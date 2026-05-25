@@ -233,6 +233,7 @@ The commit message should name the lab report and summarize what it covers in on
 | 16 | §XXV | The Homecoming: Act VIII One-Time Farewell Beats | 60 | No — document inline in `story.md` | ⚠️ PLANNED |
 | 17 | §XXVI | Corelli the Wandering Merchant: Cross-Act Vendor NPC | 61 | Yes — `lab-report-corelli-merchant.md` (wandering NPC archetype) | ⚠️ PLANNED |
 | 18 | §XXVII | Town Crier: Inn Rest World-News Ambient Lines | 62 | No — document inline | ⚠️ PLANNED |
+| 19 | §XXVIII | The Froberger Memorial: A Living Stone at CI | 63 | No — document inline in `story.md` + `world.md` | ⚠️ PLANNED |
 
 **Rule:** Implement in layer order when possible. Each implementation = code + doc sync + git commit. See plan.md §I Lab Report Policy for commit rules.
 
@@ -2005,6 +2006,7 @@ creative_literacy_token: { name:'Creative Literacy Token', icon:'📄', sell:27 
 | **Homecoming (§XXV)** | 6 one-time Act VIII farewell beats / Brynn's Loaf / Champion's Tincture / Pachelbel's Sketch / 6 new flags | `plan.md §XXV` | ✅ PLANNED stub: `story.md` Act VIII Farewell Beats | ⚠️ PLANNED |
 | **Wandering Merchant (§XXVI)** | Corelli — 5 appearances Acts II–VIII / purchase-gated fav / 5 unique items / Scholar King courier reveal / `last_cipher` cross-ref §XVI–§XVII | `plan.md §XXVI` | ✅ PLANNED stubs: `story.md` Corelli encounters; `world.md` Wandering Merchant | ⚠️ PLANNED |
 | **Town Crier (§XXVII)** | `TOWN_CRIER_LINES` const / priority-selector / inn rest rumor line / 56 act-cycling lines + critical/tension/quest/NPC tiers | `plan.md §XXVII` | ✅ PLANNED stub: `story.md` Town Crier note; no new state flags | ⚠️ PLANNED |
+| **Froberger Memorial (§XXVIII)** | `FROBERGER_MEMORIAL_TEXT` object / 4-layer plaque text / memorial book entries / [Leave Flowers] 10gp action / `storyShowFrobergerMemorial()` | `plan.md §XXVIII` | ⚠️ PLANNED stubs pending: `story.md` Memorial section; `world.md` memorial world note | ⚠️ PLANNED |
 
 ---
 
@@ -5844,3 +5846,198 @@ No lab report needed. No new nodes, monsters, or items.
 ---
 
 *§XXVII status: ⚠️ PLANNED — Town Crier system designed; TOWN_CRIER_LINES const specified in full; 56 act-cycling lines written (7 per act × 8 acts); 2 critical / 3 tension / 7 quest-flag / 6 NPC Dear Friend lines; 4-tier priority selector function specified; UI integration in storyConfirmSleep() described; zero new state flags; no new nodes/monsters/items; no lab report — document inline.*
+
+---
+
+## Section XXVIII — The Froberger Memorial: A Living Stone at CI (Layer 63, ⚠️ PLANNED)
+
+> **Design status:** PLANNED. Not yet in `roll2hit-v3.html`. No new nodes, no new monsters, no new items, no lab report required.  
+> **Layer 63** — one interaction point added to CI; 3 new state flags; zero new combat; document inline.
+
+---
+
+### XXVIII-A. Concept and World Hook
+
+The Act VIII town crier line reads: *"Someone left flowers at the old Froberger memorial stone near the CI crossroads. Fresh ones. Every morning this week."* (§XXVII, Act VIII cycling line 7). This section makes the memorial real: a carved stone at the CI node that the player can examine, read, and interact with throughout the run.
+
+The memorial has always existed in the world — it is referenced in Yael's Froberger trace (`NPC_CROSS_REFS`), implied by Brynn's memory of extending Froberger's credit, and anchored by 41 journal entries the player has been collecting since Act I. What §XXVIII adds is the ability to stand in front of it.
+
+**No quest, no combat, no vendor.** The memorial is a narrative object: one optional `[Examine Memorial]` action at CI, two optional sub-actions ([Leave Flowers] / [Sign the Book]), and a small constellation of text that reveals itself as the player builds relationships with the people who knew Froberger.
+
+**Why Layer 63?** Every layer before it built the world. This one lets the player acknowledge it.
+
+---
+
+### XXVIII-B. The Memorial Text — Four Layers
+
+Const: `FROBERGER_MEMORIAL_TEXT` — object with keys `base`, `yael_friendly`, `dear_friend`, `post_cipher`. Layers are additive: each one appends to the previous.
+
+**Layer 1 — Base** (always visible on first examine):
+
+```
+FROBERGER
+Chronicler of the Road
+Walked every corridor in Birka
+His notes are still right
+```
+
+**Layer 2 — Yael Friendly** (appended when `fav_yael >= 1`):
+
+```
+"He was the one who told me what was happening
+ in the Unbanked Quarter before anyone else would.
+ The story didn't die with him."
+                                    — Y.S.
+```
+
+**Layer 3 — Dear Friend (any NPC)** (appended when any `fav_* >= 2`):
+
+```
+The Ivory Circle formally requested the stone be removed in 1312.
+The city refused.
+```
+
+**Layer 4 — Post-Cipher** (appended when `S_story.corelliRevelationDelivered === true`; requires `last_cipher` interaction from §XXVI):
+
+```
+Beneath the main inscription, faint letters in a different hand:
+"First Contact: F.B. — the chronicler who drew the map
+ before the Circle drew the borders."
+```
+
+This is the only in-world confirmation that Froberger was "the Antecedent's first contact outside the Circle." No other scene names him directly. The player discovers this meaning retroactively.
+
+---
+
+### XXVIII-C. The Memorial Book
+
+A small weathered journal sits in a metal bracket beside the stone. The player can [Read Book] (no cost, any time) and [Sign the Book] (no cost, one-time, sets `frobergerMemorialBookSigned`).
+
+**Pre-written entries** (always present, in order, attributed or anonymous):
+
+| Entry | Attribution | Text |
+|-------|-------------|------|
+| 1 | *(unsigned)* | *"I bring fresh water. Every week."* |
+| 2 | *B.M.* | *"He had credit at the inn until the last. I never called it in."* |
+| 3 | *W. of the Crossroads Forge* | *"He watched every training session from the bench across the road. Never bet on anyone."* |
+| 4 | *(unsigned)* | *"He was right about the Tide."* |
+| 5 | *(unsigned)* | *"The thirty-second corridor. Map checks out."* |
+
+**Player sign action** — modal with a prompt (*"What would you write?"*) and three preset choices + dismiss:
+
+| Choice | Player writes |
+|--------|--------------|
+| A | *"For the map."* |
+| B | *"The covenant holds."* |
+| C | *"The road was worth it."* |
+
+Selecting A, B, or C appends the chosen line below entry 5 as *(your hand)* and sets `frobergerMemorialBookSigned = true`. Once signed, [Sign the Book] becomes [Read Your Entry] (shows only the player's line). On NG+, `frobergerMemorialBookSigned` is cleared — the player can sign again, and a fourth option appears:
+
+| D *(NG+ only)* | *"Still right."* |
+
+---
+
+### XXVIII-D. The Flowers Action
+
+**[Leave Flowers]** — costs 10gp. Available any time `frobergerMemorialFlowers === false`. Once taken:
+- `frobergerMemorialFlowers = true`
+- `S_story.gold -= 10`
+- Story log: *"You leave a small bunch of flowers at the stone. They look right there."*
+- Unlocks the Act VIII town crier flower line: the Act VIII cycling pool already contains the flowers line; after `frobergerMemorialFlowers = true`, that line is promoted to the front of the Act VIII pool (priority before cycling). It fires on the first inn rest in Act VIII if flowers were left in any previous act.
+
+On NG+: `frobergerMemorialFlowers` is cleared. The player can leave flowers again. The story log changes on NG+: *"You leave flowers again. You wonder if anyone will wonder who keeps doing this."*
+
+**10gp cost justification:** The cost is intentionally low — not trivial (it's a deliberate choice) but never punishing. It is the cheapest meaningful decision in the game. A player who has run a full combat loop will have hundreds of gold; this is not about resource pressure, it is about intention.
+
+---
+
+### XXVIII-E. Implementation Spec
+
+**XXVIII-E-1.** Add `FROBERGER_MEMORIAL_TEXT` const:
+
+```js
+const FROBERGER_MEMORIAL_TEXT = {
+  base: `FROBERGER\nChronicler of the Road\nWalked every corridor in Birka\nHis notes are still right`,
+  yael_friendly: `\n\n"He was the one who told me what was happening\n in the Unbanked Quarter before anyone else would.\n The story didn't die with him."\n                                    — Y.S.`,
+  dear_friend: `\n\nThe Ivory Circle formally requested the stone be removed in 1312.\nThe city refused.`,
+  post_cipher: `\n\nBeneath the main inscription, faint letters in a different hand:\n"First Contact: F.B. — the chronicler who drew the map\n before the Circle drew the borders."`
+};
+```
+
+**XXVIII-E-2.** Add `FROBERGER_MEMORIAL_BOOK` const — array of 5 static entries (objects `{attr, text}`):
+
+```js
+const FROBERGER_MEMORIAL_BOOK = [
+  { attr: '',                           text: 'I bring fresh water. Every week.' },
+  { attr: 'B.M.',                       text: 'He had credit at the inn until the last. I never called it in.' },
+  { attr: 'W. of the Crossroads Forge', text: 'He watched every training session from the bench across the road. Never bet on anyone.' },
+  { attr: '',                           text: 'He was right about the Tide.' },
+  { attr: '',                           text: 'The thirty-second corridor. Map checks out.' }
+];
+```
+
+**XXVIII-E-3.** New function `storyShowFrobergerMemorial()`:
+
+```js
+function storyShowFrobergerMemorial() {
+  S_story.frobergerMemorialVisited = true;
+  // Build plaque text
+  let plaque = FROBERGER_MEMORIAL_TEXT.base;
+  if ((S_story.fav_yael || 0) >= 1) plaque += FROBERGER_MEMORIAL_TEXT.yael_friendly;
+  const anyDearFriend = ['yael','brynn','quill','pachelbel','weckmann','auros']
+    .some(k => (S_story['fav_' + k] || 0) >= 2);
+  if (anyDearFriend) plaque += FROBERGER_MEMORIAL_TEXT.dear_friend;
+  if (S_story.corelliRevelationDelivered) plaque += FROBERGER_MEMORIAL_TEXT.post_cipher;
+  // Render overlay (plaque + book + action buttons)
+  // [Leave Flowers] costs 10gp; [Read Book]; [Sign the Book / Read Your Entry]
+  _renderMemorialOverlay(plaque);
+}
+```
+
+**XXVIII-E-4.** Add `[Examine Memorial]` button to CI node render (alongside existing CI action buttons). Visible at all times. Triggers `storyShowFrobergerMemorial()`.
+
+**XXVIII-E-5.** In `storyConfirmSleep()` Act VIII flower promotion: before calling `_getTownCrierLine()`, check `if (S_story.actNumber === 8 && S_story.frobergerMemorialFlowers)` and prepend the flower line to the Act VIII pool at index 0 if not yet delivered.
+
+---
+
+### XXVIII-F. New State Flags
+
+| Flag | Type | Default | NG+-preserved | Purpose |
+|------|------|---------|---------------|---------|
+| `frobergerMemorialVisited` | boolean | false | No | Tracks first visit; no mechanical effect; used for narrative log |
+| `frobergerMemorialFlowers` | boolean | false | No | Tracks flower action; promotes Act VIII crier line |
+| `frobergerMemorialBookSigned` | boolean | false | No | Tracks player signature; changes [Sign] to [Read Your Entry] |
+
+Add all three to `_S_DEFAULTS()`. Clear all three on NG+ (same batch as other non-preserved booleans). Add to Section III state field table.
+
+---
+
+### XXVIII-G. Documentation Updates Required on Implementation
+
+| File | Update |
+|------|--------|
+| `story.md` | Add §F2 row for `storyShowFrobergerMemorial()`; add Memorial section with plaque text layers and book entries |
+| `world.md` | Add note in Birka geography section: memorial stone at CI crossroads; Ivory Circle removal request 1312; cultural significance |
+| `plan.md` | Mark §XXVIII complete; update §V-A queue; add flag rows to §III State Fields |
+| `spec-engine.md` | Add 3 new `_S_DEFAULTS()` fields |
+| `mechanics.md` | Add "Froberger Memorial" entry under Optional Interactions / no-combat node actions |
+
+No lab report. No new monsters, nodes, quests, or items.
+
+---
+
+### XXVIII-H. Design Notes
+
+**Why no mechanical reward?** The memorial is the reward. Every other optional interaction in the game gives the player something to carry: gold, XP, an item, favorability. The memorial gives none of those things. It gives a moment of recognition — the player stops, reads the stone, and knows what they've been collecting those journal entries for. That completeness is the payoff.
+
+**Why four text layers instead of one?** Froberger's story arrives in fragments throughout the run — journal entries, NPC traces, Corelli's revelation. The memorial text mirrors that structure. A player on their first run reads the base inscription. A player who built Yael to Friendly reads Yael's note. A player who decoded Corelli's letter reads the four-word confirmation: *"First Contact: F.B."* The stone knows exactly as much as the player does.
+
+**The Ivory Circle removal request.** *"The city refused."* This is the only moment in the game where the city of Birka acts as a collective agent — not a faction, not an NPC, not a guild, but the whole city making a decision. It refused. That's it. No explanation of who voted or why. It's enough.
+
+**The NG+ *(Still right.)* option.** Froberger's base inscription ends: *"His notes are still right."* On NG+, the player can write: *"Still right."* It's an echo across runs. The player has now walked every corridor too. They know. The notes are still right.
+
+**The [Leave Flowers] act in Act VIII.** If flowers were left in any earlier act, the town crier line about *"fresh ones, every morning this week"* is no longer anonymous. The player knows who has been leaving them. They did it. The town doesn't know that. The player does. That gap between what is said and what is known is the whole game in miniature.
+
+---
+
+*§XXVIII status: ⚠️ PLANNED — memorial stone at CI designed in full; 4-layer plaque text written; 5 pre-written memorial book entries; player sign action with 3 choices + NG+ fourth; [Leave Flowers] 10gp action designed; storyShowFrobergerMemorial() pseudocode specified; 3 new state flags (memorialVisited/Flowers/BookSigned); Act VIII flower promotion mechanic defined; no new nodes/monsters/items/quests; no lab report — document inline.*

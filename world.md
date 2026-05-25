@@ -1118,6 +1118,22 @@ Six one-time beats fire in Act VIII (actNumber === 8) when a player with Friendl
 
 ---
 
+## ⚠️ PLANNED — The Froberger Memorial: World Context (plan.md §XXVIII, Layer 63)
+
+The Froberger memorial stone sits at the CI crossroads. It has been there since before the game begins — the players arrive in a world where this stone already exists and is already tended.
+
+**Geography:** Northwest quadrant of the CI intersection, set slightly back from the main road. Visible from the inn door. The same bench Weckmann mentions in his book entry ("the bench across the road") is the forge bench — Weckmann's forge is at CR, but Froberger apparently watched training from the CI side. This is consistent: a chronicler would sit where he could observe without interfering.
+
+**The Ivory Circle removal request (1312):** The Circle requested the stone's removal through the city administrative council. The city declined. No vote was recorded; no commissioner filed a formal response. The request simply went unanswered until the deadline passed. This is the only documented instance of the city of Birka collectively ignoring an Ivory Circle directive. It is not commemorated anywhere official — only on the stone itself (layer 3, Dear Friend unlock).
+
+**Who tends the stone:** Yael brings water every week (her unsigned memorial book entry). Brynn extended credit through the last day. The unnamed author of *"He was right about the Tide"* may be anyone — the Tilbury fishing community, a corridor runner, someone from the Unbanked Quarter. The memorial is communal in a way no NPC orchestrates.
+
+**Cross-references:** §XXVI (Corelli `last_cipher` / `corelliRevelationDelivered` unlocks layer 4); §XXVII (Act VIII town crier flower line references the stone); §XV (Entry 42 is Froberger's final journal note — the player may reach the memorial with 41 entries already read); §XVI (Ivory Circle suppression context).
+
+**No new nodes, NPCs, items, or quests.** No new persistent world state beyond 3 player-local flags (`frobergerMemorialVisited/Flowers/BookSigned`).
+
+---
+
 ## ⚠️ PLANNED — Town Crier Ambient Lines: World State (plan.md §XXVII, Layer 62)
 
 The Town Crier lines in `TOWN_CRIER_LINES` draw on existing world state already tracked in `S_story` — no new persistent fields added to the world model.

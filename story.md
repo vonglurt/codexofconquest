@@ -2492,6 +2492,28 @@ MILEPOINT G  storyNewGamePlus() — NG+ reset
 
 ---
 
+## ⚠️ PLANNED — The Froberger Memorial: A Living Stone at CI (plan.md §XXVIII, Layer 63)
+
+An optional interactive stone at CI. One `[Examine Memorial]` button, two sub-actions ([Leave Flowers] 10gp / [Sign the Book] free). No combat, no quest, no vendor.
+
+**Const:** `FROBERGER_MEMORIAL_TEXT` — object with 4 keys: `base` / `yael_friendly` / `dear_friend` / `post_cipher`. Plaque layers are additive; each appends when its condition is met.
+
+**Plaque text layers:**
+- Base: *"FROBERGER / Chronicler of the Road / Walked every corridor in Birka / His notes are still right"*
+- Yael Friendly (`fav_yael >= 1`): Yael's inscription — *"He was the one who told me what was happening in the Unbanked Quarter before anyone else would."* — Y.S.
+- Dear Friend any NPC (`any fav >= 2`): *"The Ivory Circle formally requested the stone be removed in 1312. The city refused."*
+- Post-cipher (`corelliRevelationDelivered`): *"First Contact: F.B. — the chronicler who drew the map before the Circle drew the borders."*
+
+**Memorial book:** 5 pre-written entries (unsigned / B.M. / W. of the Crossroads Forge / two unsigned). Player can [Sign the Book] once — chooses from "For the map." / "The covenant holds." / "The road was worth it." (NG+ adds "Still right."). Flag: `frobergerMemorialBookSigned`.
+
+**[Leave Flowers]:** 10gp, one-time. Sets `frobergerMemorialFlowers = true`. In Act VIII, promotes the flowers town crier line to head of the cycling pool.
+
+**Function:** `storyShowFrobergerMemorial()` — builds plaque text, renders overlay with book and action buttons.
+
+**F2 reference:** Add `storyShowFrobergerMemorial()` row on implementation.
+
+---
+
 ## ⚠️ PLANNED — Town Crier: Inn Rest World-News Lines (plan.md §XXVII, Layer 62)
 
 When the player chooses to rest at an inn (`storyConfirmSleep()`), after the standard rest resolution a Town Crier ambient line fires — a single sentence of world-news flavor injected into the story log. No new node, no new NPC, no persistent flag. The line is ephemeral: displayed once, forgotten immediately.
