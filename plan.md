@@ -16,7 +16,7 @@ Implement in layer order. Each = code change + doc sync + `git commit`.
 | 58 | §XXIII | Inn Dreams | ✅ Implemented |
 | 59 | §XXIV | Pressure Cascade: Visible Void Tide Events | ✅ Implemented |
 | 60 | §XXV | The Homecoming: Act VIII Farewell Beats | ✅ Implemented |
-| 62 | §XXVII | Town Crier: Inn Rest World-News Lines | Small |
+| 62 | §XXVII | Town Crier: Inn Rest World-News Lines | ✅ Implemented |
 | 63 | §XXVIII | Froberger Memorial: Living Stone at CI | Small |
 | 64 | §XXIX | Pit Championship: Finals at Crossroads Forge | Medium |
 | 65 | §XXX | Entry 41 Echo: Brynn + Sweelinck | Small |
@@ -288,7 +288,7 @@ The commit message should name the lab report and summarize what it covers in on
 | 15 | §XXIV | The Pressure Cascade: Visible Void Tide Events | 59 | No — extend `lab-report-living-world.md` | ✅ Implemented |
 | 16 | §XXV | The Homecoming: Act VIII One-Time Farewell Beats | 60 | No — document inline in `story.md` | ✅ Implemented |
 | 17 | §XXVI | Corelli the Wandering Merchant: Cross-Act Vendor NPC | 61 | Yes — `lab-report-corelli-merchant.md` (wandering NPC archetype) | ⚠️ PLANNED |
-| 18 | §XXVII | Town Crier: Inn Rest World-News Ambient Lines | 62 | No — document inline | ⚠️ PLANNED |
+| 18 | §XXVII | Town Crier: Inn Rest World-News Ambient Lines | 62 | No — document inline | ✅ Implemented |
 | 19 | §XXVIII | The Froberger Memorial: A Living Stone at CI | 63 | No — document inline in `story.md` + `world.md` | ⚠️ PLANNED |
 | 20 | §XXIX | The Pit Championship: Finals at Crossroads Forge | 64 | No — document inline; patch §XXV farewell beat | ⚠️ PLANNED |
 | 21 | §XXX | The Entry 41 Echo: Brynn and Sweelinck After the Last Journal | 65 | No — state flags pre-exist; document inline; patch _buildSweelinckNamingSequence() | ⚠️ PLANNED |
@@ -2072,7 +2072,7 @@ creative_literacy_token: { name:'Creative Literacy Token', icon:'📄', sell:27 
 | **Pressure Cascade (§XXIV)** | voidPressure threshold events (3/6/9) / void-touched monsters / NPC pressure lines / mercy counter | `plan.md §XXIV` | `story.md` Void Tide Events; `world.md` Void-Touched Monsters note | ✅ Implemented |
 | **Homecoming (§XXV)** | 6 one-time Act VIII farewell beats / Brynn's Loaf / Champion's Tincture / Pachelbel's Sketch / 6 new flags | `plan.md §XXV` | `story.md` Act VIII Farewell Beats | ✅ Implemented |
 | **Wandering Merchant (§XXVI)** | Corelli — 5 appearances Acts II–VIII / purchase-gated fav / 5 unique items / Scholar King courier reveal / `last_cipher` cross-ref §XVI–§XVII | `plan.md §XXVI` | ✅ PLANNED stubs: `story.md` Corelli encounters; `world.md` Wandering Merchant | ⚠️ PLANNED |
-| **Town Crier (§XXVII)** | `TOWN_CRIER_LINES` const / priority-selector / inn rest rumor line / 56 act-cycling lines + critical/tension/quest/NPC tiers | `plan.md §XXVII` | ✅ PLANNED stub: `story.md` Town Crier note; no new state flags | ⚠️ PLANNED |
+| **Town Crier (§XXVII)** | `TOWN_CRIER_LINES` const / priority-selector / inn rest rumor line / 56 act-cycling lines + critical/tension/quest/NPC tiers | `plan.md §XXVII` | `story.md` Town Crier note; no new state flags | ✅ Implemented |
 | **Froberger Memorial (§XXVIII)** | `FROBERGER_MEMORIAL_TEXT` object / 4-layer plaque text / memorial book entries / [Leave Flowers] 10gp action / `storyShowFrobergerMemorial()` | `plan.md §XXVIII` | ✅ PLANNED stubs: `story.md` Memorial section; `world.md` memorial world note | ⚠️ PLANNED |
 | **Pit Championship (§XXIX)** | `PIT_CHAMPION_OGUNDIMU` const / `_showPitChampionOffer()` / `_startPitChampionBattle()` / win/loss callbacks / Weckmann log entry / dearFriend pool patch / §XXV farewell branch | `plan.md §XXIX` | ⚠️ PLANNED stubs pending: `story.md` championship note; `world.md` Ogundimu entry | ⚠️ PLANNED |
 | **Entry 41 Echo (§XXX)** | `S49_BRYNN_SCENE` / `S49_SWEELINCK_SCENE` consts / s49 flag trigger logic / Covenant Keeper opening patch in `_buildSweelinckNamingSequence()` | `plan.md §XXX` | ✅ PLANNED stubs: `story.md` scene summaries; `world.md` S49 expanded | ⚠️ PLANNED |
@@ -5528,7 +5528,7 @@ The Last Cipher's final line — *"She built it to save us. They hid it to save 
 
 ---
 
-## Section XXVII — Town Crier: Inn Rest World-News Ambient Lines (Layer 62, ⚠️ PLANNED)
+## Section XXVII — Town Crier: Inn Rest World-News Ambient Lines (Layer 62, ✅ Implemented)
 
 > **Design problem:** Resting at an inn restores HP and advances the day counter, but the world doesn't react. The player sleeps, wakes up, and the node text is unchanged. This section adds one rumor line per inn rest — overheard from a traveler, posted on a board, murmured by the innkeeper — that reflects the current state of the world. The world is talking. The player overhears it.
 
@@ -5923,7 +5923,7 @@ No lab report needed. No new nodes, monsters, or items.
 
 ---
 
-*§XXVII status: ⚠️ PLANNED — Town Crier system designed; TOWN_CRIER_LINES const specified in full; 56 act-cycling lines written (7 per act × 8 acts); 2 critical / 3 tension / 7 quest-flag / 6 NPC Dear Friend lines; 4-tier priority selector function specified; UI integration in storyConfirmSleep() described; zero new state flags; no new nodes/monsters/items; no lab report — document inline.*
+*§XXVII status: ✅ Implemented — TOWN_CRIER_LINES const (56 act-cycling + 2 critical + 3 tension + 7 quest-flag + 6 NPC lines); _getTownCrierLine() 5-tier selector (pressure → tension → quest flags → Dear Friends → act cycling); fires via setTimeout(350ms) in storyConfirmSleep() as "📢 [Town rumor]" storyMsg; zero new state flags; no new nodes/monsters/items.*
 
 ---
 
