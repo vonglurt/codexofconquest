@@ -13679,6 +13679,27 @@ function storyQuestToggle() {
   }
 }
 
+function storyQuestHunt(questId) {
+  const q = QUEST_DB[questId];
+  if (!q || !q.targetMonsterKeys || !q.targetMonsterKeys.length) return;
+  const node = NODE_MAP[S_story.currentCode];
+  if (!node) return;
+
+  // Pick a random target from the quest's monster list
+  const keys = q.targetMonsterKeys;
+  const key = keys[Math.floor(Math.random() * keys.length)];
+  const monster = MONSTER_POOL[key];
+  if (!monster) { storyMsg('🎯 Nothing found after an hour of searching.'); return; }
+
+  storyQuestToggle(); // close quest panel
+  storyMsg('🎯 You spend an hour hunting... ' + monster.name + ' spotted!');
+  S_story.pendingBattle = { nodeCode: S_story.currentCode, name: monster.name, label: node.label, stalk: true };
+  loadWorldMonster(monster);
+  storyExit();
+  _storyRollInit();
+  _showBattleOverlay();
+}
+
 function storyRenderQuests() {
   const list = document.getElementById('quest-list');
   list.innerHTML = '';
@@ -13713,6 +13734,10 @@ function storyRenderQuests() {
           ? '<button class="quest-set-wp-btn' + (isActiveWp ? ' active-wp' : '') + '" onclick="storySetWaypoint(\'' + q.waypointNode + '\')">'
             + (isActiveWp ? '📍 Waypoint Active' : '📍 Set Waypoint') + '</button>'
           : '';
+        const huntBtnHtml = (!completed && q.targetMonsterKeys && q.targetMonsterKeys.length)
+          ? '<button class="quest-set-wp-btn" style="background:#3a1a00;border-color:#e07020;color:#ffa040;margin-top:4px;width:100%;" onclick="storyQuestHunt(\'' + id + '\')">'
+            + '🎯 Hunt Now (1 hr) — guaranteed encounter</button>'
+          : '';
         let progressHtml = '';
         if (!completed && q.killGoals) {
           const k = S_story.catKills || {};
@@ -13725,7 +13750,7 @@ function storyRenderQuests() {
         }
         div.innerHTML = '<div class="quest-title"><span>' + q.title + '</span>' + badge + '</div>'
           + '<div class="quest-desc">' + q.desc + '</div>'
-          + (completed ? '' : '<div class="quest-hint">▶ ' + q.hint + '</div>' + progressHtml + wpBtnHtml);
+          + (completed ? '' : '<div class="quest-hint">▶ ' + q.hint + '</div>' + progressHtml + wpBtnHtml + huntBtnHtml);
         if (q.disposition) {
           const dRow = document.createElement('div');
           dRow.style.cssText = 'font-style:italic;font-size:11px;color:#7a6040;margin-top:4px;border-left:2px solid #5c3311;padding-left:6px;';
