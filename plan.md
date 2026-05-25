@@ -28,6 +28,7 @@ Implement in layer order. Each = code change + doc sync + `git commit`.
 | 71 | §XXXVI | Epilogue Integration Layer: Arcs to Scroll | Small |
 | 72 | §XXXVII | The Final Confrontation: Commander Bruhns's CO Scene | Small |
 | 73 | §XXXVIII | The Heartwood Letter: Brynn's Daughter Scene | Small |
+| 74 | §XXXIX | Yael's Record: The Named Report Scene | Small |
 
 ### Tier 2 — Needs Lab Report Before Coding
 
@@ -298,7 +299,8 @@ The commit message should name the lab report and summarize what it covers in on
 | 26 | §XXXV | The First Inn Light: Brynn's Vigil Arc | 70 | Yes — 3 new flags (brynnKeeperStoryTold, brynnLightChoiceMade, brynnLightKept); add to _S_DEFAULTS() Brynn block | ⚠️ PLANNED |
 | 27 | §XXXVI | Epilogue Integration Layer: Arcs to Scroll | 71 | No — no new flags; ARC_EPILOGUE_CONDITIONS const + 4-line _buildEpilogueScroll() patch | ⚠️ PLANNED |
 | 28 | §XXXVII | The Final Confrontation: Commander Bruhns's CO Scene | 72 | Yes — 1 new flag (bruhnsCoSceneDelivered); BRUHNS_CO_SCENE const; CO render patch | ⚠️ PLANNED |
-| 29 | §XXXVIII | The Heartwood Letter: Brynn's Daughter Scene | 73 | Yes — 1 new flag (brynnLetterSceneDelivered); BRYNN_HEARTWOOD_SCENE const; IN render patch | ⚠️ PLANNED |
+| 29 | §XXXVIII | The Heartwood Letter: Brynn's Daughter Scene | 73 | Yes — 1 new flag (brynnLetterSceneDelivered); BRYNN_HEARTWOOD_SCENE const; IN render patch; note: S2/s2DaughterDelivered pre-impl, patch existing | ⚠️ PLANNED |
+| 30 | §XXXIX | Yael's Record: The Named Report Scene | 74 | Yes — 1 new flag (yaelNamedReportDelivered); YAEL_NAMED_REPORT_SCENE const; CI render + YAEL_PATROL_NODES patch | ⚠️ PLANNED |
 
 **Rule:** Implement in layer order when possible. Each implementation = code + doc sync + git commit. See plan.md §I Lab Report Policy for commit rules.
 
@@ -2081,7 +2083,8 @@ creative_literacy_token: { name:'Creative Literacy Token', icon:'📄', sell:27 
 | **First Inn Light (§XXXV)** | `BRYNN_KEEPER_STORY` const / Beat 1 inquiry (fav_brynn ≥ 1, Act II+, + follow-up) / Beat 2 choice block (fav_brynn ≥ 2, 'keep'/'rest') / IN lamp ambient line (always) / §XXV farewell four-branch table / TC_BRYNN_LAMP crier line (§XXVII) / 3 new flags (brynnKeeperStoryTold, brynnLightChoiceMade, brynnLightKept) | `plan.md §XXXV` | ⚠️ PLANNED stubs pending: `story.md` vigil arc notes; `world.md` Brynn lamp entry | ⚠️ PLANNED |
 | **Epilogue Integration Layer (§XXXVI)** | `ARC_EPILOGUE_CONDITIONS` const (14 entries: §XXIX pit champ / §XXX s49 both+solo / §XXXI s54 / §XXXII s8+s29 / §XXXIII archive+survey / §XXXIV lute arc / §XXXV lamp arc) / `_buildEpilogueScroll()` 4-line patch / scroll ordering doc / no new flags | `plan.md §XXXVI` | ⚠️ PLANNED stubs pending: `story.md` scroll extension note | ⚠️ PLANNED |
 | **Commander Bruhns CO Scene (§XXXVII)** | `BRUHNS_CO_SCENE` const (friendly / dearFriend / dearFriendWithTheory) / CO render patch (after NODE_ARRIVAL_QUOTES, before fight chip) / fav 1 brief + fav 2 full Circle/Codex motivation / s29 addendum / 1 new flag (`bruhnsCoSceneDelivered`) / Auros = Bruhns same-character clarification / §XXXIII flag correction note (`surveyDeliveredToAuros` → `undercitySurveyDelivered`) | `plan.md §XXXVII` | ⚠️ PLANNED stubs pending: `story.md` CO scene; `world.md` Bruhns motivation entry | ⚠️ PLANNED |
-| **Heartwood Letter (§XXXVIII)** | `BRYNN_HEARTWOOD_SCENE` const (friendly brief / dearFriend letter-read) / IN render patch (`brynnsJournalRead && act >= 3 && !brynnLetterSceneDelivered`) / Entry 7 cross-ref / daughter word "expedition" / Froberger's Last Note cross-ref / §XXXV lamp cross-ref / §XXXVI epilogue condition addendum (`brynnLetterSceneDelivered` line) / 1 new flag | `plan.md §XXXVIII` | ⚠️ PLANNED stubs pending: `story.md` + `world.md` | ⚠️ PLANNED |
+| **Heartwood Letter (§XXXVIII)** | `BRYNN_HEARTWOOD_SCENE` const (friendly brief / dearFriend letter-read) / IN render patch (patch S2 block at ~line 12499 — use `s2DaughterDelivered` not new flag) / Entry 7 cross-ref / "expedition" callback / Froberger's Last Note cross-ref / §XXXV lamp cross-ref / §XXXVI epilogue addendum | `plan.md §XXXVIII` | ⚠️ PLANNED stubs: `story.md` + `world.md` added | ⚠️ PLANNED |
+| **Yael's Named Report (§XXXIX)** | `YAEL_NAMED_REPORT_SCENE` const (setup + decision + two choices) / CI render patch (fav 2, Act VI+, yaelEscortUsed) / `YAEL_PATROL_NODES` SW addendum / riot backstory (three-year-old suppressed evidence, Weckmann training log connection) / §XXXVI epilogue condition (`yaelNamedReportDelivered`) / 1 new flag | `plan.md §XXXIX` | ⚠️ PLANNED stubs pending: `story.md` + `world.md` | ⚠️ PLANNED |
 
 ---
 
@@ -8065,3 +8068,199 @@ No lab report. No new nodes. No new monsters. No new items.
 ---
 
 *§XXXVIII status: ⚠️ PLANNED — brynn_letter progression event hook designed; BRYNN_HEARTWOOD_SCENE const written (fav 1 brief + fav 2 letter-read); IN render patch specified; Entry 7 and Froberger's Last Note cross-refs; §XXXVI epilogue condition addendum specified; §XXXV First Inn Light cross-ref; NPC_EPILOGUES fav 2/3 homecoming seeded; one new flag (brynnLetterSceneDelivered); no new nodes/monsters/items/lab report.*
+
+---
+
+## Section XXXIX — Yael's Record: The Named Report Scene (Layer 74, ⚠️ PLANNED)
+
+### XXXIX-A. Concept
+
+The `yael_report` world progression event fires at Act V+ with `yaelEscortUsed`: *"City records show a new internal affairs submission. Source: anonymous. It wasn't anonymous."* This is Yael's first report — about the suppressed riot evidence — filed anonymously because she didn't want to become the story. `NPC_EPILOGUES.yael` fav 2 shows the outcome of a *second* report: *"Yael filed the second report under her own name. It was acted on."*
+
+There is no designed scene between those two events. §XXXIX designs it: Yael tells the player she's filing again, under her name, and why. At fav 2 she reveals the full picture — the riot, the name, the suppressed evidence, the Weckmann connection — and asks if the player will hold a fourth copy.
+
+The Weckmann thread: his NPC_EPILOGUES fav 2 reads *"The illegal operation didn't come back."* That illegal operation was the riot from three years ago — Yael investigated the funding; Weckmann tracked the fighters. Neither had enough alone. Together: the complete record. §XXXIX makes this connection explicit at fav 2, without either NPC needing to appear in the same scene.
+
+One new flag. No new nodes. No new combat. No lab report.
+
+**Note — §XXXVIII / S2 reconciliation:** The `brynn_letter` daughter scene is already partially implemented in HTML as S2 (`s2DaughterDelivered`, line ~12499), firing at Act IV+ with a `journalEntriesRead[7]` gate. §XXXVIII's implementation should patch the existing S2 block with fav-gating and the richer "expedition" callback, rather than adding a new block. Use `s2DaughterDelivered` (existing flag) instead of the new `brynnLetterSceneDelivered` designed in §XXXVIII.
+
+---
+
+### XXXIX-B. The Riot — What Yael Knows
+
+Three years ago, a riot in the market district. Yael collected evidence: names, times, the transaction record that funded it. The evidence was pulled from the guard archive four weeks later — cleanly, by someone with access above her rank. She filed a report: anonymous, disappeared.
+
+She has a name. She cannot prove it. The name connects to the Ivory Circle's information management at BA (S8, §XXXII) — the riot was funded to suppress a public record that would have put pressure on the Circle's operations in Birka. Yael doesn't know this. She knows the name; the Circle connection is visible only to a player who has assembled the full picture (S8 + S29 + §XXXIII archive letter + §XXXIX Yael scene).
+
+Weckmann's illegal pit operation ran alongside the riot's funding network. Not connected to the Circle — Weckmann was running fights in the lower CY corridors, separate from the official pit. The riot's money moved through the same underground channels his operation used. He saw the transactions. He kept records because he always keeps records.
+
+When the illegal operation was shut down, Weckmann's records survived because they were in the training log, not the financial ledger. The financial ledger disappeared. The training log was grandfathered as "documentation of athletic supervision." Bureaucratic luck. Weckmann knows this. He's been maintaining the training log with particular care ever since.
+
+---
+
+### XXXIX-C. Scene Trigger
+
+**Trigger:** CI node, `_npcFavor('yael') >= 2`, `actNumber >= 6`, `yaelEscortUsed`, `!yaelNamedReportDelivered`.
+
+Act VI is chosen because: the anonymous report fires at Act V. Yael needs one act's worth of watching to see whether the first report disappeared before she commits to filing under her name. At Act VI she's made her decision.
+
+**One-time.** Sets `yaelNamedReportDelivered = true` on delivery.
+
+---
+
+### XXXIX-D. Scene Content
+
+**fav 0–1 (no scene):** The anonymous report has been filed. That's everything Yael shares with someone she's still measuring.
+
+**fav 2 (Dear Friend):**
+
+```
+YAEL_NAMED_REPORT_SCENE:
+
+"You've been in the archive. You've seen what happens to records."
+
+She isn't looking at you. She's watching the market corner from the 
+CI door.
+
+"Three years ago there was a riot in this district. I worked it for 
+six weeks. Names, times, the transaction record that paid for it. Four 
+weeks after I filed it, the evidence was gone — pulled from the guard 
+archive. Someone with access above my rank took it cleanly."
+
+She finally looks at you.
+
+"I filed a report at the time. Anonymous. I didn't want to become the 
+story. The report disappeared too."
+
+A pause.
+
+"I'm filing again. Under my name. I'm keeping three copies — one with 
+the Commissioner, one with a Scholar Kings archivist in Weimar, one with 
+Weckmann. He had records of the operation that funded the riot. His 
+training log. The financial ledger is gone but the training log survived 
+because no one thought to look there."
+
+She turns back to the market.
+
+"I'm telling you because you know what it means when something 
+disappears from an archive. If you want to hold a fourth copy, I'll 
+give you one. If not — you know it exists. That's also something."
+```
+
+**Player options:**
+
+| Choice | Yael's response | Effect |
+|---|---|---|
+| `[I'll hold it.]` | *"Good. Then it's in four places now."* She nods once. That's the whole acknowledgment. | `yaelNamedReportDelivered = true` |
+| `[Three copies is enough.]` | *"Three is enough. I just wanted someone outside the system to know."* | `yaelNamedReportDelivered = true` |
+
+Both choices are complete. Neither is rewarded or penalized. Yael files the report regardless.
+
+---
+
+### XXXIX-E. `YAEL_NAMED_REPORT_SCENE` Const
+
+```js
+const YAEL_NAMED_REPORT_SCENE = {
+  setup: `"You've been in the archive. You've seen what happens to records."\n\nShe isn't looking at you. She's watching the market corner from the CI door.\n\n"Three years ago there was a riot in this district. I worked it for six weeks. Names, times, the transaction record that paid for it. Four weeks after I filed it, the evidence was gone — pulled from the guard archive. Someone with access above my rank took it cleanly."\n\nShe finally looks at you.\n\n"I filed a report at the time. Anonymous. I didn't want to become the story. The report disappeared too."`,
+
+  decision: `"I'm filing again. Under my name. I'm keeping three copies — one with the Commissioner, one with a Scholar Kings archivist in Weimar, one with Weckmann. He had records of the operation that funded the riot. His training log. The financial ledger is gone but the training log survived because no one thought to look there."\n\nShe turns back to the market.\n\n"I'm telling you because you know what it means when something disappears from an archive. If you want to hold a fourth copy, I'll give you one. If not — you know it exists. That's also something."`,
+
+  choiceHold:  `"Good. Then it's in four places now."`,
+  choiceThree: `"Three is enough. I just wanted someone outside the system to know."`
+};
+```
+
+---
+
+### XXXIX-F. Cross-References
+
+**S8 / §XXXII (Varga Watch):** The riot was funded through the same channels the Ivory Circle used for information suppression at BA. Yael doesn't know this. The player who assembled the S8 picture can see the connection. No explicit statement; legible only to those who looked.
+
+**§XXXIII (Archive Letter):** The `archive_letter` obtained from the Blue Shutters contains a Circle directive: *"Entry author appears unaware of the correlation. No restriction required."* — the Circle's preferred method is letting evidence go unnoticed. When it does get noticed (Yael, Froberger), they pull it cleanly. Yael's report is the same pattern from the ground floor.
+
+**Weckmann / `WECKMANN_TRAINING_LOG`:** The training log already exists as a readable item at CY. Yael's scene retroactively explains why Weckmann maintains it so carefully — it's the only surviving record of the riot's funding network. The log is already there; §XXXIX gives it a second meaning without changing it.
+
+**§XXXVI `ARC_EPILOGUE_CONDITIONS`:** Add on §XXXVI implementation:
+```js
+{ cond: () => S_story.yaelNamedReportDelivered,
+  line: "Yael kept three copies of the second report. She knows exactly where each one is." }
+```
+
+**NPC_EPILOGUES.yael:** fav 2 (*"filed the second report under her own name. It was acted on."*) / fav 3 (*"The commissioner resigned. She went back to the corner."*) — these outcomes are the downstream result of §XXXIX's scene. §XXXIX plants; the epilogue delivers.
+
+**§XXXI (S54 Joint Witness):** Yael and Brynn at CI — *"Still the same light?"* Brynn knew what Yael was doing. The lamp Brynn kept was also for this: a light that stays on while someone does something that could get them in trouble.
+
+---
+
+### XXXIX-G. Implementation Spec
+
+**XXXIX-G-1.** Add `yaelNamedReportDelivered: false` to `_S_DEFAULTS()`.
+
+**XXXIX-G-2.** In the CI node render path, after the standard NPC render:
+
+```js
+// §XXXIX: Yael named report scene
+if (node.code === 'CI'
+    && _npcFavor('yael') >= 2
+    && (S_story.actNumber || 1) >= 6
+    && S_story.yaelEscortUsed
+    && !S_story.yaelNamedReportDelivered) {
+  setTimeout(() => {
+    storyMsg(YAEL_NAMED_REPORT_SCENE.setup + '\n\n' + YAEL_NAMED_REPORT_SCENE.decision);
+    // Render choice buttons: [I'll hold it.] and [Three copies is enough.]
+    // On selection: set yaelNamedReportDelivered = true, deliver response line
+  }, 600);
+}
+```
+
+Implementation note: the choice buttons follow the same pattern as other in-narrative choice renders (Beat 2 in §XXXV, Beat 2 in §XXXIV). If the existing pattern uses `storyChoice()` or inline button DOM, follow that pattern.
+
+**XXXIX-G-3.** Add `yaelNamedReportDelivered` epilogue condition to `ARC_EPILOGUE_CONDITIONS` during §XXXVI implementation.
+
+**XXXIX-G-4.** Add one new `YAEL_PATROL_NODES` entry:
+```js
+{ condition: () => S_story.yaelNamedReportDelivered,
+  nodeSlug: 'SW',
+  line: "The second report is filed. I'm not watching to see if it disappears." }
+```
+This patrol line fires at SW after the scene, acknowledging the decision without narrating it. No new flag needed — uses `yaelNamedReportDelivered`.
+
+---
+
+### XXXIX-H. State Flags
+
+| Flag | Default | NG+-preserved? | Note |
+|---|---|---|---|
+| `yaelNamedReportDelivered` | `false` | No (reset) | Named report scene fired at CI |
+
+One new flag. Add to `_S_DEFAULTS()` in the Yael block.
+
+---
+
+### XXXIX-I. Documentation Updates
+
+| File | Update |
+|---|---|
+| `story.md` | Add §XXXIX stub: named report scene, Weckmann connection, patrol line addendum |
+| `world.md` | Add to Yael's section: riot backstory, Weckmann training log link, three-copy strategy |
+| `plan.md` | §V-A item 30; §XI-A row; §0 Tier 1 row 74 |
+
+No lab report. No new nodes. No new monsters. No new items.
+
+---
+
+### XXXIX-J. Design Notes
+
+**"Three copies is enough."** Both player choices close the scene cleanly. Choosing not to hold the copy isn't a failure or a missed opportunity — Yael's point is that someone outside the system knows it exists. The player knowing is already something. She explicitly says this: *"That's also something."*
+
+**The Weckmann connection.** The training log at CY is already readable. Most players who find it see training notes about fighters. A player who has had §XXXIX's scene reads it and sees: this is also a record of a riot's funding network, kept accidentally, surviving by bureaucratic luck. The same text, two readings, depending on what the player knows.
+
+**The Circle at the center, unnamed.** No character in §XXXIX names the Ivory Circle as the riot's organizer. Yael has a name, not a faction. The Circle connection is visible only to a player who has: S8 (Varga at BA, Circle informant), S29 (Auros's tactical theory connecting Froberger's route to Circle pressure), §XXXIII (archive letter, Circle directive to not restrict what's not noticed), and §XXXIX (the riot, the same suppression method). Four systems pointing at the same answer. No system states it.
+
+**"She went back to the corner."** NPC_EPILOGUES yael fav 3 ends: *"The commissioner resigned. She went back to the corner."* After all of this — the testimony, the inquiry, the resignation — Yael goes back to her patrol route. That's the whole arc: she did the thing, and then she went back to work. The corner doesn't change. She does.
+
+---
+
+*§XXXIX status: ⚠️ PLANNED — Yael named report scene designed (fav 2, Act VI+, CI); riot backstory established (three years ago, suppressed evidence, Weckmann training log connection); YAEL_NAMED_REPORT_SCENE const written; two-choice player options; §XXXIX YAEL_PATROL_NODES addendum; §XXXVI epilogue condition addendum; §XXXVIII/S2 reconciliation note; no new nodes/monsters/items/lab report; 1 new flag.*

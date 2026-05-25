@@ -2596,6 +2596,26 @@ Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterOb
 
 ---
 
+## ⚠️ PLANNED — Yael's Record: The Named Report Scene (plan.md §XXXIX, Layer 74)
+
+**Trigger:** CI node, `_npcFavor('yael') >= 2`, `actNumber >= 6`, `yaelEscortUsed`, `!yaelNamedReportDelivered`. Fires one act after the anonymous `yael_report` progression event (Act V). One-time.
+
+**Scene:** Yael reveals the riot three years ago — names, times, transaction record — all pulled from the guard archive four weeks after she filed. She's filing again, under her name, three copies: Commissioner, Scholar Kings archivist in Weimar, Weckmann. His training log survived when the financial ledger disappeared ("no one thought to look there"). She asks if the player wants a fourth copy.
+
+**fav 2 choices:** `[I'll hold it.]` → *"Good. Then it's in four places now."* / `[Three copies is enough.]` → *"Three is enough. I just wanted someone outside the system to know."* Both set `yaelNamedReportDelivered = true`.
+
+**Weckmann connection:** The training log at CY (already readable) is the surviving record of the riot's funding network — preserved accidentally. §XXXIX gives it a second meaning without changing it.
+
+**YAEL_PATROL_NODES addendum:** `{ condition: () => S_story.yaelNamedReportDelivered, nodeSlug: 'SW', line: "The second report is filed. I'm not watching to see if it disappears." }`
+
+**§XXXVI epilogue addendum:** `{ cond: () => S_story.yaelNamedReportDelivered, line: "Yael kept three copies of the second report. She knows exactly where each one is." }`
+
+**Cross-refs:** S8 §XXXII (Circle suppression pattern); §XXXIII archive letter (same Circle method); §XXXI Joint Witness (Brynn kept the lamp on while Yael did this). Const: `YAEL_NAMED_REPORT_SCENE`. One new flag: `yaelNamedReportDelivered: false`.
+
+**F2 reference:** Patch CI render; add choice button block; add YAEL_PATROL_NODES entry on implementation.
+
+---
+
 ## ⚠️ PLANNED — The Heartwood Letter: Brynn's Daughter Scene (plan.md §XXXVIII, Layer 73)
 
 **Trigger:** IN node, `brynnsJournalRead && actNumber >= 3 && !brynnLetterSceneDelivered`. Fires on the visit after the `brynn_letter` world progression event ("A letter arrived for Brynn at the inn. The seal is from the Heartwood district.").
