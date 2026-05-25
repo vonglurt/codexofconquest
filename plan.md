@@ -8,8 +8,6 @@ Implement in layer order. Each = code change + doc sync + `git commit`.
 
 | Layer | Section | Feature | Est. Complexity |
 |-------|---------|---------|----------------|
-| 58 | §XXIII | Inn Dreams | ✅ Implemented |
-| 59 | §XXIV | Pressure Cascade: Visible Void Tide Events | ✅ Implemented |
 | 60 | §XXV | The Homecoming: Act VIII Farewell Beats | ✅ Implemented |
 | 62 | §XXVII | Town Crier: Inn Rest World-News Lines | ✅ Implemented |
 | 63 | §XXVIII | Froberger Memorial: Living Stone at CI | ✅ Implemented |
@@ -277,8 +275,6 @@ The commit message should name the lab report and summarize what it covers in on
 | 10 | §XIX | Tilbury Harbor Arc: "The Conclave's Weight" | 54 | Yes — shared with §XX in `lab-report-tilbury-visby-arcs.md` | ✅ Implemented 2026-05-25 |
 | 11 | §XX | Visby Underground: "What Mordus Owes" | 55 | Yes — shared with §XIX in `lab-report-tilbury-visby-arcs.md` | ✅ Implemented 2026-05-25 |
 | 12 | §XXI | The Void Shaman: The Antecedent's Last Warden | 56 | Yes — `lab-report-void-shaman.md` (corrupted mandate design) | ✅ Implemented 2026-05-25 |
-| 14 | §XXIII | Inn Dreams | 58 | No — too small; document inline | ✅ Implemented |
-| 15 | §XXIV | The Pressure Cascade: Visible Void Tide Events | 59 | No — extend `lab-report-living-world.md` | ✅ Implemented |
 | 16 | §XXV | The Homecoming: Act VIII One-Time Farewell Beats | 60 | No — document inline in `story.md` | ✅ Implemented |
 | 17 | §XXVI | Corelli the Wandering Merchant: Cross-Act Vendor NPC | 61 | Yes — `lab-report-corelli-merchant.md` (wandering NPC archetype) | ✅ Implemented 2026-05-25 |
 | 18 | §XXVII | Town Crier: Inn Rest World-News Ambient Lines | 62 | No — document inline | ✅ Implemented |
