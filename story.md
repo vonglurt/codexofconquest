@@ -1599,6 +1599,29 @@ Six one-time dialogue beats that fire when the player visits each NPC during Act
 
 ---
 
+#### ⚠️ PLANNED — Corelli the Wandering Merchant (plan.md §XXVI, Layer 61)
+
+A new NPC archetype: a vendor-modal NPC who appears at 5 nodes across 5 acts, moving through the world on their own route. Favorability is purchase-gated (not conversation/quest-gated). Former Ivory Circle courier — connects the player's knowledge arc to the suppression of the First Researcher (§XVI/§XVII).
+
+**Five encounters:**
+
+| # | Node | Act | Opener | Unique Item |
+|---|------|-----|--------|-------------|
+| 1 | TL (Tilbury) | II | *"New in Tilbury? You have the look of someone who hasn't decided if they trust the harbor yet."* | `scholar_ink` (120g) — dismissed scholar's voidPressure notes; hints at §XXIV thresholds |
+| 2 | RD (Roadside) | III | *"We meet again. I saw you in Tilbury. I remember everyone I sell to."* | `false_warrant` (200g) — skip one corridor encounter; disabled at voidPressure ≥ 7 |
+| 3 | IS (Visby) | V | *"You look like you've been going places. I have too, just different ones."* | `encoded_letter` (80g) — partially decrypted Scholar King order mentioning "the Antecedent's route"; unreadable without Last Cipher |
+| 4 | WM (Weimar) | VI | *"The Ivory Circle makes me nervous. I used to work adjacent to them."* | `kings_seal` (350g) — trinket: +1 to one saving throw per short rest |
+| 5 | IN (Birka) | VIII | *"End of the road. Or the beginning of one."* | `last_cipher` — auto-given if fav = 3 (Dear Friend); decodes encoded_letter; reveals suppression order and the First Researcher's true work |
+
+**The Revelation (fav = 3, 5th appearance):** Corelli reveals they were an Ivory Circle courier who accidentally read a sealed suppression order for "the Antecedent." Has been quietly redistributing her lost items ever since. Gives `last_cipher`. The cipher's final line (scratched with a nail, not written): *"She built it to save us. They hid it to save themselves."*
+
+**`RD` Roadside node (new):** Minor junction waypoint between Tilbury and Visby. No battle/loot/sleep. Corelli appears here on 2nd encounter; otherwise empty passage.
+
+**New state flags:** `fav_corelli` (int, 0–3), `corelli_purchase_count`, `corelli_encounter_count`, `corelliRevelationDelivered`.  
+**Lab report needed before implementation:** `lab-report-corelli-merchant.md` (new vendor-NPC archetype, differs from NPC_DIALOGUES shape).
+
+---
+
 ## BIRKA ARC SUMMARY (Layers 41–42)
 
 Six Birka NPCs are fully interactive across all 8 acts. Each has a quest chain, 4 favorability states, and 20 dialogue quotes (5 per state). Favorability persists through New Game+.

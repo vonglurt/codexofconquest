@@ -231,6 +231,7 @@ The commit message should name the lab report and summarize what it covers in on
 | 14 | §XXIII | Inn Dreams | 58 | No — too small; document inline | ⚠️ PLANNED |
 | 15 | §XXIV | The Pressure Cascade: Visible Void Tide Events | 59 | No — extend `lab-report-living-world.md` | ⚠️ PLANNED |
 | 16 | §XXV | The Homecoming: Act VIII One-Time Farewell Beats | 60 | No — document inline in `story.md` | ⚠️ PLANNED |
+| 17 | §XXVI | Corelli the Wandering Merchant: Cross-Act Vendor NPC | 61 | Yes — `lab-report-corelli-merchant.md` (wandering NPC archetype) | ⚠️ PLANNED |
 
 **Rule:** Implement in layer order when possible. Each implementation = code + doc sync + git commit. See plan.md §I Lab Report Policy for commit rules.
 
@@ -2001,6 +2002,7 @@ creative_literacy_token: { name:'Creative Literacy Token', icon:'📄', sell:27 
 | **Inn Dreams (§XXIII)** | INN_DREAMS const / 4 inns × 3 base variants / flag-gated replacements | `plan.md §XXIII` | ✅ PLANNED stubs: `story.md` Inn Dreams section; `mechanics.md` sleep note | ⚠️ PLANNED |
 | **Pressure Cascade (§XXIV)** | voidPressure threshold events (3/6/9) / void-touched monsters / NPC pressure lines / mercy counter | `plan.md §XXIV` | ✅ PLANNED stubs: `story.md` Void Tide Events; `world.md` Void-Touched Monsters note | ⚠️ PLANNED |
 | **Homecoming (§XXV)** | 6 one-time Act VIII farewell beats / Brynn's Loaf / Champion's Tincture / Pachelbel's Sketch / 6 new flags | `plan.md §XXV` | ✅ PLANNED stub: `story.md` Act VIII Farewell Beats | ⚠️ PLANNED |
+| **Wandering Merchant (§XXVI)** | Corelli — 5 appearances Acts II–VIII / purchase-gated fav / 5 unique items / Scholar King courier reveal / `last_cipher` cross-ref §XVI–§XVII | `plan.md §XXVI` | ✅ PLANNED stubs: `story.md` Corelli encounters; `world.md` Wandering Merchant | ⚠️ PLANNED |
 
 ---
 
@@ -5228,3 +5230,216 @@ None of these beats explain the game to the player. They assume the player alrea
 ---
 
 *§XXV status: ⚠️ PLANNED — Act VIII farewell beats designed for all 6 NPCs; full dialogue text written; 3 new items specified (Brynn's Loaf / Pachelbel's Sketch / Champion's Tincture); 6 new state flags; 8 insertion steps; no new monsters or nodes; no lab report — document inline in `story.md`.*
+
+---
+
+## Section XXVI — Corelli the Wandering Merchant: Cross-Act Vendor NPC (Layer 61, ⚠️ PLANNED)
+
+> **Design problem:** All vendor-capable NPCs in the game are fixed to a single node. The world has four towns and multiple vendor-adjacent locations, but no character who *travels through* the world in the same direction the player does. A wandering merchant creates the sensation that the world is inhabited by people who have their own routes — that the player isn't the only one crossing it.
+
+---
+
+### XXVI-A. The Merchant — "Corelli"
+
+**Name:** Corelli. No given name offered until Dear Friend. Players will call them "the merchant" for most of the run — which is intentional.
+
+**Physical:** Indeterminate age. Heavy oilskin coat. A cart that's always slightly different from the last time you saw it — not larger, just rearranged. Never explains where the new items come from.
+
+**Archetype:** The wandering merchant who has seen more than they're selling. They move through the same world the player does but on a different axis — their priorities are commerce and safety, not the Codex. They've been through the Northern Reach before the player was born.
+
+**True backstory (revealed at Dear Friend):** Former courier for the Ivory Circle's distribution branch — not a Scholar King themselves, but someone who carried their sealed documents for six years without asking what was in them. Went rogue when they accidentally read one. Has been selling the Scholar Kings' lost items ever since — not to expose them, but because *someone should have these things*.
+
+---
+
+### XXVI-B. Appearances — Five Nodes Across Five Acts
+
+Corelli is not an NPC in `NPC_DIALOGUES` (which covers fixed Birka NPCs). They are a new NPC type: a **vendor-modal NPC** who appears at specific nodes during specific acts, rendered through the existing vendor modal system with an extended dialogue header.
+
+| Appearance | Node | Act | Dialogue opener |
+|-----------|------|-----|----------------|
+| 1st | TL (Tilbury) | II | *"New in Tilbury? Thought so. You have the look of someone who just arrived and hasn't decided if they trust the harbor yet."* |
+| 2nd | RD (Roadside camp node between Tilbury and Visby) | III | *"We meet again. I saw you in Tilbury — don't be alarmed, I remember everyone I sell to."* |
+| 3rd | IS (Visby Smuggler's Safe House) | V | *"Visby. Well. You've been going places. I've been going places too, just different ones. Still — here we are."* |
+| 4th | WM (Weimar Scholar's Quarter) | VI | *"The Ivory Circle makes me nervous. I used to work adjacent to them. I try not to stay in Weimar long. But you — you look like you've been asking questions here. Good. Keep asking."* |
+| 5th | IN (Birka First Inn) | VIII | *"End of the road. Or the beginning of one, depending. You look like you've come the whole way. I have too. I always end up back here."* |
+
+**Detection:** Corelli appears when `actNumber` matches the appearance's act AND `corelli_encounter_count < appearance_index`. The check runs in `storyRender()` for these specific node codes, adding a special "Traveling Merchant" button to the node UI (styled like an NPC card, not a vendor button).
+
+---
+
+### XXVI-C. Favorability — Purchase-Gated, Not Conversation-Gated
+
+Unlike the six Birka NPCs (conversation and quest-gated fav), Corelli's favorability is entirely purchase-driven:
+
+```
+fav_corelli  = floor(corelli_purchase_count / 1)  (capped at 3)
+```
+
+Every purchase from Corelli increases `corelli_purchase_count` by 1 and re-evaluates `fav_corelli`. No greeting changes. No quest needed. The relationship is built through commerce — which is all they'll say about themselves until trust is established.
+
+| fav_corelli | Title | Dialogue behavior |
+|------------|-------|------------------|
+| 0 | Stranger | Standard vendor opener; remembers nothing between visits |
+| 1 | Regular | Comments on the player's last purchase; one observation about what they've seen on the road |
+| 2 | Trusted Client | Shares one piece of road intelligence per visit (useful lore or navigation note); at WM appearance: *"I haven't worked for them in six years. But I kept the seal. It still opens most of their archives."* |
+| 3 | Dear Friend | On 5th appearance (IN, Act VIII): fires the Revelation modal before vendor screen |
+
+---
+
+### XXVI-D. The Revelation Modal (fav = 3, 5th appearance)
+
+When the player reaches Corelli's 5th appearance in Birka with `fav_corelli >= 3` and `!corelliRevelationDelivered`:
+
+> *"Six years I carried sealed documents for the Ivory Circle. Documents between the Scholar Kings and their contractors — institutions, archivists, field correspondents. I never opened them.*
+>
+> *Then one seal broke in the rain. Just the outer wrapper. I had three days before the next courier exchange, so I read what was inside.*
+>
+> *It was an order. A suppression order. For a researcher named — they called her 'the Antecedent.' They were very careful not to use her name.*
+>
+> *The order said: remove her findings from the distribution network. All copies. All correspondence. All record of the correspondence. Do not destroy — destroy leaves a record of destruction. Reclassify. The word they used was 'reclassify.'*
+>
+> *I've been selling her things ever since. Not all of them. I'm not foolish. But the ones that would find the right hands eventually. I think you might be the right hands.*
+>
+> *Take this. Don't ask where I found it."*
+
+**Auto-gives to inventory:** `last_cipher`
+
+```
+key:   last_cipher
+name:  The Last Cipher
+icon:  🔐
+type:  readable
+text:  "A Scholar King administrative cipher key — the kind used to decode sealed
+        distribution correspondence. At the bottom, in a different hand:
+        'Antecedent Containment Protocol, cycle 3. All materials reclassified.
+        Distribution route: suppressed.
+        Reason on file: CLASSIFICATION LEVEL 7.'
+        Beneath that, scratched with a nail rather than written with a pen:
+        'She built it to save us. They hid it to save themselves.'"
+sell:  0
+```
+
+If the player has `encoded_letter` in inventory (from Corelli's 3rd appearance), reading `last_cipher` unlocks an additional inventory note appended to the `encoded_letter` item text: *"[Decoded with the Last Cipher: 'Route suppressed by order of the Circle. Contents: Antecedent Completion Protocol, draft 3. Status: reclassified, not destroyed.']"*
+
+Cross-reference: §XVI (First Researcher = "the Antecedent"), §XVII (Antecedent Containment Protocol), §XXII (shard 5 placed by First Researcher).
+
+Flag: `corelliRevelationDelivered = true`
+
+---
+
+### XXVI-E. Unique Items Per Appearance
+
+Each appearance offers 1–2 standard items (potions, condition items at market rate) plus one unique item not available anywhere else. Standard items follow existing vendor pricing; unique items have fixed prices.
+
+| Appearance | Unique Item | Price | Description |
+|-----------|-------------|-------|-------------|
+| 1st (TL) | `scholar_ink` | 120g | Readable: a dismissed scholar's notes on voidPressure accumulation rates; cross-ref §XXIV — hints at the 3/6/9 threshold events |
+| 2nd (RD) | `false_warrant` | 200g | Consumable: skip one forced corridor encounter (the player "shows papers" — not available at ≥ voidPressure 7; the Void makes forgeries meaningless) |
+| 3rd (IS) | `encoded_letter` | 80g | Readable: partially decrypted Scholar King correspondence mentioning "the Antecedent's route" — unreadable without the Last Cipher |
+| 4th (WM) | `kings_seal` | 350g | Trinket: +1 bonus to one saving throw per short rest; *"I haven't used it since I left their service. Might as well be good for something."* |
+| 5th (IN) | `last_cipher` | Auto-given at Dear Friend (no purchase needed) | See §XXVI-D |
+
+---
+
+### XXVI-F. Roadside Node (RD) — New Junction Point
+
+The 2nd appearance (Act III) requires a node between Tilbury and Visby that isn't currently in the node map. Rather than adding a new full story node, a **junction waypoint** `RD` (Roadside) is added — a minor corridor node with:
+- No battle or loot
+- No sleep
+- Only: NPC encounter (Corelli on 2nd appearance) + brief node text
+- Connected to the Act III corridor path
+
+Node text: *"A cleared verge where travelers sometimes stop. A fire ring, cold. Someone's broken cart wheel leaning against the tree line."*
+
+If the player arrives and Corelli's 2nd appearance conditions aren't met, the node is empty — just passage. This follows the §XVIII junction vignette model.
+
+`RD` node spec:
+```
+code:    RD
+text:    "A cleared verge where travelers sometimes stop. A fire ring, cold..."
+npc:     null (Corelli is rendered separately by act check)
+loot:    null
+battle:  null
+sleep:   null
+connections: { N: [Act III path north], S: [Act III path south] }
+terrain: road
+act:     3
+```
+
+---
+
+### XXVI-G. New State Flags and Constants
+
+| Field | Type | Default | Purpose |
+|-------|------|---------|---------|
+| `fav_corelli` | int | 0 | Favorability tier (0–3); increments per purchase |
+| `corelli_purchase_count` | int | 0 | Total purchases from Corelli across all appearances |
+| `corelli_encounter_count` | int | 0 | How many of the 5 appearances have fired |
+| `corelliRevelationDelivered` | boolean | false | Revelation modal has fired on 5th appearance |
+
+New const: `CORELLI_APPEARANCES` — array of 5 objects `{node, act, opener, uniqueItemKey}`, checked against `actNumber` and `corelli_encounter_count` on each `storyRender()` call.
+
+---
+
+### XXVI-H. Insertion Spec for `roll2hit-v3.html`
+
+**XXVI-H-1.** Add `scholar_ink`, `false_warrant`, `encoded_letter`, `kings_seal`, `last_cipher` item definitions to a new `CORELLI_ITEMS` object.
+
+**XXVI-H-2.** Add 4 flags to `_S_DEFAULTS()`: `fav_corelli`, `corelli_purchase_count`, `corelli_encounter_count`, `corelliRevelationDelivered`.
+
+**XXVI-H-3.** Add `RD` node to `NODE_MAP` and `NODE_COORDS`; connect to Act III corridor path. Follow §XVIII junction vignette style.
+
+**XXVI-H-4.** Add `CORELLI_APPEARANCES` const (5-element array). Each entry: `{nodeCode, actMin, actMax, opener, uniqueItemKey}`.
+
+**XXVI-H-5.** New function `_checkCorelliAppearance(nodeCode)`: called from `storyRender()`. Returns the matching appearance object if `actNumber` is in range and `corelli_encounter_count < appearance_index`; otherwise null.
+
+**XXVI-H-6.** New function `_renderCorelliVendor(appearance)`: renders a modified vendor modal with Corelli's dialogue header (shows fav-appropriate opener, road intelligence if fav ≥ 2), then the unique item for this appearance, then 2 standard items. On purchase: `corelli_purchase_count++`, `fav_corelli = min(3, floor(corelli_purchase_count))`, auto-save.
+
+**XXVI-H-7.** After `_renderCorelliVendor()` call: increment `corelli_encounter_count`. On 5th encounter with `fav_corelli >= 3`: fire `_renderCorelliRevelation()` before vendor modal, set `corelliRevelationDelivered = true`, push `last_cipher` to inventory.
+
+**XXVI-H-8.** `false_warrant` handling: in corridor encounter check function, if `false_warrant` is in inventory and player activates it, skip the encounter, consume item, add storyMsg: *"The patrol glances at your papers and waves you through."* Disabled if `voidPressure >= 7`.
+
+**XXVI-H-9.** `encoded_letter` + `last_cipher` interaction: in the readable item display function (`_showReadable()`), after rendering `encoded_letter`, check if `last_cipher` has been read (`kings_seal` or check inventory). If `corelliRevelationDelivered`, append decoded footnote to `encoded_letter` display text.
+
+**XXVI-H-10.** `kings_seal` trinket: add to equipped items slot or passive-item slot (implementation follows existing trinket system if present; if not, define `passiveItemSlot` as new equippable slot with one active item at a time). Effect: `+1` to one saving throw per short rest — simplest implementation: on short rest, if `kings_seal` in inventory, add +1 to lowest current ability modifier for that rest's effect.
+
+---
+
+### XXVI-I. Lab Report Trigger
+
+This section introduces a new **NPC archetype** — the wandering vendor — that doesn't exist in the current codebase. The existing `NPC_DIALOGUES` system covers fixed-node NPCs with 4 states × 5 quotes. Corelli is a different shape: vendor-modal NPC, purchase-gated fav, per-appearance unique items, act-range detection. This architectural difference is significant enough to warrant `lab-report-corelli-merchant.md`:
+
+- Documents the new NPC archetype vs. existing `NPC_DIALOGUES` shape
+- Explains the purchase-gated fav system vs. conversation/quest-gated
+- Describes `CORELLI_APPEARANCES` const structure and `_checkCorelliAppearance()` logic
+- Notes the `RD` roadside node addition and its relation to §XVIII junction model
+- Catalogs all 5 unique items and their cross-references
+
+Write this lab report **before implementing** (design-spec report, not postmortem).
+
+---
+
+### XXVI-J. Documentation Updates Required on Implementation
+
+| File | Update |
+|------|--------|
+| `story.md` | Add Corelli section to NPC roster; 5 encounter stubs with node/act/unique item; Revelation modal text |
+| `world.md` | Add "Wandering Merchant" NPC profile: backstory, fav system, road intelligence lines |
+| `maps.md` | Add `RD` (Roadside) node to grid, node network, coordinate index |
+| `monsters.md` | No new monsters |
+| `mechanics.md` | Add `false_warrant` consumable; `kings_seal` trinket; `encoded_letter` + `last_cipher` readable interaction |
+| `plan.md` | Mark §XXVI complete; update §V-A queue |
+
+---
+
+### XXVI-K. Thematic Coherence Note
+
+Corelli is the first NPC in the game whose loyalty is not to a faction, a cause, a debt, or a friendship — only to the act of making sure certain things find the right hands. They don't fight. They don't quest. They sell. But what they sell, and when, and who they eventually tell — that's the whole arc.
+
+The Scholar Kings suppressed "the Antecedent." Corelli has been quietly, commercially dismantling that suppression for six years. By the time the player reads the Last Cipher in Birka's First Inn, on the night before the Convergence, everything the Scholar Kings tried to hide about the First Researcher is now in the player's hands — not through heroics, but through six years of a merchant keeping the right things in circulation.
+
+The Last Cipher's final line — *"She built it to save us. They hid it to save themselves."* — is scratched with a nail, not written with a pen. Corelli didn't write it. They found it that way.
+
+---
+
+*§XXVI status: ⚠️ PLANNED — Corelli the wandering merchant designed; 5 appearances across Acts II–VIII specified; purchase-gated fav system (0–3, one increment per purchase); 5 unique items (scholar_ink / false_warrant / encoded_letter / kings_seal / last_cipher); Revelation modal written in full; encoded_letter + last_cipher cross-reference interaction documented; RD roadside node specified; 4 new state flags; 10 insertion steps; lab report needed before implementation — `lab-report-corelli-merchant.md` documents new NPC archetype vs. NPC_DIALOGUES shape.*

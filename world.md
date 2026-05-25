@@ -1078,6 +1078,28 @@ Stored in `NPC_VOID_PRESSURE_LINES`. Fires when `fav[npc] ≥ 2` and `voidPressu
 
 ---
 
+## ⚠️ PLANNED — Corelli the Wandering Merchant (plan.md §XXVI, Layer 61)
+
+A new NPC archetype — vendor-modal, not fixed to a single node. Corelli appears at 5 nodes across 5 acts (TL/RD/IS/WM/IN), moving through the same world as the player on their own route. Favorability is purchase-gated: one increment per purchase, cap 3. No quest needed. The relationship is built through commerce.
+
+**Backstory (revealed at fav = 3):** Former Ivory Circle courier. Carried sealed documents for six years without opening them. One seal broke in the rain. Read the order inside: a suppression directive for a researcher the Circle called "the Antecedent." Has been redistributing her lost materials commercially ever since — not to expose anyone, but because the right things should find the right hands.
+
+**Fav levels:**
+- 0 — Stranger: standard vendor header, no memory between visits
+- 1 — Regular: remembers last purchase; one observation about the road
+- 2 — Trusted Client: shares road intelligence; at WM: *"I kept their seal. It still opens most of their archives."*
+- 3 — Dear Friend: Revelation modal + `last_cipher` auto-gift at 5th appearance (IN, Act VIII)
+
+**Unique items across appearances:** `scholar_ink` (voidPressure lore notes), `false_warrant` (skip corridor encounter), `encoded_letter` (partial suppression order), `kings_seal` (+1 saving throw trinket), `last_cipher` (decodes encoded_letter; reveals First Researcher suppression). `encoded_letter` + `last_cipher` interaction: reading both unlocks a decoded footnote appended to the encoded_letter text.
+
+**Cross-references:** §XVI (First Researcher = "the Antecedent"), §XVII (Antecedent Containment Protocol), §XXII (shard 5 placed by First Researcher), §XXIV (scholar_ink hints at pressure thresholds).
+
+**New RD node:** Minor roadside junction between Tilbury and Visby; Corelli's 2nd appearance. No battle/loot/sleep.
+
+**Lab report required before implementation:** `lab-report-corelli-merchant.md`.
+
+---
+
 ## ⚠️ PLANNED — The Homecoming: Act VIII NPC Farewell Beats (plan.md §XXV, Layer 60)
 
 Six one-time beats fire in Act VIII (actNumber === 8) when a player with Friendly or Dear Friend favorability visits each NPC's node. Each fires from a parchment modal before the normal dialogue, then sets its flag and returns the NPC to standard rotation. Not preserved on NG+.

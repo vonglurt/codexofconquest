@@ -55,6 +55,7 @@ R16: WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW 
 |------|--------|---------|-----|-----------|-------------------|
 | SL | 51 | city_slums | I | R04,C16 | Birka Slums — vermin hunting ground (The Vermin Pit), N of CI; connects N→DF |
 | CQ | 77 | cat_quarter | ⚠️ PLANNED | R04,C17 | The Cat Quarter — Ally Cat hierarchy, Jimmy Two-Tails quest-giver, 6-quest arc (Layer 46); E of SL |
+| RD | 78 | road | ⚠️ PLANNED | R09,C14 | Roadside waypoint — cleared verge between Tilbury and Visby; Corelli 2nd appearance (Act III); no battle/loot/sleep (Layer 61) |
 | DF | 72 | defi_land | I | R03,C16 | The Unbanked Quarter — unregistered district, NGMI Swarm ×3 + Rug Spider, NPC Grimshaw |
 | HM | 73 | defi_land | I | R03,C17 | Frequency Row — improvised antenna arrays, Bertha No-Bank (dead-end E of DF) |
 | GL | 74 | defi_land | I | R03,C15 | Old Guard's Corner — Zeke 'The Signal', laminated GET OFF sign (dead-end W of DF) |
@@ -266,6 +267,7 @@ EPIC BATTLEGROUNDS (Layer 39 — Dead-ends, no exits)
 | SL | 51 | R04 | C16 | CI(S), DF(N), CQ(E) ⚠️ PLANNED |
 | CI | 01 | R05 | C16 | SL(N), IN(E), CR(S), J1(W) |
 | CQ | 77 | R04 | C17 | SL(W) only ⚠️ PLANNED — Layer 46 |
+| RD | 78 | R09 | C14 | Act III road corridor (N/S) ⚠️ PLANNED — Layer 61 |
 | CO | 42 | R01 | C18 | CI(S) |
 | CR | 05 | R07 | C15 | CI(N), CY(S) |
 | CY | 06 | R07 | C16 | CR(N), DK(S) |
