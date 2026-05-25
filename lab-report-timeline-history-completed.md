@@ -63,7 +63,7 @@
 | 38 | World Map Technique Unification | L38-A | `_renderWorldMiniMap()` rewritten to match local map: background-color nodes, corridor glyphs, trail/visited/current states, `wmc-icon`; removed `cx-*` border connectors; CSS: `184×112px`, `1fr` columns | ✅ |
 | 39 | Epic Battlegrounds | L39-A–L39-S | `EPIC_BOSS_POOL` (20 bosses), `EB_NPC_DIALOGUE` (20 NPCs), `EB_STORY_ITEMS` (11 items), 20 EB nodes/coords/WORLD_DB/quests (40 entries), payment negotiation modal, `DANGER: EPIC` overlay, auto-waypoint on EB defeat, minimap crimson display | ✅ |
 | 40 | Codex of Conquest Narrative Arc | L40-A–L40-N | `FROBERGER_JOURNAL` (17 entries), `SWEELINCK_DIALOGUE_VARIANTS` (4 brackets), `_curseScore()`, `#story-journal-overlay`, two ending variants (Covenant/Cursed), `ebReturnsCompleted` tracking, victory screen "People Returned To" counter | ✅ |
-| 41 | Birka Roots + NPC Favorability | L41-A–L41-S | `VELDRIS_NPC_PROFILES`, `npcFavorability`, `_npcFavor/setNpcFavor/lubeckFriends`, `_renderNpcCard`, 6 QUEST_DB entries, Rough Whiskey vendor, drunk pit fight, Yael escort, Sweelinck Birka variant | ✅ |
+| 41 | Birka Roots + NPC Favorability | L41-A–L41-S | `BIRKA_NPC_PROFILES`, `npcFavorability`, `_npcFavor/setNpcFavor/lubeckFriends`, `_renderNpcCard`, 6 QUEST_DB entries, Rough Whiskey vendor, drunk pit fight, Yael escort, Sweelinck Birka variant | ✅ |
 | 42 | NPC World-Truth Dialogue System | L42-A–L42-S | `NPC_DIALOGUES` (6 NPCs × 4 states × 5 quotes), `_getNPCDialogue()`, `_hasActiveQuestFor()`, `_missionComplete()`, `_checkDearFriendUpgrade()`, Covenant Keeper ending (names each person), Groundhog Day Cursed ending, `disposition` field in QUEST_DB, `couperiSongReceived` + `bruhnsDepthsReported` triggers | ✅ |
 | 43 | Endings, Echoes & Item Mechanics | L43-A–L43-W | `SWEELINCK_NAMING_LINES`, `NPC_EPILOGUES`, `FROBERGER_EPILOGUE`, `ROUGH_WHISKEY_REACTIONS`, `COVENANT_STANDING_LABELS`, `PIT_PERK_UNLOCKS`, `NPC_NG_PLUS_GREETINGS`, `_covenantStanding()`, `_buildSweelinckNamingSequence()`, `_buildEpilogueScroll()`, `ngPlusRun` state, Covenant Ceremony SVG, epilogue scroll, Cursed Seal Echo, Froberger's Last Note | ✅ |
 | 44 | The Living World | L44-A–L44-T | `PETRA_STALL_STATES`, `WORLD_PROGRESSION_EVENTS`, `NODE_NPC_KEYS`, `NPC_FAREWELLS`, `NPC_ACT_THREE_LINES`, `BRYNN_MAINTENANCE_TASKS`, `QUIET_RETURN_RECEIPTS`, `DEACON_CODE_TEXT`, `_getNodeMapColor()`, `_getFarewell()`, `_checkWorldProgressionEvents()`, `_renderFinalMap()`, minimap warmth tinting, farewell lines, Act III weight | ✅ |
@@ -94,7 +94,7 @@
 | `EB_STORY_ITEMS` | 11 special non-gold EB rewards: Forge Rune, Runic Hammer, Star Fragment, Swamp Blessing, River Pass, Ship Warrant, Escort Contract, Sand Cipher, Pirate Cache, Crimson Warrant, Kazrath Journal |
 | `FROBERGER_JOURNAL` | 17 entries `{entryNum, nodeCode, readAloud, text}`; 5 read-aloud + 12 collectible |
 | `SWEELINCK_DIALOGUE_VARIANTS` | 5 variants keyed by curse score bracket + Birka variant if `_lubeckFriends()≥3` |
-| `VELDRIS_NPC_PROFILES` | 6 Birka NPC profiles (Yael/Brynn/Quill/Pachelbel/Weckmann/Auros); key/name/occupation/node |
+| `BIRKA_NPC_PROFILES` | 6 Birka NPC profiles (Yael/Brynn/Quill/Pachelbel/Weckmann/Auros); key/name/occupation/node |
 | `NPC_DIALOGUES` | 6 NPCs × 4 states × 5 quotes each; cycled by visit count; priority chain in `_getNPCDialogue()` |
 | `POTION_TIERS` | 4 potion tiers: minor/healing/greater/superior; `{name, icon, heal, cost, sell}` |
 | `LOOT_TABLE` | 20-entry d20 drop table: 8 Minor / 2 Spell Scroll / 5 Healing / 3 Greater / 2 Superior |
@@ -184,7 +184,7 @@
 - Layer 18: `lab-report-leveling-flashbang-condition-economy.md`
 - Layer 39: `lab-report-epic-battlegrounds.md`
 - Layer 40: `lab-report-game-story-codex-of-conquest.md`
-- Layer 41: `lab-report-veldris-beginner-arc.md`
+- Layer 41: `lab-report-birka-beginner-arc.md`
 - Layer 42: `lab-report-npc-dialogue-system.md`
 - Layer 43: `lab-report-endings-and-echoes.md`
 - Layer 44: `lab-report-living-world.md`

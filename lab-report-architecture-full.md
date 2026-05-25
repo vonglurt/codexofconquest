@@ -160,7 +160,7 @@ Each quest entry:
 - **`FROBERGER_JOURNAL`** — 41 entries: 10 that are read-aloud (rendered as ambient text when entering a node) and 31 that are collectible and added to the journal overlay when found.
 - **`EPIC_BOSS_POOL`** — 20 named boss monsters with custom stat blocks; keyed by `bossKey` from `NODE_MAP`.
 - **`EB_NPC_DIALOGUE`** — 20 quest givers, each tied to one Epic Boss, with pre-battle, mid-quest, and return dialogue.
-- **`VELDRIS_NPC_PROFILES`** — 6 named NPCs specific to the Birka hub, with backstory and flavor used by `_renderNpcCard()`.
+- **`BIRKA_NPC_PROFILES`** — 6 named NPCs specific to the Birka hub, with backstory and flavor used by `_renderNpcCard()`.
 - **`SWEELINCK_DIALOGUE_VARIANTS`** — 5 ending-variant dialogue objects, keyed by curse score bracket. The final NPC's speech to the player changes depending on how ethically the player engaged with the Epic Boss quest system.
 - **Item tables** — `POTION_TIERS`, `SHIELD_ITEMS`, `DAGGER_ITEMS`, `WEAPON_ITEMS` drive vendor inventory and loot rolls. `FIGHTER_FEATURES` maps level to unlocked abilities. `XP_LEVELS` maps level to XP threshold. `CONDITION_ITEMS` and `CONDITION_GOLD` support pre-battle condition selection. `LOOT_TABLE` and `_D100_TABLE` power the post-combat reward roll.
 

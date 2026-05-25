@@ -24,7 +24,7 @@ That is what the arc is for. Not experience points. Not gold. Five names.
 
 ---
 
-## THE FIVE VELDRIS NPCs
+## THE SIX BIRKA NPCs
 
 ### Guard Captain Yael Scheidemann (CI — R05,C16)
 
@@ -306,10 +306,10 @@ Functions:
 
 ## IMPLEMENTATION NOTES FOR PLAN.MD
 
-**New const: `VELDRIS_NPC_PROFILES`**
+**New const: `BIRKA_NPC_PROFILES`**
 6 entries (Yael, Brynn, Quill, Pachelbel, Weckmann, Auros-extended). Each: `{key, name, occupation, node, neutral:{greeting, dialogue}, friendly:{greeting, dialogue, special?}, dearFriend:{greeting, dialogue}}`
 
-**New const: `VELDRIS_QUESTS`**
+**New const: `BIRKA_QUESTS`**
 7 QUEST_DB entries: slums_cleanup, brynn_ledger, couperin_lute, pachelbel_shipment, pit_training, drunk_fight (auto-trigger, no activation), void_below.
 
 **New state: `S_story.npcFavorability: {}`**

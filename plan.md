@@ -102,7 +102,7 @@ The commit message should name the lab report and summarize what it covers in on
 | `EB_STORY_ITEMS` | 11 special non-gold EB rewards: Forge Rune, Runic Hammer, Star Fragment, Swamp Blessing, River Pass, Ship Warrant, Escort Contract, Sand Cipher, Pirate Cache, Crimson Warrant, Kazrath Journal |
 | `FROBERGER_JOURNAL` | 41 entries `{entryNum, nodeCode, readAloud, text}`; 10 read-aloud + 31 collectible |
 | `SWEELINCK_DIALOGUE_VARIANTS` | 5 variants keyed by curse score bracket + Birka variant if `_lubeckFriends()≥3` |
-| `VELDRIS_NPC_PROFILES` | 6 Birka NPC profiles (Yael/Brynn/Quill/Pachelbel/Weckmann/Auros); key/name/occupation/node |
+| `BIRKA_NPC_PROFILES` | 6 Birka NPC profiles (Yael/Brynn/Quill/Pachelbel/Weckmann/Auros); key/name/occupation/node |
 | `NPC_DIALOGUES` | 6 NPCs × 4 states × 5 quotes each; cycled by visit count; priority chain in `_getNPCDialogue()` |
 | `POTION_TIERS` | 4 potion tiers: minor/healing/greater/superior; `{name, icon, heal, cost, sell}` |
 | `LOOT_TABLE` | 20-entry d20 drop table: 8 Minor / 2 Spell Scroll / 5 Healing / 3 Greater / 2 Superior |
@@ -246,7 +246,7 @@ The commit message should name the lab report and summarize what it covers in on
 - Layer 18: `lab-report-leveling-flashbang-condition-economy.md`
 - Layer 39: `lab-report-epic-battlegrounds.md`
 - Layer 40: `lab-report-game-story-codex-of-conquest.md`
-- Layer 41: `lab-report-veldris-beginner-arc.md`
+- Layer 41: `lab-report-birka-beginner-arc.md`
 - Layer 42: `lab-report-npc-dialogue-system.md`
 - Layer 43: `lab-report-endings-and-echoes.md`
 - Layer 44: `lab-report-living-world.md`
@@ -354,12 +354,12 @@ The commit message should name the lab report and summarize what it covers in on
 
 ### Category 2 — Story NPCs (Epic + Birka Six)
 
-**HTML source:** `VELDRIS_NPC_PROFILES` (6 Birka), `NPC_DIALOGUES` (6×4×5), `SWEELINCK_DIALOGUE_VARIANTS` (5), NODE_MAP npc fields (7 Epic NPCs)
+**HTML source:** `BIRKA_NPC_PROFILES` (6 Birka), `NPC_DIALOGUES` (6×4×5), `SWEELINCK_DIALOGUE_VARIANTS` (5), NODE_MAP npc fields (7 Epic NPCs)
 
 | What | File | Current State | Sync Needed |
 |------|------|--------------|-------------|
 | 7 Epic NPC profiles | `story.md` | ✅ Full profiles for all 7 | Verify dialogue hooks match HTML NPC text fields |
-| Birka Six profiles | `world.md` | ✅ Section added 2026-05-22 | Verify 6 keys + nodes match `VELDRIS_NPC_PROFILES` |
+| Birka Six profiles | `world.md` | ✅ Section added 2026-05-22 | Verify 6 keys + nodes match `BIRKA_NPC_PROFILES` |
 | NPC_DIALOGUES content (6×4×5) | `story.md` | ✅ Full 120-line transcript added (SG02) | — |
 | Sweelinck dialogue variants (4) | `story.md` | ✅ 4 ending variants in §Sweelinck's Last Question (SG19) | — |
 | NPC favorability states | `world.md` | ✅ Documented (0/1/2/3 labels) | — |
@@ -557,7 +557,7 @@ The commit message should name the lab report and summarize what it covers in on
 | `combat.md` | ✅ | `CONDITION_ADV`, `LOOT_TABLE`, `BOSS_COMMANDER_AUROS`, all Battle Mode functions | F6 |
 | `maps.md` | ✅ | `NODE_MAP` (coords/connections), `CORRIDOR_CELLS`, `GATE_LOCKS`, `NODE_COORDS`, `HUNTING_GROUNDS` | F1 |
 | `story.md` | ✅ | `NODE_MAP` (text/npc/loot/battle), `EB_NPC_DIALOGUE`, `FROBERGER_JOURNAL`, `SWEELINCK_DIALOGUE_VARIANTS`, `NPC_DIALOGUES` | F2 |
-| `world.md` | ✅ | `VELDRIS_NPC_PROFILES`, `QUEST_DB`, `NPC_CROSS_REFS`, `FROBERGER_TRACES`, `NPC_FAREWELLS`, `NPC_ACT_THREE_LINES`, `EB_STORY_ITEMS` | F3 |
+| `world.md` | ✅ | `BIRKA_NPC_PROFILES`, `QUEST_DB`, `NPC_CROSS_REFS`, `FROBERGER_TRACES`, `NPC_FAREWELLS`, `NPC_ACT_THREE_LINES`, `EB_STORY_ITEMS` | F3 |
 | `monsters.md` | ✅ | `MONSTER_POOL`, `MONSTER_DROPS`, `EPIC_BOSS_POOL`, `WORLD_DB` | F5 |
 | `ux-first-battles.md` | ✅ | first-battle UX trace, 10 UX fixes, wimper/flee flow | LOW |
 
@@ -581,7 +581,7 @@ The commit message should name the lab report and summarize what it covers in on
 | `lab-report-web-of-connections.md` | ✅ | Layer 45: `FROBERGER_TRACES`, `NPC_CROSS_REFS`, `_checkFrobergerTrace()`, Yael patrol, Weckmann log, Room 6 | MEDIUM |
 | `lab-report-game-story-codex-of-conquest.md` | ✅ | Layer 40: `FROBERGER_JOURNAL` (41 entries), `storyCheckJournal()`, `storyShowFrobergerNote()` | MEDIUM |
 | `lab-report-epic-battlegrounds.md` | ✅ | Layer 39: `EPIC_BOSS_POOL`, `EB_NPC_DIALOGUE` (20 entries), `_storyEbNpcModal()`, `_storyEbReturnBeat()`, `storyEpicPreBattle()` | MEDIUM |
-| `lab-report-veldris-beginner-arc.md` | ✅ | Layer 41: `VELDRIS_NPC_PROFILES`, `npcFavorability`, 7 Birka quests, `storyBuyWhiskey()`, Yael escort | MEDIUM |
+| `lab-report-birka-beginner-arc.md` | ✅ | Layer 41: `BIRKA_NPC_PROFILES`, `npcFavorability`, 7 Birka quests, `storyBuyWhiskey()`, Yael escort | MEDIUM |
 | `lab-report-npc-dialogue-system.md` | ✅ | Layer 42: `NPC_DIALOGUES` (6×4×5), `_getNPCDialogue()`, `_missionComplete()`, 4 ending variants | MEDIUM |
 | `lab-report-friendships-with-magic.md` | ✅ | L41–42 postmortem: BFS row highlight, Hunt Mode toggle, EB negotiation CHA DC17, weapon auto-equip, roll line on pass+fail | LOW |
 | `lab-report-plan-cleanup-v13.md` | ✅ | Layers 9–13 archive — verify step codes vs implemented functions | LOW |
@@ -648,12 +648,12 @@ The commit message should name the lab report and summarize what it covers in on
 
 #### F3 — world.md ↔ HTML
 
-**Read in HTML:** `VELDRIS_NPC_PROFILES`, `QUEST_DB`, `NPC_CROSS_REFS`, `FROBERGER_TRACES`, `NPC_FAREWELLS`, `NPC_ACT_THREE_LINES`, `EB_STORY_ITEMS`, `_DEFEAT_COPY`, `SWEELINCK_DIALOGUE_VARIANTS`
+**Read in HTML:** `BIRKA_NPC_PROFILES`, `QUEST_DB`, `NPC_CROSS_REFS`, `FROBERGER_TRACES`, `NPC_FAREWELLS`, `NPC_ACT_THREE_LINES`, `EB_STORY_ITEMS`, `_DEFEAT_COPY`, `SWEELINCK_DIALOGUE_VARIANTS`
 
 **Compare:**
 1. CI node connections — ✅ Fixed in world.md (SP2): now shows `N→SL · E→IN · S→CR · W→J1`
 2. SL dead-end claim — ✅ Fixed in world.md: SL connects further N→DF (SP2)
-3. All 6 VELDRIS_NPC_PROFILES match world.md Birka Six section (key/name/occupation/node) — ✅ verified SP2
+3. All 6 BIRKA_NPC_PROFILES match world.md Birka Six section (key/name/occupation/node) — ✅ verified SP2
 4. All QUEST_DB entries (7 Birka + EB quests) match world.md quest descriptions — ✅ verified SP2
 5. NPC_CROSS_REFS 17 lines — ✅ documented in lab-report-web-of-connections.md; count corrected from 14→17
 6. FROBERGER_TRACES 6 entries — ✅ documented in lab-report-web-of-connections.md
@@ -747,7 +747,7 @@ The commit message should name the lab report and summarize what it covers in on
 | `lab-report-web-of-connections.md` | Verify `FROBERGER_TRACES` count = 6, `NPC_CROSS_REFS` count = 17, Room 6 triggers | ✅ FROBERGER_TRACES = 6; NPC_CROSS_REFS = 17 (was documented as 14 — corrected); Room 6 documented §VII |
 | `lab-report-game-story-codex-of-conquest.md` | Verify `FROBERGER_JOURNAL` = 41 entries, 10 read-aloud nodes correct | ✅ 41 `entryNum:` entries verified in HTML lines 10328–10370 |
 | `lab-report-epic-battlegrounds.md` | Verify all 20 EB codes (`_EB_CODES`) match, payment floors/ceilings match `EB_NPC_DIALOGUE` | ✅ All 20 codes match HTML `_EB_CODES` (EF→EG); all 20 floor/ceiling values verified against HTML lines 10106–10296 |
-| `lab-report-veldris-beginner-arc.md` | Verify 6 NPCs, 7 quests, Rough Whiskey flag, Yael escort flag | ✅ 6 NPCs in VELDRIS_NPC_PROFILES (yael/brynn/quill/pachelbel/crov/auros); 6 quests in QUEST_DB (not 7 — `quest_drunk_fight` is a flag ref only, not a QUEST_DB entry); `roughWhiskeyUsed` + `yaelEscortUsed` confirmed; world.md quest IDs corrected (5 were wrong) |
+| `lab-report-birka-beginner-arc.md` | Verify 6 NPCs, 7 quests, Rough Whiskey flag, Yael escort flag | ✅ 6 NPCs in BIRKA_NPC_PROFILES (yael/brynn/quill/pachelbel/crov/auros); 6 quests in QUEST_DB (not 7 — `quest_drunk_fight` is a flag ref only, not a QUEST_DB entry); `roughWhiskeyUsed` + `yaelEscortUsed` confirmed; world.md quest IDs corrected (5 were wrong) |
 | `lab-report-npc-dialogue-system.md` | Verify `NPC_DIALOGUES` structure = 6×4×5, `_missionComplete()` = 12 mission bits, ≥8 threshold | ✅ 6×4×5=120 confirmed (6 NPCs, 4 pools: impartial/questActive/friendly/dearFriend, 5 quotes each); `_missionComplete()` HTML uses `≥8` not `.every(Boolean)` — implementation note added to lab report |
 | `lab-report-fish-with-dnd.md` | ✅ **INDEXED** — in index.md §Lab Reports — Implemented; Fishing Rod + Hooked documented in mechanics.md (SG03); fish pool in monsters.md (SG10/SG21) | — |
 | `lab-report-timeline-history-completed.md` | ✅ **INDEXED** — in index.md §Archive; 45 layers confirmed | — |
@@ -895,7 +895,7 @@ The six markdown documents that must be two-way synced against `roll2hit-v3.html
 |---|------|---------------------|---------------------|
 | F1 | `maps.md` | `NODE_MAP` (coords/connections), `CORRIDOR_CELLS`, `GATE_LOCKS`, `NODE_COORDS`, `HUNTING_GROUNDS` | navigation, map render, corridor, BFS |
 | F2 | `story.md` | `NODE_MAP` (text/npc/loot), `EB_NPC_DIALOGUE`, `FROBERGER_JOURNAL`, `SWEELINCK_DIALOGUE_VARIANTS`, `NPC_DIALOGUES` | node render, NPC display, journal, EB modals, endings |
-| F3 | `world.md` | `VELDRIS_NPC_PROFILES`, `QUEST_DB`, `NPC_CROSS_REFS`, `FROBERGER_TRACES`, `NPC_FAREWELLS`, `NPC_ACT_THREE_LINES` | quest logic, favorability, curse score, world events, epilogue |
+| F3 | `world.md` | `BIRKA_NPC_PROFILES`, `QUEST_DB`, `NPC_CROSS_REFS`, `FROBERGER_TRACES`, `NPC_FAREWELLS`, `NPC_ACT_THREE_LINES` | quest logic, favorability, curse score, world events, epilogue |
 | F4 | `mechanics.md` | `CONDITION_ITEMS`, `CONDITION_GOLD`, `SHIELD_ITEMS`, `POTION_TIERS`, `_D100_TABLE`, `XP_LEVELS`, `FIGHTER_FEATURES`, `_ASI_TABLE`, `VENDOR_NODES` | vendor, loot, rest, inventory, level-up, void tide |
 | F5 | `monsters.md` | `MONSTER_POOL`, `MONSTER_DROPS`, `EPIC_BOSS_POOL`, `WORLD_DB`, `EB_STORY_ITEMS` | monster pick, stalk, hunt, fishing, corridor encounter |
 | F6 | `combat.md` | `LOOT_TABLE`, `SHIELD_ITEMS` (battle use), `BOSS_COMMANDER_AUROS`, `CONDITION_ADV`, `_LEVEL_GOLD_GIFT`, `_LEVEL_SHIELD_GIFT` | pre-battle, initiative, attack/damage, flee/wimper, death saves, level-up modal |
@@ -1178,7 +1178,7 @@ The six markdown documents that must be two-way synced against `roll2hit-v3.html
 | SG04 | Captain Draketide appears as Epic NPC #3 in `story.md` AND as EA EB quest-giver (Q59). Her two contexts should cross-reference each other. | `story.md` | MEDIUM | ✅ EB Quest-Giver line added to Epic NPC #3 entry; Q59 already had the reverse note at line 1354 |
 | SG05 | Minimap warmth tint (`_renderWorldMiniMap()`) is not documented in `maps.md`. | `maps.md` | MEDIUM | ✅ |
 | SG06 | `_renderFinalMap()` end-game map behavior not documented anywhere. | `maps.md` | MEDIUM | ✅ |
-| SG07 | Town lore names purged from all docs. Real names (Birka/Tilbury/Visby/Weimar) are now the only names used. `VELDRIS_NPC_PROFILES` const name in HTML is preserved (code, not prose). | `all` | MEDIUM | ✅ |
+| SG07 | Town lore names purged from all docs. Real names (Birka/Tilbury/Visby/Weimar) are now the only names used. `BIRKA_NPC_PROFILES` const name in HTML is preserved (code, not prose). | `all` | MEDIUM | ✅ |
 | SG08 | Save system localStorage key format not documented. What key name does `storyAutoSave()` use? | `mechanics.md` | LOW | ✅ |
 | SG09 | defi_land `WORLD_DB` entry (monsters[], terrain) is completely undocumented. | `monsters.md` | MEDIUM | ✅ |
 | SG10 | Fish encounter table (Yugurt Lake fish pool, Rank 1–20) not in `monsters.md`. Only in `lab-report-fish-with-dnd.md`. | `monsters.md` | MEDIUM | ✅ |
@@ -1746,7 +1746,7 @@ Read roll2hit-v3.html. For each constant below, quote the first 5 lines of its d
   NODE_MAP, CORRIDOR_CELLS, GATE_LOCKS, NODE_COORDS, HUNTING_GROUNDS,
   MONSTER_POOL, MONSTER_DROPS, EPIC_BOSS_POOL, WORLD_DB, EB_NPC_DIALOGUE,
   EB_STORY_ITEMS, FROBERGER_JOURNAL, SWEELINCK_DIALOGUE_VARIANTS,
-  NPC_DIALOGUES, VELDRIS_NPC_PROFILES, NPC_CROSS_REFS, FROBERGER_TRACES,
+  NPC_DIALOGUES, BIRKA_NPC_PROFILES, NPC_CROSS_REFS, FROBERGER_TRACES,
   NPC_FAREWELLS, NPC_ACT_THREE_LINES, QUEST_DB, POTION_TIERS, SHIELD_ITEMS,
   DAGGER_ITEMS, WEAPON_ITEMS, FIGHTER_FEATURES, XP_LEVELS, _D100_TABLE,
   _ASI_TABLE, _LEVEL_GOLD_GIFT, _S_DEFAULTS, BOSS_COMMANDER_AUROS, VENDOR_NODES
@@ -3025,7 +3025,7 @@ LUCK             The lake knows the difference.
 ---
 
 **Implementation notes:**
-- The Outsider Merchant is not in `VELDRIS_NPC_PROFILES` and not in `NPC_DIALOGUES` — he is a one-shot inline NPC, rendered directly in the YC node text via the `Q-BAIT-00` quest state flags
+- The Outsider Merchant is not in `BIRKA_NPC_PROFILES` and not in `NPC_DIALOGUES` — he is a one-shot inline NPC, rendered directly in the YC node text via the `Q-BAIT-00` quest state flags
 - The Fishing Guide is added to `S_story.inventory` as a `type:'readable'` item; `[READ]` button opens a modal with the guide text above
 - The Starter Tackle Pouch is not a separate item — it auto-unpacks: adds directly to `S_story.tacklebox` and auto-equips Fathead Minnow as starting bait
 - Fishing modal DC display: if `_hasItem('Fishing Guide')` → show zone DCs; else show "DC: ???"
@@ -3464,7 +3464,7 @@ Every content addition requires documentation updates in the same increment. The
 | Add monster to `MONSTER_POOL` | `monsters.md` (count, new entry row), `index.md` (line count), `plan.md` (§II count) | `sed -i '' 's/370 monsters/371 monsters/g' monsters.md index.md` |
 | Add terrain to `WORLD_DB` | `monsters.md` (new terrain section), `maps.md` (legend), `world.md` | Manual — terrain sections have prose |
 | Add quest to `QUEST_DB` | `world.md` (quest table), `story.md` (if node-related), `plan.md` (§II QUEST_DB count) | Grep for quest table, sed-insert row |
-| Add NPC to `VELDRIS_NPC_PROFILES` | `world.md` (Birka Six table), `story.md` (node entry) | Manual — NPC sections have prose |
+| Add NPC to `BIRKA_NPC_PROFILES` | `world.md` (Birka Six table), `story.md` (node entry) | Manual — NPC sections have prose |
 | Add mission bit to `_missionComplete()` | `story.md` FL8 Milepoint B, `lab-report-npc-dialogue-system.md` §Mission Bits | grep for bit list, sed-insert |
 | Add EB node | `maps.md` (grid + legend), `story.md` (Q-codes), `monsters.md` (boss section), `plan.md` (EB count) | Multiple files — use the SP2 workflow |
 
@@ -3905,7 +3905,7 @@ Needed for Q-WM-01 (seal drop) and for WM terrain combat.
 2. Add `scholars_guard` to appropriate `WORLD_DB` terrain (verify Weimar terrain key in HTML)
 3. Add `TOME_BONUSES` helper or inline tome bonus application in `storyPreBattle()` / `storyCommitBattle()` — scan inventory for `type:'tome'`, apply `.bonus` fields
 4. Add 3 tome items (void_pressure / scholar_kings / rasp_annotated) to a new `TOME_ITEMS` const or inline in quest reward delivery
-5. Add Isolde Voss and Benedikt Rasp to `VELDRIS_NPC_PROFILES` equivalent (or a new `WM_NPC_PROFILES` if Birka-only restriction applies)
+5. Add Isolde Voss and Benedikt Rasp to `BIRKA_NPC_PROFILES` equivalent (or a new `WM_NPC_PROFILES` if Birka-only restriction applies)
 6. Add Q-WM-01 through Q-WM-04 to `QUEST_DB`
 7. Add 16 new state flags to `_S_DEFAULTS()`
 8. Add archive modal (`_storyWmArchiveModal()`) — 3-document viewer with [READ] buttons
@@ -4302,7 +4302,7 @@ Both items: `sell: 0`, NG+-persistent, readable from inventory.
 
 **Layer tag:** Layer 54 — Tilbury Harbor Arc
 
-1. Add Rennau to `VELDRIS_NPC_PROFILES` equivalent or to a new `TL_NPC_PROFILES` const (if hub NPCs are town-specific)
+1. Add Rennau to `BIRKA_NPC_PROFILES` equivalent or to a new `TL_NPC_PROFILES` const (if hub NPCs are town-specific)
 2. Add Vonn as ambient NPC at TL node — minimal profile; caps at Friendly; no Dear Friend path
 3. Add `ship_manifest` and `ori_account` to a `READABLE_ITEMS` const or inline in quest reward delivery
 4. Add Q-TL-01 through Q-TL-03 to `QUEST_DB`
@@ -7692,7 +7692,7 @@ No lab report. No new nodes, monsters, flags, or items. One new const + four lin
 
 ### XXXVII-A. Concept
 
-Commander Seraphine Bruhns (`BOSS_COMMANDER_AUROS`, Layer 28, AC 22 HP 300) is the final boss. She is the same character the player has been working with as "Auros" at CY throughout the game — the `key:'auros'` NPC in `VELDRIS_NPC_PROFILES`, `fav_bruhns` in `NPC_DIALOGUES`. At CO, after Entry 41 fires read-aloud (setting `frobergerLastEntryRead`), the only current content is a single fixed arrival quote: *"The cordon holds. We have maybe one hour before the Void breaks through completely. Forge the Codex. I will handle whatever comes over the wall."* — then the battle chip.
+Commander Seraphine Bruhns (`BOSS_COMMANDER_AUROS`, Layer 28, AC 22 HP 300) is the final boss. She is the same character the player has been working with as "Auros" at CY throughout the game — the `key:'auros'` NPC in `BIRKA_NPC_PROFILES`, `fav_bruhns` in `NPC_DIALOGUES`. At CO, after Entry 41 fires read-aloud (setting `frobergerLastEntryRead`), the only current content is a single fixed arrival quote: *"The cordon holds. We have maybe one hour before the Void breaks through completely. Forge the Codex. I will handle whatever comes over the wall."* — then the battle chip.
 
 This section designs the fav-gated scene that fires **between Entry 41 delivery and the fight** — giving the player who built a relationship with Bruhns a fuller picture of what she's been doing, and why the fight is still necessary.
 
@@ -7702,7 +7702,7 @@ No new flags. No new nodes. One new const. One render patch at CO.
 
 ### XXXVII-B. Character: Auros = Bruhns
 
-Throughout the game: "Auros" (informal, CY) = Commander Seraphine Bruhns (formal, CO). The fav system uses key `'bruhns'`; `VELDRIS_NPC_PROFILES` uses key `'auros'`. Both refer to the same person.
+Throughout the game: "Auros" (informal, CY) = Commander Seraphine Bruhns (formal, CO). The fav system uses key `'bruhns'`; `BIRKA_NPC_PROFILES` uses key `'auros'`. Both refer to the same person.
 
 Her story, assembled from `NPC_EPILOGUES` and existing dialogue:
 - She has been running depth surveys in the undercity for years (Layer 28+)
@@ -7843,7 +7843,7 @@ One new flag. Must be added to `_S_DEFAULTS()`.
 
 ### XXXVII-H. NPC Key Clarification (Implementation Note)
 
-The fav system uses two keys for Bruhns: `'bruhns'` (NPC_DIALOGUES, NPC_EPILOGUES, `_npcFavor('bruhns')`) and `'auros'` (VELDRIS_NPC_PROFILES, `key:'auros'`). Both refer to Commander Seraphine Bruhns. On implementation: use `_npcFavor('bruhns')` for all fav checks in §XXXVII (consistent with the NPC_DIALOGUES system).
+The fav system uses two keys for Bruhns: `'bruhns'` (NPC_DIALOGUES, NPC_EPILOGUES, `_npcFavor('bruhns')`) and `'auros'` (BIRKA_NPC_PROFILES, `key:'auros'`). Both refer to Commander Seraphine Bruhns. On implementation: use `_npcFavor('bruhns')` for all fav checks in §XXXVII (consistent with the NPC_DIALOGUES system).
 
 **Also note (§XXXIII implementation correction):** The undercity survey delivery is already implemented in HTML as `undercitySurveyDelivered` (line ~12460). The §XXXIII design used flag name `surveyDeliveredToAuros` — on implementation, use `undercitySurveyDelivered` instead (it already exists and tracks the same state).
 

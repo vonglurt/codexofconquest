@@ -52,7 +52,7 @@ Both layers were verified against the live HTML — `EPIC_BOSS_POOL`, `EB_NPC_DI
 
 Layers 41 and 42 were then confirmed as not present and implemented in sequence:
 
-**Layer 41 — Birka Roots & NPC Favorability** added `VELDRIS_NPC_PROFILES` (six full character portraits: Guard Captain Yael, Innkeeper Brynn, Lute-Bard Quill, Merchant Pachelbel, Pit-Fighter Weckmann, Scout Auros), the `npcFavorability` state object, six QUEST_DB entries with personal stakes, the Rough Whiskey vendor item as a social currency, a drunk pit fight, a Yael escort encounter, and the Birka variant of Sweelinck's Act-VI dialogue. The cursor for these NPCs was set to `_npcFavor()`, `_setNpcFavor()`, `_lubeckFriends()`, and `_renderNpcCard()`.
+**Layer 41 — Birka Roots & NPC Favorability** added `BIRKA_NPC_PROFILES` (six full character portraits: Guard Captain Yael, Innkeeper Brynn, Lute-Bard Quill, Merchant Pachelbel, Pit-Fighter Weckmann, Scout Auros), the `npcFavorability` state object, six QUEST_DB entries with personal stakes, the Rough Whiskey vendor item as a social currency, a drunk pit fight, a Yael escort encounter, and the Birka variant of Sweelinck's Act-VI dialogue. The cursor for these NPCs was set to `_npcFavor()`, `_setNpcFavor()`, `_lubeckFriends()`, and `_renderNpcCard()`.
 
 **Layer 42 — NPC World-Truth Dialogue System + Groundhog Day Completion** added `NPC_DIALOGUES` (6 NPCs × 4 relationship states × 5 cycling quotes), `_getNPCDialogue()` with visit-count cycling, `_missionComplete()` (evaluating 12 mission bits — escort used, journal read, song received, debts repaid, pit training wins, depths reported, EB returns, journal half-completed, Void sealed, at least three friends, no high curse, returned to Birka) returning true at ≥8 satisfied, `_checkDearFriendUpgrade()` triggering at the second personal act per NPC, and a fully four-branched `storyCheckVictory()`: Covenant Keeper, Standard Covenant, Groundhog Day Cursed, and Mixed. The Covenant Keeper ending names each person helped by name.
 
@@ -240,7 +240,7 @@ This project has generated a corpus of lab reports that, taken together, form a 
 | `lab-report-loot-drop-weapon-economy.md` | Weapon tier system design; dagger/shield exclusivity; sell vs buy asymmetry |
 | `lab-report-leveling-flashbang-condition-economy.md` | Flashbang mechanics; condition costs; level-up architecture |
 | `lab-report-fish-with-dnd.md` | Yugurt Lake fishing; 20-tier fish as a self-contained difficulty ladder; play as leisure |
-| `lab-report-veldris-beginner-arc.md` | Six NPC profiles; the Birka starter arc; quest design through human stakes |
+| `lab-report-birka-beginner-arc.md` | Six NPC profiles; the Birka starter arc; quest design through human stakes |
 | `lab-report-npc-dialogue-system.md` | 4-state speech; occupation as lens; friendship changes specificity not warmth |
 | `lab-report-endings-and-echoes.md` | The Covenant Ceremony; Sweelinck's dynamic naming; NPC epilogues; Groundhog Day logic |
 | `lab-report-living-world.md` | Off-screen character Gigault; world momentum independent of player; the antidote to the cursor of knowledge |

@@ -943,7 +943,7 @@ On NG+ runs, the EB nodes show one-time atmospheric `EB_NG_PLUS_LINES` on first 
 | `FROBERGER_JOURNAL` | const array | 17 entries; 5 read-aloud at key nodes + 12 collectible |
 | `EPIC_BOSS_POOL` | const object | 20 Deadly bosses keyed by slug; all EB encounters |
 | `EB_NPC_DIALOGUE` | const object | 20 EB quest-giver NPCs; payment + return beat |
-| `VELDRIS_NPC_PROFILES` | const object | 6 Birka NPC definitions; key/name/occupation/node |
+| `BIRKA_NPC_PROFILES` | const object | 6 Birka NPC definitions; key/name/occupation/node |
 | `SWEELINCK_DIALOGUE_VARIANTS` | const array | 5 variants keyed by curse score bracket + Birka variant |
 | `BOSS_COMMANDER_AUROS` | const object | Final boss stat block (AC22/HP300/ATK+12/3d8+6) |
 

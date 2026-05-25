@@ -6964,7 +6964,7 @@ document.addEventListener('DOMContentLoaded', () => {
 ══════════════════════════════════════════════════════════ */
 
 const NODE_MAP = {
-  // ── ACT I — VELDRIS
+  // ── ACT I — BIRKA
   CI:{ num:1,  code:'CI', name:'city',            label:'City Streets — Birka',       act:1, N:'SL', S:'CR', E:'IN',  W:'J1',  text:"You stand at the crossroads of Birka, the greatest city in the known world. The sky carries a faint violet cast where the Void bleeds into the evening dark. Cobblestones slick with last night's rain catch the lantern light in amber pools. A dying courier collapses at your feet, pressing a bloodstained map into your trembling hand — the single word on his lips before he goes still: 'Sweelinck.' You are a Level 1 Fighter. You have a sword, a name no one here knows yet, and a loop that has already started. The city is alive and it is watching. You will fight monsters here — real ones, with claws and void-rot and bad intentions. You will also fight the ones that live behind your own eyes. The friends you make in these streets will matter more than any loot you carry. This is not a story about winning. It is a story about waking up.", npc:'City Guard Captain', battle:null, loot:'Bloodstained Map', sleep:false },
   SL:{ num:51, code:'SL', name:'city_slums',     label:'Birka Slums',                act:1, N:'DF', S:'CI', E:null,  W:null,  text:"The cramped alleys north of Birka market. Refuse heaps attract every pest the city produces. Children dare each other to touch the leech-covered gutter stones.", npc:null, battle:null, loot:null, sleep:false },
   IN:{ num:2,  code:'IN', name:'inn',             label:'The First Inn',                 act:1, N:null, S:'TV', E:null,  W:'CI',  text:"The innkeeper is nervous. Two merchants disappeared from the harbor. She gives you a free breakfast — and slides Froberger's journal across the table.", npc:'Innkeeper Brynn', battle:null, loot:"Merchant Ledger · Froberger's Journal", sleep:true, sleepCost:5 },
@@ -7717,7 +7717,7 @@ const NPC_DIALOGUE = {
 };
 
 /* ── Layer 41: Birka NPC Profiles ── */
-const VELDRIS_NPC_PROFILES = {
+const BIRKA_NPC_PROFILES = {
   yael: {
     key:'yael', name:'Guard Captain Yael Scheidemann', occupation:'city guard captain', node:'CI',
     neutral:  { greeting:'Captain Scheidemann straightens as you approach.',
@@ -7885,7 +7885,7 @@ function _setNpcFavor(key, level) {
   const prev = _npcFavor(key);
   if (level <= prev) return;
   S_story.npcFavorability[key] = level;
-  const p = VELDRIS_NPC_PROFILES[key] || {};
+  const p = BIRKA_NPC_PROFILES[key] || {};
   const n = p.name || key;
   if (level === 1) {
     storyMsg('🤝 ' + n + ' looks at you differently now.');
@@ -7920,7 +7920,7 @@ function _checkDearFriendUpgrade(key) {
   const check = dearFriendBits[key];
   if (check && check()) {
     S_story.npcFavorability[key] = 2;
-    const p2 = VELDRIS_NPC_PROFILES[key] || {};
+    const p2 = BIRKA_NPC_PROFILES[key] || {};
     storyMsg('💛 ' + (p2.name||key) + ' says your name when you walk in.');
   }
 }
@@ -8007,7 +8007,7 @@ function _missionComplete() {
   return Object.values(bits).filter(Boolean).length >= 8;
 }
 function _renderNpcCard(key, container) {
-  const p = VELDRIS_NPC_PROFILES[key];
+  const p = BIRKA_NPC_PROFILES[key];
   if (!p) return;
   const dlg = _getNPCDialogue(key);
   if (!dlg) return;

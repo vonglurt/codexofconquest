@@ -203,9 +203,9 @@ Roll2Hit is a single-file HTML application with no external dependencies. It run
 #### `lab-report-leveling-flashbang-condition-economy.md` — Layer 18: Leveling & Condition Economy
 **Purpose:** Ten-level progression (XP_LEVELS, `_checkLevelUp`, rewards), Flashbang item, CONDITION_GOLD ×100 repricing, 0.5-action bonus phase. Layer 18 implemented and verified (8,236 lines at time of writing).
 
-#### `lab-report-veldris-beginner-arc.md` — Birka Beginner Arc *(Layer 41)*
+#### `lab-report-birka-beginner-arc.md` — Birka Beginner Arc *(Layer 41)*
 **Purpose:** Act I Birka arc with six quests across five NPCs (Yael, Brynn, Quill, Pachelbel, Weckmann) using Tales Arcane template. Emotional attachment to Birka before main quest becomes meaningful.  
-**Status:** ✅ Done — Layer 41 implemented. All L41 steps ✅. VELDRIS_NPC_PROFILES, npcFavorability, 7 Birka quests, Rough Whiskey, Yael escort, drunk pit fight, Sweelinck Birka variant live in code.
+**Status:** ✅ Done — Layer 41 implemented. All L41 steps ✅. BIRKA_NPC_PROFILES, npcFavorability, 7 Birka quests, Rough Whiskey, Yael escort, drunk pit fight, Sweelinck Birka variant live in code.
 
 #### `lab-report-npc-dialogue-system.md` — 4-State Dialogue System *(Layer 42)*
 **Purpose:** Four dialogue states per NPC (Impartial → Quest-Active → Friendly → Dear Friend). Occupation as philosophical lens. Friendship deepens specificity. Groundhog Day epilogue mechanic.  
@@ -313,7 +313,7 @@ Roll2Hit is a single-file HTML application with no external dependencies. It run
 | **Visby** | V | `IS` — Smuggler's Safe House | alley, sewers, goblin_cave, pirate_cave, bar | The Crimson Warrant | Warlord Kael Mordus |
 | **Weimar** | VI | `SQ` — Scholar's Quarter (free) | scholars_qtr, blacksmith_qtr, mountains, outhouse, arctic | The Ivory Circle | Archivus Ptolemy Sweelinck |
 
-> **Note on `VELDRIS_NPC_PROFILES`:** This is the actual JavaScript constant name in `roll2hit-v3.html` (line ~7290). It is a code identifier, not a town name — preserve it as-is in all code references.
+> **Note on `BIRKA_NPC_PROFILES`:** This is the actual JavaScript constant name in `roll2hit-v3.html` (line ~7290). It is a code identifier, not a town name — preserve it as-is in all code references.
 
 ---
 
@@ -384,7 +384,7 @@ It is NOT initiated from Story Mode. It is NOT a navigation action.
 | 31 | `combat.md` | MEDIUM | ✅ Reference document — accurate for Layers 0–37 |
 | 32 | `lab-report-loot-drop-weapon-economy.md` | LOW | ✅ Superseded — loot system (L25) fully implemented. Document is historical proposal. |
 | 33 | `lab-report-npc-dialogue-system.md` | LOW | ✅ Done — Layer 42 implemented; NPC_DIALOGUES + _getNPCDialogue + _missionComplete + 4-state endings live |
-| 34 | `lab-report-veldris-beginner-arc.md` | LOW | ✅ Done — Layer 41 implemented; 6 NPCs + 7 quests + Rough Whiskey + Yael escort live |
+| 34 | `lab-report-birka-beginner-arc.md` | LOW | ✅ Done — Layer 41 implemented; 6 NPCs + 7 quests + Rough Whiskey + Yael escort live |
 | 35 | `lab-report-epic-battlegrounds.md` | LOW | ✅ Done — Layer 39 implemented; 20 EB nodes live in code |
 | 36 | `lab-report-endings-and-echoes.md` | LOW | ✅ Done — Layer 43 implemented; all L43-A through L43-W ✅; NG+, epilogues, parchment note, covenant ceremony live |
 | 37 | `lab-report-game-story-codex-of-conquest.md` | LOW | ✅ Done — Layer 40 implemented; FROBERGER_JOURNAL + curse arc live |

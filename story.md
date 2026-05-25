@@ -2379,7 +2379,7 @@ MILEPOINT F  ebReturnDone[ebCode] = true; quest_[code]_return set to 'complete'
 
 ```
 MILEPOINT A  Player enters node → storyShowNpc(nodeCode) dispatches to _renderNpcCard(key, container)
-             Checks NPC_DIALOGUE[nodeCode] (simple) vs. VELDRIS_NPC_PROFILES[key] (rich card)
+             Checks NPC_DIALOGUE[nodeCode] (simple) vs. BIRKA_NPC_PROFILES[key] (rich card)
 
 MILEPOINT B  _getNPCDialogue(npcKey) — reads NPC_DIALOGUES[key]; increments npcVisitCounts[key]
              Reads npcFavorability[key]; calls _hasActiveQuestFor(npcKey)
@@ -2465,7 +2465,7 @@ MILEPOINT G  storyNewGamePlus() — NG+ reset
 | `storyRender(node, prefix)` | 12127 | Master node render — text, items, NPC card, battle chip, map | `NODE_MAP[code]`, `S_story.hp/gold/day` | triggers all sub-renders |
 | `storyShowNpc(nodeCode)` | 11376 | Dispatches NPC card for current node | `NPC_DIALOGUE[nodeCode]` | DOM npc-card-name/text |
 | `_getNPCDialogue(npcKey)` | 7926 | Priority pool selection + trace/cross-ref injection | `NPC_DIALOGUES[key]`, `npcFavorability`, `npcVisitCounts` | `npcVisitCounts[key]++`, `actThreeLine_[key]`, `crossRefIdx_[key]` |
-| `_renderNpcCard(key, container)` | 8007 | Builds NPC card DOM with dialogue + badge + action buttons | `VELDRIS_NPC_PROFILES[key]`, `_getNPCDialogue()` result | DOM npc card element |
+| `_renderNpcCard(key, container)` | 8007 | Builds NPC card DOM with dialogue + badge + action buttons | `BIRKA_NPC_PROFILES[key]`, `_getNPCDialogue()` result | DOM npc card element |
 | `_hasActiveQuestFor(npcKey)` | 7983 | Returns true if player has active quest tied to NPC | `S_story.quests`, hardcoded npcQuests map | none |
 | `_checkFrobergerTrace(npcKey)` | 10717 | One-time Froberger memory delivery per NPC | `FROBERGER_TRACES[key]`, `npcFavorability`, `npcVisitCounts` | `frobergerTrace_[key]_delivered = true` |
 | `_checkDearFriendUpgrade(key)` | 7908 | Upgrades fav 1→2 when NPC-specific bit is met | `npcFavorability[key]`, NPC-specific S_story bits | `npcFavorability[key] = 2` |
@@ -2598,7 +2598,7 @@ Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterOb
 
 ## ⚠️ PLANNED — The Final Confrontation: Commander Bruhns's CO Scene (plan.md §XXXVII, Layer 72)
 
-**Context:** Commander Seraphine Bruhns (key `'bruhns'` in NPC_DIALOGUES, key `'auros'` in VELDRIS_NPC_PROFILES) is the final boss (`BOSS_COMMANDER_AUROS`, AC 22 HP 300). The player has known her as "Auros" at CY throughout the game. After Entry 41 fires read-aloud at CO and `NODE_ARRIVAL_QUOTES.CO` delivers the existing quote, the §XXXVII scene fires before the fight chip.
+**Context:** Commander Seraphine Bruhns (key `'bruhns'` in NPC_DIALOGUES, key `'auros'` in BIRKA_NPC_PROFILES) is the final boss (`BOSS_COMMANDER_AUROS`, AC 22 HP 300). The player has known her as "Auros" at CY throughout the game. After Entry 41 fires read-aloud at CO and `NODE_ARRIVAL_QUOTES.CO` delivers the existing quote, the §XXXVII scene fires before the fight chip.
 
 **Sequence at CO:** Entry 41 read-aloud → existing arrival quote (*"The cordon holds. We have maybe one hour..."*) → §XXXVII fav-gated scene → battle chip → fight → victory.
 
