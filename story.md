@@ -2534,6 +2534,24 @@ One-time championship bout at CR node, triggered when `pitTrainingWins >= 5`. We
 
 ---
 
+## ⚠️ PLANNED — The Entry 41 Echo: Brynn and Sweelinck (plan.md §XXX, Layer 65)
+
+Two parallel one-time scenes triggered by `frobergerLastEntryRead === true` (set when Entry 41 is read at CO via `storyCheckJournal()`). Each fires independently on the first visit to its node after the flag is set. State flags `s49BrynnDelivered` and `s49SweelinckDelivered` already exist in `_S_DEFAULTS()`.
+
+**Brynn's scene (IN node, `!s49BrynnDelivered`):** Player hands over the journal. Brynn reads Entry 41 twice (you can tell by the time it takes). She quotes one line — *"Come back"* — and says: *"He was right. They do need the person. Glad you're not done yet."* Sets `s49BrynnDelivered = true`. Const: `S49_BRYNN_SCENE`.
+
+**Sweelinck's scene (SQ node, `!s49SweelinckDelivered`):** Player hands over the journal. Sweelinck reads Entry 41 standing. Closes it carefully. Says: *"He knew the shape of the absence... I'll keep it here. You know where to find me when you're done."* Does not give it back. Sets `s49SweelinckDelivered = true`. Const: `S49_SWEELINCK_SCENE`. Echoes NIGHT_AMBIENT SQ line: *"Sweelinck's lamp is on."*
+
+**Covenant Keeper opening patch:** In `_buildSweelinckNamingSequence()`, if `s49SweelinckDelivered`, replace the standard formal opening with: *"You know where to find me. You found me. Good."* — turning the ending ceremony from a first meeting into a reunion.
+
+**NG+ Sweelinck variant:** Sweelinck's closing line becomes *"Still here. Bring it back when you're done again."* (adds "again").
+
+**Coexistence with §XXV:** If `act8FarewellBrynn` fires before the s49 scene (player reads Entry 41 in Act VIII after visiting IN), both scenes still deliver — farewell first, s49 on the same visit or the next. No conflict.
+
+**F2 reference:** Add s49 trigger logic note to IN and SQ render functions; add `_buildSweelinckNamingSequence()` patch note on implementation.
+
+---
+
 ## ⚠️ PLANNED — Town Crier: Inn Rest World-News Lines (plan.md §XXVII, Layer 62)
 
 When the player chooses to rest at an inn (`storyConfirmSleep()`), after the standard rest resolution a Town Crier ambient line fires — a single sentence of world-news flavor injected into the story log. No new node, no new NPC, no persistent flag. The line is ephemeral: displayed once, forgotten immediately.

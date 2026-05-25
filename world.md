@@ -477,7 +477,9 @@ Perks persist through NG+. Character sheet shows "Weckmann's Student" badge when
 
 **S29 — Auros/Froberger theory** (`s29LineDelivered`) — one-time dialogue injection. Fires when the player visits Auros at CY after: (1) Froberger's last journal entry has been read AND (2) Auros is at Dear Friend (fav ≥ 2). Auros connects Froberger's final courier route to the Void advance, explains what the entry means in tactical terms. Fires once; `s29LineDelivered` prevents repeat.
 
-**S49 — Entry 41 delivery** (`s49BrynnDelivered`, `s49SweelinckDelivered`) — two parallel one-time scenes that fire after Froberger's last entry is read. At IN: Brynn reads a line aloud and goes quiet. At SQ: Sweelinck takes the journal, closes it, and doesn't give it back. Each fires independently, once per NPC, on the next visit after `frobergerLastEntryRead = true`.
+**S49 — Entry 41 delivery** (`s49BrynnDelivered`, `s49SweelinckDelivered`) — two parallel one-time scenes that fire after Froberger's last entry is read. At IN: Brynn reads Entry 41 twice (quietly), quotes the last line *"Come back"* and says: *"He was right. They do need the person. Glad you're not done yet."* At SQ: Sweelinck takes the journal, reads Entry 41 standing, closes it carefully, says: *"I'll keep it here. You know where to find me when you're done."* — and keeps it. Each fires independently on the next visit after `frobergerLastEntryRead = true`. Full scene text: `S49_BRYNN_SCENE` / `S49_SWEELINCK_SCENE` consts. Covenant Keeper patch: if `s49SweelinckDelivered`, `_buildSweelinckNamingSequence()` opening changes to *"You know where to find me. You found me. Good."* See `plan.md §XXX` for full design.
+
+⚠️ PLANNED — Layer 65. Consts and trigger logic not yet in HTML; s49 flags already in `_S_DEFAULTS()`.
 
 ### Froberger Traces
 

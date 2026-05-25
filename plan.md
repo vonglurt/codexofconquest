@@ -235,6 +235,7 @@ The commit message should name the lab report and summarize what it covers in on
 | 18 | §XXVII | Town Crier: Inn Rest World-News Ambient Lines | 62 | No — document inline | ⚠️ PLANNED |
 | 19 | §XXVIII | The Froberger Memorial: A Living Stone at CI | 63 | No — document inline in `story.md` + `world.md` | ⚠️ PLANNED |
 | 20 | §XXIX | The Pit Championship: Finals at Crossroads Forge | 64 | No — document inline; patch §XXV farewell beat | ⚠️ PLANNED |
+| 21 | §XXX | The Entry 41 Echo: Brynn and Sweelinck After the Last Journal | 65 | No — state flags pre-exist; document inline; patch _buildSweelinckNamingSequence() | ⚠️ PLANNED |
 
 **Rule:** Implement in layer order when possible. Each implementation = code + doc sync + git commit. See plan.md §I Lab Report Policy for commit rules.
 
@@ -2009,6 +2010,7 @@ creative_literacy_token: { name:'Creative Literacy Token', icon:'📄', sell:27 
 | **Town Crier (§XXVII)** | `TOWN_CRIER_LINES` const / priority-selector / inn rest rumor line / 56 act-cycling lines + critical/tension/quest/NPC tiers | `plan.md §XXVII` | ✅ PLANNED stub: `story.md` Town Crier note; no new state flags | ⚠️ PLANNED |
 | **Froberger Memorial (§XXVIII)** | `FROBERGER_MEMORIAL_TEXT` object / 4-layer plaque text / memorial book entries / [Leave Flowers] 10gp action / `storyShowFrobergerMemorial()` | `plan.md §XXVIII` | ✅ PLANNED stubs: `story.md` Memorial section; `world.md` memorial world note | ⚠️ PLANNED |
 | **Pit Championship (§XXIX)** | `PIT_CHAMPION_OGUNDIMU` const / `_showPitChampionOffer()` / `_startPitChampionBattle()` / win/loss callbacks / Weckmann log entry / dearFriend pool patch / §XXV farewell branch | `plan.md §XXIX` | ⚠️ PLANNED stubs pending: `story.md` championship note; `world.md` Ogundimu entry | ⚠️ PLANNED |
+| **Entry 41 Echo (§XXX)** | `S49_BRYNN_SCENE` / `S49_SWEELINCK_SCENE` consts / s49 flag trigger logic / Covenant Keeper opening patch in `_buildSweelinckNamingSequence()` | `plan.md §XXX` | ⚠️ PLANNED stubs pending: `story.md` scene text; `world.md` S49 update | ⚠️ PLANNED |
 
 ---
 
@@ -6268,3 +6270,204 @@ No lab report. No new MONSTER_POOL entries. Ogundimu lives only in `PIT_CHAMPION
 ---
 
 *§XXIX status: ⚠️ PLANNED — Pit Championship designed; PIT_CHAMPION_OGUNDIMU const specified (AC 16, HP 42, ATK +7, 1d10+4, xp/gold = 0); trigger condition (pitTrainingWins ≥ 5, first CR visit); offer modal text; win/loss flavor text; victory log entry in _buildWeckmannLog(); Weckmann dearFriend pool expansion; §XXV farewell beat conditional branch; 2 new state flags; no new MONSTER_POOL entries; no lab report — document inline.*
+
+---
+
+## Section XXX — The Entry 41 Echo: Brynn and Sweelinck After the Last Journal (Layer 65, ⚠️ PLANNED)
+
+> **Design status:** PLANNED. State flags `s49BrynnDelivered` and `s49SweelinckDelivered` already exist in `_S_DEFAULTS()` — this section provides the full scene design for what they gate.  
+> **Layer 65** — two parallel one-time scenes; no new nodes, monsters, items, or quests; no lab report; document inline.
+
+---
+
+### XXX-A. Concept and World Hook
+
+Froberger's Entry 41 ends: *"Come back."*
+
+It is the only direct address in the journal — forty entries of terrain notes, encounter logs, and observations about people, and then this: *"Come back. To the people. They need the person who knows, not just the knowledge."*
+
+The S49 design (noted in `world.md` Part Four-B) specifies two parallel scenes that fire on the first IN and SQ visit after `frobergerLastEntryRead = true`. The state flags exist. This section writes the scenes.
+
+**Why two scenes, not one?** Because Entry 41 means different things to Brynn and to Sweelinck. Brynn hears *"Come back"* as something she's been quietly saying herself since Act III. Sweelinck hears the part about the pattern — *"Someone made the covenant before me. I made it after. You are making it now"* — because Sweelinck is the one who has been watching the pattern from outside it. The same entry, two readings. Both are correct.
+
+**Why no player choice?** These scenes are not decisions. Entry 41 is not something the player did — it's something Froberger wrote before they arrived. The player reads it and it lands. Then they carry it to IN and to SQ. What Brynn and Sweelinck do with it is theirs. The player watches.
+
+---
+
+### XXX-B. Trigger Condition
+
+**Both scenes trigger independently** on the first visit to their respective nodes **after `S_story.frobergerLastEntryRead === true`**.
+
+- `frobergerLastEntryRead` is set by `storyCheckJournal()` at CO node when Entry 41 is read (the final journal entry, `readAloud: true`)
+- Entry 41 can be read at any CO visit — Act V through Act VIII, depending on player routing
+- The s49 scenes fire on the **next** IN / SQ visit after Entry 41, not immediately
+- If the player reads Entry 41 and immediately returns to IN, the scene fires on that visit
+- Each scene checks only its own delivered flag: Brynn fires when `!s49BrynnDelivered`, Sweelinck fires when `!s49SweelinckDelivered`
+- They can fire in either order, in the same session or in different sessions
+
+**Coexistence with §XXV Act VIII Farewell Beats:**
+- Brynn's farewell beat (§XXV, `act8FarewellBrynn`) fires on the first Act VIII IN visit
+- If the player reads Entry 41 before Act VIII: s49 Brynn fires mid-run; the Act VIII farewell fires separately on the first Act VIII visit (both can fire in the same run, in order)
+- If the player reads Entry 41 during Act VIII: whichever scene hasn't fired fires first on that visit; the other fires on the next visit to the same node
+
+---
+
+### XXX-C. Brynn's Scene — IN Node
+
+Text stored in `S49_BRYNN_SCENE` const (string or rendered HTML block):
+
+```
+You find Brynn at the bar. Before you say anything,
+she looks at the journal.
+
+"The last one?"
+
+You hand it to her. She reads it standing, at the
+bar — doesn't sit, doesn't move anywhere. When she
+finishes, she reads it again from the beginning.
+You can tell by the time it takes.
+
+She closes it and sets it on the counter.
+
+"'Come back,'" she says. Not to you. To herself,
+maybe. Or to him.
+
+She slides the journal across the bar. Picks up
+her cloth.
+
+"He was right. They do need the person."
+
+A pause.
+
+"Glad you're not done yet."
+```
+
+On close:
+- `S_story.s49BrynnDelivered = true`
+- `storyMsg()`: *Brynn has read the final entry.*
+- Return to standard IN node render
+
+**Why this works:** Brynn doesn't explain the journal. She quotes one line — the last line — because it's the one she would have said to Froberger herself. *"Come back."* She's been saying it in the other direction (the player coming back to her inn). The scene puts both directions in the same room for one moment.
+
+---
+
+### XXX-D. Sweelinck's Scene — SQ Node
+
+Text stored in `S49_SWEELINCK_SCENE` const:
+
+```
+Sweelinck is at the desk. They look up when you
+enter.
+
+"May I see it?"
+
+You hand over the journal. They read Entry 41
+standing — they don't sit for this. Their eyes
+go to the last line and stay there a moment.
+
+Then they close the journal with the particular
+care you give something you intend to keep, and
+set it on the desk.
+
+"He knew the shape of the absence," Sweelinck
+says. "Before anyone arrived. He wrote it down
+anyway, because that's what you do with knowledge
+that can't be transferred — you write it down and
+you wait."
+
+The journal stays on the desk. They don't offer
+it back.
+
+"I'll keep it here. You know where to find me
+when you're done."
+
+The lamp is on. It stays on.
+```
+
+On close:
+- `S_story.s49SweelinckDelivered = true`
+- `storyMsg()`: *Sweelinck has kept the final entry.*
+- Return to standard SQ node render
+
+**The journal:** The journal is not a physical inventory item — it's accessed via `FROBERGER_JOURNAL` const and read through `storyCheckJournal()`. Narratively, Sweelinck "keeps" it; mechanically, the player still has access. What Sweelinck actually keeps is the *weight* of Entry 41 — they now carry the knowledge that the player knows. This is the transfer the entry says can't happen for free. Sweelinck paid by watching the pattern across multiple covenants. The player paid by walking. They have met in the middle.
+
+---
+
+### XXX-E. Ending Ceremony Patch — Covenant Keeper
+
+In `_buildSweelinckNamingSequence()`, the opening line is currently a formal introduction (the exact text is in the HTML at ~line 11016). Add a conditional branch:
+
+**Standard opening** (`s49SweelinckDelivered === false`):
+> *(existing formal opening — unchanged)*
+
+**Encounter opening** (`s49SweelinckDelivered === true`):
+
+Replace the first line of the naming sequence with:
+
+```
+"You know where to find me.
+ You found me."
+
+A pause. The lamp is on here too.
+
+"Good."
+```
+
+Then the naming sequence continues normally. This change is invisible to players who didn't find the SQ scene, and profound for those who did. The ceremony becomes a reunion. Sweelinck already told the player they'd be here. They were right.
+
+---
+
+### XXX-F. Implementation Spec
+
+**XXX-F-1.** Add `S49_BRYNN_SCENE` const (scene text, §XXX-C).
+
+**XXX-F-2.** Add `S49_SWEELINCK_SCENE` const (scene text, §XXX-D).
+
+**XXX-F-3.** In IN node render: check `S_story.frobergerLastEntryRead && !S_story.s49BrynnDelivered`. If true, show `S49_BRYNN_SCENE` modal before standard node content. On close: set `s49BrynnDelivered = true`.
+
+**XXX-F-4.** In SQ node render: check `S_story.frobergerLastEntryRead && !S_story.s49SweelinckDelivered`. If true, show `S49_SWEELINCK_SCENE` modal. On close: set `s49SweelinckDelivered = true`.
+
+**XXX-F-5.** In `_buildSweelinckNamingSequence()`: add conditional branch at first line — `if (S_story.s49SweelinckDelivered)` → encounter opening; else → standard opening.
+
+**XXX-F-6.** Both modals: no action buttons beyond [Close] / [Continue]. No choices. The player reads and moves on.
+
+---
+
+### XXX-G. State Flags
+
+Both flags already exist in `_S_DEFAULTS()`:
+- `S_story.s49BrynnDelivered` — boolean, default false, NOT NG+-preserved (clears on NG+)
+- `S_story.s49SweelinckDelivered` — boolean, default false, NOT NG+-preserved (clears on NG+)
+
+**No new state fields.** Section III already has both entries. This section documents what they gate.
+
+**NG+ note:** Both flags clear on NG+. The player can re-trigger both scenes. Brynn's text is unchanged on NG+. Sweelinck's text changes: the final line becomes *"Still here. Bring it back when you're done again."* — a one-word addition (`again`) that costs nothing and means everything for a player on their second run.
+
+---
+
+### XXX-H. Documentation Updates Required on Implementation
+
+| File | Update |
+|------|--------|
+| `story.md` | Add §F2 rows for s49 scene trigger logic; add scene text to NPC section (Brynn / Sweelinck) |
+| `world.md` | Update S49 note with full scene summaries; note Sweelinck lamp line cross-ref |
+| `plan.md` | Mark §XXX complete; update §V-A queue; note `s49` flags already in §III |
+| `lab-report-endings-and-echoes.md` | Add note: `_buildSweelinckNamingSequence()` has conditional s49 branch |
+
+No lab report for this section. No new nodes, monsters, items, or quests.
+
+---
+
+### XXX-I. Design Notes
+
+**"May I see it?"** Sweelinck asks permission. They are the most powerful narrative figure in the ending — the one who names the player — but they ask. This matters. They are not taking something. They are receiving something that the player is ready to give.
+
+**Brynn's two readings.** She reads Entry 41 twice — you can tell by the time it takes. This is not stated explicitly in the scene; it's implied by the pacing. A reader who has been paying attention will understand. A reader who hasn't will still read the scene correctly. The double reading is a gift to the attentive player: Brynn is doing exactly what Froberger said couldn't be done — receiving the knowledge by reading it. But Brynn has paid her own price: forty-one days of having bread ready. That's not free.
+
+**"The lamp is on. It stays on."** This line echoes the NIGHT_AMBIENT entry for SQ: *"Sweelinck's lamp is on."* The night ambient fires when `gameDay % 4 >= 2` — Sweelinck's lamp is part of the world's background texture. After the s49 scene, the player knows why. Sweelinck is always waiting. The lamp is the signal.
+
+**Why the Covenant Keeper opening matters.** In a run without the s49 scene, Sweelinck appears at CO as a figure who has been waiting — but the player has never met them before. The ceremony is moving but impersonal. With the s49 scene, Sweelinck is someone the player sat across from at a desk while they read Entry 41 standing up. The ceremony is a reunion. *"You know where to find me. You found me."* — the player found Sweelinck at SQ; they found them again at CO. That's the covenant in miniature: you come back.
+
+---
+
+*§XXX status: ⚠️ PLANNED — Entry 41 Echo designed; s49 state flags pre-exist in _S_DEFAULTS(); S49_BRYNN_SCENE and S49_SWEELINCK_SCENE consts specified with full text; trigger logic (frobergerLastEntryRead → next IN / SQ visit); NG+ variant (Sweelinck: "again"); Covenant Keeper opening patch in _buildSweelinckNamingSequence(); coexistence with §XXV farewell beats documented; zero new state flags; no new nodes/monsters/items/quests; no lab report — document inline.*
