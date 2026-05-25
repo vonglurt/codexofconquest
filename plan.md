@@ -240,6 +240,7 @@ The commit message should name the lab report and summarize what it covers in on
 | 23 | §XXXII | Two Intelligence Feeds: The Varga Watch and the Auros Theory (S8 + S29) | 67a+67b | No — all flags pre-exist; document inline | ⚠️ PLANNED |
 | 24 | §XXXIII | The Archive and the Tools: Blue Shutters (S7) + Raison (S46) | 68a+68b | No — 1 new flag (surveyDeliveredToAuros); document inline; §XVI cross-ref (archive_letter) | ⚠️ PLANNED |
 | 25 | §XXXIV | The Couperin Ledger: Quill's Three-Beat Arc | 69 | No — all flags pre-exist; document inline; L44-E injection; §XXIV cross-ref (Act VIII BA farewell) | ⚠️ PLANNED |
+| 26 | §XXXV | The First Inn Light: Brynn's Vigil Arc | 70 | Yes — 3 new flags (brynnKeeperStoryTold, brynnLightChoiceMade, brynnLightKept); add to _S_DEFAULTS() Brynn block | ⚠️ PLANNED |
 
 **Rule:** Implement in layer order when possible. Each implementation = code + doc sync + git commit. See plan.md §I Lab Report Policy for commit rules.
 
@@ -2019,6 +2020,7 @@ creative_literacy_token: { name:'Creative Literacy Token', icon:'📄', sell:27 
 | **Two Intelligence Feeds (§XXXII)** | S8: three-observation Varga BA arc / pigeon direction / Pachelbel tell (+15gp) / S29: Auros tactical theory at CY (frobergerLastEntryRead + Dear Friend) / `S29_AUROS_THEORY` const | `plan.md §XXXII` | ✅ PLANNED stubs: `story.md` scene notes; `world.md` S8/S29 expanded | ⚠️ PLANNED |
 | **Archive and Tools (§XXXIII)** | S7: CI Blue Shutters three-state / Entry 33 footnote / `archive_letter` item (§XVI cross-cut) / Undercity Survey → Auros +40gp / S46: `raisons_tools` +30gp / `PACHELBEL_LEDGER` entries 2+3 (Raison arrest, Vonn hint) / 1 new flag `surveyDeliveredToAuros` | `plan.md §XXXIII` | ⚠️ PLANNED stubs pending: `story.md` archive+tools notes; `world.md` S7/S46 expansion | ⚠️ PLANNED |
 | **Couperin Ledger (§XXXIV)** | `quills_lute` quest item / `QUEST_DB` entry / Beat 2 TV render (+40gp, couperiSongReceived, quillQuestComplete, Dear Friend check) / Beat 3 TV render (couperiDebtDegraded, L44-E NPC_DIALOGUES injection) / Beat 1 BA/SH lute handoff (Pachelbel) / Act VIII BA farewell Pachelbel note branch / no new flags — all pre-exist | `plan.md §XXXIV` | ⚠️ PLANNED stubs pending: `story.md` three-beat notes; `world.md` Couperin/Quill entry | ⚠️ PLANNED |
+| **First Inn Light (§XXXV)** | `BRYNN_KEEPER_STORY` const / Beat 1 inquiry (fav_brynn ≥ 1, Act II+, + follow-up) / Beat 2 choice block (fav_brynn ≥ 2, 'keep'/'rest') / IN lamp ambient line (always) / §XXV farewell four-branch table / TC_BRYNN_LAMP crier line (§XXVII) / 3 new flags (brynnKeeperStoryTold, brynnLightChoiceMade, brynnLightKept) | `plan.md §XXXV` | ⚠️ PLANNED stubs pending: `story.md` vigil arc notes; `world.md` Brynn lamp entry | ⚠️ PLANNED |
 
 ---
 
@@ -7284,3 +7286,185 @@ No lab report. No new nodes or monsters. One quest item (`quills_lute`, type:'qu
 ---
 
 *§XXXIV status: ⚠️ PLANNED — Quill Couperin three-beat arc designed; Beat 1 (lute retrieval, Pachelbel dialogue "he already knew"); Beat 2 (Couperin's theme, song played, +40gp, quest complete); Beat 3 (debt degradation scene, L44-E dialogue injection); Act VIII BA node farewell cross-ref (§XXV) with quillQuestComplete branch; Town Crier quillQuestComplete line already in §XXVII; three pre-existing flags; no new nodes/monsters/items (quest item quills_lute type:'quest'); no lab report — document inline.*
+
+---
+
+## Section XXXV — The First Inn Light: Brynn's Vigil Arc (Layer 70, ⚠️ PLANNED)
+
+### XXXV-A. Concept
+
+A lamp burns at the First Inn (IN, Birka) — it has been lit since the player's first night. Brynn lit it then, without announcement, and has tended it every night since. This arc formalizes that lamp as a named lore element and gives Brynn her own dedicated two-beat quest arc, parallel to Quill's Couperin Ledger (§XXXIV). Beat 1 is the inquiry (fav_brynn ≥ 1, Act II+). Beat 2 is the choice of the lamp's fate (fav_brynn ≥ 2 only). The Act VIII farewell (§XXV) branches on both flags.
+
+The "Still the same light?" exchange in §XXXI (S54 Joint Witness) retroactively becomes the verbal shorthand for everything established here. Yael already knew.
+
+Three genuinely new flags: `brynnKeeperStoryTold`, `brynnLightChoiceMade`, `brynnLightKept`. All must be added to `_S_DEFAULTS()`.
+
+---
+
+### XXXV-B. The Lamp as Persistent Setting
+
+Patch IN node render to include one ambient line every visit (no flag required):
+
+> *A lamp burns in the corner. It has been lit since your first night here.*
+
+This line appears in the room description block, before NPC options, always. No trigger. No condition. It is simply true.
+
+On implementation: if IN node currently has no persistent room-description flavor text, this is the first. If it does, insert after existing flavor.
+
+---
+
+### XXXV-C. Beat 1 — The Inquiry
+
+**Trigger:** IN node visit, `fav_brynn >= 1`, Act II+, `!brynnKeeperStoryTold`.
+
+**Option appears:** `[Ask Brynn about the lamp in the corner.]`
+
+**Brynn's response (from `BRYNN_KEEPER_STORY.inquiry`):**
+
+> *"I lit it the night you arrived. Didn't know if you'd be back by morning, and it seemed wrong to let you come back to a dark room. So I kept it."*
+
+**Follow-up option appears immediately (same visit):** `[Why that night?]`
+
+**Brynn (from `BRYNN_KEEPER_STORY.followUp`):**
+
+> *"I've had guests before. Some didn't come back. I always meant to start a lamp then too. But you were the first time I actually did it."*
+
+No follow-up to the follow-up. The conversation ends there.
+
+**Sets:** `brynnKeeperStoryTold = true`.
+
+**Note:** The lamp inquiry cannot fire before Act II because it references a continuity ("since your first night") that requires the player to have been back at least once.
+
+---
+
+### XXXV-D. Beat 2 — The Choice (Dear Friend Only)
+
+**Trigger:** IN node visit, `fav_brynn >= 2`, `brynnKeeperStoryTold`, `!brynnLightChoiceMade`. Fires on the *next* IN visit after Beat 1 if fav_brynn is already 2; otherwise fires the first qualifying IN visit.
+
+**Brynn (from `BRYNN_KEEPER_STORY.choicePrompt`):**
+
+> *"I've been thinking about what happens when you're done — when all of this is done. Whether the lamp should keep burning. I haven't decided. I think it's your lamp as much as it is mine now. What do you want?"*
+
+**Options:**
+
+| Choice | Brynn's response | Flags set |
+|---|---|---|
+| `[Let it keep burning.]` | *"Then it keeps burning. I'll see to it."* | `brynnLightChoiceMade = true`, `brynnLightKept = true` |
+| `[It can rest when I'm done.]` | *"Then we'll let it rest together. Seems right."*  | `brynnLightChoiceMade = true`, `brynnLightKept = false` |
+
+Both choices are valid. Neither is rewarded or penalized. No gold, no fav change. The arc is complete at this beat regardless of which choice is made.
+
+**Design constraint:** If fav_brynn never reaches 2 before Act VIII, Beat 2 never fires. The §XXV farewell handles this gracefully (see §XXXV-E).
+
+---
+
+### XXXV-E. §XXV Farewell Integration (Act VIII IN Beat)
+
+When the Act VIII farewell fires at IN (§XXV), Brynn's beat branches on all three flags:
+
+| State | Brynn's farewell line |
+|---|---|
+| `!brynnKeeperStoryTold` | *"There's a lamp in the corner that's been burning since your first night. I wanted you to know that."* |
+| `brynnKeeperStoryTold && !brynnLightChoiceMade` | *"The lamp is still burning. I've never asked what you wanted for it."* |
+| `brynnLightChoiceMade && brynnLightKept` | *"The lamp is still burning. I checked this morning."* |
+| `brynnLightChoiceMade && !brynnLightKept` | *"The lamp is still burning. I'll tend it until you come back. After that — well. After that."* |
+
+All four are emotionally complete. The `!brynnKeeperStoryTold` farewell is the compressed version of the full arc — the player discovers the lamp at the last possible moment.
+
+**Implementation note for §XXV:** The farewell beat at IN should check `brynnKeeperStoryTold` first; if false, deliver the abbreviated story, set `brynnKeeperStoryTold = true`, and skip Beat 2 (no choice during farewell). If `brynnKeeperStoryTold` is true but `brynnLightChoiceMade` is false and `fav_brynn >= 2`: offer the choice inline during the farewell. This is the only case where Beat 2 fires during Act VIII rather than during a regular visit.
+
+---
+
+### XXXV-F. §XXXI Cross-Reference (S54 Joint Witness)
+
+The S54 scene at CI has Brynn ask Yael: *"Still the same light?"* / *"Still the same light."* This exchange is already designed in §XXXI. §XXXV establishes what "the same light" refers to without altering the §XXXI scene text. No patch to §XXXI is required.
+
+**Optional enhancement (flag as design note, not implementation requirement):** If `brynnKeeperStoryTold` at the time S54 fires, the player can infer the reference from their own prior conversation. If `!brynnKeeperStoryTold`, the exchange is mysterious until Beat 1 fires later. Both experiences are valid — the scene works in either order.
+
+---
+
+### XXXV-G. §XXVII Town Crier Integration
+
+One Town Crier ambient line unlocks when `brynnKeeperStoryTold`. Fires once during inn rest; uses existing TC dedup logic (line ID: `TC_BRYNN_LAMP`):
+
+> *"The lamp at the First Inn has been burning since the early days. Birka folk consider it a good omen."*
+
+Add to `TOWN_CRIER_LINES` array with trigger condition `brynnKeeperStoryTold`. TC dedup ensures it fires only once across all inn rests.
+
+---
+
+### XXXV-H. The `BRYNN_KEEPER_STORY` Const
+
+```js
+const BRYNN_KEEPER_STORY = {
+  inquiry:      `"I lit it the night you arrived. Didn't know if you'd be back by morning, and it seemed wrong to let you come back to a dark room. So I kept it."`,
+  followUp:     `"I've had guests before. Some didn't come back. I always meant to start a lamp then too. But you were the first time I actually did it."`,
+  choicePrompt: `"I've been thinking about what happens when you're done — when all of this is done. Whether the lamp should keep burning. I haven't decided. I think it's your lamp as much as it is mine now. What do you want?"`,
+  choiceKeep:   `"Then it keeps burning. I'll see to it."`,
+  choiceRest:   `"Then we'll let it rest together. Seems right."`,
+  farewellNoStory:   `"There's a lamp in the corner that's been burning since your first night. I wanted you to know that."`,
+  farewellNoChoice:  `"The lamp is still burning. I've never asked what you wanted for it."`,
+  farewellKeep:      `"The lamp is still burning. I checked this morning."`,
+  farewellRest:      `"The lamp is still burning. I'll tend it until you come back. After that — well. After that."`
+};
+```
+
+---
+
+### XXXV-I. Implementation Spec
+
+**XXXV-I-1.** Add to `_S_DEFAULTS()`: `brynnKeeperStoryTold: false`, `brynnLightChoiceMade: false`, `brynnLightKept: false`.
+
+**XXXV-I-2.** Patch IN node render: insert lamp ambient line (*"A lamp burns in the corner..."*) into room description, always.
+
+**XXXV-I-3.** IN node options render: if `fav_brynn >= 1 && !brynnKeeperStoryTold && act >= 2`: add `[Ask Brynn about the lamp in the corner.]` option. On selection: deliver `BRYNN_KEEPER_STORY.inquiry`, render follow-up option, deliver `BRYNN_KEEPER_STORY.followUp` on selection, set `brynnKeeperStoryTold = true`.
+
+**XXXV-I-4.** IN node options render: if `fav_brynn >= 2 && brynnKeeperStoryTold && !brynnLightChoiceMade`: add Beat 2 choice block (choicePrompt + two options). On choice: set `brynnLightChoiceMade = true` + `brynnLightKept` accordingly.
+
+**XXXV-I-5.** Patch §XXV Act VIII IN farewell branch: check `brynnKeeperStoryTold` / `brynnLightChoiceMade` / `brynnLightKept` per §XXXV-E table. Handle inline Beat 2 offer if `brynnKeeperStoryTold && !brynnLightChoiceMade && fav_brynn >= 2`.
+
+**XXXV-I-6.** Add `TC_BRYNN_LAMP` line to `TOWN_CRIER_LINES` with `brynnKeeperStoryTold` trigger condition.
+
+---
+
+### XXXV-J. State Flags
+
+| Flag | Default | NG+-preserved? | Note |
+|---|---|---|---|
+| `brynnKeeperStoryTold` | `false` | No (reset) | Beat 1 fired |
+| `brynnLightChoiceMade` | `false` | No (reset) | Beat 2 choice offered and answered |
+| `brynnLightKept` | `false` | No (reset) | `true` = 'keep'; `false` = 'rest' or choice not made |
+
+**All three are new — not in current `_S_DEFAULTS()`.** Add all three in the Brynn block.
+
+NG+ reset rationale: the lamp story is about this run, this arrival, this first night. The player re-lights the lamp (so to speak) each new game. Preserving the choice across NG+ would imply a continuity the narrative doesn't support — Brynn doesn't remember you until §XV NG+ memory fires.
+
+---
+
+### XXXV-K. Documentation Updates
+
+| File | Update |
+|---|---|
+| `story.md` | Add §XXXV stub: lamp ambient, Beat 1 inquiry, Beat 2 choice, §XXV farewell branch table, §XXXI cross-ref note |
+| `world.md` | Add §XXXV entry in Brynn's section: lamp lore, three-flag design, §XXXI and §XXV cross-refs |
+| `plan.md` | §V-A item 26; §XI-A row for §XXXV |
+
+No lab report. No new nodes. No new monsters. No new items. Three new state flags.
+
+---
+
+### XXXV-L. Design Notes
+
+**"Without announcement."** Brynn didn't light the lamp as a gesture. She lit it because it was the practical thing to do when a stranger might come back in the dark. The arc only works because Brynn's motivation is that quiet. When the player asks why, she doesn't reach for meaning — she reaches for the fact: *"It seemed wrong to let you come back to a dark room."*
+
+**The follow-up as the real answer.** The inquiry response explains what she did. The follow-up explains why it was this time, this guest: *"You were the first time I actually did it."* She's had strangers not come back before. She meant to light the lamp then too. She never did. This time she did. The player can decide what that means about Brynn, and about themselves.
+
+**Two valid choices.** "Let it keep burning" is care expressed as continuity. "Let it rest when I'm done" is care expressed as closure. Neither is surrender. The arc is designed so both feel earned — not like one is the "good" answer and one is the "realistic" answer. Brynn accepts both with the same weight.
+
+**"Still the same light?" as the retroactive payoff.** If the player reads §XXXI before §XXXV fires (which is possible — S54 fires at CI, §XXXV fires at IN), the exchange is mysterious and beautiful. If they read §XXXV first, the S54 exchange is the confirmation: Yael knew all along. Either order works. The design principle is that neither scene requires the other to function; they are better together but complete separately.
+
+**Layer 70 placement.** This arc is designed to be implementable at any point after the NPC_DIALOGUES system and IN node exist in their current form. No dependencies on Layers 44–69 except: §XXV (farewell) and §XXVII (Town Crier) must be implemented first, or implemented simultaneously. In practice: implement Layers 62 and 60 first (§XXVII, §XXV), then Layer 70.
+
+---
+
+*§XXXV status: ⚠️ PLANNED — First Inn lamp ambient line specified; Beat 1 inquiry (fav_brynn ≥ 1, Act II+) designed with follow-up; Beat 2 choice (fav_brynn ≥ 2) designed with two branches; §XXV farewell four-branch table; §XXXI retroactive cross-ref (no patch needed); §XXVII TC_BRYNN_LAMP line; BRYNN_KEEPER_STORY const written; three new flags (brynnKeeperStoryTold, brynnLightChoiceMade, brynnLightKept); no new nodes/monsters/items/lab report.*

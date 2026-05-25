@@ -2596,6 +2596,24 @@ Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterOb
 
 ---
 
+## ⚠️ PLANNED — The First Inn Light: Brynn's Vigil Arc (plan.md §XXXV, Layer 70)
+
+**Ambient:** IN node always displays *"A lamp burns in the corner. It has been lit since your first night here."* — no flag, no condition.
+
+**Beat 1 — Inquiry (IN, fav_brynn ≥ 1, Act II+, !brynnKeeperStoryTold):** Option `[Ask Brynn about the lamp in the corner.]` Brynn: *"I lit it the night you arrived. Didn't know if you'd be back by morning, and it seemed wrong to let you come back to a dark room. So I kept it."* Follow-up option `[Why that night?]`: *"I've had guests before. Some didn't come back. I always meant to start a lamp then too. But you were the first time I actually did it."* Sets `brynnKeeperStoryTold = true`.
+
+**Beat 2 — Choice (IN, fav_brynn ≥ 2, brynnKeeperStoryTold, !brynnLightChoiceMade):** Brynn: *"I've been thinking about what happens when you're done... I think it's your lamp as much as it is mine now. What do you want?"* Options: `[Let it keep burning.]` → `brynnLightKept = true`; `[It can rest when I'm done.]` → `brynnLightKept = false`. Both set `brynnLightChoiceMade = true`.
+
+**§XXV farewell four-branch:** `!brynnKeeperStoryTold` → abbreviated story. `!brynnLightChoiceMade` → *"never asked."* `brynnLightKept` → *"still burning, checked this morning."* `!brynnLightKept` → *"I'll tend it until you come back. After that — well. After that."*
+
+**Cross-refs:** §XXXI S54 "Still the same light?" — retroactive context, no §XXXI patch required. §XXVII TC_BRYNN_LAMP crier line fires once when brynnKeeperStoryTold.
+
+**Three new flags:** `brynnKeeperStoryTold`, `brynnLightChoiceMade`, `brynnLightKept` — all add to `_S_DEFAULTS()`.
+
+**F2 reference:** Patch IN node render (lamp ambient), Beat 1 option, Beat 2 option block, §XXV farewell branch, TC_BRYNN_LAMP crier line on implementation.
+
+---
+
 ## ⚠️ PLANNED — The Couperin Ledger: Quill's Three-Beat Arc (plan.md §XXXIV, Layer 69)
 
 **Trigger chain:** `quills_lute` item in inventory → Quill at TV → BA Act VIII farewell branch. No new state flags — all three (`couperiSongReceived`, `couperiDebtDegraded`, `quillQuestComplete`) pre-exist in `_S_DEFAULTS()`.

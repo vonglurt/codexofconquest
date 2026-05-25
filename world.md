@@ -503,6 +503,10 @@ Perks persist through NG+. Character sheet shows "Weckmann's Student" badge when
 
 ⚠️ PLANNED — Layer 69. All three flags already in `_S_DEFAULTS()`. No new flags.
 
+**The First Inn Light / Brynn's Vigil Arc** (`brynnKeeperStoryTold`, `brynnLightChoiceMade`, `brynnLightKept`) — Brynn lit the lamp at IN (First Inn, Birka) the night the player first arrived. She has tended it every night since. **Ambient:** IN room description always shows *"A lamp burns in the corner. It has been lit since your first night here."* — no flag required. **Beat 1 (fav_brynn ≥ 1, Act II+):** Player asks `[Ask Brynn about the lamp]`; Brynn explains she lit it because it seemed wrong to let the player come back to a dark room; follow-up reveals she'd meant to do the same for previous guests who didn't return, but this was the first time she actually did; `brynnKeeperStoryTold = true`. **Beat 2 (fav_brynn ≥ 2, after Beat 1):** Brynn asks what the player wants: `[Let it keep burning]` → `brynnLightKept = true` / `[It can rest when I'm done]` → `brynnLightKept = false`; both set `brynnLightChoiceMade = true`. **§XXV farewell branch:** four states — no story (abbreviated delivery), no choice made, light kept ("checked this morning"), light rested ("I'll tend it until you come back. After that — well. After that."). **§XXXI retroactive context:** "Still the same light?" / "Still the same light." — Yael knew; no §XXXI patch required. **§XXVII TC:** `TC_BRYNN_LAMP` line fires once when `brynnKeeperStoryTold`. Const: `BRYNN_KEEPER_STORY`. See `plan.md §XXXV`.
+
+⚠️ PLANNED — Layer 70. Three genuinely new flags (not in current `_S_DEFAULTS()`): `brynnKeeperStoryTold: false`, `brynnLightChoiceMade: false`, `brynnLightKept: false`. Add to Brynn block in `_S_DEFAULTS()`.
+
 ### Froberger Traces
 
 `FROBERGER_TRACES` — 6 one-time NPC memories of Froberger. Each gated by fav ≥ 2 and sufficient visit count. Delivered via `_checkFrobergerTrace(npcKey)` priority injection in `_getNPCDialogue()`.
