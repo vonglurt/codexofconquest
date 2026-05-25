@@ -2596,6 +2596,30 @@ Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterOb
 
 ---
 
+## ⚠️ PLANNED — Epilogue Integration Layer: Arcs to Scroll (plan.md §XXXVI, Layer 71)
+
+`_buildEpilogueScroll()` patch: after the `FROBERGER_EPILOGUE` push, iterate `ARC_EPILOGUE_CONDITIONS` (14 entries) and push matching lines. These are ADDITIVE — they appear alongside existing `NPC_EPILOGUES` tier lines, not in place of them.
+
+**Arc-to-scroll map (trigger → epilogue line):**
+- `defeatedBattles['CF']` → *"Ogundimu offered his hand after. You shook it. He says you were the floor, not the ceiling."*
+- `s49BrynnDelivered && s49SweelinckDelivered` → *"Both of them have Entry 41. They don't need to compare notes."*
+- `s49SweelinckDelivered only` → *"Sweelinck has the journal. He keeps it at the right height."*
+- `s49BrynnDelivered only` → *"Brynn read it twice, quietly. She hasn't needed to mention it."*
+- `s54JointMomentDelivered` → *"Brynn and Yael stood in the same light. The light held."*
+- `s8PachelbelTold` → *"Pachelbel recognized the route. She hasn't mentioned Varga by name since."*
+- `s29LineDelivered` → *"Auros's structural survey and tactical theory were filed together. That's new."*
+- `archiveLetterObtained` → *"The archive letter is in Weimar. The footnote is on record."*
+- `surveyDeliveredToAuros` → *"Auros has the Year Ten pressure data. She's drafting a unified report."*
+- `quillQuestComplete && couperiDebtDegraded` → *"Quill plays 'the one that came back.' The lute is still in tune."*
+- `quillQuestComplete && !couperiDebtDegraded` → *"Quill has the lute. He knows what a number means."*
+- `brynnLightChoiceMade && brynnLightKept` → *"The lamp is still burning. Brynn checked it this morning."*
+- `brynnLightChoiceMade && !brynnLightKept` → *"The lamp burned down quietly. Brynn says it did its work."*
+- `brynnKeeperStoryTold && !brynnLightChoiceMade` → *"Brynn kept tending it anyway. It's still burning."*
+
+**No new flags.** Implementation: define `ARC_EPILOGUE_CONDITIONS` const; add 4-line forEach block to `_buildEpilogueScroll()`.
+
+---
+
 ## ⚠️ PLANNED — The First Inn Light: Brynn's Vigil Arc (plan.md §XXXV, Layer 70)
 
 **Ambient:** IN node always displays *"A lamp burns in the corner. It has been lit since your first night here."* — no flag, no condition.

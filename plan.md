@@ -1,3 +1,56 @@
+## §0 — Implementation Readiness Dashboard
+
+> **Status as of Layer 71 design phase.** Update each row when a layer is coded and committed. This section lives at the top of the file so it's the first thing open during an implementation session.
+
+### Tier 1 — Ready to Implement Now (no lab report needed)
+
+Implement in layer order. Each = code change + doc sync + `git commit`.
+
+| Layer | Section | Feature | Est. Complexity |
+|-------|---------|---------|----------------|
+| 47 | §XII | Yugurt Lake Fishing Overhaul | Medium (lab report ✅ exists) |
+| 48 | §XIII | Luck: The Seventh Stat | Medium |
+| 46 | §X | Torment Nexus Overture (HM Kern & Sable) | Small |
+| 53 | §XVIII | Living World: Junction Vignettes + Road Companion | Medium |
+| 57 | §XXII | Codex Shard Origin Stories | Small |
+| 58 | §XXIII | Inn Dreams | Small |
+| 59 | §XXIV | Pressure Cascade: Visible Void Tide Events | Medium |
+| 60 | §XXV | The Homecoming: Act VIII Farewell Beats | Medium |
+| 62 | §XXVII | Town Crier: Inn Rest World-News Lines | Small |
+| 63 | §XXVIII | Froberger Memorial: Living Stone at CI | Small |
+| 64 | §XXIX | Pit Championship: Finals at Crossroads Forge | Medium |
+| 65 | §XXX | Entry 41 Echo: Brynn + Sweelinck | Small |
+| 66a+b | §XXXI | Joint Witness + Map Caption (S54 + S55) | Small |
+| 67a+b | §XXXII | Two Intelligence Feeds (S8 + S29) | Small |
+| 68a+b | §XXXIII | Archive + Tools (S7 + S46) | Medium |
+| 69 | §XXXIV | Couperin Ledger: Quill's Three-Beat Arc | Medium |
+| 70 | §XXXV | First Inn Light: Brynn's Vigil Arc | Small |
+| 71 | §XXXVI | Epilogue Integration Layer: Arcs to Scroll | Small |
+
+### Tier 2 — Needs Lab Report Before Coding
+
+| Layer | Section | Feature | Lab Report Needed |
+|-------|---------|---------|-------------------|
+| 44 | §IX | Ally Cat Arc | `lab-report-ally-cat.md` |
+| 49 | §XIV | Quest -1 + World Creator | `lab-report-world-creator.md` |
+| 50 | §XV | NG+ Remembrance Layer | `lab-report-ng-plus-remembrance.md` |
+| 51 | §XVI | Weimar Scholar Gate | `lab-report-weimar-scholar-gate.md` |
+| 52 | §XVII | Void Archaeology | `lab-report-void-archaeology.md` |
+| 54+55 | §XIX+§XX | Tilbury + Visby Arcs | `lab-report-tilbury-visby-arcs.md` |
+| 56 | §XXI | Void Shaman | `lab-report-void-shaman.md` |
+| 61 | §XXVI | Corelli Wandering Merchant | `lab-report-corelli-merchant.md` |
+
+### Implementation Protocol (reminder)
+
+1. Pick the lowest unimplemented layer from Tier 1.
+2. Open `roll2hit-v3.html`. Find the relevant function(s) in the section spec.
+3. Make the code change. Run the game. Test the golden path.
+4. Sync docs: update any "⚠️ PLANNED" markers to "✅" in `story.md`, `world.md`, `plan.md`.
+5. `git add` all changed files + `git commit` with one-line summary.
+6. Mark this table row ✅.
+
+---
+
 ## I. Directive
 
 > You are an expert prompt interpreter with an electrical engineering / computer science background. Follow the sections below: use the suggestions in II, III, IV to implement ideas from the list, or append new ideas to the end of the list when told about them. Work incrementally — present one step at a time and wait for "continue."
@@ -241,6 +294,7 @@ The commit message should name the lab report and summarize what it covers in on
 | 24 | §XXXIII | The Archive and the Tools: Blue Shutters (S7) + Raison (S46) | 68a+68b | No — 1 new flag (surveyDeliveredToAuros); document inline; §XVI cross-ref (archive_letter) | ⚠️ PLANNED |
 | 25 | §XXXIV | The Couperin Ledger: Quill's Three-Beat Arc | 69 | No — all flags pre-exist; document inline; L44-E injection; §XXIV cross-ref (Act VIII BA farewell) | ⚠️ PLANNED |
 | 26 | §XXXV | The First Inn Light: Brynn's Vigil Arc | 70 | Yes — 3 new flags (brynnKeeperStoryTold, brynnLightChoiceMade, brynnLightKept); add to _S_DEFAULTS() Brynn block | ⚠️ PLANNED |
+| 27 | §XXXVI | Epilogue Integration Layer: Arcs to Scroll | 71 | No — no new flags; ARC_EPILOGUE_CONDITIONS const + 4-line _buildEpilogueScroll() patch | ⚠️ PLANNED |
 
 **Rule:** Implement in layer order when possible. Each implementation = code + doc sync + git commit. See plan.md §I Lab Report Policy for commit rules.
 
@@ -2021,6 +2075,7 @@ creative_literacy_token: { name:'Creative Literacy Token', icon:'📄', sell:27 
 | **Archive and Tools (§XXXIII)** | S7: CI Blue Shutters three-state / Entry 33 footnote / `archive_letter` item (§XVI cross-cut) / Undercity Survey → Auros +40gp / S46: `raisons_tools` +30gp / `PACHELBEL_LEDGER` entries 2+3 (Raison arrest, Vonn hint) / 1 new flag `surveyDeliveredToAuros` | `plan.md §XXXIII` | ⚠️ PLANNED stubs pending: `story.md` archive+tools notes; `world.md` S7/S46 expansion | ⚠️ PLANNED |
 | **Couperin Ledger (§XXXIV)** | `quills_lute` quest item / `QUEST_DB` entry / Beat 2 TV render (+40gp, couperiSongReceived, quillQuestComplete, Dear Friend check) / Beat 3 TV render (couperiDebtDegraded, L44-E NPC_DIALOGUES injection) / Beat 1 BA/SH lute handoff (Pachelbel) / Act VIII BA farewell Pachelbel note branch / no new flags — all pre-exist | `plan.md §XXXIV` | ⚠️ PLANNED stubs pending: `story.md` three-beat notes; `world.md` Couperin/Quill entry | ⚠️ PLANNED |
 | **First Inn Light (§XXXV)** | `BRYNN_KEEPER_STORY` const / Beat 1 inquiry (fav_brynn ≥ 1, Act II+, + follow-up) / Beat 2 choice block (fav_brynn ≥ 2, 'keep'/'rest') / IN lamp ambient line (always) / §XXV farewell four-branch table / TC_BRYNN_LAMP crier line (§XXVII) / 3 new flags (brynnKeeperStoryTold, brynnLightChoiceMade, brynnLightKept) | `plan.md §XXXV` | ⚠️ PLANNED stubs pending: `story.md` vigil arc notes; `world.md` Brynn lamp entry | ⚠️ PLANNED |
+| **Epilogue Integration Layer (§XXXVI)** | `ARC_EPILOGUE_CONDITIONS` const (14 entries: §XXIX pit champ / §XXX s49 both+solo / §XXXI s54 / §XXXII s8+s29 / §XXXIII archive+survey / §XXXIV lute arc / §XXXV lamp arc) / `_buildEpilogueScroll()` 4-line patch / scroll ordering doc / no new flags | `plan.md §XXXVI` | ⚠️ PLANNED stubs pending: `story.md` scroll extension note | ⚠️ PLANNED |
 
 ---
 
@@ -7468,3 +7523,162 @@ No lab report. No new nodes. No new monsters. No new items. Three new state flag
 ---
 
 *§XXXV status: ⚠️ PLANNED — First Inn lamp ambient line specified; Beat 1 inquiry (fav_brynn ≥ 1, Act II+) designed with follow-up; Beat 2 choice (fav_brynn ≥ 2) designed with two branches; §XXV farewell four-branch table; §XXXI retroactive cross-ref (no patch needed); §XXVII TC_BRYNN_LAMP line; BRYNN_KEEPER_STORY const written; three new flags (brynnKeeperStoryTold, brynnLightChoiceMade, brynnLightKept); no new nodes/monsters/items/lab report.*
+
+---
+
+## Section XXXVI — The Epilogue Integration Layer: Arcs to Scroll (Layer 71, ⚠️ PLANNED)
+
+### XXXVI-A. Concept
+
+`_buildEpilogueScroll()` (HTML ~line 11028) builds the "What happened after." victory scroll from `NPC_EPILOGUES` (six NPCs × fav tiers) and `FROBERGER_EPILOGUE` (covenant/imperfect/efficient variants). It has no awareness of any arc designed in §XXVII–§XXXV. This section specifies a new const `ARC_EPILOGUE_CONDITIONS` and a patch to `_buildEpilogueScroll()` that adds conditional epilogue lines for each completed arc — pushed after the `FROBERGER_EPILOGUE` line, before the `return`.
+
+These lines are ADDITIVE — they appear alongside the existing NPC tier lines, not in place of them. Each adds information the NPC tier system doesn't carry: the specific mechanism by which a story resolved, the object or scene that made it real.
+
+No new state flags. No lab report. One new const and one function patch.
+
+---
+
+### XXXVI-B. The `ARC_EPILOGUE_CONDITIONS` Const
+
+```js
+const ARC_EPILOGUE_CONDITIONS = [
+
+  // §XXIX — Pit Championship
+  { cond: () => !!(S_story.defeatedBattles?.['CF']),
+    line: "Ogundimu offered his hand after. You shook it. He's still undefeated in his mind — he says you were the floor, not the ceiling." },
+
+  // §XXX — Entry 41 Echo (both)
+  { cond: () => S_story.s49BrynnDelivered && S_story.s49SweelinckDelivered,
+    line: "Both of them have Entry 41. They haven't compared notes. They don't need to." },
+
+  // §XXX — Entry 41 Echo (Sweelinck only)
+  { cond: () => S_story.s49SweelinckDelivered && !S_story.s49BrynnDelivered,
+    line: "Sweelinck has the journal. He keeps it at the right height on the shelf. You know which one." },
+
+  // §XXX — Entry 41 Echo (Brynn only)
+  { cond: () => S_story.s49BrynnDelivered && !S_story.s49SweelinckDelivered,
+    line: "Brynn read Entry 41 twice, quietly, and set it down. She hasn't mentioned it since. She hasn't needed to." },
+
+  // §XXXI — Joint Witness (S54)
+  { cond: () => S_story.s54JointMomentDelivered,
+    line: "Brynn and Yael stood in the same light at the same time. They both looked at you. The light held." },
+
+  // §XXXII — Varga Watch (S8)
+  { cond: () => S_story.s8PachelbelTold,
+    line: "Pachelbel recognized the forwarding route without being told what it was. She hasn't mentioned Varga by name since. She doesn't need to." },
+
+  // §XXXII — Auros Theory (S29)
+  { cond: () => S_story.s29LineDelivered,
+    line: "Auros had the complete picture. The structural survey and the tactical theory were filed together. That's new." },
+
+  // §XXXIII — Archive Letter
+  { cond: () => S_story.archiveLetterObtained,
+    line: "The archive letter is in Weimar. The footnote that said 'no restriction required' is on record. It's no longer the last word." },
+
+  // §XXXIII — Survey to Auros
+  { cond: () => S_story.surveyDeliveredToAuros,
+    line: "Auros has the Year Ten pressure data. The sectors match her Year Twelve projections. She's drafting a unified report." },
+
+  // §XXXIV — Couperin Ledger (arc complete + debt resolved)
+  { cond: () => S_story.quillQuestComplete && S_story.couperiDebtDegraded,
+    line: "Quill plays the family theme on request. He calls it 'the one that came back.' The lute is still in tune." },
+
+  // §XXXIV — Couperin Ledger (arc complete, debt not yet resolved)
+  { cond: () => S_story.quillQuestComplete && !S_story.couperiDebtDegraded,
+    line: "Quill has the lute. He knows what a number means. He hasn't found the words for the last part yet." },
+
+  // §XXXV — First Inn Light (choice: keep)
+  { cond: () => S_story.brynnLightChoiceMade && S_story.brynnLightKept,
+    line: "The lamp at the First Inn is still burning. Brynn checked it this morning." },
+
+  // §XXXV — First Inn Light (choice: rest)
+  { cond: () => S_story.brynnLightChoiceMade && !S_story.brynnLightKept,
+    line: "The lamp at the First Inn burned down quietly. Brynn says it did its work. She's right." },
+
+  // §XXXV — First Inn Light (story told, choice never offered)
+  { cond: () => S_story.brynnKeeperStoryTold && !S_story.brynnLightChoiceMade,
+    line: "Brynn never asked what you wanted for the lamp. She kept tending it. It's still burning." },
+
+];
+```
+
+**Implementation note for §XXIX:** The Pit Championship fight at CF (Crossroads Forge) should set `defeatedBattles['CF']` via the existing `defeatedBattles` write pattern. If a dedicated `pitChampionDefeated` flag is introduced in §XXIX's implementation instead, update the condition above to use it.
+
+---
+
+### XXXVI-C. `_buildEpilogueScroll()` Patch
+
+After the existing `FROBERGER_EPILOGUE` push and before `return lines`, add:
+
+```js
+  // Arc epilogue additions (§XXXVI — Layers 62–70)
+  ARC_EPILOGUE_CONDITIONS.forEach(({ cond, line }) => {
+    if (cond()) lines.push(line);
+  });
+```
+
+That's the entire patch: four lines. The const does the work.
+
+---
+
+### XXXVI-D. Interaction with Existing `NPC_EPILOGUES` Lines
+
+The arc epilogues are ADDITIVE — they do not replace or override the NPC tier entries. Both can appear for the same NPC in the same scroll. Expected combinations:
+
+| NPC_EPILOGUES line (existing) | ARC_EPILOGUE_CONDITIONS line (new) |
+|---|---|
+| *"Quill settled the debt. He's playing without counting the reach now."* (fav 2) | *"Quill plays the family theme on request. The lute is still in tune."* (§XXXIV) |
+| *"Brynn's daughter came home for two weeks."* (fav 2) | *"The lamp at the First Inn is still burning."* (§XXXV) |
+| *"Auros completed the structural survey."* (fav 2) | *"The structural survey and the tactical theory were filed together."* (§XXXII) |
+| *"Pachelbel sent coin to Raison's family."* (fav 2) | *"Pachelbel recognized the forwarding route."* (§XXXII) |
+
+The fav line describes the NPC's personal arc. The arc epilogue line describes the specific mechanism or object that made it concrete. Together they are more complete than either alone.
+
+---
+
+### XXXVI-E. Scroll Ordering
+
+The full scroll after §XXXVI's patch fires in this order:
+
+1. NPC_EPILOGUES entries (6 NPCs, one line each, fav-gated)
+2. EB contracts line (if ebReturns ≥ 10)
+3. FROBERGER_EPILOGUE line (one, mission/curse-gated)
+4. **ARC_EPILOGUE_CONDITIONS lines** (0–14, flag-gated) ← new
+5. End of scroll
+
+A very thorough player who completes every arc will see up to 8 lines from ARC_EPILOGUE_CONDITIONS in addition to the 6 NPC lines and the Froberger line: a scroll of up to 15 entries. A player who did nothing beyond the main quest sees only the 6 base NPC lines + 1 Froberger line.
+
+---
+
+### XXXVI-F. State Flags
+
+No new flags. All conditions reference flags already defined in existing or PLANNED _S_DEFAULTS() entries:
+`defeatedBattles`, `s49BrynnDelivered`, `s49SweelinckDelivered`, `s54JointMomentDelivered`, `s8PachelbelTold`, `s29LineDelivered`, `archiveLetterObtained`, `surveyDeliveredToAuros`, `quillQuestComplete`, `couperiDebtDegraded`, `brynnKeeperStoryTold`, `brynnLightChoiceMade`, `brynnLightKept`.
+
+---
+
+### XXXVI-G. Documentation Updates
+
+| File | Update |
+|---|---|
+| `story.md` | Add §XXXVI stub: scroll extension concept, list of 14 arc conditions with their trigger flags |
+| `world.md` | No update needed — arc epilogues are output, not world state |
+| `plan.md` | §V-A item 27; §XI-A row; update §0 dashboard Tier 1 table |
+
+No lab report. No new nodes, monsters, flags, or items. One new const + four lines added to one function.
+
+---
+
+### XXXVI-H. Design Notes
+
+**The scroll earns its length.** The base six NPC lines are always there. The 14 arc conditions are additive — each requires real engagement. A player who found the lamp story, retrieved the lute, watched the joint witness scene, and delivered the journal will see a scroll that reflects all of it. A player who didn't will see a shorter scroll that still closes cleanly. The scroll length is a mirror, not a score.
+
+**The arc epilogue lines are specific.** "The lute is still in tune." "Pachelbel recognized the forwarding route." "The lamp is still burning. Brynn checked it this morning." Each is concrete — an object, an act, a moment. Not summaries. Not evaluations. The player already knows what they did; the epilogue confirms that the world registered it.
+
+**The §XXIX check.** The Pit Championship flag condition (`defeatedBattles?.['CF']`) is written with optional chaining to avoid errors if the battle was never started. On implementation, verify the actual key used when `PIT_CHAMPION_OGUNDIMU` fight completes.
+
+**Layer 71 placement.** `_buildEpilogueScroll()` must be patched after all arc system flags are defined in `_S_DEFAULTS()`. In practice: implement after all Tier 1 arcs are coded. The patch itself is trivial; the const can be defined as a stub earlier and lines added incrementally as arcs are implemented.
+
+---
+
+*§XXXVI status: ⚠️ PLANNED — ARC_EPILOGUE_CONDITIONS const written (14 conditions × §XXIX–§XXXV); _buildEpilogueScroll() patch specified (4 lines); scroll ordering documented; interaction with NPC_EPILOGUES documented; no new flags; no lab report; §XI-A row + §V-A item 27 pending.*
