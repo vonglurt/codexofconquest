@@ -420,3 +420,7 @@ The map doesn't judge. It just shows.
 
 *lab-report-living-world.md — Layer 44 design document*  
 *Generated 2026-05-22 — roll2hit.com / Codex of Conquest*
+
+
+---
+*© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*

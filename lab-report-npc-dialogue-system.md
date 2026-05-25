@@ -571,3 +571,7 @@ That's the whole design.
 
 *lab-report-npc-dialogue-system.md — Layer 42 design document*  
 *Generated 2026-05-22 — roll2hit.com / Codex of Conquest*
+
+
+---
+*© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*

@@ -250,3 +250,7 @@ When a layer is complete, run this compaction process:
 *Codebase: roll2hit-v3.html — 7,465 lines, Layers 0–13 complete*  
 *plan.md: compacted from 1,223 → 85 lines*  
 *All removed specs verified as implemented before archival*
+
+
+---
+*© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*

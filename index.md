@@ -285,8 +285,20 @@ Roll2Hit is a single-file HTML application with no external dependencies. It run
 ---
 
 #### `lab-report-ponies-unicorns-aspirations-future-ideas.md` — Future Aspirations *(post-completion concepts)*
-**Purpose:** Aspirational ideas beyond the current build — not PLANNED layers. Documents three future product concepts: (1) DM's Companion Guide (80–120 page spoiler manual with NPC profiles, mission architecture, monster manual); (2) standalone Fishing Guide; (3) Mission Explorer (CRUD-style read interface showing monster/NPC/quest/state data with full debug metadata — variable names, data types, array indices, JavaScript reference paths).  
-**Status:** 💭 Aspirational — no implementation timeline; no Layer numbers. Record kept so ideas are not lost.
+**Purpose:** Aspirational ideas beyond the current build — not PLANNED layers. Documents four future product concepts: (1) DM's Companion Guide (80–120 page spoiler manual with NPC profiles, mission architecture, monster manual); (2) standalone Fishing Guide; (3) Mission Explorer (CRUD-style read interface showing monster/NPC/quest/state data with full debug metadata); (4) Polyphonic Pipe Organ Synthesizer (concept origin — see `lab-report-Polyphonic-Organ-Synth.md` for full implementation).  
+**Status:** 💭 Aspirational — Section VI (organ) now implemented as `5thOrgan.html`.
+
+---
+
+### Standalone Tools *(no build step — open directly in browser)*
+
+#### `5thOrgan.html` — Polyphonic Pipe Organ Synthesizer
+**Purpose:** Self-contained browser synthesizer. 12-voice polyphony × 6 harmonics per note = up to 72 simultaneous sine oscillators. Additive synthesis with real-time drawbar controls (H1–H6), ADSR envelope, biquad lowpass filter, harmonic falloff (dB/oct), and oscilloscope. Sequencer plays Beethoven Op.67 as a two-voice canon round. All parameters adjustable in real time.  
+**Status:** ✅ Implemented 2026-05-24. Open in any modern browser; no server required.
+
+#### `lab-report-Polyphonic-Organ-Synth.md` — Organ Synthesizer Design *(IEEE format)*
+**Purpose:** Full IEEE-format lab report on `5thOrgan.html`. Covers: harmonic series physics and stop registration (drawbars); MIDI-to-Hz mapping; ADSR envelope math for pipe organ; IIR biquad lowpass filter derivation (bilinear transform, Audio EQ Cookbook coefficients); convolution theorem connection; Beethoven 5th canon construction (note-collision proof); Web Audio API architecture diagram (170 node count); oscilloscope math; parameter reference table; design decisions (OscillatorNode vs ScriptProcessorNode; Taylor series sin reference; voice stealing); post-session review with future directions.  
+**Status:** ✅ Written 2026-05-24.
 
 ---
 

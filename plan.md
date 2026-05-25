@@ -476,7 +476,7 @@ The commit message should name the lab report and summarize what it covers in on
 
 ### A. Complete File Manifest — Disk vs index.md
 
-> **39 .md files + 1 .txt on disk. All files listed and indexed.**
+> **40 .md files + 1 .html + 1 .txt on disk. All files listed and indexed.**
 
 #### Core Reference (in index.md ✅)
 
@@ -527,7 +527,9 @@ The commit message should name the lab report and summarize what it covers in on
 | `lab-report-story-codoex-curse-of-knowedge.md` | ✅ | Writing style guide — no code reference | LOW |
 | `lab-report-fishing-bait-prompting.md` | ✅ | §XII design process meta-report: prompting methodology, plan.md-as-structured-prompt analysis, drop nerf + Luck stat integration documented | LOW |
 | `lab-report-documentation-system-design.md` | ✅ | IEEE-format analysis of the two-way sync architecture, plan.md purpose, keyword vocabulary, task decomposition framework (Spec→Stub→Code→Sync→Commit), ASCII diagrams | LOW |
-| `lab-report-ponies-unicorns-aspirations-future-ideas.md` | ✅ | 💭 Aspirational: DM's Companion Guide (80–120pp spoiler manual); standalone Fishing Guide; Mission Explorer (CRUD-style read interface with debug metadata per field) | LOW |
+| `lab-report-ponies-unicorns-aspirations-future-ideas.md` | ✅ | 💭 Aspirational: DM's Companion Guide (80–120pp spoiler manual); standalone Fishing Guide; Mission Explorer; Polyphonic Organ Synthesizer (§VI — implemented as 5thOrgan.html) | LOW |
+| `lab-report-Polyphonic-Organ-Synth.md` | ✅ | IEEE-format design report for `5thOrgan.html`: harmonic series, biquad filter derivation, ADSR for pipe organ, Beethoven 5th canon construction, Web Audio API architecture (170 nodes), post-session review | LOW |
+| `5thOrgan.html` | ✅ | Standalone polyphonic pipe organ synthesizer — 72 oscillators, drawbars H1–H6, ADSR, biquad LP filter, Beethoven Op.67 canon sequencer, oscilloscope, all params adjustable | LOW |
 
 #### ✅ Previously Missing from index.md — All Added (SP2)
 

@@ -445,3 +445,7 @@ These items translate the narrative arc into implementation steps for roll2hit-v
 ---
 
 *End of lab report. Implementation plan: see Layer 40 in plan.md.*
+
+
+---
+*© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*

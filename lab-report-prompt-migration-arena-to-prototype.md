@@ -734,3 +734,7 @@ The arena was a tool. The prototype is a position.
 *Codebase: roll2hit-v3.html — 7,465 lines, Layers 0–13 complete*  
 *Development span: Arena (~400 lines) → Prototype (7,465 lines), approximately 10× growth*  
 *Philosophy: The Cooperative DM Principle — the dungeon master is not your enemy*
+
+
+---
+*© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*

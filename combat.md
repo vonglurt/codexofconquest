@@ -503,3 +503,7 @@ MILEPOINT D  3 failures → _storyDeathSaveFall()
 | `_storyUnequipShield()` | 9754 | Unequips shield as bonus action after main attack; triggers enemy turn | `usedMainAttack`, `usedBonusAction`, `equippedShield` | `equippedShield=null`, `inventory.push()`, `_calcPlayerAc()`, `battleTurn='enemy'` |
 | `enterDeathSaves()` | 6021 | Battle Mode death saves (parallel, not shared with Story layer) | `S.player.*` | `S.deathSaves.*` |
 | `rollDeathSave()` | 6040 | Rolls one Battle Mode death save d20 | `S.deathSaves` | `S.deathSaves.successes/failures` |
+
+
+---
+*© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*

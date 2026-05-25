@@ -262,3 +262,7 @@ The following mechanics are **described in this report but not yet implemented**
 *Report written 2026-05-21*  
 *Codebase: roll2hit-v3.html — Layers 0–12 implemented*  
 *Layer 13 (Rest Architecture + Necklace of Knowledge) — specification complete, implementation pending*
+
+
+---
+*© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*

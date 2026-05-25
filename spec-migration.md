@@ -584,3 +584,7 @@ The world of *The Shattered Codex* — 42 nodes, 8 acts, 49 days, 7 Shards, and 
 *Document prepared for software architecture review.*
 *System: roll2hit.com / The Shattered Codex · Layers 0–8 complete*
 *Single-file HTML application · ~6,100 lines · No external dependencies · No build step*
+
+
+---
+*© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*

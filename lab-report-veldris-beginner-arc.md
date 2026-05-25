@@ -336,3 +336,7 @@ Yael's escort activates when "Walk with me" is clicked. A one-time corridor narr
 ---
 
 *End of lab report. Implementation: see Layer 41 in plan.md.*
+
+
+---
+*© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*

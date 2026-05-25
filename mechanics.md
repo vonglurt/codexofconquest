@@ -1111,3 +1111,7 @@ MILEPOINT E  _magicTierAllowed(magic) — single line: level >= magic * 5
 | `_lu_refreshAsiBtns()` | 9590 | Disables capped (≥20) or exhausted ASI buttons | `_lu_pending.asiRemaining`, `abilityScores` | DOM .lu-asi-btn disabled states |
 | `_lu_applyGiftsAndFinish(lvl, hp)` | 14233 | Awards gold gift + magic shield; closes modal; autosaves | `_LEVEL_GOLD_GIFT[lvl]`, `_LEVEL_SHIELD_GIFT[lvl]` | `S_story.gold`, `equippedShield`, `tattoos`, `levelUpLog` |
 | `storyUpdateStatus()` | 12837 | Refreshes all status bar elements (HP, gold, day, level, XP bar) | All S_story display fields | DOM status bar elements |
+
+
+---
+*© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*

@@ -745,3 +745,7 @@ That is the victory. The Codex reforging is just the last one.
 ---
 
 *End of lab report. Implementation plan: see Layer 39 in plan.md.*
+
+
+---
+*© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*

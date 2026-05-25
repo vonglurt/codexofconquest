@@ -185,3 +185,7 @@ The fishing mechanic: roll two d20s (`d1`, `d2`), set `lo = Math.min(d1,d2)`, `h
 He knows. He has always known. He considers it a nice day.
 
 ---
+
+
+---
+*© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*

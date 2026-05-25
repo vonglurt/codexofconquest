@@ -1043,3 +1043,7 @@ Luck is a read-only derived stat. It has no entry in `_S_DEFAULTS()` and is neve
 **Applications:** See `mechanics.md` Luck stub for the full application table (bare hook fishing, tournament tiebreaker, bait search DC, d100 loot, corridor encounter, death saves).
 
 **Implementation note:** `getLuck()` is a pure function. It takes nothing and returns nothing — it reads `S_story.abilityScores` directly. Adding Luck to the character sheet requires no new state field, only a display call. See `plan.md` §XIII for the 13-step implementation plan.
+
+
+---
+*© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*

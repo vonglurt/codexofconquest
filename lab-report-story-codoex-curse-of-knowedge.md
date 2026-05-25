@@ -481,3 +481,7 @@ Keep going.
 ---
 
 *End of lab report. All character revisions, quote additions, and terrain descriptions are available for direct incorporation into `story.md`. The structural node network, combat system, and EPIC token log require no changes — the bones are right. The flesh is what needed more blood in it.*
+
+
+---
+*© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*

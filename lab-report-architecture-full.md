@@ -1001,3 +1001,7 @@ The lesson is not "single files are good." The lesson is: choose your constraint
 ---
 
 *End of report.*
+
+
+---
+*© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*

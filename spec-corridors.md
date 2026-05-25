@@ -697,3 +697,7 @@ Add `'story-corridor-overlay'` to:
 
 *Last updated: 2026-05-21*  
 *Status: ✅ COMPLETE — L9-A through L9-H all implemented (6,700 lines, 2026-05-21)*
+
+
+---
+*© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*

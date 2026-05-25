@@ -920,3 +920,7 @@ The story navigation control is a 3×3 grid of buttons. Corner buttons are `.dpa
 
 ### Current State
 All 37 layers are implemented in `roll2hit-v3.html` (~10,200 lines, 515 div pairs). The single-file, no-CDN architecture is complete. Story Mode and Battle Mode share a single mutable `S_story` state object. Layers 21–37 added the Fighter level-up system (tattoos, Extra Attack, Action Surge, Indomitable), d100 unified loot, notoriety scaling, world minimap, waypoint BFS, city slums node (51 total), and the d-pad 3×3 grid with Boyscout Token camping mechanics and character sheet overlay.
+
+
+---
+*© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*

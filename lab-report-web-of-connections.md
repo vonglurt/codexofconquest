@@ -391,3 +391,7 @@ The web of connections is the witness.
 
 *lab-report-web-of-connections.md — Layer 45 design document*  
 *Generated 2026-05-22 — roll2hit.com / Codex of Conquest*
+
+
+---
+*© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*

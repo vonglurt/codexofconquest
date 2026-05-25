@@ -537,3 +537,7 @@ Behavior sequence:
 - Applies the same warmth-tint color logic as `_renderWorldMiniMap()` — a final snapshot of the player's world coverage
 - Rendered into the victory sequence overlay, not the standard map panel
 - No interaction; display-only
+
+
+---
+*© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*

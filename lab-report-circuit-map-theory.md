@@ -687,3 +687,7 @@ This is the philosophical conclusion: by reducing the infinite grid to a sparse 
 *Implementation spec: `spec-corridors.md`*  
 *Feature plan: `plan.md`*  
 *Last updated: 2026-05-21*
+
+
+---
+*© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*

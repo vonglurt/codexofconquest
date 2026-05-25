@@ -127,3 +127,7 @@ The game saves automatically to `localStorage` after every meaningful action. To
 - The terrain you're standing in determines what monsters you'll encounter when you Hunt.
 - Gold matters. Manage your condition economy — some debuffs cost gold to cure before battle.
 - The Void Tide advances daily. Don't wait too long.
+
+
+---
+*© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*

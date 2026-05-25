@@ -426,3 +426,7 @@ Fades before the title appears. Can't be paused or screenshot. It's there for on
 
 *lab-report-endings-and-echoes.md — Layer 43 design document*  
 *Generated 2026-05-22 — roll2hit.com / Codex of Conquest*
+
+
+---
+*© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*

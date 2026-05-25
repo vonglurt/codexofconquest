@@ -519,3 +519,8 @@ osc.stop(stopTime + 0.201); // stop all 6 oscillators after release
 ---
 
 *Section VI added 2026-05-24 — Polyphonic Pipe Organ Synthesizer concept: 72-oscillator sine wave engine (12-note polyphony × 6 harmonics), Web Audio API implementation, MIDI and JSON tablature input, harmonic series mixer (stop simulation), Beethoven's 5th opening motif as demo sequence.*
+
+**Implementation status (2026-05-24):** ✅ **Implemented.** The organ synthesizer is now live as `5thOrgan.html` — a self-contained single-file browser synthesizer. Full IEEE-format design report: `lab-report-Polyphonic-Organ-Synth.md`. Includes 6 harmonic drawbars, adjustable ADSR/filter/falloff, Beethoven Op.67 two-voice canon sequencer, 12-voice polyphony with voice stealing, and oscilloscope. Future directions in lab report §XIII: AudioWorklet variant, PeriodicWave blending, song library UI, chord-progression loop, random-seed generative melody (LCG scale walk), bass pedal tone sustain layer.
+
+---
+*© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*

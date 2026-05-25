@@ -792,3 +792,7 @@ Ocean EB nodes         →  London sea
 *plan.md last updated 2026-05-22 — Layers 0–45 complete. All S-suggestions addressed: S1–S60 ✅ (S24–S26 are tooling, marked out of scope).*  
 *Codebase: roll2hit-v3.html — 14,339 lines · NODE_MAP: 51 nodes (71 with Layer 39 EBs) · MONSTER_POOL: 341+ monsters*
 
+
+
+---
+*© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>5thOrgan — Polyphonic Pipe Organ Synthesizer</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#141414;color:#ddd0b8;font-family:'Courier New',monospace;padding:18px;min-width:680px}
+h1{font-size:1.3em;color:#c8a96e;border-bottom:1px solid #383020;padding-bottom:7px;margin-bottom:4px}
+.subtitle{font-size:0.7em;color:#555;margin-bottom:16px}
+h2{font-size:0.75em;color:#8a7850;margin-bottom:10px;letter-spacing:0.12em;text-transform:uppercase}
+.panel{background:#1e1e1e;border:1px solid #2e2e2e;border-radius:4px;padding:14px;margin-bottom:12px}
+
+/* Transport row */
+.trow{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+button{background:#2a2010;color:#c8a96e;border:1px solid #c8a96e55;border-radius:3px;
+  padding:7px 18px;cursor:pointer;font-family:inherit;font-size:0.9em;letter-spacing:0.05em;transition:all .15s}
+button:hover{background:#c8a96e;color:#141414}
+button.on{background:#c8a96e;color:#141414;border-color:#c8a96e}
+.num-in{background:#111;color:#c8a96e;border:1px solid #333;border-radius:3px;
+  padding:4px 7px;font-family:inherit;font-size:0.85em;width:68px}
+.num-lbl{font-size:0.68em;color:#666;margin-bottom:2px}
+.npair{display:flex;flex-direction:column}
+#status{font-size:0.7em;color:#5a8860;min-width:260px;height:16px}
+.vdots{display:flex;gap:5px;align-items:center;margin-top:4px}
+.vdot{width:11px;height:11px;border-radius:50%;background:#222;border:1px solid #3a3a3a;
+  transition:background .06s,border-color .06s}
+.vdot.on{background:#c8a96e;border-color:#e0c080}
+
+/* Drawbars */
+.dbar-section{display:flex;gap:20px;align-items:flex-start}
+.dbar-rack{display:flex;gap:10px;align-items:flex-end;padding:10px 12px;
+  background:#111;border-radius:4px;border:1px solid #252525}
+.dbar-col{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:36px}
+.dbar-col label{font-size:0.6em;color:#777;text-align:center;line-height:1.3}
+.dbar-col .dval{font-size:0.62em;color:#c8a96e;text-align:center}
+/* Vertical range via writing-mode (Firefox+Chrome) */
+input.vrange{
+  writing-mode:vertical-lr;direction:rtl;
+  -webkit-appearance:slider-vertical;appearance:slider-vertical;
+  width:26px;height:110px;cursor:pointer;accent-color:#c8a96e}
+.dbar-note{font-size:0.68em;color:#555;max-width:200px;line-height:1.7}
+
+/* Param sliders */
+.prow{display:flex;gap:16px;flex-wrap:wrap;margin-top:2px}
+.param{display:flex;flex-direction:column;gap:3px;min-width:110px}
+.param label{font-size:0.68em;color:#666}
+.param input[type=range]{accent-color:#c8a96e;cursor:pointer;width:100%}
+.param .pval{font-size:0.68em;color:#c8a96e;text-align:right}
+
+/* Scope */
+canvas{background:#080808;border:1px solid #252525;border-radius:3px;display:block}
+.footer{font-size:0.62em;color:#444;margin-top:14px}
+</style>
+</head>
+<body>
+<h1>5thOrgan — Polyphonic Pipe Organ Synthesizer</h1>
+<p class="subtitle">Additive synthesis · 12-voice polyphony · 6 harmonics/note · Beethoven Op.67 canon round · roll2hit.com 2026</p>
+
+<!-- Transport -->
+<div class="panel">
+  <h2>Transport</h2>
+  <div class="trow">
+    <button id="btnPlay">▶&nbsp;Play</button>
+    <div class="npair"><div class="num-lbl">BPM</div><input class="num-in" type="number" id="bpm" value="108" min="40" max="240"></div>
+    <div class="npair"><div class="num-lbl">Round offset (16ths)</div><input class="num-in" type="number" id="ro" value="14" min="1" max="56"></div>
+    <div class="npair"><div class="num-lbl">Repetitions</div><input class="num-in" type="number" id="nr" value="16" min="1" max="64"></div>
+    <div>
+      <div id="status">Ready — click Play to start.</div>
+      <div class="vdots" id="vdots"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Drawbars -->
+<div class="panel">
+  <h2>Harmonic Drawbars</h2>
+  <div class="dbar-section">
+    <div class="dbar-rack" id="dbarRack"></div>
+    <div class="dbar-note">
+      Each drawbar controls the amplitude of one harmonic partial.<br>
+      H1 8′ — Principal (fundamental)<br>
+      H2 4′ — Principal (octave)<br>
+      H3 2⅔′ — Quint (oct+fifth)<br>
+      H4 2′ — Super Octave<br>
+      H5 1⅗′ — Tierce (oct+third)<br>
+      H6 1⅓′ — Larigot (oct+fifth)
+    </div>
+  </div>
+</div>
+
+<!-- Envelope + Filter -->
+<div class="panel">
+  <h2>Envelope &amp; Filter</h2>
+  <div class="prow">
+    <div class="param">
+      <label>Attack (ms)</label>
+      <input type="range" id="sAtk" min="1" max="500" value="10" step="1">
+      <div class="pval" id="vAtk">10 ms</div>
+    </div>
+    <div class="param">
+      <label>Release (ms)</label>
+      <input type="range" id="sRel" min="10" max="2000" value="200" step="10">
+      <div class="pval" id="vRel">200 ms</div>
+    </div>
+    <div class="param">
+      <label>Master Volume</label>
+      <input type="range" id="sVol" min="0" max="1" value="0.5" step="0.01">
+      <div class="pval" id="vVol">0.50</div>
+    </div>
+    <div class="param">
+      <label>Filter Cutoff (Hz)</label>
+      <input type="range" id="sCut" min="200" max="20000" value="5000" step="100">
+      <div class="pval" id="vCut">5000 Hz</div>
+    </div>
+    <div class="param">
+      <label>Filter Q</label>
+      <input type="range" id="sQ" min="0.1" max="10" value="0.707" step="0.01">
+      <div class="pval" id="vQ">0.71</div>
+    </div>
+    <div class="param">
+      <label>Harmonic Falloff (dB/oct)</label>
+      <input type="range" id="sFall" min="0" max="24" value="6" step="0.5">
+      <div class="pval" id="vFall">6.0 dB/oct</div>
+    </div>
+  </div>
+</div>
+
+<!-- Oscilloscope -->
+<div class="panel">
+  <h2>Oscilloscope</h2>
+  <canvas id="scope" width="620" height="90"></canvas>
+</div>
+
+<div class="footer">© 2026 roll2hit.com — MIT License — <a href="LICENSE" style="color:#555">LICENSE</a></div>
+
+<script>
+'use strict';
+
+// ── Constants ─────────────────────────────────────────────────────────────
+const N_HARM   = 6;
+const MAX_VOX  = 12;
+
+// Beethoven Op.67 opening motif in 16th-note units
+// [beat16, midiNote, dur16, velocity]
+const MOTIF = [
+  [0,  67, 2, 0.85],   // G4  short
+  [2,  67, 2, 0.85],   // G4
+  [4,  67, 2, 0.85],   // G4
+  [6,  63, 8, 1.00],   // Eb4 long
+  [14, 65, 2, 0.85],   // F4  short
+  [16, 65, 2, 0.85],   // F4
+  [18, 65, 2, 0.85],   // F4
+  [20, 62, 8, 1.00],   // D4  long
+];
+const MOTIF_LEN = 28;  // total 16th-note span of one repetition
+
+// ── Mutable parameters (kept in sync with sliders) ───────────────────────
+const P = {
+  drawbars:  [1.000, 0.500, 0.333, 0.250, 0.200, 0.167],
+  falloffDB: 6,
+  attackMs:  10,
+  releaseMs: 200,
+  masterVol: 0.50,
+  cutHz:     5000,
+  filterQ:   0.707,
+};
+
+// ── Audio context + nodes ────────────────────────────────────────────────
+let actx = null, masterGain = null, analyser = null;
+
+function initAudio() {
+  if (actx) return;
+  actx = new (window.AudioContext || window.webkitAudioContext)();
+  masterGain = actx.createGain();
+  masterGain.gain.value = P.masterVol;
+  analyser = actx.createAnalyser();
+  analyser.fftSize = 2048;
+  masterGain.connect(analyser);
+  analyser.connect(actx.destination);
+}
+
+// ── Tuning ───────────────────────────────────────────────────────────────
+function midiHz(m) { return 440 * Math.pow(2, (m - 69) / 12); }
+
+// Amplitude for harmonic h (1-based): drawbar × dB falloff
+function harmAmp(h) {
+  return P.drawbars[h - 1] * Math.pow(10, -(P.falloffDB * Math.log2(h)) / 20);
+}
+
+// ── Voice pool ───────────────────────────────────────────────────────────
+const voices = Array.from({ length: MAX_VOX }, () => ({
+  active: false, midi: -1, vel: 0, startTime: 0, gen: 0,
+  noteGain: null, filter: null, oscs: []
+}));
+
+function noteOn(midi, vel, when) {
+  initAudio();
+  // find free slot or steal oldest active
+  let slot = voices.find(v => !v.active);
+  if (!slot) {
+    slot = voices.reduce((a, b) => a.startTime < b.startTime ? a : b);
+    shutSlot(slot, when);  // release it before reuse
+  }
+
+  const f0   = midiHz(midi);
+  const atkS = P.attackMs / 1000;
+  const ng   = actx.createGain();
+  ng.gain.setValueAtTime(0, when);
+  ng.gain.linearRampToValueAtTime(vel * 0.065, when + atkS);
+
+  const flt = actx.createBiquadFilter();
+  flt.type = 'lowpass';
+  flt.frequency.value = P.cutHz;
+  flt.Q.value = P.filterQ;
+  ng.connect(flt);
+  flt.connect(masterGain);
+
+  const oscs = [];
+  for (let h = 1; h <= N_HARM; h++) {
+    const osc = actx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.value = f0 * h;
+    const hg = actx.createGain();
+    hg.gain.value = harmAmp(h);
+    osc.connect(hg);
+    hg.connect(ng);
+    osc.start(when);
+    oscs.push({ osc, hg });
+  }
+
+  slot.active = true; slot.midi = midi; slot.vel = vel;
+  slot.startTime = when; slot.noteGain = ng; slot.filter = flt;
+  slot.oscs = oscs; slot.gen++;
+  dots();
+}
+
+function shutSlot(slot, when) {
+  if (!slot.active) return;
+  slot.active = false;
+  const myGen = slot.gen;
+  const g     = slot.noteGain;
+  const relS  = P.releaseMs / 1000;
+  const atkEnd = slot.startTime + P.attackMs / 1000;
+  const relStart = Math.max(when, atkEnd);
+  const stopAt   = relStart + relS;
+  g.gain.setValueAtTime(slot.vel * 0.065, relStart);
+  g.gain.linearRampToValueAtTime(0, stopAt);
+  slot.oscs.forEach(({ osc }) => { try { osc.stop(stopAt + 0.02); } catch(e){} });
+  const delay = Math.max(50, (stopAt - (actx ? actx.currentTime : 0)) * 1000 + 150);
+  setTimeout(() => {
+    if (slot.gen !== myGen) return;  // slot was reused — skip disconnect
+    try {
+      slot.oscs.forEach(({ osc, hg }) => { osc.disconnect(); hg.disconnect(); });
+      g.disconnect();
+      slot.filter.disconnect();
+    } catch(e){}
+    dots();
+  }, delay);
+}
+
+function noteOff(midi, when) {
+  let best = null;
+  voices.forEach(v => {
+    if (v.active && v.midi === midi && (!best || v.startTime > best.startTime)) best = v;
+  });
+  if (best) shutSlot(best, when);
+}
+
+function allOff(when) { voices.forEach(v => { if (v.active) shutSlot(v, when); }); }
+
+// ── Sequencer ─────────────────────────────────────────────────────────────
+let playing = false, schedTimer = null;
+let seqEvents = [], seqStart = 0, seqIdx = 0;
+
+function buildSeq(bpm, roundOff, nReps) {
+  const s16 = (60 / bpm) / 4;  // one 16th note in seconds
+  const evs = [];
+  function addTrack(startBeat) {
+    for (let rep = 0; rep < nReps; rep++) {
+      const base = (startBeat + rep * MOTIF_LEN) * s16;
+      MOTIF.forEach(([beat, midi, dur, vel]) => {
+        const tOn  = base + beat * s16;
+        const tOff = tOn + dur * s16 * 0.92;  // slight gap before noteOff
+        evs.push({ t: tOn,  type: 'on',  midi, vel });
+        evs.push({ t: tOff, type: 'off', midi });
+      });
+    }
+  }
+  addTrack(0);         // Track 1: starts at beat 0
+  addTrack(roundOff);  // Track 2: offset canon voice
+  evs.sort((a, b) => a.t - b.t);
+  return evs;
+}
+
+function sched() {
+  if (!playing) return;
+  const now = actx.currentTime;
+  const horizon = now + 0.15;
+
+  while (seqIdx < seqEvents.length) {
+    const ev = seqEvents[seqIdx];
+    const t  = seqStart + ev.t;
+    if (t > horizon) break;
+    const tc = Math.max(t, now + 0.001);
+    ev.type === 'on' ? noteOn(ev.midi, ev.vel, tc) : noteOff(ev.midi, tc);
+    seqIdx++;
+  }
+
+  if (seqIdx >= seqEvents.length) {
+    // seamless loop
+    const s16 = (60 / gBPM()) / 4;
+    seqStart += (gRO() + gNR() * MOTIF_LEN) * s16;
+    seqIdx = 0;
+  }
+  schedTimer = setTimeout(sched, 50);
+}
+
+function startPlay() {
+  initAudio();
+  if (actx.state === 'suspended') actx.resume();
+  seqEvents = buildSeq(gBPM(), gRO(), gNR());
+  seqStart  = actx.currentTime + 0.08;
+  seqIdx    = 0;
+  playing   = true;
+  sched();
+  btnState(true);
+  status('Playing — Op.67 canon · ' + gBPM() + ' BPM · offset ' + gRO() + ' 16ths');
+}
+function stopPlay() {
+  playing = false;
+  if (schedTimer) clearTimeout(schedTimer);
+  if (actx) allOff(actx.currentTime);
+  btnState(false);
+  status('Stopped.');
+}
+
+function gBPM(){ return Math.max(40, Math.min(240, parseInt(document.getElementById('bpm').value)||108)); }
+function gRO() { return Math.max(1,  Math.min(56,  parseInt(document.getElementById('ro').value)||14)); }
+function gNR() { return Math.max(1,  Math.min(64,  parseInt(document.getElementById('nr').value)||16)); }
+
+// ── UI helpers ────────────────────────────────────────────────────────────
+function btnState(on) {
+  const b = document.getElementById('btnPlay');
+  b.textContent = on ? '■  Stop' : '▶  Play';
+  b.classList.toggle('on', on);
+}
+function status(m) { document.getElementById('status').textContent = m; }
+function dots() {
+  document.querySelectorAll('.vdot').forEach((d, i) =>
+    d.classList.toggle('on', i < voices.length && voices[i].active));
+}
+
+document.getElementById('btnPlay').addEventListener('click', () =>
+  playing ? stopPlay() : startPlay());
+
+// ── Drawbars ──────────────────────────────────────────────────────────────
+const DBAR_LABELS = ["H1\n8′","H2\n4′","H3\n2⅔′","H4\n2′","H5\n1⅗′","H6\n1⅓′"];
+const DBAR_ACCENT = ['#c8a96e','#c8a96e','#a0a0a0','#a0a0a0','#c85050','#c85050'];
+
+const rack = document.getElementById('dbarRack');
+for (let i = 0; i < N_HARM; i++) {
+  const col = document.createElement('div');
+  col.className = 'dbar-col';
+  const lbl = document.createElement('label');
+  lbl.style.whiteSpace = 'pre-line';
+  lbl.textContent = DBAR_LABELS[i];
+  const inp = document.createElement('input');
+  inp.type = 'range'; inp.className = 'vrange';
+  inp.min = '0'; inp.max = '1'; inp.step = '0.01';
+  inp.value = P.drawbars[i];
+  inp.style.accentColor = DBAR_ACCENT[i];
+  const dval = document.createElement('div');
+  dval.className = 'dval';
+  dval.textContent = P.drawbars[i].toFixed(2);
+  const hi = i;
+  inp.addEventListener('input', () => {
+    P.drawbars[hi] = parseFloat(inp.value);
+    dval.textContent = P.drawbars[hi].toFixed(2);
+    // update any currently sounding voice for this harmonic
+    voices.forEach(v => {
+      if (v.active && v.oscs[hi])
+        v.oscs[hi].hg.gain.setValueAtTime(harmAmp(hi+1), actx ? actx.currentTime : 0);
+    });
+  });
+  col.appendChild(lbl);
+  col.appendChild(inp);
+  col.appendChild(dval);
+  rack.appendChild(col);
+}
+
+// ── Voice dots ────────────────────────────────────────────────────────────
+const vdg = document.getElementById('vdots');
+for (let i = 0; i < MAX_VOX; i++) {
+  const d = document.createElement('div');
+  d.className = 'vdot'; d.title = 'Voice ' + (i+1);
+  vdg.appendChild(d);
+}
+
+// ── Envelope + filter sliders ─────────────────────────────────────────────
+function bindParam(sid, vid, unit, dec, fn) {
+  const el = document.getElementById(sid);
+  const vl = document.getElementById(vid);
+  el.addEventListener('input', () => {
+    const v = parseFloat(el.value);
+    fn(v);
+    vl.textContent = v.toFixed(dec) + (unit ? ' ' + unit : '');
+  });
+}
+bindParam('sAtk',  'vAtk',  'ms',     0, v => { P.attackMs  = v; });
+bindParam('sRel',  'vRel',  'ms',     0, v => { P.releaseMs = v; });
+bindParam('sVol',  'vVol',  '',       2, v => { P.masterVol = v; if(masterGain) masterGain.gain.value = v; });
+bindParam('sCut',  'vCut',  'Hz',     0, v => { P.cutHz     = v; voices.forEach(vv => { if(vv.active&&vv.filter) vv.filter.frequency.value=v; }); });
+bindParam('sQ',    'vQ',    '',       2, v => { P.filterQ   = v; voices.forEach(vv => { if(vv.active&&vv.filter) vv.filter.Q.value=v; }); });
+bindParam('sFall', 'vFall', 'dB/oct', 1, v => { P.falloffDB = v; });
+
+// ── Oscilloscope ──────────────────────────────────────────────────────────
+const sc = document.getElementById('scope');
+const sx = sc.getContext('2d');
+const scBuf = new Float32Array(2048);
+
+function drawScope() {
+  requestAnimationFrame(drawScope);
+  const W = sc.width, H = sc.height;
+  sx.fillStyle = '#080808';
+  sx.fillRect(0, 0, W, H);
+  if (!analyser) return;
+  analyser.getFloatTimeDomainData(scBuf);
+  // center line
+  sx.strokeStyle = '#1e1e1e';
+  sx.lineWidth = 0.8;
+  sx.beginPath(); sx.moveTo(0, H/2); sx.lineTo(W, H/2); sx.stroke();
+  // waveform
+  sx.strokeStyle = '#c8a96e';
+  sx.lineWidth = 1.4;
+  sx.beginPath();
+  const step = Math.ceil(scBuf.length / W);
+  for (let x = 0; x < W; x++) {
+    const y = H/2 - (scBuf[x*step]||0) * H * 0.44;
+    x === 0 ? sx.moveTo(x, y) : sx.lineTo(x, y);
+  }
+  sx.stroke();
+}
+drawScope();
+</script>
+</body>
+</html>
