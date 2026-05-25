@@ -16989,11 +16989,23 @@ function _weightedMonsterPick(terrain) {
   return weighted.length ? weighted[Math.floor(Math.random() * weighted.length)] : null;
 }
 
-function triggerCorridorEncounter(terrain, destCode, questHunt) {
-  const pick     = questHunt ? _stalkedMonsterPick(terrain) : _weightedMonsterPick(terrain);
+function triggerCorridorEncounter(terrain, destCode, questHunt, forceQuestTarget) {
+  let pick;
+  if (forceQuestTarget) {
+    // 100% guaranteed quest monster — pick exclusively from quest targets in this terrain
+    const terrainDb = WORLD_DB[terrain];
+    const terrainPool = terrainDb ? terrainDb.monsters : [];
+    const questKeys = _getQuestTargetKeys();
+    const inPool = terrainPool.filter(m => questKeys.has(m.key));
+    pick = inPool.length
+      ? inPool[Math.floor(Math.random() * inPool.length)]
+      : _stalkedMonsterPick(terrain); // fallback: no quest target in this terrain
+  } else {
+    pick = questHunt ? _stalkedMonsterPick(terrain) : _weightedMonsterPick(terrain);
+  }
   const destNode = NODE_MAP[destCode];
   if (!pick) { storyRender(destNode); return; }
-  if (questHunt) S_story.surpriseAdvantage = true;
+  if (questHunt || forceQuestTarget) S_story.surpriseAdvantage = true;
   S_story.pendingBattle = { nodeCode: destCode, name: pick.name, label: destNode ? destNode.label : destCode, corridor: true };
   loadWorldMonster(pick);
   storyExit();
@@ -17030,11 +17042,14 @@ function _showCorridorPrompt(fromCode, destCode, dir) {
   const targetNames = relevantTargets.map(k => {
     const m = MONSTER_POOL[k]; return m ? m.name : k;
   });
+  const huntBtn = document.getElementById('btn-corridor-hunt');
   if (targetNames.length) {
     targetsEl.style.display = '';
-    targetsEl.textContent = '🎯 Hunting: ' + targetNames.join(' · ');
+    targetsEl.textContent = '🎯 Quest targets on this road: ' + targetNames.join(' · ');
+    huntBtn.textContent = '🎯 Hunt (1hr) — 100% quest monster';
   } else {
     targetsEl.style.display = 'none';
+    huntBtn.textContent = '🎯 Hunt — guaranteed encounter';
   }
 
   document.getElementById('story-corridor-overlay').classList.add('visible');
@@ -17076,8 +17091,8 @@ function storyCorridorTravel(fromCode, destCode, dir, forceEncounter) {
         storyMsg('📋 The patrol glances at your papers and waves you through. (False Warrant Papers consumed.)');
         storyRender(NODE_MAP[destCode]);
       } else {
-        storyMsg('🎯 Hunting footpath → ' + destLabel + ' — ambush!');
-        triggerCorridorEncounter(terrain, destCode, true);
+        storyMsg('🎯 Hunting footpath → ' + destLabel + (forceEncounter ? ' — quest target spotted!' : ' — ambush!'));
+        triggerCorridorEncounter(terrain, destCode, true, forceEncounter);
       }
     } else {
       storyMsg('🎯 Hunting footpath → ' + destLabel + ' — no prey found.');
