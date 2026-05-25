@@ -8419,6 +8419,9 @@ const _S_DEFAULTS = () => ({
   vsShamanBenediktDelivered: false,
   // Layer 61: Corelli Wandering Merchant
   fav_corelli: 0, corelli_purchase_count: 0, corelli_encounter_count: 0, corelliRevelationDelivered: false,
+  // Chronicle — permanent career ledger (never reset) and per-run ledger (reset on respawn)
+  careerStats: { kills:0, deaths:0, dmgDealt:0, dmgReceived:0, sleeps:0 },
+  runStats:    { kills:0, deaths:0, dmgDealt:0, dmgReceived:0, sleeps:0 },
 });
 
 /* ── Layer 48: Luck — Seventh Stat ── */
@@ -8756,15 +8759,25 @@ function storyVoidDefeat(type) {
   document.getElementById('story-defeat-modal').classList.add('visible');
 }
 
+function _statTally(key, n) {
+  if (!S_story.careerStats) S_story.careerStats = { kills:0, deaths:0, dmgDealt:0, dmgReceived:0, sleeps:0 };
+  if (!S_story.runStats)    S_story.runStats    = { kills:0, deaths:0, dmgDealt:0, dmgReceived:0, sleeps:0 };
+  S_story.careerStats[key] = (S_story.careerStats[key] || 0) + n;
+  S_story.runStats[key]    = (S_story.runStats[key]    || 0) + n;
+}
+
 function storyRespawnFromCheckpoint() {
-  // Tattoos outlive death — preserve them before loading older checkpoint state
-  const _survivingTattoos = (S_story.tattoos || []).slice();
+  // Tattoos and career stats outlive death — preserve before loading older checkpoint
+  const _survivingTattoos     = (S_story.tattoos || []).slice();
+  const _survivingCareerStats = Object.assign({}, S_story.careerStats || {});
   document.getElementById('story-gameover-modal').classList.remove('visible');
   if (!storyLoadSave('r2h_checkpoint')) Object.assign(S_story, _S_DEFAULTS());
-  // Always keep whichever tattoo set is larger (more progression)
   if (_survivingTattoos.length > (S_story.tattoos || []).length) {
     S_story.tattoos = _survivingTattoos;
   }
+  // Career stats carry forward unconditionally; run stats reset for the new life
+  S_story.careerStats = _survivingCareerStats;
+  S_story.runStats    = { kills:0, deaths:0, dmgDealt:0, dmgReceived:0, sleeps:0 };
   S_story.hp = Math.max(1, Math.floor(S_story.hpMax / 2));
   S_story.active = true;
   storyUpdateStatus();
@@ -9846,6 +9859,7 @@ function _overlayPlayerAttack() {
       finalDmg   = applyDmgMod(raw, S.opp.dmgMod);
       S.opp.hp   = Math.max(0, S.opp.hp - finalDmg);
       refreshLeftPanel();
+      _statTally('dmgDealt', finalDmg);
       logMsg = lbl + (isCrit ? '★ CRIT! ' : '✓ HIT! ') + atkTotal + ' vs AC ' + S.enemy.ac + ' — ' + finalDmg + ' dmg dealt.';
     }
     appendCard({ round: S.round, actor:'YOU',
@@ -9889,6 +9903,7 @@ function _overlayOffhandAttack() {
     finalDmg  = applyDmgMod(raw, S.opp.dmgMod);
     S.opp.hp  = Math.max(0, S.opp.hp - finalDmg);
     refreshLeftPanel();
+    _statTally('dmgDealt', finalDmg);
     logMsg = (isCrit ? '★ Offhand CRIT! ' : '✓ Offhand hit! ') + atkTotal + ' vs AC ' + S.enemy.ac + ' — ' + finalDmg + ' dmg.';
   }
   _sboLog('OFFHAND: ' + logMsg);
@@ -9921,6 +9936,7 @@ function _storyEnemyTurn() {
     S_story.hp  = S.player.hp;
     refreshLeftPanel();
     storyUpdateStatus();
+    _statTally('dmgReceived', finalDmg);
     logMsg = (isCrit ? '★ ENEMY CRIT! ' : '⚔ Enemy hit! ') + atkTotal + ' vs your AC ' + S.char.ac + ' — ' + finalDmg + ' dmg taken!';
   }
   appendCard({ round: S.round, actor:'OPP',
@@ -9967,6 +9983,7 @@ function _storyBattleVictory() {
   const xpAward = (S.enemy.ac || 10) * (S.opp.maxHp || 10);
   S_story.xp          += xpAward;
   S_story.xpLastBattle = xpAward;
+  _statTally('kills', 1);
   _levelUpQueue = [];   // reset before each battle resolution
   _checkLevelUp();      // fills _levelUpQueue with any newly earned levels
   const lvlUpEl = document.getElementById('svo-levelup');
@@ -10646,6 +10663,7 @@ function _storyDeathSaveFall() {
   S_story.inventory = [...critItems, Object.assign({}, STARTER_DAGGER)];
   S_story.pendingBattle = null;
   S_story.storyDeathSaves.active = false;
+  _statTally('deaths', 1);
 
   // Close battle overlay
   document.getElementById('story-battle-overlay').classList.remove('visible');
@@ -13171,6 +13189,7 @@ function _storyEbNpcModal(ebCode) {
       // Failed CHA check — NPC retaliates (non-lethal), still pays ceiling
       const dmg      = Math.max(1, Math.floor(Math.random() * 4) + 1);
       S_story.hp     = Math.max(1, (S_story.hp || 1) - dmg);
+      _statTally('dmgReceived', dmg);
       const npcName  = d.npc || 'He';
 
       const failPanel  = document.getElementById('eb-npc-cha-fail-panel');
@@ -15836,6 +15855,7 @@ function storyConfirmSleep() {
   _checkWorldProgressionEvents();
   // Record sleep
   S_story.sleptAtNodes[nodeCode] = true;
+  _statTally('sleeps', 1);
   S_story.missedSleeps = 0;
   S_story.countedMissedInns = {};
   S_story.checkpointNode = nodeCode;
@@ -16608,6 +16628,31 @@ function storyRenderCharSheet() {
     <div class="cs-section">
       <div class="cs-section-title">Progression — ${lv}/20 Levels · ${(S_story.tattoos||[]).length} Tattoos</div>
       ${progRows()}
+    </div>
+    <div class="cs-section">
+      <div class="cs-section-title">Chronicle</div>
+      ${(() => {
+        const cs = S_story.careerStats || {};
+        const rs = S_story.runStats    || {};
+        const fmt = n => (n || 0).toLocaleString();
+        const rows = [
+          ['Kills',           'kills'],
+          ['Deaths',          'deaths'],
+          ['Damage Dealt',    'dmgDealt'],
+          ['Damage Received', 'dmgReceived'],
+          ['Sleeps',          'sleeps'],
+        ];
+        const isFirstRun = (cs.deaths || 0) === 0;
+        return `<div style="display:grid;grid-template-columns:1fr auto auto;gap:2px 8px;font-size:11px;align-items:center">
+          <span style="color:#506070;font-style:italic"></span>
+          <span style="color:#a0c0e0;font-weight:bold;text-align:right;min-width:52px">This Life</span>
+          <span style="color:#FEA712;font-weight:bold;text-align:right;min-width:52px">${isFirstRun ? '' : 'All Lives'}</span>
+          ${rows.map(([label, key]) => `
+          <span class="cs-row-lbl" style="font-size:11px">${label}</span>
+          <span class="cs-row-val" style="text-align:right;font-size:11px;color:#c8d8e8">${fmt(rs[key])}</span>
+          <span class="cs-row-val" style="text-align:right;font-size:11px;color:#FEA712">${isFirstRun ? '' : fmt(cs[key])}</span>`).join('')}
+        </div>`;
+      })()}
     </div>
   `;
 }
