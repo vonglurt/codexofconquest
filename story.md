@@ -1424,6 +1424,16 @@ When `ngPlusRun > 0` and the player re-enters an Epic Battleground node, a one-t
 | EP | "Low tide, same as before. He's been guarding it since he died." |
 | EG | "Kazrath has been here since before the Codex shattered. This is a very long time." |
 
+#### ⚠️ PLANNED — NG+ Remembrance Layer (plan.md §XV, Layer 50)
+
+When `ngPlusRun >= 1` AND 3+ Dear Friends preserved AND `questMinusOne` was true at NG+ transition:
+
+- **Entry 42 modal** fires on first CI arrival: player writes (or skips) the 42nd journal entry. Saved to `S_story.entry42Text`. Appears in FROBERGER_JOURNAL sidebar as "Entry 42 — Your Hand."
+- **NPC_NG_MEMORY_LINES** — second-visit callbacks for each Dear Friend (fav ≥ 2 preserved); fires once per NG+ run per NPC.
+- **Quest chain Q-NG-01 through Q-NG-03**: "The Next Froberger" — visit all 6 Dear Friends (Q-NG-01), read Entry 42 from journal (Q-NG-02), complete all 6 Birka quests again (Q-NG-03).
+- **CO second scroll** fires after Void sealed if `nextFrobergerComplete = true`: *"The journal has 42 entries now. One of them is yours. This run is the second count."*
+- See plan.md §XV for full quest text, state flags, and implementation steps.
+
 ---
 
 ## BIRKA ARC SUMMARY (Layers 41–42)

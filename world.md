@@ -407,6 +407,10 @@ Perks persist through NG+. Character sheet shows "Weckmann's Student" badge when
 
 `FROBERGER_TRACES` — 6 one-time NPC memories of Froberger. Each gated by fav ≥ 2 and sufficient visit count. Delivered via `_checkFrobergerTrace(npcKey)` priority injection in `_getNPCDialogue()`.
 
+#### ⚠️ PLANNED — NPC_NG_MEMORY_LINES (plan.md §XV, Layer 50)
+
+Second-visit callbacks for Dear Friends in qualifying NG+ runs (ngPlusRun ≥ 1, fav ≥ 2 preserved, `questMinusOne` was set). Fires once per NPC per NG+ run (`ngMemoryDelivered[npcKey]`). A separate 6-entry const — not part of `NPC_DIALOGUES`. Each line acknowledges that the player was there before, that something changed, and that the NPC knows it. See plan.md §XV-E for full line text.
+
 ### Cross-References
 
 `NPC_CROSS_REFS` — 17 dialogue lines where NPCs mention each other. Injected every 3rd visit at fav ≥ 1. Reveals the pre-existing web of relationships in Birka.

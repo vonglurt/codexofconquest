@@ -399,7 +399,7 @@
 
 ### A. Complete File Manifest — Disk vs index.md
 
-> **35 .md files + 1 .txt on disk. Every file listed. Two .md files are missing from index.md. One .txt file is unindexed.**
+> **37 .md files + 1 .txt on disk. All files listed and indexed.**
 
 #### Core Reference (in index.md ✅)
 
@@ -407,6 +407,7 @@
 |------|---------------|---------------------|----------|
 | `index.md` | ✅ self | — (maintain) | MAINTAIN |
 | `plan.md` | ✅ | — (this document) | MAINTAIN |
+| `README.md` | ✅ | — (entry point; links to index.md + plan.md §XIV) | MAINTAIN |
 | `mechanics.md` | ✅ | `CONDITION_ITEMS`, `SHIELD_ITEMS`, `POTION_TIERS`, `XP_LEVELS`, `FIGHTER_FEATURES`, `_D100_TABLE`, `VENDOR_NODES`, `_ASI_TABLE`, `_LEVEL_GOLD_GIFT` | F4 |
 | `combat.md` | ✅ | `CONDITION_ADV`, `LOOT_TABLE`, `BOSS_COMMANDER_AUROS`, all Battle Mode functions | F6 |
 | `maps.md` | ✅ | `NODE_MAP` (coords/connections), `CORRIDOR_CELLS`, `GATE_LOCKS`, `NODE_COORDS`, `HUNTING_GROUNDS` | F1 |
@@ -447,6 +448,7 @@
 | `lab-report-prompt-migration-arena-to-prototype.md` | ✅ | Layers 0–13 retrospective — reference only | LOW |
 | `lab-report-loot-drop-weapon-economy.md` | ✅ | Historical proposal (implemented L25 as `_D100_TABLE`) — mark superseded | LOW |
 | `lab-report-story-codoex-curse-of-knowedge.md` | ✅ | Writing style guide — no code reference | LOW |
+| `lab-report-fishing-bait-prompting.md` | ✅ | §XII design process meta-report: prompting methodology, plan.md-as-structured-prompt analysis, drop nerf + Luck stat integration documented | LOW |
 
 #### ✅ Previously Missing from index.md — All Added (SP2)
 
@@ -1905,6 +1907,7 @@ creative_literacy_token: { name:'Creative Literacy Token', icon:'📄', sell:27 
 | World map grid (26×16) | `NODE_COORDS` + corridor calc | `maps.md` | ✅ YL/YC added to maps.md (grid + legend + network + coords); CQ PLANNED node stubbed; all docs consistent | ✅ SP2-02–04 |
 | **Function Coverage Table** | all ~169 named functions | `plan.md` §F1–F6 | ✅ All 169 functions verified documented in their target .md files; F4-ext/F6-ext sections added for level-up + Battle Mode utilities; `_renderSboShield()` + `_storyUnequipShield()` added to `combat.md` | ✅ SP2 complete |
 | **World Creator Wizard (§XIV)** | Quest -1 / Level 21 undefined / MIT fork | `plan.md §XIV` | ✅ PLANNED stubs: `story.md` CO node; `mechanics.md` Level 21 note; `index.md` lab-report-world-creator.md entry; `lab-report-friendships-with-magic.md` Appendix quote | ⚠️ PLANNED |
+| **NG+ Remembrance Layer (§XV)** | ngPlusRun ≥ 1 / Entry 42 / "The Next Froberger" | `plan.md §XV` | ✅ PLANNED stubs: `story.md` NG+ section; `world.md` NPC extended-memory note | ⚠️ PLANNED |
 
 ---
 
@@ -3381,4 +3384,205 @@ The original game will not know. That is also intentional.
 ---
 
 *§XIV status: ⚠️ PLANNED — Quest -1 text written; shell tooling documented; story.md/mechanics.md integration specified; implementation left to the developer who reaches Level 20.*
+
+---
+
+## Section XV — The NG+ Remembrance Layer: Entry 42 (Layer 50, ⚠️ PLANNED)
+
+> **Philosophy:** The game begins with finding Froberger's journal. He documented what he learned so you wouldn't have to start from zero. By New Game+, you have already done what Froberger did — you walked the world, you chose who to help, you sealed the Void. The question §XV asks is: *what do you leave behind for the next run?*
+>
+> Layer 50 is the layer that closes the loop.
+
+---
+
+### XV-A. The Premise
+
+Froberger's journal has 41 entries. Entry 42 is mentioned exactly once — in Quest -1:
+
+> *"— Froberger's margin note, Entry 42 (not yet written)"*
+
+Entry 42 is not Froberger's to write. He is dead. The researcher at the inn, the man who mapped every terrain — he ran out of time before he ran out of world.
+
+Entry 42 belongs to whoever came after him. On NG+, that is the player.
+
+---
+
+### XV-B. Trigger Conditions
+
+The Remembrance Layer activates on New Game+ (ngPlusRun ≥ 1) under the following conditions:
+
+| Condition | State field | Notes |
+|-----------|-------------|-------|
+| At least one prior completed run | `ngPlusRun >= 1` | Guaranteed in any NG+ session |
+| At least 3 NPCs at Dear Friend in prior run | Preserved `npcFavorability[key] >= 2` for ≥ 3 keys | Dear Friend is fav=2 or 3 |
+| Quest -1 completed in prior run | `questMinusOne === true` at time of NG+ transition | The door was opened |
+
+If all three conditions are met: **full Remembrance Layer** (Entry 42 + extended NPC memory + new quest chain).
+
+If only ngPlusRun ≥ 1 (no other conditions): **basic NG+ only** — existing NPC_NG_PLUS_GREETINGS fire as normal; no Entry 42 system.
+
+---
+
+### XV-C. Entry 42 — The Player Writes It
+
+**Trigger:** On first arrival at the INN (CI node, Act I) in a qualifying NG+ run. Before the inn text renders, a modal fires.
+
+**Modal title:** `📓 Froberger's Journal — Entry 42`
+
+**Modal text:**
+
+> *The innkeeper sets the journal on the table without being asked. She remembers you.*
+>
+> *"He left this. You know who I mean. You were here before. You know what happened to him."*
+>
+> *Entry 42 is blank. It always has been. Froberger ran out of time before he ran out of world.*
+>
+> *What do you write?*
+
+**Input:** A `<textarea>` — 400 character maximum. Placeholder: *"One sentence. The most important thing you learned."*
+
+**Buttons:** `[WRITE IT]` / `[LEAVE IT BLANK]`
+
+- **Write It:** Saves the textarea content to `S_story.entry42Text` (string). Sets `S_story.entry42Written = true`. The journal entry appears in the FROBERGER_JOURNAL sidebar as "Entry 42 — Your Hand."
+- **Leave It Blank:** Sets `S_story.entry42Written = true` but saves `entry42Text = ""`. Entry 42 appears as: *"Entry 42 — blank page. The margin says: I know. I was there too."*
+
+Either choice marks the quest chain active.
+
+---
+
+### XV-D. Entry 42 in the Journal
+
+If `entry42Written = true`, the FROBERGER_JOURNAL sidebar renders a 42nd entry at the bottom:
+
+```
+📓 ENTRY 42 — YOUR HAND
+
+[player text, or the blank-page line]
+
+——
+Found at the inn. Written in different handwriting than the other 41.
+The innkeeper says she kept a blank page at the back. Just in case.
+```
+
+On NG+2 and beyond, if the player wrote an entry in NG+1, that text persists via `localStorage`. The journal they found in their first run — the journal Froberger left — now ends with something they wrote. The loop is closed.
+
+---
+
+### XV-E. Extended NPC Memory — Dear Friend Callbacks
+
+Preserved `npcFavorability` already enables `NPC_NG_PLUS_GREETINGS`. The Remembrance Layer adds a **second visit callback** — a different line that fires on the second NPC encounter in NG+, after the greeting. Gated by fav ≥ 2 (Dear Friend) in the preserved state.
+
+These are not stored in `NPC_DIALOGUES` — they are a separate small constant `NPC_NG_MEMORY_LINES` (6 entries, 1 per NPC):
+
+| NPC | Memory line |
+|-----|-------------|
+| Yael | *"You came back to the slums. I thought you would. People who fix things usually come back to see if they stayed fixed."* |
+| Brynn | *"The ledger's still balanced. I check it every morning. Old habit. You taught me that."* |
+| Quill | *"I've been playing the song you helped me get back. Different every night. I think that's the right way."* |
+| Pachelbel | *"The shipment arrived. Eventually. You know — it always does, when someone's watching for it."* |
+| Weckmann | *"The pit's quieter now. The regulars remember someone fought clean. They copy it. Funny how that works."* |
+| Auros | *"The depths are still there. We just know what's in them now. That's different from safe. But it's better."* |
+
+**Trigger:** Second NPC visit in NG+ AND `npcFavorability[key] >= 2` preserved. Each line fires once per NG+ run (flag: `S_story.ngMemoryDelivered[npcKey]`).
+
+---
+
+### XV-F. Quest Chain — "The Next Froberger" (Q-NG-01 through Q-NG-03)
+
+**Quest-giver:** The innkeeper at CI. Triggers after Entry 42 modal resolves.
+
+> *"He used to say someone would come back and finish what he started. I thought he meant the journal. But I think he meant the rest of it."*
+>
+> *She slides a folded note across the table. It's in Froberger's handwriting — but addressed to no one. The last line reads: "If you're reading this, you already know what to do next."*
+
+---
+
+**Q-NG-01: "Return Address"** — Visit all 6 Dear Friends in NG+ (any order)
+- Condition: `npcFavorability[key] >= 2` for all 6 keys AND each visited once in current NG+ run
+- Reward: 500gp + `froberger_letter` item (lore, sell:0; readable — shows Froberger's unaddressed note in full)
+- Brynn (on completion): *"Six of us. He knew about all of us. He was watching. I don't know how that feels — being known by a dead man."*
+
+---
+
+**Q-NG-02: "The Margin"** — Read your own Entry 42 from the journal sidebar
+- Condition: `entry42Written = true` AND player opens journal sidebar AND scrolls to Entry 42 (`entry42Read = true`)
+- Reward: 200 XP + `margin_note` item — *"A blank margin. The best kind."* (sell:0; no mechanical effect)
+- Froberger's last collectible entry (Entry 41) gains a new closing line in NG+: *"Entry 42 — I left the page. I knew someone would need it."*
+
+---
+
+**Q-NG-03: "What He Started"** — Complete all 6 Birka quests again in NG+ (same IDs, re-activated)
+- Condition: All 6 QUEST_DB side quests marked 'complete' in the current NG+ run
+- Reward: `researchers_kit` — *"A field kit. Worn grip, clean lens. He used it every day for nine years."* (sell:0; inventory item; unlocks a special line from Auros at the journal page)
+- Auros (on completion): *"You know what I found in his kit? A note that said 'count everything twice.' That's it. That's all his method was. Count everything twice."*
+
+**Quest chain complete reward:** `S_story.nextFrobergerComplete = true` flag. On arrival at CO in NG+, after the Void is sealed: a second scroll fires, using the Froberger scroll CSS class, `🔓` icon:
+
+> *You sealed it again.*
+>
+> *The journal has 42 entries now. One of them is yours.*
+>
+> *Froberger counted everything twice. That's all his method was.*
+>
+> *This run is the second count.*
+
+---
+
+### XV-G. New State Fields (additions to `_S_DEFAULTS()`)
+
+| Field | Type | Default | Purpose |
+|-------|------|---------|---------|
+| `entry42Written` | boolean | false | Entry 42 modal has been resolved (write or skip) |
+| `entry42Text` | string | `""` | Player-authored text; empty = blank-page variant |
+| `entry42Read` | boolean | false | Player opened journal to Entry 42 in current NG+ run |
+| `ngMemoryDelivered` | object | `{}` | npcKey → true; each Dear Friend memory line fires once per NG+ run |
+| `nextFrobergerComplete` | boolean | false | Q-NG-01 through Q-NG-03 all complete in this run |
+| `frobergerLetterFound` | boolean | false | `froberger_letter` item acquired (Q-NG-01 reward) |
+
+> **NG+ preservation:** `entry42Written` and `entry42Text` ARE preserved across NG+ — the player's entry persists. All other fields reset to defaults on each NG+ transition (the memory lines fire fresh each run).
+
+---
+
+### XV-H. Items
+
+```js
+// froberger_letter — Q-NG-01 reward
+{ name:'Froberger\'s Unaddressed Note', icon:'📜', type:'readable', sell:0,
+  description:'A letter written to no one. The last line: "If you\'re reading this, you already know what to do next."' }
+
+// margin_note — Q-NG-02 reward
+{ name:'Margin Note', icon:'📄', type:'lore', sell:0,
+  description:'A blank margin. The best kind.' }
+
+// researchers_kit — Q-NG-03 reward
+{ name:'Researcher\'s Field Kit', icon:'🔬', type:'lore', sell:0,
+  description:'Worn grip. Clean lens. Nine years of daily use. A note inside: "Count everything twice."' }
+```
+
+---
+
+### XV-I. Documentation Updates Required on Implementation
+
+| File | Change |
+|------|--------|
+| `story.md` | Add Q-NG-01 through Q-NG-03 in §New Game+ section; add Entry 42 modal description at CI node; add CO second scroll text |
+| `world.md` | Add NPC_NG_MEMORY_LINES table to §NPC Dialogue System; note extended Dear Friend memory trigger |
+| `mechanics.md` | Add Entry 42 under §Save System (persists across NG+ runs); add 3 new lore items to §Items |
+| `plan.md` | Mark XV-A through XV-I complete after implementation |
+
+---
+
+### XV-J. Thematic Coherence Note
+
+The game opens with a dead man's journal. Entry 1 is at the first terrain Froberger visited. Entry 41 is at CO — the last node, the convergence, where the Void lived. Entry 42 is blank.
+
+The player spends 20 levels learning what Froberger knew. They learn from his mistakes, follow his trail, find his friends. By Level 20, by the Void sealed, by Quest -1 opened — they have done exactly what Froberger did. The difference is: they survived.
+
+What Froberger never got to do was write the entry about what happened after. He died documenting the problem. The player sealed it.
+
+Entry 42 is the entry about the solution. It belongs to whoever wrote it.
+
+---
+
+*§XV status: ⚠️ PLANNED — Entry 42 system designed; NPC memory lines written; quest chain specified; new state fields listed; implementation left to Layer 50.*
 

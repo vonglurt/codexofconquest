@@ -1,6 +1,6 @@
 # roll2hit.com
 
-A single-file D&D 5e RPG. No server. No build step. No npm. Open the file. Play.
+A single-file Adventure RPG. No server. Open the file. Play.
 
 ---
 
