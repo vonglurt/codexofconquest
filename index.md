@@ -284,6 +284,12 @@ Roll2Hit is a single-file HTML application with no external dependencies. It run
 
 ---
 
+#### `lab-report-ponies-unicorns-aspirations-future-ideas.md` — Future Aspirations *(post-completion concepts)*
+**Purpose:** Aspirational ideas beyond the current build — not PLANNED layers. Documents three future product concepts: (1) DM's Companion Guide (80–120 page spoiler manual with NPC profiles, mission architecture, monster manual); (2) standalone Fishing Guide; (3) Mission Explorer (CRUD-style read interface showing monster/NPC/quest/state data with full debug metadata — variable names, data types, array indices, JavaScript reference paths).  
+**Status:** 💭 Aspirational — no implementation timeline; no Layer numbers. Record kept so ideas are not lost.
+
+---
+
 ## Town Cross-Reference
 
 > All four towns use their **real names** in every doc, consistent with `roll2hit-v3.html` `NODE_MAP` labels and `ACT_NAMES`. No aliases.
