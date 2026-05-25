@@ -7899,6 +7899,13 @@ const _S_DEFAULTS = () => ({
   voidCrackFired: false, voidFracturesFired: false, voidImminentWarned: false, void_mercy_count: 0,
   act8FarewellYael: false, act8FarewellBrynn: false, act8FarewellQuill: false,
   act8FarewellPachelbel: false, act8FarewellCrov: false, act8FarewellAuros: false,
+  frobergerMemorialVisited: false, frobergerMemorialFlowers: false, frobergerMemorialBookSigned: false,
+  _memorialPlayerEntry: null,
+  pitChampionOffered: false, pitChampionWon: false,
+  s54QuillBrynnDelivered: false, s55SqMapLineDelivered: false,
+  brynnKeeperStoryTold: false, brynnLightChoiceMade: false, brynnLightKept: false,
+  bruhnsCoSceneDelivered: false,
+  yaelNamedReportDelivered: false,
 });
 
 /* ── Layer 48: Luck — Seventh Stat ── */
@@ -7972,10 +7979,11 @@ function _getNPCDialogue(npcKey) {
   else if (fav >= 1) pool = d.friendly;
   else pool = d.impartial;
   if (!pool || !pool.length) pool = d.impartial;
-  // L44-E: Quill debt degradation — inject "number is a number" into impartial pool
-  if (npcKey === 'couperin' && S_story.couperiDebtDegraded && fav === 0) {
-    if (!pool.includes("The number is a number now. I don't look at it anymore.")) {
-      pool = [...pool, "The number is a number now. I don't look at it anymore."];
+  // L44-E / Layer 69: Quill debt degradation — inject distilled lesson into impartial pool
+  if (npcKey === 'quill' && S_story.couperiDebtDegraded) {
+    const lessonLine = '"Elder Couperin wrote \'just a number\' on the original debt notice. Not minimizing. Describing. A debt that has done its work becomes just a number. That\'s when you can release it."';
+    if (!pool.includes(lessonLine)) {
+      pool = [...pool, lessonLine];
     }
   }
   // L44-J: Act III weight injection — one-time per NPC at Friendly+
@@ -8008,11 +8016,12 @@ function _getNPCDialogue(npcKey) {
     S_story.brynRoom6LineDelivered = true;
     return { quote: "He didn't say goodbye. I used to think that was the hard part. Now I think the hard part was that he thought he was coming back.", meta: d.meta, fav };
   }
-  // S29: Auros/Froberger theory — once, when entry 41 read and Auros Dear Friend
-  if (npcKey === 'bruhns' && fav >= 2 && S_story.frobergerLastEntryRead && !S_story.s29LineDelivered) {
-    S_story.s29LineDelivered = true;
-    return { quote: "You found his note. He left them at certain nodes. I think he knew which ones mattered. I've been finishing his theory for three years. You're part of why it's close.", meta: d.meta, fav };
+  // Layer 64: Weckmann championship line — injected once when pitChampionWon
+  if (npcKey === 'crov' && fav >= 2 && S_story.pitChampionWon && !S_story.crovChampionLineDelivered) {
+    S_story.crovChampionLineDelivered = true;
+    return { quote: '"Ogundimu asked after you, the last time she came through. I told her you\'d moved on. She said that was the right answer."', meta: d.meta, fav };
   }
+  // S29: Auros theory — handled via CY node render (Layer 67b); s29LineDelivered set there
   // Layer 59: void pressure line — Dear Friends at pressure ≥ 6
   if (fav >= 2 && (S_story.voidPressure || 0) >= 6 && NPC_VOID_PRESSURE_LINES[npcKey]) {
     const vpKey = 'voidPressureLine_' + npcKey;
@@ -8054,11 +8063,12 @@ function _renderNpcCard(key, container) {
     if (beat && (S_story.actNumber || 1) === 8
         && _npcFavor(key) >= 1 && !S_story[flagKey]) {
       S_story[flagKey] = true;
+      const beatText = typeof beat.text === 'function' ? beat.text() : beat.text;
       if (beat.gift) {
         S_story.inventory.push({ ...beat.gift });
-        setTimeout(() => storyMsg('🌅 ' + beat.text + '\n\n[Received: ' + beat.gift.name + ' ' + beat.gift.icon + ']'), 200);
+        setTimeout(() => storyMsg('🌅 ' + beatText + '\n\n[Received: ' + beat.gift.name + ' ' + beat.gift.icon + ']'), 200);
       } else {
-        setTimeout(() => storyMsg('🌅 ' + beat.text), 200);
+        setTimeout(() => storyMsg('🌅 ' + beatText), 200);
       }
     }
   }
@@ -9370,6 +9380,8 @@ function _storyEnemyTurn() {
 function _storyBattleVictory() {
   const pb = S_story.pendingBattle;
   S_story.roughWhiskeyActive = false;
+  // ── Layer 64: Pit Championship bypass ──
+  if (pb && pb.champion) { S_story.pendingBattle = null; _onPitChampionWin(); return; }
 
   // XP = AC × maxHP; queue level-ups for modal processing after loot screen
   const xpAward = (S.enemy.ac || 10) * (S.opp.maxHp || 10);
@@ -9987,6 +9999,15 @@ function _storyDeathSaveCrawl() {
 }
 
 function _storyDeathSaveFall() {
+  // ── Layer 64: Championship loss — soft loss, no loot strip ──
+  if (S_story.pendingBattle && S_story.pendingBattle.champion) {
+    S_story.pendingBattle = null;
+    S_story.storyDeathSaves.active = false;
+    document.getElementById('story-battle-overlay').classList.remove('visible');
+    document.getElementById('sbo-refocus-bar').style.display = 'none';
+    _onPitChampionLoss();
+    return;
+  }
   const nodeCode = S_story.pendingBattle ? S_story.pendingBattle.nodeCode : S_story.currentCode;
   const node     = NODE_MAP[nodeCode];
   const nodeName = node ? node.label.split(' — ')[0] : nodeCode;
@@ -10439,6 +10460,100 @@ const FISH_GOLD_VALUES = {
   legendary:  { common:75, rare:120, enchanted:175, golden:225, legendary:300 },
 };
 
+// ── Layer 63: Froberger Memorial ──
+const FROBERGER_MEMORIAL_TEXT = {
+  base:        'FROBERGER\nChronicler of the Road\nWalked every corridor in Birka\nHis notes are still right',
+  yael_friendly: '\n\n"He was the one who told me what was happening\n in the Unbanked Quarter before anyone else would.\n The story didn\'t die with him."\n                                    — Y.S.',
+  dear_friend:   '\n\nThe Ivory Circle formally requested the stone be removed in 1312.\nThe city refused.',
+  post_cipher:   '\n\nBeneath the main inscription, faint letters in a different hand:\n"First Contact: F.B. — the chronicler who drew the map\n before the Circle drew the borders."',
+};
+const FROBERGER_MEMORIAL_BOOK = [
+  { attr: '',                            text: 'I bring fresh water. Every week.' },
+  { attr: 'B.M.',                        text: 'He had credit at the inn until the last. I never called it in.' },
+  { attr: 'W. of the Crossroads Forge',  text: 'He watched every training session from the bench across the road. Never bet on anyone.' },
+  { attr: '',                            text: 'He was right about the Tide.' },
+  { attr: '',                            text: 'The thirty-second corridor. Map checks out.' },
+];
+const MEMORIAL_PLAYER_CHOICES = [
+  'For the map.',
+  'The covenant holds.',
+  'The road was worth it.',
+];
+const MEMORIAL_PLAYER_CHOICES_NG = [...MEMORIAL_PLAYER_CHOICES, 'Still right.'];
+function storyShowFrobergerMemorial() {
+  S_story.frobergerMemorialVisited = true;
+  let plaque = FROBERGER_MEMORIAL_TEXT.base;
+  if (_npcFavor('yael') >= 1) plaque += FROBERGER_MEMORIAL_TEXT.yael_friendly;
+  const anyDearFriend = ['yael','brynn','quill','pachelbel','crov','auros'].some(k => _npcFavor(k) >= 2);
+  if (anyDearFriend) plaque += FROBERGER_MEMORIAL_TEXT.dear_friend;
+  if (S_story.corelliRevelationDelivered) plaque += FROBERGER_MEMORIAL_TEXT.post_cipher;
+  const overlay = document.getElementById('froberger-note-overlay');
+  if (!overlay) return;
+  document.getElementById('froberger-note-title').textContent = '⛪ Froberger Memorial — Birka Crossroads';
+  const body = document.getElementById('froberger-note-body');
+  body.innerHTML = '';
+  // Plaque
+  const pq = document.createElement('pre');
+  pq.style.cssText = 'font-family:serif;font-size:13px;color:#e8d4a0;white-space:pre-wrap;margin:0 0 12px;border-left:3px solid #7a5a1a;padding-left:10px;';
+  pq.textContent = plaque;
+  body.appendChild(pq);
+  // Book entries
+  const bookHd = document.createElement('div');
+  bookHd.style.cssText = 'font-size:11px;color:#888;border-top:1px solid #3a2a0a;padding-top:8px;margin-bottom:6px;';
+  bookHd.textContent = '— Memorial Book —';
+  body.appendChild(bookHd);
+  FROBERGER_MEMORIAL_BOOK.forEach(e => {
+    const el = document.createElement('p');
+    el.style.cssText = 'font-size:11px;color:#bba;margin:0 0 4px;font-style:italic;';
+    el.textContent = '"' + e.text + '"' + (e.attr ? '  — ' + e.attr : '');
+    body.appendChild(el);
+  });
+  if (S_story.frobergerMemorialBookSigned && S_story._memorialPlayerEntry) {
+    const pe = document.createElement('p');
+    pe.style.cssText = 'font-size:11px;color:#c8a870;margin:4px 0 0;font-style:italic;';
+    pe.textContent = '"' + S_story._memorialPlayerEntry + '"  — (your hand)';
+    body.appendChild(pe);
+  }
+  // Action buttons
+  const btnRow = document.createElement('div');
+  btnRow.style.cssText = 'display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;';
+  // Leave Flowers
+  if (!S_story.frobergerMemorialFlowers) {
+    const flBtn = document.createElement('button');
+    flBtn.textContent = '🌸 Leave Flowers (10gp)';
+    flBtn.style.cssText = 'padding:5px 10px;background:#1a1000;border:1px solid #7a5a1a;border-radius:3px;color:#e8c070;cursor:pointer;font-size:12px;';
+    flBtn.addEventListener('click', () => {
+      if ((S_story.gold || 0) < 10) { storyMsg('🌸 Not enough gold to leave flowers (10gp).'); return; }
+      S_story.gold -= 10; S_story.frobergerMemorialFlowers = true;
+      storyUpdateStatus();
+      const isNg = (S_story.ngPlusRun || 0) > 0;
+      storyMsg(isNg ? '🌸 You leave flowers again. You wonder if anyone will wonder who keeps doing this.' : '🌸 You leave a small bunch of flowers at the stone. They look right there.');
+      overlay.style.display = 'none';
+    });
+    btnRow.appendChild(flBtn);
+  }
+  // Sign / Read Entry
+  if (!S_story.frobergerMemorialBookSigned) {
+    const choices = (S_story.ngPlusRun || 0) > 0 ? MEMORIAL_PLAYER_CHOICES_NG : MEMORIAL_PLAYER_CHOICES;
+    choices.forEach(txt => {
+      const cb = document.createElement('button');
+      cb.textContent = '✍️ "' + txt + '"';
+      cb.style.cssText = 'padding:5px 10px;background:#1a1000;border:1px solid #506070;border-radius:3px;color:#a0c0e0;cursor:pointer;font-size:11px;';
+      cb.addEventListener('click', () => {
+        S_story.frobergerMemorialBookSigned = true;
+        S_story._memorialPlayerEntry = txt;
+        storyMsg('✍️ You write: "' + txt + '"');
+        overlay.style.display = 'none';
+      });
+      btnRow.appendChild(cb);
+    });
+  }
+  body.appendChild(btnRow);
+  document.getElementById('froberger-note-close').textContent = 'Leave';
+  document.getElementById('froberger-note-close').onclick = () => { overlay.style.display = 'none'; };
+  overlay.style.display = 'flex';
+}
+
 // ── Layer 62: Town Crier — Inn Rest World-News Lines ──
 const TOWN_CRIER_LINES = {
   critical: [
@@ -10458,6 +10573,7 @@ const TOWN_CRIER_LINES = {
     tl_ori_account_read:       'Someone has been asking at the Tilbury docks about a ship called the Ori\'s Hope. The Harbor Master says she has no record of it.',
     yaelEscortUsed:            'The Slums have been quieter since someone ran Varga\'s informants off the north end. Nobody\'s taking credit.',
     quillQuestComplete:        'The ledger house near the Birka bar settled two long-outstanding debts this week. The creditors didn\'t argue, which is the strangest part.',
+    brynnKeeperStoryTold:      'The lamp at the First Inn has been burning since the early days. Birka folk consider it a good omen.',
   },
   npcs: {
     auros:    'The Commander\'s office has had its lights on until the fourth hour three nights running. The duty sergeant says it\'s paperwork. The soldiers say she doesn\'t pace like that over paperwork.',
@@ -10548,7 +10664,7 @@ function _getTownCrierLine() {
   if ((S_story.voidPressure || 0) >= 6)
     return TOWN_CRIER_LINES.tension[(S_story.gameDay || 0) % 3];
   const qOrder = ['warden_resolved','void_architect_seal_inv','corelliRevelationDelivered',
-    'vs_hollow_seal_taken','tl_ori_account_read','yaelEscortUsed','quillQuestComplete'];
+    'vs_hollow_seal_taken','tl_ori_account_read','yaelEscortUsed','quillQuestComplete','brynnKeeperStoryTold'];
   for (const flag of qOrder) {
     const val = flag === 'void_architect_seal_inv'
       ? (S_story.inventory || []).some(i => i.name && /void architect seal/i.test(i.name))
@@ -10571,11 +10687,30 @@ const ACT8_FAREWELL_BEATS = {
     gift: null,
   },
   brynn: {
-    text: '"Sit down. I made too much bread today — I always do when I\'m worried, and I\'ve been worried since Act III, so there\'s quite a lot of it.\n\nDon\'t argue about the room cost. Don\'t argue about the bread. You\'ve been traveling on short rations and I can tell. You have the look of someone who\'s been eating just enough to keep moving.\n\nTake it. It\'ll keep."',
+    text: () => {
+      const base = '"Sit down. I made too much bread today — I always do when I\'m worried, and I\'ve been worried since Act III, so there\'s quite a lot of it.\n\nDon\'t argue about the room cost. Don\'t argue about the bread. You\'ve been traveling on short rations and I can tell. You have the look of someone who\'s been eating just enough to keep moving.\n\nTake it. It\'ll keep."';
+      let lampLine;
+      if (!S_story.brynnKeeperStoryTold) {
+        lampLine = BRYNN_KEEPER_STORY.farewellNoStory;
+        S_story.brynnKeeperStoryTold = true;
+      } else if (!S_story.brynnLightChoiceMade) {
+        lampLine = BRYNN_KEEPER_STORY.farewellNoChoice;
+      } else if (S_story.brynnLightKept) {
+        lampLine = BRYNN_KEEPER_STORY.farewellKeep;
+      } else {
+        lampLine = BRYNN_KEEPER_STORY.farewellRest;
+      }
+      return base + '\n\n' + lampLine;
+    },
     gift: { name:"Brynn's Loaf", icon:'🍞', type:'potion', heal:8, sell:0, code:'IN', _noSell:true },
   },
   quill: {
-    text: '"I\'ve been going through the old ledgers. All the debts that seemed so significant. The Couperin estate. The back payments. The interest that had been accumulating for longer than either of us had been keeping accounts.\n\nThey balance now. Some were paid. Some were forgiven. Some just stopped mattering — which is its own kind of payment.\n\nI think I understand the note Couperin left better now. \'Just a number.\' He didn\'t mean the debt was meaningless. He meant it had served its purpose and could be released. He was teaching me something. It just took me this long to learn it.\n\nGood luck out there. I\'ll keep the books straight here."',
+    text: () => {
+      const base = '"I\'ve been going through the old ledgers. All the debts that seemed so significant. The Couperin estate. The back payments. The interest that had been accumulating for longer than either of us had been keeping accounts.\n\nThey balance now. Some were paid. Some were forgiven. Some just stopped mattering — which is its own kind of payment.\n\nI think I understand the note Couperin left better now. \'Just a number.\' He didn\'t mean the debt was meaningless. He meant it had served its purpose and could be released. He was teaching me something. It just took me this long to learn it.\n\nGood luck out there. I\'ll keep the books straight here."';
+      return S_story.quillQuestComplete
+        ? base + '\n\n"Pachelbel sent a note. \'Account closed, no remainder.\' I keep it in the case."'
+        : base;
+    },
     gift: null,
   },
   pachelbel: {
@@ -10584,7 +10719,9 @@ const ACT8_FAREWELL_BEATS = {
       readText:'Three lines of notation. A rest. Then three more, transposed up a fifth. The intervals spell out something — or almost spell it out, the way all honest things approach their meaning diagonally. At the bottom, in small letters: "For the one who came back."' },
   },
   crov: {
-    text: '"You look different.\n\nI\'ve been in this business long enough to know what the road does to people. Most come back smaller — worn down, quieter, like something got used up. Some don\'t come back at all. You came back standing straight. That\'s rarer than it sounds.\n\nI was holding this for a champion. Not the pit-fight kind — the kind that earns it out there, where nobody\'s watching and there\'s no purse at the end. Take it. You\'ll know when to use it."',
+    text: () => S_story.pitChampionWon
+      ? '"You look different.\n\nI\'ve been in this business long enough to know what the road does to people. Most come back smaller — worn down, quieter, like something got used up. Some don\'t come back at all. You came back standing straight. That\'s rarer than it sounds.\n\nI was holding this for a champion. The kind who earns it in the pit and then earns it again out here. I\'ve seen both kinds. You\'re the second kind. Take it. You\'ll know when to use it."'
+      : '"You look different.\n\nI\'ve been in this business long enough to know what the road does to people. Most come back smaller — worn down, quieter, like something got used up. Some don\'t come back at all. You came back standing straight. That\'s rarer than it sounds.\n\nI was holding this for a champion. Not the pit-fight kind — the kind that earns it out there, where nobody\'s watching and there\'s no purse at the end. Take it. You\'ll know when to use it."',
     gift: { name:"Champion's Tincture", icon:'⚗️', type:'consumable', effect:'advantage_next_attack', sell:0, code:'CY', _noSell:true,
       desc:'Grants advantage on your next attack roll. One use.' },
   },
@@ -10643,6 +10780,139 @@ function _addVoidPressure(n) {
     setTimeout(() => storyMsg('⚠️ THE VOID IS IMMINENT — Pressure: 9/10. One more pressure point and the Void breaks through.\n\nShards: ' + (S_story.shards || 0) + '/7.' + mercyNote), 400);
   }
   storyUpdateStatus();
+}
+
+// ── Layer 68b: Pachelbel Ledger ──
+const PACHELBEL_LEDGER = {
+  2: `Raison was taken at the north gate.
+
+Someone told the Circle about the seals he'd been breaking. I need it on record that it wasn't me, even if the only record is this.
+
+They called it unauthorized research access. His tools were confiscated. His eldest was brought in for "evaluation." The Circle uses that word like it means something clean.`,
+  3: `The younger one got out. Took the southern road by night — someone had left a boat. I don't know who arranged it. I didn't ask.
+
+The eldest is still in evaluation, which means they found something worth keeping. Raison would know what to think about that.
+
+I bought the tools back at the impound auction. Paid four times what they were worth, because I could, and because someone had to.
+
+I don't know what I'm going to do with them.`,
+};
+
+// ── Layer 69: §XXXIV Quill / Couperin Ledger scenes ──
+const S34_QUILL_BEAT2 = `Quill takes the lute from you.
+
+He opens the case and checks the strings — they're still in tune. It has been sitting in Pachelbel's back room for two months and it is still in tune.
+
+He plays a phrase. One bar, two. Something formal and very old — the same pattern as the first line of Codex Shard 1's note, though you'd have to know both to hear the connection.
+
+"Couperin's theme," he says. "The family theme. My grandmother taught me this. I haven't played it since before the pawn."
+
+He closes the case.
+
+"Forty gold. And thank you."`;
+
+const S34_QUILL_BEAT3 = `The borrowed instrument is gone. Quill has his lute.
+
+He's playing something quiet when you arrive — not performing, just playing. The tavern is half-empty or half-full, depending on how you count.
+
+He looks up.
+
+"I've been thinking about the note Elder Couperin left on the original account. 'Just a number.' I used to find that dismissive."
+
+He plays another bar.
+
+"I think he meant something different. He meant: this number served its purpose, which was to create an obligation, which was honored, which taught something. After that, it's just a number. You can let it go."
+
+He turns back to his playing.`;
+
+// ── Layer 70: §XXXV First Inn Light — Brynn's Vigil Arc ──
+const BRYNN_KEEPER_STORY = {
+  inquiry:      '"I lit it the night you arrived. Didn\'t know if you\'d be back by morning, and it seemed wrong to let you come back to a dark room. So I kept it."',
+  followUp:     '"I\'ve had guests before. Some didn\'t come back. I always meant to start a lamp then too. But you were the first time I actually did it."',
+  choicePrompt: '"I\'ve been thinking about what happens when you\'re done — when all of this is done. Whether the lamp should keep burning. I haven\'t decided. I think it\'s your lamp as much as it is mine now. What do you want?"',
+  choiceKeep:   '"Then it keeps burning. I\'ll see to it."',
+  choiceRest:   '"Then we\'ll let it rest together. Seems right."',
+  farewellNoStory:  '"There\'s a lamp in the corner that\'s been burning since your first night. I wanted you to know that."',
+  farewellNoChoice: '"The lamp is still burning. I\'ve never asked what you wanted for it."',
+  farewellKeep:     '"The lamp is still burning. I checked this morning."',
+  farewellRest:     '"The lamp is still burning. I\'ll tend it until you come back. After that — well. After that."',
+};
+
+// ── Layer 67b: S29 Auros Theory scene ──
+const S29_AUROS_THEORY = `Auros is at her desk when you arrive. She looks up, then at the journal.
+
+"Entry 41?"
+
+You nod.
+
+"Froberger's last documented route covered three sectors I flagged as Void-advance indicators in Year Twelve. He walked them in the right order. He logged what he saw in each one — terrain shifts, monster density changes, corridor instability."
+
+She sets her notes down.
+
+"He wasn't warning anyone. He didn't know what he was mapping. He was just thorough. But if you read his last six entries in sequence, and you know what the Void advance looks like from tactical coordinates, you get a clear picture of exactly where it was going and how fast."
+
+A pause.
+
+"'The shape of the absence.' That's what he calls it in Entry 41. He finally understood — he'd been mapping the negative space of the Void all along. Every corridor he documented was one the Tide had not yet filled."
+
+She turns back to her notes.
+
+"He got to the end of the map. Then the Tide arrived."`;
+
+// ── Layer 66a: Joint Witness scene ──
+const S54_JOINT_MOMENT = `Brynn is at the crossroads when you arrive. She has a delivery basket — the kind she uses for rounds, not for waiting.
+
+Yael is already there.
+
+They're finishing a conversation when you come into earshot. You catch the end of it.
+
+"Still the same light?" Brynn asks.
+
+"Still the same light," Yael says.
+
+They turn when you arrive. Brynn gives you the look she reserves for people she's been quietly worried about. Yael gives you the nod that means she's been watching.
+
+"You're later than I expected," Yael says.
+
+"She means that in the good way," Brynn adds.
+
+They're both right.`;
+
+// ── Layer 65: Entry 41 Echo scenes ──
+const S49_BRYNN_SCENE = `You find Brynn at the bar. Before you say anything, she looks at the journal.
+
+"The last one?"
+
+You hand it to her. She reads it standing, at the bar — doesn't sit, doesn't move anywhere. When she finishes, she reads it again from the beginning. You can tell by the time it takes.
+
+She closes it and sets it on the counter.
+
+"'Come back,'" she says. Not to you. To herself, maybe. Or to him.
+
+She slides the journal across the bar. Picks up her cloth.
+
+"He was right. They do need the person."
+
+A pause.
+
+"Glad you're not done yet."`;
+
+const S49_SWEELINCK_SCENE_BASE = `Sweelinck is at the desk. They look up when you enter.
+
+"May I see it?"
+
+You hand over the journal. They read Entry 41 standing — they don't sit for this. Their eyes go to the last line and stay there a moment.
+
+Then they close the journal with the particular care you give something you intend to keep, and set it on the desk.
+
+"He knew the shape of the absence," Sweelinck says. "Before anyone arrived. He wrote it down anyway, because that's what you do with knowledge that can't be transferred — you write it down and you wait."
+
+The journal stays on the desk. They don't offer it back.`;
+function _getS49SweelinckScene() {
+  const closing = (S_story.ngPlusRun || 0) > 0
+    ? '"Still here. Bring it back when you\'re done again."'
+    : '"I\'ll keep it here. You know where to find me when you\'re done."';
+  return S49_SWEELINCK_SCENE_BASE + '\n\n' + closing + '\n\nThe lamp is on. It stays on.';
 }
 
 // ── Layer 58: Inn Dreams ──
@@ -11079,9 +11349,22 @@ function _renderFinalMap() {
     cell.title = (NODE_MAP[slug] || {}).name || slug;
     canvas.appendChild(cell);
   });
+  // ── Layer 66b: S55 Map Caption ──
+  const caption = S_story.s49SweelinckDelivered
+    ? 'He walked every corridor. So did you. Sweelinck has the record.'
+    : 'He walked every corridor. So did you. The map remembers.';
+  const captionEl = document.createElement('div');
+  captionEl.id = 'final-map-caption';
+  captionEl.style.cssText = 'position:absolute;bottom:12%;left:0;right:0;text-align:center;color:#bbb;font-style:italic;font-size:0.9em;opacity:0;transition:opacity 0.8s;pointer-events:none;';
+  captionEl.textContent = caption;
+  overlay.style.position = 'relative';
+  overlay.appendChild(captionEl);
+  S_story.s55MapLineDelivered = true;
   setTimeout(() => {
     overlay.style.opacity = '1';
+    setTimeout(() => { captionEl.style.opacity = '1'; }, 400);
     setTimeout(() => {
+      captionEl.style.opacity = '0';
       overlay.style.transition = 'opacity 1.5s';
       overlay.style.opacity = '0';
       setTimeout(() => { overlay.style.display = 'none'; overlay.style.opacity = ''; overlay.style.transition = ''; }, 1600);
@@ -11118,7 +11401,11 @@ function _buildWeckmannLog() {
   if (wins >= 3) entries.push('Day 12: Controlled. Still aggressive at the wrong moments. Getting there.');
   if (wins >= 4) entries.push('Day 18: Good. Starting to feel like a real session.');
   if (wins >= 5) entries.push("Day 25: The lesson's in. Don't know when it happened. That's when you know.");
-  return WECKMANN_TRAINING_LOG.replace('{PLAYER_ENTRIES}', entries.join('\n'));
+  // ── Layer 64: Championship entry ──
+  const champEntry = S_story.pitChampionWon
+    ? '\n\n────────────────────────\nFight 6: Ogundimu, the Iron Standard\nResult: WIN\nNote: She chose the match. That matters.\n      You chose to accept. That matters more.'
+    : '';
+  return WECKMANN_TRAINING_LOG.replace('{PLAYER_ENTRIES}', entries.join('\n')).replace('{CHAMP_ENTRY}', champEntry);
 }
 
 function storyShowWeckmannLog() {
@@ -11261,7 +11548,8 @@ const YAEL_PATROL_NODES = [
   { condition: () => (S_story.gameDay || 0) % 2 === 1, nodeSlug:'SW', line:"Eastern check. You're traveling late." },
   { condition: () => !!(S_story.quests && S_story.quests['quest_slums_cleanup'] === 'complete'), nodeSlug:'SL', line:"Showing my face. They should see someone who isn't making a report." },
   { condition: () => !!(S_story.yaelEscortUsed), nodeSlug:'IN', line:"I walk this route now. It adds six minutes. Worth it." },
-  { condition: () => _npcFavor('yael') >= 3 && (S_story.actNumber || 1) >= 3, nodeSlug:'TV', line:"Checking on Quill. Don't tell him." }
+  { condition: () => _npcFavor('yael') >= 3 && (S_story.actNumber || 1) >= 3, nodeSlug:'TV', line:"Checking on Quill. Don't tell him." },
+  { condition: () => !!(S_story.yaelNamedReportDelivered), nodeSlug:'SW', line:"The second report is filed. I'm not watching to see if it disappears." }
 ];
 
 const WECKMANN_TRAINING_LOG = `CROV'S TRAINING LOG — CY Fighting Pit
@@ -11292,7 +11580,75 @@ Running legal fights only.
 
 [years of entries — fighters' names, brief notes, outcomes]
 
-{PLAYER_ENTRIES}`;
+{PLAYER_ENTRIES}{CHAMP_ENTRY}`;
+
+// ── Layer 64: Pit Championship ──
+const PIT_CHAMPION_OGUNDIMU = {
+  name: 'Ogundimu, the Iron Standard',
+  icon: '🏆',
+  ac: 16,
+  hp: 42,
+  atk: 7,
+  dmgDie: 10,
+  dmgCount: 1,
+  dmgFlat: 4,
+  xp: 0,
+  gold: 0,
+  drop: null,
+  tier: 'elite',
+  isChampion: true,
+  flavorPre: 'She arrives without ceremony. Shortsword, buckler, no introduction. She looks at your weapon and nods once — the kind of nod that means she\'s already thought about how she\'d answer it.\n\n"I retired," she says. "Not from this."',
+  flavorWin: 'She doesn\'t fall. She steps back, shield lowering.\n\n"Good. That\'s good."\n\nShe means it.\n\nShe picks up her bag. At the door she turns back.\n"Your fifth. That\'s not luck anymore."',
+  flavorLoss: 'She doesn\'t follow up. She steps back and waits.\n\n"Different day," she says. "Same champion."\n\nShe means it as an invitation, not an insult.',
+};
+function _showPitChampionOffer() {
+  S_story.pitChampionOffered = true;
+  const existingEl = document.getElementById('pit-champ-offer-overlay');
+  if (existingEl) { existingEl.remove(); }
+  const overlay = document.createElement('div');
+  overlay.id = 'pit-champ-offer-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:460;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;padding:20px;';
+  const panel = document.createElement('div');
+  panel.style.cssText = 'background:#f0e8d0;color:#2a1a06;border:1px solid #a0803a;border-radius:6px;padding:28px 32px;max-width:420px;width:100%;font-family:Georgia,"Times New Roman",serif;box-shadow:0 8px 40px rgba(0,0,0,0.5);display:flex;flex-direction:column;gap:14px;';
+  const title = document.createElement('div');
+  title.style.cssText = 'font-size:11px;font-weight:700;letter-spacing:2px;color:#7a5a20;text-transform:uppercase;border-bottom:1px solid #c8a870;padding-bottom:8px;';
+  title.textContent = '🏆 Weckmann — The Pit Championship';
+  const body = document.createElement('p');
+  body.style.cssText = 'font-size:13px;line-height:1.7;white-space:pre-wrap;';
+  body.textContent = 'Weckmann is cleaning the forge when you arrive. He sets the brush down.\n\n"Five. You know what five means?"\n\nHe doesn\'t wait for an answer.\n\n"It means I\'ve been holding back a name. Ogundimu. The Iron Standard — that\'s what they called her, before the dispute. She doesn\'t fight for rankings anymore. She fights because she wants to know if she\'s still herself."\n\nHe picks the brush back up.\n\n"I told her about you. She said yes. That means something — she says no to most people."';
+  const btns = document.createElement('div');
+  btns.style.cssText = 'display:flex;gap:8px;';
+  const acceptBtn = document.createElement('button');
+  acceptBtn.style.cssText = 'flex:1;padding:9px;font-size:13px;background:#c08030;color:#fff;border:none;border-radius:4px;cursor:pointer;font-family:inherit;';
+  acceptBtn.textContent = 'Accept the match';
+  acceptBtn.addEventListener('click', () => { overlay.remove(); _startPitChampionBattle(); });
+  const laterBtn = document.createElement('button');
+  laterBtn.style.cssText = 'flex:1;padding:9px;font-size:13px;background:#e0d0a0;border:1px solid #907020;color:#3a2010;border-radius:4px;cursor:pointer;font-family:inherit;';
+  laterBtn.textContent = 'Not yet';
+  laterBtn.addEventListener('click', () => overlay.remove());
+  btns.appendChild(acceptBtn); btns.appendChild(laterBtn);
+  panel.appendChild(title); panel.appendChild(body); panel.appendChild(btns);
+  overlay.appendChild(panel);
+  document.body.appendChild(overlay);
+}
+function _startPitChampionBattle() {
+  storyMsg(PIT_CHAMPION_OGUNDIMU.flavorPre);
+  S_story.pendingBattle = { nodeCode: 'CY', name: PIT_CHAMPION_OGUNDIMU.name, label: 'Neon Undercity', champion: true };
+  loadWorldMonster(PIT_CHAMPION_OGUNDIMU);
+  storyExit();
+  _storyRollInit();
+  _showBattleOverlay();
+}
+function _onPitChampionWin() {
+  S_story.pitChampionWon = true;
+  storyMsg(PIT_CHAMPION_OGUNDIMU.flavorWin);
+  setTimeout(() => storyMsg('🏆 Pit Championship complete. Weckmann\'s log updated.'), 600);
+  storyRender(NODE_MAP['CY']);
+}
+function _onPitChampionLoss() {
+  storyMsg(PIT_CHAMPION_OGUNDIMU.flavorLoss);
+  setTimeout(() => storyRespawnFromCheckpoint(), 800);
+}
 
 // S36: EB node NG+ first-lines (one per node, shown once on first NG+ revisit)
 const EB_NG_PLUS_LINES = {
@@ -11399,6 +11755,79 @@ function _buildSweelinckNamingSequence() {
   return lines;
 }
 
+// ── Layer 74: §XXXIX Yael's Named Report Scene ──
+const YAEL_NAMED_REPORT_SCENE = {
+  setup: '"You\'ve been in the archive. You\'ve seen what happens to records."\n\nShe isn\'t looking at you. She\'s watching the market corner from the CI door.\n\n"Three years ago there was a riot in this district. I worked it for six weeks. Names, times, the transaction record that paid for it. Four weeks after I filed it, the evidence was gone — pulled from the guard archive. Someone with access above my rank took it cleanly."\n\nShe finally looks at you.\n\n"I filed a report at the time. Anonymous. I didn\'t want to become the story. The report disappeared too."',
+  decision: '"I\'m filing again. Under my name. I\'m keeping three copies — one with the Commissioner, one with a Scholar Kings archivist in Weimar, one with Weckmann. He had records of the operation that funded the riot. His training log. The financial ledger is gone but the training log survived because no one thought to look there."\n\nShe turns back to the market.\n\n"I\'m telling you because you know what it means when something disappears from an archive. If you want to hold a fourth copy, I\'ll give you one. If not — you know it exists. That\'s also something."',
+  choiceHold:  '"Good. Then it\'s in four places now."',
+  choiceThree: '"Three is enough. I just wanted someone outside the system to know."',
+};
+
+// ── Layer 73: §XXXVIII Brynn Heartwood Letter ──
+const BRYNN_HEARTWOOD_SCENE = {
+  friendly: '"She wrote. First letter in three months."\n\nShe slides it off the counter, folds it back into the envelope.\n\n"She\'s working with a surveyor in the Heartwood district. Measuring things. She says she\'s good at it." A pause. "She wrote \'expedition\' in the letter. She said she learned that word from a traveler who stayed here years ago."\n\nShe puts the envelope away. "The good room\'s still yours."',
+  dearFriend: '"She wrote."\n\nShe sets the letter on the counter between you, then picks it back up.\n\n"She\'s with a surveyor in the Heartwood district. Learning to measure property lines, well depth — things you can\'t see the end of. She says she has patience for it."\n\nShe reads the last line aloud:\n\n"\'I don\'t know if it\'s patience or stubbornness. I signed this expedition because I couldn\'t decide.\'"\n\nBrynn folds the letter. Her daughter pressed hard when she wrote it — the impressions are visible through the back of the envelope.\n\n"She found a word for what she\'s doing."\n\nShe doesn\'t say anything else for a moment. Then: "The good room has a window that faces east."',
+};
+
+// ── Layer 72: §XXXVII Commander Bruhns CO Scene ──
+const BRUHNS_CO_SCENE = {
+  friendly: '"You got this far. Froberger made it this far too, more than once."\n\nA pause. The cordon behind her is steady.\n\n"He didn\'t finish. I need you to finish. So does the city."',
+  dearFriend: '"You know what I\'ve been doing here."\n\nIt isn\'t a question. She looks at the Codex Cradle, then at you.\n\n"The Circle classified every report I submitted for eleven years. I\'ve been buying time the only way the Circle\'s rules allow — holding command. As long as I hold this platform, no Circle delegate can lock that Cradle without going through me. And they won\'t move against a standing Commander without cause."\n\nShe meets your eyes.\n\n"You beating me is cause. Documented, witnessed, legitimate. After that, I don\'t hold command and I don\'t hold the Codex. You do. And the Circle can\'t classify that — you\'d be the one who opened it."\n\nA beat.\n\n"I\'m going to do everything I can to stop you. That\'s not negotiable. The Circle is watching and I need this to look like I meant it."\n\nShe doesn\'t wait for a response.',
+  dearFriendWithTheory: '"You understood the tactical model. That meant you understood what getting this wrong would cost. Anyone who understood that and still came here — I can trust them to open it."',
+};
+
+// ── Layer 71: §XXXVI Arc Epilogue Conditions ──
+const ARC_EPILOGUE_CONDITIONS = [
+  // §XXIX — Pit Championship (uses pitChampionWon, not defeatedBattles['CF'])
+  { cond: () => !!(S_story.pitChampionWon),
+    line: "Ogundimu offered her hand after. You shook it. She's still undefeated in her mind — she says you were the floor, not the ceiling." },
+  // §XXX — Entry 41 Echo (both)
+  { cond: () => !!(S_story.s49BrynnDelivered && S_story.s49SweelinckDelivered),
+    line: "Both of them have Entry 41. They haven't compared notes. They don't need to." },
+  // §XXX — Entry 41 Echo (Sweelinck only)
+  { cond: () => !!(S_story.s49SweelinckDelivered && !S_story.s49BrynnDelivered),
+    line: "Sweelinck has the journal. He keeps it at the right height on the shelf. You know which one." },
+  // §XXX — Entry 41 Echo (Brynn only)
+  { cond: () => !!(S_story.s49BrynnDelivered && !S_story.s49SweelinckDelivered),
+    line: "Brynn read Entry 41 twice, quietly, and set it down. She hasn't mentioned it since. She hasn't needed to." },
+  // §XXXI — Joint Witness (S54)
+  { cond: () => !!(S_story.s54JointMomentDelivered),
+    line: "Brynn and Yael stood in the same light at the same time. They both looked at you. The light held." },
+  // §XXXII — Varga Watch (S8)
+  { cond: () => !!(S_story.s8PachelbelTold),
+    line: "Pachelbel recognized the forwarding route without being told what it was. She hasn't mentioned Varga by name since. She doesn't need to." },
+  // §XXXII — Auros Theory (S29)
+  { cond: () => !!(S_story.s29LineDelivered),
+    line: "Auros had the complete picture. The structural survey and the tactical theory were filed together. That's new." },
+  // §XXXIII — Archive Letter
+  { cond: () => !!(S_story.archiveLetterObtained),
+    line: "The archive letter is in Weimar. The footnote that said 'no restriction required' is on record. It's no longer the last word." },
+  // §XXXIII — Survey to Auros (uses undercitySurveyDelivered, not surveyDeliveredToAuros)
+  { cond: () => !!(S_story.undercitySurveyDelivered),
+    line: "Auros has the Year Ten pressure data. The sectors match her Year Twelve projections. She's drafting a unified report." },
+  // §XXXIV — Couperin Ledger (arc complete + debt resolved)
+  { cond: () => !!(S_story.quillQuestComplete && S_story.couperiDebtDegraded),
+    line: "Quill plays the family theme on request. He calls it 'the one that came back.' The lute is still in tune." },
+  // §XXXIV — Couperin Ledger (arc complete, debt not yet resolved)
+  { cond: () => !!(S_story.quillQuestComplete && !S_story.couperiDebtDegraded),
+    line: "Quill has the lute. He knows what a number means. He hasn't found the words for the last part yet." },
+  // §XXXV — First Inn Light (choice: keep)
+  { cond: () => !!(S_story.brynnLightChoiceMade && S_story.brynnLightKept),
+    line: "The lamp at the First Inn is still burning. Brynn checked it this morning." },
+  // §XXXV — First Inn Light (choice: rest)
+  { cond: () => !!(S_story.brynnLightChoiceMade && !S_story.brynnLightKept),
+    line: "The lamp at the First Inn burned down quietly. Brynn says it did its work. She's right." },
+  // §XXXV — First Inn Light (story told, choice never offered)
+  { cond: () => !!(S_story.brynnKeeperStoryTold && !S_story.brynnLightChoiceMade),
+    line: "Brynn never asked what you wanted for the lamp. She kept tending it. It's still burning." },
+  // §XXXVIII — Heartwood Letter (uses s2DaughterDelivered per §XXXVIII reconciliation note)
+  { cond: () => !!(S_story.s2DaughterDelivered),
+    line: "Brynn's daughter wrote 'expedition' at the bottom of the letter. She's measuring property lines in the Heartwood district. She's good at it." },
+  // §XXXIX — Yael's Named Report
+  { cond: () => !!(S_story.yaelNamedReportDelivered),
+    line: "Yael kept three copies of the second report. She knows exactly where each one is." },
+];
+
 function _buildEpilogueScroll() {
   const mc = _missionComplete();
   const cs = _curseScore();
@@ -11429,6 +11858,8 @@ function _buildEpilogueScroll() {
   if (mc && cs <= 0) lines.push(FROBERGER_EPILOGUE.covenant);
   else if (mc) lines.push(FROBERGER_EPILOGUE.imperfect);
   else lines.push(FROBERGER_EPILOGUE.efficient);
+  // Arc epilogue additions (§XXXVI — Layers 62–70)
+  ARC_EPILOGUE_CONDITIONS.forEach(({ cond, line }) => { if (cond()) lines.push(line); });
   return lines;
 }
 
@@ -11528,7 +11959,10 @@ function storyCheckVictory(node) {
   if (missionDone && curse <= 0) {
     // Covenant Keeper Ending — Sweelinck names each person (L42-O / L43-K)
     const namingLines = _buildSweelinckNamingSequence();
-    const intro = '"Froberger had seven Shards and no names. You have seven Shards and names."\n\nHe says them:';
+    // ── Layer 65: s49 Covenant Keeper opening patch ──
+    const intro = S_story.s49SweelinckDelivered
+      ? '"You know where to find me.\nYou found me."\n\nA pause. The lamp is on here too.\n\n"Good."\n\n"Froberger had seven Shards and no names. You have seven Shards and names."\n\nHe says them:'
+      : '"Froberger had seven Shards and no names. You have seven Shards and names."\n\nHe says them:';
     const outro = '\n"That\'s the covenant. Not the sealing. That\'s what the sealing is for." He looks at the Cradle. "The world is worth saving when you\'ve been paying attention to who\'s in it. You were."';
     const nameBlock = namingLines.length > 0 ? '\n\n' + namingLines.join('\n') : '\n\n(No one. You moved through without stopping.)';
     endingEl.textContent = 'Sweelinck reads Entry 41 aloud. Then he sets the journal down.\n\n' + intro + nameBlock + outro;
@@ -12614,13 +13048,13 @@ function storyRenderInventory() {
           useBtn.className = 'inv-use-btn';
           useBtn.textContent = '🔧 Assess items';
           useBtn.addEventListener('click', () => {
-            const sellable = (S_story.inventory || []).filter(i => i.sell > 0 && i.type !== 'mainweapon' && i.type !== 'weapon' && i.type !== 'shield');
-            if (!sellable.length) { storyMsg("Nothing here with recoverable provenance."); return; }
             S_story.raisonToolsUsed = true;
             const idx = (S_story.inventory || []).findIndex(i => i.name === "Raison's Tools");
             if (idx >= 0) S_story.inventory.splice(idx, 1);
-            const lines = sellable.map(i => i.icon + ' ' + i.name + ' — documented. Value: ' + i.sell + 'gp.');
-            storyMsg("The toolkit is thorough. Each item gets a provenance note.\n\n" + lines.join('\n') + "\n\nNothing increases in value. Everything is seen clearly.");
+            S_story.gold = (S_story.gold || 0) + 30;
+            storyUpdateStatus();
+            storyMsg("The lens clarifies something you've been carrying. What you thought was worth less is worth more. (+30 gold)");
+            setTimeout(() => storyMsg("The handle has instructions written in tiny letters. Whoever taught Raison to do this was very careful about what not to forget."), 600);
             storyRenderInventory();
           });
           div.appendChild(useBtn);
@@ -12781,11 +13215,11 @@ function storyRender(node, prefix) {
           document.getElementById('story-text-box').insertAdjacentElement('afterend', ageDiv);
         }
       }
-      // S55: The Map Before the City — Sweelinck at SQ revisit after Act III, once
-      if (node.code === 'SQ' && (S_story.actNumber || 1) >= 3 && !S_story.s55MapLineDelivered) {
+      // S55b: The Map Before the City — Sweelinck at SQ revisit after Act III, once
+      if (node.code === 'SQ' && (S_story.actNumber || 1) >= 3 && !S_story.s55SqMapLineDelivered) {
         const sqAllVisits = (S_story.npcVisitCounts && S_story.npcVisitCounts['sq_revisit']) || 0;
         if (sqAllVisits >= 1) {
-          S_story.s55MapLineDelivered = true;
+          S_story.s55SqMapLineDelivered = true;
           const mapLineDiv = document.createElement('div');
           mapLineDiv.className = 'sweelinck-variant';
           mapLineDiv.style.marginTop = '6px';
@@ -12793,7 +13227,7 @@ function storyRender(node, prefix) {
           document.getElementById('story-text-box').insertAdjacentElement('afterend', mapLineDiv);
         }
       }
-      // S49: Froberger Entry 41 — Sweelinck at SQ
+      // ── Layer 65: S49 Froberger Entry 41 — Sweelinck at SQ (full scene) ──
       if (node.code === 'SQ' && S_story.frobergerLastEntryRead && !S_story.s49SweelinckDelivered) {
         const s49SqBtn = document.createElement('button');
         s49SqBtn.className = 'inv-use-btn';
@@ -12801,11 +13235,26 @@ function storyRender(node, prefix) {
         s49SqBtn.textContent = '📔 You read the last entry.';
         s49SqBtn.addEventListener('click', () => {
           S_story.s49SweelinckDelivered = true;
-          storyMsg("Sweelinck: \"He wrote it for the next one. I think he knew you'd find it.\"\n\nHe doesn't ask what the entry said. He knows what it said.");
+          storyMsg(_getS49SweelinckScene());
           s49SqBtn.remove();
         });
         document.getElementById('story-text-box').insertAdjacentElement('afterend', s49SqBtn);
       }
+    }
+  }
+  // ── Layer 72: §XXXVII Bruhns CO fav-gated scene ──
+  if (node.code === 'CO' && !S_story.defeatedBattles['CO'] && !S_story.bruhnsCoSceneDelivered) {
+    const fav = _npcFavor('bruhns');
+    let coSceneText = null;
+    if (fav >= 2) {
+      coSceneText = BRUHNS_CO_SCENE.dearFriend;
+      if (S_story.s29LineDelivered) coSceneText += '\n\n' + BRUHNS_CO_SCENE.dearFriendWithTheory;
+    } else if (fav >= 1) {
+      coSceneText = BRUHNS_CO_SCENE.friendly;
+    }
+    if (coSceneText) {
+      S_story.bruhnsCoSceneDelivered = true;
+      setTimeout(() => storyMsg(coSceneText), 600);
     }
   }
   // ── Layer 41: Birka NPC cards ──
@@ -12865,6 +13314,44 @@ function storyRender(node, prefix) {
           });
           npcRowDiv.appendChild(tellBtn);
         }
+      }
+      // ── Layer 68b: Pachelbel Ledger at BA (Dear Friend) ──
+      if (node.code === 'BA' && _npcFavor('pachelbel') >= 2) {
+        const ledgerBtn = document.createElement('button');
+        ledgerBtn.className = 'inv-use-btn';
+        ledgerBtn.textContent = '📒 Read the ledger.';
+        ledgerBtn.style.cssText = 'margin-top:4px;';
+        ledgerBtn.addEventListener('click', () => {
+          const overlay = document.createElement('div');
+          overlay.style.cssText = 'position:fixed;inset:0;z-index:460;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;padding:20px;';
+          const panel = document.createElement('div');
+          panel.style.cssText = 'background:#f0e8d0;color:#2a1a06;border:1px solid #a0803a;border-radius:6px;padding:28px 32px;max-width:440px;width:100%;font-family:"Courier New",monospace;box-shadow:0 8px 40px rgba(0,0,0,0.5);display:flex;flex-direction:column;gap:14px;max-height:80vh;overflow-y:auto;';
+          panel.innerHTML = '<div style="font-size:11px;font-weight:700;letter-spacing:2px;color:#7a5a20;text-transform:uppercase;border-bottom:1px solid #c8a870;padding-bottom:8px;">📒 Pachelbel\'s Ledger</div>';
+          [2,3].forEach(n => {
+            const entry = document.createElement('pre');
+            entry.style.cssText = 'font-size:11px;line-height:1.7;white-space:pre-wrap;color:#2a1a06;border-top:1px solid #d0b870;padding-top:10px;';
+            entry.textContent = 'Entry ' + n + '\n\n' + PACHELBEL_LEDGER[n];
+            panel.appendChild(entry);
+          });
+          const closeBtn = document.createElement('button');
+          closeBtn.style.cssText = 'align-self:center;padding:7px 20px;font-size:12px;background:#e0d0a0;border:1px solid #907020;color:#3a2010;border-radius:4px;cursor:pointer;font-family:inherit;';
+          closeBtn.textContent = 'Close';
+          closeBtn.addEventListener('click', () => overlay.remove());
+          panel.appendChild(closeBtn);
+          overlay.appendChild(panel);
+          overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+          document.body.appendChild(overlay);
+        });
+        npcRowDiv.appendChild(ledgerBtn);
+      }
+      // ── Layer 69 §XXXIV — Act VIII: Quill visits BA to close the Couperin estate ledger ──
+      if (node.code === 'BA' && (S_story.actNumber || 1) === 8
+          && _npcFavor('quill') >= 1 && !S_story.act8FarewellQuill) {
+        S_story.act8FarewellQuill = true;
+        const beatText = typeof ACT8_FAREWELL_BEATS.quill.text === 'function'
+          ? ACT8_FAREWELL_BEATS.quill.text()
+          : ACT8_FAREWELL_BEATS.quill.text;
+        setTimeout(() => storyMsg('Quill is at the archive desk — not his usual table, not his instrument.\n\n' + beatText), 500);
       }
       // ── L44-A: Gigault stall at BA ──
       if (node.code === 'BA') {
@@ -13002,6 +13489,51 @@ function storyRender(node, prefix) {
           npcRowDiv.appendChild(archiveBtn);
         }
       }
+      // ── Layer 63: Froberger Memorial at CI ──
+      if (node.code === 'CI') {
+        const memBtn = document.createElement('button');
+        memBtn.className = 'inv-use-btn';
+        memBtn.textContent = '⛪ Examine the memorial.';
+        memBtn.style.cssText = 'margin-top:4px;';
+        memBtn.addEventListener('click', storyShowFrobergerMemorial);
+        npcRowDiv.appendChild(memBtn);
+      }
+      // ── Layer 66a: S54 Yael + Brynn joint witness at CI (Act VIII) ──
+      if (node.code === 'CI' && (S_story.actNumber || 1) >= 7
+          && _npcFavor('yael') >= 1 && _npcFavor('brynn') >= 1
+          && !S_story.s54JointMomentDelivered) {
+        S_story.s54JointMomentDelivered = true;
+        setTimeout(() => storyMsg(S54_JOINT_MOMENT), 400);
+      }
+      // ── Layer 74 §XXXIX — Yael Named Report at CI ──
+      if (node.code === 'CI' && _npcFavor('yael') >= 2
+          && (S_story.actNumber || 1) >= 6 && S_story.yaelEscortUsed
+          && !S_story.yaelNamedReportDelivered) {
+        setTimeout(() => {
+          storyMsg(YAEL_NAMED_REPORT_SCENE.setup + '\n\n' + YAEL_NAMED_REPORT_SCENE.decision);
+          const choiceDiv = document.createElement('div');
+          choiceDiv.style.cssText = 'margin-top:6px;display:flex;flex-direction:column;gap:3px;';
+          const holdBtn = document.createElement('button');
+          holdBtn.className = 'inv-use-btn';
+          holdBtn.textContent = '📋 I\'ll hold it.';
+          holdBtn.addEventListener('click', () => {
+            S_story.yaelNamedReportDelivered = true;
+            storyMsg('Yael: ' + YAEL_NAMED_REPORT_SCENE.choiceHold);
+            choiceDiv.remove();
+          });
+          const threeBtn = document.createElement('button');
+          threeBtn.className = 'inv-use-btn';
+          threeBtn.textContent = '🗂 Three copies is enough.';
+          threeBtn.addEventListener('click', () => {
+            S_story.yaelNamedReportDelivered = true;
+            storyMsg('Yael: ' + YAEL_NAMED_REPORT_SCENE.choiceThree);
+            choiceDiv.remove();
+          });
+          choiceDiv.appendChild(holdBtn);
+          choiceDiv.appendChild(threeBtn);
+          npcRowDiv.appendChild(choiceDiv);
+        }, 600);
+      }
       // ── L45-G: Yael patrol field line ──
       if (node.code !== 'CI') {
         const yaelPatrol = _getYaelLocation();
@@ -13029,6 +13561,23 @@ function storyRender(node, prefix) {
         logBtn.style.cssText = 'margin-top:4px;';
         logBtn.addEventListener('click', storyShowWeckmannLog);
         npcRowDiv.appendChild(logBtn);
+        // ── Layer 64: Pit Championship trigger at CY ──
+        if ((S_story.pitTrainingWins || 0) >= 5 && !S_story.pitChampionOffered) {
+          setTimeout(_showPitChampionOffer, 500);
+        }
+        if (S_story.pitChampionOffered && !S_story.pitChampionWon) {
+          const chalBtn = document.createElement('button');
+          chalBtn.className = 'inv-use-btn';
+          chalBtn.textContent = '🏆 Challenge for the Title.';
+          chalBtn.style.cssText = 'margin-top:4px;';
+          chalBtn.addEventListener('click', _startPitChampionBattle);
+          npcRowDiv.appendChild(chalBtn);
+        }
+        // ── Layer 67b: S29 Auros tactical theory at CY ──
+        if (S_story.frobergerLastEntryRead && _npcFavor('bruhns') >= 2 && !S_story.s29LineDelivered) {
+          S_story.s29LineDelivered = true;
+          setTimeout(() => storyMsg(S29_AUROS_THEORY), 600);
+        }
         // ── S7b: Undercity Survey delivery to Auros at CY ──
       if (node.code === 'CY' && _npcFavor('bruhns') >= 2
           && (S_story.inventory||[]).some(i => i.name === 'Undercity Survey (Partial)')
@@ -13041,7 +13590,10 @@ function storyRender(node, prefix) {
           S_story.undercitySurveyDelivered = true;
           const idx = (S_story.inventory||[]).findIndex(i => i.name === 'Undercity Survey (Partial)');
           if (idx >= 0) S_story.inventory.splice(idx, 1);
-          storyMsg("Auros holds the notation for a long time without speaking.\n\nAuros: \"This is Froberger's handwriting. And these load measurements — this is exactly what I've been missing for the north corridor. I've been estimating this for two years.\"\n\nA pause.\n\n\"You got this from the Blue Shutters? They're not supposed to let deposit items leave.\" She looks at you. \"I'm going to pretend you mentioned a different archive.\"");
+          S_story.gold = (S_story.gold || 0) + 40; storyUpdateStatus();
+          let surveyMsg = "She takes it from you without asking where you got it.\n\nShe reads the pressure annotations. A long pause.\n\n\"This was taken around Year Ten. The survey team documented six sectors. Four of them match the Void-advance indicators I flagged in Year Twelve.\"\n\nShe folds it.\n\n\"Two years. They had two years of lead time and this never reached the tactical desk. Someone decided it wasn't worth forwarding.\" (+40 gold)\n\n\"If you find the second half, bring it.\"";
+          if (S_story.s29LineDelivered) surveyMsg += "\n\n\"Froberger walked the same sectors in Year Thirteen. One year after this survey was buried. If he'd known it existed, he would have understood earlier.\"";
+          storyMsg(surveyMsg);
           delBtn.remove();
         });
         npcRowDiv.appendChild(delBtn);
@@ -13076,14 +13628,18 @@ function storyRender(node, prefix) {
           npcRowDiv.appendChild(giveBtn);
         }
       }
-      // ── S2: Brynn's Daughter Letter — at IN after Act IV, once ──
-      if (node.code === 'IN' && (S_story.actNumber || 1) >= 4 && !S_story.s2DaughterDelivered) {
-        S_story.s2DaughterDelivered = true;
-        const journalRead = !!(S_story.journalEntriesRead && S_story.journalEntriesRead.includes(7));
-        const letterText = journalRead
-          ? "Brynn: \"A courier dropped this off this morning. From my daughter.\" She hands you an envelope, unsealed.\n\n[The letter says she arrived safely. She found work as an apprentice to a cartographer. She says the city looks different from the outside — smaller, she says, but also more itself somehow. She mentions the inn. She mentions the steps, which apparently she always knew were crooked. She ends: \"Tell whoever's staying in room 6 to check the window latch. It sticks when the weather changes.\"]\n\nBrynn: \"She knows everything. She always did.\""
-          : "Brynn: \"A courier dropped this off this morning. From my daughter.\" She doesn't hand it to you — just mentions it. She's already reading it again.\n\nShe says, eventually: \"She's well. That's the main thing.\"";
-        setTimeout(() => storyMsg(letterText), 700);
+      // ── S2 / Layer 73 §XXXVIII: Brynn Heartwood Letter — fav-gated, at IN Act IV+, Entry 7 read ──
+      if (node.code === 'IN' && (S_story.actNumber || 1) >= 4
+          && !S_story.s2DaughterDelivered
+          && (S_story.journalEntriesRead || []).includes(7)) {
+        const fav = _npcFavor('brynn');
+        let letterText = null;
+        if (fav >= 2) letterText = BRYNN_HEARTWOOD_SCENE.dearFriend;
+        else if (fav >= 1) letterText = BRYNN_HEARTWOOD_SCENE.friendly;
+        if (letterText) {
+          S_story.s2DaughterDelivered = true;
+          setTimeout(() => storyMsg(letterText), 700);
+        }
       }
       // ── S58: Brynn's Regulars — ambient guests at IN ──
       if (node.code === 'IN') {
@@ -13100,13 +13656,14 @@ function storyRender(node, prefix) {
           reg1 = 'The merchant in room 3 has been here three weeks now. He says the roads south are clear again.';
         }
         regularsDiv.innerHTML = '<div class="npc-ambient" style="font-size:11px;line-height:1.75;">'
+          + '<em>A lamp burns in the corner. It has been lit since your first night here.</em><br>'
           + '<em>' + reg1 + '</em><br>'
           + '<em>' + reg2 + '</em><br>'
           + '<em>' + reg3 + '</em>'
           + '</div>';
         npcRowDiv.appendChild(regularsDiv);
       }
-      // ── S49: Froberger Entry 41 — Brynn at IN ──
+      // ── Layer 65: S49 Froberger Entry 41 — Brynn at IN (full scene) ──
       if (node.code === 'IN' && S_story.frobergerLastEntryRead && !S_story.s49BrynnDelivered) {
         const s49Btn = document.createElement('button');
         s49Btn.className = 'inv-use-btn';
@@ -13114,7 +13671,7 @@ function storyRender(node, prefix) {
         s49Btn.style.cssText = 'margin-top:4px;';
         s49Btn.addEventListener('click', () => {
           S_story.s49BrynnDelivered = true;
-          storyMsg("Brynn: \"He was trying to come back. He just — ran out of time to figure out how.\"\n\nShe doesn't ask what the entry said. She knows what it said.");
+          storyMsg(S49_BRYNN_SCENE);
           s49Btn.remove();
         });
         npcRowDiv.appendChild(s49Btn);
@@ -13128,10 +13685,64 @@ function storyRender(node, prefix) {
         r6Btn.addEventListener('click', storyShowRoom6);
         npcRowDiv.appendChild(r6Btn);
       }
-      // ── S54: Joint NPC moment — Quill plays song Brynn requested, both Dear Friend ──
+      // ── Layer 70 §XXXV — Beat 1: Lamp Inquiry at IN ──
+      if (node.code === 'IN' && _npcFavor('brynn') >= 1
+          && (S_story.actNumber || 1) >= 2 && !S_story.brynnKeeperStoryTold) {
+        const lampBtn = document.createElement('button');
+        lampBtn.className = 'inv-use-btn';
+        lampBtn.textContent = '🕯 Ask Brynn about the lamp in the corner.';
+        lampBtn.style.cssText = 'margin-top:4px;';
+        lampBtn.addEventListener('click', () => {
+          storyMsg('Brynn: ' + BRYNN_KEEPER_STORY.inquiry);
+          lampBtn.remove();
+          const followBtn = document.createElement('button');
+          followBtn.className = 'inv-use-btn';
+          followBtn.textContent = '💬 Why that night?';
+          followBtn.style.cssText = 'margin-top:4px;';
+          followBtn.addEventListener('click', () => {
+            S_story.brynnKeeperStoryTold = true;
+            storyMsg('Brynn: ' + BRYNN_KEEPER_STORY.followUp);
+            followBtn.remove();
+          });
+          npcRowDiv.appendChild(followBtn);
+        });
+        npcRowDiv.appendChild(lampBtn);
+      }
+      // ── Layer 70 §XXXV — Beat 2: Lamp Choice at IN (Dear Friend only) ──
+      if (node.code === 'IN' && _npcFavor('brynn') >= 2
+          && S_story.brynnKeeperStoryTold && !S_story.brynnLightChoiceMade) {
+        const choiceDiv = document.createElement('div');
+        choiceDiv.style.cssText = 'margin-top:4px;display:flex;flex-direction:column;gap:3px;';
+        const prompt = document.createElement('div');
+        prompt.style.cssText = 'font-size:12px;color:#c8a870;font-style:italic;margin-bottom:2px;';
+        prompt.textContent = 'Brynn: ' + BRYNN_KEEPER_STORY.choicePrompt;
+        choiceDiv.appendChild(prompt);
+        const keepBtn = document.createElement('button');
+        keepBtn.className = 'inv-use-btn';
+        keepBtn.textContent = '🕯 Let it keep burning.';
+        keepBtn.addEventListener('click', () => {
+          S_story.brynnLightChoiceMade = true;
+          S_story.brynnLightKept = true;
+          storyMsg('Brynn: ' + BRYNN_KEEPER_STORY.choiceKeep);
+          choiceDiv.remove();
+        });
+        const restBtn = document.createElement('button');
+        restBtn.className = 'inv-use-btn';
+        restBtn.textContent = '🌙 It can rest when I\'m done.';
+        restBtn.addEventListener('click', () => {
+          S_story.brynnLightChoiceMade = true;
+          S_story.brynnLightKept = false;
+          storyMsg('Brynn: ' + BRYNN_KEEPER_STORY.choiceRest);
+          choiceDiv.remove();
+        });
+        choiceDiv.appendChild(keepBtn);
+        choiceDiv.appendChild(restBtn);
+        npcRowDiv.appendChild(choiceDiv);
+      }
+      // ── S54b: Quill plays Brynn's song at TV — both Dear Friend, once per run ──
       if (node.code === 'TV' && _npcFavor('quill') >= 2 && _npcFavor('brynn') >= 2
-          && !S_story.s54JointMomentDelivered) {
-        S_story.s54JointMomentDelivered = true;
+          && !S_story.s54QuillBrynnDelivered) {
+        S_story.s54QuillBrynnDelivered = true;
         setTimeout(() => storyMsg("Quill is already playing when you arrive. Something slow.\n\n\"Brynn came by yesterday,\" he says without stopping. \"Asked me to play something slow for a while. Said she had a guest who needed it.\"\n\nHe doesn't look up. He means it as high praise."), 500);
       }
       // ── S32: Quill's second song on NG+ (Dear Friend or higher) ──
@@ -13301,18 +13912,18 @@ function storyRender(node, prefix) {
       S_story.roughWhiskeyBrynLineDelivered = true;
       setTimeout(() => storyMsg("Brynn: \"Pachelbel's selling that now? He used to turn it away — said the margin didn't justify the trouble it causes. Must have changed his policy. Things do.\""), 400);
     }
-    // Layer 42-R: Quill second-visit song trigger
-    if (node.code === 'TV' && _npcFavor('quill') >= 1
-        && !S_story.couperiSongReceived
+    // Layer 69 §XXXIV — Quill Beat 3: The Debt Degradation (checked before Beat 2 so it can't fire same visit)
+    if (node.code === 'TV' && S_story.quillQuestComplete && !S_story.couperiDebtDegraded) {
+      S_story.couperiDebtDegraded = true;
+      setTimeout(() => storyMsg(S34_QUILL_BEAT3 + '\n\n── The Couperin debt has done its work. ──'), 600);
+    }
+    // Layer 69 §XXXIV — Quill Beat 2: Couperin's Song (fires first TV visit after lute returned)
+    if (node.code === 'TV' && !S_story.couperiSongReceived
         && S_story.quests['quest_couperin_lute'] === 'complete') {
-      const visitKey = 'tv_post_quest_visits';
-      S_story[visitKey] = (S_story[visitKey] || 0) + 1;
-      if (S_story[visitKey] >= 2) {
-        S_story.couperiSongReceived = true;
-        S_story.quillQuestComplete = true;
-        _checkDearFriendUpgrade('quill');
-        storyMsg('🎵 Quill plays something new. He calls it "The Returning Kind." He says it\'s about someone who keeps coming back. He doesn\'t look at you when he says it.');
-      }
+      S_story.couperiSongReceived = true;
+      S_story.quillQuestComplete = true;
+      _checkDearFriendUpgrade('quill');
+      setTimeout(() => storyMsg(S34_QUILL_BEAT2), 400);
     }
     // ── S36: EB node NG+ first-line (one-time on first NG+ revisit) ──
     if ((S_story.ngPlusRun || 0) > 0 && node.isEpicBattleground && EB_NG_PLUS_LINES[node.code]) {

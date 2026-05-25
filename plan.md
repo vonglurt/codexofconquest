@@ -17,18 +17,18 @@ Implement in layer order. Each = code change + doc sync + `git commit`.
 | 59 | §XXIV | Pressure Cascade: Visible Void Tide Events | ✅ Implemented |
 | 60 | §XXV | The Homecoming: Act VIII Farewell Beats | ✅ Implemented |
 | 62 | §XXVII | Town Crier: Inn Rest World-News Lines | ✅ Implemented |
-| 63 | §XXVIII | Froberger Memorial: Living Stone at CI | Small |
-| 64 | §XXIX | Pit Championship: Finals at Crossroads Forge | Medium |
-| 65 | §XXX | Entry 41 Echo: Brynn + Sweelinck | Small |
-| 66a+b | §XXXI | Joint Witness + Map Caption (S54 + S55) | Small |
-| 67a+b | §XXXII | Two Intelligence Feeds (S8 + S29) | Small |
-| 68a+b | §XXXIII | Archive + Tools (S7 + S46) | Medium |
-| 69 | §XXXIV | Couperin Ledger: Quill's Three-Beat Arc | Medium |
-| 70 | §XXXV | First Inn Light: Brynn's Vigil Arc | Small |
-| 71 | §XXXVI | Epilogue Integration Layer: Arcs to Scroll | Small |
-| 72 | §XXXVII | The Final Confrontation: Commander Bruhns's CO Scene | Small |
-| 73 | §XXXVIII | The Heartwood Letter: Brynn's Daughter Scene | Small |
-| 74 | §XXXIX | Yael's Record: The Named Report Scene | Small |
+| 63 | §XXVIII | Froberger Memorial: Living Stone at CI | ✅ Implemented |
+| 64 | §XXIX | Pit Championship: Finals at Crossroads Forge | ✅ Implemented |
+| 65 | §XXX | Entry 41 Echo: Brynn + Sweelinck | ✅ Implemented |
+| 66a+b | §XXXI | Joint Witness + Map Caption (S54 + S55) | ✅ Implemented |
+| 67a+b | §XXXII | Two Intelligence Feeds (S8 + S29) | ✅ Implemented |
+| 68a+b | §XXXIII | Archive + Tools (S7 + S46) | ✅ Implemented |
+| 69 | §XXXIV | Couperin Ledger: Quill's Three-Beat Arc | ✅ Implemented |
+| 70 | §XXXV | First Inn Light: Brynn's Vigil Arc | ✅ Implemented |
+| 71 | §XXXVI | Epilogue Integration Layer: Arcs to Scroll | ✅ Implemented |
+| 72 | §XXXVII | The Final Confrontation: Commander Bruhns's CO Scene | ✅ Implemented |
+| 73 | §XXXVIII | The Heartwood Letter: Brynn's Daughter Scene | ✅ Implemented |
+| 74 | §XXXIX | Yael's Record: The Named Report Scene | ✅ Implemented |
 
 ### Tier 2 — Needs Lab Report Before Coding
 
@@ -289,18 +289,18 @@ The commit message should name the lab report and summarize what it covers in on
 | 16 | §XXV | The Homecoming: Act VIII One-Time Farewell Beats | 60 | No — document inline in `story.md` | ✅ Implemented |
 | 17 | §XXVI | Corelli the Wandering Merchant: Cross-Act Vendor NPC | 61 | Yes — `lab-report-corelli-merchant.md` (wandering NPC archetype) | ⚠️ PLANNED |
 | 18 | §XXVII | Town Crier: Inn Rest World-News Ambient Lines | 62 | No — document inline | ✅ Implemented |
-| 19 | §XXVIII | The Froberger Memorial: A Living Stone at CI | 63 | No — document inline in `story.md` + `world.md` | ⚠️ PLANNED |
-| 20 | §XXIX | The Pit Championship: Finals at Crossroads Forge | 64 | No — document inline; patch §XXV farewell beat | ⚠️ PLANNED |
-| 21 | §XXX | The Entry 41 Echo: Brynn and Sweelinck After the Last Journal | 65 | No — state flags pre-exist; document inline; patch _buildSweelinckNamingSequence() | ⚠️ PLANNED |
-| 22 | §XXXI | The Joint Witness and the Map Caption (S54 + S55) | 66a+66b | No — state flags pre-exist; document inline; patch _renderFinalMap() | ⚠️ PLANNED |
-| 23 | §XXXII | Two Intelligence Feeds: The Varga Watch and the Auros Theory (S8 + S29) | 67a+67b | No — all flags pre-exist; document inline | ⚠️ PLANNED |
-| 24 | §XXXIII | The Archive and the Tools: Blue Shutters (S7) + Raison (S46) | 68a+68b | No — 1 new flag (surveyDeliveredToAuros); document inline; §XVI cross-ref (archive_letter) | ⚠️ PLANNED |
-| 25 | §XXXIV | The Couperin Ledger: Quill's Three-Beat Arc | 69 | No — all flags pre-exist; document inline; L44-E injection; §XXIV cross-ref (Act VIII BA farewell) | ⚠️ PLANNED |
-| 26 | §XXXV | The First Inn Light: Brynn's Vigil Arc | 70 | Yes — 3 new flags (brynnKeeperStoryTold, brynnLightChoiceMade, brynnLightKept); add to _S_DEFAULTS() Brynn block | ⚠️ PLANNED |
-| 27 | §XXXVI | Epilogue Integration Layer: Arcs to Scroll | 71 | No — no new flags; ARC_EPILOGUE_CONDITIONS const + 4-line _buildEpilogueScroll() patch | ⚠️ PLANNED |
-| 28 | §XXXVII | The Final Confrontation: Commander Bruhns's CO Scene | 72 | Yes — 1 new flag (bruhnsCoSceneDelivered); BRUHNS_CO_SCENE const; CO render patch | ⚠️ PLANNED |
-| 29 | §XXXVIII | The Heartwood Letter: Brynn's Daughter Scene | 73 | Yes — 1 new flag (brynnLetterSceneDelivered); BRYNN_HEARTWOOD_SCENE const; IN render patch; note: S2/s2DaughterDelivered pre-impl, patch existing | ⚠️ PLANNED |
-| 30 | §XXXIX | Yael's Record: The Named Report Scene | 74 | Yes — 1 new flag (yaelNamedReportDelivered); YAEL_NAMED_REPORT_SCENE const; CI render + YAEL_PATROL_NODES patch | ⚠️ PLANNED |
+| 19 | §XXVIII | The Froberger Memorial: A Living Stone at CI | 63 | No — document inline in `story.md` + `world.md` | ✅ Implemented |
+| 20 | §XXIX | The Pit Championship: Finals at Crossroads Forge | 64 | No — document inline; patch §XXV farewell beat | ✅ Implemented |
+| 21 | §XXX | The Entry 41 Echo: Brynn and Sweelinck After the Last Journal | 65 | No — state flags pre-exist; document inline; patch _buildSweelinckNamingSequence() | ✅ Implemented |
+| 22 | §XXXI | The Joint Witness and the Map Caption (S54 + S55) | 66a+66b | No — state flags pre-exist; document inline; patch _renderFinalMap() | ✅ Implemented |
+| 23 | §XXXII | Two Intelligence Feeds: The Varga Watch and the Auros Theory (S8 + S29) | 67a+67b | No — all flags pre-exist; document inline | ✅ Implemented |
+| 24 | §XXXIII | The Archive and the Tools: Blue Shutters (S7) + Raison (S46) | 68a+68b | No — 1 new flag (surveyDeliveredToAuros → `undercitySurveyDelivered` in code); document inline | ✅ Implemented |
+| 25 | §XXXIV | The Couperin Ledger: Quill's Three-Beat Arc | 69 | No — all flags pre-exist; document inline; L44-E injection; §XXIV cross-ref (Act VIII BA farewell) | ✅ Implemented |
+| 26 | §XXXV | The First Inn Light: Brynn's Vigil Arc | 70 | Yes — 3 new flags (brynnKeeperStoryTold, brynnLightChoiceMade, brynnLightKept); add to _S_DEFAULTS() Brynn block | ✅ Implemented |
+| 27 | §XXXVI | Epilogue Integration Layer: Arcs to Scroll | 71 | No — no new flags; ARC_EPILOGUE_CONDITIONS const + 4-line _buildEpilogueScroll() patch | ✅ Implemented |
+| 28 | §XXXVII | The Final Confrontation: Commander Bruhns's CO Scene | 72 | Yes — 1 new flag (bruhnsCoSceneDelivered); BRUHNS_CO_SCENE const; CO render patch | ✅ Implemented |
+| 29 | §XXXVIII | The Heartwood Letter: Brynn's Daughter Scene | 73 | No new flag — uses pre-existing s2DaughterDelivered per §XXXVIII reconciliation note; BRYNN_HEARTWOOD_SCENE const; S2 IN block patched with fav-gating | ✅ Implemented |
+| 30 | §XXXIX | Yael's Record: The Named Report Scene | 74 | Yes — 1 new flag (yaelNamedReportDelivered); YAEL_NAMED_REPORT_SCENE const; CI render + YAEL_PATROL_NODES patch | ✅ Implemented |
 
 **Rule:** Implement in layer order when possible. Each implementation = code + doc sync + git commit. See plan.md §I Lab Report Policy for commit rules.
 
@@ -2073,12 +2073,12 @@ creative_literacy_token: { name:'Creative Literacy Token', icon:'📄', sell:27 
 | **Homecoming (§XXV)** | 6 one-time Act VIII farewell beats / Brynn's Loaf / Champion's Tincture / Pachelbel's Sketch / 6 new flags | `plan.md §XXV` | `story.md` Act VIII Farewell Beats | ✅ Implemented |
 | **Wandering Merchant (§XXVI)** | Corelli — 5 appearances Acts II–VIII / purchase-gated fav / 5 unique items / Scholar King courier reveal / `last_cipher` cross-ref §XVI–§XVII | `plan.md §XXVI` | ✅ PLANNED stubs: `story.md` Corelli encounters; `world.md` Wandering Merchant | ⚠️ PLANNED |
 | **Town Crier (§XXVII)** | `TOWN_CRIER_LINES` const / priority-selector / inn rest rumor line / 56 act-cycling lines + critical/tension/quest/NPC tiers | `plan.md §XXVII` | `story.md` Town Crier note; no new state flags | ✅ Implemented |
-| **Froberger Memorial (§XXVIII)** | `FROBERGER_MEMORIAL_TEXT` object / 4-layer plaque text / memorial book entries / [Leave Flowers] 10gp action / `storyShowFrobergerMemorial()` | `plan.md §XXVIII` | ✅ PLANNED stubs: `story.md` Memorial section; `world.md` memorial world note | ⚠️ PLANNED |
-| **Pit Championship (§XXIX)** | `PIT_CHAMPION_OGUNDIMU` const / `_showPitChampionOffer()` / `_startPitChampionBattle()` / win/loss callbacks / Weckmann log entry / dearFriend pool patch / §XXV farewell branch | `plan.md §XXIX` | ⚠️ PLANNED stubs pending: `story.md` championship note; `world.md` Ogundimu entry | ⚠️ PLANNED |
-| **Entry 41 Echo (§XXX)** | `S49_BRYNN_SCENE` / `S49_SWEELINCK_SCENE` consts / s49 flag trigger logic / Covenant Keeper opening patch in `_buildSweelinckNamingSequence()` | `plan.md §XXX` | ✅ PLANNED stubs: `story.md` scene summaries; `world.md` S49 expanded | ⚠️ PLANNED |
-| **Joint Witness + Map Caption (§XXXI)** | `S54_JOINT_MOMENT` const / Yael+Brynn CI scene (act≥7, dual Friendly gate) / S55 caption in `_renderFinalMap()` (base + Sweelinck variant) | `plan.md §XXXI` | ✅ PLANNED stubs: `story.md` scene summaries; `world.md` S54/S55 entries; `maps.md` caption spec | ⚠️ PLANNED |
-| **Two Intelligence Feeds (§XXXII)** | S8: three-observation Varga BA arc / pigeon direction / Pachelbel tell (+15gp) / S29: Auros tactical theory at CY (frobergerLastEntryRead + Dear Friend) / `S29_AUROS_THEORY` const | `plan.md §XXXII` | ✅ PLANNED stubs: `story.md` scene notes; `world.md` S8/S29 expanded | ⚠️ PLANNED |
-| **Archive and Tools (§XXXIII)** | S7: CI Blue Shutters three-state / Entry 33 footnote / `archive_letter` item (§XVI cross-cut) / Undercity Survey → Auros +40gp / S46: `raisons_tools` +30gp / `PACHELBEL_LEDGER` entries 2+3 (Raison arrest, Vonn hint) / 1 new flag `surveyDeliveredToAuros` | `plan.md §XXXIII` | ⚠️ PLANNED stubs pending: `story.md` archive+tools notes; `world.md` S7/S46 expansion | ⚠️ PLANNED |
+| **Froberger Memorial (§XXVIII)** | `FROBERGER_MEMORIAL_TEXT` object / 4-layer plaque text / memorial book entries / [Leave Flowers] 10gp action / `storyShowFrobergerMemorial()` / CI `[Examine Memorial]` button | `plan.md §XXVIII` | `story.md` §XXVIII | ✅ Implemented |
+| **Pit Championship (§XXIX)** | `PIT_CHAMPION_OGUNDIMU` const / `_showPitChampionOffer()` / `_startPitChampionBattle()` / `_onPitChampionWin()` / `_onPitChampionLoss()` / championship log entry / `crovChampionLineDelivered` pool injection / §XXV farewell function-text branch / death-save fall bypass | `plan.md §XXIX` | `story.md` §XXIX | ✅ Implemented |
+| **Entry 41 Echo (§XXX)** | `S49_BRYNN_SCENE` const / `S49_SWEELINCK_SCENE_BASE` + `_getS49SweelinckScene()` (NG+ closing variant) / full scene text replaces stubs at IN (`s49BrynnDelivered`) and SQ (`s49SweelinckDelivered`) / Covenant Keeper intro patch in victory screen (`s49SweelinckDelivered` branch) | `plan.md §XXX` | `story.md` §XXX | ✅ Implemented |
+| **Joint Witness + Map Caption (§XXXI)** | `S54_JOINT_MOMENT` const / CI scene (act≥7, yael+brynn Friendly gate, `s54JointMomentDelivered`) / TV Quill+Brynn stub split to `s54QuillBrynnDelivered` / SQ map stub split to `s55SqMapLineDelivered` / S55 caption in `_renderFinalMap()` (fade-in at +400ms, base + Sweelinck variant, `s55MapLineDelivered`) | `plan.md §XXXI` | `story.md` §XXXI | ✅ Implemented |
+| **Two Intelligence Feeds (§XXXII)** | S8: three-observation Varga BA arc / pigeon direction / Pachelbel tell (+15gp) — all pre-existing at BA / S29: `S29_AUROS_THEORY` const / `_getNPCDialogue` stub replaced / CY node render trigger (frobergerLastEntryRead + bruhns Dear Friend + `!s29LineDelivered`) | `plan.md §XXXII` | `story.md` §XXXII | ✅ Implemented |
+| **Archive and Tools (§XXXIII)** | S7: CI Blue Shutters three-state pre-existing / Survey delivery +40gp (was 0gp) + S29 cross-ref line added / S46: Raison's Tools fixed to +30gp + two-message spec / `PACHELBEL_LEDGER` const (entries 2+3) / [Read Ledger] button at BA Dear Friend / `undercitySurveyDelivered` used in place of spec's `surveyDeliveredToAuros` | `plan.md §XXXIII` | `story.md` §XXXIII | ✅ Implemented |
 | **Couperin Ledger (§XXXIV)** | `quills_lute` quest item / `QUEST_DB` entry / Beat 2 TV render (+40gp, couperiSongReceived, quillQuestComplete, Dear Friend check) / Beat 3 TV render (couperiDebtDegraded, L44-E NPC_DIALOGUES injection) / Beat 1 BA/SH lute handoff (Pachelbel) / Act VIII BA farewell Pachelbel note branch / no new flags — all pre-exist | `plan.md §XXXIV` | ⚠️ PLANNED stubs pending: `story.md` three-beat notes; `world.md` Couperin/Quill entry | ⚠️ PLANNED |
 | **First Inn Light (§XXXV)** | `BRYNN_KEEPER_STORY` const / Beat 1 inquiry (fav_brynn ≥ 1, Act II+, + follow-up) / Beat 2 choice block (fav_brynn ≥ 2, 'keep'/'rest') / IN lamp ambient line (always) / §XXV farewell four-branch table / TC_BRYNN_LAMP crier line (§XXVII) / 3 new flags (brynnKeeperStoryTold, brynnLightChoiceMade, brynnLightKept) | `plan.md §XXXV` | ⚠️ PLANNED stubs pending: `story.md` vigil arc notes; `world.md` Brynn lamp entry | ⚠️ PLANNED |
 | **Epilogue Integration Layer (§XXXVI)** | `ARC_EPILOGUE_CONDITIONS` const (14 entries: §XXIX pit champ / §XXX s49 both+solo / §XXXI s54 / §XXXII s8+s29 / §XXXIII archive+survey / §XXXIV lute arc / §XXXV lamp arc) / `_buildEpilogueScroll()` 4-line patch / scroll ordering doc / no new flags | `plan.md §XXXVI` | ⚠️ PLANNED stubs pending: `story.md` scroll extension note | ⚠️ PLANNED |
@@ -7141,10 +7141,10 @@ No lab report. No new nodes or monsters.
 
 ---
 
-## Section XXXIV — The Couperin Ledger: Quill's Three-Beat Arc (Layer 69, ⚠️ PLANNED)
+## Section XXXIV — The Couperin Ledger: Quill's Three-Beat Arc (Layer 69, ✅ Implemented)
 
-> **Design status:** PLANNED. State flags `couperiSongReceived`, `couperiDebtDegraded`, and `quillQuestComplete` already exist in `_S_DEFAULTS()` — this section provides the full three-beat arc design.  
-> **Layer 69** — quest chain at TV + BA; all flags pre-existing; no new nodes, monsters, or lab report; document inline.
+> **Design status:** IMPLEMENTED. State flags `couperiSongReceived`, `couperiDebtDegraded`, and `quillQuestComplete` pre-existed in `_S_DEFAULTS()`.  
+> **Layer 69** — `S34_QUILL_BEAT2` + `S34_QUILL_BEAT3` consts added; Beat 3 block runs before Beat 2 in TV render to prevent same-visit co-fire; L44-E npcKey bug fixed ('couperin' → 'quill') and lesson line updated; `ACT8_FAREWELL_BEATS.quill.text` converted to function with `quillQuestComplete` branch; BA Act VIII Quill farewell block added (fires before TV, sets `act8FarewellQuill`). Pachelbel auto-gives lute via NPC card render (pre-existing). Quest auto-complete gives +40gp + removes lute (pre-existing). Town Crier `quillQuestComplete` line pre-existing.
 
 ---
 
@@ -7353,7 +7353,7 @@ No lab report. No new nodes or monsters. One quest item (`quills_lute`, type:'qu
 
 ---
 
-## Section XXXV — The First Inn Light: Brynn's Vigil Arc (Layer 70, ⚠️ PLANNED)
+## Section XXXV — The First Inn Light: Brynn's Vigil Arc (Layer 70, ✅ Implemented)
 
 ### XXXV-A. Concept
 
@@ -7535,7 +7535,7 @@ No lab report. No new nodes. No new monsters. No new items. Three new state flag
 
 ---
 
-## Section XXXVI — The Epilogue Integration Layer: Arcs to Scroll (Layer 71, ⚠️ PLANNED)
+## Section XXXVI — The Epilogue Integration Layer: Arcs to Scroll (Layer 71, ✅ Implemented)
 
 ### XXXVI-A. Concept
 
@@ -7694,7 +7694,7 @@ No lab report. No new nodes, monsters, flags, or items. One new const + four lin
 
 ---
 
-## Section XXXVII — The Final Confrontation: Commander Bruhns's CO Scene (Layer 72, ⚠️ PLANNED)
+## Section XXXVII — The Final Confrontation: Commander Bruhns's CO Scene (Layer 72, ✅ Implemented)
 
 ### XXXVII-A. Concept
 
@@ -7885,7 +7885,7 @@ No lab report. No new nodes. No new monsters. No new items. One new flag.
 
 ---
 
-## Section XXXVIII — The Heartwood Letter: Brynn's Daughter Scene (Layer 73, ⚠️ PLANNED)
+## Section XXXVIII — The Heartwood Letter: Brynn's Daughter Scene (Layer 73, ✅ Implemented)
 
 ### XXXVIII-A. Concept
 
@@ -8071,7 +8071,7 @@ No lab report. No new nodes. No new monsters. No new items.
 
 ---
 
-## Section XXXIX — Yael's Record: The Named Report Scene (Layer 74, ⚠️ PLANNED)
+## Section XXXIX — Yael's Record: The Named Report Scene (Layer 74, ✅ Implemented)
 
 ### XXXIX-A. Concept
 

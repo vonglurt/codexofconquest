@@ -2447,15 +2447,15 @@ MILEPOINT G  storyNewGamePlus() — NG+ reset
 
 ---
 
-## ⚠️ PLANNED — The Froberger Memorial: A Living Stone at CI (plan.md §XXVIII, Layer 63)
+## ✅ Implemented — The Froberger Memorial: A Living Stone at CI (plan.md §XXVIII, Layer 63)
 
-An optional interactive stone at CI. One `[Examine Memorial]` button, two sub-actions ([Leave Flowers] 10gp / [Sign the Book] free). No combat, no quest, no vendor.
+An optional interactive stone at CI. One `[Examine Memorial]` button at the CI NPC row; repurposes `froberger-note-overlay` div for the modal.
 
 **Const:** `FROBERGER_MEMORIAL_TEXT` — object with 4 keys: `base` / `yael_friendly` / `dear_friend` / `post_cipher`. Plaque layers are additive; each appends when its condition is met.
 
 **Plaque text layers:**
 - Base: *"FROBERGER / Chronicler of the Road / Walked every corridor in Birka / His notes are still right"*
-- Yael Friendly (`fav_yael >= 1`): Yael's inscription — *"He was the one who told me what was happening in the Unbanked Quarter before anyone else would."* — Y.S.
+- Yael Friendly (`_npcFavor('yael') >= 1`): Yael's inscription — *"He was the one who told me what was happening in the Unbanked Quarter before anyone else would."* — Y.S.
 - Dear Friend any NPC (`any fav >= 2`): *"The Ivory Circle formally requested the stone be removed in 1312. The city refused."*
 - Post-cipher (`corelliRevelationDelivered`): *"First Contact: F.B. — the chronicler who drew the map before the Circle drew the borders."*
 
@@ -2463,207 +2463,167 @@ An optional interactive stone at CI. One `[Examine Memorial]` button, two sub-ac
 
 **[Leave Flowers]:** 10gp, one-time. Sets `frobergerMemorialFlowers = true`. In Act VIII, promotes the flowers town crier line to head of the cycling pool.
 
-**Function:** `storyShowFrobergerMemorial()` — builds plaque text, renders overlay with book and action buttons.
+**Function:** `storyShowFrobergerMemorial()` — builds layered plaque text, renders overlay with book entries and action buttons.
 
-**F2 reference:** Add `storyShowFrobergerMemorial()` row on implementation.
+**CI button:** `⛪ Examine the memorial.` injected in Layer 63 block at `npcRowDiv` inside the birkaNpcs render block, alongside Nivers/Archive buttons.
 
----
-
-## ⚠️ PLANNED — The Pit Championship: Finals at Crossroads Forge (plan.md §XXIX, Layer 64)
-
-One-time championship bout at CR node, triggered when `pitTrainingWins >= 5`. Weckmann offers the match; player faces Ogundimu, the Iron Standard — a retired city champion defined in const `PIT_CHAMPION_OGUNDIMU` (not in MONSTER_POOL). No XP, no gold, no drop.
-
-**Trigger:** First CR visit after `pitTrainingWins >= 5` AND `!pitChampionOffered`. After offer fires, `pitChampionOffered = true`. Player can decline and re-accept via persistent [Challenge for the Title] button at CR.
-
-**Opponent:** AC 16, HP 42, ATK +7, 1d10+4. Tier: elite. Human — no monster mechanics. `isChampion: true` flag used to suppress XP/gold/drop resolution.
-
-**Win:** `pitChampionWon = true`. Weckmann training log gains a final entry ("Fight 6: Ogundimu, the Iron Standard — WIN"). Weckmann `dearFriend` dialogue pool gains one line: *"Ogundimu asked after you, the last time she came through. I told her you'd moved on. She said that was the right answer."*
-
-**§XXV farewell patch:** Weckmann Act VIII farewell branch — `pitChampionWon === false` → *"…the kind earned in the world, not in a pit."* / `pitChampionWon === true` → *"…who earns it in the pit and then earns it again out here."*
-
-**Loss:** Standard checkpoint respawn. [Challenge for the Title] persists. Ogundimu's loss text: *"Different day. Same champion."* — an invitation, not a dismissal.
-
-**New state flags:** `pitChampionOffered` (boolean, default false, NG+-cleared) / `pitChampionWon` (boolean, default false, NG+-cleared).
-
-**F2 reference:** Add rows for `_showPitChampionOffer()`, `_startPitChampionBattle()`, `_onPitChampionWin()`, `_onPitChampionLoss()` on implementation.
+**State flags:** `frobergerMemorialVisited`, `frobergerMemorialFlowers`, `frobergerMemorialBookSigned`, `_memorialPlayerEntry: null` — all in `_S_DEFAULTS()`.
 
 ---
 
-## ⚠️ PLANNED — The Entry 41 Echo: Brynn and Sweelinck (plan.md §XXX, Layer 65)
+## ✅ Implemented — The Pit Championship: Finals at Crossroads Forge (plan.md §XXIX, Layer 64)
 
-Two parallel one-time scenes triggered by `frobergerLastEntryRead === true` (set when Entry 41 is read at CO via `storyCheckJournal()`). Each fires independently on the first visit to its node after the flag is set. State flags `s49BrynnDelivered` and `s49SweelinckDelivered` already exist in `_S_DEFAULTS()`.
+One-time championship bout at CY node (Weckmann's actual node), triggered when `pitTrainingWins >= 5`. Weckmann offers the match; player faces Ogundimu, the Iron Standard — a retired city champion defined in const `PIT_CHAMPION_OGUNDIMU` (not in MONSTER_POOL). No XP, no gold, no drop.
 
-**Brynn's scene (IN node, `!s49BrynnDelivered`):** Player hands over the journal. Brynn reads Entry 41 twice (you can tell by the time it takes). She quotes one line — *"Come back"* — and says: *"He was right. They do need the person. Glad you're not done yet."* Sets `s49BrynnDelivered = true`. Const: `S49_BRYNN_SCENE`.
+**Trigger:** First CY visit after `pitTrainingWins >= 5` AND `!pitChampionOffered` → `_showPitChampionOffer()` fires via `setTimeout`. After offer fires, `pitChampionOffered = true`. Persistent `[Challenge for the Title]` button at CY until won.
 
-**Sweelinck's scene (SQ node, `!s49SweelinckDelivered`):** Player hands over the journal. Sweelinck reads Entry 41 standing. Closes it carefully. Says: *"He knew the shape of the absence... I'll keep it here. You know where to find me when you're done."* Does not give it back. Sets `s49SweelinckDelivered = true`. Const: `S49_SWEELINCK_SCENE`. Echoes NIGHT_AMBIENT SQ line: *"Sweelinck's lamp is on."*
+**Opponent:** `PIT_CHAMPION_OGUNDIMU` const — AC 16, HP 42, ATK +7, dmgDie 10, dmgFlat 4. Tier: elite. `isChampion: true`. `_storyBattleVictory()` patched to detect `pb.champion` and bypass all XP/gold/loot resolution.
 
-**Covenant Keeper opening patch:** In `_buildSweelinckNamingSequence()`, if `s49SweelinckDelivered`, replace the standard formal opening with: *"You know where to find me. You found me. Good."* — turning the ending ceremony from a first meeting into a reunion.
+**Win:** `_onPitChampionWin()` — sets `pitChampionWon = true`; `_buildWeckmannLog()` patched to append `{CHAMP_ENTRY}` placeholder resolved to championship entry. Weckmann Dear Friend pool: `crovChampionLineDelivered` one-time injection in `_getNPCDialogue()`.
 
-**NG+ Sweelinck variant:** Sweelinck's closing line becomes *"Still here. Bring it back when you're done again."* (adds "again").
+**§XXV farewell patch:** `ACT8_FAREWELL_BEATS.crov.text` is now a function (not a string) evaluated at render time via `typeof beat.text === 'function' ? beat.text() : beat.text` in `_renderNpcCard()`. Branches on `pitChampionWon`.
 
-**Coexistence with §XXV:** If `act8FarewellBrynn` fires before the s49 scene (player reads Entry 41 in Act VIII after visiting IN), both scenes still deliver — farewell first, s49 on the same visit or the next. No conflict.
+**Loss:** `_storyDeathSaveFall()` patched — detects `pb.champion`, clears battle, calls `_onPitChampionLoss()` (soft loss: no loot strip, calls `storyRespawnFromCheckpoint()` after 800ms). `[Challenge for the Title]` button persists.
 
-**F2 reference:** Add s49 trigger logic note to IN and SQ render functions; add `_buildSweelinckNamingSequence()` patch note on implementation.
-
----
-
-## ⚠️ PLANNED — The Joint Witness and the Map Caption (plan.md §XXXI, Layers 66a+66b)
-
-Two parallel S-suggestion systems. State flags `s54JointMomentDelivered` and `s55MapLineDelivered` already exist in `_S_DEFAULTS()`.
-
-**S54 — Yael and Brynn at CI (Layer 66a):** Fires on first CI visit where `actNumber >= 7` AND `fav_yael >= 1` AND `fav_brynn >= 1` AND `!s54JointMomentDelivered`. Brynn is at the crossroads on a supply run; Yael is already there. The player catches the end of a conversation — *"Still the same light?" / "Still the same light."* — a private exchange about the First Inn light that has been burning all night since Act I. Both then address the player: *"You're later than I expected." / "She means that in the good way."* Sets `s54JointMomentDelivered = true`. Const: `S54_JOINT_MOMENT`. This is the only scene in the game where two Birka Six NPCs share the frame.
-
-**S55 — The Map Caption (Layer 66b):** Fires inside `_renderFinalMap()` during the victory sequence. A single line appears centered below the warmth-tinted map grid at ~3500 ms, fading out with the grid at ~8100 ms. Base text: *"He walked every corridor. So did you. The map remembers."* Conditional variant (if `s49SweelinckDelivered`): *"He walked every corridor. So did you. Sweelinck has the record."* Echoes the Froberger Memorial inscription (§XXVIII). Sets `s55MapLineDelivered = true`. Rendered as `<div id="final-map-caption">` in the victory overlay.
-
-**F2 reference:** Add CI node trigger note for s54; add `_renderFinalMap()` patch note for s55 caption on implementation.
+**State flags:** `pitChampionOffered`, `pitChampionWon` in `_S_DEFAULTS()`. `crovChampionLineDelivered` set inline on delivery.
 
 ---
 
-## ⚠️ PLANNED — Two Intelligence Feeds: The Varga Watch and the Auros Theory (plan.md §XXXII, Layers 67a+67b)
+## ✅ Implemented — The Entry 41 Echo: Brynn and Sweelinck (plan.md §XXX, Layer 65)
 
-Two S-suggestion systems. All four flags (`s8VargaWatches`, `s8VargaClueUnlocked`, `s8PachelbelTold`, `s29LineDelivered`) already exist in `_S_DEFAULTS()`.
+Two parallel one-time scenes triggered by `frobergerLastEntryRead === true`. Each fires on the first visit to its node after the flag is set. State flags `s49BrynnDelivered` and `s49SweelinckDelivered` pre-exist in `_S_DEFAULTS()`.
 
-**S8 — Varga Watch at BA (Layer 67a):** Varga is an Ivory Circle informant at BA who monitors the restricted shelves (Froberger and Void research materials). Three [Observe] clicks at BA across any visits escalate ambient description: watch 1 — *"A clerk at the far table has the same book open to the same page as last time. He isn't reading it."* / watch 2 — *"Today he wrote one line in a small notebook, then put it away immediately."* / watch 3 — pigeon launches north-northeast; `s8VargaClueUnlocked = true`; story log: *"The pigeon flew north-northeast. Pachelbel's district."*
+**Brynn's scene (IN, `!s49BrynnDelivered`):** `📔 You read the last entry.` button fires `storyMsg(S49_BRYNN_SCENE)` — full scene with double-read, the *"Come back"* quote, *"Glad you're not done yet."* Sets `s49BrynnDelivered = true`, button removes itself.
 
-**S8 — Pachelbel tell:** When `s8VargaClueUnlocked && fav_pachelbel >= 1`, [Tell Pachelbel about the pigeon] option appears at SH. Pachelbel: *"That's a forwarding route. The Circle uses them when they don't want a name attached... Was it the Froberger shelf?"* — she doesn't wait for the answer. +15gp; `s8PachelbelTold = true`. Cross-refs: Act I Town Crier line [3] (Varga's informants not showing); `yaelEscortDone` quest line (informants run off north end).
+**Sweelinck's scene (SQ, `!s49SweelinckDelivered`):** Same button pattern fires `storyMsg(_getS49SweelinckScene())` — full scene with Sweelinck reading standing, *"He knew the shape of the absence"*, journal kept. NG+ closing: *"Still here. Bring it back when you're done again."* Base closing: *"I'll keep it here. You know where to find me when you're done."* `_getS49SweelinckScene()` function resolves the correct closing at call time.
 
-**S29 — Auros Theory at CY (Layer 67b):** Fires on first CY visit where `frobergerLastEntryRead && fav_auros >= 2 && !s29LineDelivered`. Auros reads Entry 41 and decodes it tactically: Froberger's last route covered Void-advance indicator sectors from Year Twelve, walked in the correct sequence. *"'The shape of the absence.' He finally understood — he'd been mapping the negative space of the Void all along... He got to the end of the map. Then the Tide arrived."* Const: `S29_AUROS_THEORY`. Sets `s29LineDelivered = true`.
+**Covenant Keeper opening patch:** Victory screen `intro` string in the Covenant Keeper ending block is now conditional — if `s49SweelinckDelivered`, prepends *"You know where to find me. / You found me." + pause + "Good."* before the standard naming intro. Turns the ceremony into a reunion.
 
-**Six-system convergence:** S8 + S29 + §XXVIII (Memorial) + §XVII (Void Archaeology) + §XXVI (Corelli) + §XXX (Entry 41 Echo) together form the complete Froberger/Void/Circle intelligence picture. No single system states it explicitly.
-
-**F2 reference:** Add BA observation logic (s8), SH tell option (s8), CY s29 trigger to their respective node render notes on implementation.
+**Consts:** `S49_BRYNN_SCENE` (string), `S49_SWEELINCK_SCENE_BASE` (string), `_getS49SweelinckScene()` (function).
 
 ---
 
-## ⚠️ PLANNED — The Archive and the Tools: Blue Shutters (S7) and Raison (S46) (plan.md §XXXIII, Layers 68a+68b)
+## ✅ Implemented — The Joint Witness and the Map Caption (plan.md §XXXI, Layers 66a+66b)
 
-Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterObtained`, `archiveUndercitySurveyTaken`, `raisonToolsUsed`. One new flag: `surveyDeliveredToAuros`.
+**S54 — Yael and Brynn at CI (Layer 66a):** Fires on first CI visit where `actNumber >= 7` AND `_npcFavor('yael') >= 1` AND `_npcFavor('brynn') >= 1` AND `!s54JointMomentDelivered`. `storyMsg(S54_JOINT_MOMENT)` via `setTimeout(400)`. Full scene: Brynn with delivery basket, Yael already at CI, *"Still the same light?" / "Still the same light."*, then both address the player. Sets `s54JointMomentDelivered = true`.
+
+**Flag split:** Pre-existing TV stub (Quill plays Brynn's song) was using `s54JointMomentDelivered`. Renamed to `s54QuillBrynnDelivered` (new flag in `_S_DEFAULTS()`). SQ "map on the wall" stub was using `s55MapLineDelivered`. Renamed to `s55SqMapLineDelivered` (new flag in `_S_DEFAULTS()`). Both pre-existing stubs now have their own flags; canonical §XXXI flags restored to their intended roles.
+
+**S55 — The Map Caption (Layer 66b):** `_renderFinalMap()` patched — creates `<div id="final-map-caption">` positioned absolute at bottom of overlay, fade-in at +400 ms after grid appears (3500 ms total), fades with grid at 5000 ms. Base: *"He walked every corridor. So did you. The map remembers."* Sweelinck variant (if `s49SweelinckDelivered`): *"...Sweelinck has the record."* Sets `s55MapLineDelivered = true` immediately on render (no gate needed — fires once per victory).
+
+---
+
+## ✅ Implemented — Two Intelligence Feeds: The Varga Watch and the Auros Theory (plan.md §XXXII, Layers 67a+67b)
+
+**S8 — Varga Watch at BA (Layer 67a):** Three-observation arc at BA already fully implemented in earlier layers. Three `👁 Watch him.` button escalations → `s8VargaClueUnlocked = true` at watch 3; pigeon direction note fires. Pachelbel tell at BA when `s8VargaClueUnlocked && !s8PachelbelTold && _npcFavor('pachelbel') >= 1` → full Pachelbel response + 15gp + `s8PachelbelTold = true`.
+
+**S29 — Auros Theory at CY (Layer 67b):** `S29_AUROS_THEORY` const (full scene: Auros decodes Froberger's route as Void-advance indicator sequence; *"'The shape of the absence.' He finally understood — he'd been mapping the negative space of the Void all along."*). `_getNPCDialogue('bruhns')` short stub removed; CY node render trigger added: `frobergerLastEntryRead && _npcFavor('bruhns') >= 2 && !s29LineDelivered` → `storyMsg(S29_AUROS_THEORY)` via `setTimeout(600)`, sets `s29LineDelivered = true`.
+
+---
+
+## ✅ Implemented — The Archive and the Tools: Blue Shutters (S7) and Raison (S46) (plan.md §XXXIII, Layers 68a+68b)
+
+Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterObtained`, `archiveUndercitySurveyTaken`, `raisonToolsUsed`. Note: spec named a new flag `surveyDeliveredToAuros`; implementation uses the pre-existing `undercitySurveyDelivered` for the same concept.
 
 **S7 — Blue Shutters Archive at CI (Layer 68a):** Three-state button: blocked (Yael letter needed) → Yael writes letter ([Request a letter] when `fav_yael >= 1`; sets letter pending; next CI visit: `archiveLetterObtained = true`) → [Enter the Archive]. Inside: (1) Entry 33 added to journal immediately with archivist footnote: *"Filed under: Void Research / Public / Uncatalogued — per Circle directive 1309-VII. Entry author appears unaware of the correlation. No restriction required."* (2) `archive_letter` item pickup (flavor: *"A partial shelf record. 'Researcher Category: Containment, Date: [REDACTED].' Two archivists. The second stopped mid-sentence."*) — in §XVI (Weimar Scholar Gate), Isolde accepts this in place of 3 Scholar Kings' Seal items. (3) Undercity Survey (Partial) pickup → `archiveUndercitySurveyTaken = true`.
 
-**Survey delivery to Auros (CY):** [Deliver survey] option when `archiveUndercitySurveyTaken && !surveyDeliveredToAuros`. Auros: *"This was taken in Year Ten. Four sectors match my Year Twelve Void-advance indicators. Someone decided it wasn't worth forwarding. +40gp, `surveyDeliveredToAuros = true`. If `s29LineDelivered`: adds *"Froberger walked the same sectors in Year Thirteen. One year after this survey was buried."*
+**Survey delivery to Auros (CY):** [Deliver survey] option when `archiveUndercitySurveyTaken && !undercitySurveyDelivered`. On deliver: item removed from inventory, `undercitySurveyDelivered = true`, +40gp. Auros: *"This was taken in Year Ten. Four sectors match my Year Twelve Void-advance indicators. Someone decided it wasn't worth forwarding."* If `s29LineDelivered`: appends *"Froberger walked the same sectors in Year Thirteen. One year after this survey was buried."*
 
-**S46 — Raison's Tools (Layer 68b):** Sold by Pachelbel at BA, Dear Friend tier (fav >= 2), 50gp. Item: `raisons_tools` (usable). Using it: `raisonToolsUsed = true`, +30gp (*"The lens clarifies something you've been carrying."*), second log line: *"The handle has instructions written in tiny letters. Whoever taught Raison to do this was very careful about what not to forget."*
+**S46 — Raison's Tools (Layer 68b):** Sold by Pachelbel at BA, Dear Friend tier (fav >= 2), 50gp. Item: `raisons_tools` (usable). Using it: item removed from inventory, `raisonToolsUsed = true`, +30gp (*"The lens clarifies something you've been carrying. What you thought was worth less is worth more."*), second log line after 600ms: *"The handle has instructions written in tiny letters. Whoever taught Raison to do this was very careful about what not to forget."*
 
-**Pachelbel's Ledger (BA, Dear Friend):** [Read Ledger] button when `fav_pachelbel >= 2`. Const: `PACHELBEL_LEDGER` entries 2 and 3. Entry 2: Raison's arrest at the north gate (*"They called it unauthorized research access... His eldest was brought in for 'evaluation.'"*). Entry 3: younger child escaped south by night (*"Someone had left a boat. I don't know who."*) → Vonn in §XIX (Tilbury, unnamed connection). Pachelbel bought the tools back at impound: *"I don't know what I'm going to do with them."*
+**Pachelbel's Ledger (BA, Dear Friend):** [Read Ledger] button when `fav_pachelbel >= 2`. Const: `PACHELBEL_LEDGER` (keyed by act). Entry 2: Raison's arrest at the north gate (*"They called it unauthorized research access... His eldest was brought in for 'evaluation.'"*). Entry 3: younger child escaped south by night (*"Someone had left a boat. I don't know who."*) → Vonn in §XIX (Tilbury, unnamed connection). Pachelbel bought the tools back at impound: *"I don't know what I'm going to do with them."* Inline overlay with [Close] and backdrop-click-to-close.
 
-**F2 reference:** Add archive overlay render, survey delivery at CY, Pachelbel ledger button, Raison's Tools use-handler on implementation.
-
----
-
-## ⚠️ PLANNED — Yael's Record: The Named Report Scene (plan.md §XXXIX, Layer 74)
-
-**Trigger:** CI node, `_npcFavor('yael') >= 2`, `actNumber >= 6`, `yaelEscortUsed`, `!yaelNamedReportDelivered`. Fires one act after the anonymous `yael_report` progression event (Act V). One-time.
-
-**Scene:** Yael reveals the riot three years ago — names, times, transaction record — all pulled from the guard archive four weeks after she filed. She's filing again, under her name, three copies: Commissioner, Scholar Kings archivist in Weimar, Weckmann. His training log survived when the financial ledger disappeared ("no one thought to look there"). She asks if the player wants a fourth copy.
-
-**fav 2 choices:** `[I'll hold it.]` → *"Good. Then it's in four places now."* / `[Three copies is enough.]` → *"Three is enough. I just wanted someone outside the system to know."* Both set `yaelNamedReportDelivered = true`.
-
-**Weckmann connection:** The training log at CY (already readable) is the surviving record of the riot's funding network — preserved accidentally. §XXXIX gives it a second meaning without changing it.
-
-**YAEL_PATROL_NODES addendum:** `{ condition: () => S_story.yaelNamedReportDelivered, nodeSlug: 'SW', line: "The second report is filed. I'm not watching to see if it disappears." }`
-
-**§XXXVI epilogue addendum:** `{ cond: () => S_story.yaelNamedReportDelivered, line: "Yael kept three copies of the second report. She knows exactly where each one is." }`
-
-**Cross-refs:** S8 §XXXII (Circle suppression pattern); §XXXIII archive letter (same Circle method); §XXXI Joint Witness (Brynn kept the lamp on while Yael did this). Const: `YAEL_NAMED_REPORT_SCENE`. One new flag: `yaelNamedReportDelivered: false`.
-
-**F2 reference:** Patch CI render; add choice button block; add YAEL_PATROL_NODES entry on implementation.
+**Flag note:** Spec flag `surveyDeliveredToAuros` was not added; `undercitySurveyDelivered` handles both the archive state and the CY delivery gate.
 
 ---
 
-## ⚠️ PLANNED — The Heartwood Letter: Brynn's Daughter Scene (plan.md §XXXVIII, Layer 73)
+## ✅ Implemented — Yael's Record: The Named Report Scene (plan.md §XXXIX, Layer 74)
 
-**Trigger:** IN node, `brynnsJournalRead && actNumber >= 3 && !brynnLetterSceneDelivered`. Fires on the visit after the `brynn_letter` world progression event ("A letter arrived for Brynn at the inn. The seal is from the Heartwood district.").
+**Trigger:** CI node, `_npcFavor('yael') >= 2`, `actNumber >= 6`, `yaelEscortUsed`, `!yaelNamedReportDelivered`. Const: `YAEL_NAMED_REPORT_SCENE` (setup, decision, choiceHold, choiceThree). `yaelNamedReportDelivered: false` added to `_S_DEFAULTS()`.
 
-**fav 1 (Friendly):** Brynn mentions the letter matter-of-factly. Daughter is a surveyor's apprentice in Heartwood. *"She wrote 'expedition' in the letter. She said she learned that word from a traveler who stayed here years ago."*
+**Scene (via `setTimeout(600ms)`):** `YAEL_NAMED_REPORT_SCENE.setup` + decision text fire as a storyMsg. Two inline choice buttons appear in npcRowDiv: `📋 I'll hold it.` → *"Good. Then it's in four places now."* / `🗂 Three copies is enough.` → *"Three is enough. I just wanted someone outside the system to know."* Both set `yaelNamedReportDelivered = true` and remove the choice div.
 
-**fav 2 (Dear Friend):** Brynn reads the last line of the letter aloud: *"'I don't know if it's patience or stubbornness. I signed this expedition because I couldn't decide.'"* Then: *"She found a word for what she's doing."* Closes with: *"The good room has a window that faces east."* — the same line from her neutral greeting, in a different register.
+**YAEL_PATROL_NODES:** SW entry appended — `{ condition: () => yaelNamedReportDelivered, nodeSlug:'SW', line:"The second report is filed. I'm not watching to see if it disappears." }`
 
-**Cross-refs:** Entry 7 (IN, read-aloud) — *"She wrote expedition back, larger than I wrote it, because she was still pressing hard."* The impressions are visible through the back of the envelope. Froberger's Last Note: *"The person you're becoming is visible from outside."* He saw it; she became it. §XXXV (First Inn Light): the lamp stays; the daughter goes. §XXXVI epilogue addendum: *"Brynn's daughter wrote 'expedition' at the bottom of the letter. She's measuring property lines in the Heartwood district."*
-
-**Const:** `BRYNN_HEARTWOOD_SCENE` (keys: friendly, dearFriend). **One new flag:** `brynnLetterSceneDelivered: false`.
-
-**F2 reference:** Patch IN render; check `brynnsJournalRead && act >= 3 && !brynnLetterSceneDelivered`; gate on `_npcFavor('brynn')`.
+**§XXXVI epilogue condition:** Added to `ARC_EPILOGUE_CONDITIONS` — *"Yael kept three copies of the second report. She knows exactly where each one is."* (also added for §XXXVIII `s2DaughterDelivered` in the same pass).
 
 ---
 
-## ⚠️ PLANNED — The Final Confrontation: Commander Bruhns's CO Scene (plan.md §XXXVII, Layer 72)
+## ✅ Implemented — The Heartwood Letter: Brynn's Daughter Scene (plan.md §XXXVIII, Layer 73)
 
-**Context:** Commander Seraphine Bruhns (key `'bruhns'` in NPC_DIALOGUES, key `'auros'` in BIRKA_NPC_PROFILES) is the final boss (`BOSS_COMMANDER_AUROS`, AC 22 HP 300). The player has known her as "Auros" at CY throughout the game. After Entry 41 fires read-aloud at CO and `NODE_ARRIVAL_QUOTES.CO` delivers the existing quote, the §XXXVII scene fires before the fight chip.
+**Trigger:** IN node, `actNumber >= 4 && !s2DaughterDelivered && journalEntriesRead.includes(7)`. Patches the pre-existing S2 block. Per §XXXVIII reconciliation note: uses `s2DaughterDelivered` (pre-existing) not `brynnLetterSceneDelivered` (spec name). Const: `BRYNN_HEARTWOOD_SCENE` (keys: friendly, dearFriend).
 
-**Sequence at CO:** Entry 41 read-aloud → existing arrival quote (*"The cordon holds. We have maybe one hour..."*) → §XXXVII fav-gated scene → battle chip → fight → victory.
+**fav 0:** No scene — `s2DaughterDelivered` not set, remains available when fav increases.
 
-**fav 1 (Friendly):** *"You got this far. Froberger made it this far too, more than once."* / pause / *"He didn't finish. I need you to finish. So does the city."*
+**fav 1 (Friendly):** `BRYNN_HEARTWOOD_SCENE.friendly` via `setTimeout(700ms)`. *"She wrote 'expedition' in the letter. She said she learned that word from a traveler who stayed here years ago."* Sets `s2DaughterDelivered = true`.
 
-**fav 2 (Dear Friend):** Full Circle/Codex motivation reveal. Bruhns explains: she's held the cordon for 11 years to prevent the Ivory Circle from locking the Codex permanently. The Circle's rules: they can't remove a standing Commander without cause. A Commander defeated in direct engagement loses command legitimately. She has been waiting to be beaten by someone she trusts. *"I'm going to do everything I can to stop you. That's not negotiable. The Circle is watching and I need this to look like I meant it."*
+**fav 2 (Dear Friend):** `BRYNN_HEARTWOOD_SCENE.dearFriend`. Brynn reads aloud: *"'I don't know if it's patience or stubbornness. I signed this expedition because I couldn't decide.'"* — impressions visible through envelope. *"The good room has a window that faces east."* Sets `s2DaughterDelivered = true`.
 
-**fav 2 + `s29LineDelivered` (Dear Friend + tactical theory):** Addendum — *"You understood the tactical model. That meant you understood what getting this wrong would cost. Anyone who understood that and still came here — I can trust them to open it."*
-
-**Post-fight:** Existing victory flavor unchanged: *"Commander Bruhns lowers her sword and looks at you the way people look at history."* — lands differently at fav 2 because the player knows she was waiting to lower it.
-
-**Const:** `BRUHNS_CO_SCENE` (keys: friendly, dearFriend, dearFriendWithTheory). **One new flag:** `bruhnsCoSceneDelivered: false`.
-
-**Implementation note:** `undercitySurveyDelivered` (already in HTML ~line 12460) is the correct flag for the survey delivery to Auros — §XXXIII's `surveyDeliveredToAuros` name should be corrected to this on implementation.
-
-**F2 reference:** Patch CO render after NODE_ARRIVAL_QUOTES.CO fires; check `!defeatedBattles['CO'] && !bruhnsCoSceneDelivered`; gate by `_npcFavor('bruhns')`.
+**§XXXVI addendum added:** `{ cond: () => s2DaughterDelivered, line: "Brynn's daughter wrote 'expedition' at the bottom of the letter. She's measuring property lines in the Heartwood district. She's good at it." }` appended to `ARC_EPILOGUE_CONDITIONS`.
 
 ---
 
-## ⚠️ PLANNED — Epilogue Integration Layer: Arcs to Scroll (plan.md §XXXVI, Layer 71)
+## ✅ Implemented — The Final Confrontation: Commander Bruhns's CO Scene (plan.md §XXXVII, Layer 72)
 
-`_buildEpilogueScroll()` patch: after the `FROBERGER_EPILOGUE` push, iterate `ARC_EPILOGUE_CONDITIONS` (14 entries) and push matching lines. These are ADDITIVE — they appear alongside existing `NPC_EPILOGUES` tier lines, not in place of them.
+**Context:** Commander Seraphine Bruhns (key `'bruhns'` in NPC_DIALOGUES, key `'auros'` in BIRKA_NPC_PROFILES) is the final boss. `BRUHNS_CO_SCENE` const added. `bruhnsCoSceneDelivered: false` added to `_S_DEFAULTS()`. CO render block added before the Birka NPC cards section: checks `!defeatedBattles['CO'] && !bruhnsCoSceneDelivered` then `_npcFavor('bruhns')`.
+
+**fav 1:** `BRUHNS_CO_SCENE.friendly` via `setTimeout(600ms)`. fav 2: `BRUHNS_CO_SCENE.dearFriend`; if `s29LineDelivered`: appends `BRUHNS_CO_SCENE.dearFriendWithTheory`. Sets `bruhnsCoSceneDelivered = true`. fav 0: no scene (arrival quote unchanged).
+
+**Victory flavor unchanged:** *"Commander Bruhns lowers her sword and looks at you the way people look at history."* — lands differently at fav 2 because the player now knows she was waiting to lower it.
+
+---
+
+## ✅ Implemented — Epilogue Integration Layer: Arcs to Scroll (plan.md §XXXVI, Layer 71)
+
+`_buildEpilogueScroll()` patched: after the `FROBERGER_EPILOGUE` push, `ARC_EPILOGUE_CONDITIONS.forEach(({ cond, line }) => { if (cond()) lines.push(line); })`. 14 entries, ADDITIVE alongside `NPC_EPILOGUES` tier lines. Flag corrections from spec: `pitChampionWon` used (not `defeatedBattles['CF']`); `undercitySurveyDelivered` used (not `surveyDeliveredToAuros`).
 
 **Arc-to-scroll map (trigger → epilogue line):**
-- `defeatedBattles['CF']` → *"Ogundimu offered his hand after. You shook it. He says you were the floor, not the ceiling."*
-- `s49BrynnDelivered && s49SweelinckDelivered` → *"Both of them have Entry 41. They don't need to compare notes."*
-- `s49SweelinckDelivered only` → *"Sweelinck has the journal. He keeps it at the right height."*
-- `s49BrynnDelivered only` → *"Brynn read it twice, quietly. She hasn't needed to mention it."*
-- `s54JointMomentDelivered` → *"Brynn and Yael stood in the same light. The light held."*
-- `s8PachelbelTold` → *"Pachelbel recognized the route. She hasn't mentioned Varga by name since."*
-- `s29LineDelivered` → *"Auros's structural survey and tactical theory were filed together. That's new."*
-- `archiveLetterObtained` → *"The archive letter is in Weimar. The footnote is on record."*
-- `surveyDeliveredToAuros` → *"Auros has the Year Ten pressure data. She's drafting a unified report."*
-- `quillQuestComplete && couperiDebtDegraded` → *"Quill plays 'the one that came back.' The lute is still in tune."*
-- `quillQuestComplete && !couperiDebtDegraded` → *"Quill has the lute. He knows what a number means."*
-- `brynnLightChoiceMade && brynnLightKept` → *"The lamp is still burning. Brynn checked it this morning."*
-- `brynnLightChoiceMade && !brynnLightKept` → *"The lamp burned down quietly. Brynn says it did its work."*
-- `brynnKeeperStoryTold && !brynnLightChoiceMade` → *"Brynn kept tending it anyway. It's still burning."*
-
-**No new flags.** Implementation: define `ARC_EPILOGUE_CONDITIONS` const; add 4-line forEach block to `_buildEpilogueScroll()`.
+- `pitChampionWon` → *"Ogundimu offered her hand after. She's still undefeated in her mind — she says you were the floor, not the ceiling."*
+- `s49BrynnDelivered && s49SweelinckDelivered` → *"Both of them have Entry 41. They haven't compared notes. They don't need to."*
+- `s49SweelinckDelivered only` → *"Sweelinck has the journal. He keeps it at the right height on the shelf. You know which one."*
+- `s49BrynnDelivered only` → *"Brynn read Entry 41 twice, quietly, and set it down. She hasn't needed to mention it since."*
+- `s54JointMomentDelivered` → *"Brynn and Yael stood in the same light at the same time. They both looked at you. The light held."*
+- `s8PachelbelTold` → *"Pachelbel recognized the forwarding route without being told what it was. She hasn't mentioned Varga by name since."*
+- `s29LineDelivered` → *"Auros had the complete picture. The structural survey and the tactical theory were filed together. That's new."*
+- `archiveLetterObtained` → *"The archive letter is in Weimar. The footnote that said 'no restriction required' is on record."*
+- `undercitySurveyDelivered` → *"Auros has the Year Ten pressure data. The sectors match her Year Twelve projections. She's drafting a unified report."*
+- `quillQuestComplete && couperiDebtDegraded` → *"Quill plays the family theme on request. He calls it 'the one that came back.' The lute is still in tune."*
+- `quillQuestComplete && !couperiDebtDegraded` → *"Quill has the lute. He knows what a number means. He hasn't found the words for the last part yet."*
+- `brynnLightChoiceMade && brynnLightKept` → *"The lamp at the First Inn is still burning. Brynn checked it this morning."*
+- `brynnLightChoiceMade && !brynnLightKept` → *"The lamp at the First Inn burned down quietly. Brynn says it did its work. She's right."*
+- `brynnKeeperStoryTold && !brynnLightChoiceMade` → *"Brynn never asked what you wanted for the lamp. She kept tending it. It's still burning."*
 
 ---
 
-## ⚠️ PLANNED — The First Inn Light: Brynn's Vigil Arc (plan.md §XXXV, Layer 70)
+## ✅ Implemented — The First Inn Light: Brynn's Vigil Arc (plan.md §XXXV, Layer 70)
 
-**Ambient:** IN node always displays *"A lamp burns in the corner. It has been lit since your first night here."* — no flag, no condition.
+**Ambient:** IN node S58 regulars block prepends *"A lamp burns in the corner. It has been lit since your first night here."* as the first line — no flag, no condition. `BRYNN_KEEPER_STORY` const holds all scene strings.
 
-**Beat 1 — Inquiry (IN, fav_brynn ≥ 1, Act II+, !brynnKeeperStoryTold):** Option `[Ask Brynn about the lamp in the corner.]` Brynn: *"I lit it the night you arrived. Didn't know if you'd be back by morning, and it seemed wrong to let you come back to a dark room. So I kept it."* Follow-up option `[Why that night?]`: *"I've had guests before. Some didn't come back. I always meant to start a lamp then too. But you were the first time I actually did it."* Sets `brynnKeeperStoryTold = true`.
+**Beat 1 — Inquiry (IN, fav_brynn ≥ 1, Act II+, !brynnKeeperStoryTold):** `🕯 Ask Brynn about the lamp in the corner.` button appears. On click: shows `BRYNN_KEEPER_STORY.inquiry`, removes button, shows `💬 Why that night?` follow-up. On follow-up click: shows `BRYNN_KEEPER_STORY.followUp`, sets `brynnKeeperStoryTold = true`.
 
-**Beat 2 — Choice (IN, fav_brynn ≥ 2, brynnKeeperStoryTold, !brynnLightChoiceMade):** Brynn: *"I've been thinking about what happens when you're done... I think it's your lamp as much as it is mine now. What do you want?"* Options: `[Let it keep burning.]` → `brynnLightKept = true`; `[It can rest when I'm done.]` → `brynnLightKept = false`. Both set `brynnLightChoiceMade = true`.
+**Beat 2 — Choice (IN, fav_brynn ≥ 2, brynnKeeperStoryTold, !brynnLightChoiceMade):** `BRYNN_KEEPER_STORY.choicePrompt` rendered inline with two buttons: `🕯 Let it keep burning.` → `brynnLightKept = true`; `🌙 It can rest when I'm done.` → `brynnLightKept = false`. Both set `brynnLightChoiceMade = true`.
 
-**§XXV farewell four-branch:** `!brynnKeeperStoryTold` → abbreviated story. `!brynnLightChoiceMade` → *"never asked."* `brynnLightKept` → *"still burning, checked this morning."* `!brynnLightKept` → *"I'll tend it until you come back. After that — well. After that."*
+**§XXV farewell four-branch (ACT8_FAREWELL_BEATS.brynn.text converted to function):** `!brynnKeeperStoryTold` → `farewellNoStory` + sets `brynnKeeperStoryTold = true`. `!brynnLightChoiceMade` → `farewellNoChoice`. `brynnLightKept` → `farewellKeep`. else → `farewellRest`. Appended to base farewell text.
 
-**Cross-refs:** §XXXI S54 "Still the same light?" — retroactive context, no §XXXI patch required. §XXVII TC_BRYNN_LAMP crier line fires once when brynnKeeperStoryTold.
+**Town Crier:** `brynnKeeperStoryTold` line added to `TOWN_CRIER_LINES.quests` and `qOrder` array: *"The lamp at the First Inn has been burning since the early days. Birka folk consider it a good omen."*
 
-**Three new flags:** `brynnKeeperStoryTold`, `brynnLightChoiceMade`, `brynnLightKept` — all add to `_S_DEFAULTS()`.
-
-**F2 reference:** Patch IN node render (lamp ambient), Beat 1 option, Beat 2 option block, §XXV farewell branch, TC_BRYNN_LAMP crier line on implementation.
+**Three new flags added to `_S_DEFAULTS()`:** `brynnKeeperStoryTold: false`, `brynnLightChoiceMade: false`, `brynnLightKept: false`.
 
 ---
 
-## ⚠️ PLANNED — The Couperin Ledger: Quill's Three-Beat Arc (plan.md §XXXIV, Layer 69)
+## ✅ Implemented — The Couperin Ledger: Quill's Three-Beat Arc (plan.md §XXXIV, Layer 69)
 
-**Trigger chain:** `quills_lute` item in inventory → Quill at TV → BA Act VIII farewell branch. No new state flags — all three (`couperiSongReceived`, `couperiDebtDegraded`, `quillQuestComplete`) pre-exist in `_S_DEFAULTS()`.
+**Trigger chain:** `quills_lute` item in inventory → Quill at TV → BA Act VIII farewell branch. No new state flags — all three (`couperiSongReceived`, `couperiDebtDegraded`, `quillQuestComplete`) pre-existed in `_S_DEFAULTS()`.
 
-**Beat 1 — Lute Retrieval:** Player visits BA or SH with Pachelbel present (any fav tier). Option appears: *[Ask Pachelbel about Couperin's lute].* Pachelbel hands it over free of charge: *"He already knew someone would come for it."* Adds `quills_lute` (type:'quest') to inventory. Quest log: "Find Quill at the tavern."
+**Beat 1 — Lute Retrieval (pre-existing):** Pachelbel auto-gives lute when `quest_couperin_lute` is active and lute not in inventory (`_renderNpcCard` at BA). Quest auto-completes at TV when lute present: +40gp, lute removed, `fav_quill → 1`, cipher scrap added. Consts: `S34_QUILL_BEAT2`, `S34_QUILL_BEAT3`.
 
-**Beat 2 — Couperin's Song (at TV, fav_quill ≥ 1, quills_lute in inventory):** Quill notices the lute — *"Where did you—"* — then plays the family theme. Still in tune after two months. +40gp (the Couperin estate's last line-item pays itself out). Sets `couperiSongReceived = true`, `quillQuestComplete = true`. If `fav_quill < 2`: Dear Friend upgrade. Cross-ref §XXII: the note pattern echoes Shard 1.
+**Beat 2 — Couperin's Song (at TV, !couperiSongReceived && quest === 'complete'):** `S34_QUILL_BEAT2` fires via `setTimeout(400ms)`. Quill plays the family theme — *"My grandmother taught me this. I haven't played it since before the pawn."* Sets `couperiSongReceived = true`, `quillQuestComplete = true`, calls `_checkDearFriendUpgrade('quill')`. Note: The +40gp and lute removal are handled by the quest auto-complete in the same render; the scene is the flavor layer.
 
-**Beat 3 — Debt Degradation (at TV, quillQuestComplete && !couperiDebtDegraded):** Quill's reflection on the debt as just a number. Sets `couperiDebtDegraded = true`. Injects L44-E dialogue into Quill's impartial pool: *"Elder Couperin wrote 'just a number' on the original debt notice. Not minimizing. Describing. A debt that has done its work becomes just a number. That's when you can release it."* Town Crier quillQuestComplete line fires on next inn rest.
+**Beat 3 — Debt Degradation (at TV, quillQuestComplete && !couperiDebtDegraded):** Beat 3 block placed BEFORE Beat 2 in TV render to prevent same-visit co-fire (Beat 3 can't trigger when quillQuestComplete is still false on Beat 2's visit). `S34_QUILL_BEAT3` fires via `setTimeout(600ms)`. *"It's just a number. You can let it go."* Sets `couperiDebtDegraded = true`. Town Crier `quillQuestComplete` line pre-existing in `TOWN_CRIER_LINES`.
 
-**Act VIII BA farewell cross-ref (plan.md §XXIV):** When Quill visits BA to close the Couperin estate ledger physically, if `quillQuestComplete`: Pachelbel adds a quiet line — *"He found the lute, then."*
+**L44-E fix:** Bug: `_getNPCDialogue` stub used `npcKey === 'couperin'` (wrong key). Fixed to `npcKey === 'quill'`. Line updated to: *"Elder Couperin wrote 'just a number' on the original debt notice. Not minimizing. Describing. A debt that has done its work becomes just a number. That's when you can release it."*
 
-**F2 reference:** Add QUEST_DB entry, Beat 2 TV render trigger, Beat 1 BA/SH option, Beat 3 TV render trigger, L44-E NPC_DIALOGUES injection, Act VIII BA farewell branch on implementation.
+**Act VIII BA farewell:** `ACT8_FAREWELL_BEATS.quill.text` converted to function. If `quillQuestComplete`: appends *"Pachelbel sent a note. 'Account closed, no remainder.' I keep it in the case."* BA Act VIII block added (before L44-A Gigault stall): fires when `actNumber === 8 && fav_quill >= 1 && !act8FarewellQuill`, showing Quill at the archive desk. `act8FarewellQuill` flag prevents double-fire at TV.
 
 ---
 
