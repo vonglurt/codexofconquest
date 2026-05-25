@@ -1477,6 +1477,35 @@ No prerequisites. Two texture layers added to open-world traversal.
 
 ---
 
+#### ⚠️ PLANNED — Tilbury Harbor Arc (plan.md §XIX, Layer 54)
+
+Nodes: TL (Tilbury) + SF (Storefront/docks). Two new NPCs, no new terrain monsters needed.
+
+- **Harbor Master Rennau** (SF node) — keeps ledger of missing ships; starts Impartial; Dear Friend after Q-TL-03.
+- **Adjutant Vonn** (TL node) — Conclave embargo enforcer; caps at Friendly; never breaks from Conclave position.
+- **Q-TL-01: "The Ledger"** — obtain `ship_manifest` (readable item) from docks; `tlLedgerRead`; Rennau Friendly.
+- **Q-TL-02: "The Embargo"** — three approaches: report to Muffat (Q65 cross-ref, 200gp), deliver to Birka contact (150gp), or leave it. Sets `tlEmbargoChallenged` or `tlEmbargoDismissed`.
+- **Q-TL-03: "The Missing Ship"** — Act IV+ only: Ori (ship survivor) appears at SF; deliver her account to Rennau; `ori_account` readable item; cross-reference to §XII (fishing predators) and §XVI (Isolde Voss named in manifest). Rennau reaches Dear Friend.
+- Ship_manifest cross-reference: if `wmFirstResearcherKnown`, an extra line reveals the manifest was consigned to Archivist Isolde Voss eleven months before her Froberger revocation.
+- See plan.md §XIX for full NPC dialogue, quest beats, state flags, and insertion spec.
+
+---
+
+#### ⚠️ PLANNED — Visby Underground (plan.md §XX, Layer 55)
+
+Nodes: VS (Visby) + GC (Goblin Caves). One new monster (`hollow_hands_guard`).
+
+- **Debt Agent Solvak** (VS node) — Merchant's Conclave debt collector; has been outside Visby for 6 weeks; starts Impartial; Friendly after Q-VS-01; leaves VS after Q-VS-03.
+- **Yva** (GC node) — goblin broker, formerly Mordus-aligned; Hollow Hands mark on her stall; 50gp to talk; Dear Friend after Q-VS-02.
+- **Q-VS-01: "The Collector"** — speak to Mordus about 2,000gp weapons debt; `vsDebtProbed`; Solvak Friendly. Cross-reference: if `tlLedgerRead`, Solvak mentions the Harrow.
+- **Q-VS-02: "The Broker"** — Yva reveals Hollow Hands diverted the weapons to a Void-aligned shaman; fight `hollow_hands_guard`; obtain `hollow_hands_seal`; `vsWeaponsFound`. Cross-reference: if `tlMissingShipSolved`, Yva confirms the Harrow was not the Hollow Hands.
+- **Q-VS-03: "Mordus Pays"** — deliver seal to Solvak; Mordus settles via proxy cache; `vsDebtSettled`; 400gp. Mordus's follow-up sets `vsShamanKnown` — the Void shaman is named as a threat but not confronted.
+- New monster: `hollow_hands_guard` (AC13/HP22/ATK+4/1d6+2/low) — Void-marked goblin sub-clan; drops `hollow_hands_seal` (sell:0).
+- The shaman is not a character in §XX — they are the shadow. Their arc is Layer 56+.
+- See plan.md §XX for full NPC dialogue, quest beats, state flags, monster spec, and insertion spec.
+
+---
+
 ## BIRKA ARC SUMMARY (Layers 41–42)
 
 Six Birka NPCs are fully interactive across all 8 acts. Each has a quest chain, 4 favorability states, and 20 dialogue quotes (5 per state). Favorability persists through New Game+.

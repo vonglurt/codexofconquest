@@ -168,6 +168,19 @@ The lake itself does not change. The fish are still there. The sign still says Y
 **Their leverage:** Information networks, harbor access, forged documents, and Magistra Muffat's intelligence apparatus.
 **Player relationship:** Transactional at first; genuinely invested once Muffat believes the player is serious.
 
+#### ⚠️ PLANNED — Tilbury Harbor Arc (plan.md §XIX, Layer 54)
+
+Two new named NPCs in the Tilbury harbor district (nodes TL + SF):
+- **Harbor Master Rennau** (SF docks) — keeps the ledger of ships that haven't come back; starts Impartial; Dear Friend after Q-TL-03. He has the ledger Road Companion Dessa (§XVIII) references.
+- **Adjutant Vonn** (TL adjutant's office) — Conclave embargo enforcer; starts Impartial; caps at Friendly; holds the Conclave's position throughout.
+
+Quest chain Q-TL-01 through Q-TL-03: "The Conclave's Weight"
+- Q-TL-01: obtain `ship_manifest` readable item (the *Harrow*, a missing ship carrying Scholar Kings correspondence consigned to Isolde Voss eleven months ago); `tlLedgerRead`.
+- Q-TL-02: choose how to handle the harbor embargo — report to Muffat (Q65 cross-ref), deliver to Birka contact, or leave it; sets `tlEmbargoChallenged` or `tlEmbargoDismissed`.
+- Q-TL-03: Act IV+ only; Ori (Harrow survivor) appears at SF docks; her account cross-references §XII apex predators if fishing overhaul is implemented; `ori_account` readable item; Rennau reaches Dear Friend.
+
+The `ship_manifest` cross-references §XVI: if `wmFirstResearcherKnown`, the consignee (Isolde Voss) is recognized. No new monsters. Two new readable items. See plan.md §XIX for full dialogue and state flags.
+
 ### The Ivory Circle (Weimar)
 **What they want:** Knowledge preserved and the world stable enough to keep studying it.
 **What they fear:** Sweelinck dying before the Shard is passed on. The Circle is down to one active member.
@@ -209,6 +222,21 @@ J1–J7 junction nodes gain one first-visit NPC encounter: Tessie (J1), Old Faer
 **What they fear:** The Void shaman's influence spreading through the goblin clans — it's already destabilizing Mordus's control.
 **Their leverage:** Military strength, labyrinthine territory, and the respect of every bandit between the mountains and the coast.
 **Player relationship:** Strictly transactional. Mordus keeps deals. He expects the same.
+
+#### ⚠️ PLANNED — Visby Underground (plan.md §XX, Layer 55)
+
+Two new NPCs and one new monster in the Visby/Goblin Caves area (nodes VS + GC):
+- **Debt Agent Solvak** (VS node, outside Crimson Warrant perimeter) — Merchant's Conclave debt collector; has been waiting 6 weeks; starts Impartial; Friendly after Q-VS-01; leaves VS permanently after Q-VS-03.
+- **Yva** (GC node, inside caves) — goblin broker, formerly Mordus-aligned; Hollow Hands mark on her stall; 50gp to talk; Dear Friend after Q-VS-02. Cross-reference: if `tlMissingShipSolved` (§XIX), she confirms the Harrow was not the Hollow Hands.
+
+New monster: `hollow_hands_guard` — Void-marked goblin sub-clan (AC13/HP22/ATK+4/1d6+2); drops `hollow_hands_seal` (sell:0). The Hollow Hands broke from Mordus 6 months ago; they are armed with the weapons shipment that Mordus never received (the debt Solvak is collecting).
+
+Quest chain Q-VS-01 through Q-VS-03: "What Mordus Owes"
+- Q-VS-01: speak to Mordus about the debt; Mordus's answer is the truth: the weapons never reached him; `vsDebtProbed`. Cross-reference: if `tlLedgerRead` (§XIX), Solvak mentions the Harrow.
+- Q-VS-02: Yva reveals the Hollow Hands' Void-aligned shaman; fight `hollow_hands_guard`; obtain `hollow_hands_seal`; `vsWeaponsFound`.
+- Q-VS-03: deliver seal to Solvak; Mordus pays via proxy cache; `vsDebtSettled`; 400gp. Mordus's follow-up sets `vsShamanKnown` — the Void shaman exists as a named shadow threat but is not confronted in §XX.
+
+The shaman is Layer 56+ content. §XX names the threat; it does not resolve it. See plan.md §XX for full dialogue, state flags, monster spec, and insertion spec.
 
 ### The Crones' Covenant (Hag Swamp)
 **What they want:** The swamp to remain theirs. The old ways to continue.

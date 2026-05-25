@@ -224,6 +224,8 @@ The commit message should name the lab report and summarize what it covers in on
 | 7 | §XVI | Weimar Scholar Gate: Tomes and the Fourth Hub | 51 | Yes — new item category + NPC arc | ⚠️ PLANNED |
 | 8 | §XVII | Void Archaeology: The Origin Investigation | 52 | Yes — narrative recontextualization + four-author chain | ⚠️ PLANNED |
 | 9 | §XVIII | Living World: Junction Vignettes + Road Companion | 53 | No — fits in living-world lab report | ⚠️ PLANNED |
+| 10 | §XIX | Tilbury Harbor Arc: "The Conclave's Weight" | 54 | Yes — shared with §XX in `lab-report-tilbury-visby-arcs.md` | ⚠️ PLANNED |
+| 11 | §XX | Visby Underground: "What Mordus Owes" | 55 | Yes — shared with §XIX in `lab-report-tilbury-visby-arcs.md` | ⚠️ PLANNED |
 
 **Rule:** Implement in layer order when possible. Each implementation = code + doc sync + git commit. See plan.md §I Lab Report Policy for commit rules.
 
@@ -250,6 +252,11 @@ The commit message should name the lab report and summarize what it covers in on
 | 1 | ~~Junction Waypoint Vignettes~~ | Promoted to §XVIII ✅ | — |
 | 2 | ~~Companion System~~ | Promoted to §XVIII ✅ | — |
 | 3 | ~~Void Archaeology~~ | Promoted to §XVII ✅ | — |
+| 4 | ~~Tilbury Harbor Arc~~ | Promoted to §XIX ✅ | — |
+| 5 | ~~Visby Underground~~ | Promoted to §XX ✅ | — |
+| 6 | Codex Shard Origin Stories — each of the 7 Codex Shards gains a readable item when found; reveals who placed it and why; connects to Scholar Kings history | Retroactively deepens main quest; each shard becomes a named artifact with a person behind it | No — fits in existing narrative lab report |
+| 7 | Inn Dreams — a brief dream sequence when the player rests at an inn; one unique dream per inn; cycles by game day; foreshadows next-act challenges | Adds texture to rest mechanic; inns are currently pure-mechanical (heal + time advance) | No — fits in living-world lab report |
+| 8 | The Void Shaman — §XX names the shaman but does not confront them; a Layer 56 arc resolving the Hollow Hands threat and naming the shaman as the Antecedent's last ambassador | Direct narrative continuation of §XX and §XVII | Yes — new boss arc + faction design |
 
 ---
 
@@ -1979,6 +1986,8 @@ creative_literacy_token: { name:'Creative Literacy Token', icon:'📄', sell:27 
 | **Weimar Scholar Gate (§XVI)** | Ivory Circle / Tomes / `scholars_guard` / First Researcher | `plan.md §XVI` | ✅ PLANNED stubs: `story.md` Node 35; `world.md` Ivory Circle section | ⚠️ PLANNED |
 | **Void Archaeology (§XVII)** | Antecedent Containment / Constructor's Log / five-node overlay / four-author chain | `plan.md §XVII` | ✅ PLANNED stubs: `story.md` NG+ Void Archaeology section; `world.md` post-CO note | ⚠️ PLANNED |
 | **Living World (§XVIII)** | J1–J7 junction vignettes / Road Companion (Acts II–VI) | `plan.md §XVIII` | ✅ PLANNED stubs: `world.md` junction vignettes note; `story.md` companion lines note | ⚠️ PLANNED |
+| **Tilbury Harbor Arc (§XIX)** | Rennau / Vonn / Q-TL-01–03 / ship_manifest / Ori survivor | `plan.md §XIX` | ✅ PLANNED stubs: `story.md` Q-TL section; `world.md` Tilbury NPC note | ⚠️ PLANNED |
+| **Visby Underground (§XX)** | Solvak / Yva / Q-VS-01–03 / hollow_hands_guard / Void shaman shadow | `plan.md §XX` | ✅ PLANNED stubs: `story.md` Q-VS section; `world.md` Visby sub-faction note | ⚠️ PLANNED |
 
 ---
 
@@ -4099,4 +4108,282 @@ No lab report needed.
 ---
 
 *§XVIII status: ⚠️ PLANNED — Junction vignettes designed (7 nodes, 5 NPCs + 2 environmental); Road Companion designed (5 acts, 4 named + 1 empty); implementation cost is two new consts + two render hooks; no new state flags; no new monsters. Document inline in `world.md` and `story.md` on implementation.*
+
+---
+
+## Section XIX — The Tilbury Harbor Arc: "The Conclave's Weight" (Layer 54, ⚠️ PLANNED)
+
+> **The gap:** Tilbury is the second hub town — Act II, the player's first stop outside Birka. It has a vendor (SF node), an inn (Storefront Inn), and a connection to the Merchant's Conclave. It has no named NPCs with quest chains. Magistra Elara Muffat appears as Epic NPC Q65 but is unreachable without an EB encounter. The harbor is referenced in ambient lore (Dessa in §XVIII, the harbor embargo in §XVI) but has no mechanical presence. This section gives Tilbury a story identity.
+
+> **The theme:** The Void Tide's narrative damage is institutional before it is physical. It breaks the structures people rely on. The Merchant's Conclave's response to Void-driven crisis was to close the harbor, impose a tariff, and stall. Harbor Master Rennau is keeping a ledger of ships that haven't come back. A survivor knows what happened to one of them. The embargo is the wrong answer to a real problem. The player can do something about the ledger; they cannot fix the Conclave.
+
+---
+
+### XIX-A. The Setting — Tilbury Harbor District
+
+**Node:** TL (Tilbury) + SF (Storefront, the Act II inn node)
+
+The harbor district is in SF — the docks, the inn, the Storefront, and the counting houses where the Conclave weighs cargo. TL is the city proper — merchants, guides, the Conclave adjutant's office. The embargo is not visible as a locked gate; it manifests as empty berths at the docks and a `[HARBOR BOARD]` notice on the SF node (a list of ships whose berths are occupied by no ship). Harbor Master Rennau manages the board alone. He has nobody left to argue with.
+
+---
+
+### XIX-B. New NPCs
+
+**Harbor Master Rennau** — Node SF (the docks)
+- Occupation: Harbor Master, Merchant's Conclave Tier 2. He was appointed before the embargo. He reports to Adjutant Vonn, who reports to the Conclave proper.
+- First impression: Tired. Not defeated — tired of being ignored. He keeps the ledger because nobody else will.
+- Fav gating: Starts Impartial. Friendly after Q-TL-01. Dear Friend after Q-TL-03.
+
+> *"The ledger goes back eleven months. Every ship that's left, every ship that's come back, every ship that hasn't. The Conclave calls the ones that haven't 'weather losses.' I stopped calling them that six weeks ago."*
+
+> *(Dear Friend):* *"Ori said the thing that boarded them didn't have a name. Things that don't have names are the Void's specialty. I'm glad someone came back to tell us."*
+
+---
+
+**Adjutant Vonn** — Node TL (the adjutant's office)
+- Occupation: Merchant's Conclave Adjutant, Tier 3. Enforces the embargo. Keeps the tariff records.
+- Demeanor: Professionally polite. Believes the Conclave's decision was correct. Has 30 years of trade law to back it up. The embargo is a legitimate Conclave instrument; the fact that it's bad policy is above his grade.
+- Fav gating: Starts Impartial. Caps at Friendly — he will be cordial but he holds the Conclave's position and will not budge from it.
+
+> *"The harbor is closed to non-Conclave vessels under Emergency Trade Protocol 7. I understand this is inconvenient. I can offer you a transit permit for a fee. The fee is fixed by the Conclave. I did not set it."*
+
+---
+
+### XIX-C. Quest Chain — "The Conclave's Weight" (Q-TL-01 through Q-TL-03)
+
+**Q-TL-01: "The Ledger"** — Trigger: first visit to SF node, Act II+
+
+- NPC: Harbor Master Rennau
+- He shows the player the harbor board: ten empty berths. He'll share the ledger page for the most recent missing ship — the *Harrow* — if the player agrees to look for any trace of its manifest.
+- Task: Find the *Harrow* manifest. It drops from a `docks_patrol` monster in the SF terrain (existing docks terrain encounters), or appears as loot in the SF node's loot table (one-time find).
+- Reward: `ship_manifest` readable item (icon: 📄, type: 'readable', sell: 0) + `tlLedgerRead = true` + Rennau Friendly.
+- Lore on reading `ship_manifest`: *"Cargo: 40 crates, Scholar Kings correspondence, sealed. Consignee: Weimar, Archivist I. Voss. Departure: Day 17. Expected arrival: Day 20. Status: Weather Loss."* — If `wmFirstResearcherKnown` is true, an additional line appears: *"Isolde Voss's name on a ship manifest from eleven months ago. Before the revocation. Whatever she was sending arrived nowhere."*
+
+---
+
+**Q-TL-02: "The Embargo"** — Trigger: `tlLedgerRead` + speak to Adjutant Vonn
+
+- The player learns the embargo's full scope from Vonn. He explains the legal basis. He is not wrong.
+- Three approaches (no binary choice):
+  - **Report to Muffat** — if Q65 (Muffat EB quest) is active or complete: bring the ship_manifest to Muffat. She files it with the Council as evidence of unreported losses. 200gp reward from her liaison NPC (an anonymous messenger at the IN node — no new NPC needed). Sets `tlEmbargoChallenged`.
+  - **Deliver to Birka contact** — carry the `ship_manifest` to IN node and interact with the [NOTICE BOARD] option "Leave a message." A contact from the High Council receives it in 3 in-game days. 150gp reward delivered to the player on next IN visit. Sets `tlEmbargoChallenged`.
+  - **Leave it** — close the quest without escalating. No reward. Sets `tlEmbargoDismissed`. The harbor stays closed.
+- Reward: status flag + gold (if challenged) + Vonn stays Impartial regardless of player's choice. He's doing his job.
+
+---
+
+**Q-TL-03: "The Missing Ship"** — Trigger: `tlLedgerRead` + Act IV+
+
+- A new encounter at SF in Act IV: **Ori**, a sailor from the *Harrow*, has arrived in Tilbury. She's the only survivor. She's been walking for three weeks.
+- Dialogue: She describes what boarded them. Not pirates. Not storm. Something that came from below — *"a shape in the water, very large, that didn't move like a fish or a whale. It moved like it was looking for something. Then it found the ship."*
+- Cross-reference: If §XII (Fishing Overhaul) is implemented, Ori's description matches the BAIT_FISH_POOL apex predator tier exactly. The Void Tide has pushed deep-sea creatures into shipping lanes.
+- Task: Bring Ori's account to Rennau. He writes it into the ledger. Sets `tlMissingShipSolved`.
+- Reward: 300gp + Rennau reaches Dear Friend + `ori_account` readable item (icon: 📜, type: 'readable', sell: 0).
+- If player has `tome_void_pressure` in inventory: an additional note appears in `ori_account`: *"Froberger wrote: 'The pressure is survivable if you know it's coming.' Ori survived because she knew the shape was there and went over the side before it hit. She knew it was coming. She'd seen it the night before, tracking the ship."*
+
+---
+
+### XIX-D. New Items
+
+| Key | Name | Icon | Type | Sell | Content |
+|-----|------|------|------|------|---------|
+| `ship_manifest` | The Harrow Manifest | 📄 | readable | 0 | Cargo record of a missing ship; Scholar Kings correspondence consigned to Isolde Voss; cross-references with §XVI if `wmFirstResearcherKnown` |
+| `ori_account` | Ori's Account | 📜 | readable | 0 | Survivor's description of the attack; cross-references with §XII fishing arc if implemented |
+
+Both items: `sell: 0`, NG+-persistent, readable from inventory.
+
+---
+
+### XIX-E. New State Flags
+
+| Flag | Type | Default | Purpose |
+|------|------|---------|---------|
+| `tlLedgerRead` | boolean | false | ship_manifest obtained (Q-TL-01) |
+| `tlEmbargoChallenged` | boolean | false | Embargo escalated via Muffat or Birka contact |
+| `tlEmbargoDismissed` | boolean | false | Player left the embargo issue unresolved |
+| `tlMissingShipSolved` | boolean | false | Ori's account delivered to Rennau (Q-TL-03) |
+| `tlRennauFav` | int | 0 | Rennau favorability (0=Impartial, 1=Friendly, 2=DearFriend) |
+| `tlVonnFav` | int | 0 | Vonn favorability — caps at 1 (Conclave allegiance) |
+
+---
+
+### XIX-F. Insertion Spec for `roll2hit-v3.html`
+
+**Layer tag:** Layer 54 — Tilbury Harbor Arc
+
+1. Add Rennau to `VELDRIS_NPC_PROFILES` equivalent or to a new `TL_NPC_PROFILES` const (if hub NPCs are town-specific)
+2. Add Vonn as ambient NPC at TL node — minimal profile; caps at Friendly; no Dear Friend path
+3. Add `ship_manifest` and `ori_account` to a `READABLE_ITEMS` const or inline in quest reward delivery
+4. Add Q-TL-01 through Q-TL-03 to `QUEST_DB`
+5. Add 6 new state flags to `_S_DEFAULTS()`
+6. Add `[HARBOR BOARD]` interaction to SF node render (one-time; shows empty berth list; triggers Rennau introduction)
+7. Add Ori encounter to SF node render — gated: `tlLedgerRead && S_story.act >= 4`
+8. Add cross-reference line to `ship_manifest` read — gated: `wmFirstResearcherKnown`
+9. Add cross-reference line to `ori_account` read — gated: `inv.tome_void_pressure`
+
+**MONSTER_POOL count after:** unchanged (uses existing docks terrain monsters).
+
+---
+
+### XIX-G. Documentation Updates Required on Implementation
+
+| File | Change |
+|------|--------|
+| `world.md` | Add Rennau and Vonn to Tilbury NPC section; add harbor district description; add Q-TL-01 through Q-TL-03 beats |
+| `story.md` | Add Q-TL-01 through Q-TL-03 quest beat section; Ori encounter notes; cross-references to §XII and §XVI |
+| `mechanics.md` | Add `type:'readable'` item shape if not already documented |
+| `index.md` | Add Tilbury Harbor Arc note |
+| `plan.md` | Mark §XIX complete; update §V-A queue |
+
+**Lab report:** `lab-report-tilbury-visby-arcs.md` — covers §XIX and §XX together as the "hub town completion pass"; institutional fracture theme (Void damages institutions before it damages people); readable item pattern (`ship_manifest`, `ori_account`, `hollow_hands_seal`); goblin sub-faction design.
+
+---
+
+### XIX-H. Thematic Coherence Note
+
+The Void Tide does not begin with monsters. It begins with missing ships, revoked research access, suppressed riot reports, and a harbor closed by people who believed they were managing a crisis. §XIX makes this visible from the commercial side: the Conclave's response is procedurally correct and humanly inadequate. Rennau keeps the ledger because institutions don't. The Curse of Knowledge applies here too — the player finds out what happened to the *Harrow*, and what they do with that information is the same choice the game asks about everything else.
+
+---
+
+*§XIX status: ⚠️ PLANNED — Tilbury Harbor Arc designed; two NPCs (Rennau, Vonn); three-quest chain; two readable items; six state flags; harbor board interaction; Ori survivor encounter; cross-references to §XII (fishing) and §XVI (Isolde Voss/First Researcher); thematic coherence with Curse of Knowledge established. Lab report: `lab-report-tilbury-visby-arcs.md` to be written on implementation (covering §XIX + §XX together).*
+
+---
+
+## Section XX — The Visby Underground: "What Mordus Owes" (Layer 55, ⚠️ PLANNED)
+
+> **The gap:** Visby is the enemy stronghold — the Crimson Warrant's territory, Warlord Kael Mordus's seat of power. Mordus appears as Epic NPC Q71 but the Crimson Warrant has no player-facing quest arc in the main game. The world.md note for Visby mentions "the Void shaman's influence spreading through the goblin clans — it's already destabilizing Mordus's control" — but this instability is never made player-visible. This section surfaces it through a debt collection arc.
+
+> **The theme:** §XIX showed how the Void fractures commerce. §XX shows how the Void fractures criminal authority. Mordus's control is built on loyalty and fear — the two things a Void-aligned faction subverts by definition. The "debt" is real but not the point. The point is the Hollow Hands: a goblin sub-clan that broke from Mordus six months ago, armed with weapons meant for him, loyal to a shaman the player never meets. The shaman is the shadow of §XX, not the subject.
+
+---
+
+### XX-A. The Setting — Visby Underground
+
+**Nodes:** VS (Visby node) + GC (Goblin Caves)
+
+Visby's surface is controlled; the caves beneath are not. The Goblin Caves are a labyrinthine territory that Mordus governs through a system of tributes and sub-chiefs. The Hollow Hands are a goblin sub-clan that stopped paying tribute six months ago and began answering to someone else. Mordus knows. He has not moved against them because he does not know how many there are, where the weapons came from, or who their shaman is. He is waiting. The player has leverage Mordus doesn't: they go into places Mordus can't follow without starting a war he's not ready for.
+
+---
+
+### XX-B. New NPCs
+
+**Debt Agent Solvak** — Node VS (outside the Crimson Warrant perimeter)
+- Occupation: Merchant's Conclave Tier 3 debt collector. He was sent from Tilbury to collect 2,000gp from Mordus — the price of a weapons shipment that never arrived. He has been outside Visby for six weeks. He is not going in.
+- Demeanor: Professionally anxious. He knows Mordus won't pay. He knows he can't make Mordus pay. He needs the player to make the debt solvable.
+- Fav gating: Starts Impartial. Friendly after Q-VS-01. He leaves VS after Q-VS-03.
+
+> *"The Conclave hired me to collect. I have collected from Crimson Warrant before — once. The key is presenting it as a mutual interest problem, not a threat. Mordus does not respond to threats. He responds to leverage. I don't have any. You might."*
+
+---
+
+**Yva** — Node GC (inside the Goblin Caves)
+- Occupation: Goblin broker, formerly Mordus-aligned supply intermediary. Now independent and frightened.
+- Background: She brokered the weapons shipment that never arrived. She knows who diverted it. She will not say the name without compensation.
+- Fav gating: Starts Impartial. Friendly after paying 50gp. Dear Friend after Q-VS-02 completion.
+
+> *"I moved cargo for Mordus for eight years. Good coin, no questions. Then the Hollow Hands put a mark on my stall and started asking questions instead. I don't know who they answer to. I know what the mark means. It means I am not neutral anymore unless I pay to be."*
+
+> *(Dear Friend):* *"I want Mordus to know I didn't betray him. I want you to tell him I didn't know what the cargo was for until it was already moved. I am telling you this because you're the only one who's been in here and out of here without bleeding."*
+
+---
+
+### XX-C. Quest Chain — "What Mordus Owes" (Q-VS-01 through Q-VS-03)
+
+**Q-VS-01: "The Collector"** — Trigger: first visit to VS node, Act V+
+
+- NPC: Debt Agent Solvak
+- He explains the 2,000gp debt. The weapons shipment (40 crates, Conclave-sourced) left Tilbury six months ago and never reached Visby. Mordus denies receiving it. The Conclave says he owes regardless.
+- Note: If `tlLedgerRead` is true (§XIX), Solvak mentions the Harrow by name: *"We lost a ship around the same time. The Harrow. Unrelated, probably."* (It is not unrelated — the Harrow was carrying Scholar Kings correspondence; the weapons were on a different manifest. But the timing is the same Void advance that pushed both into crisis.)
+- Task: Enter Visby and speak to Mordus about the debt.
+- If Q71 (Mordus EB quest) is active or complete: Mordus greets the player differently — *"Another one with a debt ledger. The Conclave is bold."* — but still engages.
+- Mordus's answer: *"The debt will be paid when the weapons are returned. The weapons will be returned when I know where they went. I do not know where they went."* He is telling the truth.
+- Reward: `vsDebtProbed = true` + Solvak Friendly.
+
+---
+
+**Q-VS-02: "The Broker"** — Trigger: `vsDebtProbed` + visit to GC node
+
+- Yva is inside GC. Her stall has the Hollow Hands mark. She charges 50gp to talk (deducted from `S_story.gold`).
+- She tells the player: the weapons went to the Hollow Hands, a goblin sub-clan with a Void-aligned shaman. The shaman told the Hollow Hands the weapons were tribute paid in advance for their loyalty. Mordus never paid tribute; the shaman invented a tribute that made the Hollow Hands feel owed.
+- New combat encounter: `hollow_hands_guard` — a Void-modified goblin. Drops `hollow_hands_seal` (icon: 🖤, type: 'quest_item', sell: 0).
+- Task: Find the Hollow Hands' cache marker in GC terrain (the `hollow_hands_guard` drops the `hollow_hands_seal` on defeat).
+- Reward: `vsWeaponsFound = true` + Yva Friendly + `hollow_hands_seal` item.
+- If the player chooses [TELL YVA ABOUT RENNAU] (available if `tlMissingShipSolved` from §XIX): she adds one sentence: *"The Harrow. I heard about that ship. The Hollow Hands didn't touch it. Whatever got that ship wasn't them."*
+
+---
+
+**Q-VS-03: "Mordus Pays"** — Trigger: `vsWeaponsFound` + speak to Mordus again
+
+- Mordus sees the `hollow_hands_seal`. He does not say the shaman's name. He pays the debt sideways: he gives the player a transit seal for a hidden weapons cache in Visby territory — not the original 40 crates, but enough for the Conclave to close the ledger.
+- Task: Deliver `hollow_hands_seal` to Solvak. He accepts the transit seal as settlement.
+- Reward: `vsDebtSettled = true` + 400gp from Solvak + Solvak leaves VS permanently.
+- Mordus's follow-up (next GC/VS visit): *"The Hollow Hands are mine to deal with now that I know what they are. You found what I needed to find them. That's worth something."* — Sets `vsShamanKnown = true`. The player now knows the Void shaman is a distinct faction operating inside Mordus's territory. The shaman is not confronted in §XX — they are named as a threat that exists.
+
+---
+
+### XX-D. New Monster — `hollow_hands_guard`
+
+| Key | Name | AC | HP | ATK | Dmg | Tier | Drop |
+|-----|------|----|----|-----|-----|------|------|
+| `hollow_hands_guard` | Hollow Hands Guard | 13 | 22 | +4 | 1d6+2 | low | `hollow_hands_seal` (icon: 🖤, sell: 0) |
+
+Add to: `GC` terrain in `WORLD_DB`. Flavour: a goblin with Void-marked armor — darker, quieter, moves wrong. The mark on the armor matches the mark on Yva's stall.
+
+**MONSTER_POOL count after §XX:** 370 + 1 (scholars_guard from §XVI) + 1 (hollow_hands_guard) = 372 if both §XVI and §XX are implemented.
+
+---
+
+### XX-E. New State Flags
+
+| Flag | Type | Default | Purpose |
+|------|------|---------|---------|
+| `vsDebtProbed` | boolean | false | Spoke to Mordus about the weapons debt (Q-VS-01) |
+| `vsWeaponsFound` | boolean | false | hollow_hands_seal obtained (Q-VS-02) |
+| `vsDebtSettled` | boolean | false | Debt settled with Solvak (Q-VS-03) |
+| `vsShamanKnown` | boolean | false | Player knows Void shaman is operating inside Mordus's territory |
+| `vsYvaFav` | int | 0 | Yva favorability (0/1/2) |
+| `vsSolvakFav` | int | 0 | Solvak favorability — caps at 1; he leaves VS after §Q-VS-03 |
+
+---
+
+### XX-F. Insertion Spec for `roll2hit-v3.html`
+
+**Layer tag:** Layer 55 — Visby Underground
+
+1. Add `hollow_hands_guard` to `MONSTER_POOL` and to `GC` terrain in `WORLD_DB`
+2. Add Solvak and Yva to NPC profile const (VS and GC node respectively)
+3. Add `hollow_hands_seal` as quest item (inline in `MONSTER_DROPS` for `hollow_hands_guard`)
+4. Add Q-VS-01 through Q-VS-03 to `QUEST_DB`
+5. Add 6 new state flags to `_S_DEFAULTS()`
+6. Add cross-reference check in Q-VS-01: if `tlLedgerRead`, insert Harrow mention into Solvak's dialogue
+7. Add cross-reference check in Q-VS-02: if `tlMissingShipSolved`, unlock Yva's Harrow line
+8. Add Solvak departure logic (remove from VS node render after `vsDebtSettled`)
+
+**MONSTER_POOL count after:** +1 (hollow_hands_guard).
+
+---
+
+### XX-G. Documentation Updates Required on Implementation
+
+| File | Change |
+|------|--------|
+| `monsters.md` | Add `hollow_hands_guard` stat block; update MONSTER_POOL count |
+| `world.md` | Add Solvak and Yva to Visby NPC section; add Hollow Hands sub-clan description; update Crimson Warrant entry to note Void shaman instability |
+| `story.md` | Add Q-VS-01 through Q-VS-03 quest beat section; Mordus dialogue variants; cross-references to §XIX |
+| `index.md` | Add Visby Underground arc note |
+| `plan.md` | Mark §XX complete; update §V-A queue |
+
+**Lab report:** `lab-report-tilbury-visby-arcs.md` — shared with §XIX; covers both hub arcs, institutional fracture theme, readable item pattern, hollow_hands_guard sub-faction design, and §XIX/§XX cross-references. Write on implementation of both.
+
+---
+
+### XX-H. Thematic Coherence Note
+
+Mordus is not a villain in §XX. He is an authority figure whose authority is being dissolved by a force he cannot name. The player can name it, because the player has been in the Void's wake since Birka. The Curse of Knowledge dynamic applies: Mordus cannot share what he knows (he doesn't know enough), the player cannot tell him what they know (he wouldn't believe it yet), and the only thing that moves is the ledger.
+
+The Void shaman named in §XX is not introduced as a character. This is intentional. The shaman is what comes next — the shadow behind §XX, the threat that will need a section of its own if the game ever reaches Layer 56. Naming a threat without confronting it is the game's oldest design move: Froberger in Entry 7 named the First Researcher without naming her, and the player spent two game layers finding her. §XX does the same with the shaman.
+
+---
+
+*§XX status: ⚠️ PLANNED — Visby Underground designed; two NPCs (Solvak, Yva); three-quest chain; hollow_hands_guard monster (372nd if both §XVI and §XX are implemented); six state flags; cross-references to §XIX (Rennau/Harrow) and Mordus EB quest (Q71); Void shaman named but not confronted; institutional fracture theme established. Lab report: `lab-report-tilbury-visby-arcs.md` to be written on implementation.*
 
