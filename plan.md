@@ -8,8 +8,6 @@ Implement in layer order. Each = code change + doc sync + `git commit`.
 
 | Layer | Section | Feature | Est. Complexity |
 |-------|---------|---------|----------------|
-| 53 | §XVIII | Living World: Junction Vignettes + Road Companion | ✅ Implemented |
-| 57 | §XXII | Codex Shard Origin Stories | ✅ Implemented |
 | 58 | §XXIII | Inn Dreams | ✅ Implemented |
 | 59 | §XXIV | Pressure Cascade: Visible Void Tide Events | ✅ Implemented |
 | 60 | §XXV | The Homecoming: Act VIII Farewell Beats | ✅ Implemented |
@@ -276,11 +274,9 @@ The commit message should name the lab report and summarize what it covers in on
 | 5 | §IX | Ally Cat Arc: "Nine Lives, Capisce?" | 44 | Yes — `lab-report-ally-cat.md` | ✅ Implemented |
 | 7 | §XVI | Weimar Scholar Gate: Tomes and the Fourth Hub | 51 | Yes — new item category + NPC arc | ✅ Implemented 2026-05-25 |
 | 8 | §XVII | Void Archaeology: The Origin Investigation | 52 | Yes — narrative recontextualization + four-author chain | ✅ Implemented 2026-05-25 |
-| 9 | §XVIII | Living World: Junction Vignettes + Road Companion | 53 | No — fits in living-world lab report | ✅ Implemented |
 | 10 | §XIX | Tilbury Harbor Arc: "The Conclave's Weight" | 54 | Yes — shared with §XX in `lab-report-tilbury-visby-arcs.md` | ✅ Implemented 2026-05-25 |
 | 11 | §XX | Visby Underground: "What Mordus Owes" | 55 | Yes — shared with §XIX in `lab-report-tilbury-visby-arcs.md` | ✅ Implemented 2026-05-25 |
 | 12 | §XXI | The Void Shaman: The Antecedent's Last Warden | 56 | Yes — `lab-report-void-shaman.md` (corrupted mandate design) | ✅ Implemented 2026-05-25 |
-| 13 | §XXII | Codex Shard Origin Stories | 57 | No — document inline in `story.md` | ✅ Implemented |
 | 14 | §XXIII | Inn Dreams | 58 | No — too small; document inline | ✅ Implemented |
 | 15 | §XXIV | The Pressure Cascade: Visible Void Tide Events | 59 | No — extend `lab-report-living-world.md` | ✅ Implemented |
 | 16 | §XXV | The Homecoming: Act VIII One-Time Farewell Beats | 60 | No — document inline in `story.md` | ✅ Implemented |
