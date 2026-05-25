@@ -7888,6 +7888,7 @@ const _S_DEFAULTS = () => ({
   s8VargaWatches: 0, s8VargaClueUnlocked: false, s8PachelbelTold: false,
   nexusQuestSeen: false, nexusQ01Active: false, nexusQ02Complete: false, creativeLiteracyToken: false,
   fishingQuestFlags: {}, fishingBaitSatchel: false, fishingYugurtFavour: false, fishingCatchLog: [],
+  junctionsSeen: {}, companionActsSeen: {},
 });
 
 /* ── Layer 48: Luck — Seventh Stat ── */
@@ -10345,6 +10346,24 @@ const FISH_POOL = [
   { rank:19, key:'fish_19', name:'Dread Catfish of Yugurt', desc:'Yugurt painted this thing on the wall of the cabin. He was trying to warn someone. He did not specify who.' },
   { rank:20, key:'fish_20', name:"Yugurt's Dread",          desc:'The apex predator of every lake that has ever existed. It swims between them.' },
 ];
+
+/* ── Layer 53: Living World — Junction Vignettes + Road Companion ── */
+const JUNCTION_VIGNETTES = {
+  J1: { npc:'Tessie', tag:'Merchant\'s runner', lines:['"My employer hasn\'t paid me in three weeks. I\'m still running the routes. I don\'t know why."','She adjusts the pack on her shoulders. She\'s not looking for an answer.','"Good road. Watch the eastern bend — something spooked the relay horses yesterday."'], help:'You hand Tessie 10 gold. She looks at it for a long moment. "I\'ll take it. Thank you."' },
+  J2: { npc:'Old Faeron', tag:'Retired soldier', lines:['"I fought the first Tide. Told everyone it would come back. I was very boring at parties."','He has a scar that runs from his left ear to his collarbone. He doesn\'t cover it.','"Don\'t make the same mistake twice. The second time, I knew what to do. The first time I just survived. Only one of those is actually useful."'], help:'Old Faeron looks at the gold. Slides it back. "Keep it. You\'ll need it for something."' },
+  J3: { npc:'Mira', tag:'Refugee', actMin:3, lines:['"We left Tilbury before the harbor closed. I don\'t think we\'ll go back."','She has three children, none older than ten. They\'re asleep against a pack.','"My husband is still there. He was arranging the last cargo. That was eight days ago."'], help:'She takes the gold. Doesn\'t say thank you. Says: "There\'s an inn two leagues east. Tell them Mira sent you — they\'ll know what that means."' },
+  J4: { npc:'The Cartographer', tag:'Unknown', lines:['"I\'ve been mapping these roads for twelve years. I still find new ones. That used to frighten me."','Her map covers three sheets and is rolled tight in an oilskin tube.','"The road you came from has changed since I drew it. Most of them have. I stopped correcting the old maps. I just make new ones."'], help:'She waves it off. "I don\'t carry gold. Maps are my currency. Here." She tears a small section from a corner sheet. "The coastline. More accurate than what you\'ll find printed."' },
+  J5: { npc:'Wren', tag:'Scholar Kings courier', lines:['"I carry messages for the Scholar Kings. I stopped reading them two years ago. Better that way."','She moves fast. She was walking before you arrived. She pauses at the junction.','"The Scholar Kings archive at Weimar lost three shelves last month. \'Reorganization.\' That\'s what they called it." She moves on.'], help:'She\'s gone before you can offer anything.' },
+  J6: { npc:null, lines:[null, null, null], env:'A note pinned to a post: "Paid in full. —S." No signature beyond that initial. No context. The road is quiet.' },
+  J7: { npc:null, lines:[null, null, null], env:'A child\'s toy on the road. No NPC. No explanation. You leave it where it is.' },
+};
+const COMPANION_LINES = {
+  2: { name:'Dessa', ctx:'Carrying supplies between Birka and Tilbury', line:'The harbor master in Tilbury keeps a ledger of every ship that left since the Tide started. He won\'t show it to anyone. I\'ve seen him writing in it.' },
+  3: { name:'Olaf', ctx:'Traveling researcher, unaffiliated', line:'Weimar\'s upper district has been closed to independent researchers for eleven years. That\'s exactly when the Void reports started.' },
+  4: { name:'Maret', ctx:'Soldier going home', line:'Visby fell twice before. Both times, they held the west gate. They tell new recruits that story on the first day.' },
+  5: { name:'Pilgrim', ctx:'Going to the Mountain Pass', line:'Someone sealed that tunnel before the Scholar Kings existed. I\'ve been trying to find out who for forty years.' },
+  6: { name:null, ctx:null, line:'For the first time in days, no one else is on the road. You walk alone. It is not lonely — it is quiet in a different way.' },
+};
 
 /* ── Layer 47: Yugurt Lake Fishing Overhaul consts ── */
 const BAIT_TABLES = {
@@ -12854,6 +12873,56 @@ function storyRender(node, prefix) {
       }
       document.getElementById('story-text-box').insertAdjacentElement('afterend', hmDiv);
     }
+    // ── Layer 53: Junction Vignettes ──
+    if (node.junction && JUNCTION_VIGNETTES[node.code]) {
+      const vig = JUNCTION_VIGNETTES[node.code];
+      const act = S_story.actNumber || 1;
+      if (vig.actMin && act < vig.actMin) { /* not yet */ }
+      else {
+        const jDiv = document.createElement('div');
+        jDiv.style.cssText = 'margin-top:8px;';
+        if (!S_story.junctionsSeen) S_story.junctionsSeen = {};
+        const seen = !!S_story.junctionsSeen[node.code];
+        if (!seen) {
+          S_story.junctionsSeen[node.code] = true;
+          if (vig.env) {
+            const envDiv = document.createElement('div');
+            envDiv.innerHTML = '<div class="npc-ambient"><em>' + vig.env + '</em></div>';
+            jDiv.appendChild(envDiv);
+          } else {
+            const npcHeader = document.createElement('div');
+            npcHeader.style.cssText = 'font-size:12px;color:#c0a080;font-weight:600;margin-bottom:4px;';
+            npcHeader.textContent = vig.npc + (vig.tag ? ' — ' + vig.tag : '');
+            jDiv.appendChild(npcHeader);
+            vig.lines.filter(Boolean).forEach(line => {
+              const lDiv = document.createElement('div');
+              lDiv.style.cssText = 'font-size:12px;color:#aaa;font-style:italic;margin-bottom:4px;line-height:1.7;';
+              lDiv.textContent = line;
+              jDiv.appendChild(lDiv);
+            });
+            if (vig.help) {
+              const helpBtn = document.createElement('button');
+              helpBtn.className = 'inv-use-btn';
+              helpBtn.textContent = '[Help — 10gp]';
+              helpBtn.style.cssText = 'margin-top:4px;';
+              helpBtn.addEventListener('click', () => {
+                if ((S_story.gold || 0) < 10) { storyMsg('Not enough gold.'); return; }
+                S_story.gold -= 10;
+                storyMsg(vig.help);
+                helpBtn.remove();
+                storyUpdateStatus();
+              });
+              jDiv.appendChild(helpBtn);
+            }
+          }
+        } else {
+          const goneDiv = document.createElement('div');
+          goneDiv.innerHTML = '<div class="npc-ambient" style="font-size:11px;"><em>' + (vig.npc ? vig.npc + ' has moved on.' : 'The road is quiet.') + '</em></div>';
+          jDiv.appendChild(goneDiv);
+        }
+        document.getElementById('story-text-box').insertAdjacentElement('afterend', jDiv);
+      }
+    }
     // ── L45-J: Froberger Note × Bruhns cross-item ──
     if (node.code === 'CY' && S_story.froberger_last_note_read && _npcFavor('bruhns') >= 2
         && !S_story.frobergerBruhnsLineDelivered) {
@@ -14215,6 +14284,18 @@ function storyCorridorTravel(fromCode, destCode, dir) {
   if (S_story.log.length > 20) S_story.log.shift();
   S_story.currentCode = destCode;
 
+  // ── Layer 53: Road Companion — fires once per act on first corridor travel ──
+  { const act = S_story.actNumber || 1;
+    if (!S_story.companionActsSeen) S_story.companionActsSeen = {};
+    if (act >= 2 && !S_story.companionActsSeen[act] && COMPANION_LINES[act]) {
+      S_story.companionActsSeen[act] = true;
+      const comp = COMPANION_LINES[act];
+      const compText = comp.name
+        ? '👣 ' + comp.name + ' — on the road (' + comp.ctx + '):\n"' + comp.line + '"'
+        : '🛤 ' + comp.line;
+      setTimeout(() => storyMsg(compText), 900);
+    }
+  }
   if (S_story.huntMode) {
     const chance = Math.min(0.95, Math.max(0.05, 0.1 + notoriety * 0.015 + activeQuestCount * 0.04 - _luckMod() * 0.5)); // Layer 48: Luck reduces encounter rate
     if (Math.random() < chance) {
