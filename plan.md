@@ -1,6 +1,6 @@
 ## §0 — Implementation Readiness Dashboard
 
-> **Status as of Layer 71 design phase.** Update each row when a layer is coded and committed. This section lives at the top of the file so it's the first thing open during an implementation session.
+> **Status as of Layer 75 (2026-05-25).** Update each row when a layer is coded and committed. This section lives at the top of the file so it's the first thing open during an implementation session.
 
 ### Tier 1 — Ready to Implement Now (no lab report needed)
 
@@ -29,18 +29,21 @@ Implement in layer order. Each = code change + doc sync + `git commit`.
 | 72 | §XXXVII | The Final Confrontation: Commander Bruhns's CO Scene | ✅ Implemented |
 | 73 | §XXXVIII | The Heartwood Letter: Brynn's Daughter Scene | ✅ Implemented |
 | 74 | §XXXIX | Yael's Record: The Named Report Scene | ✅ Implemented |
+| 75 | §XL | Kenickie's Black Market + Sheet-Swapper UI | ✅ Implemented 2026-05-25 |
+| 76 | §XLI | Tattoo Progression System (character creation, ASI/HP tattoos, death tattoos) | ✅ Implemented 2026-05-25 |
+| 77 | §XLII | Chronicle System (career/run stats, hour clock, game-over summary) | ✅ Implemented 2026-05-25 |
 
 ### Tier 2 — Needs Lab Report Before Coding
 
-| Layer | Section | Feature | Lab Report Needed |
-|-------|---------|---------|-------------------|
+| Layer | Section | Feature | Status |
+|-------|---------|---------|--------|
 | 44 | §IX | Ally Cat Arc | ✅ Implemented |
 | 49 | §XIV | Quest -1 + World Creator | ✅ Implemented |
-| 50 | §XV | NG+ Remembrance Layer | `lab-report-ng-plus-remembrance.md` |
-| 51 | §XVI | Weimar Scholar Gate | `lab-report-weimar-scholar-gate.md` |
-| 52 | §XVII | Void Archaeology | `lab-report-void-archaeology.md` |
-| 54+55 | §XIX+§XX | Tilbury + Visby Arcs | `lab-report-tilbury-visby-arcs.md` |
-| 56 | §XXI | Void Shaman | `lab-report-void-shaman.md` |
+| 50 | §XV | NG+ Remembrance Layer | ✅ Implemented 2026-05-25 |
+| 51 | §XVI | Weimar Scholar Gate | ✅ Implemented 2026-05-25 |
+| 52 | §XVII | Void Archaeology | ✅ Implemented 2026-05-25 |
+| 54+55 | §XIX+§XX | Tilbury + Visby Arcs | ✅ Implemented 2026-05-25 |
+| 56 | §XXI | Void Shaman | ✅ Implemented 2026-05-25 |
 | 61 | §XXVI | Corelli Wandering Merchant | ✅ Implemented 2026-05-25 |
 
 ### Implementation Protocol (reminder)
