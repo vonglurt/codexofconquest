@@ -237,6 +237,7 @@ The commit message should name the lab report and summarize what it covers in on
 | 20 | §XXIX | The Pit Championship: Finals at Crossroads Forge | 64 | No — document inline; patch §XXV farewell beat | ⚠️ PLANNED |
 | 21 | §XXX | The Entry 41 Echo: Brynn and Sweelinck After the Last Journal | 65 | No — state flags pre-exist; document inline; patch _buildSweelinckNamingSequence() | ⚠️ PLANNED |
 | 22 | §XXXI | The Joint Witness and the Map Caption (S54 + S55) | 66a+66b | No — state flags pre-exist; document inline; patch _renderFinalMap() | ⚠️ PLANNED |
+| 23 | §XXXII | Two Intelligence Feeds: The Varga Watch and the Auros Theory (S8 + S29) | 67a+67b | No — all flags pre-exist; document inline | ⚠️ PLANNED |
 
 **Rule:** Implement in layer order when possible. Each implementation = code + doc sync + git commit. See plan.md §I Lab Report Policy for commit rules.
 
@@ -2012,7 +2013,8 @@ creative_literacy_token: { name:'Creative Literacy Token', icon:'📄', sell:27 
 | **Froberger Memorial (§XXVIII)** | `FROBERGER_MEMORIAL_TEXT` object / 4-layer plaque text / memorial book entries / [Leave Flowers] 10gp action / `storyShowFrobergerMemorial()` | `plan.md §XXVIII` | ✅ PLANNED stubs: `story.md` Memorial section; `world.md` memorial world note | ⚠️ PLANNED |
 | **Pit Championship (§XXIX)** | `PIT_CHAMPION_OGUNDIMU` const / `_showPitChampionOffer()` / `_startPitChampionBattle()` / win/loss callbacks / Weckmann log entry / dearFriend pool patch / §XXV farewell branch | `plan.md §XXIX` | ⚠️ PLANNED stubs pending: `story.md` championship note; `world.md` Ogundimu entry | ⚠️ PLANNED |
 | **Entry 41 Echo (§XXX)** | `S49_BRYNN_SCENE` / `S49_SWEELINCK_SCENE` consts / s49 flag trigger logic / Covenant Keeper opening patch in `_buildSweelinckNamingSequence()` | `plan.md §XXX` | ✅ PLANNED stubs: `story.md` scene summaries; `world.md` S49 expanded | ⚠️ PLANNED |
-| **Joint Witness + Map Caption (§XXXI)** | `S54_JOINT_MOMENT` const / Yael+Brynn CI scene (act≥7, dual Friendly gate) / S55 caption in `_renderFinalMap()` (base + Sweelinck variant) | `plan.md §XXXI` | ⚠️ PLANNED stubs pending: `story.md` scene text; `world.md` S54/S55 entries; `maps.md` caption spec | ⚠️ PLANNED |
+| **Joint Witness + Map Caption (§XXXI)** | `S54_JOINT_MOMENT` const / Yael+Brynn CI scene (act≥7, dual Friendly gate) / S55 caption in `_renderFinalMap()` (base + Sweelinck variant) | `plan.md §XXXI` | ✅ PLANNED stubs: `story.md` scene summaries; `world.md` S54/S55 entries; `maps.md` caption spec | ⚠️ PLANNED |
+| **Two Intelligence Feeds (§XXXII)** | S8: three-observation Varga BA arc / pigeon direction / Pachelbel tell (+15gp) / S29: Auros tactical theory at CY (frobergerLastEntryRead + Dear Friend) / `S29_AUROS_THEORY` const | `plan.md §XXXII` | ⚠️ PLANNED stubs pending: `story.md` scene notes; `world.md` S8/S29 expansion | ⚠️ PLANNED |
 
 ---
 
@@ -6622,3 +6624,227 @@ No lab report. No new nodes, monsters, items, or quests.
 ---
 
 *§XXXI status: ⚠️ PLANNED — Joint Witness scene (S54) and Map Caption (S55) designed; s54/s55 flags pre-exist in _S_DEFAULTS(); S54_JOINT_MOMENT const text written (Yael + Brynn, "Still the same light?"); S55 caption text written (base + Sweelinck variant); implementation spec for CI node trigger (act ≥ 7, dual Friendly gate) and _renderFinalMap() insertion; zero new state flags; no new nodes/monsters/items/quests; no lab report — document inline.*
+
+---
+
+## Section XXXII — Two Intelligence Feeds: The Varga Watch and the Auros Theory (Layers 67a + 67b, ⚠️ PLANNED)
+
+> **Design status:** PLANNED. State flags `s8VargaWatches`, `s8VargaClueUnlocked`, `s8PachelbelTold`, and `s29LineDelivered` already exist in `_S_DEFAULTS()` — this section provides the full scene designs.  
+> **Layers 67a + 67b** — two S-suggestion systems; no new nodes, monsters, items, or quests; no lab report; document inline.
+
+---
+
+### XXXII-A. Concept: The Same Truth from Two Directions
+
+Varga is an Ivory Circle informant watching the BA (Birka Archive) — specifically watching who accesses the shelves where Froberger-related and Void research materials are held. He uses a pigeon-route network to file reports to a forwarding agent north-northeast of BA, who relays them to the Circle anonymously.
+
+Auros is a military commander in the Undercity (CY) who has been cross-referencing Froberger's journal route against Void-advance tactical indicators from Year Twelve. She never connected them until Entry 41.
+
+Both systems reveal the same thing: Froberger was, without knowing it, mapping the Void Tide's advance path. The Circle knew. Varga was monitoring who else might figure it out. Auros can explain what it means.
+
+The S8 mechanic (three-observation Varga arc) and the S29 dialogue injection (Auros tactical analysis) are independent systems that converge on the same knowledge. Neither references the other. Together they constitute an intelligence picture the player assembles across two NPCs who have never met.
+
+---
+
+### XXXII-B. S8 — The Varga Watch at BA (Layer 67a)
+
+**State flags:** `s8VargaWatches` (0–3), `s8VargaClueUnlocked` (boolean), `s8PachelbelTold` (boolean) — all pre-existing in `_S_DEFAULTS()`.
+
+**Who is Varga?** A minor Ivory Circle functionary. He holds a regular table at BA and keeps a book open to the same page. He is not interesting to talk to. He files one pigeon per archive visit by any player who touches the restricted shelves. He does not know the content of what he's reporting — only that the Circle flagged those shelves.
+
+He appears in the Act I Town Crier cycling pool (line [3]): *"Three of Varga's usual informants didn't show up to their usual corners this morning. The fourth one is talking to nobody."* — this fires before the player has observed him. Varga's informant network is already fraying at Act I for reasons unconnected to the player. The player's observations don't disrupt him — they read him.
+
+After `yaelEscortDone`, the Town Crier questFlag line fires: *"The Slums have been quieter since someone ran Varga's informants off the north end. Nobody's taking credit."* — Yael's escort resolution disrupts Varga's street network. The pigeon route at BA continues separately; the S8 mechanic is unaffected by `yaelEscortDone`.
+
+**Three-observation arc — ambient text added to BA render:**
+
+| `s8VargaWatches` | Added ambient line | Player action |
+|---|---|---|
+| 0 | *(no Varga text — he's background)* | [Observe the clerk] button appears |
+| 1 | *"A clerk at the far table has the same book open to the same page as last time. He isn't reading it."* | [Observe the clerk again] |
+| 2 | *"The same clerk. Today he wrote one line in a small notebook, then put it away immediately."* | [Watch for the signal] |
+| 3 | `s8VargaClueUnlocked = true` — see §XXXII-C | — |
+
+Each [Observe] click increments `s8VargaWatches` by 1. No time gate — observations can happen in consecutive visits or across acts.
+
+**Watch 3 event text** (shown in place of the normal [Watch for the signal] result):
+
+```
+The clerk closes his book. He folds a small slip of
+paper — you can't see what's on it from here — and
+walks to the east window.
+
+He opens it. A pigeon launches from the sill, banks
+north-northeast, and is gone.
+
+The clerk returns to his table and opens his book to
+the same page.
+```
+
+**Direction note:** *North-northeast from BA* — the player can note this in the story log. `storyMsg()`: *"The pigeon flew north-northeast. Pachelbel's district."*
+
+---
+
+### XXXII-C. S8 — Telling Pachelbel (Layer 67a, continued)
+
+**Trigger for tell option:** `s8VargaClueUnlocked && !s8PachelbelTold && (S_story.fav_pachelbel || 0) >= 1`. Available as a dialogue option at SH (Pachelbel's node) or BA: [Tell Pachelbel about the pigeon].
+
+**Pachelbel's response:**
+
+```
+"North-northeast from BA?"
+
+She doesn't need you to describe the pigeon.
+
+"That's a forwarding route. The Circle uses couriers
+at that rooftop when they don't want a name attached
+to the report — the message goes to a handler, the
+handler uses a commercial channel, and by the time
+it arrives it's just a note from 'a concerned party.'"
+
+A pause.
+
+"Was it the Froberger shelf?"
+
+She doesn't wait for the answer.
+
+"Of course it was. They've been watching that section
+for three years. Someone at the Circle decided his
+notes were worth monitoring before they decided his
+memorial was worth removing."
+
+She counts out 15 gold.
+
+"You didn't hear that from me. Officially."
+```
+
+On close: `s8PachelbelTold = true`; `S_story.gold += 15`.
+
+**Why Pachelbel knows:** She's a former fence and dealer (Raison's Tools backstory, Pachelbel's journal entries 2–3). She knows commercial information channels, forwarding routes, and how to read indirect communications. The pigeon route north-northeast from BA is a known Circle forwarding corridor in Birka's underground network. She recognized it immediately.
+
+**Why 15gp?** It's the fee she would have charged a client for this information. She's paying the player at the same rate she values the intelligence. It's not charity; it's professional courtesy.
+
+---
+
+### XXXII-D. S29 — Auros's Tactical Theory at CY (Layer 67b)
+
+**State flag:** `s29LineDelivered` (boolean) — pre-existing in `_S_DEFAULTS()`.
+
+**Trigger:** First CY visit where `S_story.frobergerLastEntryRead === true` AND `(S_story.fav_auros || 0) >= 2` AND `!S_story.s29LineDelivered`.
+
+**Auros's speech** (stored in `S29_AUROS_THEORY` const):
+
+```
+Auros is at her desk when you arrive. She looks up,
+then at the journal.
+
+"Entry 41?"
+
+You nod.
+
+"Froberger's last documented route covered three sectors
+I flagged as Void-advance indicators in Year Twelve. He
+walked them in the right order. He logged what he saw
+in each one — terrain shifts, monster density changes,
+corridor instability."
+
+She sets her notes down.
+
+"He wasn't warning anyone. He didn't know what he was
+mapping. He was just thorough. But if you read his last
+six entries in sequence, and you know what the Void
+advance looks like from tactical coordinates, you get
+a clear picture of exactly where it was going and how
+fast."
+
+A pause.
+
+"'The shape of the absence.' That's what he calls it
+in Entry 41. He finally understood — he'd been mapping
+the negative space of the Void all along. Every corridor
+he documented was one the Tide had not yet filled."
+
+She turns back to her notes.
+
+"He got to the end of the map. Then the Tide arrived."
+```
+
+On close: `S_story.s29LineDelivered = true`; `storyMsg()`: *(Auros has read the route.)*
+
+**Why CY (Undercity)?** Auros's tactical operations center is in the Undercity — signal jammers, EMP grenades, encrypted reports. She's the one military figure in Birka who cross-references civilian reports against Void-advance mapping data. Entry 41's "shape of the absence" is a phrase she would understand immediately; Froberger arrived at it inductively from journal entries while Auros had the deductive framework all along. Neither told the other.
+
+---
+
+### XXXII-E. Cross-Reference Network
+
+Both systems converge on the same underlying truth about Froberger:
+
+| System | Source | Reveals |
+|--------|--------|---------|
+| S8 — Varga | Observation at BA + Pachelbel | The Circle has been monitoring who reads Froberger's materials for 3 years |
+| S29 — Auros | CY tactical briefing | Froberger's route = Void advance indicator sequence (Years 12–current) |
+| §XXVIII — Memorial | CI stone, Layer 3 unlock | "The Ivory Circle formally requested the stone be removed in 1312. The city refused." |
+| §XVII — Void Archaeology | Origin Investigation | First Researcher / Antecedent documented the advance; Circle suppressed it |
+| §XXVI — Corelli | Courier reveal, fav 3 | Froberger was "First Contact: F.B." — the chronicler who mapped before the Circle drew borders |
+| §XXX — Entry 41 | Brynn + Sweelinck scenes | "He knew the shape of the absence... He wrote it down and waited." |
+
+A player who completes all six systems assembles the full picture: Froberger was mapping the Void's advance without knowing it, the Circle knew and monitored who accessed his work, Auros decoded the tactical implication, the memorial stone encodes the Circle's failed attempt at erasure, Corelli's revelation names Froberger as the first external contact for the suppressed research, and the Entry 41 scenes show what the map meant to the people who loved him.
+
+No single system tells the whole story. All six together do.
+
+---
+
+### XXXII-F. Implementation Spec
+
+**XXXII-F-1.** Add `S29_AUROS_THEORY` const (scene text, §XXXII-D).
+
+**XXXII-F-2.** In BA node render: add ambient text injection at `s8VargaWatches >= 1` (see table §XXXII-B). Add [Observe] / [Observe again] / [Watch for signal] buttons gated by watch count. Each button click increments `s8VargaWatches` and re-renders the node.
+
+**XXXII-F-3.** When `s8VargaWatches` reaches 3: show Watch 3 event modal (§XXXII-B text); set `s8VargaClueUnlocked = true`; add `storyMsg()` direction note.
+
+**XXXII-F-4.** In SH (and optionally BA) node render: if `s8VargaClueUnlocked && !s8PachelbelTold && fav_pachelbel >= 1`, add [Tell Pachelbel about the pigeon] option. On click: show Pachelbel response modal (§XXXII-C); set `s8PachelbelTold = true`; add 15gp.
+
+**XXXII-F-5.** In CY node render: check `frobergerLastEntryRead && fav_auros >= 2 && !s29LineDelivered`. If true, show `S29_AUROS_THEORY` modal before standard node. On close: set `s29LineDelivered = true`.
+
+---
+
+### XXXII-G. State Flags
+
+All flags pre-exist in `_S_DEFAULTS()`:
+- `S_story.s8VargaWatches` — number, default 0, NOT NG+-preserved (resets to 0)
+- `S_story.s8VargaClueUnlocked` — boolean, default false, NOT NG+-preserved
+- `S_story.s8PachelbelTold` — boolean, default false, NOT NG+-preserved
+- `S_story.s29LineDelivered` — boolean, default false, NOT NG+-preserved
+
+**No new state fields.** All four entries already in Section III.
+
+**NG+ note:** All four clear on NG+. The Varga observation arc can be re-run. The Auros speech can be re-triggered if Entry 41 is re-read and Auros is brought to Dear Friend again. On a second run, a player who already knows the picture will recognize each beat faster — the information doesn't change, but the understanding arrives earlier.
+
+---
+
+### XXXII-H. Documentation Updates Required on Implementation
+
+| File | Update |
+|------|--------|
+| `story.md` | Add §F2 notes for s8 BA observation logic, s8 Pachelbel tell option, s29 CY trigger; add `S29_AUROS_THEORY` to Auros NPC profile section |
+| `world.md` | Update S8 and S29 entries with full scene text; add cross-reference network note |
+| `plan.md` | Mark §XXXII complete; update §V-A queue; note all s8/s29 flags already in §III |
+| `combat.md` | Add note: Varga surveillance backstory cross-refs Auros CY tactical data (Void-advance indicator sectors) |
+
+No lab report. No new nodes, monsters, items, or quests.
+
+---
+
+### XXXII-I. Design Notes
+
+**"Was it the Froberger shelf?"** Pachelbel doesn't wait for an answer. She already knows. This is the scene's emotional center: the player brought her a direction (north-northeast) expecting to learn something; instead, Pachelbel confirms something the player already suspected and reveals that she suspected it independently. The 15gp is her acknowledgment that the player did something that cost attention and time — two things Pachelbel values.
+
+**Why doesn't Auros seem shocked?** Because she isn't. The Void-advance indicators were in her Year Twelve reports. She flagged those sectors. She was not surprised when Froberger's route matched them — she was surprised by the timing: that Froberger reached Entry 41 (where he finally understood) at the same moment she was correlating the same data from the other direction. *"He got to the end of the map. Then the Tide arrived."* She says this without inflection because it's just the sequence of events. What makes it tragic is the precision of the timing, which she doesn't name.
+
+**The pigeon goes north-northeast.** This is slightly wrong as an actual direction from BA to SH — the story geography doesn't require geographic accuracy, and the player is not expected to verify it on the map. What matters is that a direction is given, and that the direction leads somewhere. "Pachelbel's district" is approximate and correct in the sense that matters: it leads to Pachelbel.
+
+**Six systems, one picture.** The cross-reference table in §XXXII-E is not a checklist. A player who only triggers one system still has a complete experience of that system. But the six together form something the game never states explicitly: the Circle, the Void, Froberger's route, the memorial, the courier reveal, the Entry 41 scenes — they all connect. The game doesn't tell the player to connect them. It creates the conditions and trusts that some players will.
+
+---
+
+*§XXXII status: ⚠️ PLANNED — Varga Watch (S8) and Auros Theory (S29) designed; all four flags pre-exist in _S_DEFAULTS(); S29_AUROS_THEORY const specified with full speech text; three-observation BA ambient escalation table written (Varga at watches 1/2/3); Watch 3 pigeon launch event text; Pachelbel tell response written (+15gp, "was it the Froberger shelf?"); CY trigger for s29 (frobergerLastEntryRead + Dear Friend); six-system cross-reference table assembled; zero new state flags; no new nodes/monsters/items/quests; no lab report — document inline.*

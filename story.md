@@ -2564,6 +2564,22 @@ Two parallel S-suggestion systems. State flags `s54JointMomentDelivered` and `s5
 
 ---
 
+## ⚠️ PLANNED — Two Intelligence Feeds: The Varga Watch and the Auros Theory (plan.md §XXXII, Layers 67a+67b)
+
+Two S-suggestion systems. All four flags (`s8VargaWatches`, `s8VargaClueUnlocked`, `s8PachelbelTold`, `s29LineDelivered`) already exist in `_S_DEFAULTS()`.
+
+**S8 — Varga Watch at BA (Layer 67a):** Varga is an Ivory Circle informant at BA who monitors the restricted shelves (Froberger and Void research materials). Three [Observe] clicks at BA across any visits escalate ambient description: watch 1 — *"A clerk at the far table has the same book open to the same page as last time. He isn't reading it."* / watch 2 — *"Today he wrote one line in a small notebook, then put it away immediately."* / watch 3 — pigeon launches north-northeast; `s8VargaClueUnlocked = true`; story log: *"The pigeon flew north-northeast. Pachelbel's district."*
+
+**S8 — Pachelbel tell:** When `s8VargaClueUnlocked && fav_pachelbel >= 1`, [Tell Pachelbel about the pigeon] option appears at SH. Pachelbel: *"That's a forwarding route. The Circle uses them when they don't want a name attached... Was it the Froberger shelf?"* — she doesn't wait for the answer. +15gp; `s8PachelbelTold = true`. Cross-refs: Act I Town Crier line [3] (Varga's informants not showing); `yaelEscortDone` quest line (informants run off north end).
+
+**S29 — Auros Theory at CY (Layer 67b):** Fires on first CY visit where `frobergerLastEntryRead && fav_auros >= 2 && !s29LineDelivered`. Auros reads Entry 41 and decodes it tactically: Froberger's last route covered Void-advance indicator sectors from Year Twelve, walked in the correct sequence. *"'The shape of the absence.' He finally understood — he'd been mapping the negative space of the Void all along... He got to the end of the map. Then the Tide arrived."* Const: `S29_AUROS_THEORY`. Sets `s29LineDelivered = true`.
+
+**Six-system convergence:** S8 + S29 + §XXVIII (Memorial) + §XVII (Void Archaeology) + §XXVI (Corelli) + §XXX (Entry 41 Echo) together form the complete Froberger/Void/Circle intelligence picture. No single system states it explicitly.
+
+**F2 reference:** Add BA observation logic (s8), SH tell option (s8), CY s29 trigger to their respective node render notes on implementation.
+
+---
+
 ## ⚠️ PLANNED — Town Crier: Inn Rest World-News Lines (plan.md §XXVII, Layer 62)
 
 When the player chooses to rest at an inn (`storyConfirmSleep()`), after the standard rest resolution a Town Crier ambient line fires — a single sentence of world-news flavor injected into the story log. No new node, no new NPC, no persistent flag. The line is ephemeral: displayed once, forgotten immediately.

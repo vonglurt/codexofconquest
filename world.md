@@ -437,7 +437,13 @@ These six NPCs are fully implemented with `npcFavorability` states, `NPC_DIALOGU
 
 **Blue Shutters Archive** (CI, gated by Yael letter) — three-state button: blocked → ask Yael → enter. Grants Entry 33, Undercity Survey (Partial) key item. Survey deliverable to Auros at CY.
 
-**Varga at BA** (S8) — three-click observation mechanic. Watch count escalates ambient description. After 3 watches: pigeon-route clue unlocks. Tell Pachelbel → 15gp reward. `s8VargaWatches` tracks progress.
+**Varga at BA** (S8) — Ivory Circle informant at a regular BA table, monitoring the restricted shelves (Froberger and Void research materials). Three [Observe] clicks escalate ambient text across visits: watch 1 ("the same book open to the same page"), watch 2 ("wrote one line in a notebook, put it away"), watch 3 (pigeon launches north-northeast → `s8VargaClueUnlocked`). Tell Pachelbel at SH → she recognizes the forwarding route: *"Was it the Froberger shelf?"* +15gp → `s8PachelbelTold`. Cross-refs: Act I Town Crier line [3] (informants missing their corners); `yaelEscortDone` Town Crier line (informants run off north end). See `plan.md §XXXII` for full design.
+
+⚠️ PLANNED — Layer 67a. Flags already in `_S_DEFAULTS()`.
+
+**Auros Tactical Theory** (S29) — one-time dialogue at CY. Fires when `frobergerLastEntryRead && fav_auros >= 2`. Auros decodes Entry 41 from Void-advance tactical indicators: Froberger's last route covered Year Twelve flagged sectors in the correct sequence. *"He was mapping the negative space of the Void all along... He got to the end of the map. Then the Tide arrived."* Const: `S29_AUROS_THEORY`. Sets `s29LineDelivered`. See `plan.md §XXXII`.
+
+⚠️ PLANNED — Layer 67b. Flag already in `_S_DEFAULTS()`.
 
 **Weckmann Training Log** — available at CY after Dear Friend. Shows pit fight history. `_buildWeckmannLog()` builds it dynamically. Contains personal combat philosophy.
 
