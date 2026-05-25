@@ -70,7 +70,7 @@ Dead-end east of DF.
 - **Loot:** None
 - **Terrain notes:** The composition notebooks are stacked floor-to-ceiling inside the first unit. Volumes 1–40 are unreadable. Volume 41 is in progress.
 
-**[PLANNED — Layer 46]** At the bar counter: **Kern** (mirrored ski goggles, notebook labeled RAD IDEAS DO NOT READ) and **Sable** (t-shirt reading FUTURE PROOF with FUTURE crossed out in marker). Quest trigger Q-NEXUS-00/01/02 — "The Torment Nexus Overture." See `plan.md` Section X for full dialogue and quest design. On visit: player can [Listen], [Ask], or [Warn]. The confrontation arc ("Creative Literacy") rewards `creative_literacy_token` (sell:27 — 2.7K upvotes ÷ 100).
+**[✅ Layer 46]** At the bar counter: **Kern** (mirrored ski goggles, notebook labeled RAD IDEAS DO NOT READ) and **Sable** (t-shirt reading FUTURE PROOF with FUTURE crossed out in marker). Q-NEXUS-00/01/02 — "The Torment Nexus Overture." On first visit: [Listen] / [Ask] / [Warn]. Confrontation arc ("Creative Literacy") rewards `creative_literacy_token` (📄, sell:27).
 
 **GL — Old Guard's Corner (Node 74, R03,C15)**
 Dead-end west of DF.

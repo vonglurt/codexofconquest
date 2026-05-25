@@ -5228,6 +5228,8 @@ const MONSTER_DROPS = {
   dragon_of_fyresdal:   { name:'Fyresdal Dragon Scale',   icon:'🐉', sell:90 },
   void_warlord:         { name:'Void Crown Shard',        icon:'⚔',  sell:95 },
   slyzard_matriarch:    { name:'Matriarch Scale Trophy',  icon:'🐉', sell:75 },
+  // Layer 46: Torment Nexus quest reward (static loot, not from battle)
+  creative_literacy_token: { name:'Creative Literacy Token', icon:'📄', sell:27 },
 };
 
 const VENDOR_NODES = new Set(['BA','MQ','SF','IS','BK']);
@@ -7875,6 +7877,7 @@ const _S_DEFAULTS = () => ({
   s6JointDelivered: false, s2DaughterDelivered: false,
   archiveLetterObtained: false, archiveVisited: false, archiveUndercitySurveyTaken: false, undercitySurveyDelivered: false,
   s8VargaWatches: 0, s8VargaClueUnlocked: false, s8PachelbelTold: false,
+  nexusQuestSeen: false, nexusQ01Active: false, nexusQ02Complete: false, creativeLiteracyToken: false,
 });
 
 /* ── Layer 41: NPC Favorability helpers ── */
@@ -12580,6 +12583,82 @@ function storyRender(node, prefix) {
         }, 50);
       }
       document.getElementById('story-text-box').insertAdjacentElement('afterend', npcRowDiv);
+    }
+    // ── Layer 46: Kern & Sable at HM — Torment Nexus Overture ──
+    if (node.code === 'HM') {
+      const hmDiv = document.createElement('div');
+      hmDiv.id = 'hm-kern-sable';
+      hmDiv.style.cssText = 'margin-top:8px;';
+      if (!S_story.nexusQuestSeen) {
+        const ambDiv = document.createElement('div');
+        ambDiv.innerHTML = '<div class="npc-ambient" style="font-size:11px;"><em>Two figures at the Frequency Row counter. One has mirrored ski goggles and a notebook labeled RAD IDEAS (DO NOT READ). The other\'s t-shirt says FUTURE PROOF with FUTURE crossed out. They are deep in conversation and taking notes on the book in front of them.</em></div>';
+        hmDiv.appendChild(ambDiv);
+        const listenBtn = document.createElement('button');
+        listenBtn.className = 'inv-use-btn'; listenBtn.style.cssText = 'margin-top:6px;display:block;';
+        listenBtn.textContent = '👂 Stay quiet. Keep listening.';
+        listenBtn.addEventListener('click', () => {
+          S_story.nexusQuestSeen = true;
+          storyMsg('Two people at a bar counter, taking notes on a book called Don\'t Create The Torment Nexus. They are on Chapter 7. They have underlined the parts that describe the Torment Nexus in the most detail. They believe the author was being helpful. The mirrored-visor one says "rad" every 30 seconds. The other one nods. They are having a great time. You say nothing. You keep walking.');
+          hmDiv.remove();
+        });
+        hmDiv.appendChild(listenBtn);
+        const askBtn = document.createElement('button');
+        askBtn.className = 'inv-use-btn'; askBtn.style.cssText = 'margin-top:4px;display:block;';
+        askBtn.textContent = '❓ What exactly are you building?';
+        askBtn.addEventListener('click', () => {
+          S_story.nexusQuestSeen = true; S_story.nexusQ01Active = true;
+          storyMsg('KERN: "What are we building?"\nSABLE: "Rad question."\nKERN: "The Torment Nexus. Classic infrastructure."\nSABLE: "From the literature."\nKERN: "The author spent like 400 pages describing it."\nSABLE: "Extremely detailed."\nKERN: "We took notes." [holds up notebook labeled RAD IDEAS (DO NOT READ)]\nSABLE: "The warning parts were also helpful actually."\nKERN: "Yeah the warning parts had the most detail. Really painted a picture."\nSABLE: "Very vivid."\nKERN: "Upvote the author."\nSABLE: "Upvote."\n\nThey both look at you, waiting.');
+          hmDiv.remove();
+        });
+        hmDiv.appendChild(askBtn);
+        const warnBtn = document.createElement('button');
+        warnBtn.className = 'inv-use-btn'; warnBtn.style.cssText = 'margin-top:4px;display:block;';
+        warnBtn.textContent = '⚠ That book is a warning. Not a manual.';
+        warnBtn.addEventListener('click', () => {
+          S_story.nexusQuestSeen = true; S_story.nexusQ02Complete = true;
+          storyMsg('You say: "That book is a warning. Not a manual."\n\nSABLE: "...Oh."\nKERN: "Wait."\n\nKERN: "So when the detective used the city-wide sonar and The Trusted Friend quit—"\nSABLE: "...that was bad."\nKERN: "That was the whole point."\nSABLE: "The author wrote 80,000 words about how the sonar was a problem."\nKERN: "Because the detective had all the power. And he decided who was a criminal. And no one could opt out."\nSABLE: "...Rad."\n\nKERN: *(quietly)* "We should probably not build the Torment Nexus."\nSABLE: "Upvote."\nKERN: "Cool cool cool."\n\nKern closes the notebook. Something shifts. Not much — they are still themselves — but they are slightly less dangerous than they were five minutes ago. Sable peels the neon sticker off the notebook that said FUTURE PROOF and drops it in the gutter.\n\n✅ Quest Complete: "Creative Literacy"');
+          if (!S_story.creativeLiteracyToken) {
+            S_story.creativeLiteracyToken = true;
+            if (!S_story.inventory) S_story.inventory = [];
+            S_story.inventory.push({name:'Creative Literacy Token',icon:'📄',type:'item',sell:27,desc:'A folded printout, upvotes still visible in the corner. Worth more than it looks. Someone kept this for a reason.'});
+            setTimeout(() => storyMsg('📄 Creative Literacy Token added to inventory.'), 600);
+          }
+          hmDiv.remove();
+        });
+        hmDiv.appendChild(warnBtn);
+      } else if (S_story.nexusQ01Active && !S_story.nexusQ02Complete) {
+        const ambDiv2 = document.createElement('div');
+        ambDiv2.innerHTML = '<div class="npc-ambient" style="font-size:11px;"><em>Kern and Sable are still at the counter. Taking notes. They glance up when you walk in.</em></div>';
+        hmDiv.appendChild(ambDiv2);
+        const nothingBtn = document.createElement('button');
+        nothingBtn.className = 'inv-use-btn'; nothingBtn.style.cssText = 'margin-top:6px;display:block;';
+        nothingBtn.textContent = '🤐 Say nothing.';
+        nothingBtn.addEventListener('click', () => {
+          storyMsg('You say nothing. They return to the notes.');
+          hmDiv.remove();
+        });
+        hmDiv.appendChild(nothingBtn);
+        const explainBtn = document.createElement('button');
+        explainBtn.className = 'inv-use-btn'; explainBtn.style.cssText = 'margin-top:4px;display:block;';
+        explainBtn.textContent = '📖 Explain what a warning is.';
+        explainBtn.addEventListener('click', () => {
+          S_story.nexusQ02Complete = true;
+          storyMsg('"That book is a warning. Not a manual."\n\nSABLE: "...Oh."\nKERN: "Wait."\n\nKERN: "The title and the entire book."\nSABLE: "Very consistent messaging."\n\nKERN: *(quietly)* "We should probably not build the Torment Nexus."\nSABLE: "Upvote."\n\nKern closes the notebook. Sable drops the FUTURE PROOF sticker on the floor.\n\n✅ Quest Complete: "Creative Literacy"');
+          if (!S_story.creativeLiteracyToken) {
+            S_story.creativeLiteracyToken = true;
+            if (!S_story.inventory) S_story.inventory = [];
+            S_story.inventory.push({name:'Creative Literacy Token',icon:'📄',type:'item',sell:27,desc:'A folded printout, upvotes still visible in the corner. Worth more than it looks. Someone kept this for a reason.'});
+            setTimeout(() => storyMsg('📄 Creative Literacy Token added to inventory.'), 600);
+          }
+          hmDiv.remove();
+        });
+        hmDiv.appendChild(explainBtn);
+      } else if (S_story.nexusQ02Complete) {
+        const ambDiv3 = document.createElement('div');
+        ambDiv3.innerHTML = '<div class="npc-ambient" style="font-size:11px;"><em>The notebook is closed. The FUTURE PROOF sticker is on the floor. Kern is reading the printout. Sable is not taking notes.</em></div>';
+        hmDiv.appendChild(ambDiv3);
+      }
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', hmDiv);
     }
     // ── L45-J: Froberger Note × Bruhns cross-item ──
     if (node.code === 'CY' && S_story.froberger_last_note_read && _npcFavor('bruhns') >= 2

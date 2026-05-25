@@ -2298,44 +2298,20 @@ At **Dear Friend+** (level 3), joint NPC moments unlock:
 
 ---
 
-## PLANNED QUESTS — DeFi Land & Cat Quarter ⚠️ PLANNED (Layer 46)
+## QUESTS — DeFi Land (Layer 46 — ✅ Implemented)
 
-> *Not yet in HTML. All entries below are beat-line stubs — no verbatim implementation text. See `plan.md` Sections IX and X for full dialogue and design.*
+### Q-NEXUS-00 — HM | "The Overheard Conversation" ✅
+**Trigger:** First visit to HM; `nexusQuestSeen` false.  
+**Beat:** Kern and Sable at the Frequency Row counter, citing Chapter 7 of *Don't Create The Torment Nexus* as a blueprint.  
+**Player options:** [Listen] (journal beat, nexusQuestSeen=true) · [Ask] (→ Q-NEXUS-01) · [Warn] (→ Q-NEXUS-02 direct)
 
----
+### Q-NEXUS-01 — HM | "Blueprints" ✅
+**Trigger:** [Ask] on first visit. Sets `nexusQ01Active`.  
+**Follow-up (next HM visit):** [Say nothing] or [Explain what a warning is] → Q-NEXUS-02.
 
-### Q-NEXUS-00 — HM | "The Overheard Conversation" ⚠️ PLANNED
-**Trigger:** First visit to HM (Frequency Row); `nexusQuestSeen` flag not set.  
-**Player option:** [Listen] — stay quiet, observe.  
-**Beat:** Kern and Sable at the bar counter. Kern is citing Chapter 7 of *Don't Create The Torment Nexus* as a helpful blueprint. Sable agrees. They are taking notes. Neither has noticed that the title is a warning.  
-**Outcome:** Sets `nexusQuestSeen:true`. Journal entry unlocked (flavor, no combat). No quest started.  
-**Reward:** None (story beat only)
-
----
-
-### Q-NEXUS-01 — HM | "Blueprints" ⚠️ PLANNED
-**Trigger:** [Ask] option on first HM visit.  
-**Beat:** Player asks what they're building. Kern explains at length. The explanation is very detailed and very wrong about the intent of the source material. Sable nods. The notebook (RAD IDEAS DO NOT READ) is consulted frequently.  
-**Key dialogue beats:**
-- "Chapter 7 had the most detail." "Very helpful author."
-- Kern holds up the notebook. The cover says RAD IDEAS (DO NOT READ). He reads from it.
-- Sable: "The warning parts had the most detail, actually." Kern: "Yeah. Really painted a picture."
-**Outcome:** Sets `nexusQ01Active`. No combat. [Say nothing] or [Explain what a warning is] — latter branches to Q-NEXUS-02.
-
----
-
-### Q-NEXUS-02 — HM | "Creative Literacy" ⚠️ PLANNED
-**Trigger:** [Warn] option on HM visit, or choosing [Explain what a warning is] from Q-NEXUS-01.  
-**Beat:** Player says: *"That book is a warning. Not a manual."*  
-**Confrontation arc beats (in order):**
-- Kern: "So when the Dark Knight used the city-wide sonar and The Trusted Friend quit…" Sable: "...that was bad."
-- Kern: "The author was not impressed by the sonar. The author was concerned about the sonar."
-- Sable: "Don't Create The Torment Nexus. The title was also a warning."
-- Kern: "The title and the entire book." Sable: "Very consistent messaging."
-- Both look at the notebook. Long pause. Kern closes it.
-- Kern: "We should probably not build the Torment Nexus." Sable: "Upvote."
-**Outcome:** Sets `nexusQ02Complete`. Kern hands player a folded Reddit printout — 2.7K upvotes. He has not read it. He kept it for a reason.  
-**Reward:** `creative_literacy_token` (sell:27 — 2,700 upvotes ÷ 100, intentional)
+### Q-NEXUS-02 — HM | "Creative Literacy" ✅
+**Trigger:** [Warn] or [Explain what a warning is]. Sets `nexusQ02Complete`.  
+**Reward:** `creative_literacy_token` (📄, sell:27 — 2,700 upvotes ÷ 100, intentional)
 
 ---
 
