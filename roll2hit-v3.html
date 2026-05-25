@@ -7235,7 +7235,7 @@ const ACT_NAMES = ['','Act I — Birka','Act II — Tilbury','Act III — The Wi
 
 /* Grid coordinates from maps.md (Row 1–16 north→south, Col 1–26 west→east) */
 const NODE_COORDS = {
-  CI:{r:5,c:16},  SL:{r:4,c:16},  CQ:{r:4,c:17},  IN:{r:5,c:17},  TV:{r:6,c:17},  BA:{r:6,c:18},  CR:{r:7,c:15},  CY:{r:7,c:16},
+  CI:{r:5,c:16},  SL:{r:4,c:16},  CQ:{r:4,c:17},  IN:{r:5,c:17},  TV:{r:6,c:17},  BA:{r:6,c:15},  CR:{r:7,c:15},  CY:{r:7,c:16},
   DK:{r:8,c:15},  MQ:{r:8,c:16},  SF:{r:8,c:17},  MS:{r:8,c:19},  AL:{r:9,c:15},
   MI:{r:5,c:8},   FO:{r:5,c:3},   HL:{r:4,c:3},   SW:{r:6,c:3},   HS:{r:7,c:3},   BE:{r:12,c:2},
   OC:{r:13,c:1},  IS:{r:13,c:3},  AT:{r:14,c:2},  SC:{r:12,c:1},  FL:{r:11,c:2},  DS:{r:14,c:4},
@@ -8710,6 +8710,9 @@ function storyLoadSave(key) {
 
 let _continueChecked = false;
 let _pendingFarewell = null;
+let _corridorPendingFrom = null;
+let _corridorPendingTo   = null;
+let _corridorPendingDir  = null;
 
 function storyCheckContinue() {
   if (_continueChecked) return false;
@@ -12919,8 +12922,8 @@ function storyMove(dir) {
   const fromCoord = NODE_COORDS[S_story.currentCode];
   const toCoord   = NODE_COORDS[dest];
   if (fromCoord && toCoord &&
-      Math.abs(fromCoord.r - toCoord.r) + Math.abs(fromCoord.c - toCoord.c) >= 2) {
-    storyCorridorTravel(S_story.currentCode, dest, dir);
+      Math.abs(fromCoord.r - toCoord.r) + Math.abs(fromCoord.c - toCoord.c) >= 3) {
+    _showCorridorPrompt(S_story.currentCode, dest, dir);
     return;
   }
   _setActivePath(S_story.currentCode, dest, dir);
@@ -16948,6 +16951,29 @@ function triggerCorridorEncounter(terrain, destCode, questHunt) {
   _showBattleOverlay();
 }
 
+function _showCorridorPrompt(fromCode, destCode, dir) {
+  const fromNode  = NODE_MAP[fromCode];
+  const destNode  = NODE_MAP[destCode];
+  const terrain   = _corridorTerrain(fromCode, destCode);
+  const terrainDb = WORLD_DB[terrain];
+
+  _corridorPendingFrom = fromCode;
+  _corridorPendingTo   = destCode;
+  _corridorPendingDir  = dir;
+
+  document.getElementById('corridor-from-name').textContent    = fromNode ? fromNode.label : fromCode;
+  document.getElementById('corridor-to-name').textContent      = destNode ? destNode.label : destCode;
+  document.getElementById('corridor-terrain-name').textContent = terrainDb ? terrainDb.label : terrain.replace(/_/g,' ');
+
+  const notoriety = _notoriety();
+  const activeQuestCount = Object.values(S_story.quests || {}).filter(s => s === 'active').length;
+  const chance = Math.round(Math.min(0.95, Math.max(0.05,
+    0.1 + notoriety * 0.015 + activeQuestCount * 0.04 - _luckMod() * 0.5)) * 100);
+  document.getElementById('corridor-encounter-rate').textContent = 'Hunt encounter chance: ' + chance + '%';
+
+  document.getElementById('story-corridor-overlay').classList.add('visible');
+}
+
 function storyCorridorTravel(fromCode, destCode, dir) {
   const fromNode = NODE_MAP[fromCode];
   const destNode = NODE_MAP[destCode];
@@ -17161,6 +17187,31 @@ document.getElementById('btn-inv-close').addEventListener('click', storyInventor
 document.getElementById('btn-quest').addEventListener('click', storyQuestToggle);
 document.getElementById('btn-quest-close').addEventListener('click', storyQuestToggle);
 document.getElementById('btn-vendor-close').addEventListener('click', storyVendorToggle);
+document.getElementById('btn-corridor-warp').addEventListener('click', () => {
+  if (!_corridorPendingFrom) return;
+  const f = _corridorPendingFrom, t = _corridorPendingTo, d = _corridorPendingDir;
+  _corridorPendingFrom = _corridorPendingTo = _corridorPendingDir = null;
+  document.getElementById('story-corridor-overlay').classList.remove('visible');
+  const prevHunt = S_story.huntMode;
+  S_story.huntMode = false;
+  storyCorridorTravel(f, t, d);
+  S_story.huntMode = prevHunt;
+});
+document.getElementById('btn-corridor-hunt').addEventListener('click', () => {
+  if (!_corridorPendingFrom) return;
+  const f = _corridorPendingFrom, t = _corridorPendingTo, d = _corridorPendingDir;
+  _corridorPendingFrom = _corridorPendingTo = _corridorPendingDir = null;
+  document.getElementById('story-corridor-overlay').classList.remove('visible');
+  const prevHunt = S_story.huntMode;
+  S_story.huntMode = true;
+  storyCorridorTravel(f, t, d);
+  S_story.huntMode = prevHunt;
+});
+document.getElementById('btn-corridor-cancel').addEventListener('click', () => {
+  _corridorPendingFrom = _corridorPendingTo = _corridorPendingDir = null;
+  document.getElementById('story-corridor-overlay').classList.remove('visible');
+  storyMsg('Travel cancelled.');
+});
 document.getElementById('btn-sell-all').addEventListener('click', storySellAll);
 document.getElementById('btn-sell-equipment').addEventListener('click', storySellEquipment);
 document.querySelectorAll('.btn-buy-potion').forEach(btn => {
