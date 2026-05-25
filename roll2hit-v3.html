@@ -13684,6 +13684,8 @@ function storyRenderQuests() {
   list.innerHTML = '';
   const active = Object.keys(S_story.quests).filter(id => S_story.quests[id] === 'active');
   const done   = Object.keys(S_story.quests).filter(id => S_story.quests[id] === 'complete');
+  const countEl = document.getElementById('s-quest-count');
+  if (countEl) countEl.textContent = active.length ? '(' + active.length + ')' : '';
   const hasCorpses = S_story.corpsesQuests && S_story.corpsesQuests.length > 0;
   const customWp = S_story.customQuestTerrain ? {
     terrain: S_story.customQuestTerrain,
@@ -15817,8 +15819,8 @@ function storyRender(node, prefix) {
   const questMsgs = storyCheckQuests(node);
   const parts = [prefix, lootMsg, ...questMsgs].filter(Boolean);
   storyMsg(parts.join('  ·  '));
-  // Refresh quest panel if open so newly accepted quests appear immediately
-  if (document.getElementById('sheet-quests').classList.contains('active')) storyRenderQuests();
+  // Keep quest list DOM in sync so it's current when user opens the panel
+  storyRenderQuests();
   // Journal modal (must come last — may overwrite any message visually but modal covers it)
   storyCheckJournal(node);
   storyAutoSave();
