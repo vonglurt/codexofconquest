@@ -1230,6 +1230,12 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 #gameover-hd { font-size: 22px; font-weight: 700; color: #df4a4a; letter-spacing: 1px; }
 #gameover-sub { font-size: 13px; color: #a06060; line-height: 1.6; }
 #gameover-cp { font-size: 11px; color: var(--dim); font-style: italic; }
+#gameover-chronicle { width: 100%; display: none; border-top: 1px solid #3a1a1a; padding-top: 10px; }
+#gameover-chronicle.has-data { display: block; }
+#gameover-chronicle .goc-title { font-size: 10px; letter-spacing: 1px; color: #806060; text-transform: uppercase; margin-bottom: 5px; }
+#gameover-chronicle .goc-row { display: flex; justify-content: space-between; padding: 2px 0; font-size: 11px; }
+#gameover-chronicle .goc-lbl { color: #806060; }
+#gameover-chronicle .goc-val { color: #df9a9a; font-weight: 700; }
 #gameover-actions { display: flex; gap: 10px; width: 100%; }
 #btn-gameover-respawn {
   flex: 1; padding: 10px; font-size: 13px; font-weight: 700;
@@ -2587,6 +2593,10 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 #gameover-hd { color: #E76219; letter-spacing: 3px; text-transform: uppercase; }
 #gameover-sub { color: #FDDCA9; }
 #gameover-cp { color: #b07040; }
+#gameover-chronicle { border-top-color: #562717; }
+#gameover-chronicle .goc-title { color: #b07040; }
+#gameover-chronicle .goc-lbl { color: #b07040; }
+#gameover-chronicle .goc-val { color: #FEA712; }
 #btn-gameover-respawn { background: #C21717; border: 3px solid #E76219; color: #FDDCA9; font-weight: 900; border-radius: 8px; text-transform: uppercase; }
 #btn-gameover-respawn:hover { background: #E76219; color: #120600; border-color: #FEA712; }
 #btn-gameover-new { background: #3d1510; border: 2px solid #562717; color: #b07040; border-radius: 8px; font-weight: 700; }
@@ -4213,6 +4223,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
       <div id="gameover-hd">☠ You Have Fallen</div>
       <div id="gameover-sub">The Void claims another soul.</div>
       <div id="gameover-cp"></div>
+      <div id="gameover-chronicle"></div>
       <div id="gameover-actions">
         <button id="btn-gameover-respawn">↩ Respawn at Checkpoint</button>
         <button id="btn-gameover-new">New Game</button>
@@ -8710,6 +8721,7 @@ function storyCheckContinue() {
       Object.assign(S_story, save);
       const cpNode = NODE_MAP[S_story.checkpointNode] || NODE_MAP['CI'];
       document.getElementById('gameover-cp').textContent = 'Last checkpoint: ' + (cpNode.label.split(' — ')[0]);
+      _populateGameoverChronicle();
       document.getElementById('story-gameover-modal').classList.add('visible');
       storyUpdateStatus();
       return true;
@@ -8723,9 +8735,30 @@ function storyCheckContinue() {
   } catch(e) { return false; }
 }
 
+function _populateGameoverChronicle() {
+  const el = document.getElementById('gameover-chronicle');
+  if (!el) return;
+  const rs = S_story.runStats || {};
+  const fmt = n => (n || 0).toLocaleString();
+  const rows = [
+    ['Kills',           rs.kills        || 0],
+    ['Damage dealt',    rs.dmgDealt     || 0],
+    ['Damage received', rs.dmgReceived  || 0],
+    ['Sleeps',          rs.sleeps       || 0],
+  ];
+  const hasData = rows.some(([, v]) => v > 0);
+  if (!hasData) { el.classList.remove('has-data'); el.innerHTML = ''; return; }
+  el.innerHTML = '<div class="goc-title">This Run</div>'
+    + rows.map(([label, val]) =>
+        `<div class="goc-row"><span class="goc-lbl">${label}</span><span class="goc-val">${fmt(val)}</span></div>`
+      ).join('');
+  el.classList.add('has-data');
+}
+
 function storyGameOver() {
   const cpNode = NODE_MAP[S_story.checkpointNode] || NODE_MAP['CI'];
   document.getElementById('gameover-cp').textContent = 'Last checkpoint: ' + (cpNode.label.split(' — ')[0]);
+  _populateGameoverChronicle();
   document.getElementById('story-gameover-modal').classList.add('visible');
 }
 
