@@ -8430,9 +8430,10 @@ const _S_DEFAULTS = () => ({
   vsShamanBenediktDelivered: false,
   // Layer 61: Corelli Wandering Merchant
   fav_corelli: 0, corelli_purchase_count: 0, corelli_encounter_count: 0, corelliRevelationDelivered: false,
+  hour: 0,  // time-of-day clock 0-23; advances per battle (+1) and per sleep (+6)
   // Chronicle — permanent career ledger (never reset) and per-run ledger (reset on respawn)
-  careerStats: { kills:0, deaths:0, dmgDealt:0, dmgReceived:0, sleeps:0 },
-  runStats:    { kills:0, deaths:0, dmgDealt:0, dmgReceived:0, sleeps:0 },
+  careerStats: { kills:0, deaths:0, dmgDealt:0, dmgReceived:0, sleeps:0, battlesAttempted:0, attacksAttempted:0, attacksHit:0, exitsTaken:0, daysAdventuring:0 },
+  runStats:    { kills:0, deaths:0, dmgDealt:0, dmgReceived:0, sleeps:0, battlesAttempted:0, attacksAttempted:0, attacksHit:0, exitsTaken:0, daysAdventuring:0 },
 });
 
 /* ── Layer 48: Luck — Seventh Stat ── */
@@ -8741,12 +8742,17 @@ function _populateGameoverChronicle() {
   const rs = S_story.runStats || {};
   const fmt = n => (n || 0).toLocaleString();
   const rows = [
-    ['Kills',           rs.kills        || 0],
-    ['Damage dealt',    rs.dmgDealt     || 0],
-    ['Damage received', rs.dmgReceived  || 0],
-    ['Sleeps',          rs.sleeps       || 0],
+    ['Battles fought',    rs.battlesAttempted || 0],
+    ['Kills',             rs.kills            || 0],
+    ['Attacks',           rs.attacksAttempted || 0],
+    ['Hit rate',          rs.attacksAttempted ? Math.round((rs.attacksHit||0) / rs.attacksAttempted * 100) + '%' : '—'],
+    ['Damage dealt',      rs.dmgDealt         || 0],
+    ['Damage received',   rs.dmgReceived      || 0],
+    ['Exits taken',       rs.exitsTaken       || 0],
+    ['Sleeps',            rs.sleeps           || 0],
+    ['Days adventuring',  rs.daysAdventuring  || 0],
   ];
-  const hasData = rows.some(([, v]) => v > 0);
+  const hasData = rows.some(([, v]) => typeof v === 'number' ? v > 0 : v !== '—');
   if (!hasData) { el.classList.remove('has-data'); el.innerHTML = ''; return; }
   el.innerHTML = '<div class="goc-title">This Run</div>'
     + rows.map(([label, val]) =>
@@ -8792,9 +8798,10 @@ function storyVoidDefeat(type) {
   document.getElementById('story-defeat-modal').classList.add('visible');
 }
 
+const _STAT_ZERO = () => ({ kills:0, deaths:0, dmgDealt:0, dmgReceived:0, sleeps:0, battlesAttempted:0, attacksAttempted:0, attacksHit:0, exitsTaken:0, daysAdventuring:0 });
 function _statTally(key, n) {
-  if (!S_story.careerStats) S_story.careerStats = { kills:0, deaths:0, dmgDealt:0, dmgReceived:0, sleeps:0 };
-  if (!S_story.runStats)    S_story.runStats    = { kills:0, deaths:0, dmgDealt:0, dmgReceived:0, sleeps:0 };
+  if (!S_story.careerStats) S_story.careerStats = _STAT_ZERO();
+  if (!S_story.runStats)    S_story.runStats    = _STAT_ZERO();
   S_story.careerStats[key] = (S_story.careerStats[key] || 0) + n;
   S_story.runStats[key]    = (S_story.runStats[key]    || 0) + n;
 }
@@ -8810,7 +8817,8 @@ function storyRespawnFromCheckpoint() {
   }
   // Career stats carry forward unconditionally; run stats reset for the new life
   S_story.careerStats = _survivingCareerStats;
-  S_story.runStats    = { kills:0, deaths:0, dmgDealt:0, dmgReceived:0, sleeps:0 };
+  S_story.runStats    = _STAT_ZERO();
+  S_story.hour        = 0;
   S_story.hp = Math.max(1, Math.floor(S_story.hpMax / 2));
   S_story.active = true;
   storyUpdateStatus();
@@ -9505,6 +9513,8 @@ function _storyRollInit() {
   S_story.conditionRoundsLeft  = S.opp.cond ? 3 : 0;
   S_story.spellAdvantageReady  = false;
   // surgeCharges persist across battles (rest-gated); no reset here
+  _statTally('battlesAttempted', 1);
+  S_story.hour = ((S_story.hour || 0) + 1) % 24;
 }
 
 function _showBattleOverlay() {
@@ -9875,6 +9885,7 @@ function _overlayPlayerAttack() {
     const isNat1  = d20Val === 1;
     const isHit   = isCrit || (!isNat1 && atkTotal >= S.enemy.ac);
     S.lastHit = { hit: isHit, crit: isCrit, nat1: isNat1 };
+    _statTally('attacksAttempted', 1);
 
     let finalDmg = 0, logMsg;
     const lbl = n > 1 ? 'Atk ' + (i+1) + '/' + n + ': ' : '';
@@ -9893,6 +9904,7 @@ function _overlayPlayerAttack() {
       S.opp.hp   = Math.max(0, S.opp.hp - finalDmg);
       refreshLeftPanel();
       _statTally('dmgDealt', finalDmg);
+      _statTally('attacksHit', 1);
       logMsg = lbl + (isCrit ? '★ CRIT! ' : '✓ HIT! ') + atkTotal + ' vs AC ' + S.enemy.ac + ' — ' + finalDmg + ' dmg dealt.';
     }
     appendCard({ round: S.round, actor:'YOU',
@@ -9919,6 +9931,7 @@ function _overlayOffhandAttack() {
   if (S_story.equippedShield) { _sboLog('🗡 Unequip shield to use offhand.'); return; }
   if (!S.offhand || !S.offhand.count) return;
   _disableSboActions(true);
+  _statTally('attacksAttempted', 1);
   const d20Val   = Math.ceil(Math.random() * 20);
   const atkMod   = getAtkAbilityMod();
   const profB    = S.weapon.prof ? getProfBonus() : 0;
@@ -9937,6 +9950,7 @@ function _overlayOffhandAttack() {
     S.opp.hp  = Math.max(0, S.opp.hp - finalDmg);
     refreshLeftPanel();
     _statTally('dmgDealt', finalDmg);
+    _statTally('attacksHit', 1);
     logMsg = (isCrit ? '★ Offhand CRIT! ' : '✓ Offhand hit! ') + atkTotal + ' vs AC ' + S.enemy.ac + ' — ' + finalDmg + ' dmg.';
   }
   _sboLog('OFFHAND: ' + logMsg);
@@ -10690,6 +10704,18 @@ function _storyDeathSaveFall() {
     goldDropped: S_story.gold,
   };
   S_story.corpsesQuests.push(corpseQuest);
+
+  // Write death tattoo — permanent record of when and where the player fell
+  const _dHour = S_story.hour || 0;
+  const _dHourStr = _dHour.toString().padStart(2,'0') + ':00';
+  S_story.tattoos = (S_story.tattoos || []).concat([{
+    type: 'tattoo', subtype: 'death', icon: '💀',
+    lvl: S_story.level || 1, name: 'Fallen', sell: 0, drop: false,
+    desc: 'Day ' + S_story.day + ' · ' + _dHourStr + ' · ' + nodeName,
+    deathDay: S_story.day, deathHour: _dHour,
+    deathNode: nodeCode, deathNodeName: nodeName,
+    corpseQuestId: corpseQuest.id,
+  }]);
 
   // Strip the player
   S_story.gold      = 0;
@@ -12902,6 +12928,7 @@ function storyMove(dir) {
   S_story.log.push(S_story.currentCode);
   if (S_story.log.length > 20) S_story.log.shift();
   S_story.currentCode = dest;
+  _statTally('exitsTaken', 1);
   _pendingFarewell = _farewell || null;
   storyRender(next);
 }
@@ -15889,6 +15916,8 @@ function storyConfirmSleep() {
   // Record sleep
   S_story.sleptAtNodes[nodeCode] = true;
   _statTally('sleeps', 1);
+  _statTally('daysAdventuring', 1);
+  S_story.hour = ((S_story.hour || 0) + 6) % 24;
   S_story.missedSleeps = 0;
   S_story.countedMissedInns = {};
   S_story.checkpointNode = nodeCode;
@@ -16589,7 +16618,7 @@ function storyRenderCharSheet() {
   function m(n) { return (n >= 0 ? '+' : '') + n; }
 
   const tattooByLvl = {};
-  (S_story.tattoos || []).forEach(t => { tattooByLvl[t.lvl] = t; });
+  (S_story.tattoos || []).forEach(t => { if (t.subtype !== 'death') tattooByLvl[t.lvl] = t; });
 
   function progRows() {
     const rows = [];
@@ -16662,6 +16691,14 @@ function storyRenderCharSheet() {
       <div class="cs-section-title">Progression — ${lv}/20 Levels · ${(S_story.tattoos||[]).length} Tattoos</div>
       ${progRows()}
     </div>
+    ${(() => {
+      const deathTattoos = (S_story.tattoos || []).filter(t => t.subtype === 'death');
+      if (!deathTattoos.length) return '';
+      return `<div class="cs-section">
+        <div class="cs-section-title">Deaths — ${deathTattoos.length}</div>
+        ${deathTattoos.map(t => `<div class="cs-tattoo-row"><span style="font-size:9px">💀</span><span class="cs-tattoo-name">${t.desc}</span></div>`).join('')}
+      </div>`;
+    })()}
     <div class="cs-section">
       <div class="cs-section-title">Chronicle</div>
       ${(() => {
@@ -16669,11 +16706,16 @@ function storyRenderCharSheet() {
         const rs = S_story.runStats    || {};
         const fmt = n => (n || 0).toLocaleString();
         const rows = [
-          ['Kills',           'kills'],
-          ['Deaths',          'deaths'],
-          ['Damage Dealt',    'dmgDealt'],
-          ['Damage Received', 'dmgReceived'],
-          ['Sleeps',          'sleeps'],
+          ['Kills',              'kills'],
+          ['Deaths',             'deaths'],
+          ['Battles Fought',     'battlesAttempted'],
+          ['Attacks Attempted',  'attacksAttempted'],
+          ['Attacks Hit',        'attacksHit'],
+          ['Damage Dealt',       'dmgDealt'],
+          ['Damage Received',    'dmgReceived'],
+          ['Exits Taken',        'exitsTaken'],
+          ['Sleeps',             'sleeps'],
+          ['Days Adventuring',   'daysAdventuring'],
         ];
         const isFirstRun = (cs.deaths || 0) === 0;
         return `<div style="display:grid;grid-template-columns:1fr auto auto;gap:2px 8px;font-size:11px;align-items:center">
