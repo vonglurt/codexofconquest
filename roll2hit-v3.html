@@ -8179,6 +8179,7 @@ const NPC_DIALOGUE = {
     desc:"Jimmy Two-Tails wants the Cat Quarter settled. Clear the riff-raff — 5 strays and 3 fluffies.",
     hint:'Fight in the Cat Quarter until the quota is filled.',
     targetMonsterKeys:['stray_alley_cat','fluffy_cat'],
+    killGoals:[{key:'stray_alley_cat',need:5,label:'Stray'},{key:'fluffy_cat',need:3,label:'Fluffy'}],
     activateNode:'CQ', completeItems:[], completeFn:() => {
       const k = S_story.catKills || {};
       return (k.stray_alley_cat || 0) >= 5 && (k.fluffy_cat || 0) >= 3;
@@ -8189,6 +8190,7 @@ const NPC_DIALOGUE = {
     desc:"Three Beefy Toms are running muscle for a rival outfit. Take them down and collect the proof.",
     hint:'Kill 3 Beefy Toms and collect their Cracked Claws.',
     targetMonsterKeys:['beefy_tom'],
+    killGoals:[{key:'beefy_tom',need:3,label:'Beefy Tom'}],
     activateNode:null, completeItems:[], completeFn:() => {
       const k = S_story.catKills || {};
       return (k.beefy_tom || 0) >= 3
@@ -8200,6 +8202,7 @@ const NPC_DIALOGUE = {
     desc:"A Capo and a Boss Lady are circling each other. Kill them SEPARATE — let them merge and you\'re dealing with a Taz Devil.",
     hint:'Kill 1 Honcho Cat (Capo) and 1 Boss Lady Honcho.',
     targetMonsterKeys:['honcho_cat_m','honcho_cat_f'],
+    killGoals:[{key:'honcho_cat_m',need:1,label:'Honcho Capo'},{key:'honcho_cat_f',need:1,label:'Boss Lady'}],
     activateNode:null, completeItems:[], completeFn:() => {
       const k = S_story.catKills || {};
       return (k.honcho_cat_m || 0) >= 1 && (k.honcho_cat_f || 0) >= 1;
@@ -8216,6 +8219,7 @@ const NPC_DIALOGUE = {
     desc:"The Fat Merchant Cats are using Corrupted Cats as enforcers. Sandy wants Don Fluffissimo gone.",
     hint:'Kill 4 Fat Merchant Cats and defeat Don Fluffissimo.',
     targetMonsterKeys:['fat_merchant_cat'],
+    killGoals:[{key:'fat_merchant_cat',need:4,label:'Merchant Cat'}],
     activateNode:null, completeItems:[], completeFn:() => {
       const k = S_story.catKills || {};
       return (k.fat_merchant_cat || 0) >= 4 && !!S_story.defeatedBattles['CQ_BOSS'];
@@ -8232,6 +8236,7 @@ const NPC_DIALOGUE = {
     desc:"Strays near the DF node have gone wrong. Wrong eyes, wrong fur. Sandy doesn\'t like it in her neighborhood.",
     hint:'Kill 5 Corrupted Cats in the Cat Quarter.',
     targetMonsterKeys:['corrupted_cat'],
+    killGoals:[{key:'corrupted_cat',need:5,label:'Corrupted Cat'}],
     activateNode:null, completeItems:[], completeFn:() => (S_story.catKills || {}).corrupted_cat >= 5,
     waypointNode:'CQ', reward:400,
     disposition:'"Something\'s wrong with the strays near the DF node. They\'re not just feral — they\'re WRONG. Wrong eyes. Wrong fur. Not touching anything from that block." — Sandy Scratchpad Mewlino' },
@@ -13706,9 +13711,19 @@ function storyRenderQuests() {
           ? '<button class="quest-set-wp-btn' + (isActiveWp ? ' active-wp' : '') + '" onclick="storySetWaypoint(\'' + q.waypointNode + '\')">'
             + (isActiveWp ? '📍 Waypoint Active' : '📍 Set Waypoint') + '</button>'
           : '';
+        let progressHtml = '';
+        if (!completed && q.killGoals) {
+          const k = S_story.catKills || {};
+          progressHtml = '<div style="font-size:11px;color:#c8a84b;margin-top:3px">'
+            + q.killGoals.map(g => {
+                const cur = Math.min(k[g.key] || 0, g.need);
+                return g.label + ': ' + cur + '/' + g.need + (cur >= g.need ? ' ✓' : '');
+              }).join(' · ')
+            + '</div>';
+        }
         div.innerHTML = '<div class="quest-title"><span>' + q.title + '</span>' + badge + '</div>'
           + '<div class="quest-desc">' + q.desc + '</div>'
-          + (completed ? '' : '<div class="quest-hint">▶ ' + q.hint + '</div>' + wpBtnHtml);
+          + (completed ? '' : '<div class="quest-hint">▶ ' + q.hint + '</div>' + progressHtml + wpBtnHtml);
         if (q.disposition) {
           const dRow = document.createElement('div');
           dRow.style.cssText = 'font-style:italic;font-size:11px;color:#7a6040;margin-top:4px;border-left:2px solid #5c3311;padding-left:6px;';
@@ -15802,6 +15817,8 @@ function storyRender(node, prefix) {
   const questMsgs = storyCheckQuests(node);
   const parts = [prefix, lootMsg, ...questMsgs].filter(Boolean);
   storyMsg(parts.join('  ·  '));
+  // Refresh quest panel if open so newly accepted quests appear immediately
+  if (document.getElementById('sheet-quests').classList.contains('active')) storyRenderQuests();
   // Journal modal (must come last — may overwrite any message visually but modal covers it)
   storyCheckJournal(node);
   storyAutoSave();
