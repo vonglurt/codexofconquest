@@ -1244,6 +1244,41 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 }
 #btn-gameover-new:hover { border-color: var(--dim); color: var(--text); }
 
+/* ── Character Creation Modal ── */
+#story-charcreate-modal {
+  position: fixed; inset: 0; z-index: 500;
+  background: rgba(4,2,0,0.96);
+  display: none; align-items: center; justify-content: center;
+}
+#story-charcreate-modal.visible { display: flex; }
+#charcreate-card {
+  background: var(--panel); border: 2px solid var(--border);
+  border-radius: 10px; padding: 20px 24px; max-width: 380px; width: 90%;
+  display: flex; flex-direction: column; gap: 10px;
+}
+#charcreate-hd { font-size: 17px; font-weight: 900; color: var(--gold); text-align: center; letter-spacing: 1px; }
+#charcreate-sub { font-size: 11px; color: var(--dim); text-align: center; font-style: italic; line-height: 1.5; }
+#charcreate-tabs { display: flex; gap: 6px; }
+.cc-tab { flex: 1; padding: 6px; border-radius: 4px; border: 1px solid var(--border); background: transparent; color: var(--dim); font-size: 12px; font-weight: 700; cursor: pointer; transition: all .15s; }
+.cc-tab.active { border-color: var(--gold); color: var(--gold-lt); background: var(--panel2); }
+.cc-tab:hover:not(.active) { border-color: var(--text); color: var(--text); }
+#cc-budget-row { font-size: 12px; color: var(--text); text-align: center; }
+#cc-pts-left { font-weight: 900; color: var(--gold); font-size: 15px; }
+#cc-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.cc-stat-row { display: flex; align-items: center; gap: 4px; background: var(--panel2); border: 1px solid var(--border); border-radius: 4px; padding: 5px 7px; }
+.cc-stat-lbl { font-size: 10px; font-weight: 900; color: var(--dim); text-transform: uppercase; letter-spacing: 0.5px; width: 24px; }
+.cc-stat-val { font-size: 16px; font-weight: 900; color: var(--text); flex: 1; text-align: center; }
+.cc-stat-mod { font-size: 10px; color: var(--gold); min-width: 22px; text-align: right; }
+.cc-adj-btn { width: 20px; height: 20px; border-radius: 3px; border: 1px solid var(--border); background: transparent; color: var(--dim); font-size: 14px; cursor: pointer; line-height: 1; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.cc-adj-btn:hover:not(:disabled) { border-color: var(--gold); color: var(--gold-lt); }
+.cc-adj-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+#cc-cost-note { font-size: 10px; color: var(--dim); text-align: center; font-style: italic; }
+#cc-hard-panel { text-align: center; padding: 10px 0 4px; }
+#cc-hard-scores { font-size: 13px; font-weight: 700; color: var(--gold-lt); letter-spacing: 0.5px; margin-bottom: 6px; line-height: 1.8; }
+#cc-hard-flavor { font-size: 11px; color: var(--dim); font-style: italic; }
+#btn-charcreate-begin { padding: 10px; border-radius: 6px; border: 2px solid var(--gold); background: var(--panel2); color: var(--gold); font-size: 13px; font-weight: 900; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; transition: all .15s; }
+#btn-charcreate-begin:hover { background: var(--gold); color: #000; }
+
 /* ── Layer 20: Void / Time Defeat modal ── */
 #story-defeat-modal {
   position: fixed; inset: 0; z-index: 350;
@@ -2556,6 +2591,11 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 #btn-gameover-respawn:hover { background: #E76219; color: #120600; border-color: #FEA712; }
 #btn-gameover-new { background: #3d1510; border: 2px solid #562717; color: #b07040; border-radius: 8px; font-weight: 700; }
 #btn-gameover-new:hover { border-color: #E76219; color: #E76219; }
+#charcreate-card { background: #2a1208; border-color: #562717; }
+.cc-tab.active { border-color: #FEA712; color: #FDDCA9; background: #3d1510; }
+#btn-charcreate-begin { border-color: #FEA712; color: #FEA712; background: #2a1208; }
+#btn-charcreate-begin:hover { background: #FEA712; color: #120600; border-color: #FDDCA9; }
+.cc-adj-btn:hover:not(:disabled) { border-color: #FEA712; color: #FEA712; }
 
 /* ── Level-Up Modal (Layer 21) ──────────────────────── */
 #story-levelup-modal {
@@ -4099,6 +4139,71 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
         <button id="btn-continue-load">▶ Continue Journey</button>
         <button id="btn-continue-new">New Game</button>
       </div>
+    </div>
+  </div>
+
+  <!-- ── Character Creation modal ── -->
+  <div id="story-charcreate-modal">
+    <div id="charcreate-card">
+      <div id="charcreate-hd">⚔ Choose Your Origin</div>
+      <div id="charcreate-sub">Your tattoos record every level-up decision.<br>They outlive you — the body remembers.</div>
+      <div id="charcreate-tabs">
+        <button class="cc-tab active" data-mode="custom">🎨 Custom Build</button>
+        <button class="cc-tab" data-mode="hard">💀 Hard Mode</button>
+      </div>
+      <div id="cc-custom-panel">
+        <div id="cc-budget-row">Build points: <span id="cc-pts-left">27</span> / 27</div>
+        <div id="cc-stat-grid">
+          <div class="cc-stat-row" data-stat="str">
+            <span class="cc-stat-lbl">STR</span>
+            <button class="cc-adj-btn" data-dir="-1">−</button>
+            <span class="cc-stat-val" id="cc-val-str">10</span>
+            <button class="cc-adj-btn" data-dir="1">+</button>
+            <span class="cc-stat-mod" id="cc-mod-str">+0</span>
+          </div>
+          <div class="cc-stat-row" data-stat="dex">
+            <span class="cc-stat-lbl">DEX</span>
+            <button class="cc-adj-btn" data-dir="-1">−</button>
+            <span class="cc-stat-val" id="cc-val-dex">10</span>
+            <button class="cc-adj-btn" data-dir="1">+</button>
+            <span class="cc-stat-mod" id="cc-mod-dex">+0</span>
+          </div>
+          <div class="cc-stat-row" data-stat="con">
+            <span class="cc-stat-lbl">CON</span>
+            <button class="cc-adj-btn" data-dir="-1">−</button>
+            <span class="cc-stat-val" id="cc-val-con">10</span>
+            <button class="cc-adj-btn" data-dir="1">+</button>
+            <span class="cc-stat-mod" id="cc-mod-con">+0</span>
+          </div>
+          <div class="cc-stat-row" data-stat="int">
+            <span class="cc-stat-lbl">INT</span>
+            <button class="cc-adj-btn" data-dir="-1">−</button>
+            <span class="cc-stat-val" id="cc-val-int">8</span>
+            <button class="cc-adj-btn" data-dir="1">+</button>
+            <span class="cc-stat-mod" id="cc-mod-int">−1</span>
+          </div>
+          <div class="cc-stat-row" data-stat="wis">
+            <span class="cc-stat-lbl">WIS</span>
+            <button class="cc-adj-btn" data-dir="-1">−</button>
+            <span class="cc-stat-val" id="cc-val-wis">8</span>
+            <button class="cc-adj-btn" data-dir="1">+</button>
+            <span class="cc-stat-mod" id="cc-mod-wis">−1</span>
+          </div>
+          <div class="cc-stat-row" data-stat="cha">
+            <span class="cc-stat-lbl">CHA</span>
+            <button class="cc-adj-btn" data-dir="-1">−</button>
+            <span class="cc-stat-val" id="cc-val-cha">8</span>
+            <button class="cc-adj-btn" data-dir="1">+</button>
+            <span class="cc-stat-mod" id="cc-mod-cha">−1</span>
+          </div>
+        </div>
+        <div id="cc-cost-note">Max 15 per stat · costs: 9→1, 10→2, 11→3, 12→4, 13→5, 14→7, 15→9</div>
+      </div>
+      <div id="cc-hard-panel" style="display:none">
+        <div id="cc-hard-scores">STR 10 · DEX 8 · CON 8<br>INT 8 · WIS 8 · CHA 8</div>
+        <div id="cc-hard-flavor">"Begin with nothing. Every tattoo is earned."</div>
+      </div>
+      <button id="btn-charcreate-begin">Begin Journey →</button>
     </div>
   </div>
 
@@ -8225,7 +8330,7 @@ let S_story = {
   knowledge: [],
   corpsesQuests: [],
   storyDeathSaves: { successes: 0, failures: 0, active: false },
-  abilityScores: { str:16, dex:12, con:14, int:10, wis:12, cha:8 },
+  abilityScores: { str:10, dex:8, con:8, int:8, wis:8, cha:8 },
   shieldTier: null,
   equippedWeapon: null,
   equippedMainWeapon: null,
@@ -8244,7 +8349,7 @@ let S_story = {
 /* ── Layer 6: Save / Load ── */
 const _S_DEFAULTS = () => ({
   active: false, currentCode: 'CI',
-  hp: 30, hpMax: 30, gold: 150, day: 1, shards: 0, voidPressure: 0,
+  hp: 9, hpMax: 9, gold: 150, day: 1, shards: 0, voidPressure: 0,
   log: [], inventory: [], visited: {}, quests: {}, journalRead: {},
   defeatedBattles: {}, pendingBattle: null,
   sleptAtNodes: {}, shortRestedAtNodes: {}, countedMissedInns: {}, missedSleeps: 0, battleDis: 0, dropsCollected: 0,
@@ -8257,7 +8362,7 @@ const _S_DEFAULTS = () => ({
   shortRests: 3, knowledge: [],
   corpsesQuests: [],
   storyDeathSaves: { successes: 0, failures: 0, active: false },
-  abilityScores: { str:16, dex:12, con:14, int:10, wis:12, cha:8 },
+  abilityScores: { str:10, dex:8, con:8, int:8, wis:8, cha:8 },
   shieldTier: null, equippedWeapon: null, equippedMainWeapon: null, levelUpLog: [], tattoos: [],
   lastAutoSellNode: null, surgeCharges: 0, indomitableCharges: 0,
   waypoint: null, customQuestTerrain: null,
@@ -8652,8 +8757,14 @@ function storyVoidDefeat(type) {
 }
 
 function storyRespawnFromCheckpoint() {
+  // Tattoos outlive death — preserve them before loading older checkpoint state
+  const _survivingTattoos = (S_story.tattoos || []).slice();
   document.getElementById('story-gameover-modal').classList.remove('visible');
   if (!storyLoadSave('r2h_checkpoint')) Object.assign(S_story, _S_DEFAULTS());
+  // Always keep whichever tattoo set is larger (more progression)
+  if (_survivingTattoos.length > (S_story.tattoos || []).length) {
+    S_story.tattoos = _survivingTattoos;
+  }
   S_story.hp = Math.max(1, Math.floor(S_story.hpMax / 2));
   S_story.active = true;
   storyUpdateStatus();
@@ -8669,10 +8780,27 @@ function storyLoadContinue() {
   if (S_story.pendingBattle) storyShowOutcome();
 }
 
-function storyNewGame() {
+function storyNewGame(startScores) {
+  const scores = startScores || { str:10, dex:8, con:8, int:8, wis:8, cha:8 };
   try { localStorage.removeItem('r2h_autosave'); localStorage.removeItem('r2h_checkpoint'); } catch(e) {}
   Object.assign(S_story, _S_DEFAULTS());
+  // Apply chosen starting scores
+  S_story.abilityScores = Object.assign({}, scores);
+  // Derive initial ATK bonus from STR
+  S_story.atkBonus = Math.max(0, Math.floor((scores.str - 10) / 2));
+  // Fighter level 1 HP = 10 + CON mod
+  const _conMod1 = Math.floor((scores.con - 10) / 2);
+  S_story.hpMax = Math.max(1, 10 + _conMod1);
+  S_story.hp    = S_story.hpMax;
   S_story.active = true;
+  // Write baseline tattoo — the permanent record of starting conditions
+  S_story.tattoos = [{
+    type:'tattoo', subtype:'baseline', icon:'🌑', lvl:0,
+    name:'Origin', sell:0, drop:false,
+    desc:'Baseline · STR ' + scores.str + ' · DEX ' + scores.dex + ' · CON ' + scores.con
+       + ' · INT ' + scores.int + ' · WIS ' + scores.wis + ' · CHA ' + scores.cha,
+    baselineScores: Object.assign({}, scores),
+  }];
   // Starting loadout: Pointy Stick (main), Flint Dagger (offhand), rusted dagger in pack, 2 potions
   S_story.equippedMainWeapon = Object.assign({}, STARTER_POINTY_STICK);
   S_story.equippedWeapon     = Object.assign({}, STARTER_FLINT_DAGGER);
@@ -16899,9 +17027,9 @@ document.getElementById('btn-victory-close').addEventListener('click', () => {
   storyNewGamePlus();
 });
 document.getElementById('btn-continue-load').addEventListener('click', storyLoadContinue);
-document.getElementById('btn-continue-new').addEventListener('click', storyNewGame);
+document.getElementById('btn-continue-new').addEventListener('click', _showCharCreate);
 document.getElementById('btn-gameover-respawn').addEventListener('click', storyRespawnFromCheckpoint);
-document.getElementById('btn-gameover-new').addEventListener('click', storyNewGame);
+document.getElementById('btn-gameover-new').addEventListener('click', _showCharCreate);
 document.getElementById('btn-defeat-new').addEventListener('click', storyNewGame);
 document.getElementById('btn-waypoint').addEventListener('click', storyWaypoint);
 document.getElementById('btn-character').addEventListener('click', storyCharToggle);
@@ -17100,6 +17228,83 @@ document.getElementById('lu-asi-btns').addEventListener('click', e => {
     document.getElementById('btn-lu-continue').disabled = false;
     storyUpdateStatus(); storyAutoSave();
   }
+});
+
+/* ── Character Creation ── */
+const _CC_COST = [0,1,2,3,4,5,7,9]; // point-buy cost for score 8..15
+const CC_BUDGET = 27;
+let _cc_mode = 'custom';
+let _cc_scores = { str:10, dex:10, con:10, int:8, wis:8, cha:8 };
+
+function _ccCost(score) { return _CC_COST[Math.max(0, Math.min(7, score - 8))]; }
+function _ccSpent() { return Object.values(_cc_scores).reduce((s,v) => s + _ccCost(v), 0); }
+
+function _ccRefresh() {
+  const pts = CC_BUDGET - _ccSpent();
+  document.getElementById('cc-pts-left').textContent = pts;
+  ['str','dex','con','int','wis','cha'].forEach(st => {
+    const v   = _cc_scores[st];
+    const mod = Math.floor((v - 10) / 2);
+    document.getElementById('cc-val-' + st).textContent = v;
+    const modEl = document.getElementById('cc-mod-' + st);
+    modEl.textContent = (mod >= 0 ? '+' : '−') + Math.abs(mod);
+    modEl.style.color = mod >= 0 ? '' : 'var(--red-lt)';
+    const row = document.querySelector('.cc-stat-row[data-stat="' + st + '"]');
+    if (!row) return;
+    const [minusBtn, plusBtn] = row.querySelectorAll('.cc-adj-btn');
+    minusBtn.disabled = v <= 8;
+    const nextCost = _ccCost(v + 1) - _ccCost(v);
+    plusBtn.disabled  = v >= 15 || pts < nextCost;
+  });
+}
+
+function _showCharCreate() {
+  _cc_mode = 'custom';
+  _cc_scores = { str:10, dex:10, con:10, int:8, wis:8, cha:8 };
+  document.querySelectorAll('.cc-tab').forEach(t => t.classList.toggle('active', t.dataset.mode === 'custom'));
+  document.getElementById('cc-custom-panel').style.display = '';
+  document.getElementById('cc-hard-panel').style.display   = 'none';
+  _ccRefresh();
+  document.getElementById('story-continue-modal').classList.remove('visible');
+  document.getElementById('story-gameover-modal').classList.remove('visible');
+  document.getElementById('story-charcreate-modal').classList.add('visible');
+}
+
+// Tab switch
+document.getElementById('charcreate-tabs').addEventListener('click', e => {
+  const tab = e.target.closest('.cc-tab');
+  if (!tab) return;
+  _cc_mode = tab.dataset.mode;
+  document.querySelectorAll('.cc-tab').forEach(t => t.classList.toggle('active', t === tab));
+  document.getElementById('cc-custom-panel').style.display = _cc_mode === 'custom' ? '' : 'none';
+  document.getElementById('cc-hard-panel').style.display   = _cc_mode === 'hard'   ? '' : 'none';
+});
+
+// Stat adjust buttons
+document.getElementById('cc-stat-grid').addEventListener('click', e => {
+  const btn = e.target.closest('.cc-adj-btn');
+  if (!btn || btn.disabled) return;
+  const row = btn.closest('.cc-stat-row');
+  const st  = row.dataset.stat;
+  const dir = parseInt(btn.dataset.dir);
+  const cur = _cc_scores[st];
+  const next = cur + dir;
+  if (next < 8 || next > 15) return;
+  if (dir > 0) {
+    const pts = CC_BUDGET - _ccSpent();
+    if (pts < (_ccCost(next) - _ccCost(cur))) return;
+  }
+  _cc_scores[st] = next;
+  _ccRefresh();
+});
+
+// Begin journey
+document.getElementById('btn-charcreate-begin').addEventListener('click', () => {
+  const scores = _cc_mode === 'hard'
+    ? { str:10, dex:8, con:8, int:8, wis:8, cha:8 }
+    : Object.assign({}, _cc_scores);
+  document.getElementById('story-charcreate-modal').classList.remove('visible');
+  storyNewGame(scores);
 });
 
 document.getElementById('btn-lu-continue').addEventListener('click', () => {
