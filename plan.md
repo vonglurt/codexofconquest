@@ -12,7 +12,7 @@ Implement in layer order. Each = code change + doc sync + `git commit`.
 | 48 | §XIII | Luck: The Seventh Stat | ✅ Implemented |
 | 46 | §X | Torment Nexus Overture (HM Kern & Sable) | ✅ Implemented |
 | 53 | §XVIII | Living World: Junction Vignettes + Road Companion | ✅ Implemented |
-| 57 | §XXII | Codex Shard Origin Stories | Small |
+| 57 | §XXII | Codex Shard Origin Stories | ✅ Implemented |
 | 58 | §XXIII | Inn Dreams | Small |
 | 59 | §XXIV | Pressure Cascade: Visible Void Tide Events | Medium |
 | 60 | §XXV | The Homecoming: Act VIII Farewell Beats | Medium |
@@ -283,7 +283,7 @@ The commit message should name the lab report and summarize what it covers in on
 | 10 | §XIX | Tilbury Harbor Arc: "The Conclave's Weight" | 54 | Yes — shared with §XX in `lab-report-tilbury-visby-arcs.md` | ⚠️ PLANNED |
 | 11 | §XX | Visby Underground: "What Mordus Owes" | 55 | Yes — shared with §XIX in `lab-report-tilbury-visby-arcs.md` | ⚠️ PLANNED |
 | 12 | §XXI | The Void Shaman: The Antecedent's Last Warden | 56 | Yes — `lab-report-void-shaman.md` (corrupted mandate design) | ⚠️ PLANNED |
-| 13 | §XXII | Codex Shard Origin Stories | 57 | No — document inline in `story.md` | ⚠️ PLANNED |
+| 13 | §XXII | Codex Shard Origin Stories | 57 | No — document inline in `story.md` | ✅ Implemented |
 | 14 | §XXIII | Inn Dreams | 58 | No — too small; document inline | ⚠️ PLANNED |
 | 15 | §XXIV | The Pressure Cascade: Visible Void Tide Events | 59 | No — extend `lab-report-living-world.md` | ⚠️ PLANNED |
 | 16 | §XXV | The Homecoming: Act VIII One-Time Farewell Beats | 60 | No — document inline in `story.md` | ⚠️ PLANNED |
@@ -2067,7 +2067,7 @@ creative_literacy_token: { name:'Creative Literacy Token', icon:'📄', sell:27 
 | **Tilbury Harbor Arc (§XIX)** | Rennau / Vonn / Q-TL-01–03 / ship_manifest / Ori survivor | `plan.md §XIX` | ✅ PLANNED stubs: `story.md` Q-TL section; `world.md` Tilbury NPC note | ⚠️ PLANNED |
 | **Visby Underground (§XX)** | Solvak / Yva / Q-VS-01–03 / hollow_hands_guard / Void shaman shadow | `plan.md §XX` | ✅ PLANNED stubs: `story.md` Q-VS section; `world.md` Visby sub-faction note | ⚠️ PLANNED |
 | **Void Shaman (§XXI)** | The Warden / void_shaman boss / warden_token / combat+persuasion paths / Hollow Hands resolution | `plan.md §XXI` | ✅ PLANNED stubs: `story.md` MT tunnel encounter; `world.md` Warden backstory | ⚠️ PLANNED |
-| **Codex Shard Origins (§XXII)** | 7 shard_note items / named placers / flag-gated variants / journal reward | `plan.md §XXII` | ✅ PLANNED stubs: `story.md` Shard Origins section; `world.md` placer name notes | ⚠️ PLANNED |
+| **Codex Shard Origins (§XXII)** | 7 shard_note items / named placers / flag-gated variants / journal reward | `plan.md §XXII` | `story.md` Shard Origins section; `world.md` placer name notes | ✅ Implemented |
 | **Inn Dreams (§XXIII)** | INN_DREAMS const / 4 inns × 3 base variants / flag-gated replacements | `plan.md §XXIII` | ✅ PLANNED stubs: `story.md` Inn Dreams section; `mechanics.md` sleep note | ⚠️ PLANNED |
 | **Pressure Cascade (§XXIV)** | voidPressure threshold events (3/6/9) / void-touched monsters / NPC pressure lines / mercy counter | `plan.md §XXIV` | ✅ PLANNED stubs: `story.md` Void Tide Events; `world.md` Void-Touched Monsters note | ⚠️ PLANNED |
 | **Homecoming (§XXV)** | 6 one-time Act VIII farewell beats / Brynn's Loaf / Champion's Tincture / Pachelbel's Sketch / 6 new flags | `plan.md §XXV` | ✅ PLANNED stub: `story.md` Act VIII Farewell Beats | ⚠️ PLANNED |
@@ -4624,7 +4624,7 @@ This is the Curse of Knowledge in reverse: the First Researcher withheld the ful
 
 ---
 
-## Section XXII — Codex Shard Origin Stories (Layer 57, ⚠️ PLANNED)
+## Section XXII — Codex Shard Origin Stories (Layer 57, ✅ Implemented)
 
 > **The gap:** The 7 Codex Shards are the main quest MacGuffins. Each has a node location and a brief description. None of them has a named placer, a reason for being there, or a connection to the Scholar Kings history established in §XVI and §XVII. This section gives each shard a readable item that auto-adds to inventory when the shard is collected. Reading it reveals who placed the shard, why, and one line from that person about what they were doing.
 
@@ -4724,7 +4724,7 @@ No lab report needed — shard origins are a retroactive depth layer, not a new 
 
 ---
 
-*§XXII status: ⚠️ PLANNED — Seven Codex Shard origin stories written; all placers named (Elder Couperin → Marzena → Aldric → Hendrika → First Researcher → Warden → Froberger); flag-gated variant text for shards 5, 6, and 7 (cross-refs §XVI, §XXI, §XV); journal sidebar reward for all 7 read; two state flags; no new monsters or nodes; no lab report needed.*
+*§XXII status: ✅ Implemented — SHARD_NOTES const (7 entries keyed 1–7); auto-added to inventory on shard collect via storyCollectLoot() patch; flag-gated addText for shards 5 (wmFirstResearcherKnown), 6 (wardensLegacyKnown), 7 (entry42Written); all-7 journal reward message; "📖 Origin Notes" inventory section with Read button; shardNotes[7] + shardNotesAllRead state flags.*
 
 ---
 

@@ -1519,22 +1519,21 @@ Prerequisites: `vsShamanKnown` (§XX) + `vaLastWardVisited` (§XVII). Both requi
 
 ---
 
-#### ⚠️ PLANNED — Codex Shard Origin Stories (plan.md §XXII, Layer 57)
+#### ✅ Implemented — Codex Shard Origin Stories (plan.md §XXII, Layer 57)
 
-No prerequisites. Seven readable items auto-added to inventory when each Codex Shard is collected.
+`SHARD_NOTES` const (7 entries keyed 1–7). Each shard collected via `storyCollectLoot()` auto-adds a readable note to inventory. Notes appear in "📖 Origin Notes" inventory section with a Read button.
 
-| Shard | Name | Placer | Cross-reference |
-|-------|------|--------|----------------|
-| 1 | The Toccata Fragment | Elder Couperin (Quill's ancestor) | Quill Dear Friend dialogue |
-| 2 | The Prelude Stone | Scholar Marzena (Conclave-adjacent) | §XIX Tilbury arc |
-| 3 | The Fugue Seal | Researcher Aldric (unaffiliated) | §XVIII J4 Cartographer |
-| 4 | The Cantata Mark | Archivist Hendrika (Scholar Kings defector) | Crimson Warrant choice |
-| 5 | The Passacaglia Core | The First Researcher | If `wmFirstResearcherKnown`: name recognized |
-| 6 | The Chaconne Piece | The original Warden | If `wardensLegacyKnown`: Warden recognized |
-| 7 | The Sarabande Key | Froberger himself | If `entry42Written`: Entry 42 page connection |
+| Shard | Name | Node | Placer | Flag-gated addText |
+|-------|------|------|--------|-------------------|
+| 1 | The Toccata Fragment | DK | Elder Couperin (Quill's ancestor) | — |
+| 2 | The Prelude Stone | FO | Scholar Marzena (Conclave-adjacent) | — |
+| 3 | The Fugue Seal | AT | Researcher Aldric (unaffiliated) | — |
+| 4 | The Cantata Mark | GC | Archivist Hendrika (Scholar Kings defector) | — |
+| 5 | The Passacaglia Core | DC | The First Researcher | `wmFirstResearcherKnown`: "You recognize the handwriting. She was here. This was hers." |
+| 6 | The Chaconne Piece | OP | The original Warden | `wardensLegacyKnown`: "Placed by the first Warden, on the First Researcher's instruction." |
+| 7 | The Sarabande Key | SQ | Froberger himself | `entry42Written`: "You wrote Entry 42. He left the page. You filled it." |
 
-Reading all 7 notes from inventory unlocks a FROBERGER_JOURNAL sidebar entry: *"Seven people carried the pieces. Five of them knew what they were carrying."* `shardNotesAllRead` gates SQ dream variant (§XXIII).
-See plan.md §XXII for full shard note text and implementation spec.
+Collecting all 7 fires journal reward: *"Seven people carried the pieces. Five of them knew what they were carrying. One of them didn't know what was inside it. One of them did and placed it last. You know all their names now."* Sets `shardNotesAllRead = true` (SQ dream variant gate, §XXIII).
 
 ---
 

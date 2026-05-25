@@ -7889,6 +7889,7 @@ const _S_DEFAULTS = () => ({
   nexusQuestSeen: false, nexusQ01Active: false, nexusQ02Complete: false, creativeLiteracyToken: false,
   fishingQuestFlags: {}, fishingBaitSatchel: false, fishingYugurtFavour: false, fishingCatchLog: [],
   junctionsSeen: {}, companionActsSeen: {},
+  shardNotes: [false,false,false,false,false,false,false], shardNotesAllRead: false,
 });
 
 /* ── Layer 48: Luck — Seventh Stat ── */
@@ -10407,6 +10408,31 @@ const FISH_GOLD_VALUES = {
   legendary:  { common:75, rare:120, enchanted:175, golden:225, legendary:300 },
 };
 
+// ── Layer 57: Codex Shard Origin Stories ──
+const SHARD_NOTES = {
+  1: { key:'shard_note_1', name:'The Toccata Fragment', icon:'📿',
+    text:'Elder Couperin placed this in the Birka city archive seventy years ago. He told his family he was storing a keepsake. The note reads: "The first note must be held longest. Everything else can be improvised."',
+    conditionals: [] },
+  2: { key:'shard_note_2', name:'The Prelude Stone', icon:'📿',
+    text:'Scholar Marzena brought this from Weimar to Tilbury docks in a merchant\'s crate, labeled "decorative ballast." She was Conclave-adjacent but not Conclave-loyal. Her note: "What begins here sets the key for everything that follows. I hope someone follows."',
+    conditionals: [] },
+  3: { key:'shard_note_3', name:'The Fugue Seal', icon:'📿',
+    text:'Researcher Aldric left this at a crossroads node. He was not affiliated with any guild — he walked routes for forty years and left things where he thought they would be found by the right person at the right time. His note: "Three voices; none of them alone. The fugue requires all three to resolve."',
+    conditionals: [] },
+  4: { key:'shard_note_4', name:'The Cantata Mark', icon:'📿',
+    text:'Archivist Hendrika defected from the Scholar Kings in the third year of her appointment. She chose Visby deliberately: "The Crimson Warrant protects what the Circle has decided isn\'t worth protecting. I disagree with both their methods. I trust their incentives." Her note: "Written to be heard, not read. You had to be there."',
+    conditionals: [] },
+  5: { key:'shard_note_5', name:'The Passacaglia Core', icon:'📿',
+    text:'Placed by the First Researcher, at the Mountain Pass, before she sealed the tunnel. No name on the note — she had already stopped signing her name by then. The handwriting matches Document 3 in the Weimar lower archive.',
+    conditionals: [{ flag:'wmFirstResearcherKnown', addText:'You recognize the handwriting. She was here. This was hers.' }] },
+  6: { key:'shard_note_6', name:'The Chaconne Piece', icon:'📿',
+    text:'Left in the Weimar lower district by a hand that is not Scholar Kings — the script is older, pre-institutional. A single line: "Variations without end. The theme persists." The wax seal shows a mark you have seen before — in the Goblin Caves, on a stall.',
+    conditionals: [{ flag:'wardensLegacyKnown', addText:'Placed by the first Warden, on the First Researcher\'s instruction. The chain goes back this far.' }] },
+  7: { key:'shard_note_7', name:'The Sarabande Key', icon:'📿',
+    text:'Froberger placed this here. His handwriting — you know it from 41 journal entries. The note is three words: "I couldn\'t carry it any further. Someone else will have to finish." There is no Entry 42 in his journal. He left that page for you.',
+    conditionals: [{ flag:'entry42Written', addText:'You wrote Entry 42. He left the page. You filled it.' }] },
+};
+
 // ── Layer 40: Froberger's Journal ──
 const FROBERGER_JOURNAL = [
   { entryNum:1,  nodeCode:'CI', readAloud:false, text:"The gate officer reviewed my papers three times. The third time was identical to the first — same questions, same scrutiny, same hands turning the pages. When I mentioned this, he looked surprised, then irritated. He approved my entry immediately.\n\nI have since asked myself: did he approve me because my papers were correct, or because I named the pattern and he needed to end it? I cannot determine which. I'm not sure the distinction matters at the gate. It might matter later.\n\nI am going to spend a great deal of time in this world being approved by people who cannot explain why. I think I should decide now whether that bothers me. I have decided: it does not. This is the first decision I have made with my eyes open." },
@@ -11401,7 +11427,26 @@ function storyCollectLoot(node) {
     const type = _itemType(name);
     S_story.inventory.push({ name, code: node.code, icon: _itemIcon(name), type });
     added.push(name);
-    if (type === 'shard') S_story.shards = Math.min(7, S_story.shards + 1);
+    if (type === 'shard') {
+      S_story.shards = Math.min(7, S_story.shards + 1);
+      // Layer 57: auto-add shard origin note
+      const shardM = name.match(/#(\d)/);
+      if (shardM) {
+        const sn = parseInt(shardM[1]);
+        const snData = SHARD_NOTES[sn];
+        if (snData && !S_story.shardNotes[sn - 1]) {
+          S_story.shardNotes[sn - 1] = true;
+          let noteText = snData.text;
+          (snData.conditionals || []).forEach(c => { if (S_story[c.flag]) noteText += ' ' + c.addText; });
+          S_story.inventory.push({ name: snData.name, code: node.code, icon: snData.icon, type: 'readable', readText: noteText });
+          added.push(snData.name);
+          if (S_story.shardNotes.every(Boolean) && !S_story.shardNotesAllRead) {
+            S_story.shardNotesAllRead = true;
+            setTimeout(() => storyMsg('📜 Seven people carried the pieces. Five of them knew what they were carrying. One of them didn\'t know what was inside it. One of them did and placed it last. You know all their names now.'), 1400);
+          }
+        }
+      }
+    }
   });
   return added.length ? '📦 ' + added.join(' · ') : null;
 }
@@ -12286,8 +12331,26 @@ function storyRenderInventory() {
     });
   }
 
+  // ── Layer 57: Readable Notes (shard origin stories) ──
+  const readableItems = S_story.inventory.filter(i => i.type === 'readable');
+  if (readableItems.length) {
+    makeSection('📖 Origin Notes');
+    readableItems.forEach(item => {
+      makeItemRow(item, (div, it) => {
+        const readBtn = document.createElement('button');
+        readBtn.className = 'inv-use-btn';
+        readBtn.textContent = '📖 Read';
+        readBtn.addEventListener('click', () => {
+          const txt = it.readText || '(No text found.)';
+          storyMsg('📖 ' + it.name + '\n\n' + txt);
+        });
+        div.appendChild(readBtn);
+      });
+    });
+  }
+
   // ── 8. Other items (trophies, etc.) ──
-  const knownTypes = new Set(['potion','spell','flashbang','shard','key','item','shield','weapon','mainweapon','knowledge','key_item']);
+  const knownTypes = new Set(['potion','spell','flashbang','shard','key','item','shield','weapon','mainweapon','knowledge','key_item','readable']);
   const potionNames = new Set(Object.values(POTION_TIERS).map(p => p.name));
   const otherItems = S_story.inventory.filter(i =>
     !knownTypes.has(i.type) && !potionNames.has(i.name) && i.name !== 'Transmort Scroll');
