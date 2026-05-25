@@ -499,6 +499,10 @@ Perks persist through NG+. Character sheet shows "Weckmann's Student" badge when
 
 ⚠️ PLANNED — Layer 66b. Flag already in `_S_DEFAULTS()`.
 
+**Couperin Ledger / Quill's Arc** (`couperiSongReceived`, `couperiDebtDegraded`, `quillQuestComplete`) — three-beat quest arc centered on Elder Couperin's lute and the debt he left behind. **Beat 1:** Player asks Pachelbel at BA or SH about Couperin's lute; Pachelbel hands it over free (*"He already knew someone would come for it."*); item: `quills_lute` (type:'quest'). **Beat 2:** Player visits Quill at TV with lute in inventory (fav_quill ≥ 1); Quill plays the family theme — still in tune after two months; +40gp (estate pays itself out); `couperiSongReceived = true`, `quillQuestComplete = true`; Dear Friend check. Note pattern echoes Shard 1 (§XXII). **Beat 3:** Next TV visit after quillQuestComplete; Quill reflects on the debt becoming *"just a number"*; `couperiDebtDegraded = true`; L44-E injected into Quill's impartial NPC_DIALOGUES pool: *"Elder Couperin wrote 'just a number' on the original debt notice. Not minimizing. Describing. A debt that has done its work becomes just a number. That's when you can release it."* Town Crier fires quillQuestComplete line on next inn rest. **Act VIII BA cross-ref (§XXIV):** When Quill visits BA to close estate ledger, if quillQuestComplete: Pachelbel adds *"He found the lute, then."* — no extra flag required. See `plan.md §XXXIV`.
+
+⚠️ PLANNED — Layer 69. All three flags already in `_S_DEFAULTS()`. No new flags.
+
 ### Froberger Traces
 
 `FROBERGER_TRACES` — 6 one-time NPC memories of Froberger. Each gated by fav ≥ 2 and sufficient visit count. Delivered via `_checkFrobergerTrace(npcKey)` priority injection in `_getNPCDialogue()`.

@@ -239,6 +239,7 @@ The commit message should name the lab report and summarize what it covers in on
 | 22 | §XXXI | The Joint Witness and the Map Caption (S54 + S55) | 66a+66b | No — state flags pre-exist; document inline; patch _renderFinalMap() | ⚠️ PLANNED |
 | 23 | §XXXII | Two Intelligence Feeds: The Varga Watch and the Auros Theory (S8 + S29) | 67a+67b | No — all flags pre-exist; document inline | ⚠️ PLANNED |
 | 24 | §XXXIII | The Archive and the Tools: Blue Shutters (S7) + Raison (S46) | 68a+68b | No — 1 new flag (surveyDeliveredToAuros); document inline; §XVI cross-ref (archive_letter) | ⚠️ PLANNED |
+| 25 | §XXXIV | The Couperin Ledger: Quill's Three-Beat Arc | 69 | No — all flags pre-exist; document inline; L44-E injection; §XXIV cross-ref (Act VIII BA farewell) | ⚠️ PLANNED |
 
 **Rule:** Implement in layer order when possible. Each implementation = code + doc sync + git commit. See plan.md §I Lab Report Policy for commit rules.
 
@@ -2017,6 +2018,7 @@ creative_literacy_token: { name:'Creative Literacy Token', icon:'📄', sell:27 
 | **Joint Witness + Map Caption (§XXXI)** | `S54_JOINT_MOMENT` const / Yael+Brynn CI scene (act≥7, dual Friendly gate) / S55 caption in `_renderFinalMap()` (base + Sweelinck variant) | `plan.md §XXXI` | ✅ PLANNED stubs: `story.md` scene summaries; `world.md` S54/S55 entries; `maps.md` caption spec | ⚠️ PLANNED |
 | **Two Intelligence Feeds (§XXXII)** | S8: three-observation Varga BA arc / pigeon direction / Pachelbel tell (+15gp) / S29: Auros tactical theory at CY (frobergerLastEntryRead + Dear Friend) / `S29_AUROS_THEORY` const | `plan.md §XXXII` | ✅ PLANNED stubs: `story.md` scene notes; `world.md` S8/S29 expanded | ⚠️ PLANNED |
 | **Archive and Tools (§XXXIII)** | S7: CI Blue Shutters three-state / Entry 33 footnote / `archive_letter` item (§XVI cross-cut) / Undercity Survey → Auros +40gp / S46: `raisons_tools` +30gp / `PACHELBEL_LEDGER` entries 2+3 (Raison arrest, Vonn hint) / 1 new flag `surveyDeliveredToAuros` | `plan.md §XXXIII` | ⚠️ PLANNED stubs pending: `story.md` archive+tools notes; `world.md` S7/S46 expansion | ⚠️ PLANNED |
+| **Couperin Ledger (§XXXIV)** | `quills_lute` quest item / `QUEST_DB` entry / Beat 2 TV render (+40gp, couperiSongReceived, quillQuestComplete, Dear Friend check) / Beat 3 TV render (couperiDebtDegraded, L44-E NPC_DIALOGUES injection) / Beat 1 BA/SH lute handoff (Pachelbel) / Act VIII BA farewell Pachelbel note branch / no new flags — all pre-exist | `plan.md §XXXIV` | ⚠️ PLANNED stubs pending: `story.md` three-beat notes; `world.md` Couperin/Quill entry | ⚠️ PLANNED |
 
 ---
 
@@ -7070,3 +7072,215 @@ No lab report. No new nodes or monsters.
 ---
 
 *§XXXIII status: ⚠️ PLANNED — Blue Shutters Archive (S7) three-state unlock designed; Entry 33 archive footnote specified; archive_letter item and §XVI cross-ref; Undercity Survey delivery to Auros (+40gp, s29 cross-ref line); Raison's Tools (S46) item designed (+30gp use, handle message); Pachelbel Ledger entries 2+3 written (Raison arrest, family fate, Vonn connection); one new flag (surveyDeliveredToAuros); four pre-existing flags; no new nodes/monsters; no lab report — document inline.*
+
+---
+
+## Section XXXIV — The Couperin Ledger: Quill's Three-Beat Arc (Layer 69, ⚠️ PLANNED)
+
+> **Design status:** PLANNED. State flags `couperiSongReceived`, `couperiDebtDegraded`, and `quillQuestComplete` already exist in `_S_DEFAULTS()` — this section provides the full three-beat arc design.  
+> **Layer 69** — quest chain at TV + BA; all flags pre-existing; no new nodes, monsters, or lab report; document inline.
+
+---
+
+### XXXIV-A. Concept: The Debt That Taught Something
+
+Quill Faber is the bard at the Birka Tavern (TV, node 03). His full name is Quill Couperin-Faber, or simply Quill of the Couperin family — a name that carries a multi-generational debt obligation dating to Elder Couperin's placement of Codex Shard 1 at the Birka Archive (§XXII).
+
+The lute pawn is the visible surface of this debt. The lesson Elder Couperin inscribed on the original debt notice — *"just a number"* — is the thing Quill has been trying to understand his entire adult life. The three-beat arc ends not with the debt repaid but with the debt understood. That is the resolution.
+
+**Beat 1:** The player retrieves Quill's lute from Pachelbel. (quest_couperin_lute)  
+**Beat 2:** Quill plays Couperin's family theme. The song is the debt's real purpose. (couperiSongReceived)  
+**Beat 3:** The acknowledgment settles in. A new dialogue line enters Quill's pool permanently. The world registers it. (couperiDebtDegraded, quillQuestComplete)
+
+---
+
+### XXXIV-B. Beat 1 — The Lute Retrieval
+
+**Quest activation:** Available at TV when `fav_quill >= 0` (any visit). Quill's opening dialogue when the quest is first available:
+
+```
+Quill is at his usual table with a borrowed instrument —
+you can tell by the way he holds it. More carefully than
+you'd hold your own things.
+
+"My lute's at Pachelbel's. Two months. I put it up as
+surety for a debt that isn't entirely mine — technically
+it's the Couperin estate's, but the estate is me now,
+so it's mine too."
+
+He looks at the borrowed instrument.
+
+"Forty gold when you bring it back. I'll have it by then."
+```
+
+Sets `quest_couperin_lute` active.
+
+**Pachelbel at BA or SH** — when quest is active, a [Ask about the lute] option appears:
+
+```
+"Quill's lute?"
+
+She pulls it from behind the counter without ceremony.
+The case has a small label in Quill's handwriting:
+'Return to Quill Faber, TV, when ready.'
+
+"He wrote that label the day he brought it in. He already
+knew someone would come for it."
+
+She hands it over. No charge.
+
+"Tell him the account is closed."
+```
+
+`undercity_survey_lute` item added to inventory. (The item key is `quills_lute`, `type:'quest'`, not sellable.)
+
+---
+
+### XXXIV-C. Beat 2 — Couperin's Song
+
+**Trigger:** Next TV visit with `quills_lute` in inventory.
+
+```
+Quill takes the lute from you.
+
+He opens the case and checks the strings — they're still
+in tune. It has been sitting in Pachelbel's back room for
+two months and it is still in tune.
+
+He plays a phrase. One bar, two. Something formal and
+very old — the same pattern as the first line of
+Codex Shard 1's note (if you've read it), though you'd
+have to know both to hear the connection.
+
+"Couperin's theme," he says. "The family theme. My
+grandmother taught me this. I haven't played it since
+before the pawn."
+
+He closes the case.
+
+"Forty gold. And thank you."
+```
+
+On close:
+- `quills_lute` removed from inventory
+- `S_story.gold += 40`
+- `S_story.couperiSongReceived = true`
+- `S_story.quillQuestComplete = true`
+- Dear Friend upgrade check fires for Quill (`fav_quill` check → may increment to 2)
+- `storyMsg()`: *Quill has his lute back. Pachelbel's account is closed.*
+
+**The musical connection (Shard 1):** If the player has read the Shard 1 note (§XXII), the parenthetical in the scene becomes active — they recognize the pattern. This is not gated: the scene text includes the connection regardless. But only players who have read §XXII's shard note will know what it means. This is the same design principle as the six-system intelligence picture (§XXXII-E): no single system states the full connection.
+
+---
+
+### XXXIV-D. Beat 3 — The Debt Degradation
+
+**Trigger:** First TV visit where `quillQuestComplete && !couperiDebtDegraded`.
+
+```
+The borrowed instrument is gone. Quill has his lute.
+
+He's playing something quiet when you arrive — not
+performing, just playing. The tavern is half-empty
+or half-full, depending on how you count.
+
+He looks up.
+
+"I've been thinking about the note Elder Couperin left
+on the original account. 'Just a number.' I used to
+find that dismissive."
+
+He plays another bar.
+
+"I think he meant something different. He meant: this
+number served its purpose, which was to create an
+obligation, which was honored, which taught something.
+After that, it's just a number. You can let it go."
+
+He turns back to his playing.
+```
+
+On close:
+- `S_story.couperiDebtDegraded = true`
+- L44-E dialogue injected (§XXXIV-E)
+- `storyMsg()`: *"The Couperin debt has done its work."*
+
+**Town Crier integration:** On the next inn rest after `quillQuestComplete`, the questFlag town crier line fires: *"The ledger house near the Birka bar settled two long-outstanding debts this week. The creditors didn't argue, which is the strangest part."* This uses the existing §XXVII questFlag tier with `quillQuestComplete` as the trigger flag.
+
+---
+
+### XXXIV-E. The L44-E Dialogue Injection
+
+When `couperiDebtDegraded = true`, Quill's impartial dialogue pool permanently gains one additional line (Layer 44, Milepoint E injection). This line rotates into the pool like any other impartial quote; it does not fire preferentially after the debt degradation scene. It is simply available from that point forward:
+
+> *"Elder Couperin wrote 'just a number' on the original debt notice. Not minimizing. Describing. A debt that has done its work becomes just a number. That's when you can release it."*
+
+This line is the distilled lesson — the version Quill would give to a stranger asking. The Beat 3 scene gives it directly; this quote gives it to players who visit Quill again later and happen to draw this line from the pool.
+
+---
+
+### XXXIV-F. Act VIII Farewell Cross-Reference
+
+§XXV §C-3 places Quill's farewell beat at the BA node (fav ≥ 1), which is unusual since Quill's standard node is TV. The resolution: in Act VIII, Quill visits the Birka Archive (BA) to physically close the Couperin estate ledger — a real archival action, not a metaphor. The farewell fires when the player visits BA in Act VIII and `!act8FarewellQuill && fav_quill >= 1`. The player may find him there unexpectedly.
+
+If `quillQuestComplete` is true when the farewell fires, the farewell adds one line to the standard text:
+
+> *"Pachelbel sent a note. 'Account closed, no remainder.' I keep it in the case."*
+
+If `quillQuestComplete` is false (the player never retrieved the lute), the farewell still fires but without this line. Quill's reflection on the debt stands regardless of whether the player participated.
+
+---
+
+### XXXIV-G. Implementation Spec
+
+**XXXIV-G-1.** Add `quest_couperin_lute` to `QUEST_DB`. Quest active check: `fav_quill >= 0` (always available from first TV visit). Quest giver: Quill at TV.
+
+**XXXIV-G-2.** In TV render: if quest active AND `quills_lute` not in inventory, show standard TV node with quest-active Quill dialogue. If `quills_lute` in inventory: fire Beat 2 scene (§XXXIV-C) before node content; on close: process loot + flags.
+
+**XXXIV-G-3.** In BA and SH render: if `quest_couperin_lute` active, show [Ask about the lute] option. On click: Pachelbel dialogue (§XXXIV-B); add `quills_lute` to inventory.
+
+**XXXIV-G-4.** In TV render: check `quillQuestComplete && !couperiDebtDegraded`. If true: show Beat 3 scene (§XXXIV-D) before node content; on close: set `couperiDebtDegraded = true`; inject L44-E line into Quill's `NPC_DIALOGUES.quill.impartial` pool.
+
+**XXXIV-G-5.** In BA render (Act VIII): check `actNumber === 8 && fav_quill >= 1 && !act8FarewellQuill`. If true: show Quill's farewell beat (§XXV §C-3 text + `quillQuestComplete` branch); set `act8FarewellQuill = true`.
+
+---
+
+### XXXIV-H. State Flags
+
+All pre-existing in `_S_DEFAULTS()`:
+- `S_story.couperiSongReceived` — boolean, default false, NOT NG+-preserved
+- `S_story.couperiDebtDegraded` — boolean, default false, NOT NG+-preserved
+- `S_story.quillQuestComplete` — boolean, default false, NOT NG+-preserved
+
+**No new state fields.** Section III already has all three entries. This section documents what they gate.
+
+**NG+ note:** All three clear on NG+. The lute arc can be re-run. On a second run, players who have already learned the Couperin theme will recognize it. Nothing changes. Everything is true again.
+
+---
+
+### XXXIV-I. Documentation Updates Required on Implementation
+
+| File | Update |
+|------|--------|
+| `story.md` | Add §F2 note for Beat 2/3 TV trigger logic; add BA Act VIII Quill check note; add L44-E quote to Quill's NPC_DIALOGUES transcript |
+| `world.md` | Update Quill NPC section with lute arc summary; note BA node Act VIII appearance; Pachelbel lute handoff cross-ref |
+| `mechanics.md` | Add `quest_couperin_lute` to QUEST_DB table; add `quills_lute` item (quest, non-sellable) |
+| `plan.md` | Mark §XXXIV complete; update §V-A queue; note s-flags already in §III |
+
+No lab report. No new nodes or monsters. One quest item (`quills_lute`, type:'quest') and one dialogue injection (L44-E).
+
+---
+
+### XXXIV-J. Design Notes
+
+**"He already knew someone would come for it."** Pachelbel's line about the label Quill wrote. The label reads *'Return to Quill Faber, TV, when ready.'* Quill wrote it on the day he brought the lute in — he knew, when he gave the lute up, that it was temporary. He was not in despair. He was managing an obligation. The label is his optimism made legible.
+
+**The song is still in tune.** Two months in a case, and the strings hold. This is the kind of detail that has no narrative function except to be true. Instruments kept properly stay in tune. Quill kept it properly even when he had to give it away. The reader can decide what that means.
+
+**The shard connection.** The Couperin family theme is the same pattern as the first note of Shard 1's inscription. Elder Couperin placed Shard 1 at the Birka Archive seventy years ago and told his family he was storing a keepsake. The keepsake was a Codex Shard. The family theme was the Couperin way of marking something as theirs. Quill plays it as a family song; Elder Couperin embedded it as a kind of signature. A player who has read both will hear this. A player who has read neither will hear a sad and beautiful phrase.
+
+**"Just a number."** The three-word note on the original debt notice. Quill misunderstood it for years as dismissal. The game doesn't tell you what it means; it shows Quill arriving at the interpretation. Then he gives it, once, plainly: *"A debt that has done its work becomes just a number. That's when you can release it."* This is the arc in one sentence. The entire three-beat structure exists to earn that sentence.
+
+---
+
+*§XXXIV status: ⚠️ PLANNED — Quill Couperin three-beat arc designed; Beat 1 (lute retrieval, Pachelbel dialogue "he already knew"); Beat 2 (Couperin's theme, song played, +40gp, quest complete); Beat 3 (debt degradation scene, L44-E dialogue injection); Act VIII BA node farewell cross-ref (§XXV) with quillQuestComplete branch; Town Crier quillQuestComplete line already in §XXVII; three pre-existing flags; no new nodes/monsters/items (quest item quills_lute type:'quest'); no lab report — document inline.*

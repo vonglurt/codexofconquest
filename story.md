@@ -2596,6 +2596,22 @@ Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterOb
 
 ---
 
+## ⚠️ PLANNED — The Couperin Ledger: Quill's Three-Beat Arc (plan.md §XXXIV, Layer 69)
+
+**Trigger chain:** `quills_lute` item in inventory → Quill at TV → BA Act VIII farewell branch. No new state flags — all three (`couperiSongReceived`, `couperiDebtDegraded`, `quillQuestComplete`) pre-exist in `_S_DEFAULTS()`.
+
+**Beat 1 — Lute Retrieval:** Player visits BA or SH with Pachelbel present (any fav tier). Option appears: *[Ask Pachelbel about Couperin's lute].* Pachelbel hands it over free of charge: *"He already knew someone would come for it."* Adds `quills_lute` (type:'quest') to inventory. Quest log: "Find Quill at the tavern."
+
+**Beat 2 — Couperin's Song (at TV, fav_quill ≥ 1, quills_lute in inventory):** Quill notices the lute — *"Where did you—"* — then plays the family theme. Still in tune after two months. +40gp (the Couperin estate's last line-item pays itself out). Sets `couperiSongReceived = true`, `quillQuestComplete = true`. If `fav_quill < 2`: Dear Friend upgrade. Cross-ref §XXII: the note pattern echoes Shard 1.
+
+**Beat 3 — Debt Degradation (at TV, quillQuestComplete && !couperiDebtDegraded):** Quill's reflection on the debt as just a number. Sets `couperiDebtDegraded = true`. Injects L44-E dialogue into Quill's impartial pool: *"Elder Couperin wrote 'just a number' on the original debt notice. Not minimizing. Describing. A debt that has done its work becomes just a number. That's when you can release it."* Town Crier quillQuestComplete line fires on next inn rest.
+
+**Act VIII BA farewell cross-ref (plan.md §XXIV):** When Quill visits BA to close the Couperin estate ledger physically, if `quillQuestComplete`: Pachelbel adds a quiet line — *"He found the lute, then."*
+
+**F2 reference:** Add QUEST_DB entry, Beat 2 TV render trigger, Beat 1 BA/SH option, Beat 3 TV render trigger, L44-E NPC_DIALOGUES injection, Act VIII BA farewell branch on implementation.
+
+---
+
 ## ⚠️ PLANNED — Town Crier: Inn Rest World-News Lines (plan.md §XXVII, Layer 62)
 
 When the player chooses to rest at an inn (`storyConfirmSleep()`), after the standard rest resolution a Town Crier ambient line fires — a single sentence of world-news flavor injected into the story log. No new node, no new NPC, no persistent flag. The line is ephemeral: displayed once, forgotten immediately.
