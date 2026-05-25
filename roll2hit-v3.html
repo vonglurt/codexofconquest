@@ -4723,6 +4723,8 @@ const MONSTER_POOL = {
   sphinx:           { key:'sphinx',           name:'Sphinx (Guardian)',        ac:17, hp:136, atk:9,  dmgDie:8,  dmgCount:2, dmgFlat:5,  tier:'hard'   },
   bronze_automaton: { key:'bronze_automaton', name:'Bronze Automaton',         ac:18, hp:105, atk:7,  dmgDie:8,  dmgCount:2, dmgFlat:4,  tier:'hard'   },
   ettin:            { key:'ettin',            name:'Ettin (Two-Headed Giant)', ac:12, hp:85,  atk:7,  dmgDie:8,  dmgCount:2, dmgFlat:5,  tier:'hard'   },
+  void_wolf:        { key:'void_wolf',        name:'Void-Touched Wolf',        ac:13, hp:28,  atk:5,  dmgDie:8,  dmgCount:1, dmgFlat:3,  tier:'medium', voidTainted:true },
+  void_rat_swarm:   { key:'void_rat_swarm',   name:'Void Rat Swarm',           ac:12, hp:18,  atk:4,  dmgDie:4,  dmgCount:2, dmgFlat:0,  tier:'low',    voidTainted:true },
   void_walker:      { key:'void_walker',      name:'Void Walker',              ac:15, hp:97,  atk:8,  dmgDie:8,  dmgCount:3, dmgFlat:0,  tier:'hard'   },
   star_spawn:       { key:'star_spawn',       name:'Star Spawn (Far Realm)',   ac:14, hp:85,  atk:7,  dmgDie:8,  dmgCount:2, dmgFlat:5,  tier:'hard'   },
   jade_construct:   { key:'jade_construct',   name:'Jade Construct',           ac:17, hp:114, atk:8,  dmgDie:8,  dmgCount:2, dmgFlat:5,  tier:'hard'   },
@@ -5155,6 +5157,8 @@ const MONSTER_DROPS = {
   sphinx:               { name:'Sphinx Feather',          icon:'🪶', sell:35 },
   bronze_automaton:     { name:'Bronze Automaton Gear',   icon:'⚙',  sell:30 },
   ettin:                { name:'Ettin Head Trophy',       icon:'💀', sell:30 },
+  void_wolf:            { name:'Void Shard',               icon:'◈',  sell:25 },
+  void_rat_swarm:       { name:'Void Shard',               icon:'◈',  sell:15 },
   void_walker:          { name:'Void Walker Shard',       icon:'💜', sell:33 },
   star_spawn:           { name:'Star Spawn Eye',          icon:'💜', sell:30 },
   jade_construct:       { name:'Jade Construct Core',     icon:'⚙',  sell:33 },
@@ -7890,6 +7894,7 @@ const _S_DEFAULTS = () => ({
   fishingQuestFlags: {}, fishingBaitSatchel: false, fishingYugurtFavour: false, fishingCatchLog: [],
   junctionsSeen: {}, companionActsSeen: {},
   shardNotes: [false,false,false,false,false,false,false], shardNotesAllRead: false,
+  voidCrackFired: false, voidFracturesFired: false, voidImminentWarned: false, void_mercy_count: 0,
 });
 
 /* ── Layer 48: Luck — Seventh Stat ── */
@@ -8003,6 +8008,14 @@ function _getNPCDialogue(npcKey) {
   if (npcKey === 'bruhns' && fav >= 2 && S_story.frobergerLastEntryRead && !S_story.s29LineDelivered) {
     S_story.s29LineDelivered = true;
     return { quote: "You found his note. He left them at certain nodes. I think he knew which ones mattered. I've been finishing his theory for three years. You're part of why it's close.", meta: d.meta, fav };
+  }
+  // Layer 59: void pressure line — Dear Friends at pressure ≥ 6
+  if (fav >= 2 && (S_story.voidPressure || 0) >= 6 && NPC_VOID_PRESSURE_LINES[npcKey]) {
+    const vpKey = 'voidPressureLine_' + npcKey;
+    if (!S_story[vpKey]) {
+      S_story[vpKey] = true;
+      return { quote: NPC_VOID_PRESSURE_LINES[npcKey], meta: d.meta, fav };
+    }
   }
   return { quote: pool[count % pool.length], meta: d.meta, fav };
 }
@@ -10408,6 +10421,57 @@ const FISH_GOLD_VALUES = {
   legendary:  { common:75, rare:120, enchanted:175, golden:225, legendary:300 },
 };
 
+// ── Layer 59: Pressure Cascade ──
+const NPC_VOID_PRESSURE_LINES = {
+  yael:     'The city is holding its breath. Even the rioters have gone quiet.',
+  brynn:    'My candles won\'t stay lit past midnight. I\'ve started leaving the fire banked all night.',
+  quill:    'The numbers in the ledger keep adding up wrong. I\'ve checked them four times.',
+  pachelbel:'Three students fainted in the atelier today. The air feels thick. Like before a storm that never breaks.',
+  crov:     'I\'ve been keeping the forge running later than usual. It feels wrong to let the fire go out.',
+  auros:    'Something is moving in the Convergence. Not the Commander. Something older.',
+};
+function _voidFlavorLine(nodeCode) {
+  const vp = S_story.voidPressure || 0;
+  if (vp < 3) return '';
+  const CLUSTER = {
+    CI:'birka', SL:'birka', CR:'birka', BA:'birka', SH:'birka',
+    SF:'tilbury', PH:'tilbury', DK:'tilbury', MQ:'tilbury',
+    SQ:'weimar', DF:'weimar', WM:'weimar',
+    GL:'wild', MT:'wild', MH:'wild', HM:'wild',
+  };
+  const cluster = CLUSTER[nodeCode];
+  if (!cluster) return '';
+  const CRACK = {
+    birka:   'The cobblestones are colder than they should be.',
+    tilbury: 'The harbor lights flicker without wind.',
+    weimar:  'The scholars\' candles are burning down fast today.',
+    wild:    'Something is bleeding through the rock.',
+  };
+  const line = CRACK[cluster] || '';
+  if (!line) return '';
+  if (vp >= 6) {
+    const nd = NODE_MAP[nodeCode];
+    const lbl = nd ? nd.label.split(' — ')[0] : nodeCode;
+    return line + '\n' + lbl + ': the air here has a quality you can\'t name. Wrong, somehow.';
+  }
+  return line;
+}
+function _addVoidPressure(n) {
+  n = n || 1;
+  const prev = S_story.voidPressure || 0;
+  S_story.voidPressure = Math.min(10, prev + n);
+  const cur = S_story.voidPressure;
+  if (cur >= 3 && !S_story.voidCrackFired) S_story.voidCrackFired = true;
+  if (cur >= 6 && !S_story.voidFracturesFired) S_story.voidFracturesFired = true;
+  if (cur === 9 && !S_story.voidImminentWarned) {
+    S_story.voidImminentWarned = true;
+    S_story.void_mercy_count = (S_story.shards >= 5) ? 1 : 0;
+    const mercyNote = (S_story.shards >= 5) ? '\n\nYou have ' + S_story.shards + '/7 shards. One mercy rest remains.' : '';
+    setTimeout(() => storyMsg('⚠️ THE VOID IS IMMINENT — Pressure: 9/10. One more pressure point and the Void breaks through.\n\nShards: ' + (S_story.shards || 0) + '/7.' + mercyNote), 400);
+  }
+  storyUpdateStatus();
+}
+
 // ── Layer 58: Inn Dreams ──
 const INN_DREAMS = {
   IN: {
@@ -11386,7 +11450,8 @@ function storyMove(dir) {
     }
   }
   if (dest === 'CO' && S_story.shards < 7) {
-    storyMsg('🔮 The Convergence is sealed. You need all 7 Codex Shards. You have ' + S_story.shards + '/7.');
+    const _urgency = (S_story.voidPressure || 0) >= 9 ? '\n\n⚠️ The Void is one day away.' : '';
+    storyMsg('🔮 The Convergence is sealed. You need all 7 Codex Shards. You have ' + S_story.shards + '/7.' + _urgency);
     return;
   }
   storyCheckMissedSleep();
@@ -12465,6 +12530,10 @@ function storyRender(node, prefix) {
   document.getElementById('s-node-act').textContent = ACT_NAMES[node.act];
   // Story text
   document.getElementById('story-text-box').textContent = node.text;
+  // Layer 59: void flavor line
+  { const _vfl = _voidFlavorLine(node.code);
+    if (_vfl) document.getElementById('story-text-box').textContent += '\n\n' + _vfl;
+  }
   // ── Intro tagline at CI ──
   { const _oldCiTag = document.getElementById('story-ci-tagline');
     if (_oldCiTag) _oldCiTag.remove();
@@ -13416,9 +13485,14 @@ function storyCheckVoidTide() {
   document.getElementById('void-day-badge').textContent = 'Day ' + S_story.day + ' of 49';
   document.getElementById('void-title').textContent = event.title;
   document.getElementById('void-text').textContent = event.text;
-  // Increment void pressure at each tide event
-  S_story.voidPressure = Math.min(10, S_story.voidPressure + 1);
-  storyUpdateStatus();
+  // Increment void pressure at each tide event (Layer 59: mercy window)
+  if ((S_story.void_mercy_count || 0) > 0) {
+    S_story.void_mercy_count--;
+    setTimeout(() => storyMsg('💤 You sleep fitfully. The Void holds its breath with you.'), 600);
+  } else {
+    _addVoidPressure(1);
+  }
+  if ((S_story.voidPressure || 0) >= 10) { storyVoidDefeat('void'); return; }
   document.getElementById('story-void-modal').classList.add('visible');
 }
 
@@ -13433,8 +13507,7 @@ function storyCheckMissedSleep() {
     S_story.battleDis = Math.max(S_story.battleDis, 2);
     S_story.missedSleeps = 0;
     // Each exhaustion cycle also advances the void — neglecting rest hastens the breach
-    S_story.voidPressure = Math.min(10, S_story.voidPressure + 1);
-    storyUpdateStatus();
+    _addVoidPressure(1);
     if (S_story.voidPressure >= 10) { storyVoidDefeat('void'); return; }
     storyMsg('😴 Exhausted — DIS on next 2 battles. Void pressure rising. Sleep soon.');
   }

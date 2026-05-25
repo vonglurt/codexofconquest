@@ -14,7 +14,7 @@ Implement in layer order. Each = code change + doc sync + `git commit`.
 | 53 | §XVIII | Living World: Junction Vignettes + Road Companion | ✅ Implemented |
 | 57 | §XXII | Codex Shard Origin Stories | ✅ Implemented |
 | 58 | §XXIII | Inn Dreams | ✅ Implemented |
-| 59 | §XXIV | Pressure Cascade: Visible Void Tide Events | Medium |
+| 59 | §XXIV | Pressure Cascade: Visible Void Tide Events | ✅ Implemented |
 | 60 | §XXV | The Homecoming: Act VIII Farewell Beats | Medium |
 | 62 | §XXVII | Town Crier: Inn Rest World-News Lines | Small |
 | 63 | §XXVIII | Froberger Memorial: Living Stone at CI | Small |
@@ -285,7 +285,7 @@ The commit message should name the lab report and summarize what it covers in on
 | 12 | §XXI | The Void Shaman: The Antecedent's Last Warden | 56 | Yes — `lab-report-void-shaman.md` (corrupted mandate design) | ⚠️ PLANNED |
 | 13 | §XXII | Codex Shard Origin Stories | 57 | No — document inline in `story.md` | ✅ Implemented |
 | 14 | §XXIII | Inn Dreams | 58 | No — too small; document inline | ✅ Implemented |
-| 15 | §XXIV | The Pressure Cascade: Visible Void Tide Events | 59 | No — extend `lab-report-living-world.md` | ⚠️ PLANNED |
+| 15 | §XXIV | The Pressure Cascade: Visible Void Tide Events | 59 | No — extend `lab-report-living-world.md` | ✅ Implemented |
 | 16 | §XXV | The Homecoming: Act VIII One-Time Farewell Beats | 60 | No — document inline in `story.md` | ⚠️ PLANNED |
 | 17 | §XXVI | Corelli the Wandering Merchant: Cross-Act Vendor NPC | 61 | Yes — `lab-report-corelli-merchant.md` (wandering NPC archetype) | ⚠️ PLANNED |
 | 18 | §XXVII | Town Crier: Inn Rest World-News Ambient Lines | 62 | No — document inline | ⚠️ PLANNED |
@@ -2069,7 +2069,7 @@ creative_literacy_token: { name:'Creative Literacy Token', icon:'📄', sell:27 
 | **Void Shaman (§XXI)** | The Warden / void_shaman boss / warden_token / combat+persuasion paths / Hollow Hands resolution | `plan.md §XXI` | ✅ PLANNED stubs: `story.md` MT tunnel encounter; `world.md` Warden backstory | ⚠️ PLANNED |
 | **Codex Shard Origins (§XXII)** | 7 shard_note items / named placers / flag-gated variants / journal reward | `plan.md §XXII` | `story.md` Shard Origins section; `world.md` placer name notes | ✅ Implemented |
 | **Inn Dreams (§XXIII)** | INN_DREAMS const / 4 inns × 3 base variants / flag-gated replacements | `plan.md §XXIII` | `story.md` Inn Dreams section | ✅ Implemented |
-| **Pressure Cascade (§XXIV)** | voidPressure threshold events (3/6/9) / void-touched monsters / NPC pressure lines / mercy counter | `plan.md §XXIV` | ✅ PLANNED stubs: `story.md` Void Tide Events; `world.md` Void-Touched Monsters note | ⚠️ PLANNED |
+| **Pressure Cascade (§XXIV)** | voidPressure threshold events (3/6/9) / void-touched monsters / NPC pressure lines / mercy counter | `plan.md §XXIV` | `story.md` Void Tide Events; `world.md` Void-Touched Monsters note | ✅ Implemented |
 | **Homecoming (§XXV)** | 6 one-time Act VIII farewell beats / Brynn's Loaf / Champion's Tincture / Pachelbel's Sketch / 6 new flags | `plan.md §XXV` | ✅ PLANNED stub: `story.md` Act VIII Farewell Beats | ⚠️ PLANNED |
 | **Wandering Merchant (§XXVI)** | Corelli — 5 appearances Acts II–VIII / purchase-gated fav / 5 unique items / Scholar King courier reveal / `last_cipher` cross-ref §XVI–§XVII | `plan.md §XXVI` | ✅ PLANNED stubs: `story.md` Corelli encounters; `world.md` Wandering Merchant | ⚠️ PLANNED |
 | **Town Crier (§XXVII)** | `TOWN_CRIER_LINES` const / priority-selector / inn rest rumor line / 56 act-cycling lines + critical/tension/quest/NPC tiers | `plan.md §XXVII` | ✅ PLANNED stub: `story.md` Town Crier note; no new state flags | ⚠️ PLANNED |
@@ -4843,7 +4843,7 @@ No lab report needed — too small; document inline.
 
 ---
 
-## Section XXIV — The Pressure Cascade: Visible Void Tide Events (Layer 59, ⚠️ PLANNED)
+## Section XXIV — The Pressure Cascade: Visible Void Tide Events (Layer 59, ✅ Implemented)
 
 > **Design problem:** `voidPressure` (0–10) is the game's central survival clock. Currently it accumulates silently — the player sees it in the HUD number but the world doesn't respond to it. The final defeat at pressure 10 feels sudden. This section makes the pressure visible in the world from the first crack to the imminent breach.
 
@@ -5049,7 +5049,7 @@ No lab report needed — extend `lab-report-living-world.md` with a §XXIV appen
 
 ---
 
-*§XXIV status: ⚠️ PLANNED — Pressure Cascade designed; threshold system (0/3/6/9) specified; void_wolf + void_rat_swarm monster entries defined; NPC_VOID_PRESSURE_LINES for all 6 Dear Friend NPCs written; mercy window mechanic specified; 4 new state flags; 10 insertion steps; no new quests or nodes; no lab report — extend living-world report.*
+*§XXIV status: ✅ Implemented — void_wolf + void_rat_swarm added to MONSTER_POOL (voidTainted:true); void_wolf/void_rat_swarm drops in MONSTER_DROPS; NPC_VOID_PRESSURE_LINES const (6 keys); _voidFlavorLine() helper (4 clusters, tiers 3+/6+); _addVoidPressure() refactors raw increments with threshold checks (3→voidCrackFired, 6→voidFracturesFired, 9→imminentWarned + mercy count); mercy window in storyCheckVoidTide(); void flavor appended in storyRender(); CO gate urgency text; NPC Dear Friend pressure lines (first-time flag per NPC); 4 state flags.*
 
 
 ---

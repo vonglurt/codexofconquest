@@ -1547,29 +1547,17 @@ Collecting all 7 fires journal reward: *"Seven people carried the pieces. Five o
 
 ---
 
-#### ⚠️ PLANNED — The Pressure Cascade: Visible Void Tide Events (plan.md §XXIV, Layer 59)
+#### ✅ Implemented — The Pressure Cascade: Visible Void Tide Events (plan.md §XXIV, Layer 59)
 
-`voidPressure` (0–10) becomes visible in the world at three thresholds:
+`_addVoidPressure()` helper wraps all pressure increments with threshold checks. `_voidFlavorLine(nodeCode)` returns flavor text by cluster; appended to `story-text-box` in `storyRender()`.
 
-**Threshold 1 — First Crack (voidPressure ≥ 3):**
-- One-line flavor text appended to node descriptions at city/wilderness/harbor/scholar nodes.
-- Corridor grid: one adjacent `◈` crack cell per node visit (cosmetic, determined by day mod — not random per render).
-- Example (Birka cluster): *"The cobblestones are colder than they should be."*
+**Threshold 1 — First Crack (≥ 3):** `_voidFlavorLine` active; sets `voidCrackFired`. Birka: *"The cobblestones are colder than they should be."* Tilbury: *"The harbor lights flicker without wind."* Weimar: *"The scholars' candles are burning down fast today."* Wild: *"Something is bleeding through the rock."*
 
-**Threshold 2 — Fracture (voidPressure ≥ 6):**
-- Two new void-touched monsters injected into terrain encounter tables: `void_wolf` (dark forest / mountain) and `void_rat_swarm` (alley / sewers).
-  - `void_wolf`: AC13/HP28/ATK+5/1d8+3/drop: Void Shard (◈, sell 25)
-  - `void_rat_swarm`: AC12/HP18/ATK+4/2d4/drop: Void Shard (◈, sell 15)
-- NPC pressure line activates for all 6 Dear Friend NPCs (see world.md §XXIV-F).
-- Map header changes to: *"The Void stirs."*
+**Threshold 2 — Fracture (≥ 6):** Sets `voidFracturesFired`. NPC pressure line fires once per Dear Friend NPC (fav ≥ 2) via `_getNPCDialogue()`. Second flavor line added per node: *"[label]: the air here has a quality you can't name. Wrong, somehow."* Monsters: `void_wolf` + `void_rat_swarm` in MONSTER_POOL (voidTainted:true); drop `Void Shard` (◈, 25/15gp).
 
-**Threshold 3 — Imminent (voidPressure = 9):**
-- One-time modal: "⚠️ THE VOID IS IMMINENT — Pressure 9/10. One more day without the Convergence and the Void breaks through."
-- CO gate text augmented with urgency line.
-- Mercy window: if shards ≥ 5 at pressure 9, one rest may be taken without pressure increase (`void_mercy_count = 1`). Rest text: *"You sleep fitfully. The Void holds its breath with you."*
+**Threshold 3 — Imminent (= 9):** Sets `voidImminentWarned`. Fires storyMsg warning with shard count. `void_mercy_count = 1` if shards ≥ 5. CO gate appends urgency line. Mercy window in `storyCheckVoidTide()`: skips pressure increment, posts *"You sleep fitfully. The Void holds its breath with you."*
 
-**New state flags:** `voidCrackFired`, `voidFracturesFired`, `voidImminentWarned`, `void_mercy_count`.  
-**No new quests or nodes.** Extend `lab-report-living-world.md` with appendix note on implementation.
+**State flags:** `voidCrackFired`, `voidFracturesFired`, `voidImminentWarned`, `void_mercy_count`.
 
 ---
 
