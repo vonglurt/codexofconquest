@@ -4061,10 +4061,11 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
         <div><span class="corridor-lbl">To:</span>   <span id="corridor-to-name"></span></div>
         <div><span class="corridor-lbl">Road:</span> <span id="corridor-terrain-name"></span></div>
       </div>
+      <div id="corridor-hunt-targets" style="display:none;font-size:11px;color:#e0a040;margin-top:4px;"></div>
       <div id="corridor-encounter-rate"></div>
       <div id="corridor-card-actions">
         <button id="btn-corridor-cancel">✕ Cancel</button>
-        <button id="btn-corridor-hunt">🎯 Hunt — roll encounter</button>
+        <button id="btn-corridor-hunt">🎯 Hunt — guaranteed encounter</button>
         <button id="btn-corridor-warp">⚡ Warp — instant, safe</button>
       </div>
     </div>
@@ -8177,6 +8178,7 @@ const NPC_DIALOGUE = {
   quest_cat_01: { id:'quest_cat_01', type:'side', title:'Jimmy: The New Scratch',
     desc:"Jimmy Two-Tails wants the Cat Quarter settled. Clear the riff-raff — 5 strays and 3 fluffies.",
     hint:'Fight in the Cat Quarter until the quota is filled.',
+    targetMonsterKeys:['stray_alley_cat','fluffy_cat'],
     activateNode:'CQ', completeItems:[], completeFn:() => {
       const k = S_story.catKills || {};
       return (k.stray_alley_cat || 0) >= 5 && (k.fluffy_cat || 0) >= 3;
@@ -8186,6 +8188,7 @@ const NPC_DIALOGUE = {
   quest_cat_02: { id:'quest_cat_02', type:'side', title:'Jimmy: Beefy Business',
     desc:"Three Beefy Toms are running muscle for a rival outfit. Take them down and collect the proof.",
     hint:'Kill 3 Beefy Toms and collect their Cracked Claws.',
+    targetMonsterKeys:['beefy_tom'],
     activateNode:null, completeItems:[], completeFn:() => {
       const k = S_story.catKills || {};
       return (k.beefy_tom || 0) >= 3
@@ -8196,6 +8199,7 @@ const NPC_DIALOGUE = {
   quest_cat_03: { id:'quest_cat_03', type:'side', title:'Sandy: Honcho Problems',
     desc:"A Capo and a Boss Lady are circling each other. Kill them SEPARATE — let them merge and you\'re dealing with a Taz Devil.",
     hint:'Kill 1 Honcho Cat (Capo) and 1 Boss Lady Honcho.',
+    targetMonsterKeys:['honcho_cat_m','honcho_cat_f'],
     activateNode:null, completeItems:[], completeFn:() => {
       const k = S_story.catKills || {};
       return (k.honcho_cat_m || 0) >= 1 && (k.honcho_cat_f || 0) >= 1;
@@ -8211,6 +8215,7 @@ const NPC_DIALOGUE = {
   quest_cat_05: { id:'quest_cat_05', type:'side', title:"Sandy: Fat Cats Don't Tip",
     desc:"The Fat Merchant Cats are using Corrupted Cats as enforcers. Sandy wants Don Fluffissimo gone.",
     hint:'Kill 4 Fat Merchant Cats and defeat Don Fluffissimo.',
+    targetMonsterKeys:['fat_merchant_cat'],
     activateNode:null, completeItems:[], completeFn:() => {
       const k = S_story.catKills || {};
       return (k.fat_merchant_cat || 0) >= 4 && !!S_story.defeatedBattles['CQ_BOSS'];
@@ -8226,6 +8231,7 @@ const NPC_DIALOGUE = {
   quest_cat_void: { id:'quest_cat_void', type:'side', title:'Sandy: Void Strays',
     desc:"Strays near the DF node have gone wrong. Wrong eyes, wrong fur. Sandy doesn\'t like it in her neighborhood.",
     hint:'Kill 5 Corrupted Cats in the Cat Quarter.',
+    targetMonsterKeys:['corrupted_cat'],
     activateNode:null, completeItems:[], completeFn:() => (S_story.catKills || {}).corrupted_cat >= 5,
     waypointNode:'CQ', reward:400,
     disposition:'"Something\'s wrong with the strays near the DF node. They\'re not just feral — they\'re WRONG. Wrong eyes. Wrong fur. Not touching anything from that block." — Sandy Scratchpad Mewlino' },
@@ -16969,12 +16975,28 @@ function _showCorridorPrompt(fromCode, destCode, dir) {
   const activeQuestCount = Object.values(S_story.quests || {}).filter(s => s === 'active').length;
   const chance = Math.round(Math.min(0.95, Math.max(0.05,
     0.1 + notoriety * 0.015 + activeQuestCount * 0.04 - _luckMod() * 0.5)) * 100);
-  document.getElementById('corridor-encounter-rate').textContent = 'Hunt encounter chance: ' + chance + '%';
+  document.getElementById('corridor-encounter-rate').textContent = 'Global hunt-mode encounter chance: ' + chance + '%';
+
+  // Show quest hunt targets for this terrain
+  const targetsEl = document.getElementById('corridor-hunt-targets');
+  const terrainDb2 = WORLD_DB[terrain];
+  const terrainPool = terrainDb2 ? terrainDb2.monsters.map(m => m.key) : [];
+  const questTargetKeys = _getQuestTargetKeys();
+  const relevantTargets = [...questTargetKeys].filter(k => terrainPool.includes(k));
+  const targetNames = relevantTargets.map(k => {
+    const m = MONSTER_POOL[k]; return m ? m.name : k;
+  });
+  if (targetNames.length) {
+    targetsEl.style.display = '';
+    targetsEl.textContent = '🎯 Hunting: ' + targetNames.join(' · ');
+  } else {
+    targetsEl.style.display = 'none';
+  }
 
   document.getElementById('story-corridor-overlay').classList.add('visible');
 }
 
-function storyCorridorTravel(fromCode, destCode, dir) {
+function storyCorridorTravel(fromCode, destCode, dir, forceEncounter) {
   const fromNode = NODE_MAP[fromCode];
   const destNode = NODE_MAP[destCode];
   const terrain  = _corridorTerrain(fromCode, destCode);
@@ -16999,8 +17021,9 @@ function storyCorridorTravel(fromCode, destCode, dir) {
       setTimeout(() => storyMsg(compText), 900);
     }
   }
-  if (S_story.huntMode) {
-    const chance = Math.min(0.95, Math.max(0.05, 0.1 + notoriety * 0.015 + activeQuestCount * 0.04 - _luckMod() * 0.5)); // Layer 48: Luck reduces encounter rate
+  if (S_story.huntMode || forceEncounter) {
+    const chance = forceEncounter ? 1.0
+      : Math.min(0.95, Math.max(0.05, 0.1 + notoriety * 0.015 + activeQuestCount * 0.04 - _luckMod() * 0.5)); // Layer 48: Luck reduces encounter rate
     if (Math.random() < chance) {
       // Layer 61: false_warrant auto-consume skips encounter (disabled at voidPressure >= 7)
       const _fwIdx = (S_story.inventory || []).findIndex(i => i.name === CORELLI_ITEMS.false_warrant.name);
@@ -17030,6 +17053,7 @@ function _getQuestTargetKeys() {
     if (status !== 'active') return;
     const q = QUEST_DB[id];
     if (!q) return;
+    if (q.targetMonsterKeys) q.targetMonsterKeys.forEach(k => keys.add(k));
     const targetNode = NODE_MAP[q.activateNode];
     if (targetNode && targetNode.battle) keys.add(targetNode.battle.key);
   });
@@ -17204,7 +17228,7 @@ document.getElementById('btn-corridor-hunt').addEventListener('click', () => {
   document.getElementById('story-corridor-overlay').classList.remove('visible');
   const prevHunt = S_story.huntMode;
   S_story.huntMode = true;
-  storyCorridorTravel(f, t, d);
+  storyCorridorTravel(f, t, d, true); // forceEncounter=true — player explicitly chose Hunt
   S_story.huntMode = prevHunt;
 });
 document.getElementById('btn-corridor-cancel').addEventListener('click', () => {
