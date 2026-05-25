@@ -1561,24 +1561,20 @@ Collecting all 7 fires journal reward: *"Seven people carried the pieces. Five o
 
 ---
 
-#### ⚠️ PLANNED — The Homecoming: Act VIII Farewell Beats (plan.md §XXV, Layer 60)
+#### ✅ Implemented — The Homecoming: Act VIII Farewell Beats (plan.md §XXV, Layer 60)
 
-Six one-time dialogue beats that fire when the player visits each NPC during Act VIII (`actNumber === 8`) with at least Friendly favorability (`fav ≥ 1`). Each fires once per run; reset (not preserved) on NG+. Rendered as a parchment modal (same style as Froberger journal overlays), not as a dialogue quote.
+`ACT8_FAREWELL_BEATS` const (6 keys). Fires via `_renderNpcCard()` when `actNumber === 8 + fav ≥ 1 + flag unset`. Renders via `storyMsg()` with 🌅 prefix. Gift items auto-pushed to inventory.
 
-**Beat summary — each NPC's final note:**
+| NPC Key | Node | Theme | Gift |
+|---------|------|-------|------|
+| `yael` | CI | Builds a witness network while player was away | None |
+| `brynn` | IN | Made too much bread — *"I always do when I'm worried"* | `Brynn's Loaf` 🍞 (heal 8 HP) |
+| `quill` | TV | Ledger finally balances; understands Couperin's "just a number" | None |
+| `pachelbel` | BA | Composing honestly for the first time; gives the unfinished sketch | `Pachelbel's Sketch` 📄 (readable) |
+| `crov` | CY | Recognizes the player as a champion earned on the road | `Champion's Tincture` ⚗️ (advantage next attack) |
+| `auros` | CY | *"Be ready. What you bring to it matters."* | None |
 
-| NPC | Node | Theme | Gift |
-|-----|------|-------|------|
-| Yael | CI | Builds a witness network while player was away; gives truth a vessel | None |
-| Brynn | IN | Made too much bread — *"I always do when I'm worried"* | `brynns_loaf` (🍞, heal 8 HP, no sell) |
-| Quill | BA | Ledger finally balances; understands Couperin's "just a number" | None |
-| Pachelbel | SH | Was composing honestly for the first time; gives the player his unfinished sketch | `pachelbels_sketch` (📄, readable, no mechanical effect) |
-| Weckmann | CR | Recognizes the player is a champion — the kind earned out in the world | `champions_tincture` (⚗️, advantage on next attack roll) |
-| Auros | BK | *"Be ready. What you bring to it matters."* — the only beat that faces CO, not the past | None |
-
-**New state flags:** `act8FarewellYael`, `act8FarewellBrynn`, `act8FarewellQuill`, `act8FarewellPachelbel`, `act8FarewellWeckmann`, `act8FarewellAuros`.
-
-**No new quests or nodes.** New items: `brynns_loaf` (food/heal), `pachelbels_sketch` (readable), `champions_tincture` (consumable/advantage). See plan.md §XXV for full dialogue text and insertion spec.
+**Mechanics:** Tincture sets `S_story._advantageNextAttack`; consumed in `doPlayerAttack()`. Loaf uses inline `heal` property (not in POTION_TIERS). Sketch uses Layer 57 readable system. **6 state flags:** `act8FarewellYael/Brynn/Quill/Pachelbel/Crov/Auros`.
 
 ---
 

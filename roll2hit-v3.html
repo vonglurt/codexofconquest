@@ -5930,6 +5930,8 @@ function playerRoll() {
 }
 
 function doPlayerAttack(attackNum, total) {
+  // Layer 60: Champion's Tincture — advantage on first attack
+  if (S_story._advantageNextAttack) { S_story._advantageNextAttack = false; S.player.adv = 'adv'; }
   const advState = resolveAdv(S.player.adv, S.opp.adv);
   const d20Res   = rollD20(advState);
   const d20Val   = d20Res.result;
@@ -7895,6 +7897,8 @@ const _S_DEFAULTS = () => ({
   junctionsSeen: {}, companionActsSeen: {},
   shardNotes: [false,false,false,false,false,false,false], shardNotesAllRead: false,
   voidCrackFired: false, voidFracturesFired: false, voidImminentWarned: false, void_mercy_count: 0,
+  act8FarewellYael: false, act8FarewellBrynn: false, act8FarewellQuill: false,
+  act8FarewellPachelbel: false, act8FarewellCrov: false, act8FarewellAuros: false,
 });
 
 /* ── Layer 48: Luck — Seventh Stat ── */
@@ -8044,6 +8048,20 @@ function _missionComplete() {
   return Object.values(bits).filter(Boolean).length >= 8;
 }
 function _renderNpcCard(key, container) {
+  // Layer 60: Act VIII farewell beat
+  { const flagKey = 'act8Farewell' + key[0].toUpperCase() + key.slice(1);
+    const beat = ACT8_FAREWELL_BEATS[key];
+    if (beat && (S_story.actNumber || 1) === 8
+        && _npcFavor(key) >= 1 && !S_story[flagKey]) {
+      S_story[flagKey] = true;
+      if (beat.gift) {
+        S_story.inventory.push({ ...beat.gift });
+        setTimeout(() => storyMsg('🌅 ' + beat.text + '\n\n[Received: ' + beat.gift.name + ' ' + beat.gift.icon + ']'), 200);
+      } else {
+        setTimeout(() => storyMsg('🌅 ' + beat.text), 200);
+      }
+    }
+  }
   const p = BIRKA_NPC_PROFILES[key];
   if (!p) return;
   const dlg = _getNPCDialogue(key);
@@ -10421,6 +10439,36 @@ const FISH_GOLD_VALUES = {
   legendary:  { common:75, rare:120, enchanted:175, golden:225, legendary:300 },
 };
 
+// ── Layer 60: Act VIII Farewell Beats ──
+const ACT8_FAREWELL_BEATS = {
+  yael: {
+    text: '"You came back. I wasn\'t certain you would — I\'m not being unkind, I just know what the road between here and the Convergence costs people.\n\nWhile you were gone I\'ve been building something. Not a movement, not a cause. Just a list. Names. People who know what happened here — what the Void is, what the Scholar Kings suppressed, what it cost to hold it back. People who will tell the truth about this, after.\n\nWhatever \'after\' looks like — whether you come back or not — the truth will be harder to erase than it\'s been. That\'s the only kind of victory I know how to build.\n\nGo do the other kind."',
+    gift: null,
+  },
+  brynn: {
+    text: '"Sit down. I made too much bread today — I always do when I\'m worried, and I\'ve been worried since Act III, so there\'s quite a lot of it.\n\nDon\'t argue about the room cost. Don\'t argue about the bread. You\'ve been traveling on short rations and I can tell. You have the look of someone who\'s been eating just enough to keep moving.\n\nTake it. It\'ll keep."',
+    gift: { name:"Brynn's Loaf", icon:'🍞', type:'potion', heal:8, sell:0, code:'IN', _noSell:true },
+  },
+  quill: {
+    text: '"I\'ve been going through the old ledgers. All the debts that seemed so significant. The Couperin estate. The back payments. The interest that had been accumulating for longer than either of us had been keeping accounts.\n\nThey balance now. Some were paid. Some were forgiven. Some just stopped mattering — which is its own kind of payment.\n\nI think I understand the note Couperin left better now. \'Just a number.\' He didn\'t mean the debt was meaningless. He meant it had served its purpose and could be released. He was teaching me something. It just took me this long to learn it.\n\nGood luck out there. I\'ll keep the books straight here."',
+    gift: null,
+  },
+  pachelbel: {
+    text: '"I\'ve been writing something. I don\'t know if it\'s good — I\'m not sure that question is the right one anymore.\n\nIt\'s honest. That\'s the difference between the work I did before you cleared my debt and the work I\'m doing now. I was composing to prove something. Now I\'m composing because there\'s something in me that needs to come out.\n\nI\'d like you to have this. It\'s not finished — I don\'t think it should be finished by me alone. Maybe you\'ll understand it. Maybe you\'ll leave it for someone else to read."',
+    gift: { name:"Pachelbel's Sketch", icon:'📄', type:'readable', sell:0, code:'BA',
+      readText:'Three lines of notation. A rest. Then three more, transposed up a fifth. The intervals spell out something — or almost spell it out, the way all honest things approach their meaning diagonally. At the bottom, in small letters: "For the one who came back."' },
+  },
+  crov: {
+    text: '"You look different.\n\nI\'ve been in this business long enough to know what the road does to people. Most come back smaller — worn down, quieter, like something got used up. Some don\'t come back at all. You came back standing straight. That\'s rarer than it sounds.\n\nI was holding this for a champion. Not the pit-fight kind — the kind that earns it out there, where nobody\'s watching and there\'s no purse at the end. Take it. You\'ll know when to use it."',
+    gift: { name:"Champion's Tincture", icon:'⚗️', type:'consumable', effect:'advantage_next_attack', sell:0, code:'CY', _noSell:true,
+      desc:'Grants advantage on your next attack roll. One use.' },
+  },
+  auros: {
+    text: '"I won\'t say goodbye. That\'s what people say when they\'re not sure something will work.\n\nI\'ll say: be ready. The Convergence has been waiting longer than either of us has been alive. It isn\'t patient — patience implies willingness to wait. It\'s simply there. It\'s always been there.\n\nWhat you bring to it matters. Not just the Shards — those are the key, not the reason. The reason is everything you did between collecting them. Whether you know that yet or not.\n\nI\'ll see you on the other side of it. One way or another."',
+    gift: null,
+  },
+};
+
 // ── Layer 59: Pressure Cascade ──
 const NPC_VOID_PRESSURE_LINES = {
   yael:     'The city is holding its breath. Even the rioters have gone quiet.',
@@ -12266,8 +12314,9 @@ function storyRenderInventory() {
     }
   }
 
-  // ── 2. Consumables (potions + spell scrolls + flashbangs) ──
+  // ── 2. Consumables (potions + spell scrolls + flashbangs + farewell gifts) ──
   const consumables = S_story.inventory.filter(i => i.type === 'potion' || i.type === 'spell' || i.type === 'flashbang'
+    || i.type === 'consumable'
     || Object.values(POTION_TIERS).some(p => p.name === i.name && p.heal > 0));
   if (consumables.length) {
     makeSection('💊 Consumables');
@@ -12284,6 +12333,37 @@ function storyRenderInventory() {
             if (idx >= 0) S_story.inventory.splice(idx, 1);
             storyUpdateStatus(); storyRenderInventory();
             storyMsg(potionTier.icon + ' Drank ' + potionTier.name + '. Restored ' + potionTier.heal + ' HP.');
+          });
+          div.appendChild(useBtn);
+        }
+        // Layer 60: Brynn's Loaf (potion with inline heal property, not in POTION_TIERS)
+        if (!potionTier && it.type === 'potion' && it.heal) {
+          const useBtn = document.createElement('button');
+          useBtn.className = 'inv-use-btn';
+          useBtn.textContent = it.icon + ' Eat';
+          useBtn.addEventListener('click', () => {
+            const healed = Math.min(it.heal, S_story.hpMax - S_story.hp);
+            S_story.hp = Math.min(S_story.hpMax, S_story.hp + it.heal);
+            const idx = S_story.inventory.indexOf(it);
+            if (idx >= 0) S_story.inventory.splice(idx, 1);
+            storyUpdateStatus(); storyRenderInventory();
+            storyMsg(it.icon + ' ' + it.name + '. Restored ' + healed + ' HP.');
+          });
+          div.appendChild(useBtn);
+        }
+        // Layer 60: Champion's Tincture (consumable: advantage_next_attack)
+        if (it.type === 'consumable' && it.effect === 'advantage_next_attack') {
+          const alreadyActive = !!S_story._advantageNextAttack;
+          const useBtn = document.createElement('button');
+          useBtn.className = 'inv-use-btn';
+          useBtn.textContent = alreadyActive ? '⚗️ Active' : '⚗️ Use';
+          useBtn.disabled = alreadyActive;
+          useBtn.addEventListener('click', () => {
+            S_story._advantageNextAttack = true;
+            const idx = S_story.inventory.indexOf(it);
+            if (idx >= 0) S_story.inventory.splice(idx, 1);
+            storyRenderInventory();
+            storyMsg('⚗️ Champion\'s Tincture: advantage on your next attack roll.');
           });
           div.appendChild(useBtn);
         }
@@ -12443,7 +12523,7 @@ function storyRenderInventory() {
   }
 
   // ── 8. Other items (trophies, etc.) ──
-  const knownTypes = new Set(['potion','spell','flashbang','shard','key','item','shield','weapon','mainweapon','knowledge','key_item','readable']);
+  const knownTypes = new Set(['potion','spell','flashbang','shard','key','item','shield','weapon','mainweapon','knowledge','key_item','readable','consumable']);
   const potionNames = new Set(Object.values(POTION_TIERS).map(p => p.name));
   const otherItems = S_story.inventory.filter(i =>
     !knownTypes.has(i.type) && !potionNames.has(i.name) && i.name !== 'Transmort Scroll');

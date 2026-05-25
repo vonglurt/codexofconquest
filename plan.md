@@ -15,7 +15,7 @@ Implement in layer order. Each = code change + doc sync + `git commit`.
 | 57 | §XXII | Codex Shard Origin Stories | ✅ Implemented |
 | 58 | §XXIII | Inn Dreams | ✅ Implemented |
 | 59 | §XXIV | Pressure Cascade: Visible Void Tide Events | ✅ Implemented |
-| 60 | §XXV | The Homecoming: Act VIII Farewell Beats | Medium |
+| 60 | §XXV | The Homecoming: Act VIII Farewell Beats | ✅ Implemented |
 | 62 | §XXVII | Town Crier: Inn Rest World-News Lines | Small |
 | 63 | §XXVIII | Froberger Memorial: Living Stone at CI | Small |
 | 64 | §XXIX | Pit Championship: Finals at Crossroads Forge | Medium |
@@ -286,7 +286,7 @@ The commit message should name the lab report and summarize what it covers in on
 | 13 | §XXII | Codex Shard Origin Stories | 57 | No — document inline in `story.md` | ✅ Implemented |
 | 14 | §XXIII | Inn Dreams | 58 | No — too small; document inline | ✅ Implemented |
 | 15 | §XXIV | The Pressure Cascade: Visible Void Tide Events | 59 | No — extend `lab-report-living-world.md` | ✅ Implemented |
-| 16 | §XXV | The Homecoming: Act VIII One-Time Farewell Beats | 60 | No — document inline in `story.md` | ⚠️ PLANNED |
+| 16 | §XXV | The Homecoming: Act VIII One-Time Farewell Beats | 60 | No — document inline in `story.md` | ✅ Implemented |
 | 17 | §XXVI | Corelli the Wandering Merchant: Cross-Act Vendor NPC | 61 | Yes — `lab-report-corelli-merchant.md` (wandering NPC archetype) | ⚠️ PLANNED |
 | 18 | §XXVII | Town Crier: Inn Rest World-News Ambient Lines | 62 | No — document inline | ⚠️ PLANNED |
 | 19 | §XXVIII | The Froberger Memorial: A Living Stone at CI | 63 | No — document inline in `story.md` + `world.md` | ⚠️ PLANNED |
@@ -2070,7 +2070,7 @@ creative_literacy_token: { name:'Creative Literacy Token', icon:'📄', sell:27 
 | **Codex Shard Origins (§XXII)** | 7 shard_note items / named placers / flag-gated variants / journal reward | `plan.md §XXII` | `story.md` Shard Origins section; `world.md` placer name notes | ✅ Implemented |
 | **Inn Dreams (§XXIII)** | INN_DREAMS const / 4 inns × 3 base variants / flag-gated replacements | `plan.md §XXIII` | `story.md` Inn Dreams section | ✅ Implemented |
 | **Pressure Cascade (§XXIV)** | voidPressure threshold events (3/6/9) / void-touched monsters / NPC pressure lines / mercy counter | `plan.md §XXIV` | `story.md` Void Tide Events; `world.md` Void-Touched Monsters note | ✅ Implemented |
-| **Homecoming (§XXV)** | 6 one-time Act VIII farewell beats / Brynn's Loaf / Champion's Tincture / Pachelbel's Sketch / 6 new flags | `plan.md §XXV` | ✅ PLANNED stub: `story.md` Act VIII Farewell Beats | ⚠️ PLANNED |
+| **Homecoming (§XXV)** | 6 one-time Act VIII farewell beats / Brynn's Loaf / Champion's Tincture / Pachelbel's Sketch / 6 new flags | `plan.md §XXV` | `story.md` Act VIII Farewell Beats | ✅ Implemented |
 | **Wandering Merchant (§XXVI)** | Corelli — 5 appearances Acts II–VIII / purchase-gated fav / 5 unique items / Scholar King courier reveal / `last_cipher` cross-ref §XVI–§XVII | `plan.md §XXVI` | ✅ PLANNED stubs: `story.md` Corelli encounters; `world.md` Wandering Merchant | ⚠️ PLANNED |
 | **Town Crier (§XXVII)** | `TOWN_CRIER_LINES` const / priority-selector / inn rest rumor line / 56 act-cycling lines + critical/tension/quest/NPC tiers | `plan.md §XXVII` | ✅ PLANNED stub: `story.md` Town Crier note; no new state flags | ⚠️ PLANNED |
 | **Froberger Memorial (§XXVIII)** | `FROBERGER_MEMORIAL_TEXT` object / 4-layer plaque text / memorial book entries / [Leave Flowers] 10gp action / `storyShowFrobergerMemorial()` | `plan.md §XXVIII` | ✅ PLANNED stubs: `story.md` Memorial section; `world.md` memorial world note | ⚠️ PLANNED |
@@ -5054,7 +5054,7 @@ No lab report needed — extend `lab-report-living-world.md` with a §XXIV appen
 
 ---
 
-## Section XXV — The Homecoming: Act VIII One-Time Farewell Beats (Layer 60, ⚠️ PLANNED)
+## Section XXV — The Homecoming: Act VIII One-Time Farewell Beats (Layer 60, ✅ Implemented)
 
 > **Design problem:** Act VIII returns the player to Birka, but the 6 core NPCs don't acknowledge that the player has been gone for the entire journey — they cycle through the same dialogue pool as always. The emotional climax of the story happens at CO, but the *human* climax should happen here, in the last town, with the people the player actually knows. This section adds six one-time farewell beats that fire exactly once in Act VIII and are never repeated.
 
@@ -5311,7 +5311,7 @@ None of these beats explain the game to the player. They assume the player alrea
 
 ---
 
-*§XXV status: ⚠️ PLANNED — Act VIII farewell beats designed for all 6 NPCs; full dialogue text written; 3 new items specified (Brynn's Loaf / Pachelbel's Sketch / Champion's Tincture); 6 new state flags; 8 insertion steps; no new monsters or nodes; no lab report — document inline in `story.md`.*
+*§XXV status: ✅ Implemented — ACT8_FAREWELL_BEATS const (6 NPCs: yael/brynn/quill/pachelbel/crov/auros); fires via _renderNpcCard() when actNumber === 8 + fav ≥ 1 + flag not set; storyMsg with 🌅 prefix; Brynn's Loaf (type:potion heal:8), Pachelbel's Sketch (type:readable), Champion's Tincture (type:consumable effect:advantage_next_attack); tincture effect in doPlayerAttack(); 6 state flags; consumable+food use buttons added to inventory.*
 
 ---
 
