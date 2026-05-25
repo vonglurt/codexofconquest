@@ -945,7 +945,7 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 #story-text-box {
   background: var(--panel); border: 1px solid var(--border); border-radius: 6px;
   padding: 12px 14px; font-size: 13px; line-height: 1.65; color: var(--text);
-  min-height: 80px;
+  min-height: 80px; max-height: 220px; white-space: pre-line; overflow-y: scroll;
 }
 
 #story-info-row {
@@ -3659,7 +3659,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
         <span id="s-node-act">Act I</span>
       </div>
 
-      <div id="story-farewell"></div>
+      <div id="story-farewell" style="display:none;"></div>
       <div id="story-text-box">Arriving in Birka…</div>
 
       <div id="story-info-row">
@@ -4501,6 +4501,12 @@ const MONSTER_POOL = {
   taz_devil:        { key:'taz_devil',        name:'Taz Devil — Furball Tornado', ac:16, hp:70, atk:8, dmgDie:8, dmgCount:2, dmgFlat:4, tier:'hard'  },
   fat_cat_boss:     { key:'fat_cat_boss',     name:'Don Fluffissimo',        ac:17, hp:90, atk:7, dmgDie:6,  dmgCount:2, dmgFlat:5,  tier:'hard'     },
   cat_king:         { key:'cat_king',         name:'The Cat-King',           ac:19, hp:160,atk:10,dmgDie:8,  dmgCount:3, dmgFlat:6,  tier:'deadly'   },
+  // ── Layer 51: Weimar Scholar Gate ──
+  scholars_guard:   { key:'scholars_guard',   name:"Scholar's Guard",        ac:14, hp:45, atk:5, dmgDie:8,  dmgCount:1, dmgFlat:3,  tier:'medium'   },
+  // ── Layer 55: Visby Underground ──
+  hollow_hands_guard: { key:'hollow_hands_guard', name:'Hollow Hands Guard', ac:13, hp:22, atk:4, dmgDie:6,  dmgCount:1, dmgFlat:2,  tier:'easy'     },
+  // ── Layer 56: The Void Shaman (scripted encounter only — not in random pools) ──
+  void_shaman:        { key:'void_shaman',        name:'The Warden',         ac:15, hp:65, atk:6, dmgDie:6,  dmgCount:2, dmgFlat:4,  tier:'rare'     },
   // trivial — city slums vermin (AC ≤ 5, HP 2–20, Lv1-friendly)
   rabid_dog:         { key:'rabid_dog',         name:'Rabid Dog',               ac:4, hp:9,  atk:3, dmgDie:4, dmgCount:1, dmgFlat:1, tier:'trivial' },
   aggressive_turkey: { key:'aggressive_turkey', name:'Aggressive Turkey',       ac:2, hp:4,  atk:1, dmgDie:3, dmgCount:1, dmgFlat:0, tier:'trivial' },
@@ -4921,6 +4927,11 @@ const MONSTER_DROPS = {
   taz_devil:            { name:'Furball Crown',           icon:'🌀', sell:18 },
   fat_cat_boss:         { name:"The Don's Signet Ring",   icon:'💍', sell:35 },
   cat_king:             { name:"Cat-King's Claw Fragment",icon:'👑', sell:50 },
+  // ── Layer 51: Weimar Scholar Gate drop ──
+  scholars_guard:       { name:"Scholar Kings' Seal",     icon:'🔏', sell:20 },
+  // ── Layer 55: Visby Underground drop ──
+  hollow_hands_guard:   { name:'Hollow Hands Seal',       icon:'🖤', sell:0  },
+  // ── Layer 56: void_shaman drop is scripted inline (warden_token) — not in random table ──
   // ── Trivial ──
   commoner:             { name:'Tattered Purse',          icon:'🗡', sell:3  },
   kobold:               { name:'Kobold Fang',             icon:'🦷', sell:4  },
@@ -5279,7 +5290,7 @@ const WORLD_DB = {
   docks:            { label:'Harbor Docks',         icon:'⚓',  monsters:[ P.commoner, P.guard, P.pirate, P.thug, P.bandit, P.spy, P.giant_crab, P.merfolk, P.shadow, P.kenku, P.wererat, P.swashbuckler, P.pirate_captain, P.assassin, P.vampire_spawn, P.drowner, P.pirate_ghost, P.sea_demon ] },
   market_quarter:   { label:'Market Quarter',       icon:'🛒',  monsters:[ P.commoner, P.npc_merchant, P.bandit, P.spy, P.imp, P.homunculus, P.kenku, P.thug, P.mimic, P.intellect_dev, P.doppelganger, P.succubus, P.assassin, P.hym, P.plague_maiden, P.botchling ] },
   blacksmith_qtr:   { label:'Blacksmith Quarter',   icon:'🔨',  monsters:[ P.commoner, P.dwarf_warrior, P.guard, P.animated_armor, P.thug, P.veteran, P.shield_guardian, P.stone_golem, P.forge_elemental, P.iron_golem, P.hym ] },
-  scholars_qtr:     { label:"Scholar's Quarter",    icon:'📚',  monsters:[ P.commoner, P.homunculus, P.mage, P.specter, P.ghost, P.intellect_dev, P.archmage, P.lich, P.library_ghost, P.hym, P.bone_naga ] },
+  scholars_qtr:     { label:"Scholar's Quarter",    icon:'📚',  monsters:[ P.commoner, P.homunculus, P.mage, P.specter, P.ghost, P.intellect_dev, P.archmage, P.lich, P.library_ghost, P.hym, P.bone_naga, P.scholars_guard ] },
   cyberpunk_streets:{ label:'Cyberpunk Neon Streets',icon:'🔌',  monsters:[ P.techno_thug, P.hacker, P.corrupted_android, P.cyber_guard, P.street_samurai, P.virus_spawn, P.neon_golem, P.cyber_vampire, P.data_wraith, P.neural_predator ] },
   // ── Social / Indoor ──────────────────────────────────────
   storefront:       { label:'Market District',      icon:'🏪',  monsters:[ P.commoner, P.bandit, P.spy, P.imp, P.homunculus, P.kenku, P.thug, P.mimic, P.intellect_dev, P.doppelganger, P.succubus, P.assassin, P.vampire, P.hym, P.botchling, P.ekimara ] },
@@ -5294,7 +5305,7 @@ const WORLD_DB = {
   vampire_castle:   { label:'Vampire Castle',        icon:'🧛',  monsters:[ P.zombie, P.skeleton, P.shadow, P.ghost, P.specter, P.wraith, P.wight, P.revenant, P.vampire_spawn, P.vampire, P.death_knight, P.lich, P.striga, P.sluagh, P.bruxa ] },
   // ── Underground / Caves ──────────────────────────────────
   sewers:           { label:'Sewer Underbelly',      icon:'🐀',  monsters:[ P.giant_rat, P.zombie, P.shadow, P.ghoul, P.wererat, P.specter, P.intellect_dev, P.ghast, P.mimic, P.water_weird, P.wight, P.wraith, P.vampire_spawn, P.vampire, P.rotfiend, P.nekker, P.alghoul ] },
-  goblin_cave:      { label:'Goblin Warrens',        icon:'👺',  monsters:[ P.kobold, P.goblin, P.giant_rat, P.hobgoblin, P.bugbear, P.worg, P.ogre, P.troll, P.bandit_captain, P.nekker, P.redcap, P.ettin ] },
+  goblin_cave:      { label:'Goblin Warrens',        icon:'👺',  monsters:[ P.kobold, P.goblin, P.giant_rat, P.hobgoblin, P.bugbear, P.worg, P.ogre, P.troll, P.bandit_captain, P.nekker, P.redcap, P.ettin, P.hollow_hands_guard ] },
   pirate_cave:      { label:'Pirate Cave',           icon:'☠',   monsters:[ P.pirate, P.bandit, P.thug, P.spy, P.skeleton, P.zombie, P.mimic, P.swashbuckler, P.pirate_captain, P.vampire_spawn, P.vampire, P.pirate_ghost, P.sea_demon, P.bone_naga ] },
   monster_cave:     { label:'Monster Den',           icon:'🐉',  monsters:[ P.orc, P.gnoll, P.hobgoblin, P.ogre, P.troll, P.mimic, P.gelatinous_cube, P.wight, P.wraith, P.mind_flayer, P.beholder, P.aboleth, P.alghoul, P.ettin, P.bone_naga ] },
   sea_cavern:       { label:'Sea Cavern',            icon:'🦀',  monsters:[ P.giant_crab, P.merfolk, P.sahuagin, P.sea_spawn, P.giant_octopus, P.sea_hag, P.water_weird, P.aboleth, P.dragon_turtle, P.kraken, P.drowner, P.deep_one, P.kraken_spawn ] },
@@ -6022,7 +6033,8 @@ function doPlayerAttack(attackNum, total) {
 
 function rollInitiative() {
   const dexMod = abilityMod(S.char.dex);
-  const playerRoll = roll(20) + dexMod;
+  const _tomeInit = _tomeBonuses().initiative;
+  const playerRoll = roll(20) + dexMod + _tomeInit;
   const oppRollVal = roll(20) + S.enemy.atk;
 
   const playerWins = playerRoll >= oppRollVal; // ties go to player
@@ -6084,9 +6096,12 @@ function rollDeathSave() {
   disableAllRollBtns(true);
 
   const d20Val = roll(20);
+  const _kingsSealBonus = (S_story.inventory || []).some(i => i.name === CORELLI_ITEMS.kings_seal.name) ? 1 : 0;
+  const _dsBonus = _tomeBonuses().deathSave + _kingsSealBonus;
+  const _dsEffective = d20Val + _dsBonus;
   const heroEl  = document.getElementById('you-d20-hero');
   const statusEl = document.getElementById('ds-status');
-  const glowClass = d20Val === 20 ? 'glow-nat20' : d20Val === 1 ? 'glow-nat1' : d20Val >= 10 ? 'glow-hit' : '';
+  const glowClass = d20Val === 20 ? 'glow-nat20' : d20Val === 1 ? 'glow-nat1' : _dsEffective >= 10 ? 'glow-hit' : '';
 
   animateDie(heroEl, 20, d20Val, glowClass, () => {
     let cardOutcome;
@@ -6109,16 +6124,16 @@ function rollDeathSave() {
         statusEl.textContent = `NAT 1 — 2 failures (${S.deathSaves.failures}/3)`;
         cardOutcome = `NAT 1 — 2 failures (${S.deathSaves.failures}/3)`;
       }
-    } else if (d20Val >= 10) {
+    } else if (_dsEffective >= 10) {
       S.deathSaves.successes++;
       updateDsPips();
       if (S.deathSaves.successes >= 3) {
         statusEl.className = 'ds-status stable'; statusEl.textContent = '✓ STABLE';
-        cardOutcome = `${d20Val} — 3 successes — Stable (unconscious)`;
+        cardOutcome = `${d20Val}${_dsBonus ? '+'+_dsBonus : ''} — 3 successes — Stable (unconscious)`;
       } else {
         statusEl.className = 'ds-status';
-        statusEl.textContent = `${d20Val} — Success (${S.deathSaves.successes}/3)`;
-        cardOutcome = `${d20Val} — Success (${S.deathSaves.successes}/3)`;
+        statusEl.textContent = `${d20Val}${_dsBonus ? '+'+_dsBonus : ''} — Success (${S.deathSaves.successes}/3)`;
+        cardOutcome = `${d20Val}${_dsBonus ? '+'+_dsBonus : ''} — Success (${S.deathSaves.successes}/3)`;
       }
     } else {
       S.deathSaves.failures++;
@@ -7019,7 +7034,7 @@ const NODE_MAP = {
   MS:{ num:10, code:'MS', name:'merchant_ship',   label:'Aboard the Tilbury Star',      act:2, N:null, S:null, E:null,  W:'DK',  text:"A night passage heading east. The cargo below is alive and shouldn't be shipping. Pirates board at 2am.", npc:'Ship Captain', battle:{label:'Pirate ×3 + Ghost', key:'pirate', count:3}, loot:'Cargo Manifest', sleep:true, sleepCost:3 },
   AL:{ num:11, code:'AL', name:'alley',           label:'Visby Approach Alley',        act:2, N:'DK', S:'SE', E:null,  W:null,  text:"The edge of Visby. Warrant scouts watch every entrance. Show the Conclave Pass — or fight through the checkpoint.", npc:null, battle:{label:'Thug ×2 + Kenku', key:'thug', count:2}, loot:null, sleep:false },
   // ── ACT III — WILDS
-  MI:{ num:12, code:'MI', name:'midlands',        label:'Plains & Midlands',             act:3, N:'HL', S:'EM', E:'J1',  W:'J6',  text:"Open road. Wide sky. Farms abandoned. Livestock wandered off. A 'field woman' appears at noon on the open plain.", npc:null, battle:{label:'Noonwraith + Field Wraith', key:'noonwraith', count:1}, loot:'Abandoned Pack', sleep:false },
+  MI:{ num:12, code:'MI', name:'midlands',        label:'Plains & Midlands',             act:3, N:'HL', S:'EM', E:'J1',  W:'RD',  text:"Open road. Wide sky. Farms abandoned. Livestock wandered off. A 'field woman' appears at noon on the open plain.", npc:null, battle:{label:'Noonwraith + Field Wraith', key:'noonwraith', count:1}, loot:'Abandoned Pack', sleep:false },
   FO:{ num:13, code:'FO', name:'forest',          label:"Aldric's Forest",               act:3, N:'HL', S:'SW', E:'J6',  W:'EF',  text:"Ancient trees. Crow-marked trunks every 200 paces. Brother Aldric's hermitage: a stone hut, a fire, boiling mushrooms. He has been expecting someone.", npc:'Brother Aldric', battle:{label:'Leshen', key:'leshen', count:1}, loot:'Earthbind Root ×2 · Grove Token (Shard #2)', sleep:false },
   HL:{ num:14, code:'HL', name:'highlands',       label:'Irish Highlands',               act:3, N:'SQ', S:'FO', E:'MI',  W:'EH',  text:"Rolling hills. Cold wind. Standing stones. Dunfall village bars its doors at dusk — a kelpie has been in the loch for two seasons. Elder Fionn asks for help.", npc:'Elder Fionn', battle:{label:'Kelpie + Cú Sídhe ×2', key:'kelpie', count:1}, loot:'Highland Horse · Snare Trap', sleep:false },
   SW:{ num:15, code:'SW', name:'swamp',           label:'Murky Swamp',                   act:3, N:'FO', S:'HS', E:null,  W:'ES',  text:"The road becomes a causeway. The causeway becomes a suggestion. A Drowner has been killing bridge repair crews. The Runed Stone is at the center crossing.", npc:null, battle:{label:'Drowner ×2 + Foglet + Waterhag', key:'drowner', count:2}, loot:'Runed Stone', sleep:false },
@@ -7061,7 +7076,7 @@ const NODE_MAP = {
   J3:{ num:45, code:'J3', name:'junction', label:'Coastal Fork',               act:4, N:'HS', S:'BE', E:null,  W:null,  text:"A driftwood post driven into the cliff path. North — Crones' Swamp. South — Tropical Beach. The sea is audible in both directions.", npc:null, battle:null, loot:null, sleep:false, junction:true },
   J4:{ num:46, code:'J4', name:'junction', label:'Deep Road Split',            act:4, N:null, S:null, E:'SE',  W:'DS',  text:'A sunken road through packed sand. Saltwater marks on the stone walls. East — Visby sewers entrance. West — Deep sea trench coast road.', npc:null, battle:null, loot:null, sleep:false, junction:true },
   J5:{ num:47, code:'J5', name:'junction', label:'Arctic Overpass',            act:7, N:null, S:null, E:'HC',  W:'AR',  text:'The sky road above the clouds. Permanent frost underfoot. East — Heavenly Clouds road. West — Arctic Wastes. Visible for fifty leagues in clear weather.', npc:null, battle:null, loot:null, sleep:false, junction:true },
-  J6:{ num:48, code:'J6', name:'junction', label:'Western Wilds Crossroads',   act:3, N:'MT', S:'YL', E:'MI',  W:'FO',  text:"A triple-forked oak, each fork pointing a direction. East — Midlands plains. West — Aldric's Forest. South — a faint path ends at still water. Nothing was said about a lake.", npc:null, battle:null, loot:null, sleep:false, junction:true },
+  J6:{ num:48, code:'J6', name:'junction', label:'Western Wilds Crossroads',   act:3, N:'MT', S:'YL', E:'RD',  W:'FO',  text:"A triple-forked oak, each fork pointing a direction. East — Midlands plains. West — Aldric's Forest. South — a faint path ends at still water. Nothing was said about a lake.", npc:null, battle:null, loot:null, sleep:false, junction:true },
   J7:{ num:49, code:'J7', name:'junction', label:'Sky Gate Spur',              act:7, N:'HC', S:null, E:'OP',  W:null,  text:'The eastern branch of the sky road. North — Heavenly Clouds entrance. East — Oriental Dragon Palace. Clouds below. Nothing for hundreds of leagues.', npc:null, battle:null, loot:null, sleep:false, junction:true },
   // ── Layer 10 — Hunting Ground Nodes (terrain gaps only) ──
   MT:{ num:50, code:'MT', name:'mountains',  label:'The Mountain Pass — High Crest', act:3, N:null, S:'J6', E:'ET', W:null, text:'A narrow pass through sheer rock faces. Wind cuts horizontal. Eagles circle the southern ledge. Griffons nest above. The path dead-ends at a cliff overlooking the Midlands. Good place to wait for prey.', npc:null, battle:null, loot:null, sleep:false },
@@ -7095,6 +7110,8 @@ const NODE_MAP = {
   GL:{ num:74, code:'GL', name:'defi_land', label:"Old Guard's Corner",    act:1, N:null, S:null, E:'DF', W:null, text:"Three alleys converge at an improbable angle. A wooden folding chair. A man in it. A laminated sign that says GET OFF. Off of what is not specified. He has outlasted four city administrations, two plagues, and one Void surge without moving.", npc:"Zeke 'The Signal'", battle:null, loot:null, sleep:false },
   // ── Layer 44: Ally Cat Arc ──
   CQ:{ num:77, code:'CQ', name:'cat_quarter', label:'The Cat Quarter', act:1, N:null, S:null, E:null, W:'SL', text:"Narrow brick lanes, broken glass, discarded fish bones. Every surface is scratched. Not vandalism — territorial markings, dense as wallpaper. A large orange tabby sits on an overturned crate wearing what appears to be a very small fedora. He sees you and doesn't move.", npc:'Jimmy Two-Tails', battle:{label:'Beefy Tom × 3', key:'beefy_tom', count:3}, loot:'Tiny Fedora', sleep:false },
+  // ── Layer 61: Corelli — Roadside waypoint (Act III, between J6 and MI) ──
+  RD:{ num:78, code:'RD', name:'road', label:'Roadside Clearing', act:3, N:null, S:null, E:'MI', W:'J6', text:"A cleared verge where travelers sometimes stop. A fire ring, cold. Someone's broken cart wheel leaning against the tree line.", npc:null, battle:null, loot:null, sleep:false, junction:true },
 };
 
 const ACT_NAMES = ['','Act I — Birka','Act II — Tilbury','Act III — The Wilds','Act IV — The Deep','Act V — Visby','Act VI — Desert','Act VII — Mythic Circuit','Act VIII — The Reckoning'];
@@ -7112,6 +7129,7 @@ const NODE_COORDS = {
   /* Layer 9 — Junction nodes */
   J1:{r:5,c:12},  J2:{r:10,c:4},  J3:{r:9,c:3},
   J4:{r:12,c:8},  J5:{r:1,c:10},  J6:{r:5,c:5},   J7:{r:1,c:22},
+  RD:{r:5,c:6},
   /* Layer 10 — Hunting Ground node */
   MT:{r:4,c:5},
   /* Layer 39 — Epic Battleground nodes (EH/EW/EM/EJ repositioned to use free parent directions) */
@@ -7499,6 +7517,117 @@ const NPC_DIALOGUES = {
     friendly: [],
     dearFriend: [],
   },
+  kenickie: {
+    meta: { name:'Kenickie Clawnickie Mancuso', occupation:'Black market operator — "import/export"', node:'CQ',
+      worldTruth:'The market is the market. You want it or you don\'t.',
+      enemy:'Paperwork, questions, and anyone who asks where the minnows came from',
+      missionBit:null },
+    impartial: [
+      '"Yo. Don\'t look at the fish like that. They\'re fresh. Freshish. Listen: do you want the sardines or not."',
+      '"I run a legitimate business. The legitimacy is not in writing anywhere but it\'s implied."',
+      '"My guy Vinnie\'s got a contact who knows a cat who\'s got a whole other thing going. I\'m not part of that. I\'m just saying it exists."',
+      '"The Don is gone. The merchant side is gone. The FISH, however, remain. The fish were never political."',
+    ],
+    friendly: [
+      '"You\'re honorary Ally Cat. You know what that means? Community price. That\'s it. That\'s the whole benefit. But it\'s real."',
+      '"Sandy\'s cleaning up the neighborhood. Jimmy\'s doing the diplomacy thing. I\'m providing COMMERCE. We each got a lane."',
+    ],
+    dearFriend: [
+      '"You killed the Cat-King. You buying sardines from me. This is the whole arc right here. This is it."',
+    ],
+  },
+  // ── Layer 51: Weimar Scholar Gate NPC profiles ──
+  isolde_voss: {
+    meta: { name:'Archivist Isolde Voss', occupation:'Senior Archivist — Scholar Kings First Tier', node:'SQ',
+      worldTruth:'Controlled access to dangerous knowledge is a form of protection',
+      missionBit:'The Froberger revocation was filed correctly. She has stopped being certain it was right.' },
+    impartial: [
+      '"You\'re asking about Froberger. Everyone who comes here lately is asking about Froberger. His access was revoked pursuant to the Scholar Kings Protocol on Speculative Endangerment. That is the extent of what I can tell you."',
+      '"Research without certification causes harm. I have thirty years of examples. I am not being obstinate. I am being careful."',
+    ],
+    friendly: [
+      '"He left his research notes in the lower archive. I moved them there myself. I told myself it was protocol. I\'ve been thinking about that since you came in."',
+      '"The lower archive is open to you. I would ask that you read everything — not just the parts that confirm what you already think."',
+    ],
+    dearFriend: [],
+    quote: '"The revocation was filed correctly. I stopped being certain it was right about three months after he died."',
+  },
+  benedikt_rasp: {
+    meta: { name:'Benedikt Rasp', occupation:'Ex-Scholar Tier 3 (resigned) — runs a reading circle from a bookbinder\'s stall', node:'SQ',
+      worldTruth:'Knowledge in service of action is the only kind that works',
+      missionBit:'He has Froberger\'s annotated early notes. He is deciding who is worth giving them to.' },
+    impartial: [
+      '"The Scholar Kings don\'t lock up knowledge because they want to hoard it. They lock it up because they\'re afraid of what happens when the wrong person finds the right thing and does something about it."',
+      '"They were right about Froberger. He found the right thing. He just wasn\'t the wrong person — that\'s the part they got wrong."',
+    ],
+    friendly: [
+      '"The third one\'s always the hardest. Not because the material is harder — because by then you realize the first two were already enough and you stayed anyway."',
+      '"He said it in his margin notes every time. That\'s how I found her. That\'s how I find everyone worth finding."',
+    ],
+    dearFriend: [
+      '"The Scholar Kings didn\'t erase her. They just stopped saying the name. Froberger said it in his margin notes every time. And now you know how I found him."',
+    ],
+    quote: '"I left the Scholar Kings. Or they asked me to leave. It was one of those situations where both things are true."',
+  },
+  // ── Layer 54: Tilbury Harbor Arc NPC profiles ──
+  rennau: {
+    meta: { name:'Harbor Master Rennau', occupation:'Harbor Master — Merchant\'s Conclave Tier 2', node:'SF',
+      worldTruth:'Institutions stop counting the cost when it gets too high',
+      missionBit:'He keeps the ledger because nobody else will. He is not defeated. He is tired of being ignored.' },
+    impartial: [
+      '"The ledger goes back eleven months. Every ship that\'s left, every ship that\'s come back, every ship that hasn\'t. The Conclave calls the ones that haven\'t \'weather losses.\' I stopped calling them that six weeks ago."',
+    ],
+    friendly: [
+      '"You found the manifest. Good. I\'m going to file it under the ships that didn\'t make it — the ones the Conclave calls weather losses. It\'s not the right category. It\'s the only one they have."',
+    ],
+    dearFriend: [
+      '"Ori said the thing that boarded them didn\'t have a name. Things that don\'t have names are the Void\'s specialty. I\'m glad someone came back to tell us."',
+    ],
+    quote: '"The ledger is the only record that\'s honest. The Conclave has the other kind."',
+  },
+  vonn: {
+    meta: { name:'Adjutant Vonn', occupation:'Merchant\'s Conclave Adjutant Tier 3', node:'TL',
+      worldTruth:'Institutional process is not the same as institutional justice',
+      missionBit:'He believes the embargo was the right call. He has 30 years of trade law backing him. He is not wrong about the law.' },
+    impartial: [
+      '"The harbor is closed to non-Conclave vessels under Emergency Trade Protocol 7. I understand this is inconvenient. I can offer you a transit permit for a fee. The fee is fixed by the Conclave. I did not set it."',
+      '"Protocol 7 exists for situations exactly like this one. The legal framework is sound. The implementation challenges are noted. They are not my decision."',
+    ],
+    friendly: [
+      '"You\'re one of the few who\'s actually read the manifest. Most people just shout at the gate."',
+    ],
+    dearFriend: [],
+    quote: '"The embargo is a legitimate Conclave instrument. The fact that it\'s bad policy is above my grade."',
+  },
+  // ── Layer 55: Visby Underground NPC profiles ──
+  solvak: {
+    meta: { name:'Debt Agent Solvak', occupation:'Merchant\'s Conclave Tier 3 debt collector', node:'VS',
+      worldTruth:'Debt collection requires leverage; leverage requires going places the creditor won\'t',
+      missionBit:'He needs the player to make this solvable. He knows Mordus won\'t pay directly. He needs an angle.' },
+    impartial: [
+      '"The Conclave hired me to collect. I have collected from Crimson Warrant before — once. The key is presenting it as a mutual interest problem, not a threat. Mordus does not respond to threats. He responds to leverage. I don\'t have any. You might."',
+    ],
+    friendly: [
+      '"You talked to Mordus. He didn\'t have you removed. That\'s better than my last three visits combined."',
+    ],
+    dearFriend: [],
+    quote: '"I\'ve been outside Visby for six weeks. The debt is 2,000gp. I am very good at my job. This is not a good job situation."',
+  },
+  yva: {
+    meta: { name:'Yva', occupation:'Goblin broker, formerly Mordus-aligned supply intermediary', node:'GC',
+      worldTruth:'Neutrality has a price; the Hollow Hands set the new price',
+      missionBit:'She knows who diverted the weapons. She will not say the name without compensation.' },
+    impartial: [
+      '"I moved cargo for Mordus for eight years. Good coin, no questions. Then the Hollow Hands put a mark on my stall and started asking questions instead. I don\'t know who they answer to. I know what the mark means. It means I am not neutral anymore unless I pay to be."',
+    ],
+    friendly: [
+      '"The weapons went to the Hollow Hands. The shaman told them it was tribute Mordus owed them. Mordus never paid tribute. The shaman invented a tribute that made the Hollow Hands feel owed. That\'s the part that scares me."',
+    ],
+    dearFriend: [
+      '"I want Mordus to know I didn\'t betray him. I want you to tell him I didn\'t know what the cargo was for until it was already moved."',
+    ],
+    quote: '"Fifty gold is a reasonable price for information that could get me killed."',
+  },
 };
 
 /* ── Layer 3: Quest Data ── */
@@ -7709,62 +7838,123 @@ const QUEST_DB = {
     desc:'Return to Warlord Kael Mordus at Birka Keep for payment. He is reading the journal.',
     hint:'Find Warlord Kael Mordus at Birka Keep to the north.',
     activateNode:'BK', completeFn:() => !!(S_story.ebReturnDone||{})['EG'], waypointNode:'BK', reward:400 },
-  // ── Layer 44: Ally Cat Arc quests (activated manually via storyRender CQ block) ──
-  quest_cat_01: { id:'quest_cat_01', type:'side', title:'Jimmy: The New Scratch',
-    desc:"Jimmy Two-Tails wants the Cat Quarter settled. Clear the riff-raff — 5 strays and 3 fluffies.",
-    hint:'Fight in the Cat Quarter until the quota is filled.',
-    activateNode:null, completeItems:[], completeFn:() => {
-      const k = S_story.catKills || {};
-      return (k.stray_alley_cat || 0) >= 5 && (k.fluffy_cat || 0) >= 3;
+  // ── Layer 50: §XV NG+ Remembrance quests (activateNode:null — triggered in storyRender) ──
+  quest_ng_01: { id:'quest_ng_01', type:'side', title:'Froberger: The Remembered Path',
+    desc:"You have returned. The city remembers you — and so do the people in it. Revisit three Dear Friends.",
+    hint:'Visit three NPCs you have reached Dear Friend status with.',
+    activateNode:null, completeItems:[], completeFn:() => Object.keys(S_story.ngMemoryDelivered || {}).length >= 3,
+    waypointNode:'CI', reward:500,
+    disposition:'"The journal says: the world does not reset. The people do not reset. Only the monsters reset. You have always been here." — Froberger, Entry 41 marginal note' },
+  quest_ng_02: { id:'quest_ng_02', type:'side', title:'Froberger: The Open Page',
+    desc:"Entry 42 of Froberger\'s journal has always been blank. He left it for you.",
+    hint:'Visit the City Inn to find the open page.',
+    activateNode:null, completeItems:[], completeFn:() => !!S_story.entry42Written,
+    waypointNode:'CI', reward:0,
+    disposition:'"Forty-two. I stopped there on purpose. Someone else will finish this one." — Froberger\'s margin note' },
+  quest_ng_03: { id:'quest_ng_03', type:'side', title:'Froberger: The Letter',
+    desc:"A sealed letter has appeared at the Coastal Observatory. Froberger\'s handwriting. It was not there before.",
+    hint:'Return to the Coastal Observatory.',
+    activateNode:null, completeItems:[], completeFn:() => !!S_story.frobergerLetterFound,
+    waypointNode:'CO', reward:300,
+    disposition:'"If you are reading this, you completed the run once already. I am sorry about the ending. You deserved a better one." — Froberger\'s sealed letter' },
+  // ── Layer 51: Weimar Scholar Gate quests ──
+  quest_wm_01: { id:'quest_wm_01', type:'side', title:'Isolde: The Revocation Record',
+    desc:"Archivist Isolde Voss controls access to the Scholar Kings\' lower archive. The Froberger revocation record is there. Gain access.",
+    hint:'Collect 3 Scholar Kings\' Seals from Scholar\'s Guards — or bring the archive letter from the Blue Shutters Archive.',
+    activateNode:'SQ', completeItems:[], completeFn:() => {
+      if (S_story.archiveLetterObtained) return true;
+      return (S_story.inventory || []).filter(i => i.name === "Scholar Kings' Seal").length >= 3;
     },
-    waypointNode:'CQ', reward:200,
-    disposition:'"You done good, kid. Real professional. The neighborhood\'s already calmer. Relatively. For cats." — Jimmy Two-Tails' },
-  quest_cat_02: { id:'quest_cat_02', type:'side', title:'Jimmy: Beefy Business',
-    desc:"Three Beefy Toms are running muscle for a rival outfit. Take them down and collect the proof.",
-    hint:'Kill 3 Beefy Toms and collect 3 Cracked Claws.',
-    activateNode:null, completeItems:[], completeFn:() => {
-      const k = S_story.catKills || {};
-      return (k.beefy_tom || 0) >= 3
-        && (S_story.inventory || []).filter(i => i.name === 'Cracked Claw').length >= 3;
-    },
-    waypointNode:'CQ', reward:350,
-    disposition:'"Those guys were affiliated. You just stepped into something bigger than strays, sweetheart." — Sandy Scratchpad Mewlino' },
-  quest_cat_03: { id:'quest_cat_03', type:'side', title:'Sandy: Honcho Problems',
-    desc:"A Capo and a Boss Lady are circling each other. Kill them SEPARATE — merge triggers a Taz Devil.",
-    hint:'Kill 1 Honcho Cat (Capo) and 1 Boss Lady Honcho.',
-    activateNode:null, completeItems:[], completeFn:() => {
-      const k = S_story.catKills || {};
-      return (k.honcho_cat_m || 0) >= 1 && (k.honcho_cat_f || 0) >= 1;
-    },
-    waypointNode:'CQ', reward:500,
-    disposition:'"Kid, I told you. SEPARATE. You kill \'em SEPARATE. The merge thing is NOT a mechanic I enjoy." — Jimmy Two-Tails' },
-  quest_cat_04: { id:'quest_cat_04', type:'side', title:'Jimmy: When the Tornado Comes',
-    desc:"Two Honchos merged. A Taz Devil — Furball Tornado — is loose in the Cat Quarter. Take it down.",
-    hint:'Defeat the Taz Devil at the Cat Quarter.',
-    activateNode:null, completeItems:[], completeFn:() => !!S_story.defeatedBattles['CQ_TAZ'],
-    waypointNode:'CQ', reward:750,
-    disposition:'"Oh you think you TOUGH now? You killed ONE Taz? When they merge — WHEN THEY MERGE — that ain\'t a Taz no more. That\'s a KING." — Tommy No-Ears DeVito' },
-  quest_cat_05: { id:'quest_cat_05', type:'side', title:"Sandy: Fat Cats Don't Tip",
-    desc:"The Fat Merchant Cats are using Corrupted Cats as enforcers. Sandy wants Don Fluffissimo gone.",
-    hint:'Kill 4 Fat Merchant Cats and defeat Don Fluffissimo.',
-    activateNode:null, completeItems:[], completeFn:() => {
-      const k = S_story.catKills || {};
-      return (k.fat_merchant_cat || 0) >= 4 && !!S_story.defeatedBattles['CQ_BOSS'];
-    },
-    waypointNode:'CQ', reward:900,
-    disposition:'"The merchants have been using Corrupted Cats as enforcers. Void-touched kitties doing dirty work for coin." — Sandy Scratchpad Mewlino' },
-  quest_cat_06: { id:'quest_cat_06', type:'side', title:'Tommy: The Cat-King Cometh',
-    desc:"Three Taz Devils merged at the fish market. The Cat-King has awoken. You\'re the hero.",
-    hint:'Defeat The Cat-King at the Cat Quarter.',
-    activateNode:null, completeItems:[], completeFn:() => !!S_story.catKingDefeated,
-    waypointNode:'CQ', reward:1500,
-    disposition:'"Listen. You did good. Real good. You\'re like... honorary Ally Cat now. Don\'t tell nobody." — Jimmy Two-Tails' },
-  quest_cat_void: { id:'quest_cat_void', type:'side', title:'Sandy: Void Strays',
-    desc:"Strays near the DF node have gone wrong. Sandy doesn\'t like it in her neighborhood.",
-    hint:'Kill 5 Corrupted Cats in the Cat Quarter.',
-    activateNode:null, completeItems:[], completeFn:() => (S_story.catKills || {}).corrupted_cat >= 5,
-    waypointNode:'CQ', reward:400,
-    disposition:'"Something\'s wrong with the strays near the DF node. They\'re not just feral — they\'re WRONG." — Sandy Scratchpad Mewlino' },
+    waypointNode:'SQ', reward:0,
+    disposition:'"You\'re asking about Froberger. Everyone who comes here lately is asking about Froberger. His access was revoked pursuant to the Scholar Kings Protocol on Speculative Endangerment." — Archivist Isolde Voss' },
+  quest_wm_02: { id:'quest_wm_02', type:'side', title:'Isolde: Lower Archive',
+    desc:"Three documents in the lower archive. The revocation letter, the field report, the personnel file. Read all three.",
+    hint:'Visit the Scholar\'s Quarter and examine the archive documents.',
+    activateNode:null, completeItems:[], completeFn:() => !!(S_story.wmDoc1Read && S_story.wmDoc2Read && S_story.wmDoc3Read),
+    waypointNode:'SQ', reward:0,
+    disposition:'"He left his research notes in the lower archive. I moved them there myself. I told myself it was protocol. I\'ve been thinking about that since you came in." — Isolde Voss (Friendly)' },
+  quest_wm_03: { id:'quest_wm_03', type:'side', title:'Benedikt: The Reading Circle',
+    desc:"Benedikt Rasp runs a reading circle from a bookbinder\'s stall. Three sessions — three different days.",
+    hint:'Attend 3 reading circle sessions at the Scholar\'s Quarter (one per day).',
+    activateNode:null, completeItems:[], completeFn:() => !!(S_story.wmBenediktCircleComplete),
+    waypointNode:'SQ', reward:0,
+    disposition:'"The third one\'s always the hardest. Not because the material is harder — because by then you realize the first two were already enough and you stayed anyway." — Benedikt Rasp' },
+  quest_wm_04: { id:'quest_wm_04', type:'side', title:'Benedikt: The First Researcher',
+    desc:"Benedikt knows who the First Researcher was. He waited three sessions to be sure you were the kind of person to be told.",
+    hint:'Return to the lower archive and read the unredacted personnel file.',
+    activateNode:null, completeItems:[], completeFn:() => !!(S_story.wmFirstResearcherKnown),
+    waypointNode:'SQ', reward:300,
+    disposition:'"The Scholar Kings didn\'t erase her. They just stopped saying the name. Froberger said it in his margin notes every time. That\'s how I found her. And now you know how I found him." — Benedikt Rasp' },
+  // ── Layer 52: Void Archaeology quests ──
+  quest_va_01: { id:'quest_va_01', type:'side', title:'The Architecture: Five Marks',
+    desc:"Five existing sites carry marks from the First Researcher\'s original construction. Investigate all five.",
+    hint:'Investigate: City Inn, Birka Slums, Defiant Fields, Scholar\'s Quarter, Mountain Pass.',
+    activateNode:null, completeItems:[], completeFn:() => !!(S_story.vaAllMarksFound),
+    waypointNode:'CI', reward:0,
+    disposition:'"Five marks. One pattern. She was everywhere before anyone was looking." — Froberger, Entry 7 marginal note (between the lines)' },
+  quest_va_02: { id:'quest_va_02', type:'side', title:"The Architecture: Constructor's Log",
+    desc:"The lower archive has a fourth document now — the Constructor\'s Log. Seven entries. Her handwriting.",
+    hint:'Return to the Scholar\'s Quarter lower archive.',
+    activateNode:null, completeItems:[], completeFn:() => !!(S_story.vaLogFound),
+    waypointNode:'SQ', reward:0,
+    disposition:'"If someone is reading this, the sealing mechanism has activated. The cage is closed. I am sorry. I did not have a better answer." — The Constructor\'s Log, Entry 7' },
+  quest_va_03: { id:'quest_va_03', type:'side', title:'The Architecture: The Sealed Tunnel',
+    desc:"The Mountain Pass has a tunnel sealed from the inside. Never opened in any record. It will open for you now.",
+    hint:'Take the tunnel at the Mountain Pass.',
+    activateNode:null, completeItems:[], completeFn:() => !!(S_story.vaLastWardVisited),
+    waypointNode:'MT', reward:200,
+    disposition:'"The Antecedent was here. It is not anymore. You know where it is now." — Sealed chamber inscription' },
+  quest_va_04: { id:'quest_va_04', type:'side', title:'The Architecture: The Chain',
+    desc:"Benedikt has a message. Something about four links. Something about a chain.",
+    hint:'Return to the Scholar\'s Quarter.',
+    activateNode:null, completeItems:[], completeFn:() => !!(S_story.vaArchitectureKnown),
+    waypointNode:'SQ', reward:500,
+    disposition:'"She built it. You closed it. Froberger found the mechanism. You followed him. Entry 42 is the fourth link. Four links is a chain. A chain holds." — Benedikt Rasp' },
+  // ── Layer 54: Tilbury Harbor Arc quests ──
+  quest_tl_01: { id:'quest_tl_01', type:'side', title:'Rennau: The Ledger',
+    desc:"Harbor Master Rennau keeps the ledger of ships that haven\'t come back. The Harrow is the most recent. Find its manifest.",
+    hint:'Search the Storefront docks for the Harrow manifest (loot or monster drop).',
+    activateNode:'SF', completeItems:[], completeFn:() => !!(S_story.tlLedgerRead),
+    waypointNode:'SF', reward:0,
+    disposition:'"The Conclave calls the ones that haven\'t come back \'weather losses.\' I stopped calling them that six weeks ago." — Harbor Master Rennau' },
+  quest_tl_02: { id:'quest_tl_02', type:'side', title:'Rennau: The Embargo',
+    desc:"The harbor is closed under Emergency Trade Protocol 7. Adjutant Vonn is politely immovable. Decide what to do with the manifest.",
+    hint:'Speak with Adjutant Vonn at Tilbury, then choose how to handle the ship manifest.',
+    activateNode:null, completeItems:[], completeFn:() => !!(S_story.tlEmbargoChallenged || S_story.tlEmbargoDismissed),
+    waypointNode:'TL', reward:0,
+    disposition:'"The embargo is a legitimate Conclave instrument. The fact that it\'s bad policy is above my grade." — Adjutant Vonn' },
+  quest_tl_03: { id:'quest_tl_03', type:'side', title:'Rennau: The Missing Ship',
+    desc:"A survivor from the Harrow has arrived in Tilbury. Three weeks on foot. Her name is Ori. She knows what happened.",
+    hint:'Speak with Ori at the Storefront (Act IV+). Bring her account to Rennau.',
+    activateNode:null, completeItems:[], completeFn:() => !!(S_story.tlMissingShipSolved),
+    waypointNode:'SF', reward:300,
+    disposition:'"Ori said the thing that boarded them didn\'t have a name. Things that don\'t have names are the Void\'s specialty." — Harbor Master Rennau' },
+  // ── Layer 55: Visby Underground quests ──
+  quest_vs_01: { id:'quest_vs_01', type:'side', title:'Solvak: The Collector',
+    desc:"Debt Agent Solvak has been outside Visby six weeks with a 2,000gp debt and no leverage. You might have some.",
+    hint:'Enter Visby and speak to Warlord Mordus about the missing weapons shipment.',
+    activateNode:'VS', completeItems:[], completeFn:() => !!(S_story.vsDebtProbed),
+    waypointNode:'VS', reward:0,
+    disposition:'"The debt will be paid when the weapons are returned. The weapons will be returned when I know where they went. I do not know where they went." — Warlord Mordus' },
+  quest_vs_02: { id:'quest_vs_02', type:'side', title:'Yva: The Broker',
+    desc:"Yva is inside the Goblin Caves. The Hollow Hands have marked her stall. She knows where the weapons went — for 50gp.",
+    hint:'Find Yva inside the Goblin Caves.',
+    activateNode:null, completeItems:[], completeFn:() => !!(S_story.vsWeaponsFound),
+    waypointNode:'GC', reward:0,
+    disposition:'"I don\'t know who they answer to. I know what the mark means." — Yva' },
+  quest_vs_03: { id:'quest_vs_03', type:'side', title:'Mordus Pays',
+    desc:"Mordus saw the Hollow Hands Seal. He paid sideways. Bring the transit seal to Solvak.",
+    hint:'Return to Solvak outside Visby with the Hollow Hands Seal.',
+    activateNode:null, completeItems:[], completeFn:() => !!(S_story.vsDebtSettled),
+    waypointNode:'VS', reward:400,
+    disposition:'"The Hollow Hands are mine to deal with now that I know what they are." — Warlord Mordus' },
+  // ── Layer 56: Void Shaman quest ──
+  quest_vs_warden: { id:'quest_vs_warden', type:'side', title:'The Warden',
+    desc:'You have found the Void Shaman — the Antecedent\'s Last Warden, 200 years misdirected. The mandate was corrupted in transmission. The question is whether they can be shown this.',
+    hint:'Enter the MT tunnel and confront the Warden. Bring the Constructor\'s Log if you have it.',
+    activateNode:null, completeItems:[], completeFn:() => !!(S_story.wardensLegacyKnown),
+    waypointNode:'MT', reward:600,
+    disposition:'"If I\'m wrong, then I needed to be stopped. That\'s — that\'s actually fine." — The Warden' },
 };
 
 /* ── Layer 5: Void Tide Events ── */
@@ -8101,10 +8291,44 @@ const _S_DEFAULTS = () => ({
   brynnKeeperStoryTold: false, brynnLightChoiceMade: false, brynnLightKept: false,
   bruhnsCoSceneDelivered: false,
   yaelNamedReportDelivered: false,
-  catKills: {}, catKingDefeated: false,
+  catKills: {}, catKingDefeated: false, kenickieMarketUsed: false,
+  questMinusOne: false,
+  entry42Written: false, entry42Text: '', entry42Read: false,
+  ngMemoryDelivered: {}, nextFrobergerComplete: false, frobergerLetterFound: false,
+  priorQuestMinusOne: false,
+  // Layer 51: Weimar Scholar Gate
+  wmLowerArchiveUnlocked: false,
+  wmDoc1Read: false, wmDoc2Read: false, wmDoc3Read: false, wmDoc3Unredacted: false,
+  wmArchiveComplete: false, wmSessionsDays: [], wmBenediktCircleComplete: false,
+  wmFirstResearcherKnown: false,
+  // Layer 52: Void Archaeology
+  vaCI: false, vaSL: false, vaDF: false, vaWM: false, vaMT: false,
+  vaAllMarksFound: false, vaLogFound: false, vaLastWardVisited: false, vaArchitectureKnown: false,
+  // Layer 54: Tilbury Harbor Arc
+  tlLedgerRead: false, tlEmbargoChallenged: false, tlEmbargoDismissed: false, tlMissingShipSolved: false,
+  // Layer 55: Visby Underground
+  vsDebtProbed: false, vsWeaponsFound: false, vsDebtSettled: false, vsShamanKnown: false,
+  // Layer 56: Void Shaman
+  vshamanFound: false, vshamanDefeated: false, vsShamanPersuaded: false, wardensLegacyKnown: false,
+  vsShamanBenediktDelivered: false,
+  // Layer 61: Corelli Wandering Merchant
+  fav_corelli: 0, corelli_purchase_count: 0, corelli_encounter_count: 0, corelliRevelationDelivered: false,
 });
 
 /* ── Layer 48: Luck — Seventh Stat ── */
+// Layer 51: §XVI — Aggregate tome bonuses from inventory
+function _tomeBonuses() {
+  const out = { deathSave:0, initiative:0, atk:0 };
+  const hasActiveQuest = Object.values(S_story.quests || {}).some(v => v === 'active');
+  (S_story.inventory || []).forEach(item => {
+    if (item.type !== 'tome' || !item.bonus) return;
+    if (item.bonus.deathSave) out.deathSave += item.bonus.deathSave;
+    if (item.bonus.initiative) out.initiative += item.bonus.initiative;
+    if (item.bonus.atkWhileQuestActive && hasActiveQuest) out.atk += item.bonus.atkWhileQuestActive;
+  });
+  return out;
+}
+
 function _calcLuck() {
   const s = S_story.abilityScores || { str:16, dex:12, con:14, int:10, wis:12, cha:8 };
   const product = s.str * s.dex * s.con * s.int * s.wis * s.cha;
@@ -8112,6 +8336,19 @@ function _calcLuck() {
   return Math.ceil(Math.pow(product, 1 / 6));
 }
 function _luckMod() { return Math.floor((_calcLuck() - 10) / 2); }
+
+/* ── Layer 61: Corelli appearance helper ── */
+function _checkCorelliAppearance(nodeCode) {
+  const act = S_story.actNumber || 1;
+  const count = S_story.corelli_encounter_count || 0;
+  return CORELLI_APPEARANCES.find(a => a.nodeCode === nodeCode && act >= a.actMin && count < a.index) || null;
+}
+function _corelliOpener(app) {
+  const fav = S_story.fav_corelli || 0;
+  if (fav >= 2) return app.openerTrusted;
+  if (fav >= 1) return app.openerFriendly;
+  return app.opener;
+}
 
 /* ── Layer 41: NPC Favorability helpers ── */
 function _npcFavor(key) { return (S_story.npcFavorability || {})[key] || 0; }
@@ -8287,6 +8524,13 @@ function _renderNpcCard(key, container) {
     quoteColor = '#a0c8ff';
     S_story[ngGreetedKey] = true;
   }
+  // Layer 50: §XV — Dear Friend memory line on second NG+ visit
+  if ((S_story.ngPlusRun || 0) > 0 && S_story[ngGreetedKey] && fav >= 2
+      && NPC_NG_MEMORY_LINES[key] && !((S_story.ngMemoryDelivered || {})[key])) {
+    if (!S_story.ngMemoryDelivered) S_story.ngMemoryDelivered = {};
+    S_story.ngMemoryDelivered[key] = true;
+    setTimeout(() => storyMsg(NPC_NG_MEMORY_LINES[key]), 800);
+  }
   card.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center">'
     + '<span style="font-weight:700;color:#f0c070">' + p.name + '</span>'
     + '<span style="font-size:10px;color:#888">' + badgeTxt + '</span>'
@@ -8453,14 +8697,20 @@ function storyNewGamePlus() {
     ngOverlay.classList.add('ng-plus-anim');
     setTimeout(() => { ngOverlay.style.display = 'none'; ngOverlay.classList.remove('ng-plus-anim'); }, 2100);
   }
-  const savedFavorability = Object.assign({}, S_story.npcFavorability || {});
-  const savedPitPerks     = (S_story.pitPerks || []).slice();
-  const savedNgRun        = (S_story.ngPlusRun || 0) + 1;
+  const savedFavorability      = Object.assign({}, S_story.npcFavorability || {});
+  const savedPitPerks          = (S_story.pitPerks || []).slice();
+  const savedNgRun             = (S_story.ngPlusRun || 0) + 1;
+  const savedEntry42Written    = !!(S_story.entry42Written);
+  const savedEntry42Text       = S_story.entry42Text || '';
+  const savedPriorQuestMinus1  = !!(S_story.questMinusOne);
   try { localStorage.removeItem('r2h_autosave'); localStorage.removeItem('r2h_checkpoint'); } catch(e) {}
   Object.assign(S_story, _S_DEFAULTS());
-  S_story.npcFavorability = savedFavorability;
-  S_story.pitPerks        = savedPitPerks;
-  S_story.ngPlusRun       = savedNgRun;
+  S_story.npcFavorability   = savedFavorability;
+  S_story.pitPerks          = savedPitPerks;
+  S_story.ngPlusRun         = savedNgRun;
+  S_story.entry42Written    = savedEntry42Written;
+  S_story.entry42Text       = savedEntry42Text;
+  S_story.priorQuestMinusOne = savedPriorQuestMinus1;
   S_story.active = true;
   S_story.equippedMainWeapon = Object.assign({}, STARTER_POINTY_STICK);
   S_story.equippedWeapon     = Object.assign({}, STARTER_FLINT_DAGGER);
@@ -9424,7 +9674,7 @@ function _overlayPlayerAttack() {
   const critMin = _lv >= 20 ? 17 : _lv >= 15 ? 18 : _lv >= 3 ? 19 : 20;
   const atkMod       = getAtkAbilityMod();
   const profB        = S.weapon.prof ? getProfBonus() : 0;
-  const lvlAtk       = S_story.atkBonus || 0;
+  const lvlAtk       = (S_story.atkBonus || 0) + _tomeBonuses().atk;
   const weaponAtk    = S_story.equippedWeapon     ? (S_story.equippedWeapon.atkBonus     || 0) : 0;
   const mainWeaponAtk= S_story.equippedMainWeapon ? (S_story.equippedMainWeapon.magicBonus|| 0) : 0;
 
@@ -9645,6 +9895,21 @@ function _storyBattleVictory() {
   if (pb && pb.nodeCode === 'CQ_KING') {
     S_story.catKingDefeated = true;
     storyMsg('👑 The Cat-King is defeated. Three city blocks of flying fur and claws — done.\n\nKenickie Clawnickie Mancuso: "Yo. YO. You actually killed the Cat-King. Nobody\'s done that. The community\'s gonna be talking about this for like... three whole days. Then they\'ll forget. They\'re cats."\n\nJimmy Two-Tails: "Listen. I want you to know something. You did good. Real good. You\'re like... honorary Ally Cat now. Don\'t tell nobody. It ain\'t a thing we advertise."');
+  }
+  // ── Layer 56: Void Shaman combat outcome ──
+  if (pb && pb.nodeCode === 'MT_WARDEN') {
+    S_story.vshamanDefeated = true;
+    S_story.wardensLegacyKnown = true;
+    const _wt = { name:"The Warden's Token", icon:'🔑', type:'relic', sell:0,
+      description:'Original Warden\'s seal, First Researcher\'s appointment. Recopied seventeen times. The seventeenth copy has a small error in the verb tense that changed everything.' };
+    S_story.inventory = S_story.inventory || [];
+    S_story.inventory.push(_wt);
+    dropsThisBattle.push({ icon:'🔑', name:"The Warden's Token", type:'relic' });
+    if (!S_story.quests['quest_vs_warden']) S_story.quests['quest_vs_warden'] = 'active';
+    setTimeout(() => storyMsg(
+      'The Warden stops fighting. They sit down on the tunnel floor.\n\n"If I\'m wrong, then I needed to be stopped. That\'s — that\'s actually fine."\n\nThey pass you the token without being asked.\n\n"Tell Mordus the sub-clan is done. They\'ll walk back in. They were never really his enemies — they were executing a mandate. The mandate is over."\n\n🔑 The Warden\'s Token obtained.\n\nWithout the Warden, the Hollow Hands have no direction. Mordus\'s scouts report the sub-clan dispersing into the wider cave network.'
+    ), 600);
+    storyAutoSave();
   }
   // Layer 41: drunk fight victory
   if (S_story._drunkFight) {
@@ -10625,6 +10890,7 @@ const JUNCTION_VIGNETTES = {
   J5: { npc:'Wren', tag:'Scholar Kings courier', lines:['"I carry messages for the Scholar Kings. I stopped reading them two years ago. Better that way."','She moves fast. She was walking before you arrived. She pauses at the junction.','"The Scholar Kings archive at Weimar lost three shelves last month. \'Reorganization.\' That\'s what they called it." She moves on.'], help:'She\'s gone before you can offer anything.' },
   J6: { npc:null, lines:[null, null, null], env:'A note pinned to a post: "Paid in full. —S." No signature beyond that initial. No context. The road is quiet.' },
   J7: { npc:null, lines:[null, null, null], env:'A child\'s toy on the road. No NPC. No explanation. You leave it where it is.' },
+  RD: { npc:null, lines:[null, null, null], env:'A cleared verge. The fire ring is cold. A broken cart wheel leans against the tree line. Someone stopped here recently and kept moving.' },
 };
 const COMPANION_LINES = {
   2: { name:'Dessa', ctx:'Carrying supplies between Birka and Tilbury', line:'The harbor master in Tilbury keeps a ledger of every ship that left since the Tide started. He won\'t show it to anyone. I\'ve seen him writing in it.' },
@@ -10633,6 +10899,42 @@ const COMPANION_LINES = {
   5: { name:'Pilgrim', ctx:'Going to the Mountain Pass', line:'Someone sealed that tunnel before the Scholar Kings existed. I\'ve been trying to find out who for forty years.' },
   6: { name:null, ctx:null, line:'For the first time in days, no one else is on the road. You walk alone. It is not lonely — it is quiet in a different way.' },
 };
+
+/* ── Layer 61: Corelli the Wandering Merchant ── */
+const CORELLI_ITEMS = {
+  scholar_ink:   { name:'Scholar\'s Ink (dismissed notes)', icon:'📝', type:'readable', sell:0, price:120,
+    readText:'A dismissed scholar\'s notes on voidPressure accumulation. Written margins-first, then the main text written around them. The margins say: "If they fire me for asking, they have already decided not to answer." The main text: threshold event at P3 — behavioral change in urban animals. P6 — Void-touched sightings increase 300%. P9 — structural convergence. The scholar was correct on all three. They were fired at P2.' },
+  false_warrant: { name:'False Warrant Papers', icon:'📋', type:'consumable', sell:0, price:200,
+    readText:'Scholar Kings patrol documentation. Convincing at a distance. Useless when the Void has already corrupted the patrol — they no longer recognize authority, only movement.' },
+  encoded_letter:{ name:'Encoded Letter (partial decrypt)', icon:'🔐', type:'readable', sell:0, price:80,
+    readText:'Partially decrypted Scholar King correspondence. The legible portion: "...the Antecedent\'s route has been reassigned per Protocol 7. Reclassify all associated materials under Classification Level 7. Distribution suppressed. Do not destroy — destruction leaves a record." The rest is still encoded.' },
+  kings_seal:    { name:"Scholar King's Field Seal", icon:'🔏', type:'trinket', sell:0, price:350,
+    readText:'A wax seal press bearing the Scholar Kings\' distributed authority mark. It still functions. Carries +1 to death saving throws — old-world authority still holds some weight, even under the Void.' },
+  last_cipher:   { name:'The Last Cipher', icon:'🔐', type:'readable', sell:0, price:0,
+    readText:'A Scholar King administrative cipher key — the kind used to decode sealed distribution correspondence. At the bottom, in a different hand: "Antecedent Containment Protocol, cycle 3. All materials reclassified. Distribution route: suppressed. Reason on file: CLASSIFICATION LEVEL 7." Beneath that, scratched with a nail rather than written with a pen: "She built it to save us. They hid it to save themselves."' },
+};
+const CORELLI_APPEARANCES = [
+  { nodeCode:'DK', actMin:2, index:1, opener:'New in Tilbury? Thought so. You have the look of someone who just arrived and hasn\'t decided if they trust the harbor yet.',
+    openerFriendly:'We\'ve met before. Tilbury, if I remember right — and I always remember. The ink sold well, I take it?',
+    openerTrusted:'Back again. I\'ve been following the same road you have, more or less. Just a different axis. I keep quieter notes.',
+    itemKey:'scholar_ink', itemLabel:'📝 Scholar\'s Ink (dismissed notes) — 120gp' },
+  { nodeCode:'RD', actMin:3, index:2, opener:'We meet again. I saw you in Tilbury — don\'t be alarmed, I remember everyone I sell to.',
+    openerFriendly:'The road between here and the coast has been strange lately. You\'ve felt it too, I can see.',
+    openerTrusted:'I\'ve been on the Wilds road four times this season. Every time it looks different. The land is shifting. Or we are.',
+    itemKey:'false_warrant', itemLabel:'📋 False Warrant Papers — 200gp' },
+  { nodeCode:'BK', actMin:5, index:3, opener:'Visby. Well. You\'ve been going places. I\'ve been going places too, just different ones. Still — here we are.',
+    openerFriendly:'Mordus runs a tight tavern. Good for business — settled debts, predictable clientele. I prefer predictable.',
+    openerTrusted:'I haven\'t worked for them in six years. But I kept the seal. It still opens most of their archives.',
+    itemKey:'encoded_letter', itemLabel:'🔐 Encoded Letter (partial decrypt) — 80gp' },
+  { nodeCode:'SQ', actMin:6, index:4, opener:'The Ivory Circle makes me nervous. I used to work adjacent to them. I try not to stay in Weimar long. But you — you look like you\'ve been asking questions here. Good. Keep asking.',
+    openerFriendly:'You\'ve been here before. The Circle doesn\'t like questions. Neither do I, but for different reasons.',
+    openerTrusted:'I stopped reading their correspondence two years before I left. The last one I read — it changed what I carry.',
+    itemKey:'kings_seal', itemLabel:'🔏 Scholar King\'s Field Seal — 350gp' },
+  { nodeCode:'IN', actMin:8, index:5, opener:'End of the road. Or the beginning of one, depending. You look like you\'ve come the whole way. I have too. I always end up back here.',
+    openerFriendly:'The road closes. The city opens. I\'ve watched this loop more than once from the outside.',
+    openerTrusted:'I have something for you. Not for sale. It was never mine to sell.',
+    itemKey:'last_cipher', itemLabel:null },
+];
 
 /* ── Layer 47: Yugurt Lake Fishing Overhaul consts ── */
 const BAIT_TABLES = {
@@ -11314,6 +11616,16 @@ const NPC_NG_PLUS_GREETINGS = {
   bruhns:   "The depths are different this run. I have new data. I need your eyes again."
 };
 
+// ── Layer 50: §XV NPC Dear Friend memory lines (second NG+ visit, fav ≥ 2) ──
+const NPC_NG_MEMORY_LINES = {
+  yael:     '"You came back to the slums. I thought you would. People who fix things usually come back to see if they stayed fixed."',
+  brynn:    '"The ledger\'s still balanced. I check it every morning. Old habit. You taught me that."',
+  quill:    '"I\'ve been playing the song you helped me get back. Different every night. I think that\'s the right way."',
+  pachelbel:'"The shipment arrived. Eventually. You know — it always does, when someone\'s watching for it."',
+  crov:     '"The pit\'s quieter now. The regulars remember someone fought clean. They copy it. Funny how that works."',
+  auros:    '"The depths are still there. We just know what\'s in them now. That\'s different from safe. But it\'s better."',
+};
+
 const PIT_PERK_UNLOCKS = {
   controlledAggression: {
     title: "Controlled Aggression",
@@ -11817,6 +12129,105 @@ const PIT_CHAMPION_OGUNDIMU = {
   flavorWin: 'She doesn\'t fall. She steps back, shield lowering.\n\n"Good. That\'s good."\n\nShe means it.\n\nShe picks up her bag. At the door she turns back.\n"Your fifth. That\'s not luck anymore."',
   flavorLoss: 'She doesn\'t follow up. She steps back and waits.\n\n"Different day," she says. "Same champion."\n\nShe means it as an invitation, not an insult.',
 };
+// ── Layer 51: §XVI Weimar Scholar Gate — lower archive modal ──
+const WM_ARCHIVE_DOCS = [
+  { key:'wmDoc1Read', title:'Froberger — Access Revocation Letter',
+    body:'Scholar Kings Protocol on Speculative Endangerment, Article 7:\n\n'
+      + '"Researcher J.H. Froberger, Tier 2. Application for extended field access to Void-adjacent sites — DENIED. Risk classification: Speculative, Category A. The researcher has demonstrated a pattern of extrapolating from incomplete data toward conclusions not supportable under current methodology.\n\n'
+      + 'Access revoked effective 14th of the Third Moon.\n\n'
+      + 'Signed: Archivist I. Voss. Senior Archivist, First Tier."\n\n'
+      + '— [Filed six months before Froberger\'s death in the field]' },
+  { key:'wmDoc2Read', title:'Scholar Kings Field Report — Early Void Signs',
+    body:'Subject: Void Atmospheric Anomalies, Eastern Territories (Draft, Uncatalogued)\n\n'
+      + '"Three separate reports from independent observers, covering the same phenomenon: localized atmospheric darkening at specific geographic coordinates, occurring on the same day in consecutive years. Duration: 3–7 minutes. Observers: a shepherd, a river surveyor, a traveling merchant.\n\n'
+      + 'Cross-referencing is not warranted. These are anecdotal accounts from unaffiliated individuals with no research credentials. The probability of correlation is low.\n\n'
+      + '— Filed, Third Moon. Note: filed before subsequent confirmation of coordinates as Void-adjacent."\n\n'
+      + '[Froberger\'s handwriting in margin: "I talked to the shepherd. He was describing a Void pressure event. They wrote this before they knew. So did I."]' },
+  { key:'wmDoc3Read', title:'Personnel File — The First Researcher [REDACTED]',
+    body:'File: Research Category — Containment. Date: [REDACTED]. Classification: Archive Only.\n\n'
+      + '"Researcher [REDACTED], formerly Tier 1. Primary investigation: early Void event documentation, coordinate mapping, containment theory. Access status: Revoked — Protocol 3.\n\n'
+      + 'Research notes: sealed. Published findings: none. Institutional record: archived, restricted access.\n\n'
+      + 'Note filed by: Archivist [REDACTED]. \'The researcher\'s conclusions were not wrong. The timing was wrong. The world was not ready for them.\'\n\n'
+      + '[Two archivists. The second stopped mid-sentence.]"\n\n'
+      + '— [Dates in this file precede the Scholar Kings\' official founding by a generation]' },
+];
+
+function _storyWmArchiveModal() {
+  const existingEl = document.getElementById('wm-archive-overlay');
+  if (existingEl) { existingEl.remove(); return; }
+  const overlay = document.createElement('div');
+  overlay.id = 'wm-archive-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:1100;display:flex;align-items:center;justify-content:center;padding:16px;';
+  const panel = document.createElement('div');
+  panel.style.cssText = 'background:#120a04;border:1px solid #5c3311;border-radius:6px;max-width:500px;width:100%;max-height:80vh;overflow-y:auto;padding:16px;';
+  let html = '<div style="color:#f0c070;font-weight:700;font-size:14px;margin-bottom:10px;">📚 Lower Archive — Scholar\'s Quarter</div>';
+  WM_ARCHIVE_DOCS.forEach((doc, i) => {
+    const read = !!(S_story[doc.key]);
+    html += '<div style="border:1px solid '+(read?'#3a6a3a':'#3a2010')+';border-radius:4px;padding:10px;margin-bottom:8px;">'
+      + '<div style="color:'+(read?'#90c890':'#f0c070')+';font-weight:700;font-size:12px;margin-bottom:6px;">'+(read?'✓ ':'')+'Document '+(i+1)+': '+doc.title+'</div>';
+    if (read || (i === 2 && S_story.wmDoc3Unredacted)) {
+      html += '<div style="font-size:11px;color:#bba;white-space:pre-wrap;line-height:1.5;">'
+        + (i === 2 && S_story.wmDoc3Unredacted && S_story.wmFirstResearcherKnown
+          ? doc.body.replace('[REDACTED]','Marta Eilene Vass').replace(/\[REDACTED\]/g,'Marta Eilene Vass — First Tier, Tier-1 Researcher')
+          : doc.body)
+        + '</div>';
+    } else {
+      html += '<button class="inv-use-btn" data-dockey="'+doc.key+'" style="margin-top:4px;">'+(i===2 && S_story.wmDoc3Unredacted ? '🔓 Read (unredacted)' : '📄 Read')+'</button>';
+    }
+    html += '</div>';
+  });
+  // Layer 52: §XVII Constructor's Log — 4th document, unlocked when vaAllMarksFound
+  if (S_story.vaAllMarksFound) {
+    const _logRead = S_story.vaLogFound;
+    html += '<div style="border:1px solid '+(_logRead?'#3a6a3a':'#7a6040')+';border-radius:4px;padding:10px;margin-bottom:8px;">'
+      + '<div style="color:'+(_logRead?'#90c890':'#d4a050')+';font-weight:700;font-size:12px;margin-bottom:6px;">'+(_logRead?'✓ ':'🏛️ ')+'Document 4: The Constructor\'s Log (7 entries — her handwriting)</div>';
+    if (_logRead) {
+      html += '<div style="font-size:11px;color:#bba;white-space:pre-wrap;line-height:1.5;">'
+        + '1. "The Antecedent cannot be destroyed. It can be contained."\n'
+        + '2. "The containment structure requires a destabilization event to trigger the sealing mechanism. In plain terms: the cage must be opened before it can be closed."\n'
+        + '3. "I have calculated the destabilization event. It is survivable — if the person inside it knows it is coming."\n'
+        + '4. "The Scholar Kings do not know what I built. I told them it was a ward. They accepted that. I am not sure I was lying."\n'
+        + '5. "The stones are placed. The archive is sealed. The tunnel is closed. When it opens, the mechanism will know."\n'
+        + '6. "I am leaving my name off this record. If someone finds it, they will know why."\n'
+        + '7. "If someone is reading this, the sealing mechanism has activated. The cage is closed. Whatever you sealed inside it — that is what I built this for. I am sorry. I did not have a better answer."'
+        + '</div>';
+    } else {
+      html += '<button class="inv-use-btn" id="wm-archive-log-btn" style="margin-top:4px;">📜 Read</button>';
+    }
+    html += '</div>';
+  }
+  html += '<button class="inv-use-btn" id="wm-archive-close" style="margin-top:6px;width:100%;">✗ Close archive</button>';
+  panel.innerHTML = html;
+  overlay.appendChild(panel);
+  document.body.appendChild(overlay);
+  panel.querySelectorAll('[data-dockey]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const key = btn.dataset.dockey;
+      S_story[key] = true;
+      storyAutoSave();
+      _storyWmArchiveModal();
+    });
+  });
+  const _logBtn = panel.querySelector('#wm-archive-log-btn');
+  if (_logBtn) {
+    _logBtn.addEventListener('click', () => {
+      S_story.vaLogFound = true;
+      if (!S_story.inventory) S_story.inventory = [];
+      if (!S_story.inventory.find(i => i.name === "The Constructor's Log")) {
+        S_story.inventory.push({ name:"The Constructor's Log", icon:'📜', type:'readable', sell:0,
+          description:'Seven entries. Her handwriting. Entry 3 matches Froberger\'s margin note word for word.' });
+        S_story.inventory.push({ name:'Antecedent Seal', icon:'🏛️', type:'relic', sell:0,
+          description:'"Antecedent Containment Protocol. Seal 7. Activated."' });
+      }
+      if (!S_story.quests) S_story.quests = {};
+      if (!S_story.quests['quest_va_03']) S_story.quests['quest_va_03'] = 'active';
+      storyAutoSave();
+      _storyWmArchiveModal();
+    });
+  }
+  document.getElementById('wm-archive-close').addEventListener('click', () => overlay.remove());
+}
+
 function _showPitChampionOffer() {
   S_story.pitChampionOffered = true;
   const existingEl = document.getElementById('pit-champ-offer-overlay');
@@ -12197,7 +12608,10 @@ function storyCheckVictory(node) {
   const qEl = document.getElementById('victory-question');
   if (qEl) {
     let sweelinckQ = '';
-    if (missionDone && curse <= 0) {
+    // Layer 52: §XVII — fifth ending: vaArchitectureKnown overrides all other questions
+    if (S_story.vaArchitectureKnown && S_story.entry42Written && (S_story.ngPlusRun || 0) >= 1) {
+      sweelinckQ = '"What was inside the cage?"';
+    } else if (missionDone && curse <= 0) {
       sweelinckQ = '"Will you come back?"';
     } else if (curse <= 0) {
       sweelinckQ = '"What would you have done differently?"';
@@ -12213,6 +12627,18 @@ function storyCheckVictory(node) {
     }
     qEl.textContent = sweelinckQ;
     qEl.style.display = '';
+  }
+  // Layer 52: §XVII — CO outro addendum
+  if (S_story.vaArchitectureKnown && S_story.entry42Written && (S_story.ngPlusRun || 0) >= 1) {
+    const _vaEndDiv = document.getElementById('victory-architecture-addendum');
+    if (!_vaEndDiv) {
+      const _addDiv = document.createElement('div');
+      _addDiv.id = 'victory-architecture-addendum';
+      _addDiv.style.cssText = 'font-size:12px;color:#c8a870;font-style:italic;margin-top:10px;padding-top:8px;border-top:1px solid #3a2a08;text-align:center;';
+      _addDiv.textContent = 'Froberger wrote 41 entries. You wrote one. She wrote 7, and no one counted them for 200 years. The cage is closed. You know what it holds. The story has four authors now.';
+      const endingEl = document.getElementById('victory-ending-text');
+      if (endingEl) endingEl.insertAdjacentElement('afterend', _addDiv);
+    }
   }
   // Epilogue scroll (L43-M)
   const epilogueEl = document.getElementById('victory-epilogue');
@@ -12404,6 +12830,108 @@ function storyCheckQuests(node) {
       if (id === 'quest_cat_05') { S_story.gold += 900; S_story.inventory.push({name:"The Don's Signet Ring",icon:'💍',type:'trophy',sell:35}); msgs.push("💰 +900gp + The Don's Signet Ring. Kenickie's Black Market is open."); }
       if (id === 'quest_cat_06') { S_story.gold += 1500; S_story.inventory.push({name:"Cat-King's Claw Fragment",icon:'👑',type:'trophy',sell:50}); msgs.push("💰 +1500gp + Cat-King's Claw Fragment. You are honorary Ally Cat."); }
       if (id === 'quest_cat_void') { S_story.gold += 400; msgs.push('💰 +400gp from Sandy. The Void Strays are cleared.'); }
+      // Layer 50: §XV NG+ Remembrance quest rewards
+      if (id === 'quest_ng_01') { S_story.gold += 500; msgs.push('💰 +500gp. The city remembers. So do they.'); }
+      if (id === 'quest_ng_02') { /* reward is the act itself */ msgs.push('📖 Entry 42 is in the journal.'); }
+      if (id === 'quest_ng_03') { S_story.gold += 300; S_story.frobergerLetterFound = true; msgs.push('💰 +300gp. The letter is yours now.'); }
+      // Layer 51: Weimar Scholar Gate quest rewards
+      if (id === 'quest_wm_01') {
+        S_story.wmLowerArchiveUnlocked = true;
+        // Remove Scholar Kings' Seals spent on access (skip if archive letter used)
+        if (!S_story.archiveLetterObtained) {
+          let removed = 0;
+          S_story.inventory = (S_story.inventory || []).filter(i => {
+            if (removed < 3 && i.name === "Scholar Kings' Seal") { removed++; return false; }
+            return true;
+          });
+        }
+        msgs.push('📚 Lower Archive access granted.');
+      }
+      if (id === 'quest_wm_02') {
+        S_story.wmArchiveComplete = true;
+        _setNpcFavor('isolde_voss', 1);
+        S_story.inventory.push({ name:"Froberger's Field Notes", icon:'📗', type:'tome', sell:0,
+          bonus:{ deathSave:1 },
+          description:'Margin: "The pressure is survivable if you know it\'s coming."' });
+        msgs.push('📗 Froberger\'s Field Notes (Tome) obtained. Isolde is Friendly.');
+      }
+      if (id === 'quest_wm_03') {
+        S_story.wmBenediktCircleComplete = true;
+        _setNpcFavor('benedikt_rasp', 1);
+        S_story.inventory.push({ name:"Scholar Kings' History", icon:'📘', type:'tome', sell:0,
+          bonus:{ initiative:2 },
+          description:'"First knowledge, then decision, then action. Never the other order."' });
+        msgs.push('📘 Scholar Kings\' History (Tome) obtained. Benedikt is Dear Friend.');
+        S_story.wmDoc3Unredacted = true;
+      }
+      if (id === 'quest_wm_04') {
+        S_story.wmFirstResearcherKnown = true;
+        S_story.gold += 300;
+        S_story.inventory.push({ name:"Benedikt's Annotated Copy", icon:'📙', type:'tome', sell:0,
+          bonus:{ atkWhileQuestActive:1 },
+          description:'"He was right about this one too." — B. Rasp' });
+        msgs.push('📙 Benedikt\'s Annotated Copy (Tome) obtained. +300gp. The First Researcher is known.');
+      }
+      // Layer 52: Void Archaeology quest rewards
+      if (id === 'quest_va_01') { msgs.push('🏛️ Five marks found. The pattern is complete.'); }
+      if (id === 'quest_va_02') {
+        S_story.vaLogFound = true;
+        S_story.inventory.push({ name:"The Constructor's Log", icon:'📜', type:'readable', sell:0,
+          readable: true, readableKey:'constructors_log',
+          description:'Seven entries. Her handwriting. Entry 3 matches Froberger\'s margin note word for word.' });
+        S_story.inventory.push({ name:'Antecedent Seal', icon:'🏛️', type:'relic', sell:0,
+          description:'"Antecedent Containment Protocol. Seal 7. Activated."' });
+        msgs.push("📜 The Constructor's Log and Antecedent Seal obtained.");
+      }
+      if (id === 'quest_va_03') { S_story.vaLastWardVisited = true; S_story.gold += 200; msgs.push('🏛️ +200gp. The tunnel is open. The Antecedent was here.'); }
+      if (id === 'quest_va_04') {
+        S_story.vaArchitectureKnown = true;
+        S_story.gold += 500;
+        const annotated = (S_story.inventory || []).find(i => i.name === "Benedikt's Annotated Copy");
+        if (annotated) annotated.description += '\n"One annotation, added later: \'She was right. The fourth link held.\'"';
+        msgs.push('📙 +500gp. The Architecture is known. The chain holds.');
+      }
+      // Layer 54: Tilbury Harbor Arc quest rewards
+      if (id === 'quest_tl_01') {
+        S_story.tlLedgerRead = true;
+        _setNpcFavor('rennau', 1);
+        const manifest = { name:'The Harrow Manifest', icon:'📄', type:'readable', sell:0,
+          description:'Cargo: 40 crates, Scholar Kings correspondence, sealed. Consignee: Weimar, Archivist I. Voss. Departure: Day 17. Expected arrival: Day 20. Status: Weather Loss.'
+            + (S_story.wmFirstResearcherKnown ? '\n\nIsolde Voss\'s name on a ship manifest from eleven months ago. Before the revocation. Whatever she was sending arrived nowhere.' : '') };
+        S_story.inventory.push(manifest);
+        msgs.push('📄 The Harrow Manifest obtained. Rennau is Friendly.');
+      }
+      if (id === 'quest_tl_02') { msgs.push('📋 Embargo decision logged.'); }
+      if (id === 'quest_tl_03') {
+        S_story.tlMissingShipSolved = true;
+        _setNpcFavor('rennau', 2);
+        S_story.gold += 300;
+        const oriAcc = { name:"Ori's Account", icon:'📜', type:'readable', sell:0,
+          description:'She describes what boarded them. Not pirates. Not storm. A shape in the water, very large, that moved like it was looking for something. Then it found the ship.'
+            + ((S_story.inventory || []).find(i => i.name === "Froberger's Field Notes") ? '\n\nFroberger wrote: "The pressure is survivable if you know it\'s coming." Ori survived because she knew the shape was there and went over the side before it hit.' : '') };
+        S_story.inventory.push(oriAcc);
+        msgs.push('📜 +300gp. Ori\'s Account obtained. Rennau is Dear Friend.');
+      }
+      // Layer 55: Visby Underground quest rewards
+      if (id === 'quest_vs_01') { S_story.vsDebtProbed = true; _setNpcFavor('solvak', 1); msgs.push('💬 Mordus\'s position recorded. Solvak is Friendly.'); }
+      if (id === 'quest_vs_02') {
+        S_story.vsWeaponsFound = true;
+        _setNpcFavor('yva', 1);
+        msgs.push('🖤 Hollow Hands weapons trail found. Yva is Friendly.');
+      }
+      if (id === 'quest_vs_03') {
+        S_story.vsDebtSettled = true;
+        S_story.vsShamanKnown = true;
+        S_story.gold += 400;
+        msgs.push('💰 +400gp from Solvak. Debt settled. The shaman is named — but not found.');
+      }
+      // Layer 56: Void Shaman quest reward (gold delivered inline per path; just confirm here)
+      if (id === 'quest_vs_warden') {
+        S_story.wardensLegacyKnown = true;
+        if (!S_story.vsShamanPersuaded && !S_story.vshamanDefeated) msgs.push('🔑 The Warden\'s mandate is resolved.');
+        else if (S_story.vsShamanPersuaded) msgs.push('🔑 Persuasion path: the sub-clan returned to Mordus. The chain is known.');
+        else msgs.push('🔑 Combat path: the sub-clan scattered. The Hollow Hands have no direction.');
+      }
     }
   });
   return msgs;
@@ -12894,6 +13422,18 @@ function storyJournalToggle() {
       }
       list.appendChild(div);
     });
+    // Layer 50: §XV — Entry 42 appended to journal when written
+    if (S_story.entry42Written) {
+      S_story.entry42Read = true;
+      const e42JovDiv = document.createElement('div');
+      e42JovDiv.className = 'jov-entry unlocked';
+      const e42Body = S_story.entry42Text
+        ? S_story.entry42Text.replace(/\n/g,'<br>')
+        : '<em style="color:#7a6040">[left blank]</em>';
+      e42JovDiv.innerHTML = '<div class="jov-entry-title">Entry 42 ✦ — <span style="color:#f0c070">by you</span></div>'
+        + '<div class="jov-entry-text journal-late">' + e42Body + '</div>';
+      list.appendChild(e42JovDiv);
+    }
     ov.classList.add('visible');
   }
 }
@@ -13297,7 +13837,11 @@ function storyRenderInventory() {
         readBtn.className = 'inv-use-btn';
         readBtn.textContent = '📖 Read';
         readBtn.addEventListener('click', () => {
-          const txt = it.readText || '(No text found.)';
+          let txt = it.readText || '(No text found.)';
+          // Layer 61: encoded_letter gets decoded footnote when corelliRevelationDelivered
+          if (it.name === CORELLI_ITEMS.encoded_letter.name && (it._decoded || S_story.corelliRevelationDelivered)) {
+            txt += '\n\n[Decoded with the Last Cipher: "Route suppressed by order of the Circle. Contents: Antecedent Completion Protocol, draft 3. Status: reclassified, not destroyed."]';
+          }
           storyMsg('📖 ' + it.name + '\n\n' + txt);
         });
         div.appendChild(readBtn);
@@ -13368,9 +13912,11 @@ function storyRender(node, prefix) {
   if (farewellEl) {
     if (_pendingFarewell) {
       farewellEl.innerHTML = '<p class="npc-farewell">' + _pendingFarewell + '</p>';
+      farewellEl.style.display = '';
       _pendingFarewell = null;
     } else {
       farewellEl.innerHTML = '';
+      farewellEl.style.display = 'none';
     }
   }
   // Act III weight (L44-K)
@@ -13397,6 +13943,12 @@ function storyRender(node, prefix) {
   { const _vfl = _voidFlavorLine(node.code);
     if (_vfl) document.getElementById('story-text-box').textContent += '\n\n' + _vfl;
   }
+  // Clear all stale dynamic siblings between story-text-box and story-info-row
+  { let _el = document.getElementById('story-text-box').nextElementSibling;
+    while (_el && _el.id !== 'story-info-row') {
+      const _next = _el.nextElementSibling; _el.remove(); _el = _next;
+    }
+  }
   // ── Intro tagline at CI ──
   { const _oldCiTag = document.getElementById('story-ci-tagline');
     if (_oldCiTag) _oldCiTag.remove();
@@ -13408,6 +13960,53 @@ function storyRender(node, prefix) {
       _ciDiv.innerHTML = 'LETS GO &mdash; Codex of Conquest: Curse of Knowledge<br><span style="font-size:10px;color:#9ab0c0;letter-spacing:0.02em;">roll2hit.com &middot; MIT Public Domain</span>';
       document.getElementById('story-text-box').insertAdjacentElement('afterend', _ciDiv);
     }
+  }
+  // ── Layer 50: §XV Entry 42 — blank journal page at CI (qualifying NG+ run) ──
+  { const _e42Old = document.getElementById('story-entry42-prompt');
+    if (_e42Old) _e42Old.remove();
+    if (node.code === 'CI' && (S_story.ngPlusRun || 0) >= 1 && S_story.priorQuestMinusOne
+        && !S_story.entry42Written) {
+      const _e42Dear = ['yael','brynn','quill','pachelbel','crov','auros']
+        .filter(k => _npcFavor(k) >= 2).length;
+      if (_e42Dear >= 3) {
+        const e42Div = document.createElement('div');
+        e42Div.id = 'story-entry42-prompt';
+        e42Div.className = 'sweelinck-variant';
+        e42Div.style.cssText = 'margin-top:10px;border-left-color:#a0702a;';
+        e42Div.innerHTML = '<div style="color:#f0c070;font-weight:700;margin-bottom:6px;">📖 Froberger\'s Journal — Entry 42</div>'
+          + '<div style="font-size:12px;color:#bba;margin-bottom:8px;">The page is blank. His handwriting fills forty-one entries. This one — the last — is empty. He left it for someone else. You are the someone else.</div>'
+          + '<textarea id="entry42-textarea" placeholder="Write Entry 42, or leave this blank." style="width:100%;height:80px;background:#0e0a06;color:#ddc;border:1px solid #5c3311;border-radius:3px;padding:6px;font-size:12px;resize:vertical;box-sizing:border-box;"></textarea>'
+          + '<div style="display:flex;gap:6px;margin-top:6px;">'
+          + '<button class="inv-use-btn" id="entry42-write-btn">✍️ Write it.</button>'
+          + '<button class="inv-use-btn" id="entry42-blank-btn">— Leave it blank.</button>'
+          + '</div>';
+        document.getElementById('story-text-box').insertAdjacentElement('afterend', e42Div);
+        document.getElementById('entry42-write-btn').addEventListener('click', () => {
+          const txt = (document.getElementById('entry42-textarea').value || '').trim();
+          S_story.entry42Written = true;
+          S_story.entry42Text = txt || '';
+          e42Div.remove();
+          storyMsg(txt
+            ? '📖 You wrote Entry 42. Forty-two entries. You are the last one.'
+            : '📖 You left Entry 42 blank. Some things need not be written to be true.');
+          storyAutoSave();
+        });
+        document.getElementById('entry42-blank-btn').addEventListener('click', () => {
+          S_story.entry42Written = true;
+          S_story.entry42Text = '';
+          e42Div.remove();
+          storyMsg('📖 You close the journal. The page remains empty. That is your entry.');
+          storyAutoSave();
+        });
+      }
+    }
+  }
+  // ── Layer 50: §XV NG+ quest activation at CI ──
+  if (node.code === 'CI' && (S_story.ngPlusRun || 0) >= 1) {
+    const _ngqs = S_story.quests || {};
+    if (!_ngqs['quest_ng_01']) S_story.quests['quest_ng_01'] = 'active';
+    if (!_ngqs['quest_ng_02'] && S_story.priorQuestMinusOne) S_story.quests['quest_ng_02'] = 'active';
+    if (!_ngqs['quest_ng_03']) S_story.quests['quest_ng_03'] = 'active';
   }
   // ── L40-H/I: Sweelinck dialogue variant at SQ and CO ──
   {
@@ -13466,6 +14065,477 @@ function storyRender(node, prefix) {
       }
     }
   }
+  // ── Layer 51: §XVI Weimar Scholar Gate — SQ node ──
+  if (node.code === 'SQ') {
+    const _wqs = S_story.quests || {};
+    // Activate Q-WM-01 on first SQ visit (Act VI+)
+    if (!_wqs['quest_wm_01'] && (S_story.actNumber || 1) >= 6) {
+      S_story.quests['quest_wm_01'] = 'active';
+      setTimeout(() => storyMsg('"You\'re asking about Froberger. Everyone who comes here lately is asking about Froberger." — Archivist Isolde Voss, at the gate'), 500);
+    }
+    // Activate Q-WM-02 when archive unlocked
+    if (_wqs['quest_wm_01'] === 'complete' && !_wqs['quest_wm_02']) {
+      S_story.quests['quest_wm_02'] = 'active';
+    }
+    // Activate Q-WM-03 when archive complete + Benedikt available
+    if (S_story.wmArchiveComplete && !_wqs['quest_wm_03']) {
+      S_story.quests['quest_wm_03'] = 'active';
+    }
+    // Activate Q-WM-04 when circle complete
+    if (S_story.wmBenediktCircleComplete && !_wqs['quest_wm_04']) {
+      S_story.quests['quest_wm_04'] = 'active';
+    }
+    // Lower archive button
+    if (S_story.wmLowerArchiveUnlocked) {
+      const archBtn = document.createElement('button');
+      archBtn.className = 'inv-use-btn';
+      archBtn.textContent = '📚 Lower Archive';
+      archBtn.style.cssText = 'margin-top:6px;';
+      archBtn.addEventListener('click', () => _storyWmArchiveModal());
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', archBtn);
+    }
+    // Benedikt reading circle button
+    if (S_story.wmArchiveComplete && !S_story.wmBenediktCircleComplete) {
+      const circleBtn = document.createElement('button');
+      circleBtn.className = 'inv-use-btn';
+      const sessions = S_story.wmSessionsDays || [];
+      const today = S_story.dayCounter || 0;
+      const alreadyToday = sessions.includes(today);
+      circleBtn.textContent = alreadyToday
+        ? '📖 The circle meets again tomorrow.'
+        : '📖 Attend Benedikt\'s reading circle (' + sessions.length + '/3)';
+      circleBtn.disabled = alreadyToday;
+      circleBtn.style.cssText = 'margin-top:4px;';
+      circleBtn.addEventListener('click', () => {
+        if (alreadyToday) return;
+        if (!S_story.wmSessionsDays) S_story.wmSessionsDays = [];
+        S_story.wmSessionsDays.push(today);
+        const n = S_story.wmSessionsDays.length;
+        const lines = [
+          '"Froberger\'s early theory is here. Before the credentials. Before the revocation. When he was just curious." Benedikt opens to the first chapter.',
+          '"The Void tide advance, page 14. He wrote \'survivable if you know it\'s coming\' in the margin before he had evidence. He turned out to be right." Benedikt pauses. "He usually was."',
+          '"The third session is the one where it stops being reading and starts being understanding. You\'ve been here three times. That tells me something." Benedikt closes the book.',
+        ];
+        storyMsg(lines[n - 1] || 'Benedikt nods.');
+        if (n >= 3) S_story.wmBenediktCircleComplete = true;
+        circleBtn.remove();
+        storyAutoSave();
+      });
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', circleBtn);
+    }
+  }
+  // ── Layer 52: §XVII Void Archaeology — [INVESTIGATE] at 5 nodes + MT tunnel ──
+  {
+    const _vaReady = (S_story.ngPlusRun || 0) >= 1 && S_story.wmFirstResearcherKnown && S_story.entry42Written;
+    const _vaSites = {
+      CI: { flag:'vaCI', text:'In the back of the Blue Shutters Archive — a partial shelf record. Researcher Category: Containment. Date: [REDACTED]. The same shelf that held the archive letter. She worked here. The marks start here.' },
+      SL: { flag:'vaSL', text:'A carved marker on a corner building in the Birka Slums. The pattern matches the stones at the Defiant Fields exactly. This building predates the city by 80 years — predates the Scholar Kings. The mark was here before there was anyone to put it there.' },
+      DF: { flag:'vaDF', text:'A stone alignment in the scorched terrain of the Defiant Fields. Not random — spaced to a mathematical interval. The battle happened at the activation point. This is where the sealing mechanism triggered. You didn\'t choose this spot. She chose it, 200 years before you arrived.' },
+      WM: { flag:'vaWM', text:'Document 3 in the lower archive — but now the project codename is visible: ANTECEDENT CONTAINMENT PROTOCOL. The word "Void" appears nowhere in the original documents. She never called it that. She called it what it was: a cage.' },
+      MT: { flag:'vaMT', text:'A sealed access tunnel at the Mountain Pass. Never opened by anyone in the records. Sealed before the Scholar Kings existed. Not collapsed — sealed from inside. The seal is intact. It is waiting.' },
+    };
+    if (_vaReady && _vaSites[node.code]) {
+      const _site = _vaSites[node.code];
+      if (!S_story[_site.flag]) {
+        const invBtn = document.createElement('button');
+        invBtn.className = 'inv-use-btn';
+        invBtn.textContent = '🏛️ Investigate.';
+        invBtn.style.cssText = 'margin-top:6px;';
+        invBtn.addEventListener('click', () => {
+          S_story[_site.flag] = true;
+          storyMsg(_site.text);
+          invBtn.remove();
+          const found = ['vaCI','vaSL','vaDF','vaWM','vaMT'].every(f => S_story[f]);
+          if (found && !S_story.vaAllMarksFound) {
+            S_story.vaAllMarksFound = true;
+            setTimeout(() => {
+              storyMsg('Five marks. One pattern. She was everywhere before anyone was looking.');
+              if (!S_story.quests) S_story.quests = {};
+              if (!S_story.quests['quest_va_02']) S_story.quests['quest_va_02'] = 'active';
+            }, 600);
+          }
+          storyAutoSave();
+        });
+        document.getElementById('story-text-box').insertAdjacentElement('afterend', invBtn);
+      }
+    }
+    // Activate Q-VA-01 on first investigation site encounter
+    if (_vaReady && _vaSites[node.code] && !((S_story.quests || {})['quest_va_01'])) {
+      S_story.quests = S_story.quests || {};
+      S_story.quests['quest_va_01'] = 'active';
+    }
+    // MT tunnel button
+    if (node.code === 'MT' && S_story.vaLogFound && !S_story.vaLastWardVisited) {
+      const _hasKey = (S_story.inventory || []).some(i => i.name === 'Antecedent Seal' || i.name === "Froberger's Field Notes");
+      if (_hasKey) {
+        const tunnelBtn = document.createElement('button');
+        tunnelBtn.className = 'inv-use-btn';
+        tunnelBtn.textContent = '🏛️ Open the tunnel.';
+        tunnelBtn.style.cssText = 'margin-top:6px;';
+        tunnelBtn.addEventListener('click', () => {
+          S_story.vaLastWardVisited = true;
+          tunnelBtn.remove();
+          storyMsg('The seal accepts the key. The door opens inward.\n\nInside: cut stone. No decay. The air is perfectly still — sealed for 200 years.\n\nOn the far wall, six sentences. The last field test of the containment structure. The first time it was ever closed.\n\n"The destabilization event was calculated correctly. The sealing mechanism engaged at the predicted moment. The Antecedent entered containment. The cage is closed. We did not know what we were containing. We only knew it could not be destroyed.\n\nThe Antecedent was here. It is not anymore. You know where it is now."');
+          storyAutoSave();
+        });
+        document.getElementById('story-text-box').insertAdjacentElement('afterend', tunnelBtn);
+      }
+    }
+    // Q-VA-03 and Q-VA-04 activation
+    if ((S_story.ngPlusRun || 0) >= 1) {
+      const _qs = S_story.quests || {};
+      if (S_story.vaLogFound && !_qs['quest_va_03']) S_story.quests['quest_va_03'] = 'active';
+      if (S_story.vaLastWardVisited && !_qs['quest_va_04']) S_story.quests['quest_va_04'] = 'active';
+    }
+    // Q-VA-04: Benedikt delivers message at SQ
+    if (node.code === 'SQ' && S_story.vaLastWardVisited && S_story.entry42Written && !S_story.vaArchitectureKnown) {
+      setTimeout(() => storyMsg(
+        'Benedikt: "She built it. You closed it. Froberger found the mechanism. You followed him. Entry 42 is the fourth link. Four links is a chain. A chain holds. That is the only kind of answer this work produces — not a solution, a chain."'
+      ), 700);
+      S_story.vaArchitectureKnown = true;
+      storyAutoSave();
+    }
+  }
+  // ── Layer 54: §XIX Tilbury Harbor Arc — SF and TL nodes ──
+  if (node.code === 'SF') {
+    const _tqs = S_story.quests || {};
+    // Q-TL-01: activate on first SF visit (any act)
+    if (!_tqs['quest_tl_01']) S_story.quests['quest_tl_01'] = 'active';
+    // Harbor board button — shows manifest loot; awards quest completion
+    if (!S_story.tlLedgerRead) {
+      const hbBtn = document.createElement('button');
+      hbBtn.className = 'inv-use-btn';
+      hbBtn.textContent = '📋 Harbor Board';
+      hbBtn.style.cssText = 'margin-top:6px;';
+      hbBtn.addEventListener('click', () => {
+        storyMsg('Harbor Board — Empty berths: HARROW (Day 17), SILVER MARCH (Day 24), CORMORANT (Day 31), BRINE OATH (Day 44), VELVET DAWN (Day 52), KESSLER (Day 61), THE ROOK (Day 73), PALE MERIDIAN (Day 88), ANCHOR & WHEEL (Day 95), SUNDRESS (Day 107).\n\nThe Harbor Master adds a note: "Any information about the HARROW — cargo, crew, last position — should be reported immediately. Harbor Master Rennau."');
+        setTimeout(() => {
+          const manifestFound = (S_story.inventory || []).some(i => i.name === 'The Harrow Manifest');
+          if (!manifestFound) {
+            S_story.inventory = S_story.inventory || [];
+            S_story.inventory.push({ name:'The Harrow Manifest', icon:'📄', type:'readable', sell:0,
+              description:'Cargo: 40 crates, Scholar Kings correspondence, sealed. Consignee: Weimar, Archivist I. Voss. Departure: Day 17. Expected arrival: Day 20. Status: Weather Loss.'
+                + (S_story.wmFirstResearcherKnown ? '\n\nIsolde Voss\'s name on a ship manifest from eleven months ago. Before the revocation. Whatever she was sending arrived nowhere.' : '') });
+            storyMsg('📄 Found: The Harrow Manifest.');
+          }
+        }, 400);
+        hbBtn.remove();
+        storyAutoSave();
+      });
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', hbBtn);
+    }
+    // Activate Q-TL-02 when ledger read
+    if (S_story.tlLedgerRead && !_tqs['quest_tl_02']) S_story.quests['quest_tl_02'] = 'active';
+    // Ori encounter — Act IV+ and tlLedgerRead
+    if (S_story.tlLedgerRead && (S_story.actNumber || 1) >= 4 && !S_story.tlMissingShipSolved) {
+      if (!_tqs['quest_tl_03']) S_story.quests['quest_tl_03'] = 'active';
+      const oriBtn = document.createElement('button');
+      oriBtn.className = 'inv-use-btn';
+      oriBtn.textContent = '📜 Speak with Ori.';
+      oriBtn.style.cssText = 'margin-top:4px;';
+      oriBtn.addEventListener('click', () => {
+        storyMsg('Ori: "I was on the Harrow. I\'m the only one who came back."\n\nShe describes what boarded them. Not pirates. Not storm. Something that came from below — "a shape in the water, very large, that didn\'t move like a fish or a whale. It moved like it was looking for something. Then it found the ship."\n\n"I went over the side before it hit. Three weeks on foot to get here. I needed to tell someone."');
+        S_story.tlMissingShipSolved = true;
+        if (!S_story.inventory) S_story.inventory = [];
+        S_story.inventory.push({ name:"Ori's Account", icon:'📜', type:'readable', sell:0,
+          description:'She describes what boarded the Harrow. A shape in the water, very large, that moved like it was looking for something. Then it found the ship.'
+            + ((S_story.inventory || []).find(i => i.name === "Froberger's Field Notes") ? '\n\nFroberger wrote: "The pressure is survivable if you know it\'s coming." Ori survived because she knew the shape was there and went over the side before it hit.' : '') });
+        _setNpcFavor('rennau', 2);
+        S_story.gold += 300;
+        storyMsg('📜 +300gp. Ori\'s Account obtained. Rennau is Dear Friend.');
+        oriBtn.remove();
+        storyAutoSave();
+      });
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', oriBtn);
+    }
+  }
+  if (node.code === 'TL') {
+    const _tqs = S_story.quests || {};
+    // Q-TL-02 Vonn interaction
+    if (S_story.tlLedgerRead && _tqs['quest_tl_02'] === 'active') {
+      const vonnBtn = document.createElement('button');
+      vonnBtn.className = 'inv-use-btn';
+      vonnBtn.textContent = '⚖️ Speak with Adjutant Vonn.';
+      vonnBtn.style.cssText = 'margin-top:6px;';
+      vonnBtn.addEventListener('click', () => {
+        storyMsg('Vonn: "The harbor is closed to non-Conclave vessels under Emergency Trade Protocol 7. I understand this is inconvenient. I can offer you a transit permit for a fee. The fee is fixed by the Conclave. I did not set it."\n\nYou show him the Harrow manifest.\n\nVonn: "Filed under Emergency Trade losses. I see. Thank you for bringing this to my attention. It will be noted."\n\nHe says this in a way that does not suggest he will do anything about it.');
+        const choiceDiv = document.createElement('div');
+        choiceDiv.style.cssText = 'margin-top:6px;display:flex;flex-direction:column;gap:3px;';
+        const repBtn = document.createElement('button');
+        repBtn.className = 'inv-use-btn';
+        repBtn.textContent = '📋 Report to Birka contacts.';
+        repBtn.addEventListener('click', () => {
+          S_story.tlEmbargoChallenged = true;
+          S_story.gold += 150;
+          storyMsg('💰 +150gp from a Birka Council liaison. The manifest is on record.');
+          choiceDiv.remove();
+          storyAutoSave();
+        });
+        const leaveBtn = document.createElement('button');
+        leaveBtn.className = 'inv-use-btn';
+        leaveBtn.textContent = '— Leave it.';
+        leaveBtn.addEventListener('click', () => {
+          S_story.tlEmbargoDismissed = true;
+          storyMsg('You leave the manifest where it is. The harbor stays closed.');
+          choiceDiv.remove();
+          storyAutoSave();
+        });
+        choiceDiv.appendChild(repBtn);
+        choiceDiv.appendChild(leaveBtn);
+        vonnBtn.remove();
+        document.getElementById('story-text-box').insertAdjacentElement('afterend', choiceDiv);
+      });
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', vonnBtn);
+    }
+  }
+  // ── Layer 55: §XX Visby Underground — VS and GC nodes ──
+  if (node.code === 'VS') {
+    const _vqs = S_story.quests || {};
+    if (!_vqs['quest_vs_01'] && (S_story.actNumber || 1) >= 5) S_story.quests['quest_vs_01'] = 'active';
+    if (_vqs['quest_vs_01'] === 'active' && !S_story.vsDebtProbed) {
+      const solvakBtn = document.createElement('button');
+      solvakBtn.className = 'inv-use-btn';
+      solvakBtn.textContent = '⚖️ Speak with Solvak.';
+      solvakBtn.style.cssText = 'margin-top:6px;';
+      solvakBtn.addEventListener('click', () => {
+        const harrowNote = S_story.tlLedgerRead ? ' "We lost a ship around the same time. The Harrow. Unrelated, probably."' : '';
+        storyMsg('Solvak: "The Conclave hired me to collect 2,000gp from Mordus — the price of a weapons shipment that never arrived."' + harrowNote + '\n\n"Mordus does not respond to threats. He responds to leverage. I don\'t have any. You might. He\'ll talk to you — you\'re not Conclave."');
+        setTimeout(() => {
+          storyMsg('Mordus, inside Visby: "The debt will be paid when the weapons are returned. The weapons will be returned when I know where they went. I do not know where they went."\n\nHe is telling the truth.');
+          S_story.vsDebtProbed = true;
+          _setNpcFavor('solvak', 1);
+          if (!S_story.quests['quest_vs_02']) S_story.quests['quest_vs_02'] = 'active';
+          storyAutoSave();
+        }, 800);
+        solvakBtn.remove();
+      });
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', solvakBtn);
+    }
+    // Q-VS-03: Solvak payment
+    if (S_story.vsWeaponsFound && !S_story.vsDebtSettled) {
+      const payBtn = document.createElement('button');
+      payBtn.className = 'inv-use-btn';
+      payBtn.textContent = '🖤 Deliver the Hollow Hands Seal to Solvak.';
+      payBtn.style.cssText = 'margin-top:4px;';
+      payBtn.addEventListener('click', () => {
+        S_story.vsDebtSettled = true;
+        S_story.vsShamanKnown = true;
+        S_story.gold += 400;
+        S_story.inventory = (S_story.inventory || []).filter(i => i.name !== 'Hollow Hands Seal');
+        setTimeout(() => storyMsg('Mordus: "The Hollow Hands are mine to deal with now that I know what they are. You found what I needed to find them. That\'s worth something."'), 600);
+        storyMsg('💰 +400gp from Solvak. Debt settled. The Void shaman operates inside Mordus\'s territory. You know this. Solvak does not.');
+        payBtn.remove();
+        storyAutoSave();
+      });
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', payBtn);
+    }
+  }
+  if (node.code === 'GC') {
+    const _vqs2 = S_story.quests || {};
+    if (S_story.vsDebtProbed && !S_story.vsWeaponsFound) {
+      const yvaBtn = document.createElement('button');
+      yvaBtn.className = 'inv-use-btn';
+      yvaBtn.textContent = '💬 Find Yva (50gp).';
+      yvaBtn.style.cssText = 'margin-top:6px;';
+      yvaBtn.addEventListener('click', () => {
+        if ((S_story.gold || 0) < 50) { storyMsg('💰 You don\'t have 50gp.'); return; }
+        S_story.gold -= 50;
+        storyMsg('Yva: "Fifty gold. Thank you. The weapons went to the Hollow Hands. A goblin sub-clan with a Void-aligned shaman. The shaman told them the weapons were tribute Mordus owed them. Mordus never paid tribute. The shaman invented a tribute that made the Hollow Hands feel owed.\n\nThat\'s the part that scares me."\n\n'
+          + (S_story.tlMissingShipSolved ? 'Yva adds: "The Harrow. I heard about that ship. The Hollow Hands didn\'t touch it. Whatever got that ship wasn\'t them."\n\n' : '')
+          + 'She gives you the mark — a seal used by the Hollow Hands to identify allied cargo.');
+        S_story.vsWeaponsFound = true;
+        _setNpcFavor('yva', 1);
+        S_story.inventory = S_story.inventory || [];
+        S_story.inventory.push({ name:'Hollow Hands Seal', icon:'🖤', type:'quest_item', sell:0,
+          description:'A goblin sub-clan mark. Void-tainted. The mark of a faction answering to a shaman Mordus doesn\'t know.' });
+        if (!_vqs2['quest_vs_03']) S_story.quests['quest_vs_03'] = 'active';
+        yvaBtn.remove();
+        storyAutoSave();
+      });
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', yvaBtn);
+    }
+  }
+  // ── Layer 56: §XXI Void Shaman — MT tunnel Warden encounter ──
+  if (node.code === 'MT' && S_story.vsShamanKnown && S_story.vaLastWardVisited && !S_story.wardensLegacyKnown) {
+    if (!S_story.vshamanFound) {
+      S_story.vshamanFound = true;
+      if (!S_story.quests['quest_vs_warden']) S_story.quests['quest_vs_warden'] = 'active';
+      storyMsg('Inside the tunnel, past where you stopped before.\n\nThe walls are marked — not the stone alignment from the DF node, but new work, carved in the past six months. A workbench. Notes in a language that mixes goblin glyphs and Old Scholar script.\n\nThe Warden is not surprised to see you. They knew Mordus would send someone eventually.\n\n"You came to stop me. Or to understand. Either is fine. I have been working for eleven years to do the right thing. I may be wrong about what the right thing is."');
+      storyAutoSave();
+    }
+    const _wardenBtnGroup = document.createElement('div');
+    _wardenBtnGroup.style.cssText = 'display:flex;flex-direction:column;gap:3px;margin-top:6px;';
+    const _hasLog = (S_story.inventory || []).some(i => i.name === "The Constructor's Log");
+    if (_hasLog) {
+      const logBtn = document.createElement('button');
+      logBtn.className = 'inv-use-btn';
+      logBtn.textContent = '📜 Show them the Constructor\'s Log.';
+      logBtn.addEventListener('click', () => {
+        storyMsg('The Warden takes the Log. Reads. Stops at Entry 2.\n\n"\'The cage must be opened before it can be closed.\' This is the original. This is — the mandate they gave us was open the cage. But this says open the tunnel to close the cage. The tunnel. Not the cage."\n\nThey read Entry 7.\n\n"\'If someone is reading this, the sealing mechanism has activated. The cage is closed.\'\n\nThe cage is closed. It was closed 200 years ago. I have been eleven years trying to re-open it."\n\nThey are quiet for a long time.\n\n"Tell the clan the mission is complete. That is the truth — the mandate was fulfilled 200 years before I was born. This is — this is fine. I can stop."\n\nThey pass you the token without being asked.\n\nThe sub-clan walked back in. All of them. Mordus didn\'t ask what changed. He logged them as returned.');
+        S_story.vsShamanPersuaded = true;
+        S_story.wardensLegacyKnown = true;
+        S_story.inventory = S_story.inventory || [];
+        S_story.inventory.push({ name:"The Warden's Token", icon:'🔑', type:'relic', sell:0,
+          description:'Original Warden\'s seal, First Researcher\'s appointment. Recopied seventeen times. The seventeenth copy has a small error in the verb tense that changed everything.' });
+        S_story.gold += 600;
+        storyMsg('💰 +600gp (quest: The Warden). 🔑 The Warden\'s Token added to inventory.');
+        if (!S_story.quests['quest_vs_warden']) S_story.quests['quest_vs_warden'] = 'active';
+        _wardenBtnGroup.remove();
+        storyAutoSave();
+      });
+      _wardenBtnGroup.appendChild(logBtn);
+    }
+    const fightBtn = document.createElement('button');
+    fightBtn.className = 'inv-use-btn';
+    fightBtn.textContent = '⚔️ Fight the Warden.';
+    fightBtn.addEventListener('click', () => {
+      _wardenBtnGroup.remove();
+      setTimeout(() => storyPreBattle({ ...node, code:'MT_WARDEN', battle:{ label:'The Warden', key:'void_shaman', count:1 } }), 300);
+    });
+    _wardenBtnGroup.appendChild(fightBtn);
+    document.getElementById('story-text-box').insertAdjacentElement('afterend', _wardenBtnGroup);
+  }
+  // ── Layer 61: §XXVI Corelli the Wandering Merchant ──
+  { const _coApp = _checkCorelliAppearance(node.code);
+    if (_coApp) {
+      const _coBtnOld = document.getElementById('corelli-encounter-btn');
+      if (_coBtnOld) _coBtnOld.remove();
+      const _coBtn = document.createElement('button');
+      _coBtn.id = 'corelli-encounter-btn';
+      _coBtn.className = 'inv-use-btn';
+      _coBtn.textContent = '🛒 Traveling Merchant';
+      _coBtn.style.cssText = 'margin-top:6px;border-color:#7a6040;';
+      _coBtn.addEventListener('click', () => {
+        _coBtn.remove();
+        S_story.corelli_encounter_count = (S_story.corelli_encounter_count || 0) + 1;
+        const fav = S_story.fav_corelli || 0;
+        const opener = _corelliOpener(_coApp);
+        // 5th appearance (last_cipher) — revelation first if Dear Friend
+        if (_coApp.index === 5) {
+          if (fav >= 3 && !S_story.corelliRevelationDelivered) {
+            storyMsg('Corelli: "' + opener + '"\n\n"Six years I carried sealed documents for the Ivory Circle. Documents between the Scholar Kings and their contractors. I never opened them.\n\nThen one seal broke in the rain. Just the outer wrapper. I had three days before the next courier exchange, so I read what was inside.\n\nIt was an order. A suppression order. For a researcher named — they called her \'the Antecedent.\' They were very careful not to use her name.\n\nThe order said: remove her findings from the distribution network. All copies. All correspondence. All record of the correspondence. Do not destroy — destroy leaves a record of destruction. Reclassify.\n\nI\'ve been selling her things ever since. Not all of them. I\'m not foolish. But the ones that would find the right hands eventually. I think you might be the right hands.\n\nTake this. Don\'t ask where I found it."');
+            S_story.corelliRevelationDelivered = true;
+            S_story.inventory = S_story.inventory || [];
+            if (!S_story.inventory.some(i => i.name === CORELLI_ITEMS.last_cipher.name)) {
+              S_story.inventory.push({ ...CORELLI_ITEMS.last_cipher });
+              storyMsg('🔐 The Last Cipher added to inventory.');
+            }
+            // Decode encoded_letter if owned
+            const enc = S_story.inventory.find(i => i.name === CORELLI_ITEMS.encoded_letter.name);
+            if (enc) enc._decoded = true;
+          } else {
+            storyMsg('Corelli: "' + opener + '"');
+            storyMsg('(Corelli has nothing left to sell. But they look like they\'ve been waiting for something — or someone.)');
+          }
+          storyAutoSave();
+          return;
+        }
+        // Normal appearance — show item for purchase
+        const itemDef = CORELLI_ITEMS[_coApp.itemKey];
+        const alreadyOwned = (S_story.inventory || []).some(i => i.name === itemDef.name);
+        storyMsg('Corelli: "' + opener + '"');
+        if (alreadyOwned) {
+          storyMsg('(You already have ' + itemDef.name + '.)');
+          storyAutoSave();
+          return;
+        }
+        const _buyDiv = document.createElement('div');
+        _buyDiv.style.cssText = 'display:flex;flex-direction:column;gap:3px;margin-top:5px;';
+        const _buyBtn = document.createElement('button');
+        _buyBtn.className = 'inv-use-btn';
+        _buyBtn.textContent = _coApp.itemLabel;
+        _buyBtn.addEventListener('click', () => {
+          if ((S_story.gold || 0) < itemDef.price) { storyMsg('💰 Not enough gold.'); return; }
+          S_story.gold -= itemDef.price;
+          S_story.inventory = S_story.inventory || [];
+          S_story.inventory.push({ ...itemDef });
+          S_story.corelli_purchase_count = (S_story.corelli_purchase_count || 0) + 1;
+          S_story.fav_corelli = Math.min(3, S_story.corelli_purchase_count);
+          storyMsg('🛒 Purchased: ' + itemDef.name + '. 💰 -' + itemDef.price + 'gp.');
+          _buyDiv.remove();
+          storyAutoSave();
+        });
+        const _passBtn = document.createElement('button');
+        _passBtn.className = 'inv-use-btn';
+        _passBtn.textContent = '— Pass.';
+        _passBtn.addEventListener('click', () => { _buyDiv.remove(); });
+        _buyDiv.appendChild(_buyBtn);
+        _buyDiv.appendChild(_passBtn);
+        document.getElementById('story-text-box').insertAdjacentElement('afterend', _buyDiv);
+        storyAutoSave();
+      });
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _coBtn);
+    }
+  }
+  // Benedikt callback at SQ when vsShamanPersuaded
+  if (node.code === 'SQ' && S_story.vsShamanPersuaded && _npcFavor('benedikt_rasp') >= 2 && !S_story.vsShamanBenediktDelivered) {
+    S_story.vsShamanBenediktDelivered = true;
+    setTimeout(() => storyMsg(
+      'Benedikt: "You found the Warden. She planted them, didn\'t she — the First Researcher. She planted a guardian at the tunnel and didn\'t write it down anywhere official. I didn\'t know the chain went that far. Neither did she, I think — she thought she was planting a safeguard. She planted a 200-year misunderstanding. The difference between those things might be very small."'
+    ), 700);
+    storyAutoSave();
+  }
+  // ── Layer 49: §XIV Quest -1 — The Open Door ──
+  if (node.code === 'CO' && (S_story.level || 1) >= 20 && !S_story.questMinusOne) {
+    const q1Div = document.createElement('div');
+    q1Div.className = 'sweelinck-variant';
+    q1Div.style.cssText = 'margin-top:10px;border-left-color:#556b2f;';
+    q1Div.textContent = [
+      '🔓  You are Level 20.',
+      '',
+      'The Fighter Champion progression ends here. The crit window is 17–20.',
+      'You have two Action Surges per short rest. Indomitable has been yours',
+      'for eleven levels. There is no Level 21 in this build.',
+      '',
+      'But the source file is 16,024 lines of readable JavaScript.',
+      'MONSTER_POOL has 423 entries. WORLD_DB has 67 terrain entries.',
+      'QUEST_DB has a completion function for each quest. The MIT License',
+      'has no restrictions.',
+      '',
+      'Level 21 is undefined.',
+      'That is not a bug. That is the door.',
+      '',
+      'If you want to continue, the next step is yours to write.',
+      'The tools are: a text editor, a browser, and the following commands:',
+      '',
+      '    grep -n "MONSTER_POOL" roll2hit-v3.html',
+      '    grep -c "key:\'" roll2hit-v3.html',
+      '    grep -n "^const QUEST_DB" roll2hit-v3.html',
+      '',
+      'The markdown files in this directory keep the documentation synchronized.',
+      'plan.md §XIV describes the World Creator Wizard.',
+      '',
+      'To mark this quest complete, open your browser console and type:',
+      '    S_story.questMinusOne = true; storyAutoSave();',
+      '',
+      'The game will not know whether you earned it.',
+      'That is also intentional.',
+      '',
+      '— Froberger\'s margin note, Entry 42 (not yet written)',
+    ].join('\n');
+    document.getElementById('story-text-box').insertAdjacentElement('afterend', q1Div);
+  }
+  // ── Layer 50: §XV Froberger's sealed letter at CO in NG+ ──
+  if (node.code === 'CO' && (S_story.ngPlusRun || 0) >= 1 && !S_story.frobergerLetterFound) {
+    const _letterDiv = document.createElement('div');
+    _letterDiv.className = 'sweelinck-variant';
+    _letterDiv.style.cssText = 'margin-top:10px;border-left-color:#7a6040;';
+    _letterDiv.innerHTML = '<div style="color:#f0c070;font-weight:700;margin-bottom:6px;">📜 A sealed letter — Froberger\'s handwriting</div>'
+      + '<div style="font-size:12px;color:#bba;">'
+      + '"If you are reading this, you completed the run once already. That means you know how it ends. '
+      + 'I am sorry about the ending. You deserved a better one.<br><br>'
+      + 'The Observatory is still here. So am I, in the pages. Come back when you\'re ready. '
+      + 'There\'s one more thing to do." — F.'
+      + '</div>'
+      + '<button class="inv-use-btn" style="margin-top:6px;" id="froberger-letter-btn">📜 Take the letter.</button>';
+    document.getElementById('story-text-box').insertAdjacentElement('afterend', _letterDiv);
+    document.getElementById('froberger-letter-btn').addEventListener('click', () => {
+      S_story.frobergerLetterFound = true;
+      _letterDiv.remove();
+      storyMsg('📜 You take the letter. It is lighter than it looks. It always is.');
+      storyAutoSave();
+    });
+  }
   // ── Layer 72: §XXXVII Bruhns CO fav-gated scene ──
   if (node.code === 'CO' && !S_story.defeatedBattles['CO'] && !S_story.bruhnsCoSceneDelivered) {
     const fav = _npcFavor('bruhns');
@@ -13483,6 +14553,10 @@ function storyRender(node, prefix) {
   }
   // ── Layer 44: §IX Ally Cat Arc — CQ node render ──
   if (node.code === 'CQ') {
+    const _oldCqDiv = document.getElementById('cq-boss-buttons');
+    if (_oldCqDiv) _oldCqDiv.remove();
+    const _oldKenshop = document.getElementById('kenickie-shop-div');
+    if (_oldKenshop) _oldKenshop.remove();
     const qs = S_story.quests || {};
     // Auto-activate Q-CAT-01 on first CQ visit
     if (!qs['quest_cat_01']) {
@@ -13548,6 +14622,77 @@ function storyRender(node, prefix) {
       });
       cqDiv.appendChild(kingBtn);
     }
+    // ── Layer 75: §XL Kenickie's Black Market ──
+    if (qs['quest_cat_05'] === 'complete') {
+      const kBtn = document.createElement('button');
+      kBtn.className = 'inv-use-btn';
+      kBtn.textContent = '🐟 Kenickie\'s Black Market';
+      kBtn.addEventListener('click', () => {
+        kBtn.remove();
+        const KENICKIE_STOCK = [
+          { label:'Sardine Pack ×3', icon:'🐟', price:18,
+            desc:'Catch +2 bait. "Freshish. Don\'t ask about the smell."',
+            makeItem: () => ({ name:'Sardine Pack', icon:'🐟', type:'bait', count:3, sell:1, catchBonus:2, typeBonus:0, advantage:false, sizeUp:false }) },
+          { label:'Live Shallows Minnow', icon:'🐠', price:28,
+            desc:'Catch +3, Size↑. "From the Don\'s private pond. He doesn\'t need it anymore."',
+            makeItem: () => ({ name:'Live Shallows Minnow', icon:'🐠', type:'bait', count:1, sell:2, catchBonus:3, typeBonus:0, advantage:false, sizeUp:true }) },
+          { label:'Minor Healing Potion', icon:'🧪', price:45,
+            desc:'Heals 10hp. 10% off. Community pricing.',
+            makeItem: () => ({ name:'Minor Healing Potion', icon:'🧪', type:'potion', heal:10, sell:15 }) },
+          { label:'Healing Potion', icon:'🫧', price:135,
+            desc:'Heals 25hp. 10% off. Community pricing.',
+            makeItem: () => ({ name:'Healing Potion', icon:'🫧', type:'potion', heal:25, sell:35 }) },
+        ];
+        const shopDiv = document.createElement('div');
+        shopDiv.id = 'kenickie-shop-div';
+        shopDiv.style.cssText = 'margin-top:6px;display:flex;flex-direction:column;gap:5px;border:1px solid #3a2a1a;border-radius:5px;padding:10px;background:#1a0e08;';
+        const title = document.createElement('div');
+        title.style.cssText = 'font-size:11px;color:#b07040;font-weight:700;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid #3a2010;padding-bottom:4px;margin-bottom:2px;';
+        title.textContent = '🐟 Kenickie\'s Black Market';
+        shopDiv.appendChild(title);
+        const goldLine = document.createElement('div');
+        goldLine.style.cssText = 'font-size:11px;color:#e0c060;';
+        const updateGold = () => { goldLine.textContent = '💰 Gold: ' + S_story.gold + 'gp'; };
+        updateGold();
+        shopDiv.appendChild(goldLine);
+        KENICKIE_STOCK.forEach(stock => {
+          const row = document.createElement('div');
+          row.style.cssText = 'display:flex;align-items:flex-start;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px solid #2a1808;';
+          const info = document.createElement('div');
+          info.style.cssText = 'flex:1;font-size:11px;line-height:1.5;';
+          info.innerHTML = '<strong>' + stock.icon + ' ' + stock.label + '</strong>'
+            + ' — <span style="color:#b07040">' + stock.price + 'gp</span>'
+            + '<br><span style="color:#706050;font-size:10px;">' + stock.desc + '</span>';
+          const buyBtn = document.createElement('button');
+          buyBtn.className = 'inv-use-btn';
+          buyBtn.style.cssText = 'white-space:nowrap;font-size:10px;padding:3px 8px;';
+          buyBtn.textContent = 'Buy';
+          buyBtn.addEventListener('click', () => {
+            if (S_story.gold < stock.price) { storyMsg('💰 Not enough gold.'); return; }
+            S_story.gold -= stock.price;
+            const item = stock.makeItem();
+            const ei = item.type === 'bait' ? (S_story.inventory||[]).findIndex(i => i.name === item.name && i.type === 'bait') : -1;
+            if (ei >= 0) { S_story.inventory[ei].count = (S_story.inventory[ei].count || 1) + (item.count || 1); }
+            else { S_story.inventory = S_story.inventory || []; S_story.inventory.push(item); }
+            S_story.kenickieMarketUsed = true;
+            updateGold();
+            storyAutoSave();
+            storyMsg('Kenickie: "Good choice. My guy Vinnie\'s got more next week. Maybe." 🤌');
+          });
+          row.appendChild(info);
+          row.appendChild(buyBtn);
+          shopDiv.appendChild(row);
+        });
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'inv-use-btn';
+        closeBtn.style.cssText = 'margin-top:4px;opacity:0.6;font-size:10px;';
+        closeBtn.textContent = '↩ Close market';
+        closeBtn.addEventListener('click', () => shopDiv.remove());
+        shopDiv.appendChild(closeBtn);
+        cqDiv.insertAdjacentElement('afterend', shopDiv);
+      });
+      cqDiv.appendChild(kBtn);
+    }
     if (cqDiv.children.length > 0) {
       document.getElementById('story-text-box').insertAdjacentElement('afterend', cqDiv);
     }
@@ -13558,12 +14703,17 @@ function storyRender(node, prefix) {
     if (npcRow) npcRow.remove();
     const _cqNpcs = ['jimmy'];
     if ((S_story.quests || {})['quest_cat_02'] === 'complete') _cqNpcs.push('sandy_cat');
-    const birkaNpcs = { CI:['yael'], IN:['brynn'], TV:['quill'], BA:['pachelbel'], CY:['crov','auros'], CQ:_cqNpcs };
+    if ((S_story.quests || {})['quest_cat_05'] === 'complete') _cqNpcs.push('kenickie');
+    const _sqNpcs = ['isolde_voss'];
+    if (S_story.wmArchiveComplete) _sqNpcs.push('benedikt_rasp');
+    const birkaNpcs = { CI:['yael'], IN:['brynn'], TV:['quill'], BA:['pachelbel'], CY:['crov','auros'], CQ:_cqNpcs, SQ:_sqNpcs,
+      SF:['rennau'], TL:S_story.tlLedgerRead ? ['vonn'] : [],
+      VS:S_story.vsDebtSettled ? [] : ['solvak'], GC:S_story.vsDebtProbed && !S_story.vsWeaponsFound ? ['yva'] : [] };
     const keys = birkaNpcs[node.code];
     if (keys) {
       const npcRowDiv = document.createElement('div');
       npcRowDiv.id = 'story-npc-cards-row';
-      npcRowDiv.style.cssText = 'display:flex;flex-direction:column;gap:8px;margin-bottom:8px;';
+      npcRowDiv.style.cssText = 'display:flex;flex-direction:column;gap:8px;';
       keys.forEach(k => _renderNpcCard(k, npcRowDiv));
       // ── S8: Varga's presence at BA — observation mechanic ──
       if (node.code === 'BA') {
@@ -15588,8 +16738,16 @@ function storyCorridorTravel(fromCode, destCode, dir) {
   if (S_story.huntMode) {
     const chance = Math.min(0.95, Math.max(0.05, 0.1 + notoriety * 0.015 + activeQuestCount * 0.04 - _luckMod() * 0.5)); // Layer 48: Luck reduces encounter rate
     if (Math.random() < chance) {
-      storyMsg('🎯 Hunting footpath → ' + destLabel + ' — ambush!');
-      triggerCorridorEncounter(terrain, destCode, true);
+      // Layer 61: false_warrant auto-consume skips encounter (disabled at voidPressure >= 7)
+      const _fwIdx = (S_story.inventory || []).findIndex(i => i.name === CORELLI_ITEMS.false_warrant.name);
+      if (_fwIdx >= 0 && (S_story.voidPressure || 0) < 7) {
+        S_story.inventory.splice(_fwIdx, 1);
+        storyMsg('📋 The patrol glances at your papers and waves you through. (False Warrant Papers consumed.)');
+        storyRender(NODE_MAP[destCode]);
+      } else {
+        storyMsg('🎯 Hunting footpath → ' + destLabel + ' — ambush!');
+        triggerCorridorEncounter(terrain, destCode, true);
+      }
     } else {
       storyMsg('🎯 Hunting footpath → ' + destLabel + ' — no prey found.');
       storyRender(destNode);

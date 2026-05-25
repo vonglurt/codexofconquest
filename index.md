@@ -231,7 +231,7 @@ Roll2Hit is a single-file HTML application with no external dependencies. It run
 
 #### `lab-report-fishing-bait-prompting.md` — Fishing & Bait Overhaul Design *(Layer 47 PLANNED)*
 **Purpose:** IEEE-format academic lab report documenting the complete Yugurt Lake Fishing & Bait Sub-System design (plan.md §XII-A through §XII-Y). Covers: 20 freshwater bait fish species (5 tiers), Tackle Box mechanic, 3-zone biome (Shore/Reeds/Deep), predator attraction formula, predator condition table by rank, magic weapon drop formula, global monster drop nerf (−3 to 0), Luck Modifier integration across all 7 fishing roll points. Also documents the `index.md` Project Directive and performs a full prompt taxonomy analysis of the session that produced this design (6 command types: increment trigger, data dump, constraint declaration, formula definition, isolation directive, synthesis command).  
-**Status:** ⚠️ PLANNED — design complete in plan.md §XII. No HTML implementation yet. This report is the design rationale and planning artifact for Layer 47.
+**Status:** ✅ Implemented 2026-05-25 — §XII fishing bait system (Layer 47) live in HTML. This report is the design rationale and prompting-methodology artifact for that layer.
 
 ---
 
@@ -241,19 +241,19 @@ Roll2Hit is a single-file HTML application with no external dependencies. It run
 
 ---
 
-### Lab Reports — Design Specs *(not yet in code — future layers)*
+### Lab Reports — Historical Design Specs *(superseded or fully implemented)*
 
-> **These files describe planned features.** They are safe to read for design intent but do NOT reflect the current codebase. Before implementing any of these, verify the relevant section of `plan.md` and `spec-engine.md` for layer assignment.
+> **These files are historical design documents.** All planned features listed below are now implemented. Read for design context only.
 
 #### `lab-report-world-creator.md` — Fork, Extend, and Quest -1 *(Layer 49 PLANNED — not yet written)*
 **Purpose:** Full walkthrough of the World Creator Wizard: adding one monster, one quest, one mission bit using grep/sed with count verification. Shell session transcript showing before/insert/after/sync. Philosophy: the player who opens the console is the next developer. MIT License as game mechanic. Quest -1: The Open Door (triggers at Level 20).  
-**Status:** ⚠️ PLANNED — design complete in `plan.md` §XIV. Lab report not yet written. Quest -1 text is in `plan.md` §XIV-B; shell tooling is in §XIV-D; story/mechanics integration is in §XIV-F.
+**Status:** ✅ Implemented 2026-05-25 — §XIV Quest -1 + World Creator (Layer 49) live in HTML. Lab report written post-implementation. Quest -1 text, shell tooling, and story/mechanics integration all implemented.
 
 ---
 
 #### `lab-report-loot-drop-weapon-economy.md` — Loot System Redesign *(proposal)*
 **Purpose:** Identifies four issues in current loot: XP thresholds unattainable (~680k max unreachable), no unified drop table, unenforced magic tier gates, incomplete item categories. Proposes compressed XP scaling, d100 loot table, tier enforcement, corrected offhand slot rules.  
-**Status:** ⚠️ DESIGN PROPOSAL — not yet implemented. Creates known conflicts (see below).
+**Status:** ✅ Superseded — loot system (L25) fully implemented via `_D100_TABLE`. Document is historical proposal; the conflicts it identified are all resolved in the live codebase.
 
 #### `lab-report-epic-battlegrounds.md` — Epic Battlegrounds *(20 new nodes)*
 **Purpose:** 20 dead-end nodes for outdoor terrain bosses paired with NPC quests. Each terrain type gains one Epic Battleground: named NPC, warning, negotiation phase, return quest.

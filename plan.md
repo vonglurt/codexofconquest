@@ -34,14 +34,14 @@ Implement in layer order. Each = code change + doc sync + `git commit`.
 
 | Layer | Section | Feature | Lab Report Needed |
 |-------|---------|---------|-------------------|
-| 44 | §IX | Ally Cat Arc | `lab-report-ally-cat.md` |
-| 49 | §XIV | Quest -1 + World Creator | `lab-report-world-creator.md` |
+| 44 | §IX | Ally Cat Arc | ✅ Implemented |
+| 49 | §XIV | Quest -1 + World Creator | ✅ Implemented |
 | 50 | §XV | NG+ Remembrance Layer | `lab-report-ng-plus-remembrance.md` |
 | 51 | §XVI | Weimar Scholar Gate | `lab-report-weimar-scholar-gate.md` |
 | 52 | §XVII | Void Archaeology | `lab-report-void-archaeology.md` |
 | 54+55 | §XIX+§XX | Tilbury + Visby Arcs | `lab-report-tilbury-visby-arcs.md` |
 | 56 | §XXI | Void Shaman | `lab-report-void-shaman.md` |
-| 61 | §XXVI | Corelli Wandering Merchant | `lab-report-corelli-merchant.md` |
+| 61 | §XXVI | Corelli Wandering Merchant | ✅ Implemented 2026-05-25 |
 
 ### Implementation Protocol (reminder)
 
@@ -271,23 +271,23 @@ The commit message should name the lab report and summarize what it covers in on
 
 | Priority | Section | Feature | Layer | Lab Report Needed? | Status |
 |----------|---------|---------|-------|--------------------|--------|
-| 1 | §XIV | Quest -1: The Open Door + World Creator Wizard | 49 | `lab-report-world-creator.md` (after build) | ⚠️ PLANNED |
-| 2 | §XIII | Luck: The Seventh Stat | 48 | No — integrate into existing architecture lab report | ⚠️ PLANNED |
-| 3 | §XII | Yugurt Lake Fishing Overhaul (bait sub-system, tournament) | 47 | `lab-report-fishing-bait-prompting.md` exists ✅ | ⚠️ PLANNED |
-| 4 | §XV | NG+ Remembrance Layer: Entry 42 / "The Next Froberger" | 50 | Yes — postmortem on NG+ narrative design | ⚠️ PLANNED |
-| 5 | §IX | Ally Cat Arc: "Nine Lives, Capisce?" | 44 | Yes — new monster group + faction arc | ⚠️ PLANNED |
-| 6 | §X | Torment Nexus Overture (HM — Kern & Sable) | 46 | No — small narrative encounter; fits in living-world lab report | ⚠️ PLANNED |
-| 7 | §XVI | Weimar Scholar Gate: Tomes and the Fourth Hub | 51 | Yes — new item category + NPC arc | ⚠️ PLANNED |
-| 8 | §XVII | Void Archaeology: The Origin Investigation | 52 | Yes — narrative recontextualization + four-author chain | ⚠️ PLANNED |
-| 9 | §XVIII | Living World: Junction Vignettes + Road Companion | 53 | No — fits in living-world lab report | ⚠️ PLANNED |
-| 10 | §XIX | Tilbury Harbor Arc: "The Conclave's Weight" | 54 | Yes — shared with §XX in `lab-report-tilbury-visby-arcs.md` | ⚠️ PLANNED |
-| 11 | §XX | Visby Underground: "What Mordus Owes" | 55 | Yes — shared with §XIX in `lab-report-tilbury-visby-arcs.md` | ⚠️ PLANNED |
-| 12 | §XXI | The Void Shaman: The Antecedent's Last Warden | 56 | Yes — `lab-report-void-shaman.md` (corrupted mandate design) | ⚠️ PLANNED |
+| 1 | §XIV | Quest -1: The Open Door + World Creator Wizard | 49 | `lab-report-world-creator.md` (after build) | ✅ Implemented |
+| 2 | §XIII | Luck: The Seventh Stat | 48 | No — integrate into existing architecture lab report | ✅ Implemented |
+| 3 | §XII | Yugurt Lake Fishing Overhaul (bait sub-system, tournament) | 47 | `lab-report-fishing-bait-prompting.md` exists ✅ | ✅ Implemented |
+| 4 | §XV | NG+ Remembrance Layer: Entry 42 / "The Next Froberger" | 50 | Yes — postmortem on NG+ narrative design | ✅ Implemented 2026-05-25 |
+| 5 | §IX | Ally Cat Arc: "Nine Lives, Capisce?" | 44 | Yes — `lab-report-ally-cat.md` | ✅ Implemented |
+| 6 | §X | Torment Nexus Overture (HM — Kern & Sable) | 46 | No — small narrative encounter; fits in living-world lab report | ✅ Implemented |
+| 7 | §XVI | Weimar Scholar Gate: Tomes and the Fourth Hub | 51 | Yes — new item category + NPC arc | ✅ Implemented 2026-05-25 |
+| 8 | §XVII | Void Archaeology: The Origin Investigation | 52 | Yes — narrative recontextualization + four-author chain | ✅ Implemented 2026-05-25 |
+| 9 | §XVIII | Living World: Junction Vignettes + Road Companion | 53 | No — fits in living-world lab report | ✅ Implemented |
+| 10 | §XIX | Tilbury Harbor Arc: "The Conclave's Weight" | 54 | Yes — shared with §XX in `lab-report-tilbury-visby-arcs.md` | ✅ Implemented 2026-05-25 |
+| 11 | §XX | Visby Underground: "What Mordus Owes" | 55 | Yes — shared with §XIX in `lab-report-tilbury-visby-arcs.md` | ✅ Implemented 2026-05-25 |
+| 12 | §XXI | The Void Shaman: The Antecedent's Last Warden | 56 | Yes — `lab-report-void-shaman.md` (corrupted mandate design) | ✅ Implemented 2026-05-25 |
 | 13 | §XXII | Codex Shard Origin Stories | 57 | No — document inline in `story.md` | ✅ Implemented |
 | 14 | §XXIII | Inn Dreams | 58 | No — too small; document inline | ✅ Implemented |
 | 15 | §XXIV | The Pressure Cascade: Visible Void Tide Events | 59 | No — extend `lab-report-living-world.md` | ✅ Implemented |
 | 16 | §XXV | The Homecoming: Act VIII One-Time Farewell Beats | 60 | No — document inline in `story.md` | ✅ Implemented |
-| 17 | §XXVI | Corelli the Wandering Merchant: Cross-Act Vendor NPC | 61 | Yes — `lab-report-corelli-merchant.md` (wandering NPC archetype) | ⚠️ PLANNED |
+| 17 | §XXVI | Corelli the Wandering Merchant: Cross-Act Vendor NPC | 61 | Yes — `lab-report-corelli-merchant.md` (wandering NPC archetype) | ✅ Implemented 2026-05-25 |
 | 18 | §XXVII | Town Crier: Inn Rest World-News Ambient Lines | 62 | No — document inline | ✅ Implemented |
 | 19 | §XXVIII | The Froberger Memorial: A Living Stone at CI | 63 | No — document inline in `story.md` + `world.md` | ✅ Implemented |
 | 20 | §XXIX | The Pit Championship: Finals at Crossroads Forge | 64 | No — document inline; patch §XXV farewell beat | ✅ Implemented |
@@ -2052,26 +2052,26 @@ creative_literacy_token: { name:'Creative Literacy Token', icon:'📄', sell:27 
 | _curseScore() formula | `_curseScore()` | `lab-report-endings-and-echoes.md` | `story.md` endings section | ✅ synced |
 | NPC_NG_PLUS_GREETINGS | `NPC_NG_PLUS_GREETINGS` | `lab-report-endings-and-echoes.md` | — | ✅ synced |
 | storyFishing() / fish pool | `storyFishing()` | `lab-report-fish-with-dnd.md` | `monsters.md` (fish_01–fish_20) | ✅ synced |
-| **Fishing Overhaul (Section XII)** | plan.md only — PLANNED | `plan.md` §XII | ✅ PLANNED stubs: `story.md` NODE 75+76; `world.md` YL/YC; `monsters.md` BAIT_FISH_POOL; `mechanics.md` Equipment Drops (nerf) + Readable Items (Fishing Guide) + Fishing Items (Rod/Guide/Tackle Box state table); §XII-Q–XII-Z complete | ⚠️ PLANNED |
-| **Luck Stat (Section XIII)** | plan.md only — PLANNED | `plan.md` §XIII | ✅ PLANNED stubs: `mechanics.md` (formula, getLuck(), reference table, 6 applications, UI spec); `world.md` (world flavor, no-storage note, impl pointer) | ⚠️ PLANNED |
+| **Fishing Overhaul (Section XII)** | plan.md only — PLANNED | `plan.md` §XII | BAIT_TABLES const / BAIT_FISH_POOL / YL isFishingLake flag / fishing modal / tournament / YL+YC nodes | ✅ Implemented |
+| **Luck Stat (Section XIII)** | plan.md only — PLANNED | `plan.md` §XIII | `_calcLuck()` geometric mean / `_luckMod()` / corridor encounter rate / initiative bonus / character sheet display | ✅ Implemented |
 | **Project Directive** | — | `index.md` (top) | Rule: Adding = Planning in plan.md; Implementing = Code + markdown sync | ✅ added SP2-11 |
 | **Cat Arc (Section IX)** | plan.md only — PLANNED | `plan.md` | ✅ PLANNED stubs added: CQ node in `maps.md`; The Cat Quarter in `world.md`; Q-CAT-01–06 in `story.md` | ✅ SP2-05–07 |
 | **Torment Nexus (Section X)** | plan.md only — PLANNED | `plan.md` | ✅ PLANNED stubs added: Kern & Sable in `world.md`; Q-NEXUS-00–02 in `story.md` | ✅ SP2-08–09 |
 | World map grid (26×16) | `NODE_COORDS` + corridor calc | `maps.md` | ✅ YL/YC added to maps.md (grid + legend + network + coords); CQ PLANNED node stubbed; all docs consistent | ✅ SP2-02–04 |
 | **Function Coverage Table** | all ~169 named functions | `plan.md` §F1–F6 | ✅ All 169 functions verified documented in their target .md files; F4-ext/F6-ext sections added for level-up + Battle Mode utilities; `_renderSboShield()` + `_storyUnequipShield()` added to `combat.md` | ✅ SP2 complete |
-| **World Creator Wizard (§XIV)** | Quest -1 / Level 21 undefined / MIT fork | `plan.md §XIV` | ✅ PLANNED stubs: `story.md` CO node; `mechanics.md` Level 21 note; `index.md` lab-report-world-creator.md entry; `lab-report-friendships-with-magic.md` Appendix quote | ⚠️ PLANNED |
-| **NG+ Remembrance Layer (§XV)** | ngPlusRun ≥ 1 / Entry 42 / "The Next Froberger" | `plan.md §XV` | ✅ PLANNED stubs: `story.md` NG+ section; `world.md` NPC extended-memory note | ⚠️ PLANNED |
-| **Weimar Scholar Gate (§XVI)** | Ivory Circle / Tomes / `scholars_guard` / First Researcher | `plan.md §XVI` | ✅ PLANNED stubs: `story.md` Node 35; `world.md` Ivory Circle section | ⚠️ PLANNED |
-| **Void Archaeology (§XVII)** | Antecedent Containment / Constructor's Log / five-node overlay / four-author chain | `plan.md §XVII` | ✅ PLANNED stubs: `story.md` NG+ Void Archaeology section; `world.md` post-CO note | ⚠️ PLANNED |
-| **Living World (§XVIII)** | J1–J7 junction vignettes / Road Companion (Acts II–VI) | `plan.md §XVIII` | ✅ PLANNED stubs: `world.md` junction vignettes note; `story.md` companion lines note | ⚠️ PLANNED |
-| **Tilbury Harbor Arc (§XIX)** | Rennau / Vonn / Q-TL-01–03 / ship_manifest / Ori survivor | `plan.md §XIX` | ✅ PLANNED stubs: `story.md` Q-TL section; `world.md` Tilbury NPC note | ⚠️ PLANNED |
-| **Visby Underground (§XX)** | Solvak / Yva / Q-VS-01–03 / hollow_hands_guard / Void shaman shadow | `plan.md §XX` | ✅ PLANNED stubs: `story.md` Q-VS section; `world.md` Visby sub-faction note | ⚠️ PLANNED |
-| **Void Shaman (§XXI)** | The Warden / void_shaman boss / warden_token / combat+persuasion paths / Hollow Hands resolution | `plan.md §XXI` | ✅ PLANNED stubs: `story.md` MT tunnel encounter; `world.md` Warden backstory | ⚠️ PLANNED |
+| **World Creator Wizard (§XIV)** | Quest -1 / Level 21 undefined / MIT fork | `plan.md §XIV` | Level 20 "The Open Door" sweelinck-variant block at CO; console completion path; grep reference table | ✅ Implemented |
+| **NG+ Remembrance Layer (§XV)** | ngPlusRun ≥ 1 / Entry 42 / "The Next Froberger" | `plan.md §XV` | ✅ Implemented 2026-05-25: NPC_NG_MEMORY_LINES, Entry 42 CI modal, journal Entry 42 append, Q-NG-01/02/03, CO Froberger letter, storyNewGamePlus preservation | ✅ Implemented |
+| **Weimar Scholar Gate (§XVI)** | Ivory Circle / Tomes / `scholars_guard` / First Researcher | `plan.md §XVI` | ✅ Implemented 2026-05-25: scholars_guard, 3 tomes, Isolde/Benedikt NPCs, Q-WM-01–04, archive modal, reading circle, _tomeBonuses() | ✅ Implemented |
+| **Void Archaeology (§XVII)** | Antecedent Containment / Constructor's Log / five-node overlay / four-author chain | `plan.md §XVII` | ✅ Implemented 2026-05-25: 5 [INVESTIGATE] sites, Q-VA-01–04, Constructor's Log (4th archive doc), MT tunnel, CO fifth ending + "What was inside the cage?" Sweelinck question | ✅ Implemented |
+| **Living World (§XVIII)** | J1–J7 junction vignettes / Road Companion (Acts II–VI) | `plan.md §XVIII` | `JUNCTION_VIGNETTES` const (J1–J7+RD) / `COMPANION_LINES` const (Acts 2–5) / storyRender junction block | ✅ Implemented |
+| **Tilbury Harbor Arc (§XIX)** | Rennau / Vonn / Q-TL-01–03 / ship_manifest / Ori survivor | `plan.md §XIX` | Rennau/Vonn NPCs / Q-TL-01–03 / Harbor Board / Harrow Manifest / Ori Account / SF+TL render blocks | ✅ Implemented 2026-05-25 |
+| **Visby Underground (§XX)** | Solvak / Yva / Q-VS-01–03 / hollow_hands_guard / Void shaman shadow | `plan.md §XX` | ✅ Implemented 2026-05-25: hollow_hands_guard, Solvak/Yva NPCs, Q-VS-01–03, Harbor→Visby cross-ref, vsShamanKnown flag | ✅ Implemented |
+| **Void Shaman (§XXI)** | The Warden / void_shaman boss / warden_token / combat+persuasion paths / Hollow Hands resolution | `plan.md §XXI` | `story.md` §XXI MT tunnel encounter; both outcome texts; Benedikt callback | ✅ Implemented 2026-05-25 |
 | **Codex Shard Origins (§XXII)** | 7 shard_note items / named placers / flag-gated variants / journal reward | `plan.md §XXII` | `story.md` Shard Origins section; `world.md` placer name notes | ✅ Implemented |
 | **Inn Dreams (§XXIII)** | INN_DREAMS const / 4 inns × 3 base variants / flag-gated replacements | `plan.md §XXIII` | `story.md` Inn Dreams section | ✅ Implemented |
 | **Pressure Cascade (§XXIV)** | voidPressure threshold events (3/6/9) / void-touched monsters / NPC pressure lines / mercy counter | `plan.md §XXIV` | `story.md` Void Tide Events; `world.md` Void-Touched Monsters note | ✅ Implemented |
 | **Homecoming (§XXV)** | 6 one-time Act VIII farewell beats / Brynn's Loaf / Champion's Tincture / Pachelbel's Sketch / 6 new flags | `plan.md §XXV` | `story.md` Act VIII Farewell Beats | ✅ Implemented |
-| **Wandering Merchant (§XXVI)** | Corelli — 5 appearances Acts II–VIII / purchase-gated fav / 5 unique items / Scholar King courier reveal / `last_cipher` cross-ref §XVI–§XVII | `plan.md §XXVI` | ✅ PLANNED stubs: `story.md` Corelli encounters; `world.md` Wandering Merchant | ⚠️ PLANNED |
+| **Wandering Merchant (§XXVI)** | Corelli — 5 appearances Acts II–VIII / purchase-gated fav / 5 unique items / Scholar King courier reveal / `last_cipher` cross-ref §XVI–§XVII | `plan.md §XXVI` | `story.md` Corelli NPC section; `CORELLI_ITEMS` + `CORELLI_APPEARANCES` consts; RD node added | ✅ Implemented 2026-05-25 |
 | **Town Crier (§XXVII)** | `TOWN_CRIER_LINES` const / priority-selector / inn rest rumor line / 56 act-cycling lines + critical/tension/quest/NPC tiers | `plan.md §XXVII` | `story.md` Town Crier note; no new state flags | ✅ Implemented |
 | **Froberger Memorial (§XXVIII)** | `FROBERGER_MEMORIAL_TEXT` object / 4-layer plaque text / memorial book entries / [Leave Flowers] 10gp action / `storyShowFrobergerMemorial()` / CI `[Examine Memorial]` button | `plan.md §XXVIII` | `story.md` §XXVIII | ✅ Implemented |
 | **Pit Championship (§XXIX)** | `PIT_CHAMPION_OGUNDIMU` const / `_showPitChampionOffer()` / `_startPitChampionBattle()` / `_onPitChampionWin()` / `_onPitChampionLoss()` / championship log entry / `crovChampionLineDelivered` pool injection / §XXV farewell function-text branch / death-save fall bypass | `plan.md §XXIX` | `story.md` §XXIX | ✅ Implemented |
@@ -2079,12 +2079,12 @@ creative_literacy_token: { name:'Creative Literacy Token', icon:'📄', sell:27 
 | **Joint Witness + Map Caption (§XXXI)** | `S54_JOINT_MOMENT` const / CI scene (act≥7, yael+brynn Friendly gate, `s54JointMomentDelivered`) / TV Quill+Brynn stub split to `s54QuillBrynnDelivered` / SQ map stub split to `s55SqMapLineDelivered` / S55 caption in `_renderFinalMap()` (fade-in at +400ms, base + Sweelinck variant, `s55MapLineDelivered`) | `plan.md §XXXI` | `story.md` §XXXI | ✅ Implemented |
 | **Two Intelligence Feeds (§XXXII)** | S8: three-observation Varga BA arc / pigeon direction / Pachelbel tell (+15gp) — all pre-existing at BA / S29: `S29_AUROS_THEORY` const / `_getNPCDialogue` stub replaced / CY node render trigger (frobergerLastEntryRead + bruhns Dear Friend + `!s29LineDelivered`) | `plan.md §XXXII` | `story.md` §XXXII | ✅ Implemented |
 | **Archive and Tools (§XXXIII)** | S7: CI Blue Shutters three-state pre-existing / Survey delivery +40gp (was 0gp) + S29 cross-ref line added / S46: Raison's Tools fixed to +30gp + two-message spec / `PACHELBEL_LEDGER` const (entries 2+3) / [Read Ledger] button at BA Dear Friend / `undercitySurveyDelivered` used in place of spec's `surveyDeliveredToAuros` | `plan.md §XXXIII` | `story.md` §XXXIII | ✅ Implemented |
-| **Couperin Ledger (§XXXIV)** | `quills_lute` quest item / `QUEST_DB` entry / Beat 2 TV render (+40gp, couperiSongReceived, quillQuestComplete, Dear Friend check) / Beat 3 TV render (couperiDebtDegraded, L44-E NPC_DIALOGUES injection) / Beat 1 BA/SH lute handoff (Pachelbel) / Act VIII BA farewell Pachelbel note branch / no new flags — all pre-exist | `plan.md §XXXIV` | ⚠️ PLANNED stubs pending: `story.md` three-beat notes; `world.md` Couperin/Quill entry | ⚠️ PLANNED |
-| **First Inn Light (§XXXV)** | `BRYNN_KEEPER_STORY` const / Beat 1 inquiry (fav_brynn ≥ 1, Act II+, + follow-up) / Beat 2 choice block (fav_brynn ≥ 2, 'keep'/'rest') / IN lamp ambient line (always) / §XXV farewell four-branch table / TC_BRYNN_LAMP crier line (§XXVII) / 3 new flags (brynnKeeperStoryTold, brynnLightChoiceMade, brynnLightKept) | `plan.md §XXXV` | ⚠️ PLANNED stubs pending: `story.md` vigil arc notes; `world.md` Brynn lamp entry | ⚠️ PLANNED |
-| **Epilogue Integration Layer (§XXXVI)** | `ARC_EPILOGUE_CONDITIONS` const (14 entries: §XXIX pit champ / §XXX s49 both+solo / §XXXI s54 / §XXXII s8+s29 / §XXXIII archive+survey / §XXXIV lute arc / §XXXV lamp arc) / `_buildEpilogueScroll()` 4-line patch / scroll ordering doc / no new flags | `plan.md §XXXVI` | ⚠️ PLANNED stubs pending: `story.md` scroll extension note | ⚠️ PLANNED |
-| **Commander Bruhns CO Scene (§XXXVII)** | `BRUHNS_CO_SCENE` const (friendly / dearFriend / dearFriendWithTheory) / CO render patch (after NODE_ARRIVAL_QUOTES, before fight chip) / fav 1 brief + fav 2 full Circle/Codex motivation / s29 addendum / 1 new flag (`bruhnsCoSceneDelivered`) / Auros = Bruhns same-character clarification / §XXXIII flag correction note (`surveyDeliveredToAuros` → `undercitySurveyDelivered`) | `plan.md §XXXVII` | ⚠️ PLANNED stubs pending: `story.md` CO scene; `world.md` Bruhns motivation entry | ⚠️ PLANNED |
-| **Heartwood Letter (§XXXVIII)** | `BRYNN_HEARTWOOD_SCENE` const (friendly brief / dearFriend letter-read) / IN render patch (patch S2 block at ~line 12499 — use `s2DaughterDelivered` not new flag) / Entry 7 cross-ref / "expedition" callback / Froberger's Last Note cross-ref / §XXXV lamp cross-ref / §XXXVI epilogue addendum | `plan.md §XXXVIII` | ⚠️ PLANNED stubs: `story.md` + `world.md` added | ⚠️ PLANNED |
-| **Yael's Named Report (§XXXIX)** | `YAEL_NAMED_REPORT_SCENE` const (setup + decision + two choices) / CI render patch (fav 2, Act VI+, yaelEscortUsed) / `YAEL_PATROL_NODES` SW addendum / riot backstory (three-year-old suppressed evidence, Weckmann training log connection) / §XXXVI epilogue condition (`yaelNamedReportDelivered`) / 1 new flag | `plan.md §XXXIX` | ⚠️ PLANNED stubs pending: `story.md` + `world.md` | ⚠️ PLANNED |
+| **Couperin Ledger (§XXXIV)** | `quills_lute` quest item / `QUEST_DB` entry / Beat 2 TV render (+40gp, couperiSongReceived, quillQuestComplete, Dear Friend check) / Beat 3 TV render (couperiDebtDegraded, L44-E NPC_DIALOGUES injection) / Beat 1 BA/SH lute handoff (Pachelbel) / Act VIII BA farewell Pachelbel note branch / no new flags — all pre-exist | `plan.md §XXXIV` | `story.md` §XXXIV | ✅ Implemented |
+| **First Inn Light (§XXXV)** | `BRYNN_KEEPER_STORY` const / Beat 1 inquiry (fav_brynn ≥ 1, Act II+, + follow-up) / Beat 2 choice block (fav_brynn ≥ 2, 'keep'/'rest') / IN lamp ambient line (always) / §XXV farewell four-branch table / TC_BRYNN_LAMP crier line (§XXVII) / 3 new flags (brynnKeeperStoryTold, brynnLightChoiceMade, brynnLightKept) | `plan.md §XXXV` | `story.md` §XXXV; `BRYNN_KEEPER_STORY` const | ✅ Implemented |
+| **Epilogue Integration Layer (§XXXVI)** | `ARC_EPILOGUE_CONDITIONS` const (14 entries: §XXIX pit champ / §XXX s49 both+solo / §XXXI s54 / §XXXII s8+s29 / §XXXIII archive+survey / §XXXIV lute arc / §XXXV lamp arc) / `_buildEpilogueScroll()` 4-line patch / scroll ordering doc / no new flags | `plan.md §XXXVI` | `ARC_EPILOGUE_CONDITIONS` const; `_buildEpilogueScroll()` | ✅ Implemented |
+| **Commander Bruhns CO Scene (§XXXVII)** | `BRUHNS_CO_SCENE` const (friendly / dearFriend / dearFriendWithTheory) / CO render patch (after NODE_ARRIVAL_QUOTES, before fight chip) / fav 1 brief + fav 2 full Circle/Codex motivation / s29 addendum / 1 new flag (`bruhnsCoSceneDelivered`) | `plan.md §XXXVII` | `BRUHNS_CO_SCENE` const; CO storyRender patch | ✅ Implemented |
+| **Heartwood Letter (§XXXVIII)** | `BRYNN_HEARTWOOD_SCENE` const (friendly brief / dearFriend letter-read) / IN render patch / Entry 7 cross-ref / Froberger's Last Note cross-ref / §XXXV lamp cross-ref | `plan.md §XXXVIII` | `BRYNN_HEARTWOOD_SCENE` const; IN storyRender patch | ✅ Implemented |
+| **Yael's Named Report (§XXXIX)** | `YAEL_NAMED_REPORT_SCENE` const (setup + decision + two choices) / CI render patch (fav 2, Act VI+, yaelEscortUsed) / `YAEL_PATROL_NODES` SW addendum / riot backstory / §XXXVI epilogue condition (`yaelNamedReportDelivered`) / 1 new flag | `plan.md §XXXIX` | `YAEL_NAMED_REPORT_SCENE` const; CI+SW storyRender patch | ✅ Implemented |
 
 ---
 
@@ -3181,7 +3181,7 @@ The Fisherman at YC has high WIS, decent DEX, moderate everything else — estim
 13. No new `_S_DEFAULTS()` field needed — Luck is always computed, never stored
 ---
 
-## Section XIV — The World Creator: Fork, Extend, and Quest -1 (Layer 49, ⚠️ PLANNED)
+## Section XIV — The World Creator: Fork, Extend, and Quest -1 (Layer 49, ✅ Implemented 2026-05-25)
 
 > **Philosophy:** This section is addressed to the next developer — the person who reached Level 20 and found the world too small. It is not a feature. It is an invitation. The plan below describes what needs to be built so that invitation has a door.
 
@@ -3560,11 +3560,11 @@ The original game will not know. That is also intentional.
 
 ---
 
-*§XIV status: ⚠️ PLANNED — Quest -1 text written; shell tooling documented; story.md/mechanics.md integration specified; implementation left to the developer who reaches Level 20.*
+*§XIV status: ✅ Implemented 2026-05-25. `questMinusOne:false` added to `_S_DEFAULTS()`. Quest -1 scroll injects at CO node when `level >= 20 && !questMinusOne`. Uses `.sweelinck-variant` CSS, border tinted olive. Text updated to 16,024 lines / 423 entries / 67 terrains. `storyAutoSave()` corrected from spec's `saveStory()`. Lab report optional.*
 
 ---
 
-## Section XV — The NG+ Remembrance Layer: Entry 42 (Layer 50, ⚠️ PLANNED)
+## Section XV — The NG+ Remembrance Layer: Entry 42 (Layer 50, ✅ Implemented 2026-05-25)
 
 > **Philosophy:** The game begins with finding Froberger's journal. He documented what he learned so you wouldn't have to start from zero. By New Game+, you have already done what Froberger did — you walked the world, you chose who to help, you sealed the Void. The question §XV asks is: *what do you leave behind for the next run?*
 >
@@ -3761,11 +3761,11 @@ Entry 42 is the entry about the solution. It belongs to whoever wrote it.
 
 ---
 
-*§XV status: ⚠️ PLANNED — Entry 42 system designed; NPC memory lines written; quest chain specified; new state fields listed; implementation left to Layer 50.*
+*§XV status: ✅ Implemented 2026-05-25 — NPC_NG_MEMORY_LINES const; Entry 42 CI modal; journal append; Q-NG-01/02/03 in QUEST_DB; CO Froberger letter; storyNewGamePlus flag preservation.*
 
 ---
 
-## Section XVI — The Weimar Scholar Gate: Tomes and the Fourth Hub (Layer 51, ⚠️ PLANNED)
+## Section XVI — The Weimar Scholar Gate: Tomes and the Fourth Hub (Layer 51, ✅ Implemented 2026-05-25)
 
 > **The gap:** Weimar is the fourth hub town — the scholars' city, home of the Scholar Kings — but it receives the least development of the four hubs. Birka has six named NPCs and a full quest arc. Tilbury has the merchant harbor and a vendor. Visby is the enemy stronghold with gate drama. Weimar has Leeuwenhoek's shop (S51 items) and a name. This section gives Weimar a story identity.
 
@@ -3948,11 +3948,11 @@ Benedikt's annotated copy gives the player +1 ATK while on an active quest. The 
 
 ---
 
-*§XVI status: ⚠️ PLANNED — Weimar Scholar Gate designed; two NPCs written; three tomes defined; four-quest chain specified; `scholars_guard` monster added; new state flags listed; thematic coherence established. Lab report: `lab-report-weimar-scholar-gate.md` to be written on implementation.*
+*§XVI status: ✅ Implemented 2026-05-25 — scholars_guard monster + drop; 3 tomes (Field Notes / Scholar Kings' History / Annotated Copy) with `_tomeBonuses()` applied to initiative, death saves, and ATK; Isolde Voss and Benedikt Rasp NPC profiles; Q-WM-01 through Q-WM-04 in QUEST_DB; `_storyWmArchiveModal()` with 3 documents; reading circle (day-gated, 3 sessions); 9 state flags; SQ NPC card rendering.*
 
 ---
 
-## Section XVII — Void Archaeology: The Origin Investigation (Layer 52, ⚠️ PLANNED)
+## Section XVII — Void Archaeology: The Origin Investigation (Layer 52, ✅ Implemented 2026-05-25)
 
 > **The gap:** The player seals the Void and wins. The ending notices whether they shared what they learned. But nobody — player or NPC — ever learns what the Void actually *was*. The Froberger research chain (41 journal entries), the First Researcher revelation (§XVI), and Entry 42 (§XV) form a knowledge chain. This section gives that chain a destination.
 
@@ -4117,11 +4117,11 @@ The question *"What was inside the cage?"* does not have an answer in the game. 
 
 ---
 
-*§XVII status: ⚠️ PLANNED — Void Archaeology designed; five investigation sites specified; Constructor's Log written; four-quest chain complete; new item category (relic); fifth ending defined; thematic resolution of the four-author chain established. Lab report: `lab-report-void-archaeology.md` to be written on implementation.*
+*§XVII status: ✅ Implemented 2026-05-25 — 5 [INVESTIGATE] buttons at CI/SL/DF/WM/MT; Constructor's Log as 4th archive doc in _storyWmArchiveModal(); Q-VA-01–04 QUEST_DB entries; MT sealed tunnel (requires Antecedent Seal or Froberger's Field Notes); CO outro addendum + "What was inside the cage?" fifth ending Sweelinck question; 9 state flags.*
 
 ---
 
-## Section XVIII — Living World: Junction Vignettes and the Road Companion (Layer 53, ⚠️ PLANNED)
+## Section XVIII — Living World: Junction Vignettes and the Road Companion (Layer 53, ✅ Implemented)
 
 > **The gap:** The seven junction nodes (J1–J7) are featureless waypoints — terrain, connections, nothing else. The corridor traversal between hubs is text-free past Act I. This section adds two small texture layers: one NPC encounter per junction node (no quests, no combat), and one named road companion per act section (one piece of lore, then gone). Neither is big enough for its own section or its own lab report. Together they make the open world feel inhabited.
 
@@ -4204,11 +4204,11 @@ No lab report needed.
 
 ---
 
-*§XVIII status: ⚠️ PLANNED — Junction vignettes designed (7 nodes, 5 NPCs + 2 environmental); Road Companion designed (5 acts, 4 named + 1 empty); implementation cost is two new consts + two render hooks; no new state flags; no new monsters. Document inline in `world.md` and `story.md` on implementation.*
+*§XVIII status: ✅ Implemented — JUNCTION_VIGNETTES const (J1–J7+RD); COMPANION_LINES const (Acts 2–5); storyRender junction block; RD node added for Corelli (§XXVI).*
 
 ---
 
-## Section XIX — The Tilbury Harbor Arc: "The Conclave's Weight" (Layer 54, ⚠️ PLANNED)
+## Section XIX — The Tilbury Harbor Arc: "The Conclave's Weight" (Layer 54, ✅ Implemented 2026-05-25)
 
 > **The gap:** Tilbury is the second hub town — Act II, the player's first stop outside Birka. It has a vendor (SF node), an inn (Storefront Inn), and a connection to the Merchant's Conclave. It has no named NPCs with quest chains. Magistra Elara Muffat appears as Epic NPC Q65 but is unreachable without an EB encounter. The harbor is referenced in ambient lore (Dessa in §XVIII, the harbor embargo in §XVI) but has no mechanical presence. This section gives Tilbury a story identity.
 
@@ -4342,11 +4342,11 @@ The Void Tide does not begin with monsters. It begins with missing ships, revoke
 
 ---
 
-*§XIX status: ⚠️ PLANNED — Tilbury Harbor Arc designed; two NPCs (Rennau, Vonn); three-quest chain; two readable items; six state flags; harbor board interaction; Ori survivor encounter; cross-references to §XII (fishing) and §XVI (Isolde Voss/First Researcher); thematic coherence with Curse of Knowledge established. Lab report: `lab-report-tilbury-visby-arcs.md` to be written on implementation (covering §XIX + §XX together).*
+*§XIX status: ✅ Implemented 2026-05-25 — Rennau/Vonn NPCs; Q-TL-01–03; Harbor Board button; Harrow Manifest + Ori Account items; wmFirstResearcherKnown cross-ref; SF+TL render blocks.*
 
 ---
 
-## Section XX — The Visby Underground: "What Mordus Owes" (Layer 55, ⚠️ PLANNED)
+## Section XX — The Visby Underground: "What Mordus Owes" (Layer 55, ✅ Implemented 2026-05-25)
 
 > **The gap:** Visby is the enemy stronghold — the Crimson Warrant's territory, Warlord Kael Mordus's seat of power. Mordus appears as Epic NPC Q71 but the Crimson Warrant has no player-facing quest arc in the main game. The world.md note for Visby mentions "the Void shaman's influence spreading through the goblin clans — it's already destabilizing Mordus's control" — but this instability is never made player-visible. This section surfaces it through a debt collection arc.
 
@@ -4482,11 +4482,11 @@ The Void shaman named in §XX is not introduced as a character. This is intentio
 
 ---
 
-*§XX status: ⚠️ PLANNED — Visby Underground designed; two NPCs (Solvak, Yva); three-quest chain; hollow_hands_guard monster (372nd if both §XVI and §XX are implemented); six state flags; cross-references to §XIX (Rennau/Harrow) and Mordus EB quest (Q71); Void shaman named but not confronted; institutional fracture theme established. Lab report: `lab-report-tilbury-visby-arcs.md` to be written on implementation.*
+*§XX status: ✅ Implemented 2026-05-25 — hollow_hands_guard monster; Solvak/Yva NPCs; Q-VS-01–03; Harrow cross-ref at Yva; Mordus debt arc; vsShamanKnown flag.*
 
 ---
 
-## Section XXI — The Void Shaman: The Antecedent's Last Warden (Layer 56, ⚠️ PLANNED)
+## Section XXI — The Void Shaman: The Antecedent's Last Warden (Layer 56, ✅ Implemented 2026-05-25)
 
 > **The resolution:** §XX named the Void Shaman without confronting them. This section is the confrontation. The reveal is that the Void Shaman is not a villain — they are a catastrophically misdirected guardian. The First Researcher, after sealing the Antecedent, appointed a Warden from a local goblin clan to maintain the MT tunnel. The mandate was: "if the cage starts to fail, open the tunnel." Over 200 years of oral transmission, "open the tunnel" became "open the cage." The current Warden has been working to release the Antecedent, believing this is what the First Researcher wanted. They were right about the verb, wrong about the direction.
 
@@ -4620,7 +4620,7 @@ This is the Curse of Knowledge in reverse: the First Researcher withheld the ful
 
 ---
 
-*§XXI status: ⚠️ PLANNED — Void Shaman confrontation designed; Warden backstory (corrupted 200-year mandate); combat path (void_shaman AC15/HP65, drops warden_token) and persuasion path (Constructor's Log, voluntary resolution); both outcomes resolve Hollow Hands; Benedikt Dear Friend callback; four state flags; one scripted monster (spawns nowhere randomly); Lab report: `lab-report-void-shaman.md` to be written on implementation.*
+*§XXI status: ✅ Implemented 2026-05-25 — void_shaman (AC15/HP65/ATK+6/2d6+4) added to MONSTER_POOL (scripted only); warden_token relic delivered inline per path; MT tunnel encounter gated by vsShamanKnown && vaLastWardVisited && !wardensLegacyKnown; persuasion path (Constructor's Log → vsShamanPersuaded) and combat path (MT_WARDEN battle → vshamanDefeated) both set wardensLegacyKnown; Benedikt Dear Friend callback at SQ (vsShamanPersuaded + fav>=2 + !vsShamanBenediktDelivered); quest_vs_warden in QUEST_DB; five state flags in _S_DEFAULTS(); Hollow Hands aftermath text per path.*
 
 ---
 
@@ -5315,7 +5315,7 @@ None of these beats explain the game to the player. They assume the player alrea
 
 ---
 
-## Section XXVI — Corelli the Wandering Merchant: Cross-Act Vendor NPC (Layer 61, ⚠️ PLANNED)
+## Section XXVI — Corelli the Wandering Merchant: Cross-Act Vendor NPC (Layer 61, ✅ Implemented 2026-05-25)
 
 > **Design problem:** All vendor-capable NPCs in the game are fixed to a single node. The world has four towns and multiple vendor-adjacent locations, but no character who *travels through* the world in the same direction the player does. A wandering merchant creates the sensation that the world is inhabited by people who have their own routes — that the player isn't the only one crossing it.
 
@@ -5524,7 +5524,7 @@ The Last Cipher's final line — *"She built it to save us. They hid it to save 
 
 ---
 
-*§XXVI status: ⚠️ PLANNED — Corelli the wandering merchant designed; 5 appearances across Acts II–VIII specified; purchase-gated fav system (0–3, one increment per purchase); 5 unique items (scholar_ink / false_warrant / encoded_letter / kings_seal / last_cipher); Revelation modal written in full; encoded_letter + last_cipher cross-reference interaction documented; RD roadside node specified; 4 new state flags; 10 insertion steps; lab report needed before implementation — `lab-report-corelli-merchant.md` documents new NPC archetype vs. NPC_DIALOGUES shape.*
+*§XXVI status: ✅ Implemented 2026-05-25 — CORELLI_ITEMS const (5 items: scholar_ink/false_warrant/encoded_letter/kings_seal/last_cipher); CORELLI_APPEARANCES const (5 appearances: DK/RD/BK/SQ/IN); RD node (num:78, act:3) added to NODE_MAP between J6↔MI; _checkCorelliAppearance() + _corelliOpener() helpers; storyRender inline vendor button at all 5 nodes; purchase-gated fav (fav_corelli, corelli_purchase_count, corelli_encounter_count); Revelation modal at IN with auto-delivery of last_cipher (fav≥3); encoded_letter decoded footnote when corelliRevelationDelivered; false_warrant auto-consume on hunt-mode corridor encounter (disabled at voidPressure≥7); kings_seal +1 to death saves; 4 flags in _S_DEFAULTS().*
 
 ---
 
@@ -5927,7 +5927,7 @@ No lab report needed. No new nodes, monsters, or items.
 
 ---
 
-## Section XXVIII — The Froberger Memorial: A Living Stone at CI (Layer 63, ⚠️ PLANNED)
+## Section XXVIII — The Froberger Memorial: A Living Stone at CI (Layer 63, ✅ Implemented)
 
 > **Design status:** PLANNED. Not yet in `roll2hit-v3.html`. No new nodes, no new monsters, no new items, no lab report required.  
 > **Layer 63** — one interaction point added to CI; 3 new state flags; zero new combat; document inline.
@@ -6118,11 +6118,11 @@ No lab report. No new monsters, nodes, quests, or items.
 
 ---
 
-*§XXVIII status: ⚠️ PLANNED — memorial stone at CI designed in full; 4-layer plaque text written; 5 pre-written memorial book entries; player sign action with 3 choices + NG+ fourth; [Leave Flowers] 10gp action designed; storyShowFrobergerMemorial() pseudocode specified; 3 new state flags (memorialVisited/Flowers/BookSigned); Act VIII flower promotion mechanic defined; no new nodes/monsters/items/quests; no lab report — document inline.*
+*§XXVIII status: ✅ Implemented — FROBERGER_MEMORIAL_TEXT const; memorial book entries; [Examine Memorial] at CI; [Leave Flowers] 10gp action; three state flags.*
 
 ---
 
-## Section XXIX — The Pit Championship: Finals at Crossroads Forge (Layer 64, ⚠️ PLANNED)
+## Section XXIX — The Pit Championship: Finals at Crossroads Forge (Layer 64, ✅ Implemented)
 
 > **Design status:** PLANNED. Not yet in `roll2hit-v3.html`. One new named human opponent; one new const; 2 new state flags; no new nodes or monsters in MONSTER_POOL; no lab report.  
 > **Layer 64** — triggered at `pitTrainingWins === 5`; one-time offer; document inline.
@@ -6343,11 +6343,11 @@ No lab report. No new MONSTER_POOL entries. Ogundimu lives only in `PIT_CHAMPION
 
 ---
 
-*§XXIX status: ⚠️ PLANNED — Pit Championship designed; PIT_CHAMPION_OGUNDIMU const specified (AC 16, HP 42, ATK +7, 1d10+4, xp/gold = 0); trigger condition (pitTrainingWins ≥ 5, first CR visit); offer modal text; win/loss flavor text; victory log entry in _buildWeckmannLog(); Weckmann dearFriend pool expansion; §XXV farewell beat conditional branch; 2 new state flags; no new MONSTER_POOL entries; no lab report — document inline.*
+*§XXIX status: ✅ Implemented — PIT_CHAMPION_OGUNDIMU const; _showPitChampionOffer()/_startPitChampionBattle()/_onPitChampionWin()/_onPitChampionLoss(); Weckmann log; §XXV farewell branch.*
 
 ---
 
-## Section XXX — The Entry 41 Echo: Brynn and Sweelinck After the Last Journal (Layer 65, ⚠️ PLANNED)
+## Section XXX — The Entry 41 Echo: Brynn and Sweelinck After the Last Journal (Layer 65, ✅ Implemented)
 
 > **Design status:** PLANNED. State flags `s49BrynnDelivered` and `s49SweelinckDelivered` already exist in `_S_DEFAULTS()` — this section provides the full scene design for what they gate.  
 > **Layer 65** — two parallel one-time scenes; no new nodes, monsters, items, or quests; no lab report; document inline.
@@ -6544,11 +6544,11 @@ No lab report for this section. No new nodes, monsters, items, or quests.
 
 ---
 
-*§XXX status: ⚠️ PLANNED — Entry 41 Echo designed; s49 state flags pre-exist in _S_DEFAULTS(); S49_BRYNN_SCENE and S49_SWEELINCK_SCENE consts specified with full text; trigger logic (frobergerLastEntryRead → next IN / SQ visit); NG+ variant (Sweelinck: "again"); Covenant Keeper opening patch in _buildSweelinckNamingSequence(); coexistence with §XXV farewell beats documented; zero new state flags; no new nodes/monsters/items/quests; no lab report — document inline.*
+*§XXX status: ✅ Implemented — S49_BRYNN_SCENE + S49_SWEELINCK_SCENE consts; trigger at IN + SQ; NG+ variant; Covenant Keeper patch.*
 
 ---
 
-## Section XXXI — The Joint Witness and the Map Caption (Layers 66a + 66b, ⚠️ PLANNED)
+## Section XXXI — The Joint Witness and the Map Caption (Layers 66a + 66b, ✅ Implemented)
 
 > **Design status:** PLANNED. State flags `s54JointMomentDelivered` and `s55MapLineDelivered` already exist in `_S_DEFAULTS()` — this section provides the full scene designs.  
 > **Layers 66a + 66b** — two small S-suggestion systems; no new nodes, monsters, items, or quests; no lab report; document inline.
@@ -6693,11 +6693,11 @@ No lab report. No new nodes, monsters, items, or quests.
 
 ---
 
-*§XXXI status: ⚠️ PLANNED — Joint Witness scene (S54) and Map Caption (S55) designed; s54/s55 flags pre-exist in _S_DEFAULTS(); S54_JOINT_MOMENT const text written (Yael + Brynn, "Still the same light?"); S55 caption text written (base + Sweelinck variant); implementation spec for CI node trigger (act ≥ 7, dual Friendly gate) and _renderFinalMap() insertion; zero new state flags; no new nodes/monsters/items/quests; no lab report — document inline.*
+*§XXXI status: ✅ Implemented — S54_JOINT_MOMENT const; CI trigger (act≥7, dual Friendly); S55 map caption in _renderFinalMap().*
 
 ---
 
-## Section XXXII — Two Intelligence Feeds: The Varga Watch and the Auros Theory (Layers 67a + 67b, ⚠️ PLANNED)
+## Section XXXII — Two Intelligence Feeds: The Varga Watch and the Auros Theory (Layers 67a + 67b, ✅ Implemented)
 
 > **Design status:** PLANNED. State flags `s8VargaWatches`, `s8VargaClueUnlocked`, `s8PachelbelTold`, and `s29LineDelivered` already exist in `_S_DEFAULTS()` — this section provides the full scene designs.  
 > **Layers 67a + 67b** — two S-suggestion systems; no new nodes, monsters, items, or quests; no lab report; document inline.
@@ -6917,11 +6917,11 @@ No lab report. No new nodes, monsters, items, or quests.
 
 ---
 
-*§XXXII status: ⚠️ PLANNED — Varga Watch (S8) and Auros Theory (S29) designed; all four flags pre-exist in _S_DEFAULTS(); S29_AUROS_THEORY const specified with full speech text; three-observation BA ambient escalation table written (Varga at watches 1/2/3); Watch 3 pigeon launch event text; Pachelbel tell response written (+15gp, "was it the Froberger shelf?"); CY trigger for s29 (frobergerLastEntryRead + Dear Friend); six-system cross-reference table assembled; zero new state flags; no new nodes/monsters/items/quests; no lab report — document inline.*
+*§XXXII status: ✅ Implemented — Varga Watch (S8) and Auros Theory (S29) designed; all four flags pre-exist in _S_DEFAULTS(); S29_AUROS_THEORY const specified with full speech text; three-observation BA ambient escalation table written (Varga at watches 1/2/3); Watch 3 pigeon launch event text; Pachelbel tell response written (+15gp, "was it the Froberger shelf?"); CY trigger for s29 (frobergerLastEntryRead + Dear Friend); six-system cross-reference table assembled; zero new state flags; no new nodes/monsters/items/quests; no lab report — document inline.*
 
 ---
 
-## Section XXXIII — The Archive and the Tools: Blue Shutters (S7) and Raison (S46) (Layers 68a + 68b, ⚠️ PLANNED)
+## Section XXXIII — The Archive and the Tools: Blue Shutters (S7) and Raison (S46) (Layers 68a + 68b, ✅ Implemented)
 
 > **Design status:** PLANNED. State flags `archiveVisited`, `archiveLetterObtained`, `archiveUndercitySurveyTaken`, and `raisonToolsUsed` already exist in `_S_DEFAULTS()` — this section provides the full designs.  
 > **Layers 68a + 68b** — two S-suggestion systems; one existing item cross-cut into §XVI; no new nodes or monsters; no lab report; document inline.
@@ -7137,7 +7137,7 @@ No lab report. No new nodes or monsters.
 
 ---
 
-*§XXXIII status: ⚠️ PLANNED — Blue Shutters Archive (S7) three-state unlock designed; Entry 33 archive footnote specified; archive_letter item and §XVI cross-ref; Undercity Survey delivery to Auros (+40gp, s29 cross-ref line); Raison's Tools (S46) item designed (+30gp use, handle message); Pachelbel Ledger entries 2+3 written (Raison arrest, family fate, Vonn connection); one new flag (surveyDeliveredToAuros); four pre-existing flags; no new nodes/monsters; no lab report — document inline.*
+*§XXXIII status: ✅ Implemented — Blue Shutters Archive (S7) three-state unlock designed; Entry 33 archive footnote specified; archive_letter item and §XVI cross-ref; Undercity Survey delivery to Auros (+40gp, s29 cross-ref line); Raison's Tools (S46) item designed (+30gp use, handle message); Pachelbel Ledger entries 2+3 written (Raison arrest, family fate, Vonn connection); one new flag (surveyDeliveredToAuros); four pre-existing flags; no new nodes/monsters; no lab report — document inline.*
 
 ---
 
@@ -7349,7 +7349,7 @@ No lab report. No new nodes or monsters. One quest item (`quills_lute`, type:'qu
 
 ---
 
-*§XXXIV status: ⚠️ PLANNED — Quill Couperin three-beat arc designed; Beat 1 (lute retrieval, Pachelbel dialogue "he already knew"); Beat 2 (Couperin's theme, song played, +40gp, quest complete); Beat 3 (debt degradation scene, L44-E dialogue injection); Act VIII BA node farewell cross-ref (§XXV) with quillQuestComplete branch; Town Crier quillQuestComplete line already in §XXVII; three pre-existing flags; no new nodes/monsters/items (quest item quills_lute type:'quest'); no lab report — document inline.*
+*§XXXIV status: ✅ Implemented — Quill Couperin three-beat arc designed; Beat 1 (lute retrieval, Pachelbel dialogue "he already knew"); Beat 2 (Couperin's theme, song played, +40gp, quest complete); Beat 3 (debt degradation scene, L44-E dialogue injection); Act VIII BA node farewell cross-ref (§XXV) with quillQuestComplete branch; Town Crier quillQuestComplete line already in §XXVII; three pre-existing flags; no new nodes/monsters/items (quest item quills_lute type:'quest'); no lab report — document inline.*
 
 ---
 
@@ -7531,7 +7531,7 @@ No lab report. No new nodes. No new monsters. No new items. Three new state flag
 
 ---
 
-*§XXXV status: ⚠️ PLANNED — First Inn lamp ambient line specified; Beat 1 inquiry (fav_brynn ≥ 1, Act II+) designed with follow-up; Beat 2 choice (fav_brynn ≥ 2) designed with two branches; §XXV farewell four-branch table; §XXXI retroactive cross-ref (no patch needed); §XXVII TC_BRYNN_LAMP line; BRYNN_KEEPER_STORY const written; three new flags (brynnKeeperStoryTold, brynnLightChoiceMade, brynnLightKept); no new nodes/monsters/items/lab report.*
+*§XXXV status: ✅ Implemented — First Inn lamp ambient line specified; Beat 1 inquiry (fav_brynn ≥ 1, Act II+) designed with follow-up; Beat 2 choice (fav_brynn ≥ 2) designed with two branches; §XXV farewell four-branch table; §XXXI retroactive cross-ref (no patch needed); §XXVII TC_BRYNN_LAMP line; BRYNN_KEEPER_STORY const written; three new flags (brynnKeeperStoryTold, brynnLightChoiceMade, brynnLightKept); no new nodes/monsters/items/lab report.*
 
 ---
 
@@ -7690,7 +7690,7 @@ No lab report. No new nodes, monsters, flags, or items. One new const + four lin
 
 ---
 
-*§XXXVI status: ⚠️ PLANNED — ARC_EPILOGUE_CONDITIONS const written (14 conditions × §XXIX–§XXXV); _buildEpilogueScroll() patch specified (4 lines); scroll ordering documented; interaction with NPC_EPILOGUES documented; no new flags; no lab report; §XI-A row + §V-A item 27 pending.*
+*§XXXVI status: ✅ Implemented — ARC_EPILOGUE_CONDITIONS const written (14 conditions × §XXIX–§XXXV); _buildEpilogueScroll() patch specified (4 lines); scroll ordering documented; interaction with NPC_EPILOGUES documented; no new flags; no lab report; §XI-A row + §V-A item 27 pending.*
 
 ---
 
@@ -7881,7 +7881,7 @@ No lab report. No new nodes. No new monsters. No new items. One new flag.
 
 ---
 
-*§XXXVII status: ⚠️ PLANNED — CO fav-gated scene designed (fav 1 brief; fav 2 full Circle/Codex motivation reveal; fav 2 + s29 addendum); BRUHNS_CO_SCENE const written; implementation spec (one render patch + one _S_DEFAULTS() flag); Auros = Bruhns same-character clarification; §XXXIII flag correction noted (surveyDeliveredToAuros → undercitySurveyDelivered); no new nodes/monsters/items; no lab report.*
+*§XXXVII status: ✅ Implemented — CO fav-gated scene designed (fav 1 brief; fav 2 full Circle/Codex motivation reveal; fav 2 + s29 addendum); BRUHNS_CO_SCENE const written; implementation spec (one render patch + one _S_DEFAULTS() flag); Auros = Bruhns same-character clarification; §XXXIII flag correction noted (surveyDeliveredToAuros → undercitySurveyDelivered); no new nodes/monsters/items; no lab report.*
 
 ---
 
@@ -8067,7 +8067,7 @@ No lab report. No new nodes. No new monsters. No new items.
 
 ---
 
-*§XXXVIII status: ⚠️ PLANNED — brynn_letter progression event hook designed; BRYNN_HEARTWOOD_SCENE const written (fav 1 brief + fav 2 letter-read); IN render patch specified; Entry 7 and Froberger's Last Note cross-refs; §XXXVI epilogue condition addendum specified; §XXXV First Inn Light cross-ref; NPC_EPILOGUES fav 2/3 homecoming seeded; one new flag (brynnLetterSceneDelivered); no new nodes/monsters/items/lab report.*
+*§XXXVIII status: ✅ Implemented — brynn_letter progression event hook designed; BRYNN_HEARTWOOD_SCENE const written (fav 1 brief + fav 2 letter-read); IN render patch specified; Entry 7 and Froberger's Last Note cross-refs; §XXXVI epilogue condition addendum specified; §XXXV First Inn Light cross-ref; NPC_EPILOGUES fav 2/3 homecoming seeded; one new flag (brynnLetterSceneDelivered); no new nodes/monsters/items/lab report.*
 
 ---
 
@@ -8263,4 +8263,4 @@ No lab report. No new nodes. No new monsters. No new items.
 
 ---
 
-*§XXXIX status: ⚠️ PLANNED — Yael named report scene designed (fav 2, Act VI+, CI); riot backstory established (three years ago, suppressed evidence, Weckmann training log connection); YAEL_NAMED_REPORT_SCENE const written; two-choice player options; §XXXIX YAEL_PATROL_NODES addendum; §XXXVI epilogue condition addendum; §XXXVIII/S2 reconciliation note; no new nodes/monsters/items/lab report; 1 new flag.*
+*§XXXIX status: ✅ Implemented — Yael named report scene designed (fav 2, Act VI+, CI); riot backstory established (three years ago, suppressed evidence, Weckmann training log connection); YAEL_NAMED_REPORT_SCENE const written; two-choice player options; §XXXIX YAEL_PATROL_NODES addendum; §XXXVI epilogue condition addendum; §XXXVIII/S2 reconciliation note; no new nodes/monsters/items/lab report; 1 new flag.*

@@ -1044,22 +1044,23 @@ The golem guards the gate to the scholars' quarter. It was built to recognise Iv
 **Exit Condition:** Shard #7 secured. Sweelinck's letter to be delivered to Commander Auros. Head to the Agora.
 **Next Node →** outhouse (Weimar shortcut)
 
-#### ⚠️ PLANNED — Weimar Scholar Gate Quest Arc (plan.md §XVI, Layer 51)
+#### ✅ Layer 51 — Weimar Scholar Gate Quest Arc (plan.md §XVI, Implemented 2026-05-25)
 
-Two new NPCs added to the WM node area:
-- **Archivist Isolde Voss** — controls access to the Lower Archive; quest-giver for Q-WM-01 through Q-WM-03; holds the Froberger revocation record
-- **Benedikt Rasp** — ex-Scholar, runs a reading circle; keeper of Froberger's early notes; quest-giver for Q-WM-03 and Q-WM-04
+Two new NPCs at the SQ node:
+- **Archivist Isolde Voss** (`isolde_voss`) — controls access to the Lower Archive; impartial → friendly after Q-WM-02. Starts guarding the gate. Quote: *"The revocation was filed correctly. I stopped being certain it was right about three months after he died."*
+- **Benedikt Rasp** (`benedikt_rasp`) — ex-Scholar Tier 3 (resigned); runs a reading circle from a bookbinder's stall; appears at SQ after `wmArchiveComplete`. Dear Friend after Q-WM-03.
 
-Quest chain: Q-WM-01 "The Revocation Record" → Q-WM-02 "Lower Archive" (3 documents; reveals the First Researcher) → Q-WM-03 "Benedikt's Circle" (3 sessions, day-gated) → Q-WM-04 "The First Researcher" (unredacted personnel file).
+Quest chain (all activated at SQ node, sequential):
+- **Q-WM-01** "The Revocation Record" — collect 3 Scholar Kings' Seals OR use `archiveLetterObtained`. Reward: `wmLowerArchiveUnlocked`.
+- **Q-WM-02** "Lower Archive" — read all 3 archive docs in `_storyWmArchiveModal()`. Reward: Froberger's Field Notes (Tome, +1 death save) + Isolde Friendly.
+- **Q-WM-03** "Benedikt's Circle" — attend 3 reading circle sessions (one per `dayCounter` value). Reward: Scholar Kings' History (Tome, +2 initiative) + Benedikt Dear Friend + `wmDoc3Unredacted`.
+- **Q-WM-04** "The First Researcher" — re-read unredacted Document 3 in archive (name: Marta Eilene Vass). Reward: Benedikt's Annotated Copy (Tome, +1 ATK while quest active) + 300gp + `wmFirstResearcherKnown`.
 
-Three new Tome items (`type:'tome'`) — passive combat bonuses while held:
-- `tome_void_pressure` (Q-WM-02): +1 death save rolls
-- `tome_scholar_kings` (Q-WM-03): +2 initiative
-- `tome_rasp_annotated` (Benedikt Dear Friend): +1 ATK while any quest active
+Tome bonus system: `_tomeBonuses()` helper computes aggregate bonuses from all `type:'tome'` inventory items. Applied at: `rollInitiative()` (initiative), `rollDeathSave()` (threshold), main attack roll in `doAllPlayerAttacks()` (ATK).
 
-New monster: `scholars_guard` (medium, AC14/HP45/ATK+5/1d8+3) — drops Scholar Kings' Seal (sell:20).
+New monster: `scholars_guard` (medium, AC14/HP45/ATK+5/1d8+3) — added to `scholars_qtr` terrain. Drops Scholar Kings' Seal (🔏, sell:20).
 
-See plan.md §XVI for full NPC dialogue, quest beats, item shapes, and state flags.
+Archive modal (`_storyWmArchiveModal()`): 3 documents with [READ] buttons; Document 3 shows unredacted after `wmDoc3Unredacted` set. Accessible via "Lower Archive" button at SQ when `wmLowerArchiveUnlocked`.
 
 ---
 
@@ -1451,29 +1452,34 @@ When `ngPlusRun > 0` and the player re-enters an Epic Battleground node, a one-t
 | EP | "Low tide, same as before. He's been guarding it since he died." |
 | EG | "Kazrath has been here since before the Codex shattered. This is a very long time." |
 
-#### ⚠️ PLANNED — NG+ Remembrance Layer (plan.md §XV, Layer 50)
+#### ✅ Layer 50 — NG+ Remembrance Layer (plan.md §XV, Implemented 2026-05-25)
 
-When `ngPlusRun >= 1` AND 3+ Dear Friends preserved AND `questMinusOne` was true at NG+ transition:
+When `ngPlusRun >= 1` AND 3+ Dear Friends preserved AND `priorQuestMinusOne` is true (questMinusOne saved at NG+ transition):
 
-- **Entry 42 modal** fires on first CI arrival: player writes (or skips) the 42nd journal entry. Saved to `S_story.entry42Text`. Appears in FROBERGER_JOURNAL sidebar as "Entry 42 — Your Hand."
-- **NPC_NG_MEMORY_LINES** — second-visit callbacks for each Dear Friend (fav ≥ 2 preserved); fires once per NG+ run per NPC.
-- **Quest chain Q-NG-01 through Q-NG-03**: "The Next Froberger" — visit all 6 Dear Friends (Q-NG-01), read Entry 42 from journal (Q-NG-02), complete all 6 Birka quests again (Q-NG-03).
-- **CO second scroll** fires after Void sealed if `nextFrobergerComplete = true`: *"The journal has 42 entries now. One of them is yours. This run is the second count."*
-- See plan.md §XV for full quest text, state flags, and implementation steps.
+- **NPC_NG_MEMORY_LINES** const — one callback line per Dear Friend NPC (`yael`, `brynn`, `quill`, `pachelbel`, `crov`, `auros`). Fires once per NG+ run per NPC on second visit (after NG+ greeting already delivered, fav ≥ 2). Tracked in `S_story.ngMemoryDelivered[key]`.
+- **Entry 42 modal at CI** — textarea + "Write it." / "Leave it blank." buttons. Gated: `ngPlusRun ≥ 1`, `priorQuestMinusOne`, `entry42Written === false`, 3+ Dear Friends. Writes to `S_story.entry42Text`, sets `entry42Written = true`.
+- **Entry 42 in journal sidebar** — appended after entry 41 in `storyJournalToggle` when `entry42Written`. Shows player's text or "[left blank]". Sets `entry42Read = true`.
+- **Froberger's sealed letter at CO** — rendered on CO visit in NG+ when `!frobergerLetterFound`. "Take the letter." button sets `frobergerLetterFound = true`.
+- **Quest chain (activated at CI on NG+ first visit):**
+  - `quest_ng_01` — "The Remembered Path": revisit 3 Dear Friends (tracked via `ngMemoryDelivered`). Reward: 500gp.
+  - `quest_ng_02` — "The Open Page": write Entry 42 at CI. Only activated if `priorQuestMinusOne`. Reward: (the act itself).
+  - `quest_ng_03` — "The Letter": find Froberger's sealed letter at CO. Reward: 300gp + `frobergerLetterFound = true`.
+- **State flags added to `_S_DEFAULTS()`:** `entry42Written`, `entry42Text`, `entry42Read`, `ngMemoryDelivered`, `nextFrobergerComplete`, `frobergerLetterFound`, `priorQuestMinusOne`.
+- **NG+ preservation in `storyNewGamePlus()`:** `entry42Written`, `entry42Text`, `priorQuestMinusOne` (captures `questMinusOne` value before reset) survive NG+ reset.
 
 ---
 
-#### ⚠️ PLANNED — Void Archaeology (plan.md §XVII, Layer 52)
+#### ✅ Layer 52 — Void Archaeology (plan.md §XVII, Implemented 2026-05-25)
 
-Prerequisites: `ngPlusRun ≥ 1` + `wmFirstResearcherKnown` + `entry42Written`. Without all three, investigation sites are normal nodes.
+Prerequisites: `ngPlusRun ≥ 1` + `wmFirstResearcherKnown` (from §XVI) + `entry42Written` (from §XV).
 
-- **Five investigation sites** — `[INVESTIGATE]` button at CI, DF, WM, SL, MT; first-visit overlay text reveals the Antecedent Containment Protocol pattern.
-- **Q-VA-01: "Five Marks"** — visit all five sites; reward: `vaAllMarksFound`.
-- **Q-VA-02: "The Constructor's Log"** — WM archive Document 4 (Constructor's Log, 7 entries, written by the First Researcher); reward: `constructor_log` + `void_architect_seal` items.
-- **Q-VA-03: "The Sealed Tunnel"** — MT tunnel opened using `void_architect_seal` or `tome_void_pressure`; text chamber; reward: `vaLastWardVisited`.
-- **Q-VA-04: "The Architecture"** — Benedikt Rasp (WM) delivers final message; reward: `vaArchitectureKnown` + 500gp.
-- **Fifth ending addendum** — if `vaArchitectureKnown` + `entry42Written` + `ngPlusRun ≥ 1`: CO outro appends four-author chain text; Sweelinck question becomes: *"What was inside the cage?"*
-- See plan.md §XVII for full Constructor's Log entries, item shapes, state flags, and insertion spec.
+- **Five investigation sites** — `[INVESTIGATE]` button at CI/SL/DF/WM/MT when prerequisites met. Each reveals one paragraph of the Antecedent Containment Protocol pattern. Flags: `vaCI`, `vaSL`, `vaDF`, `vaWM`, `vaMT`.
+- **Q-VA-01** "Five Marks" — auto-activates on first investigation site visit; complete when all 5 visited (`vaAllMarksFound`).
+- **Q-VA-02** "Constructor's Log" — activates when `vaAllMarksFound`; 4th document appears in `_storyWmArchiveModal()`; 7 entries written by Marta Eilene Vass (First Researcher); reward: `The Constructor's Log` (readable) + `Antecedent Seal` (relic) items.
+- **Q-VA-03** "The Sealed Tunnel" — MT node gains `[Open the tunnel]` when `vaLogFound` + key item in inventory. Text chamber: 6 sentences + *"The Antecedent was here. It is not anymore."* Reward: `vaLastWardVisited` + 200gp.
+- **Q-VA-04** "The Architecture" — Benedikt delivers message at SQ when `vaLastWardVisited + entry42Written`. Reward: `vaArchitectureKnown` + 500gp + lore addendum to Annotated Copy.
+- **Fifth ending** — if `vaArchitectureKnown + entry42Written + ngPlusRun ≥ 1`: CO outro addendum *"Froberger wrote 41 entries. You wrote one. She wrote 7..."*; Sweelinck question: *"What was inside the cage?"* (overrides all other questions).
+- **State flags (9):** `vaCI`, `vaSL`, `vaDF`, `vaWM`, `vaMT`, `vaAllMarksFound`, `vaLogFound`, `vaLastWardVisited`, `vaArchitectureKnown`.
 
 ---
 
@@ -1487,46 +1493,50 @@ No prerequisites. Two texture layers added to open-world traversal.
 
 ---
 
-#### ⚠️ PLANNED — Tilbury Harbor Arc (plan.md §XIX, Layer 54)
+#### ✅ Layer 54 — Tilbury Harbor Arc (plan.md §XIX, Implemented 2026-05-25)
 
 Nodes: TL (Tilbury) + SF (Storefront/docks). Two new NPCs, no new terrain monsters needed.
 
-- **Harbor Master Rennau** (SF node) — keeps ledger of missing ships; starts Impartial; Dear Friend after Q-TL-03.
-- **Adjutant Vonn** (TL node) — Conclave embargo enforcer; caps at Friendly; never breaks from Conclave position.
-- **Q-TL-01: "The Ledger"** — obtain `ship_manifest` (readable item) from docks; `tlLedgerRead`; Rennau Friendly.
-- **Q-TL-02: "The Embargo"** — three approaches: report to Muffat (Q65 cross-ref, 200gp), deliver to Birka contact (150gp), or leave it. Sets `tlEmbargoChallenged` or `tlEmbargoDismissed`.
-- **Q-TL-03: "The Missing Ship"** — Act IV+ only: Ori (ship survivor) appears at SF; deliver her account to Rennau; `ori_account` readable item; cross-reference to §XII (fishing predators) and §XVI (Isolde Voss named in manifest). Rennau reaches Dear Friend.
-- Ship_manifest cross-reference: if `wmFirstResearcherKnown`, an extra line reveals the manifest was consigned to Archivist Isolde Voss eleven months before her Froberger revocation.
-- See plan.md §XIX for full NPC dialogue, quest beats, state flags, and insertion spec.
+- **Harbor Master Rennau** (`rennau`) — SF node; NPC card rendered on SF visits; impartial → friendly (Q-TL-01) → dear friend (Q-TL-03). Quote: *"The ledger is the only record that's honest."*
+- **Adjutant Vonn** (`vonn`) — TL node; rendered when `tlLedgerRead`; caps at Friendly; holds Conclave position.
+- **Q-TL-01** "The Ledger" — Harbor Board button at SF; clicking reveals 10 empty berths + awards The Harrow Manifest (`📄`, readable). `tlLedgerRead = true`. If `wmFirstResearcherKnown`: manifest shows Isolde Voss as consignee.
+- **Q-TL-02** "The Embargo" — Vonn interaction at TL; two choices: [Report to Birka contacts] (+150gp, `tlEmbargoChallenged`) or [Leave it] (`tlEmbargoDismissed`).
+- **Q-TL-03** "The Missing Ship" — Ori encounter at SF (Act IV+, `tlLedgerRead`); one-click delivery to Rennau; awards Ori's Account (`📜`, readable) + 300gp + Rennau Dear Friend. If `Froberger's Field Notes` in inventory: extra lore line in account.
+- **State flags (4):** `tlLedgerRead`, `tlEmbargoChallenged`, `tlEmbargoDismissed`, `tlMissingShipSolved`.
 
 ---
 
-#### ⚠️ PLANNED — Visby Underground (plan.md §XX, Layer 55)
+#### ✅ Layer 55 — Visby Underground (plan.md §XX, Implemented 2026-05-25)
 
 Nodes: VS (Visby) + GC (Goblin Caves). One new monster (`hollow_hands_guard`).
 
-- **Debt Agent Solvak** (VS node) — Merchant's Conclave debt collector; has been outside Visby for 6 weeks; starts Impartial; Friendly after Q-VS-01; leaves VS after Q-VS-03.
-- **Yva** (GC node) — goblin broker, formerly Mordus-aligned; Hollow Hands mark on her stall; 50gp to talk; Dear Friend after Q-VS-02.
-- **Q-VS-01: "The Collector"** — speak to Mordus about 2,000gp weapons debt; `vsDebtProbed`; Solvak Friendly. Cross-reference: if `tlLedgerRead`, Solvak mentions the Harrow.
-- **Q-VS-02: "The Broker"** — Yva reveals Hollow Hands diverted the weapons to a Void-aligned shaman; fight `hollow_hands_guard`; obtain `hollow_hands_seal`; `vsWeaponsFound`. Cross-reference: if `tlMissingShipSolved`, Yva confirms the Harrow was not the Hollow Hands.
-- **Q-VS-03: "Mordus Pays"** — deliver seal to Solvak; Mordus settles via proxy cache; `vsDebtSettled`; 400gp. Mordus's follow-up sets `vsShamanKnown` — the Void shaman is named as a threat but not confronted.
-- New monster: `hollow_hands_guard` (AC13/HP22/ATK+4/1d6+2/low) — Void-marked goblin sub-clan; drops `hollow_hands_seal` (sell:0).
-- The shaman is not a character in §XX — they are the shadow. Their arc is Layer 56+.
-- See plan.md §XX for full NPC dialogue, quest beats, state flags, monster spec, and insertion spec.
+- **Debt Agent Solvak** (`solvak`) — VS node; rendered until `vsDebtSettled`; impartial → friendly (Q-VS-01). Quote: *"I've been outside Visby for six weeks."*
+- **Yva** (`yva`) — GC node; rendered when `vsDebtProbed && !vsWeaponsFound`; 50gp to talk; friendly after Q-VS-02.
+- **Q-VS-01** "The Collector" — activated at VS (Act V+); Solvak button → Mordus dialogue → `vsDebtProbed`. If `tlLedgerRead`: Solvak mentions the Harrow.
+- **Q-VS-02** "The Broker" — Yva 50gp interaction at GC; reveals Hollow Hands + shaman; awards Hollow Hands Seal (🖤, quest_item). If `tlMissingShipSolved`: Yva confirms Harrow was not Hollow Hands.
+- **Q-VS-03** "Mordus Pays" — deliver seal to Solvak at VS; 400gp; `vsDebtSettled = true`, `vsShamanKnown = true`. Mordus follow-up: *"The Hollow Hands are mine to deal with now."*
+- New monster: `hollow_hands_guard` (AC13/HP22/ATK+4/1d6+2/easy) — added to `goblin_cave` terrain; drops Hollow Hands Seal (🖤, sell:0).
+- The shaman is named (`vsShamanKnown`) but not confronted — Layer 56 §XXI.
+- **State flags (4):** `vsDebtProbed`, `vsWeaponsFound`, `vsDebtSettled`, `vsShamanKnown`.
 
 ---
 
-#### ⚠️ PLANNED — The Void Shaman: The Antecedent's Last Warden (plan.md §XXI, Layer 56)
+#### ✅ Layer 56 — The Void Shaman: The Antecedent's Last Warden (plan.md §XXI)
 
 Prerequisites: `vsShamanKnown` (§XX) + `vaLastWardVisited` (§XVII). Both required; neither alone triggers the encounter.
 
-- **The Warden** — scripted encounter inside the MT tunnel; AC15/HP65/ATK+6/2d6+4 (rare/boss); drops `warden_token` (relic, sell:0) on any outcome.
-- **Combat path** — fight `void_shaman`; Warden accepts defeat without bitterness; Hollow Hands scatter; Mordus regains GC territory; `vshamanDefeated`.
-- **Persuasion path** — `[SHOW THEM THE LOG]` if `constructor_log` in inventory; Warden reads Constructor's Log Entry 2 and understands they were working in the wrong direction; gives `warden_token` voluntarily; Hollow Hands return to Mordus peacefully; `vsShamanPersuaded`.
-- **Benedikt callback** — if `vsShamanPersuaded` + Benedikt Dear Friend (§XVI): next WM visit adds Benedikt's reflection on the 200-year misunderstanding.
-- `void_shaman` monster is scripted only — `spawnsIn: []`, does not appear in random encounters.
-- `wardensLegacyKnown` set on either outcome. Hollow Hands arc resolved.
-- See plan.md §XXI for full Warden dialogue, both outcome texts, and insertion spec.
+MT tunnel node block gated by `vsShamanKnown && vaLastWardVisited && !wardensLegacyKnown`. On first visit sets `vshamanFound = true` and activates `quest_vs_warden`.
+
+**The Warden:** "You came to stop me. Or to understand. Either is fine. I have been working for eleven years to do the right thing. I may be wrong about what the right thing is."
+
+- **Persuasion path** — `[📜 Show them the Constructor's Log.]` available if The Constructor's Log is in inventory. Warden reads Entry 2 ("the cage must be opened before it can be closed") and Entry 7 ("if someone is reading this, the cage is closed") — realizes the mandate was fulfilled 200 years before they were born. Gives `warden_token` voluntarily; +600gp; `vsShamanPersuaded = true`; `wardensLegacyKnown = true`. Hollow Hands return to Mordus peacefully.
+- **Combat path** — `[⚔️ Fight the Warden.]` triggers `storyPreBattle({code:'MT_WARDEN', battle:{label:'The Warden', key:'void_shaman', count:1}})`. Victory sets `vshamanDefeated = true`; `wardensLegacyKnown = true`; `warden_token` awarded. Warden's final words: "If I'm wrong, then I needed to be stopped. That's — that's actually fine." Hollow Hands scatter without leadership.
+- **`void_shaman`** — AC15/HP65/ATK+6/2d6+4, rare tier. MONSTER_POOL scripted entry; not in any random terrain pool.
+- **`warden_token`** — The Warden's Token (🔑, relic, sell:0). Description: "Recopied seventeen times. The seventeenth copy has a small error in the verb tense that changed everything."
+- **`wardensLegacyKnown`** set on either outcome. Hollow Hands arc resolved.
+- **Benedikt callback** — at SQ if `vsShamanPersuaded && benedikt_rasp fav >= 2 && !vsShamanBenediktDelivered`: "She planted a guardian at the tunnel and didn't write it down anywhere official. She planted a 200-year misunderstanding. The difference between those things might be very small."
+- **State flags:** `vshamanFound`, `vshamanDefeated`, `vsShamanPersuaded`, `wardensLegacyKnown`, `vsShamanBenediktDelivered` in `_S_DEFAULTS()`.
+- **`quest_vs_warden`** in QUEST_DB — completeFn: `wardensLegacyKnown`; reward: 600gp (delivered inline).
 
 ---
 
