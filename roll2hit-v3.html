@@ -4490,6 +4490,17 @@ const MONSTER_POOL = {
   wagmi:            { key:'wagmi',            name:'WAGMI',                  ac:8,  hp:22, atk:5, dmgDie:6,  dmgCount:2, dmgFlat:1,  tier:'medium'  },
   schiff_bird:      { key:'schiff_bird',      name:'Schiff Bird',            ac:12, hp:20, atk:5, dmgDie:6,  dmgCount:2, dmgFlat:1,  tier:'medium'  },
   rug_spider:       { key:'rug_spider',       name:'Rug Spider',             ac:14, hp:40, atk:7, dmgDie:8,  dmgCount:2, dmgFlat:3,  tier:'hard'    },
+  // ── Layer 44: Ally Cat Arc ──
+  stray_alley_cat:  { key:'stray_alley_cat',  name:'Stray Alley Cat',        ac:11, hp:6,  atk:3, dmgDie:4,  dmgCount:1, dmgFlat:1,  tier:'trivial'  },
+  fluffy_cat:       { key:'fluffy_cat',       name:'Fluffy Cat',             ac:12, hp:9,  atk:4, dmgDie:4,  dmgCount:1, dmgFlat:2,  tier:'trivial'  },
+  beefy_tom:        { key:'beefy_tom',        name:'Beefy Tom',              ac:13, hp:18, atk:4, dmgDie:6,  dmgCount:1, dmgFlat:2,  tier:'easy'     },
+  fat_merchant_cat: { key:'fat_merchant_cat', name:'Fat Merchant Cat',       ac:11, hp:22, atk:3, dmgDie:6,  dmgCount:1, dmgFlat:1,  tier:'easy'     },
+  honcho_cat_m:     { key:'honcho_cat_m',     name:'Honcho Cat (Capo)',      ac:14, hp:32, atk:5, dmgDie:8,  dmgCount:1, dmgFlat:3,  tier:'medium'   },
+  honcho_cat_f:     { key:'honcho_cat_f',     name:'Boss Lady Honcho',       ac:15, hp:36, atk:6, dmgDie:8,  dmgCount:1, dmgFlat:4,  tier:'medium'   },
+  corrupted_cat:    { key:'corrupted_cat',    name:'Corrupted Cat',          ac:13, hp:28, atk:5, dmgDie:6,  dmgCount:1, dmgFlat:3,  tier:'medium'   },
+  taz_devil:        { key:'taz_devil',        name:'Taz Devil — Furball Tornado', ac:16, hp:70, atk:8, dmgDie:8, dmgCount:2, dmgFlat:4, tier:'hard'  },
+  fat_cat_boss:     { key:'fat_cat_boss',     name:'Don Fluffissimo',        ac:17, hp:90, atk:7, dmgDie:6,  dmgCount:2, dmgFlat:5,  tier:'hard'     },
+  cat_king:         { key:'cat_king',         name:'The Cat-King',           ac:19, hp:160,atk:10,dmgDie:8,  dmgCount:3, dmgFlat:6,  tier:'deadly'   },
   // trivial — city slums vermin (AC ≤ 5, HP 2–20, Lv1-friendly)
   rabid_dog:         { key:'rabid_dog',         name:'Rabid Dog',               ac:4, hp:9,  atk:3, dmgDie:4, dmgCount:1, dmgFlat:1, tier:'trivial' },
   aggressive_turkey: { key:'aggressive_turkey', name:'Aggressive Turkey',       ac:2, hp:4,  atk:1, dmgDie:3, dmgCount:1, dmgFlat:0, tier:'trivial' },
@@ -4899,6 +4910,17 @@ const MONSTER_DROPS = {
   wagmi:                { name:'Diamond Hand Fragment',   icon:'💎', sell:10 },
   schiff_bird:          { name:'Gold-Standard Feather',   icon:'🦅', sell:7  },
   rug_spider:           { name:'Spider Silk Warrant',     icon:'🕷', sell:14 },
+  // ── Layer 44: Ally Cat Arc drops ──
+  stray_alley_cat:      { name:'Flea-Dusted Pelt',        icon:'🐱', sell:1  },
+  fluffy_cat:           { name:'Tuft of Fluff',           icon:'🐾', sell:2  },
+  beefy_tom:            { name:'Cracked Claw',            icon:'🦴', sell:4  },
+  fat_merchant_cat:     { name:'Embossed Coin Pouch',     icon:'💰', sell:12 },
+  honcho_cat_m:         { name:'Tiny Fedora',             icon:'🎩', sell:8  },
+  honcho_cat_f:         { name:'Rhinestone Collar',       icon:'💎', sell:10 },
+  corrupted_cat:        { name:'Void-Singed Whisker',     icon:'⚡', sell:7  },
+  taz_devil:            { name:'Furball Crown',           icon:'🌀', sell:18 },
+  fat_cat_boss:         { name:"The Don's Signet Ring",   icon:'💍', sell:35 },
+  cat_king:             { name:"Cat-King's Claw Fragment",icon:'👑', sell:50 },
   // ── Trivial ──
   commoner:             { name:'Tattered Purse',          icon:'🗡', sell:3  },
   kobold:               { name:'Kobold Fang',             icon:'🦷', sell:4  },
@@ -5252,7 +5274,8 @@ const WORLD_DB = {
   yugurt_lake:      { label:'Yugurt Lake',          icon:'🎣',  monsters:[] },
   yugurt_cabin:     { label:'Yugurt Cabin',         icon:'🛖',  monsters:[] },
   defi_land:        { label:'DeFi Land',           icon:'📡',  monsters:[ P.pepe_rat, P.fiat_roach, P.moon_worm, P.doge_hound, P.wojak_drone, P.ngmi_swarm, P.wagmi, P.schiff_bird, P.rug_spider ] },
-  alley:            { label:'Dark Alley',           icon:'🌑',  monsters:[ P.commoner, P.bandit, P.thug, P.spy, P.shadow, P.wererat, P.ghoul, P.kenku, P.intellect_dev, P.doppelganger, P.succubus, P.assassin, P.vampire_spawn, P.vampire, P.night_hag, P.ekimara, P.barghest, P.redcap ] },
+  cat_quarter:      { label:'The Cat Quarter',     icon:'🐱',  monsters:[ P.stray_alley_cat, P.fluffy_cat, P.beefy_tom, P.fluffy_cat, P.honcho_cat_m, P.honcho_cat_f, P.fat_merchant_cat, P.corrupted_cat, P.taz_devil, P.fat_cat_boss ] },
+  alley:            { label:'Dark Alley',           icon:'🌑',  monsters:[ P.commoner, P.bandit, P.thug, P.spy, P.shadow, P.wererat, P.ghoul, P.kenku, P.intellect_dev, P.doppelganger, P.succubus, P.assassin, P.vampire_spawn, P.vampire, P.night_hag, P.ekimara, P.barghest, P.redcap, P.stray_alley_cat, P.fluffy_cat, P.beefy_tom, P.honcho_cat_m, P.honcho_cat_f, P.corrupted_cat, P.taz_devil ] },
   docks:            { label:'Harbor Docks',         icon:'⚓',  monsters:[ P.commoner, P.guard, P.pirate, P.thug, P.bandit, P.spy, P.giant_crab, P.merfolk, P.shadow, P.kenku, P.wererat, P.swashbuckler, P.pirate_captain, P.assassin, P.vampire_spawn, P.drowner, P.pirate_ghost, P.sea_demon ] },
   market_quarter:   { label:'Market Quarter',       icon:'🛒',  monsters:[ P.commoner, P.npc_merchant, P.bandit, P.spy, P.imp, P.homunculus, P.kenku, P.thug, P.mimic, P.intellect_dev, P.doppelganger, P.succubus, P.assassin, P.hym, P.plague_maiden, P.botchling ] },
   blacksmith_qtr:   { label:'Blacksmith Quarter',   icon:'🔨',  monsters:[ P.commoner, P.dwarf_warrior, P.guard, P.animated_armor, P.thug, P.veteran, P.shield_guardian, P.stone_golem, P.forge_elemental, P.iron_golem, P.hym ] },
@@ -6983,7 +7006,7 @@ document.addEventListener('DOMContentLoaded', () => {
 const NODE_MAP = {
   // ── ACT I — BIRKA
   CI:{ num:1,  code:'CI', name:'city',            label:'City Streets — Birka',       act:1, N:'SL', S:'CR', E:'IN',  W:'J1',  text:"You stand at the crossroads of Birka, the greatest city in the known world. The sky carries a faint violet cast where the Void bleeds into the evening dark. Cobblestones slick with last night's rain catch the lantern light in amber pools. A dying courier collapses at your feet, pressing a bloodstained map into your trembling hand — the single word on his lips before he goes still: 'Sweelinck.' You are a Level 1 Fighter. You have a sword, a name no one here knows yet, and a loop that has already started. The city is alive and it is watching. You will fight monsters here — real ones, with claws and void-rot and bad intentions. You will also fight the ones that live behind your own eyes. The friends you make in these streets will matter more than any loot you carry. This is not a story about winning. It is a story about waking up.", npc:'City Guard Captain', battle:null, loot:'Bloodstained Map', sleep:false },
-  SL:{ num:51, code:'SL', name:'city_slums',     label:'Birka Slums',                act:1, N:'DF', S:'CI', E:null,  W:null,  text:"The cramped alleys north of Birka market. Refuse heaps attract every pest the city produces. Children dare each other to touch the leech-covered gutter stones.", npc:null, battle:null, loot:null, sleep:false },
+  SL:{ num:51, code:'SL', name:'city_slums',     label:'Birka Slums',                act:1, N:'DF', S:'CI', E:'CQ', W:null,  text:"The cramped alleys north of Birka market. Refuse heaps attract every pest the city produces. Children dare each other to touch the leech-covered gutter stones.", npc:null, battle:null, loot:null, sleep:false },
   IN:{ num:2,  code:'IN', name:'inn',             label:'The First Inn',                 act:1, N:null, S:'TV', E:null,  W:'CI',  text:"The innkeeper is nervous. Two merchants disappeared from the harbor. She gives you a free breakfast — and slides Froberger's journal across the table.", npc:'Innkeeper Brynn', battle:null, loot:"Merchant Ledger · Froberger's Journal", sleep:true, sleepCost:5 },
   TV:{ num:3,  code:'TV', name:'tavern',          label:'Birka Tavern',                act:1, N:'IN', S:'BA', E:null,  W:null,  text:'Rumors fly. Something came out of the crypt last week. A bard sings a cipher-song that feels mathematical. Two men who watched you take the ledger have followed you in.', npc:'Bard Tomas Couperin', battle:{label:'Thug ×2', key:'thug', count:2}, loot:'Cipher Scrap', sleep:false },
   BA:{ num:4,  code:'BA', name:'bar',             label:'The Rough Bar',                 act:1, N:'TV', S:'CR', E:null,  W:'CI',  text:"The bar closest to the crypt entrance. A fence in the back room sells information about the Tilbury Conclave. The crypt entrance is in the wall behind the bar.", npc:'City Fence', battle:null, loot:'Conclave Pass (buy 15gp)', sleep:false },
@@ -7070,13 +7093,15 @@ const NODE_MAP = {
   DF:{ num:72, code:'DF', name:'defi_land', label:'The Unbanked Quarter',  act:1, N:null, S:'SL', E:'HM', W:'GL', text:"A district that exists on no city register. No tax collector has ever returned from this block. Hand-lettered signs in cracked windows read NO COIN · NO TRUST · NO THANKS. A shortwave signal repeats on every frequency. Nobody is answering. The rats here are wrong.", npc:'Grimshaw', battle:{label:'NGMI Swarm ×3 + Rug Spider', key:'ngmi_swarm', count:3}, loot:'Corrupted Meme Fragment ×2', sleep:false },
   HM:{ num:73, code:'HM', name:'defi_land', label:'Frequency Row',         act:1, N:null, S:null, E:null, W:'DF', text:"Storage units converted into listening posts, each bristling with improvised antenna arrays. Cable runs between them in defiance of physics and permits. A woman sits outside updating a frequency log in a composition notebook. She is on volume forty-one.", npc:'Bertha No-Bank', battle:null, loot:null, sleep:false },
   GL:{ num:74, code:'GL', name:'defi_land', label:"Old Guard's Corner",    act:1, N:null, S:null, E:'DF', W:null, text:"Three alleys converge at an improbable angle. A wooden folding chair. A man in it. A laminated sign that says GET OFF. Off of what is not specified. He has outlasted four city administrations, two plagues, and one Void surge without moving.", npc:"Zeke 'The Signal'", battle:null, loot:null, sleep:false },
+  // ── Layer 44: Ally Cat Arc ──
+  CQ:{ num:77, code:'CQ', name:'cat_quarter', label:'The Cat Quarter', act:1, N:null, S:null, E:null, W:'SL', text:"Narrow brick lanes, broken glass, discarded fish bones. Every surface is scratched. Not vandalism — territorial markings, dense as wallpaper. A large orange tabby sits on an overturned crate wearing what appears to be a very small fedora. He sees you and doesn't move.", npc:'Jimmy Two-Tails', battle:{label:'Beefy Tom × 3', key:'beefy_tom', count:3}, loot:'Tiny Fedora', sleep:false },
 };
 
 const ACT_NAMES = ['','Act I — Birka','Act II — Tilbury','Act III — The Wilds','Act IV — The Deep','Act V — Visby','Act VI — Desert','Act VII — Mythic Circuit','Act VIII — The Reckoning'];
 
 /* Grid coordinates from maps.md (Row 1–16 north→south, Col 1–26 west→east) */
 const NODE_COORDS = {
-  CI:{r:5,c:16},  SL:{r:4,c:16},  IN:{r:5,c:17},  TV:{r:6,c:17},  BA:{r:6,c:18},  CR:{r:7,c:15},  CY:{r:7,c:16},
+  CI:{r:5,c:16},  SL:{r:4,c:16},  CQ:{r:4,c:17},  IN:{r:5,c:17},  TV:{r:6,c:17},  BA:{r:6,c:18},  CR:{r:7,c:15},  CY:{r:7,c:16},
   DK:{r:8,c:15},  MQ:{r:8,c:16},  SF:{r:8,c:17},  MS:{r:8,c:19},  AL:{r:9,c:15},
   MI:{r:5,c:8},   FO:{r:5,c:3},   HL:{r:4,c:3},   SW:{r:6,c:3},   HS:{r:7,c:3},   BE:{r:12,c:2},
   OC:{r:13,c:1},  IS:{r:13,c:3},  AT:{r:14,c:2},  SC:{r:12,c:1},  FL:{r:11,c:2},  DS:{r:14,c:4},
@@ -7154,6 +7179,7 @@ const HUNTING_GROUNDS = {
   city_slums:       { displayName:'The Vermin Pit' },
   defi_land:        { displayName:'The Unbanked Quarter' },
   alley:            { displayName:'The Rat Run' },
+  cat_quarter:      { displayName:'The Cat Quarter' },
   docks:            { displayName:"The Smugglers' Wharf" },
   market_quarter:   { displayName:'The Black Market Stall' },
   blacksmith_qtr:   { displayName:'The Forge Pit' },
@@ -7417,6 +7443,62 @@ const NPC_DIALOGUES = {
       '"The relay will hold now. Not indefinitely — nothing holds indefinitely. But long enough. That\'s all infrastructure ever does: hold long enough for the next person to figure out the rest."',
     ],
   },
+  // ── Layer 44: Ally Cat Arc NPC profiles ──
+  jimmy: {
+    meta: { name:'Jimmy "Two-Tails" Carbonara', occupation:'Cat Quarter fixer', node:'CQ',
+      worldTruth:'The Cat Quarter runs by its own laws. You respect the hierarchy or you deal with the Tornado.',
+      enemy:'Merge events — two Honchos in the same alley is a SITUATION',
+      missionBit:null },
+    impartial: [
+      '"Listen. LISTEN. I\'m gonna tell you somethin\' and I\'m only gonna say it once."',
+      '"The Fat Merchant Cats are a separate problem. Separate. Don\'t mix \'em up with the community business."',
+      '"Every surface in this alley is scratched. You\'re standing in the largest territorial claim in the city."',
+      '"A Taz Devil ain\'t angry. It\'s a PROCESS. Two Honchos fighting plus proximity equals tornado. That\'s just physics."',
+      '"The Cat-King shows up when enough Taz Devils merge. Last time: three city blocks. Three. Nobody\'s been back to Fishmonger\'s Row since."',
+    ],
+    friendly: [
+      '"You\'re getting it. You understand this ain\'t random — it\'s structured. This is a COMMUNITY."',
+      '"Don Fluffissimo runs the Merchant side. That\'s a whole other business. Sandy handles it. I stay in my lane."',
+      '"Tommy No-Ears came up through the muscle. Now he IS the muscle. It\'s a complicated family situation."',
+    ],
+    dearFriend: [
+      '"Listen. I want you to know something. You did good. Real good. You\'re like... honorary Ally Cat now. Don\'t tell nobody. It ain\'t a thing we advertise."',
+      '"The Cat-King\'s gone. The community\'ll stabilize. For like... three days. Then they\'ll forget. They\'re cats."',
+    ],
+  },
+  sandy_cat: {
+    meta: { name:'Sandy "Scratchpad" Mewlino', occupation:'Fluffy faction boss', node:'CQ',
+      worldTruth:'This is about RESPECT. Not territory. Respect.',
+      enemy:'The merge culture and the Merchant Cat encroachment',
+      missionBit:null },
+    impartial: [
+      '"Oh honey. You think this is about territory? This is about RESPECT."',
+      '"These boys think they can just MERGE whenever they want and turn into a tornado and that\'s somehow MY problem? I don\'t THINK so, sweetheart."',
+      '"The Corrupted Cats near the DF node are Merchant Cat enforcers. Void-touched. On the payroll. It\'s disgusting."',
+      '"Kenickie\'s got a good heart. Bad impulse control, but good heart. He\'s reliable for the simple jobs."',
+    ],
+    friendly: [
+      '"Don Fluffissimo speaks very slow and very soft. Do not mistake that for safe. He is not safe."',
+      '"The merchant side has been encroaching for six months. City-backed. They have connections. We have the neighborhood."',
+      '"You killed those Beefy Toms clean. I respect that. They were affiliated — you just stepped into something bigger."',
+    ],
+    dearFriend: [
+      '"The merchants are gone. The quarter is ours again. I\'m going to go eat a very large fish and not think about politics for one whole day."',
+      '"You know what I appreciated? You didn\'t make it complicated. You just... handled it. That\'s rare. That\'s actually rare around here."',
+    ],
+  },
+  don_fluffissimo: {
+    meta: { name:'Don Fluffissimo', occupation:'Fat Merchant Cat boss (antagonist)', node:'CQ',
+      worldTruth:'Power moves slowly, deliberately, and with bodyguards',
+      enemy:'The player and the community faction',
+      missionBit:null },
+    impartial: [
+      '"You come to MY quarter. In MY district. Without bringing fish. Without a proper introduction. That\'s... unfortunate."',
+      '"I speak slowly because I have never needed to speak fast. There has always been time. There will always be time."',
+    ],
+    friendly: [],
+    dearFriend: [],
+  },
 };
 
 /* ── Layer 3: Quest Data ── */
@@ -7627,6 +7709,62 @@ const QUEST_DB = {
     desc:'Return to Warlord Kael Mordus at Birka Keep for payment. He is reading the journal.',
     hint:'Find Warlord Kael Mordus at Birka Keep to the north.',
     activateNode:'BK', completeFn:() => !!(S_story.ebReturnDone||{})['EG'], waypointNode:'BK', reward:400 },
+  // ── Layer 44: Ally Cat Arc quests (activated manually via storyRender CQ block) ──
+  quest_cat_01: { id:'quest_cat_01', type:'side', title:'Jimmy: The New Scratch',
+    desc:"Jimmy Two-Tails wants the Cat Quarter settled. Clear the riff-raff — 5 strays and 3 fluffies.",
+    hint:'Fight in the Cat Quarter until the quota is filled.',
+    activateNode:null, completeItems:[], completeFn:() => {
+      const k = S_story.catKills || {};
+      return (k.stray_alley_cat || 0) >= 5 && (k.fluffy_cat || 0) >= 3;
+    },
+    waypointNode:'CQ', reward:200,
+    disposition:'"You done good, kid. Real professional. The neighborhood\'s already calmer. Relatively. For cats." — Jimmy Two-Tails' },
+  quest_cat_02: { id:'quest_cat_02', type:'side', title:'Jimmy: Beefy Business',
+    desc:"Three Beefy Toms are running muscle for a rival outfit. Take them down and collect the proof.",
+    hint:'Kill 3 Beefy Toms and collect 3 Cracked Claws.',
+    activateNode:null, completeItems:[], completeFn:() => {
+      const k = S_story.catKills || {};
+      return (k.beefy_tom || 0) >= 3
+        && (S_story.inventory || []).filter(i => i.name === 'Cracked Claw').length >= 3;
+    },
+    waypointNode:'CQ', reward:350,
+    disposition:'"Those guys were affiliated. You just stepped into something bigger than strays, sweetheart." — Sandy Scratchpad Mewlino' },
+  quest_cat_03: { id:'quest_cat_03', type:'side', title:'Sandy: Honcho Problems',
+    desc:"A Capo and a Boss Lady are circling each other. Kill them SEPARATE — merge triggers a Taz Devil.",
+    hint:'Kill 1 Honcho Cat (Capo) and 1 Boss Lady Honcho.',
+    activateNode:null, completeItems:[], completeFn:() => {
+      const k = S_story.catKills || {};
+      return (k.honcho_cat_m || 0) >= 1 && (k.honcho_cat_f || 0) >= 1;
+    },
+    waypointNode:'CQ', reward:500,
+    disposition:'"Kid, I told you. SEPARATE. You kill \'em SEPARATE. The merge thing is NOT a mechanic I enjoy." — Jimmy Two-Tails' },
+  quest_cat_04: { id:'quest_cat_04', type:'side', title:'Jimmy: When the Tornado Comes',
+    desc:"Two Honchos merged. A Taz Devil — Furball Tornado — is loose in the Cat Quarter. Take it down.",
+    hint:'Defeat the Taz Devil at the Cat Quarter.',
+    activateNode:null, completeItems:[], completeFn:() => !!S_story.defeatedBattles['CQ_TAZ'],
+    waypointNode:'CQ', reward:750,
+    disposition:'"Oh you think you TOUGH now? You killed ONE Taz? When they merge — WHEN THEY MERGE — that ain\'t a Taz no more. That\'s a KING." — Tommy No-Ears DeVito' },
+  quest_cat_05: { id:'quest_cat_05', type:'side', title:"Sandy: Fat Cats Don't Tip",
+    desc:"The Fat Merchant Cats are using Corrupted Cats as enforcers. Sandy wants Don Fluffissimo gone.",
+    hint:'Kill 4 Fat Merchant Cats and defeat Don Fluffissimo.',
+    activateNode:null, completeItems:[], completeFn:() => {
+      const k = S_story.catKills || {};
+      return (k.fat_merchant_cat || 0) >= 4 && !!S_story.defeatedBattles['CQ_BOSS'];
+    },
+    waypointNode:'CQ', reward:900,
+    disposition:'"The merchants have been using Corrupted Cats as enforcers. Void-touched kitties doing dirty work for coin." — Sandy Scratchpad Mewlino' },
+  quest_cat_06: { id:'quest_cat_06', type:'side', title:'Tommy: The Cat-King Cometh',
+    desc:"Three Taz Devils merged at the fish market. The Cat-King has awoken. You\'re the hero.",
+    hint:'Defeat The Cat-King at the Cat Quarter.',
+    activateNode:null, completeItems:[], completeFn:() => !!S_story.catKingDefeated,
+    waypointNode:'CQ', reward:1500,
+    disposition:'"Listen. You did good. Real good. You\'re like... honorary Ally Cat now. Don\'t tell nobody." — Jimmy Two-Tails' },
+  quest_cat_void: { id:'quest_cat_void', type:'side', title:'Sandy: Void Strays',
+    desc:"Strays near the DF node have gone wrong. Sandy doesn\'t like it in her neighborhood.",
+    hint:'Kill 5 Corrupted Cats in the Cat Quarter.',
+    activateNode:null, completeItems:[], completeFn:() => (S_story.catKills || {}).corrupted_cat >= 5,
+    waypointNode:'CQ', reward:400,
+    disposition:'"Something\'s wrong with the strays near the DF node. They\'re not just feral — they\'re WRONG." — Sandy Scratchpad Mewlino' },
 };
 
 /* ── Layer 5: Void Tide Events ── */
@@ -7690,6 +7828,7 @@ const NPC_DIALOGUE = {
   GA: { name:'Oracle Kassiphane',               quote:'"Seven questions. Seven seals. You already know the answers — you have simply not asked yourself the right questions yet. The Shard was here before I was. It has always been yours."' },
   CO: { name:'Commander Seraphine Bruhns',       quote:'"The cordon holds. We have maybe one hour before the Void breaks through completely. Forge the Codex. I will handle whatever comes over the wall."' },
   YC: { name:'The Fisherman', quote:'"...Nice Day For Fishing. Yugurt! ...Nice Day For Fishing. Yugurt!" He says this continuously. Not to you specifically. Not to no one specifically. He is simply correct about the weather and the lake on every day he has ever checked, which is every day.' },
+  CQ: { name:'Jimmy Two-Tails', quote:'"Listen. LISTEN. I\'m gonna tell you somethin\' and I\'m only gonna say it once. The Taz Devil? It ain\'t a monster. It\'s a SITUATION. Two Honchos merge and boom — situation. You wanna help? You help by makin\' sure they don\'t get within three blocks of each other. Capisce?"' },
   // ── Layer 41 — Birka Arc quests ──
   quest_slums_cleanup: { id:'quest_slums_cleanup', type:'side', title:'Yael: Slums Cleanup',
     desc:"Guard Captain Yael has asked you to clear vermin from the Birka Slums. Three encounters — she'll know when it's done.",
@@ -7727,6 +7866,62 @@ const NPC_DIALOGUE = {
     activateNode:'CY', completeItems:[], completeFn:() => !!S_story.defeatedBattles['CY_VOID'],
     waypointNode:'CY', reward:0,
     disposition: '"The Council approved the maintenance request six months ago. In principle. The Void doesn\'t wait for implementation." — Commander Bruhns' },
+  // ── Layer 44 — Ally Cat Arc quests ──
+  quest_cat_01: { id:'quest_cat_01', type:'side', title:'Jimmy: The New Scratch',
+    desc:"Jimmy Two-Tails wants the Cat Quarter settled. Clear the riff-raff — 5 strays and 3 fluffies.",
+    hint:'Fight in the Cat Quarter until the quota is filled.',
+    activateNode:'CQ', completeItems:[], completeFn:() => {
+      const k = S_story.catKills || {};
+      return (k.stray_alley_cat || 0) >= 5 && (k.fluffy_cat || 0) >= 3;
+    },
+    waypointNode:'CQ', reward:200,
+    disposition:'"You done good, kid. Real professional. The neighborhood\'s already calmer. Relatively. For cats." — Jimmy Two-Tails' },
+  quest_cat_02: { id:'quest_cat_02', type:'side', title:'Jimmy: Beefy Business',
+    desc:"Three Beefy Toms are running muscle for a rival outfit. Take them down and collect the proof.",
+    hint:'Kill 3 Beefy Toms and collect their Cracked Claws.',
+    activateNode:'CQ', completeItems:[], completeFn:() => {
+      const k = S_story.catKills || {};
+      return (k.beefy_tom || 0) >= 3
+        && (S_story.inventory || []).filter(i => i.name === 'Cracked Claw').length >= 3;
+    },
+    waypointNode:'CQ', reward:350,
+    disposition:'"Those guys were affiliated. You just stepped into something bigger than strays, sweetheart." — Sandy Scratchpad Mewlino' },
+  quest_cat_03: { id:'quest_cat_03', type:'side', title:'Sandy: Honcho Problems',
+    desc:"A Capo and a Boss Lady are circling each other. Kill them SEPARATE — let them merge and you\'re dealing with a Taz Devil.",
+    hint:'Kill 1 Honcho Cat (Capo) and 1 Boss Lady Honcho.',
+    activateNode:'CQ', completeItems:[], completeFn:() => {
+      const k = S_story.catKills || {};
+      return (k.honcho_cat_m || 0) >= 1 && (k.honcho_cat_f || 0) >= 1;
+    },
+    waypointNode:'CQ', reward:500,
+    disposition:'"Kid, I told you. SEPARATE. You kill \'em SEPARATE. The merge thing is NOT a mechanic I enjoy." — Jimmy Two-Tails' },
+  quest_cat_04: { id:'quest_cat_04', type:'side', title:'Jimmy: When the Tornado Comes',
+    desc:"Two Honchos merged. A Taz Devil — Furball Tornado — is loose in the Cat Quarter. Take it down.",
+    hint:'Defeat the Taz Devil at the Cat Quarter.',
+    activateNode:'CQ', completeItems:[], completeFn:() => !!S_story.defeatedBattles['CQ_TAZ'],
+    waypointNode:'CQ', reward:750,
+    disposition:'"Oh you think you TOUGH now? You killed ONE Taz? ONE? There\'s THREE more building up past the fish market right now and when they merge — WHEN THEY MERGE, buddy — that ain\'t a Taz no more. That\'s a KING." — Tommy No-Ears DeVito' },
+  quest_cat_05: { id:'quest_cat_05', type:'side', title:"Sandy: Fat Cats Don't Tip",
+    desc:"The Fat Merchant Cats are using Corrupted Cats as enforcers. Sandy wants Don Fluffissimo gone.",
+    hint:'Kill 4 Fat Merchant Cats and defeat Don Fluffissimo.',
+    activateNode:'CQ', completeItems:[], completeFn:() => {
+      const k = S_story.catKills || {};
+      return (k.fat_merchant_cat || 0) >= 4 && !!S_story.defeatedBattles['CQ_BOSS'];
+    },
+    waypointNode:'CQ', reward:900,
+    disposition:'"The merchants have been using Corrupted Cats as enforcers. Void-touched kitties doing dirty work for coin. I don\'t like it in my neighborhood." — Sandy Scratchpad Mewlino' },
+  quest_cat_06: { id:'quest_cat_06', type:'side', title:'Tommy: The Cat-King Cometh',
+    desc:"Three Taz Devils merged at the fish market. The Cat-King has awoken. You\'re the hero. You go.",
+    hint:'Defeat The Cat-King at the Cat Quarter.',
+    activateNode:'CQ', completeItems:[], completeFn:() => !!S_story.catKingDefeated,
+    waypointNode:'CQ', reward:1500,
+    disposition:'"Listen. I want you to know something. You did good. Real good. You\'re like... honorary Ally Cat now. Don\'t tell nobody. It ain\'t a thing we advertise." — Jimmy Two-Tails' },
+  quest_cat_void: { id:'quest_cat_void', type:'side', title:'Sandy: Void Strays',
+    desc:"Strays near the DF node have gone wrong. Wrong eyes, wrong fur. Sandy doesn\'t like it in her neighborhood.",
+    hint:'Kill 5 Corrupted Cats in the Cat Quarter.',
+    activateNode:'CQ', completeItems:[], completeFn:() => (S_story.catKills || {}).corrupted_cat >= 5,
+    waypointNode:'CQ', reward:400,
+    disposition:'"Something\'s wrong with the strays near the DF node. They\'re not just feral — they\'re WRONG. Wrong eyes. Wrong fur. Not touching anything from that block." — Sandy Scratchpad Mewlino' },
   // ── DeFi Land — three useless NPCs who do nothing ──
   DF: { name:'Grimshaw',          quote:'"...static...KD9QRX, this is KD9QRX, calling general...static...anyone on frequency...static...copy that nobody." His receiver has been broken for eleven years. He is aware. He does not consider this relevant to the broadcast.' },
   HM: { name:'Bertha No-Bank',    quote:'"This is frequency 14.225. Nothing is on 14.225. I have checked every morning since the third moon of the fourth year. Nothing was on it then. Nothing is on it now. I update the log regardless." She returns to the notebook. Volume forty-two begins tomorrow.' },
@@ -7906,6 +8101,7 @@ const _S_DEFAULTS = () => ({
   brynnKeeperStoryTold: false, brynnLightChoiceMade: false, brynnLightKept: false,
   bruhnsCoSceneDelivered: false,
   yaelNamedReportDelivered: false,
+  catKills: {}, catKingDefeated: false,
 });
 
 /* ── Layer 48: Luck — Seventh Stat ── */
@@ -9429,6 +9625,26 @@ function _storyBattleVictory() {
   // Layer 41: Void Below cleared
   if (pb && pb.nodeCode === 'CY_VOID') {
     storyMsg('🔴 The Void Corruption node is cleared. The undercity stabilises.');
+  }
+  // Layer 44: Ally Cat Arc kill tracking
+  if (S.opp && S.opp.key) {
+    const _catKeys = ['stray_alley_cat','fluffy_cat','beefy_tom','fat_merchant_cat',
+                      'honcho_cat_m','honcho_cat_f','corrupted_cat','taz_devil'];
+    if (_catKeys.includes(S.opp.key)) {
+      if (!S_story.catKills) S_story.catKills = {};
+      S_story.catKills[S.opp.key] = (S_story.catKills[S.opp.key] || 0) + 1;
+    }
+  }
+  // Layer 44: Cat Quarter special boss victories
+  if (pb && pb.nodeCode === 'CQ_TAZ') {
+    storyMsg('🌀 The Taz Devil collapses into an ordinary pile of fur.\n\nTommy No-Ears DeVito materialises from a doorway: "Oh you think you TOUGH now? You killed ONE Taz? ONE? There\'s THREE more building up past the fish market right now and when they merge — WHEN THEY MERGE, buddy — that ain\'t a Taz no more. That\'s a KING."');
+  }
+  if (pb && pb.nodeCode === 'CQ_BOSS') {
+    storyMsg('💍 Don Fluffissimo and his bodyguards scatter into the alleys.\n\nSandy Mewlino appears: "The merchants are run out. Now about those Corrupted Cats near the DF node — they were on the merchant payroll."');
+  }
+  if (pb && pb.nodeCode === 'CQ_KING') {
+    S_story.catKingDefeated = true;
+    storyMsg('👑 The Cat-King is defeated. Three city blocks of flying fur and claws — done.\n\nKenickie Clawnickie Mancuso: "Yo. YO. You actually killed the Cat-King. Nobody\'s done that. The community\'s gonna be talking about this for like... three whole days. Then they\'ll forget. They\'re cats."\n\nJimmy Two-Tails: "Listen. I want you to know something. You did good. Real good. You\'re like... honorary Ally Cat now. Don\'t tell nobody. It ain\'t a thing we advertise."');
   }
   // Layer 41: drunk fight victory
   if (S_story._drunkFight) {
@@ -12180,6 +12396,14 @@ function storyCheckQuests(node) {
       if (id === 'quest_pachelbel_shipment') { S_story.gold += 60; S_story.inventory = (S_story.inventory||[]).filter(i => i.name !== 'Sealed Scholar Box'); _setNpcFavor('pachelbel',1); msgs.push('💰 +60gp from Pachelbel. Friendly!'); }
       if (id === 'quest_pit_training') { _setNpcFavor('crov',1); S_story.inventory.push({name:'Pit Legend Token',icon:'🏆',type:'token',sell:30}); msgs.push('🏆 Pit Legend Token earned. Weckmann is impressed.'); }
       if (id === 'quest_void_below') { _setNpcFavor('auros',2); S_story.inventory.push({name:"Scholar's Note",icon:'📋',type:'key',sell:0}); S_story.inventory.push({name:'EMP Grenade',icon:'💥',type:'flashbang',sell:50,uses:1}); msgs.push("📋 Scholar's Note + EMP Grenade from Auros. Dear Friend!"); S_story.bruhnsDepthsReported = true; _checkDearFriendUpgrade('auros'); }
+      // Layer 44: Ally Cat Arc quest completion rewards
+      if (id === 'quest_cat_01') { S_story.gold += 200; msgs.push('💰 +200gp from Jimmy. The Cat Quarter breathes easier.'); }
+      if (id === 'quest_cat_02') { S_story.gold += 350; msgs.push('💰 +350gp from Jimmy. Sandy Scratchpad Mewlino has joined the Cat Quarter.'); }
+      if (id === 'quest_cat_03') { S_story.gold += 500; S_story.inventory.push({name:'Rhinestone Collar',icon:'💎',type:'trophy',sell:0}); msgs.push('💰 +500gp + Rhinestone Collar trophy.'); }
+      if (id === 'quest_cat_04') { S_story.gold += 750; S_story.inventory.push({name:'Furball Crown',icon:'🌀',type:'trophy',sell:0}); msgs.push('💰 +750gp + Furball Crown trophy. Tommy No-Ears has seen enough.'); }
+      if (id === 'quest_cat_05') { S_story.gold += 900; S_story.inventory.push({name:"The Don's Signet Ring",icon:'💍',type:'trophy',sell:35}); msgs.push("💰 +900gp + The Don's Signet Ring. Kenickie's Black Market is open."); }
+      if (id === 'quest_cat_06') { S_story.gold += 1500; S_story.inventory.push({name:"Cat-King's Claw Fragment",icon:'👑',type:'trophy',sell:50}); msgs.push("💰 +1500gp + Cat-King's Claw Fragment. You are honorary Ally Cat."); }
+      if (id === 'quest_cat_void') { S_story.gold += 400; msgs.push('💰 +400gp from Sandy. The Void Strays are cleared.'); }
     }
   });
   return msgs;
@@ -13257,11 +13481,84 @@ function storyRender(node, prefix) {
       setTimeout(() => storyMsg(coSceneText), 600);
     }
   }
+  // ── Layer 44: §IX Ally Cat Arc — CQ node render ──
+  if (node.code === 'CQ') {
+    const qs = S_story.quests || {};
+    // Auto-activate Q-CAT-01 on first CQ visit
+    if (!qs['quest_cat_01']) {
+      S_story.quests['quest_cat_01'] = 'active';
+      setTimeout(() => storyMsg('Jimmy Two-Tails adjusts the brim of his tiny fedora.\n\n"Listen. LISTEN. I\'m gonna tell you somethin\' and I\'m only gonna say it once."\n\nHe leans forward.\n\n"You want to help this neighborhood? Clear out the riff-raff. Five strays. Three fluffies. They\'re harmless but they set a tone and the tone ain\'t good. Capisce? You do this, we talk about the bigger problems. Deal?"\n\n📋 Quest: The New Scratch — accepted.'), 500);
+    }
+    // Q-CAT-02 unlock after Q-CAT-01 complete
+    if (qs['quest_cat_01'] === 'complete' && !qs['quest_cat_02']) {
+      S_story.quests['quest_cat_02'] = 'active';
+      setTimeout(() => storyMsg('Jimmy: "Good work. Now. Beefy Toms — three of \'em — been running muscle for an outside operation. Take \'em down. Keep the claws. Three claws. I wanna see the proof."\n\n📋 Quest: Beefy Business — accepted.'), 600);
+    }
+    // Q-CAT-03 and Q-CAT-05/VOID unlock after Q-CAT-02 complete
+    if (qs['quest_cat_02'] === 'complete' && !qs['quest_cat_03']) {
+      S_story.quests['quest_cat_03'] = 'active';
+      if (!qs['quest_cat_05']) S_story.quests['quest_cat_05'] = 'active';
+      if (!qs['quest_cat_void']) S_story.quests['quest_cat_void'] = 'active';
+      setTimeout(() => storyMsg('Sandy "Scratchpad" Mewlino is here now. Tortoiseshell fur, eyes like she\'s already three moves ahead of you.\n\n"Sweetheart. You think this is about territory? This is about RESPECT. There\'s a Capo and a Boss Lady circling each other two blocks north. You kill \'em SEPARATE. Let \'em merge — and I promise you, a Taz Devil is nobody\'s problem they wanted.\n\nAlso — Don Fluffissimo. He\'s been sending his Merchant Cats into MY neighborhood. With Corrupted Cats for backup. Void-touched. Disgusting. He needs to be handled."\n\n📋 Quest: Honcho Problems — accepted.\n📋 Quest: Fat Cats Don\'t Tip — accepted.\n📋 Quest: Void Strays — accepted.'), 700);
+    }
+    // Q-CAT-04 unlock after Q-CAT-03 complete
+    if (qs['quest_cat_03'] === 'complete' && !qs['quest_cat_04']) {
+      S_story.quests['quest_cat_04'] = 'active';
+    }
+    // Q-CAT-06 unlock after BOTH Q-CAT-04 and Q-CAT-05 complete
+    if (qs['quest_cat_04'] === 'complete' && qs['quest_cat_05'] === 'complete' && !qs['quest_cat_06']) {
+      S_story.quests['quest_cat_06'] = 'active';
+      setTimeout(() => storyMsg('Tommy No-Ears DeVito is pacing at the alley entrance, fur standing on end.\n\n"Three Taz Devils merged at the fish market. THREE. It\'s a KING. I\'m not going anywhere near that. You\'re the hero. You go."'), 600);
+    }
+    // Boss battle buttons
+    const cqDiv = document.createElement('div');
+    cqDiv.id = 'cq-boss-buttons';
+    cqDiv.style.cssText = 'margin-top:8px;display:flex;flex-direction:column;gap:6px;';
+    // Taz Devil button — visible when Q-CAT-04 active and not yet defeated
+    if (qs['quest_cat_04'] === 'active' && !S_story.defeatedBattles['CQ_TAZ']) {
+      const tazBtn = document.createElement('button');
+      tazBtn.className = 'inv-use-btn';
+      tazBtn.textContent = '🌀 Confront the Taz Devil — Furball Tornado';
+      tazBtn.addEventListener('click', () => {
+        storyMsg('The alley fills with a low rumble. Two Honchos — male and female — spiral into each other like a drain.\n\nThen: fur. Teeth. Wind. TORNADO.\n\nJimmy, from somewhere behind you: "I TOLD you this was a SITUATION."');
+        setTimeout(() => storyPreBattle({ ...node, code:'CQ_TAZ', battle:{label:'Taz Devil — Furball Tornado', key:'taz_devil', count:1} }), 400);
+      });
+      cqDiv.appendChild(tazBtn);
+    }
+    // Don Fluffissimo button — visible when Q-CAT-05 active, 4 fat merchant cats killed, not yet defeated
+    if (qs['quest_cat_05'] === 'active' && (S_story.catKills || {}).fat_merchant_cat >= 4
+        && !S_story.defeatedBattles['CQ_BOSS']) {
+      const donBtn = document.createElement('button');
+      donBtn.className = 'inv-use-btn';
+      donBtn.textContent = '💍 Confront Don Fluffissimo';
+      donBtn.addEventListener('click', () => {
+        storyMsg('The Don is waiting in a back alley, two Fat Merchant Cats flanking him like pillars.\n\nHe speaks very slowly.\n\n"You come to MY quarter. In MY district. Without bringing fish. Without a proper introduction. That\'s... unfortunate."');
+        setTimeout(() => storyPreBattle({ ...node, code:'CQ_BOSS', battle:{label:"Don Fluffissimo + Bodyguards", key:'fat_cat_boss', count:1} }), 400);
+      });
+      cqDiv.appendChild(donBtn);
+    }
+    // Cat-King button — visible when Q-CAT-06 active and not yet defeated
+    if (qs['quest_cat_06'] === 'active' && !S_story.catKingDefeated) {
+      const kingBtn = document.createElement('button');
+      kingBtn.className = 'inv-use-btn';
+      kingBtn.textContent = '👑 Face The Cat-King';
+      kingBtn.addEventListener('click', () => {
+        storyMsg('The sky above the fish market goes dark.\n\nThree Taz Devils spiral together — a sound like every cat in the city hissing at once — and then it emerges. A crown of claw. Eyes like lanterns. The Cat-King.\n\nIt is very large. It is not happy. It is very definitely not a problem you can ignore.');
+        setTimeout(() => storyPreBattle({ ...node, code:'CQ_KING', battle:{label:'The Cat-King', key:'cat_king', count:1} }), 400);
+      });
+      cqDiv.appendChild(kingBtn);
+    }
+    if (cqDiv.children.length > 0) {
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', cqDiv);
+    }
+  }
   // ── Layer 41: Birka NPC cards ──
   {
     const npcRow = document.getElementById('story-npc-cards-row');
     if (npcRow) npcRow.remove();
-    const birkaNpcs = { CI:['yael'], IN:['brynn'], TV:['quill'], BA:['pachelbel'], CY:['crov','auros'] };
+    const _cqNpcs = ['jimmy'];
+    if ((S_story.quests || {})['quest_cat_02'] === 'complete') _cqNpcs.push('sandy_cat');
+    const birkaNpcs = { CI:['yael'], IN:['brynn'], TV:['quill'], BA:['pachelbel'], CY:['crov','auros'], CQ:_cqNpcs };
     const keys = birkaNpcs[node.code];
     if (keys) {
       const npcRowDiv = document.createElement('div');

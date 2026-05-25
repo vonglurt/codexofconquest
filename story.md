@@ -276,68 +276,79 @@ The cramped alleys north of Birka market. Refuse heaps attract every pest the ci
 **Boyscout Opportunity:** Short-resting here for the first time earns a 🏕 Necklace Token. Sleep south (at City Inn) after for Boyscout Night double rolls.
 
 **Exit Condition:** N/A — stalk-only node. Return south to CI when done.
-**Next Node →** south to City Streets (CI); east to CQ (Cat Quarter — ⚠️ PLANNED Layer 46)
+**Next Node →** south to City Streets (CI); east to CQ (Cat Quarter — Layer 44)
 
 ---
 
-### NODE 77 — cat_quarter (The Cat Quarter) ⚠️ PLANNED — Layer 46
+### NODE 77 — cat_quarter (The Cat Quarter) ✅ Layer 44
 
-> *Not yet in HTML. Accessible east of SL. Full design in `plan.md` Section IX. All dialogue below is beat-line only — no verbatim implementation text until Layer 46 build begins.*
+> *Implemented 2026-05-25. Accessible east of SL (SL.E → CQ). Terrain: `cat_quarter`. NPC: Jimmy Two-Tails. Node num: 77. Coords: r:4, c:17.*
 
-**First visit:** A cardboard sign reads RAT PROBLEM. NOT RATS. CATS. WORSE. Jimmy Two-Tails (orange tabby fixer) auto-dialogues from a milk crate. He has a job. He needs someone who isn't a cat.
+**First visit:** Jimmy Two-Tails (orange tabby, tiny fedora) auto-dialogues from an overturned crate and auto-activates Q-CAT-01. Sandy Scratchpad Mewlino appears as NPC card after Q-CAT-02 complete.
 
----
+**Default battle:** Beefy Tom × 3. Boss battles (Taz Devil, Don Fluffissimo, Cat-King) triggered via storyRender buttons gated by quest state.
 
-#### Q-CAT-01 — "New in the Neighborhood" ⚠️ PLANNED
-- **Trigger:** First visit to CQ; Jimmy Two-Tails auto-dialogue
-- **Beat:** Clear 5× Stray Alley Cats AND 3× Fluffy Cats from the CQ terrain
-- **Dialogue register:** New York Goodfellas — short, clipped, very certain about everything
-- **Return beat:** Jimmy nods. "You're alright." Sandy Scratchpad Mewlino unlocks.
-- **Reward:** 150gp + Sandy unlocks at CQ
+**NPCs:** Jimmy Two-Tails (NPC_DIALOGUES key: `jimmy`), Sandy "Scratchpad" Mewlino (key: `sandy_cat`), Don Fluffissimo (key: `don_fluffissimo`, antagonist only).
 
 ---
 
-#### Q-CAT-02 — "The Fluffy Problem" ⚠️ PLANNED
-- **Trigger:** Talk to Sandy Scratchpad Mewlino after Q-CAT-01
-- **Beat:** Sandy's faction is losing ground to the Beefy Cats moving in from the east end. Defeat 4× Beefy Cats.
-- **Dialogue register:** Sandy is Grease — big energy, fast talk, loyal to her girls
-- **Return beat:** "Nobody pushes the Fluffies around. Nobody." Honcho territory revealed.
-- **Reward:** 250gp
+#### Q-CAT-01 — "The New Scratch" ✅ Layer 44
+- **ID:** `quest_cat_01` | **Reward:** 200gp
+- **Trigger:** First CQ visit — Jimmy auto-dialogue fires, quest activated manually in storyRender
+- **Completion:** Kill 5× stray_alley_cat AND 3× fluffy_cat (tracked via `S_story.catKills`)
+- **Dialogue:** *"You done good, kid. Real professional. The neighborhood's already calmer. Relatively. For cats."*
 
 ---
 
-#### Q-CAT-03 — "Respect the Honcho" ⚠️ PLANNED
-- **Trigger:** Auto-spawns after Q-CAT-02; Jimmy explains the hierarchy
-- **Beat:** A Honcho is blocking the back corridor. You can fight it or negotiate (CHA DC 14). Both outcomes advance the quest.
-- **Dialogue register:** The Honcho speaks in short declarative sentences. "This is my corner." "It has always been my corner." "It will always be my corner." "Okay."
-- **Return beat:** The Don's territory opens. Kenickie's Black Market unlocks at CQ.
-- **Reward:** 350gp + Kenickie's Black Market vendor chip
+#### Q-CAT-02 — "Beefy Business" ✅ Layer 44
+- **ID:** `quest_cat_02` | **Reward:** 350gp
+- **Trigger:** Q-CAT-01 complete → Jimmy activates at CQ
+- **Completion:** Kill 3× beefy_tom AND hold 3× Cracked Claw in inventory
+- **Unlock:** Sandy Scratchpad Mewlino NPC card appears at CQ
+- **Dialogue:** Sandy: *"Those guys were affiliated. You just stepped into something bigger than strays, sweetheart."*
 
 ---
 
-#### Q-CAT-04 — "Taz at the Door" ⚠️ PLANNED
-- **Trigger:** Second visit to CQ after Q-CAT-03; CQ battle slot loads `taz_devil`
-- **Beat:** A Taz Devil — two Honchos who merged and are now one very large, very fast, very offended entity — has claimed the center of the Quarter. It cannot be reasoned with. It is in the zone.
-- **Dialogue register:** The Taz Devil does not speak. Jimmy: "You know what happens when two Honchos get close enough? Yeah. That."
-- **Return beat:** The Quarter breathes again. The Cat-King appears on the horizon.
-- **Reward:** 500gp + The Don's Signet Ring (sell:35)
+#### Q-CAT-03 — "Honcho Problems" ✅ Layer 44
+- **ID:** `quest_cat_03` | **Reward:** 500gp + Rhinestone Collar trophy
+- **Trigger:** Q-CAT-02 complete → Sandy activates at CQ (simultaneous with Q-CAT-05 and Q-CAT-VOID)
+- **Completion:** Kill 1× honcho_cat_m AND 1× honcho_cat_f (tracked via `S_story.catKills`)
+- **Dialogue:** Jimmy: *"Kid, I told you. SEPARATE. You kill 'em SEPARATE. The merge thing is NOT a mechanic I enjoy."*
 
 ---
 
-#### Q-CAT-05 — "The Corrupted Cat" ⚠️ PLANNED
-- **Trigger:** Auto-appears any time after Q-CAT-02; ties to DF Void pressure lore
-- **Beat:** A cat near the DF border is acting wrong — too still, wrong eyes. Void pressure from the Unbanked Quarter is leaking. Player must investigate (visit DF) and return with a Corrupted Meme Fragment as evidence. Optional: exorcise the cat (INT DC 12) or let Jimmy handle it his way.
-- **Dialogue register:** This one is quieter. Sandy: "He was a good boy." Jimmy: "Yeah." Long pause. "Yeah."
-- **Reward:** 200gp + "Crossed Paws" lore item (sell:5)
+#### Q-CAT-04 — "When the Tornado Comes" ✅ Layer 44
+- **ID:** `quest_cat_04` | **Reward:** 750gp + Furball Crown trophy
+- **Trigger:** Q-CAT-03 complete → Taz Devil battle button appears at CQ
+- **Completion:** Defeat taz_devil via CQ_TAZ special battle (`defeatedBattles['CQ_TAZ']`)
+- **Unlock:** Tommy No-Ears DeVito dialogue; Q-CAT-06 unlocks when Q-CAT-05 also complete
+- **Dialogue:** Tommy: *"Oh you think you TOUGH now? You killed ONE Taz? There's THREE more building up..."*
 
 ---
 
-#### Q-CAT-06 — "Cat-King" ⚠️ PLANNED
-- **Trigger:** After Q-CAT-04 and Q-CAT-05 both complete; special CQ battle slot loads `cat_king`
-- **Beat:** Three Taz Devils merged. The Cat-King is here. It is enormous. It is orange. It is specifically looking at you.
-- **Dialogue register:** The Cat-King does not speak either. But Jimmy, watching from a fire escape: "Three of 'em. At once. I've never seen that before." He is writing it down.
-- **Return beat:** The Quarter is stable. Jimmy hands you something wrapped in newspaper. It is a very small crown. "From the last one," he says. "We keep it around."
-- **Reward:** 900gp + Cat-King Crown (unique, sell:50) + "Nine Lives" permanent flag (flavor; +1 to first death save per rest)
+#### Q-CAT-05 — "Fat Cats Don't Tip" ✅ Layer 44
+- **ID:** `quest_cat_05` | **Reward:** 900gp + The Don's Signet Ring (sell:35)
+- **Trigger:** Q-CAT-02 complete → Sandy activates at CQ (parallel with Q-CAT-03)
+- **Completion:** Kill 4× fat_merchant_cat AND defeat Don Fluffissimo via CQ_BOSS battle
+- **Boss button:** Appears at CQ when 4 fat merchant cats killed and Q-CAT-05 active
+- **Dialogue:** Sandy: *"The merchants have been using Corrupted Cats as enforcers. Void-touched kitties doing dirty work for coin."*
+
+---
+
+#### Q-CAT-06 — "The Cat-King Cometh" ✅ Layer 44
+- **ID:** `quest_cat_06` | **Reward:** 1500gp + Cat-King's Claw Fragment (sell:50) + `catKingDefeated:true`
+- **Trigger:** BOTH Q-CAT-04 AND Q-CAT-05 complete → Cat-King battle button appears at CQ
+- **Completion:** Defeat The Cat-King via CQ_KING special battle (`catKingDefeated` flag)
+- **Dialogue:** Jimmy: *"Listen. I want you to know something. You did good. Real good. You're like... honorary Ally Cat now. Don't tell nobody. It ain't a thing we advertise."*
+
+---
+
+#### Q-CAT-VOID — "Void Strays" ✅ Layer 44
+- **ID:** `quest_cat_void` | **Reward:** 400gp
+- **Trigger:** Q-CAT-02 complete → Sandy activates at CQ (parallel with Q-CAT-03 and Q-CAT-05)
+- **Completion:** Kill 5× corrupted_cat (tracked via `S_story.catKills`)
+- **Lore tie:** Void pressure from DF (Unbanked Quarter) leaking into Cat Quarter
+- **Dialogue:** Sandy: *"Something's wrong with the strays near the DF node. They're not just feral — they're WRONG."*
 
 ---
 

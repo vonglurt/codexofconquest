@@ -1203,9 +1203,9 @@ The six markdown documents that must be two-way synced against `roll2hit-v3.html
 
 ---
 
-## IX. The Ally Cat Arc — "Nine Lives, Capisce?" (Layer 44 Planned Feature)
+## IX. The Ally Cat Arc — "Nine Lives, Capisce?" (Layer 44)
 
-> **Design status:** PLANNED. Not yet in `roll2hit-v3.html`. Full insertion spec below.  
+> **Design status:** ✅ Implemented 2026-05-25. HTML line count: 16,024.  
 > **Level range:** 3–5 (beginner arc; accessible from early Act I via SL node)  
 > **Tone:** Goodfellas mob + Grease Broadway + New York street dialect. Cats talk tough. Cats have history. Cats have feelings about territory.
 
