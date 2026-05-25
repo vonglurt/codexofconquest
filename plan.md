@@ -238,6 +238,7 @@ The commit message should name the lab report and summarize what it covers in on
 | 21 | §XXX | The Entry 41 Echo: Brynn and Sweelinck After the Last Journal | 65 | No — state flags pre-exist; document inline; patch _buildSweelinckNamingSequence() | ⚠️ PLANNED |
 | 22 | §XXXI | The Joint Witness and the Map Caption (S54 + S55) | 66a+66b | No — state flags pre-exist; document inline; patch _renderFinalMap() | ⚠️ PLANNED |
 | 23 | §XXXII | Two Intelligence Feeds: The Varga Watch and the Auros Theory (S8 + S29) | 67a+67b | No — all flags pre-exist; document inline | ⚠️ PLANNED |
+| 24 | §XXXIII | The Archive and the Tools: Blue Shutters (S7) + Raison (S46) | 68a+68b | No — 1 new flag (surveyDeliveredToAuros); document inline; §XVI cross-ref (archive_letter) | ⚠️ PLANNED |
 
 **Rule:** Implement in layer order when possible. Each implementation = code + doc sync + git commit. See plan.md §I Lab Report Policy for commit rules.
 
@@ -2014,7 +2015,8 @@ creative_literacy_token: { name:'Creative Literacy Token', icon:'📄', sell:27 
 | **Pit Championship (§XXIX)** | `PIT_CHAMPION_OGUNDIMU` const / `_showPitChampionOffer()` / `_startPitChampionBattle()` / win/loss callbacks / Weckmann log entry / dearFriend pool patch / §XXV farewell branch | `plan.md §XXIX` | ⚠️ PLANNED stubs pending: `story.md` championship note; `world.md` Ogundimu entry | ⚠️ PLANNED |
 | **Entry 41 Echo (§XXX)** | `S49_BRYNN_SCENE` / `S49_SWEELINCK_SCENE` consts / s49 flag trigger logic / Covenant Keeper opening patch in `_buildSweelinckNamingSequence()` | `plan.md §XXX` | ✅ PLANNED stubs: `story.md` scene summaries; `world.md` S49 expanded | ⚠️ PLANNED |
 | **Joint Witness + Map Caption (§XXXI)** | `S54_JOINT_MOMENT` const / Yael+Brynn CI scene (act≥7, dual Friendly gate) / S55 caption in `_renderFinalMap()` (base + Sweelinck variant) | `plan.md §XXXI` | ✅ PLANNED stubs: `story.md` scene summaries; `world.md` S54/S55 entries; `maps.md` caption spec | ⚠️ PLANNED |
-| **Two Intelligence Feeds (§XXXII)** | S8: three-observation Varga BA arc / pigeon direction / Pachelbel tell (+15gp) / S29: Auros tactical theory at CY (frobergerLastEntryRead + Dear Friend) / `S29_AUROS_THEORY` const | `plan.md §XXXII` | ⚠️ PLANNED stubs pending: `story.md` scene notes; `world.md` S8/S29 expansion | ⚠️ PLANNED |
+| **Two Intelligence Feeds (§XXXII)** | S8: three-observation Varga BA arc / pigeon direction / Pachelbel tell (+15gp) / S29: Auros tactical theory at CY (frobergerLastEntryRead + Dear Friend) / `S29_AUROS_THEORY` const | `plan.md §XXXII` | ✅ PLANNED stubs: `story.md` scene notes; `world.md` S8/S29 expanded | ⚠️ PLANNED |
+| **Archive and Tools (§XXXIII)** | S7: CI Blue Shutters three-state / Entry 33 footnote / `archive_letter` item (§XVI cross-cut) / Undercity Survey → Auros +40gp / S46: `raisons_tools` +30gp / `PACHELBEL_LEDGER` entries 2+3 (Raison arrest, Vonn hint) / 1 new flag `surveyDeliveredToAuros` | `plan.md §XXXIII` | ⚠️ PLANNED stubs pending: `story.md` archive+tools notes; `world.md` S7/S46 expansion | ⚠️ PLANNED |
 
 ---
 
@@ -6848,3 +6850,223 @@ No lab report. No new nodes, monsters, items, or quests.
 ---
 
 *§XXXII status: ⚠️ PLANNED — Varga Watch (S8) and Auros Theory (S29) designed; all four flags pre-exist in _S_DEFAULTS(); S29_AUROS_THEORY const specified with full speech text; three-observation BA ambient escalation table written (Varga at watches 1/2/3); Watch 3 pigeon launch event text; Pachelbel tell response written (+15gp, "was it the Froberger shelf?"); CY trigger for s29 (frobergerLastEntryRead + Dear Friend); six-system cross-reference table assembled; zero new state flags; no new nodes/monsters/items/quests; no lab report — document inline.*
+
+---
+
+## Section XXXIII — The Archive and the Tools: Blue Shutters (S7) and Raison (S46) (Layers 68a + 68b, ⚠️ PLANNED)
+
+> **Design status:** PLANNED. State flags `archiveVisited`, `archiveLetterObtained`, `archiveUndercitySurveyTaken`, and `raisonToolsUsed` already exist in `_S_DEFAULTS()` — this section provides the full designs.  
+> **Layers 68a + 68b** — two S-suggestion systems; one existing item cross-cut into §XVI; no new nodes or monsters; no lab report; document inline.
+
+---
+
+### XXXIII-A. Concept: Knowledge That Was Hidden and Knowledge That Was Sold
+
+Both systems turn on the same idea: there is more in the world than what is openly visible, and accessing it costs something specific.
+
+The Blue Shutters Archive (S7) costs a Yael letter — the player must have earned Yael's Friendly regard. What they find inside is not secret in itself, but it is more complete than what circulates freely: Entry 33 with archival annotation, an Undercity Survey that Auros needs, and the archive letter that §XVI will accept as proof of access to restricted-class documents.
+
+Raison's Tools (S46) costs 50gp and Pachelbel's trust (Dear Friend). What the tools carry is not a mechanical enhancement but a record — of a person, of an arrest, of a family separated. Using them gives the player a modest gold return that is not compensation for what was lost. Pachelbel knows this. The tools are sold anyway because the right things should find the right hands.
+
+---
+
+### XXXIII-B. S7 — Blue Shutters Archive: Three-State Unlock (Layer 68a)
+
+**Location:** CI node. The archive is on the northeast corner of the crossroads — the same corner where Froberger's memorial stone sits to the northwest (§XXVIII). They have been across the courtyard from each other this entire time.
+
+**Three states:**
+
+| State | Condition | Button / Text |
+|-------|-----------|---------------|
+| Blocked | `!archiveLetterObtained` | *"Blue Shutters Archive — access requires a registered letter of introduction."* [Request a letter] |
+| Letter pending | Yael dialogue initiated but letter not yet obtained | [Yael is writing the letter] *(disabled until next CI visit)* |
+| Open | `archiveLetterObtained` | [Enter the Archive] |
+
+**[Request a letter]:** Opens a short Yael dialogue (available when `fav_yael >= 1`):
+
+```
+"The Blue Shutters? Yes, I know someone on the access
+committee. I can write you in — it'll take a day. They
+ask for a name and a purpose. I'll say you're documenting
+the walk routes."
+
+A pause.
+
+"It's not wrong."
+```
+
+Sets a `_archiveLetterPending = true` session flag (not persisted). On the next CI visit: letter is ready, `archiveLetterObtained = true`, `storyMsg()`: *Yael left a letter of introduction at the crossroads desk. The Blue Shutters Archive is now accessible.*
+
+**Inside the archive** (`archiveVisited = true` on first entry):
+
+Three things are available:
+
+1. **Entry 33 (Archival Copy):** The standard Froberger journal Entry 33 appears in the journal sidebar immediately (added to `journalEntriesRead`). The archive version includes a two-line archivist footnote beneath the entry text:
+
+   > *Filed under: Void Research / Public / Uncatalogued — per Circle directive 1309-VII.*  
+   > *Archivist note: Entry author appears unaware of the correlation. No restriction required.*
+
+   This footnote appears only in the archive version. The regular node version (at its normal node) has no footnote. Players who read Entry 33 at its normal node before entering the archive will see the footnote when they [Re-read Entry 33] inside the archive.
+
+2. **`archive_letter`** — key item. Pickable from the shelf on the same visit. `archiveLetterObtained` tracks access, but the item itself is separate in inventory. Flavor text: *"A partial shelf record. 'Researcher Category: Containment, Date: [REDACTED].' The handwriting shifts mid-page — two different archivists. The second one stopped in the middle of a sentence."* Usage: In §XVI (Weimar Scholar Gate), bringing `archive_letter` to Isolde Voss skips the Scholar Kings seal-hunting step entirely. Isolde: *"I didn't expect someone to have one of these. This is a Circle-class containment record. Where did you find this?"*
+
+3. **Undercity Survey (Partial)** — key item. `archiveUndercitySurveyTaken = true` on pickup. Flavor: *"A partial survey of the Undercity's corridor grid, annotated with pressure readings. Someone was mapping the same thing Froberger mapped, from below."* Deliverable to Auros at CY.
+
+---
+
+### XXXIII-C. S7 — The Survey Delivery (Layer 68a, continued)
+
+**Delivering to Auros at CY** (requires `archiveUndercitySurveyTaken && !S_story.surveyDeliveredToAuros`):
+
+Auros dialogue on receiving the survey:
+
+```
+She takes it from you without asking where you got it.
+
+She reads the pressure annotations. A long pause.
+
+"This was taken around Year Ten. The survey team
+documented six sectors. Four of them match the
+Void-advance indicators I flagged in Year Twelve."
+
+She folds it.
+
+"Two years. They had two years of lead time and
+this never reached the tactical desk. Someone
+decided it wasn't worth forwarding."
+
+She adds it to her notes. +40gp.
+
+"If you find the second half, bring it."
+```
+
+Reward: +40gp. Sets `S_story.surveyDeliveredToAuros = true`.
+
+**Auros survey cross-ref with S29:** If `s29LineDelivered` is also true (Auros has already decoded Entry 41), she adds one line after the standard delivery text: *"Froberger walked the same sectors in Year Thirteen. One year after this survey was buried. If he'd known it existed, he would have understood earlier."*
+
+**New state flag:** `surveyDeliveredToAuros` (boolean, default false, NOT NG+-preserved). This is the one genuinely new flag in §XXXIII — it's not in the current `_S_DEFAULTS()` and must be added.
+
+---
+
+### XXXIII-D. S46 — Raison's Tools (Layer 68b)
+
+**Item:** `raisons_tools` — sold by Pachelbel at BA, Dear Friend tier (fav_pachelbel >= 2), 50gp. The item appears in Pachelbel's special stock alongside her other Dear Friend items (§XVIII implementation notes reference `_renderPachelbelSpecials()` at S46/S51/S57).
+
+**Flavor text:** *"A field assessment kit. Worn grip, clean lens, calibration weights. The name 'R.T.' is scratched into the case. Someone used these for nine years and knew what they were doing."*
+
+**Using from inventory:** Sets `raisonToolsUsed = true`. Immediate effects:
+1. `S_story.gold += 30` — the assessment reveals hidden value in something already in the player's possession. The storyMsg: *"The lens clarifies something you've been carrying. What you thought was worth less is worth more. (+30 gold)"*
+2. Second `storyMsg()`: *"The handle has instructions written in tiny letters. Whoever taught Raison to do this was very careful about what not to forget."*
+
+The 30gp is not the point. The second message is the point.
+
+---
+
+### XXXIII-E. S46 — Pachelbel's Ledger (Layer 68b, continued)
+
+**Const:** `PACHELBEL_LEDGER` — object with entries indexed by number. Entries 2 and 3 are the ones the player can access. Entry 1 exists but is not shown (it's prior to the events the player cares about).
+
+**Access:** When `fav_pachelbel >= 2` (Dear Friend), a [Read Ledger] button appears at BA. The ledger is free to read, no purchase required.
+
+**Entry 2:**
+
+```
+Raison was taken at the north gate.
+
+Someone told the Circle about the seals he'd been
+breaking. I need it on record that it wasn't me,
+even if the only record is this.
+
+They called it unauthorized research access. His
+tools were confiscated. His eldest was brought in
+for "evaluation." The Circle uses that word like
+it means something clean.
+```
+
+**Entry 3:**
+
+```
+The younger one got out. Took the southern road
+by night — someone had left a boat. I don't know
+who arranged it. I didn't ask.
+
+The eldest is still in evaluation, which means they
+found something worth keeping. Raison would know
+what to think about that.
+
+I bought the tools back at the impound auction.
+Paid four times what they were worth, because I
+could, and because someone had to.
+
+I don't know what I'm going to do with them.
+```
+
+**Cross-references:**
+- The younger child taking "the southern road" to Tilbury connects to §XIX (Tilbury Harbor — Vonn, one of the two arc characters, may be Raison's younger child; the connection is not stated explicitly, left for players who notice the details)
+- "Evaluation" connects to §XVI Weimar Scholar Gate (Ivory Circle "researcher assets" — the same term used for the First Researcher's suppression)
+- Pachelbel knowing the pigeon route (§XXXII) becomes more legible: she learned surveillance networks while trying to track what happened to Raison after the arrest
+
+---
+
+### XXXIII-F. Implementation Spec
+
+**XXXIII-F-1.** In CI node render: check state and render the appropriate archive button (blocked / pending / open). On [Request a letter]: fire Yael dialogue; set session var `_archiveLetterPending`. On next CI visit if pending: set `archiveLetterObtained = true`; show letter-ready message.
+
+**XXXIII-F-2.** [Enter Archive] opens archive overlay with three content rows: Entry 33 (with footnote), `archive_letter` pickup button, Survey pickup button.
+
+**XXXIII-F-3.** Entry 33 archive footnote: append to standard entry text when rendering from inside the archive overlay. The footnote text is a property on `FROBERGER_JOURNAL[33]` or a separate const `ARCHIVE_FOOTNOTE_33`.
+
+**XXXIII-F-4.** In CY node render: if `archiveUndercitySurveyTaken && !S_story.surveyDeliveredToAuros && fav_auros >= 0`, show [Deliver the survey] option. On click: Auros dialogue; +40gp; `surveyDeliveredToAuros = true`. If `s29LineDelivered`: append cross-ref line.
+
+**XXXIII-F-5.** Add `raisons_tools` to Pachelbel's special stock at BA (`_renderPachelbelSpecials()`): available when `fav_pachelbel >= 2`, costs 50gp. Standard inventory item with `type:'usable'`.
+
+**XXXIII-F-6.** When player uses `raisons_tools` from inventory: set `raisonToolsUsed = true`; +30gp; two story log messages (§XXXIII-D).
+
+**XXXIII-F-7.** In BA node render: if `fav_pachelbel >= 2`, add [Read Ledger] button. Opens overlay with entries 2 and 3 from `PACHELBEL_LEDGER`.
+
+**XXXIII-F-8.** Add `surveyDeliveredToAuros` to `_S_DEFAULTS()` (boolean, default false). This is the only new field required.
+
+---
+
+### XXXIII-G. State Flags
+
+Pre-existing in `_S_DEFAULTS()` (no changes needed):
+- `S_story.archiveVisited` — boolean, default false
+- `S_story.archiveLetterObtained` — boolean, default false
+- `S_story.archiveUndercitySurveyTaken` — boolean, default false
+- `S_story.raisonToolsUsed` — boolean, default false
+
+**One new flag** (must be added to `_S_DEFAULTS()`):
+- `S_story.surveyDeliveredToAuros` — boolean, default false, NOT NG+-preserved
+
+Add `surveyDeliveredToAuros` to Section III state field table.
+
+---
+
+### XXXIII-H. Documentation Updates Required on Implementation
+
+| File | Update |
+|------|--------|
+| `story.md` | Add §F2 rows for archive overlay render, survey delivery, Pachelbel ledger, Raison's Tools use; add Pachelbel entry 2+3 text to NPC profile section |
+| `world.md` | Update S7 and S46 entries with full scene text; add Raison backstory note and Vonn connection hint; update survey delivery details |
+| `mechanics.md` | Add `raisons_tools` to Pachelbel Special Stock table; add archive_letter to key items; add undercity_survey_partial to key items |
+| `plan.md` | Mark §XXXIII complete; update §V-A queue; add `surveyDeliveredToAuros` to §III state fields; note archive_letter cross-ref to §XVI |
+| `spec-engine.md` | Add `surveyDeliveredToAuros` to `_S_DEFAULTS()` fields |
+
+No lab report. No new nodes or monsters.
+
+---
+
+### XXXIII-I. Design Notes
+
+**The archive is across the courtyard from the memorial.** This is not stated in the game. The player discovers it by looking at the CI node map. Froberger's memorial and the archive where his un-restricted entry lives are thirty meters apart. The Circle decided Entry 33 didn't need restricting. They were right, technically. And wrong in the way things are often technically right.
+
+**"I don't know what I'm going to do with them."** Pachelbel's Ledger Entry 3 ends on this line. The player reading this already knows: Pachelbel sells the tools to someone who might use them well. The ledger was written before she knew what to do with them. By the time the player reads it, the question has already been answered.
+
+**The Vonn connection.** "The younger one took the southern road by night — someone had left a boat." §XIX (Tilbury Harbor, Layer 54) features Vonn as one of the two arc characters. The connection is not named. A player who notices both the ledger and Vonn's backstory in §XIX will feel the click. A player who doesn't will still have a complete experience of both systems. The connection requires no flag, no quest step, no reward — just attention.
+
+**Auros and the buried survey.** The survey was taken in Year Ten. Auros flagged the same sectors in Year Twelve. Two years elapsed. The survey "never reached the tactical desk" — someone decided it wasn't worth forwarding. Auros has been working from incomplete data for her entire career. The player bringing her this survey is giving her something she should have had a long time ago. The +40gp is the tactical value she assigns to it. The line *"If you find the second half, bring it"* is not a quest hook — it's what someone says when they know the rest of the picture exists somewhere and they have not given up on it.
+
+---
+
+*§XXXIII status: ⚠️ PLANNED — Blue Shutters Archive (S7) three-state unlock designed; Entry 33 archive footnote specified; archive_letter item and §XVI cross-ref; Undercity Survey delivery to Auros (+40gp, s29 cross-ref line); Raison's Tools (S46) item designed (+30gp use, handle message); Pachelbel Ledger entries 2+3 written (Raison arrest, family fate, Vonn connection); one new flag (surveyDeliveredToAuros); four pre-existing flags; no new nodes/monsters; no lab report — document inline.*

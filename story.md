@@ -2580,6 +2580,22 @@ Two S-suggestion systems. All four flags (`s8VargaWatches`, `s8VargaClueUnlocked
 
 ---
 
+## ⚠️ PLANNED — The Archive and the Tools: Blue Shutters (S7) and Raison (S46) (plan.md §XXXIII, Layers 68a+68b)
+
+Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterObtained`, `archiveUndercitySurveyTaken`, `raisonToolsUsed`. One new flag: `surveyDeliveredToAuros`.
+
+**S7 — Blue Shutters Archive at CI (Layer 68a):** Three-state button: blocked (Yael letter needed) → Yael writes letter ([Request a letter] when `fav_yael >= 1`; sets letter pending; next CI visit: `archiveLetterObtained = true`) → [Enter the Archive]. Inside: (1) Entry 33 added to journal immediately with archivist footnote: *"Filed under: Void Research / Public / Uncatalogued — per Circle directive 1309-VII. Entry author appears unaware of the correlation. No restriction required."* (2) `archive_letter` item pickup (flavor: *"A partial shelf record. 'Researcher Category: Containment, Date: [REDACTED].' Two archivists. The second stopped mid-sentence."*) — in §XVI (Weimar Scholar Gate), Isolde accepts this in place of 3 Scholar Kings' Seal items. (3) Undercity Survey (Partial) pickup → `archiveUndercitySurveyTaken = true`.
+
+**Survey delivery to Auros (CY):** [Deliver survey] option when `archiveUndercitySurveyTaken && !surveyDeliveredToAuros`. Auros: *"This was taken in Year Ten. Four sectors match my Year Twelve Void-advance indicators. Someone decided it wasn't worth forwarding. +40gp, `surveyDeliveredToAuros = true`. If `s29LineDelivered`: adds *"Froberger walked the same sectors in Year Thirteen. One year after this survey was buried."*
+
+**S46 — Raison's Tools (Layer 68b):** Sold by Pachelbel at BA, Dear Friend tier (fav >= 2), 50gp. Item: `raisons_tools` (usable). Using it: `raisonToolsUsed = true`, +30gp (*"The lens clarifies something you've been carrying."*), second log line: *"The handle has instructions written in tiny letters. Whoever taught Raison to do this was very careful about what not to forget."*
+
+**Pachelbel's Ledger (BA, Dear Friend):** [Read Ledger] button when `fav_pachelbel >= 2`. Const: `PACHELBEL_LEDGER` entries 2 and 3. Entry 2: Raison's arrest at the north gate (*"They called it unauthorized research access... His eldest was brought in for 'evaluation.'"*). Entry 3: younger child escaped south by night (*"Someone had left a boat. I don't know who."*) → Vonn in §XIX (Tilbury, unnamed connection). Pachelbel bought the tools back at impound: *"I don't know what I'm going to do with them."*
+
+**F2 reference:** Add archive overlay render, survey delivery at CY, Pachelbel ledger button, Raison's Tools use-handler on implementation.
+
+---
+
 ## ⚠️ PLANNED — Town Crier: Inn Rest World-News Lines (plan.md §XXVII, Layer 62)
 
 When the player chooses to rest at an inn (`storyConfirmSleep()`), after the standard rest resolution a Town Crier ambient line fires — a single sentence of world-news flavor injected into the story log. No new node, no new NPC, no persistent flag. The line is ephemeral: displayed once, forgotten immediately.

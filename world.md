@@ -477,9 +477,13 @@ Perks persist through NG+. Character sheet shows "Weckmann's Student" badge when
 
 **City at Night** (`NIGHT_AMBIENT`) — when `gameDay % 4 >= 2`, each Birka node shows a blue-tinted night ambient paragraph. Different per node.
 
-**Blue Shutters Archive entry** (`archiveVisited`) — set true the first time the player enters the archive (CI, gated by Yael letter). Used by the archive survey quest chain.
+**Blue Shutters Archive** (S7, `archiveVisited` / `archiveLetterObtained` / `archiveUndercitySurveyTaken`) — CI node, northeast corner. Three-state: blocked (requires Yael letter, `fav_yael >= 1`) → letter pending → open. Contents on entry: Entry 33 with archival footnote (*"Entry author appears unaware of the correlation. No restriction required."* — Circle directive 1309-VII); `archive_letter` item (partial containment record, two archivists, second stopped mid-sentence — accepted by Isolde Voss in §XVI in place of Scholar Kings' Seal items); Undercity Survey (Partial) → deliverable to Auros at CY (+40gp, `surveyDeliveredToAuros`). Survey shows Year Ten pressure data matching Auros's Year Twelve Void-advance indicators — the same sectors Froberger walked in Year Thirteen. See `plan.md §XXXIII`.
 
-**Raison's Tools** (`raisonToolsUsed`) — a key item sold at BA by Pachelbel (Dear Friend tier, 50gp). Using it from inventory sets `raisonToolsUsed = true` and provides a salvage bonus. Raison was Pachelbel's previous fence partner — the tools carry that history. Pachelbel's journal entries 2 and 3 describe what happened to Raison's family afterward.
+⚠️ PLANNED — Layer 68a. Flags already in `_S_DEFAULTS()`. One new flag: `surveyDeliveredToAuros`.
+
+**Raison's Tools** (S46, `raisonToolsUsed`) — sold by Pachelbel at BA, Dear Friend tier (fav >= 2), 50gp. Item: `raisons_tools` (usable). Using: +30gp (*"The lens clarifies something you've been carrying."*) + handle message (*"Whoever taught Raison to do this was very careful about what not to forget."*). Raison was Pachelbel's previous fence partner, arrested for unauthorized research access. Eldest taken for Ivory Circle "evaluation." Younger child escaped south by boat at night — likely Vonn in §XIX (Tilbury Harbor), connection unstated. Pachelbel bought the tools back at impound auction ("paid four times what they were worth, because I could"). `PACHELBEL_LEDGER` entries 2+3 (readable at BA, Dear Friend) tell this in full. See `plan.md §XXXIII`.
+
+⚠️ PLANNED — Layer 68b. Flag already in `_S_DEFAULTS()`.
 
 **S29 — Auros/Froberger theory** (`s29LineDelivered`) — one-time dialogue injection. Fires when the player visits Auros at CY after: (1) Froberger's last journal entry has been read AND (2) Auros is at Dear Friend (fav ≥ 2). Auros connects Froberger's final courier route to the Void advance, explains what the entry means in tactical terms. Fires once; `s29LineDelivered` prevents repeat.
 
