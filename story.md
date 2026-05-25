@@ -2552,6 +2552,18 @@ Two parallel one-time scenes triggered by `frobergerLastEntryRead === true` (set
 
 ---
 
+## ⚠️ PLANNED — The Joint Witness and the Map Caption (plan.md §XXXI, Layers 66a+66b)
+
+Two parallel S-suggestion systems. State flags `s54JointMomentDelivered` and `s55MapLineDelivered` already exist in `_S_DEFAULTS()`.
+
+**S54 — Yael and Brynn at CI (Layer 66a):** Fires on first CI visit where `actNumber >= 7` AND `fav_yael >= 1` AND `fav_brynn >= 1` AND `!s54JointMomentDelivered`. Brynn is at the crossroads on a supply run; Yael is already there. The player catches the end of a conversation — *"Still the same light?" / "Still the same light."* — a private exchange about the First Inn light that has been burning all night since Act I. Both then address the player: *"You're later than I expected." / "She means that in the good way."* Sets `s54JointMomentDelivered = true`. Const: `S54_JOINT_MOMENT`. This is the only scene in the game where two Birka Six NPCs share the frame.
+
+**S55 — The Map Caption (Layer 66b):** Fires inside `_renderFinalMap()` during the victory sequence. A single line appears centered below the warmth-tinted map grid at ~3500 ms, fading out with the grid at ~8100 ms. Base text: *"He walked every corridor. So did you. The map remembers."* Conditional variant (if `s49SweelinckDelivered`): *"He walked every corridor. So did you. Sweelinck has the record."* Echoes the Froberger Memorial inscription (§XXVIII). Sets `s55MapLineDelivered = true`. Rendered as `<div id="final-map-caption">` in the victory overlay.
+
+**F2 reference:** Add CI node trigger note for s54; add `_renderFinalMap()` patch note for s55 caption on implementation.
+
+---
+
 ## ⚠️ PLANNED — Town Crier: Inn Rest World-News Lines (plan.md §XXVII, Layer 62)
 
 When the player chooses to rest at an inn (`storyConfirmSleep()`), after the standard rest resolution a Town Crier ambient line fires — a single sentence of world-news flavor injected into the story log. No new node, no new NPC, no persistent flag. The line is ephemeral: displayed once, forgotten immediately.

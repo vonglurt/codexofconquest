@@ -481,6 +481,14 @@ Perks persist through NG+. Character sheet shows "Weckmann's Student" badge when
 
 ⚠️ PLANNED — Layer 65. Consts and trigger logic not yet in HTML; s49 flags already in `_S_DEFAULTS()`.
 
+**S54 — Joint NPC moment** (`s54JointMomentDelivered`) — Yael and Brynn at CI together, Act VII+, both Friendly+. The player catches Brynn asking Yael: *"Still the same light?"* / *"Still the same light."* — a reference to the First Inn light that has burned since Act I. Both then address the player. The only scene where two Birka Six NPCs share the frame. Const: `S54_JOINT_MOMENT`. See `plan.md §XXXI` for full design.
+
+⚠️ PLANNED — Layer 66a. Flag already in `_S_DEFAULTS()`.
+
+**S55 — Map reveal line** (`s55MapLineDelivered`) — a single caption line displayed during the 5-second `_renderFinalMap()` victory display. Base: *"He walked every corridor. So did you. The map remembers."* Conditional variant (if `s49SweelinckDelivered`): *"He walked every corridor. So did you. Sweelinck has the record."* Echoes the Froberger Memorial inscription. See `plan.md §XXXI` for full design.
+
+⚠️ PLANNED — Layer 66b. Flag already in `_S_DEFAULTS()`.
+
 ### Froberger Traces
 
 `FROBERGER_TRACES` — 6 one-time NPC memories of Froberger. Each gated by fav ≥ 2 and sufficient visit count. Delivered via `_checkFrobergerTrace(npcKey)` priority injection in `_getNPCDialogue()`.

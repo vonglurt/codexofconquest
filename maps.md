@@ -540,6 +540,15 @@ Behavior sequence:
 - Rendered into the victory sequence overlay, not the standard map panel
 - No interaction; display-only
 
+**⚠️ PLANNED — S55 Map Caption (plan.md §XXXI, Layer 66b):** A `<div id="final-map-caption">` is added to the overlay, centered below the warmth grid. Fades in at +400 ms after the grid (3500 ms total); fades out with the grid at 8100 ms. Text:
+
+| Condition | Caption |
+|-----------|---------|
+| Base (always) | *"He walked every corridor. So did you. The map remembers."* |
+| `s49SweelinckDelivered` | *"He walked every corridor. So did you. Sweelinck has the record."* |
+
+Sets `s55MapLineDelivered = true` on render. Style: `color: #bbb; font-style: italic; font-size: 0.9em`.
+
 
 ---
 *© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*

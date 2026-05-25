@@ -236,6 +236,7 @@ The commit message should name the lab report and summarize what it covers in on
 | 19 | §XXVIII | The Froberger Memorial: A Living Stone at CI | 63 | No — document inline in `story.md` + `world.md` | ⚠️ PLANNED |
 | 20 | §XXIX | The Pit Championship: Finals at Crossroads Forge | 64 | No — document inline; patch §XXV farewell beat | ⚠️ PLANNED |
 | 21 | §XXX | The Entry 41 Echo: Brynn and Sweelinck After the Last Journal | 65 | No — state flags pre-exist; document inline; patch _buildSweelinckNamingSequence() | ⚠️ PLANNED |
+| 22 | §XXXI | The Joint Witness and the Map Caption (S54 + S55) | 66a+66b | No — state flags pre-exist; document inline; patch _renderFinalMap() | ⚠️ PLANNED |
 
 **Rule:** Implement in layer order when possible. Each implementation = code + doc sync + git commit. See plan.md §I Lab Report Policy for commit rules.
 
@@ -2010,7 +2011,8 @@ creative_literacy_token: { name:'Creative Literacy Token', icon:'📄', sell:27 
 | **Town Crier (§XXVII)** | `TOWN_CRIER_LINES` const / priority-selector / inn rest rumor line / 56 act-cycling lines + critical/tension/quest/NPC tiers | `plan.md §XXVII` | ✅ PLANNED stub: `story.md` Town Crier note; no new state flags | ⚠️ PLANNED |
 | **Froberger Memorial (§XXVIII)** | `FROBERGER_MEMORIAL_TEXT` object / 4-layer plaque text / memorial book entries / [Leave Flowers] 10gp action / `storyShowFrobergerMemorial()` | `plan.md §XXVIII` | ✅ PLANNED stubs: `story.md` Memorial section; `world.md` memorial world note | ⚠️ PLANNED |
 | **Pit Championship (§XXIX)** | `PIT_CHAMPION_OGUNDIMU` const / `_showPitChampionOffer()` / `_startPitChampionBattle()` / win/loss callbacks / Weckmann log entry / dearFriend pool patch / §XXV farewell branch | `plan.md §XXIX` | ⚠️ PLANNED stubs pending: `story.md` championship note; `world.md` Ogundimu entry | ⚠️ PLANNED |
-| **Entry 41 Echo (§XXX)** | `S49_BRYNN_SCENE` / `S49_SWEELINCK_SCENE` consts / s49 flag trigger logic / Covenant Keeper opening patch in `_buildSweelinckNamingSequence()` | `plan.md §XXX` | ⚠️ PLANNED stubs pending: `story.md` scene text; `world.md` S49 update | ⚠️ PLANNED |
+| **Entry 41 Echo (§XXX)** | `S49_BRYNN_SCENE` / `S49_SWEELINCK_SCENE` consts / s49 flag trigger logic / Covenant Keeper opening patch in `_buildSweelinckNamingSequence()` | `plan.md §XXX` | ✅ PLANNED stubs: `story.md` scene summaries; `world.md` S49 expanded | ⚠️ PLANNED |
+| **Joint Witness + Map Caption (§XXXI)** | `S54_JOINT_MOMENT` const / Yael+Brynn CI scene (act≥7, dual Friendly gate) / S55 caption in `_renderFinalMap()` (base + Sweelinck variant) | `plan.md §XXXI` | ⚠️ PLANNED stubs pending: `story.md` scene text; `world.md` S54/S55 entries; `maps.md` caption spec | ⚠️ PLANNED |
 
 ---
 
@@ -6471,3 +6473,152 @@ No lab report for this section. No new nodes, monsters, items, or quests.
 ---
 
 *§XXX status: ⚠️ PLANNED — Entry 41 Echo designed; s49 state flags pre-exist in _S_DEFAULTS(); S49_BRYNN_SCENE and S49_SWEELINCK_SCENE consts specified with full text; trigger logic (frobergerLastEntryRead → next IN / SQ visit); NG+ variant (Sweelinck: "again"); Covenant Keeper opening patch in _buildSweelinckNamingSequence(); coexistence with §XXV farewell beats documented; zero new state flags; no new nodes/monsters/items/quests; no lab report — document inline.*
+
+---
+
+## Section XXXI — The Joint Witness and the Map Caption (Layers 66a + 66b, ⚠️ PLANNED)
+
+> **Design status:** PLANNED. State flags `s54JointMomentDelivered` and `s55MapLineDelivered` already exist in `_S_DEFAULTS()` — this section provides the full scene designs.  
+> **Layers 66a + 66b** — two small S-suggestion systems; no new nodes, monsters, items, or quests; no lab report; document inline.
+
+---
+
+### XXXI-A. Concept: Two Quiet Witnesses
+
+The game has 76 nodes, 6 named NPCs, 41 journal entries, 7 Codex Shards, and a 49-day countdown. Everything in it is moving. §XXXI is about the two moments where things are briefly still: the moment two NPCs share a courtyard at CI and don't need to explain anything to each other, and the moment after the victory sequence when the map hangs in the air for five seconds and one line appears beneath it.
+
+Both are S-suggestions with existing state flags. Both are short. Both are the world, briefly, looking back.
+
+---
+
+### XXXI-B. S54 — Yael and Brynn at CI: "The Same Light" (Layer 66a)
+
+**Trigger:** First CI visit where `S_story.actNumber >= 7` AND `(S_story.fav_yael || 0) >= 1` AND `(S_story.fav_brynn || 0) >= 1` AND `!S_story.s54JointMomentDelivered`.
+
+Brynn makes supply runs and check-ins. Yael is always at CI. They know each other. The §XXVII Town Crier NPC line for Brynn — *"The First Inn has been leaving a light on all night. The innkeeper says it's for late travelers. The regulars think she's waiting for someone."* — is the background of this scene. Yael knows. Brynn knows Yael knows.
+
+The scene fires as a modal before the standard CI render. Const: `S54_JOINT_MOMENT`.
+
+```
+Brynn is at the crossroads when you arrive.
+She has a delivery basket — the kind she uses
+for rounds, not for waiting.
+
+Yael is already there.
+
+They're finishing a conversation when you come
+into earshot. You catch the end of it.
+
+"Still the same light?" Brynn asks.
+
+"Still the same light," Yael says.
+
+They turn when you arrive. Brynn gives you
+the look she reserves for people she's been
+quietly worried about. Yael gives you the nod
+that means she's been watching.
+
+"You're later than I expected," Yael says.
+
+"She means that in the good way," Brynn adds.
+
+They're both right.
+```
+
+On close:
+- `S_story.s54JointMomentDelivered = true`
+- `storyMsg()`: *(Yael and Brynn. The same crossroads.)*
+- Return to standard CI node render
+
+**"Still the same light?"** The light at the First Inn (IN node) has been burning all night every night since Act I. Yael is the one watching the city — her witness network sees everything, including which lights stay on. She already knew Brynn was keeping it on. What she's checking now is whether Brynn is still doing it, which is also asking: *is the world still holding?* It is. Still the same light.
+
+**NG+:** On NG+, `s54JointMomentDelivered` clears. The scene fires again. The dialogue does not change — these are two people who have had this conversation before. The player witnesses it again knowing the outcome. The familiarity is the point.
+
+---
+
+### XXXI-C. S55 — The Map Caption (Layer 66b)
+
+**Trigger:** Fires inside `_renderFinalMap()` during the victory sequence. The caption appears during the 5-second warmth-grid display window (3100–8100 ms). Appears at ~3500 ms (400 ms after the grid fades in), fades out with the grid at ~8100 ms. Sets `s55MapLineDelivered = true` before rendering.
+
+**Base caption** (always):
+
+> *He walked every corridor. So did you. The map remembers.*
+
+**Conditional variant** — if `S_story.s49SweelinckDelivered`:
+
+> *He walked every corridor. So did you. Sweelinck has the record.*
+
+The base line treats the warmth-tinted map as its own memory — the colors are where the player has been, and the map holds that. The Sweelinck variant says the same thing in a more human way: the journal is with Sweelinck, who is at CO, who is the one naming the player. The record is in good hands.
+
+**Implementation:** A `<div id="final-map-caption">` positioned absolutely centered below the warmth grid, rendered into the same overlay as `_renderFinalMap()`. Font: small, muted (`color: #bbb; font-style: italic; font-size: 0.9em`). Fades in at 3500 ms via CSS transition; fades out with the grid.
+
+```js
+// Inside _renderFinalMap(), after grid construction:
+const caption = S_story.s49SweelinckDelivered
+  ? 'He walked every corridor. So did you. Sweelinck has the record.'
+  : 'He walked every corridor. So did you. The map remembers.';
+const captionEl = document.createElement('div');
+captionEl.id = 'final-map-caption';
+captionEl.textContent = caption;
+// Insert into overlay; apply fade timing
+S_story.s55MapLineDelivered = true;
+```
+
+**Why these words?** "He walked every corridor." — Froberger's base inscription at the CI memorial (§XXVIII): *"Walked every corridor in Birka / His notes are still right."* The map caption echoes the memorial. The player has now done what the memorial says Froberger did. The warmth tint is the visual proof: the nodes the player visited are colored. Empty nodes are dark. The player's map is the player's journey.
+
+*"The map remembers"* — the map is not neutral. The warmth tint is warmer where the player spent more time (via the minimap color logic). The final map is a portrait of how the player moved through the world.
+
+---
+
+### XXXI-D. Implementation Spec
+
+**XXXI-D-1.** Add `S54_JOINT_MOMENT` const (string or rendered HTML block, scene text §XXXI-B).
+
+**XXXI-D-2.** In CI node render: check `S_story.actNumber >= 7 && (S_story.fav_yael||0) >= 1 && (S_story.fav_brynn||0) >= 1 && !S_story.s54JointMomentDelivered`. If true, show `S54_JOINT_MOMENT` modal before node content; on close set `s54JointMomentDelivered = true`.
+
+**XXXI-D-3.** In `_renderFinalMap()`: before or immediately after constructing the warmth grid, build the caption string from the conditional; create and position `<div id="final-map-caption">`; apply the fade-in at +400 ms after grid appears (3500 ms total); set `s55MapLineDelivered = true`.
+
+**XXXI-D-4.** The S55 flag `s55MapLineDelivered` needs no check gate — `_renderFinalMap()` only fires once per victory sequence. The flag's purpose is record-keeping (confirming the line was delivered; potentially used in future NG+ variant detection). Set it immediately when the caption renders.
+
+---
+
+### XXXI-E. State Flags
+
+Both flags already exist in `_S_DEFAULTS()`:
+- `S_story.s54JointMomentDelivered` — boolean, default false, NOT NG+-preserved
+- `S_story.s55MapLineDelivered` — boolean, default false, NOT NG+-preserved
+
+**No new state fields.** Section III already has both entries. This section documents what they gate.
+
+**NG+ behavior:**
+- `s54JointMomentDelivered`: clears, scene re-triggers. Dialogue unchanged.
+- `s55MapLineDelivered`: clears, caption re-renders on the new victory. Caption unchanged unless `s49SweelinckDelivered` has been re-earned (it also clears on NG+, so the player must re-trigger the SQ Sweelinck scene to get the variant).
+
+---
+
+### XXXI-F. Documentation Updates Required on Implementation
+
+| File | Update |
+|------|--------|
+| `story.md` | Add §F2 note for s54 trigger in CI node render; add S54_JOINT_MOMENT scene text to NPC dialogue section (Yael + Brynn) |
+| `world.md` | Add S54 and S55 entries to Part Four-B Key Interactions (parallel to existing S8/S29/S49 entries) |
+| `maps.md` | Add caption spec to `_renderFinalMap()` table (timing + conditional logic) |
+| `plan.md` | Mark §XXXI complete; update §V-A queue; note s54/s55 flags already in §III |
+
+No lab report. No new nodes, monsters, items, or quests.
+
+---
+
+### XXXI-G. Design Notes
+
+**Why Yael and Brynn?** They are on opposite ends of the inn-to-crossroads line that runs through CI. Brynn sustains the physical world (food, warmth, the light that stays on). Yael sustains the civic world (testimony, witness, the record that can't be suppressed). The player has been sustained by both. Seeing them in the same frame, speaking to each other about the same light, is the first time the game acknowledges that these two systems have been running in parallel all along.
+
+**"They're both right."** The scene's last line. Yael says the player is later than expected; Brynn says that's meant in the good way. Both are true simultaneously. The player is late in the sense that the run is nearly over; they are late in the good sense because they survived to be late. The scene doesn't resolve this — it just notes that both things are true and lets the player carry it.
+
+**The caption echoing the memorial.** §XXVIII (Froberger Memorial) inscribes: *"Walked every corridor in Birka."* §XXXI's map caption begins: *"He walked every corridor."* These are the same words from different directions — the memorial looks back at Froberger; the map caption looks forward from Froberger to the player. The player is the person the memorial is about to become: someone who walked every corridor, whose path will be remembered, who will not be here to read what gets written about them.
+
+**The warmth tint as earned record.** The final map shows visited nodes warmer than unvisited ones. A player who visited every node sees a uniformly warm map. A player who rushed sees cold patches. The caption says *"the map remembers"* — which is true for both. What the map remembers differs. The caption is not a grade. It is a record.
+
+---
+
+*§XXXI status: ⚠️ PLANNED — Joint Witness scene (S54) and Map Caption (S55) designed; s54/s55 flags pre-exist in _S_DEFAULTS(); S54_JOINT_MOMENT const text written (Yael + Brynn, "Still the same light?"); S55 caption text written (base + Sweelinck variant); implementation spec for CI node trigger (act ≥ 7, dual Friendly gate) and _renderFinalMap() insertion; zero new state flags; no new nodes/monsters/items/quests; no lab report — document inline.*
