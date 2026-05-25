@@ -8,8 +8,6 @@ Implement in layer order. Each = code change + doc sync + `git commit`.
 
 | Layer | Section | Feature | Est. Complexity |
 |-------|---------|---------|----------------|
-| 47 | §XII | Yugurt Lake Fishing Overhaul | ✅ Implemented |
-| 48 | §XIII | Luck: The Seventh Stat | ✅ Implemented |
 | 46 | §X | Torment Nexus Overture (HM Kern & Sable) | ✅ Implemented |
 | 53 | §XVIII | Living World: Junction Vignettes + Road Companion | ✅ Implemented |
 | 57 | §XXII | Codex Shard Origin Stories | ✅ Implemented |
@@ -275,8 +273,6 @@ The commit message should name the lab report and summarize what it covers in on
 | Priority | Section | Feature | Layer | Lab Report Needed? | Status |
 |----------|---------|---------|-------|--------------------|--------|
 | 1 | §XIV | Quest -1: The Open Door + World Creator Wizard | 49 | `lab-report-world-creator.md` (after build) | ✅ Implemented |
-| 2 | §XIII | Luck: The Seventh Stat | 48 | No — integrate into existing architecture lab report | ✅ Implemented |
-| 3 | §XII | Yugurt Lake Fishing Overhaul (bait sub-system, tournament) | 47 | `lab-report-fishing-bait-prompting.md` exists ✅ | ✅ Implemented |
 | 4 | §XV | NG+ Remembrance Layer: Entry 42 / "The Next Froberger" | 50 | Yes — postmortem on NG+ narrative design | ✅ Implemented 2026-05-25 |
 | 5 | §IX | Ally Cat Arc: "Nine Lives, Capisce?" | 44 | Yes — `lab-report-ally-cat.md` | ✅ Implemented |
 | 6 | §X | Torment Nexus Overture (HM — Kern & Sable) | 46 | No — small narrative encounter; fits in living-world lab report | ✅ Implemented |
