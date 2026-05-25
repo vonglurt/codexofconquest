@@ -2489,3 +2489,23 @@ MILEPOINT G  storyNewGamePlus() — NG+ reset
 | `storyMsg(txt)` | 11280 | Appends a message line to the node log | txt string | DOM story-log element |
 | `_yaelEscortAction()` | 8057 | One-time Yael escort narration at CI; sets yaelEscortUsed | `yaelEscortUsed`, `npcFavorability.yael` | `yaelEscortUsed = true` |
 | `storyNewGamePlus()` | 8186 | NG+ reset: preserve npcFavorability + pitPerks, reset all else | `npcFavorability`, `pitPerks`, `ngPlusRun` | full S_story reset + NG+ fields restored |
+
+---
+
+## ⚠️ PLANNED — Town Crier: Inn Rest World-News Lines (plan.md §XXVII, Layer 62)
+
+When the player chooses to rest at an inn (`storyConfirmSleep()`), after the standard rest resolution a Town Crier ambient line fires — a single sentence of world-news flavor injected into the story log. No new node, no new NPC, no persistent flag. The line is ephemeral: displayed once, forgotten immediately.
+
+**Priority selector** (`_getTownCrierLine()`): 4-tier cascade, highest wins:
+1. **Critical void** — `voidPressure ≥ 9`: 2 lines referencing the Convergence going dark / guild silence
+2. **Tension** — `voidPressure ≥ 6`: 3 lines of market fear and strange omens
+3. **Quest-flag-specific** — 7 lines keyed to active quest flags (`ebQuestActive`, `corelli_encoded_letter` in inventory, `act8FarewellBrynn` set, etc.)
+4. **Act-cycling** — 56 lines (7 per act × 8 acts), selected by `(actNumber - 1) * 7 + lineIdx` where `lineIdx` cycles via `_townCrierIdx++`
+
+**Const:** `TOWN_CRIER_LINES` — object with keys `critical`, `tension`, `questFlag`, `act` (array of 8 arrays × 7 strings). Full content in `plan.md §XXVII`.
+
+**Integration:** `storyConfirmSleep()` calls `_getTownCrierLine()` then `storyMsg('🔔 ' + line)` after the rest HP/gold update. No UI chrome beyond the log line.
+
+**Design notes:** No deduplication between rests (repetition is intentional flavor); no player pronoun; Act VIII lines carry heavier finality tone without spoiling the ending; questFlag lines fire only once (checked and skipped if already fired via a `_townCrierFired[flagKey]` map, cleared on NG+).
+
+**No new state** beyond `_townCrierIdx` (session-only integer, resets to 0 on new game) and `_townCrierFired` (session map). Extend `story.md §F2` with `_getTownCrierLine()` row on implementation.

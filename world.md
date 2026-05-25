@@ -1117,4 +1117,26 @@ Six one-time beats fire in Act VIII (actNumber === 8) when a player with Friendl
 **New items:** `brynns_loaf`, `pachelbels_sketch`, `champions_tincture`. Full dialogue text in `plan.md §XXV`.
 
 ---
+
+## ⚠️ PLANNED — Town Crier Ambient Lines: World State (plan.md §XXVII, Layer 62)
+
+The Town Crier lines in `TOWN_CRIER_LINES` draw on existing world state already tracked in `S_story` — no new persistent fields added to the world model.
+
+**World state read (existing fields only):**
+- `voidPressure` — gates critical (≥9) and tension (≥6) tiers
+- Active quest flags (`ebQuestActive`, inventory contents for `corelli_encoded_letter`, act8 farewell flags) — gates quest-flag tier
+- `actNumber` — selects the act-cycling pool (1–8)
+
+**No new nodes, NPCs, items, or quests.** The crier exists only as text in the story log.
+
+**Act flavor reference (for world consistency):**
+- Acts I–II: trade routes open, minor border disputes
+- Acts III–IV: guild rationing, increasing void rumors
+- Acts V–VI: evacuation talk, Ivory Circle silence
+- Act VII: Convergence visible at night, road closures
+- Act VIII: stillness, waiting — lines imply the world knows something is ending
+
+**Cross-references:** §XXIV (voidPressure thresholds), §XXVI (Corelli encoded_letter quest flag), §XXV (act8 farewell flags). No new cross-references to add to world.md beyond these pointers to existing planned sections.
+
+---
 *© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*

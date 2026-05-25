@@ -232,6 +232,7 @@ The commit message should name the lab report and summarize what it covers in on
 | 15 | §XXIV | The Pressure Cascade: Visible Void Tide Events | 59 | No — extend `lab-report-living-world.md` | ⚠️ PLANNED |
 | 16 | §XXV | The Homecoming: Act VIII One-Time Farewell Beats | 60 | No — document inline in `story.md` | ⚠️ PLANNED |
 | 17 | §XXVI | Corelli the Wandering Merchant: Cross-Act Vendor NPC | 61 | Yes — `lab-report-corelli-merchant.md` (wandering NPC archetype) | ⚠️ PLANNED |
+| 18 | §XXVII | Town Crier: Inn Rest World-News Ambient Lines | 62 | No — document inline | ⚠️ PLANNED |
 
 **Rule:** Implement in layer order when possible. Each implementation = code + doc sync + git commit. See plan.md §I Lab Report Policy for commit rules.
 
@@ -2003,6 +2004,7 @@ creative_literacy_token: { name:'Creative Literacy Token', icon:'📄', sell:27 
 | **Pressure Cascade (§XXIV)** | voidPressure threshold events (3/6/9) / void-touched monsters / NPC pressure lines / mercy counter | `plan.md §XXIV` | ✅ PLANNED stubs: `story.md` Void Tide Events; `world.md` Void-Touched Monsters note | ⚠️ PLANNED |
 | **Homecoming (§XXV)** | 6 one-time Act VIII farewell beats / Brynn's Loaf / Champion's Tincture / Pachelbel's Sketch / 6 new flags | `plan.md §XXV` | ✅ PLANNED stub: `story.md` Act VIII Farewell Beats | ⚠️ PLANNED |
 | **Wandering Merchant (§XXVI)** | Corelli — 5 appearances Acts II–VIII / purchase-gated fav / 5 unique items / Scholar King courier reveal / `last_cipher` cross-ref §XVI–§XVII | `plan.md §XXVI` | ✅ PLANNED stubs: `story.md` Corelli encounters; `world.md` Wandering Merchant | ⚠️ PLANNED |
+| **Town Crier (§XXVII)** | `TOWN_CRIER_LINES` const / priority-selector / inn rest rumor line / 56 act-cycling lines + critical/tension/quest/NPC tiers | `plan.md §XXVII` | ✅ PLANNED stub: `story.md` Town Crier note; no new state flags | ⚠️ PLANNED |
 
 ---
 
@@ -5443,3 +5445,402 @@ The Last Cipher's final line — *"She built it to save us. They hid it to save 
 ---
 
 *§XXVI status: ⚠️ PLANNED — Corelli the wandering merchant designed; 5 appearances across Acts II–VIII specified; purchase-gated fav system (0–3, one increment per purchase); 5 unique items (scholar_ink / false_warrant / encoded_letter / kings_seal / last_cipher); Revelation modal written in full; encoded_letter + last_cipher cross-reference interaction documented; RD roadside node specified; 4 new state flags; 10 insertion steps; lab report needed before implementation — `lab-report-corelli-merchant.md` documents new NPC archetype vs. NPC_DIALOGUES shape.*
+
+---
+
+## Section XXVII — Town Crier: Inn Rest World-News Ambient Lines (Layer 62, ⚠️ PLANNED)
+
+> **Design problem:** Resting at an inn restores HP and advances the day counter, but the world doesn't react. The player sleeps, wakes up, and the node text is unchanged. This section adds one rumor line per inn rest — overheard from a traveler, posted on a board, murmured by the innkeeper — that reflects the current state of the world. The world is talking. The player overhears it.
+
+---
+
+### XXVII-A. Design Intent
+
+The Town Crier system adds a single ambient line to the inn rest modal, after HP restoration and before the player closes the modal. The line is selected by a four-tier priority system: pressure-critical overrides everything; specific quest completions and NPC relationships surface targeted rumors; generic act-appropriate lines cycle by day when no specific condition applies.
+
+**Key constraints:**
+- No new state flags — the selector reads existing `S_story` fields and writes nothing
+- No new state — lines repeat when their condition persists (a rumor about the Hollow Hands circulates for multiple days; that's authentic)
+- No player pronoun — the crier speaks about the world, not to the player (*"someone was seen"*, never *"you were seen"*)
+- One line per rest, never two — the priority system selects exactly one
+
+**UI:** After the rest text (*"You sleep. [N] HP restored."*), a horizontal rule and one italic grey line:
+
+```
+────────────────────────────────────
+[Town rumor] "Roads south of Tilbury are quiet — unusually
+quiet, says a carter who came through yesterday."
+```
+
+---
+
+### XXVII-B. Priority Tier System
+
+```
+Tier 1 (highest): voidPressure >= 9  →  critical[] (cycle by gameDay % 2)
+Tier 2:           voidPressure >= 6  →  tension[]  (cycle by gameDay % 3)
+Tier 3:           quest flags set    →  quests{}   (first matching key wins)
+Tier 4:           NPC fav >= 2       →  npcs{}     (first matching Dear Friend wins)
+Tier 5 (default): act-appropriate   →  acts[act]  (cycle by gameDay % 7)
+```
+
+Quest flag priority order (checked top to bottom, first match wins):
+1. `warden_resolved` (§XXI persuasion complete)
+2. `void_architect_seal` in inventory (§XVII)
+3. `corelliRevelationDelivered` (§XXVI)
+4. `vs_hollow_seal_taken` (§XX)
+5. `tl_ori_account_read` (§XIX)
+6. `yaelEscortDone` (Layer 41)
+7. `quillQuestComplete`
+
+NPC Dear Friend priority order:
+1. Auros (2), Yael (1), Weckmann (3), Brynn (4), Quill (5), Pachelbel (6)
+
+---
+
+### XXVII-C. Complete Line Library
+
+#### Critical Lines (voidPressure ≥ 9) — 2 lines, cycle by `gameDay % 2`
+
+```
+[0] "The Convergence lights were visible from the north road last night.
+    Three travelers saw them. Nobody is talking about what it means."
+
+[1] "Three inns north of Weimar have closed without notice. The owners
+    packed before dawn. One left a note: 'Go south.'"
+```
+
+#### Tension Lines (voidPressure ≥ 6) — 3 lines, cycle by `gameDay % 3`
+
+```
+[0] "Roads south of Tilbury are quiet — unusually quiet, says a carter
+    who came through yesterday morning."
+
+[1] "The Hollow Hands were seen near Visby — more of them than usual,
+    and carrying something wrapped in cloth."
+
+[2] "A scholar left Weimar without settling her accounts. Her rooms were
+    found in order. Her notes were gone."
+```
+
+#### Quest-Specific Lines — one per flag, fires once per rest until condition changes
+
+| Flag | Line |
+|------|------|
+| `warden_resolved` | *"Travelers on the northern road say the MT pass is open for the first time in forty years. Nobody knows why."* |
+| `void_architect_seal` in inv | *"Someone in Weimar has been asking about the Antecedent Containment Protocols. The archivists say no such documents exist. Three of them said it simultaneously."* |
+| `corelliRevelationDelivered` | *"A traveling merchant was seen leaving the Ivory Circle's distribution archive with a document case. The Circle says no such archive exists in this city."* |
+| `vs_hollow_seal_taken` | *"The Hollow Hands' mark has disappeared from three Visby buildings overnight. The Crimson Warrant says they don't know what it means. They're lying."* |
+| `tl_ori_account_read` | *"Someone has been asking at the Tilbury docks about a ship called the Ori's Hope. The Harbor Master says she has no record of it."* |
+| `yaelEscortDone` | *"The Slums have been quieter since someone ran Varga's informants off the north end. Nobody's taking credit."* |
+| `quillQuestComplete` | *"The ledger house near the Birka bar settled two long-outstanding debts this week. The creditors didn't argue, which is the strangest part."* |
+
+#### NPC Dear Friend Lines — one per NPC at fav ≥ 2
+
+| NPC | Line |
+|-----|------|
+| Auros | *"The Commander's office has had its lights on until the fourth hour three nights running. The duty sergeant says it's paperwork. The soldiers say she doesn't pace like that over paperwork."* |
+| Yael | *"Someone has been posting unsigned bills overnight — the language matches those riot pamphlets from two years ago, but the message is different. Quieter."* |
+| Weckmann | *"The unofficial sparring at the Crypt has a new rule: first one to leave the ring clean has to buy the next round. Weckmann started it. Nobody knows why."* |
+| Brynn | *"The First Inn has been leaving a light on all night. The innkeeper says it's for late travelers. The regulars think she's waiting for someone."* |
+| Quill | *"One of the bar's regulars paid a three-year-old tab last night — unprompted, in full, with a note that just said 'settling up.' Quill didn't comment."* |
+| Pachelbel | *"New work has appeared in the shop district window — small format, unsigned, not for sale. A customer offered twice the likely price. The shopkeeper said it wasn't his to sell."* |
+
+#### Act-Cycling Lines — 7 per act, cycle by `gameDay % 7`
+
+**Act I — Birka:**
+```
+[0] "A courier from the Ivory Circle arrived in Birka this morning. Left
+    without speaking to anyone. The message, if there was one, went
+    directly to the High Council."
+
+[1] "Someone's been asking questions at the Birka Slums about a man named
+    Froberger. Nobody's saying much."
+
+[2] "The crypt bell rang at the wrong hour last night. The sexton says
+    it was wind. The sexton lives two streets away and wasn't there."
+
+[3] "Three of Varga's usual informants didn't show up to their usual
+    corners this morning. The fourth one is talking to nobody."
+
+[4] "A pawnbroker on the east side bought a journal — old, leather,
+    no name inside. Wouldn't say who sold it."
+
+[5] "There's a new fighter at the unofficial pit. Won four bouts and
+    disappeared before anyone got a name."
+
+[6] "The High Council met twice this week without posting the agenda.
+    That's happened three times in the last hundred years. Twice ended
+    badly."
+```
+
+**Act II — Tilbury:**
+```
+[0] "A Conclave ship came in last night without running lights. The
+    Harbor Master logged it as a supply run. The manifest was sealed."
+
+[1] "Two of the Tilbury merchant guilds have stopped accepting letters
+    of credit from the northern settlements. No announcement. Just stopped."
+
+[2] "A sailor off a northern vessel asked about the Codex Shards at
+    the harborside market. Paid in coin nobody recognized."
+
+[3] "The Storefront Inn has a new lock on its private dining room.
+    The innkeeper says it's for large parties. The room seats four."
+
+[4] "Dock workers found something washed up on the south strand —
+    wouldn't say what. The Conclave collected it before noon."
+
+[5] "The Tilbury customs office turned away a scholar's wagon yesterday.
+    Papers were in order. The reason given was 'classification concerns.'"
+
+[6] "Harbor Master Rennau has been working late all week. The adjutant
+    covers the mornings. Nobody is explaining the arrangement."
+```
+
+**Act III — The Coastal Road:**
+```
+[0] "A traveling physician on the road south says she's seen three
+    villages where the wells have gone brackish overnight. She's heading
+    north now."
+
+[1] "Someone stripped a Hollow Hands lookout post near the coastal path.
+    Left the equipment. Took the ledger."
+
+[2] "A tinker on the road says the milepost stones between here and Visby
+    have been moved — not stolen, just repositioned. Off by about ten yards."
+
+[3] "A patrol out of Tilbury turned back at the third waypoint. Captain
+    said the air 'didn't smell right.' Filed no further report."
+
+[4] "Road traffic from the north has been lighter for five days. Merchants
+    say they're taking the longer route. They're not saying why."
+
+[5] "A shepherd's dog won't go past the fourth ridge. It's been doing
+    this for a week. The shepherd moved his flock south."
+
+[6] "A carter heading to Visby says the bridge at the Kelwick crossing
+    is sound but the toll keeper was gone. The box was empty. The gate
+    was open."
+```
+
+**Act IV — Western Coast:**
+```
+[0] "Fisherfolk on the western coves say the catch has been off for a
+    week — wrong fish, wrong depth, wrong behavior. One crew came back
+    early and wouldn't talk."
+
+[1] "A lighthouse keeper's log found on the road — last entry three
+    days ago: 'Something is moving below the surface. Not a ship.'"
+
+[2] "The western coastal roads have no Crimson Warrant patrols this week.
+    No explanation was posted. The absence is loud."
+
+[3] "A trader from the coast says the tidewater has been wrong —
+    not unusual, she says, just wrong. Like it's running a different
+    schedule than the moon."
+
+[4] "A group of scholars heading west turned back at the clifftop track.
+    They won't say what they saw. Three of them aren't speaking to each
+    other anymore."
+
+[5] "Someone put a ward mark on the coastal waystation door last night.
+    Old script. The type the Ivory Circle stopped using forty years ago."
+
+[6] "A captain heading north says she saw lights under the water south of
+    the headland. She's been sailing thirty years. She filed no report."
+```
+
+**Act V — Visby:**
+```
+[0] "Two Crimson Warrant officers were found unconscious in the lower
+    market. No injuries. No explanation. Back on duty by nightfall."
+
+[1] "A Hollow Hands broker has been making purchases in the legal market —
+    openly, with legitimate coin. The Warrant is watching. So is everyone
+    else."
+
+[2] "The smuggler's underground has a new room that wasn't there last
+    month. The regulars say it appeared overnight. Nobody asked questions."
+
+[3] "Solvak's office has been closed three days running. His assistant
+    says he's in meetings. The debt notices have still been going out."
+
+[4] "An anonymous buyer purchased every remaining copy of a restricted
+    Ivory Circle circular at the Visby book market. Paid double asking.
+    The seller won't describe the buyer."
+
+[5] "The goblin broker in the underground bought something yesterday
+    that made her laugh for the first time in six months. She won't say
+    what it was."
+
+[6] "Three shipping contracts in the Visby ledger have been quietly
+    voided this week. All three ran through the same northern route.
+    All three are now listed as 'fulfilled.'"
+```
+
+**Act VI — Weimar:**
+```
+[0] "An Ivory Circle archive room was found unlocked this morning.
+    The duty archivist says nothing is missing. The catalog says
+    otherwise."
+
+[1] "A visiting scholar gave a lecture at the Quarter that wasn't on
+    the schedule. By the time anyone thought to stop it, it was over
+    and the scholar was gone."
+
+[2] "Three senior Circle members skipped the morning convocation without
+    notice. Their offices are locked. Their assistants say they're
+    'in consultation.'"
+
+[3] "Someone has been leaving annotated pages in the Scholar's Quarter
+    library — slipped into books, not checked out. The annotations are
+    in a hand nobody recognizes."
+
+[4] "The Ivory Circle's distribution manifest has a gap — seven weeks,
+    about six years ago. Every record from that period references
+    'Classification Level 7.' Nobody in the current archive has that
+    clearance."
+
+[5] "A retired Circle courier was seen in Weimar for the first time in
+    years. Left the same day. Didn't visit any of their former colleagues."
+
+[6] "The blacksmith quarter has a new commission — a large seal press,
+    institutional size. The specifications match the Circle's old format.
+    Nobody ordered it through the Circle."
+```
+
+**Act VII — Northern Reach:**
+```
+[0] "A goat herder near the high pass says the stones in the MT tunnel
+    glow faintly at dusk. Has been happening for forty years. She stopped
+    mentioning it because nobody believed her."
+
+[1] "A pilgrim heading south says the northern road feels shorter than
+    it used to. Not by distance — by time. She checked her clock three
+    times."
+
+[2] "The last waystation before the northern descent has a new entry in
+    its log: 'Do not enter the tunnel after dark.' Unsigned. Written in
+    the same ink as entries from four decades ago."
+
+[3] "A hunter near the High Moor says the usual game has shifted south.
+    All at once, about ten days ago. He's relocating his routes."
+
+[4] "Someone buried a cache in the northern pass — food, waterskins, a
+    folded map. No name. A note on top: 'For whoever needs it next.'"
+
+[5] "Travelers who've been through the MT tunnel in the last week all
+    report hearing the same thing: a low sound, like stone settling.
+    It stops when you stop to listen."
+
+[6] "The High Moor viewpoint is the highest place on the road. On a clear
+    day you can see Birka's lanterns from there. Three travelers this week
+    stood and looked south for a long time before continuing north."
+```
+
+**Act VIII — Return to Birka:**
+```
+[0] "Birka is quieter than when you left. People are inside earlier.
+    The market closes an hour before dark now. Nobody announced it;
+    it just started happening."
+
+[1] "The High Council has posted guards at the northern gate. Not for
+    inspection — they're watching the road. Waiting for something."
+
+[2] "A letter arrived at the First Inn for a traveler who isn't staying
+    there. The innkeeper is holding it. The seal is Ivory Circle."
+
+[3] "The unofficial sparring at the Crypt has stopped for the week.
+    Weckmann closed it without explanation. The fighters are training
+    on their own, quietly."
+
+[4] "Three of Yael's contacts have gone quiet in the last two days.
+    The ones who usually have news. When sources go quiet all at once,
+    it means they know something they can't say yet."
+
+[5] "The city feels like it's listening. Shopkeepers at their doors,
+    watching the street. Not afraid — waiting. There's a difference,
+    though it's a thin one."
+
+[6] "Someone left flowers at the old Froberger memorial stone near the
+    CI crossroads. Fresh ones. Every morning this week."
+```
+
+---
+
+### XXVII-D. Implementation Spec
+
+**XXVII-D-1.** Add `TOWN_CRIER_LINES` const with the structure above: `{ critical[], tension[], quests{}, npcs{}, acts{} }`.
+
+**XXVII-D-2.** New function `_getTownCrierLine()`:
+```js
+function _getTownCrierLine() {
+  // Tier 1
+  if (S_story.voidPressure >= 9)
+    return TOWN_CRIER_LINES.critical[S_story.gameDay % 2];
+  // Tier 2
+  if (S_story.voidPressure >= 6)
+    return TOWN_CRIER_LINES.tension[S_story.gameDay % 3];
+  // Tier 3 — quest flags in priority order
+  const qOrder = ['warden_resolved','void_architect_seal_inv','corelliRevelationDelivered',
+                  'vs_hollow_seal_taken','tl_ori_account_read','yaelEscortDone','quillQuestComplete'];
+  for (const flag of qOrder) {
+    const val = flag === 'void_architect_seal_inv'
+      ? S_story.inventory.some(i => i.key === 'void_architect_seal')
+      : S_story[flag];
+    if (val) return TOWN_CRIER_LINES.quests[flag];
+  }
+  // Tier 4 — NPC Dear Friend
+  const npcOrder = ['auros','yael','weckmann','brynn','quill','pachelbel'];
+  for (const npc of npcOrder) {
+    if ((S_story['fav_' + npc] || 0) >= 2) return TOWN_CRIER_LINES.npcs[npc];
+  }
+  // Tier 5 — act cycling fallback
+  const actLines = TOWN_CRIER_LINES.acts[S_story.actNumber] || TOWN_CRIER_LINES.acts[1];
+  return actLines[S_story.gameDay % actLines.length];
+}
+```
+
+**XXVII-D-3.** In `storyConfirmSleep()` (the inn rest function): after HP restore and day increment text is built, call `_getTownCrierLine()` and append to the rest modal's output string:
+
+```js
+const crierLine = _getTownCrierLine();
+restText += '\n\n────────────────────\n[Town rumor] "' + crierLine + '"';
+```
+
+**XXVII-D-4.** Style: the `[Town rumor]` label renders in `#666` (grey), the quote in `#aaa` italic. No separate DOM element needed — inline within the rest modal text block using a `<span class="crier-line">` wrapper.
+
+---
+
+### XXVII-E. New State Flags
+
+**None.** This system reads only existing `S_story` fields. No new persistent state required.
+
+---
+
+### XXVII-F. Documentation Updates Required on Implementation
+
+| File | Update |
+|------|--------|
+| `story.md` | Add Town Crier note (all 56+ lines documented; selection logic) |
+| `mechanics.md` | Add "Town Rumor" entry under Sleep / Inn Rest section |
+| `plan.md` | Mark §XXVII complete; update §V-A queue |
+
+No lab report needed. No new nodes, monsters, or items.
+
+---
+
+### XXVII-G. Design Notes
+
+**Why no deduplication?** A rumor circulates. If the Hollow Hands story is relevant (quest flag set), it's appropriate for the same line to appear multiple nights running — it means the event is still being talked about. When the condition clears, a different line takes over. This is more authentic than a deduplication queue and simpler to implement.
+
+**Why no player pronoun?** The crier speaks about events in the world. The player should feel like an observer, not the subject. This is also consistent with how rumors work: people don't say "someone just like you did X" — they say "someone did X." The player knows whether they're that someone.
+
+**The Act VIII lines are different in tone.** They're not gossip — they're the city going quiet. *"Birka is quieter than when you left."* They describe a world that's holding its breath. This makes the final act feel genuinely different from the first seven without any additional mechanics.
+
+**The Froberger line** — *"Someone left flowers at the old Froberger memorial stone near the CI crossroads. Fresh ones. Every morning this week."* — is the last Act VIII cycling line. It's never explained. It has no flag, no quest, no resolution. It's just there: someone in Birka remembers Froberger and brings flowers. Who? Unknown. That ambiguity is the point.
+
+---
+
+*§XXVII status: ⚠️ PLANNED — Town Crier system designed; TOWN_CRIER_LINES const specified in full; 56 act-cycling lines written (7 per act × 8 acts); 2 critical / 3 tension / 7 quest-flag / 6 NPC Dear Friend lines; 4-tier priority selector function specified; UI integration in storyConfirmSleep() described; zero new state flags; no new nodes/monsters/items; no lab report — document inline.*
