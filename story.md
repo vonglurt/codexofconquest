@@ -1537,16 +1537,13 @@ Collecting all 7 fires journal reward: *"Seven people carried the pieces. Five o
 
 ---
 
-#### ⚠️ PLANNED — Inn Dreams (plan.md §XXIII, Layer 58)
+#### ✅ Implemented — Inn Dreams (plan.md §XXIII, Layer 58)
 
-No prerequisites for base dreams. Flag-gated variants replace base when story conditions are met.
+`INN_DREAMS` const keyed by `IN` and `SQ` (SF/IS have `sleep:false` in WORLD_DB). Fires via `setTimeout` after `storyConfirmSleep()`, prefixed `💤 ‹dream›`. Cycle: `gameDay % 3`. Conditionals checked first; first matching flag wins.
 
-- **IN (Birka)** — 3 base variants (city quiet, door-on-door, counting days). Flag-gated: `frobergerLastEntryRead` → Entry 41 dream; `entry42Written` → journal heavier; `vaArchitectureKnown` → four authors.
-- **SF (Tilbury)** — 3 base variants (harbor bell, shape in water, harbor board count). Flag-gated: `tlLedgerRead` → Rennau at the board; `tlMissingShipSolved` → Ori goes over the side.
-- **IS (Visby)** — 3 base variants (caves counting, mark on wall, patient watcher). Flag-gated: `vsDebtProbed` → Mordus ledger; `vsShamanPersuaded` → counting stops; `wardensLegacyKnown` → mark recognized.
-- **SQ (Weimar)** — 3 base variants (pages turning, name at margin, organized archive). Flag-gated: `wmFirstResearcherKnown` → name readable; `vaArchitectureKnown` → Constructor's Log Entry 7; `shardNotesAllRead` → seven handwritings.
-- Fires after every rest. Cycle by `gameDay % 3`. No new state flags. No new monsters. No new items.
-- See plan.md §XXIII for full dream text and render logic.
+- **IN (Birka)** — *Birka in the small hours / A door / The city is very quiet.* Flags: `frobergerLastEntryRead` → Entry 41 dream; `entry42Written` → journal heavier; `vaArchitectureKnown` → four authors.
+- **SQ (Weimar)** — *Pages turning / Name at margin / Archive organized.* Flags: `wmFirstResearcherKnown` → name readable; `vaArchitectureKnown` → Constructor's Log Entry 7; `shardNotesAllRead` → seven handwritings.
+- No new state flags. No new monsters. No new items.
 
 ---
 

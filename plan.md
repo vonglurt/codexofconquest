@@ -13,7 +13,7 @@ Implement in layer order. Each = code change + doc sync + `git commit`.
 | 46 | §X | Torment Nexus Overture (HM Kern & Sable) | ✅ Implemented |
 | 53 | §XVIII | Living World: Junction Vignettes + Road Companion | ✅ Implemented |
 | 57 | §XXII | Codex Shard Origin Stories | ✅ Implemented |
-| 58 | §XXIII | Inn Dreams | Small |
+| 58 | §XXIII | Inn Dreams | ✅ Implemented |
 | 59 | §XXIV | Pressure Cascade: Visible Void Tide Events | Medium |
 | 60 | §XXV | The Homecoming: Act VIII Farewell Beats | Medium |
 | 62 | §XXVII | Town Crier: Inn Rest World-News Lines | Small |
@@ -284,7 +284,7 @@ The commit message should name the lab report and summarize what it covers in on
 | 11 | §XX | Visby Underground: "What Mordus Owes" | 55 | Yes — shared with §XIX in `lab-report-tilbury-visby-arcs.md` | ⚠️ PLANNED |
 | 12 | §XXI | The Void Shaman: The Antecedent's Last Warden | 56 | Yes — `lab-report-void-shaman.md` (corrupted mandate design) | ⚠️ PLANNED |
 | 13 | §XXII | Codex Shard Origin Stories | 57 | No — document inline in `story.md` | ✅ Implemented |
-| 14 | §XXIII | Inn Dreams | 58 | No — too small; document inline | ⚠️ PLANNED |
+| 14 | §XXIII | Inn Dreams | 58 | No — too small; document inline | ✅ Implemented |
 | 15 | §XXIV | The Pressure Cascade: Visible Void Tide Events | 59 | No — extend `lab-report-living-world.md` | ⚠️ PLANNED |
 | 16 | §XXV | The Homecoming: Act VIII One-Time Farewell Beats | 60 | No — document inline in `story.md` | ⚠️ PLANNED |
 | 17 | §XXVI | Corelli the Wandering Merchant: Cross-Act Vendor NPC | 61 | Yes — `lab-report-corelli-merchant.md` (wandering NPC archetype) | ⚠️ PLANNED |
@@ -2068,7 +2068,7 @@ creative_literacy_token: { name:'Creative Literacy Token', icon:'📄', sell:27 
 | **Visby Underground (§XX)** | Solvak / Yva / Q-VS-01–03 / hollow_hands_guard / Void shaman shadow | `plan.md §XX` | ✅ PLANNED stubs: `story.md` Q-VS section; `world.md` Visby sub-faction note | ⚠️ PLANNED |
 | **Void Shaman (§XXI)** | The Warden / void_shaman boss / warden_token / combat+persuasion paths / Hollow Hands resolution | `plan.md §XXI` | ✅ PLANNED stubs: `story.md` MT tunnel encounter; `world.md` Warden backstory | ⚠️ PLANNED |
 | **Codex Shard Origins (§XXII)** | 7 shard_note items / named placers / flag-gated variants / journal reward | `plan.md §XXII` | `story.md` Shard Origins section; `world.md` placer name notes | ✅ Implemented |
-| **Inn Dreams (§XXIII)** | INN_DREAMS const / 4 inns × 3 base variants / flag-gated replacements | `plan.md §XXIII` | ✅ PLANNED stubs: `story.md` Inn Dreams section; `mechanics.md` sleep note | ⚠️ PLANNED |
+| **Inn Dreams (§XXIII)** | INN_DREAMS const / 4 inns × 3 base variants / flag-gated replacements | `plan.md §XXIII` | `story.md` Inn Dreams section | ✅ Implemented |
 | **Pressure Cascade (§XXIV)** | voidPressure threshold events (3/6/9) / void-touched monsters / NPC pressure lines / mercy counter | `plan.md §XXIV` | ✅ PLANNED stubs: `story.md` Void Tide Events; `world.md` Void-Touched Monsters note | ⚠️ PLANNED |
 | **Homecoming (§XXV)** | 6 one-time Act VIII farewell beats / Brynn's Loaf / Champion's Tincture / Pachelbel's Sketch / 6 new flags | `plan.md §XXV` | ✅ PLANNED stub: `story.md` Act VIII Farewell Beats | ⚠️ PLANNED |
 | **Wandering Merchant (§XXVI)** | Corelli — 5 appearances Acts II–VIII / purchase-gated fav / 5 unique items / Scholar King courier reveal / `last_cipher` cross-ref §XVI–§XVII | `plan.md §XXVI` | ✅ PLANNED stubs: `story.md` Corelli encounters; `world.md` Wandering Merchant | ⚠️ PLANNED |
@@ -4728,7 +4728,7 @@ No lab report needed — shard origins are a retroactive depth layer, not a new 
 
 ---
 
-## Section XXIII — Inn Dreams (Layer 58, ⚠️ PLANNED)
+## Section XXIII — Inn Dreams (Layer 58, ✅ Implemented)
 
 > **The gap:** The four inns (IN, SF, IS, SQ) heal HP and advance time. When the player sleeps, the game renders a rest confirmation and continues. There is no content at that moment — no texture, no foreshadow, no reflection. This section adds a brief dream text (1–2 sentences) that fires after every rest, selected by inn and `gameDay % 3`. Three base variants per inn cycle on a 3-day rotation. Flag-gated variants replace the base when specific story conditions are met.
 
@@ -4839,7 +4839,7 @@ No lab report needed — too small; document inline.
 
 ---
 
-*§XXIII status: ⚠️ PLANNED — Inn Dreams designed; 4 inns × 3 base variants + flag-gated replacements; IN dreams cross-ref §XV (Froberger entry, Entry 42, four-author chain); SF dreams cross-ref §XIX (Harrow/Ori); IS dreams cross-ref §XX/§XXI (Mordus ledger, Warden resolution, Hollow Hands mark); SQ dreams cross-ref §XVI/§XVII/§XXII (First Researcher name, Constructor's Log, seven handwritings); no new state flags; no new monsters; no lab report needed.*
+*§XXIII status: ✅ Implemented — INN_DREAMS const keyed by IN and SQ (SF/IS have sleep:false in WORLD_DB so were omitted); 3 base variants per inn cycling on gameDay % 3; flag-gated conditional checks (IN: frobergerLastEntryRead / entry42Written / vaArchitectureKnown; SQ: wmFirstResearcherKnown / vaArchitectureKnown / shardNotesAllRead); dream text fires via setTimeout after storyConfirmSleep() render, prefixed "💤 ‹dream›"; no new state flags.*
 
 ---
 

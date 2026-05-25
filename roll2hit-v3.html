@@ -10408,6 +10408,34 @@ const FISH_GOLD_VALUES = {
   legendary:  { common:75, rare:120, enchanted:175, golden:225, legendary:300 },
 };
 
+// ── Layer 58: Inn Dreams ──
+const INN_DREAMS = {
+  IN: {
+    base: [
+      'Birka in the small hours. The fires are banked. Something is counting the days — not with alarm, just keeping track.',
+      'A door you have walked past a hundred times. Tonight you try the handle. It opens onto another door. You decide this is fine.',
+      'The city is very quiet. You are aware, in the way of dreams, that this is temporary. You sleep anyway.',
+    ],
+    conditional: [
+      { flag:'frobergerLastEntryRead', text:'Entry 41. He knew it was the last one. He wrote it anyway. You sleep in a city he documented until he couldn\'t.' },
+      { flag:'entry42Written',         text:'Entry 42 is in the journal now. Forty-two entries. You are one of them. The journal is heavier than it looks.' },
+      { flag:'vaArchitectureKnown',    text:'Four authors. You are the fourth. The journal has always had room for a fourth. You dream about that.' },
+    ],
+  },
+  SQ: {
+    base: [
+      'Pages turning by themselves. One at a time, deliberate. You have the impression that something is reading, not that the pages are moving.',
+      'A name at the margin of a book. You almost read it. The handwriting is older than the paper it is written on.',
+      'The archive is perfectly organized. The system makes sense. You understand the system completely in the dream and cannot explain it when you wake up.',
+    ],
+    conditional: [
+      { flag:'wmFirstResearcherKnown', text:'Document 3, the personnel file. You can read the name now. You read it again to make sure. It is the same name both times.' },
+      { flag:'vaArchitectureKnown',    text:'Constructor\'s Log, Entry 7: "If someone is reading this, the sealing mechanism has activated." You are reading it. You already knew this.' },
+      { flag:'shardNotesAllRead',      text:'Seven handwritings. You could identify each one now. They are distinct in the dream in a way they aren\'t on paper. You think: that is what a chain looks like.' },
+    ],
+  },
+};
+
 // ── Layer 57: Codex Shard Origin Stories ──
 const SHARD_NOTES = {
   1: { key:'shard_note_1', name:'The Toccata Fragment', icon:'📿',
@@ -13370,6 +13398,14 @@ function storyConfirmSleep() {
   const _sleepRollStr = _healRolls.map(r => 'd10:'+r+(_conMod?(_conMod>=0?'+':'')+_conMod:'')).join(' + ');
   const _boyscoutStr = _isFirstSleep ? ' 🏕 Boyscout Night! Double rolls: ' + _sleepRollStr + ' →' : ' 🛌 Rest: rolls ' + _sleepRollStr + ' →';
   storyRender(NODE_MAP[S_story.currentCode], _boyscoutStr + ' +' + _healed + ' HP · Short rests reset (3).');
+  // Layer 58: Inn Dreams
+  { const _dreams = INN_DREAMS[nodeCode];
+    if (_dreams) {
+      const _cond = _dreams.conditional.find(c => S_story[c.flag]);
+      const _dreamText = _cond ? _cond.text : _dreams.base[(S_story.gameDay || 0) % 3];
+      setTimeout(() => storyMsg('💤 ‹dream› ' + _dreamText), 700);
+    }
+  }
   // Check void tide (fires modal after render)
   storyCheckVoidTide();
 }
