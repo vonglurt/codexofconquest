@@ -1453,6 +1453,30 @@ When `ngPlusRun >= 1` AND 3+ Dear Friends preserved AND `questMinusOne` was true
 
 ---
 
+#### ⚠️ PLANNED — Void Archaeology (plan.md §XVII, Layer 52)
+
+Prerequisites: `ngPlusRun ≥ 1` + `wmFirstResearcherKnown` + `entry42Written`. Without all three, investigation sites are normal nodes.
+
+- **Five investigation sites** — `[INVESTIGATE]` button at CI, DF, WM, SL, MT; first-visit overlay text reveals the Antecedent Containment Protocol pattern.
+- **Q-VA-01: "Five Marks"** — visit all five sites; reward: `vaAllMarksFound`.
+- **Q-VA-02: "The Constructor's Log"** — WM archive Document 4 (Constructor's Log, 7 entries, written by the First Researcher); reward: `constructor_log` + `void_architect_seal` items.
+- **Q-VA-03: "The Sealed Tunnel"** — MT tunnel opened using `void_architect_seal` or `tome_void_pressure`; text chamber; reward: `vaLastWardVisited`.
+- **Q-VA-04: "The Architecture"** — Benedikt Rasp (WM) delivers final message; reward: `vaArchitectureKnown` + 500gp.
+- **Fifth ending addendum** — if `vaArchitectureKnown` + `entry42Written` + `ngPlusRun ≥ 1`: CO outro appends four-author chain text; Sweelinck question becomes: *"What was inside the cage?"*
+- See plan.md §XVII for full Constructor's Log entries, item shapes, state flags, and insertion spec.
+
+---
+
+#### ⚠️ PLANNED — Living World: Junction Vignettes + Road Companion (plan.md §XVIII, Layer 53)
+
+No prerequisites. Two texture layers added to open-world traversal.
+
+- **Junction Vignettes** — J1–J7 junction nodes gain one NPC on first visit: Tessie (J1), Old Faeron (J2), Mira (J3, Act III+), The Cartographer (J4), Wren (J5), empty note (J6, Act VII+), child's toy (J7). Optional `[HELP]` (10gp donation; Curse of Knowledge credit). No quest, no state flags.
+- **Road Companion** — one named traveler per act (Acts II–VI) delivers one lore line in the first corridor cell departing a hub node: Dessa (Act II, harbor ledger), Olaf (Act III, Scholar Kings lockout date), Maret (Act IV, Visby west gate), Pilgrim (Act V, MT sealed tunnel), empty road (Act VI). No state tracking.
+- See plan.md §XVIII for full NPC dialogue, companion lines, and implementation spec.
+
+---
+
 ## BIRKA ARC SUMMARY (Layers 41–42)
 
 Six Birka NPCs are fully interactive across all 8 acts. Each has a quest chain, 4 favorability states, and 20 dialogue quotes (5 per state). Favorability persists through New Game+.

@@ -186,6 +186,24 @@ New monster `scholars_guard` (medium) added to WM-area terrain. Drops Scholar Ki
 
 Q-WM-04 reveals a "First Researcher" who preceded Froberger — unnamed by the Scholar Kings, documented only in a redacted personnel file that Benedikt can unredact. See plan.md §XVI for full quest chain and state flags.
 
+#### ⚠️ PLANNED — Void Archaeology (plan.md §XVII, Layer 52)
+
+Prerequisites: NG+ run + `wmFirstResearcherKnown` + `entry42Written`.
+
+The First Researcher did not merely study the Void — she built the Antecedent Containment Protocol: a pressure cage designed to hold something she called the Antecedent. The Void Tide is the cage expanding. The CO victory activated the sealing mechanism. Five existing nodes (CI, DF, WM, SL, MT) gain `[INVESTIGATE]` overlays in NG+ that reveal the cage's construction and the First Researcher's identity across a four-quest investigation arc (Q-VA-01 through Q-VA-04).
+
+New items: `void_architect_seal` (type: `relic`, sell: 0) and `constructor_log` (type: `readable`, sell: 0) — both NG+-persistent. No new monsters. No new nodes.
+
+The **Constructor's Log** (7 entries, First Researcher's own words) surfaces as Document 4 in the WM lower archive after all five sites are visited. Benedikt Rasp delivers the final confirmation of the four-author chain: First Researcher → Froberger → Benedikt → player (Entry 42).
+
+See plan.md §XVII for the full Constructor's Log text, investigation site descriptions, state flags, and CO outro addendum.
+
+#### ⚠️ PLANNED — Living World: Junction Vignettes (plan.md §XVIII, Layer 53)
+
+J1–J7 junction nodes gain one first-visit NPC encounter: Tessie (J1), Old Faeron (J2), Mira (J3, Act III+), The Cartographer (J4), Wren (J5, Scholar Kings courier who stopped reading the messages), a pinned note reading *"Paid in full. —S."* (J6, Act VII+), and a child's toy with no explanation (J7). Optional `[HELP]` interaction at J1–J5 (10gp; Curse of Knowledge credit). No state flags, no quests.
+
+**Road Companion** — one named traveler per act section (Acts II–VI) appears in the first corridor cell departing a hub node; delivers one piece of world lore, then is gone. No state tracking. See plan.md §XVIII for full dialogue and implementation spec.
+
 ### The Crimson Warrant (Visby)
 **What they want:** Visby to remain independent, profitable, and ungoverned by outsiders.
 **What they fear:** The Void shaman's influence spreading through the goblin clans — it's already destabilizing Mordus's control.

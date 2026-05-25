@@ -222,6 +222,8 @@ The commit message should name the lab report and summarize what it covers in on
 | 5 | §IX | Ally Cat Arc: "Nine Lives, Capisce?" | 44 | Yes — new monster group + faction arc | ⚠️ PLANNED |
 | 6 | §X | Torment Nexus Overture (HM — Kern & Sable) | 46 | No — small narrative encounter; fits in living-world lab report | ⚠️ PLANNED |
 | 7 | §XVI | Weimar Scholar Gate: Tomes and the Fourth Hub | 51 | Yes — new item category + NPC arc | ⚠️ PLANNED |
+| 8 | §XVII | Void Archaeology: The Origin Investigation | 52 | Yes — narrative recontextualization + four-author chain | ⚠️ PLANNED |
+| 9 | §XVIII | Living World: Junction Vignettes + Road Companion | 53 | No — fits in living-world lab report | ⚠️ PLANNED |
 
 **Rule:** Implement in layer order when possible. Each implementation = code + doc sync + git commit. See plan.md §I Lab Report Policy for commit rules.
 
@@ -245,9 +247,9 @@ The commit message should name the lab report and summarize what it covers in on
 
 | # | Idea | Rationale | Candidate Lab Report |
 |---|------|-----------|----------------------|
-| 1 | Junction Waypoint Vignettes — short one-off encounters at J1–J7 junction nodes; travelers, refugees, soldiers; no combat required | Acts II–VII travel is narratively sparse; junctions are currently featureless waypoints | No — fits in living-world lab report |
-| 2 | Companion System — a named traveler who joins for one act section; shares corridor descriptions; has one piece of lore to deliver | Adds human texture to the long solo traversal; low implementation (text + one flag) | No — too small for own lab report |
-| 3 | Void Archaeology — post-CO investigation quests that reveal the Void's origin; only accessible after victory in NG+ | Closes the narrative gap: players seal the Void but never learn its actual nature | Yes — new post-game arc |
+| 1 | ~~Junction Waypoint Vignettes~~ | Promoted to §XVIII ✅ | — |
+| 2 | ~~Companion System~~ | Promoted to §XVIII ✅ | — |
+| 3 | ~~Void Archaeology~~ | Promoted to §XVII ✅ | — |
 
 ---
 
@@ -1974,6 +1976,8 @@ creative_literacy_token: { name:'Creative Literacy Token', icon:'📄', sell:27 
 | **World Creator Wizard (§XIV)** | Quest -1 / Level 21 undefined / MIT fork | `plan.md §XIV` | ✅ PLANNED stubs: `story.md` CO node; `mechanics.md` Level 21 note; `index.md` lab-report-world-creator.md entry; `lab-report-friendships-with-magic.md` Appendix quote | ⚠️ PLANNED |
 | **NG+ Remembrance Layer (§XV)** | ngPlusRun ≥ 1 / Entry 42 / "The Next Froberger" | `plan.md §XV` | ✅ PLANNED stubs: `story.md` NG+ section; `world.md` NPC extended-memory note | ⚠️ PLANNED |
 | **Weimar Scholar Gate (§XVI)** | Ivory Circle / Tomes / `scholars_guard` / First Researcher | `plan.md §XVI` | ✅ PLANNED stubs: `story.md` Node 35; `world.md` Ivory Circle section | ⚠️ PLANNED |
+| **Void Archaeology (§XVII)** | Antecedent Containment / Constructor's Log / five-node overlay / four-author chain | `plan.md §XVII` | ✅ PLANNED stubs: `story.md` NG+ Void Archaeology section; `world.md` post-CO note | ⚠️ PLANNED |
+| **Living World (§XVIII)** | J1–J7 junction vignettes / Road Companion (Acts II–VI) | `plan.md §XVIII` | ✅ PLANNED stubs: `world.md` junction vignettes note; `story.md` companion lines note | ⚠️ PLANNED |
 
 ---
 
@@ -3838,4 +3842,260 @@ Benedikt's annotated copy gives the player +1 ATK while on an active quest. The 
 ---
 
 *§XVI status: ⚠️ PLANNED — Weimar Scholar Gate designed; two NPCs written; three tomes defined; four-quest chain specified; `scholars_guard` monster added; new state flags listed; thematic coherence established. Lab report: `lab-report-weimar-scholar-gate.md` to be written on implementation.*
+
+---
+
+## Section XVII — Void Archaeology: The Origin Investigation (Layer 52, ⚠️ PLANNED)
+
+> **The gap:** The player seals the Void and wins. The ending notices whether they shared what they learned. But nobody — player or NPC — ever learns what the Void actually *was*. The Froberger research chain (41 journal entries), the First Researcher revelation (§XVI), and Entry 42 (§XV) form a knowledge chain. This section gives that chain a destination.
+
+> **The theme:** The Void was not a natural phenomenon. It was a containment structure — built to hold something called the Antecedent. The cage was never supposed to expand. The Void Tide is the cage failing. The CO victory didn't destroy the Void: it activated the stabilization mechanism. The player sealed the cage. They just didn't know that's what they were doing — until now.
+
+> **Prerequisites:** NG+ run (`ngPlusRun ≥ 1`) + `wmFirstResearcherKnown` (from §XVI) + `entry42Written` (from §XV). Without all three, the five overlay sites are normal nodes. No content is locked — only the interpretation layer.
+
+---
+
+### XVII-A. The Five Investigation Sites
+
+No new nodes. Five existing nodes gain a `[INVESTIGATE]` button in NG+ when prerequisites are met. Each site reveals one piece of the picture.
+
+| Node | Location | What the player finds |
+|------|----------|-----------------------|
+| CI | Blue Shutters Archive | A partial shelf record: *"Researcher Category: Containment, Date: [REDACTED]."* The same shelf that held the archive letter. She worked here. |
+| DF | Defiant Fields | A stone alignment in the scorched terrain. Not random — spaced to a mathematical interval. The battle happened at the activation point, not a random field. |
+| WM | Weimar lower archive | Document 3 again — but now the project codename is visible: *"ANTECEDENT CONTAINMENT PROTOCOL."* The word "Void" appears nowhere in the original documents. |
+| SL | Birka Slums | An old carved marker on a building corner. The mark matches the DF stones. This building predates the city by 80 years — predates the Scholar Kings. |
+| MT | Mountain Pass | A sealed access tunnel. *"Never opened by anyone in the records. Sealed before the Scholar Kings existed."* Not collapsed — sealed from inside. |
+
+Collecting all five: `vaAllMarksFound = true`.
+
+---
+
+### XVII-B. The Revelation — Who Built It
+
+**The First Researcher did not merely study the Void. She built it.**
+
+Specifically: she built a containment structure — a pressure cage — to trap something she called the Antecedent. She did not know what the Antecedent was. She knew it could not be destroyed. She knew it could be contained. The cage required a destabilization event to seal — it had to be opened before it could be closed.
+
+The Void Tide is the cage expanding because nobody activated the sealing mechanism. Froberger's research was aimed at the stabilization mechanism, not the Void itself. The CO victory activated it. The player didn't destroy the Void. They closed the cage.
+
+Entry 7 of FROBERGER_JOURNAL references *"a predecessor"* without a name. That is her. He found her records in the Weimar lower archive (before access revocation — the revocation letter was about this research). He knew the cage was failing. He documented it. The player followed his trail.
+
+Entry 42, written by the player in §XV, is now the fourth document in a chain: her 7 entries → Froberger's 41 → Entry 42. Benedikt Rasp carries the reading circle annotations. That is four authors. The cage is closed, the chain holds.
+
+---
+
+### XVII-C. Quest Chain — "The Architecture" (Q-VA-01 through Q-VA-04)
+
+**Q-VA-01: "Five Marks"** — Trigger: NG+ active + prerequisites met + first investigation site visited
+
+- No NPC. The `[INVESTIGATE]` button appears at each of the five nodes.
+- Each gives one paragraph of overlay text (see XVII-A).
+- Reward on all five: `vaAllMarksFound = true` + quest log entry: *"Five marks. One pattern. She was everywhere before anyone was looking."*
+
+---
+
+**Q-VA-02: "The Constructor's Log"** — Trigger: `vaAllMarksFound`
+
+- Location: WM lower archive. Document 3 modal gains a 4th document: **The Constructor's Log** — 7 entries, written in the First Researcher's hand, embedded in the margin of the personnel file.
+- The 7 entries:
+  1. *"The Antecedent cannot be destroyed. It can be contained."*
+  2. *"The containment structure requires a destabilization event to trigger the sealing mechanism. In plain terms: the cage must be opened before it can be closed."*
+  3. *"I have calculated the destabilization event. It is survivable — if the person inside it knows it is coming."*
+  4. *"The Scholar Kings do not know what I built. I told them it was a ward. They accepted that. I am not sure I was lying."*
+  5. *"The stones are placed. The archive is sealed. The tunnel is closed. When it opens, the mechanism will know."*
+  6. *"I am leaving my name off this record. If someone finds it, they will know why."*
+  7. *"If someone is reading this, the sealing mechanism has activated. The cage is closed. Whatever you sealed inside it — that is what I built this for. I am sorry. I did not have a better answer."*
+- Reward: `constructor_log` item + `void_architect_seal` item + `vaLogFound = true`
+- Tome connection: Entry 3 of the Constructor's Log matches the margin note in `tome_void_pressure` word for word. Froberger copied it. He knew whose margin it was.
+
+---
+
+**Q-VA-03: "The Sealed Tunnel"** — Trigger: `vaLogFound`
+
+- MT node gains `[OPEN THE TUNNEL]` when `vaLogFound` is set.
+- Opening requires: (a) `void_architect_seal` in inventory, OR (b) `tome_void_pressure` in inventory (proves Froberger research chain complete).
+- Inside: a short text chamber. No combat. Six sentences describing the first field test of the containment structure — 200 years before the game. The last sentence: *"The Antecedent was here. It is not anymore. You know where it is now."*
+- Reward: `vaLastWardVisited = true` + 200gp
+
+---
+
+**Q-VA-04: "The Architecture"** — Trigger: `vaLastWardVisited` + `entry42Written`
+
+- Benedikt Rasp delivers a message on next WM node visit.
+- *"She built it. You closed it. Froberger found the mechanism. You followed him. Entry 42 is the fourth link. Four links is a chain. A chain holds. That is the only kind of answer this work produces — not a solution, a chain."*
+- Reward: `vaArchitectureKnown = true` + 500gp + `tome_rasp_annotated` gains a second line of lore: *"One annotation, added later: 'She was right. The fourth link held.'"*
+
+---
+
+### XVII-D. New Items
+
+| Key | Name | Icon | Type | Sell | Effect |
+|-----|------|------|------|------|--------|
+| `void_architect_seal` | Antecedent Seal | 🏛️ | relic | 0 | *"The Antecedent Containment Protocol. Seal 7. Activated."* Passive — no bonus; narrative object. Persists through NG+. Required for MT tunnel (or `tome_void_pressure`). |
+| `constructor_log` | The Constructor's Log | 📜 | readable | 0 | 7-entry journal; readable from inventory. Sets `vaLogFound` on read. |
+
+Both items: `sell: 0`, auto-sell ignores them, NG+-persistent.
+
+---
+
+### XVII-E. New State Flags
+
+| Flag | Type | Default | Purpose |
+|------|------|---------|---------|
+| `vaCI` | boolean | false | CI investigation site visited |
+| `vaSL` | boolean | false | SL investigation site visited |
+| `vaDF` | boolean | false | DF investigation site visited |
+| `vaWM` | boolean | false | WM investigation site visited |
+| `vaMT` | boolean | false | MT investigation site visited |
+| `vaAllMarksFound` | boolean | false | All five sites visited (Q-VA-01 complete) |
+| `vaLogFound` | boolean | false | Constructor's Log obtained (Q-VA-02 complete) |
+| `vaLastWardVisited` | boolean | false | MT tunnel opened (Q-VA-03 complete) |
+| `vaArchitectureKnown` | boolean | false | Benedikt's message received (Q-VA-04 complete) |
+
+---
+
+### XVII-F. The Fifth Ending — The Acknowledgment
+
+Not a new ending screen. An addendum to the existing CO node in NG+.
+
+**Condition:** `vaArchitectureKnown = true` AND `entry42Written = true` AND `ngPlusRun ≥ 1`
+
+The CO outro appends: *"Froberger wrote 41 entries. You wrote one. She wrote 7, and no one counted them for 200 years. The cage is closed. You know what it holds. The story has four authors now."*
+
+The curse score text gains a final line: *"You knew. You told someone. That is the only thing that changes anything."*
+
+The Sweelinck question (`#victory-question`) in this condition replaces its standard text with: *"What was inside the cage?"* — and accepts no answer. The question is the ending.
+
+---
+
+### XVII-G. Insertion Spec for `roll2hit-v3.html`
+
+**Layer tag:** Layer 52 — Void Archaeology
+
+1. Add `[INVESTIGATE]` button to CI, DF, WM, SL, MT node renders — gated: `ngPlusRun ≥ 1 && wmFirstResearcherKnown && entry42Written`
+2. Add 4th document to WM archive modal (`_storyWmArchiveModal()`) — Constructor's Log 7 entries; gated: `vaAllMarksFound`
+3. Add 2 new items to a `RELIC_ITEMS` const or inline in Q-VA-02 reward delivery
+4. Add `[OPEN THE TUNNEL]` to MT node render — gated: `vaLogFound && (inv.void_architect_seal || inv.tome_void_pressure)`
+5. Add Q-VA-01 through Q-VA-04 to `QUEST_DB`
+6. Add 9 new state flags to `_S_DEFAULTS()`
+7. Add CO outro addendum — gated condition in `storyRenderCO()` or equivalent
+8. Modify Sweelinck question render — gated condition appends final text
+
+**MONSTER_POOL count after:** unchanged (370 or 371 if §XVI is also implemented).
+
+---
+
+### XVII-H. Documentation Updates Required on Implementation
+
+| File | Change |
+|------|--------|
+| `story.md` | Add §XVII quest chain Q-VA-01 through Q-VA-04; CO outro addendum note; Constructor's Log text |
+| `world.md` | Add Constructor's Log summary to the First Researcher entry (from §XVI stub); add Antecedent Containment note |
+| `mechanics.md` | Add `type:'relic'` item shape; add readable-from-inventory note for `constructor_log` |
+| `index.md` | Add Void Archaeology arc note |
+| `plan.md` | Mark XVII complete after implementation; update §V-A queue |
+
+**Lab report required:** `lab-report-void-archaeology.md` — covers the "revelation-as-recontextualization" design pattern (CO victory retroactively meant more), Antecedent Containment as the Void's actual nature, and the four-author narrative chain as a design decision.
+
+---
+
+### XVII-I. Thematic Coherence Note
+
+The Curse of Knowledge score asks: did you share what you learned? The game ends differently depending on the answer.
+
+§XVII is the scene where the player finds out what the First Researcher learned — and why she didn't share it. She didn't share it because she built the thing and was ashamed. She left 7 margin entries instead of a name. The Scholar Kings built an institution to contain her secret without understanding it. Froberger understood it. He went public. He died. The player followed him. The cage is closed.
+
+The question *"What was inside the cage?"* does not have an answer in the game. It is the correct question. The game rewards the player for arriving at it with full knowledge — not for answering it. Knowing what question to ask, after everything, is the only competence the game ever tested.
+
+---
+
+*§XVII status: ⚠️ PLANNED — Void Archaeology designed; five investigation sites specified; Constructor's Log written; four-quest chain complete; new item category (relic); fifth ending defined; thematic resolution of the four-author chain established. Lab report: `lab-report-void-archaeology.md` to be written on implementation.*
+
+---
+
+## Section XVIII — Living World: Junction Vignettes and the Road Companion (Layer 53, ⚠️ PLANNED)
+
+> **The gap:** The seven junction nodes (J1–J7) are featureless waypoints — terrain, connections, nothing else. The corridor traversal between hubs is text-free past Act I. This section adds two small texture layers: one NPC encounter per junction node (no quests, no combat), and one named road companion per act section (one piece of lore, then gone). Neither is big enough for its own section or its own lab report. Together they make the open world feel inhabited.
+
+---
+
+### XVIII-A. Junction Waypoint Vignettes
+
+One static NPC encounter per junction node. First-visit only — using the existing `visitedNodes` tracking. Subsequent visits: *"The traveler has moved on."* No state flags needed. No quests. No combat.
+
+Each vignette:
+- One NPC name + occupation
+- 3 lines of dialogue (first visit)
+- Optional `[HELP]` (donate 10gp; counts as one Curse of Knowledge credit — shared what you had)
+- `[MOVE ON]` always available
+
+**Junction assignments:**
+
+| Node | NPC | Occupation | Opening line |
+|------|-----|------------|--------------|
+| J1 | Tessie | Merchant's runner | *"My employer hasn't paid me in three weeks. I'm still running the routes. I don't know why."* |
+| J2 | Old Faeron | Retired soldier | *"I fought the first Tide. Told everyone it would come back. I was very boring at parties."* |
+| J3 | Mira | Refugee (Act III+ only) | *"We left Tilbury before the harbor closed. I don't think we'll go back."* |
+| J4 | The Cartographer | Unknown | *"I've been mapping these roads for twelve years. I still find new ones. That used to frighten me."* |
+| J5 | Wren | Scholar Kings courier | *"I carry messages for the Scholar Kings. I stopped reading them two years ago. Better that way."* |
+| J6 | — | Empty junction (Act VII+) | A note pinned to a post: *"Paid in full. —S."* No NPC. No [HELP]. |
+| J7 | — | Nobody | A child's toy on the road. No NPC. No explanation. One sentence: *"You leave it where it is."* |
+
+**Implementation:** `JUNCTION_VIGNETTES` const (7 entries, keyed by junction code) or inline in NODE_MAP text render. Act-gating on J3 (only visible Act III+) and J6 (only visible Act VII+) via `S_story.act` check. No new state flags. No new quests.
+
+No lab report needed — too small; document inline in `world.md` §Junction Nodes when implemented.
+
+---
+
+### XVIII-B. The Road Companion
+
+One named traveler appears once per act (Acts II–VI). They walk the same road and share one corridor-cell text line before arriving at the next node. No combat. No quests. No flags. They are gone on the next act. In Act VI, the road is empty — that is also a companion entry.
+
+**Companions by act:**
+
+| Act | Name | Context | Lore line |
+|-----|------|---------|-----------|
+| II | Dessa | Running supplies between Birka and Tilbury | *"The harbor master in Tilbury keeps a ledger of every ship that left since the Tide started. He won't show it to anyone. I've seen him writing in it."* |
+| III | Olaf | Traveling researcher, unaffiliated | *"Weimar's upper district has been closed to independent researchers for eleven years. That's exactly when the Void reports started."* |
+| IV | Maret | Soldier going home | *"Visby fell twice before. Both times, they held the west gate. They tell new recruits that story on the first day."* |
+| V | Pilgrim (unnamed) | Going to the Mountain Pass | *"Someone sealed that tunnel before the Scholar Kings existed. I've been trying to find out who for forty years."* |
+| VI | — | The road is empty | *"For the first time in days, no one else is on the road. You walk alone. It is not lonely — it is quiet in a different way."* |
+
+**Implementation:** `COMPANION_LINES` const (5 entries keyed by act number 2–6) or inline in corridor render. Act-gated via `S_story.act`. Fires in first corridor cell after departing a hub node. No state tracking needed.
+
+Note: The Pilgrim (Act V) foreshadows the MT sealed tunnel from §XVII. If §XVII is not implemented, their line is flavor. If §XVII is implemented, returning players in NG+ will recognize it.
+
+No lab report needed. Document inline in `world.md` §Road Companion when implemented.
+
+---
+
+### XVIII-C. Insertion Spec for `roll2hit-v3.html`
+
+**Layer tag:** Layer 53 — Living World
+
+1. Add `JUNCTION_VIGNETTES` const — 7 entries; each with `npc`, `lines[]`, `helpText` (optional), `actMin` (optional)
+2. Add junction vignette render to `_storyRenderNode()` — show NPC block on first visit; show "moved on" text on repeat visit; gate J3 (act ≥ 3) and J6 (act ≥ 7)
+3. Add `COMPANION_LINES` const — 5 entries keyed by act (2–6)
+4. Add companion render to corridor cell render (`_storyRenderCorridor()`) — fires on first corridor cell of a hub-to-hub path, act-gated
+5. No new `_S_DEFAULTS()` flags needed (junction first-visit uses existing `visitedNodes` set; companion uses `S_story.act`)
+
+**MONSTER_POOL count after:** unchanged.
+
+---
+
+### XVIII-D. Documentation Updates Required on Implementation
+
+| File | Change |
+|------|--------|
+| `world.md` | Add §Junction Vignette NPCs section (Tessie through J7); add §Road Companions section (Dessa through Act VI empty) |
+| `story.md` | Add companion lore lines to corridor notes section; add junction vignette dialogue list |
+| `maps.md` | Update J1–J7 legend entries to note "NPC vignette (first visit)" |
+| `plan.md` | Mark §XVIII complete; update §V-A queue |
+
+No lab report needed.
+
+---
+
+*§XVIII status: ⚠️ PLANNED — Junction vignettes designed (7 nodes, 5 NPCs + 2 environmental); Road Companion designed (5 acts, 4 named + 1 empty); implementation cost is two new consts + two render hooks; no new state flags; no new monsters. Document inline in `world.md` and `story.md` on implementation.*
 
