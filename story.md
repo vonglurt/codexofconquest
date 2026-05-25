@@ -1506,6 +1506,52 @@ Nodes: VS (Visby) + GC (Goblin Caves). One new monster (`hollow_hands_guard`).
 
 ---
 
+#### ⚠️ PLANNED — The Void Shaman: The Antecedent's Last Warden (plan.md §XXI, Layer 56)
+
+Prerequisites: `vsShamanKnown` (§XX) + `vaLastWardVisited` (§XVII). Both required; neither alone triggers the encounter.
+
+- **The Warden** — scripted encounter inside the MT tunnel; AC15/HP65/ATK+6/2d6+4 (rare/boss); drops `warden_token` (relic, sell:0) on any outcome.
+- **Combat path** — fight `void_shaman`; Warden accepts defeat without bitterness; Hollow Hands scatter; Mordus regains GC territory; `vshamanDefeated`.
+- **Persuasion path** — `[SHOW THEM THE LOG]` if `constructor_log` in inventory; Warden reads Constructor's Log Entry 2 and understands they were working in the wrong direction; gives `warden_token` voluntarily; Hollow Hands return to Mordus peacefully; `vsShamanPersuaded`.
+- **Benedikt callback** — if `vsShamanPersuaded` + Benedikt Dear Friend (§XVI): next WM visit adds Benedikt's reflection on the 200-year misunderstanding.
+- `void_shaman` monster is scripted only — `spawnsIn: []`, does not appear in random encounters.
+- `wardensLegacyKnown` set on either outcome. Hollow Hands arc resolved.
+- See plan.md §XXI for full Warden dialogue, both outcome texts, and insertion spec.
+
+---
+
+#### ⚠️ PLANNED — Codex Shard Origin Stories (plan.md §XXII, Layer 57)
+
+No prerequisites. Seven readable items auto-added to inventory when each Codex Shard is collected.
+
+| Shard | Name | Placer | Cross-reference |
+|-------|------|--------|----------------|
+| 1 | The Toccata Fragment | Elder Couperin (Quill's ancestor) | Quill Dear Friend dialogue |
+| 2 | The Prelude Stone | Scholar Marzena (Conclave-adjacent) | §XIX Tilbury arc |
+| 3 | The Fugue Seal | Researcher Aldric (unaffiliated) | §XVIII J4 Cartographer |
+| 4 | The Cantata Mark | Archivist Hendrika (Scholar Kings defector) | Crimson Warrant choice |
+| 5 | The Passacaglia Core | The First Researcher | If `wmFirstResearcherKnown`: name recognized |
+| 6 | The Chaconne Piece | The original Warden | If `wardensLegacyKnown`: Warden recognized |
+| 7 | The Sarabande Key | Froberger himself | If `entry42Written`: Entry 42 page connection |
+
+Reading all 7 notes from inventory unlocks a FROBERGER_JOURNAL sidebar entry: *"Seven people carried the pieces. Five of them knew what they were carrying."* `shardNotesAllRead` gates SQ dream variant (§XXIII).
+See plan.md §XXII for full shard note text and implementation spec.
+
+---
+
+#### ⚠️ PLANNED — Inn Dreams (plan.md §XXIII, Layer 58)
+
+No prerequisites for base dreams. Flag-gated variants replace base when story conditions are met.
+
+- **IN (Birka)** — 3 base variants (city quiet, door-on-door, counting days). Flag-gated: `frobergerLastEntryRead` → Entry 41 dream; `entry42Written` → journal heavier; `vaArchitectureKnown` → four authors.
+- **SF (Tilbury)** — 3 base variants (harbor bell, shape in water, harbor board count). Flag-gated: `tlLedgerRead` → Rennau at the board; `tlMissingShipSolved` → Ori goes over the side.
+- **IS (Visby)** — 3 base variants (caves counting, mark on wall, patient watcher). Flag-gated: `vsDebtProbed` → Mordus ledger; `vsShamanPersuaded` → counting stops; `wardensLegacyKnown` → mark recognized.
+- **SQ (Weimar)** — 3 base variants (pages turning, name at margin, organized archive). Flag-gated: `wmFirstResearcherKnown` → name readable; `vaArchitectureKnown` → Constructor's Log Entry 7; `shardNotesAllRead` → seven handwritings.
+- Fires after every rest. Cycle by `gameDay % 3`. No new state flags. No new monsters. No new items.
+- See plan.md §XXIII for full dream text and render logic.
+
+---
+
 ## BIRKA ARC SUMMARY (Layers 41–42)
 
 Six Birka NPCs are fully interactive across all 8 acts. Each has a quest chain, 4 favorability states, and 20 dialogue quotes (5 per state). Favorability persists through New Game+.

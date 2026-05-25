@@ -238,6 +238,24 @@ Quest chain Q-VS-01 through Q-VS-03: "What Mordus Owes"
 
 The shaman is Layer 56+ content. §XX names the threat; it does not resolve it. See plan.md §XX for full dialogue, state flags, monster spec, and insertion spec.
 
+#### ⚠️ PLANNED — The Void Shaman: The Antecedent's Last Warden (plan.md §XXI, Layer 56)
+
+Prerequisites: `vsShamanKnown` (§XX) + `vaLastWardVisited` (§XVII). The Warden has been living in the MT tunnel for 6 months.
+
+**The Warden** — the current holder of a goblin title appointed 200 years ago by the First Researcher. She planted a guardian clan (the proto-Hollow Hands) at the Mountain Pass with the mandate: "if the cage starts to fail, open the tunnel." In 200 years of oral retransmission, "open the tunnel to stabilize the cage from inside" became "open the cage." The Warden has been working to release the Antecedent, believing this is what the First Researcher wanted. They are wrong about the direction. The CO victory already activated the sealing mechanism — the Warden has been working toward something that already happened, from the wrong side.
+
+Two outcomes: combat (fight `void_shaman` AC15/HP65) or persuasion (show `constructor_log` from §XVII; Warden reads Entry 2 + Entry 7 and understands). Either way: `wardensLegacyKnown` set, Hollow Hands resolved, `warden_token` relic obtained.
+
+If persuaded: Benedikt Rasp (WM, Dear Friend after §XVI) reflects on the First Researcher planting the Warden without documenting it — *"She thought she was planting a safeguard. She planted a 200-year misunderstanding."*
+
+`void_shaman` monster is scripted only (`spawnsIn: []`). See plan.md §XXI for full dialogue, both outcome texts, and insertion spec.
+
+#### ⚠️ PLANNED — Codex Shard Origin Stories (plan.md §XXII, Layer 57)
+
+Seven readable items auto-added to inventory when each Codex Shard is collected. Each names the person who placed that shard and why. The 7 placers: Elder Couperin (Quill's ancestor), Scholar Marzena (Conclave-adjacent), Researcher Aldric (unaffiliated), Archivist Hendrika (Scholar Kings defector), the First Researcher (Shard 5, MT), the original Warden (Shard 6, WM — recognized if `wardensLegacyKnown`), and Froberger himself (Shard 7, CO — *"I couldn't carry it any further. Someone else will have to finish."*).
+
+Reading all 7 notes unlocks a FROBERGER_JOURNAL sidebar entry. No new monsters, quests, or nodes. See plan.md §XXII for full shard note text.
+
 ### The Crones' Covenant (Hag Swamp)
 **What they want:** The swamp to remain theirs. The old ways to continue.
 **What they fear:** The Void consuming the wet dark places where they draw their power.

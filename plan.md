@@ -226,6 +226,9 @@ The commit message should name the lab report and summarize what it covers in on
 | 9 | §XVIII | Living World: Junction Vignettes + Road Companion | 53 | No — fits in living-world lab report | ⚠️ PLANNED |
 | 10 | §XIX | Tilbury Harbor Arc: "The Conclave's Weight" | 54 | Yes — shared with §XX in `lab-report-tilbury-visby-arcs.md` | ⚠️ PLANNED |
 | 11 | §XX | Visby Underground: "What Mordus Owes" | 55 | Yes — shared with §XIX in `lab-report-tilbury-visby-arcs.md` | ⚠️ PLANNED |
+| 12 | §XXI | The Void Shaman: The Antecedent's Last Warden | 56 | Yes — `lab-report-void-shaman.md` (corrupted mandate design) | ⚠️ PLANNED |
+| 13 | §XXII | Codex Shard Origin Stories | 57 | No — document inline in `story.md` | ⚠️ PLANNED |
+| 14 | §XXIII | Inn Dreams | 58 | No — too small; document inline | ⚠️ PLANNED |
 
 **Rule:** Implement in layer order when possible. Each implementation = code + doc sync + git commit. See plan.md §I Lab Report Policy for commit rules.
 
@@ -254,9 +257,9 @@ The commit message should name the lab report and summarize what it covers in on
 | 3 | ~~Void Archaeology~~ | Promoted to §XVII ✅ | — |
 | 4 | ~~Tilbury Harbor Arc~~ | Promoted to §XIX ✅ | — |
 | 5 | ~~Visby Underground~~ | Promoted to §XX ✅ | — |
-| 6 | Codex Shard Origin Stories — each of the 7 Codex Shards gains a readable item when found; reveals who placed it and why; connects to Scholar Kings history | Retroactively deepens main quest; each shard becomes a named artifact with a person behind it | No — fits in existing narrative lab report |
-| 7 | Inn Dreams — a brief dream sequence when the player rests at an inn; one unique dream per inn; cycles by game day; foreshadows next-act challenges | Adds texture to rest mechanic; inns are currently pure-mechanical (heal + time advance) | No — fits in living-world lab report |
-| 8 | The Void Shaman — §XX names the shaman but does not confront them; a Layer 56 arc resolving the Hollow Hands threat and naming the shaman as the Antecedent's last ambassador | Direct narrative continuation of §XX and §XVII | Yes — new boss arc + faction design |
+| 6 | ~~Codex Shard Origin Stories~~ | Promoted to §XXII ✅ | — |
+| 7 | ~~Inn Dreams~~ | Promoted to §XXIII ✅ | — |
+| 8 | ~~The Void Shaman~~ | Promoted to §XXI ✅ | — |
 
 ---
 
@@ -1988,6 +1991,9 @@ creative_literacy_token: { name:'Creative Literacy Token', icon:'📄', sell:27 
 | **Living World (§XVIII)** | J1–J7 junction vignettes / Road Companion (Acts II–VI) | `plan.md §XVIII` | ✅ PLANNED stubs: `world.md` junction vignettes note; `story.md` companion lines note | ⚠️ PLANNED |
 | **Tilbury Harbor Arc (§XIX)** | Rennau / Vonn / Q-TL-01–03 / ship_manifest / Ori survivor | `plan.md §XIX` | ✅ PLANNED stubs: `story.md` Q-TL section; `world.md` Tilbury NPC note | ⚠️ PLANNED |
 | **Visby Underground (§XX)** | Solvak / Yva / Q-VS-01–03 / hollow_hands_guard / Void shaman shadow | `plan.md §XX` | ✅ PLANNED stubs: `story.md` Q-VS section; `world.md` Visby sub-faction note | ⚠️ PLANNED |
+| **Void Shaman (§XXI)** | The Warden / void_shaman boss / warden_token / combat+persuasion paths / Hollow Hands resolution | `plan.md §XXI` | ✅ PLANNED stubs: `story.md` MT tunnel encounter; `world.md` Warden backstory | ⚠️ PLANNED |
+| **Codex Shard Origins (§XXII)** | 7 shard_note items / named placers / flag-gated variants / journal reward | `plan.md §XXII` | ✅ PLANNED stubs: `story.md` Shard Origins section; `world.md` placer name notes | ⚠️ PLANNED |
+| **Inn Dreams (§XXIII)** | INN_DREAMS const / 4 inns × 3 base variants / flag-gated replacements | `plan.md §XXIII` | ✅ PLANNED stubs: `story.md` Inn Dreams section; `mechanics.md` sleep note | ⚠️ PLANNED |
 
 ---
 
@@ -4386,4 +4392,361 @@ The Void shaman named in §XX is not introduced as a character. This is intentio
 ---
 
 *§XX status: ⚠️ PLANNED — Visby Underground designed; two NPCs (Solvak, Yva); three-quest chain; hollow_hands_guard monster (372nd if both §XVI and §XX are implemented); six state flags; cross-references to §XIX (Rennau/Harrow) and Mordus EB quest (Q71); Void shaman named but not confronted; institutional fracture theme established. Lab report: `lab-report-tilbury-visby-arcs.md` to be written on implementation.*
+
+---
+
+## Section XXI — The Void Shaman: The Antecedent's Last Warden (Layer 56, ⚠️ PLANNED)
+
+> **The resolution:** §XX named the Void Shaman without confronting them. This section is the confrontation. The reveal is that the Void Shaman is not a villain — they are a catastrophically misdirected guardian. The First Researcher, after sealing the Antecedent, appointed a Warden from a local goblin clan to maintain the MT tunnel. The mandate was: "if the cage starts to fail, open the tunnel." Over 200 years of oral transmission, "open the tunnel" became "open the cage." The current Warden has been working to release the Antecedent, believing this is what the First Researcher wanted. They were right about the verb, wrong about the direction.
+
+> **Prerequisites:** `vsShamanKnown` (from §XX) + `vaLastWardVisited` (from §XVII — the MT tunnel must already be open). If either is missing, the MT tunnel is unchanged and the encounter does not trigger. This creates a natural convergence: players must do both §XVII and §XX before §XXI is reachable.
+
+---
+
+### XXI-A. The Setting — Inside the MT Tunnel
+
+The MT tunnel was described in §XVII as sealed before the Scholar Kings existed, opened by the player during Q-VA-03, and containing *"the Antecedent was here — it is not anymore — you know where it is now."* The player has been inside once. Someone else has been living there for six months.
+
+The Warden has been working. The tunnel walls have marks — not the stone alignment from DF, but new ones, carved in the past six months. A workbench. Notes in a language that mixes goblin glyphs and Old Scholar script. The Warden is not surprised to see the player. They knew Mordus would send someone eventually.
+
+---
+
+### XXI-B. The Warden
+
+The current Warden has no individual name recorded anywhere. They have held the title for eleven years, inherited from their predecessor. The Hollow Hands know them only as "the Warden." The Scholar Kings' records have no entry for a goblin Warden because the First Researcher never wrote it down — the Warden was a private failsafe, not a documented protocol.
+
+The Warden is old for a goblin. They have read every piece of writing they could find about the Antecedent — which amounts to the Scholar Kings' suppressed field reports (obtained via a Hollow Hands intermediary six months before Q-WM-02 uncovered the same reports), and a corrupted version of the First Researcher's mandate, recopied seventeen times across eleven generations.
+
+> *"I know what you are. You're from outside. You found the marks. You went to Mordus. You came here. That's the sequence she described — the sequence that means someone finally followed the full trail. I've been waiting for someone to follow the full trail for eleven years."*
+
+> *"She said: 'When the cage starts to fail, open the tunnel.' The cage has been failing for three years. I opened the tunnel. I've been trying to open the cage from the outside. I have been doing this wrong, haven't I."*
+
+---
+
+### XXI-C. Two Outcomes — Combat or Persuasion
+
+**Combat path:** Fight `void_shaman`. Stats: AC 15 / HP 65 / ATK +6 / 2d6+4 (fire+void). Rare/boss tier. Drops `warden_token` on defeat.
+
+The Warden fights to protect the tunnel — not from malice but from eleven years of belief that the tunnel must stay active until the cage is opened. They are not trying to kill the player; they are trying to slow them down long enough to finish the work. The combat ends when they are defeated. They accept it without bitterness: *"If I'm wrong, then I needed to be stopped. That's — that's actually fine."*
+
+`vshamanDefeated = true`.
+
+---
+
+**Persuasion path:** If `constructor_log` is in inventory, a `[SHOW THEM THE LOG]` option appears before combat triggers.
+
+The Warden reads the Constructor's Log. Specifically Entry 2: *"The containment structure requires a destabilization event to trigger the sealing mechanism. In plain terms: the cage must be opened before it can be closed."* And Entry 7: *"If someone is reading this, the sealing mechanism has activated. The cage is closed."*
+
+The Warden's reaction, reading:
+
+> *"'The cage must be opened before it can be closed.' That's — that's exactly what we were told. That's the mandate. But. Entry 7 says it's already done. The sealing mechanism. That was the battle, wasn't it. At the Defiant Fields. You were there."*
+
+> *"I've been outside the wall I was supposed to be inside. I was supposed to open it from inside, at the right moment, to trigger the seal. Someone else did that. You did that. And I've been out here trying to open it from the wrong direction for six months."*
+
+The Warden gives `warden_token` voluntarily. Tells the Hollow Hands the mission is complete — the cage is sealed, the mandate is fulfilled. The sub-clan, without a war mandate, returns to Mordus's territory quietly.
+
+`vsShamanPersuaded = true`.
+
+---
+
+### XXI-D. The Hollow Hands Aftermath
+
+Both outcomes set `wardensLegacyKnown = true`.
+
+- **Combat:** Hollow Hands lose leadership and scatter. Mordus regains GC territory over 5 in-game days. A quest log entry: *"Without the Warden, the Hollow Hands have no direction. Mordus's scouts report the sub-clan dispersing into the wider cave network."*
+
+- **Persuasion:** Hollow Hands receive word from the Warden that the mission is done. They return to Mordus's governance without fighting. Mordus's quest log note: *"The sub-clan walked back in. All of them. Mordus didn't ask what changed. He logged them as returned."*
+
+**Benedikt Rasp callback** — if `vsShamanPersuaded` and Benedikt is Dear Friend (§XVI), next WM visit triggers:
+
+> *"You found the Warden. She planted them, didn't she — the First Researcher. She planted a guardian at the tunnel and didn't write it down anywhere official. I didn't know the chain went that far. Neither did she, I think — she thought she was planting a safeguard. She planted a 200-year misunderstanding. The difference between those things might be very small."*
+
+---
+
+### XXI-E. New Monster — `void_shaman`
+
+| Key | Name | AC | HP | ATK | Dmg | Tier | Drop |
+|-----|------|----|----|-----|-----|------|------|
+| `void_shaman` | The Warden | 15 | 65 | +6 | 2d6+4 | rare | `warden_token` (icon: 🔑, sell: 0) |
+
+**NOT added to random encounter pool.** This is a scripted encounter at MT tunnel only. Add to `MONSTER_POOL` as a scripted/unique entry with `spawnsIn: []` (no terrain random encounters). The `warden_token` drop is scripted — not in `MONSTER_DROPS` random table.
+
+---
+
+### XXI-F. New Items
+
+| Key | Name | Icon | Type | Sell | Content |
+|-----|------|------|------|------|---------|
+| `warden_token` | The Warden's Token | 🔑 | relic | 0 | *"Original Warden's seal, First Researcher's appointment. Recopied seventeen times. The seventeenth copy has a small error in the verb tense that changed everything."* NG+-persistent. |
+
+---
+
+### XXI-G. New State Flags
+
+| Flag | Type | Default | Purpose |
+|------|------|---------|---------|
+| `vshamanFound` | boolean | false | MT tunnel encounter triggered |
+| `vshamanDefeated` | boolean | false | Warden defeated in combat |
+| `vsShamanPersuaded` | boolean | false | Warden persuaded via Constructor's Log |
+| `wardensLegacyKnown` | boolean | false | Either outcome complete; Hollow Hands resolved |
+
+---
+
+### XXI-H. Insertion Spec for `roll2hit-v3.html`
+
+**Layer tag:** Layer 56 — The Void Shaman
+
+1. Add `void_shaman` to `MONSTER_POOL` with `spawnsIn: []` (scripted only)
+2. Add `warden_token` relic item inline in encounter reward delivery
+3. Add scripted encounter to MT node render — gated: `vsShamanKnown && vaLastWardVisited && !wardensLegacyKnown`
+4. Add `[SHOW THEM THE LOG]` dialogue option — gated: `inv.constructor_log && !wardensLegacyKnown`
+5. Add Q-VS continuation logic: after `wardensLegacyKnown`, update Mordus quest log entry
+6. Add Benedikt callback — gated: `vsShamanPersuaded && fav_benedikt >= 2` (Dear Friend)
+7. Add 4 new state flags to `_S_DEFAULTS()`
+
+**MONSTER_POOL count after:** +1 (`void_shaman`, scripted entry) = 373 if §XVI + §XX + §XXI all implemented.
+
+---
+
+### XXI-I. Documentation Updates Required on Implementation
+
+| File | Change |
+|------|--------|
+| `monsters.md` | Add `void_shaman` scripted entry; note it has `spawnsIn: []`; update MONSTER_POOL count |
+| `world.md` | Add Warden backstory to Visby/GC section; update Hollow Hands note; add Benedikt callback note |
+| `story.md` | Add §XXI encounter section at MT node; both outcome texts; Hollow Hands aftermath quest log lines |
+| `plan.md` | Mark §XXI complete; update §V-A queue |
+
+**Lab report:** `lab-report-void-shaman.md` — covers the "corrupted mandate" design (a guardian who was right about the verb, wrong about the direction), the persuasion-vs-combat duality, and the First Researcher's chain (Researcher → Warden → Hollow Hands → §XXI confrontation → player). Write on implementation.
+
+---
+
+### XXI-J. Thematic Coherence Note
+
+The Warden is the only character in the game who has been doing the right thing in the wrong direction for 200 years. Every other antagonist or complication in the game is a system failure — the Scholar Kings suppressed knowledge, the Merchant's Conclave closed the harbor, the Void Tide corrupted the goblin clans. The Warden is the only one who was appointed correctly, genuinely loyal, doing exactly what they were told, and still catastrophically wrong. The mandate degraded in transmission, not in intent.
+
+This is the Curse of Knowledge in reverse: the First Researcher withheld the full truth from the Warden (she didn't tell them what was inside the cage) because she believed it was safer. That withheld truth became the 200-year misunderstanding. Sharing the Constructor's Log resolves it. The game's thesis — knowing is not enough; you have to tell someone — applies to the First Researcher herself. She kept the secret. It almost destroyed everything she built.
+
+---
+
+*§XXI status: ⚠️ PLANNED — Void Shaman confrontation designed; Warden backstory (corrupted 200-year mandate); combat path (void_shaman AC15/HP65, drops warden_token) and persuasion path (Constructor's Log, voluntary resolution); both outcomes resolve Hollow Hands; Benedikt Dear Friend callback; four state flags; one scripted monster (spawns nowhere randomly); Lab report: `lab-report-void-shaman.md` to be written on implementation.*
+
+---
+
+## Section XXII — Codex Shard Origin Stories (Layer 57, ⚠️ PLANNED)
+
+> **The gap:** The 7 Codex Shards are the main quest MacGuffins. Each has a node location and a brief description. None of them has a named placer, a reason for being there, or a connection to the Scholar Kings history established in §XVI and §XVII. This section gives each shard a readable item that auto-adds to inventory when the shard is collected. Reading it reveals who placed the shard, why, and one line from that person about what they were doing.
+
+> **The reveal:** The 7 shards were distributed by 7 different people across the Scholar Kings' history — researchers, archivists, and guardians who knew the Codex must survive any single catastrophe. The distribution was a precaution against exactly the kind of knowledge-suppression the Scholar Kings later became. The last placer was Froberger. He placed Shard 7 himself. He knew he wasn't going to make it out.
+
+---
+
+### XXII-A. The Seven Shards — Named and Sourced
+
+Following the game's Baroque composer naming theme, each shard is named after a musical form from the Baroque period.
+
+| # | Shard Name | Node | Placer | Era | Cross-reference |
+|---|-----------|------|--------|-----|----------------|
+| 1 | **The Toccata Fragment** | CI (Birka Archive) | Elder Couperin — ancestor of NPC Quill/Couperin | 5 generations ago | Quill's `dearFriend` dialogue mentions "family papers in the archive" |
+| 2 | **The Prelude Stone** | TL/SF (Tilbury docks) | Scholar Marzena — Merchant's Conclave-aligned researcher | 4 generations ago | Connects to Tilbury Harbor Arc (§XIX): she worked with early Conclave |
+| 3 | **The Fugue Seal** | Mid-world node (DF or J4) | Researcher Aldric — field researcher, no guild affiliation | 3 generations ago | Connects to §XVIII J4 vignette (The Cartographer found old maps referencing Aldric) |
+| 4 | **The Cantata Mark** | VS/GC (Visby/Goblin Caves) | Archivist Hendrika — briefly Scholar Kings Tier 1 before defecting | 3 generations ago | Chose Visby because *"the Warrant would protect it from the Circle"* |
+| 5 | **The Passacaglia Core** | MT (Mountain Pass) | The First Researcher | 2 generations ago | If `wmFirstResearcherKnown`: note names her; *"She placed this before she sealed the tunnel."* |
+| 6 | **The Chaconne Piece** | WM (Weimar lower district) | The original Warden (first of the Hollow Hands lineage) | 2 generations ago | If `wardensLegacyKnown`: note says *"Placed by the first Warden, at her instruction."* |
+| 7 | **The Sarabande Key** | CO (Covenant ceremony site) | Froberger himself | ~1 year ago (recent) | If `frobergerLastEntryRead`: note matches Entry 41's mood exactly |
+
+---
+
+### XXII-B. Shard Note Content
+
+Each `shard_note_N` readable item (2–3 sentences) is added to inventory automatically when the corresponding Codex Shard is collected. Readable at any time from inventory.
+
+**shard_note_1** — The Toccata Fragment (CI):
+> *"Elder Couperin placed this in the Birka city archive seventy years ago. He told his family he was storing a keepsake. The note reads: 'The first note must be held longest. Everything else can be improvised.'"*
+
+**shard_note_2** — The Prelude Stone (TL):
+> *"Scholar Marzena brought this from Weimar to Tilbury docks in a merchant's crate, labeled 'decorative ballast.' She was Conclave-adjacent but not Conclave-loyal. Her note: 'What begins here sets the key for everything that follows. I hope someone follows.'"*
+
+**shard_note_3** — The Fugue Seal (mid-world):
+> *"Researcher Aldric left this at a crossroads node. He was not affiliated with any guild — he walked routes for forty years and left things where he thought they would be found by the right person at the right time. His note: 'Three voices; none of them alone. The fugue requires all three to resolve.'"*
+
+**shard_note_4** — The Cantata Mark (VS/GC):
+> *"Archivist Hendrika defected from the Scholar Kings in the third year of her appointment. She chose Visby deliberately: 'The Crimson Warrant protects what the Circle has decided isn't worth protecting. I disagree with both their methods. I trust their incentives.' Her note: 'Written to be heard, not read. You had to be there.'"*
+
+**shard_note_5** — The Passacaglia Core (MT):
+> *"Placed by the First Researcher, at the Mountain Pass, before she sealed the tunnel. No name on the note — she had already stopped signing her name by then. The handwriting matches Document 3 in the Weimar lower archive."*
+> *(If `wmFirstResearcherKnown` adds): "You recognize the handwriting. She was here. This was hers."*
+
+**shard_note_6** — The Chaconne Piece (WM):
+> *"Left in the Weimar lower district by a hand that is not Scholar Kings — the script is older, pre-institutional. A single line: 'Variations without end. The theme persists.' The wax seal shows a mark you have seen before — in the Goblin Caves, on a stall."*
+> *(If `wardensLegacyKnown` adds): "Placed by the first Warden, on the First Researcher's instruction. The chain goes back this far."*
+
+**shard_note_7** — The Sarabande Key (CO):
+> *"Froberger placed this here. His handwriting — you know it from 41 journal entries. The note is three words: 'I couldn't carry it any further. Someone else will have to finish.' There is no Entry 42 in his journal. He left that page for you."*
+> *(If `entry42Written` adds): "You wrote Entry 42. He left the page. You filled it."*
+
+---
+
+### XXII-C. Implementation
+
+**New const:** `SHARD_NOTES` — 7 entries, keyed by shard number 1–7.
+
+Each entry:
+```js
+{ key: 'shard_note_1', name: 'The Toccata Fragment', icon: '📿', type: 'readable', sell: 0,
+  text: '...base text...',
+  conditionals: [
+    { flag: 'wmFirstResearcherKnown', addText: '...' }  // for shard 5 only
+  ]
+}
+```
+
+**Trigger:** When each Codex Shard is collected (in `_collectShard()` or equivalent), add the corresponding `shard_note_N` to inventory and set `S_story.shardNotes[N] = true`.
+
+**New const flag:** `shardNotesCollected` — array tracking which notes have been collected (mirrors shard collection).
+
+**Journal reward:** When all 7 shard notes have been read from inventory, append a Froberger Journal sidebar entry: *"Seven people carried the pieces. Five of them knew what they were carrying. One of them didn't know what was inside it. One of them did and placed it last. You know all their names now."*
+
+**No new monsters. No new quests (shard collection is already main-quest gated).** No new nodes.
+
+---
+
+### XXII-D. New State Flags
+
+| Flag | Type | Default | Purpose |
+|------|------|---------|---------|
+| `shardNotes` | array[7] | `[false×7]` | Tracks which shard notes have been collected |
+| `shardNotesAllRead` | boolean | false | All 7 notes read from inventory; journal sidebar entry unlocked |
+
+---
+
+### XXII-E. Documentation Updates Required on Implementation
+
+| File | Change |
+|------|--------|
+| `story.md` | Add Shard Origin section: table of all 7 shards with placer names and notes; note flag-gated text variants |
+| `world.md` | Add placer names to relevant faction sections (Couperin ancestor to Birka NPC section; Marzena to Conclave section; Hendrika to Scholar Kings defector note; First Researcher shard to MT node) |
+| `mechanics.md` | Add `SHARD_NOTES` const reference; note auto-add on shard collect |
+| `plan.md` | Mark §XXII complete; update §V-A queue |
+
+No lab report needed — shard origins are a retroactive depth layer, not a new system. Document inline in `story.md` when implemented.
+
+---
+
+*§XXII status: ⚠️ PLANNED — Seven Codex Shard origin stories written; all placers named (Elder Couperin → Marzena → Aldric → Hendrika → First Researcher → Warden → Froberger); flag-gated variant text for shards 5, 6, and 7 (cross-refs §XVI, §XXI, §XV); journal sidebar reward for all 7 read; two state flags; no new monsters or nodes; no lab report needed.*
+
+---
+
+## Section XXIII — Inn Dreams (Layer 58, ⚠️ PLANNED)
+
+> **The gap:** The four inns (IN, SF, IS, SQ) heal HP and advance time. When the player sleeps, the game renders a rest confirmation and continues. There is no content at that moment — no texture, no foreshadow, no reflection. This section adds a brief dream text (1–2 sentences) that fires after every rest, selected by inn and `gameDay % 3`. Three base variants per inn cycle on a 3-day rotation. Flag-gated variants replace the base when specific story conditions are met.
+
+> **The philosophy:** Dreams in the game are not prophetic or mechanical. They do not grant bonuses. They are not even reliably true. They are the player-character's subconscious processing what they have seen, at whatever level the character has been paying attention. A player who has done everything will get different dreams than a player who hasn't spoken to anyone.
+
+---
+
+### XXIII-A. IN Dreams — The First Inn, Birka (Acts I and VIII)
+
+Base variants (cycle by `gameDay % 3`):
+
+1. *"Birka in the small hours. The fires are banked. Something is counting the days — not with alarm, just keeping track."*
+2. *"A door you have walked past a hundred times. Tonight you try the handle. It opens onto another door. You decide this is fine."*
+3. *"The city is very quiet. You are aware, in the way of dreams, that this is temporary. You sleep anyway."*
+
+Flag-gated replacements:
+
+- If `frobergerLastEntryRead`: *"Entry 41. He knew it was the last one. He wrote it anyway. You sleep in a city he documented until he couldn't."*
+- If `entry42Written`: *"Entry 42 is in the journal now. Forty-two entries. You are one of them. The journal is heavier than it looks."*
+- If `vaArchitectureKnown`: *"Four authors. You are the fourth. The journal has always had room for a fourth. You dream about that."*
+
+---
+
+### XXIII-B. SF Dreams — Storefront Inn, Tilbury (Act II)
+
+Base variants:
+
+1. *"The harbor at night. Ship bells. One bell does not stop when the others do."*
+2. *"Something large, moving slow, below the surface. It is looking for something. In the dream you know what it is looking for. When you wake up, you don't."*
+3. *"The harbor board. All the berths are accounted for. You count them. Eleven. Then you count again. Twelve."*
+
+Flag-gated replacements:
+
+- If `tlLedgerRead`: *"The Harrow's berth. Empty. Rennau stands at the board with his pen. He doesn't write anything. Neither do you."*
+- If `tlMissingShipSolved`: *"Ori's voice, calm: 'I went over the side before it hit.' The shape passes beneath where the ship was. You understand, in the dream, that she was right to go over."*
+
+---
+
+### XXIII-C. IS Dreams — Smuggler's Safe House, Visby (Acts III–V)
+
+Base variants:
+
+1. *"The caves go deeper than the map says. You can hear counting in the dark. Not numbers — something else being enumerated."*
+2. *"A mark on the wall. You did not put it there. You do not recognize it. Someone before you did. Someone before them made it."*
+3. *"You are being watched from somewhere in the dark. The watcher is patient. They have been waiting longer than you have been alive. This does not frighten you, in the dream."*
+
+Flag-gated replacements:
+
+- If `vsDebtProbed`: *"Mordus at a table, writing in a ledger. He crosses out a number and writes another. The number never gets smaller."*
+- If `vsShamanPersuaded`: *"The counting stops. What replaces it is not silence — it is a rhythm. You almost hear the words. You feel that they are not a threat."*
+- If `wardensLegacyKnown`: *"The mark on the wall resolves. You recognize it now. It is very old. It was put there by someone who was told to put it there. They did exactly what they were asked. That is what the mark means."*
+
+---
+
+### XXIII-D. SQ Dreams — Scholar's Quarter, Weimar (Acts VI–VII, free sleep)
+
+Base variants:
+
+1. *"Pages turning by themselves. One at a time, deliberate. You have the impression that something is reading, not that the pages are moving."*
+2. *"A name at the margin of a book. You almost read it. The handwriting is older than the paper it is written on."*
+3. *"The archive is perfectly organized. The system makes sense. You understand the system completely in the dream and cannot explain it when you wake up."*
+
+Flag-gated replacements:
+
+- If `wmFirstResearcherKnown`: *"Document 3, the personnel file. You can read the name now. You read it again to make sure. It is the same name both times."*
+- If `vaArchitectureKnown`: *"Constructor's Log, Entry 7: 'If someone is reading this, the sealing mechanism has activated.' You are reading it. You already knew this."*
+- If `shardNotesAllRead`: *"Seven handwritings. You could identify each one now. They are distinct in the dream in a way they aren't on paper. You think: that is what a chain looks like."*
+
+---
+
+### XXIII-E. Implementation
+
+**New const:** `INN_DREAMS` — object keyed by inn node code (`IN`, `SF`, `IS`, `SQ`).
+
+Each entry:
+```js
+'IN': {
+  base: ['...day1...', '...day2...', '...day3...'],
+  conditional: [
+    { flag: 'frobergerLastEntryRead', text: '...' },
+    { flag: 'entry42Written', text: '...' },
+    { flag: 'vaArchitectureKnown', text: '...' }
+  ]
+}
+```
+
+**Render logic:** In the sleep/rest function (after HP restore, before advancing `gameDay`):
+1. Check if current node is an inn node — if not, no dream text
+2. Select base variant: `INN_DREAMS[nodeCode].base[gameDay % 3]`
+3. Check conditionals in order: use the first matching flag's text instead of base
+4. Render dream text in a styled block (italic, smaller, below the HP restore confirmation)
+
+**No new state flags, no new monsters, no new quests, no new items.** The dreams do not need tracking — they are ambient texture.
+
+**One optional flag:** `firstDreamSeen` (boolean) — set on first dream render. Can be used by FC01 doc health or future achievement system. Otherwise has no effect.
+
+---
+
+### XXIII-F. Documentation Updates Required on Implementation
+
+| File | Change |
+|------|--------|
+| `story.md` | Add §Inn Dreams section: full `INN_DREAMS` content for all 4 inns (base + conditional variants) |
+| `mechanics.md` | Add §Sleep and Dreams to the rest/inn section: cycle logic, conditional check, render note |
+| `plan.md` | Mark §XXIII complete; update §V-A queue |
+
+No lab report needed — too small; document inline.
+
+---
+
+*§XXIII status: ⚠️ PLANNED — Inn Dreams designed; 4 inns × 3 base variants + flag-gated replacements; IN dreams cross-ref §XV (Froberger entry, Entry 42, four-author chain); SF dreams cross-ref §XIX (Harrow/Ori); IS dreams cross-ref §XX/§XXI (Mordus ledger, Warden resolution, Hollow Hands mark); SQ dreams cross-ref §XVI/§XVII/§XXII (First Researcher name, Constructor's Log, seven handwritings); no new state flags; no new monsters; no lab report needed.*
 
