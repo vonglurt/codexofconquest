@@ -10,7 +10,7 @@
 
 This document captures aspirational ideas that sit outside the current implementation queue. Nothing here is PLANNED in the plan.md sense — there is no Layer number, no insertion spec, no state flags. These are "what if the game is complete and we want to go further" ideas: companion publications, tooling products, and interface concepts that would require significant work beyond `roll2hit-v3.html`. They are recorded here so they are not lost, not so they are acted on immediately.
 
-The three major concepts explored are: (1) a **Dungeon Master's Companion Guide** — a full spoiler manual for GMs running roll2hit as a tabletop session; (2) a **Fishing Guide** — a standalone reference for the fishing system; and (3) a **Mission Explorer** — a CRUD-style read interface for exploring mission arcs, monster data, and NPC dispositions with full debug metadata. The Mission Explorer is the most technically ambitious and the one most likely to have a standalone implementation path.
+The four major concepts explored are: (1) a **Dungeon Master's Companion Guide** — a full spoiler manual for GMs running roll2hit as a tabletop session; (2) a **Fishing Guide** — a standalone reference for the fishing system; (3) a **Mission Explorer** — a CRUD-style read interface for exploring mission arcs, monster data, and NPC dispositions with full debug metadata; and (4) a **Polyphonic Pipe Organ Synthesizer** — real-time background music computed from 72 sine wave oscillators (12-note polyphony × 6 harmonics per note), driven by MIDI or a JSON tablature sequencer, delivered as a standalone `roll2hit-organ.html` with no samples and no audio files. The Mission Explorer and Organ Synthesizer are the most technically concrete and each has a clear standalone implementation path.
 
 ---
 
@@ -286,4 +286,236 @@ This would mean the Fishing Guide is written as a readable item — in-world pro
 
 ---
 
-*Lab report status: 💭 ASPIRATIONAL — three future product concepts documented; no implementation timeline; no Layer numbers; no plan.md sections. Record kept here so ideas are not lost. Re-evaluate after all Layers 44–58 are implemented.*
+---
+
+## VI. Polyphonic Pipe Organ Synthesizer — Background Music via Sine Waves
+
+### A. The Concept
+
+A real-time polyphonic pipe organ synthesizer running entirely in the browser via the Web Audio API. No samples. No audio files. Pure mathematics: sine waves mixed in the proportions that a real pipe organ produces, driven by a sequencer that reads a note file and plays it like a player piano — in the background, as the game is played.
+
+**Why an organ?** Pipe organs are the ideal instrument to simulate with sine waves because their harmonic structure is precisely predictable. Each pipe produces a fundamental frequency plus a series of overtones that follow the harmonic series exactly. The timbre (the "color" of the organ's sound) comes from the relative volumes of those overtones — not from the complexity of the waveform itself. This means a convincing organ simulation requires no samples and no convolution: just oscillators, gain nodes, and a mixer.
+
+**Why sine waves?** A sine wave is the fundamental unit of acoustic energy. Every sound — every instrument, every voice, every noise — can be expressed as a sum of sine waves at different frequencies and amplitudes (Fourier's theorem). For a pipe organ, the decomposition is not just theoretical: the instrument literally generates those sine wave components mechanically, one per pipe. Simulating it is reconstruction, not approximation.
+
+---
+
+### B. Harmonic Series — The Physics
+
+When an organ pipe sounds a note at fundamental frequency *f*, it also generates overtones at integer multiples of *f*. The amplitude of each overtone decreases inversely with its order:
+
+| Harmonic | Frequency | Amplitude (ratio) | Pipe organ stop analogy |
+|----------|-----------|-------------------|------------------------|
+| 1st (fundamental) | *f* | 1.000 | Principal 8' |
+| 2nd | 2*f* (octave) | 0.500 | Principal 4' |
+| 3rd | 3*f* (octave + fifth) | 0.333 | Quint 2⅔' |
+| 4th | 4*f* (two octaves) | 0.250 | Principal 2' |
+| 5th | 5*f* (two octaves + third) | 0.200 | Tierce 1⅗' |
+| 6th | 6*f* (two octaves + fifth) | 0.167 | Larigot 1⅓' |
+
+**For each note played:** create 6 oscillators (one per harmonic), each at frequency `n * f`, each with gain proportional to `1/n`. Sum through a master gain node. The result sounds like a principal organ stop.
+
+**Polyphony:** 12 simultaneous notes × 6 harmonics each = **72 sine wave oscillators running simultaneously**. The Web Audio API handles this comfortably; modern browsers can sustain hundreds of concurrent oscillator nodes.
+
+---
+
+### C. Oscillator Architecture
+
+```
+For each active note N (up to 12 simultaneous):
+
+  MIDI note → frequency f = 440 × 2^((note - 69) / 12)
+
+  Oscillator 1 (fundamental):  freq = 1 × f,  gain = 1.000 × velocity × masterGain
+  Oscillator 2 (2nd harmonic): freq = 2 × f,  gain = 0.500 × velocity × masterGain
+  Oscillator 3 (3rd harmonic): freq = 3 × f,  gain = 0.333 × velocity × masterGain
+  Oscillator 4 (4th harmonic): freq = 4 × f,  gain = 0.250 × velocity × masterGain
+  Oscillator 5 (5th harmonic): freq = 5 × f,  gain = 0.200 × velocity × masterGain
+  Oscillator 6 (6th harmonic): freq = 6 × f,  gain = 0.167 × velocity × masterGain
+
+  All 6 → GainNode(note) → masterGainNode → AudioContext.destination
+
+Total: 12 × 6 = 72 oscillators + 12 note GainNodes + 1 masterGainNode
+```
+
+**Stop simulation:** Different organ stops emphasize different harmonics. The mixer for each harmonic order is a GainNode whose value can be changed in real time:
+
+```
+stopMixer = {
+  h1: 1.000,  // fundamental weight — increase for flute; keep at 1.0 for principal
+  h2: 0.500,  // 2nd harmonic — decrease for flute; increase for reed
+  h3: 0.333,  // 3rd harmonic — decrease for flute; emphasized for string stops
+  h4: 0.250,  // 4th harmonic
+  h5: 0.200,  // 5th harmonic — emphasized for mixture stops (brightness)
+  h6: 0.167   // 6th harmonic
+}
+```
+
+This gives the player a virtual drawbar organ (similar to a Hammond B3 but simulating pipe organ stops rather than a tonewheeel organ). Six sliders — one per harmonic order — control the timbre in real time.
+
+---
+
+### D. Input Format — MIDI vs. Custom
+
+**MIDI** is the standard and the right choice. Reasons:
+- `navigator.requestMIDIAccess()` (Web MIDI API) gives browser access to hardware MIDI controllers
+- MIDI files (`.mid`) are the universal format for pre-composed sequences
+- MIDI note numbers map directly to frequencies via the standard formula
+- Tempo, timing, and channel assignment are already handled by the MIDI spec
+
+**MIDI channels for this implementation:**
+- Channel 1: Manual I (right hand / melody)
+- Channel 2: Manual II (left hand / harmony)
+- Channel 3: Pedal (bass — lowest octave; only fundamentals + 2nd harmonic, no high partials)
+- Channels 4–16: reserved for expansion or polyphonic aftertouch
+
+**16th note resolution at tempo:** MIDI files carry their own tempo in BPM. The sequencer reads the MIDI file's timing track (division, tempo change events) and schedules Web Audio API events using `AudioContext.currentTime` with sub-millisecond precision. No approximation needed — Web Audio scheduling is sample-accurate.
+
+**If not MIDI:** A simple JSON tablature format works for hand-authored sequences:
+
+```json
+{
+  "bpm": 108,
+  "resolution": 16,
+  "events": [
+    { "beat": 0,    "note": 67, "duration": 1, "velocity": 0.8, "ch": 1 },
+    { "beat": 0.5,  "note": 67, "duration": 1, "velocity": 0.8, "ch": 1 },
+    { "beat": 1.0,  "note": 67, "duration": 1, "velocity": 0.8, "ch": 1 },
+    { "beat": 1.5,  "note": 63, "duration": 4, "velocity": 1.0, "ch": 1 }
+  ]
+}
+```
+
+`beat` is in 16th-note units. `duration` is in 16th-note units. This is readable by hand and parseable by a single JSON.parse().
+
+---
+
+### E. Beethoven's 5th — The Example Sequence
+
+The opening of Beethoven's 5th Symphony (the *da da da DOMMM* motif) is ideal as a test sequence:
+- Short, immediately recognizable
+- Demonstrates polyphony: the held note overlaps with the repeat of the motif
+- Loops naturally: after the second phrase ends, it returns to the first
+
+**Pitches:**
+- First phrase: G4 G4 G4 Eb4 (short short short long) — MIDI: 67 67 67 63
+- Second phrase: F4 F4 F4 D4 (short short short long) — MIDI: 65 65 65 62
+- At 108 BPM, "short" = eighth note = 277ms; "long" = half note = 1111ms
+
+**JSON tablature (16th note units at 108 BPM):**
+
+```json
+{
+  "title": "Beethoven Symphony No. 5, Op. 67 — Opening Motif",
+  "bpm": 108,
+  "resolution": 16,
+  "loop": true,
+  "events": [
+    { "beat": 0,  "note": 67, "duration": 2, "velocity": 0.85, "ch": 1 },
+    { "beat": 2,  "note": 67, "duration": 2, "velocity": 0.85, "ch": 1 },
+    { "beat": 4,  "note": 67, "duration": 2, "velocity": 0.85, "ch": 1 },
+    { "beat": 6,  "note": 63, "duration": 8, "velocity": 1.00, "ch": 1 },
+    { "beat": 14, "note": 65, "duration": 2, "velocity": 0.85, "ch": 1 },
+    { "beat": 16, "note": 65, "duration": 2, "velocity": 0.85, "ch": 1 },
+    { "beat": 18, "note": 65, "duration": 2, "velocity": 0.85, "ch": 1 },
+    { "beat": 20, "note": 62, "duration": 8, "velocity": 1.00, "ch": 1 }
+  ]
+}
+```
+
+**With overlap:** If the long note (Eb4, 8 beats = half note) is held for its full duration and the second phrase begins at beat 14 while beat 6's note is still sounding, 2 notes are active simultaneously. The loop then begins again while the D4 is still ringing — demonstrating the organ's natural voice overlap and why 12-note polyphony is the right target (a full Bach chorale can have 4 simultaneous parts, each sustained into the next beat, easily reaching 8 simultaneous notes when phrases overlap).
+
+---
+
+### F. Architecture Diagram
+
+```
+                          ┌─────────────────────────────────┐
+  MIDI file / JSON ──────►│         Sequencer               │
+  (or MIDI keyboard)      │   reads beats at AudioContext   │
+                          │   .currentTime; schedules start │
+                          │   and stop events per note      │
+                          └──────────────┬──────────────────┘
+                                         │ noteOn(midi, velocity, time)
+                                         │ noteOff(midi, time)
+                                         ▼
+                          ┌─────────────────────────────────┐
+                          │       Voice Pool (12 slots)     │
+                          │                                 │
+                          │  slot 0: note=67, active        │
+                          │  slot 1: note=63, active        │
+                          │  slot 2: idle                   │
+                          │  ...                            │
+                          └──────────────┬──────────────────┘
+                                         │ per active slot:
+                                         ▼
+                   ┌─────────────────────────────────────────────┐
+                   │            Voice (per note)                 │
+                   │                                             │
+                   │  f = 440 × 2^((note-69)/12)                 │
+                   │                                             │
+                   │  OscNode(1×f) → GainNode(1.000 × h1stop)   │
+                   │  OscNode(2×f) → GainNode(0.500 × h2stop)   │  ─┐
+                   │  OscNode(3×f) → GainNode(0.333 × h3stop)   │   │
+                   │  OscNode(4×f) → GainNode(0.250 × h4stop)   │   │ all → NoteGain
+                   │  OscNode(5×f) → GainNode(0.200 × h5stop)   │   │
+                   │  OscNode(6×f) → GainNode(0.167 × h6stop)   │  ─┘
+                   │                                             │
+                   │  NoteGain.gain ramps: attack 10ms,          │
+                   │  release 200ms on noteOff (pipe organ       │
+                   │  has fast attack, slow release)             │
+                   └──────────────────────┬──────────────────────┘
+                                          │ × 12 voices
+                                          ▼
+                          ┌──────────────────────────┐
+                          │      MasterGain           │
+                          │   (overall volume knob)   │
+                          └──────────────┬────────────┘
+                                         │
+                                         ▼
+                              AudioContext.destination
+                                  (speakers / headphones)
+```
+
+---
+
+### G. Implementation Notes
+
+**Envelope:** A pipe organ has essentially no attack time (the pipe speaks immediately) and a medium release (the air column decays over ~200ms when the key is released). In Web Audio API terms:
+
+```js
+noteGain.gain.setValueAtTime(0, startTime);
+noteGain.gain.linearRampToValueAtTime(velocity, startTime + 0.010); // 10ms attack
+// on noteOff:
+noteGain.gain.setValueAtTime(noteGain.gain.value, stopTime);
+noteGain.gain.linearRampToValueAtTime(0, stopTime + 0.200);         // 200ms release
+osc.stop(stopTime + 0.201); // stop all 6 oscillators after release
+```
+
+**Voice stealing:** When all 12 voice slots are occupied and a new note arrives, steal the oldest active note. Log a warning if voice stealing occurs — it means the composition has more than 12 simultaneous notes and the polyphony target should be raised.
+
+**Tuning:** Equal temperament by default (the standard formula). Add an option for meantone or Pythagorean temperament for historically-accurate organ simulation — these slightly alter the frequency of non-fundamental harmonics and produce the characteristic "beating" between intervals that period instruments have.
+
+**File format recommendation:** Use the JSON tablature format for hand-authored game loops (background music); use the Web MIDI API for live keyboard input. Both paths feed the same `noteOn(midi, velocity, time)` and `noteOff(midi, time)` functions in the Voice Pool.
+
+**Standalone file:** Deliver as `roll2hit-organ.html` — a single HTML file following the same "no server, no build" philosophy as the main game. The Beethoven motif JSON is embedded inline as a `const DEMO_SEQUENCE`. The player can open it, hear it, adjust the stop sliders, and optionally connect a MIDI keyboard.
+
+---
+
+### H. Polyphony Budget — Why 12?
+
+| Use case | Notes needed simultaneously |
+|----------|-----------------------------|
+| Simple melody | 1 |
+| Melody + bass | 2 |
+| Three-voice Bach invention | 3 |
+| Four-voice chorale | 4 |
+| Chorale with sustained notes across bar lines | 6–8 |
+| Full organ texture (chorale + counterpoint + pedal) | 8–12 |
+| With overlapping phrase releases | up to 12 |
+
+12 notes covers all practical organ repertoire, including dense Baroque polyphony. 72 oscillators is well within the Web Audio API's capacity. The main constraint is CPU — but on a modern laptop, 72 oscillator nodes running simultaneously takes approximately 2–5% of a single CPU core.
+
+---
+
+*Section VI added 2026-05-24 — Polyphonic Pipe Organ Synthesizer concept: 72-oscillator sine wave engine (12-note polyphony × 6 harmonics), Web Audio API implementation, MIDI and JSON tablature input, harmonic series mixer (stop simulation), Beethoven's 5th opening motif as demo sequence.*
