@@ -1,425 +1,273 @@
-# Roll2Hit — The Shattered Codex: Document Overview
-**Project:** roll2hit-v3.html — single-file combat tracker + narrative game engine  
-**Status:** Layers 0–45 implemented. 14,377 lines · 76 nodes · 370 monsters. Last updated 2026-05-24.
+# Roll2Hit — The Shattered Codex: Document Index
+
+**Project:** `roll2hit-v3.html` — single-file combat tracker + narrative RPG
+**Status:** Layers 0–77 implemented · 17,631 lines · 76 nodes · 370 monsters · 36 lab reports
+**Last updated:** 2026-05-25
 
 ---
 
-## Project Directive — How This Project Works
+## Project Directive
 
-> Read this section at the start of every session. It overrides default behavior.
+> Read this section at the start of every session.
 
-### Adding vs. Implementing
+**Adding = Planning.** Write a spec in `plan.md`. Assign a Layer number. Mark it `⚠️ PLANNED`. Do not touch `roll2hit-v3.html`.
 
-**Adding to the project = Planning.**  
-Write a new section to `plan.md`. Assign a Layer number. Describe the feature as a PLANNED stub. Mark it `⚠️ PLANNED`. Add PLANNED stubs to the appropriate markdown docs (`story.md`, `world.md`, `maps.md`). Do **not** touch `roll2hit-v3.html`. Nothing is "added" until it is planned in writing.
+**Implementing = Code + Sync.** Write JavaScript. Then sync every markdown doc that describes what changed. Both steps required.
 
-**Implementing = Writing code + syncing markdown.**  
-Write JavaScript/HTML to `roll2hit-v3.html`. Then sync every markdown doc that describes what you changed. Both steps must happen. A code change without a doc sync is incomplete. A doc sync without a code change is planning, not implementing.
+**Two-Way Sync Rule.** Every item in the markdown docs traces back to `roll2hit-v3.html`. Everything in the HTML has a home doc. On each sync pass: verify world map consistency across `maps.md`, `story.md`, `world.md`.
 
-### Two-Way Sync Rule
+**Lab Report Rule.** Write a `lab-report-<title>.md` for: major collections, multi-system redesigns, new narrative arcs (3+ nodes), pre-implementation design reviews, or session postmortems with non-obvious decisions. Do not write one for single-item additions or value corrections.
 
-Every item in the markdown docs must trace back to `roll2hit-v3.html` (source of truth).  
-Everything in `roll2hit-v3.html` must have a home doc.  
-On each sync pass: verify world map consistency across `maps.md`, `story.md`, `world.md`, `spec-world.md`, and `spec-engine.md`.
-
-### Lab Report Rule
-
-Write a new `lab-report-<title>.md` when any of the following is true:
-
-| Trigger | Examples |
-|---------|---------|
-| Major collection added or redesigned | New monster group, terrain cluster, NPC faction, item economy |
-| Large redesign touching multiple systems | Weapon drop overhaul, Luck Stat, fishing bait sub-system |
-| New narrative theme or arc | New quest chain spanning 3+ nodes, new named faction, new NPC arc |
-| Design review before implementation | IEEE-format spec locking data shapes and flow before any HTML edit |
-| Session postmortem with non-obvious decisions | Choices that won't be recoverable from code or core docs alone |
-
-Do **not** write a lab report for: a single monster/quest addition (sync core docs), a value correction (add implementation note to existing report), or small additions that fit in an existing doc section.
-
-When a lab report is written, **git add and commit it with the related doc changes in the same commit.** A lab report that isn't committed is a planning note, not a record.
-
-### Session Format
-
-One increment per "continue." Say "continue" to advance. Each increment ends with a confirmation before the next begins.
-
-### Cross-Reference
-
-Keep a running cross-reference table in `plan.md` (Section XI) so future passes can find where each item lives.
+**Session Format.** One increment per "continue."
 
 ---
 
 ## The Game in One Paragraph
 
-Roll2Hit is a single-file HTML application with no external dependencies. It runs as a combat dice tracker (Battle Mode) and a 76-node narrative adventure game (Story Mode). The two modes share a single mutable state object (`S_story`). The narrative game — *The Shattered Codex* — is a solo journey across 8 acts and 76 locations to collect 7 Codex Shards and seal the Void before Day 49. Combat uses the existing dice engine; story progression uses a 3×3 d-pad grid with directional navigation, stalk/wait/rest/NPC corner buttons, a Boyscout Token rest mechanic (dice-based sleep healing with first-night double rolls and Necklace Token collectibles), an inventory system, quest tracking, gate locks, a vendor economy, save/load, and a Void Tide survival clock. The player is a Level 1–20 Fighter Champion starting with a Pointy Stick and Flint Dagger, earning tattoos at each level-up visible in the interleaved character sheet.
+Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Battle Mode) and a 76-node narrative adventure game (Story Mode). The narrative game — *The Shattered Codex* — is a solo journey across 8 acts and 76 locations to collect 7 Codex Shards and seal the Void before Day 49. The player is a Level 1–20 Fighter Champion. Combat uses D&D 5e mechanics; story progression uses directional navigation across a node graph. MIT-licensed. No server. No build step.
 
 ---
 
 ## Document Index
 
-> **How to use this index:**  
-> — **Core Reference**: open in every coding session  
-> — **Spec / Plan**: consult when implementing a specific layer  
-> — **Story / World**: consult when editing node text, NPC dialogue, or lore  
-> — **Lab Report — Implemented**: archive & rationale; safe to skip in coding sessions  
-> — **Lab Report — Design Spec**: future work; not yet in code  
-
----
-
 ### Core Reference
 
-#### `index.md` — This File
-**Purpose:** Central index and session review plan.  
-**Scope:** Cross-document consistency guide. Does not contain game rules or code specs.  
-**Update frequency:** Every session.
+| File | Purpose | Status |
+|------|---------|--------|
+| `index.md` | This file — master index + cross-reference | ✅ Updated 2026-05-25 |
+| `plan.md` | Implementation directive + constants ref + state fields + pending FC items | ✅ Cleaned 2026-05-25 (230 lines) |
+| `mechanics.md` | Player-facing rules: combat flow, 1.5 AP economy, weapons, vendor, loot, leveling, conditions | ✅ Reviewed 2026-05-24 |
+| `combat.md` | Battle engine reference: initiative, overlay, Champion features, death saves, flee | ✅ Reviewed 2026-05-24 |
+| `maps.md` | World map: 26×16 grid, 76 node codes + coordinates, N/E/S/W network, gate locks, corridors | ✅ Reviewed 2026-05-24 |
+| `story.md` | Main quest narrative: 42 story nodes across 8 acts, 7 Epic NPC profiles, prologue, endings, NG+ | ✅ 76 nodes covered |
+| `world.md` | DM manual: world history, 4 factions, 7 Epic NPC profiles, quest motivation, survival pressure | ✅ Reviewed 2026-05-24 |
+| `monsters.md` | 370 monsters: stat blocks by tier and terrain pool, 20 EB bosses, fish pool | ✅ Verified 2026-05-24 |
+
+### Story Arc Files
+
+| File | Content | Intersection |
+|------|---------|-------------|
+| `story-flowchart.md` | Full story flowchart using two-letter node codes · arc overlays · intersection points ★ | All arcs |
+| `story-arc-investigation.md` | §XVI Weimar Scholar Gate + §XVII Void Archaeology + §XXI Void Shaman chain | SQ · MT · CI |
+| `story-arc-coastal.md` | §XIX Tilbury Harbor + §XX Visby Underground | DK · SF · GC |
+| `story-arc-ngplus.md` | §XV NG+ Remembrance · Entry 42 · quest_ng_01/02/03 | CI · SQ · CO |
+| `story-arc-npc-dialogues.md` | Birka Six NPC_DIALOGUES full transcript (120 quotes) · arc summary | CI · IN · TV · BA · CY |
+| `story-arc-epic-battlegrounds.md` | Q52–Q71 EB quest-giver dialogue (5 fields × 20 entries) | 20 dead-end nodes |
+
+### Content Files
+
+| File | Content | Status |
+|------|---------|--------|
+| `froberger-journal-all-entries.txt` | All 41 Froberger journal entries verbatim | ✅ Verified 41/41 (2026-05-24) |
+| `ux-first-battles.md` | First battles UX walkthrough, 10 UX fixes, wimper/flee flow | ✅ Accurate for L0–37 |
+| `5thOrgan.html` | Standalone polyphonic pipe organ synthesizer (72 oscillators, Beethoven canon) | ✅ 2026-05-24 |
+
+### Spec Documents *(historical — all implemented)*
+
+| File | Scope |
+|------|-------|
+| `spec-engine.md` | Layers 0–20 narrative engine design — all marked IMPLEMENTED |
+| `spec-corridors.md` | Layer 9 corridor system — all L9-A through L9-H ✅ |
+| `spec-world.md` | WORLD_DB + MONSTER_POOL architecture — counts verified (66 terrains, 370 monsters) |
+| `spec-combat.md` | Phase 0/2 combat arena spec — historical |
+| `spec-migration.md` | Layers 0–8 IEEE migration report — all sections implemented |
 
 ---
 
-#### `mechanics.md` — Player-Facing Rules Reference
-**Purpose:** Operational guide for all implemented game mechanics: combat flow, action economy (1.5 AP), weapon drops, vendor system, 4-tier healing potions, Hearth Home, Transmort Scroll, sidequests, short rests, condition costs, shields, spell scrolls, Flashbang, safe flee/wimper, defeat screens, starting kit.  
-**Scope:** Battle Mode + Story Mode rules. Primary player and DM reference.  
-**Status:** ✅ REVIEWED 2026-05-22. Updated with Layers 21–45: Fighter Champion system, NPC favorability, Epic Battlegrounds, NG+, d100 loot, S-suggestion systems. 14,377-line codebase.
+## Lab Report Index (All 36 Reports)
+
+### Architecture & Systems
+
+| File | Layer(s) | Topic |
+|------|---------|-------|
+| `lab-report-architecture-full.md` | 0–45 | Complete IEEE function catalog — every function, all subsystems, flow charts |
+| `lab-report-documentation-system-design.md` | — | Two-way sync architecture, plan.md purpose, task decomposition framework |
+| `lab-report-plan-cleanup-world-builder-arc.md` | 48–77 | plan.md archaeology + arc from dice tracker to world builder |
+| `lab-report-timeline-history-completed.md` | 0–45 | Complete layer-by-layer development timeline archive |
+| `lab-report-prompt-migration-arena-to-prototype.md` | 0–13 | Arena → Prototype: specification gravity, Cooperative DM Principle |
+
+### Combat & Mechanics
+
+| File | Layer(s) | Topic |
+|------|---------|-------|
+| `lab-report-leveling-flashbang-condition-economy.md` | 18 | Level-up system, Flashbang, CONDITION_GOLD ×100, 0.5-action bonus phase |
+| `lab-report-drop-rates-balance-and-health.md` | 12 | `reward = floor(0.1 × AC × maxHP)`, health economy, Cooperative DM Principle |
+| `lab-report-loot-drop-weapon-economy.md` | 25 | Historical proposal — superseded by `_D100_TABLE`. Read for design context. |
+| `lab-report-luck-seventh-stat.md` | 48 | §XIII Luck as seventh stat — d20 roll modifier, stat interaction |
+| `lab-report-tattoo-progression-system.md` | 76 | §XLI Tattoo progression — character creation modal, HP tattoos, death persistence |
+| `lab-report-kenickie-chronicle.md` | 75+77 | §XL Kenickie's black market + §XLII Chronicle System (careerStats/runStats) |
+
+### World & Navigation
+
+| File | Layer(s) | Topic |
+|------|---------|-------|
+| `lab-report-plan-cleanup-v13.md` | 9–13 | Spec archive Layers 9–13 — corridor, hunt, stalk, quest engine |
+| `lab-report-plan-cleanup-v17.md` | 14–17 | Spec archive Layers 14–17 — conditions, shield, flee, 6 bug corrections |
+| `lab-report-circuit-map-theory.md` | 9 | CS theory: sparse node mesh, junction concept, TSP framing, Hunt/Warp traces |
+| `lab-report-battleground-circuit-path-quest.md` | 9–12 | Stalk mechanics, quest-coupled guaranteed encounters, XP methodology |
+| `lab-report-epic-battlegrounds.md` | 39 | §0 20 EB dead-end nodes, `EB_NPC_DIALOGUE`, payment negotiation, return beats |
+
+### Monsters & Fishing
+
+| File | Layer(s) | Topic |
+|------|---------|-------|
+| `lab-report-fish-with-dnd.md` | 37 | Yugurt Lake — 20 rank fish, 2d20 cast roll, predator-as-combat design |
+| `lab-report-fishing-bait-prompting.md` | 47 | §XII Fishing bait sub-system design — 5 bait tiers, biome zones, Luck integration |
+
+### NPC & Narrative
+
+| File | Layer(s) | Topic |
+|------|---------|-------|
+| `lab-report-birka-beginner-arc.md` | 41 | Birka Six NPCs, 7 quests, Rough Whiskey, Yael escort, pit fight |
+| `lab-report-npc-dialogue-system.md` | 42 | 4-state dialogue system, `NPC_DIALOGUES` (6×4×5), `_missionComplete()` |
+| `lab-report-friendships-with-magic.md` | 41–42 | Session postmortem — waypoint BFS highlight, Hunt Mode, EB negotiation |
+| `lab-report-living-world.md` | 44 | World progression events, Gigault stall, NPC farewells, Act III desaturation |
+| `lab-report-web-of-connections.md` | 45 | `FROBERGER_TRACES`, `NPC_CROSS_REFS` (17), Room 6, Yael patrol, cross-item triggers |
+| `lab-report-ally-cat.md` | 44 | §IX Cat Quarter — 6-quest arc, Ally Cat hierarchy, Kenickie unlock |
+| `lab-report-narrative-arcs-brynn-bruhns-yael.md` | 70+72+74 | §XXXV Brynn's Vigil + §XXXVII Bruhns CO scene + §XXXIX Yael Named Report |
+
+### Quest Arcs
+
+| File | Layer(s) | Topic |
+|------|---------|-------|
+| `lab-report-game-story-codex-of-conquest.md` | 40 | `FROBERGER_JOURNAL` (41 entries), curse arc, Pinker's Curse of Knowledge |
+| `lab-report-endings-and-echoes.md` | 43 | Covenant ending system, curse score formula, epilogue scroll, NG+ state |
+| `lab-report-ng-plus-remembrance.md` | 50 | §XV Entry 42, NPC_NG_MEMORY_LINES, quest_ng_01/02/03, priorQuestMinusOne |
+| `lab-report-weimar-scholar-gate.md` | 51 | §XVI Scholar Gate — archive modal, tome items, Benedikt reading circle, First Researcher |
+| `lab-report-void-archaeology.md` | 52 | §XVII Void Archaeology — 5 investigation sites, Constructor's Log, 4-author chain |
+| `lab-report-tilbury-visby-arcs.md` | 54+55 | §XIX Tilbury Harbor + §XX Visby Underground — Rennau, Solvak, hollow_hands_guard |
+| `lab-report-void-shaman.md` | 56 | §XXI Void Shaman "The Warden" — dual resolution, verb-tense mandate corruption |
+| `lab-report-corelli-merchant.md` | 61 | §XXVI Corelli — 5-appearance wandering merchant, purchase-gated fav, last_cipher |
+| `lab-report-quest-minus-one-world-creator.md` | 49 | §XIV Quest -1 — Level 21 undefined as invitation, World Creator Wizard |
+
+### Writing & Design Philosophy
+
+| File | Topic |
+|------|-------|
+| `lab-report-story-codoex-curse-of-knowedge.md` | Pinker framework — writing guide for terrain descriptions and NPC dialogue |
+| `lab-report-Polyphonic-Organ-Synth.md` | `5thOrgan.html` — IIR biquad filter, ADSR, Beethoven canon construction, Web Audio API |
+| `lab-report-ponies-unicorns-aspirations-future-ideas.md` | Future aspirations — DM's Companion Guide, Fishing Guide, Mission Explorer |
 
 ---
 
-#### `combat.md` — Combat System Reference
-**Purpose:** Quick-reference for the battle engine flow — D-pad entry, pre-battle screen, initiative, overlay, Layers 11–17 (battle), 21 (level-up), 23 (notoriety), 36–37 (features, Boyscout).  
-**Scope:** Battle Mode only. Synced to ~10,200-line codebase as of 2026-05-21.  
-**Status:** ✅ Reference document. Accurate for Layers 0–37. Fighter features, Boyscout Token, d-pad grid all covered.
-
----
-
-### Spec & Plan Documents *(coding guides — consult when implementing)*
-
-#### `plan.md` — Layer 9–45 Implementation Plans
-**Purpose:** Full implementation plans and archives for all layers. Layers 0–45 complete. No pending layers remain.  
-**Scope:** Layers 9–45. Single source of truth for what is planned and what is done.  
-**Status:** ✅ Layers 0–45 all marked ✅. Updated 2026-05-22.
-
----
-
-#### `spec-engine.md` — Narrative Engine Design Specification
-**Purpose:** Design blueprint for the full Story Mode layer: two-mode engine, schemas (NODE_MAP, QUEST_DB, CONDITION_ITEMS), state machine, navigation, loot/quest/battle interface, and the 8-layer implementation plan plus Layers 9–20 addendum.  
-**Scope:** Layers 1–20. Primary design spec for the game engine.  
-**Status:** ✅ REVIEWED. All Layers 0–20 marked IMPLEMENTED.
-
----
-
-#### `spec-corridors.md` — Layer 9 Function-Level Spec
-**Purpose:** Function signatures, data structure definitions, and pseudo-code for every new function in Layer 9 (circuit corridors, junction nodes, Hunt/Warp dialog, fog-of-war, active path highlight).  
-**Scope:** Layer 9 only.  
-**Status:** ✅ COMPLETE. All L9-A through L9-H marked ✅.
-
----
-
-#### `spec-world.md` — Phase 3 World Engine Architecture
-**Purpose:** Architecture spec for Phase 3: terrain-stratified monster catalog, cascading dropdown world selector UI. Phase 3 targets: 329 monsters across 42 geographic terrains. Current state: 370 monsters across 66 terrains (46 base + 20 epic) — see `monsters.md` for live counts.  
-**Scope:** `WORLD_DB` + `MONSTER_POOL` data layer.  
-**Status:** ✅ REVIEWED. Count corrected 120→329, terrains 16→42. Phase 3 snapshot — live counts in `monsters.md`.
-
----
-
-#### `spec-combat.md` — Base Combat Tracker Plan *(historical)*
-**Purpose:** Original Phase 0/Phase 2 specification: 4-quadrant → 3-column arena layout, advantage/disadvantage model, history cards, config panel. Foundation that all later layers build on.  
-**Scope:** Battle Mode only. Historical document.  
-**Status:** ✅ All steps S0–S11 complete. No review needed.
-
----
-
-#### `spec-migration.md` — IEEE Technical Migration Report
-**Purpose:** Formal academic-style post-implementation report documenting the architectural migration from standalone combat tracker to narrative game engine. Covers Layers 0–8 in depth; Layers 5–8 as implemented summaries. Design decisions, state machine diagrams, control flow analysis, validation test paths.  
-**Scope:** Layers 0–8.  
-**Status:** ✅ REVIEWED v2.0. Sections IV-B, IV-D, VII-C, X, conclusion, and footer updated.
-
----
-
-### Story, World & Geography *(consult when editing nodes, NPCs, or lore)*
-
-#### `maps.md` — World Map & Node Network
-**Purpose:** Geographic reference: 26×16 grid system, all 76 node codes with coordinates, full N/E/S/W connection network, 8 inn nodes, locked passages, portal node, four towns, and GATE LOCKS table. Includes: CIRCUIT CORRIDORS section (CORRIDOR_CELLS, active path highlight), DF/HM/GL defi_land cluster (nodes 72–74), all 20 Epic Battleground dead-ends (EF–EW, nodes 52–71), and CO (The Convergence, node 76).  
-**Scope:** Navigation and geography only.  
-**Status:** ✅ REVIEWED 2026-05-24. Junction nodes J1–J7 and MT added. Gate locks verified against `GATE_LOCKS` array in code. 76-node count confirmed.
-
----
-
-#### `story.md` — Full Campaign Narrative
-**Purpose:** Complete node-by-node story across 8 acts; all 20 Epic Battleground quest dialogues (Q52–Q71, 5 fields each); NPC dialogue profiles; endings (Covenant Keeper, Groundhog Day, Cursed Seal); NG+ system. Source material for node text, NPC dialogue, battle triggers, item discovery scenes, and condition item introductions.  
-**Scope:** Narrative content. NODE_MAP text fields in code are drawn from this document.  
-**Status:** ✅ All 76 nodes covered. All 8 acts complete. EB dialogues Q52–Q71 added 2026-05-24.  
-**Note:** Node text in code is abbreviated vs. full prose here — expected.
-
----
-
-#### `world.md` — DM Manual
-**Purpose:** Backstage campaign manual: world history, four ruling factions, 7 epic NPC profiles with dialogue hooks, 13 condition items (mechanics + story introduction), updated Survival Pressure table (exhaustion→voidPressure, void tide events, defeat conditions at 10), and quest motivation architecture.  
-**Scope:** Thematic and NPC/condition reference. Not a rules document.  
-**Status:** ✅ REVIEWED. Survival Pressure rewritten with actual mechanics through Layer 20.
-
----
-
-#### `monsters.md` — Monster Reference Table
-**Purpose:** Complete reference table of 370 monsters by challenge tier (Trivial → Deadly) and source pool. Stat blocks: AC, HP, ATK, damage dice. Includes Yugurt Lake fish pool (fish_01–fish_20) and DeFi Land creatures (9 entries including WAGMI).  
-**Scope:** Monster data only.  
-**Status:** ✅ REVIEWED 2026-05-24. All 370 keys verified against MONSTER_POOL. All 8 source pools documented.
-
----
-
-### Content Files *(raw source material — not coding references)*
-
-#### `froberger-journal-all-entries.txt` — All 41 Journal Entries
-**Purpose:** Plain-text source for the complete `FROBERGER_JOURNAL` const — all 41 entries verbatim: 10 read-aloud entries (Entry 1 at CI, Entries 2–9 at act-opening nodes, Entry 10 at CO) and 31 collectible entries found at specific nodes throughout the world. Canonical text for every journal entry; use as reference when editing `FROBERGER_JOURNAL` in HTML.  
-**Status:** ✅ Verified 2026-05-24 (S23) — all 41 entries match HTML const exactly.
-
----
-
-### UX & Walkthroughs
-
-#### `ux-first-battles.md` — First Battles & First Level-Up
-**Purpose:** Player experience analysis of starting state (Level 1, 30 HP, Pointy Stick, 150gp), first safe battles in Birka Slums, Boyscout Token collectible, safe flee via wimper→bonus, and first level-up.  
-**Scope:** Post-Layer 37 UX walkthrough. Table of all 10 UX fixes applied.  
-**Status:** ✅ Written 2026-05-21. Accurate for Layers 0–37.
-
----
-
-### Lab Reports — Implemented *(retrospective/archive — reference only, safe to skip in coding sessions)*
-
-#### `lab-report-plan-cleanup-v13.md` — Layers 9–13 Spec Archive
-**Purpose:** Archives 1,223 lines of implementation spec from `plan.md` after Layers 9–13 completion. Change record, spec archive, and verification manifest that all specs are reflected in live code (7,465 lines at time of writing).
-
-#### `lab-report-plan-cleanup-v17.md` — Layers 14–17 Spec Archive
-**Purpose:** Archives 1,358 lines of compacted specs from Layers 14–17. Verifies all features against `roll2hit-v3.html` (8,110 lines at time of writing). Includes 6 post-implementation bug corrections.
-
-#### `lab-report-prompt-migration-arena-to-prototype.md` — Arena → Prototype Retrospective
-**Purpose:** Grand retrospective of Roll2Hit's transformation from dice roller to 42-node adventure. Introduces "specification gravity" — interlocking docs that prevent feature bloat. Layers 0–13 timeline.
-
-#### `lab-report-circuit-map-theory.md` — CS Theory: Corridor System
-**Purpose:** Academic/philosophical treatment of the sparse node mesh model, junction concept, TSP framing, data architecture, and full Hunt/Warp execution traces. Reference — not a coding guide.
-
-#### `lab-report-battleground-circuit-path-quest.md` — Battleground Architecture
-**Purpose:** IEEE-style report on the discrete 42-node terrain world, Stalk mechanics, quest-coupled guaranteed encounters, XP methodology. Describes the "lost in a field" UX solution.
-
-#### `lab-report-drop-rates-balance-and-health.md` — Drop Rate & Health Economy
-**Purpose:** Drop rate formula (`reward = floor(0.1 × AC × maxHP)`), health economy balancing, rest mechanics, Necklace of Knowledge, Cooperative DM Principle. Ensures net-positive resource flow for engaged play.
-
-#### `lab-report-leveling-flashbang-condition-economy.md` — Layer 18: Leveling & Condition Economy
-**Purpose:** Ten-level progression (XP_LEVELS, `_checkLevelUp`, rewards), Flashbang item, CONDITION_GOLD ×100 repricing, 0.5-action bonus phase. Layer 18 implemented and verified (8,236 lines at time of writing).
-
-#### `lab-report-birka-beginner-arc.md` — Birka Beginner Arc *(Layer 41)*
-**Purpose:** Act I Birka arc with six quests across five NPCs (Yael, Brynn, Quill, Pachelbel, Weckmann) using Tales Arcane template. Emotional attachment to Birka before main quest becomes meaningful.  
-**Status:** ✅ Done — Layer 41 implemented. All L41 steps ✅. BIRKA_NPC_PROFILES, npcFavorability, 7 Birka quests, Rough Whiskey, Yael escort, drunk pit fight, Sweelinck Birka variant live in code.
-
-#### `lab-report-npc-dialogue-system.md` — 4-State Dialogue System *(Layer 42)*
-**Purpose:** Four dialogue states per NPC (Impartial → Quest-Active → Friendly → Dear Friend). Occupation as philosophical lens. Friendship deepens specificity. Groundhog Day epilogue mechanic.  
-**Status:** ✅ Done — Layer 42 implemented. All L42 steps ✅. NPC_DIALOGUES, _getNPCDialogue(), _missionComplete(), Covenant Keeper/Groundhog Day endings live in code.
-
-#### `lab-report-architecture-full.md` — Full Architectural Review *(IEEE format)*
-**Purpose:** Complete CS academic-style architectural review of the entire roll2hit-v3.html codebase. Every function named. All subsystems analyzed with execution flow charts: Battle Mode engine, Story Mode navigation, combat bridge, loot pipeline, quest/narrative chain, NPC dialogue priority, stalk/corridor system, rest/save/persistence, DOM render architecture, mechanics deep dive (action economy, Fighter Champion, notoriety, Void Tide, curse score, NG+).  
-**Status:** ✅ Written 2026-05-22, updated 2026-05-24 — full 14,377-line codebase audit.
-
----
-
-#### `lab-report-friendships-with-magic.md` — Session Postmortem: Eight Hours in the Loop
-**Purpose:** Post-implementation audit for Layers 41–42, plus documentation of 5 new systems: waypoint exit highlighting (green BFS row), Hunt Mode persistent toggle (replaces corridor modal), EB negotiation CHA check DC 17 with gut-punch fail, guaranteed monster weapon drops (Finders Keepers, auto-equip), roll line shown on both pass and fail. Contains the project's philosophical thesis — "Friendships with Magic."  
-**Status:** ✅ Written 2026-05-22 — accurate for 12,637-line codebase, Layers 0–42.
-
----
-
-#### `lab-report-fish-with-dnd.md` — Yugurt Lake & Fishing System *(Layer 37)*
-**Purpose:** Predator fish encounter system — Yugurt Lake as a combat-dressed-as-fishing mechanic. 20 Rank fish (Needle Minnow AC5/HP4 through Yugurt's Dread AC20/HP220/4d12+9), 2d20 cast roll, guaranteed fight at every rank, no patience mechanic. Full stat block table. Mechanical design rationale: the rod is bait; the fish are what answer.  
-**Status:** ✅ Implemented — `storyFishing()`, `_startFishBattle()`, Fishing Rod item, Hooked condition, and fish_01–fish_20 MONSTER_POOL entries all live in HTML.
-
----
-
-#### `lab-report-fishing-bait-prompting.md` — Fishing & Bait Overhaul Design *(Layer 47 PLANNED)*
-**Purpose:** IEEE-format academic lab report documenting the complete Yugurt Lake Fishing & Bait Sub-System design (plan.md §XII-A through §XII-Y). Covers: 20 freshwater bait fish species (5 tiers), Tackle Box mechanic, 3-zone biome (Shore/Reeds/Deep), predator attraction formula, predator condition table by rank, magic weapon drop formula, global monster drop nerf (−3 to 0), Luck Modifier integration across all 7 fishing roll points. Also documents the `index.md` Project Directive and performs a full prompt taxonomy analysis of the session that produced this design (6 command types: increment trigger, data dump, constraint declaration, formula definition, isolation directive, synthesis command).  
-**Status:** ✅ Implemented 2026-05-25 — §XII fishing bait system (Layer 47) live in HTML. This report is the design rationale and prompting-methodology artifact for that layer.
-
----
-
-#### `lab-report-timeline-history-completed.md` — Development Timeline & History *(Archive)*
-**Purpose:** Complete extracted history of Roll2Hit's implementation: 46 named development layers (Layers 0–45), 32 global constants, 55 runtime state fields, 11 archived lab reports, 60 fulfilled feature suggestions, and the full Baroque organ composer naming migration. Source of truth for "how we got here."  
-**Status:** ✅ Archive — extracted from plan.md 2026-05-22. All layers complete. Not a coding reference; read for historical context only.
-
----
-
-### Lab Reports — Historical Design Specs *(superseded or fully implemented)*
-
-> **These files are historical design documents.** All planned features listed below are now implemented. Read for design context only.
-
-#### `lab-report-world-creator.md` — Fork, Extend, and Quest -1 *(Layer 49 PLANNED — not yet written)*
-**Purpose:** Full walkthrough of the World Creator Wizard: adding one monster, one quest, one mission bit using grep/sed with count verification. Shell session transcript showing before/insert/after/sync. Philosophy: the player who opens the console is the next developer. MIT License as game mechanic. Quest -1: The Open Door (triggers at Level 20).  
-**Status:** ✅ Implemented 2026-05-25 — §XIV Quest -1 + World Creator (Layer 49) live in HTML. Lab report written post-implementation. Quest -1 text, shell tooling, and story/mechanics integration all implemented.
-
----
-
-#### `lab-report-loot-drop-weapon-economy.md` — Loot System Redesign *(proposal)*
-**Purpose:** Identifies four issues in current loot: XP thresholds unattainable (~680k max unreachable), no unified drop table, unenforced magic tier gates, incomplete item categories. Proposes compressed XP scaling, d100 loot table, tier enforcement, corrected offhand slot rules.  
-**Status:** ✅ Superseded — loot system (L25) fully implemented via `_D100_TABLE`. Document is historical proposal; the conflicts it identified are all resolved in the live codebase.
-
-#### `lab-report-epic-battlegrounds.md` — Epic Battlegrounds *(20 new nodes)*
-**Purpose:** 20 dead-end nodes for outdoor terrain bosses paired with NPC quests. Each terrain type gains one Epic Battleground: named NPC, warning, negotiation phase, return quest.
-
-#### `lab-report-endings-and-echoes.md` — Covenant Arc Endings *(Layer 43)*
-**Purpose:** Ending sequence mechanics: Covenant Ceremony animation, dynamic NPC epilogue sequences, Cursed Seal echo (Groundhog Day mechanic), "who did you help" consequence tracking.  
-**Status:** ✅ Written 2026-05-22 — Layer 43 complete. All L43-A through L43-W implemented. Source for all const content and NG+ systems.
-
-#### `lab-report-game-story-codex-of-conquest.md` — Codex of Conquest Narrative Arc *(future)*
-**Purpose:** D&D 5-step quest template for Froberger's arc. Pinker's "Curse of Knowledge" as both theme and structure. Player choices about helping NPCs define the ending.
-
-#### `lab-report-story-codoex-curse-of-knowedge.md` — Pinker Framework Application *(writing guide)*
-**Purpose:** Applies Pinker's writing principles (curse of knowledge, mental imagery, example-generalization pendulum, empathy) to terrain descriptions and character dialogue for emotional depth.
-
-#### `lab-report-living-world.md` — Off-Screen World Progression *(Layer 44)*
-**Purpose:** World state progression triggered by story milestones (not real-time). NPCs persist independently of player action. Gigault as an example NPC who exists but is never interactable.  
-**Status:** ✅ Done — Layer 44 implemented. Gigault stall, world progression events, minimap warmth, NPC farewells, Act III desaturation, Brynn maintenance/ledger, Deacon's Code, Void's First Sign, final map render all live.
-
-#### `lab-report-web-of-connections.md` — NPC Cross-Relationships *(Layer 45)*
-**Purpose:** NPCs have pre-existing relationships, debts, and histories with each other and with Froberger. Players discover connections gradually — the world predates their arrival.  
-**Status:** ✅ Done — Layer 45 implemented. FROBERGER_TRACES (6 NPCs), NPC_CROSS_REFS (17 lines across 6 NPCs), Nivers ("Evening."), Yael patrol nodes, Weckmann training log, Room 6, cross-item triggers all live.
-
----
-
-#### `lab-report-documentation-system-design.md` — Documentation System Design *(IEEE format)*
-**Purpose:** IEEE-format analysis of the two-way synchronization architecture, `plan.md`'s role as master planning document, keyword vocabulary across all prompts, task decomposition framework (Spec → Stub → Code → Sync → Commit), and ASCII architecture diagrams for all major subsystems.  
-**Status:** ✅ Written — covers document hierarchy, sync symmetry as bijection, PLANNED feature lifecycle flowchart, session workflow flowchart, state flag architecture, FC item queue recommendations.
-
----
-
-#### `lab-report-ponies-unicorns-aspirations-future-ideas.md` — Future Aspirations *(post-completion concepts)*
-**Purpose:** Aspirational ideas beyond the current build — not PLANNED layers. Documents four future product concepts: (1) DM's Companion Guide (80–120 page spoiler manual with NPC profiles, mission architecture, monster manual); (2) standalone Fishing Guide; (3) Mission Explorer (CRUD-style read interface showing monster/NPC/quest/state data with full debug metadata); (4) Polyphonic Pipe Organ Synthesizer (concept origin — see `lab-report-Polyphonic-Organ-Synth.md` for full implementation).  
-**Status:** 💭 Aspirational — Section VI (organ) now implemented as `5thOrgan.html`.
-
----
-
-### Standalone Tools *(no build step — open directly in browser)*
-
-#### `5thOrgan.html` — Polyphonic Pipe Organ Synthesizer
-**Purpose:** Self-contained browser synthesizer. 12-voice polyphony × 6 harmonics per note = up to 72 simultaneous sine oscillators. Additive synthesis with real-time drawbar controls (H1–H6), ADSR envelope, biquad lowpass filter, harmonic falloff (dB/oct), and oscilloscope. Sequencer plays Beethoven Op.67 as a two-voice canon round. All parameters adjustable in real time.  
-**Status:** ✅ Implemented 2026-05-24. Open in any modern browser; no server required.
-
-#### `lab-report-Polyphonic-Organ-Synth.md` — Organ Synthesizer Design *(IEEE format)*
-**Purpose:** Full IEEE-format lab report on `5thOrgan.html`. Covers: harmonic series physics and stop registration (drawbars); MIDI-to-Hz mapping; ADSR envelope math for pipe organ; IIR biquad lowpass filter derivation (bilinear transform, Audio EQ Cookbook coefficients); convolution theorem connection; Beethoven 5th canon construction (note-collision proof); Web Audio API architecture diagram (170 node count); oscilloscope math; parameter reference table; design decisions (OscillatorNode vs ScriptProcessorNode; Taylor series sin reference; voice stealing); post-session review with future directions.  
-**Status:** ✅ Written 2026-05-24.
+## Reverse Lookup — Keywords to Files
+
+> Find any topic and the files that elaborate it. Every file has at least one inbound reference.
+
+| Keyword / Topic | Primary File | Elaboration |
+|----------------|-------------|-------------|
+| **Action economy (1.5 AP)** | `mechanics.md` | `lab-report-plan-cleanup-v17.md` |
+| **Ability scores** | `mechanics.md` | `plan.md §III` |
+| **ASI table (d6)** | `mechanics.md` | `plan.md §II` |
+| **Antecedent / cage** | `story-arc-investigation.md` | `lab-report-void-archaeology.md` · `lab-report-void-shaman.md` |
+| **Archive modal (Weimar)** | `story-arc-investigation.md` | `lab-report-weimar-scholar-gate.md` |
+| **Benedikt Rasp** | `story-arc-investigation.md` | `lab-report-weimar-scholar-gate.md` · `lab-report-void-archaeology.md` |
+| **Battle Mode engine** | `combat.md` | `lab-report-architecture-full.md` · `spec-combat.md` |
+| **BFS pathfinding** | `maps.md` | `lab-report-circuit-map-theory.md` · `lab-report-battleground-circuit-path-quest.md` |
+| **Birka Six NPCs** | `world.md` | `lab-report-birka-beginner-arc.md` · `story-arc-npc-dialogues.md` |
+| **Brynn Clerambault** | `story-arc-npc-dialogues.md` | `lab-report-narrative-arcs-brynn-bruhns-yael.md` · `lab-report-living-world.md` |
+| **Bruhns CO scene** | `story.md` | `lab-report-narrative-arcs-brynn-bruhns-yael.md` |
+| **Career/run stats (Chronicle)** | `lab-report-kenickie-chronicle.md` | `plan.md §III (careerStats/runStats)` |
+| **Cat Quarter / Ally Cat** | `story.md` | `lab-report-ally-cat.md` |
+| **Codex Shards (7)** | `story.md` | `lab-report-game-story-codex-of-conquest.md` |
+| **Conditions / CONDITION_GOLD** | `mechanics.md` | `combat.md` · `lab-report-leveling-flashbang-condition-economy.md` |
+| **Constructor's Log** | `story-arc-investigation.md` | `lab-report-void-archaeology.md` · `lab-report-void-shaman.md` |
+| **Cooperative DM Principle** | `lab-report-drop-rates-balance-and-health.md` | `lab-report-prompt-migration-arena-to-prototype.md` |
+| **Corelli merchant** | `story.md §XXVI stub` | `lab-report-corelli-merchant.md` · `story-arc-coastal.md` |
+| **Corridor system** | `maps.md` | `spec-corridors.md` · `lab-report-circuit-map-theory.md` |
+| **Curse score / Covenant Standing** | `story.md` | `lab-report-endings-and-echoes.md` · `lab-report-architecture-full.md` |
+| **Daggers (offhand)** | `mechanics.md` | `plan.md §II` |
+| **Death saves** | `combat.md` | `lab-report-plan-cleanup-v17.md` |
+| **defi_land cluster (DF/HM/GL)** | `maps.md` · `world.md` | `story-flowchart.md` |
+| **Drop rates / reward formula** | `mechanics.md` | `lab-report-drop-rates-balance-and-health.md` |
+| **Entry 42** | `story-arc-ngplus.md` | `lab-report-ng-plus-remembrance.md` · `lab-report-void-archaeology.md` |
+| **Epic Battlegrounds** | `story-arc-epic-battlegrounds.md` | `lab-report-epic-battlegrounds.md` · `story-flowchart.md` |
+| **Endings / epilogue** | `story.md` | `lab-report-endings-and-echoes.md` |
+| **Fighter Champion features** | `mechanics.md` | `plan.md §II (FIGHTER_FEATURES)` |
+| **First Researcher (Marta Eilene Vass)** | `story-arc-investigation.md` | `lab-report-weimar-scholar-gate.md` · `lab-report-void-archaeology.md` |
+| **Fishing / Yugurt Lake** | `monsters.md` | `lab-report-fish-with-dnd.md` · `lab-report-fishing-bait-prompting.md` · `maps.md` |
+| **Froberger journal (41 entries)** | `froberger-journal-all-entries.txt` | `lab-report-game-story-codex-of-conquest.md` · `story.md §PROLOGUE` |
+| **Froberger traces** | `world.md` | `lab-report-web-of-connections.md` |
+| **Gate locks (4 passages)** | `maps.md` | `plan.md §II (GATE_LOCKS)` |
+| **Hollow Hands sub-clan** | `story-arc-coastal.md` | `lab-report-tilbury-visby-arcs.md` · `lab-report-void-shaman.md` |
+| **Hunt Mode / stalk** | `mechanics.md` | `lab-report-battleground-circuit-path-quest.md` · `lab-report-friendships-with-magic.md` |
+| **Inn Dreams** | `story.md §XXIII stub` | `lab-report-void-archaeology.md §H` |
+| **Investigation chain arc** | `story-arc-investigation.md` | `story-flowchart.md` |
+| **Isolde Voss (Archivist)** | `story-arc-investigation.md` | `lab-report-weimar-scholar-gate.md` |
+| **Kenickie's market** | `lab-report-kenickie-chronicle.md` | `lab-report-ally-cat.md` |
+| **Lab report policy** | `index.md` · `plan.md §I` | `lab-report-documentation-system-design.md` |
+| **Level-up system** | `mechanics.md` | `lab-report-leveling-flashbang-condition-economy.md` · `lab-report-architecture-full.md` |
+| **Luck stat** | `mechanics.md` | `lab-report-luck-seventh-stat.md` · `lab-report-fishing-bait-prompting.md` |
+| **MIT License / Quest -1** | `story.md §XIV` | `lab-report-quest-minus-one-world-creator.md` |
+| **Monster pool (370)** | `monsters.md` | `plan.md §II (MONSTER_POOL)` · `spec-world.md` |
+| **Mordus (Warlord)** | `story.md` · `world.md` | `lab-report-tilbury-visby-arcs.md` |
+| **MT Mountain Pass** | `maps.md` · `story-flowchart.md` | `story-arc-investigation.md` (§XVII + §XXI intersection) |
+| **NPC cross-references** | `world.md` | `lab-report-web-of-connections.md` |
+| **NPC dialogue system** | `story-arc-npc-dialogues.md` | `lab-report-npc-dialogue-system.md` · `lab-report-birka-beginner-arc.md` |
+| **NPC favorability** | `world.md` | `lab-report-birka-beginner-arc.md` · `plan.md §III` |
+| **NG+ system** | `story-arc-ngplus.md` | `lab-report-ng-plus-remembrance.md` · `lab-report-endings-and-echoes.md` |
+| **Node map (76 nodes)** | `maps.md` | `plan.md §II (NODE_MAP)` · `story-flowchart.md` |
+| **Pachelbel / Deacon** | `story-arc-npc-dialogues.md` | `lab-report-web-of-connections.md` |
+| **Pit training / Weckmann** | `world.md` | `lab-report-birka-beginner-arc.md` · `lab-report-kenickie-chronicle.md` |
+| **Polyphonic organ** | `5thOrgan.html` | `lab-report-Polyphonic-Organ-Synth.md` |
+| **Potions (4 tiers)** | `mechanics.md` | `plan.md §II (POTION_TIERS)` |
+| **Quill / Couperin** | `story-arc-npc-dialogues.md` | `lab-report-web-of-connections.md` |
+| **Quest -1 (Level 21)** | `story.md §XIV` | `lab-report-quest-minus-one-world-creator.md` |
+| **Quest system** | `world.md` | `plan.md §II (QUEST_DB)` · `lab-report-architecture-full.md` |
+| **Reward formula** | `mechanics.md` | `lab-report-drop-rates-balance-and-health.md` |
+| **Room 6 (joint NPC moment)** | `world.md` | `lab-report-web-of-connections.md` |
+| **Save / load system** | `mechanics.md` | `lab-report-architecture-full.md` · `plan.md §III` |
+| **Shard origin stories** | `story.md §XXII stub` | `lab-report-void-archaeology.md` (shard notes table) |
+| **Shields (6 tiers)** | `mechanics.md` | `plan.md §II (SHIELD_ITEMS)` |
+| **Specification gravity** | `lab-report-prompt-migration-arena-to-prototype.md` | `lab-report-documentation-system-design.md` |
+| **State fields (107)** | `plan.md §III` | `lab-report-architecture-full.md` |
+| **Story arc split** | `story-flowchart.md` | All `story-arc-*.md` files |
+| **Sweelinck / endings** | `story.md` | `lab-report-endings-and-echoes.md` · `lab-report-npc-dialogue-system.md` |
+| **Tattoos** | `lab-report-tattoo-progression-system.md` | `plan.md §III (S_story.tattoos)` |
+| **Tilbury Harbor Arc** | `story-arc-coastal.md` | `lab-report-tilbury-visby-arcs.md` |
+| **Tomes (item type)** | `story-arc-investigation.md` | `lab-report-weimar-scholar-gate.md` |
+| **Void Archaeology** | `story-arc-investigation.md` | `lab-report-void-archaeology.md` |
+| **Void pressure / Void Tide** | `mechanics.md` | `plan.md §III (voidPressure)` · `lab-report-architecture-full.md` |
+| **Void Shaman / The Warden** | `story-arc-investigation.md` | `lab-report-void-shaman.md` |
+| **Visby Underground** | `story-arc-coastal.md` | `lab-report-tilbury-visby-arcs.md` |
+| **Weapons (70 types)** | `mechanics.md` | `plan.md §II (WEAPON_ITEMS)` |
+| **Weimar Scholar Gate** | `story-arc-investigation.md` | `lab-report-weimar-scholar-gate.md` |
+| **World builder arc** | `lab-report-plan-cleanup-world-builder-arc.md` | `lab-report-quest-minus-one-world-creator.md` |
+| **World progression events** | `world.md` | `lab-report-living-world.md` |
+| **XP / leveling** | `mechanics.md` | `plan.md §II (XP_LEVELS)` · `lab-report-leveling-flashbang-condition-economy.md` |
+| **Yael Scheidemann** | `story-arc-npc-dialogues.md` | `lab-report-narrative-arcs-brynn-bruhns-yael.md` · `lab-report-web-of-connections.md` |
+| **Yugurt Lake / fishing** | `monsters.md` · `maps.md` | `lab-report-fish-with-dnd.md` |
 
 ---
 
 ## Town Cross-Reference
 
-> All four towns use their **real names** in every doc, consistent with `roll2hit-v3.html` `NODE_MAP` labels and `ACT_NAMES`. No aliases.
+| Town | Two-letter hub | Act | Inn | Key quest nodes | Epic NPC |
+|------|---------------|-----|-----|-----------------|----------|
+| **Birka** | BI | I + VIII | IN | CI · SL · CQ · TV · BA · CR · CY | Commander Bruhns |
+| **Tilbury** | TL | II | SF | DK · MQ · MS · AL | Magistra Muffat |
+| **Visby** | VS | V | IS / PC | SE · BK · GC · MC · CA · VC | Warlord Mordus |
+| **Weimar** | WM | VI | SQ | BQ · OU → GA · AR · MT | Archivus Sweelinck |
 
-| Town | Act | Inn node | Key terrains | Ruling faction | Epic NPC |
-|---|---|---|---|---|---|
-| **Birka** | I & VIII | `IN` — The First Inn | city, city_slums, tavern, bar, crypt, cyberpunk_streets | High Council of Birka | Commander Seraphine Bruhns |
-| **Tilbury** | II | `SF` — Storefront Inn | docks, market_quarter, storefront, merchant_ship | The Merchant's Conclave | Magistra Elara Muffat |
-| **Visby** | V | `IS` — Smuggler's Safe House | alley, sewers, goblin_cave, pirate_cave, bar | The Crimson Warrant | Warlord Kael Mordus |
-| **Weimar** | VI | `SQ` — Scholar's Quarter (free) | scholars_qtr, blacksmith_qtr, mountains, outhouse, arctic | The Ivory Circle | Archivus Ptolemy Sweelinck |
-
-> **Note on `BIRKA_NPC_PROFILES`:** This is the actual JavaScript constant name in `roll2hit-v3.html` (line ~7290). It is a code identifier, not a town name — preserve it as-is in all code references.
+> See `story-flowchart.md` for full node-to-node movement graph and arc overlays.
 
 ---
 
-## Known Cross-Document Conflicts
+## Known Cross-Document Issues
 
-| Issue | Files | Status |
-|---|---|---|
-| ~~Flee is a Battle mechanic~~ | `mechanics.md` §Flee | ✅ Fixed — Flee under Battle Mode section |
-| ~~Layers 5–8 show PLANNED~~ | `spec-engine.md` | ✅ Fixed — all layers marked IMPLEMENTED |
-| ~~Monster count discrepancy~~ | `spec-world.md`, `monsters.md` | ✅ Fixed — actual count 329; header corrected |
-| ~~Layer 8 scope expansion~~ | `spec-engine.md` | ✅ Fixed — Layer 8 updated with full scope |
-| ~~Layer 9 in progress~~ | `plan.md`, `spec-corridors.md` | ✅ Complete — L9-A through L9-H all implemented |
-| ~~`maps.md` missing J1–J7/MT~~ | `maps.md`, `plan.md` | ✅ Fixed — added to grid, legend, node network, coordinate index |
-| ~~XP thresholds & loot table~~ | `lab-report-loot-drop-weapon-economy.md` | ✅ Resolved — Layer 25 implemented d100 loot table, tier gates, rebalanced XP (max 195k); proposal is now historical |
-| `spec-migration.md` Layers 5–8 | `spec-migration.md` | ✅ Done — Section X converted to implemented summaries |
-| ~~Town lore names vs real names~~ | all docs | ✅ Fixed 2026-05-24 — lore names purged; Birka/Tilbury/Visby/Weimar only |
+All previously logged conflicts resolved. Current known gaps:
 
----
-
-## Correction: Flee / Run Away — Battle Mechanic
-
-The Flee mechanic is **not a Story Mode mechanic**. It belongs entirely in Battle Mode.
-
-**Correct description:**  
-When a player in Battle Mode does not want their HP to hit 0, they click the **🏃 Flee** button in the battle header. The enemy takes one free attack roll. If it hits (and Auto-Damage is ON), damage is applied to the player's Battle Mode HP. After 0.8 seconds, the player is returned to Story Mode. The pending battle is cleared — no victory credit, no drops, no outcome modal. The battle chip on the node remains active.
-
-This flow is: **Battle Mode → flee action → enemy attack → automatic return to Story Mode (world view).**  
-It is NOT initiated from Story Mode. It is NOT a navigation action.
+| Gap | Files | Action |
+|-----|-------|--------|
+| index.md status line was "Layers 0–45" | `index.md` | ✅ Fixed 2026-05-25 |
+| story.md EB dialogs and NPC dialogs were inline (2660 lines) | `story.md` | ✅ Extracted to `story-arc-*.md` files 2026-05-25 |
+| Lab reports for Layers 48–77 missing from index | `index.md` | ✅ All 36 indexed 2026-05-25 |
+| Reverse lookup table missing | `index.md` | ✅ Added 2026-05-25 |
+| story-flowchart.md did not exist | — | ✅ Created 2026-05-25 |
+| FC01–FC05 documentation queue | `plan.md §V-B` | ⏳ Pending |
 
 ---
 
-## Review Plan
-
-> All files through session 2026-05-21 are reviewed (rows 1–30 below). New files added 2026-05-22 are **PENDING** — these are design-spec lab reports and need layer assignment before they affect the codebase.
-
-| # | File | Priority | Status |
-|---|---|---|---|
-| 1 | `mechanics.md` | HIGH | ✅ Done — Flee reclassified; potion table, action economy, Layer 20 state fields verified |
-| 2 | `spec-engine.md` | HIGH | ✅ Done — All layers marked IMPLEMENTED; Layers 9–20 addendum added |
-| 3 | `spec-migration.md` | MEDIUM | ✅ Done — Layers 5–8 added to Section X; IV-B, IV-D, VII-C, conclusion, footer updated |
-| 4 | `maps.md` | LOW | ✅ Done — GATE LOCKS section added; CIRCUIT CORRIDORS section added |
-| 5 | `monsters.md` | LOW | ✅ Done — 329 keys verified; header updated; all IP references cleaned |
-| 6 | `spec-world.md` | LOW | ✅ Done — count 120→329, terrains 16→42, file size updated |
-| 7 | `world.md` | LOW | ✅ Done — Survival Pressure rewritten with actual mechanics |
-| 8 | `story.md` | LOW | ✅ Done — 76 nodes across 8 acts (42 story + 20 EBs + 7 junctions + SL/MT/DF/HM/GL/CO + YL/YC); PLANNED: NODE 77 CQ |
-| 9 | `spec-combat.md` | INFO | Historical only; no changes needed |
-| 10 | `plan.md` (L9–10) | HIGH | ✅ Done — L9-A through L9-H + L10-A through L10-F all marked ✅ |
-| 11 | `spec-corridors.md` | HIGH | ✅ Done — all L9 steps marked ✅ |
-| 12 | `lab-report-circuit-map-theory.md` | LOW | ✅ Written — reference only; no code changes |
-| 13 | `lab-report-battleground-circuit-path-quest.md` | LOW | ✅ Written — IEEE report on Stalk/XP methodology |
-| 14 | `plan.md` (L11) | HIGH | ✅ Done — L11-A through L11-H all marked ✅ |
-| 15 | `plan.md` (L12) | HIGH | ✅ Done — L12-A through L12-E all marked ✅ |
-| 16 | `lab-report-drop-rates-balance-and-health.md` | LOW | ✅ Written — drop rate calibration, Cooperative DM Principle |
-| 17 | `plan.md` (L13) | HIGH | ✅ Done — L13-A through L13-G all marked ✅ |
-| 18 | `lab-report-plan-cleanup-v13.md` | LOW | ✅ Written — spec archive Layers 9–13; verification manifest |
-| 19 | `lab-report-prompt-migration-arena-to-prototype.md` | LOW | ✅ Written — Arena→Prototype retrospective |
-| 20 | `plan.md` (L16) | HIGH | ✅ Done — condition countdown, DIS badge, Spell Scrolls, skill check mechanic |
-| 21 | `plan.md` (L17) | HIGH | ✅ Done — 1.5 AP economy, shield, wimper, flee rework, inventory ordering, spell expiry |
-| 22 | `lab-report-plan-cleanup-v17.md` | LOW | ✅ Written — spec archive Layers 14–17; 6 bug corrections; plan.md compacted |
-| 23 | `lab-report-leveling-flashbang-condition-economy.md` | LOW | ✅ Written — Layer 18: leveling, Flashbang, CONDITION_GOLD ×100 |
-| 24 | `plan.md` (L19) | HIGH | ✅ Done — L19-A through L19-K: starting kit, wimper redesign, safe flee, threat badge |
-| 25 | `ux-first-battles.md` | LOW | ✅ Written — first 3 battles traced; all 10 UX fixes documented |
-| 26 | `plan.md` (L20) | HIGH | ✅ Done — storyVoidDefeat, Day-49 defeat, void pressure, enhanced victory stats |
-| 27 | `mechanics.md` (full review) | HIGH | ✅ Updated 2026-05-22 — Layers 21–45: NPC favorability, EB system, NG+, S-suggestions, state fields |
-| 28 | `spec-engine.md` (full review) | HIGH | ✅ Updated — Layers 9–20 in Part Nine; state machine updated |
-| 29 | `world.md` (Birka Six + survival pressure) | MEDIUM | ✅ Updated 2026-05-22 — Birka Six NPCs section added; favorability/traces/cross-refs documented |
-| 30 | `maps.md` (corridor + EB nodes) | LOW | ✅ Updated — CIRCUIT CORRIDORS + 20 EB nodes in legend |
-| 31 | `combat.md` | MEDIUM | ✅ Reference document — accurate for Layers 0–37 |
-| 32 | `lab-report-loot-drop-weapon-economy.md` | LOW | ✅ Superseded — loot system (L25) fully implemented. Document is historical proposal. |
-| 33 | `lab-report-npc-dialogue-system.md` | LOW | ✅ Done — Layer 42 implemented; NPC_DIALOGUES + _getNPCDialogue + _missionComplete + 4-state endings live |
-| 34 | `lab-report-birka-beginner-arc.md` | LOW | ✅ Done — Layer 41 implemented; 6 NPCs + 7 quests + Rough Whiskey + Yael escort live |
-| 35 | `lab-report-epic-battlegrounds.md` | LOW | ✅ Done — Layer 39 implemented; 20 EB nodes live in code |
-| 36 | `lab-report-endings-and-echoes.md` | LOW | ✅ Done — Layer 43 implemented; all L43-A through L43-W ✅; NG+, epilogues, parchment note, covenant ceremony live |
-| 37 | `lab-report-game-story-codex-of-conquest.md` | LOW | ✅ Done — Layer 40 implemented; FROBERGER_JOURNAL + curse arc live |
-| 38 | `lab-report-story-codoex-curse-of-knowedge.md` | LOW | ✅ Writing framework — used as style reference; no direct code changes |
-| 39 | `lab-report-living-world.md` | LOW | ✅ Done — Layer 44 implemented: Gigault stall, world progression, NPC farewells, Act III desaturation |
-| 40 | `lab-report-web-of-connections.md` | LOW | ✅ Done — Layer 45 implemented: FROBERGER_TRACES, NPC_CROSS_REFS, Room 6, cross-item triggers |
-| 41 | `lab-report-friendships-with-magic.md` | LOW | ✅ Written 2026-05-22 — session postmortem L41–42; 5 new systems |
-| 42 | `plan.md` (L41–45) | HIGH | ✅ Done — all layers L41–L45 complete; verbose specs archived; plan.md cleaned up |
-| 43 | `lab-report-architecture-full.md` | HIGH | ✅ Written 2026-05-22 — full IEEE architectural review; every function, all flow charts, all subsystems |
-| 44 | `world.md` — CI connections + SL dead-end + defi_land cluster | HIGH | ✅ Fixed 2026-05-24 (S01/S03) — CI N/S/E/W corrected; SL dead-end claim removed; DF/HM/GL nodes 72–74 documented with NODE_MAP text, NPC, battle, terrain |
-| 45 | `maps.md` — DF/HM/GL grid + legend + node network + coordinate index | HIGH | ✅ Fixed 2026-05-24 (S02) — R03 grid updated; 3 legend rows added; SL→DF connection added; coordinate index entries added |
-| 46 | `story.md` — EB_NPC_DIALOGUE all 20 entries (Q52–Q71) | HIGH | ✅ Added 2026-05-24 (S05/S06) — all 5 fields per entry (wound/opening/warning/negotiate/return) verbatim from HTML; dual-role NPCs cross-referenced (Q59 Draketide, Q65 Izador, Q71 Mordus) |
-| 47 | `maps.md` — F1 Navigation Engine function reference | MEDIUM | ✅ Added 2026-05-24 (S08) — FL1/FL9/FL12 flowcharts with named milepoints; 23-function table; map data structure summary |
-| 48 | `story.md` — F2 Story Engine function reference | MEDIUM | ✅ Added 2026-05-24 (S09) — FL3/FL7/FL8 flowcharts with named milepoints; 27-function table; CS architecture note |
-| 49 | `world.md` — F3 World Engine function reference | MEDIUM | ✅ Added 2026-05-24 (S10) — FL4/FL7/FL8/FL15 flowcharts with named milepoints; 28-function table; void pressure + save/load architecture |
-| 50 | `mechanics.md` — F4 Mechanics Engine function reference | MEDIUM | ✅ Added 2026-05-24 (S11) — FL2/FL5/FL6/FL10 flowcharts with named milepoints; 25-function table; loot pipeline + level-up + vendor economy |
-| 51 | `monsters.md` — F5 Monster Engine function reference | MEDIUM | ✅ Added 2026-05-24 (S12) — FL9/FL13/FL14 flowcharts with named milepoints; 15-function table; notoriety weights + stalk ×6 boost + fishing 2d20 |
-| 52 | `combat.md` — F6 Combat Engine function reference | MEDIUM | ✅ Added 2026-05-24 (S13) — FL2/FL6/FL11 flowcharts with named milepoints; 32-function table; Story↔Battle bridge; death save corpse quest |
-| 53 | `index.md` — Town Cross-Reference table | MEDIUM | ✅ Added 2026-05-24 (S14) — Birka/Tilbury/Visby/Weimar with acts, inn nodes, terrains, factions, Epic NPCs |
-| 54 | All docs — lore name purge (Veldris/Saltwick/Ashcrag/Highspire) | HIGH | ✅ Fixed 2026-05-24 — 15 instances replaced across story.md (10), maps.md (1), index.md (2 sections), plan.md (4); zero instances remain in any .md file |
-| 55 | `lab-report-documentation-system-design.md` — IEEE analysis of documentation system | LOW | ✅ Written 2026-05-24 — plan.md purpose, two-way sync symmetry, keyword analysis, task decomposition framework, ASCII architecture diagrams |
-
-**Session format:** Say "continue" to move to the next file. Each review will be: read the relevant section → compare to code → edit the markdown → confirm before next.
-
----
-
-*Last updated: 2026-05-24*  
-*Codebase: roll2hit-v3.html · 14,377 lines · Layers 0–45 complete · 76 nodes · 370 monsters (46 base + 20 epic terrains)*  
-*All core docs reviewed and synced 2026-05-22. All layers implemented and verified. Plan.md cleaned.*  
-*2026-05-24 sync pass (SP1): world map consistency verified; DF/HM/GL nodes documented; 20 EB dialogues added to story.md; F1–F6 function reference sections added to all six sync files; town names unified (Birka/Tilbury/Visby/Weimar); lore names purged; froberger-journal-all-entries.txt verified (41 entries); fish+timeline lab reports indexed; WAGMI monster added to DeFi Land.*  
-*2026-05-24 sync pass (SP2): YL/YC nodes added to maps.md (grid + legend + network); Cat Arc PLANNED stubs added to maps.md, world.md, story.md; Torment Nexus PLANNED stubs added to world.md, story.md; Fishing Overhaul (Section XII) + Luck Stat (Section XIII) planned in plan.md; lab-report-architecture-full.md updated (76 nodes, 370 monsters, 14,377 lines); Project Directive added to top of index.md (Adding = Planning; Implementing = Code + Sync). SP2 lab report verification pass complete: all 13 lab reports verified or annotated; MONSTER_POOL count corrected 341→370; WORLD_DB terrains corrected 42→66; NPC_CROSS_REFS corrected 14→17; world.md Birka quest IDs corrected (5 wrong IDs fixed); curse score formula corrected in lab-report-architecture-full.md; _missionComplete() design/implementation divergence noted in lab-report-npc-dialogue-system.md. World Creator Wizard (§XIV) and Quest -1: The Open Door planned — Level 21 undefined; shell tooling documented; MIT fork invitation formalized.*  
-*Layer 43: Endings & Echoes — covenant ceremony, epilogue scroll, parchment note, NG+ system ("Sweelinck is waiting."), covenant standing*  
-*Layer 44: Living World — Gigault stall, world progression events, minimap warmth, NPC farewells, Act III desaturation, Brynn maintenance/ledger, quiet return receipts, Deacon's Code, Void's First Sign, final map render*  
-*Layer 45: Web of Connections — FROBERGER_TRACES (6 NPCs), NPC_CROSS_REFS (17 cross-reference lines), Nivers ("Evening."), Yael patrol nodes, Weckmann training log, Room 6, cross-item triggers (Note×Bruhns, Whiskey×Brynn), Fighter's Token*
-
----
-
-MIT License — roll2hit.com — Copyright (c) 2026 — Free to use, modify, and share.
+*Last updated: 2026-05-25*
+*Codebase: `roll2hit-v3.html` · 17,631 lines · Layers 0–77 complete · 76 nodes · 370 monsters · 36 lab reports*
+*MIT License — roll2hit.com — Copyright (c) 2026 — Free to use, modify, and share.*
