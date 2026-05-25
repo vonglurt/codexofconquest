@@ -1134,6 +1134,20 @@ The Froberger memorial stone sits at the CI crossroads. It has been there since 
 
 ---
 
+## ⚠️ PLANNED — Pit Championship: World Context (plan.md §XXIX, Layer 64)
+
+**Ogundimu, the Iron Standard** — non-dialogue NPC. No favorability, no quest, no fixed node. She appears once at CR for the championship bout and is never seen again. She is real in the world — Weckmann knows her, she has a history with the city's pit circuit — but she is not a recurring presence.
+
+**Background:** Former city pit champion. Lost the title in a contested bout she disputes. Has been taking irregular exhibition matches since. Known to Weckmann through the forge/training network. When Weckmann contacts her, she says yes.
+
+**The pit circuit:** The CY pit training bouts are informal affairs — traveling fighters, neighborhood challengers, occasional visiting professionals. The championship is a step above: Ogundimu is the standard by which serious fighters are measured. Reaching her requires five documented wins in the circuit. Weckmann is the one who knows when a fighter has earned the right to ask.
+
+**Post-championship world:** After `pitChampionWon = true`, the world does not change visibly — no new NPCs, no changed nodes, no altered terrain. Ogundimu passes through. The fight happened. Weckmann's log records it. The player's favorability status with the world does not shift. This is intentional: the championship is recognized by those who would know, invisible to those who wouldn't.
+
+**No new nodes, monsters, items, or quests.** New state: `pitChampionOffered` / `pitChampionWon` (both boolean, player-local, NG+-cleared).
+
+---
+
 ## ⚠️ PLANNED — Town Crier Ambient Lines: World State (plan.md §XXVII, Layer 62)
 
 The Town Crier lines in `TOWN_CRIER_LINES` draw on existing world state already tracked in `S_story` — no new persistent fields added to the world model.

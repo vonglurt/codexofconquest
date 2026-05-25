@@ -2514,6 +2514,26 @@ An optional interactive stone at CI. One `[Examine Memorial]` button, two sub-ac
 
 ---
 
+## ⚠️ PLANNED — The Pit Championship: Finals at Crossroads Forge (plan.md §XXIX, Layer 64)
+
+One-time championship bout at CR node, triggered when `pitTrainingWins >= 5`. Weckmann offers the match; player faces Ogundimu, the Iron Standard — a retired city champion defined in const `PIT_CHAMPION_OGUNDIMU` (not in MONSTER_POOL). No XP, no gold, no drop.
+
+**Trigger:** First CR visit after `pitTrainingWins >= 5` AND `!pitChampionOffered`. After offer fires, `pitChampionOffered = true`. Player can decline and re-accept via persistent [Challenge for the Title] button at CR.
+
+**Opponent:** AC 16, HP 42, ATK +7, 1d10+4. Tier: elite. Human — no monster mechanics. `isChampion: true` flag used to suppress XP/gold/drop resolution.
+
+**Win:** `pitChampionWon = true`. Weckmann training log gains a final entry ("Fight 6: Ogundimu, the Iron Standard — WIN"). Weckmann `dearFriend` dialogue pool gains one line: *"Ogundimu asked after you, the last time she came through. I told her you'd moved on. She said that was the right answer."*
+
+**§XXV farewell patch:** Weckmann Act VIII farewell branch — `pitChampionWon === false` → *"…the kind earned in the world, not in a pit."* / `pitChampionWon === true` → *"…who earns it in the pit and then earns it again out here."*
+
+**Loss:** Standard checkpoint respawn. [Challenge for the Title] persists. Ogundimu's loss text: *"Different day. Same champion."* — an invitation, not a dismissal.
+
+**New state flags:** `pitChampionOffered` (boolean, default false, NG+-cleared) / `pitChampionWon` (boolean, default false, NG+-cleared).
+
+**F2 reference:** Add rows for `_showPitChampionOffer()`, `_startPitChampionBattle()`, `_onPitChampionWin()`, `_onPitChampionLoss()` on implementation.
+
+---
+
 ## ⚠️ PLANNED — Town Crier: Inn Rest World-News Lines (plan.md §XXVII, Layer 62)
 
 When the player chooses to rest at an inn (`storyConfirmSleep()`), after the standard rest resolution a Town Crier ambient line fires — a single sentence of world-news flavor injected into the story log. No new node, no new NPC, no persistent flag. The line is ephemeral: displayed once, forgotten immediately.

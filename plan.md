@@ -234,6 +234,7 @@ The commit message should name the lab report and summarize what it covers in on
 | 17 | §XXVI | Corelli the Wandering Merchant: Cross-Act Vendor NPC | 61 | Yes — `lab-report-corelli-merchant.md` (wandering NPC archetype) | ⚠️ PLANNED |
 | 18 | §XXVII | Town Crier: Inn Rest World-News Ambient Lines | 62 | No — document inline | ⚠️ PLANNED |
 | 19 | §XXVIII | The Froberger Memorial: A Living Stone at CI | 63 | No — document inline in `story.md` + `world.md` | ⚠️ PLANNED |
+| 20 | §XXIX | The Pit Championship: Finals at Crossroads Forge | 64 | No — document inline; patch §XXV farewell beat | ⚠️ PLANNED |
 
 **Rule:** Implement in layer order when possible. Each implementation = code + doc sync + git commit. See plan.md §I Lab Report Policy for commit rules.
 
@@ -2006,7 +2007,8 @@ creative_literacy_token: { name:'Creative Literacy Token', icon:'📄', sell:27 
 | **Homecoming (§XXV)** | 6 one-time Act VIII farewell beats / Brynn's Loaf / Champion's Tincture / Pachelbel's Sketch / 6 new flags | `plan.md §XXV` | ✅ PLANNED stub: `story.md` Act VIII Farewell Beats | ⚠️ PLANNED |
 | **Wandering Merchant (§XXVI)** | Corelli — 5 appearances Acts II–VIII / purchase-gated fav / 5 unique items / Scholar King courier reveal / `last_cipher` cross-ref §XVI–§XVII | `plan.md §XXVI` | ✅ PLANNED stubs: `story.md` Corelli encounters; `world.md` Wandering Merchant | ⚠️ PLANNED |
 | **Town Crier (§XXVII)** | `TOWN_CRIER_LINES` const / priority-selector / inn rest rumor line / 56 act-cycling lines + critical/tension/quest/NPC tiers | `plan.md §XXVII` | ✅ PLANNED stub: `story.md` Town Crier note; no new state flags | ⚠️ PLANNED |
-| **Froberger Memorial (§XXVIII)** | `FROBERGER_MEMORIAL_TEXT` object / 4-layer plaque text / memorial book entries / [Leave Flowers] 10gp action / `storyShowFrobergerMemorial()` | `plan.md §XXVIII` | ⚠️ PLANNED stubs pending: `story.md` Memorial section; `world.md` memorial world note | ⚠️ PLANNED |
+| **Froberger Memorial (§XXVIII)** | `FROBERGER_MEMORIAL_TEXT` object / 4-layer plaque text / memorial book entries / [Leave Flowers] 10gp action / `storyShowFrobergerMemorial()` | `plan.md §XXVIII` | ✅ PLANNED stubs: `story.md` Memorial section; `world.md` memorial world note | ⚠️ PLANNED |
+| **Pit Championship (§XXIX)** | `PIT_CHAMPION_OGUNDIMU` const / `_showPitChampionOffer()` / `_startPitChampionBattle()` / win/loss callbacks / Weckmann log entry / dearFriend pool patch / §XXV farewell branch | `plan.md §XXIX` | ⚠️ PLANNED stubs pending: `story.md` championship note; `world.md` Ogundimu entry | ⚠️ PLANNED |
 
 ---
 
@@ -6041,3 +6043,228 @@ No lab report. No new monsters, nodes, quests, or items.
 ---
 
 *§XXVIII status: ⚠️ PLANNED — memorial stone at CI designed in full; 4-layer plaque text written; 5 pre-written memorial book entries; player sign action with 3 choices + NG+ fourth; [Leave Flowers] 10gp action designed; storyShowFrobergerMemorial() pseudocode specified; 3 new state flags (memorialVisited/Flowers/BookSigned); Act VIII flower promotion mechanic defined; no new nodes/monsters/items/quests; no lab report — document inline.*
+
+---
+
+## Section XXIX — The Pit Championship: Finals at Crossroads Forge (Layer 64, ⚠️ PLANNED)
+
+> **Design status:** PLANNED. Not yet in `roll2hit-v3.html`. One new named human opponent; one new const; 2 new state flags; no new nodes or monsters in MONSTER_POOL; no lab report.  
+> **Layer 64** — triggered at `pitTrainingWins === 5`; one-time offer; document inline.
+
+---
+
+### XXIX-A. Concept and World Hook
+
+`pitTrainingWins >= 5` is one of the four conditions for the True Keeper ending. The player accumulates these wins across CY pit training bouts, tracked silently in `S_story.pitTrainingWins`. But the game never acknowledges reaching the threshold. The counter increments. Nothing else happens. The player either knows to check `_isTrue()` or they don't.
+
+§XXIX adds the moment: on the first CR visit after reaching five wins, Weckmann offers the Pit Championship. It is not framed as a milestone — Weckmann frames it as *the next fight*. The fight itself answers the question the training system has been building toward: *what does five wins mean?* It means Weckmann thinks you are ready to face someone who might beat you.
+
+The opponent is Ogundimu, the Iron Standard — a retired city champion who lost her title in a bout she still disputes and has been taking irregular exhibition matches ever since. She is not a monster. She does not appear in `MONSTER_POOL`. She is defined entirely within the championship const, fights once, and is never seen again.
+
+**No XP. No gold. No item drop.** Winning the championship sets `pitChampionWon = true`, adds a final entry to the Weckmann training log, and permanently changes one of Weckmann's dialogue lines. These are the only consequences — and they are the right ones.
+
+---
+
+### XXIX-B. Trigger Condition
+
+The championship offer fires on the **first CR visit where `pitTrainingWins >= 5` AND `!S_story.pitChampionOffered`**. It does not fire during the training bout itself — it fires afterward, when the player is at CR (Weckmann's node) and Weckmann can address them directly.
+
+On trigger:
+1. A pre-modal fires (Weckmann speaks, see §XXIX-C)
+2. `S_story.pitChampionOffered = true` (offer fires exactly once regardless of player response)
+3. Player chooses [Accept] or [Not yet]
+
+**[Not yet]:** Closes modal. Offer does not re-fire automatically. After declining, [Challenge for the Title] button appears in the CR node action row and persists until accepted. Player can return to accept at any point.
+
+**[Accept]:** Proceeds directly to the championship pre-battle overlay (§XXIX-D).
+
+---
+
+### XXIX-C. Weckmann's Offer — Pre-Modal Text
+
+```
+Weckmann is cleaning the forge when you arrive. He sets the 
+brush down.
+
+"Five. You know what five means?"
+
+He doesn't wait for an answer.
+
+"It means I've been holding back a name. Ogundimu. The Iron 
+Standard — that's what they called her, before the dispute. 
+She doesn't fight for rankings anymore. She fights because 
+she wants to know if she's still herself."
+
+He picks the brush back up.
+
+"I told her about you. She said yes. That means something — 
+she says no to most people."
+
+    [Accept the match]    [Not yet]
+```
+
+---
+
+### XXIX-D. Ogundimu — The Iron Standard
+
+Defined in const `PIT_CHAMPION_OGUNDIMU` (not in MONSTER_POOL). One-time opponent.
+
+```js
+const PIT_CHAMPION_OGUNDIMU = {
+  name: 'Ogundimu, the Iron Standard',
+  icon: '🏆',
+  ac: 16,
+  hp: 42,
+  atk: 7,
+  die: 10,
+  dieCount: 1,
+  mod: 4,
+  xp: 0,
+  gold: 0,
+  drop: null,
+  tier: 'elite',
+  isChampion: true,
+  flavorPre: `She arrives without ceremony. Shortsword, buckler, no 
+introduction. She looks at your weapon and nods once — the 
+kind of nod that means she's already thought about how she'd 
+answer it.
+
+"I retired," she says. "Not from this."`,
+  flavorWin: `She doesn't fall. She steps back, shield lowering.
+
+"Good. That's good."
+
+She means it.
+
+She picks up her bag. At the door she turns back.
+"Your fifth. That's not luck anymore."`,
+  flavorLoss: `She doesn't follow up. She steps back and waits.
+
+"Different day," she says. "Same champion."
+
+She means it as an invitation, not an insult.`
+};
+```
+
+**Battle mechanics:** Standard story battle flow — `_storyRollInit()`, attack/defense, conditions, death saves. No special abilities. She is formidable (AC 16, HP 42, +7 ATK) but not supernatural. A fully leveled player with good gear wins reliably. A player who rushed here early will struggle. That is correct.
+
+**On player death/checkpoint:** `pitChampionOffered` remains `true`. [Challenge for the Title] button persists at CR. Player can fight again — `flavorLoss` text is Ogundimu's, not a failure state. She is waiting.
+
+---
+
+### XXIX-E. Victory Resolution
+
+On win, before returning to CR:
+
+```
+WECKMANN'S LOG — Final Entry
+────────────────────────────
+Fight 6: Ogundimu, the Iron Standard
+Result: WIN
+Note: She chose the match. That matters.
+      You chose to accept. That matters more.
+```
+
+This entry is appended to the existing `_buildWeckmannLog()` output. It fires only when `pitChampionWon = true`. The log entry is readable at any time via [Weckmann's Log] at CR.
+
+Additionally:
+- `S_story.pitChampionWon = true`
+- Weckmann's `dearFriend` dialogue pool gains one additional line (see §XXIX-F)
+- The Act VIII farewell beat for Weckmann (§XXV) references the championship explicitly
+
+---
+
+### XXIX-F. Weckmann Dialogue Change
+
+One new line added to `NPC_DIALOGUES['weckmann'].dearFriend[]` (appended, selected via normal priority pool rotation when `pitChampionWon`):
+
+> *"Ogundimu asked after you, the last time she came through. I told her you'd moved on. She said that was the right answer."*
+
+This line only enters the pool when `pitChampionWon === true`. It is added alongside the existing 5 Dear Friend lines — total becomes 6 at Dear Friend state for players who completed the championship.
+
+---
+
+### XXIX-G. Act VIII Farewell Beat Integration (§XXV Cross-Reference)
+
+The Weckmann Act VIII farewell beat (§XXV, §XXV-C-5) currently reads:
+
+> *"Recognizes the player as the rare kind of champion — the kind earned in the world, not in a pit."*
+
+With §XXIX implemented, this line is **conditionally branched**:
+
+- `pitChampionWon === false` → standard: *"…the kind earned in the world, not in a pit."*
+- `pitChampionWon === true` → extended: *"…the kind who earns it in the pit and then earns it again out here. I've seen both kinds. You're the second kind."*
+
+The distinction matters: the standard line implies the pit doesn't count. The champion line says both count — the pit was real, the world was also real, the player did both.
+
+---
+
+### XXIX-H. Implementation Spec
+
+**XXIX-H-1.** Add `PIT_CHAMPION_OGUNDIMU` const (structure in §XXIX-D).
+
+**XXIX-H-2.** In CR node render function (wherever the existing [Weckmann's Log] button is rendered): add check:
+
+```js
+if ((S_story.pitTrainingWins || 0) >= 5 && !S_story.pitChampionOffered) {
+  _showPitChampionOffer(); // fires the Weckmann offer modal
+}
+if (S_story.pitChampionOffered && !S_story.pitChampionWon) {
+  // render [Challenge for the Title] button
+}
+```
+
+**XXIX-H-3.** New function `_showPitChampionOffer()`: sets `pitChampionOffered = true`; renders offer modal with Weckmann text; [Accept] calls `_startPitChampionBattle()`; [Not yet] closes.
+
+**XXIX-H-4.** New function `_startPitChampionBattle()`: uses `PIT_CHAMPION_OGUNDIMU` const to initialize a battle in the same way as `storyBattle()` but with `xp=0`, `gold=0`, no drop — custom `_onPitChampionWin()` and `_onPitChampionLoss()` callbacks.
+
+**XXIX-H-5.** `_onPitChampionWin()`: sets `pitChampionWon = true`; appends championship log entry (mutates the `_buildWeckmannLog()` output via flag); shows victory text; returns to CR.
+
+**XXIX-H-6.** `_onPitChampionLoss()`: shows loss text (Ogundimu's flavorLoss); respawns at checkpoint (standard `storyRespawnFromCheckpoint()`); [Challenge for the Title] button remains at CR.
+
+**XXIX-H-7.** Patch `_buildWeckmannLog()`: after existing log text, append championship entry if `pitChampionWon`.
+
+**XXIX-H-8.** Patch §XXV Act VIII Weckmann farewell beat: conditional branch on `pitChampionWon` (§XXIX-G).
+
+---
+
+### XXIX-I. New State Flags
+
+| Flag | Type | Default | NG+-preserved | Purpose |
+|------|------|---------|---------------|---------|
+| `pitChampionOffered` | boolean | false | No | Tracks whether offer has fired; prevents re-offer on each CR visit |
+| `pitChampionWon` | boolean | false | No | Tracks championship win; gates log entry, dialogue line, farewell branch |
+
+Add both to `_S_DEFAULTS()`. Clear on NG+ (not preserved). Add to Section III state field table.
+
+---
+
+### XXIX-J. Documentation Updates Required on Implementation
+
+| File | Update |
+|------|--------|
+| `story.md` | Add §F2 rows for `_showPitChampionOffer()`, `_startPitChampionBattle()`, `_onPitChampionWin()`; note Weckmann dearFriend pool expansion |
+| `world.md` | Add Ogundimu to Birka NPC roster (non-dialogue NPC — no favorability, no quest; one-time encounter) |
+| `plan.md` | Mark §XXIX complete; update §V-A queue; add flag rows to §III; patch §XXV farewell beat note |
+| `spec-engine.md` | Add 2 new `_S_DEFAULTS()` fields |
+| `combat.md` | Note `PIT_CHAMPION_OGUNDIMU` as a named-human const separate from `MONSTER_POOL`; xp/gold = 0 |
+
+No lab report. No new MONSTER_POOL entries. Ogundimu lives only in `PIT_CHAMPION_OGUNDIMU`.
+
+---
+
+### XXIX-K. Design Notes
+
+**Why no XP and no gold?** Every other fight gives XP and/or gold. Ogundimu gives neither. This is the signal: this fight is different. It's not about resources. It's about being ready. A player who approaches it as a resource fight is approaching it wrong, and the 0 XP / 0 gold result will make them reconsider. That reconsideration is part of the design.
+
+**Why is she retired?** Every combat system in the game culminates in a boss fight (Auros, EB champions). Ogundimu is the anti-boss: a human who chose to stop competing, who takes selective exhibition bouts, who has nothing to prove and isn't trying to prove anything here. Her presence in the world is voluntary. She said yes because she heard something worth testing — not to defeat the player, to find out. That's a fundamentally different motivation than any other opponent in the game.
+
+**"The dispute."** Weckmann mentions she lost her title in a bout she still disputes. This is never explained. It is not a quest hook. It is not a lore entry. It is background that makes Ogundimu feel like a person who existed before the player arrived. She doesn't need a quest chain — she needs to be real enough that the fight matters.
+
+**The farewell branch.** The §XXV standard line (*"the kind earned in the world, not in a pit"*) would have been a retroactive slight on the pit system — implying the pit wins were lesser. The champion branch corrects this: both count. The pit made the world wins possible; the world wins made the pit championship meaningful. The player who did both did something the standard line can't describe.
+
+**NG+ and Ogundimu.** On NG+, `pitChampionOffered` and `pitChampionWon` are cleared. The player must re-earn five pit wins and Weckmann must re-offer. But there's no new NG+ text for Ogundimu. If the player has won the championship before, they bring that knowledge into the fight — they know her patterns, her AC, her HP. The fight is objectively easier. The game doesn't comment on this. The player can.
+
+---
+
+*§XXIX status: ⚠️ PLANNED — Pit Championship designed; PIT_CHAMPION_OGUNDIMU const specified (AC 16, HP 42, ATK +7, 1d10+4, xp/gold = 0); trigger condition (pitTrainingWins ≥ 5, first CR visit); offer modal text; win/loss flavor text; victory log entry in _buildWeckmannLog(); Weckmann dearFriend pool expansion; §XXV farewell beat conditional branch; 2 new state flags; no new MONSTER_POOL entries; no lab report — document inline.*
