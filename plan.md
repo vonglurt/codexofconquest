@@ -8,20 +8,9 @@ Implement in layer order. Each = code change + doc sync + `git commit`.
 
 | Layer | Section | Feature | Est. Complexity |
 |-------|---------|---------|----------------|
-| 60 | §XXV | The Homecoming: Act VIII Farewell Beats | ✅ Implemented |
-| 62 | §XXVII | Town Crier: Inn Rest World-News Lines | ✅ Implemented |
-| 63 | §XXVIII | Froberger Memorial: Living Stone at CI | ✅ Implemented |
-| 64 | §XXIX | Pit Championship: Finals at Crossroads Forge | ✅ Implemented |
-| 65 | §XXX | Entry 41 Echo: Brynn + Sweelinck | ✅ Implemented |
-| 66a+b | §XXXI | Joint Witness + Map Caption (S54 + S55) | ✅ Implemented |
-| 67a+b | §XXXII | Two Intelligence Feeds (S8 + S29) | ✅ Implemented |
-| 68a+b | §XXXIII | Archive + Tools (S7 + S46) | ✅ Implemented |
-| 69 | §XXXIV | Couperin Ledger: Quill's Three-Beat Arc | ✅ Implemented |
-| 70 | §XXXV | First Inn Light: Brynn's Vigil Arc | ✅ Implemented |
-| 71 | §XXXVI | Epilogue Integration Layer: Arcs to Scroll | ✅ Implemented |
-| 72 | §XXXVII | The Final Confrontation: Commander Bruhns's CO Scene | ✅ Implemented |
-| 73 | §XXXVIII | The Heartwood Letter: Brynn's Daughter Scene | ✅ Implemented |
-| 74 | §XXXIX | Yael's Record: The Named Report Scene | ✅ Implemented |
+| 70 | §XXXV | First Inn Light: Brynn's Vigil Arc | ✅ Implemented — lab report pending |
+| 72 | §XXXVII | The Final Confrontation: Commander Bruhns's CO Scene | ✅ Implemented — lab report pending |
+| 74 | §XXXIX | Yael's Record: The Named Report Scene | ✅ Implemented — lab report pending |
 | 75 | §XL | Kenickie's Black Market + Sheet-Swapper UI | ✅ Implemented 2026-05-25 |
 | 76 | §XLI | Tattoo Progression System (character creation, ASI/HP tattoos, death tattoos) | ✅ Implemented 2026-05-25 |
 | 77 | §XLII | Chronicle System (career/run stats, hour clock, game-over summary) | ✅ Implemented 2026-05-25 |
@@ -275,21 +264,10 @@ The commit message should name the lab report and summarize what it covers in on
 | 10 | §XIX | Tilbury Harbor Arc: "The Conclave's Weight" | 54 | Yes — shared with §XX in `lab-report-tilbury-visby-arcs.md` | ✅ Implemented 2026-05-25 |
 | 11 | §XX | Visby Underground: "What Mordus Owes" | 55 | Yes — shared with §XIX in `lab-report-tilbury-visby-arcs.md` | ✅ Implemented 2026-05-25 |
 | 12 | §XXI | The Void Shaman: The Antecedent's Last Warden | 56 | Yes — `lab-report-void-shaman.md` (corrupted mandate design) | ✅ Implemented 2026-05-25 |
-| 16 | §XXV | The Homecoming: Act VIII One-Time Farewell Beats | 60 | No — document inline in `story.md` | ✅ Implemented |
-| 17 | §XXVI | Corelli the Wandering Merchant: Cross-Act Vendor NPC | 61 | Yes — `lab-report-corelli-merchant.md` (wandering NPC archetype) | ✅ Implemented 2026-05-25 |
-| 18 | §XXVII | Town Crier: Inn Rest World-News Ambient Lines | 62 | No — document inline | ✅ Implemented |
-| 19 | §XXVIII | The Froberger Memorial: A Living Stone at CI | 63 | No — document inline in `story.md` + `world.md` | ✅ Implemented |
-| 20 | §XXIX | The Pit Championship: Finals at Crossroads Forge | 64 | No — document inline; patch §XXV farewell beat | ✅ Implemented |
-| 21 | §XXX | The Entry 41 Echo: Brynn and Sweelinck After the Last Journal | 65 | No — state flags pre-exist; document inline; patch _buildSweelinckNamingSequence() | ✅ Implemented |
-| 22 | §XXXI | The Joint Witness and the Map Caption (S54 + S55) | 66a+66b | No — state flags pre-exist; document inline; patch _renderFinalMap() | ✅ Implemented |
-| 23 | §XXXII | Two Intelligence Feeds: The Varga Watch and the Auros Theory (S8 + S29) | 67a+67b | No — all flags pre-exist; document inline | ✅ Implemented |
-| 24 | §XXXIII | The Archive and the Tools: Blue Shutters (S7) + Raison (S46) | 68a+68b | No — 1 new flag (surveyDeliveredToAuros → `undercitySurveyDelivered` in code); document inline | ✅ Implemented |
-| 25 | §XXXIV | The Couperin Ledger: Quill's Three-Beat Arc | 69 | No — all flags pre-exist; document inline; L44-E injection; §XXIV cross-ref (Act VIII BA farewell) | ✅ Implemented |
-| 26 | §XXXV | The First Inn Light: Brynn's Vigil Arc | 70 | Yes — 3 new flags (brynnKeeperStoryTold, brynnLightChoiceMade, brynnLightKept); add to _S_DEFAULTS() Brynn block | ✅ Implemented |
-| 27 | §XXXVI | Epilogue Integration Layer: Arcs to Scroll | 71 | No — no new flags; ARC_EPILOGUE_CONDITIONS const + 4-line _buildEpilogueScroll() patch | ✅ Implemented |
-| 28 | §XXXVII | The Final Confrontation: Commander Bruhns's CO Scene | 72 | Yes — 1 new flag (bruhnsCoSceneDelivered); BRUHNS_CO_SCENE const; CO render patch | ✅ Implemented |
-| 29 | §XXXVIII | The Heartwood Letter: Brynn's Daughter Scene | 73 | No new flag — uses pre-existing s2DaughterDelivered per §XXXVIII reconciliation note; BRYNN_HEARTWOOD_SCENE const; S2 IN block patched with fav-gating | ✅ Implemented |
-| 30 | §XXXIX | Yael's Record: The Named Report Scene | 74 | Yes — 1 new flag (yaelNamedReportDelivered); YAEL_NAMED_REPORT_SCENE const; CI render + YAEL_PATROL_NODES patch | ✅ Implemented |
+| 17 | §XXVI | Corelli the Wandering Merchant: Cross-Act Vendor NPC | 61 | `lab-report-corelli-merchant.md` — pending | ✅ Implemented 2026-05-25 |
+| 26 | §XXXV | The First Inn Light: Brynn's Vigil Arc | 70 | Lab report pending | ✅ Implemented |
+| 28 | §XXXVII | The Final Confrontation: Commander Bruhns's CO Scene | 72 | Lab report pending | ✅ Implemented |
+| 30 | §XXXIX | Yael's Record: The Named Report Scene | 74 | Lab report pending | ✅ Implemented |
 
 **Rule:** Implement in layer order when possible. Each implementation = code + doc sync + git commit. See plan.md §I Lab Report Policy for commit rules.
 
