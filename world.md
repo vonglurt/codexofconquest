@@ -1044,6 +1044,37 @@ Luck is a read-only derived stat. It has no entry in `_S_DEFAULTS()` and is neve
 
 **Implementation note:** `getLuck()` is a pure function. It takes nothing and returns nothing — it reads `S_story.abilityScores` directly. Adding Luck to the character sheet requires no new state field, only a display call. See `plan.md` §XIII for the 13-step implementation plan.
 
+---
+
+## ⚠️ PLANNED — The Pressure Cascade: Void-Touched Monsters and NPC Reactions (plan.md §XXIV, Layer 59)
+
+`voidPressure` reaching thresholds (3, 6, 9) produces visible world changes. See `story.md §XXIV stub` for the full flavor text and threshold event table. This section covers the world-layer additions: void-touched monster variants and NPC pressure responses.
+
+### Void-Touched Monsters
+
+Two new entries added to `MONSTER_POOL` at Layer 59. Injected into terrain encounter tables at runtime when `voidPressure ≥ 6` via `_applyVoidPressureMonsters()`:
+
+| Monster | Terrain | AC | HP | ATK | DMG | Drop |
+|---------|---------|----|----|-----|-----|------|
+| `void_wolf` | dark_forest, mountain_pass, GL wilderness | 13 | 28 | +5 | 1d8+3 | Void Shard (◈, sell 25) |
+| `void_rat_swarm` | alley, city_slums, sewers | 12 | 18 | +4 | 2d4 | Void Shard (◈, sell 15) |
+
+**Void Shard** is a sellable lore relic, not a Codex Shard. Flavor text: *"A fragment of something that shouldn't exist."*
+
+### NPC Pressure Reactions — Dear Friend Lines (voidPressure ≥ 6)
+
+Stored in `NPC_VOID_PRESSURE_LINES`. Fires when `fav[npc] ≥ 2` and `voidPressure ≥ 6`. Replaces one Dear Friend quote during that visit:
+
+| NPC | Pressure line |
+|-----|--------------|
+| Yael | *"The city is holding its breath. Even the rioters have gone quiet."* |
+| Brynn | *"My candles won't stay lit past midnight. I've started leaving the fire banked all night."* |
+| Quill | *"The numbers in the ledger keep adding up wrong. I've checked them four times."* |
+| Pachelbel | *"Three students fainted in the atelier today. The air feels thick. Like before a storm that never breaks."* |
+| Weckmann | *"I've been keeping the forge running later than usual. It feels wrong to let the fire go out."* |
+| Auros | *"Something is moving in the Convergence. Not the Commander. Something older."* |
+
+**No new nodes, quests, or named NPCs.** Extend `lab-report-living-world.md` with a §XXIV implementation note on completion.
 
 ---
 *© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*

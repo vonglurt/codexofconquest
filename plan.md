@@ -229,6 +229,7 @@ The commit message should name the lab report and summarize what it covers in on
 | 12 | §XXI | The Void Shaman: The Antecedent's Last Warden | 56 | Yes — `lab-report-void-shaman.md` (corrupted mandate design) | ⚠️ PLANNED |
 | 13 | §XXII | Codex Shard Origin Stories | 57 | No — document inline in `story.md` | ⚠️ PLANNED |
 | 14 | §XXIII | Inn Dreams | 58 | No — too small; document inline | ⚠️ PLANNED |
+| 15 | §XXIV | The Pressure Cascade: Visible Void Tide Events | 59 | No — extend `lab-report-living-world.md` | ⚠️ PLANNED |
 
 **Rule:** Implement in layer order when possible. Each implementation = code + doc sync + git commit. See plan.md §I Lab Report Policy for commit rules.
 
@@ -1997,6 +1998,7 @@ creative_literacy_token: { name:'Creative Literacy Token', icon:'📄', sell:27 
 | **Void Shaman (§XXI)** | The Warden / void_shaman boss / warden_token / combat+persuasion paths / Hollow Hands resolution | `plan.md §XXI` | ✅ PLANNED stubs: `story.md` MT tunnel encounter; `world.md` Warden backstory | ⚠️ PLANNED |
 | **Codex Shard Origins (§XXII)** | 7 shard_note items / named placers / flag-gated variants / journal reward | `plan.md §XXII` | ✅ PLANNED stubs: `story.md` Shard Origins section; `world.md` placer name notes | ⚠️ PLANNED |
 | **Inn Dreams (§XXIII)** | INN_DREAMS const / 4 inns × 3 base variants / flag-gated replacements | `plan.md §XXIII` | ✅ PLANNED stubs: `story.md` Inn Dreams section; `mechanics.md` sleep note | ⚠️ PLANNED |
+| **Pressure Cascade (§XXIV)** | voidPressure threshold events (3/6/9) / void-touched monsters / NPC pressure lines / mercy counter | `plan.md §XXIV` | ✅ PLANNED stubs: `story.md` Void Tide Events; `world.md` Void-Touched Monsters note | ⚠️ PLANNED |
 
 ---
 
@@ -4752,4 +4754,214 @@ No lab report needed — too small; document inline.
 ---
 
 *§XXIII status: ⚠️ PLANNED — Inn Dreams designed; 4 inns × 3 base variants + flag-gated replacements; IN dreams cross-ref §XV (Froberger entry, Entry 42, four-author chain); SF dreams cross-ref §XIX (Harrow/Ori); IS dreams cross-ref §XX/§XXI (Mordus ledger, Warden resolution, Hollow Hands mark); SQ dreams cross-ref §XVI/§XVII/§XXII (First Researcher name, Constructor's Log, seven handwritings); no new state flags; no new monsters; no lab report needed.*
+
+---
+
+## Section XXIV — The Pressure Cascade: Visible Void Tide Events (Layer 59, ⚠️ PLANNED)
+
+> **Design problem:** `voidPressure` (0–10) is the game's central survival clock. Currently it accumulates silently — the player sees it in the HUD number but the world doesn't respond to it. The final defeat at pressure 10 feels sudden. This section makes the pressure visible in the world from the first crack to the imminent breach.
+
+---
+
+### XXIV-A. Design Intent
+
+The Void Tide should feel like a physical presence that grows heavier as the run progresses. At low pressure (0–2) the world is normal. At medium pressure (3–5) cracks appear — in the environment text, in battle encounters, in the corridor grid. At high pressure (6–8) NPCs notice; monsters are affected; the map itself shows the strain. At critical pressure (9) the player receives a direct warning. The mercy window at pressure 9 + ≥ 5 shards gives the engaged player one last breath before the final push.
+
+Three systems are extended: **world text** (node flavor lines keyed by pressure tier), **encounter tables** (void-touched monster variants injected at pressure ≥ 6), and **NPC reactions** (one pressure line per Dear Friend NPC at pressure ≥ 6).
+
+---
+
+### XXIV-B. Pressure Tier Thresholds
+
+| Tier | Range | Name | Effect |
+|------|-------|------|--------|
+| 0 | 0–2 | Clear | No visible change. World is normal. |
+| 1 | 3–5 | First Crack | Flavor text appears in certain node descriptions; corridor glyph `◈` appears at 1 randomly-selected node per visit at voidPressure ≥ 3 |
+| 2 | 6–8 | Fracture | Void-touched monster variants join encounter tables; NPC Dear Friend pressure lines unlock; map header shows "The Void stirs." |
+| 3 | 9   | Imminent | Player receives a modal warning; CO gate text changes; mercy window opens if ≥ 5 shards |
+
+---
+
+### XXIV-C. World Text — Pressure Lines
+
+One additional flavor line is appended to certain node visit texts when the player arrives at that node and voidPressure ≥ 3. These lines are keyed to node clusters:
+
+**Birka cluster (CI, SL, CR, BA, SH) — First Crack:**
+> *"The cobblestones are colder than they should be."*
+
+**Tilbury cluster (SF, PH, DK, MQ) — First Crack:**
+> *"The harbor lights flicker without wind."*
+
+**Weimar cluster (SQ, DF, WM) — First Crack:**
+> *"The scholars' candles are burning down fast today."*
+
+**Wilderness (GL, MT, MH, HM) — First Crack:**
+> *"Something is bleeding through the rock."*
+
+**At Fracture tier (voidPressure ≥ 6), a second line is added:**
+> *"[node name]: the air here has a quality you can't name. Wrong, somehow."*
+
+This is implemented as a helper `_voidFlavorLine(nodeCode)` that checks `S_story.voidPressure` and returns the appropriate string (or `""` at tier 0). The story node render function (`_renderNode()`) appends it to the existing node text if non-empty.
+
+---
+
+### XXIV-D. Corridor Glyph — The Void Crack `◈`
+
+At voidPressure ≥ 3, one corridor cell adjacent to the player's current node is temporarily marked with `◈` instead of its normal glyph (`·`, `─`, `│`, `┼`, etc.). This is a cosmetic-only change — it does not block movement. The crack cell resets each time the player moves to a new node (it's not persistent — it's a visual shimmer, not a permanent map feature).
+
+Implementation: after `_renderCorridorGrid()` writes the grid, a post-pass selects one of the 8 adjacent corridor cells at random (if any exist) and replaces its character with `◈` and colors it with `#7744aa` (void purple). This requires no new state — it is computed fresh on each render.
+
+---
+
+### XXIV-E. Void-Touched Monster Variants (voidPressure ≥ 6)
+
+Two new `MONSTER_POOL` entries are added. They are injected into specific `WORLD_DB` terrain entries at runtime (not hardcoded into WORLD_DB — injected via `_applyVoidPressureMonsters()` called at session start after `voidPressure` is loaded):
+
+**`void_wolf`**
+```
+key:    void_wolf
+name:   Void-Touched Wolf
+icon:   🐺
+ac:     13
+hp:     28
+atk:    +5
+die:    8, dieCount: 1, mod: 3
+tier:   medium
+drop:   { name: "Void Shard", icon: "◈", sell: 25 }
+```
+Injected into: `dark_forest`, `mountain_pass`, `GL wilderness` terrain WORLD_DB entries when `voidPressure ≥ 6`.
+
+**`void_rat_swarm`**
+```
+key:    void_rat_swarm
+name:   Void Rat Swarm
+icon:   🐀
+ac:     12
+hp:     18
+atk:    +4
+die:    4, dieCount: 2, mod: 0
+tier:   low
+drop:   { name: "Void Shard", icon: "◈", sell: 15 }
+```
+Injected into: `alley`, `city_slums`, `sewers` WORLD_DB entries when `voidPressure ≥ 6`.
+
+The `Void Shard` drop item (not a Codex Shard — different item) is a sellable minor lore relic with flavor text: *"A fragment of something that shouldn't exist."* It sells for 15–25 gold and is not part of the Codex Shard count.
+
+---
+
+### XXIV-F. NPC Pressure Lines (Dear Friend, voidPressure ≥ 6)
+
+Each of the 6 core NPCs (Yael, Brynn, Quill, Pachelbel, Weckmann, Auros) gets one additional dialogue line injected into their Dear Friend dialogue pool when `voidPressure ≥ 6`. These are checked in `_getNPCDialogue()` after the normal Dear Friend quote is selected — if the pressure condition is met, the pressure line replaces the normal quote (or is appended, implementation choice).
+
+| NPC | Pressure line |
+|-----|--------------|
+| Yael | *"The city is holding its breath. Even the rioters have gone quiet."* |
+| Brynn | *"My candles won't stay lit past midnight. I've started leaving the fire banked all night."* |
+| Quill | *"The numbers in the ledger keep adding up wrong. I've checked them four times."* |
+| Pachelbel | *"Three students fainted in the atelier today. The air feels thick. Like before a storm that never breaks."* |
+| Weckmann | *"I've been keeping the forge running later than usual. It feels wrong to let the fire go out."* |
+| Auros | *"Something is moving in the Convergence. Not the Commander. Something older."* |
+
+These lines are stored in a new const `NPC_VOID_PRESSURE_LINES` keyed by NPC ID. The check is: `if (S_story.voidPressure >= 6 && S_story['fav_' + npcId] >= 2)` — only Dear Friends (fav ≥ 2) hear this line.
+
+---
+
+### XXIV-G. The Pressure 9 Warning — "Imminent Breach"
+
+When `voidPressure` reaches exactly 9 (transition from 8→9 via `_addVoidPressure()`), a modal fires once:
+
+```
+┌─────────────────────────────────────────────────────┐
+│  ⚠️  THE VOID IS IMMINENT                           │
+│                                                     │
+│  Pressure: 9 / 10.                                  │
+│                                                     │
+│  One more day without reaching the Convergence      │
+│  and the Void breaks through. The world ends        │
+│  tomorrow if you rest.                              │
+│                                                     │
+│  [Shards collected: N / 7]                          │
+│                                                     │
+│  [I understand]                                     │
+└─────────────────────────────────────────────────────┘
+```
+
+State flag: `voidImminentWarned` (boolean, default false). The modal fires once and sets the flag. The `[Shards collected]` line is dynamic.
+
+**CO Gate text at pressure 9 (without 7 shards):**
+> *"The gate is sealed. You need all seven Codex Shards. [N/7 shards collected.] The Void is one day away."*
+
+This replaces the normal gate-locked text when `voidPressure ≥ 9`.
+
+---
+
+### XXIV-H. Mercy Window — One Last Rest
+
+When `voidPressure` reaches 9 AND the player has ≥ 5 shards, a one-time "mercy rest" becomes available: the player may rest once without voidPressure increasing. This is stored in:
+
+```
+S_story.void_mercy_count  (int, default 0)
+```
+
+Set to 1 when `voidPressure` transitions to 9 and `S_story.shards >= 5`. During the rest mechanic in `storyRest()`, if `void_mercy_count > 0`, skip the pressure increment and decrement `void_mercy_count` to 0. A small text note: *"You sleep fitfully. The Void holds its breath with you."*
+
+This is intentionally not well-telegraphed — it's a mechanical grace for engaged players who are close to the end. Players who have only 0–4 shards at pressure 9 do not receive the mercy window.
+
+---
+
+### XXIV-I. New State Flags
+
+| Flag | Type | Default | Purpose |
+|------|------|---------|---------|
+| `voidCrackFired` | boolean | false | First Crack pressure text has been shown at least once (suppress repeat modal) |
+| `voidFracturesFired` | boolean | false | Fracture tier crossed; NPC pressure lines unlocked; void-touched monsters injected |
+| `voidImminentWarned` | boolean | false | Pressure 9 modal has fired |
+| `void_mercy_count` | int | 0 | Number of mercy rests remaining at pressure 9 (set to 1 once if shards ≥ 5) |
+
+Note: no new persistent monster pool entries need separate flags — the injection is computed from existing `voidPressure` state on load.
+
+---
+
+### XXIV-J. Insertion Spec for `roll2hit-v3.html`
+
+**XXIV-J-1.** Add `void_wolf` and `void_rat_swarm` to `MONSTER_POOL` (after existing wolf/rat entries; include `voidTainted: true` property).
+
+**XXIV-J-2.** Add `VOID_SHARD` to a loot/drop table (or define inline in monster entries — follow existing `MONSTER_DROPS` pattern).
+
+**XXIV-J-3.** Add `NPC_VOID_PRESSURE_LINES` const (object, 6 keys: `yael/brynn/quill/pachelbel/weckmann/auros`).
+
+**XXIV-J-4.** In `_getNPCDialogue()`: after selecting the Dear Friend quote, check `S_story.voidPressure >= 6` and `fav >= 2`; if true, return `NPC_VOID_PRESSURE_LINES[npcId]` instead.
+
+**XXIV-J-5.** In `_addVoidPressure()`: add threshold checks:
+- At pressure 3 → set `voidCrackFired = true` (flag for node render)
+- At pressure 6 → set `voidFracturesFired = true`; call `_applyVoidPressureMonsters()`
+- At pressure 9 → set `voidImminentWarned` modal trigger; set `void_mercy_count = (shards >= 5) ? 1 : 0`
+
+**XXIV-J-6.** New function `_applyVoidPressureMonsters()`: if `voidPressure >= 6`, push `'void_wolf'` into `WORLD_DB['dark_forest'].monsters` etc. — check for duplicates before pushing. Called once per session load after state restore.
+
+**XXIV-J-7.** New function `_voidFlavorLine(nodeCode)`: returns pressure tier string for the given node, or `""`. Called from `_renderNode()` after existing node text render.
+
+**XXIV-J-8.** In `_renderCorridorGrid()`: post-pass `◈` crack cell injection when `voidPressure >= 3`. Select one adjacent corridor cell pseudorandomly from `S_story.day % [adjacents.length]` (deterministic per day, not per render — avoids shimmer on re-render).
+
+**XXIV-J-9.** In `storyRest()`: check `void_mercy_count > 0` before `_addVoidPressure()`; if true, skip pressure and decrement mercy count. Add flavor text to rest output.
+
+**XXIV-J-10.** Gate text override at CO: in the gate-locked modal function, check `voidPressure >= 9` and append the urgency line.
+
+---
+
+### XXIV-K. Documentation Updates Required on Implementation
+
+| File | Update |
+|------|--------|
+| `monsters.md` | Add `void_wolf` and `void_rat_swarm` stat blocks; note `voidTainted` flag |
+| `story.md` | Add "Void Tide Events" stub (XXIV-C flavor lines); add Mercy Window note |
+| `world.md` | Add Void-Touched Monsters note; NPC pressure lines listed |
+| `mechanics.md` | Update `voidPressure` section: add threshold events table, mercy window rule, CO gate override |
+| `plan.md` | Mark §XXIV complete; update §V-A queue |
+
+No lab report needed — extend `lab-report-living-world.md` with a §XXIV appendix note.
+
+---
+
+*§XXIV status: ⚠️ PLANNED — Pressure Cascade designed; threshold system (0/3/6/9) specified; void_wolf + void_rat_swarm monster entries defined; NPC_VOID_PRESSURE_LINES for all 6 Dear Friend NPCs written; mercy window mechanic specified; 4 new state flags; 10 insertion steps; no new quests or nodes; no lab report — extend living-world report.*
 
