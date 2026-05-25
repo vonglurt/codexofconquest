@@ -1067,18 +1067,11 @@ All six are Birka city nodes. No other nodes have NIGHT_AMBIENT entries.
 
 ---
 
-## **[PLANNED — Layer 48]** Luck — The Seventh Stat
+## **[✅ Layer 48]** Luck — The Seventh Stat
 
-Luck is a read-only derived stat. It has no entry in `_S_DEFAULTS()` and is never stored in `S_story`. It is recalculated on every call from the six live ability scores.
+Read-only derived stat. Never stored in `S_story`. `_calcLuck()` = `⌈(STR×DEX×CON×INT×WIS×CHA)^(1/6)⌉`. `_luckMod()` = `floor((luck−10)/2)`.
 
-**Formula:** `Luck = ⌈(STR × DEX × CON × INT × WIS × CHA)^(1/6)⌉`  
-**Luck Modifier:** `floor((Luck − 10) / 2)` — same scale as all other modifier functions.
-
-**World flavor:** Luck is not something the Shattered Codex world calls by name. Froberger never mentions it. No NPC will explain it. It is the ambient harmonic of everything working in your favor at once — or not. A fighter who has trained every muscle, kept their wits sharp, and knows when to run has more of it than one who ignored half their gifts. The geometric mean punishes extreme neglect more than linear averaging would. A score of 0 in any stat collapses Luck entirely.
-
-**Applications:** See `mechanics.md` Luck stub for the full application table (bare hook fishing, tournament tiebreaker, bait search DC, d100 loot, corridor encounter, death saves).
-
-**Implementation note:** `getLuck()` is a pure function. It takes nothing and returns nothing — it reads `S_story.abilityScores` directly. Adding Luck to the character sheet requires no new state field, only a display call. See `plan.md` §XIII for the 13-step implementation plan.
+**Active applications:** Character sheet ✦ LUCK display; bare hook catch bonus → LuckMod; fishing Type Roll +LuckMod; bait search DC reduced by LuckMod (floor 4); d100 loot roll +max(0,LuckMod); death save roll +LuckMod; hunt-mode encounter chance −LuckMod×0.5. No new `_S_DEFAULTS()` field.
 
 ---
 

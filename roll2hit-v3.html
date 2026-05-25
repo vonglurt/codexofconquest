@@ -7890,6 +7890,15 @@ const _S_DEFAULTS = () => ({
   fishingQuestFlags: {}, fishingBaitSatchel: false, fishingYugurtFavour: false, fishingCatchLog: [],
 });
 
+/* ── Layer 48: Luck — Seventh Stat ── */
+function _calcLuck() {
+  const s = S_story.abilityScores || { str:16, dex:12, con:14, int:10, wis:12, cha:8 };
+  const product = s.str * s.dex * s.con * s.int * s.wis * s.cha;
+  if (product <= 0) return 0;
+  return Math.ceil(Math.pow(product, 1 / 6));
+}
+function _luckMod() { return Math.floor((_calcLuck() - 10) / 2); }
+
 /* ── Layer 41: NPC Favorability helpers ── */
 function _npcFavor(key) { return (S_story.npcFavorability || {})[key] || 0; }
 function _lubeckFriends() { return Object.values(S_story.npcFavorability || {}).filter(v => v >= 1).length; }
@@ -8739,7 +8748,7 @@ function _rollD100Loot() {
 
   // Up to 3 attempts; on failure fall back to Minor Healing Potion
   for (let attempt = 0; attempt < 3; attempt++) {
-    const roll = Math.floor(Math.random() * 100);
+    const roll = Math.min(99, Math.floor(Math.random() * 100) + Math.max(0, _luckMod())); // Layer 48: Luck bonus
     const row  = _d100Result(roll);
 
     if (row._type === 'potion_minor')    return { name:'Minor Healing Potion',    icon:'🧪', type:'potion',    sell:25  };
@@ -9890,7 +9899,7 @@ function _storyRollDeathSave() {
   if (!ds.active) return;
   document.getElementById('btn-sbo-ds-roll').disabled = true;
 
-  let d20 = Math.ceil(Math.random() * 20);
+  let d20 = Math.ceil(Math.random() * 20) + _luckMod(); // Layer 48: Luck applies to death saves
   let indomUsed = false;
   // Indomitable I (Lv9): if roll fails (<10) and charges remain, reroll once
   if (d20 < 10 && (S_story.indomitableCharges || 0) > 0) {
@@ -11657,14 +11666,14 @@ function storyFishing() {
     rollEl.style.display = 'none'; revealEl.style.display = 'none';
     const title = document.createElement('div');
     title.style.cssText = 'font-size:11px;color:#6090b0;margin-bottom:2px;';
-    title.textContent = 'Search location — Survival (WIS) DC ' + (S_story.fishingBaitSatchel ? '8' : '10') + ':';
+    title.textContent = 'Search location — Survival (WIS) DC ' + Math.max(4, (S_story.fishingBaitSatchel ? 8 : 10) - _luckMod()) + ':';
     baitSearch.appendChild(title);
     [['bank','The Bank 🪨'],['reeds','The Reeds 🌿'],['shallows','The Shallows 🌊']].forEach(([loc, lbl]) => {
       const btn = document.createElement('button');
       btn.className = 'inv-use-btn'; btn.textContent = lbl;
       btn.addEventListener('click', () => {
         const wisMod = Math.floor(((S_story.abilityScores||{}).wis || 12) - 10) / 2;
-        const dc     = S_story.fishingBaitSatchel ? 8 : 10;
+        const dc     = Math.max(4, (S_story.fishingBaitSatchel ? 8 : 10) - _luckMod()); // Layer 48: Luck reduces Survival DC
         const die    = Math.ceil(Math.random() * 20);
         const total  = die + Math.floor(wisMod);
         baitSearch.style.display = 'none'; baitSearch.innerHTML = '';
@@ -11699,7 +11708,7 @@ function storyFishing() {
 
   const doCast = () => {
     baitSearch.style.display = 'none'; baitSearch.innerHTML = '';
-    const bait = _getSessionBait() || { name:'Bare Hook', icon:'🪝', catch:-3, type:0, advantage:false, sizeUp:false };
+    const bait = _getSessionBait() || { name:'Bare Hook', icon:'🪝', catch:_luckMod(), type:0, advantage:false, sizeUp:false }; // Layer 48: bare hook uses LuckMod
     const isBare = bait.name === 'Bare Hook';
     if (!isBare) _consumeBait(bait);
 
@@ -11726,7 +11735,7 @@ function storyFishing() {
     let rarity = 'common', typeTotal = 0;
     if (sizeKey) {
       const tDie = Math.ceil(Math.random() * 20);
-      typeTotal  = tDie + bait.type;
+      typeTotal  = tDie + bait.type + _luckMod(); // Layer 48: Luck bonus on Type Roll
       rarity     = _rarityFromRoll(typeTotal);
       // Special Catch (raw die 20 before bait) → force legendary rarity
       if (catchTotal >= 20 && cResult === 20) rarity = 'legendary';
@@ -13962,6 +13971,10 @@ function storyRenderCharSheet() {
           return `<div class="cs-stat"><div class="cs-stat-label">${s.toUpperCase()}</div><div class="cs-stat-score">${score}</div><div class="cs-stat-mod">${m(mod)}</div></div>`;
         }).join('')}
       </div>
+      <div class="cs-row" style="margin-top:6px;padding-top:6px;border-top:1px solid #1a2a3a;">
+        <span class="cs-row-lbl" style="color:#a0c0e0;">✦ LUCK</span>
+        <span class="cs-row-val" style="color:#a0c0e0;">${_calcLuck()} [${m(_luckMod())}] <span style="font-size:10px;color:#506070;font-style:italic;">geometric mean of all stats — read-only</span></span>
+      </div>
     </div>
     <div class="cs-section">
       <div class="cs-section-title">Equipment</div>
@@ -14203,7 +14216,7 @@ function storyCorridorTravel(fromCode, destCode, dir) {
   S_story.currentCode = destCode;
 
   if (S_story.huntMode) {
-    const chance = Math.min(0.95, 0.1 + notoriety * 0.015 + activeQuestCount * 0.04);
+    const chance = Math.min(0.95, Math.max(0.05, 0.1 + notoriety * 0.015 + activeQuestCount * 0.04 - _luckMod() * 0.5)); // Layer 48: Luck reduces encounter rate
     if (Math.random() < chance) {
       storyMsg('🎯 Hunting footpath → ' + destLabel + ' — ambush!');
       triggerCorridorEncounter(terrain, destCode, true);
