@@ -1077,4 +1077,22 @@ Stored in `NPC_VOID_PRESSURE_LINES`. Fires when `fav[npc] ≥ 2` and `voidPressu
 **No new nodes, quests, or named NPCs.** Extend `lab-report-living-world.md` with a §XXIV implementation note on completion.
 
 ---
+
+## ⚠️ PLANNED — The Homecoming: Act VIII NPC Farewell Beats (plan.md §XXV, Layer 60)
+
+Six one-time beats fire in Act VIII (actNumber === 8) when a player with Friendly or Dear Friend favorability visits each NPC's node. Each fires from a parchment modal before the normal dialogue, then sets its flag and returns the NPC to standard rotation. Not preserved on NG+.
+
+| NPC | Act VIII Final Note | Gift |
+|-----|--------------------|----|
+| Yael (CI) | Spent the player's absence building a witness network — names of people who will tell the truth after. *"Go do the other kind [of victory]."* | None |
+| Brynn (IN) | Has bread waiting. Was worried since Act III. Doesn't say so directly. | `brynns_loaf` — heals 8 HP, cannot be sold |
+| Quill (BA) | The Couperin ledger is settled. Understood the lesson: debts that served their purpose can be released. | None |
+| Pachelbel (SH) | Gives the player an unfinished composition sketch — the first honest work since the debt was cleared. *"Maybe you'll leave it for someone else to read."* | `pachelbels_sketch` — readable, no mechanical effect, cannot be sold |
+| Weckmann (CR) | Recognizes the player as the rare kind of champion — the kind earned in the world, not in a pit. Kept a tincture for this. | `champions_tincture` — advantage on next attack roll, cannot be sold |
+| Auros (BK) | *"Be ready. What you bring to it matters. Not just the Shards."* — the only beat that looks toward CO rather than back. Ambiguous in retrospect, given her role in the final battle. | None |
+
+**Flags:** `act8FarewellYael/Brynn/Quill/Pachelbel/Weckmann/Auros` (6 booleans, default false, not NG+-preserved).  
+**New items:** `brynns_loaf`, `pachelbels_sketch`, `champions_tincture`. Full dialogue text in `plan.md §XXV`.
+
+---
 *© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*

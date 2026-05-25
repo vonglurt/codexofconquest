@@ -1578,6 +1578,27 @@ No prerequisites for base dreams. Flag-gated variants replace base when story co
 
 ---
 
+#### ⚠️ PLANNED — The Homecoming: Act VIII Farewell Beats (plan.md §XXV, Layer 60)
+
+Six one-time dialogue beats that fire when the player visits each NPC during Act VIII (`actNumber === 8`) with at least Friendly favorability (`fav ≥ 1`). Each fires once per run; reset (not preserved) on NG+. Rendered as a parchment modal (same style as Froberger journal overlays), not as a dialogue quote.
+
+**Beat summary — each NPC's final note:**
+
+| NPC | Node | Theme | Gift |
+|-----|------|-------|------|
+| Yael | CI | Builds a witness network while player was away; gives truth a vessel | None |
+| Brynn | IN | Made too much bread — *"I always do when I'm worried"* | `brynns_loaf` (🍞, heal 8 HP, no sell) |
+| Quill | BA | Ledger finally balances; understands Couperin's "just a number" | None |
+| Pachelbel | SH | Was composing honestly for the first time; gives the player his unfinished sketch | `pachelbels_sketch` (📄, readable, no mechanical effect) |
+| Weckmann | CR | Recognizes the player is a champion — the kind earned out in the world | `champions_tincture` (⚗️, advantage on next attack roll) |
+| Auros | BK | *"Be ready. What you bring to it matters."* — the only beat that faces CO, not the past | None |
+
+**New state flags:** `act8FarewellYael`, `act8FarewellBrynn`, `act8FarewellQuill`, `act8FarewellPachelbel`, `act8FarewellWeckmann`, `act8FarewellAuros`.
+
+**No new quests or nodes.** New items: `brynns_loaf` (food/heal), `pachelbels_sketch` (readable), `champions_tincture` (consumable/advantage). See plan.md §XXV for full dialogue text and insertion spec.
+
+---
+
 ## BIRKA ARC SUMMARY (Layers 41–42)
 
 Six Birka NPCs are fully interactive across all 8 acts. Each has a quest chain, 4 favorability states, and 20 dialogue quotes (5 per state). Favorability persists through New Game+.

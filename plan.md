@@ -230,6 +230,7 @@ The commit message should name the lab report and summarize what it covers in on
 | 13 | §XXII | Codex Shard Origin Stories | 57 | No — document inline in `story.md` | ⚠️ PLANNED |
 | 14 | §XXIII | Inn Dreams | 58 | No — too small; document inline | ⚠️ PLANNED |
 | 15 | §XXIV | The Pressure Cascade: Visible Void Tide Events | 59 | No — extend `lab-report-living-world.md` | ⚠️ PLANNED |
+| 16 | §XXV | The Homecoming: Act VIII One-Time Farewell Beats | 60 | No — document inline in `story.md` | ⚠️ PLANNED |
 
 **Rule:** Implement in layer order when possible. Each implementation = code + doc sync + git commit. See plan.md §I Lab Report Policy for commit rules.
 
@@ -1999,6 +2000,7 @@ creative_literacy_token: { name:'Creative Literacy Token', icon:'📄', sell:27 
 | **Codex Shard Origins (§XXII)** | 7 shard_note items / named placers / flag-gated variants / journal reward | `plan.md §XXII` | ✅ PLANNED stubs: `story.md` Shard Origins section; `world.md` placer name notes | ⚠️ PLANNED |
 | **Inn Dreams (§XXIII)** | INN_DREAMS const / 4 inns × 3 base variants / flag-gated replacements | `plan.md §XXIII` | ✅ PLANNED stubs: `story.md` Inn Dreams section; `mechanics.md` sleep note | ⚠️ PLANNED |
 | **Pressure Cascade (§XXIV)** | voidPressure threshold events (3/6/9) / void-touched monsters / NPC pressure lines / mercy counter | `plan.md §XXIV` | ✅ PLANNED stubs: `story.md` Void Tide Events; `world.md` Void-Touched Monsters note | ⚠️ PLANNED |
+| **Homecoming (§XXV)** | 6 one-time Act VIII farewell beats / Brynn's Loaf / Champion's Tincture / Pachelbel's Sketch / 6 new flags | `plan.md §XXV` | ✅ PLANNED stub: `story.md` Act VIII Farewell Beats | ⚠️ PLANNED |
 
 ---
 
@@ -4965,3 +4967,264 @@ No lab report needed — extend `lab-report-living-world.md` with a §XXIV appen
 
 *§XXIV status: ⚠️ PLANNED — Pressure Cascade designed; threshold system (0/3/6/9) specified; void_wolf + void_rat_swarm monster entries defined; NPC_VOID_PRESSURE_LINES for all 6 Dear Friend NPCs written; mercy window mechanic specified; 4 new state flags; 10 insertion steps; no new quests or nodes; no lab report — extend living-world report.*
 
+
+---
+
+## Section XXV — The Homecoming: Act VIII One-Time Farewell Beats (Layer 60, ⚠️ PLANNED)
+
+> **Design problem:** Act VIII returns the player to Birka, but the 6 core NPCs don't acknowledge that the player has been gone for the entire journey — they cycle through the same dialogue pool as always. The emotional climax of the story happens at CO, but the *human* climax should happen here, in the last town, with the people the player actually knows. This section adds six one-time farewell beats that fire exactly once in Act VIII and are never repeated.
+
+---
+
+### XXV-A. Design Intent
+
+The farewell beats are not quests. There is no objective text, no completion reward beyond the beat itself (and in two cases, a small item). They are triggered automatically when the player visits an NPC's node during Act VIII with at least Friendly favorability. Once fired, the flag is set and the NPC returns to normal dialogue.
+
+The beats accomplish three things:
+1. Acknowledge the player's journey across eight acts without summarizing it — they show rather than tell.
+2. Give each NPC a final emotional note consistent with their arc: Yael's witness-keeping, Brynn's quiet care, Quill's reconciled ledger, Pachelbel's recovered creativity, Weckmann's recognition, Auros's unsentimental preparation.
+3. Provide two small mechanical gifts (Brynn's Loaf, Champion's Tincture) that are useful for the final push — earned, not handed over.
+
+---
+
+### XXV-B. Trigger Conditions
+
+All six beats use the same logic:
+
+```
+if (actNumber === 8
+    && npcFavorability[npc] >= 1
+    && !S_story['act8Farewell' + Npc])
+{
+    fireAct8Farewell(npc);
+    S_story['act8Farewell' + Npc] = true;
+}
+```
+
+This check runs in `_renderNpcCard()` before the normal dialogue is selected. When fired, the farewell beat renders as a distinct modal (parchment or speech overlay — same style as Froberger journal entry modals) rather than as a dialogue quote, so it doesn't consume one of the NPC's five-quote rotation slots.
+
+**Act VIII detection:** `S_story.actNumber === 8` is set when the player reaches the IN node on their return (the existing act transition logic handles this).
+
+**NG+ behavior:** The six flags are NOT preserved across NG+. On NG+, the player re-experiences them. This is intentional — the farewell beats are about the end of this run, not about accumulated memory. (NG+ has its own separate epilogue system.)
+
+---
+
+### XXV-C. The Six Farewell Beats
+
+---
+
+#### C-1. Yael Scheidemann — *"The List"* (CI node, fav ≥ 1)
+
+> *"You came back. I wasn't certain you would — I'm not being unkind, I just know what the road between here and the Convergence costs people.*
+>
+> *While you were gone I've been building something. Not a movement, not a cause. Just a list. Names. People who know what happened here — what the Void is, what the Scholar Kings suppressed, what it cost to hold it back. People who will tell the truth about this, after.*
+>
+> *Whatever 'after' looks like — whether you come back or not — the truth will be harder to erase than it's been. That's the only kind of victory I know how to build.*
+>
+> *Go do the other kind."*
+
+No item. No mechanical gift. The beat is the gift.
+Flag: `act8FarewellYael`
+
+---
+
+#### C-2. Brynn — *"Too Much Bread"* (IN node, fav ≥ 1)
+
+> *"Sit down. I made too much bread today — I always do when I'm worried, and I've been worried since Act III, so there's quite a lot of it.*
+>
+> *Don't argue about the room cost. Don't argue about the bread. You've been traveling on short rations and I can tell. You have the look of someone who's been eating just enough to keep moving.*
+>
+> *Take it. It'll keep."*
+
+**Auto-gives to inventory:** `brynns_loaf`
+```
+key:   brynns_loaf
+name:  Brynn's Loaf
+icon:  🍞
+type:  food
+heal:  8
+desc:  "Still warm. Brynn's bread always is."
+sell:  0   (cannot be sold — Brynn would be offended)
+```
+
+Use during combat or at any node to restore 8 HP. One-use.
+Flag: `act8FarewellBrynn`
+
+---
+
+#### C-3. Quill Faber — *"The Ledger Closes"* (BA node, fav ≥ 1)
+
+> *"I've been going through the old ledgers. All the debts that seemed so significant. The Couperin estate. The back payments. The interest that had been accumulating for longer than either of us had been keeping accounts.*
+>
+> *They balance now. Some were paid. Some were forgiven. Some just stopped mattering — which is its own kind of payment.*
+>
+> *I think I understand the note Couperin left better now. 'Just a number.' He didn't mean the debt was meaningless. He meant it had served its purpose and could be released. He was teaching me something. It just took me this long to learn it.*
+>
+> *Good luck out there. I'll keep the books straight here."*
+
+No item. Quill's arc completes here. This is the third and final beat of his journey (debt degradation → `couperiDebtDegraded` flag → this farewell).
+Flag: `act8FarewellQuill`
+
+---
+
+#### C-4. Pachelbel Voss — *"The Sketch"* (SH node, fav ≥ 1)
+
+> *"I've been writing something. I don't know if it's good — I'm not sure that question is the right one anymore.*
+>
+> *It's honest. That's the difference between the work I did before you cleared my debt and the work I'm doing now. I was composing to prove something. Now I'm composing because there's something in me that needs to come out.*
+>
+> *I'd like you to have this. It's not finished — I don't think it should be finished by me alone. Maybe you'll understand it. Maybe you'll leave it for someone else to read."*
+
+**Auto-gives to inventory:** `pachelbels_sketch`
+```
+key:    pachelbels_sketch
+name:   Pachelbel's Sketch
+icon:   📄
+type:   readable
+text:   "Three lines of notation. A rest. Then three more, transposed up a fifth.
+         The intervals spell out something — or almost spell it out, the way all
+         honest things approach their meaning diagonally.
+         At the bottom, in small letters: 'For the one who came back.'"
+sell:   0
+```
+
+No mechanical effect. A readable item that carries the tone of the ending. Can be read from inventory like a tome.
+Flag: `act8FarewellPachelbel`
+
+---
+
+#### C-5. Weckmann — *"The Tincture"* (CR node, fav ≥ 1)
+
+> *"You look different.*
+>
+> *I've been in this business long enough to know what the road does to people. Most come back smaller — worn down, quieter, like something got used up. Some don't come back at all. You came back standing straight. That's rarer than it sounds.*
+>
+> *I was holding this for a champion. Not the pit-fight kind — the kind that earns it out there, where nobody's watching and there's no purse at the end. Take it. You'll know when to use it."*
+
+**Auto-gives to inventory:** `champions_tincture`
+```
+key:    champions_tincture
+name:   Champion's Tincture
+icon:   ⚗️
+type:   consumable
+effect: advantage_next_attack
+desc:   "Brewed by a man who knows champions. Tastes like iron and pine resin."
+sell:   0
+```
+
+When used before an attack roll (in battle UI: a "Use Item" action that costs no AP), grants advantage on that roll. One-use. The `advantage_next_attack` flag is set and consumed on the next ATK roll.
+Flag: `act8FarewellWeckmann`
+
+---
+
+#### C-6. Auros (Commander Seraphine Bruhns) — *"Be Ready"* (BK or Auros node, fav ≥ 1)
+
+> *"I won't say goodbye. That's what people say when they're not sure something will work.*
+>
+> *I'll say: be ready. The Convergence has been waiting longer than either of us has been alive. It isn't patient — patience implies willingness to wait. It's simply there. It's always been there.*
+>
+> *What you bring to it matters. Not just the Shards — those are the key, not the reason. The reason is everything you did between collecting them. Whether you know that yet or not.*
+>
+> *I'll see you on the other side of it. One way or another."*
+
+No item. Auros's beat is forward-facing — the only farewell beat that looks toward CO rather than back at the journey. It also carries the ambiguity of her final role (she is the antagonist at CO, but she says this as an ally — the player will remember it during the final battle).
+Flag: `act8FarewellAuros`
+
+---
+
+### XXV-D. New Items Summary
+
+| Key | Name | Icon | Type | Effect | Sell |
+|-----|------|------|------|--------|------|
+| `brynns_loaf` | Brynn's Loaf | 🍞 | food | Heal 8 HP (one-use) | 0 (no sell) |
+| `pachelbels_sketch` | Pachelbel's Sketch | 📄 | readable | In-world prose (no mechanical effect) | 0 |
+| `champions_tincture` | Champion's Tincture | ⚗️ | consumable | Advantage on next attack roll | 0 |
+
+All three items have `sell: 0` — they cannot be sold to vendors. Attempting to sell them returns: *"[Item] is not something you can sell."* This is enforced in the vendor UI by checking `item.sell === 0`.
+
+---
+
+### XXV-E. New State Flags
+
+| Flag | Type | Default | Purpose |
+|------|------|---------|---------|
+| `act8FarewellYael` | boolean | false | Yael's Act VIII beat has fired |
+| `act8FarewellBrynn` | boolean | false | Brynn's Act VIII beat has fired |
+| `act8FarewellQuill` | boolean | false | Quill's Act VIII beat has fired |
+| `act8FarewellPachelbel` | boolean | false | Pachelbel's Act VIII beat has fired |
+| `act8FarewellWeckmann` | boolean | false | Weckmann's Act VIII beat has fired |
+| `act8FarewellAuros` | boolean | false | Auros's Act VIII beat has fired |
+
+All 6 default to false. Reset to false on NG+ (not preserved).
+
+---
+
+### XXV-F. Insertion Spec for `roll2hit-v3.html`
+
+**XXV-F-1.** Add `brynns_loaf`, `pachelbels_sketch`, `champions_tincture` to an appropriate item pool (or define inline at point of use, as `const ACT8_FAREWELL_ITEMS`). These are one-off items that don't belong in LOOT_TABLE, SHIELD_ITEMS, etc. — define them in a dedicated `ACT8_GIFTS` object keyed by NPC.
+
+**XXV-F-2.** Add 6 flags to `_S_DEFAULTS()`:
+```js
+act8FarewellYael:      false,
+act8FarewellBrynn:     false,
+act8FarewellQuill:     false,
+act8FarewellPachelbel: false,
+act8FarewellWeckmann:  false,
+act8FarewellAuros:     false,
+```
+
+**XXV-F-3.** New function `_checkAct8Farewell(npcKey)`:
+```js
+function _checkAct8Farewell(npcKey) {
+  const flagKey = 'act8Farewell' + npcKey[0].toUpperCase() + npcKey.slice(1);
+  if (S_story.actNumber !== 8) return false;
+  if ((S_story['fav_' + npcKey] || 0) < 1) return false;
+  if (S_story[flagKey]) return false;
+  return true;
+}
+```
+
+**XXV-F-4.** In `_renderNpcCard(key, container)`: call `_checkAct8Farewell(key)` before building the normal dialogue. If true:
+- Call `_fireAct8Farewell(key)` to render the farewell modal
+- Set `S_story[flagKey] = true`
+- Return early (don't render the normal NPC card this visit)
+
+**XXV-F-5.** New function `_fireAct8Farewell(npcKey)`: renders the farewell text in a modal (parchment style, same as Froberger journal entry overlays). If the NPC has a gift item, push it to `S_story.inventory` and append `"\n\n[Received: {itemName}]"` to the modal text. Include a `[Close]` button.
+
+**XXV-F-6.** Add `champions_tincture` effect handling to battle phase: in the pre-attack step, check `S_story.inventory` for `champions_tincture`. If found and player activates it (Use Item action, 0 AP), set `S_story._advantageNextAttack = true`, remove item from inventory. In attack roll: if `_advantageNextAttack`, roll twice and take higher; then set `_advantageNextAttack = false`.
+
+**XXV-F-7.** Add `brynns_loaf` healing: in inventory/Use Item flow, handle `type: 'food'` items similarly to healing potions — restore `item.heal` HP, clamp at `hpMax`, remove item.
+
+**XXV-F-8.** Add `pachelbels_sketch` readable: in inventory/Use Item flow, handle `type: 'readable'` — render `item.text` in a small modal. Same treatment as other tome-class items.
+
+---
+
+### XXV-G. Documentation Updates Required on Implementation
+
+| File | Update |
+|------|--------|
+| `story.md` | Add "Act VIII Farewell Beats" section with all 6 beat texts (PLANNED → IMPLEMENTED) |
+| `world.md` | Add note under each NPC profile entry: farewell beat summary |
+| `mechanics.md` | Add food item type (`brynns_loaf`); add consumable advantage mechanic (`champions_tincture`); add readable item type (`pachelbels_sketch`) |
+| `plan.md` | Mark §XXV complete; update §V-A queue |
+
+No lab report needed. Document inline.
+
+---
+
+### XXV-H. Thematic Coherence Note
+
+The farewell beats respect each NPC's established arc without summarizing it. They trust the player to have lived those arcs and to receive the final note as a resonance, not a recap:
+
+- Yael doesn't say "remember all those quests we did." She just shows what she built while the player was gone.
+- Brynn doesn't say "I was worried." She shows it: bread.
+- Quill doesn't summarize the Couperin debt arc. He arrives at the lesson and lets it land.
+- Pachelbel doesn't say "thank you for paying my debt." He gives the player the art that the debt was preventing.
+- Weckmann doesn't list the player's achievements. He describes what he sees when he looks at them.
+- Auros doesn't warn or advise. She says "be ready" and means it entirely.
+
+None of these beats explain the game to the player. They assume the player already knows.
+
+---
+
+*§XXV status: ⚠️ PLANNED — Act VIII farewell beats designed for all 6 NPCs; full dialogue text written; 3 new items specified (Brynn's Loaf / Pachelbel's Sketch / Champion's Tincture); 6 new state flags; 8 insertion steps; no new monsters or nodes; no lab report — document inline in `story.md`.*
