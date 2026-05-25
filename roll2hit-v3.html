@@ -8073,6 +8073,72 @@ const QUEST_DB = {
     activateNode:null, completeItems:[], completeFn:() => !!(S_story.wardensLegacyKnown),
     waypointNode:'MT', reward:600,
     disposition:'"If I\'m wrong, then I needed to be stopped. That\'s — that\'s actually fine." — The Warden' },
+  // ── Layer 44 — Ally Cat Arc quests ──
+  quest_cat_01: { id:'quest_cat_01', type:'side', title:'Jimmy: The New Scratch',
+    desc:"Jimmy Two-Tails wants the Cat Quarter settled. Clear the riff-raff — 5 strays and 3 fluffies.",
+    hint:'Fight in the Cat Quarter until the quota is filled.',
+    targetMonsterKeys:['stray_alley_cat','fluffy_cat'],
+    killGoals:[{key:'stray_alley_cat',need:5,label:'Stray'},{key:'fluffy_cat',need:3,label:'Fluffy'}],
+    activateNode:'CQ', completeItems:[], completeFn:() => {
+      const k = S_story.catKills || {};
+      return (k.stray_alley_cat || 0) >= 5 && (k.fluffy_cat || 0) >= 3;
+    },
+    waypointNode:'CQ', reward:200,
+    disposition:'"You done good, kid. Real professional. The neighborhood\'s already calmer. Relatively. For cats." — Jimmy Two-Tails' },
+  quest_cat_02: { id:'quest_cat_02', type:'side', title:'Jimmy: Beefy Business',
+    desc:"Three Beefy Toms are running muscle for a rival outfit. Take them down and collect the proof.",
+    hint:'Kill 3 Beefy Toms and collect their Cracked Claws.',
+    targetMonsterKeys:['beefy_tom'],
+    killGoals:[{key:'beefy_tom',need:3,label:'Beefy Tom'}],
+    activateNode:null, completeItems:[], completeFn:() => {
+      const k = S_story.catKills || {};
+      return (k.beefy_tom || 0) >= 3
+        && (S_story.inventory || []).filter(i => i.name === 'Cracked Claw').length >= 3;
+    },
+    waypointNode:'CQ', reward:350,
+    disposition:'"Those guys were affiliated. You just stepped into something bigger than strays, sweetheart." — Sandy Scratchpad Mewlino' },
+  quest_cat_03: { id:'quest_cat_03', type:'side', title:'Sandy: Honcho Problems',
+    desc:"A Capo and a Boss Lady are circling each other. Kill them SEPARATE — let them merge and you\'re dealing with a Taz Devil.",
+    hint:'Kill 1 Honcho Cat (Capo) and 1 Boss Lady Honcho.',
+    targetMonsterKeys:['honcho_cat_m','honcho_cat_f'],
+    killGoals:[{key:'honcho_cat_m',need:1,label:'Honcho Capo'},{key:'honcho_cat_f',need:1,label:'Boss Lady'}],
+    activateNode:null, completeItems:[], completeFn:() => {
+      const k = S_story.catKills || {};
+      return (k.honcho_cat_m || 0) >= 1 && (k.honcho_cat_f || 0) >= 1;
+    },
+    waypointNode:'CQ', reward:500,
+    disposition:'"Kid, I told you. SEPARATE. You kill \'em SEPARATE. The merge thing is NOT a mechanic I enjoy." — Jimmy Two-Tails' },
+  quest_cat_04: { id:'quest_cat_04', type:'side', title:'Jimmy: When the Tornado Comes',
+    desc:"Two Honchos merged. A Taz Devil — Furball Tornado — is loose in the Cat Quarter. Take it down.",
+    hint:'Defeat the Taz Devil at the Cat Quarter.',
+    activateNode:null, completeItems:[], completeFn:() => !!S_story.defeatedBattles['CQ_TAZ'],
+    waypointNode:'CQ', reward:750,
+    disposition:'"Oh you think you TOUGH now? You killed ONE Taz? ONE? There\'s THREE more building up past the fish market right now and when they merge — WHEN THEY MERGE, buddy — that ain\'t a Taz no more. That\'s a KING." — Tommy No-Ears DeVito' },
+  quest_cat_05: { id:'quest_cat_05', type:'side', title:"Sandy: Fat Cats Don't Tip",
+    desc:"The Fat Merchant Cats are using Corrupted Cats as enforcers. Sandy wants Don Fluffissimo gone.",
+    hint:'Kill 4 Fat Merchant Cats and defeat Don Fluffissimo.',
+    targetMonsterKeys:['fat_merchant_cat'],
+    killGoals:[{key:'fat_merchant_cat',need:4,label:'Merchant Cat'}],
+    activateNode:null, completeItems:[], completeFn:() => {
+      const k = S_story.catKills || {};
+      return (k.fat_merchant_cat || 0) >= 4 && !!S_story.defeatedBattles['CQ_BOSS'];
+    },
+    waypointNode:'CQ', reward:900,
+    disposition:'"The merchants have been using Corrupted Cats as enforcers. Void-touched kitties doing dirty work for coin. I don\'t like it in my neighborhood." — Sandy Scratchpad Mewlino' },
+  quest_cat_06: { id:'quest_cat_06', type:'side', title:'Tommy: The Cat-King Cometh',
+    desc:"Three Taz Devils merged at the fish market. The Cat-King has awoken. You\'re the hero. You go.",
+    hint:'Defeat The Cat-King at the Cat Quarter.',
+    activateNode:null, completeItems:[], completeFn:() => !!S_story.catKingDefeated,
+    waypointNode:'CQ', reward:1500,
+    disposition:'"Listen. I want you to know something. You did good. Real good. You\'re like... honorary Ally Cat now. Don\'t tell nobody. It ain\'t a thing we advertise." — Jimmy Two-Tails' },
+  quest_cat_void: { id:'quest_cat_void', type:'side', title:'Sandy: Void Strays',
+    desc:"Strays near the DF node have gone wrong. Wrong eyes, wrong fur. Sandy doesn\'t like it in her neighborhood.",
+    hint:'Kill 5 Corrupted Cats in the Cat Quarter.',
+    targetMonsterKeys:['corrupted_cat'],
+    killGoals:[{key:'corrupted_cat',need:5,label:'Corrupted Cat'}],
+    activateNode:null, completeItems:[], completeFn:() => (S_story.catKills || {}).corrupted_cat >= 5,
+    waypointNode:'CQ', reward:400,
+    disposition:'"Something\'s wrong with the strays near the DF node. They\'re not just feral — they\'re WRONG. Wrong eyes. Wrong fur. Not touching anything from that block." — Sandy Scratchpad Mewlino' },
 };
 
 /* ── Layer 5: Void Tide Events ── */
@@ -8174,72 +8240,6 @@ const NPC_DIALOGUE = {
     activateNode:'CY', completeItems:[], completeFn:() => !!S_story.defeatedBattles['CY_VOID'],
     waypointNode:'CY', reward:0,
     disposition: '"The Council approved the maintenance request six months ago. In principle. The Void doesn\'t wait for implementation." — Commander Bruhns' },
-  // ── Layer 44 — Ally Cat Arc quests ──
-  quest_cat_01: { id:'quest_cat_01', type:'side', title:'Jimmy: The New Scratch',
-    desc:"Jimmy Two-Tails wants the Cat Quarter settled. Clear the riff-raff — 5 strays and 3 fluffies.",
-    hint:'Fight in the Cat Quarter until the quota is filled.',
-    targetMonsterKeys:['stray_alley_cat','fluffy_cat'],
-    killGoals:[{key:'stray_alley_cat',need:5,label:'Stray'},{key:'fluffy_cat',need:3,label:'Fluffy'}],
-    activateNode:'CQ', completeItems:[], completeFn:() => {
-      const k = S_story.catKills || {};
-      return (k.stray_alley_cat || 0) >= 5 && (k.fluffy_cat || 0) >= 3;
-    },
-    waypointNode:'CQ', reward:200,
-    disposition:'"You done good, kid. Real professional. The neighborhood\'s already calmer. Relatively. For cats." — Jimmy Two-Tails' },
-  quest_cat_02: { id:'quest_cat_02', type:'side', title:'Jimmy: Beefy Business',
-    desc:"Three Beefy Toms are running muscle for a rival outfit. Take them down and collect the proof.",
-    hint:'Kill 3 Beefy Toms and collect their Cracked Claws.',
-    targetMonsterKeys:['beefy_tom'],
-    killGoals:[{key:'beefy_tom',need:3,label:'Beefy Tom'}],
-    activateNode:null, completeItems:[], completeFn:() => {
-      const k = S_story.catKills || {};
-      return (k.beefy_tom || 0) >= 3
-        && (S_story.inventory || []).filter(i => i.name === 'Cracked Claw').length >= 3;
-    },
-    waypointNode:'CQ', reward:350,
-    disposition:'"Those guys were affiliated. You just stepped into something bigger than strays, sweetheart." — Sandy Scratchpad Mewlino' },
-  quest_cat_03: { id:'quest_cat_03', type:'side', title:'Sandy: Honcho Problems',
-    desc:"A Capo and a Boss Lady are circling each other. Kill them SEPARATE — let them merge and you\'re dealing with a Taz Devil.",
-    hint:'Kill 1 Honcho Cat (Capo) and 1 Boss Lady Honcho.',
-    targetMonsterKeys:['honcho_cat_m','honcho_cat_f'],
-    killGoals:[{key:'honcho_cat_m',need:1,label:'Honcho Capo'},{key:'honcho_cat_f',need:1,label:'Boss Lady'}],
-    activateNode:null, completeItems:[], completeFn:() => {
-      const k = S_story.catKills || {};
-      return (k.honcho_cat_m || 0) >= 1 && (k.honcho_cat_f || 0) >= 1;
-    },
-    waypointNode:'CQ', reward:500,
-    disposition:'"Kid, I told you. SEPARATE. You kill \'em SEPARATE. The merge thing is NOT a mechanic I enjoy." — Jimmy Two-Tails' },
-  quest_cat_04: { id:'quest_cat_04', type:'side', title:'Jimmy: When the Tornado Comes',
-    desc:"Two Honchos merged. A Taz Devil — Furball Tornado — is loose in the Cat Quarter. Take it down.",
-    hint:'Defeat the Taz Devil at the Cat Quarter.',
-    activateNode:null, completeItems:[], completeFn:() => !!S_story.defeatedBattles['CQ_TAZ'],
-    waypointNode:'CQ', reward:750,
-    disposition:'"Oh you think you TOUGH now? You killed ONE Taz? ONE? There\'s THREE more building up past the fish market right now and when they merge — WHEN THEY MERGE, buddy — that ain\'t a Taz no more. That\'s a KING." — Tommy No-Ears DeVito' },
-  quest_cat_05: { id:'quest_cat_05', type:'side', title:"Sandy: Fat Cats Don't Tip",
-    desc:"The Fat Merchant Cats are using Corrupted Cats as enforcers. Sandy wants Don Fluffissimo gone.",
-    hint:'Kill 4 Fat Merchant Cats and defeat Don Fluffissimo.',
-    targetMonsterKeys:['fat_merchant_cat'],
-    killGoals:[{key:'fat_merchant_cat',need:4,label:'Merchant Cat'}],
-    activateNode:null, completeItems:[], completeFn:() => {
-      const k = S_story.catKills || {};
-      return (k.fat_merchant_cat || 0) >= 4 && !!S_story.defeatedBattles['CQ_BOSS'];
-    },
-    waypointNode:'CQ', reward:900,
-    disposition:'"The merchants have been using Corrupted Cats as enforcers. Void-touched kitties doing dirty work for coin. I don\'t like it in my neighborhood." — Sandy Scratchpad Mewlino' },
-  quest_cat_06: { id:'quest_cat_06', type:'side', title:'Tommy: The Cat-King Cometh',
-    desc:"Three Taz Devils merged at the fish market. The Cat-King has awoken. You\'re the hero. You go.",
-    hint:'Defeat The Cat-King at the Cat Quarter.',
-    activateNode:null, completeItems:[], completeFn:() => !!S_story.catKingDefeated,
-    waypointNode:'CQ', reward:1500,
-    disposition:'"Listen. I want you to know something. You did good. Real good. You\'re like... honorary Ally Cat now. Don\'t tell nobody. It ain\'t a thing we advertise." — Jimmy Two-Tails' },
-  quest_cat_void: { id:'quest_cat_void', type:'side', title:'Sandy: Void Strays',
-    desc:"Strays near the DF node have gone wrong. Wrong eyes, wrong fur. Sandy doesn\'t like it in her neighborhood.",
-    hint:'Kill 5 Corrupted Cats in the Cat Quarter.',
-    targetMonsterKeys:['corrupted_cat'],
-    killGoals:[{key:'corrupted_cat',need:5,label:'Corrupted Cat'}],
-    activateNode:null, completeItems:[], completeFn:() => (S_story.catKills || {}).corrupted_cat >= 5,
-    waypointNode:'CQ', reward:400,
-    disposition:'"Something\'s wrong with the strays near the DF node. They\'re not just feral — they\'re WRONG. Wrong eyes. Wrong fur. Not touching anything from that block." — Sandy Scratchpad Mewlino' },
   // ── DeFi Land — three useless NPCs who do nothing ──
   DF: { name:'Grimshaw',          quote:'"...static...KD9QRX, this is KD9QRX, calling general...static...anyone on frequency...static...copy that nobody." His receiver has been broken for eleven years. He is aware. He does not consider this relevant to the broadcast.' },
   HM: { name:'Bertha No-Bank',    quote:'"This is frequency 14.225. Nothing is on 14.225. I have checked every morning since the third moon of the fourth year. Nothing was on it then. Nothing is on it now. I update the log regardless." She returns to the notebook. Volume forty-two begins tomorrow.' },
