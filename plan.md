@@ -466,7 +466,7 @@ The commit message should name the lab report and summarize what it covers in on
 
 ### A. Complete File Manifest — Disk vs index.md
 
-> **37 .md files + 1 .txt on disk. All files listed and indexed.**
+> **38 .md files + 1 .txt on disk. All files listed and indexed.**
 
 #### Core Reference (in index.md ✅)
 
@@ -516,6 +516,7 @@ The commit message should name the lab report and summarize what it covers in on
 | `lab-report-loot-drop-weapon-economy.md` | ✅ | Historical proposal (implemented L25 as `_D100_TABLE`) — mark superseded | LOW |
 | `lab-report-story-codoex-curse-of-knowedge.md` | ✅ | Writing style guide — no code reference | LOW |
 | `lab-report-fishing-bait-prompting.md` | ✅ | §XII design process meta-report: prompting methodology, plan.md-as-structured-prompt analysis, drop nerf + Luck stat integration documented | LOW |
+| `lab-report-documentation-system-design.md` | ✅ | IEEE-format analysis of the two-way sync architecture, plan.md purpose, keyword vocabulary, task decomposition framework (Spec→Stub→Code→Sync→Commit), ASCII diagrams | LOW |
 
 #### ✅ Previously Missing from index.md — All Added (SP2)
 
