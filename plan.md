@@ -19,8 +19,6 @@ Implement in layer order. Each = code change + doc sync + `git commit`.
 
 | Layer | Section | Feature | Status |
 |-------|---------|---------|--------|
-| 44 | §IX | Ally Cat Arc | ✅ Implemented |
-| 49 | §XIV | Quest -1 + World Creator | ✅ Implemented |
 | 50 | §XV | NG+ Remembrance Layer | ✅ Implemented 2026-05-25 |
 | 51 | §XVI | Weimar Scholar Gate | ✅ Implemented 2026-05-25 |
 | 52 | §XVII | Void Archaeology | ✅ Implemented 2026-05-25 |
@@ -256,9 +254,7 @@ The commit message should name the lab report and summarize what it covers in on
 
 | Priority | Section | Feature | Layer | Lab Report Needed? | Status |
 |----------|---------|---------|-------|--------------------|--------|
-| 1 | §XIV | Quest -1: The Open Door + World Creator Wizard | 49 | `lab-report-world-creator.md` (after build) | ✅ Implemented |
 | 4 | §XV | NG+ Remembrance Layer: Entry 42 / "The Next Froberger" | 50 | Yes — postmortem on NG+ narrative design | ✅ Implemented 2026-05-25 |
-| 5 | §IX | Ally Cat Arc: "Nine Lives, Capisce?" | 44 | Yes — `lab-report-ally-cat.md` | ✅ Implemented |
 | 7 | §XVI | Weimar Scholar Gate: Tomes and the Fourth Hub | 51 | Yes — new item category + NPC arc | ✅ Implemented 2026-05-25 |
 | 8 | §XVII | Void Archaeology: The Origin Investigation | 52 | Yes — narrative recontextualization + four-author chain | ✅ Implemented 2026-05-25 |
 | 10 | §XIX | Tilbury Harbor Arc: "The Conclave's Weight" | 54 | Yes — shared with §XX in `lab-report-tilbury-visby-arcs.md` | ✅ Implemented 2026-05-25 |
