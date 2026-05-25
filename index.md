@@ -22,6 +22,22 @@ Every item in the markdown docs must trace back to `roll2hit-v3.html` (source of
 Everything in `roll2hit-v3.html` must have a home doc.  
 On each sync pass: verify world map consistency across `maps.md`, `story.md`, `world.md`, `spec-world.md`, and `spec-engine.md`.
 
+### Lab Report Rule
+
+Write a new `lab-report-<title>.md` when any of the following is true:
+
+| Trigger | Examples |
+|---------|---------|
+| Major collection added or redesigned | New monster group, terrain cluster, NPC faction, item economy |
+| Large redesign touching multiple systems | Weapon drop overhaul, Luck Stat, fishing bait sub-system |
+| New narrative theme or arc | New quest chain spanning 3+ nodes, new named faction, new NPC arc |
+| Design review before implementation | IEEE-format spec locking data shapes and flow before any HTML edit |
+| Session postmortem with non-obvious decisions | Choices that won't be recoverable from code or core docs alone |
+
+Do **not** write a lab report for: a single monster/quest addition (sync core docs), a value correction (add implementation note to existing report), or small additions that fit in an existing doc section.
+
+When a lab report is written, **git add and commit it with the related doc changes in the same commit.** A lab report that isn't committed is a planning note, not a record.
+
 ### Session Format
 
 One increment per "continue." Say "continue" to advance. Each increment ends with a confirmation before the next begins.

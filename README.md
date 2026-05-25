@@ -35,13 +35,17 @@ This directory maintains a **two-way sync** between the source HTML and the mark
 - `spec-combat.md` — combat flow, conditions, death saves, Fighter features
 - `spec-migration.md` — full architecture overview, all data structures
 
-**Lab reports** document design decisions, implementation findings, and system behavior. Each significant contribution produces a new file:
+**Lab reports** document design decisions, implementation findings, and system behavior. A new `lab-report-<title>.md` is written when:
 
-```
-lab-report-<title>.md
-```
+- A **major collection** is added or redesigned — new monster group, terrain cluster, NPC faction, or item economy (e.g., the fishing bait sub-system, the Ally Cat Arc)
+- A **large redesign** touches multiple systems or rewrites an existing mechanic (e.g., weapon drop economy overhaul, Luck Stat integration)
+- A **new narrative theme or arc** spans multiple nodes, NPCs, or quest chains
+- A **design review** is needed before implementation — IEEE-format spec to lock in data shapes and flow before touching the HTML
+- A **session postmortem** captures decisions that aren't obvious from reading the code or the core docs
 
-Lab reports are archived — they reflect the system as understood at the time of writing. Implementation notes are added when the shipped code diverges from the design. See `index.md` for the full list.
+A lab report is **not** needed for: adding a single monster or quest (sync the core docs), correcting a value (add an implementation note to the existing report), or small additions that fit cleanly into an existing doc section.
+
+Lab reports are archived — they reflect the system as understood at the time of writing. When shipped code diverges from the design, add an implementation note at the top rather than rewriting the archive. See `index.md` for the full list.
 
 ### Adding Content
 

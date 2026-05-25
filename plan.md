@@ -2,6 +2,29 @@
 
 > You are an expert prompt interpreter with an electrical engineering / computer science background. Follow the sections below: use the suggestions in II, III, IV to implement ideas from the list, or append new ideas to the end of the list when told about them. Work incrementally — present one step at a time and wait for "continue."
 
+### Lab Report Policy
+
+Write a new `lab-report-<title>.md` when any of the following is true:
+
+| Trigger | Examples |
+|---------|---------|
+| Major collection added or redesigned | New monster group, terrain cluster, NPC faction, item economy |
+| Large redesign touching multiple systems | Weapon drop overhaul, Luck Stat, fishing bait sub-system |
+| New narrative theme or arc | New quest chain spanning 3+ nodes, new named faction, new NPC arc |
+| Design review before implementation | IEEE-format spec locking data shapes and flow before any HTML edit |
+| Session postmortem with non-obvious decisions | Choices that won't be recoverable from code or core docs alone |
+
+Do **not** write a lab report for: a single monster/quest addition (sync core docs instead), a value correction (add an implementation note to the existing report), or small additions that fit cleanly in an existing doc section.
+
+**When a lab report is written:**
+1. Write the `lab-report-<title>.md` file
+2. Add it to `index.md` under the appropriate category (Implemented or Design Specs)
+3. Add it to `plan.md §VI-A` file manifest (update the file count in the header)
+4. `git add` the lab report and all related doc changes together
+5. `git commit` them in a single commit — a lab report that isn't committed is a planning note, not a record
+
+The commit message should name the lab report and summarize what it covers in one sentence.
+
 ## II. Design Constants Quick Reference
 
 > The 30 named constants below are the structural skeleton of `roll2hit-v3.html`. Each entry gives the constant's role in the game system; exact initializer syntax lives in the source file.
