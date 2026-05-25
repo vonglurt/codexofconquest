@@ -209,7 +209,49 @@ The commit message should name the lab report and summarize what it covers in on
 
 ---
 
-## V-B. Documentation Sync — Category Coverage
+### V-A. Implementation Queue — PLANNED Features
+
+> Full specs live in their own sections. This table is the priority dashboard.
+
+| Priority | Section | Feature | Layer | Lab Report Needed? | Status |
+|----------|---------|---------|-------|--------------------|--------|
+| 1 | §XIV | Quest -1: The Open Door + World Creator Wizard | 49 | `lab-report-world-creator.md` (after build) | ⚠️ PLANNED |
+| 2 | §XIII | Luck: The Seventh Stat | 48 | No — integrate into existing architecture lab report | ⚠️ PLANNED |
+| 3 | §XII | Yugurt Lake Fishing Overhaul (bait sub-system, tournament) | 47 | `lab-report-fishing-bait-prompting.md` exists ✅ | ⚠️ PLANNED |
+| 4 | §XV | NG+ Remembrance Layer: Entry 42 / "The Next Froberger" | 50 | Yes — postmortem on NG+ narrative design | ⚠️ PLANNED |
+| 5 | §IX | Ally Cat Arc: "Nine Lives, Capisce?" | 44 | Yes — new monster group + faction arc | ⚠️ PLANNED |
+| 6 | §X | Torment Nexus Overture (HM — Kern & Sable) | 46 | No — small narrative encounter; fits in living-world lab report | ⚠️ PLANNED |
+| 7 | §XVI | Weimar Scholar Gate: Tomes and the Fourth Hub | 51 | Yes — new item category + NPC arc | ⚠️ PLANNED |
+
+**Rule:** Implement in layer order when possible. Each implementation = code + doc sync + git commit. See plan.md §I Lab Report Policy for commit rules.
+
+---
+
+### V-B. Documentation Queue — FC Items
+
+| # | Item | File(s) | Status |
+|---|------|---------|--------|
+| FC01 | Doc Health badge in `index.md` — live count of sync-pass completion | `index.md` | ⏳ |
+| FC02 | `froberger-journal-all-entries.txt` entry-by-entry compare against HTML | `froberger-journal-all-entries.txt` | ⏳ |
+| FC03 | Split `mechanics.md` into `mechanics-combat.md` + `mechanics-economy.md` | `mechanics.md` | ⏳ |
+| FC04 | Spot-check date policy: re-verify function names in `lab-report-architecture-full.md` every 10 layers | `lab-report-architecture-full.md` | ⏳ |
+| FC05 | Two-way link convention: every HTML const gets `// → doc: filename.md §Section`; every doc section gets `> HTML source: CONST ~line N` | all core docs | ⏳ |
+
+---
+
+### V-C. New Feature Ideas (not yet assigned to a section)
+
+> Add raw ideas here. When an idea is ready to plan, move it to its own §XVI, §XVII, etc.
+
+| # | Idea | Rationale | Candidate Lab Report |
+|---|------|-----------|----------------------|
+| 1 | Junction Waypoint Vignettes — short one-off encounters at J1–J7 junction nodes; travelers, refugees, soldiers; no combat required | Acts II–VII travel is narratively sparse; junctions are currently featureless waypoints | No — fits in living-world lab report |
+| 2 | Companion System — a named traveler who joins for one act section; shares corridor descriptions; has one piece of lore to deliver | Adds human texture to the long solo traversal; low implementation (text + one flag) | No — too small for own lab report |
+| 3 | Void Archaeology — post-CO investigation quests that reveal the Void's origin; only accessible after victory in NG+ | Closes the narrative gap: players seal the Void but never learn its actual nature | Yes — new post-game arc |
+
+---
+
+## V-D. Documentation Sync — Category Coverage
 
 > The HTML has working code. These docs describe it. Each category below is a **content type** that appears across multiple markdown files. For each category: which files cover it, what the HTML source is, and what sync work is needed.
 
@@ -1931,6 +1973,7 @@ creative_literacy_token: { name:'Creative Literacy Token', icon:'📄', sell:27 
 | **Function Coverage Table** | all ~169 named functions | `plan.md` §F1–F6 | ✅ All 169 functions verified documented in their target .md files; F4-ext/F6-ext sections added for level-up + Battle Mode utilities; `_renderSboShield()` + `_storyUnequipShield()` added to `combat.md` | ✅ SP2 complete |
 | **World Creator Wizard (§XIV)** | Quest -1 / Level 21 undefined / MIT fork | `plan.md §XIV` | ✅ PLANNED stubs: `story.md` CO node; `mechanics.md` Level 21 note; `index.md` lab-report-world-creator.md entry; `lab-report-friendships-with-magic.md` Appendix quote | ⚠️ PLANNED |
 | **NG+ Remembrance Layer (§XV)** | ngPlusRun ≥ 1 / Entry 42 / "The Next Froberger" | `plan.md §XV` | ✅ PLANNED stubs: `story.md` NG+ section; `world.md` NPC extended-memory note | ⚠️ PLANNED |
+| **Weimar Scholar Gate (§XVI)** | Ivory Circle / Tomes / `scholars_guard` / First Researcher | `plan.md §XVI` | ✅ PLANNED stubs: `story.md` Node 35; `world.md` Ivory Circle section | ⚠️ PLANNED |
 
 ---
 
@@ -3608,4 +3651,191 @@ Entry 42 is the entry about the solution. It belongs to whoever wrote it.
 ---
 
 *§XV status: ⚠️ PLANNED — Entry 42 system designed; NPC memory lines written; quest chain specified; new state fields listed; implementation left to Layer 50.*
+
+---
+
+## Section XVI — The Weimar Scholar Gate: Tomes and the Fourth Hub (Layer 51, ⚠️ PLANNED)
+
+> **The gap:** Weimar is the fourth hub town — the scholars' city, home of the Scholar Kings — but it receives the least development of the four hubs. Birka has six named NPCs and a full quest arc. Tilbury has the merchant harbor and a vendor. Visby is the enemy stronghold with gate drama. Weimar has Leeuwenhoek's shop (S51 items) and a name. This section gives Weimar a story identity.
+
+> **The theme:** Froberger was a researcher. He came from somewhere. He studied at somewhere. Weimar is where scholars study things like the Void — and where access to that knowledge is controlled by people who have decided what others are allowed to know. The Curse of Knowledge has an institutional form. It lives in Weimar.
+
+---
+
+### XVI-A. The Setting — Weimar Scholars' District
+
+**Node:** WM — Weimar (existing hub node, Act V–VII range)
+
+Weimar is a walled city within a city — the Scholar Kings occupy the upper district, accessible through a gated archive passage. The lower district is open: traders, messengers, researchers without guild affiliation, and the occasional ex-Scholar who left or was asked to leave. Leeuwenhoek's shop is in the lower district. The gate is between them.
+
+**The Scholar Gate** — an actual locked passage in the upper district. Not a GATE_LOCKS item gate — a quest-gated NPC interaction. The senior Scholar King, Archivist Isolde Voss, controls access. She determines what qualifies as legitimate research. She has decided that the Void is not a legitimate research topic.
+
+Froberger had his access revoked six months before he died.
+
+---
+
+### XVI-B. New NPCs
+
+**Archivist Isolde Voss** — Node WM (lower district, blocking the gate)
+- Occupation: Senior Archivist, Scholar Kings First Tier. Keeper of the Gate Records.
+- First impression: Not hostile. Precise. Everything she says is technically correct.
+- Demeanor: She believes access restriction is a form of care. Research without certification causes harm. She has 30 years of examples.
+- Fav gating: Starts Impartial. Requires Q-WM-02 completion to reach Friendly. Cannot reach Dear Friend in Act V — only after CO (if returning in NG+, she has processed what happened).
+
+> *"You're asking about Froberger. Everyone who comes here lately is asking about Froberger. He was a credentialed researcher. His access was revoked pursuant to the Scholar Kings Protocol on Speculative Endangerment. That is the extent of what I can tell you."*
+
+> *(Friendly, after quest):* *"He left his research notes in the lower archive. I moved them there myself. I told myself it was protocol. I've been thinking about that since you came in."*
+
+---
+
+**Benedikt Rasp** — Node WM (lower district, near Leeuwenhoek's shop)
+- Occupation: Ex-Scholar, Tier 3 (resigned — or near enough). Now runs an informal reading circle out of the back of a bookbinder's stall.
+- Relationship to Froberger: Knew him. Was his student for two years. Watched the access revocation happen. Kept some of Froberger's early notes.
+- Fav gating: Starts Friendly (he's not suspicious of anyone, just tired). Reaches Dear Friend after Q-WM-03.
+
+> *"The Scholar Kings don't lock up knowledge because they want to hoard it. They lock it up because they're afraid of what happens when the wrong person finds the right thing and does something about it. They were right about Froberger. He found the right thing. He just wasn't the wrong person — that's the part they got wrong."*
+
+---
+
+### XVI-C. New Item Category — Tomes
+
+Tomes are passive research documents. They have no combat use. They sit in inventory. While they are held, a bonus applies. They cannot be equipped to a weapon or shield slot — they are a new item type: `type:'tome'`.
+
+**Mechanic:** `_applyTomeBonuses(combatState)` — called at battle start. Checks inventory for `type:'tome'` items. Applies each tome's bonus to the battle state. Multiple tomes stack.
+
+**Three tomes added in §XVI:**
+
+| Tome | Source | Bonus | Lore |
+|------|--------|-------|------|
+| `tome_void_pressure` | Q-WM-02 reward | +1 to all death save rolls | *"Froberger's field notes on the Void Tide advance. Margin: 'The pressure is survivable if you know it's coming.'"* |
+| `tome_scholar_kings` | Q-WM-03 reward | +2 to all initiative rolls | *"A history of the Scholar Kings' martial governance. Chapter 7: 'First knowledge, then decision, then action. Never the other order.'"* |
+| `tome_rasp_annotated` | Benedikt Rasp (Dear Friend) | +1 to all ATK rolls while any active quest is in `S_story.quests` | *"Benedikt's annotated copy of Froberger's early theory. The annotations are longer than the text. 'He was right about this one too.'"* |
+
+**Item shape:**
+```js
+{ name: 'Froberger\'s Field Notes', icon: '📗', type: 'tome', sell: 0,
+  bonus: { deathSave: 1 },
+  description: 'Margin: "The pressure is survivable if you know it\'s coming."' }
+```
+
+Tomes cannot be sold (`sell: 0`). Auto-sell (`_autoSellDuplicates()`) ignores them. They persist through NG+.
+
+---
+
+### XVI-D. Quest Chain — "What the Gate Keeps" (Q-WM-01 through Q-WM-04)
+
+**Q-WM-01: "The Revocation Record"** — Trigger: first visit to WM node, Act V+
+
+- NPC: Archivist Isolde Voss (at the gate)
+- Dialogue: She mentions the Froberger revocation unprompted if player has any Froberger journal entry read. Does not offer the record. Says it's sealed.
+- Task: Find 3 Scholar Kings' Seal items (drops from `scholars_guard` monsters in WM terrain — new monster, see XVI-E) OR bring her the `archive_letter` item (already obtainable from CI Blue Shutters Archive, S7 quest chain)
+- If player has `archiveLetterObtained = true`: quest skips the seal-hunting step entirely. The archive letter IS a Scholar Kings seal-class document. Isolde accepts it. She did not expect someone to have one.
+- Reward: Access to the Lower Archive (flag: `wmLowerArchiveUnlocked`). +Froberger context note in the journal sidebar.
+
+---
+
+**Q-WM-02: "Lower Archive"** — Trigger: `wmLowerArchiveUnlocked` set, WM node
+
+- Task: Read the 3 archived documents in the Lower Archive (a small modal with three text entries: Froberger's access revocation letter, a Scholar Kings field report on early Void signs, and a personnel file on someone called "the First Researcher")
+- No combat required. Each document is a [READ] button in the archive modal. Setting `wmDoc1Read / wmDoc2Read / wmDoc3Read` flags.
+- Reward on all three read: `tome_void_pressure` (Froberger's Field Notes tome) + `wmArchiveComplete` flag + Isolde Voss moves to Friendly.
+- Isolde (Friendly): *"He left his research notes in the lower archive. I moved them there myself. I told myself it was protocol. I've been thinking about that since you came in."*
+
+---
+
+**Q-WM-03: "Benedikt's Circle"** — Trigger: `wmArchiveComplete` set + speak to Benedikt Rasp
+
+- Task: Attend 3 of Benedikt's reading circle sessions. Each session requires a visit to WM on a different in-game day (`wmSessionsDays` array of unique day values). Each session adds a brief text entry to the quest log — excerpts from Froberger's early notes, filtered through Benedikt's commentary.
+- Day spacing: each session must be on a different day (not consecutive — the circle meets irregularly). Player must leave WM and return at least twice.
+- Reward on third session: `tome_scholar_kings` + Benedikt reaches Dear Friend + `wmBenediktCircleComplete` flag.
+- Benedikt (Dear Friend): *"The third one's always the hardest. Not because the material is harder — because by then you realize the first two were already enough and you stayed anyway."*
+
+---
+
+**Q-WM-04: "The First Researcher"** — Trigger: `wmBenediktCircleComplete` set + Benedikt at Dear Friend
+
+- This quest reveals who "the First Researcher" was. The personnel file from Q-WM-02 named them but gave no identity. Benedikt knows. He has known since Q-WM-01. He waited to see if you were the kind of person who would stay for three sessions.
+- The First Researcher is not a name the player knows — but the dates in the file match the dates of the first Void Tide events, a generation before Froberger. Froberger was not the first. He knew he was not the first. Entry 7 of his journal references a "predecessor" without naming one.
+- Task: Return to the lower archive and read Document 3 again (the personnel file) — it now shows the unredacted name. `wmDoc3Unredacted` flag set by Benedikt's dialogue.
+- Reward: `tome_rasp_annotated` (Benedikt's annotated copy) + 300gp + `wmFirstResearcherKnown` flag.
+- Benedikt: *"The Scholar Kings didn't erase her. They just stopped saying the name. Froberger said it in his margin notes every time. That's how I found her. And now you know how I found him."*
+
+---
+
+### XVI-E. New Monster — `scholars_guard`
+
+Needed for Q-WM-01 (seal drop) and for WM terrain combat.
+
+| Key | Name | AC | HP | ATK | Dmg | Tier | Drop |
+|-----|------|----|----|-----|-----|------|------|
+| `scholars_guard` | Scholar's Guard | 14 | 45 | +5 | 1d8+3 | medium | Scholar Kings' Seal (icon: 🔏, sell: 20) |
+
+**Add to WORLD_DB terrain:** `scholars` or `city` (whichever covers Weimar nodes in HTML).
+
+**MONSTER_DROPS:** `scholars_guard → { name:'Scholar Kings\' Seal', icon:'🔏', sell:20 }`
+
+---
+
+### XVI-F. New State Flags (additions to `_S_DEFAULTS()`)
+
+| Flag | Type | Default | Purpose |
+|------|------|---------|---------|
+| `wmLowerArchiveUnlocked` | boolean | false | Access to lower archive granted (Q-WM-01) |
+| `wmDoc1Read` | boolean | false | Revocation letter read |
+| `wmDoc2Read` | boolean | false | Void field report read |
+| `wmDoc3Read` | boolean | false | Personnel file read (redacted) |
+| `wmDoc3Unredacted` | boolean | false | Personnel file re-read after Benedikt reveals name |
+| `wmArchiveComplete` | boolean | false | All 3 archive docs read |
+| `wmSessionsDays` | array | `[]` | Day numbers of attended reading circle sessions |
+| `wmBenediktCircleComplete` | boolean | false | 3 sessions attended |
+| `wmFirstResearcherKnown` | boolean | false | Unredacted personnel file read |
+
+---
+
+### XVI-G. Insertion Spec for `roll2hit-v3.html`
+
+**Layer tag:** Layer 51 — Weimar Scholar Gate
+
+1. Add `scholars_guard` to `MONSTER_POOL` and `MONSTER_DROPS`
+2. Add `scholars_guard` to appropriate `WORLD_DB` terrain (verify Weimar terrain key in HTML)
+3. Add `TOME_BONUSES` helper or inline tome bonus application in `storyPreBattle()` / `storyCommitBattle()` — scan inventory for `type:'tome'`, apply `.bonus` fields
+4. Add 3 tome items (void_pressure / scholar_kings / rasp_annotated) to a new `TOME_ITEMS` const or inline in quest reward delivery
+5. Add Isolde Voss and Benedikt Rasp to `VELDRIS_NPC_PROFILES` equivalent (or a new `WM_NPC_PROFILES` if Birka-only restriction applies)
+6. Add Q-WM-01 through Q-WM-04 to `QUEST_DB`
+7. Add 16 new state flags to `_S_DEFAULTS()`
+8. Add archive modal (`_storyWmArchiveModal()`) — 3-document viewer with [READ] buttons
+9. Add reading circle session check to WM node render (day-gated, 3 required)
+
+**MONSTER_POOL count after:** 370 + 1 = 371
+
+---
+
+### XVI-H. Documentation Updates Required on Implementation
+
+| File | Change |
+|------|--------|
+| `monsters.md` | Add `scholars_guard` entry; update count 370→371 |
+| `story.md` | Add WM node arc section; Q-WM-01 through Q-WM-04 quest beats; Isolde and Benedikt NPC profiles |
+| `world.md` | Add Isolde Voss and Benedikt Rasp to NPC section; add tome item category |
+| `mechanics.md` | Add §Tomes — `type:'tome'` item shape, bonus application, NG+ persistence |
+| `index.md` | Add Scholar Gate arc note to Weimar entry |
+| `plan.md` | Mark XVI-A through XVI-H complete after implementation; update §V-A queue |
+
+**Lab report required:** `lab-report-weimar-scholar-gate.md` — covers new item category (Tomes), new NPC arc, archive modal design, and the Froberger/First Researcher revelation as a narrative design decision.
+
+---
+
+### XVI-I. Thematic Coherence Note
+
+The Curse of Knowledge score tracks whether the player shared what they learned. The Scholar Kings are its institutional counterpart — an organization that decided, systematically, that some knowledge should not be shared. They are not villains. Isolde Voss is not a villain. She genuinely believes that uncontrolled access to Void research causes harm.
+
+She is correct. Froberger's research did cause harm. He went into the field. He died.
+
+The question §XVI asks — the same question the game asks about the Curse of Knowledge — is whether that harm was from the knowledge or from the withholding. Froberger knew. He shared. He died, but the player is alive because of what he left. The First Researcher knew. She did not share. Nobody knows her name. The Void still came.
+
+Benedikt's annotated copy gives the player +1 ATK while on an active quest. The tomb says: knowledge in service of action is the only kind that works.
+
+---
+
+*§XVI status: ⚠️ PLANNED — Weimar Scholar Gate designed; two NPCs written; three tomes defined; four-quest chain specified; `scholars_guard` monster added; new state flags listed; thematic coherence established. Lab report: `lab-report-weimar-scholar-gate.md` to be written on implementation.*
 

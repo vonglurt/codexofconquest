@@ -174,6 +174,18 @@ The lake itself does not change. The fish are still there. The sign still says Y
 **Their leverage:** Ancient knowledge, the portal network, the golem gate, Weimar's inaccessibility.
 **Player relationship:** Reluctant trust. They will help anyone Sweelinck approves of.
 
+#### ⚠️ PLANNED — Weimar Scholar Gate (plan.md §XVI, Layer 51)
+
+Two new named NPCs within the Weimar lower district — outside the Ivory Circle hierarchy, adjacent to it:
+- **Archivist Isolde Voss** — Scholar Kings First Tier; controls gate access; holds Froberger's revocation record; Friendly after Q-WM-02; never reaches Dear Friend in first run
+- **Benedikt Rasp** — ex-Scholar, Tier 3 (resigned); runs informal reading circle; starts Friendly; Dear Friend after Q-WM-03; gives `tome_rasp_annotated`
+
+New item category **Tomes** (`type:'tome'`): passive inventory bonuses, unsellable, NG+-persistent. Three tomes available through the Scholar Gate quest chain. Bonus applied by `_applyTomeBonuses()` at battle start.
+
+New monster `scholars_guard` (medium) added to WM-area terrain. Drops Scholar Kings' Seal (sell:20).
+
+Q-WM-04 reveals a "First Researcher" who preceded Froberger — unnamed by the Scholar Kings, documented only in a redacted personnel file that Benedikt can unredact. See plan.md §XVI for full quest chain and state flags.
+
 ### The Crimson Warrant (Visby)
 **What they want:** Visby to remain independent, profitable, and ungoverned by outsiders.
 **What they fear:** The Void shaman's influence spreading through the goblin clans — it's already destabilizing Mordus's control.

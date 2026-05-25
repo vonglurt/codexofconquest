@@ -1034,6 +1034,23 @@ The golem guards the gate to the scholars' quarter. It was built to recognise Iv
 **Exit Condition:** Shard #7 secured. Sweelinck's letter to be delivered to Commander Auros. Head to the Agora.
 **Next Node →** outhouse (Weimar shortcut)
 
+#### ⚠️ PLANNED — Weimar Scholar Gate Quest Arc (plan.md §XVI, Layer 51)
+
+Two new NPCs added to the WM node area:
+- **Archivist Isolde Voss** — controls access to the Lower Archive; quest-giver for Q-WM-01 through Q-WM-03; holds the Froberger revocation record
+- **Benedikt Rasp** — ex-Scholar, runs a reading circle; keeper of Froberger's early notes; quest-giver for Q-WM-03 and Q-WM-04
+
+Quest chain: Q-WM-01 "The Revocation Record" → Q-WM-02 "Lower Archive" (3 documents; reveals the First Researcher) → Q-WM-03 "Benedikt's Circle" (3 sessions, day-gated) → Q-WM-04 "The First Researcher" (unredacted personnel file).
+
+Three new Tome items (`type:'tome'`) — passive combat bonuses while held:
+- `tome_void_pressure` (Q-WM-02): +1 death save rolls
+- `tome_scholar_kings` (Q-WM-03): +2 initiative
+- `tome_rasp_annotated` (Benedikt Dear Friend): +1 ATK while any quest active
+
+New monster: `scholars_guard` (medium, AC14/HP45/ATK+5/1d8+3) — drops Scholar Kings' Seal (sell:20).
+
+See plan.md §XVI for full NPC dialogue, quest beats, item shapes, and state flags.
+
 ---
 
 ### NODE 36 — outhouse (The Observatory Outhouse)
