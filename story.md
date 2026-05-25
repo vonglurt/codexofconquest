@@ -2596,6 +2596,22 @@ Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterOb
 
 ---
 
+## ⚠️ PLANNED — The Heartwood Letter: Brynn's Daughter Scene (plan.md §XXXVIII, Layer 73)
+
+**Trigger:** IN node, `brynnsJournalRead && actNumber >= 3 && !brynnLetterSceneDelivered`. Fires on the visit after the `brynn_letter` world progression event ("A letter arrived for Brynn at the inn. The seal is from the Heartwood district.").
+
+**fav 1 (Friendly):** Brynn mentions the letter matter-of-factly. Daughter is a surveyor's apprentice in Heartwood. *"She wrote 'expedition' in the letter. She said she learned that word from a traveler who stayed here years ago."*
+
+**fav 2 (Dear Friend):** Brynn reads the last line of the letter aloud: *"'I don't know if it's patience or stubbornness. I signed this expedition because I couldn't decide.'"* Then: *"She found a word for what she's doing."* Closes with: *"The good room has a window that faces east."* — the same line from her neutral greeting, in a different register.
+
+**Cross-refs:** Entry 7 (IN, read-aloud) — *"She wrote expedition back, larger than I wrote it, because she was still pressing hard."* The impressions are visible through the back of the envelope. Froberger's Last Note: *"The person you're becoming is visible from outside."* He saw it; she became it. §XXXV (First Inn Light): the lamp stays; the daughter goes. §XXXVI epilogue addendum: *"Brynn's daughter wrote 'expedition' at the bottom of the letter. She's measuring property lines in the Heartwood district."*
+
+**Const:** `BRYNN_HEARTWOOD_SCENE` (keys: friendly, dearFriend). **One new flag:** `brynnLetterSceneDelivered: false`.
+
+**F2 reference:** Patch IN render; check `brynnsJournalRead && act >= 3 && !brynnLetterSceneDelivered`; gate on `_npcFavor('brynn')`.
+
+---
+
 ## ⚠️ PLANNED — The Final Confrontation: Commander Bruhns's CO Scene (plan.md §XXXVII, Layer 72)
 
 **Context:** Commander Seraphine Bruhns (key `'bruhns'` in NPC_DIALOGUES, key `'auros'` in BIRKA_NPC_PROFILES) is the final boss (`BOSS_COMMANDER_AUROS`, AC 22 HP 300). The player has known her as "Auros" at CY throughout the game. After Entry 41 fires read-aloud at CO and `NODE_ARRIVAL_QUOTES.CO` delivers the existing quote, the §XXXVII scene fires before the fight chip.

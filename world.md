@@ -509,6 +509,10 @@ Perks persist through NG+. Character sheet shows "Weckmann's Student" badge when
 
 ⚠️ PLANNED — Layer 70. Three genuinely new flags (not in current `_S_DEFAULTS()`): `brynnKeeperStoryTold: false`, `brynnLightChoiceMade: false`, `brynnLightKept: false`. Add to Brynn block in `_S_DEFAULTS()`.
 
+**The Heartwood Letter / Brynn's Daughter Scene** (`brynnLetterSceneDelivered`) — Journal Entry 7 (read-aloud at IN) describes Froberger teaching Brynn's daughter to write "expedition": *"She wrote it back, larger than I wrote it, because she was still pressing hard."* Reading Entry 7 sets `brynnsJournalRead = true`, which triggers the existing `brynn_letter` world progression event at Act III+: *"A letter arrived for Brynn at the inn. The seal is from the Heartwood district."* §XXXVIII designs the scene that fires on the next IN visit: the daughter is now a surveyor's apprentice in the Heartwood district; she signed the letter *expedition* because she couldn't decide between patience and stubbornness. **fav 1:** Brynn mentions the letter, quotes the word. **fav 2:** Brynn reads the last line aloud; closes with *"The good room has a window that faces east"* — the same line as her neutral greeting, said differently. Cross-ref: Froberger's Last Note (*"The person you're becoming is visible from outside"*); §XXXV (lamp stays; daughter goes); §XXXVI epilogue addendum (`brynnLetterSceneDelivered`); NPC_EPILOGUES brynn fav 2 homecoming seeded here. Const: `BRYNN_HEARTWOOD_SCENE`. 1 new flag: `brynnLetterSceneDelivered`. See `plan.md §XXXVIII`.
+
+⚠️ PLANNED — Layer 73. One new flag (`brynnLetterSceneDelivered: false`). The `brynn_letter` progression event is already implemented; §XXXVIII adds the IN scene that gives it content.
+
 ### Froberger Traces
 
 `FROBERGER_TRACES` — 6 one-time NPC memories of Froberger. Each gated by fav ≥ 2 and sufficient visit count. Delivered via `_checkFrobergerTrace(npcKey)` priority injection in `_getNPCDialogue()`.

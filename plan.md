@@ -27,6 +27,7 @@ Implement in layer order. Each = code change + doc sync + `git commit`.
 | 70 | §XXXV | First Inn Light: Brynn's Vigil Arc | Small |
 | 71 | §XXXVI | Epilogue Integration Layer: Arcs to Scroll | Small |
 | 72 | §XXXVII | The Final Confrontation: Commander Bruhns's CO Scene | Small |
+| 73 | §XXXVIII | The Heartwood Letter: Brynn's Daughter Scene | Small |
 
 ### Tier 2 — Needs Lab Report Before Coding
 
@@ -297,6 +298,7 @@ The commit message should name the lab report and summarize what it covers in on
 | 26 | §XXXV | The First Inn Light: Brynn's Vigil Arc | 70 | Yes — 3 new flags (brynnKeeperStoryTold, brynnLightChoiceMade, brynnLightKept); add to _S_DEFAULTS() Brynn block | ⚠️ PLANNED |
 | 27 | §XXXVI | Epilogue Integration Layer: Arcs to Scroll | 71 | No — no new flags; ARC_EPILOGUE_CONDITIONS const + 4-line _buildEpilogueScroll() patch | ⚠️ PLANNED |
 | 28 | §XXXVII | The Final Confrontation: Commander Bruhns's CO Scene | 72 | Yes — 1 new flag (bruhnsCoSceneDelivered); BRUHNS_CO_SCENE const; CO render patch | ⚠️ PLANNED |
+| 29 | §XXXVIII | The Heartwood Letter: Brynn's Daughter Scene | 73 | Yes — 1 new flag (brynnLetterSceneDelivered); BRYNN_HEARTWOOD_SCENE const; IN render patch | ⚠️ PLANNED |
 
 **Rule:** Implement in layer order when possible. Each implementation = code + doc sync + git commit. See plan.md §I Lab Report Policy for commit rules.
 
@@ -2079,6 +2081,7 @@ creative_literacy_token: { name:'Creative Literacy Token', icon:'📄', sell:27 
 | **First Inn Light (§XXXV)** | `BRYNN_KEEPER_STORY` const / Beat 1 inquiry (fav_brynn ≥ 1, Act II+, + follow-up) / Beat 2 choice block (fav_brynn ≥ 2, 'keep'/'rest') / IN lamp ambient line (always) / §XXV farewell four-branch table / TC_BRYNN_LAMP crier line (§XXVII) / 3 new flags (brynnKeeperStoryTold, brynnLightChoiceMade, brynnLightKept) | `plan.md §XXXV` | ⚠️ PLANNED stubs pending: `story.md` vigil arc notes; `world.md` Brynn lamp entry | ⚠️ PLANNED |
 | **Epilogue Integration Layer (§XXXVI)** | `ARC_EPILOGUE_CONDITIONS` const (14 entries: §XXIX pit champ / §XXX s49 both+solo / §XXXI s54 / §XXXII s8+s29 / §XXXIII archive+survey / §XXXIV lute arc / §XXXV lamp arc) / `_buildEpilogueScroll()` 4-line patch / scroll ordering doc / no new flags | `plan.md §XXXVI` | ⚠️ PLANNED stubs pending: `story.md` scroll extension note | ⚠️ PLANNED |
 | **Commander Bruhns CO Scene (§XXXVII)** | `BRUHNS_CO_SCENE` const (friendly / dearFriend / dearFriendWithTheory) / CO render patch (after NODE_ARRIVAL_QUOTES, before fight chip) / fav 1 brief + fav 2 full Circle/Codex motivation / s29 addendum / 1 new flag (`bruhnsCoSceneDelivered`) / Auros = Bruhns same-character clarification / §XXXIII flag correction note (`surveyDeliveredToAuros` → `undercitySurveyDelivered`) | `plan.md §XXXVII` | ⚠️ PLANNED stubs pending: `story.md` CO scene; `world.md` Bruhns motivation entry | ⚠️ PLANNED |
+| **Heartwood Letter (§XXXVIII)** | `BRYNN_HEARTWOOD_SCENE` const (friendly brief / dearFriend letter-read) / IN render patch (`brynnsJournalRead && act >= 3 && !brynnLetterSceneDelivered`) / Entry 7 cross-ref / daughter word "expedition" / Froberger's Last Note cross-ref / §XXXV lamp cross-ref / §XXXVI epilogue condition addendum (`brynnLetterSceneDelivered` line) / 1 new flag | `plan.md §XXXVIII` | ⚠️ PLANNED stubs pending: `story.md` + `world.md` | ⚠️ PLANNED |
 
 ---
 
@@ -7876,3 +7879,189 @@ No lab report. No new nodes. No new monsters. No new items. One new flag.
 ---
 
 *§XXXVII status: ⚠️ PLANNED — CO fav-gated scene designed (fav 1 brief; fav 2 full Circle/Codex motivation reveal; fav 2 + s29 addendum); BRUHNS_CO_SCENE const written; implementation spec (one render patch + one _S_DEFAULTS() flag); Auros = Bruhns same-character clarification; §XXXIII flag correction noted (surveyDeliveredToAuros → undercitySurveyDelivered); no new nodes/monsters/items; no lab report.*
+
+---
+
+## Section XXXVIII — The Heartwood Letter: Brynn's Daughter Scene (Layer 73, ⚠️ PLANNED)
+
+### XXXVIII-A. Concept
+
+Froberger's Journal Entry 7 (fires read-aloud at IN) describes Brynn's daughter learning to write — she pressed hard, she wrote "expedition" back larger than Froberger wrote it, because she hadn't learned yet that soft marks still count. Reading Entry 7 sets `brynnsJournalRead = true`, which eventually triggers the world progression event `brynn_letter` (Act III+): *"A letter arrived for Brynn at the inn. The seal is from the Heartwood district."*
+
+Currently: the progression event fires and the journal note appears. Then nothing. Brynn doesn't react. The letter has no content.
+
+§XXXVIII designs the scene that fires when the player next visits IN after `brynn_letter` has triggered — Brynn mentions the letter, and at fav 2 (Dear Friend) reads a line from it aloud. The letter is from her daughter, now living in the Heartwood district, apprenticed to a surveyor. She signed it *"expedition."*
+
+Froberger wrote one journal entry about one child pressing hard on borrowed paper. It became her word. That is the arc.
+
+One new flag (`brynnLetterSceneDelivered`). No new nodes. No new combat. No lab report.
+
+---
+
+### XXXVIII-B. The Letter's Content (Not Read Aloud to the Player)
+
+The full letter is not shown to the player. Brynn holds it. The player sees only what Brynn shares. The letter's contents — summarized here for implementation — are:
+
+> The daughter has found work as a surveyor's apprentice in the Heartwood district. She is learning to measure things she cannot touch — property lines, sight-lines, the depth of wells by the sound of dropped stone. She is good at it. The surveyor says she has patience for the work. She says she doesn't know if it's patience or stubbornness. She signed the letter with one word: *expedition.*
+
+The player does not read this. Brynn reads it. The player sees Brynn read it.
+
+---
+
+### XXXVIII-C. Scene Trigger
+
+**Trigger:** IN node visit, `brynnsJournalRead`, `actNumber >= 3`, `!brynnLetterSceneDelivered`.
+
+The progression event `brynn_letter` fires independently of this scene (it's already implemented). §XXXVIII's scene fires on the next IN visit AFTER the progression event would have triggered. In practice: if the player is at IN when they read Entry 7 and they're already Act III+, the scene fires on the very next IN visit. If they haven't yet reached Act III, the scene waits.
+
+**One-time.** Sets `brynnLetterSceneDelivered = true` on delivery.
+
+---
+
+### XXXVIII-D. Scene Content
+
+**fav 0–0 (Impartial — no scene):** The progression event fired, the journal note appeared. That's all Brynn shares with a stranger.
+
+**fav 1 (Friendly):** Brynn mentions the letter without being asked. Matter-of-fact.
+
+```
+BRYNN_HEARTWOOD_SCENE.friendly:
+
+"She wrote. First letter in three months."
+
+She slides it off the counter, folds it back into the envelope.
+
+"She's working with a surveyor in the Heartwood district. Measuring things.
+She says she's good at it." A pause. "She wrote 'expedition' in the letter.
+She said she learned that word from a traveler who stayed here years ago."
+
+She puts the envelope away. "The good room's still yours."
+```
+
+**fav 2 (Dear Friend):** Brynn reads a line from the letter aloud.
+
+```
+BRYNN_HEARTWOOD_SCENE.dearFriend:
+
+"She wrote."
+
+She sets the letter on the counter between you, then picks it back up.
+
+"She's with a surveyor in the Heartwood district. Learning to measure
+property lines, well depth — things you can't see the end of. She says
+she has patience for it."
+
+She reads the last line aloud:
+
+"'I don't know if it's patience or stubbornness. I signed this
+expedition because I couldn't decide.'"
+
+Brynn folds the letter. Her daughter pressed hard when she wrote it — the
+impressions are visible through the back of the envelope.
+
+"She found a word for what she's doing."
+
+She doesn't say anything else for a moment. Then: "The good room has a
+window that faces east."
+```
+
+*"The good room has a window that faces east."* — this is Brynn's neutral greeting from the lab report. She says it now in a different register. The same words. The same lamp in the corner. A different weight.
+
+---
+
+### XXXVIII-E. `BRYNN_HEARTWOOD_SCENE` Const
+
+```js
+const BRYNN_HEARTWOOD_SCENE = {
+  friendly:
+    `"She wrote. First letter in three months."\n\nShe slides it off the counter, folds it back into the envelope.\n\n"She's working with a surveyor in the Heartwood district. Measuring things. She says she's good at it." A pause. "She wrote 'expedition' in the letter. She said she learned that word from a traveler who stayed here years ago."\n\nShe puts the envelope away. "The good room's still yours."`,
+
+  dearFriend:
+    `"She wrote."\n\nShe sets the letter on the counter between you, then picks it back up.\n\n"She's with a surveyor in the Heartwood district. Learning to measure property lines, well depth — things you can't see the end of. She says she has patience for it."\n\nShe reads the last line aloud:\n\n"'I don't know if it's patience or stubbornness. I signed this expedition because I couldn't decide.'"\n\nBrynn folds the letter. Her daughter pressed hard when she wrote it — the impressions are visible through the back of the envelope.\n\n"She found a word for what she's doing."\n\nShe doesn't say anything else for a moment. Then: "The good room has a window that faces east."`
+};
+```
+
+---
+
+### XXXVIII-F. Cross-References
+
+**Entry 7 (HTML ~line 10335):** *"She wrote expedition back, larger than I wrote it, because she was still pressing hard."* — §XXXVIII delivers the resolution: she kept the word, found a life for it, pressed hard on the letter.
+
+**§XXXV (First Inn Light):** The lamp is still burning; the daughter has moved on. The light stays; the people go. Both things are true simultaneously.
+
+**§XXXVII (Bruhns CO scene — epilogue `brynn` NPC_EPILOGUES fav 2/3):** *"Brynn's daughter came home for two weeks."* (fav 2) — the homecoming in the epilogue is not the first contact; the letter (§XXXVIII) is. The daughter comes home later. §XXXVIII plants the relationship that makes the homecoming legible.
+
+**Froberger's Last Note (HTML ~line 4258):** *"The person you're becoming is visible from outside. People can see the shape of it before you can."* Froberger saw the daughter becoming a surveyor. He wrote it as "pressing hard on paper." He didn't know that's what he saw. She figured out what to call it herself.
+
+**§XXXVI (ARC_EPILOGUE_CONDITIONS):** One additional condition can be added to `ARC_EPILOGUE_CONDITIONS` in §XXXVI's implementation:
+```js
+{ cond: () => S_story.brynnLetterSceneDelivered,
+  line: "Brynn's daughter wrote 'expedition' at the bottom of the letter. She's measuring property lines in the Heartwood district. She's good at it." }
+```
+This supplements `NPC_EPILOGUES.brynn` without replacing it. Add during §XXXVI implementation.
+
+---
+
+### XXXVIII-G. Implementation Spec
+
+**XXXVIII-G-1.** Add `brynnLetterSceneDelivered: false` to `_S_DEFAULTS()`.
+
+**XXXVIII-G-2.** In the IN node render path, after the standard NPC render, add:
+
+```js
+// §XXXVIII: Brynn heartwood letter scene
+if (S_story.brynnsJournalRead
+    && (S_story.actNumber || 1) >= 3
+    && !S_story.brynnLetterSceneDelivered) {
+  const fav = _npcFavor('brynn');
+  let sceneText = null;
+  if (fav >= 2) sceneText = BRYNN_HEARTWOOD_SCENE.dearFriend;
+  else if (fav >= 1) sceneText = BRYNN_HEARTWOOD_SCENE.friendly;
+  if (sceneText) {
+    S_story.brynnLetterSceneDelivered = true;
+    setTimeout(() => storyMsg(sceneText), 500);
+  }
+}
+```
+
+**XXXVIII-G-3.** No changes to the `brynn_letter` progression event (already implemented). No changes to Entry 7 (already implemented). No changes to `brynnsJournalRead` derivation.
+
+**XXXVIII-G-4.** Optional §XXXVI patch: add `brynnLetterSceneDelivered` epilogue condition (see §XXXVIII-F).
+
+---
+
+### XXXVIII-H. State Flags
+
+| Flag | Default | NG+-preserved? | Note |
+|---|---|---|---|
+| `brynnLetterSceneDelivered` | `false` | No (reset) | One-time letter scene at IN |
+
+One new flag. Add to `_S_DEFAULTS()` in the Brynn block.
+
+---
+
+### XXXVIII-I. Documentation Updates
+
+| File | Update |
+|---|---|
+| `story.md` | Add §XXXVIII stub: brynn_letter progression event + scene design |
+| `world.md` | Add to Brynn's section: letter from Heartwood, daughter arc, Entry 7 cross-ref |
+| `plan.md` | §V-A item 29; §XI-A row; §0 Tier 1 row 73 |
+
+No lab report. No new nodes. No new monsters. No new items.
+
+---
+
+### XXXVIII-J. Design Notes
+
+**The word "expedition."** Froberger defined it for her: *going somewhere you haven't been before, on purpose.* She wrote it back larger. She couldn't have known she was writing her future. She signed the letter with it because she still couldn't decide between patience and stubbornness — and "expedition" held both.
+
+**"Pressing hard."** Entry 7 says she wrote with a stub of charcoal, pressing hard, *"the way children do when they haven't learned to trust that soft marks still count."* The letter envelope has impressions visible through the back — she's still pressing hard. She hasn't learned. The design point is that she doesn't need to. She found work where pressing hard is correct: measuring property lines, well depth, the distance to things you can't see.
+
+**The fav gate.** At fav 0, the player doesn't get this scene at all — Brynn doesn't share private correspondence with strangers. At fav 1, she shares the fact and the word. At fav 2, she reads a line aloud and doesn't explain what it means. The explanation would ruin it. She just lets the player sit in the room where Entry 7 happened.
+
+**"The good room has a window that faces east."** The closing line of both the fav 2 scene and Brynn's neutral greeting in the lab report. Brynn says the same thing in the same room across the whole game. The room doesn't change. The light doesn't change. The daughter is different. Brynn is different. The line is the same.
+
+---
+
+*§XXXVIII status: ⚠️ PLANNED — brynn_letter progression event hook designed; BRYNN_HEARTWOOD_SCENE const written (fav 1 brief + fav 2 letter-read); IN render patch specified; Entry 7 and Froberger's Last Note cross-refs; §XXXVI epilogue condition addendum specified; §XXXV First Inn Light cross-ref; NPC_EPILOGUES fav 2/3 homecoming seeded; one new flag (brynnLetterSceneDelivered); no new nodes/monsters/items/lab report.*
