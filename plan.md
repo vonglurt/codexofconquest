@@ -26,6 +26,7 @@ Implement in layer order. Each = code change + doc sync + `git commit`.
 | 69 | §XXXIV | Couperin Ledger: Quill's Three-Beat Arc | Medium |
 | 70 | §XXXV | First Inn Light: Brynn's Vigil Arc | Small |
 | 71 | §XXXVI | Epilogue Integration Layer: Arcs to Scroll | Small |
+| 72 | §XXXVII | The Final Confrontation: Commander Bruhns's CO Scene | Small |
 
 ### Tier 2 — Needs Lab Report Before Coding
 
@@ -295,6 +296,7 @@ The commit message should name the lab report and summarize what it covers in on
 | 25 | §XXXIV | The Couperin Ledger: Quill's Three-Beat Arc | 69 | No — all flags pre-exist; document inline; L44-E injection; §XXIV cross-ref (Act VIII BA farewell) | ⚠️ PLANNED |
 | 26 | §XXXV | The First Inn Light: Brynn's Vigil Arc | 70 | Yes — 3 new flags (brynnKeeperStoryTold, brynnLightChoiceMade, brynnLightKept); add to _S_DEFAULTS() Brynn block | ⚠️ PLANNED |
 | 27 | §XXXVI | Epilogue Integration Layer: Arcs to Scroll | 71 | No — no new flags; ARC_EPILOGUE_CONDITIONS const + 4-line _buildEpilogueScroll() patch | ⚠️ PLANNED |
+| 28 | §XXXVII | The Final Confrontation: Commander Bruhns's CO Scene | 72 | Yes — 1 new flag (bruhnsCoSceneDelivered); BRUHNS_CO_SCENE const; CO render patch | ⚠️ PLANNED |
 
 **Rule:** Implement in layer order when possible. Each implementation = code + doc sync + git commit. See plan.md §I Lab Report Policy for commit rules.
 
@@ -2076,6 +2078,7 @@ creative_literacy_token: { name:'Creative Literacy Token', icon:'📄', sell:27 
 | **Couperin Ledger (§XXXIV)** | `quills_lute` quest item / `QUEST_DB` entry / Beat 2 TV render (+40gp, couperiSongReceived, quillQuestComplete, Dear Friend check) / Beat 3 TV render (couperiDebtDegraded, L44-E NPC_DIALOGUES injection) / Beat 1 BA/SH lute handoff (Pachelbel) / Act VIII BA farewell Pachelbel note branch / no new flags — all pre-exist | `plan.md §XXXIV` | ⚠️ PLANNED stubs pending: `story.md` three-beat notes; `world.md` Couperin/Quill entry | ⚠️ PLANNED |
 | **First Inn Light (§XXXV)** | `BRYNN_KEEPER_STORY` const / Beat 1 inquiry (fav_brynn ≥ 1, Act II+, + follow-up) / Beat 2 choice block (fav_brynn ≥ 2, 'keep'/'rest') / IN lamp ambient line (always) / §XXV farewell four-branch table / TC_BRYNN_LAMP crier line (§XXVII) / 3 new flags (brynnKeeperStoryTold, brynnLightChoiceMade, brynnLightKept) | `plan.md §XXXV` | ⚠️ PLANNED stubs pending: `story.md` vigil arc notes; `world.md` Brynn lamp entry | ⚠️ PLANNED |
 | **Epilogue Integration Layer (§XXXVI)** | `ARC_EPILOGUE_CONDITIONS` const (14 entries: §XXIX pit champ / §XXX s49 both+solo / §XXXI s54 / §XXXII s8+s29 / §XXXIII archive+survey / §XXXIV lute arc / §XXXV lamp arc) / `_buildEpilogueScroll()` 4-line patch / scroll ordering doc / no new flags | `plan.md §XXXVI` | ⚠️ PLANNED stubs pending: `story.md` scroll extension note | ⚠️ PLANNED |
+| **Commander Bruhns CO Scene (§XXXVII)** | `BRUHNS_CO_SCENE` const (friendly / dearFriend / dearFriendWithTheory) / CO render patch (after NODE_ARRIVAL_QUOTES, before fight chip) / fav 1 brief + fav 2 full Circle/Codex motivation / s29 addendum / 1 new flag (`bruhnsCoSceneDelivered`) / Auros = Bruhns same-character clarification / §XXXIII flag correction note (`surveyDeliveredToAuros` → `undercitySurveyDelivered`) | `plan.md §XXXVII` | ⚠️ PLANNED stubs pending: `story.md` CO scene; `world.md` Bruhns motivation entry | ⚠️ PLANNED |
 
 ---
 
@@ -7682,3 +7685,194 @@ No lab report. No new nodes, monsters, flags, or items. One new const + four lin
 ---
 
 *§XXXVI status: ⚠️ PLANNED — ARC_EPILOGUE_CONDITIONS const written (14 conditions × §XXIX–§XXXV); _buildEpilogueScroll() patch specified (4 lines); scroll ordering documented; interaction with NPC_EPILOGUES documented; no new flags; no lab report; §XI-A row + §V-A item 27 pending.*
+
+---
+
+## Section XXXVII — The Final Confrontation: Commander Bruhns's CO Scene (Layer 72, ⚠️ PLANNED)
+
+### XXXVII-A. Concept
+
+Commander Seraphine Bruhns (`BOSS_COMMANDER_AUROS`, Layer 28, AC 22 HP 300) is the final boss. She is the same character the player has been working with as "Auros" at CY throughout the game — the `key:'auros'` NPC in `VELDRIS_NPC_PROFILES`, `fav_bruhns` in `NPC_DIALOGUES`. At CO, after Entry 41 fires read-aloud (setting `frobergerLastEntryRead`), the only current content is a single fixed arrival quote: *"The cordon holds. We have maybe one hour before the Void breaks through completely. Forge the Codex. I will handle whatever comes over the wall."* — then the battle chip.
+
+This section designs the fav-gated scene that fires **between Entry 41 delivery and the fight** — giving the player who built a relationship with Bruhns a fuller picture of what she's been doing, and why the fight is still necessary.
+
+No new flags. No new nodes. One new const. One render patch at CO.
+
+---
+
+### XXXVII-B. Character: Auros = Bruhns
+
+Throughout the game: "Auros" (informal, CY) = Commander Seraphine Bruhns (formal, CO). The fav system uses key `'bruhns'`; `VELDRIS_NPC_PROFILES` uses key `'auros'`. Both refer to the same person.
+
+Her story, assembled from `NPC_EPILOGUES` and existing dialogue:
+- She has been running depth surveys in the undercity for years (Layer 28+)
+- She holds a military cordon at the CO spire — officially "to contain the Void threat"
+- She has been suppressing her own structural survey through official channels (NPC_EPILOGUES fav 0: *"Auros submitted another report. It was reclassified."*)
+- At fav 2+: the survey reaches a different channel; at fav 3+: filed jointly with a Scholar King archivist, city planning acts on it
+- `FROBERGER_TRACES.bruhns`: Froberger spent three hours with her depth survey, then told her "The rate of change is accelerating. You have maybe two years before the first surface event." — she's been working against that deadline ever since
+- The `s6JointDelivered` scene shows her and Weckmann as trusted colleagues
+- The final battle exists because: whoever holds the Codex Cradle controls Birka's fate. The Ivory Circle (who classified her reports) want the Codex sealed. Bruhns holds the cordon because if she yields command voluntarily, the Circle replaces her with someone who won't let anyone reach it. The only way she can hand over the Codex legitimately — within Circle rules — is if she's defeated in direct engagement. She cannot lose on purpose; she can only be beaten.
+
+This is the story the fav 2 scene tells directly.
+
+---
+
+### XXXVII-C. The CO Scene Sequence
+
+**Full CO sequence with §XXXVII patch:**
+
+1. Player arrives at CO (level ≥ 20, shards = 7)
+2. Entry 41 fires read-aloud via `storyCheckJournal()` — sets `frobergerLastEntryRead = true`
+3. `NODE_ARRIVAL_QUOTES.CO` fires: *"The cordon holds. We have maybe one hour..."* (existing, unchanged)
+4. **[NEW §XXXVII] Fav-gated scene fires** if `fav_bruhns >= 1` — see §XXXVII-D
+5. Player sees CO node options including battle chip: *"⚔ THE FINAL BATTLE — Commander Bruhns"*
+6. Fight: `BOSS_COMMANDER_AUROS` (AC 22, HP 300, ATK +12, 3d8+6)
+7. Victory: `storyCheckVictory()` → ending sequence (§XXXVI epilogue)
+
+Step 4 fires once per visit to CO while `!S_story.defeatedBattles['CO']`. Use flag `bruhnsCoSceneDelivered` to prevent repeat — BUT this fires only at CO and only when the pre-fight conditions are met, so it will only naturally trigger once anyway. No new flag strictly required; implement as a one-time `setTimeout` with a session check.
+
+---
+
+### XXXVII-D. Fav-Gated Scene Content
+
+**fav 0 (no scene):** Only the existing arrival quote fires. Cold, professional, unknown.
+
+**fav 1 — Friendly (new content):**
+
+> *"You got this far. Froberger made it this far too, more than once."*
+>
+> *A pause. The cordon behind her is steady.*
+>
+> *"He didn't finish. I need you to finish. So does the city."*
+
+Sets no flag. One-time atmospheric addition that acknowledges prior acquaintance without revealing her full hand.
+
+**fav 2 — Dear Friend (new content):**
+
+```
+BRUHNS_CO_SCENE.dearFriend:
+
+"You know what I've been doing here."
+
+It isn't a question. She looks at the Codex Cradle, then at you.
+
+"The Circle classified every report I submitted for eleven years. I've been 
+buying time the only way the Circle's rules allow — holding command. As long 
+as I hold this platform, no Circle delegate can lock that Cradle without going 
+through me. And they won't move against a standing Commander without cause."
+
+She meets your eyes.
+
+"You beating me is cause. Documented, witnessed, legitimate. After that, I 
+don't hold command and I don't hold the Codex. You do. And the Circle can't 
+classify that — you'd be the one who opened it."
+
+A beat.
+
+"I'm going to do everything I can to stop you. That's not negotiable. The 
+Circle is watching and I need this to look like I meant it."
+
+She doesn't wait for a response.
+```
+
+**fav 2 + `s29LineDelivered` — additional line (appended to above):**
+
+```
+BRUHNS_CO_SCENE.dearFriendWithTheory:
+
+"You understood the tactical model. That mattered — it meant you understood 
+what the cost of getting this wrong would be. Anyone who understood that and 
+still came here — I can trust them to open it."
+```
+
+---
+
+### XXXVII-E. `BRUHNS_CO_SCENE` Const
+
+```js
+const BRUHNS_CO_SCENE = {
+  friendly: `"You got this far. Froberger made it this far too, more than once."\n\nA pause. The cordon behind her is steady.\n\n"He didn't finish. I need you to finish. So does the city."`,
+
+  dearFriend: `"You know what I've been doing here."\n\nIt isn't a question. She looks at the Codex Cradle, then at you.\n\n"The Circle classified every report I submitted for eleven years. I've been buying time the only way the Circle's rules allow — holding command. As long as I hold this platform, no Circle delegate can lock that Cradle without going through me. And they won't move against a standing Commander without cause."\n\nShe meets your eyes.\n\n"You beating me is cause. Documented, witnessed, legitimate. After that, I don't hold command and I don't hold the Codex. You do. And the Circle can't classify that — you'd be the one who opened it."\n\nA beat.\n\n"I'm going to do everything I can to stop you. That's not negotiable. The Circle is watching and I need this to look like I meant it."\n\nShe doesn't wait for a response.`,
+
+  dearFriendWithTheory: `"You understood the tactical model. That meant you understood what getting this wrong would cost. Anyone who understood that and still came here — I can trust them to open it."`
+};
+```
+
+---
+
+### XXXVII-F. Implementation Spec
+
+**XXXVII-F-1.** In the CO node render path (where `NODE_ARRIVAL_QUOTES` fires), add after the existing quote:
+
+```js
+// §XXXVII: Bruhns CO fav-gated scene
+if (!S_story.defeatedBattles['CO'] && !S_story.bruhnsCoSceneDelivered) {
+  const fav = _npcFavor('bruhns');
+  let sceneText = null;
+  if (fav >= 2) {
+    sceneText = BRUHNS_CO_SCENE.dearFriend;
+    if (S_story.s29LineDelivered) sceneText += '\n\n' + BRUHNS_CO_SCENE.dearFriendWithTheory;
+  } else if (fav >= 1) {
+    sceneText = BRUHNS_CO_SCENE.friendly;
+  }
+  if (sceneText) {
+    S_story.bruhnsCoSceneDelivered = true;
+    setTimeout(() => storyMsg(sceneText), 600);
+  }
+}
+```
+
+**XXXVII-F-2.** Add `bruhnsCoSceneDelivered: false` to `_S_DEFAULTS()`.
+
+**XXXVII-F-3.** No changes to `storyPreFinalBattle()`, `BOSS_COMMANDER_AUROS`, or the battle system. The fight is unchanged; only the pre-fight narration is new.
+
+**XXXVII-F-4.** Victory flavor text (line 4273) is unchanged: *"Commander Bruhns lowers her sword and looks at you the way people look at history."* — this lands differently at fav 2 because the player now understands why she lowered it.
+
+---
+
+### XXXVII-G. State Flags
+
+| Flag | Default | NG+-preserved? | Note |
+|---|---|---|---|
+| `bruhnsCoSceneDelivered` | `false` | No (reset) | One-time CO fav-gated scene fired |
+
+One new flag. Must be added to `_S_DEFAULTS()`.
+
+---
+
+### XXXVII-H. NPC Key Clarification (Implementation Note)
+
+The fav system uses two keys for Bruhns: `'bruhns'` (NPC_DIALOGUES, NPC_EPILOGUES, `_npcFavor('bruhns')`) and `'auros'` (VELDRIS_NPC_PROFILES, `key:'auros'`). Both refer to Commander Seraphine Bruhns. On implementation: use `_npcFavor('bruhns')` for all fav checks in §XXXVII (consistent with the NPC_DIALOGUES system).
+
+**Also note (§XXXIII implementation correction):** The undercity survey delivery is already implemented in HTML as `undercitySurveyDelivered` (line ~12460). The §XXXIII design used flag name `surveyDeliveredToAuros` — on implementation, use `undercitySurveyDelivered` instead (it already exists and tracks the same state).
+
+---
+
+### XXXVII-I. Documentation Updates
+
+| File | Update |
+|---|---|
+| `story.md` | Add §XXXVII stub: CO scene sequence, fav 1/2 text, s29 branch, const name |
+| `world.md` | Expand Bruhns entry: Circle/Codex motivation, "you beating me is cause" design, same-character note |
+| `plan.md` | §V-A item 28; §XI-A row; §0 Tier 1 table row 72 |
+
+No lab report. No new nodes. No new monsters. No new items. One new flag.
+
+---
+
+### XXXVII-J. Design Notes
+
+**"I need this to look like I meant it."** Bruhns has been managing a corrupt system's rules to do the right thing. The fight is not betrayal — it's the mechanism by which the right thing becomes possible. She tells you this at Dear Friend because you've earned the right to understand what you're fighting for, not just that you're fighting.
+
+**Victory flavor lands differently at fav 2.** "Commander Bruhns lowers her sword and looks at you the way people look at history." At fav 0, this is simply the moment of defeat. At fav 2, the player knows: she was waiting to be beaten. She lowered it not in defeat but in transfer. The look is relief, not resignation.
+
+**The `s29LineDelivered` addendum.** The S29 scene at CY (§XXXII) delivers Bruhns's tactical theory: the connection between Froberger's final route and the Void advance. At CO, if this theory was shared, she adds one line: understanding the cost is what makes someone trustworthy with the opening. The theory was not just information — it was a test.
+
+**fav 0 is not a failure.** The player who never built a relationship with Bruhns still wins. The game doesn't require the fav 2 scene to complete. The epilogue at fav 0 reads: *"Auros submitted another report. It was reclassified."* — without the relationship, the Circle wins the bureaucratic battle. The player saved the world; the institutional damage continues. Both endings are true.
+
+**The `bruhnsCoSceneDelivered` flag.** Added to `_S_DEFAULTS()` as a guard against the scene firing twice if the player somehow re-enters CO. In practice, `defeatedBattles['CO']` would be set on victory and the early-return in `storyCheckVictory()` would prevent the node from rendering normally — but the flag is cheap insurance.
+
+---
+
+*§XXXVII status: ⚠️ PLANNED — CO fav-gated scene designed (fav 1 brief; fav 2 full Circle/Codex motivation reveal; fav 2 + s29 addendum); BRUHNS_CO_SCENE const written; implementation spec (one render patch + one _S_DEFAULTS() flag); Auros = Bruhns same-character clarification; §XXXIII flag correction noted (surveyDeliveredToAuros → undercitySurveyDelivered); no new nodes/monsters/items; no lab report.*

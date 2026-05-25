@@ -2596,6 +2596,28 @@ Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterOb
 
 ---
 
+## ⚠️ PLANNED — The Final Confrontation: Commander Bruhns's CO Scene (plan.md §XXXVII, Layer 72)
+
+**Context:** Commander Seraphine Bruhns (key `'bruhns'` in NPC_DIALOGUES, key `'auros'` in VELDRIS_NPC_PROFILES) is the final boss (`BOSS_COMMANDER_AUROS`, AC 22 HP 300). The player has known her as "Auros" at CY throughout the game. After Entry 41 fires read-aloud at CO and `NODE_ARRIVAL_QUOTES.CO` delivers the existing quote, the §XXXVII scene fires before the fight chip.
+
+**Sequence at CO:** Entry 41 read-aloud → existing arrival quote (*"The cordon holds. We have maybe one hour..."*) → §XXXVII fav-gated scene → battle chip → fight → victory.
+
+**fav 1 (Friendly):** *"You got this far. Froberger made it this far too, more than once."* / pause / *"He didn't finish. I need you to finish. So does the city."*
+
+**fav 2 (Dear Friend):** Full Circle/Codex motivation reveal. Bruhns explains: she's held the cordon for 11 years to prevent the Ivory Circle from locking the Codex permanently. The Circle's rules: they can't remove a standing Commander without cause. A Commander defeated in direct engagement loses command legitimately. She has been waiting to be beaten by someone she trusts. *"I'm going to do everything I can to stop you. That's not negotiable. The Circle is watching and I need this to look like I meant it."*
+
+**fav 2 + `s29LineDelivered` (Dear Friend + tactical theory):** Addendum — *"You understood the tactical model. That meant you understood what getting this wrong would cost. Anyone who understood that and still came here — I can trust them to open it."*
+
+**Post-fight:** Existing victory flavor unchanged: *"Commander Bruhns lowers her sword and looks at you the way people look at history."* — lands differently at fav 2 because the player knows she was waiting to lower it.
+
+**Const:** `BRUHNS_CO_SCENE` (keys: friendly, dearFriend, dearFriendWithTheory). **One new flag:** `bruhnsCoSceneDelivered: false`.
+
+**Implementation note:** `undercitySurveyDelivered` (already in HTML ~line 12460) is the correct flag for the survey delivery to Auros — §XXXIII's `surveyDeliveredToAuros` name should be corrected to this on implementation.
+
+**F2 reference:** Patch CO render after NODE_ARRIVAL_QUOTES.CO fires; check `!defeatedBattles['CO'] && !bruhnsCoSceneDelivered`; gate by `_npcFavor('bruhns')`.
+
+---
+
 ## ⚠️ PLANNED — Epilogue Integration Layer: Arcs to Scroll (plan.md §XXXVI, Layer 71)
 
 `_buildEpilogueScroll()` patch: after the `FROBERGER_EPILOGUE` push, iterate `ARC_EPILOGUE_CONDITIONS` (14 entries) and push matching lines. These are ADDITIVE — they appear alongside existing `NPC_EPILOGUES` tier lines, not in place of them.

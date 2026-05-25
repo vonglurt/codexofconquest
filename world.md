@@ -304,6 +304,8 @@ The bloodstained map is Froberger's. He made it himself, over three years, one d
 | Archivus Ptolemy Sweelinck | Weimar — Observatory | #7 Weimar Fragment | Node 35 |
 | High Commander Seraphine Bruhns | Birka — Cyberpunk undercity | Final anchor | Node 6 |
 
+**Commander Seraphine Bruhns (Auros) — §XXXVII PLANNED:** NPC key `'bruhns'` in NPC_DIALOGUES; key `'auros'` in profile system; same character. At CY: tactical analyst and depth survey researcher, known casually as "Auros." At CO: holds the military cordon — officially to contain the Void, actually to keep the Ivory Circle from permanently locking the Codex Cradle. For 11 years, her reports were classified. She held command because the Circle cannot remove a standing Commander without cause; a Commander defeated in direct engagement loses command legitimately. She has been waiting to be beaten by someone she trusts with the opening. Final boss: `BOSS_COMMANDER_AUROS` (AC 22, HP 300, ATK +12, 3d8+6). `BRUHNS_CO_SCENE` const delivers fav-gated pre-fight reveal (fav 1: brief acknowledgment; fav 2: full Circle/Codex motivation; fav 2 + `s29LineDelivered`: tactical trust addendum). Victory: *"Commander Bruhns lowers her sword and looks at you the way people look at history."* NPC_EPILOGUES fav 0: survey still reclassified; fav 2+: survey reaches a legitimate channel; fav 3: filed jointly, city acts. 1 new flag: `bruhnsCoSceneDelivered`. See `plan.md §XXXVII`.
+
 ---
 
 ### NON-EPIC NAMED NPCs (Supporting Cast)
