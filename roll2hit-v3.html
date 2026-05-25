@@ -924,10 +924,18 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 .stat-val.danger { color: var(--red-lt); }
 
 #story-center {
-  flex: 1; display: block;
-  padding: 16px 20px; overflow-y: auto; min-width: 0; position: relative;
+  flex: 1; display: block; min-width: 0; position: relative; overflow: hidden;
 }
-#story-center > * { margin-bottom: 12px; }
+
+/* ── Sheet-swapper: only one sheet visible at a time ── */
+.story-sheet { display: none; height: 100%; overflow-y: auto; box-sizing: border-box; }
+#sheet-story { padding: 16px 20px; }
+#sheet-story.active { display: block; }
+#sheet-story.active > * { margin-bottom: 12px; }
+#sheet-inventory, #sheet-quests { flex-direction: column; gap: 10px; padding: 16px 20px; }
+#sheet-inventory.active, #sheet-quests.active { display: flex; }
+#sheet-character { flex-direction: column; gap: 8px; padding: 10px; }
+#sheet-character.active { display: flex; }
 #story-node-header {
   display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
 }
@@ -1016,12 +1024,9 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 }
 
 /* ── Layer 2: Inventory ─── */
-#story-inv-overlay {
-  position: absolute; inset: 0; z-index: 10;
-  background: var(--bg); display: none;
-  flex-direction: column; padding: 16px 20px; gap: 10px; overflow-y: auto;
+#sheet-inventory {
+  background: var(--bg);
 }
-#story-inv-overlay.visible { display: flex; }
 #inv-header {
   display: flex; align-items: center; justify-content: space-between;
   border-bottom: 1px solid var(--border); padding-bottom: 8px;
@@ -1063,12 +1068,9 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 #btn-inventory:hover { border-color: var(--gold); color: var(--gold-lt); }
 
 /* ── Layer 3: Quest Log + Journal ── */
-#story-quest-overlay {
-  position: absolute; inset: 0; z-index: 10;
-  background: var(--bg); display: none;
-  flex-direction: column; padding: 16px 20px; gap: 10px; overflow-y: auto;
+#sheet-quests {
+  background: var(--bg);
 }
-#story-quest-overlay.visible { display: flex; }
 #quest-header {
   display: flex; align-items: center; justify-content: space-between;
   border-bottom: 1px solid var(--border); padding-bottom: 8px;
@@ -2688,7 +2690,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 .sweelinck-variant { font-size: 12px; color: #9ab0c0; line-height: 1.75; font-style: italic; padding: 10px 14px; border-left: 3px solid #40607a; border-radius: 4px; background: #0a1018; margin: 8px 0; white-space: pre-wrap; }
 
 /* ── Inventory Overlay ───────────────────────────────── */
-#story-inv-overlay, #story-quest-overlay, #story-vendor-overlay { background: #1e0802; }
+#sheet-inventory, #sheet-quests, #story-vendor-overlay { background: #1e0802; }
 .inv-section-hd { color: #E76219; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 900; border-left: 4px solid #FEA712; padding-left: 6px; }
 .inv-item { background: #3d1510; border: 2px solid #562717; border-radius: 8px; }
 .inv-item:nth-child(5n+1) { border-color: #FDDCA9; }
@@ -2855,13 +2857,8 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 #btn-waypoint { border: 2px solid #FEA712; color: #FEA712; border-radius: 6px; font-weight: 700; background: #2a1200; }
 #btn-waypoint:hover { border-color: #FDDCA9; color: #FDDCA9; background: rgba(254,167,18,0.12); }
 #btn-waypoint.at-waypoint { border-color: #22cc66; color: #22cc66; background: #0d2010; }
-/* ── Character Sheet Overlay ── */
-#story-char-overlay {
-  display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-  z-index: 20; background: #1a0802; flex-direction: column;
-  padding: 10px; gap: 8px; overflow-y: auto;
-}
-#story-char-overlay.visible { display: flex; }
+/* ── Character Sheet ── */
+#sheet-character { background: #1a0802; }
 #char-sheet-header {
   display: flex; justify-content: space-between; align-items: center;
   border-bottom: 2px solid #562717; padding-bottom: 6px; flex-shrink: 0;
@@ -3653,6 +3650,8 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
     <!-- Center: node info + direction pad -->
     <div id="story-center">
 
+      <!-- ── Sheet: Story (default) ── -->
+      <div id="sheet-story" class="story-sheet active">
       <div id="story-node-header">
         <span id="s-node-num">01</span>
         <span id="s-node-name">City Streets — Birka</span>
@@ -3706,8 +3705,10 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
         </div>
       </div>
 
-      <!-- ── Inventory overlay (Layer 2) ── -->
-      <div id="story-inv-overlay">
+      </div><!-- /sheet-story -->
+
+      <!-- ── Sheet: Inventory ── -->
+      <div id="sheet-inventory" class="story-sheet">
         <div id="inv-header">
           <span id="inv-title">🎒 Inventory</span>
           <button id="btn-inv-close">✕ Close [I]</button>
@@ -3841,8 +3842,8 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
         </div>
       </div>
 
-      <!-- ── Quest overlay (Layer 3) ── -->
-      <div id="story-quest-overlay">
+      <!-- ── Sheet: Quests ── -->
+      <div id="sheet-quests" class="story-sheet">
         <div id="quest-header">
           <span id="quest-panel-title">📋 Quests</span>
           <button id="btn-quest-close">✕ Close [Q]</button>
@@ -3900,8 +3901,8 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
         </div>
       </div>
 
-      <!-- ── Character Sheet overlay ── -->
-      <div id="story-char-overlay">
+      <!-- ── Sheet: Character ── -->
+      <div id="sheet-character" class="story-sheet">
         <div id="char-sheet-header">
           <span id="char-sheet-title">👤 Character</span>
           <button id="btn-char-close">✕ Close</button>
@@ -8778,13 +8779,18 @@ function _autoSellDuplicates() {
 }
 
 /* ── Layer 8: Vendor ── */
+/* ── Sheet-swapper ── */
+function switchSheet(id) {
+  document.querySelectorAll('#story-center .story-sheet').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById(id);
+  if (el) el.classList.add('active');
+}
+
 function storyVendorToggle() {
   const ov = document.getElementById('story-vendor-overlay');
   if (ov.classList.contains('visible')) {
     ov.classList.remove('visible');
   } else {
-    ['story-inv-overlay','story-quest-overlay'].forEach(id =>
-      document.getElementById(id).classList.remove('visible'));
     const autoSold = _autoSellDuplicates();
     if (autoSold > 0) storyMsg('💰 Auto-sold duplicate gear for ' + autoSold + 'gp.');
     storyUpdateStatus();
@@ -10567,10 +10573,11 @@ function storyUseTransmort() {
 
 function storyExit() {
   S_story.active = false;
+  switchSheet('sheet-story');
   ['story-journal-modal','story-npc-modal','story-stalk-modal','story-corridor-overlay',
    'story-outcome-modal','story-void-modal',
    'story-sleep-overlay','story-prebatt-overlay',
-   'story-quest-overlay','story-inv-overlay','story-vendor-overlay',
+   'story-vendor-overlay',
    'story-continue-modal','story-gameover-modal','story-defeat-modal',
    'story-victory-modal','story-battle-overlay','story-victory-overlay'].forEach(id => {
     const el = document.getElementById(id);
@@ -12350,8 +12357,7 @@ function storyPreFinalBattle() {
   _availableConds = CONDITION_ITEMS.map(ci => ({ ...ci, invName: ci.match }));
   _preBattTab = 'plain';
   S_story.surpriseAdvantage = false;
-  ['story-inv-overlay','story-quest-overlay','story-vendor-overlay'].forEach(id =>
-    document.getElementById(id).classList.remove('visible'));
+  document.getElementById('story-vendor-overlay').classList.remove('visible');
   document.getElementById('prebatt-stealth-result').textContent = '';
   _switchPreBattTab('plain');
   _renderPreBatt();
@@ -13335,8 +13341,7 @@ function _startFishBattle(fish, hasRod) {
   }
   _preBattTab = 'plain';
   S_story.surpriseAdvantage = false;
-  ['story-inv-overlay','story-quest-overlay','story-vendor-overlay'].forEach(id =>
-    document.getElementById(id).classList.remove('visible'));
+  document.getElementById('story-vendor-overlay').classList.remove('visible');
   document.getElementById('prebatt-stealth-result').textContent = '';
   _switchPreBattTab('plain');
   _renderPreBatt();
@@ -13445,15 +13450,11 @@ function storyUpdateJournalCount() {
 }
 
 function storyQuestToggle() {
-  const inv = document.getElementById('story-inv-overlay');
-  const ov  = document.getElementById('story-quest-overlay');
-  if (ov.classList.contains('visible')) {
-    ov.classList.remove('visible');
+  if (document.getElementById('sheet-quests').classList.contains('active')) {
+    switchSheet('sheet-story');
   } else {
-    inv.classList.remove('visible');
-    document.getElementById('story-vendor-overlay').classList.remove('visible');
     storyRenderQuests();
-    ov.classList.add('visible');
+    switchSheet('sheet-quests');
   }
 }
 
@@ -13893,15 +13894,11 @@ function storyRenderInventory() {
 }
 
 function storyInventoryToggle() {
-  const ov  = document.getElementById('story-inv-overlay');
-  const qov = document.getElementById('story-quest-overlay');
-  if (ov.classList.contains('visible')) {
-    ov.classList.remove('visible');
+  if (document.getElementById('sheet-inventory').classList.contains('active')) {
+    switchSheet('sheet-story');
   } else {
-    qov.classList.remove('visible');
-    document.getElementById('story-vendor-overlay').classList.remove('visible');
     storyRenderInventory();
-    ov.classList.add('visible');
+    switchSheet('sheet-inventory');
   }
 }
 
@@ -13921,13 +13918,11 @@ function storyRender(node, prefix) {
   }
   // Act III weight (L44-K)
   _applyActThreeWeight();
-  // close overlays on navigation
-  document.getElementById('story-inv-overlay').classList.remove('visible');
-  document.getElementById('story-quest-overlay').classList.remove('visible');
+  // close all sheets and overlays on navigation
+  switchSheet('sheet-story');
   document.getElementById('story-vendor-overlay').classList.remove('visible');
   document.getElementById('story-stalk-modal').classList.remove('visible');
   document.getElementById('story-corridor-overlay').classList.remove('visible');
-  document.getElementById('story-char-overlay').classList.remove('visible');
   document.getElementById('story-eb-npc-modal').classList.remove('visible');
   document.getElementById('story-fishing-modal').classList.remove('visible');
   // Act badge
@@ -15649,7 +15644,7 @@ function storyUpdateStatus() {
 function storySleep(node) {
   if (!node.sleep) return;
   // Close other overlays
-  ['story-inv-overlay','story-quest-overlay','story-vendor-overlay','story-prebatt-overlay'].forEach(id =>
+  ['story-vendor-overlay','story-prebatt-overlay'].forEach(id =>
     document.getElementById(id).classList.remove('visible'));
   // Populate overlay
   document.getElementById('sleep-node-name').textContent = node.label;
@@ -15796,8 +15791,6 @@ function storyPreBattle(node) {
   _preBattTab = 'plain';
   S_story.surpriseAdvantage = false;
   // Close other overlays
-  document.getElementById('story-inv-overlay').classList.remove('visible');
-  document.getElementById('story-quest-overlay').classList.remove('visible');
   document.getElementById('story-vendor-overlay').classList.remove('visible');
   // Reset stealth result
   document.getElementById('prebatt-stealth-result').textContent = '';
@@ -15822,8 +15815,7 @@ function storyEpicPreBattle(node) {
   _availableConds = CONDITION_ITEMS.map(ci => ({ ...ci, invName: ci.match }));
   _preBattTab = 'plain';
   S_story.surpriseAdvantage = false;
-  ['story-inv-overlay','story-quest-overlay','story-vendor-overlay'].forEach(id =>
-    document.getElementById(id).classList.remove('visible'));
+  document.getElementById('story-vendor-overlay').classList.remove('visible');
   document.getElementById('prebatt-stealth-result').textContent = '';
   _switchPreBattTab('plain');
   _renderPreBatt();
@@ -16029,8 +16021,7 @@ function storyMapToggle() {
     ov.classList.remove('visible');
   } else {
     // Close other overlays first
-    ['story-inv-overlay','story-quest-overlay','story-vendor-overlay',
-     'story-prebatt-overlay','story-sleep-overlay'].forEach(id => {
+    ['story-vendor-overlay','story-prebatt-overlay','story-sleep-overlay'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.classList.remove('visible');
     });
@@ -16377,15 +16368,11 @@ function _updateExitLinks() {
 /* ── Character Sheet ── */
 
 function storyCharToggle() {
-  const ov = document.getElementById('story-char-overlay');
-  if (!ov) return;
-  if (ov.classList.contains('visible')) {
-    ov.classList.remove('visible');
+  if (document.getElementById('sheet-character').classList.contains('active')) {
+    switchSheet('sheet-story');
   } else {
     storyRenderCharSheet();
-    ov.classList.add('visible');
-    document.getElementById('story-inv-overlay').classList.remove('visible');
-    document.getElementById('story-quest-overlay').classList.remove('visible');
+    switchSheet('sheet-character');
     // L36-J: keep simulator inputs in sync when opened from story
     if (S_story.active) {
       const _sc = S_story.abilityScores || { str:16, dex:12, con:14, int:10, wis:12, cha:8 };
@@ -16640,12 +16627,15 @@ document.addEventListener('keydown', e => {
     document.getElementById('story-journal-modal').classList.remove('visible');
   }
   if (e.key === 'Escape') {
+    // Escape from a non-story sheet → back to story
+    const activeSheet = document.querySelector('#story-center .story-sheet.active');
+    if (activeSheet && activeSheet.id !== 'sheet-story') { switchSheet('sheet-story'); return; }
     for (const id of ['story-map-overlay',
                       'story-victory-modal','story-gameover-modal','story-continue-modal',
                       'story-void-modal','story-outcome-modal','story-journal-modal',
                       'story-npc-modal','story-stalk-modal','story-corridor-overlay',
                       'story-sleep-overlay','story-prebatt-overlay',
-                      'story-inv-overlay','story-quest-overlay','story-vendor-overlay']) {
+                      'story-vendor-overlay']) {
       const el = document.getElementById(id);
       if (el && el.classList.contains('visible')) { el.classList.remove('visible'); return; }
     }
