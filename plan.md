@@ -8,7 +8,7 @@ Implement in layer order. Each = code change + doc sync + `git commit`.
 
 | Layer | Section | Feature | Est. Complexity |
 |-------|---------|---------|----------------|
-| 47 | §XII | Yugurt Lake Fishing Overhaul | Medium (lab report ✅ exists) |
+| 47 | §XII | Yugurt Lake Fishing Overhaul | ✅ Implemented |
 | 48 | §XIII | Luck: The Seventh Stat | Medium |
 | 46 | §X | Torment Nexus Overture (HM Kern & Sable) | ✅ Implemented |
 | 53 | §XVIII | Living World: Junction Vignettes + Road Companion | Medium |

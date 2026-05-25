@@ -646,13 +646,12 @@ Accessible by going south from J6 (Western Wilds Crossroads). Not on the main qu
 **No Codex Shard. No story battle. No NPC. No sleep.**  
 **Next Node →** yugurt_cabin (south)
 
-**[PLANNED — Layer 47] Fishing Overhaul — Four-Phase Mechanic**  
-The current 2d20→fight system will be replaced by a four-phase loop:  
-1. **Bait Search** (Survival DC 12–18) — find bait in the terrain; failed roll yields bare hook fallback  
-2. **Cast** (auto) — drop line with equipped bait from `S_story.equippedBait` stack (mirrors arrow mechanic; depletes on use)  
-3. **Type Roll** (2d20 + bait bonus) — determines fish rank 1–20; bare hook uses Luck in place of bait bonus  
-4. **Catch Roll** (Dex check vs. fish AC) — success = inventory item; failure = fight the fish  
-See `plan.md` §XII for full bait table, fish size tiers, gold value matrix, and 26-step implementation plan.
+**[✅ Layer 47] Fishing Overhaul — Four-Phase Mechanic**  
+1. **[Find Bait]** — Survival (WIS) DC 10; 3 locations (Bank/Reeds/Shallows); d6 on BAIT_TABLES; adds bait to inventory.  
+2. **Cast** — DEX DC 12; fail=−2, pass=+0, pass+5=+2 cast modifier.  
+3. **Catch Roll** — d20 + bait.catch + castMod + Yugurt Favour bonus; ≤5=no catch, 6–10=Small, 11–16=Medium, 17–19=Large, 20+=Very Large/Legendary.  
+4. **Type Roll** — d20 + bait.type → Common/Rare/Enchanted/Golden/Legendary. Drop sell value = `FISH_GOLD_VALUES[size][rarity]`.  
+Bait consumed per cast. Bare Hook gives −3 Catch. `fishingQuestFlags.q01` set on first fish caught.
 
 ---
 

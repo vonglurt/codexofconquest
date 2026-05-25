@@ -128,11 +128,9 @@ Reached by going south from J6 (Western Wilds Crossroads, Node 48) in the Midlan
 
 > **DM note:** The Fisherman is not a quest-giver in the current build. He is ambient world — a human who made a choice about how to spend his time and is at peace with it. He has no backstory the player can unlock. He has no connection to the Void, Froberger, or the Ivory Circle. He fishes.
 
-**[PLANNED — Layer 47]** Yugurt Lake Fishing Overhaul — Extended Community
+**[✅ Layer 47 — Core mechanic implemented]** Yugurt Lake Fishing Overhaul — 4-phase casting system live. `BAIT_TABLES` (3 zones × 6 entries), `FISH_SIZE_TIERS`, `FISH_GOLD_VALUES`. Bait consumed per cast. Drop sell value = size×rarity. `fishingQuestFlags.q01` on first catch. Tournament circuit and Outsider Merchant NPC are ⚠️ PLANNED follow-on.
 
-Five additional NPCs join The Fisherman at YC for the tournament arc. The Fisherman becomes *Master of Yugurt* — a title with mechanical weight (the hardest tournament opponent, Luck Mod +4). The other five range from Expert Angler to Accounting Department (here on a wellness retreat, deeply out of his depth). Tournament mechanic: 1v1 betting, best-of-1 round, Luck Mod tiebreaker. Full design in `plan.md` §XII.
-
-**[PLANNED — Layer 47]** The Outsider Merchant (Q-BAIT-00 — *"Listen Closely"*)
+**[PLANNED — Layer 47 follow-on]** The Outsider Merchant (Q-BAIT-00 — *"Listen Closely"*)
 
 A one-shot NPC who appears only on the player's first visit to YC. He stands at the cabin door. He is from somewhere else. He does not say where. He delivers a complete mechanical briefing on the fishing system — the bait loop, the three zones, predator conditions, magic weapon drops, and the fact that road monsters now drop junk — then never appears again. His dialogue is the game's only explicit tutorial for the fishing sub-system.
 
