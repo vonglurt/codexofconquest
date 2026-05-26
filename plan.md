@@ -1,6 +1,6 @@
 ## §0 — Implementation Readiness Dashboard
 
-> **Status as of Layer 77 (2026-05-26).** All layers through §XLII implemented. SP4 stale-PLANNED scan complete — 20 markers cleared in world.md + story.md (Layers 46, 47, 50, 53, 60–70, 73–74). Remaining PLANNED markers are genuinely unimplemented (Layers 49, 51–52, 54–57, 59). Add new layers below as §XLIII+.
+> **Status as of Layer 77 (2026-05-26).** All layers through §XLII implemented. SP4 complete: 20 stale PLANNED markers cleared, 94 consts annotated, F4/F6 tables re-verified, 5 mismatched `// → doc:` targets fixed, `#### Gate Locks` section added to story.md. Remaining PLANNED markers are genuinely unimplemented (Layers 49, 51–52, 54–57, 59). Add new layers below as §XLIII+.
 
 ### Lab Report Index (Layers 48–77)
 
@@ -295,6 +295,7 @@ Do **not** write a lab report for: a single monster/quest addition (sync core do
 | FC03 | Split `mechanics.md` into `mechanics-combat.md` + `mechanics-economy.md` | `mechanics.md` | ✅ 2026-05-25 — split complete; index.md cross-refs updated |
 | FC04 | Spot-check function names in `lab-report-architecture-full.md` every 10 layers | `lab-report-architecture-full.md` | ✅ 2026-05-25 — all 44 functions verified; `_S_DEFAULTS` is arrow const at line 8372, not missing; all line numbers accurate |
 | FC05 | Two-way link convention: every HTML const gets `// → doc: filename.md §Section` | all core docs | ✅ 2026-05-26 — 94 consts annotated (27 original pass + 67 SP4 reverse scan); all non-trivial public consts covered |
+| FC08 | Validate all `// → doc:` annotation targets resolve to real named sections | `roll2hit-v3.html` · `story.md` | ✅ 2026-05-26 — 5 mismatched targets fixed; `#### Gate Locks` section added to story.md |
 
 ### V-C. New Feature Ideas (not yet assigned to a section)
 

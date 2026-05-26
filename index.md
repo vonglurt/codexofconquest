@@ -1,7 +1,7 @@
 # Roll2Hit — The Shattered Codex: Document Index
 
 **Project:** `roll2hit-v3.html` — single-file combat tracker + narrative RPG
-**Status:** Layers 0–77 implemented · 17,762 lines · 76 nodes · 370 monsters · 37 lab reports · FC01–FC07 ✅ · §RESEARCH-01 ✅ · §API-02 ✅ · SP4 ✅
+**Status:** Layers 0–77 implemented · 17,762 lines · 76 nodes · 370 monsters · 37 lab reports · FC01–FC08 ✅ · §RESEARCH-01 ✅ · §API-02 ✅ · SP4 ✅
 **Last updated:** 2026-05-26
 
 ### Doc Health Badge
@@ -12,7 +12,7 @@
 | Lab reports on disk | 37 | ✅ |
 | Lab reports in index | 37 | ✅ |
 | Node text rewrites (noir register) | 76 / 76 | ✅ Implemented 2026-05-25 |
-| FC items pending | 0 (FC01–FC07 all ✅) | ✅ 2026-05-26 |
+| FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
 | Layers implemented | 0–77 | ✅ |
 | Last sync pass | 2026-05-26 (SP4) | ✅ |
 
@@ -203,7 +203,7 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | **Fishing / Yugurt Lake** | `monsters.md` | `lab-report-fish-with-dnd.md` · `lab-report-fishing-bait-prompting.md` · `maps.md` |
 | **Froberger journal (41 entries)** | `froberger-journal-all-entries.txt` | `lab-report-game-story-codex-of-conquest.md` · `story.md §PROLOGUE` |
 | **Froberger traces** | `world.md` | `lab-report-web-of-connections.md` |
-| **Gate locks (4 passages)** | `maps.md` | `plan.md §II (GATE_LOCKS)` |
+| **Gate locks (4 passages)** | `maps.md` · `story.md §Gate Locks` | `plan.md §II (GATE_LOCKS)` |
 | **Hollow Hands sub-clan** | `story-arc-coastal.md` | `lab-report-tilbury-visby-arcs.md` · `lab-report-void-shaman.md` |
 | **Hunt Mode / stalk** | `mechanics-combat.md` | `lab-report-battleground-circuit-path-quest.md` · `lab-report-friendships-with-magic.md` |
 | **Inn Dreams** | `story.md §XXIII stub` | `lab-report-void-archaeology.md §H` |
@@ -287,6 +287,7 @@ All previously logged conflicts resolved. Current known gaps:
 | 67 HTML public consts had no `// → doc:` pointer (27 → 94 total) | `roll2hit-v3.html` | ✅ Full reverse scan complete 2026-05-26 (SP4) |
 | F4 table re-drifted (+9–53 lines) after SP4 annotation pass | `mechanics-economy.md` | ✅ All 29 entries re-verified 2026-05-26 |
 | `surveyDeliveredToAuros` flag name wrong in world.md §Blue Shutters Archive | `world.md` | ✅ Corrected to `undercitySurveyDelivered` 2026-05-26 |
+| 5 `// → doc:` annotations pointed to non-existent section names (§Inn Sleep, §Gate Locks, §Quiet Return, §Act III NPC Lines, §Sweelinck Naming Ceremony) | `roll2hit-v3.html` · `story.md` | ✅ All fixed 2026-05-26 — annotations corrected; `#### Gate Locks` section added to story.md |
 
 ---
 
