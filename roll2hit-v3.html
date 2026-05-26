@@ -1006,9 +1006,30 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 
 #story-text-box {
   background: var(--panel); border: 1px solid var(--border); border-radius: 6px;
-  padding: 12px 14px; font-size: 13px; line-height: 1.65; color: var(--text);
+  border-left: 4px solid var(--border);
+  padding: 14px 16px; font-size: 13px; line-height: 1.75; color: var(--text);
   min-height: 80px; white-space: pre-line;
+  box-shadow: inset 0 1px 4px rgba(42,26,10,0.07), 0 1px 3px rgba(42,26,10,0.05);
 }
+
+/* ── Inline quest strip (below description, above chips) ── */
+#story-quest-strip {
+  display: none; flex-direction: column; gap: 4px;
+  padding: 7px 10px 7px 12px;
+  background: rgba(123,170,184,0.09);
+  border-left: 3px solid var(--sky-dk);
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+}
+#story-quest-strip.has-quests { display: flex; }
+#story-quest-strip:hover { background: rgba(123,170,184,0.15); }
+.quest-strip-item { display: flex; flex-direction: column; gap: 2px; }
+.quest-strip-title {
+  font-size: 11px; font-weight: 700; color: var(--text);
+  display: flex; align-items: center; gap: 4px;
+}
+.quest-strip-hint { font-size: 10px; color: var(--sky-dk); font-style: italic; line-height: 1.4; }
+.quest-strip-sep { height: 1px; background: var(--sky); opacity: 0.35; margin: 3px 0; }
 
 #story-info-row {
   display: flex; flex-direction: column; gap: 6px; font-size: 11px;
@@ -3796,6 +3817,10 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 
       <div id="story-info-row">
         <!-- chips populated by JS -->
+      </div>
+
+      <div id="story-quest-strip">
+        <!-- active quests populated by JS; hidden when empty -->
       </div>
 
       <div id="story-move-msg"></div>
@@ -16037,6 +16062,7 @@ function storyRender(node, prefix) {
   storyMsg(parts.join('  ·  '));
   // Keep quest list DOM in sync so it's current when user opens the panel
   storyRenderQuests();
+  storyRenderQuestStrip();
   // Journal modal (must come last — may overwrite any message visually but modal covers it)
   storyCheckJournal(node);
   storyAutoSave();
@@ -16045,6 +16071,29 @@ function storyRender(node, prefix) {
   _renderWorldMiniMap();
   _updateExitLinks();
   _updateWaypointBtn();
+}
+
+function storyRenderQuestStrip() {
+  const strip = document.getElementById('story-quest-strip');
+  if (!strip) return;
+  const active = Object.entries(S_story.quests || {})
+    .filter(([, s]) => s === 'active')
+    .map(([id]) => QUEST_DB[id])
+    .filter(Boolean)
+    .slice(0, 2);
+  strip.innerHTML = '';
+  if (!active.length) { strip.classList.remove('has-quests'); return; }
+  active.forEach((q, i) => {
+    if (i > 0) { const sep = document.createElement('div'); sep.className = 'quest-strip-sep'; strip.appendChild(sep); }
+    const item = document.createElement('div');
+    item.className = 'quest-strip-item';
+    item.innerHTML = '<div class="quest-strip-title"><span>'
+      + (q.type === 'main' ? '⬥' : '◇') + '</span><span>' + q.title + '</span></div>'
+      + '<div class="quest-strip-hint">▶ ' + q.hint + '</div>';
+    item.addEventListener('click', () => switchSheet('sheet-quests'));
+    strip.appendChild(item);
+  });
+  strip.classList.add('has-quests');
 }
 
 function storyUpdateStatus() {
