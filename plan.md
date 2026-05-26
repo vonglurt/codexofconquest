@@ -296,7 +296,7 @@ Do **not** write a lab report for: a single monster/quest addition (sync core do
 
 ## §DESIGN-01 — Desert Codex Theme Redesign
 
-**Status:** ⚠️ PLANNED — spec written 2026-05-26. Awaiting "continue" for implementation.
+**Status:** ✅ Implemented 2026-05-26. P1–P8 complete.
 **Scope:** CSS variables · Story Mode layout · Character vitals panel · Quest strip · Action chip styling · Map panel
 **Files:** `roll2hit-v3.html` (CSS block lines 7–2229 + story mode structural CSS lines 886–2360)
 
@@ -609,18 +609,16 @@ Current chips are small `border: 1px solid` pills. New chips are taller (32px mi
 
 ### VIII. Implementation Phases
 
-| Phase | Scope | Changes |
-|-------|-------|---------|
-| **P1** | CSS variables | Replace all `:root` vars with Desert Codex palette |
-| **P2** | Base surfaces | bg/panel/text classes; scrollbar; hr.divider |
-| **P3** | Left sidebar vitals | Weapon display rows; HP bar; potion count; section groups |
-| **P4** | Description + quest strip | story-text-box padding/font; new #story-quest-strip element + JS |
-| **P5** | Action chips | Chip sizing, color mapping per type |
-| **P6** | Navigation block | dpad + maps + exits inline layout |
-| **P7** | Panel banding update | pb-l5 → sky-lt; add horizontal az-divider below header |
-| **P8** | World map + history below fold | story-history-panel restructured as scrollable below |
-
-**Each phase = one "continue" increment.**
+| Phase | Scope | Status |
+|-------|-------|--------|
+| **P1** | CSS variables — `:root` Desert Codex palette | ✅ 2026-05-26 |
+| **P2** | Base surfaces — bg/panel/text classes; chips; overlays | ✅ 2026-05-26 |
+| **P3** | Left sidebar vitals — HP bar; weapon rows; potion count | ✅ 2026-05-26 |
+| **P4** | Description card + quest strip — `#story-quest-strip` + JS | ✅ 2026-05-26 |
+| **P5** | Action chips — 32px min-height; icon/label sizing | ✅ 2026-05-26 |
+| **P6** | Navigation block — dpad sizing; hover states | ✅ 2026-05-26 |
+| **P7** | Panel banding — pb-l5 → sky-lt; horizontal az-divider | ✅ 2026-05-26 |
+| **P8** | History below fold — horizontal hcard strip; az-divider | ✅ 2026-05-26 |
 
 ---
 
