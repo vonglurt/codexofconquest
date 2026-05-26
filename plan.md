@@ -290,265 +290,337 @@ Do **not** write a lab report for: a single monster/quest addition (sync core do
 
 ---
 
-## §API-02 — combat.md Analysis
-
-**IEEE-Format API Review**  
-**File:** `combat.md` (F6 scope — Battle Mode + Story Battle overlay)  
-**HTML Source:** `roll2hit-v3.html` (17,708 lines as of 2026-05-25)  
-**Category Group:** Combat Engine · Death Saves · Level-Up · Enemy Scaling
-
-### Abstract
-
-`combat.md` is the F6 surface document for roll2hit's combat engine. It covers: pre-battle setup (Pre-Battle Screen → storyCommitBattle), action economy (1.5 AP), weapon/damage formulas, death saves (FL11), level-up chain (FL6), notoriety scaling, the F6 function reference table, and the FL2/FL6/FL11 milepoint flowcharts.
-
-The document was last synced at ~14,377 HTML lines. The HTML has since grown to 17,708 lines (+3,331 lines, +23%). This produced systemic line-number drift in the F6 Function Reference Table — all 30 entries were stale.
-
-**§API-02 action taken:** F6 Function Reference Table fully re-verified against live HTML. All 30 original entries corrected plus 7 new entries added (`_magicTierAllowed`, `_rollD100Loot`, `_overlayPlayerAttack`, `_storyEnemyTurn`, `storyShortRest`, `storyCharToggle`, `storyRenderCharSheet`, `_lu_applyGiftsAndFinish`, `_notoriety`, `_notorietyWeights`, `_weightedMonsterPick`, `_stalkedMonsterPick`). combat.md header updated to 17,708 / 2026-05-25.
+> §API-01 + §API-02 extracted to `lab-report-api-01-02-mechanics-combat-review.md` (2026-05-26).
 
 ---
 
-### I. Findings Table
+## §DESIGN-01 — Desert Codex Theme Redesign
 
-| # | Claim in combat.md | HTML evidence | Status |
-|---|---|---|---|
-| 1 | All F6 function table line numbers (30 entries) | Verified 2026-05-25 | ❌ ALL stale (see below) |
-| 2 | `roll(sides)` at line 5319 | Actual: 5482 | ❌ Off by +163 |
-| 3 | `rollN` / `rollNExploding` / `abilityMod` / `getProfBonus` group | All off by +163 | ❌ Systemic |
-| 4 | `playerRoll()` / `doPlayerAttack()` / `applyCondition()` group | All off by +169 | ❌ Systemic |
-| 5 | `rollMainDamage()` / `offhandRoll()` / `bonusRoll()` / `oppRoll()` group | All off by +175 | ❌ Systemic |
-| 6 | `_calcPlayerAc()` at 8787 / `_storyRollInit()` at 8800 | Actual: 9536 / 9549 | ❌ Off by +749 |
-| 7 | `_overlayFlee()` / `_storyFleeClean()` / `_storyFleeMutual()` group | All off by +796 | ❌ Systemic |
-| 8 | `_storyEnterDeathSaves()` / death save group | Off by +796 | ❌ Systemic |
-| 9 | `storyShowOutcome()` at 13200 / `storyApplyOutcome(won)` at 13209 | Actual: 16315 / 16324 | ❌ Off by +3115 |
-| 10 | Duplicate `_storyRollInit()` row (appeared twice in old table) | Removed | ⚠ Duplicate removed |
-| 11 | Action economy (1.5 AP), attack formula, damage formula | All correct — no formula drift | ✓ |
-| 12 | Fighter Champion level table (Lv1–20 features, tattoo names) | Matches FIGHTER_FEATURES const | ✓ |
-| 13 | Notoriety formula `level × 3 + floor(battlesWon / 2)` | `_notoriety()` at 17043 | ✓ |
-| 14 | Notoriety weight table (6 brackets, 5 tiers) | `_notorietyWeights()` at 17048 | ✓ |
-| 15 | Death save sequence (FL11 milepoints A–D) | `_storyEnterDeathSaves()` et al. | ✓ |
-| 16 | Indomitable: Lv9+, reroll on fail, 1/long rest | `_storyRollDeathSave()` at 10669 | ✓ |
-| 17 | ASI cascade (STR → atkBonus, CON → retroactive HP) | `_lu_applyGiftsAndFinish()` at 17489 | ✓ |
-| 18 | Final Boss stats: AC22/HP300/ATK+12/3d8+6 | `BOSS_COMMANDER_AUROS` const | ✓ |
-| 19 | `CONDITION_ADV` line 5831 (from `## Conditions` header) | Actual: line 5831 | ✓ (not in F6 table, inline ref) |
+**Status:** ⚠️ PLANNED — spec written 2026-05-26. Awaiting "continue" for implementation.
+**Scope:** CSS variables · Story Mode layout · Character vitals panel · Quest strip · Action chip styling · Map panel
+**Files:** `roll2hit-v3.html` (CSS block lines 7–2229 + story mode structural CSS lines 886–2360)
 
 ---
 
-### II. Root Cause
+### I. Design Rationale
 
-The drift has three distinct magnitudes (+163, +169–175, +749–796, +3115) because different layers of the codebase were inserted at different depths between the last sync (≈14,377 lines) and now (17,708 lines). The dice primitives drifted least; the story outcome functions drifted most, indicating that the largest content additions landed after line ~13,000.
+The current theme is a BBS/terminal palette — near-black background (#120600), flame orange (#E76219), hot red (#C21717), amber (#FEA712), warm cream (#FDDCA9). It reads well in dark conditions and has strong character. The Aztec stripe banding (panel-banding: dark ember → red → orange → amber → cream) is a signature element to preserve.
 
----
+The redesign shifts the **base surface from near-black to parchment/sand**. All structural readability problems trace to the dark background: description text, quest text, NPC dialogue, and stat labels are all warm-cream-on-dark, which fatigues the eye for reading. Inverting to dark-text-on-light-sand dramatically improves reading legibility while keeping the Aztec stripe palette and border color language.
 
-### III. Fix Applied
-
-F6 Function Reference Table in combat.md: all line numbers corrected to verified values. 12 new entries added for functions listed in the Key Functions table but missing from the F6 table. combat.md header updated. **Status: ✅ 2026-05-25.**
+**Inspiration:** 1970s earth-tone graphic design — harvest gold, burnt sienna, baby blue, cream. Think airport signage, airline liveries, textbook covers. Brown + blue + cream is the canonical 70s triplet. Aztec codex manuscripts used sand-parchment grounds with terracotta, turquoise, and black geometric marks — the Aztec and 70s palettes are the same underlying vocabulary.
 
 ---
 
-## §API-01 — mechanics.md Analysis
+### I-B. Color Theory — Why Autumn Pastels
 
-**IEEE-Format API Review**  
-**File:** `mechanics.md` (1,117 lines)  
-**HTML Source:** `roll2hit-v3.html` (~17,600 lines)  
-**Category Group:** Game Design · Combat System · Economy · Progression · Persistence
+#### Warm-Cool Contrast (Goethe / Itten)
 
-### Abstract
+The Desert Codex palette is structured around **warm-cool opposition** — the oldest organizing principle in Western color theory. Johannes Itten (Bauhaus, 1961) identified warm-cool contrast as the most psychologically active of the seven color contrasts: warm tones (ochre, sienna, amber) advance visually; cool tones (blue, teal) recede. The eye alternates between them without fatigue.
 
-`mechanics.md` is the primary API surface document for roll2hit's simulation engine. It documents two behavioral modes (Battle Mode, Story Mode), the action economy (1.5 AP system), the loot pipeline (`_D100_TABLE`), the vendor economy (5 nodes × 3 item categories), the level-up chain (Fighter Champion, 1–20), and the save/load architecture (`localStorage`, two-key). The document serves as both a player-facing guide and an implementer reference — it names HTML functions, line numbers, const names, and state fields explicitly. This dual-audience design creates a verification burden: every function reference and line number is a testable claim.
+Our split: **warm parchment field** (#F0E6C8) + **cool blue accent** (#7BAAB8). The sand background reads as the resting state — the ground — and the baby blue reads as active attention signal. Every information element that says "this is notable" (quest strip, inn/rest chip, map) uses the cool blue, while narrative text (descriptions, NPC dialogue) lives on the warm sand. The warm-cool axis encodes meaning without color-coding by memorized convention.
 
-This section records 36 comparison points across five categories — Game Design, Combat System, Economy, Progression, and Persistence — evaluating `mechanics.md` against `roll2hit-v3.html` for accuracy, completeness, and sync parity.
+#### Simultaneous Contrast (Chevreul, 1839)
 
----
+Chevreul's law: a color appears more saturated when placed against its temperature complement. Our flame orange / amber Aztec stripes (#E76219, #FEA712) already exist in the design. When the baby blue (#7BAAB8) appears adjacent to these warm stripes, Chevreul contrast amplifies both — the blue reads cooler and the orange reads warmer than their measured values. This means the blue accent does not need to be saturated to feel vivid. The #7BAAB8 is deliberately desaturated (the "dusty" quality); the Aztec frame does the amplification work for free.
 
-### I. Data Architecture
+#### Autumn Pastel Specifically — Why Desaturated Earth Tones
 
-```
-S_story (localStorage)
-  ├── Combat state:   hp/hpMax, pendingBattle, battleTurn, battleRound
-  ├── Progression:    xp, level, abilityScores, surgeCharges, indomitableCharges
-  ├── Economy:        gold, inventory[], equipped{Shield/Weapon/MainWeapon}
-  ├── Map state:      currentCode, visited{}, defeatedBattles{}
-  ├── Quest state:    quests{}, ebReturnsCompleted{}, ebNegotiatedPayments{}
-  └── Narrative:      npcFavorability{}, ngPlusRun, frobergerLastEntryRead, journalEntriesRead[]
-```
+"Pastel" means a hue with white or gray added — reduced chroma, raised lightness. Autumn pastels are earth-tone hues at low-to-medium chroma:
 
-Two `localStorage` keys:
+| Season feel | Pigment origin | Hex range |
+|-------------|----------------|-----------|
+| Spring | Zinc white, cadmium yellow | #FFF8E7 |
+| **Autumn** | **Raw sienna, raw umber, yellow ochre** | **#F0E6C8 → #C8A870** |
+| Winter | Titanium white, Prussian blue | #E8EEF4 |
 
-```
-r2h_autosave    ← storyAutoSave()         every move / battle / levelup / purchase
-r2h_checkpoint  ← storySaveCheckpoint()   on inn sleep only
-```
+Autumn pigments are the colors of **aging organic matter** — drying grasses, exposed clay, sandstone, aged paper, tanned leather. They are inherently aged rather than clinical. For a game about codices, chronicles, and ruin archaeology, this is thematically precise: the surface itself reads as artifact.
 
-No versioning field — `Object.assign` merge with `_S_DEFAULTS()` on load provides forward compatibility.
+Psychologically, desaturated earth tones reduce arousal — low chroma, moderate value. This is intentional: the base field should be calm so that high-chroma events (red battle chips, amber gold notifications, flame orange Aztec stripes) read as elevated. The entire signal hierarchy relies on the muted ground.
 
----
+#### Value Contrast and Legibility
 
-### II. Game Design Category (Points 1–10)
+The BBS dark theme is technically high-contrast (cream #FDDCA9 on near-black #120600 ≈ 15:1 luminance ratio), but long-form reading on dark backgrounds creates a specific fatigue mechanism: the pupil dilates for low ambient light, then constricts in response to each bright text character — this micro-oscillation over minutes of reading produces eye strain. All historical long-form reading media (manuscripts, printed books, newspapers) use **dark text on light ground** for this reason.
 
-| # | Claim in mechanics.md | HTML evidence | Status |
-|---|---|---|---|
-| 1 | Reward formula: `floor(0.1 × AC × maxHP)` for HP healed and gold dropped | `storyApplyOutcome()` kill path | ✓ |
-| 2 | XP formula: `enemy AC × enemy maxHP` | `_checkLevelUp()` trigger | ✓ |
-| 3 | Level 20 cap = 195,000 XP; `XP_LEVELS[20]` returns `undefined` (Level 21 open) | `XP_LEVELS` at line 8608 | ✓ |
-| 4 | 1.5 AP system: 1.0 main + 0.5 bonus; two Flee paths (⚠ mutual, ✓ clean) | `doPlayerAttack()` / `oppRoll()` button logic | ✓ |
-| 5 | `usedRealAttack` gates 🗡 Offhand; wimper → offhand exploit blocked | `S_story.usedRealAttack` state field | ✓ |
-| 6 | Auto-Damage ON by default; damage applied before victory overlay | `storyApplyOutcome()` | ✓ |
-| 7 | Notoriety formula: `level × 3 + floor(battlesWon / 2)`; 5-bracket tier weight table | `_notoriety()` — **no line ref cited** | ⚠ |
-| 8 | Corridor encounter: `min(95, 10 + notoriety × 1.5 + activeQuests × 4)` | Corridor encounter logic | ✓ |
-| 9 | Stealth roll: d20 vs random DC 5–16 (25–80% pass rate) | `storyCommitBattle()` stealth tab | ✓ |
-| 10 | Condition costs: Feint Scroll 1,000gp → Basilisk Eye Flask 5,000gp | `CONDITION_GOLD` const | ✓ |
+Our Desert Codex: dark brown #2A1A0A on parchment #F0E6C8 ≈ 12:1 contrast ratio, well above WCAG AA (4.5:1). The 3-point drop from the dark theme is irrelevant; what matters is stable pupil diameter during description / quest / NPC text reading.
 
----
+#### The Aztec Codex Parallel
 
-### III. Combat System Category (Points 11–20)
+Mesoamerican codices (Codex Borgia, Codex Mendoza, c. 14th–16th century) used:
+- **Ground**: amatl bark paper — ochre/buff (#E8D4A0 range)
+- **Structural color**: deep red (iron oxide, cinnabar)
+- **Sacred accent**: turquoise / teal (azurite, malachite)
+- **Outline**: carbon black
 
-| # | Function | HTML line | Status in mechanics.md |
-|---|---|---|---|
-| 11 | `roll()` / `rollN()` dice primitives | 5482 / 5486 | ⚠ Not named — underlie all dice results |
-| 12 | `abilityMod()` | 5505 | ⚠ Not named — used in ASI cascade descriptions |
-| 13 | `getProfBonus()` | 5509 | ⚠ Not named — formula says "proficiencyBonus" without naming the function |
-| 14 | `getAtkAbilityMod()` | 5514 | ⚠ Not named |
-| 15 | `doPlayerAttack()` | 6084 | ⚠ Not named — attack flow documented but function anonymous |
-| 16 | `rollInitiative()` | 6152 | ⚠ Not named; HTML also refs `_tomeInit = _tomeBonuses().initiative` (undocumented) |
-| 17 | `rollDeathSave()` | 6212 | ⚠ Not named; HTML refs `_kingsSealBonus` + `_tomeBonuses()` affecting death saves (undocumented) |
-| 18 | `offhandRoll()` | 6374 | ⚠ F6 scope — belongs in combat.md, not mechanics.md F4 |
-| 19 | `oppRoll()` | 6596 | ⚠ F6 scope; 1.2s delay IS documented |
-| 20 | `newCombat()` | 6682 | ⚠ Not named; pre-battle chain flow is documented |
+The turquoise in Mesoamerican iconography carried the highest status — associated with Quetzalcoatl, Tlaloc, sky, water, and divine favor. The hot red was blood, sacrifice, warfare. Together: sacred blue + sacrificial red against parchment ground. Our palette is this structure exactly: --sky (#7BAAB8, teal-blue) + --az2/#C21717 (hot red) + --bg (#F0E6C8, buff parchment). The 1970s design trend and the Aztec codex tradition are drawing from the same source: earth pigments before synthetic dyes.
 
-**Note:** The 7 "function unnamed" results in Points 11–20 are scope-split findings, not errors. `doPlayerAttack()`, `offhandRoll()`, `oppRoll()`, and `newCombat()` belong to F6 (combat.md scope). The dice primitives (`roll()`, `abilityMod()`, `getProfBonus()`) belong to a utility layer not assigned to any current doc.
+#### The 1970s Palette as Earth-Pigment Revival
+
+The 1970s earth-tone movement was a conscious rejection of 1960s high-saturation primary colors (think Mondrian, Helvetica on white). Designers returned to pigments validated by organic chemistry: raw sienna, burnt umber, harvest gold, avocado, harvest wheat. The baby blue (#7BAAB8) is specifically the **institutional pastel blue** of 1970s public design — hospitals, schools, government offices — a blue that had been stripped of the crisp corporate associations of Pantone 300 and left to age into something warmer and less declarative.
+
+This color — dusty, slightly gray-shifted — is calm where a saturated blue is assertive. It says "information" rather than "alert." That is exactly the register we want for quest data, rest actions, and map navigation: present and legible, not alarming.
+
+#### Summary — Color Theory Rationale
+
+| Choice | Theory basis | Effect |
+|--------|-------------|--------|
+| Parchment ground (#F0E6C8) | Autumn pastel earth pigment; dark-on-light legibility principle | Reduces reading fatigue; reads as artifact/manuscript |
+| Baby blue accent (#7BAAB8) | Warm-cool Itten contrast; Chevreul amplification against orange stripes | Encodes "calm/navigational" category without memorized convention |
+| Terracotta border (#8B4A2A) | Desaturated warm — same hue family as Aztec stripes, lower chroma | Frames without competing with text or action elements |
+| Aztec stripes UNCHANGED | Existing brand; Mesoamerican codex parallel confirmed | Continuity + amplifies cool accents via simultaneous contrast |
+| Dark brown text (#2A1A0A) | ~12:1 contrast on parchment; stable pupil for long-form reading | Maximizes description/quest text legibility |
 
 ---
 
-### IV. Economy Category (Points 21–28)
+### II. New Color Palette — "Desert Codex"
 
-| # | Claim | HTML line | Status |
-|---|---|---|---|
-| 21 | `VENDOR_NODES`: BA/MQ/SF/IS/BK (5 nodes) | 5393 | ✓ (no line ref cited in mechanics.md) |
-| 22 | `_D100_TABLE` total weight = 100; `LOOT_TABLE` is dead code | `_rollD100Loot()` line 8714 | ✓ |
-| 23 | `_magicTierAllowed(magic)`: `level >= magic × 5` | line 8683 | ✓ |
-| 24 | `_autoSellDuplicates()`: idempotent per node via `lastAutoSellNode` | line 8219 | ✓ Named in F4 table |
-| 25 | Potion pricing: ~3× per tier, tied to exponential HP growth | `POTION_TIERS` | ✓ Design intent documented |
-| 26 | `_renderPachelbelSpecials()`: S51 act-gated, S46 Dear Friend, friendly rotating | BA vendor section | ✓ Named correctly |
-| 27 | `_rollMonsterWeaponDrop(dmgDie)`: filtered by die ≤ dmgDie | line 8762 | ✓ Named in F4 table |
-| 28 | `MONSTER_DROPS`: 8 creature categories, sell range 4–150gp | `MONSTER_DROPS` const | ✓ |
+```css
+:root {
+  /* Surface scale (light → dark) */
+  --bg:       #F0E6C8;   /* parchment ground — main background */
+  --panel:    #E2D0A8;   /* panel surface — slightly darker parchment */
+  --panel2:   #D4BC88;   /* recessed panel — mid sand */
+  --panel3:   #C8A870;   /* deep panel — warm tan */
 
----
+  /* Text */
+  --text:     #2A1A0A;   /* dark brown — primary text on light bg */
+  --dim:      #6A4A28;   /* mid-brown — secondary/label text */
+  --muted:    #9A7A52;   /* muted — disabled / hints */
 
-### V. Progression Category (Points 29–33)
+  /* Aztec stripe colors (panel-banding — UNCHANGED from current) */
+  --az1: #562717;        /* dark ember      → KEEP */
+  --az2: #C21717;        /* hot red         → KEEP */
+  --az3: #E76219;        /* flame orange    → KEEP */
+  --az4: #FEA712;        /* amber           → KEEP */
+  --az5: #FDDCA9;        /* warm cream      → KEEP */
 
-| # | Claim | HTML line | Status |
-|---|---|---|---|
-| 29 | `_checkLevelUp()` recurses for multi-level gains | 9655 | ✓ Named, flow documented |
-| 30 | `_lu_applyGiftsAndFinish()` at line 14233 | 14233 | ✓ Correct line reference |
-| 31 | ASI levels {4,6,8,12,14,16,19}; d6 on `_ASI_TABLE`; CON delta → retroactive HP | `_ASI_LEVELS` Set | ✓ |
-| 32 | Bonus HP on milestone levels 7/10/13/18; feature names match FIGHTER_FEATURES | `FIGHTER_FEATURES` | ✓ |
-| 33 | Tattoo schema inline: `{type, lvl, name, icon, hpRoll, bonusHpRoll}` | `S_story.tattoos` | ⚠ Partial — F4 table at doc bottom adds `asiChanges`, `goldGift` |
+  /* Border / structural accent — terracotta */
+  --border:   #8B4A2A;   /* terracotta border (was flame orange) */
+  --border-lt:#C47A4A;   /* light border — hover state */
 
----
+  /* 70s baby blue — rest, inn, quests, map */
+  --sky:      #7BAAB8;   /* dusty blue accent */
+  --sky-lt:   #B0D0DC;   /* pale blue — chip fill */
+  --sky-dk:   #3D6E7A;   /* deep blue — active/selected */
 
-### VI. Persistence Category (Points 34–36)
+  /* Ochre / gold — loot, XP, level-up */
+  --gold:     #B87C28;   /* burnt gold (was amber) */
+  --gold-lt:  #D4A848;   /* warm gold highlight */
 
-| # | Claim | Status |
-|---|---|---|
-| 34 | Two-key localStorage: autosave (every move) + checkpoint (inn sleep only) | ✓ |
-| 35 | No versioning field; `Object.assign` merge for forward compatibility | ✓ Design decision documented |
-| 36 | NG+ preserves `npcFavorability`, `pitPerks`, `ngPlusRun`; all other state reset | ✓ Matches `storyNewGamePlus()` |
+  /* Alert colors */
+  --red:      #8B2010;   /* deep crimson — danger */
+  --red-lt:   #C03020;   /* bright red — warnings */
+  --grn-lt:   #3A7A3A;   /* forest green — success */
 
----
-
-### VII. Summary Assessment
-
-| Category | Points | ✓ Accurate | ⚠ Gap |
-|---|---|---|---|
-| Game Design | 10 | 9 | 1 (notoriety line ref) |
-| Combat System | 10 | 3 | 7 (dice primitives unnamed; scope-split) |
-| Economy | 8 | 7 | 1 (VENDOR_NODES line ref) |
-| Progression | 5 | 4 | 1 (tattoo schema partial) |
-| Persistence | 3 | 3 | 0 |
-| **Total** | **36** | **26** | **10** |
-
-**Structural finding:** mechanics.md's F4 table is comprehensive for economy/vendor functions but explicitly excludes combat.md scope (F6). The 7 "function unnamed" gaps in Combat are scope-split findings — those functions live in combat.md's API surface. True gaps: notoriety line ref, VENDOR_NODES line ref, tattoo schema inconsistency.
-
-**FC03 recommendation confirmed:** The mechanics.md split into `mechanics-combat.md` + `mechanics-economy.md` is natural — F4 (economy) and F6 (combat) are already separated in the document. Splitting makes the scope boundary explicit and eliminates scope-split confusion.
-
-**Undocumented mechanic (flag for FC):** `_tomeBonuses().initiative` at line 6152 and `_kingsSealBonus` at line 6212 affect initiative and death saves respectively. Neither appears in mechanics.md. These belong in the combat doc surface.
-
----
-
-### VIII. Flowchart — Battle Resolution Pipeline
-
-```
-PRE-BATTLE                         BATTLE FOCUS                   POST-BATTLE
-==========                         ============                   ===========
-storyPreBattle(node)               Round start (1.5 AP)          storyApplyOutcome(won)
-  ├─ CONDITION_ITEMS panel         ├─ ⚔ Attack (1.0 AP)            ├─ Won:
-  ├─ stealth tab (d20 vs DC 5-16) │    doPlayerAttack()            │    defeatedBattles[code]=true
-  └─ Retreat (safe) available      │    ├─ hit → auto-damage        │    XP += AC × maxHP
-                                   │    └─ bonus phase opens         │    _checkLevelUp()
-storyCommitBattle()                ├─ 😬 Wimper (1.0 AP)           │    _rollD100Loot()
-  ├─ gold deducted                 │    bonus phase opens           ├─ Lost:
-  ├─ pendingBattle written         ├─ Bonus phase (0.5 AP)         │    pendingBattle retained
-  └─ CONDITION_ADV applied         │    ├─ 🗡 Offhand (usedRealAtk) │    respawn from checkpoint
-                                   │    ├─ 🧪 Potion
-newCombat()                        │    ├─ 📜 Spell Scroll (ADV)
-  └─ Battle Focus overlay renders  │    ├─ 💥 Flashbang (ADV)
-                                   │    ├─ 🛡 Shield (equip)
-                                   │    ├─ 🏃 Flee ✓ (clean)
-                                   │    └─ 😬 Pass bonus
-                                   └─ Enemy turn (1.2s delay)
-                                        oppRoll()
+  /* Action / advantage colors */
+  --adv:      #3D6E7A;   /* sky-dk = advantage blue */
+  --dis:      #C03020;   /* red-lt = disadvantage */
+}
 ```
 
----
+**What changes:**
+- Background: #120600 (near-black) → #F0E6C8 (parchment)
+- Panels: #562717 (dark ember) → #E2D0A8 (light sand)
+- Text: #FDDCA9 (cream) → #2A1A0A (dark brown)
+- Border: #E76219 (flame orange) → #8B4A2A (terracotta)
+- Added baby blue (#7BAAB8) as new accent
 
-### IX. Flowchart — Loot Pipeline
-
-```
-_rollD100Loot()
-  │
-  ├─ [roll d100, up to 3 attempts]
-  │
-  └─ _d100Result(roll)   ← walks _D100_TABLE by cumulative weight (total=100)
-       ├─ potion_*   → push to inventory
-       ├─ scroll     → Spell Scroll (sell:50)
-       ├─ flashbang  → Flashbang (sell:75)
-       ├─ gold       → 50–249gp added directly to S_story.gold
-       ├─ dagger     → _magicTierAllowed() + not owned → push
-       └─ mainweapon → _magicTierAllowed() + not owned → push
-             └─ [pool empty or tier blocked → retry; after 3 fails → Minor Potion fallback]
-
-[Next node entry]
-  └─ _autoSellDuplicates()  (idempotent: skips if lastAutoSellNode === currentCode)
-       ├─ main weapons: keep equipped + best magicBonus per base key; sell rest
-       ├─ daggers:      keep equipped + best atkBonus; sell rest
-       └─ shields:      keep equipped + best acBonus; sell rest
-```
+**What is preserved:**
+- Panel banding stripes: all five colors unchanged (#562717 → #C21717 → #E76219 → #FEA712 → #FDDCA9)
+- Aztec groove: #1c0804 unchanged
+- Red/orange for warnings, battles, danger states
 
 ---
 
-### X. File References
+### III. Layout Redesign — Story Mode
 
-| File | Location | Content |
-|------|----------|---------|
-| `roll2hit-v3.html` | 5393 | `VENDOR_NODES` Set (BA/MQ/SF/IS/BK) |
-| `roll2hit-v3.html` | 5482–5486 | `roll()` / `rollN()` dice primitives |
-| `roll2hit-v3.html` | 5505–5533 | `abilityMod()` / `getProfBonus()` / `getAtkAbilityMod()` / `getDmgMod()` |
-| `roll2hit-v3.html` | 5998 | `CONDITION_ADV` |
-| `roll2hit-v3.html` | 6084 | `doPlayerAttack()` |
-| `roll2hit-v3.html` | 6152 | `rollInitiative()` — includes `_tomeInit = _tomeBonuses().initiative` |
-| `roll2hit-v3.html` | 6212 | `rollDeathSave()` — includes `_kingsSealBonus` modifier |
-| `roll2hit-v3.html` | 6374 / 6464 / 6596 | `offhandRoll()` / `bonusRoll()` / `oppRoll()` |
-| `roll2hit-v3.html` | 6682 | `newCombat()` |
-| `roll2hit-v3.html` | 8219 | `_autoSellDuplicates()` |
-| `roll2hit-v3.html` | 8608 | `XP_LEVELS` (20-entry array; max 195,000 at L20) |
-| `roll2hit-v3.html` | 8683 / 8708 / 8714 / 8762 | `_magicTierAllowed()` / `_d100Result()` / `_rollD100Loot()` / `_rollMonsterWeaponDrop()` |
-| `roll2hit-v3.html` | 9599 / 9655 | `_showLevelUpModal()` / `_checkLevelUp()` |
-| `roll2hit-v3.html` | 13007 | `storyPreBattle()` |
-| `roll2hit-v3.html` | 14233 | `_lu_applyGiftsAndFinish()` |
-| `mechanics-combat.md` | §Battle Mode | 1.5 AP system, XP formula, loot table, flee chain |
-| `mechanics-economy.md` | §Story Mode | Vendor, save system, items |
-| `mechanics-economy.md` | §F4 Function Reference | Economy + pre-battle functions |
-| `combat.md` | F6 scope | `doPlayerAttack()`, `offhandRoll()`, `oppRoll()`, `newCombat()` — F6 scope, not mechanics-combat.md |
+#### III-A. Current Layout (3-column fixed)
+
+```
+┌─────────┬──────┬──────────────────────────────┬──────┬──────────┐
+│ Left    │ Band │ Center                        │ Band │ History  │
+│ 180px   │ 44px │ flex                          │ 44px │ 190px    │
+│         │      │                               │      │          │
+│ act     │      │ node-header                   │      │ location │
+│ log     │      │ text-box (description)        │      │ history  │
+│ status  │      │ info-row (chips)              │      │ cards    │
+│ buttons │      │ nav-row:                      │      │          │
+│         │      │   dpad | minimap | worldmap   │      │          │
+│         │      │   nsew-exits                  │      │          │
+└─────────┴──────┴──────────────────────────────┴──────┴──────────┘
+```
+
+Problems: (1) Left sidebar is cramped — 11 stat rows + 6 buttons in 180px. (2) Description text box is mid-column between header and chips — not prominent. (3) Quest log is a separate full-screen sheet — not visible at a glance. (4) Character vitals (weapon, potions) are buried in separate sheet. (5) History panel competes for horizontal space.
+
+#### III-B. New Layout — "Read → Quest → Act → Navigate"
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ HEADER (38px): Roll2Hit v3 ── story badge ── btns               │
+├────────────────────────────────────────────────────────────────┤
+│ AZTEC BAND (horizontal, 8px tall, full width)                   │
+│ [dark ember ━━ red ━━ orange ━━ amber ━━ cream ━━ groove]       │
+├──────────┬─────────────────────────────────────────────────────┤
+│ LEFT     │ CENTER MAIN                                          │
+│ CHAR     │                                                      │
+│ VITALS   │ ① NODE NAME + ACT BADGE                             │
+│ (200px)  │    [large, clear header]                             │
+│          │                                                      │
+│ ── HP ── │ ② DESCRIPTION                                       │
+│ bar      │    [parchment card, dark brown text, readable]       │
+│          │                                                      │
+│ Potions  │ ③ QUEST STRIP (inline, 1-2 active quests)           │
+│ count    │    [sky-blue left border, compact, no sheet switch]  │
+│          │                                                      │
+│ ⚔ Main  │ ④ ACTION CHIPS                                      │
+│ weapon   │    [NPC / Battle / Rest / Loot / EB]                 │
+│ +atk mod │    [larger, clear labels, terracotta/sky/gold accent]│
+│          │                                                      │
+│ 🛡 Off  │ ⑤ NAVIGATION                                        │
+│ hand +ac │    dpad (left) + mini-map (center) + exits (right)   │
+│          │                                                      │
+│ ── MAP ──│                                                      │
+│ local    │ ── HORIZONTAL DIVIDER (Aztec step pattern) ─────── │
+│ 7×7      │                                                      │
+│          │ ⑥ WORLD MAP (full width below divider)              │
+│ Day/Void │    [scrollable, appears below main content]          │
+│ Level    │                                                      │
+│ Gold     │ ⑦ HISTORY LOG (below world map, scrollable)         │
+│          │    [location history cards, no longer a sidebar]     │
+└──────────┴──────────────────────────────────────────────────────┘
+```
+
+**Key structural changes:**
+1. **Horizontal Aztec band** replaces the vertical panel banding as the top-of-content divider. The vertical bands remain as left/right framing elements flanking the left sidebar.
+2. **Left sidebar** shrinks to character vitals only: HP bar, potion count, equipped weapons with modifiers, day/void/level/gold.
+3. **World map and history** move below the fold (scrollable) instead of always-on competing for width.
+4. **Quest strip** is always visible inline below the description — 1 or 2 current active quests, compact, sky-blue accented.
+5. **Description text** is given full width and clear parchment card treatment.
+
+---
+
+### IV. Character Vitals Panel (Left Sidebar)
+
+New left sidebar content — compact, always-on, battle-useful:
+
+```
+┌─────────────────────┐
+│ ACT I · DAY 4       │
+│ Level 3             │
+├─────────────────────┤
+│ ❤ HP  ██████░░ 24/30│
+│ ⚡ XP  ━━━━━━░░ 40% │
+├─────────────────────┤
+│ ⚔ Longsword +1      │
+│   ATK +7 · 1d8+3   │
+│ 🛡 Shield +1        │
+│   AC +3             │
+├─────────────────────┤
+│ 🧪 Potions    ×2    │
+│ 💰 Gold    850gp    │
+│ 🔮 Shards    2/7    │
+│ 🌑 Void      3/10  │
+├─────────────────────┤
+│ LOCAL MAP (7×7)     │
+│ [mini-map grid]     │
+├─────────────────────┤
+│ 📋 Quests [Q]       │
+│ 🎒 Inventory [I]    │
+│ 📖 Journal          │
+│ 📍 Waypoint         │
+└─────────────────────┘
+```
+
+**HTML changes needed:**
+- `#story-status`: add weapon display rows (`s-main-weapon`, `s-offhand`, `s-potion-count`)
+- `#story-left`: reorganize into logical groups with section dividers
+- Weapon data populated in JS `storyRender()` reading `S_story.equippedMainWeapon` + `S_story.equippedShield`/`S_story.equippedWeapon`
+
+---
+
+### V. Quest Strip (Inline, Below Description)
+
+A new `#story-quest-strip` element between `#story-text-box` and `#story-info-row`. Shows max 2 active quests without switching sheets.
+
+```html
+<div id="story-quest-strip">
+  <!-- populated by storyRender(); hidden if no active quests -->
+</div>
+```
+
+CSS: `border-left: 3px solid var(--sky-dk)` + compact row with quest name, objective snippet, hint. Tap/click to open full quest sheet.
+
+---
+
+### VI. Aztec Geometric Accents (CSS only, no images)
+
+**Section dividers** — CSS repeating gradient step pattern replacing plain `<hr>`:
+
+```css
+.az-divider {
+  height: 8px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--az1) 0px, var(--az1) 8px,
+    var(--az2) 8px, var(--az2) 16px,
+    var(--az3) 16px, var(--az3) 24px,
+    var(--az4) 24px, var(--az4) 32px,
+    var(--az5) 32px, var(--az5) 40px
+  );
+}
+```
+
+**Card headers** — stepped border on section title blocks:
+
+```css
+.section-card-hd {
+  background: var(--panel3);
+  border-top: 3px solid var(--az3);
+  border-left: 6px solid var(--az2);
+  padding: 4px 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--dim);
+}
+```
+
+**Panel banding** (vertical, kept): update pb-l5 to `var(--sky-lt)` as the 6th/outermost layer instead of cream — adds baby blue fringe to the stripe stack.
+
+---
+
+### VII. Action Chips — Restyled
+
+Current chips are small `border: 1px solid` pills. New chips are taller (32px min), grouped by action type, with clear icons and purpose labels:
+
+| Chip type | Border color | Background | Label |
+|-----------|-------------|------------|-------|
+| NPC talk | terracotta `--border` | `--panel` | "Talk to [Name]" |
+| Battle | `--red-lt` | `rgba(red, 0.06)` | "⚔ Fight" |
+| Epic Battle NPC | `--red` | `rgba(red, 0.12)` | "⚔ Quest: [Name]" |
+| Rest (Inn) | `--sky` | `rgba(sky, 0.1)` | "🌙 Rest here" |
+| Short rest | `--sky-dk` | `rgba(sky, 0.08)` | "🛌 Short Rest" |
+| Loot | `--gold` | `rgba(gold, 0.08)` | "💰 Loot" |
+| Portal | `--gold-lt` | `rgba(gold, 0.06)` | "🔮 Portal" |
+| EB Return | `--grn-lt` | `rgba(grn, 0.08)` | "↩ Return" |
+
+---
+
+### VIII. Implementation Phases
+
+| Phase | Scope | Changes |
+|-------|-------|---------|
+| **P1** | CSS variables | Replace all `:root` vars with Desert Codex palette |
+| **P2** | Base surfaces | bg/panel/text classes; scrollbar; hr.divider |
+| **P3** | Left sidebar vitals | Weapon display rows; HP bar; potion count; section groups |
+| **P4** | Description + quest strip | story-text-box padding/font; new #story-quest-strip element + JS |
+| **P5** | Action chips | Chip sizing, color mapping per type |
+| **P6** | Navigation block | dpad + maps + exits inline layout |
+| **P7** | Panel banding update | pb-l5 → sky-lt; add horizontal az-divider below header |
+| **P8** | World map + history below fold | story-history-panel restructured as scrollable below |
+
+**Each phase = one "continue" increment.**
 
 ---
 

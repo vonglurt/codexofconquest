@@ -1,7 +1,7 @@
 # Roll2Hit — The Shattered Codex: Document Index
 
 **Project:** `roll2hit-v3.html` — single-file combat tracker + narrative RPG
-**Status:** Layers 0–77 implemented · 17,762 lines · 76 nodes · 370 monsters · 38 lab reports · FC01–FC08 ✅ · §RESEARCH-01 ✅ · §API-02 ✅ · SP4 ✅
+**Status:** Layers 0–77 implemented · 17,762 lines · 76 nodes · 370 monsters · 39 lab reports · FC01–FC08 ✅ · §RESEARCH-01 ✅ · §API-01+02 ✅ · SP4 ✅
 **Last updated:** 2026-05-26
 
 ### Doc Health Badge
@@ -9,8 +9,8 @@
 | Metric | Value | Status |
 |--------|-------|--------|
 | HTML line count | 17,762 | ✅ |
-| Lab reports on disk | 38 | ✅ |
-| Lab reports in index | 38 | ✅ |
+| Lab reports on disk | 39 | ✅ |
+| Lab reports in index | 39 | ✅ |
 | Node text rewrites (noir register) | 76 / 76 | ✅ Implemented 2026-05-25 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
 | Layers implemented | 0–77 | ✅ |
@@ -98,6 +98,7 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | `lab-report-architecture-full.md` | 0–45 | Complete IEEE function catalog — every function, all subsystems, flow charts |
 | `lab-report-documentation-system-design.md` | — | Two-way sync architecture, plan.md purpose, task decomposition framework |
 | `lab-report-sp4-documentation-sync-pass.md` | SP4 | SP4 sync pass — 20 PLANNED markers, 67 annotations, F4/F6 re-verification, FC01–FC08 archive |
+| `lab-report-api-01-02-mechanics-combat-review.md` | §API-01+02 | IEEE API review: mechanics.md (36 points) + combat.md F6 drift (+163 to +3,115 lines) |
 | `lab-report-plan-cleanup-world-builder-arc.md` | 48–77 | plan.md archaeology + arc from dice tracker to world builder |
 | `lab-report-timeline-history-completed.md` | 0–45 | Complete layer-by-layer development timeline archive |
 | `lab-report-prompt-migration-arena-to-prototype.md` | 0–13 | Arena → Prototype: specification gravity, Cooperative DM Principle |
@@ -293,5 +294,5 @@ All previously logged conflicts resolved. Current known gaps:
 ---
 
 *Last updated: 2026-05-26*
-*Codebase: `roll2hit-v3.html` · 17,762 lines · Layers 0–77 complete · 76 nodes · 370 monsters · 38 lab reports*
+*Codebase: `roll2hit-v3.html` · 17,762 lines · Layers 0–77 complete · 76 nodes · 370 monsters · 39 lab reports*
 *MIT License — roll2hit.com — Copyright (c) 2026 — Free to use, modify, and share.*
