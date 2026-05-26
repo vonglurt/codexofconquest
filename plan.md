@@ -1,3 +1,102 @@
+## §GR — Grief Arc: The Vignette Layer
+
+> **Status:** ✅ Implemented 2026-05-26 (Layer 78). FR node live at CQ.E. NPCs: `connie_tuna`, `aldo_sardino`. Quest chain: `quest_la_riva_01–03`. State flags: `connieMet`, `frCatKillCount`, `laRivaComplete`, `fishmongerRowRestored`. Vincenzo's Net drops at frCatKillCount ≥ 5. HTML: ~18,304 lines at implementation close.
+
+### §GR-A. The Central Argument
+
+Grief in *The Shattered Codex* is not a decorative layer. It is mechanically causal — a consequence of corruption, not a parallel story running alongside it.
+
+The chain runs entirely through existing HTML:
+
+**Void corruption (CY, Neon Undercity) → Merchant Cat faction void-touched → Taz Devils merge into Cat-King → Cat-King destroys Fishmonger's Row (3 city blocks) → Vincenzo Tuna dies in the destruction → Connie Tuna + Aldo Sardino grieve unwitnessed → Corrupted Cats colonize the rubble → grief-space becomes a second void-corruption vector → cycle feeds back upward into Birka surface**
+
+The wound is already in the HTML. Jimmy Two-Tails: *"Last time: three city blocks. Three. Nobody's been back to Fishmonger's Row since."* Kenickie: *"My guy Vinnie's got a contact..."* and *"My guy Vinnie's got more next week. Maybe."* The La Riva arc writes the content of what nobody goes back to describe — and names why Kenickie says "maybe" with the trailing silence after it.
+
+The grief arc asks: what does it mean to return to a place that grief has already colonized? What does it mean that the same void mechanism that runs through the Neon Undercity's neon corridors and data wraiths also runs through the Merchant Cat supply chain and comes out the other end as three blocks of rubble where a fishmonger's husband used to work?
+
+### §GR-B. Characters
+
+| Character | Role | Node | Status |
+|-----------|------|------|--------|
+| Connie Tuna | Widow, former fishmonger; carries Vincenzo's key | FR (CQ.E) | ✅ Implemented — Layer 78 |
+| Aldo Sardino | Patriarch, old fishmonger; carries Vincenzo's folded net inside his coat | FR | ✅ Implemented — Layer 78 |
+| Vincenzo "Vinnie" Tuna | Kenickie's contact; died when Cat-King attacked; referenced, never appears | — (retroactive) | ✅ Live: HTML lines 7857, 15265 |
+| Kenickie Clawnickie Mancuso | Black market operator; carries the Vinnie reference | CQ (existing) | ✅ Implemented — Layer 75 |
+
+**The Vinnie retrofit is cost-free.** The two existing Kenickie lines already name him. The grief arc does not require changing any Kenickie dialogue. It requires the player to encounter Connie and understand that "Vincenzo" and "Vinnie" are the same person. The reveal is delivered by register alone — Connie uses the full name; Kenickie uses the nickname. No disambiguation in the text. The reader connects them across the gap.
+
+### §GR-C. Quest Architecture — "La Riva" (The Row)
+
+**Prerequisites:** `catKingDefeated: true` (Q-CAT-06 complete). Kenickie's Black Market open.
+
+| ID | Title | Activation | Completion | Reward |
+|----|-------|-----------|------------|--------|
+| `quest_la_riva_01` | "What Remains" | Kenickie post-Q-CAT-06: *"You should go see what's left of the Row. Connie's still there."* | Reach FR; Connie first dialogue | `connieMet: true` |
+| `quest_la_riva_02` | "The Weight of a Net" | Connie at FR | Kill 5× corrupted_cat at FR + find Vincenzo's Net (guaranteed 5th drop) | 500gp + Aldo Friendly |
+| `quest_la_riva_03` | "The Account Book" | Aldo at FR (after quest_la_riva_02) | Deliver `Old Tuna Account Book` to Kenickie at CQ | Kenickie Dear Friend + `fishmongerRowRestored: true` |
+
+**Node FR — Fishmonger's Row:**
+- Access: CQ.S → FR (new exit, unlocks after `catKingDefeated`)
+- Terrain: `ruins` (existing type; re-uses terrain monster pool)
+- Default battle: `corrupted_cat` × 4 (separate encounter from CQ default)
+- NPCs: Connie Tuna (key: `connie_tuna`), Aldo Sardino (key: `aldo_sardino`)
+- State flags: `connieMet`, `fishmongerRowRestored`, `laRivaComplete`
+
+**Ending — Q-FR-03 complete:** Kenickie receives the account book. He looks at it. He does not say Vinnie's name. He says: *"Yeah. Okay. I'll hold onto this."* The Row does not rebuild. Aldo does not stop carrying the net. The key stays on Connie's ring. What changes is that someone came, and the thing that had been happening in private — grief in a neighborhood that does not discuss grief because everyone inside it is still inside it — gets a witness. That is the only resolution this kind of grief admits.
+
+### §GR-D. Grief Subplot Map — Full Narrative
+
+The La Riva quest is where the grief is concentrated. But the same corruption-grief transfer runs through the full arc as a distributed layer, using the same technique: small domestic actions encoding loss, not performed, not declared — the object that carries the weight.
+
+| Arc | Character | Grief Source | Object | Node | Status |
+|-----|-----------|-------------|--------|------|--------|
+| La Riva | Connie + Aldo | Vincenzo's death; Cat-King destruction | The net / the key / the account book | FR | ✅ Implemented — Layer 78 |
+| Froberger's Margins | Froberger | The woman at the archive; the unfinished life | Entry 41 blank line; Entry 42 page | CO + collectible | Entries 17+29 ✅ in FROBERGER_JOURNAL; Entry 41 ✅; Entry 42 deferred NG+ |
+| Brynn's Cup | Brynn Clerambault | The merchant who took the ledger; "good credit and bad judgment" | The cup already on the table | IN | ✅ fav ≥ 2 preamble |
+| Yael's Corner | Yael Scheidemann | The courier she filed correctly; the distance she stood at | The corner she looks up from | CI | ✅ fav ≥ 2 preamble |
+| Bruhns at Dawn | Commander Seraphine Bruhns | The chain of command; carrying things alone | The manifests; the candle; the absolute stillness | CY | ✅ fav ≥ 2 preamble |
+| Void Archaeology | Froberger + player | Things that should be dead writing to you | Entry 42; the blank page filled | CO | ✅ Layer 52 |
+
+All six arcs share one structural constraint: **the grief is not named in the text.** It is enacted through objects and small observable actions. Brynn's cup. Yael's corner. Aldo's coat pocket. Connie's key ring. Froberger's taxonomy correction mailed to a general address. The Chrétien technique applied consistently: encode the emotional weight in a thing the character does, not in a thing the character says about how they feel.
+
+All six converge at the Covenant Keeper ending, where each name is spoken. The ending is structured as a receipt — acknowledgment that the grief was witnessed. This is why the Covenant Keeper ending names each person: not to celebrate them, but to confirm that the things they carried were seen.
+
+### §GR-E. The Corruption Transfer — Neon Undercity to Surface
+
+The CY aesthetic (neon corridors, mechanical guards, corrupted data wraiths) is not genre mixing. It documents the void's mode of advance: through commercial infrastructure, through faction relationships, through the supply corridors between underground and surface.
+
+**The pathway (all currently live in HTML):**
+
+1. Void pressure at CY → `quest_cat_void` (Sandy: *"Something's wrong with the strays near the DF node. They're not just feral — they're WRONG."*)
+2. Don Fluffissimo uses Corrupted Cats as enforcers across the CY/CQ boundary (Q-CAT-05 lore)
+3. Cat-King emerges from merged Taz Devils — void-touch accelerates the merge rate
+4. Cat-King destroys three city blocks — disproportionate to a territorial conflict; void-amplified
+5. Corrupted Cats colonize the Fishmonger's Row ruins — still void-touched, still carrying the resonance
+6. Human grief settles in the same space as the corrupted colonization
+7. The grief-space and the corruption-space become the same block
+
+**The "bad vibes" transfer:** Every time a Merchant Cat ran a Corrupted Cat enforcer through the CQ/CY corridor, they moved a small amount of void resonance upward through the social lattice. The Neon Undercity's neon-and-data aesthetic is the form this corruption takes underground. The Fishmonger's Row rubble is the form it takes on the surface. The grief bad vibes and the corruption bad vibes are the same phenomenon in two registers: structural (void colonizing territory) and human (loss colonizing memory). The Corrupted Cats squat in both simultaneously.
+
+The player who has been through CY already knows what void corruption looks like. The La Riva arc is the point where they discover that the same mechanism they cleared underground has a residue on the surface — not a monster, but a widow who is still there, and an old man who carries a net folded inside his coat and has not told her he found it.
+
+### §GR-F. Vignette Writing Spec
+
+All La Riva and grief-arc prose uses the French vignette technique:
+
+- **5 acts**, each named for one object (not a character, not an event — the object that survives and travels)
+- **Two perspectives per act**: one short paragraph per character; compressed present-tense prose
+- **The gap between perspectives is the emotion**: what one character doesn't know the other is carrying; where they do not speak; what the same object meant to each of them
+- **No declaration**: the emotional register is not named in the prose
+- **Objects travel across acts**: the same object reappears in later acts with accumulated weight
+
+See `story.md §GRIEF AND CORRUPTION` for the vignette prose.
+
+### §GR-G. Lab Report
+
+✅ `lab-report-la-riva-grief-arc.md` written 2026-05-26. Covers: corruption-grief chain, five-act vignette structure (confirmed correct), full La Riva quest chain record, distributed grief subplot map (Froberger/Brynn/Yael/Bruhns), romance layer (ROMANCE_QUOTES/NPC_ROMANCE_PREAMBLES/NPC_ROMANCE_VIGNETTES), quest disposition rewrite philosophy, hour counter wiring table, deferred items (FR visual change, Kenickie NG+ naming line).
+
+---
+
 ## §0 — Implementation Readiness Dashboard
 
 > **Status as of Layer 77 (2026-05-26).** All layers through §XLII implemented. SP4 complete: 20 stale PLANNED markers cleared, 94 consts annotated, F4/F6 tables re-verified, 5 mismatched `// → doc:` targets fixed, `#### Gate Locks` section added to story.md. Remaining PLANNED markers are genuinely unimplemented (Layers 49, 51–52, 54–57, 59). Add new layers below as §XLIII+.
@@ -760,10 +859,10 @@ Only show conditions the player can afford. Clicking a condition button launches
 
 | Phase | Scope | Status |
 |-------|-------|--------|
-| **P1** | Section layout CSS + JS routing into labeled sections | ⚠️ Implementing 2026-05-26 |
-| **P2** | Hour state fields + sidebar display + per-action hour increment | Spec complete |
-| **P3** | Exhaustion thresholds + DIS application | Spec only |
-| **P4** | Per-quest hunt buttons (needs QUEST_DB `huntMonsterKey` field) | Spec only |
+| **P1** | Section layout CSS + JS routing into labeled sections | ✅ Implemented 2026-05-26 |
+| **P2** | Hour state fields + sidebar display + per-action hour increment | ✅ Implemented 2026-05-26 |
+| **P3** | Exhaustion thresholds + DIS application | ✅ Implemented 2026-05-26 — `hoursSinceSlept ≥ 24` and `battleDis > 0` both now apply DIS to attack rolls (ADV cancelled to normal); fixed bug where `battleDis` showed warning but never affected rolls |
+| **P4** | Per-quest hunt buttons (needs QUEST_DB `huntMonsterKey` field) | ✅ Implemented 2026-05-26 — per-monster STALK cards keyed to terrain `WORLD_DB` monster list; `storyQuestHunt(id, forceKey)` added; kill-goal progress shown inline |
 | **P5** | Inline condition selector per encounter | Spec only |
 
 ---

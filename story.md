@@ -1,3 +1,109 @@
+## GRIEF AND CORRUPTION: THE VIGNETTE LAYER
+
+*A writing architecture for loss that travels upward from the dark.*
+
+---
+
+The Neon Undercity is where corruption begins. Void pressure through the CY corridors, data wraiths in the relay chambers, the Scholar Kings' underground city turned inside out and made to carry something it was not built for. The corruption does not stay there. It moves upward through commercial channels: the Merchant Cats who ran Corrupted Cat enforcers across the CY/CQ boundary, the void-accelerated merges that produced the Taz Devils, the Cat-King that came from those merges and destroyed three city blocks and went back down. The grief that settled in those three city blocks is the same void corruption in a human register. It is not metaphor. It is the social form of the same mechanism.
+
+Nobody has been back to Fishmonger's Row since.
+
+Except Connie goes back sometimes, and Aldo goes every two weeks to make sure the net is still there. They do not discuss this with each other.
+
+---
+
+### LA RIVA — THE ROW *(Layer 78 — ✅ Implemented 2026-05-26)*
+
+*Five acts. Each named for the object that survived. Two perspectives per act. The gap between them is the emotion.*
+
+---
+
+#### Act I — The Net
+
+The net was still hanging to dry the morning the Cat-King came. Connie had put it there before sunrise — Vincenzo always said you hung the net at dawn so it was ready by the second tide. She was inside when the noise started. She came to the door. The net was down and Vincenzo was not standing next to it. That is the complete record of what she saw at that moment. She went back inside. She had no plan for what to do after that; she did not understand yet that she would need one.
+
+Aldo found the net three days later in the rubble of his stall, draped over the broken counter as if someone had set it down on their way somewhere else. He folded it. He is still carrying it folded inside his coat. He has not told Connie he found it because she has not asked where the net went, which means she is not ready to hear it, which means he keeps carrying it until she is. This is the logic he is using. He does not examine the logic closely.
+
+---
+
+#### Act II — The Crate
+
+The Corrupted Cats found the crates first. When Connie went back — once, two weeks after — they were already settled into the broken wood, void-touched eyes catching the light in the wrong color. She stood at the edge of what had been the Row and counted what she could still name by shape: the Sardino stall, the ice box, the hook rack where the morning catch went up. The cats watched her count. They did not move. She counted everything she could name and then she left because she had finished what she came to do, which was to confirm that it was all still there in the shape of absence.
+
+Sandy Scratchpad Mewlino knows about the Corrupted Cats at the Row. She has not told Connie directly. She told Jimmy: *"There's something wrong with that block. Wrong the way the DF strays are wrong. They're not just feral — they're HOLDING something."* Jimmy said: *"That's above our pay grade."* Sandy said: *"Above everyone's, apparently."* This is the neighborhood's working theory: the grief at Fishmonger's Row is nobody's problem in particular, which is how it stays everyone's ambient condition.
+
+---
+
+#### Act III — The Account Book
+
+The account book was Aldo's. He kept one for every vendor on the Row — who owed what, who had paid forward, who was due a rebate from the spring catch. When the Row came down, he walked away with it under his arm because it was the only thing he could carry that would tell anyone what had existed there. The entries are neat and squared, one vendor per page. Vincenzo's page is the last completed entry. The pages after it are blank.
+
+Kenickie heard about the account book from Sandy. He said: *"What are they gonna do with it — rebuild?"* Then he went quiet. He has a way of going quiet when something is true in a direction he does not want to go. He said: *"Vinnie had the whole south block operation in his head. Nobody knew the supply chain like him. Not even me."* He said *"maybe"* once about more stock being available next week, and then he did not say anything else. He has not asked to see the book. This is the form his grief takes: accurate information about supply chains delivered with a trailing silence where the person who held the supply chain used to be.
+
+---
+
+#### Act IV — The Key
+
+Connie still has the key to the stall. It is a bronze key with a fish stamp on the head — Vincenzo had it made as a joke, the kind of joke that becomes unbearable once the thing it opens no longer exists. She carries it on the same ring as her house key. She takes it off the ring sometimes and puts it in her pocket separately, then returns it to the ring when she leaves the house. She has not examined this habit or tried to stop it. It is what she does now.
+
+Aldo has been watching her do this since the first week. He has seen the key come off the ring, get turned over in her palm, go back. He does not say anything about it because he is carrying the net and that is worse and he knows it. Grief in this neighborhood is not discussed by people who are still inside it — not because they are incapable of discussing it but because the neighborhood's only remaining dignity is in not requiring each other to perform it. Aldo carries the net. Connie carries the key. They do not ask each other why.
+
+---
+
+#### Act V — The Market
+
+After the Cat-King falls, the void pressure at Fishmonger's Row drops. The Corrupted Cats there grow thin — less fed, less certain. They are still present, still carrying the resonance, but diminished. Nothing rebuilds on its own. Connie is still there. Aldo still goes every two weeks.
+
+What changes when the player arrives: someone came. That is the whole of it. The market does not reopen. Aldo does not stop carrying the net. Kenickie receives the account book and holds it and does not say the name that is in it. But someone came, and the grief that had been occurring in private — the grief that the neighborhood had been carrying without a witness, without a quest attached to it, without anyone official — gets a witness. The Covenant Keeper ending names each person helped by name. This is why. Not to celebrate them. To confirm that the things they were carrying were seen.
+
+---
+
+### THE DISTRIBUTED GRIEF — ELSEWHERE IN THE CODEX
+
+The Cat Quarter is where the grief is concentrated. The same corruption-grief transfer runs through the full arc in a lower register, using the same technique: a small domestic action encoding the weight, the object that carries the meaning without declaring it.
+
+---
+
+#### Froberger's Margins
+
+The grief in Froberger's journal is epistemic — the grief of someone who understood everything except how to give that understanding to another person without the context that makes it receivable. Entry 41 is the last one. He stopped writing in the middle of the page. The line below the last sentence is blank.
+
+*Entry 17 (collectible, mid-run):* "The woman at the archive disagreed with my taxonomy of the eastern wards. She was right. I did not tell her she was right until she had already left the city. I wrote it in a letter I addressed to the archive's general post, not to her name, because I did not know if she would want to hear from me. I do not know if she received it. The taxonomy stands corrected in any case."
+
+*Entry 29 (collectible, late-run):* "There is a question I should have asked before she left. I have been composing an answer to it for eleven months in case she asks it, which she will not, because I never asked the question. This is the kind of error that only gets worse with additional documentation."
+
+*Entry 41 (read aloud at CO):* The entry that must always be read. The blank line after it is what Froberger left for the person who came after him. In NG+, the player writes Entry 42. The blank line was always the invitation.
+
+---
+
+#### The Cup — Brynn Clerambault (IN)
+
+*The cup is already on the table.* This is the whole of it. The merchant who took the ledger and kept it without paying — *"good credit and bad judgment and I trusted the credit"* — is not in the room and will not be. The ledger came back eventually, through the player, through a chain of obligation that Brynn did not set up and did not ask for. What she does when it comes back is refill the cup before you ask. The domestic action encodes the weight she is no longer carrying alone. She does not say thank you, which in her particular register means something closer to it than most people's explicit gratitude.
+
+---
+
+#### The Corner — Yael Scheidemann (CI)
+
+*She looks up before you reach the corner.* Yael filed the report on the courier. She was correct to file it. She was standing two blocks from where Froberger collapsed and she wrote it up and turned it in on time. She watched the city do what cities do with dead couriers. She has been watching the corner where it happened since then — not because she could have done something but because she cannot stop knowing the exact distance. Three encounters. Come back when it is finished and she will not say thank you. This is the same grammar as the cup on the table: acknowledgment through observable action; the thing that cannot be said said through the body's prior knowledge of your arrival.
+
+---
+
+#### The Manifests — Commander Seraphine Bruhns (CY)
+
+*She closes the manifold. That is the acknowledgment.* Bruhns carries everything alone because no one else has the clearance, and by the time the clearance could be granted, the thing needing carrying is already done. The grief of command: the people you are protecting from the weight are protected from it so successfully that they do not know you are carrying it. The candle. The papers at dawn. The absolute stillness of someone who is used to being alone with the load. You are going to have to fight her. She is going to have to let you. Neither of you knows, and has stopped pretending to know, whether you are the right person for what comes after.
+
+---
+
+#### The Blank Page — Void Archaeology (CO)
+
+In NG+, at the CO node, there is a sealed letter from Froberger. The fifth ending — if `vaArchitectureKnown` and `entry42Written` and `ngPlusRun ≥ 1` — adds the line: *"Froberger wrote 41 entries. You wrote one. She wrote 7."* Sweelinck's final question, overriding all others: *"What was inside the cage?"* The void archaeology arc is grief in its purest mechanical form: the architecture of things that should be over that are not over, the scaffold of the dead Scholar Kings visible through the wall of the present, the blank page that Froberger left and that the player fills. To fill it is not to finish it. It is to add your weight to the ongoing project of carrying what cannot be set down.
+
+---
+
+*The corruption travels upward from the Neon Undercity through commercial channels and social fabric and comes out as three blocks of rubble where a net used to dry in the morning. The grief travels in the same direction. The void bad vibes and the grief bad vibes are not two different things happening in the same neighborhood. They are the same movement in two registers. What the player does — in the Cat Quarter, at the inn, at the corner where Yael watches, in the catacombs where the void's architecture is visible — is witness the endpoints of that movement. The Covenant Keeper ending is the receipt.*
+
+---
+
 # THE SHATTERED CODEX
 ### A Solo Journey — Story, Quest Map & Terrain Traversal Guide
 
@@ -360,6 +466,43 @@ The cramped alleys north of Birka market. Refuse heaps attract every pest the ci
 - **Completion:** Kill 5× corrupted_cat (tracked via `S_story.catKills`)
 - **Lore tie:** Void pressure from DF (Unbanked Quarter) leaking into Cat Quarter
 - **Dialogue:** Sandy: *"Something's wrong with the strays near the DF node. They're not just feral — they're WRONG."*
+
+---
+
+### NODE 79 — ruins (Fishmonger's Row) ✅ Layer 78
+
+> *Implemented 2026-05-26. Accessible east of CQ (CQ.E → FR). Terrain: `ruins`. NPCs: Connie Tuna, Aldo Sardino. Node num: 79. Coords: r:4, c:18. Unlocks after `catKingDefeated`.*
+
+**First visit:** Connie Tuna auto-dialogues. `connieMet: true` set. `quest_la_riva_02` activated.
+
+**Default battle (normal render):** Corrupted Cat × 4. **Repeatable clear button** (corridor:true, count:1) appears while `quest_la_riva_02` active and `frCatKillCount < 5`.
+
+**NPCs:** Connie Tuna (key: `connie_tuna`), Aldo Sardino (key: `aldo_sardino`, appears after quest_la_riva_02 active).
+
+---
+
+#### Q-FR-01 — "What Remains" ✅ Layer 78
+- **ID:** `quest_la_riva_01` | **Reward:** 0gp
+- **Trigger:** Cat-King defeated (`catKingDefeated: true`) → Kenickie sends player east
+- **Completion:** Reach FR; Connie first dialogue (`connieMet: true`)
+- **Dialogue:** Kenickie: *"She's been there since... You should go."*
+
+---
+
+#### Q-FR-02 — "The Weight of a Net" ✅ Layer 78
+- **ID:** `quest_la_riva_02` | **Reward:** 500gp
+- **Trigger:** Q-FR-01 complete → Connie activates at FR
+- **Completion:** `frCatKillCount >= 5` AND `Vincenzo's Net` in inventory (guaranteed drop at frCatKillCount = 5)
+- **Unlock:** Aldo Sardino NPC card; Q-FR-03 activated
+- **Dialogue:** Aldo: *"I found the net in the rubble of my stall. Three days after. I folded it. I've been carrying it since."*
+
+---
+
+#### Q-FR-03 — "The Account Book" ✅ Layer 78
+- **ID:** `quest_la_riva_03` | **Reward:** 0gp + Kenickie Dear Friend + `laRivaComplete: true`
+- **Trigger:** Q-FR-02 complete → Aldo gives Old Tuna Account Book
+- **Completion:** Deliver `Old Tuna Account Book` to Kenickie at CQ (button in CQ render)
+- **Dialogue:** Kenickie: *"Yeah. Okay. I'll hold onto this."*
 
 ---
 

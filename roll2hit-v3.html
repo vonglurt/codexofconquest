@@ -23,30 +23,30 @@
   /* Text */
   --text:     #2A1A0A;   /* dark brown — primary */
   --dim:      #6A4A28;   /* mid-brown — labels / secondary */
-  --muted:    #9A7A52;   /* muted — disabled / hints */
+  --muted:    #52351A;   /* muted — disabled / hints */
 
   /* Border / structural accent — terracotta */
   --border:   #8B4A2A;   /* terracotta */
   --border-lt:#C47A4A;   /* light border — hover */
 
   /* 70s baby blue — rest, inn, quests, map */
-  --sky:      #7BAAB8;   /* dusty blue accent */
+  --sky:      #1E5868;   /* dusty blue accent */
   --sky-lt:   #B0D0DC;   /* pale blue — chip fill */
-  --sky-dk:   #3D6E7A;   /* deep blue — active/selected */
+  --sky-dk:   #1A4A56;   /* deep blue — active/selected */
 
   /* Ochre / gold — loot, XP, level-up */
-  --gold:     #B87C28;   /* burnt gold */
-  --gold-lt:  #D4A848;   /* warm gold highlight */
+  --gold:     #6A4808;   /* burnt gold */
+  --gold-lt:  #7A5208;   /* warm gold highlight */
 
   /* Alert / state colors */
   --red:      #8B2010;   /* deep crimson — danger */
-  --red-lt:   #C03020;   /* bright red — warnings */
+  --red-lt:   #8A2015;   /* bright red — warnings */
   --grn-lt:   #3A7A3A;   /* forest green — success */
   --purple:   #8B4A2A;   /* maps to terracotta in light theme */
 
   /* Advantage / disadvantage */
-  --adv:      #3D6E7A;   /* sky-dk — advantage blue */
-  --dis:      #C03020;   /* red-lt — disadvantage */
+  --adv:      #1A4A56;   /* sky-dk — advantage blue */
+  --dis:      #8A2015;   /* red-lt — disadvantage */
 }
 
 /* ── Reset / Base ──────────────────────────────────────── */
@@ -92,9 +92,9 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
   border-radius: 5px; cursor: pointer; white-space: nowrap; transition: background .15s;
 }
 #btn-return-story:hover { background: var(--c3); }
-.info-chip.hearth-set { border-color: #5a3a00; color: #e0a050; cursor: pointer; }
+.info-chip.hearth-set { border-color: #5a3a00; color: #6A4808; cursor: pointer; }
 .info-chip.hearth-set:hover { border-color: #c08030; background: var(--panel2); }
-.info-chip.hearth-home { border-color: #c08030; color: #ffc060; cursor: default; }
+.info-chip.hearth-home { border-color: #c08030; color: #7A5010; cursor: default; }
 
 /* ── Main Content Area ─────────────────────────────────── */
 #main-body {
@@ -108,7 +108,7 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 #left-panel {
   width: 210px;
   min-width: 210px;
-  background: var(--panel);
+  background: linear-gradient(135deg, var(--panel) 0%, var(--panel2) 40%, var(--panel) 70%, var(--panel3) 100%);
   border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
@@ -252,7 +252,7 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 #history-panel {
   width: 210px;
   min-width: 210px;
-  background: var(--panel);
+  background: var(--bg);
   border-left: 1px solid var(--border);
   display: flex;
   flex-direction: column;
@@ -262,10 +262,10 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
   padding: 6px 10px;
   font-size: 11px;
   font-weight: 700;
-  color: var(--dim);
+  color: var(--muted);
   border-bottom: 1px solid var(--border);
   letter-spacing: 0.5px;
-  background: var(--panel);
+  background: var(--bg);
   flex-shrink: 0;
 }
 #hcard-container {
@@ -281,18 +281,20 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 /* ── History Card ──────────────────────────────────────── */
 .hcard {
   border-radius: 4px;
-  border-left: 3px solid var(--dim);
-  background: var(--panel2);
+  border-left: 3px solid var(--border-lt);
+  background: var(--panel);
   padding: 5px 7px;
   font-size: 11px;
   line-height: 1.5;
   flex-shrink: 0;
+  width: 100px; min-width: 100px;
+  align-self: stretch; display: flex; flex-direction: column; overflow-y: auto;
 }
-.hcard .hc-round  { font-size: 9px; color: var(--dim); }
-.hcard .hc-actor  { font-weight: 700; }
-.hcard .hc-roll   { color: var(--dim); }
+.hcard .hc-round  { font-size: 9px; color: var(--muted); }
+.hcard .hc-actor  { font-weight: 700; color: var(--text); }
+.hcard .hc-roll   { color: var(--muted); }
 .hcard .hc-outcome{ font-weight: 700; }
-.hcard .hc-dmg    { font-size: 10px; color: var(--dim); }
+.hcard .hc-dmg    { font-size: 10px; color: var(--muted); }
 
 /* ── Histogram Strip ───────────────────────────────────── */
 #histogram-strip {
@@ -917,9 +919,10 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 #story-panel.visible { display: flex; }
 
 #story-left {
-  width: 180px; min-width: 180px;
+  width: 172px; min-width: 172px;
   background: var(--panel); border-right: 1px solid var(--border);
-  display: flex; flex-direction: column; padding: 10px 8px; gap: 8px;
+  display: flex; flex-direction: column; padding: 8px 7px 6px; gap: 5px;
+  overflow-y: auto; overflow-x: hidden;
 }
 #story-act-badge {
   font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
@@ -932,8 +935,9 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 .story-log-entry { color: var(--dim); }
 .story-log-entry.current { color: var(--text); font-weight: 600; }
 #story-status {
-  font-size: 11px; display: flex; flex-direction: column; gap: 5px;
-  border-top: 1px solid var(--border); padding-top: 8px;
+  font-size: 11px; display: flex; flex-direction: column; gap: 4px;
+  border-top: 1px solid var(--border); padding-top: 6px;
+  margin-top: auto;
 }
 .stat-row { display: flex; justify-content: space-between; align-items: center; }
 .stat-lbl { color: var(--dim); font-size: 10px; }
@@ -943,15 +947,16 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 
 /* ── Sidebar groups (vitals / equipment / resources) ── */
 .sidebar-group {
-  display: flex; flex-direction: column; gap: 4px;
-  padding-bottom: 7px;
+  display: flex; flex-direction: column; gap: 3px;
+  padding-bottom: 5px;
   border-bottom: 1px solid var(--border);
 }
 
 .sidebar-section-lbl {
   font-size: 8px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase;
-  color: var(--muted); padding: 2px 0 1px; margin-bottom: 1px;
+  color: var(--muted); padding: 1px 0; margin-bottom: 0;
 }
+.stat-row { display: flex; justify-content: space-between; align-items: center; min-height: 16px; }
 .story-nav-section-lbl {
   font-size: 8px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase;
   color: var(--muted); padding: 4px 0 2px; border-top: 1px solid var(--border);
@@ -1130,13 +1135,13 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 .info-chip.eb-npc-done   { border-color: var(--muted); color: var(--muted); cursor: default; }
 
 #story-dpad {
-  display: flex; flex-direction: column; align-items: center; gap: 4px; margin-top: 4px;
+  display: flex; flex-direction: column; align-items: center; gap: 3px; margin-top: 2px;
 }
-.dpad-row { display: flex; gap: 4px; align-items: center; justify-content: center; }
+.dpad-row { display: flex; gap: 3px; align-items: center; justify-content: center; }
 .dpad-btn {
-  width: 60px; height: 44px; border-radius: 5px;
+  width: 48px; height: 52px; border-radius: 5px;
   background: var(--panel2); border: 1px solid var(--border);
-  color: var(--text); font-size: 12px; font-weight: 700; cursor: pointer;
+  color: var(--text); font-size: 11px; font-weight: 700; cursor: pointer;
   transition: background .12s, border-color .12s, color .12s;
   letter-spacing: 0.3px;
 }
@@ -1147,20 +1152,21 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
   color: var(--muted); text-align: center; padding: 2px 0;
 }
 .dpad-center {
-  width: 48px; height: 48px; background: var(--panel3); border-color: var(--c3);
-  color: var(--c3); font-size: 18px;
+  width: 40px; height: 40px; background: var(--panel3); border-color: var(--c3);
+  color: var(--c3); font-size: 16px;
 }
+.dpad-center { color: #7A3008; }
 .dpad-center:hover:not(:disabled) { background: var(--c1); border-color: var(--c4); color: var(--c4); }
 .dpad-center:disabled { opacity: 0.35; }
 .dpad-center.hunt-on { background: rgba(58,122,58,0.12); border-color: #3A7A3A; color: #3A7A3A; }
 .dpad-center.hunt-on:hover:not(:disabled) { background: rgba(58,122,58,0.2); border-color: #2a6a28; color: #2a6a28; }
 .dpad-corner {
-  width: 34px; height: 34px; font-size: 13px; padding: 0; border-radius: 4px;
+  width: 28px; height: 28px; font-size: 12px; padding: 0; border-radius: 4px;
   background: var(--panel2); border-color: var(--border); color: var(--dim);
 }
 .dpad-corner:hover:not(:disabled) { background: var(--panel3); border-color: var(--c3); color: var(--c4); }
 .dpad-corner:disabled { opacity: 0.25; cursor: default; }
-.dpad-corner-spacer { display: inline-block; width: 34px; height: 34px; }
+.dpad-corner-spacer { display: inline-block; width: 28px; height: 28px; }
 
 #story-move-msg {
   font-size: 11px; color: var(--gold); text-align: center;
@@ -1191,16 +1197,16 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 .inv-name { flex: 1; color: var(--text); }
 .inv-src  { font-size: 10px; color: var(--dim); white-space: nowrap; margin-left: 4px; flex-shrink: 0; }
 .inv-item.shard-item { border-color: #4a2a8a; }
-.inv-item.shard-item .inv-name { color: #b888ff; }
+.inv-item.shard-item .inv-name { color: #5A2A9A; }
 .inv-item.key-item { border-color: #5a4a1a; }
 .inv-item.key-item .inv-name { color: var(--gold-lt); }
 #inv-empty { color: var(--dim); font-size: 12px; font-style: italic; padding: 20px 0; text-align: center; }
 .inv-section-hd { font-size: 10px; font-weight: 700; letter-spacing: 0.8px; color: var(--purple); text-transform: uppercase; padding: 8px 2px 3px; border-top: 1px solid var(--border); margin-top: 4px; }
-.quest-section-hd { font-size: 10px; font-weight: 700; letter-spacing: 0.8px; color: #c8a060; text-transform: uppercase; padding: 8px 2px 3px; border-top: 1px solid var(--border); margin-top: 4px; }
+.quest-section-hd { font-size: 10px; font-weight: 700; letter-spacing: 0.8px; color: #6A4808; text-transform: uppercase; padding: 8px 2px 3px; border-top: 1px solid var(--border); margin-top: 4px; }
 .quest-item.quest-corpse { border-color: #5a3a1a; }
-.quest-item.quest-corpse .q-name { color: #c8a060; }
+.quest-item.quest-corpse .q-name { color: #6A4808; }
 .inv-item-knowledge { border-color: #2a1a4a; opacity: 0.85; }
-.inv-item-knowledge .inv-name { color: #a080d0; }
+.inv-item-knowledge .inv-name { color: #5A2A8A; }
 .inv-tag { font-size: 9px; color: var(--purple); border: 1px solid #3a1a6a; border-radius: 3px; padding: 1px 4px; white-space: nowrap; flex-shrink: 0; }
 #btn-inventory {
   width: 100%; padding: 5px; margin-top: 2px;
@@ -1322,7 +1328,7 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
   box-shadow: 0 8px 40px rgba(80,0,120,0.6);
 }
 #void-hd {
-  font-size: 10px; font-weight: 700; letter-spacing: 2px; color: #9a5acf;
+  font-size: 10px; font-weight: 700; letter-spacing: 2px; color: #5A1A8A;
   text-transform: uppercase;
 }
 #void-day-badge {
@@ -1548,7 +1554,7 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
   display: flex; justify-content: space-between; align-items: center;
   width: 100%; max-width: 540px; margin-bottom: 10px;
 }
-#map-title { font-size: 1rem; color: #c8b86e; font-weight: bold; letter-spacing: 0.5px; }
+#map-title { font-size: 1rem; color: #5A4010; font-weight: bold; letter-spacing: 0.5px; }
 #map-close-btn {
   padding: 4px 12px; font-size: 11px; font-weight: 600;
   background: var(--panel2); border: 1px solid var(--border);
@@ -1583,17 +1589,17 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 }
 .mc-code {
   font-size: 9px; font-weight: 700; letter-spacing: 0.3px;
-  color: #4a7a9a; line-height: 1;
+  color: #1A4A6A; line-height: 1;
 }
 .mc-current .mc-code { color: #e0c040; font-size: 9.5px; }
-.mc-trail .mc-code { color: #4a8a4a; }
+.mc-trail .mc-code { color: #1A5A1A; }
 .mc-icon { font-size: 13px; line-height: 1; }
 .mc-current .mc-icon { font-size: 16px; }
-.mc-fog-icon { font-size: 11px; color: #1e1e2e; }
+.mc-fog-icon { font-size: 11px; color: #2A2A3A; }
 .mc-exits { position: absolute; inset: 0; pointer-events: none; }
 .mc-exit { position: absolute; font-size: 7px; line-height: 1; }
-.mc-exit.available { color: #4a90b0; }
-.mc-exit.oneway    { color: #9a4020; }
+.mc-exit.available { color: #1A5070; }
+.mc-exit.oneway    { color: #6A2010; }
 .mc-exit.dir-n { top: 0px;    left: 50%; transform: translateX(-50%); }
 .mc-exit.dir-s { bottom: 0px; left: 50%; transform: translateX(-50%); }
 .mc-exit.dir-e { right: 1px;  top: 50%;  transform: translateY(-50%); }
@@ -1653,7 +1659,7 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
   font-size: 11px; color: var(--sky-lt); min-height: 28px; text-align: center;
 }
 #map-status-bar {
-  font-size: 10px; color: #444; margin-top: 8px;
+  font-size: 10px; color: #1A1A1A; margin-top: 8px;
   text-align: center; letter-spacing: 0.3px;
 }
 #btn-story-map {
@@ -1746,7 +1752,7 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 }
 #froberger-note-title {
   font-size: 11px; font-weight: 700; letter-spacing: 2px;
-  color: #7a5a20; text-transform: uppercase; border-bottom: 1px solid #c8a870;
+  color: #3A2A08; text-transform: uppercase; border-bottom: 1px solid #c8a870;
   padding-bottom: 8px;
 }
 #froberger-note-body p {
@@ -1838,7 +1844,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 }
 #deacon-code-title {
   font-size: 11px; font-weight: 700; letter-spacing: 2px;
-  color: #7a5a20; text-transform: uppercase; border-bottom: 1px solid #c8a870;
+  color: #3A2A08; text-transform: uppercase; border-bottom: 1px solid #c8a870;
   padding-bottom: 8px;
 }
 #deacon-code-body {
@@ -2176,13 +2182,13 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
   box-shadow: 0 8px 32px rgba(0,0,0,0.6);
 }
 #stalk-card-hd {
-  font-size: 10px; font-weight: 700; letter-spacing: 1.5px; color: #c8a84a;
+  font-size: 10px; font-weight: 700; letter-spacing: 1.5px; color: #6A5010;
   text-transform: uppercase; border-bottom: 1px solid var(--border); padding-bottom: 8px;
 }
 #stalk-card-name { font-size: 16px; font-weight: 700; color: var(--text); }
 #stalk-card-text { font-size: 13px; line-height: 1.85; color: var(--text); font-style: italic; }
 #stalk-quest-list { font-size: 12px; color: var(--dim); display: flex; flex-direction: column; gap: 4px; }
-.stalk-quest-entry { color: #c8a84a; }
+.stalk-quest-entry { color: #6A5010; }
 #stalk-card-actions { display: flex; gap: 10px; justify-content: flex-end; }
 #btn-stalk-wait {
   padding: 6px 16px; border-radius: 4px;
@@ -2329,7 +2335,8 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 
 .hcard {
   background: var(--panel); border-left: 4px solid var(--c3);
-  border-radius: 5px; width: 160px; min-width: 160px; flex-shrink: 0;
+  border-radius: 5px; width: 100px; min-width: 100px; flex-shrink: 0;
+  align-self: stretch; display: flex; flex-direction: column; overflow-y: auto;
 }
 .hcard .hc-round  { color: var(--dim); }
 .hcard .hc-actor  { color: var(--text); }
@@ -2367,7 +2374,22 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 .story-log-entry.current { color: var(--text); }
 #story-log-box { color: var(--dim); }
 
-#story-status { border-top: 3px solid var(--c3); padding-top: 10px; }
+#story-status { border-top: 3px solid var(--c3); padding-top: 8px; margin-top: auto; }
+
+/* Inventory status bar — shards + void (light theme) */
+#inv-status-bar {
+  display: flex; flex-direction: row; gap: 8px; padding: 6px 12px;
+  background: var(--panel); border-bottom: 2px solid var(--border);
+  flex-shrink: 0;
+}
+.inv-stat-pill {
+  display: flex; align-items: center; gap: 5px;
+  background: var(--panel2); border: 1px solid var(--border);
+  border-radius: 4px; padding: 3px 8px;
+}
+.inv-stat-lbl { font-size: 10px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.8px; }
+.inv-stat-val { font-size: 12px; font-weight: 700; color: var(--text); }
+.void-pill .inv-stat-val { color: var(--red); }
 .stat-lbl { color: var(--dim); text-transform: uppercase; font-size: 9px; letter-spacing: 1px; }
 .stat-val { color: var(--text); font-weight: 700; }
 .stat-val.warn   { color: var(--gold); }
@@ -2401,14 +2423,13 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 
 /* ── Aztec horizontal divider ───────────────────────── */
 .az-divider {
-  height: 8px; flex-shrink: 0;
+  height: 4px; flex-shrink: 0;
   background: repeating-linear-gradient(
     90deg,
-    var(--c1) 0px, var(--c1) 8px,
-    var(--c2) 8px, var(--c2) 16px,
-    var(--c3) 16px, var(--c3) 24px,
-    var(--c4) 24px, var(--c4) 32px,
-    var(--c5) 32px, var(--c5) 40px
+    var(--c1) 0px, var(--c1) 7px,
+    var(--c2) 7px, var(--c2) 14px,
+    var(--c3) 14px, var(--c3) 21px,
+    var(--c4) 21px, var(--c4) 28px
   );
 }
 
@@ -2418,11 +2439,45 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
   overflow: hidden; min-height: 0;
 }
 
-/* ── Story History Panel (bottom strip) ──────────────── */
+/* ── Story Bottom Row (nav + combat log) ─────────────── */
 #story-history-panel {
-  height: 104px; min-height: 104px; flex-shrink: 0;
-  background: var(--panel2); border-top: 1px solid var(--border);
-  display: flex; flex-direction: column; overflow: hidden;
+  height: 312px; min-height: 312px; flex-shrink: 0;
+  background: var(--panel2); border-top: 2px solid var(--border);
+  display: flex; flex-direction: row; overflow: hidden;
+}
+
+/* Bot section — each nav column (Compass / Local / World / Exits) */
+.bot-section {
+  display: flex; flex-direction: column; flex-shrink: 0;
+  border-right: 1px solid var(--border); overflow: hidden;
+}
+.bot-section-hd {
+  font-size: 8px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--c4); background: var(--c1); padding: 3px 8px;
+  border-bottom: 1px solid #3a1a0a; flex-shrink: 0;
+}
+.bot-section-body { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+
+#bot-compass { width: 130px; }
+#bot-local   { width: 200px; }
+#bot-world   { width: 202px; }
+#bot-exits   { width: 170px; }
+
+/* Vertical Aztec separator between nav and combat log */
+.bot-vert-sep {
+  width: 6px; flex-shrink: 0; align-self: stretch;
+  background: repeating-linear-gradient(
+    180deg,
+    var(--c1) 0px, var(--c1) 7px,
+    var(--c2) 7px, var(--c2) 14px,
+    var(--c3) 14px, var(--c3) 21px,
+    var(--c4) 21px, var(--c4) 28px
+  );
+}
+
+/* Combat log column (right side, fills remaining width) */
+#story-bottom-log {
+  flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0;
 }
 #story-history-title {
   padding: 3px 10px; font-size: 9px; font-weight: 700;
@@ -2433,15 +2488,17 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 #story-hcard-container {
   flex: 1; overflow-x: auto; overflow-y: hidden;
   padding: 5px 6px; display: flex; flex-direction: row; gap: 5px;
+  align-items: stretch;
 }
 
+/* ── Bottom nav section headers (light theme) ───────── */
+.bot-section-hd { background: var(--c1); color: var(--c4); border-bottom-color: #3a1a0a; }
+#story-history-panel { background: var(--panel2); border-top-color: var(--border); }
+#story-bottom-log { background: var(--panel2); }
+
 /* ── Story Mini-Map ──────────────────────────────────── */
-#story-nav-row {
-  display: flex; flex-direction: row; align-items: flex-start;
-  gap: 10px; margin-top: 2px; flex-wrap: wrap;
-  border-top: 2px solid var(--border); padding-top: 8px;
-}
-#story-nav-left { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
+#story-nav-row { display: none; } /* contents moved to #story-history-panel bottom row */
+#story-nav-left { display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; }
 
 /* ── Local mini-map (7×7 around player) ── */
 #story-mini-map { display: flex; flex-direction: column; gap: 2px; flex-shrink: 0; }
@@ -2450,7 +2507,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   grid-template-rows: repeat(7, 1fr);
-  width: 184px; height: 182px;
+  width: 186px; height: 268px;
   gap: 1px;
   background: #2a0e06;
   border: 2px solid #562717;
@@ -2483,7 +2540,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
   display: grid;
   grid-template-columns: repeat(23, 1fr);
   grid-template-rows: repeat(14, 1fr);
-  width: 184px; height: 112px;
+  width: 188px; height: 268px;
   gap: 1px;
   background: #2a0e06;
   border: 2px solid #562717;
@@ -2510,7 +2567,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 .wmc-epic-unvis   { background: #200808; color: #4a1a1a; }
 
 /* NSEW exit links block (light theme) */
-#story-nsew { display: flex; flex-direction: column; gap: 3px; flex-shrink: 0; padding-left: 8px; border-left: 2px solid var(--border-lt); min-width: 0; max-width: 180px; overflow: hidden; }
+#story-nsew { display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; min-width: 0; overflow: hidden; }
 #nsew-title { font-size: 8px; font-weight: 900; color: var(--muted); text-transform: uppercase; letter-spacing: 2px; padding-bottom: 3px; }
 .exit-line { font-size: 10px; line-height: 1.5; color: var(--dim); min-height: 22px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 3px 5px; border-radius: 4px; border: 1px solid transparent; box-sizing: border-box; }
 .exit-line.exit-active { cursor: pointer; }
@@ -2586,137 +2643,136 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 .info-chip.final-battle-chip { border-left: 4px solid var(--gold); border-color: var(--gold); color: var(--gold); font-weight: 900; animation: pulse-gold 1.5s infinite; }
 @keyframes pulse-gold { 0%,100%{ box-shadow:0 0 4px rgba(254,167,18,0.3); } 50%{ box-shadow:0 0 14px rgba(254,167,18,0.7); } }
 
-/* ── Pre-Battle Overlay ──────────────────────────────── */
-#story-prebatt-overlay { background: #1e0802; }
-#prebatt-header { border-bottom: 3px solid #C21717; }
-#prebatt-title { color: #E76219; letter-spacing: 2px; text-transform: uppercase; }
-#prebatt-subtitle { color: #b07040; }
-#prebatt-threat { color: #FEA712; }
-.threat-tier { font-weight: 900; letter-spacing: 2px; border-radius: 5px; border-width: 2px; }
-.threat-trivial { color: #FDDCA9; border-color: #562717; }
-.threat-easy    { color: #FEA712; border-color: #E76219; }
-.threat-medium  { color: #E76219; border-color: #C21717; }
-.threat-hard    { color: #C21717; border-color: #C21717; }
-.threat-deadly  { color: #FDDCA9; border-color: #C21717; background: #C21717; }
-
-.prebatt-tab-btn {
-  border: 2px solid #E76219; background: #3d1510; color: #FEA712;
-  border-radius: 8px 8px 0 0; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+/* ── Pre-Battle Overlay — light parchment + dark ember header ── */
+#story-prebatt-overlay { background: var(--bg); }
+#story-prebatt-overlay .az-divider { margin: 0 -20px; }
+#prebatt-header {
+  background: var(--c1); border-bottom: 3px solid var(--c2);
+  margin: -16px -20px 0; padding: 12px 20px;
 }
-.prebatt-tab-btn.active { background: #E76219; color: #120600; border-color: #FEA712; }
-.prebatt-tab-btn:hover:not(.active) { background: #562717; border-color: #FEA712; }
+#prebatt-title { color: var(--c5); letter-spacing: 2px; text-transform: uppercase; }
+#prebatt-subtitle { color: var(--c5); opacity: 0.8; }
+#prebatt-threat { color: var(--dim); }
+.threat-tier { font-weight: 700; letter-spacing: 1.5px; border-radius: 4px; border-width: 1px; }
+.threat-trivial { color: var(--grn-lt);  border-color: var(--grn-lt); }
+.threat-easy    { color: var(--sky-dk);  border-color: var(--sky-dk); }
+.threat-medium  { color: var(--gold);    border-color: var(--gold); }
+.threat-hard    { color: var(--red);     border-color: var(--red); }
+.threat-deadly  { color: var(--c5); border-color: var(--red); background: var(--red); }
 
-#prebatt-start-row { gap: 10px; }
-#btn-prebatt-start {
-  background: #C21717; border: 3px solid #E76219; color: #FDDCA9;
-  border-radius: 8px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px;
-}
-#btn-prebatt-start:hover { background: #E76219; border-color: #FEA712; color: #120600; }
-#btn-prebatt-cancel {
-  background: #3d1510; border: 2px solid #562717; color: #b07040;
-  border-radius: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
-}
-#btn-prebatt-cancel:hover { border-color: #FEA712; color: #FEA712; background: #562717; }
+.cond-item-row { background: var(--panel); border: 1px solid var(--border); border-radius: 6px; }
+.cond-item-row.selected { border-color: var(--red-lt); background: rgba(138,32,21,0.06); }
+.cond-item-row .cond-name { color: var(--text); font-weight: 700; }
+.cond-item-row .cond-cost { color: var(--gold); font-weight: 700; }
+.cond-item-row .cond-effect { color: var(--dim); font-size: 10px; }
+.cond-afford-hint { color: var(--red); font-style: italic; font-size: 10px; }
+#prebatt-cond-summary { background: var(--panel); border: 1px solid var(--border); border-radius: 6px; color: var(--text); }
 
-.cond-item-row { background: #3d1510; border: 2px solid #562717; border-radius: 6px; }
-.cond-item-row.selected { border-color: #E76219; background: #562717; }
-.cond-item-row .cond-name { color: #FDDCA9; font-weight: 700; }
-.cond-item-row .cond-cost { color: #FEA712; font-weight: 700; }
-.cond-item-row .cond-effect { color: #E76219; font-size: 10px; }
-.cond-afford-hint { color: #E76219; font-style: italic; font-size: 10px; }
-#prebatt-cond-summary { background: #562717; border: 2px solid #FEA712; border-radius: 6px; color: #FDDCA9; }
-
-/* ── Battle Overlay ──────────────────────────────────── */
+/* ── Battle Overlay — light parchment, dark ember header, red motif ── */
 /* Layer 39: Epic Battleground danger banner */
 #sbo-epic-banner {
-  background: #1a0000; border-bottom: 2px solid #8a0000;
+  background: rgba(138,32,21,0.07); border-bottom: 2px solid var(--red-lt);
   border-radius: 8px 8px 0 0; padding: 10px 16px;
   display: flex; flex-direction: column; gap: 4px;
 }
 #sbo-epic-danger {
-  font-size: 11px; font-weight: 900; letter-spacing: 3px; color: #e02020;
+  font-size: 11px; font-weight: 900; letter-spacing: 3px; color: var(--red);
   text-transform: uppercase; animation: pulse-red 1.4s infinite;
 }
-#sbo-epic-boss-name { font-size: 15px; font-weight: 700; color: #e08060; }
+#sbo-epic-boss-name { font-size: 15px; font-weight: 700; color: var(--red); }
 #sbo-epic-warning {
-  font-size: 11px; line-height: 1.7; color: #b06050; font-style: italic;
-  border-left: 2px solid #5a1a1a; padding-left: 8px; margin-top: 2px;
+  font-size: 11px; line-height: 1.7; color: var(--dim); font-style: italic;
+  border-left: 2px solid var(--red-lt); padding-left: 8px; margin-top: 2px;
 }
-.info-chip.eb-battle-chip { border-color: #8a1a1a; color: #e06060; cursor: pointer; animation: pulse-red 1.8s infinite; }
-.info-chip.eb-battle-chip:hover { background: #2a0808; border-color: #e04040; }
-.info-chip.eb-battle-locked { border-color: #3a1a1a; color: #604040; cursor: default; opacity:.6; }
-#story-battle-overlay { background: #120600; }
-#sbo-header { background: #C21717; border-bottom: 3px solid #E76219; border-radius: 8px 8px 0 0; padding: 10px 14px; }
-#sbo-title { color: #FDDCA9; letter-spacing: 3px; text-transform: uppercase; font-size: 14px; }
-#sbo-round { color: #FEA712; font-weight: 700; letter-spacing: 1px; }
+.info-chip.eb-battle-chip { border-color: var(--red-lt); color: var(--red); cursor: pointer; animation: pulse-red 1.8s infinite; }
+.info-chip.eb-battle-chip:hover { background: rgba(138,32,21,0.1); border-color: var(--red); }
+.info-chip.eb-battle-locked { border-color: var(--muted); color: var(--muted); cursor: default; opacity:.6; }
+#story-battle-overlay { background: var(--bg); }
+#story-battle-overlay .az-divider { margin: 0 -16px; }
+#sbo-header {
+  background: var(--c1); border-bottom: 3px solid var(--c2);
+  border-radius: 0; padding: 10px 14px;
+  margin: -12px -16px 0;
+}
+#sbo-title { color: var(--c5); letter-spacing: 3px; text-transform: uppercase; font-size: 14px; }
+#sbo-round { color: var(--c4); font-weight: 700; letter-spacing: 1px; }
 #sbo-turn-badge {
-  background: #FEA712; border: 2px solid #FDDCA9; color: #120600;
+  background: var(--c4); border: 2px solid var(--c5); color: var(--c1);
   font-weight: 900; letter-spacing: 1.5px; border-radius: 6px; text-transform: uppercase;
 }
-#sbo-turn-badge.enemy-turn { background: #C21717; border-color: #E76219; color: #FDDCA9; }
-#btn-sbo-advanced { background: #3d1510; border: 2px solid #E76219; color: #FEA712; border-radius: 6px; font-weight: 700; }
-#btn-sbo-advanced:hover { border-color: #FEA712; color: #FDDCA9; }
+#sbo-turn-badge.enemy-turn { background: var(--c2); border-color: var(--c3); color: var(--c5); }
+#btn-sbo-advanced { background: var(--c1); border: 1px solid var(--c3); color: var(--c4); border-radius: 6px; font-weight: 700; }
+#btn-sbo-advanced:hover { border-color: var(--c5); color: var(--c5); }
 
-.sbo-fighter { background: #3d1510; border: 3px solid #E76219; border-radius: 10px; }
-.sbo-fighter.enemy  { border-color: #C21717; }
-.sbo-fighter.player { border-color: #FEA712; }
+.sbo-fighter { background: var(--panel); border: 3px solid var(--c2); border-radius: 10px; }
+.sbo-fighter.enemy  { border-color: var(--red); }
+.sbo-fighter.player { border-color: var(--gold); }
 .sbo-label { letter-spacing: 2px; font-size: 9px; }
-.sbo-fighter.enemy  .sbo-label { color: #E76219; }
-.sbo-fighter.player .sbo-label { color: #FEA712; }
-.sbo-name { color: #FDDCA9; font-weight: 900; text-transform: uppercase; }
-.sbo-stat { color: #E76219; }
-.sbo-stat strong { color: #FDDCA9; }
-.sbo-hp-bar { background: #1e0802; border-radius: 6px; height: 8px; }
-.sbo-fighter.enemy  .sbo-hp-fill { background: #C21717; }
-.sbo-fighter.player .sbo-hp-fill { background: #E76219; }
-.sbo-hp-text { color: #FDDCA9; }
-.sbo-condition { color: #FEA712; }
-.sbo-init-note { color: #b07040; }
+.sbo-fighter.enemy  .sbo-label { color: var(--red); }
+.sbo-fighter.player .sbo-label { color: var(--gold); }
+.sbo-name { color: var(--text); font-weight: 900; text-transform: uppercase; }
+.sbo-stat { color: var(--dim); }
+.sbo-stat strong { color: var(--text); }
+.sbo-hp-bar { background: var(--panel3); border-radius: 6px; height: 8px; }
+.sbo-fighter.enemy  .sbo-hp-fill { background: var(--red); }
+.sbo-fighter.player .sbo-hp-fill { background: var(--grn-lt); }
+.sbo-hp-text { color: var(--text); }
+.sbo-condition { color: var(--gold); }
+.sbo-init-note { color: var(--dim); }
+.sbo-fighter.enemy.has-dis { border-color: var(--red); background: rgba(138,32,21,0.06); box-shadow: 0 0 8px rgba(138,32,21,0.15); }
+.sbo-fighter.enemy.has-dis .sbo-condition { font-weight: 700; color: var(--red); font-size: 11px; letter-spacing: 0.5px; }
 
-#sbo-ap-row { background: #562717; border: 2px solid #E76219; border-radius: 6px; }
-#sbo-ap-val  { color: #FEA712; font-weight: 900; }
-#sbo-ap-hint { color: #FDDCA9; }
+#sbo-ap-row { background: var(--panel); border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px; }
+#sbo-ap-value { color: var(--gold); font-weight: 900; font-size: 13px; }
+#sbo-ap-hint  { color: var(--dim); }
 
 .sbo-btn { border-radius: 8px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; border-width: 2px; }
-.sbo-btn-attack { background: #C21717; border-color: #E76219; color: #FDDCA9; }
-.sbo-btn-attack:hover { background: #E76219; border-color: #FEA712; color: #120600; }
-.sbo-btn-offhand { background: #562717; border: 2px solid #E76219; color: #FDDCA9; }
-.sbo-btn-offhand:hover { background: #E76219; color: #120600; }
-.sbo-btn-flee { background: #3d1510; border: 2px solid #562717; color: #b07040; }
-.sbo-btn-flee:hover { border-color: #FEA712; color: #FEA712; }
+.sbo-btn-attack { background: var(--c2); border-color: var(--c3); color: var(--c5); }
+.sbo-btn-attack:hover { background: var(--c3); border-color: var(--c4); color: var(--c1); }
+.sbo-btn-offhand { background: var(--panel); border: 2px solid #6a4a9a; color: #6a4a9a; }
+.sbo-btn-offhand:hover { background: rgba(106,74,154,0.1); }
+.sbo-btn-flee { background: var(--panel2); border: 2px solid var(--border); color: var(--dim); }
+.sbo-btn-flee:hover { border-color: var(--gold); color: var(--gold); }
 .sbo-btn-surge { background: #1a1a3a; border: 2px solid #4a4acf; color: #9090ff; }
 .sbo-btn-surge:hover { background: #2a2a5a; border-color: #8080ff; color: #c0c0ff; }
-.sbo-btn-wimper { background: #3d1510; border: 2px solid #E76219; color: #E76219; }
-.sbo-btn-wimper:hover { background: #562717; border-color: #FEA712; color: #FEA712; }
+.sbo-btn-wimper { background: var(--panel2); border: 2px solid var(--border); color: var(--dim); }
+.sbo-btn-wimper:hover { border-color: var(--gold); color: var(--gold); }
 
-.sbo-btn-potion { background: #562717; border: 2px solid #FEA712; color: #FDDCA9; border-radius: 8px; font-weight: 700; }
-.sbo-btn-potion:hover { background: #FEA712; color: #120600; border-color: #FDDCA9; }
-.sbo-btn-spell  { background: #3d1510; border: 2px solid #E76219; color: #FEA712; border-radius: 8px; font-weight: 700; }
-.sbo-btn-spell:hover  { background: #E76219; color: #120600; }
-.sbo-btn-shield { background: #562717; border: 2px solid #C21717; color: #E76219; border-radius: 8px; font-weight: 700; }
-.sbo-btn-shield:hover { background: #C21717; color: #FDDCA9; }
-.sbo-btn-flash  { background: #3d1510; border: 2px solid #FEA712; color: #FEA712; border-radius: 8px; font-weight: 700; }
-.sbo-btn-flash:hover  { background: #FEA712; color: #120600; }
+.sbo-btn-potion { background: var(--panel); border: 1px solid var(--grn-lt); color: var(--grn-lt); border-radius: 8px; font-weight: 700; }
+.sbo-btn-potion:hover { background: rgba(58,122,58,0.1); border-color: var(--grn-lt); }
+.sbo-btn-spell  { background: var(--panel); border: 2px solid #4040af; color: #4040af; border-radius: 8px; font-weight: 700; }
+.sbo-btn-spell:hover  { background: rgba(64,64,175,0.1); }
+.sbo-btn-shield { background: var(--panel); border: 2px solid var(--grn-lt); color: var(--grn-lt); border-radius: 8px; font-weight: 700; }
+.sbo-btn-shield:hover { background: rgba(58,122,58,0.1); border-color: var(--grn-lt); }
+.sbo-btn-flash  { background: var(--panel); border: 2px solid var(--gold); color: var(--gold); border-radius: 8px; font-weight: 700; }
+.sbo-btn-flash:hover  { background: rgba(106,72,8,0.12); }
+#sbo-spell-row { border-top: 1px dashed var(--border); }
+#sbo-shield-row { border-top: 1px dashed var(--border); }
+#sbo-shield-name { color: var(--gold); }
+#sbo-refocus-bar { background: var(--c1); border-bottom: 2px solid var(--c2); }
+#btn-sbo-refocus { background: var(--c1); border: 1px solid var(--c3); color: var(--c5); border-radius: 3px; }
+#sbo-death-save-panel { background: var(--panel); border: 1px solid var(--red-lt); }
+#sbo-ds-hd { color: var(--red); }
 
-#sbo-log { background: #1e0802; border: 2px solid #562717; border-radius: 6px; color: #b07040; }
-.sbo-log-line { color: #b07040; }
-.sbo-log-line.hit  { color: #E76219; }
-.sbo-log-line.crit { color: #FEA712; font-weight: 700; }
-.sbo-log-line.miss { color: #562717; }
+#sbo-log { background: var(--panel); border: 1px solid var(--border); border-radius: 6px; color: var(--dim); }
+.sbo-log-line { color: var(--dim); }
+.sbo-log-line.hit  { color: var(--red); }
+.sbo-log-line.crit { color: var(--gold); font-weight: 700; }
+.sbo-log-line.miss { color: var(--muted); }
 
-#sbo-dis-badge { background: #C21717; border: 2px solid #E76219; border-radius: 6px; color: #FDDCA9; font-weight: 900; }
+#sbo-dis-badge { background: var(--c2); border: 2px solid var(--c3); border-radius: 6px; color: var(--c5); font-weight: 900; }
 
 /* ── Battle Victory Overlay ──────────────────────────── */
-#story-victory-overlay { background: #120600; }
-#svo-hd { color: #FEA712; letter-spacing: 3px; text-transform: uppercase; }
-#svo-enemy-name { color: #E76219; }
-#svo-xp-total { color: #FDDCA9; font-weight: 700; }
-#svo-levelup { background: #562717; border: 3px solid #FEA712; color: #FEA712; border-radius: 8px; font-weight: 900; }
-#svo-heal  { color: #FEA712; }
-#svo-gold  { color: #E76219; }
-#svo-drops-hd { color: #FDDCA9; text-transform: uppercase; letter-spacing: 1px; }
-#btn-svo-return { background: #E76219; border: 3px solid #FEA712; color: #120600; font-weight: 900; border-radius: 8px; text-transform: uppercase; letter-spacing: 2px; }
-#btn-svo-return:hover { background: #FEA712; border-color: #FDDCA9; }
+#story-victory-overlay { background: rgba(0,0,0,0.82); }
+#svo-hd { color: var(--gold); letter-spacing: 3px; text-transform: uppercase; }
+#svo-enemy-name { color: var(--dim); }
+#svo-xp-total { color: var(--text); font-weight: 700; }
+#svo-levelup { background: rgba(106,72,8,0.1); border: 1px solid var(--gold); color: var(--gold); border-radius: 8px; font-weight: 900; }
+#svo-heal  { color: var(--grn-lt); }
+#svo-gold  { color: var(--gold); }
+#svo-drops-hd { color: var(--dim); text-transform: uppercase; letter-spacing: 1px; }
+#btn-svo-return { background: linear-gradient(135deg, var(--c1), var(--c2)); border: 2px solid var(--c3); color: var(--c5); font-weight: 900; border-radius: 8px; text-transform: uppercase; letter-spacing: 2px; }
+#btn-svo-return:hover { background: linear-gradient(135deg, var(--c2), var(--c3)); border-color: var(--c4); }
 
 /* ── Sleep Overlay ───────────────────────────────────── */
 #story-sleep-overlay { background: #1e0802; }
@@ -3034,21 +3090,21 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
   text-transform: uppercase; animation: pulse-red 1.8s infinite;
 }
 #eb-npc-boss-name { font-size: 13px; font-weight: 700; color: #e08060; }
-#eb-npc-warning { font-size: 12px; line-height: 1.75; color: #b07050; font-style: italic; }
+#eb-npc-warning { font-size: 12px; line-height: 1.75; color: #5A3020; font-style: italic; }
 #eb-npc-payment-section {
   background: #221008; border: 1px solid #5a3010; border-radius: 4px; padding: 10px 14px;
   display: flex; flex-direction: column; gap: 4px;
 }
 #eb-npc-payment-label { font-size: 10px; color: var(--dim); text-transform: uppercase; letter-spacing: 1px; }
-#eb-npc-payment-amount { font-size: 18px; font-weight: 700; color: #e0c060; }
-#eb-npc-negotiate-line { font-size: 12px; color: #b0a070; font-style: italic; line-height: 1.6; }
+#eb-npc-payment-amount { font-size: 18px; font-weight: 700; color: #6A4808; }
+#eb-npc-negotiate-line { font-size: 12px; color: #5A4020; font-style: italic; line-height: 1.6; }
 #eb-npc-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 4px; }
 /* CHA check failure panel */
 #eb-npc-cha-fail-panel { display: none; flex-direction: column; gap: 10px; }
 #eb-npc-cha-roll-line { font-size: 12px; color: #e05050; font-weight: 700; background: #1a0808; border: 1px solid #6a2020; border-radius: 4px; padding: 8px 12px; text-align: center; line-height: 1.8; }
 #eb-npc-cha-roll-line.cha-pass { color: #44ee88; background: #051a0d; border-color: #22cc66; }
-#eb-npc-anger-text { font-size: 12px; color: #b07050; line-height: 1.8; }
-#eb-npc-calm-text { font-size: 12px; color: #b0a070; font-style: italic; line-height: 1.8; border-left: 2px solid #6a5030; padding-left: 10px; }
+#eb-npc-anger-text { font-size: 12px; color: #5A3020; line-height: 1.8; }
+#eb-npc-calm-text { font-size: 12px; color: #5A4020; font-style: italic; line-height: 1.8; border-left: 2px solid #6a5030; padding-left: 10px; }
 #eb-npc-damage-text { font-size: 12px; color: #e06050; font-weight: 700; text-align: center; background: #1a0808; border: 1px solid #5a2020; border-radius: 3px; padding: 5px 10px; }
 #btn-eb-npc-anger-continue { padding: 7px 18px; border-radius: 4px; border: 1px solid #7a5010; background: #3a2008; color: #e0c060; font-size: 12px; font-weight: 700; cursor: pointer; align-self: flex-end; margin-top: 4px; }
 #btn-eb-npc-anger-continue:hover { background: #6a3a10; border-color: #e0a030; color: #ffe090; }
@@ -3859,8 +3915,6 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
       <div class="sidebar-group">
         <div class="stat-row"><span class="stat-lbl">🧪 Potions</span><span class="stat-val" id="s-potions">×0</span></div>
         <div class="stat-row"><span class="stat-lbl">💰 Gold</span><span class="stat-val" id="s-gold">50gp</span></div>
-        <div class="stat-row"><span class="stat-lbl">🔮 Shards</span><span class="stat-val" id="s-shards">0/7</span></div>
-        <div class="stat-row"><span class="stat-lbl">🌑 Void</span><span class="stat-val" id="s-void">0/10</span></div>
         <div class="stat-row"><span class="stat-lbl">📅 Day</span><span class="stat-val" id="s-day">1/49</span></div>
         <div class="stat-row"><span class="stat-lbl">🌙 Rest</span><span class="stat-val" id="s-rests">3/3</span></div>
         <div class="stat-row"><span class="stat-lbl">⏱ Hours</span><span class="stat-val" id="s-hours">0h</span></div>
@@ -3924,43 +3978,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 
       <div id="story-move-msg"></div>
 
-      <div id="story-nav-row">
-        <div id="story-nav-left">
-          <div id="story-dpad">
-            <div class="dpad-row">
-              <button class="dpad-btn dpad-corner" id="btn-dpad-npc" title="Talk to NPC">🧙</button>
-              <button class="dpad-btn" id="btn-N">↑ N</button>
-              <span class="dpad-corner-spacer"></span>
-            </div>
-            <div class="dpad-row dpad-middle">
-              <button class="dpad-btn" id="btn-W">← W</button>
-              <button class="dpad-btn dpad-center" id="btn-hunt-toggle" title="Hunt for Quest OFF — footpaths warp safely (click to enable)">🎯</button>
-              <button class="dpad-btn" id="btn-E">E →</button>
-            </div>
-            <div class="dpad-row">
-              <button class="dpad-btn dpad-corner" id="btn-dpad-rest" title="Short Rest">🛌</button>
-              <button class="dpad-btn" id="btn-S">↓ S</button>
-              <span class="dpad-corner-spacer"></span>
-            </div>
-          </div>
-        </div>
-        <div id="story-mini-map">
-          <div id="mini-map-title">LOCAL</div>
-          <div id="mini-map-grid"></div>
-        </div>
-        <div id="story-world-map">
-          <div id="world-map-title">◉ WORLD MAP</div>
-          <div id="world-map-grid"></div>
-        </div>
-        <div id="story-nsew">
-          <div id="nsew-title">EXITS</div>
-          <div class="exit-line" id="exit-N"></div>
-          <div class="exit-line" id="exit-E"></div>
-          <div class="exit-line" id="exit-W"></div>
-          <div class="exit-line" id="exit-S"></div>
-          <div class="exit-line" id="exit-extra" style="display:none"></div>
-        </div>
-      </div>
+      <!-- nav moved to #story-history-panel bottom row -->
 
       </div><!-- /sheet-story -->
 
@@ -3969,6 +3987,10 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
         <div id="inv-header">
           <span id="inv-title">🎒 Inventory</span>
           <button id="btn-inv-close">✕ Close [I]</button>
+        </div>
+        <div id="inv-status-bar">
+          <span class="inv-stat-pill"><span class="inv-stat-lbl">🔮 Shards</span><span class="inv-stat-val" id="s-shards">0/7</span></span>
+          <span class="inv-stat-pill void-pill"><span class="inv-stat-lbl">🌑 Void</span><span class="inv-stat-val" id="s-void">0/10</span></span>
         </div>
         <div id="inv-list">
           <div id="inv-empty">No items yet. Explore nodes to collect loot.</div>
@@ -3982,6 +4004,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
           <span id="prebatt-subtitle"></span>
           <span id="prebatt-gold-display"></span>
         </div>
+        <div class="az-divider"></div>
         <div id="prebatt-threat"></div>
         <div id="prebatt-dis-warning"></div>
         <!-- Tab switcher -->
@@ -4091,7 +4114,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
           </div>
           <div id="vendor-whiskey-section" class="buy-item" style="margin-top:6px;display:none">
             <div>
-              <div class="buy-item-desc">🥃 Rough Whiskey — 5gp <span style="color:#cc9955;font-size:10px">★ Social</span></div>
+              <div class="buy-item-desc">🥃 Rough Whiskey — 5gp <span style="color:#7A4A10;font-size:10px">★ Social</span></div>
               <div class="buy-item-heal">Hold it entering battle · drunk fight at CY pit</div>
             </div>
             <button id="btn-buy-whiskey">Buy</button>
@@ -4174,10 +4197,81 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
   <!-- Aztec divider between main content and history strip -->
   <div class="az-divider"></div>
 
-  <!-- ═══ Story Combat Log (bottom strip) ═══ -->
+  <!-- ═══ Story Bottom Row: Nav + Combat Log ═══ -->
   <div id="story-history-panel">
-    <div id="story-history-title">Combat Log</div>
-    <div id="story-hcard-container"></div>
+
+    <!-- Compass -->
+    <div class="bot-section" id="bot-compass">
+      <div class="bot-section-hd">COMPASS</div>
+      <div class="bot-section-body" style="display:flex;align-items:center;justify-content:center;flex:1">
+        <div id="story-nav-left">
+          <div id="story-dpad">
+            <div class="dpad-row">
+              <button class="dpad-btn dpad-corner" id="btn-dpad-npc" title="Talk to NPC">🧙</button>
+              <button class="dpad-btn" id="btn-N">↑ N</button>
+              <span class="dpad-corner-spacer"></span>
+            </div>
+            <div class="dpad-row dpad-middle">
+              <button class="dpad-btn" id="btn-W">← W</button>
+              <button class="dpad-btn dpad-center" id="btn-hunt-toggle" title="Hunt for Quest OFF — footpaths warp safely (click to enable)">🎯</button>
+              <button class="dpad-btn" id="btn-E">E →</button>
+            </div>
+            <div class="dpad-row">
+              <button class="dpad-btn dpad-corner" id="btn-dpad-rest" title="Short Rest">🛌</button>
+              <button class="dpad-btn" id="btn-S">↓ S</button>
+              <span class="dpad-corner-spacer"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Local Map -->
+    <div class="bot-section" id="bot-local">
+      <div class="bot-section-hd">LOCAL</div>
+      <div class="bot-section-body" style="display:flex;align-items:center;justify-content:center;flex:1;padding:4px">
+        <div id="story-mini-map">
+          <div id="mini-map-title" style="display:none">LOCAL</div>
+          <div id="mini-map-grid"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- World Map -->
+    <div class="bot-section" id="bot-world">
+      <div class="bot-section-hd">WORLD</div>
+      <div class="bot-section-body" style="display:flex;align-items:center;justify-content:center;flex:1;padding:4px">
+        <div id="story-world-map">
+          <div id="world-map-title" style="display:none">◉ WORLD MAP</div>
+          <div id="world-map-grid"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Exits -->
+    <div class="bot-section" id="bot-exits">
+      <div class="bot-section-hd">EXITS</div>
+      <div class="bot-section-body" style="flex:1;padding:6px 8px">
+        <div id="story-nsew">
+          <div id="nsew-title" style="display:none">EXITS</div>
+          <div class="exit-line" id="exit-N"></div>
+          <div class="exit-line" id="exit-E"></div>
+          <div class="exit-line" id="exit-W"></div>
+          <div class="exit-line" id="exit-S"></div>
+          <div class="exit-line" id="exit-extra" style="display:none"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vertical separator -->
+    <div class="bot-vert-sep"></div>
+
+    <!-- Combat Log -->
+    <div id="story-bottom-log">
+      <div id="story-history-title">Combat Log</div>
+      <div id="story-hcard-container"></div>
+    </div>
+
   </div>
 
   <!-- ── Map Overlay ── -->
@@ -4187,14 +4281,14 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
       <button id="map-close-btn">✕ Close [M]</button>
     </div>
     <div id="map-legend">
-      <span style="color:#e0c040">◉ You</span>
-      <span style="color:#4a90b0">□ Visited</span>
-      <span style="color:#4a8a4a">· Trail</span>
-      <span style="color:#1e1e2e">? Unknown</span>
-      <span style="color:#4a90b0">▲ Exit</span>
-      <span style="color:#9a4020">▲ One-way</span>
-      <span style="color:#4a90b0">⚔ Active battle</span>
-      <span style="color:#4a90b0">🛏 Inn</span>
+      <span style="color:#7A6010">◉ You</span>
+      <span style="color:#1A5070">□ Visited</span>
+      <span style="color:#1A5A1A">· Trail</span>
+      <span style="color:#2A2A3A">? Unknown</span>
+      <span style="color:#1A5070">▲ Exit</span>
+      <span style="color:#6A2010">▲ One-way</span>
+      <span style="color:#1A5070">⚔ Active battle</span>
+      <span style="color:#1A5070">🛏 Inn</span>
     </div>
     <div id="map-main-area">
       <div id="map-grid"></div>
@@ -4269,7 +4363,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
         <div><span class="corridor-lbl">To:</span>   <span id="corridor-to-name"></span></div>
         <div><span class="corridor-lbl">Road:</span> <span id="corridor-terrain-name"></span></div>
       </div>
-      <div id="corridor-hunt-targets" style="display:none;font-size:11px;color:#e0a040;margin-top:4px;"></div>
+      <div id="corridor-hunt-targets" style="display:none;font-size:11px;color:#6A4808;margin-top:4px;"></div>
       <div id="corridor-encounter-rate"></div>
       <div id="corridor-card-actions">
         <button id="btn-corridor-cancel">✕ Cancel</button>
@@ -4296,7 +4390,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
       <div id="fishing-lake-text">Still water. Something large moves below. The rod is ready.</div>
       <div id="fishing-roll-result" style="display:none"></div>
       <div id="fishing-fish-reveal" style="display:none"></div>
-      <div id="fishing-zone-dcs" style="font-size:11px;color:#405060;padding:3px 8px;margin-bottom:4px;"></div>
+      <div id="fishing-zone-dcs" style="font-size:11px;color:#1A3040;padding:3px 8px;margin-bottom:4px;"></div>
       <div id="fishing-bait-status" style="display:none;font-size:12px;color:#6090b0;padding:5px 8px;background:#030e18;border-radius:4px;border:1px solid #1a3a4a;margin-bottom:6px;"></div>
       <div id="fishing-bait-search" style="display:none;flex-direction:column;gap:5px;margin-bottom:6px;"></div>
       <div id="fishing-card-actions">
@@ -4473,6 +4567,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
       <span id="sbo-turn-badge">YOUR TURN</span>
       <button id="btn-sbo-advanced" title="Reveal God Mode / Practice debug panels">⚙ God Mode</button>
     </div>
+    <div class="az-divider"></div>
     <div id="sbo-combat-row">
       <div class="sbo-fighter enemy">
         <div class="sbo-label">Opponent</div>
@@ -4497,6 +4592,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
         <div class="sbo-init-note" id="sbo-init-note"></div>
       </div>
     </div>
+    <div class="az-divider"></div>
     <div id="sbo-ap-row">
       <span id="sbo-ap-label">⚡</span>
       <span id="sbo-ap-value">1.5</span>
@@ -7436,7 +7532,9 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   HM:{ num:73, code:'HM', name:'defi_land', label:'Frequency Row',         act:1, N:null, S:null, E:null, W:'DF', text:"The storage units have been converted into listening posts — each one bristles with antenna arrays, improvised, dense, aimed at frequencies the city does not acknowledge. Cable runs between them in configurations that violate physics and every permit classification on record. Nobody has corrected this. The cables stay.\n\nBertha No-Bank sits outside on a metal folding chair with a composition notebook. She is on volume forty-one. Volume forty-two begins tomorrow; she has already labeled the cover.\n\nThe frequency she monitors is 14.225. She has checked it every morning since the third moon of the fourth year. Nothing was on it then. Nothing is on it now. She logs this. Every morning: a new entry confirming the absence. Forty-one volumes of confirmed absence, organized by date, cross-referenced by atmospheric condition.\n\nYou are now in the log. Frequency Row notes everything that passes through it. This is the hospitality it offers — not shelter, not coin. Documentation.", npc:'Bertha No-Bank', battle:null, loot:null, sleep:false },
   GL:{ num:74, code:'GL', name:'defi_land', label:"Old Guard's Corner",    act:1, N:null, S:null, E:'DF', W:null, text:"Three alleys meet at an improbable angle — the geometry is wrong for this block, wrong for this district, possibly wrong for this city. The intersection produced itself without civic input. No permit issued it. It is here regardless.\n\nThe wooden folding chair is in the center of it. Zeke 'The Signal' has occupied that chair through four city administrations, two plagues, and one Void surge. He has not moved. This is not stubbornness — it is evidence. Administrations change. Plagues end. Void surges recede. The chair remains. Zeke has become the fixed reference point by which the impermanence of everything around him is measured.\n\nThe sign on his lap says GET OFF. Off of what is not specified. This is intentional. You are probably on it.\n\nHe does not speak. He holds up a laminated card. The card says: SYSTEM COMPROMISED. He has a weatherproof box beside the chair containing four hundred identical cards. He has never offered a different one. He has never needed to. He offers you one. It is simply the current reading.", npc:"Zeke 'The Signal'", battle:null, loot:null, sleep:false },
   // ── Layer 44: Ally Cat Arc ──
-  CQ:{ num:77, code:'CQ', name:'cat_quarter', label:'The Cat Quarter', act:1, N:null, S:null, E:null, W:'SL', text:"Narrow brick lanes, broken glass, fish bones in the cracks. Every surface is scratched — not vandalism but territorial markings, laid so densely they read like wallpaper. Someone has been making claims in this district surface by surface for a long time. The claims are current.\n\nAt the corner: an overturned crate. On the crate: a large orange tabby in a very small fedora. The fedora fits correctly. This is not the result of chance.\n\nJimmy Two-Tails registers you from the moment you enter the lane. He does not move. He does not adjust his position. He watches with the professional stillness of someone who has already reached a verdict and is waiting to see if you confirm it.\n\nThe scratches on the walls are the guest register. They record every claim made in this quarter and kept. Yours is not yet on the wall.\n\nThe Beefy Toms are his. They are not visible from here. They are present.", npc:'Jimmy Two-Tails', battle:{label:'Beefy Tom × 3', key:'beefy_tom', count:3}, loot:'Tiny Fedora', sleep:false },
+  CQ:{ num:77, code:'CQ', name:'cat_quarter', label:'The Cat Quarter', act:1, N:null, S:null, E:'FR', W:'SL', text:"Narrow brick lanes, broken glass, fish bones in the cracks. Every surface is scratched — not vandalism but territorial markings, laid so densely they read like wallpaper. Someone has been making claims in this district surface by surface for a long time. The claims are current.\n\nAt the corner: an overturned crate. On the crate: a large orange tabby in a very small fedora. The fedora fits correctly. This is not the result of chance.\n\nJimmy Two-Tails registers you from the moment you enter the lane. He does not move. He does not adjust his position. He watches with the professional stillness of someone who has already reached a verdict and is waiting to see if you confirm it.\n\nThe scratches on the walls are the guest register. They record every claim made in this quarter and kept. Yours is not yet on the wall.\n\nThe Beefy Toms are his. They are not visible from here. They are present.", npc:'Jimmy Two-Tails', battle:{label:'Beefy Tom × 3', key:'beefy_tom', count:3}, loot:'Tiny Fedora', sleep:false },
+  // ── Layer 78: La Riva — Fishmonger's Row ──
+  FR:{ num:79, code:'FR', name:'ruins', label:"Fishmonger's Row", act:1, N:null, S:null, E:null, W:'CQ', text:"Three city blocks of collapsed stalls. The Cat-King's work: still visible in the way the brick fell — not inward from age but outward from impact, each pile oriented away from the fish market's center. The hook racks are down. The ice boxes are split. Someone has maintained a narrow cleared path through the rubble — not wide enough for a cart, just wide enough for a person who comes here regularly.\n\nThe Corrupted Cats have settled into the dark spaces between the piles. They are thin here — the Cat-King's death reduced the void pressure feeding them — but they hold the space with the particular confidence of things that have been somewhere long enough to consider it theirs.\n\nAt the far end of the cleared path, a woman stands with her back to you, looking at what used to be the south stall.\n\nA faint smell of salt and old wood. The brick remembers eleven years of fish market whether anything is here or not.", npc:'Connie Tuna', battle:{label:'Corrupted Cat × 4', key:'corrupted_cat', count:4}, loot:null, sleep:false },
   // ── Layer 61: Corelli — Roadside waypoint (Act III, between J6 and MI) ──
   RD:{ num:78, code:'RD', name:'road', label:'Roadside Clearing', act:3, N:null, S:null, E:'MI', W:'J6', text:"A cleared verge where travelers sometimes stop. A fire ring, cold. Someone's broken cart wheel leaning against the tree line.", npc:null, battle:null, loot:null, sleep:false, junction:true },
 };
@@ -7445,7 +7543,7 @@ const ACT_NAMES = ['','Act I — Birka','Act II — Tilbury','Act III — The Wi
 
 /* Grid coordinates from maps.md (Row 1–16 north→south, Col 1–26 west→east) */
 const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
-  CI:{r:5,c:16},  SL:{r:4,c:16},  CQ:{r:4,c:17},  IN:{r:5,c:17},  TV:{r:6,c:17},  BA:{r:6,c:15},  CR:{r:7,c:15},  CY:{r:7,c:16},
+  CI:{r:5,c:16},  SL:{r:4,c:16},  CQ:{r:4,c:17},  FR:{r:4,c:18},  IN:{r:5,c:17},  TV:{r:6,c:17},  BA:{r:6,c:15},  CR:{r:7,c:15},  CY:{r:7,c:16},
   DK:{r:8,c:15},  MQ:{r:8,c:16},  SF:{r:8,c:17},  MS:{r:8,c:19},  AL:{r:9,c:15},
   MI:{r:5,c:8},   FO:{r:5,c:3},   HL:{r:4,c:3},   SW:{r:6,c:3},   HS:{r:7,c:3},   BE:{r:12,c:2},
   OC:{r:13,c:1},  IS:{r:13,c:3},  AT:{r:14,c:2},  SC:{r:12,c:1},  FL:{r:11,c:2},  DS:{r:14,c:4},
@@ -7861,6 +7959,39 @@ const NPC_DIALOGUES = { // → doc: story-arc-npc-dialogues.md
     ],
     dearFriend: [
       '"You killed the Cat-King. You buying sardines from me. This is the whole arc right here. This is it."',
+    ],
+  },
+  // ── Layer 78: La Riva — Fishmonger's Row NPCs ──
+  connie_tuna: {
+    meta: { name:'Connie Tuna', occupation:"Fishmonger's Row — widow", node:'FR',
+      worldTruth:'The row was real. It happened. Someone should know that.',
+      missionBit:'She carries Vincenzo\'s key on her ring. She has not been asked why.' },
+    impartial: [
+      '"The stall was mine and Vincenzo\'s for eleven years. The ice box came from his father. The hook rack he built himself the second season, after the first one went down in a storm. He was proud of that rack."',
+      '"Aldo still comes here. Every two weeks. He thinks I don\'t know. I know. I don\'t say anything because I don\'t know what I would say."',
+    ],
+    friendly: [
+      '"I went back once. Two weeks after. Just to count what was still there by shape. Everything I could still name by shape."',
+      '"The cats are different from strays. These ones aren\'t hungry. They\'re holding something. I don\'t know what, but it\'s not the same kind of animal."',
+    ],
+    dearFriend: [
+      '"The key still opens the lock. I tried it. The lock is in the rubble but it opens. I don\'t know what that means. I keep it on my ring."',
+    ],
+  },
+  aldo_sardino: {
+    meta: { name:'Aldo Sardino', occupation:"Fishmonger — south stall patriarch", node:'FR',
+      worldTruth:'You keep the records. Someone has to keep the records.',
+      missionBit:'He has the account book and the net. He has not told Connie about the net.' },
+    impartial: [
+      '"I kept a book. Every vendor on the row — who owed what, who paid forward, who was due a rebate from the spring catch. Vincenzo\'s page is the last completed entry."',
+      '"My stall was the south one. Sardino\'s — you could smell it from the harbor. Eleven years of that smell in the brick. The brick is still there."',
+    ],
+    friendly: [
+      '"The Corrupted Cats came where the grief settled. I don\'t say that to be poetic — I mean it as an observation. They arrived after, not during."',
+      '"I come every two weeks to make sure the net is still where I left it. I can\'t bring it back without explaining, and I\'m not ready to explain."',
+    ],
+    dearFriend: [
+      '"Here. The account book. You take it to Kenickie. Not because he needs it — because Vincenzo is in it and someone who knew him should hold it. I\'ve held it long enough."',
     ],
   },
   // ── Layer 51: Weimar Scholar Gate NPC profiles ──
@@ -8348,6 +8479,28 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     activateNode:null, completeItems:[], completeFn:() => (S_story.catKills || {}).corrupted_cat >= 5,
     waypointNode:'CQ', reward:400,
     disposition:'"Something\'s wrong with the strays near the DF node. They\'re not just feral — they\'re WRONG. Wrong eyes. Wrong fur. Not touching anything from that block." — Sandy Scratchpad Mewlino' },
+  // ── Layer 78: La Riva — Fishmonger's Row quests ──
+  quest_la_riva_01: { id:'quest_la_riva_01', type:'side', title:"Kenickie: What Remains",
+    desc:"Kenickie mentioned Fishmonger's Row. Three city blocks. Nobody's been back — except Connie has. She's still there.",
+    hint:"Go east from the Cat Quarter to Fishmonger's Row. Find Connie Tuna.",
+    activateNode:null, completeItems:[], completeFn:() => !!S_story.connieMet,
+    waypointNode:'FR', reward:0,
+    disposition:'"She\'s still there. That\'s the whole of it." — Kenickie Clawnickie Mancuso' },
+  quest_la_riva_02: { id:'quest_la_riva_02', type:'side', title:"Connie: The Weight of a Net",
+    desc:"The Corrupted Cats have settled into the rubble of Fishmonger's Row. They're not just feral — they're holding something. Five of them. Find what they're carrying.",
+    hint:"Kill 5 Corrupted Cats at Fishmonger's Row. Find what's in the rubble.",
+    targetMonsterKeys:['corrupted_cat'],
+    activateNode:null, completeItems:[],
+    completeFn:() => (S_story.frCatKillCount || 0) >= 5 && (S_story.inventory || []).some(i => i.name === "Vincenzo's Net"),
+    waypointNode:'FR', reward:500,
+    disposition:'"He built that rack himself, the second season." — Connie Tuna' },
+  quest_la_riva_03: { id:'quest_la_riva_03', type:'side', title:"Aldo: The Account Book",
+    desc:"Aldo Sardino has kept the account book since the row came down. Vincenzo's page is the last completed entry. He wants it to go to someone who knew Vincenzo.",
+    hint:"Deliver the Old Tuna Account Book to Kenickie at the Cat Quarter.",
+    activateNode:null, completeItems:[],
+    completeFn:() => !!S_story.laRivaComplete,
+    waypointNode:'CQ', reward:0,
+    disposition:'"Yeah. Okay. I\'ll hold onto this." — Kenickie Clawnickie Mancuso' },
   // ── Layer 47: Fishing Guide (Q-BAIT-00) ──
   quest_fishing_guide: { id:'quest_fishing_guide', type:'side', title:'The Fisherman: Listen Closely',
     desc:"The Fisherman at Yugurt Cabin has a guide. Not a pamphlet — eleven years of fieldwork compressed into something small enough to fold. He doesn\'t offer it to people who ask. He offers it to people who have already been out on the lake and come back with the particular look of someone who now understands what they didn\'t know before they went.",
@@ -8668,6 +8821,8 @@ const _S_DEFAULTS = () => ({
   bruhnsCoSceneDelivered: false,
   yaelNamedReportDelivered: false,
   catKills: {}, catKingDefeated: false, kenickieMarketUsed: false,
+  // Layer 78: La Riva
+  connieMet: false, fishmongerRowRestored: false, laRivaComplete: false, frCatKillCount: 0,
   questMinusOne: false,
   entry42Written: false, entry42Text: '', entry42Read: false,
   ngMemoryDelivered: {}, nextFrobergerComplete: false, frobergerLetterFound: false,
@@ -8912,20 +9067,20 @@ function _renderNpcCard(key, container) {
     setTimeout(() => storyMsg(NPC_NG_MEMORY_LINES[key]), 800);
   }
   const _preamble = (fav >= 2 && NPC_ROMANCE_PREAMBLES[key])
-    ? '<div style="font-size:11px;color:#8a7a5a;font-style:italic;margin-top:3px;">' + NPC_ROMANCE_PREAMBLES[key] + '</div>'
+    ? '<div style="font-size:11px;color:#3A2A10;font-style:italic;margin-top:3px;">' + NPC_ROMANCE_PREAMBLES[key] + '</div>'
     : '';
   card.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center">'
-    + '<span style="font-weight:700;color:#f0c070">' + p.name + '</span>'
-    + '<span style="font-size:10px;color:#888">' + badgeTxt + '</span>'
+    + '<span style="font-weight:700;color:#6A4808">' + p.name + '</span>'
+    + '<span style="font-size:10px;color:#444444">' + badgeTxt + '</span>'
     + '</div>'
-    + '<div style="font-size:11px;color:#aaa;margin-bottom:2px">' + p.occupation + '</div>'
-    + '<div style="font-size:12px;color:#ddc">' + staticProfile.greeting + '</div>'
+    + '<div style="font-size:11px;color:#444444;margin-bottom:2px">' + p.occupation + '</div>'
+    + '<div style="font-size:12px;color:#2A1A0A">' + staticProfile.greeting + '</div>'
     + _preamble
     + '<div style="font-style:italic;font-size:12px;color:' + quoteColor + ';margin-top:2px">' + displayQuote + '</div>';
   // worldTruth footer — only at Dear Friend
   if (fav >= 2 && dlg.meta && dlg.meta.worldTruth) {
     const wt = document.createElement('div');
-    wt.style.cssText = 'font-size:10px;color:#7a6040;margin-top:6px;font-style:italic;border-top:1px solid #3a2010;padding-top:4px;';
+    wt.style.cssText = 'font-size:10px;color:#3A2010;margin-top:6px;font-style:italic;border-top:1px solid #3a2010;padding-top:4px;';
     wt.textContent = '✦ ' + dlg.meta.worldTruth;
     card.appendChild(wt);
   }
@@ -9309,7 +9464,7 @@ function _renderPachelbelSpecials() {
       sRow.className = 'buy-item';
       sRow.style.cssText = 'margin-top:6px;';
       sRow.innerHTML = '<div><div class="buy-item-desc">' + si.label
-        + ' <span style="color:#7a6040;font-size:10px">new</span></div>'
+        + ' <span style="color:#3A2010;font-size:10px">new</span></div>'
         + '<div class="buy-item-heal">' + si.desc + '</div></div>';
       const sBtn = document.createElement('button');
       sBtn.className = 'vendor-buy-btn';
@@ -9341,7 +9496,7 @@ function _renderPachelbelSpecials() {
     if (!alreadyOwns && !alreadyUsed) {
       const row = document.createElement('div');
       row.className = 'buy-item';
-      row.innerHTML = '<div><div class="buy-item-desc">🔧 Raison\'s Tools — 50gp <span style="color:#c0a060;font-size:10px">★ Salvage</span></div>'
+      row.innerHTML = '<div><div class="buy-item-desc">🔧 Raison\'s Tools — 50gp <span style="color:#5A4010;font-size:10px">★ Salvage</span></div>'
         + '<div class="buy-item-heal">Certified kit — reveals provenance of found items</div></div>';
       const btn = document.createElement('button');
       btn.className = 'vendor-buy-btn';
@@ -9372,7 +9527,7 @@ function _renderPachelbelSpecials() {
     const row2 = document.createElement('div');
     row2.className = 'buy-item';
     row2.style.cssText = 'margin-top:6px;';
-    row2.innerHTML = '<div><div class="buy-item-desc">' + noqItem.label + ' <span style="color:#8a6050;font-size:10px">no questions</span></div>'
+    row2.innerHTML = '<div><div class="buy-item-desc">' + noqItem.label + ' <span style="color:#3A2010;font-size:10px">no questions</span></div>'
       + '<div class="buy-item-heal">' + noqItem.desc + '</div></div>';
     const btn2 = document.createElement('button');
     btn2.className = 'vendor-buy-btn';
@@ -9784,6 +9939,8 @@ function _storyRollInit() {
   // surgeCharges persist across battles (rest-gated); no reset here
   _statTally('battlesAttempted', 1);
   S_story.hour = ((S_story.hour || 0) + 1) % 24;
+  S_story.hoursElapsed    = (S_story.hoursElapsed    || 0) + 1;
+  S_story.hoursSinceSlept = (S_story.hoursSinceSlept || 0) + 1;
 }
 
 function _showBattleOverlay() {
@@ -10147,6 +10304,10 @@ function _overlayPlayerAttack() {
     let adv     = i === 0 ? firstAdv : resolveAdv(S.player.adv, S.opp.adv);
     // Layer 41: drunk fight — disadvantage on attack rolls, +3 flat damage on hit
     if (S_story._drunkFight) adv = 'dis';
+    // P3 exhaustion: battleDis charges (missed rest) or awake ≥ 24h both impose DIS; ADV cancels to normal
+    if (S_story.battleDis > 0 || (S_story.hoursSinceSlept || 0) >= 24) {
+      adv = (adv === 'adv') ? 'normal' : 'dis';
+    }
     const d20Res  = rollD20(adv);
     const d20Val  = d20Res.result;
     const atkTotal = d20Val + atkMod + profB + lvlAtk + weaponAtk + mainWeaponAtk;
@@ -10352,6 +10513,18 @@ function _storyBattleVictory() {
       S_story.catKills[S.opp.key] = (S_story.catKills[S.opp.key] || 0) + 1;
     }
   }
+  // Layer 78: La Riva — FR kill tracking and Vincenzo's Net drop
+  if (pb && pb.nodeCode === 'FR' && S.opp && S.opp.key === 'corrupted_cat') {
+    S_story.frCatKillCount = (S_story.frCatKillCount || 0) + 1;
+    if (S_story.frCatKillCount >= 5 && (S_story.quests || {})['quest_la_riva_02'] === 'active'
+        && !(S_story.inventory || []).some(i => i.name === "Vincenzo's Net")) {
+      const _net = { name:"Vincenzo's Net", icon:'🎣', type:'key_item', sell:0,
+        description:"A fishing net with a bronze fish-stamp tag on the corner. It was left hanging to dry the morning the Cat-King came. Found in the rubble, folded." };
+      S_story.inventory = S_story.inventory || [];
+      S_story.inventory.push(_net);
+      dropsThisBattle.push({ icon:'🎣', name:"Vincenzo's Net", type:'key_item' });
+    }
+  }
   // Layer 44: Cat Quarter special boss victories
   if (pb && pb.nodeCode === 'CQ_TAZ') {
     storyMsg('🌀 The Taz Devil collapses into an ordinary pile of fur.\n\nTommy No-Ears DeVito materialises from a doorway: "Oh you think you TOUGH now? You killed ONE Taz? ONE? There\'s THREE more building up past the fish market right now and when they merge — WHEN THEY MERGE, buddy — that ain\'t a Taz no more. That\'s a KING."');
@@ -10362,6 +10535,12 @@ function _storyBattleVictory() {
   if (pb && pb.nodeCode === 'CQ_KING') {
     S_story.catKingDefeated = true;
     storyMsg('👑 The Cat-King is defeated. Three city blocks of flying fur and claws — done.\n\nKenickie Clawnickie Mancuso: "Yo. YO. You actually killed the Cat-King. Nobody\'s done that. The community\'s gonna be talking about this for like... three whole days. Then they\'ll forget. They\'re cats."\n\nJimmy Two-Tails: "Listen. I want you to know something. You did good. Real good. You\'re like... honorary Ally Cat now. Don\'t tell nobody. It ain\'t a thing we advertise."');
+    if (!(S_story.quests || {})['quest_la_riva_01']) {
+      setTimeout(() => {
+        S_story.quests['quest_la_riva_01'] = 'active';
+        storyMsg('Kenickie catches your eye from across the alley.\n\n"Yo. Hey. Listen — you should go see what\'s left of the Row. Fishmonger\'s Row, one block east. Connie\'s still there. She\'s been there since..." He trails off. He does not finish the sentence. "You should go."\n\n📋 Quest: What Remains — accepted.');
+      }, 2500);
+    }
   }
   // ── Layer 56: Void Shaman combat outcome ──
   if (pb && pb.nodeCode === 'MT_WARDEN') {
@@ -10839,6 +11018,8 @@ function storyShortRest(nodeCode) {
   const base  = Math.floor(S_story.hpMax * 0.25);
   const heal  = isInn ? base : base * 2;
   S_story.shortRests--;
+  S_story.hoursElapsed    = (S_story.hoursElapsed    || 0) + 1;
+  S_story.hoursSinceSlept = (S_story.hoursSinceSlept || 0) + 1;
   const _lv = S_story.level || 1;
   if (_lv >= 2) S_story.surgeCharges = _lv >= 17 ? 2 : 1;
   const before = S_story.hp;
@@ -11530,13 +11711,13 @@ function storyShowFrobergerMemorial() {
   body.appendChild(bookHd);
   FROBERGER_MEMORIAL_BOOK.forEach(e => {
     const el = document.createElement('p');
-    el.style.cssText = 'font-size:11px;color:#bba;margin:0 0 4px;font-style:italic;';
+    el.style.cssText = 'font-size:11px;color:#2A1A0A;margin:0 0 4px;font-style:italic;';
     el.textContent = '"' + e.text + '"' + (e.attr ? '  — ' + e.attr : '');
     body.appendChild(el);
   });
   if (S_story.frobergerMemorialBookSigned && S_story._memorialPlayerEntry) {
     const pe = document.createElement('p');
-    pe.style.cssText = 'font-size:11px;color:#c8a870;margin:4px 0 0;font-style:italic;';
+    pe.style.cssText = 'font-size:11px;color:#3A2010;margin:4px 0 0;font-style:italic;';
     pe.textContent = '"' + S_story._memorialPlayerEntry + '"  — (your hand)';
     body.appendChild(pe);
   }
@@ -12480,7 +12661,7 @@ function storyShowWeckmannLog() {
   const panel = document.createElement('div');
   panel.style.cssText = 'background:#f0e8d0;color:#2a1a06;border:1px solid #a0803a;border-radius:6px;padding:28px 32px;max-width:420px;width:100%;font-family:"Courier New",monospace;box-shadow:0 8px 40px rgba(0,0,0,0.5);max-height:80vh;overflow-y:auto;display:flex;flex-direction:column;gap:12px;';
   const title = document.createElement('div');
-  title.style.cssText = 'font-size:11px;font-weight:700;letter-spacing:2px;color:#7a5a20;text-transform:uppercase;border-bottom:1px solid #c8a870;padding-bottom:8px;';
+  title.style.cssText = 'font-size:11px;font-weight:700;letter-spacing:2px;color:#3A2A08;text-transform:uppercase;border-bottom:1px solid #c8a870;padding-bottom:8px;';
   title.textContent = '📓 Training Log';
   const body = document.createElement('pre');
   body.style.cssText = 'font-size:11px;line-height:1.7;white-space:pre-wrap;color:#2a1a06;';
@@ -12503,7 +12684,7 @@ function storyShowRoom6() {
   overlay.style.cssText = 'position:fixed;inset:0;z-index:460;background:rgba(0,0,0,0.88);display:flex;align-items:center;justify-content:center;padding:20px;';
   const panel = document.createElement('div');
   panel.style.cssText = 'background:#f5ead0;color:#2a1a06;border:1px solid #b89a60;border-radius:6px;padding:32px 36px;max-width:440px;width:100%;font-family:Georgia,"Times New Roman",serif;box-shadow:0 8px 40px rgba(0,0,0,0.6);display:flex;flex-direction:column;gap:14px;max-height:80vh;overflow-y:auto;';
-  panel.innerHTML = '<div style="font-size:11px;font-weight:700;letter-spacing:2px;color:#7a5a20;text-transform:uppercase;border-bottom:1px solid #c8a870;padding-bottom:8px;">🚪 Room 6</div>'
+  panel.innerHTML = '<div style="font-size:11px;font-weight:700;letter-spacing:2px;color:#3A2A08;text-transform:uppercase;border-bottom:1px solid #c8a870;padding-bottom:8px;">🚪 Room 6</div>'
     + '<div style="font-size:13px;line-height:1.9;color:#3a2010;font-style:italic;">'
     + "<p>It's clean. Brynn keeps all the rooms clean, but this one is slightly more so — the way a room gets when someone tidies it out of care rather than routine.</p>"
     + "<p>There's a mark on the wall near the window: a small sigil, scratched into the plaster. Not defacement — done carefully, at eye level, the kind of mark someone makes when they want to be able to find a place again.</p>"
@@ -12511,7 +12692,7 @@ function storyShowRoom6() {
     + "<p>On the windowsill, almost under the sill itself, a scrap of paper. Not Froberger's journal pages — different paper, smaller. In the same handwriting as the journal, but lighter:</p>"
     + '</div>'
     + '<div style="text-align:center;font-size:16px;color:#5a3a18;font-style:italic;padding:12px 0;border-top:1px solid #c8a870;border-bottom:1px solid #c8a870;">— still here.</div>'
-    + '<div style="font-size:12px;color:#7a6040;font-style:italic;">You look at it for a while. You close the door behind you.</div>';
+    + '<div style="font-size:12px;color:#3A2010;font-style:italic;">You look at it for a while. You close the door behind you.</div>';
   const closeBtn = document.createElement('button');
   closeBtn.style.cssText = 'align-self:center;padding:8px 24px;font-size:12px;background:#e8d8a8;border:1px solid #a07030;color:#4a2c08;border-radius:4px;cursor:pointer;font-family:inherit;';
   closeBtn.textContent = 'Close';
@@ -12774,7 +12955,7 @@ function _showPitChampionOffer() {
   const panel = document.createElement('div');
   panel.style.cssText = 'background:#f0e8d0;color:#2a1a06;border:1px solid #a0803a;border-radius:6px;padding:28px 32px;max-width:420px;width:100%;font-family:Georgia,"Times New Roman",serif;box-shadow:0 8px 40px rgba(0,0,0,0.5);display:flex;flex-direction:column;gap:14px;';
   const title = document.createElement('div');
-  title.style.cssText = 'font-size:11px;font-weight:700;letter-spacing:2px;color:#7a5a20;text-transform:uppercase;border-bottom:1px solid #c8a870;padding-bottom:8px;';
+  title.style.cssText = 'font-size:11px;font-weight:700;letter-spacing:2px;color:#3A2A08;text-transform:uppercase;border-bottom:1px solid #c8a870;padding-bottom:8px;';
   title.textContent = '🏆 Weckmann — The Pit Championship';
   const body = document.createElement('p');
   body.style.cssText = 'font-size:13px;line-height:1.7;white-space:pre-wrap;';
@@ -13254,6 +13435,8 @@ function storyMove(dir) {
   if (S_story.log.length > 20) S_story.log.shift();
   S_story.currentCode = dest;
   _statTally('exitsTaken', 1);
+  S_story.hoursElapsed  = (S_story.hoursElapsed  || 0) + 1;
+  S_story.hoursSinceSlept = (S_story.hoursSinceSlept || 0) + 1;
   _pendingFarewell = _farewell || null;
   storyRender(next);
 }
@@ -13724,7 +13907,7 @@ function storyFishing() {
     castBtn.style.display = 'none'; recastBtn.style.display = 'none';
     rollEl.style.display = 'none'; revealEl.style.display = 'none';
     const title = document.createElement('div');
-    title.style.cssText = 'font-size:11px;color:#6090b0;margin-bottom:2px;';
+    title.style.cssText = 'font-size:11px;color:#1A4060;margin-bottom:2px;';
     title.textContent = 'Search location — Survival (WIS) DC ' + Math.max(4, (S_story.fishingBaitSatchel ? 8 : 10) - _luckMod()) + ':';
     baitSearch.appendChild(title);
     [['bank','The Bank 🪨'],['reeds','The Reeds 🌿'],['shallows','The Shallows 🌊']].forEach(([loc, lbl]) => {
@@ -13995,19 +14178,21 @@ function storyQuestToggle() {
   }
 }
 
-function storyQuestHunt(questId) {
+function storyQuestHunt(questId, forceKey) {
   const q = QUEST_DB[questId];
   if (!q || !q.targetMonsterKeys || !q.targetMonsterKeys.length) return;
   const node = NODE_MAP[S_story.currentCode];
   if (!node) return;
 
-  // Pick a random target from the quest's monster list
+  // forceKey: hunt a specific monster (from per-quest STALK card); otherwise random
   const keys = q.targetMonsterKeys;
-  const key = keys[Math.floor(Math.random() * keys.length)];
+  const key = (forceKey && keys.includes(forceKey)) ? forceKey : keys[Math.floor(Math.random() * keys.length)];
   const monster = MONSTER_POOL[key];
   if (!monster) { storyMsg('🎯 Nothing found after an hour of searching.'); return; }
 
   storyQuestToggle(); // close quest panel
+  S_story.hoursElapsed    = (S_story.hoursElapsed    || 0) + 2;
+  S_story.hoursSinceSlept = (S_story.hoursSinceSlept || 0) + 2;
   storyMsg('🎯 You spend an hour hunting... ' + monster.name + ' spotted!');
   S_story.pendingBattle = { nodeCode: S_story.currentCode, name: monster.name, label: node.label, stalk: true };
   loadWorldMonster(monster);
@@ -14046,18 +14231,31 @@ function storyRenderQuests() {
         div.className = 'quest-item ' + (q.type === 'main' ? 'main-quest' : 'side-quest') + (completed ? ' done' : '');
         const badge = completed ? '<span class="quest-badge done-b">✓ DONE</span>' : '<span class="quest-badge ' + q.type + '">' + q.type.toUpperCase() + '</span>';
         const isActiveWp = S_story.waypoint === q.waypointNode && q.waypointNode;
-        const wpBtnHtml = (!completed && q.waypointNode)
-          ? '<button class="quest-set-wp-btn' + (isActiveWp ? ' active-wp' : '') + '" onclick="storySetWaypoint(\'' + q.waypointNode + '\')">'
-            + (isActiveWp ? '📍 Waypoint Active' : '📍 Set Waypoint') + '</button>'
-          : '';
-        const huntBtnHtml = (!completed && q.targetMonsterKeys && q.targetMonsterKeys.length)
-          ? '<button class="quest-set-wp-btn" style="background:#3a1a00;border-color:#e07020;color:#ffa040;margin-top:4px;width:100%;" onclick="storyQuestHunt(\'' + id + '\')">'
-            + '🎯 Hunt Now (1 hr) — guaranteed encounter</button>'
-          : '';
+        const atDest = q.waypointNode && S_story.currentCode === q.waypointNode;
+        const wpNode = q.waypointNode ? NODE_MAP[q.waypointNode] : null;
+        let wpBtnHtml = '';
+        let huntBtnHtml = '';
+        if (!completed && q.waypointNode) {
+          if (atDest && wpNode && wpNode.battle) {
+            const isFinal = q.waypointNode === 'CO' && (S_story.level||1) >= 20 && (S_story.shards||0) >= 7;
+            wpBtnHtml = '<button class="quest-set-wp-btn" style="background:rgba(138,32,21,0.1);border-color:var(--red-lt);color:var(--red);margin-top:4px;" '
+              + 'onclick="' + (isFinal ? 'storyPreFinalBattle()' : 'storyPreBattle(NODE_MAP[\'' + q.waypointNode + '\'])') + '">'
+              + (isFinal ? '🔥 Final Fight' : '⚔ Fight Now') + '</button>';
+          } else if (!atDest) {
+            const destLabel = wpNode ? wpNode.label.split(' — ')[0] : q.waypointNode;
+            wpBtnHtml = '<button class="quest-set-wp-btn' + (isActiveWp ? ' active-wp' : '') + '" '
+              + 'onclick="storySetWaypoint(\'' + q.waypointNode + '\')">'
+              + (isActiveWp ? '📍 Waypoint Active' : '📍 Navigate → ' + destLabel) + '</button>';
+          }
+        }
+        if (!completed && q.targetMonsterKeys && q.targetMonsterKeys.length) {
+          huntBtnHtml = '<button class="quest-set-wp-btn" style="background:rgba(106,72,8,0.1);border-color:var(--gold);color:var(--gold);margin-top:4px;width:100%;" onclick="storyQuestHunt(\'' + id + '\')">'
+            + '🎯 Hunt Here (2h) — 1h stalk + encounter</button>';
+        }
         let progressHtml = '';
         if (!completed && q.killGoals) {
           const k = S_story.catKills || {};
-          progressHtml = '<div style="font-size:11px;color:#c8a84b;margin-top:3px">'
+          progressHtml = '<div style="font-size:11px;color:#6A5010;margin-top:3px">'
             + q.killGoals.map(g => {
                 const cur = Math.min(k[g.key] || 0, g.need);
                 return g.label + ': ' + cur + '/' + g.need + (cur >= g.need ? ' ✓' : '');
@@ -14069,7 +14267,7 @@ function storyRenderQuests() {
           + (completed ? '' : '<div class="quest-hint">▶ ' + q.hint + '</div>' + progressHtml + wpBtnHtml + huntBtnHtml);
         if (q.disposition) {
           const dRow = document.createElement('div');
-          dRow.style.cssText = 'font-style:italic;font-size:11px;color:#7a6040;margin-top:4px;border-left:2px solid #5c3311;padding-left:6px;';
+          dRow.style.cssText = 'font-style:italic;font-size:11px;color:#3A2010;margin-top:4px;border-left:2px solid #5c3311;padding-left:6px;';
           dRow.textContent = q.disposition;
           div.appendChild(dRow);
         }
@@ -15221,7 +15419,7 @@ function storyRender(node, prefix) {
         title.textContent = '🐟 Kenickie\'s Black Market';
         shopDiv.appendChild(title);
         const goldLine = document.createElement('div');
-        goldLine.style.cssText = 'font-size:11px;color:#B87C28;';
+        goldLine.style.cssText = 'font-size:11px;color:#6A4808;';
         const updateGold = () => { goldLine.textContent = '💰 Gold: ' + S_story.gold + 'gp'; };
         updateGold();
         shopDiv.appendChild(goldLine);
@@ -15231,8 +15429,8 @@ function storyRender(node, prefix) {
           const info = document.createElement('div');
           info.style.cssText = 'flex:1;font-size:11px;line-height:1.5;';
           info.innerHTML = '<strong>' + stock.icon + ' ' + stock.label + '</strong>'
-            + ' — <span style="color:#b07040">' + stock.price + 'gp</span>'
-            + '<br><span style="color:#706050;font-size:10px;">' + stock.desc + '</span>';
+            + ' — <span style="color:#5A3010">' + stock.price + 'gp</span>'
+            + '<br><span style="color:#3A2010;font-size:10px;">' + stock.desc + '</span>';
           const buyBtn = document.createElement('button');
           buyBtn.className = 'inv-use-btn';
           buyBtn.style.cssText = 'white-space:nowrap;font-size:10px;padding:3px 8px;';
@@ -15263,8 +15461,75 @@ function storyRender(node, prefix) {
       });
       cqDiv.appendChild(kBtn);
     }
+    // ── Layer 78: La Riva — la_riva_03 Kenickie delivery at CQ ──
+    if (qs['quest_la_riva_03'] === 'active'
+        && (S_story.inventory || []).some(i => i.name === 'Old Tuna Account Book')) {
+      const deliverBtn = document.createElement('button');
+      deliverBtn.className = 'inv-use-btn';
+      deliverBtn.textContent = '📒 Give Kenickie the Account Book';
+      deliverBtn.addEventListener('click', () => {
+        deliverBtn.remove();
+        S_story.inventory = (S_story.inventory || []).filter(i => i.name !== 'Old Tuna Account Book');
+        S_story.laRivaComplete = true;
+        S_story.fishmongerRowRestored = true;
+        if (!S_story.npcFavorability) S_story.npcFavorability = {};
+        S_story.npcFavorability['kenickie'] = 3;
+        storyMsg('You hand Kenickie the account book.\n\nHe takes it. He looks at it for a long moment. He does not open it. He does not say Vincenzo\'s name.\n\n"Yeah." A pause. "Okay." Another pause. "I\'ll hold onto this."\n\nHe puts it under the counter, next to whatever else is under there. The market is still open. The sardines are still freshish. He does not say anything else about it.\n\n🎣 La Riva — complete.\n✨ Kenickie Clawnickie Mancuso: Dear Friend.');
+        storyAutoSave();
+        storyRender(NODE_MAP[S_story.currentCode]);
+      });
+      cqDiv.appendChild(deliverBtn);
+    }
     if (cqDiv.children.length > 0) {
       document.getElementById('story-text-box').insertAdjacentElement('afterend', cqDiv);
+    }
+  }
+  // ── Layer 78: La Riva — FR node render ──
+  if (node.code === 'FR') {
+    const _oldFrDiv = document.getElementById('fr-quest-div');
+    if (_oldFrDiv) _oldFrDiv.remove();
+    const qs = S_story.quests || {};
+    // First visit — Connie auto-dialogue and connieMet
+    if (qs['quest_la_riva_01'] === 'active' && !S_story.connieMet) {
+      S_story.connieMet = true;
+      setTimeout(() => storyMsg('The woman at the end of the path turns when she hears you.\n\nConnie Tuna. Tortoiseshell apron, hands that know what work looks like. She does not look surprised. She looks like someone who has been here long enough that new arrivals have stopped surprising her.\n\n"You came." Not a question. A registration.\n\n"The Corrupted Cats showed up after the Cat-King went down. Thinner now. But they\'re still here. They\'re in the rubble where the south stall was. I can\'t clear them myself."\n\nShe does not ask why you came. She seems to have decided that you being here is enough.\n\n📋 Quest: The Weight of a Net — accepted.'), 500);
+      S_story.quests['quest_la_riva_02'] = 'active';
+    }
+    // la_riva_02 complete — Aldo gives account book
+    if (qs['quest_la_riva_02'] === 'active'
+        && (S_story.frCatKillCount || 0) >= 5
+        && (S_story.inventory || []).some(i => i.name === "Vincenzo's Net")
+        && !qs['quest_la_riva_03']) {
+      S_story.quests['quest_la_riva_02'] = 'complete';
+      S_story.quests['quest_la_riva_03'] = 'active';
+      if (!S_story.npcFavorability) S_story.npcFavorability = {};
+      S_story.npcFavorability['aldo_sardino'] = (S_story.npcFavorability['aldo_sardino'] || 0) + 1;
+      S_story.gold = (S_story.gold || 0) + 500;
+      setTimeout(() => {
+        storyMsg('💰 +500gp. The rubble is quieter now.\n\nAldo Sardino steps out from between two collapsed stalls. He has been here the whole time.\n\n"I found the net in the rubble of my stall. Three days after. I folded it." He does not look at Connie. "I\'ve been carrying it since."\n\nHe reaches inside his coat. He puts the folded net down on the nearest intact piece of counter. Then he reaches under his arm and draws out a ledger — battered, squared, the handwriting on the cover formal.\n\n"Every vendor on the row. Who owed what. Who paid. Vincenzo\'s page is the last one." He holds it out to you. "Take it to Kenickie. He\'s the one who knew Vincenzo\'s operation. He should hold it."\n\n📒 Old Tuna Account Book obtained.\n📋 Quest: The Account Book — accepted.');
+        const _book = { name:'Old Tuna Account Book', icon:'📒', type:'key_item', sell:0,
+          description:"A worn ledger. Every vendor on Fishmonger's Row — who owed what, who paid forward. Vincenzo's page is the last completed entry. The pages after it are blank." };
+        S_story.inventory = S_story.inventory || [];
+        S_story.inventory.push(_book);
+        updateGold();
+        storyAutoSave();
+      }, 600);
+    }
+    const frDiv = document.createElement('div');
+    frDiv.id = 'fr-quest-div';
+    frDiv.style.cssText = 'margin-top:8px;display:flex;flex-direction:column;gap:6px;';
+    // Repeatable clear button — fires corridor battle so defeatedBattles['FR'] doesn't block it
+    if (qs['quest_la_riva_02'] === 'active' && (S_story.frCatKillCount || 0) < 5) {
+      const clearBtn = document.createElement('button');
+      clearBtn.className = 'inv-use-btn';
+      clearBtn.textContent = '⚡ Clear Corrupted Cats (' + (S_story.frCatKillCount || 0) + '/5)';
+      clearBtn.addEventListener('click', () => {
+        storyPreBattle({ ...node, code:'FR', battle:{label:'Corrupted Cat in the Rubble', key:'corrupted_cat', count:1}, corridor:true });
+      });
+      frDiv.appendChild(clearBtn);
+    }
+    if (frDiv.children.length > 0) {
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', frDiv);
     }
   }
   // ── Layer 41: Birka NPC cards ──
@@ -15276,9 +15541,13 @@ function storyRender(node, prefix) {
     if ((S_story.quests || {})['quest_cat_05'] === 'complete') _cqNpcs.push('kenickie');
     const _sqNpcs = ['isolde_voss'];
     if (S_story.wmArchiveComplete) _sqNpcs.push('benedikt_rasp');
+    const _frNpcs = [];
+    if (S_story.connieMet) _frNpcs.push('connie_tuna');
+    if ((S_story.quests || {})['quest_la_riva_02'] === 'active' || (S_story.quests || {})['quest_la_riva_03'] === 'active') _frNpcs.push('aldo_sardino');
     const birkaNpcs = { CI:['yael'], IN:['brynn'], TV:['quill'], BA:['pachelbel'], CY:['crov','auros'], CQ:_cqNpcs, SQ:_sqNpcs,
       SF:['rennau'], TL:S_story.tlLedgerRead ? ['vonn'] : [],
-      VS:S_story.vsDebtSettled ? [] : ['solvak'], GC:S_story.vsDebtProbed && !S_story.vsWeaponsFound ? ['yva'] : [] };
+      VS:S_story.vsDebtSettled ? [] : ['solvak'], GC:S_story.vsDebtProbed && !S_story.vsWeaponsFound ? ['yva'] : [],
+      FR:_frNpcs };
     const keys = birkaNpcs[node.code];
     if (keys) {
       const npcRowDiv = document.createElement('div');
@@ -15343,7 +15612,7 @@ function storyRender(node, prefix) {
           overlay.style.cssText = 'position:fixed;inset:0;z-index:460;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;padding:20px;';
           const panel = document.createElement('div');
           panel.style.cssText = 'background:#f0e8d0;color:#2a1a06;border:1px solid #a0803a;border-radius:6px;padding:28px 32px;max-width:440px;width:100%;font-family:"Courier New",monospace;box-shadow:0 8px 40px rgba(0,0,0,0.5);display:flex;flex-direction:column;gap:14px;max-height:80vh;overflow-y:auto;';
-          panel.innerHTML = '<div style="font-size:11px;font-weight:700;letter-spacing:2px;color:#7a5a20;text-transform:uppercase;border-bottom:1px solid #c8a870;padding-bottom:8px;">📒 Pachelbel\'s Ledger</div>';
+          panel.innerHTML = '<div style="font-size:11px;font-weight:700;letter-spacing:2px;color:#3A2A08;text-transform:uppercase;border-bottom:1px solid #c8a870;padding-bottom:8px;">📒 Pachelbel\'s Ledger</div>';
           [2,3].forEach(n => {
             const entry = document.createElement('pre');
             entry.style.cssText = 'font-size:11px;line-height:1.7;white-space:pre-wrap;color:#2a1a06;border-top:1px solid #d0b870;padding-top:10px;';
@@ -15731,7 +16000,7 @@ function storyRender(node, prefix) {
         const choiceDiv = document.createElement('div');
         choiceDiv.style.cssText = 'margin-top:4px;display:flex;flex-direction:column;gap:3px;';
         const prompt = document.createElement('div');
-        prompt.style.cssText = 'font-size:12px;color:#c8a870;font-style:italic;margin-bottom:2px;';
+        prompt.style.cssText = 'font-size:12px;color:#5A3A10;font-style:italic;margin-bottom:2px;';
         prompt.textContent = 'Brynn: ' + BRYNN_KEEPER_STORY.choicePrompt;
         choiceDiv.appendChild(prompt);
         const keepBtn = document.createElement('button');
@@ -15779,12 +16048,12 @@ function storyRender(node, prefix) {
         const songIdx = Math.floor((S_story.gameDay || 0) / 2) % QUILL_UNFINISHED_SONGS.length;
         const s45Div = document.createElement('div');
         s45Div.style.cssText = 'margin-top:6px;';
-        s45Div.innerHTML = '<div class="npc-ambient">' + QUILL_UNFINISHED_SONGS[songIdx] + ' <button style="background:none;border:none;color:#9a8050;font-size:11px;cursor:pointer;padding:0;font-style:italic;" id="s45-ask-quill">Ask about it.</button></div>';
+        s45Div.innerHTML = '<div class="npc-ambient">' + QUILL_UNFINISHED_SONGS[songIdx] + ' <button style="background:none;border:none;color:#4A3010;font-size:11px;cursor:pointer;padding:0;font-style:italic;" id="s45-ask-quill">Ask about it.</button></div>';
         npcRowDiv.appendChild(s45Div);
         setTimeout(() => {
           const askBtn = document.getElementById('s45-ask-quill');
           if (askBtn) askBtn.addEventListener('click', () => {
-            askBtn.parentElement.innerHTML = '<em style="color:#9a8050">"Oh — this one\'s not finished. Come back."</em>';
+            askBtn.parentElement.innerHTML = '<em style="color:#4A3010">"Oh — this one\'s not finished. Come back."</em>';
           });
         }, 50);
       }
@@ -15884,12 +16153,12 @@ function storyRender(node, prefix) {
             jDiv.appendChild(envDiv);
           } else {
             const npcHeader = document.createElement('div');
-            npcHeader.style.cssText = 'font-size:12px;color:#c0a080;font-weight:600;margin-bottom:4px;';
+            npcHeader.style.cssText = 'font-size:12px;color:#3A2010;font-weight:600;margin-bottom:4px;';
             npcHeader.textContent = vig.npc + (vig.tag ? ' — ' + vig.tag : '');
             jDiv.appendChild(npcHeader);
             vig.lines.filter(Boolean).forEach(line => {
               const lDiv = document.createElement('div');
-              lDiv.style.cssText = 'font-size:12px;color:#aaa;font-style:italic;margin-bottom:4px;line-height:1.7;';
+              lDiv.style.cssText = 'font-size:12px;color:#2A1A0A;font-style:italic;margin-bottom:4px;line-height:1.7;';
               lDiv.textContent = line;
               jDiv.appendChild(lDiv);
             });
@@ -16006,7 +16275,33 @@ function storyRender(node, prefix) {
   // ── STALK section ──────────────────────────────────
   const hg = HUNTING_GROUNDS[node.name];
   const hasFish = node.isFishingLake;
-  if (hg || hasFish) {
+
+  // Build per-quest hunt cards: one card per targetMonsterKey that exists in this terrain
+  const terrainMonsterKeys = new Set(
+    ((WORLD_DB[node.name] && WORLD_DB[node.name].monsters) || []).map(m => m.key)
+  );
+  const questHuntCards = [];
+  Object.entries(S_story.quests || {})
+    .filter(([, s]) => s === 'active')
+    .forEach(([qId]) => {
+      const q = QUEST_DB[qId];
+      if (!q || !q.targetMonsterKeys) return;
+      q.targetMonsterKeys.forEach(mKey => {
+        if (!terrainMonsterKeys.has(mKey)) return;
+        const monster = MONSTER_POOL[mKey];
+        if (!monster) return;
+        // Kill progress (catKills covers all cat arc monsters)
+        const kills = (S_story.catKills || {})[mKey] || 0;
+        const goal = q.killGoals ? q.killGoals.find(g => g.key === mKey) : null;
+        const progressTag = goal ? kills + '/' + goal.need : null;
+        const alreadyDone = goal ? kills >= goal.need : false;
+        if (!alreadyDone) {
+          questHuntCards.push({ qId, q, mKey, monster, progressTag });
+        }
+      });
+    });
+
+  if (hg || hasFish || questHuntCards.length) {
     const { sec, body } = _mkSection(null, '🎯', 'Stalk');
     if (hg) {
       body.appendChild(_mkCard({
@@ -16024,6 +16319,15 @@ function storyRender(node, prefix) {
         btnClick: () => storyFishing()
       }));
     }
+    // Per-quest targeted hunt cards
+    questHuntCards.forEach(({ qId, q, mKey, monster, progressTag }) => {
+      body.appendChild(_mkCard({
+        lbl: 'QUEST', main: monster.name + (progressTag ? ' — ' + progressTag : ''),
+        hint: q.title,
+        tag: '2h', btn: '🎯 Hunt', btnClass: 'btn-hunt',
+        btnClick: () => storyQuestHunt(qId, mKey)
+      }));
+    });
     row.appendChild(sec);
   }
 
@@ -16048,17 +16352,38 @@ function storyRender(node, prefix) {
 
   // ── QUESTS section (active quests at this node) ────
   {
-    const active = Object.entries(S_story.quests || {})
+    const activeEntries = Object.entries(S_story.quests || {})
       .filter(([, s]) => s === 'active')
-      .map(([id]) => QUEST_DB[id]).filter(Boolean);
-    if (active.length) {
+      .map(([id]) => ({ id, q: QUEST_DB[id] }))
+      .filter(e => e.q);
+    if (activeEntries.length) {
       const { sec, body } = _mkSection(null, '📋', 'Quests');
-      active.slice(0, 4).forEach(q => {
+      activeEntries.slice(0, 4).forEach(({ id, q }) => {
+        const atDest = q.waypointNode && node.code === q.waypointNode;
+        const wpNode = q.waypointNode ? NODE_MAP[q.waypointNode] : null;
+        let btn = null, btnClass = 'btn-hunt', btnClick = null;
+        if (q.waypointNode) {
+          if (atDest && wpNode && wpNode.battle) {
+            const isFinal = q.waypointNode === 'CO' && (S_story.level||1) >= 20 && (S_story.shards||0) >= 7;
+            btn = isFinal ? '🔥 Final Fight' : '⚔ Fight Now';
+            btnClass = 'btn-fight';
+            btnClick = () => isFinal ? storyPreFinalBattle() : storyPreBattle(wpNode);
+          } else if (atDest && q.targetMonsterKeys && q.targetMonsterKeys.length) {
+            btn = '🎯 Hunt (2h)';
+            btnClass = 'btn-hunt';
+            btnClick = () => storyQuestHunt(id);
+          } else if (!atDest) {
+            btn = '📍 Navigate';
+            btnClass = 'btn-rest';
+            btnClick = () => { S_story.waypoint = q.waypointNode; storyMsg('📍 Waypoint: ' + (wpNode ? wpNode.label.split(' — ')[0] : q.waypointNode)); _updateWaypointBtn(); };
+          }
+        }
         body.appendChild(_mkCard({
           lbl: q.type === 'main' ? 'MAIN' : 'SIDE',
           main: (q.type === 'main' ? '◈ ' : '◇ ') + q.title,
           hint: '▶ ' + q.hint,
-          clickable: true, click: () => switchSheet('sheet-quests')
+          btn, btnClass, btnClick,
+          clickable: !btn, click: !btn ? () => switchSheet('sheet-quests') : null
         }));
       });
       row.appendChild(sec);
@@ -16335,7 +16660,7 @@ function storyUpdateStatus() {
   document.getElementById('s-shards').textContent = S_story.shards + '/7';
   const voidEl = document.getElementById('s-void');
   voidEl.textContent = S_story.voidPressure + '/10';
-  voidEl.className = 'stat-val' + (S_story.voidPressure >= 7 ? ' danger' : S_story.voidPressure >= 4 ? ' warn' : '');
+  voidEl.className = 'inv-stat-val' + (S_story.voidPressure >= 7 ? ' danger' : S_story.voidPressure >= 4 ? ' warn' : '');
   document.getElementById('s-inv-count').textContent = S_story.inventory.length;
   const restEl = document.getElementById('s-rests');
   restEl.textContent = S_story.shortRests + '/3';
@@ -16447,6 +16772,8 @@ function storyConfirmSleep() {
   _statTally('sleeps', 1);
   _statTally('daysAdventuring', 1);
   S_story.hour = ((S_story.hour || 0) + 6) % 24;
+  S_story.hoursElapsed  = (S_story.hoursElapsed  || 0) + 8;
+  S_story.hoursSinceSlept = 0;
   S_story.missedSleeps = 0;
   S_story.countedMissedInns = {};
   S_story.checkpointNode = nodeCode;
@@ -16618,10 +16945,15 @@ function _renderPreBatt() {
       threatEl.style.display = 'none';
     }
   }
-  // DIS warning from exhaustion (Layer 5)
+  // DIS warning from exhaustion (Layer 5 + P3)
   const disEl = document.getElementById('prebatt-dis-warning');
-  if (S_story.battleDis > 0) {
-    disEl.textContent = '😴 Exhausted — your attack rolls have DIS this battle (' + S_story.battleDis + ' remaining). Sleep to recover.';
+  const _awakeH = S_story.hoursSinceSlept || 0;
+  const _hasExhaustion = S_story.battleDis > 0 || _awakeH >= 24;
+  if (_hasExhaustion) {
+    const _msgs = [];
+    if (S_story.battleDis > 0) _msgs.push(S_story.battleDis + ' battle(s) remaining from missed rest');
+    if (_awakeH >= 24) _msgs.push(_awakeH + 'h without sleep');
+    disEl.textContent = '😴 Exhausted — attack rolls have DIS (' + _msgs.join('; ') + '). Sleep to recover.';
     disEl.classList.add('show');
   } else {
     disEl.classList.remove('show');
@@ -17093,7 +17425,7 @@ function _updateExitLinks() {
           + '<span class="exit-num">' + num + '</span>'
           + ' <a>' + dest.label + '</a>'
           + (isWp ? '<span class="exit-wp-tag">▶ WP</span>' : '')
-          + (terrain ? '<br><span style="font-size:9px;color:#7a4020;padding-left:18px">' + terrain + '</span>' : '');
+          + (terrain ? '<br><span style="font-size:9px;color:#4A2010;padding-left:18px">' + terrain + '</span>' : '');
       }
     } else {
       el.className = 'exit-line';
@@ -17191,7 +17523,7 @@ function storyRenderCharSheet() {
           : '';
         const bonusStr = tattoo.bonusHpRoll ? '+'+tattoo.bonusHpRoll+' HP' : '';
         const infoStr = [asiStr, bonusStr].filter(Boolean).join(' · ');
-        rows.push(`<div class="cs-tattoo-row" title="${(tattoo.desc||'').replace(/"/g,"'")}"><span style="font-size:9px">🖊</span><span class="cs-tattoo-name">${tattoo.name}</span>${infoStr ? `<span class="cs-feat-tag" style="color:#FEA712">${infoStr}</span>` : ''}</div>`);
+        rows.push(`<div class="cs-tattoo-row" title="${(tattoo.desc||'').replace(/"/g,"'")}"><span style="font-size:9px">🖊</span><span class="cs-tattoo-name">${tattoo.name}</span>${infoStr ? `<span class="cs-feat-tag" style="color:#6A4808">${infoStr}</span>` : ''}</div>`);
       } else {
         rows.push(`<div class="cs-tattoo-row upcoming"><span style="font-size:9px;color:#2a1208">🖊</span><span class="cs-tattoo-name">${feat.tattooName || feat.name}</span></div>`);
       }
@@ -17213,11 +17545,11 @@ function storyRenderCharSheet() {
       ${(() => {
         if ((S_story.shards || 0) >= 1) {
           const cs = _covenantStanding();
-          return `<div class="cs-row" style="flex-direction:column;align-items:flex-start;gap:2px"><span class="cs-row-lbl">Covenant Standing</span><span class="cs-row-val" style="color:#FEA712">${cs.label}</span><span style="font-size:10px;color:#aaa;font-style:italic;padding-left:2px">"${cs.desc}"</span></div>`;
+          return `<div class="cs-row" style="flex-direction:column;align-items:flex-start;gap:2px"><span class="cs-row-lbl">Covenant Standing</span><span class="cs-row-val" style="color:#6A4808">${cs.label}</span><span style="font-size:10px;color:#333333;font-style:italic;padding-left:2px">"${cs.desc}"</span></div>`;
         }
-        return `<div class="cs-row"><span class="cs-row-lbl">Covenant Standing</span><span class="cs-row-val" style="color:#666">Unknown</span></div>`;
+        return `<div class="cs-row"><span class="cs-row-lbl">Covenant Standing</span><span class="cs-row-val" style="color:#333333">Unknown</span></div>`;
       })()}
-      ${(S_story.pitPerks||[]).length >= 5 ? `<div class="cs-row"><span class="cs-row-lbl">Combat Style</span><span class="cs-row-val" style="color:#c0a060">Weckmann's Student</span></div>` : ''}
+      ${(S_story.pitPerks||[]).length >= 5 ? `<div class="cs-row"><span class="cs-row-lbl">Combat Style</span><span class="cs-row-val" style="color:#6A4808">Weckmann's Student</span></div>` : ''}
     </div>
     <div class="cs-section">
       <div class="cs-section-title">Ability Scores</div>
@@ -17229,8 +17561,8 @@ function storyRenderCharSheet() {
         }).join('')}
       </div>
       <div class="cs-row" style="margin-top:6px;padding-top:6px;border-top:1px solid #1a2a3a;">
-        <span class="cs-row-lbl" style="color:#a0c0e0;">✦ LUCK</span>
-        <span class="cs-row-val" style="color:#a0c0e0;">${_calcLuck()} [${m(_luckMod())}] <span style="font-size:10px;color:#506070;font-style:italic;">geometric mean of all stats — read-only</span></span>
+        <span class="cs-row-lbl" style="color:#1A4060;">✦ LUCK</span>
+        <span class="cs-row-val" style="color:#1A4060;">${_calcLuck()} [${m(_luckMod())}] <span style="font-size:10px;color:#2A3040;font-style:italic;">geometric mean of all stats — read-only</span></span>
       </div>
     </div>
     <div class="cs-section">
@@ -17271,13 +17603,13 @@ function storyRenderCharSheet() {
         ];
         const isFirstRun = (cs.deaths || 0) === 0;
         return `<div style="display:grid;grid-template-columns:1fr auto auto;gap:2px 8px;font-size:11px;align-items:center">
-          <span style="color:#506070;font-style:italic"></span>
-          <span style="color:#a0c0e0;font-weight:bold;text-align:right;min-width:52px">This Life</span>
-          <span style="color:#FEA712;font-weight:bold;text-align:right;min-width:52px">${isFirstRun ? '' : 'All Lives'}</span>
+          <span style="color:#2A3040;font-style:italic"></span>
+          <span style="color:#1A4060;font-weight:bold;text-align:right;min-width:52px">This Life</span>
+          <span style="color:#6A4808;font-weight:bold;text-align:right;min-width:52px">${isFirstRun ? '' : 'All Lives'}</span>
           ${rows.map(([label, key]) => `
           <span class="cs-row-lbl" style="font-size:11px">${label}</span>
-          <span class="cs-row-val" style="text-align:right;font-size:11px;color:#c8d8e8">${fmt(rs[key])}</span>
-          <span class="cs-row-val" style="text-align:right;font-size:11px;color:#FEA712">${isFirstRun ? '' : fmt(cs[key])}</span>`).join('')}
+          <span class="cs-row-val" style="text-align:right;font-size:11px;color:#1A3848">${fmt(rs[key])}</span>
+          <span class="cs-row-val" style="text-align:right;font-size:11px;color:#6A4808">${isFirstRun ? '' : fmt(cs[key])}</span>`).join('')}
         </div>`;
       })()}
     </div>
