@@ -286,25 +286,7 @@ Do **not** write a lab report for: a single monster/quest addition (sync core do
 
 ## V. Suggestions for Further Development
 
-### V-B. Documentation Queue — FC Items
-
-| # | Item | File(s) | Status |
-|---|------|---------|--------|
-| FC01 | Doc Health badge in `index.md` — live count of sync-pass completion | `index.md` | ✅ 2026-05-25 — badge added, count corrected 36→37 |
-| FC02 | `froberger-journal-all-entries.txt` entry-by-entry compare against HTML | `froberger-journal-all-entries.txt` | ✅ 2026-05-25 — all 41 entries match |
-| FC03 | Split `mechanics.md` into `mechanics-combat.md` + `mechanics-economy.md` | `mechanics.md` | ✅ 2026-05-25 — split complete; index.md cross-refs updated |
-| FC04 | Spot-check function names in `lab-report-architecture-full.md` every 10 layers | `lab-report-architecture-full.md` | ✅ 2026-05-25 — all 44 functions verified; `_S_DEFAULTS` is arrow const at line 8372, not missing; all line numbers accurate |
-| FC05 | Two-way link convention: every HTML const gets `// → doc: filename.md §Section` | all core docs | ✅ 2026-05-26 — 94 consts annotated (27 original pass + 67 SP4 reverse scan); all non-trivial public consts covered |
-| FC08 | Validate all `// → doc:` annotation targets resolve to real named sections | `roll2hit-v3.html` · `story.md` | ✅ 2026-05-26 — 5 mismatched targets fixed; `#### Gate Locks` section added to story.md |
-
-### V-C. New Feature Ideas (not yet assigned to a section)
-
-> Add raw ideas here when ready to plan. Move to its own §XLIII+, etc. when spec is written.
-
-| # | Item | Source | Notes |
-|---|------|---------|-------|
-| FC06 | Monster Drop Nerf — degraded weapons only | `mechanics-combat.md §Equipment Drops` | ✅ 2026-05-26 — base pool + deg −3…0 at drop time; HTML line 9511 |
-| FC07 | Fishing Guide + Zone Unlock gating | `mechanics-combat.md §Fishing Items` | ✅ 2026-05-26 — Fishing Guide readable item + quest_fishing_guide implemented; tackleboxZoneUnlocks in _S_DEFAULTS(); zone gating UI deferred to Layer 48+ |
+> FC01–FC08 all ✅ 2026-05-25/26. Full record in `lab-report-sp4-documentation-sync-pass.md`. Add new FC items here as §XLIII+ work is planned.
 
 ---
 
