@@ -5,30 +5,48 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Roll2Hit v3 — Combat & Adventure Tracker</title>
 <style>
-/* ── CSS Variables — BBS Palette ───────────────────────── */
+/* ── CSS Variables — Desert Codex Palette ──────────────── */
 :root {
-  /* BBS Colour Ramp: dark → flame → amber → cream */
+  /* Aztec stripe ramp — UNCHANGED (used by panel-banding) */
   --c1: #562717;   /* dark ember      → white text */
   --c2: #C21717;   /* hot red         → white text */
   --c3: #E76219;   /* flame orange    → white text */
   --c4: #FEA712;   /* amber           → black text */
   --c5: #FDDCA9;   /* warm cream      → black text */
 
-  /* Semantic mappings used throughout the existing code */
-  --bg:      #120600;
-  --panel:   #562717;
-  --panel2:  #3d1510;
-  --border:  #E76219;
-  --gold:    #FEA712;
-  --gold-lt: #FDDCA9;
-  --red:     #C21717;
-  --red-lt:  #E76219;
-  --grn-lt:  #FEA712;
-  --purple:  #E76219;
-  --text:    #FDDCA9;
-  --dim:     #b07040;
-  --adv:     #FEA712;
-  --dis:     #C21717;
+  /* Surface scale — parchment ground */
+  --bg:       #F0E6C8;   /* parchment — main background */
+  --panel:    #E2D0A8;   /* light sand panel */
+  --panel2:   #D4BC88;   /* recessed panel — mid sand */
+  --panel3:   #C8A870;   /* deep panel — warm tan */
+
+  /* Text */
+  --text:     #2A1A0A;   /* dark brown — primary */
+  --dim:      #6A4A28;   /* mid-brown — labels / secondary */
+  --muted:    #9A7A52;   /* muted — disabled / hints */
+
+  /* Border / structural accent — terracotta */
+  --border:   #8B4A2A;   /* terracotta */
+  --border-lt:#C47A4A;   /* light border — hover */
+
+  /* 70s baby blue — rest, inn, quests, map */
+  --sky:      #7BAAB8;   /* dusty blue accent */
+  --sky-lt:   #B0D0DC;   /* pale blue — chip fill */
+  --sky-dk:   #3D6E7A;   /* deep blue — active/selected */
+
+  /* Ochre / gold — loot, XP, level-up */
+  --gold:     #B87C28;   /* burnt gold */
+  --gold-lt:  #D4A848;   /* warm gold highlight */
+
+  /* Alert / state colors */
+  --red:      #8B2010;   /* deep crimson — danger */
+  --red-lt:   #C03020;   /* bright red — warnings */
+  --grn-lt:   #3A7A3A;   /* forest green — success */
+  --purple:   #8B4A2A;   /* maps to terracotta in light theme */
+
+  /* Advantage / disadvantage */
+  --adv:      #3D6E7A;   /* sky-dk — advantage blue */
+  --dis:      #C03020;   /* red-lt — disadvantage */
 }
 
 /* ── Reset / Base ──────────────────────────────────────── */
@@ -60,7 +78,7 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 #new-combat-btn:hover { border-color: var(--red-lt); color: var(--red-lt); }
 #battle-victory-banner {
   display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 150;
-  background: #0a1a0a; border-top: 2px solid var(--gold);
+  background: var(--c1); border-top: 2px solid var(--gold);
   padding: 10px 20px; align-items: center; justify-content: space-between; gap: 12px;
 }
 #battle-victory-banner.show { display: flex; }
@@ -70,10 +88,10 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 #bvb-drop { font-size: 11px; color: var(--gold-lt); }
 #btn-return-story {
   padding: 8px 18px; font-size: 13px; font-weight: 700;
-  background: #1a2a0a; border: 1px solid var(--gold); color: var(--gold);
+  background: var(--c2); border: 1px solid var(--gold); color: var(--gold);
   border-radius: 5px; cursor: pointer; white-space: nowrap; transition: background .15s;
 }
-#btn-return-story:hover { background: #2a4a1a; }
+#btn-return-story:hover { background: var(--c3); }
 .info-chip.hearth-set { border-color: #5a3a00; color: #e0a050; cursor: pointer; }
 .info-chip.hearth-set:hover { border-color: #c08030; background: var(--panel2); }
 .info-chip.hearth-home { border-color: #c08030; color: #ffc060; cursor: default; }
@@ -967,28 +985,28 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 }
 .info-chip .chip-icon { font-size: 13px; }
 .info-chip .chip-lbl  { color: var(--dim); font-size: 10px; margin-right: 2px; }
-.info-chip.npc-chip   { border-color: #4a3a7a; color: #b09ade; cursor: pointer; }
-.info-chip.npc-chip:hover { background: #1a0a3a; border-color: var(--purple); }
-.info-chip.loot-chip  { border-color: #3a5a2a; color: var(--grn-lt); }
-.info-chip.loot-collected { border-color: #2a3a2a; color: var(--dim); }
-.info-chip.battle-chip { border-color: #5a1a1a; color: var(--red-lt); cursor: pointer; }
-.info-chip.battle-chip:hover { background: #2a0a0a; border-color: var(--red-lt); }
-.info-chip.stalk-chip  { border-color: #4a3a1a; color: #c8a84a; cursor: pointer; }
-.info-chip.stalk-chip:hover { background: #2a1a00; border-color: #c8a84a; }
-.info-chip.portal-chip { border-color: #3a2a6a; color: var(--purple); cursor: pointer; }
-.info-chip.portal-chip:hover { background: #1a0a3a; }
-.info-chip.rest-chip { border-color: #1a3a4a; color: #6acfdf; cursor: pointer; }
-.info-chip.rest-chip:hover { background: #0a1a2a; border-color: #6acfdf; }
-.info-chip.rest-chip-empty { border-color: #2a2a2a; color: var(--dim); cursor: default; }
-.info-chip.corpse-chip { border-color: #5a3a1a; color: #c8a060; cursor: pointer; }
-.info-chip.corpse-chip:hover { background: #2a1a00; border-color: #c8a060; }
+.info-chip.npc-chip   { border-color: #7a5a9a; color: #5a3a7a; cursor: pointer; }
+.info-chip.npc-chip:hover { background: rgba(122,90,154,0.1); border-color: #5a3a7a; }
+.info-chip.loot-chip  { border-color: #5a8a3a; color: var(--grn-lt); }
+.info-chip.loot-collected { border-color: var(--muted); color: var(--muted); }
+.info-chip.battle-chip { border-color: var(--red-lt); color: var(--red); cursor: pointer; }
+.info-chip.battle-chip:hover { background: rgba(192,48,32,0.08); border-color: var(--red); }
+.info-chip.stalk-chip  { border-color: #a08030; color: #7a5a10; cursor: pointer; }
+.info-chip.stalk-chip:hover { background: rgba(160,128,48,0.1); border-color: #7a5a10; }
+.info-chip.portal-chip { border-color: #7a5a9a; color: var(--border); cursor: pointer; }
+.info-chip.portal-chip:hover { background: rgba(122,90,154,0.08); }
+.info-chip.rest-chip { border-color: var(--sky); color: var(--sky-dk); cursor: pointer; }
+.info-chip.rest-chip:hover { background: rgba(123,170,184,0.15); border-color: var(--sky-dk); }
+.info-chip.rest-chip-empty { border-color: var(--muted); color: var(--muted); cursor: default; }
+.info-chip.corpse-chip { border-color: #a07840; color: #6a4a18; cursor: pointer; }
+.info-chip.corpse-chip:hover { background: rgba(160,120,64,0.1); border-color: #6a4a18; }
 /* Layer 39 — Epic Battleground NPC chips */
-.info-chip.eb-npc-chip   { border-color: #7a1a1a; color: #e06060; cursor: pointer; }
-.info-chip.eb-npc-chip:hover { background: #2a0808; border-color: #e06060; }
-.info-chip.eb-active-chip { border-color: #7a5a00; color: #e0b040; cursor: default; }
-.info-chip.eb-return-chip { border-color: #1a5a2a; color: #60d080; cursor: pointer; }
-.info-chip.eb-return-chip:hover { background: #082a10; border-color: #60d080; }
-.info-chip.eb-npc-done   { border-color: #2a2a2a; color: var(--dim); cursor: default; }
+.info-chip.eb-npc-chip   { border-color: var(--red-lt); color: var(--red); cursor: pointer; }
+.info-chip.eb-npc-chip:hover { background: rgba(192,48,32,0.1); border-color: var(--red); }
+.info-chip.eb-active-chip { border-color: var(--gold); color: var(--gold); cursor: default; }
+.info-chip.eb-return-chip { border-color: #4a8a3a; color: #3A7A3A; cursor: pointer; }
+.info-chip.eb-return-chip:hover { background: rgba(58,122,58,0.1); border-color: #2a6a28; }
+.info-chip.eb-npc-done   { border-color: var(--muted); color: var(--muted); cursor: default; }
 
 #story-dpad {
   display: flex; flex-direction: column; align-items: center; gap: 4px; margin-top: 4px;
@@ -1003,19 +1021,19 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 .dpad-btn:hover:not(:disabled) { background: var(--panel); border-color: var(--gold); color: var(--gold-lt); }
 .dpad-btn:disabled { opacity: 0.25; cursor: default; }
 .dpad-center {
-  width: 48px; height: 48px; background: #2a1208; border-color: #E76219;
-  color: #E76219; font-size: 18px;
+  width: 48px; height: 48px; background: var(--panel3); border-color: var(--c3);
+  color: var(--c3); font-size: 18px;
 }
-.dpad-center:hover:not(:disabled) { background: #562717; border-color: #FEA712; color: #FEA712; }
-.dpad-center:disabled { opacity: 0.25; }
-.dpad-center.hunt-on { background: #051a0d; border-color: #22cc66; color: #22cc66; }
-.dpad-center.hunt-on:hover:not(:disabled) { background: #0a2a15; border-color: #44ee88; color: #44ee88; }
+.dpad-center:hover:not(:disabled) { background: var(--c1); border-color: var(--c4); color: var(--c4); }
+.dpad-center:disabled { opacity: 0.35; }
+.dpad-center.hunt-on { background: rgba(58,122,58,0.12); border-color: #3A7A3A; color: #3A7A3A; }
+.dpad-center.hunt-on:hover:not(:disabled) { background: rgba(58,122,58,0.2); border-color: #2a6a28; color: #2a6a28; }
 .dpad-corner {
   width: 34px; height: 34px; font-size: 13px; padding: 0; border-radius: 4px;
-  background: #180a04; border-color: #3d1510; color: #b07040;
+  background: var(--panel2); border-color: var(--border); color: var(--dim);
 }
-.dpad-corner:hover:not(:disabled) { background: #2a1208; border-color: #E76219; color: #FEA712; }
-.dpad-corner:disabled { opacity: 0.18; cursor: default; }
+.dpad-corner:hover:not(:disabled) { background: var(--panel3); border-color: var(--c3); color: var(--c4); }
+.dpad-corner:disabled { opacity: 0.25; cursor: default; }
 .dpad-corner-spacer { display: inline-block; width: 34px; height: 34px; }
 
 #story-move-msg {
@@ -1100,9 +1118,9 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 .quest-badge {
   font-size: 9px; padding: 1px 5px; border-radius: 3px; flex-shrink: 0;
 }
-.quest-badge.main { background: #2a1a00; color: var(--gold); border: 1px solid #5a4a1a; }
-.quest-badge.side { background: #0a1a2a; color: #6a9acf; border: 1px solid #2a4a6a; }
-.quest-badge.done-b { background: #1a2a1a; color: var(--dim); border: 1px solid #2a3a2a; }
+.quest-badge.main { background: rgba(184,124,40,0.12); color: var(--gold); border: 1px solid var(--gold); }
+.quest-badge.side { background: rgba(61,110,122,0.1); color: var(--sky-dk); border: 1px solid var(--sky); }
+.quest-badge.done-b { background: var(--panel2); color: var(--muted); border: 1px solid var(--muted); }
 #btn-quest {
   width: 100%; padding: 5px; margin-top: 2px;
   font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
@@ -1114,9 +1132,9 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 #s-quest-count { font-size: 10px; color: var(--gold); }
 
 /* ── Layer 5: Sleep + Void Tide ── */
-.info-chip.inn-chip { border-color: #1a3a5a; color: #6a9acf; cursor: pointer; }
-.info-chip.inn-chip:hover { background: #0a1a2a; border-color: #6a9acf; }
-.info-chip.inn-slept { border-color: #1a2a3a; color: var(--dim); }
+.info-chip.inn-chip { border-color: var(--sky); color: var(--sky-dk); cursor: pointer; }
+.info-chip.inn-chip:hover { background: rgba(123,170,184,0.15); border-color: var(--sky-dk); }
+.info-chip.inn-slept { border-color: var(--muted); color: var(--muted); }
 #story-sleep-overlay {
   position: absolute; inset: 0; z-index: 11;
   background: var(--bg); display: none;
@@ -1125,9 +1143,9 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 #story-sleep-overlay.visible { display: flex; }
 #sleep-header {
   display: flex; align-items: center; gap: 10px;
-  border-bottom: 1px solid #1a3a5a; padding-bottom: 10px;
+  border-bottom: 1px solid var(--sky); padding-bottom: 10px;
 }
-#sleep-title { font-size: 14px; font-weight: 700; color: #6a9acf; }
+#sleep-title { font-size: 14px; font-weight: 700; color: var(--sky-dk); }
 #sleep-node-name { font-size: 11px; color: var(--dim); flex: 1; }
 #sleep-details { display: flex; flex-direction: column; gap: 8px; }
 .sleep-row { display: flex; align-items: center; justify-content: space-between; font-size: 12px; }
@@ -1135,20 +1153,20 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 .sleep-val { color: var(--text); font-weight: 600; }
 .sleep-val.restore { color: var(--grn-lt); }
 .sleep-val.cost    { color: var(--gold); }
-.sleep-val.day     { color: #6a9acf; }
+.sleep-val.day     { color: var(--sky-dk); }
 #sleep-warning {
-  font-size: 11px; color: var(--red-lt); background: #1a0808;
-  border: 1px solid #5a1a1a; border-radius: 4px; padding: 6px 10px;
+  font-size: 11px; color: var(--red); background: rgba(192,48,32,0.06);
+  border: 1px solid var(--red-lt); border-radius: 4px; padding: 6px 10px;
   display: none;
 }
 #sleep-warning.show { display: block; }
 #sleep-actions { display: flex; gap: 8px; margin-top: 4px; }
 #btn-sleep-confirm {
   flex: 1; padding: 9px; font-size: 13px; font-weight: 700;
-  background: #0a1a2a; border: 1px solid #6a9acf; color: #6a9acf;
+  background: var(--sky-lt); border: 1px solid var(--sky-dk); color: var(--sky-dk);
   border-radius: 5px; cursor: pointer; transition: background .12s;
 }
-#btn-sleep-confirm:hover { background: #1a2a3a; }
+#btn-sleep-confirm:hover { background: var(--sky); color: var(--bg); }
 #btn-sleep-confirm:disabled { opacity: 0.35; cursor: default; }
 #btn-sleep-cancel {
   padding: 9px 14px; font-size: 12px; font-weight: 600;
@@ -1350,10 +1368,10 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 #vendor-sell-total { font-size: 12px; color: var(--gold); font-weight: 700; margin-top: 4px; }
 #btn-sell-all {
   padding: 8px; font-size: 12px; font-weight: 700;
-  background: #1a2a0a; border: 1px solid #4a8a1a; color: #8adf4a;
+  background: rgba(58,122,58,0.1); border: 1px solid var(--grn-lt); color: var(--grn-lt);
   border-radius: 5px; cursor: pointer; transition: background .15s;
 }
-#btn-sell-all:hover { background: #2a4a1a; }
+#btn-sell-all:hover { background: rgba(58,122,58,0.2); }
 #vendor-buy-section { margin-top: 8px; }
 .buy-item {
   display: flex; align-items: center; justify-content: space-between;
@@ -1364,28 +1382,28 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 .buy-item-heal { font-size: 10px; color: var(--grn-lt); margin-top: 2px; }
 #btn-buy-potion {
   padding: 6px 14px; font-size: 12px; font-weight: 700;
-  background: #0a1a0a; border: 1px solid #2a6a2a; color: #6adf6a;
+  background: rgba(58,122,58,0.1); border: 1px solid var(--grn-lt); color: var(--grn-lt);
   border-radius: 4px; cursor: pointer; transition: background .15s;
 }
-#btn-buy-potion:hover { background: #1a3a1a; }
+#btn-buy-potion:hover { background: rgba(58,122,58,0.2); }
 .btn-buy-potion, .btn-buy-shield {
   padding: 6px 14px; font-size: 12px; font-weight: 700;
-  background: #0a1a0a; border: 1px solid #2a6a2a; color: #6adf6a;
+  background: rgba(58,122,58,0.1); border: 1px solid var(--grn-lt); color: var(--grn-lt);
   border-radius: 4px; cursor: pointer; transition: background .15s;
 }
-.btn-buy-shield { border-color: #2a5a4a; color: #6adfc4; background: #0a1a18; }
-.btn-buy-potion:hover { background: #1a3a1a; }
-.btn-buy-shield:hover { background: #0f2a24; }
+.btn-buy-shield { border-color: var(--sky); color: var(--sky-dk); background: rgba(123,170,184,0.1); }
+.btn-buy-potion:hover { background: rgba(58,122,58,0.2); }
+.btn-buy-shield:hover { background: rgba(123,170,184,0.2); }
 #vendor-empty { font-size: 12px; color: var(--dim); font-style: italic; }
 .buy-locked { opacity: 0.5; }
-.info-chip.vendor-chip { border-color: #3a5a1a; color: #8adf6a; cursor: pointer; }
-.info-chip.vendor-chip:hover { border-color: #6adf4a; background: var(--panel2); }
+.info-chip.vendor-chip { border-color: #5a8a3a; color: var(--grn-lt); cursor: pointer; }
+.info-chip.vendor-chip:hover { border-color: #3A7A3A; background: rgba(58,122,58,0.08); }
 .inv-use-btn {
   padding: 3px 8px; font-size: 10px; font-weight: 600;
-  background: #0a1a0a; border: 1px solid #2a6a2a; color: #6adf6a;
+  background: rgba(58,122,58,0.1); border: 1px solid var(--grn-lt); color: var(--grn-lt);
   border-radius: 3px; cursor: pointer; margin-left: 6px; transition: background .12s;
 }
-.inv-use-btn:hover { background: #1a3a1a; }
+.inv-use-btn:hover { background: rgba(58,122,58,0.2); }
 
 /* ── Map Overlay ── */
 #story-map-overlay {
@@ -2206,25 +2224,25 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 #clear-stats-btn:hover { border-color: #FDDCA9; color: #FDDCA9; }
 
 /* ── Victory Banner ──────────────────────────────────── */
-#battle-victory-banner { background: #562717; border-top: 4px solid #FEA712; }
-#bvb-text { color: #FDDCA9; }
-#bvb-drop { color: #FEA712; }
-#btn-return-story { background: #E76219; border: 3px solid #FEA712; color: #120600; font-weight: 900; border-radius: 8px; text-transform: uppercase; }
-#btn-return-story:hover { background: #FEA712; }
+#battle-victory-banner { background: var(--c1); border-top: 4px solid var(--c4); }
+#bvb-text { color: var(--c5); }
+#bvb-drop { color: var(--c4); }
+#btn-return-story { background: var(--c3); border: 3px solid var(--c4); color: #120600; font-weight: 900; border-radius: 8px; text-transform: uppercase; }
+#btn-return-story:hover { background: var(--c4); }
 
 /* ── Story Panel Shell ───────────────────────────────── */
-#story-panel { background: #2a1208; }
-#story-left { background: #562717; border-right: none; }
-#story-act-badge { color: #FEA712; letter-spacing: 2px; border-left: 3px solid #E76219; padding-left: 6px; }
-.story-log-entry { color: #b07040; }
-.story-log-entry.current { color: #FDDCA9; }
-#story-log-box { color: #b07040; }
+#story-panel { background: var(--bg); }
+#story-left { background: var(--panel2); border-right: 1px solid var(--border); }
+#story-act-badge { color: var(--c3); letter-spacing: 2px; border-left: 3px solid var(--c3); padding-left: 6px; }
+.story-log-entry { color: var(--dim); }
+.story-log-entry.current { color: var(--text); }
+#story-log-box { color: var(--dim); }
 
-#story-status { border-top: 3px solid #E76219; padding-top: 10px; }
-.stat-lbl { color: #E76219; text-transform: uppercase; font-size: 9px; letter-spacing: 1px; }
-.stat-val { color: #FDDCA9; font-weight: 700; }
-.stat-val.warn   { color: #FEA712; }
-.stat-val.danger { color: #C21717; }
+#story-status { border-top: 3px solid var(--c3); padding-top: 10px; }
+.stat-lbl { color: var(--dim); text-transform: uppercase; font-size: 9px; letter-spacing: 1px; }
+.stat-val { color: var(--text); font-weight: 700; }
+.stat-val.warn   { color: var(--gold); }
+.stat-val.danger { color: var(--red); }
 
 /* ── Panel Banding — layered retro stripe separator ─── */
 .panel-banding {
@@ -2255,13 +2273,13 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 /* ── Story History Panel (right side in story mode) ──── */
 #story-history-panel {
   width: 190px; min-width: 190px;
-  background: #562717; border-left: none;
+  background: var(--panel2); border-left: 1px solid var(--border);
   display: flex; flex-direction: column; overflow: hidden;
 }
 #story-history-title {
   padding: 6px 10px; font-size: 11px; font-weight: 700;
-  background: #C21717; color: #FDDCA9;
-  border-bottom: 3px solid #E76219;
+  background: var(--c2); color: var(--c5);
+  border-bottom: 3px solid var(--c3);
   letter-spacing: 1.5px; text-transform: uppercase;
 }
 #story-hcard-container {
@@ -2273,13 +2291,13 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 #story-nav-row {
   display: flex; flex-direction: row; align-items: flex-start;
   gap: 10px; margin-top: 2px; flex-wrap: wrap;
-  border-top: 2px solid #3d1510; padding-top: 8px;
+  border-top: 2px solid var(--border); padding-top: 8px;
 }
 #story-nav-left { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
 
 /* ── Local mini-map (7×7 around player) ── */
 #story-mini-map { display: flex; flex-direction: column; gap: 2px; flex-shrink: 0; }
-#mini-map-title { font-size: 8px; font-weight: 900; color: #E76219; text-transform: uppercase; letter-spacing: 2px; text-align: center; }
+#mini-map-title { font-size: 8px; font-weight: 900; color: var(--c3); text-transform: uppercase; letter-spacing: 2px; text-align: center; }
 #mini-map-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
