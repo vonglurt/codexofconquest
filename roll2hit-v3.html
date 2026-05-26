@@ -948,6 +948,34 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
   border-bottom: 1px solid var(--border);
 }
 
+.sidebar-section-lbl {
+  font-size: 8px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--muted); padding: 2px 0 1px; margin-bottom: 1px;
+}
+.story-nav-section-lbl {
+  font-size: 8px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--muted); padding: 4px 0 2px; border-top: 1px solid var(--border);
+  margin-top: 4px;
+}
+.chips-section-lbl {
+  font-size: 8px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--muted); padding: 2px 0;
+}
+#map-travel-log {
+  flex: 1; min-width: 160px; max-width: 220px;
+  background: var(--panel2); border-left: 1px solid var(--border);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+#map-travel-log-hd {
+  padding: 6px 10px 4px; font-size: 9px; font-weight: 900;
+  text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--muted); border-bottom: 1px solid var(--border);
+  background: var(--panel); flex-shrink: 0;
+}
+#map-travel-log-list {
+  flex: 1; overflow-y: auto; padding: 5px 8px; display: flex; flex-direction: column; gap: 2px;
+}
+
 /* HP bar */
 #s-hp-bar-wrap {
   width: 100%; height: 6px; background: var(--panel3);
@@ -1477,7 +1505,11 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
   background: rgba(4,4,8,0.97);
   display: none; flex-direction: column;
   align-items: center; justify-content: flex-start;
-  padding: 16px 12px; overflow-y: auto;
+  padding: 16px 12px 16px; overflow-y: auto;
+}
+#map-main-area {
+  display: flex; flex-direction: row; align-items: flex-start;
+  gap: 14px; width: 100%; max-width: 740px;
 }
 #story-map-overlay.visible { display: flex; }
 #map-header {
@@ -2397,20 +2429,20 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
   display: flex; align-items: center; justify-content: center;
   font-size: 9px; font-family: monospace;
   cursor: default; box-sizing: border-box;
-  background: #100502; color: #2a1010;
+  background: #1e0f06; color: #4a2c14;
 }
-.mmc-current { background: #FEA712; color: #1a0400; border: 2px solid #FDDCA9; box-shadow: 0 0 5px rgba(254,167,18,0.9); font-size: 11px; }
-.mmc-visited { background: #0a2010; color: #22cc66; border: 1px solid #1a5025; }
-.mmc-trail   { background: #181400; color: #c0a020; border: 1px solid #4a3800; }
-.mmc-node    { background: #080810; color: #252538; }
-.mmc-corridor { background: #100502; color: #2a1800; font-size: 10px; }
-.mmc-corridor-visited { color: #a05818; }
-.mmc-corridor-active  { color: #FEA712; background: #180900; }
+.mmc-current  { background: #B87C28; color: #1a0400; border: 2px solid #F0E6C8; box-shadow: 0 0 6px rgba(184,124,40,0.9); font-size: 11px; }
+.mmc-visited  { background: #0d2414; color: #3aba6a; border: 1px solid #1e5a30; }
+.mmc-trail    { background: #1e1800; color: #c8a828; border: 1px solid #5a4410; }
+.mmc-node     { background: #0c0c1a; color: #3a3a6a; border: 1px solid #1a1a30; }
+.mmc-corridor { background: #1e0f06; color: #4a3010; font-size: 10px; }
+.mmc-corridor-visited { color: #b06020; }
+.mmc-corridor-active  { color: #E76219; background: #200c00; }
 .mmc-icon { font-size: 12px; line-height: 1; }
-.mmc-fog  { font-size: 9px; color: #1e1010; }
+.mmc-fog  { font-size: 9px; color: #4a2c14; }
 .mmc-epic         { background: #8b0000; color: #ffaaaa; border: 1px solid #cc2222; box-shadow: 0 0 5px rgba(180,0,0,0.8); }
-.mmc-epic-visited { background: #3a0000; color: #aa4444; border: 1px solid #660000; }
-.mmc-epic-unvis   { background: #1a0505; color: #330000; }
+.mmc-epic-visited { background: #3a0000; color: #cc5555; border: 1px solid #770000; }
+.mmc-epic-unvis   { background: #200808; color: #4a1a1a; }
 
 /* World minimap (full 14×23 world) — same drawing technique as local mini-map */
 #story-world-map { display: flex; flex-direction: column; gap: 2px; flex-shrink: 0; }
@@ -2430,100 +2462,96 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
   display: flex; align-items: center; justify-content: center;
   font-family: monospace; font-size: 7px;
   cursor: default; box-sizing: border-box;
-  background: #100502; color: #2a1010;
+  background: #1e0f06; color: #4a2c14;
 }
-.wmc-current  { background: #FEA712; color: #1a0400; border: 1px solid #FDDCA9; box-shadow: 0 0 4px rgba(254,167,18,0.9); }
-.wmc-visited  { background: #0a2010; color: #22cc66; border: 1px solid #1a5025; }
-.wmc-trail    { background: #181400; color: #c0a020; border: 1px solid #4a3800; }
-.wmc-node     { background: #080810; color: #252538; }
-.wmc-corridor { background: #100502; color: #2a1800; }
-.wmc-corridor-visited { color: #a05818; }
-.wmc-corridor-active  { color: #FEA712; background: #180900; }
+.wmc-current  { background: #B87C28; color: #1a0400; border: 1px solid #F0E6C8; box-shadow: 0 0 4px rgba(184,124,40,0.9); }
+.wmc-visited  { background: #0d2414; color: #3aba6a; border: 1px solid #1e5a30; }
+.wmc-trail    { background: #1e1800; color: #c8a828; border: 1px solid #5a4410; }
+.wmc-node     { background: #0c0c1a; color: #3a3a6a; border: 1px solid #1a1a30; }
+.wmc-corridor { background: #1e0f06; color: #4a3010; }
+.wmc-corridor-visited { color: #b06020; }
+.wmc-corridor-active  { color: #E76219; background: #200c00; }
 .wmc-icon { font-size: 8px; line-height: 1; }
-.wmc-fog  { font-size: 7px; color: #1e1010; }
+.wmc-fog  { font-size: 7px; color: #4a2c14; }
 .wmc-epic         { background: #8b0000; color: #ffaaaa; border: 1px solid #cc2222; box-shadow: 0 0 4px rgba(180,0,0,0.8); }
-.wmc-epic-visited { background: #3a0000; color: #aa4444; border: 1px solid #660000; }
-.wmc-epic-unvis   { background: #1a0505; color: #330000; }
+.wmc-epic-visited { background: #3a0000; color: #cc5555; border: 1px solid #770000; }
+.wmc-epic-unvis   { background: #200808; color: #4a1a1a; }
 
-/* NSEW exit links block */
-#story-nsew { display: flex; flex-direction: column; gap: 3px; flex-shrink: 0; padding-left: 6px; border-left: 1px solid #3d1510; min-width: 0; max-width: 180px; overflow: hidden; }
-#nsew-title { font-size: 8px; font-weight: 900; color: #FEA712; text-transform: uppercase; letter-spacing: 2px; }
-.exit-line { font-size: 10px; line-height: 1.5; color: #b07040; min-height: 22px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 3px 5px; border-radius: 4px; border: 1px solid transparent; box-sizing: border-box; }
+/* NSEW exit links block (light theme) */
+#story-nsew { display: flex; flex-direction: column; gap: 3px; flex-shrink: 0; padding-left: 8px; border-left: 2px solid var(--border-lt); min-width: 0; max-width: 180px; overflow: hidden; }
+#nsew-title { font-size: 8px; font-weight: 900; color: var(--muted); text-transform: uppercase; letter-spacing: 2px; padding-bottom: 3px; }
+.exit-line { font-size: 10px; line-height: 1.5; color: var(--dim); min-height: 22px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 3px 5px; border-radius: 4px; border: 1px solid transparent; box-sizing: border-box; }
 .exit-line.exit-active { cursor: pointer; }
-.exit-line.exit-active:hover { background: rgba(86,39,23,0.5); border-color: #562717; }
-.exit-line a { color: #FEA712; text-decoration: none; pointer-events: none; border-bottom: 1px dotted #E76219; }
-.exit-arrow { color: #562717; margin: 0 2px; }
-.exit-num { color: #E76219; font-weight: 900; margin-right: 2px; }
-.exit-none { color: #3d1510; font-style: italic; font-size: 9px; }
-.exit-waypoint { background: rgba(0,70,20,0.45) !important; border-color: #22cc66 !important; }
-.exit-waypoint .exit-arrow { color: #22cc66 !important; }
-.exit-waypoint .exit-num { color: #44ee88 !important; }
-.exit-waypoint a { color: #44ee88 !important; border-bottom-color: #22cc66 !important; }
-.exit-wp-tag { display: inline-block; background: #22cc66; color: #001a0a; font-size: 7px; font-weight: 900; border-radius: 2px; padding: 0 3px; margin-left: 4px; vertical-align: middle; letter-spacing: 0.5px; line-height: 1.6; }
+.exit-line.exit-active:hover { background: var(--panel2); border-color: var(--border); }
+.exit-line a { color: var(--gold); text-decoration: none; pointer-events: none; border-bottom: 1px dotted var(--gold-lt); }
+.exit-arrow { color: var(--border); margin: 0 2px; }
+.exit-num { color: var(--border); font-weight: 900; margin-right: 2px; }
+.exit-none { color: var(--muted); font-style: italic; font-size: 9px; }
+.exit-waypoint { background: rgba(58,122,58,0.1) !important; border-color: var(--grn-lt) !important; }
+.exit-waypoint .exit-arrow { color: var(--grn-lt) !important; }
+.exit-waypoint .exit-num   { color: var(--grn-lt) !important; }
+.exit-waypoint a { color: var(--grn-lt) !important; border-bottom-color: var(--grn-lt) !important; }
+.exit-wp-tag { display: inline-block; background: var(--grn-lt); color: #fff; font-size: 7px; font-weight: 900; border-radius: 2px; padding: 0 3px; margin-left: 4px; vertical-align: middle; letter-spacing: 0.5px; line-height: 1.6; }
 .exit-extra-item { display: block; cursor: pointer; padding: 2px 3px; border-radius: 3px; }
-.exit-extra-item:hover { background: rgba(86,39,23,0.5); }
-.exit-extra-item.exit-waypoint-item .exit-arrow { color: #22cc66; }
-.exit-extra-item.exit-waypoint-item .exit-num { color: #44ee88; }
-.exit-extra-item.exit-waypoint-item a { color: #44ee88; border-bottom-color: #22cc66; }
+.exit-extra-item:hover { background: var(--panel2); }
+.exit-extra-item.exit-waypoint-item .exit-arrow { color: var(--grn-lt); }
+.exit-extra-item.exit-waypoint-item .exit-num   { color: var(--grn-lt); }
+.exit-extra-item.exit-waypoint-item a { color: var(--grn-lt); border-bottom-color: var(--grn-lt); }
 
-/* ── Waypoint & Custom Quest ── */
-.quest-set-wp-btn { background: #0d1800; border: 1px solid #22cc66; color: #22cc66; padding: 2px 8px; border-radius: 3px; font-size: 10px; cursor: pointer; margin-top: 3px; display: inline-block; }
-.quest-set-wp-btn:hover { background: rgba(34,204,102,0.18); }
-.quest-set-wp-btn.active-wp { border-color: #FEA712; color: #FEA712; background: rgba(254,167,18,0.10); }
-#quest-create-section { border-top: 1px solid #3d1510; margin-top: 10px; padding-top: 6px; }
+/* ── Waypoint & Custom Quest (light theme) ── */
+.quest-set-wp-btn { background: transparent; border: 1px solid var(--grn-lt); color: var(--grn-lt); padding: 2px 8px; border-radius: 3px; font-size: 10px; cursor: pointer; margin-top: 3px; display: inline-block; }
+.quest-set-wp-btn:hover { background: rgba(58,122,58,0.1); }
+.quest-set-wp-btn.active-wp { border-color: var(--gold); color: var(--gold); background: rgba(184,124,40,0.1); }
+#quest-create-section { border-top: 1px solid var(--border); margin-top: 10px; padding-top: 6px; }
 #quest-create-ui { display: flex; gap: 6px; align-items: center; padding: 6px 0; flex-wrap: wrap; }
-#quest-terrain-select { background: #1a0a06; color: #FDDCA9; border: 1px solid #562717; border-radius: 4px; padding: 4px 6px; font-size: 11px; flex: 1; min-width: 120px; }
-#btn-create-quest { background: #2a1200; border: 1px solid #FEA712; color: #FEA712; padding: 4px 10px; border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: 700; white-space: nowrap; }
-#btn-create-quest:hover { background: rgba(254,167,18,0.15); }
+#quest-terrain-select { background: var(--panel2); color: var(--text); border: 1px solid var(--border); border-radius: 4px; padding: 4px 6px; font-size: 11px; flex: 1; min-width: 120px; }
+#btn-create-quest { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 4px 10px; border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: 700; white-space: nowrap; }
+#btn-create-quest:hover { background: rgba(184,124,40,0.12); }
 
-/* ── Story Center ────────────────────────────────────── */
-#story-center { background: #2a1208; }
-#s-node-num { background: #562717; border: 2px solid #E76219; color: #FEA712; font-weight: 900; border-radius: 6px; letter-spacing: 1px; }
-#s-node-name { color: #FDDCA9; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
-#s-node-act { color: #E76219; letter-spacing: 2px; }
+/* ── Story Center (light theme) ──────────────────────── */
+#story-center { background: var(--bg); }
+#s-node-num { background: var(--panel); border: 2px solid var(--border); color: var(--gold); font-weight: 900; border-radius: 6px; letter-spacing: 1px; }
+#s-node-name { color: var(--text); font-weight: 800; letter-spacing: 0.3px; }
+#s-node-act  { color: var(--dim); letter-spacing: 1.5px; }
 
 #story-text-box {
-  background: #3d1510;
-  border: 3px solid #E76219;
-  border-radius: 8px;
-  color: #FDDCA9;
-  line-height: 1.7;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-left: 5px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  line-height: 1.8;
+  box-shadow: inset 0 1px 4px rgba(42,26,10,0.07);
 }
 
-/* ── Info Chips — rainbow border rotation ────────────── */
+/* ── Info Chips (light theme) ─────────────────────────── */
 .info-chip {
-  background: #3d1510;
-  border: 2px solid #E76219;
-  border-radius: 8px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
 }
-.info-chip .chip-lbl { color: #E76219; text-transform: uppercase; font-size: 9px; letter-spacing: 0.8px; }
-/* rainbow rotation */
-.info-chip:nth-child(5n+1) { border-color: #FDDCA9; }
-.info-chip:nth-child(5n+2) { border-color: #C21717; }
-.info-chip:nth-child(5n+3) { border-color: #E76219; }
-.info-chip:nth-child(5n+4) { border-color: #FEA712; }
-.info-chip:nth-child(5n+0) { border-color: #562717; border-width: 3px; }
-/* chip type overrides — retain identity but use palette */
-.info-chip.npc-chip    { border-color: #FEA712; color: #FDDCA9; }
-.info-chip.npc-chip:hover { background: #562717; border-color: #FDDCA9; }
-.info-chip.loot-chip   { border-color: #E76219; color: #FEA712; }
-.info-chip.loot-collected { border-color: #562717; color: #b07040; }
-.info-chip.battle-chip { border-color: #C21717; color: #E76219; }
-.info-chip.battle-chip:hover { background: #2a0505; border-color: #E76219; }
-.info-chip.stalk-chip  { border-color: #E76219; color: #FEA712; }
-.info-chip.stalk-chip:hover { background: #562717; border-color: #FEA712; }
-.info-chip.portal-chip { border-color: #FEA712; color: #FDDCA9; }
-.info-chip.portal-chip:hover { background: #562717; }
-.info-chip.rest-chip   { border-color: #FEA712; color: #FDDCA9; }
-.info-chip.rest-chip:hover { background: #562717; border-color: #FDDCA9; }
-.info-chip.rest-chip-empty { border-color: #562717; color: #b07040; border-width: 2px; }
-.info-chip.corpse-chip { border-color: #C21717; color: #E76219; }
-.info-chip.corpse-chip:hover { background: #2a0505; border-color: #E76219; }
-.info-chip.hearth-set  { border-color: #E76219; color: #FEA712; }
-.info-chip.hearth-set:hover { background: #562717; border-color: #FEA712; }
-.info-chip.hearth-home { border-color: #FEA712; color: #FDDCA9; }
-.info-chip.battle-defeated { border-color: #3d1510; color: #b07040; }
-.info-chip.final-battle-chip { border-color: #FEA712; color: #FEA712; font-weight: 900; animation: pulse-gold 1.5s infinite; }
+.info-chip .chip-lbl { color: var(--muted); }
+.info-chip.npc-chip    { border-color: var(--border); color: var(--text); }
+.info-chip.npc-chip:hover { background: var(--panel2); }
+.info-chip.loot-chip   { border-left: 3px solid var(--gold); color: var(--gold); }
+.info-chip.loot-collected { border-color: var(--muted); color: var(--muted); }
+.info-chip.battle-chip { border-left: 3px solid var(--red-lt); color: var(--red); }
+.info-chip.battle-chip:hover { background: rgba(192,48,32,0.07); }
+.info-chip.stalk-chip  { border-left: 3px solid var(--gold-lt); color: var(--gold); }
+.info-chip.stalk-chip:hover { background: rgba(184,124,40,0.08); }
+.info-chip.portal-chip { border-left: 3px solid var(--sky); color: var(--sky-dk); }
+.info-chip.portal-chip:hover { background: rgba(123,170,184,0.1); }
+.info-chip.rest-chip   { border-left: 3px solid var(--sky-dk); color: var(--sky-dk); }
+.info-chip.rest-chip:hover { background: rgba(123,170,184,0.12); }
+.info-chip.rest-chip-empty { border-color: var(--muted); color: var(--muted); }
+.info-chip.corpse-chip { border-left: 3px solid var(--border); color: var(--dim); }
+.info-chip.corpse-chip:hover { background: var(--panel2); }
+.info-chip.hearth-set  { border-left: 3px solid var(--gold); color: var(--gold); cursor: pointer; }
+.info-chip.hearth-set:hover { background: rgba(184,124,40,0.08); }
+.info-chip.hearth-home { border-left: 3px solid var(--gold-lt); color: var(--gold); }
+.info-chip.battle-defeated { border-color: var(--muted); color: var(--muted); }
+.info-chip.final-battle-chip { border-left: 4px solid var(--gold); border-color: var(--gold); color: var(--gold); font-weight: 900; animation: pulse-gold 1.5s infinite; }
 @keyframes pulse-gold { 0%,100%{ box-shadow:0 0 4px rgba(254,167,18,0.3); } 50%{ box-shadow:0 0 14px rgba(254,167,18,0.7); } }
 
 /* ── Pre-Battle Overlay ──────────────────────────────── */
@@ -3000,49 +3028,50 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 #btn-eb-npc-accept:hover { background: #6a3a10; border-color: #e0a030; color: #ffe090; }
 @keyframes pulse-red { 0%,100%{opacity:1} 50%{opacity:.5} }
 
-/* ── Story Mode Buttons ──────────────────────────────── */
-#story-mode-btn { border: 3px solid #E76219; background: #562717; color: #FEA712; border-radius: 8px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
-#story-mode-btn:hover { background: #E76219; color: #120600; border-color: #FEA712; }
-#story-mode-btn.active { background: #C21717; border-color: #E76219; color: #FDDCA9; }
-#btn-inventory, #btn-quests, #btn-story-map { background: #3d1510; border: 2px solid #E76219; color: #FEA712; border-radius: 6px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-#btn-inventory:hover, #btn-quests:hover, #btn-story-map:hover { background: #562717; border-color: #FEA712; color: #FDDCA9; }
-#btn-waypoint { border: 2px solid #FEA712; color: #FEA712; border-radius: 6px; font-weight: 700; background: #2a1200; }
-#btn-waypoint:hover { border-color: #FDDCA9; color: #FDDCA9; background: rgba(254,167,18,0.12); }
-#btn-waypoint.at-waypoint { border-color: #22cc66; color: #22cc66; background: #0d2010; }
-/* ── Character Sheet ── */
-#sheet-character { background: #1a0802; }
-#char-sheet-header {
-  display: flex; justify-content: space-between; align-items: center;
-  border-bottom: 2px solid #562717; padding-bottom: 6px; flex-shrink: 0;
+/* ── Story Mode Buttons (light theme) ────────────────── */
+#story-mode-btn { border: 2px solid var(--border); background: var(--panel); color: var(--text); border-radius: 6px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+#story-mode-btn:hover { background: var(--panel2); border-color: var(--c3); color: var(--c3); }
+#story-mode-btn.active { background: var(--c1); border-color: var(--c3); color: var(--c5); }
+#btn-inventory, #btn-waypoint, #btn-story-map, #btn-character, #btn-journal-browse {
+  background: var(--panel); border: 1px solid var(--border); color: var(--dim);
+  border-radius: 5px; font-weight: 600; width: 100%; padding: 5px;
+  font-size: 11px; letter-spacing: 0.3px; cursor: pointer;
+  transition: border-color .12s, background .12s, color .12s;
 }
-#char-sheet-title { color: #FEA712; font-weight: 900; font-size: 13px; text-transform: uppercase; letter-spacing: 2px; }
-#btn-char-close { background: transparent; border: 1px solid #562717; color: #b07040; padding: 2px 8px; border-radius: 3px; cursor: pointer; font-size: 11px; }
-#btn-char-close:hover { border-color: #FEA712; color: #FEA712; }
+#btn-inventory:hover, #btn-waypoint:hover, #btn-story-map:hover, #btn-character:hover, #btn-journal-browse:hover {
+  background: var(--panel2); border-color: var(--gold); color: var(--gold);
+}
+#btn-waypoint.at-waypoint { border-color: var(--grn-lt); color: var(--grn-lt); background: rgba(58,122,58,0.08); }
+/* ── Character Sheet (light theme) ── */
+#sheet-character { background: var(--bg); }
+#char-sheet-header { border-bottom: 2px solid var(--border); padding-bottom: 6px; flex-shrink: 0; }
+#char-sheet-title { color: var(--gold); font-weight: 900; font-size: 13px; text-transform: uppercase; letter-spacing: 2px; }
+#btn-char-close { background: transparent; border: 1px solid var(--border); color: var(--dim); padding: 2px 8px; border-radius: 3px; cursor: pointer; font-size: 11px; }
+#btn-char-close:hover { border-color: var(--gold); color: var(--gold); }
 #char-sheet-body { flex: 1; overflow-y: auto; }
-.cs-section { border-top: 1px solid #3d1510; padding: 6px 0; }
+.cs-section { border-top: 1px solid var(--border); padding: 6px 0; }
 .cs-section:first-child { border-top: none; }
-.cs-section-title { font-size: 9px; font-weight: 900; color: #E76219; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px; }
+.cs-section-title { font-size: 9px; font-weight: 900; color: var(--border); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px; }
 .cs-stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin: 4px 0; }
-.cs-stat { background: #2a1208; border: 1px solid #562717; border-radius: 4px; padding: 4px; text-align: center; }
-.cs-stat-label { font-size: 8px; color: #b07040; text-transform: uppercase; }
-.cs-stat-score { font-size: 16px; font-weight: 900; color: #FDDCA9; }
-.cs-stat-mod { font-size: 10px; color: #FEA712; }
+.cs-stat { background: var(--panel); border: 1px solid var(--border); border-radius: 4px; padding: 4px; text-align: center; }
+.cs-stat-label { font-size: 8px; color: var(--muted); text-transform: uppercase; }
+.cs-stat-score { font-size: 16px; font-weight: 900; color: var(--text); }
+.cs-stat-mod { font-size: 10px; color: var(--gold); }
 .cs-row { display: flex; justify-content: space-between; font-size: 11px; padding: 2px 0; }
-.cs-row-lbl { color: #b07040; }
-.cs-row-val { color: #FDDCA9; font-weight: 700; }
-.cs-feature { font-size: 11px; padding: 3px 0; color: #FDDCA9; }
+.cs-row-lbl { color: var(--muted); }
+.cs-row-val { color: var(--text); font-weight: 700; }
+.cs-feature { font-size: 11px; padding: 3px 0; color: var(--text); }
 .cs-feature-icon { margin-right: 4px; }
-.cs-feature.upcoming { color: #3d2010; }
-.tattoo-item { border-left: 3px solid #562717 !important; }
-.tattoo-item:hover { border-left-color: #FEA712 !important; }
-/* ── Progression interleaved table ── */
-.cs-prog-row { display:flex; align-items:center; gap:4px; font-size:11px; padding:2px 0; color:#FDDCA9; }
-.cs-prog-row.upcoming { color:#3d2010; }
-.cs-tattoo-row { display:flex; align-items:center; gap:4px; font-size:10px; padding:1px 0 3px 14px; border-left:2px solid #562717; margin-left:14px; color:#b07040; }
-.cs-tattoo-row.upcoming { color:#2a1208; border-left-color:#2a1208; }
-.cs-feat-lvl { color:#E76219; font-size:9px; font-weight:900; min-width:22px; flex-shrink:0; }
+.cs-feature.upcoming { color: var(--muted); opacity: 0.5; }
+.tattoo-item { border-left: 3px solid var(--border) !important; }
+.tattoo-item:hover { border-left-color: var(--gold) !important; }
+.cs-prog-row { display:flex; align-items:center; gap:4px; font-size:11px; padding:2px 0; color:var(--text); }
+.cs-prog-row.upcoming { color:var(--muted); opacity:0.5; }
+.cs-tattoo-row { display:flex; align-items:center; gap:4px; font-size:10px; padding:1px 0 3px 14px; border-left:2px solid var(--border); margin-left:14px; color:var(--dim); }
+.cs-tattoo-row.upcoming { color:var(--muted); border-left-color:var(--muted); opacity:0.4; }
+.cs-feat-lvl { color:var(--border); font-size:9px; font-weight:900; min-width:22px; flex-shrink:0; }
 .cs-feat-name { flex:1; }
-.cs-feat-tag { font-size:9px; color:#b07040; background:#2a1208; padding:0 3px; border-radius:2px; flex-shrink:0; }
+.cs-feat-tag { font-size:9px; color:var(--muted); background:var(--panel2); padding:0 3px; border-radius:2px; flex-shrink:0; }
 .cs-tattoo-name { flex:1; font-style:italic; }
 
 /* ── Map Overlay ─────────────────────────────────────── */
@@ -3070,8 +3099,8 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 .ds-die.success { border-color: #FEA712; background: #3d2a00; color: #FEA712; }
 .ds-die.failure { border-color: #C21717; background: #3d0505; color: #C21717; }
 
-/* ── Rest Chip ───────────────────────────────────────── */
-.rest-chip { background: #3d1510; border: 2px solid #FEA712; border-radius: 8px; color: #FEA712; font-weight: 700; }
+/* ── Rest Chip (light theme) ── */
+.rest-chip { background: var(--panel); border: 1px solid var(--sky-dk); border-radius: 6px; color: var(--sky-dk); font-weight: 700; }
 .rest-chip:hover { background: #562717; border-color: #FDDCA9; color: #FDDCA9; }
 .rest-chip-used { border-color: #562717; color: #b07040; }
 
@@ -3766,6 +3795,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
     <div id="story-left">
       <div id="story-act-badge">— Act I —</div>
 
+      <div class="sidebar-section-lbl">Character</div>
       <!-- Vitals group: HP bar + Level -->
       <div class="sidebar-group">
         <div class="stat-row">
@@ -3779,6 +3809,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
         </div>
       </div>
 
+      <div class="sidebar-section-lbl">Equipped</div>
       <!-- Equipment group: main weapon + offhand/shield -->
       <div class="sidebar-group" id="s-equipment-group">
         <div class="weapon-row">
@@ -3791,6 +3822,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
         </div>
       </div>
 
+      <div class="sidebar-section-lbl">Resources</div>
       <!-- Resources group: potions, gold, shards, void, day, rest -->
       <div class="sidebar-group">
         <div class="stat-row"><span class="stat-lbl">🧪 Potions</span><span class="stat-val" id="s-potions">×0</span></div>
@@ -3801,17 +3833,13 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
         <div class="stat-row"><span class="stat-lbl">🌙 Rest</span><span class="stat-val" id="s-rests">3/3</span></div>
       </div>
 
-      <!-- Travel log (fills remaining space) -->
-      <div id="story-log-box">
-        <!-- travel log populated by JS -->
-      </div>
-
       <!-- Secondary stats + nav buttons -->
       <div id="story-status">
         <div class="stat-row"><span class="stat-lbl">🎒 Items</span><span class="stat-val" id="s-inv-count">0</span></div>
         <div class="stat-row" id="s-dis-row" style="display:none"><span class="stat-lbl">😴 DIS</span><span class="stat-val danger" id="s-dis-count"></span></div>
         <div class="stat-row"><span class="stat-lbl">⚠ Notoriety</span><span class="stat-val" id="s-notoriety">3</span></div>
         <div class="stat-row"><span class="stat-lbl">🏁 CP</span><span class="stat-val" id="s-checkpoint">Start</span></div>
+        <div class="story-nav-section-lbl">Navigate</div>
         <button id="btn-inventory">📦 Inventory [I]</button>
         <button id="btn-quest">📋 Quests [Q] <span id="s-quest-count"></span></button>
         <button id="btn-story-map">🗺 Map [M]</button>
@@ -3845,6 +3873,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
       <div id="story-farewell" style="display:none;"></div>
       <div id="story-text-box">Arriving in Birka…</div>
 
+      <div class="chips-section-lbl">Actions</div>
       <div id="story-info-row">
         <!-- chips populated by JS -->
       </div>
@@ -4127,9 +4156,15 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
       <span style="color:#4a90b0">⚔ Active battle</span>
       <span style="color:#4a90b0">🛏 Inn</span>
     </div>
-    <div id="map-grid"></div>
-    <div id="map-node-info">Hover a node to see its name.</div>
-    <div id="map-status-bar"></div>
+    <div id="map-main-area">
+      <div id="map-grid"></div>
+      <div id="map-node-info">Hover a node to see its name.</div>
+      <div id="map-status-bar"></div>
+      <div id="map-travel-log">
+        <div id="map-travel-log-hd">📍 Location History</div>
+        <div id="map-travel-log-list"></div>
+      </div>
+    </div>
   </div>
 
   </div><!-- /story-panel -->
@@ -16067,18 +16102,21 @@ function storyRender(node, prefix) {
   document.getElementById('btn-dpad-rest').disabled = false;  // always clickable (0 rests → shows auto-quest)
   _updateHuntBtn();
   // Log
-  const logBox = document.getElementById('story-log-box');
-  logBox.innerHTML = '';
-  const trail = [...S_story.log.slice(-8), S_story.currentCode];
-  trail.forEach((code, i) => {
-    const n = NODE_MAP[code];
-    if (!n) return;
-    const div = document.createElement('div');
-    div.className = 'story-log-entry' + (i === trail.length - 1 ? ' current' : '');
-    div.textContent = (i === trail.length - 1 ? '▶ ' : '  ') + String(n.num).padStart(2,'0') + ' ' + n.name;
-    logBox.appendChild(div);
-  });
-  logBox.scrollTop = logBox.scrollHeight;
+  // Build travel log entries in both sidebar (removed) and map overlay
+  const mapLogList = document.getElementById('map-travel-log-list');
+  if (mapLogList) {
+    mapLogList.innerHTML = '';
+    const fullTrail = [...S_story.log, S_story.currentCode];
+    fullTrail.forEach((code, i) => {
+      const n = NODE_MAP[code];
+      if (!n) return;
+      const div = document.createElement('div');
+      div.className = 'story-log-entry' + (i === fullTrail.length - 1 ? ' current' : '');
+      div.textContent = (i === fullTrail.length - 1 ? '▶ ' : '  ') + String(n.num).padStart(2,'0') + ' ' + n.name;
+      mapLogList.appendChild(div);
+    });
+    mapLogList.scrollTop = mapLogList.scrollHeight;
+  }
   // Status
   storyUpdateStatus();
   // Quests + messages
