@@ -689,12 +689,12 @@ Five additional NPCs will be present at YC alongside The Fisherman (who is the M
 
 **Tournament:** 1v1 betting, best-of-1 round. Player bets gold against opponent's stake. Opponent rolls their own cast using their competence tier as a bait bonus. Highest fish rank wins. Tie → Luck modifier tiebreaker. Win = gold + title upgrade. See `plan.md` §XII-N–XII-P for quest chain Q-TOUR-01 through Q-TOUR-06.
 
-**[PLANNED — Layer 47] The Outsider Merchant — Q-BAIT-00: "Listen Closely"**  
-A trader appears at the cabin door on the player's first visit to YC. He blocks entry until the player chooses [LISTEN]. He delivers a complete briefing on the fishing system — the bait loop, the zones, the predator conditions, the magic drops, the monster loot nerf — then is gone on every subsequent visit. No name. No farewell. The cabin door is open. The Fisherman is inside saying Yugurt.
+**[✅ Layer 47 — Fishing Guide implemented via quest_fishing_guide]**  
+The Outsider Merchant delivery mechanism (spec) was superseded. The Fisherman himself delivers the **Fishing Guide** after the player casts once at YL and returns to YC. Quest `quest_fishing_guide` (*"The Fisherman: Listen Closely"*) activates at node YC; completes when `(S_story.fishingCatchLog||[]).length > 0 && S_story.currentCode === 'YC'`. Reward: `Fishing Guide` readable item pushed to inventory. While in inventory, the fishing modal shows zone DCs (Shore DC 8 · Reeds DC 12 · Deep DC 16). `FISHING_GUIDE_TEXT` const holds the full annotated guide text.
 
-*"You fish for bait. You use bait to fish... The quality depends on how lucky you are. Not how strong. Lucky. There's a difference. The lake knows the difference."*
+*"The lake knows the difference between someone casting and someone fishing. After a few visits, so will you."* — The Fisherman, FISHING_GUIDE_TEXT
 
-- **Q-BAIT-00** — *Listen Closely*: The Outsider Merchant blocks the cabin door and recites his briefing — precise, numbered, mechanical, like a man who memorized every word. At the end he holds out a folded pamphlet: **YUGURT LAKE — FISHING GUIDE**. *"You can go now."* He leaves before you do. The Guide goes into inventory (readable, permanent, not sellable). While carried, zone DCs are shown in the fishing modal. → Obtain Fishing Rod → catch 1 bait fish → defeat 1 predator fish. Auto-completes on first predator win. Reward: Starter Tackle Pouch (3× Fathead Minnow, 2× Golden Shiner) + 75 XP. See `plan.md` §XII-Z for full beat structure, Guide text, and implementation notes.
+Tournament circuit (Q-TOUR series) and Six Fishermen NPCs remain ⚠️ PLANNED.
 
 **[PLANNED — Layer 47] Fishing Quest Stubs**  
 - **Q-FISH-00** — *The Rod and the Lake*: Obtain Fishing Rod from The Fisherman; trigger first cast at YL  
@@ -1483,13 +1483,12 @@ Prerequisites: `ngPlusRun ≥ 1` + `wmFirstResearcherKnown` (from §XVI) + `entr
 
 ---
 
-#### ⚠️ PLANNED — Living World: Junction Vignettes + Road Companion (plan.md §XVIII, Layer 53)
+#### Living World: Junction Vignettes + Road Companion *(Layer 53 — ✅ Implemented)*
 
-No prerequisites. Two texture layers added to open-world traversal.
+Two texture layers added to open-world traversal. No state flags on either system.
 
-- **Junction Vignettes** — J1–J7 junction nodes gain one NPC on first visit: Tessie (J1), Old Faeron (J2), Mira (J3, Act III+), The Cartographer (J4), Wren (J5), empty note (J6, Act VII+), child's toy (J7). Optional `[HELP]` (10gp donation; Curse of Knowledge credit). No quest, no state flags.
-- **Road Companion** — one named traveler per act (Acts II–VI) delivers one lore line in the first corridor cell departing a hub node: Dessa (Act II, harbor ledger), Olaf (Act III, Scholar Kings lockout date), Maret (Act IV, Visby west gate), Pilgrim (Act V, MT sealed tunnel), empty road (Act VI). No state tracking.
-- See plan.md §XVIII for full NPC dialogue, companion lines, and implementation spec.
+- **Junction Vignettes** (`JUNCTION_VIGNETTES`, HTML line 11145) — J1–J7 junction nodes each have one NPC on first visit: Tessie (J1), Old Faeron (J2), Mira (J3, Act III+), The Cartographer (J4), Wren (J5), empty note (J6), child's toy (J7), empty verge (RD). Optional `[HELP]` button (10gp donation). Rendered in `storyRender()` at HTML line 15608 when `node.junction` and `JUNCTION_VIGNETTES[node.code]` exist.
+- **Road Companion** (`COMPANION_LINES`, HTML line 11155) — one named traveler per act (Acts II–VI) delivers one lore line in the first corridor cell departing a hub node: Dessa (Act II, harbor ledger), Olaf (Act III, Scholar Kings lockout date), Maret (Act IV, Visby west gate), Pilgrim (Act V, MT sealed tunnel), empty road (Act VI). Rendered at HTML line 17152 when `act >= 2 && !companionActsSeen[act]`. No repeat per act.
 
 ---
 
@@ -1599,7 +1598,7 @@ Collecting all 7 fires journal reward: *"Seven people carried the pieces. Five o
 
 ---
 
-#### ⚠️ PLANNED — Corelli the Wandering Merchant (plan.md §XXVI, Layer 61)
+#### Corelli the Wandering Merchant *(Layer 61 — ✅ Implemented)*
 
 A new NPC archetype: a vendor-modal NPC who appears at 5 nodes across 5 acts, moving through the world on their own route. Favorability is purchase-gated (not conversation/quest-gated). Former Ivory Circle courier — connects the player's knowledge arc to the suppression of the First Researcher (§XVI/§XVII).
 
@@ -2352,6 +2351,8 @@ MILEPOINT F  ebReturnDone[ebCode] = true; quest_[code]_return set to 'complete'
 ---
 
 ### FL7 — NPC Dialogue Priority
+
+**`NPC_DIALOGUE`** (HTML line 8210) — 27-entry dictionary keyed by node code. Each entry: `{name, quote}`. Covers all non-Birka story NPCs (Magistra Muffat, Sandmage Izador, Fisherman, etc.) plus static fallback quotes for the five Birka Six nodes. Used by `storyShowNpc()` when `BIRKA_NPC_PROFILES` does not apply. → doc: story.md §FL7
 
 ```
 MILEPOINT A  Player enters node → storyShowNpc(nodeCode) dispatches to _renderNpcCard(key, container)

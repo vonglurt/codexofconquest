@@ -1,6 +1,6 @@
 # Roll2Hit — Combat System Reference
 **File:** `roll2hit-v3.html` · **Layers:** 11–17 (battle engine), 21 (level-up), 23 (notoriety), 36–37 (features, d-pad, Boyscout)  
-**Last synced:** 2026-05-24 · ~14,377 lines · 515 div pairs
+**Last synced:** 2026-05-26 · 17,762 lines · §API-02 line numbers verified
 
 ---
 
@@ -44,7 +44,7 @@ _showBattleOverlay()
 
 ## Conditions & ADV/DIS Reference
 
-> **Source:** `CONDITION_ADV` const, HTML line 5831. Applied by `applyCondition(side, condKey)`. Each condition sets one combatant's `adv` field to `'adv'` or `'dis'`, which is consumed by `rollD20(advState)`.
+> **Source:** `CONDITION_ADV` const, HTML line 5999. Applied by `applyCondition(side, condKey)`. Each condition sets one combatant's `adv` field to `'adv'` or `'dis'`, which is consumed by `rollD20(advState)`.
 
 | Key | Label | Side | Effect | Note |
 |---|---|---|---|---|
@@ -466,43 +466,61 @@ MILEPOINT D  3 failures → _storyDeathSaveFall()
 
 | Function | Line | Purpose | Key data read | Key data written |
 |----------|------|---------|---------------|-----------------|
-| `roll(sides)` | 5319 | Core die roll: floor(random × sides) + 1 | sides | returns int |
-| `rollN(sides, count)` | 5323 | Rolls N dice; returns array | sides, count | returns int[] |
-| `rollNExploding(sides, count)` | 5329 | Rolls N dice; re-rolls each max value | sides, count | returns int[] (can exceed N elements) |
-| `abilityMod(score)` | 5342 | Returns floor((score−10)/2) | score | returns int |
-| `getProfBonus()` | 5346 | Returns ceil(level/4)+1; or override | `S.char.level/prof/profOverride` | returns int |
-| `getAtkAbilityMod()` | 5351 | ATK ability mod + finesse + extra-mod field | `S.char.*`, atk-ability UI, atk-extra-mod UI | returns int |
-| `getDmgMod()` | 5362 | Damage ability mod (STR or DEX for finesse) | `S.char.*`, atk-ability UI | returns int |
-| `resolveAdv(pm, om)` | 5370 | Combines player+opponent ADV/DIS flags | pm (player mod), om (opp mod) | returns 'adv'\|'dis'\|'norm' |
-| `rollD20(advState)` | 5378 | Rolls 1 or 2d20; returns {result, rolls[]} | advState string | returns {result, rolls} |
-| `playerRoll()` | 5907 | Entry point for player attack in Battle Mode | `S.multiAttack` | calls `doPlayerAttack(1, total)` |
-| `doPlayerAttack(attackNum, total)` | 5915 | Resolves one player attack: roll → hit/miss/crit → damage chips | `S.player.adv`, `S.opp.adv/ac`, `S.weapon.*` | `S.lastHit`, roll history; calls `appendCard()` |
-| `rollMainDamage()` | 6106 | Rolls main-hand weapon damage after hit | `S.weapon.die/count/flatMod`, crit flag | `S.opp.hp`; appends damage chips |
-| `offhandRoll()` | 6199 | Offhand dagger attack + damage | `S_story.equippedWeapon`, `S.usedRealAttack` | `S.opp.hp`; bonus-action consumed |
-| `bonusRoll()` | 6289 | Bonus action roll (misc) | `S.player.*` | `S.opp.hp` |
-| `oppRoll()` | 6421 | Enemy attack: d20+atk vs char.ac; damage on hit | `S.enemy.atk/dmgDie/dmgCount/dmgFlat`, `S.char.ac` | `S.player.hp`; calls `appendCard()` |
-| `applyCondition(side, condKey)` | 5860 | Applies condition effect (ADV/DIS) to combatant | `CONDITION_ADV[condKey]`, side string | `S.player.adv` or `S.opp.adv` |
-| `newCombat()` | 6507 | Resets Battle Mode for a new encounter | `S` defaults | `S.round`, HP, adv, cond fields cleared |
-| `syncCharFromUI()` | 6567 | Syncs S.char from UI input fields | UI char-* elements | `S.char.*` |
-| `_calcPlayerAc()` | 8787 | Computes AC: baseAc + shield.acBonus + acBonus | `S.char.baseAc/ac`, `equippedShield`, `S_story.acBonus` | returns int |
-| `_storyRollInit()` | 8800 | Story initiative: player d20 vs enemy d20+tierMod | `S.opp.tier` | `S_story.battleTurn/battlePRoll/battleERoll/battleRound`, used* flags |
-| `_showBattleOverlay()` | 8817 | Story→Battle sync: HP, AC, weapon, ability scores, pit perks | `S_story.*`, `S_story.equippedMainWeapon` | `S.player/char/weapon.*`; DOM battle fields |
-| `storyShowOutcome()` | 13200 | Shows outcome modal pre-filled with post-battle HP | `S_story.pendingBattle`, `S.player.hp` | DOM outcome modal |
-| `storyApplyOutcome(won)` | 13209 | Applies battle result back to S_story: HP, defeat flag, loot, EB quest | `outcome-hp-input`, `pendingBattle`, `S._pendingDrop` | `S_story.hp`, `defeatedBattles`, `quests`, `inventory`, `waypoint` |
-| `_storyRollInit()` | 8800 | Story initiative roll (see above) | — | — |
-| `_overlayFlee()` | 9664 | Flee dispatcher: clean flee (after attack) vs mutual (before attack) | `battleTurn`, `usedMainAttack`, `usedBonusAction` | calls `_storyFleeClean()` or `_storyFleeMutual()` |
-| `_storyFleeClean()` | 9673 | Clean flee after player attack: exits battle, no penalty | `S_story.usedBonusAction` | `pendingBattle = null`; battle overlay closed |
-| `_storyFleeMutual()` | 9683 | Mutual flee: both combatants swap one free attack | `S.player/enemy.*` | `S.opp.hp`, `S.player.hp`, `S_story.hp` |
-| `_storyEnterDeathSaves()` | 9859 | Enters death save UI; hides action row; shows DS panel | — | `storyDeathSaves = {0,0,true}` |
-| `_storyUpdateDsPips()` | 9851 | Renders success/failure pip indicators | `storyDeathSaves.successes/failures` | DOM sbo-ds-pip elements |
-| `_storyRollDeathSave()` | 9873 | Rolls one death save d20; handles Indomitable reroll | `storyDeathSaves`, `indomitableCharges` | `storyDeathSaves.successes/failures`, `indomitableCharges` |
-| `_storyDeathSaveCrawl()` | 9915 | 3-success path: hp=1; close battle; storyEnter() | — | `S_story.hp=1`, `pendingBattle=null` |
-| `_storyDeathSaveFall()` | 9932 | 3-failure path: strip gold+items to corpse; respawn at checkpoint | `pendingBattle.nodeCode`, `inventory`, `gold` | `corpsesQuests.push()`, `gold=0`, `inventory` stripped, `currentCode=checkpointNode` |
-| `_storyRetrieveCorpse(questId)` | 9979 | Retrieves items+gold from a corpse quest back to inventory | `corpsesQuests`, questId | `inventory` restored, `gold` restored, corpse quest removed |
-| `_renderSboShield()` | 9743 | Shows/hides shield row in battle overlay; disables unequip btn unless bonus-action phase | `S_story.equippedShield`, `usedMainAttack`, `usedBonusAction`, `battleTurn` | DOM `#sbo-shield-row`, `#sbo-shield-name`, `#btn-sbo-unequip-shield` |
-| `_storyUnequipShield()` | 9754 | Unequips shield as bonus action after main attack; triggers enemy turn | `usedMainAttack`, `usedBonusAction`, `equippedShield` | `equippedShield=null`, `inventory.push()`, `_calcPlayerAc()`, `battleTurn='enemy'` |
-| `enterDeathSaves()` | 6021 | Battle Mode death saves (parallel, not shared with Story layer) | `S.player.*` | `S.deathSaves.*` |
-| `rollDeathSave()` | 6040 | Rolls one Battle Mode death save d20 | `S.deathSaves` | `S.deathSaves.successes/failures` |
+| `roll(sides)` | 5483 | Core die roll: floor(random × sides) + 1 | sides | returns int |
+| `rollN(sides, count)` | 5487 | Rolls N dice; returns array | sides, count | returns int[] |
+| `rollNExploding(sides, count)` | 5493 | Rolls N dice; re-rolls each max value | sides, count | returns int[] (can exceed N elements) |
+| `abilityMod(score)` | 5506 | Returns floor((score−10)/2) | score | returns int |
+| `getProfBonus()` | 5510 | Returns ceil(level/4)+1; or override | `S.char.level/prof/profOverride` | returns int |
+| `getAtkAbilityMod()` | 5515 | ATK ability mod + finesse + extra-mod field | `S.char.*`, atk-ability UI, atk-extra-mod UI | returns int |
+| `getDmgMod()` | 5526 | Damage ability mod (STR or DEX for finesse) | `S.char.*`, atk-ability UI | returns int |
+| `resolveAdv(pm, om)` | 5534 | Combines player+opponent ADV/DIS flags | pm (player mod), om (opp mod) | returns 'adv'\|'dis'\|'norm' |
+| `rollD20(advState)` | 5542 | Rolls 1 or 2d20; returns {result, rolls[]} | advState string | returns {result, rolls} |
+| `applyCondition(side, condKey)` | 6030 | Applies condition effect (ADV/DIS) to combatant | `CONDITION_ADV[condKey]`, side string | `S.player.adv` or `S.opp.adv` |
+| `enterDeathSaves()` | 6194 | Battle Mode death saves (parallel, not shared with Story layer) | `S.player.*` | `S.deathSaves.*` |
+| `rollDeathSave()` | 6213 | Rolls one Battle Mode death save d20 | `S.deathSaves` | `S.deathSaves.successes/failures` |
+| `playerRoll()` | 6077 | Entry point for player attack in Battle Mode | `S.multiAttack` | calls `doPlayerAttack(1, total)` |
+| `doPlayerAttack(attackNum, total)` | 6085 | Resolves one player attack: roll → hit/miss/crit → damage chips | `S.player.adv`, `S.opp.adv/ac`, `S.weapon.*` | `S.lastHit`, roll history; calls `appendCard()` |
+| `rollMainDamage()` | 6282 | Rolls main-hand weapon damage after hit | `S.weapon.die/count/flatMod`, crit flag | `S.opp.hp`; appends damage chips |
+| `offhandRoll()` | 6375 | Offhand dagger attack + damage | `S_story.equippedWeapon`, `S.usedRealAttack` | `S.opp.hp`; bonus-action consumed |
+| `bonusRoll()` | 6465 | Bonus action roll (misc) | `S.player.*` | `S.opp.hp` |
+| `oppRoll()` | 6597 | Enemy attack: d20+atk vs char.ac; damage on hit | `S.enemy.atk/dmgDie/dmgCount/dmgFlat`, `S.char.ac` | `S.player.hp`; calls `appendCard()` |
+| `newCombat()` | 6683 | Resets Battle Mode for a new encounter | `S` defaults | `S.round`, HP, adv, cond fields cleared |
+| `syncCharFromUI()` | 6743 | Syncs S.char from UI input fields | UI char-* elements | `S.char.*` |
+| `_magicTierAllowed(magic)` | 9441 | `S_story.level >= magic*5` — checks if player can hold +n magic items | `S_story.level` | returns bool |
+| `_rollD100Loot()` | 9472 | Unified d100 loot table roll with 3-reroll gate fallback | `_D100_TABLE`, `S_story.level` | `S_story.inventory`; returns result string |
+| `_calcPlayerAc()` | 9548 | Computes AC: baseAc + shield.acBonus + acBonus | `S.char.baseAc/ac`, `equippedShield`, `S_story.acBonus` | returns int |
+| `_storyRollInit()` | 9549 | Story initiative: player d20 vs enemy d20+tierMod | `S.opp.tier` | `S_story.battleTurn/battlePRoll/battleERoll/battleRound`, used* flags |
+| `_showBattleOverlay()` | 9568 | Story→Battle sync: HP, AC, weapon, ability scores, pit perks | `S_story.*`, `S_story.equippedMainWeapon` | `S.player/char/weapon.*`; DOM battle fields |
+| `_extraAttackCount()` | 9897 | Returns 1/2/3/4 based on level | `S_story.level` | returns int |
+| `_overlayPlayerAttack()` | 9905 | Loop `_extraAttackCount()` rolls; each fully resolved; mid-loop victory check | `S.player.*`, `S.opp.*` | `S.opp.hp`; mid-loop `_storyBattleVictory()` if enemy dies |
+| `_storyBattleVictory()` | 10071 | Award XP/gold/HP; collect drops; show victory overlay | `S.opp.ac/maxHP`, `S._pendingDrop` | `S_story.xp/gold/hp`, `defeatedBattles`, `inventory` |
+| `_storyEnemyTurn()` | 10013 | Enemy attack roll; apply damage; check death saves | `S.enemy.atk/dmgDie`, `S.char.ac` | `S.player.hp`, `S_story.hp`; calls `_storyEnterDeathSaves()` if hp≤0 |
+| `_showLevelUpModal(lvl)` | 10395 | Apply HP roll + ASI/gifts + bonus HP roll for Lv7/10/13/18; populate modal DOM | `S_story.level/xp`, `FIGHTER_FEATURES` | `S_story.hp/hpMax`, tattoos; DOM modal |
+| `_checkLevelUp()` | 10451 | Advance S_story.level if XP threshold crossed; fill queue | `S_story.xp/level`, `XP_LEVELS` | `S_story.level`; `_levelUpQueue.push()` |
+| `_overlayFlee()` | 10460 | Flee dispatcher: clean flee (after attack) vs mutual (before attack) | `battleTurn`, `usedMainAttack`, `usedBonusAction` | calls `_storyFleeClean()` or `_storyFleeMutual()` |
+| `_storyFleeClean()` | 10469 | Clean flee after player attack: exits battle, no penalty | `S_story.usedBonusAction` | `pendingBattle = null`; battle overlay closed |
+| `_storyFleeMutual()` | 10479 | Mutual flee: both combatants swap one free attack | `S.player/enemy.*` | `S.opp.hp`, `S.player.hp`, `S_story.hp` |
+| `_renderSboShield()` | 10537 | Shows/hides shield row in battle overlay; disables unequip btn unless bonus-action phase | `S_story.equippedShield`, `usedMainAttack`, `usedBonusAction`, `battleTurn` | DOM `#sbo-shield-row`, `#sbo-shield-name`, `#btn-sbo-unequip-shield` |
+| `_storyUnequipShield()` | 10548 | Unequips shield as bonus action after main attack; triggers enemy turn | `usedMainAttack`, `usedBonusAction`, `equippedShield` | `equippedShield=null`, `inventory.push()`, `_calcPlayerAc()`, `battleTurn='enemy'` |
+| `storyShortRest(nodeCode)` | 10597 | Heals 25% hpMax (×2 if not inn); Necklace Token if first visit; 0 rests → BFS waypoint to inn | `S_story.shortRests/hpMax`, `nodeCode` | `S_story.hp`, `shortRests--` |
+| `_storyUpdateDsPips()` | 10647 | Renders success/failure pip indicators | `storyDeathSaves.successes/failures` | DOM sbo-ds-pip elements |
+| `_storyEnterDeathSaves()` | 10655 | Enters death save UI; hides action row; shows DS panel | — | `storyDeathSaves = {0,0,true}` |
+| `_storyRollDeathSave()` | 10669 | Rolls one death save d20; handles Indomitable reroll | `storyDeathSaves`, `indomitableCharges` | `storyDeathSaves.successes/failures`, `indomitableCharges` |
+| `_storyDeathSaveCrawl()` | 10711 | 3-success path: hp=1; close battle; storyEnter() | — | `S_story.hp=1`, `pendingBattle=null` |
+| `_storyDeathSaveFall()` | 10728 | 3-failure path: strip gold+items to corpse; respawn at checkpoint | `pendingBattle.nodeCode`, `inventory`, `gold` | `corpsesQuests.push()`, `gold=0`, `inventory` stripped, `currentCode=checkpointNode` |
+| `_storyRetrieveCorpse(questId)` | 10797 | Retrieves items+gold from a corpse quest back to inventory | `corpsesQuests`, questId | `inventory` restored, `gold` restored, corpse quest removed |
+| `_storyBattleVictory()` | 10071 | Award XP/gold/HP; collect drops; show victory overlay | `S.opp.ac/maxHP`, `S._pendingDrop` | `S_story.xp/gold/hp`, `defeatedBattles`, `inventory` |
+| `storyStalk(nodeCode)` | 13626 | Opens stalk modal with quest-target list; "Wait for Prey" → battle | `nodeCode`, `QUEST_DB`, `WORLD_DB` | DOM stalk modal |
+| `storyQuickWait(nodeCode)` | 13671 | SE d-pad ⏳: picks random monster via `_weightedMonsterPick()`, starts battle | `nodeCode`, `WORLD_DB` | `S_story.pendingBattle` |
+| `storyShowOutcome()` | 16315 | Shows outcome modal pre-filled with post-battle HP | `S_story.pendingBattle`, `S.player.hp` | DOM outcome modal |
+| `storyApplyOutcome(won)` | 16324 | Applies battle result back to S_story: HP, defeat flag, loot, EB quest | `outcome-hp-input`, `pendingBattle`, `S._pendingDrop` | `S_story.hp`, `defeatedBattles`, `quests`, `inventory`, `waypoint` |
+| `storyCharToggle()` | 16710 | Opens/closes char overlay; syncs simulator inputs from S_story when story active | `S_story.*` | DOM char overlay, `syncCharFromUI()` |
+| `storyRenderCharSheet()` | 16732 | Renders char overlay: stats, ability grid, gear, 20-level interleaved prog table | `S_story.*`, `FIGHTER_FEATURES` | DOM char sheet elements |
+| `_lu_applyGiftsAndFinish(lvl, hp)` | 17489 | Shared helper: apply gold/shield gifts, push to levelUpLog, enable continue | `lvl`, `hp`, `_LEVEL_GOLD_GIFT`, `_LEVEL_SHIELD_GIFT` | `S_story.gold`, `inventory`, `levelUpLog.push()` |
+| `_notoriety()` | 17043 | Compute notoriety from level + battlesWon (pure, no side effects) | `S_story.level/battlesWon` | returns int |
+| `_notorietyWeights(n)` | 17048 | Map notoriety → {trivial,easy,medium,hard,deadly} weight object | n (notoriety score) | returns weight object |
+| `_weightedMonsterPick(terrain)` | 17057 | Pick random monster weighted by notoriety tier weights | `terrain`, `WORLD_DB`, `MONSTER_POOL` | returns monster object |
+| `_stalkedMonsterPick(terrain)` | 17199 | Same + BOOST=6 for quest-target monsters | `terrain`, `QUEST_DB`, active quests | returns monster object |
 
 
 ---

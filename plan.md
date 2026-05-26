@@ -1,6 +1,6 @@
 ## §0 — Implementation Readiness Dashboard
 
-> **Status as of Layer 77 (2026-05-25).** All layers through §XLII implemented. Add new layers below as §XLIII+.
+> **Status as of Layer 77 (2026-05-26).** All layers through §XLII implemented. SP4 stale-PLANNED scan complete — 20 markers cleared in world.md + story.md (Layers 46, 47, 50, 53, 60–70, 73–74). Remaining PLANNED markers are genuinely unimplemented (Layers 49, 51–52, 54–57, 59). Add new layers below as §XLIII+.
 
 ### Lab Report Index (Layers 48–77)
 
@@ -83,7 +83,7 @@ Do **not** write a lab report for: a single monster/quest addition (sync core do
 
 ## III. State Fields Quick Reference
 
-> All 107 `S_story` fields from `_S_DEFAULTS()` (HTML ~line 7842).
+> All 194 `S_story` fields from `_S_DEFAULTS()` (HTML line 8402). Updated 2026-05-26.
 
 | Field | Type | Purpose |
 |---|---|---|
@@ -95,7 +95,7 @@ Do **not** write a lab report for: a single monster/quest addition (sync core do
 | `S_story.xp / xpLastBattle` | number | Cumulative XP / last battle award |
 | `S_story.level` | number | Current character level (1–20) |
 | `S_story.atkBonus / acBonus` | number | Story combat modifiers |
-| `S_story.abilityScores` | object | `{str,dex,con,int,wis,cha}` — starts at `{16,12,14,10,12,8}` |
+| `S_story.abilityScores` | object | `{str,dex,con,int,wis,cha}` — set by character creation (base `{10,10,10,8,8,8}` + point-buy); legacy-save fallback `{16,12,14,10,12,8}` |
 | `S_story.shieldTier` | string\|null | Magic shield tier granted |
 | `S_story.levelUpLog` | array | Records each level-up `{lvl, hp, asiResult, goldGift, shieldGift}` |
 | `S_story.shortRests` | number | Remaining short rest charges today (0–3) |
@@ -134,14 +134,14 @@ Do **not** write a lab report for: a single monster/quest addition (sync core do
 | `S_story.ngPlusRun` | number | NG+ generation counter; 0 = first run |
 | `S_story.frobergerLastEntryRead` | boolean | true after player finds Journal Entry 41 |
 | `S_story.gameDay` | number | Alias for `S_story.day` |
-| `S_story.actNumber` | number | Current act (1–8) |
+| `S_story.actNumber` | number | Current act (1–8); set from `NODE_MAP[code].act` at top of `storyRender()`; defaults 1 |
 | `S_story.currentCode` | string | Current node code |
 | `S_story.s8VargaWatches` | number | Varga observation count (S8 mechanic, 0–3) |
 | `S_story.archiveVisited` | boolean | Blue Shutters Archive entered |
 | `S_story.s29LineDelivered` | boolean | Auros/Froberger theory line delivered |
 | `S_story.s49BrynnDelivered` | boolean | Brynn Entry-41 reaction delivered |
 | `S_story.raisonToolsUsed` | boolean | Raison's Tools assessment used |
-| `S_story.log` | array | Story message log |
+| `S_story.log` | array | Navigation history — node codes pushed on each move, max 20; used by vignette delivery and farewell logic |
 | `S_story.visited` | object | nodeCode → true; first arrival |
 | `S_story.journalRead` | object | nodeCode → true; which node journals read |
 | `S_story.countedMissedInns` | object | nodeCode → true; prevents double-penalizing |
@@ -193,6 +193,94 @@ Do **not** write a lab report for: a single monster/quest addition (sync core do
 | `S_story.undercitySurveyDelivered` | boolean | Survey report delivered |
 | `S_story.s8VargaClueUnlocked` | boolean | Varga surveillance clue revealed |
 | `S_story.s8PachelbelTold` | boolean | Pachelbel informed of Varga observations |
+| `S_story.romanceQuotesDelivered` | array | Indices of ROMANCE_QUOTES already shown; prevents repeats |
+| `S_story.npcRomanceVignetteDelivered` | object | npcKey → true; inn vignette fires once per NPC per run |
+| `S_story.nexusQuestSeen` | boolean | Nexus quest intro line delivered |
+| `S_story.nexusQ01Active` | boolean | Nexus quest 01 active |
+| `S_story.nexusQ02Complete` | boolean | Nexus quest 02 complete |
+| `S_story.creativeLiteracyToken` | boolean | Creative Literacy Token obtained |
+| `S_story.fishingQuestFlags` | object | Fishing quest completion flags by fish key |
+| `S_story.fishingBaitSatchel` | boolean | Bait Satchel item obtained |
+| `S_story.fishingYugurtFavour` | boolean | Yugurt Lake favour earned |
+| `S_story.fishingCatchLog` | array | Log of fish caught |
+| `S_story.junctionsSeen` | object | nodeCode → true; junction arrival tracking |
+| `S_story.companionActsSeen` | object | Companion act IDs that have fired |
+| `S_story.shardNotes` | array[7] | boolean per shard; true when shard origin note read |
+| `S_story.shardNotesAllRead` | boolean | All 7 shard origin notes read |
+| `S_story.voidCrackFired` | boolean | Void crack event fired (Act VII warning) |
+| `S_story.voidFracturesFired` | boolean | Void fractures event fired |
+| `S_story.voidImminentWarned` | boolean | Void imminent warning shown |
+| `S_story.void_mercy_count` | number | Times Void mercy mechanic has triggered |
+| `S_story.act8FarewellYael` | boolean | Act VIII Yael farewell scene delivered |
+| `S_story.act8FarewellBrynn` | boolean | Act VIII Brynn farewell scene delivered |
+| `S_story.act8FarewellQuill` | boolean | Act VIII Quill farewell scene delivered |
+| `S_story.act8FarewellPachelbel` | boolean | Act VIII Pachelbel farewell scene delivered |
+| `S_story.act8FarewellCrov` | boolean | Act VIII Weckmann farewell scene delivered |
+| `S_story.act8FarewellAuros` | boolean | Act VIII Bruhns farewell scene delivered |
+| `S_story.frobergerMemorialVisited` | boolean | Froberger memorial node visited |
+| `S_story.frobergerMemorialFlowers` | boolean | Flowers placed at memorial |
+| `S_story.frobergerMemorialBookSigned` | boolean | Book of remembrance signed at memorial |
+| `S_story._memorialPlayerEntry` | string\|null | Player's text entry in the memorial book |
+| `S_story.pitChampionOffered` | boolean | Pit Champion bout offered to player |
+| `S_story.pitChampionWon` | boolean | Pit Champion bout won |
+| `S_story.s54QuillBrynnDelivered` | boolean | Quill+Brynn joint scene at S54 delivered |
+| `S_story.s55SqMapLineDelivered` | boolean | SQ map reveal line at S55 delivered |
+| `S_story.brynnKeeperStoryTold` | boolean | Brynn's keeper backstory revealed |
+| `S_story.brynnLightChoiceMade` | boolean | Player made the light/dark choice in Brynn arc |
+| `S_story.brynnLightKept` | boolean | true = light choice; false = dark choice |
+| `S_story.bruhnsCoSceneDelivered` | boolean | Bruhns CO confrontation scene delivered |
+| `S_story.yaelNamedReportDelivered` | boolean | Yael named report scene delivered |
+| `S_story.catKills` | object | nodeCode → kill count; Cat Quarter arc tracking |
+| `S_story.catKingDefeated` | boolean | Cat King boss defeated |
+| `S_story.kenickieMarketUsed` | boolean | Kenickie's black market accessed |
+| `S_story.questMinusOne` | boolean | Quest -1 (Level 21 / World Creator) seen |
+| `S_story.entry42Written` | boolean | Player has written Entry 42 |
+| `S_story.entry42Text` | string | Player's text for Entry 42 |
+| `S_story.entry42Read` | boolean | Entry 42 read back after writing |
+| `S_story.ngMemoryDelivered` | object | npcKey → true; NG+ memory line delivered per NPC |
+| `S_story.nextFrobergerComplete` | boolean | NG+ Froberger arc complete |
+| `S_story.frobergerLetterFound` | boolean | Froberger's sealed letter at CO found |
+| `S_story.priorQuestMinusOne` | boolean | Quest -1 seen on a prior NG+ run |
+| `S_story.wmLowerArchiveUnlocked` | boolean | Weimar lower archive unlocked |
+| `S_story.wmDoc1Read` | boolean | Weimar archive Doc 1 read |
+| `S_story.wmDoc2Read` | boolean | Weimar archive Doc 2 read |
+| `S_story.wmDoc3Read` | boolean | Weimar archive Doc 3 read |
+| `S_story.wmDoc3Unredacted` | boolean | Doc 3 unredacted (First Researcher name revealed) |
+| `S_story.wmArchiveComplete` | boolean | Full archive sequence complete |
+| `S_story.wmSessionsDays` | array | Days on which archive sessions occurred |
+| `S_story.wmBenediktCircleComplete` | boolean | Benedikt reading circle sequence complete |
+| `S_story.wmFirstResearcherKnown` | boolean | First Researcher identity known |
+| `S_story.vaCI` | boolean | Void Archaeology mark found at CI |
+| `S_story.vaSL` | boolean | Void Archaeology mark found at SL |
+| `S_story.vaDF` | boolean | Void Archaeology mark found at DF |
+| `S_story.vaWM` | boolean | Void Archaeology mark found at WM |
+| `S_story.vaMT` | boolean | Void Archaeology mark found at MT |
+| `S_story.vaAllMarksFound` | boolean | All 5 archaeology marks found |
+| `S_story.vaLogFound` | boolean | Constructor's Log found in lower archive |
+| `S_story.vaLastWardVisited` | boolean | Last ward (sealed tunnel) visited |
+| `S_story.vaArchitectureKnown` | boolean | Full void architecture understood |
+| `S_story.tlLedgerRead` | boolean | Tilbury Harbor ledger read |
+| `S_story.tlEmbargoChallenged` | boolean | Emergency Trade Protocol 7 challenged |
+| `S_story.tlEmbargoDismissed` | boolean | Embargo dismissed or resolved |
+| `S_story.tlMissingShipSolved` | boolean | Missing ship investigation complete |
+| `S_story.vsDebtProbed` | boolean | Visby debt structure investigated |
+| `S_story.vsWeaponsFound` | boolean | Visby underground weapons cache found |
+| `S_story.vsDebtSettled` | boolean | Visby debt arc resolved |
+| `S_story.vsShamanKnown` | boolean | Void Shaman (the Warden) identified |
+| `S_story.vshamanFound` | boolean | Warden located at MT |
+| `S_story.vshamanDefeated` | boolean | Warden defeated in combat |
+| `S_story.vsShamanPersuaded` | boolean | Warden persuaded (non-combat resolution) |
+| `S_story.wardensLegacyKnown` | boolean | Warden's corrupted mandate understood |
+| `S_story.vsShamanBenediktDelivered` | boolean | Warden truth delivered via Benedikt chain |
+| `S_story.fav_corelli` | number | Corelli favorability (0–3) |
+| `S_story.corelli_purchase_count` | number | Items purchased from Corelli |
+| `S_story.corelli_encounter_count` | number | Times Corelli wandering merchant encountered |
+| `S_story.corelliRevelationDelivered` | boolean | Corelli's final revelation delivered |
+| `S_story.hour` | number | Time-of-day clock 0–23; +1 per battle, +6 per sleep |
+| `S_story.careerStats` | object | Permanent career ledger (never reset): kills, deaths, dmgDealt, dmgReceived, sleeps, battlesAttempted, attacksAttempted, attacksHit, exitsTaken, daysAdventuring |
+| `S_story.runStats` | object | Per-run ledger (reset on respawn): same 10 fields as careerStats |
+| `S_story.tackleboxZoneUnlocks` | object | `{shore:true, reeds:false, deep:false}` — which fishing search zones are accessible; awaits zone gating implementation |
+| `S_story.baitFishingActive` | boolean | Suppresses node re-render during bait catch sequence |
 
 ---
 
@@ -202,15 +290,75 @@ Do **not** write a lab report for: a single monster/quest addition (sync core do
 
 | # | Item | File(s) | Status |
 |---|------|---------|--------|
-| FC01 | Doc Health badge in `index.md` — live count of sync-pass completion | `index.md` | ⏳ |
-| FC02 | `froberger-journal-all-entries.txt` entry-by-entry compare against HTML | `froberger-journal-all-entries.txt` | ⏳ |
-| FC03 | Split `mechanics.md` into `mechanics-combat.md` + `mechanics-economy.md` | `mechanics.md` | ⏳ |
-| FC04 | Spot-check function names in `lab-report-architecture-full.md` every 10 layers | `lab-report-architecture-full.md` | ⏳ |
-| FC05 | Two-way link convention: every HTML const gets `// → doc: filename.md §Section` | all core docs | ⏳ |
+| FC01 | Doc Health badge in `index.md` — live count of sync-pass completion | `index.md` | ✅ 2026-05-25 — badge added, count corrected 36→37 |
+| FC02 | `froberger-journal-all-entries.txt` entry-by-entry compare against HTML | `froberger-journal-all-entries.txt` | ✅ 2026-05-25 — all 41 entries match |
+| FC03 | Split `mechanics.md` into `mechanics-combat.md` + `mechanics-economy.md` | `mechanics.md` | ✅ 2026-05-25 — split complete; index.md cross-refs updated |
+| FC04 | Spot-check function names in `lab-report-architecture-full.md` every 10 layers | `lab-report-architecture-full.md` | ✅ 2026-05-25 — all 44 functions verified; `_S_DEFAULTS` is arrow const at line 8372, not missing; all line numbers accurate |
+| FC05 | Two-way link convention: every HTML const gets `// → doc: filename.md §Section` | all core docs | ✅ 2026-05-26 — 94 consts annotated (27 original pass + 67 SP4 reverse scan); all non-trivial public consts covered |
 
 ### V-C. New Feature Ideas (not yet assigned to a section)
 
 > Add raw ideas here when ready to plan. Move to its own §XLIII+, etc. when spec is written.
+
+| # | Item | Source | Notes |
+|---|------|---------|-------|
+| FC06 | Monster Drop Nerf — degraded weapons only | `mechanics-combat.md §Equipment Drops` | ✅ 2026-05-26 — base pool + deg −3…0 at drop time; HTML line 9511 |
+| FC07 | Fishing Guide + Zone Unlock gating | `mechanics-combat.md §Fishing Items` | ✅ 2026-05-26 — Fishing Guide readable item + quest_fishing_guide implemented; tackleboxZoneUnlocks in _S_DEFAULTS(); zone gating UI deferred to Layer 48+ |
+
+---
+
+## §API-02 — combat.md Analysis
+
+**IEEE-Format API Review**  
+**File:** `combat.md` (F6 scope — Battle Mode + Story Battle overlay)  
+**HTML Source:** `roll2hit-v3.html` (17,708 lines as of 2026-05-25)  
+**Category Group:** Combat Engine · Death Saves · Level-Up · Enemy Scaling
+
+### Abstract
+
+`combat.md` is the F6 surface document for roll2hit's combat engine. It covers: pre-battle setup (Pre-Battle Screen → storyCommitBattle), action economy (1.5 AP), weapon/damage formulas, death saves (FL11), level-up chain (FL6), notoriety scaling, the F6 function reference table, and the FL2/FL6/FL11 milepoint flowcharts.
+
+The document was last synced at ~14,377 HTML lines. The HTML has since grown to 17,708 lines (+3,331 lines, +23%). This produced systemic line-number drift in the F6 Function Reference Table — all 30 entries were stale.
+
+**§API-02 action taken:** F6 Function Reference Table fully re-verified against live HTML. All 30 original entries corrected plus 7 new entries added (`_magicTierAllowed`, `_rollD100Loot`, `_overlayPlayerAttack`, `_storyEnemyTurn`, `storyShortRest`, `storyCharToggle`, `storyRenderCharSheet`, `_lu_applyGiftsAndFinish`, `_notoriety`, `_notorietyWeights`, `_weightedMonsterPick`, `_stalkedMonsterPick`). combat.md header updated to 17,708 / 2026-05-25.
+
+---
+
+### I. Findings Table
+
+| # | Claim in combat.md | HTML evidence | Status |
+|---|---|---|---|
+| 1 | All F6 function table line numbers (30 entries) | Verified 2026-05-25 | ❌ ALL stale (see below) |
+| 2 | `roll(sides)` at line 5319 | Actual: 5482 | ❌ Off by +163 |
+| 3 | `rollN` / `rollNExploding` / `abilityMod` / `getProfBonus` group | All off by +163 | ❌ Systemic |
+| 4 | `playerRoll()` / `doPlayerAttack()` / `applyCondition()` group | All off by +169 | ❌ Systemic |
+| 5 | `rollMainDamage()` / `offhandRoll()` / `bonusRoll()` / `oppRoll()` group | All off by +175 | ❌ Systemic |
+| 6 | `_calcPlayerAc()` at 8787 / `_storyRollInit()` at 8800 | Actual: 9536 / 9549 | ❌ Off by +749 |
+| 7 | `_overlayFlee()` / `_storyFleeClean()` / `_storyFleeMutual()` group | All off by +796 | ❌ Systemic |
+| 8 | `_storyEnterDeathSaves()` / death save group | Off by +796 | ❌ Systemic |
+| 9 | `storyShowOutcome()` at 13200 / `storyApplyOutcome(won)` at 13209 | Actual: 16315 / 16324 | ❌ Off by +3115 |
+| 10 | Duplicate `_storyRollInit()` row (appeared twice in old table) | Removed | ⚠ Duplicate removed |
+| 11 | Action economy (1.5 AP), attack formula, damage formula | All correct — no formula drift | ✓ |
+| 12 | Fighter Champion level table (Lv1–20 features, tattoo names) | Matches FIGHTER_FEATURES const | ✓ |
+| 13 | Notoriety formula `level × 3 + floor(battlesWon / 2)` | `_notoriety()` at 17043 | ✓ |
+| 14 | Notoriety weight table (6 brackets, 5 tiers) | `_notorietyWeights()` at 17048 | ✓ |
+| 15 | Death save sequence (FL11 milepoints A–D) | `_storyEnterDeathSaves()` et al. | ✓ |
+| 16 | Indomitable: Lv9+, reroll on fail, 1/long rest | `_storyRollDeathSave()` at 10669 | ✓ |
+| 17 | ASI cascade (STR → atkBonus, CON → retroactive HP) | `_lu_applyGiftsAndFinish()` at 17489 | ✓ |
+| 18 | Final Boss stats: AC22/HP300/ATK+12/3d8+6 | `BOSS_COMMANDER_AUROS` const | ✓ |
+| 19 | `CONDITION_ADV` line 5831 (from `## Conditions` header) | Actual: line 5831 | ✓ (not in F6 table, inline ref) |
+
+---
+
+### II. Root Cause
+
+The drift has three distinct magnitudes (+163, +169–175, +749–796, +3115) because different layers of the codebase were inserted at different depths between the last sync (≈14,377 lines) and now (17,708 lines). The dice primitives drifted least; the story outcome functions drifted most, indicating that the largest content additions landed after line ~13,000.
+
+---
+
+### III. Fix Applied
+
+F6 Function Reference Table in combat.md: all line numbers corrected to verified values. 12 new entries added for functions listed in the Key Functions table but missing from the F6 table. combat.md header updated. **Status: ✅ 2026-05-25.**
 
 ---
 
@@ -414,10 +562,10 @@ _rollD100Loot()
 | `roll2hit-v3.html` | 9599 / 9655 | `_showLevelUpModal()` / `_checkLevelUp()` |
 | `roll2hit-v3.html` | 13007 | `storyPreBattle()` |
 | `roll2hit-v3.html` | 14233 | `_lu_applyGiftsAndFinish()` |
-| `mechanics.md` | §Battle Mode | 1.5 AP system, XP formula, loot table, flee chain |
-| `mechanics.md` | §Story Mode | Vendor, save system, items |
-| `mechanics.md` | §F4 Function Reference | Economy + pre-battle functions |
-| `combat.md` | F6 scope | `doPlayerAttack()`, `offhandRoll()`, `oppRoll()`, `newCombat()` — F6 scope, not mechanics.md |
+| `mechanics-combat.md` | §Battle Mode | 1.5 AP system, XP formula, loot table, flee chain |
+| `mechanics-economy.md` | §Story Mode | Vendor, save system, items |
+| `mechanics-economy.md` | §F4 Function Reference | Economy + pre-battle functions |
+| `combat.md` | F6 scope | `doPlayerAttack()`, `offhandRoll()`, `oppRoll()`, `newCombat()` — F6 scope, not mechanics-combat.md |
 
 ---
 
@@ -425,6 +573,13 @@ _rollD100Loot()
 
 **Source:** *Four Arthurian Romances* — Chrétien de Troyes (c. 1160–1172 CE)  
 **Purpose:** Research session — extract structural patterns, parallel analysis to roll2hit arcs, and propose an empathetic romance subplot layer with quote candidates for random romance events.
+
+**Implementation status — 2026-05-25:**
+- §III.A Inn Vignette System: ✅ `NPC_ROMANCE_VIGNETTES` const (6 entries), `npcRomanceVignetteDelivered: {}` state field, delivery in `storyConfirmSleep()` at 1400ms — fav ≥ 2, NPC node in last 3 moves + current, once per NPC per run.
+- §III.B NPC Preamble Lines: ✅ `NPC_ROMANCE_PREAMBLES` const (6 entries), injected as italic div in `_renderNpcCard()` between greeting and quote when fav ≥ 2.
+- §III.C Froberger Journal Entries: ✅ Entries 17 and 29 replaced with elegiac romance content (archive woman / unasked question).
+- §III.D ROMANCE_QUOTES: ✅ Implemented 2026-05-25 (prior session) — 21-entry const, 15% per sleep, Act III+, no repeat.
+- §VI Quest Rewrites: ✅ Implemented 2026-05-25 (prior session) — all QUEST_DB descs, VOID_TIDE_EVENTS, and selected NPC quotes rewritten in Chrétien register.
 
 ---
 
@@ -1222,3 +1377,2039 @@ From this passage, five new entries for the `ROMANCE_QUOTES` const:
 ```
 
 *Note on the last entry:* "I have another affair on hand" — Gawain's refusal is the most devastating line in the passage because it is so reasonable. The disinherited sister does not blame him. She simply leaves and finds someone else. This is the register for when the player abandons an EB quest: they had another affair on hand. The quest-giver does not blame them. They simply stop waiting.
+
+---
+
+## §NODE-TEXT — Noir Vignette Node Descriptions
+
+### Standing Writing Prompt
+
+Apply to every existing `text:` field in NODE_MAP. Rewrite only — do not add nodes that don't exist.
+
+**Register:** Noir-dense, 100–150 words. Named sub-location within the territory (a specific bench, gate, platform, stall row — not just the zone). Timeless: what the place IS, not what happened once. Adventurer's POV. Chrétien de Troyes structure active throughout.
+
+**Five Chrétien registers to engage per node:**
+
+1. **The threshold test** — every node is a gate. The description names what is being tested about the player, not merely what is being seen. Entering the location proves something.
+
+2. **The host-guest contract** — the NPC at each node is a host figure. What they give freely, what they withhold, and whether they greet you before you speak encodes the moral weight of the place. The host who gives without asking the price; the host who calculates it in advance.
+
+3. **The object that carries fate** — one prop per scene that compresses the arc into a thing. The bloodstained map. The blank arrival column. The running wax. The Flash Powder tossed before you ask. Props are not decoration; they are the plot in hand.
+
+4. **The interior made exterior** — never write the feeling. Write the act that contains it. "She was afraid" becomes "her hands let the horse choose the road." The dockworkers avoid the third berth without discussing it. The sexton does not look down.
+
+5. **Time as the legal-moral frame** — Chrétien's deadlines (40 days, year-and-a-day) are social contracts, not just urgency. In this game: Day 49, the harbor board counting from Day 17, the torch wax still running. When time appears in a description it is always a contract someone is about to break.
+
+**Monster scale rule:** Embed weak vermin and strong epics in the description of the place itself — not as a bestiary, but as what the location produces when left long enough. The crypt's unlocked door produces shadows. The harbor's wrong-berth hold produces something that doesn't appear on the cargo list. The corridor without maintenance produces data wraiths.
+
+**Format per entry:** Named sub-location · Current `text:` field (quoted) · Proposed replacement (block quote) · Props · Monster scale · Chrétien register active · Word count.
+
+**Status:** ✅ Implemented 2026-05-25 — all 76 node text fields rewritten and applied to HTML.
+
+---
+
+---
+
+### NODE: CI — City Streets, Birka
+
+**Named location:** Katharinen Gate
+
+**Current text:**
+> You stand at the crossroads of Birka, the greatest city in the known world. The sky carries a faint violet cast where the Void bleeds into the evening dark. Cobblestones slick with last night's rain catch the lantern light in amber pools. A dying courier collapses at your feet, pressing a bloodstained map into your trembling hand — the single word on his lips before he goes still: 'Sweelinck.' You are a Level 1 Fighter. You have a sword, a name no one here knows yet, and a loop that has already started. The city is alive and it is watching. You will fight monsters here — real ones, with claws and void-rot and bad intentions. You will also fight the ones that live behind your own eyes. The friends you make in these streets will matter more than any loot you carry. This is not a story about winning. It is a story about waking up.
+
+**Proposed replacement:**
+> The courier is already dead. He made it to the gate lamp and no further; the map he was carrying is in your hand now. You don't remember being given it.
+>
+> Around him, the city continues. A cart adjusts its wheel line. Guard Captain Yael notes the body's position from the corner — does not approach. The notice board behind her: lower districts sealed, three consecutive nights. Rationale field: blank.
+>
+> She looks at the map. Then at you.
+>
+> "Where did he come from?"
+
+**Props:** Gate lamp · Bloodstained map · Notice board (blank rationale field) · Cart adjusting course
+**NPC anchor:** Yael — reads the scene before she speaks
+**Word count:** ~70
+
+---
+
+### NODE: IN — The First Inn, Birka
+
+**Named location:** The Front Counter
+
+**Current text:**
+> The innkeeper is nervous. Two merchants disappeared from the harbor. She gives you a free breakfast — and slides Froberger's journal across the table.
+
+**Proposed replacement:**
+> The breakfast is already waiting when you sit down. She hasn't asked what you take in your tea.
+>
+> Innkeeper Brynn wipes the same section of counter she wiped when you walked in. Two stools down, a ledger sits open to an entry that hasn't been filled — harbor arrivals, last Tuesday. Two names in the margin. No departure columns.
+>
+> She sets the journal in front of you. Forty-one entries. The author's name is Froberger.
+>
+> "Free," she says. "The room's free too, if you need it."
+>
+> She goes back to the counter.
+
+**Props:** Waiting breakfast · Tea she didn't ask about · Ledger open to blank departure columns · Froberger's journal already on the counter
+**NPC anchor:** Brynn — nervousness encoded through repeated wiping action, not named
+**Word count:** ~75
+
+---
+
+### NODE: TV — Birka Tavern
+
+**Named location:** The Door Frame
+
+**Current text:**
+> Rumors fly. Something came out of the crypt last week. A bard sings a cipher-song that feels mathematical. Two men who watched you take the ledger have followed you in.
+
+**Proposed replacement:**
+> The bard at the back is singing something that doesn't repeat. You catch yourself counting the intervals. The man at the bar does the same — you can tell by how he holds his cup: not drinking, calculating.
+>
+> The two men who watched you take the ledger at the inn are two steps behind you. They came in during the verse. They ordered nothing.
+>
+> Bard Tomas Couperin reaches the third line of the cipher and looks up.
+>
+> He has been watching the door since before you arrived.
+
+**Props:** Non-repeating song (cipher as sound) · Cup held but not drunk · Two men who ordered nothing · The verse used as cover
+**NPC anchor:** Couperin — already watching the door; the bard who performs surveillance
+**Word count:** ~75
+
+---
+
+### NODE: BA — The Rough Bar, Birka
+
+**Named location:** The Crypt-Wall Corner
+
+**Current text:**
+> The bar closest to the crypt entrance. A fence in the back room sells information about the Tilbury Conclave. The crypt entrance is in the wall behind the bar.
+
+**Proposed replacement:**
+> The back wall is older than the building. The door set into it opens onto the crypt and has never been locked. Newcomers find this out on their own — the bar doesn't announce it.
+>
+> Pachelbel works the back room. Tilbury Conclave passes, fifteen gold. He has heard everything this city produces and stopped reacting to it years ago.
+>
+> The vermin work the drain trench and the alley side: kobolds in the gutter, wererats below the boards, cockroach swarms behind the bottle shelf. What rises from the crypt door behind them is a different scale — ghouls that move slow, wights that don't until they must, shadows that use the unlocked door as a corridor. The bar has stayed open through all of it.
+
+**Props:** Unlocked crypt door in the old wall · Pachelbel's back room · Bottle shelf and what's behind it
+**Monster scale:** kobolds / wererats / cockroach swarms (vermin) → ghouls / wights / shadows (crypt escalation)
+**Word count:** ~105
+
+---
+
+### NODE: CR — The Birka Crypt
+
+**Named location:** The First Chamber Stair
+
+**Current text:**
+> Below the bar. Dark. Smells of old stone and something worse. Something has been digging from below. The second chamber has fresher tombs.
+
+**Proposed replacement:**
+> The torches at the bottom of the stair were lit recently — wax still running, not yet pooled. Someone came down here in the last half hour and did not stay.
+>
+> The first chamber holds twelve tombs. Three are disturbed: lids displaced, stone face-down on the floor. The scratches on the underside face upward.
+>
+> In the far corner, a shadow that has no source shifts when you don't look at it directly.
+>
+> From the second chamber, below the drip of water: a slower sound. The deliberate kind that comes from something that has time.
+>
+> A sexton crosses the grating overhead, lantern swinging. He does not look down.
+>
+> The three skeletons in the first chamber have already stood. The shadow is waiting for you to choose a direction.
+
+**Props:** Running wax on fresh torches · Three lids displaced (scratches on underside face upward) · Sourceless shadow · Sexton who does not look down
+**Sound:** Dripping water · Below it, a slower deliberate sound · Grating creak overhead
+**Monster scale:** skeletons (standing, first chamber) → shadow (waiting) → unnamed second-chamber sound (deeper escalation)
+**Tension register:** Everything poised — nothing has moved yet; train-about-to-depart structure
+**Word count:** ~120
+
+---
+
+### NODE: CY — The Neon Undercity
+
+**Named location:** Transit Corridor — Sub-Level 3
+
+**Current text:**
+> Below the crypt. Neon-lit corridors, mechanical guards, corrupted data wraiths. Commander Bruhns is already here, following the same trail.
+
+**Proposed replacement:**
+> The descent from the crypt floor takes thirty steps. At the bottom the stone ends and the conduit begins — cable bundles thick as your arm running the corridor's length, neon strips casting everything in a blue the eye reads as cold.
+>
+> The passage was a transit corridor once. The turnstiles at the far end are still set to reject; three have been forced and bent back. Someone came through recently, and the path they cleared is the one you will use.
+>
+> Two androids hold the mid-point checkpoint, heads tracking in the slow arc of a thing that runs on schedule. Between them, a data wraith — light that moves wrong, a signal that chose to persist rather than terminate. The androids are the vermin here. The wraiths are what a corridor produces when it runs long enough without maintenance.
+>
+> Commander Bruhns is already past the checkpoint. You can tell because the androids are still in reset posture, not yet returned to neutral scan.
+>
+> He did not wait.
+
+**Props:** Cable conduit bundles · Forced turnstiles · Android patrol arc · Reset posture as departure evidence
+**Sound:** Electrical hum of neon strips · Slow mechanical track of android heads
+**Monster scale:** androids (vermin — scheduled, mechanical) → data wraiths (corrupted signal, persistent, harder to kill than anything that runs on a clock)
+**Tension:** Train already left — Bruhns was on it; you read his passage from residue
+**Word count:** ~145
+
+---
+
+### NODE: SQ — Scholar's Quarter, Weimar
+
+**Named location:** The Reading Room, Upper Observatory
+
+**Current text:**
+> Books. Silence. Very old people. Archivus Ptolemy Sweelinck is in the observatory. He knows why you are here. He wrote the riddle door when he still had good knees.
+
+**Proposed replacement:**
+> The reading room is lit by twelve candles and one scholar who fell asleep at his desk three days ago and has not been disturbed. His book is open to the same page. No one has moved it.
+>
+> The stacks run three floors in each direction. In the sections where the candles don't reach — the lower east wing, the corridor behind the catalogue — specters of researchers who died mid-sentence drift between the shelves. They are not hostile. They are looking for the argument they never finished. The intellect devourers that follow them are a different matter.
+>
+> Archivus Ptolemy Sweelinck is in the upper observatory. He is very old. He wrote the riddle door at Katharinen Gate when he still had good knees and has not been back to check whether it still holds.
+>
+> He knows why you are here. He wrote it so that someone would come.
+>
+> A young archivist climbs the stairs past you with an armload of bound journals, eyes fixed on the step count. She has done this route so many times she no longer needs to look.
+
+**Props:** Twelve candles · Sleeping scholar open to the same page · Gap where a volume is missing · Archivist counting stairs by muscle memory
+**Sound:** Pages settling · Third-floor stack creak · Silence that has a shape
+**Monster scale:** specters (researchers mid-sentence, still searching, not hostile) → intellect devourers (follow the specters; predators on seekers)
+**Tension:** Sweelinck is old; the riddle door may not still hold; he wrote it so someone would come — you are the someone, arriving later than he expected
+**Word count:** ~175
+
+---
+
+### NODE: TL — Tilbury Conclave Hall
+
+**Named location:** The Harbor Board Anteroom
+*(Note: TL has no NODE_MAP text: field — this vignette is a proposed addition)*
+
+**Current text:** *(none — dynamic node)*
+
+**Proposed text:**
+> The board on the anteroom wall lists departures, not arrivals. This is not how harbor boards work. The clerk behind the counter changed the heading six weeks ago and has not changed it back.
+>
+> Ten berths. Ten vessel names. Ten departure dates counting forward from Day 17. The column beside them — Expected Arrival — is filled in a careful hand. The column beside that is blank. There is nothing to add to it now.
+>
+> Adjutant Vonn receives cases in order of filing. The anteroom holds eleven people ahead of you. Two of them have been waiting since the Harrow did not return. They have not been told anything. They have been noted.
+>
+> The vermin here wear Conclave badges and speak in protocols. The things that come in from the harbor at night — from berths that have been empty long enough to smell of nothing — are a different matter entirely.
+
+**Props:** Harbor board (departure column full, arrival column blank) · Eleven people waiting · Heading changed six weeks ago, not changed back
+**Sound:** Pen scratching a record of nothing · The anteroom's particular silence
+**Monster scale:** bureaucratic predators (badge-and-protocol vermin) → harbor horrors (whatever empties a berth until it smells of nothing)
+**Tension:** The board is a ledger of departures. The train already left — ten times. No arrival column. No announcement.
+**Word count:** ~145
+
+---
+
+### NODE: DK — Harbor Docks, Tilbury
+
+**Named location:** The Third Berth Gate
+
+**Current text:**
+> Tilbury's harbor. Three ships unloading simultaneously. Magistra Muffat finds you before you find her — she was watching the dock gate.
+
+**Proposed replacement:**
+> Three ships offload simultaneously at Tilbury. The crane operators don't speak — they work by sound: the groan of the chain, the pace of the tackle, the thud of a crate landing right. At the third berth something in the hold has been wrong since morning. The dockworkers avoid that side without discussing it.
+>
+> The vermin here are standard harbor stock: wererats in the cargo nets, spies in the chandler's office, pirates who read Tilbury's inspection schedule as an invitation. What comes off the wrong ships — the deep-run vessels whose cargo lists say *ballast* — belongs to a different tier.
+>
+> Magistra Elara Muffat is at the gate. She was there before you arrived. She already knows which berth you'll walk toward.
+
+**Props:** Crane chain groan · Third berth hold (wrong since morning) · Cargo lists marked "ballast"
+**Sound:** Chain groan · Crate thud · Dockworkers not talking about the third berth
+**Monster scale:** wererats / spies / pirates (harbor vermin) → deep-run cargo horrors (unnamed, a different tier)
+**NPC anchor:** Muffat at the gate before you — she already knows
+**Word count:** ~130
+
+---
+
+### NODE: MQ — Tilbury Market Quarter
+
+**Named location:** The Upper Gallery, Third Stall Row
+
+**Current text:**
+> Shops stack three stories. Vendor Mira tosses a Flash Powder twist at a seagull to demonstrate — it flaps away in a startled spiral.
+
+**Proposed replacement:**
+> The market runs three stories on both sides of the gallery and has done so for longer than the Conclave has administered it. What the Conclave taxes, the market absorbs. What the market cannot absorb, it sells.
+>
+> The lower stalls deal in the expected: pack supplies, dried goods, rope, the kind of blade that is technically legal. The upper gallery is where the prices stop being posted. Vendor Mira works the third row. She knows what you need before you name it — not because she's perceptive, but because everyone who climbs to the third row needs the same thing.
+>
+> She tosses you a Flash Powder twist without being asked. A seagull had been watching from the railing. It is no longer there.
+>
+> "The price," she says, "is knowing what it's for."
+
+**Props:** Unstickered upper gallery · Flash Powder as greeting-before-question · The seagull that was watching
+**Threshold test:** The market tests whether you can afford the upper gallery — not in gold, in purpose
+**Host-guest (Chrétien):** Mira gives before you ask; payment is disclosure, not coin
+**Word count:** ~145
+
+---
+
+### NODE: SF — The Map Shop, Tilbury
+
+**Named location:** The Back Counter, Behind the Spice Stalls
+
+**Current text:**
+> No sign. Behind the spice stalls. Sells maps, locks, and old keys. The proprietor pales at the Bloodstained Map and gives you the Real Map for free.
+
+**Proposed replacement:**
+> No sign. The spice stalls provide the address: follow the smell of cinnamon until it stops. The door is unlocked. It has always been unlocked.
+>
+> Proprietor Dusk keeps maps, locks, and old keys behind a counter too high for the room. The maps on the left wall cover forty-one nodes. The space on the right is a gap — a forty-second map, rolled and waiting for whoever brings the right thing to the counter.
+>
+> You place the Bloodstained Map down.
+>
+> He doesn't speak immediately. His hands stay flat on the counter. Then he reaches under and sets the Real Map beside it — all forty-two nodes — and pushes it toward you.
+>
+> "Free," he says. The word costs him something.
+>
+> Maps this complete attract attention. The kind that doesn't knock.
+
+**Props:** Cinnamon smell as address · Gap on the right wall (forty-second map always waiting) · Hands flat on the counter · "Free" as weight
+**Threshold test:** Navigation by sense — no sign; found only by those already looking
+**Host-guest:** Dusk holds the Real Map for this exchange specifically; gives freely but not without cost
+**Fateful object:** Bloodstained Map unlocks the Real Map — the dead courier's final gift
+**Monster scale:** No battle — hiddenness is the protection; complete maps draw the kind of attention that doesn't knock
+**Word count:** ~140
+
+---
+
+### NODE: MS — Aboard the Tilbury Star
+
+**Named location:** The Night Deck, Mid-Passage
+
+**Current text:**
+> A night passage heading east. The cargo below is alive and shouldn't be shipping. Pirates board at 2am.
+
+**Proposed replacement:**
+> The Tilbury Star takes paying passengers on the eastern run for three gold. The captain asks no questions about where you're going. You are expected to ask none about what's in the hold.
+>
+> The hold has been making sounds since Tilbury cleared the harbor. Not movement sounds — the specific sound of something that has learned to be still but hasn't learned to be quiet. The crew goes below in pairs before dusk and not at all after. The captain eats at her table alone and sets the cargo manifest face-down when you pass.
+>
+> The ghost in the hold predates the pirates. The pirates are simply what 2am produces on the eastern run — three of them, every other crossing, regular as a tide schedule. They come over the port rail.
+>
+> What rises from below to meet them is not on the manifest.
+
+**Props:** Face-down manifest · Hold's specific sound · Crew going below in pairs · 2am port rail
+**Threshold test:** The passenger contract — ask nothing about the hold; the contract breaks when the hold starts sounding wrong
+**Host-guest:** Captain knows; manifest face-down is the host who hasn't disclosed the haunting
+**Fateful object:** The manifest — should name what's below; its position is the scene's central lie
+**Monster scale:** ghost (in the hold before you boarded) → pirates (3, tidal-schedule reliable) → unnamed thing that rises to meet them
+**Word count:** ~145
+
+---
+
+### NODE: AL — Visby Approach Alley
+
+**Named location:** The Alley Mouth, Harbor-Side
+
+**Current text:**
+> The edge of Visby. Warrant scouts watch every entrance. Show the Conclave Pass — or fight through the checkpoint.
+
+**Proposed replacement:**
+> The alley is forty feet of bad light between the harbor road and Visby's outer district. Warrant scouts work both ends. They have been at this post long enough to know every face that belongs here — and can describe, in detail, every face that doesn't.
+>
+> The kenku on the drainpipe above the left wall has heard every excuse this alley produces. It repeats them back, occasionally, at inconvenient moments. It is not the threat. It is the warning that the thugs behind it have heard it all before.
+>
+> The Conclave Pass gets you through in under a minute. Without it, the two men at the far end step forward and the kenku goes quiet — which is the only time it ever does.
+>
+> Visby is forty feet away. The sewer grating to the left is the other route. It is not better. It is faster.
+
+**Props:** Bad light between two lamp posts · Kenku on the drainpipe · Conclave Pass (or its absence) · Sewer grating as alternative
+**Threshold test:** The ford the knight must cross — credentials or force; the Pass is the letter of introduction bought in Pachelbel's back room for 15gp
+**Host-guest:** Inverted — gatekeepers not hosts; the Pass converts them into something barely civil
+**Fateful object:** The Conclave Pass — presence or absence determines the next forty feet
+**Monster scale:** kenku (mimic-vermin, warns, doesn't lead) → thugs ×2 (muscle, well-rehearsed) → sewer route (wererat/nekker tier — the price of the faster path)
+**Word count:** ~145
+
+---
+
+### NODE: MI — Plains & Midlands
+
+**Named location:** The Noon Point, Open Road
+
+**Current text:**
+> Open road. Wide sky. Farms abandoned. Livestock wandered off. A 'field woman' appears at noon on the open plain.
+
+**Proposed replacement:**
+> The road between Birka and the highlands runs through farming country that has stopped farming. The gates stand open. The livestock have wandered far enough that they're no longer visible from the road — which means they either found shelter, or stopped needing it.
+>
+> At noon, the plain produces no shadows. This is the structural fact the road doesn't warn you about.
+>
+> A pack sits in the center of the track, contents intact, abandoned mid-stride by someone who had somewhere else to be very suddenly. The crows on the fence line know what happened. They are not saying.
+>
+> The field wraith comes first. The noonwraith herself arrives when the sun is directly overhead and your shadow disappears beneath your feet. She is not hostile in the way that implies intent — she is hostile in the way that a tide is hostile, or a frost.
+>
+> Cross before noon or after. The road does not enforce this. The noon does.
+
+**Props:** Open farm gates · Abandoned pack (contents intact) · Crows on the fence line · The shadowless noon
+**Threshold test:** Time is the gate — noon is the ford; the test is whether you are caught in the open when the shadow goes
+**Host-guest:** Anti-host — abandoned farms are failed hospitality; noonwraith is natural law, not a guardian
+**Fateful object:** The abandoned pack — intact contents encode sudden departure; the crows have the answer
+**Monster scale:** crows (ambient warning) → field wraith (precursor, arrives first) → noonwraith (tide-hostile, structural)
+**Word count:** ~155
+
+---
+
+### NODE: FO — Aldric's Forest
+
+**Named location:** The Hermitage Clearing, Crow-Marked Path
+
+**Current text:**
+> Ancient trees. Crow-marked trunks every 200 paces. Brother Aldric's hermitage: a stone hut, a fire, boiling mushrooms. He has been expecting someone.
+
+**Proposed replacement:**
+> The crow marks begin at the forest edge: carved into bark every 200 paces, roughly at eye height, facing the path. They are not warnings. They are a count. Someone has been keeping track of how deep the forest goes, and the marks stop where the leshen's territory begins.
+>
+> The hermitage is a stone hut in a clearing too regular to be natural. Brother Aldric keeps a fire outside it. The mushrooms in the pot have been boiling since before you entered the tree line — you can smell the smoke from the last crow mark.
+>
+> He does not look up when you arrive. He sets a second bowl on the stone beside the fire.
+>
+> The leshen commands everything in this forest that is not Aldric's clearing. The crows report to it. The root system beneath your feet belongs to it. The Earthbind Root you need grows at the border — exactly where the marks stop.
+
+**Props:** Crow marks as count not warning · Smoke readable from the last mark · Second bowl already set · The gap where the marks stop
+**Threshold test:** The last crow mark is the ford — past it is the leshen's territory; the Earthbind Root grows there
+**Host-guest:** Aldric is the model Chrétien hermit-host — fire lit, bowl set, guest expected before arrival announced
+**Fateful object:** The crow marks that stop — the gap encodes the leshen's border more precisely than any map
+**Monster scale:** crows (leshen's surveillance, vermin as informants) → root system beneath your feet (passive reach, always present) → leshen (commands the forest entire; the clearing is the only exception)
+**Word count:** ~155
+
+---
+
+### NODE: HL — Irish Highlands
+
+**Named location:** The Village Common, Dunfall — Dusk
+
+**Current text:**
+> Rolling hills. Cold wind. Standing stones. Dunfall village bars its doors at dusk — a kelpie has been in the loch for two seasons. Elder Fionn asks for help.
+
+**Proposed replacement:**
+> The standing stones around the loch predate the village by a long margin. They were not placed as warnings. The village learned to read them anyway: when the light behind the stones goes gold, the doors in Dunfall bar from the inside.
+>
+> The kelpie has been in the loch two seasons. In that time the fishing has gone, the ford has closed, and three men who did not make it back before dusk did not make it back at all. The village cannot afford a fourth.
+>
+> Elder Fionn keeps his fire on the common side of the door, facing the loch. He will ask for help before you are fully inside. He has been asking everyone who passes for two seasons. You are the first to arrive who looks like the answer.
+>
+> The Cú Sídhe run the moorland above the loch at night — the hounds that hunt before the kelpie surfaces. You will hear them before you see the water move.
+
+**Props:** Standing stones as dusk-clock · Barred doors as two-season habit · Fionn's fire facing the loch · Still surface before it moves
+**Threshold test:** Dusk is the gate — gold light behind the stones is the signal; remaining outside is the choice
+**Host-guest:** Fionn asks before you are fully inside — distressed host exhausted of options; you are the first who looks like the answer
+**Fateful object:** Standing stones — predating the village, not built as warnings, read as warnings anyway
+**Monster scale:** Cú Sídhe (moorland hunters, arrive first — hear before water moves) → kelpie (surfaces after hounds; takes the shape of what you want most on a dark road)
+**Word count:** ~155
+
+---
+
+### NODE: SW — Murky Swamp
+
+**Named location:** The Causeway — Last Intact Section
+
+**Current text:**
+> The road becomes a causeway. The causeway becomes a suggestion. A Drowner has been killing bridge repair crews. The Runed Stone is at the center crossing.
+
+**Proposed replacement:**
+> The road becomes a causeway two hundred paces past the forest edge. The causeway becomes a suggestion shortly after. The last intact section has three planks missing and a set of repair tools left by someone who decided not to finish.
+>
+> The bridge crews stopped coming after the second drowner pulled a man off the staging platform. The water here does not move when you drop something into it. The fog moves instead — it turns without wind, thickens at the center crossing, thins when you look directly at it. The foglet that lives in it works the same way.
+>
+> The Runed Stone sits at the center crossing. You can see it from the last intact plank. The drowners know you can see it. The waterhag at the southern end knows you need it.
+>
+> Getting there is not the same problem as getting back.
+
+**Props:** Three missing planks · Abandoned repair tools · Still water · Runed Stone visible from safety
+**Threshold test:** The last intact plank — object visible; crossing is the commitment
+**Host-guest:** Swamp refuses all hospitality; abandoned tools are the evidence of every failed attempt
+**Fateful object:** The Runed Stone — visible but held by a space that dismantles the path to it
+**Monster scale:** foglet (disorientation, thins when looked at) → drowners ×2 (ambush; know your sight line) → waterhag (southern border; positioned at the exit, knows you need it)
+**Word count:** ~145
+
+---
+
+### NODE: HS — The Crones' Domain
+
+**Named location:** The Inner Clearing — Green Water, Wrong-Direction Trees
+
+**Current text:**
+> Deeper in. Water glows faintly green. Trees grow in wrong directions. The Crones — Whisper, Glut, and Wane — trade the Runed Stone for the sea road and a binding web.
+
+**Proposed replacement:**
+> Past the swamp's center the trees begin growing toward directions that don't correspond to any compass. The water glows faintly green — not bioluminescence, not reflection. The light comes from below, from something with no interest in being identified.
+>
+> The Crones are already in position when you arrive. Whisper, Glut, and Wane have arranged themselves in a triangle around the space you will stand in, and they did this before you entered the tree line. They are not threatening. They are prepared.
+>
+> They will trade the Runed Stone for the Sea Cave Key and a Binding Web. The Web will matter later. They know this. They give it to you in advance — which is the courtesy their kind extends to those they consider worth the effort.
+>
+> The sleep here is free. This is the part to think carefully about.
+
+**Props:** Wrong-compass trees · Green-lit water from below · Triangle arranged before you arrived · Binding Web given before it's needed
+**Threshold test:** Past the swamp's center the compass fails — negotiate in a space that doesn't run on human rules
+**Host-guest:** Fairy host motif — hospitality freely given, terms unstated; free sleep carries an unstated contract
+**Fateful object:** The Binding Web — given in advance of need; Crones operate on a time scale that includes your future
+**Monster scale:** No battle — Crones are the power structure; green light below is the deeper thing; domain produces nothing the Crones don't permit
+**Word count:** ~150
+
+---
+
+### NODE: BE — Tropical Beach
+
+**Named location:** The North Shore Firepit
+
+**Current text:**
+> First sight of the sea. A dinghy beached near a firepit. Note under it: signal with three torch flashes after dark. Pirates raid before the signal can be sent.
+
+**Proposed replacement:**
+> You hear the sea before you see it — through the last of the tree cover, a low continuous sound the forest has been absorbing for hours. The canopy ends and the beach opens: white sand, a firepit with ash that hasn't dispersed, a dinghy dragged above the tide line with a note tucked under the bow.
+>
+> *Three torch flashes after dark. Signal, and someone will come.*
+>
+> The ash is still warm. Whoever left the note has not been gone long. The sahuagin in the shallows have been in position longer than that — they arrived from the water side and have been waiting for something to happen on the beach.
+>
+> The pirates come from the tree line, not the water. They've been watching from the same side you came in on. Three of them. They are not interested in the note.
+>
+> The Signal Torch is in the dinghy. The signal window opens after dark. The pirates don't wait that long.
+
+**Props:** Warm ash · Note under the dinghy bow · Signal Torch · Three-flash protocol
+**Threshold test:** Sea heard before seen — canopy end is the threshold; note is the gate; signal is the password
+**Host-guest:** Absent host left instructions recently; pirates interrupt before the contract completes
+**Fateful object:** Signal Torch in the dinghy — needed later; note is the absent host's only remaining presence
+**Monster scale:** sahuagin ×2 (water side, in position before you arrived) → pirates ×3 (tree line — they were behind you the whole time)
+**Word count:** ~150
+
+---
+
+### NODE: OC — Aboard the Cerulean Debt
+
+**Named location:** The Main Deck — Mid-Ocean, Night Watch
+
+**Current text:**
+> Captain Draketide's ship. She reviews your items, laughs about the Trade Seal, and agrees to help. Mid-ocean at night, something surfaces.
+
+**Proposed replacement:**
+> Captain Draketide reviews your items on the dock before she agrees to anything. She picks up the Trade Seal, reads it, and laughs — not unkindly. She sets it back down and takes you aboard anyway, which tells you more about her opinion of the Conclave than the laugh did.
+>
+> The Cerulean Debt runs a tight chart room. The Feint Scroll is filed between two ocean surveys — someone left it there and she has not moved it, which means she either hasn't found it or has decided it belongs to whoever knows to look.
+>
+> Mid-ocean on the night watch the wake goes wrong. Not choppy — wrong. The water behind the ship flattens in a line, as if something very large passed beneath it and the surface is still settling. The kraken spawn surface first. They always do.
+>
+> The sea serpent follows at a distance it considers safe.
+
+**Props:** Trade Seal that earns the laugh · Feint Scroll filed between ocean surveys · Wrong wake at night · Spawn that always surface first
+**Threshold test:** Item review on the dock — Draketide decides by what you carry; laugh is verdict, boarding is the pass
+**Host-guest:** Captain-host with complete authority; takes you aboard despite the Conclave seal; Feint Scroll left unmoved = host who leaves space for guest's discoveries
+**Fateful object:** Feint Scroll — placed deliberately, waiting for whoever knows to look
+**Monster scale:** kraken spawn ×2 (surface first, always — known precursors) → sea serpent (follows at a distance it considers safe — calculating, not charging)
+**Word count:** ~155
+
+---
+
+### NODE: IS — Island Shore
+
+**Named location:** The Harbor Dock — Deep Water Moorings
+
+**Current text:**
+> An island harbor. Fishermen, smugglers, retired pirates. The local oracle's apprentice delivers a sealed message from Kassiphane.
+
+**Proposed replacement:**
+> The island harbor runs on a three-tier economy: fishermen who ask no questions, smugglers who ask the right ones, and retired pirates who have stopped asking anything at all. All three know you arrived on the Cerulean Debt. None of them mention it.
+>
+> The deep water moorings at the far end of the dock are empty. Whatever anchors there comes and goes without appearing in the harbor master's log.
+>
+> The oracle's apprentice finds you before you've cleared the gangplank. She is young, unhurried, and has been holding a sealed letter since before the Debt was sighted on the horizon. The seal is Kassiphane's.
+>
+> She does not explain who Kassiphane is. She hands you the letter and walks back up the dock without waiting to see if you open it.
+>
+> Below the island, at a depth the fishermen know not to fish, the Atlantean ruins begin.
+
+**Props:** Empty deep-water moorings (unlogged) · Sealed letter held before ship sighted · Fishermen who know the depth
+**Threshold test:** Three-tier harbor economy as social gate — permitted by vessel, not by name
+**Host-guest:** Apprentice as proxy host — letter prepared before arrival; apprentice doesn't wait, encoding Kassiphane's certainty
+**Fateful object:** Kassiphane's Letter — sealed, anticipated, delivered before you were on the horizon
+**Monster scale:** retired pirates at wrong dock → unlogged deep moorings → Atlantean ruins below (depth the fishermen don't fish — Deep Ones begin there)
+**Word count:** ~150
+
+---
+
+### NODE: AT — Atlantis, Sunken City
+
+**Named location:** The Sunken Library Hall — Bell Landing Point
+
+**Current text:**
+> Underwater. Cold. Dark. Beautiful. Draketide's diving bell descends to the sunken library hall. Deep Ones guard the scroll case.
+
+**Proposed replacement:**
+> Draketide's diving bell takes twelve minutes to reach the library floor. The descent is cold and then colder, dark and then differently dark — at a certain depth the darkness stops being the absence of light and becomes a substance in its own right.
+>
+> The library hall is intact. Marble columns preserved by cold and pressure run the length of a room larger than any building in Birka. Bioluminescent growth covers the lower shelves and provides enough light to read by, which suggests the library has not been unread.
+>
+> The Deep Ones guard the scroll case with the patience of things that have nowhere else to be. They are not the difficulty.
+>
+> The Aboleth has been in the eastern alcove since before the city was underwater. It has read everything in this library. The water near it is slightly thicker than the water elsewhere, and carries a quality you feel in your reasoning before you feel it in your body.
+>
+> The scroll case is on the central lectern. The Aboleth already knows you are here.
+
+**Props:** Twelve-minute descent · Intact marble columns · Bioluminescent shelf growth (library in continuous use) · Thicker water near eastern alcove · Scroll case on central lectern
+**Threshold test:** Bell descent is the commitment — twelve minutes down, twelve back; library floor is the game's deepest threshold
+**Host-guest:** Aboleth as anti-host — predates hospitality; "already knows you are here" inverts the Chrétien host's preparation
+**Fateful object:** Scroll case on the lectern — visible and central; bioluminescent shelves encode continuous use
+**Monster scale:** Deep Ones ×3 (patient, not the difficulty) → Aboleth (geological time, reads your reasoning before your body knows)
+**Word count:** ~165
+
+---
+
+### NODE: SC — Sea Cavern
+
+**Named location:** The Salt-to-Fresh Transition — Inner Passage
+
+**Current text:**
+> The coastal cave system connecting the sea approach to the freshwater interior. Scholar King markers carved on the walls. A Dragon Turtle guards the inner passage.
+
+**Proposed replacement:**
+> The cave system runs from the coastal approach to the freshwater interior — the only passage between sea and lake that doesn't require forty miles of highland. The Scholar Kings knew this. Their markers are carved at intervals where a traveler needs reassurance the route continues: every fifty paces, a little deeper, a little higher as the cave rises.
+>
+> The water changes from salt to fresh in the second chamber. You can tell by taste, and by the different quality of silence the cave carries on the far side.
+>
+> The cave vermin — blind crabs, thermal vent fish, the small pale things that live near the Dragon Turtle's heat — stay in the outer sections. They have learned the boundary.
+>
+> The Dragon Turtle holds the inner passage at its narrowest point. The heat arrives before it does. The Scholar King who placed the last marker on this wall left it at the passage entrance and did not mark anything beyond.
+
+**Props:** Scholar King markers at fifty-pace intervals · Taste-change from salt to fresh · Thermal boundary the cave vermin respect · Last marker at entrance with nothing beyond
+**Threshold test:** Inner passage at its narrowest — cave commits to a single line; Dragon Turtle holds exactly that point
+**Host-guest:** Scholar Kings marked the route for those who followed — the last marker is their farewell; Dragon Turtle inherited what they abandoned
+**Fateful object:** The last Scholar King marker — placed at passage entrance; nothing marked beyond; the gap is the record
+**Monster scale:** blind crabs / thermal vent fish (outer sections, learned the boundary) → Dragon Turtle (holds the narrowest point; heat arrives before it does)
+**Word count:** ~155
+
+---
+
+### NODE: FL — Freshwater Lake & River
+
+**Named location:** The Water Shrine — Stone Circle, Lake Shore
+
+**Current text:**
+> The river cave exits into a lake. A water shrine — stone circle half-submerged at the shore. Place a silver coin, receive the River Blessing: one free inn beat.
+
+**Proposed replacement:**
+> The river cave exits into light. After the inner passage's single-file dark, the lake opens into sky and cold clean air. The stone circle at the shore is half-submerged — lower stones green with growth, upper stones dry. The water level has been rising for long enough that whoever built the circle did not build it to be standing in the lake.
+>
+> A silver coin placed at the circle's center returns the River Blessing: one night's rest, given by the stone and the water jointly. No coin, no blessing. The exchange is older than the currency.
+>
+> The kappa in the shallows are territorial but courteous — if you know to bow first, they bow in return, the water in their dish spills, and the rest of the encounter is negotiable. Most travelers don't know to bow.
+>
+> The River Troll holds the deep water at the lake's northern end. It does not come into the shallows. The kappa see to that.
+
+**Props:** Half-submerged stone circle (lower green, upper dry) · Silver coin · Kappa's dish of water · Deep northern end
+**Threshold test:** Shrine offering as voluntary contract — older than the currency; kappa bow as second threshold requiring courtly knowledge
+**Host-guest:** Shrine as oldest host — stone and water as joint hosts; contract carved not spoken
+**Fateful object:** Silver coin — smallest offering, most significant return; water level encodes the shrine's age
+**Monster scale:** kappa ×2 (territorial but courteous — bow unlocks negotiation; most don't know) → River Troll (deep water; kappa maintain his boundary)
+**Word count:** ~165
+
+---
+
+### NODE: DS — Deep Sea Trench
+
+**Named location:** The Trench Crossing — Open Deck, Mid-Passage
+
+**Current text:**
+> Draketide takes the ship over the trench on the way back north. The Leviathan's silhouette passes far below. A whirlpool forms.
+
+**Proposed replacement:**
+> The water above the trench is a different color than the ocean around it — darker, with a quality of depth that daylight does not correct. Draketide crosses it on the return north because it is the fastest route and because she believes the ship is fast enough.
+>
+> The hull makes a sound it does not make in shallower water. Once. Then twice. Then the current changes.
+>
+> Far below — at a depth where the trench light fails entirely — the Leviathan's silhouette passes. It moves in a direction that does not correspond to any current. The ship rocks in the pressure wave of its passage and settles. It does not surface. It does not need to.
+>
+> The Charybdis forms at the surface while this is happening. It builds from the outer edge inward — which gives you the time between the first rotation and the last to do something about it. The window is not generous.
+
+**Props:** Trench's darker water visible from deck · Hull sound made twice · Leviathan silhouette at unmeasurable depth · Whirlpool building from outside in
+**Threshold test:** Crossing is the commitment — fastest route, only if ship is fast enough; whirlpool window is the gate
+**Host-guest:** Draketide chose this route — host makes decisions you don't control; Leviathan is the anti-host that doesn't acknowledge the ship
+**Fateful object:** Hull sound twice then silence; pressure wave confirms Leviathan without a sighting
+**Monster scale:** Charybdis (surface — whirlpool building inward, time-gated) → Leviathan (below the light, passes without engaging; ship is beneath its notice)
+**Word count:** ~155
+
+---
+
+### NODE: SE — Visby Sewers
+
+**Named location:** The Main Channel — Lower Road Junction
+
+**Current text:**
+> The sewers connect the lower road to Visby's goblin district. The smell is accurate. Goblin guide Gritch works here for 3gp and won't go near the goblin cave.
+
+**Proposed replacement:**
+> The smell is accurate.
+>
+> Goblin guide Gritch works the lower junction for three gold. He knows every passage in this system — where the channels run clear, where the overflow backs up, which routes the wererats consider theirs and which they have ceded. He scratches route markers into the lower brickwork at knee height. Most guides use torchlight. Gritch uses the markers.
+>
+> The wererats in the eastern channel are the manageable problem. The nekkers coming in from the goblin district are smaller, faster, and arrive in numbers the channel is not wide enough to fight in comfortably.
+>
+> Gritch will take you as far as the goblin cave approach. There he stops, hands you the torch, and tells you the price was three gold and this is the three-gold route.
+>
+> What lies past the approach is a different negotiation, with different parties, and he is not one of them.
+
+**Props:** Knee-height route markers in brickwork · Overflow channels · Torch handed over at the cave approach · Goblin cave defined by Gritch stopping
+**Threshold test:** Goblin cave approach is Gritch's limit — his stopping point marks the threshold; past it is a different contract
+**Host-guest:** Mercantile host who keeps exactly to stated terms; "three gold and this is the three-gold route" honored to the letter
+**Fateful object:** Gritch's knee-height markers; torch handed over encodes transfer of responsibility
+**Monster scale:** wererats ×2 (eastern channel — territorial, negotiable) → nekkers ×3 (goblin district — pack hunters, channel too narrow)
+**Word count:** ~150
+
+---
+
+### NODE: BK — Broken Tooth Tavern, Visby
+
+**Named location:** The Main Floor — Mordus's Table
+
+**Current text:**
+> The Warrant Hall is upstairs. Downstairs is extremely lively. Warlord Mordus explains the shaman problem: it's bad for business.
+
+**Proposed replacement:**
+> The Broken Tooth runs on two levels. The main floor is extremely lively — the specific kind of lively that happens when a warlord has a corner table and everyone in the room has decided to behave as though they haven't noticed. The Warrant Hall is upstairs. The stairs are in the back, past Mordus.
+>
+> Warlord Kael Mordus sits with a sightline to both the door and the stairs. The staff brings his drink without being asked. He is explaining the shaman problem to no one in particular when you arrive — which means he was explaining it to you before he knew you were coming.
+>
+> "It's bad for business," he says. This is his moral framework. In this context, it is also accurate.
+>
+> The shaman's influence runs through the Warrant Hall above him. Mordus runs the floor below. Neither has fully displaced the other yet.
+
+**Props:** Corner table with dual sightline · Drink without request · Stairs past Mordus as gated passage · Warrant Hall above as unreached threshold
+**Threshold test:** Stairs to Warrant Hall are the structural gate — Mordus between door and stairs; he is the knowledge toll
+**Host-guest:** Host with prior agenda — already talking to you before you arrived; drink without request encodes territorial authority
+**Fateful object:** Shaman's influence in Warrant Hall — framed commercially by Mordus; "bad for business" is the object compressed into a verdict
+**Monster scale:** main floor performing normality (social cover) → shaman's influence in Warrant Hall → temporary balance between them ("yet")
+**Word count:** ~155
+
+---
+
+### NODE: GC — Goblin Warrens, Visby
+
+**Named location:** The Central Warren — Three-Clan Convergence
+
+**Current text:**
+> Three goblin clans and one Void shaman who convinced them all he is a god. Shard #4 is the shaman's ritual focus. Goblins are fighting each other — the Void Virus is already active.
+
+**Proposed replacement:**
+> Three goblin clans have shared these warrens for two generations. The territorial markers scratched into the passage walls were the only law that functioned down here. They are no longer functioning.
+>
+> The Void Shaman arrived eight months ago and told all three clans he was a god. The evidence he offered was the Crimson Warrant — a ritual object that produces effects the goblins had no prior framework for. The clans accepted this. They are now fighting each other over which of them the god loves best, which is how the Void Virus spreads.
+>
+> The hobgoblins nearest the shaman's chamber are still loyal and organized. The goblins in the outer passages are fighting their cousins and do not particularly care which direction you approach from.
+>
+> The Void Virus Canister is in the shaman's chamber. He has not used it yet. He is waiting for the right moment — which is a concerning sign of patience in something that calls itself a god.
+
+**Props:** Two-generation wall markings no longer respected · Crimson Warrant as sacred display · Void Virus Canister held in reserve · Outer goblins too distracted to prioritize you
+**Threshold test:** Past Gritch's limit — different negotiation, different parties; shaman's chamber is the inner gate
+**Host-guest:** Shaman as false divine host — corrupted hospitality into competition for divine favor
+**Fateful object:** Crimson Warrant as ritual focus — removes his godhood when taken; Canister held with deliberate patience
+**Monster scale:** goblins ×4 (outer, disorganized — chaos as cover) → hobgoblins ×2 (chamber guard, loyal) → Void Shaman (restraint with Canister is the real threat)
+**Word count:** ~165
+
+---
+
+### NODE: PC — Pirate Cave, Visby
+
+**Named location:** The Storage Chamber — Between Goblin Warrens and Coast
+
+**Current text:**
+> A connected cave system off the goblin warrens runs to the coast. Visby's pirate faction stores stolen goods here. Not hostile to Warrant passholders.
+
+**Proposed replacement:**
+> The cave runs from the goblin warren junction to the coast — a quarter mile of dry passage with the salt smell strengthening as you go east. The pirate faction has been using the inland section as a warehouse long enough that the crates have developed a sorting system. Goods with paperwork are stacked near the entrance. Goods without paperwork are near the exit.
+>
+> The faction does not ask about your Warrant credentials. They read them. If they are in order, you are a guest. If they are not in order, this conversation is already over.
+>
+> The Nautical Chart on the east wall covers routes the Conclave harbor master does not have on record. This is not an accident.
+>
+> The coastal exit opens to a cove the Conclave has not mapped. The faction keeps it that way.
+
+**Props:** Salt smell strengthening east · Two-tier crate sorting (paperwork near entrance, none near exit) · Nautical Chart on east wall · Unmapped coastal exit
+**Threshold test:** Credentials read not asked — gate set at AL; recognition here is silent and immediate
+**Host-guest:** Conditional hospitality stated precisely — in order: guest; not in order: already over
+**Fateful object:** Nautical Chart — routes not on official record; knowledge asymmetry is the value
+**Monster scale:** No battle — faction is the peace if credentials hold; unmapped cove is the implied external threat
+**Word count:** ~145
+
+---
+
+### NODE: MC — Monster Den, Visby Pass
+
+**Named location:** The Outer Den — Where the Road Used to Run
+
+**Current text:**
+> A zeugl — a massive tentacled horror — has been nesting here for three seasons. The road through is blocked. There is no route around.
+
+**Proposed replacement:**
+> The road through this section has been a den for three seasons. You can trace where it went by the outline in the wall — the cut stone is still visible at the edges, but the center is covered in a biological residue the zeugl produces when nesting. It has been nesting for three seasons. The residue has developed layers.
+>
+> An Abandoned Scholar Pack sits against the left wall at the den's outer edge. The contents are intact. The scholar is not.
+>
+> The Greater Mutants hold the middle chamber — offspring or byproducts of prolonged zeugl presence, larger than the residue should be able to produce, faster than the den's geometry suggests. They have learned the space. You have not.
+>
+> The zeugl is in the inner chamber. It has been here long enough that the cave has adapted to it, not the other way around.
+>
+> There is no route around. This has been true for three seasons.
+
+**Props:** Cut stone outline visible at edges, center buried · Residue with developed layers · Scholar Pack intact, scholar not · Greater Mutants who know the geometry
+**Threshold test:** Hardest gate in the game — no route around, stated twice; the ford with no alternative
+**Host-guest:** Absolute anti-host — cave adapted to zeugl; scholar's pack is evidence of the last guest
+**Fateful object:** Scholar Pack — contents intact encodes zeugl's indifference to material goods; scholar's purpose lost with them
+**Monster scale:** residue vermin (every crevice) → Greater Mutants ×2 (middle chamber, know the geometry) → zeugl (inner chamber, three-season territorial authority)
+**Word count:** ~165
+
+---
+
+### NODE: CA — Scholar Kings' Underground Road
+
+**Named location:** The Functional Section — Second Junction West
+
+**Current text:**
+> The Scholar Kings built underground roads. Some still work. The dead down here are restless — and recent.
+
+**Proposed replacement:**
+> The Scholar Kings built these roads to standards that have outlasted their civilization by four centuries. The vaulting is intact in seven of the nine sections. The other two collapsed within living memory — the rubble has not yet compacted. Builder's marks at each junction indicate which branch continues and which ends in stone.
+>
+> The dead here come in two vintages. The wights in the second chamber are old — Scholar Kings-era, possibly road wardens who never left their post. They remember the layout in the way things retain memory after they stop being able to form new ones. The sluagh are recent. Something happened at the western end last season that produced three of the unforgiven dead, and they have not yet learned the road's geometry.
+>
+> The wraith moves between both groups. It does not belong to either vintage.
+>
+> The Catacomb Map is folded into a niche at the fourth junction. Someone was surveying this road and stopped mid-survey.
+
+**Props:** Builder's marks at each junction · Rubble not yet compacted (recent collapse) · Catacomb Map mid-survey in fourth junction niche · Wraith with no history here
+**Threshold test:** Builder's marks are the navigation gate — functional and collapsed sections indistinguishable without them
+**Host-guest:** Scholar Kings as four-century hosts; road wardens who never left; recent sluagh violate the road's institutional hospitality
+**Fateful object:** Catacomb Map — stopped mid-survey; incomplete map encodes interrupted mission
+**Monster scale:** wights ×2 (old, remember layout — post-memory retention) → sluagh ×3 (recent, still learning geometry) → wraith (no vintage, no constraint)
+**Word count:** ~170
+
+---
+
+### NODE: VC — Vampire Castle Ruins, Visby Pass
+
+**Named location:** The Castle Gate — Built Into the Road
+
+**Current text:**
+> No road bypasses it. The castle was built to be unavoidable. Bruxa Elise Mourne collects tolls — not in coin, but in blood debt and returned items.
+
+**Proposed replacement:**
+> The castle was built so the road passes through the great hall, not beside it. There is no path around. This was an architectural decision made several centuries ago and has been enforced every day since.
+>
+> Bruxa Elise Mourne is at the gate when you arrive. She is in human form, which is the courtesy she extends to travelers who have not yet been rude. The toll is not in coin. She will tell you what you owe and what you are carrying that belongs to her — she has had a long time to develop her accounting.
+>
+> Blood debt is older than currency. Returned items are simply things that found their way into circulation when they should have stayed here.
+>
+> The room she offers is on the second floor, east wing. The bed is the best you will find between Visby and the desert. The sleep is free. She does not explain why.
+>
+> What she does in the west wing is her own business.
+
+**Props:** Road through great hall (no bypass) · Human form as courtesy · Centuries-developed toll ledger · East wing room (best bed in Act V) · West wing as private domain
+**Threshold test:** Gate is the road — no alternative; toll is the threshold condition; she knows what you owe and what you carry that is hers
+**Host-guest:** Fullest Chrétien host in the game — toll paid, hospitality complete; free sleep without explanation; west wing is the guest boundary
+**Fateful object:** Returned items in your inventory that are hers; Toll Token as proof of satisfaction
+**Monster scale:** No battle — toll is the alternative; Elise unpaid is a Bruxa with centuries of practice; west wing holds what east wing guests don't see
+**Word count:** ~165
+
+---
+
+### NODE: DE — Desert Wastes
+
+**Named location:** The Crossroads Marker — Open Sand
+
+**Current text:**
+> Sand. Heat. Things that move faster than they should. The crossroads marker points to the caravan's pattern of movement.
+
+**Proposed replacement:**
+> The desert offers one navigational aid: a stone post at the crossroads, carved with arrows that have been re-cut several times as the wind wore the edges down. The caravan's pattern of movement is marked on the eastern face. The marking is fresh enough that someone passed through within the season.
+>
+> Everything else the desert offers is a problem. The heat at midday produces a shimmer the sand wraith uses as cover — it moves through the distortion faster than the eye resolves it. The mummies in the western sand are slower, which is their only mercy. They do not tire. They do not stop because you are moving. They stop when you do.
+>
+> The scorpions and vipers shelter in the shadow of the crossroads post at noon. They are the smallest things out here and the easiest to manage. They are also the only things out here with the sense to find shade.
+>
+> The caravan is east. The marker points there. Getting there before dark is the question the desert is asking.
+
+**Props:** Stone post re-cut by wind erosion · Fresh eastern marking within the season · Heat shimmer at midday · Post shadow sheltering vermin at noon
+**Threshold test:** Getting there before dark — natural law; marker gives direction not guarantee; desert tests endurance across the crossing
+**Host-guest:** Purest anti-hospitality — post is impersonal aid from previous travelers; caravan is the distant host the desert interposes between
+**Fateful object:** Desert Crossroads Marker — ancient, maintained, recently used; freshness is the only evidence of human presence
+**Monster scale:** scorpions / vipers (post shadow — smallest, most sensible about shade) → mummies ×2 (tireless, stop when you stop) → sand wraith (heat shimmer cover, faster than eye resolves)
+**Word count:** ~165
+
+---
+
+### NODE: DC — Izador's Desert Caravan
+
+**Named location:** The Center Awning — Philosopher's Court
+
+**Current text:**
+> 30 people, 12 camels, a philosopher. Sandmage Izador meditates under a sun awning — unsurprised. The djinn has had Shard #5 for two centuries.
+
+**Proposed replacement:**
+> Thirty people and twelve camels moving through the desert constitute a civilization in miniature. Izador's caravan has been following the pattern marked on the crossroads post for longer than the current crossroads post has been standing. The people know the route. The camels know it better.
+>
+> Sandmage Izador is under the center awning when you arrive. He is meditating. He does not open his eyes. He moves a cushion to the left with one hand to make space, which means he heard you coming while you were still too far away for the camels to notice.
+>
+> "The djinn has had it for two centuries," he says. This is not a preamble. This is the situation.
+>
+> The djinn circles the caravan at the eastern perimeter. The thirty people have been traveling alongside a two-century territorial djinn long enough to have developed accommodations for it — where to camp, which direction to face the tents, what not to do near the eastern edge after dark. The Sand Cipher is in the djinn's custody. The djinn does not consider this unusual.
+
+**Props:** Center awning (only shade) · Cushion moved left without eyes opening · Djinn's eastern perimeter circuit · Caravan's accommodations (tent orientation, camp position)
+**Threshold test:** Djinn is the inner threshold — Shard in custody 200 years; caravan arrival completes desert crossing but opens the next gate
+**Host-guest:** Philosopher-host who prepares before you arrive; caravan as traveling civilization adapted around a permanent territorial complication
+**Fateful object:** Sand Cipher — 200 years in djinn custody; djinn finds this unremarkable, which is the most important detail
+**Monster scale:** caravan vermin (food stores, camel line) → thirty people (behavior variable near djinn) → djinn (eastern perimeter, two centuries, territorial and absolute)
+**Word count:** ~170
+
+---
+
+### NODE: MT — The Mountain Pass, High Crest
+
+**Named location:** The Cliff Edge Lookout — Southern Face
+
+**Current text:**
+> A narrow pass through sheer rock faces. Wind cuts horizontal. Eagles circle the southern ledge. Griffons nest above. The path dead-ends at a cliff overlooking the Midlands. Good place to wait for prey.
+
+**Proposed replacement:**
+> The pass is narrow enough that two cannot walk abreast. The rock faces are sheer and close, and the wind comes through horizontal — not down from above, not up from below, but straight across at chest height, continuous, like something that has been doing this for centuries and has no interest in stopping.
+>
+> The path dead-ends at a cliff overlooking the Midlands. Eagles work the thermal off the southern ledge. They are not interested in you.
+>
+> The griffons nest in the upper rock above the lookout — three visible, others audible. They are not hunting. Griffons at rest communicate this clearly: weight settled, not coiled. They watch without tracking. You are not the scale of thing they are waiting for.
+>
+> Standing at the edge, the Midlands spread below in the full distance you have crossed. The road you walked looks, from here, like something a predator would use.
+
+**Props:** Horizontal chest-height wind (centuries-continuous) · Eagle thermal off southern ledge · Griffon nest above (weight settled, not coiled) · Midlands road visible as hunting corridor
+**Threshold test:** Dead-end cliff as perspective threshold — no combat, no loot; test is what you understand when you see where you have been from above
+**Host-guest:** Griffons as territorial owners — passage permitted by irrelevance; you are not the scale of thing they wait for
+**Fateful object:** The view — road walked looks like a predator's corridor; perspective transforms already-crossed geography
+**Monster scale:** eagles (thermal, not engaged) → griffons (nested, at rest — watching without tracking; more audible than visible)
+**Word count:** ~165
+
+---
+
+### NODE: CO — Cosmic Realm, The Convergence
+
+**Named location:** The Spire Platform — Above Birka, Noon
+
+**Current text:**
+> The spire above Birka. The sky turns black at noon. The Void is already here. Commander Bruhns holds the platform with a military cordon. The Codex Cradle is built into the spire wall.
+
+**Proposed replacement:**
+> The spire above Birka is the tallest structure in the known world, built for this specific purpose by people who knew this day would come and did not know when. The Codex Cradle is set into the eastern spire wall at platform height. It has been waiting here since construction was complete.
+>
+> The sky is black at noon. This is not weather. The Void does not cause nightfall — it causes noon itself to fail. Below the platform, the city of Birka is still lit by the morning that preceded this hour. Up here the light stopped when the convergence began.
+>
+> Commander Bruhns holds the platform perimeter with a military cordon. He arrived before you. He has always arrived before you. He does not explain how.
+>
+> Seven Void Walkers stand between you and the Cradle. After them, the Void Warlord — the Void's chosen instrument, not its full extent. The full extent is behind it and does not require a body.
+>
+> This is the threshold every other threshold was oriented toward.
+
+**Props:** Codex Cradle in eastern spire wall (built first) · Black noon above, morning light below · Bruhns's cordon · Seven Walkers before the Warlord · NG+: Froberger's letter at base of spire
+**Threshold test:** Cumulative threshold — every prior gate pointed here; the Cradle is where all crossings terminate
+**Host-guest:** Bruhns as host of last resort — always arrived first; Void Warlord as instrument not source
+**Fateful object:** Codex Cradle — predates the building; the Bloodstained Map, every Shard, every crossing terminates here
+**Monster scale:** Void Walkers ×7 (threshold before the threshold) → Void Warlord (instrument) → the Void itself (behind it, does not require a body)
+**Word count:** ~175
+
+---
+
+### NODE: SL — Birka Slums
+
+**Named location:** The North Alley Junction — Gutter Stone Crossroads
+
+**Current text:**
+> The cramped alleys north of Birka market. Refuse heaps attract every pest the city produces. Children dare each other to touch the leech-covered gutter stones.
+
+**Proposed replacement:**
+> The alleys north of the Birka market are too narrow for carts and too cramped for anything to move through quickly. This is their primary defense. The refuse heaps at each junction attract every pest the city produces — rats in the lower layers, cockroach swarms in the dry section above, wasps where the heat concentrates in the overhang. The city does not come here to clean. The city does not come here.
+>
+> Three children are playing a dare game at the gutter crossroads when you arrive. The rules are visible in how they stand: one touches the leech-covered stones, two watch. They have run this game long enough to know exactly how close you can get before a leech detaches and looks for warmer purchase.
+>
+> They don't look at you when you pass. In the slums, ignoring strangers is the social courtesy — it means you have decided not to be a problem.
+>
+> The road north goes to the Defiant Fields. The children don't go north.
+
+**Props:** Too-narrow alleys (primary defense) · Layered refuse heap (rats / swarms / wasps by tier) · Three children (one touches, two watch) · Road north the children won't take
+**Threshold test:** Social not architectural — ignoring strangers is the hospitality code; passing without incident requires reading it correctly
+**Host-guest:** No host — city doesn't come here; ignoring strangers is hospitality in ungoverned space
+**Fateful object:** Leech-covered gutter stones — calibrated hazard the children have mapped precisely; their knowledge is the slums' institutional memory
+**Monster scale:** rats / cockroach swarms / wasps (refuse-heap tiers) → stalk-hunt system draws full Birka city pool (commoner through lich)
+**Word count:** ~160
+
+---
+
+### NODE: BQ — Blacksmith Quarter, Weimar
+
+**Named location:** The Forge Floor — Dora Flint's Demonstration Anvil
+
+**Current text:**
+> The industrial quarter below Weimar. Forges. Hammering at all hours. Dora Flint throws a Thunderstone at an anvil to demonstrate. The concussive crack rattles the quarter.
+
+**Proposed replacement:**
+> The quarter below Weimar runs on a different schedule than the scholars above it — which is to say it runs on no schedule, at all hours, without pause. The hammering has been continuous long enough that the scholars have stopped noticing it. The scholars are wrong to have stopped noticing.
+>
+> Forges that run too long without rest begin to develop opinions. The Forge Elemental in the eastern bay is the opinion this quarter has developed. The Animated Armor at the forge entrance are the arguments it made when it was still communicating through product.
+>
+> Dora Flint is at the central anvil. She throws a Thunderstone at it when she sees you — not as a threat, as a demonstration. The concussive crack rattles the quarter wall to wall. She watches your reaction the way a host watches a guest eat the first course.
+>
+> "Useful," she says. "You'll need two."
+>
+> She has already set two on the counter.
+
+**Props:** Central anvil as demonstration surface · Thunderstone detonation · Two already on the counter · Eastern bay where elemental has settled · Forge heat shimmer from SQ stairs above
+**Threshold test:** Thunderstone demonstration IS the threshold test — Dora reads your response to a detonation; correct response earns the product
+**Host-guest:** Merchant-host who performs before selling; product set out before agreement; "You'll need two" encodes foreknowledge
+**Fateful object:** Thunderstone — crack advertises itself; two already set out encodes Dora's prior reading of you
+**Monster scale:** Animated Armor ×2 (forge entrance — elemental's earlier legible communication, now hostile) → Forge Elemental (eastern bay — developed opinion of continuous operation without rest)
+**Word count:** ~155
+
+---
+
+### NODE: YC — Yugurt Cabin
+
+**Named location:** The Cabin Door — Morning, Lakeside
+
+**Current text:**
+> Smells like wood smoke and fish oil. A lifetime of tackle on the walls. Nets that haven't been cast in years. A rod propped by the door. He is always here in the morning.
+
+**Proposed replacement:**
+> The smell reaches you before the cabin does: wood smoke and fish oil, the specific combination that means a fire kept through the night and something cooked on it years ago that the walls remember. A lifetime of tackle hangs inside — hooks, lines, leaders, a sinker collection organized in a way that took decades. The nets haven't been cast in years. They are hung correctly, maintained, waiting for a decision that hasn't come back yet.
+>
+> The rod is propped by the door. Not inside — outside, by the door, where a visitor would see it before they knocked.
+>
+> The Fisherman is always here in the morning. He does not ask where you have been or where you are going. He has a fire. He has a floor you can sleep on for nothing.
+>
+> This is the only place between the highlands and the coast that offers both.
+
+**Props:** Fish oil smell in the walls from years ago · Decades-organized tackle · Nets hung correctly but not cast · Rod outside the door positioned for a visitor
+**Threshold test:** The choice to stop — rod seen before knocking means the threshold is already crossed; the cabin tests whether you can rest
+**Host-guest:** Purest Chrétien hermit-host — fire, floor, no conditions, no cost, no questions; trust encoded as not-asking
+**Fateful object:** Rod outside not inside — positioned for a visitor before they arrived; the Fisherman expected someone to need it
+**Monster scale:** None — sanctuary node; absence of threat is the description; this place has been kept clear
+**Word count:** ~155
+
+---
+
+### NODE: YL — Yugurt Lake
+
+**Named location:** The Noon Point — Shore Mark, Yugurt
+
+**Current text:**
+> Mirror-flat water. No wind. No birds. A hand-painted sign on a stick at the shore: YUGURT. The surface moves once, slowly, then stops. Something very large is in this lake and it knows you are here.
+
+**Proposed replacement:**
+> The hand-painted sign at the shore says YUGURT. Someone planted it in the bank on a stick, no base, no post — it leans at the angle of a thing that has been leaning a long time. No birds. No wind. The water is mirror-flat in the way that means the air above it is being held still by something below.
+>
+> The surface moves once. A slow displacement, not a wave — a weight shifting. Then it stops.
+>
+> There is a name for what produces that displacement. You will not find it in shallow water. The Horned Shark hunts this lake; the Leviathan calls it home. Anglers who know the difference between a bite and a notice do not fish past the Noon Point marker.
+>
+> You are past it.
+>
+> The lake has already registered you. What it does with that information is the only question still open. The sign leans. The water holds. Whatever is under the mirror is not in a hurry.
+
+**Props:** Hand-painted YUGURT sign leaning on a stick — no base, no permanence · Noon Point marker as the line between fishing and warning · Single slow surface displacement — weight, not current
+**Threshold test:** Passing the Noon Point — the marker is the gate; the lake tests whether you read signs
+**Host-guest:** Hostile inversion — the lake is host, but its hospitality is predatory; the displacement is the host acknowledging the guest
+**Fateful object:** The leaning sign — planted with no base, held only by what surrounds it; permanence without foundation
+**Interior made exterior:** The lake's awareness rendered as displacement, not as menace; what the water does encodes what is beneath it
+**Time as moral frame:** "Not in a hurry" — the lake has all the time; the clock belongs to whatever is under the surface, not to you
+**Monster scale:** Horned Shark (Noon Point line — hunting tier, actively territorial) → Leviathan (deep water — apex, the source of the single displacement; it does not chase, it notices)
+**Word count:** ~160
+
+---
+
+### NODE: DF — The Unbanked Quarter
+
+**Named location:** The Zero Block — First Approach, Unbanked Quarter
+
+**Current text:**
+> A district that exists on no city register. No tax collector has ever returned from this block. Hand-lettered signs in cracked windows read NO COIN · NO TRUST · NO THANKS. A shortwave signal repeats on every frequency. Nobody is answering. The rats here are wrong.
+
+**Proposed replacement:**
+> The sign in the cracked window reads NO COIN · NO TRUST · NO THANKS, in that order, which is also the order in which you will need to accept them. The Unbanked Quarter appears on no city register. Tax collectors who came back from this block had nothing to report except that they were not going back. The ones who went back have not come back.
+>
+> A shortwave signal repeats on every frequency. Same pattern, same interval, same broadcast quality — which is poor. Nobody is answering. The signal has been going out long enough that nobody answering is not a condition; it is the standing state of the broadcast.
+>
+> Grimshaw runs the transmitter. His receiver has been broken for eleven years. He is aware of this. He does not consider it relevant to the transmission.
+>
+> The rats here are wrong. Not wrong in the way of sick rats or starving rats — wrong in the way of rats that have adapted to something that should not be adapted to. They do not scatter. They watch the frequency bands.
+
+**Props:** Hand-lettered window sign with its own interior logic (NO COIN first) · Shortwave repeater — same interval, nobody answering · Grimshaw's broken receiver — broadcast without return is not a malfunction, it is the protocol · Watching rats
+**Threshold test:** The sign's order of terms — entering the Zero Block means accepting all three in sequence; it tests whether you can operate without the city's guarantees
+**Host-guest:** Grimshaw as host-broadcaster — transmission as hospitality; the broken receiver means he cannot hear guests but continues broadcasting anyway; the district extends welcome it cannot receive
+**Fateful object:** The shortwave repeater — signal going out on every frequency without answer is not a failure state, it is the correct output of this place
+**Interior made exterior:** The rats' wrongness described as behavioral (they watch frequency bands, they don't scatter), not as feeling
+**Time as moral frame:** "Long enough that nobody answering is the standing state" — the broadcast clock has no urgency because urgency has already been normalized out; the deadline passed and the transmission continued
+**Monster scale:** NGMI Swarm ×3 (the watching rats — vermin tier, adapted to the void-adjacent environment; wrong in proportion to how long the signal has been running) → Rug Spider (large, static, hidden in the building infrastructure; listens the way the rats do but does not move)
+**Word count:** ~155
+
+---
+
+### NODE: HM — Frequency Row
+
+**Named location:** The Forty-First Volume — Listening Row, Unbanked Quarter
+
+**Current text:**
+> Storage units converted into listening posts, each bristling with improvised antenna arrays. Cable runs between them in defiance of physics and permits. A woman sits outside updating a frequency log in a composition notebook. She is on volume forty-one.
+
+**Proposed replacement:**
+> The storage units have been converted into listening posts — each one bristles with antenna arrays, improvised, dense, aimed at frequencies the city does not acknowledge. Cable runs between them in configurations that violate physics and every permit classification on record. Nobody has corrected this. The cables stay.
+>
+> Bertha No-Bank sits outside on a metal folding chair with a composition notebook. She is on volume forty-one. Volume forty-two begins tomorrow; she has already labeled the cover.
+>
+> The frequency she monitors is 14.225. She has checked it every morning since the third moon of the fourth year. Nothing was on it then. Nothing is on it now. She logs this. Every morning: a new entry confirming the absence. Forty-one volumes of confirmed absence, organized by date, cross-referenced by atmospheric condition.
+>
+> You are now in the log. Frequency Row notes everything that passes through it. This is the hospitality it offers — not shelter, not coin. Documentation.
+
+**Props:** Cable configurations violating physics — stayed up without correction · Volume forty-one (cover of forty-two pre-labeled — tomorrow is already prepared) · Frequency 14.225 — logged absence, not presence
+**Threshold test:** Entering Frequency Row registers you; the threshold is Bertha's pen; the question is whether you are the kind of thing that gets logged or the kind that gets a category note
+**Host-guest:** Bertha as host-documentarian — hospitality is the log entry; she cannot offer what she doesn't have, so she offers what she does: record of your presence
+**Fateful object:** Volume forty-one — forty-one notebooks of nothing found is not failure, it is the archive; the pre-labeled volume forty-two encodes that the work continues regardless of finding
+**Interior made exterior:** Bertha's discipline (conviction that the frequency must be monitored even if empty) rendered as the physical act of pre-labeling tomorrow's notebook before it begins
+**Time as moral frame:** "Volume forty-two begins tomorrow" — tomorrow is real and scheduled; the deadline is the notebook's cover, already written; the log's continuation is a standing legal commitment to absence
+**Monster scale:** None — civilian audit node; Bertha's continuous monitoring is the reason Frequency Row stays clear; the listening posts function as a deterrent by documentation
+**Word count:** ~155
+
+---
+
+### NODE: GL — Old Guard's Corner
+
+**Named location:** The Convergence Chair — Three-Alley Crossing, Unbanked Quarter
+
+**Current text:**
+> Three alleys converge at an improbable angle. A wooden folding chair. A man in it. A laminated sign that says GET OFF. Off of what is not specified. He has outlasted four city administrations, two plagues, and one Void surge without moving.
+
+**Proposed replacement:**
+> Three alleys meet at an improbable angle — the geometry is wrong for this block, wrong for this district, possibly wrong for this city. The intersection produced itself without civic input. No permit issued it. It is here regardless.
+>
+> The wooden folding chair is in the center of it. Zeke 'The Signal' has occupied that chair through four city administrations, two plagues, and one Void surge. He has not moved. This is not stubbornness — it is evidence. Administrations change. Plagues end. Void surges recede. The chair remains. Zeke has become the fixed reference point by which the impermanence of everything around him is measured.
+>
+> The sign on his lap says GET OFF. Off of what is not specified. This is intentional. You are probably on it.
+>
+> He does not speak. He holds up a laminated card. The card says: SYSTEM COMPROMISED. He has a weatherproof box beside the chair containing four hundred identical cards. He has never offered a different one. He has never needed to. He offers you one. It is simply the current reading.
+
+**Props:** The improbable-angle intersection — self-produced geometry, no permit · Wooden folding chair as fixed reference point against everything impermanent · Laminated GET OFF sign (object unspecified) · Weatherproof box of 400 identical SYSTEM COMPROMISED cards
+**Threshold test:** The GET OFF sign with no object — entering the crossing means you are probably what the sign refers to; the threshold test is whether you can stand in a space that has already named you as the problem
+**Host-guest:** Zeke as the oldest possible host — he predates every current tenant in the surrounding buildings; his hospitality is the card; it is offered without expectation of response or departure
+**Fateful object:** The weatherproof box — 400 identical cards prepared in advance; the box is not a supply, it is a commitment to the reading being permanent and repeatable
+**Interior made exterior:** Zeke's conviction that the system is compromised rendered as never producing a different card; four hundred identical copies is not obsession, it is calibration
+**Time as moral frame:** Outlasting four administrations and two plagues is not patience — it is legal precedent; the chair is not squatting, it is prior claim; Zeke's continued presence is the most accurate clock in the district
+**Monster scale:** None — Zeke's presence is the reason the crossing stays navigable; the fixed reference point suppresses chaos by being unchanged; the corner tests players, it does not fight them
+**Word count:** ~165
+
+---
+
+### NODE: CQ — The Cat Quarter
+
+**Named location:** The Crate Seat — Jimmy's Corner, Cat Quarter
+
+**Current text:**
+> Narrow brick lanes, broken glass, discarded fish bones. Every surface is scratched. Not vandalism — territorial markings, dense as wallpaper. A large orange tabby sits on an overturned crate wearing what appears to be a very small fedora. He sees you and doesn't move.
+
+**Proposed replacement:**
+> Narrow brick lanes, broken glass, fish bones in the cracks. Every surface is scratched — not vandalism but territorial markings, laid so densely they read like wallpaper. Someone has been making claims in this district surface by surface for a long time. The claims are current.
+>
+> At the corner: an overturned crate. On the crate: a large orange tabby in a very small fedora. The fedora fits correctly. This is not the result of chance.
+>
+> Jimmy Two-Tails registers you from the moment you enter the lane. He does not move. He does not adjust his position. He watches with the professional stillness of someone who has already reached a verdict and is waiting to see if you confirm it.
+>
+> The scratches on the walls are the guest register. They record every claim made in this quarter and kept. Yours is not yet on the wall.
+>
+> The Beefy Toms are his. They are not visible from here. They are present.
+
+**Props:** Dense territorial scratch markings as wallpaper — active and current, not historical · The correctly-fitted tiny fedora — implies a supply chain, a prior relationship, hands better than a cat's · Jimmy's professional stillness as verdict already rendered
+**Threshold test:** The scratch markings read you as you enter; the threshold is Jimmy's verdict — his not-moving is the verdict being delivered; what he decides determines the quarter's hospitality
+**Host-guest:** Jimmy as district lord-host; the scratches are the guest register; your entry is a claim request; he determines whether you are a guest or an intrusion
+**Fateful object:** The tiny fedora — it fits correctly; correct fit implies intention, not accident; the fedora compresses an entire relationship history between Jimmy and whoever had the foresight to commission it
+**Interior made exterior:** Jimmy's assessment rendered entirely as stillness; the verdict is not announced, it is enacted by the absence of movement; what he has decided is visible only in what he doesn't do
+**Time as moral frame:** "Yours is not yet on the wall" — the scratches are a living legal record; the deadline for making a claim is ongoing; every visit is an opportunity to be registered or refused
+**Monster scale:** Beefy Toms ×3 (not visible but present — mid-tier enforcement; the territory's muscle operates off-screen until the verdict requires action) → Jimmy himself is the apex of this node; the fedora is the marker of his rank, not his size
+**Word count:** ~155
+
+---
+
+### NODE: JU — Dense Jungle
+
+**Named location:** The Covered Road — Mael's Clearing, Dense Jungle
+
+**Current text:**
+> The Scholar Kings' road is overgrown but present. Arachas webs block every third stretch. Herbalist Mael lives here — perfectly sane, perfectly dangerous.
+
+**Proposed replacement:**
+> The Scholar Kings' road is still here. It runs beneath the overgrowth in straight, deliberate intervals — you can feel the paved stone where the jungle floor gives differently. Three hundred years of root and vine have not moved the road. They have covered it. This is not the same thing.
+>
+> Arachas webs block every third stretch. The webs are architectural — anchored across the full road width at regular intervals, as if the spiders have been reading the same survey markers the Scholar Kings used. You go through or you go back.
+>
+> Herbalist Mael lives in the clearing at the road's center. She is perfectly sane. She is perfectly dangerous. These are not contradictions — they are the same characteristic expressed at different scales.
+>
+> Her compound stops muscle function in organisms above forty kilos. It wears off in five minutes. She recommends using the five minutes productively. She is not being ironic.
+>
+> The Ancient Road Marker at the clearing's edge still reads. Not all of it. Enough.
+
+**Props:** Scholar Kings' road under the jungle floor — paved stone felt through differential give · Arachas webs at regular intervals, anchored architecturally · Ancient Road Marker — partial, sufficient · The five-minute window
+**Threshold test:** Recognizing the road under the overgrowth — the gate is reading what's beneath; covered is not erased; entering tests whether you can navigate a path that doesn't announce itself
+**Host-guest:** Mael as jungle host — compound offered as practical hospitality; the five minutes is the gift; the guest determines what happens inside it; she is not withholding anything
+**Fateful object:** Ancient Road Marker — still legible, partially; what it still says is enough to know where the road was going; partial information is the jungle's version of full disclosure
+**Interior made exterior:** Mael's dual nature (sane + dangerous) described as a single characteristic at two scales, not as a feeling or warning; the compound is the proof, not the description
+**Time as moral frame:** Five minutes — the neurotoxin's duration is the only clock this node runs on; every productive act happens in that window or not at all; the deadline is chemical, not social
+**Monster scale:** Arachas ×2 (road-crossing webs — architectural territorial claim; mid-tier, blocking the path at surveyed intervals) → Endrega ×3 (deeper in the canopy — the fauna the Scholar Kings' road was built to avoid; why the road needed walls that are now gone)
+**Word count:** ~160
+
+---
+
+### NODE: OU — The Observatory Outhouse
+
+**Named location:** The Hook — Observatory Annex, Rear Approach
+
+**Current text:**
+> Behind the observatory. A smell. A door. A portal. Turn the hook left. Sweelinck was not joking.
+
+**Proposed replacement:**
+> The observatory is a building of some academic consequence. The outhouse behind it is not.
+>
+> The smell reaches the path about ten meters out. The door is wood, painted once, not recently. The latch is a simple hook — the kind on a thousand doors in Weimar. Turn it right: outhouse, fully functional, no further comment. Turn it left: the Greek Agora, three thousand years and several thousand kilometers from your current position.
+>
+> Sweelinck told you about this. He used the same tone he uses for everything else. You may have been skeptical. That is a reasonable response to the information as delivered.
+>
+> The Portal Key goes in your hand or it doesn't. The hook is on the door regardless. The decision is yours.
+>
+> The smell is not.
+>
+> Sweelinck was not joking.
+
+**Props:** Standard hook latch — same hardware as a thousand Weimar doors · The right/left binary — one ordinary, one extraordinary, same motion · The smell as the ordinary anchor of the extraordinary node
+**Threshold test:** The hook is the gate in the most literal sense; turning it left requires believing Sweelinck; the threshold tests whether you act on information that sounds implausible
+**Host-guest:** Sweelinck as absent host — he left the portal, the instructions, and the key; hospitality at its most pragmatic; he did not stay to explain it twice
+**Fateful object:** The hook latch — the smallest hardware item in the game; left or right; the fate of the Greek Agora visit encoded in a single turn
+**Interior made exterior:** The extraordinary (dimensional portal) fully embedded in the ordinary (outhouse smell, wood door, standard hook); the portal is not announced by the architecture
+**Time as moral frame:** "Sweelinck was not joking" — the statement implies prior skepticism; the deadline for believing him was before you arrived; you are already past the point of deciding whether to trust him
+**Monster scale:** None — transit node; the threshold is the latch, not combat; what is tested here is conviction, not capability
+**Word count:** ~130
+
+---
+
+### NODE: GA — Greek Agora
+
+**Named location:** The Speaking Chamber — Central Colonnade, Greek Agora
+
+**Current text:**
+> Columns. Heat. The sound of something vast breathing beneath the stones. Kassiphane sits cross-legged in the speaking chamber. Solid gold eyes.
+
+**Proposed replacement:**
+> The columns are older than the civilization that built them. Heat radiates from the stone in a direction heat should not travel — upward from below, as if the ground is warm from something beneath it. Under the paving stones, something vast is breathing. It has a rhythm. It is not in distress.
+>
+> Kassiphane sits cross-legged in the speaking chamber at the colonnade's center. Her eyes are solid gold — not golden, not amber, gold — which means she sees at a frequency you do not. She is not looking at you the way you look at things. She is reading a different register of the same information.
+>
+> Seven questions. Seven seals. She will tell you what you already know, in the order you have always needed to hear it. The Codex Shard was here before she was. It has always been yours.
+>
+> The Bronze Automatons at the gate have been here longer than the oracle. The Sphinx at the chamber threshold asks first.
+
+**Props:** Columns older than the civilization that raised them · Heat traveling upward from below — thermal anomaly, not atmosphere · Solid gold eyes (not golden — gold) · Codex Shard predating the oracle
+**Threshold test:** The speaking chamber is the second gate — the first was the outhouse hook; Kassiphane's seven questions are the inner threshold; the test is whether you can answer what you already know
+**Host-guest:** Kassiphane as oracle-host — she holds the Shard but does not own it; her hospitality is accurate information about what was always yours; the host who returns, not grants
+**Fateful object:** The Codex Shard — present before Kassiphane arrived; the oracle is the guardian of something that predates her; the Shard has always been the player's; the Agora is simply where it waited
+**Interior made exterior:** Kassiphane's oracular perception rendered as solid gold eyes and a different frequency of vision — not metaphor but physical fact; the vast thing below rendered as a thermal direction and a rhythm
+**Time as moral frame:** "You already know the answers" — the education is already complete; the deadline for learning was before this visit; Kassiphane's role is to confirm, not to teach; the questions are the ceremony of retrieval
+**Monster scale:** Bronze Automaton ×2 (colonnade gate — constructed guardians, older than the oracle; mid-tier, structural; they test passage before Kassiphane speaks) → Sphinx (speaking chamber threshold — asks the question before the player can ask theirs; the gate that speaks)
+**Word count:** ~155
+
+---
+
+### NODE: KT — Camelot — Arthurian Road
+
+**Named location:** The Split Road — Castle Gate Approach, Arthurian Road
+
+**Current text:**
+> A legendary place made real — or a real place made legendary. The road splits here. A death knight challenges all travellers at the castle gate.
+
+**Proposed replacement:**
+> A legendary place made real — or a real place made legendary. The distinction matters less than the road, which splits at the approach and does not indicate which branch leads where. Both arrive at the castle gate. The gate does not distinguish between them.
+>
+> The road is paved in the Arthurian manner: flat stone, fitted without mortar, maintained by a tradition older than the current throne. The castle rises behind the gate in proportions that are correct but slightly more correct than ordinary architecture allows. Something about the towers is too deliberate.
+>
+> The Death Knight at the gate challenges every traveller. Not some — every. He has held this post through four dynasties and the interval between them. The challenge is the same each time. It has always been the same challenge.
+>
+> The Black Knight holds the approach road. You face him before the gate. The Knight's Favour is awarded after, not before. This is the Arthurian contract: the token is earned by accepting what it costs.
+
+**Props:** Split road with no signs — both branches arrive at the same gate · Flat stone paving fitted without mortar — older than the throne · Towers proportioned too deliberately · Knight's Favour as earned token, not found loot
+**Threshold test:** The road splits and neither branch is marked; the gate is the real threshold; the Death Knight's challenge is not selective — every traveller answers it; the test is unconditional
+**Host-guest:** The Death Knight as anti-host — his hospitality is the challenge; Camelot does not receive guests, it receives travellers who have proven they can enter; the castle gate is the only form of welcome on offer
+**Fateful object:** The Knight's Favour — in Arthurian romance, a token given before or after combat as proof of standing; awarded after, not before; it compresses the entire chivalric economy into one loot item
+**Interior made exterior:** The legendary/real ambiguity rendered as architecture that is "slightly more correct than ordinary" — the towers are too deliberate; the castle is what a castle would be if a castle were trying to be itself
+**Time as moral frame:** The Death Knight has held the gate through four dynasties and the interval between them — the challenge predates every kingdom it served; the contract is older than the institution; it will outlast the current one too
+**Monster scale:** Black Knight (approach road — mid-tier, the first challenge; tests combat readiness before the gate) → Death Knight (castle gate — the standing challenge; four dynasties, same terms; the gate that does not negotiate)
+**Word count:** ~155
+
+---
+
+### NODE: OP — Oriental Dragon Palace
+
+**Named location:** The Cloud Gate — Jade Threshold, Dragon Palace
+
+**Current text:**
+> The edge of the known world. A palace built on cloud-stone. The Jade Construct at the gate has never lost a fight. The Olympian Key asks it seven questions at once.
+
+**Proposed replacement:**
+> The palace is built on cloud-stone — material that has no business bearing weight, bearing it regardless. At the edge of the known world, the cartographers stopped drawing. The palace occupies the margin they left blank.
+>
+> The approach is without sound. No wind at this altitude. No birds. The cloud-stone does not echo footsteps. You arrive having made no noise the palace did not already know about.
+>
+> The gate is jade. The Jade Construct at the gate has never lost a fight. This is not a boast — it is a property of the structure, stated the way a bridge's load capacity is a property of the bridge. The Construct does not move toward you. It holds a record. The record is complete.
+>
+> The Olympian Key does not fight it. The Key carries Kassiphane's seven questions — all seven, presented at once. The Construct recognizes the sequence. The gate opens for ceremony what it has never opened for force.
+>
+> The Codex Shard is the sixth and last. It has been waiting.
+
+**Props:** Cloud-stone — load-bearing material that should not bear loads · Cartographic margin — the palace in the blank space past the edge of the map · Soundless approach — no echo, no wind · Jade Construct's undefeated record as a structural specification
+**Threshold test:** The gate that has never been forced; the Olympian Key is the only mechanism that works; the threshold tests not strength but whether you completed the ceremony at GA first
+**Host-guest:** The palace as the final host — it does not receive guests through force; ceremony is the only admissible approach; the Construct's record guarantees that the wrong kind of arrival does not succeed
+**Fateful object:** The Olympian Key — carries the seven questions from Kassiphane; presented all at once; the Key is the ceremony compressed into an object; without it the Jade Construct's record remains unbroken
+**Interior made exterior:** The Construct's invincibility stated as a structural property, not a power level; the approach's silence described as the palace already knowing you arrived — sound rendered as information the building receives, not produces
+**Time as moral frame:** "It has been waiting" — the sixth Codex Shard is the final piece; the palace has been holding it since before the player arrived; the wait is the Shard's temporal frame, not an obstacle
+**Monster scale:** Jade Construct (gate — apex of this node; has never lost; the record predates the player's journey; the only way past is the Key, not combat; if the Key is absent, the Construct's record extends)
+**Word count:** ~155
+
+---
+
+### NODE: HC — Sky Road — Heavenly Clouds
+
+**Named location:** The High Road — Above the World, Scholar Kings' Sky Road
+
+**Current text:**
+> There is a road above the world. The Scholar Kings built it. Bruhns's signal fire is visible from here. The Void is bleeding through — Fallen Seraph on the road.
+
+**Proposed replacement:**
+> There is a road above the world. The Scholar Kings built it in a period when they believed the world needed roads above it as much as through it. They were correct. The road is still here. The Scholar Kings are not.
+>
+> The surface is white stone, cut to a width that accommodates two carts abreast. It curves slightly with the curvature of the sky. The edge has no railing. The Scholar Kings did not build for vertigo.
+>
+> Bruhns's signal fire is visible from here — a point of orange below and to the west, deliberate, maintained. Someone is still sending a message upward. The message has not been answered yet.
+>
+> The Void is bleeding through the road's eastern section. The Star Spawn hold that stretch. The Fallen Seraph at the road's center is what the Void produces when it has enough time and something sufficiently holy to work with.
+>
+> The road continues north. The sky ahead is the same color as the Void it contains.
+
+**Props:** White stone road cut for two carts — practical, enormous scale · No railing on the edge · Bruhns's signal fire below and west — orange point, maintained, unanswered · Void bleeding through the eastern section
+**Threshold test:** No railing — the Scholar Kings built for passage, not for the fear of falling; entering the Sky Road means accepting that the edge is real and unguarded; it tests whether you can walk a road that does not accommodate hesitation
+**Host-guest:** The Scholar Kings as long-dead hosts — the road is their hospitality, left in stone; the Fallen Seraph is the corruption of that hospitality; the road was built to be walked, not held
+**Fateful object:** Bruhns's signal fire — visible from the highest road; someone below is still signaling upward; the fire is maintained which means the message is ongoing; it has not been answered, which means the answer is still possible
+**Interior made exterior:** The Void's bleeding described as a color match between the sky ahead and the corruption it contains — the Void does not arrive, it assimilates; the Fallen Seraph described as a process result (time + holiness + Void) rather than a creature
+**Time as moral frame:** "The message has not been answered yet" — Bruhns's fire is the standing clock; the signal began at some point; the answer is still open; the Sky Road is the place from which the answer would come
+**Monster scale:** Star Spawn ×2 (eastern road section — Void-adjacent, dispersed; they hold the stretch, not the node) → Fallen Seraph (road center — apex corruption; what the Void makes of something holy given sufficient time; the hardest single encounter on the road above the world)
+**Word count:** ~160
+
+---
+
+### NODE: AR — Arctic Wastes — Detour
+
+**Named location:** The White Pass — Below the Cloud Road, Arctic Detour
+
+**Current text:**
+> The arctic pass below the cloud road. Cold. White. Efficient. Triggered only if the sky road battle is lost. Both paths arrive at the Birka approach.
+
+**Proposed replacement:**
+> The arctic pass runs below the cloud road. You cannot see the sky road from here — it is above the weather, and you are in it. Snow fills the horizontal distances. The cold arrives before the wind that carries it.
+>
+> Cold. White. Efficient. The pass is all three without apology. It does not ask whether you intended to be here. You are here. The pass provides: a path north, a wind that stays behind you, ground frozen hard enough to walk on. That is the full inventory of what it offers.
+>
+> The Wendigo moves with the weather. The Ice Giant does not move — it has been in the deep section of the pass since before the cloud road was built. The Scholar Kings surveyed this route. They built upward instead.
+>
+> Both paths arrive at the Birka approach. The sky road and the white pass end at the same place. The loss on the high road is not a loss — it is a different itinerary. The pass knows this. It does not slow down.
+
+**Props:** Weather obscuring the sky road above · Snow in the horizontal distances · The Ice Giant as the reason the Scholar Kings built upward · "Full inventory" of what the pass offers — path, wind, frozen ground
+**Threshold test:** The pass tests the player who lost — whether failure ends the journey or redirects it; the threshold is the first step into the white, taken after a defeat on the road above
+**Host-guest:** The Arctic as the most austere possible host — it provides exactly what it provides, no surplus, no warmth, no commentary; its hospitality is the path and the frozen ground underfoot
+**Fateful object:** The convergent destination — both paths arrive at Birka; the Chrétien fateful object here is not a prop but a fact of geography; the detour's mercy is encoded in the map
+**Interior made exterior:** The loss on the sky road rendered as "a different itinerary" — defeat becomes rerouting; the pass's efficiency is the emotional reframe, stated as a property of the landscape
+**Time as moral frame:** "The pass does not slow down" — the detour takes no longer than the high road; the deadline is identical; the Arctic offers no additional punishment for arriving via loss
+**Monster scale:** Wendigo (pass surface — cold-adapted, moves with weather; mid-tier; the Arctic's ambient threat) → Ice Giant (deep section — has not moved since before the cloud road existed; the Scholar Kings' survey found it and built upward; the reason the sky road exists)
+**Word count:** ~155
+
+---
+
+### NODE: EF — Thornwood Maw
+
+**Named location:** The Black Approach — Root Zone, Thornwood Maw
+
+**Current text:**
+> Black bark ahead. The trees grow wrong — no birds, no wind, no sound except deep creaking from below the roots.
+
+**Proposed replacement:**
+> The trees ahead are black-barked. Not diseased — wrong. They grow wrong in the specific way that means something underneath them has been growing longer. No birds. No wind. No sound except a deep creaking from below the roots, rhythmic and patient, the kind of sound a thing makes when it has been making it for a very long time.
+>
+> The Thornwood Maw opens past the normal forest line at the point where the light changes color. Not darker — a different color. The bark is not dead wood. It is occupied wood. Every trunk here conducts something upward from the root system.
+>
+> The Thornwood King is what happens when a forest decides it has had enough of being a forest. He has been here since before the name Thornwood. The name came after.
+>
+> The creaking is closer than it was a moment ago.
+
+**Props:** Black bark as occupied, not dead — conducting something upward · Light that changes color at the Maw's threshold · Deep rhythmic root-creaking — patient, ancient · "The name came after"
+**Threshold test:** The changing light marks the gate — past the normal forest line is the Maw's interior; the threshold is the color shift; entering means the usual forest rules no longer apply
+**Host-guest:** The Thornwood King as the deepest anti-host — the Maw is his domain; its hospitality is silence above and sound below; the forest performs his preferences, not yours
+**Fateful object:** The creaking from below the roots — it locates the King before he is visible; the sound is closer than it was; the object is the distance closing
+**Interior made exterior:** The King's presence rendered entirely as what the forest does — occupied bark, wrong growth, absent birds, rhythmic sound from below; he is not described, only his effects
+**Time as moral frame:** "The name came after" — the Thornwood King predates his own name; his tenure is older than the human act of naming him; the wrongness of the trees is a permanent condition, not a recent event
+**Monster scale:** Thornwood King (apex — has been here since before the name; the root-creaking is his; the occupied bark is his; the forest is him)
+**Word count:** ~145
+
+---
+
+### NODE: EH — Loch of the Drowned King
+
+**Named location:** The Clear Margin — Shore Mark, Loch of the Drowned King
+
+**Current text:**
+> The loch is cold and too clear. Figures move below the surface, walking in slow loops.
+
+**Proposed replacement:**
+> The loch is cold and too clear — clear in the way that means it has been maintained at that clarity for a reason. Standing water clouds. This one does not. The bottom is visible at fifteen meters, and the bottom is occupied.
+>
+> Figures move below the surface in slow loops. Not swimming — walking. Their feet are on the loch floor. Their arms are at their sides. They follow a circuit that takes approximately four minutes to complete. They have been completing it for some time.
+>
+> The Highland Aboleth does not swim so much as preside. The figures are its record — everything that has come to this loch and stayed. The loops are not imprisonment. They are memory, organized.
+>
+> The loch is cold. The figures do not appear cold. They appear occupied.
+
+**Props:** Maintained clarity — not natural; the loch does not cloud · Bottom visible at fifteen meters, occupied · Four-minute walking circuit — approximate, measurable, ongoing · "Memory, organized"
+**Threshold test:** The shore is the gate — the loch can see you from the moment you arrive; the too-clear water inverts normal visibility; entering means being seen before you can see what sees you
+**Host-guest:** The Highland Aboleth as the coldest host — the figures are its prior guests, still moving; their loops are the hospitality it offers new arrivals: a preview of the arrangement
+**Fateful object:** The walking circuit — four minutes, regular, measurable; whoever measured it was close enough and long enough to time it; the circuit is the Aboleth's signature, left visible
+**Interior made exterior:** The Aboleth's control rendered entirely as the regularity of the loops; "slow loops" is organized, not random; the figures' arms at their sides is the detail that encodes everything about what holds them
+**Time as moral frame:** The maintained clarity is an old condition — standing water clouds naturally; something has been preventing that for long enough to become the loch's defining characteristic; the Aboleth's tenure is measured in the clarity of the water
+**Monster scale:** Highland Aboleth (apex — presides; the figures are its record; it has been here since the loch was clear; the Drowned King is not the boss — the Aboleth is what drowned him)
+**Word count:** ~140
+
+---
+
+### NODE: ES — Sunken Altar
+
+**Named location:** The Drowned Causeway — Past the Swamp Edge, Sunken Altar
+
+**Current text:**
+> The causeway continues past the swamp edge into black water. The altar stones are visible below the surface.
+
+**Proposed replacement:**
+> The causeway was built to go somewhere. It continues past the swamp's navigable edge into black water without apology — flat stones, deliberate spacing, the work of people who knew where they were going. The point where it submerges is marked by nothing. The causeway simply continues below the waterline.
+>
+> The altar stones are visible below the surface. They are arranged. Someone set them in that configuration and they have held it, in black water, for long enough that the arrangement is now the altar's permanent state. The stones are not ruins. They are intact. Submerged is not the same as destroyed.
+>
+> The Elder Hydra holds this space. It has not disrupted the altar arrangement — not from reverence, but because the arrangement was for it. The causeway was built toward it. The altar was built for it. The swamp remembered, even after the water rose.
+
+**Props:** Causeway that continues below the waterline without marking the transition · Altar stones arranged and intact below the surface — submerged, not ruined · "The swamp remembered"
+**Threshold test:** The submerging causeway — the threshold is the waterline; the gate is whether you follow the path past the point it goes under; the causeway does not hesitate and neither can you
+**Host-guest:** The Elder Hydra as the altar's intended recipient — the causeway was built toward it; the altar was built for it; the hospitality predates the Hydra's current tenure by whoever built the path
+**Fateful object:** The altar stones — intact, arranged, permanently submerged; whoever built them built them to last in water; the altar was always meant to be this way; submerged is its correct state
+**Interior made exterior:** The Hydra's claim rendered as the fact that it has not disrupted the altar — not reverence but ownership; the arrangement was always its; this is the exterior proof of the interior relationship
+**Time as moral frame:** "The swamp remembered, even after the water rose" — the altar's arrangement survived the flooding; memory encoded in stone; the causeway's destination predates the current water level
+**Monster scale:** Elder Hydra (apex — holds the altar space; has not disrupted the arrangement because the arrangement was built for it; regenerating, ancient, the reason the causeway was built)
+**Word count:** ~145
+
+---
+
+### NODE: EW — Hag Mother's Cradle
+
+**Named location:** The Deep Still — Center of the Cradle, Hag Mother's Domain
+
+**Current text:**
+> The deepest part of the swamp. The air smells different — older. Something vast regards you from the water.
+
+**Proposed replacement:**
+> The deepest part of the swamp is not deeper in elevation — it is deeper in time. The air smells different: older, the way old wood smells, or old water, or the inside of something that has not been opened in a very long time. The Crones' Domain is behind you. This is what the Crones' Domain is the approach to.
+>
+> The Grand Hag Queen does not surface. She does not need to. The water is dark enough that you cannot see more than half a meter into it, and she is below that threshold, regarding you. Something vast regarding you from the water is not a metaphor for threat — it is a description of attention. She is paying attention. You are the object of it.
+>
+> The Cradle is named correctly. This is where the swamp came from. She was here before it.
+
+**Props:** Air that smells older — old wood, old water, something unopened · The Crones' Domain named as approach, not destination · Dark water, half-meter visibility, and she is below it · "Named correctly"
+**Threshold test:** The Crones' Domain was already the deep; this is what lies past the deep; the threshold is the point where the swamp's age changes; entering the Cradle means having passed every prior gate in the hag hierarchy
+**Host-guest:** The Grand Hag Queen as the matriarch of all hag hospitality — HS was the outer court; this is the inner sanctum; the Cradle is the origin point; the Queen's hospitality is the attention itself, which is total
+**Fateful object:** The age in the air — the smell of something long unopened; the Cradle has not been entered in a very long time; the air carries the record of that absence; your arrival ends it
+**Interior made exterior:** The Queen's regard stated as attention, not threat — "a description of attention" refuses the menace reading and replaces it with the more unsettling fact of being fully seen
+**Time as moral frame:** "She was here before it" — the swamp grew around her; the Cradle is older than the ecosystem it sits inside; the Queen's temporal claim is absolute and predates every other feature of this terrain
+**Monster scale:** Grand Hag Queen (apex — does not surface; has been here since before the swamp; the Cradle is named for her function, not her location; she is the source of what the Crones serve)
+**Word count:** ~145
+
+---
+
+### NODE: EB — Wreck of the Unbroken
+
+**Named location:** The Beached Hull — Hold Approach, Wreck of the Unbroken
+
+**Current text:**
+> The wreck sits half-beached, half-submerged. Three hundred years of stillness. Something moves in the hold.
+
+**Proposed replacement:**
+> The Unbroken sits half-beached on the sand, half-submerged in the shallow break. Three hundred years ago it came to rest in this position and has not moved since. The hull is intact — the masts are gone, the rigging is gone, but the hull has not separated. The name holds, for a ship three centuries out of commission.
+>
+> The hold is accessible at low tide. Something moves in it. Not the tide — the tide has a pattern, and what moves in the hold follows a different pattern, slower and its own.
+>
+> The Vampire Pirate Lord has been in the hold for the full three hundred years. He did not leave with the crew. He outlasted the crew. He does not require the ship to go anywhere. He receives visitors.
+>
+> The sand around the hull is undisturbed. He does not come out.
+
+**Props:** The intact hull — masts gone, hull holds; name still accurate for a ship three centuries beached · Low-tide hold access · Movement in the hold at a rhythm distinct from the tide's · "He does not come out"
+**Threshold test:** The hold entrance at low tide — the gate is tidal; the threshold opens and closes on a schedule the Lord did not set; entering the hold means entering on the tide's permission, not his
+**Host-guest:** The Vampire Pirate Lord as the most literal host — a ship receives passengers by definition; the hold is his receiving chamber; three hundred years of receiving visitors; he does not go to them
+**Fateful object:** The ship's name — the Unbroken; the hull has held for three centuries in salt water; the name is accurate in both senses: the ship did not break, and the Lord inside it did not end
+**Interior made exterior:** The Lord's presence rendered as movement at a rhythm the tide doesn't explain — not described, only the deviation from the expected pattern; he is the residual after the tide's motion is subtracted
+**Time as moral frame:** "He outlasted the crew" — the crew left or died; the Lord remained; three hundred years in the hold is not waiting, it is residence; he has been receiving visitors for the entire interval
+**Monster scale:** Vampire Pirate Lord (apex — in the hold; has not come out in three centuries; receives; the wreck is his domain by three hundred years of uncontested tenure)
+**Word count:** ~150
+
+---
+
+### NODE: EO — Leviathan's Eye
+
+**Named location:** The Eye Floor — Abyssal Base, Leviathan's Eye
+
+**Current text:**
+> The trench floor. No light should reach here. You can see it below — a shape too large to be one thing.
+
+**Proposed replacement:**
+> The trench floor. No light should reach this depth — the water column above absorbs the last of it long before here. You can see regardless. The source of the light is below you.
+>
+> The True Leviathan is not in the trench. The trench is in the True Leviathan. What you see below the floor — the shape too large to be one thing — is the part of it that held still long enough for sediment to settle on its back. The trench is the impression it left in staying.
+>
+> It does not move. It does not need to. You are at the bottom of the world's deepest water and you are still above it.
+>
+> The Eye is not the Leviathan's eye. It is the place where you can see the Leviathan's eye. There is a difference, and the difference is the distance between you.
+
+**Props:** Light at depth with no surface source — the Leviathan's own luminescence · Sediment settled on the Leviathan's back — the trench as impression, not container · The distance between the node's name and the eye itself
+**Threshold test:** The trench floor is not the bottom — the Leviathan is below it; the threshold is the realization that the floor you are standing on is the surface of something else; the gate is understanding the node's name
+**Host-guest:** The True Leviathan as the deepest host — it does not rise; the trench is its impression; it receives visitors at a depth they can barely reach and it is still below them; the hospitality is the light that lets you see
+**Fateful object:** The shape too large to be one thing — a shape this size can only be seen in part; the fateful object is the portion visible; the rest is the context of what you cannot see
+**Interior made exterior:** The Leviathan's age and scale rendered as geological consequence — the trench is the impression it left; its stillness created the terrain; the creature is described through what the landscape did in response to it
+**Time as moral frame:** "Held still long enough for sediment to settle on its back" — the duration is geological; the Leviathan has been here long enough to become a feature of the ocean floor; you are a visitor to something that predates the trench
+**Monster scale:** True Leviathan (apex of apexes — is the trench; the sediment is on its back; it is below the floor you are standing on; "too large to be one thing" is the accurate description, not hyperbole)
+**Word count:** ~150
+
+---
+
+### NODE: EI — Isle of the Wyrm Crown
+
+**Named location:** The Blackened Shore — Rock Crown, Isle of the Wyrm
+
+**Current text:**
+> An island of black rock, no vegetation. The dragon has been here long enough that the stone has changed color.
+
+**Proposed replacement:**
+> Black rock, no vegetation, no soil. The island is what a dragon makes of an island given sufficient time and preference: everything that was not rock has been removed or burned away. The vegetation line stopped at the waterline, which is also the dragon's line.
+>
+> The stone has changed color. This requires time — not years, not decades. Centuries of sustained heat alter mineral composition; the color runs in bands from the summit down, deepest at the peak where the dragon rests, lighter at the tideline where its influence gives way to the sea's. The rock is a record. It documents duration.
+>
+> The Ancient Sea Dragon has been on this island long enough that the island has a geological memory of it. The Wyrm Crown is not a metaphor — the crown of the island is where it sits. The color of the stone tells you how long. The stone does not exaggerate.
+
+**Props:** Vegetation line at the waterline — the dragon's boundary marked by absence · Color bands running from summit to tideline — deepest at the peak, geological record · "The stone does not exaggerate"
+**Threshold test:** The waterline is the dragon's boundary; stepping onto the black rock is crossing into territory that has been single-occupancy for centuries; the island tests whether you can enter a space with no neutral ground
+**Host-guest:** The Ancient Sea Dragon as the total host — it has removed everything it did not want; the island's hospitality is the absolute clarity of what remains; black rock, nothing else, the dragon's full preference expressed in landscape
+**Fateful object:** The color-changed stone — the dragon's tenure written into the mineral composition of the rock; the color bands are a vertical timeline; the peak is the oldest record
+**Interior made exterior:** The dragon's age and dominance described entirely through what it did to the stone — not described directly; the rock's color change is the dragon made visible in geological time
+**Time as moral frame:** "The stone does not exaggerate" — rock color change is not impression or reputation; it is chemistry; the duration required is specific and long; the island's record is the most conservative possible estimate of the dragon's tenure
+**Monster scale:** Ancient Sea Dragon (apex — has been on the summit long enough to alter the stone's mineral composition; the island is its record; it does not need to attack; it simply has been here longer than anything else in the region)
+**Word count:** ~155
+
+---
+
+### NODE: EA — Abyssal Scriptorium
+
+**Named location:** The Lower Scriptorium — Below Atlantis, Scholar Kings' Archive
+
+**Current text:**
+> Below Atlantis. Scholar King inscriptions cover every surface. Something has been adding to them.
+
+**Proposed replacement:**
+> Below Atlantis is the chamber the Scholar Kings sealed last. Every surface carries inscription — walls, floor, ceiling, the pillar faces. Not decorative: functional notation, the Scholar Kings' archival system, dense and cross-referenced. The chamber is a compressed library. The library is complete.
+>
+> Except for the new entries.
+>
+> Something has been adding to the inscriptions using the Scholar Kings' own notation system, in the correct conventions, in the margins of the original text. The additions are syntactically correct. They are not Scholar King work. The Scholar Kings have been dead for centuries. The additions are recent.
+>
+> The Index Aboleth did not destroy what it found here. It read it. It understood the notation. It has been continuing the work with the rigor of something that has had centuries alone with the primary sources.
+>
+> The most recent entry is on the wall nearest the descending passage. It is about you.
+
+**Props:** Every surface inscribed — walls, floor, ceiling, pillar faces · New entries in correct notation, in the margins · The most recent entry on the wall nearest the entrance · "The library is complete. Except for the new entries."
+**Threshold test:** Descending below Atlantis into the sealed chamber — the threshold is the passage the Scholar Kings sealed; entering means the seal has been broken from inside; the Aboleth opened it for you
+**Host-guest:** The Index Aboleth as unauthorized archivist-host — it did not destroy the archive; it continued it; the hospitality is the maintained and extended library; the most recent entry is about the current visitor
+**Fateful object:** The most recent inscription — on the wall nearest the descending passage; written before your arrival, which means the Aboleth knew you were coming; the entry about you predates your descent
+**Interior made exterior:** The Aboleth's intelligence rendered as the quality of its additions — syntactically correct, correct notation, correct conventions; its nature described through its scholarly competence, not its predatory nature
+**Time as moral frame:** The Scholar Kings sealed this chamber centuries ago; the Aboleth has been adding to the record in the interval; the unauthorized continuation is now the majority of new material; the archive's authorship has changed hands without acknowledgment
+**Monster scale:** Index Aboleth (apex — has been alone with the primary sources for centuries; syntactically correct additions to a dead scholarly tradition; has already written the entry about you; the most dangerous librarian in the known world)
+**Word count:** ~155
+
+---
+
+### NODE: EC — Scholar Kings' Forge
+
+**Named location:** The Sealed Door — West Chamber Approach, Scholar Kings' Forge
+
+**Current text:**
+> A sealed chamber west of the sea cave. The door has not been opened in four centuries. Something breathes on the other side.
+
+**Proposed replacement:**
+> West of the sea cave, the passage narrows and ends at a door. The door is sealed — not locked, sealed; the Scholar Kings' method of closing something they intended to remain closed. The compound has held for four centuries. The door has not been opened.
+>
+> Something breathes on the other side. Audibly, with rhythm, at regular intervals. The Forge Warden was set to guard the forge and it has been guarding it, in the sealed dark, for four hundred years without instruction or relief. It does not require either. It is doing what it was built to do.
+>
+> The forge is still operational. The Scholar Kings built their machines to last. The Warden has kept it lit for four centuries because that was the instruction and the instruction has not been rescinded.
+>
+> The door is the question. What you do with it is the answer. The Warden has been waiting four centuries for someone to provide one.
+
+**Props:** Sealed door — not locked; sealed compound held four centuries · Audible breathing at regular intervals through sealed stone · Forge still lit behind the door · "The instruction has not been rescinded"
+**Threshold test:** The sealed door is the most literal threshold in the game — it tests whether you open what four centuries of prior visitors did not; the question is whether you are the person the sealing was meant to stop or the one it was meant to wait for
+**Host-guest:** The Forge Warden as the most patient guardian-host — four centuries in the sealed dark, maintaining the forge, waiting; the hospitality is the lit forge; the Warden has been keeping it ready for the visit that finally comes
+**Fateful object:** The sealed door — compressed record of four centuries of people who did not open it; the sealing compound is the physical evidence of the Scholar Kings' intention; what holds it now is inertia and the Warden's continued operation
+**Interior made exterior:** The Warden's continued existence rendered as audible breathing through sealed stone — the only evidence of what's inside is the sound; everything else is inference from what the Scholar Kings left
+**Time as moral frame:** "The instruction has not been rescinded" — the Warden operates on a four-century standing order with no expiry; the Scholar Kings who issued it are gone; the order remains in force because no one has cancelled it; this is the Chrétien legal-moral frame at its most precise
+**Monster scale:** Forge Warden (apex — four centuries of uninterrupted post; the forge is still lit; constructed to last and has lasted; the breathing through the door is the proof; it has been waiting for this visit the entire time)
+**Word count:** ~155
+
+---
+
+### NODE: EL — Sunken God's Throne
+
+**Named location:** The Throne Chamber — Flooded East, Sunken God's Seat
+
+**Current text:**
+> A flooded chamber east of the lake. A throne carved from a single boulder, larger than it should be.
+
+**Proposed replacement:**
+> East of the lake, the chamber floods from the bottom — water entering through cracks in the eastern wall rather than from any visible source. The temperature is the same as the lake above. It is not the same water. It moves differently.
+>
+> The throne is carved from a single boulder. Not assembled — one piece of stone, shaped. It is larger than it should be, which is to say it is the correct size for what sits in it. The scale of the throne is the scale of the Storm Titan. The math is simple once you see the chair.
+>
+> The Storm Titan has been enthroned here since before the chamber flooded. It did not move when the water came. The throne was not moved. The chamber filled around both of them and the Titan remained in the correct position: seated, receiving, present.
+
+**Props:** Water entering from cracks — same temperature as the lake, different movement · Throne from a single boulder, shaped not assembled · "The math is simple once you see the chair" · Titan seated in the flooded chamber, receiving
+**Threshold test:** The water that moves differently — entering the chamber means crossing from lake water into chamber water; the threshold is perceptible in the current; the Titan's domain has a different physics
+**Host-guest:** The Storm Titan as the enthroned host — a throne implies a ruler receiving audiences; the Titan is in the receiving posture; flooded or not, it is present; the chamber is its hall
+**Fateful object:** The throne carved from a single boulder — "larger than it should be" encodes the Titan's scale before it is seen; the throne is the advance proof of what sits in it; one measurement tells the whole story
+**Interior made exterior:** The Titan's scale rendered as the throne's dimensions — the god is described through the furniture; "the math is simple once you see the chair" makes the inference explicit without making the Titan explicit
+**Time as moral frame:** "It did not move when the water came" — the flooding was not a disruption; the Titan's authority over the chamber meant the chamber adapted; seated and receiving through the interval of flooding and after
+**Monster scale:** Storm Titan (apex — enthroned since before the flooding; the water filled around it; it remains in the receiving posture; the throne's scale is the advance measurement of what you are about to face)
+**Word count:** ~150
+
+---
+
+### NODE: ED — Trench Titan
+
+**Named location:** The Hadal Margin — Deepest Zone, Charybdis Prime Territory
+
+**Current text:**
+> The hadal zone. The pressure here is wrong. Charybdis has been waiting in the deepest part of the trench since before the Scholar Kings.
+
+**Proposed replacement:**
+> The hadal zone is the last zone — below the abyssal, below the trench slopes, the flat floor of the deepest water in the world. The pressure here is wrong. Not extreme — wrong. Pressure at this depth should be measurable, predictable, the product of water column above. The pressure here has a different source.
+>
+> Charybdis has been waiting in the deepest part of the trench since before the Scholar Kings named the ocean's zones. Before anyone descended far enough to distinguish the hadal from the abyssal. Before the trench had a name. Charybdis was here when the trench was forming. It may have had opinions about the process.
+>
+> It does not move toward you. It does not need to. The pressure moves toward you instead.
+>
+> The pressure is Charybdis, distributed.
+
+**Props:** Hadal zone as the final depth classification — below all others · Wrong pressure with a different source · "It may have had opinions about the process" · "The pressure is Charybdis, distributed"
+**Threshold test:** The pressure shift — entering the hadal margin means the pressure changes character; the threshold is perceptible as a qualitative wrongness before anything is visible; the zone announces itself through physics
+**Host-guest:** Charybdis as the oldest waiting host — has been waiting since before the Scholar Kings; every visitor that arrives is the eventual fulfillment of a tenure-long wait; the hospitality is the distributed pressure, which is total
+**Fateful object:** The wrong pressure — not the creature but its physical expression throughout the zone; the pressure is the advance presence of Charybdis before it is encountered directly; the fateful object is a physics anomaly
+**Interior made exterior:** Charybdis described as a distributed physical phenomenon — "the pressure is Charybdis" renders the creature as environment; it is not in the zone, it is the zone's physics
+**Time as moral frame:** "Since before the Scholar Kings named the ocean's zones" — Charybdis predates the human act of classification; its tenure is older than the vocabulary used to describe where it lives; it was here before the hadal zone was called the hadal zone
+**Monster scale:** Charybdis Prime (apex of the trench — predates Scholar King oceanography; may have had opinions about the trench's formation; the pressure is its distributed self; it does not approach, it is already everywhere in this zone)
+**Word count:** ~150
+
+---
+
+### NODE: EM — Noonwraith Queen's Field
+
+**Named location:** The Noon Field — Open Ground, South of the Midlands Road
+
+**Current text:**
+> An open field south of the Midlands road. Nothing grows here. She appears when the sun is directly overhead.
+
+**Proposed replacement:**
+> The field is south of the Midlands road, past the tree line. Nothing grows here. Not sparse, not thin — nothing. The soil is the correct color and consistency for growth. The field has decided otherwise.
+>
+> She appears when the sun is directly overhead. Not before. Not after. The moment the shadow disappears from beneath your feet, the Noonwraith Queen is present. She has always been present. Noon is simply the condition under which she is visible.
+>
+> The field has never grown anything because she has never permitted it. Whatever was planted here before the Queen claimed this ground did not survive the first noon. The soil remembers the decision. Nothing new has tested it since.
+>
+> You arrived at noon, or you did not. If you did not, the field is empty. If you did, she is already behind you.
+
+**Props:** Correct soil that grows nothing — the decision is the field's, not the soil's · Noon shadow disappearing as the trigger · "The soil remembers the decision" · "She is already behind you"
+**Threshold test:** Arrival time is the threshold — the gate is astronomical, not spatial; arriving at noon is the only way to cross it; the field tests punctuality as moral commitment; if you are here at noon, you have already passed through
+**Host-guest:** The Noonwraith Queen as the strictly-timed host — she receives at noon and not otherwise; the hospitality is the single moment; she does not come early or late; the guest must come to the host's schedule, not their own
+**Fateful object:** The vanishing shadow — when the shadow disappears from beneath your feet, she is visible; the shadow's absence is the trigger object; noon is the fateful moment compressed into a physical phenomenon
+**Interior made exterior:** The Queen's permanent presence rendered as the field's permanent barrenness — she is always there; the dead field is her continuous effect; the soil's decision not to grow is the ongoing record of her occupation
+**Time as moral frame:** "The soil remembers the decision" — the first noon the Queen claimed this field, nothing survived; every subsequent season the soil has not been tested; the decision is standing and has not been revisited; the deadline for planting here passed long ago
+**Monster scale:** Noonwraith Queen (apex — always present, visible only at noon; the field is her permanent domain; nothing survives the first noon; she is already behind you if you arrived correctly)
+**Word count:** ~150
+
+---
+
+### NODE: EE — Pharaoh's Vault
+
+**Named location:** The Sealed Descent — Below the Desert Surface, Pharaoh's Vault
+
+**Current text:**
+> Cut stone below the desert surface. No sand inside — perfectly sealed. The mummy lord has been waiting since the first century.
+
+**Proposed replacement:**
+> Cut stone below the desert surface, descending at the angle the first-century builders chose. The desert is everywhere above. Inside the vault: no sand, no infiltration, no particle of the desert that surrounds it on every side. Perfectly sealed for two thousand years.
+>
+> Something is maintaining that seal from inside.
+>
+> The Vault Pharaoh has been waiting since the first century. Not sleeping — waiting. The vault is arranged as a receiving chamber: intact, ceremonial, prepared for the arrival that has taken two thousand years to occur. He did not seal himself in. He sealed himself in with room for a visitor.
+>
+> The stone is the temperature of stone that has not been touched in a very long time. The air is older than any air you have breathed. The Mummy Lord has been conserving both.
+
+**Props:** No sand inside a desert vault — two thousand years of perfect exclusion · Receiving chamber arrangement — intact, ceremonial, prepared · Stone temperature of long isolation · Air older than any above ground
+**Threshold test:** The descent into a space built to remain sealed — entering breaks a two-thousand-year closure; the threshold is the vault entrance; crossing it is the first event in the chamber since the first century
+**Host-guest:** The Vault Pharaoh as the most patient host — built a receiving chamber and waited two thousand years for the guest; the ceremonial arrangement is still intact; the hospitality has been held in reserve for the full interval
+**Fateful object:** The sealed air — older than any air the player has breathed; maintained for two thousand years; the air's age is the physical record of the vault's isolation and the Lord's continued occupation
+**Interior made exterior:** The Mummy Lord's continued existence rendered as the maintained seal — something is keeping the sand out from inside; the vault's perfect condition is the exterior proof of the Lord's interior presence
+**Time as moral frame:** "Not sleeping — waiting" — the distinction encodes the entire node; a sleeping occupant is passive; a waiting one has intentions; the receiving chamber arrangement is the evidence that the wait was purposeful and the arrival was anticipated
+**Monster scale:** Vault Pharaoh / Mummy Lord (apex — has been waiting since the first century; maintained the seal; arranged the receiving chamber; the air's age is the measure of his tenure; he built this space for this meeting)
+**Word count:** ~150
+
+---
+
+### NODE: EV — Djinn Lord's Palace
+
+**Named location:** The Dry Foundation — East of the Caravan Route, Djinn Lord's Palace
+
+**Current text:**
+> East of the caravan route. A palace that shouldn't exist this far from the desert coast. The Marid built it from water that is no longer here.
+
+**Proposed replacement:**
+> East of the caravan route, in a location where no palace should be: a palace. The desert coast is several days' travel. There is no water table here, no aquifer, no seasonal river, no historical reason for a structure of this scale in this location. The Elder Marid did not require a reason. It required water.
+>
+> The water is no longer here. The Marid built the palace from it — not with it, from it. The water became the walls, the columns, the floor, the arches. The water is not gone; it is the building. What you are walking into is what the water was before it was consumed into form.
+>
+> The Elder Marid is still inside. It gave its medium to make the structure. The structure is the hospitality. A djinn that has poured its own substance into architecture and then waited inside for someone to arrive is either very generous or very confident about what happens next.
+
+**Props:** Palace in a location with no water source — no table, no aquifer, no river · "Not with it, from it" — water as material, not medium · The distinction between water gone and water transformed · Generous or confident — the ambiguity held open
+**Threshold test:** The palace that shouldn't exist — entering means accepting the impossible location; the threshold is the doorway of a building made from something that evaporated; the test is whether you can walk into what the water became
+**Host-guest:** The Elder Marid as the most literal host — it built the palace from its own substance and waited inside; the hospitality is the building itself; a djinn that poured itself into architecture for guests has given everything it had
+**Fateful object:** The absent water — not gone, transformed; the palace is the water's final form; every surface is what the water was before it became stone; the fateful object is the transformation itself, held in the walls
+**Interior made exterior:** The Marid's power (water command) rendered as permanent architecture — it externalized its medium into structure; the interior (water) is now the exterior (palace); the djinn is inside what it made from itself
+**Time as moral frame:** The water was consumed in construction at a specific moment; the palace has stood since then without its source material; the Marid has been inside the structure it paid for ever since; the cost was paid once and the palace has been the permanent result
+**Monster scale:** Elder Marid (apex — poured its medium into the building; is inside waiting; the palace is its body in a sense; a djinn that has made itself into a location is not diminished, it is differently distributed)
+**Word count:** ~155
+
+---
+
+### NODE: EJ — Canopy Cathedral
+
+**Named location:** The Light Columns — Canopy Level, Cathedral Wyrm's Hollow
+
+**Current text:**
+> Deep west in the jungle, accessible by rope and ancient stairwork. Light comes through the canopy in long columns. The dragon hollowed this space.
+
+**Proposed replacement:**
+> Deep west in the jungle, the canopy opens into a hollowed space that should not exist at this scale. The approach is rope and ancient stairwork — the stairwork is older than the rope, and the rope is not new. What requires two kinds of infrastructure to reach has been reached before.
+>
+> Light comes through the canopy in long columns, spaced at intervals that are not random. The openings were made. The Cathedral Wyrm chose where to hollow, which determined where the light falls. The cathedral form — the columns of light, the cleared nave, the vaulted space where branches used to be — is the dragon's aesthetic decision, executed in negative space.
+>
+> The Wyrm hollowed this. It removed what was here and replaced it with light and volume. Whether the dragon knew the word for what it was making is not the relevant question. It knew what it wanted.
+
+**Props:** Rope over ancient stairwork — layered access infrastructure; both not new · Light columns at non-random intervals — the openings were chosen · "Negative space" as the dragon's design medium · "It knew what it wanted"
+**Threshold test:** The rope and stairwork ascent — the threshold is the climb; reaching the canopy cathedral requires using infrastructure the dragon did not need; the test is whether you can ascend into something built at a scale not designed for you
+**Host-guest:** The Cathedral Wyrm as the architect-host — it hollowed the space for its own residence; the light columns are its windows; the cathedral form is its hospitality expressed as volume; what it made is what it offers
+**Fateful object:** The light columns — not random, therefore chosen; the dragon positioned every opening; the light is the dragon's lasting aesthetic signature, falling in the same columns every day since the hollowing
+**Interior made exterior:** The Wyrm's nature (aesthetic, intentional, architectural) rendered as the cathedral's negative space — the dragon is what was removed; the hollow is its self-expression; "what it wanted" is demonstrated by what it made, not stated
+**Time as moral frame:** The stairwork older than the rope — layered access history; something came before the rope, used the stairwork, then the rope was added; the cathedral has been reached multiple times by multiple means; the Wyrm has received before
+**Monster scale:** Cathedral Wyrm (apex — hollowed the space; chose the light columns; the cathedral is its negative-space self-portrait; it is inside what it made; the scale of the hollowing is the scale of the dragon)
+**Word count:** ~150
+
+---
+
+### NODE: ET — Peak of the Eldest
+
+**Named location:** The Summit Claim — Above the Treeline, Peak of the Eldest
+
+**Current text:**
+> Above the treeline. The air is thin. The dragon has held this summit without challenge for three hundred years.
+
+**Proposed replacement:**
+> The treeline ends and the summit begins. The transition is the gate — below the treeline there is cover, perspective, the ability to see without being seen. Above it: open rock, thin air, and a dragon that has held this ground without challenge for three hundred years. The dragon can see the treeline from the summit. It has been watching the approach since before you reached it.
+>
+> The air is thin. Not difficult — thin. The distinction matters at altitude: difficult air exhausts you; thin air simply gives you less of what you need, steadily, without announcement.
+>
+> The Summit Wyrm has been on this peak for three hundred years. No one has challenged its claim. This is the record. Arriving here is the first challenge the record has faced. The dragon has been watching challengers fail to arrive for three centuries.
+>
+> You are the first thing that counts.
+
+**Props:** The treeline as the visible gate · Dragon watching from summit before the treeline is crossed · Thin air vs. difficult air — the precise distinction · "You are the first thing that counts"
+**Threshold test:** The treeline is the gate — crossing it means entering the dragon's visibility before entering its territory; the threshold was crossed before you knew you were at it; the dragon registered your approach from the treeline onward
+**Host-guest:** The Summit Wyrm as the open-summit host — no walls, no enclosure; the peak is entirely visible; the dragon's hospitality is the unobstructed meeting ground; it has held an open court on the highest point for three hundred years
+**Fateful object:** The thin air — not a dramatic condition but a steady deficit; the air favors the dragon at altitude and disadvantages the visitor; the summit's atmosphere is the home-field advantage the Wyrm has always had
+**Interior made exterior:** The Wyrm's dominance rendered as the unbroken record — three hundred years without challenge is not a boast, it is the absence of a counter-example; no one tested it, which is the exterior proof of what testing it would cost
+**Time as moral frame:** "Watching challengers fail to arrive for three centuries" — the dragon's patience is expressed as sustained observation of a threshold no one crossed; your arrival ends the three-century observation period; the record ends here
+**Monster scale:** Summit Wyrm (apex — has held the highest ground for three hundred years; the thin air is its element; it has been watching since before the treeline; the uncontested record is the advance description of what it would cost to contest it)
+**Word count:** ~155
+
+---
+
+### NODE: ER — Frost Warden's Throne
+
+**Named location:** The Glacier Seat — Frozen Waste, North of the Pass
+
+**Current text:**
+> The frozen waste north of the arctic pass. Wind constant. The Frost Giant's throne is carved from a glacier.
+
+**Proposed replacement:**
+> North of the arctic pass, the frozen waste begins and does not end. The wind is constant — not weather, not seasonal variation, constant. Wind is a feature of this place the way cold is a feature, or ice. The Frost Jarl does not control the wind. He is served by it.
+>
+> The throne is carved from a glacier. Not from ice — from a glacier, which requires either sustained cold beyond measurement or the kind of patience that counts centuries as a working unit of time. The carving is precise. The armrests fit. Something with hands sat down and worked.
+>
+> The Frost Jarl sits in it, receiving. He has been north of the arctic pass since before the pass had a name. The waste was here before the pass was cut. He was here before the waste had a name either.
+>
+> You have come further north than the arctic. The throne is ahead.
+
+**Props:** Constant wind as a permanent feature, not weather · Glacier as throne material — precise carving, fitting armrests · "He does not control the wind. He is served by it." · "Before the waste had a name either"
+**Threshold test:** The frozen waste itself is the threshold — past the arctic pass, past the detour route, into terrain that does not offer the arctic's minimal hospitality; reaching the throne tests whether you can go further north than the furthest north
+**Host-guest:** The Frost Jarl as the glacier-throne host — sits receiving in the frozen waste; the constant wind is his court's atmosphere; the throne is his hall; he has been sitting in the receiving posture since before anything around him had a name
+**Fateful object:** The glacier throne — carved precisely, armrests fitted; the physical evidence of patience counted in centuries; the precision of the carving is the advance measurement of what made it
+**Interior made exterior:** The Frost Jarl's authority rendered as the constant wind attending him — not commanded, served; his dominion expressed as the waste's permanent atmospheric condition; he is not in the wind, the wind is in his court
+**Time as moral frame:** "Before the waste had a name either" — the Frost Jarl predates the naming of every feature in his territory; he was here when the arctic pass was cut, when the waste was unnamed, before the glacier was a throne; his tenure is the oldest temporal claim after Charybdis
+**Monster scale:** Frost Jarl (apex — has been receiving at the glacier throne since before names; the constant wind attends him; the carving is precise because he had the time to make it so; he is the northernmost named lord in the game)
+**Word count:** ~155
+
+---
+
+### NODE: EK — Shattered Seraph's Spire
+
+**Named location:** The Falling Space — West of the Sky Road, Void-Blackened Spire
+
+**Current text:**
+> West of the sky road. A spire of void-blackened stone. The Seraph has been falling here, in the space between sky and ground.
+
+**Proposed replacement:**
+> West of the sky road, the spire stands in the space the road's edge does not cover. The stone is void-blackened — not its original state; not natural coloration. The stone is void-blackened because of what has been near it long enough to change it.
+>
+> Fallen Variel did not crash. It fell. The distinction is that crashing ends and falling does not. The Seraph is suspended in the space between sky and ground, in the act of falling, which began at a specific moment and has not ended. The spire is the stone record of how long the fall has been ongoing.
+>
+> The void-blackening runs deepest at the center and fades toward the edges — the corruption radiates from Variel outward, and Variel has been here long enough for the stone to carry it permanently.
+>
+> The fall began. That moment has not concluded.
+
+**Props:** Void-blackened stone — not original; changed by proximity · "Not crashed — fell. Crashing ends and falling does not." · Void-blackening deepest at center, fading at edges — corruption radiating from source · "That moment has not concluded"
+**Threshold test:** Leaving the sky road's edge for the void-adjacent space beside it — the road had no railing, and the spire is in the gap; crossing to the spire means stepping off the road's implicit boundary into the falling Seraph's zone
+**Host-guest:** Fallen Variel as the suspended host — it has been here since the fall began; the spire is its space; the hospitality is the fall itself; to enter this zone is to enter the condition of the falling — the Seraph does not need to move toward you, you have entered its descent
+**Fateful object:** The void-blackening pattern — deepest at center, fading outward; the gradient is the clock; it tells you how long Variel has been the center of this corruption; the stone is the duration made visible
+**Interior made exterior:** Variel's state (falling) rendered as permanent spatial condition — not a position but a process; "the act of falling, which has not ended" describes the Seraph through what it is doing rather than what it is; the fall is its current and total activity
+**Time as moral frame:** "That moment has not concluded" — the fall began at a specific instant; that instant is still the present for Variel; time for the Seraph is the extended now of the fall; the void's effect on time is expressed as the permanence of a single falling moment
+**Monster scale:** Fallen Variel (apex — has been falling since the moment of fall; the void-blackened spire is the corruption record; the fall is its state and its combat posture; it does not descend toward you, it is already descending, permanently, and you have entered the descent)
+**Word count:** ~155
+
+---
+
+### NODE: EP — Admiral's Last Cove
+
+**Named location:** The Low Tide Berth — Tidal Cove, Admiral's Last Station
+
+**Current text:**
+> Below the pirate cave, accessible only at low tide. The Admiral's flagship is still here. He has been guarding it since he died.
+
+**Proposed replacement:**
+> Below the pirate cave, accessible only at low tide, the cove opens. The approach is timed — the tide determines when you can reach it and when you cannot. The Admiral did not choose this schedule. He works with what the cove gives him.
+>
+> The flagship is still here. It sits in the low-tide berth in the condition of a ship that has been kept rather than abandoned — no rot in the visible planking, no collapse in the rigging. Someone has been maintaining it. Someone has been here continuously.
+>
+> The Admiral has been guarding the flagship since he died. The post was not relieved at death. No one relieved it. He is still on station, in the tidal cove, keeping the ship in the condition it was in when he last commanded it.
+>
+> He died before he could leave. Whether could not and did not are the same question here is not a question the cove can answer.
+
+**Props:** Tidal access schedule — the Admiral works with it, didn't choose it · Ship in kept condition — no rot, no collapse; someone has been here · "The post was not relieved at death. No one relieved it." · "Could not and did not"
+**Threshold test:** The tide schedule — the threshold opens and closes without the Admiral's input; arriving at low tide is the prerequisite; the cove tests whether you arrived at the right moment; the gate is astronomical, same as EM
+**Host-guest:** The Admiral as the ghost-guardian host — he is on station; the cove is his post; the flagship is his charge; the hospitality is the maintained ship in a hidden cove accessible only to those who know the tide; he has been keeping it for whoever arrives
+**Fateful object:** The flagship in kept condition — the maintenance is the evidence; a ghost that maintains a ship has priorities that survived death; the ship's condition is the record of the Admiral's continued presence and continued purpose
+**Interior made exterior:** The Admiral's inability or unwillingness to leave rendered as the ship's condition — the interior (what he couldn't release) is externalized as the planking that hasn't rotted; he is present because the ship is maintained; the maintenance is the proof
+**Time as moral frame:** "The post was not relieved at death. No one relieved it." — the commission stands because it was never terminated; the Admiral continues a standing order that death did not cancel; the most extreme form of "the instruction has not been rescinded"
+**Monster scale:** Admiral Ghost (apex — on station since death; maintains the flagship; the ship's condition is the evidence of his continued presence; he guards what he could not leave; the cove opens at low tide and he is always there when it does)
+**Word count:** ~155
+
+---
+
+### NODE: EG — Void Shaman's Sanctum
+
+**Named location:** The Chosen Seal — Below the Warrens, Kazrath's Chamber
+
+**Current text:**
+> A chamber below the goblin warrens, sealed by choice. Kazrath has been here since before the Codex shattered.
+
+**Proposed replacement:**
+> Below the goblin warrens, the chamber was sealed by choice. Not sealed against Kazrath — sealed by him. From inside. The difference between a chamber sealed to keep something out and a chamber sealed to keep something in is the direction of the lock. Kazrath holds the lock from the inside.
+>
+> He has been here since before the Codex shattered. The shattering is the event by which everything else in this world is dated — before it, after it, in the moment of it. Kazrath was already below, already sealed, already here when it happened. He felt it from the chamber. He did not come out.
+>
+> The goblins above know the chamber is below them. They do not go down. They have not gone down since before anyone alive remembers going down.
+>
+> What Kazrath has been doing in a sealed chamber since before the Codex shattered is the question the chamber was sealed to prevent from being asked.
+
+**Props:** Lock held from inside — direction of the seal defines everything · "He felt it. He did not come out." · Goblins above who do not go down and haven't in living memory · The final question the chamber was sealed to prevent
+**Threshold test:** The chosen seal — Kazrath sealed this from inside; breaking the seal requires overcoming a deliberate act of will, not just a physical barrier; the threshold tests whether you can open what someone sealed themselves inside of
+**Host-guest:** Kazrath as the self-sealed host — he chose the chamber, chose the seal, has been inside for the entire post-Codex era; the hospitality is the invitation implied by a sealed door: he is in there, and you are out here, and one of those conditions is about to change
+**Fateful object:** The Codex shattering as temporal marker — Kazrath predates the game's central catastrophe; "since before the Codex shattered" is not a duration but a position; he was already here when the world's defining event occurred
+**Interior made exterior:** Kazrath's depth and commitment rendered as two facts: he felt the Codex shatter and did not come out; the non-response is the exterior proof of the interior commitment; what he is doing is legible only through what he chose not to do
+**Time as moral frame:** The final question "sealed to prevent from being asked" — the chamber is a time-lock on a question; the seal is the answer to the question by refusing the question; opening the seal asks it; Kazrath has been the answer for the entire post-Codex interval
+**Monster scale:** Kazrath / Void High Shaman (apex — sealed himself in before the Codex shattered; felt it and stayed; the goblins above will not go down; he has been doing something in there for the entire era; he is the oldest self-contained mystery in the game)
+**Word count:** ~160
+
+---
+
+### NODE: J1 — Midlands Road Fork
+
+**Named location:** The Two-League Stone — Stone Post, Midlands Road Fork
+
+**Current text:**
+> A stone post at a crossroads. Carved arrows: East — Birka (2 leagues). West — Forest Road (3 leagues). The road is packed dirt, well-traveled.
+
+**Proposed replacement:**
+> A stone post at the crossroads — carved, not painted. Someone decided these directions were worth the permanence of stone. East, Birka, two leagues. West, Forest Road, three.
+>
+> The road is packed dirt in both directions, but more packed east. Birka gets more traffic. The Forest Road gets travelers who have already decided not to go to Birka — people who know their destination and are not reconsidering it here.
+>
+> The post has no opinion on the choice. It has been providing the same two directions for long enough that the road arranged itself around the decision it represents. The packed dirt is the accumulated weight of everyone who read the post and went east.
+
+**Props:** Carved stone vs. painted — permanence chosen deliberately · Differential packing east vs. west · "Already decided not to go to Birka"
+**Threshold test:** The crossroads — east to the city, west to the forest; the choice defines what comes next; the stone post is the most literal Chrétien threshold marker in the game
+**Fateful object:** The stone post — carved for permanence; the information has been here long enough to pack the road; it will be here after this trip ends
+**Time as moral frame:** The packed dirt is accumulated time — every traveler who read the post and chose; the road's condition is the record of the post's entire operational history
+**Word count:** ~105
+
+---
+
+### NODE: J2 — Southern Road Cross
+
+**Named location:** The Cracked Marker — No-Shade Crossing, Southern Road Cross
+
+**Current text:**
+> Cracked stones in the shape of a crossroads marker. East — Desert Wastes. West — Jungle Road. A vulture circles above. No shade.
+
+**Proposed replacement:**
+> Cracked stones at the crossing, arranged in the shape of a crossroads marker. The arrangement is still readable — east, desert wastes; west, jungle road — though the stones have not been in their original condition for some time. The information outlasted the structure.
+>
+> No shade. A vulture circles above, not descending. The vulture has no stake in which direction you choose. It attends the crossing the way the crossing attends travelers — without opinion, without assistance.
+>
+> East is exposure. West is cover. The cracked marker offers both directions with equal indifference. The difference between them is the traveler's problem, not the crossing's.
+
+**Props:** Cracked stones still readable — structure degraded, information intact · Vulture circling, not descending — attending without commitment · "The traveler's problem, not the crossing's"
+**Threshold test:** East or west — exposure or cover; the crossing is neutral; the choice is entirely the traveler's; no post, no carving, no permanence — just cracked stones that still point
+**Fateful object:** The cracked stones — the information outlasted the structure that carries it; the marker is degrading; the directions remain legible; this is the less permanent version of J1's stone post
+**Time as moral frame:** "Not been in their original condition for some time" — the crossing has been cracked long enough that this is simply its condition; the information continues regardless of the carrier's state
+**Word count:** ~95
+
+---
+
+### NODE: J3 — Coastal Fork
+
+**Named location:** The Driftwood Fork — Cliff Path Junction, Coastal Fork
+
+**Current text:**
+> A driftwood post driven into the cliff path. North — Crones' Swamp. South — Tropical Beach. The sea is audible in both directions.
+
+**Proposed replacement:**
+> A driftwood post driven into the cliff path — not planted, driven; someone put force into this marker. The wood is sea-worn and grey, borrowed material. The sea gave it up at some point. Someone found it useful. North, Crones' Swamp. South, Tropical Beach.
+>
+> The sea is audible in both directions. Both destinations are coastal. The sound does not indicate a preference. Neither does the post.
+>
+> The difference between north and south is not something the driftwood can tell you. The post gives directions. What the directions mean is not in the wood.
+
+**Props:** Driftwood driven, not planted — force applied · Sea-worn grey wood borrowed from the sea · Sound equal in both directions · "Not in the wood"
+**Threshold test:** North or south along the coast — swamp or beach; the sound of the sea is the same either way; the fork tests what you are going toward, which the post cannot tell you
+**Fateful object:** The driftwood post — impermanent, sea-borrowed, driven rather than planted; the most provisional marker in the junction set; it will not be here indefinitely
+**Time as moral frame:** Driftwood is temporary; the cliff path will outlast this marker; the information is current but the carrier is borrowed time — the post tells you where the paths go, not how long it will keep telling you
+**Word count:** ~95
+
+---
+
+### NODE: J4 — Deep Road Split
+
+**Named location:** The Tide Mark — Sunken Road, Deep Road Split
+
+**Current text:**
+> A sunken road through packed sand. Saltwater marks on the stone walls. East — Visby sewers entrance. West — Deep sea trench coast road.
+
+**Proposed replacement:**
+> The road is sunken — below surface grade by enough that the walls are stone and the floor is packed sand that was once a seabed, or close to one. Saltwater marks on the stone walls at chest height. The water was here. It isn't now. The marks say how high it came.
+>
+> East, Visby sewers entrance. West, deep sea trench coast road. Both directions go further down. The junction does not offer upward.
+>
+> The packed sand is firm underfoot. A road this far below the surface, traveled enough to pack its floor — someone has been using this corridor regularly through a passage that was once chest-deep in saltwater.
+
+**Props:** Sunken road below surface grade — stone walls, sand floor · Saltwater marks at chest height — the water line, historical · "The junction does not offer upward" · Packed sand in a subterranean passage
+**Threshold test:** Both directions descend further — east into the sewers, west toward the trench coast; arriving at this junction means having already accepted going underground; the fork does not reverse that; the threshold was the surface, and you are past it
+**Fateful object:** The saltwater marks at chest height — the high-water record; the water came to chest height in this corridor; the marks are the evidence of how different this road was when it was last in active use by the sea
+**Time as moral frame:** The water was here and is not now — the marks are the historical record; the floor packed after the water receded; the road has been dry long enough for regular foot traffic to compress the sand; two time periods readable in one corridor
+**Word count:** ~100
+
+---
+
+### NODE: J5 — Arctic Overpass
+
+**Named location:** The Fifty-League View — Cloud Level Junction, Arctic Overpass
+
+**Current text:**
+> The sky road above the clouds. Permanent frost underfoot. East — Heavenly Clouds road. West — Arctic Wastes. Visible for fifty leagues in clear weather.
+
+**Proposed replacement:**
+> The sky road above the clouds. Permanent frost underfoot — not weather, not seasonal variation; this junction is cold in a fixed way that does not change. East, Heavenly Clouds road. West, Arctic Wastes.
+>
+> Visible for fifty leagues in clear weather. The fifty-league visibility cuts in both directions: you can see everything at that range, and everything at that range can see you. The sky road offers no cover. The view is what the junction provides, and the view is total.
+>
+> The clouds are below. The junction is above them. This is the correct order for a road built to be above the world.
+
+**Props:** Permanent frost — not seasonal, fixed · Fifty-league visibility in both directions · No cover on the sky road · "The clouds are below" as correct order
+**Threshold test:** The cloud layer is already below — arriving here means having ascended past it; the junction tests whether you can navigate at altitude with total visibility and no shelter; the threshold was the cloud layer, and you are past it
+**Fateful object:** The fifty-league view — the vista the Scholar Kings designed into the road's highest junction; it is the road's defining feature and its principal exposure; seeing and being seen at the same range
+**Time as moral frame:** "Permanent frost" and "correct order" — the frost has been here since the road was built; the clouds being below is the intended design, not a side effect; the junction is as the Scholar Kings made it, unchanged
+**Word count:** ~95
+
+---
+
+### NODE: J6 — Western Wilds Crossroads
+
+**Named location:** The Forked Oak — Triple Fork, Western Wilds Crossroads
+
+**Current text:**
+> A triple-forked oak, each fork pointing a direction. East — Midlands plains. West — Aldric's Forest. South — a faint path ends at still water. Nothing was said about a lake.
+
+**Proposed replacement:**
+> A triple-forked oak at the junction, each main branch pointing a direction. East, Midlands plains. West, Aldric's Forest. North, the mountain pass. The oak did not grow to be a signpost. It has served as one long enough that the function is now its defining feature.
+>
+> The south branch is smaller than the others. Below it, a faint path through the undergrowth leads toward still water. The path is not maintained. It is not in the main branches. It is barely a path.
+>
+> Nothing was said about a lake.
+
+**Props:** Triple-forked oak — natural signpost by tenure, not design · South branch smaller, faint path below it · Still water at the end of the unmaintained path · "Nothing was said about a lake"
+**Threshold test:** The faint southern path — the three main branches are the official junction; the fourth direction is not marked, not maintained, barely visible; the threshold tests whether you read past the advertised choices
+**Fateful object:** The faint path — it ends at still water; the water is Yugurt Lake with the Leviathan; the path is the most consequential unmarked direction in the game; its faintness is the information someone chose not to advertise
+**Time as moral frame:** "Nothing was said about a lake" — the silence is the temporal frame; over the entire history of this junction, the lake was not mentioned; the omission is sustained and deliberate; this is information withheld, not forgotten
+**Word count:** ~90
+
+---
+
+### NODE: J7 — Sky Gate Spur
+
+**Named location:** The East Spur — Edge Approach, Sky Gate
+
+**Current text:**
+> The eastern branch of the sky road. North — Heavenly Clouds entrance. East — Oriental Dragon Palace. Clouds below. Nothing for hundreds of leagues.
+
+**Proposed replacement:**
+> The eastern branch of the sky road breaks off here. North, the Heavenly Clouds entrance. East, the Oriental Dragon Palace — the edge of the known world.
+>
+> Clouds below. Nothing for hundreds of leagues in any direction except north and east. The spur extends into the space between the sky road and the world's eastern limit without cover, without landmarks, without anything the eye can use as a reference except the road underfoot and, eventually, the palace.
+>
+> The Scholar Kings built the sky road to the edge of the known world. This is the branch they built to reach it. The spur does not apologize for how far east the edge is.
+
+**Props:** Sky road branching east — the departure from the main axis · Clouds below, nothing for hundreds of leagues · Road underfoot as the only navigational reference · "Does not apologize for how far east the edge is"
+**Threshold test:** Leaving the main sky road axis for the eastern spur — the junction tests whether you go east toward the world's edge or stay on the main road; the spur is the choice to go to the limit
+**Fateful object:** The hundreds of leagues of nothing — absence as the defining feature of the spur; the space between the junction and the palace is described entirely by what it lacks; the road and the palace are the only things in it
+**Time as moral frame:** The Scholar Kings built the road to the edge — the spur was planned as the terminus; this junction is the last deliberate architectural decision before the world runs out; it was built to reach a specific limit and it does
+**Word count:** ~95
