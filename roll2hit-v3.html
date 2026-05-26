@@ -912,7 +912,7 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 }
 #story-panel {
   display: none; flex: 1; overflow: hidden;
-  background: var(--bg); flex-direction: row;
+  background: var(--bg); flex-direction: column;
 }
 #story-panel.visible { display: flex; }
 
@@ -1035,12 +1035,17 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
   display: flex; flex-direction: column; gap: 6px; font-size: 11px;
 }
 .info-chip {
-  display: inline-flex; align-items: center; gap: 6px;
+  display: inline-flex; align-items: center; gap: 8px;
   background: var(--panel); border: 1px solid var(--border);
-  border-radius: 4px; padding: 4px 9px; line-height: 1.4;
+  border-radius: 5px; padding: 7px 12px; line-height: 1.4;
+  min-height: 32px; font-size: 12px; font-weight: 600; cursor: default;
+  transition: background .12s, border-color .12s;
 }
-.info-chip .chip-icon { font-size: 13px; }
-.info-chip .chip-lbl  { color: var(--dim); font-size: 10px; margin-right: 2px; }
+.info-chip .chip-icon { font-size: 15px; flex-shrink: 0; }
+.info-chip .chip-lbl  {
+  color: var(--muted); font-size: 9px; letter-spacing: 0.8px;
+  text-transform: uppercase; font-weight: 700; margin-right: 1px; flex-shrink: 0;
+}
 .info-chip.npc-chip   { border-color: #7a5a9a; color: #5a3a7a; cursor: pointer; }
 .info-chip.npc-chip:hover { background: rgba(122,90,154,0.1); border-color: #5a3a7a; }
 .info-chip.loot-chip  { border-color: #5a8a3a; color: var(--grn-lt); }
@@ -1069,13 +1074,18 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 }
 .dpad-row { display: flex; gap: 4px; align-items: center; justify-content: center; }
 .dpad-btn {
-  width: 56px; height: 40px; border-radius: 5px;
+  width: 60px; height: 44px; border-radius: 5px;
   background: var(--panel2); border: 1px solid var(--border);
-  color: var(--text); font-size: 12px; font-weight: 600; cursor: pointer;
+  color: var(--text); font-size: 12px; font-weight: 700; cursor: pointer;
   transition: background .12s, border-color .12s, color .12s;
+  letter-spacing: 0.3px;
 }
-.dpad-btn:hover:not(:disabled) { background: var(--panel); border-color: var(--gold); color: var(--gold-lt); }
-.dpad-btn:disabled { opacity: 0.25; cursor: default; }
+.dpad-btn:hover:not(:disabled) { background: var(--panel3); border-color: var(--c3); color: var(--c3); }
+.dpad-btn:disabled { opacity: 0.22; cursor: default; }
+.nav-section-hd {
+  font-size: 8px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--muted); text-align: center; padding: 2px 0;
+}
 .dpad-center {
   width: 48px; height: 48px; background: var(--panel3); border-color: var(--c3);
   color: var(--c3); font-size: 18px;
@@ -2254,20 +2264,19 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 #history-title { background: #C21717; color: #FDDCA9; border-bottom: 3px solid #E76219; letter-spacing: 1.5px; text-transform: uppercase; }
 
 .hcard {
-  background: #3d1510;
-  border-left: 4px solid #E76219;
-  border-radius: 6px;
+  background: var(--panel); border-left: 4px solid var(--c3);
+  border-radius: 5px; width: 160px; min-width: 160px; flex-shrink: 0;
 }
-.hcard .hc-round  { color: #FEA712; }
-.hcard .hc-actor  { color: #FDDCA9; }
-.hcard .hc-roll   { color: #E76219; }
-.hcard .hc-dmg    { color: #b07040; }
-/* Rainbow history card borders */
-.hcard:nth-child(5n+1) { border-left-color: #FDDCA9; }
-.hcard:nth-child(5n+2) { border-left-color: #C21717; }
-.hcard:nth-child(5n+3) { border-left-color: #E76219; }
-.hcard:nth-child(5n+4) { border-left-color: #FEA712; }
-.hcard:nth-child(5n+0) { border-left-color: #562717; border-left-width: 5px; }
+.hcard .hc-round  { color: var(--dim); }
+.hcard .hc-actor  { color: var(--text); }
+.hcard .hc-roll   { color: var(--c3); }
+.hcard .hc-dmg    { color: var(--dim); }
+/* Rainbow history card borders — Aztec cycling */
+.hcard:nth-child(5n+1) { border-left-color: var(--c3); }
+.hcard:nth-child(5n+2) { border-left-color: var(--c2); }
+.hcard:nth-child(5n+3) { border-left-color: var(--c4); }
+.hcard:nth-child(5n+4) { border-left-color: var(--sky-dk); }
+.hcard:nth-child(5n+0) { border-left-color: var(--c1); border-left-width: 5px; }
 
 /* ── Histogram ───────────────────────────────────────── */
 #histogram-strip { background: #562717; border-top: 3px solid #E76219; border-radius: 8px; }
@@ -2322,25 +2331,44 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 .pb-l2 { width: 36px; background: #C21717; z-index: 2; }
 .pb-l3 { width: 28px; background: linear-gradient(180deg, #E76219, #FEA712); z-index: 3; }
 .pb-l4 { width: 20px; background: #FEA712; z-index: 4; }
-.pb-l5 { width: 12px; background: #FDDCA9; z-index: 5; }
+.pb-l5 { width: 12px; background: var(--sky-lt); z-index: 5; }
 .pb-groove { width: 6px; background: #1c0804; z-index: 6;
   box-shadow: inset 0 2px 8px rgba(0,0,0,0.8); }
 
-/* ── Story History Panel (right side in story mode) ──── */
+/* ── Aztec horizontal divider ───────────────────────── */
+.az-divider {
+  height: 8px; flex-shrink: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--c1) 0px, var(--c1) 8px,
+    var(--c2) 8px, var(--c2) 16px,
+    var(--c3) 16px, var(--c3) 24px,
+    var(--c4) 24px, var(--c4) 32px,
+    var(--c5) 32px, var(--c5) 40px
+  );
+}
+
+/* ── Story Row Main (left + banding + center) ────────── */
+#story-row-main {
+  flex: 1; display: flex; flex-direction: row;
+  overflow: hidden; min-height: 0;
+}
+
+/* ── Story History Panel (bottom strip) ──────────────── */
 #story-history-panel {
-  width: 190px; min-width: 190px;
-  background: var(--panel2); border-left: 1px solid var(--border);
+  height: 104px; min-height: 104px; flex-shrink: 0;
+  background: var(--panel2); border-top: 1px solid var(--border);
   display: flex; flex-direction: column; overflow: hidden;
 }
 #story-history-title {
-  padding: 6px 10px; font-size: 11px; font-weight: 700;
-  background: var(--c2); color: var(--c5);
-  border-bottom: 3px solid var(--c3);
-  letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 3px 10px; font-size: 9px; font-weight: 700;
+  background: var(--c1); color: var(--c4);
+  border-bottom: 2px solid var(--c3);
+  letter-spacing: 1.5px; text-transform: uppercase; flex-shrink: 0;
 }
 #story-hcard-container {
-  flex: 1; overflow-y: auto; overflow-x: hidden;
-  padding: 6px; display: flex; flex-direction: column; gap: 4px;
+  flex: 1; overflow-x: auto; overflow-y: hidden;
+  padding: 5px 6px; display: flex; flex-direction: row; gap: 5px;
 }
 
 /* ── Story Mini-Map ──────────────────────────────────── */
@@ -3079,6 +3107,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
     <button id="story-mode-btn">🗺 Story</button>
     <button id="new-combat-btn">New Combat</button>
   </div>
+  <div class="az-divider"></div>
   <div id="battle-victory-banner">
     <div>
       <div id="bvb-text">⚔ VICTORY!</div>
@@ -3731,6 +3760,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 
   <!-- ══ STORY MODE PANEL ══ -->
   <div id="story-panel">
+  <div id="story-row-main">
 
     <!-- Left sidebar: act + vitals + equipment + travel log + nav -->
     <div id="story-left">
@@ -4070,21 +4100,16 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 
     </div><!-- /story-center -->
 
-    <!-- Panel Banding (mirrored for right side) -->
-    <div class="panel-banding" style="transform: scaleX(-1);">
-      <div class="pb-layer pb-l1"></div>
-      <div class="pb-layer pb-l2"></div>
-      <div class="pb-layer pb-l3"></div>
-      <div class="pb-layer pb-l4"></div>
-      <div class="pb-layer pb-l5"></div>
-      <div class="pb-layer pb-groove"></div>
-    </div>
+  </div><!-- /story-row-main -->
 
-    <!-- ═══ Story Combat Log (right panel) ═══ -->
-    <div id="story-history-panel">
-      <div id="story-history-title">Combat Log</div>
-      <div id="story-hcard-container"></div>
-    </div>
+  <!-- Aztec divider between main content and history strip -->
+  <div class="az-divider"></div>
+
+  <!-- ═══ Story Combat Log (bottom strip) ═══ -->
+  <div id="story-history-panel">
+    <div id="story-history-title">Combat Log</div>
+    <div id="story-hcard-container"></div>
+  </div>
 
   <!-- ── Map Overlay ── -->
   <div id="story-map-overlay">
