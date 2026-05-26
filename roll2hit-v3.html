@@ -8818,14 +8818,14 @@ function _renderNpcCard(key, container) {
   const staticProfile = fav >= 2 ? p.dearFriend : fav >= 1 ? p.friendly : p.neutral;
   const card = document.createElement('div');
   card.className = 'info-chip npc-card-chip';
-  card.style.cssText = 'display:flex;flex-direction:column;gap:4px;padding:8px;background:#1a0e06;border:1px solid #5c3311;border-radius:4px;cursor:default;width:100%;box-sizing:border-box;';
+  card.style.cssText = 'display:flex;flex-direction:column;gap:4px;padding:8px;background:#D4BC88;border:1px solid #8B4A2A;border-radius:4px;cursor:default;width:100%;box-sizing:border-box;';
   const whiskyReaction = _checkRoughWhiskeyReaction(key);
   let displayQuote = whiskyReaction || dlg.quote;
-  let quoteColor = whiskyReaction ? '#cc9955' : '#bba';
+  let quoteColor = whiskyReaction ? '#7a5a10' : '#6A4A28';
   const ngGreetedKey = key + 'NgGreeted';
   if ((S_story.ngPlusRun || 0) > 0 && !S_story[ngGreetedKey] && NPC_NG_PLUS_GREETINGS[key]) {
     displayQuote = NPC_NG_PLUS_GREETINGS[key];
-    quoteColor = '#a0c8ff';
+    quoteColor = '#3D6E7A';
     S_story[ngGreetedKey] = true;
   }
   // Layer 50: §XV — Dear Friend memory line on second NG+ visit
@@ -15139,13 +15139,13 @@ function storyRender(node, prefix) {
         ];
         const shopDiv = document.createElement('div');
         shopDiv.id = 'kenickie-shop-div';
-        shopDiv.style.cssText = 'margin-top:6px;display:flex;flex-direction:column;gap:5px;border:1px solid #3a2a1a;border-radius:5px;padding:10px;background:#1a0e08;';
+        shopDiv.style.cssText = 'margin-top:6px;display:flex;flex-direction:column;gap:5px;border:1px solid #8B4A2A;border-radius:5px;padding:10px;background:#E2D0A8;';
         const title = document.createElement('div');
-        title.style.cssText = 'font-size:11px;color:#b07040;font-weight:700;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid #3a2010;padding-bottom:4px;margin-bottom:2px;';
+        title.style.cssText = 'font-size:11px;color:#6A4A28;font-weight:700;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid #8B4A2A;padding-bottom:4px;margin-bottom:2px;';
         title.textContent = '🐟 Kenickie\'s Black Market';
         shopDiv.appendChild(title);
         const goldLine = document.createElement('div');
-        goldLine.style.cssText = 'font-size:11px;color:#e0c060;';
+        goldLine.style.cssText = 'font-size:11px;color:#B87C28;';
         const updateGold = () => { goldLine.textContent = '💰 Gold: ' + S_story.gold + 'gp'; };
         updateGold();
         shopDiv.appendChild(goldLine);
@@ -15689,13 +15689,13 @@ function storyRender(node, prefix) {
       // ── S32: Quill's second song on NG+ (Dear Friend or higher) ──
       if (node.code === 'TV' && (S_story.ngPlusRun || 0) > 0 && _npcFavor('quill') >= 2) {
         const s32Div = document.createElement('div');
-        s32Div.style.cssText = 'margin-top:8px;padding:10px 12px;background:#0d0a00;border-left:3px solid #6a5020;font-style:italic;font-size:12px;color:#ccb880;line-height:1.7;';
-        s32Div.innerHTML = '<div style="font-size:10px;color:#7a6040;letter-spacing:2px;margin-bottom:8px;font-style:normal;">UNTITLED (SECOND SONG)</div>'
+        s32Div.style.cssText = 'margin-top:8px;padding:10px 12px;background:#E2D0A8;border-left:3px solid #B87C28;font-style:italic;font-size:12px;color:#2A1A0A;line-height:1.7;';
+        s32Div.innerHTML = '<div style="font-size:10px;color:#6A4A28;letter-spacing:2px;margin-bottom:8px;font-style:normal;">UNTITLED (SECOND SONG)</div>'
           + '<div>The city is still there. The city is still there.</div>'
           + '<div>You left it and it stayed. You came back and it remembered.</div>'
           + '<div>That\'s the thing about cities — they don\'t wait for you, they just don\'t leave.</div>'
           + '<div>That\'s a love song, I think. I\'m still deciding.</div>'
-          + '<div style="margin-top:8px;font-size:11px;color:#9a8050;font-style:normal;">[Quill: "I reused the chord progression. It fit."]</div>';
+          + '<div style="margin-top:8px;font-size:11px;color:#6A4A28;font-style:normal;">[Quill: "I reused the chord progression. It fit."]</div>';
         npcRowDiv.appendChild(s32Div);
       }
       // ── S45: Quill plays without prompting (unfinished song ambient, odd game days) ──
