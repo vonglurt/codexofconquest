@@ -976,6 +976,57 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
   flex: 1; overflow-y: auto; padding: 5px 8px; display: flex; flex-direction: column; gap: 2px;
 }
 
+/* ── Story Mode Section Containers ───────────────────── */
+.story-section {
+  border-radius: 5px; overflow: hidden;
+  margin-bottom: 8px;
+}
+.story-section-hd {
+  font-size: 9px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--c5); padding: 4px 10px;
+  background: var(--c1);
+  border-bottom: 1px solid #3a1a0a;
+}
+.story-section-body {
+  background: var(--c1);
+  padding: 4px;
+  display: flex; flex-direction: column; gap: 3px;
+}
+.story-section-card {
+  background: var(--bg);
+  border-radius: 4px; padding: 8px 10px;
+  font-size: 12px; color: var(--text);
+  display: flex; align-items: center; gap: 8px;
+  line-height: 1.4;
+}
+.story-section-card.clickable { cursor: pointer; }
+.story-section-card.clickable:hover { background: var(--panel); }
+.story-card-lbl {
+  font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+  color: var(--muted); flex-shrink: 0; min-width: 44px;
+}
+.story-card-main { flex: 1; color: var(--text); }
+.story-card-sub  { font-size: 10px; color: var(--dim); margin-top: 2px; }
+.story-card-hint { font-size: 10px; color: var(--sky-dk); font-style: italic; margin-top: 2px; }
+.story-card-tag  { font-size: 9px; color: var(--muted); background: var(--panel2); border-radius: 3px; padding: 1px 5px; flex-shrink: 0; }
+.story-card-tag.transferred { color: var(--grn-lt); background: rgba(58,122,58,0.1); border: 1px solid var(--grn-lt); }
+.story-card-tag.hours  { color: var(--dim); background: var(--panel2); }
+.story-card-btn {
+  margin-left: auto; padding: 4px 12px; border-radius: 4px;
+  font-size: 11px; font-weight: 700; cursor: pointer; border: 1px solid;
+  flex-shrink: 0; transition: background .12s;
+}
+.story-card-btn.btn-fight { background: rgba(192,48,32,0.1); border-color: var(--red-lt); color: var(--red); }
+.story-card-btn.btn-fight:hover { background: rgba(192,48,32,0.2); }
+.story-card-btn.btn-hunt  { background: rgba(184,124,40,0.1); border-color: var(--gold); color: var(--gold); }
+.story-card-btn.btn-hunt:hover { background: rgba(184,124,40,0.2); }
+.story-card-btn.btn-rest  { background: rgba(61,110,122,0.1); border-color: var(--sky-dk); color: var(--sky-dk); }
+.story-card-btn.btn-rest:hover { background: rgba(61,110,122,0.2); }
+.story-card-btn.btn-talk  { background: rgba(42,26,10,0.06); border-color: var(--border); color: var(--dim); }
+.story-card-btn.btn-talk:hover { background: var(--panel2); }
+.story-card-btn:disabled  { opacity: 0.4; cursor: default; }
+.story-card-done { color: var(--muted); text-decoration: line-through; opacity: 0.7; }
+
 /* HP bar */
 #s-hp-bar-wrap {
   width: 100%; height: 6px; background: var(--panel3);
@@ -1040,27 +1091,8 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
   box-shadow: inset 0 1px 4px rgba(42,26,10,0.07), 0 1px 3px rgba(42,26,10,0.05);
 }
 
-/* ── Inline quest strip (below description, above chips) ── */
-#story-quest-strip {
-  display: none; flex-direction: column; gap: 4px;
-  padding: 7px 10px 7px 12px;
-  background: rgba(123,170,184,0.09);
-  border-left: 3px solid var(--sky-dk);
-  border-radius: 0 4px 4px 0;
-  cursor: pointer;
-}
-#story-quest-strip.has-quests { display: flex; }
-#story-quest-strip:hover { background: rgba(123,170,184,0.15); }
-.quest-strip-item { display: flex; flex-direction: column; gap: 2px; }
-.quest-strip-title {
-  font-size: 11px; font-weight: 700; color: var(--text);
-  display: flex; align-items: center; gap: 4px;
-}
-.quest-strip-hint { font-size: 10px; color: var(--sky-dk); font-style: italic; line-height: 1.4; }
-.quest-strip-sep { height: 1px; background: var(--sky); opacity: 0.35; margin: 3px 0; }
-
 #story-info-row {
-  display: flex; flex-direction: column; gap: 6px; font-size: 11px;
+  display: flex; flex-direction: column; gap: 0;
 }
 .info-chip {
   display: inline-flex; align-items: center; gap: 8px;
@@ -3831,6 +3863,8 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
         <div class="stat-row"><span class="stat-lbl">🌑 Void</span><span class="stat-val" id="s-void">0/10</span></div>
         <div class="stat-row"><span class="stat-lbl">📅 Day</span><span class="stat-val" id="s-day">1/49</span></div>
         <div class="stat-row"><span class="stat-lbl">🌙 Rest</span><span class="stat-val" id="s-rests">3/3</span></div>
+        <div class="stat-row"><span class="stat-lbl">⏱ Hours</span><span class="stat-val" id="s-hours">0h</span></div>
+        <div class="stat-row"><span class="stat-lbl">😴 Awake</span><span class="stat-val" id="s-awake">0h</span></div>
       </div>
 
       <!-- Secondary stats + nav buttons -->
@@ -3864,22 +3898,28 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 
       <!-- ── Sheet: Story (default) ── -->
       <div id="sheet-story" class="story-sheet active">
-      <div id="story-node-header">
-        <span id="s-node-num">01</span>
-        <span id="s-node-name">City Streets — Birka</span>
-        <span id="s-node-act">Act I</span>
+
+      <!-- LOCATION section — static, always shown -->
+      <div class="story-section">
+        <div class="story-section-hd">📍 Location</div>
+        <div class="story-section-body">
+          <div class="story-section-card" id="story-location-hd-card">
+            <div style="flex:1">
+              <div id="story-node-header" style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">
+                <span id="s-node-num">01</span>
+                <span id="s-node-name">City Streets — Birka</span>
+                <span id="s-node-act">Act I</span>
+              </div>
+            </div>
+          </div>
+          <div id="story-farewell" style="display:none;"></div>
+          <div class="story-section-card" id="story-text-box" style="display:block">Arriving in Birka…</div>
+        </div>
       </div>
 
-      <div id="story-farewell" style="display:none;"></div>
-      <div id="story-text-box">Arriving in Birka…</div>
-
-      <div class="chips-section-lbl">Actions</div>
+      <!-- Dynamic action sections — populated/cleared by JS each render -->
       <div id="story-info-row">
-        <!-- chips populated by JS -->
-      </div>
-
-      <div id="story-quest-strip">
-        <!-- active quests populated by JS; hidden when empty -->
+        <!-- storyRenderSections() writes .story-section divs here -->
       </div>
 
       <div id="story-move-msg"></div>
@@ -8600,6 +8640,7 @@ const _S_DEFAULTS = () => ({
   npcVisitCounts: {}, couperiSongReceived: false, bruhnsDepthsReported: false, frobergerLastEntryRead: false,
   pitPerks: [], frobergerNoteNode: null, froberger_last_note_found: false, froberger_last_note_read: false, ngPlusRun: 0,
   huntMode: false,
+  hoursElapsed: 0, hoursSinceSlept: 0,
   gameDay: 0, couperiDebtDegraded: false, worldEventsFired: [],
   brynThirdStepFixed: false, brynFirewoodBrought: false, brynPantryRestocked: false,
   brynLedgerBalance: -8, voidSignClicked: false,
@@ -15916,122 +15957,230 @@ function storyRender(node, prefix) {
       storyMsg('📦 You find the Sealed Scholar Box in the first chamber of the crypt — exactly where Pachelbel described it.');
     }
   }
-  // Info chips
+  // ── Section-based UI rendering ──
+  function _mkSection(id, icon, label) {
+    const sec = document.createElement('div');
+    sec.className = 'story-section';
+    if (id) sec.id = id;
+    const hd = document.createElement('div');
+    hd.className = 'story-section-hd';
+    hd.textContent = icon + ' ' + label;
+    sec.appendChild(hd);
+    const body = document.createElement('div');
+    body.className = 'story-section-body';
+    sec.appendChild(body);
+    return { sec, body };
+  }
+  function _mkCard(opts) {
+    // opts: { lbl, main, sub, hint, tag, tagClass, btn, btnClass, btnClick, done, clickable, click }
+    const card = document.createElement('div');
+    card.className = 'story-section-card' + (opts.clickable ? ' clickable' : '') + (opts.done ? ' story-card-done' : '');
+    if (opts.click) card.addEventListener('click', opts.click);
+    if (opts.lbl) {
+      const l = document.createElement('span'); l.className = 'story-card-lbl'; l.textContent = opts.lbl; card.appendChild(l);
+    }
+    const wrap = document.createElement('div'); wrap.style.flex = '1';
+    if (opts.main) {
+      const m = document.createElement('div'); m.className = 'story-card-main'; m.innerHTML = opts.main; wrap.appendChild(m);
+    }
+    if (opts.sub) {
+      const s = document.createElement('div'); s.className = 'story-card-sub'; s.textContent = opts.sub; wrap.appendChild(s);
+    }
+    if (opts.hint) {
+      const h = document.createElement('div'); h.className = 'story-card-hint'; h.textContent = opts.hint; wrap.appendChild(h);
+    }
+    card.appendChild(wrap);
+    if (opts.tag) {
+      const t = document.createElement('span'); t.className = 'story-card-tag' + (opts.tagClass ? ' ' + opts.tagClass : ''); t.textContent = opts.tag; card.appendChild(t);
+    }
+    if (opts.btn) {
+      const b = document.createElement('button'); b.className = 'story-card-btn ' + (opts.btnClass || 'btn-talk');
+      b.textContent = opts.btn; b.addEventListener('click', e => { e.stopPropagation(); opts.btnClick(); }); card.appendChild(b);
+    }
+    return card;
+  }
+
   const row = document.getElementById('story-info-row');
   row.innerHTML = '';
-  if (node.npc) {
-    const c = document.createElement('div');
-    c.className = 'info-chip npc-chip';
-    c.innerHTML = '<span class="chip-icon">🧙</span><span class="chip-lbl">NPC</span>' + node.npc;
-    if (NPC_DIALOGUE[node.code]) c.addEventListener('click', () => storyShowNpc(node.code));
-    row.appendChild(c);
-  }
-  if (node.loot && !node.loot.startsWith('VICTORY') && !node.loot.startsWith('Portal Key')) {
-    const c = document.createElement('div');
-    const collected = !!S_story.visited[node.code];
-    c.className = 'info-chip loot-chip' + (collected ? ' loot-collected' : '');
-    c.innerHTML = '<span class="chip-icon">' + (collected ? '✅' : '📦') + '</span>'
-      + '<span class="chip-lbl">LOOT</span>' + node.loot;
-    row.appendChild(c);
-  }
-  if (node.battle) {
-    const c = document.createElement('div');
-    const defeated = !!S_story.defeatedBattles[node.code];
-    const isFinalBattle = node.code === 'CO' && (S_story.level || 1) >= 20 && (S_story.shards || 0) >= 7;
-    if (defeated) {
-      c.className = 'info-chip battle-defeated';
-      const lbl = isFinalBattle ? 'Commander Bruhns — DEFEATED' : node.battle.label + ' — Defeated';
-      c.innerHTML = '<span class="chip-icon">✓</span><span class="chip-lbl">BATTLE</span>' + lbl;
-    } else {
-      c.className = 'info-chip battle-chip' + (isFinalBattle ? ' final-battle-chip' : '');
-      const lbl = isFinalBattle ? '⚔ THE FINAL BATTLE — Commander Bruhns' : node.battle.label;
-      c.innerHTML = '<span class="chip-icon">' + (isFinalBattle ? '🔥' : '⚔') + '</span><span class="chip-lbl">BATTLE</span>' + lbl;
-      c.addEventListener('click', () => isFinalBattle ? storyPreFinalBattle() : storyPreBattle(node));
-    }
-    row.appendChild(c);
-  }
-  if (node.sleep) {
-    const c = document.createElement('div');
-    const slept = !!S_story.sleptAtNodes[node.code];
-    if (slept) {
-      c.className = 'info-chip inn-slept';
-      c.innerHTML = '<span class="chip-icon">✅</span><span class="chip-lbl">INN</span>Rested here — Day ' + S_story.day;
-    } else {
-      const cost = node.sleepCost === 0 ? 'free' : node.sleepCost + 'gp';
-      c.className = 'info-chip inn-chip';
-      c.innerHTML = '<span class="chip-icon">🛏</span><span class="chip-lbl">INN</span>Rest (' + cost + ')';
-      c.addEventListener('click', () => storySleep(node));
-    }
-    row.appendChild(c);
-    // Hearth Home chip
-    const isHome = S_story.hearthHome === node.code;
-    const hc = document.createElement('div');
-    if (isHome) {
-      hc.className = 'info-chip hearth-home';
-      hc.innerHTML = '<span class="chip-icon">🔥</span><span class="chip-lbl">HEARTH</span>Home set here';
-    } else {
-      hc.className = 'info-chip hearth-set';
-      hc.innerHTML = '<span class="chip-icon">🔥</span><span class="chip-lbl">HEARTH</span>Set as Home';
-      hc.addEventListener('click', () => storySetHearthHome(node.code));
-    }
-    row.appendChild(hc);
-  }
-  if (node.portal) {
-    const c = document.createElement('div');
-    c.className = 'info-chip portal-chip';
-    c.innerHTML = '<span class="chip-icon">🌀</span><span class="chip-lbl">PORTAL</span>Activate portal → ' + node.portal;
-    c.addEventListener('click', storyPortal);
-    row.appendChild(c);
-  }
-  if (VENDOR_NODES.has(node.code)) {
-    const c = document.createElement('div');
-    c.className = 'info-chip vendor-chip';
-    c.innerHTML = '<span class="chip-icon">🛒</span><span class="chip-lbl">VENDOR</span>' + (node.npc || 'Merchant');
-    c.addEventListener('click', storyVendorToggle);
-    row.appendChild(c);
-  }
+
+  // ── STALK section ──────────────────────────────────
   const hg = HUNTING_GROUNDS[node.name];
-  if (hg) {
-    const c = document.createElement('div');
-    c.className = 'info-chip stalk-chip';
-    c.innerHTML = '<span class="chip-icon">🎯</span><span class="chip-lbl">STALK</span>' + hg.displayName;
-    c.addEventListener('click', () => storyStalk(node.code));
-    row.appendChild(c);
-  }
-  // Yugurt Lake — fishing chip
-  if (node.isFishingLake) {
-    const c = document.createElement('div');
-    c.className = 'info-chip fish-chip';
-    c.innerHTML = '<span class="chip-icon">🎣</span><span class="chip-lbl">FISH</span>Cast a Line';
-    c.addEventListener('click', () => storyFishing());
-    row.appendChild(c);
-  }
-  // SHORT REST chip (L13-D)
-  {
-    const isInn = !!(node.sleep);
-    const hasBoy = !isInn && S_story.shortRests > 0;
-    const sr = document.createElement('div');
-    sr.className = 'info-chip rest-chip' + (S_story.shortRests <= 0 ? ' rest-chip-empty' : '');
-    sr.innerHTML = '<span class="chip-icon">🌙</span>'
-      + '<span class="chip-lbl">SHORT REST</span>'
-      + S_story.shortRests + '/3'
-      + (hasBoy ? ' · 🏕 ×2' : '');
-    if (S_story.shortRests > 0) {
-      sr.addEventListener('click', () => storyShortRest(node.code));
+  const hasFish = node.isFishingLake;
+  if (hg || hasFish) {
+    const { sec, body } = _mkSection(null, '🎯', 'Stalk');
+    if (hg) {
+      body.appendChild(_mkCard({
+        lbl: 'HUNT', main: hg.displayName,
+        hint: '⏱ 2 hours · setup + encounter',
+        tag: '2h', btn: 'Hunt', btnClass: 'btn-hunt',
+        btnClick: () => storyStalk(node.code)
+      }));
     }
-    row.appendChild(sr);
+    if (hasFish) {
+      body.appendChild(_mkCard({
+        lbl: 'FISH', main: 'Cast a Line',
+        hint: '⏱ 1 hour · fishing session',
+        tag: '1h', btn: 'Fish', btnClass: 'btn-hunt',
+        btnClick: () => storyFishing()
+      }));
+    }
+    row.appendChild(sec);
   }
-  // REMAINS chips (L15-H) — one per corpse quest at this node
-  S_story.corpsesQuests.filter(q => q.nodeCode === node.code).forEach(q => {
-    const c = document.createElement('div');
-    c.className = 'info-chip corpse-chip';
-    c.innerHTML = '<span class="chip-icon">🦴</span>'
-      + '<span class="chip-lbl">REMAINS</span>'
-      + q.items.length + ' item(s) · ' + q.goldDropped + 'gp';
-    c.addEventListener('click', () => _storyRetrieveCorpse(q.id));
-    row.appendChild(c);
-  });
-  // ── Layer 39 — Epic Battleground NPC chips ──
+
+  // ── ENCOUNTER section ──────────────────────────────
+  if (node.battle) {
+    const { sec, body } = _mkSection(null, '⚔', 'Encounter');
+    const defeated = !!S_story.defeatedBattles[node.code];
+    const isFinal = node.code === 'CO' && (S_story.level||1) >= 20 && (S_story.shards||0) >= 7;
+    if (defeated) {
+      body.appendChild(_mkCard({ lbl: 'BATTLE', main: node.battle.label, tag: '✓ Defeated', tagClass: 'transferred', done: true }));
+    } else {
+      const lbl = isFinal ? '⚔ THE FINAL BATTLE — Commander Bruhns' : node.battle.label;
+      body.appendChild(_mkCard({
+        lbl: 'BATTLE', main: lbl,
+        hint: '⏱ 1 hour · combat',
+        tag: '1h', btn: isFinal ? '🔥 FINAL FIGHT' : 'Fight', btnClass: 'btn-fight',
+        btnClick: () => isFinal ? storyPreFinalBattle() : storyPreBattle(node)
+      }));
+    }
+    row.appendChild(sec);
+  }
+
+  // ── QUESTS section (active quests at this node) ────
+  {
+    const active = Object.entries(S_story.quests || {})
+      .filter(([, s]) => s === 'active')
+      .map(([id]) => QUEST_DB[id]).filter(Boolean);
+    if (active.length) {
+      const { sec, body } = _mkSection(null, '📋', 'Quests');
+      active.slice(0, 4).forEach(q => {
+        body.appendChild(_mkCard({
+          lbl: q.type === 'main' ? 'MAIN' : 'SIDE',
+          main: (q.type === 'main' ? '◈ ' : '◇ ') + q.title,
+          hint: '▶ ' + q.hint,
+          clickable: true, click: () => switchSheet('sheet-quests')
+        }));
+      });
+      row.appendChild(sec);
+    }
+  }
+
+  // ── LOOT section ───────────────────────────────────
+  if (node.loot && !node.loot.startsWith('VICTORY') && !node.loot.startsWith('Portal Key')) {
+    const { sec, body } = _mkSection(null, '💰', 'Loot');
+    const collected = !!S_story.visited[node.code];
+    body.appendChild(_mkCard({
+      lbl: 'ITEM', main: (collected ? '📦 ' : '📦 ') + node.loot,
+      tag: collected ? '✓ In Inventory' : 'Not collected',
+      tagClass: collected ? 'transferred' : ''
+    }));
+    row.appendChild(sec);
+  }
+  // Corpse loot
+  if ((S_story.corpsesQuests || []).some(q => q.nodeCode === node.code)) {
+    const { sec, body } = _mkSection(null, '🦴', 'Remains');
+    S_story.corpsesQuests.filter(q => q.nodeCode === node.code).forEach(q => {
+      body.appendChild(_mkCard({
+        lbl: 'CORPSE', main: q.items.length + ' item(s)',
+        sub: q.goldDropped + 'gp recovered',
+        btn: 'Retrieve', btnClass: 'btn-hunt',
+        btnClick: () => _storyRetrieveCorpse(q.id)
+      }));
+    });
+    row.appendChild(sec);
+  }
+
+  // ── REST section ───────────────────────────────────
+  {
+    const { sec, body } = _mkSection(null, '🛌', 'Rest');
+    // Inn / Long Rest
+    if (node.sleep) {
+      const slept = !!S_story.sleptAtNodes[node.code];
+      const cost = node.sleepCost === 0 ? 'free' : node.sleepCost + 'gp';
+      if (slept) {
+        body.appendChild(_mkCard({ lbl: 'INN', main: 'Rested here — Day ' + S_story.day, tag: '✓ Done', tagClass: 'transferred', done: true }));
+      } else {
+        body.appendChild(_mkCard({
+          lbl: 'INN', main: 'Long Rest (' + cost + ')',
+          hint: '⏱ 8 hours · full HP recovery · resets fatigue',
+          tag: '8h', btn: 'Rest', btnClass: 'btn-rest',
+          btnClick: () => storySleep(node)
+        }));
+      }
+      // Hearth
+      const isHome = S_story.hearthHome === node.code;
+      body.appendChild(_mkCard({
+        lbl: 'HEARTH', main: isHome ? '🔥 Home set here' : '🔥 Set as Home Inn',
+        tag: isHome ? '✓ Set' : '',
+        tagClass: isHome ? 'transferred' : '',
+        clickable: !isHome, click: isHome ? null : () => storySetHearthHome(node.code)
+      }));
+    } else {
+      // Not at inn — show nearest inn hint
+      const innNodes = Object.values(NODE_MAP).filter(n => n.sleep);
+      let nearest = null, nearestDist = Infinity;
+      innNodes.forEach(n => {
+        const p = _bfsPath(node.code, n.code);
+        if (p !== null && p.length < nearestDist) { nearestDist = p.length; nearest = n; }
+      });
+      if (nearest) {
+        body.appendChild(_mkCard({
+          lbl: 'INN', main: 'Nearest Inn: ' + nearest.label.split(' — ')[0] + ' (' + nearest.code + ')',
+          hint: nearestDist + ' move' + (nearestDist !== 1 ? 's' : '') + ' away — set waypoint to navigate',
+          tag: nearestDist + ' moves',
+          btn: 'Waypoint', btnClass: 'btn-rest',
+          btnClick: () => { S_story.waypoint = nearest.code; storyMsg('📍 Waypoint set: ' + nearest.label); _updateWaypointBtn(); }
+        }));
+      }
+    }
+    // Short Rest
+    const rests = S_story.shortRests || 0;
+    body.appendChild(_mkCard({
+      lbl: 'SHORT', main: '🌙 Short Rest',
+      hint: rests > 0 ? '⏱ 1 hour · roll HD · recover HP' : 'No short rests remaining',
+      tag: rests + '/3 left',
+      tagClass: rests === 0 ? '' : '',
+      btn: rests > 0 ? 'Short Rest' : null,
+      btnClass: 'btn-rest',
+      btnClick: () => storyShortRest(node.code)
+    }));
+    row.appendChild(sec);
+  }
+
+  // ── WORLD section (NPC, vendor, portal, misc) ──────
+  {
+    const worldCards = [];
+    if (node.npc) {
+      worldCards.push(_mkCard({
+        lbl: 'NPC', main: '🧙 ' + node.npc,
+        hint: NPC_DIALOGUE[node.code] ? 'Has dialogue' : '',
+        btn: NPC_DIALOGUE[node.code] ? 'Talk' : null,
+        btnClass: 'btn-talk',
+        btnClick: () => storyShowNpc(node.code)
+      }));
+    }
+    if (VENDOR_NODES.has(node.code)) {
+      worldCards.push(_mkCard({
+        lbl: 'SHOP', main: '🛒 Vendor: ' + (node.npc || 'Merchant'),
+        btn: 'Shop', btnClass: 'btn-talk',
+        btnClick: storyVendorToggle
+      }));
+    }
+    if (node.portal) {
+      worldCards.push(_mkCard({
+        lbl: 'PORTAL', main: '🌀 Activate portal → ' + node.portal,
+        btn: 'Activate', btnClass: 'btn-rest',
+        btnClick: storyPortal
+      }));
+    }
+    if (worldCards.length) {
+      const { sec, body } = _mkSection(null, '🌐', 'World');
+      worldCards.forEach(c => body.appendChild(c));
+      row.appendChild(sec);
+    }
+  }
+
+  // ── Epic Battleground NPC chips (Layer 39) — appended to row directly ──
   Object.entries(EB_NPC_DIALOGUE).forEach(([ebCode, d]) => {
     if (d.npcNode !== node.code) return;
     const primaryId  = 'quest_' + ebCode.toLowerCase() + '_primary';
@@ -16125,7 +16274,6 @@ function storyRender(node, prefix) {
   storyMsg(parts.join('  ·  '));
   // Keep quest list DOM in sync so it's current when user opens the panel
   storyRenderQuests();
-  storyRenderQuestStrip();
   // Journal modal (must come last — may overwrite any message visually but modal covers it)
   storyCheckJournal(node);
   storyAutoSave();
@@ -16134,29 +16282,6 @@ function storyRender(node, prefix) {
   _renderWorldMiniMap();
   _updateExitLinks();
   _updateWaypointBtn();
-}
-
-function storyRenderQuestStrip() {
-  const strip = document.getElementById('story-quest-strip');
-  if (!strip) return;
-  const active = Object.entries(S_story.quests || {})
-    .filter(([, s]) => s === 'active')
-    .map(([id]) => QUEST_DB[id])
-    .filter(Boolean)
-    .slice(0, 2);
-  strip.innerHTML = '';
-  if (!active.length) { strip.classList.remove('has-quests'); return; }
-  active.forEach((q, i) => {
-    if (i > 0) { const sep = document.createElement('div'); sep.className = 'quest-strip-sep'; strip.appendChild(sep); }
-    const item = document.createElement('div');
-    item.className = 'quest-strip-item';
-    item.innerHTML = '<div class="quest-strip-title"><span>'
-      + (q.type === 'main' ? '⬥' : '◇') + '</span><span>' + q.title + '</span></div>'
-      + '<div class="quest-strip-hint">▶ ' + q.hint + '</div>';
-    item.addEventListener('click', () => switchSheet('sheet-quests'));
-    strip.appendChild(item);
-  });
-  strip.classList.add('has-quests');
 }
 
 function storyUpdateStatus() {
@@ -16215,6 +16340,14 @@ function storyUpdateStatus() {
   const restEl = document.getElementById('s-rests');
   restEl.textContent = S_story.shortRests + '/3';
   restEl.className = 'stat-val' + (S_story.shortRests === 0 ? ' danger' : S_story.shortRests === 1 ? ' warn' : '');
+  const hoursEl = document.getElementById('s-hours');
+  if (hoursEl) hoursEl.textContent = (S_story.hoursElapsed || 0) + 'h';
+  const awakeEl = document.getElementById('s-awake');
+  if (awakeEl) {
+    const aw = S_story.hoursSinceSlept || 0;
+    awakeEl.textContent = aw + 'h';
+    awakeEl.className = 'stat-val' + (aw >= 24 ? ' danger' : aw >= 16 ? ' warn' : '');
+  }
   const disRow = document.getElementById('s-dis-row');
   if (S_story.battleDis > 0) {
     document.getElementById('s-dis-count').textContent = S_story.battleDis + ' battle(s)';

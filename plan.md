@@ -622,6 +622,152 @@ Current chips are small `border: 1px solid` pills. New chips are taller (32px mi
 
 ---
 
+## §DESIGN-02 — Story Mode UX: Purpose-Driven Section Layout + Hour Tracking
+
+**Status:** ⚠️ Phase 1 Implementing 2026-05-26. Phase 2+ spec only.
+**Scope:** Story mode center layout · Section containers · Hour tracking · Per-quest hunt UI
+**Files:** `roll2hit-v3.html` (CSS + JS storyRenderSections + _S_DEFAULTS)
+
+---
+
+### I. Design Rationale
+
+The current story mode center renders all action chips in a single undifferentiated row. The user sees: NPC Talk, Battle, Stalk, Loot, Inn, Short Rest, Vendor — all flattened into a list with no semantic hierarchy. The result: the player must scan the entire chip list to find the relevant action for their current intent.
+
+The fix: **purpose-driven labeled sections**. Each section has one semantic meaning. The player can navigate by section identity ("I want to hunt → look for STALK") rather than by parsing icons.
+
+**Visual language:** Section container = dark ember `var(--c1)/#562717` → section header in warm cream `var(--c5)` → item cards in parchment `var(--bg)/#F0E6C8`. This matches the quests screen aesthetic (dark section frame, eggshell content card).
+
+---
+
+### II. Section Layout (Phase 1 — Implemented)
+
+```
+┌─ 📍 LOCATION ───────────────────────────────────────┐
+│ [01] City Streets — Birka   Act I                   │
+│ Description text (full narrative)                   │
+└─────────────────────────────────────────────────────┘
+┌─ 🎯 STALK ──────────────────────────────────────────┐  (if hunting ground)
+│ Hunt: Urban Ruins · Rats, Thugs, Shadows   [Hunt]  │
+└─────────────────────────────────────────────────────┘
+┌─ ⚔ ENCOUNTER ───────────────────────────────────────┐  (if battle)
+│ ⚔ Skeleton ×3 + Shadow                    [Fight]  │
+└─────────────────────────────────────────────────────┘
+┌─ 📋 QUESTS ─────────────────────────────────────────┐  (if active quests)
+│ ◈ Main: Find the Sealed Box                         │
+│   ▶ Recover from Chamber CR                        │
+└─────────────────────────────────────────────────────┘
+┌─ 💰 LOOT ───────────────────────────────────────────┐  (if loot present)
+│ 📦 Bloodstained Map           ✓ In Inventory        │
+└─────────────────────────────────────────────────────┘
+┌─ 🛌 REST ───────────────────────────────────────────┐  (always)
+│ 🌙 Short Rest   2/3 remaining         [Short Rest]  │
+│ 🏠 Long Rest → Nearest Inn: IN (2 moves N)          │
+└─────────────────────────────────────────────────────┘
+┌─ 🌐 WORLD ──────────────────────────────────────────┐  (if misc: NPC, vendor, portal)
+│ 🧙 Talk: City Guard Captain Yael       [Talk]       │
+│ 🛒 Vendor: Mira                        [Shop]       │
+└─────────────────────────────────────────────────────┘
+```
+
+**Section order:** LOCATION → STALK → ENCOUNTER → QUESTS → LOOT → REST → WORLD
+
+Stalk is above Quests: hunting is active/dangerous and should precede the passive quest list.
+
+---
+
+### III. Hour Tracking System (Phase 2 — Spec)
+
+#### III-A. New State Fields
+
+```js
+hoursElapsed: 0,        // total hours since run start
+hoursSinceSlept: 0,     // hours since last long rest (inn sleep)
+```
+
+#### III-B. Hour Cost by Action
+
+| Action | Hours | Notes |
+|--------|-------|-------|
+| Move to adjacent node | 1h | Normal travel |
+| Corridor warp | 2h | Long-distance fast travel |
+| Normal combat | 1h | Win or retreat |
+| Hunt / Stalk | 2h | 1h setup + 1h battle |
+| Fishing | 1h | One fishing session |
+| Short rest | 1h | HD roll + HP recovery |
+| Long rest (inn) | 8h | Full HP + resets hoursSinceSlept |
+| Shop / vendor | 0h | No time cost |
+| NPC dialogue | 0h | No time cost |
+
+#### III-C. Sidebar Display
+
+```
+⏱ 6h elapsed   0h rested
+```
+
+Add to resources stat group in `#story-left`:
+- `s-hours-elapsed` — total hours, always incrementing
+- `s-hours-slept` — hours since last long rest
+
+#### III-D. Exhaustion Thresholds (design, implementation deferred)
+
+| Hours without sleep | Effect |
+|--------------------|--------|
+| 0–15h | Normal |
+| 16–23h | ⚠ Warn in sidebar: "Tired" |
+| 24h+ | DIS on all attack rolls |
+| 48h+ | DIS on STR/DEX checks + -2 to AC |
+
+Exhaustion resets on inn long rest. Short rest does NOT reset hoursSinceSlept.
+
+---
+
+### IV. Per-Quest Hunt Buttons (Phase 2 — Spec)
+
+When a quest is active and specifies a monster type, and that monster type exists in the current node's terrain `WORLD_DB` entry, show a dedicated hunt button in the STALK section:
+
+```
+┌─ 🎯 STALK ──────────────────────────────────────────┐
+│ 🐀 Rats ×3 — Hunt for: Rat Poison Quest   [Hunt]    │
+│ 👤 Thug — Hunt for: Bounty: The Fence     [Hunt]    │
+└─────────────────────────────────────────────────────┘
+```
+
+**Implementation notes:**
+- Requires `QUEST_DB` entries to carry a `huntMonsterKey` or `huntTerrain` field
+- `huntMonsterKey` matches a key in `MONSTER_POOL`
+- A hunt button launches `storyPreBattle(node)` with the monster pre-selected
+- Hunt costs 2h; normal stalk costs 2h; they are the same mechanic but surfaced per-quest
+
+---
+
+### V. Inline Condition Selector per Quest (Phase 2 — Spec)
+
+Instead of navigating away to the pre-battle overlay, the ENCOUNTER section shows inline condition buttons:
+
+```
+┌─ ⚔ ENCOUNTER ──────────────────────────────────────┐
+│ ⚔ Skeleton ×3 + Shadow                             │
+│   [Fight]  [Poison (50gp)]  [Flanked (30gp)]       │
+└─────────────────────────────────────────────────────┘
+```
+
+Only show conditions the player can afford. Clicking a condition button launches battle with that condition pre-applied (skipping the pre-battle overlay).
+
+---
+
+### VI. Implementation Phases
+
+| Phase | Scope | Status |
+|-------|-------|--------|
+| **P1** | Section layout CSS + JS routing into labeled sections | ⚠️ Implementing 2026-05-26 |
+| **P2** | Hour state fields + sidebar display + per-action hour increment | Spec complete |
+| **P3** | Exhaustion thresholds + DIS application | Spec only |
+| **P4** | Per-quest hunt buttons (needs QUEST_DB `huntMonsterKey` field) | Spec only |
+| **P5** | Inline condition selector per encounter | Spec only |
+
+---
+
 ## §RESEARCH-01 — Arthurian Romance Reference: Chrétien de Troyes
 
 **Source:** *Four Arthurian Romances* — Chrétien de Troyes (c. 1160–1172 CE)  
