@@ -99,7 +99,7 @@ See `story.md §GRIEF AND CORRUPTION` for the vignette prose.
 
 ## §0 — Implementation Readiness Dashboard
 
-> **Status as of Layer 97 (2026-05-27).** CO-001 + CO-002 closed: Bog Mudwhistle defeat speech (bogDefeated flag, inline tournament win HTML) + Muffat States 5+6 consolidated (crate opens in antecedentMet visit, cycle4NoteRead set inline, quest_muffat_05 activateCond → antecedentMet, mandatory DK visits reduced from 3 to 1). HTML: ~20,445 lines. Lab reports: 43. Add new layers below as §LIX+.
+> **Status as of Layer 98 (2026-05-27).** §LIX implemented: HR + KS nodes live. Conversion fires on KS arrival (storyRender inline, saulConverted=true). Blind gate blocks KS movement until anathSightRestored (day counter via storyMove). Anath quoteFn 3-state IIFE heals on day 3. quest_road_kesra + quest_anath in QUEST_DB. HTML: ~20,510 lines. Lab reports: 43. Add new layers below as §LX+.
 
 ### Lab Report Index (Layers 48–79)
 
@@ -5677,6 +5677,46 @@ Unknown. The Conclave Archivist is unnamed. The Cycle 4 components have not arri
 ## §FUTURE — Long-Range Ideas (not scheduled)
 
 > Speculative world expansions. No implementation layer assigned. Record the concept and canonical source material while the idea is fresh.
+
+---
+
+## §LIX — Herath + Kesra: The Conversion (✅ Implemented — Layer 98)
+
+> **Status:** Live. HR + KS nodes in NODE_MAP. Two new NPC_DIALOGUE entries. Two QUEST_DB quests. Conversion fires on KS arrival. Blind gate (3-day counter) blocks movement. Anath heals on day 3 via IIFE in KS quoteFn.
+
+### §LIX-A. What Was Built
+
+| Element | Detail |
+|---|---|
+| Nodes added | HR (num:84, act:4, E:KS) · KS (num:85, act:4, W:HR) |
+| NODE_COORDS | HR:{r:17,c:5} · KS:{r:17,c:8} — new southeast cluster |
+| Loot at HR | Three Herath Warrants · Order of Escort (first-visit only) |
+| _S_DEFAULTS | saulConverted · blindDaysKS · anathSightRestored |
+| NPC_DIALOGUE | HR: The Court Registrar (static) · KS: Anath (3-state quoteFn) |
+| Quests | quest_road_kesra (activates at HR, completes on saulConverted) · quest_anath (activates at KS, completes on anathSightRestored) |
+| Conversion event | storyRender KS block: on first arrival, sets saulConverted=true, injects conversion prose inline |
+| Blind gate | storyMove KS check: blocks all exits while !anathSightRestored; increments blindDaysKS; day 3 message prompts Anath |
+
+### §LIX-B. The Conversion Text
+
+The conversion fires as an inline storyRender div on first arrival at KS. No skill check. No pass/fail. The road changes the person; the destination confirms it. Prose: "The light arrived with the absolute certainty of a fact that had already been true and was simply now being acknowledged."
+
+### §LIX-C. Anath's States
+
+| State | Condition | Action |
+|---|---|---|
+| Waiting (days 1–2) | blindDaysKS < 3 | "The room is quiet. Day N of three. You wait." |
+| Arrival (day 3) | blindDaysKS ≥ 3 AND !anathSightRestored | IIFE: sets anathSightRestored=true; delivers healing scene |
+| After healing | anathSightRestored | Quiet reflection; road visible from window |
+
+### §LIX-D. Arc Shape So Far
+
+| Layer | Content |
+|---|---|
+| §LIX (98) | HR + KS live. Conversion. Blind gate. Anath heals. quest_road_kesra + quest_anath. |
+| §LX (next) | KS basket escape (quest_basket_kesra). DR node (Dust Roads retreat, optional). |
+| §LXI | HR return + Barnach vouches + 15-day Hellenist gate → TS (Tarsis) |
+| §LXII | TS silent years + Barnach arrival → AO (Anthos) + commissioning |
 
 ---
 
