@@ -662,4 +662,72 @@ Both fields are in `_S_DEFAULTS()` (added 2026-05-26) awaiting zone gating imple
 
 ---
 
+### Stalk / Hunt Mechanic *(§XLIII — PLANNED)*
+
+Hunting lets the player choose a specific target before entering combat. Three distinct paths exist with different time costs and risk profiles.
+
+#### Hunt Modes
+
+| Mode | Time Cost | Survival Check | Outcome |
+|---|---|---|---|
+| **Targeted Hunt** | 1h hunt + 1h battle = 2h | WIS Survival vs tier DC | Pass → exact target + surprise ADV; Fail → random fallback |
+| **Rush In** | 1h battle only | None | Random encounter from terrain pool (notoriety-weighted) |
+| **Corridor** | 0h (passive) | None | Encounter rolls on movement, no player agency |
+
+**Time Economy:** A targeted hunt costs one extra hour but rewards precise control and surprise advantage on pass. Players hunting quest targets should invest the extra hour — the XP/loot from off-target monsters doesn't contribute to quest completion. Players grinding levels may prefer Rush In for speed.
+
+#### Target Selector UI
+
+The Hunt card in Story Mode expands an **inline accordion** below the card (same CSS transition as the NPC Talk accordion). The panel lists two groups:
+
+**Quest Targets** — monsters from active quests matching this terrain.  
+**All Monsters Here** — full terrain pool from `WORLD_DB[node.name].monsters`.
+
+Each row: name · tier badge · AC · HP · WIS Survival DC. Quest targets also show a ◈ badge.
+
+A **Rush In** button above the selector skips target selection, calls `storyQuickWait(nodeCode)`, and costs only the 1h battle.
+
+#### WIS Survival DC by Tier
+
+| Tier | DC |
+|---|---|
+| Trivial | 8 |
+| Easy | 10 |
+| Medium | 12 |
+| Hard | 14 |
+| Deadly | 16 |
+
+DC is derived from the monster's `tier` field in `MONSTER_POOL`.
+
+#### Survival Roll Formula
+
+```
+roll  = d20 + floor((WIS − 10) / 2)
+dc    = TIER_DC[monster.tier]
+pass  = roll >= dc
+```
+
+**UI display:** `d20 (N) + WIS (±N) = N vs DC N → PASS` or `→ FAIL`
+
+#### Pass / Fail Outcomes
+
+**Pass:** `pendingBattle` set with exact monster key. `surpriseAdvantage = true` → ADV on first attack. 1h added to time.
+
+**Fail:** `_weightedMonsterPick(terrain)` fires as fallback. No surprise advantage. Flavor text shown (5 entries: cold trail, snapped branch, old tracks, wind betrayal, quarry never arrived). 1h added to time.
+
+**Rush In:** Calls `storyQuickWait(nodeCode)` unchanged — no survival check, no extra hour.
+
+#### Reward for Hunting Well
+
+Precise hunting completes quest kills in 2h vs 4–6h of random encounters. Surprise ADV is meaningful against hard/deadly-tier enemies with high AC. The extra hour is never wasted if the target is a quest monster.
+
+#### State Fields
+
+| Field | Type | Default | Notes |
+|---|---|---|---|
+| `huntSelectedTarget` | string\|null | `null` | Monster key selected in target picker |
+| `huntLastSurvivalRoll` | object\|null | `null` | `{roll, mod, total, dc, pass}` — for display |
+
+---
+
 *© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*

@@ -1030,6 +1030,21 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 .story-card-btn.btn-talk  { background: rgba(42,26,10,0.06); border-color: var(--border); color: var(--dim); }
 .story-card-btn.btn-talk:hover { background: var(--panel2); }
 .story-card-btn:disabled  { opacity: 0.4; cursor: default; }
+.npc-talk-accordion {
+  margin: 0 4px 4px 14px;
+  border-left: 2px solid var(--border-lt);
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  border-radius: 0 0 8px 8px;
+  background: var(--panel);
+  overflow: hidden;
+  max-height: 0;
+  padding: 0 14px;
+  transition: max-height 0.26s ease, padding 0.26s ease;
+}
+.npc-talk-accordion.open { max-height: 320px; padding: 10px 14px 13px; }
+.npc-talk-quote { font-size: 14px; line-height: 1.75; font-style: italic; color: var(--text); }
+.npc-talk-name  { font-size: 11px; color: var(--dim); margin-top: 7px; text-align: right; }
 .story-card-done { color: var(--muted); text-decoration: line-through; opacity: 0.7; }
 
 /* HP bar */
@@ -3042,6 +3057,9 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 #npc-card-text { color: #FEA712; font-style: italic; }
 #btn-npc-close { background: #562717; border: 2px solid #E76219; color: #FDDCA9; border-radius: 8px; font-weight: 700; text-transform: uppercase; }
 #btn-npc-close:hover { background: #E76219; color: #120600; border-color: #FEA712; }
+.npc-talk-accordion { background: #1c0c04; border-color: #5c2c10; }
+.npc-talk-quote { color: #FDDCA9; }
+.npc-talk-name  { color: #FEA712; }
 
 /* ── Yugurt Lake Fishing Modal ── */
 #story-fishing-modal {
@@ -17661,13 +17679,34 @@ function storyRender(node, prefix) {
   {
     const worldCards = [];
     if (node.npc) {
-      worldCards.push(_mkCard({
+      const _npcDial = NPC_DIALOGUE[node.code];
+      let _talkAccordion = null;
+      const _npcCard = _mkCard({
         lbl: 'NPC', main: '🧙 ' + node.npc,
-        hint: NPC_DIALOGUE[node.code] ? 'Has dialogue' : '',
-        btn: NPC_DIALOGUE[node.code] ? 'Talk' : null,
+        hint: _npcDial ? 'Has dialogue' : '',
+        btn: _npcDial ? 'Talk' : null,
         btnClass: 'btn-talk',
-        btnClick: () => storyShowNpc(node.code)
-      }));
+        btnClick: () => {
+          const _talkBtn = _npcCard.querySelector('.story-card-btn');
+          if (_talkAccordion) {
+            _talkAccordion.classList.remove('open');
+            const _closing = _talkAccordion;
+            setTimeout(() => _closing.remove(), 270);
+            _talkAccordion = null;
+            if (_talkBtn) _talkBtn.textContent = 'Talk';
+          } else {
+            _talkAccordion = document.createElement('div');
+            _talkAccordion.className = 'npc-talk-accordion';
+            _talkAccordion.innerHTML =
+              '<div class="npc-talk-quote">' + _npcDial.quote + '</div>'
+              + '<div class="npc-talk-name">— ' + _npcDial.name + '</div>';
+            _npcCard.insertAdjacentElement('afterend', _talkAccordion);
+            requestAnimationFrame(() => _talkAccordion && _talkAccordion.classList.add('open'));
+            if (_talkBtn) _talkBtn.textContent = 'Close';
+          }
+        }
+      });
+      worldCards.push(_npcCard);
     }
     if (VENDOR_NODES.has(node.code)) {
       worldCards.push(_mkCard({
@@ -18829,18 +18868,8 @@ function _updateWaypointBtn() {
   const btn = document.getElementById('btn-waypoint');
   if (!btn) return;
   const wp = S_story.waypoint;
-  if (!wp) { btn.textContent = 'WP'; btn.classList.remove('at-waypoint'); _updateExitLinks(); return; }
-  const dest = NODE_MAP[wp];
-  const name = dest ? dest.label.split(' — ')[0] : wp;
-  if (S_story.currentCode === wp) {
-    btn.textContent = '📍 Here: ' + name;
-    btn.classList.add('at-waypoint');
-  } else {
-    const path = _bfsPath(S_story.currentCode, wp);
-    const hops = path ? path.length : '?';
-    btn.textContent = '📍 ' + name + ' (' + hops + ')';
-    btn.classList.remove('at-waypoint');
-  }
+  btn.textContent = 'WP';
+  btn.classList.toggle('at-waypoint', !!wp && S_story.currentCode === wp);
   _updateExitLinks();
 }
 
