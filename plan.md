@@ -99,7 +99,7 @@ See `story.md §GRIEF AND CORRUPTION` for the vignette prose.
 
 ## §0 — Implementation Readiness Dashboard
 
-> **Status as of Layer 80 (2026-05-26).** All layers through §DESIGN-03 implemented. SP4 complete: 20 stale PLANNED markers cleared. §DESIGN-02 overlay→sheet migration complete. §DESIGN-03 complete: Ceremonia Roll engine, 4 Birka quests, 5-act Yael arc. §DUNGEON-01 lab report written; P1 themes live: CY Madness Gate, Codex Core Chamber, Prior Carrier, Codex Inquisitor. §DUNGEON-02 five-act chains live: D02-01 (AT Drowned Page), D02-05 (BK Chalk Mark), D02-07 (CY Maintenance Plate), D02-09 (AT Spell Scroll). Add new layers below as §XLIII+.
+> **Status as of Layer 81 (2026-05-26).** All layers through §DUNGEON-02 implemented. §DUNGEON-01 fully live: Nodes WK + MM, all 10 themes. §DUNGEON-02 fully live: all 10 five-act chains — D02-01 through D02-10, including D02-06 (WK node) and D02-08 (MM node). HTML: ~19,577 lines. Lab reports: 43. Add new layers below as §XLIII+.
 
 ### Lab Report Index (Layers 48–79)
 
@@ -117,13 +117,14 @@ See `story.md §GRIEF AND CORRUPTION` for the vignette prose.
 | 75+77 | §XL+§XLII | `lab-report-kenickie-chronicle.md` |
 | 76 | §XLI | `lab-report-tattoo-progression-system.md` |
 | 79 | §DESIGN-03 | `lab-report-ceremonia-roll-skill-checks.md` |
+| 78 | §GR | `lab-report-la-riva-grief-arc.md` |
 | 80 | §DUNGEON-01 | `lab-report-dungeon-ten-themes.md` |
 
 Earlier layers (9–47): see `lab-report-architecture-full.md` and `lab-report-timeline-history-completed.md`.
 
 ✅ §DESIGN-03 (Ceremonia Roll + Starting City) — implemented 2026-05-26. Lab report: `lab-report-ceremonia-roll-skill-checks.md`.
 ✅ §DUNGEON-01 (10 Dungeon Themes) — fully implemented Layer 81 (2026-05-26). Nodes WK + MM live.
-🔄 §DUNGEON-02 (Five-Act Arthurian Quest Elaborations) — D02-01/02/03/04/05/07/09/10 live; D02-06/08 deferred (new nodes). See `quest.md`.
+✅ §DUNGEON-02 (Five-Act Arthurian Quest Elaborations) — All 10 chains live (Layer 81, 2026-05-26). D02-06 (WK node) + D02-08 (MM node) implemented. See `quest.md`.
 
 ---
 
@@ -3936,7 +3937,7 @@ Write `lab-report-ceremonia-roll-skill-checks.md` before implementing P1. Report
 ## §DUNGEON-01 — Ten Dungeon Themes Applied to The Shattered Codex
 
 **Source:** Transcript — "10 Dungeon Room Ideas That Don't All Rely on Combat" (D&D Hunter)  
-**Status:** 🔄 In Progress — Layer 80 (2026-05-26). P1+P2 complete: §D01-01 (EB approach panels EA/EG/EV/BK), §D01-02 (Codex Inquisitor at SQ), §D01-03 (Prior Carrier at SQ), §D01-04 (Memory Gate/CO, Secret Gate/DF, Class Gate/SQ), §D01-07 (CY Madness Gate), §D01-09 (voidFlux healing inversion), §D01-10 (Codex Core Chamber). §D02 chains: D02-01/02/03/04/05/07/09 live. P3+ deferred: §D01-06/§D01-08 (Node SW, Node MM). Bug fix: node code WM→SQ (WM was not a real WORLD_DB node).  
+**Status:** ✅ Fully Implemented — Layer 81 (2026-05-26). All 10 themes live. Nodes WK (Scholar King's Workshop) + MM (Mimic Meadows) implemented. Node code WK replaces deferred SW (WM was already taken). All D02 chains complete.  
 **Scope:** New node types · Dungeon-cluster design doctrine · Hero origin canon · Loop reason · Mimic Meadows territory · Madness mechanic · Heart of the Dungeon room · Arcane inversion zone · Sacrifice gates · Shifting labyrinth
 
 ---
@@ -4271,7 +4272,7 @@ Write `lab-report-dungeon-ten-themes.md` before implementing any of the above. R
 ## §DUNGEON-02 — Five-Act Arthurian Quest Elaborations (10 + Framework)
 
 **Source:** §DUNGEON-01 themes + Chrétien de Troyes structural analysis from §RESEARCH-01  
-**Status:** 🔄 In Progress — Layer 80 (2026-05-26). D02-01/02/03/04/05/07/09/10 live. D02-06 (SW node, deferred P3+), D02-08 (MM node, deferred P3+) planned. See `quest.md` for register.  
+**Status:** ✅ Complete — Layer 81 (2026-05-26). All 10 chains live. D02-06 (WK node) + D02-08 (MM node) implemented. See `quest.md` for register.  
 **Structure:** Each quest has 5 acts. Every act is tagged **[Story Skill Check]** or **[Story Gating Battle]**. No permanent fail — retryable until pass. Final act is always the story-driving Ceremonia Roll.
 
 **Act label conventions:**

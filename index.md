@@ -1,20 +1,20 @@
 # Roll2Hit — The Shattered Codex: Document Index
 
 **Project:** `roll2hit-v3.html` — single-file combat tracker + narrative RPG
-**Status:** Layers 0–80 implemented · ~19,349 lines · 76 nodes · 370 monsters · 41 lab reports · FC01–FC08 ✅ · §RESEARCH-01 ✅ · §API-01+02 ✅ · SP4 ✅ · §DESIGN-02 ✅ · §DESIGN-03 ✅ · §DUNGEON-01 🔄 · §DUNGEON-02 🔄
+**Status:** Layers 0–81 implemented · ~19,577 lines · 78 nodes · 370 monsters · 43 lab reports · FC01–FC08 ✅ · §RESEARCH-01 ✅ · §API-01+02 ✅ · SP4 ✅ · §DESIGN-02 ✅ · §DESIGN-03 ✅ · §DUNGEON-01 ✅ · §DUNGEON-02 ✅
 **Last updated:** 2026-05-26
 
 ### Doc Health Badge
 
 | Metric | Value | Status |
 |--------|-------|--------|
-| HTML line count | ~19,349 | ✅ |
-| Lab reports on disk | 41 | ✅ |
-| Lab reports in index | 41 | ✅ |
-| Node text rewrites (noir register) | 76 / 76 | ✅ Implemented 2026-05-25 |
+| HTML line count | ~19,577 | ✅ |
+| Lab reports on disk | 43 | ✅ |
+| Lab reports in index | 43 | ✅ |
+| Node text rewrites (noir register) | 78 / 78 | ✅ WK + MM added Layer 81 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
-| Layers implemented | 0–80 | ✅ |
-| Last sync pass | 2026-05-26 (§DUNGEON-01 P1+P2 complete; §DUNGEON-02 D02-01–05/07/09; SQ node fix) | ✅ |
+| Layers implemented | 0–81 | ✅ |
+| Last sync pass | 2026-05-26 Layer 81 (§DUNGEON-01 + §DUNGEON-02 fully live; WK + MM nodes; D02-06/08 chains) | ✅ |
 
 > Update this table at the start of each session: recount lab reports with `ls lab-report-*.md | wc -l`, check HTML line count with `wc -l roll2hit-v3.html`, confirm FC item status.
 
@@ -158,6 +158,7 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | `lab-report-quest-minus-one-world-creator.md` | 49 | §XIV Quest -1 — Level 21 undefined as invitation, World Creator Wizard |
 | `lab-report-ceremonia-roll-skill-checks.md` | 79 | §DESIGN-03 Ceremonia Roll — `skill_check` quest type, `_rollCeremonia()`, Yael 5-act arc |
 | `lab-report-dungeon-ten-themes.md` | 80 | §DUNGEON-01 — 10 dungeon themes, P1–P3+ tiers, Node MM, Tribble counter, Madness Table, voidFluxActive, Prior Carrier, Codex Core ending compat |
+| `lab-report-la-riva-grief-arc.md` | 78 | §GR Grief Arc — La Riva / Fishmonger's Row, Connie/Aldo/Vinnie, corruption-grief chain, distributed grief subplot map |
 
 ### Writing & Design Philosophy
 
@@ -166,6 +167,7 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | `lab-report-story-codoex-curse-of-knowedge.md` | Pinker framework — writing guide for terrain descriptions and NPC dialogue |
 | `lab-report-Polyphonic-Organ-Synth.md` | `5thOrgan.html` — IIR biquad filter, ADSR, Beethoven canon construction, Web Audio API |
 | `lab-report-ponies-unicorns-aspirations-future-ideas.md` | Future aspirations — DM's Companion Guide, Fishing Guide, Mission Explorer |
+| `lab-report-meta-process-loop-expansion.md` | Meta-process — prompt→plan→lab-report recursive loop, 10 historical instances, session efficiency |
 
 ---
 
@@ -296,5 +298,5 @@ All previously logged conflicts resolved. Current known gaps:
 ---
 
 *Last updated: 2026-05-26*
-*Codebase: `roll2hit-v3.html` · ~18,657 lines · Layers 0–79 complete · 76 nodes · 370 monsters · 40 lab reports*
+*Codebase: `roll2hit-v3.html` · ~19,577 lines · Layers 0–81 complete · 78 nodes · 370 monsters · 43 lab reports*
 *MIT License — roll2hit.com — Copyright (c) 2026 — Free to use, modify, and share.*

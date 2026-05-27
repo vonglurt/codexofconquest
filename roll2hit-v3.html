@@ -8600,6 +8600,12 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     activateNode:'YC', completeItems:[], completeFn:() => (S_story.fishingCatchLog||[]).length > 0 && S_story.currentCode === 'YC',
     waypointNode:'YL', reward:0,
     disposition:'"The lake knows the difference. The guide tells you what the difference is." — The Fisherman' },
+  quest_no_fishing_sign: { id:'quest_no_fishing_sign', type:'side', title:'The No-Fishing Sign',
+    desc:"A city ordinance notice bolted to the lamppost near the gate. Underneath the official text, someone has added a handwritten pull-tab advertising free fishing at Yugurt Lake.",
+    hint:'Take the coupon to The Fisherman at Yugurt Cabin and redeem it for a free fishing rod.',
+    activateNode:null, completeItems:[], completeFn:() => !!S_story.fishingRodCouponRedeemed,
+    xpAward:50, waypointNode:'YC', reward:0,
+    disposition:'"...Nice Day For Fishing. Yugurt!" — The Fisherman' },
 };
 
 /* ── Layer 5: Void Tide Events ── */
@@ -9488,6 +9494,7 @@ const _S_DEFAULTS = () => ({
   cyMaintenanceDecoded: false, cyOriginKnown: false, loopHeartComplete: false,
   aurosBlueprintKnown: false, scholarWorkshopComplete: false, spiritDefeated: false,
   scriptorium_approach_complete: false, mimicColonyEntered: false,
+  noFishingSignRead: false, fishingRodCouponRedeemed: false,
 });
 
 /* ── Layer 48: Luck — Seventh Stat ── */
@@ -16822,6 +16829,40 @@ function storyRender(node, prefix) {
         memBtn.addEventListener('click', storyShowFrobergerMemorial);
         npcRowDiv.appendChild(memBtn);
       }
+      // ── No Fishing Sign at CI ──
+      if (node.code === 'CI') {
+        if (!S_story.noFishingSignRead) {
+          const signBtn = document.createElement('button');
+          signBtn.className = 'inv-use-btn';
+          signBtn.style.cssText = 'margin-top:4px;';
+          signBtn.textContent = '🚫 A hand-lettered sign on the lamppost: NO FISHING.';
+          let _tabReady = false;
+          signBtn.addEventListener('click', () => {
+            if (!_tabReady) {
+              _tabReady = true;
+              signBtn.textContent = '↩ Pull the tab.';
+              storyMsg('The notice is bolted at chest height. Block letters, official ink: "NO FISHING IN THE CITY LIMITS. By Order of the Watch."\n\nBelow the ordinance, in smaller hand: "...unless you know what you\'re doing. Tear here."\n\nA perforated tab hangs from the bottom edge. It reads: FISHING AT YUGURT LAKE · FREE ROD FOR NEW ANGLERS · BRING THIS COUPON · MEET THE FISHERMAN.');
+            } else {
+              S_story.noFishingSignRead = true;
+              S_story.inventory = S_story.inventory || [];
+              S_story.inventory.push({ name:'Free Rod Coupon', icon:'🎫', type:'readable', sell:0,
+                readText:'FISHING AT YUGURT LAKE\n\nFREE ROD FOR NEW ANGLERS\n\nPresent this coupon to The Fisherman at Yugurt Cabin.\nYugurt Cabin is south of Yugurt Lake, south of the Western Wilds Crossroads.\n\n"...Nice Day For Fishing. Yugurt!"' });
+              if (!S_story.quests) S_story.quests = {};
+              S_story.quests['quest_no_fishing_sign'] = 'active';
+              storyMsg('📋 New Quest — The No-Fishing Sign\n\nThe tab is in your hand. Somewhere in the lake country is a man who will give you a rod if you show him this. The sign said so. You have no reason to distrust a sign.\n\n🎫 Free Rod Coupon added to inventory.');
+              signBtn.remove();
+              storyAutoSave();
+            }
+          });
+          npcRowDiv.appendChild(signBtn);
+        } else {
+          const signDiv = document.createElement('div');
+          signDiv.className = 'npc-ambient';
+          signDiv.style.cssText = 'font-size:11px;color:var(--muted);margin-top:4px;';
+          signDiv.innerHTML = 'The NO FISHING notice is still bolted to the lamppost. The pull-tab is gone.';
+          npcRowDiv.appendChild(signDiv);
+        }
+      }
       // ── Layer 66a: S54 Yael + Brynn joint witness at CI (Act VIII) ──
       if (node.code === 'CI' && (S_story.actNumber || 1) >= 7
           && _npcFavor('yael') >= 1 && _npcFavor('brynn') >= 1
@@ -17118,6 +17159,31 @@ function storyRender(node, prefix) {
           + '<div>That\'s a love song, I think. I\'m still deciding.</div>'
           + '<div style="margin-top:8px;font-size:11px;color:#6A4A28;font-style:normal;">[Quill: "I reused the chord progression. It fit."]</div>';
         npcRowDiv.appendChild(s32Div);
+      }
+      // ── No Fishing Sign quest — coupon redemption at YC ──
+      if (node.code === 'YC' && !S_story.fishingRodCouponRedeemed
+          && (S_story.inventory||[]).some(i => i.name === 'Free Rod Coupon')) {
+        const couponBtn = document.createElement('button');
+        couponBtn.className = 'inv-use-btn';
+        couponBtn.style.cssText = 'margin-top:4px;';
+        couponBtn.textContent = '🎫 Present the Free Rod Coupon to The Fisherman.';
+        couponBtn.addEventListener('click', () => {
+          S_story.fishingRodCouponRedeemed = true;
+          S_story.inventory = (S_story.inventory||[]).filter(i => i.name !== 'Free Rod Coupon');
+          if (!(S_story.inventory||[]).some(i => i.name === 'Fishing Rod')) {
+            S_story.inventory.push({ name:'Fishing Rod', icon:'🎣', type:'tool', sell:10, code:'YC',
+              desc:"The rod from outside Yugurt Cabin. Propped by the door since before you arrived." });
+          }
+          S_story.xp = (S_story.xp || 0) + 50;
+          _checkLevelUp();
+          if ((S_story.quests||{})['quest_no_fishing_sign'] === 'active') {
+            S_story.quests['quest_no_fishing_sign'] = 'complete';
+          }
+          storyMsg("The Fisherman takes the tab. He looks at it. He has seen the tab before — he made the tab — but he looks at it like it's new each time.\n\n\"...Nice Day For Fishing. Yugurt!\"\n\nHe hands you the rod that was propped by the door. He has another inside. The door rod was always for this.\n\n🎣 Fishing Rod obtained. ✓ Quest complete — The No-Fishing Sign. +50 XP.");
+          couponBtn.remove();
+          storyAutoSave();
+        });
+        npcRowDiv.appendChild(couponBtn);
       }
       // ── S45: Quill plays without prompting (unfinished song ambient, odd game days) ──
       if (node.code === 'TV' && (S_story.gameDay || 0) > 0 && (S_story.gameDay || 0) % 2 === 1) {

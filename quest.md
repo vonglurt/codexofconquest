@@ -122,7 +122,7 @@ Each quest entry uses the following tags:
 
 ---
 
-### Mimic Meadows (MM) — NODE (PLANNED)
+### Mimic Meadows (MM) — NODE
 
 | Quest ID | Title | Type | Acts | Reward | Status |
 |----------|-------|------|------|--------|--------|
@@ -178,11 +178,11 @@ Each quest entry uses the following tags:
 
 ---
 
-### Scholar King's Workshop (SW) — NODE (PLANNED)
+### Scholar King's Workshop (WK) — NODE
 
 | Quest ID | Title | Type | Acts | Reward | Status |
 |----------|-------|------|------|--------|--------|
-| `quest_scholar_workshop` | "The Blueprint Roll" | [SKILL CHECK]+[BATTLE/SPIRIT] | 5 acts | Prototype Wand + `aurosBlueprintKnown` + `scholarWorkshopComplete` | [PLANNED §D02-06] |
+| `quest_scholar_workshop` | "The Blueprint Roll" | [SKILL CHECK]+[BATTLE/SPIRIT] | 5 acts | Prototype Wand + `aurosBlueprintKnown` + `scholarWorkshopComplete` | [✅ LIVE §D02-06] |
 
 **`quest_scholar_workshop` — "The Blueprint Roll"** *(5-act, see §D02-06)*
 *Node: SW. Trigger: first SW visit. Object: blueprint roll — plans for Auros's armor.*
@@ -206,7 +206,7 @@ Each quest entry uses the following tags:
 
 ---
 
-## EPIC BATTLEGROUNDS — Approach Quests (PLANNED per §D01-01 + §D02)
+## EPIC BATTLEGROUNDS — Approach Quests (✅ ALL LIVE — §D01-01 + §D02)
 
 ### Abyssal Scriptorium (AT)
 
@@ -288,10 +288,12 @@ Each quest entry uses the following tags:
 
 | Status | Count |
 |--------|-------|
-| ✅ Live | ~35 (story.md + HTML) |
-| Planned §DESIGN-03 | 6 (4 Birka + 5 Yael Ceremonia) |
-| Planned §DUNGEON-01/02 | 11 (10 themed + framework) |
-| **Total new planned** | **17** |
+| ✅ Live (main story) | ~35 |
+| ✅ Live §DESIGN-03 | 9 (4 Birka Ceremonia + 5-act Yael arc) |
+| ✅ Live §DUNGEON-01/02 | 11 (10 five-act chains + D02-11 framework) |
+| ✅ Live §GR | 3 (La Riva: Q-FR-01/02/03) |
+| **Total live** | **~58** |
+| Planned | 0 |
 
 ---
 
