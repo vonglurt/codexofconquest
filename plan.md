@@ -99,7 +99,7 @@ See `story.md §GRIEF AND CORRUPTION` for the vignette prose.
 
 ## §0 — Implementation Readiness Dashboard
 
-> **Status as of Layer 89 (2026-05-27).** §LI implemented: Isolde Voss one-time lake acknowledgment (isoldeGurtAckDelivered) + Muffat quest_muffat_01 "The Third Berth" (skill_check DEX DC 13, activates at DK on Trade Seal) + Muffat two-state quoteFn (post-muffatBerthReached reveals three-year crate pattern). Tilbury arc opened. HTML: ~20,295 lines. Lab reports: 43. Add new layers below as §LII+.
+> **Status as of Layer 90 (2026-05-27).** §LII implemented: quest_muffat_02 "The Distribution Pattern" (activates at DK post-muffatBerthReached, completes at HM on muffatManifestRead) + Shipping Manifest (Intercepted) readable + Bertha No-Bank two-state quoteFn + Muffat three-state quoteFn (Station 7 / 14.225 connection). HTML: ~20,307 lines. Lab reports: 43. Add new layers below as §LIII+.
 
 ### Lab Report Index (Layers 48–79)
 
@@ -5422,6 +5422,45 @@ She doesn't explain why she went. The shore smell, the fire, the way he looked a
 **Muffat's `quoteFn`** now has two states: before the berth, she gives the Act One/Act Two line. After, she reveals she's been collecting off-ledger Scholar Kings crates for two years. Three already on her shelf. Every six weeks. Someone decided these crates do not exist. *"The Scholar Kings do not make clerical errors. They make decisions."*
 
 This opens `quest_muffat_02` (*The Distribution Pattern*) as a future layer — what's in the crates, who's been shipping them, and whether Muffat's collection is known to the Scholar Kings.
+
+---
+
+## §LII — Muffat: The Distribution Pattern (✅ Implemented — Layer 90)
+
+**Status:** ✅ Implemented 2026-05-27
+
+### §LII-A. The Connection
+
+`quest_muffat_02` activates at DK once `muffatBerthReached` is set. The crate Muffat recovered carries a distribution reference: *Frequency 14.225* — delivery terminus: **Station 7, Frequency Row Monitoring Annex**. Station 7 went dark three months ago. Bertha No-Bank has been logging the changed absence in volume 41 without knowing what changed it.
+
+### §LII-B. Bertha No-Bank: Changed Absence (quoteFn)
+
+| State | Trigger | Quote |
+|---|---|---|
+| Default | Always | *"This is frequency 14.225. Nothing is on 14.225..."* Volume 42 begins tomorrow |
+| Post-read | `muffatManifestRead` | *"Volume forty-one is when it changed. Not the signal — the absence..."* |
+
+### §LII-C. Muffat: Three-State quoteFn
+
+| State | Trigger | Content |
+|---|---|---|
+| State 1 | Default | *"The courier worked for me. That was Act One. Welcome to Act Two."* |
+| State 2 | `muffatBerthReached` | Off-ledger crate pattern, two-year six-week schedule, Scholar Kings decisions |
+| State 3 | `muffatManifestRead` | Station 7 / 14.225 convergence — *"Scholar Kings infrastructure does not produce coincidences. It produces decisions that look like coincidences."* |
+
+### §LII-D. Readable Item
+
+**Shipping Manifest (Intercepted)** — `📦` — lists origin (Tilbury third berth), destination (Station 7), contents (Category 4 monitoring equipment), frequency reference (14.225), six-week schedule. Margin annotations: one noting Station 7 went dark in Vol. 41. Second annotation in different hand: *"Station 7 was not decommissioned. —M.E.M."*
+
+| Field | Value |
+|---|---|
+| Quest | `quest_muffat_02` — *The Distribution Pattern* |
+| Activates | DK; requires `muffatBerthReached` |
+| Completes | On `muffatManifestRead` (set in reward handler) |
+| XP | 250 |
+| Gold | 300gp |
+| State flag | `muffatManifestRead` |
+| Disposition | *"Volume forty-one is when the absence changed."* — Bertha No-Bank |
 
 ---
 

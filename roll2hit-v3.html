@@ -8559,6 +8559,14 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     failText:'The watch catches the movement before you clear the shadow line. You pull back. The crate stays where it is. The watch makes a note in the margin of the wrong ledger.',
     completeItems:[], checkPassFlag:'muffatBerthReached',
     disposition:'"There are three things on that berth that should not be there. The crate is one of them." — Magistra Elara Muffat' },
+  // ── §LII: Muffat — The Distribution Pattern ──
+  quest_muffat_02: { id:'quest_muffat_02', type:'side', title:'The Distribution Pattern',
+    desc:"The crate Muffat has on her shelf has a distribution stamp and a frequency reference: 14.225. That is Bertha No-Bank's frequency. The one with nothing on it. Forty-one volumes of nothing.",
+    hint:'Find Bertha No-Bank at Frequency Row and ask about the changed absence on 14.225.',
+    activateNode:'DK', activateCond:() => !!S_story.muffatBerthReached,
+    completeFn:() => !!S_story.muffatManifestRead,
+    xpAward:250, waypointNode:'HM', reward:300,
+    disposition:'"Volume forty-one is when the absence changed. I do not know what changed it. I logged the change. That is the function of the log." — Bertha No-Bank' },
   // ── Layer 55: Visby Underground quests ──
   quest_vs_01: { id:'quest_vs_01', type:'side', title:'Solvak: The Collector',
     desc:"Debt Agent Solvak has been outside Visby six weeks with a 2,000gp debt and no leverage. You might have some.",
@@ -8829,7 +8837,9 @@ const NPC_DIALOGUE = { // → doc: story.md §FL7
   TV: { name:'Bard Tomas Couperin',                quote:'"Song\'s old. Older than the city, older than the Conclave. The melody\'s simple but the words are a lock waiting for a key. Yours for a drink and a silver."' },
   BA: { name:'City Fence',                      quote:'"No names, no receipts. If you have regrets, that\'s yours to carry. Show coin and we begin."' },
   CY: { name:'Commander Seraphine Bruhns',       quote:'"That\'s a Warrant suppressor — jams coordinated tactical signals in a forty-foot radius. Whoever built this undercity wanted control over every signal in it. Keep it. You\'ll need it."' },
-  DK: { name:'Magistra Elara Muffat', quoteFn:() => S_story.muffatBerthReached // §LI
+  DK: { name:'Magistra Elara Muffat', quoteFn:() => S_story.muffatManifestRead // §LII
+    ? '"Bertha has been logging the 14.225 absence for years. The changed absence in volume forty-one is three months after Station 7 went dark." She does not look up from the manifest. "Station 7 is listed in this crate\'s distribution notes as the delivery terminus. The station that went dark. The frequency that changed." She closes the manifest. "That is not a coincidence. Scholar Kings infrastructure does not produce coincidences. It produces decisions that look like coincidences."'
+    : S_story.muffatBerthReached // §LI
     ? '"The crate has a distribution stamp and no manifest number. That means it was shipped outside the standard record — either off-ledger, or the ledger was corrected afterward. The Scholar Kings do not make clerical errors. They make decisions. Someone decided this crate does not exist." She sets it on the shelf behind her. "I have three more like it. They have been arriving every six weeks for two years."'
     : '"The courier worked for me. Whatever he told you before he died — that was Act One. Welcome to Act Two."' },
   MQ: { name:'Vendor Mira',                     quote:'"Lords use it for party tricks. Stagehands use it for scene changes. Smart people use it for other things." A knowing look.' },
@@ -9421,7 +9431,9 @@ const NPC_DIALOGUE = { // → doc: story.md §FL7
 
   // ── DeFi Land — three useless NPCs who do nothing ──
   DF: { name:'Grimshaw',          quote:'"...static...KD9QRX, this is KD9QRX, calling general...static...anyone on frequency...static...copy that nobody." His receiver has been broken for eleven years. He is aware. He does not consider this relevant to the broadcast.' },
-  HM: { name:'Bertha No-Bank',    quote:'"This is frequency 14.225. Nothing is on 14.225. I have checked every morning since the third moon of the fourth year. Nothing was on it then. Nothing is on it now. I update the log regardless." She returns to the notebook. Volume forty-two begins tomorrow.' },
+  HM: { name:'Bertha No-Bank', quoteFn:() => S_story.muffatManifestRead // §LII
+    ? '"Volume forty-one is when it changed." She does not look up from the notebook. "Not the signal — the absence. The absence changed character. I do not have a classification for that. I logged: changed absence, 14.225. I have logged it every morning since. I do not know what changed it." She turns the page. "I am glad someone else is asking. I thought it was a notation error." She pauses. "It is not a notation error."'
+    : '"This is frequency 14.225. Nothing is on 14.225. I have checked every morning since the third moon of the fourth year. Nothing was on it then. Nothing is on it now. I update the log regardless." She returns to the notebook. Volume forty-two begins tomorrow.' }, // §LII
   GL: { name:"Zeke 'The Signal'", quote:'He does not speak. He holds up a laminated card. The card says: SYSTEM COMPROMISED. He has a weatherproof box containing four hundred identical cards. He has never shown a different one. He offers you one. It is not a trade. It is not anything.' },
 };
 
@@ -9569,7 +9581,7 @@ const _S_DEFAULTS = () => ({
   waypoint: null, customQuestTerrain: null,
   ebNegotiatedPayments: {}, ebReturnDone: {},
   journalEntriesRead: [], ebReturnsCompleted: {},
-  npcFavorability: {}, roughWhiskeyUsed: false, roughWhiskeyActive: false, yaelEscortUsed: false, pitTrainingWins: 0, slStalksWon: 0, muffatBerthReached: false, // §LI
+  npcFavorability: {}, roughWhiskeyUsed: false, roughWhiskeyActive: false, yaelEscortUsed: false, pitTrainingWins: 0, slStalksWon: 0, muffatBerthReached: false, muffatManifestRead: false, // §LI–§LII
   npcVisitCounts: {}, couperiSongReceived: false, bruhnsDepthsReported: false, frobergerLastEntryRead: false,
   pitPerks: [], frobergerNoteNode: null, froberger_last_note_found: false, froberger_last_note_read: false, ngPlusRun: 0,
   huntMode: false,
@@ -14501,6 +14513,14 @@ function storyCheckQuests(node) {
         msgs.push('📙 Benedikt\'s Annotated Copy (Tome) obtained. +300gp. The First Researcher is known.');
       }
       if (id === 'quest_wm_05') { S_story.gold += 200; msgs.push('💰 +200gp. 📋 The Gurt file is still open. It has been filed, and refiled, and it will not close.'); } // §L
+      if (id === 'quest_muffat_02') { // §LII
+        S_story.gold += 300;
+        S_story.muffatManifestRead = true;
+        if (!S_story.inventory) S_story.inventory = [];
+        S_story.inventory.push({ name:'Shipping Manifest (Intercepted)', icon:'📦', type:'readable', sell:0,
+          readText:"SCHOLAR KINGS DISTRIBUTION — INTERNAL ROUTING\nStamp: Non-Standard Clearance (Class 3 Seal)\nOrigin: Tilbury Harbor, Third Berth\nDestination: Station 7 (Frequency Row Monitoring Annex)\nDelivery Frequency: Every 6 weeks\nContents: Monitoring equipment, Category 4 (no itemisation required)\nDistribution Reference: Frequency 14.225 — passive reception array maintenance\n\n[Handwritten annotation, margin:]\nStation 7 last confirmed operational — see Freq. Row log, Vol. 38.\nStation 7 status as of Vol. 41: no confirmation received.\nField note: Station may have been decommissioned without notice to monitoring staff.\n\n[Second annotation, different hand:]\nStation 7 was not decommissioned.\n—M.E.M." });
+        msgs.push('💰 +300gp. 📦 Shipping Manifest (Intercepted) obtained — Station 7, 14.225, six-week schedule. The pattern is complete.');
+      }
       // Layer 52: Void Archaeology quest rewards
       if (id === 'quest_va_01') { msgs.push('🏛️ Five marks found. The pattern is complete.'); }
       if (id === 'quest_va_02') {
