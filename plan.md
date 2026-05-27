@@ -5115,25 +5115,32 @@ The Talk accordion proved the pattern: a smooth max-height CSS transition reveal
 
 ### §XLIV-C. Battle Card Accordion
 
-The Battle card's **Fight** button expands an inline accordion below the card. Contents mirror the current pre-battle screen tabs:
+The Battle card's **Fight** button expands an inline accordion below the card. The accordion is a single setup panel — configure conditions and stealth, then hit Start Battle when ready.
 
 **Row 1 — Enemy threat summary:**  
 `[Tier badge] [Name] AC N · HP ~N · ATK +N`
 
-**Row 2 — Three action buttons (horizontal):**
+**Row 2 — Optional setup toggles (horizontal, both default off):**
 
-| Button | Effect |
+| Toggle | Effect when selected |
 |---|---|
-| ⚔ Fight | `pendingBattle = …` → `storyStartBattle(node)` immediately |
-| 💣 Condition | Expand sub-row with condition selector (gold costs inline) |
-| 🎭 Stealth | Roll stealth d20 inline, show result, then start battle after 800ms |
+| 💣 Condition | Expands condition picker sub-row below (gold costs shown inline) |
+| 🎭 Stealth | Marks stealth for inclusion at battle start; result resolves when Start Battle fires |
 
-**Row 3 — Safe retreat link:**  
+Neither toggle is required. Both can be skipped.
+
+**Row 3 — Start Battle button (full-width):**  
+`⚔ Start Battle` — fires with whatever is configured above.  
+- If Condition selected: deducts gold, queues condition  
+- If Stealth selected: rolls d20 vs random DC, shows result briefly (`d20 (N) vs DC N → PASS`), then opens battle  
+- If neither: enters battle immediately
+
+**Row 4 — Safe retreat link:**  
 `← Retreat (safe)` — collapses accordion, no penalty.
 
-The 💣 Condition sub-row lists affordable conditions only (grayed out with hint if none affordable). Selecting a condition deducts gold immediately and queues it — same mechanic as the modal, now inline.
+The 💣 Condition sub-row lists affordable conditions only. If none affordable: dimmed hint text `"Conditions unlock as you earn gold. Cheapest: Feint Scroll at 1,000 gp."` No condition selected = no cost.
 
-The 🎭 Stealth sub-row shows roll result in place: `d20 (N) vs DC N → PASS · You go first + ADV` or `FAIL · No effect`.
+Stealth result display: shown for ~600ms inline before the battle screen opens. Pass gives you first initiative + ADV on first attack. Fail: no effect, no cost.
 
 ### §XLIV-D. CSS Spec
 
@@ -5145,17 +5152,20 @@ Condition sub-row uses a nested inner accordion (same pattern, max-height 180px)
 
 - Only one accordion open at a time per node render. Opening a second collapses the first.
 - Accordion state is not persisted — re-render always starts collapsed.
-- Clicking the trigger button again while accordion is open → closes it (toggle).
+- Clicking the Fight button again while accordion is open → closes it (toggle).
 - Battle accordion closing via Retreat: `storyAutoSave()` is NOT called (no state change).
-- Battle accordion: once ⚔ Fight is clicked, accordion is removed from DOM before the battle screen opens (avoids stale DOM behind overlay).
+- Start Battle removes the accordion from DOM before the battle screen opens (avoids stale DOM behind overlay).
 
 ### §XLIV-F. Implementation Checklist
 
 - [ ] `storyRenderInfoRow` Battle card: replace direct `storyStartBattle(node)` call with `_toggleBattleAccordion(node)`
-- [ ] `_toggleBattleAccordion(node)` — builds accordion DOM, inserts after Battle card, handles three sub-buttons
-- [ ] Condition sub-row: filter `CONDITION_ITEMS` by affordability, show gold hint if empty
-- [ ] Stealth sub-row: roll d20+tier inline on click, show result, start battle after 800ms delay
+- [ ] `_toggleBattleAccordion(node)` — builds accordion DOM: threat row, setup toggles, Start Battle, Retreat
+- [ ] Condition toggle: expand/collapse condition picker sub-row, track selected condition in closure var
+- [ ] Stealth toggle: toggled state tracked in closure var (no roll yet — fires at Start Battle)
+- [ ] Start Battle button: deduct gold if condition queued; roll + show stealth result if stealth checked; then `storyStartBattle(node)`
+- [ ] Condition sub-row: filter `CONDITION_ITEMS` by affordability, show hint if empty
+- [ ] Stealth result display: inline span, 600ms delay before battle opens
 - [ ] Accordion CSS: add `.battle-accordion` override (border `#5c0a0a`, bg `#1c0404` in dark theme)
 - [ ] Ensure only one accordion open at a time (close sibling before opening new)
 - [ ] Remove legacy `storyShowPreBattle()` modal call after accordion is live (keep 1 layer as fallback)
-- [ ] Test: Fight, Condition (affordable + unaffordable), Stealth (pass + fail), Retreat, toggle close
+- [ ] Test: no setup, condition only, stealth only, both, Retreat, toggle close, affordable/unaffordable
