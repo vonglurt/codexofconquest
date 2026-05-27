@@ -1,20 +1,20 @@
 # Roll2Hit — The Shattered Codex: Document Index
 
 **Project:** `roll2hit-v3.html` — single-file combat tracker + narrative RPG
-**Status:** Layers 0–102 implemented · ~20,750 lines · 87 nodes · 378 monsters · 43 lab reports · FC01–FC08 ✅ · §RESEARCH-01 ✅ · §API-01+02 ✅ · SP4 ✅ · §DESIGN-02 ✅ · §DESIGN-03 ✅ · §DUNGEON-01 ✅ · §DUNGEON-02 ✅ · §XLIII ✅ · §XLIV ✅ · §XLV ✅ · §XLVI ✅ · §XLVII ✅ · §XLVIII ✅ · §XLIX ✅ · §L ✅ · §LI ✅ · §LII ✅ · §LIII ✅ · §LIV ✅ · §LV ✅ · §LVI ✅ · §LVII ✅ · §LVIII ✅ · §LIX ✅ · §LX ✅ · §LXI ✅ · §LXII ✅ · §LXIII ✅
+**Status:** Layers 0–103 implemented · ~20,800 lines · 88 nodes · 378 monsters · 43 lab reports · FC01–FC08 ✅ · §RESEARCH-01 ✅ · §API-01+02 ✅ · SP4 ✅ · §DESIGN-02 ✅ · §DESIGN-03 ✅ · §DUNGEON-01 ✅ · §DUNGEON-02 ✅ · §XLIII ✅ · §XLIV ✅ · §XLV ✅ · §XLVI ✅ · §XLVII ✅ · §XLVIII ✅ · §XLIX ✅ · §L ✅ · §LI ✅ · §LII ✅ · §LIII ✅ · §LIV ✅ · §LV ✅ · §LVI ✅ · §LVII ✅ · §LVIII ✅ · §LIX ✅ · §LX ✅ · §LXI ✅ · §LXII ✅ · §LXIII ✅ · §LXIV ✅
 **Last updated:** 2026-05-27
 
 ### Doc Health Badge
 
 | Metric | Value | Status |
 |--------|-------|--------|
-| HTML line count | ~20,750 | ✅ |
+| HTML line count | ~20,800 | ✅ |
 | Lab reports on disk | 43 | ✅ |
 | Lab reports in index | 43 | ✅ |
-| Node text rewrites (noir register) | 87 / 87 | ✅ CI2 (Copper Isle) added Layer 102 |
+| Node text rewrites (noir register) | 88 / 88 | ✅ LT (Lythros) added Layer 103 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
-| Layers implemented | 0–102 | ✅ |
-| Last sync pass | 2026-05-27 Layer 102 (§LXIII: CI2 node, Governor 3-state, quest_ezzir WIS DC14 + quest_governor_copper CHR DC11) | ✅ |
+| Layers implemented | 0–103 | ✅ |
+| Last sync pass | 2026-05-27 Layer 103 (§LXIV: LT node, Timael 4-state, quest_lame_lythros WIS DC10 + quest_stoning_lythros survival, HP cap at LT) | ✅ |
 
 > Update this table at the start of each session: recount lab reports with `ls lab-report-*.md | wc -l`, check HTML line count with `wc -l roll2hit-v3.html`, confirm FC item status.
 

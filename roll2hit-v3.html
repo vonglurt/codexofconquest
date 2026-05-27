@@ -7596,6 +7596,10 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   HR:{ num:84, code:'HR', name:'herath', label:'Herath — Lower Court', act:4, N:null, S:null, E:'KS', W:'TS',
     text:"The city writes its authority in stone. The law courts have been here for three hundred years; the newest wall is a century old; the oldest inscription above the gate has been re-carved twice because the stone wore before the law did.\n\nSaul of Tarsis has a desk in the lower court. On that desk: three warrants, two authorization letters, and a list of names. The names are of people who have been meeting in houses and saying things the court considers seditious. The warrant language is precise: 'Bring them.' Not 'question.' Not 'invite.' Bring.\n\nHe has done this before. The warrants are a bureaucratic instrument. He treats them with the seriousness appropriate to bureaucratic instruments — which is to say, complete and impersonal seriousness. He does not hate the people on the list. He has decided that the list is correct. He has not examined that decision recently.\n\nThe road to Kesra leaves from the east gate. He has already requisitioned the escort. He leaves at first light.",
     npc:'The Court Registrar', battle:null, loot:'Three Herath Warrants · Order of Escort', sleep:true, sleepCost:5 },
+  // ── §LXIV: LT — Lythros (first journey, stop 2; Timael joins) ──
+  LT:{ num:90, code:'LT', name:'lythros', label:'Lythros — The East Gate', act:4, N:'CI2', S:null, E:null, W:null,
+    text:"A small city in a wide valley. It has the particular civic pride of a place that has been overlooked — they know they are not the capital and have decided that this is fine with them. The market runs six days a week. The seventh day the market stalls stay up but the vendors go to the assembly hall, which is an arrangement that satisfies both commerce and attendance.\n\nThere is a man by the gate who has been by the gate his entire life. He has a specific condition of the feet that is not treatable by the methods available in Lythros. He knows this. He has made his peace with this. He is watching the road with the patience of someone who has accepted their situation completely.\n\nHe is watching Paul specifically.",
+    npc:'Timael', battle:null, loot:null, sleep:true, sleepCost:3 },
   // ── §LXIII: CI2 — The Copper Isle (first journey, stop 1) ──
   CI2:{ num:89, code:'CI2', name:'copper_isle', label:'The Copper Isle — Harbor District', act:4, N:'AO', S:'LT', E:null, W:null,
     text:"The harbor smells of copper smelting and salt, in roughly equal parts. The island has been exporting copper since before anyone in Anthos was born. It has a governor who is interested in unusual things — the kind of governor who reads widely and holds opinions about ideas rather than only about policy, which is either an asset or a liability depending on who arrives with an idea.\n\nEzzir is in the governor's service. This is his recommendation and the governor finds his recommendations useful. He has been in the governor's service for six years. He has a good record. He is also blocking the door.\n\nThe governor is watching from across the room. He is watching the way a man watches two arguments he has not yet decided between.",
@@ -7746,8 +7750,8 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   YL:{r:6,c:5},   YC:{r:7,c:5},  YD:{r:6,c:4},
   /* DeFi Land — north of Birka Slums */
   DF:{r:3,c:16},  HM:{r:3,c:17},  GL:{r:3,c:15},  S7:{r:3,c:18},
-  /* §LIX–§LXIII — The Road to Kesra cluster */
-  HR:{r:17,c:5},  KS:{r:17,c:8},  DR:{r:19,c:8},  TS:{r:17,c:2},  AO:{r:17,c:0},  CI2:{r:19,c:0},
+  /* §LIX–§LXIV — The Road to Kesra cluster */
+  HR:{r:17,c:5},  KS:{r:17,c:8},  DR:{r:19,c:8},  TS:{r:17,c:2},  AO:{r:17,c:0},  CI2:{r:19,c:0},  LT:{r:21,c:0},
 };
 
 /* ── Layer 9-A: Circuit Corridor Data Structures ── */
@@ -8695,6 +8699,27 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     completeItems:[], checkPassFlag:'govCopperConverted',
     onPass:() => { if (!S_story.inventory) S_story.inventory = []; },
     disposition:'"He said things I could not explain by the methods I usually use to explain things. I find this interesting rather than threatening. It is possible I find it interesting because it is true." — Governor of the Copper Isle' },
+  // ── §LXIV: The Gate ──
+  quest_lame_lythros: { id:'quest_lame_lythros', type:'skill_check', title:'The Gate',
+    desc:"The man at the gate has been there his entire life. He has a condition of the feet. He has made his peace with it. He is watching Paul specifically, the way someone watches a person they have been waiting for without knowing they were waiting.",
+    hint:'The man at the gate is watching you.',
+    activateNode:'LT', activateCond:() => true,
+    checkAbility:'wis', checkLabel:'Faith', checkDC:10,
+    retryable:false,
+    xpAward:200,
+    vignetteText:'He has been here his whole life. He is not asking for anything. He is watching the road with the patience of someone who has already accepted his situation.\n\nHe is watching Paul specifically.',
+    passText:'Paul looks at him. Not at the crowd. He says: stand.\n\nThe man stands.\n\nThe crowd witnesses this. The crowd\'s response is immediate and wrong — they call Paul a god. Paul corrects them. At length. The crowd had come expecting a god and is now being asked to reconsider their entire cosmological framework in an afternoon. They are disappointed. Some of them are angry.',
+    failText:'The man does not stand. Paul continues through the gate. The city is unchanged. The man goes home.',
+    completeItems:[], checkPassFlag:'lameManHealed',
+    disposition:'"He looked at me. He did not look at the crowd. He looked at me and said: stand. I have been told to stand before. No one has ever meant it this way." — The Man at the Gate' },
+  // ── §LXIV: Left for Dead ──
+  quest_stoning_lythros: { id:'quest_stoning_lythros', type:'side', title:'Left for Dead',
+    desc:"The crowd that wanted to sacrifice to a god has become the crowd that stones one. Both responses are to the same event. They had expected a god. What they got was a correction. Some crowds do not accept corrections.",
+    hint:'The crowd that called you a god is still in the market square.',
+    activateNode:'LT', activateCond:() => !!(S_story.quests && S_story.quests['quest_lame_lythros'] === 'done'),
+    completeFn:() => !!S_story.stoningEvent,
+    xpAward:100, waypointNode:'LT', reward:0,
+    disposition:'"He got up. Everyone else left. I decided to stay." — Timael' },
   // ── §LXII: The Sending ──
   quest_anthos_commission: { id:'quest_anthos_commission', type:'side', title:'The Sending',
     desc:"Anthos is where the first journey forms. Barnach is here. Silar is here. The commission comes from the assembly — the first time Paul has been sent somewhere by a body of people rather than going by his own authority. He is accountable to the people who sent him and to the people he will find. He finds this clarifying.",
@@ -9028,6 +9053,14 @@ const NPC_DIALOGUE = { // → doc: story.md §FL7
     : S_story.blindDaysKS >= 3 // Day 3 — Anath arrives
     ? ((() => { S_story.anathSightRestored = true; return '"I was told you were here. I was told to come." He sets the bowl down on the table beside the window. His hands are steady. His voice is not quite steady. "I have heard what you did to the people in Herath. I have heard what you were coming here to do."\n\nHe does not say: I was afraid of you. He does not need to.\n\n"I am here anyway."\n\nHe places his hands. The light returns.'; })())
     : '"The room is quiet. Three days. The innkeeper brings food at noon and does not ask questions. Someone else\'s servant brings water in the morning. The door is closed. Day ' + (S_story.blindDaysKS || 0) + ' of three.\n\nYou wait."' },
+  // §LXIV: LT — Timael (does not explain his loyalty)
+  LT: { name:'Timael', quoteFn:() => S_story.timaelaJoined // §LXIV
+    ? '"I am from Lythros. The city does not need me in the way it needed the man at the gate to stay. I can leave." He looks at the road. He looks at Paul. "I am not leaving."'
+    : S_story.stoningEvent // Stoning: Timael stayed
+    ? ((() => { S_story.timaelaJoined = true; return 'He was watching from the market square when it started. He did not leave when the crowd turned. He did not leave when the stones came. He did not leave after.\n\n"He got up," Timael says. He has been standing here since the crowd went home. "Everyone else left. I decided to stay."\n\nHe is young. He is watching the road. He has not examined why he stayed and does not appear to need to. "Where are you going next?"'; })())
+    : S_story.lameManHealed // After healing — crowd response
+    ? '"They called him a god. He corrected them. At length. They were ready to sacrifice to a god." Timael looks at the crowd dispersing from the gate. He is not sure what he just saw but he is sure it was real. "He looked at the man. Not the crowd. He said: stand. The man stood." He watches the road. "The crowd is angry. They came expecting something different than what they got."'
+    : '"The man at the gate has been there my whole life. He watches the road. He has been watching a long time." A pause. "Today he is watching Paul specifically. I noticed that."' },
   // §LXIII: CI2 — The Governor of the Copper Isle
   CI2: { name:'The Governor', quoteFn:() => S_story.govCopperConverted // §LXIII
     ? '"He said things I could not explain by the methods I usually use to explain things." He has sent Ezzir away. The record of that departure is in the governor\'s service log as a professional reassignment, which is the most honest way he knows to describe it. "I find this interesting rather than threatening. It is possible I find it interesting because it is true." He looks at the altar he has in the corner of the room — small, made by a local craftsman, three hundred years old. "I have been maintaining it," he says, "longer than I have understood why."'
@@ -9869,6 +9902,7 @@ const _S_DEFAULTS = () => ({
   saulConverted: false, blindDaysKS: 0, anathSightRestored: false, escapedKesra: false,
   barnachVouchedHR: false, hrHellenistDays: 0, hellenistsThreaten: false, barnachFoundPaul: false,
   commissionReceived: false, silarJoined: false, ezzirConfronted: false, govCopperConverted: false,
+  lameManHealed: false, stoningEvent: false, timaelaJoined: false,
 });
 
 /* ── Layer 48: Luck — Seventh Stat ── */
@@ -14802,6 +14836,13 @@ function storyCheckQuests(node) {
       if (id === 'quest_governor_copper') { // §LXIII
         msgs.push('🏛️ +250 XP. The governor has been maintaining an altar for three hundred years without knowing why. He knows now.');
       }
+      if (id === 'quest_lame_lythros') { // §LXIV
+        if (S_story.lameManHealed) msgs.push('✨ +200 XP. The man stood. The crowd had expected a god. What they got was a correction.');
+        else msgs.push('🚶 +200 XP. The man did not stand. The city is unchanged. The man went home.');
+      }
+      if (id === 'quest_stoning_lythros') { // §LXIV
+        msgs.push('🪨 +100 XP. He got up. Everyone else left. Timael decided to stay.');
+      }
       if (id === 'quest_antecedent_01') { // §LV
         msgs.push('🏛️ The question is closed. The archive still has an archivist.');
       }
@@ -16076,6 +16117,21 @@ function storyRender(node, prefix) {
       _convDiv.style.cssText = 'margin-top:10px;border-left-color:#8080a0;font-style:italic;color:#c0c8d8;font-size:13px;';
       _convDiv.textContent = 'The road was well-maintained for the first half day. After the stones gave way to packed earth the escort fell back to march-pace. The dust was the same colour as the sky — noon, flat white, no shadow to navigate by.\n\nThe light, when it came, was not theatrical. It did not arrive with sound. It arrived with the absolute certainty of a fact that had already been true and was simply now being acknowledged. The road did not change. The dust did not change. The sky did not change.\n\nSaul of Tarsis fell.\n\nWhen he looked up, he could not see. The escort commander was asking him something. He said: Lead me to the city. He meant Kesra. He meant: I cannot complete this journey on my own and I require assistance. Both things were true for the first time simultaneously.\n\nThe warrants are still in his coat. He will not use them again.';
       document.getElementById('story-text-box').insertAdjacentElement('afterend', _convDiv);
+    }
+  }
+  // ── §LXIV: LT — stoning event fires after lame-man quest completes ──
+  { const _ltStoningOld = document.getElementById('story-lt-stoning');
+    if (_ltStoningOld) _ltStoningOld.remove();
+    if (node.code === 'LT' && !S_story.stoningEvent
+        && S_story.quests && S_story.quests['quest_lame_lythros'] === 'done') {
+      S_story.stoningEvent = true;
+      S_story.hp = 1;
+      const _stDiv = document.createElement('div');
+      _stDiv.id = 'story-lt-stoning';
+      _stDiv.className = 'sweelinck-variant';
+      _stDiv.style.cssText = 'margin-top:10px;border-left-color:#803030;font-style:italic;color:#d8a0a0;font-size:12px;';
+      _stDiv.textContent = 'The crowd that called him a god came back with stones. Both responses were to the same event. They had expected a god. What they got was a correction. Some crowds do not accept corrections.\n\nHe is on the ground outside the city when they leave. He is not dead. He gets up.\n\nTimael is still standing in the market square. He has been there the whole time. He does not explain why. He has not examined it. He says: where are you going next?\n\nHP: 1. You cannot be healed above 1 while in Lythros.';
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _stDiv);
     }
   }
   // ── Layer 50: §XV NG+ quest activation at CI ──
@@ -18944,6 +19000,8 @@ function storyConfirmSleep() {
   _healTotal = Math.max(_healTotal, Math.floor(S_story.hpMax * 0.5));
   const _before = S_story.hp;
   S_story.hp = Math.min(S_story.hpMax, S_story.hp + _healTotal);
+  // §LXIV: stoning at Lythros — cannot heal above 1 until the node is left
+  if (S_story.stoningEvent && nodeCode === 'LT') S_story.hp = Math.min(1, S_story.hp);
   const _healed = S_story.hp - _before;
   // Advance day
   S_story.day = Math.min(49, S_story.day + 1);

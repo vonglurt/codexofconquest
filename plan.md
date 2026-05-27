@@ -99,7 +99,7 @@ See `story.md §GRIEF AND CORRUPTION` for the vignette prose.
 
 ## §0 — Implementation Readiness Dashboard
 
-> **Status as of Layer 102 (2026-05-27).** §LIX–§LXIII: HR+KS+DR+TS+AO+CI2 nodes live. Copper Isle: Ezzir (WIS DC14) + Governor (CHR DC11). Two quests. AO→CI2 commission gate. HTML: ~20,750 lines. Lab reports: 43. Add new layers below as §LXIV+.
+> **Status as of Layer 103 (2026-05-27).** §LIX–§LXIV: HR+KS+DR+TS+AO+CI2+LT nodes live. LT: lame man (WIS DC10, non-retryable) + stoning (survival, HP=1) + Timael joins. Journey 1 complete. HTML: ~20,800 lines. Lab reports: 43. Add new layers below as §LXV+.
 
 ### Lab Report Index (Layers 48–79)
 
@@ -5745,7 +5745,48 @@ The governor maintains a three-hundred-year-old altar in the corner of his room.
 AO (commission) → CI2 (Ezzir, governor) → LT (Lythros, lame man, stoning, Timael)
 ```
 
-Next: §LXIV — LT (Lythros, healing, crowd response, stoning event, Timael joins).
+Next: §LXV — PL (Phillam, Lyra/purple cloth, prison earthquake, Silar).
+
+---
+
+## §LXIV — Lythros: The Gate + The Stoning (✅ Implemented — Layer 103)
+
+> **Status:** Live. LT node (num:90, act:4, CI2.S). Timael 4-state quoteFn. Two quests: quest_lame_lythros (WIS/Faith DC 10, non-retryable) + quest_stoning_lythros (survival event). HP drops to 1 on stoningEvent. Cannot heal above 1 at LT. Timael joins after stoning.
+
+### §LXIV-A. What Was Built
+
+| Element | Detail |
+|---|---|
+| LT node | num:90, act:4, N:CI2 — Lythros, market civic pride, man at gate |
+| CI2 update | S: null → S:'LT' |
+| Timael NPC | 4-state quoteFn: default (watching) / lameManHealed (crowd response) / stoningEvent IIFE (joined) / timaelaJoined (not leaving) |
+| quest_lame_lythros | WIS/Faith DC 10, non-retryable. checkPassFlag: lameManHealed. "No one has ever meant it this way." |
+| quest_stoning_lythros | side, activates when quest_lame_lythros done. completeFn: stoningEvent. HP=1 via storyRender block |
+| storyRender block | Fires at LT after quest_lame_lythros done. Sets stoningEvent=true, hp=1. Injects crowd-turns narrative |
+| storyConfirmSleep HP cap | stoningEvent && nodeCode==='LT' → hp capped at 1 |
+
+### §LXIV-B. The Two Crowd Responses
+
+The crowd comes expecting a god and gets a correction. On pass, the man stood — and the crowd immediately misread the event as divine appointment. Paul corrects them at length. The crowd is disappointed: they were ready to sacrifice. Some of them decide the correction is the offense.
+
+On fail, the man does not stand and the crowd disperses. The stoning happens because Paul is still in the city, still speaking, still correcting. The crowd's reason for stoning is the same reason as the worship: they had an image of what he was and he kept not being it.
+
+Both paths lead to the stones. The WIS check changes the narrative register, not the destination.
+
+### §LXIV-C. Timael
+
+Does not explain why he stayed. Has not examined it. Does not appear to need to. The IIFE state fires on stoningEvent: "He got up. Everyone else left. I decided to stay." No further analysis.
+
+### §LXIV-D. Arc Shape — Journey 1 Complete
+
+| Layer | Node | Content |
+|---|---|---|
+| §LIX (98) | HR + KS | Conversion. Blind gate. Anath heals. |
+| §LX (99) | DR | Detention gate. Basket escape (DEX DC 12). |
+| §LXI (100) | HR return + TS | Barnach vouches. 15-day Hellenist gate. Tarsis. |
+| §LXII (101) | AO | Commissioning. Name-change. Silar joins. |
+| §LXIII (102) | CI2 | Ezzir (WIS DC 14). Governor (CHR DC 11). |
+| §LXIV (103) | LT | Lame man (WIS DC 10). Stoning. Timael joins. |
 
 ---
 
