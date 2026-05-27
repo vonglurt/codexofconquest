@@ -1368,7 +1368,7 @@ Sweelinck's letter, read by Auros, contains three lines:
 
 ---
 
-**⚠️ PLANNED — Quest -1: The Open Door** *(plan.md §XIV, Layer 49)*
+**[✅ Implemented — Layer 49] Quest -1: The Open Door** *(plan.md §XIV)*
 
 After the victory screen resolves, if `S_story.level >= 20 && !S_story.questMinusOne`, a Froberger-style scroll (`🔓`) injects into the CO node description with the full Quest -1 text (verbatim in `plan.md §XIV-B`). The scroll explains:
 - Level 21 is architecturally undefined — `XP_LEVELS[20]` does not exist

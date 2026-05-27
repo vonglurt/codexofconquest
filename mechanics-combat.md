@@ -668,7 +668,7 @@ Locked buttons show `🔒`, opacity 0.45, `disabled`, and a tooltip hint. The `b
 
 ---
 
-### Stalk / Hunt Mechanic *(§XLIII — PLANNED)*
+### Stalk / Hunt Mechanic *(§XLIII — ✅ Implemented Layer 82)*
 
 Hunting lets the player choose a specific target before entering combat. Three distinct paths exist with different time costs and risk profiles.
 

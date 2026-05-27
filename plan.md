@@ -881,7 +881,7 @@ Only show conditions the player can afford. Clicking a condition button launches
 | **P2** | Hour state fields + sidebar display + per-action hour increment | ✅ Implemented 2026-05-26 |
 | **P3** | Exhaustion thresholds + DIS application | ✅ Implemented 2026-05-26 — `hoursSinceSlept ≥ 24` and `battleDis > 0` both now apply DIS to attack rolls (ADV cancelled to normal); fixed bug where `battleDis` showed warning but never affected rolls |
 | **P4** | Per-quest hunt buttons (needs QUEST_DB `huntMonsterKey` field) | ✅ Implemented 2026-05-26 — per-monster STALK cards keyed to terrain `WORLD_DB` monster list; `storyQuestHunt(id, forceKey)` added; kill-goal progress shown inline |
-| **P5** | Inline condition selector per encounter | Spec only |
+| **P5** | Inline condition selector per encounter | ✅ Covered by §XLIV battle accordion (condition sub-row + stealth toggle inline beneath Encounter card) |
 
 ---
 
