@@ -8564,6 +8564,14 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     failText:'The watch catches the movement before you clear the shadow line. You pull back. The crate stays where it is. The watch makes a note in the margin of the wrong ledger.',
     completeItems:[], checkPassFlag:'muffatBerthReached',
     disposition:'"There are three things on that berth that should not be there. The crate is one of them." — Magistra Elara Muffat' },
+  // ── §LVIII: Cycle 4 ──
+  quest_muffat_05: { id:'quest_muffat_05', type:'side', title:'Cycle 4',
+    desc:"Muffat has had three Scholar Kings crates on her shelf for two years, unopened. The stamp prevented harbor search. The question is closed now. She opens one. The receiver array inside is expected. The handwritten requisition note in the packing material is not.",
+    hint:'Return to Magistra Muffat at the Harbor Docks and read what she found in the crate.',
+    activateNode:'DK', activateCond:() => !!S_story.solmFound,
+    completeFn:() => !!S_story.cycle4NoteRead,
+    xpAward:150, waypointNode:'DK', reward:200,
+    disposition:'"They were not reacting to the signal. They were already in motion." — Magistra Elara Muffat' },
   // ── §LVII: The Field Analyst ──
   quest_solm_01: { id:'quest_solm_01', type:'side', title:'The Field Analyst',
     desc:"The Station 7 operator went to Magistra Muffat three months ago with classified knowledge she could no longer safely carry. Muffat sent her to the Map Shop. Dusk holds things without asking why. He has been holding her.",
@@ -8882,7 +8890,9 @@ const NPC_DIALOGUE = { // → doc: story.md §FL7
     : S_story.station7LogRead // §LIV
     ? '"The suppressor fires automatically on structured transmissions in its radius. Non-mechanical signal classification, subsurface source." She looks at the device in your hand. "I did not know it kept a log. I was watching the door." She holds out her hand for the suppressor, checks the side panel, hands it back. "The log is on the device. Forty-one volumes of confirmed absence, three events, and then it cut the transmission mid-entry on Day 14." She does not look away. "I cut the transmission. I did not know I was cutting anything."'
     : '"That\'s a Warrant suppressor — jams coordinated tactical signals in a forty-foot radius. Whoever built this undercity wanted control over every signal in it. Keep it. You\'ll need it."' },
-  DK: { name:'Magistra Elara Muffat', quoteFn:() => S_story.antecedentMet // §LVII
+  DK: { name:'Magistra Elara Muffat', quoteFn:() => S_story.cycle4NoteRead // §LVIII
+    ? '"Cycle 3 was the Constructor\'s work. She built the containment to give it a room rather than a cage. If Cycle 4 carries a Conclave Archivist\'s authorization—" She stops. She sets the requisition note on top of the stack. "They were not building infrastructure to understand the signal. They were building infrastructure to manage the interval. Cycle 4 is not a response to what happened. It was already in motion before the first transmission." She does not look at the crates. "I am keeping them. All four. I am also keeping the note."'
+    : S_story.antecedentMet // §LVII
     ? '"I sent Solm to the Map Shop three months ago. Dusk does not ask. He holds things — maps, keys, people who carry knowledge that has become unsafe." She straightens the stack of manifests without looking at you. "She has been writing the same entry every morning since she arrived. Transmission confirmed, bearing 047°, no repeat. She cannot close the file without a record from the terminus." A pause. "You have been to the terminus."'
     : S_story.station7LogRead // §LIII
     ? '"The log ends mid-entry. The Scholar Kings do not abandon equipment mid-entry. They do not leave pens in trays." She sets the manifest on the shelf beside the three crates. "The signal character was non-mechanical. Three occurrences, each longer than the last. The fourth was long enough to contain something. We do not know what it contained. The station operator does." A pause. "We do not know where the station operator is. We know the bearing. Bearing 047° from Station 7 is the Neon Undercity access corridor." She does not say what that means. She does not need to.'
@@ -9636,7 +9646,7 @@ const _S_DEFAULTS = () => ({
   waypoint: null, customQuestTerrain: null,
   ebNegotiatedPayments: {}, ebReturnDone: {},
   journalEntriesRead: [], ebReturnsCompleted: {},
-  npcFavorability: {}, roughWhiskeyUsed: false, roughWhiskeyActive: false, yaelEscortUsed: false, pitTrainingWins: 0, slStalksWon: 0, muffatBerthReached: false, muffatManifestRead: false, station7LogRead: false, suppressorLogRead: false, antecedentMet: false, solmFound: false, // §LI–§LVII
+  npcFavorability: {}, roughWhiskeyUsed: false, roughWhiskeyActive: false, yaelEscortUsed: false, pitTrainingWins: 0, slStalksWon: 0, muffatBerthReached: false, muffatManifestRead: false, station7LogRead: false, suppressorLogRead: false, antecedentMet: false, solmFound: false, cycle4NoteRead: false, // §LI–§LVIII
   npcVisitCounts: {}, couperiSongReceived: false, bruhnsDepthsReported: false, frobergerLastEntryRead: false,
   pitPerks: [], frobergerNoteNode: null, froberger_last_note_found: false, froberger_last_note_read: false, ngPlusRun: 0,
   huntMode: false,
@@ -14570,6 +14580,14 @@ function storyCheckQuests(node) {
         msgs.push('📙 Benedikt\'s Annotated Copy (Tome) obtained. +300gp. The First Researcher is known.');
       }
       if (id === 'quest_wm_05') { S_story.gold += 200; msgs.push('💰 +200gp. 📋 The Gurt file is still open. It has been filed, and refiled, and it will not close.'); } // §L
+      if (id === 'quest_muffat_05') { // §LVIII
+        S_story.gold += 200;
+        S_story.cycle4NoteRead = true;
+        if (!S_story.inventory) S_story.inventory = [];
+        S_story.inventory.push({ name:'Scholar Kings Requisition (Handwritten)', icon:'📜', type:'readable', sell:0,
+          readText:"SCHOLAR KINGS — INTERNAL ROUTING\nHandwritten. Class 3. No copy to be made.\n\nStation 7 monitoring capacity is to be maintained through the current cycle and expanded in advance of Cycle 4. The Antecedent Containment Protocol requires adjustment at the interval. Equipment delivered per the attached schedule is adequate for the extension only. Cycle 4 components to follow under separate authority.\n\nAuthorization: Conclave Archivist.\nNo countersignature required.\nNo date required.\n\n[Below the fold, a single line in different ink:]\nThe archive knows what it holds.\nDo not let the archive answer." });
+        msgs.push('💰 +200gp. 📜 Scholar Kings Requisition obtained — Cycle 4, Conclave Archivist authorization. "Do not let the archive answer."');
+      }
       if (id === 'quest_solm_01') { // §LVII
         S_story.gold += 150;
         if (!S_story.inventory) S_story.inventory = [];

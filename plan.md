@@ -99,7 +99,7 @@ See `story.md §GRIEF AND CORRUPTION` for the vignette prose.
 
 ## §0 — Implementation Readiness Dashboard
 
-> **Status as of Layer 95 (2026-05-27).** §LVII implemented: quest_solm_01 "The Field Analyst" (activates DK post-antecedentMet, completes on solmFound at SF) + Muffat five-state quoteFn + SF Dusk three-state quoteFn + Analyst Solm scene + Solm Field File readable. The full Muffat chain is closed: every person who touched the 14.225 signal has a final beat. HTML: ~20,415 lines. Lab reports: 43. Add new layers below as §LVIII+.
+> **Status as of Layer 96 (2026-05-27).** §LVIII implemented: quest_muffat_05 "Cycle 4" (activates DK post-solmFound, completes on cycle4NoteRead) + Scholar Kings Requisition (Handwritten) readable ("Do not let the archive answer") + Muffat six-state quoteFn. Muffat chain structurally complete; Cycle 4 / Conclave Archivist thread open for future arc. HTML: ~20,435 lines. Lab reports: 43. Add new layers below as §LIX+.
 
 ### Lab Report Index (Layers 48–79)
 
@@ -5637,6 +5637,40 @@ The Solm Field File closes with: *"The archive still has an archivist."*
 | Gold | 150gp |
 | Readable | Analyst Solm Field File — 88 entries, Vol. 1, closing entry written by hand |
 | Disposition | *"File closed."* — Analyst I. Solm |
+
+---
+
+## §LVIII — Cycle 4 (✅ Implemented — Layer 96)
+
+**Status:** ✅ Implemented 2026-05-27
+
+### §LVIII-A. The Crate
+
+Two years, six-week intervals, Scholar Kings stamp. Muffat never opened them because the stamp prevented search and she was building a case. The question is closed now. She opens one.
+
+The receiver array inside is expected. The handwritten requisition note in the packing material — written by hand, no copy authorized, no date, no countersignature required — was not.
+
+### §LVIII-B. The Requisition
+
+The note authorizes expansion of Station 7 monitoring capacity *in advance of Cycle 4*. The Antecedent Containment Protocol runs in cycles. Cycle 3 was the Constructor's work. Cycle 4 carries a Conclave Archivist's authorization — someone with institutional authority over the Scholar Kings' archive itself.
+
+The final line, in different ink: *"The archive knows what it holds. Do not let the archive answer."*
+
+The signal answered anyway. The archive answered anyway. Someone with Conclave authority had already written the instruction against it before the first transmission. Cycle 4 is not a response. It was already in motion.
+
+### §LVIII-C. What Cycle 4 Is (§FUTURE)
+
+Unknown. The Conclave Archivist is unnamed. The Cycle 4 components have not arrived. The adjustment required at the interval is unspecified. This thread is open — the Conclave Archivist is a figure for a future arc, as is the question of what Cycle 4 does to the containment that the Constructor built to save people.
+
+| Field | Value |
+|---|---|
+| Quest | `quest_muffat_05` — *Cycle 4* |
+| Activates | DK; requires `solmFound` |
+| Completes | On `cycle4NoteRead` |
+| XP | 150 |
+| Gold | 200gp |
+| Readable | Scholar Kings Requisition (Handwritten) — Cycle 4 auth, Conclave Archivist, "Do not let the archive answer" |
+| Disposition | *"They were not reacting to the signal. They were already in motion."* — Magistra Elara Muffat |
 
 ---
 
