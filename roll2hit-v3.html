@@ -8564,6 +8564,14 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     failText:'The watch catches the movement before you clear the shadow line. You pull back. The crate stays where it is. The watch makes a note in the margin of the wrong ledger.',
     completeItems:[], checkPassFlag:'muffatBerthReached',
     disposition:'"There are three things on that berth that should not be there. The crate is one of them." — Magistra Elara Muffat' },
+  // ── §LVII: The Field Analyst ──
+  quest_solm_01: { id:'quest_solm_01', type:'side', title:'The Field Analyst',
+    desc:"The Station 7 operator went to Magistra Muffat three months ago with classified knowledge she could no longer safely carry. Muffat sent her to the Map Shop. Dusk holds things without asking why. He has been holding her.",
+    hint:'Find Analyst Solm at the Map Shop. She has been waiting for someone who finished what she could not.',
+    activateNode:'DK', activateCond:() => !!S_story.antecedentMet,
+    completeFn:() => !!S_story.solmFound,
+    xpAward:200, waypointNode:'SF', reward:150,
+    disposition:'"Confirmed. That\'s sufficient." — Analyst I. Solm, closing entry, Field File Vol. 1' },
   // ── §LV: The Antecedent ──
   quest_antecedent_01: { id:'quest_antecedent_01', type:'side', title:'The Question',
     desc:"Bearing 047°, depth 18m. The Antecedent Seal activates the receiving array. The thing that has been asking for forty-one volumes is still there. It was waiting for an answer, not an archivist. It turns out those are the same thing.",
@@ -8874,7 +8882,9 @@ const NPC_DIALOGUE = { // → doc: story.md §FL7
     : S_story.station7LogRead // §LIV
     ? '"The suppressor fires automatically on structured transmissions in its radius. Non-mechanical signal classification, subsurface source." She looks at the device in your hand. "I did not know it kept a log. I was watching the door." She holds out her hand for the suppressor, checks the side panel, hands it back. "The log is on the device. Forty-one volumes of confirmed absence, three events, and then it cut the transmission mid-entry on Day 14." She does not look away. "I cut the transmission. I did not know I was cutting anything."'
     : '"That\'s a Warrant suppressor — jams coordinated tactical signals in a forty-foot radius. Whoever built this undercity wanted control over every signal in it. Keep it. You\'ll need it."' },
-  DK: { name:'Magistra Elara Muffat', quoteFn:() => S_story.station7LogRead // §LIII
+  DK: { name:'Magistra Elara Muffat', quoteFn:() => S_story.antecedentMet // §LVII
+    ? '"I sent Solm to the Map Shop three months ago. Dusk does not ask. He holds things — maps, keys, people who carry knowledge that has become unsafe." She straightens the stack of manifests without looking at you. "She has been writing the same entry every morning since she arrived. Transmission confirmed, bearing 047°, no repeat. She cannot close the file without a record from the terminus." A pause. "You have been to the terminus."'
+    : S_story.station7LogRead // §LIII
     ? '"The log ends mid-entry. The Scholar Kings do not abandon equipment mid-entry. They do not leave pens in trays." She sets the manifest on the shelf beside the three crates. "The signal character was non-mechanical. Three occurrences, each longer than the last. The fourth was long enough to contain something. We do not know what it contained. The station operator does." A pause. "We do not know where the station operator is. We know the bearing. Bearing 047° from Station 7 is the Neon Undercity access corridor." She does not say what that means. She does not need to.'
     : S_story.muffatManifestRead // §LII
     ? '"Bertha has been logging the 14.225 absence for years. The changed absence in volume forty-one is three months after Station 7 went dark." She does not look up from the manifest. "Station 7 is listed in this crate\'s distribution notes as the delivery terminus. The station that went dark. The frequency that changed." She closes the manifest. "That is not a coincidence. Scholar Kings infrastructure does not produce coincidences. It produces decisions that look like coincidences."'
@@ -8882,7 +8892,11 @@ const NPC_DIALOGUE = { // → doc: story.md §FL7
     ? '"The crate has a distribution stamp and no manifest number. That means it was shipped outside the standard record — either off-ledger, or the ledger was corrected afterward. The Scholar Kings do not make clerical errors. They make decisions. Someone decided this crate does not exist." She sets it on the shelf behind her. "I have three more like it. They have been arriving every six weeks for two years."'
     : '"The courier worked for me. Whatever he told you before he died — that was Act One. Welcome to Act Two."' },
   MQ: { name:'Vendor Mira',                     quote:'"Lords use it for party tricks. Stagehands use it for scene changes. Smart people use it for other things." A knowing look.' },
-  SF: { name:'Proprietor Dusk',                 quote:'"No sign on the door by design. You found it, which means you were supposed to. I\'ve been holding the Real Map for eleven years waiting for someone who needed it."' },
+  SF: { name:'Proprietor Dusk', quoteFn:() => S_story.solmFound // §LVII
+    ? '"She left this morning. Before the cinnamon stalls opened." He straightens a map that does not need straightening. "She took her notebook. She left the field file." He sets a slim folder on the counter — three months of entries, small handwriting, entirely composed. "For the archive, she said. Whoever closes the record should hold it." He looks at you. "You closed the record."'
+    : S_story.antecedentMet && !S_story.solmFound // §LVII
+    ? ((() => { S_story.solmFound = true; return '"Back room." He lifts the hinged counter without ceremony. "Three months. She reorganized the shelf twice." He says it the way he says everything — as a fact, without opinion about it.\n\nAnalyst Solm is at the back desk with a notebook open to a fresh page. She looks up once. Her pen does not move.\n\n"The transmission lasted three seconds and eleven tenths. I had stopped writing because I was listening so carefully I forgot to log. When it cut — I understood what had happened before I understood what I had heard."\n\nShe sets the pen down.\n\n"I did not return to Station 7. I came here instead. Classified knowledge you can no longer safely carry — Magistra Muffat is the only institutional function that makes sense for that." A pause. "You were down there." Not a question. She looks at the entry she wrote this morning. "Was it —"\n\nShe stops.\n\n"Confirmed," she says quietly. "That\'s sufficient." She writes it once more, cleanly, and closes the volume.'; })())
+    : '"No sign on the door by design. You found it, which means you were supposed to. I\'ve been holding the Real Map for eleven years waiting for someone who needed it."' },
   MS: { name:'Ship Captain',                    quote:'"Weather\'s holding. Sleep while you can — we make the deep crossing at dawn and I won\'t slow the ship if something comes over the rail."' },
   HL: { name:'Elder Fionn',                     quote:'"Aye, quick lad. Brown satchel. Went south. Asked the same thing about the loch. Good boy. You\'ll want to sort it — the village can\'t fish while it\'s down there."' },
   FO: { name:'Brother Aldric',                  quote:'"You\'ll want to go into that grove. I\'d advise against it. You\'ll go anyway. Come back when you\'re done bleeding."' },
@@ -9622,7 +9636,7 @@ const _S_DEFAULTS = () => ({
   waypoint: null, customQuestTerrain: null,
   ebNegotiatedPayments: {}, ebReturnDone: {},
   journalEntriesRead: [], ebReturnsCompleted: {},
-  npcFavorability: {}, roughWhiskeyUsed: false, roughWhiskeyActive: false, yaelEscortUsed: false, pitTrainingWins: 0, slStalksWon: 0, muffatBerthReached: false, muffatManifestRead: false, station7LogRead: false, suppressorLogRead: false, antecedentMet: false, // §LI–§LV
+  npcFavorability: {}, roughWhiskeyUsed: false, roughWhiskeyActive: false, yaelEscortUsed: false, pitTrainingWins: 0, slStalksWon: 0, muffatBerthReached: false, muffatManifestRead: false, station7LogRead: false, suppressorLogRead: false, antecedentMet: false, solmFound: false, // §LI–§LVII
   npcVisitCounts: {}, couperiSongReceived: false, bruhnsDepthsReported: false, frobergerLastEntryRead: false,
   pitPerks: [], frobergerNoteNode: null, froberger_last_note_found: false, froberger_last_note_read: false, ngPlusRun: 0,
   huntMode: false,
@@ -14556,6 +14570,13 @@ function storyCheckQuests(node) {
         msgs.push('📙 Benedikt\'s Annotated Copy (Tome) obtained. +300gp. The First Researcher is known.');
       }
       if (id === 'quest_wm_05') { S_story.gold += 200; msgs.push('💰 +200gp. 📋 The Gurt file is still open. It has been filed, and refiled, and it will not close.'); } // §L
+      if (id === 'quest_solm_01') { // §LVII
+        S_story.gold += 150;
+        if (!S_story.inventory) S_story.inventory = [];
+        S_story.inventory.push({ name:'Analyst Solm Field File', icon:'📋', type:'readable', sell:0,
+          readText:"FIELD FILE — ANALYST I. SOLM\nStation 7, Frequency 14.225 Monitoring Assignment\nClass 3, Scholar Kings Research Division\n\n[Vol. 1, Day 1 — three months prior:]\nTransmission cut mid-entry. Suppressor origin: CY access corridor. Operator unknown to me. I do not believe the suppression was deliberate interference — the timing and mechanism suggest an automated device, not a hand on a dial. I have nonetheless lost the fourth transmission before it completed.\n\nI cannot return to Station 7. The Scholar Kings will not acknowledge the record. I am here instead, where things that cannot be officially held are held unofficially.\n\n[Vol. 1, Days 2–87:]\nTransmission confirmed, bearing 047°, no repeat. [repeated daily, same hand, same composure]\n\n[Vol. 1, Day 88 — closing entry, ink slightly different pressure:]\nRecord from the terminus received. Source confirmed: contained, non-hostile, question answered. Absence confirmed on 14.225. The archive still has an archivist.\n\nFile closed.\n\n— I. Solm" });
+        msgs.push('💰 +150gp. 📋 Analyst Solm Field File obtained. File closed. The archive still has an archivist.');
+      }
       if (id === 'quest_antecedent_01') { // §LV
         msgs.push('🏛️ The question is closed. The archive still has an archivist.');
       }

@@ -99,7 +99,7 @@ See `story.md §GRIEF AND CORRUPTION` for the vignette prose.
 
 ## §0 — Implementation Readiness Dashboard
 
-> **Status as of Layer 94 (2026-05-27).** §LVI implemented: Bertha No-Bank three-state quoteFn — Volume 42 entry, confirmed absence, "the absence is quieter than it was yesterday." She does not know why she said that. HTML: ~20,385 lines. Lab reports: 43. Add new layers below as §LVII+.
+> **Status as of Layer 95 (2026-05-27).** §LVII implemented: quest_solm_01 "The Field Analyst" (activates DK post-antecedentMet, completes on solmFound at SF) + Muffat five-state quoteFn + SF Dusk three-state quoteFn + Analyst Solm scene + Solm Field File readable. The full Muffat chain is closed: every person who touched the 14.225 signal has a final beat. HTML: ~20,415 lines. Lab reports: 43. Add new layers below as §LVIII+.
 
 ### Lab Report Index (Layers 48–79)
 
@@ -5596,6 +5596,47 @@ Third state on Bertha's `quoteFn`, triggered by `antecedentMet`. She writes the 
 She is the only person in the city who would notice. She has been listening to it for forty-one volumes. The changed character of the absence registers before she has language for it.
 
 She never finds out what answered. The log continues.
+
+---
+
+## §LVII — The Field Analyst (✅ Implemented — Layer 95)
+
+**Status:** ✅ Implemented 2026-05-27
+
+### §LVII-A. Analyst I. Solm
+
+The Station 7 operator. Class 3, field-redacted. She heard the transmission cut off at 3.1 seconds on Day 14. She understood what had happened before she understood what she had heard. She went to Muffat. Muffat sent her to the Map Shop. Dusk held her for three months without asking why.
+
+She has been writing the same entry every morning: *transmission confirmed, bearing 047°, no repeat.* She cannot close the file without a record from the terminus. The player comes back from the terminus. She writes the closing entry once, cleanly, and shuts the volume.
+
+### §LVII-B. Dusk: Three-State quoteFn
+
+| State | Trigger | Content |
+|---|---|---|
+| 1 | Default | *"Found it, which means you were supposed to."* |
+| 2 | `antecedentMet && !solmFound` | *"Back room."* — Sets solmFound. Solm's scene delivered. |
+| 3 | `solmFound` | She left this morning. She left the field file. *"You closed the record."* |
+
+### §LVII-C. Final Arc Shape — The 14.225 Chain
+
+Every person who touched this signal now has a closing beat:
+- **Muffat** — five-state quoteFn, State 5: she sent Solm to Dusk, she is satisfied
+- **Bertha** — three-state quoteFn, State 3: Volume 42, the quieter absence
+- **Seraphine** — three-state quoteFn, State 3: three months of silence, she would like to know what it was trying to say
+- **Solm** — one-time scene at SF: she writes the closing entry and goes
+- **The Antecedent** — one-time delivery at AC: the question is closed, you may go
+
+The Solm Field File closes with: *"The archive still has an archivist."*
+
+| Field | Value |
+|---|---|
+| Quest | `quest_solm_01` — *The Field Analyst* |
+| Activates | DK; requires `antecedentMet` |
+| Completes | On `solmFound` (set in SF quoteFn) |
+| XP | 200 |
+| Gold | 150gp |
+| Readable | Analyst Solm Field File — 88 entries, Vol. 1, closing entry written by hand |
+| Disposition | *"File closed."* — Analyst I. Solm |
 
 ---
 
