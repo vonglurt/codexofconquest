@@ -7596,8 +7596,12 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   HR:{ num:84, code:'HR', name:'herath', label:'Herath — Lower Court', act:4, N:null, S:null, E:'KS', W:'TS',
     text:"The city writes its authority in stone. The law courts have been here for three hundred years; the newest wall is a century old; the oldest inscription above the gate has been re-carved twice because the stone wore before the law did.\n\nSaul of Tarsis has a desk in the lower court. On that desk: three warrants, two authorization letters, and a list of names. The names are of people who have been meeting in houses and saying things the court considers seditious. The warrant language is precise: 'Bring them.' Not 'question.' Not 'invite.' Bring.\n\nHe has done this before. The warrants are a bureaucratic instrument. He treats them with the seriousness appropriate to bureaucratic instruments — which is to say, complete and impersonal seriousness. He does not hate the people on the list. He has decided that the list is correct. He has not examined that decision recently.\n\nThe road to Kesra leaves from the east gate. He has already requisitioned the escort. He leaves at first light.",
     npc:'The Court Registrar', battle:null, loot:'Three Herath Warrants · Order of Escort', sleep:true, sleepCost:5 },
+  // ── §LXIII: CI2 — The Copper Isle (first journey, stop 1) ──
+  CI2:{ num:89, code:'CI2', name:'copper_isle', label:'The Copper Isle — Harbor District', act:4, N:'AO', S:'LT', E:null, W:null,
+    text:"The harbor smells of copper smelting and salt, in roughly equal parts. The island has been exporting copper since before anyone in Anthos was born. It has a governor who is interested in unusual things — the kind of governor who reads widely and holds opinions about ideas rather than only about policy, which is either an asset or a liability depending on who arrives with an idea.\n\nEzzir is in the governor's service. This is his recommendation and the governor finds his recommendations useful. He has been in the governor's service for six years. He has a good record. He is also blocking the door.\n\nThe governor is watching from across the room. He is watching the way a man watches two arguments he has not yet decided between.",
+    npc:'The Governor', battle:null, loot:null, sleep:true, sleepCost:4 },
   // ── §LXII: AO — Anthos (commissioning, first journey) ──
-  AO:{ num:88, code:'AO', name:'anthos', label:'Anthos — The Mixed Quarter', act:4, N:null, S:null, E:'TS', W:null,
+  AO:{ num:88, code:'AO', name:'anthos', label:'Anthos — The Mixed Quarter', act:4, N:null, S:'CI2', E:'TS', W:null,
     text:"Anthos is not trying to be anything in particular. It is too large to be a village and not large enough to be a city and too mixed to be classified as either. Merchants from four different peoples live in the same quarter without anyone having organized them. They got there before the organizing arrived and now they are too settled to move.\n\nThis is where the first journey forms. Barnach is here. Silar is here — steady, direct, capable of principled disagreement, which is a quality the work is going to require. The commission comes from the assembly. This is the first time Paul has been sent somewhere by a body of people rather than going by his own authority.\n\nHe is called Paul here for the first time in this record. He will be called Saul again once, by someone who does not know the road, and it will not fit.",
     npc:'Assembly Elder Joach', battle:null, loot:null, sleep:true, sleepCost:4 },
   // ── §LXI: TS — Tarsis (the silent years) ──
@@ -7742,8 +7746,8 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   YL:{r:6,c:5},   YC:{r:7,c:5},  YD:{r:6,c:4},
   /* DeFi Land — north of Birka Slums */
   DF:{r:3,c:16},  HM:{r:3,c:17},  GL:{r:3,c:15},  S7:{r:3,c:18},
-  /* §LIX–§LXII — The Road to Kesra cluster */
-  HR:{r:17,c:5},  KS:{r:17,c:8},  DR:{r:19,c:8},  TS:{r:17,c:2},  AO:{r:17,c:0},
+  /* §LIX–§LXIII — The Road to Kesra cluster */
+  HR:{r:17,c:5},  KS:{r:17,c:8},  DR:{r:19,c:8},  TS:{r:17,c:2},  AO:{r:17,c:0},  CI2:{r:19,c:0},
 };
 
 /* ── Layer 9-A: Circuit Corridor Data Structures ── */
@@ -8665,6 +8669,32 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     completeFn:() => !!S_story.barnachFoundPaul,
     xpAward:100, waypointNode:'TS', reward:0,
     disposition:'"I have been looking for you for a year. It\'s time." — Barnach' },
+  // ── §LXIII: The Copper Isle ──
+  quest_ezzir: { id:'quest_ezzir', type:'skill_check', title:'The Sorcerer\'s Opposition',
+    desc:"Ezzir has the governor's ear. He has been in the governor's service for six years and knows where to stand. He is standing between Paul and the governor. The governor is watching. He is watching the way a man watches two arguments he has not yet decided between.",
+    hint:'Speak past Ezzir. Do not let him have the first word with the governor.',
+    activateNode:'CI2', activateCond:() => !!S_story.commissionReceived,
+    checkAbility:'wis', checkLabel:'Insight', checkDC:14,
+    retryable:true, retryGateDays:1,
+    xpAward:200,
+    vignetteText:'He is precisely positioned between Paul and the governor. This is not an accident — Ezzir has been in rooms before and knows where to stand. The governor is watching.\n\nEzzir speaks first. He is very good at speaking first.',
+    passText:'Ezzir\'s words stop working. This is visible. The governor has been watching for exactly this kind of evidence — an argument that stops another argument by being more true. The door is no longer blocked.',
+    failText:'Ezzir gets the first word and the second word. Paul gets to recover from both. Tomorrow the door is still there.',
+    completeItems:[], checkPassFlag:'ezzirConfronted',
+    disposition:'"I have been serving this governor for six years. You have been here eleven hours." — Ezzir' },
+  quest_governor_copper: { id:'quest_governor_copper', type:'skill_check', title:'The Governor Listens',
+    desc:"Ezzir has stepped aside. The governor reads widely and holds opinions about ideas. He has an altar in the corner of his room — three hundred years old, maintained by every governor before him. He does not know why he maintains it. He is about to find out.",
+    hint:'Speak to the Governor of the Copper Isle.',
+    activateNode:'CI2', activateCond:() => !!S_story.ezzirConfronted,
+    checkAbility:'cha', checkLabel:'Persuasion', checkDC:11,
+    retryable:true, retryGateDays:0,
+    xpAward:250,
+    vignetteText:'The governor has the particular quality of someone who has made their career on good judgment about ideas — he knows the difference between an argument and a description. He has been waiting for a description.\n\nThe altar in the corner is three hundred years old. He maintains it. He does not know why.',
+    passText:'He sits down. He looks at the altar. "I have been maintaining it longer than I have understood why." He looks at Paul. "Tell me."',
+    failText:'The governor is interested but not convinced. He is curious rather than resistant. He will hear the description again tomorrow.',
+    completeItems:[], checkPassFlag:'govCopperConverted',
+    onPass:() => { if (!S_story.inventory) S_story.inventory = []; },
+    disposition:'"He said things I could not explain by the methods I usually use to explain things. I find this interesting rather than threatening. It is possible I find it interesting because it is true." — Governor of the Copper Isle' },
   // ── §LXII: The Sending ──
   quest_anthos_commission: { id:'quest_anthos_commission', type:'side', title:'The Sending',
     desc:"Anthos is where the first journey forms. Barnach is here. Silar is here. The commission comes from the assembly — the first time Paul has been sent somewhere by a body of people rather than going by his own authority. He is accountable to the people who sent him and to the people he will find. He finds this clarifying.",
@@ -8998,6 +9028,12 @@ const NPC_DIALOGUE = { // → doc: story.md §FL7
     : S_story.blindDaysKS >= 3 // Day 3 — Anath arrives
     ? ((() => { S_story.anathSightRestored = true; return '"I was told you were here. I was told to come." He sets the bowl down on the table beside the window. His hands are steady. His voice is not quite steady. "I have heard what you did to the people in Herath. I have heard what you were coming here to do."\n\nHe does not say: I was afraid of you. He does not need to.\n\n"I am here anyway."\n\nHe places his hands. The light returns.'; })())
     : '"The room is quiet. Three days. The innkeeper brings food at noon and does not ask questions. Someone else\'s servant brings water in the morning. The door is closed. Day ' + (S_story.blindDaysKS || 0) + ' of three.\n\nYou wait."' },
+  // §LXIII: CI2 — The Governor of the Copper Isle
+  CI2: { name:'The Governor', quoteFn:() => S_story.govCopperConverted // §LXIII
+    ? '"He said things I could not explain by the methods I usually use to explain things." He has sent Ezzir away. The record of that departure is in the governor\'s service log as a professional reassignment, which is the most honest way he knows to describe it. "I find this interesting rather than threatening. It is possible I find it interesting because it is true." He looks at the altar he has in the corner of the room — small, made by a local craftsman, three hundred years old. "I have been maintaining it," he says, "longer than I have understood why."'
+    : S_story.ezzirConfronted // Ezzir stepped aside; now the governor speaks
+    ? '"Ezzir\'s recommendations have been useful. I have never before watched one of his recommendations stop working in the middle of the room. I have been watching for exactly this kind of evidence." He sits down. He is a man who reads widely and holds opinions about ideas rather than only about policy; this is the quality that makes what just happened in this room legible to him. "Tell me what you know. I will tell you what I have already been maintaining."'
+    : '"I have a sorcerer who advises me. He is currently standing between us. He has been in my service for six years and I have found his counsel valuable. I am watching you both. I have not yet decided between you." A pause. "He has been watching you since you came through the gate. He positioned himself before you finished speaking. That is either a tribute to your significance or a concern about it. I am willing to find out which."' },
   // §LXII: AO — Assembly Elder Joach + name-change moment
   AO: { name:'Assembly Elder Joach', quoteFn:() => S_story.commissionReceived // §LXII
     ? '"The mandate is simple because the work isn\'t." He says it the way a man says things he has said before and means more each time. "Send word when you reach the Copper Isle. We will be praying in the interim. We will be praying regardless."'
@@ -9829,10 +9865,10 @@ const _S_DEFAULTS = () => ({
   scriptorium_approach_complete: false, mimicColonyEntered: false,
   noFishingSignRead: false, fishingRodCouponRedeemed: false,
   yugurtTourBeat: {}, yugurtTourTitle: null,
-  // §LIX–§LXII: The Road to Kesra
+  // §LIX–§LXIII: The Road to Kesra
   saulConverted: false, blindDaysKS: 0, anathSightRestored: false, escapedKesra: false,
   barnachVouchedHR: false, hrHellenistDays: 0, hellenistsThreaten: false, barnachFoundPaul: false,
-  commissionReceived: false, silarJoined: false,
+  commissionReceived: false, silarJoined: false, ezzirConfronted: false, govCopperConverted: false,
 });
 
 /* ── Layer 48: Luck — Seventh Stat ── */
@@ -14511,6 +14547,11 @@ function storyMove(dir) {
       return;
     }
   }
+  // §LXIII: AO→CI2 gate — commission required before first journey departs
+  if (S_story.currentCode === 'AO' && dest === 'CI2' && !S_story.commissionReceived) {
+    storyMsg('The journey has not yet been commissioned. Speak to Assembly Elder Joach before leaving Anthos.');
+    return;
+  }
   // §LXI: HR→TS gate — fifteen days before Barnach releases you
   if (S_story.currentCode === 'HR' && dest === 'TS' && S_story.saulConverted) {
     if (!S_story.barnachVouchedHR) {
@@ -14754,6 +14795,12 @@ function storyCheckQuests(node) {
       }
       if (id === 'quest_anthos_commission') { // §LXII
         msgs.push('⚡ +150 XP. Commissioned. Barnach and Silar traveling. The mandate is simple because the work isn\'t.');
+      }
+      if (id === 'quest_ezzir') { // §LXIII
+        msgs.push('🗝️ +200 XP. Ezzir stepped aside. The governor is watching. The door is open.');
+      }
+      if (id === 'quest_governor_copper') { // §LXIII
+        msgs.push('🏛️ +250 XP. The governor has been maintaining an altar for three hundred years without knowing why. He knows now.');
       }
       if (id === 'quest_antecedent_01') { // §LV
         msgs.push('🏛️ The question is closed. The archive still has an archivist.');

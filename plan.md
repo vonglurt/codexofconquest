@@ -99,7 +99,7 @@ See `story.md §GRIEF AND CORRUPTION` for the vignette prose.
 
 ## §0 — Implementation Readiness Dashboard
 
-> **Status as of Layer 101 (2026-05-27).** §LIX–§LXII: HR + KS + DR + TS + AO nodes live. Full conversion chain: Herath → road → Kesra blind → basket → HR return/Barnach vouch/15 days → Tarsis silence → Barnach finds → Anthos commissioning. quest_anthos_commission. AO name-change storyRender block. HTML: ~20,670 lines. Lab reports: 43. Add new layers below as §LXIII+.
+> **Status as of Layer 102 (2026-05-27).** §LIX–§LXIII: HR+KS+DR+TS+AO+CI2 nodes live. Copper Isle: Ezzir (WIS DC14) + Governor (CHR DC11). Two quests. AO→CI2 commission gate. HTML: ~20,750 lines. Lab reports: 43. Add new layers below as §LXIV+.
 
 ### Lab Report Index (Layers 48–79)
 
@@ -5717,6 +5717,37 @@ The conversion fires as an inline storyRender div on first arrival at KS. No ski
 | §LX (99) | DR node. KS→DR connection. Detention gate. quest_basket_kesra (DEX DC 12, retryable). escapedKesra flag. |
 | §LXI (next) | HR return + Barnach vouches + 15-day Hellenist gate → TS (Tarsis) |
 | §LXII | TS silent years + Barnach arrival → AO (Anthos) + commissioning |
+
+## §LXIII — The Copper Isle: Ezzir + The Governor (✅ Implemented — Layer 102)
+
+> **Status:** Live. CI2 node. AO.S → CI2. AO→CI2 commission gate. Governor 3-state quoteFn. Two skill checks: quest_ezzir (WIS DC 14) + quest_governor_copper (CHR DC 11). New flags: ezzirConfronted, govCopperConverted.
+
+### §LXIII-A. What Was Built
+
+| Element | Detail |
+|---|---|
+| CI2 node | num:89, act:4, N:AO, S:LT — harbor district, copper/salt air, sleep:true (4gp) |
+| AO update | S: null → S:'CI2' |
+| CI2 NPC | The Governor — 3-state quoteFn: default (watching) / ezzirConfronted (listening) / govCopperConverted (understood) |
+| AO→CI2 gate | storyMove: commissionReceived required |
+| quest_ezzir | WIS/Insight DC 14, retryable 1-day gate. checkPassFlag: ezzirConfronted |
+| quest_governor_copper | CHR/Persuasion DC 11, retryable 0-day gate, activates after ezzirConfronted. checkPassFlag: govCopperConverted |
+
+### §LXIII-B. The Door and the Room
+
+Ezzir knows where to stand. That is all the spec says about his technique and it is sufficient. The WIS check is not "does Paul see through Ezzir" — it is whether Paul's description of what he knows is more specific than Ezzir's position of what he recommends. On pass: Ezzir's words stop working. This is visible. The governor has been watching for this kind of evidence.
+
+The governor maintains a three-hundred-year-old altar in the corner of his room. He does not know why. Every governor before him maintained it. He maintains it because they did, which is the most honest reason he has found. The CHR check is whether Paul can tell him what it is.
+
+### §LXIII-C. Arc Shape — Journey 1
+
+```
+AO (commission) → CI2 (Ezzir, governor) → LT (Lythros, lame man, stoning, Timael)
+```
+
+Next: §LXIV — LT (Lythros, healing, crowd response, stoning event, Timael joins).
+
+---
 
 ## §LXII — Anthos: The Sending (✅ Implemented — Layer 101)
 
