@@ -99,7 +99,7 @@ See `story.md §GRIEF AND CORRUPTION` for the vignette prose.
 
 ## §0 — Implementation Readiness Dashboard
 
-> **Status as of Layer 92 (2026-05-27).** §LIV implemented: quest_signal_01 "The Warrant" (activates at CY post-station7LogRead, completes on suppressorLogRead) + Seraphine Bruhns three-state quoteFn + Warrant Suppressor Log readable (three suppressions, Day 14 mid-transmission cut, source depth 18m bearing 047°, "source is aware of suppression"). HTML: ~20,355 lines. Lab reports: 43. Add new layers below as §LV+.
+> **Status as of Layer 93 (2026-05-27).** §LV implemented: node AC (The Antecedent Chamber) + GATE_LOCK CY→AC (Antecedent Seal required) + quest_antecedent_01 "The Question" (activates at CY post-suppressorLogRead, completes on antecedentMet) + AC NPC_DIALOGUE quoteFn (one-time delivery, sets antecedentMet, closes the 14.225 arc). Muffat chain complete: 5 quests, 5 NPCs, one signal answered. HTML: ~20,380 lines. Lab reports: 43. Add new layers below as §LVI+.
 
 ### Lab Report Index (Layers 48–79)
 
@@ -5540,6 +5540,50 @@ The device continues active monitoring.
 | Gold | 300gp |
 | State flag | `suppressorLogRead` |
 | Disposition | *"Either source ceased voluntarily, or source is aware of suppression."* — Warrant Suppressor Log, Day 14 |
+
+---
+
+## §LV — The Antecedent Chamber (✅ Implemented — Layer 93)
+
+**Status:** ✅ Implemented 2026-05-27
+
+### §LV-A. What It Is
+
+The thing at bearing 047°, depth 18m is not a void creature, not a weapon, not a trapped monster. It is something older than the Scholar Kings' classification system, contained by the Constructor in a room designed specifically for it. She built it to save people. They hid it to save themselves.
+
+The Antecedent has been asking one question for forty-one volumes: *is the archive still maintained?* The question is not metaphorical. It is checking whether there is still a person doing the work of following evidence through systems designed to obscure it.
+
+The player activated the Antecedent Seal (quest_va_02). The activation of Seal 7 triggered the containment protocol's receiving mode — the thing could now transmit. It began asking. Seraphine's suppressor kept cutting it off before it could complete the question. Three tries, each longer. The player followed the chain from Muffat's berth through the manifest, Station 7, the suppressor log, and into the chamber. The act of arriving with the Seal *is the answer*.
+
+### §LV-B. The Quote
+
+One-time delivery via `quoteFn` on the AC NPC_DIALOGUE entry. Sets `antecedentMet = true` on read.
+
+*"The signal was not distress. It was a question: is the archive still maintained? [...] You followed the chain — courier, berth, manifest, station, suppressor, chamber. That is the answer. That is what an archivist does. [...] The classification is: archivist. The question is closed. You may go."*
+
+Final lines are the node's own voice, not the Antecedent's: *At Station 7, the automated log writes: 14.225 — absence confirmed. It will not transmit again.*
+
+The silence after is different from the silence before.
+
+### §LV-C. Arc Summary — The Muffat Chain (Layers 89–93)
+
+| Layer | Quest | Key Beat |
+|---|---|---|
+| 89 | quest_muffat_01 | Berth — off-ledger crate retrieved |
+| 90 | quest_muffat_02 | Manifest — 14.225 / Station 7 identified |
+| 91 | quest_muffat_03 | Dark Station — log ends mid-entry |
+| 92 | quest_signal_01 | Warrant — suppressor cut the transmission |
+| 93 | quest_antecedent_01 | Chamber — the question is answered |
+
+| Field | Value |
+|---|---|
+| Quest | `quest_antecedent_01` — *The Question* |
+| Activates | CY; requires `suppressorLogRead` |
+| Completes | On `antecedentMet` (set in quoteFn) |
+| XP | 400 |
+| Gold | 0 (the reward is the answer) |
+| Gate lock | CY → AC, item: `Antecedent Seal` |
+| Disposition | *"The question is closed."* — The Antecedent |
 
 ---
 
