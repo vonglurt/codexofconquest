@@ -99,7 +99,7 @@ See `story.md §GRIEF AND CORRUPTION` for the vignette prose.
 
 ## §0 — Implementation Readiness Dashboard
 
-> **Status as of Layer 84 (2026-05-26).** §XLVI Q-FISH-01 The Leviathan Class live. quest_fish_01: activates after first catch at YC, completes on landing Rank 15+ fish with real bait, rewards +200gp + permanent Yugurt's Favour (+1 catch rolls). HTML: ~20,149 lines. Lab reports: 43. Add new layers below as §XLVII+.
+> **Status as of Layer 85 (2026-05-27).** §XLVII Horned Shark lake boss live. horned_shark (ac:15 hp:120 atk:10 deadly) + quest_horned_shark (activates at YL on fishingYugurtFavour; completes on kill; +300gp +500xp). HUNTING_GROUNDS yugurt_lake → The Noon Point. NPC_DIALOGUE YC now uses quoteFn — conditional Fisherman acknowledgment post-kill. HTML: ~20,164 lines. Lab reports: 43. Add new layers below as §XLVIII+.
 
 ### Lab Report Index (Layers 48–79)
 

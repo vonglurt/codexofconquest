@@ -5090,6 +5090,7 @@ const MONSTER_POOL = { // → doc: monsters.md §Monster Pool
   frost_giant:     { key:'frost_giant',     name:'Frost Giant',        ac:15, hp:138, atk:9,  dmgDie:6,  dmgCount:4, dmgFlat:7,  tier:'hard' },
   wy_white_dragon: { key:'wy_white_dragon', name:'Young White Dragon', ac:17, hp:133, atk:7,  dmgDie:6,  dmgCount:2, dmgFlat:4,  tier:'hard' },
   hunter_shark:    { key:'hunter_shark',    name:'Hunter Shark',       ac:12, hp:45,  atk:6,  dmgDie:6,  dmgCount:3, dmgFlat:4,  tier:'hard' },
+  horned_shark:    { key:'horned_shark',    name:'Horned Shark',       ac:15, hp:120, atk:10, dmgDie:8,  dmgCount:2, dmgFlat:8,  tier:'deadly' }, // §XLVII — Yugurt Lake apex predator
   t_rex:           { key:'t_rex',           name:'T-Rex',              ac:13, hp:136, atk:10, dmgDie:12, dmgCount:4, dmgFlat:7,  tier:'hard' },
   deva:            { key:'deva',            name:'Deva (Angel)',        ac:17, hp:136, atk:9,  dmgDie:8,  dmgCount:2, dmgFlat:7,  tier:'hard' },
   cloud_giant:     { key:'cloud_giant',     name:'Cloud Giant',        ac:14, hp:200, atk:12, dmgDie:8,  dmgCount:3, dmgFlat:8,  tier:'hard' },
@@ -5624,6 +5625,7 @@ const MONSTER_DROPS = { // → doc: mechanics-combat.md §Monster Trophy Drops
   frost_giant:          { name:'Frost Giant Rune Stone',  icon:'⚔',  sell:35 },
   wy_white_dragon:      { name:'White Dragon Scale',      icon:'🐉', sell:35 },
   hunter_shark:         { name:'Shark Tooth',             icon:'🦷', sell:23 },
+  horned_shark:         { name:'Horned Shark Jaw',        icon:'🦷', sell:55 },
   t_rex:                { name:'T-Rex Tooth',             icon:'🦷', sell:35 },
   deva:                 { name:'Deva Feather',            icon:'🪶', sell:35 },
   cloud_giant:          { name:'Cloud Giant Sigil',       icon:'⚔',  sell:38 },
@@ -5765,7 +5767,7 @@ const WORLD_DB = { // → doc: world.md §WORLD_DB
   // ── Urban / Town ─────────────────────────────────────────
   city:             { label:'City Streets',        icon:'🏙',  monsters:[ P.commoner, P.kobold, P.bandit, P.spy, P.shadow, P.thug, P.imp, P.kenku, P.wererat, P.ghoul, P.intellect_dev, P.doppelganger, P.wight, P.gargoyle, P.assassin, P.gladiator, P.veteran, P.night_hag, P.knight, P.stone_golem, P.vampire, P.lich, P.striga, P.botchling, P.plague_maiden, P.rabid_dog, P.cockroach_swarm, P.swarming_wasps ] },
   city_slums:       { label:'City Slums',          icon:'🏚',  monsters:[ P.rabid_dog, P.aggressive_turkey, P.horned_goat, P.toilet_leech, P.honeybucket_spider, P.cockroach_swarm, P.skittish_sheep, P.swarming_wasps, P.night_owl, P.raging_bull, P.spooked_horse, P.catnabbing_eagle, P.commoner, P.giant_rat ] },
-  yugurt_lake:      { label:'Yugurt Lake',          icon:'🎣',  monsters:[] },
+  yugurt_lake:      { label:'Yugurt Lake',          icon:'🎣',  monsters:[ P.horned_shark ] },
   yugurt_cabin:     { label:'Yugurt Cabin',         icon:'🛖',  monsters:[] },
   defi_land:        { label:'DeFi Land',           icon:'📡',  monsters:[ P.pepe_rat, P.fiat_roach, P.moon_worm, P.doge_hound, P.wojak_drone, P.ngmi_swarm, P.wagmi, P.schiff_bird, P.rug_spider ] },
   cat_quarter:      { label:'The Cat Quarter',     icon:'🐱',  monsters:[ P.stray_alley_cat, P.fluffy_cat, P.beefy_tom, P.fluffy_cat, P.honcho_cat_m, P.honcho_cat_f, P.fat_merchant_cat, P.corrupted_cat, P.taz_devil, P.fat_cat_boss ] },
@@ -6274,6 +6276,7 @@ let _killFired = false;
 
 function battKillEvent() {
   const drop = MONSTER_DROPS[S.enemy.key];
+  if (S.enemy.key === 'horned_shark' && S_story.active) S_story.hornedSharkSlain = true; // §XLVII
   // Layer 47: override fish drop sell value with size×rarity gold
   if (drop && S_story._fishBattleGold) {
     S._pendingDrop = { ...drop, sell: S_story._fishBattleGold };
@@ -7789,6 +7792,7 @@ const HUNTING_GROUNDS = { // → doc: mechanics-combat.md §Hunting Mode (terrai
   islands:          { displayName:'The Hidden Cove' },
   atlantis:         { displayName:'The Coral Maze' },
   freshwater_lake:  { displayName:'The Lake Shallows' },
+  yugurt_lake:      { displayName:'The Noon Point' },
   deep_sea:         { displayName:'The Abyss Shelf' },
   greek_agora:      { displayName:'The Arena Pit' },
   camelot:          { displayName:'The Tournament Ground' },
@@ -8648,6 +8652,14 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     completeFn:() => !!(S_story.fishingQuestFlags||{}).landed15Plus,
     xpAward:750, waypointNode:'YL', reward:200,
     disposition:'"You went deep." — The Fisherman' },
+  quest_horned_shark: { id:'quest_horned_shark', type:'side', title:'The Noon Point',
+    desc:"The Noon Point marker stands where the bank rope ends and the shark's territory begins. Every angler at Yugurt knows it. The ones who fish past it are not more skilled — they have simply decided the marker is someone else's problem. You have been past it. The lake has registered you. The shark hunts this water. You are in this water.",
+    hint:'Hunt the Horned Shark at Yugurt Lake.',
+    activateNode:'YL', completeItems:[],
+    activateCond:() => !!S_story.fishingYugurtFavour,
+    completeFn:() => !!S_story.hornedSharkSlain,
+    xpAward:500, waypointNode:'YL', reward:300,
+    disposition:'"You got the shark. That\'s a different kind of fishing." — The Fisherman' },
   quest_no_fishing_sign: { id:'quest_no_fishing_sign', type:'side', title:'The No-Fishing Sign',
     desc:"A city ordinance notice bolted to the lamppost near the gate. Underneath the official text, someone has added a handwritten pull-tab advertising free fishing at Yugurt Lake.",
     hint:'Take the coupon to The Fisherman at Yugurt Cabin and redeem it for a free fishing rod.',
@@ -8783,7 +8795,9 @@ const NPC_DIALOGUE = { // → doc: story.md §FL7
   SQ: { name:'Archivus Ptolemy Sweelinck',          quote:'"You found six. The seventh is the map — not the destination, the map. I have been holding the Weimar Fragment since before you were born. I knew the day I took it that I would not be the one to carry it. I have been waiting for whoever earned the carrying. You found six. You have earned it."' },
   GA: { name:'Oracle Kassiphane',               quote:'"Seven questions. Seven seals. You already know the answers — you have simply not asked yourself the right questions yet. The Shard was here before I was. It has always been yours."' },
   CO: { name:'Commander Seraphine Bruhns',       quote:'"The cordon holds. We have maybe one hour before the Void breaks through completely. Forge the Codex. I will handle whatever comes over the wall."' },
-  YC: { name:'The Fisherman', quote:'"...Nice Day For Fishing. Yugurt! ...Nice Day For Fishing. Yugurt!" He says this continuously. Not to you specifically. Not to no one specifically. He is simply correct about the weather and the lake on every day he has ever checked, which is every day.' },
+  YC: { name:'The Fisherman', quoteFn:() => S_story.hornedSharkSlain
+    ? '"...Nice Day For Fishing. Yugurt." He looks at you the way he looks at the lake in the morning — the particular attention of someone checking whether the water has changed. "You got the shark," he says. "That\'s a different kind of fishing." He looks back at the lake. "...Nice Day For Fishing. Yugurt."'
+    : '"...Nice Day For Fishing. Yugurt! ...Nice Day For Fishing. Yugurt!" He says this continuously. Not to you specifically. Not to no one specifically. He is simply correct about the weather and the lake on every day he has ever checked, which is every day.' },
   CQ: { name:'Jimmy Two-Tails', quote:'"Listen. LISTEN. I\'m gonna tell you somethin\' and I\'m only gonna say it once. The Taz Devil? It ain\'t a monster. It\'s a SITUATION. Two Honchos merge and boom — situation. You wanna help? You help by makin\' sure they don\'t get within three blocks of each other. Capisce?"' },
   // ── Layer 41 — Birka Arc quests ──
   quest_slums_cleanup: { id:'quest_slums_cleanup', type:'side', title:'Yael: Slums Cleanup',
@@ -9517,7 +9531,7 @@ const _S_DEFAULTS = () => ({
   s8VargaWatches: 0, s8VargaClueUnlocked: false, s8PachelbelTold: false,
   nexusQuestSeen: false, nexusQ01Active: false, nexusQ02Complete: false, creativeLiteracyToken: false,
   fishingQuestFlags: {}, fishingBaitSatchel: false, fishingYugurtFavour: false, fishingCatchLog: [],
-  tackleboxZoneUnlocks: {shore:true, reeds:false, deep:false}, baitFishingActive: false,
+  tackleboxZoneUnlocks: {shore:true, reeds:false, deep:false}, baitFishingActive: false, hornedSharkSlain: false,
   junctionsSeen: {}, companionActsSeen: {},
   shardNotes: [false,false,false,false,false,false,false], shardNotesAllRead: false,
   voidCrackFired: false, voidFracturesFired: false, voidImminentWarned: false, void_mercy_count: 0,
@@ -14344,6 +14358,7 @@ function storyCheckQuests(node) {
       if (id === 'quest_cat_void') { S_story.gold += 400; msgs.push('💰 +400gp from Sandy. The Void Strays are cleared.'); }
       if (id === 'quest_fishing_guide') { S_story.inventory.push({ name:'Fishing Guide', icon:'📖', type:'readable', sell:0, readText:FISHING_GUIDE_TEXT }); msgs.push('📖 Fishing Guide received. Zone DCs now visible in the fishing modal.'); }
       if (id === 'quest_fish_01') { S_story.gold += 200; S_story.fishingYugurtFavour = true; msgs.push("💰 +200gp. 🎣 Yugurt's Favour granted — +1 on all future catch rolls."); }
+      if (id === 'quest_horned_shark') { S_story.gold += 300; msgs.push('💰 +300gp. 🦷 The Noon Point is yours now.'); }
       // Layer 50: §XV NG+ Remembrance quest rewards
       if (id === 'quest_ng_01') { S_story.gold += 500; msgs.push('💰 +500gp. The city remembers. So do they.'); }
       if (id === 'quest_ng_02') { /* reward is the act itself */ msgs.push('📖 Entry 42 is in the journal.'); }
@@ -18175,7 +18190,7 @@ function storyRender(node, prefix) {
             _talkAccordion = document.createElement('div');
             _talkAccordion.className = 'npc-talk-accordion';
             _talkAccordion.innerHTML =
-              '<div class="npc-talk-quote">' + _npcDial.quote + '</div>'
+              '<div class="npc-talk-quote">' + (_npcDial.quoteFn ? _npcDial.quoteFn() : _npcDial.quote) + '</div>'
               + '<div class="npc-talk-name">— ' + _npcDial.name + '</div>';
             _npcCard.insertAdjacentElement('afterend', _talkAccordion);
             requestAnimationFrame(() => _talkAccordion && _talkAccordion.classList.add('open'));
