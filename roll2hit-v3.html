@@ -14699,9 +14699,27 @@ function storyFishing() {
     title.style.cssText = 'font-size:11px;color:#1A4060;margin-bottom:2px;';
     title.textContent = 'Search location — Survival (WIS) DC ' + Math.max(4, (S_story.fishingBaitSatchel ? 8 : 10) - _luckMod()) + ':';
     baitSearch.appendChild(title);
-    [['bank','The Bank 🪨'],['reeds','The Reeds 🌿'],['shallows','The Shallows 🌊']].forEach(([loc, lbl]) => {
+    // Auto-unlock zones based on catch log progress
+    const _zoneUnlocks = S_story.tackleboxZoneUnlocks || { shore:true, reeds:false, deep:false };
+    const _catchLog = S_story.fishingCatchLog || [];
+    if (!_zoneUnlocks.reeds && _catchLog.length >= 1) { _zoneUnlocks.reeds = true; S_story.tackleboxZoneUnlocks = _zoneUnlocks; }
+    if (!_zoneUnlocks.deep && _catchLog.some(c => ['large','very_large','legendary'].includes(c.size))) { _zoneUnlocks.deep = true; S_story.tackleboxZoneUnlocks = _zoneUnlocks; }
+    const _zoneMap = { bank:'shore', reeds:'reeds', shallows:'deep' };
+    const _zoneHint = { bank:null, reeds:'Unlocks after first catch', shallows:'Unlocks after landing a Large fish' };
+    [['bank','The Bank 🪨'],['reeds','The Reeds 🌿'],['shallows','The Deep 🌊']].forEach(([loc, lbl]) => {
+      const zKey = _zoneMap[loc];
+      const unlocked = _zoneUnlocks[zKey];
       const btn = document.createElement('button');
-      btn.className = 'inv-use-btn'; btn.textContent = lbl;
+      btn.className = 'inv-use-btn';
+      if (!unlocked) {
+        btn.textContent = lbl + ' 🔒';
+        btn.style.opacity = '0.45';
+        btn.title = _zoneHint[loc] || 'Locked';
+        btn.disabled = true;
+        baitSearch.appendChild(btn);
+        return;
+      }
+      btn.textContent = lbl;
       btn.addEventListener('click', () => {
         const wisMod = Math.floor(((S_story.abilityScores||{}).wis || 12) - 10) / 2;
         const dc     = Math.max(4, (S_story.fishingBaitSatchel ? 8 : 10) - _luckMod()); // Layer 48: Luck reduces Survival DC

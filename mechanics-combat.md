@@ -650,15 +650,21 @@ Bait is stored in the main inventory (`type:'bait'`) — not a separate Tackle B
 **📖 Fishing Guide** *(✅ Implemented 2026-05-26)*  
 Readable item from the Fisherman at YC via quest `quest_fishing_guide` *"Listen Closely"* (activates on first YC visit; completes when `fishingCatchLog.length > 0` and player returns to YC). While in inventory: zone DCs displayed in fishing modal (`Shore DC 8 · Reeds DC 12 · Deep DC 16`). Without it, shows `DC: ???`. Content: `FISHING_GUIDE_TEXT` const (HTML line 11230). DC display wired via `hasGuide` check at top of `storyFishing()`.
 
-**Zone Unlock Progression** *(⚠️ PLANNED — Layer 47)*  
-Zone access gates are designed but not yet wired. Currently all three search locations are always available. Intended state field:
+**Zone Unlock Progression** *(✅ Implemented — Layer 83, §XLV)*  
+Zone access is gated via `tackleboxZoneUnlocks` state. All three zones check unlock state when the Find Bait panel opens; unlocks are auto-granted on the spot when conditions are met.
+
+| Zone | Key | Default | Unlock Condition |
+|------|-----|---------|-----------------|
+| The Bank 🪨 | `shore` | `true` | Always available |
+| The Reeds 🌿 | `reeds` | `false` | Auto-unlocks after first catch (`fishingCatchLog.length >= 1`) |
+| The Deep 🌊 | `deep` | `false` | Auto-unlocks after landing a Large+ fish (`fishingCatchLog.some(c => ['large','very_large','legendary'].includes(c.size))`) |
+
+Locked buttons show `🔒`, opacity 0.45, `disabled`, and a tooltip hint. The `baitFishingActive` suppression flag is also live.
 
 | State field | Type | Default | Purpose |
 |-------------|------|---------|---------|
 | `tackleboxZoneUnlocks` | object | `{shore:true, reeds:false, deep:false}` | Unlocked fishing search zones |
 | `baitFishingActive` | bool | false | Suppresses node re-render during bait catch sequence |
-
-Both fields are in `_S_DEFAULTS()` (added 2026-05-26) awaiting zone gating implementation.
 
 ---
 

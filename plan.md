@@ -99,7 +99,7 @@ See `story.md §GRIEF AND CORRUPTION` for the vignette prose.
 
 ## §0 — Implementation Readiness Dashboard
 
-> **Status as of Layer 82 (2026-05-26).** §XLIII Hunt Overhaul + §XLIV Accordion-First UI Pattern both live. Hunt accordion: inline target selector, WIS Survival roll, quest target ◈ badges, Rush In path. Battle accordion: threat badge, condition picker, stealth toggle, Start Battle. HTML: ~19,900 lines. Lab reports: 43. Add new layers below as §XLV+.
+> **Status as of Layer 83 (2026-05-26).** §XLV Yugurt Tournament + Six Fishermen + fishing zone unlock gating live. Tournament: 6 NPC opponents, d20+bonus catch mechanic, title progression, cascade quest chain, accordion challenge UI. Zone gating: The Bank always open; The Reeds unlock after first catch; The Deep unlock after landing a Large+ fish. HTML: ~20,000 lines. Lab reports: 43. Add new layers below as §XLVI+.
 
 ### Lab Report Index (Layers 48–79)
 
@@ -387,7 +387,7 @@ Do **not** write a lab report for: a single monster/quest addition (sync core do
 | `S_story.hour` | number | Time-of-day clock 0–23; +1 per battle, +6 per sleep |
 | `S_story.careerStats` | object | Permanent career ledger (never reset): kills, deaths, dmgDealt, dmgReceived, sleeps, battlesAttempted, attacksAttempted, attacksHit, exitsTaken, daysAdventuring |
 | `S_story.runStats` | object | Per-run ledger (reset on respawn): same 10 fields as careerStats |
-| `S_story.tackleboxZoneUnlocks` | object | `{shore:true, reeds:false, deep:false}` — which fishing search zones are accessible; awaits zone gating implementation |
+| `S_story.tackleboxZoneUnlocks` | object | `{shore:true, reeds:false, deep:false}` — which fishing search zones are accessible; zone gating live (Layer 83) |
 | `S_story.baitFishingActive` | boolean | Suppresses node re-render during bait catch sequence |
 | `S_story.skillCheckAttempts` | object | `{ questId: { lastDay, failures } }` — retry gate for Ceremonia Roll quests; set on each failed retryable roll |
 | `S_story.ceremoniaYaelAct` | number | Current act in Yael Ceremonia Arc (0 = not started, 1–5 = act N complete) |
@@ -5242,3 +5242,15 @@ XP: 100 / 150 / 200 / 300 / 500 / 1000 per quest.
 ### §XLV-F. UI
 
 Tournament section `🏆 Tournament` in `storyRenderInfoRow` at YC (after Rest, before World). Each card: `[COMPETENCE] Name · Title · Stake Ngp [Challenge]`. Beaten cards show `[BEAT] done:true`. Challenge button opens accordion with NPC quote, bait status, Cast button, result display, Walk Away link. Uses `hunt-accordion` CSS class. `_tourRoll(bonus)` helper function. After win: `storyRender(node)` called after 400ms to refresh beaten state.
+
+### §XLV-G. Fishing Zone Unlock Gating *(✅ Implemented Layer 83)*
+
+Zone access now gates progressively instead of all-open. Evaluated when Find Bait panel opens; auto-granted on the spot.
+
+| Zone | Key | Unlock Condition |
+|------|-----|-----------------|
+| The Bank 🪨 | `shore` | Always open |
+| The Reeds 🌿 | `reeds` | First catch (`fishingCatchLog.length >= 1`) |
+| The Deep 🌊 | `deep` | Large+ fish landed (`fishingCatchLog.some(c => ['large','very_large','legendary'].includes(c.size))`) |
+
+Locked buttons: `🔒` label, opacity 0.45, `disabled`, tooltip hint. Zone map (`bank→shore`, `reeds→reeds`, `shallows→deep`) bridges `BAIT_TABLES` keys to `tackleboxZoneUnlocks` keys. State auto-persists to `S_story.tackleboxZoneUnlocks`.
