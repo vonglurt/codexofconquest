@@ -99,7 +99,7 @@ See `story.md §GRIEF AND CORRUPTION` for the vignette prose.
 
 ## §0 — Implementation Readiness Dashboard
 
-> **Status as of Layer 81 (2026-05-26).** All layers through §DUNGEON-02 implemented. §DUNGEON-01 fully live: Nodes WK + MM, all 10 themes. §DUNGEON-02 fully live: all 10 five-act chains — D02-01 through D02-10, including D02-06 (WK node) and D02-08 (MM node). HTML: ~19,577 lines. Lab reports: 43. Add new layers below as §XLIII+.
+> **Status as of Layer 82 (2026-05-26).** §XLIII Hunt Overhaul + §XLIV Accordion-First UI Pattern both live. Hunt accordion: inline target selector, WIS Survival roll, quest target ◈ badges, Rush In path. Battle accordion: threat badge, condition picker, stealth toggle, Start Battle. HTML: ~19,900 lines. Lab reports: 43. Add new layers below as §XLV+.
 
 ### Lab Report Index (Layers 48–79)
 
@@ -125,6 +125,8 @@ Earlier layers (9–47): see `lab-report-architecture-full.md` and `lab-report-t
 ✅ §DESIGN-03 (Ceremonia Roll + Starting City) — implemented 2026-05-26. Lab report: `lab-report-ceremonia-roll-skill-checks.md`.
 ✅ §DUNGEON-01 (10 Dungeon Themes) — fully implemented Layer 81 (2026-05-26). Nodes WK + MM live.
 ✅ §DUNGEON-02 (Five-Act Arthurian Quest Elaborations) — All 10 chains live (Layer 81, 2026-05-26). D02-06 (WK node) + D02-08 (MM node) implemented. See `quest.md`.
+✅ §XLIII (Hunt Overhaul) — implemented Layer 82 (2026-05-26). Inline target selector accordion, WIS Survival DC roll, ◈ quest badges, fail flavor, Rush In.
+✅ §XLIV (Accordion-First UI) — implemented Layer 82 (2026-05-26). Hunt + Battle cards both inline accordions; battle accordion has threat badge, condition picker, stealth toggle, Start Battle, Retreat.
 
 ---
 
@@ -4930,7 +4932,7 @@ Roll: CHA (Persuasion) DC 12 — answer the question honestly. Any true answer p
 
 ## §XLIII — Hunt Overhaul: Target Selector + WIS Survival Check
 
-**Status:** ⚠️ PLANNED — Layer 82  
+**Status:** ✅ Implemented — Layer 82 (2026-05-26)  
 **Scope:** `storyStalk()` · `storyRenderInfoRow()` · new `_huntSurvivalRoll()` · stalk modal redesign  
 **Motivation:** Hunting currently gives no player control over the target and does not use any stat. Clicking Hunt opens a modal with "Wait for Prey" — random weighted pick, no input. This redesign adds a monster target selector, a WIS Survival check as the hunt resolution, a time economy choice, and surprise advantage as the reward for skilled hunting.
 
@@ -5078,24 +5080,24 @@ Update `mechanics-combat.md §Stalk / Hunt` to document:
 
 ### §XLIII-I. Implementation Checklist
 
-- [ ] Add `huntSelectedTarget`, `huntLastSurvivalRoll` to `_S_DEFAULTS()`
-- [ ] Write `_huntSurvivalRoll(targetMonster, nodeCode)` — roll, compare DC, route to battle
-- [ ] Write `_toggleHuntAccordion(node)` — build selector DOM inline, toggle open/closed
-- [ ] Change Hunt card in `storyRenderInfoRow`: `'Hunt'` → `'Select Target'` + Rush In sibling
-- [ ] `_huntSurvivalRoll` pass path: `pendingBattle` with exact key + `surpriseAdvantage = true`
-- [ ] `_huntSurvivalRoll` fail path: `_weightedMonsterPick` fallback + fail flavor
-- [ ] Monster row in selector: name, tier badge, AC, HP, DC — click to select
-- [ ] Show quest-target badge (◈) for monsters matching `_getQuestTargetKeys()`
-- [ ] storyMsg roll display: `d20 (N) + WIS (±N) = N vs DC N → PASS/FAIL`
-- [ ] Update `mechanics-combat.md` hunt section ✅ 2026-05-26
-- [ ] Update `quest.md` quest count (hunt now applies to all quest monsters in terrain)
+- [x] State is closure-scoped — no `_S_DEFAULTS` fields needed (inline roll, no persistence required)
+- [x] Survival roll inline in monster row click handler (no named function needed)
+- [x] Hunt accordion built in `storyRenderInfoRow` Hunt card `btnClick` closure
+- [x] Hunt card button: 'Hunt' → 'Close' when open; accordion toggles
+- [x] Pass path: `surpriseAdvantage = true`, exact monster `pendingBattle`, `loadWorldMonster(m)` → battle
+- [x] Fail path: `_weightedMonsterPick` fallback + storyMsg flavor line
+- [x] Monster rows: tier badge, name, AC, HP, DC — click to select and roll
+- [x] Quest-target badge ◈ for monsters in `_getQuestTargetKeys()`
+- [x] storyMsg roll display: `d20 (N) + WIS (±N) = N vs DC N → PASS/FAIL`
+- [x] mechanics-combat.md hunt section ✅ 2026-05-26
+- [x] Rush In button: `storyQuickWait(node.code)`, 1h, no survival check
 
 ---
 
-## §XLIV — Accordion-First UI Pattern (PLANNED)
+## §XLIV — Accordion-First UI Pattern
 
 **Layer:** 82  
-**Status:** 🔄 PLANNED — spec complete  
+**Status:** ✅ Implemented — 2026-05-26  
 **Directive:** Every Story Mode button that currently opens a full-screen modal should expand an inline accordion below the triggering card instead. NPC Talk is the reference implementation (Layer 81 ✅).
 
 ### §XLIV-A. Design Principle
@@ -5109,9 +5111,9 @@ The Talk accordion proved the pattern: a smooth max-height CSS transition reveal
 | Button | Current behavior | New behavior | Status |
 |---|---|---|---|
 | **Talk** | Opens `storyShowNpc()` modal | Accordion below NPC card | ✅ Live (Layer 81) |
-| **Hunt / Select Target** | Opens stalk modal | Accordion below Hunt card (target selector) | 🔄 §XLIII |
-| **Fight / ⚔ Battle** | Opens full pre-battle screen modal | Accordion below Battle card | 🔄 §XLIV |
-| **Stalk (legacy)** | Opens stalk modal | Replaced by Hunt accordion | 🔄 §XLIII |
+| **Hunt / Select Target** | Opens stalk modal | Accordion below Hunt card (target selector) | ✅ Live (Layer 82) |
+| **Fight / ⚔ Battle** | Opens full pre-battle screen modal | Accordion below Battle card | ✅ Live (Layer 82) |
+| **Stalk (legacy)** | Opens stalk modal | Replaced by Hunt accordion | ✅ Live (Layer 82) |
 
 ### §XLIV-C. Battle Card Accordion
 
@@ -5158,14 +5160,13 @@ Condition sub-row uses a nested inner accordion (same pattern, max-height 180px)
 
 ### §XLIV-F. Implementation Checklist
 
-- [ ] `storyRenderInfoRow` Battle card: replace direct `storyStartBattle(node)` call with `_toggleBattleAccordion(node)`
-- [ ] `_toggleBattleAccordion(node)` — builds accordion DOM: threat row, setup toggles, Start Battle, Retreat
-- [ ] Condition toggle: expand/collapse condition picker sub-row, track selected condition in closure var
-- [ ] Stealth toggle: toggled state tracked in closure var (no roll yet — fires at Start Battle)
-- [ ] Start Battle button: deduct gold if condition queued; roll + show stealth result if stealth checked; then `storyStartBattle(node)`
-- [ ] Condition sub-row: filter `CONDITION_ITEMS` by affordability, show hint if empty
-- [ ] Stealth result display: inline span, 600ms delay before battle opens
-- [ ] Accordion CSS: add `.battle-accordion` override (border `#5c0a0a`, bg `#1c0404` in dark theme)
-- [ ] Ensure only one accordion open at a time (close sibling before opening new)
-- [ ] Remove legacy `storyShowPreBattle()` modal call after accordion is live (keep 1 layer as fallback)
-- [ ] Test: no setup, condition only, stealth only, both, Retreat, toggle close, affordable/unaffordable
+- [x] Battle card `btnClick` → inline accordion (closure, no named toggle function needed)
+- [x] Accordion DOM: threat row, Condition + Stealth toggle buttons, condition sub-row, stealth result, Start Battle, Retreat
+- [x] Condition toggle: `condSubrow.style.display` toggled; `_condSelected` Set tracked in closure
+- [x] Stealth toggle: `_stealthOn` bool tracked in closure; roll fires at Start Battle click
+- [x] Start Battle: sets `_preBattNode`, `_availableConds`, `_selectedConds` then calls `storyCommitBattle()`
+- [x] Condition sub-row: all `CONDITION_ITEMS` shown; cant-afford hint if none affordable
+- [x] Stealth result: inline div, 700ms delay before `storyCommitBattle()` fires
+- [x] CSS: `.battle-accordion` (bg `#1c0404`, border `#5c0a0a` in dark theme), `.hunt-accordion` (same colors as NPC)
+- [x] Toggle close: re-clicking Fight while open collapses accordion
+- [x] `storyPreBattle()` modal kept as legacy path (used by quest card fight-now buttons + script event listeners)
