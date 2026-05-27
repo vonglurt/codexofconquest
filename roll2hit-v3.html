@@ -7592,32 +7592,32 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   BA:{ num:4,  code:'BA', name:'bar',             label:'The Rough Bar',                 act:1, N:'TV', S:'CR', E:null,  W:'CI',  text:"The back wall is older than the building. The door set into it opens onto the crypt and has never been locked. Newcomers find this out on their own — the bar doesn't announce it.\n\nPachelbel works the back room. Tilbury Conclave passes, fifteen gold. He has heard everything this city produces and stopped reacting to it years ago.\n\nThe vermin work the drain trench and the alley side: kobolds in the gutter, wererats below the boards, cockroach swarms behind the bottle shelf. What rises from the crypt door behind them is a different scale — ghouls that move slow, wights that don't until they must, shadows that use the unlocked door as a corridor. The bar has stayed open through all of it.", npc:'City Fence', battle:null, loot:'Conclave Pass (buy 15gp)', sleep:false },
   CR:{ num:5,  code:'CR', name:'crypt',           label:'The Birka Crypt',             act:1, N:'BA', S:'CY', E:null,  W:null,  text:"The torches at the bottom of the stair were lit recently — wax still running, not yet pooled. Someone came down here in the last half hour and did not stay.\n\nThe first chamber holds twelve tombs. Three are disturbed: lids displaced, stone face-down on the floor. The scratches on the underside face upward.\n\nIn the far corner, a shadow that has no source shifts when you don't look at it directly.\n\nFrom the second chamber, below the drip of water: a slower sound. The deliberate kind that comes from something that has time.\n\nA sexton crosses the grating overhead, lantern swinging. He does not look down.\n\nThe three skeletons in the first chamber have already stood. The shadow is waiting for you to choose a direction.", npc:null, battle:{label:'Skeleton ×3 + Shadow', key:'skeleton', count:3}, loot:'Crypt Key · Void Scratch Note', sleep:false },
   CY:{ num:6,  code:'CY', name:'cyberpunk_streets', label:'Neon Undercity',             act:1, N:'CR', S:'AC', E:'DK',  W:null,  text:"The descent from the crypt floor takes thirty steps. At the bottom the stone ends and the conduit begins — cable bundles thick as your arm running the corridor's length, neon strips casting everything in a blue the eye reads as cold.\n\nThe passage was a transit corridor once. The turnstiles at the far end are still set to reject; three have been forced and bent back. Someone came through recently, and the path they cleared is the one you will use.\n\nTwo androids hold the mid-point checkpoint, heads tracking in the slow arc of a thing that runs on schedule. Between them, a data wraith — light that moves wrong, a signal that chose to persist rather than terminate. The androids are the vermin here. The wraiths are what a corridor produces when it runs long enough without maintenance.\n\nCommander Bruhns is already past the checkpoint. You can tell because the androids are still in reset posture, not yet returned to neutral scan.\n\nHe did not wait.", npc:'Commander Bruhns', battle:{label:'Android ×2 + Data Wraith', key:'corrupted_android', count:2}, loot:'Signal Jammer · EMP Grenade · Commander Token', sleep:false },
-  // ── §LIX: Herath + Kesra — The Road to Kesra ──
-  HR:{ num:84, code:'HR', name:'herath', label:'Herath — Lower Court', act:4, N:null, S:null, E:'KS', W:'TS',
-    text:"The city writes its authority in stone. The law courts have been here for three hundred years; the newest wall is a century old; the oldest inscription above the gate has been re-carved twice because the stone wore before the law did.\n\nSaul of Tarsis has a desk in the lower court. On that desk: three warrants, two authorization letters, and a list of names. The names are of people who have been meeting in houses and saying things the court considers seditious. The warrant language is precise: 'Bring them.' Not 'question.' Not 'invite.' Bring.\n\nHe has done this before. The warrants are a bureaucratic instrument. He treats them with the seriousness appropriate to bureaucratic instruments — which is to say, complete and impersonal seriousness. He does not hate the people on the list. He has decided that the list is correct. He has not examined that decision recently.\n\nThe road to Kesra leaves from the east gate. He has already requisitioned the escort. He leaves at first light.",
-    npc:'The Court Registrar', battle:null, loot:'Three Herath Warrants · Order of Escort', sleep:true, sleepCost:5 },
-  // ── §LXIV: LT — Lythros (first journey, stop 2; Timael joins) ──
-  LT:{ num:90, code:'LT', name:'lythros', label:'Lythros — The East Gate', act:4, N:'CI2', S:null, E:null, W:null,
-    text:"A small city in a wide valley. It has the particular civic pride of a place that has been overlooked — they know they are not the capital and have decided that this is fine with them. The market runs six days a week. The seventh day the market stalls stay up but the vendors go to the assembly hall, which is an arrangement that satisfies both commerce and attendance.\n\nThere is a man by the gate who has been by the gate his entire life. He has a specific condition of the feet that is not treatable by the methods available in Lythros. He knows this. He has made his peace with this. He is watching the road with the patience of someone who has accepted their situation completely.\n\nHe is watching Paul specifically.",
+  // ── §LIX: Jerusalem + Damascus — The Road to Damascus ──
+  HR:{ num:84, code:'HR', name:'jerusalem', label:'Jerusalem — Lower Court', act:4, N:null, S:null, E:'KS', W:'TS',
+    text:"The city writes its authority in stone. The law courts have been here for three hundred years; the newest wall is a century old; the oldest inscription above the gate has been re-carved twice because the stone wore before the law did.\n\nSaul of Tarsus has a desk in the lower court. On that desk: three warrants, two authorization letters, and a list of names. The names are of people who have been meeting in houses and saying things the court considers seditious. The warrant language is precise: 'Bring them.' Not 'question.' Not 'invite.' Bring.\n\nHe has done this before. The warrants are a bureaucratic instrument. He treats them with the seriousness appropriate to bureaucratic instruments — which is to say, complete and impersonal seriousness. He does not hate the people on the list. He has decided that the list is correct. He has not examined that decision recently.\n\nThe road to Damascus leaves from the east gate. He has already requisitioned the escort. He leaves at first light.",
+    npc:'The Court Registrar', battle:null, loot:'Three Jerusalem Warrants · Order of Escort', sleep:true, sleepCost:5 },
+  // ── §LXIV: LT — Lystra (first journey, stop 2; Timael joins) ──
+  LT:{ num:90, code:'LT', name:'lystra', label:'Lystra — The East Gate', act:4, N:'CI2', S:null, E:null, W:null,
+    text:"A small city in a wide valley. It has the particular civic pride of a place that has been overlooked — they know they are not the capital and have decided that this is fine with them. The market runs six days a week. The seventh day the market stalls stay up but the vendors go to the assembly hall, which is an arrangement that satisfies both commerce and attendance.\n\nThere is a man by the gate who has been by the gate his entire life. He has a specific condition of the feet that is not treatable by the methods available in Lystra. He knows this. He has made his peace with this. He is watching the road with the patience of someone who has accepted their situation completely.\n\nHe is watching Paul specifically.",
     npc:'Timael', battle:null, loot:null, sleep:true, sleepCost:3 },
-  // ── §LXIII: CI2 — The Copper Isle (first journey, stop 1) ──
-  CI2:{ num:89, code:'CI2', name:'copper_isle', label:'The Copper Isle — Harbor District', act:4, N:'AO', S:'LT', E:null, W:null,
-    text:"The harbor smells of copper smelting and salt, in roughly equal parts. The island has been exporting copper since before anyone in Anthos was born. It has a governor who is interested in unusual things — the kind of governor who reads widely and holds opinions about ideas rather than only about policy, which is either an asset or a liability depending on who arrives with an idea.\n\nEzzir is in the governor's service. This is his recommendation and the governor finds his recommendations useful. He has been in the governor's service for six years. He has a good record. He is also blocking the door.\n\nThe governor is watching from across the room. He is watching the way a man watches two arguments he has not yet decided between.",
+  // ── §LXIII: CI2 — Cyprus (first journey, stop 1) ──
+  CI2:{ num:89, code:'CI2', name:'cyprus', label:'Cyprus — Harbor District', act:4, N:'AO', S:'LT', E:null, W:null,
+    text:"The harbor smells of copper smelting and salt, in roughly equal parts. The island has been exporting copper since before anyone in Antioch was born. It has a governor who is interested in unusual things — the kind of governor who reads widely and holds opinions about ideas rather than only about policy, which is either an asset or a liability depending on who arrives with an idea.\n\nEzzir is in the governor's service. This is his recommendation and the governor finds his recommendations useful. He has been in the governor's service for six years. He has a good record. He is also blocking the door.\n\nThe governor is watching from across the room. He is watching the way a man watches two arguments he has not yet decided between.",
     npc:'The Governor', battle:null, loot:null, sleep:true, sleepCost:4 },
-  // ── §LXII: AO — Anthos (commissioning, first journey) ──
-  AO:{ num:88, code:'AO', name:'anthos', label:'Anthos — The Mixed Quarter', act:4, N:null, S:'CI2', E:'TS', W:null,
-    text:"Anthos is not trying to be anything in particular. It is too large to be a village and not large enough to be a city and too mixed to be classified as either. Merchants from four different peoples live in the same quarter without anyone having organized them. They got there before the organizing arrived and now they are too settled to move.\n\nThis is where the first journey forms. Barnach is here. Silar is here — steady, direct, capable of principled disagreement, which is a quality the work is going to require. The commission comes from the assembly. This is the first time Paul has been sent somewhere by a body of people rather than going by his own authority.\n\nHe is called Paul here for the first time in this record. He will be called Saul again once, by someone who does not know the road, and it will not fit.",
+  // ── §LXII: AO — Antioch (commissioning, first journey) ──
+  AO:{ num:88, code:'AO', name:'antioch', label:'Antioch — The Mixed Quarter', act:4, N:null, S:'CI2', E:'TS', W:null,
+    text:"Antioch is not trying to be anything in particular. It is too large to be a village and not large enough to be a city and too mixed to be classified as either. Merchants from four different peoples live in the same quarter without anyone having organized them. They got there before the organizing arrived and now they are too settled to move.\n\nThis is where the first journey forms. Barnach is here. Silar is here — steady, direct, capable of principled disagreement, which is a quality the work is going to require. The commission comes from the assembly. This is the first time Paul has been sent somewhere by a body of people rather than going by his own authority.\n\nHe is called Paul here for the first time in this record. He will be called Saul again once, by someone who does not know the road, and it will not fit.",
     npc:'Assembly Elder Joach', battle:null, loot:null, sleep:true, sleepCost:4 },
-  // ── §LXI: TS — Tarsis (the silent years) ──
-  TS:{ num:87, code:'TS', name:'tarsis', label:'Tarsis — The Tentmaker\'s Quarter', act:4, N:null, S:null, E:'HR', W:'AO',
-    text:"He is from here. The streets are familiar in the way that streets are familiar when you have not been to them since you were young and have become a different person in the interval. The house he grew up in is still standing. Someone else lives there. He does not knock.\n\nHe works. He has a trade — tentmaking, the craft he learned before he learned the law. It is meticulous work and the city has no particular opinion about tentmakers one way or the other, which is exactly the quality he requires of a city right now.\n\nThe years in Tarsis are in no document he wrote. They are a gap in the record. The things that happened in the gap happened to a person who was both Saul and Paul and neither, settling into what he had become. The record resumes when Barnach arrives at the gate.",
+  // ── §LXI: TS — Tarsus (the silent years) ──
+  TS:{ num:87, code:'TS', name:'tarsus', label:'Tarsus — The Tentmaker\'s Quarter', act:4, N:null, S:null, E:'HR', W:'AO',
+    text:"He is from here. The streets are familiar in the way that streets are familiar when you have not been to them since you were young and have become a different person in the interval. The house he grew up in is still standing. Someone else lives there. He does not knock.\n\nHe works. He has a trade — tentmaking, the craft he learned before he learned the law. It is meticulous work and the city has no particular opinion about tentmakers one way or the other, which is exactly the quality he requires of a city right now.\n\nThe years in Tarsus are in no document he wrote. They are a gap in the record. The things that happened in the gap happened to a person who was both Saul and Paul and neither, settling into what he had become. The record resumes when Barnach arrives at the gate.",
     npc:'Barnach', battle:null, loot:'Tentmaking Tools', sleep:true, sleepCost:3 },
-  KS:{ num:85, code:'KS', name:'kesra', label:'Kesra — Lower City', act:4, N:null, S:'DR', E:null, W:'HR',
-    text:"The escort has left him at the gate of the lower city. They are not required to wait — the warrant authority is his, not theirs, and he has not invoked it since the road. They leave with the courtesy appropriate to leaving a superior officer who has become someone else's problem.\n\nHe does not know anyone in Kesra who is not on the list. The list is in his coat. He does not take it out.\n\nThree days. He is in a house on the lower road. The innkeeper brings food at noon and does not ask questions about his eyes. Someone else's servant — he does not know whose — has been bringing water in the morning. He has not asked for it. He has not told anyone he cannot see.\n\nOn the third morning, someone knocks.",
+  KS:{ num:85, code:'KS', name:'damascus', label:'Damascus — Lower City', act:4, N:null, S:'DR', E:null, W:'HR',
+    text:"The escort has left him at the gate of the lower city. They are not required to wait — the warrant authority is his, not theirs, and he has not invoked it since the road. They leave with the courtesy appropriate to leaving a superior officer who has become someone else's problem.\n\nHe does not know anyone in Damascus who is not on the list. The list is in his coat. He does not take it out.\n\nThree days. He is in a house on the lower road. The innkeeper brings food at noon and does not ask questions about his eyes. Someone else's servant — he does not know whose — has been bringing water in the morning. He has not asked for it. He has not told anyone he cannot see.\n\nOn the third morning, someone knocks.",
     npc:'Anath', battle:null, loot:null, sleep:true, sleepCost:3 },
-  // ── §LX: DR — The Dust Roads (optional retreat) ──
-  DR:{ num:86, code:'DR', name:'desert_caravan', label:'The Dust Roads', act:4, N:'KS', S:null, E:null, W:null,
-    text:"No road. The roads end at Kesra's southern gate. Below the gate: a track that the caravans use, maintained by foot traffic rather than civic investment. Below the track: the desert proper, which is not hostile so much as indifferent.\n\nHe stays in the desert for a season. The duration is not specified in the records he leaves behind — he mentions it in one letter as 'the time I spent in the Dust Roads' and does not elaborate. Whatever happens there is not recorded and is not recoverable. This is intentional. Some things about a person belong to the desert.\n\nHe returns from the Dust Roads changed in a way that is different from the road to Kesra. The road to Kesra changed what he was. The desert changed what he does with it.",
+  // ── §LX: DR — Arabia (optional retreat) ──
+  DR:{ num:86, code:'DR', name:'arabia', label:'Arabia', act:4, N:'KS', S:null, E:null, W:null,
+    text:"No road. The roads end at Damascus's southern gate. Below the gate: a track that the caravans use, maintained by foot traffic rather than civic investment. Below the track: the desert proper, which is not hostile so much as indifferent.\n\nHe stays in the desert for a season. The duration is not specified in the records he leaves behind — he mentions it in one letter as 'the time I spent in the Arabia' and does not elaborate. Whatever happens there is not recorded and is not recoverable. This is intentional. Some things about a person belong to the desert.\n\nHe returns from the Arabia changed in a way that is different from the road to Damascus. The road to Damascus changed what he was. The desert changed what he does with it.",
     npc:null, battle:{label:'Desert Wanderer ×2', key:'desert_wanderer', count:2}, loot:null, sleep:true, sleepCost:0 },
   // ── §LV: The Antecedent Chamber ──
   AC:{ num:83, code:'AC', name:'antecedent_chamber', label:'The Antecedent Chamber', act:1, N:'CY', S:null, E:null, W:null,
@@ -7652,7 +7652,7 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   VC:{ num:30, code:'VC', name:'vampire_castle',  label:'Vampire Castle Ruins',          act:5, N:'CA', S:null, E:'DE',  W:null,  text:"The castle was built so the road passes through the great hall, not beside it. There is no path around. This was an architectural decision made several centuries ago and has been enforced every day since.\n\nBruxa Elise Mourne is at the gate when you arrive. She is in human form, which is the courtesy she extends to travelers who have not yet been rude. The toll is not in coin. She will tell you what you owe and what you are carrying that belongs to her — she has had a long time to develop her accounting.\n\nBlood debt is older than currency. Returned items are simply things that found their way into circulation when they should have stayed here.\n\nThe room she offers is on the second floor, east wing. The bed is the best you will find between Visby and the desert. The sleep is free. She does not explain why.\n\nWhat she does in the west wing is her own business.", npc:'Bruxa Elise Mourne', battle:null, loot:'Toll Token', sleep:true, sleepCost:0 },
   // ── ACT VI — DESERT
   DE:{ num:31, code:'DE', name:'desert',          label:'Desert Wastes',                 act:6, N:null, S:'EE', E:'DC',  W:'VC',  text:"The desert offers one navigational aid: a stone post at the crossroads, carved with arrows that have been re-cut several times as the wind wore the edges down. The caravan's pattern of movement is marked on the eastern face. The marking is fresh enough that someone passed through within the season.\n\nEverything else the desert offers is a problem. The heat at midday produces a shimmer the sand wraith uses as cover — it moves through the distortion faster than the eye resolves it. The mummies in the western sand are slower, which is their only mercy. They do not tire. They do not stop because you are moving. They stop when you do.\n\nThe scorpions and vipers shelter in the shadow of the crossroads post at noon. They are the smallest things out here and the easiest to manage. They are also the only things out here with the sense to find shade.\n\nThe caravan is east. The marker points there. Getting there before dark is the question the desert is asking.", npc:null, battle:{label:'Mummy ×2 + Sand Wraith', key:'mummy', count:2}, loot:'Desert Crossroads Marker', sleep:false },
-  DC:{ num:32, code:'DC', name:'desert_caravan',  label:"Izador's Desert Caravan",       act:6, N:'JU', S:null, E:'EV',  W:'DE',  text:"Thirty people and twelve camels moving through the desert constitute a civilization in miniature. Izador's caravan has been following the pattern marked on the crossroads post for longer than the current crossroads post has been standing. The people know the route. The camels know it better.\n\nSandmage Izador is under the center awning when you arrive. He is meditating. He does not open his eyes. He moves a cushion to the left with one hand to make space, which means he heard you coming while you were still too far away for the camels to notice.\n\n\"The djinn has had it for two centuries,\" he says. This is not a preamble. This is the situation.\n\nThe djinn circles the caravan at the eastern perimeter. The thirty people have been traveling alongside a two-century territorial djinn long enough to have developed accommodations for it — where to camp, which direction to face the tents, what not to do near the eastern edge after dark. The Sand Cipher is in the djinn's custody. The djinn does not consider this unusual.", npc:'Sandmage Izador', battle:{label:'Djinn', key:'djinn', count:1}, loot:'Sand Cipher (Shard #5)', sleep:false },
+  DC:{ num:32, code:'DC', name:'arabia',  label:"Izador's Desert Caravan",       act:6, N:'JU', S:null, E:'EV',  W:'DE',  text:"Thirty people and twelve camels moving through the desert constitute a civilization in miniature. Izador's caravan has been following the pattern marked on the crossroads post for longer than the current crossroads post has been standing. The people know the route. The camels know it better.\n\nSandmage Izador is under the center awning when you arrive. He is meditating. He does not open his eyes. He moves a cushion to the left with one hand to make space, which means he heard you coming while you were still too far away for the camels to notice.\n\n\"The djinn has had it for two centuries,\" he says. This is not a preamble. This is the situation.\n\nThe djinn circles the caravan at the eastern perimeter. The thirty people have been traveling alongside a two-century territorial djinn long enough to have developed accommodations for it — where to camp, which direction to face the tents, what not to do near the eastern edge after dark. The Sand Cipher is in the djinn's custody. The djinn does not consider this unusual.", npc:'Sandmage Izador', battle:{label:'Djinn', key:'djinn', count:1}, loot:'Sand Cipher (Shard #5)', sleep:false },
   JU:{ num:33, code:'JU', name:'jungle',          label:'Dense Jungle',                  act:6, N:'BQ', S:'FL', E:'J2',  W:'EJ', SE:'MM', text:"The Scholar Kings' road is still here. It runs beneath the overgrowth in straight, deliberate intervals — you can feel the paved stone where the jungle floor gives differently. Three hundred years of root and vine have not moved the road. They have covered it. This is not the same thing.\n\nArachas webs block every third stretch. The webs are architectural — anchored across the full road width at regular intervals, as if the spiders have been reading the same survey markers the Scholar Kings used. You go through or you go back.\n\nHerbalist Mael lives in the clearing at the road's center. She is perfectly sane. She is perfectly dangerous. These are not contradictions — they are the same characteristic expressed at different scales.\n\nHer compound stops muscle function in organisms above forty kilos. It wears off in five minutes. She recommends using the five minutes productively. She is not being ironic.\n\nThe Ancient Road Marker at the clearing's edge still reads. Not all of it. Enough.", npc:'Herbalist Mael', battle:{label:'Arachas ×2 + Endrega ×3', key:'arachas', count:2}, loot:'Ancient Road Marker · Neurotoxin Dip', sleep:false },
   BQ:{ num:34, code:'BQ', name:'blacksmith_qtr',  label:'Blacksmith Quarter — Weimar', act:6, N:'SQ', S:'JU', E:'OU',  W:null,  text:"The quarter below Weimar runs on a different schedule than the scholars above it — which is to say it runs on no schedule, at all hours, without pause. The hammering has been continuous long enough that the scholars have stopped noticing it. The scholars are wrong to have stopped noticing.\n\nForges that run too long without rest begin to develop opinions. The Forge Elemental in the eastern bay is the opinion this quarter has developed. The Animated Armor at the forge entrance are the arguments it made when it was still communicating through product.\n\nDora Flint is at the central anvil. She throws a Thunderstone at it when she sees you — not as a threat, as a demonstration. The concussive crack rattles the quarter wall to wall. She watches your reaction the way a host watches a guest eat the first course.\n\n\"Useful,\" she says. \"You'll need two.\"\n\nShe has already set two on the counter.", npc:'Dora Flint', battle:{label:'Forge Elemental + Animated Armor ×2', key:'forge_elemental', count:1}, loot:'Thunderstone ×2 · EMP Grenade v2', sleep:true, sleepCost:4 },
   SQ:{ num:35, code:'SQ', name:'scholars_qtr',    label:"Scholar's Quarter — Weimar", act:6, N:'AR', S:'BQ', E:null,  W:null,  text:"The reading room is lit by twelve candles and one scholar who fell asleep at his desk three days ago and has not been disturbed. His book is open to the same page. No one has moved it.\n\nThe stacks run three floors in each direction. In the sections where the candles don't reach — the lower east wing, the corridor behind the catalogue — specters of researchers who died mid-sentence drift between the shelves. They are not hostile. They are looking for the argument they never finished. The intellect devourers that follow them are a different matter.\n\nArchivus Ptolemy Sweelinck is in the upper observatory. He is very old. He wrote the riddle door at Katharinen Gate when he still had good knees and has not been back to check whether it still holds.\n\nHe knows why you are here. He wrote it so that someone would come.\n\nA young archivist climbs the stairs past you with an armload of bound journals, eyes fixed on the step count. She has done this route so many times she no longer needs to look.", npc:'Archivus Ptolemy Sweelinck', battle:null, loot:'Weimar Fragment (Shard #7)', sleep:true, sleepCost:0 },
@@ -7750,7 +7750,7 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   YL:{r:6,c:5},   YC:{r:7,c:5},  YD:{r:6,c:4},
   /* DeFi Land — north of Birka Slums */
   DF:{r:3,c:16},  HM:{r:3,c:17},  GL:{r:3,c:15},  S7:{r:3,c:18},
-  /* §LIX–§LXIV — The Road to Kesra cluster */
+  /* §LIX–§LXIV — The Road to Damascus cluster */
   HR:{r:17,c:5},  KS:{r:17,c:8},  DR:{r:19,c:8},  TS:{r:17,c:2},  AO:{r:17,c:0},  CI2:{r:19,c:0},  LT:{r:21,c:0},
 };
 
@@ -8641,15 +8641,15 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     completeFn:() => !!S_story.muffatManifestRead,
     xpAward:250, waypointNode:'HM', reward:300,
     disposition:'"Volume forty-one is when the absence changed. I do not know what changed it. I logged the change. That is the function of the log." — Bertha No-Bank' },
-  // ── §LIX: The Road to Kesra ──
-  quest_road_kesra: { id:'quest_road_kesra', type:'side', title:'The Light at Noon',
-    desc:"The road to Kesra is well-maintained for the first half day. After the stones give way to packed earth, the escort falls back and the dust is the same colour as the sky at noon. The warrants are in your coat. He leaves at first light.",
-    hint:'Take the road east from Herath to Kesra.',
+  // ── §LIX: The Road to Damascus ──
+  quest_road_damascus: { id:'quest_road_damascus', type:'side', title:'The Light at Noon',
+    desc:"The road to Damascus is well-maintained for the first half day. After the stones give way to packed earth, the escort falls back and the dust is the same colour as the sky at noon. The warrants are in your coat. He leaves at first light.",
+    hint:'Take the road east from Jerusalem to Damascus.',
     activateNode:'HR',
-    activateCond:() => (S_story.inventory||[]).some(i => i.name === 'Three Herath Warrants'),
+    activateCond:() => (S_story.inventory||[]).some(i => i.name === 'Three Jerusalem Warrants'),
     completeFn:() => !!S_story.saulConverted,
     xpAward:200, waypointNode:'KS', reward:0,
-    disposition:'"He says: Lead me to the city. He means Kesra. He means: I cannot complete this journey on my own and I require assistance. Both things are true for the first time simultaneously." — The road to Kesra' },
+    disposition:'"He says: Lead me to the city. He means Damascus. He means: I cannot complete this journey on my own and I require assistance. Both things are true for the first time simultaneously." — The road to Damascus' },
   quest_anath: { id:'quest_anath', type:'side', title:'The House on the Lower Road',
     desc:"Three days in a house on the lower road. The innkeeper brings food at noon and does not ask questions about his eyes. Someone else's servant brings water in the morning. He has not asked for it. He has not told anyone he cannot see. On the third morning, someone knocks.",
     hint:'Wait. Speak to Anath when he arrives on the third day.',
@@ -8658,22 +8658,22 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     completeFn:() => !!S_story.anathSightRestored,
     xpAward:300, waypointNode:'KS', reward:0,
     disposition:'"I was afraid of you for three years. I was afraid of you when I knocked on that door. I am choosing not to let that matter." — Anath' },
-  // ── §LXI: Herath return + Tarsis ──
-  quest_hellenists_herath: { id:'quest_hellenists_herath', type:'side', title:'Fifteen Days',
+  // ── §LXI: Jerusalem return + Tarsus ──
+  quest_hellenists_jerusalem: { id:'quest_hellenists_jerusalem', type:'side', title:'Fifteen Days',
     desc:"He stays fifteen days. He speaks in the assembly halls. He argues with people who disagree with him — he is very good at arguing, and the conversion did not change this about him, which is a point of some reflection. On the fifteenth day, the Hellenists gather near the gate. Barnach says: go.",
-    hint:'Stay in Herath. Wait for Barnach\'s word — fifteen days.',
+    hint:'Stay in Jerusalem. Wait for Barnach\'s word — fifteen days.',
     activateNode:'HR', activateCond:() => !!S_story.barnachVouchedHR,
     completeFn:() => !!S_story.hellenistsThreaten,
     xpAward:150, waypointNode:'HR', reward:0,
-    disposition:'"Fifteen days is how long Herath was prepared to hold this tension. It has held. Now it is releasing." — Barnach' },
+    disposition:'"Fifteen days is how long Jerusalem was prepared to hold this tension. It has held. Now it is releasing." — Barnach' },
   quest_barnach_finds: { id:'quest_barnach_finds', type:'side', title:'A Year Looking',
     desc:"Barnach has been looking for a year. He found him in the tentmaking quarter in the afternoon. He said: it\'s time. There was no skill check. No argument. Just: it\'s time. That was sufficient.",
-    hint:'Speak to Barnach at Tarsis.',
+    hint:'Speak to Barnach at Tarsus.',
     activateNode:'TS', activateCond:() => !!S_story.hellenistsThreaten,
     completeFn:() => !!S_story.barnachFoundPaul,
     xpAward:100, waypointNode:'TS', reward:0,
     disposition:'"I have been looking for you for a year. It\'s time." — Barnach' },
-  // ── §LXIII: The Copper Isle ──
+  // ── §LXIII: Cyprus ──
   quest_ezzir: { id:'quest_ezzir', type:'skill_check', title:'The Sorcerer\'s Opposition',
     desc:"Ezzir has the governor's ear. He has been in the governor's service for six years and knows where to stand. He is standing between Paul and the governor. The governor is watching. He is watching the way a man watches two arguments he has not yet decided between.",
     hint:'Speak past Ezzir. Do not let him have the first word with the governor.',
@@ -8686,9 +8686,9 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     failText:'Ezzir gets the first word and the second word. Paul gets to recover from both. Tomorrow the door is still there.',
     completeItems:[], checkPassFlag:'ezzirConfronted',
     disposition:'"I have been serving this governor for six years. You have been here eleven hours." — Ezzir' },
-  quest_governor_copper: { id:'quest_governor_copper', type:'skill_check', title:'The Governor Listens',
+  quest_governor_cyprus: { id:'quest_governor_cyprus', type:'skill_check', title:'The Governor Listens',
     desc:"Ezzir has stepped aside. The governor reads widely and holds opinions about ideas. He has an altar in the corner of his room — three hundred years old, maintained by every governor before him. He does not know why he maintains it. He is about to find out.",
-    hint:'Speak to the Governor of the Copper Isle.',
+    hint:'Speak to the Governor of Cyprus.',
     activateNode:'CI2', activateCond:() => !!S_story.ezzirConfronted,
     checkAbility:'cha', checkLabel:'Persuasion', checkDC:11,
     retryable:true, retryGateDays:0,
@@ -8698,9 +8698,9 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     failText:'The governor is interested but not convinced. He is curious rather than resistant. He will hear the description again tomorrow.',
     completeItems:[], checkPassFlag:'govCopperConverted',
     onPass:() => { if (!S_story.inventory) S_story.inventory = []; },
-    disposition:'"He said things I could not explain by the methods I usually use to explain things. I find this interesting rather than threatening. It is possible I find it interesting because it is true." — Governor of the Copper Isle' },
+    disposition:'"He said things I could not explain by the methods I usually use to explain things. I find this interesting rather than threatening. It is possible I find it interesting because it is true." — Governor of Cyprus' },
   // ── §LXIV: The Gate ──
-  quest_lame_lythros: { id:'quest_lame_lythros', type:'skill_check', title:'The Gate',
+  quest_lame_lystra: { id:'quest_lame_lystra', type:'skill_check', title:'The Gate',
     desc:"The man at the gate has been there his entire life. He has a condition of the feet. He has made his peace with it. He is watching Paul specifically, the way someone watches a person they have been waiting for without knowing they were waiting.",
     hint:'The man at the gate is watching you.',
     activateNode:'LT', activateCond:() => true,
@@ -8713,34 +8713,34 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     completeItems:[], checkPassFlag:'lameManHealed',
     disposition:'"He looked at me. He did not look at the crowd. He looked at me and said: stand. I have been told to stand before. No one has ever meant it this way." — The Man at the Gate' },
   // ── §LXIV: Left for Dead ──
-  quest_stoning_lythros: { id:'quest_stoning_lythros', type:'side', title:'Left for Dead',
+  quest_stoning_lystra: { id:'quest_stoning_lystra', type:'side', title:'Left for Dead',
     desc:"The crowd that wanted to sacrifice to a god has become the crowd that stones one. Both responses are to the same event. They had expected a god. What they got was a correction. Some crowds do not accept corrections.",
     hint:'The crowd that called you a god is still in the market square.',
-    activateNode:'LT', activateCond:() => !!(S_story.quests && S_story.quests['quest_lame_lythros'] === 'done'),
+    activateNode:'LT', activateCond:() => !!(S_story.quests && S_story.quests['quest_lame_lystra'] === 'done'),
     completeFn:() => !!S_story.stoningEvent,
     xpAward:100, waypointNode:'LT', reward:0,
     disposition:'"He got up. Everyone else left. I decided to stay." — Timael' },
   // ── §LXII: The Sending ──
-  quest_anthos_commission: { id:'quest_anthos_commission', type:'side', title:'The Sending',
-    desc:"Anthos is where the first journey forms. Barnach is here. Silar is here. The commission comes from the assembly — the first time Paul has been sent somewhere by a body of people rather than going by his own authority. He is accountable to the people who sent him and to the people he will find. He finds this clarifying.",
-    hint:'Speak to Assembly Elder Joach at Anthos.',
+  quest_antioch_commission: { id:'quest_antioch_commission', type:'side', title:'The Sending',
+    desc:"Antioch is where the first journey forms. Barnach is here. Silar is here. The commission comes from the assembly — the first time Paul has been sent somewhere by a body of people rather than going by his own authority. He is accountable to the people who sent him and to the people he will find. He finds this clarifying.",
+    hint:'Speak to Assembly Elder Joach at Antioch.',
     activateNode:'AO', activateCond:() => !!S_story.barnachFoundPaul,
     completeFn:() => !!S_story.commissionReceived,
     xpAward:150, waypointNode:'AO', reward:0,
     disposition:'"The mandate is simple because the work isn\'t." — Assembly Elder Joach' },
   // ── §LX: Basket escape ──
-  quest_basket_kesra: { id:'quest_basket_kesra', type:'skill_check', title:'Over the Wall',
-    desc:"The magistrate of Kesra has learned that Saul is in the lower city — now as a liability rather than an asset. A detention order has been issued. The warrant authority has turned against the warrant-carrier. The gate is watched. The wall is not.",
-    hint:'Find another way out of Kesra. The wall has a window. The window has a rope.',
+  quest_basket_damascus: { id:'quest_basket_damascus', type:'skill_check', title:'Over the Wall',
+    desc:"The magistrate of Damascus has learned that Saul is in the lower city — now as a liability rather than an asset. A detention order has been issued. The warrant authority has turned against the warrant-carrier. The gate is watched. The wall is not.",
+    hint:'Find another way out of Damascus. The wall has a window. The window has a rope.',
     activateNode:'KS', activateCond:() => !!S_story.anathSightRestored,
     checkAbility:'dex', checkLabel:'Stealth', checkDC:12,
     retryable:true, retryGateDays:1,
     xpAward:150,
-    vignetteText:'The basket is large enough. The rope is long enough. The wall is higher than it looks.\n\nBelow the wall: the road to Herath is open. Above: this window is the only way out of a city that has been told to hold you. The watch is on the gate. Not on the wall. Not yet.',
+    vignetteText:'The basket is large enough. The rope is long enough. The wall is higher than it looks.\n\nBelow the wall: the road to Jerusalem is open. Above: this window is the only way out of a city that has been told to hold you. The watch is on the gate. Not on the wall. Not yet.',
     passText:'Down. The road. The dark. The escort that escorted you in does not recognize the man who left.',
     failText:'You pull back before clearing the wall. The window remains. So does the watch. Try again tomorrow.',
-    completeItems:[], checkPassFlag:'escapedKesra',
-    disposition:'"The warrant authority turns against the warrant-carrier. Both are the same warrant." — the wall at Kesra' },
+    completeItems:[], checkPassFlag:'escapedDamascus',
+    disposition:'"The warrant authority turns against the warrant-carrier. Both are the same warrant." — the wall at Damascus' },
   // ── Layer 55: Visby Underground quests ──
   quest_vs_01: { id:'quest_vs_01', type:'side', title:'Solvak: The Collector',
     desc:"Debt Agent Solvak has been outside Visby six weeks with a 2,000gp debt and no leverage. You might have some.",
@@ -9040,28 +9040,28 @@ const NPC_DIALOGUE = { // → doc: story.md §FL7
     ? ((() => { S_story.solmFound = true; return '"Back room." He lifts the hinged counter without ceremony. "Three months. She reorganized the shelf twice." He says it the way he says everything — as a fact, without opinion about it.\n\nAnalyst Solm is at the back desk with a notebook open to a fresh page. She looks up once. Her pen does not move.\n\n"The transmission lasted three seconds and eleven tenths. I had stopped writing because I was listening so carefully I forgot to log. When it cut — I understood what had happened before I understood what I had heard."\n\nShe sets the pen down.\n\n"I did not return to Station 7. I came here instead. Classified knowledge you can no longer safely carry — Magistra Muffat is the only institutional function that makes sense for that." A pause. "You were down there." Not a question. She looks at the entry she wrote this morning. "Was it —"\n\nShe stops.\n\n"Confirmed," she says quietly. "That\'s sufficient." She writes it once more, cleanly, and closes the volume.'; })())
     : '"No sign on the door by design. You found it, which means you were supposed to. I\'ve been holding the Real Map for eleven years waiting for someone who needed it."' },
   MS: { name:'Ship Captain',                    quote:'"Weather\'s holding. Sleep while you can — we make the deep crossing at dawn and I won\'t slow the ship if something comes over the rail."' },
-  // §LIX–§LXI — The Road to Kesra NPCs
+  // §LIX–§LXI — The Road to Damascus NPCs
   HR: { name:'Barnach', quoteFn:() => S_story.hellenistsThreaten // §LXI
-    ? '"They are at the gate. They are at the assembly hall. They are in the square." He does not waste time on what they want — you both know. "Fifteen days is how long this city was prepared to hold this tension. It has held." He looks toward the west gate. "Tarsis. Go to Tarsis. You are from Tarsis. They will not follow you to Tarsis."'
+    ? '"They are at the gate. They are at the assembly hall. They are in the square." He does not waste time on what they want — you both know. "Fifteen days is how long this city was prepared to hold this tension. It has held." He looks toward the west gate. "Tarsus. Go to Tarsus. You are from Tarsus. They will not follow you to Tarsus."'
     : S_story.barnachVouchedHR // §LXI — Barnach has vouched; counting days
     ? '"The city is complicated about this." He means it as information, not complaint. "Some people are afraid. Some people are glad. Both groups have grounds. You have been arguing in the assembly hall." He does not say this is a problem. He says it the way he says things that are true and will continue to be true for some number of days that he has a specific number for and is not sharing yet.'
     : S_story.saulConverted // §LXI — return: first Barnach meeting
     ? ((() => { S_story.barnachVouchedHR = true; return '"He was there. I was not." He says it simply, the way someone says the one true thing they have that applies to the situation. "I am vouching for what he told me, which is everything he has."\n\nThe people in the room are afraid. Some of them have reasonable grounds for being afraid of him and some have reasonable grounds for being afraid of what he represents and some are afraid in the way people are afraid when two things they held separately have become the same thing.\n\nBarnach looks at them all and says: he was there.\n\nIt is enough. For now.'; })())
-    : '"Warrants are countersigned. Three copies: one for you, one for the escort commander, one for the Kesra magistrate. The prisoners are to be returned to Herath for processing. Do not process them in Kesra — the Kesra magistrate has standing to dismiss, and our magistrate does not."' },
+    : '"Warrants are countersigned. Three copies: one for you, one for the escort commander, one for the Damascus magistrate. The prisoners are to be returned to Jerusalem for processing. Do not process them in Damascus — the Damascus magistrate has standing to dismiss, and our magistrate does not."' },
   KS: { name:'Anath', quoteFn:() => S_story.anathSightRestored // §LIX
     ? '"I was afraid of you for three years. I was afraid of you when I knocked on that door. I am choosing not to let that matter." He picks up the bowl. He does not look at you directly — not from distaste, from the particular composure of a man who has done something he did not know he could do and is still working out what it means. The road is visible from the window. It has always been there.'
     : S_story.blindDaysKS >= 3 // Day 3 — Anath arrives
-    ? ((() => { S_story.anathSightRestored = true; return '"I was told you were here. I was told to come." He sets the bowl down on the table beside the window. His hands are steady. His voice is not quite steady. "I have heard what you did to the people in Herath. I have heard what you were coming here to do."\n\nHe does not say: I was afraid of you. He does not need to.\n\n"I am here anyway."\n\nHe places his hands. The light returns.'; })())
+    ? ((() => { S_story.anathSightRestored = true; return '"I was told you were here. I was told to come." He sets the bowl down on the table beside the window. His hands are steady. His voice is not quite steady. "I have heard what you did to the people in Jerusalem. I have heard what you were coming here to do."\n\nHe does not say: I was afraid of you. He does not need to.\n\n"I am here anyway."\n\nHe places his hands. The light returns.'; })())
     : '"The room is quiet. Three days. The innkeeper brings food at noon and does not ask questions. Someone else\'s servant brings water in the morning. The door is closed. Day ' + (S_story.blindDaysKS || 0) + ' of three.\n\nYou wait."' },
   // §LXIV: LT — Timael (does not explain his loyalty)
   LT: { name:'Timael', quoteFn:() => S_story.timaelaJoined // §LXIV
-    ? '"I am from Lythros. The city does not need me in the way it needed the man at the gate to stay. I can leave." He looks at the road. He looks at Paul. "I am not leaving."'
+    ? '"I am from Lystra. The city does not need me in the way it needed the man at the gate to stay. I can leave." He looks at the road. He looks at Paul. "I am not leaving."'
     : S_story.stoningEvent // Stoning: Timael stayed
     ? ((() => { S_story.timaelaJoined = true; return 'He was watching from the market square when it started. He did not leave when the crowd turned. He did not leave when the stones came. He did not leave after.\n\n"He got up," Timael says. He has been standing here since the crowd went home. "Everyone else left. I decided to stay."\n\nHe is young. He is watching the road. He has not examined why he stayed and does not appear to need to. "Where are you going next?"'; })())
     : S_story.lameManHealed // After healing — crowd response
     ? '"They called him a god. He corrected them. At length. They were ready to sacrifice to a god." Timael looks at the crowd dispersing from the gate. He is not sure what he just saw but he is sure it was real. "He looked at the man. Not the crowd. He said: stand. The man stood." He watches the road. "The crowd is angry. They came expecting something different than what they got."'
     : '"The man at the gate has been there my whole life. He watches the road. He has been watching a long time." A pause. "Today he is watching Paul specifically. I noticed that."' },
-  // §LXIII: CI2 — The Governor of the Copper Isle
+  // §LXIII: CI2 — The Governor of Cyprus
   CI2: { name:'The Governor', quoteFn:() => S_story.govCopperConverted // §LXIII
     ? '"He said things I could not explain by the methods I usually use to explain things." He has sent Ezzir away. The record of that departure is in the governor\'s service log as a professional reassignment, which is the most honest way he knows to describe it. "I find this interesting rather than threatening. It is possible I find it interesting because it is true." He looks at the altar he has in the corner of the room — small, made by a local craftsman, three hundred years old. "I have been maintaining it," he says, "longer than I have understood why."'
     : S_story.ezzirConfronted // Ezzir stepped aside; now the governor speaks
@@ -9069,15 +9069,15 @@ const NPC_DIALOGUE = { // → doc: story.md §FL7
     : '"I have a sorcerer who advises me. He is currently standing between us. He has been in my service for six years and I have found his counsel valuable. I am watching you both. I have not yet decided between you." A pause. "He has been watching you since you came through the gate. He positioned himself before you finished speaking. That is either a tribute to your significance or a concern about it. I am willing to find out which."' },
   // §LXII: AO — Assembly Elder Joach + name-change moment
   AO: { name:'Assembly Elder Joach', quoteFn:() => S_story.commissionReceived // §LXII
-    ? '"The mandate is simple because the work isn\'t." He says it the way a man says things he has said before and means more each time. "Send word when you reach the Copper Isle. We will be praying in the interim. We will be praying regardless."'
+    ? '"The mandate is simple because the work isn\'t." He says it the way a man says things he has said before and means more each time. "Send word when you reach Cyprus. We will be praying in the interim. We will be praying regardless."'
     : ((() => {
         S_story.commissionReceived = true;
         S_story.silarJoined = true;
         return 'He is called Paul here for the first time in this record.\n\nThe Assembly Elder sets both hands flat on the table. "We are sending you. Barnach goes with you. Silar goes with you. Take what you need. The mandate is: go to the cities you can reach and say what you know. That is the whole of it."\n\nBarnach is already at the door. Silar is checking the water supply. Paul looks at the table. He has been sent by courts before. He has been sent by his own authority before. He has never been sent by people he is accountable to in both directions.\n\n"The mandate is simple," the Elder says, "because the work isn\'t."';
       })()) },
   TS: { name:'Barnach', quoteFn:() => S_story.barnachFoundPaul // §LXI
-    ? '"I have been looking for you for a year. Anthos needs you. I need you." He does not say: come back. He is standing in the doorway of a city you grew up in and he is not telling you what to do. He is telling you that you are needed, which is different from telling you what to do, which is one of the things that is different about who he is now. "I am not going to tell you it\'s safe — you know it isn\'t. I am going to tell you it\'s time."'
-    : ((() => { S_story.barnachFoundPaul = true; return 'He comes through the gate in the early afternoon, when the tentmaking quarter is quiet and the light is flat. He has the look of someone who has been traveling a long time and not sleeping particularly well and has kept going anyway.\n\n"I have been looking for you for a year."\n\nThe tent canvas is on the frame behind you. The tools are on the bench. The city has had no particular opinion about this work and you have required none.\n\n"Anthos needs you. I need you." He looks at the canvas. He looks at you. "It\'s time."'; })()) },
+    ? '"I have been looking for you for a year. Antioch needs you. I need you." He does not say: come back. He is standing in the doorway of a city you grew up in and he is not telling you what to do. He is telling you that you are needed, which is different from telling you what to do, which is one of the things that is different about who he is now. "I am not going to tell you it\'s safe — you know it isn\'t. I am going to tell you it\'s time."'
+    : ((() => { S_story.barnachFoundPaul = true; return 'He comes through the gate in the early afternoon, when the tentmaking quarter is quiet and the light is flat. He has the look of someone who has been traveling a long time and not sleeping particularly well and has kept going anyway.\n\n"I have been looking for you for a year."\n\nThe tent canvas is on the frame behind you. The tools are on the bench. The city has had no particular opinion about this work and you have required none.\n\n"Antioch needs you. I need you." He looks at the canvas. He looks at you. "It\'s time."'; })()) },
   HL: { name:'Elder Fionn',                     quote:'"Aye, quick lad. Brown satchel. Went south. Asked the same thing about the loch. Good boy. You\'ll want to sort it — the village can\'t fish while it\'s down there."' },
   FO: { name:'Brother Aldric',                  quote:'"You\'ll want to go into that grove. I\'d advise against it. You\'ll go anyway. Come back when you\'re done bleeding."' },
   HS: { name:'The Crones — Whisper, Glut & Wane', quote:'"You smell of the map. Good. We have been waiting. Leave the stone. Take the web and the key. Go south before the tide turns — or don\'t, and meet something worse."' },
@@ -9898,8 +9898,8 @@ const _S_DEFAULTS = () => ({
   scriptorium_approach_complete: false, mimicColonyEntered: false,
   noFishingSignRead: false, fishingRodCouponRedeemed: false,
   yugurtTourBeat: {}, yugurtTourTitle: null,
-  // §LIX–§LXIII: The Road to Kesra
-  saulConverted: false, blindDaysKS: 0, anathSightRestored: false, escapedKesra: false,
+  // §LIX–§LXIII: The Road to Damascus
+  saulConverted: false, blindDaysKS: 0, anathSightRestored: false, escapedDamascus: false,
   barnachVouchedHR: false, hrHellenistDays: 0, hellenistsThreaten: false, barnachFoundPaul: false,
   commissionReceived: false, silarJoined: false, ezzirConfronted: false, govCopperConverted: false,
   lameManHealed: false, stoningEvent: false, timaelaJoined: false,
@@ -14569,27 +14569,27 @@ function storyMove(dir) {
       S_story.blindDaysKS = (S_story.blindDaysKS || 0) + 1;
       const _ksDay = S_story.blindDaysKS;
       if (_ksDay >= 3) {
-        storyMsg('Day three. You hear a knock at the door.\n\nSpeak to Anath before leaving Kesra.');
+        storyMsg('Day three. You hear a knock at the door.\n\nSpeak to Anath before leaving Damascus.');
       } else {
         storyMsg('You cannot navigate the road without sight. You wait in the house on the lower road.\n\nDay ' + _ksDay + '. Tomorrow may be different.');
       }
       storyRender(NODE_MAP[S_story.currentCode]);
       return;
     }
-    if (!S_story.escapedKesra) {
-      storyMsg('The city watch is at the gate. The magistrate of Kesra has issued a detention order — the warrant authority has turned against the warrant-carrier.\n\nThe gate is watched. The wall is not. Check your active quests.');
+    if (!S_story.escapedDamascus) {
+      storyMsg('The city watch is at the gate. The magistrate of Damascus has issued a detention order — the warrant authority has turned against the warrant-carrier.\n\nThe gate is watched. The wall is not. Check your active quests.');
       return;
     }
   }
   // §LXIII: AO→CI2 gate — commission required before first journey departs
   if (S_story.currentCode === 'AO' && dest === 'CI2' && !S_story.commissionReceived) {
-    storyMsg('The journey has not yet been commissioned. Speak to Assembly Elder Joach before leaving Anthos.');
+    storyMsg('The journey has not yet been commissioned. Speak to Assembly Elder Joach before leaving Antioch.');
     return;
   }
   // §LXI: HR→TS gate — fifteen days before Barnach releases you
   if (S_story.currentCode === 'HR' && dest === 'TS' && S_story.saulConverted) {
     if (!S_story.barnachVouchedHR) {
-      storyMsg('You have not yet been vouched for. Find Barnach in Herath first.');
+      storyMsg('You have not yet been vouched for. Find Barnach in Jerusalem first.');
       return;
     }
     if (!S_story.hellenistsThreaten) {
@@ -14597,7 +14597,7 @@ function storyMove(dir) {
       const _hrDay = S_story.hrHellenistDays;
       if (_hrDay >= 15) {
         S_story.hellenistsThreaten = true;
-        storyMsg('The Hellenists are at the gate. At the assembly hall. In the square. Fifteen days is how long this city was prepared to hold the tension.\n\nBarnach says: go. The road west leads to Tarsis.');
+        storyMsg('The Hellenists are at the gate. At the assembly hall. In the square. Fifteen days is how long this city was prepared to hold the tension.\n\nBarnach says: go. The road west leads to Tarsus.');
         storyRender(NODE_MAP[S_story.currentCode]);
       } else {
         storyMsg('Day ' + _hrDay + ' of fifteen. You speak in the assembly halls. You argue. The city watches. Barnach watches the city.');
@@ -14812,35 +14812,35 @@ function storyCheckQuests(node) {
           readText:"FIELD FILE — ANALYST I. SOLM\nStation 7, Frequency 14.225 Monitoring Assignment\nClass 3, Scholar Kings Research Division\n\n[Vol. 1, Day 1 — three months prior:]\nTransmission cut mid-entry. Suppressor origin: CY access corridor. Operator unknown to me. I do not believe the suppression was deliberate interference — the timing and mechanism suggest an automated device, not a hand on a dial. I have nonetheless lost the fourth transmission before it completed.\n\nI cannot return to Station 7. The Scholar Kings will not acknowledge the record. I am here instead, where things that cannot be officially held are held unofficially.\n\n[Vol. 1, Days 2–87:]\nTransmission confirmed, bearing 047°, no repeat. [repeated daily, same hand, same composure]\n\n[Vol. 1, Day 88 — closing entry, ink slightly different pressure:]\nRecord from the terminus received. Source confirmed: contained, non-hostile, question answered. Absence confirmed on 14.225. The archive still has an archivist.\n\nFile closed.\n\n— I. Solm" });
         msgs.push('💰 +150gp. 📋 Analyst Solm Field File obtained. File closed. The archive still has an archivist.');
       }
-      if (id === 'quest_road_kesra') { // §LIX
-        msgs.push('⚡ The road to Kesra is behind you. The warrants are still in your coat. You will not use them again.');
+      if (id === 'quest_road_damascus') { // §LIX
+        msgs.push('⚡ The road to Damascus is behind you. The warrants are still in your coat. You will not use them again.');
       }
       if (id === 'quest_anath') { // §LIX
         msgs.push('🕊️ +300 XP. Sight restored. Anath came because he was told to, and chose to anyway.');
       }
-      if (id === 'quest_basket_kesra') { // §LX
+      if (id === 'quest_basket_damascus') { // §LX
         msgs.push('🧺 +150 XP. Down. The road. The dark. The man who left does not look like the man who arrived.');
       }
-      if (id === 'quest_hellenists_herath') { // §LXI
+      if (id === 'quest_hellenists_jerusalem') { // §LXI
         msgs.push('⚡ +150 XP. Fifteen days. The tension broke. Barnach said: go.');
       }
       if (id === 'quest_barnach_finds') { // §LXI
-        msgs.push('🛤️ +100 XP. Barnach found him. A year looking. The arc resumes — Anthos is west.');
+        msgs.push('🛤️ +100 XP. Barnach found him. A year looking. The arc resumes — Antioch is west.');
       }
-      if (id === 'quest_anthos_commission') { // §LXII
+      if (id === 'quest_antioch_commission') { // §LXII
         msgs.push('⚡ +150 XP. Commissioned. Barnach and Silar traveling. The mandate is simple because the work isn\'t.');
       }
       if (id === 'quest_ezzir') { // §LXIII
         msgs.push('🗝️ +200 XP. Ezzir stepped aside. The governor is watching. The door is open.');
       }
-      if (id === 'quest_governor_copper') { // §LXIII
+      if (id === 'quest_governor_cyprus') { // §LXIII
         msgs.push('🏛️ +250 XP. The governor has been maintaining an altar for three hundred years without knowing why. He knows now.');
       }
-      if (id === 'quest_lame_lythros') { // §LXIV
+      if (id === 'quest_lame_lystra') { // §LXIV
         if (S_story.lameManHealed) msgs.push('✨ +200 XP. The man stood. The crowd had expected a god. What they got was a correction.');
         else msgs.push('🚶 +200 XP. The man did not stand. The city is unchanged. The man went home.');
       }
-      if (id === 'quest_stoning_lythros') { // §LXIV
+      if (id === 'quest_stoning_lystra') { // §LXIV
         msgs.push('🪨 +100 XP. He got up. Everyone else left. Timael decided to stay.');
       }
       if (id === 'quest_antecedent_01') { // §LV
@@ -16110,12 +16110,12 @@ function storyRender(node, prefix) {
     if (_ksConvOld) _ksConvOld.remove();
     if (node.code === 'KS' && !S_story.saulConverted) {
       S_story.saulConverted = true;
-      // quest_road_kesra will auto-complete on next storyCheckQuests
+      // quest_road_damascus will auto-complete on next storyCheckQuests
       const _convDiv = document.createElement('div');
       _convDiv.id = 'story-ks-conversion';
       _convDiv.className = 'sweelinck-variant';
       _convDiv.style.cssText = 'margin-top:10px;border-left-color:#8080a0;font-style:italic;color:#c0c8d8;font-size:13px;';
-      _convDiv.textContent = 'The road was well-maintained for the first half day. After the stones gave way to packed earth the escort fell back to march-pace. The dust was the same colour as the sky — noon, flat white, no shadow to navigate by.\n\nThe light, when it came, was not theatrical. It did not arrive with sound. It arrived with the absolute certainty of a fact that had already been true and was simply now being acknowledged. The road did not change. The dust did not change. The sky did not change.\n\nSaul of Tarsis fell.\n\nWhen he looked up, he could not see. The escort commander was asking him something. He said: Lead me to the city. He meant Kesra. He meant: I cannot complete this journey on my own and I require assistance. Both things were true for the first time simultaneously.\n\nThe warrants are still in his coat. He will not use them again.';
+      _convDiv.textContent = 'The road was well-maintained for the first half day. After the stones gave way to packed earth the escort fell back to march-pace. The dust was the same colour as the sky — noon, flat white, no shadow to navigate by.\n\nThe light, when it came, was not theatrical. It did not arrive with sound. It arrived with the absolute certainty of a fact that had already been true and was simply now being acknowledged. The road did not change. The dust did not change. The sky did not change.\n\nSaul of Tarsus fell.\n\nWhen he looked up, he could not see. The escort commander was asking him something. He said: Lead me to the city. He meant Damascus. He meant: I cannot complete this journey on my own and I require assistance. Both things were true for the first time simultaneously.\n\nThe warrants are still in his coat. He will not use them again.';
       document.getElementById('story-text-box').insertAdjacentElement('afterend', _convDiv);
     }
   }
@@ -16123,14 +16123,14 @@ function storyRender(node, prefix) {
   { const _ltStoningOld = document.getElementById('story-lt-stoning');
     if (_ltStoningOld) _ltStoningOld.remove();
     if (node.code === 'LT' && !S_story.stoningEvent
-        && S_story.quests && S_story.quests['quest_lame_lythros'] === 'done') {
+        && S_story.quests && S_story.quests['quest_lame_lystra'] === 'done') {
       S_story.stoningEvent = true;
       S_story.hp = 1;
       const _stDiv = document.createElement('div');
       _stDiv.id = 'story-lt-stoning';
       _stDiv.className = 'sweelinck-variant';
       _stDiv.style.cssText = 'margin-top:10px;border-left-color:#803030;font-style:italic;color:#d8a0a0;font-size:12px;';
-      _stDiv.textContent = 'The crowd that called him a god came back with stones. Both responses were to the same event. They had expected a god. What they got was a correction. Some crowds do not accept corrections.\n\nHe is on the ground outside the city when they leave. He is not dead. He gets up.\n\nTimael is still standing in the market square. He has been there the whole time. He does not explain why. He has not examined it. He says: where are you going next?\n\nHP: 1. You cannot be healed above 1 while in Lythros.';
+      _stDiv.textContent = 'The crowd that called him a god came back with stones. Both responses were to the same event. They had expected a god. What they got was a correction. Some crowds do not accept corrections.\n\nHe is on the ground outside the city when they leave. He is not dead. He gets up.\n\nTimael is still standing in the market square. He has been there the whole time. He does not explain why. He has not examined it. He says: where are you going next?\n\nHP: 1. You cannot be healed above 1 while in Lystra.';
       document.getElementById('story-text-box').insertAdjacentElement('afterend', _stDiv);
     }
   }
@@ -19000,7 +19000,7 @@ function storyConfirmSleep() {
   _healTotal = Math.max(_healTotal, Math.floor(S_story.hpMax * 0.5));
   const _before = S_story.hp;
   S_story.hp = Math.min(S_story.hpMax, S_story.hp + _healTotal);
-  // §LXIV: stoning at Lythros — cannot heal above 1 until the node is left
+  // §LXIV: stoning at Lystra — cannot heal above 1 until the node is left
   if (S_story.stoningEvent && nodeCode === 'LT') S_story.hp = Math.min(1, S_story.hp);
   const _healed = S_story.hp - _before;
   // Advance day

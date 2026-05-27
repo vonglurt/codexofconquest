@@ -5680,7 +5680,7 @@ Unknown. The Conclave Archivist is unnamed. The Cycle 4 components have not arri
 
 ---
 
-## §LIX — Herath + Kesra: The Conversion (✅ Implemented — Layer 98)
+## §LIX — Jerusalem + Damascus: The Conversion (✅ Implemented — Layer 98)
 
 > **Status:** Live. HR + KS nodes in NODE_MAP. Two new NPC_DIALOGUE entries. Two QUEST_DB quests. Conversion fires on KS arrival. Blind gate (3-day counter) blocks movement. Anath heals on day 3 via IIFE in KS quoteFn.
 
@@ -5690,10 +5690,10 @@ Unknown. The Conclave Archivist is unnamed. The Cycle 4 components have not arri
 |---|---|
 | Nodes added | HR (num:84, act:4, E:KS) · KS (num:85, act:4, W:HR) |
 | NODE_COORDS | HR:{r:17,c:5} · KS:{r:17,c:8} — new southeast cluster |
-| Loot at HR | Three Herath Warrants · Order of Escort (first-visit only) |
+| Loot at HR | Three Jerusalem Warrants · Order of Escort (first-visit only) |
 | _S_DEFAULTS | saulConverted · blindDaysKS · anathSightRestored |
 | NPC_DIALOGUE | HR: The Court Registrar (static) · KS: Anath (3-state quoteFn) |
-| Quests | quest_road_kesra (activates at HR, completes on saulConverted) · quest_anath (activates at KS, completes on anathSightRestored) |
+| Quests | quest_road_damascus (activates at HR, completes on saulConverted) · quest_anath (activates at KS, completes on anathSightRestored) |
 | Conversion event | storyRender KS block: on first arrival, sets saulConverted=true, injects conversion prose inline |
 | Blind gate | storyMove KS check: blocks all exits while !anathSightRestored; increments blindDaysKS; day 3 message prompts Anath |
 
@@ -5713,14 +5713,14 @@ The conversion fires as an inline storyRender div on first arrival at KS. No ski
 
 | Layer | Content |
 |---|---|
-| §LIX (98) | HR + KS live. Conversion. Blind gate. Anath heals. quest_road_kesra + quest_anath. |
-| §LX (99) | DR node. KS→DR connection. Detention gate. quest_basket_kesra (DEX DC 12, retryable). escapedKesra flag. |
-| §LXI (next) | HR return + Barnach vouches + 15-day Hellenist gate → TS (Tarsis) |
-| §LXII | TS silent years + Barnach arrival → AO (Anthos) + commissioning |
+| §LIX (98) | HR + KS live. Conversion. Blind gate. Anath heals. quest_road_damascus + quest_anath. |
+| §LX (99) | DR node. KS→DR connection. Detention gate. quest_basket_damascus (DEX DC 12, retryable). escapedDamascus flag. |
+| §LXI (next) | HR return + Barnach vouches + 15-day Hellenist gate → TS (Tarsus) |
+| §LXII | TS silent years + Barnach arrival → AO (Antioch) + commissioning |
 
-## §LXIII — The Copper Isle: Ezzir + The Governor (✅ Implemented — Layer 102)
+## §LXIII — Cyprus: Ezzir + The Governor (✅ Implemented — Layer 102)
 
-> **Status:** Live. CI2 node. AO.S → CI2. AO→CI2 commission gate. Governor 3-state quoteFn. Two skill checks: quest_ezzir (WIS DC 14) + quest_governor_copper (CHR DC 11). New flags: ezzirConfronted, govCopperConverted.
+> **Status:** Live. CI2 node. AO.S → CI2. AO→CI2 commission gate. Governor 3-state quoteFn. Two skill checks: quest_ezzir (WIS DC 14) + quest_governor_cyprus (CHR DC 11). New flags: ezzirConfronted, govCopperConverted.
 
 ### §LXIII-A. What Was Built
 
@@ -5731,7 +5731,7 @@ The conversion fires as an inline storyRender div on first arrival at KS. No ski
 | CI2 NPC | The Governor — 3-state quoteFn: default (watching) / ezzirConfronted (listening) / govCopperConverted (understood) |
 | AO→CI2 gate | storyMove: commissionReceived required |
 | quest_ezzir | WIS/Insight DC 14, retryable 1-day gate. checkPassFlag: ezzirConfronted |
-| quest_governor_copper | CHR/Persuasion DC 11, retryable 0-day gate, activates after ezzirConfronted. checkPassFlag: govCopperConverted |
+| quest_governor_cyprus | CHR/Persuasion DC 11, retryable 0-day gate, activates after ezzirConfronted. checkPassFlag: govCopperConverted |
 
 ### §LXIII-B. The Door and the Room
 
@@ -5742,27 +5742,27 @@ The governor maintains a three-hundred-year-old altar in the corner of his room.
 ### §LXIII-C. Arc Shape — Journey 1
 
 ```
-AO (commission) → CI2 (Ezzir, governor) → LT (Lythros, lame man, stoning, Timael)
+AO (commission) → CI2 (Ezzir, governor) → LT (Lystra, lame man, stoning, Timael)
 ```
 
 Next: §LXV — PL (Phillam, Lyra/purple cloth, prison earthquake, Silar).
 
 ---
 
-## §LXIV — Lythros: The Gate + The Stoning (✅ Implemented — Layer 103)
+## §LXIV — Lystra: The Gate + The Stoning (✅ Implemented — Layer 103)
 
-> **Status:** Live. LT node (num:90, act:4, CI2.S). Timael 4-state quoteFn. Two quests: quest_lame_lythros (WIS/Faith DC 10, non-retryable) + quest_stoning_lythros (survival event). HP drops to 1 on stoningEvent. Cannot heal above 1 at LT. Timael joins after stoning.
+> **Status:** Live. LT node (num:90, act:4, CI2.S). Timael 4-state quoteFn. Two quests: quest_lame_lystra (WIS/Faith DC 10, non-retryable) + quest_stoning_lystra (survival event). HP drops to 1 on stoningEvent. Cannot heal above 1 at LT. Timael joins after stoning.
 
 ### §LXIV-A. What Was Built
 
 | Element | Detail |
 |---|---|
-| LT node | num:90, act:4, N:CI2 — Lythros, market civic pride, man at gate |
+| LT node | num:90, act:4, N:CI2 — Lystra, market civic pride, man at gate |
 | CI2 update | S: null → S:'LT' |
 | Timael NPC | 4-state quoteFn: default (watching) / lameManHealed (crowd response) / stoningEvent IIFE (joined) / timaelaJoined (not leaving) |
-| quest_lame_lythros | WIS/Faith DC 10, non-retryable. checkPassFlag: lameManHealed. "No one has ever meant it this way." |
-| quest_stoning_lythros | side, activates when quest_lame_lythros done. completeFn: stoningEvent. HP=1 via storyRender block |
-| storyRender block | Fires at LT after quest_lame_lythros done. Sets stoningEvent=true, hp=1. Injects crowd-turns narrative |
+| quest_lame_lystra | WIS/Faith DC 10, non-retryable. checkPassFlag: lameManHealed. "No one has ever meant it this way." |
+| quest_stoning_lystra | side, activates when quest_lame_lystra done. completeFn: stoningEvent. HP=1 via storyRender block |
+| storyRender block | Fires at LT after quest_lame_lystra done. Sets stoningEvent=true, hp=1. Injects crowd-turns narrative |
 | storyConfirmSleep HP cap | stoningEvent && nodeCode==='LT' → hp capped at 1 |
 
 ### §LXIV-B. The Two Crowd Responses
@@ -5783,27 +5783,27 @@ Does not explain why he stayed. Has not examined it. Does not appear to need to.
 |---|---|---|
 | §LIX (98) | HR + KS | Conversion. Blind gate. Anath heals. |
 | §LX (99) | DR | Detention gate. Basket escape (DEX DC 12). |
-| §LXI (100) | HR return + TS | Barnach vouches. 15-day Hellenist gate. Tarsis. |
+| §LXI (100) | HR return + TS | Barnach vouches. 15-day Hellenist gate. Tarsus. |
 | §LXII (101) | AO | Commissioning. Name-change. Silar joins. |
 | §LXIII (102) | CI2 | Ezzir (WIS DC 14). Governor (CHR DC 11). |
 | §LXIV (103) | LT | Lame man (WIS DC 10). Stoning. Timael joins. |
 
 ---
 
-## §LXII — Anthos: The Sending (✅ Implemented — Layer 101)
+## §LXII — Antioch: The Sending (✅ Implemented — Layer 101)
 
-> **Status:** Live. AO node. TS.W → AO. Assembly Elder Joach 2-state quoteFn (IIFE sets commissionReceived + silarJoined). storyRender name-change notice at AO on first commission visit. quest_anthos_commission.
+> **Status:** Live. AO node. TS.W → AO. Assembly Elder Joach 2-state quoteFn (IIFE sets commissionReceived + silarJoined). storyRender name-change notice at AO on first commission visit. quest_antioch_commission.
 
 ### §LXII-A. What Was Built
 
 | Element | Detail |
 |---|---|
-| AO node | num:88, act:4, E:TS — Anthos mixed quarter, sleep:true (4gp) |
+| AO node | num:88, act:4, E:TS — Antioch mixed quarter, sleep:true (4gp) |
 | TS update | W: null → W:'AO' |
 | AO NPC | Assembly Elder Joach — 2-state quoteFn: IIFE commission → return reflection |
 | Name change | storyRender block: "He is called Paul here for the first time." — injected on first AO arrival post-commission |
 | _S_DEFAULTS | commissionReceived · silarJoined |
-| Quest | quest_anthos_commission (activates at AO when barnachFoundPaul, completes on commissionReceived) |
+| Quest | quest_antioch_commission (activates at AO when barnachFoundPaul, completes on commissionReceived) |
 
 ### §LXII-B. The Name
 
@@ -5812,26 +5812,26 @@ Does not explain why he stayed. Has not examined it. Does not appear to need to.
 ### §LXII-C. Arc Shape — First Journey Path
 
 ```
-HR (pre-conversion) → KS (blind, Anath) → DR (optional desert) → HR (return, Barnach vouches, 15 days) → TS (silent years) → AO (commissioning, Paul named) → CI2 (Copper Isle) → LT (Lythros, Timael)
+HR (pre-conversion) → KS (blind, Anath) → DR (optional desert) → HR (return, Barnach vouches, 15 days) → TS (silent years) → AO (commissioning, Paul named) → CI2 (Copper Isle) → LT (Lystra, Timael)
 ```
 
 Next: §LXIII — CI2 (Copper Isle, Ezzir encounter, governor conversion).
 
 ---
 
-## §LXI — Herath Return + Tarsis (✅ Implemented — Layer 100)
+## §LXI — Jerusalem Return + Tarsus (✅ Implemented — Layer 100)
 
-> **Status:** Live. TS node added. HR.W → TS. HR NPC_DIALOGUE updated to 4-state Barnach quoteFn. 15-day Hellenist gate in storyMove. quest_hellenists_herath + quest_barnach_finds. Barnach TS 2-state quoteFn (IIFE sets barnachFoundPaul on first click).
+> **Status:** Live. TS node added. HR.W → TS. HR NPC_DIALOGUE updated to 4-state Barnach quoteFn. 15-day Hellenist gate in storyMove. quest_hellenists_jerusalem + quest_barnach_finds. Barnach TS 2-state quoteFn (IIFE sets barnachFoundPaul on first click).
 
 ### §LXI-A. What Was Built
 
 | Element | Detail |
 |---|---|
-| TS node | num:87, act:4, E:HR — Tarsis tentmaking quarter, sleep:true (3gp), loot:Tentmaking Tools |
+| TS node | num:87, act:4, E:HR — Tarsus tentmaking quarter, sleep:true (3gp), loot:Tentmaking Tools |
 | HR update | W: null → W:'TS' |
-| HR NPC_DIALOGUE | 4-state quoteFn: pre-conversion (Registrar) / post-conversion return (Barnach vouches, IIFE) / barnachVouchedHR (watching days) / hellenistsThreaten (go to Tarsis) |
+| HR NPC_DIALOGUE | 4-state quoteFn: pre-conversion (Registrar) / post-conversion return (Barnach vouches, IIFE) / barnachVouchedHR (watching days) / hellenistsThreaten (go to Tarsus) |
 | HR→TS gate | storyMove: barnachVouchedHR required + 15-day counter → hellenistsThreaten |
-| Quests | quest_hellenists_herath (activates post-vouch, completes when hellenistsThreaten) · quest_barnach_finds (activates at TS, completes when barnachFoundPaul) |
+| Quests | quest_hellenists_jerusalem (activates post-vouch, completes when hellenistsThreaten) · quest_barnach_finds (activates at TS, completes when barnachFoundPaul) |
 | TS Barnach | 2-state quoteFn: IIFE sets barnachFoundPaul on first click → departure speech on return |
 
 ### §LXI-B. Barnach's Vouching
@@ -5840,13 +5840,13 @@ The vouch is an IIFE: first time the player talks to Barnach on HR return, barna
 
 ### §LXI-C. The Silent Years
 
-Tarsis delivers loot (Tentmaking Tools) on first visit, then Barnach arrives. The arc earns the silence: the player has nowhere to go. The road east leads back to Herath (which sent them away). The road west doesn't exist yet. The only thing to do is work. Then Barnach comes through the gate.
+Tarsus delivers loot (Tentmaking Tools) on first visit, then Barnach arrives. The arc earns the silence: the player has nowhere to go. The road east leads back to Jerusalem (which sent them away). The road west doesn't exist yet. The only thing to do is work. Then Barnach comes through the gate.
 
 ---
 
-## §LX — Basket Escape + Dust Roads (✅ Implemented — Layer 99)
+## §LX — Basket Escape + Arabia (✅ Implemented — Layer 99)
 
-> **Status:** Live. DR node added. KS.S → DR. Two-stage KS gate (blind → detention). quest_basket_kesra (skill_check, DEX DC 12, retryable, 1-day gate). escapedKesra flag. DR is optional negative space — desert encounter, no quests, no NPCs.
+> **Status:** Live. DR node added. KS.S → DR. Two-stage KS gate (blind → detention). quest_basket_damascus (skill_check, DEX DC 12, retryable, 1-day gate). escapedDamascus flag. DR is optional negative space — desert encounter, no quests, no NPCs.
 
 ### §LX-A. What Was Built
 
@@ -5854,25 +5854,25 @@ Tarsis delivers loot (Tentmaking Tools) on first visit, then Barnach arrives. Th
 |---|---|
 | DR node | num:86, act:4, N:KS — desert_caravan terrain, optional retreat, sleep:true (no cost) |
 | KS update | S: null → S:'DR' |
-| Two-stage KS gate | Blind gate (§LIX) + detention gate (§LX): escapedKesra required after sight restored |
-| quest_basket_kesra | DEX/Stealth DC 12, retryable, 1-day gate, checkPassFlag:'escapedKesra' |
-| _S_DEFAULTS | escapedKesra: false |
+| Two-stage KS gate | Blind gate (§LIX) + detention gate (§LX): escapedDamascus required after sight restored |
+| quest_basket_damascus | DEX/Stealth DC 12, retryable, 1-day gate, checkPassFlag:'escapedDamascus' |
+| _S_DEFAULTS | escapedDamascus: false |
 
 ### §LX-B. The Two Walls
 
-The player encounters two walls in Kesra. The first is blindness — navigation impossible without sight. The second is the magistrate's watch. Both walls are structural: the first resolves when Anath knocks; the second resolves when the player finds the window the watch hasn't covered. The arc earns both gates — they are not arbitrary difficulty, they are the form that Kesra takes when the warrant authority reverses.
+The player encounters two walls in Damascus. The first is blindness — navigation impossible without sight. The second is the magistrate's watch. Both walls are structural: the first resolves when Anath knocks; the second resolves when the player finds the window the watch hasn't covered. The arc earns both gates — they are not arbitrary difficulty, they are the form that Damascus takes when the warrant authority reverses.
 
-### §LX-C. The Dust Roads
+### §LX-C. Arabia
 
 DR has one encounter (Desert Wanderer ×2) and no NPCs. The node text is the only content: "Some things about a person belong to the desert." The player can sleep there for free — the desert is the only space in the arc where nothing is asked of them. Returning to KS.N closes the retreat.
 
 ---
 
-### §FUTURE-01 — The Road to Kesra: Saul of Tarsis Arc
+### §FUTURE-01 — The Road to Damascus: Saul of Tarsus Arc
 
-**Concept:** A new act following the travels of Saul of Tarsis — his conversion on the road, his three missionary circuits across the inland sea, and his eventual arrest and voyage to the imperial capital. The arc is structurally derived from a historical itinerary (see `lab-report-saul-paul-travel-reference.md` for source material) but all city names, NPC names, and institutions are fictionalized to fit the Roll2Hit world.
+**Concept:** A new act following the travels of Saul of Tarsus — his conversion on the road, his three missionary circuits across the inland sea, and his eventual arrest and voyage to the imperial capital. The arc is structurally derived from a historical itinerary (see `lab-report-saul-paul-travel-reference.md` for source material) but all city names, NPC names, and institutions are fictionalized to fit the Roll2Hit world.
 
-**Mechanical hook:** The Road to Kesra conversion is not a cutscene — it is a world event. The player walks the road to Kesra as Saul (enforcer) and arrives in Kesra as Paul (apostle). The conversion changes the available quest types: enforcement quests close, persuasion and network quests open. Pre-conversion Saul has combat resources (order escort, arrest warrants). Post-conversion Paul has rhetoric resources (speeches, NPC disposition chains) and loses the combat support. This is the first instance in Roll2Hit where a mid-arc identity shift rewrites the world map's available interactions.
+**Mechanical hook:** The Road to Damascus conversion is not a cutscene — it is a world event. The player walks the road to Damascus as Saul (enforcer) and arrives in Damascus as Paul (apostle). The conversion changes the available quest types: enforcement quests close, persuasion and network quests open. Pre-conversion Saul has combat resources (order escort, arrest warrants). Post-conversion Paul has rhetoric resources (speeches, NPC disposition chains) and loses the combat support. This is the first instance in Roll2Hit where a mid-arc identity shift rewrites the world map's available interactions.
 
 ---
 
@@ -5882,13 +5882,13 @@ DR has one encounter (Desert Wanderer ×2) and no NPCs. The node text is the onl
 
 | Historical | In-Game Name | Node Code |
 |---|---|---|
-| Jerusalem | **Herath** | `HR` |
-| Damascus | **Kesra** | `KS` |
-| Arabia (Nabatean desert) | **The Dust Roads** | `DR` |
-| Tarsus | **Tarsis** | `TS` |
-| Antioch | **Anthos** | `AO` |
-| Cyprus | **The Copper Isle** | `CI2` |
-| Lystra | **Lythros** | `LT` |
+| Jerusalem | **Jerusalem** | `HR` |
+| Damascus | **Damascus** | `KS` |
+| Arabia (Nabatean desert) | **Arabia** | `DR` |
+| Tarsus | **Tarsus** | `TS` |
+| Antioch | **Antioch** | `AO` |
+| Cyprus | **Cyprus** | `CI2` |
+| Lystra | **Lystra** | `LT` |
 | Athens | **Aethon** | `AE` |
 | Corinth | **Korath** | `KR` |
 | Ephesus | **Ephrath** | `EF` |
@@ -5901,25 +5901,25 @@ DR has one encounter (Desert Wanderer ×2) and no NPCs. The node text is the onl
 | Ananias | **Anath** | Healer; restores sight |
 | Barnabas | **Barnach** | Advocate; first journey partner |
 | Silas | **Silar** | Second journey co-traveler |
-| Timothy | **Timael** | Third companion; picked up at Lythros |
+| Timothy | **Timael** | Third companion; picked up at Lystra |
 | Lydia | **Lyra** | Purple cloth merchant; first convert at Phillam |
 | Priscilla + Aquila | **Prisca + Akil** | Tentmakers; harbor Paul in Korath |
 | Felix / Festus | **The Governors** | Prosecution arc; Paul appeals to the Seat |
-| Bar-Jesus (the sorcerer) | **Ezzir** | Sorcerer-for-hire; opposes on the Copper Isle |
+| Bar-Jesus (the sorcerer) | **Ezzir** | Sorcerer-for-hire; opposes on Cyprus |
 
 ---
 
 #### Act Structure
 
 **Pre-conversion (Saul):**
-- Player travels from Herath toward Kesra with warrants authorizing arrest of the dissenters
+- Player travels from Jerusalem toward Damascus with warrants authorizing arrest of the dissenters
 - Encounters along the road: hostile terrain, order escorts, a bound prisoner being transferred
-- The Road to Kesra node: WIS save or INT check has no correct answer — the light comes regardless; what changes is how clearly the player hears the voice
+- The Road to Damascus node: WIS save or INT check has no correct answer — the light comes regardless; what changes is how clearly the player hears the voice
 
 **Post-conversion (Paul):**
-- Three days blind in Kesra — time-locked passage; player cannot move until the encounter with Anath
+- Three days blind in Damascus — time-locked passage; player cannot move until the encounter with Anath
 - Anath at the lower-city inn: `quest_anath` — NPC will not appear until blind days have passed; delivers healing
-- The Dust Roads interlude: optional node before returning to Kesra — no quests, only terrain and time; desert encounter table
+- Arabia interlude: optional node before returning to Damascus — no quests, only terrain and time; desert encounter table
 
 ---
 
@@ -5927,14 +5927,14 @@ DR has one encounter (Desert Wanderer ×2) and no NPCs. The node text is the onl
 
 | Code | City | Act | Notes |
 |---|---|---|---|
-| `HR` | Herath | Pre-conversion | Law-city; source of warrants; first node |
-| `KS` | Kesra | Conversion | Arrival blind; Anath; basket escape over the wall |
-| `DR` | The Dust Roads | Post-conversion retreat | Optional; desert only; no NPCs |
-| `HR` | Herath (return) | Early post-conversion | Barnach vouches; 15-day stay; Hellenists threaten |
-| `TS` | Tarsis | The silent years | Paul's home city; Barnach retrieves him |
-| `AO` | Anthos | Base of operations | First called by new name here; commissioning node |
-| `CI2` | The Copper Isle | Journey 1 | Ezzir encounter; governor conversion |
-| `LT` | Lythros | Journey 1 | Lame man healed; stoning; left for dead |
+| `HR` | Jerusalem | Pre-conversion | Law-city; source of warrants; first node |
+| `KS` | Damascus | Conversion | Arrival blind; Anath; basket escape over the wall |
+| `DR` | Arabia | Post-conversion retreat | Optional; desert only; no NPCs |
+| `HR` | Jerusalem (return) | Early post-conversion | Barnach vouches; 15-day stay; Hellenists threaten |
+| `TS` | Tarsus | The silent years | Paul's home city; Barnach retrieves him |
+| `AO` | Antioch | Base of operations | First called by new name here; commissioning node |
+| `CI2` | Cyprus | Journey 1 | Ezzir encounter; governor conversion |
+| `LT` | Lystra | Journey 1 | Lame man healed; stoning; left for dead |
 | `PL` | Phillam | Journey 2 | Lyra conversion; prison + earthquake event |
 | `AE` | Aethon | Journey 2 | Unknown Altar speech; rhetoric skill check |
 | `KR` | Korath | Journey 2 | 18-month stay; tentmaking with Prisca + Akil |
@@ -5948,11 +5948,11 @@ DR has one encounter (Desert Wanderer ×2) and no NPCs. The node text is the onl
 
 | ID | Title | Type |
 |---|---|---|
-| `quest_road_kesra` | The Light at Noon | Conversion event — no pass/fail |
+| `quest_road_damascus` | The Light at Noon | Conversion event — no pass/fail |
 | `quest_anath` | The House on the Lower Road | NPC encounter; 3-day time gate |
 | `quest_barnach_vouches` | Vouched For | Disposition: Barnach favor required |
 | `quest_ezzir` | The Sorcerer's Opposition | Combat/spell-block; WIS save vs blindness |
-| `quest_stoning_lythros` | Left for Dead | Post-combat survival; HP threshold event |
+| `quest_stoning_lystra` | Left for Dead | Post-combat survival; HP threshold event |
 | `quest_unknown_altar` | The Unknown Altar | Rhetoric skill check (INT + Proficiency); partial/full outcomes |
 | `quest_temple_riot` | Riot in the Marketplace | Crowd encounter; escape-route decision tree |
 | `quest_shipwreck_melta` | Two Hundred and Seventy-Six | Sea encounter; survival without attack roll |
@@ -5965,9 +5965,9 @@ DR has one encounter (Desert Wanderer ×2) and no NPCs. The node text is the onl
 | Key | Name | Role | Node |
 |---|---|---|---|
 | `anath` | Anath | Healer; restores sight; reluctant obedience | KS |
-| `barnach` | Barnach | Advocate; retrieves Paul from Tarsis; first journey partner | HR / TS / AO |
+| `barnach` | Barnach | Advocate; retrieves Paul from Tarsus; first journey partner | HR / TS / AO |
 | `silar` | Silar | Second journey co-traveler; imprisoned with Paul at Phillam | AO / PL |
-| `timael` | Timael | Picked up at Lythros; youngest companion | LT |
+| `timael` | Timael | Picked up at Lystra; youngest companion | LT |
 | `lyra` | Lyra | Purple cloth merchant; first convert at Phillam; provides lodging | PL |
 | `prisca_akil` | Prisca + Akil | Tentmakers; harbor Paul in Korath 18 months | KR |
 | `the_governors` | The Governors | Prosecution arc; Paul appeals to the Seat | HR → ST |
@@ -5979,7 +5979,7 @@ DR has one encounter (Desert Wanderer ×2) and no NPCs. The node text is the onl
 | Terrain | New? | Notes |
 |---|---|---|
 | `ancient_road` | New | Paved road; low encounter rate; movement bonus |
-| `desert_caravan` | New | The Dust Roads + interior desert; heat mechanics possible |
+| `desert_caravan` | New | Arabia + interior desert; heat mechanics possible |
 | `assembly_hall` | New | Interior node; dialogue-only; persuasion checks |
 | `locked_cell` | New | Time-locked node; earthquake event wired to day counter |
 | `harbor_ancient` | Reuse `harbor` | Inland sea ports: Kaphos, Mileth, Keth-Shor |

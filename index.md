@@ -11,10 +11,10 @@
 | HTML line count | ~20,800 | ✅ |
 | Lab reports on disk | 43 | ✅ |
 | Lab reports in index | 43 | ✅ |
-| Node text rewrites (noir register) | 88 / 88 | ✅ LT (Lythros) added Layer 103 |
+| Node text rewrites (noir register) | 88 / 88 | ✅ LT (Lystra) added Layer 103 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
 | Layers implemented | 0–103 | ✅ |
-| Last sync pass | 2026-05-27 Layer 103 (§LXIV: LT node, Timael 4-state, quest_lame_lythros WIS DC10 + quest_stoning_lythros survival, HP cap at LT) | ✅ |
+| Last sync pass | 2026-05-27 Layer 103 (§LXIV: LT node, Timael 4-state, quest_lame_lystra WIS DC10 + quest_stoning_lystra survival, HP cap at LT) | ✅ |
 
 > Update this table at the start of each session: recount lab reports with `ls lab-report-*.md | wc -l`, check HTML line count with `wc -l roll2hit-v3.html`, confirm FC item status.
 
