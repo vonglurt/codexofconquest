@@ -1,0 +1,1068 @@
+SAUL2PAUL — THE ROAD TO KESRA
+Arc Design Document · Roll2Hit: The Shattered Codex
+§FUTURE-01 · Status: Designed, Unimplemented
+
+─────────────────────────────────────────────────────────────────────────────
+
+CONCEPT
+
+A new act following the travels of Saul of Tarsis. His conversion on the road.
+His three missionary circuits across the inland sea. His arrest and voyage to
+the imperial capital. Every node maps to a documented historical stop. Quests
+dramatize events; they do not invent them. Source fidelity is the constraint,
+not the decoration.
+
+The conversion is not a cutscene. It is a world event. The player walks the
+road to Kesra as Saul — enforcer, warrant-carrier, man with a list. He arrives
+in Kesra as Paul. The world has not changed. The player's available actions
+have changed entirely.
+
+This is the first arc in Roll2Hit where a mid-arc identity shift rewrites what
+the player can do.
+
+─────────────────────────────────────────────────────────────────────────────
+
+NAME TRANSLATION TABLE
+
+All historical names fictionalized for in-game use. Lab report uses original
+names for source reference. Do not expose historical names in-game.
+
+  Historical          In-Game Name          Node Code
+  Jerusalem         → Herath                HR
+  Damascus          → Kesra                 KS
+  Arabia (Nabatean) → The Dust Roads        DR
+  Tarsus            → Tarsis                TS
+  Antioch           → Anthos                AO
+  Cyprus            → The Copper Isle       CI2
+  Lystra            → Lythros               LT
+  Athens            → Aethon                AE
+  Corinth           → Korath                KR
+  Ephesus           → Ephrath               EF
+  Philippi          → Phillam               PL
+  Malta             → Melta                 MT
+  Rome              → The Seat              ST
+
+  Historical NPC      In-Game Name          Role
+  Ananias           → Anath                 Healer; restores sight; reluctant
+  Barnabas          → Barnach               Advocate; first journey partner
+  Silas             → Silar                 Second journey co-traveler
+  Timothy           → Timael                Third companion; picked up Lythros
+  Lydia             → Lyra                  Purple cloth merchant; Phillam
+  Priscilla + Aquila→ Prisca + Akil         Tentmakers; Korath 18 months
+  Felix / Festus    → The Governors         Prosecution; Paul appeals to Seat
+  Bar-Jesus         → Ezzir                 Sorcerer-for-hire; Copper Isle
+
+─────────────────────────────────────────────────────────────────────────────
+
+THE MECHANIC — PRE- AND POST-CONVERSION
+
+Pre-conversion (Saul):
+  - Warrant authority: can compel NPCs through legal instruments
+  - Order escort available at HR and along road nodes
+  - INT/STR/CON primary — Saul operates through power
+  - Arrest quests available (dissenter lists, search-and-detain)
+  - Persuasion checks unavailable; Saul does not persuade, he commands
+
+Post-conversion (Paul):
+  - All warrant authority closed. Arrest quests locked permanently.
+  - Rhetoric resources unlock: speeches, letters, NPC disposition chains
+  - CHR/WIS/INT primary — Paul operates through presence
+  - New quest type: "testimony" — describe what happened; crowd reaction varies
+  - The companion system activates: Barnach, Silar, Timael travel with you
+    and their presence modifies encounter outcomes
+
+Trade summary: you lose the ability to compel. You gain the ability to persuade
+people who cannot be compelled. This is not an upgrade. It is a reframing.
+
+─────────────────────────────────────────────────────────────────────────────
+
+NODE MAP AND VIGNETTE TEXT
+
+─── HR — HERATH ─────────────────────────────────────────────────────────────
+Act: Pre-conversion
+Connections: Road south toward Kesra
+
+Node text:
+The city writes its authority in stone. The law courts have been here for three
+hundred years; the newest wall is a century old; the oldest inscription above
+the gate has been re-carved twice because the stone wore before the law did.
+
+Saul of Tarsis has a desk in the lower court. On that desk: three warrants,
+two authorization letters, and a list of names. The names are of people who
+have been meeting in houses and saying things the court considers seditious.
+The warrant language is precise: 'Bring them.' Not 'question.' Not 'invite.'
+Bring.
+
+He has done this before. The warrants are a bureaucratic instrument. He treats
+them with the seriousness appropriate to bureaucratic instruments — which is
+to say, complete and impersonal seriousness. He does not hate the people on
+the list. He has decided that the list is correct. He has not examined that
+decision recently.
+
+The road to Kesra leaves from the east gate. He has already requisitioned
+the escort. He leaves at first light.
+
+NPC: The Court Registrar
+Quote: "Warrants are countersigned. Three copies: one for you, one for the
+escort commander, one for the Kesra magistrate. The prisoners are to be
+returned to Herath for processing. Do not process them in Kesra — the
+Kesra magistrate has standing to dismiss, and our magistrate does not."
+
+Loot: Three Herath Warrants (key item) · Order of Escort (key item)
+Battle: null
+Sleep: true (inn, 5gp)
+
+─── ROAD TO KESRA (conversion node) ─────────────────────────────────────────
+Act: Conversion
+Note: This node has no combat, no loot, no NPC. It is a single event.
+
+Quest: quest_road_kesra — "The Light at Noon"
+Type: Conversion event. No pass/fail. The light comes regardless.
+
+Node text:
+The road is well-maintained for the first half day. After that the stones give
+way to packed earth and the escort falls back to march-pace. The dust is the
+same colour as the sky at this hour — noon, flat white, the sun directly
+overhead with no shadow to navigate by.
+
+The light, when it comes, is not theatrical. It does not arrive with sound.
+It arrives with the absolute certainty of a fact that has already been true
+and is simply now being acknowledged. The road does not change. The dust does
+not change. The sky does not change.
+
+Saul of Tarsis falls.
+
+He cannot say how long he is down. When he looks up, he cannot see. The
+escort commander is asking him something. He cannot hear the words correctly.
+He says: 'Lead me to the city.' He means Kesra. He means: I cannot complete
+this journey on my own and I require assistance. Both things are true for
+the first time simultaneously.
+
+The warrants are still in his coat. He does not use them again.
+
+[WIS save DC 10 — determines the clarity of what is heard, not whether it
+is heard. On a pass: full voice. On a fail: impressions only. Both outcomes
+advance the node. Both outcomes convert. The WIS save is not a test of
+worthiness — it is a measure of what the player carries into the encounter.]
+
+Vignette text (WIS pass):
+The voice says his name. Not the name he uses in the court. The name before that.
+He does not know how the voice knows the name before that. He does not ask.
+
+Vignette text (WIS fail):
+Something happens on the road. He will spend three days working out what it was.
+He will never work out all of it.
+
+[State changes on this node:
+  - S_story.saulConverted = true
+  - Warrant authority: locked
+  - Arrest quests: locked permanently
+  - Companion system: activates
+  - Player name in all subsequent dialogue: 'Paul' not 'Saul']
+
+─── KS — KESRA ──────────────────────────────────────────────────────────────
+Act: Post-conversion, early
+Connections: Road north to Herath · South to Dust Roads · Harbor east
+
+Time gate: Player cannot leave until saulConverted === true AND blindDaysKS >= 3.
+Day counter increments each time the player attempts to leave. On day 3,
+Anath appears.
+
+Node text:
+The escort has left him at the gate of the lower city. They are not required
+to wait — the warrant authority is his, not theirs, and he has not invoked it
+since the road. They leave with the courtesy appropriate to leaving a superior
+officer who has become someone else's problem.
+
+He does not know anyone in Kesra who is not on the list. The list is in his
+coat. He does not take it out.
+
+Three days. He is in a house on the lower road. The innkeeper brings food at
+noon and does not ask questions about his eyes. Someone else's servant —
+he does not know whose — has been bringing water in the morning. He has not
+asked for it. He has not told anyone he cannot see.
+
+On the third morning, someone knocks.
+
+Quest: quest_anath — "The House on the Lower Road"
+Type: NPC encounter. Activates on day 3 (blindDaysKS >= 3).
+Completes on: anathSightRestored === true
+
+NPC: Anath
+Quote: "I was told you were here. I was told to come." He sets the bowl down.
+His hands are steady. His voice is not quite steady. "I have heard what you
+did to the people in Herath. I have heard what you were coming here to do.
+I am here anyway." He does not explain why. He does not need to. He places
+his hands. The light returns.
+
+Disposition: "I was afraid of you for three years. I was afraid of you when
+I knocked on that door. I am choosing not to let that matter." — Anath
+
+State: anathSightRestored = true · sightRestored = true
+Reward: 300 XP · Sight mechanics restored (if implemented)
+
+[The basket escape: a second quest in Kesra, triggered when the city magistrate
+(having learned Saul is in Kesra, now as a liability rather than an asset)
+issues a detention warrant. The warrant authority turns against the warrant-
+carrier. Quest: quest_basket_kesra — "Over the Wall." A basket, a rope, a
+window in the city wall at night. Completes on escapedKesra = true.]
+
+Quest: quest_basket_kesra — "Over the Wall"
+Type: Stealth skill check. DEX · DC 12.
+Hint: Get out of Kesra before the magistrate's watch closes the gate.
+Vignette: The basket is large enough. The rope is long enough. The wall
+is higher than it looks. Below the wall: the road to Herath is open. Above
+the wall: the window is the only way out of a city that has been told to
+hold you. The watch is on the gate. Not on the wall. Not yet.
+Pass: Down. The road. The dark. The escort that escorted you in does not
+recognize the man who left.
+Fail: You wait another night. The window remains. So does the watch.
+(Retryable: 1 day gate.)
+
+─── DR — THE DUST ROADS ─────────────────────────────────────────────────────
+Act: Post-conversion retreat. Optional.
+Connections: KS only (return path)
+
+Node text:
+No road. The roads end at Kesra's southern gate. Below the gate: a track
+that the caravans use, maintained by foot traffic rather than civic investment.
+Below the track: the desert proper, which is not hostile so much as indifferent.
+
+He stays in the desert for a season. The duration is not specified in the records
+he leaves behind — he mentions it in one letter as 'the time I spent in the
+Dust Roads' and does not elaborate. Whatever happens there is not recorded
+and is not recoverable by the player. This is intentional. Some things about a
+person belong to the desert.
+
+He returns from the Dust Roads changed in a way that is different from the road
+to Kesra. The road to Kesra changed what he was. The desert changed what he
+does with it.
+
+NPC: None.
+Battle: Desert encounter table (see Terrain: desert_caravan).
+Loot: None.
+Note: No quests unlock here. The Dust Roads is a resting node — time passes,
+encounters occur, the player returns. The value is negative space.
+
+─── HR (RETURN) — HERATH ────────────────────────────────────────────────────
+Act: Early post-conversion
+Time gate: 15 days. After 15 days, Hellenists threaten and player must leave.
+
+Node text (return):
+He has been here before. The court knows his name. The court knows his name
+in a new context: Saul of Tarsis who went to Kesra with warrants and came back
+without prisoners and is now, apparently, one of the people on the list.
+
+Barnach vouches for him. This is more than Barnach expected to do and less
+than what was needed. He does it anyway.
+
+The city is complicated about this. Some people are afraid. Some people are
+glad. Both groups have reasonable grounds.
+
+He stays fifteen days. He speaks in the assembly halls. He argues with people
+who disagree with him — he is very good at arguing, and was very good at it
+before the road, and the conversion did not change this about him, which is
+a point of some reflection.
+
+On the fifteenth day, the Hellenists gather near the gate. Barnach says: go.
+
+Quest: quest_barnach_vouches — "Vouched For"
+Type: Disposition check. Requires barnachFavor >= 1 (Barnach must have been
+spoken to in Herath before conversion; the favor is earned pre-arc).
+Completes on: barnachVouchedHR = true.
+Disposition: "He was there. I was not. I am vouching for what he told me,
+which is everything he has." — Barnach
+
+Quest: quest_hellenists_herath — "Fifteen Days"
+Type: Time gate / forced move.
+Activates: Day 15 at HR (return).
+Completes on: player moves to TS.
+Text: "They are at the gate. They are at the assembly hall. They are in the
+square. Fifteen days is how long Herath was prepared to hold this tension.
+It has held. Now it is releasing. Barnach says: 'Tarsis. Go to Tarsis. You are
+from Tarsis. They will not follow you to Tarsis.'"
+
+─── TS — TARSIS ─────────────────────────────────────────────────────────────
+Act: The silent years.
+Note: Paul stays in Tarsis for an indeterminate period (years, not days).
+The time abstraction is handled by a "years passed" text on entry.
+
+Node text:
+He is from here. The streets are familiar in the way that streets are familiar
+when you have not been to them since you were young and have become a different
+person in the interval. The house he grew up in is still standing. Someone
+else lives there. He does not knock.
+
+He works. He has a trade — tentmaking, the craft he learned before he learned
+the law. It is meticulous work and the city has no particular opinion about
+tentmakers one way or the other, which is exactly the quality he requires
+of a city right now.
+
+The years in Tarsis are in no document he wrote. They are a gap in the record.
+The things that happened in the gap happened to a person who was both Saul
+and Paul and neither, settling into what he had become. The record resumes
+when Barnach arrives at the gate.
+
+NPC: Barnach (arrival)
+Quote: "I have been looking for you for a year. Anthos needs you. I need you.
+I am not going to tell you it's safe — you know it isn't. I am going to tell
+you it's time."
+
+[The Barnach arrival at Tarsis is quest_barnach_finds — 'A Year Looking.'
+No skill check. No combat. Completes on: barnachFoundPaul = true. The reward
+is the arc resuming.]
+
+─── AO — ANTHOS ─────────────────────────────────────────────────────────────
+Act: First journey, base of operations.
+Note: This is where Saul is formally renamed Paul in the record. First called
+by new name here. The name change is mechanical: all dialogue post-AO
+uses 'Paul.' The player is notified once.
+
+Node text:
+Anthos is not trying to be anything in particular. It is too large to be a
+village and not large enough to be a city and too mixed to be classified as
+either. Merchants from four different peoples live in the same quarter
+without anyone having organized them. They got there before the organizing
+arrived and now they are too settled to move.
+
+This is where the first journey forms. Barnach is here. Silar is here.
+The commission comes from the assembly — the first time Paul has been sent
+somewhere by a body of people rather than going by his own authority.
+He has been places before on his own authority. This is different. He is
+accountable to the people who sent him and to the people he will find.
+He finds this clarifying.
+
+He is called Paul here for the first time. He will be called Saul again once,
+by someone who does not know the road, and it will not fit.
+
+NPC: Assembly Elder Joach
+Quote: "We are sending you. Barnach goes with you. Take what you need. The
+mandate is: go to the cities you can reach and say what you know. That is the
+whole of it."
+
+Quest: quest_anthos_commission — "The Sending"
+Type: Story beat. No check. Completes on: commissionReceived = true.
+Reward: 150 XP. Companion system fully activates. Barnach joins party.
+Disposition: "The mandate is simple because the work isn't." — Assembly Elder Joach
+
+─── CI2 — THE COPPER ISLE ───────────────────────────────────────────────────
+Act: First journey, stop 1.
+Connections: Harbor south to Lythros
+
+Node text:
+The harbor smells of copper smelting and salt, in roughly equal parts. The
+island has been exporting copper since before anyone in Anthos was born. It
+has a governor who is interested in unusual things — the kind of governor
+who reads widely and holds opinions about ideas rather than only about policy,
+which is either an asset or a liability depending on who arrives with an idea.
+
+Ezzir is in the governor's service. This is his recommendation and the governor
+finds his recommendations useful. He has been in the governor's service for
+six years. He has a good record. He is also blocking the door.
+
+Quest: quest_ezzir — "The Sorcerer's Opposition"
+Type: WIS save vs blindness (DC 14). Combat not required; the confrontation
+is rhetorical until Ezzir escalates.
+Hint: Ezzir has the governor's ear. He will use it against you if you let him.
+Do not let him have the first word.
+Vignette: He is precisely positioned between Paul and the governor. This is
+not an accident — Ezzir has been in rooms before and knows where to stand.
+The governor is watching. He is watching the way a man watches two arguments
+he has not yet decided between.
+Pass (WIS ≥ 14): Ezzir's words stop working. This is visible. The governor
+sees it. The governor has been watching for exactly this kind of evidence.
+Fail: Ezzir gets the first word and the second word and Paul gets to recover
+from both.
+Disposition: "I have been serving this governor for six years. You have been
+here eleven hours." — Ezzir
+
+Quest: quest_governor_copper — "The Governor Listens"
+Type: CHR check (DC 11). Activates after quest_ezzir resolved.
+Post: Governor converted (govCopperConverted = true). Ezzir removed from
+service. The door is open.
+Disposition: "He said things I could not explain by the methods I usually use
+to explain things. I find this interesting rather than threatening. It is
+possible I find it interesting because it is true." — Governor of the Copper Isle
+
+─── LT — LYTHROS ────────────────────────────────────────────────────────────
+Act: First journey, stop 2.
+Timael joins here (youngest companion; picked up at Lythros).
+
+Node text:
+A small city in a wide valley. It has the particular civic pride of a place
+that has been overlooked — they know they are not the capital and have decided
+that this is fine with them. The market runs six days a week. The seventh day
+the market stalls stay up but the vendors go to the assembly hall, which is
+an arrangement that satisfies both commerce and attendance.
+
+There is a man by the gate who has been by the gate his entire life. He has
+a specific condition of the feet that is not treatable by the methods available
+in Lythros. He knows this. He has made his peace with this. He is watching the
+road with the patience of someone who has accepted their situation completely.
+
+He is watching Paul specifically.
+
+Quest: quest_lame_lythros — "The Gate"
+Type: Faith check (WIS DC 10 — 'faith check' is flavored WIS).
+Note: Pass or fail affects the crowd response; the healing occurs on a pass.
+Pass: The man stands. The crowd witnesses. The crowd's response is immediate
+and wrong: they call Paul a god. Paul corrects them at length. The crowd
+is disappointed. They were ready to sacrifice to a god and are now being asked
+to reconsider their entire cosmological framework in an afternoon.
+Fail: The man does not stand. Paul continues. The city is unchanged. The man
+goes home.
+Disposition: "He looked at me. He did not look at the crowd. He looked at me
+and said: stand. I have been told to stand before. No one has ever meant it
+this way." — The Man at the Gate
+
+Quest: quest_stoning_lythros — "Left for Dead"
+Type: Survival event. Activates after quest_lame_lythros, regardless of outcome.
+Note: The crowd that wanted to sacrifice to Paul becomes the crowd that stones
+him. Both responses are to the same event. The crowd had expected a god.
+What they got was a correction. Some crowds do not accept corrections.
+Mechanic: HP drops to 1. Cannot be healed above 1 until node is left.
+Timael, who has been watching from the market square, does not leave.
+Disposition: "He got up. Everyone else left. I decided to stay." — Timael
+
+Timael joins as companion on leaving Lythros.
+
+─── PL — PHILLAM ────────────────────────────────────────────────────────────
+Act: Second journey, stop 1.
+Lyra first convert. Prison earthquake event.
+
+Node text:
+The city sits on a river that has flooded twice in living memory and will flood
+again. The buildings on the high ground are expensive. The buildings on the
+lower ground are not, and have the particular character of buildings that have
+been rebuilt before and know they will be rebuilt again.
+
+Lyra sells purple cloth from a stall on the bridge. Purple cloth is expensive
+and her clients are specific and she knows all of them by name and she has
+excellent judgment about new clients. She watches Paul from across the bridge
+for two days before she speaks to him. When she speaks to him it is because
+she has already decided.
+
+The prison is on the eastern road. It is a city prison, not an imperial one,
+which means the cells are smaller and the guards are more bored. Paul and Silar
+are in the inner cell. The earthquake, when it comes, opens every door.
+
+Quest: quest_lyra_phillam — "The Purple Merchant"
+Type: Dialogue encounter. No check. Lyra asks questions; Paul answers them.
+Completes on: lyraConverted = true.
+Disposition: "I have been listening to arguments all my life — merchants argue,
+clients argue, the city council argues. He was not arguing. He was describing
+something he had seen. I trust descriptions more than arguments." — Lyra
+
+Quest: quest_prison_earthquake — "The Inner Cell"
+Type: Timed event. Day counter: prison sentence (magistrate-imposed, triggered
+by slave-owner complaint). On day N, earthquake event fires.
+Mechanic: All cells open. Paul and Silar do not leave. The jailer, expecting
+to find them gone (escape is a capital offence for a jailer), finds them
+present. This has an effect on the jailer.
+Note: The earthquake is not a roll. It is not a combat event. It fires because
+it fires. Paul's decision to stay when the door opens is where the player's
+agency lives.
+Disposition: "The door was open. He was still there. I don't have a framework
+for that." — Jailer at Phillam
+
+─── AE — AETHON ─────────────────────────────────────────────────────────────
+Act: Second journey, stop 2.
+The Unknown Altar speech. Rhetoric skill check.
+
+Node text:
+Aethon builds things. It has built more things than most cities of its size —
+temples to forty different ideas, each one maintained with equal civic
+conscientiousness, on the theory that if you maintain all the altars you have
+covered all your bases. The city has not found this theory wanting. The altars
+are well-maintained and the city is prosperous and the people are curious about
+ideas in the way that prosperous people can afford to be.
+
+There is an altar at the east end of the market that says: TO AN UNKNOWN ONE.
+It has been there for two hundred years. Nobody knows who built it or what it
+was for. It is maintained along with everything else. Every spring the priests
+clean the inscription. Every spring the inscription remains: TO AN UNKNOWN ONE.
+
+Paul has been standing in front of it for a long time.
+
+Quest: quest_unknown_altar — "The Unknown Altar"
+Type: Rhetoric skill check. INT + Proficiency, DC 12.
+Partial outcome (result 9–11): Some of the crowd stays. They will think about it.
+Full outcome (result 12+): The crowd follows. The Aethon assembly invites him
+to speak formally. He does. He speaks about the altar. He says: the one you
+have already been maintaining — I can tell you who that is.
+Fail (result < 9): The crowd disperses politely. A few scholars ask questions
+afterward. Aethon is curious but will not be moved today.
+Vignette text:
+The market crowd assembles the way Aethon market crowds always assemble:
+partly out of interest, partly out of boredom, partly out of the habit of
+stopping when someone is speaking. They are not hostile. They are waiting to
+see whether this is worth their time. They have good judgment about what is
+worth their time. They have had practice.
+
+He stands in front of the Unknown Altar and starts with what is already there.
+Disposition: "He did not argue against our altars. He stood in front of the
+oldest one and said: I know who you meant." — Aethon Market Observer
+
+─── KR — KORATH ─────────────────────────────────────────────────────────────
+Act: Second journey, stop 3. 18-month stay.
+Prisca + Akil node. Tentmaking. Longest stay of any city.
+
+Node text:
+Korath is a harbor city built on two harbors — one facing east, one facing west,
+both active, both profitable, both generating the kind of civic complexity that
+comes from two different trading cultures meeting at a land crossing and
+deciding to make a city there rather than fight about it.
+
+Prisca and Akil have a workshop on the street behind the east harbor. They make
+tents. It is precise, skilled work and they do it well and the quality is
+consistent because Akil does the cutting and Prisca does the finishing and
+they have been doing this for eleven years and the division is established.
+They hire Paul when he arrives because he knows the trade and because he
+will work for the room in the back.
+
+He stays eighteen months. He earns his rent in tent canvas. He writes letters
+to the cities he has already been to. Some of the letters survive; some of
+them are the most important things he will ever write; he does not know which
+ones yet.
+
+NPC: Prisca + Akil (joint dialogue)
+Prisca: "The room is in the back. The rate is what you can produce.
+We don't get involved in your other business."
+Akil: "The canvas comes first. When the canvas is done, the rest is yours."
+
+Quest: quest_korath_letters — "The Work and the Letters"
+Type: Time passage. 18-month counter (abstracted to 3 node-visits minimum).
+Completes on: korathLettersWritten = true.
+Note: The letters written in Korath are readables — short, formal, containing
+specific instructions Paul is sending to specific cities. Each one is a piece
+of something ongoing. The player can read them. They should read them.
+Letter 1: To Phillam — on unity. Letter 2: To Anthos — on how to behave
+in assembly. Letter 3: To communities not yet visited — on the nature of hope.
+Disposition: "The letters he sent from here — I read them thirty years later.
+I recognized the man who wrote them as the man I knew. The man I knew cut tent
+canvas in this workshop and argued with sailors at the harbor and came home
+and wrote until late." — Prisca, recalled
+
+─── EF — EPHRATH ────────────────────────────────────────────────────────────
+Act: Third journey. 3-year stay. Temple riot.
+
+Node text:
+Ephrath's economy runs on the temple district. The temple district runs on
+silver. The silversmiths make models of the temple — small ones for households,
+large ones for shrines, the full range. It is a good trade. It has been a good
+trade for generations. The models are sold in every market in the inland sea.
+The workshops are established, the supply chains are stable, and everything
+is working correctly.
+
+Paul has been here three years. The silversmiths have noticed.
+
+Quest: quest_temple_riot — "Riot in the Marketplace"
+Type: Escape-route decision tree.
+Trigger: demetrius_riots === true (Demetrius the silversmith has organized
+the craftsmen's guild against Paul; the guild meeting tips into the streets).
+Decision points:
+  A) Through the theater (crowds, exits, risk of getting cornered)
+  B) Through the tannery district (slower, smells, less crowded)
+  C) Wait it out inside (Ephrathite allies offer shelter; 24-hour time lock)
+Each path resolves differently. Each path succeeds. The point is not
+whether Paul escapes — he does — but how, and what it costs.
+Vignette:
+The riot begins the way riots begin: someone is angry and someone else was
+already angry about something else and they find each other in a crowd.
+Demetrius is angry about commerce. The guild is angry about commerce. The
+crowd is angry about general instability and the temple-model trade is as good
+a symbol as any. By the time it reaches the market square it has become
+the kind of crowd that does not remember how it started.
+Disposition: "He was in the city three years. Nobody thought about the
+silver shops until he had been there three years. We should have thought
+about the silver shops." — Ephrath Guild Merchant, retrospective
+
+─── MT — MELTA ──────────────────────────────────────────────────────────────
+Act: Voyage and shipwreck. 276 aboard.
+
+Node text:
+The ship has been at sea for fourteen days. Fourteen days of weather that the
+captain described on day one as 'manageable' and has not described since because
+he has stopped speaking to passengers and is speaking only to the wheel.
+There are two hundred and seventy-six people aboard. Paul has been counting.
+He counts because the count matters. He does not know why it matters yet.
+
+The grounding happens at night. The ship hits the shallows at speed and does
+not come off. The hull holds. It will not hold until morning.
+
+The soldiers want to kill the prisoners — standard protocol; a prisoner who
+survives a shipwreck is a prisoner who can escape. The centurion stops them.
+The centurion stops them for Paul, specifically, which Paul did not ask for
+and could not have arranged.
+
+Two hundred and seventy-six people reach the shore of Melta before dawn.
+Paul has been counting all night. The count is correct.
+
+Quest: quest_shipwreck_melta — "Two Hundred and Seventy-Six"
+Type: Survival event. No attack roll. Completes on: melteShoreReached = true.
+Note: The storm is not a combat encounter. The shipwreck is not a skill check.
+Everyone survives because they survive. The centurion's intervention is not
+explained. Paul's count — precise, ongoing, conducted while the ship was
+coming apart — is the only active thing the player does. The count is the
+prayer.
+Disposition: "He counted us all night. I asked him why. He said: because each
+one is the count." — Melta Shore Survivor
+
+Quest: quest_snake_melta — "It Did Nothing"
+Type: Passive event. Fires on melteShoreReached.
+Note: Do not roll. Do not explain. Play it completely straight.
+Vignette:
+A fire has been built on the shore. Paul is gathering wood — this is not
+beneath him; it has never been beneath him — and a snake comes out of the
+bundle. It bites his hand. It is a viper. Everyone on the shore knows what
+a viper bite does. They are watching. They have been watching all night and
+now they are watching this.
+
+He shakes the snake off into the fire. He keeps gathering wood.
+Time passes. He does not swell. He does not die. He keeps working.
+
+The people who have been watching change their minds about who he is. They
+had one theory before the snake. They have a different theory after. Neither
+theory is exactly correct. The correct thing is more specific and less
+available to a crowd on a shore at dawn after a shipwreck.
+Disposition: "We thought he was a murderer — escaped justice, the sea caught
+him at last. Then the snake. Then he just — kept working." — Melta Islander
+
+─── ST — THE SEAT ───────────────────────────────────────────────────────────
+Act: Final. Under house arrest. Open ending.
+
+Node text:
+The Seat is the largest city he has ever been in. It is also the most organized
+city he has ever been in, and the most indifferent. It has seen everything.
+It has processed everything. It continues.
+
+He is under house arrest in a rented house. The conditions are comfortable
+by the standards of imperial detention — he can receive visitors, which he
+does, constantly; he can write letters, which he does, constantly; he cannot
+leave, which he does not, because he has visitors to receive and letters to write.
+
+He has been here two years. The letters he writes here are different from
+the letters he wrote in Korath — shorter, more specific, more aware of what
+remains to be said versus what can remain unsaid. He is running the calculation
+that people run when they know the remaining column is smaller than the spent one.
+
+The arc does not end here. It stops here.
+
+[This is the design intention: The Seat node has no final quest. No boss. No
+resolution. The player arrives, receives the last letter written by Paul to
+Timael ('I have finished the course. I have kept faith.'), and the node simply
+continues to exist. Paul receives visitors. He writes letters. The city moves
+around him. The arc does not give the player a completion marker because the
+arc does not end — it simply reaches the last documented stop and continues
+from there as a fact that no longer requires the player's presence to remain true.]
+
+Final letter: "I have done what I set out to do. I have done more than I set
+out to do because the thing I set out to do was the wrong thing, and the right
+thing turned out to be larger. I am not complaining about this. I have kept
+faith. The rest is not mine to carry." — Paul, last letter to Timael
+
+NPC: Timael (final)
+Quote: "He never asked me to call him Saul. He never asked me not to. I called
+him Paul because that was who he was when I knew him. I knew him from Lythros.
+I stayed because he got up." He looks at the letter. "He said to give it to
+whoever needed it most. I have been holding it for two years. It seems like
+you need it most."
+
+─────────────────────────────────────────────────────────────────────────────
+
+COMPANION SYSTEM
+
+Companions join and leave across the arc. Their presence modifies outcomes.
+
+  Barnach   — joins at AO (first journey), travels through CI2, LT, HR
+              returns at TS to retrieve Paul; present at AO through Journey 1.
+              Voice: steady, organizational, pragmatic about risk.
+
+  Silar     — joins at AO (second journey), imprisoned with Paul at PL.
+              Present PL through KR. Separates after KR dispute (doctrinal
+              disagreement — historical; preserved in arc).
+              Voice: direct, loyal, capable of principled disagreement.
+
+  Timael    — joins at LT (after the stoning). Does not leave. Present
+              through The Seat. Delivers the final letter.
+              Voice: young, observant, does not explain his loyalty because
+              he has never examined it and does not need to.
+
+Companion dialogue updates at each node. They have opinions. They express them.
+They are not narrators — they are people traveling the same road.
+
+─────────────────────────────────────────────────────────────────────────────
+
+TERRAIN TYPES REQUIRED (new)
+
+  ancient_road      Paved Roman-equivalent road. Low encounter rate.
+                    Movement: no time cost. Atmospheric only.
+
+  desert_caravan    The Dust Roads and interior desert.
+                    Encounter table: heat, bandits (rare), other travelers.
+                    No fixed NPCs.
+
+  assembly_hall     Interior dialogue node. Persuasion checks available.
+                    No combat. No loot. The encounter is the speech.
+
+  locked_cell       Time-locked node. Day counter active.
+                    Earthquake event wired to day counter.
+                    Exit locked until event fires.
+
+  sea_voyage        Shipwreck sequence. Storm encounter table.
+                    276 counter. Passive survival mechanic.
+                    No attack roll. Completes on shore.
+
+─────────────────────────────────────────────────────────────────────────────
+
+OBJECT INVENTORY
+
+These objects carry weight in the arc. Each one is enacted, not described.
+
+  The Three Warrants         — Pre-conversion. Never used post-conversion.
+                               Remain in inventory as a readable.
+                               They do not expire. He simply stops presenting them.
+
+  The Order of Escort        — Pre-conversion. Locked on saulConverted.
+                               The escort leaves at Kesra gate.
+
+  Anath's Bowl               — Left in the Kesra house. Not lootable.
+                               Its presence in the house is noted in the node text.
+
+  The Tentmaking Tools       — Acquired in Tarsis. Carried through the arc.
+                               Used at Korath (tentmaking with Prisca + Akil).
+                               Paul works for his keep. These are how.
+
+  The Letters from Korath    — Readables. Three of them. Short and specific.
+                               Written at KR; carried through the arc.
+                               Not for sale.
+
+  Timael's Travelling Coat   — Given by Paul to Timael at Phillam when Timael
+                               arrives without adequate clothing.
+                               In-game item: Travelling Coat (Timael's).
+                               Wearable but not upgradeable. Belongs to him.
+
+  The Final Letter           — Delivered by Timael at The Seat.
+                               Readable. Last thing in the arc.
+                               'I have kept faith. The rest is not mine to carry.'
+
+─────────────────────────────────────────────────────────────────────────────
+
+VOICE RULES
+
+Eight rules for writing this arc.
+
+  1. Paul does not explain himself. He describes what he saw and what it meant.
+     The difference matters. Explanation is defense. Description is record.
+
+  2. Barnach speaks before Paul does. He has been in the room longer.
+     He knows how the room reads people.
+
+  3. Timael does not explain why he stayed. He has not examined it.
+     Do not ask him to.
+
+  4. Every city has its own economy and that economy shapes how it receives Paul.
+     Korath is commerce. Aethon is ideas. Ephrath is silver. The city type
+     determines what the opposition is made of.
+
+  5. The snake at Melta: no roll, no explanation, no theory. He shakes it off.
+     He keeps working. The crowd changes their mind. That is the whole scene.
+
+  6. The letters are not summaries. They are specific instructions to specific
+     people about specific situations. They sound like someone who has been
+     somewhere and is writing to someone who hasn't.
+
+  7. The warrants remain in the inventory after conversion. They are not
+     removed. They are simply never presented again. The player can read them.
+     The text does not change. What has changed is the person carrying them.
+
+  8. The arc ends at The Seat without a completion marker. Paul does not retire.
+     He does not receive a prize. He receives visitors and writes letters.
+     The arc stops because the documented record stops. Not because it is over.
+
+─────────────────────────────────────────────────────────────────────────────
+
+THE THORN
+
+One design element from the source material that has no mechanical analogue
+yet and must be handled carefully.
+
+Paul writes, in a letter from Korath, about 'a thorn in the flesh' — something
+that troubles him, that he asked three times to have removed, and that was not
+removed. He does not specify what it is. He never specifies what it is.
+The source material is deliberately silent.
+
+The arc must preserve that silence. The thorn is not named. It is not cured.
+It is carried. The mechanic (if any) should be: a passive debuff with no cure,
+applied at some point post-conversion, never explained, never resolved. The
+player notices it. The arc does not comment on it.
+
+If the thorn is implemented as a status effect, it should read:
+  [Thorn] — A persistent condition. Source unknown. It has been present since
+  the road to Kesra, or before it — the timing is unclear. Three times the
+  question was asked. The answer was: the grace is sufficient.
+
+─────────────────────────────────────────────────────────────────────────────
+
+CROSS-REFERENCE: THE ARCHIVIST THEME
+
+The Saul/Paul arc belongs to the same thematic tradition as the 14.225 chain.
+
+The 14.225 chain's central question: is the archive still maintained?
+The answer: the archive still has an archivist. The act of following the
+evidence is the answer.
+
+The Saul/Paul arc's central question, from the road to The Seat:
+what do you do with a record that cannot be fully explained?
+
+The warrants are a record. The letters are a record. The snake at Melta is
+a record. Paul counts the 276 survivors because the count matters — because
+the individual matters — and the count is the form the record takes.
+
+Both arcs are about people who kept careful account of things in the face of
+institutions that preferred the account to remain unclosed, unfiled, or silent.
+Y. Gurt stayed at the lake and sent data anyway. Solm wrote the same entry
+every morning for eighty-eight days waiting for someone who could close it.
+Paul writes letters to cities he has already left.
+
+The archive outlasts the archivist.
+But the archive still has an archivist.
+Both things are true.
+
+─────────────────────────────────────────────────────────────────────────────
+
+IMPLEMENTATION NOTES
+
+Time unit: The arc requires a day/week counter as primary time unit.
+The hour counter is insufficient — the journeys span years.
+Proposed: a 'journey day' counter that increments on each node move.
+Journey days are not wall-clock hours. They are steps.
+
+Source fidelity: every node maps to a documented stop. Do not invent stops.
+The invented material is in the texture — the voice, the detail, the object
+that carries weight. The structure comes from the source.
+
+Lab reports on file:
+  lab-report-saul-paul-travel-reference.md  — 37 nodes, Acts 7-28 + letters
+  lab-report-saul-paul-vignette-spec.md     — 14 node texts, 9 quest specs,
+                                              7 NPC voice lines, 8 voice rules
+
+Estimated implementation scope: 15 layers, 13 nodes, 9 quests, 6+ new NPCs.
+Largest single arc in Roll2Hit. Begin at §LIX or later.
+
+─────────────────────────────────────────────────────────────────────────────
+
+CHANGE ORDERS
+
+Derived from arc review critique. Each CO is a specific implementation order
+against existing live code. Numbered sequentially. Status: OPEN until closed
+by commit. All changes are to roll2hit-v3.html unless otherwise specified.
+
+─────────────────────────────────────────────────────────────────────────────
+
+CO-001 — TOURNAMENT VOICE: BOG MUDWHISTLE LOSING BEAT
+Status: OPEN
+Source critique: The tournament chain is mechanically solid but narratively thin.
+Six opponents, six mild dispositions. They gate the emotional arc without
+contributing to it. One of them should lose with something to say.
+
+TARGET: quest_tour_03 — Bog Mudwhistle, "Bog's Terms"
+
+WHY BOG:
+Bog is positioned at the midpoint of the chain (fight 3 of 6). He is the
+last purely survival-oriented angler before the chain turns commercial (Dirk)
+and procedural (Vera). He has a metabolic relationship with the lake — he
+eats what he catches; the lake has eaten parts of him. He is the only
+opponent whose existing disposition implies a real relationship with Yugurt
+rather than a professional or recreational one.
+
+When Bog loses, the player learns something about the lake that neither the
+Fisherman nor Y. Gurt has said yet. Not wisdom — something closer to testimony.
+
+CHANGE: Add a post-defeat one-time line to Bog's NPC_DIALOGUE entry.
+Deliver via quoteFn: two states — default / post-defeat (bogDefeated flag set
+in battKillEvent or tournament completion handler).
+
+NEW STATE (post-defeat):
+He sits down on the bank with his rod across his knees. He does not look at
+you. He looks at the lake.
+
+"I been coming here since before that cabin was standing. Before the Fisherman.
+Before the dock." He turns the rod over once. "I used to think the lake had
+a mood. Like it chose what to give you. I don't think that anymore." He is
+quiet a moment. "I think it just is what it is and we're the ones who want
+it to mean something."
+
+He stands up. He picks up his catch bucket — one fish, medium, respectable.
+"Good cast," he says. Not to the fish. To you.
+
+STATE FLAG: bogDefeated: false — add to _S_DEFAULTS, set on tournament
+completion for bog entry.
+
+QUEST DESCRIPTION UPDATE: Append to quest_tour_03 desc:
+"He will tell you something about the lake when he loses. Not advice. Just
+what thirty years of eating from it looks like from the inside."
+
+UPDATED DISPOSITION (replaces current):
+"I been coming here since before that cabin was standing. I don't think the
+lake has a mood anymore. I think we're the ones who want it to mean something."
+— Bog Mudwhistle
+
+ACCEPTANCE CRITERIA:
+- Bog's quoteFn has two states
+- bogDefeated flag exists in _S_DEFAULTS
+- Flag is set on tournament bout completion (bog entry)
+- Post-defeat quote delivers the lake-testimony beat
+- quest_tour_03 desc updated
+
+─────────────────────────────────────────────────────────────────────────────
+
+CO-002 — MUFFAT STATE CONSOLIDATION: STATES 5+6 INTO ONE VISIT
+Status: OPEN
+Source critique: Muffat accumulates six dialogue states — one too many for
+comfortable tracking. States 5 (antecedentMet → Solm direction) and 6
+(cycle4NoteRead → Cycle 4 revelation) require two separate return visits to DK
+after the player has already done the arc's heavy work. If the player is not
+paying close attention to the chain, these states are easy to miss entirely.
+The design chose granularity over economy and the character suffers for it.
+
+PROBLEM IN CONCRETE TERMS:
+After completing quest_antecedent_01 (antecedentMet = true), the player must:
+  Visit 1 — DK: see State 5 (Solm direction), receive quest_solm_01
+  Visit 2 — SF: complete quest_solm_01 (solmFound = true)
+  Visit 3 — DK: see State 6 (Cycle 4 crate) via quest_muffat_05
+  Visit 4 — DK: see State 6 dialogue
+
+That is three mandatory DK visits and one SF visit after the Antecedent Chamber.
+The arc earned two of those visits. It did not earn four.
+
+THE FIX: Consolidate the crate-opening (quest_muffat_05) into the same DK
+visit as the Solm direction (State 5). Muffat opens the crate in the same
+scene she tells the player where Solm is. Both quest_solm_01 AND the Cycle 4
+revelation happen in one visit. The player leaves DK with two active waypoints
+(SF for Solm, already at DK for the crate) instead of having to return.
+
+IMPLEMENTATION:
+
+1. Rewrite Muffat's NPC_DIALOGUE State 5 (currently keyed to antecedentMet)
+   to deliver BOTH the Solm direction and the crate opening in one scene.
+
+NEW STATE 5 TEXT (replaces current antecedentMet state):
+"I sent Solm to the Map Shop three months ago. Dusk does not ask." She turns
+to the shelf and lifts the nearest crate onto the counter. She does not pause
+before doing it. The question is closed; the reason not to open it is closed
+with it. "You have been to the terminus."
+
+She removes the packing material. Receiver array, Category 4, as expected.
+Beneath it: a folded note, handwritten, no date. She reads it without handing
+it to you. Her expression does not change.
+
+"Cycle 4 carries a Conclave Archivist's authorization." She sets the note on
+the counter. "They were not building infrastructure to understand the signal.
+They were building infrastructure to manage the interval. This was already in
+motion before the first transmission." She pushes the note toward you. "Go
+find Solm. Come back when you have."
+
+2. In the State 5 quoteFn, inline the cycle4NoteRead flag and Requisition
+   item delivery:
+   — Set S_story.cycle4NoteRead = true
+   — Push Shipping Manifest (Intercepted) to S_story.inventory inline
+   — quest_muffat_05 will auto-complete on next quest check (completeFn
+     already checks cycle4NoteRead)
+
+3. Remove quest_muffat_05 from its current separate activation/reward handler
+   OR keep it but have the reward fire silently (no separate visit required).
+   The 150xp and 200gp should fire when cycle4NoteRead is set in the quoteFn.
+
+4. State 6 (post-cycle4NoteRead, currently the Cycle 4 reflection speech)
+   REMAINS as-is. It is now the return-visit state after solmFound,
+   not a third separate mandatory visit. The player has already seen the crate.
+   State 6 is Muffat's reflection on what it means.
+
+REVISED VISIT FLOW (post-consolidation):
+  Visit 1 — DK: State 5 fires. Solm direction + crate opened. Both quests
+             (quest_solm_01 active, quest_muffat_05 auto-completes inline).
+  Visit 2 — SF: quest_solm_01 completed. Solm scene.
+  Visit 3 — DK (optional return): State 6 fires. Muffat reflects on Cycle 4.
+
+Three visits, one mandatory return. Two fewer mandatory DK trips.
+
+STATE 6 TEXT (unchanged — now the optional return reflection):
+"Cycle 3 was the Constructor's work. She built the containment to give it a
+room rather than a cage. If Cycle 4 carries a Conclave Archivist's
+authorization—" She stops. She sets the requisition note on top of the stack.
+"They were not building infrastructure to understand the signal. They were
+building infrastructure to manage the interval. Cycle 4 is not a response
+to what happened. It was already in motion before the first transmission."
+She does not look at the crates. "I am keeping them. All four. I am also
+keeping the note."
+
+ACCEPTANCE CRITERIA:
+- Muffat's antecedentMet state delivers both Solm direction AND crate opening
+- cycle4NoteRead is set inline in the quoteFn, not via a separate quest visit
+- Requisition readable is delivered inline in the same state
+- quest_muffat_05 auto-completes (xp+gold) without requiring a separate visit
+- State 6 remains accessible on return but is no longer mandatory
+- Total mandatory DK visits post-Antecedent Chamber: 1 (down from 3)
+- quest_muffat_05 activation condition updated: activateCond removed or
+  set to always-true when antecedentMet, relying on completeFn for gating
+
+─────────────────────────────────────────────────────────────────────────────
+
+CO-003 — SAUL2PAUL FUTURE AUDIT: FLAG STATES THAT CAN BE SKIPPED
+Status: OPEN (design note, not yet implementable — applies to arc when built)
+Source critique: Extended character quoteFn chains work only when the player
+is paying close attention. States that activate on specific flags can be
+missed entirely if the player returns to a node before the activating
+condition is true and then never returns.
+
+THIS CO APPLIES FORWARD — to the Saul2Paul arc when implemented, and to
+any future multi-state quoteFn chain.
+
+RULE: Any NPC with 4+ quoteFn states that activates on sequential flags
+MUST have at least one of the following:
+  (a) A quest waypoint pointing at the NPC when the new state becomes active
+  (b) A world event message on the HUD when the flag triggers: "Return to
+      [NPC Name] — something has changed."
+  (c) The state's activation condition also fires a new active quest
+      (so the journal acts as the reminder system)
+
+SAUL2PAUL APPLICATION:
+The Saul2Paul arc has companion NPCs (Barnach, Silar, Timael) who travel
+across nodes and update their dialogue at each stop. These are sequential
+states with no natural reminder system — the player may move through a node
+without speaking to a companion and miss a state permanently.
+
+FIX FOR SAUL2PAUL COMPANIONS:
+All companion dialogue states should be delivered as one-time injections
+(the _getNPCDialogue injection pattern, or equivalent) rather than
+conditional quoteFn states. One-time injections fire on the FIRST visit
+to the node after the condition is true, regardless of whether the player
+actively clicks the NPC. This guarantees delivery.
+
+Alternatively: companions speak unprompted when the player enters a node
+(a node-entry trigger, not an NPC-click trigger). This is a new mechanic
+not yet in Roll2Hit — worth building for this arc specifically, since the
+companion system requires it.
+
+ACCEPTANCE CRITERIA (when Saul2Paul is implemented):
+- Companion voice lines at each node are delivered as one-time injections
+  OR via a node-entry trigger, not as passive quoteFn states
+- No companion line can be permanently missed by not clicking the NPC
+- Any NPC with 4+ states has a waypoint/journal reminder when state advances
+
+─────────────────────────────────────────────────────────────────────────────
+
+END OF CHANGE ORDERS
+
+Change orders are implementation-ready specifications. CO-001 and CO-002
+apply to existing live code (roll2hit-v3.html). CO-003 applies to Saul2Paul
+on implementation. Close each CO by commit; note the layer number.
+
+─────────────────────────────────────────────────────────────────────────────
+
+END OF DOCUMENT
+
+Saul2Paul.txt · Roll2Hit: The Shattered Codex
+Written 2026-05-27
+Change Orders added 2026-05-27
