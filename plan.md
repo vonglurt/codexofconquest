@@ -5289,61 +5289,95 @@ Quest ID: `quest_fish_01`
 
 ---
 
-### §FUTURE-01 — The Road to Damascus: Saul of Tarsus Arc
+### §FUTURE-01 — The Road to Kesra: Saul of Tarsis Arc
 
-**Concept:** A new act following the historical travels of Saul of Tarsus — his conversion, his missionary journeys, and his eventual arrest — as a quest chain across a Middle Eastern map. The arc follows the biblical itinerary with geographical fidelity: real cities, real distances, real opposition. The player walks the road Saul walked, each node a documented stop from Acts and the Pauline letters.
+**Concept:** A new act following the travels of Saul of Tarsis — his conversion on the road, his three missionary circuits across the inland sea, and his eventual arrest and voyage to the imperial capital. The arc is structurally derived from a historical itinerary (see `lab-report-saul-paul-travel-reference.md` for source material) but all city names, NPC names, and institutions are fictionalized to fit the Roll2Hit world.
 
-**Mechanical hook:** The Damascus Road conversion is not a cutscene — it is a world event. The player walks the road to Damascus as Saul (persecutor) and arrives in Damascus as Paul (apostle). The conversion changes the available quest types: persecution quests close, preaching/persuasion quests open. This is the first instance in Roll2Hit where a mid-arc identity shift rewrites the world map's available interactions — not through a flag but through the player's accumulated actions before the event.
+**Mechanical hook:** The Road to Kesra conversion is not a cutscene — it is a world event. The player walks the road to Kesra as Saul (enforcer) and arrives in Kesra as Paul (apostle). The conversion changes the available quest types: enforcement quests close, persuasion and network quests open. Pre-conversion Saul has combat resources (order escort, arrest warrants). Post-conversion Paul has rhetoric resources (speeches, NPC disposition chains) and loses the combat support. This is the first instance in Roll2Hit where a mid-arc identity shift rewrites the world map's available interactions.
+
+---
+
+#### Name Translation Table
+
+> Source material uses historical names. All in-game names are listed here. The lab report uses the original names for research reference.
+
+| Historical | In-Game Name | Node Code |
+|---|---|---|
+| Jerusalem | **Herath** | `HR` |
+| Damascus | **Kesra** | `KS` |
+| Arabia (Nabatean desert) | **The Dust Roads** | `DR` |
+| Tarsus | **Tarsis** | `TS` |
+| Antioch | **Anthos** | `AO` |
+| Cyprus | **The Copper Isle** | `CI2` |
+| Lystra | **Lythros** | `LT` |
+| Athens | **Aethon** | `AE` |
+| Corinth | **Korath** | `KR` |
+| Ephesus | **Ephrath** | `EF` |
+| Philippi | **Phillam** | `PL` |
+| Malta / Melita | **Melta** | `MT` |
+| Rome | **The Seat** | `ST` |
+
+| Historical NPC | In-Game Name | Role |
+|---|---|---|
+| Ananias | **Anath** | Healer; restores sight |
+| Barnabas | **Barnach** | Advocate; first journey partner |
+| Silas | **Silar** | Second journey co-traveler |
+| Timothy | **Timael** | Third companion; picked up at Lythros |
+| Lydia | **Lyra** | Purple cloth merchant; first convert at Phillam |
+| Priscilla + Aquila | **Prisca + Akil** | Tentmakers; harbor Paul in Korath |
+| Felix / Festus | **The Governors** | Prosecution arc; Paul appeals to the Seat |
+| Bar-Jesus (the sorcerer) | **Ezzir** | Sorcerer-for-hire; opposes on the Copper Isle |
 
 ---
 
 #### Act Structure
 
 **Pre-conversion (Saul):**
-- Player travels from Jerusalem toward Damascus with letters authorizing arrest of Christians
-- Encounters along the road: hostile terrain, Pharisee escorts, a bound prisoner being transferred
-- The Road to Damascus node: WIS save or INT check has no correct answer — the light comes regardless; what changes is how clearly the player hears the voice
+- Player travels from Herath toward Kesra with warrants authorizing arrest of the dissenters
+- Encounters along the road: hostile terrain, order escorts, a bound prisoner being transferred
+- The Road to Kesra node: WIS save or INT check has no correct answer — the light comes regardless; what changes is how clearly the player hears the voice
 
 **Post-conversion (Paul):**
-- Three days blind in Damascus — time-locked passage; player cannot move until the encounter with Ananias
-- Ananias at Straight Street: `quest_ananias` — NPC will not appear until blind days have passed; delivers healing + baptism
-- Arabia interlude (Galatians 1:17): optional node before returning to Damascus — no quests, only terrain and time; desert encounter table
+- Three days blind in Kesra — time-locked passage; player cannot move until the encounter with Anath
+- Anath at the lower-city inn: `quest_anath` — NPC will not appear until blind days have passed; delivers healing
+- The Dust Roads interlude: optional node before returning to Kesra — no quests, only terrain and time; desert encounter table
 
 ---
 
-#### Node Map (Pauline Journeys)
+#### Node Map
 
-| Code | City | Biblical Reference | Act |
+| Code | City | Act | Notes |
 |---|---|---|---|
-| `DA` | Damascus | Acts 9:1–25; Gal 1:17 | Pre/Post conversion |
-| `AR` | Arabia (Nabatean Desert) | Galatians 1:17 | Post-conversion retreat |
-| `JR` | Jerusalem | Acts 9:26–30; Gal 1:18 | Paul meets Peter (15 days) |
-| `TR` | Tarsus | Acts 9:30; Acts 11:25 | Paul's home city; retrieved by Barnabas |
-| `AN` | Antioch | Acts 11:26; Acts 13:1–3 | First called Christians here; commissioning node |
-| `CY` | Cyprus (Salamis → Paphos) | Acts 13:4–12 | Bar-Jesus encounter; Sergius Paulus conversion |
-| `LY` | Lystra | Acts 14:8–20 | Healing of lame man; stoning of Paul |
-| `AT` | Athens | Acts 17:16–34 | Areopagus speech; Rhetoric skill check |
-| `CO` | Corinth | Acts 18:1–18 | 18-month stay; tent-making with Priscilla + Aquila |
-| `EP` | Ephesus | Acts 19:1–41 | 3-year stay; Riot of Silversmiths encounter |
-| `PH` | Philippi | Acts 16:12–40 | Lydia conversion; prison + earthquake event |
-| `ML` | Malta (Melita) | Acts 27–28 | Shipwreck; snake bite that doesn't kill |
-| `RM` | Rome | Acts 28:14–31 | Final node; under house arrest |
+| `HR` | Herath | Pre-conversion | Law-city; source of warrants; first node |
+| `KS` | Kesra | Conversion | Arrival blind; Anath; basket escape over the wall |
+| `DR` | The Dust Roads | Post-conversion retreat | Optional; desert only; no NPCs |
+| `HR` | Herath (return) | Early post-conversion | Barnach vouches; 15-day stay; Hellenists threaten |
+| `TS` | Tarsis | The silent years | Paul's home city; Barnach retrieves him |
+| `AO` | Anthos | Base of operations | First called by new name here; commissioning node |
+| `CI2` | The Copper Isle | Journey 1 | Ezzir encounter; governor conversion |
+| `LT` | Lythros | Journey 1 | Lame man healed; stoning; left for dead |
+| `PL` | Phillam | Journey 2 | Lyra conversion; prison + earthquake event |
+| `AE` | Aethon | Journey 2 | Unknown Altar speech; rhetoric skill check |
+| `KR` | Korath | Journey 2 | 18-month stay; tentmaking with Prisca + Akil |
+| `EF` | Ephrath | Journey 3 | 3-year stay; Temple riot (silversmiths) |
+| `MT` | Melta | Shipwreck | 276 aboard; grounded; snake bite; 3 months |
+| `ST` | The Seat | Final | Under house arrest; open ending |
 
 ---
 
 #### Key Quests
 
-| ID | Title | Reference | Type |
-|---|---|---|---|
-| `quest_road_damascus` | The Light at Noon | Acts 9:1–9 | Conversion event — no pass/fail |
-| `quest_ananias` | Straight Street | Acts 9:10–19 | NPC encounter; 3-day time gate |
-| `quest_barnabas_vouches` | Vouched For | Acts 9:26–27 | Disposition: Barnabas favor required |
-| `quest_bar_jesus` | The Sorcerer's Opposition | Acts 13:6–12 | Combat/spell-block; WIS save vs blindness effect |
-| `quest_stoning_lystra` | Left for Dead | Acts 14:19–20 | Post-combat survival; HP threshold event |
-| `quest_areopagus` | The Unknown God | Acts 17:22–34 | Rhetoric skill check (INT + Proficiency); partial/full conversion outcomes |
-| `quest_silversmiths` | Riot in the Marketplace | Acts 19:23–41 | Crowd encounter; escape-route decision tree |
-| `quest_shipwreck_malta` | Two Hundred and Seventy-Six | Acts 27:37 | Sea encounter; survival without attack roll |
-| `quest_snake_malta` | It Did Nothing | Acts 28:3–6 | Passive event — crowd expects death, crowd is wrong |
+| ID | Title | Type |
+|---|---|---|
+| `quest_road_kesra` | The Light at Noon | Conversion event — no pass/fail |
+| `quest_anath` | The House on the Lower Road | NPC encounter; 3-day time gate |
+| `quest_barnach_vouches` | Vouched For | Disposition: Barnach favor required |
+| `quest_ezzir` | The Sorcerer's Opposition | Combat/spell-block; WIS save vs blindness |
+| `quest_stoning_lythros` | Left for Dead | Post-combat survival; HP threshold event |
+| `quest_unknown_altar` | The Unknown Altar | Rhetoric skill check (INT + Proficiency); partial/full outcomes |
+| `quest_temple_riot` | Riot in the Marketplace | Crowd encounter; escape-route decision tree |
+| `quest_shipwreck_melta` | Two Hundred and Seventy-Six | Sea encounter; survival without attack roll |
+| `quest_snake_melta` | It Did Nothing | Passive event — crowd expects death, crowd is wrong |
 
 ---
 
@@ -5351,13 +5385,13 @@ Quest ID: `quest_fish_01`
 
 | Key | Name | Role | Node |
 |---|---|---|---|
-| `ananias` | Ananias of Damascus | Healer; restores sight; reluctant obedience | DA |
-| `barnabas` | Barnabas | Advocate; retrieves Paul from Tarsus; first journey partner | JR / TR / AN |
-| `silas` | Silas | Second journey co-traveler; imprisoned with Paul at Philippi | AN / PH |
-| `timothy` | Timothy | Picked up at Lystra; youngest party member | LY |
-| `lydia` | Lydia of Thyatira | First European convert; purple cloth merchant; provides lodging | PH |
-| `priscilla_aquila` | Priscilla + Aquila | Tent-makers; harbor Paul in Corinth 18 months | CO |
-| `festus` | Festus / Felix | Roman governors; prosecution arc; Paul appeals to Caesar | JR → RM |
+| `anath` | Anath | Healer; restores sight; reluctant obedience | KS |
+| `barnach` | Barnach | Advocate; retrieves Paul from Tarsis; first journey partner | HR / TS / AO |
+| `silar` | Silar | Second journey co-traveler; imprisoned with Paul at Phillam | AO / PL |
+| `timael` | Timael | Picked up at Lythros; youngest companion | LT |
+| `lyra` | Lyra | Purple cloth merchant; first convert at Phillam; provides lodging | PL |
+| `prisca_akil` | Prisca + Akil | Tentmakers; harbor Paul in Korath 18 months | KR |
+| `the_governors` | The Governors | Prosecution arc; Paul appeals to the Seat | HR → ST |
 
 ---
 
@@ -5365,19 +5399,20 @@ Quest ID: `quest_fish_01`
 
 | Terrain | New? | Notes |
 |---|---|---|
-| `ancient_road` | New | Roman-paved; low encounter rate; movement bonus |
-| `desert_caravan` | New | Arabia + Syrian interior; high heat mechanics possible |
-| `synagogue` | New | Interior node; dialogue-only; persuasion checks |
-| `roman_prison` | New | Time-locked node; earthquake event wired to day counter |
-| `harbor_ancient` | Reuse `harbor` | Mediterranean ports; Paphos, Miletus, Caesarea |
-| `sea_voyage` | New | Acts 27 shipwreck sequence; storm encounter table |
+| `ancient_road` | New | Paved road; low encounter rate; movement bonus |
+| `desert_caravan` | New | The Dust Roads + interior desert; heat mechanics possible |
+| `assembly_hall` | New | Interior node; dialogue-only; persuasion checks |
+| `locked_cell` | New | Time-locked node; earthquake event wired to day counter |
+| `harbor_ancient` | Reuse `harbor` | Inland sea ports: Kaphos, Mileth, Keth-Shor |
+| `sea_voyage` | New | Shipwreck sequence; storm encounter table |
 
 ---
 
 #### Design Notes
 
-- **The conversion is not a reward — it is a reframing.** The player does not become more powerful; they become differently motivated. Pre-conversion Saul has combat resources (Pharisee escort, letters of authority). Post-conversion Paul has persuasion resources (rhetoric, NPC networks) and loses the combat resources. The arc is about what you trade and what you gain.
-- **Biblical fidelity as constraint, not costume.** Every node has a chapter/verse citation. Quests cannot invent events — they can only dramatize documented ones. The Areopagus speech (Acts 17:22–34) is the text; the skill check is whether Paul finds the right entry point with this particular crowd.
-- **"It did nothing"** (Acts 28:5) is the best single line in the source material. The Malta snake encounter should play completely straight: Paul is bitten, the crowd waits for him to swell and die, he shakes the snake off into the fire, nothing happens. No roll. No explanation. The crowd changes their mind about who he is. This is the game's version of that event.
-- **Travel pacing:** Paul's journeys cover thousands of miles across multiple years. The hour counter is insufficient — this arc would need a **day/week counter** as the primary time unit, or the arc should be explicitly time-abstracted (node-to-node = one movement, no hour cost).
-- **Cross-reference with existing Arthurian arc:** Roll2Hit already uses Chrétien's structural vocabulary (objects that carry weight, things enacted not stated). The Pauline arc uses the same technique: the snake that does nothing, the coat Paul leaves in Troas, the letter to Philemon about Onesimus. These are Chrétien objects. The arcs belong to the same tradition.
+- **The conversion is not a reward — it is a reframing.** Pre-conversion Saul has combat resources (order escorts, arrest warrants). Post-conversion Paul has persuasion resources (rhetoric, NPC disposition chains) and loses the combat support. The arc is about what you trade and what you gain.
+- **Source fidelity as constraint, not costume.** Every node maps to a documented stop in the lab report. Quests dramatize events rather than invent them. The Unknown Altar speech at Aethon is the text; the skill check is whether Paul finds the right entry point with this particular crowd.
+- **"It Did Nothing"** is the best single beat in the source arc. The Melta snake encounter should play completely straight: Paul is bitten, the crowd waits for him to swell and die, he shakes the snake off into the fire, nothing happens. No roll. No explanation. The crowd changes their mind about who he is.
+- **Travel pacing:** The journeys cover thousands of miles across multiple years. The hour counter is insufficient — this arc needs a **day/week counter** as the primary time unit, or explicit time-abstraction (node-to-node = one movement, no hour cost).
+- **Cross-reference with existing Arthurian arc:** Roll2Hit uses Chrétien's structural vocabulary (objects that carry weight, things enacted not stated). This arc uses the same technique: the snake that does nothing, the coat left behind at a waypoint inn, the letter carried for someone else. These are Chrétien objects. The arcs belong to the same tradition.
+- **Source material:** `lab-report-saul-paul-travel-reference.md` — 37 nodes, Acts 7–28 + Pauline letters, full NPC list, lodging details, meals, speeches. Use for implementation reference; do not expose historical names in-game.
