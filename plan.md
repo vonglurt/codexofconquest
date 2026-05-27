@@ -99,7 +99,7 @@ See `story.md §GRIEF AND CORRUPTION` for the vignette prose.
 
 ## §0 — Implementation Readiness Dashboard
 
-> **Status as of Layer 86 (2026-05-27).** §XLVIII Night Fishing live. NIGHT_FISH_POOL (5 species ranks 6–14) + night mode detection (hour ≥ 20 or ≤ 5) + quest_night_eel (activates on hornedSharkSlain; completes on lanternEelLanded; +150gp +400xp + Eel Skin Pouch → eelSkinPouchActive → +1 Type). Header/lake-text night register. HTML: ~20,230 lines. Lab reports: 43. Add new layers below as §XLIX+.
+> **Status as of Layer 87 (2026-05-27).** §XLIX The Shale Drop live. Node YD + cave_lurker + GATE_LOCKS YL→YD (Eel Skin Pouch) + quest_shale_drop (activates on eelSkinPouchActive; completes on shaleDropFound; +250gp +300xp + Y. Gurt Field Survey readable). Yugurt's real identity: Y. Gurt, First Circle Naturalist who chose the lake over the archive. HTML: ~20,270 lines. Lab reports: 43. Add new layers below as §L+.
 
 ### Lab Report Index (Layers 48–79)
 
@@ -5337,6 +5337,29 @@ Quest ID: `quest_fish_01`
 | `night_05` | Deepwater Lurker | 14 | hard |
 
 **State fields added to `_S_DEFAULTS()`:** `lanternEelLanded: false`, `eelSkinPouchActive: false`
+
+---
+
+## §XLIX — The Shale Drop: Yugurt's Identity (✅ Implemented — Layer 87)
+
+**Status:** ✅ Implemented 2026-05-27
+
+**Summary:** A new node `YD` (The Shale Drop) opens west of YL when the player carries the Eel Skin Pouch. Inside: a fixed Cave Lurker encounter and, upon completion, the `Y. Gurt Field Survey` — a pre-Codex Scholar Kings document that names Yugurt as a First Circle Naturalist who chose the lake over the archive.
+
+| Field | Value |
+|---|---|
+| New node | `YD` — act 3, num:77, E:'YL' return, battle: Cave Lurker |
+| Gate | GATE_LOCKS YL→YD requires Eel Skin Pouch (msg: "The crack in the bank drops into darkness. You need a light.") |
+| Monster | `cave_lurker` — ac:15, hp:88, atk:8, tier:hard (cave variant; distinct key from `night_05`) |
+| Quest | `quest_shale_drop` — *The Shale Drop* |
+| Activates | YL visit; requires `eelSkinPouchActive === true` |
+| Completes | `shaleDropFound === true` (set in `battKillEvent` on `cave_lurker` kill) |
+| XP | 300 |
+| Gold | 250gp |
+| Item reward | `Y. Gurt Field Survey` (📋 readable) — Pre-Codex Year 3 survey, signed "Y. Gurt, Nat. First Circle"; closes with: *"The request was not approved. I stayed anyway."* |
+| Disposition | *"He doesn't react when you come back up. He already knew what was down there."* — The Fisherman |
+
+**The reveal:** Yugurt is not the lake's name that became a man's name. He is Y. Gurt — a Scholar Kings naturalist who filed a formal request to remain at the lake instead of returning to the archive for classification review. The request was denied. He stayed anyway. The lake has been giving him data every morning since. He's still recording it.
 
 ---
 

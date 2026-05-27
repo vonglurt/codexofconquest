@@ -4969,6 +4969,7 @@ const MONSTER_POOL = { // → doc: monsters.md §Monster Pool
   night_03: { key:'night_03', name:'Lantern Eel',       ac:12, hp:38,  atk:6, dmgDie:8,  dmgCount:2, dmgFlat:3, tier:'medium' }, // §XLVIII — quest_night_eel target
   night_04: { key:'night_04', name:'Shadowfin Carp',    ac:13, hp:54,  atk:7, dmgDie:8,  dmgCount:2, dmgFlat:4, tier:'medium' }, // §XLVIII
   night_05: { key:'night_05', name:'Deepwater Lurker',  ac:14, hp:77,  atk:8, dmgDie:8,  dmgCount:3, dmgFlat:5, tier:'hard'   }, // §XLVIII
+  cave_lurker: { key:'cave_lurker', name:'Cave Lurker', ac:15, hp:88,  atk:8, dmgDie:8,  dmgCount:3, dmgFlat:5, tier:'hard'   }, // §XLIX — YD fixed encounter
   // ── DeFi Land — meme rodents, virii, and corruption swarms ──
   pepe_rat:         { key:'pepe_rat',         name:'Pepe Rat',               ac:10, hp:5,  atk:3, dmgDie:4,  dmgCount:2, dmgFlat:0,  tier:'trivial' },
   fiat_roach:       { key:'fiat_roach',       name:'Fiat Roach',             ac:9,  hp:4,  atk:2, dmgDie:4,  dmgCount:1, dmgFlat:0,  tier:'trivial' },
@@ -5402,6 +5403,7 @@ const MONSTER_DROPS = { // → doc: mechanics-combat.md §Monster Trophy Drops
   night_03: { name:'Lantern Eel Gland',        icon:'🏮', sell:22 }, // §XLVIII
   night_04: { name:'Shadowfin Scale Sheet',    icon:'🌑', sell:17 }, // §XLVIII
   night_05: { name:'Lurker Bone Hook',         icon:'🌑', sell:23 }, // §XLVIII
+  cave_lurker: { name:'Lurker Carapace',       icon:'🌑', sell:28 }, // §XLIX
   // ── DeFi Land drops ──
   pepe_rat:             { name:'Corrupted Meme Fragment', icon:'🐀', sell:2  },
   fiat_roach:           { name:'Worthless Coin Chip',     icon:'🪲', sell:1  },
@@ -6290,6 +6292,7 @@ function battKillEvent() {
   const drop = MONSTER_DROPS[S.enemy.key];
   if (S.enemy.key === 'horned_shark' && S_story.active) S_story.hornedSharkSlain = true; // §XLVII
   if (S.enemy.key === 'night_03' && S_story.active) S_story.lanternEelLanded = true; // §XLVIII: quest_night_eel trigger
+  if (S.enemy.key === 'cave_lurker' && S_story.active) S_story.shaleDropFound = true; // §XLIX: quest_shale_drop trigger
   // Layer 47: override fish drop sell value with size×rarity gold
   if (drop && S_story._fishBattleGold) {
     S._pendingDrop = { ...drop, sell: S_story._fishBattleGold };
@@ -7664,7 +7667,8 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   EP:{ num:70, code:'EP', name:'epic_pirate_cave',     label:"Admiral's Last Cove",            act:5, N:'PC', text:"Below the pirate cave, accessible only at low tide, the cove opens. The approach is timed — the tide determines when you can reach it and when you cannot. The Admiral did not choose this schedule. He works with what the cove gives him.\n\nThe flagship is still here. It sits in the low-tide berth in the condition of a ship that has been kept rather than abandoned — no rot in the visible planking, no collapse in the rigging. Someone has been maintaining it. Someone has been here continuously.\n\nThe Admiral has been guarding the flagship since he died. The post was not relieved at death. No one relieved it. He is still on station, in the tidal cove, keeping the ship in the condition it was in when he last commanded it.\n\nHe died before he could leave. Whether could not and did not are the same question here is not a question the cove can answer.", npc:null, battle:null, loot:null, sleep:false, isEpicBattleground:true, bossKey:'admiral_ghost' },
   EG:{ num:71, code:'EG', name:'epic_goblin_cave',     label:"Void Shaman's Sanctum",         act:5, N:'GC', text:"Below the goblin warrens, the chamber was sealed by choice. Not sealed against Kazrath — sealed by him. From inside. The difference between a chamber sealed to keep something out and a chamber sealed to keep something in is the direction of the lock. Kazrath holds the lock from the inside.\n\nHe has been here since before the Codex shattered. The shattering is the event by which everything else in this world is dated — before it, after it, in the moment of it. Kazrath was already below, already sealed, already here when it happened. He felt it from the chamber. He did not come out.\n\nThe goblins above know the chamber is below them. They do not go down. They have not gone down since before anyone alive remembers going down.\n\nWhat Kazrath has been doing in a sealed chamber since before the Codex shattered is the question the chamber was sealed to prevent from being asked.", npc:null, battle:null, loot:null, sleep:false, isEpicBattleground:true, bossKey:'void_high_shaman' },
   // ── Yugurt Lake ──
-  YL:{ num:75, code:'YL', name:'yugurt_lake',  label:'Yugurt Lake',   act:3, N:'J6', S:'YC', E:null, W:null, text:"The hand-painted sign at the shore says YUGURT. Someone planted it in the bank on a stick, no base, no post — it leans at the angle of a thing that has been leaning a long time. No birds. No wind. The water is mirror-flat in the way that means the air above it is being held still by something below.\n\nThe surface moves once. A slow displacement, not a wave — a weight shifting. Then it stops.\n\nThere is a name for what produces that displacement. You will not find it in shallow water. The Horned Shark hunts this lake; the Leviathan calls it home. Anglers who know the difference between a bite and a notice do not fish past the Noon Point marker.\n\nYou are past it.\n\nThe lake has already registered you. What it does with that information is the only question still open. The sign leans. The water holds. Whatever is under the mirror is not in a hurry.", npc:null, battle:null, loot:null, sleep:false, isFishingLake:true },
+  YL:{ num:75, code:'YL', name:'yugurt_lake',  label:'Yugurt Lake',   act:3, N:'J6', S:'YC', E:null, W:'YD', text:"The hand-painted sign at the shore says YUGURT. Someone planted it in the bank on a stick, no base, no post — it leans at the angle of a thing that has been leaning a long time. No birds. No wind. The water is mirror-flat in the way that means the air above it is being held still by something below.\n\nThe surface moves once. A slow displacement, not a wave — a weight shifting. Then it stops.\n\nThere is a name for what produces that displacement. You will not find it in shallow water. The Horned Shark hunts this lake; the Leviathan calls it home. Anglers who know the difference between a bite and a notice do not fish past the Noon Point marker.\n\nYou are past it.\n\nThe lake has already registered you. What it does with that information is the only question still open. The sign leans. The water holds. Whatever is under the mirror is not in a hurry.", npc:null, battle:null, loot:null, sleep:false, isFishingLake:true },
+  YD:{ num:77, code:'YD', name:'shale_drop',   label:'The Shale Drop', act:3, N:null, S:null, E:'YL', W:null, text:"The crack in the bank goes deeper than it has any right to. The shale steps down in irregular cuts — not carved, just how the rock decided to break. The Eel Skin Pouch lights the first five feet. Below that, the water resumes.\n\nThe cave is not dry. The water has been here longer than the lake above it. You are below the lake floor. The geology has been displaced sideways and then down and the whole arrangement is old enough that the edges are smooth.\n\nThe light shows you the shape of the space before it shows you what is in it. There is something in it.\n\nThe Cave Lurker has been in the dark since before anyone named this lake. It has not been waiting for you specifically. It has been waiting for anything that brings light down here — which amounts to the same thing.", npc:null, battle:{label:'Cave Lurker', key:'cave_lurker', count:1}, loot:'Oilskin case on the far ledge', sleep:false }, // §XLIX
   YC:{ num:76, code:'YC', name:'yugurt_cabin', label:'Yugurt Cabin',  act:3, N:'YL', S:null, E:null, W:null, text:"The smell reaches you before the cabin does: wood smoke and fish oil, the specific combination that means a fire kept through the night and something cooked on it years ago that the walls remember. A lifetime of tackle hangs inside — hooks, lines, leaders, a sinker collection organized in a way that took decades. The nets haven't been cast in years. They are hung correctly, maintained, waiting for a decision that hasn't come back yet.\n\nThe rod is propped by the door. Not inside — outside, by the door, where a visitor would see it before they knocked.\n\nThe Fisherman is always here in the morning. He does not ask where you have been or where you are going. He has a fire. He has a floor you can sleep on for nothing.\n\nThis is the only place between the highlands and the coast that offers both.", npc:'The Fisherman', battle:null, loot:'Fishing Rod', sleep:true, sleepCost:0 },
   // ── DeFi Land (The Unbanked Quarter) ──
   DF:{ num:72, code:'DF', name:'defi_land', label:'The Unbanked Quarter',  act:1, N:null, S:'SL', E:'HM', W:'GL', text:"The sign in the cracked window reads NO COIN · NO TRUST · NO THANKS, in that order, which is also the order in which you will need to accept them. The Unbanked Quarter appears on no city register. Tax collectors who came back from this block had nothing to report except that they were not going back. The ones who went back have not come back.\n\nA shortwave signal repeats on every frequency. Same pattern, same interval, same broadcast quality — which is poor. Nobody is answering. The signal has been going out long enough that nobody answering is not a condition; it is the standing state of the broadcast.\n\nGrimshaw runs the transmitter. His receiver has been broken for eleven years. He is aware of this. He does not consider it relevant to the transmission.\n\nThe rats here are wrong. Not wrong in the way of sick rats or starving rats — wrong in the way of rats that have adapted to something that should not be adapted to. They do not scatter. They watch the frequency bands.", npc:'Grimshaw', battle:{label:'NGMI Swarm ×3 + Rug Spider', key:'ngmi_swarm', count:3}, loot:'Corrupted Meme Fragment ×2', sleep:false },
@@ -7711,7 +7715,7 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   ED:{r:15,c:3},  EM:{r:6,c:8},   EE:{r:11,c:5},  EV:{r:10,c:8},  EJ:{r:10,c:1},
   ET:{r:4,c:6},   ER:{r:1,c:3},   EK:{r:1,c:16},  EP:{r:11,c:16}, EG:{r:11,c:14},
   /* Yugurt Lake — south of Western Wilds Crossroads */
-  YL:{r:6,c:5},   YC:{r:7,c:5},
+  YL:{r:6,c:5},   YC:{r:7,c:5},  YD:{r:6,c:4},
   /* DeFi Land — north of Birka Slums */
   DF:{r:3,c:16},  HM:{r:3,c:17},  GL:{r:3,c:15},
 };
@@ -8673,6 +8677,14 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     completeFn:() => !!S_story.hornedSharkSlain,
     xpAward:500, waypointNode:'YL', reward:300,
     disposition:'"You got the shark. That\'s a different kind of fishing." — The Fisherman' },
+  quest_shale_drop: { id:'quest_shale_drop', type:'side', title:'The Shale Drop', // §XLIX
+    desc:"There is a crack in the bank at Yugurt Lake where the shale drops away below the waterline. You have been past it without a light. The Eel Skin Pouch gives you one. The lake floor is older than the water above it. What has been sitting in the dark down there has been sitting in the dark for a very long time.",
+    hint:'Enter The Shale Drop from Yugurt Lake (requires Eel Skin Pouch) and defeat the Cave Lurker.',
+    activateNode:'YL', completeItems:[],
+    activateCond:() => !!S_story.eelSkinPouchActive,
+    completeFn:() => !!S_story.shaleDropFound,
+    xpAward:300, waypointNode:'YD', reward:250,
+    disposition:'"He doesn\'t react when you come back up. He already knew what was down there." — The Fisherman' },
   quest_night_eel: { id:'quest_night_eel', type:'side', title:'Night Water', // §XLVIII
     desc:"After dark, Yugurt Lake becomes a different lake. The familiar geometry of the bank and the reeds still holds. But the fish that come up are not the ones that come up at noon. Something luminescent hunts the deep water after dark. You have seen the light. The lake has seen you looking.",
     hint:'Fish at Yugurt Lake after dark (hour ≥ 20 or ≤ 5) and defeat the Lantern Eel.',
@@ -9552,7 +9564,7 @@ const _S_DEFAULTS = () => ({
   s8VargaWatches: 0, s8VargaClueUnlocked: false, s8PachelbelTold: false,
   nexusQuestSeen: false, nexusQ01Active: false, nexusQ02Complete: false, creativeLiteracyToken: false,
   fishingQuestFlags: {}, fishingBaitSatchel: false, fishingYugurtFavour: false, fishingCatchLog: [],
-  tackleboxZoneUnlocks: {shore:true, reeds:false, deep:false}, baitFishingActive: false, hornedSharkSlain: false, lanternEelLanded: false, eelSkinPouchActive: false, // §XLVIII
+  tackleboxZoneUnlocks: {shore:true, reeds:false, deep:false}, baitFishingActive: false, hornedSharkSlain: false, lanternEelLanded: false, eelSkinPouchActive: false, shaleDropFound: false, // §XLVIII–§XLIX
   junctionsSeen: {}, companionActsSeen: {},
   shardNotes: [false,false,false,false,false,false,false], shardNotesAllRead: false,
   voidCrackFired: false, voidFracturesFired: false, voidImminentWarned: false, void_mercy_count: 0,
@@ -12037,6 +12049,7 @@ const GATE_LOCKS = [ // → doc: story.md §Gate Locks (from/to node pairs block
   { from:'SC', to:'FL', item:'Sea Cave Key',  msg:'🗝 The inner passage is blocked. The Crones\' Sea Cave Key opens it.' },
   { from:'AL', to:'SE', item:'Conclave Pass', msg:'🗝 Checkpoint blocked. Show your Conclave Pass to the scouts.' },
   { from:'VC', to:'DE', item:'Toll Token',    msg:'🗝 Bruxa Mourne\'s toll gate. Offer the Toll Token to pass.' },
+  { from:'YL', to:'YD', item:'Eel Skin Pouch', msg:'🏮 The crack in the bank drops into darkness. You need a light.' }, // §XLIX
 ];
 
 function _hasItem(keyword) {
@@ -14388,6 +14401,7 @@ function storyCheckQuests(node) {
       if (id === 'quest_fish_01') { S_story.gold += 200; S_story.fishingYugurtFavour = true; msgs.push("💰 +200gp. 🎣 Yugurt's Favour granted — +1 on all future catch rolls."); }
       if (id === 'quest_horned_shark') { S_story.gold += 300; msgs.push('💰 +300gp. 🦷 The Noon Point is yours now.'); }
       if (id === 'quest_night_eel') { S_story.gold += 150; S_story.eelSkinPouchActive = true; if (!S_story.inventory) S_story.inventory = []; S_story.inventory.push({ name:'Eel Skin Pouch', icon:'🏮', type:'trinket', sell:35, desc:'+1 Type bonus on all fishing casts. The light never fully goes out.' }); msgs.push("💰 +150gp. 🏮 Eel Skin Pouch acquired — +1 Type on all future casts."); } // §XLVIII
+      if (id === 'quest_shale_drop') { S_story.gold += 250; if (!S_story.inventory) S_story.inventory = []; S_story.inventory.push({ name:'Y. Gurt Field Survey', icon:'📋', type:'readable', sell:0, readText:"Y. GURT — YUGURT LAKE SURVEY\nFirst Circle Field Record, Pre-Codex Year 3\nClassification: Naturalist Assessment — Freshwater Taxonomy\n\nLake dimensions: 2.4km × 0.9km. Maximum depth: 31 meters at the northwest basin. The shale formation below the northwest bank extends below the waterline for an undetermined depth — further survey required.\n\nDocumented species: 20 surface and mid-water, 3 confirmed deep-water (unclassified), 1 depth specimen observed on descent into northwest shale formation. See Annex 4: 'the light-producing variety; do not pursue below 25m without additional crew.'\n\nSurveyor notation (Y. Gurt, Nat. First Circle): The lake has developed a self-regulating predator hierarchy without Scholar Kings intervention. I recommend no intervention. It is doing this correctly on its own. I also recommend I be permitted to stay here rather than return to the archive for the classification review. The archive will continue without me. The lake will require observation.\n\nThe request was not approved.\n\nI stayed anyway." }); msgs.push('💰 +250gp. 📋 Y. Gurt Field Survey found.'); } // §XLIX
       // Layer 50: §XV NG+ Remembrance quest rewards
       if (id === 'quest_ng_01') { S_story.gold += 500; msgs.push('💰 +500gp. The city remembers. So do they.'); }
       if (id === 'quest_ng_02') { /* reward is the act itself */ msgs.push('📖 Entry 42 is in the journal.'); }
