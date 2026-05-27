@@ -99,7 +99,7 @@ See `story.md §GRIEF AND CORRUPTION` for the vignette prose.
 
 ## §0 — Implementation Readiness Dashboard
 
-> **Status as of Layer 91 (2026-05-27).** §LIII implemented: quest_muffat_03 "The Dark Station" (activates at DK post-muffatManifestRead, completes at S7 on station7LogRead) + node S7 (Station 7, Dark) + GATE_LOCK HM→S7 (manifest required) + Station 7 Transmission Log readable (bearing 047°, log ends mid-entry) + Muffat four-state quoteFn. Void arc / Tilbury arc now connected via bearing 047° → Neon Undercity. HTML: ~20,330 lines. Lab reports: 43. Add new layers below as §LIV+.
+> **Status as of Layer 92 (2026-05-27).** §LIV implemented: quest_signal_01 "The Warrant" (activates at CY post-station7LogRead, completes on suppressorLogRead) + Seraphine Bruhns three-state quoteFn + Warrant Suppressor Log readable (three suppressions, Day 14 mid-transmission cut, source depth 18m bearing 047°, "source is aware of suppression"). HTML: ~20,355 lines. Lab reports: 43. Add new layers below as §LV+.
 
 ### Lab Report Index (Layers 48–79)
 
@@ -5502,6 +5502,44 @@ Final note appended: *"Bearing 047° from Station 7 points toward the Neon Under
 | State flag | `station7LogRead` |
 | Gate lock | HM → S7, item: `Shipping Manifest (Intercepted)` |
 | Disposition | *"We do not know where the station operator is. We know the bearing."* — Magistra Elara Muffat |
+
+---
+
+## §LIV — The Warrant (✅ Implemented — Layer 92)
+
+**Status:** ✅ Implemented 2026-05-27
+
+### §LIV-A. The Discovery
+
+The Warrant suppressor Seraphine gave the player is a WSP-CY-04 unit. It fires automatically on structured transmissions. It keeps a log. She did not know it kept a log.
+
+The suppressor is what silenced Station 7's operator mid-entry on Day 14. Seraphine cut the transmission without knowing she was cutting anything. She was watching the door.
+
+The signal has not repeated since. Three months of silence after three transmissions of increasing length — the fourth long enough to contain something, ended before it finished. Either the source stopped voluntarily. Or the source knows it's being jammed.
+
+### §LIV-B. Seraphine Bruhns: Three-State quoteFn
+
+| State | Trigger | Content |
+|---|---|---|
+| 1 | Default | *"That's a Warrant suppressor. Keep it."* |
+| 2 | `station7LogRead` | She checks the side panel. Hands it back. *"I cut the transmission. I did not know I was cutting anything."* |
+| 3 | `suppressorLogRead` | Three months of silence after three events. *"I would like to know what it was trying to say."* |
+
+### §LIV-C. Warrant Suppressor Log (Readable)
+
+Auto-log recovered from the device itself. Three suppression events matching Station 7 exactly. Source: bearing 047°, depth 18m, subsurface. Post-Day 14 note: *"Either source ceased voluntarily, or source is aware of suppression."*
+
+The device continues active monitoring.
+
+| Field | Value |
+|---|---|
+| Quest | `quest_signal_01` — *The Warrant* |
+| Activates | CY; requires `station7LogRead` |
+| Completes | On `suppressorLogRead` |
+| XP | 250 |
+| Gold | 300gp |
+| State flag | `suppressorLogRead` |
+| Disposition | *"Either source ceased voluntarily, or source is aware of suppression."* — Warrant Suppressor Log, Day 14 |
 
 ---
 

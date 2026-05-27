@@ -8561,6 +8561,14 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     failText:'The watch catches the movement before you clear the shadow line. You pull back. The crate stays where it is. The watch makes a note in the margin of the wrong ledger.',
     completeItems:[], checkPassFlag:'muffatBerthReached',
     disposition:'"There are three things on that berth that should not be there. The crate is one of them." — Magistra Elara Muffat' },
+  // ── §LIV: The Warrant ──
+  quest_signal_01: { id:'quest_signal_01', type:'side', title:'The Warrant',
+    desc:"Station 7's log ends mid-entry. Bearing 047° points at the Neon Undercity. Seraphine Bruhns has been running a Warrant suppressor at CY since before you arrived. The suppressor fires automatically on structured transmissions. It keeps a log. She did not know it kept a log.",
+    hint:'Return to Commander Seraphine Bruhns at the Neon Undercity and ask about the suppressor log.',
+    activateNode:'CY', activateCond:() => !!S_story.station7LogRead,
+    completeFn:() => !!S_story.suppressorLogRead,
+    xpAward:250, waypointNode:'CY', reward:300,
+    disposition:'"Either the source ceased voluntarily, or the source is aware of suppression." — Warrant Suppressor Log, auto-entry, Day 14' },
   // ── §LIII: Station 7 ──
   quest_muffat_03: { id:'quest_muffat_03', type:'side', title:'The Dark Station',
     desc:"Station 7 is listed in the manifest as the delivery terminus. The station that went dark. The manifest has an address. Bertha's logs have a changed absence. The station has a transmission log that ends mid-entry.",
@@ -8846,7 +8854,11 @@ const NPC_DIALOGUE = { // → doc: story.md §FL7
   IN: { name:'Innkeeper Brynn',                 quote:'"He left this in the room. Paid three nights ahead, didn\'t sleep the third one. I kept it. Felt like someone would come asking."' },
   TV: { name:'Bard Tomas Couperin',                quote:'"Song\'s old. Older than the city, older than the Conclave. The melody\'s simple but the words are a lock waiting for a key. Yours for a drink and a silver."' },
   BA: { name:'City Fence',                      quote:'"No names, no receipts. If you have regrets, that\'s yours to carry. Show coin and we begin."' },
-  CY: { name:'Commander Seraphine Bruhns',       quote:'"That\'s a Warrant suppressor — jams coordinated tactical signals in a forty-foot radius. Whoever built this undercity wanted control over every signal in it. Keep it. You\'ll need it."' },
+  CY: { name:'Commander Seraphine Bruhns', quoteFn:() => S_story.suppressorLogRead // §LIV
+    ? '"The source has not repeated since Day 14. Three months of silence after three transmissions of increasing duration." She is not looking at the suppressor anymore — she already knows what it says. "I have been standing in this corridor for two years. The undercity is stable because I am standing in this corridor. The signal was stable because I was jamming it without knowing I was jamming it." A pause. "I would like to know what it was trying to say."'
+    : S_story.station7LogRead // §LIV
+    ? '"The suppressor fires automatically on structured transmissions in its radius. Non-mechanical signal classification, subsurface source." She looks at the device in your hand. "I did not know it kept a log. I was watching the door." She holds out her hand for the suppressor, checks the side panel, hands it back. "The log is on the device. Forty-one volumes of confirmed absence, three events, and then it cut the transmission mid-entry on Day 14." She does not look away. "I cut the transmission. I did not know I was cutting anything."'
+    : '"That\'s a Warrant suppressor — jams coordinated tactical signals in a forty-foot radius. Whoever built this undercity wanted control over every signal in it. Keep it. You\'ll need it."' },
   DK: { name:'Magistra Elara Muffat', quoteFn:() => S_story.station7LogRead // §LIII
     ? '"The log ends mid-entry. The Scholar Kings do not abandon equipment mid-entry. They do not leave pens in trays." She sets the manifest on the shelf beside the three crates. "The signal character was non-mechanical. Three occurrences, each longer than the last. The fourth was long enough to contain something. We do not know what it contained. The station operator does." A pause. "We do not know where the station operator is. We know the bearing. Bearing 047° from Station 7 is the Neon Undercity access corridor." She does not say what that means. She does not need to.'
     : S_story.muffatManifestRead // §LII
@@ -9593,7 +9605,7 @@ const _S_DEFAULTS = () => ({
   waypoint: null, customQuestTerrain: null,
   ebNegotiatedPayments: {}, ebReturnDone: {},
   journalEntriesRead: [], ebReturnsCompleted: {},
-  npcFavorability: {}, roughWhiskeyUsed: false, roughWhiskeyActive: false, yaelEscortUsed: false, pitTrainingWins: 0, slStalksWon: 0, muffatBerthReached: false, muffatManifestRead: false, station7LogRead: false, // §LI–§LIII
+  npcFavorability: {}, roughWhiskeyUsed: false, roughWhiskeyActive: false, yaelEscortUsed: false, pitTrainingWins: 0, slStalksWon: 0, muffatBerthReached: false, muffatManifestRead: false, station7LogRead: false, suppressorLogRead: false, // §LI–§LIV
   npcVisitCounts: {}, couperiSongReceived: false, bruhnsDepthsReported: false, frobergerLastEntryRead: false,
   pitPerks: [], frobergerNoteNode: null, froberger_last_note_found: false, froberger_last_note_read: false, ngPlusRun: 0,
   huntMode: false,
@@ -14526,6 +14538,14 @@ function storyCheckQuests(node) {
         msgs.push('📙 Benedikt\'s Annotated Copy (Tome) obtained. +300gp. The First Researcher is known.');
       }
       if (id === 'quest_wm_05') { S_story.gold += 200; msgs.push('💰 +200gp. 📋 The Gurt file is still open. It has been filed, and refiled, and it will not close.'); } // §L
+      if (id === 'quest_signal_01') { // §LIV
+        S_story.gold += 300;
+        S_story.suppressorLogRead = true;
+        if (!S_story.inventory) S_story.inventory = [];
+        S_story.inventory.push({ name:'Warrant Suppressor Log', icon:'📡', type:'readable', sell:0,
+          readText:"WARRANT SUPPRESSOR — AUTOMATIC SIGNAL LOG\nDevice ID: WSP-CY-04 (Neon Undercity, Station Corridor)\nOperator: Commander S. Bruhns (unaware of logging function)\n\n[Months 1–41: 14.225 monitored. No structured transmission detected. Log: confirmed absent. Cross-reference with Frequency Row Vol. 1–41: consistent.]\n\nDay 3, Vol. 41: Auto-suppression fired. Signal on 14.225, duration 0.4s, character: non-mechanical, subsurface origin — depth est. 18m, bearing 047° from HM. Suppression effective. Signal terminated.\nDay 9, Vol. 41: Auto-suppression fired. Signal on 14.225, duration 1.1s, character: non-mechanical, partial internal structure. Suppression effective. Signal terminated.\nDay 14, Vol. 41: Auto-suppression fired. Signal on 14.225, duration 3.1s, character: non-mechanical, structured content, transmission in progress at suppression. Suppression effective. Signal terminated mid-transmission.\n\n[Post-Day 14: 14.225 monitored. No structured transmission detected. Source remains at bearing 047°, depth 18m.]\n\nAuto-assessment: Signal suppression achieved. Source has not repeated transmission.\n\nNote: Either source ceased voluntarily, or source is aware of suppression.\n\n[End of log. Device continues active monitoring.]" });
+        msgs.push('💰 +300gp. 📡 Warrant Suppressor Log recovered — three suppressions, Day 14 cut mid-transmission. Source at bearing 047°, depth 18m. Source has not repeated.');
+      }
       if (id === 'quest_muffat_03') { // §LIII
         S_story.gold += 350;
         S_story.station7LogRead = true;

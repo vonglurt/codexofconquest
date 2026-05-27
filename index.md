@@ -1,20 +1,20 @@
 # Roll2Hit — The Shattered Codex: Document Index
 
 **Project:** `roll2hit-v3.html` — single-file combat tracker + narrative RPG
-**Status:** Layers 0–91 implemented · ~20,330 lines · 80 nodes · 378 monsters · 43 lab reports · FC01–FC08 ✅ · §RESEARCH-01 ✅ · §API-01+02 ✅ · SP4 ✅ · §DESIGN-02 ✅ · §DESIGN-03 ✅ · §DUNGEON-01 ✅ · §DUNGEON-02 ✅ · §XLIII ✅ · §XLIV ✅ · §XLV ✅ · §XLVI ✅ · §XLVII ✅ · §XLVIII ✅ · §XLIX ✅ · §L ✅ · §LI ✅ · §LII ✅ · §LIII ✅
+**Status:** Layers 0–92 implemented · ~20,355 lines · 80 nodes · 378 monsters · 43 lab reports · FC01–FC08 ✅ · §RESEARCH-01 ✅ · §API-01+02 ✅ · SP4 ✅ · §DESIGN-02 ✅ · §DESIGN-03 ✅ · §DUNGEON-01 ✅ · §DUNGEON-02 ✅ · §XLIII ✅ · §XLIV ✅ · §XLV ✅ · §XLVI ✅ · §XLVII ✅ · §XLVIII ✅ · §XLIX ✅ · §L ✅ · §LI ✅ · §LII ✅ · §LIII ✅ · §LIV ✅
 **Last updated:** 2026-05-27
 
 ### Doc Health Badge
 
 | Metric | Value | Status |
 |--------|-------|--------|
-| HTML line count | ~20,330 | ✅ |
+| HTML line count | ~20,355 | ✅ |
 | Lab reports on disk | 43 | ✅ |
 | Lab reports in index | 43 | ✅ |
 | Node text rewrites (noir register) | 80 / 80 | ✅ S7 (Station 7, Dark) added Layer 91 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
-| Layers implemented | 0–91 | ✅ |
-| Last sync pass | 2026-05-27 Layer 91 (§LIII — node S7 Station 7 Dark + quest_muffat_03 The Dark Station + Station 7 Transmission Log readable + Muffat four-state quoteFn + bearing 047° → Neon Undercity) | ✅ |
+| Layers implemented | 0–92 | ✅ |
+| Last sync pass | 2026-05-27 Layer 92 (§LIV — quest_signal_01 The Warrant + Seraphine three-state quoteFn + Warrant Suppressor Log readable + suppressorLogRead flag) | ✅ |
 
 > Update this table at the start of each session: recount lab reports with `ls lab-report-*.md | wc -l`, check HTML line count with `wc -l roll2hit-v3.html`, confirm FC item status.
 
