@@ -8567,8 +8567,8 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   // ── §LVIII: Cycle 4 ──
   quest_muffat_05: { id:'quest_muffat_05', type:'side', title:'Cycle 4',
     desc:"Muffat has had three Scholar Kings crates on her shelf for two years, unopened. The stamp prevented harbor search. The question is closed now. She opens one. The receiver array inside is expected. The handwritten requisition note in the packing material is not.",
-    hint:'Return to Magistra Muffat at the Harbor Docks and read what she found in the crate.',
-    activateNode:'DK', activateCond:() => !!S_story.solmFound,
+    hint:'Return to Magistra Muffat at the Harbor Docks — she has something to show you.',
+    activateNode:'DK', activateCond:() => !!S_story.antecedentMet, // CO-002: activates same visit as Solm direction
     completeFn:() => !!S_story.cycle4NoteRead,
     xpAward:150, waypointNode:'DK', reward:200,
     disposition:'"They were not reacting to the signal. They were already in motion." — Magistra Elara Muffat' },
@@ -8789,7 +8789,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Beat Bog at Yugurt Cabin.', activateNode:'YC', completeItems:[],
     activateCond:() => !!(S_story.yugurtTourBeat||{}).renard,
     completeFn:() => !!(S_story.yugurtTourBeat||{}).bog, xpAward:200, waypointNode:'YC', reward:150,
-    disposition:'"I eat what I catch. What I catch eats back, sometimes."  — Bog Mudwhistle' },
+    disposition:'"I don\'t think the lake has a mood anymore. I think we\'re the ones who want it to mean something." — Bog Mudwhistle' }, // CO-001
   quest_tour_04: { id:'quest_tour_04', type:'side', title:"Vera's Rulebook",
     desc:"Vera Hookline has a laminated rulebook. She will read rule twelve to you if you lose.",
     hint:'Beat Vera at Yugurt Cabin.', activateNode:'YC', completeItems:[],
@@ -8892,8 +8892,11 @@ const NPC_DIALOGUE = { // → doc: story.md §FL7
     : '"That\'s a Warrant suppressor — jams coordinated tactical signals in a forty-foot radius. Whoever built this undercity wanted control over every signal in it. Keep it. You\'ll need it."' },
   DK: { name:'Magistra Elara Muffat', quoteFn:() => S_story.cycle4NoteRead // §LVIII
     ? '"Cycle 3 was the Constructor\'s work. She built the containment to give it a room rather than a cage. If Cycle 4 carries a Conclave Archivist\'s authorization—" She stops. She sets the requisition note on top of the stack. "They were not building infrastructure to understand the signal. They were building infrastructure to manage the interval. Cycle 4 is not a response to what happened. It was already in motion before the first transmission." She does not look at the crates. "I am keeping them. All four. I am also keeping the note."'
-    : S_story.antecedentMet // §LVII
-    ? '"I sent Solm to the Map Shop three months ago. Dusk does not ask. He holds things — maps, keys, people who carry knowledge that has become unsafe." She straightens the stack of manifests without looking at you. "She has been writing the same entry every morning since she arrived. Transmission confirmed, bearing 047°, no repeat. She cannot close the file without a record from the terminus." A pause. "You have been to the terminus."'
+    : S_story.antecedentMet // §LVII + §LVIII consolidated (CO-002)
+    ? (() => {
+        if (!S_story.cycle4NoteRead) S_story.cycle4NoteRead = true; // auto-completes quest_muffat_05 on next quest check
+        return '"I sent Solm to the Map Shop three months ago. Dusk does not ask." She turns to the shelf and lifts the nearest crate onto the counter. She does not pause before doing it. The question is closed; the reason not to open the crate is closed with it.\n\nShe removes the packing material. Receiver array, Category 4, as expected. Beneath it: a folded note, handwritten, no date. She reads it without handing it to you. Her expression does not change.\n\n"Cycle 4 carries a Conclave Archivist\'s authorization. They were not building infrastructure to understand the signal. They were building infrastructure to manage the interval. This was already in motion before the first transmission." She sets the note on the counter. "Go find Solm. Come back when you have."';
+      })()
     : S_story.station7LogRead // §LIII
     ? '"The log ends mid-entry. The Scholar Kings do not abandon equipment mid-entry. They do not leave pens in trays." She sets the manifest on the shelf beside the three crates. "The signal character was non-mechanical. Three occurrences, each longer than the last. The fourth was long enough to contain something. We do not know what it contained. The station operator does." A pause. "We do not know where the station operator is. We know the bearing. Bearing 047° from Station 7 is the Neon Undercity access corridor." She does not say what that means. She does not need to.'
     : S_story.muffatManifestRead // §LII
@@ -9646,7 +9649,7 @@ const _S_DEFAULTS = () => ({
   waypoint: null, customQuestTerrain: null,
   ebNegotiatedPayments: {}, ebReturnDone: {},
   journalEntriesRead: [], ebReturnsCompleted: {},
-  npcFavorability: {}, roughWhiskeyUsed: false, roughWhiskeyActive: false, yaelEscortUsed: false, pitTrainingWins: 0, slStalksWon: 0, muffatBerthReached: false, muffatManifestRead: false, station7LogRead: false, suppressorLogRead: false, antecedentMet: false, solmFound: false, cycle4NoteRead: false, // §LI–§LVIII
+  npcFavorability: {}, roughWhiskeyUsed: false, roughWhiskeyActive: false, yaelEscortUsed: false, pitTrainingWins: 0, slStalksWon: 0, muffatBerthReached: false, muffatManifestRead: false, station7LogRead: false, suppressorLogRead: false, antecedentMet: false, solmFound: false, cycle4NoteRead: false, bogDefeated: false, // §LI–§LVIII + CO-001
   npcVisitCounts: {}, couperiSongReceived: false, bruhnsDepthsReported: false, frobergerLastEntryRead: false,
   pitPerks: [], frobergerNoteNode: null, froberger_last_note_found: false, froberger_last_note_read: false, ngPlusRun: 0,
   huntMode: false,
@@ -18357,6 +18360,10 @@ function storyRender(node, prefix) {
                 }
                 storyCheckQuests(node); // activate next quest in chain
                 html += '✓ <strong>YOU WIN</strong> — +'+opp.stake+'gp · <em>'+TOUR_TITLES[opp.key]+'</em>';
+                if (opp.key === 'bog') { // CO-001: Bog's losing beat
+                  S_story.bogDefeated = true;
+                  html += '<br><br><em>He sits down on the bank with his rod across his knees. He does not look at you. He looks at the lake.<br><br>"I been coming here since before that cabin was standing. Before the Fisherman. Before the dock." He turns the rod over once. "I used to think the lake had a mood. Like it chose what to give you. I don\'t think that anymore." A pause. "I think it just is what it is and we\'re the ones who want it to mean something."<br><br>He stands up. He picks up his bucket. One fish, medium, respectable. "Good cast," he says. Not to the fish.</em>';
+                }
                 if (opp.key === 'master') html += '<br>🏆 You are the Master of Yugurt.';
                 storyAutoSave();
                 setTimeout(() => storyRender(node), 500);

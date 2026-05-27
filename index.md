@@ -1,7 +1,7 @@
 # Roll2Hit — The Shattered Codex: Document Index
 
 **Project:** `roll2hit-v3.html` — single-file combat tracker + narrative RPG
-**Status:** Layers 0–96 implemented · ~20,435 lines · 81 nodes · 378 monsters · 43 lab reports · FC01–FC08 ✅ · §RESEARCH-01 ✅ · §API-01+02 ✅ · SP4 ✅ · §DESIGN-02 ✅ · §DESIGN-03 ✅ · §DUNGEON-01 ✅ · §DUNGEON-02 ✅ · §XLIII ✅ · §XLIV ✅ · §XLV ✅ · §XLVI ✅ · §XLVII ✅ · §XLVIII ✅ · §XLIX ✅ · §L ✅ · §LI ✅ · §LII ✅ · §LIII ✅ · §LIV ✅ · §LV ✅ · §LVI ✅ · §LVII ✅ · §LVIII ✅
+**Status:** Layers 0–97 implemented · ~20,445 lines · 81 nodes · 378 monsters · 43 lab reports · FC01–FC08 ✅ · §RESEARCH-01 ✅ · §API-01+02 ✅ · SP4 ✅ · §DESIGN-02 ✅ · §DESIGN-03 ✅ · §DUNGEON-01 ✅ · §DUNGEON-02 ✅ · §XLIII ✅ · §XLIV ✅ · §XLV ✅ · §XLVI ✅ · §XLVII ✅ · §XLVIII ✅ · §XLIX ✅ · §L ✅ · §LI ✅ · §LII ✅ · §LIII ✅ · §LIV ✅ · §LV ✅ · §LVI ✅ · §LVII ✅ · §LVIII ✅
 **Last updated:** 2026-05-27
 
 ### Doc Health Badge
@@ -13,8 +13,8 @@
 | Lab reports in index | 43 | ✅ |
 | Node text rewrites (noir register) | 81 / 81 | ✅ AC (The Antecedent Chamber) added Layer 93 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
-| Layers implemented | 0–96 | ✅ |
-| Last sync pass | 2026-05-27 Layer 96 (§LVIII — quest_muffat_05 Cycle 4 + Scholar Kings Requisition readable + Muffat six-state quoteFn + cycle4NoteRead) | ✅ |
+| Layers implemented | 0–97 | ✅ |
+| Last sync pass | 2026-05-27 Layer 97 (CO-001: Bog defeat speech + CO-002: Muffat State 5+6 consolidation — crate opens inline, mandatory DK visits 3→1) | ✅ |
 
 > Update this table at the start of each session: recount lab reports with `ls lab-report-*.md | wc -l`, check HTML line count with `wc -l roll2hit-v3.html`, confirm FC item status.
 

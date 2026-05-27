@@ -861,7 +861,7 @@ by commit. All changes are to roll2hit-v3.html unless otherwise specified.
 ─────────────────────────────────────────────────────────────────────────────
 
 CO-001 — TOURNAMENT VOICE: BOG MUDWHISTLE LOSING BEAT
-Status: OPEN
+Status: CLOSED — implemented Layer 97
 Source critique: The tournament chain is mechanically solid but narratively thin.
 Six opponents, six mild dispositions. They gate the emotional arc without
 contributing to it. One of them should lose with something to say.
@@ -918,7 +918,7 @@ ACCEPTANCE CRITERIA:
 ─────────────────────────────────────────────────────────────────────────────
 
 CO-002 — MUFFAT STATE CONSOLIDATION: STATES 5+6 INTO ONE VISIT
-Status: OPEN
+Status: CLOSED — implemented Layer 97
 Source critique: Muffat accumulates six dialogue states — one too many for
 comfortable tracking. States 5 (antecedentMet → Solm direction) and 6
 (cycle4NoteRead → Cycle 4 revelation) require two separate return visits to DK

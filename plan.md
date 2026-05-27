@@ -99,7 +99,7 @@ See `story.md §GRIEF AND CORRUPTION` for the vignette prose.
 
 ## §0 — Implementation Readiness Dashboard
 
-> **Status as of Layer 96 (2026-05-27).** §LVIII implemented: quest_muffat_05 "Cycle 4" (activates DK post-solmFound, completes on cycle4NoteRead) + Scholar Kings Requisition (Handwritten) readable ("Do not let the archive answer") + Muffat six-state quoteFn. Muffat chain structurally complete; Cycle 4 / Conclave Archivist thread open for future arc. HTML: ~20,435 lines. Lab reports: 43. Add new layers below as §LIX+.
+> **Status as of Layer 97 (2026-05-27).** CO-001 + CO-002 closed: Bog Mudwhistle defeat speech (bogDefeated flag, inline tournament win HTML) + Muffat States 5+6 consolidated (crate opens in antecedentMet visit, cycle4NoteRead set inline, quest_muffat_05 activateCond → antecedentMet, mandatory DK visits reduced from 3 to 1). HTML: ~20,445 lines. Lab reports: 43. Add new layers below as §LIX+.
 
 ### Lab Report Index (Layers 48–79)
 
