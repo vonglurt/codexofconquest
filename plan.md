@@ -5170,3 +5170,75 @@ Condition sub-row uses a nested inner accordion (same pattern, max-height 180px)
 - [x] CSS: `.battle-accordion` (bg `#1c0404`, border `#5c0a0a` in dark theme), `.hunt-accordion` (same colors as NPC)
 - [x] Toggle close: re-clicking Fight while open collapses accordion
 - [x] `storyPreBattle()` modal kept as legacy path (used by quest card fight-now buttons + script event listeners)
+
+---
+
+## §XLV — Yugurt Tournament + Six Fishermen (PLANNED → Layer 83)
+
+**Status:** ✅ Implemented — 2026-05-26  
+**Source:** story.md line 832 — longest-standing PLANNED marker (Layer 47)
+
+### §XLV-A. NPCs at Yugurt Cabin
+
+Six fishermen are present at YC whenever the player has a Fishing Rod:
+
+| Key | Name | Title | Competence | Cast Bonus | Stake |
+|---|---|---|---|---|---|
+| `pip` | Pip | The Kid | Novice | −1 | 50gp |
+| `renard` | Renard Castwell | Accounting Dept. | Terrible | −3 | 75gp |
+| `bog` | Bog Mudwhistle | Subsistence Fisher | Average | +1 | 150gp |
+| `vera` | Vera Hookline | Sport Angler | Skilled | +3 | 300gp |
+| `dirk` | Dirk Troutslap | Commercial Trawler | Expert | +5 | 600gp |
+| `master` | The Fisherman | Master of Yugurt | God-tier | +8 | 1,500gp |
+
+### §XLV-B. Tournament Mechanic
+
+1. Each opponent is challenged via a **Challenge** accordion button at their card.
+2. Both sides roll: `d20 + cast_bonus = catch_total → size_tier → random fish from tier → rank`
+3. Highest fish rank wins. Tie → Luck Mod tiebreaker (NPC has Luck Mod 0).
+4. Win: player gains stake gold + title + quest complete. Lose: player loses stake gold.
+5. Each opponent can be beaten once (tracked in `S_story.yugurtTourBeat`).
+
+**Cast Bonus mapping:**
+- Player: current bait's `catchBonus`, or −3 for bare hook
+- NPC: fixed bonus per competence tier (see table above)
+
+**Catch total → size tier:** ≤5 → nothing (rank 0), 6–10 → small (1–4), 11–16 → medium (5–9), 17–19 → large (10–14), 20–21 → very\_large (15–19), 22+ → legendary (20)
+
+### §XLV-C. Title Progression
+
+| Beaten | Title Earned |
+|---|---|
+| Pip | Lake Apprentice |
+| Renard Castwell | Local Angler |
+| Bog Mudwhistle | Credible Fisher |
+| Vera Hookline | Named Competitor |
+| Dirk Troutslap | Lake Champion |
+| The Fisherman | Master of Yugurt 🏆 |
+
+Title stored in `S_story.yugurtTourTitle`. Shown in the tournament section header.
+
+### §XLV-D. Quest Chain
+
+| Quest ID | Title | Completes when |
+|---|---|---|
+| `quest_tour_01` | Pip's Challenge | `yugurtTourBeat.pip` |
+| `quest_tour_02` | The Spreadsheet Casts | `yugurtTourBeat.renard` |
+| `quest_tour_03` | Bog's Terms | `yugurtTourBeat.bog` |
+| `quest_tour_04` | Vera's Rulebook | `yugurtTourBeat.vera` |
+| `quest_tour_05` | Tonnage | `yugurtTourBeat.dirk` |
+| `quest_tour_06` | The Fisherman's Tournament | `yugurtTourBeat.master` |
+
+All 6 quests activate on first YC visit when Fishing Rod is in inventory.
+XP: 100 / 150 / 200 / 300 / 500 / 1000 per quest.
+
+### §XLV-E. State Fields
+
+| Field | Default | Notes |
+|---|---|---|
+| `yugurtTourBeat` | `{}` | `{ pip:true, ... }` — beaten opponent keys |
+| `yugurtTourTitle` | `null` | Current title string |
+
+### §XLV-F. UI
+
+Tournament section `🏆 Tournament` in `storyRenderInfoRow` at YC (after Rest, before World). Each card: `[COMPETENCE] Name · Title · Stake Ngp [Challenge]`. Beaten cards show `[BEAT] done:true`. Challenge button opens accordion with NPC quote, bait status, Cast button, result display, Walk Away link. Uses `hunt-accordion` CSS class. `_tourRoll(bonus)` helper function. After win: `storyRender(node)` called after 400ms to refresh beaten state.

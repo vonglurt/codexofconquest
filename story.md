@@ -829,7 +829,7 @@ Dead-end south of YL. The Fisherman is here continuously. He says: *"...Nice Day
 **Item Found:** Fishing Rod — required to trigger `storyFishing()` at YL.  
 **Sleep:** Free at this node.
 
-**[PLANNED — Layer 47] Yugurt Cabin Expanded — Tournament & Six Fishermen**  
+**[✅ Layer 83 — §XLV] Yugurt Cabin Expanded — Tournament & Six Fishermen**  
 Five additional NPCs will be present at YC alongside The Fisherman (who is the Master):
 
 | NPC | Title | Competence | Signature |
@@ -848,9 +848,9 @@ The Outsider Merchant delivery mechanism (spec) was superseded. The Fisherman hi
 
 *"The lake knows the difference between someone casting and someone fishing. After a few visits, so will you."* — The Fisherman, FISHING_GUIDE_TEXT
 
-Tournament circuit (Q-TOUR series) and Six Fishermen NPCs remain ⚠️ PLANNED.
+Tournament circuit (Q-TOUR-01 through Q-TOUR-06) and Six Fishermen NPCs ✅ live (Layer 83, §XLV).
 
-**[PLANNED — Layer 47] Fishing Quest Stubs**  
+**[✅ Layer 83 — §XLV] Fishing Quest Stubs (implemented)**  
 - **Q-FISH-00** — *The Rod and the Lake*: Obtain Fishing Rod from The Fisherman; trigger first cast at YL  
 - **Q-FISH-01** — *Master of Yugurt*: Land a Rank 15+ fish (Yugurt's Leviathan or higher) with bait (not bare hook)  
 - **Q-TOUR-01** — *Pip's Challenge*: Beat Pip in a 1v1 tournament bet (competence: Novice)  

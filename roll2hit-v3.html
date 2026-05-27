@@ -8646,6 +8646,43 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     activateNode:null, completeItems:[], completeFn:() => !!S_story.fishingRodCouponRedeemed,
     xpAward:50, waypointNode:'YC', reward:0,
     disposition:'"...Nice Day For Fishing. Yugurt!" — The Fisherman' },
+  // §XLV — Yugurt Tournament chain (activate at YC when Fishing Rod present; cascade on each win)
+  quest_tour_01: { id:'quest_tour_01', type:'side', title:"Pip's Challenge",
+    desc:"A kid at Yugurt Cabin has issued a fishing challenge. Stake: 50gp. He uses a stick and string. He's been practicing.",
+    hint:'Beat Pip in a 1v1 cast at Yugurt Cabin.', activateNode:'YC', completeItems:[],
+    activateCond:() => (S_story.inventory||[]).some(i => (i.name||'').toLowerCase().includes('fishing rod')),
+    completeFn:() => !!(S_story.yugurtTourBeat||{}).pip, xpAward:100, waypointNode:'YC', reward:50,
+    disposition:'"I have been practicing. Every day."  — Pip' },
+  quest_tour_02: { id:'quest_tour_02', type:'side', title:'The Spreadsheet Casts',
+    desc:"Renard Castwell from the Accounting Department is at the lake on a corporate wellness retreat. He has a spreadsheet and is terrible at fishing.",
+    hint:'Beat Renard at Yugurt Cabin.', activateNode:'YC', completeItems:[],
+    activateCond:() => !!(S_story.yugurtTourBeat||{}).pip,
+    completeFn:() => !!(S_story.yugurtTourBeat||{}).renard, xpAward:150, waypointNode:'YC', reward:75,
+    disposition:'"This counts as a team-building exercise per company policy."  — Renard Castwell' },
+  quest_tour_03: { id:'quest_tour_03', type:'side', title:"Bog's Terms",
+    desc:"Bog Mudwhistle fishes to eat. He eats what he catches. The lake has eaten parts of him too. Fair exchange.",
+    hint:'Beat Bog at Yugurt Cabin.', activateNode:'YC', completeItems:[],
+    activateCond:() => !!(S_story.yugurtTourBeat||{}).renard,
+    completeFn:() => !!(S_story.yugurtTourBeat||{}).bog, xpAward:200, waypointNode:'YC', reward:150,
+    disposition:'"I eat what I catch. What I catch eats back, sometimes."  — Bog Mudwhistle' },
+  quest_tour_04: { id:'quest_tour_04', type:'side', title:"Vera's Rulebook",
+    desc:"Vera Hookline has a laminated rulebook. She will read rule twelve to you if you lose.",
+    hint:'Beat Vera at Yugurt Cabin.', activateNode:'YC', completeItems:[],
+    activateCond:() => !!(S_story.yugurtTourBeat||{}).bog,
+    completeFn:() => !!(S_story.yugurtTourBeat||{}).vera, xpAward:300, waypointNode:'YC', reward:300,
+    disposition:'"The fish does not care about your feelings."  — Vera Hookline' },
+  quest_tour_05: { id:'quest_tour_05', type:'side', title:'Tonnage',
+    desc:"Dirk Troutslap has moved forty thousand pounds of fish retail weight this season. He is here for exactly one reason.",
+    hint:'Beat Dirk at Yugurt Cabin.', activateNode:'YC', completeItems:[],
+    activateCond:() => !!(S_story.yugurtTourBeat||{}).vera,
+    completeFn:() => !!(S_story.yugurtTourBeat||{}).dirk, xpAward:500, waypointNode:'YC', reward:600,
+    disposition:'"I do not fish for fun. I fish for tonnage."  — Dirk Troutslap' },
+  quest_tour_06: { id:'quest_tour_06', type:'side', title:"The Fisherman's Tournament",
+    desc:"The Master of Yugurt will fish against you. Stake: 1,500gp. He has been here eleven years. The lake may be on his side.",
+    hint:'Beat The Fisherman at Yugurt Cabin.', activateNode:'YC', completeItems:[],
+    activateCond:() => !!(S_story.yugurtTourBeat||{}).dirk,
+    completeFn:() => !!(S_story.yugurtTourBeat||{}).master, xpAward:1000, waypointNode:'YC', reward:1500,
+    disposition:'"...Nice Day For Fishing. Yugurt!"  — The Fisherman' },
 };
 
 /* ── Layer 5: Void Tide Events ── */
@@ -9535,6 +9572,7 @@ const _S_DEFAULTS = () => ({
   aurosBlueprintKnown: false, scholarWorkshopComplete: false, spiritDefeated: false,
   scriptorium_approach_complete: false, mimicColonyEntered: false,
   noFishingSignRead: false, fishingRodCouponRedeemed: false,
+  yugurtTourBeat: {}, yugurtTourTitle: null,
 });
 
 /* ── Layer 48: Luck — Seventh Stat ── */
@@ -12366,6 +12404,34 @@ const FISH_GOLD_VALUES = { // → doc: mechanics-combat.md §Fishing Items (sell
   very_large: { common:20, rare:40,  enchanted:65,  golden:100, legendary:150 },
   legendary:  { common:75, rare:120, enchanted:175, golden:225, legendary:300 },
 };
+
+// ── §XLV: Yugurt Tournament — Six Fishermen ──
+const NPC_TOUR_OPPONENTS = [ // → doc: plan.md §XLV (YC tournament; competence bonus drives NPC cast roll)
+  { key:'pip',    name:'Pip',             title:'The Kid',            competence:'Novice',   bonus:-1, stake:50,   order:1, xp:100,
+    quote:'"I have been practicing. Every day. Well. Most days. Some days I forgot my string."' },
+  { key:'renard', name:'Renard Castwell', title:'Accounting Dept.',   competence:'Terrible', bonus:-3, stake:75,   order:2, xp:150,
+    quote:'"This counts as a team-building exercise per company policy. That is the only reason I am here. I have a spreadsheet."' },
+  { key:'bog',    name:'Bog Mudwhistle',  title:'Subsistence Fisher', competence:'Average',  bonus:1,  stake:150,  order:3, xp:200,
+    quote:'"I eat what I catch. What I catch eats back, sometimes. That\'s the deal."' },
+  { key:'vera',   name:'Vera Hookline',   title:'Sport Angler',       competence:'Skilled',  bonus:3,  stake:300,  order:4, xp:300,
+    quote:'"There are rules. I have them laminated. Rule twelve: the fish does not care about your feelings."' },
+  { key:'dirk',   name:'Dirk Troutslap', title:'Commercial Trawler', competence:'Expert',   bonus:5,  stake:600,  order:5, xp:500,
+    quote:'"Forty thousand pounds last season. Retail weight. The lake knows me by name. I do not fish for fun. I fish for tonnage."' },
+  { key:'master', name:'The Fisherman',  title:'Master of Yugurt',   competence:'God-tier', bonus:8,  stake:1500, order:6, xp:1000,
+    quote:'"...Nice Day For Fishing. Yugurt!"' },
+];
+const TOUR_TITLES = { pip:'Lake Apprentice', renard:'Local Angler', bog:'Credible Fisher', vera:'Named Competitor', dirk:'Lake Champion', master:'Master of Yugurt' };
+
+function _tourRoll(bonus) { // → doc: plan.md §XLV-B (d20 + bonus → catch total → size tier → fish rank)
+  const die  = Math.ceil(Math.random() * 20);
+  const tot  = die + bonus;
+  const size = tot <= 5 ? null : tot <= 10 ? 'small' : tot <= 16 ? 'medium' : tot <= 19 ? 'large' : tot <= 21 ? 'very_large' : 'legendary';
+  if (!size) return { die, tot, fishRank:0, fishName:'nothing', size:null };
+  const tier = FISH_SIZE_TIERS.find(t => t.size === size);
+  const pool = FISH_POOL.filter(f => f.rank >= tier.minRank && f.rank <= tier.maxRank);
+  const fish = pool[Math.floor(Math.random() * pool.length)] || FISH_POOL[0];
+  return { die, tot, fishRank:fish.rank, fishName:fish.name, size };
+}
 
 // ── Layer 63: Froberger Memorial ──
 const FROBERGER_MEMORIAL_TEXT = { // → doc: world.md §The Froberger Memorial (4 unlock layers; CI crossroads stone)
@@ -17933,6 +17999,129 @@ function storyRender(node, prefix) {
       btnClick: () => storyShortRest(node.code)
     }));
     row.appendChild(sec);
+  }
+
+  // ── §XLV TOURNAMENT section (YC only, requires Fishing Rod) ────
+  if (node.code === 'YC') {
+    const hasRod = (S_story.inventory||[]).some(i => (i.name||'').toLowerCase().includes('fishing rod'));
+    if (hasRod) {
+      const { sec, body } = _mkSection(null, '🏆', 'Tournament');
+      const currentTitle = S_story.yugurtTourTitle;
+      if (currentTitle) {
+        const titleBadge = document.createElement('div');
+        titleBadge.style.cssText = 'font-size:11px;color:var(--gold);padding:4px 0 2px;letter-spacing:.4px;';
+        titleBadge.textContent = '🏆 Your title: ' + currentTitle;
+        body.appendChild(titleBadge);
+      }
+      NPC_TOUR_OPPONENTS.forEach(opp => {
+        const beaten = !!(S_story.yugurtTourBeat||{})[opp.key];
+        if (beaten) {
+          body.appendChild(_mkCard({ lbl:'BEAT', main:opp.name, hint:opp.title, tag:'✓', tagClass:'transferred', done:true }));
+          return;
+        }
+        let _tourAccordion = null;
+        const _card = _mkCard({
+          lbl: opp.competence.toUpperCase(), main: opp.name,
+          hint: opp.title + ' · Stake: ' + opp.stake + 'gp',
+          btn: 'Challenge', btnClass: 'btn-hunt',
+          btnClick: () => {
+            const _btn = _card.querySelector('.story-card-btn');
+            if (_tourAccordion) {
+              _tourAccordion.classList.remove('open');
+              const _c = _tourAccordion; setTimeout(() => _c.remove(), 270);
+              _tourAccordion = null;
+              if (_btn) _btn.textContent = 'Challenge';
+              return;
+            }
+            const acc = document.createElement('div');
+            acc.className = 'npc-talk-accordion hunt-accordion';
+            // NPC quote
+            const quoteEl = document.createElement('div');
+            quoteEl.className = 'npc-talk-quote';
+            quoteEl.style.cssText = 'font-size:12px;margin-bottom:8px;';
+            quoteEl.textContent = opp.quote;
+            acc.appendChild(quoteEl);
+            // Bait / cast info
+            const playerBait = (S_story.inventory||[]).find(i => i.type === 'bait');
+            const playerBonus = playerBait ? (playerBait.catchBonus||0) : -3;
+            const playerBaitLbl = playerBait ? (playerBait.icon+' '+playerBait.name+' ('+(playerBonus>=0?'+':'')+playerBonus+')') : '🪝 Bare Hook (−3)';
+            const infoEl = document.createElement('div');
+            infoEl.style.cssText = 'font-size:11px;color:var(--dim);margin-bottom:6px;';
+            infoEl.textContent = 'Your bait: '+playerBaitLbl+' · '+opp.name+': '+opp.competence+' ('+(opp.bonus>=0?'+':'')+opp.bonus+')';
+            acc.appendChild(infoEl);
+            // Result area (inserted before castBtn for stacking)
+            const resultEl = document.createElement('div');
+            resultEl.style.cssText = 'font-size:11px;line-height:1.7;min-height:0;';
+            acc.appendChild(resultEl);
+            // Cast button
+            const canAfford = S_story.gold >= opp.stake;
+            const castBtn = document.createElement('button');
+            castBtn.className = 'story-card-btn btn-hunt';
+            castBtn.style.cssText = 'width:100%;margin-top:6px;font-size:12px;';
+            castBtn.textContent = canAfford ? '🎣 Cast — stake '+opp.stake+'gp' : '💰 Need '+opp.stake+'gp to enter';
+            castBtn.disabled = !canAfford;
+            castBtn.addEventListener('click', () => {
+              castBtn.disabled = true;
+              // Rolls
+              const pRoll = _tourRoll(playerBonus);
+              const nRoll = _tourRoll(opp.bonus);
+              let outcome = pRoll.fishRank > nRoll.fishRank ? 'win' : pRoll.fishRank < nRoll.fishRank ? 'lose' : 'tie';
+              if (outcome === 'tie') outcome = _luckMod() > 0 ? 'win' : _luckMod() < 0 ? 'lose' : 'tie';
+              // Display
+              const pMod = (playerBonus>=0?'+':'')+playerBonus, nMod = (opp.bonus>=0?'+':'')+opp.bonus;
+              let html = 'You: d20('+pRoll.die+')'+pMod+'='+pRoll.tot+' → <strong>'+pRoll.fishName+'</strong> (Rank '+pRoll.fishRank+')<br>';
+              html += opp.name+': d20('+nRoll.die+')'+nMod+'='+nRoll.tot+' → <strong>'+nRoll.fishName+'</strong> (Rank '+nRoll.fishRank+')<br><br>';
+              if (outcome === 'win') {
+                S_story.gold += opp.stake;
+                if (!S_story.yugurtTourBeat) S_story.yugurtTourBeat = {};
+                S_story.yugurtTourBeat[opp.key] = true;
+                S_story.yugurtTourTitle = TOUR_TITLES[opp.key];
+                // Complete active quest + activate next
+                const qId = 'quest_tour_0' + opp.order;
+                if ((S_story.quests||{})[qId] === 'active') {
+                  S_story.quests[qId] = 'complete';
+                  S_story.xp = (S_story.xp||0) + opp.xp;
+                  _checkLevelUp();
+                }
+                storyCheckQuests(node); // activate next quest in chain
+                html += '✓ <strong>YOU WIN</strong> — +'+opp.stake+'gp · <em>'+TOUR_TITLES[opp.key]+'</em>';
+                if (opp.key === 'master') html += '<br>🏆 You are the Master of Yugurt.';
+                storyAutoSave();
+                setTimeout(() => storyRender(node), 500);
+              } else if (outcome === 'lose') {
+                S_story.gold = Math.max(0, (S_story.gold||0) - opp.stake);
+                html += '✗ <strong>YOU LOSE</strong> — −'+opp.stake+'gp';
+                castBtn.disabled = (S_story.gold||0) < opp.stake;
+                castBtn.textContent = (S_story.gold||0) >= opp.stake ? '🎣 Cast again — '+opp.stake+'gp' : '💰 Need '+opp.stake+'gp to re-enter';
+                storyAutoSave();
+              } else {
+                html += '— <strong>TIE</strong> — no gold exchanged · cast again';
+                castBtn.disabled = false;
+              }
+              resultEl.innerHTML = html;
+            });
+            acc.appendChild(castBtn);
+            // Walk away
+            const retreatEl = document.createElement('div');
+            retreatEl.className = 'battle-retreat-link';
+            retreatEl.textContent = '← Walk away';
+            retreatEl.addEventListener('click', () => {
+              acc.classList.remove('open');
+              const _c = acc; setTimeout(() => _c.remove(), 270);
+              _tourAccordion = null;
+              if (_btn) _btn.textContent = 'Challenge';
+            });
+            acc.appendChild(retreatEl);
+            _tourAccordion = acc;
+            _card.insertAdjacentElement('afterend', acc);
+            requestAnimationFrame(() => _tourAccordion && _tourAccordion.classList.add('open'));
+            if (_btn) _btn.textContent = 'Close';
+          }
+        });
+        body.appendChild(_card);
+      });
+      row.appendChild(sec);
+    }
   }
 
   // ── WORLD section (NPC, vendor, portal, misc) ──────
