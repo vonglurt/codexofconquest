@@ -122,7 +122,7 @@ See `story.md §GRIEF AND CORRUPTION` for the vignette prose.
 Earlier layers (9–47): see `lab-report-architecture-full.md` and `lab-report-timeline-history-completed.md`.
 
 ✅ §DESIGN-03 (Ceremonia Roll + Starting City) — implemented 2026-05-26. Lab report: `lab-report-ceremonia-roll-skill-checks.md`.
-🔄 §DUNGEON-01 (10 Dungeon Themes) — lab report written 2026-05-26; implementation in progress Layer 80.
+✅ §DUNGEON-01 (10 Dungeon Themes) — fully implemented Layer 81 (2026-05-26). Nodes WK + MM live.
 🔄 §DUNGEON-02 (Five-Act Arthurian Quest Elaborations) — D02-01/02/03/04/05/07/09/10 live; D02-06/08 deferred (new nodes). See `quest.md`.
 
 ---

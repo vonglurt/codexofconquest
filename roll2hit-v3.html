@@ -5799,6 +5799,9 @@ const WORLD_DB = { // → doc: world.md §WORLD_DB
   epic_heavenly_clouds: { label:'Epic Battleground — Heavenly Clouds', icon:'🌩', monsters:[], isEpicBattleground:true },
   epic_pirate_cave:     { label:'Epic Battleground — Pirate Cave',     icon:'👻', monsters:[], isEpicBattleground:true },
   epic_goblin_cave:     { label:'Epic Battleground — Goblin Cave',     icon:'🔮', monsters:[], isEpicBattleground:true },
+  // ── Layer 81: New Optional Nodes ────────────────────────────
+  workshop:      { label:'Scholar King\'s Workshop', icon:'⚗', monsters:[ P.specter, P.library_ghost, P.scholars_guard, P.mage, P.archmage ] },
+  mimic_meadow:  { label:'The Mimic Meadows',        icon:'🧸', monsters:[ P.mimic ] },
 };
 
 /* ══════════════════════════════════════════════════════════
@@ -7561,7 +7564,7 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   // ── ACT VI — DESERT
   DE:{ num:31, code:'DE', name:'desert',          label:'Desert Wastes',                 act:6, N:null, S:'EE', E:'DC',  W:'VC',  text:"The desert offers one navigational aid: a stone post at the crossroads, carved with arrows that have been re-cut several times as the wind wore the edges down. The caravan's pattern of movement is marked on the eastern face. The marking is fresh enough that someone passed through within the season.\n\nEverything else the desert offers is a problem. The heat at midday produces a shimmer the sand wraith uses as cover — it moves through the distortion faster than the eye resolves it. The mummies in the western sand are slower, which is their only mercy. They do not tire. They do not stop because you are moving. They stop when you do.\n\nThe scorpions and vipers shelter in the shadow of the crossroads post at noon. They are the smallest things out here and the easiest to manage. They are also the only things out here with the sense to find shade.\n\nThe caravan is east. The marker points there. Getting there before dark is the question the desert is asking.", npc:null, battle:{label:'Mummy ×2 + Sand Wraith', key:'mummy', count:2}, loot:'Desert Crossroads Marker', sleep:false },
   DC:{ num:32, code:'DC', name:'desert_caravan',  label:"Izador's Desert Caravan",       act:6, N:'JU', S:null, E:'EV',  W:'DE',  text:"Thirty people and twelve camels moving through the desert constitute a civilization in miniature. Izador's caravan has been following the pattern marked on the crossroads post for longer than the current crossroads post has been standing. The people know the route. The camels know it better.\n\nSandmage Izador is under the center awning when you arrive. He is meditating. He does not open his eyes. He moves a cushion to the left with one hand to make space, which means he heard you coming while you were still too far away for the camels to notice.\n\n\"The djinn has had it for two centuries,\" he says. This is not a preamble. This is the situation.\n\nThe djinn circles the caravan at the eastern perimeter. The thirty people have been traveling alongside a two-century territorial djinn long enough to have developed accommodations for it — where to camp, which direction to face the tents, what not to do near the eastern edge after dark. The Sand Cipher is in the djinn's custody. The djinn does not consider this unusual.", npc:'Sandmage Izador', battle:{label:'Djinn', key:'djinn', count:1}, loot:'Sand Cipher (Shard #5)', sleep:false },
-  JU:{ num:33, code:'JU', name:'jungle',          label:'Dense Jungle',                  act:6, N:'BQ', S:'FL', E:'J2',  W:'EJ',  text:"The Scholar Kings' road is still here. It runs beneath the overgrowth in straight, deliberate intervals — you can feel the paved stone where the jungle floor gives differently. Three hundred years of root and vine have not moved the road. They have covered it. This is not the same thing.\n\nArachas webs block every third stretch. The webs are architectural — anchored across the full road width at regular intervals, as if the spiders have been reading the same survey markers the Scholar Kings used. You go through or you go back.\n\nHerbalist Mael lives in the clearing at the road's center. She is perfectly sane. She is perfectly dangerous. These are not contradictions — they are the same characteristic expressed at different scales.\n\nHer compound stops muscle function in organisms above forty kilos. It wears off in five minutes. She recommends using the five minutes productively. She is not being ironic.\n\nThe Ancient Road Marker at the clearing's edge still reads. Not all of it. Enough.", npc:'Herbalist Mael', battle:{label:'Arachas ×2 + Endrega ×3', key:'arachas', count:2}, loot:'Ancient Road Marker · Neurotoxin Dip', sleep:false },
+  JU:{ num:33, code:'JU', name:'jungle',          label:'Dense Jungle',                  act:6, N:'BQ', S:'FL', E:'J2',  W:'EJ', SE:'MM', text:"The Scholar Kings' road is still here. It runs beneath the overgrowth in straight, deliberate intervals — you can feel the paved stone where the jungle floor gives differently. Three hundred years of root and vine have not moved the road. They have covered it. This is not the same thing.\n\nArachas webs block every third stretch. The webs are architectural — anchored across the full road width at regular intervals, as if the spiders have been reading the same survey markers the Scholar Kings used. You go through or you go back.\n\nHerbalist Mael lives in the clearing at the road's center. She is perfectly sane. She is perfectly dangerous. These are not contradictions — they are the same characteristic expressed at different scales.\n\nHer compound stops muscle function in organisms above forty kilos. It wears off in five minutes. She recommends using the five minutes productively. She is not being ironic.\n\nThe Ancient Road Marker at the clearing's edge still reads. Not all of it. Enough.", npc:'Herbalist Mael', battle:{label:'Arachas ×2 + Endrega ×3', key:'arachas', count:2}, loot:'Ancient Road Marker · Neurotoxin Dip', sleep:false },
   BQ:{ num:34, code:'BQ', name:'blacksmith_qtr',  label:'Blacksmith Quarter — Weimar', act:6, N:'SQ', S:'JU', E:'OU',  W:null,  text:"The quarter below Weimar runs on a different schedule than the scholars above it — which is to say it runs on no schedule, at all hours, without pause. The hammering has been continuous long enough that the scholars have stopped noticing it. The scholars are wrong to have stopped noticing.\n\nForges that run too long without rest begin to develop opinions. The Forge Elemental in the eastern bay is the opinion this quarter has developed. The Animated Armor at the forge entrance are the arguments it made when it was still communicating through product.\n\nDora Flint is at the central anvil. She throws a Thunderstone at it when she sees you — not as a threat, as a demonstration. The concussive crack rattles the quarter wall to wall. She watches your reaction the way a host watches a guest eat the first course.\n\n\"Useful,\" she says. \"You'll need two.\"\n\nShe has already set two on the counter.", npc:'Dora Flint', battle:{label:'Forge Elemental + Animated Armor ×2', key:'forge_elemental', count:1}, loot:'Thunderstone ×2 · EMP Grenade v2', sleep:true, sleepCost:4 },
   SQ:{ num:35, code:'SQ', name:'scholars_qtr',    label:"Scholar's Quarter — Weimar", act:6, N:'AR', S:'BQ', E:null,  W:null,  text:"The reading room is lit by twelve candles and one scholar who fell asleep at his desk three days ago and has not been disturbed. His book is open to the same page. No one has moved it.\n\nThe stacks run three floors in each direction. In the sections where the candles don't reach — the lower east wing, the corridor behind the catalogue — specters of researchers who died mid-sentence drift between the shelves. They are not hostile. They are looking for the argument they never finished. The intellect devourers that follow them are a different matter.\n\nArchivus Ptolemy Sweelinck is in the upper observatory. He is very old. He wrote the riddle door at Katharinen Gate when he still had good knees and has not been back to check whether it still holds.\n\nHe knows why you are here. He wrote it so that someone would come.\n\nA young archivist climbs the stairs past you with an armload of bound journals, eyes fixed on the step count. She has done this route so many times she no longer needs to look.", npc:'Archivus Ptolemy Sweelinck', battle:null, loot:'Weimar Fragment (Shard #7)', sleep:true, sleepCost:0 },
   OU:{ num:36, code:'OU', name:'outhouse',        label:'The Observatory Outhouse',      act:6, N:null, S:null, E:null,  W:'BQ',  text:"The observatory is a building of some academic consequence. The outhouse behind it is not.\n\nThe smell reaches the path about ten meters out. The door is wood, painted once, not recently. The latch is a simple hook — the kind on a thousand doors in Weimar. Turn it right: outhouse, fully functional, no further comment. Turn it left: the Greek Agora, three thousand years and several thousand kilometers from your current position.\n\nSweelinck told you about this. He used the same tone he uses for everything else. You may have been skeptical. That is a reasonable response to the information as delivered.\n\nThe Portal Key goes in your hand or it doesn't. The hook is on the door regardless. The decision is yours.\n\nThe smell is not.\n\nSweelinck was not joking.", npc:null, battle:null, loot:'Portal Key → Greek Agora (instant)', portal:'GA', sleep:false },
@@ -7572,7 +7575,7 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   HC:{ num:40, code:'HC', name:'heavenly_clouds', label:'Sky Road — Heavenly Clouds',    act:7, N:'CO', S:'KT', E:'J7',  W:'J5',  spire:'EK', text:"There is a road above the world. The Scholar Kings built it in a period when they believed the world needed roads above it as much as through it. They were correct. The road is still here. The Scholar Kings are not.\n\nThe surface is white stone, cut to a width that accommodates two carts abreast. It curves slightly with the curvature of the sky. The edge has no railing. The Scholar Kings did not build for vertigo.\n\nBruhns's signal fire is visible from here — a point of orange below and to the west, deliberate, maintained. Someone is still sending a message upward. The message has not been answered yet.\n\nThe Void is bleeding through the road's eastern section. The Star Spawn hold that stretch. The Fallen Seraph at the road's center is what the Void produces when it has enough time and something sufficiently holy to work with.\n\nThe road continues north. The sky ahead is the same color as the Void it contains.", npc:null, battle:{label:'Fallen Seraph + Star Spawn ×2', key:'fallen_seraph', count:1}, loot:null, sleep:false },
   AR:{ num:41, code:'AR', name:'arctic',          label:'Arctic Wastes — Detour',        act:7, N:'ER', S:'SQ', E:'J5',  W:null,  text:"The arctic pass runs below the cloud road. You cannot see the sky road from here — it is above the weather, and you are in it. Snow fills the horizontal distances. The cold arrives before the wind that carries it.\n\nCold. White. Efficient. The pass is all three without apology. It does not ask whether you intended to be here. You are here. The pass provides: a path north, a wind that stays behind you, ground frozen hard enough to walk on. That is the full inventory of what it offers.\n\nThe Wendigo moves with the weather. The Ice Giant does not move — it has been in the deep section of the pass since before the cloud road was built. The Scholar Kings surveyed this route. They built upward instead.\n\nBoth paths arrive at the Birka approach. The sky road and the white pass end at the same place. The loss on the high road is not a loss — it is a different itinerary. The pass knows this. It does not slow down.", npc:null, battle:{label:'Wendigo + Ice Giant', key:'wendigo', count:1}, loot:null, sleep:false },
   // ── ACT VIII — FINALE
-  CO:{ num:42, code:'CO', name:'cosmic_realm',    label:'Cosmic Realm — The Convergence', act:8, N:null, S:'CI', E:null,  W:null,  text:"The spire above Birka is the tallest structure in the known world, built for this specific purpose by people who knew this day would come and did not know when. The Codex Cradle is set into the eastern spire wall at platform height. It has been waiting here since construction was complete.\n\nThe sky is black at noon. This is not weather. The Void does not cause nightfall — it causes noon itself to fail. Below the platform, the city of Birka is still lit by the morning that preceded this hour. Up here the light stopped when the convergence began.\n\nCommander Bruhns holds the platform perimeter with a military cordon. He arrived before you. He has always arrived before you. He does not explain how.\n\nSeven Void Walkers stand between you and the Cradle. After them, the Void Warlord — the Void's chosen instrument, not its full extent. The full extent is behind it and does not require a body.\n\nThis is the threshold every other threshold was oriented toward.", npc:'Commander Bruhns', battle:{label:'Void Walker ×7 → Void Warlord', key:'void_walker', count:1}, loot:'VICTORY — The Codex is Reforged', sleep:false },
+  CO:{ num:42, code:'CO', name:'cosmic_realm',    label:'Cosmic Realm — The Convergence', act:8, N:null, S:'CI', E:null,  W:'WK', text:"The spire above Birka is the tallest structure in the known world, built for this specific purpose by people who knew this day would come and did not know when. The Codex Cradle is set into the eastern spire wall at platform height. It has been waiting here since construction was complete.\n\nThe sky is black at noon. This is not weather. The Void does not cause nightfall — it causes noon itself to fail. Below the platform, the city of Birka is still lit by the morning that preceded this hour. Up here the light stopped when the convergence began.\n\nCommander Bruhns holds the platform perimeter with a military cordon. He arrived before you. He has always arrived before you. He does not explain how.\n\nSeven Void Walkers stand between you and the Cradle. After them, the Void Warlord — the Void's chosen instrument, not its full extent. The full extent is behind it and does not require a body.\n\nThis is the threshold every other threshold was oriented toward.", npc:'Commander Bruhns', battle:{label:'Void Walker ×7 → Void Warlord', key:'void_walker', count:1}, loot:'VICTORY — The Codex is Reforged', sleep:false },
   // ── Layer 9 — Junction Nodes ──
   J1:{ num:43, code:'J1', name:'junction', label:'Midlands Road Fork',        act:3, N:null, S:null, E:'CI',  W:'MI',  text:"A stone post at the crossroads — carved, not painted. Someone decided these directions were worth the permanence of stone. East, Birka, two leagues. West, Forest Road, three.\n\nThe road is packed dirt in both directions, but more packed east. Birka gets more traffic. The Forest Road gets travelers who have already decided not to go to Birka — people who know their destination and are not reconsidering it here.\n\nThe post has no opinion on the choice. It has been providing the same two directions for long enough that the road arranged itself around the decision it represents. The packed dirt is the accumulated weight of everyone who read the post and went east.", npc:null, battle:null, loot:null, sleep:false, junction:true },
   J2:{ num:44, code:'J2', name:'junction', label:'Southern Road Cross',        act:5, N:null, S:null, E:'DE',  W:'JU',  text:"Cracked stones at the crossing, arranged in the shape of a crossroads marker. The arrangement is still readable — east, desert wastes; west, jungle road — though the stones have not been in their original condition for some time. The information outlasted the structure.\n\nNo shade. A vulture circles above, not descending. The vulture has no stake in which direction you choose. It attends the crossing the way the crossing attends travelers — without opinion, without assistance.\n\nEast is exposure. West is cover. The cracked marker offers both directions with equal indifference. The difference between them is the traveler's problem, not the crossing's.", npc:null, battle:null, loot:null, sleep:false, junction:true },
@@ -7617,6 +7620,13 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   FR:{ num:79, code:'FR', name:'ruins', label:"Fishmonger's Row", act:1, N:null, S:null, E:null, W:'CQ', text:"Three city blocks of collapsed stalls. The Cat-King's work: still visible in the way the brick fell — not inward from age but outward from impact, each pile oriented away from the fish market's center. The hook racks are down. The ice boxes are split. Someone has maintained a narrow cleared path through the rubble — not wide enough for a cart, just wide enough for a person who comes here regularly.\n\nThe Corrupted Cats have settled into the dark spaces between the piles. They are thin here — the Cat-King's death reduced the void pressure feeding them — but they hold the space with the particular confidence of things that have been somewhere long enough to consider it theirs.\n\nAt the far end of the cleared path, a woman stands with her back to you, looking at what used to be the south stall.\n\nA faint smell of salt and old wood. The brick remembers eleven years of fish market whether anything is here or not.", npc:'Connie Tuna', battle:{label:'Corrupted Cat × 4', key:'corrupted_cat', count:4}, loot:null, sleep:false },
   // ── Layer 61: Corelli — Roadside waypoint (Act III, between J6 and MI) ──
   RD:{ num:78, code:'RD', name:'road', label:'Roadside Clearing', act:3, N:null, S:null, E:'MI', W:'J6', text:"A cleared verge where travelers sometimes stop. A fire ring, cold. Someone's broken cart wheel leaning against the tree line.", npc:null, battle:null, loot:null, sleep:false, junction:true },
+  // ── Layer 81: New Optional Nodes ────────────────────────────────────────
+  WK:{ num:80, code:'WK', name:'workshop', label:"Scholar King's Workshop", act:7, N:null, S:null, E:'CO', W:null,
+    text:"The workshop has not been touched. The Scholar King designed the Neon Undercity's infrastructure here — the copper wiring diagrams, the bioluminescent resonance channels, the containment lattice. All of it is still on the tables, in the order he left it.\n\nOne blueprint is different from the others. Rolled separately, tied with a different cord. Commander Auros's armor — full schematics. The left pauldron joint is marked with a marginal note: 'incomplete — carrier integration unresolved. Revisit.'\n\nIn the corner, a half-finished void containment construct. A note is attached: 'The failsafe assumes the carrier remembers their name. Current carrier test: negative.'\n\nYou are standing in the room where the test was run. The test has not been updated since.\n\nOn the shelf near the east window: a Scholar King's Prototype Wand. Single charge. The creator ran out of time before loading the second one. The Workshop is quiet in a way that has nothing to do with sound.",
+    npc:null, battle:null, loot:"Scholar King's Prototype Wand", sleep:true, sleepCost:0 },
+  MM:{ num:81, code:'MM', name:'mimic_meadow', label:'The Mimic Meadows', act:6, N:null, S:null, E:null, W:null, NW:'JU',
+    text:"The meadow has no enemies. This is immediately suspicious and then immediately not — the mimics here are well-fed, well-rested, and have no territorial interest in anyone who does not threaten the Tribbles.\n\nBaby chest mimics scurry between the grass tufts. A bookshelf mimic naps against the east wall, three Fuzzy Tribbles stacked on its top shelf like a particularly content hat rack. The floor mimic has been in the same position long enough that moss has started growing on its lid.\n\nThe Mother Mimic sits at the meadow's center. She is the size of a large chest that has been thinking about it for a very long time. She watches you arrive the way an expert watches an amateur make their first correct move.\n\nA Fuzzy Tribble rolls past your foot. It is not going anywhere specific. It is going there enthusiastically.",
+    npc:null, battle:null, loot:'Fuzzy Tribble', sleep:false },
 };
 
 const ACT_NAMES = ['','Act I — Birka','Act II — Tilbury','Act III — The Wilds','Act IV — The Deep','Act V — Visby','Act VI — Desert','Act VII — Mythic Circuit','Act VIII — The Reckoning'];
@@ -7631,6 +7641,8 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   VC:{r:11,c:11}, DE:{r:10,c:5},  DC:{r:10,c:7},  JU:{r:10,c:2},  BQ:{r:3,c:4},   SQ:{r:3,c:3},
   OU:{r:3,c:5},   GA:{r:3,c:20},  KT:{r:2,c:21},  OP:{r:2,c:23},  HC:{r:1,c:17},  AR:{r:2,c:3},
   CO:{r:1,c:18},
+  /* Layer 81 — New optional nodes */
+  WK:{r:2,c:17},  MM:{r:11,c:3},
   /* Layer 9 — Junction nodes */
   J1:{r:5,c:12},  J2:{r:10,c:4},  J3:{r:9,c:3},
   J4:{r:12,c:8},  J5:{r:1,c:10},  J6:{r:5,c:5},   J7:{r:1,c:22},
@@ -9139,6 +9151,112 @@ const NPC_DIALOGUE = { // → doc: story.md §FL7
     failText:'"The question waits. It has waited before. It will wait until you mean it." Retry.',
     completeItems:[{name:"Loop Closure Seal", desc:'A rune that appeared on your hand when the question was answered. It fades slowly. While it lasts, the loop remembers.', icon:'🔮'}],
     onPass:() => { S_story.loopHeartComplete = true; } },
+
+  // ── §D02-06 — "The Blueprint Roll" (Node WK — Scholar King's Workshop) ──
+  quest_d0206_a1: { id:'quest_d0206_a1', type:'skill_check', title:'Act I — The Dusty Table',
+    hint:'The blueprint is exactly where he left it.',
+    activateNode:'WK', activateCond:() => !S_story.scholarWorkshopComplete,
+    checkAbility:'int', checkLabel:'Investigation', checkDC:10, retryable:true, retryGateDays:0,
+    vignetteText:'The workshop has not been touched. A blueprint roll on the central table. The Scholar King stepped out to get tea three hundred years ago and never returned.',
+    passText:'You recognize Commander Auros\'s armor system. This is where she was made. The workshop is her origin.',
+    failText:'Keep searching. The table has more on it than first appears.',
+    checkPassFlag:'d0206_a1_passed' },
+
+  quest_d0206_a2: { id:'quest_d0206_a2', type:'skill_check', title:'Act II — The Prototype',
+    hint:'Assess the wand\'s stability before touching it.',
+    activateNode:'WK', activateCond:() => !!S_story.d0206_a1_passed,
+    checkAbility:'wis', checkLabel:'Perception', checkDC:11, retryable:true, retryGateDays:1,
+    vignetteText:'A half-finished wand on the shelf. The creator ran out of time.',
+    passText:'The wand is stable. Scholar King\'s Prototype Wand added — single use, 2d6 force.',
+    failText:'The wand sparks. Leave it. Return next day if desired.',
+    checkPassFlag:'d0206_a2_passed',
+    onPass:() => { S_story.inventory.push({name:"Scholar King's Prototype Wand",icon:'⚗',type:'wand',sell:80,desc:'Single use. 2d6 force damage on next attack. The creator ran out of time loading the second charge.',uses:1}); } },
+
+  quest_d0206_a3: { id:'quest_d0206_a3', type:'skill_check', title:'Act III — The Spirit',
+    hint:'The spirit is not hostile. It is uncomfortable.',
+    activateNode:'WK', activateCond:() => !!S_story.d0206_a2_passed && (S_story.shortRestedAtNodes||{})['WK'] >= 1,
+    checkAbility:'cha', checkLabel:'Persuasion', checkDC:12, retryable:true, retryGateDays:1,
+    vignetteText:'After a rest, footsteps from below. The Scholar King Spirit emerges. It does not want a fight. But discomfort in spirits looks very much like hostility.',
+    passText:'"I\'m not here to take anything." The spirit settles. It will answer one question.',
+    failText:'The spirit gestures toward the exit. Not hostile. Strongly suggestive. Try again tomorrow.',
+    checkPassFlag:'d0206_a3_passed',
+    onPass:() => { S_story.spiritDefeated = false; } },
+
+  quest_d0206_a4: { id:'quest_d0206_a4', type:'skill_check', title:'Act IV — The Blueprint\'s Secret',
+    hint:'The left pauldron joint. The design was never finished.',
+    activateNode:'WK', activateCond:() => !!S_story.d0206_a3_passed,
+    checkAbility:'wis', checkLabel:'Insight', checkDC:13, retryable:true, retryGateDays:1,
+    vignetteText:'The spirit points to a specific fold in the blueprint roll. The left pauldron joint. The original design was never completed.',
+    passText:'`aurosBlueprintKnown`: In the CO boss fight, Auros\'s left pauldron has -4 AC. Her armor was never finished there.',
+    failText:'The implication moves too fast. Retry tomorrow — the fold will still be there.',
+    checkPassFlag:'d0206_a4_passed',
+    onPass:() => { S_story.aurosBlueprintKnown = true; } },
+
+  quest_d0206_a5: { id:'quest_d0206_a5', type:'skill_check', title:'Act V — The Name on the Cover',
+    hint:'Accept what this means.',
+    activateNode:'WK', activateCond:() => !!S_story.d0206_a4_passed,
+    checkAbility:'cha', checkLabel:'Persuasion', checkDC:13, retryable:true, retryGateDays:0,
+    xpAward:400, goldAward:150,
+    vignetteText:'As you leave, you look at the blueprint roll\'s cover. Your name is on it. Not written now. Written into the original paper, three centuries ago, in the Scholar King\'s hand.',
+    passText:'You designed this. You designed her. The Prior Carrier connection fires: you were here before the loop.',
+    failText:'"You fold the cover back and pretend you didn\'t see it. The paper does not pretend back."',
+    checkPassFlag:'d0206_complete',
+    completeItems:[{name:'Blueprint Roll', icon:'📜', type:'key_item', sell:0, desc:"Commander Auros's original armor schematics. Your name is on the cover. Three centuries old."}],
+    onPass:() => { S_story.scholarWorkshopComplete = true; } },
+
+  // ── §D02-08 — "The Dropped Coin" (Node MM — Mimic Meadows) ──
+  quest_d0208_a1: { id:'quest_d0208_a1', type:'skill_check', title:'Act I — The Coin',
+    hint:'Pick it up gently, visibly — let the mimic see you.',
+    activateNode:'MM', activateCond:() => !S_story.mimicColonyEntered,
+    checkAbility:'wis', checkLabel:'Animal Handling', checkDC:10, retryable:true, retryGateDays:0,
+    vignetteText:'A baby chest mimic runs past and drops a coin. It is watching to see what you do with it.',
+    passText:'The baby mimic pauses. It watches. You are being evaluated.',
+    failText:'You pocketed it. The baby mimic hisses once and runs. Put the coin back down first.',
+    checkPassFlag:'d0208_a1_passed',
+    onPass:() => { S_story.mimicColonyEntered = true; } },
+
+  quest_d0208_a2: { id:'quest_d0208_a2', type:'skill_check', title:'Act II — The Bookshelf',
+    hint:'Do not wake it.',
+    activateNode:'MM', activateCond:() => !!S_story.d0208_a1_passed,
+    checkAbility:'wis', checkLabel:'Animal Handling', checkDC:12, retryable:true, retryGateDays:1,
+    vignetteText:'A bookshelf mimic naps in the corner. A Fuzzy Tribble is balanced on its top shelf, asleep. This is apparently a normal arrangement.',
+    passText:'You sit near it. It opens one eye. It goes back to sleep. A Fuzzy Tribble rolls off and lands near your foot.',
+    failText:'It hisses — 2 psychic damage. Try again.',
+    checkPassFlag:'d0208_a2_passed',
+    onPass:() => { S_story.tribbleCount = (S_story.tribbleCount||0) + 1; S_story.inventory.push({name:'Fuzzy Tribble',icon:'🧸',type:'trinket',sell:0,desc:'Soft. Does nothing. You are fairly certain it is multiplying.'}); } },
+
+  quest_d0208_a3: { id:'quest_d0208_a3', type:'side', title:'Act III — The Mother Mimic',
+    hint:'If no mimics were harmed, she waits.',
+    activateNode:'MM', activateCond:() => !!S_story.d0208_a2_passed,
+    completeFn:() => !!S_story.d0208_a2_passed },
+
+  quest_d0208_a4: { id:'quest_d0208_a4', type:'skill_check', title:'Act IV — The Feeding',
+    hint:'Return the coin to the baby mimic, in front of the Mother.',
+    activateNode:'MM', activateCond:() => (S_story.quests||{})['quest_d0208_a3'] === 'complete',
+    checkAbility:'wis', checkLabel:'Animal Handling', checkDC:14, retryable:true, retryGateDays:1,
+    vignetteText:'The Mother Mimic watches you. The coin the baby dropped is still in your hand. You have been carrying it through this whole place.',
+    passText:'The baby mimic takes the coin to the Mother. She opens her chest lid.',
+    failText:'The Mother closes her lid. Retry tomorrow — she is patient.',
+    checkPassFlag:'d0208_a4_passed',
+    onPass:() => {
+      S_story.tribbleGladesFed = true;
+      S_story.tribbleCount = (S_story.tribbleCount||0) + 3;
+      S_story.inventory.push({name:"Mimic's Cache",icon:'💎',type:'loot',sell:200,desc:'The Mother Mimic gave you this. It contains something rare and several Fuzzy Tribbles.'});
+      S_story.inventory.push({name:'Fuzzy Tribble',icon:'🧸',type:'trinket',sell:0,desc:'Soft. Multiplying.'});
+      S_story.inventory.push({name:'Fuzzy Tribble',icon:'🧸',type:'trinket',sell:0,desc:'Soft. Multiplying.'});
+      S_story.inventory.push({name:'Fuzzy Tribble',icon:'🧸',type:'trinket',sell:0,desc:'Soft. Multiplying.'}); } },
+
+  quest_d0208_a5: { id:'quest_d0208_a5', type:'skill_check', title:'Act V — The Name',
+    hint:'Accept the pet.',
+    activateNode:'MM', activateCond:() => !!S_story.d0208_a4_passed && !S_story.mimicPetName,
+    checkAbility:'cha', checkLabel:'Persuasion', checkDC:10, retryable:true, retryGateDays:0,
+    xpAward:300, goldAward:100,
+    vignetteText:'The baby chest mimic follows you toward the exit. It has decided you are interesting and adjusted its route accordingly.',
+    passText:'"It has decided you are acceptable. You are unsure when you decided the same." Baby Mimic companion added.',
+    failText:'"It follows anyway. You just haven\'t acknowledged it yet."',
+    checkPassFlag:'d0208_complete',
+    completeItems:[{name:'Baby Mimic', icon:'📦', type:'companion', sell:0, desc:'A baby chest mimic. Grants +2 to Deception. Cannot be sold. Named by you.'}],
+    onPass:() => { S_story.mimicPetName = S_story.mimicPetName || 'Baby Mimic'; } },
 
   // ── DeFi Land — three useless NPCs who do nothing ──
   DF: { name:'Grimshaw',          quote:'"...static...KD9QRX, this is KD9QRX, calling general...static...anyone on frequency...static...copy that nobody." His receiver has been broken for eleven years. He is aware. He does not consider this relevant to the broadcast.' },
@@ -14206,6 +14324,11 @@ function storyCheckQuests(node) {
         else if (S_story.vsShamanPersuaded) msgs.push('🔑 Persuasion path: the sub-clan returned to Mordus. The chain is known.');
         else msgs.push('🔑 Combat path: the sub-clan scattered. The Hollow Hands have no direction.');
       }
+      // Layer 81: Scholar King's Workshop quest rewards
+      if (id === 'quest_d0206_a5') { msgs.push('⚗ Scholar King\'s Workshop complete. The name on the cover is yours.'); }
+      // Layer 81: Mimic Meadows quest rewards
+      if (id === 'quest_d0208_a4') { msgs.push('🧸 The Mother Mimic opened her lid. Mimic\'s Cache obtained.'); }
+      if (id === 'quest_d0208_a5') { msgs.push('📦 Baby Mimic companion joined. Name it at the Mimic Meadows.'); }
     }
   });
   return msgs;
@@ -16371,6 +16494,82 @@ function storyRender(node, prefix) {
       document.getElementById('story-text-box').insertAdjacentElement('afterend', frDiv);
     }
   }
+  // ── Layer 81: Scholar King's Workshop (WK) render ──
+  if (node.code === 'WK') {
+    const _wkOld = document.getElementById('wk-panel');
+    if (_wkOld) _wkOld.remove();
+    const _wkDiv = document.createElement('div');
+    _wkDiv.id = 'wk-panel';
+    _wkDiv.style.cssText = 'display:flex;flex-direction:column;gap:6px;padding:10px 12px;background:var(--panel);border:1px solid var(--border);border-radius:6px;margin-top:8px;';
+    // Prototype Wand pickup (before quest system activates)
+    if (!S_story.d0206_a2_passed && !(S_story.inventory||[]).some(i => i.name === "Scholar King's Prototype Wand")) {
+      const _wandBtn = document.createElement('button');
+      _wandBtn.className = 'story-card-btn';
+      _wandBtn.textContent = '⚗ Examine the Prototype Wand on the shelf.';
+      _wandBtn.onclick = () => { storyMsg('The wand hums faintly. You will need to prove you can handle it first. (See quest: Act II — The Prototype)'); };
+      _wkDiv.appendChild(_wandBtn);
+    }
+    // Spirit encounter info after blueprint known
+    if (S_story.scholarWorkshopComplete) {
+      const _wkDone = document.createElement('div');
+      _wkDone.style.cssText = 'font-size:11px;color:var(--grn-lt);';
+      _wkDone.textContent = '✓ The Workshop yielded its secrets. The blueprint is in your pack. The Spirit has gone quiet.';
+      _wkDiv.appendChild(_wkDone);
+    }
+    // Auros blueprint advantage reminder
+    if (S_story.aurosBlueprintKnown && !S_story.defeatedBattles['CO']) {
+      const _wkHint = document.createElement('div');
+      _wkHint.style.cssText = 'font-size:10px;color:var(--gold);border-left:2px solid var(--gold);padding-left:6px;';
+      _wkHint.textContent = '📜 Blueprint known: Auros\'s left pauldron is AC -4 in the Convergence fight.';
+      _wkDiv.appendChild(_wkHint);
+    }
+    if (_wkDiv.children.length > 0) {
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _wkDiv);
+    }
+  }
+
+  // ── Layer 81: Mimic Meadows (MM) render ──
+  if (node.code === 'MM') {
+    const _mmOld = document.getElementById('mm-panel');
+    if (_mmOld) _mmOld.remove();
+    const _mmDiv = document.createElement('div');
+    _mmDiv.id = 'mm-panel';
+    _mmDiv.style.cssText = 'display:flex;flex-direction:column;gap:6px;padding:10px 12px;background:var(--panel);border:1px solid var(--border);border-radius:6px;margin-top:8px;';
+    // Tribble count display
+    const _tc = S_story.tribbleCount || 0;
+    if (_tc > 0) {
+      const _tcEl = document.createElement('div');
+      _tcEl.style.cssText = 'font-size:11px;color:var(--gold);';
+      _tcEl.textContent = '🧸 Fuzzy Tribbles in pack: ' + _tc + (_tc >= 10 ? ' — Brynn says they\'re on the ceiling.' : _tc >= 5 ? ' — They have opinions about battles.' : '');
+      _mmDiv.appendChild(_tcEl);
+    }
+    // Mimic pet name prompt (after A5 passes)
+    if ((S_story.quests||{})['quest_d0208_a5'] === 'complete' && S_story.mimicPetName === 'Baby Mimic') {
+      const _nameDiv = document.createElement('div');
+      _nameDiv.style.cssText = 'display:flex;gap:6px;align-items:center;flex-wrap:wrap;';
+      const _nameInput = document.createElement('input');
+      _nameInput.type = 'text'; _nameInput.placeholder = 'Name your mimic...';
+      _nameInput.style.cssText = 'font-size:11px;padding:3px 6px;background:var(--panel2);border:1px solid var(--border);color:var(--text);border-radius:4px;flex:1;min-width:120px;';
+      const _nameBtn = document.createElement('button');
+      _nameBtn.className = 'story-card-btn'; _nameBtn.textContent = '📦 Give a name';
+      _nameBtn.onclick = () => {
+        const n = _nameInput.value.trim();
+        if (n) { S_story.mimicPetName = n; storySave(); storyMsg('📦 ' + n + ' opens its lid once in acknowledgement. You are not sure if that means yes.'); storyRender(node); }
+      };
+      _nameDiv.appendChild(_nameInput); _nameDiv.appendChild(_nameBtn);
+      _mmDiv.appendChild(_nameDiv);
+    }
+    if (S_story.mimicPetName && S_story.mimicPetName !== 'Baby Mimic') {
+      const _petEl = document.createElement('div');
+      _petEl.style.cssText = 'font-size:11px;color:var(--grn-lt);';
+      _petEl.textContent = '📦 ' + S_story.mimicPetName + ' is following you. It has decided you are acceptable.';
+      _mmDiv.appendChild(_petEl);
+    }
+    if (_mmDiv.children.length > 0) {
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _mmDiv);
+    }
+  }
+
   // ── Layer 41: Birka NPC cards ──
   {
     const npcRow = document.getElementById('story-npc-cards-row');

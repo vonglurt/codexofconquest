@@ -126,7 +126,7 @@ Each quest entry uses the following tags:
 
 | Quest ID | Title | Type | Acts | Reward | Status |
 |----------|-------|------|------|--------|--------|
-| `quest_mimic_colony` | "Colony Curation" | [SKILL CHECK]+[BATTLE if provoked] | 5 acts | 200gp + Mimic's Wax + Baby Mimic + `tribbleGladesFed` | [PLANNED §D02-08] |
+| `quest_mimic_colony` | "Colony Curation" | [SKILL CHECK]+[BATTLE if provoked] | 5 acts | 200gp + Mimic's Wax + Baby Mimic + `tribbleGladesFed` | [✅ LIVE §D02-08] |
 
 **`quest_mimic_colony` — "The Dropped Coin"** *(5-act, see §D02-08)*
 *Node: MM. Trigger: first visit. Object: a shiny coin dropped by the baby chest mimic.*
