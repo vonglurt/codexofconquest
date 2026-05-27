@@ -8496,6 +8496,14 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     activateNode:null, completeItems:[], completeFn:() => !!(S_story.wmFirstResearcherKnown),
     waypointNode:'SQ', reward:300,
     disposition:'"The Scholar Kings didn\'t erase her. They just stopped saying the name. Froberger said it in his margin notes every time. That\'s how I found her. And now you know how I found him." — Benedikt Rasp' },
+  quest_wm_05: { id:'quest_wm_05', type:'side', title:'The Open File', // §L
+    desc:"The lower archive has a fifth document you were not looking for. A personnel file that has never been closed — because the Scholar Kings' filing system does not have a category for someone who chose the field over the archive and kept sending data anyway. The Y. Gurt file is still active. It has been active for a very long time.",
+    hint:'Return to the Weimar lower archive with the Y. Gurt Field Survey.',
+    activateNode:'SQ', completeItems:[],
+    activateCond:() => !!(S_story.wmLowerArchiveUnlocked && (S_story.inventory||[]).some(i => i.name === 'Y. Gurt Field Survey')),
+    completeFn:() => !!S_story.wmGurtFileRead,
+    xpAward:200, waypointNode:'SQ', reward:200,
+    disposition:'"We continue to file them." — Scholar Kings Personnel Record, Y. Gurt (Field Absence: Ongoing)' },
   // ── Layer 52: Void Archaeology quests ──
   quest_va_01: { id:'quest_va_01', type:'side', title:'The Architecture: Five Marks',
     desc:"Someone passed through five sites two hundred years ago and left marks. The marks are at nodes you have already visited — you walked past them without knowing. No one told you they were there because no one who knew is still alive to tell. What you have instead are Froberger's margin notes, which mention the marks in the way a person mentions something they saw in passing and could not explain and never went back for. Follow the track. Each site will say where he was and how long ago.",
@@ -8828,7 +8836,9 @@ const NPC_DIALOGUE = { // → doc: story.md §FL7
   SQ: { name:'Archivus Ptolemy Sweelinck',          quote:'"You found six. The seventh is the map — not the destination, the map. I have been holding the Weimar Fragment since before you were born. I knew the day I took it that I would not be the one to carry it. I have been waiting for whoever earned the carrying. You found six. You have earned it."' },
   GA: { name:'Oracle Kassiphane',               quote:'"Seven questions. Seven seals. You already know the answers — you have simply not asked yourself the right questions yet. The Shard was here before I was. It has always been yours."' },
   CO: { name:'Commander Seraphine Bruhns',       quote:'"The cordon holds. We have maybe one hour before the Void breaks through completely. Forge the Codex. I will handle whatever comes over the wall."' },
-  YC: { name:'The Fisherman', quoteFn:() => S_story.hornedSharkSlain
+  YC: { name:'The Fisherman', quoteFn:() => S_story.shaleDropFound // §XLIX: three-state arc close
+    ? '"...Nice Day For Fishing. Yugurt." He is making tea. He does not ask where you have been. He sets a second cup on the windowsill. Not the table — the windowsill, where a person stands when they are looking at something. The lake is still. He looks at it the same way he always has: the particular attention of someone checking whether the water has changed. He picks up the first cup. "First Circle used to say the archive outlasts the archivist." He drinks. "...Nice Day For Fishing. Yugurt."'
+    : S_story.hornedSharkSlain
     ? '"...Nice Day For Fishing. Yugurt." He looks at you the way he looks at the lake in the morning — the particular attention of someone checking whether the water has changed. "You got the shark," he says. "That\'s a different kind of fishing." He looks back at the lake. "...Nice Day For Fishing. Yugurt."'
     : '"...Nice Day For Fishing. Yugurt! ...Nice Day For Fishing. Yugurt!" He says this continuously. Not to you specifically. Not to no one specifically. He is simply correct about the weather and the lake on every day he has ever checked, which is every day.' },
   CQ: { name:'Jimmy Two-Tails', quote:'"Listen. LISTEN. I\'m gonna tell you somethin\' and I\'m only gonna say it once. The Taz Devil? It ain\'t a monster. It\'s a SITUATION. Two Honchos merge and boom — situation. You wanna help? You help by makin\' sure they don\'t get within three blocks of each other. Capisce?"' },
@@ -9588,7 +9598,7 @@ const _S_DEFAULTS = () => ({
   wmLowerArchiveUnlocked: false,
   wmDoc1Read: false, wmDoc2Read: false, wmDoc3Read: false, wmDoc3Unredacted: false,
   wmArchiveComplete: false, wmSessionsDays: [], wmBenediktCircleComplete: false,
-  wmFirstResearcherKnown: false,
+  wmFirstResearcherKnown: false, wmGurtFileRead: false, // §L
   // Layer 52: Void Archaeology
   vaCI: false, vaSL: false, vaDF: false, vaWM: false, vaMT: false,
   vaAllMarksFound: false, vaLogFound: false, vaLastWardVisited: false, vaArchitectureKnown: false,
@@ -13742,6 +13752,26 @@ function _storyWmArchiveModal() {
     }
     html += '</div>';
   }
+  // §L: Y. Gurt file — appears when player carries the Field Survey
+  const _hasGurtSurvey = (S_story.inventory || []).some(i => i.name === 'Y. Gurt Field Survey');
+  if (_hasGurtSurvey) {
+    const _gurtRead = S_story.wmGurtFileRead;
+    html += '<div style="border:1px solid '+(_gurtRead?'#3a6a3a':'#5a4030')+';border-radius:4px;padding:10px;margin-bottom:8px;">'
+      + '<div style="color:'+(_gurtRead?'#90c890':'#c0a080')+';font-weight:700;font-size:12px;margin-bottom:6px;">'+(_gurtRead?'✓ ':'📋 ')+'Document — Y. Gurt: Field Absence (Ongoing)</div>';
+    if (_gurtRead) {
+      html += '<div style="font-size:11px;color:#bba;white-space:pre-wrap;line-height:1.5;">'
+        + 'Y. GURT — FIELD NATURALIST, FIRST CIRCLE\nPersonnel File — Scholar Kings Archive\n\n'
+        + 'Assignment: Yugurt Lake, freshwater taxonomy survey\nSurvey date: Pre-Codex Year 3\nSurvey status: Submitted (Survey #47-L, filed)\n\n'
+        + 'Correspondence record:\n  — Follow-up #1, 2nd Moon Year 4: No response\n  — Follow-up #2, 4th Moon Year 4: No response\n  — Follow-up #3, 1st Moon Year 5: No response\n\n'
+        + 'Current status: Field absence (ongoing)\nClassification: Active/Incomplete\n\n'
+        + 'Note: Field surveys from Y. Gurt continue to arrive sporadically via river courier — undated, unsigned, no return address. Contents: weather observations, species population counts, water temperature gradients by depth.\n\nWe continue to file them.\n\n'
+        + '[In different ink:]\n"He is still there. I checked the lake last year. He is still there and the lake is fine. — I.V."'
+        + '</div>';
+    } else {
+      html += '<button class="inv-use-btn" id="wm-archive-gurt-btn" style="margin-top:4px;">📋 Read</button>';
+    }
+    html += '</div>';
+  }
   html += '<button class="inv-use-btn" id="wm-archive-close" style="margin-top:6px;width:100%;">✗ Close archive</button>';
   panel.innerHTML = html;
   overlay.appendChild(panel);
@@ -13767,6 +13797,14 @@ function _storyWmArchiveModal() {
       }
       if (!S_story.quests) S_story.quests = {};
       if (!S_story.quests['quest_va_03']) S_story.quests['quest_va_03'] = 'active';
+      storyAutoSave();
+      _storyWmArchiveModal();
+    });
+  }
+  const _gurtBtn = panel.querySelector('#wm-archive-gurt-btn'); // §L
+  if (_gurtBtn) {
+    _gurtBtn.addEventListener('click', () => {
+      S_story.wmGurtFileRead = true;
       storyAutoSave();
       _storyWmArchiveModal();
     });
@@ -14444,6 +14482,7 @@ function storyCheckQuests(node) {
           description:'"He was right about this one too." — B. Rasp' });
         msgs.push('📙 Benedikt\'s Annotated Copy (Tome) obtained. +300gp. The First Researcher is known.');
       }
+      if (id === 'quest_wm_05') { S_story.gold += 200; msgs.push('💰 +200gp. 📋 The Gurt file is still open. It has been filed, and refiled, and it will not close.'); } // §L
       // Layer 52: Void Archaeology quest rewards
       if (id === 'quest_va_01') { msgs.push('🏛️ Five marks found. The pattern is complete.'); }
       if (id === 'quest_va_02') {

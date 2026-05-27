@@ -99,7 +99,7 @@ See `story.md §GRIEF AND CORRUPTION` for the vignette prose.
 
 ## §0 — Implementation Readiness Dashboard
 
-> **Status as of Layer 87 (2026-05-27).** §XLIX The Shale Drop live. Node YD + cave_lurker + GATE_LOCKS YL→YD (Eel Skin Pouch) + quest_shale_drop (activates on eelSkinPouchActive; completes on shaleDropFound; +250gp +300xp + Y. Gurt Field Survey readable). Yugurt's real identity: Y. Gurt, First Circle Naturalist who chose the lake over the archive. HTML: ~20,270 lines. Lab reports: 43. Add new layers below as §L+.
+> **Status as of Layer 88 (2026-05-27).** §L implemented: Fisherman arc closed (three-state quoteFn on shaleDropFound) + Weimar Y. Gurt connection live (quest_wm_05, wmGurtFileRead, fifth archive document appears when Y. Gurt Field Survey in inventory). Yugurt arc fully resolved: rod → catches → zones → tournament → Leviathan Class → Horned Shark → night fishing → Lantern Eel → Shale Drop → Gurt file → archive. HTML: ~20,290 lines. Lab reports: 43. Add new layers below as §LI+.
 
 ### Lab Report Index (Layers 48–79)
 
@@ -5360,6 +5360,39 @@ Quest ID: `quest_fish_01`
 | Disposition | *"He doesn't react when you come back up. He already knew what was down there."* — The Fisherman |
 
 **The reveal:** Yugurt is not the lake's name that became a man's name. He is Y. Gurt — a Scholar Kings naturalist who filed a formal request to remain at the lake instead of returning to the archive for classification review. The request was denied. He stayed anyway. The lake has been giving him data every morning since. He's still recording it.
+
+---
+
+## §L — Arc Close: Fisherman's Third Dialogue + Weimar Y. Gurt Connection (✅ Implemented — Layer 88)
+
+**Status:** ✅ Implemented 2026-05-27
+
+### §L-A. Fisherman's Arc Close
+
+The `quoteFn` at YC now has three states (was two):
+
+| Condition | Dialogue |
+|-----------|----------|
+| `shaleDropFound` | *Making tea. Sets a second cup on the windowsill — not the table. "First Circle used to say the archive outlasts the archivist." Drinks. "...Nice Day For Fishing. Yugurt."* |
+| `hornedSharkSlain` | *Acknowledges the shark. "That's a different kind of fishing."* |
+| default | *The continuous loop. Simply correct about the weather.* |
+
+The third state resolves his arc: he uses "First Circle" without explanation. He does not acknowledge the survey. He does not explain himself. The second cup on the windowsill — for whoever is looking at the lake — is the only gesture he makes.
+
+### §L-B. Weimar: The Open File (quest_wm_05)
+
+| Field | Value |
+|---|---|
+| Quest | `quest_wm_05` — *The Open File* |
+| Activates | SQ; requires `wmLowerArchiveUnlocked && Y. Gurt Field Survey in inventory` |
+| Completes | `wmGurtFileRead === true` (set by reading the fifth archive document) |
+| XP | 200 |
+| Gold | 200gp |
+| Disposition | *"We continue to file them."* — Scholar Kings Personnel Record, Y. Gurt (Field Absence: Ongoing) |
+
+**Fifth archive document** appears in `_storyWmArchiveModal()` only when player carries the Y. Gurt Field Survey. Content: personnel file showing three unanswered follow-up correspondences, ongoing field absence classification, and a handwritten note from Isolde Voss: *"He is still there. I checked the lake last year. He is still there and the lake is fine. — I.V."*
+
+**The full Yugurt arc resolves as:** rod → catches → zone unlocks → tournament (6 fights) → Leviathan Class (rank 15+, Yugurt's Favour) → Horned Shark → night fishing → Lantern Eel (Eel Skin Pouch) → Shale Drop (cave_lurker, Y. Gurt Field Survey) → Fisherman's third dialogue → Weimar archive (The Open File). The lake was always a field station. He never stopped working. The Scholar Kings never closed the file.
 
 ---
 

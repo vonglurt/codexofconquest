@@ -1,20 +1,20 @@
 # Roll2Hit — The Shattered Codex: Document Index
 
 **Project:** `roll2hit-v3.html` — single-file combat tracker + narrative RPG
-**Status:** Layers 0–87 implemented · ~20,215 lines · 79 nodes · 378 monsters · 43 lab reports · FC01–FC08 ✅ · §RESEARCH-01 ✅ · §API-01+02 ✅ · SP4 ✅ · §DESIGN-02 ✅ · §DESIGN-03 ✅ · §DUNGEON-01 ✅ · §DUNGEON-02 ✅ · §XLIII ✅ · §XLIV ✅ · §XLV ✅ · §XLVI ✅ · §XLVII ✅ · §XLVIII ✅ · §XLIX ✅
+**Status:** Layers 0–88 implemented · ~20,254 lines · 79 nodes · 378 monsters · 43 lab reports · FC01–FC08 ✅ · §RESEARCH-01 ✅ · §API-01+02 ✅ · SP4 ✅ · §DESIGN-02 ✅ · §DESIGN-03 ✅ · §DUNGEON-01 ✅ · §DUNGEON-02 ✅ · §XLIII ✅ · §XLIV ✅ · §XLV ✅ · §XLVI ✅ · §XLVII ✅ · §XLVIII ✅ · §XLIX ✅ · §L ✅
 **Last updated:** 2026-05-27
 
 ### Doc Health Badge
 
 | Metric | Value | Status |
 |--------|-------|--------|
-| HTML line count | ~20,215 | ✅ |
+| HTML line count | ~20,254 | ✅ |
 | Lab reports on disk | 43 | ✅ |
 | Lab reports in index | 43 | ✅ |
 | Node text rewrites (noir register) | 79 / 79 | ✅ YD (The Shale Drop) added Layer 87 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
-| Layers implemented | 0–87 | ✅ |
-| Last sync pass | 2026-05-27 Layer 87 (§XLIX The Shale Drop — node YD + cave_lurker + quest_shale_drop + Y. Gurt reveal live) | ✅ |
+| Layers implemented | 0–88 | ✅ |
+| Last sync pass | 2026-05-27 Layer 88 (§L — Fisherman three-state arc close + Weimar quest_wm_05 + Y. Gurt archive file) | ✅ |
 
 > Update this table at the start of each session: recount lab reports with `ls lab-report-*.md | wc -l`, check HTML line count with `wc -l roll2hit-v3.html`, confirm FC item status.
 
