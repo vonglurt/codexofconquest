@@ -99,7 +99,7 @@ See `story.md §GRIEF AND CORRUPTION` for the vignette prose.
 
 ## §0 — Implementation Readiness Dashboard
 
-> **Status as of Layer 100 (2026-05-27).** §LIX–§LXI implemented: HR + KS + DR + TS nodes live. Conversion, blind gate, detention gate, basket escape, HR return/Barnach vouch/15-day Hellenist gate, Tarsis silent years + Barnach arrival. HTML: ~20,610 lines. Lab reports: 43. Add new layers below as §LXII+.
+> **Status as of Layer 101 (2026-05-27).** §LIX–§LXII: HR + KS + DR + TS + AO nodes live. Full conversion chain: Herath → road → Kesra blind → basket → HR return/Barnach vouch/15 days → Tarsis silence → Barnach finds → Anthos commissioning. quest_anthos_commission. AO name-change storyRender block. HTML: ~20,670 lines. Lab reports: 43. Add new layers below as §LXIII+.
 
 ### Lab Report Index (Layers 48–79)
 
@@ -5717,6 +5717,35 @@ The conversion fires as an inline storyRender div on first arrival at KS. No ski
 | §LX (99) | DR node. KS→DR connection. Detention gate. quest_basket_kesra (DEX DC 12, retryable). escapedKesra flag. |
 | §LXI (next) | HR return + Barnach vouches + 15-day Hellenist gate → TS (Tarsis) |
 | §LXII | TS silent years + Barnach arrival → AO (Anthos) + commissioning |
+
+## §LXII — Anthos: The Sending (✅ Implemented — Layer 101)
+
+> **Status:** Live. AO node. TS.W → AO. Assembly Elder Joach 2-state quoteFn (IIFE sets commissionReceived + silarJoined). storyRender name-change notice at AO on first commission visit. quest_anthos_commission.
+
+### §LXII-A. What Was Built
+
+| Element | Detail |
+|---|---|
+| AO node | num:88, act:4, E:TS — Anthos mixed quarter, sleep:true (4gp) |
+| TS update | W: null → W:'AO' |
+| AO NPC | Assembly Elder Joach — 2-state quoteFn: IIFE commission → return reflection |
+| Name change | storyRender block: "He is called Paul here for the first time." — injected on first AO arrival post-commission |
+| _S_DEFAULTS | commissionReceived · silarJoined |
+| Quest | quest_anthos_commission (activates at AO when barnachFoundPaul, completes on commissionReceived) |
+
+### §LXII-B. The Name
+
+"He is called Paul here for the first time. He will be called Saul again once, by someone who does not know the road. It will not fit." This is delivered as a storyRender block — not dialogue, not quest text. It is just true, and now visible.
+
+### §LXII-C. Arc Shape — First Journey Path
+
+```
+HR (pre-conversion) → KS (blind, Anath) → DR (optional desert) → HR (return, Barnach vouches, 15 days) → TS (silent years) → AO (commissioning, Paul named) → CI2 (Copper Isle) → LT (Lythros, Timael)
+```
+
+Next: §LXIII — CI2 (Copper Isle, Ezzir encounter, governor conversion).
+
+---
 
 ## §LXI — Herath Return + Tarsis (✅ Implemented — Layer 100)
 

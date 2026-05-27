@@ -7596,8 +7596,12 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   HR:{ num:84, code:'HR', name:'herath', label:'Herath — Lower Court', act:4, N:null, S:null, E:'KS', W:'TS',
     text:"The city writes its authority in stone. The law courts have been here for three hundred years; the newest wall is a century old; the oldest inscription above the gate has been re-carved twice because the stone wore before the law did.\n\nSaul of Tarsis has a desk in the lower court. On that desk: three warrants, two authorization letters, and a list of names. The names are of people who have been meeting in houses and saying things the court considers seditious. The warrant language is precise: 'Bring them.' Not 'question.' Not 'invite.' Bring.\n\nHe has done this before. The warrants are a bureaucratic instrument. He treats them with the seriousness appropriate to bureaucratic instruments — which is to say, complete and impersonal seriousness. He does not hate the people on the list. He has decided that the list is correct. He has not examined that decision recently.\n\nThe road to Kesra leaves from the east gate. He has already requisitioned the escort. He leaves at first light.",
     npc:'The Court Registrar', battle:null, loot:'Three Herath Warrants · Order of Escort', sleep:true, sleepCost:5 },
+  // ── §LXII: AO — Anthos (commissioning, first journey) ──
+  AO:{ num:88, code:'AO', name:'anthos', label:'Anthos — The Mixed Quarter', act:4, N:null, S:null, E:'TS', W:null,
+    text:"Anthos is not trying to be anything in particular. It is too large to be a village and not large enough to be a city and too mixed to be classified as either. Merchants from four different peoples live in the same quarter without anyone having organized them. They got there before the organizing arrived and now they are too settled to move.\n\nThis is where the first journey forms. Barnach is here. Silar is here — steady, direct, capable of principled disagreement, which is a quality the work is going to require. The commission comes from the assembly. This is the first time Paul has been sent somewhere by a body of people rather than going by his own authority.\n\nHe is called Paul here for the first time in this record. He will be called Saul again once, by someone who does not know the road, and it will not fit.",
+    npc:'Assembly Elder Joach', battle:null, loot:null, sleep:true, sleepCost:4 },
   // ── §LXI: TS — Tarsis (the silent years) ──
-  TS:{ num:87, code:'TS', name:'tarsis', label:'Tarsis — The Tentmaker\'s Quarter', act:4, N:null, S:null, E:'HR', W:null,
+  TS:{ num:87, code:'TS', name:'tarsis', label:'Tarsis — The Tentmaker\'s Quarter', act:4, N:null, S:null, E:'HR', W:'AO',
     text:"He is from here. The streets are familiar in the way that streets are familiar when you have not been to them since you were young and have become a different person in the interval. The house he grew up in is still standing. Someone else lives there. He does not knock.\n\nHe works. He has a trade — tentmaking, the craft he learned before he learned the law. It is meticulous work and the city has no particular opinion about tentmakers one way or the other, which is exactly the quality he requires of a city right now.\n\nThe years in Tarsis are in no document he wrote. They are a gap in the record. The things that happened in the gap happened to a person who was both Saul and Paul and neither, settling into what he had become. The record resumes when Barnach arrives at the gate.",
     npc:'Barnach', battle:null, loot:'Tentmaking Tools', sleep:true, sleepCost:3 },
   KS:{ num:85, code:'KS', name:'kesra', label:'Kesra — Lower City', act:4, N:null, S:'DR', E:null, W:'HR',
@@ -7738,8 +7742,8 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   YL:{r:6,c:5},   YC:{r:7,c:5},  YD:{r:6,c:4},
   /* DeFi Land — north of Birka Slums */
   DF:{r:3,c:16},  HM:{r:3,c:17},  GL:{r:3,c:15},  S7:{r:3,c:18},
-  /* §LIX–§LXI — The Road to Kesra cluster */
-  HR:{r:17,c:5},  KS:{r:17,c:8},  DR:{r:19,c:8},  TS:{r:17,c:2},
+  /* §LIX–§LXII — The Road to Kesra cluster */
+  HR:{r:17,c:5},  KS:{r:17,c:8},  DR:{r:19,c:8},  TS:{r:17,c:2},  AO:{r:17,c:0},
 };
 
 /* ── Layer 9-A: Circuit Corridor Data Structures ── */
@@ -8661,6 +8665,14 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     completeFn:() => !!S_story.barnachFoundPaul,
     xpAward:100, waypointNode:'TS', reward:0,
     disposition:'"I have been looking for you for a year. It\'s time." — Barnach' },
+  // ── §LXII: The Sending ──
+  quest_anthos_commission: { id:'quest_anthos_commission', type:'side', title:'The Sending',
+    desc:"Anthos is where the first journey forms. Barnach is here. Silar is here. The commission comes from the assembly — the first time Paul has been sent somewhere by a body of people rather than going by his own authority. He is accountable to the people who sent him and to the people he will find. He finds this clarifying.",
+    hint:'Speak to Assembly Elder Joach at Anthos.',
+    activateNode:'AO', activateCond:() => !!S_story.barnachFoundPaul,
+    completeFn:() => !!S_story.commissionReceived,
+    xpAward:150, waypointNode:'AO', reward:0,
+    disposition:'"The mandate is simple because the work isn\'t." — Assembly Elder Joach' },
   // ── §LX: Basket escape ──
   quest_basket_kesra: { id:'quest_basket_kesra', type:'skill_check', title:'Over the Wall',
     desc:"The magistrate of Kesra has learned that Saul is in the lower city — now as a liability rather than an asset. A detention order has been issued. The warrant authority has turned against the warrant-carrier. The gate is watched. The wall is not.",
@@ -8986,6 +8998,14 @@ const NPC_DIALOGUE = { // → doc: story.md §FL7
     : S_story.blindDaysKS >= 3 // Day 3 — Anath arrives
     ? ((() => { S_story.anathSightRestored = true; return '"I was told you were here. I was told to come." He sets the bowl down on the table beside the window. His hands are steady. His voice is not quite steady. "I have heard what you did to the people in Herath. I have heard what you were coming here to do."\n\nHe does not say: I was afraid of you. He does not need to.\n\n"I am here anyway."\n\nHe places his hands. The light returns.'; })())
     : '"The room is quiet. Three days. The innkeeper brings food at noon and does not ask questions. Someone else\'s servant brings water in the morning. The door is closed. Day ' + (S_story.blindDaysKS || 0) + ' of three.\n\nYou wait."' },
+  // §LXII: AO — Assembly Elder Joach + name-change moment
+  AO: { name:'Assembly Elder Joach', quoteFn:() => S_story.commissionReceived // §LXII
+    ? '"The mandate is simple because the work isn\'t." He says it the way a man says things he has said before and means more each time. "Send word when you reach the Copper Isle. We will be praying in the interim. We will be praying regardless."'
+    : ((() => {
+        S_story.commissionReceived = true;
+        S_story.silarJoined = true;
+        return 'He is called Paul here for the first time in this record.\n\nThe Assembly Elder sets both hands flat on the table. "We are sending you. Barnach goes with you. Silar goes with you. Take what you need. The mandate is: go to the cities you can reach and say what you know. That is the whole of it."\n\nBarnach is already at the door. Silar is checking the water supply. Paul looks at the table. He has been sent by courts before. He has been sent by his own authority before. He has never been sent by people he is accountable to in both directions.\n\n"The mandate is simple," the Elder says, "because the work isn\'t."';
+      })()) },
   TS: { name:'Barnach', quoteFn:() => S_story.barnachFoundPaul // §LXI
     ? '"I have been looking for you for a year. Anthos needs you. I need you." He does not say: come back. He is standing in the doorway of a city you grew up in and he is not telling you what to do. He is telling you that you are needed, which is different from telling you what to do, which is one of the things that is different about who he is now. "I am not going to tell you it\'s safe — you know it isn\'t. I am going to tell you it\'s time."'
     : ((() => { S_story.barnachFoundPaul = true; return 'He comes through the gate in the early afternoon, when the tentmaking quarter is quiet and the light is flat. He has the look of someone who has been traveling a long time and not sleeping particularly well and has kept going anyway.\n\n"I have been looking for you for a year."\n\nThe tent canvas is on the frame behind you. The tools are on the bench. The city has had no particular opinion about this work and you have required none.\n\n"Anthos needs you. I need you." He looks at the canvas. He looks at you. "It\'s time."'; })()) },
@@ -9809,9 +9829,10 @@ const _S_DEFAULTS = () => ({
   scriptorium_approach_complete: false, mimicColonyEntered: false,
   noFishingSignRead: false, fishingRodCouponRedeemed: false,
   yugurtTourBeat: {}, yugurtTourTitle: null,
-  // §LIX–§LXI: The Road to Kesra
+  // §LIX–§LXII: The Road to Kesra
   saulConverted: false, blindDaysKS: 0, anathSightRestored: false, escapedKesra: false,
   barnachVouchedHR: false, hrHellenistDays: 0, hellenistsThreaten: false, barnachFoundPaul: false,
+  commissionReceived: false, silarJoined: false,
 });
 
 /* ── Layer 48: Luck — Seventh Stat ── */
@@ -14731,6 +14752,9 @@ function storyCheckQuests(node) {
       if (id === 'quest_barnach_finds') { // §LXI
         msgs.push('🛤️ +100 XP. Barnach found him. A year looking. The arc resumes — Anthos is west.');
       }
+      if (id === 'quest_anthos_commission') { // §LXII
+        msgs.push('⚡ +150 XP. Commissioned. Barnach and Silar traveling. The mandate is simple because the work isn\'t.');
+      }
       if (id === 'quest_antecedent_01') { // §LV
         msgs.push('🏛️ The question is closed. The archive still has an archivist.');
       }
@@ -15979,6 +16003,18 @@ function storyRender(node, prefix) {
           storyAutoSave();
         });
       }
+    }
+  }
+  // ── §LXII: AO — name-change notice on first arrival post-commission ──
+  { const _aoNameOld = document.getElementById('story-ao-namechange');
+    if (_aoNameOld) _aoNameOld.remove();
+    if (node.code === 'AO' && S_story.commissionReceived && !S_story.visited['AO']) {
+      const _aoDiv = document.createElement('div');
+      _aoDiv.id = 'story-ao-namechange';
+      _aoDiv.className = 'sweelinck-variant';
+      _aoDiv.style.cssText = 'margin-top:10px;border-left-color:#a07030;font-style:italic;color:#e0c890;font-size:12px;';
+      _aoDiv.textContent = 'He is called Paul here for the first time. He will be called Saul again once, by someone who does not know the road. It will not fit.';
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _aoDiv);
     }
   }
   // ── §LIX: KS — conversion fires on first arrival ──
