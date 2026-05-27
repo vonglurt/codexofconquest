@@ -99,7 +99,7 @@ See `story.md §GRIEF AND CORRUPTION` for the vignette prose.
 
 ## §0 — Implementation Readiness Dashboard
 
-> **Status as of Layer 99 (2026-05-27).** §LIX+§LX implemented: HR + KS + DR nodes live. Conversion fires on KS arrival. Two-stage KS gate (blind → detention). Basket escape quest_basket_kesra (DEX DC 12, retryable). DR optional Dust Roads. HTML: ~20,545 lines. Lab reports: 43. Add new layers below as §LXI+.
+> **Status as of Layer 100 (2026-05-27).** §LIX–§LXI implemented: HR + KS + DR + TS nodes live. Conversion, blind gate, detention gate, basket escape, HR return/Barnach vouch/15-day Hellenist gate, Tarsis silent years + Barnach arrival. HTML: ~20,610 lines. Lab reports: 43. Add new layers below as §LXII+.
 
 ### Lab Report Index (Layers 48–79)
 
@@ -5717,6 +5717,31 @@ The conversion fires as an inline storyRender div on first arrival at KS. No ski
 | §LX (99) | DR node. KS→DR connection. Detention gate. quest_basket_kesra (DEX DC 12, retryable). escapedKesra flag. |
 | §LXI (next) | HR return + Barnach vouches + 15-day Hellenist gate → TS (Tarsis) |
 | §LXII | TS silent years + Barnach arrival → AO (Anthos) + commissioning |
+
+## §LXI — Herath Return + Tarsis (✅ Implemented — Layer 100)
+
+> **Status:** Live. TS node added. HR.W → TS. HR NPC_DIALOGUE updated to 4-state Barnach quoteFn. 15-day Hellenist gate in storyMove. quest_hellenists_herath + quest_barnach_finds. Barnach TS 2-state quoteFn (IIFE sets barnachFoundPaul on first click).
+
+### §LXI-A. What Was Built
+
+| Element | Detail |
+|---|---|
+| TS node | num:87, act:4, E:HR — Tarsis tentmaking quarter, sleep:true (3gp), loot:Tentmaking Tools |
+| HR update | W: null → W:'TS' |
+| HR NPC_DIALOGUE | 4-state quoteFn: pre-conversion (Registrar) / post-conversion return (Barnach vouches, IIFE) / barnachVouchedHR (watching days) / hellenistsThreaten (go to Tarsis) |
+| HR→TS gate | storyMove: barnachVouchedHR required + 15-day counter → hellenistsThreaten |
+| Quests | quest_hellenists_herath (activates post-vouch, completes when hellenistsThreaten) · quest_barnach_finds (activates at TS, completes when barnachFoundPaul) |
+| TS Barnach | 2-state quoteFn: IIFE sets barnachFoundPaul on first click → departure speech on return |
+
+### §LXI-B. Barnach's Vouching
+
+The vouch is an IIFE: first time the player talks to Barnach on HR return, barnachVouchedHR=true fires and the room-scene delivers. "He was there." That's the whole of the vouch. It is enough. For now.
+
+### §LXI-C. The Silent Years
+
+Tarsis delivers loot (Tentmaking Tools) on first visit, then Barnach arrives. The arc earns the silence: the player has nowhere to go. The road east leads back to Herath (which sent them away). The road west doesn't exist yet. The only thing to do is work. Then Barnach comes through the gate.
+
+---
 
 ## §LX — Basket Escape + Dust Roads (✅ Implemented — Layer 99)
 

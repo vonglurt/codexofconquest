@@ -7593,9 +7593,13 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   CR:{ num:5,  code:'CR', name:'crypt',           label:'The Birka Crypt',             act:1, N:'BA', S:'CY', E:null,  W:null,  text:"The torches at the bottom of the stair were lit recently — wax still running, not yet pooled. Someone came down here in the last half hour and did not stay.\n\nThe first chamber holds twelve tombs. Three are disturbed: lids displaced, stone face-down on the floor. The scratches on the underside face upward.\n\nIn the far corner, a shadow that has no source shifts when you don't look at it directly.\n\nFrom the second chamber, below the drip of water: a slower sound. The deliberate kind that comes from something that has time.\n\nA sexton crosses the grating overhead, lantern swinging. He does not look down.\n\nThe three skeletons in the first chamber have already stood. The shadow is waiting for you to choose a direction.", npc:null, battle:{label:'Skeleton ×3 + Shadow', key:'skeleton', count:3}, loot:'Crypt Key · Void Scratch Note', sleep:false },
   CY:{ num:6,  code:'CY', name:'cyberpunk_streets', label:'Neon Undercity',             act:1, N:'CR', S:'AC', E:'DK',  W:null,  text:"The descent from the crypt floor takes thirty steps. At the bottom the stone ends and the conduit begins — cable bundles thick as your arm running the corridor's length, neon strips casting everything in a blue the eye reads as cold.\n\nThe passage was a transit corridor once. The turnstiles at the far end are still set to reject; three have been forced and bent back. Someone came through recently, and the path they cleared is the one you will use.\n\nTwo androids hold the mid-point checkpoint, heads tracking in the slow arc of a thing that runs on schedule. Between them, a data wraith — light that moves wrong, a signal that chose to persist rather than terminate. The androids are the vermin here. The wraiths are what a corridor produces when it runs long enough without maintenance.\n\nCommander Bruhns is already past the checkpoint. You can tell because the androids are still in reset posture, not yet returned to neutral scan.\n\nHe did not wait.", npc:'Commander Bruhns', battle:{label:'Android ×2 + Data Wraith', key:'corrupted_android', count:2}, loot:'Signal Jammer · EMP Grenade · Commander Token', sleep:false },
   // ── §LIX: Herath + Kesra — The Road to Kesra ──
-  HR:{ num:84, code:'HR', name:'herath', label:'Herath — Lower Court', act:4, N:null, S:null, E:'KS', W:null,
+  HR:{ num:84, code:'HR', name:'herath', label:'Herath — Lower Court', act:4, N:null, S:null, E:'KS', W:'TS',
     text:"The city writes its authority in stone. The law courts have been here for three hundred years; the newest wall is a century old; the oldest inscription above the gate has been re-carved twice because the stone wore before the law did.\n\nSaul of Tarsis has a desk in the lower court. On that desk: three warrants, two authorization letters, and a list of names. The names are of people who have been meeting in houses and saying things the court considers seditious. The warrant language is precise: 'Bring them.' Not 'question.' Not 'invite.' Bring.\n\nHe has done this before. The warrants are a bureaucratic instrument. He treats them with the seriousness appropriate to bureaucratic instruments — which is to say, complete and impersonal seriousness. He does not hate the people on the list. He has decided that the list is correct. He has not examined that decision recently.\n\nThe road to Kesra leaves from the east gate. He has already requisitioned the escort. He leaves at first light.",
     npc:'The Court Registrar', battle:null, loot:'Three Herath Warrants · Order of Escort', sleep:true, sleepCost:5 },
+  // ── §LXI: TS — Tarsis (the silent years) ──
+  TS:{ num:87, code:'TS', name:'tarsis', label:'Tarsis — The Tentmaker\'s Quarter', act:4, N:null, S:null, E:'HR', W:null,
+    text:"He is from here. The streets are familiar in the way that streets are familiar when you have not been to them since you were young and have become a different person in the interval. The house he grew up in is still standing. Someone else lives there. He does not knock.\n\nHe works. He has a trade — tentmaking, the craft he learned before he learned the law. It is meticulous work and the city has no particular opinion about tentmakers one way or the other, which is exactly the quality he requires of a city right now.\n\nThe years in Tarsis are in no document he wrote. They are a gap in the record. The things that happened in the gap happened to a person who was both Saul and Paul and neither, settling into what he had become. The record resumes when Barnach arrives at the gate.",
+    npc:'Barnach', battle:null, loot:'Tentmaking Tools', sleep:true, sleepCost:3 },
   KS:{ num:85, code:'KS', name:'kesra', label:'Kesra — Lower City', act:4, N:null, S:'DR', E:null, W:'HR',
     text:"The escort has left him at the gate of the lower city. They are not required to wait — the warrant authority is his, not theirs, and he has not invoked it since the road. They leave with the courtesy appropriate to leaving a superior officer who has become someone else's problem.\n\nHe does not know anyone in Kesra who is not on the list. The list is in his coat. He does not take it out.\n\nThree days. He is in a house on the lower road. The innkeeper brings food at noon and does not ask questions about his eyes. Someone else's servant — he does not know whose — has been bringing water in the morning. He has not asked for it. He has not told anyone he cannot see.\n\nOn the third morning, someone knocks.",
     npc:'Anath', battle:null, loot:null, sleep:true, sleepCost:3 },
@@ -7734,8 +7738,8 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   YL:{r:6,c:5},   YC:{r:7,c:5},  YD:{r:6,c:4},
   /* DeFi Land — north of Birka Slums */
   DF:{r:3,c:16},  HM:{r:3,c:17},  GL:{r:3,c:15},  S7:{r:3,c:18},
-  /* §LIX–§LX — The Road to Kesra cluster */
-  HR:{r:17,c:5},  KS:{r:17,c:8},  DR:{r:19,c:8},
+  /* §LIX–§LXI — The Road to Kesra cluster */
+  HR:{r:17,c:5},  KS:{r:17,c:8},  DR:{r:19,c:8},  TS:{r:17,c:2},
 };
 
 /* ── Layer 9-A: Circuit Corridor Data Structures ── */
@@ -8642,6 +8646,21 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     completeFn:() => !!S_story.anathSightRestored,
     xpAward:300, waypointNode:'KS', reward:0,
     disposition:'"I was afraid of you for three years. I was afraid of you when I knocked on that door. I am choosing not to let that matter." — Anath' },
+  // ── §LXI: Herath return + Tarsis ──
+  quest_hellenists_herath: { id:'quest_hellenists_herath', type:'side', title:'Fifteen Days',
+    desc:"He stays fifteen days. He speaks in the assembly halls. He argues with people who disagree with him — he is very good at arguing, and the conversion did not change this about him, which is a point of some reflection. On the fifteenth day, the Hellenists gather near the gate. Barnach says: go.",
+    hint:'Stay in Herath. Wait for Barnach\'s word — fifteen days.',
+    activateNode:'HR', activateCond:() => !!S_story.barnachVouchedHR,
+    completeFn:() => !!S_story.hellenistsThreaten,
+    xpAward:150, waypointNode:'HR', reward:0,
+    disposition:'"Fifteen days is how long Herath was prepared to hold this tension. It has held. Now it is releasing." — Barnach' },
+  quest_barnach_finds: { id:'quest_barnach_finds', type:'side', title:'A Year Looking',
+    desc:"Barnach has been looking for a year. He found him in the tentmaking quarter in the afternoon. He said: it\'s time. There was no skill check. No argument. Just: it\'s time. That was sufficient.",
+    hint:'Speak to Barnach at Tarsis.',
+    activateNode:'TS', activateCond:() => !!S_story.hellenistsThreaten,
+    completeFn:() => !!S_story.barnachFoundPaul,
+    xpAward:100, waypointNode:'TS', reward:0,
+    disposition:'"I have been looking for you for a year. It\'s time." — Barnach' },
   // ── §LX: Basket escape ──
   quest_basket_kesra: { id:'quest_basket_kesra', type:'skill_check', title:'Over the Wall',
     desc:"The magistrate of Kesra has learned that Saul is in the lower city — now as a liability rather than an asset. A detention order has been issued. The warrant authority has turned against the warrant-carrier. The gate is watched. The wall is not.",
@@ -8954,13 +8973,22 @@ const NPC_DIALOGUE = { // → doc: story.md §FL7
     ? ((() => { S_story.solmFound = true; return '"Back room." He lifts the hinged counter without ceremony. "Three months. She reorganized the shelf twice." He says it the way he says everything — as a fact, without opinion about it.\n\nAnalyst Solm is at the back desk with a notebook open to a fresh page. She looks up once. Her pen does not move.\n\n"The transmission lasted three seconds and eleven tenths. I had stopped writing because I was listening so carefully I forgot to log. When it cut — I understood what had happened before I understood what I had heard."\n\nShe sets the pen down.\n\n"I did not return to Station 7. I came here instead. Classified knowledge you can no longer safely carry — Magistra Muffat is the only institutional function that makes sense for that." A pause. "You were down there." Not a question. She looks at the entry she wrote this morning. "Was it —"\n\nShe stops.\n\n"Confirmed," she says quietly. "That\'s sufficient." She writes it once more, cleanly, and closes the volume.'; })())
     : '"No sign on the door by design. You found it, which means you were supposed to. I\'ve been holding the Real Map for eleven years waiting for someone who needed it."' },
   MS: { name:'Ship Captain',                    quote:'"Weather\'s holding. Sleep while you can — we make the deep crossing at dawn and I won\'t slow the ship if something comes over the rail."' },
-  // §LIX — The Road to Kesra NPCs
-  HR: { name:'The Court Registrar', quote:'"Warrants are countersigned. Three copies: one for you, one for the escort commander, one for the Kesra magistrate. The prisoners are to be returned to Herath for processing. Do not process them in Kesra — the Kesra magistrate has standing to dismiss, and our magistrate does not."' },
+  // §LIX–§LXI — The Road to Kesra NPCs
+  HR: { name:'Barnach', quoteFn:() => S_story.hellenistsThreaten // §LXI
+    ? '"They are at the gate. They are at the assembly hall. They are in the square." He does not waste time on what they want — you both know. "Fifteen days is how long this city was prepared to hold this tension. It has held." He looks toward the west gate. "Tarsis. Go to Tarsis. You are from Tarsis. They will not follow you to Tarsis."'
+    : S_story.barnachVouchedHR // §LXI — Barnach has vouched; counting days
+    ? '"The city is complicated about this." He means it as information, not complaint. "Some people are afraid. Some people are glad. Both groups have grounds. You have been arguing in the assembly hall." He does not say this is a problem. He says it the way he says things that are true and will continue to be true for some number of days that he has a specific number for and is not sharing yet.'
+    : S_story.saulConverted // §LXI — return: first Barnach meeting
+    ? ((() => { S_story.barnachVouchedHR = true; return '"He was there. I was not." He says it simply, the way someone says the one true thing they have that applies to the situation. "I am vouching for what he told me, which is everything he has."\n\nThe people in the room are afraid. Some of them have reasonable grounds for being afraid of him and some have reasonable grounds for being afraid of what he represents and some are afraid in the way people are afraid when two things they held separately have become the same thing.\n\nBarnach looks at them all and says: he was there.\n\nIt is enough. For now.'; })())
+    : '"Warrants are countersigned. Three copies: one for you, one for the escort commander, one for the Kesra magistrate. The prisoners are to be returned to Herath for processing. Do not process them in Kesra — the Kesra magistrate has standing to dismiss, and our magistrate does not."' },
   KS: { name:'Anath', quoteFn:() => S_story.anathSightRestored // §LIX
     ? '"I was afraid of you for three years. I was afraid of you when I knocked on that door. I am choosing not to let that matter." He picks up the bowl. He does not look at you directly — not from distaste, from the particular composure of a man who has done something he did not know he could do and is still working out what it means. The road is visible from the window. It has always been there.'
     : S_story.blindDaysKS >= 3 // Day 3 — Anath arrives
     ? ((() => { S_story.anathSightRestored = true; return '"I was told you were here. I was told to come." He sets the bowl down on the table beside the window. His hands are steady. His voice is not quite steady. "I have heard what you did to the people in Herath. I have heard what you were coming here to do."\n\nHe does not say: I was afraid of you. He does not need to.\n\n"I am here anyway."\n\nHe places his hands. The light returns.'; })())
     : '"The room is quiet. Three days. The innkeeper brings food at noon and does not ask questions. Someone else\'s servant brings water in the morning. The door is closed. Day ' + (S_story.blindDaysKS || 0) + ' of three.\n\nYou wait."' },
+  TS: { name:'Barnach', quoteFn:() => S_story.barnachFoundPaul // §LXI
+    ? '"I have been looking for you for a year. Anthos needs you. I need you." He does not say: come back. He is standing in the doorway of a city you grew up in and he is not telling you what to do. He is telling you that you are needed, which is different from telling you what to do, which is one of the things that is different about who he is now. "I am not going to tell you it\'s safe — you know it isn\'t. I am going to tell you it\'s time."'
+    : ((() => { S_story.barnachFoundPaul = true; return 'He comes through the gate in the early afternoon, when the tentmaking quarter is quiet and the light is flat. He has the look of someone who has been traveling a long time and not sleeping particularly well and has kept going anyway.\n\n"I have been looking for you for a year."\n\nThe tent canvas is on the frame behind you. The tools are on the bench. The city has had no particular opinion about this work and you have required none.\n\n"Anthos needs you. I need you." He looks at the canvas. He looks at you. "It\'s time."'; })()) },
   HL: { name:'Elder Fionn',                     quote:'"Aye, quick lad. Brown satchel. Went south. Asked the same thing about the loch. Good boy. You\'ll want to sort it — the village can\'t fish while it\'s down there."' },
   FO: { name:'Brother Aldric',                  quote:'"You\'ll want to go into that grove. I\'d advise against it. You\'ll go anyway. Come back when you\'re done bleeding."' },
   HS: { name:'The Crones — Whisper, Glut & Wane', quote:'"You smell of the map. Good. We have been waiting. Leave the stone. Take the web and the key. Go south before the tide turns — or don\'t, and meet something worse."' },
@@ -9781,8 +9809,9 @@ const _S_DEFAULTS = () => ({
   scriptorium_approach_complete: false, mimicColonyEntered: false,
   noFishingSignRead: false, fishingRodCouponRedeemed: false,
   yugurtTourBeat: {}, yugurtTourTitle: null,
-  // §LIX–§LX: The Road to Kesra
+  // §LIX–§LXI: The Road to Kesra
   saulConverted: false, blindDaysKS: 0, anathSightRestored: false, escapedKesra: false,
+  barnachVouchedHR: false, hrHellenistDays: 0, hellenistsThreaten: false, barnachFoundPaul: false,
 });
 
 /* ── Layer 48: Luck — Seventh Stat ── */
@@ -14461,6 +14490,25 @@ function storyMove(dir) {
       return;
     }
   }
+  // §LXI: HR→TS gate — fifteen days before Barnach releases you
+  if (S_story.currentCode === 'HR' && dest === 'TS' && S_story.saulConverted) {
+    if (!S_story.barnachVouchedHR) {
+      storyMsg('You have not yet been vouched for. Find Barnach in Herath first.');
+      return;
+    }
+    if (!S_story.hellenistsThreaten) {
+      S_story.hrHellenistDays = (S_story.hrHellenistDays || 0) + 1;
+      const _hrDay = S_story.hrHellenistDays;
+      if (_hrDay >= 15) {
+        S_story.hellenistsThreaten = true;
+        storyMsg('The Hellenists are at the gate. At the assembly hall. In the square. Fifteen days is how long this city was prepared to hold the tension.\n\nBarnach says: go. The road west leads to Tarsis.');
+        storyRender(NODE_MAP[S_story.currentCode]);
+      } else {
+        storyMsg('Day ' + _hrDay + ' of fifteen. You speak in the assembly halls. You argue. The city watches. Barnach watches the city.');
+      }
+      return;
+    }
+  }
   storyCheckMissedSleep();
   // ── L9-G: Corridor travel for non-adjacent moves ──
   const fromCoord = NODE_COORDS[S_story.currentCode];
@@ -14676,6 +14724,12 @@ function storyCheckQuests(node) {
       }
       if (id === 'quest_basket_kesra') { // §LX
         msgs.push('🧺 +150 XP. Down. The road. The dark. The man who left does not look like the man who arrived.');
+      }
+      if (id === 'quest_hellenists_herath') { // §LXI
+        msgs.push('⚡ +150 XP. Fifteen days. The tension broke. Barnach said: go.');
+      }
+      if (id === 'quest_barnach_finds') { // §LXI
+        msgs.push('🛤️ +100 XP. Barnach found him. A year looking. The arc resumes — Anthos is west.');
       }
       if (id === 'quest_antecedent_01') { // §LV
         msgs.push('🏛️ The question is closed. The archive still has an archivist.');
