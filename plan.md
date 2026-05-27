@@ -99,7 +99,7 @@ See `story.md §GRIEF AND CORRUPTION` for the vignette prose.
 
 ## §0 — Implementation Readiness Dashboard
 
-> **Status as of Layer 90 (2026-05-27).** §LII implemented: quest_muffat_02 "The Distribution Pattern" (activates at DK post-muffatBerthReached, completes at HM on muffatManifestRead) + Shipping Manifest (Intercepted) readable + Bertha No-Bank two-state quoteFn + Muffat three-state quoteFn (Station 7 / 14.225 connection). HTML: ~20,307 lines. Lab reports: 43. Add new layers below as §LIII+.
+> **Status as of Layer 91 (2026-05-27).** §LIII implemented: quest_muffat_03 "The Dark Station" (activates at DK post-muffatManifestRead, completes at S7 on station7LogRead) + node S7 (Station 7, Dark) + GATE_LOCK HM→S7 (manifest required) + Station 7 Transmission Log readable (bearing 047°, log ends mid-entry) + Muffat four-state quoteFn. Void arc / Tilbury arc now connected via bearing 047° → Neon Undercity. HTML: ~20,330 lines. Lab reports: 43. Add new layers below as §LIV+.
 
 ### Lab Report Index (Layers 48–79)
 
@@ -5461,6 +5461,47 @@ This opens `quest_muffat_02` (*The Distribution Pattern*) as a future layer — 
 | Gold | 300gp |
 | State flag | `muffatManifestRead` |
 | Disposition | *"Volume forty-one is when the absence changed."* — Bertha No-Bank |
+
+---
+
+## §LIII — Station 7 (Dark) (✅ Implemented — Layer 91)
+
+**Status:** ✅ Implemented 2026-05-27
+
+### §LIII-A. Node S7
+
+New node east of HM (r:3, c:18). GATE_LOCK: requires `Shipping Manifest (Intercepted)`. Equipment still running on emergency power. Receiver array still oriented toward subsurface. Transmission log on the desk, pen in the output tray, last entry mid-sentence.
+
+The node text does not explain what happened. It documents what remains: indicators blinking, three months of unread output, a half-written sentence, a pen set with care by a person who expected to return.
+
+### §LIII-B. Station 7 Transmission Log (Readable)
+
+Four signal events on 14.225, subsurface bearing 047°:
+- Day 3: 0.4s, non-mechanical, no repeat
+- Day 9: 1.1s, non-mechanical, partial structure detected
+- Day 14: 3.1s — *"Signal contains—"* [log ends]
+
+Final note appended: *"Bearing 047° from Station 7 points toward the Neon Undercity access corridor."* This connects the Tilbury/Muffat monitoring arc to the Void Archaeology arc — the Scholar Kings were listening for something under the city. Something started answering.
+
+### §LIII-C. Muffat: Four-State quoteFn
+
+| State | Trigger | Content |
+|---|---|---|
+| 1 | Default | *"Welcome to Act Two."* |
+| 2 | `muffatBerthReached` | Off-ledger crate pattern, two-year six-week schedule |
+| 3 | `muffatManifestRead` | Station 7 / 14.225 convergence, Scholar Kings decisions |
+| 4 | `station7LogRead` | Log ends mid-entry. Bearing 047°. Neon Undercity. The operator knew. We don't know where the operator is. |
+
+| Field | Value |
+|---|---|
+| Quest | `quest_muffat_03` — *The Dark Station* |
+| Activates | DK; requires `muffatManifestRead` |
+| Completes | On `station7LogRead` |
+| XP | 300 |
+| Gold | 350gp |
+| State flag | `station7LogRead` |
+| Gate lock | HM → S7, item: `Shipping Manifest (Intercepted)` |
+| Disposition | *"We do not know where the station operator is. We know the bearing."* — Magistra Elara Muffat |
 
 ---
 
