@@ -99,7 +99,7 @@ See `story.md §GRIEF AND CORRUPTION` for the vignette prose.
 
 ## §0 — Implementation Readiness Dashboard
 
-> **Status as of Layer 88 (2026-05-27).** §L implemented: Fisherman arc closed (three-state quoteFn on shaleDropFound) + Weimar Y. Gurt connection live (quest_wm_05, wmGurtFileRead, fifth archive document appears when Y. Gurt Field Survey in inventory). Yugurt arc fully resolved: rod → catches → zones → tournament → Leviathan Class → Horned Shark → night fishing → Lantern Eel → Shale Drop → Gurt file → archive. HTML: ~20,290 lines. Lab reports: 43. Add new layers below as §LI+.
+> **Status as of Layer 89 (2026-05-27).** §LI implemented: Isolde Voss one-time lake acknowledgment (isoldeGurtAckDelivered) + Muffat quest_muffat_01 "The Third Berth" (skill_check DEX DC 13, activates at DK on Trade Seal) + Muffat two-state quoteFn (post-muffatBerthReached reveals three-year crate pattern). Tilbury arc opened. HTML: ~20,295 lines. Lab reports: 43. Add new layers below as §LII+.
 
 ### Lab Report Index (Layers 48–79)
 
@@ -5393,6 +5393,35 @@ The third state resolves his arc: he uses "First Circle" without explanation. He
 **Fifth archive document** appears in `_storyWmArchiveModal()` only when player carries the Y. Gurt Field Survey. Content: personnel file showing three unanswered follow-up correspondences, ongoing field absence classification, and a handwritten note from Isolde Voss: *"He is still there. I checked the lake last year. He is still there and the lake is fine. — I.V."*
 
 **The full Yugurt arc resolves as:** rod → catches → zone unlocks → tournament (6 fights) → Leviathan Class (rank 15+, Yugurt's Favour) → Horned Shark → night fishing → Lantern Eel (Eel Skin Pouch) → Shale Drop (cave_lurker, Y. Gurt Field Survey) → Fisherman's third dialogue → Weimar archive (The Open File). The lake was always a field station. He never stopped working. The Scholar Kings never closed the file.
+
+---
+
+## §LI — Isolde Acknowledgment + Muffat: The Third Berth (✅ Implemented — Layer 89)
+
+**Status:** ✅ Implemented 2026-05-27
+
+### §LI-A. Isolde Voss: The Visit
+
+One-time delivery in `_getNPCDialogue('isolde_voss')` when `wmGurtFileRead && !isoldeGurtAckDelivered`. Quote: *"The shore smells like cold stone and fish oil in the morning. He had a fire going when I arrived. He looked at me the way he looks at the water — checking whether something had changed. I filed the note when I got back. That is the only part that was protocol."*
+
+She doesn't explain why she went. The shore smell, the fire, the way he looked at her — all detail. No commentary. She filed the note. That's the procedural frame around the personal thing she did.
+
+### §LI-B. Muffat: The Third Berth (quest_muffat_01)
+
+| Field | Value |
+|---|---|
+| Quest | `quest_muffat_01` — *The Third Berth* |
+| Type | `skill_check` |
+| Activates | DK; requires `_hasItem('Trade Seal')` |
+| Check | DEX · Stealth · DC 13 · retryable (1 day gate) |
+| XP | 150 |
+| Gold | 150gp |
+| Pass flag | `muffatBerthReached` |
+| Disposition | *"There are three things on that berth that should not be there. The crate is one of them."* — Magistra Elara Muffat |
+
+**Muffat's `quoteFn`** now has two states: before the berth, she gives the Act One/Act Two line. After, she reveals she's been collecting off-ledger Scholar Kings crates for two years. Three already on her shelf. Every six weeks. Someone decided these crates do not exist. *"The Scholar Kings do not make clerical errors. They make decisions."*
+
+This opens `quest_muffat_02` (*The Distribution Pattern*) as a future layer — what's in the crates, who's been shipping them, and whether Muffat's collection is known to the Scholar Kings.
 
 ---
 

@@ -8548,6 +8548,17 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     activateNode:null, completeItems:[], completeFn:() => !!(S_story.tlMissingShipSolved),
     waypointNode:'SF', reward:300,
     disposition:'"Ori said the thing that boarded them didn\'t have a name. Things that don\'t have names are the Void\'s specialty." — Harbor Master Rennau' },
+  // ── §LI: Muffat — The Third Berth ──
+  quest_muffat_01: { id:'quest_muffat_01', type:'skill_check', title:'The Third Berth', // §LI
+    hint:'Reach the third berth without the harbor watch stopping you (DEX · Stealth DC 13).',
+    activateNode:'DK', activateCond:() => _hasItem('Trade Seal'),
+    checkAbility:'dex', checkLabel:'Stealth', checkDC:13, retryable:true, retryGateDays:1,
+    xpAward:150, goldAward:150,
+    vignetteText:"The third berth has been wrong since Tuesday. The manifest says ballast. The crane operators won\'t take that side. Muffat has been watching the Scholar Kings clearance stamp on the hold for three days — it prevents harbor search and she knows it. You have the Trade Seal, which gets you onto the dock. The harbor watch works the main berths. The third is close enough to the crane rigging that the shadow covers the approach. Close enough.",
+    passText:"The crate is there. Scholar Kings Distribution stamp, no matching manifest number. You bring it to Muffat. She sets it on the counter and looks at it the way she looks at manifests: correctly, and with no illusions about what that means.",
+    failText:'The watch catches the movement before you clear the shadow line. You pull back. The crate stays where it is. The watch makes a note in the margin of the wrong ledger.',
+    completeItems:[], checkPassFlag:'muffatBerthReached',
+    disposition:'"There are three things on that berth that should not be there. The crate is one of them." — Magistra Elara Muffat' },
   // ── Layer 55: Visby Underground quests ──
   quest_vs_01: { id:'quest_vs_01', type:'side', title:'Solvak: The Collector',
     desc:"Debt Agent Solvak has been outside Visby six weeks with a 2,000gp debt and no leverage. You might have some.",
@@ -8818,7 +8829,9 @@ const NPC_DIALOGUE = { // → doc: story.md §FL7
   TV: { name:'Bard Tomas Couperin',                quote:'"Song\'s old. Older than the city, older than the Conclave. The melody\'s simple but the words are a lock waiting for a key. Yours for a drink and a silver."' },
   BA: { name:'City Fence',                      quote:'"No names, no receipts. If you have regrets, that\'s yours to carry. Show coin and we begin."' },
   CY: { name:'Commander Seraphine Bruhns',       quote:'"That\'s a Warrant suppressor — jams coordinated tactical signals in a forty-foot radius. Whoever built this undercity wanted control over every signal in it. Keep it. You\'ll need it."' },
-  DK: { name:'Magistra Elara Muffat',             quote:'"The courier worked for me. Whatever he told you before he died — that was Act One. Welcome to Act Two."' },
+  DK: { name:'Magistra Elara Muffat', quoteFn:() => S_story.muffatBerthReached // §LI
+    ? '"The crate has a distribution stamp and no manifest number. That means it was shipped outside the standard record — either off-ledger, or the ledger was corrected afterward. The Scholar Kings do not make clerical errors. They make decisions. Someone decided this crate does not exist." She sets it on the shelf behind her. "I have three more like it. They have been arriving every six weeks for two years."'
+    : '"The courier worked for me. Whatever he told you before he died — that was Act One. Welcome to Act Two."' },
   MQ: { name:'Vendor Mira',                     quote:'"Lords use it for party tricks. Stagehands use it for scene changes. Smart people use it for other things." A knowing look.' },
   SF: { name:'Proprietor Dusk',                 quote:'"No sign on the door by design. You found it, which means you were supposed to. I\'ve been holding the Real Map for eleven years waiting for someone who needed it."' },
   MS: { name:'Ship Captain',                    quote:'"Weather\'s holding. Sleep while you can — we make the deep crossing at dawn and I won\'t slow the ship if something comes over the rail."' },
@@ -9556,7 +9569,7 @@ const _S_DEFAULTS = () => ({
   waypoint: null, customQuestTerrain: null,
   ebNegotiatedPayments: {}, ebReturnDone: {},
   journalEntriesRead: [], ebReturnsCompleted: {},
-  npcFavorability: {}, roughWhiskeyUsed: false, roughWhiskeyActive: false, yaelEscortUsed: false, pitTrainingWins: 0, slStalksWon: 0,
+  npcFavorability: {}, roughWhiskeyUsed: false, roughWhiskeyActive: false, yaelEscortUsed: false, pitTrainingWins: 0, slStalksWon: 0, muffatBerthReached: false, // §LI
   npcVisitCounts: {}, couperiSongReceived: false, bruhnsDepthsReported: false, frobergerLastEntryRead: false,
   pitPerks: [], frobergerNoteNode: null, froberger_last_note_found: false, froberger_last_note_read: false, ngPlusRun: 0,
   huntMode: false,
@@ -9598,7 +9611,7 @@ const _S_DEFAULTS = () => ({
   wmLowerArchiveUnlocked: false,
   wmDoc1Read: false, wmDoc2Read: false, wmDoc3Read: false, wmDoc3Unredacted: false,
   wmArchiveComplete: false, wmSessionsDays: [], wmBenediktCircleComplete: false,
-  wmFirstResearcherKnown: false, wmGurtFileRead: false, // §L
+  wmFirstResearcherKnown: false, wmGurtFileRead: false, isoldeGurtAckDelivered: false, // §L–§LI
   // Layer 52: Void Archaeology
   vaCI: false, vaSL: false, vaDF: false, vaWM: false, vaMT: false,
   vaAllMarksFound: false, vaLogFound: false, vaLastWardVisited: false, vaArchitectureKnown: false,
@@ -9778,6 +9791,11 @@ function _getNPCDialogue(npcKey) {
   if (npcKey === 'crov' && fav >= 2 && S_story.pitChampionWon && !S_story.crovChampionLineDelivered) {
     S_story.crovChampionLineDelivered = true;
     return { quote: '"Ogundimu asked after you, the last time she came through. I told her you\'d moved on. She said that was the right answer."', meta: d.meta, fav };
+  }
+  // §LI: Isolde Gurt acknowledgment — one-time delivery after player reads the Y. Gurt archive file
+  if (npcKey === 'isolde_voss' && S_story.wmGurtFileRead && !S_story.isoldeGurtAckDelivered) {
+    S_story.isoldeGurtAckDelivered = true;
+    return { quote: '"The shore smells like cold stone and fish oil in the morning. He had a fire going when I arrived. He looked at me the way he looks at the water — checking whether something had changed. I filed the note when I got back. That is the only part that was protocol."', meta: d.meta, fav };
   }
   // S29: Auros theory — handled via CY node render (Layer 67b); s29LineDelivered set there
   // Layer 59: void pressure line — Dear Friends at pressure ≥ 6
