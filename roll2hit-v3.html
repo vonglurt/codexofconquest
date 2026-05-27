@@ -1043,8 +1043,23 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
   transition: max-height 0.26s ease, padding 0.26s ease;
 }
 .npc-talk-accordion.open { max-height: 320px; padding: 10px 14px 13px; }
+.hunt-accordion.open    { max-height: 620px; padding: 10px 14px 13px; }
+.battle-accordion.open  { max-height: 460px; padding: 10px 14px 13px; }
 .npc-talk-quote { font-size: 14px; line-height: 1.75; font-style: italic; color: var(--text); }
 .npc-talk-name  { font-size: 11px; color: var(--dim); margin-top: 7px; text-align: right; }
+.hunt-section-hd { font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin:6px 0 2px; }
+.hunt-target-row { display:flex;align-items:center;gap:4px;padding:4px 6px;margin:1px 0;border-radius:4px;cursor:pointer;border:1px solid transparent;font-size:12px; }
+.hunt-target-row:hover { border-color:var(--gold);background:rgba(184,124,40,0.07); }
+.hunt-target-name { flex:1; }
+.hunt-target-stats { font-size:10px;color:var(--dim); }
+.battle-threat-row { font-size:12px;color:var(--dim);padding:4px 0 8px;border-bottom:1px solid var(--border);margin-bottom:8px; }
+.battle-setup-row { display:flex;gap:8px;margin-bottom:6px; }
+.battle-cond-subrow { margin-bottom:6px;border-top:1px solid var(--border);padding-top:6px;display:none; }
+.battle-stealth-result { font-size:11px;min-height:14px;margin-bottom:4px; }
+.battle-start-btn { width:100%;margin-top:4px;font-size:13px;font-weight:700; }
+.battle-retreat-link { display:block;font-size:11px;color:var(--dim);text-align:center;margin-top:7px;cursor:pointer; }
+.battle-retreat-link:hover { color:var(--text); }
+.story-card-btn.btn-active { box-shadow:inset 0 0 0 2px currentColor;opacity:1; }
 .story-card-done { color: var(--muted); text-decoration: line-through; opacity: 0.7; }
 
 /* HP bar */
@@ -3058,8 +3073,15 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 #btn-npc-close { background: #562717; border: 2px solid #E76219; color: #FDDCA9; border-radius: 8px; font-weight: 700; text-transform: uppercase; }
 #btn-npc-close:hover { background: #E76219; color: #120600; border-color: #FEA712; }
 .npc-talk-accordion { background: #1c0c04; border-color: #5c2c10; }
+.hunt-accordion     { background: #1c0c04; border-color: #5c2c10; }
+.battle-accordion   { background: #1c0404; border-color: #5c0a0a; }
 .npc-talk-quote { color: #FDDCA9; }
 .npc-talk-name  { color: #FEA712; }
+.hunt-section-hd { color: #7a5010; }
+.hunt-target-row:hover { background: rgba(184,124,40,0.1); border-color: #E76219 !important; }
+.battle-threat-row { color: #b07040; border-color: #5c2c10; }
+.battle-retreat-link { color: #7a5040; }
+.battle-retreat-link:hover { color: #FDDCA9; }
 
 /* ── Yugurt Lake Fishing Modal ── */
 #story-fishing-modal {
@@ -17482,12 +17504,102 @@ function storyRender(node, prefix) {
   if (hg || hasFish || questHuntCards.length) {
     const { sec, body } = _mkSection(null, '🎯', 'Stalk');
     if (hg) {
-      body.appendChild(_mkCard({
+      const _TIER_DC    = { trivial:8, easy:10, medium:12, hard:14, deadly:16 };
+      const _TIER_LBL   = { trivial:'TRIVIAL', easy:'EASY', medium:'MEDIUM', hard:'HARD', deadly:'DEADLY' };
+      const _TIER_CLS   = { trivial:'threat-trivial', easy:'threat-easy', medium:'threat-medium', hard:'threat-hard', deadly:'threat-deadly' };
+      const _HUNT_FAIL  = [
+        'You wait at the ridge line for hours. The quarry never comes.',
+        'A branch snaps. Whatever was there is already gone.',
+        'You find tracks — old ones. The trail is cold.',
+        'You circle the perimeter twice. The terrain offers nothing today.',
+        'The wind shifts and betrays your position.'
+      ];
+      let _huntAccordion = null;
+      const _huntCard = _mkCard({
         lbl: 'HUNT', main: hg.displayName,
         hint: '⏱ 2 hours · setup + encounter',
         tag: '2h', btn: 'Hunt', btnClass: 'btn-hunt',
-        btnClick: () => storyStalk(node.code)
-      }));
+        btnClick: () => {
+          const _huntBtn = _huntCard.querySelector('.story-card-btn');
+          if (_huntAccordion) {
+            _huntAccordion.classList.remove('open');
+            const _c = _huntAccordion; setTimeout(() => _c.remove(), 270);
+            _huntAccordion = null;
+            if (_huntBtn) _huntBtn.textContent = 'Hunt';
+            return;
+          }
+          const pool = (WORLD_DB[node.name] || WORLD_DB['midlands']).monsters;
+          const questKeys = _getQuestTargetKeys();
+          const acc = document.createElement('div');
+          acc.className = 'npc-talk-accordion hunt-accordion';
+
+          // Rush In
+          const rushBtn = document.createElement('button');
+          rushBtn.className = 'story-card-btn btn-hunt';
+          rushBtn.style.cssText = 'width:100%;margin-bottom:8px;font-size:11px;';
+          rushBtn.textContent = '⚡ Rush In — random encounter, 1h (no survival check)';
+          rushBtn.addEventListener('click', () => storyQuickWait(node.code));
+          acc.appendChild(rushBtn);
+
+          const mkMonsterRow = (m, isQuest) => {
+            const dc = _TIER_DC[m.tier] || 12;
+            const r = document.createElement('div');
+            r.className = 'hunt-target-row';
+            r.innerHTML =
+              (isQuest ? '<span style="color:var(--gold)">◈ </span>' : '')
+              + '<span class="threat-tier ' + (_TIER_CLS[m.tier]||'') + '" style="font-size:9px;padding:1px 3px;margin-right:4px;">' + (_TIER_LBL[m.tier]||'?') + '</span>'
+              + '<span class="hunt-target-name">' + m.name + '</span>'
+              + '<span class="hunt-target-stats">AC ' + m.ac + ' · HP ' + m.hp + ' · DC ' + dc + '</span>';
+            r.addEventListener('click', () => {
+              acc.classList.remove('open');
+              const _c = acc; setTimeout(() => _c.remove(), 270);
+              _huntAccordion = null;
+              if (_huntBtn) _huntBtn.textContent = 'Hunt';
+              const wis = (S_story.abilityScores || {}).wis || 10;
+              const wisMod = Math.floor((wis - 10) / 2);
+              const roll = Math.ceil(Math.random() * 20);
+              const total = roll + wisMod;
+              const pass = total >= dc;
+              const modStr = (wisMod >= 0 ? '+' : '') + wisMod;
+              const rollLine = 'd20 (' + roll + ') + WIS (' + modStr + ') = ' + total + ' vs DC ' + dc;
+              if (pass) {
+                S_story.surpriseAdvantage = true;
+                storyMsg('🎯 Targeted Hunt — ' + m.name + '\n' + rollLine + ' → PASS\n\nYou move in quietly. ADV on first attack.');
+                S_story.pendingBattle = { nodeCode: node.code, name: m.name, label: node.label, stalk: true };
+                loadWorldMonster(m);
+                storyExit(); _storyRollInit(); _showBattleOverlay();
+              } else {
+                const flavor = _HUNT_FAIL[Math.floor(Math.random() * _HUNT_FAIL.length)];
+                const fallback = _weightedMonsterPick(node.name);
+                if (!fallback) { storyMsg('🎯 Hunt — ' + rollLine + ' → FAIL\n\n' + flavor + '\n\nNothing stirs.'); return; }
+                S_story.surpriseAdvantage = false;
+                storyMsg('🎯 Hunt — ' + rollLine + ' → FAIL\n\n' + flavor + '\n\nA ' + fallback.name + ' crosses your path instead.');
+                S_story.pendingBattle = { nodeCode: node.code, name: fallback.name, label: node.label, stalk: true };
+                loadWorldMonster(fallback);
+                storyExit(); _storyRollInit(); _showBattleOverlay();
+              }
+            });
+            return r;
+          };
+
+          const questPool = pool.filter(m => questKeys.has(m.key));
+          if (questPool.length) {
+            const hd = document.createElement('div'); hd.className = 'hunt-section-hd'; hd.textContent = 'Quest Targets Here';
+            acc.appendChild(hd);
+            questPool.forEach(m => acc.appendChild(mkMonsterRow(m, true)));
+          }
+          const hd2 = document.createElement('div'); hd2.className = 'hunt-section-hd';
+          hd2.textContent = questPool.length ? 'All Monsters' : 'Monsters Here';
+          acc.appendChild(hd2);
+          pool.forEach(m => acc.appendChild(mkMonsterRow(m, questKeys.has(m.key))));
+
+          _huntAccordion = acc;
+          _huntCard.insertAdjacentElement('afterend', acc);
+          requestAnimationFrame(() => _huntAccordion && _huntAccordion.classList.add('open'));
+          if (_huntBtn) _huntBtn.textContent = 'Close';
+        }
+      });
+      body.appendChild(_huntCard);
     }
     if (hasFish) {
       body.appendChild(_mkCard({
@@ -17518,12 +17630,160 @@ function storyRender(node, prefix) {
       body.appendChild(_mkCard({ lbl: 'BATTLE', main: node.battle.label, tag: '✓ Defeated', tagClass: 'transferred', done: true }));
     } else {
       const lbl = isFinal ? '⚔ THE FINAL BATTLE — Commander Bruhns' : node.battle.label;
-      body.appendChild(_mkCard({
+      let _battleAccordion = null;
+      const _battleCard = _mkCard({
         lbl: 'BATTLE', main: lbl,
         hint: '⏱ 1 hour · combat',
         tag: '1h', btn: isFinal ? '🔥 FINAL FIGHT' : 'Fight', btnClass: 'btn-fight',
-        btnClick: () => isFinal ? storyPreFinalBattle() : storyPreBattle(node)
-      }));
+        btnClick: () => {
+          if (isFinal) { storyPreFinalBattle(); return; }
+          const _fightBtn = _battleCard.querySelector('.story-card-btn');
+          if (_battleAccordion) {
+            _battleAccordion.classList.remove('open');
+            const _c = _battleAccordion; setTimeout(() => _c.remove(), 270);
+            _battleAccordion = null;
+            if (_fightBtn) _fightBtn.textContent = 'Fight';
+            return;
+          }
+          const acc = document.createElement('div');
+          acc.className = 'npc-talk-accordion battle-accordion';
+
+          // Threat summary row
+          const mp = MONSTER_POOL[node.battle.key] || EPIC_BOSS_POOL[node.battle.key];
+          if (mp) {
+            const t = (mp.tier||'medium').toLowerCase();
+            const tLbl = {trivial:'TRIVIAL',easy:'EASY',medium:'MEDIUM',hard:'HARD',deadly:'DEADLY ⚠'}[t]||t.toUpperCase();
+            const threatRow = document.createElement('div');
+            threatRow.className = 'battle-threat-row';
+            threatRow.innerHTML = '<span class="threat-tier threat-' + t + '">' + tLbl + '</span>'
+              + ' AC ' + mp.ac + ' · HP ~' + mp.hp + ' · ATK +' + mp.atk;
+            acc.appendChild(threatRow);
+          }
+
+          // Condition + Stealth toggles
+          let _stealthOn = false;
+          let _condSelected = new Set();
+          const avail = CONDITION_ITEMS.map(ci => ({...ci}));
+
+          const setupRow = document.createElement('div');
+          setupRow.className = 'battle-setup-row';
+
+          const condBtn = document.createElement('button');
+          condBtn.className = 'story-card-btn btn-hunt';
+          condBtn.style.flex = '1';
+          condBtn.textContent = '💣 Condition';
+
+          const stealthBtn = document.createElement('button');
+          stealthBtn.className = 'story-card-btn btn-hunt';
+          stealthBtn.style.flex = '1';
+          stealthBtn.textContent = '🎭 Stealth';
+          stealthBtn.addEventListener('click', () => {
+            _stealthOn = !_stealthOn;
+            stealthBtn.classList.toggle('btn-active', _stealthOn);
+            stealthBtn.textContent = _stealthOn ? '🎭 Stealth ✓' : '🎭 Stealth';
+          });
+          setupRow.appendChild(condBtn);
+          setupRow.appendChild(stealthBtn);
+          acc.appendChild(setupRow);
+
+          // Condition picker sub-row
+          const condSubrow = document.createElement('div');
+          condSubrow.className = 'battle-cond-subrow';
+          const anyAfford = avail.some(ci => S_story.gold >= (CONDITION_GOLD[ci.match]||20));
+          if (!anyAfford) {
+            const hint = document.createElement('div');
+            hint.style.cssText = 'font-size:11px;color:var(--dim);padding:5px;border:1px dashed var(--border);border-radius:4px;text-align:center;';
+            hint.textContent = 'Conditions unlock as you earn gold. Cheapest: Feint Scroll at 1,000 gp.';
+            condSubrow.appendChild(hint);
+          } else {
+            avail.forEach((ci, i) => {
+              const cost = CONDITION_GOLD[ci.match]||20;
+              const canAfford = S_story.gold >= cost;
+              const row = document.createElement('div');
+              row.className = 'cond-item' + (!canAfford ? ' cant-afford' : '');
+              row.innerHTML =
+                '<span class="cond-check">☐</span>'
+                + '<div class="cond-body"><div class="cond-name">' + ci.match + '</div>'
+                + '<span class="cond-condition">' + ci.condition.toUpperCase() + '</span> '
+                + '<span class="cond-effect">' + ci.effect + '</span></div>'
+                + '<span class="cond-gold-tag' + (!canAfford ? ' cant-afford':'') + '">' + cost + 'gp</span>';
+              if (canAfford) {
+                row.addEventListener('click', () => {
+                  const sel = _condSelected.has(i);
+                  if (!sel) {
+                    const tot = [..._condSelected].reduce((s,j)=>s+(CONDITION_GOLD[avail[j].match]||20),0)+cost;
+                    if (S_story.gold < tot) return;
+                    _condSelected.add(i);
+                    row.querySelector('.cond-check').textContent = '☑';
+                    row.classList.add('selected');
+                  } else {
+                    _condSelected.delete(i);
+                    row.querySelector('.cond-check').textContent = '☐';
+                    row.classList.remove('selected');
+                  }
+                });
+              }
+              condSubrow.appendChild(row);
+            });
+          }
+          condBtn.addEventListener('click', () => {
+            const showing = condSubrow.style.display !== 'none';
+            condSubrow.style.display = showing ? 'none' : 'block';
+            condBtn.classList.toggle('btn-active', !showing);
+          });
+          acc.appendChild(condSubrow);
+
+          // Stealth result area
+          const stealthResult = document.createElement('div');
+          stealthResult.className = 'battle-stealth-result';
+          acc.appendChild(stealthResult);
+
+          // Start Battle button
+          const startBtn = document.createElement('button');
+          startBtn.className = 'story-card-btn btn-fight battle-start-btn';
+          startBtn.textContent = '⚔ Start Battle';
+          startBtn.addEventListener('click', () => {
+            _preBattNode = node;
+            _availableConds = avail;
+            _selectedConds = new Set(_condSelected);
+            S_story.surpriseAdvantage = false;
+            const launch = () => {
+              acc.classList.remove('open');
+              const _c = acc; setTimeout(() => _c.remove(), 270);
+              _battleAccordion = null;
+              if (_fightBtn) _fightBtn.textContent = 'Fight';
+              storyCommitBattle();
+            };
+            if (_stealthOn) {
+              const dc = 5 + Math.floor(Math.random() * 12);
+              const roll = Math.ceil(Math.random() * 20);
+              const pass = roll >= dc;
+              if (pass) { S_story.surpriseAdvantage = true; stealthResult.style.color='var(--grn-lt)'; stealthResult.textContent='✓ d20='+roll+' vs DC '+dc+' — ADV on first attack!'; }
+              else       { stealthResult.style.color='var(--red-lt)'; stealthResult.textContent='✗ d20='+roll+' vs DC '+dc+' — Detected.'; }
+              setTimeout(launch, 700);
+            } else { launch(); }
+          });
+          acc.appendChild(startBtn);
+
+          // Retreat
+          const retreatEl = document.createElement('div');
+          retreatEl.className = 'battle-retreat-link';
+          retreatEl.textContent = '← Retreat (safe)';
+          retreatEl.addEventListener('click', () => {
+            acc.classList.remove('open');
+            const _c = acc; setTimeout(() => _c.remove(), 270);
+            _battleAccordion = null;
+            if (_fightBtn) _fightBtn.textContent = 'Fight';
+          });
+          acc.appendChild(retreatEl);
+
+          _battleAccordion = acc;
+          _battleCard.insertAdjacentElement('afterend', acc);
+          requestAnimationFrame(() => _battleAccordion && _battleAccordion.classList.add('open'));
+          if (_fightBtn) _fightBtn.textContent = 'Close';
+        }
+      });
+      body.appendChild(_battleCard);
     }
     row.appendChild(sec);
   }
