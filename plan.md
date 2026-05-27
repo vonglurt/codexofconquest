@@ -99,7 +99,7 @@ See `story.md §GRIEF AND CORRUPTION` for the vignette prose.
 
 ## §0 — Implementation Readiness Dashboard
 
-> **Status as of Layer 85 (2026-05-27).** §XLVII Horned Shark lake boss live. horned_shark (ac:15 hp:120 atk:10 deadly) + quest_horned_shark (activates at YL on fishingYugurtFavour; completes on kill; +300gp +500xp). HUNTING_GROUNDS yugurt_lake → The Noon Point. NPC_DIALOGUE YC now uses quoteFn — conditional Fisherman acknowledgment post-kill. HTML: ~20,164 lines. Lab reports: 43. Add new layers below as §XLVIII+.
+> **Status as of Layer 86 (2026-05-27).** §XLVIII Night Fishing live. NIGHT_FISH_POOL (5 species ranks 6–14) + night mode detection (hour ≥ 20 or ≤ 5) + quest_night_eel (activates on hornedSharkSlain; completes on lanternEelLanded; +150gp +400xp + Eel Skin Pouch → eelSkinPouchActive → +1 Type). Header/lake-text night register. HTML: ~20,230 lines. Lab reports: 43. Add new layers below as §XLIX+.
 
 ### Lab Report Index (Layers 48–79)
 
@@ -5280,6 +5280,63 @@ Quest ID: `quest_fish_01`
 - `castBtn.onclick` in `doCast()`: sets `fishingQuestFlags.landed15Plus = true` when `fish.rank >= 15 && !isBare`
 - Completion handler in `storyCheckQuests`: `+200gp` + sets `fishingYugurtFavour = true` (dormant state field pre-wired to `+favBonus` in cast roll display)
 - `fishingYugurtFavour` was already in `_S_DEFAULTS` and `doCast()` roll formula since Layer 47 but was never triggered — this quest wires the hook
+
+---
+
+## §XLVII — Horned Shark: Yugurt Lake Boss (✅ Implemented — Layer 85)
+
+**Status:** ✅ Implemented 2026-05-27
+
+| Field | Value |
+|---|---|
+| Monster | `horned_shark` — ac:15, hp:120, atk:10, dmgDie:8×2+8, tier:deadly |
+| Quest ID | `quest_horned_shark` — *The Noon Point* |
+| Activates | YL visit; requires `fishingYugurtFavour === true` |
+| Completes | `hornedSharkSlain === true` (set in `battKillEvent`) |
+| XP | 500 |
+| Gold | 300gp |
+| Waypoint | YL |
+| Disposition | *"You got the shark. That's a different kind of fishing."* — The Fisherman |
+
+**Implementation:**
+- `horned_shark` in MONSTER_POOL + MONSTER_DROPS + `yugurt_lake` terrain + HUNTING_GROUNDS (*The Noon Point*)
+- `hornedSharkSlain: false` in `_S_DEFAULTS()`
+- `battKillEvent()`: sets `hornedSharkSlain = true` when `S.enemy.key === 'horned_shark'`
+- NPC_DIALOGUE YC: static `quote` → conditional `quoteFn` pattern (renderer checks `_npcDial.quoteFn ? _npcDial.quoteFn() : _npcDial.quote`). Fisherman post-kill acknowledgment fires only if `hornedSharkSlain`
+
+---
+
+## §XLVIII — Night Fishing: Nocturnal Species + Eel Skin Pouch (✅ Implemented — Layer 86)
+
+**Status:** ✅ Implemented 2026-05-27
+
+**Mechanic:** `storyFishing()` reads `S_story.hour` on entry. If `hour >= 20 || hour <= 5`, night mode activates: header shows 🌙, lake text changes register, and `NIGHT_FISH_POOL` replaces `FISH_POOL` for medium/large tier catches.
+
+| Field | Value |
+|---|---|
+| New pool | `NIGHT_FISH_POOL` — 5 species, ranks 6–14 (medium/large tier only) |
+| Night detection | `isNight = (S_story.hour \|\| 12) >= 20 \|\| (S_story.hour \|\| 12) <= 5` |
+| Fallback | If no night fish in tier range, falls back to `FISH_POOL` |
+| Quest ID | `quest_night_eel` — *Night Water* |
+| Activates | YL visit; requires `hornedSharkSlain === true` |
+| Completes | `lanternEelLanded === true` (set in `battKillEvent` on `night_03` kill) |
+| XP | 400 |
+| Gold | 150gp |
+| Item reward | Eel Skin Pouch (🏮, trinket) — sets `eelSkinPouchActive = true` → +1 Type on all future casts |
+| Waypoint | YL |
+| Disposition | *"Some fish don't exist in daylight."* — The Fisherman |
+
+**Night Fish Pool:**
+
+| Key | Name | Rank | Tier |
+|-----|------|------|------|
+| `night_01` | Murk Darter | 6 | easy |
+| `night_02` | Void Gulper | 8 | easy |
+| `night_03` | Lantern Eel | 10 | medium (quest target) |
+| `night_04` | Shadowfin Carp | 12 | medium |
+| `night_05` | Deepwater Lurker | 14 | hard |
+
+**State fields added to `_S_DEFAULTS()`:** `lanternEelLanded: false`, `eelSkinPouchActive: false`
 
 ---
 

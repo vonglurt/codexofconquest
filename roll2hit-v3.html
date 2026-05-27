@@ -4963,6 +4963,12 @@ const MONSTER_POOL = { // → doc: monsters.md §Monster Pool
   fish_18: { key:'fish_18', name:'The Spine King',           ac:18, hp:152, atk:11,dmgDie:10, dmgCount:4, dmgFlat:7, tier:'deadly'  },
   fish_19: { key:'fish_19', name:'Dread Catfish of Yugurt',  ac:19, hp:182, atk:12,dmgDie:12, dmgCount:4, dmgFlat:8, tier:'deadly'  },
   fish_20: { key:'fish_20', name:"Yugurt's Dread",           ac:20, hp:220, atk:13,dmgDie:12, dmgCount:4, dmgFlat:9, tier:'deadly'  },
+  // ── §XLVIII: Night Fish — nocturnal species, Yugurt Lake after hour ≥ 20 or ≤ 5 ──
+  night_01: { key:'night_01', name:'Murk Darter',      ac:10, hp:17,  atk:4, dmgDie:6,  dmgCount:1, dmgFlat:2, tier:'easy'   }, // §XLVIII
+  night_02: { key:'night_02', name:'Void Gulper',       ac:11, hp:26,  atk:5, dmgDie:6,  dmgCount:2, dmgFlat:2, tier:'easy'   }, // §XLVIII
+  night_03: { key:'night_03', name:'Lantern Eel',       ac:12, hp:38,  atk:6, dmgDie:8,  dmgCount:2, dmgFlat:3, tier:'medium' }, // §XLVIII — quest_night_eel target
+  night_04: { key:'night_04', name:'Shadowfin Carp',    ac:13, hp:54,  atk:7, dmgDie:8,  dmgCount:2, dmgFlat:4, tier:'medium' }, // §XLVIII
+  night_05: { key:'night_05', name:'Deepwater Lurker',  ac:14, hp:77,  atk:8, dmgDie:8,  dmgCount:3, dmgFlat:5, tier:'hard'   }, // §XLVIII
   // ── DeFi Land — meme rodents, virii, and corruption swarms ──
   pepe_rat:         { key:'pepe_rat',         name:'Pepe Rat',               ac:10, hp:5,  atk:3, dmgDie:4,  dmgCount:2, dmgFlat:0,  tier:'trivial' },
   fiat_roach:       { key:'fiat_roach',       name:'Fiat Roach',             ac:9,  hp:4,  atk:2, dmgDie:4,  dmgCount:1, dmgFlat:0,  tier:'trivial' },
@@ -5390,6 +5396,12 @@ const MONSTER_DROPS = { // → doc: mechanics-combat.md §Monster Trophy Drops
   fish_18: { name:'Spine King Crown',         icon:'🦈', sell:46 },
   fish_19: { name:'Dread Catfish Whisker',    icon:'💀', sell:56 },
   fish_20: { name:"Yugurt's Dread Scale",     icon:'💀', sell:70 },
+  // ── §XLVIII: Night Fish drops ──
+  night_01: { name:'Murk Darter Scale',        icon:'🌑', sell:7  }, // §XLVIII
+  night_02: { name:'Void Gulper Stomach',      icon:'🌑', sell:9  }, // §XLVIII
+  night_03: { name:'Lantern Eel Gland',        icon:'🏮', sell:22 }, // §XLVIII
+  night_04: { name:'Shadowfin Scale Sheet',    icon:'🌑', sell:17 }, // §XLVIII
+  night_05: { name:'Lurker Bone Hook',         icon:'🌑', sell:23 }, // §XLVIII
   // ── DeFi Land drops ──
   pepe_rat:             { name:'Corrupted Meme Fragment', icon:'🐀', sell:2  },
   fiat_roach:           { name:'Worthless Coin Chip',     icon:'🪲', sell:1  },
@@ -6277,6 +6289,7 @@ let _killFired = false;
 function battKillEvent() {
   const drop = MONSTER_DROPS[S.enemy.key];
   if (S.enemy.key === 'horned_shark' && S_story.active) S_story.hornedSharkSlain = true; // §XLVII
+  if (S.enemy.key === 'night_03' && S_story.active) S_story.lanternEelLanded = true; // §XLVIII: quest_night_eel trigger
   // Layer 47: override fish drop sell value with size×rarity gold
   if (drop && S_story._fishBattleGold) {
     S._pendingDrop = { ...drop, sell: S_story._fishBattleGold };
@@ -8660,6 +8673,14 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     completeFn:() => !!S_story.hornedSharkSlain,
     xpAward:500, waypointNode:'YL', reward:300,
     disposition:'"You got the shark. That\'s a different kind of fishing." — The Fisherman' },
+  quest_night_eel: { id:'quest_night_eel', type:'side', title:'Night Water', // §XLVIII
+    desc:"After dark, Yugurt Lake becomes a different lake. The familiar geometry of the bank and the reeds still holds. But the fish that come up are not the ones that come up at noon. Something luminescent hunts the deep water after dark. You have seen the light. The lake has seen you looking.",
+    hint:'Fish at Yugurt Lake after dark (hour ≥ 20 or ≤ 5) and defeat the Lantern Eel.',
+    activateNode:'YL', completeItems:[],
+    activateCond:() => !!S_story.hornedSharkSlain,
+    completeFn:() => !!S_story.lanternEelLanded,
+    xpAward:400, waypointNode:'YL', reward:150,
+    disposition:'"Some fish don\'t exist in daylight." — The Fisherman' },
   quest_no_fishing_sign: { id:'quest_no_fishing_sign', type:'side', title:'The No-Fishing Sign',
     desc:"A city ordinance notice bolted to the lamppost near the gate. Underneath the official text, someone has added a handwritten pull-tab advertising free fishing at Yugurt Lake.",
     hint:'Take the coupon to The Fisherman at Yugurt Cabin and redeem it for a free fishing rod.',
@@ -9531,7 +9552,7 @@ const _S_DEFAULTS = () => ({
   s8VargaWatches: 0, s8VargaClueUnlocked: false, s8PachelbelTold: false,
   nexusQuestSeen: false, nexusQ01Active: false, nexusQ02Complete: false, creativeLiteracyToken: false,
   fishingQuestFlags: {}, fishingBaitSatchel: false, fishingYugurtFavour: false, fishingCatchLog: [],
-  tackleboxZoneUnlocks: {shore:true, reeds:false, deep:false}, baitFishingActive: false, hornedSharkSlain: false,
+  tackleboxZoneUnlocks: {shore:true, reeds:false, deep:false}, baitFishingActive: false, hornedSharkSlain: false, lanternEelLanded: false, eelSkinPouchActive: false, // §XLVIII
   junctionsSeen: {}, companionActsSeen: {},
   shardNotes: [false,false,false,false,false,false,false], shardNotesAllRead: false,
   voidCrackFired: false, voidFracturesFired: false, voidImminentWarned: false, void_mercy_count: 0,
@@ -12302,6 +12323,13 @@ const FISH_POOL = [ // → doc: mechanics-combat.md §Fishing Items (20 ranks, N
   { rank:19, key:'fish_19', name:'Dread Catfish of Yugurt', desc:'Yugurt painted this thing on the wall of the cabin. He was trying to warn someone. He did not specify who.' },
   { rank:20, key:'fish_20', name:"Yugurt's Dread",          desc:'The apex predator of every lake that has ever existed. It swims between them.' },
 ];
+const NIGHT_FISH_POOL = [ // §XLVIII — nocturnal species, Yugurt Lake after hour ≥ 20 or ≤ 5 (ranks 6–14; medium/large tier)
+  { rank:6,  key:'night_01', name:'Murk Darter',       desc:'Moves fast in black water. Nearly invisible until the line pulls taut.' },
+  { rank:8,  key:'night_02', name:'Void Gulper',        desc:'Feeds on whatever sinks. Drawn to noise. Silence is the only bait that matters.' },
+  { rank:10, key:'night_03', name:'Lantern Eel',        desc:'Bioluminescent. Hunts by light it produces itself. You can see it coming. That doesn\'t help.' },
+  { rank:12, key:'night_04', name:'Shadowfin Carp',     desc:'Scales absorb light rather than reflect it. It is darker than the water it swims in.' },
+  { rank:14, key:'night_05', name:'Deepwater Lurker',   desc:'Bottom-feeder that rises only after dark. It has never been seen in daylight. Presumably.' },
+];
 
 /* ── Layer 53: Living World — Junction Vignettes + Road Companion ── */
 const JUNCTION_VIGNETTES = { // → doc: story.md §Junction Vignettes
@@ -14359,6 +14387,7 @@ function storyCheckQuests(node) {
       if (id === 'quest_fishing_guide') { S_story.inventory.push({ name:'Fishing Guide', icon:'📖', type:'readable', sell:0, readText:FISHING_GUIDE_TEXT }); msgs.push('📖 Fishing Guide received. Zone DCs now visible in the fishing modal.'); }
       if (id === 'quest_fish_01') { S_story.gold += 200; S_story.fishingYugurtFavour = true; msgs.push("💰 +200gp. 🎣 Yugurt's Favour granted — +1 on all future catch rolls."); }
       if (id === 'quest_horned_shark') { S_story.gold += 300; msgs.push('💰 +300gp. 🦷 The Noon Point is yours now.'); }
+      if (id === 'quest_night_eel') { S_story.gold += 150; S_story.eelSkinPouchActive = true; if (!S_story.inventory) S_story.inventory = []; S_story.inventory.push({ name:'Eel Skin Pouch', icon:'🏮', type:'trinket', sell:35, desc:'+1 Type bonus on all fishing casts. The light never fully goes out.' }); msgs.push("💰 +150gp. 🏮 Eel Skin Pouch acquired — +1 Type on all future casts."); } // §XLVIII
       // Layer 50: §XV NG+ Remembrance quest rewards
       if (id === 'quest_ng_01') { S_story.gold += 500; msgs.push('💰 +500gp. The city remembers. So do they.'); }
       if (id === 'quest_ng_02') { /* reward is the act itself */ msgs.push('📖 Entry 42 is in the journal.'); }
@@ -14665,6 +14694,9 @@ function storyFishing() {
 
   const hasRod   = (S_story.inventory||[]).some(i => (i.name||'').toLowerCase().includes('fishing rod'));
   const hasGuide = (S_story.inventory||[]).some(i => i.name === 'Fishing Guide');
+  const isNight  = (S_story.hour || 12) >= 20 || (S_story.hour || 12) <= 5; // §XLVIII
+  const hdEl = document.getElementById('fishing-card-hd');
+  hdEl.textContent = isNight ? '🌙 Yugurt Lake — Night Fishing' : '🎣 Yugurt Lake — Cast Your Line'; // §XLVIII
   document.getElementById('fishing-zone-dcs').textContent = hasGuide
     ? 'Shore DC 8 · Reeds DC 12 · Deep DC 16'
     : 'DC: ???  (obtain the Fishing Guide to reveal zone DCs)';
@@ -14711,7 +14743,7 @@ function storyFishing() {
     recastBtn.style.display= 'none';
     baitSearch.style.display = 'none'; baitSearch.innerHTML = '';
     castBtn.style.display  = ''; castBtn.textContent = '🎣 Cast Line';
-    lakeText.textContent   = 'Still water. Something large moves below. The rod is ready.';
+    lakeText.textContent   = isNight ? 'The water is black. The line goes out. You wait.' : 'Still water. Something large moves below. The rod is ready.'; // §XLVIII
     _renderBait();
   };
 
@@ -14808,7 +14840,8 @@ function storyFishing() {
     let rarity = 'common', typeTotal = 0;
     if (sizeKey) {
       const tDie = Math.ceil(Math.random() * 20);
-      typeTotal  = tDie + bait.type + _luckMod(); // Layer 48: Luck bonus on Type Roll
+      const eelBonus = S_story.eelSkinPouchActive ? 1 : 0; // §XLVIII
+      typeTotal  = tDie + bait.type + _luckMod() + eelBonus; // Layer 48: Luck; §XLVIII: eel pouch
       rarity     = _rarityFromRoll(typeTotal);
       // Special Catch (raw die 20 before bait) → force legendary rarity
       if (catchTotal >= 20 && cResult === 20) rarity = 'legendary';
@@ -14834,7 +14867,11 @@ function storyFishing() {
     }
 
     const tier = _getTier(sizeKey);
-    const fish = _fishFromTier(tier);
+    // §XLVIII: use night pool if night and tier has nocturnal species; fall back to day pool otherwise
+    const _nightInTier = NIGHT_FISH_POOL.filter(f => f.rank >= tier.minRank && f.rank <= tier.maxRank);
+    const fish = (isNight && _nightInTier.length)
+      ? _nightInTier[Math.floor(Math.random() * _nightInTier.length)]
+      : _fishFromTier(tier);
     const mp   = MONSTER_POOL[fish.key];
     if (!fish || !mp) { revealEl.innerHTML='<em style="color:var(--dim)">Something moved — then didn\'t.</em>'; revealEl.style.display=''; recastBtn.style.display=''; recastBtn.onclick=doCast; _renderBait(); return; }
 
