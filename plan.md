@@ -5280,3 +5280,104 @@ Quest ID: `quest_fish_01`
 - `castBtn.onclick` in `doCast()`: sets `fishingQuestFlags.landed15Plus = true` when `fish.rank >= 15 && !isBare`
 - Completion handler in `storyCheckQuests`: `+200gp` + sets `fishingYugurtFavour = true` (dormant state field pre-wired to `+favBonus` in cast roll display)
 - `fishingYugurtFavour` was already in `_S_DEFAULTS` and `doCast()` roll formula since Layer 47 but was never triggered — this quest wires the hook
+
+---
+
+## §FUTURE — Long-Range Ideas (not scheduled)
+
+> Speculative world expansions. No implementation layer assigned. Record the concept and canonical source material while the idea is fresh.
+
+---
+
+### §FUTURE-01 — The Road to Damascus: Saul of Tarsus Arc
+
+**Concept:** A new act following the historical travels of Saul of Tarsus — his conversion, his missionary journeys, and his eventual arrest — as a quest chain across a Middle Eastern map. The arc follows the biblical itinerary with geographical fidelity: real cities, real distances, real opposition. The player walks the road Saul walked, each node a documented stop from Acts and the Pauline letters.
+
+**Mechanical hook:** The Damascus Road conversion is not a cutscene — it is a world event. The player walks the road to Damascus as Saul (persecutor) and arrives in Damascus as Paul (apostle). The conversion changes the available quest types: persecution quests close, preaching/persuasion quests open. This is the first instance in Roll2Hit where a mid-arc identity shift rewrites the world map's available interactions — not through a flag but through the player's accumulated actions before the event.
+
+---
+
+#### Act Structure
+
+**Pre-conversion (Saul):**
+- Player travels from Jerusalem toward Damascus with letters authorizing arrest of Christians
+- Encounters along the road: hostile terrain, Pharisee escorts, a bound prisoner being transferred
+- The Road to Damascus node: WIS save or INT check has no correct answer — the light comes regardless; what changes is how clearly the player hears the voice
+
+**Post-conversion (Paul):**
+- Three days blind in Damascus — time-locked passage; player cannot move until the encounter with Ananias
+- Ananias at Straight Street: `quest_ananias` — NPC will not appear until blind days have passed; delivers healing + baptism
+- Arabia interlude (Galatians 1:17): optional node before returning to Damascus — no quests, only terrain and time; desert encounter table
+
+---
+
+#### Node Map (Pauline Journeys)
+
+| Code | City | Biblical Reference | Act |
+|---|---|---|---|
+| `DA` | Damascus | Acts 9:1–25; Gal 1:17 | Pre/Post conversion |
+| `AR` | Arabia (Nabatean Desert) | Galatians 1:17 | Post-conversion retreat |
+| `JR` | Jerusalem | Acts 9:26–30; Gal 1:18 | Paul meets Peter (15 days) |
+| `TR` | Tarsus | Acts 9:30; Acts 11:25 | Paul's home city; retrieved by Barnabas |
+| `AN` | Antioch | Acts 11:26; Acts 13:1–3 | First called Christians here; commissioning node |
+| `CY` | Cyprus (Salamis → Paphos) | Acts 13:4–12 | Bar-Jesus encounter; Sergius Paulus conversion |
+| `LY` | Lystra | Acts 14:8–20 | Healing of lame man; stoning of Paul |
+| `AT` | Athens | Acts 17:16–34 | Areopagus speech; Rhetoric skill check |
+| `CO` | Corinth | Acts 18:1–18 | 18-month stay; tent-making with Priscilla + Aquila |
+| `EP` | Ephesus | Acts 19:1–41 | 3-year stay; Riot of Silversmiths encounter |
+| `PH` | Philippi | Acts 16:12–40 | Lydia conversion; prison + earthquake event |
+| `ML` | Malta (Melita) | Acts 27–28 | Shipwreck; snake bite that doesn't kill |
+| `RM` | Rome | Acts 28:14–31 | Final node; under house arrest |
+
+---
+
+#### Key Quests
+
+| ID | Title | Reference | Type |
+|---|---|---|---|
+| `quest_road_damascus` | The Light at Noon | Acts 9:1–9 | Conversion event — no pass/fail |
+| `quest_ananias` | Straight Street | Acts 9:10–19 | NPC encounter; 3-day time gate |
+| `quest_barnabas_vouches` | Vouched For | Acts 9:26–27 | Disposition: Barnabas favor required |
+| `quest_bar_jesus` | The Sorcerer's Opposition | Acts 13:6–12 | Combat/spell-block; WIS save vs blindness effect |
+| `quest_stoning_lystra` | Left for Dead | Acts 14:19–20 | Post-combat survival; HP threshold event |
+| `quest_areopagus` | The Unknown God | Acts 17:22–34 | Rhetoric skill check (INT + Proficiency); partial/full conversion outcomes |
+| `quest_silversmiths` | Riot in the Marketplace | Acts 19:23–41 | Crowd encounter; escape-route decision tree |
+| `quest_shipwreck_malta` | Two Hundred and Seventy-Six | Acts 27:37 | Sea encounter; survival without attack roll |
+| `quest_snake_malta` | It Did Nothing | Acts 28:3–6 | Passive event — crowd expects death, crowd is wrong |
+
+---
+
+#### Key NPCs
+
+| Key | Name | Role | Node |
+|---|---|---|---|
+| `ananias` | Ananias of Damascus | Healer; restores sight; reluctant obedience | DA |
+| `barnabas` | Barnabas | Advocate; retrieves Paul from Tarsus; first journey partner | JR / TR / AN |
+| `silas` | Silas | Second journey co-traveler; imprisoned with Paul at Philippi | AN / PH |
+| `timothy` | Timothy | Picked up at Lystra; youngest party member | LY |
+| `lydia` | Lydia of Thyatira | First European convert; purple cloth merchant; provides lodging | PH |
+| `priscilla_aquila` | Priscilla + Aquila | Tent-makers; harbor Paul in Corinth 18 months | CO |
+| `festus` | Festus / Felix | Roman governors; prosecution arc; Paul appeals to Caesar | JR → RM |
+
+---
+
+#### Terrain Types Needed
+
+| Terrain | New? | Notes |
+|---|---|---|
+| `ancient_road` | New | Roman-paved; low encounter rate; movement bonus |
+| `desert_caravan` | New | Arabia + Syrian interior; high heat mechanics possible |
+| `synagogue` | New | Interior node; dialogue-only; persuasion checks |
+| `roman_prison` | New | Time-locked node; earthquake event wired to day counter |
+| `harbor_ancient` | Reuse `harbor` | Mediterranean ports; Paphos, Miletus, Caesarea |
+| `sea_voyage` | New | Acts 27 shipwreck sequence; storm encounter table |
+
+---
+
+#### Design Notes
+
+- **The conversion is not a reward — it is a reframing.** The player does not become more powerful; they become differently motivated. Pre-conversion Saul has combat resources (Pharisee escort, letters of authority). Post-conversion Paul has persuasion resources (rhetoric, NPC networks) and loses the combat resources. The arc is about what you trade and what you gain.
+- **Biblical fidelity as constraint, not costume.** Every node has a chapter/verse citation. Quests cannot invent events — they can only dramatize documented ones. The Areopagus speech (Acts 17:22–34) is the text; the skill check is whether Paul finds the right entry point with this particular crowd.
+- **"It did nothing"** (Acts 28:5) is the best single line in the source material. The Malta snake encounter should play completely straight: Paul is bitten, the crowd waits for him to swell and die, he shakes the snake off into the fire, nothing happens. No roll. No explanation. The crowd changes their mind about who he is. This is the game's version of that event.
+- **Travel pacing:** Paul's journeys cover thousands of miles across multiple years. The hour counter is insufficient — this arc would need a **day/week counter** as the primary time unit, or the arc should be explicitly time-abstracted (node-to-node = one movement, no hour cost).
+- **Cross-reference with existing Arthurian arc:** Roll2Hit already uses Chrétien's structural vocabulary (objects that carry weight, things enacted not stated). The Pauline arc uses the same technique: the snake that does nothing, the coat Paul leaves in Troas, the letter to Philemon about Onesimus. These are Chrétien objects. The arcs belong to the same tradition.
