@@ -851,11 +851,15 @@ The Outsider Merchant delivery mechanism (spec) was superseded. The Fisherman hi
 Tournament circuit (Q-TOUR-01 through Q-TOUR-06) and Six Fishermen NPCs ✅ live (Layer 83, §XLV).
 
 **[✅ Layer 83 — §XLV] Fishing Quest Stubs (implemented)**  
-- **Q-FISH-00** — *The Rod and the Lake*: Obtain Fishing Rod from The Fisherman; trigger first cast at YL  
-- **Q-FISH-01** — *Master of Yugurt*: Land a Rank 15+ fish (Yugurt's Leviathan or higher) with bait (not bare hook)  
+- **Q-FISH-00** — *The Rod and the Lake*: covered by `quest_no_fishing_sign` (get rod) + `quest_fishing_guide` (first cast). No separate quest needed.  
 - **Q-TOUR-01** — *Pip's Challenge*: Beat Pip in a 1v1 tournament bet (competence: Novice)  
-- **Q-TOUR-06** — *The Fisherman's Tournament*: Beat the Master. Reward: `master_of_yugurt` token (legendary)  
-See `plan.md` §XII for full quest chain and reward table.
+- **Q-TOUR-06** — *The Fisherman's Tournament*: Beat the Master. Title: `Master of Yugurt`.  
+
+**[✅ Layer 84 — §XLVI] Q-FISH-01: The Leviathan Class** (`quest_fish_01`)  
+- Activates: YC visit with Fishing Rod + at least 1 prior catch  
+- Completes: Land + defeat a Rank 15+ fish (`fishingQuestFlags.landed15Plus = true`) using real bait  
+- Reward: +200gp + `fishingYugurtFavour = true` (permanent +1 on all future catch rolls)  
+- Title: *"The Leviathan Class"*. Quote: *"You went deep."* — The Fisherman
 
 ---
 

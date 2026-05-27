@@ -8640,6 +8640,14 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     activateNode:'YC', completeItems:[], completeFn:() => (S_story.fishingCatchLog||[]).length > 0 && S_story.currentCode === 'YC',
     waypointNode:'YL', reward:0,
     disposition:'"The lake knows the difference. The guide tells you what the difference is." — The Fisherman' },
+  quest_fish_01: { id:'quest_fish_01', type:'side', title:'The Leviathan Class',
+    desc:"There is a point at which fishing becomes something else. Rank 15 is the threshold — the water changes quality, the fight changes weight, and what comes up on the line is not a catch but a confrontation. The Fisherman has not spoken about this directly. He has not needed to.",
+    hint:'Land and defeat a Rank 15+ fish using real bait at Yugurt Lake.',
+    activateNode:'YC', completeItems:[],
+    activateCond:() => (S_story.inventory||[]).some(i => (i.name||'').toLowerCase().includes('fishing rod')) && (S_story.fishingCatchLog||[]).length > 0,
+    completeFn:() => !!(S_story.fishingQuestFlags||{}).landed15Plus,
+    xpAward:750, waypointNode:'YL', reward:200,
+    disposition:'"You went deep." — The Fisherman' },
   quest_no_fishing_sign: { id:'quest_no_fishing_sign', type:'side', title:'The No-Fishing Sign',
     desc:"A city ordinance notice bolted to the lamppost near the gate. Underneath the official text, someone has added a handwritten pull-tab advertising free fishing at Yugurt Lake.",
     hint:'Take the coupon to The Fisherman at Yugurt Cabin and redeem it for a free fishing rod.',
@@ -14335,6 +14343,7 @@ function storyCheckQuests(node) {
       if (id === 'quest_cat_06') { S_story.gold += 1500; S_story.inventory.push({name:"Cat-King's Claw Fragment",icon:'👑',type:'trophy',sell:50}); msgs.push("💰 +1500gp + Cat-King's Claw Fragment. You are honorary Ally Cat."); }
       if (id === 'quest_cat_void') { S_story.gold += 400; msgs.push('💰 +400gp from Sandy. The Void Strays are cleared.'); }
       if (id === 'quest_fishing_guide') { S_story.inventory.push({ name:'Fishing Guide', icon:'📖', type:'readable', sell:0, readText:FISHING_GUIDE_TEXT }); msgs.push('📖 Fishing Guide received. Zone DCs now visible in the fishing modal.'); }
+      if (id === 'quest_fish_01') { S_story.gold += 200; S_story.fishingYugurtFavour = true; msgs.push("💰 +200gp. 🎣 Yugurt's Favour granted — +1 on all future catch rolls."); }
       // Layer 50: §XV NG+ Remembrance quest rewards
       if (id === 'quest_ng_01') { S_story.gold += 500; msgs.push('💰 +500gp. The city remembers. So do they.'); }
       if (id === 'quest_ng_02') { /* reward is the act itself */ msgs.push('📖 Entry 42 is in the journal.'); }
@@ -14835,6 +14844,7 @@ function storyFishing() {
       S_story._fishBattleGold = goldValue;
       if (!S_story.fishingQuestFlags) S_story.fishingQuestFlags = {};
       S_story.fishingQuestFlags.q01 = true;
+      if (fish.rank >= 15 && !isBare) S_story.fishingQuestFlags.landed15Plus = true; // §XLVI: Q-FISH-01 trigger
       if (!S_story.fishingCatchLog) S_story.fishingCatchLog = [];
       S_story.fishingCatchLog.unshift({ size:sizeKey, rarity, fish_key:fish.key, gold:goldValue });
       if (S_story.fishingCatchLog.length > 10) S_story.fishingCatchLog.length = 10;

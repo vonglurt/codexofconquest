@@ -99,7 +99,7 @@ See `story.md §GRIEF AND CORRUPTION` for the vignette prose.
 
 ## §0 — Implementation Readiness Dashboard
 
-> **Status as of Layer 83 (2026-05-26).** §XLV Yugurt Tournament + Six Fishermen + fishing zone unlock gating live. Tournament: 6 NPC opponents, d20+bonus catch mechanic, title progression, cascade quest chain, accordion challenge UI. Zone gating: The Bank always open; The Reeds unlock after first catch; The Deep unlock after landing a Large+ fish. HTML: ~20,000 lines. Lab reports: 43. Add new layers below as §XLVI+.
+> **Status as of Layer 84 (2026-05-26).** §XLVI Q-FISH-01 The Leviathan Class live. quest_fish_01: activates after first catch at YC, completes on landing Rank 15+ fish with real bait, rewards +200gp + permanent Yugurt's Favour (+1 catch rolls). HTML: ~20,149 lines. Lab reports: 43. Add new layers below as §XLVII+.
 
 ### Lab Report Index (Layers 48–79)
 
@@ -5254,3 +5254,29 @@ Zone access now gates progressively instead of all-open. Evaluated when Find Bai
 | The Deep 🌊 | `deep` | Large+ fish landed (`fishingCatchLog.some(c => ['large','very_large','legendary'].includes(c.size))`) |
 
 Locked buttons: `🔒` label, opacity 0.45, `disabled`, tooltip hint. Zone map (`bank→shore`, `reeds→reeds`, `shallows→deep`) bridges `BAIT_TABLES` keys to `tackleboxZoneUnlocks` keys. State auto-persists to `S_story.tackleboxZoneUnlocks`.
+
+---
+
+## §XLVI — Q-FISH-01: The Leviathan Class (✅ Implemented — Layer 84)
+
+**Status:** ✅ Implemented 2026-05-26
+
+Quest ID: `quest_fish_01`
+
+| Field | Value |
+|---|---|
+| Title | The Leviathan Class |
+| Type | `side` |
+| Activates | YC visit; requires Fishing Rod in inventory + `fishingCatchLog.length > 0` |
+| Completes | `fishingQuestFlags.landed15Plus === true` |
+| XP | 750 |
+| Gold | 200gp |
+| Mechanic reward | `fishingYugurtFavour = true` → permanent +1 on all future catch rolls |
+| Waypoint | YL |
+| Disposition | *"You went deep."* — The Fisherman |
+
+**Implementation:**
+- `quest_fish_01` entry in QUEST_DB (after `quest_fishing_guide`)
+- `castBtn.onclick` in `doCast()`: sets `fishingQuestFlags.landed15Plus = true` when `fish.rank >= 15 && !isBare`
+- Completion handler in `storyCheckQuests`: `+200gp` + sets `fishingYugurtFavour = true` (dormant state field pre-wired to `+favBonus` in cast roll display)
+- `fishingYugurtFavour` was already in `_S_DEFAULTS` and `doCast()` roll formula since Layer 47 but was never triggered — this quest wires the hook

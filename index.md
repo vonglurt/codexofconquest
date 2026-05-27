@@ -1,20 +1,20 @@
 # Roll2Hit — The Shattered Codex: Document Index
 
 **Project:** `roll2hit-v3.html` — single-file combat tracker + narrative RPG
-**Status:** Layers 0–83 implemented · ~20,139 lines · 78 nodes · 370 monsters · 43 lab reports · FC01–FC08 ✅ · §RESEARCH-01 ✅ · §API-01+02 ✅ · SP4 ✅ · §DESIGN-02 ✅ · §DESIGN-03 ✅ · §DUNGEON-01 ✅ · §DUNGEON-02 ✅ · §XLIII ✅ · §XLIV ✅ · §XLV ✅
+**Status:** Layers 0–84 implemented · ~20,149 lines · 78 nodes · 370 monsters · 43 lab reports · FC01–FC08 ✅ · §RESEARCH-01 ✅ · §API-01+02 ✅ · SP4 ✅ · §DESIGN-02 ✅ · §DESIGN-03 ✅ · §DUNGEON-01 ✅ · §DUNGEON-02 ✅ · §XLIII ✅ · §XLIV ✅ · §XLV ✅ · §XLVI ✅
 **Last updated:** 2026-05-26
 
 ### Doc Health Badge
 
 | Metric | Value | Status |
 |--------|-------|--------|
-| HTML line count | ~20,139 | ✅ |
+| HTML line count | ~20,149 | ✅ |
 | Lab reports on disk | 43 | ✅ |
 | Lab reports in index | 43 | ✅ |
 | Node text rewrites (noir register) | 78 / 78 | ✅ WK + MM added Layer 81 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
-| Layers implemented | 0–83 | ✅ |
-| Last sync pass | 2026-05-26 Layer 83 (§XLV Yugurt Tournament + Six Fishermen + zone unlock gating live) | ✅ |
+| Layers implemented | 0–84 | ✅ |
+| Last sync pass | 2026-05-26 Layer 84 (§XLVI Q-FISH-01 The Leviathan Class live) | ✅ |
 
 > Update this table at the start of each session: recount lab reports with `ls lab-report-*.md | wc -l`, check HTML line count with `wc -l roll2hit-v3.html`, confirm FC item status.
 
