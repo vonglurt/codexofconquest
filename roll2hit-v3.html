@@ -9470,9 +9470,11 @@ const NPC_DIALOGUE = { // → doc: story.md §FL7
 
   // ── DeFi Land — three useless NPCs who do nothing ──
   DF: { name:'Grimshaw',          quote:'"...static...KD9QRX, this is KD9QRX, calling general...static...anyone on frequency...static...copy that nobody." His receiver has been broken for eleven years. He is aware. He does not consider this relevant to the broadcast.' },
-  HM: { name:'Bertha No-Bank', quoteFn:() => S_story.muffatManifestRead // §LII
+  HM: { name:'Bertha No-Bank', quoteFn:() => S_story.antecedentMet // §LVI
+    ? ('"Volume forty-two." She writes the entry without looking up. Confirmed absence, 14.225. The same entry as every morning since the third moon of the fourth year. She looks at it for longer than usual. "The absence is the same," she says. "But it is quieter than it was yesterday." She returns to the notebook. She does not know why she said that.')
+    : S_story.muffatManifestRead // §LII
     ? '"Volume forty-one is when it changed." She does not look up from the notebook. "Not the signal — the absence. The absence changed character. I do not have a classification for that. I logged: changed absence, 14.225. I have logged it every morning since. I do not know what changed it." She turns the page. "I am glad someone else is asking. I thought it was a notation error." She pauses. "It is not a notation error."'
-    : '"This is frequency 14.225. Nothing is on 14.225. I have checked every morning since the third moon of the fourth year. Nothing was on it then. Nothing is on it now. I update the log regardless." She returns to the notebook. Volume forty-two begins tomorrow.' }, // §LII
+    : '"This is frequency 14.225. Nothing is on 14.225. I have checked every morning since the third moon of the fourth year. Nothing was on it then. Nothing is on it now. I update the log regardless." She returns to the notebook. Volume forty-two begins tomorrow.' },
   GL: { name:"Zeke 'The Signal'", quote:'He does not speak. He holds up a laminated card. The card says: SYSTEM COMPROMISED. He has a weatherproof box containing four hundred identical cards. He has never shown a different one. He offers you one. It is not a trade. It is not anything.' },
 };
 

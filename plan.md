@@ -99,7 +99,7 @@ See `story.md §GRIEF AND CORRUPTION` for the vignette prose.
 
 ## §0 — Implementation Readiness Dashboard
 
-> **Status as of Layer 93 (2026-05-27).** §LV implemented: node AC (The Antecedent Chamber) + GATE_LOCK CY→AC (Antecedent Seal required) + quest_antecedent_01 "The Question" (activates at CY post-suppressorLogRead, completes on antecedentMet) + AC NPC_DIALOGUE quoteFn (one-time delivery, sets antecedentMet, closes the 14.225 arc). Muffat chain complete: 5 quests, 5 NPCs, one signal answered. HTML: ~20,380 lines. Lab reports: 43. Add new layers below as §LVI+.
+> **Status as of Layer 94 (2026-05-27).** §LVI implemented: Bertha No-Bank three-state quoteFn — Volume 42 entry, confirmed absence, "the absence is quieter than it was yesterday." She does not know why she said that. HTML: ~20,385 lines. Lab reports: 43. Add new layers below as §LVII+.
 
 ### Lab Report Index (Layers 48–79)
 
@@ -5584,6 +5584,18 @@ The silence after is different from the silence before.
 | Gold | 0 (the reward is the answer) |
 | Gate lock | CY → AC, item: `Antecedent Seal` |
 | Disposition | *"The question is closed."* — The Antecedent |
+
+---
+
+## §LVI — Bertha: Volume 42 (✅ Implemented — Layer 94)
+
+**Status:** ✅ Implemented 2026-05-27
+
+Third state on Bertha's `quoteFn`, triggered by `antecedentMet`. She writes the Volume 42 entry. Confirmed absence. Same as every morning for forty-one volumes. She looks at it for longer than usual. *"The absence is the same. But it is quieter than it was yesterday."* She returns to the notebook. She does not know why she said that.
+
+She is the only person in the city who would notice. She has been listening to it for forty-one volumes. The changed character of the absence registers before she has language for it.
+
+She never finds out what answered. The log continues.
 
 ---
 
