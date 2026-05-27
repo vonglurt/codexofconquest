@@ -99,9 +99,9 @@ See `story.md §GRIEF AND CORRUPTION` for the vignette prose.
 
 ## §0 — Implementation Readiness Dashboard
 
-> **Status as of Layer 77 (2026-05-26).** All layers through §XLII implemented. SP4 complete: 20 stale PLANNED markers cleared, 94 consts annotated, F4/F6 tables re-verified, 5 mismatched `// → doc:` targets fixed, `#### Gate Locks` section added to story.md. Remaining PLANNED markers are genuinely unimplemented (Layers 49, 51–52, 54–57, 59). Add new layers below as §XLIII+.
+> **Status as of Layer 80 (2026-05-26).** All layers through §DESIGN-03 implemented. SP4 complete: 20 stale PLANNED markers cleared. §DESIGN-02 overlay→sheet migration complete. §DESIGN-03 complete: Ceremonia Roll engine, 4 Birka quests, 5-act Yael arc. §DUNGEON-01 lab report written; P1 themes live: CY Madness Gate, Codex Core Chamber, Prior Carrier, Codex Inquisitor. §DUNGEON-02 five-act chains live: D02-01 (AT Drowned Page), D02-05 (BK Chalk Mark), D02-07 (CY Maintenance Plate), D02-09 (AT Spell Scroll). Add new layers below as §XLIII+.
 
-### Lab Report Index (Layers 48–77)
+### Lab Report Index (Layers 48–79)
 
 | Layer(s) | Section(s) | Lab Report |
 |----------|-----------|-----------|
@@ -116,8 +116,14 @@ See `story.md §GRIEF AND CORRUPTION` for the vignette prose.
 | 70+72+74 | §XXXV+§XXXVII+§XXXIX | `lab-report-narrative-arcs-brynn-bruhns-yael.md` |
 | 75+77 | §XL+§XLII | `lab-report-kenickie-chronicle.md` |
 | 76 | §XLI | `lab-report-tattoo-progression-system.md` |
+| 79 | §DESIGN-03 | `lab-report-ceremonia-roll-skill-checks.md` |
+| 80 | §DUNGEON-01 | `lab-report-dungeon-ten-themes.md` |
 
 Earlier layers (9–47): see `lab-report-architecture-full.md` and `lab-report-timeline-history-completed.md`.
+
+✅ §DESIGN-03 (Ceremonia Roll + Starting City) — implemented 2026-05-26. Lab report: `lab-report-ceremonia-roll-skill-checks.md`.
+🔄 §DUNGEON-01 (10 Dungeon Themes) — lab report written 2026-05-26; implementation in progress Layer 80.
+🔄 §DUNGEON-02 (Five-Act Arthurian Quest Elaborations) — D02-01/02/03/04/05/07/09/10 live; D02-06/08 deferred (new nodes). See `quest.md`.
 
 ---
 
@@ -380,6 +386,15 @@ Do **not** write a lab report for: a single monster/quest addition (sync core do
 | `S_story.runStats` | object | Per-run ledger (reset on respawn): same 10 fields as careerStats |
 | `S_story.tackleboxZoneUnlocks` | object | `{shore:true, reeds:false, deep:false}` — which fishing search zones are accessible; awaits zone gating implementation |
 | `S_story.baitFishingActive` | boolean | Suppresses node re-render during bait catch sequence |
+| `S_story.skillCheckAttempts` | object | `{ questId: { lastDay, failures } }` — retry gate for Ceremonia Roll quests; set on each failed retryable roll |
+| `S_story.ceremoniaYaelAct` | number | Current act in Yael Ceremonia Arc (0 = not started, 1–5 = act N complete) |
+| `S_story.ceremonia_yael_04_failed` | boolean | Act IV fail path — changes Yael's Act V vignetteText |
+| `S_story.ceremonia_yael_complete` | boolean | Full Yael Ceremonia Arc complete; triggers Watch Token item |
+| `S_story.cryptSurveyed` | boolean | `quest_crypt_survey` pass flag |
+| `S_story.courierReleased` | boolean | `quest_courier_release` pass flag |
+| `S_story.patrolBA` | boolean | Player visited CI while `quest_city_watch_patrol` active |
+| `S_story.patrolIN` | boolean | Player visited IN after CI while `quest_city_watch_patrol` active |
+| `S_story.patrolRouteComplete` | boolean | Full patrol route BA→IN→TA completed; triggers quest completion |
 
 ---
 
@@ -3711,3 +3726,1201 @@ Apply to every existing `text:` field in NODE_MAP. Rewrite only — do not add n
 **Fateful object:** The hundreds of leagues of nothing — absence as the defining feature of the spur; the space between the junction and the palace is described entirely by what it lacks; the road and the palace are the only things in it
 **Time as moral frame:** The Scholar Kings built the road to the edge — the spur was planned as the terminus; this junction is the last deliberate architectural decision before the world runs out; it was built to reach a specific limit and it does
 **Word count:** ~95
+
+---
+
+## §DESIGN-03 — Starting City Expansion + Ceremonia Roll (Skill Check Quest System)
+
+**Status:** ✅ Implemented 2026-05-26. P1–P4 complete. Lab report: `lab-report-ceremonia-roll-skill-checks.md`.  
+**Scope:** Birka Act I node content · New quest type `skill_check` · Ceremonia Roll engine · 5-act romantic vignette chain
+
+---
+
+### I. Design Rationale
+
+The starting city (Birka, Act I) currently provides two progression lanes: vermin hunting at SL (trivial–easy, L1–4) and the Cat Quarter arc at CQ (easy–hard, L5–20). Between these is a gap: players at L3–6 who have cleared the Slums but are not yet strong enough for the Cat Quarter have no meaningful city content.
+
+Wider problem: **combat is the only source of XP.** All social interaction, exploration, and NPC relationship-building are narratively rewarded but mechanically inert — they do not advance the player's numbers. The existing romance layer (ROMANCE_QUOTES, NPC_ROMANCE_PREAMBLES, NPC_ROMANCE_VIGNETTES, all ✅ implemented) has no quest structure tying it to any mechanical progression. Players have no in-system reason to build NPC favorability beyond curiosity.
+
+**Fix:** Introduce a skill check quest type — the **Ceremonia Roll** — that makes social and exploratory actions mechanically meaningful. Apply it to new Birka missions and to a 5-act romantic vignette chain that gives the favorability system a story spine.
+
+---
+
+### II. Ceremonia Roll — Mechanic Spec
+
+A **Ceremonia Roll** is a named d20 skill check. "Ceremonia" is a Birkan social term — from *caerimonia* (sacred rite) — used in the city's legal and diplomatic culture. When an NPC is sizing you up, a guard is deciding whether to pass you, or a courtship moment is being made formal, the dice are called a Ceremonia Roll.
+
+**Formula:**
+```
+d20 + abilityMod(ability) + profBonus ≥ DC  →  Pass
+```
+
+- `abilityMod(a) = Math.floor((S_story.abilityScores[a] - 10) / 2)`
+- `profBonus = 2 + Math.floor((S_story.level - 1) / 4)`  
+  (D&D 5e standard: L1–4 → +2 · L5–8 → +3 · L9–12 → +4 · L13–16 → +5 · L17–20 → +6)
+- **Default stat:** the character's own ability scores from character creation, modified by level proficiency. No situational bonuses unless a condition item grants them.
+
+**DC tiers:**
+
+| Tier | DC | Example |
+|------|----|---------|
+| Easy | 10 | Casual persuasion; a guard who wants to be convinced |
+| Medium | 12–13 | Competent NPCs with genuine doubt |
+| Hard | 15 | Adversarial or high-stakes social situations |
+| Very Hard | 18 | Against a trained interrogator or deeply suspicious NPC |
+
+**Retry gate:** Each quest specifies `retryable: true/false`. If retryable, a failed roll locks the attempt until `S_story.day` advances (daily cooldown). If not retryable, one roll only — pass or permanent fail path.
+
+**Combat log integration:** Ceremonia Rolls display in the combat log hcard strip using the same roll card format as attack rolls. Breakdown shown: `d20(14) + CHA mod(+2) + Prof(+3) = 19 vs DC 15 → Pass`.
+
+---
+
+### III. Quest Type — Skill Check Challenge
+
+**New QUEST_DB fields** (added to qualifying entries alongside existing fields):
+
+```js
+{
+  // existing fields:
+  id: 'quest_ceremonia_yael_01',
+  title: 'The Watch',
+  // new fields:
+  type: 'skill_check',           // flags this as a Ceremonia Roll quest
+  checkAbility: 'cha',           // str | dex | con | int | wis | cha
+  checkLabel: 'Persuasion',      // display name in UI button + log
+  checkDC: 10,                   // target number
+  retryable: true,               // daily retry gate on fail
+  retryGateDays: 1,              // days until retry (default 1)
+  checkPassFlag: 'ceremoniaPassed_yael_01',  // S_story flag set on pass
+  vignetteText: '...',           // 2–3 sentence prose shown before the roll button
+  passText: '...',               // one sentence shown on pass
+  failText: '...',               // one sentence shown on fail
+}
+```
+
+**UI render** (in QUEST section of `storyRenderSections()`):
+
+- Quest card shows `checkLabel`, modifier total `(+N)`, and DC
+- Single button: **"Roll Ceremonia — [Label] DC [N]"**
+- On click: `_rollCeremonia(questId)` fires
+- Result hcard pushed to combat log strip: roll breakdown, pass/fail verdict, flavor line
+
+**`_rollCeremonia(questId)` function spec:**
+1. Pull `checkAbility`, `checkDC` from QUEST_DB
+2. Compute `mod = Math.floor((S_story.abilityScores[ability] - 10) / 2)`
+3. Compute `prof = 2 + Math.floor((S_story.level - 1) / 4)`
+4. Roll `d20 = Math.ceil(Math.random() * 20)`
+5. Total `= d20 + mod + prof`
+6. If total ≥ DC: pass path (complete quest, set `checkPassFlag`, push pass hcard)
+7. If total < DC: fail path (push fail hcard; if `retryable`, set retry gate on `S_story.skillCheckAttempts[questId].lastDay`)
+8. Re-render QUEST section
+
+---
+
+### IV. Starting City New Content — Birka Act I
+
+Four new Birka missions using existing nodes. None require new nodes.
+
+| Quest ID | Node | Type | Ability | DC | Reward | Notes |
+|----------|------|------|---------|-----|--------|-------|
+| `quest_courier_release` | BA (city) | `skill_check` | CHA | 10 | Map + 50gp | Already implied in NODE 1 text ("must be persuaded or deceived"). Retrofit: make the City Guard encounter a real Ceremonia Roll gate. Fail path: player must pay 20gp bribe instead. |
+| `quest_city_watch_patrol` | BA→IN→TA | accomplishment | — | — | 50gp + Yael fav +1 | Visit BA, IN, TA in sequence. Fires on TA arrival if quest active. No combat. L1 suitable. |
+| `quest_crypt_survey` | CP (crypt) | `skill_check` | WIS | 12 | 75gp + `cryptSurveyed: true` | "Something is digging from below — you spend an hour mapping the second chamber." Retry: daily. Flavor tie: Froberger made the same survey fifteen years ago; his notes are in the archive. |
+| `quest_pit_debut` | CY | accomplishment | — | — | 100gp + "Pit Newcomer" flavor line | Auto-fires on first CY battle win. Uses existing `pitTrainingWins` tracking — needs reward hook only. L4–6 suitable. |
+
+**Accomplishment missions** do not use the Ceremonia Roll. They fire automatically when a condition is met and push a reward hcard to the combat log.
+
+**Early XP source gap:** Skill check quests award XP on pass:
+
+| Quest | XP Award | Level Range |
+|-------|----------|-------------|
+| `quest_courier_release` | 100 XP | L1 |
+| `quest_city_watch_patrol` | 150 XP | L1–2 |
+| `quest_crypt_survey` | 200 XP | L3–5 |
+| `quest_pit_debut` | 250 XP | L4–6 |
+
+---
+
+### V. The Ceremonia Arc — "The Watchpost" (Yael Scheidemann, 5 acts)
+
+A 5-act romantic vignette chain applied to Yael Scheidemann using the French vignette technique from §GR-F. Each act is a `skill_check` quest. Acts are named for the object that survives — the same object travels across all five acts.
+
+**Prerequisites:** `quest_slums_cleanup` complete (Yael Friendly, fav ≥ 1).
+
+| Act | Quest ID | Object | Node | Ability | DC | Trigger | Retryable |
+|-----|----------|--------|------|---------|-----|---------|-----------|
+| I — The Watch | `quest_ceremonia_yael_01` | The watch she checks every quarter-hour | BA | CHA (Persuasion) | 10 | Yael fav ≥ 1 | yes |
+| II — The Route | `quest_ceremonia_yael_02` | The patrol route, rolled in her left sleeve | BA | WIS (Insight) | 12 | Act I pass | yes |
+| III — The Crate | `quest_ceremonia_yael_03` | A heavy crate in the Slums square | SL | STR (Athletics) | 12 | Act II pass + at SL | yes |
+| IV — The Report | `quest_ceremonia_yael_04` | The duty report she signs at shift change | BA | CHA (Persuasion) | 14 | Act III pass | no |
+| V — The Name | `quest_ceremonia_yael_05` | Your name, spoken without title | BA | CHA (Persuasion) | 15 | Act IV pass + Yael fav ≥ 3 | no |
+
+**Completion reward:** `ceremonia_yael_complete: true` + Yael Dear Friend (fav → 3 if not already) + `Yael's Watch Token` item (sell: 0; flavor: *"A small brass coin, worn smooth. Guard issue, retired. She gave it to you without explanation."*)
+
+**Vignette prose spec (Act I — sample):**
+
+> *She checks her watch once more while you are talking. Quarter-hour. She has been doing this since before you arrived. You say what you came to say. She does not look up from the logbook. The watch is back in her coat pocket. You have thirty seconds before the shift changes.*
+
+Roll: CHA (Persuasion) DC 10.  
+Pass: *She writes something in the logbook. You do not see what.*  
+Fail: *The logbook closes. "Next time," she says, which means: try again.*
+
+**Writing technique (all 5 acts):** Present tense, second-person, 2–3 sentences max before the roll button. The prose names the object, describes the space, withholds the emotion. Pass/fail lines are one sentence each. The gap between the two lines is the emotional range; the player's dice determine which vignette they receive. No act tells the player what they are feeling.
+
+**Act IV note (no retry):** DC 14. The shift captain is asking why you were seen in her district. One pass gets you through without Yael's name appearing in anyone's report. Fail: `ceremonia_yael_04_failed: true`; the quest status is `'failed'`; Act V still unlocks, but Yael's Act V opening line changes: *"I heard about the report."*
+
+**Act V note (no retry):** DC 15. She says your name. Not the title. Not "you." Your name — which she has been carrying since you told it to her outside the mortuary. One roll. The last Ceremonia Roll of the arc.
+
+---
+
+### VI. New State Fields
+
+| Field | Type | Purpose |
+|-------|------|---------|
+| `S_story.skillCheckAttempts` | object | `{ questId: { lastDay: N, failures: N } }` — retry gate; `lastDay` = `S_story.day` value of last fail |
+| `S_story.ceremoniaYaelAct` | number | Current act in Yael arc (0 = not started, 1–5 = act N complete) |
+| `S_story.ceremonia_yael_04_failed` | boolean | Act IV fail path — Yael's Act V opening line variant |
+| `S_story.ceremonia_yael_complete` | boolean | Full arc complete |
+
+**§DUNGEON-01 new state fields (Layer 80):**
+
+| Field | Type | Purpose |
+|-------|------|---------|
+| `S_story.cyMadnessRoll` | `'clear'\|'fractured'\|null` | CY first-visit WIS save result |
+| `S_story.cyMadnessTable` | `string\|null` | d10 madness table result text |
+| `S_story.inquisitorMet` | boolean | WM Codex Inquisitor handshake initiated |
+| `S_story.inquisitorPassed` | boolean | All three questions passed; archive key given |
+| `S_story.priorCarrierSeen` | boolean | Prior Carrier encountered in WM cell |
+| `S_story.priorCarrierSpoke` | boolean | Player answered the Prior Carrier's question |
+| `S_story.mazeSolvedChecks` | number (0–3) | Void Fracture Maze navigation checks |
+| `S_story.voidMazeEntered` | boolean | Player entered the Void Fracture Maze |
+| `S_story.voidFluxActive` | boolean | Arcane Inversion Zone active during combat |
+| `S_story.voidFluxCleared` | boolean | Chamber defeated |
+| `S_story.voidFluxImmunityChoice` | `string\|null` | Chosen immunized inversion |
+| `S_story.voidFluxScrollChanged` | boolean | Scroll dual-use state |
+| `S_story.codexCoreChosen` | `'stabilize'\|'destroy'\|'claim'\|null` | Codex Core Chamber choice |
+| `S_story.codexCoreEntered` | boolean | Pre-boss chamber triggered |
+| `S_story.tribbleCount` | number | Tribble counter — void-corruption byproduct; acquired at Node MM, consumed as mimic-bait |
+| `S_story.mimicPetName` | `string\|null` | Baby mimic pet name |
+| `S_story.tribbleGladesFed` | boolean | Colony fed 3× rations |
+| `S_story.memorGateBypassUsed` | boolean | Memory Gate fought through rather than paid |
+| `S_story.memorGatePassedEntry` | boolean | Found prior payment entry in toll room |
+
+---
+
+### VII. Implementation Phases
+
+| Phase | Scope | Status |
+|-------|-------|--------|
+| **P1** | Ceremonia Roll engine: `_rollCeremonia(questId)`, `_appendStoryHcard()`, `_ceremoRetryBlocked()`, hcard render, retry gate; `storyCheckQuests()` `activateCond` patch | ✅ 2026-05-26 |
+| **P2** | `quest_courier_release` + `quest_crypt_survey`: QUEST_DB entries, wired to `type: 'skill_check'`, XP awards | ✅ 2026-05-26 |
+| **P3** | `quest_city_watch_patrol` + `quest_pit_debut`: accomplishment hooks, patrol flag logic | ✅ 2026-05-26 |
+| **P4** | Ceremonia Arc 01–05 (Yael): full QUEST_DB entries, all prose vignettes, state flags, fav gate | ✅ 2026-05-26 |
+
+---
+
+### §DESIGN-03-G. Lab Report Gate
+
+Write `lab-report-ceremonia-roll-skill-checks.md` before implementing P1. Report must lock:
+
+1. Data shape for `type: 'skill_check'` in QUEST_DB — all new fields, which are required vs optional
+2. `_rollCeremonia()` function signature, return value, and hcard push format
+3. Retry mechanic: state field key format, collision prevention with existing quest fields
+4. UI render spec: where the button appears in `storyRenderSections()`, what the quest card shows at each state (active/retry-locked/passed)
+5. Prose for all 5 Yael arc acts — `vignetteText`, `passText`, `failText` locked before any HTML edit
+6. XP award hook: integration with `storyLevelCheck()` — same path as battle XP or separate channel
+7. Assess whether `quest_courier_release` should gate the NODE 1 main flow or run as an optional parallel quest
+
+---
+
+## §DUNGEON-01 — Ten Dungeon Themes Applied to The Shattered Codex
+
+**Source:** Transcript — "10 Dungeon Room Ideas That Don't All Rely on Combat" (D&D Hunter)  
+**Status:** 🔄 In Progress — Layer 80 (2026-05-26). P1+P2 complete: §D01-01 (EB approach panels EA/EG/EV/BK), §D01-02 (Codex Inquisitor at SQ), §D01-03 (Prior Carrier at SQ), §D01-04 (Memory Gate/CO, Secret Gate/DF, Class Gate/SQ), §D01-07 (CY Madness Gate), §D01-09 (voidFlux healing inversion), §D01-10 (Codex Core Chamber). §D02 chains: D02-01/02/03/04/05/07/09 live. P3+ deferred: §D01-06/§D01-08 (Node SW, Node MM). Bug fix: node code WM→SQ (WM was not a real WORLD_DB node).  
+**Scope:** New node types · Dungeon-cluster design doctrine · Hero origin canon · Loop reason · Mimic Meadows territory · Madness mechanic · Heart of the Dungeon room · Arcane inversion zone · Sacrifice gates · Shifting labyrinth
+
+---
+
+### §D01-01 — Themed Dungeon Doctrine (Theme 1: Theme Your Dungeon)
+
+**Principle:** Every EB (Epic Battleground) and major node cluster should feel architecturally unified — not tunnel-after-tunnel. Each zone needs an atmosphere that connects all its rooms to a single governing idea.
+
+**Application to The Shattered Codex:**
+
+The 20 Epic Battlegrounds are currently spec'd as individual combat encounters with NPC quest-givers. Upgrade each to a **mini-dungeon cluster** with 3 thematic zones:
+
+| Zone | Role | Mechanic |
+|------|------|----------|
+| Approach room | Atmosphere-setter, no combat | Lore/puzzle/Ceremonia Roll |
+| Mid-chamber | Hazard room — madness / labyrinth / sacrifice gate | Skill check or resource cost |
+| Boss room | The EB encounter | Combat, driven by existing EB system |
+
+**Thematic archetypes for existing EB clusters:**
+
+| EB | Theme Archetype |
+|----|----------------|
+| Abyssal Scriptorium (AT) | Library of the drowned — ink-black water, pages that ripple |
+| Void Shaman's Sanctum (BK) | Organic corruption — bones in walls, void-flesh architecture |
+| Djinn's Apex Vault (DC) | Elemental geometry — sand-glass corridors, light refracting wrong |
+| Oriental Dragon Palace | Celestial bureaucracy — jade, red lacquer, forms that require completion |
+| Heavenly Clouds | Altitude vertigo — no ground visible, cloud-floor illusion |
+
+**Implementation note:** Themed approach rooms and mid-chambers do not require new nodes — they are rendered as flavor sections within existing EB node `storyRender()` calls, gated by `!defeatedBattles[ebCode]`.
+
+---
+
+### §D01-02 — The Judgment Room (Theme 2: The Interview)
+
+**Principle from transcript:** A statue interviews the player, locked to the chair, must answer truthfully. Questions reveal backstory. Lying incurs psychic damage.
+
+**Application: The Codex Inquisitor at Weimar (WM)**
+
+At the Weimar lower archive (`wmLowerArchiveUnlocked`), a Scholar King defensive construct sits behind the final door. A stone judge with an outstretched hand. The player shakes it. The construct activates. Three questions asked; the answers unlock the Weimar Fragment (Shard #7 approach).
+
+**The three questions (dynamically chosen from player state):**
+
+| Question | State condition | Pass outcome |
+|----------|-----------------|--------------|
+| "Name someone you helped." | Check `npcFavorability` — any fav ≥ 2 | Pass: construct acknowledges; next question |
+| "Name something you sacrificed to come this far." | Check `defeatedBattles` + `curse score` | Pass: construct recognizes cost |
+| "Why are you still here after everything?" | Final question — Ceremonia Roll CHA DC 12 | Pass: door opens |
+
+**Lie detection:** If the player's answer to a past-action question contradicts their actual state flags (e.g., claims to have helped someone with fav = 0), a psychic zap fires: 10 damage, Construct says *"The record disagrees."* Retry allowed — but the lie is logged in combat history.
+
+**On passing all three:** The construct releases the player, hands over the archive key, and delivers one line: *"The previous applicant answered none of them correctly. He came back seventeen times."* (Sweelinck, in a previous age.)
+
+**New state flags:** `inquisitorMet: boolean`, `inquisitorPassed: boolean`
+
+---
+
+### §D01-03 — The Prisoner Who Shouldn't Be Here + Hero's Origin (Theme 3)
+
+**Principle from transcript:** A confused person woke up in a cell with no memory of how they got there. The dungeon itself may have pulled them in. Could be a future version of a party member.
+
+**Application: The Hero's Origin Canon — "The Codex Carrier"**
+
+This is the canonical answer to: *What were you before the loop began?*
+
+**Proposed canon:**
+
+You were a Scholar King Apprentice — not one of the seven kings, but one of their assistants, the person who ran messages between them during the final binding. When the last Seal was set, the Codex's magic misfired: it needed a carrier for the next age but found no one who qualified. It pulled the nearest living person who understood all seven Kings by name. That was you. You were not heroic. You were just present, and you knew their names, and the Codex decided that was enough.
+
+You have been waking up in Birka ever since — at the moment the city needs you, with no memory of who you were, with a sword and a coin purse, at the exact corner where a dying courier is about to round the turn too fast.
+
+The Neon Undercity (CY) feels wrong to you in a way you cannot name. You built it. Not in this run — in an earlier one. The Scholar Kings' underground city was your design. You forgot. The Void has been slowly corrupting it since.
+
+**The Prisoner NPC — "The Prior Carrier"**
+
+In the Weimar lower archive, behind the Inquisitor's door, there is a cell. Inside: a figure sitting against the wall. Their eyes are tired. Their clothes are Scholar King era — not fantasy, not cyberpunk. Just old. They do not know how they got here.
+
+They are a previous version of the player. Not quite the player — more like a ghost of an earlier run that got stuck. The dungeon (the Codex's architecture) pulled them in because the binding was imperfect.
+
+They are not hostile. They ask one thing: *"Did the Void open again?"*
+
+**Player responses and outcomes:**
+
+| Response | Effect |
+|----------|--------|
+| "Yes." | Prior Carrier nods. *"It always does. Tell Sweelinck I found the seventh entry."* Gives `Prior Carrier's Token` — not collectible, just flavor. |
+| "No." | Prior Carrier says *"Then you're ahead of me."* Token same. |
+| Ignore / walk past | No token, but `priorCarrierSeen: true` fires; Sweelinck's Last Question changes to *"Did you find the room?"* |
+
+**New state flags:** `priorCarrierSeen: boolean`, `priorCarrierSpoke: boolean`
+
+---
+
+### §D01-04 — Price Rooms: Sacrifice Gates (Theme 4: The Room That Demands a Sacrifice)
+
+**Principle from transcript:** A door with glowing runes: "A price must be paid." Make the price something players dread: a memory, a secret, a class feature for a week.
+
+**Application: Void Toll Gates**
+
+Three optional toll gates distributed across Act III–VI nodes. Each extracts a cost more significant than gold. All are optional bypasses — there is always a harder path that avoids the toll.
+
+| Gate | Location | Price | Gain |
+|------|----------|-------|------|
+| **The Memory Gate** | Catacombs (CO approach) | One journal entry permanently removed from `journalEntriesRead` — a memory the Codex takes | Skip a dangerous corridor segment |
+| **The Secret Gate** | Void Archaeology node | A Ceremonia Roll CHA DC 13 — "speak the thing you have not said" (player types a secret into a text box) | The secret is written into `S_story._voidTollSecret`; delivered as an anonymous line in the victory epilogue |
+| **The Class Gate** | Weimar archive | Spend an Action Surge charge permanently (reduces `surgeCharges` max by 1 for this run) | `wmLowerArchiveUnlocked` bypassed — direct access to Inquisitor room |
+
+**Design note:** The transcript warns against blood sacrifice (D4 damage, anyone would pay it). These prices are not HP. They are choices that the player will think about before agreeing. The Memory Gate removes something the player has already collected. The Secret Gate records what the player writes. The Class Gate costs a combat resource permanently.
+
+---
+
+### §D01-05 — The Shifting Labyrinth: The Void Corridor Maze (Theme 5)
+
+**Principle from transcript:** Walls rotate on a d6 roll (4–6 = shift). Three successful navigation checks before the dungeon realigns. Walls can crush on failure.
+
+**Application: The Void Fracture Maze (new EB cluster)**
+
+A new Epic Battleground zone: `void_fracture_maze` terrain. Applied to one existing EB — the Void Shaman's Sanctum approach (BK) is the best fit: a maze of void-corrupted architecture that rearranges itself.
+
+**Mechanics:**
+
+Every two rounds in the maze, the DM rolls a d6:
+- 1–3: Layout stable. Move freely.
+- 4–6: Walls shift. A check is required to maintain orientation.
+
+Three checks needed before the boss room opens:
+
+| Check | Ability | DC | Effect on fail |
+|-------|---------|-----|----------------|
+| Track movement through rotating walls | WIS (Survival) | 14 | Looped back to start of maze |
+| Read the shifting void runes | INT (Arcana) | 14 | `voidPressure` +1 |
+| Dash through before walls close | STR/DEX (Athletics) | 13 | 10 crushing damage |
+
+**State mechanic:** `mazeSolvedChecks` counter (0–3). On 3 checks: maze stabilizes, boss room unlocks. Failed checks cost resources but do not fail the run.
+
+**New state flags:** `mazeSolvedChecks: number (0–3)`, `voidMazeEntered: boolean`
+
+---
+
+### §D01-06 — The Forgotten Workshop: The Scholar King's Laboratory (Theme 6)
+
+**Principle from transcript:** A dusty room with half-finished constructs, blueprints, and clues about the final boss. A safe rest room — but the creator walks in after 2 hours.
+
+**Application: Node SW — The Scholar King's Workshop (new optional node)**
+
+A new optional node accessible from the Weimar or CO approach. The abandoned lab of the Scholar King who designed both the Neon Undercity and the Codex binding architecture.
+
+**Contents:**
+- Blueprint of Commander Auros's armor (foreshadows the CO boss, hints at the weak point)
+- A half-finished void containment construct with a note: *"The failsafe assumes the carrier remembers their name. Current carrier test: negative."* (The player is the carrier. They failed the test.)
+- `Scholar King's Prototype Wand` — single use: empowered spell effect; 2d6 force damage on next attack
+- A rest opportunity: safe short rest, free
+
+**The 2-hour rule:** If the player rests more than one short rest cycle here, a footstep sequence fires in the combat log: *"Someone is walking toward this room from below."* The creator is not dead — they are an ancient Scholar King spirit that has inhabited the lab. They are not hostile but they are intensely uncomfortable with visitors.
+
+**Spirit encounter:** Ceremonia Roll WIS DC 12 — *"They look at you the way a teacher looks at a student who found their private notes."* Pass: the Spirit tells you one thing about Commander Auros that changes combat. Fail: they gesture toward the exit. Either way they do not fight.
+
+**New node:** `node_sw` — Scholar's Workshop. Accessible from WM.S or CO.W. Terrain: `workshop`. No default battle.
+
+---
+
+### §D01-07 — Madness Risk: The Neon Undercity as Hallucination (Theme 7)
+
+**Principle from transcript:** Alien being frozen in ice; staring at it triggers WIS save; fail = roll on the madness table. The question: is it worth the risk to find out what this alien is?
+
+**Application: The CY Madness Gate + Hero Origin Reveal**
+
+**The central question:** Is the Neon Undercity real?
+
+The CY node (Lower Birka — the Neon Undercity) is the only cyberpunk-aesthetic node in an otherwise fantasy/historical world. The story justification is that the Scholar Kings built it as a technological failsafe three centuries ago. But the Void has been corrupting it since. The player, as a Codex Carrier with no conscious memory of prior runs, may have *built* it in a previous life.
+
+**Mechanic: First CY Entry WIS Save**
+
+On first visit to CY (`!visited['CY']`), a WIS save fires before the normal render:
+
+| Roll | DC 12 | Outcome |
+|------|--------|---------|
+| **Pass** | The player sees the Neon Undercity clearly: Scholar King infrastructure, three centuries old, now void-corrupted. The neon is bioluminescent void growth on copper wiring. The data wraiths are corrupted Scholar King maintenance programs. This is what it is. | `cyMadnessRoll: 'clear'` |
+| **Fail** | The Neon Undercity doesn't make sense. A fantasy city shouldn't have neon. A fantasy city shouldn't have data wraiths. For one round, the player's combat log shows fragments: *"You have been here before. You don't know when. The wiring looks like something you designed."* Short-term madness fires: roll on the D&D Madness Table. | `cyMadnessRoll: 'fractured'` |
+
+**The madness result is flavor only** — it cannot kill, and it clears by the next day. But it plants the question: was CY always real, or is the Void teaching you to see things that aren't there? In NG+ runs, the WIS save does not fire — the player's accumulated self knows what CY is. Instead, a one-time line: *"The Neon Undercity looks exactly as you remember it. Which is the problem — you should not remember it at all."*
+
+**New state flags:** `cyMadnessRoll: 'clear'|'fractured'|null`, `cyMadnessTable: string` (result text)
+
+**Short-term Madness Table** (d10, flavor only — no mechanical penalties past flavor):
+
+| d10 | Madness |
+|-----|---------|
+| 1 | "The walls are breathing. You are fairly certain this is incorrect." |
+| 2 | "The data wraith turns toward you before you enter the room. You didn't make a sound." |
+| 3 | "A maintenance log on the wall is dated 300 years ago and your name is on it." |
+| 4 | "For three seconds, the neon is beautiful and you know exactly why." |
+| 5 | "You can read the void-script on the relays. You do not know this language. You have always known this language." |
+| 6 | "Someone else is wearing your footsteps." |
+| 7 | "The Corrupted Androids look at you like they recognize you." |
+| 8 | "The map in your hand matches this building's blueprint exactly. It shouldn't." |
+| 9 | "You almost said hello to the data wraith before combat started." |
+| 10 | "This is fine. This is all fine. You have been here before and it was fine then too." |
+
+---
+
+### §D01-08 — The Mimic Meadows + Tribble Glades (Theme 8: Mimic Sanctuary)
+
+**Principle from transcript:** A room full of non-hostile mimics living their best lives. Baby chest mimics scurrying. Bookshelf mimic napping. Mother Mimic watching like a big weird cat. Animal handling checks to befriend. A mimic can become a pet — or cough up a reward. It's like a little mimic colony. Fun and cute.
+
+**Application: New Territory — Node MM, Mimic Meadows**
+
+A new optional node: the only space in the world where mimics are the dominant ecosystem, living peacefully in symbiosis with Tribbles (small fuzzy multiplying creatures). The mimics have no reason to attack — they are well-fed and safe. The Tribbles keep them entertained.
+
+**Node MM — The Mimic Meadows**
+- Accessible from: Jungle node (NODE 33) east exit, or as an Act III detour branch
+- Terrain: `mimic_meadow` (new terrain entry in `WORLD_DB`)
+- No default hostile battle — all enemies are `mimic_*` variants flagged `passive: true`
+- Monster pool (passive, Animal Handling gate): baby_chest_mimic, bookshelf_mimic, floor_mimic, mother_mimic
+
+**Tribble mechanic:**
+
+Tribbles are a collectible item dropped by the Mimic Meadows environment. They do nothing harmful. They multiply in inventory.
+
+| Inventory state | Effect |
+|----------------|--------|
+| 1 Fuzzy Tribble | Just sits there. Soft. |
+| 2 Fuzzy Tribbles (after any sleep) | Becomes 3. |
+| 3 Fuzzy Tribbles | Becomes "Tribble Cluster" — counts as one slot, still multiplies |
+| 5+ after next sleep | Becomes "Tribble Swarm" — small hcard appears in combat log: *"The Tribbles have opinions about the battle."* Flavor only. |
+| 10+ | `tribbleOverflow: true` — Brynn at the Inn says: *"Those things are on the ceiling."* |
+
+**Tribbles as mimic bait:** In the Mimic Meadows, offering a Tribble to a mimic in lieu of gold adds +4 to the Animal Handling check (mimics find the movement irresistible).
+
+**Animal Handling encounters:**
+
+| Target | WIS DC | On success | On fail |
+|--------|--------|-----------|---------|
+| Baby chest mimic | 10 | Befriended; follows for remainder of node visit | Scurries away |
+| Bookshelf mimic | 12 | Naps beside you; ignore you for rest of visit | Hisses; minor psychic damage 2 |
+| Floor mimic | 13 | Coughs up 1 Fuzzy Tribble | Startled; leaves |
+| Mother Mimic | 16 | Grants `Mimic's Cache` (random rare item + 3 Fuzzy Tribbles) | Watches you coolly. No attack. Try again tomorrow. |
+
+**The Mimic Pet:**
+
+If the baby_chest_mimic Animal Handling check passes + the player feeds it gold (20gp), it becomes `Baby Mimic` — an equipped pet item that grants one passive: +2 to Deception checks (the mimic opens its lid convincingly to distract NPCs). It cannot be sold. It can be named — player text entry, saved to `S_story.mimicPetName`.
+
+**Quest: "Colony Curation" — `quest_mimic_colony`**
+- Trigger: First MM visit
+- Objective: Bring 3× Rations to the colony (feed the Tribbles) AND pass one Animal Handling check (any mimic, any DC)
+- Reward: 200gp + `Mimic's Wax` item (can coat a weapon: next attack auto-crits — chest-mimic saliva is surprisingly corrosive) + `tribbleGladesFed: true`
+- Flavor: The Mother Mimic watches you leave. She does not follow. The meadow is still there if you come back.
+
+**New state flags:** `tribbleCount: number`, `tribbleOverflow: boolean`, `mimicPetName: string|null`, `tribbleGladesFed: boolean`
+
+---
+
+### §D01-09 — The Arcane Inversion Zone: Void Flux Chamber (Theme 9)
+
+**Principle from transcript:** In this room magic works backwards. Fire freezes. Healing hurts. Teleportation sends you somewhere else. Players must adapt on the fly.
+
+**Application: The Void Flux Chamber (new EB approach room)**
+
+Applied as the mid-chamber in two EBs where the Void's corrupting influence on reality is strongest:
+
+1. **Abyssal Scriptorium approach (AT)** — ink-black room where written spells invert
+2. **Neon Undercity CY_VOID encounter** — the deepest relay chamber; void energy inverts polarity
+
+**Inversion table (active while inside the Void Flux Chamber):**
+
+| Normal effect | Inverted effect |
+|--------------|----------------|
+| Fire damage | Cold damage + slow (move rate halved) |
+| Healing spell | 50% of healing becomes damage |
+| Teleportation | Player moves to random adjacent node (1-step displacement) |
+| Buff (ADV) | Becomes DIS for that round |
+| Necrotic damage | Becomes radiant damage (vs undead: reversed weakness/resistance) |
+
+**Mechanical implementation:**
+
+`S_story.voidFluxActive: boolean` — set when the player enters the chamber. While active:
+- `storyRollAttack()` checks `voidFluxActive` and applies inversion table to condition items
+- Healing potions in `storyRollHeal()` apply 50% as damage if `voidFluxActive`
+- Combat log hcard shows: *"[Void Flux] Fire → Cold. Heal → Hurt. The rules have changed."*
+
+**Escape:** Clear the chamber's mini-encounter (3–4 enemies, INT (Arcana) DC 12 check pre-battle grants immunity to one inversion of player's choice) or use INT (Arcana) DC 15 to deactivate the chamber without combat.
+
+**New state flags:** `voidFluxActive: boolean`, `voidFluxCleared: boolean`, `voidFluxImmunityChoice: string|null`
+
+---
+
+### §D01-10 — The Loop Heart: Codex Core Chamber (Theme 10: Heart of the Dungeon)
+
+**Principle from transcript:** Final room. A pulsing crystal at the center. Air shivers. Every step echoes. The players must choose: stabilize it, destroy it, or claim its power. No mandatory combat. About choices and the weight of the dungeon's final secret.
+
+**Application: The Codex Core Chamber at CO — Pre-Boss Choice Room**
+
+A new pre-boss room inserted at the CO node, before the Commander Auros fight. Accessible after 6 Shards are in hand but before engaging Auros. The seventh Shard is visible inside the Codex Core, pulsing.
+
+**Description:**
+
+> *The chamber hums like a tuning fork. The Codex — not all of it, not yet, but the architecture of it — is visible here as a standing column of light, each Shard spinning in its locked position. Six of them yours now. The seventh is here. Has been here. The chamber built itself around the seventh Shard centuries ago and the whole CO node is structured around keeping anything from touching it. Commander Auros is not guarding the Codex. She is part of the seal. She does not know this. When she attacks you, she is executing a Scholar King failsafe that has been running in her bones for thirty years.*
+
+**The Choice:**
+
+| Option | Mechanic | Outcome |
+|--------|---------|---------|
+| **Stabilize** | Standard path — take Shard, face Auros | Normal CO boss fight; full ending options |
+| **Destroy the housing** | Ceremonia Roll STR DC 15 — smash the crystal column | Shard acquired without Auros fight (ends threat) — but `curseScore +5`: "You broke something that could not be rebuilt." Auros's armor fails (she is freed from the compulsion) but the Codex housing is permanently scarred |
+| **Claim it as power** | Ceremonia Roll CHA DC 17 — assert ownership of the full Codex in its incomplete state | `surgeCharges` +2 permanent for this run, `voidPressure` +3 (the void notices), Shard acquired, Auros fight still required but Auros is confused: "You shouldn't be able to do that." |
+
+**The Loop Reveal:**
+
+If `priorCarrierSeen: true` (from §D01-03 — the player met the Prior Carrier in Weimar), an additional text block fires:
+
+> *The Prior Carrier said "Tell Sweelinck I found the seventh entry." You are standing in the room where that entry was written. This is not a metaphor. The Codex recorded you before you arrived. The blank page is not blank.*
+
+This fires as a one-time combat log hcard. No mechanical effect. It is the answer to where you were before the loop.
+
+**New state flags:** `codexCoreChosen: 'stabilize'|'destroy'|'claim'|null`, `codexCoreEntered: boolean`
+
+---
+
+### §DUNGEON-01-G. Lab Report Gate
+
+Write `lab-report-dungeon-ten-themes.md` before implementing any of the above. Report must lock:
+
+1. Which themes are P1 (low-hanging, existing infrastructure) vs P3+ (require new nodes/systems)
+2. Node MM (Mimic Meadows) data shape: `WORLD_DB` entry, monster keys, `passive` flag implementation
+3. Tribble multiplication mechanic: how `tribbleCount` interacts with inventory slots
+4. Madness Table: confirm flavor-only (no mechanical penalties) vs allowing light penalties
+5. `voidFluxActive` inversion logic: where in `storyRollAttack()` to insert, how to avoid breaking existing condition item calculations
+6. Prior Carrier NPC: confirm this is a separate entity from any existing NPC; does not share state with player
+7. Codex Core Chamber choice room: confirm "Destroy" and "Claim" paths do not break the existing ending system (`_missionComplete()` requires `catKingDefeated + sevenShards`)
+
+---
+
+## §DUNGEON-02 — Five-Act Arthurian Quest Elaborations (10 + Framework)
+
+**Source:** §DUNGEON-01 themes + Chrétien de Troyes structural analysis from §RESEARCH-01  
+**Status:** 🔄 In Progress — Layer 80 (2026-05-26). D02-01/02/03/04/05/07/09/10 live. D02-06 (SW node, deferred P3+), D02-08 (MM node, deferred P3+) planned. See `quest.md` for register.  
+**Structure:** Each quest has 5 acts. Every act is tagged **[Story Skill Check]** or **[Story Gating Battle]**. No permanent fail — retryable until pass. Final act is always the story-driving Ceremonia Roll.
+
+**Act label conventions:**
+- **[Story Skill Check]** — Ceremonia Roll; retry gate is one day advance. Story pauses here until pass.
+- **[Story Gating Battle]** — Must win combat to proceed. No fail state; player respawns at checkpoint; quest remains active.
+- **[Story-Driving]** — Final act only. Ceremonia Roll that closes the quest emotionally. Always retryable, but each fail generates a unique flavor line.
+
+**Five-act template (Chrétien de Troyes pattern):**
+
+| Act | Arthurian parallel | Mechanic | Named for |
+|-----|--------------------|---------|-----------|
+| I | Encounter / The Object appears | Skill Check DC Easy | The object's first form |
+| II | Complication / The Test | Skill Check DC Medium | The object under pressure |
+| III | The Ordeal | Gating Battle | The object at risk |
+| IV | The Cost / Recognition | Skill Check DC Medium-Hard | The object changed |
+| V | The Seal / Return | Story-Driving Skill Check | The object in its final meaning |
+
+---
+
+### §D02-01 — "The Drowned Page" (Quest: Abyssal Scriptorium Approach)
+
+**Location:** AT — Abyssal Scriptorium (EB cluster approach)  
+**Object travels:** A drowned manuscript page — Froberger's handwriting, waterlogged, still legible  
+**Chrétien parallel:** Lancelot — the scholar chose the wrong path (the page was never sent); now it must be recovered by someone who will do what Froberger could not
+
+---
+
+**Act I — "The Page Afloat"** `[Story Skill Check]`
+
+> *The entrance to the Scriptorium is three inches of ink-black water. Something floats at the surface — a page, face-up, as if placed.*
+
+Roll: INT (Investigation) DC 10 — recognize Froberger's handwriting.  
+**Pass:** You carry the page forward. It becomes your compass through the dungeon.  
+**Fail:** Retry next room. The page floats there. It will wait.
+
+---
+
+**Act II — "The Flooded Chamber"** `[Story Skill Check]`
+
+> *The second room is deeper. Something moves under the surface — not fast, not hostile. Just present.*
+
+Roll: DEX (Stealth) DC 12 — cross without disturbing the water.  
+**Pass:** The thing below does not surface. You reach the door.  
+**Fail:** `voidPressure +1`. Retry — the thing resettles. Try again.
+
+---
+
+**Act III — "The Archivist's Guardian"** `[Story Gating Battle]`
+
+> *A Scholar King construct stands between the archives and you. It does not speak. It attacks because it was built to. The page in your hand flickers — it recognizes something it cannot act on.*
+
+Battle: AC 16 / HP 40. Must defeat to reach the central archive.  
+**Win:** The construct falls. The page stops flickering. The archive door opens.
+
+---
+
+**Act IV — "The Reading"** `[Story Skill Check]`
+
+> *The page is now fully legible in the archive's light. It was always complete. The water preserved it.*
+
+Roll: INT (Arcana) DC 13 — decode the Scholar King cipher on the page.  
+**Pass:** The Shard's location is confirmed. The page dissolves — it was always meant to be read exactly here.  
+**Fail:** `voidPressure +1`. Retry — the cipher reshuffles but stays readable.
+
+---
+
+**Act V — "The Librarian's Question"** `[Story-Driving Skill Check]`
+
+> *A voice from the walls — the Scholar King's recorded question, echoing since the archive was sealed. It has been asking this for three centuries. You are the first person to hear it who could answer.*
+
+Roll: CHA (Persuasion) DC 14 — "What are you here to preserve?"  
+**Pass:** The Shard room unlocks peacefully. `scriptorium_approach_complete: true`.  
+**Fail flavor:** *"The archive has heard that answer before. It didn't work then either."* Retry next visit.
+
+---
+
+### §D02-02 — "The Extended Hand" (Quest: The Codex Inquisitor)
+
+**Location:** WM — Weimar lower archive (behind `wmLowerArchiveUnlocked` gate)  
+**Object travels:** The construct's outstretched hand — extended for three centuries, waiting  
+**Chrétien parallel:** Erec — the formal encounter that starts the arc; sitting across from someone who knows your worth before you do
+
+---
+
+**Act I — "The Handshake"** `[Story Skill Check]`
+
+> *The Inquisitor's hand has been extended since the archive was sealed. Three centuries. Whoever shakes it must be willing to be questioned. The chair is on the other side of the desk.*
+
+Roll: CHA (Persuasion) DC 10 — volunteer to be the one who sits.  
+**Pass:** You shake the hand. The construct activates.  
+**Fail:** The construct waits. It will wait another three centuries. Try again.
+
+---
+
+**Act II — "The First Two Questions"** `[Story Skill Check]`
+
+> *"Name someone you helped." Then: "Name something you sacrificed." The construct reads your state — it knows if you're lying.*
+
+Roll: WIS (Insight) DC 12 — answer truthfully (answers must match `npcFavorability` and `defeatedBattles` state).  
+**Pass:** "Acknowledged." The third question prepares.  
+**Fail (lie detected):** 10 psychic damage. *"The record disagrees."* Retry with honest answer.
+
+---
+
+**Act III — "The Construct's Patience"** `[Story Gating Battle — triggered by two lies]`
+
+> *If honesty fails twice, the Inquisitor's patience ends. It was built to protect the archive, not to be deceived.*
+
+Battle: AC 14 / HP 30. Only triggered by repeated dishonesty. Defeating it opens the door; the third question is waived — but `inquisitorPassed` remains false.  
+**Win:** Passage granted. The hand goes still.
+
+---
+
+**Act IV — "The Third Question"** `[Story Skill Check]`
+
+> *"Why are you still here after everything?" There is no wrong answer. The construct measures conviction, not content.*
+
+Roll: CHA (Persuasion) DC 12 Ceremonia Roll.  
+**Pass:** The door opens. Archive key acquired. `inquisitorPassed: true`.  
+**Fail:** *"You'll need to mean it."* Retry next day.
+
+---
+
+**Act V — "The Record"** `[Story-Driving Skill Check]`
+
+> *Inside the archive, a record book lists every prior applicant. The handshake is on each page — the same extended hand, different grips.*
+
+Roll: INT (Investigation) DC 13 — find your own entry in the record.  
+**Pass:** It is there. Dated before you arrived. *"The Codex knew."* The Prior Carrier's cell is in the next room.  
+**Fail flavor:** *"Your page is here but it's blank. You'll fill it in by the time you leave."*
+
+---
+
+### §D02-03 — "The Worn Boots" (Quest: The Prior Carrier)
+
+**Location:** WM cell — behind the Inquisitor's archive  
+**Object travels:** The Prior Carrier's worn boots — identical to yours in every detail  
+**Chrétien parallel:** Yvain — the promise broken across a loop; the knight who must return under a name not yet re-earned
+
+---
+
+**Act I — "The Cell"** `[Story Skill Check]`
+
+> *The cell door is locked from the inside. The lock is on their side. This is not imprisonment. This is choice.*
+
+Roll: WIS (Perception) DC 10 — notice the lock placement before knocking.  
+**Pass:** You knock. They look up.  
+**Fail:** You try the door first — it doesn't open. Look again.
+
+---
+
+**Act II — "The Question"** `[Story Skill Check]`
+
+> *"Did the Void open again?" Their eyes are tired but the question is precise. They have asked it before. They will ask it again.*
+
+Roll: CHA (Persuasion) DC 11 — answer truthfully (matches actual `voidPressure` state).  
+**Pass:** They nod. They begin to speak.  
+**Fail:** *"You don't know yet. Come back when you do."* Retry after `voidPressure` updates.
+
+---
+
+**Act III — "The Outrider"** `[Story Gating Battle]`
+
+> *A Void Outrider has been tracking the Prior Carrier. It breaks through the archive wall. The Carrier does not fight — they have already done this. They watch.*
+
+Battle: AC 14 / HP 35. Must defeat to protect them.  
+**Win:** The Outrider collapses. *"Thank you,"* the Carrier says, which is not nothing.
+
+---
+
+**Act IV — "The Token"** `[Story Skill Check]`
+
+> *"Take this." The token is worn smooth. It is not a gift. It is the thing they carried when they last stood where you are standing.*
+
+Roll: WIS (Insight) DC 12 — understand what the token is before accepting.  
+**Pass:** `priorCarrierSpoke: true`. The token means: you are not the first, and the one before you was not the first either.  
+**Fail:** You take it anyway. `priorCarrierSpoke: false`. The distinction matters later.
+
+---
+
+**Act V — "The Name"** `[Story-Driving Skill Check]`
+
+> *They say your name. Not your title. Your actual name. They should not know it. You gave it to no one here.*
+
+Roll: CHA (Persuasion) DC 13 — "How do you know that?"  
+**Pass:** *"I was you. Before the last time."* `priorCarrierSeen: true`. The blank journal page is no longer blank.  
+**Fail flavor:** *"You're not ready to hear that answer."* Come back after advancing one act in the main quest.
+
+---
+
+### §D02-04 — "The Journal Entry" (Quest: The Memory Gate)
+
+**Location:** CO approach — Catacombs corridor  
+**Object travels:** A specific journal entry — found, carried, offered  
+**Chrétien parallel:** Cligès — the Anti-Tristan move; refusing the tragic cost; choosing to pay voluntarily rather than have it taken
+
+---
+
+**Act I — "The Runes"** `[Story Skill Check]`
+
+> *The gate's inscription is not a threat. It is an offer. There is a difference.*
+
+Roll: INT (Arcana) DC 10 — read the inscription before agreeing to anything.  
+**Pass:** You understand the full price before committing. *"A memory given freely passes. A memory taken by force costs more."*  
+**Fail:** You don't read it fully. You can still pay the toll, but without the context.
+
+---
+
+**Act II — "The Choice"** `[Story Skill Check]`
+
+> *The gate reads intent. Not what you say — what you hold toward it.*
+
+Roll: WIS (Insight) DC 12 — identify a journal entry you are willing to lose.  
+**Pass:** The gate accepts the choice without taking it yet. The entry glows in your pack.  
+**Fail:** The gate refuses unclear intent. Retry when you know which entry to offer.
+
+---
+
+**Act III — "The Guardian"** `[Story Gating Battle — bypass path]`
+
+> *The guardian is not blocking the toll. It is the toll for those who refuse to pay. The bypass is harder than the price.*
+
+Battle: AC 15 / HP 45. Defeat opens the gate without the memory cost — but `memorGateBypassUsed: true` affects the Act V room.  
+**Win:** Gate opens. You paid nothing and lost something harder to name.
+
+---
+
+**Act IV — "The Payment"** `[Story Skill Check — toll path only]`
+
+> *The gate says nothing. It takes the memory and is done. The entry is gone from your journal. What remains is the gap.*
+
+Roll: CHA (Persuasion) DC 13 — "I give this freely."  
+**Pass:** Entry removed from `journalEntriesRead`. Passage opens. The gate says nothing.  
+**Fail:** *"That was not free."* Try again. The gate waits.
+
+---
+
+**Act V — "The Other Side"** `[Story-Driving Skill Check]`
+
+> *A small room. A single chair. Something left here by whoever paid last.*
+
+Roll: INT (Investigation) DC 12 — examine the room.  
+**Pass:** Another journal entry — from someone else's run. Left here. `memorGatePassedEntry: true`.  
+**Fail flavor (bypass path):** The room is empty. The chair is for the person who paid.
+
+---
+
+### §D02-05 — "The Chalk Mark" (Quest: The Void Fracture Maze)
+
+**Location:** BK — Void Shaman's Sanctum approach  
+**Object travels:** A chalk mark scratched on the first wall entering the maze  
+**Chrétien parallel:** Lancelot and the cart — you enter knowing it will cost you; the mark is the commitment to return
+
+---
+
+**Act I — "The Mark"** `[Story Skill Check]`
+
+> *Before entering, you scratch an orientation mark on the first wall. The maze will try to erase it. You are betting that it can't.*
+
+Roll: DEX (Sleight of Hand) DC 10 — the mark holds through the first shift.  
+**Pass:** One of three required checks auto-complete (`mazeSolvedChecks: 1`).  
+**Fail:** The mark smears. Start with zero checks.
+
+---
+
+**Act II — "The First Shift"** `[Story Skill Check]`
+
+> *The walls begin to move. A d6 rolls 5. New positions. The chalk mark is somewhere behind you.*
+
+Roll: WIS (Survival) DC 14 — maintain orientation through the rotation.  
+**Pass:** `mazeSolvedChecks: 2`. The mark becomes visible again from the new angle.  
+**Fail:** Looped back to maze entrance. Mark still visible. Retry.
+
+---
+
+**Act III — "The Construct"** `[Story Gating Battle]`
+
+> *The construct patrols the maze's center. While it lives, the maze does not shift. Its presence stabilizes the architecture. Defeating it is, paradoxically, the only way to end the maze's coherence.*
+
+Battle: AC 15 / HP 40. Defeat auto-completes the third check (`mazeSolvedChecks: 3`). The maze recognized the act as orientation.  
+**Win:** Three checks. Maze stabilized. Boss room visible.
+
+---
+
+**Act IV — "The Last Shift"** `[Story Skill Check — if maze shifts post-battle]`
+
+> *One last rotation before the maze accepts its defeat. A final d6: 6.*
+
+Roll: INT (Arcana) DC 14 — read the void runes on the final panel.  
+**Pass:** You move through without losing the path.  
+**Fail:** One more loop. The chalk mark is still there. The maze is almost done.
+
+---
+
+**Act V — "The Exit"** `[Story-Driving Skill Check]`
+
+> *The boss room door is visible. The maze makes one last attempt — the final wall segment begins to close.*
+
+Roll: STR/DEX (Athletics) DC 12 — dash through before it locks.  
+**Pass:** Through. `voidMazeEntered: true`. The chalk mark is on the other side of the wall now.  
+**Fail flavor:** *"The wall closes. The chalk mark is on the wrong side. You can still see it."* Retry immediately — no day gate on Act V.
+
+---
+
+### §D02-06 — "The Blueprint Roll" (Quest: The Scholar King's Workshop)
+
+**Location:** Node SW — Scholar King's Workshop (new optional node, WM.S or CO.W)  
+**Object travels:** A blueprint roll — the original architectural plans for Commander Auros's armor  
+**Chrétien parallel:** Erec and Enide — the hero in domestic repose discovers the stakes were always higher than the household; the armor was made here; the maker was already gone
+
+---
+
+**Act I — "The Dusty Table"** `[Story Skill Check]`
+
+> *The workshop has not been touched. The blueprint roll is on the table as if the Scholar King stepped out to get tea and never returned.*
+
+Roll: INT (Investigation) DC 10 — confirm this is the right blueprint.  
+**Pass:** You recognize Commander Auros's armor system. This is where she was made. The workshop is her origin.  
+**Fail:** Retry — keep searching the table.
+
+---
+
+**Act II — "The Prototype"** `[Story Skill Check]`
+
+> *A half-finished wand on the shelf. The creator ran out of time.*
+
+Roll: WIS (Perception) DC 11 — assess stability.  
+**Pass:** `Scholar King's Prototype Wand` added (single use, 2d6 force).  
+**Fail:** The wand sparks. Leave it. Return next day if desired.
+
+---
+
+**Act III — "The Spirit"** `[Story Gating Battle — triggered by second short rest]`
+
+> *After two short rests, footsteps from below. The Scholar King Spirit does not want a fight. But it is not accustomed to visitors, and discomfort, in spirits, looks a great deal like hostility.*
+
+Ceremonia Roll CHA DC 12 — "I'm not here to take anything."  
+**Pass:** No battle. Spirit speaks. Act IV proceeds with full lore.  
+**Roll fail / combat chosen:** AC 12 / HP 25. Defeat the spirit — lore lost; skip to Act V with `spiritDefeated: true`.
+
+---
+
+**Act IV — "The Blueprint's Secret"** `[Story Skill Check]`
+
+> *The Spirit points to a specific fold in the blueprint roll. The left pauldron joint. Where the original design was never completed.*
+
+Roll: WIS (Insight) DC 13 — understand the implication for the CO boss fight.  
+**Pass:** `aurosBlueprintKnown: true`. In the CO boss fight, Auros's left pauldron has -4 AC (her armor was never finished there).  
+**Fail (or spirit defeated):** No knowledge gained. The blueprint roll is still useful as lore, but the mechanical advantage is lost.
+
+---
+
+**Act V — "The Name on the Cover"** `[Story-Driving Skill Check]`
+
+> *As you leave, you look at the blueprint roll's cover. Your name is on it. Not written now. Written into the original paper, three centuries ago, in the Scholar King's hand.*
+
+Roll: CHA (Persuasion) DC 13 — accept what this means.  
+**Pass:** `scholarWorkshopComplete: true`. The Prior Carrier connection fires: you designed this. You designed her.  
+**Fail flavor:** *"You fold the cover back and pretend you didn't see it. The paper does not pretend back."*
+
+---
+
+### §D02-07 — "The Maintenance Plate" (Quest: Neon Undercity Madness Gate)
+
+**Location:** CY — Neon Undercity (first visit only; NG+ variant)  
+**Object travels:** A copper maintenance plate — Scholar King cipher, dated 300 years ago  
+**Chrétien parallel:** Yvain's lion — the beast that follows after the madness; the data wraith is the serpent; your recognition of the plate is the rescue
+
+---
+
+**Act I — "The Plate"** `[Story Skill Check]`
+
+> *First entry to CY. The neon is loud. The plate on the wall is quiet. Dated three centuries ago. Scholar King cipher. You should not be able to read this.*
+
+Roll: WIS (Perception) DC 10 — notice the plate before the ambient overwhelms you.  
+**Pass:** You see it. It is there.  
+**Fail:** Your attention is pulled by the neon. Retry — the plate doesn't move.
+
+---
+
+**Act II — "The Madness Save"** `[Story Skill Check]`
+
+> *CY's aesthetic makes no sense. A fantasy city should not have neon. You have been here before. You don't know when.*
+
+Roll: WIS saving throw DC 12.  
+**Pass:** Clarity. This is Scholar King infrastructure — copper wiring, bioluminescent void growth. The data wraiths are corrupted maintenance programs.  
+**Fail:** Madness Table d10 fires (flavor hcard only, no mechanical penalty). Both results leave the plate visible.
+
+---
+
+**Act III — "The Data Wraith"** `[Story Gating Battle]`
+
+> *The Data Wraith investigates the plate at the same moment you do. It is drawn to the cipher. So are you. There is only one plate.*
+
+Battle: AC 14 / HP 30. Must defeat to examine the plate safely.  
+**Win:** The Wraith dissolves. The plate is yours to read.
+
+---
+
+**Act IV — "The Cipher"** `[Story Skill Check]`
+
+> *The maintenance log names the original builder. The name is a Scholar King designation that matches a fragment Froberger held.*
+
+Roll: INT (Arcana) DC 13 — decode the log.  
+**Pass:** `cyMaintenanceDecoded: true`. The builder designation matches a cipher fragment from Froberger's Journal (Entry 17 or 29 if read).  
+**Fail:** The cipher scrambles. Retry next day.
+
+---
+
+**Act V — "The Name on the Log"** `[Story-Driving Skill Check]`
+
+> *The builder's designation, fully decoded, translates to a name in the Scholar King's naming convention. It is yours — not your current name, but the name you had before.*
+
+Roll: CHA (Persuasion) DC 12 — accept or reject the implication.  
+**Pass:** `cyOriginKnown: true`. `Scholar King's Name Plate` added to inventory (flavor item, cannot be sold). The Neon Undercity is, in a very specific sense, yours.  
+**Fail flavor:** *"The translation is inconclusive. This is the most comfortable explanation available to you."*
+
+---
+
+### §D02-08 — "The Dropped Coin" (Quest: The Mimic Colony)
+
+**Location:** Node MM — The Mimic Meadows  
+**Object travels:** A small shiny coin — dropped by the first baby chest mimic, carried through all five acts  
+**Chrétien parallel:** Erec and Enide (the vavasor's daughter) — beauty and intelligence recognized in a setting of apparent lowliness; the mimic colony is not low, it is simply misread
+
+---
+
+**Act I — "The Coin"** `[Story Skill Check]`
+
+> *A baby chest mimic runs past and drops a coin. It is watching to see what you do with it.*
+
+Roll: WIS (Animal Handling) DC 10 — pick it up gently, visibly, without pocketing it.  
+**Pass:** The baby mimic pauses. It watches. `mimicColonyEntered: true`.  
+**Fail:** You pocket the coin. The baby mimic hisses once and runs. Retry — put the coin back down first.
+
+---
+
+**Act II — "The Bookshelf"** `[Story Skill Check]`
+
+> *A bookshelf mimic naps in the corner. A Fuzzy Tribble is balanced on its top shelf, asleep. This is apparently a normal arrangement.*
+
+Roll: WIS (Animal Handling) DC 12 — approach the napping mimic without waking it.  
+**Pass:** You sit near it. It opens one eye. It goes back to sleep. A Fuzzy Tribble rolls off and lands near your foot. `tribbleCount: 1`.  
+**Fail:** It hisses — 2 psychic damage. Try again.
+
+---
+
+**Act III — "The Mother Mimic"** `[Story Gating Battle — if any mimic provoked]`
+
+> *The Mother Mimic is the size of a treasure chest that has been thinking about it for a very long time. She does not attack unless something she considers hers is threatened.*
+
+Battle triggers only if a mimic was attacked: AC 16 / HP 60.  
+**Win:** She retreats. The colony resettles. The coin is still in your hand.  
+**No battle path:** If no mimics were harmed, skip to Act IV directly.
+
+---
+
+**Act IV — "The Feeding"** `[Story Skill Check]`
+
+> *The Mother Mimic watches you. The coin the baby dropped is still in your hand. You have been carrying it through this whole place.*
+
+Roll: WIS (Animal Handling) DC 14 — return the coin to the baby mimic, in front of the Mother.  
+**Pass:** The baby mimic takes the coin to the Mother. She opens her chest lid and gives you `Mimic's Cache` (rare item + 3 Fuzzy Tribbles). `tribbleGladesFed: true`.  
+**Fail:** The Mother closes her lid. Retry tomorrow — she is patient.
+
+---
+
+**Act V — "The Name"** `[Story-Driving Skill Check]`
+
+> *The baby chest mimic follows you toward the exit. It is not following you. It has decided you are interesting and has adjusted its route accordingly.*
+
+Roll: CHA (Persuasion) DC 10 — accepting the pet.  
+Text prompt: player names the mimic → `mimicPetName` set.  
+**Pass:** `Baby Mimic` item added. *"It has decided you are acceptable. You are unsure when you decided the same."*  
+**Fail flavor:** *"It follows anyway. You just haven't acknowledged it yet."*
+
+---
+
+### §D02-09 — "The Spell Scroll" (Quest: The Void Flux Chamber)
+
+**Location:** AT (Abyssal Scriptorium mid-chamber) or CY_VOID (deepest relay)  
+**Object travels:** A spell scroll in the player's pack — enters the chamber, exits changed  
+**Chrétien parallel:** Cligès and Fenice — the thing that comes out of the experience is not the same as what went in; the self that emerges from the inversion is the Anti-Tristan move
+
+---
+
+**Act I — "The Entry"** `[Story Skill Check]`
+
+> *The room hums at a frequency that isn't sound. The spell scroll in your pack begins to glow wrong.*
+
+Roll: INT (Arcana) DC 10 — recognize the inversion field before casting anything.  
+**Pass:** `voidFluxActive: true` registered. You will not cast by accident.  
+**Fail:** Your next action misfires once (condition item effect inverted). You recognize it after.
+
+---
+
+**Act II — "The Immunization"** `[Story Skill Check]`
+
+> *You have a brief window before combat begins to choose which rule you refuse to follow.*
+
+Roll: INT (Arcana) DC 12 — choose one inversion to immunize against.  
+**Pass:** Your chosen immunity applies. One spell effect behaves normally.  
+**Fail:** All inversions apply this combat. The field does not negotiate.
+
+---
+
+**Act III — "The Chamber's Guardians"** `[Story Gating Battle]`
+
+> *Three Void-flux constructs. They were built inside the inversion field. They do not find it confusing.*
+
+Battle: 3× AC 14 / HP 20 each. The inversion field is active — use immunized spell normally; all others invert.  
+**Win:** `voidFluxCleared: true`.
+
+---
+
+**Act IV — "The Scroll"** `[Story Skill Check]`
+
+> *After the battle, the scroll in your pack has been changed by the field. It is still the same scroll. It is also something else.*
+
+Roll: INT (Arcana) DC 13 — safely stabilize the changed scroll.  
+**Pass:** The scroll now holds both its original spell AND its inverted variant — dual-use, single use. `voidFluxScrollChanged: true`.  
+**Fail:** The scroll stabilizes back to its original form only. The change was lost.
+
+---
+
+**Act V — "The Exit"** `[Story-Driving Skill Check]`
+
+> *The field collapses. Thirty seconds. The room returns to normal physics, which in this context is an event.*
+
+Roll: DEX (Acrobatics) DC 12 — dash through before the rebound wall closes.  
+**Pass:** You exit with the changed scroll. `voidFluxActive: false`. The scroll whispers in your pocket.  
+**Fail flavor:** *"The wall closes. You are inside the rebound. The scroll chooses one form. You have fifteen seconds before the next opening."* Retry immediately.
+
+---
+
+### §D02-10 — "The Seventh Shard" (Quest: The Loop Heart, Codex Core Chamber)
+
+**Location:** CO — pre-boss Codex Core Chamber  
+**Object travels:** The seventh Shard — visible inside the pulsing column; the thing the loop was built to carry  
+**Chrétien parallel:** Lancelot — the two-step hesitation; the choice in this room is the measure of how completely you have committed
+
+---
+
+**Act I — "The Hum"** `[Story Skill Check]`
+
+> *The chamber hums at the frequency of something that has been running for centuries without maintenance. Every step echoes like a heartbeat — not yours.*
+
+Roll: WIS (Perception) DC 10 — sense how many times this room has been entered before.  
+**Pass:** You know the number. `codexCoreEntered: true`.  
+**Fail:** You enter without knowing. The number is there either way.
+
+---
+
+**Act II — "The Three Paths"** `[Story Skill Check]`
+
+> *Inscribed on the column base: three sets of instructions. Each clear. Each honest about its cost.*
+
+Roll: INT (Arcana) DC 12 — read and understand all three costs before choosing.  
+**Pass:** You see: Stabilize (standard, Auros fight), Destroy (STR DC 15, curseScore +5, Auros freed), Claim (CHA DC 17, surge +2, void +3, Auros fight required).  
+**Fail:** The inscription is partially obscured. You choose without full information — the choice is valid; the cost may surprise you.
+
+---
+
+**Act III — "Commander Auros"** `[Story Gating Battle — Stabilize and Claim paths]`
+
+> *She is not protecting the Codex. She is part of the Codex's seal. She does not know this. When she attacks, she is executing a Scholar King failsafe that has been running in her bones for thirty years.*
+
+Battle: AC 22 / HP 300 / ATK +12.  
+**Destroy path bypass:** STR Ceremonia Roll DC 15 — smash the housing before she can respond. Pass: no battle. `curseScore +5`.  
+**Win (Stabilize/Claim):** Auros falls. The seal releases her. She will be someone else when she wakes.
+
+---
+
+**Act IV — "The Cost"** `[Story Skill Check]`
+
+> *The choice has been made. Now it must be accepted.*
+
+**Stabilize path:** WIS (Insight) DC 12 — *"Accept that it will open again."* Pass: standard ending proceeds.  
+**Claim path:** CHA (Persuasion) DC 17 Ceremonia Roll — assert full ownership. Pass: `surgeCharges +2`, `voidPressure +3`.  
+**Destroy path:** No check. `curseScore +5` already paid.  
+**Fail (Claim or Stabilize):** *"Not yet."* Retry next day.
+
+---
+
+**Act V — "Sweelinck's Last Question"** `[Story-Driving Skill Check]`
+
+> *Sweelinck's Last Question fires. One final Ceremonia Roll — the question determined by your curse score and mission state. You have carried the Shard this far. The loop closes here, or it does not.*
+
+Roll: CHA (Persuasion) DC 12 — answer the question honestly. Any true answer passes.  
+**Pass:** `codexCoreChosen` set. Victory sequence fires. The loop heart closes.  
+**Fail flavor:** *"The question waits. It has waited before. It will wait until you mean it."*  
+**Prior Carrier connection (if `priorCarrierSeen`):** *"The blank page is not blank. The Prior Carrier left their answer here. You are leaving yours."*
+
+---
+
+### §D02-11 — The Five-Act Arthurian Quest Framework
+
+**Purpose:** A design template for all future quests in The Shattered Codex — applicable to any new quest, EB approach, romantic arc, or skill check chain.
+
+**The core argument:** Every quest in The Shattered Codex is a Chrétien de Troyes romance in miniature. The player is always Lancelot choosing the cart, or Yvain breaking the promise, or Erec sitting across from Enide at the vavasor's table. The object that travels through the quest's five acts is the emotional anchor — the thing that cannot be named directly, carried instead through five different forms.
+
+---
+
+**Structural rules:**
+
+1. **Name the quest for its object, not its goal.** "The Drowned Page" not "Retrieve the Archive Key." The object is what travels; the goal is what closes.
+
+2. **Tag every act.** `[Story Skill Check]` or `[Story Gating Battle]`. No unmarked acts. Players always know what kind of moment they are in.
+
+3. **No permanent fail.** Every check is retryable. The retry gate (day advance, quest state change, or immediate) must be specified. The emotional cost of failing is the story — it generates flavor text, not a dead end.
+
+4. **The battle is Act III.** The Ordeal is always in the middle. Acts I–II build toward it; Acts IV–V are its aftermath. Do not put the battle at Act I or Act V.
+
+5. **Act V is always the story-driving skill check.** It closes the object's arc. The check is never purely mechanical — it asks the player to acknowledge something. It cannot be brute-forced by stats alone (CHA-based Ceremonia Roll is the default).
+
+6. **Two perspectives per act (implied).** Even in a solo game, write the NPC's implied perspective into the vignette prose. *"She does not look up from the logbook"* — we do not need to be told what Yael is thinking. The gap between her action and yours is the emotion.
+
+7. **The object must arrive changed.** By Act V, the object the quest was named for has changed form: the page dissolves, the coin is given back, the boots are recognized, the scroll whispers. The change is the evidence that something happened.
+
+---
+
+**Difficulty scaling by act:**
+
+| Act | Check DC (Easy Quest) | Check DC (Mid Quest) | Check DC (Hard Quest) |
+|-----|----------------------|---------------------|----------------------|
+| I | 10 | 11 | 12 |
+| II | 12 | 13 | 14 |
+| III | Battle: AC 13/HP 25 | Battle: AC 15/HP 40 | Battle: AC 17/HP 55 |
+| IV | 12 | 14 | 15 |
+| V | 12 | 14 | 16 |
+
+**Quest type pairings (what kinds of checks belong to what arcs):**
+
+| Arc type | Act I | Act II | Act IV | Act V |
+|----------|-------|--------|--------|-------|
+| Romantic/social | CHA Persuasion | WIS Insight | CHA Persuasion | CHA Persuasion |
+| Exploration/discovery | WIS Perception | INT Investigation | INT Arcana | INT History |
+| Physical/dungeon | WIS Perception | DEX Stealth | STR Athletics | DEX Acrobatics |
+| Combat/ordeal | INT Investigation | WIS Survival | WIS Insight | CHA Persuasion (final acceptance) |
+
+**The last line of every Act V vignette prose block should pass through the object:**
+
+> *The page dissolves.* (D02-01)  
+> *The hand goes still.* (D02-02)  
+> *The blank page is not blank.* (D02-03)  
+> *The gap where the memory was.* (D02-04)  
+> *The chalk mark is on the other side of the wall.* (D02-05)  
+> *The blueprint roll knew you were coming.* (D02-06)  
+> *The Neon Undercity is yours.* (D02-07)  
+> *It has decided you are acceptable.* (D02-08)  
+> *The scroll whispers.* (D02-09)  
+> *The loop heart closes.* (D02-10)

@@ -1,20 +1,20 @@
 # Roll2Hit — The Shattered Codex: Document Index
 
 **Project:** `roll2hit-v3.html` — single-file combat tracker + narrative RPG
-**Status:** Layers 0–77 implemented · 17,762 lines · 76 nodes · 370 monsters · 39 lab reports · FC01–FC08 ✅ · §RESEARCH-01 ✅ · §API-01+02 ✅ · SP4 ✅
+**Status:** Layers 0–80 implemented · ~19,349 lines · 76 nodes · 370 monsters · 41 lab reports · FC01–FC08 ✅ · §RESEARCH-01 ✅ · §API-01+02 ✅ · SP4 ✅ · §DESIGN-02 ✅ · §DESIGN-03 ✅ · §DUNGEON-01 🔄 · §DUNGEON-02 🔄
 **Last updated:** 2026-05-26
 
 ### Doc Health Badge
 
 | Metric | Value | Status |
 |--------|-------|--------|
-| HTML line count | 17,762 | ✅ |
-| Lab reports on disk | 39 | ✅ |
-| Lab reports in index | 39 | ✅ |
+| HTML line count | ~19,349 | ✅ |
+| Lab reports on disk | 41 | ✅ |
+| Lab reports in index | 41 | ✅ |
 | Node text rewrites (noir register) | 76 / 76 | ✅ Implemented 2026-05-25 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
-| Layers implemented | 0–77 | ✅ |
-| Last sync pass | 2026-05-26 (SP4) | ✅ |
+| Layers implemented | 0–80 | ✅ |
+| Last sync pass | 2026-05-26 (§DUNGEON-01 P1+P2 complete; §DUNGEON-02 D02-01–05/07/09; SQ node fix) | ✅ |
 
 > Update this table at the start of each session: recount lab reports with `ls lab-report-*.md | wc -l`, check HTML line count with `wc -l roll2hit-v3.html`, confirm FC item status.
 
@@ -89,7 +89,7 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 
 ---
 
-## Lab Report Index (All 37 Reports)
+## Lab Report Index (All 41 Reports)
 
 ### Architecture & Systems
 
@@ -156,6 +156,8 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | `lab-report-void-shaman.md` | 56 | §XXI Void Shaman "The Warden" — dual resolution, verb-tense mandate corruption |
 | `lab-report-corelli-merchant.md` | 61 | §XXVI Corelli — 5-appearance wandering merchant, purchase-gated fav, last_cipher |
 | `lab-report-quest-minus-one-world-creator.md` | 49 | §XIV Quest -1 — Level 21 undefined as invitation, World Creator Wizard |
+| `lab-report-ceremonia-roll-skill-checks.md` | 79 | §DESIGN-03 Ceremonia Roll — `skill_check` quest type, `_rollCeremonia()`, Yael 5-act arc |
+| `lab-report-dungeon-ten-themes.md` | 80 | §DUNGEON-01 — 10 dungeon themes, P1–P3+ tiers, Node MM, Tribble counter, Madness Table, voidFluxActive, Prior Carrier, Codex Core ending compat |
 
 ### Writing & Design Philosophy
 
@@ -294,5 +296,5 @@ All previously logged conflicts resolved. Current known gaps:
 ---
 
 *Last updated: 2026-05-26*
-*Codebase: `roll2hit-v3.html` · 17,762 lines · Layers 0–77 complete · 76 nodes · 370 monsters · 39 lab reports*
+*Codebase: `roll2hit-v3.html` · ~18,657 lines · Layers 0–79 complete · 76 nodes · 370 monsters · 40 lab reports*
 *MIT License — roll2hit.com — Copyright (c) 2026 — Free to use, modify, and share.*
