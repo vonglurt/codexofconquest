@@ -99,7 +99,7 @@ See `story.md §GRIEF AND CORRUPTION` for the vignette prose.
 
 ## §0 — Implementation Readiness Dashboard
 
-> **Status as of Layer 98 (2026-05-27).** §LIX implemented: HR + KS nodes live. Conversion fires on KS arrival (storyRender inline, saulConverted=true). Blind gate blocks KS movement until anathSightRestored (day counter via storyMove). Anath quoteFn 3-state IIFE heals on day 3. quest_road_kesra + quest_anath in QUEST_DB. HTML: ~20,510 lines. Lab reports: 43. Add new layers below as §LX+.
+> **Status as of Layer 99 (2026-05-27).** §LIX+§LX implemented: HR + KS + DR nodes live. Conversion fires on KS arrival. Two-stage KS gate (blind → detention). Basket escape quest_basket_kesra (DEX DC 12, retryable). DR optional Dust Roads. HTML: ~20,545 lines. Lab reports: 43. Add new layers below as §LXI+.
 
 ### Lab Report Index (Layers 48–79)
 
@@ -5714,9 +5714,31 @@ The conversion fires as an inline storyRender div on first arrival at KS. No ski
 | Layer | Content |
 |---|---|
 | §LIX (98) | HR + KS live. Conversion. Blind gate. Anath heals. quest_road_kesra + quest_anath. |
-| §LX (next) | KS basket escape (quest_basket_kesra). DR node (Dust Roads retreat, optional). |
-| §LXI | HR return + Barnach vouches + 15-day Hellenist gate → TS (Tarsis) |
+| §LX (99) | DR node. KS→DR connection. Detention gate. quest_basket_kesra (DEX DC 12, retryable). escapedKesra flag. |
+| §LXI (next) | HR return + Barnach vouches + 15-day Hellenist gate → TS (Tarsis) |
 | §LXII | TS silent years + Barnach arrival → AO (Anthos) + commissioning |
+
+## §LX — Basket Escape + Dust Roads (✅ Implemented — Layer 99)
+
+> **Status:** Live. DR node added. KS.S → DR. Two-stage KS gate (blind → detention). quest_basket_kesra (skill_check, DEX DC 12, retryable, 1-day gate). escapedKesra flag. DR is optional negative space — desert encounter, no quests, no NPCs.
+
+### §LX-A. What Was Built
+
+| Element | Detail |
+|---|---|
+| DR node | num:86, act:4, N:KS — desert_caravan terrain, optional retreat, sleep:true (no cost) |
+| KS update | S: null → S:'DR' |
+| Two-stage KS gate | Blind gate (§LIX) + detention gate (§LX): escapedKesra required after sight restored |
+| quest_basket_kesra | DEX/Stealth DC 12, retryable, 1-day gate, checkPassFlag:'escapedKesra' |
+| _S_DEFAULTS | escapedKesra: false |
+
+### §LX-B. The Two Walls
+
+The player encounters two walls in Kesra. The first is blindness — navigation impossible without sight. The second is the magistrate's watch. Both walls are structural: the first resolves when Anath knocks; the second resolves when the player finds the window the watch hasn't covered. The arc earns both gates — they are not arbitrary difficulty, they are the form that Kesra takes when the warrant authority reverses.
+
+### §LX-C. The Dust Roads
+
+DR has one encounter (Desert Wanderer ×2) and no NPCs. The node text is the only content: "Some things about a person belong to the desert." The player can sleep there for free — the desert is the only space in the arc where nothing is asked of them. Returning to KS.N closes the retreat.
 
 ---
 

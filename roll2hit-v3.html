@@ -7596,9 +7596,13 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   HR:{ num:84, code:'HR', name:'herath', label:'Herath — Lower Court', act:4, N:null, S:null, E:'KS', W:null,
     text:"The city writes its authority in stone. The law courts have been here for three hundred years; the newest wall is a century old; the oldest inscription above the gate has been re-carved twice because the stone wore before the law did.\n\nSaul of Tarsis has a desk in the lower court. On that desk: three warrants, two authorization letters, and a list of names. The names are of people who have been meeting in houses and saying things the court considers seditious. The warrant language is precise: 'Bring them.' Not 'question.' Not 'invite.' Bring.\n\nHe has done this before. The warrants are a bureaucratic instrument. He treats them with the seriousness appropriate to bureaucratic instruments — which is to say, complete and impersonal seriousness. He does not hate the people on the list. He has decided that the list is correct. He has not examined that decision recently.\n\nThe road to Kesra leaves from the east gate. He has already requisitioned the escort. He leaves at first light.",
     npc:'The Court Registrar', battle:null, loot:'Three Herath Warrants · Order of Escort', sleep:true, sleepCost:5 },
-  KS:{ num:85, code:'KS', name:'kesra', label:'Kesra — Lower City', act:4, N:null, S:null, E:null, W:'HR',
+  KS:{ num:85, code:'KS', name:'kesra', label:'Kesra — Lower City', act:4, N:null, S:'DR', E:null, W:'HR',
     text:"The escort has left him at the gate of the lower city. They are not required to wait — the warrant authority is his, not theirs, and he has not invoked it since the road. They leave with the courtesy appropriate to leaving a superior officer who has become someone else's problem.\n\nHe does not know anyone in Kesra who is not on the list. The list is in his coat. He does not take it out.\n\nThree days. He is in a house on the lower road. The innkeeper brings food at noon and does not ask questions about his eyes. Someone else's servant — he does not know whose — has been bringing water in the morning. He has not asked for it. He has not told anyone he cannot see.\n\nOn the third morning, someone knocks.",
     npc:'Anath', battle:null, loot:null, sleep:true, sleepCost:3 },
+  // ── §LX: DR — The Dust Roads (optional retreat) ──
+  DR:{ num:86, code:'DR', name:'desert_caravan', label:'The Dust Roads', act:4, N:'KS', S:null, E:null, W:null,
+    text:"No road. The roads end at Kesra's southern gate. Below the gate: a track that the caravans use, maintained by foot traffic rather than civic investment. Below the track: the desert proper, which is not hostile so much as indifferent.\n\nHe stays in the desert for a season. The duration is not specified in the records he leaves behind — he mentions it in one letter as 'the time I spent in the Dust Roads' and does not elaborate. Whatever happens there is not recorded and is not recoverable. This is intentional. Some things about a person belong to the desert.\n\nHe returns from the Dust Roads changed in a way that is different from the road to Kesra. The road to Kesra changed what he was. The desert changed what he does with it.",
+    npc:null, battle:{label:'Desert Wanderer ×2', key:'desert_wanderer', count:2}, loot:null, sleep:true, sleepCost:0 },
   // ── §LV: The Antecedent Chamber ──
   AC:{ num:83, code:'AC', name:'antecedent_chamber', label:'The Antecedent Chamber', act:1, N:'CY', S:null, E:null, W:null,
     text:"The descent past the CY checkpoint level goes another twelve meters before the floor levels. The conduit cables end at a partition wall — not brick, not data-center partition, something older than either. The indicators in this section run on a power source that predates the undercity infrastructure by a margin no one has calculated because no one has thought to ask.\n\nThe chamber was designed, from the start, to be exactly this: a room with one function and one occupant. The function is containment. The occupant is still here.\n\nIt is not large. It does not need to be. It has been here long enough that the word 'waiting' no longer applies — waiting implies an expectation of change. This is older than that. This is patience as a physical property of the space.\n\nThe Antecedent Seal activates on entry. The seal runs warm. The indicators change from standby to receiving.\n\nYou are, apparently, expected.", npc:'The Antecedent', battle:null, loot:null, sleep:false },
@@ -7730,8 +7734,8 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   YL:{r:6,c:5},   YC:{r:7,c:5},  YD:{r:6,c:4},
   /* DeFi Land — north of Birka Slums */
   DF:{r:3,c:16},  HM:{r:3,c:17},  GL:{r:3,c:15},  S7:{r:3,c:18},
-  /* §LIX — The Road to Kesra cluster */
-  HR:{r:17,c:5},  KS:{r:17,c:8},
+  /* §LIX–§LX — The Road to Kesra cluster */
+  HR:{r:17,c:5},  KS:{r:17,c:8},  DR:{r:19,c:8},
 };
 
 /* ── Layer 9-A: Circuit Corridor Data Structures ── */
@@ -8638,6 +8642,19 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     completeFn:() => !!S_story.anathSightRestored,
     xpAward:300, waypointNode:'KS', reward:0,
     disposition:'"I was afraid of you for three years. I was afraid of you when I knocked on that door. I am choosing not to let that matter." — Anath' },
+  // ── §LX: Basket escape ──
+  quest_basket_kesra: { id:'quest_basket_kesra', type:'skill_check', title:'Over the Wall',
+    desc:"The magistrate of Kesra has learned that Saul is in the lower city — now as a liability rather than an asset. A detention order has been issued. The warrant authority has turned against the warrant-carrier. The gate is watched. The wall is not.",
+    hint:'Find another way out of Kesra. The wall has a window. The window has a rope.',
+    activateNode:'KS', activateCond:() => !!S_story.anathSightRestored,
+    checkAbility:'dex', checkLabel:'Stealth', checkDC:12,
+    retryable:true, retryGateDays:1,
+    xpAward:150,
+    vignetteText:'The basket is large enough. The rope is long enough. The wall is higher than it looks.\n\nBelow the wall: the road to Herath is open. Above: this window is the only way out of a city that has been told to hold you. The watch is on the gate. Not on the wall. Not yet.',
+    passText:'Down. The road. The dark. The escort that escorted you in does not recognize the man who left.',
+    failText:'You pull back before clearing the wall. The window remains. So does the watch. Try again tomorrow.',
+    completeItems:[], checkPassFlag:'escapedKesra',
+    disposition:'"The warrant authority turns against the warrant-carrier. Both are the same warrant." — the wall at Kesra' },
   // ── Layer 55: Visby Underground quests ──
   quest_vs_01: { id:'quest_vs_01', type:'side', title:'Solvak: The Collector',
     desc:"Debt Agent Solvak has been outside Visby six weeks with a 2,000gp debt and no leverage. You might have some.",
@@ -9764,8 +9781,8 @@ const _S_DEFAULTS = () => ({
   scriptorium_approach_complete: false, mimicColonyEntered: false,
   noFishingSignRead: false, fishingRodCouponRedeemed: false,
   yugurtTourBeat: {}, yugurtTourTitle: null,
-  // §LIX: The Road to Kesra
-  saulConverted: false, blindDaysKS: 0, anathSightRestored: false,
+  // §LIX–§LX: The Road to Kesra
+  saulConverted: false, blindDaysKS: 0, anathSightRestored: false, escapedKesra: false,
 });
 
 /* ── Layer 48: Luck — Seventh Stat ── */
@@ -14426,17 +14443,23 @@ function storyMove(dir) {
     storyMsg('🔮 The Convergence is sealed. You need all 7 Codex Shards. You have ' + S_story.shards + '/7.' + _urgency);
     return;
   }
-  // §LIX: KS blind gate — cannot leave Kesra until Anath restores sight
-  if (S_story.currentCode === 'KS' && S_story.saulConverted && !S_story.anathSightRestored) {
-    S_story.blindDaysKS = (S_story.blindDaysKS || 0) + 1;
-    const _ksDay = S_story.blindDaysKS;
-    if (_ksDay >= 3) {
-      storyMsg('Day three. You hear a knock at the door.\n\nSpeak to Anath before leaving Kesra.');
-    } else {
-      storyMsg('You cannot navigate the road without sight. You wait in the house on the lower road.\n\nDay ' + _ksDay + '. Tomorrow may be different.');
+  // §LIX–§LX: KS two-stage gate — blind days, then magistrate detention
+  if (S_story.currentCode === 'KS' && S_story.saulConverted) {
+    if (!S_story.anathSightRestored) {
+      S_story.blindDaysKS = (S_story.blindDaysKS || 0) + 1;
+      const _ksDay = S_story.blindDaysKS;
+      if (_ksDay >= 3) {
+        storyMsg('Day three. You hear a knock at the door.\n\nSpeak to Anath before leaving Kesra.');
+      } else {
+        storyMsg('You cannot navigate the road without sight. You wait in the house on the lower road.\n\nDay ' + _ksDay + '. Tomorrow may be different.');
+      }
+      storyRender(NODE_MAP[S_story.currentCode]);
+      return;
     }
-    storyRender(NODE_MAP[S_story.currentCode]);
-    return;
+    if (!S_story.escapedKesra) {
+      storyMsg('The city watch is at the gate. The magistrate of Kesra has issued a detention order — the warrant authority has turned against the warrant-carrier.\n\nThe gate is watched. The wall is not. Check your active quests.');
+      return;
+    }
   }
   storyCheckMissedSleep();
   // ── L9-G: Corridor travel for non-adjacent moves ──
@@ -14650,6 +14673,9 @@ function storyCheckQuests(node) {
       }
       if (id === 'quest_anath') { // §LIX
         msgs.push('🕊️ +300 XP. Sight restored. Anath came because he was told to, and chose to anyway.');
+      }
+      if (id === 'quest_basket_kesra') { // §LX
+        msgs.push('🧺 +150 XP. Down. The road. The dark. The man who left does not look like the man who arrived.');
       }
       if (id === 'quest_antecedent_01') { // §LV
         msgs.push('🏛️ The question is closed. The archive still has an archivist.');
