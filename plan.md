@@ -741,7 +741,7 @@ Current chips are small `border: 1px solid` pills. New chips are taller (32px mi
 
 ## §DESIGN-02 — Story Mode UX: Purpose-Driven Section Layout + Hour Tracking
 
-**Status:** ⚠️ Phase 1 Implementing 2026-05-26. Phase 2+ spec only.
+**Status:** ✅ All phases implemented 2026-05-26/27 (P1–P5 live; P5 covered by §XLIV battle accordion).
 **Scope:** Story mode center layout · Section containers · Hour tracking · Per-quest hunt UI
 **Files:** `roll2hit-v3.html` (CSS + JS storyRenderSections + _S_DEFAULTS)
 

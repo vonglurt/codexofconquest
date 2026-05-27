@@ -375,8 +375,8 @@ function getLuck() {
 | d100 loot roll | `min(99, floor(rand×100) + max(0, LuckMod))` | ✅ HTML line 9485 |
 | Corridor encounter | Encounter chance `−LuckMod × 50pp` (significant) | ✅ HTML line 17165 |
 | Death saves | `d20 + LuckMod` on each save roll | ✅ HTML line 10686 |
-| Fishing — bare hook cast | Luck Mod replaces bait bonus on Type Roll | ⚠ Tackle Box not yet implemented |
-| Fishing — tournament tie | Luck Mod as tiebreaker when fish ranks are equal | ⚠ Tackle Box not yet implemented |
+| Fishing — bare hook cast | Luck Mod replaces bait bonus on Type Roll | ✅ Live — `doCast()` line ~14787 |
+| Fishing — tournament tie | Luck Mod as tiebreaker when fish ranks are equal | ✅ Live — tournament outcome line ~18112 |
 
 **UI:** Displayed in character sheet as `🍀 Luck: 12 (Mod: +1)` below the six ability scores. Not shown on the status bar — derived on demand only.
 
