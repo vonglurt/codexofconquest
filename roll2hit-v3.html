@@ -6176,13 +6176,18 @@ function _rollCeremonia(questId) {
   const mod  = Math.floor((abilityVal - 10) / 2);
   const prof = 2 + Math.floor(((S_story.level || 1) - 1) / 4);
   const d20  = Math.ceil(Math.random() * 20);
-  const total = d20 + mod + prof;
+  // §CROWN-01 Amendment A: Iodine Salt clarity bonus
+  const iodineBonus = S_story.iodineBuffActive ? (S_story.iodineBuffBonus || 3) : 0;
+  const iodineName  = S_story.iodineBuffBonus >= 5 ? 'Charged Iodine' : 'Iodine Salt';
+  if (S_story.iodineBuffActive) { S_story.iodineBuffActive = false; S_story.iodineBuffBonus = 0; }
+  const total = d20 + mod + prof + iodineBonus;
   const passed = total >= q.checkDC;
   const modStr = (mod >= 0 ? '+' : '') + mod;
+  const iodineStr = iodineBonus > 0 ? ' + ' + iodineName + '(+' + iodineBonus + ')' : '';
   _appendStoryHcard({
     round: 'Day ' + (S_story.day || 1),
     actor: 'ROLL',
-    formula: 'd20(' + d20 + ') + ' + q.checkLabel + '(' + modStr + ') + Prof(+' + prof + ')',
+    formula: 'd20(' + d20 + ') + ' + q.checkLabel + '(' + modStr + ') + Prof(+' + prof + ')' + iodineStr,
     outcome: total + ' vs DC ' + q.checkDC + ' — ' + (passed ? 'PASS ✓' : 'FAIL'),
     dmg: passed ? (typeof q.passText === 'function' ? q.passText() : q.passText) : (typeof q.failText === 'function' ? q.failText() : q.failText),
   });
@@ -6217,6 +6222,15 @@ function battKillEvent() {
   if (S.enemy.key === 'horned_shark' && S_story.active) S_story.hornedSharkSlain = true; // §XLVII
   if (S.enemy.key === 'night_03' && S_story.active) S_story.lanternEelLanded = true; // §XLVIII: quest_night_eel trigger
   if (S.enemy.key === 'cave_lurker' && S_story.active) S_story.shaleDropFound = true; // §XLIX: quest_shale_drop trigger
+  // §CROWN-01 Amendment A: kelp + seaweed drops from swamp sea monsters
+  if (S_story.active && ['sea_serpent','sea_witch','giant_eel','sea_demon','kraken_spawn','sea_hag'].includes(S.enemy.key)) {
+    S_story.inventory = S_story.inventory || [];
+    S_story.inventory.push({ name:'Swamp Kelp', icon:'🌿', sell:3, type:'craft', desc:'Sea kelp from the swamp. Burns to iodine salt at the inn hearth.' });
+  }
+  if (S_story.active && ['sea_spawn','kelpie','giant_octopus','electric_eel','sea_snake'].includes(S.enemy.key)) {
+    S_story.inventory = S_story.inventory || [];
+    S_story.inventory.push({ name:'Marsh Seaweed', icon:'🪸', sell:2, type:'craft', desc:'Mire seaweed. Burns to trace iodine salt at the inn hearth.' });
+  }
   // Layer 47: override fish drop sell value with size×rarity gold
   if (drop && S_story._fishBattleGold) {
     S._pendingDrop = { ...drop, sell: S_story._fishBattleGold };
@@ -9250,6 +9264,152 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     activateNode:'INN', activateCond:() => (S_story.innmotherKindness||0) >= 5,
     completeItems:[], completeFn:() => !!S_story.freeBookingUnlocked,
     disposition:'"Sleep is free. The meals are still what they are." — The Innmother\'s Hall' },
+
+  // ── §CROWN-01 Amendment A: Failure dispatches ──
+  quest_whisper_kelpie: { id:'quest_whisper_kelpie', type:'side',
+    title:'Track the Silent One',
+    desc:'Whisper gestures east — toward a part of the pool that has been moving when the water should be still. "The thing that moves there. Find it."',
+    hint:'Kill the Kelpie in the still water\'s east shallows.',
+    activateNode:'HW1', activateCond:() => (S_story.quests['quest_whisper_01']||'') !== '',
+    completeItems:[], completeFn:() => !!((S_story.defeatedBattles||{})['HW1_KELPIE']),
+    onComplete:() => { _innKindness(1); },
+    disposition:'"You found it. You followed it. Now you know what silence that moves looks like." — The Still Water' },
+
+  quest_glut_mudcrab: { id:'quest_glut_mudcrab', type:'side',
+    title:'Find What Left',
+    desc:'The Mudcrab ate enough and left the feeding pool. Glut needs you to find it and bring it back. It is a mudcrab.',
+    hint:'Catch the Mudcrab at the mire\'s edge and return it to the feeding pool.',
+    activateNode:'HG1', activateCond:() => (S_story.quests['quest_glut_01']||'') !== '',
+    completeItems:[], completeFn:() => !!((S_story.defeatedBattles||{})['HG1_MUDCRAB']),
+    onComplete:() => { _innKindness(1); },
+    disposition:'"It was enough. It knew when to stop. I keep it here now. I feed it more than it wants. This is fine." — The Feeding Pool' },
+
+  quest_wane_spawn: { id:'quest_wane_spawn', type:'side',
+    title:'What Moved It Before You',
+    desc:'Something moved the stone once, a long time ago, and put it back wrong. Find what moved it.',
+    hint:'Kill the Sea Spawn beneath the stone. The DC on the stone task will drop.',
+    activateNode:'HN1', activateCond:() => (S_story.quests['quest_wane_02']||'') !== '',
+    completeItems:[], completeFn:() => !!((S_story.defeatedBattles||{})['HN1_SPAWN']),
+    onComplete:() => { S_story.waneStoneDCReduced = true; _innKindness(1); },
+    disposition:'"It had been carrying the same thing for years. Now it is not carrying anything. The stone is lighter." — The Drained Mire' },
+
+  // ── §CROWN-01 Amendment A: Hag commissions ──
+  quest_whisper_witch: { id:'quest_whisper_witch', type:'side',
+    title:'The Unnamed Thing',
+    desc:'The still water has a surface problem. A Sea Witch has been living in the deep section for two seasons. Whisper will not name it.',
+    hint:'Kill the Sea Witch in the deep still water.',
+    activateNode:'HW1', activateCond:() => (S_story.quests['quest_whisper_03']||'') !== '',
+    completeItems:[], completeFn:() => !!((S_story.defeatedBattles||{})['HW1_WITCH']),
+    onComplete:() => {
+      S_story.knowledge = S_story.knowledge || [];
+      S_story.knowledge.push("Sea Witch's Tome — The witch hoarded secrets. You found them anyway. INT checks +1.");
+      _innKindness(1);
+      storyMsg("📖 Sea Witch's Tome added to knowledge. INT checks +1.");
+    },
+    disposition:'"It is gone. The water knows. I knew what it was the entire time. That was the problem." — The Still Water' },
+
+  quest_glut_octopus: { id:'quest_glut_octopus', type:'side',
+    title:'What I Fed',
+    desc:'A Giant Octopus grew fat on Glut\'s feeding and now blocks the eastern crossing of the pool. She describes it as: "The passage on the east. It is blocked."',
+    hint:'Kill the Giant Octopus at the east crossing of the feeding pool.',
+    activateNode:'HG1', activateCond:() => (S_story.quests['quest_glut_03']||'') !== '',
+    completeItems:[], completeFn:() => !!((S_story.defeatedBattles||{})['HG1_OCTOPUS']),
+    onComplete:() => {
+      S_story.inventory = S_story.inventory || [];
+      S_story.inventory.push({ name:"Glut's Hoard Fragment", icon:'🪴', sell:45, type:'loot', desc:'The octopus was sitting on this. It had been there long enough to consider itself the owner.' });
+      S_story.inventory.push({ name:'Swamp Kelp', icon:'🌿', sell:3, type:'craft', desc:'Sea kelp from the feeding pool. Burns to iodine salt.' });
+      S_story.inventory.push({ name:'Swamp Kelp', icon:'🌿', sell:3, type:'craft', desc:'Sea kelp from the feeding pool. Burns to iodine salt.' });
+      _innKindness(1);
+      storyMsg("🪴 The east crossing is clear. Glut's Hoard Fragment + 2× Swamp Kelp recovered.");
+    },
+    disposition:'"I fed it too much. It grew. You removed it. I have not stopped feeding what comes to the pool." — The Feeding Pool' },
+
+  quest_wane_demon: { id:'quest_wane_demon', type:'side',
+    title:'The Better Drainer',
+    desc:'Something below the mire drains more efficiently than the mire itself. Wane finds this unacceptable.',
+    hint:'Kill the Sea Demon in the sub-channel below the drained mire.',
+    activateNode:'HN1', activateCond:() => (S_story.quests['quest_wane_03']||'') !== '',
+    completeItems:[], completeFn:() => !!((S_story.defeatedBattles||{})['HN1_DEMON']),
+    onComplete:() => {
+      S_story.atlanteanProcessKnown = true;
+      S_story.knowledge = S_story.knowledge || [];
+      S_story.knowledge.push('Atlantean Kelp Scroll — The coastal reduction process. Kelp burned with an electric catalyst produces Charged Iodine Salt. Teaches the iodine smelting method.');
+      S_story.inventory = S_story.inventory || [];
+      S_story.inventory.push({ name:'Swamp Kelp', icon:'🌿', sell:3, type:'craft', desc:'Mire kelp retrieved from the sub-channel.' });
+      _innKindness(1);
+      storyMsg("📜 Atlantean Kelp Scroll learned. Charged reduction process now known. Swamp Kelp recovered from the channel.");
+    },
+    disposition:'"It was better at this than I am. I am aware. Thank you for not pointing it out directly." — The Drained Mire' },
+
+  quest_inn_eel: { id:'quest_inn_eel', type:'side',
+    title:'The Smell in the South Corridor',
+    desc:'There is a Giant Eel in the drainage channel beneath the inn. It has been there since autumn. The Innmother has not dealt with it.',
+    hint:'Go below the inn and kill the Giant Eel in the drainage channel.',
+    activateNode:'INN', activateCond:() => (S_story.quests['quest_inn_03']||'') !== '',
+    completeItems:[], completeFn:() => !!((S_story.defeatedBattles||{})['INN_EEL']),
+    onComplete:() => {
+      S_story.electricEelOrganHeld = true;
+      S_story.inventory = S_story.inventory || [];
+      S_story.inventory.push({ name:'Electric Eel Organ', icon:'⚡', sell:15, type:'craft', desc:'Bioluminescent organ from the eel beneath the inn. Catalyzes iodine extraction — produces Charged Iodine Salt.' });
+      _innKindness(1);
+      storyMsg("⚡ Electric Eel Organ recovered. The south corridor no longer smells like the sea. The Innmother says nothing.");
+    },
+    disposition:'"The smell is gone. The room to the south is the same room. It is a better room now." — The Innmother\'s Hall' },
+
+  // ── §CROWN-01 Amendment A: Iodine track ──
+  quest_iodine_01: { id:'quest_iodine_01', type:'skill_check',
+    title:'The Salt Test',
+    desc:'The Innmother is burning something at the hearth. The smoke smells of the sea at low tide — concentrated. Iodine.',
+    hint:'Identify the process: kelp reduction to iodine salt.',
+    activateNode:'INN', activateCond:() => (S_story.quests['quest_inn_01']||'') !== '',
+    checkAbility:'int', checkLabel:'INT Investigation', checkDC:11, retryable:true,
+    xpAward:100,
+    vignetteText:"The hearth smoke has a character that is not wood smoke — the smell of the sea at low tide on a hot day, concentrated. The salt in the ash tray has the texture of sea salt but the color of charred residue. She skims it with a flat tool and stores it in a jar she does not label.\n\nShe is burning kelp. The process is coastal in origin — craftspeople used the same reduction along the Atlantean shore routes. The kelp burns to iodine salt. The iodine was a byproduct of their metalwork. She is using it for something else. The result is the same salt.",
+    passText:"You name the compound before she explains it. 'You know the process,' she says. The jar is yours.",
+    failText:"You ask what she is burning. She says: kelp. You ask why. She describes the result without naming it. You receive the information but not the recognition.",
+    completeItems:[],
+    onPass:() => {
+      S_story.inventory = S_story.inventory || [];
+      S_story.inventory.push({ name:'Iodine Salt', icon:'🧂', sell:5, type:'craft', desc:'+3 to any skill check when burned before rolling. Coastal reduction product — the Atlantean clarity method.' });
+      _innKindness(1);
+    },
+    disposition:'"The reduction is the same each time. Once you know the smell you cannot not know it." — The Innmother\'s Hall' },
+
+  quest_iodine_02: { id:'quest_iodine_02', type:'side',
+    title:'The Gathered Burn',
+    desc:'Gather Swamp Kelp from the mire and return to the Innmother\'s hearth to burn it down to Iodine Salt.',
+    hint:'Carry 2× Swamp Kelp to the inn and burn them. Kelp drops from sea monsters in the swamp.',
+    activateNode:'INN', activateCond:() => (S_story.quests['quest_iodine_01']||'') !== '',
+    completeItems:[],
+    completeFn:() => (S_story.inventory||[]).filter(i => i.name === 'Swamp Kelp').length >= 2 && S_story.currentCode === 'INN',
+    onComplete:() => {
+      let removed = 0;
+      S_story.inventory = (S_story.inventory||[]).filter(i => { if (i.name === 'Swamp Kelp' && removed < 2) { removed++; return false; } return true; });
+      S_story.inventory.push({ name:'Iodine Salt', icon:'🧂', sell:5, type:'craft', desc:'+3 to any skill check when burned before rolling.' });
+      S_story.inventory.push({ name:'Iodine Salt', icon:'🧂', sell:5, type:'craft', desc:'+3 to any skill check when burned before rolling.' });
+      _innKindness(1);
+      storyMsg("🧂 Two doses of Iodine Salt produced. The hearth smells like the sea for an hour afterward.");
+    },
+    disposition:'"The reduction is the same each time. The smell tells you when it is done." — The Innmother\'s Hall' },
+
+  quest_iodine_03: { id:'quest_iodine_03', type:'side',
+    title:'The Charged Reduction',
+    desc:'The Electric Eel Organ catalyzes the burn — charged iodine salt, significantly more potent. The Atlantean smelting secret.',
+    hint:'Bring the Electric Eel Organ to the inn hearth while carrying Swamp Kelp.',
+    activateNode:'INN', activateCond:() => !!S_story.electricEelOrganHeld && (S_story.quests['quest_iodine_01']||'') !== '',
+    completeItems:[],
+    completeFn:() => !!S_story.electricEelOrganHeld && (S_story.inventory||[]).some(i => i.name === 'Swamp Kelp') && S_story.currentCode === 'INN',
+    onComplete:() => {
+      S_story.electricEelOrganHeld = false;
+      let kelpRemoved = false;
+      S_story.inventory = (S_story.inventory||[]).filter(i => { if (i.name === 'Electric Eel Organ') return false; if (i.name === 'Swamp Kelp' && !kelpRemoved) { kelpRemoved = true; return false; } return true; });
+      S_story.atlanteanProcessKnown = true;
+      S_story.inventory.push({ name:'Charged Iodine Salt', icon:'⚡🧂', sell:12, type:'craft', desc:'+5 to any skill check when burned before rolling. Atlantean catalyzed reduction — the electric charge accelerates the iodine separation.' });
+      _innKindness(1);
+      storyMsg("⚡🧂 The organ ignites the kelp blue-white. The salt that settles is faintly luminescent. The Innmother: 'The coastal people knew this. They found it from the other direction.'");
+    },
+    disposition:'"You found it from the salt. They found it from the metal. The sequence does not matter. The reduction is the same." — The Innmother\'s Hall' },
+
   // ── Layer 55: Visby Underground quests ──
   quest_vs_01: { id:'quest_vs_01', type:'side', title:'Solvak: The Collector',
     desc:"Debt Agent Solvak has been outside Visby six weeks with a 2,000gp debt and no leverage. You might have some.",
@@ -10509,6 +10669,12 @@ const _S_DEFAULTS = () => ({
   innDeparted: false,
   whisperSaintSeen: false,
   glutGiftReturned: false,
+  // §CROWN-01 Amendment A: Monster encounters, iodine track
+  waneStoneDCReduced: false,
+  electricEelOrganHeld: false,
+  atlanteanProcessKnown: false,
+  iodineBuffActive: false,
+  iodineBuffBonus: 0,
 });
 
 /* ── Layer 48: Luck — Seventh Stat ── */
@@ -10607,6 +10773,22 @@ function _innKindness(n) {
 function _addCroneMark() {
   S_story.croneMarks = (S_story.croneMarks || 0) + 1;
   _innKindness(1);
+}
+// §CROWN-01 Amendment A: burn iodine salt before a skill check roll
+function _burnIodineSalt(questId) {
+  const inv = S_story.inventory || [];
+  const chargedIdx = inv.findIndex(i => i.name === 'Charged Iodine Salt');
+  const plainIdx   = inv.findIndex(i => i.name === 'Iodine Salt');
+  if (chargedIdx !== -1) {
+    inv.splice(chargedIdx, 1);
+    S_story.iodineBuffActive = true; S_story.iodineBuffBonus = 5;
+    storyMsg('⚡🧂 Charged Iodine Salt burned. +5 to the next roll. The smoke smells correct.');
+  } else if (plainIdx !== -1) {
+    inv.splice(plainIdx, 1);
+    S_story.iodineBuffActive = true; S_story.iodineBuffBonus = 3;
+    storyMsg('🧂 Iodine Salt burned. +3 to the next roll. The hearth smell returns.');
+  } else { return; }
+  _rollCeremonia(questId);
 }
 /* ── Layer 42: NPC dialogue cycling helpers ── */
 function _getNPCDialogue(npcKey) {
@@ -19310,6 +19492,23 @@ function storyRender(node, prefix) {
             btnClass: 'btn-talk',
             btnClick: blocked ? null : () => _rollCeremonia(id),
           }));
+          // §CROWN-01 Amendment A: Iodine Salt boost button for skill checks
+          if (!blocked) {
+            const _inv = S_story.inventory || [];
+            const _hasCharged = _inv.some(i => i.name === 'Charged Iodine Salt');
+            const _hasPlain   = _inv.some(i => i.name === 'Iodine Salt');
+            if (_hasCharged || _hasPlain) {
+              body.appendChild(_mkCard({
+                lbl: 'IODINE',
+                main: (_hasCharged ? '⚡🧂 Burn Charged Iodine Salt (+5)' : '🧂 Burn Iodine Salt (+3)'),
+                sub: 'Atlantean clarity method. Consumes one dose.',
+                hint: _hasCharged ? '+5 to roll — charged reduction' : '+3 to roll — plain reduction',
+                btn: _hasCharged ? 'Burn & Roll (+5) — ' + q.checkLabel : 'Burn & Roll (+3) — ' + q.checkLabel,
+                btnClass: 'btn-rest',
+                btnClick: () => _burnIodineSalt(id),
+              }));
+            }
+          }
           return;
         }
         // ── standard quests ──
@@ -19715,6 +19914,126 @@ function storyRender(node, prefix) {
       }
     }
   }
+  // §CROWN-01 Amendment A: WG0 — Sea Serpent gate trial
+  { const _wg0Old = document.getElementById('story-wg0-trial');
+    if (_wg0Old) _wg0Old.remove();
+    if (node.code === 'WG0' && !(S_story.defeatedBattles||{})['WG0_TRIAL']) {
+      const _wg0Div = document.createElement('div');
+      _wg0Div.id = 'story-wg0-trial';
+      _wg0Div.className = 'sweelinck-variant';
+      _wg0Div.style.cssText = 'margin-top:10px;border-left-color:#204a30;color:#9acc9a;font-size:12px;';
+      _wg0Div.textContent = '🐍 The flooded crossing. Something large coils beneath the surface — visible, not hiding. It occupies the gate. The water is at chest height.';
+      const _wg0Btn = document.createElement('button');
+      _wg0Btn.className = 'inv-use-btn'; _wg0Btn.style.marginTop = '6px';
+      _wg0Btn.textContent = '🐍 Cross the flooded gate';
+      _wg0Btn.addEventListener('click', () => {
+        _wg0Btn.disabled = true;
+        storyMsg('The water reaches your chest at the crossing. The serpent does not retreat. It turns toward you.');
+        setTimeout(() => storyPreBattle({ ...node, code:'WG0_TRIAL', battle:{ label:'Sea Serpent — The Gate Crossing', key:'sea_serpent', count:1 } }), 400);
+      });
+      _wg0Div.appendChild(_wg0Btn);
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _wg0Div);
+    }
+  }
+  // §CROWN-01 Amendment A: HW1 — Kelpie (failure dispatch) + Sea Witch (hag commission)
+  { const _kelpieOld = document.getElementById('story-hw1-kelpie'); if (_kelpieOld) _kelpieOld.remove();
+    if (node.code === 'HW1' && (S_story.quests['quest_whisper_kelpie']||'') === 'active'
+        && !(S_story.defeatedBattles||{})['HW1_KELPIE']) {
+      const _kBtn = document.createElement('button');
+      _kBtn.id = 'story-hw1-kelpie'; _kBtn.className = 'inv-use-btn'; _kBtn.style.marginTop = '4px';
+      _kBtn.textContent = '🌊 Track the Kelpie in the east shallows';
+      _kBtn.addEventListener('click', () => {
+        _kBtn.disabled = true;
+        storyMsg('The east shallows. The surface moves against the current — the pattern of something circling. The Kelpie turns toward you.');
+        setTimeout(() => storyPreBattle({ ...node, code:'HW1_KELPIE', battle:{ label:'Kelpie — The East Shallows', key:'kelpie', count:1 } }), 400);
+      });
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _kBtn);
+    }
+    const _witchOld = document.getElementById('story-hw1-witch'); if (_witchOld) _witchOld.remove();
+    if (node.code === 'HW1' && (S_story.quests['quest_whisper_witch']||'') === 'active'
+        && !(S_story.defeatedBattles||{})['HW1_WITCH']) {
+      const _wBtn = document.createElement('button');
+      _wBtn.id = 'story-hw1-witch'; _wBtn.className = 'inv-use-btn'; _wBtn.style.marginTop = '4px';
+      _wBtn.textContent = '🧙 Confront the thing in the still water';
+      _wBtn.addEventListener('click', () => {
+        _wBtn.disabled = true;
+        storyMsg("The surface problem. The Sea Witch rises from the deepest section. She knows every secret she shouldn't. So does Whisper. They are the same creature. Only one of them has chosen to be the problem.");
+        setTimeout(() => storyPreBattle({ ...node, code:'HW1_WITCH', battle:{ label:'Sea Witch — The Deep Still', key:'sea_witch', count:1 } }), 400);
+      });
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _wBtn);
+    }
+  }
+  // §CROWN-01 Amendment A: HG1 — Mudcrab (chicken quest) + Giant Octopus (hag commission)
+  { const _mudOld = document.getElementById('story-hg1-mudcrab'); if (_mudOld) _mudOld.remove();
+    if (node.code === 'HG1' && (S_story.quests['quest_glut_mudcrab']||'') === 'active'
+        && !(S_story.defeatedBattles||{})['HG1_MUDCRAB']) {
+      const _mBtn = document.createElement('button');
+      _mBtn.id = 'story-hg1-mudcrab'; _mBtn.className = 'inv-use-btn'; _mBtn.style.marginTop = '4px';
+      _mBtn.textContent = '🦀 Find the Mudcrab that left';
+      _mBtn.addEventListener('click', () => {
+        _mBtn.disabled = true;
+        storyMsg("The mudcrab is at the mire's edge. Not hiding. It ate enough and left. It is, in the specific way of creatures that know when to stop, exactly where it chose to be.");
+        setTimeout(() => storyPreBattle({ ...node, code:'HG1_MUDCRAB', battle:{ label:'Mudcrab — Mire Edge', key:'mudcrab', count:1 } }), 400);
+      });
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _mBtn);
+    }
+    const _octOld = document.getElementById('story-hg1-octopus'); if (_octOld) _octOld.remove();
+    if (node.code === 'HG1' && (S_story.quests['quest_glut_octopus']||'') === 'active'
+        && !(S_story.defeatedBattles||{})['HG1_OCTOPUS']) {
+      const _oBtn = document.createElement('button');
+      _oBtn.id = 'story-hg1-octopus'; _oBtn.className = 'inv-use-btn'; _oBtn.style.marginTop = '4px';
+      _oBtn.textContent = '🐙 Clear the east crossing';
+      _oBtn.addEventListener('click', () => {
+        _oBtn.disabled = true;
+        storyMsg("The Giant Octopus across the eastern passage. Fed for seasons on Glut's overflow. It occupies the space with the certainty of something that has never been asked to leave.");
+        setTimeout(() => storyPreBattle({ ...node, code:'HG1_OCTOPUS', battle:{ label:'Giant Octopus — The East Crossing', key:'giant_octopus', count:1 } }), 400);
+      });
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _oBtn);
+    }
+  }
+  // §CROWN-01 Amendment A: HN1 — Sea Spawn (failure dispatch) + Sea Demon (hag commission)
+  { const _spawnOld = document.getElementById('story-hn1-spawn'); if (_spawnOld) _spawnOld.remove();
+    if (node.code === 'HN1' && (S_story.quests['quest_wane_spawn']||'') === 'active'
+        && !(S_story.defeatedBattles||{})['HN1_SPAWN']) {
+      const _spBtn = document.createElement('button');
+      _spBtn.id = 'story-hn1-spawn'; _spBtn.className = 'inv-use-btn'; _spBtn.style.marginTop = '4px';
+      _spBtn.textContent = '🌊 Find what moved the stone';
+      _spBtn.addEventListener('click', () => {
+        _spBtn.disabled = true;
+        storyMsg("The Sea Spawn in the mire beneath the stone. It carries grief that soaked into the ground long enough to animate. It moves toward you the way things move when carrying too much.");
+        setTimeout(() => storyPreBattle({ ...node, code:'HN1_SPAWN', battle:{ label:"Sea Spawn — The Stone's Sub-channel", key:'sea_spawn', count:1 } }), 400);
+      });
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _spBtn);
+    }
+    const _demonOld = document.getElementById('story-hn1-demon'); if (_demonOld) _demonOld.remove();
+    if (node.code === 'HN1' && (S_story.quests['quest_wane_demon']||'') === 'active'
+        && !(S_story.defeatedBattles||{})['HN1_DEMON']) {
+      const _dBtn = document.createElement('button');
+      _dBtn.id = 'story-hn1-demon'; _dBtn.className = 'inv-use-btn'; _dBtn.style.marginTop = '4px';
+      _dBtn.textContent = '👁 Face the thing below the mire';
+      _dBtn.addEventListener('click', () => {
+        _dBtn.disabled = true;
+        storyMsg("The sub-channel below. The Sea Demon drains whatever vitality enters the channel — a sustained pull, not a violent one. It is more efficient at diminishment than Wane. She finds this unacceptable.");
+        setTimeout(() => storyPreBattle({ ...node, code:'HN1_DEMON', battle:{ label:'Sea Demon — The Sub-channel', key:'sea_demon', count:1 } }), 400);
+      });
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _dBtn);
+    }
+  }
+  // §CROWN-01 Amendment A: INN — Giant Eel (inn commission)
+  { const _eelOld = document.getElementById('story-inn-eel'); if (_eelOld) _eelOld.remove();
+    if (node.code === 'INN' && (S_story.quests['quest_inn_eel']||'') === 'active'
+        && !(S_story.defeatedBattles||{})['INN_EEL']) {
+      const _eBtn = document.createElement('button');
+      _eBtn.id = 'story-inn-eel'; _eBtn.className = 'inv-use-btn'; _eBtn.style.marginTop = '4px';
+      _eBtn.textContent = '⚡ Go below — the drainage channel';
+      _eBtn.addEventListener('click', () => {
+        _eBtn.disabled = true;
+        storyMsg("The passage below the inn floor is narrow and slick. The smell here is the sea, concentrated. The Giant Eel occupies most of the channel. It is electrogenic and large and occupying a space you both need.");
+        setTimeout(() => storyPreBattle({ ...node, code:'INN_EEL', battle:{ label:'Giant Eel — The Drainage Channel', key:'giant_eel', count:1 } }), 400);
+      });
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _eBtn);
+    }
+  }
   // §CROWN-01: HW1 return-visit — Whisper's Saint's Work (triggers after quest_01 attempted)
   if (node.code === 'HW1' && !S_story.whisperSaintSeen
       && (S_story.quests['quest_whisper_01']||'') !== '') {
@@ -19735,10 +20054,49 @@ function storyRender(node, prefix) {
       document.getElementById('story-text-box').insertAdjacentElement('afterend', _hg1Div);
     }
   }
+  // §CROWN-01 Amendment A: HCA — Leviathan arc boss (gates the conversion)
+  { const _levOld = document.getElementById('story-hca-leviathan'); if (_levOld) _levOld.remove();
+    if (node.code === 'HCA' && !(S_story.defeatedBattles||{})['HCA_BOSS']) {
+      const _levDiv = document.createElement('div');
+      _levDiv.id = 'story-hca-leviathan';
+      _levDiv.className = 'sweelinck-variant';
+      _levDiv.style.cssText = 'margin-top:10px;border-left-color:#1a2a4a;color:#8ab0d0;font-size:12px;';
+      _levDiv.textContent = '🌊 The clearing surface breaks. Something rises from the depth that has been drawing on the swamp for a very long time — Whisper\'s silence, Glut\'s excess, Wane\'s grief, all of it accumulated below into this. The Leviathan. It surfaces here because this is where the pressure finally equals the weight above it.';
+      const _levBtn = document.createElement('button');
+      _levBtn.className = 'inv-use-btn'; _levBtn.style.marginTop = '6px';
+      _levBtn.textContent = '🌊 Face the Leviathan';
+      // Check for iodine inventory — offer burn before battle
+      const _invL = S_story.inventory || [];
+      const _hasChL = _invL.some(i => i.name === 'Charged Iodine Salt');
+      const _hasPlaL = _invL.some(i => i.name === 'Iodine Salt');
+      if (_hasChL || _hasPlaL) {
+        const _iodBtn = document.createElement('button');
+        _iodBtn.className = 'inv-use-btn'; _iodBtn.style.cssText = 'margin-top:4px;border-color:#c09020;color:#e0c060;';
+        _iodBtn.textContent = _hasChL ? '⚡🧂 Burn Charged Iodine Salt at the water\'s edge (+5 ATK this fight)' : '🧂 Burn Iodine Salt at the water\'s edge (+3 ATK this fight)';
+        _iodBtn.addEventListener('click', () => {
+          _iodBtn.disabled = true; _levBtn.disabled = false;
+          const _iIdx = _invL.findIndex(i => i.name === (_hasChL ? 'Charged Iodine Salt' : 'Iodine Salt'));
+          if (_iIdx !== -1) _invL.splice(_iIdx, 1);
+          S_story.iodineBuffActive = true; S_story.iodineBuffBonus = _hasChL ? 5 : 3;
+          storyMsg(_hasChL ? '⚡🧂 Charged iodine burns blue-white at the water\'s edge. The Leviathan flinches. Atlantean craft — ancient and correct.' : '🧂 Iodine salt burns at the waterline. The smoke is chemical, sea-salt, focused. The Leviathan is sensitive to it.');
+        });
+        _levDiv.appendChild(_iodBtn);
+        _levBtn.disabled = true;
+      }
+      _levBtn.addEventListener('click', () => {
+        _levBtn.disabled = true;
+        const _iodAtk = S_story.iodineBuffActive ? ' The iodine reaction is already in the water.' : '';
+        storyMsg('The Leviathan surfaces completely.' + _iodAtk + ' It is larger than the clearing. It has been here, below, the entire arc.');
+        setTimeout(() => storyPreBattle({ ...node, code:'HCA_BOSS', battle:{ label:'The Leviathan — Rising from the Clearing', key:'leviathan', count:1 } }), 400);
+      });
+      _levDiv.appendChild(_levBtn);
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _levDiv);
+    }
+  }
   // §CROWN-01: HCA — Crone Mark conversion (fires once, not on revisit)
   { const _hcaOld = document.getElementById('story-hca-marks');
     if (_hcaOld) _hcaOld.remove();
-    if (node.code === 'HCA' && !S_story.croneMarksBanked) {
+    if (node.code === 'HCA' && !S_story.croneMarksBanked && (S_story.defeatedBattles||{})['HCA_BOSS']) {
       S_story.croneMarksBanked = true;
       const m = S_story.croneMarks || 0;
       const _hcaDiv = document.createElement('div');
