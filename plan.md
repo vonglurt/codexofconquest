@@ -5996,3 +5996,70 @@ DR has one encounter (Desert Wanderer ×2) and no NPCs. The node text is the onl
 - **Cross-reference with existing Arthurian arc:** Roll2Hit uses Chrétien's structural vocabulary (objects that carry weight, things enacted not stated). This arc uses the same technique: the snake that does nothing, the coat left behind at a waypoint inn, the letter carried for someone else. These are Chrétien objects. The arcs belong to the same tradition.
 - **Source material:** `lab-report-saul-paul-travel-reference.md` — 37 nodes, Acts 7–28 + Pauline letters, full NPC list, lodging details, meals, speeches. Use for implementation reference; do not expose historical names in-game.
 - **Vignette spec:** `lab-report-saul-paul-vignette-spec.md` — 14 node texts, 9 quest descriptions + disposition quotes, 7 NPC voice lines, 8 voice rules, object inventory, thorn mechanic note.
+
+---
+
+## §SIREN-01 — The Four Courts of the Littoral Sea
+
+> **Status:** ✅ Implemented 2026-05-28. 9 nodes (LJ0→LCA), 4 quests, 4 NPC arcs, 3 sea battles, storyRender arc-close at LCA. Entry: DS.E → LJ0(r:25,c:14), chain at c:14 rows 25→41.
+
+### §S01-A. The Central Argument
+
+A knight receives a commission requiring four courtly seals from four coastal harbor-courts that control the southern sea lanes. The seals are freely given — but the process of obtaining each one enacts a pattern the knight is asked to read.
+
+Each Lady rules one harbor and uses one word as a social instrument: BUSY (*Occupée*), MAYBE (*Peut-être*), FRIEND (*Ami*), SOON (*Bientôt*). Each word is a frame — a way of shaping the knight's position without naming that it is a tool. The arc is not about treachery or declared opposition. It is about calibration: four courts testing whether the knight will anchor or drift.
+
+The arc borrows its three-betrayal spine from the Succubus/Incubus lore: betrayal of thought, word, and deed. Failing the skill check at the first three courts sets the corresponding betrayal flag. The arc does not punish failure — it witnesses it. The final court (SOON) resolves the pattern regardless of score.
+
+**Battles are with the sea, not the courts.** The Ladies never fight. The ocean does.
+
+Writing register: all court prose and NPC voice in compressed present-tense French vignette style. Two perspectives are implied at every encounter — the Lady's calibration and the knight's position — without either being named. The gap between perspectives is the subject. No word in the text declares what the manipulation is. The skill check vignette text frames the moment without framing it as a lesson.
+
+### §S01-B. Node Chain
+
+| Node | Code | Label | Type | Encounter |
+|------|------|-------|------|-----------|
+| Entry junction | `LJ0` | The Littoral Passage | Junction (entry) | none; connects DS.E |
+| First court | `LC1` | Port Aurel — The Tide Keep | Court | `quest_aurel_tide` WIS Insight DC 12 |
+| First crossing | `LJ1` | First Crossing | Open water | Sea Serpent × 2 |
+| Second court | `LC2` | Port Calice — The Drawbridge Court | Court | `quest_calice_bridge` INT Investigation DC 13 |
+| Second crossing | `LJ2` | Second Crossing | Deep water | Deep One × 3 |
+| Third court | `LC3` | Port Mireille — The Cape Court | Court | `quest_mireille_ami` CHA Persuasion DC 14 |
+| Third crossing | `LJ3` | The Serpent Passage | Long battle | Sea Serpent × 1 (solo, full HP) |
+| Fourth court | `LC4` | Port Solen — The Far Harbor | Court | `quest_solen_horizon` WIS Insight DC 13 |
+| Arc close | `LCA` | The Southern Anchorage | Terminal | storyRender: betrayal count text |
+
+**Coordinates:** c:14, r:25 (LJ0) → r:41 (LCA), 2-row steps. Entry probe: LJ0(r:25,c:14).W → DS(r:25,c:10), gap=4.
+
+### §S01-C. The Four Courts
+
+| Court | Lady | Word | The Frame | Skill Check |
+|-------|------|------|-----------|-------------|
+| Port Aurel | Lady Aurel | BUSY (*Occupée*) | Warmth given in installments. The tide table is open on her desk. She reads it while speaking; she speaks while reading it. Every appointment is borrowed from the schedule. | WIS Insight DC 12: read that the schedule is calibration, not fact — that she sees you exactly as often as she has decided to |
+| Port Calice | Lady Calice | MAYBE (*Peut-être*) | The drawbridge chain hangs visible in the courtyard below the window. She says: perhaps at the evening tide. The evening tide exists. The wheel is in the courtyard. The wheel is not locked. | INT Investigation DC 13: find the wheel mechanism; cross without waiting for her tide |
+| Port Mireille | Lady Mireille | FRIEND (*Ami*) | She introduces the knight to her court before the herald can: "My most trusted companion." The court receives this. The frame is set before the knight can set one. | CHA Persuasion DC 14: address the court with name and title; name your standing before it names you |
+| Port Solen | Lady Solen | SOON (*Bientôt*) | She points at a specific ship on the horizon. "My captain returns soon — he carries the letters of passage." The fishermen at the dock have watched that ship for three seasons. It has not moved. | WIS Insight DC 13: ask the fishermen; bring the specific fact back to Lady Solen; require a real date |
+
+### §S01-D. Betrayal Mechanic
+
+Three flags track skill-check fails: `betrayalThought` (Aurel/BUSY), `betrayalWord` (Calice/MAYBE), `betrayalDeed` (Mireille/FRIEND). A fourth flag `solenSoonRead` tracks the horizon check. At LCA, storyRender counts the flags and renders the arc close:
+
+- **0 betrayals:** "The four courts gave their seals. You gave them nothing but your position. The sea behind you is the same sea."
+- **1–2 betrayals:** "The seals are in your coat. You have been shaped by the crossing. The shaping was not requested. You notice it now that the water is still."
+- **3 betrayals:** "You gave something at each harbor that you did not mean to give. The water is still. The stillness is the first moment of stillness since Port Aurel."
+
+### §S01-E. Sea Crossings
+
+| Crossing | Battle Label | Key | Count | Design Note |
+|----------|-------------|-----|-------|-------------|
+| LJ1 | Sea Spawn × 2 | `sea_serpent` | 2 | Shallow deep water; two creatures, standard difficulty |
+| LJ2 | Deep One × 3 | `deep_one` | 3 | Old things coming up from the second fathom; known key from AT |
+| LJ3 | The Serpent of the Passage | `sea_serpent` | 1 | Solo long battle; the creature holds the channel; labeled as a named creature |
+
+### §S01-F. New State Flags
+
+```
+// §SIREN-01: Littoral Courts
+betrayalThought: false, betrayalWord: false, betrayalDeed: false,
+solenSoonRead: false, littorialComplete: false,
+```

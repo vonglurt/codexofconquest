@@ -7646,6 +7646,35 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   LS:{ num:109, code:'LS', name:'lake_south', label:'South Shore — The Fishermen\'s Village', act:4, N:'LH', S:null, E:null, W:null,
     text:"The south shore village is the oldest settlement on the lake. The houses have been rebuilt so many times that the current structures share walls with foundations two generations older. The village has been here longer than the road that connects it to anywhere else.\n\nThe fish market runs before dawn. By the time the rest of the lake is awake the day's catch has been sorted, priced, and is on its way to the harbor road. The village operates on a schedule that predates the clock by at least a century.\n\nThe oldest fisherman in the village is ninety-one. She does not fish anymore. She sits at the dock and tells you things about the lake that are specific and accurate and not written down anywhere.",
     npc:'The Elder Fisherwoman', battle:null, loot:null, sleep:true, sleepCost:2 },
+  // ── §SIREN-01: The Four Courts of the Littoral Sea ──
+  LJ0:{ num:111, code:'LJ0', name:'junction', label:'The Littoral Passage', act:4, N:null, S:'LC1', E:null, W:null,
+    text:"The sea runs west from here. The charts name this water the Littoral Passage — the chain of coastal courts that controls the southern lanes. Four harbors, four seals. The commission requires all four.\n\nThe captain of the crossing packet points south and says nothing. He has run this route long enough to have no opinions about the courts at its end. The water is deep and the current is not a current but a direction that wants to be followed.\n\nThe first harbor keeps its light on all night. It is visible from here.", npc:null, battle:null, loot:null, sleep:false, junction:true },
+  LC1:{ num:112, code:'LC1', name:'port_aurel', label:'Port Aurel — The Tide Keep', act:4, N:'LJ0', S:'LJ1', E:null, W:null,
+    text:"The harbor is a working harbor. Cranes, cargo, the particular arithmetic of tide windows and ship drafts that governs every decision made here.\n\nLady Aurel administers it from the harbormaster's tower. She is never not working. The tide tables are open on her desk. She reads them while speaking. She speaks while reading them.\n\nShe is glad you have come. She will see you at the next window. The next window follows the current survey. The current survey began before dawn.\n\nThe warmth is genuine. The warmth is given in installments. The installments arrive on her schedule, not yours — which is not a coincidence and is not carelessness. It is a form of measurement. She is not measuring her schedule. She is measuring you.",
+    npc:'Lady Aurel', battle:null, loot:null, sleep:true, sleepCost:4 },
+  LJ1:{ num:113, code:'LJ1', name:'junction', label:'First Crossing', act:4, N:'LC1', S:'LC2', E:null, W:null,
+    text:"The passage between the first and second harbors runs through open water. The charts mark it with the notation common to all deep crossings: *here the current changes*.\n\nThe change is not weather. It is depth — two hundred fathoms, then three, then a depth the charts stop measuring because the measurement costs ships.\n\nThe sea spawn come from below. They do not announce themselves.", npc:null, battle:{label:'Sea Spawn × 2', key:'sea_serpent', count:2}, loot:null, sleep:false, junction:true },
+  LC2:{ num:114, code:'LC2', name:'port_calice', label:'Port Calice — The Drawbridge Court', act:4, N:'LJ1', S:'LJ2', E:null, W:null,
+    text:"Port Calice is built on a headland with a drawbridge on the landward approach and open water on three sides. The bridge is the only entrance. The bridge chain hangs visible from the court window — thick iron links, well-maintained, operated by a wheel mechanism in the courtyard below.\n\nLady Calice says: perhaps at the evening tide.\n\nShe says it with the warmth of someone who is genuinely uncertain. The evening tide exists. The bridge will lower at some evening tide. Both statements are accurate. Neither one names the wheel in the courtyard. The wheel is not locked. The wheel has been there the entire time you have been waiting for the evening tide.",
+    npc:'Lady Calice', battle:null, loot:null, sleep:true, sleepCost:4 },
+  LJ2:{ num:115, code:'LJ2', name:'junction', label:'Second Crossing', act:4, N:'LC2', S:'LC3', E:null, W:null,
+    text:"The second crossing runs along the cliff face. The coast rises on the eastern side and the water narrows. In the narrows, the depth-water creatures come up.\n\nThey are old things. They live where sunlight does not reach and have been there longer than the courts above them have been standing. They have no opinion about the courts. They have been here long before courts were a feature of the coastline.",
+    npc:null, battle:{label:'Deep One × 3', key:'deep_one', count:3}, loot:null, sleep:false, junction:true },
+  LC3:{ num:116, code:'LC3', name:'port_mireille', label:'Port Mireille — The Cape Court', act:4, N:'LJ2', S:'LJ3', E:null, W:null,
+    text:"The court of Mireille is the warmest of the four. The fire is large. The table is set.\n\nLady Mireille rises when you enter and addresses the court before you can address it yourself.\n\n'My most trusted companion,' she says. She says it with evident affection. The court receives this. The court nods. The frame is set before the herald can speak your name and title.\n\nYour name is still your name. Your title is still your title. Both remain. The role, however, was not offered. It was assigned. The court will ask for your counsel. The court will receive your counsel as the counsel of a companion — not the counsel of a peer, not the counsel of a knight on commission. The distinction is not declared. It does not need to be. The room already believes it.",
+    npc:'Lady Mireille', battle:null, loot:null, sleep:true, sleepCost:4 },
+  LJ3:{ num:117, code:'LJ3', name:'junction', label:'The Serpent Passage', act:4, N:'LC3', S:'LC4', E:null, W:null,
+    text:"The third crossing is the longest. The charts name this water *la mer des serpents* — the sea of serpents — not as a warning but as a classification.\n\nThe serpent is a single creature. It is large enough that the passage narrows when it enters the channel. It does not attack from below. It enters from the south, which is the direction you need to travel. It does not move from the channel.\n\nThe crossing requires it to move.",
+    npc:null, battle:{label:'The Serpent of the Passage', key:'sea_serpent', count:1}, loot:null, sleep:false, junction:true },
+  LC4:{ num:118, code:'LC4', name:'port_solen', label:'Port Solen — The Far Harbor', act:4, N:'LJ3', S:'LCA', E:null, W:null,
+    text:"The harbor at Solen faces south. From the window of the court you can see open water in three directions. The fourth direction is the road back.\n\nLady Solen stands at the window and points at a ship on the horizon. 'My captain,' she says. 'He returns soon — he carries the letters of passage.' She names the ship. She says it with the easy confidence of a woman who has given this information many times and has never been asked to verify it.\n\nThe fishermen at the dock know that name. They have watched this harbor their entire lives. They have been watching that specific point on the horizon for three seasons. The ship has not moved. They have not been asked about this, because no one who comes to Port Solen for the letters of passage goes to the dock first.",
+    npc:'Lady Solen', battle:null, loot:null, sleep:true, sleepCost:0 },
+  LSO:{ num:120, code:'LSO', name:'fog_bank', label:'The Fog Bank — Open Water', act:4, N:null, S:null, E:null, W:'LJ3',
+    text:"The fog bank sits four miles east of the serpent passage. It has no seasonal explanation — the captains who know this water say it is always here, at this depth, in this reach.\n\nThe navigator has been speaking in a different register since the serpent crossing. Not often. Brief exchanges with the air — not muttering, not the wind, something between. You have noticed it.\n\nThere is a voice in the fog that knows you.\n\nIt knows about Port Aurel and the tidal schedule. It knows about Port Calice and the wheel. It knows about Lady Mireille's introduction and what it cost. It knows because it has been in the water ahead of you the entire time — not as a threat, as an administrator.\n\n'You have one more court,' it says. Not through the navigator now. Directly. 'I can arrange that differently. It would be simpler.'",
+    npc:'The Overseer', battle:null, loot:null, sleep:false },
+  LCA:{ num:119, code:'LCA', name:'southern_anchorage', label:'The Southern Anchorage', act:4, N:'LC4', S:null, E:null, W:null,
+    text:"The southern sea opens here.\n\nThe four seals are in your coat. The crossing is complete.\n\nThe water is still. The stillness is the first moment of stillness since Port Aurel — the first moment in which no one is measuring anything, no word is being used as a frame, no warmth is being given on a schedule that is not yours.\n\nThe sea does not require anything from you. It is simply water. This is, unexpectedly, a relief.",
+    npc:'Harbor Keeper', battle:null, loot:null, sleep:true, sleepCost:0 },
   // ── §LV: The Antecedent Chamber ──
   AC:{ num:83, code:'AC', name:'antecedent_chamber', label:'The Antecedent Chamber', act:1, N:'CY', S:null, E:null, W:null,
     text:"The descent past the CY checkpoint level goes another twelve meters before the floor levels. The conduit cables end at a partition wall — not brick, not data-center partition, something older than either. The indicators in this section run on a power source that predates the undercity infrastructure by a margin no one has calculated because no one has thought to ask.\n\nThe chamber was designed, from the start, to be exactly this: a room with one function and one occupant. The function is containment. The occupant is still here.\n\nIt is not large. It does not need to be. It has been here long enough that the word 'waiting' no longer applies — waiting implies an expectation of change. This is older than that. This is patience as a physical property of the space.\n\nThe Antecedent Seal activates on entry. The seal runs warm. The indicators change from standby to receiving.\n\nYou are, apparently, expected.", npc:'The Antecedent', battle:null, loot:null, sleep:false },
@@ -7807,6 +7836,10 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   J11:{r:33,c:56}, J12:{r:35,c:56}, KR:{r:35,c:60},
   J13:{r:37,c:56}, J14:{r:39,c:56}, ML:{r:39,c:60},
   ST:{r:41,c:56},
+  /* §SIREN-01: Littoral Courts — c:14, rows 25→41; Overseer at (37,18) */
+  LJ0:{r:25,c:14}, LC1:{r:27,c:14}, LJ1:{r:29,c:14}, LC2:{r:31,c:14},
+  LJ2:{r:33,c:14}, LC3:{r:35,c:14}, LJ3:{r:37,c:14}, LC4:{r:39,c:14},
+  LCA:{r:41,c:14}, LSO:{r:37,c:18},
 };
 
 /* ── Layer 9-A: Circuit Corridor Data Structures ── */
@@ -8846,6 +8879,71 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     failText:'You pull back before clearing the wall. The window remains. So does the watch. Try again tomorrow.',
     completeItems:[], checkPassFlag:'escapedDamascus',
     disposition:'"The warrant authority turns against the warrant-carrier. Both are the same warrant." — the wall at Damascus' },
+  // ── §SIREN-01: The Four Courts of the Littoral Sea ──
+  quest_aurel_tide: { id:'quest_aurel_tide', type:'skill_check', title:'The Tidal Schedule',
+    desc:"Lady Aurel administers the harbor from the harbormaster's tower. She is never not working. The tide tables are open on her desk. She is glad you have come. She will see you at the next window. The warmth is genuine. The warmth is given in installments.",
+    hint:'Read the pattern in the harbor schedule at Port Aurel.',
+    activateNode:'LC1', activateCond:() => true,
+    checkAbility:'wis', checkLabel:'Insight', checkDC:12,
+    retryable:false,
+    xpAward:150,
+    vignetteText:'The tide table is open on her desk. She reads it while speaking to you. She speaks while reading it. This is the message: everything has prior claim on her attention, and the space she gives you is borrowed from the schedule.\n\nShe is not describing her schedule. She is describing your position in it. The warmth is real. The installments are also real. Both things are true simultaneously, which is what makes the frame stable.',
+    passText:'You name the pattern without naming it as a pattern. You say: I will receive the seal when it is convenient, not when it is next — send word when the window opens. You make yourself the appointment, not the waiting.\n\nShe looks at you for a moment. She closes the tide table. She gives you the seal.',
+    failText:'You wait for the next window. The window opens briefly, closes again. You wait for the one after that. The seal comes eventually — she was always going to give it. But she has learned something about you in the waiting that you did not mean to teach.',
+    completeItems:[], checkPassFlag:'aurelTideRead',
+    checkFailFlag:'betrayalThought',
+    disposition:'"The tide keeps its own schedule. Everything else negotiates." — The harbormaster\'s tower, Port Aurel' },
+  quest_calice_bridge: { id:'quest_calice_bridge', type:'skill_check', title:'The Wheel in the Courtyard',
+    desc:"The drawbridge chain hangs visible from the court window. Lady Calice says: perhaps at the evening tide. She says it the way someone says something true in a technical sense. The evening tide exists. The wheel is in the courtyard. The wheel is not locked.",
+    hint:'Find the bridge mechanism at Port Calice.',
+    activateNode:'LC2', activateCond:() => true,
+    checkAbility:'int', checkLabel:'Investigation', checkDC:13,
+    retryable:false,
+    xpAward:175,
+    vignetteText:'The bridge chain runs from the tower to the courtyard. The courtyard is accessible from the gate that was left open when you arrived. The wheel is visible from the gate.\n\nShe has said: perhaps at the evening tide. Perhaps is not no. Perhaps is not yes. Perhaps is a holding pattern — the coin is still in the air and you are being asked to wait for it to land.\n\nThe wheel has a handle.',
+    passText:'You go to the courtyard. You find the wheel. The mechanism is straightforward — well-maintained, designed to be operated without assistance. You turn it. The bridge lowers.\n\nYou cross before the evening tide.\n\nLady Calice, when she sees you on the other side, says nothing for a moment. Then she gives you the seal. The perhaps is over.',
+    failText:'You wait for the evening tide. The tide comes. She lowers the bridge. You cross.\n\nThe crossing happens, but you are no longer the person who initiated it. You were waiting and she was watching the wait. The seal is given. You have taught her something about your patience.',
+    completeItems:[], checkPassFlag:'caliceBridgeCrossed',
+    checkFailFlag:'betrayalWord',
+    disposition:'"The evening tide is reliable. The question is whether you need it to be." — Port Calice' },
+  quest_mireille_ami: { id:'quest_mireille_ami', type:'skill_check', title:'Name Your Standing',
+    desc:"Lady Mireille introduces you to her court as her most trusted companion before the herald can speak your name and title. The court receives this. The frame is set. Your name is still your name. The role, however, was assigned before you could claim one.",
+    hint:'Address the court with your name and title at Port Mireille.',
+    activateNode:'LC3', activateCond:() => true,
+    checkAbility:'cha', checkLabel:'Persuasion', checkDC:14,
+    retryable:false,
+    xpAward:200,
+    vignetteText:'The introduction has already happened. The court already has an opinion of who you are in relation to Lady Mireille. The opinion is warm and favorable and entirely wrong about the category.\n\nYou have been placed in the last box — valued, present, available, not chosen. The court will ask for your counsel. The court will receive it as a companion\'s counsel, which is the counsel of someone who gives and is not owed a return.\n\nThe herald is still standing at the door with your name on his tongue.',
+    passText:'You address the court before they can address you through her.\n\nYou give your name. You give your commission. You give your title. You do it the way a person gives these things when they have decided they are worth giving — without softening them, without the apologetic parenthetical that invitation-only rooms produce.\n\nThe court adjusts. Lady Mireille looks at you — a different look than the one that accompanied the introduction. She gives you the seal.',
+    failText:'You accept the introduction. You counsel the court through the evening. You give what the role asks for — attention, reassurance, guidance. You are good at this. You give it well.\n\nYou leave the court lighter of something you brought in and heavier of nothing you were owed. The seal is in your coat. The evening was warm. The role stayed with you.',
+    completeItems:[], checkPassFlag:'mireilleAmiNamed',
+    checkFailFlag:'betrayalDeed',
+    disposition:'"He addressed the court directly. It was unexpected. I found it clarifying." — Lady Mireille' },
+  quest_solen_horizon: { id:'quest_solen_horizon', type:'skill_check', title:'The Ship That Does Not Come',
+    desc:"Lady Solen points at a ship on the horizon and names it. Her captain returns soon with the letters of passage. The fishermen at the dock have watched that ship for three seasons. It has not moved. No one who comes to Port Solen for the letters goes to the dock first.",
+    hint:'Ask the fishermen at Port Solen\'s dock about the ship on the horizon.',
+    activateNode:'LC4', activateCond:() => true,
+    checkAbility:'wis', checkLabel:'Insight', checkDC:13,
+    retryable:false,
+    xpAward:225,
+    vignetteText:'The ship is on the horizon. She named it. The name is specific.\n\nA future that is real has a date, a plan, a place, a time — something you can point to and say: this exists. She has given you a name and a direction. She has not given you a date.\n\nThe dock is forty paces from the court gate. The fishermen have been watching this harbor since before there was a court to watch it from. They know every ship on their water by the way it sits.',
+    passText:'You go to the dock before you go to the court.\n\nThe fishermen know the ship. They name the season they last saw it move — three seasons ago, in the autumn, when the captain put in for water and departed south. He has not returned. The ship on the horizon is anchored. It has been anchored since the second season of waiting.\n\nYou bring this back to Lady Solen. You give her the name she gave you, and the season the fishermen gave you, and you say: I require a date, or I require a different carrier.\n\nShe pauses. She gives you the date. The carrier is different.',
+    failText:'You wait. She says soon. The week passes. Another follows. The letters arrive eventually — by a different courier, sent quietly, without explanation. The ship on the horizon is still there.\n\nYou did not look at the horizon clearly. You believed the soon was a real soon because you wanted it to be. The letters are in your coat. The season has changed.',
+    completeItems:[], checkPassFlag:'solenSoonRead',
+    disposition:'"The fishermen remember. They always remember." — the dock at Port Solen' },
+  quest_sea_overseer: { id:'quest_sea_overseer', type:'skill_check', title:'The Voice in the Fog',
+    desc:"The navigator has been speaking in a different register since the serpent crossing. In the fog bank east of the passage, a voice speaks directly — no intermediary. It knows about every court. It has been in the water ahead of you the entire time. It offers to make the fourth court unnecessary.",
+    hint:'Name your position to the voice in the fog bank east of the Serpent Passage.',
+    activateNode:'LSO', activateCond:() => true,
+    checkAbility:'wis', checkLabel:'Insight', checkDC:15,
+    retryable:false,
+    xpAward:250,
+    vignetteText:'The voice is not hostile. This is the part you are meant to notice. A hostile voice can be refused. A helpful voice requires a different kind of refusal.\n\nIt knows Port Aurel. It knows Port Calice. It knows Port Mireille. It has this information because it has been present at each court — not physically, but through the navigator, who has been walking around in their own body and having their own thoughts while also, in a separate register, reporting to something in the water.\n\nThe navigator does not know this. The navigator has simply been feeling unusually clear-headed and well-directed since the first crossing.\n\n"You have one more court," the voice says. "I can arrange the letters another way. It would cost you nothing. It would simply require that you allow me to be useful to you." It says this pleasantly. It is pleasant. This is exactly the problem.',
+    passText:'You name the structure aloud.\n\nNot to accuse. Not dramatically. You simply say, in the fog, to the voice that has been ahead of you the entire time: you arranged the four courts. The tidal schedule was a test because you needed to know if I could read it. Port Calice, the same. Port Mireille was a categorization test. Port Solen was temporal delay.\n\nYou name each one. Flat. Present-tense. Not angry.\n\n"I understand you," you say. "I am going to the fourth court anyway."\n\nThe fog lifts. The navigator stops speaking in the second register. The navigator does not know what just happened.',
+    failText:'The offer sounds reasonable. It is reasonable. That is what the voice does — it makes the reasonable offer at the moment when you have been working hard and the end is close and the shortcuts look attractive.\n\nYou say: tell me what you need.\n\nThe voice tells you. It needs a small compliance — nothing significant, a minor framing of how you will request the letters at Port Solen. A word. A specific word.\n\nThe word is not wrong. The word simply gives the voice a small piece of the frame. The letters come. The frame shifts a degree. You are not aware of the degree.',
+    completeItems:[], checkPassFlag:'charmResisted',
+    checkFailFlag:'seaOverseerMet',
+    disposition:'"The most effective intervention is the one that appears to be assistance." — the fog bank, open water' },
   // ── Layer 55: Visby Underground quests ──
   quest_vs_01: { id:'quest_vs_01', type:'side', title:'Solvak: The Collector',
     desc:"Debt Agent Solvak has been outside Visby six weeks with a 2,000gp debt and no leverage. You might have some.",
@@ -9183,6 +9281,33 @@ const NPC_DIALOGUE = { // → doc: story.md §FL7
   TS: { name:'Barnach', quoteFn:() => S_story.barnachFoundPaul // §LXI
     ? '"I have been looking for you for a year. Antioch needs you. I need you." He does not say: come back. He is standing in the doorway of a city you grew up in and he is not telling you what to do. He is telling you that you are needed, which is different from telling you what to do, which is one of the things that is different about who he is now. "I am not going to tell you it\'s safe — you know it isn\'t. I am going to tell you it\'s time."'
     : ((() => { S_story.barnachFoundPaul = true; return 'He comes through the gate in the early afternoon, when the tentmaking quarter is quiet and the light is flat. He has the look of someone who has been traveling a long time and not sleeping particularly well and has kept going anyway.\n\n"I have been looking for you for a year."\n\nThe tent canvas is on the frame behind you. The tools are on the bench. The city has had no particular opinion about this work and you have required none.\n\n"Antioch needs you. I need you." He looks at the canvas. He looks at you. "It\'s time."'; })()) },
+  // §SIREN-01: Littoral Courts NPCs
+  LC1: { name:'Lady Aurel', quoteFn:() => S_story.aurelTideRead
+    ? '"The seal is yours." She closes the tide table. It is the first time you have seen her close it. "You did not wait for the window. You made yourself the appointment." She sets the table aside. The harbor below continues without her consultation. "That is the correct reading."'
+    : S_story.betrayalThought
+    ? '"The survey is complete. Come tomorrow at the second tide." She says it warmly. She says everything warmly. The warmth is real. The installments are also real. You have not yet asked which one you are on.'
+    : '"The tide table runs four weeks ahead. Every appointment, every pilot window, every cargo draft — all here." She reads it while speaking. She speaks while reading it. "You are the third this week on the southern commission. I will see you at the next window. It will not be long."' },
+  LC2: { name:'Lady Calice', quoteFn:() => S_story.caliceBridgeCrossed
+    ? '"You found the wheel." She says it without surprise. She was, perhaps, waiting to see if anyone would. "The mechanism has been there since the construction. My father put it in. He said: anyone who needs the bridge and cannot wait for the tide is someone I want to be dealing with." She pauses. "He was right about that."'
+    : S_story.betrayalWord
+    ? '"Perhaps at the evening tide. The wind has to settle first." She says this the way people say things they have said before. She does not look at the courtyard. The wheel in the courtyard has been there the entire conversation.'
+    : '"Perhaps at the evening tide. The bridge chain is old iron — it needs the right moment." She smiles. The bridge chain hangs in the courtyard below the window. The wheel mechanism is next to it. Neither of them is mentioned.' },
+  LC3: { name:'Lady Mireille', quoteFn:() => S_story.mireilleAmiNamed
+    ? '"You addressed the court directly." She says it as an observation, not a rebuke. "Most people accept the introduction. It is easier." She looks at the fire. "You are the first this season who gave their title before I gave it for them." A pause. "It clarifies things."'
+    : S_story.betrayalDeed
+    ? '"My most trusted companion." She says it to the court when you enter. The court nods. The evening is warm. She will ask for your counsel before the meal is over. You will give it. You are good at this. She knows you are good at this.'
+    : '"My most trusted companion." She says it before the herald can speak your name. She says it with evident warmth. The court receives it. The frame is set. Your name is on the herald\'s tongue. The herald waits to be needed.' },
+  LC4: { name:'Lady Solen', quoteFn:() => S_story.solenSoonRead
+    ? '"You went to the dock first." She says it quietly. "No one goes to the dock first." She looks at the horizon. The ship is still there. "The letters will come from the north courier. He leaves on the new moon. That is a date." She gives you the date. It is real. "That is a date," she says again, as if it needed saying twice.'
+    : '"My captain returns soon — he carries the letters of passage." She points at the ship on the horizon. She names it with the easy confidence of someone who has named it many times. "Soon. When the wind is right." The fishermen at the dock have three seasons of watching that ship not move. No one has asked them.' },
+  LCA: { name:'Harbor Keeper', quoteFn:() => S_story.littorialComplete
+    ? '"Four seals." He takes each one, examines it, sets it down. "Lady Aurel, Lady Calice, Lady Mireille, Lady Solen." He looks at the set of them. "Most take three months. You took —" He checks his register. He does not finish the sentence. He stamps the commission. "South lanes are open. The water\'s yours."'
+    : ((() => { S_story.littorialComplete = true; return 'He examines the four seals in order. Port Aurel first — the harbor seal, clean impression. Port Calice second — the bridge mark. Port Mireille third — the cape crest. Port Solen fourth — the far harbor, stamped with the courier\'s counter-mark.\n\nHe nods once. He stamps the commission. He hands it back.\n\n"South lanes," he says. "Open." He writes the date in the register. He does not ask how it went.'; })()) },
+  LSO: { name:'The Overseer', quoteFn:() => S_story.charmResisted
+    ? 'The fog is thinner now. The navigator stands at the wheel, attentive to the compass, speaking to no one. They do not remember the second register. They have been feeling clear-headed since the first crossing.\n\nThere is nothing in the water here. There is no voice. There was a voice. It has retreated to the place it retreats to when a person names it clearly and goes to the fourth court anyway.\n\nThe sea is quiet. The water moves without agenda.'
+    : S_story.seaOverseerMet
+    ? '"A small compliance," it says. "A single word at Port Solen. You will not notice the difference in how the letters read." The fog is still present. The voice is still pleasant. It has been pleasant this whole time. "You are almost done. Let me be useful."'
+    : '"I have been watching since Port Aurel." The voice is in the air — not the navigator, directly. "The tidal schedule test. The wheel in the courtyard. The introduction at Port Mireille. You navigated them." A pause. "You have one more court. I can arrange the letters another way. It would cost you nothing."' },
   // §LXV–§LXIX: Mediterranean Journey NPCs
   PL: { name:'Lyra', quoteFn:() => S_story.lyraConverted
     ? '"I decided before I spoke. The speaking was the confirmation." She has arranged the purple cloth in the way she arranges things she has decided on — with care, not ceremony. She has the quality of someone who has reorganized around a true thing and is no longer uncertain about the arrangement.'
@@ -10029,6 +10154,12 @@ const _S_DEFAULTS = () => ({
   lameManHealed: false, stoningEvent: false, timaelaJoined: false,
   // §LXV–§LXIX: Mediterranean Journey
   lyraConverted: false, areopagusSpeech: false, demetriusRiotEscaped: false, corinthLettersWritten: false, maltaSnakeEvent: false, romeArrestBegun: false,
+  // §SIREN-01: Littoral Courts
+  aurelTideRead: false, betrayalThought: false,
+  caliceBridgeCrossed: false, betrayalWord: false,
+  mireilleAmiNamed: false, betrayalDeed: false,
+  solenSoonRead: false, littorialComplete: false,
+  seaOverseerMet: false, charmResisted: false,
 });
 
 /* ── Layer 48: Luck — Seventh Stat ── */
@@ -16179,6 +16310,37 @@ function storyRender(node, prefix) {
       _stDiv.style.cssText = 'margin-top:10px;border-left-color:#803030;font-style:italic;color:#d8a0a0;font-size:12px;';
       _stDiv.textContent = 'The crowd that called him a god came back with stones. Both responses were to the same event. They had expected a god. What they got was a correction. Some crowds do not accept corrections.\n\nHe is on the ground outside the city when they leave. He is not dead. He gets up.\n\nTimael is still standing in the market square. He has been there the whole time. He does not explain why. He has not examined it. He says: where are you going next?\n\nHP: 1. You cannot be healed above 1 while in Lystra.';
       document.getElementById('story-text-box').insertAdjacentElement('afterend', _stDiv);
+    }
+  }
+  // ── §SIREN-01: LJ3 — navigator speaks in a different register ──
+  { const _lsoOld = document.getElementById('story-lso-trigger');
+    if (_lsoOld) _lsoOld.remove();
+    if (node.code === 'LJ3' && !S_story.seaOverseerMet && !S_story.charmResisted) {
+      const _lsoDiv = document.createElement('div');
+      _lsoDiv.id = 'story-lso-trigger';
+      _lsoDiv.className = 'sweelinck-variant';
+      _lsoDiv.style.cssText = 'margin-top:10px;border-left-color:#2a3a4a;background:#06080a;color:#9ab0c0;font-style:italic;font-size:12px;';
+      _lsoDiv.textContent = 'After the serpent crossing the navigator is at the wheel. They are attentive to the compass in the ordinary way.\n\nThey are also, in a second and quieter register, speaking to something in the water to the east. Brief exchanges. Their lips barely move. They are not aware of it.\n\nThe fog bank four miles east has been there all day. It has no seasonal explanation.\n\nThere is something in the fog that knows you have come through three courts.';
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _lsoDiv);
+    }
+  }
+  // ── §SIREN-01: LCA — arc close, betrayal count ──
+  { const _lcaOld = document.getElementById('story-lca-close');
+    if (_lcaOld) _lcaOld.remove();
+    if (node.code === 'LCA') {
+      const _bc = (S_story.betrayalThought ? 1 : 0) + (S_story.betrayalWord ? 1 : 0) + (S_story.betrayalDeed ? 1 : 0);
+      const _lcaDiv = document.createElement('div');
+      _lcaDiv.id = 'story-lca-close';
+      _lcaDiv.className = 'sweelinck-variant';
+      _lcaDiv.style.cssText = 'margin-top:10px;border-left-color:#3a3a5a;font-style:italic;color:#c0c0d8;font-size:12px;';
+      if (_bc === 0) {
+        _lcaDiv.textContent = 'The four courts gave their seals.\n\nYou gave them nothing but your position. You named the tidal schedule. You found the wheel. You addressed the court directly. You went to the dock first. Each time: your position, clearly held.\n\nThe sea behind you is the same sea. Nothing about the water has changed. The difference is that you navigated it without being navigated.';
+      } else if (_bc <= 2) {
+        _lcaDiv.textContent = 'The seals are in your coat.\n\nYou have been shaped by the crossing. Not entirely — you held your position at ' + (3 - _bc) + ' of the courts. But the shaping was real, and it was not requested, and you did not notice it at the time it happened.\n\nYou notice it now. The water is still. Stillness makes the shape of a thing visible. This is what stillness is for.';
+      } else {
+        _lcaDiv.textContent = 'You gave something at each harbor that you did not mean to give.\n\nAt Port Aurel: your interpretation. At Port Calice: your pace. At Port Mireille: your role.\n\nThe seals are in your coat. The commission is complete. The water is still. The stillness is the first moment of stillness since Port Aurel — the first moment in which nothing is being measured except by you, and you are only now beginning to count.';
+      }
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _lcaDiv);
     }
   }
   // ── §ML: Malta shore — snake; no roll, no explanation, crowd changes their mind ──
