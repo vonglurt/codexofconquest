@@ -7675,6 +7675,34 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   LCA:{ num:119, code:'LCA', name:'southern_anchorage', label:'The Southern Anchorage', act:4, N:'LC4', S:null, E:null, W:null,
     text:"The southern sea opens here.\n\nThe four seals are in your coat. The crossing is complete.\n\nThe water is still. The stillness is the first moment of stillness since Port Aurel — the first moment in which no one is measuring anything, no word is being used as a frame, no warmth is being given on a schedule that is not yours.\n\nThe sea does not require anything from you. It is simply water. This is, unexpectedly, a relief.",
     npc:'Harbor Keeper', battle:null, loot:null, sleep:true, sleepCost:0 },
+  // ── §CROWN-01: Three Crowns of the Swamp ──
+  WG0:{ num:121, code:'WG0', name:'hag_swamp', label:'The Deeper Gate', act:3, N:null, S:'HW1', E:null, W:null,
+    text:"Past the HS threshold the trees stop branching. They grow vertical and close, as if the swamp has decided that peripheral vision is unnecessary beyond this point.\n\nThe path south narrows once and then stops pretending to be a path. The water rises to ankle height, then knee height, then back to ankle — not flooding, adjusting. The swamp is measuring you for something.\n\nWhisper's domain is further south. Glut's is beyond that. Wane's is at the end of what the compass still tracks. The Innmother's hall sits in the center of all three, equidistant from each crown, where the swamp's oldest roads converge.\n\nYou are in the deeper swamp now. The light here is different — not less, different. It arrives from directions that don't correspond to the sun's position.",
+    npc:null, battle:null, loot:null, sleep:false },
+  HW1:{ num:122, code:'HW1', name:'hag_swamp', label:"Whisper's Crown — The Still Water", act:3, N:'WG0', S:'HJ1', E:null, W:null,
+    text:"The water is still enough to read by. Not glass — water — but the stillness is so complete that the sky comes down to the surface and stays there. You can tell it is not glass because glass does not breathe. The water breathes, slowly, at intervals you cannot predict.\n\nWhisper is at the edge. She is not looking at you. She has been not looking at you since you arrived, which is a thing she does deliberately, which you would know if you had been paying attention to the quality of the deliberateness.\n\nSomething is missing from the bank. You can tell because the shape of the bank expects it to be there. The water reflects a space where the thing should be. The thing is not there.",
+    npc:'Whisper', battle:null, loot:null, sleep:false },
+  HJ1:{ num:123, code:'HJ1', name:'hag_swamp', label:'The First Mire', act:3, N:'HW1', S:'HG1', E:null, W:null,
+    text:"The lights arrive before anything explains them. Two of them, moving at the height of a lantern someone holds, except no one is holding them. They drift in arcs that are not random — arcs that correspond to something, a pattern you could name if you had longer.\n\nThe will-o'-wisps do not speak. They do not need to. They lead, because leading is what they do, and the only question is whether you follow.",
+    npc:null, battle:{label:"Will-o'-Wisp × 2", key:'will_o_wisp', count:2}, loot:null, sleep:false },
+  HG1:{ num:124, code:'HG1', name:'hag_swamp', label:"Glut's Crown — The Feeding Pool", act:3, N:'HJ1', S:'HJ2', E:null, W:null,
+    text:"The pool surface has a film on it. Not algae — warmth. The warmth rises from below, which means the source is deeper than the surface, which means the comfort she offers is not generated here but conducted from somewhere else, through something that has been here much longer than the pool has.\n\nGlut stands in the shallows. The water is at her waist. She has been here long enough that the water has adjusted to her.\n\nShe gestures at the bank where food has been laid out. The gesture is easy, practiced — the gesture of someone who has made this offering many times and considers it already accepted.\n\nShe gives you the jar as you arrive. You did not ask for it. It is warm in your hand.",
+    npc:'Glut', battle:null, loot:null, sleep:false },
+  HJ2:{ num:125, code:'HJ2', name:'hag_swamp', label:'The Second Mire', act:3, N:'HG1', S:'HN1', E:null, W:null,
+    text:"The water here is thicker. Not physically — the density is different, the way water is different when it has been still for a very long time and something in it has been feeding.\n\nThe grave hags are not threatening in the way that implies planning. They are thorough. They come from below the waterline and they offer. The crone witch arrives from the tree line. She has been watching since the pool.",
+    npc:null, battle:{label:'Grave Hag × 2 + Crone Witch', key:'grave_hag', count:2}, loot:null, sleep:false },
+  HN1:{ num:126, code:'HN1', name:'hag_swamp', label:"Wane's Crown — The Drained Mire", act:3, N:'HJ2', S:'HJ3', E:null, W:null,
+    text:"The grass does not grow toward the light here. It grows lateral — across the mire surface, covering it, waiting for what is in the surface to finish waning so there is room.\n\nWane is seated on a stone that has been seated on for long enough that the stone remembers it. She is wearing something she has been wearing since before the color left this place.\n\nShe looks up when you arrive as if she expected you later, or earlier, or someone else. She does not say which. The expression is the same for all three.",
+    npc:'Wane', battle:null, loot:null, sleep:false },
+  HJ3:{ num:127, code:'HJ3', name:'hag_swamp', label:'The Dark Passage', act:3, N:'HN1', S:'INN', E:null, W:null,
+    text:"The passage narrows here. Not geographically — optically. The light does not reach the walls the same way it reaches the center, which means the walls are not the same as the center, which means something in the passage has made a decision about which parts of itself it wants visible.\n\nThe darkness thickens before the dragon appears. It arrives from above, which is unexpected in a swamp — everything in the swamp lives at eye level or below. This one does not.",
+    npc:null, battle:{label:'Young Black Dragon', key:'young_black_dragon', count:1}, loot:null, sleep:false },
+  INN:{ num:128, code:'INN', name:'inn', label:"The Innmother's Hall", act:3, N:'HJ3', S:'HCA', E:null, W:null,
+    text:"The hall is functional. The fire works. The meals are real meals. The beds — the second one, specifically — hold their shape through the night.\n\nThe innkeeper assigns you the worst room without asking which you want. She corrects the way you hold the spoon. She charges for the candle that was already on the table when you arrived. She knows when you are tired and selects that moment to demand something.\n\nNone of this is performance.\n\nShe has been running this hall since before the swamp had its current shape and no one who came through the door ever came back to say the room was worth it. She has not developed protocols for that.",
+    npc:'The Innmother', battle:null, loot:null, sleep:true, sleepCost:8 },
+  HCA:{ num:129, code:'HCA', name:'hag_swamp', label:'The Deeper Clearing', act:3, N:'INN', S:null, E:null, W:null,
+    text:"The swamp ends here. Not abruptly — it thins, the way things that have held on for a long time thin when they finally release. The color comes back gradually, not all at once.\n\nThe Crone Marks are in your coat. They are not heavy. They are the weight of things that were noticed — three crowns of the deep swamp, and the things you named in each one, and the hag who told you her name after seven rooms of not telling you.\n\nThe Deeper Clearing has a path going south. It did not have a path going south until now.",
+    npc:null, battle:null, loot:null, sleep:false },
   // ── §LV: The Antecedent Chamber ──
   AC:{ num:83, code:'AC', name:'antecedent_chamber', label:'The Antecedent Chamber', act:1, N:'CY', S:null, E:null, W:null,
     text:"The descent past the CY checkpoint level goes another twelve meters before the floor levels. The conduit cables end at a partition wall — not brick, not data-center partition, something older than either. The indicators in this section run on a power source that predates the undercity infrastructure by a margin no one has calculated because no one has thought to ask.\n\nThe chamber was designed, from the start, to be exactly this: a room with one function and one occupant. The function is containment. The occupant is still here.\n\nIt is not large. It does not need to be. It has been here long enough that the word 'waiting' no longer applies — waiting implies an expectation of change. This is older than that. This is patience as a physical property of the space.\n\nThe Antecedent Seal activates on entry. The seal runs warm. The indicators change from standby to receiving.\n\nYou are, apparently, expected.", npc:'The Antecedent', battle:null, loot:null, sleep:false },
@@ -7840,6 +7868,11 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   LJ0:{r:25,c:14}, LC1:{r:27,c:14}, LJ1:{r:29,c:14}, LC2:{r:31,c:14},
   LJ2:{r:33,c:14}, LC3:{r:35,c:14}, LJ3:{r:37,c:14}, LC4:{r:39,c:14},
   LCA:{r:41,c:14}, LSO:{r:37,c:18},
+  /* §CROWN-01: Three Crowns of the Swamp — c:3, rows 15–32. EC at {r:19,c:2} forced shift from lab-report c:2 to c:3.
+     HJ1 at r:21 (not r:19) to prevent SC.W probe override. Even rows (22,24,26,28,30,32) avoid OC/AT/EA row probes.
+     Only secondary connection: HW1{r:17,c:3}.E → J3{r:17,c:6} (d=3; J-node; accepted). */
+  WG0:{r:15,c:3}, HW1:{r:17,c:3}, HJ1:{r:21,c:3}, HG1:{r:22,c:3},
+  HJ2:{r:24,c:3}, HN1:{r:26,c:3}, HJ3:{r:28,c:3}, INN:{r:30,c:3}, HCA:{r:32,c:3},
 };
 
 /* ── Layer 9-A: Circuit Corridor Data Structures ── */
@@ -8944,6 +8977,279 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     completeItems:[], checkPassFlag:'charmResisted',
     checkFailFlag:'seaOverseerMet',
     disposition:'"The most effective intervention is the one that appears to be assistance." — the fog bank, open water' },
+  // ── §CROWN-01: Three Crowns of the Swamp quests ──
+  // — Whisper (HW1) —
+  quest_whisper_01: { id:'quest_whisper_01', type:'skill_check', title:'The Unspoken Request',
+    desc:'Whisper is at the edge of the still water and she is not looking at you. Something is missing from the bank. The request has not been made. The water reflects a space where the thing should be.',
+    hint:'Read what she wants without being told.',
+    activateNode:'HW1', activateCond:() => true,
+    checkAbility:'wis', checkLabel:'Insight', checkDC:12,
+    retryable:false, xpAward:150,
+    vignetteText:'The water is still. The bank is arranged as if something belongs on it. She is at the edge, not looking at you — not because she has not noticed you, but because the not-looking is the message. The space on the bank is shaped like an absence. The absence has been there long enough that the water knows the shape of it.\n\nShe will not say what she wants. She has decided that the asking is the test — not the answer. The asking is the frame. The frame is: will you see what is in front of you without requiring it to be explained.',
+    passText:'You do not ask what she wants. You name the thing you notice is missing — the item that should be on the bank, the name she did not say, the direction she did not look toward. You say it once. She turns. She gives you the mark. She turns back. Neither of you names what just happened.',
+    failText:'You wait for her to tell you. She does not tell you. The water is still for a long time. Eventually she nods toward the bank and you follow what you think she means and get it partly right. She accepts it. You have given her the answer she already knew would come — the approximate one, the one that arrives when nobody looked carefully enough.',
+    completeItems:[], checkPassFlag:'',
+    onPass:() => _addCroneMark(),
+    disposition:'"You brought the right thing. You did not ask how I knew you would." — The Still Water, Whisper\'s Crown' },
+  quest_whisper_02: { id:'quest_whisper_02', type:'skill_check', title:'The Withheld Name',
+    desc:'Whisper speaks about the swamp at length. She names the heron. She names the black-root moss. She names the three pools by depth. She does not name someone you hear moving in the rushes.',
+    hint:'Find who in the swamp she has stopped naming.',
+    activateNode:'HW1', activateCond:() => (S_story.quests['quest_whisper_01']||'') !== '',
+    checkAbility:'int', checkLabel:'Investigation', checkDC:13,
+    retryable:false, xpAward:175,
+    vignetteText:'She names everything in the swamp. The catalogue is complete except for one thing — someone in the rushes, moving at intervals, present as a sound and absent as a word. She knows this person. You can tell from the specific quality of the gap.\n\nThe name she will not say is the name she thinks about most. Not because it brings her comfort. Because she has decided not to say it — and decisions about what not to say are the loudest things a person carries.',
+    passText:'You name the unnamed — not the person in the rushes, but the fact of the gap. You say: there is someone here you know and have not named. She is still for a moment. "You heard correctly," she says. She gives you the mark. She does not say the name.',
+    failText:'You search the rushes. No one is visible. The question was not where the person is. The question was whose name she has stopped saying and why. You did not know to ask that version.',
+    completeItems:[], checkPassFlag:'',
+    onPass:() => _addCroneMark(),
+    disposition:'"The name I do not say is the name that matters." — The Still Water, Whisper\'s Crown' },
+  quest_whisper_03: { id:'quest_whisper_03', type:'skill_check', title:'The Empty Gift',
+    desc:'Whisper sets three objects on the bank — a jar of pale water, a bundle of dried sedge, a small carved stone — and gestures for you to take one.',
+    hint:'Identify which of her three offered gifts is hollow.',
+    activateNode:'HW1', activateCond:() => (S_story.quests['quest_whisper_02']||'') !== '',
+    checkAbility:'wis', checkLabel:'Perception', checkDC:12,
+    retryable:false, xpAward:175,
+    vignetteText:'Three objects. The jar has water in it — pale water, the kind that is not quite clear. The sedge is dry. The stone has been worn smooth by handling, or by water, or by both over a long time.\n\nShe has arranged them for you. The arrangement is not neutral — one of them is placed so that the eye goes to it first, which means she knew which one you would take, which means she already knew what the right answer was, which means the test is whether you can see past the arrangement to the object underneath.',
+    passText:'You look at all three. The stone is the one the eye goes to. The eye is not the organ to use here. You pick up the jar and hold it to the light. The water inside moves a fraction of a second before you tilt it — the reflex of something that is not quite water. You set the jar back. "This one," you say. She nods. You get the mark.',
+    failText:'You pick the carved stone. It is the most solid of the three. It is also the one the arrangement points to, which is why she placed it where she placed it. You carry it south and discover in the second crossing that it has a weight it should not have — not heavy, wrong. The mark does not come.',
+    completeItems:[], checkPassFlag:'',
+    onPass:() => _addCroneMark(),
+    disposition:'"The eye is not the organ. Most people use the eye." — The Still Water, Whisper\'s Crown' },
+  quest_whisper_04: { id:'quest_whisper_04', type:'skill_check', title:'The Absent Warning',
+    desc:'Whisper describes the south path in detail — creatures, depth, the light at different times. Her description is thorough. It omits one thing.',
+    hint:'Notice what she failed to tell you before it matters.',
+    activateNode:'HW1', activateCond:() => (S_story.quests['quest_whisper_03']||'') !== '',
+    checkAbility:'wis', checkLabel:'Insight', checkDC:14,
+    retryable:false, xpAward:200,
+    vignetteText:'She describes the south path. The creatures she names, the depth of each crossing, the quality of the light at morning and at the turn of the tide. Her description is thorough. It is also, in the specific way of thorough descriptions, complete except for one element that is implied by the structure of everything around it but never stated.\n\nWhat she describes goes around something. The structure has a gap that is shaped like a warning she has not given.',
+    passText:'Before crossing south you name what she did not say — the safe crossing time, the specific sequence the path requires that she described only by implication. You say it back to her as a question. She pauses. She says: "Yes." She marks you before you take another step. The thing she did not say is now said.',
+    failText:'You cross the mire and find the thing she did not warn you about. You manage it. But you found it with your body rather than your attention, which is how most people find the things Whisper did not warn them about, which is information she has been collecting for a long time.',
+    completeItems:[], checkPassFlag:'',
+    onPass:() => _addCroneMark(),
+    disposition:'"I describe everything around the gap. The gap is the warning." — The Still Water, Whisper\'s Crown' },
+  quest_whisper_05: { id:'quest_whisper_05', type:'side', title:"The Saint's Work",
+    desc:'Whisper tends a small cairn at the still water\'s edge — stones arranged in a way that suggests ongoing care, not ceremony. She does not mention it. She does not invite you to witness it.',
+    hint:'Bear witness to her hidden care without being asked.',
+    activateNode:'HW1', activateCond:() => (S_story.quests['quest_whisper_01']||'') !== '',
+    completeItems:[], completeFn:() => !!S_story.whisperSaintSeen,
+    onComplete:() => { S_story.whisperSaintSeen = true; _innKindness(1); },
+    disposition:'"It is not a temple. It does not require an audience. You were there anyway." — The Still Water, Whisper\'s Crown' },
+  quest_whisper_06: { id:'quest_whisper_06', type:'skill_check', title:'The Forgiven Absence',
+    desc:'Whisper was not there when she was needed. You know this now. She knows you know. She is present now. What you do with the past determines the mark.',
+    hint:'Give her the space to be present now; do not demand she explain the past.',
+    activateNode:'HW1', activateCond:() => (S_story.quests['quest_whisper_04']||'') !== '',
+    checkAbility:'cha', checkLabel:'Persuasion', checkDC:13,
+    retryable:false, xpAward:225,
+    vignetteText:'She was not there. The swamp knows this. The still water knows this. She knows you know because she has been watching your face since you arrived and your face has the specific quality of someone who has found out a thing and is deciding what to do with it.\n\nShe is present now. The absence was real. Both things are true simultaneously. What you do with both of them true simultaneously is the test.',
+    passText:'You do not ask where she was. You say: you are here now. You say it without weight attached to it — not accusatory, not forgiving, simply present. You are here now. She is still for a long time. Then she gives you the mark. You have given her the thing she could not give herself — a witness to the present moment that does not require her to justify the past.',
+    failText:'You ask where she was. She answers — not fully, but enough. The answer is worse than the absence in the way that answers to certain questions always are. You leave with the information but without the mark. The information was not what the moment needed.',
+    completeItems:[], checkPassFlag:'',
+    onPass:() => { _addCroneMark(); S_story.whisperCrownComplete = (Object.keys(S_story.quests).filter(k=>k.startsWith('quest_whisper_')&&S_story.quests[k]==='complete').length >= 5); },
+    disposition:'"The absence was not malice. I have no protocol for what you just did." — The Still Water, Whisper\'s Crown' },
+  // — Glut (HG1) —
+  quest_glut_01: { id:'quest_glut_01', type:'skill_check', title:'The Offered Feast',
+    desc:'The food on the bank is excellent. Glut gestures for more. The second portion is already being prepared. She has not asked if you want it.',
+    hint:'Decline the second portion without offense.',
+    activateNode:'HG1', activateCond:() => true,
+    checkAbility:'wis', checkLabel:'Insight', checkDC:13,
+    retryable:false, xpAward:150,
+    vignetteText:'The first portion is good. The second arrives before the first is finished. The third is being prepared. She is doing this with the ease of someone for whom offering more is the primary language — not manipulation, language. This is how she says: I care that you are here.\n\nThe test is not whether you like the food. The test is whether you can decline without the declination reading as rejection of the person doing the offering. These are different things. Most people cannot hold both at once.',
+    passText:'You set the bowl down when the first portion is done. "That was enough," you say. You mean it — not as performance, as fact. She watches. The surprise does not reach her face but it reaches the pool surface, which stills slightly as if something in the pool noticed. She gives you the mark.',
+    failText:'You take the second portion. The second is good. You finish it. The third arrives. You are full before the third and take it anyway because declining felt ungrateful. The meal continues. She is satisfied. The satisfaction has a quality that is not quite full — not because the food is insufficient, but because you did not stop when you were done.',
+    completeItems:[], checkPassFlag:'',
+    onPass:() => _addCroneMark(),
+    disposition:'"You stopped when you were done. I have been watching people not do that for a very long time." — The Feeding Pool, Glut\'s Crown' },
+  quest_glut_02: { id:'quest_glut_02', type:'skill_check', title:'The Smothering Gift',
+    desc:'She has given you the jar. You did not ask for it. It is warm. Returning it will read as rejection unless the frame is exact.',
+    hint:'Return what she gave without reading as ungrateful.',
+    activateNode:'HG1', activateCond:() => (S_story.quests['quest_glut_01']||'') !== '',
+    checkAbility:'cha', checkLabel:'Persuasion', checkDC:13,
+    retryable:false, xpAward:175,
+    vignetteText:'The jar is in your hand. It is warm. She gave it before you could respond to the giving. She does this — the gift arrives before the space for the gift, which means the gift is already part of your hand before you have decided anything about it.\n\nReturning it will read as rejection if the frame is wrong. The frame must be: I will come back for this. Not: I do not want it. Come back for it — which means it is received, it is valued, it will be claimed. The gift persists. You simply defer the claiming.',
+    passText:'You set the jar back on the bank. "I want to come back and take this when I need it," you say. Not refusal — deferral. She takes the jar back. The gift persists in the form of the future claim. She gives you the mark. The jar will be there when you return. This is the first time the return has been named as a real thing.',
+    failText:'You keep the jar. She can see you do not want it. The gift has been accepted without wanting, which is the category she fills — the gift that arrives whether you want it or not. It is not a cruel category. It is the one that has never learned to stop when done.',
+    completeItems:[], checkPassFlag:'',
+    onPass:() => _addCroneMark(),
+    disposition:'"The gift persists in the form of the future claim. I had not thought of it that way." — The Feeding Pool, Glut\'s Crown' },
+  quest_glut_03: { id:'quest_glut_03', type:'skill_check', title:'The Locked Door',
+    desc:'The feeding pool has no visible exit. The comfort circles back. The exit is here — everything has an exit.',
+    hint:'Find the exit hidden under the comfort.',
+    activateNode:'HG1', activateCond:() => (S_story.quests['quest_glut_02']||'') !== '',
+    checkAbility:'int', checkLabel:'Investigation', checkDC:14,
+    retryable:false, xpAward:200,
+    vignetteText:'Every comfortable room has an exit. The exit is always in the location of maximum comfort — the warmest point, the place where the food smells best, the seat nearest the fire. This is true because the exit was there before the comfort, and the comfort was arranged around the exit, not the other way.\n\nYou have been in the pool for some time. The warmth is real. The warmth is also arranged.',
+    passText:'The exit is under the warmest part of the room — where the food smells best, where the fire reaches. You cross it without lingering. You do not apologize for leaving. She watches from the far side of the pool. When you reach the threshold she says: good. She says it quietly, to the water.',
+    failText:'You stay for the meal. The meal is good. You stay for the second. The exit does not find you until you have eaten three times and slept once and she has already given you the gift you did not want and you are carrying it when you finally cross. She waves from the bank. She has been waving goodbye in this direction for longer than you have been in the swamp.',
+    completeItems:[], checkPassFlag:'',
+    onPass:() => _addCroneMark(),
+    disposition:'"The door has always been there. You are the fourth person this season to find it on the first crossing." — The Feeding Pool, Glut\'s Crown' },
+  quest_glut_04: { id:'quest_glut_04', type:'skill_check', title:'The Endless Feeding',
+    desc:'She has offered again. She has offered three times this visit. The offering is genuine each time. The pattern is also genuine.',
+    hint:'Name the pattern of the offering without naming her as the trap.',
+    activateNode:'HG1', activateCond:() => (S_story.quests['quest_glut_03']||'') !== '',
+    checkAbility:'wis', checkLabel:'Insight', checkDC:13,
+    retryable:false, xpAward:200,
+    vignetteText:'The third offer. The offer is real — she means it each time. The pattern that produces the third offer is also real — she does not know it as a pattern, she knows it as care. Both things are simultaneously true.\n\nNaming the pattern means naming it as a pattern without naming her as the mechanism of the pattern. The mechanism and the person are different things. The test is whether you can distinguish them and speak to the distinction.',
+    passText:'You name the pattern. Not her — the pattern: this is the third offer, and the offering is the mechanism by which connection is maintained, and I am not going to refuse you but I want to name what is happening here. She looks at you for a long time. The pool is very still. She gives you the mark.',
+    failText:'You accept the third offer. The meal continues. She is satisfied. The satisfaction has the quality of something that ran its course without being noticed, which is how it was designed. Not by her. By the force that moves through her.',
+    completeItems:[], checkPassFlag:'',
+    onPass:() => _addCroneMark(),
+    disposition:'"No one has named the third offer before. Most people are eating the third offer when they realize it has arrived." — The Feeding Pool, Glut\'s Crown' },
+  quest_glut_05: { id:'quest_glut_05', type:'skill_check', title:'The False Protection',
+    desc:'She has been protecting the pool. The protection is elaborate and real. It is not protecting what she says it is protecting.',
+    hint:'Name what she is actually protecting herself from.',
+    activateNode:'HG1', activateCond:() => (S_story.quests['quest_glut_04']||'') !== '',
+    checkAbility:'wis', checkLabel:'Insight', checkDC:15,
+    retryable:false, xpAward:225,
+    vignetteText:'The protection is real — the pool is protected. She has maintained it across a long time with genuine effort and genuine attention. The protection is also misdirected — not at what she says it is directed at.\n\nShe is not protecting the pool. The pool is what she protects herself from losing. And she is not protecting the pool from external threat. She is protecting it from the silence that would arrive if the feeding stopped and the pool became just a pool and she became just a hag in a swamp without anyone to give anything to.',
+    passText:'You name it. Not the pool — the silence. You say: you are not protecting the pool. You are protecting yourself from what arrives if the feeding stops and there is nothing left to give. She does not move. The water is very still. After a long time she says: yes. Just that. The mark follows.',
+    failText:'You accept the protection narrative. The pool is protected. You are grateful for the protection. The thing she is actually protecting herself from continues unaddressed, which means the protection will continue at the same level indefinitely, which is what she has always had.',
+    completeItems:[], checkPassFlag:'',
+    onPass:() => _addCroneMark(),
+    disposition:'"I have been protecting myself for so long that I forgot what I was protecting." — The Feeding Pool, Glut\'s Crown' },
+  quest_glut_06: { id:'quest_glut_06', type:'side', title:'The Open Hand',
+    desc:"The jar Glut gave you at first arrival has been in your coat since HG1. You are back at the pool. The gesture is simple.",
+    hint:"Return Glut's Gift to the feeding pool.",
+    activateNode:'HG1', activateCond:() => !!S_story.glut_gift_held,
+    completeItems:[], completeFn:() => !!S_story.glutGiftReturned,
+    onComplete:() => {
+      S_story.glutGiftReturned = true;
+      S_story.glut_gift_held = false;
+      S_story.inventory = (S_story.inventory||[]).filter(i => i.name !== "Glut's Gift");
+      _innKindness(1);
+      S_story.glutCrownComplete = true;
+    },
+    disposition:'"You gave it back. Most people keep the jar. The jar is not the gift — the returning is the gift." — The Feeding Pool, Glut\'s Crown' },
+  // — Wane (HN1) —
+  quest_wane_01: { id:'quest_wane_01', type:'skill_check', title:'The Carried Grief',
+    desc:'Wane places her hand over yours. The weight begins to transfer. It seems small.',
+    hint:'Decline to carry her weight without cruelty.',
+    activateNode:'HN1', activateCond:() => true,
+    checkAbility:'wis', checkLabel:'Insight', checkDC:12,
+    retryable:false, xpAward:150,
+    vignetteText:'Her hand, yours. The weight moving. The weight is the grief of something that has been waning longer than the swamp has been named — real grief, earned grief, grief that belongs to her and has always belonged to her and has been moving sideways into other people for so long that the movement has become automatic.\n\nIt seems small when it starts. It is not small. You will discover this later if you take it.',
+    passText:'She gives you her grief in the form of a stone. Not literally — she places her hand over yours and the weight transfers, which is what she does, which is what she has always done and which you name as the thing it is: I am not the place for this. You say it before the weight arrives. She takes her hand back. She holds the weight herself. She has not done that in a long time. She looks at her own hands.',
+    failText:'You take the weight because it seems small and she seems tired. The weight is not small. You discover this in the second hour of the next crossing, when the mire is heavier than it should be and you cannot account for the difference and she has already moved on to the next thing she needs you to carry.',
+    completeItems:[], checkPassFlag:'',
+    onPass:() => _addCroneMark(),
+    disposition:'"You gave it back. Most people take it and don\'t realize they\'ve taken it until they\'re out of the swamp and by then it\'s theirs." — The Drained Mire, Wane\'s Crown' },
+  quest_wane_02: { id:'quest_wane_02', type:'skill_check', title:'The Diminishing Task',
+    desc:'She says it cannot be done. She says it the way someone states a fact they have already accepted. The task is moving the stone at the mire\'s edge.',
+    hint:'Complete what she says cannot be done.',
+    activateNode:'HN1', activateCond:() => (S_story.quests['quest_wane_01']||'') !== '',
+    checkAbility:'str', checkLabel:'Athletics', checkDC:13,
+    retryable:false, xpAward:175,
+    vignetteText:'The stone is large. She said it cannot be done. She said it as information, not challenge — as someone reporting a settled fact that they decided was settled long enough ago that the deciding itself has been forgotten.\n\nThe decision was the problem, not the stone. The stone is just a stone.',
+    passText:'You move the stone. Not with cleverness — with weight, with work, with your body in the correct position and the correct application of effort. It moves. She watches. She had already decided what she would say when it moved. "I forgot," she says. "I forgot the stone was not fixed." You give her the mark back. She does not know what to do with it.',
+    failText:'You try at the wrong angle, the wrong distribution of effort. The stone does not move. She nods. She had already accommodated this. Everything confirms for her. The stone remains. The mark does not come.',
+    completeItems:[], checkPassFlag:'',
+    onPass:() => _addCroneMark(),
+    disposition:'"I forgot that I had decided it. The deciding was a long time ago." — The Drained Mire, Wane\'s Crown' },
+  quest_wane_03: { id:'quest_wane_03', type:'skill_check', title:'The Hopeless Errand',
+    desc:'Something is lost in the mire. She says it is permanently lost. She says it without drama — a weather report.',
+    hint:'Return what she claims is permanently lost.',
+    activateNode:'HN1', activateCond:() => (S_story.quests['quest_wane_02']||'') !== '',
+    checkAbility:'int', checkLabel:'Investigation', checkDC:13,
+    retryable:false, xpAward:175,
+    vignetteText:'The lost thing. She described it once and has not looked for it since she decided it was lost. The deciding was the end of the search. The deciding happened long enough ago that the search feels ancient — not recent, not recoverable.\n\nThings that are declared permanently lost are usually at the edge of the place they were lost. Not in the center. The center is where you look when you are still hoping. The edge is where things come to rest when the center has been searched and abandoned.',
+    passText:'You find it. Not in the mire — at the edge of the mire, where things that are lost come to rest just out of eyeline from the center. You bring it back. She takes it without surprise. "It was there," she says. "I knew where it was. I did not look." You have given her evidence that looking is possible. The mark comes.',
+    failText:'You look in the mire. The mire is not where it is. You come back without it. She nods. She already knew you would look in the mire. The thing is at the mire\'s edge. Neither of you will look there today.',
+    completeItems:[], checkPassFlag:'',
+    onPass:() => _addCroneMark(),
+    disposition:'"It was at the edge. I had stopped looking at the edge." — The Drained Mire, Wane\'s Crown' },
+  quest_wane_04: { id:'quest_wane_04', type:'skill_check', title:'The Burden',
+    desc:'She begins her history. The history is long. It is accurate. It is terrible in the specific way of things that have had the color extracted over time.',
+    hint:'Hear her full history without being consumed by it.',
+    activateNode:'HN1', activateCond:() => (S_story.quests['quest_wane_03']||'') !== '',
+    checkAbility:'wis', checkLabel:'Insight', checkDC:14,
+    retryable:false, xpAward:200,
+    vignetteText:'Her history. Three hours in, you notice you are heavier. Not tired — heavier. The specific heaviness of being a vessel for things that are real and true and belong to someone else.\n\nShe does not intend the consuming. The consuming is automatic. She has been carrying this history alone long enough that the automatic draw is sideways — it requires a body near the history, and you are the nearest body.',
+    passText:'At hour three you say: I can hear the rest another time. Not: I cannot take this. Another time — which means you will return, which means she is not left holding it alone, which means the history will continue and you will be there for it in portions. She stops. She looks at her own hands. "Another time," she says. "Yes." The mark comes.',
+    failText:'You hear the full history. It is true, all of it. You leave the mire carrying more than you brought in — not her history, exactly, but the quality of it, the particular grey of things drained too long. She watches you go with the look of someone who has done this before and knows you will need time before you return.',
+    completeItems:[], checkPassFlag:'',
+    onPass:() => _addCroneMark(),
+    disposition:'"You said: another time. You meant it. That is the first time someone has meant it." — The Drained Mire, Wane\'s Crown' },
+  quest_wane_05: { id:'quest_wane_05', type:'skill_check', title:'The Drain',
+    desc:'Something is leaving you that was there when you arrived. Not gold, not health — something in the quality of your attention. You notice you are slower.',
+    hint:'Notice the drain while it is happening and name it.',
+    activateNode:'HN1', activateCond:() => (S_story.quests['quest_wane_04']||'') !== '',
+    checkAbility:'wis', checkLabel:'Insight', checkDC:13,
+    retryable:false, xpAward:200,
+    vignetteText:'The mire. Your attention. The relationship between the two.\n\nShe is not doing anything. She is simply present, which is what the drain requires — presence, and proximity, and the slow transfer that happens when something has been waning for so long that the waning has become a property of the space rather than an action of the self.\n\nThe drain is happening. The question is whether you notice before it completes.',
+    passText:'You notice while it is still happening. You say: I am being drained. Not to her — to the fact of it, in her presence. She looks up from the stone. "You named it," she says. "Most people name it after." The mark comes. The drain slows. The naming was enough.',
+    failText:'You notice later — outside the mire, in the crossing south, when the effort is higher than it should be. You had been slow for an hour before you understood why. The drain ran its full course. You will recover. The noticing after the fact is its own kind of learning, but not the mark she gives.',
+    completeItems:[], checkPassFlag:'',
+    onPass:() => _addCroneMark(),
+    disposition:'"You said it while it was happening. That has not happened before." — The Drained Mire, Wane\'s Crown' },
+  quest_wane_06: { id:'quest_wane_06', type:'skill_check', title:'The Refusal',
+    desc:'She has given you her tragedy. The full weight of it. She is asking you to carry it as a final fact — the meaning of the mire.',
+    hint:'Say no to her tragedy — not cruelly, simply no.',
+    activateNode:'HN1', activateCond:() => (S_story.quests['quest_wane_05']||'') !== '',
+    checkAbility:'cha', checkLabel:'Persuasion', checkDC:14,
+    retryable:false, xpAward:225,
+    vignetteText:'The tragedy is real. It happened. She is the first person to have told you the full version — not the edited version, not the version that ends before the worst part. The full version. She has been waiting across a very long time for someone to receive it.\n\nWhat she is asking you to do by receiving it is to confirm that the tragedy is final — that it is the last word about her. That she is what happened to her.\n\nThe refusal is not: your tragedy is not real. The refusal is: you are not only what happened to you. Said without cruelty. Said as a simple fact.',
+    passText:'You say: no. Not with cruelty — simply no. You say: what happened is real and I cannot carry it as your final meaning because it is not your final meaning. It is one true thing. She looks at you. She looks at the mire. She has been waiting, across a very long time, for someone to say exactly that. The mark comes. She keeps the tragedy. It belongs to her. She does not have to offer it as a credential anymore.',
+    failText:'You accept it. The tragedy is yours now, in the category of things received without anywhere to put them. She watches you go. She looks lighter. The lightness is real. What you are carrying is also real. You are not sure if this is the correct distribution.',
+    completeItems:[], checkPassFlag:'',
+    onPass:() => { _addCroneMark(); S_story.waneCrownComplete = (Object.keys(S_story.quests).filter(k=>k.startsWith('quest_wane_')&&S_story.quests[k]==='complete').length >= 5); },
+    disposition:'"I have been offering that as a credential for a very long time. You are the first person to decline the credential." — The Drained Mire, Wane\'s Crown' },
+  // — Inn (INN) —
+  quest_inn_01: { id:'quest_inn_01', type:'side', title:'The First Night',
+    desc:'The room is at the end of the hall. The second bed is the one that works. Sleep happens — not comfortably, not badly. You came back in the morning.',
+    hint:'Sleep at The Innmother\'s Hall.',
+    activateNode:'INN', activateCond:() => true,
+    completeItems:[], completeFn:() => !!(S_story.sleptAtNodes||{})['INN'],
+    onComplete:() => _innKindness(1),
+    disposition:'"You slept in the bad room and came back in the morning. No one does that." — The Innmother\'s Hall' },
+  quest_inn_02: { id:'quest_inn_02', type:'skill_check', title:'The Unrequested Thing',
+    desc:'She needs something before she asks. You can see it if you look at what she is doing and what she is not doing and what the gap between them contains.',
+    hint:'Bring her something she needs before she asks.',
+    activateNode:'INN', activateCond:() => !!(S_story.sleptAtNodes||{})['INN'],
+    checkAbility:'wis', checkLabel:'Insight', checkDC:12,
+    retryable:false, xpAward:150,
+    vignetteText:'She is working. The work has a rhythm. The rhythm has a gap — a moment where the next step in the sequence requires something that is not in her hand, and she has not yet reached for it, and she is moving through the gap as if she has learned to accommodate it.\n\nThe gap is small. The accommodation has been long.',
+    passText:'You bring the thing before she asks. You set it where it goes without explanation. She takes it without comment. The lack of comment is the comment. She expected the pattern — ask, wait, receive. You broke the pattern. The kindness meter moves.',
+    failText:'You wait for her to ask. She asks. You provide it. The transaction is correct. It is also the transaction she has had every time. She has asked and received so many times that the asking is automatic. The asking is what you did not interrupt.',
+    completeItems:[], checkPassFlag:'',
+    onPass:() => _innKindness(1),
+    disposition:'"You brought it before I asked. I was not expecting that." — The Innmother\'s Hall' },
+  quest_inn_03: { id:'quest_inn_03', type:'skill_check', title:'The Correction',
+    desc:'At the table, she corrects the way you hold the spoon. This is not the first time. It is the third.',
+    hint:'Name her bad manners without anger.',
+    activateNode:'INN', activateCond:() => !!(S_story.sleptAtNodes||{})['INN'],
+    checkAbility:'cha', checkLabel:'Persuasion', checkDC:13,
+    retryable:false, xpAward:175,
+    vignetteText:'At the table, she corrects the way you hold the spoon.\n\nThis is not the first time. It is the third. The spoon is held incorrectly in the same direction each time, which means you have not changed and she has not stopped noticing.\n\nThe correction is delivered the way someone delivers information they have delivered before and expect to deliver again. There is no malice in it. There is also no expectation that it will stop bothering you, because she has already decided how much things bother most people and most people do not surprise her.',
+    passText:'You set the spoon down. You say: you correct things, and I notice that you do, and I am not leaving.\n\nShe looks at the spoon. She does not say anything. She picks up her own bowl and continues.\n\nThis is the first time the correction has produced a response she did not already have a category for. The kindness meter moves.',
+    failText:'You apologize for the spoon. She corrects it again. You apologize again. By the third correction you have established that apology is available, which means the corrections will continue at the intervals she decides, which is what happens for the rest of the evening. She is not cruel. She is simply thorough.',
+    completeItems:[], checkPassFlag:'',
+    onPass:() => _innKindness(1),
+    disposition:'"You said you were not leaving. No one has said that." — The Innmother\'s Hall' },
+  quest_inn_04: { id:'quest_inn_04', type:'skill_check', title:'The Tired Hour',
+    desc:'She is tired. Not visibly tired — the particular quality of tired that knows better than to be visible. You can see it in the rhythm of her work.',
+    hint:'Notice she is tired and say so with no expectation.',
+    activateNode:'INN', activateCond:() => !!(S_story.sleptAtNodes||{})['INN'],
+    checkAbility:'wis', checkLabel:'Insight', checkDC:12,
+    retryable:false, xpAward:150,
+    vignetteText:'She is working. The work has a rhythm. The rhythm today has a quality that was not there yesterday — a fraction of a second slower in the turns, a slightly different distribution of weight, the specific economy of motion that belongs to someone who is managing something that is not visible.\n\nThe tired is real. She has not named it. She would not name it unprompted — naming it would require acknowledging it, and acknowledging it would require stopping, and she has not stopped in a very long time.',
+    passText:'You say: you are tired. You say it without anything attached — no offer, no question, no expectation of a response or a change. Just the observation, placed in the room. She stops. She says: yes. She says it the way someone says something true that they did not have a category for receiving in this context. Then she resumes. The kindness meter moves.',
+    failText:'The rhythm tells you something is slightly wrong. You read it as general irritability, which is her baseline, so the reading produces no signal. The tired hour passes. The work continues. She does not stop.',
+    completeItems:[], checkPassFlag:'',
+    onPass:() => _innKindness(1),
+    disposition:'"You named it. I was not expecting to be named." — The Innmother\'s Hall' },
+  quest_inn_05: { id:'quest_inn_05', type:'side', title:'The Return',
+    desc:'You left the hall. You came back. She notes this.',
+    hint:'Leave The Innmother\'s Hall and return.',
+    activateNode:'INN', activateCond:() => !!(S_story.sleptAtNodes||{})['INN'],
+    completeItems:[], completeFn:() => !!(S_story.innDeparted && S_story.currentCode === 'INN'),
+    onComplete:() => _innKindness(1),
+    disposition:'"You came back. No one has come back before you." — The Innmother\'s Hall' },
+  quest_inn_06: { id:'quest_inn_06', type:'side', title:'The Free Booking',
+    desc:'The Kindness Meter has reached its threshold. She gives you the key. Sleep is free here for the remainder of the run.',
+    hint:'Reach Kindness ≥ 5 through genuine acts at the Inn and the Crown domains.',
+    activateNode:'INN', activateCond:() => (S_story.innmotherKindness||0) >= 5,
+    completeItems:[], completeFn:() => !!S_story.freeBookingUnlocked,
+    disposition:'"Sleep is free. The meals are still what they are." — The Innmother\'s Hall' },
   // ── Layer 55: Visby Underground quests ──
   quest_vs_01: { id:'quest_vs_01', type:'side', title:'Solvak: The Collector',
     desc:"Debt Agent Solvak has been outside Visby six weeks with a 2,000gp debt and no leverage. You might have some.",
@@ -9308,6 +9614,35 @@ const NPC_DIALOGUE = { // → doc: story.md §FL7
     : S_story.seaOverseerMet
     ? '"A small compliance," it says. "A single word at Port Solen. You will not notice the difference in how the letters read." The fog is still present. The voice is still pleasant. It has been pleasant this whole time. "You are almost done. Let me be useful."'
     : '"I have been watching since Port Aurel." The voice is in the air — not the navigator, directly. "The tidal schedule test. The wheel in the courtyard. The introduction at Port Mireille. You navigated them." A pause. "You have one more court. I can arrange the letters another way. It would cost you nothing."' },
+  // §CROWN-01: Three Crowns of the Swamp NPCs
+  HW1: { name:'Whisper', quoteFn:() => S_story.whisperCrownComplete
+    ? 'She is at the edge of the still water, looking at it for the first time since you arrived. The not-looking was the thing. This is what it looks like when the thing ends.\n\n"You gave me back the present moment," she says. "I had not been here in a long time."'
+    : (S_story.quests['quest_whisper_04']||'') !== ''
+    ? '"The absent warning is the loudest thing I say. You heard it. That is the first time." She does not look at you. This is not withholding — this is the quality of attention she gives to the water when she means it. "Come back."'
+    : '"The bank is arranged. Something is missing from it. If you notice what is missing you may name it once." She does not look at you. The not-looking is information.' },
+  HG1: { name:'Glut', quoteFn:() => S_story.glutGiftReturned
+    ? 'She stands in the shallows. The jar is back on the bank. The pool is still.\n\n"You gave it back," she says. "The gift that returns is the only gift I have not given before." She looks at the water. "Come back when you need something."'
+    : S_story.glut_gift_held
+    ? '"The jar is in your coat. I know. I can feel it from here." She says it without accusation. "When you are ready to return it, the pool will be here." She gestures at the bank.'
+    : '"You are here." She says it as if it is already true in a deeper sense than the physical. "Come and eat. The second portion is warm." She gestures at the bank. The food is already there.' },
+  HN1: { name:'Wane', quoteFn:() => S_story.waneCrownComplete
+    ? 'She is seated on the stone. The stone still remembers. But she is sitting differently — weight distributed as if she is here, rather than as if she is waiting to leave.\n\n"You refused the credential," she says. "I am still deciding what I am if I am not the tragedy." She pauses. "That is new."'
+    : (S_story.quests['quest_wane_03']||'') !== ''
+    ? '"The thing at the edge of the mire — you found it. I knew where it was. I had decided it was lost." She looks at her hands. "What else have I decided?" She says it to herself. She does not expect an answer.'
+    : '"Something is lost," she says. "It has been lost for some time. I have accommodated the loss." She says it without drama. It is a weather report about her interior. "Sit if you like. The stone is cold but it holds."' },
+  INN: { name:'The Innmother', quoteFn:() => {
+    if (S_story.innmotherKindness >= 7 && !S_story.innmotherNamed) {
+      S_story.innmotherNamed = true;
+      return '"Mère Boudine. Since you\'ll keep coming back anyway."';
+    }
+    if (S_story.innmotherNamed) return '"The room is yours. The south path is open."';
+    if (S_story.innmotherKindness >= 5) return '"Sleep is free. The meals are still what they are."';
+    if (S_story.innmotherKindness >= 3) return '"You keep coming back." She says it like an accusation. She says everything like an accusation. It is the only register she has.';
+    return '"The room is at the end of the hall. The second bed is the one that works. I don\'t know why you\'re still standing here."';
+  }},
+  HCA: { name:'The Crones — Whisper, Glut & Wane', quoteFn:() => S_story.croneMarksBanked
+    ? '"The marks are yours now," Wane says. "You earned them in the proper order — by paying attention." Glut nods. Whisper does not look at you. The not-looking is the warmest thing she has. "Go south," she says. "The path is open."'
+    : '"The clearing is the end of the deeper swamp," Glut says. "What you carry from here, you carry permanently." Wane looks at the mire. "The marks know their own weight," she says. "You will understand them later."' },
   // §LXV–§LXIX: Mediterranean Journey NPCs
   PL: { name:'Lyra', quoteFn:() => S_story.lyraConverted
     ? '"I decided before I spoke. The speaking was the confirmation." She has arranged the purple cloth in the way she arranges things she has decided on — with care, not ceremony. She has the quality of someone who has reorganized around a true thing and is no longer uncertain about the arrangement.'
@@ -10160,6 +10495,20 @@ const _S_DEFAULTS = () => ({
   mireilleAmiNamed: false, betrayalDeed: false,
   solenSoonRead: false, littorialComplete: false,
   seaOverseerMet: false, charmResisted: false,
+  // §CROWN-01: Three Crowns of the Swamp
+  whisperCrownComplete: false,
+  glutCrownComplete: false,
+  waneCrownComplete: false,
+  innmotherKindness: 0,
+  innmotherNamed: false,
+  freeBookingUnlocked: false,
+  innmotherKeyGiven: false,
+  croneMarks: 0,
+  croneMarksBanked: false,
+  glut_gift_held: false,
+  innDeparted: false,
+  whisperSaintSeen: false,
+  glutGiftReturned: false,
 });
 
 /* ── Layer 48: Luck — Seventh Stat ── */
@@ -10243,6 +10592,21 @@ function _checkDearFriendUpgrade(key) {
     const p2 = BIRKA_NPC_PROFILES[key] || {};
     storyMsg('💛 ' + (p2.name||key) + ' says your name when you walk in.');
   }
+}
+/* ── §CROWN-01: Kindness Meter + Crone Mark helpers ── */
+function _innKindness(n) {
+  S_story.innmotherKindness = (S_story.innmotherKindness || 0) + n;
+  if (S_story.innmotherKindness >= 5 && !S_story.freeBookingUnlocked) {
+    S_story.freeBookingUnlocked = true;
+    storyMsg('🗝 The Innmother sets the key on the table without a word. The room is free from here.');
+    S_story.inventory = S_story.inventory || [];
+    S_story.inventory.push({ name:"Innmother's Key", icon:'🗝', sell:0, drop:false });
+    S_story.innmotherKeyGiven = true;
+  }
+}
+function _addCroneMark() {
+  S_story.croneMarks = (S_story.croneMarks || 0) + 1;
+  _innKindness(1);
 }
 /* ── Layer 42: NPC dialogue cycling helpers ── */
 function _getNPCDialogue(npcKey) {
@@ -19351,6 +19715,62 @@ function storyRender(node, prefix) {
       }
     }
   }
+  // §CROWN-01: HW1 return-visit — Whisper's Saint's Work (triggers after quest_01 attempted)
+  if (node.code === 'HW1' && !S_story.whisperSaintSeen
+      && (S_story.quests['quest_whisper_01']||'') !== '') {
+    S_story.whisperSaintSeen = true;
+  }
+  // §CROWN-01: HG1 first-visit — give Glut's Gift
+  { const _hg1Old = document.getElementById('story-hg1-gift');
+    if (_hg1Old) _hg1Old.remove();
+    if (node.code === 'HG1' && !S_story.visited['HG1'] && !S_story.glut_gift_held) {
+      S_story.glut_gift_held = true;
+      S_story.inventory = S_story.inventory || [];
+      S_story.inventory.push({ name:"Glut's Gift", icon:'🍯', sell:0, drop:false });
+      const _hg1Div = document.createElement('div');
+      _hg1Div.id = 'story-hg1-gift';
+      _hg1Div.className = 'sweelinck-variant';
+      _hg1Div.style.cssText = 'margin-top:10px;border-left-color:#a07030;font-style:italic;color:#e0c890;font-size:12px;';
+      _hg1Div.textContent = '🍯 Glut presses the jar into your hand before you can respond to the pressing. It is warm. You are carrying Glut\'s Gift.';
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _hg1Div);
+    }
+  }
+  // §CROWN-01: HCA — Crone Mark conversion (fires once, not on revisit)
+  { const _hcaOld = document.getElementById('story-hca-marks');
+    if (_hcaOld) _hcaOld.remove();
+    if (node.code === 'HCA' && !S_story.croneMarksBanked) {
+      S_story.croneMarksBanked = true;
+      const m = S_story.croneMarks || 0;
+      const _hcaDiv = document.createElement('div');
+      _hcaDiv.id = 'story-hca-marks';
+      _hcaDiv.className = 'sweelinck-variant';
+      _hcaDiv.style.cssText = 'margin-top:10px;border-left-color:#7a5a9a;';
+      let _hcaText = '🟤 Crone Marks: ' + m + ' accumulated across the three crowns.\n\n';
+      if (m >= 15) {
+        S_story.abilityScores = S_story.abilityScores || {};
+        S_story.abilityScores.wis = (S_story.abilityScores.wis || 8) + 1;
+        S_story.knowledge = S_story.knowledge || [];
+        S_story.knowledge.push('Swamp-lore — Crone Bead: one question of the deep swamp answered.');
+        S_story.inventory = S_story.inventory || [];
+        S_story.inventory.push({ name:'Crone Staff', icon:'🪄', sell:250, atkBonus:3, dmgDie:8, dmgCount:1, dmgFlat:0, type:'weapon', minLevel:1 });
+        _hcaText += 'Fifteen marks. The three crowns witnessed fully. WIS +1 (permanent). Crone Bead added to the Necklace of Knowledge. Crone Staff: 🪄 +3 ATK, 1d8.';
+      } else if (m >= 10) {
+        S_story.abilityScores = S_story.abilityScores || {};
+        S_story.abilityScores.wis = (S_story.abilityScores.wis || 8) + 1;
+        S_story.knowledge = S_story.knowledge || [];
+        S_story.knowledge.push('Swamp-lore — Crone Bead: one question of the deep swamp answered.');
+        _hcaText += 'Ten marks. The attention was sufficient. WIS +1 (permanent). Crone Bead added to the Necklace of Knowledge.';
+      } else if (m >= 6) {
+        S_story.abilityScores = S_story.abilityScores || {};
+        S_story.abilityScores.wis = (S_story.abilityScores.wis || 8) + 1;
+        _hcaText += 'Six marks. The crowns were witnessed. WIS +1 (permanent).';
+      } else {
+        _hcaText += 'The marks are what they are. The arc closes here regardless.';
+      }
+      _hcaDiv.textContent = _hcaText;
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _hcaDiv);
+    }
+  }
   // Status
   storyUpdateStatus();
   // Quests + messages
@@ -19478,7 +19898,7 @@ function storySleep(node) {
   const hpLine = S_story.hp + '/' + S_story.hpMax + ' → +'
     + _avgHeal + ' HP est.' + (_isFirst ? ' 🏕 Boyscout Night! 2×d10' : ' 1×d10') + ' (min 50%)';
   document.getElementById('sleep-hp-preview').textContent = hpLine + '  ·  🌙 Short rests → 3';
-  const cost = node.sleepCost;
+  const cost = (node.code === 'INN' && S_story.freeBookingUnlocked) ? 0 : node.sleepCost;
   document.getElementById('sleep-cost-preview').textContent = cost === 0 ? 'Free' : cost + 'gp (have ' + S_story.gold + 'gp)';
   document.getElementById('sleep-day-preview').textContent = 'Day ' + S_story.day + ' → Day ' + (S_story.day + 1) + ' of 49';
   const warn = document.getElementById('sleep-warning');
@@ -19506,7 +19926,7 @@ function storyConfirmSleep() {
   if (!node) return;
   S_story.roughWhiskeyActive = false;
   // Deduct gold
-  if (node.sleepCost > 0) S_story.gold -= node.sleepCost;
+  if (node.sleepCost > 0 && !(node.code === 'INN' && S_story.freeBookingUnlocked)) S_story.gold -= node.sleepCost;
   // Restore HP — Boyscout Night (first sleep) = 2 d10 rolls; revisit = 1 d10 roll
   const _isFirstSleep = !S_story.sleptAtNodes[nodeCode];
   const _sc = S_story.abilityScores || { con:14 };
@@ -20647,6 +21067,7 @@ function storyCorridorTravel(fromCode, destCode, dir, forceEncounter) {
   _setActivePath(fromCode, destCode, dir);
   S_story.log.push(fromCode);
   if (S_story.log.length > 20) S_story.log.shift();
+  if (fromCode === 'INN') S_story.innDeparted = true; // §CROWN-01: quest_inn_05 gate
   S_story.currentCode = destCode;
 
   // ── Layer 53: Road Companion — fires once per act on first corridor travel ──
