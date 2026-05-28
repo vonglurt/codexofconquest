@@ -6098,9 +6098,9 @@ seaOverseerMet: false, charmResisted: false,
 
 ---
 
-## §CROWN-01 — The Three Crowns of the Swamp (PLANNED → Layer 105)
+## §CROWN-01 — The Three Crowns of the Swamp (✅ Implemented — Layer 105)
 
-> **Status:** PLANNED. Design complete. Lab report gate required before any HTML edit. Extends existing HS node (The Crones' Domain, Layer 16) into a full 9-node arc. Entry: HS.S → WG0. Resolution: HCA.
+> **Status:** ✅ Implemented 2026-05-28. 9 nodes (WG0/HW1/HJ1/HG1/HJ2/HN1/HJ3/INN/HCA, num:121-129, c:3). 24 quests live. Kindness Meter + Crone Mark mechanics active. INN free booking + Mère Boudine reveal wired. HCA Crone Mark conversion block fires at arc close. Coord correction: c:2→c:3 (EC conflict); HJ1 at r:21. Lab report: `lab-report-crown-three-hags.md`.
 
 ### §C01-A. The Central Argument
 

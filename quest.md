@@ -344,6 +344,52 @@ The Overseer. It has been in the water since Port Aurel, in telepathic contact w
 
 ---
 
+## §CROWN-01 — The Three Crowns of the Swamp [✅ LIVE Layer 105]
+
+9-node arc extending the HS Crones' Domain south (WG0→HCA, c:3). Three Crown domains (Whisper/Glut/Wane) each with 6 quests + 4 junction nodes (3 combat, 1 inn) + arc-close altar. Mechanics: Kindness Meter (`innmotherKindness`), Crone Marks (`croneMarks`), free booking threshold, Mère Boudine name reveal. See `lab-report-crown-three-hags.md`.
+
+| Quest ID | Title | Node | Type | Check | DC | onPass/onComplete | XP | Status |
+|----------|-------|------|------|-------|----|----|----|----|
+| `quest_whisper_01` | "The Unspoken Request" | HW1 | [SKILL CHECK] | WIS Insight | 12 | `_addCroneMark()` | 150 | [✅ LIVE §CROWN-01] |
+| `quest_whisper_02` | "The Withheld Name" | HW1 | [SKILL CHECK] | INT Investigation | 13 | `_addCroneMark()` | 175 | [✅ LIVE §CROWN-01] |
+| `quest_whisper_03` | "The Empty Gift" | HW1 | [SKILL CHECK] | WIS Perception | 12 | `_addCroneMark()` | 175 | [✅ LIVE §CROWN-01] |
+| `quest_whisper_04` | "The Absent Warning" | HW1 | [SKILL CHECK] | WIS Insight | 14 | `_addCroneMark()` | 200 | [✅ LIVE §CROWN-01] |
+| `quest_whisper_05` | "The Saint's Work" | HW1 | [COMPLETION] | — | — | `whisperSaintSeen`, `_innKindness(1)` | — | [✅ LIVE §CROWN-01] |
+| `quest_whisper_06` | "The Forgiven Absence" | HW1 | [SKILL CHECK] | CHA Persuasion | 13 | `_addCroneMark()`, `whisperCrownComplete` | 225 | [✅ LIVE §CROWN-01] |
+| `quest_glut_01` | "The Offered Feast" | HG1 | [SKILL CHECK] | WIS Insight | 13 | `_addCroneMark()` | 150 | [✅ LIVE §CROWN-01] |
+| `quest_glut_02` | "The Smothering Gift" | HG1 | [SKILL CHECK] | CHA Persuasion | 13 | `_addCroneMark()` | 175 | [✅ LIVE §CROWN-01] |
+| `quest_glut_03` | "The Locked Door" | HG1 | [SKILL CHECK] | INT Investigation | 14 | `_addCroneMark()` | 200 | [✅ LIVE §CROWN-01] |
+| `quest_glut_04` | "The Endless Feeding" | HG1 | [SKILL CHECK] | WIS Insight | 13 | `_addCroneMark()` | 200 | [✅ LIVE §CROWN-01] |
+| `quest_glut_05` | "The False Protection" | HG1 | [SKILL CHECK] | WIS Insight | 15 | `_addCroneMark()` | 225 | [✅ LIVE §CROWN-01] |
+| `quest_glut_06` | "The Open Hand" | HG1 | [COMPLETION] | — | — | remove Glut's Gift, `glutGiftReturned`, `glutCrownComplete`, `_innKindness(1)` | — | [✅ LIVE §CROWN-01] |
+| `quest_wane_01` | "The Carried Grief" | HN1 | [SKILL CHECK] | WIS Insight | 12 | `_addCroneMark()` | 150 | [✅ LIVE §CROWN-01] |
+| `quest_wane_02` | "The Diminishing Task" | HN1 | [SKILL CHECK] | STR Athletics | 13 | `_addCroneMark()` | 175 | [✅ LIVE §CROWN-01] |
+| `quest_wane_03` | "The Hopeless Errand" | HN1 | [SKILL CHECK] | INT Investigation | 13 | `_addCroneMark()` | 175 | [✅ LIVE §CROWN-01] |
+| `quest_wane_04` | "The Burden" | HN1 | [SKILL CHECK] | WIS Insight | 14 | `_addCroneMark()` | 200 | [✅ LIVE §CROWN-01] |
+| `quest_wane_05` | "The Drain" | HN1 | [SKILL CHECK] | WIS Insight | 13 | `_addCroneMark()` | 200 | [✅ LIVE §CROWN-01] |
+| `quest_wane_06` | "The Refusal" | HN1 | [SKILL CHECK] | CHA Persuasion | 14 | `_addCroneMark()`, `waneCrownComplete` | 225 | [✅ LIVE §CROWN-01] |
+| `quest_inn_01` | "The First Night" | INN | [COMPLETION] | — | — | `_innKindness(1)` | — | [✅ LIVE §CROWN-01] |
+| `quest_inn_02` | "The Unrequested Thing" | INN | [SKILL CHECK] | WIS Insight | 12 | `_innKindness(1)` | 150 | [✅ LIVE §CROWN-01] |
+| `quest_inn_03` | "The Correction" | INN | [SKILL CHECK] | CHA Persuasion | 13 | `_innKindness(1)` | 175 | [✅ LIVE §CROWN-01] |
+| `quest_inn_04` | "The Tired Hour" | INN | [SKILL CHECK] | WIS Insight | 12 | `_innKindness(1)` | 150 | [✅ LIVE §CROWN-01] |
+| `quest_inn_05` | "The Return" | INN | [COMPLETION] | — | — | `_innKindness(1)` (on innDeparted return) | — | [✅ LIVE §CROWN-01] |
+| `quest_inn_06` | "The Free Booking" | INN | [THRESHOLD] | Kindness ≥5 | — | `freeBookingUnlocked`, Innmother's Key | — | [✅ LIVE §CROWN-01] |
+
+**Kindness Meter thresholds:** ≥3 first register shift · ≥5 free booking + Innmother's Key · ≥7 `innmotherNamed = true` ("Mère Boudine.")
+
+**Crone Mark conversion at HCA:** 6–9 → WIS +1 · 10–14 → WIS +1 + Crone Bead · 15–18 → WIS +1 + Crone Bead + Crone Staff (🪄 +3 ATK, 1d8)
+
+**`quest_whisper_05` — "The Saint's Work"** *(Node: HW1. Object: the cairn at the still water's edge.)*
+NOTHING (*Rien*). Whisper tends a small cairn without mention or invitation. Fires on any HW1 return visit after quest_01 attempted. No check. `whisperSaintSeen = true`, `_innKindness(1)`.
+
+**`quest_glut_06` — "The Open Hand"** *(Node: HG1. Object: Glut's Gift jar, warm in the coat.)*
+MORE (*Encore*). The jar given at first arrival. Completion: player holds Glut's Gift and is at HG1. No check. Item removed, `glutGiftReturned = true`.
+
+**`quest_inn_03` — "The Correction"** *(Node: INN. Object: the spoon, held incorrectly for the third time.)*
+MINE (*À moi*). She corrects it again. The correction is the same each time. CHA Persuasion DC 13: set the spoon down; say you are not leaving. Pass: the correction produces a response she did not have a category for; `_innKindness(1)`. Fail: you apologize; the corrections continue.
+
+---
+
 ## QUEST COUNT SUMMARY
 
 | Status | Count |
@@ -354,7 +400,8 @@ The Overseer. It has been in the water since Port Aurel, in telepathic contact w
 | ✅ Live §GR | 3 (La Riva: Q-FR-01/02/03) |
 | ✅ Live §LXV–§LXIX | 5 (Mediterranean Paul arc) |
 | ✅ Live §SIREN-01 | 5 (Littoral Courts + Overseer) |
-| **Total live** | **~68** |
+| ✅ Live §CROWN-01 | 24 (Whisper ×6, Glut ×6, Wane ×6, Inn ×6) |
+| **Total live** | **~92** |
 | Planned | 0 |
 
 ---
