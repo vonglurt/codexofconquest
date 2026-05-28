@@ -1208,4 +1208,4 @@ leviathanDefeated: false,        // HCA arc boss defeated; conversion can procee
 ---
 
 **Amendment A Filed:** 2026-05-28  
-**Status:** Design complete — pending HTML implementation
+**Status:** ✅ Implemented 2026-05-28 — commit c0c952b
