@@ -284,6 +284,66 @@ Each quest entry uses the following tags:
 
 ---
 
+## PAUL'S MEDITERRANEAN JOURNEYS — Act IV (§LXV–§LXIX)
+*(Nodes: PL, AE, EF2, KR, ST — implemented 2026-05-28)*
+
+All quests activate on first node visit. All use Ceremonia Roll skill-check system or side-quest `completeFn` flag checks. NPC dialogue mutations handle state on first interaction.
+
+| Quest ID | Title | Type | Check | DC | Pass Flag | XP | Status |
+|----------|-------|------|-------|----|-----------|----|--------|
+| `quest_philippi` | "The Purple Merchant" | [ACCOMPLISHMENT] | — | — | `lyraConverted` | 150 | [✅ LIVE §LXV] |
+| `quest_areopagus` | "To An Unknown One" | [SKILL CHECK] | CHA Persuasion | 13 | `areopagusSpeech` | 200 | [✅ LIVE §LXVI] |
+| `quest_ephesus_riot` | "The Silversmith's Meeting" | [SKILL CHECK] | CHA Persuasion | 12 | `demetriusRiotEscaped` | 175 | [✅ LIVE §LXVII] |
+| `quest_corinth_letters` | "Tent Canvas & Letters" | [ACCOMPLISHMENT] | — | — | `corinthLettersWritten` | 200 | [✅ LIVE §LXVIII] |
+| `quest_rome_arrest` | "The Rented House" | [ACCOMPLISHMENT] | — | — | `romeArrestBegun` | 300 | [✅ LIVE §LXIX] |
+
+**`quest_philippi` — "The Purple Merchant"** *(Node: PL. Object: the purple cloth arranged on the bridge stall.)*
+Lyra has been watching from across the bridge for two days before she speaks. When she speaks, it is because she has already decided. NPC first-visit mutation sets `lyraConverted: true`. Quest completes on flag. The earthquake (every door of the city prison opens) is narrated in the NPC text; it is not a separate event.
+
+**`quest_areopagus` — "To An Unknown One"** *(Node: AE. Object: the inscription — TO AN UNKNOWN ONE.)*
+The altar has been maintained for two hundred years. Paul has been standing in front of it for a long time. CHA Persuasion DC 13: begin with the altar, not with a correction. Pass: Dionysius stays; Damaris stays. Fail: the steward receives the interpretation politely; the council does not invite him to speak.
+
+**`quest_ephesus_riot` — "The Silversmith's Meeting"** *(Node: EF2. Object: the guild meeting notice, larger than the hall.)*
+Demetrius's argument is economic and theological simultaneously. The theater fills. CHA Persuasion DC 12: the city clerk reaches the front and names the legal position before the charges can be filed. Pass: the theater empties before dark; the charges are never filed. Fail: Paul leaves Ephesus the next morning.
+
+**`quest_corinth_letters` — "Tent Canvas & Letters"** *(Node: KR. Object: the letters written at night, canvas on the frame behind.)*
+Prisca and Akil hire him because he knows the trade. NPC first-visit mutation sets `corinthLettersWritten: true` and delivers the 18-month compressed narrative. Some of the letters written here are the most important things he will ever write. He does not know which ones yet.
+
+**`quest_rome_arrest` — "The Rented House"** *(Node: ST. Object: the door that cannot be opened from the inside.)*
+Requires `maltaSnakeEvent: true` (Malta arc fires first on arrival at ML). NPC first-visit mutation by Timael sets `romeArrestBegun: true`. Visitors every day. Letters every night. The arc does not end here. It stops here. Disposition: *"Where are you going next?"*
+
+---
+
+## THE LITTORAL COURTS — Act IV (§SIREN-01)
+*(Nodes: LC1, LC2, LC3, LC4, LSO — implemented 2026-05-28)*
+
+Sequential ocean-route arc. Entry: DS.E → LJ0 → LC1 south chain. Four court quests + one parallel Overseer quest. Betrayal mechanic: `checkFailFlag` sets `betrayalThought` / `betrayalWord` / `betrayalDeed` on skill-check fail. Arc-close at LCA reads betrayal count (0 / 1–2 / 3). See `lab-report-littoral-courts.md` for full design record.
+
+| Quest ID | Title | Node | Type | Check | DC | Pass Flag | Fail Flag | XP | Status |
+|----------|-------|------|------|-------|----|-----------|-----------|----|--------|
+| `quest_aurel_tide` | "The Tidal Schedule" | LC1 | [SKILL CHECK] | WIS Insight | 12 | `aurelTideRead` | `betrayalThought` | 150 | [✅ LIVE §SIREN-01] |
+| `quest_calice_bridge` | "The Wheel in the Courtyard" | LC2 | [SKILL CHECK] | INT Investigation | 13 | `caliceBridgeCrossed` | `betrayalWord` | 175 | [✅ LIVE §SIREN-01] |
+| `quest_mireille_ami` | "Name Your Standing" | LC3 | [SKILL CHECK] | CHA Persuasion | 14 | `mireilleAmiNamed` | `betrayalDeed` | 200 | [✅ LIVE §SIREN-01] |
+| `quest_solen_horizon` | "The Ship That Does Not Come" | LC4 | [SKILL CHECK] | WIS Insight | 13 | `solenSoonRead` | — | 225 | [✅ LIVE §SIREN-01] |
+| `quest_sea_overseer` | "The Voice in the Fog" | LSO | [SKILL CHECK] | WIS Insight | 15 | `charmResisted` | `seaOverseerMet` | 250 | [✅ LIVE §SIREN-01] |
+
+**`quest_aurel_tide` — "The Tidal Schedule"** *(Node: LC1 — Port Aurel. Object: the tide table, open on her desk.)*
+BUSY (*Occupée*). She reads it while speaking. She speaks while reading it. Every appointment is borrowed from the schedule. WIS Insight DC 12: read that the schedule is calibration, not fact. Pass: you make yourself the appointment; she closes the table; the seal is given. Fail: you wait for the window; `betrayalThought` set; the seal comes eventually.
+
+**`quest_calice_bridge` — "The Wheel in the Courtyard"** *(Node: LC2 — Port Calice. Object: the bridge chain, thick iron links, visible from the window.)*
+MAYBE (*Peut-être*). "Perhaps at the evening tide." The wheel mechanism is in the courtyard below. It is not locked. INT Investigation DC 13: find the wheel; cross before the tide. Pass: you turn the wheel; you cross; the perhaps is over. Fail: you wait for the evening; `betrayalWord` set; the crossing happens but you are no longer the person who initiated it.
+
+**`quest_mireille_ami` — "Name Your Standing"** *(Node: LC3 — Port Mireille. Object: the herald at the door, name on his tongue.)*
+FRIEND (*Ami*). "My most trusted companion" — said before the herald can speak your name and title. The court nods. The frame is set. CHA Persuasion DC 14: address the court with name and title before the frame holds. Pass: the Lady looks at you differently; the seal is given from a different position. Fail: you counsel the court through the evening; `betrayalDeed` set; the role stays with you.
+
+**`quest_solen_horizon` — "The Ship That Does Not Come"** *(Node: LC4 — Port Solen. Object: the ship on the horizon, three seasons unmoving.)*
+SOON (*Bientôt*). She names the ship. The fishermen at the dock have been watching it for three seasons. No one asks them first. WIS Insight DC 13: go to the dock before the court; bring the specific fact back; require a date. Pass: she gives a real date; the letters come with a courier who exists. Fail: you wait; the season passes; the letters arrive eventually by a different path.
+
+**`quest_sea_overseer` — "The Voice in the Fog"** *(Node: LSO — The Fog Bank. Object: the navigator's mouth, speaking in a second register.)*
+The Overseer. It has been in the water since Port Aurel, in telepathic contact with the ship's navigator (who is not aware of this). It offers to arrange the fourth court differently. WIS Insight DC 15 (matching Succubus/Incubus charm DC). Pass (`charmResisted`): name the structure flat, without drama; go to the fourth court anyway; the fog lifts. Fail (`seaOverseerMet`): accept the offer; give the specific word at Port Solen; the frame shifts a degree you do not notice.
+
+---
+
 ## QUEST COUNT SUMMARY
 
 | Status | Count |
@@ -292,7 +352,9 @@ Each quest entry uses the following tags:
 | ✅ Live §DESIGN-03 | 9 (4 Birka Ceremonia + 5-act Yael arc) |
 | ✅ Live §DUNGEON-01/02 | 11 (10 five-act chains + D02-11 framework) |
 | ✅ Live §GR | 3 (La Riva: Q-FR-01/02/03) |
-| **Total live** | **~58** |
+| ✅ Live §LXV–§LXIX | 5 (Mediterranean Paul arc) |
+| ✅ Live §SIREN-01 | 5 (Littoral Courts + Overseer) |
+| **Total live** | **~68** |
 | Planned | 0 |
 
 ---
