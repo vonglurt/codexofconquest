@@ -7776,7 +7776,11 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   DC:{ num:32, code:'DC', name:'arabia',  label:"Izador's Desert Caravan",       act:6, N:'JU', S:null, E:'EV',  W:'DE',  text:"Thirty people and twelve camels moving through the desert constitute a civilization in miniature. Izador's caravan has been following the pattern marked on the crossroads post for longer than the current crossroads post has been standing. The people know the route. The camels know it better.\n\nSandmage Izador is under the center awning when you arrive. He is meditating. He does not open his eyes. He moves a cushion to the left with one hand to make space, which means he heard you coming while you were still too far away for the camels to notice.\n\n\"The djinn has had it for two centuries,\" he says. This is not a preamble. This is the situation.\n\nThe djinn circles the caravan at the eastern perimeter. The thirty people have been traveling alongside a two-century territorial djinn long enough to have developed accommodations for it — where to camp, which direction to face the tents, what not to do near the eastern edge after dark. The Sand Cipher is in the djinn's custody. The djinn does not consider this unusual.", npc:'Sandmage Izador', battle:{label:'Djinn', key:'djinn', count:1}, loot:'Sand Cipher (Shard #5)', sleep:false },
   JU:{ num:33, code:'JU', name:'jungle',          label:'Dense Jungle',                  act:6, N:'BQ', S:'FL', E:'J2',  W:'EJ', SE:'MM', text:"The Scholar Kings' road is still here. It runs beneath the overgrowth in straight, deliberate intervals — you can feel the paved stone where the jungle floor gives differently. Three hundred years of root and vine have not moved the road. They have covered it. This is not the same thing.\n\nArachas webs block every third stretch. The webs are architectural — anchored across the full road width at regular intervals, as if the spiders have been reading the same survey markers the Scholar Kings used. You go through or you go back.\n\nHerbalist Mael lives in the clearing at the road's center. She is perfectly sane. She is perfectly dangerous. These are not contradictions — they are the same characteristic expressed at different scales.\n\nHer compound stops muscle function in organisms above forty kilos. It wears off in five minutes. She recommends using the five minutes productively. She is not being ironic.\n\nThe Ancient Road Marker at the clearing's edge still reads. Not all of it. Enough.", npc:'Herbalist Mael', battle:{label:'Arachas ×2 + Endrega ×3', key:'arachas', count:2}, loot:'Ancient Road Marker · Neurotoxin Dip', sleep:false },
   BQ:{ num:34, code:'BQ', name:'blacksmith_qtr',  label:'Blacksmith Quarter — Weimar', act:6, N:'SQ', S:'JU', E:'OU',  W:null,  text:"The quarter below Weimar runs on a different schedule than the scholars above it — which is to say it runs on no schedule, at all hours, without pause. The hammering has been continuous long enough that the scholars have stopped noticing it. The scholars are wrong to have stopped noticing.\n\nForges that run too long without rest begin to develop opinions. The Forge Elemental in the eastern bay is the opinion this quarter has developed. The Animated Armor at the forge entrance are the arguments it made when it was still communicating through product.\n\nDora Flint is at the central anvil. She throws a Thunderstone at it when she sees you — not as a threat, as a demonstration. The concussive crack rattles the quarter wall to wall. She watches your reaction the way a host watches a guest eat the first course.\n\n\"Useful,\" she says. \"You'll need two.\"\n\nShe has already set two on the counter.", npc:'Dora Flint', battle:{label:'Forge Elemental + Animated Armor ×2', key:'forge_elemental', count:1}, loot:'Thunderstone ×2 · EMP Grenade v2', sleep:true, sleepCost:4 },
-  SQ:{ num:35, code:'SQ', name:'scholars_qtr',    label:"Scholar's Quarter — Weimar", act:6, N:'AR', S:'BQ', E:null,  W:null,  text:"The reading room is lit by twelve candles and one scholar who fell asleep at his desk three days ago and has not been disturbed. His book is open to the same page. No one has moved it.\n\nThe stacks run three floors in each direction. In the sections where the candles don't reach — the lower east wing, the corridor behind the catalogue — specters of researchers who died mid-sentence drift between the shelves. They are not hostile. They are looking for the argument they never finished. The intellect devourers that follow them are a different matter.\n\nArchivus Ptolemy Sweelinck is in the upper observatory. He is very old. He wrote the riddle door at Katharinen Gate when he still had good knees and has not been back to check whether it still holds.\n\nHe knows why you are here. He wrote it so that someone would come.\n\nA young archivist climbs the stairs past you with an armload of bound journals, eyes fixed on the step count. She has done this route so many times she no longer needs to look.", npc:'Archivus Ptolemy Sweelinck', battle:null, loot:'Weimar Fragment (Shard #7)', sleep:true, sleepCost:0 },
+  SQ:{ num:35, code:'SQ', name:'scholars_qtr',    label:"Scholar's Quarter — Weimar", act:6, N:'AR', S:'BQ', E:null,  W:'CAN',  text:"The reading room is lit by twelve candles and one scholar who fell asleep at his desk three days ago and has not been disturbed. His book is open to the same page. No one has moved it.\n\nThe stacks run three floors in each direction. In the sections where the candles don't reach — the lower east wing, the corridor behind the catalogue — specters of researchers who died mid-sentence drift between the shelves. They are not hostile. They are looking for the argument they never finished. The intellect devourers that follow them are a different matter.\n\nArchivus Ptolemy Sweelinck is in the upper observatory. He is very old. He wrote the riddle door at Katharinen Gate when he still had good knees and has not been back to check whether it still holds.\n\nHe knows why you are here. He wrote it so that someone would come.\n\nA young archivist climbs the stairs past you with an armload of bound journals, eyes fixed on the step count. She has done this route so many times she no longer needs to look.", npc:'Archivus Ptolemy Sweelinck', battle:null, loot:'Weimar Fragment (Shard #7)', sleep:true, sleepCost:0 },
+  // ── §LXXII: The Conclave Annex ──
+  CAN:{ num:137, code:'CAN', name:'conclave_annex', label:'The Conclave Annex', act:6, N:null, S:null, E:'SQ', W:null,
+    text:"The annex has no sign. It is not on the Scholar's Quarter floor plan. The door was unlocked when the Gate opened — the monitoring protocol activated automatically on a condition it had been waiting for since the protocol was installed.\n\nThe room is small. Three monitoring receivers, Category 4, same specification as the crates Muffat has been collecting. They are running. The output tray carries a single document.\n\nThe document was pre-written. The Archivist wrote it in advance, in the knowledge that someone would eventually follow the chain completely, and left it here on the condition that it would not be findable until they had. The condition has been met. The document is here.\n\nThe Annex has been waiting in exactly this way since the Archivist left it. Not passively — the monitoring infrastructure was active the whole time, recording the absence of the condition. When the condition arrived, the lock opened. The document is what the Archivist had to say to whoever arrived.",
+    npc:'The Conclave Archivist\'s Proxy', battle:null, loot:null, sleep:false },
   OU:{ num:36, code:'OU', name:'outhouse',        label:'The Observatory Outhouse',      act:6, N:null, S:null, E:null,  W:'BQ',  text:"The observatory is a building of some academic consequence. The outhouse behind it is not.\n\nThe smell reaches the path about ten meters out. The door is wood, painted once, not recently. The latch is a simple hook — the kind on a thousand doors in Weimar. Turn it right: outhouse, fully functional, no further comment. Turn it left: the Greek Agora, three thousand years and several thousand kilometers from your current position.\n\nSweelinck told you about this. He used the same tone he uses for everything else. You may have been skeptical. That is a reasonable response to the information as delivered.\n\nThe Portal Key goes in your hand or it doesn't. The hook is on the door regardless. The decision is yours.\n\nThe smell is not.\n\nSweelinck was not joking.", npc:null, battle:null, loot:'Portal Key → Greek Agora (instant)', portal:'GA', sleep:false },
   // ── ACT VII — MYTHIC
   GA:{ num:37, code:'GA', name:'greek_agora',     label:'Greek Agora',                   act:7, N:'KT', S:null, E:null,  W:null,  text:"The columns are older than the civilization that built them. Heat radiates from the stone in a direction heat should not travel — upward from below, as if the ground is warm from something beneath it. Under the paving stones, something vast is breathing. It has a rhythm. It is not in distress.\n\nKassiphane sits cross-legged in the speaking chamber at the colonnade's center. Her eyes are solid gold — not golden, not amber, gold — which means she sees at a frequency you do not. She is not looking at you the way you look at things. She is reading a different register of the same information.\n\nSeven questions. Seven seals. She will tell you what you already know, in the order you have always needed to hear it. The Codex Shard was here before she was. It has always been yours.\n\nThe Bronze Automatons at the gate have been here longer than the oracle. The Sphinx at the chamber threshold asks first.", npc:'Oracle Kassiphane', battle:{label:'Sphinx + Bronze Automaton ×2', key:'sphinx', count:1}, loot:'Olympian Key · Basilisk Eye Flask', sleep:false },
@@ -7855,7 +7859,7 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   /* Birka Slums cluster */
   SL:{r:9,c:28},  CQ:{r:9,c:30},  FR:{r:9,c:32},
   /* Western Wilds */
-  SQ:{r:7,c:8},   BQ:{r:11,c:10}, OU:{r:9,c:16},
+  SQ:{r:7,c:8},   BQ:{r:11,c:10}, OU:{r:9,c:16}, CAN:{r:7,c:6},
   HL:{r:9,c:6},   EH:{r:9,c:4},
   FO:{r:11,c:6},  EF:{r:11,c:4},
   SW:{r:13,c:6},  ES:{r:13,c:4},
@@ -9513,6 +9517,22 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     },
     disposition:'"It was the last useful thing we left. The alloy holds." — The Forge Echo, Atlantean Forge' },
 
+  // ── §LXXII: The Conclave Annex quest ──
+  quest_ca_01: { id:'quest_ca_01', type:'side',
+    title:'The Adjusted Timeline',
+    desc:'The Conclave Annex in the Scholar\'s Quarter opened when the Tide Gate opened. The Archivist left something there.',
+    hint:'Find the Conclave Annex (west of the Scholar\'s Quarter) and read the post-event document.',
+    activateNode:'DK', activateCond:() => !!S_story.tideGateOpened && !!S_story.cycle4NoteRead,
+    completeItems:[],
+    completeFn:() => !!S_story.conclaveResponseRead,
+    onComplete:() => {
+      S_story.gold = (S_story.gold||0) + 300;
+      storyMsg("300gp. The Conclave's post-event protocol is complete. The interval is confirmed.");
+    },
+    xpAward:300,
+    waypointNode:'CAN',
+    disposition:'"The archive has an archivist. The interval is confirmed. Cycle 4 proceeds." — Conclave Archivist, Post-Event Note' },
+
   // ── §LXXI: The Sunken Hall quests ──
   quest_sunken_01: { id:'quest_sunken_01', type:'skill_check',
     title:'The Foundation',
@@ -9832,7 +9852,9 @@ const NPC_DIALOGUE = { // → doc: story.md §FL7
     : S_story.station7LogRead // §LIV
     ? '"The suppressor fires automatically on structured transmissions in its radius. Non-mechanical signal classification, subsurface source." She looks at the device in your hand. "I did not know it kept a log. I was watching the door." She holds out her hand for the suppressor, checks the side panel, hands it back. "The log is on the device. Forty-one volumes of confirmed absence, three events, and then it cut the transmission mid-entry on Day 14." She does not look away. "I cut the transmission. I did not know I was cutting anything."'
     : '"That\'s a Warrant suppressor — jams coordinated tactical signals in a forty-foot radius. Whoever built this undercity wanted control over every signal in it. Keep it. You\'ll need it."' },
-  DK: { name:'Magistra Elara Muffat', quoteFn:() => S_story.cycle4NoteRead // §LVIII
+  DK: { name:'Magistra Elara Muffat', quoteFn:() => S_story.tideGateOpened // §LXXII
+    ? '"The note said: do not let the archive answer." She has the requisition on the shelf. She is not looking at it. "It answered. The Gate opened. The chain was complete before the monitoring infrastructure was positioned." She picks up the requisition note, reads the last line again, sets it down. "Cycle 4\'s adjusted timeline is now active. Post-event monitoring. I have all four crates. Whatever the interval requires, the equipment is here." A pause. "The Annex in the Scholar\'s Quarter opened when the Gate opened. The Archivist left something there. You should read it."'
+    : S_story.cycle4NoteRead // §LVIII
     ? '"Cycle 3 was the Constructor\'s work. She built the containment to give it a room rather than a cage. If Cycle 4 carries a Conclave Archivist\'s authorization—" She stops. She sets the requisition note on top of the stack. "They were not building infrastructure to understand the signal. They were building infrastructure to manage the interval. Cycle 4 is not a response to what happened. It was already in motion before the first transmission." She does not look at the crates. "I am keeping them. All four. I am also keeping the note."'
     : S_story.antecedentMet // §LVII + §LVIII consolidated (CO-002)
     ? (() => {
@@ -9944,6 +9966,10 @@ const NPC_DIALOGUE = { // → doc: story.md §FL7
     if (S_story.innmotherKindness >= 3) return '"You keep coming back." She says it like an accusation. She says everything like an accusation. It is the only register she has.';
     return '"The room is at the end of the hall. The second bed is the one that works. I don\'t know why you\'re still standing here."';
   }},
+  // §LXXII: Conclave Annex NPC
+  CAN: { name:"The Conclave Archivist's Proxy", quoteFn:() => S_story.conclaveResponseRead
+    ? '"The document has been read. The monitoring continues. The Annex has no further standing orders." The equipment runs. The output tray is empty. Whatever the Archivist had to say, they said it in the note. The receivers log the absence of the Gate\'s signal. The absence is confirmed rather than projected.'
+    : '"The condition has been met." The proxy is the equipment — three monitors, one output tray, one document. The document was pre-written and is waiting. The Annex activated when the Tide Gate opened at bearing 047°, depth 18m. The Archivist anticipated this outcome. They left instructions for it.' },
   // §LXXI: Sunken Hall NPCs
   DA1: { name:'The Stone Inscription', quoteFn:() => S_story.inscriptionRead
     ? '"The chain was laid from this end. It points outward toward whoever is following it inward." The inscription has not changed. You have. The letter-forms are familiar now in the way of things you cannot unlearn.'
@@ -10841,6 +10867,8 @@ const _S_DEFAULTS = () => ({
   // §LXXI: Sunken Hall
   inscriptionRead: false,
   tideGateOpened: false,
+  // §LXXII: Conclave Annex
+  conclaveResponseRead: false,
 });
 
 /* ── Layer 48: Luck — Seventh Stat ── */
@@ -15403,6 +15431,11 @@ function storyMove(dir) {
       }
       return;
     }
+  }
+  // §LXXII: SQ → CAN gate — Tide Gate must be opened first (Annex activates on condition)
+  if (S_story.currentCode === 'SQ' && dest === 'CAN' && !S_story.tideGateOpened) {
+    storyMsg('The door to the west annex is sealed. The monitoring protocol has not yet activated.');
+    return;
   }
   // §LXX: HCA → DS0 gate — Leviathan must be defeated first
   if (S_story.currentCode === 'HCA' && dest === 'DS0' && !((S_story.defeatedBattles||{})['HCA_BOSS'])) {
@@ -20298,6 +20331,29 @@ function storyRender(node, prefix) {
       }
       _hcaDiv.textContent = _hcaText;
       document.getElementById('story-text-box').insertAdjacentElement('afterend', _hcaDiv);
+    }
+  }
+  // §LXXII: CAN — Conclave Annex post-event document
+  { const _canOld = document.getElementById('story-can-doc'); if (_canOld) _canOld.remove();
+    if (node.code === 'CAN' && !S_story.conclaveResponseRead) {
+      const _canDiv = document.createElement('div');
+      _canDiv.id = 'story-can-doc';
+      _canDiv.className = 'sweelinck-variant';
+      _canDiv.style.cssText = 'margin-top:10px;border-left-color:#3a3a5a;color:#a0a8c8;font-size:12px;';
+      _canDiv.textContent = '📜 The document in the output tray. Pre-written. It has been waiting for you.';
+      const _canBtn = document.createElement('button');
+      _canBtn.className = 'inv-use-btn'; _canBtn.style.marginTop = '6px';
+      _canBtn.textContent = '📜 Read the post-event document';
+      _canBtn.addEventListener('click', () => {
+        _canBtn.disabled = true;
+        S_story.conclaveResponseRead = true;
+        S_story.knowledge = S_story.knowledge || [];
+        S_story.knowledge.push("Cycle 4 — Post-Event Note: The archive answered. The interval is confirmed. 'The person who followed the chain receives this note because they are the archivist the protocol was designed to identify.' — Conclave Archivist");
+        storyMsg('📜 SCHOLAR KINGS — CONCLAVE ROUTING / Post-Event. Class 1. No further routing.\n\nThe Gate opened at the expected terminus of the chain. The monitoring infrastructure was not in position to intervene. The note placed in the requisition materials was a record of the intent, not a successful instruction.\n\nThe archive answered. The Antecedent\'s question is closed. The containment holds — the closure of the question does not dissolve the structure; it changes the character of the pressure within it.\n\nCycle 4 proceeds on the adjusted timeline: post-event monitoring. The interval is now confirmed.\n\nThe person who followed the chain receives this note because they are the archivist the protocol was designed to identify. The note is for them.\n\nAuthorization: Conclave Archivist.\n[No countersignature required.]\n[No date required.]\n\n— Post-Event Note added to the Necklace of Knowledge.');
+        storyRender(node);
+      });
+      _canDiv.appendChild(_canBtn);
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _canDiv);
     }
   }
   // §LXXI: DA2 — Tide Gate activation

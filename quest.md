@@ -404,7 +404,8 @@ MINE (*À moi*). She corrects it again. The correction is the same each time. CH
 | ✅ Live §CROWN-01 Amendment A | 10 (3 failure dispatches + 4 hag commissions + 3 iodine track) |
 | ✅ Live §LXX | 4 (Shore Road + Tide Register + Forge Mechanism + Smelting) |
 | ✅ Live §LXXI | 2 (Sunken Hall inscription + Tide Gate activation) |
-| **Total live** | **~108** |
+| ✅ Live §LXXII | 1 (Conclave Annex post-event note) |
+| **Total live** | **~109** |
 | Planned | 0 |
 
 ---

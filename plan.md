@@ -6393,3 +6393,32 @@ The arc-close text at DA2 references Station 7, Bertha No-Bank's forty-one volum
 inscriptionRead: false,
 tideGateOpened: false,
 ```
+
+---
+
+## §LXXII — The Conclave Annex (✅ Implemented — Layer 108)
+
+**Status:** ✅ Implemented 2026-05-28
+
+**Summary:** Post-event resolution of the Cycle 4 thread (§LVIII). When `tideGateOpened` is set, a sealed annex west of SQ (Scholar's Quarter) unlocks automatically. The Conclave Archivist pre-wrote a document for whoever followed the chain to completion. One quest, one document, one knowledge entry. Also adds state 6 to Muffat's quoteFn.
+
+| Element | Detail |
+|---------|--------|
+| New node | `CAN` — The Conclave Annex, num:137, r:7,c:6, E:'SQ' (SQ.W → CAN) |
+| Gate | `storyMove` SQ→CAN: requires `tideGateOpened` |
+| Quest | `quest_ca_01` — *The Adjusted Timeline*, side completion |
+| Activates | DK, requires `tideGateOpened + cycle4NoteRead` |
+| Completes | `conclaveResponseRead` set by reading the post-event document at CAN |
+| Reward | 300gp, 300 XP; "Cycle 4 — Post-Event Note" added to knowledge |
+| Muffat state 6 | New highest-priority state: `tideGateOpened` — points player to the Annex |
+
+### §LXXII-A. The Post-Event Note
+
+Pre-written document left by the Conclave Archivist at CAN. Text acknowledges: (1) the Gate opened as an expected possible outcome; (2) the monitoring infrastructure was not in position to intervene; (3) the archive answered; (4) Cycle 4 proceeds on adjusted (post-event) timeline; (5) "The person who followed the chain receives this note because they are the archivist the protocol was designed to identify. The note is for them."
+
+### §LXXII-B. New State Flags
+
+```
+// §LXXII: Conclave Annex
+conclaveResponseRead: false,
+```
