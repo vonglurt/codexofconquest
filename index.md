@@ -1,20 +1,20 @@
 # Roll2Hit — The Shattered Codex: Document Index
 
 **Project:** `roll2hit-v3.html` — single-file combat tracker + narrative RPG
-**Status:** Layers 0–103 implemented · ~20,800 lines · 88 nodes · 378 monsters · 43 lab reports · FC01–FC08 ✅ · §RESEARCH-01 ✅ · §API-01+02 ✅ · SP4 ✅ · §DESIGN-02 ✅ · §DESIGN-03 ✅ · §DUNGEON-01 ✅ · §DUNGEON-02 ✅ · §XLIII ✅ · §XLIV ✅ · §XLV ✅ · §XLVI ✅ · §XLVII ✅ · §XLVIII ✅ · §XLIX ✅ · §L ✅ · §LI ✅ · §LII ✅ · §LIII ✅ · §LIV ✅ · §LV ✅ · §LVI ✅ · §LVII ✅ · §LVIII ✅ · §LIX ✅ · §LX ✅ · §LXI ✅ · §LXII ✅ · §LXIII ✅ · §LXIV ✅
-**Last updated:** 2026-05-27
+**Status:** Layers 0–104 implemented · ~21,200 lines · 121 nodes · 378 monsters · 46 lab reports · FC01–FC08 ✅ · §RESEARCH-01 ✅ · §API-01+02 ✅ · SP4 ✅ · §DESIGN-02 ✅ · §DESIGN-03 ✅ · §DUNGEON-01 ✅ · §DUNGEON-02 ✅ · §XLIII ✅ · §XLIV ✅ · §XLV ✅ · §XLVI ✅ · §XLVII ✅ · §XLVIII ✅ · §XLIX ✅ · §L ✅ · §LI ✅ · §LII ✅ · §LIII ✅ · §LIV ✅ · §LV ✅ · §LVI ✅ · §LVII ✅ · §LVIII ✅ · §LIX ✅ · §LX ✅ · §LXI ✅ · §LXII ✅ · §LXIII ✅ · §LXIV ✅ · §LXV–§LXIX ✅ · §SIREN-01 ✅
+**Last updated:** 2026-05-28
 
 ### Doc Health Badge
 
 | Metric | Value | Status |
 |--------|-------|--------|
-| HTML line count | ~20,800 | ✅ |
-| Lab reports on disk | 43 | ✅ |
-| Lab reports in index | 43 | ✅ |
-| Node text rewrites (noir register) | 88 / 88 | ✅ LT (Lystra) added Layer 103 |
+| HTML line count | ~21,200 | ✅ |
+| Lab reports on disk | 46 | ✅ |
+| Lab reports in index | 46 | ✅ |
+| Node text rewrites (noir register) | 121 / 121 | ✅ +33 nodes: Med arc (91–110) + Littoral Courts (111–120) Layer 104 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
-| Layers implemented | 0–103 | ✅ |
-| Last sync pass | 2026-05-27 Layer 103 (§LXIV: LT node, Timael 4-state, quest_lame_lystra WIS DC10 + quest_stoning_lystra survival, HP cap at LT) | ✅ |
+| Layers implemented | 0–104 | ✅ |
+| Last sync pass | 2026-05-28 Layer 104 (§LXV–§LXIX: Mediterranean journey quests + Malta storyRender; §SIREN-01: 10-node Littoral Courts arc, betrayal mechanic, 4 Ladies + Overseer, LCA arc-close, lab-report-littoral-courts.md) | ✅ |
 
 > Update this table at the start of each session: recount lab reports with `ls lab-report-*.md | wc -l`, check HTML line count with `wc -l roll2hit-v3.html`, confirm FC item status.
 
@@ -38,7 +38,7 @@
 
 ## The Game in One Paragraph
 
-Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Battle Mode) and a 76-node narrative adventure game (Story Mode). The narrative game — *The Shattered Codex* — is a solo journey across 8 acts and 76 locations to collect 7 Codex Shards and seal the Void before Day 49. The player is a Level 1–20 Fighter Champion. Combat uses D&D 5e mechanics; story progression uses directional navigation across a node graph. MIT-licensed. No server. No build step.
+Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Battle Mode) and a 121-node narrative adventure game (Story Mode). The narrative game — *The Shattered Codex* — is a solo journey across 8 acts and 121 locations to collect 7 Codex Shards and seal the Void before Day 49. The player is a Level 1–20 Fighter Champion. Combat uses D&D 5e mechanics; story progression uses directional navigation across a node graph. MIT-licensed. No server. No build step.
 
 ---
 
@@ -53,7 +53,7 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | `mechanics-combat.md` | Battle Mode: combat flow, 1.5 AP economy, weapons, loot, leveling, defeat screens, save system | ✅ Split 2026-05-25 |
 | `mechanics-economy.md` | Story Mode: vendor system, NPC favorability, EB, NG+, state fields, F4 function reference | ✅ Split 2026-05-25 |
 | `combat.md` | Battle engine reference: initiative, overlay, Champion features, death saves, flee | ✅ §API-02 line-verified 2026-05-25 |
-| `maps.md` | World map: 26×16 grid, 76 node codes + coordinates, N/E/S/W network, gate locks, corridors | ✅ Reviewed 2026-05-24 |
+| `maps.md` | World map: 26×16 grid + extended areas, 121 node codes + coordinates, N/E/S/W network, gate locks, corridors | ✅ Updated 2026-05-28 |
 | `story.md` | Main quest narrative: 42 story nodes across 8 acts, 7 Epic NPC profiles, prologue, endings, NG+ | ✅ 76 nodes covered |
 | `world.md` | DM manual: world history, 4 factions, 7 Epic NPC profiles, quest motivation, survival pressure | ✅ Reviewed 2026-05-24 |
 | `monsters.md` | 370 monsters: stat blocks by tier and terrain pool, 20 EB bosses, fish pool | ✅ Verified 2026-05-24 |
@@ -89,7 +89,7 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 
 ---
 
-## Lab Report Index (All 41 Reports)
+## Lab Report Index (All 46 Reports)
 
 ### Architecture & Systems
 
@@ -159,6 +159,7 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | `lab-report-ceremonia-roll-skill-checks.md` | 79 | §DESIGN-03 Ceremonia Roll — `skill_check` quest type, `_rollCeremonia()`, Yael 5-act arc |
 | `lab-report-dungeon-ten-themes.md` | 80 | §DUNGEON-01 — 10 dungeon themes, P1–P3+ tiers, Node MM, Tribble counter, Madness Table, voidFluxActive, Prior Carrier, Codex Core ending compat |
 | `lab-report-la-riva-grief-arc.md` | 78 | §GR Grief Arc — La Riva / Fishmonger's Row, Connie/Aldo/Vinnie, corruption-grief chain, distributed grief subplot map |
+| `lab-report-littoral-courts.md` | 104 | §SIREN-01 Littoral Courts — four manipulative words, betrayal mechanic, Overseer parallel quest, French vignette register, non-obvious decisions |
 
 ### Writing & Design Philosophy
 
@@ -168,6 +169,8 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | `lab-report-Polyphonic-Organ-Synth.md` | `5thOrgan.html` — IIR biquad filter, ADSR, Beethoven canon construction, Web Audio API |
 | `lab-report-ponies-unicorns-aspirations-future-ideas.md` | Future aspirations — DM's Companion Guide, Fishing Guide, Mission Explorer |
 | `lab-report-meta-process-loop-expansion.md` | Meta-process — prompt→plan→lab-report recursive loop, 10 historical instances, session efficiency |
+| `lab-report-saul-paul-travel-reference.md` | §FUTURE-01 source — 37-node Paul arc itinerary, Acts 7–28 + Pauline letters, NPC list, lodging, speeches |
+| `lab-report-saul-paul-vignette-spec.md` | §FUTURE-01 vignette — 14 node texts, 9 quest descriptions, 7 NPC voice lines, 8 voice rules, object inventory, thorn mechanic |
 
 ---
 
@@ -183,6 +186,7 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | **Antecedent / cage** | `story-arc-investigation.md` | `lab-report-void-archaeology.md` · `lab-report-void-shaman.md` |
 | **Archive modal (Weimar)** | `story-arc-investigation.md` | `lab-report-weimar-scholar-gate.md` |
 | **Benedikt Rasp** | `story-arc-investigation.md` | `lab-report-weimar-scholar-gate.md` · `lab-report-void-archaeology.md` |
+| **Betrayal mechanic (thought/word/deed)** | `story.md Layer 104b` | `lab-report-littoral-courts.md` · `world.md §SIREN-01` |
 | **Battle Mode engine** | `combat.md` | `lab-report-architecture-full.md` · `spec-combat.md` |
 | **BFS pathfinding** | `maps.md` | `lab-report-circuit-map-theory.md` · `lab-report-battleground-circuit-path-quest.md` |
 | **Birka Six NPCs** | `world.md` | `lab-report-birka-beginner-arc.md` · `story-arc-npc-dialogues.md` |
@@ -195,6 +199,7 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | **Constructor's Log** | `story-arc-investigation.md` | `lab-report-void-archaeology.md` · `lab-report-void-shaman.md` |
 | **Cooperative DM Principle** | `lab-report-drop-rates-balance-and-health.md` | `lab-report-prompt-migration-arena-to-prototype.md` |
 | **Corelli merchant** | `story.md §XXVI stub` | `lab-report-corelli-merchant.md` · `story-arc-coastal.md` |
+| **Corinth / Korath (KR)** | `story.md Layer 104a` | `lab-report-saul-paul-travel-reference.md` |
 | **Corridor system** | `maps.md` | `spec-corridors.md` · `lab-report-circuit-map-theory.md` |
 | **Curse score / Covenant Standing** | `story.md` | `lab-report-endings-and-echoes.md` · `lab-report-architecture-full.md` |
 | **Daggers (offhand)** | `mechanics-combat.md` | `plan.md §II` |
@@ -217,6 +222,7 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | **Isolde Voss (Archivist)** | `story-arc-investigation.md` | `lab-report-weimar-scholar-gate.md` |
 | **Kenickie's market** | `lab-report-kenickie-chronicle.md` | `lab-report-ally-cat.md` |
 | **Lab report policy** | `index.md` · `plan.md §I` | `lab-report-documentation-system-design.md` |
+| **Littoral Courts (§SIREN-01)** | `story.md Layer 104b` · `world.md` | `lab-report-littoral-courts.md` · `maps.md §SIREN-01` |
 | **Level-up system** | `mechanics-combat.md` | `lab-report-leveling-flashbang-condition-economy.md` · `lab-report-architecture-full.md` |
 | **Luck stat** | `mechanics-combat.md` | `lab-report-luck-seventh-stat.md` · `lab-report-fishing-bait-prompting.md` |
 | **MIT License / Quest -1** | `story.md §XIV` | `lab-report-quest-minus-one-world-creator.md` |
@@ -227,8 +233,10 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | **NPC dialogue system** | `story-arc-npc-dialogues.md` | `lab-report-npc-dialogue-system.md` · `lab-report-birka-beginner-arc.md` |
 | **NPC favorability** | `world.md` | `lab-report-birka-beginner-arc.md` · `plan.md §III` |
 | **NG+ system** | `story-arc-ngplus.md` | `lab-report-ng-plus-remembrance.md` · `lab-report-endings-and-echoes.md` |
-| **Node map (76 nodes)** | `maps.md` | `plan.md §II (NODE_MAP)` · `story-flowchart.md` |
+| **Node map (121 nodes)** | `maps.md` | `plan.md §II (NODE_MAP)` · `story-flowchart.md` |
+| **Overseer (The Fog Bank / LSO)** | `world.md` · `story.md Layer 104b` | `lab-report-littoral-courts.md §III` |
 | **Pachelbel / Deacon** | `story-arc-npc-dialogues.md` | `lab-report-web-of-connections.md` |
+| **Paul's Mediterranean Journey (§LXV–§LXIX)** | `story.md Layer 104a` · `maps.md` | `lab-report-saul-paul-travel-reference.md` · `lab-report-saul-paul-vignette-spec.md` |
 | **Pit training / Weckmann** | `world.md` | `lab-report-birka-beginner-arc.md` · `lab-report-kenickie-chronicle.md` |
 | **Polyphonic organ** | `5thOrgan.html` | `lab-report-Polyphonic-Organ-Synth.md` |
 | **Potions (4 tiers)** | `mechanics-economy.md` | `plan.md §II (POTION_TIERS)` |
@@ -297,6 +305,6 @@ All previously logged conflicts resolved. Current known gaps:
 
 ---
 
-*Last updated: 2026-05-26*
-*Codebase: `roll2hit-v3.html` · ~19,577 lines · Layers 0–81 complete · 78 nodes · 370 monsters · 43 lab reports*
+*Last updated: 2026-05-28*
+*Codebase: `roll2hit-v3.html` · ~21,200 lines · Layers 0–104 complete · 121 nodes · 378 monsters · 46 lab reports*
 *MIT License — roll2hit.com — Copyright (c) 2026 — Free to use, modify, and share.*

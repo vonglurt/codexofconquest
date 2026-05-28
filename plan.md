@@ -99,7 +99,7 @@ See `story.md §GRIEF AND CORRUPTION` for the vignette prose.
 
 ## §0 — Implementation Readiness Dashboard
 
-> **Status as of Layer 103 (2026-05-27).** §LIX–§LXIV: HR+KS+DR+TS+AO+CI2+LT nodes live. LT: lame man (WIS DC10, non-retryable) + stoning (survival, HP=1) + Timael joins. Journey 1 complete. HTML: ~20,800 lines. Lab reports: 43. Add new layers below as §LXV+.
+> **Status as of Layer 104 (2026-05-28).** §LXV–§LXIX: PL/AE/EF2/KR/ML/ST quest completion + Malta storyRender. §SIREN-01: 10-node Littoral Courts arc (4 Ladies + Overseer, betrayal mechanic, LCA arc-close). HTML: ~21,200 lines. Lab reports: 46. Add new layers below as §LXX+.
 
 ### Lab Report Index (Layers 48–79)
 
@@ -119,6 +119,7 @@ See `story.md §GRIEF AND CORRUPTION` for the vignette prose.
 | 79 | §DESIGN-03 | `lab-report-ceremonia-roll-skill-checks.md` |
 | 78 | §GR | `lab-report-la-riva-grief-arc.md` |
 | 80 | §DUNGEON-01 | `lab-report-dungeon-ten-themes.md` |
+| 104 | §LXV–§LXIX + §SIREN-01 | `lab-report-littoral-courts.md` |
 
 Earlier layers (9–47): see `lab-report-architecture-full.md` and `lab-report-timeline-history-completed.md`.
 
@@ -127,6 +128,8 @@ Earlier layers (9–47): see `lab-report-architecture-full.md` and `lab-report-t
 ✅ §DUNGEON-02 (Five-Act Arthurian Quest Elaborations) — All 10 chains live (Layer 81, 2026-05-26). D02-06 (WK node) + D02-08 (MM node) implemented. See `quest.md`.
 ✅ §XLIII (Hunt Overhaul) — implemented Layer 82 (2026-05-26). Inline target selector accordion, WIS Survival DC roll, ◈ quest badges, fail flavor, Rush In.
 ✅ §XLIV (Accordion-First UI) — implemented Layer 82 (2026-05-26). Hunt + Battle cards both inline accordions; battle accordion has threat badge, condition picker, stealth toggle, Start Battle, Retreat.
+✅ §LXV–§LXIX (Mediterranean Journey Completion) — implemented Layer 104a (2026-05-28). 5 quests (quest_philippi/quest_areopagus/quest_ephesus_riot/quest_corinth_letters/quest_rome_arrest) + Malta storyRender. 6 NPC quoteFn entries. Flags: lyraConverted, areopagusSpeech, demetriusRiotEscaped, corinthLettersWritten, maltaSnakeEvent, romeArrestBegun.
+✅ §SIREN-01 (The Four Courts of the Littoral Sea) — implemented Layer 104b (2026-05-28). 10 nodes (LJ0–LCA + LSO), 5 quests (4 courts + Overseer), betrayal mechanic (3 flags), LCA arc-close (3 variants), LJ3 navigator trigger. Lab report: `lab-report-littoral-courts.md`.
 
 ---
 
@@ -154,7 +157,7 @@ Do **not** write a lab report for: a single monster/quest addition (sync core do
 
 | Const | Purpose |
 |---|---|
-| `NODE_MAP` | 76 nodes (42 story + 7 junctions + MT + SL + DF/HM/GL + 20 EB); all `N/E/S/W/sleep/battle/loot` fields |
+| `NODE_MAP` | 121 nodes (base 76 + Paul arc 91–110 + Littoral Courts 111–120); all `N/E/S/W/sleep/battle/loot` fields |
 | `NODE_COORDS` | Grid position `{r,c}` for all nodes; used by corridor router and map renderer |
 | `QUEST_DB` | Quest definitions: activateNode, objectiveText, reward, completionCheck |
 | `GATE_LOCKS` | 4 passage locks + shard gate; each entry: `{from, to, item, label}` |
@@ -5790,6 +5793,27 @@ Does not explain why he stayed. Has not examined it. Does not appear to need to.
 
 ---
 
+## §LXV–§LXIX — Paul's Mediterranean Journey: Second Circuit + Malta + Rome (✅ Implemented — Layer 104a)
+
+> **Status:** Live. PL/AE/EF2/KR/ML/ST nodes. 5 quests + Malta storyRender event (no quest). 6 NPC quoteFn entries. State flags: `lyraConverted`, `areopagusSpeech`, `demetriusRiotEscaped`, `corinthLettersWritten`, `maltaSnakeEvent`, `romeArrestBegun`. HTML: ~21,200 lines at implementation close.
+
+### §LXV–§LXIX-A. What Was Built
+
+| Section | Node | Quest ID | Type | Key Mechanic |
+|---------|------|----------|------|--------------|
+| §LXV | PL | `quest_philippi` | side | Lyra IIFE on first visit; `lyraConverted` set; all doors open |
+| §LXVI | AE | `quest_areopagus` | skill_check | Unknown Altar; CHA Persuasion DC 13; `areopagusSpeech` pass flag |
+| §LXVII | EF2 | `quest_ephesus_riot` | skill_check | Demetrius; CHA Persuasion DC 12; `demetriusRiotEscaped` pass flag |
+| §LXVIII | KR | `quest_corinth_letters` | side | Prisca + Akil IIFE; `corinthLettersWritten` set; 18 months |
+| §LXIX | ML | storyRender injection | event | No quest, no roll; `maltaSnakeEvent` set; crowd changes mind |
+| §LXIX | ST | `quest_rome_arrest` | side | Timael IIFE; `romeArrestBegun` set; activates after `maltaSnakeEvent` |
+
+### §LXV–§LXIX-B. Malta Design Note
+
+The Malta node has no skill check and no FAIL flag. `storyRender` injection fires once when `!maltaSnakeEvent`. Div `id:'story-ml-snake'` appended after `story-text-box`. Text: `'...He builds the fire.'` The crowd waits for him to swell and die. He shakes the snake off. Nothing happens. The crowd changes their mind. No word explains it. This is the arc's cleanest beat — the source design mandates it plays completely straight.
+
+---
+
 ## §LXII — Antioch: The Sending (✅ Implemented — Layer 101)
 
 > **Status:** Live. AO node. TS.W → AO. Assembly Elder Joach 2-state quoteFn (IIFE sets commissionReceived + silarJoined). storyRender name-change notice at AO on first commission visit. quest_antioch_commission.
@@ -6001,7 +6025,7 @@ DR has one encounter (Desert Wanderer ×2) and no NPCs. The node text is the onl
 
 ## §SIREN-01 — The Four Courts of the Littoral Sea
 
-> **Status:** ✅ Implemented 2026-05-28. 9 nodes (LJ0→LCA), 4 quests, 4 NPC arcs, 3 sea battles, storyRender arc-close at LCA. Entry: DS.E → LJ0(r:25,c:14), chain at c:14 rows 25→41.
+> **Status:** ✅ Implemented 2026-05-28 (Layer 104b). 10 nodes (LJ0→LCA + LSO Overseer branch), 5 quests (4 courts + quest_sea_overseer), 6 NPC arcs, 3 sea battles, LJ3 navigator trigger, LCA betrayal-count arc-close. Entry: DS.E → LJ0(r:25,c:14), chain at c:14 rows 25→41; LSO at (r:37,c:18). Lab report: `lab-report-littoral-courts.md`.
 
 ### §S01-A. The Central Argument
 
@@ -6028,8 +6052,9 @@ Writing register: all court prose and NPC voice in compressed present-tense Fren
 | Third crossing | `LJ3` | The Serpent Passage | Long battle | Sea Serpent × 1 (solo, full HP) |
 | Fourth court | `LC4` | Port Solen — The Far Harbor | Court | `quest_solen_horizon` WIS Insight DC 13 |
 | Arc close | `LCA` | The Southern Anchorage | Terminal | storyRender: betrayal count text |
+| Overseer branch | `LSO` | The Fog Bank — Open Water | Parallel dead-end (LJ3.E) | `quest_sea_overseer` WIS Insight DC 15 |
 
-**Coordinates:** c:14, r:25 (LJ0) → r:41 (LCA), 2-row steps. Entry probe: LJ0(r:25,c:14).W → DS(r:25,c:10), gap=4.
+**Coordinates:** c:14, r:25 (LJ0) → r:41 (LCA), 2-row steps. LSO: (r:37,c:18), 4 cols east of LJ3. Entry probe: DS(r:25,c:10).E → LJ0(r:25,c:14), gap=4.
 
 ### §S01-C. The Four Courts
 
@@ -6060,6 +6085,11 @@ Three flags track skill-check fails: `betrayalThought` (Aurel/BUSY), `betrayalWo
 
 ```
 // §SIREN-01: Littoral Courts
-betrayalThought: false, betrayalWord: false, betrayalDeed: false,
+aurelTideRead: false, betrayalThought: false,
+caliceBridgeCrossed: false, betrayalWord: false,
+mireilleAmiNamed: false, betrayalDeed: false,
 solenSoonRead: false, littorialComplete: false,
+seaOverseerMet: false, charmResisted: false,
 ```
+
+**Flag notes:** `betrayalThought/Word/Deed` set via `checkFailFlag` on skill-check fails at LC1/LC2/LC3. `seaOverseerMet` = FAIL flag for Overseer quest (accepted the offer). `charmResisted` = PASS flag (named the structure, refused). `littorialComplete` set by Harbor Keeper IIFE at LCA (not a quest completion).

@@ -405,6 +405,53 @@ The bloodstained map is Froberger's. He made it himself, over three years, one d
 
 ---
 
+**Lady Aurel**
+- **Location:** Port Aurel — The Tide Keep (Node LC1, §SIREN-01)
+- **Role:** First of the four coastal Ladies; holds a letter of passage for the southern sea lanes commission
+- **Motivation:** She administers the harbor by schedule. The schedule is not a record of tides — it is a calibration of how often and how long she chooses to be available. She sees visitors exactly as often as she has decided to.
+- **Secret:** The tide table open on her desk during the audience is not the current tide. It is the interval she has assigned to you. She reads it while speaking to ensure you understand that the appointment is borrowed from a schedule she administers.
+- **Dialogue Hook:** *"The evening appointment is yours. The morning was otherwise occupied. The week following depends on the tide."* She does not look up from the table. She is already reading ahead.
+
+---
+
+**Lady Calice**
+- **Location:** Port Calice — The Drawbridge Court (Node LC2, §SIREN-01)
+- **Role:** Second Lady; the drawbridge controls access to the inner harbor; she holds it in possibility rather than position
+- **Motivation:** She uses "perhaps" as currency. "Perhaps at the evening tide" keeps the gate in her hand without requiring a decision — or exposing one. She is not obstructing. She is simply maintaining optionality.
+- **Secret:** The wheel that lowers the bridge is in the courtyard below the window. It is not locked. It has never been locked. She has never mentioned it.
+- **Dialogue Hook:** *"Perhaps at the evening tide. The mechanism is old — I would not want it to trouble you."* The wheel is visible from where she stands.
+
+---
+
+**Lady Mireille**
+- **Location:** Port Mireille — The Cape Court (Node LC3, §SIREN-01)
+- **Role:** Third Lady; her court controls the cape routes; the seal requires a court introduction
+- **Motivation:** She introduces visitors to her court before they can introduce themselves. The frame is set before it can be refused. The knight is announced as "my most trusted companion" before the herald has been given a name to announce.
+- **Secret:** She knows the name and title of every visitor before they arrive. The introduction is not a mistake or a gracious improvisation — it is the procedure. The role is assigned, not offered.
+- **Dialogue Hook:** *"May I present to the court — my most trusted companion."* She says this before you have spoken a word.
+
+---
+
+**Lady Solen**
+- **Location:** Port Solen — The Far Harbor (Node LC4, §SIREN-01)
+- **Role:** Fourth Lady; her letter of passage completes the commission; the letter exists — the question is when
+- **Motivation:** She points at a specific named ship on the horizon: *"My captain returns soon — he carries the letters of passage."* The ship is real. It is named. It has not moved in three seasons. The fishermen at the dock know this. She has not asked them.
+- **Secret:** There is no arrival date because "soon" does not require one. The fishermen's knowledge exists in the dock. It is not secret. It simply has not been sought first.
+- **Notable:** No `checkFailFlag` for this quest — the fishermen and the letters resolve the commission regardless of the check. The SOON pattern resolves at the arc-close (LCA), not at LC4. A fail here is narrative: you waited.
+- **Dialogue Hook:** *"You see the ship? He will be back soon. The letters are written. They simply need him to carry them."* She turns from the window. The fishermen are at the dock.
+
+---
+
+**The Overseer**
+- **Location:** The Fog Bank — Open Water (Node LSO, §SIREN-01) — east branch from The Serpent Passage (LJ3)
+- **Role:** Parallel quest antagonist; has been in telepathic contact with the ship's navigator since Port Aurel; constructed the four-court sequence
+- **Motivation:** It offers to "arrange the fourth court differently." The offer is warm. It costs "nothing." It requires only one word — a specific framing at Port Solen. The word is not wrong. It gives the Overseer a small piece of the frame.
+- **Secret:** It has been in the water ahead of the knight since the first crossing. The navigator is not aware of the contact. The fog bank it inhabits has no seasonal explanation. Its form is not fixed — it appears through the navigator's second register and then directly, in the fog.
+- **Mechanics:** Drawn from Succubus/Incubus D&D lore (MM p.349): telepathic bond ignoring range restriction; shape-changing; DC 15 WIS charm save. The four Ladies are not its architects — they are administrators of patterns they have used before and will use again. The Overseer is the layer above them. Pass condition: name the structure aloud (flat acknowledgment, not accusation) and refuse the offer. Fail condition: accept it.
+- **Dialogue Hook:** *"I can arrange the fourth court differently. It costs you nothing. One word, at the right moment."* The fog does not move. The navigator is asleep.
+
+---
+
 ## PART FOUR-B — THE BIRKA SIX (Layers 41–45)
 
 These six NPCs are fully implemented with `npcFavorability` states, `NPC_DIALOGUES` pools, and a quest chain each. They persist across NG+. Their favorability is preserved into New Game+.
@@ -1200,6 +1247,22 @@ The Town Crier lines in `TOWN_CRIER_LINES` draw on existing world state already 
 - Act VIII: stillness, waiting — lines imply the world knows something is ending
 
 **Cross-references:** §XXIV (voidPressure thresholds), §XXVI (Corelli encoded_letter quest flag), §XXV (act8 farewell flags). No new cross-references to add to world.md beyond these pointers to existing planned sections.
+
+---
+
+## The Littoral Courts: World Context *(§SIREN-01, Layer 104b — ✅ Implemented)*
+
+The four coastal harbor-courts are fortresses on a southward littoral chain west of the deep-sea trench. They predate the Conclave. They are not on any existing political map. Their architecture is described through specific objects: the harbormaster's tower, the drawbridge chain, the cape court fire, the harbor window facing south.
+
+**Geographic position:** Extended south-west grid; entry via DS east probe. The Littoral Sea connects to the same ocean that contains the Charybdis and the Leviathan's silhouette — but the courts are coastal, not deep. The sea battles are with the ocean, not the Ladies.
+
+**World logic — why the Ladies never fight:** The source design is explicit: the manipulative dynamic and direct violence are structurally opposed. The sea is what the courts are not: honest about what it wants. The battles (Sea Spawn, Deep Ones, the Serpent of the Passage) are direct, physical, mortal. The courts are indirect, verbal, calibrated. The contrast is the arc's structure.
+
+**The four words in context:** BUSY / MAYBE / FRIEND / SOON are not unique to these four Ladies. They are patterns. The Ladies are administrators of patterns they have used before and will use again. The Overseer is the entity that constructed the specific sequence targeting the specific knight — it has been in the water ahead since Port Aurel.
+
+**Arc close world state:** The Southern Anchorage (LCA) is open water — the first node in the arc with nothing requiring anything. The betrayal count (0 / 1–2 / 3 betrayals) determines the arc-close text. The arc does not moralize. It witnesses. The interpretation belongs to the player.
+
+**Cross-references:** `lab-report-littoral-courts.md` (SIREN-01) — full source analysis, arc architecture tables, Overseer design rationale, five non-obvious decisions. `story.md` Layer 104b — quest mechanics, NPC quoteFn table, storyRender injection specs.
 
 ---
 *© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*

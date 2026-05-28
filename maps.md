@@ -131,6 +131,22 @@ R16: WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW 
 | EK | 69 | epic_clouds | VII | R01,C16 | Shattered Seraph's Spire — Fallen Seraph Variel; dead-end west of HC *(WW override)* |
 | EP | 70 | epic_pirate | V | R11,C16 | Admiral's Last Cove — Admiral's Ghost (Wraith King); dead-end south of PC *(WW override)* |
 | EG | 71 | epic_goblin | V | R11,C14 | Void Shaman's Sanctum — Void High Shaman Kazrath; dead-end SE of GC |
+| PL | 91 | philippi | IV | off-map §LXV | Philippi — The River Quarter — Lyra converted; crowd by the river |
+| EF2 | 94 | ephesus | IV | off-map §LXVII | Ephesus — The Silver Quarter — Demetrius riot; silversmith guild uprising |
+| AE | 92 | athens | IV | off-map §LXVI | Athens — The Market Hill — Areopagus speech; the unknown-god altar |
+| KR | 93 | corinth | IV | off-map §LXVIII | Corinth — The East Harbor — letters written; two seasons in the city |
+| ML | 95 | malta | IV | off-map §LXIX | Malta — The Shore — snake bite at the fire; crowd reversal; no skill roll |
+| ST | 96 | rome | IV | off-map §LXIX | Rome — House Arrest — commission ends; the chain is the last fact |
+| LJ0 | 111 | junction | IV | off-map §SIREN-01 | The Littoral Passage — §SIREN-01 arc entry; enters via DS east probe |
+| LC1 | 112 | port_aurel | IV | off-map §SIREN-01 | Port Aurel — The Tide Keep — Lady Aurel; BUSY; WIS Insight DC 12 |
+| LJ1 | 113 | junction | IV | off-map §SIREN-01 | First Crossing — Sea Spawn ×2 |
+| LC2 | 114 | port_calice | IV | off-map §SIREN-01 | Port Calice — The Drawbridge Court — Lady Calice; MAYBE; INT Investigation DC 13 |
+| LJ2 | 115 | junction | IV | off-map §SIREN-01 | Second Crossing — Deep One ×3 |
+| LC3 | 116 | port_mireille | IV | off-map §SIREN-01 | Port Mireille — The Cape Court — Lady Mireille; FRIEND; CHA Persuasion DC 14 |
+| LJ3 | 117 | junction | IV | off-map §SIREN-01 | The Serpent Passage — Sea Serpent (solo); navigator storyRender trigger fires |
+| LC4 | 118 | port_solen | IV | off-map §SIREN-01 | Port Solen — The Far Harbor — Lady Solen; SOON; WIS Insight DC 13 |
+| LCA | 119 | southern_anchorage | IV | off-map §SIREN-01 | The Southern Anchorage — arc terminal; storyRender betrayal-count close (0 / 1–2 / 3) |
+| LSO | 120 | fog_bank | IV | off-map §SIREN-01 | The Fog Bank — Open Water — The Overseer; WIS Insight DC 15; parallel dead-end east of LJ3 |
 
 > **Junction note:** J1–J7 are navigation waypoints with no battle or loot. They appear as `✛` on the map. MT is the only terrain node reachable only via J6.N — it exists purely as a Hunting Ground for the `mountains` terrain. J6 also connects S→YL (Yugurt Lake) — a fishing-only dead-end branch that does not appear on the main quest path.
 
@@ -143,6 +159,10 @@ R16: WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW 
 > **Defi_land cluster note (Nodes 72–74):** DF/HM/GL are three `defi_land` terrain nodes north of SL in the extended Birka Slums district. They occupy R03,C15–C17, cells previously shown as WW. DF (The Unbanked Quarter) is the hub — HM (Frequency Row) hangs off its east, GL (Old Guard's Corner) off its west. Both HM and GL are dead-ends. DF has one story battle (NGMI Swarm ×3 + Rug Spider) and NPC Grimshaw. None of these nodes have a Codex Shard, inn sleep, or vendor.
 
 > **⚠️ PLANNED — Cat Quarter note (Node 77, Layer 46):** CQ (The Cat Quarter) is planned at R04,C17 — one cell east of SL (Birka Slums). It extends the Birka Slums district eastward. CQ will be a `cat_quarter` terrain node with a 6-quest arc (Q-CAT-01 through Q-CAT-06) and the Ally Cat hierarchy (strays → fluffies → beefies → honchos → Taz Devils → Cat-King). Not yet in HTML. See `plan.md` Section IX for full design.
+
+> **§LXV–§LXIX — Paul's Mediterranean Journey (Nodes 91–96):** Six story nodes (PL/EF2/AE/KR/ML/ST) in the extended east grid, connected via seven junction nodes (J8/SEA/J9–J14, nodes 97–104). Entry via Lystra (LT, Node 90) south to J8 then SEA. PL (Philippi) branches west off SEA; EF2 (Ephesus) branches east — both dead-ends. AE (Athens), KR (Corinth), and ML (Malta) each dead-end east of their respective junction node; ST (Rome) is the chain terminal south of J14. Malta has no skill roll — the crowd simply reverses. NODE_COORDS: col c:52–c:60, rows r:25–r:41 (extended east).
+
+> **§SIREN-01 — Littoral Courts (Nodes 111–120):** Ten-node sequential ocean arc in the extended south-west grid. Entry via DS east probe (DS at r:25,c:10; LJ0 at r:25,c:14 — 4 cells east, within probe limit). Chain runs south at c:14 from LJ0 (r:25) to LCA (r:41) in 2-row steps; LSO branches east at (r:37,c:18). Three sea-battle junctions (LJ1/LJ2/LJ3) alternate with four port-courts (LC1/LC2/LC3/LC4). LJ3 fires a storyRender navigator-trigger on first visit. LCA is the arc terminal with a three-variant betrayal-count arc-close. LSO is the Overseer dead-end (WIS DC 15, Succubus/Incubus telepathic bond mechanic). Betrayal flags: `betrayalThought` (LC1 fail), `betrayalWord` (LC2 fail), `betrayalDeed` (LC3 fail). All nodes Act IV.
 
 ---
 
@@ -248,6 +268,25 @@ EPIC BATTLEGROUNDS (Layer 39 — Dead-ends, no exits)
   HC(40) ──W──> EK(69)   [Shattered Seraph's Spire — WW override, sky-adjacent; note: EK sits at C16, HC at C17]
   PC(27) ──S──> EP(70)   [Admiral's Last Cove — WW override, tidal cave]
   GC(26) ──SE─> EG(71)   [Void Shaman's Sanctum]
+
+PAUL'S MEDITERRANEAN JOURNEY (§LXV–§LXIX — extended east, Act IV)
+  LT(90) ──S──> J8(98) ──S──> SEA(97)   [Lystra south → Inner Sea hub]
+  SEA(97) ──W──> PL(91)   [Philippi — dead-end]
+  SEA(97) ──E──> EF2(94)  [Ephesus — dead-end]
+  SEA(97) ──S──> J9(99) ──S──> J10(100)
+  J10(100) ──E──> AE(92)  [Athens — dead-end]
+  J10(100) ──S──> J11(101) ──S──> J12(102)
+  J12(102) ──E──> KR(93)  [Corinth — dead-end]
+  J12(102) ──S──> J13(103) ──S──> J14(104)
+  J14(104) ──E──> ML(95)  [Malta — dead-end]
+  J14(104) ──S──> ST(96)  [Rome — terminal; commission end]
+
+LITTORAL COURTS (§SIREN-01 — extended south from DS, Act IV)
+  DS(23) ──E──> LJ0(111)  [Deep Sea Trench east probe; arc entry]
+  LJ0(111) ──S──> LC1(112) ──S──> LJ1(113) ──S──> LC2(114)
+  LC2(114) ──S──> LJ2(115) ──S──> LC3(116) ──S──> LJ3(117)
+  LJ3(117) ──E──> LSO(120)  [The Fog Bank — Overseer encounter; dead-end]
+  LJ3(117) ──S──> LC4(118) ──S──> LCA(119)  [Southern Anchorage — arc terminal]
 ```
 
 ---
@@ -275,7 +314,7 @@ EPIC BATTLEGROUNDS (Layer 39 — Dead-ends, no exits)
 | DE | 31 | R10 | C05 | VC(W), DC(E), EE(S) |
 | DF | 72 | R03 | C16 | SL(S), HM(E), GL(W) |
 | DK | 07 | R08 | C15 | CY(N), MQ(E), AL(S), OC(W) |
-| DS | 23 | R14 | C04 | AT(N), OC(W), J4(E), EO(S), ED(SW) |
+| DS | 23 | R14 | C04 | AT(W), LJ0(E), EO(S), ED(SW) — east probe now reaches LJ0(111) |
 | FL | 22 | R11 | C02 | JU(N), SC(S), EL(E) |
 | FO | 13 | R05 | C03 | HL(N), J6(E), SW(S), EF(W) |
 | GA | 37 | R03 | C20 | OU(W/portal), KT(N) |
@@ -314,6 +353,23 @@ EPIC BATTLEGROUNDS (Layer 39 — Dead-ends, no exits)
 | YL | 75 | R06 | C05 | J6(N), YC(S) |
 | YC | 76 | R07 | C05 | YL(N) only — fishing dead-end |
 | J7 | 49 | R01 | C22 | HC(N), OP(E) |
+| **EXTENDED AREA NODES** | | | | **NODE_COORDS r,c (off visual map — probe-computed connections)** |
+| AE | 92 | r:31 | c:60 | J10(W) only |
+| EF2 | 94 | r:27 | c:60 | SEA(W) only |
+| KR | 93 | r:35 | c:60 | J12(W) only |
+| LC1 | 112 | r:27 | c:14 | LJ0(N), LJ1(S) |
+| LC2 | 114 | r:31 | c:14 | LJ1(N), LJ2(S) |
+| LC3 | 116 | r:35 | c:14 | LJ2(N), LJ3(S) |
+| LC4 | 118 | r:39 | c:14 | LJ3(N), LCA(S) |
+| LCA | 119 | r:41 | c:14 | LC4(N) only — arc terminal |
+| LJ0 | 111 | r:25 | c:14 | DS(W→E probe), LC1(S) |
+| LJ1 | 113 | r:29 | c:14 | LC1(N), LC2(S) |
+| LJ2 | 115 | r:33 | c:14 | LC2(N), LC3(S) |
+| LJ3 | 117 | r:37 | c:14 | LC3(N), LC4(S), LSO(E) |
+| LSO | 120 | r:37 | c:18 | LJ3(W) only — Overseer dead-end |
+| ML | 95 | r:39 | c:60 | J14(W) only |
+| PL | 91 | r:27 | c:52 | SEA(E) only |
+| ST | 96 | r:41 | c:56 | J14(N) only — arc terminal |
 | **EPIC BATTLEGROUNDS** | | | | **dead-end: one connection only** |
 | EA | 59 | R15 | C02 | AT(N) only *(WW override)* |
 | EB | 56 | R12 | C03 | BE(W) only |

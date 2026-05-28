@@ -2817,3 +2817,94 @@ Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterOb
 3. Quest flags in order: `warden_resolved`, `void_architect_seal_inv`, `corelliRevelationDelivered`, `vs_hollow_seal_taken`, `tl_ori_account_read`, `yaelEscortUsed`, `quillQuestComplete`
 4. Dear Friend NPCs (fav ≥ 2): auros → yael → crov → brynn → quill → pachelbel
 5. Act-cycling fallback: 7 lines per act, cycle by `gameDay % 7`
+
+---
+
+## ✅ Implemented — Paul's Mediterranean Journey: Journey 2 + Malta + Rome (plan.md §FUTURE-01 / §LXV–§LXIX, Layer 104a)
+
+Six story nodes (PL/AE/EF2/KR/ML/ST) completing the Mediterranean commission arc begun in §LIX–§LXIV. Five quests, one storyRender event (Malta snake), six NPC quoteFn entries. All nodes Act IV.
+
+**Quest table:**
+
+| Quest ID | Node | Type | Check | DC | Pass Flag | Description |
+|----------|------|------|-------|----|-----------| ------------|
+| `quest_philippi` | PL | side | — | — | `lyraConverted` | Lyra sets via IIFE on first visit; all doors open |
+| `quest_areopagus` | AE | skill_check | CHA Persuasion | 13 | `areopagusSpeech` | Unknown Altar; Dionysius and Damaris stay |
+| `quest_ephesus_riot` | EF2 | skill_check | CHA Persuasion | 12 | `demetriusRiotEscaped` | City clerk reaches front of theater; charges never filed |
+| `quest_corinth_letters` | KR | side | — | — | `corinthLettersWritten` | IIFE on first visit; 18 months; letters written at night |
+| `quest_rome_arrest` | ST | side | — | — | `romeArrestBegun` | IIFE on first visit; activates after `maltaSnakeEvent` |
+
+**Malta snake — storyRender injection (no quest, no skill roll):**
+Fires once at ML when `!S_story.maltaSnakeEvent` → sets flag → injects `<div id="story-ml-snake">` with `'...He builds the fire.'`. No pass/fail state. The crowd changes their mind without being asked to. `style: border-left-color:#4a4a2a; color:#c8c890; font-style:italic` matches the grief-arc vignette register.
+
+**NPC quoteFn table:**
+
+| Code | NPC | Pre-event | Post-event |
+|------|-----|-----------|------------|
+| PL | Lyra | IIFE — watches from bridge, decides, invites to house | "I decided before I spoke. The speaking was the confirmation." |
+| AE | Athens Market Steward | Describes 200-year maintenance policy for all altars | Recalls Areopagus; "Some of them will think about it longer than others." |
+| EF2 | Demetrius | Guild economics; theater filling | "The meeting got away from me. I should have called a lawyer." |
+| KR | Prisca + Akil | IIFE — hire Paul on arrival, letters written at night | "The joins held. Some of the letters were for everyone." |
+| ML | Malta Shore Islanders | Counts survivors (276); watches Paul build fire | "We said a lot of things today. The counting was real." |
+| ST | Timael | IIFE — follows since Lystra; house arrest framing | "The arc does not end here. I know that. He knows that." |
+
+**State flags:** `lyraConverted`, `areopagusSpeech`, `demetriusRiotEscaped`, `corinthLettersWritten`, `maltaSnakeEvent`, `romeArrestBegun` — all in `S_story` defaults.
+
+**Writing register:** Compressed present-tense vignette. Objects carry weight (tide table, tent canvas, purple cloth, fire). No declared interiority. Malta is the arc's cleanest node — nothing happens, the crowd changes their mind, no word explains it.
+
+---
+
+## ✅ Implemented — The Four Courts of the Littoral Sea (plan.md §SIREN-01, Layer 104b)
+
+Ten-node sequential ocean arc. Entry via DS east probe (DS at r:25,c:10; LJ0 at r:25,c:14). Four courtly skill-check encounters, three sea battles, one parallel Overseer quest, one arc-close storyRender. Writing register: compressed French vignette, two perspectives implied per encounter, no declared manipulation.
+
+**Node chain:**
+LJ0(entry) → LC1(court) → LJ1(battle) → LC2(court) → LJ2(battle) → LC3(court) → LJ3(battle+trigger) → LC4(court) → LCA(terminal); LSO branches east from LJ3.
+
+**Quest table:**
+
+| Quest ID | Node | Ability | DC | Pass Flag | Fail Flag | Word |
+|----------|------|---------|----|-----------|-----------|----|
+| `quest_aurel_tide` | LC1 | WIS Insight | 12 | `aurelTideRead` | `betrayalThought` | BUSY |
+| `quest_calice_bridge` | LC2 | INT Investigation | 13 | `caliceBridgeCrossed` | `betrayalWord` | MAYBE |
+| `quest_mireille_ami` | LC3 | CHA Persuasion | 14 | `mireilleAmiNamed` | `betrayalDeed` | FRIEND |
+| `quest_solen_horizon` | LC4 | WIS Insight | 13 | `solenSoonRead` | — | SOON |
+| `quest_sea_overseer` | LSO | WIS Insight | 15 | `charmResisted` | `seaOverseerMet` | — |
+
+`quest_solen_horizon` has no `checkFailFlag` — the letters come regardless; fail is narrative-only (you waited). `quest_sea_overseer` fail flag `seaOverseerMet` = accepted the offer; pass flag `charmResisted` = refused.
+
+**Betrayal mechanic:** Three flags (`betrayalThought` / `betrayalWord` / `betrayalDeed`) set via `checkFailFlag` on skill-check fails at the first three courts. Drawn from Succubus/Incubus MM p.349 — three betrayals (thought, word, deed) sufficient. Flags are read at LCA arc-close.
+
+**storyRender injections:**
+
+*LJ3 — navigator trigger* (`id:'story-lso-trigger'`): Fires once when `!seaOverseerMet && !charmResisted`. Describes navigator's second register; orients player toward LSO (east of LJ3).
+
+*LCA — arc-close* (`id:'story-lca-close'`): Fires on every visit. Counts `(betrayalThought + betrayalWord + betrayalDeed)`:
+- 0: "The four courts gave their seals. You gave them nothing but your position."
+- 1–2: "You have been shaped by the crossing. The shaping was not requested. You notice it now that the water is still."
+- 3: "You gave something at each harbor that you did not mean to give. The water is still."
+
+**NPC quoteFn table:**
+
+| Code | NPC | Pass state | Fail/In-progress state |
+|------|-----|-----------|------------------------|
+| LC1 | Lady Aurel | Tide table closed; she sees exactly as often as she decided to | Tide table open; every appointment is borrowed |
+| LC2 | Lady Calice | Wheel turned; you crossed without waiting for her tide | "Perhaps at the evening tide." The wheel is in the courtyard |
+| LC3 | Lady Mireille | Named own standing before she named it | Introduced to court as "my most trusted companion" before herald |
+| LC4 | Lady Solen | Fishermen confirmed; real date required | Ship on horizon named; three seasons unmoving |
+| LCA | Harbor Keeper | `littorialComplete` set on first visit IIFE | — |
+| LSO | The Overseer | Fog thinner; navigator normal; nothing in water | Offer still open; it waits |
+
+`littorialComplete` set by Harbor Keeper IIFE (not a quest) — arc completion is a commission stamp.
+
+**Sea battles (junction nodes):**
+
+| Node | Battle | Key | Count |
+|------|--------|-----|-------|
+| LJ1 | First Crossing | `sea_serpent` | 2 |
+| LJ2 | Second Crossing | `deep_one` | 3 |
+| LJ3 | The Serpent of the Passage | `sea_serpent` | 1 (solo, full HP) |
+
+**Overseer design:** WIS DC 15 (matches Succubus/Incubus charm save DC). Not a battle — dialogue in the fog. Pass = name the structure aloud, go to fourth court anyway. Fail = accept the "helpful offer" (one specific framing at Port Solen). The offer is transparent; the difficulty is not deception but the knight's willingness to accept assistance from something that has been instrumentalizing them.
+
+**State flags:** `aurelTideRead`, `betrayalThought`, `caliceBridgeCrossed`, `betrayalWord`, `mireilleAmiNamed`, `betrayalDeed`, `solenSoonRead`, `littorialComplete`, `seaOverseerMet`, `charmResisted` — all in `S_story` defaults, `§SIREN-01` comment block.
