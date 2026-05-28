@@ -92,6 +92,33 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
   border-radius: 5px; cursor: pointer; white-space: nowrap; transition: background .15s;
 }
 #btn-return-story:hover { background: var(--c3); }
+@keyframes rts-expand {
+  from { max-height: 0; opacity: 0; transform: scaleY(0.85); }
+  to   { max-height: 240px; opacity: 1; transform: scaleY(1); }
+}
+.rts-row {
+  transform-origin: top; overflow: hidden;
+  animation: rts-expand 0.38s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  background: linear-gradient(160deg, #1a0f00, #221600);
+  border: 2px solid var(--gold); border-radius: 6px;
+  padding: 10px 12px; display: flex; flex-direction: column; gap: 7px;
+  margin-bottom: 6px;
+}
+.rts-label { font-size: 11px; color: var(--gold-lt); letter-spacing: 0.5px; }
+.rts-btn-story {
+  font-size: 14px; font-weight: 900; padding: 11px 16px;
+  background: var(--c3); border: 2px solid var(--gold); color: #120600;
+  border-radius: 6px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; width: 100%;
+  transition: background .12s;
+}
+.rts-btn-story:hover { background: var(--c4); }
+.rts-btn-heal {
+  font-size: 13px; font-weight: 700; padding: 9px 16px;
+  background: #081808; border: 2px solid var(--grn); color: var(--grn-lt);
+  border-radius: 6px; cursor: pointer; width: 100%; transition: background .12s;
+}
+.rts-btn-heal:hover { background: #0f2a0f; }
+.rts-btn-heal:disabled { opacity: 0.4; cursor: default; }
 .info-chip.hearth-set { border-color: #5a3a00; color: #6A4808; cursor: pointer; }
 .info-chip.hearth-set:hover { border-color: #c08030; background: var(--panel2); }
 .info-chip.hearth-home { border-color: #c08030; color: #7A5010; cursor: default; }
@@ -919,7 +946,7 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 #story-panel.visible { display: flex; }
 
 #story-left {
-  width: 172px; min-width: 172px;
+  width: 210px; min-width: 210px;
   background: var(--panel); border-right: 1px solid var(--border);
   display: flex; flex-direction: column; padding: 8px 7px 6px; gap: 5px;
   overflow-y: auto; overflow-x: hidden;
@@ -1223,7 +1250,9 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 #story-move-msg {
   font-size: 11px; color: var(--gold); text-align: center;
   min-height: 16px; font-style: italic;
+  transition: background 0.1s;
 }
+
 
 /* ── Layer 2: Inventory ─── */
 #sheet-inventory {
@@ -1771,36 +1800,6 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
   padding-bottom: 8px; border-bottom: 1px solid #2a1a00;
 }
 .vic-epilogue-entry:last-child { border-bottom: none; padding-bottom: 0; }
-#froberger-note-overlay {
-  position: fixed; inset: 0; z-index: 460;
-  background: rgba(0,0,0,0.82); display: flex;
-  align-items: center; justify-content: center; padding: 20px;
-}
-#froberger-note-panel {
-  background: #f5ead0; color: #2a1a06;
-  border: 1px solid #b89a60; border-radius: 6px;
-  padding: 32px 36px; max-width: 440px; width: 100%;
-  font-family: Georgia, 'Times New Roman', serif;
-  box-shadow: 0 8px 40px rgba(0,0,0,0.6);
-  display: flex; flex-direction: column; gap: 14px;
-}
-#froberger-note-title {
-  font-size: 11px; font-weight: 700; letter-spacing: 2px;
-  color: #3A2A08; text-transform: uppercase; border-bottom: 1px solid #c8a870;
-  padding-bottom: 8px;
-}
-#froberger-note-body p {
-  margin: 0; font-size: 14px; line-height: 1.9; color: #3a2010;
-  font-style: italic;
-}
-#froberger-note-body p + p { margin-top: 10px; }
-.froberger-sig { text-align: right; font-style: italic; color: #6a4a18; font-size: 15px; margin-top: 6px !important; }
-#froberger-note-close {
-  align-self: center; padding: 8px 24px; font-size: 12px;
-  background: #e8d8a8; border: 1px solid #a07030; color: #4a2c08;
-  border-radius: 4px; cursor: pointer; font-family: inherit; letter-spacing: 0.5px;
-}
-#froberger-note-close:hover { background: #ddc88a; }
 #ng-plus-title-overlay {
   position: fixed; inset: 0; z-index: 500;
   background: #000; display: flex;
@@ -1863,52 +1862,6 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
   0%, 100% { background: #1a1a2a; }
   50% { background: #1e1e36; }
 }
-#deacon-code-overlay {
-  position: fixed; inset: 0; z-index: 460;
-  background: rgba(0,0,0,0.82); display: flex;
-  align-items: center; justify-content: center; padding: 20px;
-}
-#deacon-code-panel {
-  background: #f5ead0; color: #2a1a06;
-  border: 1px solid #b89a60; border-radius: 6px;
-  padding: 32px 36px; max-width: 440px; width: 100%;
-  font-family: Georgia, 'Times New Roman', serif;
-  box-shadow: 0 8px 40px rgba(0,0,0,0.6);
-  display: flex; flex-direction: column; gap: 14px;
-}
-#deacon-code-title {
-  font-size: 11px; font-weight: 700; letter-spacing: 2px;
-  color: #3A2A08; text-transform: uppercase; border-bottom: 1px solid #c8a870;
-  padding-bottom: 8px;
-}
-#deacon-code-body {
-  font-size: 13px; line-height: 1.9; color: #3a2010; white-space: pre-wrap;
-}
-#deacon-code-close {
-  align-self: center; padding: 8px 24px; font-size: 12px;
-  background: #e8d8a8; border: 1px solid #a07030; color: #4a2c08;
-  border-radius: 4px; cursor: pointer; font-family: inherit; letter-spacing: 0.5px;
-}
-#deacon-code-close:hover { background: #ddc88a; }
-#brynn-ledger-overlay {
-  position: fixed; inset: 0; z-index: 460;
-  background: rgba(0,0,0,0.82); display: flex;
-  align-items: center; justify-content: center; padding: 20px;
-}
-#brynn-ledger-panel {
-  background: #f0e8d0; color: #2a1a06;
-  border: 1px solid #a8905a; border-radius: 6px;
-  padding: 28px 32px; max-width: 380px; width: 100%;
-  font-family: 'Courier New', monospace;
-  box-shadow: 0 8px 40px rgba(0,0,0,0.5);
-  display: flex; flex-direction: column; gap: 10px;
-}
-#brynn-ledger-close {
-  align-self: center; padding: 7px 20px; font-size: 12px;
-  background: #e0d0a0; border: 1px solid #907020; color: #3a2010;
-  border-radius: 4px; cursor: pointer; font-family: inherit;
-}
-#brynn-ledger-close:hover { background: #d0c090; }
 
 /* ── Layer 4: Pre-Battle + Outcome ── */
 .info-chip.battle-defeated { border-color: #2a3a2a; color: var(--dim); cursor: default; }
@@ -2415,7 +2368,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 
 /* ── Story Panel Shell ───────────────────────────────── */
 #story-panel { background: var(--bg); }
-#story-left { background: var(--panel2); border-right: 1px solid var(--border); }
+#story-left { width: 210px; min-width: 210px; background: var(--panel2); border-right: 1px solid var(--border); }
 #story-act-badge { color: var(--c3); letter-spacing: 2px; border-left: 3px solid var(--c3); padding-left: 6px; }
 .story-log-entry { color: var(--dim); }
 .story-log-entry.current { color: var(--text); }
@@ -2593,10 +2546,10 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 #world-map-title { font-size: 8px; font-weight: 900; color: #FEA712; text-transform: uppercase; letter-spacing: 2px; text-align: center; }
 #world-map-grid {
   display: grid;
-  grid-template-columns: repeat(23, 7px);
-  grid-template-rows: repeat(14, 9px);
-  width: 187px; height: 143px;
-  gap: 1px;
+  grid-template-columns: repeat(61, 3px);
+  grid-template-rows: repeat(41, 3px);
+  width: 183px; height: 123px;
+  gap: 0px;
   background: #2a0e06;
   border: 2px solid #562717;
   padding: 1px;
@@ -2612,11 +2565,12 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 .wmc-visited  { background: #0d2414; color: #3aba6a; border: 1px solid #1e5a30; }
 .wmc-trail    { background: #1e1800; color: #c8a828; border: 1px solid #5a4410; }
 .wmc-node     { background: #0c0c1a; color: #3a3a6a; border: 1px solid #1a1a30; }
-.wmc-corridor { background: #1e0f06; color: #4a3010; }
+.wmc-corridor     { background: #1e0f06; color: #4a3010; }
+.wmc-corridor-dim { color: #2a1e0c; }
 .wmc-corridor-visited { color: #b06020; }
 .wmc-corridor-active  { color: #E76219; background: #200c00; }
-.wmc-icon { font-size: 8px; line-height: 1; }
-.wmc-fog  { font-size: 7px; color: #4a2c14; }
+.wmc-icon  { font-size: 4px; line-height: 1; overflow: hidden; }
+.wmc-unvis { font-size: 3px; color: #25253a; }
 .wmc-epic         { background: #8b0000; color: #ffaaaa; border: 1px solid #cc2222; box-shadow: 0 0 4px rgba(180,0,0,0.8); }
 .wmc-epic-visited { background: #3a0000; color: #cc5555; border: 1px solid #770000; }
 .wmc-epic-unvis   { background: #200808; color: #4a1a1a; }
@@ -4737,20 +4691,6 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
     <div id="ng-plus-title-text">Sweelinck is waiting.</div>
   </div>
 
-  <div id="froberger-note-overlay" style="display:none">
-    <div id="froberger-note-panel">
-      <div id="froberger-note-title">📜 Froberger's Last Note</div>
-      <div id="froberger-note-body">
-        <p>If you find this — you're somewhere difficult.</p>
-        <p>The person you're becoming is visible from outside. People can see the shape of it before you can.</p>
-        <p>Check in with someone who knew you before you got good at this. Ask them what's different.</p>
-        <p>They'll tell you something true. It might not be comfortable. That's how you know it's true.</p>
-        <p>Whatever they say — stay long enough to hear the second sentence.</p>
-        <p class="froberger-sig">— F</p>
-      </div>
-      <button id="froberger-note-close">Close</button>
-    </div>
-  </div>
 
   <div id="story-victory-modal">
     <div id="victory-card">
@@ -4780,22 +4720,6 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
     </div>
   </div>
 
-  <!-- Layer 44: Deacon Code overlay -->
-  <div id="deacon-code-overlay" style="display:none">
-    <div id="deacon-code-panel">
-      <div id="deacon-code-title">📋 Pachelbel's Code</div>
-      <div id="deacon-code-body"></div>
-      <button id="deacon-code-close">Close</button>
-    </div>
-  </div>
-
-  <!-- Layer 44: Brynn Ledger overlay -->
-  <div id="brynn-ledger-overlay" style="display:none">
-    <div id="brynn-ledger-panel">
-      <div id="brynn-ledger-body"></div>
-      <button id="brynn-ledger-close">Close</button>
-    </div>
-  </div>
 
   <!-- Layer 44: Final Map overlay -->
   <div id="final-map-overlay" style="display:none">
@@ -6309,16 +6233,68 @@ function battKillEvent() {
     outcome: '⚔ ENEMY DEFEATED!',
     dmg: 'Dropped: ' + dropLine,
   });
-  // Show victory banner with return-to-story CTA
-  document.getElementById('bvb-text').textContent = '⚔ ' + S.enemy.name + ' defeated!';
-  document.getElementById('bvb-drop').textContent = drop ? ('Drop: ' + dropLine) : '';
-  const bvb = document.getElementById('battle-victory-banner');
-  bvb.classList.remove('auto-dismiss');
-  bvb.classList.add('show');
+  // Return-to-story flow
   if (S_story.active) {
-    bvb.classList.add('auto-dismiss');
+    const bvb = document.getElementById('battle-victory-banner');
+    bvb.classList.remove('auto-dismiss');
+    bvb.classList.add('show', 'auto-dismiss');
     setTimeout(() => { storyEnter(); bvb.classList.remove('show', 'auto-dismiss'); }, 1400);
+  } else {
+    _showReturnRow(S.enemy.name, dropLine);
   }
+}
+
+function _showReturnRow(enemyName, dropLine) {
+  storyRenderQuests();
+  switchSheet('sheet-quests');
+  const list = document.getElementById('quest-list');
+  const old = document.getElementById('rts-row');
+  if (old) old.remove();
+  const row = document.createElement('div');
+  row.id = 'rts-row';
+  row.className = 'rts-row';
+  // Victory label
+  const lbl = document.createElement('div');
+  lbl.className = 'rts-label';
+  lbl.textContent = '⚔ ' + (enemyName || 'Enemy') + ' defeated' + (dropLine ? '  ·  ' + dropLine : '');
+  row.appendChild(lbl);
+  // Return to Story button
+  const retBtn = document.createElement('button');
+  retBtn.className = 'rts-btn-story';
+  retBtn.textContent = '▶ Return to Story →';
+  retBtn.addEventListener('click', () => { row.remove(); storyEnter(); });
+  row.appendChild(retBtn);
+  // Heal button (HP < 50%)
+  if (S_story.hp < (S_story.hpMax / 2)) {
+    const healBtn = document.createElement('button');
+    const _hpPct = () => Math.round(S_story.hp / S_story.hpMax * 100);
+    const _rests = () => S_story.shortRests || 0;
+    const _updateHeal = () => {
+      if (S_story.hp >= S_story.hpMax / 2 || _rests() <= 0) { healBtn.remove(); return; }
+      healBtn.textContent = '🩹 Short Rest — Heal  (' + _hpPct() + '% HP · ' + _rests() + ' rest' + (_rests() === 1 ? '' : 's') + ' left)';
+      healBtn.disabled = false;
+    };
+    _updateHeal();
+    healBtn.className = 'rts-btn-heal';
+    healBtn.addEventListener('click', () => {
+      if (_rests() <= 0) { storyMsg('😴 No short rests left — find an inn.'); return; }
+      const node = NODE_MAP[S_story.currentCode];
+      const isInn = !!(node && node.sleep);
+      const base = Math.floor(S_story.hpMax * 0.25);
+      const heal = isInn ? base : base * 2;
+      const before = S_story.hp;
+      S_story.shortRests = Math.max(0, (S_story.shortRests || 0) - 1);
+      S_story.hoursElapsed    = (S_story.hoursElapsed    || 0) + 1;
+      S_story.hoursSinceSlept = (S_story.hoursSinceSlept || 0) + 1;
+      S_story.hp = Math.min(S_story.hpMax, S_story.hp + heal);
+      storyUpdateStatus();
+      storyMsg('🌙 Short rest +' + (S_story.hp - before) + ' HP. (' + _rests() + ' rest' + (_rests() === 1 ? '' : 's') + ' remaining)');
+      _updateHeal();
+    });
+    row.appendChild(healBtn);
+  }
+  list.prepend(row);
+  document.getElementById('sheet-quests').scrollTop = 0;
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -7774,46 +7750,63 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
 
 const ACT_NAMES = ['','Act I — Birka','Act II — Tilbury','Act III — The Wilds','Act IV — The Deep','Act V — Visby','Act VI — Desert','Act VII — Mythic Circuit','Act VIII — The Reckoning'];
 
-/* Grid coordinates from maps.md (Row 1–16 north→south, Col 1–26 west→east) */
+/* Grid coordinates — spaced layout r:1–41, c:2–60 (Chebyshev ≥ 2 between all nodes) */
 const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
-  CI:{r:5,c:16},  SL:{r:4,c:16},  CQ:{r:4,c:17},  FR:{r:4,c:18},  IN:{r:5,c:17},  TV:{r:6,c:17},  BA:{r:6,c:15},  CR:{r:7,c:15},  CY:{r:7,c:16},  AC:{r:8,c:14},
-  DK:{r:8,c:15},  MQ:{r:8,c:16},  SF:{r:8,c:17},  MS:{r:8,c:19},  AL:{r:9,c:15},
-  MI:{r:5,c:8},   FO:{r:5,c:3},   HL:{r:4,c:3},   SW:{r:6,c:3},   HS:{r:7,c:3},   BE:{r:12,c:2},
-  OC:{r:13,c:1},  IS:{r:13,c:3},  AT:{r:14,c:2},  SC:{r:12,c:1},  FL:{r:11,c:2},  DS:{r:14,c:4},
-  SE:{r:10,c:13}, BK:{r:10,c:14}, GC:{r:10,c:15}, PC:{r:10,c:16}, MC:{r:11,c:12}, CA:{r:10,c:12},
-  VC:{r:11,c:11}, DE:{r:10,c:5},  DC:{r:10,c:7},  JU:{r:10,c:2},  BQ:{r:3,c:4},   SQ:{r:3,c:3},
-  OU:{r:3,c:5},   GA:{r:3,c:20},  KT:{r:2,c:21},  OP:{r:2,c:23},  HC:{r:1,c:17},  AR:{r:2,c:3},
-  CO:{r:1,c:18},
-  /* Layer 81 — New optional nodes */
-  WK:{r:2,c:17},  MM:{r:11,c:3},
-  /* Layer 9 — Junction nodes */
-  J1:{r:5,c:12},  J2:{r:10,c:4},  J3:{r:9,c:3},
-  J4:{r:12,c:8},  J5:{r:1,c:10},  J6:{r:5,c:5},   J7:{r:1,c:22},
-  RD:{r:5,c:6},
-  /* Layer 10 — Hunting Ground node */
-  MT:{r:4,c:5},
-  /* Layer 39 — Epic Battleground nodes (EH/EW/EM/EJ repositioned to use free parent directions) */
-  EF:{r:5,c:2},   EH:{r:4,c:2},   ES:{r:6,c:2},   EW:{r:7,c:4},   EB:{r:12,c:3},
-  EO:{r:15,c:4},  EI:{r:13,c:4},  EA:{r:15,c:2},  EC:{r:11,c:1},  EL:{r:11,c:3},
-  ED:{r:15,c:3},  EM:{r:6,c:8},   EE:{r:11,c:5},  EV:{r:10,c:8},  EJ:{r:10,c:1},
-  ET:{r:4,c:6},   ER:{r:1,c:3},   EK:{r:1,c:16},  EP:{r:11,c:16}, EG:{r:11,c:14},
-  /* Yugurt Lake — south of Western Wilds Crossroads */
-  YL:{r:6,c:5},   YC:{r:7,c:5},  YD:{r:6,c:4},
-  /* DeFi Land — north of Birka Slums */
-  DF:{r:3,c:16},  HM:{r:3,c:17},  GL:{r:3,c:15},  S7:{r:3,c:18},
-  /* §LIX–§LXIV — The Road to Damascus cluster */
-  HR:{r:17,c:5},  KS:{r:17,c:8},  DR:{r:19,c:8},  TS:{r:17,c:2},  AO:{r:17,c:0},  CI2:{r:19,c:0},  LT:{r:21,c:0},
-  /* §LXV+ — Paul's Journeys: serial chain south + ocean hub + city branches */
-  J8:{r:22,c:2},  SEA:{r:23,c:4},
-  PL:{r:23,c:0},  EF2:{r:23,c:8},
-  J9:{r:24,c:4},  J10:{r:25,c:4},  AE:{r:25,c:8},
-  J11:{r:26,c:4},
-  J12:{r:27,c:4},  KR:{r:27,c:8},
-  J13:{r:28,c:4},
-  J14:{r:29,c:4},  ML:{r:29,c:8},
-  ST:{r:30,c:4},
-  /* Lake Extension — east coast chain */
-  LW:{r:8,c:22},  LH:{r:8,c:25},  LN:{r:5,c:25},  LE:{r:5,c:28},  J15:{r:8,c:28},  LS:{r:11,c:25},
+  /* Northern spine — main quest axis */
+  CO:{r:1,c:28},  WK:{r:3,c:28},  HC:{r:5,c:28},
+  EK:{r:5,c:26},  J5:{r:5,c:22},  AR:{r:5,c:14},  ER:{r:3,c:14},
+  J7:{r:5,c:32},  OP:{r:7,c:36},  KT:{r:9,c:36},  GA:{r:13,c:36},
+  /* DeFi Land cluster */
+  GL:{r:7,c:24},  DF:{r:7,c:28},  HM:{r:7,c:30},  S7:{r:7,c:32},
+  /* Birka Slums cluster */
+  SL:{r:9,c:28},  CQ:{r:9,c:30},  FR:{r:9,c:32},
+  /* Western Wilds */
+  SQ:{r:7,c:8},   BQ:{r:11,c:10}, OU:{r:9,c:16},
+  HL:{r:9,c:6},   EH:{r:9,c:4},
+  FO:{r:11,c:6},  EF:{r:11,c:4},
+  SW:{r:13,c:6},  ES:{r:13,c:4},
+  HS:{r:15,c:6},  EW:{r:15,c:8},
+  J3:{r:17,c:6},  BE:{r:19,c:6},  EB:{r:19,c:10},
+  SC:{r:19,c:4},  EC:{r:19,c:2},
+  /* Hunting / Yugurt / Crossroads */
+  MT:{r:9,c:12},  ET:{r:9,c:14},
+  J6:{r:11,c:12}, RD:{r:11,c:16}, MI:{r:11,c:18}, EM:{r:9,c:18},
+  YL:{r:13,c:12}, YD:{r:13,c:10}, YC:{r:15,c:12},
+  /* Tilbury axis */
+  J1:{r:11,c:24},
+  CI:{r:11,c:28}, IN:{r:11,c:30},
+  CR:{r:13,c:28}, TV:{r:13,c:30},
+  CY:{r:15,c:28}, BA:{r:15,c:30},
+  AC:{r:17,c:28},
+  DK:{r:17,c:30}, MQ:{r:17,c:34}, SF:{r:17,c:38}, MS:{r:17,c:40},
+  AL:{r:19,c:30},
+  /* Southern landmass */
+  SE:{r:21,c:26}, J4:{r:21,c:20},
+  BK:{r:21,c:28}, GC:{r:21,c:30}, PC:{r:21,c:32},
+  MC:{r:23,c:28}, CA:{r:23,c:30}, VC:{r:23,c:32},
+  EG:{r:25,c:30}, EP:{r:25,c:32},
+  /* Wilds / Minotaur / Jungle */
+  JU:{r:17,c:20}, EJ:{r:17,c:18}, J2:{r:17,c:24}, MM:{r:19,c:22},
+  FL:{r:19,c:14}, EL:{r:19,c:18},
+  DC:{r:21,c:36}, DE:{r:21,c:34}, EE:{r:23,c:34}, EV:{r:21,c:38},
+  /* Far-west coast */
+  OC:{r:23,c:4},
+  IS:{r:23,c:8},  EI:{r:23,c:10},
+  AT:{r:25,c:6},  EA:{r:27,c:6},
+  DS:{r:25,c:10}, EO:{r:27,c:10}, ED:{r:27,c:8},
+  /* Eastern lake chain */
+  LW:{r:17,c:42}, LH:{r:17,c:46}, LN:{r:13,c:46},
+  LE:{r:13,c:50}, J15:{r:17,c:50}, LS:{r:21,c:46},
+  /* Road to Damascus / eastern landmass */
+  AO:{r:19,c:52}, TS:{r:19,c:54}, HR:{r:19,c:56}, KS:{r:19,c:58}, DR:{r:21,c:58},
+  CI2:{r:21,c:52}, LT:{r:23,c:52},
+  /* Paul's Journeys — Mediterranean serial chain */
+  J8:{r:25,c:54},  SEA:{r:27,c:56},
+  PL:{r:27,c:52},  EF2:{r:27,c:60},
+  J9:{r:29,c:56},  J10:{r:31,c:56}, AE:{r:31,c:60},
+  J11:{r:33,c:56}, J12:{r:35,c:56}, KR:{r:35,c:60},
+  J13:{r:37,c:56}, J14:{r:39,c:56}, ML:{r:39,c:60},
+  ST:{r:41,c:56},
 };
 
 /* ── Layer 9-A: Circuit Corridor Data Structures ── */
@@ -8790,6 +8783,56 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     completeFn:() => !!S_story.commissionReceived,
     xpAward:150, waypointNode:'AO', reward:0,
     disposition:'"The mandate is simple because the work isn\'t." — Assembly Elder Joach' },
+  // ── §LXV: Philippi — Lyra's Conversion + The Prison ──
+  quest_philippi: { id:'quest_philippi', type:'side', title:'The Purple Merchant',
+    desc:"Lyra sells purple cloth from the bridge. She has been watching Paul from across the bridge for two days before she speaks. When she speaks it is because she has already decided. The earthquake comes later. Every door opens.",
+    hint:'Speak to Lyra at Philippi.',
+    activateNode:'PL', activateCond:() => !!S_story.commissionReceived,
+    completeFn:() => !!S_story.lyraConverted,
+    xpAward:150, waypointNode:'PL', reward:0,
+    disposition:'"I decided before I spoke. The speaking was the confirmation." — Lyra' },
+  // ── §LXVI: Athens — The Unknown Altar ──
+  quest_areopagus: { id:'quest_areopagus', type:'skill_check', title:'To An Unknown One',
+    desc:"There is an altar at the east end of the market that reads: TO AN UNKNOWN ONE. It has been there for two hundred years. Nobody knows who built it or what it was for. Paul has been standing in front of it for a long time. The Market Steward wants to know why.",
+    hint:'Speak at the Areopagus about the Unknown Altar.',
+    activateNode:'AE', activateCond:() => true,
+    checkAbility:'cha', checkLabel:'Persuasion', checkDC:13,
+    retryable:false,
+    xpAward:200,
+    vignetteText:'The altar is at the east end of the market. The inscription: TO AN UNKNOWN ONE. Two hundred years of upkeep. The priests who maintain it don\'t know who built it. The city maintains it anyway — on the principle that a city that maintains all the altars has covered all its bases.\n\nPaul has been standing in front of it for a long time.\n\nThe Market Steward approaches. He has the manner of a man who administers forty shrines and has heard every interpretation of every one of them. He has not heard this interpretation.',
+    passText:'The Areopagus is the speaking hill above the market. The council meets there. They invite Paul because they are curious, not because they agree — Athens runs on the formal exchange of new ideas as a civic institution.\n\nHe begins with the altar. He does not begin with a correction. He begins: I see that you maintain what you do not fully know. I want to tell you what I know about what you have been maintaining.\n\nSome laugh. Some leave. Some say: we want to hear this again. Dionysius stays. Damaris stays. They stay for the rest of the conversation and then for longer than that.',
+    failText:'The Market Steward listens with the patience of a man who has managed the theological opinions of forty altars. He does not argue. He does not agree. He says: the inscription is maintained. It has been maintained for two hundred years. We will continue to maintain it. Thank you for your interpretation.\n\nThe council does not invite him to the Areopagus. The altar continues to be maintained.',
+    completeItems:[], checkPassFlag:'areopagusSpeech',
+    disposition:'"I found among your objects of worship an altar with the inscription: TO AN UNKNOWN ONE." — Athens' },
+  // ── §LXVII: Ephesus — The Riot ──
+  quest_ephesus_riot: { id:'quest_ephesus_riot', type:'skill_check', title:'The Silversmith\'s Meeting',
+    desc:"Demetrius runs the craftsmen's guild. The guild makes temple models. Paul has been here three years and the guild has noticed. The meeting Demetrius called has spilled out of the market hall. The market hall was not large enough.",
+    hint:'Navigate the Demetrius riot in Ephesus.',
+    activateNode:'EF2', activateCond:() => true,
+    checkAbility:'cha', checkLabel:'Persuasion', checkDC:12,
+    retryable:false,
+    xpAward:175,
+    vignetteText:'Demetrius\'s voice is the loudest in the square. He is not wrong about the economics: three years of Paul in Ephesus, and silver temple sales are down. He is also not just about economics — there is a theological argument underneath the economic one. He is making both simultaneously. The crowd is responding to both.\n\nThe theater holds twenty-five thousand people. The crowd is moving toward the theater. The city clerk is trying to reach the front.',
+    passText:'The city clerk gets to the front. He is a bureaucrat with perfect institutional memory and the specific kind of calm that comes from administering a city that has had riots before.\n\nHe says: these men have not robbed the temple. They have not blasphemed the goddess. If Demetrius has a charge, the courts are open. If Demetrius does not have a charge, this assembly is illegal and Rome will want to know about it.\n\nThe crowd considers this. The crowd is not wrong about the economics. But the clerk is right about the courts. The theater empties before dark. The charges are never filed.',
+    failText:'The theater fills. Twenty-five thousand people, all of them shouting the same thing at once — not at Paul specifically, but in the direction of everything Paul represents. The shouting continues for two hours. The city clerk cannot get to the front.\n\nPaul leaves Ephesus the next morning. He had planned to stay longer.',
+    completeItems:[], checkPassFlag:'demetriusRiotEscaped',
+    disposition:'"This craft is our wealth. The woman is demoted from magnificence by this man." — Demetrius, craftsmen\'s guild, Ephesus' },
+  // ── §LXVIII: Corinth — The Letters ──
+  quest_corinth_letters: { id:'quest_corinth_letters', type:'side', title:'Tent Canvas & Letters',
+    desc:"Prisca and Akil hire Paul when he arrives because he knows the tentmaking trade. He earns his room in canvas. He stays eighteen months. He writes letters to the cities he has already been to. Some of them are the most important things he will ever write. He does not know which ones yet.",
+    hint:'Stay in Corinth with Prisca and Akil.',
+    activateNode:'KR', activateCond:() => true,
+    completeFn:() => !!S_story.corinthLettersWritten,
+    xpAward:200, waypointNode:'KR', reward:0,
+    disposition:'"He earned his room. He was good with canvas. The letters — we could hear him working on them at night." — Prisca' },
+  // ── §LXIX: Rome — House Arrest ──
+  quest_rome_arrest: { id:'quest_rome_arrest', type:'side', title:'The Rented House',
+    desc:"House arrest in a rented house. He can receive visitors, which he does, constantly. He can write letters, which he does, constantly. He cannot leave, which he does not. The arc does not end here. It stops here.",
+    hint:'Reach Rome and speak to Timael.',
+    activateNode:'ST', activateCond:() => !!S_story.maltaSnakeEvent,
+    completeFn:() => !!S_story.romeArrestBegun,
+    xpAward:300, waypointNode:'ST', reward:0,
+    disposition:'"He got up. From Lystra, from every place after. The counting was real." — Timael' },
   // ── §LX: Basket escape ──
   quest_basket_damascus: { id:'quest_basket_damascus', type:'skill_check', title:'Over the Wall',
     desc:"The magistrate of Damascus has learned that Saul is in the lower city — now as a liability rather than an asset. A detention order has been issued. The warrant authority has turned against the warrant-carrier. The gate is watched. The wall is not.",
@@ -9140,6 +9183,25 @@ const NPC_DIALOGUE = { // → doc: story.md §FL7
   TS: { name:'Barnach', quoteFn:() => S_story.barnachFoundPaul // §LXI
     ? '"I have been looking for you for a year. Antioch needs you. I need you." He does not say: come back. He is standing in the doorway of a city you grew up in and he is not telling you what to do. He is telling you that you are needed, which is different from telling you what to do, which is one of the things that is different about who he is now. "I am not going to tell you it\'s safe — you know it isn\'t. I am going to tell you it\'s time."'
     : ((() => { S_story.barnachFoundPaul = true; return 'He comes through the gate in the early afternoon, when the tentmaking quarter is quiet and the light is flat. He has the look of someone who has been traveling a long time and not sleeping particularly well and has kept going anyway.\n\n"I have been looking for you for a year."\n\nThe tent canvas is on the frame behind you. The tools are on the bench. The city has had no particular opinion about this work and you have required none.\n\n"Antioch needs you. I need you." He looks at the canvas. He looks at you. "It\'s time."'; })()) },
+  // §LXV–§LXIX: Mediterranean Journey NPCs
+  PL: { name:'Lyra', quoteFn:() => S_story.lyraConverted
+    ? '"I decided before I spoke. The speaking was the confirmation." She has arranged the purple cloth in the way she arranges things she has decided on — with care, not ceremony. She has the quality of someone who has reorganized around a true thing and is no longer uncertain about the arrangement.'
+    : ((() => { S_story.lyraConverted = true; return 'She has been watching from across the bridge for two days. She has evaluated the quality of the teaching and the character of the teacher and the question underneath both and has come to a conclusion.\n\n"I want to hear more of this." She says it the way a purple-cloth merchant says things she has already priced — a final assessment, not an inquiry.\n\n"Come to the house. Bring whoever is with you."\n\nShe does not say: I believe you. She does not need to say it. She has already arranged the household.\n\nThe earthquake comes three days later. Every door in the city prison opens. The jailer wakes, sees the doors open, reaches for his sword. Paul says: stop. We are all here. The jailer sets down the sword. This is the moment he decides.'; })()) },
+  AE: { name:'Athens Market Steward', quoteFn:() => S_story.areopagusSpeech
+    ? '"The altar has been there two hundred years. We maintain what we do not fully understand. You are the first to explain it in terms of what it has always meant rather than what it should mean." He straightens the inscription plaque. It does not need straightening. "The Areopagus will remember the conversation. Some of them will think about it longer than others."'
+    : '"TO AN UNKNOWN ONE. Two hundred years of maintenance. No one who built it is living. We maintain it because we maintain all altars — theological completeness as civic policy. You have been standing in front of it for quite some time." He pauses. "We are curious what you see there that requires this much attention."' },
+  EF2: { name:'Demetrius', quoteFn:() => S_story.demetriusRiotEscaped
+    ? '"The courts were open. The charges were never filed." He is back at his workshop. The models are back in production. "The meeting got away from me. I called a meeting and got a theater. I should have called a lawyer." He is a practical man. This is the most practical thing he has said today.'
+    : '"This craft is our wealth. This city\'s wealth. Three years of this man\'s presence and the models are not selling. We\'re not talking about theology — we\'re talking about livelihoods." He looks at the market hall. The market hall is full. "I called a meeting. It got bigger than I expected."' },
+  KR: { name:'Prisca + Akil', quoteFn:() => S_story.corinthLettersWritten
+    ? '"He stayed eighteen months. He was good with canvas — not the fastest, but steady, and the joins held." Prisca sets another bolt on the frame. "He wrote at night. We could hear him working. We did not read the letters. They were not for us." A pause. "Some of them were for everyone."'
+    : ((() => { S_story.corinthLettersWritten = true; return 'Prisca and Akil hire him because he knows the trade.\n\nThe workshop is behind the east harbor — good light in the morning, salt air all day, steady work from the shipping concerns. The canvas is good canvas. The work is good work. The city has no particular opinion about the tentmaker in the back room.\n\nHe earns the room in canvas. He writes letters in the evenings. Some go to Thessalonica. Some go to Corinth itself — to the assembly meeting in the house three streets over.\n\nHe stays eighteen months. He writes the letters he will be known for writing. He does not know yet which ones those are.'; })()) },
+  ML: { name:'Malta Shore Islanders', quoteFn:() => S_story.maltaSnakeEvent
+    ? '"We said he was a god. Then we said he was a murderer — saw the snake, thought it was judgment. Then it let go." The island elder looks at the cold fire. "He counted us. All night. He was still counting when you hit the shore." A pause. "We said a lot of things today. The counting was real."'
+    : '"Two hundred and seventy-six people. Your man — he was counting. All night. He was still counting when you hit the shore." The elder looks at Paul building the fire. "We don\'t get many shipwrecks. When we do, they don\'t count."' },
+  ST: { name:'Timael', quoteFn:() => S_story.romeArrestBegun
+    ? '"House arrest. Visitors every day. Letters every night. He is working harder than I have ever seen anyone work who cannot leave the building." Timael is at the door. He has been near it since Lystra. "People come from across the city. They argue all day. He argues back. He writes down the argument afterward. The arc does not end here. I know that. He knows that."'
+    : ((() => { S_story.romeArrestBegun = true; return 'Timael followed from Lystra.\n\nFrom the stoning to the road north. From the road north to the ships. From the ships to Malta. From Malta, south.\n\nHe has not been asked to follow. He has not explained why he follows. He looked at Paul getting up from the stones in Lystra and made a decision that has not required re-examination since.\n\n"You\'re under house arrest," Timael says. He says it the way you state a fact that is also a situation. "Visitors every day. Letters every night." He looks at the door. "The city is outside the door and cannot come in unless it knocks."\n\nHe has been watching since the market square. He is still watching. "Where are you going next?"'; })()) },
   HL: { name:'Elder Fionn',                     quote:'"Aye, quick lad. Brown satchel. Went south. Asked the same thing about the loch. Good boy. You\'ll want to sort it — the village can\'t fish while it\'s down there."' },
   FO: { name:'Brother Aldric',                  quote:'"You\'ll want to go into that grove. I\'d advise against it. You\'ll go anyway. Come back when you\'re done bleeding."' },
   HS: { name:'The Crones — Whisper, Glut & Wane', quote:'"You smell of the map. Good. We have been waiting. Leave the stone. Take the web and the key. Go south before the tide turns — or don\'t, and meet something worse."' },
@@ -9965,6 +10027,8 @@ const _S_DEFAULTS = () => ({
   barnachVouchedHR: false, hrHellenistDays: 0, hellenistsThreaten: false, barnachFoundPaul: false,
   commissionReceived: false, silarJoined: false, ezzirConfronted: false, govCopperConverted: false,
   lameManHealed: false, stoningEvent: false, timaelaJoined: false,
+  // §LXV–§LXIX: Mediterranean Journey
+  lyraConverted: false, areopagusSpeech: false, demetriusRiotEscaped: false, corinthLettersWritten: false, maltaSnakeEvent: false, romeArrestBegun: false,
 });
 
 /* ── Layer 48: Luck — Seventh Stat ── */
@@ -12385,20 +12449,50 @@ function storyToggle() {
   S_story.active ? storyExit() : storyEnter();
 }
 
-/* ── Layer 7: Gate Locks ── */
-const GATE_LOCKS = [ // → doc: story.md §Gate Locks (from/to node pairs blocked by required key items)
-  { from:'CR', to:'CY', item:'Crypt Key',     msg:'🗝 The lower passage is sealed. You need the Crypt Key to descend.' },
-  { from:'SC', to:'FL', item:'Sea Cave Key',  msg:'🗝 The inner passage is blocked. The Crones\' Sea Cave Key opens it.' },
-  { from:'AL', to:'SE', item:'Conclave Pass', msg:'🗝 Checkpoint blocked. Show your Conclave Pass to the scouts.' },
-  { from:'VC', to:'DE', item:'Toll Token',    msg:'🗝 Bruxa Mourne\'s toll gate. Offer the Toll Token to pass.' },
-  { from:'YL', to:'YD', item:'Eel Skin Pouch', msg:'🏮 The crack in the bank drops into darkness. You need a light.' }, // §XLIX
-  { from:'HM', to:'S7', item:'Shipping Manifest (Intercepted)', msg:'📦 The station address is on the manifest. Without it there is no way to know which unit was Station 7.' }, // §LIII
-  { from:'CY', to:'AC', item:'Antecedent Seal', msg:'🏛️ The passage descends into older infrastructure. The seal in your pack will activate the receiving array. Without it the chamber stays dark.' }, // §LV
-];
+/* ── Layer 7: (Gate Locks removed — open world) ── */
 
 function _hasItem(keyword) {
   return S_story.inventory.some(i => i.name.includes(keyword) || keyword.includes(i.name.split(' (')[0]));
 }
+
+/* ── Layer 7-B: Key Events — item-triggered world changes (replaces gate locks) ── */
+const KEY_EVENTS = [
+  { id:'ke_crypt_key', node:'CR', item:'Crypt Key', label:'🗝 Open the lower ward',
+    ability:'int', abilityLabel:'Investigation', dc:10, flag:'keyEvent_cryptKey',
+    successText:'The key enters the lock and turns cleanly. You feel the mechanism give — three tumblers, well-made, waiting for exactly this. The lower ward is open.\n\nThe sexton crosses the grating above and this time looks down. He nods once. He does not ask what you opened or why.\n\nWithin the hour a figure appears from the east passage. He has been working the outer perimeter for weeks — waiting for the inner ward to clear. He trades in things that were not supposed to leave the lower level. He knows you opened it. He does not explain how.',
+    failText:'The key enters the lock but catches — rust, age, or simple misalignment. You work it for three full minutes, hand flat against the cold stone for leverage. The mechanism finally gives.\n\nThe sexton pretends not to have heard.',
+    worldNote:'Lower ward open. A tomb-robber contact operates from the east passage — goods that were not supposed to leave. The sexton no longer avoids the grating.' },
+  { id:'ke_sea_cave', node:'SC', item:'Sea Cave Key', label:'🗝 Open the inner passage',
+    ability:'dex', abilityLabel:'Sleight of Hand', dc:11, flag:'keyEvent_seaCave',
+    successText:'The key finds the lock with practiced ease — the Crones knew exactly what shape of mechanism they were keeping. The passage slides back, stone on stone, and the smell behind it is salt and old wood and the specific dark of routes used by people who prefer not to be seen.\n\nA fishing boat is visible at the far end within the day. Then two. The route was always known — it was the lock that closed it.',
+    failText:'You work the mechanism longer than it should take. The passage opens, scraping stone — the sound carries back into the cave behind you and forward into wherever the passage leads. Whatever uses this route has now heard you arrive.',
+    worldNote:'Inner passage open. Fishing boats from the coast have resumed the route. Coastal goods available at the cave mouth.' },
+  { id:'ke_conclave_pass', node:'AL', item:'Conclave Pass', label:'📋 Present the Conclave Pass',
+    ability:'cha', abilityLabel:'Persuasion', dc:12, flag:'keyEvent_conclavePass',
+    successText:'You present the pass. The warrant scout takes it, examines both sides, and hands it back in under ten seconds. He says a single word to the other scout — your name, or a number — and steps aside.\n\nThe kenku on the drainpipe goes quiet. Not the alert kind. The kind that means you have been filed and are no longer interesting.',
+    failText:'The scout takes more time than he needs. He tilts the pass toward the alley light, looking for something specific. He finds nothing — or decides there is nothing to find — and steps aside without speaking.\n\nThe kenku repeats one of your earlier excuses back at you. You get through anyway.',
+    worldNote:'Conclave Pass registered at the checkpoint. The scouts step aside on sight. The kenku has stopped collecting your excuses.' },
+  { id:'ke_toll_token', node:'VC', item:'Toll Token', label:'🪙 Offer the Toll Token',
+    ability:'cha', abilityLabel:'Persuasion', dc:13, flag:'keyEvent_tollToken',
+    successText:'Bruxa Elise Mourne accepts the token without looking at it. She already knows what it is — she has been collecting settled accounts for a very long time and can read the weight of one before she touches it.\n\n"The debt is closed," she says. She does not explain what the debt was for. She sets the token on the gate post and leaves it there.\n\nWhen you go, a small vial is on the road post. Sealed. One full rest, no cost. She does not explain why.',
+    failText:'She takes the token, holds it a moment longer than necessary, and sets it down. "The account is settled," she says. Barely. The vial is on the post when you leave. Half-emptied. She does not explain that either.',
+    worldNote:'Toll gate removed. Blood debt settled with Bruxa Mourne. A vial on the road post — one full rest at no cost.' },
+  { id:'ke_eel_pouch', node:'YL', item:'Eel Skin Pouch', label:'🏮 Lower the light into the crack',
+    ability:'wis', abilityLabel:'Perception', dc:11, flag:'keyEvent_eelPouch',
+    successText:'The pouch light goes into the crack first, held at arm\'s length. The shale steps down in clear stages — you read the geometry before you commit to the descent. The cave below is larger than the opening suggests. Cold. Old water, still water, water that has been here longer than the lake above it.\n\nYou map the territory from the entrance. The fishermen at the lake edge notice the light going down. Within a week they are pulling catches from the lower openings.',
+    failText:'The pouch light flickers at the waterline — the transition disrupts it for a moment. You manage the descent before it fully stabilizes. In the gap, something in the dark moves toward the light. You track it by sound before you can track it by sight.',
+    worldNote:'The cave below Yugurt Lake is mapped. Fishermen are pulling catches from the lower openings. Trade volume at the lake is improving.' },
+  { id:'ke_manifest', node:'HM', item:'Shipping Manifest (Intercepted)', label:'📦 Cross-reference the manifest',
+    ability:'int', abilityLabel:'Investigation', dc:12, flag:'keyEvent_manifest',
+    successText:'The manifest notation cross-references cleanly to a unit designation: 14.225, six-week rotation, third warehouse from the harbor-side entrance. Station 7.\n\nYou bring the address to the dock master. He has been logging cargo irregularities for months without a source address. The manifest gives him one.\n\nThree dock workers are reassigned by morning. The north berth, under restricted access, opens to neutral traffic.',
+    failText:'The manifest notation is abbreviated in a format you have to decode against the harbor schedule twice before the unit designation resolves. Twenty minutes. The dock master is not impressed with the time — only with what you found. He takes the manifest without comment.',
+    worldNote:'Station 7 identified: unit 14.225, third warehouse. Dock master has proof of cargo irregularities. Three workers reassigned. North berth open.' },
+  { id:'ke_antecedent', node:'CY', item:'Antecedent Seal', label:'🏛️ Activate the Antecedent Seal',
+    ability:'int', abilityLabel:'Arcana', dc:14, flag:'keyEvent_antecedent',
+    successText:'The seal runs warm the moment you hold it toward the partition wall. Not hot — warm, the way a thing feels when it recognizes something it has been waiting for. The indicators change from standby to receiving. The change is immediate.\n\nThe Antecedent has been asking the same question across forty-one volumes. You have the forty-second answer. It does not ask for credentials. It was waiting for someone who arrived here anyway.',
+    failText:'The seal activates on a partial sequence — the indicators shift from standby but pause before resolving to receiving. Something in the handshake is slightly wrong: the order, the angle, the number of times you have passed through the CY checkpoint. The Antecedent adjusts its assessment. After a moment the indicators settle to receiving. It still accepts what you brought.',
+    worldNote:'Receiving array active. The Antecedent acknowledged. Indicators: receiving. The forty-second volume delivered.' },
+];
 
 /* ── Layer 28: Final Boss — Commander Bruhns ── */
 const BOSS_COMMANDER_AUROS = { // → doc: mechanics-economy.md §Final Boss
@@ -12812,6 +12906,13 @@ const FISH_GOLD_VALUES = { // → doc: mechanics-combat.md §Fishing Items (sell
   legendary:  { common:75, rare:120, enchanted:175, golden:225, legendary:300 },
 };
 
+const FISHING_RODS = [
+  { name:'Fishing Rod',   tier:0, rodBonus:0, price:20,  icon:'🎣', sell:10,  desc:'Standard rod. Gets the line out.' },
+  { name:'River Rod +1',  tier:1, rodBonus:1, price:75,  icon:'🎣', sell:30,  desc:'Better balanced. +1 to Catch rolls.' },
+  { name:'Deep Rod +2',   tier:2, rodBonus:2, price:200, icon:'🎣', sell:80,  desc:'Weighted for deep water. +2 to Catch rolls.' },
+  { name:'Master Rod +3', tier:3, rodBonus:3, price:600, icon:'🎣', sell:250, desc:"Forged to feel the deep. +3 to Catch rolls." },
+];
+
 // ── §XLV: Yugurt Tournament — Six Fishermen ──
 const NPC_TOUR_OPPONENTS = [ // → doc: plan.md §XLV (YC tournament; competence bonus drives NPC cast roll)
   { key:'pip',    name:'Pip',             title:'The Kid',            competence:'Novice',   bonus:-1, stake:50,   order:1, xp:100,
@@ -12860,79 +12961,6 @@ const MEMORIAL_PLAYER_CHOICES = [ // → doc: world.md §The Froberger Memorial 
   'The road was worth it.',
 ];
 const MEMORIAL_PLAYER_CHOICES_NG = [...MEMORIAL_PLAYER_CHOICES, 'Still right.'];
-function storyShowFrobergerMemorial() {
-  S_story.frobergerMemorialVisited = true;
-  let plaque = FROBERGER_MEMORIAL_TEXT.base;
-  if (_npcFavor('yael') >= 1) plaque += FROBERGER_MEMORIAL_TEXT.yael_friendly;
-  const anyDearFriend = ['yael','brynn','quill','pachelbel','crov','auros'].some(k => _npcFavor(k) >= 2);
-  if (anyDearFriend) plaque += FROBERGER_MEMORIAL_TEXT.dear_friend;
-  if (S_story.corelliRevelationDelivered) plaque += FROBERGER_MEMORIAL_TEXT.post_cipher;
-  const overlay = document.getElementById('froberger-note-overlay');
-  if (!overlay) return;
-  document.getElementById('froberger-note-title').textContent = '⛪ Froberger Memorial — Birka Crossroads';
-  const body = document.getElementById('froberger-note-body');
-  body.innerHTML = '';
-  // Plaque
-  const pq = document.createElement('pre');
-  pq.style.cssText = 'font-family:serif;font-size:13px;color:#e8d4a0;white-space:pre-wrap;margin:0 0 12px;border-left:3px solid #7a5a1a;padding-left:10px;';
-  pq.textContent = plaque;
-  body.appendChild(pq);
-  // Book entries
-  const bookHd = document.createElement('div');
-  bookHd.style.cssText = 'font-size:11px;color:#888;border-top:1px solid #3a2a0a;padding-top:8px;margin-bottom:6px;';
-  bookHd.textContent = '— Memorial Book —';
-  body.appendChild(bookHd);
-  FROBERGER_MEMORIAL_BOOK.forEach(e => {
-    const el = document.createElement('p');
-    el.style.cssText = 'font-size:11px;color:#2A1A0A;margin:0 0 4px;font-style:italic;';
-    el.textContent = '"' + e.text + '"' + (e.attr ? '  — ' + e.attr : '');
-    body.appendChild(el);
-  });
-  if (S_story.frobergerMemorialBookSigned && S_story._memorialPlayerEntry) {
-    const pe = document.createElement('p');
-    pe.style.cssText = 'font-size:11px;color:#3A2010;margin:4px 0 0;font-style:italic;';
-    pe.textContent = '"' + S_story._memorialPlayerEntry + '"  — (your hand)';
-    body.appendChild(pe);
-  }
-  // Action buttons
-  const btnRow = document.createElement('div');
-  btnRow.style.cssText = 'display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;';
-  // Leave Flowers
-  if (!S_story.frobergerMemorialFlowers) {
-    const flBtn = document.createElement('button');
-    flBtn.textContent = '🌸 Leave Flowers (10gp)';
-    flBtn.style.cssText = 'padding:5px 10px;background:#1a1000;border:1px solid #7a5a1a;border-radius:3px;color:#e8c070;cursor:pointer;font-size:12px;';
-    flBtn.addEventListener('click', () => {
-      if ((S_story.gold || 0) < 10) { storyMsg('🌸 Not enough gold to leave flowers (10gp).'); return; }
-      S_story.gold -= 10; S_story.frobergerMemorialFlowers = true;
-      storyUpdateStatus();
-      const isNg = (S_story.ngPlusRun || 0) > 0;
-      storyMsg(isNg ? '🌸 You leave flowers again. You wonder if anyone will wonder who keeps doing this.' : '🌸 You leave a small bunch of flowers at the stone. They look right there.');
-      overlay.style.display = 'none';
-    });
-    btnRow.appendChild(flBtn);
-  }
-  // Sign / Read Entry
-  if (!S_story.frobergerMemorialBookSigned) {
-    const choices = (S_story.ngPlusRun || 0) > 0 ? MEMORIAL_PLAYER_CHOICES_NG : MEMORIAL_PLAYER_CHOICES;
-    choices.forEach(txt => {
-      const cb = document.createElement('button');
-      cb.textContent = '✍️ "' + txt + '"';
-      cb.style.cssText = 'padding:5px 10px;background:#1a1000;border:1px solid #506070;border-radius:3px;color:#a0c0e0;cursor:pointer;font-size:11px;';
-      cb.addEventListener('click', () => {
-        S_story.frobergerMemorialBookSigned = true;
-        S_story._memorialPlayerEntry = txt;
-        storyMsg('✍️ You write: "' + txt + '"');
-        overlay.style.display = 'none';
-      });
-      btnRow.appendChild(cb);
-    });
-  }
-  body.appendChild(btnRow);
-  document.getElementById('froberger-note-close').textContent = 'Leave';
-  document.getElementById('froberger-note-close').onclick = () => { overlay.style.display = 'none'; };
-  overlay.style.display = 'flex';
-}
 
 // ── Layer 62: Town Crier — Inn Rest World-News Lines ──
 const TOWN_CRIER_LINES = { // → doc: world.md §Town Crier Ambient Lines (critical/tension/quest/npc/act tiers; no new state flags)
@@ -13825,97 +13853,6 @@ function _buildWeckmannLog() {
   return WECKMANN_TRAINING_LOG.replace('{PLAYER_ENTRIES}', entries.join('\n')).replace('{CHAMP_ENTRY}', champEntry);
 }
 
-function storyShowWeckmannLog() {
-  const existingEl = document.getElementById('weckmann-log-overlay');
-  if (existingEl) { existingEl.remove(); }
-  const overlay = document.createElement('div');
-  overlay.id = 'weckmann-log-overlay';
-  overlay.style.cssText = 'position:fixed;inset:0;z-index:460;background:rgba(0,0,0,0.82);display:flex;align-items:center;justify-content:center;padding:20px;';
-  const panel = document.createElement('div');
-  panel.style.cssText = 'background:#f0e8d0;color:#2a1a06;border:1px solid #a0803a;border-radius:6px;padding:28px 32px;max-width:420px;width:100%;font-family:"Courier New",monospace;box-shadow:0 8px 40px rgba(0,0,0,0.5);max-height:80vh;overflow-y:auto;display:flex;flex-direction:column;gap:12px;';
-  const title = document.createElement('div');
-  title.style.cssText = 'font-size:11px;font-weight:700;letter-spacing:2px;color:#3A2A08;text-transform:uppercase;border-bottom:1px solid #c8a870;padding-bottom:8px;';
-  title.textContent = '📓 Training Log';
-  const body = document.createElement('pre');
-  body.style.cssText = 'font-size:11px;line-height:1.7;white-space:pre-wrap;color:#2a1a06;';
-  body.textContent = _buildWeckmannLog();
-  const closeBtn = document.createElement('button');
-  closeBtn.style.cssText = 'align-self:center;padding:7px 20px;font-size:12px;background:#e0d0a0;border:1px solid #907020;color:#3a2010;border-radius:4px;cursor:pointer;font-family:inherit;';
-  closeBtn.textContent = 'Close';
-  closeBtn.addEventListener('click', () => overlay.remove());
-  panel.appendChild(title); panel.appendChild(body); panel.appendChild(closeBtn);
-  overlay.appendChild(panel);
-  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
-  document.body.appendChild(overlay);
-}
-
-function storyShowRoom6() {
-  const existingEl = document.getElementById('room6-overlay');
-  if (existingEl) { existingEl.remove(); }
-  const overlay = document.createElement('div');
-  overlay.id = 'room6-overlay';
-  overlay.style.cssText = 'position:fixed;inset:0;z-index:460;background:rgba(0,0,0,0.88);display:flex;align-items:center;justify-content:center;padding:20px;';
-  const panel = document.createElement('div');
-  panel.style.cssText = 'background:#f5ead0;color:#2a1a06;border:1px solid #b89a60;border-radius:6px;padding:32px 36px;max-width:440px;width:100%;font-family:Georgia,"Times New Roman",serif;box-shadow:0 8px 40px rgba(0,0,0,0.6);display:flex;flex-direction:column;gap:14px;max-height:80vh;overflow-y:auto;';
-  panel.innerHTML = '<div style="font-size:11px;font-weight:700;letter-spacing:2px;color:#3A2A08;text-transform:uppercase;border-bottom:1px solid #c8a870;padding-bottom:8px;">🚪 Room 6</div>'
-    + '<div style="font-size:13px;line-height:1.9;color:#3a2010;font-style:italic;">'
-    + "<p>It's clean. Brynn keeps all the rooms clean, but this one is slightly more so — the way a room gets when someone tidies it out of care rather than routine.</p>"
-    + "<p>There's a mark on the wall near the window: a small sigil, scratched into the plaster. Not defacement — done carefully, at eye level, the kind of mark someone makes when they want to be able to find a place again.</p>"
-    + "<p>The bed has two pillows. Brynn added the second one after the fact. She doesn't know exactly why. She changed the pillowcase last week even though no one had slept on it.</p>"
-    + "<p>On the windowsill, almost under the sill itself, a scrap of paper. Not Froberger's journal pages — different paper, smaller. In the same handwriting as the journal, but lighter:</p>"
-    + '</div>'
-    + '<div style="text-align:center;font-size:16px;color:#5a3a18;font-style:italic;padding:12px 0;border-top:1px solid #c8a870;border-bottom:1px solid #c8a870;">— still here.</div>'
-    + '<div style="font-size:12px;color:#3A2010;font-style:italic;">You look at it for a while. You close the door behind you.</div>';
-  const closeBtn = document.createElement('button');
-  closeBtn.style.cssText = 'align-self:center;padding:8px 24px;font-size:12px;background:#e8d8a8;border:1px solid #a07030;color:#4a2c08;border-radius:4px;cursor:pointer;font-family:inherit;';
-  closeBtn.textContent = 'Close';
-  closeBtn.addEventListener('click', () => {
-    overlay.remove();
-    if (!S_story['room6Visited']) {
-      S_story['room6Visited'] = true;
-      // Add permanent line to Brynn's Dear Friend pool via next visit
-      S_story['brynRoom6Line'] = true;
-    }
-  });
-  panel.appendChild(closeBtn);
-  overlay.appendChild(panel);
-  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
-  document.body.appendChild(overlay);
-}
-
-function storyShowDeaconCode() {
-  const overlay = document.getElementById('deacon-code-overlay');
-  if (!overlay) return;
-  document.getElementById('deacon-code-body').textContent = DEACON_CODE_TEXT;
-  overlay.style.display = 'flex';
-  document.getElementById('deacon-code-close').onclick = () => { overlay.style.display = 'none'; };
-}
-
-function storyShowBrynnLedger() {
-  const overlay = document.getElementById('brynn-ledger-overlay');
-  if (!overlay) return;
-  const bal = S_story.brynLedgerBalance ?? -8;
-  const balStr = bal < 0 ? bal + ' copper' : bal === 0 ? '0 copper (balanced)' : '+' + bal + ' copper';
-  const body = document.getElementById('brynn-ledger-body');
-  body.innerHTML = '<pre style="font-size:12px;line-height:1.7;color:#3a2010;white-space:pre">'
-    + "BRYNN'S INN — MONTH LEDGER\n"
-    + "—————————————————————————\n"
-    + "Room nights (14 beds avg 60% fill):  235 copper\n"
-    + "Meals served:                         84 copper\n"
-    + "Kitchen staff (part-time):           -45 copper\n"
-    + "Supplies (food, candles, linen):    -112 copper\n"
-    + "Repairs (ongoing):                   -" + (24 - (S_story.brynThirdStepFixed ? 4 : 0)) + " copper\n"
-    + "—————————————————————————\n"
-    + "BALANCE: <span style=\"color:" + (bal < 0 ? '#c04' : '#4a8') + ";font-weight:700\">" + balStr + "</span></pre>";
-  overlay.style.display = 'flex';
-  document.getElementById('brynn-ledger-close').onclick = () => {
-    overlay.style.display = 'none';
-    if ((S_story.brynLedgerBalance ?? -8) >= 0 && !S_story._brynLedgerZeroShown) {
-      S_story._brynLedgerZeroShown = true;
-      storyMsg("Brynn: \"Oh. That's the first time in three years.\" Beat. \"Thank you.\"");
-    }
-  };
-}
 
 /* ── Layer 45: Web of Connections Consts ── */
 const FROBERGER_TRACES = { // → doc: world.md §Froberger Traces (6 one-time NPC memories; fav >= 2 + visit-count gated)
@@ -14042,140 +13979,111 @@ const WM_ARCHIVE_DOCS = [ // → doc: world.md §Weimar Scholar Gate (Layer 51 �
       + '— [Dates in this file precede the Scholar Kings\' official founding by a generation]' },
 ];
 
-function _storyWmArchiveModal() {
-  const existingEl = document.getElementById('wm-archive-overlay');
-  if (existingEl) { existingEl.remove(); return; }
-  const overlay = document.createElement('div');
-  overlay.id = 'wm-archive-overlay';
-  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:1100;display:flex;align-items:center;justify-content:center;padding:16px;';
-  const panel = document.createElement('div');
-  panel.style.cssText = 'background:#120a04;border:1px solid #5c3311;border-radius:6px;max-width:500px;width:100%;max-height:80vh;overflow-y:auto;padding:16px;';
-  let html = '<div style="color:#f0c070;font-weight:700;font-size:14px;margin-bottom:10px;">📚 Lower Archive — Scholar\'s Quarter</div>';
+function _storyWmArchiveModal(wrap) {
+  // wrap is the container div; if called with no arg, look it up
+  const _wrap = wrap || document.getElementById('wm-archive-wrap');
+  if (!_wrap) return;
+  const old = document.getElementById('wm-archive-sub');
+  if (old) old.remove();
+  const sub = document.createElement('div');
+  sub.id = 'wm-archive-sub';
+  sub.style.cssText = 'margin-top:6px;padding:12px 14px;background:#0c0804;border-left:3px solid #5c3311;border-radius:4px;display:flex;flex-direction:column;gap:8px;';
+  const hd = document.createElement('div');
+  hd.style.cssText = 'font-size:10px;font-weight:700;letter-spacing:1.5px;color:#a07030;text-transform:uppercase;margin-bottom:2px;';
+  hd.textContent = '📚 Lower Archive — Scholar\'s Quarter';
+  sub.appendChild(hd);
+  const _makeDoc = (borderColor, labelColor, label, bodyHtml, readBtn) => {
+    const card = document.createElement('div');
+    card.style.cssText = 'border:1px solid '+borderColor+';border-radius:4px;padding:10px;';
+    const lbl = document.createElement('div');
+    lbl.style.cssText = 'color:'+labelColor+';font-weight:700;font-size:11px;margin-bottom:6px;';
+    lbl.textContent = label;
+    card.appendChild(lbl);
+    if (bodyHtml) {
+      const body = document.createElement('div');
+      body.style.cssText = 'font-size:11px;color:#bba;white-space:pre-wrap;line-height:1.5;';
+      body.innerHTML = bodyHtml;
+      card.appendChild(body);
+    }
+    if (readBtn) card.appendChild(readBtn);
+    return card;
+  };
   WM_ARCHIVE_DOCS.forEach((doc, i) => {
     const read = !!(S_story[doc.key]);
-    html += '<div style="border:1px solid '+(read?'#3a6a3a':'#3a2010')+';border-radius:4px;padding:10px;margin-bottom:8px;">'
-      + '<div style="color:'+(read?'#90c890':'#f0c070')+';font-weight:700;font-size:12px;margin-bottom:6px;">'+(read?'✓ ':'')+'Document '+(i+1)+': '+doc.title+'</div>';
-    if (read || (i === 2 && S_story.wmDoc3Unredacted)) {
-      html += '<div style="font-size:11px;color:#bba;white-space:pre-wrap;line-height:1.5;">'
-        + (i === 2 && S_story.wmDoc3Unredacted && S_story.wmFirstResearcherKnown
+    const body = read || (i === 2 && S_story.wmDoc3Unredacted)
+      ? (i === 2 && S_story.wmDoc3Unredacted && S_story.wmFirstResearcherKnown
           ? doc.body.replace('[REDACTED]','Marta Eilene Vass').replace(/\[REDACTED\]/g,'Marta Eilene Vass — First Tier, Tier-1 Researcher')
           : doc.body)
-        + '</div>';
-    } else {
-      html += '<button class="inv-use-btn" data-dockey="'+doc.key+'" style="margin-top:4px;">'+(i===2 && S_story.wmDoc3Unredacted ? '🔓 Read (unredacted)' : '📄 Read')+'</button>';
+      : null;
+    let btn = null;
+    if (!body) {
+      btn = document.createElement('button');
+      btn.className = 'inv-use-btn';
+      btn.style.cssText = 'margin-top:4px;';
+      btn.textContent = (i === 2 && S_story.wmDoc3Unredacted) ? '🔓 Read (unredacted)' : '📄 Read';
+      btn.addEventListener('click', () => { S_story[doc.key] = true; storyAutoSave(); _storyWmArchiveModal(_wrap); });
     }
-    html += '</div>';
+    sub.appendChild(_makeDoc(read ? '#3a6a3a' : '#3a2010', read ? '#90c890' : '#f0c070',
+      (read ? '✓ ' : '') + 'Document ' + (i+1) + ': ' + doc.title, body, btn));
   });
-  // Layer 52: §XVII Constructor's Log — 4th document, unlocked when vaAllMarksFound
   if (S_story.vaAllMarksFound) {
     const _logRead = S_story.vaLogFound;
-    html += '<div style="border:1px solid '+(_logRead?'#3a6a3a':'#7a6040')+';border-radius:4px;padding:10px;margin-bottom:8px;">'
-      + '<div style="color:'+(_logRead?'#90c890':'#d4a050')+';font-weight:700;font-size:12px;margin-bottom:6px;">'+(_logRead?'✓ ':'🏛️ ')+'Document 4: The Constructor\'s Log (7 entries — her handwriting)</div>';
-    if (_logRead) {
-      html += '<div style="font-size:11px;color:#bba;white-space:pre-wrap;line-height:1.5;">'
-        + '1. "The Antecedent cannot be destroyed. It can be contained."\n'
-        + '2. "The containment structure requires a destabilization event to trigger the sealing mechanism. In plain terms: the cage must be opened before it can be closed."\n'
-        + '3. "I have calculated the destabilization event. It is survivable — if the person inside it knows it is coming."\n'
-        + '4. "The Scholar Kings do not know what I built. I told them it was a ward. They accepted that. I am not sure I was lying."\n'
-        + '5. "The stones are placed. The archive is sealed. The tunnel is closed. When it opens, the mechanism will know."\n'
-        + '6. "I am leaving my name off this record. If someone finds it, they will know why."\n'
-        + '7. "If someone is reading this, the sealing mechanism has activated. The cage is closed. Whatever you sealed inside it — that is what I built this for. I am sorry. I did not have a better answer."'
-        + '</div>';
-    } else {
-      html += '<button class="inv-use-btn" id="wm-archive-log-btn" style="margin-top:4px;">📜 Read</button>';
+    let logBtn = null;
+    if (!_logRead) {
+      logBtn = document.createElement('button');
+      logBtn.className = 'inv-use-btn';
+      logBtn.style.cssText = 'margin-top:4px;';
+      logBtn.textContent = '📜 Read';
+      logBtn.addEventListener('click', () => {
+        S_story.vaLogFound = true;
+        if (!S_story.inventory) S_story.inventory = [];
+        if (!S_story.inventory.find(i => i.name === "The Constructor's Log")) {
+          S_story.inventory.push({ name:"The Constructor's Log", icon:'📜', type:'readable', sell:0,
+            description:'Seven entries. Her handwriting. Entry 3 matches Froberger\'s margin note word for word.' });
+          S_story.inventory.push({ name:'Antecedent Seal', icon:'🏛️', type:'relic', sell:0,
+            description:'"Antecedent Containment Protocol. Seal 7. Activated."' });
+        }
+        if (!S_story.quests) S_story.quests = {};
+        if (!S_story.quests['quest_va_03']) S_story.quests['quest_va_03'] = 'active';
+        storyAutoSave();
+        _storyWmArchiveModal(_wrap);
+      });
     }
-    html += '</div>';
+    const logBody = _logRead ? '1. "The Antecedent cannot be destroyed. It can be contained."\n'
+      + '2. "The containment structure requires a destabilization event to trigger the sealing mechanism. In plain terms: the cage must be opened before it can be closed."\n'
+      + '3. "I have calculated the destabilization event. It is survivable — if the person inside it knows it is coming."\n'
+      + '4. "The Scholar Kings do not know what I built. I told them it was a ward. They accepted that. I am not sure I was lying."\n'
+      + '5. "The stones are placed. The archive is sealed. The tunnel is closed. When it opens, the mechanism will know."\n'
+      + '6. "I am leaving my name off this record. If someone finds it, they will know why."\n'
+      + '7. "If someone is reading this, the sealing mechanism has activated. The cage is closed. Whatever you sealed inside it — that is what I built this for. I am sorry. I did not have a better answer."'
+      : null;
+    sub.appendChild(_makeDoc(_logRead ? '#3a6a3a' : '#7a6040', _logRead ? '#90c890' : '#d4a050',
+      (_logRead ? '✓ ' : '🏛️ ') + 'Document 4: The Constructor\'s Log (7 entries — her handwriting)', logBody, logBtn));
   }
-  // §L: Y. Gurt file — appears when player carries the Field Survey
   const _hasGurtSurvey = (S_story.inventory || []).some(i => i.name === 'Y. Gurt Field Survey');
   if (_hasGurtSurvey) {
     const _gurtRead = S_story.wmGurtFileRead;
-    html += '<div style="border:1px solid '+(_gurtRead?'#3a6a3a':'#5a4030')+';border-radius:4px;padding:10px;margin-bottom:8px;">'
-      + '<div style="color:'+(_gurtRead?'#90c890':'#c0a080')+';font-weight:700;font-size:12px;margin-bottom:6px;">'+(_gurtRead?'✓ ':'📋 ')+'Document — Y. Gurt: Field Absence (Ongoing)</div>';
-    if (_gurtRead) {
-      html += '<div style="font-size:11px;color:#bba;white-space:pre-wrap;line-height:1.5;">'
-        + 'Y. GURT — FIELD NATURALIST, FIRST CIRCLE\nPersonnel File — Scholar Kings Archive\n\n'
-        + 'Assignment: Yugurt Lake, freshwater taxonomy survey\nSurvey date: Pre-Codex Year 3\nSurvey status: Submitted (Survey #47-L, filed)\n\n'
-        + 'Correspondence record:\n  — Follow-up #1, 2nd Moon Year 4: No response\n  — Follow-up #2, 4th Moon Year 4: No response\n  — Follow-up #3, 1st Moon Year 5: No response\n\n'
-        + 'Current status: Field absence (ongoing)\nClassification: Active/Incomplete\n\n'
-        + 'Note: Field surveys from Y. Gurt continue to arrive sporadically via river courier — undated, unsigned, no return address. Contents: weather observations, species population counts, water temperature gradients by depth.\n\nWe continue to file them.\n\n'
-        + '[In different ink:]\n"He is still there. I checked the lake last year. He is still there and the lake is fine. — I.V."'
-        + '</div>';
-    } else {
-      html += '<button class="inv-use-btn" id="wm-archive-gurt-btn" style="margin-top:4px;">📋 Read</button>';
+    let gurtBtn = null;
+    if (!_gurtRead) {
+      gurtBtn = document.createElement('button');
+      gurtBtn.className = 'inv-use-btn';
+      gurtBtn.style.cssText = 'margin-top:4px;';
+      gurtBtn.textContent = '📋 Read';
+      gurtBtn.addEventListener('click', () => { S_story.wmGurtFileRead = true; storyAutoSave(); _storyWmArchiveModal(_wrap); });
     }
-    html += '</div>';
+    const gurtBody = _gurtRead ? 'Y. GURT — FIELD NATURALIST, FIRST CIRCLE\nPersonnel File — Scholar Kings Archive\n\n'
+      + 'Assignment: Yugurt Lake, freshwater taxonomy survey\nSurvey date: Pre-Codex Year 3\nSurvey status: Submitted (Survey #47-L, filed)\n\n'
+      + 'Correspondence record:\n  — Follow-up #1, 2nd Moon Year 4: No response\n  — Follow-up #2, 4th Moon Year 4: No response\n  — Follow-up #3, 1st Moon Year 5: No response\n\n'
+      + 'Current status: Field absence (ongoing)\nClassification: Active/Incomplete\n\n'
+      + 'Note: Field surveys from Y. Gurt continue to arrive sporadically via river courier — undated, unsigned, no return address. Contents: weather observations, species population counts, water temperature gradients by depth.\n\nWe continue to file them.\n\n'
+      + '[In different ink:]\n"He is still there. I checked the lake last year. He is still there and the lake is fine. — I.V."'
+      : null;
+    sub.appendChild(_makeDoc(_gurtRead ? '#3a6a3a' : '#5a4030', _gurtRead ? '#90c890' : '#c0a080',
+      (_gurtRead ? '✓ ' : '📋 ') + 'Document — Y. Gurt: Field Absence (Ongoing)', gurtBody, gurtBtn));
   }
-  html += '<button class="inv-use-btn" id="wm-archive-close" style="margin-top:6px;width:100%;">✗ Close archive</button>';
-  panel.innerHTML = html;
-  overlay.appendChild(panel);
-  document.body.appendChild(overlay);
-  panel.querySelectorAll('[data-dockey]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const key = btn.dataset.dockey;
-      S_story[key] = true;
-      storyAutoSave();
-      _storyWmArchiveModal();
-    });
-  });
-  const _logBtn = panel.querySelector('#wm-archive-log-btn');
-  if (_logBtn) {
-    _logBtn.addEventListener('click', () => {
-      S_story.vaLogFound = true;
-      if (!S_story.inventory) S_story.inventory = [];
-      if (!S_story.inventory.find(i => i.name === "The Constructor's Log")) {
-        S_story.inventory.push({ name:"The Constructor's Log", icon:'📜', type:'readable', sell:0,
-          description:'Seven entries. Her handwriting. Entry 3 matches Froberger\'s margin note word for word.' });
-        S_story.inventory.push({ name:'Antecedent Seal', icon:'🏛️', type:'relic', sell:0,
-          description:'"Antecedent Containment Protocol. Seal 7. Activated."' });
-      }
-      if (!S_story.quests) S_story.quests = {};
-      if (!S_story.quests['quest_va_03']) S_story.quests['quest_va_03'] = 'active';
-      storyAutoSave();
-      _storyWmArchiveModal();
-    });
-  }
-  const _gurtBtn = panel.querySelector('#wm-archive-gurt-btn'); // §L
-  if (_gurtBtn) {
-    _gurtBtn.addEventListener('click', () => {
-      S_story.wmGurtFileRead = true;
-      storyAutoSave();
-      _storyWmArchiveModal();
-    });
-  }
-  document.getElementById('wm-archive-close').addEventListener('click', () => overlay.remove());
+  _wrap.appendChild(sub);
 }
 
-function _showPitChampionOffer() {
-  S_story.pitChampionOffered = true;
-  const existingEl = document.getElementById('pit-champ-offer-overlay');
-  if (existingEl) { existingEl.remove(); }
-  const overlay = document.createElement('div');
-  overlay.id = 'pit-champ-offer-overlay';
-  overlay.style.cssText = 'position:fixed;inset:0;z-index:460;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;padding:20px;';
-  const panel = document.createElement('div');
-  panel.style.cssText = 'background:#f0e8d0;color:#2a1a06;border:1px solid #a0803a;border-radius:6px;padding:28px 32px;max-width:420px;width:100%;font-family:Georgia,"Times New Roman",serif;box-shadow:0 8px 40px rgba(0,0,0,0.5);display:flex;flex-direction:column;gap:14px;';
-  const title = document.createElement('div');
-  title.style.cssText = 'font-size:11px;font-weight:700;letter-spacing:2px;color:#3A2A08;text-transform:uppercase;border-bottom:1px solid #c8a870;padding-bottom:8px;';
-  title.textContent = '🏆 Weckmann — The Pit Championship';
-  const body = document.createElement('p');
-  body.style.cssText = 'font-size:13px;line-height:1.7;white-space:pre-wrap;';
-  body.textContent = 'Weckmann is cleaning the forge when you arrive. He sets the brush down.\n\n"Five. You know what five means?"\n\nHe doesn\'t wait for an answer.\n\n"It means I\'ve been holding back a name. Ogundimu. The Iron Standard — that\'s what they called her, before the dispute. She doesn\'t fight for rankings anymore. She fights because she wants to know if she\'s still herself."\n\nHe picks the brush back up.\n\n"I told her about you. She said yes. That means something — she says no to most people."';
-  const btns = document.createElement('div');
-  btns.style.cssText = 'display:flex;gap:8px;';
-  const acceptBtn = document.createElement('button');
-  acceptBtn.style.cssText = 'flex:1;padding:9px;font-size:13px;background:#c08030;color:#fff;border:none;border-radius:4px;cursor:pointer;font-family:inherit;';
-  acceptBtn.textContent = 'Accept the match';
-  acceptBtn.addEventListener('click', () => { overlay.remove(); _startPitChampionBattle(); });
-  const laterBtn = document.createElement('button');
-  laterBtn.style.cssText = 'flex:1;padding:9px;font-size:13px;background:#e0d0a0;border:1px solid #907020;color:#3a2010;border-radius:4px;cursor:pointer;font-family:inherit;';
-  laterBtn.textContent = 'Not yet';
-  laterBtn.addEventListener('click', () => overlay.remove());
-  btns.appendChild(acceptBtn); btns.appendChild(laterBtn);
-  panel.appendChild(title); panel.appendChild(body); panel.appendChild(btns);
-  overlay.appendChild(panel);
-  document.body.appendChild(overlay);
-}
 function _startPitChampionBattle() {
   storyMsg(PIT_CHAMPION_OGUNDIMU.flavorPre);
   S_story.pendingBattle = { nodeCode: 'CY', name: PIT_CHAMPION_OGUNDIMU.name, label: 'Neon Undercity', champion: true };
@@ -14443,15 +14351,6 @@ function _applyPitPerks(combatState) {
   if (perks.includes('crovsLesson')) combatState.crovsLesson = true;
 }
 
-function storyShowFrobergerNote() {
-  const overlay = document.getElementById('froberger-note-overlay');
-  if (!overlay) return;
-  overlay.style.display = 'flex';
-  document.getElementById('froberger-note-close').onclick = () => {
-    overlay.style.display = 'none';
-    S_story.froberger_last_note_read = true;
-  };
-}
 
 function _curseScore() {
   let startedNotReturned = 0, neverStarted = 0, returnsComplete = 0;
@@ -14614,12 +14513,7 @@ function storyMove(dir) {
   }
   const next = NODE_MAP[dest];
   if (!next) { storyMsg('Unknown destination.'); return; }
-  // Gate locks
-  for (const gate of GATE_LOCKS) {
-    if (gate.from === S_story.currentCode && gate.to === dest) {
-      if (!_hasItem(gate.item)) { storyMsg(gate.msg); return; }
-    }
-  }
+
   if (dest === 'CO' && S_story.shards < 7) {
     const _urgency = (S_story.voidPressure || 0) >= 9 ? '\n\n⚠️ The Void is one day away.' : '';
     storyMsg('🔮 The Convergence is sealed. You need all 7 Codex Shards. You have ' + S_story.shards + '/7.' + _urgency);
@@ -14671,8 +14565,8 @@ function storyMove(dir) {
   // ── L9-G: Corridor travel for non-adjacent moves ──
   const fromCoord = NODE_COORDS[S_story.currentCode];
   const toCoord   = NODE_COORDS[dest];
-  if (fromCoord && toCoord &&
-      Math.abs(fromCoord.r - toCoord.r) + Math.abs(fromCoord.c - toCoord.c) >= 3) {
+  const manhattan = fromCoord && toCoord ? Math.abs(fromCoord.r - toCoord.r) + Math.abs(fromCoord.c - toCoord.c) : 0;
+  if (fromCoord && toCoord && manhattan >= 3) {
     _showCorridorPrompt(S_story.currentCode, dest, dir);
     return;
   }
@@ -14699,6 +14593,28 @@ function storyPortal() {
 
 function storyMsg(txt) {
   document.getElementById('story-move-msg').textContent = txt;
+}
+
+function _rollKeyEvent(id) {
+  const evt = KEY_EVENTS.find(e => e.id === id);
+  if (!evt || S_story[evt.flag]) return;
+  const abilityVal = ((S_story.abilityScores || {})[evt.ability] || 10);
+  const mod  = Math.floor((abilityVal - 10) / 2);
+  const prof = 2 + Math.floor(((S_story.level || 1) - 1) / 4);
+  const d20  = Math.ceil(Math.random() * 20);
+  const total = d20 + mod + prof;
+  const passed = total >= evt.dc;
+  const modStr = (mod >= 0 ? '+' : '') + mod;
+  _appendStoryHcard({
+    round: 'Day ' + (S_story.day || 1),
+    actor: evt.abilityLabel.toUpperCase(),
+    formula: 'd20(' + d20 + ') + ' + evt.abilityLabel + '(' + modStr + ') + Prof(+' + prof + ')',
+    outcome: total + ' vs DC ' + evt.dc + ' — ' + (passed ? 'PASS ✓' : 'FAIL ✗'),
+    dmg: passed ? evt.successText : evt.failText,
+  });
+  S_story[evt.flag] = true;
+  storyAutoSave();
+  storyRender(NODE_MAP[S_story.currentCode]);
 }
 
 /* ── Layer 2: Inventory ── */
@@ -15194,7 +15110,8 @@ function storyFishing() {
   const abandonBtn = document.getElementById('btn-fishing-abandon');
   const lakeText   = document.getElementById('fishing-lake-text');
 
-  const hasRod   = (S_story.inventory||[]).some(i => (i.name||'').toLowerCase().includes('fishing rod'));
+  const _rodItem  = (S_story.inventory||[]).find(i => FISHING_RODS.some(r => r.name === i.name) || (i.name||'').toLowerCase().includes('fishing rod'));
+  const hasRod    = !!_rodItem;
   const hasGuide = (S_story.inventory||[]).some(i => i.name === 'Fishing Guide');
   const isNight  = (S_story.hour || 12) >= 20 || (S_story.hour || 12) <= 5; // §XLVIII
   const hdEl = document.getElementById('fishing-card-hd');
@@ -15328,10 +15245,11 @@ function storyFishing() {
 
     // Phase 3: Catch Roll
     const favBonus  = S_story.fishingYugurtFavour ? 1 : 0;
+    const rodBonus  = Math.max(0, ...(S_story.inventory||[]).filter(i => i.rodBonus !== undefined).map(i => i.rodBonus));
     const cDie1 = Math.ceil(Math.random() * 20);
     const cDie2 = bait.advantage ? Math.ceil(Math.random() * 20) : null;
     const cResult = cDie2 !== null ? Math.max(cDie1, cDie2) : cDie1;
-    const catchTotal = cResult + bait.catch + castMod + favBonus;
+    const catchTotal = cResult + bait.catch + castMod + favBonus + rodBonus;
 
     const sizeOrder = ['small','medium','large','very_large','legendary'];
     let sizeKey = catchTotal <= 5 ? null : catchTotal <= 10 ? 'small' : catchTotal <= 16 ? 'medium' : catchTotal <= 19 ? 'large' : catchTotal === 20 ? 'very_large' : 'legendary';
@@ -15356,7 +15274,7 @@ function storyFishing() {
 
     let rollHtml = '<strong>DEX:</strong> d20(' + dexDie + ')+' + Math.floor(dexMod) + '=' + dexTot + ' — ' + castDesc;
     rollHtml += '<br><strong>Catch:</strong> d20(' + cDie1 + (cDie2 !== null ? '/' + cDie2 : '') + ')';
-    rollHtml += (bait.catch >= 0 ? '+' : '') + bait.catch + (castMod !== 0 ? (castMod > 0 ? '+' : '') + castMod : '') + (favBonus ? '+1' : '');
+    rollHtml += (bait.catch >= 0 ? '+' : '') + bait.catch + (castMod !== 0 ? (castMod > 0 ? '+' : '') + castMod : '') + (favBonus ? '+1' : '') + (rodBonus > 0 ? '+' + rodBonus + '🎣' : '');
     rollHtml += ' = ' + catchTotal + (isBare ? ' (Bare Hook)' : ' — ' + bait.icon + ' ' + bait.name);
     rollEl.innerHTML = rollHtml; rollEl.style.display = '';
 
@@ -15402,7 +15320,7 @@ function storyFishing() {
       if (!S_story.fishingCatchLog) S_story.fishingCatchLog = [];
       S_story.fishingCatchLog.unshift({ size:sizeKey, rarity, fish_key:fish.key, gold:goldValue });
       if (S_story.fishingCatchLog.length > 10) S_story.fishingCatchLog.length = 10;
-      _startFishBattle(fish, hasRod);
+      _startFishBattle(fish, hasRod, _rodItem ? _rodItem.name : 'Fishing Rod');
     };
     _renderBait();
   };
@@ -15413,7 +15331,7 @@ function storyFishing() {
   modal.classList.add('visible');
 }
 
-function _startFishBattle(fish, hasRod) {
+function _startFishBattle(fish, hasRod, rodName) {
   const node = NODE_MAP[S_story.currentCode] || NODE_MAP['YL'];
   _preBattNode = {
     ...node,
@@ -15424,10 +15342,11 @@ function _startFishBattle(fish, hasRod) {
   _selectedConds = new Set();
   _availableConds = CONDITION_ITEMS.map(ci => ({ ...ci, invName: ci.match }));
   if (hasRod) {
+    const _rn = rodName || 'Fishing Rod';
     _availableConds.unshift({
-      match:'Fishing Rod', condition:'Hooked',
+      match:_rn, condition:'Hooked',
       effect:'ADV on all attacks — fish is on your line',
-      icon:'🎣', invName:'Fishing Rod'
+      icon:'🎣', invName:_rn
     });
   }
   _preBattTab = 'plain';
@@ -15960,11 +15879,39 @@ function storyRenderInventory() {
     keyItems.forEach(item => {
       makeItemRow(item, (div, it) => {
         if (it.name === "Froberger's Last Note") {
+          const _fnWrap = document.createElement('div');
+          _fnWrap.style.cssText = 'display:flex;flex-direction:column;gap:0;';
           const readBtn = document.createElement('button');
           readBtn.className = 'inv-use-btn';
           readBtn.textContent = S_story.froberger_last_note_read ? '📜 Re-read' : '📜 Read';
-          readBtn.addEventListener('click', storyShowFrobergerNote);
-          div.appendChild(readBtn);
+          readBtn.addEventListener('click', () => {
+            const existing = document.getElementById('froberger-note-sub');
+            if (existing) { existing.remove(); readBtn.disabled = false; readBtn.style.opacity = ''; return; }
+            readBtn.disabled = true; readBtn.style.opacity = '0.5';
+            S_story.froberger_last_note_read = true;
+            const sub = document.createElement('div');
+            sub.id = 'froberger-note-sub';
+            sub.style.cssText = 'margin-top:6px;padding:12px 14px;background:#0c0a06;border-left:3px solid #7a5a1a;border-radius:4px;display:flex;flex-direction:column;gap:10px;';
+            const hd = document.createElement('div');
+            hd.style.cssText = 'font-size:10px;font-weight:700;letter-spacing:1.5px;color:#907030;text-transform:uppercase;';
+            hd.textContent = "📜 Froberger's Last Note";
+            const body = document.createElement('div');
+            body.style.cssText = 'font-size:12px;line-height:1.9;color:#c8b080;font-style:italic;font-family:Georgia,serif;display:flex;flex-direction:column;gap:8px;';
+            [
+              'If you find this — you\'re somewhere difficult.',
+              'The person you\'re becoming is visible from outside. People can see the shape of it before you can.',
+              'Check in with someone who knew you before you got good at this. Ask them what\'s different.',
+              'They\'ll tell you something true. It might not be comfortable. That\'s how you know it\'s true.',
+              'Whatever they say — stay long enough to hear the second sentence.',
+            ].forEach(t => { const p = document.createElement('p'); p.style.margin = '0'; p.textContent = t; body.appendChild(p); });
+            const sig = document.createElement('div');
+            sig.style.cssText = 'text-align:right;font-style:italic;color:#9a7840;font-size:13px;';
+            sig.textContent = '— F';
+            sub.appendChild(hd); sub.appendChild(body); sub.appendChild(sig);
+            _fnWrap.appendChild(sub);
+          });
+          _fnWrap.appendChild(readBtn);
+          div.appendChild(_fnWrap);
         }
         if (it.name === "Raison's Tools") {
           const useBtn = document.createElement('button');
@@ -16058,6 +16005,44 @@ function storyInventoryToggle() {
     storyRenderInventory();
     switchSheet('sheet-inventory');
   }
+}
+
+function _openBlueShuttersContent(wrap) {
+  S_story.archiveVisited = true;
+  if (!(S_story.journalEntriesRead || []).includes(33)) {
+    if (!S_story.journalEntriesRead) S_story.journalEntriesRead = [];
+    S_story.journalEntriesRead.push(33);
+    storyUpdateJournalCount();
+  }
+  const old = document.getElementById('bs-archive-sub');
+  if (old) old.remove();
+  const sub = document.createElement('div');
+  sub.id = 'bs-archive-sub';
+  sub.style.cssText = 'margin-top:6px;padding:12px 14px;background:#08090e;border-left:3px solid #304060;border-radius:4px;display:flex;flex-direction:column;gap:10px;';
+  const hd = document.createElement('div');
+  hd.style.cssText = 'font-size:10px;font-weight:700;letter-spacing:1.5px;color:#405870;text-transform:uppercase;';
+  hd.textContent = '🔵 Blue Shutters Archive — Reading Room B';
+  const body = document.createElement('pre');
+  body.style.cssText = 'font-size:11px;line-height:1.7;white-space:pre-wrap;color:#8898b8;margin:0;font-family:inherit;';
+  body.textContent = BLUE_SHUTTERS_ARCHIVE_TEXT;
+  const entry33 = document.createElement('div');
+  entry33.style.cssText = 'font-size:11px;color:#506878;font-style:italic;border-top:1px solid #1e2a3a;padding-top:8px;';
+  entry33.textContent = '📖 Froberger\'s Journal — Entry 33 found in the archive deposit.';
+  sub.appendChild(hd); sub.appendChild(body); sub.appendChild(entry33);
+  if (!S_story.archiveUndercitySurveyTaken) {
+    const surveyBtn = document.createElement('button');
+    surveyBtn.className = 'inv-use-btn';
+    surveyBtn.textContent = '🗺 Take the undercity survey notation.';
+    surveyBtn.addEventListener('click', () => {
+      S_story.archiveUndercitySurveyTaken = true;
+      S_story.inventory.push({name:'Undercity Survey (Partial)',icon:'🗺',type:'key_item',sell:0,
+        desc:"Froberger's depth notation, deposited at the Blue Shutters Archive. Describes stress points in the CY district substructure. The margin says: 'This would take three people and a reason.'"});
+      storyMsg("You take the notation. You're not supposed to. The catalogue entry lists it as a water assessment, which you now know it isn't.");
+      surveyBtn.remove();
+    });
+    sub.appendChild(surveyBtn);
+  }
+  wrap.appendChild(sub);
 }
 
 function storyRender(node, prefix) {
@@ -16196,6 +16181,19 @@ function storyRender(node, prefix) {
       document.getElementById('story-text-box').insertAdjacentElement('afterend', _stDiv);
     }
   }
+  // ── §ML: Malta shore — snake; no roll, no explanation, crowd changes their mind ──
+  { const _mlOld = document.getElementById('story-ml-snake');
+    if (_mlOld) _mlOld.remove();
+    if (node.code === 'ML' && !S_story.maltaSnakeEvent) {
+      S_story.maltaSnakeEvent = true;
+      const _mlDiv = document.createElement('div');
+      _mlDiv.id = 'story-ml-snake';
+      _mlDiv.className = 'sweelinck-variant';
+      _mlDiv.style.cssText = 'margin-top:10px;border-left-color:#4a4a2a;font-style:italic;color:#c8c890;font-size:12px;';
+      _mlDiv.textContent = 'The fire is built on the shore. Two hundred and seventy-six people, cold and wet and alive on the beach before dawn.\n\nA viper comes out of the brush when the wood is gathered — the heat, the disturbance. It fastens to his hand. The islanders see this. They reach a conclusion: he is a murderer; he survived the sea but judgment found him at the fire.\n\nHe shakes it into the fire.\n\nThey wait for his hand to swell. His hand does not swell. They wait for him to fall. He does not fall. He goes back to building the fire.\n\nThe islanders change their minds. They say: he is a god.\n\nHe does not correct them. He has been counting people all night. The count is correct. He builds the fire.';
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _mlDiv);
+    }
+  }
   // ── Layer 50: §XV NG+ quest activation at CI ──
   if (node.code === 'CI' && (S_story.ngPlusRun || 0) >= 1) {
     const _ngqs = S_story.quests || {};
@@ -16301,12 +16299,20 @@ function storyRender(node, prefix) {
     }
     // Lower archive button
     if (S_story.wmLowerArchiveUnlocked) {
+      const _archWrap = document.createElement('div');
+      _archWrap.id = 'wm-archive-wrap';
+      _archWrap.style.cssText = 'display:flex;flex-direction:column;gap:0;margin-top:6px;';
       const archBtn = document.createElement('button');
       archBtn.className = 'inv-use-btn';
       archBtn.textContent = '📚 Lower Archive';
-      archBtn.style.cssText = 'margin-top:6px;';
-      archBtn.addEventListener('click', () => _storyWmArchiveModal());
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', archBtn);
+      archBtn.addEventListener('click', () => {
+        const existing = document.getElementById('wm-archive-sub');
+        if (existing) { existing.remove(); archBtn.style.opacity = ''; archBtn.disabled = false; return; }
+        archBtn.disabled = true; archBtn.style.opacity = '0.5';
+        _storyWmArchiveModal(_archWrap);
+      });
+      _archWrap.appendChild(archBtn);
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _archWrap);
     }
     // Benedikt reading circle button
     if (S_story.wmArchiveComplete && !S_story.wmBenediktCircleComplete) {
@@ -17377,32 +17383,32 @@ function storyRender(node, prefix) {
       }
       // ── Layer 68b: Pachelbel Ledger at BA (Dear Friend) ──
       if (node.code === 'BA' && _npcFavor('pachelbel') >= 2) {
+        const _plWrap = document.createElement('div');
+        _plWrap.style.cssText = 'display:flex;flex-direction:column;gap:0;';
         const ledgerBtn = document.createElement('button');
         ledgerBtn.className = 'inv-use-btn';
         ledgerBtn.textContent = '📒 Read the ledger.';
         ledgerBtn.style.cssText = 'margin-top:4px;';
         ledgerBtn.addEventListener('click', () => {
-          const overlay = document.createElement('div');
-          overlay.style.cssText = 'position:fixed;inset:0;z-index:460;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;padding:20px;';
-          const panel = document.createElement('div');
-          panel.style.cssText = 'background:#f0e8d0;color:#2a1a06;border:1px solid #a0803a;border-radius:6px;padding:28px 32px;max-width:440px;width:100%;font-family:"Courier New",monospace;box-shadow:0 8px 40px rgba(0,0,0,0.5);display:flex;flex-direction:column;gap:14px;max-height:80vh;overflow-y:auto;';
-          panel.innerHTML = '<div style="font-size:11px;font-weight:700;letter-spacing:2px;color:#3A2A08;text-transform:uppercase;border-bottom:1px solid #c8a870;padding-bottom:8px;">📒 Pachelbel\'s Ledger</div>';
+          if (document.getElementById('pachelbel-ledger-sub')) return;
+          ledgerBtn.disabled = true; ledgerBtn.style.opacity = '0.5';
+          const sub = document.createElement('div');
+          sub.id = 'pachelbel-ledger-sub';
+          sub.style.cssText = 'margin-top:6px;padding:12px 14px;background:#08090c;border-left:3px solid #404870;border-radius:4px;display:flex;flex-direction:column;gap:10px;';
+          const hd = document.createElement('div');
+          hd.style.cssText = 'font-size:10px;font-weight:700;letter-spacing:1.5px;color:#6070a0;text-transform:uppercase;';
+          hd.textContent = "📒 Pachelbel's Ledger";
+          sub.appendChild(hd);
           [2,3].forEach(n => {
             const entry = document.createElement('pre');
-            entry.style.cssText = 'font-size:11px;line-height:1.7;white-space:pre-wrap;color:#2a1a06;border-top:1px solid #d0b870;padding-top:10px;';
+            entry.style.cssText = 'font-size:11px;line-height:1.7;white-space:pre-wrap;color:#8090b8;font-family:"Courier New",monospace;margin:0;border-top:1px solid #2a3050;padding-top:10px;';
             entry.textContent = 'Entry ' + n + '\n\n' + PACHELBEL_LEDGER[n];
-            panel.appendChild(entry);
+            sub.appendChild(entry);
           });
-          const closeBtn = document.createElement('button');
-          closeBtn.style.cssText = 'align-self:center;padding:7px 20px;font-size:12px;background:#e0d0a0;border:1px solid #907020;color:#3a2010;border-radius:4px;cursor:pointer;font-family:inherit;';
-          closeBtn.textContent = 'Close';
-          closeBtn.addEventListener('click', () => overlay.remove());
-          panel.appendChild(closeBtn);
-          overlay.appendChild(panel);
-          overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
-          document.body.appendChild(overlay);
+          _plWrap.appendChild(sub);
         });
-        npcRowDiv.appendChild(ledgerBtn);
+        _plWrap.appendChild(ledgerBtn);
+        npcRowDiv.appendChild(_plWrap);
       }
       // ── Layer 69 §XXXIV — Act VIII: Quill visits BA to close the Couperin estate ledger ──
       if (node.code === 'BA' && (S_story.actNumber || 1) === 8
@@ -17422,22 +17428,71 @@ function storyRender(node, prefix) {
       }
       // ── L44-Q: Deacon Code click target at BA ──
       if (node.code === 'BA') {
+        const _dcWrap = document.createElement('div');
+        _dcWrap.style.cssText = 'display:flex;flex-direction:column;gap:0;';
         const dcBtn = document.createElement('button');
         dcBtn.className = 'inv-use-btn';
         dcBtn.textContent = '📋 The code on the wall.';
         dcBtn.style.cssText = 'margin-top:4px;';
-        dcBtn.addEventListener('click', storyShowDeaconCode);
-        npcRowDiv.appendChild(dcBtn);
+        dcBtn.addEventListener('click', () => {
+          if (document.getElementById('deacon-code-sub')) return;
+          dcBtn.disabled = true; dcBtn.style.opacity = '0.5';
+          const sub = document.createElement('div');
+          sub.id = 'deacon-code-sub';
+          sub.style.cssText = 'margin-top:6px;padding:12px 14px;background:#0a0c0a;border-left:3px solid #506850;border-radius:4px;';
+          const hd = document.createElement('div');
+          hd.style.cssText = 'font-size:10px;font-weight:700;letter-spacing:1.5px;color:#608060;text-transform:uppercase;margin-bottom:8px;';
+          hd.textContent = '📋 Pachelbel\'s Code';
+          const body = document.createElement('pre');
+          body.style.cssText = 'font-size:12px;line-height:1.8;white-space:pre-wrap;color:#a0c0a0;margin:0;';
+          body.textContent = DEACON_CODE_TEXT;
+          sub.appendChild(hd); sub.appendChild(body);
+          _dcWrap.appendChild(sub);
+        });
+        _dcWrap.appendChild(dcBtn);
+        npcRowDiv.appendChild(_dcWrap);
       }
       // ── L44-L/N: Brynn maintenance + ledger at IN ──
       if (node.code === 'IN') {
         const bmDiv = document.createElement('div');
         bmDiv.style.cssText = 'margin-top:6px;display:flex;flex-direction:column;gap:4px;';
+        const _ledgerWrap = document.createElement('div');
+        _ledgerWrap.style.cssText = 'display:flex;flex-direction:column;gap:0;';
         const ledgerBtn = document.createElement('button');
         ledgerBtn.className = 'inv-use-btn';
         ledgerBtn.textContent = '📒 The ledger.';
-        ledgerBtn.addEventListener('click', storyShowBrynnLedger);
-        bmDiv.appendChild(ledgerBtn);
+        ledgerBtn.addEventListener('click', () => {
+          if (document.getElementById('brynn-ledger-sub')) return;
+          ledgerBtn.disabled = true; ledgerBtn.style.opacity = '0.5';
+          const bal = S_story.brynLedgerBalance ?? -8;
+          const balColor = bal < 0 ? '#c06060' : '#60a060';
+          const balStr = bal < 0 ? bal + ' copper' : bal === 0 ? '0 copper (balanced)' : '+' + bal + ' copper';
+          const sub = document.createElement('div');
+          sub.id = 'brynn-ledger-sub';
+          sub.style.cssText = 'margin-top:6px;padding:12px 14px;background:#08090c;border-left:3px solid #404870;border-radius:4px;';
+          const hd = document.createElement('div');
+          hd.style.cssText = 'font-size:10px;font-weight:700;letter-spacing:1.5px;color:#6070a0;text-transform:uppercase;margin-bottom:8px;';
+          hd.textContent = "📒 Brynn's Inn — Month Ledger";
+          const pre = document.createElement('pre');
+          pre.style.cssText = 'font-size:11px;line-height:1.7;white-space:pre;color:#8090b8;font-family:"Courier New",monospace;margin:0;';
+          pre.innerHTML = "BRYNN'S INN — MONTH LEDGER\n"
+            + "—————————————————————————\n"
+            + "Room nights (14 beds avg 60% fill):  235 copper\n"
+            + "Meals served:                         84 copper\n"
+            + "Kitchen staff (part-time):           -45 copper\n"
+            + "Supplies (food, candles, linen):    -112 copper\n"
+            + "Repairs (ongoing):                   -" + (24 - (S_story.brynThirdStepFixed ? 4 : 0)) + " copper\n"
+            + "—————————————————————————\n"
+            + 'BALANCE: <span style="color:' + balColor + ';font-weight:700">' + balStr + '</span>';
+          sub.appendChild(hd); sub.appendChild(pre);
+          _ledgerWrap.appendChild(sub);
+          if (bal >= 0 && !S_story._brynLedgerZeroShown) {
+            S_story._brynLedgerZeroShown = true;
+            setTimeout(() => storyMsg("Brynn: \"Oh. That's the first time in three years.\" Beat. \"Thank you.\""), 300);
+          }
+        });
+        _ledgerWrap.appendChild(ledgerBtn);
+        bmDiv.appendChild(_ledgerWrap);
         if (_npcFavor('brynn') >= 1) {
           const taskIdx = (S_story.gameDay || 0) % 3;
           const task = BRYNN_MAINTENANCE_TASKS[taskIdx];
@@ -17497,80 +17552,176 @@ function storyRender(node, prefix) {
       // ── S7: Blue Shutters Archive at CI ──
       if (node.code === 'CI') {
         const yealFav = _npcFavor('yael');
-        const archiveBtn = document.createElement('button');
-        archiveBtn.className = 'inv-use-btn';
-        archiveBtn.style.cssText = 'margin-top:6px;';
+        const _bsWrap = document.createElement('div');
+        _bsWrap.style.cssText = 'display:flex;flex-direction:column;gap:0;margin-top:6px;';
+
         if (!S_story.archiveLetterObtained && yealFav < 1) {
+          // State 1: rejected at the door
+          const archiveBtn = document.createElement('button');
+          archiveBtn.className = 'inv-use-btn';
           archiveBtn.textContent = '🔵 The blue-shuttered building on Scholar\'s Row.';
           archiveBtn.addEventListener('click', () => {
-            storyMsg("The archive staff tell you the reading list is full. They don't make eye contact. You get the impression it isn't about the reading list.");
+            if (document.getElementById('bs-archive-sub')) return;
+            archiveBtn.disabled = true; archiveBtn.style.opacity = '0.5';
+            const sub = document.createElement('div');
+            sub.id = 'bs-archive-sub';
+            sub.style.cssText = 'margin-top:6px;padding:12px 14px;background:#08090e;border-left:3px solid #304060;border-radius:4px;display:flex;flex-direction:column;gap:6px;';
+            const hd = document.createElement('div');
+            hd.style.cssText = 'font-size:10px;font-weight:700;letter-spacing:1.5px;color:#405870;text-transform:uppercase;';
+            hd.textContent = '🔵 Blue Shutters Archive — Scholar\'s Row';
+            const body = document.createElement('div');
+            body.style.cssText = 'font-size:12px;line-height:1.8;color:#8090a8;font-style:italic;';
+            body.textContent = 'The shutters are a particular shade of blue — institutional, deliberate. A Scholar Kings archive seal is set into the door frame. The reading list is full. The staff tell you this without looking up. You get the impression it isn\'t about the reading list.';
+            const note = document.createElement('div');
+            note.style.cssText = 'font-size:11px;color:#506080;';
+            note.textContent = 'Access requires a letter of introduction. Ask someone who has standing here.';
+            sub.appendChild(hd); sub.appendChild(body); sub.appendChild(note);
+            _bsWrap.appendChild(sub);
           });
+          _bsWrap.appendChild(archiveBtn);
+
         } else if (!S_story.archiveLetterObtained && yealFav >= 1) {
+          // State 2: Yael can provide a letter
+          const archiveBtn = document.createElement('button');
+          archiveBtn.className = 'inv-use-btn';
           archiveBtn.textContent = '🔵 Ask Yael about the blue-shuttered building.';
           archiveBtn.addEventListener('click', () => {
+            if (document.getElementById('bs-archive-sub')) return;
+            archiveBtn.disabled = true; archiveBtn.style.opacity = '0.5';
             S_story.archiveLetterObtained = true;
-            storyMsg("Yael: \"The Blue Shutters. Scholar King archive, restricted stack. I have a standing letter of introduction — patrol business. You can use it.\"\n\nShe writes your name in the margin. \"Don't take anything. Don't ask about the depth surveys. They'll know what you're looking for.\"\n\nShe hands you the letter.");
-            archiveBtn.textContent = '🔵 Enter the Blue Shutters Archive.';
+            const sub = document.createElement('div');
+            sub.id = 'bs-archive-sub';
+            sub.style.cssText = 'margin-top:6px;padding:12px 14px;background:#08090e;border-left:3px solid #304060;border-radius:4px;display:flex;flex-direction:column;gap:8px;';
+            const hd = document.createElement('div');
+            hd.style.cssText = 'font-size:10px;font-weight:700;letter-spacing:1.5px;color:#405870;text-transform:uppercase;';
+            hd.textContent = '🔵 Blue Shutters Archive — Yael';
+            const body = document.createElement('div');
+            body.style.cssText = 'font-size:12px;line-height:1.8;color:#a0b0c8;font-style:italic;';
+            body.textContent = '"The Blue Shutters. Scholar King archive, restricted stack. I have a standing letter of introduction — patrol business. You can use it."\n\nShe writes your name in the margin. "Don\'t take anything. Don\'t ask about the depth surveys. They\'ll know what you\'re looking for."\n\nShe hands you the letter.';
+            const enterBtn = document.createElement('button');
+            enterBtn.className = 'inv-use-btn';
+            enterBtn.textContent = '🔵 Enter the Blue Shutters Archive.';
+            enterBtn.addEventListener('click', () => {
+              enterBtn.disabled = true; enterBtn.style.opacity = '0.5';
+              _openBlueShuttersContent(_bsWrap);
+            });
+            sub.appendChild(hd); sub.appendChild(body); sub.appendChild(enterBtn);
+            _bsWrap.appendChild(sub);
           });
+          _bsWrap.appendChild(archiveBtn);
+
         } else {
+          // State 3: letter in hand, enter directly
+          const archiveBtn = document.createElement('button');
+          archiveBtn.className = 'inv-use-btn';
           archiveBtn.textContent = '🔵 Enter the Blue Shutters Archive.';
           archiveBtn.addEventListener('click', () => {
-            S_story.archiveVisited = true;
-            // Grant journal entry 33 if not yet read (normally found at JU)
-            if (!(S_story.journalEntriesRead || []).includes(33)) {
-              if (!S_story.journalEntriesRead) S_story.journalEntriesRead = [];
-              S_story.journalEntriesRead.push(33);
-              storyUpdateJournalCount();
-              setTimeout(() => storyMsg('📖 Froberger\'s Journal — Entry 33 found in the archive deposit.'), 800);
-            }
-            // Show archive text overlay
-            const ov = document.getElementById('story-npc-modal');
-            document.getElementById('npc-card-name').textContent = '🔵 Blue Shutters Archive — Reading Room B';
-            document.getElementById('npc-card-text').textContent = BLUE_SHUTTERS_ARCHIVE_TEXT;
-            ov.classList.add('visible');
+            if (document.getElementById('bs-archive-sub')) return;
+            archiveBtn.disabled = true; archiveBtn.style.opacity = '0.5';
+            _openBlueShuttersContent(_bsWrap);
           });
+          _bsWrap.appendChild(archiveBtn);
         }
-        if (S_story.archiveVisited && !S_story.archiveUndercitySurveyTaken) {
-          const surveyBtn = document.createElement('button');
-          surveyBtn.className = 'inv-use-btn';
-          surveyBtn.style.cssText = 'margin-top:4px;';
-          surveyBtn.textContent = '🗺 Take the undercity survey notation.';
-          surveyBtn.addEventListener('click', () => {
-            S_story.archiveUndercitySurveyTaken = true;
-            S_story.inventory.push({name:'Undercity Survey (Partial)',icon:'🗺',type:'key_item',sell:0,
-              desc:"Froberger's depth notation, deposited at the Blue Shutters Archive. Describes stress points in the CY district substructure. The margin says: 'This would take three people and a reason.'"});
-            storyMsg("You take the notation. You're not supposed to. The catalogue entry lists it as a water assessment, which you now know it isn't.");
-            surveyBtn.remove();
-            storyUpdateJournalCount();
-          });
-          npcRowDiv.appendChild(archiveBtn);
-          npcRowDiv.appendChild(surveyBtn);
-        } else {
-          npcRowDiv.appendChild(archiveBtn);
-        }
+
+        npcRowDiv.appendChild(_bsWrap);
       }
       // ── Layer 63: Froberger Memorial at CI ──
       if (node.code === 'CI') {
+        const _memWrap = document.createElement('div');
+        _memWrap.style.cssText = 'display:flex;flex-direction:column;gap:0;';
         const memBtn = document.createElement('button');
         memBtn.className = 'inv-use-btn';
         memBtn.textContent = '⛪ Examine the memorial.';
         memBtn.style.cssText = 'margin-top:4px;';
-        memBtn.addEventListener('click', storyShowFrobergerMemorial);
-        npcRowDiv.appendChild(memBtn);
+        memBtn.addEventListener('click', () => {
+          if (document.getElementById('memorial-subrow')) return;
+          memBtn.disabled = true; memBtn.style.opacity = '0.5';
+          S_story.frobergerMemorialVisited = true;
+          let plaque = FROBERGER_MEMORIAL_TEXT.base;
+          if (_npcFavor('yael') >= 1) plaque += FROBERGER_MEMORIAL_TEXT.yael_friendly;
+          if (['yael','brynn','quill','pachelbel','crov','auros'].some(k => _npcFavor(k) >= 2)) plaque += FROBERGER_MEMORIAL_TEXT.dear_friend;
+          if (S_story.corelliRevelationDelivered) plaque += FROBERGER_MEMORIAL_TEXT.post_cipher;
+          const sub = document.createElement('div');
+          sub.id = 'memorial-subrow';
+          sub.style.cssText = 'margin-top:6px;padding:12px 14px;background:#0c0a06;border-left:3px solid #7a5a1a;border-radius:4px;display:flex;flex-direction:column;gap:8px;';
+          const pq = document.createElement('pre');
+          pq.style.cssText = 'font-family:Georgia,serif;font-size:12px;color:#e8d4a0;white-space:pre-wrap;margin:0;line-height:1.7;';
+          pq.textContent = plaque;
+          sub.appendChild(pq);
+          const bookHd = document.createElement('div');
+          bookHd.style.cssText = 'font-size:10px;color:#666;border-top:1px solid #3a2a0a;padding-top:6px;letter-spacing:1px;';
+          bookHd.textContent = '— Memorial Book —';
+          sub.appendChild(bookHd);
+          FROBERGER_MEMORIAL_BOOK.forEach(e => {
+            const el = document.createElement('div');
+            el.style.cssText = 'font-size:11px;color:#a08060;font-style:italic;';
+            el.textContent = '"' + e.text + '"' + (e.attr ? '  — ' + e.attr : '');
+            sub.appendChild(el);
+          });
+          if (S_story.frobergerMemorialBookSigned && S_story._memorialPlayerEntry) {
+            const pe = document.createElement('div');
+            pe.style.cssText = 'font-size:11px;color:#b09070;font-style:italic;';
+            pe.textContent = '"' + S_story._memorialPlayerEntry + '"  — (your hand)';
+            sub.appendChild(pe);
+          }
+          const btnRow = document.createElement('div');
+          btnRow.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid #3a2a0a;padding-top:8px;';
+          if (!S_story.frobergerMemorialFlowers) {
+            const flBtn = document.createElement('button');
+            flBtn.className = 'inv-use-btn';
+            flBtn.textContent = '🌸 Leave Flowers (10gp)';
+            flBtn.addEventListener('click', () => {
+              if ((S_story.gold || 0) < 10) { storyMsg('🌸 Not enough gold (10gp required).'); return; }
+              S_story.gold -= 10; S_story.frobergerMemorialFlowers = true;
+              storyUpdateStatus();
+              const isNg = (S_story.ngPlusRun || 0) > 0;
+              storyMsg(isNg ? '🌸 You leave flowers again. You wonder if anyone will wonder who keeps doing this.' : '🌸 You leave a small bunch of flowers at the stone. They look right there.');
+              flBtn.remove();
+            });
+            btnRow.appendChild(flBtn);
+          }
+          if (!S_story.frobergerMemorialBookSigned) {
+            const choices = (S_story.ngPlusRun || 0) > 0 ? MEMORIAL_PLAYER_CHOICES_NG : MEMORIAL_PLAYER_CHOICES;
+            choices.forEach(txt => {
+              const cb = document.createElement('button');
+              cb.className = 'inv-use-btn';
+              cb.textContent = '✍️ "' + txt + '"';
+              cb.addEventListener('click', () => {
+                S_story.frobergerMemorialBookSigned = true;
+                S_story._memorialPlayerEntry = txt;
+                storyMsg('✍️ You write: "' + txt + '"');
+                const pe = document.createElement('div');
+                pe.style.cssText = 'font-size:11px;color:#b09070;font-style:italic;';
+                pe.textContent = '"' + txt + '"  — (your hand)';
+                sub.insertBefore(pe, btnRow);
+                btnRow.querySelectorAll('button').forEach(b => { if (b.textContent.startsWith('✍️')) b.remove(); });
+              });
+              btnRow.appendChild(cb);
+            });
+          }
+          sub.appendChild(btnRow);
+          _memWrap.appendChild(sub);
+        });
+        _memWrap.appendChild(memBtn);
+        npcRowDiv.appendChild(_memWrap);
       }
       // ── No Fishing Sign at CI ──
       if (node.code === 'CI') {
         if (!S_story.noFishingSignRead) {
+          const _fishWrap = document.createElement('div');
+          _fishWrap.style.cssText = 'display:flex;flex-direction:column;gap:0;margin-top:4px;';
           const signBtn = document.createElement('button');
           signBtn.className = 'inv-use-btn';
-          signBtn.style.cssText = 'margin-top:4px;';
           signBtn.textContent = '🚫 A hand-lettered sign on the lamppost: NO FISHING.';
           let _tabReady = false;
           signBtn.addEventListener('click', () => {
             if (!_tabReady) {
               _tabReady = true;
               signBtn.textContent = '↩ Pull the tab.';
-              storyMsg('The notice is bolted at chest height. Block letters, official ink: "NO FISHING IN THE CITY LIMITS. By Order of the Watch."\n\nBelow the ordinance, in smaller hand: "...unless you know what you\'re doing. Tear here."\n\nA perforated tab hangs from the bottom edge. It reads: FISHING AT YUGURT LAKE · FREE ROD FOR NEW ANGLERS · BRING THIS COUPON · MEET THE FISHERMAN.');
+              const readSub = document.createElement('div');
+              readSub.style.cssText = 'margin-top:6px;padding:10px 12px;background:#080c08;border-left:3px solid #406040;border-radius:4px;font-size:11px;color:#80a080;line-height:1.7;font-style:italic;';
+              readSub.textContent = 'The notice is bolted at chest height. Block letters, official ink: "NO FISHING IN THE CITY LIMITS. By Order of the Watch."\n\nBelow the ordinance, in smaller hand: "...unless you know what you\'re doing. Tear here."\n\nA perforated tab hangs from the bottom edge. It reads: FISHING AT YUGURT LAKE · FREE ROD FOR NEW ANGLERS · BRING THIS COUPON · MEET THE FISHERMAN.';
+              _fishWrap.appendChild(readSub);
             } else {
               S_story.noFishingSignRead = true;
               S_story.inventory = S_story.inventory || [];
@@ -17578,12 +17729,33 @@ function storyRender(node, prefix) {
                 readText:'FISHING AT YUGURT LAKE\n\nFREE ROD FOR NEW ANGLERS\n\nPresent this coupon to The Fisherman at Yugurt Cabin.\nYugurt Cabin is south of Yugurt Lake, south of the Western Wilds Crossroads.\n\n"...Nice Day For Fishing. Yugurt!"' });
               if (!S_story.quests) S_story.quests = {};
               S_story.quests['quest_no_fishing_sign'] = 'active';
-              storyMsg('📋 New Quest — The No-Fishing Sign\n\nThe tab is in your hand. Somewhere in the lake country is a man who will give you a rod if you show him this. The sign said so. You have no reason to distrust a sign.\n\n🎫 Free Rod Coupon added to inventory.');
-              signBtn.remove();
+              signBtn.disabled = true; signBtn.style.opacity = '0.5';
+              // Replace any read-sub with the response sub-row
+              const old = _fishWrap.querySelector('div');
+              if (old) old.remove();
+              const sub = document.createElement('div');
+              sub.style.cssText = 'margin-top:6px;padding:10px 12px;background:#080c08;border-left:3px solid #406040;border-radius:4px;display:flex;flex-direction:column;gap:8px;';
+              const txt = document.createElement('div');
+              txt.style.cssText = 'font-size:12px;color:#90b890;line-height:1.7;';
+              txt.textContent = '🎫 The tab is in your hand. Somewhere in the lake country is a man who will give you a rod if you show him this. The sign said so. You have no reason to distrust a sign.';
+              const wpBtn = document.createElement('button');
+              wpBtn.className = 'inv-use-btn';
+              wpBtn.textContent = '📍 Set waypoint → Yugurt Lake';
+              wpBtn.addEventListener('click', () => {
+                storySetWaypoint('YL');
+                wpBtn.textContent = '📍 Waypoint set — Yugurt Lake';
+                wpBtn.disabled = true; wpBtn.style.opacity = '0.6';
+              });
+              const couponCard = document.createElement('div');
+              couponCard.style.cssText = 'padding:6px 8px;background:#050a05;border:1px solid #3a5030;border-radius:3px;font-size:11px;color:#70a070;line-height:1.6;';
+              couponCard.innerHTML = '🎫 <strong style="color:#90c080">Free Rod Coupon</strong> added to inventory — redeemable for 1 × <em>Fishing Rod (+0, standard)</em> at Yugurt Cabin.';
+              sub.appendChild(txt); sub.appendChild(wpBtn); sub.appendChild(couponCard);
+              _fishWrap.appendChild(sub);
               storyAutoSave();
             }
           });
-          npcRowDiv.appendChild(signBtn);
+          _fishWrap.appendChild(signBtn);
+          npcRowDiv.appendChild(_fishWrap);
         } else {
           const signDiv = document.createElement('div');
           signDiv.className = 'npc-ambient';
@@ -17687,15 +17859,55 @@ function storyRender(node, prefix) {
       }
       // ── L45-H: Weckmann training log at CY ──
       if (node.code === 'CY') {
+        const _logWrap = document.createElement('div');
+        _logWrap.style.cssText = 'display:flex;flex-direction:column;gap:0;';
         const logBtn = document.createElement('button');
         logBtn.className = 'inv-use-btn';
         logBtn.textContent = '📓 The training log.';
         logBtn.style.cssText = 'margin-top:4px;';
-        logBtn.addEventListener('click', storyShowWeckmannLog);
-        npcRowDiv.appendChild(logBtn);
+        logBtn.addEventListener('click', () => {
+          if (document.getElementById('weckmann-log-sub')) return;
+          logBtn.disabled = true; logBtn.style.opacity = '0.5';
+          const sub = document.createElement('div');
+          sub.id = 'weckmann-log-sub';
+          sub.style.cssText = 'margin-top:6px;padding:12px 14px;background:#080c08;border-left:3px solid #506050;border-radius:4px;';
+          const hd = document.createElement('div');
+          hd.style.cssText = 'font-size:10px;font-weight:700;letter-spacing:1.5px;color:#708070;text-transform:uppercase;margin-bottom:8px;';
+          hd.textContent = '📓 Training Log';
+          const body = document.createElement('pre');
+          body.style.cssText = 'font-size:11px;line-height:1.7;white-space:pre-wrap;color:#90a890;font-family:"Courier New",monospace;margin:0;';
+          body.textContent = _buildWeckmannLog();
+          sub.appendChild(hd); sub.appendChild(body);
+          _logWrap.appendChild(sub);
+        });
+        _logWrap.appendChild(logBtn);
+        npcRowDiv.appendChild(_logWrap);
         // ── Layer 64: Pit Championship trigger at CY ──
         if ((S_story.pitTrainingWins || 0) >= 5 && !S_story.pitChampionOffered) {
-          setTimeout(_showPitChampionOffer, 500);
+          S_story.pitChampionOffered = true;
+          const _pcSub = document.createElement('div');
+          _pcSub.style.cssText = 'margin-top:8px;padding:12px 14px;background:#0c0900;border-left:3px solid #a07030;border-radius:4px;display:flex;flex-direction:column;gap:10px;';
+          const _pcHd = document.createElement('div');
+          _pcHd.style.cssText = 'font-size:10px;font-weight:700;letter-spacing:1.5px;color:#a08040;text-transform:uppercase;';
+          _pcHd.textContent = '🏆 Weckmann — The Pit Championship';
+          const _pcBody = document.createElement('div');
+          _pcBody.style.cssText = 'font-size:12px;line-height:1.8;color:#c8a870;white-space:pre-wrap;';
+          _pcBody.textContent = 'Weckmann is cleaning the forge when you arrive. He sets the brush down.\n\n"Five. You know what five means?"\n\nHe doesn\'t wait for an answer.\n\n"It means I\'ve been holding back a name. Ogundimu. The Iron Standard — that\'s what they called her, before the dispute. She doesn\'t fight for rankings anymore. She fights because she wants to know if she\'s still herself."\n\nHe picks the brush back up.\n\n"I told her about you. She said yes. That means something — she says no to most people."';
+          const _pcBtns = document.createElement('div');
+          _pcBtns.style.cssText = 'display:flex;gap:8px;';
+          const _pcAccept = document.createElement('button');
+          _pcAccept.className = 'inv-use-btn';
+          _pcAccept.style.cssText = 'flex:1;background:#3a2000;border-color:#c08030;color:#f0c060;font-weight:700;';
+          _pcAccept.textContent = '🏆 Accept the match';
+          _pcAccept.addEventListener('click', () => { _pcSub.remove(); _startPitChampionBattle(); });
+          const _pcLater = document.createElement('button');
+          _pcLater.className = 'inv-use-btn';
+          _pcLater.style.cssText = 'flex:1;';
+          _pcLater.textContent = 'Not yet';
+          _pcLater.addEventListener('click', () => _pcSub.remove());
+          _pcBtns.appendChild(_pcAccept); _pcBtns.appendChild(_pcLater);
+          _pcSub.appendChild(_pcHd); _pcSub.appendChild(_pcBody); _pcSub.appendChild(_pcBtns);
+          npcRowDiv.appendChild(_pcSub);
         }
         if (S_story.pitChampionOffered && !S_story.pitChampionWon) {
           const chalBtn = document.createElement('button');
@@ -17810,12 +18022,36 @@ function storyRender(node, prefix) {
       }
       // ── L45-I: Room 6 at IN (Brynn Dear Friend) ──
       if (node.code === 'IN' && _npcFavor('brynn') >= 3) {
+        const _r6Wrap = document.createElement('div');
+        _r6Wrap.style.cssText = 'display:flex;flex-direction:column;gap:0;';
         const r6Btn = document.createElement('button');
         r6Btn.className = 'inv-use-btn';
         r6Btn.textContent = '🚪 Room 6.';
         r6Btn.style.cssText = 'margin-top:4px;';
-        r6Btn.addEventListener('click', storyShowRoom6);
-        npcRowDiv.appendChild(r6Btn);
+        r6Btn.addEventListener('click', () => {
+          if (document.getElementById('room6-sub')) return;
+          r6Btn.disabled = true; r6Btn.style.opacity = '0.5';
+          if (!S_story.room6Visited) { S_story.room6Visited = true; S_story.brynRoom6Line = true; }
+          const sub = document.createElement('div');
+          sub.id = 'room6-sub';
+          sub.style.cssText = 'margin-top:6px;padding:12px 14px;background:#0c0a08;border-left:3px solid #7a6040;border-radius:4px;display:flex;flex-direction:column;gap:10px;';
+          const body = document.createElement('div');
+          body.style.cssText = 'font-size:12px;line-height:1.9;color:#c0a870;font-style:italic;';
+          body.innerHTML = "<p style='margin:0 0 8px'>It's clean. Brynn keeps all the rooms clean, but this one is slightly more so — the way a room gets when someone tidies it out of care rather than routine.</p>"
+            + "<p style='margin:0 0 8px'>There's a mark on the wall near the window: a small sigil, scratched into the plaster. Not defacement — done carefully, at eye level, the kind of mark someone makes when they want to be able to find a place again.</p>"
+            + "<p style='margin:0 0 8px'>The bed has two pillows. Brynn added the second one after the fact. She doesn't know exactly why. She changed the pillowcase last week even though no one had slept on it.</p>"
+            + "<p style='margin:0'>On the windowsill, almost under the sill itself, a scrap of paper. Not Froberger's journal pages — different paper, smaller. In the same handwriting as the journal, but lighter:</p>";
+          const sig = document.createElement('div');
+          sig.style.cssText = 'text-align:center;font-size:15px;color:#8a6030;font-style:italic;padding:10px 0;border-top:1px solid #3a2a10;border-bottom:1px solid #3a2a10;';
+          sig.textContent = '— still here.';
+          const close = document.createElement('div');
+          close.style.cssText = 'font-size:11px;color:#907050;font-style:italic;';
+          close.textContent = 'You look at it for a while. You close the door behind you.';
+          sub.appendChild(body); sub.appendChild(sig); sub.appendChild(close);
+          _r6Wrap.appendChild(sub);
+        });
+        _r6Wrap.appendChild(r6Btn);
+        npcRowDiv.appendChild(_r6Wrap);
       }
       // ── Layer 70 §XXXV — Beat 1: Lamp Inquiry at IN ──
       if (node.code === 'IN' && _npcFavor('brynn') >= 1
@@ -17889,30 +18125,70 @@ function storyRender(node, prefix) {
           + '<div style="margin-top:8px;font-size:11px;color:#6A4A28;font-style:normal;">[Quill: "I reused the chord progression. It fit."]</div>';
         npcRowDiv.appendChild(s32Div);
       }
-      // ── No Fishing Sign quest — coupon redemption at YC ──
-      if (node.code === 'YC' && !S_story.fishingRodCouponRedeemed
-          && (S_story.inventory||[]).some(i => i.name === 'Free Rod Coupon')) {
-        const couponBtn = document.createElement('button');
-        couponBtn.className = 'inv-use-btn';
-        couponBtn.style.cssText = 'margin-top:4px;';
-        couponBtn.textContent = '🎫 Present the Free Rod Coupon to The Fisherman.';
-        couponBtn.addEventListener('click', () => {
-          S_story.fishingRodCouponRedeemed = true;
-          S_story.inventory = (S_story.inventory||[]).filter(i => i.name !== 'Free Rod Coupon');
-          if (!(S_story.inventory||[]).some(i => i.name === 'Fishing Rod')) {
-            S_story.inventory.push({ name:'Fishing Rod', icon:'🎣', type:'tool', sell:10, code:'YC',
-              desc:"The rod from outside Yugurt Cabin. Propped by the door since before you arrived." });
-          }
-          S_story.xp = (S_story.xp || 0) + 50;
-          _checkLevelUp();
-          if ((S_story.quests||{})['quest_no_fishing_sign'] === 'active') {
-            S_story.quests['quest_no_fishing_sign'] = 'complete';
-          }
-          storyMsg("The Fisherman takes the tab. He looks at it. He has seen the tab before — he made the tab — but he looks at it like it's new each time.\n\n\"...Nice Day For Fishing. Yugurt!\"\n\nHe hands you the rod that was propped by the door. He has another inside. The door rod was always for this.\n\n🎣 Fishing Rod obtained. ✓ Quest complete — The No-Fishing Sign. +50 XP.");
-          couponBtn.remove();
-          storyAutoSave();
+      // ── Rod Shop at YC ──
+      if (node.code === 'YC') {
+        const _rodShopWrap = document.createElement('div');
+        _rodShopWrap.style.cssText = 'display:flex;flex-direction:column;gap:0;margin-top:4px;';
+        const shopBtn = document.createElement('button');
+        shopBtn.className = 'inv-use-btn';
+        shopBtn.textContent = '🎣 Browse Rods — The Fisherman';
+        shopBtn.addEventListener('click', () => {
+          const existing = document.getElementById('rod-shop-sub');
+          if (existing) { existing.remove(); shopBtn.disabled = false; shopBtn.style.opacity = ''; return; }
+          shopBtn.disabled = true; shopBtn.style.opacity = '0.5';
+          const sub = document.createElement('div');
+          sub.id = 'rod-shop-sub';
+          sub.style.cssText = 'margin-top:6px;padding:10px 12px;background:#060a08;border-left:3px solid #4a7060;border-radius:4px;display:flex;flex-direction:column;gap:10px;';
+          const hdr = document.createElement('div');
+          hdr.style.cssText = 'font-size:10px;color:#6a9070;letter-spacing:2px;';
+          hdr.textContent = "THE FISHERMAN'S RODS";
+          sub.appendChild(hdr);
+          const hasCoupon = !S_story.fishingRodCouponRedeemed && (S_story.inventory||[]).some(i => i.name === 'Free Rod Coupon');
+          FISHING_RODS.forEach(rod => {
+            const owned = (S_story.inventory||[]).some(i => i.name === rod.name);
+            const row = document.createElement('div');
+            row.style.cssText = 'display:flex;align-items:center;gap:8px;flex-wrap:wrap;';
+            const info = document.createElement('div');
+            info.style.cssText = 'flex:1;font-size:12px;color:#a0c0a8;line-height:1.5;';
+            info.innerHTML = rod.icon + ' <strong>' + rod.name + '</strong>'
+              + (rod.rodBonus > 0 ? ' <span style="color:#60e0a0">+' + rod.rodBonus + ' Catch</span>' : '')
+              + '<br><span style="font-size:11px;color:#688070;">' + rod.desc + '</span>';
+            const btn = document.createElement('button');
+            btn.className = 'inv-use-btn';
+            if (owned) {
+              btn.textContent = '✓ Owned'; btn.disabled = true; btn.style.opacity = '0.5';
+            } else if (rod.tier === 0 && hasCoupon) {
+              btn.textContent = '🎫 Redeem Coupon (Free)';
+              btn.addEventListener('click', () => {
+                S_story.fishingRodCouponRedeemed = true;
+                S_story.inventory = (S_story.inventory||[]).filter(i => i.name !== 'Free Rod Coupon');
+                S_story.inventory.push({ name:rod.name, icon:rod.icon, type:'tool', sell:rod.sell, code:'YC', rodBonus:rod.rodBonus, desc:rod.desc });
+                S_story.xp = (S_story.xp || 0) + 50; _checkLevelUp();
+                if ((S_story.quests||{})['quest_no_fishing_sign'] === 'active') S_story.quests['quest_no_fishing_sign'] = 'complete';
+                storyMsg("The Fisherman takes the tab. He looks at it — he made the tab — but he looks at it like it's new each time.\n\n\"...Nice Day For Fishing. Yugurt!\"\n\nHe hands you the rod that was propped by the door.\n\n🎣 Fishing Rod obtained. ✓ Quest complete — The No-Fishing Sign. +50 XP.");
+                sub.remove(); shopBtn.disabled = false; shopBtn.style.opacity = ''; storyAutoSave();
+              });
+            } else {
+              btn.textContent = rod.price + 'gp';
+              btn.addEventListener('click', () => {
+                if ((S_story.gold || 0) < rod.price) {
+                  const orig = btn.textContent;
+                  btn.textContent = '✗ Need ' + rod.price + 'gp';
+                  setTimeout(() => { btn.textContent = orig; }, 1500); return;
+                }
+                S_story.gold = (S_story.gold || 0) - rod.price;
+                S_story.inventory = S_story.inventory || [];
+                S_story.inventory.push({ name:rod.name, icon:rod.icon, type:'tool', sell:rod.sell, code:'YC', rodBonus:rod.rodBonus, desc:rod.desc });
+                storyMsg('You hand over ' + rod.price + 'gp. The Fisherman nods once.\n\n🎣 ' + rod.name + ' obtained.' + (rod.rodBonus > 0 ? ' +' + rod.rodBonus + ' to Catch rolls.' : ''));
+                sub.remove(); shopBtn.disabled = false; shopBtn.style.opacity = ''; storyAutoSave();
+              });
+            }
+            row.appendChild(info); row.appendChild(btn); sub.appendChild(row);
+          });
+          _rodShopWrap.appendChild(sub);
         });
-        npcRowDiv.appendChild(couponBtn);
+        _rodShopWrap.appendChild(shopBtn);
+        npcRowDiv.appendChild(_rodShopWrap);
       }
       // ── S45: Quill plays without prompting (unfinished song ambient, odd game days) ──
       if (node.code === 'TV' && (S_story.gameDay || 0) > 0 && (S_story.gameDay || 0) % 2 === 1) {
@@ -18891,6 +19167,28 @@ function storyRender(node, prefix) {
     });
     mapLogList.scrollTop = mapLogList.scrollHeight;
   }
+  // ── Key Events — item-triggered world changes ──
+  { const _keOld = document.getElementById('story-key-event-panel');
+    if (_keOld) _keOld.remove();
+    const _ke = KEY_EVENTS.find(e => e.node === node.code);
+    if (_ke && (S_story[_ke.flag] || _hasItem(_ke.item))) {
+      const _keDiv = document.createElement('div');
+      _keDiv.id = 'story-key-event-panel';
+      _keDiv.className = 'sweelinck-variant';
+      if (S_story[_ke.flag]) {
+        _keDiv.style.cssText = 'margin-top:10px;border-left-color:#2a5a2a;color:#7ab87a;font-style:normal;font-size:11px;';
+        _keDiv.textContent = '🌍 ' + _ke.worldNote;
+      } else {
+        _keDiv.style.cssText = 'margin-top:10px;border-left-color:#5a4a1a;background:#0e0c06;';
+        _keDiv.innerHTML = '<div style="font-size:11px;color:#c8a040;margin-bottom:6px;">📦 ' + _ke.item + ' — ready to use here.</div>'
+          + '<button class="inv-use-btn" id="ke-use-btn">' + _ke.label + '</button>';
+      }
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _keDiv);
+      if (!S_story[_ke.flag]) {
+        document.getElementById('ke-use-btn').addEventListener('click', () => _rollKeyEvent(_ke.id));
+      }
+    }
+  }
   // Status
   storyUpdateStatus();
   // Quests + messages
@@ -19650,8 +19948,8 @@ function _renderWorldMiniMap() {
   const activeSet    = new Set((S_story.lastCorridorCells || []).map(p => p.r + ',' + p.c));
   const nodeCoordSet = new Set(Object.values(NODE_COORDS).map(p => p.r + ',' + p.c));
   grid.innerHTML = '';
-  for (let r = 1; r <= 14; r++) {
-    for (let c = 1; c <= 23; c++) {
+  for (let r = 1; r <= 41; r++) {
+    for (let c = 1; c <= 61; c++) {
       const key  = r + ',' + c;
       const code = byCoord[key];
       const cell = document.createElement('div');
@@ -19667,24 +19965,26 @@ function _renderWorldMiniMap() {
           cell.classList.add(isEB ? 'wmc-epic' : 'wmc-current');
           cell.innerHTML = '<span class="wmc-icon">◉</span>';
         } else if (isEB) {
-          if (ebDefeated)       cell.classList.add('wmc-epic-visited');
-          else if (isVisited || isTrail) cell.classList.add('wmc-epic');
-          else                  cell.classList.add('wmc-epic-unvis');
-          cell.innerHTML = '<span class="wmc-icon">' + (isVisited || isTrail ? _mapIcon(code) : '·') + '</span>';
-        } else if (isVisited || isTrail) {
-          cell.classList.add(isTrail ? 'wmc-trail' : 'wmc-visited');
+          cell.classList.add(ebDefeated ? 'wmc-epic-visited' : (isVisited || isTrail ? 'wmc-epic' : 'wmc-epic-unvis'));
+          cell.innerHTML = '<span class="wmc-icon">' + _mapIcon(code) + '</span>';
+        } else if (isTrail) {
+          cell.classList.add('wmc-trail');
+          cell.innerHTML = '<span class="wmc-icon">' + _mapIcon(code) + '</span>';
+        } else if (isVisited) {
+          cell.classList.add('wmc-visited');
           cell.innerHTML = '<span class="wmc-icon">' + _mapIcon(code) + '</span>';
         } else {
           cell.classList.add('wmc-node');
-          cell.innerHTML = '<span class="wmc-fog">·</span>';
+          cell.innerHTML = '<span class="wmc-icon wmc-unvis">·</span>';
         }
       } else {
         const corr = CORRIDOR_CELLS[key];
         if (corr && !nodeCoordSet.has(key)) {
           cell.classList.add('wmc-corridor');
           const anyVis = corr.edges.some(e => S_story.visited[e.from] && S_story.visited[e.to]);
-          if (activeSet.has(key))   cell.classList.add('wmc-corridor-active');
-          else if (anyVis)          cell.classList.add('wmc-corridor-visited');
+          if (activeSet.has(key))        cell.classList.add('wmc-corridor-active');
+          else if (anyVis)               cell.classList.add('wmc-corridor-visited');
+          else                           cell.classList.add('wmc-corridor-dim');
           cell.textContent = corr.glyph;
         }
       }
@@ -20339,6 +20639,36 @@ function buildCorridorMap() {
   });
 }
 
+/* ── Dynamic exit builder — derives N/S/E/W from NODE_COORDS proximity ──
+   Probes up to 4 cells in each cardinal direction from every node.
+   Patches NODE_MAP[code].N/S/E/W so all downstream code (storyMove,
+   _bfsPath, buildCorridorMap, _updateExitLinks) gets two-way symmetric exits
+   without any manual maintenance of the direction fields in NODE_MAP. */
+function _buildNodeExits() {
+  const coordToCode = {};
+  for (const [code, pos] of Object.entries(NODE_COORDS)) {
+    coordToCode[pos.r + ',' + pos.c] = code;
+  }
+
+  function probe(r, c, dr, dc) {
+    for (let d = 1; d <= 4; d++) {
+      const key = (r + dr * d) + ',' + (c + dc * d);
+      if (coordToCode[key]) return coordToCode[key];
+    }
+    return null;
+  }
+
+  for (const [code, pos] of Object.entries(NODE_COORDS)) {
+    const nm = NODE_MAP[code];
+    if (!nm) continue;
+    nm.N = probe(pos.r, pos.c, -1, 0);
+    nm.S = probe(pos.r, pos.c, +1, 0);
+    nm.E = probe(pos.r, pos.c,  0, +1);
+    nm.W = probe(pos.r, pos.c,  0, -1);
+  }
+}
+
+_buildNodeExits();
 buildCorridorMap();
 
 /* ── Wire Story Mode button ── */
@@ -20346,7 +20676,7 @@ document.getElementById('story-mode-btn').addEventListener('click', storyToggle)
 
 /* ── Wire D-pad buttons ── */
 ['N','S','E','W'].forEach(d => {
-  document.getElementById('btn-' + d).addEventListener('click', () => storyMove(d));
+  document.getElementById('btn-' + d).addEventListener('click', () => { storyMove(d); });
 });
 document.getElementById('btn-dpad-npc').addEventListener('click', () => {
   const node = NODE_MAP[S_story.currentCode];
