@@ -1,3 +1,6 @@
+```
+ lp -o page-top=48 -o page-bottom=48 -o page-left=12 -o page-right=12 -o cpi=18 -o lpi=9 lab-report-littorial-courts-story.txt
+```
 # Lab Report — The Four Courts of the Littoral Sea
 
 **Project:** roll2hit.com — *The Shattered Codex*
