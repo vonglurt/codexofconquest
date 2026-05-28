@@ -824,4 +824,388 @@ I don't know why you're still standing here."
 ---
 
 **Filed:** 2026-05-28 (initial)  
-**Revised:** 2026-05-28 (full rewrite — verbatim quest text, architecture explanation, progression system, abstraction sketch)
+**Revised:** 2026-05-28 (full rewrite — verbatim quest text, architecture explanation, progression system, abstraction sketch)  
+**Amendment A:** 2026-05-28 (monster insert list, sea trials, failure quests, herbalist iodine track, hag commissions, arc boss)
+
+---
+
+## AMENDMENT A — Monster Encounters: Bosses, Sea Trials, Herbalist Track, and Hag Commissions
+
+---
+
+### A.1 Methods of Evil — The Three Hags as Monster Ecologies
+
+The three Crones are not neutral figures. Each embodies a specific failure mode of care, and each failure mode has an ecological consequence — a category of monster that her domain attracts, feeds, or becomes.
+
+**Whisper: The Evil of Omission**
+Her power is absence. She withholds attention, name, warning, presence. The thing she will not name grows in the silence she creates. Her still water conceals things she has decided not to see. The monsters that haunt her domain are things that exist in the gap between acknowledgment and reality — entities that survive by not being named: Sea Witch, Kelpie, the things that move when no one is looking. Her method of evil is passive: she is not malicious, she simply refuses to look. The refusal has weight.
+
+**Glut: The Evil of Excess**
+Her power is overflow. She feeds everything — including things that should not be fed. The feeding pool draws predators because she has no filter on the giving. Whatever approaches she provides for. The things that have grown in her pool have grown on her generosity and are now large enough to block the exit. Her monsters are creatures of abundance gone wrong: Giant Octopus fed until it owns the crossing, Sea Spawn that return because she never refused them. Her method of evil is smothering: not cruelty but saturation.
+
+**Wane: The Evil of Entropy**
+Her power is diminishment. The drain in her mire is not metaphorical — there is something below that draws on whatever grief she floods the place with, and it has been drawing for long enough to grow enormous. Her monsters are things that drain the living: Sea Demon, kraken spawn that pull energy from their surroundings. Her method of evil is hollowing: she is herself a wound, and wounds attract things that feed on wounds.
+
+**The Innmother: The Evil of Hoarding**
+She is not evil in the melodramatic sense. She hoards function — the hall runs, the meals are made, the beds are assigned, but nothing good circulates. Her method is MINE. The eel in the drainage channel beneath the hall has been there for a season. She has not dealt with it because dealing with it would require acknowledging that something lives below her floor, and acknowledging it would require caring about it, and she has not yet developed a protocol for that.
+
+---
+
+### A.2 Monster Insert List — Amendment to §CROWN-01 Node Chain
+
+The following table specifies new and proposed encounter additions, keyed to existing `MONSTER_POOL` entries. All keys are verified live in the codebase.
+
+| Node | Code | Monster | Key | Tier | AC | HP | Encounter Type |
+|------|------|---------|-----|------|----|----|---------------|
+| Gate Trial | WG0 | Sea Serpent | `sea_serpent` | hard | 13 | 90 | Worthiness trial — first visit |
+| Whisper failure dispatch | HW1 | Kelpie | `kelpie` | medium | 13 | 67 | Failure quest target |
+| Whisper hag commission | HW1 | Sea Witch | `sea_witch` | hard | 13 | 82 | Hag side quest boss |
+| First Mire | HJ1 | Will-o'-Wisp × 2 | `will_o_wisp` | medium | 19 | 22 | ✅ Already implemented |
+| Glut failure dispatch | HG1 | Mudcrab | `mudcrab` | trivial | 5 | 5 | Failure quest — chicken quest |
+| Glut hag commission | HG1 | Giant Octopus | `giant_octopus` | medium | 11 | 52 | Hag side quest boss |
+| Second Mire | HJ2 | Grave Hag × 2 + Crone Witch | `grave_hag` | hard | 15 | 112 | ✅ Already implemented |
+| Wane failure dispatch | HN1 | Sea Spawn | `sea_spawn` | medium | 11 | 32 | Failure quest target |
+| Wane hag commission | HN1 | Sea Demon | `sea_demon` | hard | 16 | 110 | Hag side quest boss |
+| Dark Passage | HJ3 | Young Black Dragon | `young_black_dragon` | hard | 18 | 127 | ✅ Already implemented |
+| Herbalist fetch | INN | Electric Eel | `electric_eel` | easy | 10 | 16 | Inn side quest target |
+| Inn commission | INN | Giant Eel | `giant_eel` | medium | 11 | 45 | Hag commission — eel in channel |
+| Arc close boss | HCA | Leviathan | `leviathan` | deadly | 17 | 230 | Arc boss — pre-conversion |
+
+**Sea monster reference catalog (full pool available in hag_swamp / sea_cavern terrain):**
+
+| Key | Name | Tier | AC | HP |
+|-----|------|------|----|----|
+| `mudcrab` | Mudcrab | trivial | 5 | 5 |
+| `electric_eel` | Electric Eel | easy | 10 | 16 |
+| `sea_snake` | Sea Snake | easy | 12 | 22 |
+| `merfolk` | Merfolk | easy | 11 | 11 |
+| `sea_spawn` | Sea Spawn | medium | 11 | 32 |
+| `giant_eel` | Giant Eel | medium | 11 | 45 |
+| `kelpie` | Kelpie | medium | 13 | 67 |
+| `sea_siren` | Sea Siren | medium | 12 | 52 |
+| `sea_hag` | Sea Hag | medium | 14 | 52 |
+| `giant_octopus` | Giant Octopus | medium | 11 | 52 |
+| `sea_witch` | Sea Witch | hard | 13 | 82 |
+| `kraken_spawn` | Kraken Spawn | hard | 15 | 75 |
+| `sea_demon` | Sea Demon | hard | 16 | 110 |
+| `sea_serpent` | Sea Serpent | hard | 13 | 90 |
+| `hydra` | Hydra | hard | 15 | 172 |
+| `leviathan` | Leviathan | deadly | 17 | 230 |
+| `ancient_sea_serpent` | Ancient Sea Serpent | deadly | 17 | 243 |
+| `sea_titan` | Sea Titan | deadly | 18 | 310 |
+| `kraken` | Kraken | deadly | 18 | 472 |
+| `true_leviathan` | The True Leviathan | deadly | 20 | 420 |
+
+---
+
+### A.3 Sea Monster Worthiness Trials
+
+**The design principle:** Before receiving a Crown's teaching, prove the body knows what the mind will be tested on. The skill checks are tests of perception, restraint, attention. The worthiness trial is the same test made physical — fight the thing that embodies the failure mode you are about to be asked to transcend.
+
+---
+
+**WG0 — The Gate Trial: Sea Serpent**
+
+*Fires on first visit to WG0 via `storyRender` injection.*
+
+The gate to the deeper swamp is submerged at the crossing. A Sea Serpent (`sea_serpent`, AC:13, HP:90, hard) coils across it — not guarding it in any intelligent sense, simply occupying it the way things occupy spaces they have filled for a long time. The swamp does not explain this. The gate does not open until the serpent has been dealt with.
+
+*Narrative:* The crossing requires passing through water up to the chest. The serpent is visible under the surface before you reach it — which means the danger is announced, not hidden. The test is whether you move forward anyway.
+
+*Implementation sketch:*
+```javascript
+// WG0 storyRender injection — first-visit gate trial
+if (node.code === 'WG0' && !S_story.visited['WG0'] && !S_story.wg0TrialComplete) {
+  storyPreBattle({ ...node, code:'WG0_TRIAL',
+    battle:{ label:'Sea Serpent — The Gate Crossing', key:'sea_serpent', count:1 }
+  });
+}
+// storyBattleComplete hook sets S_story.wg0TrialComplete = true on victory
+```
+
+---
+
+**Pre-Skill-Check Trials: Proving Worthiness Before the Crown Speaks**
+
+Before `quest_whisper_04` (DC:14 — the hardest Whisper check), the Still Water is not empty. A Kelpie (`kelpie`, AC:13, HP:67) has settled in the deepest part. Whisper will not name it. She simply gestures to the water when you arrive. The Kelpie leaves a trail — the ripple pattern of something moving in a direction that does not match the current. Killing it before asking to hear the path warning is not required. But a player who defeats it gains narrative clarity: they understand the still water by moving through it, not by watching it.
+
+*Mechanic option:* Kelpie kill before quest_whisper_04 → `activateCond` grants +2 to the DC:14 WIS roll (context bonus, not guaranteed pass).
+
+---
+
+### A.4 Failure Quest Mechanics — "The Chicken Quest"
+
+A failed skill check does not strand the player — it redirects them. Each Crown has one failure-response quest: if quest_X_01 is failed, a new side quest activates that sends the player on an errand they could not have been given if they had succeeded. These are not punishments. They are alternate paths.
+
+The principle: you couldn't do it with your mind. Go do it with your body. Come back when the body understands.
+
+---
+
+**`quest_whisper_01_fail` — "Track the Silent One"**
+*Activates if quest_whisper_01 resolved as fail. Type: side.*
+
+Whisper does not express disappointment. She gestures east — toward a part of the pool that has been moving when the water should be still. "The thing that moves there," she says. "Find it." That is the entire commission. You do not know what it is until you find it.
+
+The Kelpie (`kelpie`, AC:13, HP:67) moves through the east shallows. It does not attack first — it circles. The tracking is the quest. Following the circling pattern shows the player, physically, what Whisper was asking them to perceive in the still: the shape of motion that looks like stillness until you follow it long enough.
+
+- **completeFn:** `() => S_story.kelpie_tracked`  
+- **onComplete:** sets `kelpieTracked = true`, `_innKindness(1)` — the act of following without naming is itself a kindness  
+- **disposition:** "You found it. You followed it. Now you know what silence that moves looks like."
+
+---
+
+**`quest_glut_01_fail` — "Find What Left"**
+*Activates if quest_glut_01 resolved as fail. Type: side. This is the chicken quest.*
+
+The Mudcrab (`mudcrab`, AC:5, HP:5, trivial) ate enough and left the feeding pool. This is, in Glut's economy, unthinkable — she has never had something leave of its own accord. She needs you to find it and bring it back. She describes it as urgent. It is a mudcrab.
+
+The quest is intentionally ridiculous. The mudcrab is at the edge of the mire, not far, and it offers almost no combat challenge. The joke is built in: you failed to decline the second portion (the Insight check about limits) and now you are hunting a small crab that successfully did exactly that. The crab knew when to stop. You are fetching it back for someone who does not.
+
+- **completeFn:** `() => S_story.mudcrab_returned`  
+- **onComplete:** Glut receives the mudcrab. She immediately offers it more food. The mark does not come from this. But `_innKindness(1)` fires — the act of fetching it without laughing at her counts as genuine engagement with her world.  
+- **disposition:** "It was enough. It knew when to stop. I keep it here now. I feed it more than it wants. This is fine."
+
+---
+
+**`quest_wane_02_fail` — "What Moved It Before You"**
+*Activates if quest_wane_02 resolved as fail (couldn't move the stone). Type: side.*
+
+Wane says: "Something moved it once, a long time ago, and put it back wrong. Find what moved it." She has framed the stone's current position as a legacy of something else's mistake, which means she does not have to admit she stopped trying to move it herself. The Sea Spawn (`sea_spawn`, AC:11, HP:32) is in the mire beneath the stone's location. It has been carrying something it cannot set down — a behavior that mirrors Wane's own inability to release the weight.
+
+Killing the Sea Spawn proves nothing about the stone. But when the player returns, the context of the stone has shifted: you have killed the thing that moved it wrong. Now the stone is just a stone again. Wane does not explain this. The stone moves on the next STR Athletics attempt (DC drops from 13 to 10).
+
+- **completeFn:** `() => S_story.sea_spawn_cleared`  
+- **onComplete:** `S_story.waneStoneDCReduced = true` — future attempts on quest_wane_02 use DC:10  
+- **disposition:** "It had been carrying the same thing for years. Now it is not carrying anything. The stone is lighter."
+
+---
+
+### A.5 Herbalist Track — Iodine Extraction: The Secret of Atlantis
+
+**The Concept**
+
+The swamp and the mire contain sea kelp and marsh seaweed that have washed up from a tidal channel that the Innmother knows connects underground to the sea. Burning these plants in a specific sequence produces iodine salt — a compound that coastal and deep-water civilizations have used for centuries as a clarity agent, a wound disinfectant, and an alchemical catalyst. The Innmother knows this because she has been burning kelp in her hearth for a long time for reasons she will not explain.
+
+The "Secret of Atlantis" framing: Atlantean alchemists used iodine-rich seaweed combustion as a base for their smelting process — the iodine acted as a flux, reducing melting points and purifying the extracted mineral. The player is discovering the same knowledge they did, in reverse: starting with the plant, learning the burn, finding the salt.
+
+---
+
+**Items**
+
+| Item | Icon | Source | Notes |
+|------|------|--------|-------|
+| Swamp Kelp | 🌿 | Drop from sea monsters in hag_swamp terrain (sea_serpent, giant_eel, sea_witch) OR gathered at HJ1/HJ2 crossing nodes | Stackable, sell:3 |
+| Marsh Seaweed | 🪸 | Drop from mire creatures (sea_spawn, kelpie) OR gathered at HN1 | Stackable, sell:2 |
+| Iodine Salt | 🧂 | Crafted: burn 2× Swamp Kelp at INN hearth | +3 to any WIS/INT skill check (consumable) |
+| Charged Iodine Salt | ⚡🧂 | Crafted: burn 1× Swamp Kelp + Electric Eel organ at INN hearth | +5 to any WIS/INT skill check; also +2 ATK in combat for one fight |
+
+The Electric Eel organ (`electric_eel` drop loot) catalyzes the reaction. It is the Innmother's specific discovery — she learned this from the eel that keeps returning to her drainage channel.
+
+---
+
+**`quest_iodine_01` — "The Salt Test"**
+*Activates at INN once player has carried any sea monster loot. Type: skill_check · INT Investigation · DC 11.*
+
+The Innmother is burning something at the hearth that is not wood. You recognize the smell — briny, chemical, not unpleasant. She does not explain it. If you pass the Investigation check you identify what she is doing: burning kelp, producing a white salt that settles in the ash tray.
+
+She will teach you the process if you ask. She will not explain why she knows it. "The smell tells you when it is done," she says. "Burning is the wrong word. It is a reduction. Something becomes something else."
+
+- **vignette:** The smoke has a specific iodine character — it is the smell of the sea at low tide on a hot day, concentrated. The salt in the tray has the texture of sea salt but the color of ash. She skims it with a flat tool and stores it in a jar she does not label.
+- **passText:** You name the compound before she explains it. She looks at you with the expression she uses when something surprises her — not much expression, but slightly more presence. "You know the process," she says. The jar is yours.
+- **failText:** You ask what she is burning. She says: kelp. You ask why. She describes the result without naming it. You receive the information but not the recognition that you already knew it somewhere older than this conversation.
+- **onPass:** Pushes `{ name:"Iodine Salt", icon:'🧂', sell:5, drop:false }` to inventory, calls `_innKindness(1)`
+
+---
+
+**`quest_iodine_02` — "The Gathered Burn"**
+*Activates after quest_iodine_01 complete. Type: side — completeFn checks kelp in inventory.*
+
+Gather 2× Swamp Kelp (from mire encounters or sea monster drops) and return to INN to burn them. The burn produces Iodine Salt, which can be used during any subsequent skill check in the arc as a concentration aid (+3 to roll).
+
+- **completeFn:** `() => (S_story.swampKelpCount || 0) >= 2 && S_story.currentCode === 'INN'`
+- **onComplete:** removes 2 kelp from inventory, pushes Iodine Salt ×2, `_innKindness(1)`
+- **disposition:** "The reduction is the same each time. Once you know the smell you cannot not know it."
+
+---
+
+**`quest_iodine_03` — "The Charged Reduction" (Atlantean Process)**
+*Activates after quest_iodine_02 complete + Electric Eel killed. Type: side.*
+
+The Innmother has been waiting for someone to bring her an electric eel organ. She has not said this. The organ catalyzes the burn — the charge in the tissue accelerates the iodine separation, producing a salt with a faint luminescence and significantly higher potency. This is the Atlantean secret: coastal metalworkers used electric ray and eel organs as flux agents in their smelting process, reducing ore at temperatures that should not have been achievable. The iodine was a byproduct. They were making something else and found the salt by accident. The Innmother found it by accident too, a long time ago, burning things she had no protocol for.
+
+- **completeFn:** `() => S_story.electricEelOrganHeld && S_story.currentCode === 'INN'`
+- **onComplete:** combines organ + kelp into Charged Iodine Salt, `_innKindness(1)`, sets `S_story.atlanteanProcessKnown = true`
+- **disposition:** "The coastal people knew this. They found it from the other direction — they were trying to smelt metal and found the salt instead. You found it from the salt and found the metal underneath. The sequence does not matter. The reduction is the same."
+
+---
+
+**Skill Check Integration — Iodine as Clarity Aid**
+
+At any Crown skill check where `S_story.inventory` contains Iodine Salt or Charged Iodine Salt:
+- A second button appears: "Burn a dose (+3 to roll)" or "(+5 if Charged)"
+- Spending the dose consumes the item and adds the flat bonus before the d20 roll
+- Narrative: burning the salt at the start of a task is described as an Atlantean focusing ritual — the smell of it signals something that the body recognizes as ancient and correct
+
+```javascript
+// In the skill check modal render function, after the standard roll button:
+if (S_story.inventory.some(i => i.name === 'Charged Iodine Salt')) {
+  // show +5 button, remove one Charged Iodine Salt on use
+} else if (S_story.inventory.some(i => i.name === 'Iodine Salt')) {
+  // show +3 button, remove one Iodine Salt on use
+}
+```
+
+---
+
+### A.6 Hag Side Quests — Evil Commissions
+
+Each hag has a monster she will not deal with herself. The reasons are consistent with their failure modes. The player, as the hero, is asked — obliquely — to solve the problem they have been too committed to their own pathology to address.
+
+These are `type:'side'` quests, activated by progressing through the Crown's skill check sequence. Each requires a kill in or near the Crown's domain.
+
+---
+
+**`quest_whisper_boss` — "The Unnamed Thing"**
+*Activates at HW1 after quest_whisper_03 complete. Whisper's commission.*
+
+She describes the still water as having a "surface problem." She does not name the source. The surface problem has a specific pattern — a disruption consistent with something large and intentional moving below. If you ask what it is she will say: "It has been there for two seasons. I have not looked directly at it."
+
+The Sea Witch (`sea_witch`, AC:13, HP:82, hard) has been living in the deep section of the still water. She is, herself, a crone who withholds — a mirror of Whisper. She hoards secrets and poisons the water near her with them. Whisper knows this and will not name it because naming it would require naming the resonance.
+
+- **completeFn:** `() => S_story.seaWitchKilled`
+- **onComplete:** `S_story.whisperBossKilled = true; _innKindness(1)` — unlocks a hidden loot cache at HW1 (Sea Witch Tome: knowledge item, "+1 INT checks")
+- **Loot drop:** Sea Witch Tome — `{ name:"Sea Witch's Tome", icon:'📖', sell:45, knowledge:true }`
+- **disposition:** "It is gone. The water knows. I knew what it was the entire time. That was the problem."
+
+---
+
+**`quest_glut_boss` — "What I Fed"**
+*Activates at HG1 after quest_glut_03 complete. Glut's commission.*
+
+She has been feeding the pool. Something in the pool has been growing on the feeding. It now occupies the crossing on the far side. She describes it as: "The passage on the east. It is blocked. I do not know why it is blocked." She knows why it is blocked. She fed it.
+
+The Giant Octopus (`giant_octopus`, AC:11, HP:52, medium) has grown fat in the feeding pool and stretched across the eastern passage. It is not aggressive in the hungry sense — it is simply large, and large things occupy space by default.
+
+- **completeFn:** `() => S_story.giantOctopusKilled`
+- **onComplete:** `S_story.glutEastPassageOpen = true; _innKindness(1)` — unlocks east passage at HG1 (new loot node: Glut's Hoard, contains rare craft materials + Swamp Kelp ×3)
+- **disposition:** "I fed it too much. It grew. You removed it. I have not stopped feeding what comes to the pool. I am not going to stop. This is useful information about me."
+
+---
+
+**`quest_wane_boss` — "The Better Drainer"**
+*Activates at HN1 after quest_wane_03 complete. Wane's commission.*
+
+The mire has been draining faster than it should. She experiences this as competition. "Something below," she says, "has been more efficient. I find this — " she pauses. "Unacceptable." She does not explain what the drain is. She simply makes it clear that the drain below her is a rival and she wants it stopped.
+
+The Sea Demon (`sea_demon`, AC:16, HP:110, hard) lives in the sub-channel below the mire. It drains the living of vitality — a sustained pull, not a violent one. It is more efficient at diminishment than Wane, which is why she finds it intolerable. Her grief is a craft. It will not share the mire with something better at the craft than herself.
+
+- **completeFn:** `() => S_story.seaDemonKilled`
+- **onComplete:** `S_story.waneLowerPassageOpen = true; _innKindness(1)` — opens HN1 south-east passage to a new loot node containing the **Atlantean Kelp Scroll** (knowledge item, teaches the Charged Iodine Salt recipe without the discovery quest)
+- **disposition:** "It was better at this than I am. I am aware. Thank you for not pointing it out directly."
+
+---
+
+**`quest_inn_boss` — "The Smell in the South Corridor"**
+*Activates at INN after quest_inn_03 complete. The Innmother's commission.*
+
+She describes it as a maintenance issue. "There is an eel," she says. "In the drainage channel. It has been there since the autumn. I have not dealt with it." She says it the way she says everything — as information she is delivering, not as a request she is making. She is, in fact, making a request. The eel has been there since autumn because she cannot kill it and will not admit she cannot kill it.
+
+The Giant Eel (`giant_eel`, AC:11, HP:45, medium) is electrogenic — not dangerous to someone armored, but unpleasant in the specific way of something that touches you constantly and slightly. The drainage channel runs under the inn; the fight happens below the floor, in a narrow passage.
+
+- **completeFn:** `() => S_story.giantEelKilled`
+- **onComplete:** `S_story.electricEelOrganHeld = true` (the eel's organ drops, usable in the iodine track); `_innKindness(1)` fires; INN south corridor smell description changes in the storyRender text
+- **Loot drop:** Electric Eel Organ — `{ name:'Electric Eel Organ', icon:'⚡', sell:15, craftInput:true }`
+- **disposition:** "The smell is gone. The room to the south is the same room. It is a better room now. Thank you."
+
+---
+
+### A.7 Arc Boss — The Leviathan at HCA
+
+**The Concept**
+
+The arc close at HCA currently fires the Crone Mark conversion. The amendment proposes one addition before that fires: the Leviathan surfaces.
+
+**The Leviathan's Origin**
+
+The three Crowns have each, in their way, been feeding something in the deep water:
+- Whisper's silence created pressure that accumulated below
+- Glut's excess nourished it through the tidal channel connection
+- Wane's grief dissolved the barriers that kept it at depth
+
+The Leviathan (`leviathan`, AC:17, HP:230, deadly) has been drawing on all three for a long time. It is not intelligent in the planning sense. It is simply the consequence of sustained damage to the ecology of the swamp. The clearing at HCA is where the channel meets the surface. The Leviathan rises there because this is where the pressure finally equals the weight above it.
+
+**The Iodine Connection**
+
+If the player carries Iodine Salt or Charged Iodine Salt when the Leviathan fight begins, an option fires before the battle:
+- "Burn the salt at the water's edge" → triggers the Atlantean fire reaction
+- Effect: +2 ATK and +3 flat damage for the duration of the fight
+- Narrative: the burning salt reacts with the tidal water and produces a chemical reaction that the Leviathan's amphibious skin is sensitive to — it is not fire, it is chemistry, it is Atlantean craft applied to a monster that predates the civilization that discovered it
+
+**Implementation sketch:**
+
+```javascript
+// HCA storyRender injection — arc boss fires before croneMarksBanked check
+if (node.code === 'HCA' && !S_story.leviathanDefeated && !S_story.leviathanBossFired) {
+  S_story.leviathanBossFired = true;
+  // Check for iodine inventory — offer burn option before battle
+  const hasIodine = S_story.inventory.some(i =>
+    i.name === 'Iodine Salt' || i.name === 'Charged Iodine Salt'
+  );
+  if (hasIodine) {
+    // inject DOM: burn option — removes iodine, sets S_story.iodineBuffActive = true
+    // iodineBuffActive is checked in storyBattleComplete to add combat bonus
+  }
+  storyPreBattle({ ...node, code:'HCA_BOSS',
+    battle:{ label:'The Leviathan — Rising from the Clearing', key:'leviathan', count:1 }
+  });
+}
+// After victory: storyBattleComplete sets leviathanDefeated = true
+// croneMarksBanked conversion fires on the next HCA storyRender pass
+```
+
+**Failure state:** If the player loses to the Leviathan, respawn at INN. The Leviathan returns on re-entry to HCA. The Innmother will say: "You went south. You came back. The south is still there." She does not say anything else. The arc does not close until the Leviathan is defeated — it is the gate to the conversion.
+
+**Crone Marks + Leviathan Kill:** The kill itself does not grant a Crone Mark. It is not a Crown test. It is the consequence of the arc — what grew in the space the three Crones damaged. Defeating it is the precondition for the conversion, not a contribution to it. The marks come from attention. The boss comes from neglect. They are separate currencies.
+
+---
+
+### A.8 Summary of New S_story State Fields (Amendment A)
+
+```javascript
+// §CROWN-01 Amendment A: Monster encounters, failure quests, iodine track
+wg0TrialComplete: false,         // Gate Trial (sea_serpent) defeated
+kelpieTracked: false,            // quest_whisper_01_fail completion flag
+mudcrabReturned: false,          // quest_glut_01_fail completion flag (chicken quest)
+seaSpawnCleared: false,          // quest_wane_02_fail — DC reduction for stone quest
+waneStoneDCReduced: false,       // quest_wane_02 retry DC drops from 13 to 10
+
+seaWitchKilled: false,           // Whisper hag commission boss
+giantOctopusKilled: false,       // Glut hag commission boss (opens east passage)
+seaDemonKilled: false,           // Wane hag commission boss (opens lower passage)
+giantEelKilled: false,           // Inn commission boss (yields Electric Eel Organ)
+
+glutEastPassageOpen: false,      // east loot node at HG1 unlocked
+waneLowerPassageOpen: false,     // HN2 loot node unlocked (Atlantean Kelp Scroll)
+
+swampKelpCount: 0,               // gathered kelp counter (max shown: 5)
+electricEelOrganHeld: false,     // organ held for Charged Iodine Salt craft
+atlanteanProcessKnown: false,    // iodine_03 complete; charged recipe unlocked
+iodineBuffActive: false,         // transient: burns during Leviathan fight
+
+leviathanBossFired: false,       // HCA boss trigger guard
+leviathanDefeated: false,        // HCA arc boss defeated; conversion can proceed
+```
+
+**New items added to inventory pool:**
+- `{ name:'Swamp Kelp', icon:'🌿', sell:3 }` — stackable gather/drop
+- `{ name:'Marsh Seaweed', icon:'🪸', sell:2 }` — stackable gather/drop
+- `{ name:'Iodine Salt', icon:'🧂', sell:5 }` — crafted, skill check consumable (+3)
+- `{ name:'Charged Iodine Salt', icon:'⚡🧂', sell:12 }` — crafted, skill check consumable (+5), combat buff (+2 ATK, +3 dmg)
+- `{ name:'Electric Eel Organ', icon:'⚡', sell:15, craftInput:true }` — craft reagent
+- `{ name:"Sea Witch's Tome", icon:'📖', sell:45, knowledge:true }` — hidden cache at HW1
+- `{ name:'Atlantean Kelp Scroll', icon:'📜', sell:30, knowledge:true }` — HN2 loot node
+
+---
+
+**Amendment A Filed:** 2026-05-28  
+**Status:** Design complete — pending HTML implementation
