@@ -7727,9 +7727,19 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   DSJ:{ num:132, code:'DSJ', name:'drowned_shore', label:'The Kelp Channel', act:3, N:'DS1', S:'DSF', E:null, W:null,
     text:"The channel between the shore and the forge entrance is thirty feet of slow water. The kelp grows here in density — the last growth before the salt bottom begins.\n\nThe Giant Eels hold the channel. Two of them. They have been holding it since before the forge was sealed. They are not territorial in the ordinary sense — they are present, which amounts to the same thing. The channel does not offer another passage. They have registered you.",
     npc:null, battle:{label:'Giant Eel × 2', key:'giant_eel', count:2}, loot:null, sleep:false },
-  DSF:{ num:133, code:'DSF', name:'atlantean_forge', label:'The Atlantean Forge', act:3, N:'DSJ', S:null, E:null, W:null,
+  DSF:{ num:133, code:'DSF', name:'atlantean_forge', label:'The Atlantean Forge', act:3, N:'DSJ', S:'DA0', E:null, W:null,
     text:"The forge is inside a structure that was built to outlast the people who built it. The walls are dressed stone — not laid stone, dressed stone, the kind of finish that requires knowing what the stone is going to be used for before you cut it. The ventilation runs through the floor. The bellows mechanism is still present, still tensioned, still waiting.\n\nThe salt marks on the working surface are chemical, not organic. Iodine reduction. The Atlantean coastal smiths did not smelt with heat alone — they used the tidal elements. The smoke register, the salt bed, the charged reduction. Someone was making something here that required all three.\n\nThe mechanism is sealed. The process is not obvious. What is obvious is that the forge has been waiting for someone who knows what it is.",
     npc:'The Forge Echo', battle:null, loot:null, sleep:false },
+  // ── §LXXI: The Sunken Hall ──
+  DA0:{ num:134, code:'DA0', name:'atlantean_forge', label:'The South Passage', act:3, N:'DSF', S:'DA1', E:null, W:null,
+    text:"The passage beyond the forge runs further south than the shoreline should permit. The walls transition without announcement: dressed stone gives way to marine-calcified stone — stone that has been under salt water and is now above it, or was always at the boundary and never resolved the question.\n\nThe passage is not collapsed. Someone kept it clear, or it was built well enough to keep itself. The air carries the smell of forge residue and old salt and something below both of those — older, mineral, the specific smell of sealed spaces that have not been opened in a very long time.",
+    npc:null, battle:null, loot:null, sleep:false },
+  DA1:{ num:135, code:'DA1', name:'sunken_hall', label:'The Sunken Hall', act:3, N:'DA0', S:'DA2', E:null, W:null,
+    text:"The hall is below the original waterline. Not currently flooded — the drainage is engineered and still running — but the walls hold the record of centuries of salt water in their calcification. The Atlantean coastal civilization built here knowing it would be underwater eventually. They built anyway, which is the thing you learn about them the longer you read what they left.\n\nThe inscription is above the ventilation channel. Not decorative — functional, in the sense that instructions are functional. It describes the Gate. It describes what the Gate holds. It describes the mechanism that opens it and the specific alloy required.\n\nThe inscription has been waiting for someone to read it since before the Scholar Kings classified the first document in their archive.",
+    npc:'The Stone Inscription', battle:null, loot:null, sleep:false },
+  DA2:{ num:136, code:'DA2', name:'sunken_hall', label:'The Tide Gate', act:3, N:'DA1', S:null, E:null, W:null,
+    text:"The Gate is a sealed arch in the south wall. The mechanism is recessed into the floor — three positions, each one corresponding to a step in the Atlantean reduction sequence. The arch is dressed to the same specification as the forge walls. They were built by the same hands, at the same time, for the same process.\n\nThe depth below the arch is eighteen meters. The bearing from the nearest fixed point is 047°.\n\nStation 7 was monitoring this location. Bertha No-Bank spent forty-one volumes recording the absence of its signal. The Antecedent's containment was built on top of this structure. The Constructor chose this site because the infrastructure was already here — already designed to hold something old and question-asking in place until the question was answered.\n\nThe Sea Element is the key. The forge made the key. The process produced the key. You have been following the chain from the outside in.",
+    npc:null, battle:null, loot:null, sleep:false },
   // ── §LV: The Antecedent Chamber ──
   AC:{ num:83, code:'AC', name:'antecedent_chamber', label:'The Antecedent Chamber', act:1, N:'CY', S:null, E:null, W:null,
     text:"The descent past the CY checkpoint level goes another twelve meters before the floor levels. The conduit cables end at a partition wall — not brick, not data-center partition, something older than either. The indicators in this section run on a power source that predates the undercity infrastructure by a margin no one has calculated because no one has thought to ask.\n\nThe chamber was designed, from the start, to be exactly this: a room with one function and one occupant. The function is containment. The occupant is still here.\n\nIt is not large. It does not need to be. It has been here long enough that the word 'waiting' no longer applies — waiting implies an expectation of change. This is older than that. This is patience as a physical property of the space.\n\nThe Antecedent Seal activates on entry. The seal runs warm. The indicators change from standby to receiving.\n\nYou are, apparently, expected.", npc:'The Antecedent', battle:null, loot:null, sleep:false },
@@ -7902,6 +7912,8 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   HJ2:{r:24,c:3}, HN1:{r:26,c:3}, HJ3:{r:28,c:3}, INN:{r:30,c:3}, HCA:{r:32,c:3},
   /* §LXX: Atlantean Shore — c:3, rows 34→40 */
   DS0:{r:34,c:3}, DS1:{r:36,c:3}, DSJ:{r:38,c:3}, DSF:{r:40,c:3},
+  /* §LXXI: Sunken Hall — c:3, rows 42→46 */
+  DA0:{r:42,c:3}, DA1:{r:44,c:3}, DA2:{r:46,c:3},
 };
 
 /* ── Layer 9-A: Circuit Corridor Data Structures ── */
@@ -9501,6 +9513,47 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     },
     disposition:'"It was the last useful thing we left. The alloy holds." — The Forge Echo, Atlantean Forge' },
 
+  // ── §LXXI: The Sunken Hall quests ──
+  quest_sunken_01: { id:'quest_sunken_01', type:'skill_check',
+    title:'The Foundation',
+    desc:'The inscription above the ventilation channel describes the Gate — what it holds, what opens it, and why it was built here.',
+    hint:'Read the Atlantean inscription at The Sunken Hall — INT Arcana DC 13.',
+    activateNode:'DA1', activateCond:() => true,
+    checkAbility:'int', checkLabel:'INT Arcana', checkDC:13, retryable:true,
+    xpAward:250,
+    vignetteText:"The inscription is carved in the pre-Codex register — not the Scholar Kings' classification notation, not the Conclave's administrative shorthand. Older than both. The letter-forms predate the current archive system by several centuries.\n\nThe text describes a mechanism. Specifically: a gate installed at a location chosen because something very old and question-asking was already there, had been there since before the coastal civilization, and needed a structure capable of holding a question in place long enough for the answer to arrive.\n\nThe mechanism requires a specific alloy. The alloy is produced by a specific reduction sequence. The reduction sequence begins with kelp.",
+    passText:"The inscription resolves completely. You recognize every step — the kelp beds, the hearth reduction, the charged element, the forge. The chain was laid from this end outward, by people who knew what would eventually be needed to return to it. They did not know who would follow the chain. They knew someone would.",
+    failText:"The letter-forms are readable but the technical register is partially opaque. The mechanism description is clear; the context for why this location is unclear. Try again when the reduction sequence has more time to settle.",
+    completeItems:[],
+    onPass:() => {
+      S_story.inscriptionRead = true;
+      S_story.knowledge = S_story.knowledge || [];
+      S_story.knowledge.push('Atlantean Foundation: the Tide Gate was installed at bearing 047°, depth 18m, to hold something older than the coastal civilization itself. The chain of iodine reduction points here.');
+      S_story.gold = (S_story.gold||0) + 250;
+      storyMsg("📋 Atlantean Foundation added to the Necklace of Knowledge. +250gp.");
+    },
+    disposition:'"The chain was laid from this end. It points outward toward whoever is following it inward." — The Stone Inscription, Sunken Hall' },
+
+  quest_sunken_02: { id:'quest_sunken_02', type:'side',
+    title:'The Tide Gate',
+    desc:'The Gate mechanism requires the Sea Element — the Atlantean alloy forged from the reduction sequence. The forge made the key. You are the last step.',
+    hint:'Bring the Sea Element to The Tide Gate. The mechanism accepts the alloy.',
+    activateNode:'DA2', activateCond:() => !!S_story.inscriptionRead,
+    completeItems:[],
+    completeFn:() => !!(S_story.inscriptionRead) && (S_story.inventory||[]).some(i => i.name === 'Sea Element') && S_story.currentCode === 'DA2',
+    onComplete:() => {
+      S_story.tideGateOpened = true;
+      const inv = S_story.inventory || [];
+      const seIdx = inv.findIndex(i => i.name === 'Sea Element');
+      if (seIdx !== -1) inv.splice(seIdx, 1);
+      S_story.abilityScores = S_story.abilityScores || {};
+      S_story.abilityScores.int = (S_story.abilityScores.int || 10) + 1;
+      S_story.gold = (S_story.gold||0) + 500;
+      storyMsg("🔱 The Sea Element fits the mechanism in the correct order. The Gate opens inward and down. Bearing 047°. Depth 18m. The chain closes. INT +1 (permanent). +500gp.");
+    },
+    xpAward:500,
+    disposition:'"The Gate was waiting for whoever followed the chain. The chain closes." — The Tide Gate, Sunken Hall' },
+
   // ── Layer 55: Visby Underground quests ──
   quest_vs_01: { id:'quest_vs_01', type:'side', title:'Solvak: The Collector',
     desc:"Debt Agent Solvak has been outside Visby six weeks with a 2,000gp debt and no leverage. You might have some.",
@@ -9891,6 +9944,11 @@ const NPC_DIALOGUE = { // → doc: story.md §FL7
     if (S_story.innmotherKindness >= 3) return '"You keep coming back." She says it like an accusation. She says everything like an accusation. It is the only register she has.';
     return '"The room is at the end of the hall. The second bed is the one that works. I don\'t know why you\'re still standing here."';
   }},
+  // §LXXI: Sunken Hall NPCs
+  DA1: { name:'The Stone Inscription', quoteFn:() => S_story.inscriptionRead
+    ? '"The chain was laid from this end. It points outward toward whoever is following it inward." The inscription has not changed. You have. The letter-forms are familiar now in the way of things you cannot unlearn.'
+    : '"[Pre-Codex notation. Marine-calcified. The text describes a gate, a mechanism, an alloy, and a location. The location is here. The alloy is produced by a specific reduction sequence. The reduction sequence begins with kelp.]"' },
+  DA2: { name:null, quoteFn:null },
   // §LXX: Atlantean Shore NPCs
   DS1: { name:'The Tide Reader', quoteFn:() => S_story.kelpBedsCharted
     ? '"You read it correctly. The beds are a record, not a resource." She marks the current morning position and closes the notebook. "The bearing I noted six years ago — you confirmed it. I was not going to do anything with it alone. Now it is not alone."'
@@ -10780,6 +10838,9 @@ const _S_DEFAULTS = () => ({
   kelpBedsCharted: false,
   forgeActivated: false,
   seaElementCrafted: false,
+  // §LXXI: Sunken Hall
+  inscriptionRead: false,
+  tideGateOpened: false,
 });
 
 /* ── Layer 48: Luck — Seventh Stat ── */
@@ -20237,6 +20298,48 @@ function storyRender(node, prefix) {
       }
       _hcaDiv.textContent = _hcaText;
       document.getElementById('story-text-box').insertAdjacentElement('afterend', _hcaDiv);
+    }
+  }
+  // §LXXI: DA2 — Tide Gate activation
+  { const _gateOld = document.getElementById('story-da2-gate'); if (_gateOld) _gateOld.remove();
+    if (node.code === 'DA2' && !S_story.tideGateOpened) {
+      const _inv = S_story.inventory || [];
+      const _hasEl = _inv.some(i => i.name === 'Sea Element');
+      const _gateDiv = document.createElement('div');
+      _gateDiv.id = 'story-da2-gate';
+      _gateDiv.className = 'sweelinck-variant';
+      _gateDiv.style.cssText = 'margin-top:10px;border-left-color:#2a3a5a;color:#90a8c8;font-size:12px;';
+      if (_hasEl && S_story.inscriptionRead) {
+        _gateDiv.textContent = '🔱 The mechanism has three positions. You know the sequence. The Sea Element fits the first position. The reduction runs forward from here.';
+        const _gateBtn = document.createElement('button');
+        _gateBtn.className = 'inv-use-btn'; _gateBtn.style.marginTop = '6px';
+        _gateBtn.textContent = '🔱 Place the Sea Element — open the Gate';
+        _gateBtn.addEventListener('click', () => {
+          _gateBtn.disabled = true;
+          const _inv2 = S_story.inventory || [];
+          const _seIdx = _inv2.findIndex(i => i.name === 'Sea Element');
+          if (_seIdx !== -1) _inv2.splice(_seIdx, 1);
+          S_story.tideGateOpened = true;
+          S_story.abilityScores = S_story.abilityScores || {};
+          S_story.abilityScores.int = (S_story.abilityScores.int || 10) + 1;
+          S_story.gold = (S_story.gold||0) + 500;
+          storyMsg('The Gate opens inward and down. The depth below is eighteen meters. Bearing 047°.\n\nStation 7 monitored this location. Bertha No-Bank spent forty-one volumes recording the absence of its signal. The Antecedent\'s containment was built on top of this structure. The Constructor chose this site because the infrastructure was already here.\n\nThe chain closes. You have been following it from the outside in. INT +1 (permanent). +500gp.');
+          storyRender(node);
+        });
+        _gateDiv.appendChild(_gateBtn);
+      } else if (!S_story.inscriptionRead) {
+        _gateDiv.textContent = '🔱 The mechanism is visible but the sequence is not yet clear. The inscription in the hall above describes the correct order.';
+      } else {
+        _gateDiv.textContent = '🔱 The mechanism requires the Sea Element — the Atlantean alloy from the forge above. The forge knows the sequence. The Gate knows the alloy.';
+      }
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _gateDiv);
+    }
+    if (node.code === 'DA2' && S_story.tideGateOpened) {
+      const _openDiv = document.createElement('div');
+      _openDiv.className = 'sweelinck-variant';
+      _openDiv.style.cssText = 'margin-top:10px;border-left-color:#2a5a3a;color:#80c890;font-size:12px;';
+      _openDiv.textContent = '✅ The Gate is open. The depth below: eighteen meters. Bearing 047°. The chain has closed. The archive has an archivist. The Gate has the alloy. These are two statements of the same fact.';
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _openDiv);
     }
   }
   // §LXX: DSJ — Giant Eel × 2 channel battle

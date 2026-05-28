@@ -6358,3 +6358,38 @@ HCA (Leviathan defeated) → DS0 (Shore Road) → DS1 (Drowned Shore, Tide Reade
 ```
 
 The gate at HCA → DS0 is a `storyMove` block requiring `defeatedBattles['HCA_BOSS']`. The forge battle at DSJ uses `code:'DSJ_EELS'`. The smelting completion button appears at DSF only when `forgeActivated` and iodine is in inventory.
+
+---
+
+## §LXXI — The Sunken Hall (✅ Implemented — Layer 107)
+
+**Status:** ✅ Implemented 2026-05-28
+
+**Summary:** Three-node arc extending south of DSF, resolving the Atlantean chain back to the Antecedent's bearing 047° at depth 18m (first noted in §LIII — Station 7). The Tide Gate at DA2 was the original reason the Constructor chose this site for the Antecedent's containment. The Sea Element is the key; `inscriptionRead` (DA1 skill check) gates the Gate activation.
+
+| Node | Code | num | Coords | Content |
+|------|------|-----|--------|---------|
+| The South Passage | `DA0` | 134 | r:42, c:3 | Junction; entry from DSF |
+| The Sunken Hall | `DA1` | 135 | r:44, c:3 | Stone Inscription NPC; `quest_sunken_01` (INT DC 13) |
+| The Tide Gate | `DA2` | 136 | r:46, c:3 | Arc close; Gate activation storyRender block |
+
+### §LXXI-A. Quests
+
+| ID | Title | Type | Node | Gate | DC | Reward |
+|----|-------|------|------|------|----|--------|
+| `quest_sunken_01` | "The Foundation" | skill_check | DA1 | always | INT DC 13 | 250gp, 250 XP; `inscriptionRead`; Atlantean Foundation added to knowledge |
+| `quest_sunken_02` | "The Tide Gate" | side completion | DA2 | `inscriptionRead` + Sea Element in inv + at DA2 | — | INT +1 (permanent) + 500gp, 500 XP; `tideGateOpened`; Sea Element consumed |
+
+### §LXXI-B. The Closure
+
+The Gate opens to bearing 047°, depth 18m — the exact coordinates Station 7 was monitoring (§LIII). The Antecedent's containment (§LV) was built on top of Atlantean infrastructure already designed to hold something ancient in place. The chain runs: kelp beds → iodine reduction → forge → Sea Element → Tide Gate. It was laid from the Gate outward by people who knew what the return chain would eventually need.
+
+The arc-close text at DA2 references Station 7, Bertha No-Bank's forty-one volumes, and the Constructor's site selection — connecting the Muffat chain (§LI–§LVIII) to the Atlantean chain (§CROWN-01 Amendment A + §LXX–§LXXI) as two branches of the same deep structure.
+
+### §LXXI-C. New State Flags
+
+```
+// §LXXI: Sunken Hall
+inscriptionRead: false,
+tideGateOpened: false,
+```
