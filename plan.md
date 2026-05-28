@@ -5176,7 +5176,7 @@ Condition sub-row uses a nested inner accordion (same pattern, max-height 180px)
 
 ---
 
-## §XLV — Yugurt Tournament + Six Fishermen (PLANNED → Layer 83)
+## §XLV — Yugurt Tournament + Six Fishermen (✅ Implemented — Layer 83)
 
 **Status:** ✅ Implemented — 2026-05-26  
 **Source:** story.md line 832 — longest-standing PLANNED marker (Layer 47)
@@ -5894,6 +5894,8 @@ DR has one encounter (Desert Wanderer ×2) and no NPCs. The node text is the onl
 
 ### §FUTURE-01 — The Road to Damascus: Saul of Tarsus Arc
 
+> **Status:** ✅ Fully implemented — §LIX (Layer 98) through §LXIX (Layer 104a). All nodes live: HR/KS/DR/TS/AO/CI2/LT/PL/AE/EF2/KR/ML/ST. See individual section entries above.
+
 **Concept:** A new act following the travels of Saul of Tarsus — his conversion on the road, his three missionary circuits across the inland sea, and his eventual arrest and voyage to the imperial capital. The arc is structurally derived from a historical itinerary (see `lab-report-saul-paul-travel-reference.md` for source material) but all city names, NPC names, and institutions are fictionalized to fit the Roll2Hit world.
 
 **Mechanical hook:** The Road to Damascus conversion is not a cutscene — it is a world event. The player walks the road to Damascus as Saul (enforcer) and arrives in Damascus as Paul (apostle). The conversion changes the available quest types: enforcement quests close, persuasion and network quests open. Pre-conversion Saul has combat resources (order escort, arrest warrants). Post-conversion Paul has rhetoric resources (speeches, NPC disposition chains) and loses the combat support. This is the first instance in Roll2Hit where a mid-arc identity shift rewrites the world map's available interactions.
@@ -5917,7 +5919,7 @@ DR has one encounter (Desert Wanderer ×2) and no NPCs. The node text is the onl
 | Corinth | **Korath** | `KR` |
 | Ephesus | **Ephrath** | `EF` |
 | Philippi | **Phillam** | `PL` |
-| Malta / Melita | **Melta** | `MT` |
+| Malta / Melita | **Melta** | `ML` |
 | Rome | **The Seat** | `ST` |
 
 | Historical NPC | In-Game Name | Role |
@@ -6093,3 +6095,214 @@ seaOverseerMet: false, charmResisted: false,
 ```
 
 **Flag notes:** `betrayalThought/Word/Deed` set via `checkFailFlag` on skill-check fails at LC1/LC2/LC3. `seaOverseerMet` = FAIL flag for Overseer quest (accepted the offer). `charmResisted` = PASS flag (named the structure, refused). `littorialComplete` set by Harbor Keeper IIFE at LCA (not a quest completion).
+
+---
+
+## §CROWN-01 — The Three Crowns of the Swamp (PLANNED → Layer 105)
+
+> **Status:** PLANNED. Design complete. Lab report gate required before any HTML edit. Extends existing HS node (The Crones' Domain, Layer 16) into a full 9-node arc. Entry: HS.S → WG0. Resolution: HCA.
+
+### §C01-A. The Central Argument
+
+The Crones at HS have names, faces, and trades. They have been fixtures since Layer 16. What they have not had is territory — a deepening. The Crown arc corrects this: each Crone has a domain in the darker swamp, and each domain is a different face of the same ancient force. The force is generative and devouring. It gives and takes back. It is womb and tomb in the same moment.
+
+Three archetypal forms of devouring darkness — one per Crone. Each manifests as a specific failure mode of care: the care that withholds, the care that smothers, the care that consumes through weakness. The player navigates three crowns of the deep swamp, meeting each Crone in her own territory, passing her specific test.
+
+At the center sits an inn. The innkeeper is a hag with no category for genuine kindness. The arc asks: what does the devouring force do when it encounters something it cannot reabsorb?
+
+**The answer is not combat.** The junction nodes have monsters. The Crowns do not. The Crowns are won with attention, with naming, with small acts of genuine care that the Crones have no protocol for. The player accumulates Crone Marks (1 per quest passed) which convert at arc close to permanent stat bonuses. The Innmother tracks a separate Kindness Meter. Free booking unlocks at Kindness ≥ 5.
+
+### §C01-B. Characters
+
+| Character | Crown | Two Archetypes | The Word | Domain |
+|-----------|-------|----------------|----------|--------|
+| Whisper | Crown of Absence | Neglectful + The Saint | NOTHING (*Rien*) | Still water — absence consumes as surely as presence |
+| Glut | Crown of Excess | Over-Nurturing + Overprotective | MORE (*Encore*) | The feeding pool — gives until giving becomes taking |
+| Wane | Crown of Diminishment | Neurotic + Anxious | LESS (*Moins*) | The drained mire — reduces everything including herself |
+| The Innmother | The Inn | All five consolidated | MINE (*À moi*) | The swamp inn — terrible manners, no category for kindness |
+
+**The Innmother** is not named until Kindness ≥ 3. Before the threshold she is "the innkeeper." Her inn is functional — beds, a fire, meals — all terrible, all real. She has been running it alone since before the swamp had its current shape. Her bad manners are not malice. They are the behavior of something that has never been genuinely met. She corrects the way you hold the spoon. She assigns the worst room without asking. She charges for things she never mentioned. None of this is performance. This is how she operates when no one has ever come back to say the room was worth it.
+
+**Kindness Meter:** `S_story.innmotherKindness`, integer, starts 0, does not decay. Each PASS on a Crown quest = +1. Each Inn quest completed = +1. At ≥5: Free Booking unlocked (free sleep at INN for remainder of run). At ≥7: she says her name — the arc's emotional close.
+
+### §C01-C. Node Chain
+
+| Code | Label | Type | Connection | Primary Content |
+|------|-------|------|-----------|-----------------|
+| WG0 | The Deeper Gate | Junction | HS.S → WG0; WG0.S → HW1 | Entry narration only |
+| HW1 | Whisper's Crown — The Still Water | Crown | WG0.S → HW1; HW1.S → HJ1 | 6 Whisper quests |
+| HJ1 | The First Mire | Junction/Combat | HW1.S → HJ1; HJ1.S → HG1 | Will-o'-Wisp × 2 |
+| HG1 | Glut's Crown — The Feeding Pool | Crown | HJ1.S → HG1; HG1.S → HJ2 | 6 Glut quests |
+| HJ2 | The Second Mire | Junction/Combat | HG1.S → HJ2; HJ2.S → HN1 | Bog Hag × 2 + Swamp Horror |
+| HN1 | Wane's Crown — The Drained Mire | Crown | HJ2.S → HN1; HN1.S → HJ3 | 6 Wane quests |
+| HJ3 | The Dark Passage | Junction/Combat | HN1.S → HJ3; HJ3.S → INN | Shadow Drake (boss) |
+| INN | The Innmother's Hall | Inn/Arc | HJ3.S → INN; INN.S → HCA | 6 Inn quests; Kindness Meter |
+| HCA | The Deeper Clearing | Resolution | INN.S → HCA | Crone Mark conversion; arc close |
+
+### §C01-D. Crown of Absence — Whisper's Domain (HW1)
+
+Whisper's archetype: the care that withholds. Not cold. Not hostile. Simply absent — in the specific way of things that were once present and have learned to absent themselves as a form of control. The Still Water reflects the sky back. Nothing moves in it. The absence is the information.
+
+Her word is NOTHING. She will not name what she wants. She will not say what the test is. The test is to notice what is not there and name it without accusing.
+
+**Node text register:** The water is still enough to read by. Not glass — water — but the stillness is so complete that the sky comes down to the surface and stays there. Whisper is at the edge. She is not looking at you. She has been not looking at you since you arrived, which is a thing she does deliberately, which you would know if you had been paying attention to the quality of the deliberateness.
+
+| ID | Title | Type | DC | What It Tests |
+|----|-------|------|----|--------------|
+| quest_whisper_01 | The Unspoken Request | skill_check | WIS Insight 12 | Read what she wants without being told |
+| quest_whisper_02 | The Withheld Name | skill_check | INT Investigation 13 | Find who in the swamp she has stopped naming |
+| quest_whisper_03 | The Empty Gift | skill_check | WIS Perception 12 | Identify which of her three offered gifts is hollow |
+| quest_whisper_04 | The Absent Warning | skill_check | WIS Insight 14 | Notice what she failed to tell you before it matters |
+| quest_whisper_05 | The Saint's Work | completion | — | Bear witness to her hidden care without being asked; no fail state; Kindness +1 |
+| quest_whisper_06 | The Forgiven Absence | skill_check | CHA Persuasion 13 | Give her the space to be present now; do not demand she explain the past |
+
+**PASS register (quest_whisper_01):** You do not ask what she wants. You name the thing you notice is missing — the item that should be on the bank, the name she did not say, the direction she did not look toward. You say it once. She turns. She gives you the mark. She turns back. Neither of you names what just happened.
+
+**FAIL register (quest_whisper_01):** You wait for her to tell you. She does not tell you. The water is still for a long time. Eventually she nods toward the bank and you follow what you think she means and get it partly right. She accepts it. You have given her the answer she already knew would come — the approximate one, the one that arrives when nobody looked carefully enough.
+
+**Disposition:** *"You brought the right thing. You did not ask how I knew you would."* — The Still Water, Whisper's Crown
+
+### §C01-E. Crown of Excess — Glut's Domain (HG1)
+
+Glut's archetype: the care that smothers. The Feeding Pool is warm. The water is warm. The food she offers is warm. Everything at Glut's Crown is comfortable and slightly too much. The exit is hidden under the offer of more.
+
+Her word is MORE. She offers the extra portion, the additional warning, the second helping, the third. The test is to recognize when MORE has become the cage — and name it without refusing her entirely. Full refusal reads as rejection. Rejection makes her dangerous.
+
+**Node text register:** The pool surface has a film on it. Not algae — warmth. The warmth rises from below, which means the source is deeper than the surface, which means the comfort she offers is not generated here but conducted from somewhere else, through something that has been here much longer than the pool has. Glut stands in the shallows. The water is at her waist. She has been here long enough that the water has adjusted to her.
+
+| ID | Title | Type | DC | What It Tests |
+|----|-------|------|----|--------------|
+| quest_glut_01 | The Offered Feast | skill_check | WIS Insight 13 | Decline the second portion without offense |
+| quest_glut_02 | The Smothering Gift | skill_check | CHA Persuasion 13 | Return what she gave without reading as ungrateful |
+| quest_glut_03 | The Locked Door | skill_check | INT Investigation 14 | Find the exit hidden under the comfort |
+| quest_glut_04 | The Endless Feeding | skill_check | WIS Insight 13 | Name the pattern of the offering without naming her as the trap |
+| quest_glut_05 | The False Protection | skill_check | WIS Insight 15 | Name what she is actually protecting herself from |
+| quest_glut_06 | The Open Hand | completion | — | Release the Glut-gift into the pool. Requires `glut_gift` item obtained at HG1. No check. |
+
+**PASS register (quest_glut_03):** The exit is under the warmest part of the room — the part where the food smells best, where the fire reaches. You cross it without lingering. You do not apologize for leaving. She watches from the far side of the pool. When you reach the threshold she says: good. She says it quietly, to the water.
+
+**FAIL register (quest_glut_03):** You stay for the meal. The meal is good. You stay for the second. The exit does not find you until you have eaten three times and slept once and she has already given you the gift you did not want and you are carrying it when you finally cross. She waves from the bank. She has been waving goodbye in this direction for longer than you have been in the swamp.
+
+**Disposition:** *"The door has always been there. You are the fourth person this season to find it on the first crossing."* — The Feeding Pool, Glut's Crown
+
+### §C01-F. Crown of Diminishment — Wane's Domain (HN1)
+
+Wane's archetype: the care that drains through its own grief. The Drained Mire is colorless — not dark, not grey, colorless in the particular way of things that have had the color extracted over time. Wane was here before the other Crones had their crowns. She has been waning since before the swamp was named.
+
+Her word is LESS. Less time. Less hope. Less you, after she's done, than before. She does not intend the drain. She cannot hold herself and so the automatic draw is sideways. The skill is not to fight it. The skill is to remain full while in her presence — which is harder than fighting.
+
+**Node text register:** The grass does not grow toward the light here. It grows lateral — across the mire surface, covering it, waiting for what is in the surface to finish waning so there is room. Wane is seated on a stone that has been seated on for long enough that the stone remembers it. She is wearing something she has been wearing since before the color left this place. She looks up when you arrive as if she expected you later, or earlier, or someone else.
+
+| ID | Title | Type | DC | What It Tests |
+|----|-------|------|----|--------------|
+| quest_wane_01 | The Carried Grief | skill_check | WIS Insight 12 | Decline to carry her weight without cruelty |
+| quest_wane_02 | The Diminishing Task | skill_check | STR or INT 13 | Complete what she says cannot be done |
+| quest_wane_03 | The Hopeless Errand | skill_check | INT Investigation 13 | Return what she claims is permanently lost |
+| quest_wane_04 | The Burden | skill_check | CON or WIS 14 | Hear her full history without being consumed by it |
+| quest_wane_05 | The Drain | skill_check | WIS Insight 13 | Notice the drain while it is happening and name it |
+| quest_wane_06 | The Refusal | skill_check | CHA Persuasion 14 | Say no to her tragedy — not cruelly, simply no |
+
+**PASS register (quest_wane_01):** She gives you her grief in the form of a stone. Not literally — she places her hand over yours and the weight transfers, which is what she does, which is what she has always done and which you name as the thing it is: I am not the place for this. You say it before the weight arrives. She takes her hand back. She holds the weight herself. She has not done that in a long time. She looks at her own hands.
+
+**FAIL register (quest_wane_01):** You take the weight because it seems small and she seems tired. The weight is not small. You discover this in the second hour of the next crossing, when the mire is heavier than it should be and you cannot account for the difference and she has already moved on to the next thing she needs you to carry.
+
+**Disposition:** *"You gave it back. Most people take it and don't realize they've taken it until they're out of the swamp and by then it's theirs."* — The Drained Mire, Wane's Crown
+
+### §C01-G. The Innmother's Hall (INN)
+
+The INN node is the arc's center of gravity. It is reached after the Dark Passage and before the resolution. The Innmother assigns the worst room without asking. She corrects the way you hold the spoon. She charges for things she never mentioned. She knows when you are tired and selects that moment to demand something.
+
+None of this is performance. She has been running the inn since before the swamp had its current geography and no one who came through the door ever came back to say the room was worth it. She has developed no protocols for kindness because kindness has not presented itself as a category worth developing protocols for. She will be surprised exactly once, and she will not show it, and you will see it anyway.
+
+**Six Inn Quests — Kindness Meter Actions:**
+
+| ID | Title | Action | DC | Kindness |
+|----|-------|--------|----|---------|
+| quest_inn_01 | The First Night | Sleep without complaint (automatic on first sleep) | — | +1 |
+| quest_inn_02 | The Unrequested Thing | Bring her something she needs before she asks | WIS Insight 12 | +1 |
+| quest_inn_03 | The Correction | Name her bad manners without anger | CHA Persuasion 13 | +1 |
+| quest_inn_04 | The Tired Hour | Notice she is tired and say so with no expectation | WIS Insight 12 | +1 |
+| quest_inn_05 | The Return | Leave INN and return; she notes you came back | movement completion | +1 |
+| quest_inn_06 | The Free Booking | Threshold: Kindness ≥ 5; she gives Innmother's Key | — | unlock |
+
+**Full vignette — quest_inn_03, "The Correction":**
+
+> At the table, she corrects the way you hold the spoon.
+>
+> This is not the first time. It is the third. The spoon is held incorrectly in the same direction each time, which means you have not changed and she has not stopped noticing.
+>
+> The correction is delivered the way someone delivers information they have delivered before and expect to deliver again. There is no malice in it. There is also no expectation that it will stop bothering you, because she has already decided how much things bother most people and most people do not surprise her.
+>
+> You set the spoon down. You say: you correct things, and I notice that you do, and I am not leaving.
+>
+> She looks at the spoon. She does not say anything. She picks up her own bowl and continues.
+>
+> This is the first time the correction has produced a response she did not already have a category for.
+
+**PASS:** The spoon stays on the table. She says nothing for long enough that the fire in the grate changes its sound. Then she resumes her meal. You have not won. You have simply given her something she has not been given before: a person who stayed in the room with the truth of what she does and did not leave because of it. That is the whole of what happens. It is enough.
+
+**FAIL:** You apologize for the spoon. She corrects it again. You apologize again. By the third correction you have established that apology is available, which means the corrections will continue at the intervals she decides, which is what happens for the rest of the evening. She is not cruel. She is simply thorough, and thoroughness requires something to be thorough at.
+
+**At Kindness = 7:** Her name appears in the INN quoteFn for the first time. The line is short. It does not explain anything. She says: *"Mère Boudine. Since you'll keep coming back anyway."* The line does not fire again.
+
+**Disposition:** *"I ran this inn before the swamp had its current shape. No one who came through the door ever came back to say the room was worth it. You came back."* — The Innmother's Hall
+
+### §C01-H. Crone Marks & Arc Close (HCA)
+
+Each PASS on any of the 18 Crown quests (Whisper 1–6, Glut 1–6, Wane 1–6) = +1 to `S_story.croneMarks`. At HCA, a `storyRender` injection reads the count and converts:
+
+| Marks | Conversion |
+|-------|-----------|
+| 6–9 | +1 permanent bonus to one ability score (player chooses) |
+| 10–14 | +1 ASI + 1 Crone Bead (Necklace of Knowledge variant, swamp-lore) |
+| 15–18 | +1 ASI + Crone Staff (new unique weapon, WIS-scaling) + permanent advantage on WIS saves vs. charm |
+
+FAIL states do not subtract marks — they simply do not add. A player who passes zero Crown quests still completes the arc and still receives the Innmother's Key if Kindness ≥ 5.
+
+**Arc close register (HCA — The Deeper Clearing):**
+
+> The swamp ends here. Not abruptly — it thins, the way things that have held on for a long time thin when they finally release. The color comes back gradually, not all at once.
+>
+> The Crone Marks are in your coat. They are not heavy. They are the weight of things that were noticed — three crowns of the deep swamp, and the things you named in each one, and the hag who told you her name after seven rooms of not telling you.
+>
+> The Deeper Clearing has a path going south. It did not have a path going south until now.
+
+### §C01-I. New State Flags
+
+```
+// §CROWN-01: The Three Crowns
+whisperCrownComplete: false,   // all 6 Whisper quests done
+glutCrownComplete: false,      // all 6 Glut quests done
+waneCrownComplete: false,      // all 6 Wane quests done
+innmotherKindness: 0,          // kindness meter (0–7+)
+innmotherNamed: false,         // she said her name (Kindness ≥ 7)
+freeBookingUnlocked: false,    // Kindness ≥ 5; permanent free sleep at INN
+innmotherKeyGiven: false,      // HCA exit opened
+croneMarks: 0,                 // total Crone Marks accumulated (0–18)
+croneMarksBanked: false,       // arc close conversion complete at HCA
+glut_gift_held: false,         // Glut-gift in inventory (required for quest_glut_06)
+```
+
+### §C01-J. Combat at Junction Nodes
+
+| Node | Battle Label | Key | Count | Design Note |
+|------|-------------|-----|-------|-------------|
+| HJ1 | Will-o'-Wisp × 2 | `will_o_wisp` | 2 | Absence given light; leads nowhere; resists physical |
+| HJ2 | Bog Hag × 2 + Swamp Horror | `bog_hag` | 2 | Excess embodied; they offer and take simultaneously |
+| HJ3 | Shadow Drake | `shadow_drake` | 1 | Solo boss; the last resistance before the inn; its presence dims everything around it |
+
+Verify `will_o_wisp`, `bog_hag`, `shadow_drake` against MONSTER_POOL before implementation — add to WORLD_DB if absent.
+
+### §C01-K. Lab Report Gate
+
+Write `lab-report-crown-three-hags.md` before any HTML edit. Lock:
+- All 10 `S_story` field names (§C01-I)
+- All 24 quest IDs (18 Crown + 6 Inn)
+- Node codes WG0, HW1, HJ1, HG1, HJ2, HN1, HJ3, INN, HCA
+- NODE_COORDS `{r,c}` positions for all 9 new nodes
+- Kindness Meter threshold values (5 = free booking; 7 = name)
+- Crone Mark conversion table
+- New monster keys and whether they exist in MONSTER_POOL
+- `glut_gift` item definition (`{name, icon, sell}`)
+- Innmother's Key item definition
+- Crone Staff weapon definition (if marks ≥ 15)
