@@ -19899,7 +19899,16 @@ function storySleep(node) {
     + _avgHeal + ' HP est.' + (_isFirst ? ' 🏕 Boyscout Night! 2×d10' : ' 1×d10') + ' (min 50%)';
   document.getElementById('sleep-hp-preview').textContent = hpLine + '  ·  🌙 Short rests → 3';
   const cost = (node.code === 'INN' && S_story.freeBookingUnlocked) ? 0 : node.sleepCost;
-  document.getElementById('sleep-cost-preview').textContent = cost === 0 ? 'Free' : cost + 'gp (have ' + S_story.gold + 'gp)';
+  let costText = cost === 0 ? 'Free' : cost + 'gp (have ' + S_story.gold + 'gp)';
+  if (node.code === 'INN') {
+    const k = S_story.innmotherKindness || 0;
+    if (S_story.freeBookingUnlocked) {
+      costText = 'Free  ·  🗝 Kindness discount applied';
+    } else {
+      costText = cost + 'gp (have ' + S_story.gold + 'gp)  ·  Kindness ' + k + ' / 5 — free at 5';
+    }
+  }
+  document.getElementById('sleep-cost-preview').textContent = costText;
   document.getElementById('sleep-day-preview').textContent = 'Day ' + S_story.day + ' → Day ' + (S_story.day + 1) + ' of 49';
   const warn = document.getElementById('sleep-warning');
   const confirmBtn = document.getElementById('btn-sleep-confirm');
