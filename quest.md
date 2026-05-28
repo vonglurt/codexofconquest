@@ -402,7 +402,8 @@ MINE (*À moi*). She corrects it again. The correction is the same each time. CH
 | ✅ Live §SIREN-01 | 5 (Littoral Courts + Overseer) |
 | ✅ Live §CROWN-01 | 24 (Whisper ×6, Glut ×6, Wane ×6, Inn ×6) |
 | ✅ Live §CROWN-01 Amendment A | 10 (3 failure dispatches + 4 hag commissions + 3 iodine track) |
-| **Total live** | **~102** |
+| ✅ Live §LXX | 4 (Shore Road + Tide Register + Forge Mechanism + Smelting) |
+| **Total live** | **~106** |
 | Planned | 0 |
 
 ---

@@ -6306,3 +6306,55 @@ Write `lab-report-crown-three-hags.md` before any HTML edit. Lock:
 - `glut_gift` item definition (`{name, icon, sell}`)
 - Innmother's Key item definition
 - Crone Staff weapon definition (if marks ≥ 15)
+
+---
+
+## §LXX — The Atlantean Shore (✅ Implemented — Layer 106)
+
+**Status:** ✅ Implemented 2026-05-28
+
+**Summary:** Four-node arc extending south of HCA after the Leviathan is defeated. The path opens only when `defeatedBattles['HCA_BOSS']` is set. The arc resolves the iodine/Atlantean smelting thread from §CROWN-01 Amendment A — the player follows the shore road to the Drowned Shore, navigates the Kelp Channel (Giant Eel × 2), and reaches the Atlantean Forge where the Sea Element can be smelted.
+
+| Node | Code | num | Coords | Content |
+|------|------|-----|--------|---------|
+| The Shore Road | `DS0` | 130 | r:34, c:3 | Junction; gate: HCA_BOSS kill required |
+| The Drowned Shore | `DS1` | 131 | r:36, c:3 | Tide Reader NPC; `quest_shore_02` (WIS DC 12) |
+| The Kelp Channel | `DSJ` | 132 | r:38, c:3 | Battle: Giant Eel × 2 (`DSJ_EELS`) |
+| The Atlantean Forge | `DSF` | 133 | r:40, c:3 | Forge Echo NPC; `quest_forge_01` (INT DC 14) + `quest_forge_02` (smelting) |
+
+### §LXX-A. Quests
+
+| ID | Title | Type | Node | Gate | DC | Reward |
+|----|-------|------|------|------|----|--------|
+| `quest_shore_01` | "The Path Opens" | side completion | HCA | `HCA_BOSS` killed | — | 200gp, 200 XP; `shorePathFound` |
+| `quest_shore_02` | "The Bed Register" | skill_check | DS1 | always active | WIS DC 12 | 2× Swamp Kelp + 150gp, 150 XP; `kelpBedsCharted` |
+| `quest_forge_01` | "The Mechanism" | skill_check | DSF | `atlanteanProcessKnown` | INT DC 14 | 300gp, 300 XP; `forgeActivated` |
+| `quest_forge_02` | "The Smelting" | side completion | DSF | `forgeActivated` + Iodine Salt in inv + at DSF | — | Sea Element + 400gp, 400 XP; `seaElementCrafted` |
+
+### §LXX-B. The Sea Element
+
+The arc's terminal reward. Crafted at the forge by consuming any Iodine Salt (plain or charged). A weapon (`type:'weapon'`) with `atkBonus:2, dmgDie:8, dmgCount:1`. The "secret of Atlantas" — the coastal smiths smelted with tidal elements, using iodine reduction to create alloys that hold elemental force.
+
+### §LXX-C. New State Flags
+
+```
+// §LXX: Atlantean Shore
+shorePathFound: false,
+kelpBedsCharted: false,
+forgeActivated: false,
+seaElementCrafted: false,
+```
+
+### §LXX-D. NPCs
+
+- **The Tide Reader** (DS1) — 2-state quoteFn: before/after `kelpBedsCharted`. Records kelp bed positions; bearing to forge noted six years ago, confirmed by player.
+- **The Forge Echo** (DSF) — 3-state quoteFn: default (sealed, waiting for sequence knowledge) / `forgeActivated` (ready, complete the process) / `seaElementCrafted` (arc close: "Take it south. The forge has done what it was kept for.").
+
+### §LXX-E. Arc Shape
+
+```
+HCA (Leviathan defeated) → DS0 (Shore Road) → DS1 (Drowned Shore, Tide Reader)
+  → DSJ (Kelp Channel, Giant Eel × 2) → DSF (Atlantean Forge, Sea Element crafted)
+```
+
+The gate at HCA → DS0 is a `storyMove` block requiring `defeatedBattles['HCA_BOSS']`. The forge battle at DSJ uses `code:'DSJ_EELS'`. The smelting completion button appears at DSF only when `forgeActivated` and iodine is in inventory.

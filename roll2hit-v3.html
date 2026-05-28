@@ -7714,9 +7714,22 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   INN:{ num:128, code:'INN', name:'inn', label:"The Innmother's Hall", act:3, N:'HJ3', S:'HCA', E:null, W:null,
     text:"The hall is functional. The fire works. The meals are real meals. The beds — the second one, specifically — hold their shape through the night.\n\nThe innkeeper assigns you the worst room without asking which you want. She corrects the way you hold the spoon. She charges for the candle that was already on the table when you arrived. She knows when you are tired and selects that moment to demand something.\n\nNone of this is performance.\n\nShe has been running this hall since before the swamp had its current shape and no one who came through the door ever came back to say the room was worth it. She has not developed protocols for that.",
     npc:'The Innmother', battle:null, loot:null, sleep:true, sleepCost:8 },
-  HCA:{ num:129, code:'HCA', name:'hag_swamp', label:'The Deeper Clearing', act:3, N:'INN', S:null, E:null, W:null,
+  HCA:{ num:129, code:'HCA', name:'hag_swamp', label:'The Deeper Clearing', act:3, N:'INN', S:'DS0', E:null, W:null,
     text:"The swamp ends here. Not abruptly — it thins, the way things that have held on for a long time thin when they finally release. The color comes back gradually, not all at once.\n\nThe Crone Marks are in your coat. They are not heavy. They are the weight of things that were noticed — three crowns of the deep swamp, and the things you named in each one, and the hag who told you her name after seven rooms of not telling you.\n\nThe Deeper Clearing has a path going south. It did not have a path going south until now.",
     npc:null, battle:null, loot:null, sleep:false },
+  // ── §LXX: The Atlantean Shore ──
+  DS0:{ num:130, code:'DS0', name:'hag_swamp', label:'The Shore Road', act:3, N:'HCA', S:'DS1', E:null, W:null,
+    text:"The path south of the Clearing is not a proper road. It is a compression in the ground — the kind that forms when something has moved through a place often enough that the earth remembers the weight.\n\nThe swamp does not end here. It changes register. The standing water has a different character: not still, not stagnant — tidal, in a small slow way. Something from further south is pushing north through the ground. Salt, and the smell of old burning.",
+    npc:null, battle:null, loot:null, sleep:false },
+  DS1:{ num:131, code:'DS1', name:'drowned_shore', label:'The Drowned Shore', act:3, N:'DS0', S:'DSJ', E:null, W:null,
+    text:"The swamp has been giving ground here for a long time. The shoreline is not a line — it is a negotiation. Reed beds that were forest beds two centuries ago. Salt grass growing in the channels where fresh water used to run.\n\nThe kelp beds are offshore by thirty feet. Not seaweed — something older, rooted in bedrock, seasonal in the way of plants that have been here longer than the season. The Tide Reader is on the bank. She is recording the morning position of the beds in a notebook she has been filling since before you arrived.\n\nThe beds have been shifting south for forty years. Whatever is drawing them south is under the bottom.",
+    npc:'The Tide Reader', battle:null, loot:null, sleep:false },
+  DSJ:{ num:132, code:'DSJ', name:'drowned_shore', label:'The Kelp Channel', act:3, N:'DS1', S:'DSF', E:null, W:null,
+    text:"The channel between the shore and the forge entrance is thirty feet of slow water. The kelp grows here in density — the last growth before the salt bottom begins.\n\nThe Giant Eels hold the channel. Two of them. They have been holding it since before the forge was sealed. They are not territorial in the ordinary sense — they are present, which amounts to the same thing. The channel does not offer another passage. They have registered you.",
+    npc:null, battle:{label:'Giant Eel × 2', key:'giant_eel', count:2}, loot:null, sleep:false },
+  DSF:{ num:133, code:'DSF', name:'atlantean_forge', label:'The Atlantean Forge', act:3, N:'DSJ', S:null, E:null, W:null,
+    text:"The forge is inside a structure that was built to outlast the people who built it. The walls are dressed stone — not laid stone, dressed stone, the kind of finish that requires knowing what the stone is going to be used for before you cut it. The ventilation runs through the floor. The bellows mechanism is still present, still tensioned, still waiting.\n\nThe salt marks on the working surface are chemical, not organic. Iodine reduction. The Atlantean coastal smiths did not smelt with heat alone — they used the tidal elements. The smoke register, the salt bed, the charged reduction. Someone was making something here that required all three.\n\nThe mechanism is sealed. The process is not obvious. What is obvious is that the forge has been waiting for someone who knows what it is.",
+    npc:'The Forge Echo', battle:null, loot:null, sleep:false },
   // ── §LV: The Antecedent Chamber ──
   AC:{ num:83, code:'AC', name:'antecedent_chamber', label:'The Antecedent Chamber', act:1, N:'CY', S:null, E:null, W:null,
     text:"The descent past the CY checkpoint level goes another twelve meters before the floor levels. The conduit cables end at a partition wall — not brick, not data-center partition, something older than either. The indicators in this section run on a power source that predates the undercity infrastructure by a margin no one has calculated because no one has thought to ask.\n\nThe chamber was designed, from the start, to be exactly this: a room with one function and one occupant. The function is containment. The occupant is still here.\n\nIt is not large. It does not need to be. It has been here long enough that the word 'waiting' no longer applies — waiting implies an expectation of change. This is older than that. This is patience as a physical property of the space.\n\nThe Antecedent Seal activates on entry. The seal runs warm. The indicators change from standby to receiving.\n\nYou are, apparently, expected.", npc:'The Antecedent', battle:null, loot:null, sleep:false },
@@ -7887,6 +7900,8 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
      Only secondary connection: HW1{r:17,c:3}.E → J3{r:17,c:6} (d=3; J-node; accepted). */
   WG0:{r:15,c:3}, HW1:{r:17,c:3}, HJ1:{r:21,c:3}, HG1:{r:22,c:3},
   HJ2:{r:24,c:3}, HN1:{r:26,c:3}, HJ3:{r:28,c:3}, INN:{r:30,c:3}, HCA:{r:32,c:3},
+  /* §LXX: Atlantean Shore — c:3, rows 34→40 */
+  DS0:{r:34,c:3}, DS1:{r:36,c:3}, DSJ:{r:38,c:3}, DSF:{r:40,c:3},
 };
 
 /* ── Layer 9-A: Circuit Corridor Data Structures ── */
@@ -9410,6 +9425,82 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     },
     disposition:'"You found it from the salt. They found it from the metal. The sequence does not matter. The reduction is the same." — The Innmother\'s Hall' },
 
+  // ── §LXX: The Atlantean Shore quests ──
+  quest_shore_01: { id:'quest_shore_01', type:'side',
+    title:'The Path Opens',
+    desc:'The Deeper Clearing has a path going south. It did not have one before.',
+    hint:'Follow the path south of HCA to the Shore Road.',
+    activateNode:'HCA', activateCond:() => !!((S_story.defeatedBattles||{})['HCA_BOSS']),
+    completeItems:[],
+    completeFn:() => S_story.currentCode === 'DS0',
+    onComplete:() => {
+      S_story.shorePathFound = true;
+      S_story.gold = (S_story.gold||0) + 200;
+      storyMsg("200gp found along the shore path — old coin, Atlantean mint, corroded but real.");
+    },
+    xpAward:200,
+    waypointNode:'DS0',
+    disposition:'"The path was always there. The Leviathan was in front of it." — The Deeper Clearing' },
+
+  quest_shore_02: { id:'quest_shore_02', type:'skill_check',
+    title:'The Bed Register',
+    desc:'The kelp beds offshore are shifting south. The Tide Reader has been tracking the pattern. It points to something under the bottom.',
+    hint:'At The Drowned Shore, read the tide register — WIS Perception DC 12.',
+    activateNode:'DS1', activateCond:() => true,
+    checkAbility:'wis', checkLabel:'WIS Perception', checkDC:12, retryable:true,
+    xpAward:150,
+    vignetteText:"The kelp beds sit thirty feet offshore. The Tide Reader's notebook is open on the bank — forty years of morning positions, each entry in the same handwriting, each entry slightly further south than the one before it.\n\nThe pattern in the notebook is not drift. Drift is random. This is directional, consistent, accelerating over the last decade. The beds are being drawn. Something south of the bedrock is producing a tidal pull too small for the charts but large enough for forty years of morning entries.\n\nYou read the notebook. The last entry has a bearing.",
+    passText:"The bearing in the notebook matches the forge's position. She marked it six years ago and has not mentioned it. She was waiting for someone who could confirm what she already knew.",
+    failText:"The notebook entries blur together — the pattern is there, but the instrument for reading it isn't assembled yet. She says: come back when the water has done another turn.",
+    completeItems:[],
+    onPass:() => {
+      S_story.kelpBedsCharted = true;
+      S_story.gold = (S_story.gold||0) + 150;
+      S_story.inventory = S_story.inventory || [];
+      S_story.inventory.push({ name:'Swamp Kelp', icon:'🌿', sell:3, type:'craft', desc:'Sea kelp from the tidal beds. Burns to iodine salt at a hearth or forge.' });
+      S_story.inventory.push({ name:'Swamp Kelp', icon:'🌿', sell:3, type:'craft', desc:'Sea kelp from the tidal beds. Burns to iodine salt at a hearth or forge.' });
+      storyMsg("🌿🌿 Two bundles of Swamp Kelp taken from the tidal beds. 150gp.");
+    },
+    disposition:'"The beds do not shift without reason. The reason has a location." — The Tide Reader, Drowned Shore' },
+
+  quest_forge_01: { id:'quest_forge_01', type:'skill_check',
+    title:'The Mechanism',
+    desc:'The Atlantean Forge is sealed. The mechanism requires the knowledge of the process — not force.',
+    hint:'At The Atlantean Forge, unlock the mechanism — INT Arcana DC 14. Requires knowing the Atlantean Process.',
+    activateNode:'DSF', activateCond:() => !!S_story.atlanteanProcessKnown,
+    checkAbility:'int', checkLabel:'INT Arcana', checkDC:14, retryable:true,
+    xpAward:300,
+    vignetteText:"The mechanism is recessed into the working surface. Three channels, each one a different depth, each one corresponding to a step in the reduction sequence: kelp bed, salt tray, charged element. The Atlantean smiths built their unlock into the process itself — the mechanism only yields to someone who has run the sequence.\n\nYou have run the sequence. The burns are in the salt marks on your hands. The charged reduction is a thing you know, not a thing you remember.\n\nYou apply the knowledge in the correct order. The mechanism recognizes the sequence.",
+    passText:"The forge unlocks from the inside — the bellows engage, the ventilation clears, the surface temperature rises to working heat. It has been waiting for this for a long time. The waiting was not patience. It was accuracy.",
+    failText:"The sequence is almost right. One step is inverted — you have the knowledge but not yet the order. The mechanism holds. Try again when the order is clearer.",
+    completeItems:[],
+    onPass:() => {
+      S_story.forgeActivated = true;
+      S_story.gold = (S_story.gold||0) + 300;
+      storyMsg("🔥 The Atlantean Forge activates. The bellows engage. The heat rises from below. +300gp.");
+    },
+    disposition:'"The mechanism does not ask for skill. It asks for the sequence in the correct order. You have run the sequence." — The Atlantean Forge' },
+
+  quest_forge_02: { id:'quest_forge_02', type:'side',
+    title:'The Smelting',
+    desc:'The forge is active. The Atlantean Sea Element requires iodine reduction in the forge heat — the secret of Atlantas.',
+    hint:'Bring Iodine Salt to the forge and smelt the Sea Element.',
+    activateNode:'DSF', activateCond:() => !!S_story.forgeActivated,
+    completeItems:[],
+    completeFn:() => !!S_story.forgeActivated && ((S_story.inventory||[]).some(i => i.name === 'Charged Iodine Salt') || (S_story.inventory||[]).some(i => i.name === 'Iodine Salt')) && S_story.currentCode === 'DSF',
+    onComplete:() => {
+      const inv = S_story.inventory || [];
+      const chargedIdx = inv.findIndex(i => i.name === 'Charged Iodine Salt');
+      const plainIdx   = inv.findIndex(i => i.name === 'Iodine Salt');
+      if (chargedIdx !== -1) inv.splice(chargedIdx, 1);
+      else if (plainIdx !== -1) inv.splice(plainIdx, 1);
+      S_story.seaElementCrafted = true;
+      S_story.gold = (S_story.gold||0) + 400;
+      S_story.inventory.push({ name:'Sea Element', icon:'🔱', type:'weapon', atkBonus:2, dmgDie:8, dmgCount:1, dmgFlat:0, minLevel:1, sell:500, desc:'Atlantean alloy. Holds the tide\'s force in the metal. +2 ATK, 1d8 damage.' });
+      storyMsg("🔱 Sea Element smelted. The alloy cools to a color that is not quite any color. +2 ATK, 1d8. +400gp.");
+    },
+    disposition:'"It was the last useful thing we left. The alloy holds." — The Forge Echo, Atlantean Forge' },
+
   // ── Layer 55: Visby Underground quests ──
   quest_vs_01: { id:'quest_vs_01', type:'side', title:'Solvak: The Collector',
     desc:"Debt Agent Solvak has been outside Visby six weeks with a 2,000gp debt and no leverage. You might have some.",
@@ -9800,6 +9891,15 @@ const NPC_DIALOGUE = { // → doc: story.md §FL7
     if (S_story.innmotherKindness >= 3) return '"You keep coming back." She says it like an accusation. She says everything like an accusation. It is the only register she has.';
     return '"The room is at the end of the hall. The second bed is the one that works. I don\'t know why you\'re still standing here."';
   }},
+  // §LXX: Atlantean Shore NPCs
+  DS1: { name:'The Tide Reader', quoteFn:() => S_story.kelpBedsCharted
+    ? '"You read it correctly. The beds are a record, not a resource." She marks the current morning position and closes the notebook. "The bearing I noted six years ago — you confirmed it. I was not going to do anything with it alone. Now it is not alone."'
+    : '"The beds have been here since before the shore had its current shape. I have been recording the morning position since my predecessor stopped recording it. The shift is forty years old and accelerating." She does not look up from the notebook. "Most people look at the water and see the water. The pattern is in the position, not the surface."' },
+  DSF: { name:'The Forge Echo', quoteFn:() => S_story.seaElementCrafted
+    ? '"It was the last useful thing we left. The alloy holds." The voice is old in a way that is not age — it is duration. A sound that has been in this room since the room was sealed. "Take it south. The forge has done what it was kept for. We are finished here."'
+    : (S_story.forgeActivated
+    ? '"You unlocked the mechanism in the correct order. That is the only credential the forge recognizes." The room carries the voice without a body. "You have the iodine reduction. Complete the sequence. The Sea Element is in the process — not in the metal. You are the last step."'
+    : '"We sealed it because nothing that came afterward knew the sequence." The voice is present and sourceless — not an echo, a remnant. A sound the room has held since the smith who made it last worked here. "The mechanism knows the process. If you know the process, the mechanism will know you."') },
   HCA: { name:'The Crones — Whisper, Glut & Wane', quoteFn:() => S_story.croneMarksBanked
     ? '"The marks are yours now," Wane says. "You earned them in the proper order — by paying attention." Glut nods. Whisper does not look at you. The not-looking is the warmest thing she has. "Go south," she says. "The path is open."'
     : '"The clearing is the end of the deeper swamp," Glut says. "What you carry from here, you carry permanently." Wane looks at the mire. "The marks know their own weight," she says. "You will understand them later."' },
@@ -10675,6 +10775,11 @@ const _S_DEFAULTS = () => ({
   atlanteanProcessKnown: false,
   iodineBuffActive: false,
   iodineBuffBonus: 0,
+  // §LXX: Atlantean Shore
+  shorePathFound: false,
+  kelpBedsCharted: false,
+  forgeActivated: false,
+  seaElementCrafted: false,
 });
 
 /* ── Layer 48: Luck — Seventh Stat ── */
@@ -15237,6 +15342,11 @@ function storyMove(dir) {
       }
       return;
     }
+  }
+  // §LXX: HCA → DS0 gate — Leviathan must be defeated first
+  if (S_story.currentCode === 'HCA' && dest === 'DS0' && !((S_story.defeatedBattles||{})['HCA_BOSS'])) {
+    storyMsg('The path south does not open until the Clearing is settled. The Leviathan holds the threshold.');
+    return;
   }
   storyCheckMissedSleep();
   // ── L9-G: Corridor travel for non-adjacent moves ──
@@ -20127,6 +20237,58 @@ function storyRender(node, prefix) {
       }
       _hcaDiv.textContent = _hcaText;
       document.getElementById('story-text-box').insertAdjacentElement('afterend', _hcaDiv);
+    }
+  }
+  // §LXX: DSJ — Giant Eel × 2 channel battle
+  { const _dsjOld = document.getElementById('story-dsj-eels'); if (_dsjOld) _dsjOld.remove();
+    if (node.code === 'DSJ' && !(S_story.defeatedBattles||{})['DSJ_EELS']) {
+      const _eelsDiv = document.createElement('div');
+      _eelsDiv.id = 'story-dsj-eels';
+      _eelsDiv.className = 'sweelinck-variant';
+      _eelsDiv.style.cssText = 'margin-top:10px;border-left-color:#2a4a3a;color:#80c0a0;font-size:12px;';
+      _eelsDiv.textContent = '⚡ The channel is held by two Giant Eels. They have been stationed here longer than the forge has been sealed. They are not predatory — they are present, which is a different kind of obstruction.';
+      const _eelsBtn = document.createElement('button');
+      _eelsBtn.className = 'inv-use-btn'; _eelsBtn.style.marginTop = '6px';
+      _eelsBtn.textContent = '⚡ Clear the channel';
+      _eelsBtn.addEventListener('click', () => {
+        _eelsBtn.disabled = true;
+        storyMsg('The two eels move toward each other as you enter the channel — not to attack, but to close it. The current changes. The discharge is enough to arc across the water.');
+        setTimeout(() => storyPreBattle({ ...node, code:'DSJ_EELS', battle:{ label:'Giant Eel × 2 — The Kelp Channel', key:'giant_eel', count:2 } }), 400);
+      });
+      _eelsDiv.appendChild(_eelsBtn);
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _eelsDiv);
+    }
+  }
+  // §LXX: DSF — Smelting completion button (requires forgeActivated + iodine)
+  { const _smeltOld = document.getElementById('story-dsf-smelt'); if (_smeltOld) _smeltOld.remove();
+    if (node.code === 'DSF' && S_story.forgeActivated && !S_story.seaElementCrafted) {
+      const _inv = S_story.inventory || [];
+      const _hasIodine = _inv.some(i => i.name === 'Charged Iodine Salt' || i.name === 'Iodine Salt');
+      if (_hasIodine) {
+        const _smeltBtn = document.createElement('button');
+        _smeltBtn.id = 'story-dsf-smelt'; _smeltBtn.className = 'inv-use-btn'; _smeltBtn.style.marginTop = '4px';
+        _smeltBtn.textContent = '🔱 Smelt the Sea Element';
+        _smeltBtn.addEventListener('click', () => {
+          _smeltBtn.disabled = true;
+          const _inv2 = S_story.inventory || [];
+          const _ci = _inv2.findIndex(i => i.name === 'Charged Iodine Salt');
+          const _pi = _inv2.findIndex(i => i.name === 'Iodine Salt');
+          if (_ci !== -1) _inv2.splice(_ci, 1); else if (_pi !== -1) _inv2.splice(_pi, 1);
+          S_story.seaElementCrafted = true;
+          S_story.gold = (S_story.gold||0) + 400;
+          S_story.inventory.push({ name:'Sea Element', icon:'🔱', type:'weapon', atkBonus:2, dmgDie:8, dmgCount:1, dmgFlat:0, minLevel:1, sell:500, desc:'Atlantean alloy. Holds the tide\'s force in the metal. +2 ATK, 1d8 damage.' });
+          storyMsg('🔱 The iodine goes into the forge first — the smoke register, then the salt bed, then the charged heat. The alloy that emerges is the color the sea has before dawn. Sea Element: +2 ATK, 1d8. +400gp.');
+          storyRender(node);
+        });
+        document.getElementById('story-text-box').insertAdjacentElement('afterend', _smeltBtn);
+      } else {
+        const _smeltNote = document.createElement('div');
+        _smeltNote.id = 'story-dsf-smelt';
+        _smeltNote.className = 'sweelinck-variant';
+        _smeltNote.style.cssText = 'margin-top:8px;border-left-color:#6a4a1a;color:#c09050;font-size:11px;';
+        _smeltNote.textContent = '🧂 The forge is active. The mechanism is ready. The process requires Iodine Salt — plain or charged. The reduction completes in the forge heat.';
+        document.getElementById('story-text-box').insertAdjacentElement('afterend', _smeltNote);
+      }
     }
   }
   // Status
