@@ -8,7 +8,7 @@
 // Local REST API for roll2hit-v3.html — reads and writes the HTML file
 // directly.  The game is fully self-contained in that one file.
 // Toggle: ./wbapi-toggle.sh [start|stop|restart|status]
-// curl:   curl http://localhost:3001/api/ping
+// curl:   curl http://localhost:1367/api/ping
 
 const http   = require('http');
 const fs     = require('fs');
@@ -41,7 +41,8 @@ function purgeNonces() {
 }
 
 // ── Config ──────────────────────────────────────────────────────────────────
-const PORT      = parseInt(process.env.PORT || '3001');
+const PORT      = parseInt(process.env.PORT || '1367');
+const VERBOSE   = process.env.WBAPI_VERBOSE === '1' || process.env.WBAPI_VERBOSE === 'true';
 const GAME_FILE = process.env.ROLL2HIT_FILE
   || process.argv.find((a, i) => process.argv[i-1] === '--file')
   || path.join(__dirname, 'roll2hit-v3.html');
@@ -108,6 +109,27 @@ function logResponse(_method, _url, status, summary) {
   const timeStr = elapsed < 10 ? `${elapsed}ms` : elapsed < 100 ? `${C.yellow}${elapsed}ms${C.reset}` : `${C.red}${elapsed}ms${C.reset}`;
   console.log(`  ${C.dim}└─${C.reset}  ${col}${C.bold}${status}${C.reset}  ${summary}  ${C.dim}[${timeStr}${C.dim}]${C.reset}`);
   logStream.write(`  └─  ${status}  ${summary}  [${elapsed}ms]\n`);
+}
+
+// ── logBody() — pretty-print JSON body; always to file, console only in verbose
+function logBody(direction, obj) {
+  const label = direction === 'in' ? '→ body' : '← resp';
+  const lines  = JSON.stringify(obj, null, 2).split('\n');
+  const clipped = lines.length > 40;
+  const fileLines = clipped ? [...lines.slice(0, 40), `  … ${lines.length - 40} more lines`] : lines;
+
+  // Always write to log file (strip ANSI)
+  logStream.write(`  │  ${label}\n`);
+  for (const l of fileLines) logStream.write(`  │  ${l}\n`);
+
+  // Console only in verbose mode
+  if (!VERBOSE) return;
+  const arrow = direction === 'in' ? `${C.blue}→ body${C.reset}` : `${C.green}← resp${C.reset}`;
+  console.log(`  ${C.dim}│${C.reset}  ${arrow}`);
+  for (const l of lines.slice(0, 40))
+    console.log(`  ${C.dim}│${C.reset}  ${C.dim}${l}${C.reset}`);
+  if (clipped)
+    console.log(`  ${C.dim}│  … ${lines.length - 40} more lines${C.reset}`);
 }
 
 // ── sample() — first N items joined, with "+M more" suffix ──────────────────
@@ -394,6 +416,7 @@ function cors(res) {
 function json(res, status, body) {
   cors(res);
   res.writeHead(status, { 'Content-Type': 'application/json' });
+  logBody('out', body);
   res.end(JSON.stringify(body, null, 2));
 }
 
@@ -401,7 +424,13 @@ function readBody(req) {
   return new Promise((resolve, reject) => {
     let buf = '';
     req.on('data', c => { buf += c; if (buf.length > 1e6) reject(new Error('Body too large')); });
-    req.on('end', () => { try { resolve(JSON.parse(buf || '{}')); } catch(e) { reject(e); } });
+    req.on('end', () => {
+      try {
+        const parsed = JSON.parse(buf || '{}');
+        logBody('in', parsed);
+        resolve(parsed);
+      } catch(e) { reject(e); }
+    });
     req.on('error', reject);
   });
 }
@@ -533,6 +562,591 @@ async function route(req, res) {
 
   const qs = url.search ? url.search.slice(1) : '';
   logReq(method, url.pathname, qs);
+
+  // ── Help ──
+  if (parts[0] === 'help' && method === 'GET') {
+    const topic = (parts[1] || 'index').toLowerCase().replace(/-/g,'_');
+    logRow('topic', topic);
+    const b = `http://localhost:${PORT}`;
+    const HELP = {
+      index: {
+        title: 'WBAPI Help Index',
+        body: [
+          'Roll2Hit World Builder API — man-page style reference.',
+          '',
+          'TOPICS',
+          '  GET /api/help/overview        — what this API is and how it works',
+          '  GET /api/help/modes           — read-only vs. guided-write mode',
+          '  GET /api/help/nonce           — how write-protection and nonces work',
+          '  GET /api/help/read            — all safe read-only endpoints',
+          '  GET /api/help/write           — all write endpoints and their requirements',
+          '  GET /api/help/quest           — quest schema, fields, and lifecycle',
+          '  GET /api/help/node            — node schema, fields, and connections',
+          '  GET /api/help/monster         — monster schema and terrain linkage',
+          '  GET /api/help/terrain         — terrain schema and monster arrays',
+          '  GET /api/help/mission_bit     — mission-bit token pattern for quests',
+          '  GET /api/help/export          — exporting arrays as JSON / JS / module',
+          '  GET /api/help/wizard          — full workflow: terrain→node→monster→quest',
+          '  GET /api/help/audit           — integrity scan and fixing errors',
+          '  GET /api/help/curl            — curl cheat sheet for every operation',
+          '',
+          `Server: ${b}`,
+          'Source: PaulRicheson@Roll2Hit.com — MIT License',
+        ].join('\n'),
+      },
+
+      overview: {
+        title: 'Overview',
+        body: [
+          'OVERVIEW',
+          '  roll2hit-v3.html is the single source of truth for the entire game.',
+          '  All data (nodes, quests, monsters, terrain, NPCs, fish, lake magic)',
+          '  is stored as JavaScript literals inside that one HTML file.',
+          '',
+          '  wbapi-server.js reads the HTML text directly and parses it in memory.',
+          '  Every write endpoint mutates the in-memory objects, then serialises',
+          '  them back into the HTML file via POST /api/save.',
+          '',
+          '  The game is fully playable in a browser with only roll2hit-v3.html —',
+          '  no Node, no server, no dependencies.',
+          '',
+          'ARCHITECTURE',
+          '  Browser ─── roll2hit-v3.html (game engine + all data)',
+          '  Dev tool ── worldbuilder.html (reads game via API, never touched by game)',
+          '  API server ─ wbapi-server.js  (parses + writes roll2hit-v3.html in-place)',
+          '',
+          'TYPICAL WORKFLOW',
+          '  1. ./wbapi-toggle.sh start',
+          `  2. curl ${b}/api/ping             # confirm server is up`,
+          `  3. curl ${b}/api/read/node/CY      # read anything safely`,
+          '  4. Plan the write; get a nonce',
+          `  5. NONCE=$(curl -s -XPOST ${b}/api/nonce \\`,
+          `       -H \'Content-Type: application/json\'`,
+          `       -d \'{"type":"quest","id":"quest_new_01"}\' | jq -r .nonce)`,
+          `  6. curl -XPOST ${b}/api/quest -H "X-Nonce: $NONCE" ...`,
+          `  7. curl -XPOST ${b}/api/save`,
+          '',
+          'See: GET /api/help/modes  |  GET /api/help/curl',
+        ].join('\n'),
+      },
+
+      modes: {
+        title: 'Read-Only vs. Guided-Write Mode',
+        body: [
+          'MODES',
+          '',
+          '1. READ-ONLY MODE (safe — no side effects)',
+          '   All GET requests. Nothing is written to disk.',
+          '   Suitable for exploration, auditing, and automation.',
+          '',
+          '   Examples:',
+          `     curl ${b}/api/ping`,
+          `     curl ${b}/api/node/CY`,
+          `     curl ${b}/api/quest/quest_wis_01`,
+          `     curl ${b}/api/list/monster`,
+          `     curl ${b}/api/audit`,
+          `     curl ${b}/api/export/quest_db?format=json`,
+          '',
+          '2. GUIDED-WRITE MODE (requires nonce)',
+          '   POST / PUT / DELETE endpoints that mutate roll2hit-v3.html.',
+          '   Every write operation is two-step:',
+          '',
+          '   Step A — request a nonce (expires in 5 minutes):',
+          `     curl -s -XPOST ${b}/api/nonce \\`,
+          `       -H \'Content-Type: application/json\'`,
+          `       -d \'{"type":"quest","id":"quest_new_01"}\'`,
+          '     → { "nonce": "ab12cd34ef56gh78", "expires": "60s" }',
+          '',
+          '   Step B — send the write with the nonce header:',
+          `     curl -XPOST ${b}/api/quest \\`,
+          '       -H \'Content-Type: application/json\' \\',
+          '       -H \'X-Nonce: ab12cd34ef56gh78\' \\',
+          '       -d \'{"id":"quest_new_01","title":"...","type":"combat",...}\'',
+          '',
+          '   Step C — save (always required after any write):',
+          `     curl -XPOST ${b}/api/save`,
+          '',
+          '   NOTE: The nonce is tied to one {type, id} pair. Reuse is rejected.',
+          '   DELETE always requires a nonce. POST and PUT accept nonces but some',
+          '   POST endpoints (terrain, monster) are currently nonce-optional.',
+          '   See: GET /api/help/nonce',
+        ].join('\n'),
+      },
+
+      nonce: {
+        title: 'Nonces — Write Protection',
+        body: [
+          'NONCE — WRITE PROTECTION',
+          '',
+          '  A nonce is a single-use 16-character token that proves intent.',
+          '  It is required for DELETE and recommended for destructive PUT/POST.',
+          '',
+          'REQUEST A NONCE',
+          `  POST ${b}/api/nonce`,
+          '  Body: { "type": "<entity-type>", "id": "<entity-id>" }',
+          '',
+          '  type: node | quest | monster | npc | terrain',
+          '  id:   the exact key/code/id of the entity you intend to modify',
+          '',
+          '  Response: { "nonce": "ab12cd34ef56gh78", "expires": 300 }',
+          '  Nonces expire after 5 minutes. Request a fresh one if needed.',
+          '',
+          'USING THE NONCE',
+          '  Add header:  X-Nonce: <nonce>',
+          '  The server validates type+id match before executing the write.',
+          '',
+          'EXAMPLE — delete a node with nonce',
+          `  NONCE=$(curl -s -XPOST ${b}/api/nonce \\`,
+          `    -H \'Content-Type: application/json\'`,
+          `    -d \'{"type":"node","id":"XX"}\' | jq -r .nonce)`,
+          `  curl -XDELETE ${b}/api/node/XX -H "X-Nonce: $NONCE"`,
+          '',
+          'WHY NONCES?',
+          '  Writes are permanent (no undo). The nonce forces a two-step review:',
+          '  read first, confirm the target, then write. It also prevents',
+          '  accidental writes from mis-typed curl commands or browser tab replays.',
+        ].join('\n'),
+      },
+
+      read: {
+        title: 'Read-Only Endpoints (GET)',
+        body: [
+          'READ-ONLY ENDPOINTS — All are GET, no nonce required',
+          '',
+          `GET ${b}/api/ping`,
+          '  Health check. Returns counts of all loaded collections.',
+          '',
+          `GET ${b}/api/source`,
+          '  Raw HTML source of roll2hit-v3.html. Pipe to file to download.',
+          `  curl ${b}/api/source -o backup.html`,
+          '',
+          `GET ${b}/api/audit`,
+          '  Integrity scan. Returns errors, warnings, suggestions.',
+          '  Errors = broken references; warnings = style issues.',
+          '',
+          `GET ${b}/api/schema[/{type}]`,
+          '  Canonical field schema for node, quest, monster, npc, terrain.',
+          '',
+          `GET ${b}/api/flags`,
+          '  List all _S_DEFAULTS flags and their default values.',
+          '',
+          `GET ${b}/api/list/{type}[?node=&terrain=&type=]`,
+          '  type: node | quest | monster | npc | terrain | fish | lake-magic',
+          '  Optional filters narrow results.',
+          '',
+          `GET ${b}/api/{node|quest|monster|npc|terrain}/{id}`,
+          '  Full entity detail including cross-references and connections.',
+          `  e.g.  curl ${b}/api/quest/quest_wis_01`,
+          '',
+          `GET ${b}/api/quest/{id}/chain`,
+          '  Upstream and downstream quest chain for a quest.',
+          '',
+          `GET ${b}/api/location/{code}`,
+          '  Composite view: node + quests + NPCs + monsters for a location.',
+          '',
+          `GET ${b}/api/export/{collection}[?format=json|js|module]`,
+          '  Dump a full array as JSON, JS literal, or CommonJS module.',
+          '  collection: node_map | quest_db | monster_pool | world_db | fish_pool | all',
+          `  e.g.  curl '${b}/api/export/quest_db?format=json' -o quests.json`,
+          '',
+          `GET ${b}/api/fish[/{key}][?rank=&night=]`,
+          '  Fish pool entries. Filter by rank or night flag.',
+          '',
+          `GET ${b}/api/lake-magic[/{key}][?effect=&minRank=]`,
+          '  Lake magic item list or single entry.',
+        ].join('\n'),
+      },
+
+      write: {
+        title: 'Write Endpoints (POST / PUT / DELETE)',
+        body: [
+          'WRITE ENDPOINTS — All mutate roll2hit-v3.html. Run POST /api/save after.',
+          '',
+          'CREATE',
+          `  POST ${b}/api/node          body: {code, label, act, name?, desc?, ...}`,
+          `  POST ${b}/api/quest         body: {id, type, title, activateNode, startText, ...}`,
+          `  POST ${b}/api/monster       body: {key, name, ac, hp, atk, dmg, xp, tier, cr?, desc?}`,
+          `  POST ${b}/api/terrain       body: {key, label, icon?, monsters:[key,...]}`,
+          `  POST ${b}/api/npc           body: {key, name, node, role?, desc?}`,
+          `  POST ${b}/api/fish          body: {key, name, rank, desc?, isNight?}`,
+          `  POST ${b}/api/lake-magic    body: {key, name, effect, ...}`,
+          `  POST ${b}/api/flags         body: {name, defaultValue, comment?}`,
+          '',
+          'UPDATE',
+          `  PUT  ${b}/api/node/{code}   body: {label?, act?, name?, desc?, ...}`,
+          `  PUT  ${b}/api/quest/{id}    body: {title?, type?, startText?, failText?, ...}`,
+          `  PUT  ${b}/api/monster/{key} body: {name?, ac?, hp?, atk?, dmg?, xp?, tier?}`,
+          `  PUT  ${b}/api/terrain/{key} body: {label?, icon?}`,
+          `  PUT  ${b}/api/npc/{key}     body: {name?, role?, desc?}`,
+          '',
+          'RENAME / FORK',
+          `  POST ${b}/api/monster/{key}/rename   body: {name}`,
+          `  POST ${b}/api/monster/{key}/fork     body: {newKey, overrides?}`,
+          `  POST ${b}/api/terrain/{key}/swap     body: {oldKey, newKey}`,
+          `  POST ${b}/api/node/{code}/move       body: {newCode}`,
+          '',
+          'DELETE (nonce required)',
+          `  DELETE ${b}/api/node/{code}      X-Nonce: <token>`,
+          `  DELETE ${b}/api/quest/{id}       X-Nonce: <token>`,
+          `  DELETE ${b}/api/monster/{key}    X-Nonce: <token>`,
+          `  DELETE ${b}/api/npc/{key}        X-Nonce: <token>`,
+          '',
+          'SYSTEM',
+          `  POST ${b}/api/save      — serialise all in-memory edits back to roll2hit-v3.html`,
+          `  POST ${b}/api/reload    — re-parse roll2hit-v3.html from disk (discard memory edits)`,
+          `  POST ${b}/api/restart   — save + exit(67); toggle script auto-relaunches`,
+          '',
+          'See: GET /api/help/nonce  |  GET /api/help/wizard',
+        ].join('\n'),
+      },
+
+      quest: {
+        title: 'Quest Schema',
+        body: [
+          'QUEST SCHEMA',
+          '',
+          '  id            string   unique snake_case identifier  (e.g. quest_delivery_01)',
+          '  type          string   combat | explore | trade | social | mission_bit | skill_check',
+          '  title         string   display title shown to player',
+          '  activateNode  string   node code where quest appears on map',
+          '  waypointNode  string?  optional destination node',
+          '  npc           string?  NPC key who gives the quest',
+          '  startText     string   narrative shown when quest is accepted (BEFORE state)',
+          '  failText      string?  shown on failure; player retries next hour',
+          '  passText      string?  shown on success; world changes',
+          '  reqLevel      number?  minimum player level to accept',
+          '  reqQuest      string?  prerequisite quest ID that must be complete',
+          '  retryable     boolean  true = player may retry (costs 1 hour each attempt)',
+          '  retryGateDays number   days to wait before retry (0 = retry same hour)',
+          '  missionBitKey string?  mission_bit item key granted at quest start',
+          '  chain         string?  quest ID this unlocks on completion',
+          '  xp            number?  XP reward on pass',
+          '  gold          number?  gold reward on pass',
+          '',
+          'LIFECYCLE',
+          '  LOCKED → AVAILABLE (reqQuest done, reqLevel met, activateNode visited)',
+          '  AVAILABLE → ACTIVE (player accepts; if missionBitKey, item is granted)',
+          '  ACTIVE → FAIL (attempt fails; retryable quests stay ACTIVE)',
+          '  ACTIVE → PASS (attempt succeeds; missionBitKey item is taken)',
+          '  PASS → unlocks chain quest if chain is set',
+          '',
+          'EXAMPLE — create via curl',
+          `  curl -XPOST http://localhost:${PORT}/api/quest \\`,
+          `    -H \'Content-Type: application/json\' \\`,
+          `    -d \'{"id":"quest_chest_01","type":"mission_bit","title":"The Sealed Chest",`,
+          `         "activateNode":"BK","startText":"A merchant presses a locked chest...","failText":"The docks are crawling...",`,
+          `         "passText":"The temple priest accepts the chest...","retryable":true,"retryGateDays":0,`,
+          `         "missionBitKey":"sealed_merchant_chest"}\'`,
+          '',
+          'See: GET /api/help/mission_bit',
+        ].join('\n'),
+      },
+
+      node: {
+        title: 'Node Schema',
+        body: [
+          'NODE SCHEMA',
+          '',
+          '  code    string   2–3 char map code (e.g. BK, CY, FR)',
+          '  label   string   display name shown on map',
+          '  name    string?  terrain key from WORLD_DB (e.g. coastal_market)',
+          '  act     number   story act (1–8)',
+          '  desc    string?  narrative description shown when entering',
+          '  x, y    number?  map pixel coordinates',
+          '  locked  boolean? true = hidden until unlocked',
+          '',
+          'CONNECTIONS (read-only, derived)',
+          '  quests   — quests with activateNode === this code',
+          '  npcs     — NPCs assigned to this node',
+          '  monsters — monsters in this node\'s terrain',
+          '',
+          'EXAMPLE — create',
+          `  curl -XPOST http://localhost:${PORT}/api/node \\`,
+          `    -H \'Content-Type: application/json\' \\`,
+          `    -d \'{"code":"SD","label":"Sunken Docks","act":1,"name":"coastal_market",`,
+          `         "desc":"Fog-shrouded docks where sailors speak in whispers."}\'`,
+        ].join('\n'),
+      },
+
+      monster: {
+        title: 'Monster Schema',
+        body: [
+          'MONSTER SCHEMA (MONSTER_POOL)',
+          '',
+          '  key     string   snake_case identifier (e.g. dock_rat)',
+          '  name    string   display name',
+          '  ac      number   armour class',
+          '  hp      number   hit points',
+          '  atk     number   attack bonus',
+          '  dmg     number   average damage per hit',
+          '  xp      number   XP awarded on defeat',
+          '  tier    number   encounter tier 1–5',
+          '  cr      string?  challenge rating (e.g. "1/8", "2")',
+          '  size    string?  Tiny | Small | Medium | Large | Huge | Gargantuan',
+          '  type    string?  beast | undead | humanoid | fiend | ...',
+          '  align   string?  e.g. "neutral evil"',
+          '  speed   string?  e.g. "30 ft"',
+          '  desc    string?  flavour description',
+          '',
+          'TERRAIN LINKAGE',
+          '  Monsters belong to terrains via WORLD_DB entries.',
+          '  To add a monster to a terrain after creating it:',
+          `  PUT http://localhost:${PORT}/api/terrain/{terrainKey}`,
+          '  body: { "monsters": ["existing_key", "new_monster_key"] }',
+          '',
+          'EXAMPLE',
+          `  curl -XPOST http://localhost:${PORT}/api/monster \\`,
+          `    -H \'Content-Type: application/json\' \\`,
+          `    -d \'{"key":"dock_rat","name":"Dock Rat","ac":11,"hp":4,`,
+          `         "atk":2,"dmg":3,"xp":10,"tier":1,"cr":"1/8",`,
+          `         "desc":"A mangy rodent the size of a small dog."}\'`,
+        ].join('\n'),
+      },
+
+      terrain: {
+        title: 'Terrain Schema',
+        body: [
+          'TERRAIN SCHEMA (WORLD_DB)',
+          '',
+          '  key       string   snake_case identifier (e.g. coastal_market)',
+          '  label     string   display name',
+          '  icon      string?  emoji or short string shown on map',
+          '  monsters  array    list of MONSTER_POOL keys that can spawn here',
+          '',
+          'NODES ↔ TERRAIN',
+          '  A node\'s "name" field is its terrain key.',
+          '  Monsters in that terrain can appear when the player is at that node.',
+          '',
+          'EXAMPLE — create terrain',
+          `  curl -XPOST http://localhost:${PORT}/api/terrain \\`,
+          `    -H \'Content-Type: application/json\' \\`,
+          `    -d \'{"key":"fog_docks","label":"Fog Docks","icon":"🌫","monsters":["dock_rat","drowned_sailor"]}\'`,
+          '',
+          'EXAMPLE — add a monster to existing terrain',
+          `  curl -XPUT http://localhost:${PORT}/api/terrain/coastal_market \\`,
+          `    -H \'Content-Type: application/json\' \\`,
+          `    -d \'{"monsters":["goblin","dock_rat","coastal_bandit"]}\'`,
+        ].join('\n'),
+      },
+
+      mission_bit: {
+        title: 'Mission Bit Token Pattern',
+        body: [
+          'MISSION BIT TOKEN',
+          '',
+          '  A mission bit token is an inventory item of type "mission_bit".',
+          '  It represents the physical burden of a quest — the thing the player',
+          '  carries. The item is granted when the quest starts and taken when',
+          '  the quest passes.',
+          '',
+          'ITEM SHAPE',
+          `  { type: 'mission_bit',`,
+          `    id:   'sealed_merchant_chest',`,
+          `    name: 'Sealed Merchant Chest',`,
+          `    desc: 'A locked chest you were paid to deliver. You dare not look inside.',`,
+          `    checkPassFlag: 'sealed_merchant_chest_done' }`,
+          '',
+          'QUEST WIRING',
+          '  Set missionBitKey in the quest to the item\'s id.',
+          '  The engine calls _grantMissionBit(player, item) on quest accept',
+          '  and _takeMissionBit(player, item) on quest pass.',
+          '',
+          'RETRY PATTERN',
+          '  Most mission_bit quests should be retryable:',
+          '  retryable: true, retryGateDays: 0',
+          '  → each attempt costs 1 hour; fail text explains the delay.',
+          '',
+          'FAIL TEXT CONVENTION',
+          '  Fail text should describe a plausible in-world reason for delay:',
+          '  patrols, weather, a locked gate, a suspicious guard.',
+          '  The player keeps the token and tries again next hour.',
+          '',
+          'See: GET /api/help/quest',
+        ].join('\n'),
+      },
+
+      export: {
+        title: 'Export Endpoints',
+        body: [
+          'EXPORT',
+          '',
+          `GET ${b}/api/export/{collection}[?format=json|js|module]`,
+          '',
+          '  Dumps a full in-memory collection as a downloadable artifact.',
+          '',
+          'COLLECTIONS',
+          '  node_map     — NODE_MAP object',
+          '  quest_db     — QUEST_DB object',
+          '  monster_pool — MONSTER_POOL object',
+          '  world_db     — WORLD_DB (terrain) object',
+          '  fish_pool    — { day: [...], night: [...] }',
+          '  lake_magic   — LAKE_MAGIC_DB object',
+          '  all          — all of the above in one object',
+          '',
+          'FORMATS',
+          '  json    (default) — standard JSON',
+          '  js      — assignment: const QUEST_DB = {...};',
+          '  module  — CommonJS: module.exports = {...};',
+          '',
+          'EXAMPLES',
+          `  curl '${b}/api/export/quest_db?format=json' -o quests.json`,
+          `  curl '${b}/api/export/monster_pool?format=js' -o monsters.js`,
+          `  curl '${b}/api/export/all?format=module' -o game-data.js`,
+        ].join('\n'),
+      },
+
+      wizard: {
+        title: 'Full Creation Workflow',
+        body: [
+          'FULL CREATION WORKFLOW (terrain → node → monster → quest)',
+          '',
+          'This is the API-first sequence for adding a new quest with a new',
+          'location and a new monster.',
+          '',
+          `SERVER=http://localhost:${PORT}`,
+          '',
+          '# 1. Check current state',
+          `curl $SERVER/api/ping`,
+          `curl $SERVER/api/audit`,
+          '',
+          '# 2. Create terrain (if new)',
+          `curl -XPOST $SERVER/api/terrain \\`,
+          `  -H 'Content-Type: application/json' \\`,
+          `  -d '{"key":"fog_docks","label":"Fog Docks","icon":"🌫","monsters":[]}'`,
+          '',
+          '# 3. Create node',
+          `curl -XPOST $SERVER/api/node \\`,
+          `  -H 'Content-Type: application/json' \\`,
+          `  -d '{"code":"FD","label":"Fog Docks","act":1,"name":"fog_docks","desc":"..."}'`,
+          '',
+          '# 4. Create monster',
+          `curl -XPOST $SERVER/api/monster \\`,
+          `  -H 'Content-Type: application/json' \\`,
+          `  -d '{"key":"dock_rat","name":"Dock Rat","ac":11,"hp":4,"atk":2,"dmg":3,"xp":10,"tier":1}'`,
+          '',
+          '# 5. Add monster to terrain',
+          `curl -XPUT $SERVER/api/terrain/fog_docks \\`,
+          `  -H 'Content-Type: application/json' \\`,
+          `  -d '{"monsters":["dock_rat"]}'`,
+          '',
+          '# 6. Create quest with mission bit',
+          `curl -XPOST $SERVER/api/quest \\`,
+          `  -H 'Content-Type: application/json' \\`,
+          `  -d '{"id":"quest_chest_01","type":"mission_bit","title":"The Sealed Chest",`,
+          `       "activateNode":"FD","retryable":true,"retryGateDays":0,`,
+          `       "missionBitKey":"sealed_chest",`,
+          `       "startText":"...","failText":"...","passText":"..."}'`,
+          '',
+          '# 7. Save to file',
+          `curl -XPOST $SERVER/api/save`,
+          '',
+          '# 8. Restart server to reload',
+          `curl -XPOST $SERVER/api/restart`,
+          '',
+          'TIP: Use worldbuilder.html → ✦ Wizard tab for a guided UI version.',
+          'See: GET /api/help/mission_bit  |  GET /api/help/nonce',
+        ].join('\n'),
+      },
+
+      audit: {
+        title: 'Audit — Data Integrity',
+        body: [
+          'AUDIT',
+          '',
+          `GET ${b}/api/audit`,
+          '',
+          '  Scans the in-memory game data for integrity issues.',
+          '  Returns a list of findings grouped by severity:',
+          '',
+          '  error       — broken reference; will cause bugs at runtime',
+          '  warning     — style issue or likely mistake; game still works',
+          '  suggestion  — improvement; not required',
+          '  parse       — section could not be parsed; data may be missing',
+          '',
+          'COMMON ERRORS',
+          '  node quest ref  — quest.activateNode points to a missing node code',
+          '  monster key ref — terrain monster list references missing MONSTER_POOL key',
+          '  quest chain ref — quest.chain points to a missing quest ID',
+          '  npc node ref    — NPC.node points to a missing node code',
+          '',
+          'FIXING ERRORS',
+          '  1. Run audit to get the error list',
+          '  2. For broken references: create the missing entity or fix the key',
+          '  3. For typos in existing keys: use /rename or /swap endpoints',
+          '  4. Run audit again to confirm errors dropped to zero',
+          '',
+          `  e.g. curl ${b}/api/audit | jq \'.errors\'`,
+        ].join('\n'),
+      },
+
+      curl: {
+        title: 'curl Cheat Sheet',
+        body: [
+          `CURL CHEAT SHEET  —  ${b}`,
+          '',
+          '# Health & info',
+          `curl ${b}/api/ping`,
+          `curl ${b}/api/audit`,
+          `curl ${b}/api/schema`,
+          `curl ${b}/api/flags`,
+          '',
+          '# Read entities',
+          `curl ${b}/api/node/CY`,
+          `curl ${b}/api/quest/quest_wis_01`,
+          `curl ${b}/api/monster/goblin`,
+          `curl ${b}/api/terrain/forest`,
+          `curl ${b}/api/location/CY`,
+          `curl ${b}/api/quest/quest_wis_01/chain`,
+          '',
+          '# List',
+          `curl ${b}/api/list/node`,
+          `curl ${b}/api/list/quest`,
+          `curl ${b}/api/list/monster`,
+          `curl ${b}/api/list/terrain`,
+          `curl '${b}/api/list/quest?node=CY'`,
+          '',
+          '# Export',
+          `curl '${b}/api/export/quest_db?format=json'`,
+          `curl '${b}/api/export/all?format=module'`,
+          '',
+          '# Create',
+          `curl -XPOST ${b}/api/node    -H 'Content-Type: application/json' -d '{"code":"XX","label":"New Node","act":1}'`,
+          `curl -XPOST ${b}/api/quest   -H 'Content-Type: application/json' -d '{"id":"quest_xx_01","type":"combat","title":"...","activateNode":"XX"}'`,
+          `curl -XPOST ${b}/api/monster -H 'Content-Type: application/json' -d '{"key":"new_mob","name":"New Mob","ac":12,"hp":6,"atk":3,"dmg":4,"xp":15,"tier":1}'`,
+          `curl -XPOST ${b}/api/terrain -H 'Content-Type: application/json' -d '{"key":"new_terrain","label":"New Terrain","monsters":["new_mob"]}'`,
+          '',
+          '# Update',
+          `curl -XPUT ${b}/api/node/XX    -H 'Content-Type: application/json' -d '{"label":"Updated Label"}'`,
+          `curl -XPUT ${b}/api/quest/q_01 -H 'Content-Type: application/json' -d '{"failText":"..."}'`,
+          '',
+          '# Delete (nonce required)',
+          `NONCE=$(curl -s -XPOST ${b}/api/nonce -H 'Content-Type: application/json' -d '{"type":"node","id":"XX"}' | jq -r .nonce)`,
+          `curl -XDELETE ${b}/api/node/XX -H "X-Nonce: $NONCE"`,
+          '',
+          '# Save / restart',
+          `curl -XPOST ${b}/api/save`,
+          `curl -XPOST ${b}/api/restart`,
+          '',
+          '# Help topics',
+          `curl ${b}/api/help`,
+          `curl ${b}/api/help/modes`,
+          `curl ${b}/api/help/nonce`,
+          `curl ${b}/api/help/quest`,
+          `curl ${b}/api/help/wizard`,
+        ].join('\n'),
+      },
+    };
+
+    const entry = HELP[topic] || HELP['index'];
+    const plain = method === 'GET' && (url.searchParams.get('format') || 'text') === 'text';
+    logResponse(method, url.pathname, 200, entry.title);
+    if (plain) {
+      cors(res);
+      res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
+      return res.end(`\n${entry.title}\n${'─'.repeat(entry.title.length)}\n\n${entry.body}\n\n`);
+    }
+    return json(res, 200, { topic, title: entry.title, text: entry.body, topics: Object.keys(HELP) });
+  }
 
   // ── Health ──
   if (parts[0] === 'ping') {
@@ -1589,11 +2203,14 @@ server.listen(PORT, '127.0.0.1', () => {
   const line = '═'.repeat(60);
   console.log(`\n${C.bold}${C.magenta}${line}${C.reset}`);
   console.log(`${C.bold}  WBAPI Server  —  http://localhost:${PORT}/api${C.reset}`);
+  console.log(`${C.dim}  PaulRicheson@Roll2Hit.com  —  MIT License  —  Public Domain${C.reset}`);
   console.log(`${C.magenta}${line}${C.reset}`);
   console.log(`  Game file: ${C.cyan}${GAME_FILE}${C.reset}`);
   console.log(`  Log file:  ${C.cyan}${LOG_FILE}${C.reset}`);
+  if (VERBOSE) console.log(`  ${C.yellow}${C.bold}VERBOSE${C.reset}${C.yellow}     Full request + response bodies printed to terminal${C.reset}`);
   console.log(`\n  ${C.dim}Endpoints:${C.reset}`);
   const routes = [
+    ['GET',    '/api/help[/{topic}]             → man-page style docs (read|write|nonce|wizard|curl|...)'],
     ['GET',    '/api/ping'],
     ['GET',    '/api/source                         → raw HTML source (worldbuilder Load from Server)'],
     ['GET',    '/api/audit                          → data integrity scan (errors/warnings/suggestions)'],

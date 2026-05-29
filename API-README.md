@@ -3,7 +3,7 @@
 # Roll2Hit World Builder API — Full Reference
 
 **Architecture**: Browser UI → Node.js REST server → `roll2hit-v3.html` (game file)  
-**Server port**: `localhost:3001`  
+**Server port**: `localhost:1367`  
 **Game file**: `roll2hit-v3.html` (1.7 MB, ~11,530 lines)
 
 ---
@@ -35,7 +35,7 @@ The script:
 Once running:
 ```
 ════════════════════════════════════════════════════════════════
-  WBAPI Server  —  http://localhost:3001/api
+  WBAPI Server  —  http://localhost:1367/api
 ════════════════════════════════════════════════════════════════
   Game file: roll2hit-v3.html
   Log file:  wbapi-server.log
@@ -107,7 +107,7 @@ The `_meta.canDelete` flag tells the UI whether to show a Delete button or a "bl
 Health check. Use this to detect if the server is running.
 
 ```bash
-curl http://localhost:3001/api/ping
+curl http://localhost:1367/api/ping
 ```
 ```json
 {
@@ -165,7 +165,7 @@ Fetch a single entity with full connection envelope.
 Composite view: node + terrain + all monsters/quests/NPCs at that location.
 
 ```bash
-curl http://localhost:3001/api/location/CI
+curl http://localhost:1367/api/location/CI
 ```
 ```json
 {
@@ -194,8 +194,8 @@ Returns lightweight list with `_meta.canDelete` per item.
 | `?arc=quest_wis` | quest | filter by arc prefix |
 
 ```bash
-curl 'http://localhost:3001/api/list/quest?node=CY'
-curl 'http://localhost:3001/api/list/monster?terrain=market_quarter'
+curl 'http://localhost:1367/api/list/quest?node=CY'
+curl 'http://localhost:1367/api/list/monster?terrain=market_quarter'
 ```
 
 ---
@@ -209,17 +209,17 @@ Update one or more fields. Body is a JSON object of `{field: value}` pairs.
 
 ```bash
 # Edit monster stats
-curl -X PUT http://localhost:3001/api/monster/commoner \
+curl -X PUT http://localhost:1367/api/monster/commoner \
   -H 'Content-Type: application/json' \
   -d '{"ac": 15, "hp": 8}'
 
 # Edit quest text
-curl -X PUT http://localhost:3001/api/quest/quest_wis_01 \
+curl -X PUT http://localhost:1367/api/quest/quest_wis_01 \
   -H 'Content-Type: application/json' \
   -d '{"passText": "You recalled the ancient text.", "xpAward": 150}'
 
 # Edit node label
-curl -X PUT http://localhost:3001/api/node/CY \
+curl -X PUT http://localhost:1367/api/node/CY \
   -H 'Content-Type: application/json' \
   -d '{"label": "Neo Undercity"}'
 ```
@@ -257,7 +257,7 @@ curl -X PUT http://localhost:3001/api/node/CY \
 Delete an entity. Returns **HTTP 409** if nested content blocks deletion.
 
 ```bash
-curl -X DELETE http://localhost:3001/api/monster/rabid_monkey
+curl -X DELETE http://localhost:1367/api/monster/rabid_monkey
 ```
 
 **200 — deleted:**
@@ -291,7 +291,7 @@ curl -X DELETE http://localhost:3001/api/monster/rabid_monkey
 Change a monster's display name globally (key is unchanged).
 
 ```bash
-curl -X POST http://localhost:3001/api/monster/commoner/rename \
+curl -X POST http://localhost:1367/api/monster/commoner/rename \
   -H 'Content-Type: application/json' \
   -d '{"name": "Rabid Monkey"}'
 ```
@@ -306,7 +306,7 @@ curl -X POST http://localhost:3001/api/monster/commoner/rename \
 Create a new monster as a copy of an existing one (for terrain-specific variants).
 
 ```bash
-curl -X POST http://localhost:3001/api/monster/commoner/fork \
+curl -X POST http://localhost:1367/api/monster/commoner/fork \
   -H 'Content-Type: application/json' \
   -d '{"newKey": "rabid_monkey", "overrides": {"name": "Rabid Monkey", "hp": 8}}'
 ```
@@ -314,7 +314,7 @@ curl -X POST http://localhost:3001/api/monster/commoner/fork \
 Then optionally replace in a specific terrain only:
 
 ```bash
-curl -X POST http://localhost:3001/api/terrain/market_quarter/swap \
+curl -X POST http://localhost:1367/api/terrain/market_quarter/swap \
   -H 'Content-Type: application/json' \
   -d '{"oldKey": "commoner", "newKey": "rabid_monkey"}'
 ```
@@ -326,7 +326,7 @@ curl -X POST http://localhost:3001/api/terrain/market_quarter/swap \
 Rename a node code and rewrite all quest/NPC references automatically.
 
 ```bash
-curl -X POST http://localhost:3001/api/node/CY/move \
+curl -X POST http://localhost:1367/api/node/CY/move \
   -H 'Content-Type: application/json' \
   -d '{"newCode": "CY2"}'
 ```
@@ -341,7 +341,7 @@ curl -X POST http://localhost:3001/api/node/CY/move \
 Write all pending changes to a new timestamped HTML file. Original is never overwritten.
 
 ```bash
-curl -X POST http://localhost:3001/api/save -H 'Content-Type: application/json' -d '{}'
+curl -X POST http://localhost:1367/api/save -H 'Content-Type: application/json' -d '{}'
 ```
 ```json
 { "ok": true, "path": "/Users/user/code/roll2hit.com/roll2hit-v3-20260529-162839.html" }
@@ -349,7 +349,7 @@ curl -X POST http://localhost:3001/api/save -H 'Content-Type: application/json' 
 
 Use `outputPath` to specify a custom save location:
 ```bash
-curl -X POST http://localhost:3001/api/save \
+curl -X POST http://localhost:1367/api/save \
   -H 'Content-Type: application/json' \
   -d '{"outputPath": "/Users/user/Desktop/my-world.html"}'
 ```
@@ -361,7 +361,7 @@ curl -X POST http://localhost:3001/api/save \
 Re-read the game file from disk (picks up changes made by a previous session).
 
 ```bash
-curl -X POST http://localhost:3001/api/reload -H 'Content-Type: application/json' -d '{}'
+curl -X POST http://localhost:1367/api/reload -H 'Content-Type: application/json' -d '{}'
 ```
 
 ---
@@ -458,7 +458,7 @@ curl -X POST .../api/save   # → roll2hit-v3-20260529-162839.html  (has BOTH re
 Before adding any quests, confirm the target node is in the game and has the terrain you expect:
 
 ```bash
-curl http://localhost:3001/api/location/KS
+curl http://localhost:1367/api/location/KS
 ```
 
 ```json
@@ -472,7 +472,7 @@ curl http://localhost:3001/api/location/KS
 If the node doesn't exist yet, add it first:
 
 ```bash
-curl -X PUT http://localhost:3001/api/node/KS \
+curl -X PUT http://localhost:1367/api/node/KS \
   -H 'Content-Type: application/json' \
   -d '{"label":"Damascus — Lower City","name":"damascus","act":4}'
 ```
@@ -498,7 +498,7 @@ ROLL2HIT_FILE=roll2hit-v3.html ./start-wbapi.sh
 ### Step 2 — Inspect the schema before writing the quest
 
 ```bash
-curl http://localhost:3001/api/schema/quest
+curl http://localhost:1367/api/schema/quest
 ```
 
 Returns the canonical field list for quest objects — required fields, editable fields, types. Use this to avoid typos in field names before writing the quest object.
@@ -527,7 +527,7 @@ Returns the canonical field list for quest objects — required fields, editable
 The basket escape quest. This is a skill_check (STR Athletics DC 12) at node KS. The `POST /api/quest` endpoint creates a new quest object in `QUEST_DB`:
 
 ```bash
-curl -X POST http://localhost:3001/api/quest \
+curl -X POST http://localhost:1367/api/quest \
   -H 'Content-Type: application/json' \
   -d '{
     "id": "quest_basket_damascus",
@@ -562,7 +562,7 @@ Response:
 ### Step 4 — Verify the quest is readable
 
 ```bash
-curl http://localhost:3001/api/quest/quest_basket_damascus
+curl http://localhost:1367/api/quest/quest_basket_damascus
 ```
 
 Returns the full quest object. Check that `activateNode`, `checkAbility`, `checkDC`, and `checkPassFlag` are all set correctly before proceeding.
@@ -574,7 +574,7 @@ Returns the full quest object. Check that `activateNode`, `checkAbility`, `check
 Once a quest exists, individual fields can be patched:
 
 ```bash
-curl -X PUT http://localhost:3001/api/quest/quest_basket_damascus \
+curl -X PUT http://localhost:1367/api/quest/quest_basket_damascus \
   -H 'Content-Type: application/json' \
   -d '{"passText": "Down. Controlled. The last three feet you lower slowly because you can hear him breathing. He lands and crouches and then he is moving. The gate guard does not turn."}'
 ```
@@ -611,7 +611,7 @@ Each quest's `activateCond` references the `checkPassFlag` of the preceding ques
 After adding all quests, run the chain query to confirm the dependency graph is correct:
 
 ```bash
-curl http://localhost:3001/api/quest/quest_anath/chain
+curl http://localhost:1367/api/quest/quest_anath/chain
 ```
 
 ```json
@@ -628,7 +628,7 @@ If any quest appears in the wrong position, or a flag name is misspelled (which 
 ### Step 8 — Save to a timestamped file
 
 ```bash
-curl -X POST http://localhost:3001/api/save -H 'Content-Type: application/json' -d '{}'
+curl -X POST http://localhost:1367/api/save -H 'Content-Type: application/json' -d '{}'
 ```
 
 ```json
@@ -664,7 +664,7 @@ Load the timestamped file to verify it renders correctly in the browser. The cha
 ### Query 1 — What missions currently exist at a node?
 
 ```bash
-curl http://localhost:3001/api/location/LT
+curl http://localhost:1367/api/location/LT
 ```
 
 The `connections.quests` array in the response shows every quest whose `activateNode` or `waypointNode` is `LT`. Before adding a new quest, confirm:
@@ -678,7 +678,7 @@ The `connections.quests` array in the response shows every quest whose `activate
 Use the schema to get the canonical mission type list:
 
 ```bash
-curl http://localhost:3001/api/schema/quest | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['fields']['type']['values'])"
+curl http://localhost:1367/api/schema/quest | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['fields']['type']['values'])"
 ```
 
 ```
@@ -708,25 +708,25 @@ A three-quest escort chain at Philippi: meet the contact, secure the prison, dep
 
 **Mission 1: meet the contact (talk_chain / side)**
 ```bash
-curl -X POST http://localhost:3001/api/quest \
+curl -X POST http://localhost:1367/api/quest \
   -d '{"id":"quest_pl_01","type":"side","title":"The Bridge Meeting","activateNode":"PL","checkPassFlag":"plContactMet","desc":"..."}'
 ```
 
 **Mission 2: secure the prison (skill_check / escort, WIS DC 12)**
 ```bash
-curl -X POST http://localhost:3001/api/quest \
+curl -X POST http://localhost:1367/api/quest \
   -d '{"id":"quest_pl_02","type":"skill_check","title":"Seven Stairs, Then Five","activateNode":"PL","activateCond":"plContactMet","checkAbility":"wis","checkLabel":"Insight","checkDC":12,"checkPassFlag":"plPrisonSecured","desc":"..."}'
 ```
 
 **Mission 3: depart (gate_pass / side)**
 ```bash
-curl -X POST http://localhost:3001/api/quest \
+curl -X POST http://localhost:1367/api/quest \
   -d '{"id":"quest_pl_03","type":"side","title":"The Road East","activateNode":"PL","activateCond":"plPrisonSecured","checkPassFlag":"plDeparted","desc":"..."}'
 ```
 
 Then verify the chain:
 ```bash
-curl http://localhost:3001/api/quest/quest_pl_01/chain
+curl http://localhost:1367/api/quest/quest_pl_01/chain
 # upstream: [], downstream: [quest_pl_02, quest_pl_03]
 ```
 

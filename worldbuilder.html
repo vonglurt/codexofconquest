@@ -212,6 +212,67 @@ select.fi{appearance:none;}
 .op-result.err{border-color:var(--red);color:var(--red);}
 .op-err-msg{font-size:10px;color:var(--red);display:none;}
 
+/* ── Wizard tab ── */
+#tab-wizard{overflow-y:auto;}
+.wiz-wrap{max-width:680px;margin:0 auto;padding:28px 24px;display:flex;flex-direction:column;gap:0;width:100%;}
+.wiz-progress{display:flex;align-items:flex-start;gap:0;margin-bottom:36px;position:relative;}
+.wiz-dot-wrap{display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;}
+.wiz-dot{width:26px;height:26px;border-radius:50%;border:2px solid var(--border);background:var(--bg2);color:var(--muted);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all .2s;cursor:default;}
+.wiz-dot.done{background:var(--green);border-color:var(--green);color:#000;}
+.wiz-dot.active{background:var(--accent);border-color:var(--accent);color:#000;}
+.wiz-dlabel{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;text-align:center;}
+.wiz-dlabel.active{color:var(--accent);}
+.wiz-line{flex:1;height:2px;background:var(--border);margin-top:13px;transition:background .3s;}
+.wiz-line.done{background:var(--green);}
+.wiz-step{display:none;flex-direction:column;gap:14px;animation:wiz-in .15s ease;}
+.wiz-step.active{display:flex;}
+@keyframes wiz-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.wiz-title{font-size:17px;font-weight:700;color:var(--text);}
+.wiz-subtitle{font-size:12px;color:var(--muted);line-height:1.65;max-width:560px;}
+.wiz-card{background:var(--bg2);border:1px solid var(--border);border-radius:7px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;}
+.wiz-card-title{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;}
+.wiz-row{display:flex;gap:10px;align-items:flex-start;}
+.wiz-row>.fg{flex:1;}
+.wiz-toggle-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:2px;}
+.wiz-opt{padding:4px 11px;border:1px solid var(--border);border-radius:5px;cursor:pointer;font-size:11px;color:var(--muted);background:var(--bg2);transition:all .15s;user-select:none;}
+.wiz-opt:hover{border-color:var(--accent);color:var(--accent);}
+.wiz-opt.on{border-color:var(--accent);background:#1c2a40;color:var(--accent);}
+.wiz-tl{display:flex;flex-direction:column;gap:8px;}
+.wiz-tl-row{display:grid;grid-template-columns:58px 1fr;gap:10px;align-items:start;}
+.wiz-tl-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding-top:6px;text-align:right;border-right:2px solid var(--border);padding-right:8px;color:var(--muted);}
+.wiz-tl-label.before{border-color:var(--muted);}
+.wiz-tl-label.during{border-color:var(--yellow);color:var(--yellow);}
+.wiz-tl-label.fail{border-color:var(--red);color:var(--red);}
+.wiz-tl-label.pass{border-color:var(--green);color:var(--green);}
+.wiz-nav{display:flex;align-items:center;gap:8px;padding-top:6px;}
+.wiz-spacer{flex:1;}
+.wiz-err{font-size:11px;color:var(--red);padding:6px 10px;background:#2a1212;border:1px solid var(--red);border-radius:4px;display:none;}
+.wiz-suggest{padding:10px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;font-size:11px;color:var(--muted);line-height:1.7;}
+.wiz-suggest strong{color:var(--text);}
+.wiz-suggest .pill{display:inline-block;padding:1px 7px;border-radius:3px;background:#1c2a40;color:var(--accent);border:1px solid #2a4a6a;margin:0 2px;font-size:10px;cursor:pointer;}
+.wiz-suggest .pill:hover{background:#2a3a50;}
+.wiz-review-section{background:var(--bg2);border:1px solid var(--border);border-radius:6px;overflow:hidden;margin-bottom:8px;}
+.wiz-review-hd{padding:7px 12px;background:var(--bg3);border-bottom:1px solid var(--border);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;display:flex;align-items:center;gap:8px;}
+.wiz-review-body{padding:10px 12px;font-size:11px;line-height:1.65;}
+.wiz-review-body pre{white-space:pre-wrap;word-break:break-all;font-size:10px;color:var(--green);font-family:monospace;}
+.wiz-curl{background:#080d12;border:1px solid #1c2a3a;border-radius:4px;padding:8px 10px;font-size:10px;color:var(--teal);font-family:monospace;white-space:pre-wrap;word-break:break-all;margin-top:4px;}
+.wiz-log{font-size:11px;font-family:monospace;background:#080d12;border:1px solid var(--border);border-radius:4px;padding:8px 10px;max-height:160px;overflow-y:auto;white-space:pre-wrap;color:var(--muted);margin-top:4px;}
+.wiz-log .ok{color:var(--green);}
+.wiz-log .err{color:var(--red);}
+.wiz-log .info{color:var(--accent);}
+.wiz-entity-row{display:flex;align-items:baseline;gap:8px;padding:4px 0;border-bottom:1px solid var(--border);font-size:11px;}
+.wiz-entity-row:last-child{border-bottom:none;}
+.wiz-entity-type{font-size:10px;color:var(--muted);min-width:54px;}
+.wiz-entity-key{color:var(--purple);font-weight:700;}
+.wiz-entity-label{color:var(--muted);}
+.wiz-token-preview{padding:8px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:5px;display:flex;align-items:center;gap:10px;font-size:12px;}
+.wiz-token-icon{font-size:18px;}
+.wiz-token-name{color:var(--text);font-weight:600;}
+.wiz-token-type{font-size:10px;color:var(--purple);margin-left:4px;}
+.wiz-empty{color:var(--muted);font-size:12px;padding:28px;text-align:center;}
+.wiz-nav-row{display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding-top:12px;border-top:1px solid var(--border);}
+.wiz-review-title{font-size:11px;font-weight:700;color:var(--text);padding:8px 12px;background:var(--bg3);border-bottom:1px solid var(--border);}
+
 /* ── Welcome screen ── */
 #welcome-screen{position:absolute;inset:0;z-index:100;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;padding:24px;}
 #welcome-screen.hidden{display:none;}
@@ -287,6 +348,7 @@ select.fi{appearance:none;}
   <div class="nav-tab" data-tab="audit">🔍 Audit</div>
   <div class="nav-tab" data-tab="stats">📊 Stats</div>
   <div class="nav-tab" data-tab="builder">🏗 Builder</div>
+  <div class="nav-tab" data-tab="wizard">✦ Wizard</div>
   <div class="nav-sep"></div>
   <div id="topbar-right">
     <span id="server-indicator" class="offline" style="display:none">○ Browser only</span>
@@ -337,7 +399,7 @@ select.fi{appearance:none;}
       <div class="wcard" id="wcard-server">
         <div class="wcard-icon">⚡</div>
         <div class="wcard-title">Localhost Server</div>
-        <div class="wcard-desc">Connect to wbapi-server.js on port 3001. Auto-loads the game file.</div>
+        <div class="wcard-desc">Connect to wbapi-server.js on port 1367. Auto-loads the game file.</div>
         <div class="wcard-status" id="wcard-server-status" style="color:var(--muted)">Checking…</div>
       </div>
 
@@ -764,6 +826,222 @@ select.fi{appearance:none;}
     <div id="builder-empty" class="empty"><h2>Load a game file</h2><p>Open roll2hit-v3.html to use the Builder.</p></div>
     <div id="builder-content" style="display:none;flex-direction:column;gap:0"></div>
   </div>
+
+  <!-- ═══ WIZARD ═══ -->
+  <div class="panel" id="tab-wizard" style="overflow-y:auto;padding:0;flex-direction:column;">
+    <div id="wizard-empty" class="empty"><h2>Load a game file</h2><p>Open roll2hit-v3.html to use the Wizard.</p></div>
+    <div id="wizard-content" style="display:none;" class="wiz-wrap">
+
+      <!-- Progress dots -->
+      <div class="wiz-progress" id="wiz-progress">
+        <div class="wiz-dot-wrap"><div class="wiz-dot active" id="wdot-1">1</div><div class="wiz-dlabel active" id="wdlbl-1">Vignette</div></div>
+        <div class="wiz-line" id="wline-1"></div>
+        <div class="wiz-dot-wrap"><div class="wiz-dot" id="wdot-2">2</div><div class="wiz-dlabel" id="wdlbl-2">Token</div></div>
+        <div class="wiz-line" id="wline-2"></div>
+        <div class="wiz-dot-wrap"><div class="wiz-dot" id="wdot-3">3</div><div class="wiz-dlabel" id="wdlbl-3">Location</div></div>
+        <div class="wiz-line" id="wline-3"></div>
+        <div class="wiz-dot-wrap"><div class="wiz-dot" id="wdot-4">4</div><div class="wiz-dlabel" id="wdlbl-4">Monster</div></div>
+        <div class="wiz-line" id="wline-4"></div>
+        <div class="wiz-dot-wrap"><div class="wiz-dot" id="wdot-5">5</div><div class="wiz-dlabel" id="wdlbl-5">Quest Arc</div></div>
+        <div class="wiz-line" id="wline-5"></div>
+        <div class="wiz-dot-wrap"><div class="wiz-dot" id="wdot-6">6</div><div class="wiz-dlabel" id="wdlbl-6">Review</div></div>
+      </div>
+
+      <!-- ── Step 1: Vignette ── -->
+      <div class="wiz-step active" id="wstep-1">
+        <div class="wiz-title">Write the Story</div>
+        <div class="wiz-subtitle">Describe in plain English what this quest is about — the world before, during, and after. Write it like a vignette: who, where, what burden, what changes. The wizard will extract IDs and text from your narrative.</div>
+        <div class="wiz-card">
+          <div class="wiz-card-title">Narrative vignette</div>
+          <textarea id="wiz-vignette" class="fi" rows="7" placeholder="A merchant in the port of Birka carries a locked chest he dare not open. He knows only that it must reach the temple before the next moon…" style="resize:vertical;line-height:1.7"></textarea>
+        </div>
+        <div class="wiz-card">
+          <div class="wiz-card-title">What are we creating?</div>
+          <div class="wiz-toggle-row" id="wiz-mode-row">
+            <button class="wiz-opt on" data-mode="quest">Quest</button>
+            <button class="wiz-opt on" data-mode="location">Location</button>
+            <button class="wiz-opt on" data-mode="monster">Monster</button>
+          </div>
+          <div style="font-size:10px;color:var(--muted);margin-top:4px">Toggle which objects to create. Deselect anything that already exists.</div>
+        </div>
+        <div class="wiz-nav-row">
+          <span></span>
+          <button class="btn primary" onclick="wizStep(2)">Next →</button>
+        </div>
+      </div>
+
+      <!-- ── Step 2: Mission Token ── -->
+      <div class="wiz-step" id="wstep-2">
+        <div class="wiz-title">Mission Token</div>
+        <div class="wiz-subtitle">Every quest starts by granting the player a token — a tangible item in their inventory that represents the burden they carry. Name it like an object the character holds.</div>
+        <div class="wiz-card">
+          <div class="wiz-card-title">Suggested from vignette</div>
+          <div class="wiz-row">
+            <div class="fg">
+              <div class="fl">Token label (display name)</div>
+              <input id="wiz-bit-label" class="fi" placeholder="e.g. Sealed Merchant Chest">
+            </div>
+            <div class="fg">
+              <div class="fl">Token key (snake_case ID)</div>
+              <input id="wiz-bit-key" class="fi" placeholder="e.g. sealed_merchant_chest">
+            </div>
+          </div>
+          <div class="fl">Token description (shown in inventory)</div>
+          <input id="wiz-bit-desc" class="fi" placeholder="A locked chest you were paid to deliver. You dare not look inside.">
+        </div>
+        <div class="wiz-token-preview" id="wiz-token-preview">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:6px">Preview — inventory item</div>
+          <div id="wiz-token-preview-body" style="font-size:11px;color:var(--text);font-family:monospace;white-space:pre"></div>
+        </div>
+        <div class="wiz-nav-row">
+          <button class="btn" onclick="wizStep(1)">← Back</button>
+          <button class="btn primary" onclick="wizStep(3)">Next →</button>
+        </div>
+      </div>
+
+      <!-- ── Step 3: Location ── -->
+      <div class="wiz-step" id="wstep-3">
+        <div class="wiz-title">Location</div>
+        <div class="wiz-subtitle">Where does this quest begin? Choose an existing node or define a new one. The quest's <code>activateNode</code> determines where it appears on the map.</div>
+        <div class="wiz-card">
+          <div class="wiz-card-title">Use existing node</div>
+          <div class="wiz-row">
+            <div class="fg">
+              <div class="fl">Node code</div>
+              <input id="wiz-loc-existing" class="fi" placeholder="e.g. BK, CY, FR">
+            </div>
+            <button class="btn" style="align-self:flex-end" onclick="wizLookupNode()">Look up</button>
+          </div>
+          <div id="wiz-loc-found" style="font-size:11px;color:var(--green);display:none"></div>
+        </div>
+        <div class="wiz-card" id="wiz-loc-new-card">
+          <div class="wiz-card-title">— or — create new node</div>
+          <div class="wiz-row">
+            <div class="fg"><div class="fl">Code (2–3 chars)</div><input id="wiz-node-code" class="fi" placeholder="XX"></div>
+            <div class="fg"><div class="fl">Label</div><input id="wiz-node-label" class="fi" placeholder="The Sunken Docks"></div>
+          </div>
+          <div class="wiz-row">
+            <div class="fg"><div class="fl">Act (1–8)</div><input id="wiz-node-act" class="fi" type="number" min="1" max="8" placeholder="1"></div>
+            <div class="fg"><div class="fl">Terrain key</div><input id="wiz-node-terrain" class="fi" placeholder="coastal_market"></div>
+          </div>
+          <div><div class="fl">Node description</div><textarea id="wiz-node-desc" class="fi" rows="2" placeholder="A fog-shrouded dock district where sailors speak in whispers." style="resize:none"></textarea></div>
+        </div>
+        <div class="wiz-nav-row">
+          <button class="btn" onclick="wizStep(2)">← Back</button>
+          <button class="btn primary" onclick="wizStep(4)">Next →</button>
+        </div>
+      </div>
+
+      <!-- ── Step 4: Monster ── -->
+      <div class="wiz-step" id="wstep-4">
+        <div class="wiz-title">Encounter</div>
+        <div class="wiz-subtitle">What stands in the player's way? Choose an existing monster or define a new one that inhabits this location's terrain.</div>
+        <div class="wiz-card">
+          <div class="wiz-card-title">Use existing monster</div>
+          <div class="wiz-row">
+            <div class="fg"><div class="fl">Monster key or name</div><input id="wiz-mon-existing" class="fi" placeholder="e.g. goblin, dock_rat, drowned_sailor"></div>
+            <button class="btn" style="align-self:flex-end" onclick="wizLookupMonster()">Look up</button>
+          </div>
+          <div id="wiz-mon-found" style="font-size:11px;color:var(--green);display:none"></div>
+        </div>
+        <div class="wiz-card" id="wiz-mon-new-card">
+          <div class="wiz-card-title">— or — create new monster</div>
+          <div class="wiz-row">
+            <div class="fg"><div class="fl">Key (snake_case)</div><input id="wiz-mon-key" class="fi" placeholder="dock_rat"></div>
+            <div class="fg"><div class="fl">Display name</div><input id="wiz-mon-name" class="fi" placeholder="Dock Rat"></div>
+          </div>
+          <div class="wiz-row">
+            <div class="fg"><div class="fl">AC</div><input id="wiz-mon-ac" class="fi" type="number" placeholder="11"></div>
+            <div class="fg"><div class="fl">HP</div><input id="wiz-mon-hp" class="fi" type="number" placeholder="4"></div>
+            <div class="fg"><div class="fl">ATK</div><input id="wiz-mon-atk" class="fi" type="number" placeholder="2"></div>
+            <div class="fg"><div class="fl">DMG</div><input id="wiz-mon-dmg" class="fi" type="number" placeholder="3"></div>
+          </div>
+          <div class="wiz-row">
+            <div class="fg"><div class="fl">XP</div><input id="wiz-mon-xp" class="fi" type="number" placeholder="10"></div>
+            <div class="fg"><div class="fl">Tier (1–5)</div><input id="wiz-mon-tier" class="fi" type="number" min="1" max="5" placeholder="1"></div>
+            <div class="fg"><div class="fl">CR</div><input id="wiz-mon-cr" class="fi" placeholder="1/8"></div>
+          </div>
+          <div><div class="fl">Description</div><textarea id="wiz-mon-desc" class="fi" rows="2" placeholder="A mangy, disease-ridden rodent the size of a small dog." style="resize:none"></textarea></div>
+        </div>
+        <div class="wiz-nav-row">
+          <button class="btn" onclick="wizStep(3)">← Back</button>
+          <button class="btn primary" onclick="wizStep(5)">Next →</button>
+        </div>
+      </div>
+
+      <!-- ── Step 5: Quest Arc ── -->
+      <div class="wiz-step" id="wstep-5">
+        <div class="wiz-title">Quest Arc</div>
+        <div class="wiz-subtitle">Write the three moments of the quest. Each attempt costs 1 hour. Failure lets the player try again.</div>
+        <div class="wiz-card">
+          <div class="wiz-card-title">Quest identity</div>
+          <div class="wiz-row">
+            <div class="fg"><div class="fl">Quest ID (snake_case)</div><input id="wiz-quest-id" class="fi" placeholder="quest_delivery_chest_01"></div>
+            <div class="fg"><div class="fl">Type</div>
+              <select id="wiz-quest-type" class="fi">
+                <option value="combat">combat</option>
+                <option value="explore">explore</option>
+                <option value="trade">trade</option>
+                <option value="social">social</option>
+                <option value="mission_bit">mission_bit</option>
+              </select>
+            </div>
+          </div>
+          <div><div class="fl">Quest title</div><input id="wiz-quest-title" class="fi" placeholder="The Sealed Chest"></div>
+        </div>
+
+        <div class="wiz-tl">
+          <div class="wiz-tl-row">
+            <span class="wiz-tl-label before">BEFORE</span>
+            <div class="fg"><div class="fl">Start text — world as it is when quest is accepted</div>
+              <textarea id="wiz-quest-start" class="fi" rows="3" style="resize:none" placeholder="The merchant Aldric presses a locked chest into your hands at dawn. 'Get it to the Temple of Birka before the moon rises,' he says, eyes darting to the fog. 'Ask no questions.'"></textarea>
+            </div>
+          </div>
+          <div class="wiz-tl-row">
+            <span class="wiz-tl-label fail">FAIL</span>
+            <div class="fg"><div class="fl">Fail text — something blocked the attempt; player may retry in 1 hour</div>
+              <textarea id="wiz-quest-fail" class="fi" rows="3" style="resize:none" placeholder="The docks are crawling with the harbormaster's men tonight. You slip back to the inn, chest tucked under your cloak. You'll try again when the patrols thin."></textarea>
+            </div>
+          </div>
+          <div class="wiz-tl-row">
+            <span class="wiz-tl-label pass">PASS</span>
+            <div class="fg"><div class="fl">Pass text — the world changes; mission token is taken</div>
+              <textarea id="wiz-quest-pass" class="fi" rows="3" style="resize:none" placeholder="The temple priest accepts the chest without a word, presses a coin into your palm, and closes the door before you can ask. The weight is gone. So is Aldric."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="wiz-card" style="background:transparent;border-color:var(--border)">
+          <div style="display:flex;align-items:center;gap:10px">
+            <input type="checkbox" id="wiz-retryable" checked style="width:14px;height:14px;accent-color:var(--accent)">
+            <label for="wiz-retryable" style="font-size:12px;color:var(--text)">Retryable — each attempt costs 1 hour (<code>retryable:true, retryGateDays:0</code>)</label>
+          </div>
+        </div>
+        <div class="wiz-nav-row">
+          <button class="btn" onclick="wizStep(4)">← Back</button>
+          <button class="btn primary" onclick="wizStep(6)">Review →</button>
+        </div>
+      </div>
+
+      <!-- ── Step 6: Review + Create ── -->
+      <div class="wiz-step" id="wstep-6">
+        <div class="wiz-title">Review &amp; Create</div>
+        <div class="wiz-subtitle">Check the generated objects below, then click Create to fire the API calls in sequence. Each section shows the JS literal that will be inserted into roll2hit-v3.html.</div>
+
+        <div id="wiz-review-sections"></div>
+
+        <div class="wiz-curl" id="wiz-curl-block" style="display:none"></div>
+
+        <div class="wiz-log" id="wiz-log" style="display:none"></div>
+
+        <div class="wiz-nav-row" style="margin-top:8px">
+          <button class="btn" onclick="wizStep(5)">← Back</button>
+          <button class="btn primary" id="btn-wiz-create" onclick="wizCreate()">⚡ Create All</button>
+        </div>
+      </div>
+
+    </div><!-- /wizard-content -->
+  </div><!-- /tab-wizard -->
 
 </div>
 <div id="tooltip"></div>
@@ -1619,7 +1897,7 @@ function updateDiffBadge() {
 // ═══════════════════════════════════════════════════════════════════════════
 // Server mode — detect local WBAPI server and route mutations through it
 // ═══════════════════════════════════════════════════════════════════════════
-const SERVER = { active: false, url: 'http://localhost:3001' };
+const SERVER = { active: false, url: 'http://localhost:1367' };
 
 async function serverDetect() {
   const ind = $('server-indicator');
@@ -2672,7 +2950,7 @@ $('btn-skill-check').addEventListener('click',()=>{
 // Mirrors fishing mechanics from roll2hit-v3.html §Fishing
 // ═══════════════════════════════════════════════════════════════════════════
 (()=>{
-  const FS_API = 'http://localhost:3001/api';
+  const FS_API = 'http://localhost:1367/api';
   const fsMod  = id => parseInt(document.getElementById(id).value) || 0;
   const $$     = id => document.getElementById(id);
   const d20    = () => Math.ceil(Math.random() * 20);
@@ -3685,13 +3963,13 @@ const BIRKA_NPC = {};
     card.classList.remove('active','err','checking');
     card.classList.add('checking');
     status.style.color = 'var(--yellow)';
-    status.textContent = 'Checking localhost:3001…';
+    status.textContent = 'Checking localhost:1367…';
     term.style.display = 'none';
     let d;
     try {
       const ctrl = new AbortController();
       const tid = setTimeout(() => ctrl.abort(), 2000);
-      const r = await fetch('http://localhost:3001/api/ping', { signal: ctrl.signal });
+      const r = await fetch('http://localhost:1367/api/ping', { signal: ctrl.signal });
       clearTimeout(tid);
       d = await r.json();
     } catch(_) { d = null; }
@@ -3764,12 +4042,12 @@ const BIRKA_NPC = {};
     splashHexCols();
 
     // Kick off fetch in parallel
-    const fetchP = fetch('http://localhost:3001/api/source')
+    const fetchP = fetch('http://localhost:1367/api/source')
       .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); });
 
     // Phase sequence
     splashPhase('Searching…',           'scanning local network', 5);  await wait(700);
-    splashPhase('Establishing link…',   'port 3001', 14);              await wait(600);
+    splashPhase('Establishing link…',   'port 1367', 14);              await wait(600);
     splashPhase('Receiving data…',      'roll2hit-v3.html', 26);
 
     let src;
@@ -4537,6 +4815,382 @@ document.querySelector('[data-tab="stats"]').addEventListener('click', () => {
   document.querySelector('[data-tab="builder"]').addEventListener('click', () => {
     if (WBAPI.loaded) renderBuilder();
   });
+
+})();
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Wizard Tab
+// ═══════════════════════════════════════════════════════════════════════════
+(()=>{
+  const FS_API = 'http://localhost:1367/api';
+
+  const WIZ = {
+    step: 1,
+    modes: new Set(['quest','location','monster']),
+    loc: { existing: null, isNew: false },
+    mon: { existing: null, isNew: false },
+    created: [],
+  };
+
+  function $w(id){ return document.getElementById(id); }
+
+  // ── Utilities ──────────────────────────────────────────────────────────────
+  function slugify(s){
+    return s.toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'');
+  }
+
+  function suggestFromVignette(){
+    const txt = ($w('wiz-vignette').value||'').trim();
+    if (!txt) return;
+
+    // Suggest bit label = first noun phrase after "a/an/the"
+    const nounMatch = txt.match(/(?:a|an|the)\s+([a-z][a-z\s]{2,30})/i);
+    const bitLabel = nounMatch ? nounMatch[1].replace(/\b\w/g,c=>c.toUpperCase()).trim() : 'Mission Token';
+    const bitKey   = slugify(bitLabel);
+    const bitDesc  = txt.length > 120 ? txt.slice(0,120).trim()+'…' : txt;
+
+    if (!$w('wiz-bit-label').value) $w('wiz-bit-label').value = bitLabel;
+    if (!$w('wiz-bit-key').value)   $w('wiz-bit-key').value   = bitKey;
+    if (!$w('wiz-bit-desc').value)  $w('wiz-bit-desc').value  = bitDesc;
+
+    // Suggest quest ID from slug
+    const qid = 'quest_' + bitKey.slice(0,24);
+    if (!$w('wiz-quest-id').value) $w('wiz-quest-id').value = qid;
+    if (!$w('wiz-quest-title').value){
+      const title = bitLabel.length > 4 ? 'The ' + bitLabel : bitLabel;
+      $w('wiz-quest-title').value = title;
+    }
+  }
+
+  function updateTokenPreview(){
+    const label = $w('wiz-bit-label').value.trim();
+    const key   = $w('wiz-bit-key').value.trim();
+    const desc  = $w('wiz-bit-desc').value.trim();
+    if (!key) { $w('wiz-token-preview-body').textContent = ''; return; }
+    $w('wiz-token-preview-body').textContent =
+      `{ type: 'mission_bit',\n  id:   '${key}',\n  name: '${label||key}',\n  desc: '${desc}',\n  checkPassFlag: '${key}_done' }`;
+  }
+
+  // ── Step navigation ────────────────────────────────────────────────────────
+  function wizStep(n){
+    if (n === 2 && WIZ.step === 1) suggestFromVignette();
+    if (n === 6) wizBuildReview();
+
+    for (let i=1;i<=6;i++){
+      const dot  = $w(`wdot-${i}`);
+      const lbl  = $w(`wdlbl-${i}`);
+      const step = $w(`wstep-${i}`);
+      const line = $w(`wline-${i}`);
+      const done = i < n;
+      const act  = i === n;
+      dot.className  = 'wiz-dot' + (done?' done':act?' active':'');
+      lbl.className  = 'wiz-dlabel' + (act?' active':'');
+      if (step) step.className = 'wiz-step' + (act?' active':'');
+      if (line) line.className = 'wiz-line' + (done?' done':'');
+    }
+    WIZ.step = n;
+  }
+  window.wizStep = wizStep;
+
+  // ── Mode toggles ──────────────────────────────────────────────────────────
+  document.getElementById('wiz-mode-row').addEventListener('click', e => {
+    const btn = e.target.closest('.wiz-opt');
+    if (!btn) return;
+    const m = btn.dataset.mode;
+    if (WIZ.modes.has(m)) WIZ.modes.delete(m); else WIZ.modes.add(m);
+    btn.classList.toggle('on', WIZ.modes.has(m));
+  });
+
+  // ── Token preview live update ──────────────────────────────────────────────
+  ['wiz-bit-label','wiz-bit-key','wiz-bit-desc'].forEach(id =>
+    $w(id).addEventListener('input', updateTokenPreview));
+  $w('wiz-bit-label').addEventListener('blur', () => {
+    if (!$w('wiz-bit-key').value)
+      $w('wiz-bit-key').value = slugify($w('wiz-bit-label').value);
+    updateTokenPreview();
+  });
+
+  // ── Location lookup ────────────────────────────────────────────────────────
+  async function wizLookupNode(){
+    const code = ($w('wiz-loc-existing').value||'').trim().toUpperCase();
+    if (!code) return;
+    const found = $w('wiz-loc-found');
+    try {
+      const r = await fetch(`${FS_API}/node/${code}`);
+      if (r.ok){
+        const d = await r.json();
+        found.textContent = `✓ ${code} — ${d.label||d.node?.label||'found'}`;
+        found.style.display = '';
+        WIZ.loc = { existing: code, isNew: false };
+      } else {
+        found.style.color = 'var(--red)';
+        found.textContent = `✗ Node "${code}" not found — fill in "create new node" below`;
+        found.style.display = '';
+        WIZ.loc = { existing: null, isNew: true };
+      }
+    } catch(_){
+      found.style.color = 'var(--yellow)';
+      found.textContent = 'Server not connected — fill in new node fields or connect wbapi-server';
+      found.style.display = '';
+    }
+  }
+  window.wizLookupNode = wizLookupNode;
+
+  // ── Monster lookup ─────────────────────────────────────────────────────────
+  async function wizLookupMonster(){
+    const key = ($w('wiz-mon-existing').value||'').trim().toLowerCase();
+    if (!key) return;
+    const found = $w('wiz-mon-found');
+    try {
+      const r = await fetch(`${FS_API}/monster/${key}`);
+      if (r.ok){
+        const d = await r.json();
+        found.style.color = 'var(--green)';
+        found.textContent = `✓ ${key} — ${d.name||d.monster?.name||'found'} (AC ${d.ac||d.monster?.ac}, HP ${d.hp||d.monster?.hp})`;
+        found.style.display = '';
+        WIZ.mon = { existing: key, isNew: false };
+      } else {
+        found.style.color = 'var(--red)';
+        found.textContent = `✗ Monster "${key}" not found — fill in "create new monster" below`;
+        found.style.display = '';
+        WIZ.mon = { existing: null, isNew: true };
+      }
+    } catch(_){
+      found.style.color = 'var(--yellow)';
+      found.textContent = 'Server not connected — fill in new monster fields';
+      found.style.display = '';
+    }
+  }
+  window.wizLookupMonster = wizLookupMonster;
+
+  // ── Build review step ──────────────────────────────────────────────────────
+  function wizBuildReview(){
+    const sec = $w('wiz-review-sections');
+    sec.innerHTML = '';
+
+    const bitLabel = $w('wiz-bit-label').value.trim();
+    const bitKey   = $w('wiz-bit-key').value.trim();
+    const bitDesc  = $w('wiz-bit-desc').value.trim();
+    const questId  = $w('wiz-quest-id').value.trim();
+    const questTitle = $w('wiz-quest-title').value.trim();
+    const questType  = $w('wiz-quest-type').value;
+    const startTxt = $w('wiz-quest-start').value.trim();
+    const failTxt  = $w('wiz-quest-fail').value.trim();
+    const passTxt  = $w('wiz-quest-pass').value.trim();
+    const retryable = $w('wiz-retryable').checked;
+    const locCode  = WIZ.loc.existing || $w('wiz-loc-existing').value.trim().toUpperCase() || ($w('wiz-node-code').value.trim().toUpperCase());
+    const monKey   = WIZ.mon.existing || $w('wiz-mon-existing').value.trim() || $w('wiz-mon-key').value.trim();
+
+    const sections = [];
+    const curlLines = [];
+
+    // Token section
+    if (bitKey) {
+      sections.push({
+        title: '1. Mission Token (inventory item)',
+        code: `{ type: 'mission_bit', id: '${bitKey}', name: '${bitLabel||bitKey}',\n  desc: '${bitDesc}',\n  checkPassFlag: '${bitKey}_done' }`,
+        note: 'Granted at quest start via _grantMissionBit(player, item). Taken on pass via _takeMissionBit.',
+      });
+    }
+
+    // Location section
+    if (WIZ.modes.has('location') && WIZ.loc.isNew) {
+      const code  = $w('wiz-node-code').value.trim().toUpperCase();
+      const label = $w('wiz-node-label').value.trim();
+      const act   = $w('wiz-node-act').value.trim();
+      const ter   = $w('wiz-node-terrain').value.trim();
+      const desc  = $w('wiz-node-desc').value.trim();
+      if (code) {
+        const body = JSON.stringify({ code, label, act:Number(act)||1, terrain:ter, desc });
+        sections.push({
+          title: `2. New Node — ${code} ${label}`,
+          code: `POST /api/node\n${JSON.stringify({code,label,act:Number(act)||1,terrain:ter,desc},null,2)}`,
+          note: 'Creates a new map node.',
+        });
+        curlLines.push(`curl -s -X POST ${FS_API}/node -H 'Content-Type: application/json' -d '${body}'`);
+      }
+    }
+
+    // Monster section
+    if (WIZ.modes.has('monster') && WIZ.mon.isNew) {
+      const mk   = $w('wiz-mon-key').value.trim();
+      const mn   = $w('wiz-mon-name').value.trim();
+      const mac  = Number($w('wiz-mon-ac').value)||11;
+      const mhp  = Number($w('wiz-mon-hp').value)||4;
+      const matk = Number($w('wiz-mon-atk').value)||2;
+      const mdmg = Number($w('wiz-mon-dmg').value)||3;
+      const mxp  = Number($w('wiz-mon-xp').value)||10;
+      const mtier= Number($w('wiz-mon-tier').value)||1;
+      const mcr  = $w('wiz-mon-cr').value.trim()||'1/8';
+      const mdesc= $w('wiz-mon-desc').value.trim();
+      if (mk) {
+        const body = JSON.stringify({key:mk,name:mn,ac:mac,hp:mhp,atk:matk,dmg:mdmg,xp:mxp,tier:mtier,cr:mcr,desc:mdesc});
+        sections.push({
+          title: `3. New Monster — ${mk}`,
+          code: `POST /api/monster\n${JSON.stringify({key:mk,name:mn,ac:mac,hp:mhp,atk:matk,dmg:mdmg,xp:mxp,tier:mtier,cr:mcr,desc:mdesc},null,2)}`,
+          note: `Inserted into MONSTER_POOL. To add to terrain: PUT /api/terrain/${$w('wiz-node-terrain').value.trim()||'your_terrain'}`,
+        });
+        curlLines.push(`curl -s -X POST ${FS_API}/monster -H 'Content-Type: application/json' -d '${body}'`);
+      }
+    }
+
+    // Quest section
+    if (WIZ.modes.has('quest') && questId) {
+      const qbody = {
+        id:questId, type:questType, title:questTitle,
+        activateNode:locCode,
+        startText:startTxt, failText:failTxt, passText:passTxt,
+        retryable, retryGateDays:0,
+        missionBitKey:bitKey,
+      };
+      sections.push({
+        title: `4. Quest — ${questId}`,
+        code: `POST /api/quest\n${JSON.stringify(qbody,null,2)}`,
+        note: `Inserted into QUEST_DB. activateNode: ${locCode}`,
+      });
+      curlLines.push(`curl -s -X POST ${FS_API}/quest -H 'Content-Type: application/json' -d '${JSON.stringify(qbody)}'`);
+    }
+
+    // Save
+    curlLines.push(`curl -s -X POST ${FS_API}/save`);
+    curlLines.push(`curl -s -X POST ${FS_API}/restart`);
+
+    // Render sections
+    sections.forEach(s => {
+      const div = document.createElement('div');
+      div.className = 'wiz-review-section';
+      div.innerHTML = `<div class="wiz-review-title">${s.title}</div>`+
+        `<div class="wiz-curl" style="margin:6px 0 4px">${escHtml(s.code)}</div>`+
+        (s.note ? `<div style="font-size:10px;color:var(--muted);margin-top:2px">${s.note}</div>` : '');
+      sec.appendChild(div);
+    });
+
+    // Curl block
+    const curlEl = $w('wiz-curl-block');
+    curlEl.style.display = '';
+    curlEl.innerHTML = `<div style="font-size:10px;color:var(--muted);margin-bottom:6px">Full curl sequence (run in order):</div>` +
+      curlLines.map(l => escHtml(l)).join('\n');
+
+    WIZ._reviewData = { sections, curlLines, questId, bitKey,
+      locCode, monKey, questType, questTitle, startTxt, failTxt, passTxt,
+      retryable };
+  }
+
+  function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  // ── Create all via API ─────────────────────────────────────────────────────
+  async function wizCreate(){
+    const log   = $w('wiz-log');
+    const btn   = $w('btn-wiz-create');
+    log.style.display = '';
+    log.innerHTML = '';
+    btn.disabled = true;
+
+    function logLine(cls, msg){ log.innerHTML += `<div class="${cls}">${escHtml(msg)}</div>`; }
+
+    const d = WIZ._reviewData;
+    if (!d){ logLine('err','No review data — go back to step 5 and fill in the quest arc.'); btn.disabled=false; return; }
+
+    let allOk = true;
+
+    // 1. Create node if new
+    if (WIZ.modes.has('location') && WIZ.loc.isNew) {
+      const code  = $w('wiz-node-code').value.trim().toUpperCase();
+      const label = $w('wiz-node-label').value.trim();
+      const act   = Number($w('wiz-node-act').value)||1;
+      const ter   = $w('wiz-node-terrain').value.trim();
+      const desc  = $w('wiz-node-desc').value.trim();
+      if (code) {
+        logLine('info', `POST /api/node  (${code})…`);
+        try {
+          const r = await fetch(`${FS_API}/node`, { method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({code,label,act,terrain:ter,desc}) });
+          const rd = await r.json();
+          if (r.ok) logLine('ok', `✓ Node ${code} created`);
+          else { logLine('err', `✗ Node failed: ${rd.error||r.status}`); allOk=false; }
+        } catch(e){ logLine('err',`✗ Network error: ${e.message}`); allOk=false; }
+      }
+    }
+
+    // 2. Create monster if new
+    if (WIZ.modes.has('monster') && WIZ.mon.isNew) {
+      const mk  = $w('wiz-mon-key').value.trim();
+      if (mk) {
+        const body = {
+          key:mk, name:$w('wiz-mon-name').value.trim(),
+          ac:Number($w('wiz-mon-ac').value)||11, hp:Number($w('wiz-mon-hp').value)||4,
+          atk:Number($w('wiz-mon-atk').value)||2, dmg:Number($w('wiz-mon-dmg').value)||3,
+          xp:Number($w('wiz-mon-xp').value)||10, tier:Number($w('wiz-mon-tier').value)||1,
+          cr:$w('wiz-mon-cr').value.trim()||'1/8', desc:$w('wiz-mon-desc').value.trim(),
+        };
+        logLine('info', `POST /api/monster  (${mk})…`);
+        try {
+          const r = await fetch(`${FS_API}/monster`, { method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify(body) });
+          const rd = await r.json();
+          if (r.ok) logLine('ok', `✓ Monster ${mk} created`);
+          else { logLine('err', `✗ Monster failed: ${rd.error||r.status}`); allOk=false; }
+        } catch(e){ logLine('err',`✗ Network error: ${e.message}`); allOk=false; }
+      }
+    }
+
+    // 3. Create quest
+    if (WIZ.modes.has('quest') && d.questId) {
+      const qbody = {
+        id:d.questId, type:d.questType, title:d.questTitle,
+        activateNode:d.locCode,
+        startText:d.startTxt, failText:d.failTxt, passText:d.passTxt,
+        retryable:d.retryable, retryGateDays:0,
+        missionBitKey:d.bitKey,
+      };
+      logLine('info', `POST /api/quest  (${d.questId})…`);
+      try {
+        const r = await fetch(`${FS_API}/quest`, { method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify(qbody) });
+        const rd = await r.json();
+        if (r.ok) logLine('ok', `✓ Quest ${d.questId} created`);
+        else { logLine('err', `✗ Quest failed: ${rd.error||r.status}`); allOk=false; }
+      } catch(e){ logLine('err',`✗ Network error: ${e.message}`); allOk=false; }
+    }
+
+    // 4. Save
+    logLine('info', 'POST /api/save…');
+    try {
+      const r = await fetch(`${FS_API}/save`, { method:'POST' });
+      if (r.ok) logLine('ok', '✓ Saved to roll2hit-v3.html');
+      else { logLine('err', `✗ Save failed: ${r.status}`); allOk=false; }
+    } catch(e){ logLine('err',`✗ Network error: ${e.message}`); allOk=false; }
+
+    if (allOk){
+      logLine('ok', '✓ Done! Restart server to reload game data: POST /api/restart');
+    } else {
+      logLine('err', 'Some steps failed — check above and retry or fix manually.');
+    }
+    btn.disabled = false;
+  }
+  window.wizCreate = wizCreate;
+
+  // ── Activate wizard when file is loaded ────────────────────────────────────
+  function wizActivate(){
+    $w('wizard-empty').style.display = 'none';
+    $w('wizard-content').style.display = '';
+  }
+
+  document.querySelector('[data-tab="wizard"]').addEventListener('click', () => {
+    if (WBAPI.loaded) wizActivate();
+  });
+
+  // Hook into existing game-load event (reuse SERVER.onLoad if available)
+  const _origSetLoaded = WBAPI.setLoaded;
+  if (typeof _origSetLoaded === 'function'){
+    WBAPI.setLoaded = function(...a){
+      const r = _origSetLoaded.apply(this, a);
+      wizActivate();
+      return r;
+    };
+  }
+  // Also listen for the custom event fired by loadFromServer / loadFromFile
+  document.addEventListener('wbapi:loaded', wizActivate);
 
 })();
 </script>

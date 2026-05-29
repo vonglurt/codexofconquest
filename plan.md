@@ -143,11 +143,11 @@ Earlier layers (9–47): see `lab-report-architecture-full.md` and `lab-report-t
 
 **Preferred workflow for any data addition or edit to `roll2hit-v3.html`:**
 
-1. **Check API first** — before editing HTML, query `http://localhost:3001/api` to confirm current state. Use `curl` to inspect entities, audit, or list before making changes.
+1. **Check API first** — before editing HTML, query `http://localhost:1367/api` to confirm current state. Use `curl` to inspect entities, audit, or list before making changes.
 2. **Write the API method first** — if the operation isn't yet supported (e.g., `POST /api/terrain`, `PATCH /api/world_db`), add the endpoint to `wbapi-server.js` and restart before touching the HTML.
-3. **Create/modify via API, not HTML** — preferred: `curl -X POST http://localhost:3001/api/<type> -d '...'` followed by `POST /api/save` to write back. Direct HTML edits are a fallback only when the API cannot yet express the operation.
+3. **Create/modify via API, not HTML** — preferred: `curl -X POST http://localhost:1367/api/<type> -d '...'` followed by `POST /api/save` to write back. Direct HTML edits are a fallback only when the API cannot yet express the operation.
 4. **Restart server after adding endpoints** — `./wbapi-toggle.sh restart` (or `start` if stopped).
-5. **When adding items to plan.md** — cross-reference the current API at `localhost:3001/api/audit` and `localhost:3001/api/list/<type>` to confirm what actually exists vs. what the plan assumes. Do not add a plan item without verifying the API-reported current state.
+5. **When adding items to plan.md** — cross-reference the current API at `localhost:1367/api/audit` and `localhost:1367/api/list/<type>` to confirm what actually exists vs. what the plan assumes. Do not add a plan item without verifying the API-reported current state.
 
 **Goal state:** All large JS arrays in `roll2hit-v3.html` (`NODE_MAP`, `QUEST_DB`, `WORLD_DB`, `MONSTER_POOL`, `MONSTER_DROPS`, `FISH_POOL`, `LAKE_MAGIC_DB`, `CONDITION_ITEMS`, `EPIC_BOSS_POOL`, etc.) are exportable via the API. The HTML file is the single source of truth — it should be possible to run all game logic on Node/V8 by feeding API-extracted code sections, without a browser. See `§WBAPI-01` for the export roadmap.
 
@@ -8747,13 +8747,13 @@ Returns the named constant as a raw JS literal string that can be pasted directl
 
 ```bash
 # Export full WORLD_DB as pasteable JS literal
-curl http://localhost:3001/api/export/world_db
+curl http://localhost:1367/api/export/world_db
 
 # Export MONSTER_POOL as JSON
-curl http://localhost:3001/api/export/monster_pool?format=json
+curl http://localhost:1367/api/export/monster_pool?format=json
 
 # Export all collections as a standalone Node module
-curl http://localhost:3001/api/export/all?format=module > world.js
+curl http://localhost:1367/api/export/all?format=module > world.js
 node -e "const W = require('./world.js'); console.log(Object.keys(W.MONSTER_POOL).length);"
 ```
 
@@ -8762,7 +8762,7 @@ node -e "const W = require('./world.js'); console.log(Object.keys(W.MONSTER_POOL
 ### §WBAPI-01-D. `POST /api/terrain` — Create Terrain Entry
 
 ```bash
-curl -X POST http://localhost:3001/api/terrain \
+curl -X POST http://localhost:1367/api/terrain \
   -H 'Content-Type: application/json' \
   -d '{
     "key": "forum_romanum",
@@ -8778,27 +8778,27 @@ Server validates monster keys against `MONSTER_POOL`, writes entry to `WORLD_DB`
 
 **Add a terrain entry:**
 ```bash
-curl -X POST http://localhost:3001/api/terrain \
+curl -X POST http://localhost:1367/api/terrain \
   -H 'Content-Type: application/json' \
   -d '{"key":"new_terrain","label":"New Place","icon":"🗺","monsters":["goblin","bandit"]}'
-curl -X POST http://localhost:3001/api/save
+curl -X POST http://localhost:1367/api/save
 ./wbapi-toggle.sh restart
-curl http://localhost:3001/api/audit | jq '.summary'
+curl http://localhost:1367/api/audit | jq '.summary'
 ```
 
 **Create a quest:**
 ```bash
-curl -X POST http://localhost:3001/api/quest \
+curl -X POST http://localhost:1367/api/quest \
   -H 'Content-Type: application/json' \
   -d '{"id":"quest_my_01","type":"main","title":"My Quest","activateNode":"CY","objectiveText":"Do the thing."}'
-curl -X POST http://localhost:3001/api/save
+curl -X POST http://localhost:1367/api/save
 ```
 
 **Inspect before planning:**
 ```bash
-curl -s http://localhost:3001/api/audit | jq '.items[] | select(.level=="error")'
-curl -s http://localhost:3001/api/list/terrain | jq '.[].key'
-curl -s http://localhost:3001/api/list/node?type=story | jq '.[].code'
+curl -s http://localhost:1367/api/audit | jq '.items[] | select(.level=="error")'
+curl -s http://localhost:1367/api/list/terrain | jq '.[].key'
+curl -s http://localhost:1367/api/list/node?type=story | jq '.[].code'
 ```
 
 ### §WBAPI-01-F. Implementation Checklist
@@ -8831,4 +8831,154 @@ curl -s http://localhost:3001/api/list/node?type=story | jq '.[].code'
   - [ ] `GET /api/export/all?format=module` produces a complete game-logic module
   - [ ] Add `wbapi-extract.js` CLI: `node wbapi-extract.js --out=world.js` (no server needed; reads HTML directly like `parse-nodes.js`)
   - [ ] Document how to run game logic in Node: `const W = require('./world.js'); W.NODE_MAP['CY']`
+
+---
+
+## §1367 — The Year Is 1367 AD: Historical Setting Canon (📋 PLANNED)
+
+**Canonical game year: 1367 AD.**
+
+All in-game time, political factions, cities, trade routes, and named historical figures should be consistent with the world as it existed in 1367 AD. This section maps the six major historical events of that year to quest design opportunities, and poses the clarification questions that must be answered before integration begins.
+
+---
+
+### §1367-A. Historical Anchor — What Was True in 1367 AD
+
+| Event | Where | Significance to the game |
+|-------|-------|--------------------------|
+| **Battle of Nájera** (Apr 3) | Castile, Spain | Edward the Black Prince leads English mercenaries to victory. Routier companies are everywhere. |
+| **Tamerlane rising** | Transoxiana (Central Asia) | 31 years old, consolidating power. The eastern threat is not yet war — it is whisper and rumor. |
+| **Ottoman expansion** | Balkans | Murad I holds Adrianople (Edirne) as European capital. The Balkans are actively contested. |
+| **Hanseatic League peak** | Baltic / North Sea | Birka and Visby are Hanseatic-adjacent cities. Trade, wool, amber, salt, herring. Political leverage. |
+| **John Wycliffe at Oxford** | England | Early heresy. Questioning papal authority. Not yet condemned — dangerous ideas moving through clergy. |
+| **Black Death aftermath** | All of Europe | ~1/3 of Europe dead since 1347. Cities undermanned. Inheritance disputes. Plague pits. Survivor guilt. |
+
+**Visby note:** Visby was sacked by Valdemar IV of Denmark in 1361. By 1367 it is six years into its decline from a Hanseatic powerhouse to a contested, partially ruined port. This is already in the game — the arc structure fits perfectly.
+
+**Birka note:** Historically Birka was abandoned ~970 AD. In this game it is treated as a persistent fictional city in the Hanseatic Baltic world, elevated to 1367 status. No apology needed — this is D&D 5e, not a textbook.
+
+---
+
+### §1367-B. The Six Events as Quest Seeds
+
+#### 1. The Routiers — Mercenary Companies (from Nájera)
+
+The *routiers* (French) and *condottieri* (Italian) are freelance mercenary bands roaming Europe after every truce and treaty. They are soldiers with no war — dangerous, experienced, and available for hire or extortion.
+
+**Design seed:** A routier company has set up near a node and is extracting "protection" from local merchants. The player can fight them, hire them, or expose who is paying them. One routier captain may be a named NPC with a Hundred Years' War backstory.
+
+**Clarification needed:**
+- [ ] Is the routier faction a one-off quest or a recurring faction with multiple nodes?
+- [ ] Does the Black Prince himself appear (as NPC, rumor, or distant authority), or only his soldiers?
+- [ ] Do routiers have a home node, or do they migrate between nodes seasonally?
+
+---
+
+#### 2. Tamerlane — The Eastern Whisper
+
+Tamerlane is not yet the destroyer of cities he will become by 1380. In 1367 he is a warlord consolidating Transoxiana — present as rumor, refugee, and displaced scholar rather than direct threat.
+
+**Design seed:** A refugee scholar from Samarkand arrives at a Mediterranean node carrying a scroll Tamerlane's men were hunting. The scroll contains something (a map, a heresy, a formula). The quest is to understand what it contains before Tamerlane's agents arrive.
+
+**Clarification needed:**
+- [ ] Is Tamerlane a named villain who eventually appears (in a late-act node), or kept permanently offscreen as rumor?
+- [ ] Does the eastern threat connect to the Shattered Codex arc (the Codex itself could be what Tamerlane seeks)?
+- [ ] Which node receives the Samarkand scholar — a Mediterranean city (Jerusalem, Athens) or a trade hub (Visby, a Hanseatic port)?
+
+---
+
+#### 3. The Ottoman Balkans — Murad I's Expansion
+
+The Balkans in 1367 are a patchwork of contested Christian kingdoms and Ottoman-held territory. Adrianople is Ottoman. Murad I is methodical and patient. Local Serbian and Bulgarian lords are making desperate deals.
+
+**Design seed:** A Balkan noble is at a node, negotiating secretly with an Ottoman envoy. The player stumbles into this. The quest branches: expose the negotiation (destabilize the region, gain a reward from the Church), assist it (gain Ottoman favor, anger the Church), or steal the treaty document and sell it to the highest bidder.
+
+**Clarification needed:**
+- [ ] Does the Ottoman faction have a node on the map, or appear only as quest NPCs?
+- [ ] Is Murad I a named NPC (distant, political) or kept as a historical backdrop force?
+- [ ] Does the Balkan arc connect to the existing Middle East map nodes (Jerusalem, Athens)?
+
+---
+
+#### 4. The Hanseatic League — Trade as Power
+
+The Hanseatic League in 1367 is at its apex. It controls Baltic and North Sea trade — wool, herring, amber, salt, timber. It has its own navy, its own legal system, and its own foreign policy. Birka and Visby sit in its orbit.
+
+**Design seed:** A Hanseatic factor (merchant-agent) at Birka is withholding grain shipments to a northern node as a political lever. The local population is hungry. The quest is to break the embargo — by theft, negotiation, forgery of trade documents, or finding an alternative supply route.
+
+**Clarification needed:**
+- [ ] Is the Hanseatic League a faction with a disposition score (like a merchant guild), or purely quest-context flavor?
+- [ ] Does Visby's 1361 sacking appear as past lore in node descriptions, or as an active unresolved quest arc?
+- [ ] Are there Hanseatic trade route nodes — ports along the Baltic coast — that should be added to the map?
+
+---
+
+#### 5. John Wycliffe — The Heresy at Oxford
+
+Wycliffe is teaching that the Bible should be in English (not Latin), that the Pope's temporal power is illegitimate, and that clergy who sin forfeit their authority. This is not yet the Protestant Reformation — it is one dangerous scholar at one university, and the Church is watching.
+
+**Design seed:** A traveling friar arrives at a node carrying a handwritten pamphlet in the vernacular. He asks the player to deliver it to a local monastery without the bishop's men intercepting it. The pamphlet's content is Wycliffe's argument — the player may read it, burn it, deliver it, or sell it to the bishop.
+
+**Clarification needed:**
+- [ ] Is Wycliffe's heresy a single quest or a recurring philosophical thread (a book that reappears across acts)?
+- [ ] Does the Church appear as an antagonist faction with quests on both sides (heresy vs. orthodoxy)?
+- [ ] Does this connect to the existing Codex arc — could the Shattered Codex itself be a suppressed vernacular scripture?
+
+---
+
+#### 6. The Black Death Aftermath — The Hollow World
+
+By 1367 the first wave is twenty years past but recurring outbreaks continue. One third of Europe is dead. The survivors live in a world of:
+- Inherited land with no heirs — abandoned manor nodes
+- Flagellant processions — NPCs performing public penance
+- Plague pits that were never properly sealed
+- Labor scarcity — peasants have leverage they never had before
+- Survivor guilt — characters who lived when their families did not
+
+**Design seed:** A node has been abandoned — its population died in a 1363 recurrence. A merchant wants to claim the land. The player must clear the node (the dead were not buried correctly — undead encounter), determine who the legal heir is (a quest chain through Church records), and decide who gets the land: the merchant, the distant heir, or the Church.
+
+**Clarification needed:**
+- [ ] Does plague appear as an active mechanic (infection risk, quarantine nodes), or only as historical backdrop in node descriptions?
+- [ ] Are flagellants an NPC type — wandering, hostile to merchants and rationalists, occasionally violent?
+- [ ] Does the abandoned node exist as a map location (a hollow/ruined terrain type), or only in quest flavor text?
+
+---
+
+### §1367-C. Universal Setting Directives
+
+Once the above clarifications are resolved, these changes become universal across the game:
+
+1. **Year stamp** — add `const GAME_YEAR = 1367;` to `_S_DEFAULTS`. Display in UI as "Anno Domini MCCCLXVII" or simply "1367 AD" in appropriate nodes.
+
+2. **Node description anachronism audit** — scan all 144 node `desc` fields for technology, language, or political references inconsistent with 1367 AD. Flag and rewrite.
+
+3. **Faction system** — introduce a lightweight faction disposition table for: `Hanseatic League`, `The Church`, `Ottoman Court`, `Routier Companies`, `Crown of England`. Each quest that touches a faction shifts disposition ±1. Disposition gates certain quest options.
+
+4. **Calendar events** — the Battle of Nájera is April 3. If the game tracks months (via the existing hour system), certain historical events could trigger as the player's in-game date passes the anniversary. Optional.
+
+5. **Named historical figures as NPCs** — candidates: Edward the Black Prince (distant authority, Nájera rumor), John Wycliffe (the scholar, Oxford), Murad I (Ottoman envoy, not direct), Tamerlane (offscreen threat, refugee NPCs only). None appear as combatants in Act I.
+
+---
+
+### §1367-D. Clarification Queue — Answer Before Integration
+
+The following questions must be answered before any §1367 content is integrated into the HTML. Each answer locks a design decision.
+
+| # | Question | Stakes |
+|---|----------|--------|
+| 1 | Is the game world literal 1367 Europe/Middle East, or a 1367-analog fantasy? | Determines whether real place names are kept or fictionalized |
+| 2 | Which 2–3 of the 6 events become major quest arcs (Acts I–IV)? | Determines NODE_MAP additions and QUEST_DB scope |
+| 3 | Which historical figures appear as named NPCs vs. offscreen forces? | Determines BIRKA_NPCS additions and NPC schema |
+| 4 | Does the Black Death have a gameplay mechanic, or is it lore only? | Determines whether new state flags are needed |
+| 5 | Is the Hanseatic League a faction with a disposition score? | Determines whether a faction system needs to be built |
+| 6 | Does Tamerlane connect to the Shattered Codex arc? | Determines whether the Codex backstory needs a rewrite |
+| 7 | Do we add Baltic coast trade route nodes to the map? | Determines NODE_MAP scope for Act I/II |
+| 8 | Does the Church appear as a dual-sided faction (heresy + orthodoxy quests)? | Determines QUEST_DB type additions |
+
+**Gate:** §1367 integration does not begin until all 8 questions have answers. Write answers directly into §1367-D before touching HTML.
+
+---
+
+**Status:** 📋 PLANNED — awaiting clarification answers in §1367-D  
+**Cross-references:** `plan.md §GR` · `plan.md §FUTURE-01` (Saul to Paul arc, Middle East map) · `quest.md` · `lab-report-wbapi-evolution.md`
 
