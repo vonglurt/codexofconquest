@@ -168,6 +168,15 @@ body{background:var(--bg);color:var(--text);font-family:'SF Mono','Consolas',mon
 ::-webkit-scrollbar-track{background:var(--bg);}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
 select.fi{appearance:none;}
+
+/* ── Server indicator ── */
+#server-indicator{font-size:11px;padding:2px 8px;border-radius:10px;white-space:nowrap;}
+#server-indicator.connected{background:var(--added);color:var(--green);border:1px solid var(--green);}
+#server-indicator.offline{background:var(--bg3);color:var(--muted);border:1px solid var(--border);}
+
+/* ── Entity edit toolbar ── */
+.edit-toolbar{padding:8px 12px;border-top:1px solid var(--border);display:flex;gap:6px;align-items:center;flex-shrink:0;}
+.edit-toolbar .change-count{font-size:10px;color:var(--muted);flex:1;}
 </style>
 </head>
 <body>
@@ -182,11 +191,12 @@ select.fi{appearance:none;}
   <div class="nav-tab" data-tab="api">⚙ API</div>
   <div class="nav-sep"></div>
   <div id="topbar-right">
+    <span id="server-indicator" class="offline" style="display:none">○ Browser only</span>
     <label id="file-drop" for="file-input">📂 <span id="file-label">Load roll2hit-v3.html</span></label>
     <input type="file" id="file-input" accept=".html">
     <span id="diff-badge" class="badge yellow" style="display:none">0 changes</span>
     <button class="btn" id="btn-diff" disabled>Diff</button>
-    <button class="btn primary" id="btn-apply-patch" disabled>Export Patched</button>
+    <button class="btn primary" id="btn-apply-patch" disabled>Save</button>
     <span id="node-count" style="font-size:11px;color:var(--muted)">—</span>
     <span id="quest-count" style="font-size:11px;color:var(--muted)">—</span>
   </div>
@@ -285,6 +295,11 @@ select.fi{appearance:none;}
           <span id="md-tier" style="margin-left:auto"></span>
         </div>
         <div class="detail-body" id="md-body"></div>
+        <div class="edit-toolbar">
+          <span class="change-count" id="md-change-count"></span>
+          <button class="btn primary sm" id="btn-md-put" disabled>PUT Changes</button>
+          <button class="btn sm" id="btn-md-reset">Reset</button>
+        </div>
       </div>
     </div>
   </div>
@@ -329,6 +344,11 @@ select.fi{appearance:none;}
         <div id="quest-detail-area" class="empty">
           <h2>Select a quest</h2>
           <p>Full fields, flag dependencies, and chain view.</p>
+        </div>
+        <div class="edit-toolbar" id="quest-edit-toolbar" style="display:none">
+          <span class="change-count" id="quest-change-count"></span>
+          <button class="btn primary sm" id="btn-quest-put" disabled>PUT Changes</button>
+          <button class="btn sm" id="btn-quest-reset">Reset</button>
         </div>
       </div>
       <div class="detail-pane wide" id="quest-chain-pane" style="display:none">
@@ -1053,6 +1073,52 @@ function updateDiffBadge() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
+// Server mode — detect local WBAPI server and route mutations through it
+// ═══════════════════════════════════════════════════════════════════════════
+const SERVER = { active: false, url: 'http://localhost:3001' };
+
+async function serverDetect() {
+  const ind = $('server-indicator');
+  try {
+    const r = await fetch(`${SERVER.url}/api/ping`, { signal: AbortSignal.timeout(600) });
+    const d = await r.json();
+    if (d.ok) {
+      SERVER.active = true;
+      ind.className = 'connected';
+      ind.textContent = '● Server';
+      ind.title = `Connected: ${SERVER.url}\n${d.nodes} nodes · ${d.quests} quests · ${d.monsters} monsters`;
+      ind.style.display = '';
+      $('btn-apply-patch').textContent = 'Save to File';
+      return;
+    }
+  } catch(_) {}
+  SERVER.active = false;
+  ind.className = 'offline';
+  ind.textContent = '○ Browser only';
+  ind.title = 'Start wbapi-server.js (./start-wbapi.sh) to enable server-side saves';
+  ind.style.display = '';
+  $('btn-apply-patch').textContent = 'Export Patched';
+}
+
+// Generic entity PUT — routes through server or in-memory WBAPI
+async function doEntityPut(type, key, fields) {
+  if (SERVER.active) {
+    const res = await fetch(`${SERVER.url}/api/${type}/${encodeURIComponent(key)}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(fields),
+    });
+    return res.json();
+  }
+  // Browser-only: apply to in-memory WBAPI
+  const ns = { node:WBAPI.nodes, quest:WBAPI.quests, monster:WBAPI.monsters, npc:WBAPI.npcs }[type];
+  if (!ns) return { ok:false, error:`Unknown type: ${type}` };
+  const r = ns.put(key, fields);
+  updateDiffBadge();
+  return { ok: r.ok, fields: Object.keys(fields).map(f => ({ field:f, ok:true, strategy:'put' })) };
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // Utilities
 // ═══════════════════════════════════════════════════════════════════════════
 const $ = id => document.getElementById(id);
@@ -1080,6 +1146,7 @@ function loadFile(text) {
   renderNpcList();
   renderQuestList();
   populateArcFilter();
+  serverDetect();
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1334,13 +1401,36 @@ function renderDiffPanel(){
 }
 $('btn-copy-patch').addEventListener('click',()=>{ navigator.clipboard.writeText($('patch-out').value); $('btn-copy-patch').textContent='Copied!'; setTimeout(()=>$('btn-copy-patch').textContent='Copy',1500); });
 $('btn-dl-patch').addEventListener('click',()=>{ dl(DIFF.patch(),`roll2hit-patch-${Date.now()}.patch.js`,'text/javascript'); });
-$('btn-apply-patch').addEventListener('click',()=>{
-  if(!_rawSource){alert('No source loaded.');return;}
-  const anchor='// ◆◆◆ WORLDBUILDER:NODE_MAP:END ◆◆◆';
-  const i=_rawSource.indexOf(anchor);
-  if(i===-1){alert('Cannot find insertion point.');return;}
-  const patched=_rawSource.slice(0,i+anchor.length)+'\n\n// ── Applied Patch ──\n'+DIFF.patch()+'\n'+_rawSource.slice(i+anchor.length);
-  dl(patched,'roll2hit-v3-patched.html','text/html');
+$('btn-apply-patch').addEventListener('click', async () => {
+  if (!_rawSource) { alert('No source loaded.'); return; }
+  if (SERVER.active) {
+    // Server mode: POST /api/save → writes timestamped HTML to disk
+    const btn = $('btn-apply-patch');
+    btn.disabled = true; btn.textContent = 'Saving…';
+    try {
+      const r = await fetch(`${SERVER.url}/api/save`, { method:'POST',
+        headers:{'Content-Type':'application/json'}, body:'{}' });
+      const d = await r.json();
+      if (d.ok) {
+        btn.textContent = '✓ Saved';
+        btn.title = d.path || '';
+        setTimeout(() => { btn.textContent = 'Save to File'; btn.disabled = false; }, 2500);
+      } else {
+        alert('Save failed: ' + (d.error || JSON.stringify(d)));
+        btn.textContent = 'Save to File'; btn.disabled = false;
+      }
+    } catch(e) {
+      alert('Server error: ' + e.message);
+      btn.textContent = 'Save to File'; btn.disabled = false;
+    }
+  } else {
+    // Browser-only: inject patch and download
+    const anchor = '// ◆◆◆ WORLDBUILDER:NODE_MAP:END ◆◆◆';
+    const i = _rawSource.indexOf(anchor);
+    if (i === -1) { alert('Cannot find insertion point.'); return; }
+    const patched = _rawSource.slice(0, i+anchor.length) + '\n\n// ── Applied Patch ──\n' + DIFF.patch() + '\n' + _rawSource.slice(i+anchor.length);
+    dl(patched, 'roll2hit-v3-patched.html', 'text/html');
+  }
 });
 function dl(content,filename,type){
   const b=new Blob([content],{type}),u=URL.createObjectURL(b),a=document.createElement('a');
@@ -1396,25 +1486,154 @@ function renderMonsterTable(){
 }
 $('monster-search').addEventListener('input',renderMonsterTable);
 
-function renderMonsterDetail(m){
-  $('md-name').textContent=m.name||m.key;
-  $('md-tier').innerHTML=`<span class="tier-badge tier-${m.tier}">${m.tier}</span>`;
-  const body=$('md-body'); body.innerHTML='';
-  const stats=[['AC',m.ac,'var(--teal)'],['HP',m.hp,'var(--red)'],['ATK','+'+m.atk,'var(--yellow)'],
-    ['Damage',m.dmgDie?`${m.dmgCount||1}d${m.dmgDie}${m.dmgFlat?'+'+m.dmgFlat:''}`:'-','var(--orange)']];
-  const sg=document.createElement('div'); sg.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:6px;';
-  for(const [lbl,val,col] of stats){
-    sg.innerHTML+=`<div class="fg"><div class="fl">${lbl}</div><div class="fv" style="color:${col};font-size:16px;font-weight:700;text-align:center">${val}</div></div>`;
+// ── Monster detail: editable fields with change tracking ──
+let mdOriginals = {}, mdCurrentKey = null;
+
+function mdCheckChanges() {
+  let n = 0;
+  for (const [field, orig] of Object.entries(mdOriginals)) {
+    const inp = document.getElementById(`md-f-${field}`);
+    if (!inp) continue;
+    const val = inp.type === 'number' ? (inp.value === '' ? null : Number(inp.value)) : inp.value;
+    const changed = val !== orig && !(val === 0 && orig === null) && !(val === '' && orig === null);
+    inp.classList.toggle('chg', changed);
+    if (changed) n++;
   }
+  $('btn-md-put').disabled = n === 0;
+  $('md-change-count').textContent = n ? `${n} field${n!==1?'s':''} changed` : '';
+}
+
+function mkMonsterField(field, label, inputType, options) {
+  const g = document.createElement('div'); g.className = 'fg';
+  if (label) g.innerHTML = `<div class="fl">${label}</div>`;
+  if (inputType === 'select') {
+    const sel = document.createElement('select'); sel.className = 'fi'; sel.id = `md-f-${field}`;
+    for (const opt of options) {
+      const o = document.createElement('option'); o.value = opt; o.textContent = opt;
+      if (opt === mdOriginals[field]) o.selected = true;
+      sel.appendChild(o);
+    }
+    sel.addEventListener('change', mdCheckChanges);
+    g.appendChild(sel);
+  } else {
+    const inp = document.createElement('input'); inp.type = inputType; inp.className = 'fi'; inp.id = `md-f-${field}`;
+    const ov = mdOriginals[field];
+    if (ov !== null && ov !== undefined) inp.value = ov;
+    inp.addEventListener('input', mdCheckChanges);
+    g.appendChild(inp);
+  }
+  return g;
+}
+
+function renderMonsterDetail(m) {
+  const full = WBAPI.monsters.get(m.key);
+  mdCurrentKey = full.key;
+  mdOriginals = {
+    name:     full.name     ?? '',
+    ac:       full.ac       ?? null,
+    hp:       full.hp       ?? null,
+    atk:      full.atk      ?? 0,
+    dmgCount: full.dmgCount ?? 1,
+    dmgDie:   full.dmgDie   ?? null,
+    dmgFlat:  full.dmgFlat  ?? 0,
+    tier:     full.tier     || 'trivial',
+  };
+  if (full.xp    != null) mdOriginals.xp    = full.xp;
+  if (full.morale!= null) mdOriginals.morale= full.morale;
+
+  $('md-name').textContent = full.name || full.key;
+  $('md-tier').innerHTML = `<span class="tier-badge tier-${full.tier}">${full.tier}</span>`;
+  $('md-change-count').textContent = '';
+  $('btn-md-put').disabled = true;
+
+  const body = $('md-body'); body.innerHTML = '';
+
+  // Name (full width)
+  body.appendChild(mkMonsterField('name', 'Name', 'text'));
+
+  // Core combat stats grid
+  const sg = document.createElement('div');
+  sg.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:6px;';
+  sg.appendChild(mkMonsterField('ac',  'AC',  'number'));
+  sg.appendChild(mkMonsterField('hp',  'HP',  'number'));
+  sg.appendChild(mkMonsterField('atk', 'ATK Bonus', 'number'));
+  sg.appendChild(mkMonsterField('tier','Tier', 'select', ['trivial','easy','medium','hard','deadly','boss']));
   body.appendChild(sg);
-  const full=WBAPI.monsters.get(m.key);
-  if(full.drop){ const dg=document.createElement('div'); dg.className='fg'; dg.innerHTML=`<div class="fl">Trophy Drop</div><div class="fv">${full.drop.icon} ${full.drop.name} <span style="color:var(--yellow)">${full.drop.sell}gp</span></div>`; body.appendChild(dg); }
-  if(full.terrains&&full.terrains.length){
-    const tg=document.createElement('div'); tg.className='fg';
-    tg.innerHTML=`<div class="fl">Appears in (${full.terrains.length} terrains)</div><div>${full.terrains.map(tk=>`<span class="flag-pill flag-read">${(WBAPI.worldDb[tk]||{}).icon||''} ${tk}</span>`).join('')}</div>`;
+
+  // Damage row: count d die + flat
+  const dg = document.createElement('div'); dg.className = 'fg';
+  dg.innerHTML = '<div class="fl">Damage — dice count / die size / flat bonus</div>';
+  const dr = document.createElement('div');
+  dr.style.cssText = 'display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;';
+  const countW = mkMonsterField('dmgCount','','number'); countW.querySelector('input').placeholder='count';
+  const dieW   = mkMonsterField('dmgDie',  '','number'); dieW.querySelector('input').placeholder='die (6,8…)';
+  const flatW  = mkMonsterField('dmgFlat', '','number'); flatW.querySelector('input').placeholder='flat +/-';
+  dr.appendChild(countW); dr.appendChild(dieW); dr.appendChild(flatW);
+  dg.appendChild(dr); body.appendChild(dg);
+
+  // Optional fields
+  if (full.xp    != null) body.appendChild(mkMonsterField('xp',    'XP Award',  'number'));
+  if (full.morale!= null) body.appendChild(mkMonsterField('morale','Morale',    'number'));
+
+  // Drop (read-only)
+  if (full.drop) {
+    const drp = document.createElement('div'); drp.className = 'fg';
+    drp.innerHTML = `<div class="fl">Trophy Drop</div>
+      <div class="fv">${full.drop.icon} ${full.drop.name} <span style="color:var(--yellow)">${full.drop.sell}gp</span></div>`;
+    body.appendChild(drp);
+  }
+
+  // Terrain appearances (read-only)
+  if (full.terrains && full.terrains.length) {
+    const tg = document.createElement('div'); tg.className = 'fg';
+    tg.innerHTML = `<div class="fl">Appears in (${full.terrains.length} terrain${full.terrains.length!==1?'s':''})</div>
+      <div>${full.terrains.map(tk=>`<span class="flag-pill flag-read">${(WBAPI.worldDb[tk]||{}).icon||''} ${tk}</span>`).join('')}</div>`;
     body.appendChild(tg);
   }
 }
+
+$('btn-md-reset').addEventListener('click', () => {
+  if (!mdCurrentKey) return;
+  renderMonsterDetail(WBAPI.monsters.get(mdCurrentKey));
+});
+
+$('btn-md-put').addEventListener('click', async () => {
+  const key = mdCurrentKey;
+  if (!key) return;
+
+  // Collect changed fields
+  const changed = {};
+  for (const [field, orig] of Object.entries(mdOriginals)) {
+    const inp = document.getElementById(`md-f-${field}`);
+    if (!inp) continue;
+    const val = inp.type === 'number' ? (inp.value === '' ? null : Number(inp.value)) : inp.value;
+    if (val !== orig) changed[field] = val;
+  }
+  if (!Object.keys(changed).length) return;
+
+  const btn = $('btn-md-put');
+  btn.disabled = true; btn.textContent = 'Saving…';
+
+  try {
+    const result = await doEntityPut('monster', key, changed);
+    if (result.ok || (result.fields && result.fields.every(f=>f.ok))) {
+      // Sync in-memory from result or apply locally
+      WBAPI.monsters.put(key, changed);
+      updateDiffBadge();
+      renderMonsterDetail(WBAPI.monsters.get(key));
+      renderMonsterTable();
+      btn.textContent = '✓ Saved';
+      setTimeout(() => { btn.textContent = 'PUT Changes'; btn.disabled = true; }, 2000);
+    } else {
+      const failed = (result.fields||[]).filter(f=>!f.ok).map(f=>f.field).join(', ');
+      alert(`PUT failed${failed?' for fields: '+failed:''}\n${result.error||''}`);
+      btn.textContent = 'PUT Changes'; btn.disabled = false;
+    }
+  } catch(e) {
+    alert('PUT error: ' + e.message);
+    btn.textContent = 'PUT Changes'; btn.disabled = false;
+  }
+});
 
 // ═══════════════════════════════════════════════════════════════════════════
 // NPC TAB
@@ -1498,46 +1717,98 @@ function renderQuestList(){
 ['quest-search','quest-type-filter','quest-arc-filter'].forEach(id=>$(id).addEventListener('input',renderQuestList));
 $('quest-arc-filter').addEventListener('change',renderQuestList);
 
+// ── Quest detail: editable fields with change tracking ──
+let qOriginals = {}, qCurrentId = null;
+
+const Q_EDITABLE = [
+  {key:'title',      label:'Title',                    type:'text'},
+  {key:'type',       label:'Type',                     type:'select', options:['side','main','skill_check','hunt']},
+  {key:'hint',       label:'Hook / Hint',               type:'textarea'},
+  {key:'passText',   label:'Pass Text',                 type:'textarea'},
+  {key:'failText',   label:'Fail Text',                 type:'textarea'},
+  {key:'rewardText', label:'Reward Text',               type:'textarea'},
+  {key:'disposition',label:'Disposition Quote',         type:'textarea'},
+  {key:'activateNode',label:'Activate Node',            type:'text'},
+  {key:'waypointNode',label:'Waypoint Node',            type:'text'},
+  {key:'npc',        label:'NPC Key',                   type:'text'},
+  {key:'checkDC',    label:'Check DC',                  type:'number'},
+  {key:'checkStat',  label:'Check Stat (WIS/INT/CHA)',  type:'text'},
+  {key:'checkSkill', label:'Check Skill',               type:'text'},
+  {key:'xpAward',    label:'XP Award',                  type:'number'},
+  {key:'reward',     label:'Gold Reward',               type:'number'},
+];
+
+function qCheckChanges() {
+  let n = 0;
+  for (const [field, orig] of Object.entries(qOriginals)) {
+    const el = document.getElementById(`qf-${field}`);
+    if (!el) continue;
+    const val = el.type === 'number' ? (el.value==='' ? null : Number(el.value)) : el.value;
+    const origStr = orig == null ? '' : String(orig);
+    const valStr  = val  == null ? '' : String(val);
+    const changed = valStr !== origStr;
+    el.classList.toggle('chg', changed);
+    if (changed) n++;
+  }
+  $('btn-quest-put').disabled = n === 0;
+  $('quest-change-count').textContent = n ? `${n} field${n!==1?'s':''} changed` : '';
+}
+
 function selectQuest(id){
   selQuestId=id; renderQuestList();
+  qCurrentId = id;
   const area=$('quest-detail-area'); area.className='detail-body'; area.style.overflow='auto'; area.style.padding='14px 16px'; area.style.flex='1';
   const q=WBAPI.questDb[id]||{}; const flags=WBAPI.quests.flags(id);
   const chain=WBAPI.quests.chain(id);
   const fmtFlags=(set,cls)=>[...set].map(f=>`<span class="flag-pill ${cls}">${f}</span>`).join('');
-  let h=`<div style="margin-bottom:12px"><div style="font-size:16px;font-weight:800;color:var(--accent)">${id}</div>
-    <div style="font-size:11px;color:var(--muted)">${q.type||'side'} quest</div></div>`;
-  const editable=[
-    {key:'title',label:'Title',type:'text'},
-    {key:'hint',label:'Hint',type:'textarea'},
-    {key:'activateNode',label:'Activate Node',type:'text'},
-    {key:'waypointNode',label:'Waypoint Node',type:'text'},
-    {key:'checkDC',label:'Check DC',type:'number'},
-    {key:'checkStat',label:'Check Stat (WIS/INT/CHA)',type:'text'},
-    {key:'checkSkill',label:'Check Skill',type:'text'},
-    {key:'xpAward',label:'XP Award',type:'number'},
-    {key:'reward',label:'Gold Reward',type:'number'},
-    {key:'disposition',label:'Disposition Quote',type:'textarea'},
-  ];
+
+  // Snapshot originals for change detection
+  qOriginals = {};
+  for (const {key} of Q_EDITABLE) { if (q[key] != null) qOriginals[key] = q[key]; }
+
   area.innerHTML='';
+  $('quest-edit-toolbar').style.display = '';
+  $('quest-change-count').textContent = '';
+  $('btn-quest-put').disabled = true;
+
   const header=document.createElement('div'); header.style.marginBottom='12px';
-  header.innerHTML=`<div style="font-size:16px;font-weight:800;color:var(--accent)">${id}</div><div style="font-size:11px;color:var(--muted)">${q.type||'side'} quest · ${q.activateNode||'no node'}</div>`;
+  header.innerHTML=`<div style="font-size:16px;font-weight:800;color:var(--accent)">${id}</div>
+    <div style="font-size:11px;color:var(--muted)">${q.type||'side'} quest · ${q.activateNode||'no node'}</div>`;
   area.appendChild(header);
-  for(const {key,label,type} of editable){
-    if(q[key]===undefined&&type!=='text') continue;
+
+  for (const {key, label, type, options} of Q_EDITABLE) {
+    // Show field if it has a value OR is a core text/select field
+    const hasVal = q[key] != null && q[key] !== '';
+    const isCore = ['title','type','activateNode'].includes(key);
+    if (!hasVal && !isCore) continue;
+
     const g=document.createElement('div'); g.className='fg';
     g.innerHTML=`<div class="fl">${label}</div>`;
-    if(type==='textarea'){
-      const ta=document.createElement('textarea'); ta.className='fi'; ta.rows=3; ta.value=q[key]||'';
-      ta.addEventListener('change',()=>{ q[key]=ta.value; });
+
+    if (type === 'select') {
+      const sel = document.createElement('select'); sel.className='fi'; sel.id=`qf-${key}`;
+      for (const opt of (options||[])) {
+        const o=document.createElement('option'); o.value=opt; o.textContent=opt;
+        if (opt === q[key]) o.selected=true;
+        sel.appendChild(o);
+      }
+      sel.addEventListener('change', qCheckChanges);
+      g.appendChild(sel);
+    } else if (type === 'textarea') {
+      const ta=document.createElement('textarea'); ta.className='fi'; ta.rows=3; ta.id=`qf-${key}`;
+      ta.value=q[key]||'';
+      ta.addEventListener('input', qCheckChanges);
       g.appendChild(ta);
     } else {
-      const inp=document.createElement('input'); inp.type=type; inp.className='fi'; inp.value=q[key]!=null?q[key]:'';
-      inp.addEventListener('change',()=>{ q[key]=type==='number'?Number(inp.value):inp.value; });
+      const inp=document.createElement('input'); inp.type=type; inp.className='fi'; inp.id=`qf-${key}`;
+      inp.value=q[key]!=null?q[key]:'';
+      inp.addEventListener('input', qCheckChanges);
       g.appendChild(inp);
     }
     area.appendChild(g);
   }
-  // Flags
+
+  // Flags (read-only)
   if(flags.reads.size){const fg=document.createElement('div');fg.className='fg';fg.innerHTML=`<div class="fl">Reads Flags (activateCond)</div><div>${fmtFlags(flags.reads,'flag-read')}</div>`;area.appendChild(fg);}
   if(flags.writes.size){const fg=document.createElement('div');fg.className='fg';fg.innerHTML=`<div class="fl">Writes Flags (onPass / completeFn)</div><div>${fmtFlags(flags.writes,'flag-write')}</div>`;area.appendChild(fg);}
 
@@ -1583,6 +1854,54 @@ function selectQuest(id){
     cb.appendChild(ag);
   }
 }
+
+$('btn-quest-reset').addEventListener('click', () => {
+  if (qCurrentId) selectQuest(qCurrentId);
+});
+
+$('btn-quest-put').addEventListener('click', async () => {
+  const id = qCurrentId;
+  if (!id) return;
+
+  const changed = {};
+  for (const [field, orig] of Object.entries(qOriginals)) {
+    const el = document.getElementById(`qf-${field}`);
+    if (!el) continue;
+    const val = el.type === 'number' ? (el.value==='' ? null : Number(el.value)) : el.value;
+    const origStr = orig == null ? '' : String(orig);
+    const valStr  = val  == null ? '' : String(val);
+    if (valStr !== origStr) changed[field] = val;
+  }
+  // Also check fields that weren't in originals (new values for optional fields)
+  for (const {key, type} of Q_EDITABLE) {
+    if (key in changed || key in qOriginals) continue;
+    const el = document.getElementById(`qf-${key}`);
+    if (!el || !el.value) continue;
+    changed[key] = type === 'number' ? Number(el.value) : el.value;
+  }
+  if (!Object.keys(changed).length) return;
+
+  const btn = $('btn-quest-put');
+  btn.disabled = true; btn.textContent = 'Saving…';
+
+  try {
+    const result = await doEntityPut('quest', id, changed);
+    if (result.ok || (result.fields && result.fields.every(f=>f.ok))) {
+      WBAPI.quests.put(id, changed);
+      updateDiffBadge();
+      selectQuest(id);
+      btn.textContent = '✓ Saved';
+      setTimeout(() => { btn.textContent = 'PUT Changes'; btn.disabled = true; }, 2000);
+    } else {
+      const failed = (result.fields||[]).filter(f=>!f.ok).map(f=>f.field).join(', ');
+      alert(`PUT failed${failed?' for: '+failed:''}\n${result.error||''}`);
+      btn.textContent = 'PUT Changes'; btn.disabled = false;
+    }
+  } catch(e) {
+    alert('PUT error: ' + e.message);
+    btn.textContent = 'PUT Changes'; btn.disabled = false;
+  }
+});
 
 // ═══════════════════════════════════════════════════════════════════════════
 // DICE LAB
