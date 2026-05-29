@@ -289,6 +289,21 @@ select.fi{appearance:none;}
           <div id="bestiary-empty" class="empty"><h2>No terrain selected</h2><p>Choose a terrain from the left to see its monster roster.</p></div>
         </div>
       </div>
+      <!-- Terrain edit pane -->
+      <div class="detail-pane" id="terrain-detail" style="display:none;width:280px">
+        <div class="detail-hd">
+          <span id="td-icon" style="font-size:20px;margin-right:6px"></span>
+          <span id="td-name" style="font-size:13px;font-weight:700;color:var(--text)"></span>
+          <span style="margin-left:auto;font-size:10px;color:var(--muted)" id="td-key"></span>
+        </div>
+        <div class="detail-body" id="td-body"></div>
+        <div class="edit-toolbar">
+          <span class="change-count" id="td-change-count"></span>
+          <button class="btn primary sm" id="btn-td-put" disabled>PUT Changes</button>
+          <button class="btn sm" id="btn-td-reset">Reset</button>
+        </div>
+      </div>
+      <!-- Monster edit pane -->
       <div class="detail-pane" id="monster-detail" style="display:none">
         <div class="detail-hd">
           <span id="md-name" style="font-size:14px;font-weight:700;color:var(--text)"></span>
@@ -410,6 +425,8 @@ select.fi{appearance:none;}
           <option value="quest">quest</option>
           <option value="npc">npc</option>
           <option value="monster">monster</option>
+          <option value="terrain">terrain</option>
+          <option value="schema">schema</option>
         </select>
       </div>
       <div>
@@ -1442,6 +1459,112 @@ function dl(content,filename,type){
 // ═══════════════════════════════════════════════════════════════════════════
 let selTerrain=null, selMonster=null;
 
+// ── Terrain detail: editable label + icon ──
+let tdOriginals = {}, tdCurrentKey = null;
+
+function tdCheckChanges() {
+  let n = 0;
+  for (const [f, orig] of Object.entries(tdOriginals)) {
+    const inp = document.getElementById(`td-f-${f}`);
+    if (!inp) continue;
+    const changed = inp.value !== orig;
+    inp.classList.toggle('chg', changed);
+    if (changed) n++;
+  }
+  $('btn-td-put').disabled = n === 0;
+  $('td-change-count').textContent = n ? `${n} field${n!==1?'s':''} changed` : '';
+}
+
+function renderTerrainDetail(tk) {
+  const t = WBAPI.worldDb[tk]; if (!t) return;
+  tdCurrentKey = tk;
+  tdOriginals = { label: t.label||'', icon: t.icon||'' };
+  $('td-icon').textContent = t.icon||'🗺';
+  $('td-name').textContent = t.label||tk;
+  $('td-key').textContent  = tk;
+  $('td-change-count').textContent = '';
+  $('btn-td-put').disabled = true;
+
+  const body = $('td-body'); body.innerHTML = '';
+
+  for (const [field, label] of [['label','Display Name'], ['icon','Icon (emoji)']]) {
+    const g = document.createElement('div'); g.className='fg';
+    g.innerHTML = `<div class="fl">${label}</div>`;
+    const inp = document.createElement('input'); inp.type='text'; inp.className='fi';
+    inp.id = `td-f-${field}`; inp.value = tdOriginals[field];
+    inp.addEventListener('input', tdCheckChanges);
+    g.appendChild(inp); body.appendChild(g);
+  }
+
+  // Monster roster (read-only list)
+  const monsters = (WBAPI._terrainToMonsters[tk]||[]);
+  if (monsters.length) {
+    const mg = document.createElement('div'); mg.className='fg';
+    mg.innerHTML = `<div class="fl">Monster Roster (${monsters.length})</div>
+      <div style="max-height:120px;overflow-y:auto;margin-top:3px">
+        ${monsters.map(mk=>{
+          const m=WBAPI.monsterPool[mk]||{};
+          return `<div style="padding:2px 0;font-size:11px;cursor:pointer;color:var(--muted)" onclick="selMonster='${mk}';renderMonsterTable();renderMonsterDetail(WBAPI.monsters.get('${mk}'));$('monster-detail').style.display='flex'">
+            <span class="tier-badge tier-${m.tier||'trivial'}" style="font-size:9px">${m.tier||'?'}</span>
+            <span style="color:var(--text);margin-left:4px">${m.name||mk}</span>
+            <span style="color:var(--muted);margin-left:4px;font-size:10px">${mk}</span>
+          </div>`;
+        }).join('')}
+      </div>`;
+    body.appendChild(mg);
+  }
+
+  // Linked nodes
+  const nodes = Object.entries(WBAPI.nodeMap).filter(([,n])=>n.name===tk);
+  if (nodes.length) {
+    const ng = document.createElement('div'); ng.className='fg';
+    ng.innerHTML = `<div class="fl">Nodes using this terrain (${nodes.length})</div>
+      <div>${nodes.map(([c,n])=>`<span class="flag-pill flag-read" style="cursor:pointer" onclick="switchTab('map');selectMapNode('${c}')">${c} ${n.label||''}</span>`).join('')}</div>`;
+    body.appendChild(ng);
+  }
+}
+
+$('btn-td-reset').addEventListener('click', () => {
+  if (tdCurrentKey) renderTerrainDetail(tdCurrentKey);
+});
+
+$('btn-td-put').addEventListener('click', async () => {
+  const key = tdCurrentKey; if (!key) return;
+  const changed = {};
+  for (const [f, orig] of Object.entries(tdOriginals)) {
+    const inp = document.getElementById(`td-f-${f}`);
+    if (inp && inp.value !== orig) changed[f] = inp.value;
+  }
+  if (!Object.keys(changed).length) return;
+  const btn = $('btn-td-put');
+  btn.disabled=true; btn.textContent='Saving…';
+  try {
+    let result;
+    if (SERVER.active) {
+      const r = await fetch(`${SERVER.url}/api/terrain/${encodeURIComponent(key)}`, {
+        method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(changed)
+      });
+      result = await r.json();
+    } else {
+      for (const [f,v] of Object.entries(changed)) WBAPI.worldDb[key][f] = v;
+      result = { ok:true };
+    }
+    if (result.ok || (result.fields && result.fields.some(f=>f.ok))) {
+      for (const [f,v] of Object.entries(changed)) WBAPI.worldDb[key][f] = v;
+      renderTerrainDetail(key);
+      renderTerrainList();
+      btn.textContent='✓ Saved';
+      setTimeout(()=>{ btn.textContent='PUT Changes'; btn.disabled=true; }, 2000);
+    } else {
+      alert('PUT failed: ' + (result.error||JSON.stringify(result)));
+      btn.textContent='PUT Changes'; btn.disabled=false;
+    }
+  } catch(e) {
+    alert('PUT error: ' + e.message);
+    btn.textContent='PUT Changes'; btn.disabled=false;
+  }
+});
+
 function renderTerrainList(){
   const q=($('terrain-search').value||'').toLowerCase();
   const list=$('terrain-list'); list.innerHTML='';
@@ -1451,7 +1574,13 @@ function renderTerrainList(){
     const cnt=(WBAPI._terrainToMonsters[tk]||[]).length;
     const el=document.createElement('div'); el.className='terrain-item'+(tk===selTerrain?' sel':'');
     el.innerHTML=`<span class="terrain-icon">${t.icon||'🗺'}</span><span class="terrain-name">${t.label||tk}</span><span class="terrain-count">${cnt}</span>`;
-    el.addEventListener('click',()=>{ selTerrain=tk; selMonster=null; renderTerrainList(); renderMonsterTable(); $('monster-detail').style.display='none'; });
+    el.addEventListener('click',()=>{
+      selTerrain=tk; selMonster=null;
+      renderTerrainList(); renderMonsterTable();
+      $('monster-detail').style.display='none';
+      renderTerrainDetail(tk);
+      $('terrain-detail').style.display='flex';
+    });
     list.appendChild(el);
   }
 }
@@ -1947,10 +2076,92 @@ document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>
 // API Tab
 // ═══════════════════════════════════════════════════════════════════════════
 const API_SCHEMAS = {
-  node:    `name         string   Display name\nterrain      string   Terrain key (ruins, city, dungeon…)\nact          number   Story act 1–5\nbattle       boolean  Combat enabled\nnpc          string   Inline NPC name\ndesc         string   Location description\nlocked       boolean  Hidden until unlocked`,
-  quest:   `title        string   Display title\ntype         string   main | side | skill_check | hunt\nhook         string   Intro text\npassText     string   Success text\nfailText     string   Failure text\nrewardText   string   Reward flavour\nnpc          string   NPC key who gives quest\nactivateNode string   Node where quest appears\nwaypointNode string   Node where quest resolves\ngold         number   Gold reward\nxp           number   XP reward\ndc           number   Difficulty class\nstat         string   wis | int | str | dex | con | cha`,
-  npc:     `name         string   Display name\noccupation   string   Role / job title\nnode         string   Node code\ngreeting     string   Default dialogue`,
-  monster: `name         string   Display name\ntier         number   Difficulty 1–5\nhp           number   Hit points\nac           number   Armor class\ncr           string   Challenge rating\ntype         string   humanoid | beast | undead…\nsize         string   tiny|small|medium|large|huge\ndrop         object   { gold, items[] }`,
+  // Source of truth: roll2hit-v3.html data sections
+  node:    `── NODE_MAP (144 nodes) ──────────────────────────────────────
+code*        string   Node ID (CI, CY…). Immutable; use MOVE to rename.
+label*       string   Display name shown on map + in game dialogue.
+name*        string   Terrain key → must match a WORLD_DB entry.
+             ↳ This is how the game knows which monsters appear here.
+act*         number   Story act 1–7. Controls node visibility.
+text         string   Location description prose shown on arrival.
+npc          string   Inline NPC display name (simple, not a profile).
+battle       object   Fixed encounter: {label, key:monsterKey, count:number}
+             ↳ null = random pool from WORLD_DB[node.name].monsters
+loot         string   Loot flavour text shown on encounter completion.
+sleep        boolean  Can the player rest here?
+sleepCost    number   Gold cost to rest (only when sleep:true).
+N/S/E/W      string   Adjacent node codes (cardinal directions).
+──────────────────────────────────────────────────────────────
+* required field`,
+
+  quest:   `── QUEST_DB (210 quests) ─────────────────────────────────────
+title*       string   Display title in quest log.
+type*        string   main | side | skill_check | hunt
+hint         string   Hook / intro text when quest becomes available.
+hook         string   Alias for hint (same field, different quests use either).
+passText     string   Success text shown on completion.
+failText     string   Failure text.
+rewardText   string   Reward flavour text.
+disposition  string   Contextual NPC quote.
+npc          string   NPC key or name who gives/is involved in quest.
+activateNode string   Node code where quest appears.
+waypointNode string   Node code where objective is located.
+xpAward      number   XP granted on pass.
+reward       number   Gold reward on pass.
+checkDC      number   Difficulty Class (skill_check type only).
+checkStat    string   WIS | INT | CHA | STR | DEX | CON
+checkSkill   string   Specific skill name for the check.
+──────────────────────────────────────────────────────────────
+activateCond function  (S) => bool  — NOT editable via API
+completeFn   function  (S) => {...} — NOT editable via API
+onPass/onFail function                NOT editable via API`,
+
+  npc:     `── BIRKA_NPC (6 named NPCs) ──────────────────────────────────
+key*         string   Internal key (yael, brynn, quill, pachelbel, crov, auros)
+name*        string   Full display name.
+occupation*  string   Role shown in NPC list.
+node*        string   Node code where NPC is found.
+neutral*     object   { greeting, dialogue }   — default level
+friendly     object   { greeting, dialogue, special? }
+dearFriend   object   { greeting, dialogue }
+──────────────────────────────────────────────────────────────
+Inline NPCs (node.npc strings) are simpler; edit via node PUT.`,
+
+  monster: `── MONSTER_POOL (392 monsters) ──────────────────────────────
+key*         string   Internal key. Never change; use fork+swap for variants.
+name*        string   Display name. Editable globally via rename or PUT.
+ac*          number   Armor Class. Range 5–22.
+hp*          number   Hit Points. trivial:4–10, easy:10–30, medium:20–80,
+             ↳ hard:50–180, deadly:100–600.
+atk*         number   Attack bonus. Range 0–17.
+dmgDie*      number   Damage die size (3,4,6,8,10,12).
+dmgCount*    number   Number of damage dice (1–4).
+dmgFlat*     number   Flat damage bonus (can be 0).
+tier*        string   trivial | easy | medium | hard | deadly
+──────────────────────────────────────────────────────────────
+drop (in MONSTER_DROPS): { icon, name, sell:number(gp) }
+All fields* are required. Edit all via PUT /api/monster/{key}.`,
+
+  terrain: `── WORLD_DB (69 terrain types) ──────────────────────────────
+key*         string   Internal key (city, forest, dungeon…). Immutable.
+label*       string   Display name. Editable via PUT /api/terrain/{key}.
+icon*        string   Emoji icon. Editable via PUT /api/terrain/{key}.
+monsters*    array    Monster roster: [P.monsterKey, ...].
+             ↳ Edit via POST /api/terrain/{key}/swap, not directly.
+isEpicBattleground  boolean  If true, monsters[] unused (boss from EPIC_BOSS_POOL).
+──────────────────────────────────────────────────────────────
+Nodes reference terrain via node.name (e.g. CI.name = "city").`,
+
+  schema:  `── /api/schema ──────────────────────────────────────────────
+GET /api/schema            → full schema for all entity types
+GET /api/schema/monster    → monster fields + notes
+GET /api/schema/terrain    → terrain fields + notes
+GET /api/schema/node       → node fields + notes
+GET /api/schema/quest      → quest fields (incl. non-editable fns)
+GET /api/schema/npc        → NPC fields + dialogue structure
+──────────────────────────────────────────────────────────────
+Source of truth: roll2hit-v3.html anchor sections.
+_anchors field in response lists each section's start marker.`,
 };
 
 function apiOut(data, cls) {
@@ -1961,13 +2172,41 @@ function apiOut(data, cls) {
 }
 
 function apiGetNs(type) {
-  return { location:WBAPI.location, node:WBAPI.nodes, quest:WBAPI.quests, npc:WBAPI.npcs, monster:WBAPI.monsters }[type];
+  return { location:WBAPI.location, node:WBAPI.nodes, quest:WBAPI.quests,
+           npc:WBAPI.npcs, monster:WBAPI.monsters, terrain:WBAPI.worlds }[type];
 }
 
-$('btn-api-get').addEventListener('click', () => {
+$('btn-api-get').addEventListener('click', async () => {
   if (!WBAPI.loaded) return apiOut('Load a game file first.', 'err');
   const type = $('api-type').value, id = $('api-id').value.trim();
+
+  // Schema: no id needed, returns field definitions
+  if (type === 'schema') {
+    if (SERVER.active) {
+      try {
+        const r = await fetch(`${SERVER.url}/api/schema${id ? '/'+encodeURIComponent(id) : ''}`);
+        const d = await r.json();
+        apiOut(d, 'ok');
+      } catch(e) { apiOut('Server error: ' + e.message, 'err'); }
+    } else {
+      apiOut(id ? (API_SCHEMAS[id]||`No schema for "${id}"`) : API_SCHEMAS, 'ok');
+    }
+    return;
+  }
+
   if (!id) return apiOut('Enter an ID or name.', 'err');
+
+  if (SERVER.active) {
+    try {
+      const path = type === 'location' ? `location/${encodeURIComponent(id)}`
+                 : `${type}/${encodeURIComponent(id)}`;
+      const r = await fetch(`${SERVER.url}/api/${path}`);
+      const d = await r.json();
+      apiOut(d, r.ok ? 'ok' : 'err');
+    } catch(e) { apiOut('Server error: ' + e.message, 'err'); }
+    return;
+  }
+
   const result = apiGetNs(type)?.get(id);
   if (!result) return apiOut(`"${id}" not found in ${type}s.`, 'err');
   apiOut(result, 'ok');
@@ -1988,16 +2227,35 @@ $('btn-api-load-field').addEventListener('click', () => {
   apiOut(`Loaded ${type}:${key}.${field}`, 'ok');
 });
 
-function doPut(value) {
+async function doPut(value) {
   if (!WBAPI.loaded) return apiOut('Load a game file first.', 'err');
   const type = $('api-type').value, id = $('api-id').value.trim(), field = $('api-field').value.trim();
   if (!id || !field) return apiOut('Enter ID and field name.', 'err');
   if (value === '') return apiOut('Value is empty.', 'err');
+  // Coerce numeric strings to numbers for known numeric fields
+  const numFields = new Set(['ac','hp','atk','dmgCount','dmgDie','dmgFlat','xp','morale','checkDC','xpAward','reward','num','act','sleepCost']);
+  const coerced = numFields.has(field) && value !== '' && !isNaN(value) ? Number(value) : value;
+  if (SERVER.active) {
+    try {
+      const res = await fetch(`${SERVER.url}/api/${type}/${encodeURIComponent(id)}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ [field]: coerced }),
+      });
+      const r = await res.json();
+      if (!r.ok) return apiOut(r.error || JSON.stringify(r), 'err');
+      const fSummary = (r.fields || []).map(f => `  ${f.field}: ${f.strategy || ''} ${f.ok ? '✓' : '✗'}`).join('\n');
+      apiOut(`PUT ${type}:${r.key}.${field} = ${JSON.stringify(coerced)}\n${fSummary}`, 'ok');
+      updateDiffBadge();
+      return;
+    } catch(e) { return apiOut(`Server error: ${e.message}`, 'err'); }
+  }
   const ns = apiGetNs(type);
   if (!ns?.put) return apiOut(`${type} does not support PUT.`, 'err');
-  const r = ns.put(id, { [field]: value });
+  const r = ns.put(id, { [field]: coerced });
   if (!r.ok) return apiOut(r.error || JSON.stringify(r), 'err');
-  apiOut(`PUT ${type}:${r.key}.${field} = ${JSON.stringify(value)}`, 'ok');
+  apiOut(`PUT ${type}:${r.key}.${field} = ${JSON.stringify(coerced)}`, 'ok');
+  updateDiffBadge();
 }
 
 $('btn-api-put').addEventListener('click', () => doPut($('api-value').value));

@@ -6025,6 +6025,210 @@ DR has one encounter (Desert Wanderer ×2) and no NPCs. The node text is the onl
 
 ---
 
+## §PAUL-01 — The Escort of the Apostle: Revised Arc Design (📋 PLANNED)
+
+**Status:** 📋 PLANNED — written 2026-05-29. Supersedes the storytelling approach of §FUTURE-01 (which remains the node map and implementation reference). This section reframes the player role, establishes the Fighter's presence, redesigns the skill check structure, and integrates real source quotes.
+
+**The premise shift:** In §FUTURE-01 as implemented, the player walks in Paul's footprints — the narration is in second person but the events are Paul's events. The revision establishes the **Fighter as co-protagonist**. Paul is a Cleric NPC — on a mission from his deity, skilled in rhetoric and faith-mechanics, incapable of routing himself safely through a hostile world. The Fighter is his escort. Both characters are present in every scene. Neither is backdrop to the other.
+
+---
+
+### §PAUL-01-A. The Central Argument
+
+Paul is a Cleric who fights with words and outlasts everything. The Fighter is the person who makes it possible for him to keep going. This is not a supportive relationship in the subordinate sense — it is the way two very different skill sets become one capability. Paul can persuade a governor, heal a man who has never walked, survive a shipwreck by prayer and presence of mind, and write letters that reach cities he cannot walk to. He cannot read a street about to turn, assess which guards can be bribed, lower a grown man in a basket from a third-floor window in the dark, or keep a prison door open long enough for everyone to get out.
+
+The Fighter's job is exactly those things.
+
+**This is a faith-witness arc, not a faith-instruction arc.** The Fighter is not asked to convert. They are asked to watch what happens when a man operates at the limit of what faith can carry, and to keep him alive long enough for it to matter. Witnessing is the Fighter's vocation in this arc, the same way it is in §GR: you come, you see, you stay — and the staying is the thing.
+
+---
+
+### §PAUL-01-B. Fighter Presence Rules
+
+These rules govern how the Fighter appears in every node text and quest description. They supplement the Paul voice rules in `lab-report-saul-paul-vignette-spec.md`.
+
+**1. The Fighter is named by function, not by name.**
+Node texts do not say "you" in the Paul passages — they are in third person as observed from outside. When the Fighter acts, the text shifts to second person: "You hold the rope." "You count the guards." "You stay." The shift marks the boundary between witnessing and acting.
+
+**2. The Fighter's skill checks are always physical or situational.**
+Paul's checks are rhetoric (INT) and faith (WIS). The Fighter's checks are STR Athletics, DEX Stealth/Acrobatics, CHA Intimidation (holding a room), WIS Insight (reading a street or a crowd). Their skills are complementary. Neither set solves the same problem.
+
+**3. The Fighter has an opinion.**
+Not stated as commentary — shown as choice. Before the Aethon speech: the Fighter scouts the square and confirms two exits. Before the Phillam prison: the Fighter does not leave when the doors open. The opinion is the action. No dialogue required.
+
+**4. The Fighter's presence changes what Paul can do.**
+Without the Fighter, Paul cannot get out of Damascus. Without Paul, the Fighter has no reason to be at the Aethon public hall. The interdependence is structural, not decorative. If one of them were removed from any node, the scene's resolution changes.
+
+**5. The Fighter is not a believer. The Fighter is a witness.**
+This is the same function as in §GR: Connie's grief is witnessed by someone who came and stayed. Paul's mission is witnessed by someone who came and stayed. The Fighter does not need to share the faith to share the road. This distinction is kept clean — no conversion arc, no faith-check for the Fighter. Their deity is their own matter. What they have is loyalty to a specific man on a specific road and the professional ethic to keep him breathing.
+
+**6. The Fighter is physically present in key objects.**
+The rope holds a basket. The Fighter holds the rope. The earthquake opens the door. The Fighter is the one who tells the jailer to put down the sword. The snake goes into the fire. The Fighter is standing next to the fire. Small, specific, present.
+
+---
+
+### §PAUL-01-C. Paul as Cleric NPC — What He Does, What He Cannot Do
+
+| Paul's capabilities | Fighter's capabilities |
+|--------------------|----------------------|
+| Rhetoric skill check (INT, Persuasion/History) | Combat, physical extraction, route-finding |
+| Faith healing (scripted event — no roll; happens or it happens) | Guard assessment, bribery reads, crowd reads |
+| Writes letters (narrative — not rolled) | Rope work, climbing, heavy lifting |
+| NPC disposition changes (his charisma rewrites who likes whom) | Intimidation to hold a room or a guard |
+| Survives things that should not be survived (the thorn; the snake) | Tactical escape planning |
+| Arguments (pushes back on everyone he respects) | Recognizes which arguments are about to become streets |
+
+Paul cannot be killed in this arc. He can be captured (triggering specific quest states), isolated (triggering the blind days, the house arrest), or delayed (triggering time-gates). The Fighter can fail to protect him — the consequence is not Paul's death but a harder path: more damage on the fighter, a missed NPC disposition opportunity, a door that closes.
+
+---
+
+### §PAUL-01-D. The Escort Quest Chain — Revised Structure
+
+Each leg of the journey is one escort quest. The Fighter has a primary skill check per leg. Paul has a secondary (his rhetoric/faith action). Both resolve in the same scene.
+
+| Quest ID | Title | Node | Fighter Check | Paul Action | Real Quote |
+|----------|-------|------|---------------|-------------|-----------|
+| `quest_road_kesra` | The Light at Noon | KS (road) | None — the Fighter watches. No check. This is Paul's moment alone. | Conversion event: fell to the ground, heard a voice, blind. | *"Saul, Saul, why are you persecuting me?"* — Acts 9:4 |
+| `quest_basket_descent` | The Rope in the Dark | KS (wall) | STR Athletics DC 12 — lower the basket without the rope slipping while guards are at the eastern gate. Fail: rope frays; basket drops last three feet; Paul bruised, Fighter makes noise. | Paul is in the basket. He is doing nothing mechanical. He is praying. This is documented. | *"Through a window in the wall his disciples lowered him in a basket."* — Acts 9:25 |
+| `quest_anath` | The House on the Lower Road | KS (inn) | WIS Insight DC 10 — is Anath safe? (He stops on the landing, deciding. The Fighter hears this and chooses not to intercept.) | 3-day time gate. Anath heals. Sight returns. | *"Brother Saul, the Lord Jesus, who appeared to you on the road... has sent me so that you may see again."* — Acts 9:17 |
+| `quest_barnach_vouches` | Vouched For | HR | CHA Intimidation DC 11 — hold the room while Barnach argues. The room does not trust Paul yet. The Fighter's visible presence keeps the arguments verbal. | Barnach speaks for Paul. Paul does not speak yet. He waits. | *"He will stay with me."* — Barnach (adapted) |
+| `quest_ezzir` | The Sorcerer's Opposition | CI2 | STR/DEX DC 12 — stand between Ezzir and the door while Paul addresses the governor. Ezzir will try to leave the room before the argument finishes. | WIS faith check vs Ezzir's rhetoric. Paul names what Ezzir is doing, plainly, in front of the governor. | *"You are a child of the devil and an enemy of everything that is right."* — Acts 13:10 |
+| `quest_stoning_lythros` | Left for Dead | LT | STR Athletics DC 13 — create an opening in the crowd after the lame man stands and the crowd reverses. The Fighter pulls Paul through before the first stone is thrown. Fail: Paul takes 2d6 damage before extraction. | The healing happens. Paul cannot prevent what comes after. | *"He got up and went back into the city."* — Acts 14:20 (documented sequence; Paul's action after the stoning) |
+| `quest_prison_phillam` | Seven Stairs, Then Five | PL | WIS Insight DC 12 — when the earthquake opens the doors and the chains fall, the jailer draws his sword (he will execute himself before being blamed for escaped prisoners). The Fighter must read this before it happens. | Paul is singing. At midnight. Silar is with him. This is the first anyone has heard this in a prison. | *"About midnight Paul and Silas were praying and singing hymns to God, and the other prisoners were listening."* — Acts 16:25 |
+| `quest_unknown_altar` | The Unknown Altar | AE | DEX Stealth DC 11 — scout the two exits from the public hall before Paul takes the steps. If the speech fails (partial result), the Fighter already knows the way out. | INT Persuasion DC 14. Paul starts with the altar. The crowd has calibrated opinions. Some will stop. A few won't. | *"To an Unknown God. What therefore you worship as unknown, this I proclaim to you."* — Acts 17:23 |
+| `quest_temple_riot` | Riot in the Marketplace | EF | STR Athletics DC 13 — reach the north gate. Demetrios has translated a business problem into a street; the street is between the player and the exit. Paul is already moving. | Paul is moving. He does not fight Demetrios. He leaves through the north gate. The departure is the answer. | *"Great is Artemis of the Ephesians!"* — Acts 19:28 (Demetrios's crowd — used as disposition quote for the riot scene) |
+| `quest_shipwreck_melta` | Two Hundred and Seventy-Six | MT | STR Athletics DC 12 — help keep people on planks during the swim to shore. Paul has directed the crew to eat before the hull goes; the Fighter executes the distribution. | Paul addresses the 276 before the ship goes down. He tells them no one will die. He is right. | *"Therefore I urge you to take some food. You need it to survive. Not one of you will lose a single hair from his head."* — Acts 27:34 |
+| `quest_snake_melta` | It Did Nothing | MT | None — the Fighter watches. No check. This is Paul's moment alone, the same as the road to Kesra. The arc brackets its two no-check moments: the conversion and the snake. Both are witnessed, not participated in. | Paul shakes the snake into the fire. Nothing happens. The crowd revises its theory twice in one afternoon. | *"The islanders showed us unusual kindness."* — Acts 28:2 (the welcome at Melta — note: unusual kindness. The same vocabulary as §SPARK-01.) |
+
+---
+
+### §PAUL-01-E. Key Event Vignettes — Fighter-Integrated Rewrites
+
+These replace the corresponding passages in `lab-report-saul-paul-vignette-spec.md`. They are not replacements for the full lab report — they are additions that insert the Fighter's physical presence into the existing scene texts.
+
+---
+
+**KS — The Basket Descent (addition to existing KS node text)**
+
+The rope is made of cloth strips. This was not pre-planned — the cloth was taken from the room. You knotted it yourself. Seven knots, tested against the window frame. The basket is market-grade, meant for vegetables; it will hold the weight if the weight is distributed and the descent is controlled. You know this because you have dropped things in baskets before and you know what controlled means.
+
+He gets in. He is not heavy. He does not speak. There is nothing to say at this moment — the guards at the eastern gate change at the third hour; you are ahead of the change; the window points west; the mathematics of this are in your favor if the knots hold.
+
+They hold.
+
+The last three feet you lower slowly because you can hear him breathing. He lands and crouches, and then he is moving and you are pulling the rope back up and you do not watch him go because watching him go means watching the western road and you are watching the eastern gate.
+
+The gate guard does not turn.
+
+*"Through a window in the wall his disciples lowered him in a basket."* This is what will be written down later, by someone who was not there. The facts are accurate. They do not include the knots.
+
+---
+
+**PL — Seven Stairs, Then Five (addition to existing PL node text)**
+
+At midnight there is an earthquake.
+
+This is the fact. Earthquakes do not announce themselves. The prison floor moves the way floors should not move, and the door — the door that required a key and a guard and a formal process — swings open. The chains on the wall come loose. Not just Paul's and Silar's: all of them. Every prisoner in the block is free, in the technical sense, at midnight.
+
+No one moves.
+
+This is important. You are in the cell across the corridor. You are free to leave. You are staying because Paul is staying and you are his escort and he has not indicated that he is leaving. He is still singing. Silar has stopped, but Paul has not stopped.
+
+The jailer wakes in a dark room where the doors should not be open. He draws his sword. You know this sound — the specific sound of a man who has decided to die rather than answer for something. You have three seconds to cover the distance or the sound becomes a different sound.
+
+*"Do yourself no harm."* Paul says this before you reach the doorway. His voice is not loud.
+
+The jailer drops the sword. You are still moving.
+
+Later, in the jailer's house, the household eats together at a table in the middle of the night. You eat. Paul eats. Silar eats. You count seven stairs on the way down from his apartment and five more after the landing. Lyra's house had stairs like that.
+
+*"He was filled with joy because he had come to believe in God — he and his whole household."* — Acts 16:34. The Fighter notes this: the whole household. Not the jailer alone. The jailer understood something and brought everyone with him. This is how it moves.
+
+---
+
+**MT — Two Hundred and Seventy-Six (addition to existing MT node text)**
+
+Before the hull goes, Paul addresses the 276. This is unusual behavior on a sinking ship. The crew has been working for fourteen days without eating — the storm, the gear thrown overboard, the constant pumping. Paul stands in the middle of the ship and says: eat. Specifically: not one of you will die. He says this plainly.
+
+You distribute the bread. This is a practical action — 276 people need to receive bread on a moving deck in high weather, and someone has to pass it. You pass it. Paul breaks it first and gives thanks, and then you pass the rest. The number is real. You know how many people are on this ship because you asked the ship's log keeper on the second day.
+
+When the hull goes on the sandbar, the soldiers want to kill the prisoners so none escape. You stand in the way of this. The centurion stops his soldiers because he wants to save Paul, and Paul gets out alive, but you are the reason the moment pauses long enough for the centurion to make the order. The pause is four seconds.
+
+Everyone reaches shore. The number at the start is the number at the end.
+
+---
+
+### §PAUL-01-F. Theme Cross-References
+
+Each major Paul arc event maps to a theme running through the existing game. These cross-references should be surfaced in the quest investigation card (§WORLDBUILDER-02) when the player views any Paul quest.
+
+| Event | Theme | Parallel arc |
+|-------|-------|-------------|
+| The basket descent — the rope is knotted cloth, improvised, specific | Objects that carry weight; improvised care | §GR: Aldo's net, folded in his coat pocket; the object that says everything |
+| The blind days — bread on the table, unmoved, three days | Sensory specificity as testimony; the one anchor | §WISDOM-01: Froberger's taxonomy correction sent to a general address |
+| The prison song at midnight | Kindness in a place that is not built for kindness | §SPARK-01: The cat and the mouse; kindness that changes what a space does |
+| The snake at Melta — crowd's theory is wrong twice | The friendly monster; wrong assumption, plain correction | §HUNT-01: the creature is not what anyone thought |
+| The 276 number — specific, documented | Specificity as testimony against abstraction | §GR: the three city blocks; the account book |
+| The jailer's household eating at midnight | A household that decides together | §GR: Lyra's household; the household as the unit of decision |
+| Paul's letters from house arrest | What survives; what extends past where you can walk | §WISDOM-01: the Ardley Manuscript; things written become things that outlast |
+| The Aethon altar — *To the Unknown God* — find the entry point | Institutions that hedge honestly; the gap acknowledged | §NAVAL-01: Keel protecting something she cannot name; the gap between what is documented and what is known |
+| "Unusual kindness" at Melta — the islanders | Kindness as the operative word | §SPARK-01: the harmonyChainComplete flag; the world that recognizes kindness |
+| The conversion is not described, only reported | The restraint is the testimony | §GR: "What Remains" — grief not named, enacted through objects |
+
+---
+
+### §PAUL-01-G. Real Quote Index
+
+Quotes cleared for use in-game. All are sourced from Acts or the Pauline letters. Used as: disposition quotes, node text fragments, or NPC voice lines. They are in plain English — not archaic, not stylized. They land the way a man lands who has said something many times and is no longer performing it.
+
+| Quote | Source | Use |
+|-------|--------|-----|
+| *"Saul, Saul, why are you persecuting me?"* | Acts 9:4 | `quest_road_kesra` disposition |
+| *"Brother Saul, the Lord Jesus... has sent me so that you may see again."* | Acts 9:17 | `quest_anath` disposition — Anath's voice line |
+| *"Through a window in the wall his disciples lowered him in a basket."* | Acts 9:25 | `quest_basket_descent` node text fragment |
+| *"He will stay with me."* | Acts 9 (Barnabas) | `quest_barnach_vouches` disposition |
+| *"You are a child of the devil and an enemy of everything that is right."* | Acts 13:10 | `quest_ezzir` — Paul to Ezzir, in the room, in front of the governor. Said plainly. |
+| *"He got up and went back into the city."* | Acts 14:20 | `quest_stoning_lythros` disposition — the sequence is the documentation |
+| *"About midnight Paul and Silas were praying and singing hymns to God, and the other prisoners were listening."* | Acts 16:25 | `quest_prison_phillam` node text — the prisoners are listening |
+| *"Do yourself no harm."* | Acts 16:28 | `quest_prison_phillam` — Paul to the jailer. Said before the Fighter reaches the door. |
+| *"He was filled with joy because he had come to believe in God — he and his whole household."* | Acts 16:34 | `quest_prison_phillam` storyRender close |
+| *"To an Unknown God. What therefore you worship as unknown, this I proclaim to you."* | Acts 17:23 | `quest_unknown_altar` — Paul on the public hall steps |
+| *"Not one of you will lose a single hair from his head."* | Acts 27:34 | `quest_shipwreck_melta` — Paul to the 276, before the hull goes |
+| *"Therefore I urge you to take some food. You need it to survive."* | Acts 27:34 | `quest_shipwreck_melta` node text — before the bread distribution |
+| *"The islanders showed us unusual kindness."* | Acts 28:2 | `quest_snake_melta` — the Melta welcome; cross-references harmonyChainComplete |
+| *"My grace is sufficient for you, for my power is made perfect in weakness."* | 2 Corinthians 12:9 | The Thorn item tooltip — the only line that appears there |
+| *"I have learned, in whatever state I am, to be content."* | Philippians 4:11 | `ST` node text fragment — the apartment; the letters; the open ending |
+
+---
+
+### §PAUL-01-H. Vignette Register (Voice Tone — English Spoken)
+
+The Littoral Courts arc (`§SIREN-01`) uses compressed French present-tense syntax — sentence fragments, calibrated ambiguity, implied perspectives. The Paul arc uses the opposite: **spoken English, full sentences, plain verb tense, no compression**. The events are documented, not evoked. Paul's voice in particular sounds like someone who has described these events many times to many different rooms and has stopped trying to make them interesting — because the facts are already interesting and the embellishment would diminish them.
+
+The Fighter's sections use second-person present tense (same as the rest of Roll2Hit). Paul's sections can be third-person present tense, observed — "He gets in the basket. He does not speak." This maintains the separation between witnessing and participating, which is the Fighter's structural position throughout.
+
+Object-anchored: every major scene has one object that carries the weight of the scene. The basket. The bread on the table. The seam on the tent. The snake on the fire. The warrant letters in the inner pocket. The door that should not be open. These objects should appear in both the quest description and the node text — the same object, named twice, from two distances.
+
+Direct quotes from source material are used sparingly and exactly: one per quest, in the disposition slot or as a fragment in the node text. They are not explicated. They appear and the scene moves on.
+
+---
+
+### §PAUL-01-I. Implementation Checklist
+
+This section specifies what needs to change from the existing §FUTURE-01 implementation to match the §PAUL-01 revised design. All nodes exist; quests are partially implemented; what is missing is the Fighter's presence layer and the two new quests.
+
+- [ ] Add `quest_basket_descent` to QUEST_DB (STR Athletics DC 12, node: KS, activateCond: `kesraMadnessWISSave` complete, completion signal: `kesraBasketComplete`)
+- [ ] Add `quest_prison_phillam` to QUEST_DB (WIS Insight DC 12, node: PL, activateCond: `lyraConverted`, completion signal: `phillippiJailerConverted`) — currently the prison event fires as a storyRender block only; needs a player-facing skill check
+- [ ] Revise existing quest `desc` fields to add Fighter-presence clauses (one sentence per quest noting the Fighter's physical position/action during Paul's moment)
+- [ ] Add Fighter second-person sections to KS, PL, and MT node texts (see §PAUL-01-E vignettes above)
+- [ ] Add `quest_basket_descent` disposition and `quest_prison_phillam` disposition using quotes from §PAUL-01-G
+- [ ] Update `_S_DEFAULTS` with two new flags: `kesraBasketComplete: false`, `phillippiJailerConverted: false`
+- [ ] The Thorn permanent status effect tooltip: replace current (none/empty) with the 2 Corinthians 12:9 quote, exact text
+- [ ] `quest_snake_melta` disposition: add "The islanders showed us unusual kindness." — cross-references the harmonyChainComplete world-state (if `harmonyChainComplete: true`, add a second line: "You have seen this before. It moves the same way.")
+- [ ] `quest_unknown_altar` Fighter section: add DEX Stealth DC 11 pre-check to scout the hall exits before Paul takes the steps; Fighter result appears in storyRender pass/fail text
+- [ ] Revise `quest_stoning_lythros` to add STR Athletics DC 13 Fighter extraction check; current version has only Paul's survival event with no Fighter participation
+- [ ] Ensure all real quotes from §PAUL-01-G appear exactly as written — no paraphrase, no archaic substitution
+
 ## §SIREN-01 — The Four Courts of the Littoral Sea
 
 > **Status:** ✅ Implemented 2026-05-28 (Layer 104b). 10 nodes (LJ0→LCA + LSO Overseer branch), 5 quests (4 courts + quest_sea_overseer), 6 NPC arcs, 3 sea battles, LJ3 navigator trigger, LCA betrayal-count arc-close. Entry: DS.E → LJ0(r:25,c:14), chain at c:14 rows 25→41; LSO at (r:37,c:18). Lab report: `lab-report-littoral-courts.md`.
@@ -7833,4 +8037,268 @@ WBAPI.worlds.flagUniqueInArc(flag, arcId)  // flag not reused across arc
 **Phase 5 — Full advisory enforcement**
 - [ ] `quests.create()` hard-blocks on world-logic failures (node not found, NPC not placed)
 - [ ] World Builder CLI: `node wbapi-cli.js advise quest <id>` command
+
+---
+
+## §WORLDBUILDER-02 — Investigation Mode: Cross-Reference Explorer (📋 PLANNED)
+
+**Status:** 📋 PLANNED — written 2026-05-29
+
+**What it is:** A second interaction mode for worldbuilder.html that shifts emphasis from editing to *investigation*. The current worldbuilder is CRUD-first: you find an entity, you change its fields. Investigation Mode is knowledge-first: you find an entity and immediately see all of its relationships — what it's connected to, what depends on it, what references it — so that design decisions are made from a full picture rather than a partial one.
+
+**Why this matters:** The game has 210 quests, 144 nodes, 392 monsters, 69 terrains. At this scale, editing a quest's activateNode without knowing what else activates at that node, or renaming a monster without knowing which terrains it appears in, creates invisible breakage. Investigation Mode makes the graph visible before any change is made.
+
+---
+
+### §WORLDBUILDER-02-A. The Quest Detail Card (Full Cross-Reference View)
+
+The current quest display shows title + text. The investigation card adds:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  quest_wis_03                                [skill_check / WIS] │
+│  "The Stalemate Cost"                                            │
+│  Node: SB  (Senate Building — Birka)                             │
+├─────────────────────────────────────────────────────────────────┤
+│  NPC: Magistra Voss (yael)   Stat: WIS  DC: 12                  │
+│  Retryable: no               XP: 100   Gold: 0                  │
+├─────────────────────────────────────────────────────────────────┤
+│  UPSTREAM FLAGS (must be set before this activates):            │
+│    wisHookReceived    ← written by quest_wis_00                 │
+│    sbResolved         ← written by quest_sb_01 or quest_sb_fight│
+│  DOWNSTREAM FLAGS (set by this quest, read by):                 │
+│    wisPage3_thumbscrew → read by quest_wis_07, quest_wis_09     │
+├─────────────────────────────────────────────────────────────────┤
+│  ARC: quest_wis (Wisdom arc)   [8 quests total, this is #3]     │
+│  Sibling quests in arc: wis_00 wis_01 wis_02 [this] wis_04...   │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+Clicking any node code, NPC key, flag name, or arc quest ID navigates to that entity's card.
+
+---
+
+### §WORLDBUILDER-02-B. Mission Classification — Proposed Type Taxonomy
+
+Current quest types in QUEST_DB: `side`, `skill_check`, `epic`, `main`.
+
+These 4 types carry too much semantic weight for a 210-quest corpus. A finer taxonomy makes it possible to filter by what the player actually does:
+
+| Proposed Class | Description | Existing examples |
+|----------------|-------------|-------------------|
+| `hunt` | Kill N enemies of type X | quest_hunt_01–04 |
+| `collect` | Acquire item(s) and return them | quest_la_riva_02, quest_basket_damascus |
+| `escort` | Companion must survive to destination | §SPARK-01 (Caspian) |
+| `skill_check` | Roll stat vs DC (already exists) | all skill_check quests |
+| `talk_chain` | Dialogue with NPC sequence (no combat required) | quest_wis_00, quest_la_riva_01 |
+| `lore_collect` | Gather scattered journal/map fragments | Froberger arc, §ALCH |
+| `gate_pass` | Reach a node while a condition is met | quest_governor_cyprus |
+| `survival` | Reach a state with HP > threshold | quest_stoning_lystra |
+| `investigation` | Read clues from multiple nodes, synthesize at one | §WHODUNIT |
+| `epic` | Multi-step, multi-node arc capstone (already exists) | mq quests |
+| `main` | Story-gate progression key (already exists) | quest_antecedent_01 |
+
+**Classification rule:** a quest's operational class is determined by the primary completion signal — the single thing that fires `completeFn`. Secondary effects (a skill check inside a hunt) do not change the class.
+
+---
+
+### §WORLDBUILDER-02-C. Filter + Search Interface
+
+Investigation Mode adds a persistent filter bar above the main content area:
+
+```
+[ Type ▾ all ] [ Arc ▾ all ] [ Node ▾ all ] [ NPC ▾ all ]  [ Search... ]
+```
+
+Filtering by node shows all quests that activate OR waypoint at that node — the full mission picture for a location. Filtering by NPC shows every quest that NPC is involved in. Filtering by arc shows the full chain in order with flag dependencies inline.
+
+**Location Profile card** (per node, aggregates all entities):
+
+```
+Node: CI — City Streets – Birka  (Act 1, terrain: city)
+  Quests active here:  6  (3 side, 2 skill_check, 1 talk_chain)
+  NPCs:                Yael Scheidemann, Crov (inline)
+  Monsters:            city_guard, thief, pickpocket, shadow_agent... (28 total)
+  Terrains:            city
+  Adjacent nodes:      CI2 (S), CY (N), CO (E), IN (W)
+  Flags set by quests: connieMet, wisHookReceived, labHookReceived
+  Flags read by quests: catKingDefeated, govCopperConverted
+```
+
+---
+
+### §WORLDBUILDER-02-D. Relationship Graph (Visual)
+
+A secondary panel showing the selected entity's immediate neighborhood as a small force-directed graph:
+
+- Quest node → connected to: its activateNode, waypointNode, NPC key, arc siblings, upstream/downstream quests (by flag)
+- Node → connected to: all adjacent nodes (N/S/E/W), all quests at that node, all NPCs at that node
+- NPC → connected to: their home node, all quests that reference their key
+- Monster → connected to: all terrains that include it, all nodes where that terrain is active
+
+The graph is not a map replacement — it is a relationship surface for the selected entity. Nodes in the graph are clickable (navigate to that entity's investigation card).
+
+---
+
+### §WORLDBUILDER-02-E. Implementation Phases
+
+**Phase 1 — Quest investigation card (no graph)**
+- [ ] Extend quest detail pane in worldbuilder.html to show: arc siblings, upstream/downstream flags with originating quest IDs, NPC key → NPC name lookup, activateNode → node label lookup
+- [ ] Add arc-filter to quest sidebar (filter by arc prefix extracted from quest ID)
+- [ ] Add "Location Profile" button on node detail that shows all quests + NPCs + monsters at that node
+
+**Phase 2 — Mission classification layer**
+- [ ] Add `_classifyQuest(q)` to wbapi-core.js — returns operational class from `§WORLDBUILDER-02-B` table based on field inspection
+- [ ] Add `WBAPI.quests.byClass(cls)` list method
+- [ ] Expose in worldbuilder: type filter dropdown includes the 11 operational classes (not just QUEST_DB's 4)
+- [ ] Show operational class badge alongside QUEST_DB type in quest card header
+
+**Phase 3 — Location Profile card**
+- [ ] `WBAPI.location.profile(nodeCode)` — extends existing `location.get()` with: quest list with classes, NPC list with quest counts, flag reads/writes at this node
+- [ ] Render Location Profile card in worldbuilder when clicking a node (replaces simple node detail pane)
+
+**Phase 4 — Relationship graph panel**
+- [ ] Add lightweight canvas/SVG graph panel (right sidebar or overlay)
+- [ ] Populate from `WBAPI.location.profile()` + `WBAPI.quests.chain()` data
+- [ ] Nodes clickable → navigate to investigation card
+
+---
+
+### §WORLDBUILDER-02-F. Architectural Suggestion List
+
+Items that arise from the investigation-mode design and should feed into §ARCH-01/§ARCH-02:
+
+1. **Quest operational class field** — add `_class` to UQF schema (§ARCH-01). Derived at load time by `_classifyQuest()`, not stored in source. Classification is deterministic from existing fields.
+
+2. **Arc ID field** — quests currently encode arc membership in their key prefix (e.g., `quest_wis_03` → arc `quest_wis`). Make this explicit: add `arc: 'quest_wis'` as a first-class UQF field. Enables arc-level sorting, ordering, and chain queries without string-splitting heuristics.
+
+3. **NPC–quest relationship index** — WBAPI already has `_questsByNode` but no `_questsByNpc`. Add `_questsByNpc` index (NPC key → quest IDs that reference it) in `_buildIndexes()`. Currently this is done by regex scan of raw source; a first-class index makes it O(1).
+
+4. **Terrain–node index** — `WBAPI.worlds.monsterList(terrain)` exists but there is no `WBAPI.worlds.nodeList(terrain)` — the list of all nodes whose `name` field equals a terrain key. Add this to `_buildIndexes()` as `_nodesByTerrain`.
+
+5. **Waypoint-node second index** — `_questsByNode` currently indexes only `activateNode`. Add `_questsByWaypoint` for `waypointNode` so both activation point and completion point are reachable in O(1). This makes the Location Profile card complete.
+
+6. **Flag-to-class map** — for a given flag (e.g., `catKingDefeated`), show: which quest class wrote it, and which quest classes read it. Supports Investigation Mode's "what does changing this flag break?" view.
+
+7. **Mission brief export** — `WBAPI.quests.brief(id)` returns a human-readable one-paragraph summary of a quest: class, node, NPC, stat check if any, upstream deps, downstream effects. Used in investigation card and exportable as game design doc.
 - [ ] worldbuilder.html Quest Editor shows real-time advisory warnings while editing
+
+---
+
+## §BACKLOG — Outstanding Tasks (updated 2026-05-29)
+
+A consolidated register of all open work across the project. Organized by domain. Items carry a priority tier: **P1** (blocks other work or has active dependencies), **P2** (planned, sequenced), **P3** (unscheduled / speculative).
+
+---
+
+### BACKLOG-A. Tooling — WBAPI + Worldbuilder
+
+**P1 — Immediately actionable:**
+
+- [ ] **§ARCH-02 Phase 1 — Operand Registry (inert):** Add `OPERAND_CONTRACTS` object (12 operand kinds, required/optional fields) to `wbapi-core.js`. Add `WBAPI.operands.list()`, `.contract(kind)`, `.validate(bit)`. Add `WBAPI.quests.validate(id)` (field-level) and `WBAPI.quests.advise(id)` (world-logic cross-ref). Add `WBAPI.quests.toOperands(id)` — parse existing quest fields into operand array. Wire validate + advise into worldbuilder.html API tab. *(Depends on: nothing. Enables: §ARCH-02 Phase 2, §WORLDBUILDER-02 advisory warnings.)*
+
+- [ ] **§ARCH-01 Phase 1 — UQF skeleton (inert):** Add `SCHEMA_VERSION = 'UQF-1.0'` and stub `QuestRuntime` + `adaptLegacyQuest()` to `roll2hit-v3.html` inside a `/* §ARCH-01 */` block. No behavior change — just establishes the namespace. Add `BIT_CONTRACTS` and `validateQuest()` to worldbuilder.html Quest Editor. *(Depends on: nothing. Enables: §ARCH-01 Phase 2 migration.)*
+
+- [ ] **§WORLDBUILDER-02 Phase 1 — Quest investigation card:** Extend quest detail pane in worldbuilder.html: arc siblings, upstream/downstream flags with originating quest IDs, NPC key → NPC name lookup, activateNode → node label. Add arc-filter to quest sidebar. Add "Location Profile" button on node detail. *(Depends on: nothing. Enables: Phase 2 classification layer.)*
+
+**P2 — Sequenced after P1:**
+
+- [ ] **§WORLDBUILDER-02 Phase 2 — Mission classification:** Add `_classifyQuest(q)` to wbapi-core.js (11 operational classes). Add `WBAPI.quests.byClass(cls)`. Expose in worldbuilder filter bar. Show operational class badge in quest card. *(Depends on: §WORLDBUILDER-02 Phase 1.)*
+
+- [ ] **§WORLDBUILDER-02 Phase 3 — Location Profile card:** `WBAPI.location.profile(nodeCode)` — extends `location.get()` with quest list w/ classes, NPC quest counts, flag reads/writes at node. Render as Location Profile card in worldbuilder. *(Depends on: Phase 2 classification, §ARCH-02 Phase 1 for flag-class map.)*
+
+- [ ] **§ARCH-02 Phase 2 — Quest creation flow:** Add `WBAPI.quests.create(questObj)` (validates then adds). Add operand builder UI in worldbuilder Quest Editor. Show `quests.chain()` upstream/downstream in Quest Editor. *(Depends on: §ARCH-02 Phase 1.)*
+
+- [ ] **§WORLDBUILDER-01 — Visual grid editor:** Full canvas-based node map editor with node detail inspector, exit bidirectional editing, collision detection. See full spec in §WORLDBUILDER-01-A through -D. *(Depends on: §WORLDBUILDER-02 Phase 1 for cross-ref panel integration.)*
+
+- [ ] **§EDITOR-01 — Quest creator UI:** Form-based quest creator with type-aware fields, flag dependency graph, storyRender block generator, token item manager, template presets. See full spec in §EDITOR-01-A through -G. *(Depends on: §ARCH-02 Phase 1 for operand validation.)*
+
+**P3 — Deferred / unscheduled:**
+
+- [ ] **§WORLDBUILDER-02 Phase 4 — Relationship graph:** Canvas/SVG graph panel showing entity neighborhood. Nodes clickable. *(Depends on: Phase 3.)*
+- [ ] **§ARCH-02 Phase 3 — Escort + party runtime:** `S.party`, `escort` pickup/dropoff, `talk_party` in inventory panel. *(Depends on: Phase 2.)*
+- [ ] **§ARCH-02 Phase 4 — Legacy quest conversion:** Audit all 210 quests with `toOperands()`. Convert 59 skill_check quests first (most uniform). Convert §HUNT-01 and §SPARK-01 as proof-of-concept. *(Depends on: Phase 2.)*
+- [ ] **§ARCH-01 Phases 2–5:** Migrate quest arcs to UQF one by one (WISDOM → SPARK → ALCHEMY → main chain). Remove `completeFn`/`onPass` closure pattern. Export UQF JS literals from worldbuilder. *(Long-term.)*
+
+---
+
+### BACKLOG-B. Game Content — Unimplemented Arcs
+
+**P1 — Has active dependencies in live quests:**
+
+- [ ] **§DUNGEON-01 VS Underground Room (visbyUnderground):** `quest_wis_06` (the Shadow Room WIS save) requires `visbyUnderground: true` as an activateCond gate. The shadow room must be implemented before §WISDOM-01's final quest resolves properly. See §DUNGEON-01 + §WISDOM-01-I for the coordination note. This is the only §WISDOM-01 quest that requires a new storyRender block at VS — all others are already live. *Implement first among §DUNGEON-01 remainders.*
+
+**P2 — Specced and ready:**
+
+- [ ] **§SPARK-01 — The Harmony Chain (5 quests):** Full spec in quest.md §SPARK-01 and plan.md §SPARK-01. Quests: `quest_spark_01–05`. Nodes: DK, MS. State flags: `smaltBefriended`, `pipMet`, `bioluminescentParasiteFound`, `whodunitSolved`, `wrenpemburyInconsistencyNoticed`, `aldousConfessed`, `harmonyChainComplete`. Token objects: Smalt's Trust, Pip's Friendship Bead, Clot's Glow, Letter of Safe Passage, Letter of True Passage (King's Writ destroyed). Inspector Aldous Wren-Pembury becomes recurring ally NPC after §SPARK-01 close. *Self-contained arc, no prerequisites beyond existing node access.*
+
+- [ ] **Combined monster rename save:** Two renames (commoner → "Rabid Monkey", npc_merchant → "Badger") currently exist in separate timestamped saves. A combined single-session save that applies both in one timestamped file has never been produced. Low risk, low effort. *(Run both `monsters.rename()` calls in one `node -e` session.)*
+
+**P3 — Unscheduled:**
+
+- [ ] **§SPARK-01-H — Naval Extension (Deep Warmth Eel):** Non-aggressive CR 4 Deep Warmth Eel at open sea between DK and LW. Four-phase hunt (strange stillness → investigation → confrontation → escort). Resolution: escort to deeper trench, not kill. Reward: two pirate crews owe a debt, sea route unlocks. *(Depends on: §SPARK-01 complete, `harmonyChainComplete` flag set.)*
+
+- [ ] **§WISDOM-01 — Keel thread close:** quest_wis_03 identified that Keel was protecting Baltic sea route survey data from the navigator's notes. This is a partial resolution only — Keel took the notes, their destination is unknown, the navigator is missing. A future arc (unspecced) must close this thread. Candidate: an arc at an eastern Baltic node where the survey data surfaces. *(Unspecced — requires new arc design.)*
+
+- [ ] **§GR-D Froberger Entry 42 (NG+ deferred):** The blank page filled on second playthrough. Deferred from §GR implementation. *(Requires NG+ state tracking, currently unsupported.)*
+
+- [ ] **Covenant Keeper Ending:** Referenced across §GR-D (all six grief arcs converge here; each person's name is spoken as a receipt of witnessing). Not yet implemented as a narrative endpoint. Requires: all six grief arcs complete, a final node or storyRender event, the "naming ceremony" dialogue. *(Depends on: §GR complete, §SPARK-01 complete for Aldous/harmony thread.)*
+
+---
+
+### BACKLOG-C. Design + Architecture Decisions (non-implementation)
+
+- [ ] **Arc ID as first-class UQF field:** Currently arc membership is inferred from quest key prefix (`quest_wis_03` → arc `quest_wis`). Add explicit `arc: 'quest_wis'` field to UQF schema. Enables arc-level sorting without heuristics. *(Feed into §ARCH-01 Phase 1.)*
+
+- [ ] **`_questsByNpc` index in WBAPI:** NPC key → quest IDs that reference it. Currently done by regex scan; a first-class index makes it O(1) and enables investigation card NPC panels. *(Feed into §WORLDBUILDER-02-F item 3.)*
+
+- [ ] **`_nodesByTerrain` index in WBAPI:** Terrain key → list of node codes whose `name` field equals that terrain. No lookup currently exists. *(Feed into §WORLDBUILDER-02-F item 4.)*
+
+- [ ] **`_questsByWaypoint` second index:** Currently `_questsByNode` indexes only `activateNode`. Add `_questsByWaypoint` for `waypointNode`. Makes Location Profile cards complete for completion-point queries. *(Feed into §WORLDBUILDER-02-F item 5.)*
+
+- [ ] **§FUTURE-01 Saul/Paul arc — canonical placement decision:** This arc is fully specced and was implemented (§FUTURE-01 section). The design decision outstanding is how its tone and register sits relative to the Birka/Tilbury/Visby world — specifically whether Acts-fidelity creates a tonal discontinuity. See §BACKLOG-D thematic audit note. If the arc is to remain, the integration point is the existing Malta/Rome nodes; if pulled, those nodes should stand alone.
+
+---
+
+### BACKLOG-D. Thematic Audit Note
+
+*See §BACKLOG-E below for the full theme review. Outstanding design question:*
+
+The current game has two registers that coexist:
+
+1. **Chrétien register** — grief enacted through objects, silence, small domestic actions. Brynn's cup. Connie's key ring. The void that expresses itself through supply chains and cat factions. The Harmony Chain (kindness → harmony, monster = friendly). Keel's omission. Inspector Wren-Pembury's impossible backstory. This register is character-first, and its resolutions are receipts, not victories.
+
+2. **Acts fidelity register** — §FUTURE-01, conversion mechanics, Acts/Pauline canon adherence. This register is history-first and its resolutions are transformations.
+
+These two registers are currently adjacent without a seam. The question is whether to write a seam (a bridging character who exists in both registers) or to let them be two distinct world zones. The Covenant Keeper ending is the natural seam candidate — it names people from both zones.
+
+*Decision deferred. Flag for next major arc design session.*
+
+---
+
+### BACKLOG-E. Unified Theme Review (2026-05-29)
+
+Every major implemented arc and every PLANNED arc was reviewed against the project's core thematic vocabulary. Summary:
+
+**Core vocabulary (all arcs that use it):**
+
+| Theme | Arcs |
+|-------|------|
+| Grief enacted through objects, not declared | §GR, §SPARK-01 (Inspector), §WHODUNIT-01, §WISDOM-01 |
+| Corruption as infrastructure (void moves through supply chains) | §GR, §DUNGEON-01 (CY/CQ corruption chain), all Cat faction arcs |
+| Kindness as the operative skill (not violence) | §SPARK-01, §SPARK-02, §HUNT-01 ("fear → understanding"), §HUNT-02 |
+| Institutions that fail silently | §NAVAL-01 (Keel), §PORT-01 (Saltwick suppressed history), §WISDOM-01 (Senate Building) |
+| Witnessing as resolution | §GR (Connie/Aldo scene; Kenickie receipt), Covenant Keeper ending, §WHODUNIT-01 |
+| The friendly monster (assumptions inverted) | §SPARK-01 (Warmth eel), §HUNT-01 (creature is spiritual, not feral), §DUNGEON-01 (mimic meadows) |
+
+**Arcs with strong thematic coherence:** §GR, §SPARK-01, §SPARK-02, §HUNT-01, §HUNT-02, §NAVAL-01, §PORT-01, §WHODUNIT-01, §ALCHEMY-01, §WISDOM-01, §DUNGEON-01 (thematically anchored via hero origin + shadow room + sacrifice gate).
+
+**Arcs with partial or conditional coherence:**
+
+- **§SPARK-01-H (Naval Extension):** Uses the "friendly monster" theme correctly. The eel as the resolution agent for a human social problem (pirate cooperation) is thematically sharp. *Coherent.*
+
+- **§FUTURE-01 (Saul/Paul arc):** Uses transformation as its primary register, not grief-through-objects. The conversion mechanic is conceptually distinct from the witnessing model. *See §BACKLOG-D.* The road-to-Damascus section is internally coherent; the question is whether "transformation that rewrites identity" and "grief that does not resolve" are in productive tension or in contradiction. The arc currently treats them as separate world zones rather than as two expressions of a shared theme. This is fine architecturally but could be richer if the tension were made explicit.
+
+- **§DUNGEON-01 — Loop Heart choice room + Sacrifice Gates:** These are mechanically the most game-like sections. They fit thematically via "what you carry shapes what you find" (the sacrifice gate asks the player to give up something they value to advance). *Thematically coherent, mechanically legible.*
+
+**One gap:** No arc currently addresses the *restoration* side of witnessing. All grief resolutions are receipts (acknowledgment), not rebuilds. Fishmonger's Row does not rebuild. The Covenant Keeper ending names people, does not heal them. The §SPARK-01 chain does not undo the Inspector's lost years. This is structurally correct for the Chrétien register — but it means the world has no arc about what comes after witnessing. The Keel thread close (BACKLOG-B) is the natural candidate for this: if the Baltic survey data is recovered, something lost to institutional silence actually returns. *Suggestion: design the Keel closure arc explicitly as the "after witnessing" arc.*

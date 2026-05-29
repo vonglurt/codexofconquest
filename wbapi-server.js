@@ -181,6 +181,115 @@ function locationConnections(key) {
 // ── Connection dispatcher ────────────────────────────────────────────────────
 const CONNECT = { node:nodeConnections, quest:questConnections, monster:monsterConnections, npc:npcConnections };
 
+// ═══════════════════════════════════════════════════════════════════════════
+// Schema — canonical field reference derived from roll2hit-v3.html
+// ═══════════════════════════════════════════════════════════════════════════
+const SCHEMAS = {
+  _version: '1.0',
+  _source: 'roll2hit-v3.html',
+  _anchors: {
+    MONSTER_POOL:  '// ◆◆◆ WORLDBUILDER:MONSTER_POOL:START ◆◆◆',
+    MONSTER_DROPS: '// ◆◆◆ WORLDBUILDER:MONSTER_DROPS:START ◆◆◆',
+    WORLD_DB:      '// ◆◆◆ WORLDBUILDER:WORLD_DB:START ◆◆◆',
+    NODE_MAP:      '// ◆◆◆ WORLDBUILDER:NODE_MAP:START ◆◆◆',
+    NODE_COORDS:   '// ◆◆◆ WORLDBUILDER:NODE_COORDS:START ◆◆◆',
+    QUEST_DB:      '// ◆◆◆ WORLDBUILDER:QUEST_DB:START ◆◆◆',
+    BIRKA_NPC:     '// ◆◆◆ WORLDBUILDER:BIRKA_NPC:START ◆◆◆',
+  },
+  monster: {
+    _section: 'MONSTER_POOL',
+    _description: 'Combat opponents. Every entry in MONSTER_POOL is a potential encounter. Referenced by WORLD_DB terrain .monsters arrays.',
+    fields: {
+      key:       { type:'string',   required:true,  editable:false, note:'Internal key — matches the MONSTER_POOL property name. Never change this key directly; use fork+swap for terrain variants.' },
+      name:      { type:'string',   required:true,  editable:true,  note:'Display name shown in combat and bestiary. Changing name is safe globally; key is unchanged.' },
+      ac:        { type:'number',   required:true,  editable:true,  note:'Armor Class. Determines attack roll needed to hit. Typical range: 5–22.' },
+      hp:        { type:'number',   required:true,  editable:true,  note:'Hit Points. Monster health pool. Typical ranges: trivial 4–10, easy 10–30, medium 20–80, hard 50–180, deadly 100–600.' },
+      atk:       { type:'number',   required:true,  editable:true,  note:'Attack bonus. Added to d20 roll to hit player. Typical range: 0–17.' },
+      dmgDie:    { type:'number',   required:true,  editable:true,  note:'Damage die size. Common values: 3, 4, 6, 8, 10, 12. Formula: dmgCount·d(dmgDie) + dmgFlat.' },
+      dmgCount:  { type:'number',   required:true,  editable:true,  note:'Number of damage dice rolled per attack. Usually 1–4.' },
+      dmgFlat:   { type:'number',   required:true,  editable:true,  note:'Flat damage bonus added after dice roll. Can be 0.' },
+      tier:      { type:'string',   required:true,  editable:true,  values:['trivial','easy','medium','hard','deadly'],
+                   note:'Difficulty tier. Controls encounter scaling, XP recommendations, and UI badge color.' },
+    },
+    related: {
+      drop: { section:'MONSTER_DROPS', type:'object', note:'Trophy drop. {icon:string, name:string, sell:number(gp)}. Separate from MONSTER_POOL for cleaner editing.' },
+    },
+  },
+  terrain: {
+    _section: 'WORLD_DB',
+    _description: 'Terrain types. Define which monsters appear where. Nodes point to terrain via node.name field.',
+    fields: {
+      label:            { type:'string',  required:true,  editable:true,  note:'Display name shown in game UI and worldbuilder sidebar.' },
+      icon:             { type:'string',  required:true,  editable:true,  note:'Emoji icon used in UI. One character.' },
+      monsters:         { type:'array',   required:true,  editable:false, note:'Array of P.monsterKey references. Populated via worlds.swapMonster() to avoid breaking P.proxy refs.' },
+      isEpicBattleground:{ type:'boolean',required:false, editable:false, note:'If true, monster array is unused — boss loaded from EPIC_BOSS_POOL instead.' },
+    },
+  },
+  node: {
+    _section: 'NODE_MAP',
+    _description: 'World map nodes. Each node is a location the player can visit. Connected by N/S/E/W cardinal links.',
+    fields: {
+      code:     { type:'string',  required:true,  editable:false, note:'Node code (CI, CY, etc.). Two-letter identifier. Use MOVE to rename.' },
+      num:      { type:'number',  required:true,  editable:false, note:'Sequential number for map ordering. Assigned at creation.' },
+      name:     { type:'string',  required:true,  editable:true,  note:'Terrain key. Must match a WORLD_DB key. This is what the game uses to look up which monsters appear here.' },
+      label:    { type:'string',  required:true,  editable:true,  note:'Display name shown on the map and in game dialogue.' },
+      act:      { type:'number',  required:true,  editable:true,  note:'Story act (1–7). Controls which nodes are visible as the player progresses.' },
+      text:     { type:'string',  required:false, editable:true,  note:'Location description text shown when arriving. Flavour prose.' },
+      npc:      { type:'string',  required:false, editable:true,  note:'Inline NPC display name at this node. For full NPC profiles, see BIRKA_NPC.' },
+      battle:   { type:'object',  required:false, editable:false, note:'Fixed encounter. {label:string, key:monsterKey, count:number}. null = random encounter pool instead.' },
+      loot:     { type:'string',  required:false, editable:true,  note:'Loot text shown on encounter completion.' },
+      sleep:    { type:'boolean', required:false, editable:true,  note:'If true, player can rest here to restore HP.' },
+      sleepCost:{ type:'number',  required:false, editable:true,  note:'Gold cost to sleep. Only present when sleep:true.' },
+      N:        { type:'string',  required:false, editable:true,  note:'Adjacent node code to the North. null if no connection.' },
+      S:        { type:'string',  required:false, editable:true,  note:'Adjacent node code to the South.' },
+      E:        { type:'string',  required:false, editable:true,  note:'Adjacent node code to the East.' },
+      W:        { type:'string',  required:false, editable:true,  note:'Adjacent node code to the West.' },
+    },
+    coordinates: { section:'NODE_COORDS', note:'Canvas x/y stored separately in NODE_COORDS. Updated by the map canvas UI.' },
+  },
+  quest: {
+    _section: 'QUEST_DB',
+    _description: 'Quest database. Contains all 210 quests. Function bodies (activateCond, completeFn) are preserved as raw JS — not editable via API. Text fields are fully editable.',
+    fields: {
+      title:       { type:'string',  required:true,  editable:true,  note:'Display title shown in quest log.' },
+      type:        { type:'string',  required:true,  editable:true,  values:['side','main','skill_check','hunt'],
+                     note:'Quest type. main quests gated by story flags. skill_check requires DC roll. hunt targets specific monsters.' },
+      hook:        { type:'string',  required:false, editable:true,  note:'Alternative name for hint. Intro text.' },
+      hint:        { type:'string',  required:false, editable:true,  note:'Intro/hook text shown when quest becomes available.' },
+      passText:    { type:'string',  required:false, editable:true,  note:'Success outcome text shown on quest completion.' },
+      failText:    { type:'string',  required:false, editable:true,  note:'Failure outcome text.' },
+      rewardText:  { type:'string',  required:false, editable:true,  note:'Reward flavour text.' },
+      disposition: { type:'string',  required:false, editable:true,  note:'Contextual quote, often from an NPC.' },
+      npc:         { type:'string',  required:false, editable:true,  note:'NPC key who gives or is involved in this quest.' },
+      activateNode:{ type:'string',  required:false, editable:true,  note:'Node code where quest first becomes available.' },
+      waypointNode:{ type:'string',  required:false, editable:true,  note:'Node code where quest objective is located.' },
+      xpAward:     { type:'number',  required:false, editable:true,  note:'XP granted on completion.' },
+      reward:      { type:'number',  required:false, editable:true,  note:'Gold reward on completion.' },
+      checkDC:     { type:'number',  required:false, editable:true,  note:'Difficulty Class for skill_check quests. Player rolls d20+mod vs DC.' },
+      checkStat:   { type:'string',  required:false, editable:true,  values:['WIS','INT','CHA','STR','DEX','CON'],
+                     note:'Ability score used for the skill check.' },
+      checkSkill:  { type:'string',  required:false, editable:true,  note:'Specific skill name for the check (optional).' },
+      activateCond:{ type:'function',required:false, editable:false, note:'JS arrow function (S) => bool. Evaluated at runtime to decide if quest is visible. Not editable via API — edit in source.' },
+      completeFn:  { type:'function',required:false, editable:false, note:'JS arrow function (S) => {...}. Runs on quest completion to set story flags, grant items, etc. Not editable via API.' },
+      onPass:      { type:'function',required:false, editable:false, note:'Alternative to completeFn. Runs on successful skill_check.' },
+      onFail:      { type:'function',required:false, editable:false, note:'Runs on failed skill_check.' },
+    },
+  },
+  npc: {
+    _section: 'BIRKA_NPC',
+    _description: 'Named NPC profiles (the Birka Six). Full dialogue trees with favorability levels. Inline NPCs (node.npc strings) are simpler and edited via node.put().',
+    fields: {
+      key:        { type:'string', required:true,  editable:false, note:'Internal key. Matches the BIRKA_NPC_PROFILES property name.' },
+      name:       { type:'string', required:true,  editable:true,  note:'Full display name.' },
+      occupation: { type:'string', required:true,  editable:true,  note:'Role shown in NPC list.' },
+      node:       { type:'string', required:true,  editable:true,  note:'Node code where NPC is found.' },
+      neutral:    { type:'object', required:true,  editable:true,  note:'Dialogue at neutral favorability. {greeting:string, dialogue:string}.' },
+      friendly:   { type:'object', required:false, editable:true,  note:'Dialogue at friendly level. {greeting, dialogue, special?}.' },
+      dearFriend: { type:'object', required:false, editable:true,  note:'Dialogue at highest favorability. {greeting, dialogue}.' },
+    },
+  },
+};
+
 function resolveId(type, raw) {
   const col = { node:WBAPI.nodeMap, quest:WBAPI.questDb, monster:WBAPI.monsterPool, npc:WBAPI.birkaNpcs }[type];
   if (!col) return raw;
@@ -264,6 +373,19 @@ async function route(req, res) {
     const r = WBAPI.save(body.outputPath);
     logResponse(method, url.pathname, r.ok ? 200 : 500, r.ok ? `saved → ${r.path}` : r.error);
     return json(res, r.ok ? 200 : 500, r);
+  }
+
+  // ── Schema ──
+  if (parts[0] === 'schema') {
+    const type = parts[1];
+    log('LOGIC', `Schema requested${type ? ' for type: ' + type : ' (all)'}`);
+    if (type && !SCHEMAS[type]) {
+      logResponse(method, url.pathname, 404, `Unknown schema type: ${type}`);
+      return json(res, 404, { error: `Unknown schema type "${type}". Available: ${Object.keys(SCHEMAS).filter(k=>!k.startsWith('_')).join(', ')}` });
+    }
+    const result = type ? SCHEMAS[type] : SCHEMAS;
+    logResponse(method, url.pathname, 200, type ? `schema for ${type}` : 'full schema');
+    return json(res, 200, result);
   }
 
   // ── Diff summary ──
@@ -366,9 +488,65 @@ async function route(req, res) {
     return json(res, 404, { error: `Location "${rawId}" not found` });
   }
 
+  // ── Terrain (WORLD_DB) ──
+  if (type === 'terrain') {
+    const tk = resolveId('terrain', rawId) || rawId;
+    const t  = WBAPI.worldDb[tk];
+    if (!t) {
+      logResponse(method, url.pathname, 404, `terrain "${rawId}" not found`);
+      return json(res, 404, { error: `Terrain "${rawId}" not found` });
+    }
+
+    if (method === 'GET') {
+      log('LOGIC', `GET terrain "${tk}" — ${(WBAPI._terrainToMonsters[tk]||[]).length} monsters`);
+      const monsterList = (WBAPI._terrainToMonsters[tk]||[]).map(mk => ({
+        key: mk, name: WBAPI.monsterPool[mk]?.name||mk, tier: WBAPI.monsterPool[mk]?.tier||'?'
+      }));
+      const nodes = Object.entries(WBAPI.nodeMap)
+        .filter(([,n])=>n.name===tk)
+        .map(([code,n])=>({ code, label:n.label, act:n.act }));
+      logResponse(method, url.pathname, 200, `terrain:${tk} — ${monsterList.length} monsters, ${nodes.length} nodes`);
+      return json(res, 200, {
+        entity: { ...t, key:tk },
+        connections: { monsters: monsterList, nodes },
+        _meta: { canDelete: nodes.length === 0, blockedBy: nodes.length ? { nodes } : null },
+      });
+    }
+
+    if (method === 'PUT') {
+      let body;
+      try { body = await readBody(req); } catch(e) {
+        return json(res, 400, { error:'Invalid JSON' });
+      }
+      log('REQUEST', `PUT terrain:${tk}`, body);
+      const allowed = ['label','icon'];
+      const results = [];
+      for (const [field, value] of Object.entries(body)) {
+        if (!allowed.includes(field)) {
+          log('LOGIC', `Field "${field}" is not directly editable on terrain (use swapMonster for monsters)`);
+          results.push({ field, ok:false, error:`Field "${field}" not directly editable. Editable: ${allowed.join(', ')}` });
+          continue;
+        }
+        if (typeof value === 'string') {
+          log('LOGIC', `Patching terrain "${tk}" field "${field}" → "${value}"`);
+          WBAPI.worldDb[tk][field] = value;
+          results.push({ field, ok:true });
+        } else {
+          results.push({ field, ok:false, error:'Terrain fields must be strings' });
+        }
+      }
+      const allOk = results.every(r=>r.ok);
+      logResponse(method, url.pathname, allOk ? 200 : 207, `terrain:${tk} — ${results.map(r=>`${r.field}=${r.ok?'ok':'FAIL'}`).join(', ')}`);
+      return json(res, allOk ? 200 : 207, {
+        ok: allOk, fields: results,
+        entity: { ...WBAPI.worldDb[tk], key:tk },
+      });
+    }
+  }
+
   if (!CONNECT[type]) {
     logResponse(method, url.pathname, 400, `Unknown type "${type}"`);
-    return json(res, 400, { error: `Unknown type "${type}". Use: node quest monster npc location` });
+    return json(res, 400, { error: `Unknown type "${type}". Use: node quest monster npc terrain location` });
   }
 
   const key = resolveId(type, rawId);
@@ -554,10 +732,12 @@ server.listen(PORT, '127.0.0.1', () => {
   console.log(`\n  ${C.dim}Endpoints:${C.reset}`);
   const routes = [
     ['GET',    '/api/ping'],
+    ['GET',    '/api/schema[/{type}]                → canonical field schema'],
     ['GET',    '/api/list/{node|quest|monster|npc|terrain}[?node=&terrain=&type=]'],
-    ['GET',    '/api/{node|quest|monster|npc}/{id}  → entity + connections + _meta'],
+    ['GET',    '/api/{node|quest|monster|npc|terrain}/{id}  → entity + connections + _meta'],
     ['GET',    '/api/location/{code}               → composite view'],
     ['PUT',    '/api/{node|quest|monster|npc}/{id}  body: {field:value,...}'],
+    ['PUT',    '/api/terrain/{id}                  body: {label?,icon?}'],
     ['DELETE', '/api/{node|quest|monster|npc}/{id}  (409 if nested content)'],
     ['POST',   '/api/monster/{id}/rename            body: {name}'],
     ['POST',   '/api/monster/{id}/fork              body: {newKey, overrides?}'],
