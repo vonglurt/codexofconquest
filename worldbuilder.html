@@ -231,6 +231,23 @@ select.fi{appearance:none;}
 .welcome-drop-zone.drag-over{border-color:var(--accent);color:var(--accent);}
 .welcome-terminal{font-size:11px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-family:monospace;color:var(--green);display:none;}
 
+/* ── Load splash ── */
+#load-splash{position:absolute;inset:0;z-index:200;background:#000;display:flex;flex-direction:column;overflow:hidden;font-family:monospace;}
+#load-splash.hidden{display:none;}
+#splash-cols{position:absolute;inset:0;display:flex;}
+.scol{flex:1;overflow:hidden;position:relative;padding:0 4px;}
+.scol-inner{position:absolute;top:0;left:0;right:0;white-space:pre-wrap;word-break:break-all;font-size:10px;line-height:1.55;color:#00c844;animation:stream-up linear infinite;}
+.scol:nth-child(3n)   .scol-inner{color:#00ff41;opacity:.9;}
+.scol:nth-child(3n+1) .scol-inner{color:#009933;opacity:.6;}
+.scol:nth-child(3n+2) .scol-inner{color:#00e03a;opacity:.75;}
+#splash-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 30%,#000 100%);pointer-events:none;z-index:2;}
+#splash-status{position:absolute;bottom:56px;left:0;right:0;text-align:center;z-index:10;font-size:15px;font-weight:700;color:#00ff41;letter-spacing:.18em;text-transform:uppercase;text-shadow:0 0 18px #00ff41,0 0 40px #00ff41;}
+#splash-label{position:absolute;bottom:36px;left:0;right:0;text-align:center;z-index:10;font-size:10px;color:#009933;letter-spacing:.12em;}
+#splash-bar-wrap{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);width:260px;height:2px;background:#0a1a0a;border-radius:1px;z-index:10;}
+#splash-bar{height:100%;width:0%;background:#00ff41;box-shadow:0 0 10px #00ff41;border-radius:1px;transition:width .5s ease;}
+@keyframes stream-up{from{transform:translateY(0)}to{transform:translateY(-50%)}}
+@keyframes splash-fade-out{from{opacity:1}to{opacity:0}}
+
 /* ── Server indicator ── */
 #server-indicator{font-size:11px;padding:2px 8px;border-radius:10px;white-space:nowrap;}
 #server-indicator.connected{background:var(--added);color:var(--green);border:1px solid var(--green);}
@@ -319,6 +336,15 @@ select.fi{appearance:none;}
     <div class="welcome-terminal" id="welcome-terminal">node wbapi-server.js</div>
 
     <input type="file" id="welcome-file-input" accept=".html" style="display:none">
+  </div>
+
+  <!-- ═══ LOAD SPLASH ═══ -->
+  <div id="load-splash" class="hidden">
+    <div id="splash-cols"></div>
+    <div id="splash-vignette"></div>
+    <div id="splash-status">Searching…</div>
+    <div id="splash-label"></div>
+    <div id="splash-bar-wrap"><div id="splash-bar"></div></div>
   </div>
 
   <!-- ═══ MAP ═══ -->
@@ -3425,22 +3451,112 @@ const BIRKA_NPC = {};
     return false;
   }
 
+  // ── Splash helpers ───────────────────────────────────────────────────────
+  function splashPhase(text, sub, pct) {
+    $('splash-status').textContent = text;
+    $('splash-label').textContent  = sub || '';
+    $('splash-bar').style.width    = pct + '%';
+  }
+
+  function splashBuildCols(streams) {
+    const cols = $('splash-cols');
+    cols.innerHTML = '';
+    const NUM = 16;
+    for (let i = 0; i < NUM; i++) {
+      const items = streams[i % streams.length];
+      const shuffled = [...items].sort(() => Math.random() - .5);
+      const content = [...shuffled, ...shuffled].join('\n') + '\n';
+      const col = document.createElement('div');
+      col.className = 'scol';
+      const inner = document.createElement('div');
+      inner.className = 'scol-inner';
+      const speed = (1.8 + Math.random() * 5).toFixed(2);
+      inner.style.animationDuration  = speed + 's';
+      inner.style.animationDelay     = '-' + (Math.random() * parseFloat(speed)).toFixed(2) + 's';
+      inner.textContent = content;
+      col.appendChild(inner);
+      cols.appendChild(col);
+    }
+  }
+
+  function splashHexCols() {
+    const H = '0123456789ABCDEF';
+    const rand = n => Array.from({length:n}, () => H[Math.random()*16|0]).join('');
+    const lines = Array.from({length:80}, () => rand(6 + (Math.random()*12|0)));
+    splashBuildCols([lines]);
+  }
+
+  function splashRealCols() {
+    if (!WBAPI.loaded) return;
+    const monsters  = Object.values(WBAPI.monsterPool).map(m => m.name || m.key || '');
+    const terrains  = Object.values(WBAPI.worldDb).map(t => (t.icon||'') + ' ' + (t.label||''));
+    const nodes     = Object.values(WBAPI.nodeMap).map(n => n.code + '  ' + (n.label||'').replace(' — ','  '));
+    const quests    = Object.keys(WBAPI.questDb);
+    const npcs      = Object.values(WBAPI.birkaNpcs||{}).map(n => n.name||n.key||'');
+    splashBuildCols([monsters, nodes, terrains, quests, npcs, monsters, nodes]);
+  }
+
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+
   async function loadFromServer() {
-    const card = $('wcard-server'), status = $('wcard-server-status');
-    card.classList.remove('active','err'); card.classList.add('checking');
-    status.style.color = 'var(--yellow)'; status.textContent = '⏳ Loading…';
+    const splash = $('load-splash');
+    splash.classList.remove('hidden');
+    splash.style.animation = '';
+    splashHexCols();
+
+    // Kick off fetch in parallel
+    const fetchP = fetch('http://localhost:3001/api/source')
+      .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); });
+
+    // Phase sequence
+    splashPhase('Searching…',           'scanning local network', 5);  await wait(700);
+    splashPhase('Establishing link…',   'port 3001', 14);              await wait(600);
+    splashPhase('Receiving data…',      'roll2hit-v3.html', 26);
+
+    let src;
     try {
-      const r = await fetch('http://localhost:3001/api/source');
-      if (!r.ok) throw new Error(`HTTP ${r.status}`);
-      const text = await r.text();
-      card.classList.remove('checking'); card.classList.add('active');
-      status.style.color = 'var(--green)'; status.textContent = '✓ Loaded from server';
-      loadFile(text);
-      dismiss();
+      src = await fetchP;
     } catch(e) {
+      splashPhase('Connection failed', e.message, 0);
+      $('splash-bar').style.background = '#ff3333';
+      await wait(2000);
+      splash.classList.add('hidden');
+      const card = $('wcard-server'), status = $('wcard-server-status');
       card.classList.remove('checking'); card.classList.add('err');
       status.style.color = 'var(--red)'; status.textContent = '✗ Load failed: ' + e.message;
+      return;
     }
+
+    // Parse and switch columns to real data
+    loadFile(src);
+    splashRealCols();
+
+    splashPhase('Parsing terrain…',         'world topology', 40);        await wait(550);
+    splashPhase('Cataloguing monsters…',    WBAPI.loaded ? Object.keys(WBAPI.monsterPool).length + ' entries' : '', 54); await wait(600);
+    splashPhase('Mapping nodes…',           WBAPI.loaded ? Object.keys(WBAPI.nodeMap).length + ' locations' : '', 66);  await wait(500);
+    splashPhase('Cross-referencing…',       WBAPI.loaded ? Object.keys(WBAPI.questDb).length + ' quests' : '', 78);    await wait(550);
+    splashPhase('Decombobulating…',         'please stand by', 88);        await wait(800);
+    splashPhase('Synchronising…',           '', 96);                       await wait(500);
+
+    // READY
+    $('splash-status').style.cssText = 'position:absolute;bottom:56px;left:0;right:0;text-align:center;z-index:10;font-size:22px;font-weight:700;color:#fff;letter-spacing:.28em;text-shadow:0 0 30px #00ff41,0 0 60px #00ff41;';
+    $('splash-status').textContent = 'READY';
+    $('splash-label').textContent  = '';
+    $('splash-bar').style.width    = '100%';
+    await wait(900);
+
+    // Fade out splash
+    splash.style.animation = 'splash-fade-out .5s ease forwards';
+    await wait(500);
+    splash.classList.add('hidden');
+    splash.style.animation = '';
+    $('splash-status').style.cssText = '';
+
+    // Update server card + dismiss welcome
+    const card = $('wcard-server'), status = $('wcard-server-status');
+    card.classList.remove('checking'); card.classList.add('active');
+    status.style.color = 'var(--green)'; status.textContent = '✓ Loaded from server';
+    dismiss();
   }
 
   $('wcard-server').addEventListener('click', async () => {
