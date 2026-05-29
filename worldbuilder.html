@@ -170,6 +170,48 @@ body{background:var(--bg);color:var(--text);font-family:'SF Mono','Consolas',mon
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
 select.fi{appearance:none;}
 
+/* ── Stats tab ── */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px 16px;display:flex;flex-direction:column;gap:4px;}
+.stat-num{font-size:32px;font-weight:800;line-height:1;}
+.stat-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;}
+.stats-section{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px 16px;}
+.stats-section-title{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;}
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:5px;font-size:11px;}
+.bar-key{min-width:110px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.bar-track{flex:1;background:var(--bg3);border-radius:3px;height:7px;overflow:hidden;min-width:40px;}
+.bar-fill{height:100%;border-radius:3px;transition:width .3s;}
+.bar-val{min-width:28px;text-align:right;color:var(--muted);font-size:10px;}
+
+/* ── Builder tab ── */
+.builder-section{background:var(--bg2);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:8px;}
+.builder-section-hd{padding:8px 14px;font-size:11px;font-weight:700;color:var(--text);text-transform:uppercase;letter-spacing:.05em;background:var(--bg3);border-bottom:1px solid var(--border);}
+.op-row{border-bottom:1px solid var(--border);}
+.op-row:last-child{border-bottom:none;}
+.op-row-hd{padding:6px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;}
+.op-row-hd:hover{background:var(--bg3);}
+.op-badge{padding:1px 7px;border-radius:4px;font-size:10px;font-weight:700;min-width:36px;text-align:center;}
+.op-get{background:#1a2a3a;color:var(--accent);}
+.op-put{background:#1a3a1a;color:var(--green);}
+.op-del{background:#3b1a1a;color:var(--red);}
+.op-post{background:#2a1a3a;color:var(--purple);}
+.op-label{font-size:12px;color:var(--text);}
+.op-desc{font-size:11px;color:var(--muted);flex:1;}
+.op-chevron{color:var(--muted);font-size:10px;transition:transform .15s;}
+.op-chevron.open{transform:rotate(90deg);}
+.op-body{display:none;padding:10px 14px;background:var(--bg);border-top:1px solid var(--border);flex-direction:column;gap:8px;}
+.op-body.open{display:flex;}
+.op-row-fields{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end;}
+.op-field{display:flex;flex-direction:column;gap:3px;min-width:140px;}
+.op-field label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;}
+.op-field input,.op-field select,.op-field textarea{background:var(--bg3);border:1px solid var(--border);border-radius:4px;color:var(--text);padding:4px 8px;font-family:inherit;font-size:12px;width:100%;}
+.op-field input:focus,.op-field select:focus,.op-field textarea:focus{outline:none;border-color:var(--accent);}
+.op-field input.invalid,.op-field select.invalid{border-color:var(--red);}
+.op-result{font-size:11px;font-family:monospace;background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:6px 8px;max-height:200px;overflow-y:auto;white-space:pre-wrap;word-break:break-all;display:none;}
+.op-result.ok{border-color:var(--green);color:var(--green);}
+.op-result.err{border-color:var(--red);color:var(--red);}
+.op-err-msg{font-size:10px;color:var(--red);display:none;}
+
 /* ── Server indicator ── */
 #server-indicator{font-size:11px;padding:2px 8px;border-radius:10px;white-space:nowrap;}
 #server-indicator.connected{background:var(--added);color:var(--green);border:1px solid var(--green);}
@@ -191,6 +233,8 @@ select.fi{appearance:none;}
   <div class="nav-tab" data-tab="dice">🎲 Dice Lab</div>
   <div class="nav-tab" data-tab="api">⚙ API</div>
   <div class="nav-tab" data-tab="audit">🔍 Audit</div>
+  <div class="nav-tab" data-tab="stats">📊 Stats</div>
+  <div class="nav-tab" data-tab="builder">🏗 Builder</div>
   <div class="nav-sep"></div>
   <div id="topbar-right">
     <span id="server-indicator" class="offline" style="display:none">○ Browser only</span>
@@ -549,6 +593,18 @@ select.fi{appearance:none;}
 
   </div>
 
+  <!-- ═══ STATS ═══ -->
+  <div class="panel" id="tab-stats" style="overflow-y:auto;padding:16px;flex-direction:column;gap:14px">
+    <div id="stats-empty" class="empty"><h2>Load a game file</h2><p>Open roll2hit-v3.html to see world statistics.</p></div>
+    <div id="stats-content" style="display:none;flex-direction:column;gap:14px"></div>
+  </div>
+
+  <!-- ═══ BUILDER ═══ -->
+  <div class="panel" id="tab-builder" style="overflow-y:auto;padding:16px;flex-direction:column;gap:0">
+    <div id="builder-empty" class="empty"><h2>Load a game file</h2><p>Open roll2hit-v3.html to use the Builder.</p></div>
+    <div id="builder-content" style="display:none;flex-direction:column;gap:0"></div>
+  </div>
+
 </div>
 <div id="tooltip"></div>
 
@@ -564,7 +620,10 @@ const WBAPI = {
   // Indexes
   _terrainToMonsters: {},   // terrainKey → [monsterKey]
   _monsterToTerrains: {},   // monsterKey → [terrainKey]
-  _questsByNode: {},        // nodeCode → [questId]
+  _questsByNode: {},        // nodeCode → [questId]  (activateNode + waypointNode)
+  _questsByNpc: {},         // npcKey → [questId]
+  _questsByWaypoint: {},    // nodeCode → [questId]  (waypointNode only)
+  _nodesByTerrain: {},      // terrainKey → [nodeCode]
   _questFlags: {},          // questId → { reads:Set, writes:Set }
   _flagToQuests: {},        // flagName → { reads:[id], writes:[id] }
   _questArcs: {},           // arcPrefix → [questId]  e.g. 'quest_wis' → [...]
@@ -798,6 +857,33 @@ const WBAPI = {
       const arc = id.replace(/_\d+$/, '').replace(/_[a-z]{2}$/, '');
       if (!this._questArcs[arc]) this._questArcs[arc] = [];
       this._questArcs[arc].push(id);
+    }
+
+    // Quests by NPC key
+    this._questsByNpc = {};
+    for (const [id, q] of Object.entries(this.questDb)) {
+      if (q.npc) {
+        if (!this._questsByNpc[q.npc]) this._questsByNpc[q.npc] = [];
+        this._questsByNpc[q.npc].push(id);
+      }
+    }
+
+    // Quests by waypointNode (separate index — activateNode already in _questsByNode)
+    this._questsByWaypoint = {};
+    for (const [id, q] of Object.entries(this.questDb)) {
+      if (q.waypointNode) {
+        if (!this._questsByWaypoint[q.waypointNode]) this._questsByWaypoint[q.waypointNode] = [];
+        this._questsByWaypoint[q.waypointNode].push(id);
+      }
+    }
+
+    // Nodes by terrain key
+    this._nodesByTerrain = {};
+    for (const [code, node] of Object.entries(this.nodeMap)) {
+      if (node.name) {
+        if (!this._nodesByTerrain[node.name]) this._nodesByTerrain[node.name] = [];
+        this._nodesByTerrain[node.name].push(code);
+      }
     }
   },
 
@@ -1445,6 +1531,9 @@ function loadFile(text) {
   renderNpcList();
   renderQuestList();
   populateArcFilter();
+  // Reset stats + builder so they re-render fresh on next tab visit
+  $('stats-content').style.display = 'none'; $('stats-empty').style.display = '';
+  $('builder-content').innerHTML = ''; $('builder-content').style.display = 'none'; $('builder-empty').style.display = '';
   serverDetect();
 }
 
@@ -1796,8 +1885,8 @@ function renderTerrainDetail(tk) {
     body.appendChild(mg);
   }
 
-  // Linked nodes
-  const nodes = Object.entries(WBAPI.nodeMap).filter(([,n])=>n.name===tk);
+  // Linked nodes (via _nodesByTerrain index)
+  const nodes = (WBAPI._nodesByTerrain[tk]||[]).map(c=>[c,WBAPI.nodeMap[c]]).filter(([,n])=>n);
   if (nodes.length) {
     const ng = document.createElement('div'); ng.className='fg';
     ng.innerHTML = `<div class="fl">Nodes using this terrain (${nodes.length})</div>
@@ -2089,6 +2178,15 @@ function renderNpcDetail(npc){
       h+=`<div class="chain-link" onclick="switchTab('quests');selectQuest('${id}')"><span style="color:var(--purple)">${id}</span><span style="color:var(--muted)"> — </span>${q.title||''}</div>`;
     }
   }
+  const npcKey = npc.key || Object.keys(WBAPI.birkaNpcs).find(k=>WBAPI.birkaNpcs[k]===npc||WBAPI.birkaNpcs[k].name===npc.name);
+  const npcRefQuests = npcKey ? (WBAPI._questsByNpc[npcKey]||[]) : [];
+  if(npcRefQuests.length){
+    h+=`<div style="font-size:11px;color:var(--muted);margin-top:12px;text-transform:uppercase;letter-spacing:.05em">Quests referencing <span style="color:var(--pink)">${npcKey}</span></div>`;
+    for(const id of npcRefQuests){
+      const q=WBAPI.questDb[id]||{};
+      h+=`<div class="chain-link" onclick="switchTab('quests');selectQuest('${id}')"><span style="color:var(--purple)">${id}</span><span style="color:var(--muted)"> — </span>${q.title||''}</div>`;
+    }
+  }
   area.innerHTML=h;
 }
 
@@ -2192,9 +2290,14 @@ function selectQuest(id){
   $('quest-change-count').textContent = '';
   $('btn-quest-put').disabled = true;
 
+  const nodeInfo = q.activateNode
+    ? `<span style="cursor:pointer;color:var(--orange)" onclick="switchTab('map');selectMapNode('${q.activateNode}')">${q.activateNode}${WBAPI.nodeMap[q.activateNode]?.label ? ' — '+WBAPI.nodeMap[q.activateNode].label : ''}</span>`
+    : '<span style="color:var(--muted)">no node</span>';
+  const arcName = id.replace(/_\d+$/, '').replace(/_[a-z]{2}$/, '');
+  const arcSize = (WBAPI._questArcs[arcName]||[]).length;
   const header=document.createElement('div'); header.style.marginBottom='12px';
   header.innerHTML=`<div style="font-size:16px;font-weight:800;color:var(--accent)">${id}</div>
-    <div style="font-size:11px;color:var(--muted)">${q.type||'side'} quest · ${q.activateNode||'no node'}</div>`;
+    <div style="font-size:11px;color:var(--muted);margin-top:3px">${q.type||'side'} · ${nodeInfo}${arcSize>1?` · <span style="color:var(--purple)">arc: ${arcName} (${arcSize})</span>`:''}</div>`;
   area.appendChild(header);
 
   // Type-change notice banner (inserted once, updated on type change)
@@ -2251,9 +2354,41 @@ function selectQuest(id){
   // Fire initial type notice after fields are rendered
   updateTypeNotice(q.type || 'side');
 
-  // Flags (read-only)
-  if(flags.reads.size){const fg=document.createElement('div');fg.className='fg';fg.innerHTML=`<div class="fl">Reads Flags (activateCond)</div><div>${fmtFlags(flags.reads,'flag-read')}</div>`;area.appendChild(fg);}
-  if(flags.writes.size){const fg=document.createElement('div');fg.className='fg';fg.innerHTML=`<div class="fl">Writes Flags (onPass / completeFn)</div><div>${fmtFlags(flags.writes,'flag-write')}</div>`;area.appendChild(fg);}
+  // NPC name lookup after the NPC field
+  const npcKey = q.npc;
+  if (npcKey) {
+    const npcData = WBAPI.birkaNpcs[npcKey];
+    const npcName = npcData?.name || null;
+    const npcNode = npcData?.node || null;
+    if (npcName || npcNode) {
+      const ng = document.createElement('div'); ng.className='fg';
+      ng.innerHTML=`<div class="fl">NPC Resolved</div><div class="fv" style="cursor:pointer;font-size:11px" onclick="switchTab('npcs');renderNpcDetail(WBAPI.npcs.get('${npcKey}'))">${npcName||npcKey}${npcNode?' <span style="color:var(--muted)">@ '+npcNode+'</span>':''}</div>`;
+      area.appendChild(ng);
+    }
+  }
+
+  // Flags with cross-ref detail
+  const mkFlagDetail = (flagSet, cls, role, relRole) => {
+    if (!flagSet.size) return;
+    const fg = document.createElement('div'); fg.className='fg';
+    const lbl = document.createElement('div'); lbl.className='fl'; lbl.textContent = role === 'reads' ? 'Reads Flags (activateCond)' : 'Writes Flags (onPass / completeFn)';
+    fg.appendChild(lbl);
+    for (const f of flagSet) {
+      const row = document.createElement('div'); row.style.cssText='display:flex;align-items:flex-start;gap:6px;margin-bottom:4px;flex-wrap:wrap;';
+      const pill = document.createElement('span'); pill.className=`flag-pill ${cls}`; pill.textContent=f; pill.style.cursor='pointer';
+      const relIds = (WBAPI._flagToQuests[f]||{})[relRole]||[];
+      const othersHtml = relIds.filter(qid=>qid!==id).map(qid=>{
+        const qq=WBAPI.questDb[qid]||{};
+        return `<span class="flag-pill flag-${relRole==='reads'?'read':'write'}" style="cursor:pointer;font-size:9px" onclick="selectQuest('${qid}')" title="${qq.title||qid}">${qid}</span>`;
+      }).join('');
+      row.innerHTML = `<span class="flag-pill ${cls}" style="font-family:monospace">${f}</span>`;
+      if (othersHtml) row.innerHTML += `<span style="font-size:9px;color:var(--muted);align-self:center">→ ${relRole==='reads'?'written by':'read by'}:</span>${othersHtml}`;
+      fg.appendChild(row);
+    }
+    area.appendChild(fg);
+  };
+  mkFlagDetail(flags.reads,  'flag-read',  'reads',  'writes');
+  mkFlagDetail(flags.writes, 'flag-write', 'writes', 'reads');
 
   // Chain
   $('quest-chain-pane').style.display='flex';
@@ -3037,6 +3172,710 @@ document.querySelector('[data-tab="api"]').addEventListener('click', () => {
     $('api-id').value = mapSelected;
   }
 });
+
+// ═══════════════════════════════════════════════════════════════════════════
+// STATS TAB
+// ═══════════════════════════════════════════════════════════════════════════
+function renderStats() {
+  if (!WBAPI.loaded) return;
+  $('stats-empty').style.display = 'none';
+  const el = $('stats-content');
+  el.style.display = 'flex';
+  el.innerHTML = '';
+
+  const bar = (val, max, color) =>
+    `<div class="bar-track"><div class="bar-fill" style="width:${max?Math.round(val/max*100):0}%;background:${color}"></div></div>`;
+
+  // ── Summary counters ──
+  const quests   = Object.keys(WBAPI.questDb);
+  const monsters = Object.keys(WBAPI.monsterPool);
+  const terrains = Object.keys(WBAPI.worldDb).filter(k => !WBAPI.worldDb[k].isEpicBattleground);
+  const nodes    = Object.keys(WBAPI.nodeMap);
+  const npcs     = WBAPI.npcs.all().filter(n => !n._inline);
+  const arcs     = Object.keys(WBAPI._questArcs);
+
+  const counters = [
+    { num: nodes.length,    label: 'Nodes',    color: 'var(--accent)'  },
+    { num: quests.length,   label: 'Quests',   color: 'var(--purple)'  },
+    { num: monsters.length, label: 'Monsters', color: 'var(--red)'     },
+    { num: terrains.length, label: 'Terrains', color: 'var(--teal)'    },
+    { num: npcs.length,     label: 'NPCs',     color: 'var(--pink)'    },
+    { num: arcs.length,     label: 'Arcs',     color: 'var(--yellow)'  },
+  ];
+  const grid = document.createElement('div');
+  grid.className = 'stat-grid';
+  for (const { num, label, color } of counters) {
+    grid.innerHTML += `<div class="stat-card"><div class="stat-num" style="color:${color}">${num}</div><div class="stat-label">${label}</div></div>`;
+  }
+  el.appendChild(grid);
+
+  // ── Two-column layout for charts ──
+  const cols = document.createElement('div');
+  cols.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:14px;';
+  el.appendChild(cols);
+
+  // Quest types
+  const typeCounts = {};
+  const TYPE_COLORS = { main:'var(--red)', skill_check:'var(--teal)', epic:'var(--yellow)', side:'var(--accent)' };
+  for (const q of Object.values(WBAPI.questDb)) typeCounts[q.type||'side'] = (typeCounts[q.type||'side']||0)+1;
+  const typeBox = document.createElement('div'); typeBox.className = 'stats-section';
+  typeBox.innerHTML = `<div class="stats-section-title">Quest Types</div>` +
+    Object.entries(typeCounts).sort((a,b)=>b[1]-a[1]).map(([t,n])=>
+      `<div class="bar-row"><span class="bar-key" style="color:${TYPE_COLORS[t]||'var(--text)'}">${t}</span>${bar(n,quests.length,TYPE_COLORS[t]||'var(--accent)')}<span class="bar-val">${n}</span></div>`
+    ).join('');
+  cols.appendChild(typeBox);
+
+  // Monster tiers
+  const tierCounts = {};
+  const TIER_COLORS = { trivial:'#6a7080', easy:'var(--teal)', medium:'var(--accent)', hard:'var(--yellow)', deadly:'var(--red)', boss:'var(--purple)' };
+  for (const m of Object.values(WBAPI.monsterPool)) tierCounts[m.tier||'trivial'] = (tierCounts[m.tier||'trivial']||0)+1;
+  const tierBox = document.createElement('div'); tierBox.className = 'stats-section';
+  tierBox.innerHTML = `<div class="stats-section-title">Monster Tiers</div>` +
+    ['trivial','easy','medium','hard','deadly','boss'].filter(t=>tierCounts[t]).map(t=>
+      `<div class="bar-row"><span class="bar-key" style="color:${TIER_COLORS[t]}">${t}</span>${bar(tierCounts[t],monsters.length,TIER_COLORS[t])}<span class="bar-val">${tierCounts[t]}</span></div>`
+    ).join('');
+  cols.appendChild(tierBox);
+
+  // Nodes per Act
+  const actCounts = {};
+  for (const n of Object.values(WBAPI.nodeMap)) actCounts[n.act||1] = (actCounts[n.act||1]||0)+1;
+  const ACT_NAMES = {1:'I Birka',2:'II Tilbury',3:'III Wilds',4:'IV Deep',5:'V Visby',6:'VI Desert',7:'VII Mythic',8:'VIII Reckoning'};
+  const actMax = Math.max(...Object.values(actCounts));
+  const actBox = document.createElement('div'); actBox.className = 'stats-section';
+  actBox.innerHTML = `<div class="stats-section-title">Nodes per Act</div>` +
+    Object.entries(actCounts).sort((a,b)=>+a[0]-+b[0]).map(([a,n])=>
+      `<div class="bar-row"><span class="bar-key">Act ${ACT_NAMES[a]||a}</span>${bar(n,actMax,'var(--accent)')}<span class="bar-val">${n}</span></div>`
+    ).join('');
+  cols.appendChild(actBox);
+
+  // Quests per arc (top 15)
+  const arcEntries = Object.entries(WBAPI._questArcs).sort((a,b)=>b[1].length-a[1].length).slice(0,15);
+  const arcMax = arcEntries[0]?.[1]?.length || 1;
+  const arcBox = document.createElement('div'); arcBox.className = 'stats-section';
+  arcBox.innerHTML = `<div class="stats-section-title">Largest Arcs</div>` +
+    arcEntries.map(([arc,ids])=>
+      `<div class="bar-row"><span class="bar-key" style="cursor:pointer;color:var(--purple)" onclick="switchTab('quests');$('quest-arc-filter').value='${arc}';renderQuestList()">${arc}</span>${bar(ids.length,arcMax,'var(--purple)')}<span class="bar-val">${ids.length}</span></div>`
+    ).join('');
+  cols.appendChild(arcBox);
+
+  // Top flags by reference count (reads+writes across all quests)
+  const flagRef = {};
+  for (const { reads, writes } of Object.values(WBAPI._questFlags||{})) {
+    for (const f of reads)  flagRef[f] = (flagRef[f]||0)+1;
+    for (const f of writes) flagRef[f] = (flagRef[f]||0)+1;
+  }
+  const topFlags = Object.entries(flagRef).sort((a,b)=>b[1]-a[1]).slice(0,15);
+  const flagMax  = topFlags[0]?.[1] || 1;
+  const flagBox  = document.createElement('div'); flagBox.className = 'stats-section';
+  flagBox.style.gridColumn = '1 / -1';
+  flagBox.innerHTML = `<div class="stats-section-title">Most Referenced Flags (top 15)</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;">` +
+    topFlags.map(([f,n])=>
+      `<div class="bar-row"><span class="bar-key" style="color:var(--teal);font-family:monospace">${f}</span>${bar(n,flagMax,'var(--teal)')}<span class="bar-val">${n}</span></div>`
+    ).join('') + `</div>`;
+  el.appendChild(flagBox);
+
+  // Nodes with most quests (top 10)
+  const nodeQCounts = Object.entries(WBAPI._questsByNode).map(([c,ids])=>({code:c,n:ids.length,label:(WBAPI.nodeMap[c]||{}).label||''})).sort((a,b)=>b.n-a.n).slice(0,10);
+  if (nodeQCounts.length) {
+    const nqMax = nodeQCounts[0].n;
+    const nqBox = document.createElement('div'); nqBox.className = 'stats-section';
+    nqBox.innerHTML = `<div class="stats-section-title">Nodes with Most Quests</div>` +
+      nodeQCounts.map(({code,n,label})=>
+        `<div class="bar-row"><span class="bar-key" style="cursor:pointer;color:var(--orange)" onclick="switchTab('map');selectMapNode('${code}')">${code} <span style="color:var(--muted);font-weight:400">${label}</span></span>${bar(n,nqMax,'var(--orange)')}<span class="bar-val">${n}</span></div>`
+      ).join('');
+    el.appendChild(nqBox);
+  }
+}
+
+document.querySelector('[data-tab="stats"]').addEventListener('click', () => {
+  if (WBAPI.loaded) renderStats();
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+// BUILDER TAB — full CRUD accordion console
+// ═══════════════════════════════════════════════════════════════════════════
+(function(){
+
+  // ── Helpers ──
+  const mkField = (name, label, type, opts={}) => {
+    const wrap = document.createElement('div'); wrap.className = 'op-field';
+    if (opts.flex) wrap.style.flex = opts.flex;
+    wrap.innerHTML = `<label>${label}</label>`;
+    let inp;
+    if (type === 'select') {
+      inp = document.createElement('select');
+      for (const [v,t] of Object.entries(opts.options||{})) {
+        const o = document.createElement('option'); o.value=v; o.textContent=t; inp.appendChild(o);
+      }
+    } else if (type === 'textarea') {
+      inp = document.createElement('textarea'); inp.rows = opts.rows||3;
+    } else {
+      inp = document.createElement('input'); inp.type = type;
+      if (opts.placeholder) inp.placeholder = opts.placeholder;
+    }
+    inp.name = name;
+    wrap.appendChild(inp);
+    return wrap;
+  };
+
+  const mkBtn = (label, cls='') => {
+    const b = document.createElement('button'); b.className='btn'+(cls?' '+cls:''); b.textContent=label; b.type='button'; return b;
+  };
+
+  const showResult = (el, data, isErr) => {
+    el.style.display = ''; el.className = 'op-result '+(isErr?'err':'ok');
+    el.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+  };
+
+  const validate = (fields, rules) => {
+    let ok = true;
+    for (const { name, required, pattern, label } of rules) {
+      const inp = fields[name]; if (!inp) continue;
+      const v = inp.value.trim();
+      inp.classList.remove('invalid');
+      const nxt = inp.nextElementSibling;
+      if (nxt && nxt.classList.contains('op-err-msg')) nxt.style.display = 'none';
+      if (required && !v) {
+        inp.classList.add('invalid'); ok=false;
+        const em = document.createElement('span'); em.className='op-err-msg'; em.textContent=`${label} is required`;
+        if (!inp.nextElementSibling || !inp.nextElementSibling.classList?.contains('op-err-msg')) inp.after(em);
+        inp.nextElementSibling.style.display='';
+      } else if (pattern && v && !pattern.test(v)) {
+        inp.classList.add('invalid'); ok=false;
+        const em = document.createElement('span'); em.className='op-err-msg'; em.textContent=`${label}: invalid format`;
+        if (!inp.nextElementSibling || !inp.nextElementSibling.classList?.contains('op-err-msg')) inp.after(em);
+        inp.nextElementSibling.style.display='';
+      }
+    }
+    return ok;
+  };
+
+  const getFields = (body) => {
+    const map = {};
+    body.querySelectorAll('[name]').forEach(el => { map[el.name] = el; });
+    return map;
+  };
+
+  // ── Op row builder ──
+  let _opCount = 0;
+  function mkOpRow(method, label, desc, buildBody) {
+    const id = 'op-'+(++_opCount);
+    const row = document.createElement('div'); row.className = 'op-row';
+
+    const hd = document.createElement('div'); hd.className = 'op-row-hd';
+    const methods = { GET:'op-get', PUT:'op-put', DELETE:'op-del', POST:'op-post' };
+    hd.innerHTML = `<span class="op-badge ${methods[method]||'op-get'}">${method}</span><span class="op-label">${label}</span><span class="op-desc">${desc}</span><span class="op-chevron" id="${id}-chev">▶</span>`;
+
+    const body = document.createElement('div'); body.className = 'op-body'; body.id = id+'-body';
+    buildBody(body);
+
+    hd.addEventListener('click', () => {
+      const open = body.classList.toggle('open');
+      document.getElementById(id+'-chev').classList.toggle('open', open);
+    });
+
+    row.appendChild(hd); row.appendChild(body);
+    return row;
+  }
+
+  function mkSection(title, ops) {
+    const sec = document.createElement('div'); sec.className = 'builder-section';
+    sec.innerHTML = `<div class="builder-section-hd">${title}</div>`;
+    for (const op of ops) sec.appendChild(op);
+    return sec;
+  }
+
+  // ── Op body builders ──
+
+  function opNodeGet(body) {
+    const fields = document.createElement('div'); fields.className = 'op-row-fields';
+    fields.appendChild(mkField('id','Node Code','text',{placeholder:'CI, VS, CY…',flex:'0 0 120px'}));
+    const btn = mkBtn('GET','primary sm'); fields.appendChild(btn);
+    const res = document.createElement('pre'); res.className='op-result';
+    body.appendChild(fields); body.appendChild(res);
+    btn.addEventListener('click',()=>{
+      if (!WBAPI.loaded) return showResult(res,'Load a file first.',true);
+      const f = getFields(fields);
+      if (!validate(f,[{name:'id',required:true,label:'Node Code'}])) return;
+      const r = WBAPI.nodes.get(f.id.value.trim());
+      showResult(res, r||`Node "${f.id.value}" not found.`, !r);
+    });
+  }
+
+  function opNodeGetAll(body) {
+    const fields = document.createElement('div'); fields.className = 'op-row-fields';
+    const actSel = document.createElement('div'); actSel.className='op-field';
+    actSel.innerHTML=`<label>Act (optional)</label>`;
+    const sel = document.createElement('select'); sel.name='act';
+    sel.innerHTML=`<option value="">All</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option>`;
+    actSel.appendChild(sel); fields.appendChild(actSel);
+    const btn = mkBtn('GET ALL','primary sm'); fields.appendChild(btn);
+    const res = document.createElement('pre'); res.className='op-result';
+    body.appendChild(fields); body.appendChild(res);
+    btn.addEventListener('click',()=>{
+      if (!WBAPI.loaded) return showResult(res,'Load a file first.',true);
+      const f = getFields(fields);
+      const act = f.act.value;
+      const r = act ? WBAPI.nodes.byAct(Number(act)) : WBAPI.nodes.all();
+      showResult(res, r, false);
+    });
+  }
+
+  function opNodePut(body) {
+    const fields = document.createElement('div'); fields.className = 'op-row-fields';
+    fields.appendChild(mkField('id','Node Code','text',{placeholder:'CI',flex:'0 0 100px'}));
+    fields.appendChild(mkField('field','Field','text',{placeholder:'label, name, act…',flex:'0 0 120px'}));
+    fields.appendChild(mkField('value','Value','text',{placeholder:'new value',flex:'1 1 160px'}));
+    const btn = mkBtn('PUT','primary sm'); fields.appendChild(btn);
+    const res = document.createElement('pre'); res.className='op-result';
+    body.appendChild(fields); body.appendChild(res);
+    btn.addEventListener('click', async ()=>{
+      if (!WBAPI.loaded) return showResult(res,'Load a file first.',true);
+      const f = getFields(fields);
+      if (!validate(f,[{name:'id',required:true,label:'Node Code'},{name:'field',required:true,label:'Field'},{name:'value',required:true,label:'Value'}])) return;
+      const result = await doEntityPut('node',f.id.value.trim(),{[f.field.value.trim()]:f.value.value});
+      showResult(res, result, !result.ok);
+      if (result.ok) { WBAPI._buildIndexes(); renderMapNodeList(); }
+    });
+  }
+
+  function opNodeAdd(body) {
+    const fields = document.createElement('div'); fields.className = 'op-row-fields';
+    fields.appendChild(mkField('code','Code','text',{placeholder:'AB, XY…',flex:'0 0 80px'}));
+    fields.appendChild(mkField('label','Label','text',{placeholder:'The Dark Tower',flex:'1 1 160px'}));
+    fields.appendChild(mkField('name','Terrain Key','text',{placeholder:'dark_forest',flex:'1 1 140px'}));
+    const actS = document.createElement('div'); actS.className='op-field'; actS.style.flex='0 0 60px';
+    actS.innerHTML='<label>Act</label>';
+    const aInp = document.createElement('input'); aInp.type='number'; aInp.name='act'; aInp.value='1'; aInp.min='1'; aInp.max='8';
+    actS.appendChild(aInp); fields.appendChild(actS);
+    const btn = mkBtn('ADD NODE','primary sm'); fields.appendChild(btn);
+    const res = document.createElement('pre'); res.className='op-result';
+    body.appendChild(fields); body.appendChild(res);
+    body.appendChild(mkNote('Node code must be 1–6 uppercase letters/digits. Terrain key must exist in WORLD_DB.'));
+    btn.addEventListener('click',()=>{
+      if (!WBAPI.loaded) return showResult(res,'Load a file first.',true);
+      const f = getFields(fields);
+      if (!validate(f,[
+        {name:'code',required:true,label:'Code',pattern:/^[A-Z0-9_]{1,6}$/},
+        {name:'label',required:true,label:'Label'},
+        {name:'name',required:true,label:'Terrain Key'},
+      ])) return;
+      const code = f.code.value.trim().toUpperCase();
+      if (WBAPI.nodeMap[code]) return showResult(res,`Node "${code}" already exists.`,true);
+      const n = {num:9000+Object.keys(WBAPI.nodeMap).length, code, name:f.name.value.trim(),
+        label:f.label.value.trim(), act:Number(f.act.value)||1, N:null,S:null,E:null,W:null};
+      WBAPI.nodeMap[code]=n; WBAPI.nodeCoords[code]={r:50,c:64,virtual:true};
+      DIFF.added[code]=n; WBAPI._buildIndexes(); updateDiffBadge();
+      showResult(res,{ok:true,code,node:n},false);
+      renderMapNodeList(); renderMap();
+    });
+  }
+
+  function opQuestGet(body) {
+    const fields = document.createElement('div'); fields.className = 'op-row-fields';
+    fields.appendChild(mkField('id','Quest ID or Title','text',{placeholder:'quest_wis_01…',flex:'1 1 200px'}));
+    const btn = mkBtn('GET','primary sm'); fields.appendChild(btn);
+    const res = document.createElement('pre'); res.className='op-result';
+    body.appendChild(fields); body.appendChild(res);
+    btn.addEventListener('click',()=>{
+      if (!WBAPI.loaded) return showResult(res,'Load a file first.',true);
+      const f = getFields(fields);
+      if (!validate(f,[{name:'id',required:true,label:'Quest ID'}])) return;
+      const r = WBAPI.quests.get(f.id.value.trim());
+      showResult(res, r||`Quest "${f.id.value}" not found.`, !r);
+    });
+  }
+
+  function opQuestGetByNode(body) {
+    const fields = document.createElement('div'); fields.className = 'op-row-fields';
+    fields.appendChild(mkField('node','Node Code','text',{placeholder:'CI',flex:'0 0 100px'}));
+    const btn = mkBtn('GET','primary sm'); fields.appendChild(btn);
+    const res = document.createElement('pre'); res.className='op-result';
+    body.appendChild(fields); body.appendChild(res);
+    btn.addEventListener('click',()=>{
+      if (!WBAPI.loaded) return showResult(res,'Load a file first.',true);
+      const f = getFields(fields);
+      if (!validate(f,[{name:'node',required:true,label:'Node Code'}])) return;
+      const r = WBAPI.quests.byNode(f.node.value.trim().toUpperCase());
+      showResult(res, r.length ? r : `No quests at node "${f.node.value}".`, r.length===0);
+    });
+  }
+
+  function opQuestGetByType(body) {
+    const fields = document.createElement('div'); fields.className = 'op-row-fields';
+    const sel = mkField('type','Type','select',{options:{side:'side',main:'main',skill_check:'skill_check',epic:'epic'}});
+    fields.appendChild(sel);
+    const btn = mkBtn('GET','primary sm'); fields.appendChild(btn);
+    const res = document.createElement('pre'); res.className='op-result';
+    body.appendChild(fields); body.appendChild(res);
+    btn.addEventListener('click',()=>{
+      if (!WBAPI.loaded) return showResult(res,'Load a file first.',true);
+      const f = getFields(fields);
+      const r = WBAPI.quests.byType(f.type.value);
+      showResult(res, r.length ? r : `No quests of type "${f.type.value}".`, r.length===0);
+    });
+  }
+
+  function opQuestGetByNpc(body) {
+    const fields = document.createElement('div'); fields.className = 'op-row-fields';
+    fields.appendChild(mkField('npc','NPC Key','text',{placeholder:'yael, aldo…',flex:'1 1 160px'}));
+    const btn = mkBtn('GET','primary sm'); fields.appendChild(btn);
+    const res = document.createElement('pre'); res.className='op-result';
+    body.appendChild(fields); body.appendChild(res);
+    btn.addEventListener('click',()=>{
+      if (!WBAPI.loaded) return showResult(res,'Load a file first.',true);
+      const f = getFields(fields);
+      if (!validate(f,[{name:'npc',required:true,label:'NPC Key'}])) return;
+      const ids = WBAPI._questsByNpc[f.npc.value.trim()]||[];
+      const r = ids.map(id=>({id,...WBAPI.questDb[id]}));
+      showResult(res, r.length ? r : `No quests reference NPC "${f.npc.value}".`, r.length===0);
+    });
+  }
+
+  function opQuestGetChain(body) {
+    const fields = document.createElement('div'); fields.className = 'op-row-fields';
+    fields.appendChild(mkField('id','Quest ID','text',{placeholder:'quest_wis_01…',flex:'1 1 200px'}));
+    const btn = mkBtn('GET CHAIN','primary sm'); fields.appendChild(btn);
+    const res = document.createElement('pre'); res.className='op-result';
+    body.appendChild(fields); body.appendChild(res);
+    btn.addEventListener('click',()=>{
+      if (!WBAPI.loaded) return showResult(res,'Load a file first.',true);
+      const f = getFields(fields);
+      if (!validate(f,[{name:'id',required:true,label:'Quest ID'}])) return;
+      const chain = WBAPI.quests.chain(f.id.value.trim());
+      showResult(res, chain, chain.upstream.length===0&&chain.downstream.length===0);
+    });
+  }
+
+  function opQuestPut(body) {
+    const fields = document.createElement('div'); fields.className = 'op-row-fields';
+    fields.appendChild(mkField('id','Quest ID','text',{placeholder:'quest_wis_01…',flex:'1 1 180px'}));
+    fields.appendChild(mkField('field','Field','text',{placeholder:'title, desc, xpAward…',flex:'1 1 140px'}));
+    fields.appendChild(mkField('value','Value','text',{placeholder:'new value',flex:'1 1 160px'}));
+    const btn = mkBtn('PUT','primary sm'); fields.appendChild(btn);
+    const res = document.createElement('pre'); res.className='op-result';
+    body.appendChild(fields); body.appendChild(res);
+    body.appendChild(mkNote('Allowed fields: title, type, activateNode, waypointNode, desc, hint, vignetteText, passText, failText, rewardText, disposition, checkAbility, checkLabel, checkDC, retryable, retryGateDays, xpAward, reward, npc.'));
+    btn.addEventListener('click', async ()=>{
+      if (!WBAPI.loaded) return showResult(res,'Load a file first.',true);
+      const f = getFields(fields);
+      if (!validate(f,[{name:'id',required:true,label:'Quest ID'},{name:'field',required:true,label:'Field'},{name:'value',required:true,label:'Value'}])) return;
+      const result = await doEntityPut('quest',f.id.value.trim(),{[f.field.value.trim()]:f.value.value});
+      showResult(res, result, !result.ok);
+      if (result.ok) { WBAPI._buildIndexes(); selectQuest(f.id.value.trim()); }
+    });
+  }
+
+  function opQuestAll(body) {
+    const fields = document.createElement('div'); fields.className = 'op-row-fields';
+    const btn = mkBtn('GET ALL','primary sm'); fields.appendChild(btn);
+    const res = document.createElement('pre'); res.className='op-result';
+    body.appendChild(fields); body.appendChild(res);
+    btn.addEventListener('click',()=>{
+      if (!WBAPI.loaded) return showResult(res,'Load a file first.',true);
+      showResult(res, WBAPI.quests.all(), false);
+    });
+  }
+
+  function opMonsterGet(body) {
+    const fields = document.createElement('div'); fields.className = 'op-row-fields';
+    fields.appendChild(mkField('id','Key or Name','text',{placeholder:'goblin, Goblin…',flex:'1 1 180px'}));
+    const btn = mkBtn('GET','primary sm'); fields.appendChild(btn);
+    const res = document.createElement('pre'); res.className='op-result';
+    body.appendChild(fields); body.appendChild(res);
+    btn.addEventListener('click',()=>{
+      if (!WBAPI.loaded) return showResult(res,'Load a file first.',true);
+      const f = getFields(fields);
+      if (!validate(f,[{name:'id',required:true,label:'Key or Name'}])) return;
+      const r = WBAPI.monsters.get(f.id.value.trim());
+      showResult(res, r||`Monster "${f.id.value}" not found.`, !r);
+    });
+  }
+
+  function opMonsterGetByTerrain(body) {
+    const fields = document.createElement('div'); fields.className = 'op-row-fields';
+    fields.appendChild(mkField('terrain','Terrain Key','text',{placeholder:'dark_forest…',flex:'1 1 180px'}));
+    const btn = mkBtn('GET','primary sm'); fields.appendChild(btn);
+    const res = document.createElement('pre'); res.className='op-result';
+    body.appendChild(fields); body.appendChild(res);
+    btn.addEventListener('click',()=>{
+      if (!WBAPI.loaded) return showResult(res,'Load a file first.',true);
+      const f = getFields(fields);
+      if (!validate(f,[{name:'terrain',required:true,label:'Terrain Key'}])) return;
+      const r = WBAPI.monsters.byTerrain(f.terrain.value.trim());
+      showResult(res, r.length ? r : `No monsters in terrain "${f.terrain.value}".`, r.length===0);
+    });
+  }
+
+  function opMonsterPut(body) {
+    const fields = document.createElement('div'); fields.className = 'op-row-fields';
+    fields.appendChild(mkField('id','Monster Key','text',{placeholder:'goblin',flex:'0 0 120px'}));
+    fields.appendChild(mkField('field','Field','text',{placeholder:'name, ac, hp, atk…',flex:'0 0 120px'}));
+    fields.appendChild(mkField('value','Value','text',{placeholder:'new value',flex:'1 1 100px'}));
+    const btn = mkBtn('PUT','primary sm'); fields.appendChild(btn);
+    const res = document.createElement('pre'); res.className='op-result';
+    body.appendChild(fields); body.appendChild(res);
+    body.appendChild(mkNote('Numeric fields: ac, hp, atk, dmgCount, dmgDie, dmgFlat, xp, morale.'));
+    btn.addEventListener('click', async ()=>{
+      if (!WBAPI.loaded) return showResult(res,'Load a file first.',true);
+      const f = getFields(fields);
+      if (!validate(f,[{name:'id',required:true,label:'Monster Key'},{name:'field',required:true,label:'Field'},{name:'value',required:true,label:'Value'}])) return;
+      const result = await doEntityPut('monster',f.id.value.trim(),{[f.field.value.trim()]:f.value.value});
+      showResult(res, result, !result.ok);
+      if (result.ok) renderMonsterTable();
+    });
+  }
+
+  function opMonsterFork(body) {
+    const fields = document.createElement('div'); fields.className = 'op-row-fields';
+    fields.appendChild(mkField('source','Source Key','text',{placeholder:'goblin',flex:'0 0 120px'}));
+    fields.appendChild(mkField('newKey','New Key','text',{placeholder:'goblin_elder',flex:'0 0 140px'}));
+    fields.appendChild(mkField('overrides','Overrides JSON','text',{placeholder:'{"name":"Goblin Elder","tier":"hard"}',flex:'1 1 200px'}));
+    const btn = mkBtn('FORK','primary sm'); fields.appendChild(btn);
+    const res = document.createElement('pre'); res.className='op-result';
+    body.appendChild(fields); body.appendChild(res);
+    btn.addEventListener('click',()=>{
+      if (!WBAPI.loaded) return showResult(res,'Load a file first.',true);
+      const f = getFields(fields);
+      if (!validate(f,[{name:'source',required:true,label:'Source Key'},{name:'newKey',required:true,label:'New Key'}])) return;
+      let overrides = {};
+      if (f.overrides.value.trim()) {
+        try { overrides = JSON.parse(f.overrides.value); }
+        catch(e) { return showResult(res,'Overrides JSON parse error: '+e.message,true); }
+      }
+      const r = WBAPI.monsters.fork(f.source.value.trim(), f.newKey.value.trim(), overrides);
+      showResult(res, r, !r.ok);
+      if (r.ok) { WBAPI._buildIndexes(); renderMonsterTable(); updateDiffBadge(); }
+    });
+  }
+
+  function opNpcGet(body) {
+    const fields = document.createElement('div'); fields.className = 'op-row-fields';
+    fields.appendChild(mkField('id','NPC Key or Name','text',{placeholder:'yael, Yael…',flex:'1 1 180px'}));
+    const btn = mkBtn('GET','primary sm'); fields.appendChild(btn);
+    const res = document.createElement('pre'); res.className='op-result';
+    body.appendChild(fields); body.appendChild(res);
+    btn.addEventListener('click',()=>{
+      if (!WBAPI.loaded) return showResult(res,'Load a file first.',true);
+      const f = getFields(fields);
+      if (!validate(f,[{name:'id',required:true,label:'NPC Key'}])) return;
+      const r = WBAPI.npcs.get(f.id.value.trim());
+      showResult(res, r||`NPC "${f.id.value}" not found.`, !r);
+    });
+  }
+
+  function opNpcGetByNode(body) {
+    const fields = document.createElement('div'); fields.className = 'op-row-fields';
+    fields.appendChild(mkField('node','Node Code','text',{placeholder:'CI',flex:'0 0 100px'}));
+    const btn = mkBtn('GET','primary sm'); fields.appendChild(btn);
+    const res = document.createElement('pre'); res.className='op-result';
+    body.appendChild(fields); body.appendChild(res);
+    btn.addEventListener('click',()=>{
+      if (!WBAPI.loaded) return showResult(res,'Load a file first.',true);
+      const f = getFields(fields);
+      if (!validate(f,[{name:'node',required:true,label:'Node Code'}])) return;
+      const r = WBAPI.npcs.byNode(f.node.value.trim().toUpperCase());
+      showResult(res, r.length ? r : `No NPCs at node "${f.node.value}".`, r.length===0);
+    });
+  }
+
+  function opNpcPut(body) {
+    const fields = document.createElement('div'); fields.className = 'op-row-fields';
+    fields.appendChild(mkField('id','NPC Key','text',{placeholder:'yael',flex:'0 0 110px'}));
+    fields.appendChild(mkField('field','Field','text',{placeholder:'name, occupation, node…',flex:'1 1 140px'}));
+    fields.appendChild(mkField('value','Value','text',{placeholder:'new value',flex:'1 1 140px'}));
+    const btn = mkBtn('PUT','primary sm'); fields.appendChild(btn);
+    const res = document.createElement('pre'); res.className='op-result';
+    body.appendChild(fields); body.appendChild(res);
+    btn.addEventListener('click', async ()=>{
+      if (!WBAPI.loaded) return showResult(res,'Load a file first.',true);
+      const f = getFields(fields);
+      if (!validate(f,[{name:'id',required:true,label:'NPC Key'},{name:'field',required:true,label:'Field'},{name:'value',required:true,label:'Value'}])) return;
+      const result = await doEntityPut('npc',f.id.value.trim(),{[f.field.value.trim()]:f.value.value});
+      showResult(res, result, !result.ok);
+      if (result.ok) { WBAPI._buildIndexes(); renderNpcList(); }
+    });
+  }
+
+  function opTerrainGet(body) {
+    const fields = document.createElement('div'); fields.className = 'op-row-fields';
+    fields.appendChild(mkField('id','Terrain Key','text',{placeholder:'dark_forest…',flex:'1 1 180px'}));
+    const btn = mkBtn('GET','primary sm'); fields.appendChild(btn);
+    const res = document.createElement('pre'); res.className='op-result';
+    body.appendChild(fields); body.appendChild(res);
+    btn.addEventListener('click',()=>{
+      if (!WBAPI.loaded) return showResult(res,'Load a file first.',true);
+      const f = getFields(fields);
+      if (!validate(f,[{name:'id',required:true,label:'Terrain Key'}])) return;
+      const key = f.id.value.trim();
+      const t = WBAPI.worlds.get(key);
+      if (!t) return showResult(res,`Terrain "${key}" not found.`,true);
+      const nodes = WBAPI._nodesByTerrain[key]||[];
+      showResult(res,{...t, nodes, monsterCount:(WBAPI._terrainToMonsters[key]||[]).length},false);
+    });
+  }
+
+  function opTerrainSwapMonster(body) {
+    const fields = document.createElement('div'); fields.className = 'op-row-fields';
+    fields.appendChild(mkField('terrain','Terrain Key','text',{placeholder:'dark_forest',flex:'1 1 140px'}));
+    fields.appendChild(mkField('oldM','Old Monster Key','text',{placeholder:'goblin',flex:'1 1 120px'}));
+    fields.appendChild(mkField('newM','New Monster Key','text',{placeholder:'goblin_elder',flex:'1 1 130px'}));
+    const btn = mkBtn('SWAP','primary sm'); fields.appendChild(btn);
+    const res = document.createElement('pre'); res.className='op-result';
+    body.appendChild(fields); body.appendChild(res);
+    body.appendChild(mkNote('New monster must already exist in MONSTER_POOL. Fork it first if needed.'));
+    btn.addEventListener('click',()=>{
+      if (!WBAPI.loaded) return showResult(res,'Load a file first.',true);
+      const f = getFields(fields);
+      if (!validate(f,[{name:'terrain',required:true,label:'Terrain'},{name:'oldM',required:true,label:'Old Monster'},{name:'newM',required:true,label:'New Monster'}])) return;
+      const r = WBAPI.worlds.swapMonster(f.terrain.value.trim(),f.oldM.value.trim(),f.newM.value.trim());
+      showResult(res, r, !r.ok);
+      if (r.ok) { WBAPI._buildIndexes(); renderMonsterTable(); updateDiffBadge(); }
+    });
+  }
+
+  function opFishGet(body) {
+    const fields = document.createElement('div'); fields.className = 'op-row-fields';
+    fields.appendChild(mkField('id','Key or Name (blank = all)','text',{placeholder:'yugurt_carp…',flex:'1 1 200px'}));
+    const btn = mkBtn('GET','primary sm'); fields.appendChild(btn);
+    const res = document.createElement('pre'); res.className='op-result';
+    body.appendChild(fields); body.appendChild(res);
+    btn.addEventListener('click',()=>{
+      if (!WBAPI.loaded) return showResult(res,'Load a file first.',true);
+      const f = getFields(fields);
+      const id = f.id.value.trim();
+      const r = id ? WBAPI.fish.get(id) : WBAPI.fish.all();
+      showResult(res, r||(id?`Fish "${id}" not found.`:r), !r||(Array.isArray(r)&&!r.length));
+    });
+  }
+
+  function opLakeMagicGet(body) {
+    const fields = document.createElement('div'); fields.className = 'op-row-fields';
+    fields.appendChild(mkField('id','Key or Name (blank = all)','text',{placeholder:'blessing…',flex:'1 1 200px'}));
+    const btn = mkBtn('GET','primary sm'); fields.appendChild(btn);
+    const res = document.createElement('pre'); res.className='op-result';
+    body.appendChild(fields); body.appendChild(res);
+    btn.addEventListener('click',()=>{
+      if (!WBAPI.loaded) return showResult(res,'Load a file first.',true);
+      const f = getFields(fields);
+      const id = f.id.value.trim();
+      const r = id ? WBAPI['lake-magic'].get(id) : WBAPI['lake-magic'].all();
+      showResult(res, r||(id?`Lake magic "${id}" not found.`:r), !r||(Array.isArray(r)&&!r.length));
+    });
+  }
+
+  function opDiceRoll(body) {
+    const fields = document.createElement('div'); fields.className = 'op-row-fields';
+    fields.appendChild(mkField('expr','Dice Expression','text',{placeholder:'2d6+3, d20, adv, dis…',flex:'1 1 200px'}));
+    const btn = mkBtn('ROLL','primary sm'); fields.appendChild(btn);
+    const res = document.createElement('pre'); res.className='op-result';
+    body.appendChild(fields); body.appendChild(res);
+    btn.addEventListener('click',()=>{
+      const f = getFields(fields);
+      if (!validate(f,[{name:'expr',required:true,label:'Expression'}])) return;
+      const r = WBAPI.dice.roll(f.expr.value.trim());
+      showResult(res,r,false);
+    });
+  }
+
+  function opSkillCheck(body) {
+    const fields = document.createElement('div'); fields.className = 'op-row-fields';
+    fields.appendChild(mkField('dc','DC','text',{placeholder:'13',flex:'0 0 60px'}));
+    fields.appendChild(mkField('mod','Modifier','text',{placeholder:'+2',flex:'0 0 80px'}));
+    fields.appendChild(mkField('prof','Proficiency','text',{placeholder:'0',flex:'0 0 90px'}));
+    const btn = mkBtn('ROLL CHECK','primary sm'); fields.appendChild(btn);
+    const res = document.createElement('pre'); res.className='op-result';
+    body.appendChild(fields); body.appendChild(res);
+    btn.addEventListener('click',()=>{
+      const f = getFields(fields);
+      if (!validate(f,[{name:'dc',required:true,label:'DC'}])) return;
+      const r = WBAPI.dice.skillCheck(Number(f.dc.value)||13, Number(f.mod.value)||0, Number(f.prof.value)||0);
+      showResult(res,r,!r.pass);
+    });
+  }
+
+  function opAuditRun(body) {
+    const fields = document.createElement('div'); fields.className = 'op-row-fields';
+    const btn = mkBtn('RUN AUDIT','primary sm'); fields.appendChild(btn);
+    const res = document.createElement('pre'); res.className='op-result';
+    body.appendChild(fields); body.appendChild(res);
+    btn.addEventListener('click',()=>{
+      if (!WBAPI.loaded) return showResult(res,'Load a file first.',true);
+      const r = WBAPI.audit();
+      showResult(res,{summary:r.summary,errors:r.errors,warnings:r.warnings.slice(0,20),suggestions:r.suggestions.slice(0,20)},r.summary.errors>0);
+    });
+  }
+
+  function mkNote(txt) {
+    const d = document.createElement('div');
+    d.style.cssText = 'font-size:10px;color:var(--muted);line-height:1.5;';
+    d.textContent = txt; return d;
+  }
+
+  // ── Assemble the builder ──
+  function renderBuilder() {
+    if (!WBAPI.loaded) return;
+    $('builder-empty').style.display = 'none';
+    const el = $('builder-content');
+    el.style.display = 'flex';
+    if (el.childElementCount > 0) return; // already built
+
+    el.appendChild(mkSection('🗺 Nodes', [
+      mkOpRow('GET',  'Get Node by Code',       'Fetch a single node by its code (CI, VS…)',           opNodeGet),
+      mkOpRow('GET',  'Get All / By Act',        'List all nodes or filter by act number',              opNodeGetAll),
+      mkOpRow('PUT',  'Set Node Field',          'Edit any field on an existing node',                  opNodePut),
+      mkOpRow('POST', 'Add New Node',            'Create a new node (added to diff, not saved yet)',    opNodeAdd),
+    ]));
+
+    el.appendChild(mkSection('📜 Quests', [
+      mkOpRow('GET',  'Get Quest by ID',         'Fetch a single quest with chain info',                opQuestGet),
+      mkOpRow('GET',  'Get Quests by Node',      'All quests at a given activateNode or waypointNode',  opQuestGetByNode),
+      mkOpRow('GET',  'Get Quests by Type',      'Filter by quest type (side/main/skill_check/epic)',   opQuestGetByType),
+      mkOpRow('GET',  'Get Quests by NPC',       'All quests that reference a given NPC key',           opQuestGetByNpc),
+      mkOpRow('GET',  'Get Quest Chain',         'Upstream + downstream quests via shared flags',       opQuestGetChain),
+      mkOpRow('GET',  'Get All Quests',          'Dump entire quest database',                          opQuestAll),
+      mkOpRow('PUT',  'Set Quest Field',         'Edit any narrative or mechanic field on a quest',     opQuestPut),
+    ]));
+
+    el.appendChild(mkSection('⚔ Monsters', [
+      mkOpRow('GET',  'Get Monster by Key/Name', 'Fetch a single monster with drop + terrain data',     opMonsterGet),
+      mkOpRow('GET',  'Get Monsters by Terrain', 'List all monsters in a given terrain',                opMonsterGetByTerrain),
+      mkOpRow('PUT',  'Set Monster Field',       'Edit combat stat or name on a monster',               opMonsterPut),
+      mkOpRow('POST', 'Fork Monster',            'Clone a monster under a new key with overrides',      opMonsterFork),
+      mkOpRow('POST', 'Swap Monster in Terrain', 'Replace one monster with another in a terrain roster',opTerrainSwapMonster),
+    ]));
+
+    el.appendChild(mkSection('👤 NPCs', [
+      mkOpRow('GET',  'Get NPC by Key/Name',     'Fetch NPC data with node + dialogue',                 opNpcGet),
+      mkOpRow('GET',  'Get NPCs by Node',        'All NPCs registered at a node',                       opNpcGetByNode),
+      mkOpRow('PUT',  'Set NPC Field',           'Edit any NPC field',                                  opNpcPut),
+    ]));
+
+    el.appendChild(mkSection('🏔 Terrains', [
+      mkOpRow('GET',  'Get Terrain by Key',      'Fetch terrain with node list + monster count',        opTerrainGet),
+    ]));
+
+    el.appendChild(mkSection('🐟 Fish & Lake Magic', [
+      mkOpRow('GET',  'Get Fish',                'Look up a fish by key/name, or list all',             opFishGet),
+      mkOpRow('GET',  'Get Lake Magic',          'Look up a lake magic item by key/name, or list all',  opLakeMagicGet),
+    ]));
+
+    el.appendChild(mkSection('🎲 Dice', [
+      mkOpRow('POST', 'Roll Dice',               'Roll any expression: d20, 2d6+3, adv, dis',           opDiceRoll),
+      mkOpRow('POST', 'Skill Check',             'Roll d20 + mod + prof vs DC',                         opSkillCheck),
+    ]));
+
+    el.appendChild(mkSection('🔍 Audit', [
+      mkOpRow('POST', 'Run Integrity Audit',     'Check for broken refs, missing data, dead flags',     opAuditRun),
+    ]));
+  }
+
+  document.querySelector('[data-tab="builder"]').addEventListener('click', () => {
+    if (WBAPI.loaded) renderBuilder();
+  });
+
+})();
 </script>
 </body>
 </html>
