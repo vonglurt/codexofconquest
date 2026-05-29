@@ -1558,13 +1558,6 @@ async function serverDetect() {
       ind.title = `Connected: ${SERVER.url}\n${d.nodes} nodes · ${d.quests} quests · ${d.monsters} monsters`;
       ind.style.display = '';
       $('btn-apply-patch').textContent = 'Save to File';
-      // Switch load button to server mode
-      const drop = $('file-drop');
-      drop.removeAttribute('for');
-      drop.style.borderColor = 'var(--green)';
-      drop.style.color = 'var(--green)';
-      drop.title = `⚡ Load ${d.file} from ${SERVER.url}`;
-      $('file-label').textContent = d.file + ' (server)';
       if (WBAPI.loaded && window._auditEnableServer) window._auditEnableServer();
       return;
     }
@@ -1572,41 +1565,10 @@ async function serverDetect() {
   SERVER.active = false;
   ind.className = 'offline';
   ind.textContent = '○ Browser only';
-  ind.title = 'Start wbapi-server.js (./start-wbapi.sh) to enable server-side saves';
+  ind.title = 'Start wbapi-server.js to enable server-side saves';
   ind.style.display = '';
-  // Restore load button to file-picker mode
-  const drop = $('file-drop');
-  drop.setAttribute('for', 'file-input');
-  drop.style.borderColor = '';
-  drop.style.color = '';
-  drop.title = '';
-  if (!WBAPI.loaded) $('file-label').textContent = 'Load roll2hit-v3.html';
   $('btn-apply-patch').textContent = 'Export Patched';
 }
-
-// File-drop click: use server API when connected, otherwise open file picker
-$('file-drop').addEventListener('click', async (e) => {
-  if (!SERVER.active) {
-    $('file-input').click();
-    return;
-  }
-  const drop = $('file-drop');
-  const orig = $('file-label').textContent;
-  $('file-label').textContent = '⏳ Loading…';
-  drop.style.pointerEvents = 'none';
-  try {
-    const r = await fetch(`${SERVER.url}/api/source`);
-    if (!r.ok) throw new Error(`Server returned ${r.status}`);
-    const text = await r.text();
-    loadFile(text);
-    $('file-label').textContent = '✓ Loaded';
-    setTimeout(() => { $('file-label').textContent = orig; drop.style.pointerEvents = ''; }, 2000);
-  } catch(err) {
-    alert('Failed to load from server: ' + err.message);
-    $('file-label').textContent = orig;
-    drop.style.pointerEvents = '';
-  }
-});
 
 // Generic entity PUT — routes through server or in-memory WBAPI
 async function doEntityPut(type, key, fields) {
@@ -1644,7 +1606,6 @@ function loadFile(text) {
   $('map-node-cnt').textContent = nc;
   $('quest-cnt').textContent = qc;
   $('npc-cnt').textContent = WBAPI.npcs.all().filter(n=>!n._inline).length;
-  $('file-label').textContent = 'roll2hit-v3.html ✓';
   $('map-empty').style.display = 'none';
   ['btn-diff','btn-apply-patch','btn-run-audit'].forEach(id => $(id).disabled = false);
   ['btn-save-node','btn-delete-node','btn-add-node'].forEach(id => $(id).disabled = false);
@@ -3394,7 +3355,6 @@ const BIRKA_NPC = {};
   // ── Card: New World ──
   $('wcard-new').addEventListener('click', () => {
     $('wcard-new').classList.add('active');
-    $('file-label').textContent = 'New World ✓';
     loadFile(BLANK_HTML);
     dismiss();
   });
