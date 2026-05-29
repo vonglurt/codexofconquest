@@ -235,8 +235,8 @@ select.fi{appearance:none;}
 #load-splash{position:absolute;inset:0;z-index:200;background:#000;display:flex;flex-direction:column;overflow:hidden;font-family:monospace;}
 #load-splash.hidden{display:none;}
 #splash-cols{position:absolute;inset:0;display:flex;}
-.scol{flex:1;overflow:hidden;position:relative;padding:0 4px;}
-.scol-inner{position:absolute;top:0;left:0;right:0;white-space:pre-wrap;word-break:break-all;font-size:10px;line-height:1.55;color:#00c844;animation:stream-up linear infinite;}
+.scol{overflow:hidden;position:relative;padding:0 4px;}
+.scol-inner{position:absolute;top:0;left:0;right:0;white-space:pre-wrap;word-break:break-all;font-size:10px;line-height:1.55;color:#00c844;animation:stream-up linear infinite;text-align:right;}
 .scol:nth-child(3n)   .scol-inner{color:#00ff41;opacity:.9;}
 .scol:nth-child(3n+1) .scol-inner{color:#009933;opacity:.6;}
 .scol:nth-child(3n+2) .scol-inner{color:#00e03a;opacity:.75;}
@@ -3468,6 +3468,7 @@ const BIRKA_NPC = {};
       const content = [...shuffled, ...shuffled].join('\n') + '\n';
       const col = document.createElement('div');
       col.className = 'scol';
+      col.style.flex = (1 + Math.random()).toFixed(3);
       const inner = document.createElement('div');
       inner.className = 'scol-inner';
       const speed = (1.8 + Math.random() * 5).toFixed(2);
