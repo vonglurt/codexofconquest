@@ -39,7 +39,7 @@ body{background:var(--bg);color:var(--text);font-family:'SF Mono','Consolas',mon
 #file-input{display:none;}
 
 /* ── Panel system ── */
-#panels{flex:1;overflow:hidden;display:flex;}
+#panels{flex:1;overflow:hidden;display:flex;position:relative;}
 .panel{display:none;flex:1;overflow:hidden;}
 .panel.active{display:flex;}
 
@@ -212,6 +212,25 @@ select.fi{appearance:none;}
 .op-result.err{border-color:var(--red);color:var(--red);}
 .op-err-msg{font-size:10px;color:var(--red);display:none;}
 
+/* ── Welcome screen ── */
+#welcome-screen{position:absolute;inset:0;z-index:100;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;padding:24px;}
+#welcome-screen.hidden{display:none;}
+.welcome-logo{font-size:22px;font-weight:800;color:var(--accent);letter-spacing:.08em;}
+.welcome-sub{font-size:13px;color:var(--muted);margin-top:-20px;}
+.welcome-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;width:100%;max-width:880px;}
+.wcard{background:var(--bg2);border:2px solid var(--border);border-radius:12px;padding:24px 18px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;transition:border-color .2s,background .2s;text-align:center;user-select:none;min-height:170px;justify-content:center;}
+.wcard:hover{border-color:var(--accent);background:var(--bg3);}
+.wcard.active{border-color:var(--green);background:#0d2218;}
+.wcard.checking{border-color:var(--yellow);background:#1a1a0a;}
+.wcard.err{border-color:var(--red);background:#1a0d0d;}
+.wcard-icon{font-size:36px;line-height:1;}
+.wcard-title{font-size:13px;font-weight:700;color:var(--text);}
+.wcard-desc{font-size:11px;color:var(--muted);line-height:1.5;}
+.wcard-status{font-size:11px;font-weight:600;min-height:14px;}
+.welcome-drop-zone{width:100%;max-width:880px;border:2px dashed var(--border);border-radius:10px;padding:18px;display:flex;align-items:center;justify-content:center;gap:10px;color:var(--muted);font-size:12px;transition:border-color .2s,color .2s;}
+.welcome-drop-zone.drag-over{border-color:var(--accent);color:var(--accent);}
+.welcome-terminal{font-size:11px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-family:monospace;color:var(--green);display:none;}
+
 /* ── Server indicator ── */
 #server-indicator{font-size:11px;padding:2px 8px;border-radius:10px;white-space:nowrap;}
 #server-indicator.connected{background:var(--added);color:var(--green);border:1px solid var(--green);}
@@ -249,6 +268,58 @@ select.fi{appearance:none;}
 </div>
 
 <div id="panels">
+
+  <!-- ═══ WELCOME SCREEN ═══ -->
+  <div id="welcome-screen">
+    <div class="welcome-logo">◆ WORLD BUILDER</div>
+    <div class="welcome-sub">Choose a data source to begin</div>
+
+    <div class="welcome-cards">
+
+      <!-- 1. New -->
+      <div class="wcard" id="wcard-new">
+        <div class="wcard-icon">✦</div>
+        <div class="wcard-title">New World</div>
+        <div class="wcard-desc">Start with empty data structures. Build from scratch.</div>
+        <div class="wcard-status" id="wcard-new-status"></div>
+      </div>
+
+      <!-- 2. Browse -->
+      <div class="wcard" id="wcard-browse">
+        <div class="wcard-icon">📂</div>
+        <div class="wcard-title">Browse HTML</div>
+        <div class="wcard-desc">Open roll2hit-v3.html from your filesystem.</div>
+        <div class="wcard-status" id="wcard-browse-status"></div>
+      </div>
+
+      <!-- 3. Drop -->
+      <div class="wcard" id="wcard-drop">
+        <div class="wcard-icon">⬇</div>
+        <div class="wcard-title">Drop File Here</div>
+        <div class="wcard-desc">Drag your .html file onto this card or anywhere on the screen.</div>
+        <div class="wcard-status" id="wcard-drop-status"></div>
+      </div>
+
+      <!-- 4. Server -->
+      <div class="wcard" id="wcard-server">
+        <div class="wcard-icon">⚡</div>
+        <div class="wcard-title">Localhost Server</div>
+        <div class="wcard-desc">Connect to wbapi-server.js on port 3001. Auto-loads the game file.</div>
+        <div class="wcard-status" id="wcard-server-status" style="color:var(--muted)">Checking…</div>
+      </div>
+
+    </div>
+
+    <!-- Drop zone strip -->
+    <div class="welcome-drop-zone" id="welcome-drop-zone">
+      ⬇ Drop roll2hit-v3.html anywhere on this screen
+    </div>
+
+    <!-- Terminal hint for server card -->
+    <div class="welcome-terminal" id="welcome-terminal">node wbapi-server.js</div>
+
+    <input type="file" id="welcome-file-input" accept=".html" style="display:none">
+  </div>
 
   <!-- ═══ MAP ═══ -->
   <div class="panel active" id="tab-map">
@@ -1572,6 +1643,7 @@ function loadFile(text) {
   // Reset stats + builder so they re-render fresh on next tab visit
   $('stats-content').style.display = 'none'; $('stats-empty').style.display = '';
   $('builder-content').innerHTML = ''; $('builder-content').style.display = 'none'; $('builder-empty').style.display = '';
+  $('welcome-screen').classList.add('hidden');
   serverDetect();
 }
 
@@ -3202,6 +3274,134 @@ document.querySelectorAll('[data-schema]').forEach(btn => btn.addEventListener('
   pre.dataset.showing = key;
   pre.textContent = API_SCHEMAS[key] || 'No schema.';
 }));
+
+// ═══════════════════════════════════════════════════════════════════════════
+// WELCOME SCREEN
+// ═══════════════════════════════════════════════════════════════════════════
+(function(){
+
+  const BLANK_HTML = `<!DOCTYPE html><html><head><title>New World</title></head><body><script>
+// ◆◆◆ WORLDBUILDER:MONSTER_POOL:START ◆◆◆
+const MONSTER_POOL = {};
+const MONSTER_DROPS = {};
+// ◆◆◆ WORLDBUILDER:MONSTER_POOL:END ◆◆◆
+// ◆◆◆ WORLDBUILDER:WORLD_DB:START ◆◆◆
+const WORLD_DB = {};
+// ◆◆◆ WORLDBUILDER:WORLD_DB:END ◆◆◆
+// ◆◆◆ WORLDBUILDER:NODE_MAP:START ◆◆◆
+const NODE_MAP = {};
+const NODE_COORDS = {};
+// ◆◆◆ WORLDBUILDER:NODE_MAP:END ◆◆◆
+// ◆◆◆ WORLDBUILDER:QUEST_DB:START ◆◆◆
+const QUEST_DB = {};
+// ◆◆◆ WORLDBUILDER:QUEST_DB:END ◆◆◆
+// ◆◆◆ WORLDBUILDER:BIRKA_NPC:START ◆◆◆
+const BIRKA_NPC = {};
+// ◆◆◆ WORLDBUILDER:BIRKA_NPC:END ◆◆◆
+<\/script><\/body><\/html>`;
+
+  function dismiss() {
+    $('welcome-screen').classList.add('hidden');
+  }
+
+  // ── Card: New World ──
+  $('wcard-new').addEventListener('click', () => {
+    $('wcard-new').classList.add('active');
+    $('file-label').textContent = 'New World ✓';
+    loadFile(BLANK_HTML);
+    dismiss();
+  });
+
+  // ── Card: Browse ──
+  $('wcard-browse').addEventListener('click', () => {
+    $('welcome-file-input').click();
+  });
+  $('welcome-file-input').addEventListener('change', e => {
+    const f = e.target.files[0]; if (!f) return;
+    $('wcard-browse').classList.add('active');
+    $('wcard-browse-status').textContent = f.name;
+    const reader = new FileReader();
+    reader.onload = ev => { loadFile(ev.target.result); dismiss(); };
+    reader.readAsText(f);
+  });
+
+  // ── Card + Zone: Drop ──
+  function handleDrop(e) {
+    e.preventDefault();
+    const f = e.dataTransfer?.files?.[0]; if (!f || !f.name.endsWith('.html')) return;
+    $('wcard-drop').classList.add('active');
+    $('wcard-drop-status').textContent = f.name;
+    $('welcome-drop-zone').classList.remove('drag-over');
+    const reader = new FileReader();
+    reader.onload = ev => { loadFile(ev.target.result); dismiss(); };
+    reader.readAsText(f);
+  }
+  ['dragover','dragenter'].forEach(ev =>
+    $('welcome-screen').addEventListener(ev, e => { e.preventDefault(); $('welcome-drop-zone').classList.add('drag-over'); $('wcard-drop').classList.add('checking'); })
+  );
+  $('welcome-screen').addEventListener('dragleave', e => {
+    if (!$('welcome-screen').contains(e.relatedTarget)) {
+      $('welcome-drop-zone').classList.remove('drag-over');
+      $('wcard-drop').classList.remove('checking');
+    }
+  });
+  $('welcome-screen').addEventListener('drop', handleDrop);
+  $('wcard-drop').addEventListener('drop', handleDrop);
+
+  // ── Card: Server ──
+  async function probeServer() {
+    const card = $('wcard-server'), status = $('wcard-server-status'), term = $('welcome-terminal');
+    card.classList.remove('active','err','checking');
+    card.classList.add('checking');
+    status.style.color = 'var(--yellow)';
+    status.textContent = 'Checking localhost:3001…';
+    term.style.display = 'none';
+    try {
+      const r = await fetch('http://localhost:3001/api/ping', { signal: AbortSignal.timeout(1200) });
+      const d = await r.json();
+      if (d.ok) {
+        card.classList.remove('checking'); card.classList.add('active');
+        status.style.color = 'var(--green)';
+        status.textContent = `● Connected — ${d.nodes} nodes · ${d.quests} quests`;
+        card.onclick = () => loadFromServer();
+        return true;
+      }
+    } catch(_) {}
+    card.classList.remove('checking'); card.classList.add('err');
+    status.style.color = 'var(--red)';
+    status.textContent = '✗ Not running — start it first:';
+    term.style.display = '';
+    card.onclick = () => probeServer();
+    return false;
+  }
+
+  async function loadFromServer() {
+    const card = $('wcard-server'), status = $('wcard-server-status');
+    card.classList.remove('active','err'); card.classList.add('checking');
+    status.style.color = 'var(--yellow)'; status.textContent = '⏳ Loading…';
+    try {
+      const r = await fetch('http://localhost:3001/api/source');
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      const text = await r.text();
+      card.classList.remove('checking'); card.classList.add('active');
+      status.style.color = 'var(--green)'; status.textContent = '✓ Loaded from server';
+      loadFile(text);
+      dismiss();
+    } catch(e) {
+      card.classList.remove('checking'); card.classList.add('err');
+      status.style.color = 'var(--red)'; status.textContent = '✗ Load failed: ' + e.message;
+    }
+  }
+
+  $('wcard-server').addEventListener('click', () => {
+    if ($('wcard-server').classList.contains('active')) loadFromServer();
+    else probeServer();
+  });
+
+  // Auto-probe on load
+  probeServer().then(up => { if (up) { /* ready, user clicks to load */ } });
+
+})();
 
 // Pre-fill ID from last selected map node when switching to API tab
 document.querySelector('[data-tab="api"]').addEventListener('click', () => {
