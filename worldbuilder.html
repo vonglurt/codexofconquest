@@ -402,6 +402,26 @@ select.fi{appearance:none;}
         <button class="btn primary" id="btn-skill-check" style="width:100%;margin-top:8px">Roll Skill Check</button>
         <div id="sc-result" style="margin-top:8px;font-size:13px;text-align:center;color:var(--muted)"></div>
       </div>
+      <!-- ── 🪣 Yugurt Lake Easter Egg ── -->
+      <div style="border-top:1px solid var(--border);padding-top:12px">
+        <div style="display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none" id="fish-sim-toggle">
+          <span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em">🪣 Yugurt Lake Fishing Sim</span>
+          <span id="fish-sim-chevron" style="font-size:11px;color:var(--muted)">▶</span>
+        </div>
+        <div id="fish-sim-body" style="display:none;margin-top:10px">
+          <!-- Setup row -->
+          <div id="fish-row-setup" style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:8px">
+            <div><div class="fl">DEX mod</div><input id="fs-dex" type="number" class="fi" value="1" style="text-align:center"></div>
+            <div><div class="fl">Bait Catch</div><input id="fs-catch" type="number" class="fi" value="0" style="text-align:center"></div>
+            <div><div class="fl">Bait Type</div><input id="fs-type" type="number" class="fi" value="0" style="text-align:center"></div>
+            <div><div class="fl">Luck mod</div><input id="fs-luck" type="number" class="fi" value="0" style="text-align:center"></div>
+            <div><div class="fl">Rod bonus</div><input id="fs-rod" type="number" class="fi" value="0" style="text-align:center"></div>
+          </div>
+          <button class="btn primary" id="btn-fs-start" style="width:100%;margin-bottom:10px">🎣 Cast Line</button>
+          <div id="fish-sim-steps"></div>
+        </div>
+      </div>
+
       <div>
         <div style="font-size:11px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em">History</div>
         <div class="dice-history" id="dice-history"></div>
@@ -426,6 +446,8 @@ select.fi{appearance:none;}
           <option value="npc">npc</option>
           <option value="monster">monster</option>
           <option value="terrain">terrain</option>
+          <option value="fish">fish</option>
+          <option value="lake-magic">lake-magic</option>
           <option value="schema">schema</option>
         </select>
       </div>
@@ -510,6 +532,7 @@ const WBAPI = {
   // Raw parsed objects
   nodeMap: {}, nodeCoords: {}, questDb: {}, monsterPool: {},
   monsterDrops: {}, worldDb: {}, birkaNpcs: {},
+  fishPool: [], nightFishPool: [], lakeMagicDb: {},
   // Indexes
   _terrainToMonsters: {},   // terrainKey → [monsterKey]
   _monsterToTerrains: {},   // monsterKey → [terrainKey]
@@ -629,6 +652,39 @@ const WBAPI = {
       catch(e) { console.warn(name + ':', e.message); return {}; }
     };
 
+    // Array literal extractor — tracks [ ] depth, skips // and /* */ comments
+    const extractArr = (block, name) => {
+      if (!block) return null;
+      const re = new RegExp(`(?:const|let|var)\\s+${name}\\s*=\\s*\\[`);
+      const pos = block.search(re);
+      if (pos === -1) return null;
+      const bracketOffset = block.slice(pos).indexOf('[');
+      if (bracketOffset === -1) return null;
+      let i = pos + bracketOffset, depth = 0, inStr = null, j = i;
+      while (j < block.length) {
+        const c = block[j];
+        if (inStr) {
+          if (c === '\\' && inStr !== '`') { j += 2; continue; }
+          if (c === inStr) inStr = null;
+        } else if (c === '/' && block[j+1] === '/') {
+          while (j < block.length && block[j] !== '\n') j++;
+          continue;
+        } else if (c === '/' && block[j+1] === '*') {
+          j += 2; while (j < block.length && !(block[j] === '*' && block[j+1] === '/')) j++;
+          j += 2; continue;
+        } else if (c === '"' || c === "'" || c === '`') {
+          inStr = c;
+        } else if (c === '[') { depth++; }
+        else if (c === ']') { depth--; if (depth === 0) return block.slice(i, j + 1); }
+        j++;
+      }
+      return null;
+    };
+    const parseArr = (block, name) => {
+      const arr = extractArr(block, name); if (!arr) return [];
+      try { return new Function('return ' + arr)(); } catch(e) { return []; }
+    };
+
     // Eval after stripping function values (QUEST_DB, BIRKA_NPC)
     const parseSanitized = (block, name) => {
       const obj = extractObj(block, name); if (!obj) return {};
@@ -650,12 +706,19 @@ const WBAPI = {
     this._rawQuestSrc = qSrc || '';
     this.questDb = parseSanitized(qSrc, 'QUEST_DB');
 
+    const fishSrc = extr(`// ${A}FISH_DB:START ◆◆◆`, `// ${A}FISH_DB:END ◆◆◆`);
+    this.fishPool      = parseArr(fishSrc, 'FISH_POOL');
+    this.nightFishPool = parseArr(fishSrc, 'NIGHT_FISH_POOL');
+    this.lakeMagicDb   = parseSimple(extr(`// ${A}LAKE_MAGIC:START ◆◆◆`, `// ${A}LAKE_MAGIC:END ◆◆◆`), 'LAKE_MAGIC_DB');
+
     console.log('[WBAPI] monsters:', Object.keys(this.monsterPool).length,
       '| drops:', Object.keys(this.monsterDrops).length,
       '| terrains:', Object.keys(this.worldDb).length,
       '| nodes:', Object.keys(this.nodeMap).length,
       '| quests:', Object.keys(this.questDb).length,
-      '| npcs:', Object.keys(this.birkaNpcs).length);
+      '| npcs:', Object.keys(this.birkaNpcs).length,
+      '| fish:', this.fishPool.length + this.nightFishPool.length,
+      '| lake-magic:', Object.keys(this.lakeMagicDb).length);
 
     this._buildIndexes();
     this.loaded = true;
@@ -955,6 +1018,33 @@ const WBAPI = {
         quests:   WBAPI.quests.byNode(key),
         npcs:     WBAPI.npcs.byNode(key),
       };
+    },
+  },
+
+  fish: {
+    all() {
+      const day   = WBAPI.fishPool.map(f => ({...f, isNight:false}));
+      const night = WBAPI.nightFishPool.map(f => ({...f, isNight:true}));
+      return [...day, ...night].sort((a,b) => a.rank - b.rank);
+    },
+    get(keyOrName) {
+      const all = [...WBAPI.fishPool, ...WBAPI.nightFishPool];
+      const found = all.find(f => f.key === keyOrName) ||
+                    all.find(f => f.name && f.name.toLowerCase() === String(keyOrName).toLowerCase());
+      if (!found) return null;
+      const isNight = WBAPI.nightFishPool.some(f => f.key === found.key);
+      return { ...found, isNight, monster: WBAPI.monsterPool[found.key] || null };
+    },
+  },
+
+  'lake-magic': {
+    all() { return Object.entries(WBAPI.lakeMagicDb).map(([k,v]) => ({...v, key:k})); },
+    get(keyOrName) {
+      const byKey = WBAPI.lakeMagicDb[keyOrName];
+      if (byKey) return {...byKey, key:keyOrName};
+      const entry = Object.entries(WBAPI.lakeMagicDb)
+        .find(([,v]) => v.name && v.name.toLowerCase() === String(keyOrName).toLowerCase());
+      return entry ? {...entry[1], key:entry[0]} : null;
     },
   },
 
@@ -2059,6 +2149,281 @@ $('btn-skill-check').addEventListener('click',()=>{
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
+// FISHING SIM (Easter Egg — Yugurt Lake)
+// Mirrors fishing mechanics from roll2hit-v3.html §Fishing
+// ═══════════════════════════════════════════════════════════════════════════
+(()=>{
+  const FS_API = 'http://localhost:3001/api';
+  const fsMod  = id => parseInt(document.getElementById(id).value) || 0;
+  const $$     = id => document.getElementById(id);
+  const d20    = () => Math.ceil(Math.random() * 20);
+  const sgn    = n => (n >= 0 ? '+' : '') + n;
+  const RC     = { common:'#aaa', rare:'#60b0e0', enchanted:'#a060e0', golden:'#e0b040', legendary:'#e04040' };
+
+  // ── Cast quality flavor table (index = total, 0–25, clamped) ──
+  const CAST_FLAVOR = [
+    { adverb:'smellily',          sentence:'The bait hits the water upside-down and bobs to the surface like it has given up entirely.' },
+    { adverb:'baligerently',      sentence:'You nearly hook yourself. The line screams into the wrong part of the lake.' },
+    { adverb:'goofily',           sentence:'You trip mid-swing and the bait plops into the shallows with a wet smack.' },
+    { adverb:'chaotically',       sentence:'The rod bends in three directions at once. Something splashes somewhere distant.' },
+    { adverb:'sloppily',          sentence:'The line snaps sideways in a wet arc. A cluster of frogs scatter in protest.' },
+    { adverb:'jerkily',           sentence:'The cast jerks mid-arc and drops embarrassingly close to the bank.' },
+    { adverb:'wobbly',            sentence:'The line wobbles through the air and lands in a graceless tangle.' },
+    { adverb:'shortly',           sentence:'You fall just short of the mark. The current pulls the bait sideways into shadow.' },
+    { adverb:'badly',             sentence:'A passable attempt — but the bait drifts into the wrong current entirely.' },
+    { adverb:'roughly',           sentence:'The cast lacks finesse, but the bait lands somewhere a creature might notice.' },
+    { adverb:'stiffly',           sentence:'A stiff cast, serviceable at best. The line settles near the shade of the far bank.' },
+    { adverb:'nobbily',           sentence:'Blocky, stiff, a little nobby — but the bait lands just ahead of a promising shadow.' },
+    { adverb:'decently',          sentence:'A clean, ordinary cast. The line settles exactly where it should. Twelve is twelve.' },
+    { adverb:'sternly',           sentence:'You cast with grim precision. The line does not argue. It goes where it is told.' },
+    { adverb:'capably',           sentence:'The bait lands in good position near the drop-off, where bigger things tend to lurk.' },
+    { adverb:'cleanly',           sentence:'The rod snaps forward and the line arcs cleanly over open water. Solid work.' },
+    { adverb:'on point',          sentence:'Right on the mark. The bait kisses the surface without a ripple. Something below takes note.' },
+    { adverb:'sharply',           sentence:'The line sings through the air and lands exactly where you intended. Every time.' },
+    { adverb:'fancily',           sentence:'A theatrical flourish of the wrist and the bait curves into the deep zone like it belongs there.' },
+    { adverb:'elegantly',         sentence:'A smooth arc — the bait touches down as if invited by the water. The lake accepts the offering.' },
+    { adverb:'sinnisterly',       sentence:'Something in that cast was too perfect. The dark water stirs. You are not alone out here.' },
+    { adverb:'epically',          sentence:'The line traces an epic parabola that draws the attention of passing birds and older things beneath.' },
+    { adverb:'ornately',          sentence:'The cast draws a sweeping calligraphy across the sky before settling into the deep with purpose.' },
+    { adverb:'flawlessly',        sentence:'A flawless arc. Every angler within eyeshot stops what they are doing. Even the herons look.' },
+    { adverb:'divinely',          sentence:'The bait lands in the exact center of the deepest eddy. Fate leans over the rail to watch.' },
+    { adverb:'with divine fury',  sentence:'The universe itself acknowledged this cast. The surface of the lake reflects stars it should not be able to see.' },
+  ];
+  const castFlav = t => CAST_FLAVOR[Math.min(Math.max(t, 0), 25)];
+
+  // ── Catch flavor by size ──
+  const CATCH_FLAVOR = {
+    nothing:    'The water holds its breath. Nothing stirs below. The bait drifts in silence.',
+    small:      'Something small and quick circles the bait — cautious, darting, not yet committed.',
+    medium:     'A shadow moves below. Medium-sized. Deliberate. It has been here before.',
+    large:      'The line twitches hard. Whatever took notice is larger than expected and coming closer.',
+    very_large: 'The rod bends. The reel tightens. Whatever this is, it is not small and it is not afraid of you.',
+    legendary:  'The lake goes silent. Every ripple stops. Then the water beneath you erupts.',
+  };
+
+  // ── Rarity flavor ──
+  const RARITY_FLAVOR = {
+    common:    'An ordinary catch — but an honest one. Yours.',
+    rare:      'Something you do not see every day surfaces from the deep.',
+    enchanted: 'There is a faint shimmer on the scales. Something about it is not entirely natural.',
+    golden:    'It gleams even in shadow. The light bends around it strangely.',
+    legendary: 'You will tell this story for the rest of your life. People will not believe you.',
+  };
+
+  // ── shared state across steps ──
+  let FS = {};
+
+  function fsReset(){
+    $$('fish-sim-steps').innerHTML = '';
+    $$('btn-fs-start').disabled = false;
+    $$('btn-fs-start').textContent = '🎣 Cast Line';
+    FS = {};
+  }
+
+  // Append a card row; returns { card, resultEl, rollBtn }
+  function fsCard(phaseLabel, formulaHtml, thresholdHtml){
+    const card = document.createElement('div');
+    card.style.cssText = 'border:1px solid var(--border);border-radius:6px;padding:10px 12px;margin-bottom:6px;font-size:12px;';
+
+    const hd = document.createElement('div');
+    hd.style.cssText = 'font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px;font-weight:700;';
+    hd.textContent = phaseLabel;
+
+    const formula = document.createElement('div');
+    formula.style.cssText = 'color:var(--text);margin-bottom:6px;line-height:1.6;';
+    formula.innerHTML = formulaHtml;
+
+    const thresh = document.createElement('div');
+    thresh.style.cssText = 'color:var(--muted);font-size:11px;margin-bottom:8px;line-height:1.7;';
+    thresh.innerHTML = thresholdHtml;
+
+    const rollBtn = document.createElement('button');
+    rollBtn.className = 'btn primary';
+    rollBtn.style.cssText = 'width:100%;font-size:13px;letter-spacing:.03em;';
+    rollBtn.textContent = '🎲 Roll d20';
+
+    const resultEl = document.createElement('div');
+    resultEl.style.cssText = 'margin-top:8px;font-size:13px;display:none;';
+
+    card.append(hd, formula, thresh, rollBtn, resultEl);
+    $$('fish-sim-steps').appendChild(card);
+    card.scrollIntoView({ behavior:'smooth', block:'nearest' });
+    return { card, resultEl, rollBtn };
+  }
+
+  // ── Phase 1 — Cast ──
+  function showPhase1(){
+    const { dexMod } = FS;
+    const { resultEl, rollBtn } = fsCard(
+      'Phase 1 — Cast  (DEX d20)',
+      `Formula: <b>d20 + DEX mod</b><br>
+       Your DEX mod: <b>${sgn(dexMod)}</b>`,
+      `0–11 → Clumsy cast <span style="color:var(--red)">−2</span> to catch<br>
+       12–16 → Clean cast <span style="color:var(--accent)">+0</span><br>
+       17–25 → Perfect cast <span style="color:var(--green)">+2</span>`
+    );
+    rollBtn.onclick = () => {
+      const die = d20(), total = die + dexMod;
+      const castMod  = total < 12 ? -2 : total >= 17 ? 2 : 0;
+      const modColor = castMod < 0 ? 'var(--red)' : castMod > 0 ? 'var(--green)' : 'var(--accent)';
+      const modLabel = castMod < 0 ? '−2' : castMod > 0 ? '+2' : '+0';
+      const flav = castFlav(total);
+      resultEl.innerHTML =
+        `d20 <b>${die}</b> ${sgn(dexMod)} DEX = <b>${total}</b> → cast mod <b style="color:${modColor}">${modLabel}</b><br>
+         <span style="font-style:italic;color:var(--muted);font-size:11px;line-height:1.7">
+           You cast your line <b style="color:${modColor}">${flav.adverb}</b>. ${flav.sentence}
+         </span>`;
+      resultEl.style.display = '';
+      rollBtn.disabled = true; rollBtn.textContent = `Rolled ${die}`;
+      FS.castMod = castMod; FS.castAdverb = flav.adverb;
+      showPhase2();
+    };
+  }
+
+  // ── Phase 2 — Catch ──
+  function showPhase2(){
+    const { catchMod, castMod, rodBonus } = FS;
+    const parts = [`d20`, `Bait Catch <b>${sgn(catchMod)}</b>`, `Cast mod <b>${sgn(castMod)}</b>`];
+    if (rodBonus) parts.push(`Rod bonus <b>${sgn(rodBonus)}</b>`);
+    const { resultEl, rollBtn } = fsCard(
+      'Phase 2 — Catch Roll  (d20)',
+      `Formula: <b>${parts.join(' + ')}</b>`,
+      `≤ 5 → Nothing bites<br>
+       6–10 → Small 🐟<br>
+       11–16 → Medium 🐠<br>
+       17–19 → Large 🐡<br>
+       20 → Very Large 🦈<br>
+       21+ → <b>Legendary</b> 💀`
+    );
+    rollBtn.onclick = () => {
+      const die = d20();
+      const total = die + catchMod + castMod + rodBonus;
+      const SIZES = { small:'Small 🐟', medium:'Medium 🐠', large:'Large 🐡', very_large:'Very Large 🦈', legendary:'<b>LEGENDARY</b> 💀' };
+      const sizeKey = total <= 5 ? null : total <= 10 ? 'small' : total <= 16 ? 'medium' : total <= 19 ? 'large' : total === 20 ? 'very_large' : 'legendary';
+      const mathLine = `d20 <b>${die}</b> ${sgn(catchMod)} Catch ${sgn(castMod)} Cast${rodBonus ? ` ${sgn(rodBonus)} Rod` : ''} = <b>${total}</b>`;
+      const flavorKey = sizeKey || 'nothing';
+      const flavor = CATCH_FLAVOR[flavorKey];
+      if (!sizeKey) {
+        resultEl.innerHTML =
+          `${mathLine} → <span style="color:var(--muted)">Nothing bites.</span><br>
+           <span style="font-style:italic;color:var(--muted);font-size:11px;line-height:1.7">${flavor}</span>`;
+        resultEl.style.display = ''; rollBtn.disabled = true; rollBtn.textContent = `Rolled ${die}`;
+        const out = document.createElement('div');
+        out.style.cssText = 'margin-top:6px;font-size:11px;color:var(--muted);text-align:center;';
+        out.textContent = 'The water is still. Cast again?';
+        $$('fish-sim-steps').appendChild(out);
+        $$('btn-fs-start').disabled = false; $$('btn-fs-start').textContent = '🎣 Cast Again';
+        return;
+      }
+      resultEl.innerHTML =
+        `${mathLine} → <b style="font-size:14px">${SIZES[sizeKey]}</b><br>
+         <span style="font-style:italic;color:var(--muted);font-size:11px;line-height:1.7">${flavor}</span>`;
+      resultEl.style.display = ''; rollBtn.disabled = true; rollBtn.textContent = `Rolled ${die}`;
+      FS.sizeKey = sizeKey; FS.sizeLabel = SIZES[sizeKey];
+      showPhase3();
+    };
+  }
+
+  // ── Phase 3 — Type ──
+  function showPhase3(){
+    const { typeMod, luckMod } = FS;
+    const { resultEl, rollBtn } = fsCard(
+      'Phase 3 — Type Roll  (d20)',
+      `Formula: <b>d20 + Bait Type ${sgn(typeMod)} + Luck mod ${sgn(luckMod)}</b>`,
+      `≤ 5 → <span style="color:${RC.common}">Common</span><br>
+       6–10 → <span style="color:${RC.rare}">Rare</span><br>
+       11–15 → <span style="color:${RC.enchanted}">Enchanted</span><br>
+       16–18 → <span style="color:${RC.golden}">Golden</span><br>
+       19+ → <span style="color:${RC.legendary}">Legendary</span>`
+    );
+    rollBtn.onclick = async () => {
+      const die = d20(), total = die + typeMod + luckMod;
+      const rarity = total <= 5 ? 'common' : total <= 10 ? 'rare' : total <= 15 ? 'enchanted' : total <= 18 ? 'golden' : 'legendary';
+      const RL = { common:'Common', rare:'Rare', enchanted:'Enchanted', golden:'Golden', legendary:'Legendary' };
+      resultEl.innerHTML =
+        `d20 <b>${die}</b> ${sgn(typeMod)} Type ${sgn(luckMod)} Luck = <b>${total}</b> → <span style="color:${RC[rarity]};font-size:14px"><b>${RL[rarity]}</b></span><br>
+         <span style="font-style:italic;color:var(--muted);font-size:11px;line-height:1.7">${RARITY_FLAVOR[rarity]}</span>`;
+      resultEl.style.display = ''; rollBtn.disabled = true; rollBtn.textContent = `Rolled ${die}`;
+      FS.rarity = rarity; FS.rarityLabel = RL[rarity];
+      await showResult();
+    };
+  }
+
+  // ── Final result card ──
+  async function showResult(){
+    const TIER_RANKS = { small:[1,7], medium:[4,12], large:[8,16], very_large:[12,18], legendary:[16,20] };
+    const [mn, mx] = TIER_RANKS[FS.sizeKey];
+    let fishData = null;
+    try {
+      const candidates = [];
+      const resp = await fetch(`${FS_API}/fish`);
+      if (resp.ok) {
+        const all = (await resp.json()).fish || [];
+        all.filter(f => f.rank >= mn && f.rank <= mx && !f.isNight).forEach(f => candidates.push(f));
+      }
+      if (candidates.length) {
+        const picked = candidates[Math.floor(Math.random() * candidates.length)];
+        const det = await fetch(`${FS_API}/fish/${picked.key}`);
+        if (det.ok) fishData = (await det.json());
+      }
+    } catch(e){}
+
+    const f    = fishData?.fish;
+    const mon  = fishData?.connections?.monster;
+
+    // Madlib summary sentence
+    const adv = FS.castAdverb || 'decently';
+    const madlib = f
+      ? `You cast <b>${adv}</b> and pulled a <span style="color:${RC[FS.rarity]}">${FS.rarityLabel.toLowerCase()}</span> ${FS.sizeKey.replace('_',' ')} creature from Yugurt Lake — the <b>${f.name}</b>.`
+      : `You cast <b>${adv}</b> and something ${FS.sizeKey.replace('_',' ')} and <span style="color:${RC[FS.rarity]}">${FS.rarityLabel.toLowerCase()}</span> took your bait. It remains nameless.`;
+
+    const fishBlock = f
+      ? `<div style="margin-top:8px;padding:8px;background:var(--bg3);border-radius:5px;font-size:11px;line-height:1.8;">
+           <div style="font-size:13px;font-weight:700;">${f.name} <span style="color:var(--muted);font-size:11px;font-weight:400;">rank ${f.rank}</span></div>
+           ${mon ? `<div style="color:var(--muted);">AC ${mon.ac} &nbsp;·&nbsp; HP ${mon.hp} &nbsp;·&nbsp; ATK +${mon.atk} &nbsp;·&nbsp; ${mon.tier}</div>` : ''}
+           <div style="color:var(--muted);margin-top:3px;">${f.desc || ''}</div>
+         </div>`
+      : '';
+
+    const card = document.createElement('div');
+    card.style.cssText = 'border:2px solid var(--accent);border-radius:6px;padding:12px;margin-bottom:6px;';
+    card.innerHTML =
+      `<div style="font-size:14px;font-weight:700;margin-bottom:6px;">
+         🎣 ${FS.sizeLabel} &nbsp;/&nbsp; <span style="color:${RC[FS.rarity]}">${FS.rarityLabel}</span>
+       </div>
+       <div style="font-size:12px;color:var(--text);line-height:1.7;margin-bottom:4px;">${madlib}</div>
+       ${fishBlock}`;
+    $$('fish-sim-steps').appendChild(card);
+    card.scrollIntoView({ behavior:'smooth', block:'nearest' });
+
+    $$('btn-fs-start').disabled = false;
+    $$('btn-fs-start').textContent = '🎣 Cast Again';
+  }
+
+  // ── Start ──
+  $$('btn-fs-start').addEventListener('click', () => {
+    fsReset();
+    $$('btn-fs-start').disabled = true;
+    FS = {
+      dexMod:   fsMod('fs-dex'),
+      catchMod: fsMod('fs-catch'),
+      typeMod:  fsMod('fs-type'),
+      luckMod:  fsMod('fs-luck'),
+      rodBonus: fsMod('fs-rod'),
+    };
+    showPhase1();
+  });
+
+  $$('fish-sim-toggle').addEventListener('click', ()=>{
+    const body = $$('fish-sim-body');
+    const chevron = $$('fish-sim-chevron');
+    const open = body.style.display !== 'none';
+    body.style.display = open ? 'none' : 'block';
+    chevron.textContent = open ? '▶' : '▼';
+  });
+})();
+
+// ═══════════════════════════════════════════════════════════════════════════
 // File loading + tab routing
 // ═══════════════════════════════════════════════════════════════════════════
 function readFile(file){
@@ -2173,7 +2538,8 @@ function apiOut(data, cls) {
 
 function apiGetNs(type) {
   return { location:WBAPI.location, node:WBAPI.nodes, quest:WBAPI.quests,
-           npc:WBAPI.npcs, monster:WBAPI.monsters, terrain:WBAPI.worlds }[type];
+           npc:WBAPI.npcs, monster:WBAPI.monsters, terrain:WBAPI.worlds,
+           fish:WBAPI.fish, 'lake-magic':WBAPI['lake-magic'] }[type];
 }
 
 $('btn-api-get').addEventListener('click', async () => {
@@ -2194,12 +2560,13 @@ $('btn-api-get').addEventListener('click', async () => {
     return;
   }
 
-  if (!id) return apiOut('Enter an ID or name.', 'err');
+  const listTypes = new Set(['fish', 'lake-magic']);
+  if (!id && !listTypes.has(type)) return apiOut('Enter an ID or name.', 'err');
 
   if (SERVER.active) {
     try {
       const path = type === 'location' ? `location/${encodeURIComponent(id)}`
-                 : `${type}/${encodeURIComponent(id)}`;
+                 : id ? `${type}/${encodeURIComponent(id)}` : type;
       const r = await fetch(`${SERVER.url}/api/${path}`);
       const d = await r.json();
       apiOut(d, r.ok ? 'ok' : 'err');
@@ -2207,6 +2574,10 @@ $('btn-api-get').addEventListener('click', async () => {
     return;
   }
 
+  if (!id && listTypes.has(type)) {
+    apiOut(apiGetNs(type)?.all() ?? [], 'ok');
+    return;
+  }
   const result = apiGetNs(type)?.get(id);
   if (!result) return apiOut(`"${id}" not found in ${type}s.`, 'err');
   apiOut(result, 'ok');

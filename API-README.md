@@ -445,7 +445,301 @@ curl -X POST .../api/save   # → roll2hit-v3-20260529-162839.html  (has BOTH re
 
 ---
 
-## Field Strategies
+## Use Case: Implementing a Quest Chain One Story at a Time
+
+> **Scenario:** You are writing the Paul arc — a 12-quest escort chain across 13 nodes. Each quest has a different mechanic (STR check, WIS check, side event, skill block). You want to implement it one quest at a time, verify each one with a GET, then save the game file. This is the API-driven authoring workflow.
+
+---
+
+### Step 0 — Verify the starting node exists
+
+Before adding any quests, confirm the target node is in the game and has the terrain you expect:
+
+```bash
+curl http://localhost:3001/api/location/KS
+```
+
+```json
+{
+  "entity": { "node": { "code": "KS", "label": "Damascus — Lower City", "act": 4, "name": "damascus" } },
+  "connections": { "quests": [...], "npcs": [...], "monsters": [...] },
+  "_meta": { "canDelete": false }
+}
+```
+
+If the node doesn't exist yet, add it first:
+
+```bash
+curl -X PUT http://localhost:3001/api/node/KS \
+  -H 'Content-Type: application/json' \
+  -d '{"label":"Damascus — Lower City","name":"damascus","act":4}'
+```
+
+---
+
+### Step 1 — Add a state flag
+
+The first quest needs a completion flag. Add it to `_S_DEFAULTS` in the game file manually (WBAPI does not yet write `_S_DEFAULTS` — this is the one field that stays a direct edit). Flag naming convention: `camelCase`, scoped to the arc, descriptive.
+
+```
+escapedDamascus: false,   // added to _S_DEFAULTS manually
+```
+
+After adding the flag, reload the server:
+```bash
+# Restart wbapi-server.js against the updated game file
+ROLL2HIT_FILE=roll2hit-v3.html ./start-wbapi.sh
+```
+
+---
+
+### Step 2 — Inspect the schema before writing the quest
+
+```bash
+curl http://localhost:3001/api/schema/quest
+```
+
+Returns the canonical field list for quest objects — required fields, editable fields, types. Use this to avoid typos in field names before writing the quest object.
+
+```json
+{
+  "_section": "QUEST_DB",
+  "fields": {
+    "id":           { "type": "string",   "required": true  },
+    "type":         { "type": "string",   "required": true,  "values": ["side","skill_check","epic","main"] },
+    "title":        { "type": "string",   "required": true,  "editable": true },
+    "desc":         { "type": "string",   "required": true,  "editable": true },
+    "hint":         { "type": "string",   "required": true,  "editable": true },
+    "activateNode": { "type": "string",   "required": true                    },
+    "checkAbility": { "type": "string",   "required": false, "note": "skill_check only" },
+    "checkDC":      { "type": "number",   "required": false, "note": "skill_check only" },
+    ...
+  }
+}
+```
+
+---
+
+### Step 3 — Add the first quest
+
+The basket escape quest. This is a skill_check (STR Athletics DC 12) at node KS. The `POST /api/quest` endpoint creates a new quest object in `QUEST_DB`:
+
+```bash
+curl -X POST http://localhost:3001/api/quest \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "id": "quest_basket_damascus",
+    "type": "skill_check",
+    "title": "Over the Wall",
+    "desc": "The magistrate has issued a detention order. The gate is watched. The wall is not. The rope is knotted cloth — seven knots, tested against the window frame.",
+    "hint": "Lower him over the wall. Hold the rope.",
+    "activateNode": "KS",
+    "activateCond": "anathSightRestored",
+    "checkAbility": "str",
+    "checkLabel": "Athletics",
+    "checkDC": 12,
+    "retryable": true,
+    "retryGateDays": 1,
+    "xpAward": 150,
+    "checkPassFlag": "escapedDamascus",
+    "vignetteText": "He gets in. He does not speak. You hold the rope.",
+    "passText": "Down. Controlled. The gate guard does not turn. The facts are accurate. They do not include the knots.",
+    "failText": "The rope shifts. You pull back. The window remains. Tomorrow.",
+    "disposition": "Through a window in the wall his disciples lowered him in a basket."
+  }'
+```
+
+Response:
+
+```json
+{ "ok": true, "key": "quest_basket_damascus", "action": "created" }
+```
+
+---
+
+### Step 4 — Verify the quest is readable
+
+```bash
+curl http://localhost:3001/api/quest/quest_basket_damascus
+```
+
+Returns the full quest object. Check that `activateNode`, `checkAbility`, `checkDC`, and `checkPassFlag` are all set correctly before proceeding.
+
+---
+
+### Step 5 — Edit quest text without rewriting the whole quest
+
+Once a quest exists, individual fields can be patched:
+
+```bash
+curl -X PUT http://localhost:3001/api/quest/quest_basket_damascus \
+  -H 'Content-Type: application/json' \
+  -d '{"passText": "Down. Controlled. The last three feet you lower slowly because you can hear him breathing. He lands and crouches and then he is moving. The gate guard does not turn."}'
+```
+
+```json
+{
+  "ok": true,
+  "key": "quest_basket_damascus",
+  "fields": [{ "field": "passText", "strategy": "editField", "ok": true }]
+}
+```
+
+The `editField` strategy patches only the `passText` value in `_rawSrc` — the surrounding quest object (including function bodies in other fields) is untouched.
+
+---
+
+### Step 6 — Repeat for each quest in the chain
+
+Each quest is one `POST /api/quest` call. The chain order is:
+
+```
+quest_basket_damascus  →  quest_anath  →  quest_barnach_vouches  →  quest_ezzir
+→  quest_governor_cyprus  →  quest_lame_lystra  →  quest_stoning_lystra
+→  quest_prison_phillam  →  quest_areopagus  →  quest_ephesus_riot
+→  quest_corinth_letters  →  quest_rome_arrest
+```
+
+Each quest's `activateCond` references the `checkPassFlag` of the preceding quest. The chain is verified after each addition with `GET /api/quest/{id}`.
+
+---
+
+### Step 7 — Verify the full chain with `chain`
+
+After adding all quests, run the chain query to confirm the dependency graph is correct:
+
+```bash
+curl http://localhost:3001/api/quest/quest_anath/chain
+```
+
+```json
+{
+  "upstream": ["quest_basket_damascus"],
+  "downstream": ["quest_barnach_vouches", "quest_hellenists_jerusalem"]
+}
+```
+
+If any quest appears in the wrong position, or a flag name is misspelled (which severs the chain), it will show up here as a disconnection.
+
+---
+
+### Step 8 — Save to a timestamped file
+
+```bash
+curl -X POST http://localhost:3001/api/save -H 'Content-Type: application/json' -d '{}'
+```
+
+```json
+{ "ok": true, "path": "/Users/.../roll2hit-v3-20260529-143012.html" }
+```
+
+Load the timestamped file to verify it renders correctly in the browser. The chain is now committed. The next session loads the timestamped file and continues from there.
+
+---
+
+### Pattern Summary — One Quest at a Time
+
+| Step | API call | What it verifies |
+|------|----------|-----------------|
+| 0 | `GET /location/{nodeCode}` | Node exists; terrain is correct |
+| 1 | Edit `_S_DEFAULTS` manually | State flag is registered |
+| 2 | `GET /schema/quest` | Field names before writing |
+| 3 | `POST /api/quest` | Quest created in QUEST_DB |
+| 4 | `GET /api/quest/{id}` | Quest is readable; all fields set |
+| 5 | `PUT /api/quest/{id}` | Patch text fields without full rewrite |
+| 6 | Repeat 3–5 | Add each quest in the chain |
+| 7 | `GET /api/quest/{id}/chain` | Dependency graph is connected |
+| 8 | `POST /api/save` | Commit to timestamped HTML |
+
+---
+
+## Use Case: Generic Mission Builder — Starting Location → Mission Type → Skill Check
+
+> **Scenario:** You want to create a repeatable pattern for new quest arcs. Starting at a node, you choose a sequence of mission types (hunt, escort, skill_check, collect, talk_chain). Each type has a canonical set of required fields and a matching skill check stat. The API validates each mission against the pattern before inserting it.
+
+---
+
+### Query 1 — What missions currently exist at a node?
+
+```bash
+curl http://localhost:3001/api/location/LT
+```
+
+The `connections.quests` array in the response shows every quest whose `activateNode` or `waypointNode` is `LT`. Before adding a new quest, confirm:
+- No other quest uses the same `checkPassFlag` you plan to use
+- The activation chain does not orphan an existing quest
+
+---
+
+### Query 2 — What mission types are valid here?
+
+Use the schema to get the canonical mission type list:
+
+```bash
+curl http://localhost:3001/api/schema/quest | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['fields']['type']['values'])"
+```
+
+```
+["side", "skill_check", "epic", "main"]
+```
+
+The operational class taxonomy (from `§WORLDBUILDER-02-B`) maps these to richer types:
+
+| API `type` | Operational class | Canonical stat | DC range |
+|-----------|------------------|----------------|----------|
+| `skill_check` | `hunt` | STR Athletics | 10–14 |
+| `skill_check` | `escort` | STR Athletics | 12–15 |
+| `skill_check` | `skill_check` | WIS/INT/CHA | 10–15 |
+| `skill_check` | `investigation` | INT Investigation | 12–16 |
+| `skill_check` | `survival` | CON Endurance | 12–16 |
+| `side` | `talk_chain` | No roll | — |
+| `side` | `collect` | No roll | — |
+| `side` | `lore_collect` | No roll | — |
+| `epic` | `epic` | Multiple | Varies |
+| `main` | `gate_pass` | No roll | — |
+
+---
+
+### Query 3 — Build a three-quest escort chain at PL
+
+A three-quest escort chain at Philippi: meet the contact, secure the prison, depart.
+
+**Mission 1: meet the contact (talk_chain / side)**
+```bash
+curl -X POST http://localhost:3001/api/quest \
+  -d '{"id":"quest_pl_01","type":"side","title":"The Bridge Meeting","activateNode":"PL","checkPassFlag":"plContactMet","desc":"..."}'
+```
+
+**Mission 2: secure the prison (skill_check / escort, WIS DC 12)**
+```bash
+curl -X POST http://localhost:3001/api/quest \
+  -d '{"id":"quest_pl_02","type":"skill_check","title":"Seven Stairs, Then Five","activateNode":"PL","activateCond":"plContactMet","checkAbility":"wis","checkLabel":"Insight","checkDC":12,"checkPassFlag":"plPrisonSecured","desc":"..."}'
+```
+
+**Mission 3: depart (gate_pass / side)**
+```bash
+curl -X POST http://localhost:3001/api/quest \
+  -d '{"id":"quest_pl_03","type":"side","title":"The Road East","activateNode":"PL","activateCond":"plPrisonSecured","checkPassFlag":"plDeparted","desc":"..."}'
+```
+
+Then verify the chain:
+```bash
+curl http://localhost:3001/api/quest/quest_pl_01/chain
+# upstream: [], downstream: [quest_pl_02, quest_pl_03]
+```
+
+---
+
+### Query 4 — Validate before saving
+
+After building the chain, run a GET on each quest and confirm:
+1. All `activateCond` flags exist in `_S_DEFAULTS` (manual check — WBAPI cannot query `_S_DEFAULTS` yet)
+2. All `checkPassFlag` values are unique (the server does not enforce this; check with `GET /api/quest/{flagName}` — if it returns a quest, the flag is taken)
+3. All `activateNode` values exist: `GET /api/node/{code}`
+
+These three checks are the pre-flight for any quest chain. After passing, `POST /api/save`.
+
+---
 
 The server applies two strategies for each PUT field:
 

@@ -7493,6 +7493,199 @@ One-click presets that pre-fill the field set for each proven template:
 
 ---
 
+## §EDITOR-02 — Generic Quest Chain Inserter: Mission Builder (📋 PLANNED)
+
+**Status:** 📋 PLANNED — written 2026-05-29  
+**Reference:** `API-README.md §Use Case: Generic Mission Builder`
+
+**What it is:** A repeatable API-driven workflow for inserting new quest arcs one mission at a time. Not a UI — a workflow pattern and a server-side extension that makes the pattern executable. The insight from the Paul arc implementation: every new arc is a sequence of these moves: check the node → add a state flag → verify the schema → POST the quest → GET it back → PUT any text corrections → check the chain → save. That sequence can be formalized.
+
+**Why now:** Without a pattern, each arc requires re-learning the API from scratch. With a pattern, a new arc is a checklist. The Paul arc was the first arc implemented this way — 12 quests, 13 nodes, each verified individually before the next was added. The pattern worked. It should be the standard method.
+
+---
+
+### §EDITOR-02-A. The Seven-Step Arc Insertion Protocol
+
+This is the canonical workflow for adding any quest chain via the API. It applies whether you are adding 2 quests or 20. The steps are invariant; the content changes.
+
+```
+Step 0:  GET /location/{startNode}         — node exists, terrain is correct
+Step 1:  Edit _S_DEFAULTS                  — register new flags (manual, one-time)
+Step 2:  GET /schema/quest                 — canonical field list before writing
+Step 3:  POST /api/quest                   — add one quest
+Step 4:  GET /api/quest/{id}              — verify quest is readable; all fields set
+Step 5:  PUT /api/quest/{id}              — patch text fields if needed (no full rewrite)
+Step 6:  Repeat steps 3–5 for each quest in the chain
+Step 7:  GET /api/quest/{anyId}/chain     — verify dependency graph is connected
+Step 8:  POST /api/save                   — commit to timestamped HTML
+```
+
+**One session per arc.** All POSTs and PUTs in the chain must happen in a single server session before Step 8. Each `save()` produces a new timestamped file. The next session loads that timestamped file as `ROLL2HIT_FILE`.
+
+---
+
+### §EDITOR-02-B. Mission Type → Canonical Field Template
+
+Every mission type has a minimum required field set. These are the templates. Copy, fill in the narrative fields (`desc`, `hint`, `vignetteText`, `passText`, `failText`, `disposition`), then POST.
+
+**Template: `talk_chain` (NPC conversation, no roll)**
+```json
+{
+  "id": "quest_{arc}_{nn}",
+  "type": "side",
+  "title": "...",
+  "desc": "...",
+  "hint": "...",
+  "activateNode": "{nodeCode}",
+  "activateCond": "{priorFlag}",
+  "checkPassFlag": "{arcFlag}",
+  "xpAward": 100,
+  "reward": 0
+}
+```
+
+**Template: `skill_check` (Fighter ability check)**
+```json
+{
+  "id": "quest_{arc}_{nn}",
+  "type": "skill_check",
+  "title": "...",
+  "desc": "...",
+  "hint": "...",
+  "activateNode": "{nodeCode}",
+  "activateCond": "{priorFlag}",
+  "checkAbility": "{str|dex|con|int|wis|cha}",
+  "checkLabel": "{Skill name}",
+  "checkDC": 12,
+  "retryable": false,
+  "xpAward": 150,
+  "vignetteText": "...",
+  "passText": "...",
+  "failText": "...",
+  "checkPassFlag": "{arcFlag}",
+  "disposition": "..."
+}
+```
+
+**Template: `hunt` (kill-count mission — uses `completeFn`)**
+```json
+{
+  "id": "quest_{arc}_{nn}",
+  "type": "side",
+  "title": "...",
+  "desc": "...",
+  "hint": "Kill {N} × {monsterKey} at {nodeCode}.",
+  "activateNode": "{nodeCode}",
+  "activateCond": "{priorFlag}",
+  "completeItems": [],
+  "checkPassFlag": "{arcFlag}",
+  "xpAward": 200,
+  "reward": 0
+}
+```
+*Note: `completeFn` (kill count check against S_story counter) cannot be posted via the API's current text fields — it requires a manual source edit for the JS closure. For kill-count quests, POST the non-function fields, then manually add the `completeFn` in the game file.*
+
+**Template: `escort` (companion travel — no roll, completion at destination)**
+```json
+{
+  "id": "quest_{arc}_{nn}",
+  "type": "side",
+  "title": "...",
+  "desc": "...",
+  "hint": "Reach {destinationNode} with {npcKey}.",
+  "activateNode": "{startNode}",
+  "waypointNode": "{destinationNode}",
+  "activateCond": "{priorFlag}",
+  "checkPassFlag": "{arcFlag}",
+  "xpAward": 150,
+  "reward": 0
+}
+```
+
+**Template: `collect` (item delivery)**
+```json
+{
+  "id": "quest_{arc}_{nn}",
+  "type": "side",
+  "title": "...",
+  "desc": "...",
+  "hint": "Bring {itemName} to {npcKey} at {nodeCode}.",
+  "activateNode": "{nodeCode}",
+  "waypointNode": "{deliveryNode}",
+  "activateCond": "{priorFlag}",
+  "completeItems": ["{itemName}"],
+  "checkPassFlag": "{arcFlag}",
+  "xpAward": 150,
+  "reward": 0
+}
+```
+
+---
+
+### §EDITOR-02-C. Pre-flight Checklist (run before POST /api/save)
+
+Before saving any quest chain, verify all three of these pass:
+
+1. **All `activateCond` flags exist in `_S_DEFAULTS`:**
+   - Grep the game file: `grep -o 'flagName: false' roll2hit-v3.html` (or `wbapi-cli.js` once `_S_DEFAULTS` is indexed)
+   - Every flag referenced in `activateCond` must be listed there
+
+2. **All `checkPassFlag` values are unique:**
+   - `GET /api/quest/{flagName}` — if it returns a quest, that flag name is taken by another quest
+   - Naming convention: `{arcPrefix}_{nodeCode}_{nn}` avoids collisions
+
+3. **All `activateNode` and `waypointNode` values exist:**
+   - `GET /api/node/{code}` for each node referenced in the chain
+
+4. **Chain is connected:**
+   - `GET /api/quest/{firstQuestId}/chain` — downstream array lists all expected quests
+
+---
+
+### §EDITOR-02-D. Needed API Extensions (not yet implemented)
+
+These additions to `wbapi-server.js` and `wbapi-core.js` are required to make §EDITOR-02 fully executable without manual file edits:
+
+- [ ] **`POST /api/quest`** — create a new quest object in QUEST_DB (currently only PUT/existing quests supported). Inserts between the QUEST_DB START/END anchors. Validates against `GET /api/schema/quest` before writing.
+
+- [ ] **`POST /api/node`** — create a new NODE_MAP entry. Currently only PUT/existing nodes is supported.
+
+- [ ] **`GET /api/quest/{id}/chain`** — expose the existing `WBAPI.quests.chain()` method as an HTTP endpoint (currently only available in the CLI).
+
+- [ ] **`GET /api/flags`** — list all flags currently in `_S_DEFAULTS`. Enables pre-flight check #1 without manual grep.
+
+- [ ] **`POST /api/flag`** — add a new flag to `_S_DEFAULTS` with a default value. Eliminates the only remaining manual edit step in the protocol.
+
+- [ ] **`GET /api/quest?node={code}`** — filter quests by `activateNode` (wrapper around `WBAPI.quests.byNode()`). Currently requires the full location GET.
+
+---
+
+### §EDITOR-02-E. Worldbuilder UI Integration
+
+Once §EDITOR-02-D extensions exist, the Mission Builder can be a tab in worldbuilder.html:
+
+```
+[ Mission Builder ]
+
+Starting node:  [ KS — Damascus ▾ ]
+Arc prefix:     [ paul_ ]
+
+Mission 1:  [ talk_chain ▾ ]  Title: [ The House on the Lower Road ]  Flag: [ anathSightRestored ]
+Mission 2:  [ skill_check ▾ ] Title: [ Over the Wall ]  Stat: [ STR ▾ ] DC: [ 12 ]  Flag: [ escapedDamascus ]
+Mission 3:  [ skill_check ▾ ] Title: [ Vouched For ]    Stat: [ CHA ▾ ] DC: [ 11 ]  Flag: [ barnachVouchedHR ]
+
+[ + Add Mission ]
+
+[ Preview Chain ]   [ Validate ]   [ POST All ]   [ Save ]
+```
+
+**Preview Chain** renders the full quest sequence in order with flag dependency arrows.  
+**Validate** runs the pre-flight checklist (§EDITOR-02-C) and shows pass/fail per check.  
+**POST All** sends each quest in sequence, stopping if any POST fails.  
+**Save** calls `POST /api/save` only if all POSTs succeeded.
+
+---
+
 ## §ARCH-01 — Quest API Architecture & Universal Mission Format (📋 PLANNED — Next Implementation Phase)
 
 **Lab Report:** `lab-report-quest-api-architecture.md`  
@@ -8302,3 +8495,199 @@ Every major implemented arc and every PLANNED arc was reviewed against the proje
 - **§DUNGEON-01 — Loop Heart choice room + Sacrifice Gates:** These are mechanically the most game-like sections. They fit thematically via "what you carry shapes what you find" (the sacrifice gate asks the player to give up something they value to advance). *Thematically coherent, mechanically legible.*
 
 **One gap:** No arc currently addresses the *restoration* side of witnessing. All grief resolutions are receipts (acknowledgment), not rebuilds. Fishmonger's Row does not rebuild. The Covenant Keeper ending names people, does not heal them. The §SPARK-01 chain does not undo the Inspector's lost years. This is structurally correct for the Chrétien register — but it means the world has no arc about what comes after witnessing. The Keel thread close (BACKLOG-B) is the natural candidate for this: if the Baltic survey data is recovered, something lost to institutional silence actually returns. *Suggestion: design the Keel closure arc explicitly as the "after witnessing" arc.*
+
+---
+
+## §MBIT-01 — Mission Bit Tokens: Physical Proof System (✅ Implemented 2026-05-29)
+
+### §MBIT-01-A. What Was Built
+
+Every skill-check quest that sets a `checkPassFlag` (or `checkFailFlag`) now also grants the player a carved bone token in inventory. The token is the physical, player-visible proof of a witnessed event.
+
+**Three new helpers added to roll2hit-v3.html (after `_hasItem`):**
+
+```javascript
+function _flagToLabel(f)
+// camelCase → "Title Case" — stoningEvent → "Stoning Event"
+
+function _grantMissionBit(flagName, label)
+// Sets S_story[flagName] = true  (backward-compatible boolean stays)
+// Pushes { name:'Label Token', icon:'🪬', type:'mission_bit', sell:0, flagRef:flagName } to inventory
+// Calls storyMsg('🪬 Token received: Label Token.')
+// Idempotent — does not double-grant if token already present
+
+function _takeMissionBit(flagName)
+// Sets S_story[flagName] = false
+// Removes token from inventory by flagRef
+// Calls storyMsg('🪬 Token returned: Label Token.')
+```
+
+**Wire-up in `_rollCeremonia`:**
+```
+checkPassFlag set:  S_story[flag] = true  →  _grantMissionBit(flag, q.bitLabel)
+checkFailFlag set:  S_story[flag] = true  →  _grantMissionBit(flag, q.bitLabel)
+```
+
+The boolean `S_story[flagName]` is still set, so all existing `activateCond: () => !!S_story.someFlag` conditions work unchanged.
+
+**Inventory display — section 8 "🪬 Mission Tokens":**
+- Compact chip grid (flex-wrap), one chip per token
+- Chip shows glyph icon + flag label (without the word "Token")
+- Chip tooltip (`title`) = full desc including the raw glyph code
+- `'mission_bit'` added to `knownTypes` so tokens don't also appear in "Trophies & Other"
+
+**Token object structure:**
+```javascript
+{
+  name:    'Stoning Event Token',          // _flagToLabel(flag) + ' Token'
+  icon:    '🪬',                            // carved ward — the glyph marker
+  type:    'mission_bit',
+  sell:    0,                               // non-sellable, always
+  desc:    'A carved bone token. Glyph: STONING_EVENT. Mark of a witnessed moment.',
+  flagRef: 'stoningEvent',                  // back-reference for _takeMissionBit
+}
+```
+
+**Optional quest field `bitLabel`:** If a quest sets `bitLabel: 'Basket Rope'`, the token is named "Basket Rope Token" instead of the auto-generated camelCase expansion.
+
+### §MBIT-01-B. How to Use
+
+Naming convention: token name = readable label + " Token". Default label is the camelCase flag expanded to Title Case. Override with `bitLabel` in the quest definition:
+
+```javascript
+quest_basket_damascus: {
+  ...
+  checkPassFlag: 'basketRopeComplete',
+  bitLabel: 'Basket Rope',              // → token named "Basket Rope Token"
+}
+```
+
+To take a token back (e.g. a consumed proof, a surrendered pass):
+```javascript
+onPass: () => { _takeMissionBit('conclavePass'); }
+```
+
+To test if a player holds a token (alternative to boolean):
+```javascript
+activateCond: () => _hasItem('Stoning Event Token')
+// or keep the boolean form — both work
+activateCond: () => !!S_story.stoningEvent
+```
+
+---
+
+## §MBIT-02 — Mission Bit Token Follow-Up Items
+
+### §MBIT-02-A. ✅ `bitLabel` added to all quest sites (2026-05-29)
+
+All `skill_check` quests with `checkPassFlag`/`checkFailFlag` now carry `bitLabel`. Full table of what was implemented:
+
+| questId | flag | bitLabel |
+|---------|------|----------|
+| `quest_muffat_01` | `muffatBerthReached` | `'Muffat Berth'` |
+| `quest_ezzir` | `ezzirConfronted` | `'Ezzir Standoff'` |
+| `quest_governor_cyprus` | `govCopperConverted` | `'Governor of Cyprus'` |
+| `quest_lame_lystra` | `lameManHealed` | `'Gate Healing'` |
+| `quest_stoning_lystra` | `stoningEvent` (pass+fail) | `'Lystra Stoning'` |
+| `quest_prison_phillam` | `phillippiJailerConverted` | `'Philippi Jailer'` |
+| `quest_areopagus` | `areopagusSpeech` | `'Areopagus Speech'` |
+| `quest_ephesus_riot` | `demetriusRiotEscaped` | `'Ephesus Riot'` |
+| `quest_basket_damascus` | `escapedDamascus` | `'Damascus Escape'` |
+| `quest_basket_damascus` onPass | `basketRopeComplete` | `'Basket Rope'` (via `_grantMissionBit`) |
+| `quest_aurel_tide` | `aurelTideRead` / fail:`betrayalThought` | `'Aurel Seal'` |
+| `quest_calice_bridge` | `caliceBridgeCrossed` / fail:`betrayalWord` | `'Calice Crossing'` |
+| `quest_mireille_ami` | `mireilleAmiNamed` / fail:`betrayalDeed` | `'Mireille Named'` |
+| `quest_solen_horizon` | `solenSoonRead` | `'Solen Truth'` |
+| `quest_sea_overseer` | `charmResisted` / fail:`seaOverseerMet` | `'Charm Resisted'` |
+| `quest_spark_smalt` | `smaltBefriended` | `'Smalt Befriended'` |
+
+Also cleaned up: `quest_stoning_lystra` now uses `checkFailFlag:'stoningEvent'` (both outcomes produce the token). Redundant `onPass` that just set the boolean removed. `quest_basket_damascus` `onPass` now calls `_grantMissionBit('basketRopeComplete','Basket Rope')` directly. `quest_governor_cyprus` empty `onPass` removed.
+
+`_grantMissionBit` updated to store `day: S_story.day` on each token at grant time — enables future timeline rendering.
+
+### §MBIT-02-B. ✅ `consumeItem` on KEY_EVENTS (2026-05-29)
+
+KEY_EVENTS that physically surrender the item now carry `consumeItem:true`. `_rollKeyEvent` filters the item from `S_story.inventory` after setting the flag.
+
+| Key Event | Item | Consumed? | Reason |
+|-----------|------|-----------|--------|
+| `ke_conclave_pass` | Conclave Pass | ✅ yes | Pass registered; no further use |
+| `ke_toll_token` | Toll Token | ✅ yes | "She sets the token on the gate post" |
+| `ke_crypt_key` | Crypt Key | — | Key stays (player may carry it) |
+| `ke_sea_cave` | Sea Cave Key | — | Key stays |
+| `ke_eel_pouch` | Eel Skin Pouch | — | Reusable light, +1 fishing bonus |
+| `ke_manifest` | Shipping Manifest | — | Evidence document kept |
+| `ke_antecedent` | Antecedent Seal | — | Seal stays (acknowledged, not deposited) |
+
+`quest_solen_horizon` — truth token not taken; it is a record of discernment, not a physical handover.  
+Escort-arc "letter of introduction" remains P2 pending escort arc implementation.
+
+### §MBIT-02-C. ✅ worldbuilder.html schema updated (2026-05-29)
+
+`SCHEMAS.quest.fields` in `wbapi-server.js` now includes:
+- `checkPassFlag` with note about `_grantMissionBit` side effect
+- `checkFailFlag` with same note
+- `bitLabel` — editable, describes token name override
+
+Full worldbuilder quest pane "Produces: 🪬 Token" display remains P2.
+
+### §MBIT-02-D. ✅ Token day stored at grant (2026-05-29)
+
+`_grantMissionBit` now stores `day: S_story.day || 1` on each token. Timeline rendering in journal is P3.
+
+**P3 — When journal is extended, filter `inventory` by `type:'mission_bit'`, sort by `.day`, render as a witnessed-events chronicle.**
+
+### §MBIT-02-E. Token as gate key (alternative to separate `_hasItem` condition)
+
+The existing `_hasItem('Trade Seal')` pattern and `KEY_EVENTS[].item` patterns could unify with mission bit tokens. A quest with `checkPassFlag:'tradeSealReceived'` would produce a "Trade Seal Received Token" — but the token's `name` doesn't match `_hasItem('Trade Seal')` since the naming differs.
+
+Resolution options:
+1. Add `keyPhrase` field to token: `{ ..., keyPhrase:'Trade Seal' }` — `_hasItem` checks both `name` and `keyPhrase`
+2. Keep the two systems separate: KEY_EVENTS use named items; mission bits use tokens. They serve different purposes.
+
+**P3 — Decision pending. Leaning toward keeping systems separate: KEY_EVENTS items are physical objects found or purchased; mission bit tokens are event receipts. Different ontology.**
+
+---
+
+## §FISH-01 — Fish + Lake Magic in Worldbuilder + API (2026-05-29)
+
+### Implemented
+
+**WORLDBUILDER anchors (roll2hit-v3.html):**
+- `// ◆◆◆ WORLDBUILDER:FISH_DB:START/END ◆◆◆` — wraps `FISH_POOL` (20 day fish, rank 1–20) and `NIGHT_FISH_POOL` (5 nocturnal species, ranks 6–14)
+- `// ◆◆◆ WORLDBUILDER:LAKE_MAGIC:START/END ◆◆◆` — new `LAKE_MAGIC_DB` const with 8 lake magic items
+
+**wbapi-core.js:**
+- `extractArr(block, name)` — array-literal parser (like `extractObj` but for `[...]`), with `//` and `/* */` comment skipping
+- `parseArr(block, name)` — wraps `extractArr` for safe eval
+- `WBAPI.fishPool`, `WBAPI.nightFishPool`, `WBAPI.lakeMagicDb` — loaded on `WBAPI.load()`
+
+**wbapi-server.js API routes:**
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| `GET`  | `/api/fish` | List all 25 fish; filter `?rank=N` or `?night=true/false` |
+| `GET`  | `/api/fish/:key` | Single fish + connections (drop, monster) |
+| `POST` | `/api/fish` | Create new fish (day or night pool) |
+| `POST` | `/api/fish/simulate` | Run full 3-phase fishing roll server-side; returns fish + monster stats |
+| `GET`  | `/api/lake-magic` | List all 8 magic items; filter `?effect=` or `?minRank=` |
+| `GET`  | `/api/lake-magic/:key` | Single magic item |
+| `POST` | `/api/lake-magic` | Create new magic item |
+
+**SCHEMAS:** `fish` and `lake_magic` schemas added to `GET /api/schema`.
+
+**worldbuilder.html — Fishing Sim Easter Egg (Dice Lab):**
+- "🪣 Yugurt Lake Fishing Sim" collapsible section in the Dice Lab
+- 5 modifier inputs: DEX mod, Bait Catch, Bait Type, Luck mod, Rod bonus
+- Calls `POST /api/fish/simulate` → renders 3 accordion rows (Phase 1 Cast, Phase 2 Catch, Phase 3 Type) plus final result card with fish name + monster stats
+- Offline fallback: local rolls if API unavailable
+
+**LAKE_MAGIC_DB schema:**
+```
+effect: ac_bonus | atk_bonus | fishing_dc | first_strike | night_type | all_ability
+bonus formula: base + floor(level × levelScale) + floor(luckMod × luckScale)
+```
+
+**Pending (P2):**
+- Wire `LAKE_MAGIC_DB` effects into fishing battle rewards — currently items are defined but not yet dropped in-game
+- Add `POST /api/fish/simulate?advantage=true` for bait advantage rolls
+- Worldbuilder quest pane: "Produces: 🪬 Token" display (§MBIT-02-C P2)

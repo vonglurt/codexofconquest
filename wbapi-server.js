@@ -269,10 +269,47 @@ const SCHEMAS = {
       checkStat:   { type:'string',  required:false, editable:true,  values:['WIS','INT','CHA','STR','DEX','CON'],
                      note:'Ability score used for the skill check.' },
       checkSkill:  { type:'string',  required:false, editable:true,  note:'Specific skill name for the check (optional).' },
+      checkPassFlag:{ type:'string', required:false, editable:true,  note:'Flag name set true on pass. Also triggers _grantMissionBit — creates a mission_bit token in player inventory.' },
+      checkFailFlag:{ type:'string', required:false, editable:true,  note:'Flag name set true on fail (for non-retryable quests). Also triggers _grantMissionBit.' },
+      bitLabel:    { type:'string',  required:false, editable:true,  note:'Human-readable label for the mission bit token. Defaults to camelCase expansion of checkPassFlag. Token name = bitLabel + " Token".' },
       activateCond:{ type:'function',required:false, editable:false, note:'JS arrow function (S) => bool. Evaluated at runtime to decide if quest is visible. Not editable via API — edit in source.' },
       completeFn:  { type:'function',required:false, editable:false, note:'JS arrow function (S) => {...}. Runs on quest completion to set story flags, grant items, etc. Not editable via API.' },
       onPass:      { type:'function',required:false, editable:false, note:'Alternative to completeFn. Runs on successful skill_check.' },
       onFail:      { type:'function',required:false, editable:false, note:'Runs on failed skill_check.' },
+    },
+  },
+  fish: {
+    _section: 'FISH_DB',
+    _description: 'Yugurt Lake fish pool — FISH_POOL (ranks 1–20, day) and NIGHT_FISH_POOL (ranks 6–14, nocturnal). Each entry is a combatable creature that drops a MONSTER_DROPS entry matching its key.',
+    fields: {
+      key:    { type:'string', required:true,  editable:false, note:'Fish key. Matches MONSTER_POOL and MONSTER_DROPS key. Format: fish_01–fish_20 (day) or night_01–night_05 (night).' },
+      rank:   { type:'number', required:true,  editable:true,  note:'Rank 1–20. Controls which size tier can catch this fish. Higher rank = harder fight + more valuable drop.' },
+      name:   { type:'string', required:true,  editable:true,  note:'Display name shown during fishing reveal.' },
+      desc:   { type:'string', required:false, editable:true,  note:'Flavor text shown in the fishing reveal card.' },
+      isNight:{ type:'boolean',required:false, editable:false, note:'True for NIGHT_FISH_POOL entries. Not stored on item — derived from which array the fish lives in.' },
+    },
+    related: {
+      drop:    { section:'MONSTER_DROPS', note:'Trophy item dropped on defeat. Must share key with MONSTER_DROPS.' },
+      monster: { section:'MONSTER_POOL',  note:'Combat stats. Must share key with MONSTER_POOL.' },
+    },
+  },
+  lake_magic: {
+    _section: 'LAKE_MAGIC',
+    _description: 'Magic items found via high-rank fishing at Yugurt Lake. Stat bonuses scale with player level and luck modifier using the formula: bonus = base + floor(level × levelScale) + floor(luckMod × luckScale).',
+    fields: {
+      key:        { type:'string', required:true,  editable:false, note:'Internal key. lake_mag_01 … lake_mag_N.' },
+      name:       { type:'string', required:true,  editable:true,  note:'Display name in inventory.' },
+      icon:       { type:'string', required:true,  editable:true,  note:'Emoji icon. One character.' },
+      desc:       { type:'string', required:false, editable:true,  note:'Flavor/lore text shown in inventory tooltip.' },
+      type:       { type:'string', required:true,  editable:false, note:'Always "lake_magic".' },
+      sell:       { type:'number', required:true,  editable:true,  note:'Gold value if sold. Usually 0 (not sellable).' },
+      effect:     { type:'string', required:true,  editable:true,  values:['ac_bonus','atk_bonus','fishing_dc','first_strike','night_type','all_ability'],
+                    note:'What stat this item affects. Determines which game formula reads base+levelScale+luckScale.' },
+      base:       { type:'number', required:true,  editable:true,  note:'Flat base bonus before any scaling.' },
+      levelScale: { type:'number', required:true,  editable:true,  note:'Bonus per player level. floor(level × levelScale) added to base.' },
+      luckScale:  { type:'number', required:true,  editable:true,  note:'Multiplier on luckMod. floor(luckMod × luckScale) added to base.' },
+      minRank:    { type:'number', required:true,  editable:true,  note:'Minimum fish rank required to have a chance of finding this item.' },
+      minLevel:   { type:'number', required:true,  editable:true,  note:'Minimum player level required to receive this item.' },
     },
   },
   npc: {
@@ -323,6 +360,96 @@ function readBody(req) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
+// Source mutation helpers  (used by create routes + flag insertion)
+// ═══════════════════════════════════════════════════════════════════════════
+
+function insertBeforeSectionClose(section, entry) {
+  const endAnchor = `// ◆◆◆ WORLDBUILDER:${section}:END ◆◆◆`;
+  const anchorIdx = WBAPI._rawSrc.indexOf(endAnchor);
+  if (anchorIdx === -1) return { ok:false, error:`${section} END anchor not found` };
+  const closingIdx = WBAPI._rawSrc.lastIndexOf('\n};', anchorIdx);
+  if (closingIdx === -1) return { ok:false, error:`${section} closing }; not found` };
+  WBAPI._rawSrc = WBAPI._rawSrc.slice(0, closingIdx + 1) + entry + WBAPI._rawSrc.slice(closingIdx + 1);
+  return { ok:true };
+}
+
+function serializeQuestLiteral(id, body) {
+  const STR  = ['type','title','desc','hint','hook','passText','failText','rewardText',
+    'disposition','npc','activateNode','waypointNode','checkAbility','checkLabel',
+    'checkStat','checkPassFlag','vignetteText'];
+  const NUM  = ['xpAward','reward','checkDC','retryGateDays'];
+  const BOOL = ['retryable'];
+  const FN   = ['activateCond','completeFn','onPass','onFail'];
+  const parts = [`  ${id}: { id:${JSON.stringify(id)}`];
+  for (const f of STR)  if (body[f] !== undefined) parts.push(`${f}:${JSON.stringify(body[f])}`);
+  for (const f of NUM)  if (body[f] !== undefined) parts.push(`${f}:${Number(body[f])}`);
+  for (const f of BOOL) if (body[f] !== undefined) parts.push(`${f}:${!!body[f]}`);
+  for (const f of FN)   if (body[f] !== undefined) parts.push(`${f}:${body[f]}`);
+  return parts.join(', ') + ' },\n';
+}
+
+function serializeNodeLiteral(code, body) {
+  const maxNum = Object.values(WBAPI.nodeMap).reduce((m, n) => Math.max(m, n.num || 0), 0);
+  const num = body.num !== undefined ? Number(body.num) : maxNum + 1;
+  const STR  = ['name','label','text','npc','loot','N','S','E','W'];
+  const NUM  = ['act','sleepCost'];
+  const BOOL = ['sleep'];
+  const parts = [`  ${code}: { num:${num}`];
+  for (const f of STR)  if (body[f] !== undefined) parts.push(`${f}:${JSON.stringify(body[f])}`);
+  for (const f of NUM)  if (body[f] !== undefined) parts.push(`${f}:${Number(body[f])}`);
+  for (const f of BOOL) if (body[f] !== undefined) parts.push(`${f}:${!!body[f]}`);
+  if (body.battle) parts.push(`battle:${JSON.stringify(body.battle)}`);
+  return parts.join(', ') + ' },\n';
+}
+
+function insertBeforeArrayClose(section, entry) {
+  const endAnchor = `// ◆◆◆ WORLDBUILDER:${section}:END ◆◆◆`;
+  const anchorIdx = WBAPI._rawSrc.indexOf(endAnchor);
+  if (anchorIdx === -1) return { ok:false, error:`${section} END anchor not found` };
+  const closingIdx = WBAPI._rawSrc.lastIndexOf('\n];', anchorIdx);
+  if (closingIdx === -1) return { ok:false, error:`${section} closing ]; not found` };
+  WBAPI._rawSrc = WBAPI._rawSrc.slice(0, closingIdx + 1) + entry + WBAPI._rawSrc.slice(closingIdx + 1);
+  return { ok:true };
+}
+
+function serializeFishEntry(body) {
+  const STR  = ['key','name','desc'];
+  const NUM  = ['rank'];
+  const parts = [];
+  for (const f of ['rank','key','name','desc'])
+    if (body[f] !== undefined)
+      parts.push(`${f}:${typeof body[f]==='number' ? body[f] : JSON.stringify(body[f])}`);
+  const pad = body.rank < 10 ? ' ' : '';
+  return `  { ${parts.join(', ')} },\n`;
+}
+
+function serializeLakeMagicEntry(key, body) {
+  const STR  = ['key','name','icon','desc','type','effect'];
+  const NUM  = ['sell','base','levelScale','luckScale','minRank','minLevel'];
+  const parts = [`  ${key}: { key:${JSON.stringify(key)}`];
+  for (const f of STR) if (body[f] !== undefined && f !== 'key') parts.push(`${f}:${JSON.stringify(body[f])}`);
+  for (const f of NUM) if (body[f] !== undefined) parts.push(`${f}:${Number(body[f])}`);
+  return parts.join(', ') + ' },\n';
+}
+
+function parseSDefaultsBody() {
+  // Handles both `function _S_DEFAULTS() { return {...}; }` and `const _S_DEFAULTS = () => ({...})`
+  const declIdx = WBAPI._rawSrc.indexOf('_S_DEFAULTS');
+  if (declIdx === -1) return { ok:false, error:'_S_DEFAULTS not found in source' };
+  // Find the opening { of the returned object (could be `return {` or `=> ({`)
+  const openBrace = WBAPI._rawSrc.indexOf('{', declIdx);
+  if (openBrace === -1) return { ok:false, error:'Opening brace not found after _S_DEFAULTS' };
+  let depth = 1, closeIdx = -1;
+  for (let i = openBrace + 1; i < WBAPI._rawSrc.length; i++) {
+    const ch = WBAPI._rawSrc[i];
+    if (ch === '{') depth++;
+    else if (ch === '}') { if (--depth === 0) { closeIdx = i; break; } }
+  }
+  if (closeIdx === -1) return { ok:false, error:'Could not locate closing brace of _S_DEFAULTS return object' };
+  return { ok:true, openBrace, closeIdx, body: WBAPI._rawSrc.slice(openBrace + 1, closeIdx) };
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // Router
 // ═══════════════════════════════════════════════════════════════════════════
 async function route(req, res) {
@@ -347,6 +474,8 @@ async function route(req, res) {
       nodes:    Object.keys(WBAPI.nodeMap).length,
       quests:   Object.keys(WBAPI.questDb).length,
       monsters: Object.keys(WBAPI.monsterPool).length,
+      fish:     WBAPI.fishPool.length + WBAPI.nightFishPool.length,
+      lakeMagic:Object.keys(WBAPI.lakeMagicDb).length,
     };
     logResponse(method, url.pathname, 200, `ping ok — ${resp.nodes} nodes, ${resp.quests} quests`);
     return json(res, 200, resp);
@@ -393,6 +522,226 @@ async function route(req, res) {
     log('LOGIC', 'Diff summary requested');
     logResponse(method, url.pathname, 200, 'diff summary');
     return json(res, 200, { note: 'Use POST /api/save to write all pending changes to disk' });
+  }
+
+  // ── Fish (FISH_DB) ────────────────────────────────────────────────────────
+  if (parts[0] === 'fish') {
+    const fishKey = parts[1];
+
+    if (method === 'GET') {
+      if (!fishKey) {
+        const rankFilter  = url.searchParams.get('rank');
+        const nightFilter = url.searchParams.get('night');
+        let day   = WBAPI.fishPool.map(f => ({ ...f, isNight:false }));
+        let night = WBAPI.nightFishPool.map(f => ({ ...f, isNight:true }));
+        let all   = [...day, ...night];
+        if (rankFilter !== null) all = all.filter(f => f.rank === Number(rankFilter));
+        if (nightFilter === 'true') all = all.filter(f => f.isNight);
+        if (nightFilter === 'false') all = all.filter(f => !f.isNight);
+        all.sort((a, b) => a.rank - b.rank || (a.isNight ? 1 : -1));
+        log('LOGIC', `GET /api/fish — ${all.length} entries`);
+        logResponse(method, url.pathname, 200, `${all.length} fish`);
+        return json(res, 200, { ok:true, count:all.length, fish: all });
+      }
+      const found = [...WBAPI.fishPool, ...WBAPI.nightFishPool].find(f => f.key === fishKey);
+      if (!found) {
+        logResponse(method, url.pathname, 404, `fish "${fishKey}" not found`);
+        return json(res, 404, { error:`fish "${fishKey}" not found` });
+      }
+      const isNight = WBAPI.nightFishPool.some(f => f.key === fishKey);
+      const drop    = WBAPI.monsterDrops[fishKey] || null;
+      const monster = WBAPI.monsterPool[fishKey]  || null;
+      logResponse(method, url.pathname, 200, `fish:${fishKey} rank:${found.rank}`);
+      return json(res, 200, { ok:true, fish:{ ...found, isNight },
+        connections:{ drop, monster }, _meta:{ canDelete: false } });
+    }
+
+    if (method === 'POST' && fishKey === 'simulate') {
+      let body;
+      try { body = await readBody(req); } catch(e) { return json(res, 400, { error:'Invalid JSON' }); }
+      log('REQUEST', 'POST /api/fish/simulate', body);
+      const dexMod   = Number(body.dexMod   || 0);
+      const catchMod = Number(body.catchMod || 0);
+      const typeMod  = Number(body.typeMod  || 0);
+      const luckMod  = Number(body.luckMod  || 0);
+      const rodBonus = Number(body.rodBonus || 0);
+      const d20 = () => Math.ceil(Math.random() * 20);
+
+      // Phase 1 — Cast (DEX)
+      const castRoll  = d20();
+      const castTotal = castRoll + dexMod;
+      const castMod   = castTotal < 12 ? -2 : castTotal >= 17 ? 2 : 0;
+      const castDesc  = castTotal < 12 ? 'clumsy(-2)' : castTotal >= 17 ? 'perfect(+2)' : 'clean(0)';
+
+      // Phase 2 — Catch
+      const catchRoll  = d20();
+      const catchTotal = catchRoll + catchMod + castMod + rodBonus;
+      const sizeKey    = catchTotal <= 5 ? null : catchTotal <= 10 ? 'small' : catchTotal <= 16 ? 'medium' : catchTotal <= 19 ? 'large' : catchTotal === 20 ? 'very_large' : 'legendary';
+      const sizeLabel  = { small:'Small', medium:'Medium', large:'Large', very_large:'Very Large', legendary:'Legendary' };
+
+      // Phase 3 — Type (only if something bites)
+      let typeRoll = null, typeTotal = null, rarity = null, rarityLabel = null;
+      let fishEntry = null, monsterEntry = null;
+      if (sizeKey) {
+        typeRoll  = d20();
+        typeTotal = typeRoll + typeMod + luckMod;
+        rarity    = typeTotal <= 5 ? 'common' : typeTotal <= 10 ? 'rare' : typeTotal <= 15 ? 'enchanted' : typeTotal <= 18 ? 'golden' : 'legendary';
+        rarityLabel = { common:'Common', rare:'Rare', enchanted:'Enchanted', golden:'Golden', legendary:'Legendary' }[rarity];
+        const TIER_RANKS = { small:[1,7], medium:[4,12], large:[8,16], very_large:[12,18], legendary:[16,20] };
+        const [mn, mx] = TIER_RANKS[sizeKey];
+        const eligible = [...WBAPI.fishPool, ...WBAPI.nightFishPool].filter(f => f.rank >= mn && f.rank <= mx);
+        if (eligible.length) {
+          fishEntry = eligible[Math.floor(Math.random() * eligible.length)];
+          monsterEntry = WBAPI.monsterPool[fishEntry.key] || null;
+        }
+      }
+
+      const result = {
+        ok: true,
+        phases: {
+          cast:  { roll:castRoll,  mod:dexMod,   total:castTotal, castMod, desc:castDesc },
+          catch: { roll:catchRoll, mod:catchMod, castMod, rodBonus, total:catchTotal, size:sizeKey, sizeLabel: sizeKey ? sizeLabel[sizeKey] : null },
+          type:  sizeKey ? { roll:typeRoll, mod:typeMod, luckMod, total:typeTotal, rarity, rarityLabel } : null,
+        },
+        fish: fishEntry ? { ...fishEntry, monster:monsterEntry } : null,
+        summary: sizeKey
+          ? `${sizeLabel[sizeKey]} ${rarityLabel} — ${fishEntry?.name || 'unknown fish'}`
+          : 'Nothing bites.',
+      };
+      logResponse(method, url.pathname, 200, `simulate: ${result.summary}`);
+      return json(res, 200, result);
+    }
+
+    if (method === 'POST' && !fishKey) {
+      let body;
+      try { body = await readBody(req); } catch(e) { return json(res, 400, { error:'Invalid JSON' }); }
+      log('REQUEST', 'POST /api/fish (create)', body);
+      const { key, name, rank } = body;
+      if (!key || !name || rank === undefined) {
+        logResponse(method, url.pathname, 400, 'fish create: missing required fields');
+        return json(res, 400, { error:'Required fields: key, name, rank' });
+      }
+      const allFish = [...WBAPI.fishPool, ...WBAPI.nightFishPool];
+      if (allFish.find(f => f.key === key)) {
+        logResponse(method, url.pathname, 409, `fish "${key}" already exists`);
+        return json(res, 409, { error:`Fish "${key}" already exists` });
+      }
+      const isNight = !!body.isNight;
+      const entry   = serializeFishEntry(body);
+      const arrName = isNight ? 'NIGHT_FISH_POOL' : 'FISH_POOL';
+      const ins = insertBeforeArrayClose('FISH_DB', entry);
+      if (!ins.ok) { logResponse(method, url.pathname, 500, ins.error); return json(res, 500, ins); }
+      const fishObj = { rank:Number(rank), key, name, ...(body.desc ? { desc:body.desc } : {}) };
+      if (isNight) WBAPI.nightFishPool.push(fishObj); else WBAPI.fishPool.push(fishObj);
+      WBAPI.fishPool.sort((a,b) => a.rank - b.rank);
+      log('LOGIC', `Created fish "${key}" rank ${rank} (${isNight ? 'night' : 'day'} pool, inserted into ${arrName})`);
+      logResponse(method, url.pathname, 201, `created fish "${key}"`);
+      return json(res, 201, { ok:true, key, note:'POST /api/save to persist.', fish:fishObj });
+    }
+  }
+
+  // ── Lake Magic Items (LAKE_MAGIC) ─────────────────────────────────────────
+  if (parts[0] === 'lake-magic') {
+    const magKey = parts[1];
+
+    if (method === 'GET') {
+      if (!magKey) {
+        const effectFilter = url.searchParams.get('effect');
+        const rankFilter   = url.searchParams.get('minRank');
+        let list = Object.values(WBAPI.lakeMagicDb);
+        if (effectFilter) list = list.filter(m => m.effect === effectFilter);
+        if (rankFilter !== null) list = list.filter(m => (m.minRank || 0) <= Number(rankFilter));
+        list.sort((a,b) => (a.minRank||0) - (b.minRank||0));
+        log('LOGIC', `GET /api/lake-magic — ${list.length} entries`);
+        logResponse(method, url.pathname, 200, `${list.length} lake magic items`);
+        return json(res, 200, { ok:true, count:list.length, items: list });
+      }
+      const item = WBAPI.lakeMagicDb[magKey];
+      if (!item) {
+        logResponse(method, url.pathname, 404, `lake-magic "${magKey}" not found`);
+        return json(res, 404, { error:`lake-magic "${magKey}" not found` });
+      }
+      logResponse(method, url.pathname, 200, `lake-magic:${magKey}`);
+      return json(res, 200, { ok:true, item, _meta:{ canDelete: true } });
+    }
+
+    if (method === 'POST' && !magKey) {
+      let body;
+      try { body = await readBody(req); } catch(e) { return json(res, 400, { error:'Invalid JSON' }); }
+      log('REQUEST', 'POST /api/lake-magic (create)', body);
+      const { key, name, effect } = body;
+      if (!key || !name || !effect) {
+        logResponse(method, url.pathname, 400, 'lake-magic create: missing required fields');
+        return json(res, 400, { error:'Required fields: key, name, effect' });
+      }
+      if (WBAPI.lakeMagicDb[key]) {
+        logResponse(method, url.pathname, 409, `lake-magic "${key}" already exists`);
+        return json(res, 409, { error:`Lake magic "${key}" already exists` });
+      }
+      const entry = serializeLakeMagicEntry(key, { type:'lake_magic', sell:0, base:0, levelScale:0, luckScale:0, minRank:1, minLevel:1, ...body });
+      const ins = insertBeforeSectionClose('LAKE_MAGIC', entry);
+      if (!ins.ok) { logResponse(method, url.pathname, 500, ins.error); return json(res, 500, ins); }
+      WBAPI.lakeMagicDb[key] = { key, type:'lake_magic', sell:0, base:0, levelScale:0, luckScale:0, minRank:1, minLevel:1, ...body };
+      logResponse(method, url.pathname, 201, `created lake-magic "${key}"`);
+      return json(res, 201, { ok:true, key, note:'POST /api/save to persist.', item: WBAPI.lakeMagicDb[key] });
+    }
+  }
+
+  // ── Flags (_S_DEFAULTS) ───────────────────────────────────────────────────
+  if (parts[0] === 'flags') {
+    if (method === 'GET') {
+      log('LOGIC', 'Parsing _S_DEFAULTS flags from source');
+      const parsed = parseSDefaultsBody();
+      if (!parsed.ok) {
+        logResponse(method, url.pathname, 404, parsed.error);
+        return json(res, 404, { error: parsed.error });
+      }
+      const flags = {};
+      const lineRe = /(?:^|,)\s*([a-z_]\w*)\s*:\s*([^,\n/{}[\]]+)/gm;
+      let m;
+      while ((m = lineRe.exec(parsed.body)) !== null) {
+        const [, k, rawVal] = m;
+        const t = rawVal.trim();
+        if (t === 'true')  flags[k] = true;
+        else if (t === 'false') flags[k] = false;
+        else if (t === 'null')  flags[k] = null;
+        else if (t !== '' && !isNaN(t)) flags[k] = Number(t);
+        else flags[k] = t.replace(/^['"]|['"]$/g, '');
+      }
+      logResponse(method, url.pathname, 200, `${Object.keys(flags).length} flags`);
+      return json(res, 200, { ok:true, count:Object.keys(flags).length, flags });
+    }
+
+    if (method === 'POST') {
+      let body;
+      try { body = await readBody(req); } catch(e) {
+        return json(res, 400, { error:'Invalid JSON' });
+      }
+      log('REQUEST', 'POST flags (add flag)', body);
+      const { name, defaultValue, comment } = body;
+      if (!name || !/^\w+$/.test(name)) {
+        logResponse(method, url.pathname, 400, 'name must be a valid JS identifier');
+        return json(res, 400, { error:'body.name must be a valid JS identifier' });
+      }
+      if (defaultValue === undefined) {
+        logResponse(method, url.pathname, 400, 'body.defaultValue required');
+        return json(res, 400, { error:'body.defaultValue required' });
+      }
+      const parsed = parseSDefaultsBody();
+      if (!parsed.ok) return json(res, 404, { error: parsed.error });
+      if (new RegExp(`\\b${name}\\s*:`).test(parsed.body)) {
+        logResponse(method, url.pathname, 409, `flag "${name}" already exists`);
+        return json(res, 409, { error:`Flag "${name}" already exists in _S_DEFAULTS` });
+      }
+      const valStr = typeof defaultValue === 'string' ? JSON.stringify(defaultValue) : String(defaultValue);
+      const suffix = comment ? ` // ${comment}` : '';
+      const newLine = `    ${name}: ${valStr},${suffix}\n`;
+      const lineStart = WBAPI._rawSrc.lastIndexOf('\n', parsed.closeIdx - 1);
+      WBAPI._rawSrc = WBAPI._rawSrc.slice(0, lineStart + 1) + newLine + WBAPI._rawSrc.slice(lineStart + 1);
+      log('LOGIC', `Added flag "${name}" = ${valStr} to _S_DEFAULTS`);
+      logResponse('POST', '/api/flags', 201, `flag "${name}" added`);
+      return json(res, 201, { ok:true, name, defaultValue, note:'POST /api/save to persist.' });
+    }
   }
 
   // ── List ──────────────────────────────────────────────────────────────────
@@ -471,6 +820,88 @@ async function route(req, res) {
 
   // ── Single entity ─────────────────────────────────────────────────────────
   const [type, rawId, action] = parts;
+
+  // ── POST /api/{quest|node} (create new entity) ────────────────────────────
+  if (!rawId && method === 'POST' && (type === 'quest' || type === 'node')) {
+    let body;
+    try { body = await readBody(req); } catch(e) {
+      return json(res, 400, { error:'Invalid JSON' });
+    }
+    log('REQUEST', `POST ${type} (create)`, body);
+
+    if (type === 'quest') {
+      const { id } = body;
+      if (!id || !body.type || !body.title || !body.activateNode) {
+        logResponse(method, url.pathname, 400, 'quest create: missing required fields');
+        return json(res, 400, { error:'Required fields: id, type, title, activateNode' });
+      }
+      if (WBAPI.questDb[id]) {
+        logResponse(method, url.pathname, 409, `quest "${id}" already exists`);
+        return json(res, 409, { error:`Quest "${id}" already exists` });
+      }
+      log('LOGIC', `Creating quest "${id}" — serializing to QUEST_DB`);
+      const entry = serializeQuestLiteral(id, body);
+      const ins = insertBeforeSectionClose('QUEST_DB', entry);
+      if (!ins.ok) { logResponse(method, url.pathname, 500, ins.error); return json(res, 500, ins); }
+      const FN_FIELDS = ['activateCond','completeFn','onPass','onFail'];
+      WBAPI.questDb[id] = Object.fromEntries(Object.entries(body).filter(([k]) => !FN_FIELDS.includes(k)));
+      WBAPI._buildIndexes();
+      const hasFns = FN_FIELDS.some(f => body[f] !== undefined);
+      logResponse(method, url.pathname, 201, `created quest "${id}"`);
+      return json(res, 201, {
+        ok:true, id,
+        note: hasFns
+          ? 'Function fields written to source. POST /api/save then /api/reload to activate.'
+          : 'POST /api/save to persist.',
+        ...questConnections(id),
+      });
+    }
+
+    if (type === 'node') {
+      const code = body.code;
+      if (!code || !body.name || !body.label || body.act === undefined) {
+        logResponse(method, url.pathname, 400, 'node create: missing required fields');
+        return json(res, 400, { error:'Required fields: code, name, label, act' });
+      }
+      if (WBAPI.nodeMap[code]) {
+        logResponse(method, url.pathname, 409, `node "${code}" already exists`);
+        return json(res, 409, { error:`Node "${code}" already exists` });
+      }
+      log('LOGIC', `Creating node "${code}" — serializing to NODE_MAP`);
+      const entry = serializeNodeLiteral(code, body);
+      const ins = insertBeforeSectionClose('NODE_MAP', entry);
+      if (!ins.ok) { logResponse(method, url.pathname, 500, ins.error); return json(res, 500, ins); }
+      const maxNum = Object.values(WBAPI.nodeMap).reduce((m, n) => Math.max(m, n.num || 0), 0);
+      const { code: _code, ...nodeFields } = body;
+      WBAPI.nodeMap[code] = { ...nodeFields, num: body.num !== undefined ? Number(body.num) : maxNum + 1 };
+      WBAPI._buildIndexes();
+      logResponse(method, url.pathname, 201, `created node "${code}"`);
+      return json(res, 201, { ok:true, code, note:'POST /api/save to persist.', ...nodeConnections(code) });
+    }
+  }
+
+  // ── GET /api/quest?{node|arc|type}= (shorthand filter) ────────────────────
+  if (type === 'quest' && !rawId && method === 'GET') {
+    const nodeFilter = url.searchParams.get('node');
+    const arcFilter  = url.searchParams.get('arc');
+    const typeFilter = url.searchParams.get('type');
+    if (nodeFilter || arcFilter || typeFilter) {
+      log('LOGIC', `Quest filter: node=${nodeFilter} arc=${arcFilter} type=${typeFilter}`);
+      let list = WBAPI.quests.all();
+      if (nodeFilter) list = list.filter(q => q.activateNode===nodeFilter || q.waypointNode===nodeFilter);
+      if (typeFilter) list = list.filter(q => q.type === typeFilter);
+      if (arcFilter)  list = list.filter(q => q.id.startsWith(arcFilter));
+      const out = list.map(q => ({
+        id:q.id, title:q.title, type:q.type,
+        activateNode:q.activateNode, waypointNode:q.waypointNode, npc:q.npc,
+        _meta:{ downstream:WBAPI.quests.chain(q.id).downstream.length,
+                canDelete:WBAPI.quests.chain(q.id).downstream.length === 0 }
+      }));
+      logResponse(method, url.pathname, 200, `${out.length} quests`);
+      return json(res, 200, out);
+    }
+  }
+
   if (!type || !rawId) {
     logResponse(method, url.pathname, 400, 'missing type/id');
     return json(res, 400, { error: 'Path: /api/{type}/{id}' });
@@ -546,13 +977,39 @@ async function route(req, res) {
 
   if (!CONNECT[type]) {
     logResponse(method, url.pathname, 400, `Unknown type "${type}"`);
-    return json(res, 400, { error: `Unknown type "${type}". Use: node quest monster npc terrain location` });
+    return json(res, 400, { error: `Unknown type "${type}". Use: node quest monster npc terrain location fish lake-magic` });
   }
 
   const key = resolveId(type, rawId);
 
   // ── GET ──
   if (method === 'GET') {
+    // GET /api/quest/{id}/chain
+    if (type === 'quest' && action === 'chain') {
+      const q = WBAPI.questDb[key];
+      if (!q) {
+        logResponse(method, url.pathname, 404, `quest "${key}" not found`);
+        return json(res, 404, { error:`quest "${key}" not found` });
+      }
+      const chain = WBAPI.quests.chain(key);
+      const enrich = id => ({
+        id,
+        title:       WBAPI.questDb[id]?.title,
+        type:        WBAPI.questDb[id]?.type,
+        activateNode:WBAPI.questDb[id]?.activateNode,
+      });
+      log('LOGIC', `Chain for "${key}" — up:${chain.upstream.length}, down:${chain.downstream.length}`);
+      logResponse(method, url.pathname, 200,
+        `chain for "${key}" — length ${chain.upstream.length + 1 + chain.downstream.length}`);
+      return json(res, 200, {
+        id:         key,
+        upstream:   chain.upstream.map(enrich),
+        current:    enrich(key),
+        downstream: chain.downstream.map(enrich),
+        length:     chain.upstream.length + 1 + chain.downstream.length,
+      });
+    }
+
     log('LOGIC', `GET ${type} "${key}" — building connection envelope`);
     const r = CONNECT[type](key);
     if (r) {
@@ -733,12 +1190,23 @@ server.listen(PORT, '127.0.0.1', () => {
   const routes = [
     ['GET',    '/api/ping'],
     ['GET',    '/api/schema[/{type}]                → canonical field schema'],
+    ['GET',    '/api/flags                          → list _S_DEFAULTS flags'],
+    ['POST',   '/api/flags                          body: {name, defaultValue, comment?}'],
     ['GET',    '/api/list/{node|quest|monster|npc|terrain}[?node=&terrain=&type=]'],
+    ['GET',    '/api/quest?node={code}              → filter quests (shorthand)'],
     ['GET',    '/api/{node|quest|monster|npc|terrain}/{id}  → entity + connections + _meta'],
+    ['GET',    '/api/quest/{id}/chain               → upstream + downstream chain'],
     ['GET',    '/api/location/{code}               → composite view'],
     ['PUT',    '/api/{node|quest|monster|npc}/{id}  body: {field:value,...}'],
     ['PUT',    '/api/terrain/{id}                  body: {label?,icon?}'],
     ['DELETE', '/api/{node|quest|monster|npc}/{id}  (409 if nested content)'],
+    ['POST',   '/api/quest                          body: {id, type, title, activateNode, ...}'],
+    ['POST',   '/api/node                           body: {code, name, label, act, ...}'],
+    ['GET',    '/api/fish[/{key}][?rank=&night=]     → fish list or single'],
+    ['POST',   '/api/fish/simulate                  body: {dexMod, catchMod, typeMod, luckMod, rodBonus}'],
+    ['POST',   '/api/fish                           body: {key, name, rank, desc?, isNight?}'],
+    ['GET',    '/api/lake-magic[/{key}][?effect=&minRank=] → magic item list or single'],
+    ['POST',   '/api/lake-magic                     body: {key, name, effect, ...}'],
     ['POST',   '/api/monster/{id}/rename            body: {name}'],
     ['POST',   '/api/monster/{id}/fork              body: {newKey, overrides?}'],
     ['POST',   '/api/terrain/{id}/swap              body: {oldKey, newKey}'],

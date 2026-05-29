@@ -6199,7 +6199,7 @@ function _rollCeremonia(questId) {
   });
   if (passed) {
     S_story.quests[questId] = 'done';
-    if (q.checkPassFlag) S_story[q.checkPassFlag] = true;
+    if (q.checkPassFlag) _grantMissionBit(q.checkPassFlag, q.bitLabel);
     if (q.xpAward) { S_story.xp += q.xpAward; _checkLevelUp(); }
     if (q.goldAward) S_story.gold += q.goldAward;
     if (q.onPass) q.onPass();
@@ -6211,7 +6211,7 @@ function _rollCeremonia(questId) {
       S_story.skillCheckAttempts[questId] = { lastDay: S_story.day, failures: (prev.failures || 0) + 1 };
     } else {
       S_story.quests[questId] = 'failed';
-      if (q.checkFailFlag) S_story[q.checkFailFlag] = true;
+      if (q.checkFailFlag) _grantMissionBit(q.checkFailFlag, q.bitLabel);
     }
   }
   storyUpdateStatus();
@@ -7610,7 +7610,7 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
     text:"He is from here. The streets are familiar in the way that streets are familiar when you have not been to them since you were young and have become a different person in the interval. The house he grew up in is still standing. Someone else lives there. He does not knock.\n\nHe works. He has a trade — tentmaking, the craft he learned before he learned the law. It is meticulous work and the city has no particular opinion about tentmakers one way or the other, which is exactly the quality he requires of a city right now.\n\nThe years in Tarsus are in no document he wrote. They are a gap in the record. The things that happened in the gap happened to a person who was both Saul and Paul and neither, settling into what he had become. The record resumes when Barnach arrives at the gate.",
     npc:'Barnach', battle:null, loot:'Tentmaking Tools', sleep:true, sleepCost:3 },
   KS:{ num:85, code:'KS', name:'damascus', label:'Damascus — Lower City', act:4, N:null, S:'DR', E:null, W:'HR',
-    text:"The escort has left him at the gate of the lower city. They are not required to wait — the warrant authority is his, not theirs, and he has not invoked it since the road. They leave with the courtesy appropriate to leaving a superior officer who has become someone else's problem.\n\nHe does not know anyone in Damascus who is not on the list. The list is in his coat. He does not take it out.\n\nThree days. He is in a house on the lower road. The innkeeper brings food at noon and does not ask questions about his eyes. Someone else's servant — he does not know whose — has been bringing water in the morning. He has not asked for it. He has not told anyone he cannot see.\n\nOn the third morning, someone knocks.",
+    text:"The escort has left him at the gate of the lower city. They are not required to wait — the warrant authority is his, not theirs, and he has not invoked it since the road. They leave with the courtesy appropriate to leaving a superior officer who has become someone else's problem.\n\nHe does not know anyone in Damascus who is not on the list. The list is in his coat. He does not take it out.\n\nThree days. He is in a house on the lower road. The innkeeper brings food at noon and does not ask questions about his eyes. Someone else's servant — he does not know whose — has been bringing water in the morning. He has not asked for it. He has not told anyone he cannot see.\n\nOn the third morning, someone knocks.\n\nThe magistrate's detention order comes on the fourth day. The gate is watched. The wall is not.\n\nYou take the cloth from the room and make the rope yourself — seven knots, tested against the window frame. The basket is market-grade, meant for vegetables; it will hold the weight if the descent is controlled. He gets in without speaking. There is nothing to say at this moment — the guards at the eastern gate change at the third hour; the window points west; the mathematics are in your favor if the knots hold. You hold the knots.",
     npc:'Anath', battle:null, loot:null, sleep:true, sleepCost:3 },
   // ── §LX: DR — Arabia (optional retreat) ──
   DR:{ num:86, code:'DR', name:'arabia', label:'Arabia', act:4, N:'KS', S:null, E:null, W:null,
@@ -7622,7 +7622,7 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   SEA:{ num:97, code:'SEA', name:'mediterranean', label:'The Inner Sea', act:4, N:'J8', S:'J9', E:'EF2', W:'PL',
     text:"The Inner Sea connects everything it does not divide. Nine days out from the eastern coast the horizon is uninterrupted in all directions: water north toward the last landfall, water south toward Malta if the wind holds, Ephesus east, Macedonia and Philippi west.\n\nThe wind has been from the northwest for three days. The captain described it as manageable on day one and has not described it since. This is normal.\n\nHe is sitting at the stern watching the wake — the line the ship has drawn across the surface that is already closing behind it. It will be closed completely in an hour.\n\nHe has been doing this since Damascus. The wake always closes. He does not find this discouraging.", npc:null, battle:null, loot:null, sleep:true, sleepCost:0 },
   PL:{ num:91, code:'PL', name:'philippi', label:'Philippi — The River Quarter', act:4, N:null, S:null, E:'SEA', W:null,
-    text:"The city sits on a river that has flooded twice in living memory and will flood again. The buildings on the high ground are expensive. The buildings on the lower ground are not, and have the particular character of buildings that have been rebuilt before and know they will be rebuilt again.\n\nLyra sells purple cloth from a stall on the bridge. Purple cloth is expensive and her clients are specific and she knows all of them by name and has excellent judgment about new clients. She watches Paul from across the bridge for two days before she speaks to him. When she speaks to him it is because she has already decided.\n\nThe prison is on the eastern road. It is a city prison, not an imperial one, which means the cells are smaller and the guards are more bored. Paul and Silar are in the inner cell. The earthquake, when it comes, opens every door.",
+    text:"The city sits on a river that has flooded twice in living memory and will flood again. The buildings on the high ground are expensive. The buildings on the lower ground are not, and have the particular character of buildings that have been rebuilt before and know they will be rebuilt again.\n\nLyra sells purple cloth from a stall on the bridge. Purple cloth is expensive and her clients are specific and she knows all of them by name and has excellent judgment about new clients. She watches Paul from across the bridge for two days before she speaks to him. When she speaks to him it is because she has already decided.\n\nThe prison is on the eastern road. It is a city prison, not an imperial one, which means the cells are smaller and the guards are more bored. Paul and Silar are in the inner cell. The earthquake, when it comes, opens every door.\n\nYou are across the corridor. The doors are open. You are free to leave. Paul is not leaving — he is still singing. At midnight, in a prison, with the doors open. Silar has stopped. Paul has not stopped.\n\nThe jailer wakes in a dark room where the doors should not be open. He reaches for his sword. You know what the sword is for — a jailer whose prisoners escape answers with his life under Roman law, and he has already made his calculation.\n\nYou cover the distance. The staircase up to his house has seven steps, then a landing, then five more. His household is awake. You all eat together at a table in the middle of the night.",
     npc:'Lyra', battle:null, loot:null, sleep:true, sleepCost:4 },
   EF2:{ num:94, code:'EF2', name:'ephesus', label:'Ephesus — The Silver Quarter', act:4, N:null, S:null, E:null, W:'SEA',
     text:"Ephesus's economy runs on the temple district. The temple district runs on silver. The silversmiths make models of the temple — small ones for households, large ones for shrines, the full range. It is a good trade. It has been a good trade for generations. The models are sold in every market in the inner sea. The workshops are established, the supply chains are stable, and everything is working correctly.\n\nPaul has been here three years. The silversmiths have noticed.\n\nDemetrius, who runs the craftsmen's guild, has called a meeting. The meeting was scheduled for the market hall. The meeting has spilled out of the market hall. The market hall was not large enough for the meeting Demetrius called.",
@@ -7646,7 +7646,7 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   J14:{ num:104, code:'J14', name:'junction', label:'The Malta Approach', act:4, N:'J13', S:'ST', E:'ML', W:null,
     text:"The ship has been at sea for nine days when the captain begins speaking only to the wheel. East, the island — rocky coastline, low buildings against the sky, a harbor that exists because it must. South, open sea.\n\nThe island has a name on the charts. It is also, separately, the place where the hull will meet the shallows before dawn.", npc:null, battle:null, loot:null, sleep:false, junction:true },
   ML:{ num:95, code:'ML', name:'malta', label:'Malta — The Shore', act:4, N:null, S:null, E:null, W:'J14',
-    text:"The ship has been at sea for fourteen days. The captain described the weather on day one as manageable and has not described it since because he has stopped speaking to passengers and is speaking only to the wheel. There are two hundred and seventy-six people aboard. Paul has been counting. He counts because the count matters.\n\nThe grounding happens at night. The ship hits the shallows at speed and does not come off. The hull holds. It will not hold until morning.\n\nThe soldiers want to kill the prisoners — standard protocol. The centurion stops them. The centurion stops them for Paul specifically, which Paul did not ask for and could not have arranged.\n\nTwo hundred and seventy-six people reach the shore before dawn. Paul has been counting all night. The count is correct.",
+    text:"The ship has been at sea for fourteen days. The captain described the weather on day one as manageable and has not described it since because he has stopped speaking to passengers and is speaking only to the wheel. There are two hundred and seventy-six people aboard. Paul has been counting. He counts because the count matters.\n\nThe grounding happens at night. The ship hits the shallows at speed and does not come off. The hull holds. It will not hold until morning.\n\nBefore the hull goes, Paul addresses the 276. He tells them to eat — fourteen days without food, the storm, the constant pumping. He breaks bread and gives thanks. You distribute the rest. This is a practical action: 276 people need to receive bread on a moving deck in high weather, and someone has to pass it. You pass it. You know the count because you asked the ship's log keeper on the second day.\n\nThe soldiers want to kill the prisoners — standard protocol, no escaped prisoner on their watch. You stand in the way of this. The centurion stops his soldiers because he wants to save Paul, and Paul gets out, but you are the reason the moment pauses long enough for the centurion to make the order. The pause is four seconds.\n\nTwo hundred and seventy-six people reach the shore before dawn. Paul has been counting all night. The count is correct. \"Therefore I urge you to take some food. You need it to survive. Not one of you will lose a single hair from his head.\"",
     npc:'Malta Shore Islanders', battle:null, loot:null, sleep:true, sleepCost:0 },
   ST:{ num:96, code:'ST', name:'rome', label:'Rome — House Arrest', act:4, N:'J14', S:null, E:null, W:null,
     text:"Rome is the largest city he has ever been in. It is also the most organized city he has ever been in, and the most indifferent. It has seen everything. It has processed everything. It continues.\n\nHe is under house arrest in a rented house. The conditions are comfortable by the standards of imperial detention — he can receive visitors, which he does, constantly; he can write letters, which he does, constantly; he cannot leave, which he does not, because he has visitors to receive and letters to write.\n\nHe has been here two years. The letters he writes here are different from the letters he wrote in Corinth — shorter, more specific, more aware of what remains to be said versus what can remain unsaid.\n\nThe arc does not end here. It stops here.",
@@ -8796,7 +8796,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     vignetteText:"The third berth has been wrong since Tuesday. The manifest says ballast. The crane operators won\'t take that side. Muffat has been watching the Scholar Kings clearance stamp on the hold for three days — it prevents harbor search and she knows it. You have the Trade Seal, which gets you onto the dock. The harbor watch works the main berths. The third is close enough to the crane rigging that the shadow covers the approach. Close enough.",
     passText:"The crate is there. Scholar Kings Distribution stamp, no matching manifest number. You bring it to Muffat. She sets it on the counter and looks at it the way she looks at manifests: correctly, and with no illusions about what that means.",
     failText:'The watch catches the movement before you clear the shadow line. You pull back. The crate stays where it is. The watch makes a note in the margin of the wrong ledger.',
-    completeItems:[], checkPassFlag:'muffatBerthReached',
+    completeItems:[], checkPassFlag:'muffatBerthReached', bitLabel:'Muffat Berth',
     disposition:'"There are three things on that berth that should not be there. The crate is one of them." — Magistra Elara Muffat' },
   // ── §LVIII: Cycle 4 ──
   quest_muffat_05: { id:'quest_muffat_05', type:'side', title:'Cycle 4',
@@ -8862,7 +8862,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     activateCond:() => !!S_story.saulConverted,
     completeFn:() => !!S_story.anathSightRestored,
     xpAward:300, waypointNode:'KS', reward:0,
-    disposition:'"I was afraid of you for three years. I was afraid of you when I knocked on that door. I am choosing not to let that matter." — Anath' },
+    disposition:'"Brother Saul, the Lord Jesus, who appeared to you on the road, has sent me so that you may see again." — Anath' },
   // ── §LXI: Jerusalem return + Tarsus ──
   quest_hellenists_jerusalem: { id:'quest_hellenists_jerusalem', type:'side', title:'Fifteen Days',
     desc:"He stays fifteen days. He speaks in the assembly halls. He argues with people who disagree with him — he is very good at arguing, and the conversion did not change this about him, which is a point of some reflection. On the fifteenth day, the Hellenists gather near the gate. Barnach says: go.",
@@ -8889,7 +8889,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     vignetteText:'He is precisely positioned between Paul and the governor. This is not an accident — Ezzir has been in rooms before and knows where to stand. The governor is watching.\n\nEzzir speaks first. He is very good at speaking first.',
     passText:'Ezzir\'s words stop working. This is visible. The governor has been watching for exactly this kind of evidence — an argument that stops another argument by being more true. The door is no longer blocked.',
     failText:'Ezzir gets the first word and the second word. Paul gets to recover from both. Tomorrow the door is still there.',
-    completeItems:[], checkPassFlag:'ezzirConfronted',
+    completeItems:[], checkPassFlag:'ezzirConfronted', bitLabel:'Ezzir Standoff',
     disposition:'"I have been serving this governor for six years. You have been here eleven hours." — Ezzir' },
   quest_governor_cyprus: { id:'quest_governor_cyprus', type:'skill_check', title:'The Governor Listens',
     desc:"Ezzir has stepped aside. The governor reads widely and holds opinions about ideas. He has an altar in the corner of his room — three hundred years old, maintained by every governor before him. He does not know why he maintains it. He is about to find out.",
@@ -8901,8 +8901,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     vignetteText:'The governor has the particular quality of someone who has made their career on good judgment about ideas — he knows the difference between an argument and a description. He has been waiting for a description.\n\nThe altar in the corner is three hundred years old. He maintains it. He does not know why.',
     passText:'He sits down. He looks at the altar. "I have been maintaining it longer than I have understood why." He looks at Paul. "Tell me."',
     failText:'The governor is interested but not convinced. He is curious rather than resistant. He will hear the description again tomorrow.',
-    completeItems:[], checkPassFlag:'govCopperConverted',
-    onPass:() => { if (!S_story.inventory) S_story.inventory = []; },
+    completeItems:[], checkPassFlag:'govCopperConverted', bitLabel:'Governor of Cyprus',
     disposition:'"He said things I could not explain by the methods I usually use to explain things. I find this interesting rather than threatening. It is possible I find it interesting because it is true." — Governor of Cyprus' },
   // ── §LXIV: The Gate ──
   quest_lame_lystra: { id:'quest_lame_lystra', type:'skill_check', title:'The Gate',
@@ -8915,15 +8914,21 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     vignetteText:'He has been here his whole life. He is not asking for anything. He is watching the road with the patience of someone who has already accepted his situation.\n\nHe is watching Paul specifically.',
     passText:'Paul looks at him. Not at the crowd. He says: stand.\n\nThe man stands.\n\nThe crowd witnesses this. The crowd\'s response is immediate and wrong — they call Paul a god. Paul corrects them. At length. The crowd had come expecting a god and is now being asked to reconsider their entire cosmological framework in an afternoon. They are disappointed. Some of them are angry.',
     failText:'The man does not stand. Paul continues through the gate. The city is unchanged. The man goes home.',
-    completeItems:[], checkPassFlag:'lameManHealed',
+    completeItems:[], checkPassFlag:'lameManHealed', bitLabel:'Gate Healing',
     disposition:'"He looked at me. He did not look at the crowd. He looked at me and said: stand. I have been told to stand before. No one has ever meant it this way." — The Man at the Gate' },
   // ── §LXIV: Left for Dead ──
-  quest_stoning_lystra: { id:'quest_stoning_lystra', type:'side', title:'Left for Dead',
-    desc:"The crowd that wanted to sacrifice to a god has become the crowd that stones one. Both responses are to the same event. They had expected a god. What they got was a correction. Some crowds do not accept corrections.",
-    hint:'The crowd that called you a god is still in the market square.',
+  quest_stoning_lystra: { id:'quest_stoning_lystra', type:'skill_check', title:'Left for Dead',
+    desc:"The crowd that called Paul a god has become the crowd that stones one. Both responses are to the same event — they had expected a god; what they got was a correction. Some crowds do not accept corrections.\n\nThe square is filling. They know his face. They do not know yours yet.",
+    hint:'Create an opening in the crowd. Get Paul through before the first stone is thrown.',
     activateNode:'LT', activateCond:() => !!(S_story.quests && S_story.quests['quest_lame_lystra'] === 'done'),
-    completeFn:() => !!S_story.stoningEvent,
-    xpAward:100, waypointNode:'LT', reward:0,
+    checkAbility:'str', checkLabel:'Athletics', checkDC:13,
+    retryable:false,
+    xpAward:150,
+    vignetteText:'The crowd has stopped being a crowd and started being a direction. You can see where it intends to go. You are between it and him.\n\nThe south gate is forty feet to your left. He is standing, which is already unusual behavior for a man who has just realized what is about to happen. He is not moving — he is still in the mode of addressing the crowd. You are the one who is going to have to move.',
+    passText:'You make the opening. Shoulder, then body, then the space where a person stood. He comes through it without being asked. The south gate.\n\nThe road northeast runs out of Lythros past the south gate marker. He takes it. He gets up from the square first, and then he takes it. The sequence matters.\n\n"He got up and went back into the city."',
+    failText:'The first stone is not aimed — it is thrown by someone who wanted to be part of something. The second is aimed. Paul takes the hit before you close the distance. You get him to the gate. He is down. Then he gets up. Timael watches this from across the square and decides something.',
+    completeItems:[], checkPassFlag:'stoningEvent', checkFailFlag:'stoningEvent', bitLabel:'Lystra Stoning',
+    onFail:() => { S_story.hp = Math.min(S_story.hp || 1, 1); },
     disposition:'"He got up. Everyone else left. I decided to stay." — Timael' },
   // ── §LXII: The Sending ──
   quest_antioch_commission: { id:'quest_antioch_commission', type:'side', title:'The Sending',
@@ -8941,19 +8946,32 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     completeFn:() => !!S_story.lyraConverted,
     xpAward:150, waypointNode:'PL', reward:0,
     disposition:'"I decided before I spoke. The speaking was the confirmation." — Lyra' },
+  // ── §PAUL-01: Philippi — The Prison ──
+  quest_prison_phillam: { id:'quest_prison_phillam', type:'skill_check', title:'Seven Stairs, Then Five',
+    desc:"The earthquake opens every door in the city prison. The chains come loose from the walls. The guards are awake. The jailer is awake. He draws his sword — not for you, for himself. Under Roman protocol, a jailer whose prisoners escape answers with his life. He has already decided how to answer.\n\nEvery prisoner in the block is free, in the technical sense, at midnight. Paul and Silar have not moved. Paul is still singing. You are in the cell across the corridor and you are free to leave.",
+    hint:'When the doors open — stay. Read the jailer before he acts.',
+    activateNode:'PL', activateCond:() => !!S_story.lyraConverted,
+    checkAbility:'wis', checkLabel:'Insight', checkDC:12,
+    retryable:false,
+    xpAward:200,
+    vignetteText:'The doors are open. The dark is the specific dark of a room where the lamps have gone out, not the dark of a room that never had them.\n\nThe jailer is across the corridor. He has the sword out. His hands are not steady. You have three seconds — four if the hand does not stop shaking. Paul\'s voice is still going. The other prisoners are listening.\n\nYou know what the sword is for. The question is whether you get there before he uses it on himself.',
+    passText:'"Do yourself no harm." Paul says this before you reach the doorway. He does not need to be loud. The jailer lowers the sword.\n\nYou are still moving when the sword goes down. You stop.\n\nHe brings you upstairs to his house. His household eats together in the middle of the night — the jailer, his family, Paul, Silar, you. After, Paul invokes Roman citizenship for the record: not for release, which has already happened, but to establish that they were beaten uncondemned. The magistrates come personally to walk them out.\n\n"He was filled with joy because he had come to believe in God — he and his whole household."',
+    failText:'You reach the door a second late. The jailer has made his decision. Paul\'s voice stops the hand — not your movement, but his voice. The sword goes down. The household eats together. The story comes out right. But you know it was one second, and you know what that second was.',
+    completeItems:[], checkPassFlag:'phillippiJailerConverted', bitLabel:'Philippi Jailer',
+    disposition:'"About midnight Paul and Silas were praying and singing hymns to God, and the other prisoners were listening."' },
   // ── §LXVI: Athens — The Unknown Altar ──
   quest_areopagus: { id:'quest_areopagus', type:'skill_check', title:'To An Unknown One',
-    desc:"There is an altar at the east end of the market that reads: TO AN UNKNOWN ONE. It has been there for two hundred years. Nobody knows who built it or what it was for. Paul has been standing in front of it for a long time. The Market Steward wants to know why.",
-    hint:'Speak at the Areopagus about the Unknown Altar.',
+    desc:"There is an altar at the east end of the market that reads: TO AN UNKNOWN ONE. It has been there for two hundred years. Nobody knows who built it or what it was for. Paul has been standing in front of it for a long time. The Market Steward wants to know why.\n\nBefore he takes the steps, you walk the hall. Two exits: the colonnade south and the market gate east. Both open. You note the distance to each.",
+    hint:'Speak at the Areopagus. Start with what they already built.',
     activateNode:'AE', activateCond:() => true,
     checkAbility:'cha', checkLabel:'Persuasion', checkDC:13,
     retryable:false,
     xpAward:200,
-    vignetteText:'The altar is at the east end of the market. The inscription: TO AN UNKNOWN ONE. Two hundred years of upkeep. The priests who maintain it don\'t know who built it. The city maintains it anyway — on the principle that a city that maintains all the altars has covered all its bases.\n\nPaul has been standing in front of it for a long time.\n\nThe Market Steward approaches. He has the manner of a man who administers forty shrines and has heard every interpretation of every one of them. He has not heard this interpretation.',
-    passText:'The Areopagus is the speaking hill above the market. The council meets there. They invite Paul because they are curious, not because they agree — Athens runs on the formal exchange of new ideas as a civic institution.\n\nHe begins with the altar. He does not begin with a correction. He begins: I see that you maintain what you do not fully know. I want to tell you what I know about what you have been maintaining.\n\nSome laugh. Some leave. Some say: we want to hear this again. Dionysius stays. Damaris stays. They stay for the rest of the conversation and then for longer than that.',
-    failText:'The Market Steward listens with the patience of a man who has managed the theological opinions of forty altars. He does not argue. He does not agree. He says: the inscription is maintained. It has been maintained for two hundred years. We will continue to maintain it. Thank you for your interpretation.\n\nThe council does not invite him to the Areopagus. The altar continues to be maintained.',
-    completeItems:[], checkPassFlag:'areopagusSpeech',
-    disposition:'"I found among your objects of worship an altar with the inscription: TO AN UNKNOWN ONE." — Athens' },
+    vignetteText:'The altar is at the east end of the market. The inscription: TO AN UNKNOWN ONE. Two hundred years of upkeep. The priests who maintain it don\'t know who built it. The city maintains it anyway — on the principle that a city that maintains all the altars has covered all its bases.\n\nPaul has been standing in front of it for a long time. You have been watching the square.\n\nThe Market Steward approaches. He has the manner of a man who administers forty shrines and has heard every interpretation of every one of them. He has not heard this interpretation.\n\nYou position yourself at the base of the steps. South exit is twelve paces left.',
+    passText:'The Areopagus is the speaking hill above the market. The council meets there. They invite Paul because they are curious, not because they agree — Athens runs on the formal exchange of new ideas as a civic institution.\n\nHe begins with the altar. He does not begin with a correction. He begins: I see that you maintain what you do not fully know. I want to tell you what I know about what you have been maintaining.\n\nSome laugh. Some leave. Some say: we want to hear this again. Dionysius stays. Damaris stays. They stay for the rest of the conversation and then for longer than that.\n\nYou watch the exits. No one closes them.',
+    failText:'The Market Steward listens with the patience of a man who has managed the theological opinions of forty altars. He does not argue. He does not agree. He says: the inscription is maintained. It has been maintained for two hundred years. We will continue to maintain it.\n\nThe council does not invite him to the Areopagus. The south exit stays open. The altar continues to be maintained.',
+    completeItems:[], checkPassFlag:'areopagusSpeech', bitLabel:'Areopagus Speech',
+    disposition:'"To an Unknown God. What therefore you worship as unknown, this I proclaim to you."' },
   // ── §LXVII: Ephesus — The Riot ──
   quest_ephesus_riot: { id:'quest_ephesus_riot', type:'skill_check', title:'The Silversmith\'s Meeting',
     desc:"Demetrius runs the craftsmen's guild. The guild makes temple models. Paul has been here three years and the guild has noticed. The meeting Demetrius called has spilled out of the market hall. The market hall was not large enough.",
@@ -8965,7 +8983,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     vignetteText:'Demetrius\'s voice is the loudest in the square. He is not wrong about the economics: three years of Paul in Ephesus, and silver temple sales are down. He is also not just about economics — there is a theological argument underneath the economic one. He is making both simultaneously. The crowd is responding to both.\n\nThe theater holds twenty-five thousand people. The crowd is moving toward the theater. The city clerk is trying to reach the front.',
     passText:'The city clerk gets to the front. He is a bureaucrat with perfect institutional memory and the specific kind of calm that comes from administering a city that has had riots before.\n\nHe says: these men have not robbed the temple. They have not blasphemed the goddess. If Demetrius has a charge, the courts are open. If Demetrius does not have a charge, this assembly is illegal and Rome will want to know about it.\n\nThe crowd considers this. The crowd is not wrong about the economics. But the clerk is right about the courts. The theater empties before dark. The charges are never filed.',
     failText:'The theater fills. Twenty-five thousand people, all of them shouting the same thing at once — not at Paul specifically, but in the direction of everything Paul represents. The shouting continues for two hours. The city clerk cannot get to the front.\n\nPaul leaves Ephesus the next morning. He had planned to stay longer.',
-    completeItems:[], checkPassFlag:'demetriusRiotEscaped',
+    completeItems:[], checkPassFlag:'demetriusRiotEscaped', bitLabel:'Ephesus Riot',
     disposition:'"This craft is our wealth. The woman is demoted from magnificence by this man." — Demetrius, craftsmen\'s guild, Ephesus' },
   // ── §LXVIII: Corinth — The Letters ──
   quest_corinth_letters: { id:'quest_corinth_letters', type:'side', title:'Tent Canvas & Letters',
@@ -8985,17 +9003,18 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     disposition:'"He got up. From Lystra, from every place after. The counting was real." — Timael' },
   // ── §LX: Basket escape ──
   quest_basket_damascus: { id:'quest_basket_damascus', type:'skill_check', title:'Over the Wall',
-    desc:"The magistrate of Damascus has learned that Saul is in the lower city — now as a liability rather than an asset. A detention order has been issued. The warrant authority has turned against the warrant-carrier. The gate is watched. The wall is not.",
-    hint:'Find another way out of Damascus. The wall has a window. The window has a rope.',
+    desc:"The magistrate of Damascus has issued a detention order. The warrant authority has turned against the warrant-carrier. The gate is watched. The wall is not.\n\nThe rope is knotted cloth — not planned, improvised from what is in the room. You make seven knots yourself and test each one against the window frame. The basket is market-grade, meant for vegetables. It will hold the weight if the descent is controlled. You know this because you have lowered things before and you know what controlled means.",
+    hint:'Lower him over the wall. Hold the rope. The watch is on the gate, not the wall — not yet.',
     activateNode:'KS', activateCond:() => !!S_story.anathSightRestored,
-    checkAbility:'dex', checkLabel:'Stealth', checkDC:12,
+    checkAbility:'str', checkLabel:'Athletics', checkDC:12,
     retryable:true, retryGateDays:1,
     xpAward:150,
-    vignetteText:'The basket is large enough. The rope is long enough. The wall is higher than it looks.\n\nBelow the wall: the road to Jerusalem is open. Above: this window is the only way out of a city that has been told to hold you. The watch is on the gate. Not on the wall. Not yet.',
-    passText:'Down. The road. The dark. The escort that escorted you in does not recognize the man who left.',
-    failText:'You pull back before clearing the wall. The window remains. So does the watch. Try again tomorrow.',
-    completeItems:[], checkPassFlag:'escapedDamascus',
-    disposition:'"The warrant authority turns against the warrant-carrier. Both are the same warrant." — the wall at Damascus' },
+    vignetteText:'He gets in. He is not heavy. He does not speak. There is nothing to say at this moment — the guards at the eastern gate change at the third hour; you are ahead of the change; the window points west; the mathematics are in your favor if the knots hold.\n\nYou hold the knots.',
+    passText:'Down. Controlled. The last three feet you lower slowly because you can hear him breathing. He lands and crouches and then he is moving. You pull the rope back up. You do not watch him go — you are watching the eastern gate.\n\nThe gate guard does not turn.\n\nThe facts are accurate. They do not include the knots.',
+    failText:'The rope shifts under the load. You brace and recover — but there is noise. You pull back before clearing the wall. The window remains. So does the watch. Tomorrow the knots will hold.',
+    completeItems:[], checkPassFlag:'escapedDamascus', bitLabel:'Damascus Escape',
+    onPass:() => { _grantMissionBit('basketRopeComplete', 'Basket Rope'); },
+    disposition:'"Through a window in the wall his disciples lowered him in a basket."' },
   // ── §SIREN-01: The Four Courts of the Littoral Sea ──
   quest_aurel_tide: { id:'quest_aurel_tide', type:'skill_check', title:'The Tidal Schedule',
     desc:"Lady Aurel administers the harbor from the harbormaster's tower. She is never not working. The tide tables are open on her desk. She is glad you have come. She will see you at the next window. The warmth is genuine. The warmth is given in installments.",
@@ -9007,7 +9026,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     vignetteText:'The tide table is open on her desk. She reads it while speaking to you. She speaks while reading it. This is the message: everything has prior claim on her attention, and the space she gives you is borrowed from the schedule.\n\nShe is not describing her schedule. She is describing your position in it. The warmth is real. The installments are also real. Both things are true simultaneously, which is what makes the frame stable.',
     passText:'You name the pattern without naming it as a pattern. You say: I will receive the seal when it is convenient, not when it is next — send word when the window opens. You make yourself the appointment, not the waiting.\n\nShe looks at you for a moment. She closes the tide table. She gives you the seal.',
     failText:'You wait for the next window. The window opens briefly, closes again. You wait for the one after that. The seal comes eventually — she was always going to give it. But she has learned something about you in the waiting that you did not mean to teach.',
-    completeItems:[], checkPassFlag:'aurelTideRead',
+    completeItems:[], checkPassFlag:'aurelTideRead', bitLabel:'Aurel Seal',
     checkFailFlag:'betrayalThought',
     disposition:'"The tide keeps its own schedule. Everything else negotiates." — The harbormaster\'s tower, Port Aurel' },
   quest_calice_bridge: { id:'quest_calice_bridge', type:'skill_check', title:'The Wheel in the Courtyard',
@@ -9020,7 +9039,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     vignetteText:'The bridge chain runs from the tower to the courtyard. The courtyard is accessible from the gate that was left open when you arrived. The wheel is visible from the gate.\n\nShe has said: perhaps at the evening tide. Perhaps is not no. Perhaps is not yes. Perhaps is a holding pattern — the coin is still in the air and you are being asked to wait for it to land.\n\nThe wheel has a handle.',
     passText:'You go to the courtyard. You find the wheel. The mechanism is straightforward — well-maintained, designed to be operated without assistance. You turn it. The bridge lowers.\n\nYou cross before the evening tide.\n\nLady Calice, when she sees you on the other side, says nothing for a moment. Then she gives you the seal. The perhaps is over.',
     failText:'You wait for the evening tide. The tide comes. She lowers the bridge. You cross.\n\nThe crossing happens, but you are no longer the person who initiated it. You were waiting and she was watching the wait. The seal is given. You have taught her something about your patience.',
-    completeItems:[], checkPassFlag:'caliceBridgeCrossed',
+    completeItems:[], checkPassFlag:'caliceBridgeCrossed', bitLabel:'Calice Crossing',
     checkFailFlag:'betrayalWord',
     disposition:'"The evening tide is reliable. The question is whether you need it to be." — Port Calice' },
   quest_mireille_ami: { id:'quest_mireille_ami', type:'skill_check', title:'Name Your Standing',
@@ -9033,7 +9052,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     vignetteText:'The introduction has already happened. The court already has an opinion of who you are in relation to Lady Mireille. The opinion is warm and favorable and entirely wrong about the category.\n\nYou have been placed in the last box — valued, present, available, not chosen. The court will ask for your counsel. The court will receive it as a companion\'s counsel, which is the counsel of someone who gives and is not owed a return.\n\nThe herald is still standing at the door with your name on his tongue.',
     passText:'You address the court before they can address you through her.\n\nYou give your name. You give your commission. You give your title. You do it the way a person gives these things when they have decided they are worth giving — without softening them, without the apologetic parenthetical that invitation-only rooms produce.\n\nThe court adjusts. Lady Mireille looks at you — a different look than the one that accompanied the introduction. She gives you the seal.',
     failText:'You accept the introduction. You counsel the court through the evening. You give what the role asks for — attention, reassurance, guidance. You are good at this. You give it well.\n\nYou leave the court lighter of something you brought in and heavier of nothing you were owed. The seal is in your coat. The evening was warm. The role stayed with you.',
-    completeItems:[], checkPassFlag:'mireilleAmiNamed',
+    completeItems:[], checkPassFlag:'mireilleAmiNamed', bitLabel:'Mireille Named',
     checkFailFlag:'betrayalDeed',
     disposition:'"He addressed the court directly. It was unexpected. I found it clarifying." — Lady Mireille' },
   quest_solen_horizon: { id:'quest_solen_horizon', type:'skill_check', title:'The Ship That Does Not Come',
@@ -9046,7 +9065,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     vignetteText:'The ship is on the horizon. She named it. The name is specific.\n\nA future that is real has a date, a plan, a place, a time — something you can point to and say: this exists. She has given you a name and a direction. She has not given you a date.\n\nThe dock is forty paces from the court gate. The fishermen have been watching this harbor since before there was a court to watch it from. They know every ship on their water by the way it sits.',
     passText:'You go to the dock before you go to the court.\n\nThe fishermen know the ship. They name the season they last saw it move — three seasons ago, in the autumn, when the captain put in for water and departed south. He has not returned. The ship on the horizon is anchored. It has been anchored since the second season of waiting.\n\nYou bring this back to Lady Solen. You give her the name she gave you, and the season the fishermen gave you, and you say: I require a date, or I require a different carrier.\n\nShe pauses. She gives you the date. The carrier is different.',
     failText:'You wait. She says soon. The week passes. Another follows. The letters arrive eventually — by a different courier, sent quietly, without explanation. The ship on the horizon is still there.\n\nYou did not look at the horizon clearly. You believed the soon was a real soon because you wanted it to be. The letters are in your coat. The season has changed.',
-    completeItems:[], checkPassFlag:'solenSoonRead',
+    completeItems:[], checkPassFlag:'solenSoonRead', bitLabel:'Solen Truth',
     disposition:'"The fishermen remember. They always remember." — the dock at Port Solen' },
   quest_sea_overseer: { id:'quest_sea_overseer', type:'skill_check', title:'The Voice in the Fog',
     desc:"The navigator has been speaking in a different register since the serpent crossing. In the fog bank east of the passage, a voice speaks directly — no intermediary. It knows about every court. It has been in the water ahead of you the entire time. It offers to make the fourth court unnecessary.",
@@ -9058,7 +9077,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     vignetteText:'The voice is not hostile. This is the part you are meant to notice. A hostile voice can be refused. A helpful voice requires a different kind of refusal.\n\nIt knows Port Aurel. It knows Port Calice. It knows Port Mireille. It has this information because it has been present at each court — not physically, but through the navigator, who has been walking around in their own body and having their own thoughts while also, in a separate register, reporting to something in the water.\n\nThe navigator does not know this. The navigator has simply been feeling unusually clear-headed and well-directed since the first crossing.\n\n"You have one more court," the voice says. "I can arrange the letters another way. It would cost you nothing. It would simply require that you allow me to be useful to you." It says this pleasantly. It is pleasant. This is exactly the problem.',
     passText:'You name the structure aloud.\n\nNot to accuse. Not dramatically. You simply say, in the fog, to the voice that has been ahead of you the entire time: you arranged the four courts. The tidal schedule was a test because you needed to know if I could read it. Port Calice, the same. Port Mireille was a categorization test. Port Solen was temporal delay.\n\nYou name each one. Flat. Present-tense. Not angry.\n\n"I understand you," you say. "I am going to the fourth court anyway."\n\nThe fog lifts. The navigator stops speaking in the second register. The navigator does not know what just happened.',
     failText:'The offer sounds reasonable. It is reasonable. That is what the voice does — it makes the reasonable offer at the moment when you have been working hard and the end is close and the shortcuts look attractive.\n\nYou say: tell me what you need.\n\nThe voice tells you. It needs a small compliance — nothing significant, a minor framing of how you will request the letters at Port Solen. A word. A specific word.\n\nThe word is not wrong. The word simply gives the voice a small piece of the frame. The letters come. The frame shifts a degree. You are not aware of the degree.',
-    completeItems:[], checkPassFlag:'charmResisted',
+    completeItems:[], checkPassFlag:'charmResisted', bitLabel:'Charm Resisted',
     checkFailFlag:'seaOverseerMet',
     disposition:'"The most effective intervention is the one that appears to be assistance." — the fog bank, open water' },
   // ── §CROWN-01: Three Crowns of the Swamp quests ──
@@ -9637,7 +9656,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Approach the cat with kindness rather than force. CHA Persuasion DC 10.',
     activateNode:'DK', activateCond:() => true,
     checkStat:'cha', checkSkill:'Persuasion', checkDC:10, retryable:true,
-    checkPassFlag:'smaltBefriended',
+    checkPassFlag:'smaltBefriended', bitLabel:'Smalt Befriended',
     onPass:() => {
       S_story.smaltBefriended = true;
       S_story.gold = (S_story.gold||0) + 100;
@@ -10856,9 +10875,11 @@ const NPC_DIALOGUE = { // → doc: story.md §FL7
     ? '"The marks are yours now," Wane says. "You earned them in the proper order — by paying attention." Glut nods. Whisper does not look at you. The not-looking is the warmest thing she has. "Go south," she says. "The path is open."'
     : '"The clearing is the end of the deeper swamp," Glut says. "What you carry from here, you carry permanently." Wane looks at the mire. "The marks know their own weight," she says. "You will understand them later."' },
   // §LXV–§LXIX: Mediterranean Journey NPCs
-  PL: { name:'Lyra', quoteFn:() => S_story.lyraConverted
+  PL: { name:'Lyra', quoteFn:() => S_story.phillippiJailerConverted
+    ? '"The jailer brought his whole household down at midnight. I have never seen a man make a decision that fast — see the doors open, reach for the sword, then put the sword down before you could blink. That is what it looks like when someone changes their mind completely." She looks at the guest room stairs. "Seven up, then five. I counted them when I arranged the rooms."'
+    : S_story.lyraConverted
     ? '"I decided before I spoke. The speaking was the confirmation." She has arranged the purple cloth in the way she arranges things she has decided on — with care, not ceremony. She has the quality of someone who has reorganized around a true thing and is no longer uncertain about the arrangement.'
-    : ((() => { S_story.lyraConverted = true; return 'She has been watching from across the bridge for two days. She has evaluated the quality of the teaching and the character of the teacher and the question underneath both and has come to a conclusion.\n\n"I want to hear more of this." She says it the way a purple-cloth merchant says things she has already priced — a final assessment, not an inquiry.\n\n"Come to the house. Bring whoever is with you."\n\nShe does not say: I believe you. She does not need to say it. She has already arranged the household.\n\nThe earthquake comes three days later. Every door in the city prison opens. The jailer wakes, sees the doors open, reaches for his sword. Paul says: stop. We are all here. The jailer sets down the sword. This is the moment he decides.'; })()) },
+    : ((() => { S_story.lyraConverted = true; return 'She has been watching from across the bridge for two days. She has evaluated the quality of the teaching and the character of the teacher and the question underneath both and has come to a conclusion.\n\n"I want to hear more of this." She says it the way a purple-cloth merchant says things she has already priced — a final assessment, not an inquiry.\n\n"Come to the house. Bring whoever is with you."\n\nShe does not say: I believe you. She does not need to say it. She has already arranged the household.\n\nShe points toward the stairs. "Seven up, then a landing, then five more. The guest room is reliable. Sleep before the prison problem gets worse."'; })()) },
   AE: { name:'Athens Market Steward', quoteFn:() => S_story.areopagusSpeech
     ? '"The altar has been there two hundred years. We maintain what we do not fully understand. You are the first to explain it in terms of what it has always meant rather than what it should mean." He straightens the inscription plaque. It does not need straightening. "The Areopagus will remember the conversation. Some of them will think about it longer than others."'
     : '"TO AN UNKNOWN ONE. Two hundred years of maintenance. No one who built it is living. We maintain it because we maintain all altars — theological completeness as civic policy. You have been standing in front of it for quite some time." He pauses. "We are curious what you see there that requires this much attention."' },
@@ -11703,6 +11724,7 @@ const _S_DEFAULTS = () => ({
   lameManHealed: false, stoningEvent: false, timaelaJoined: false,
   // §LXV–§LXIX: Mediterranean Journey
   lyraConverted: false, areopagusSpeech: false, demetriusRiotEscaped: false, corinthLettersWritten: false, maltaSnakeEvent: false, romeArrestBegun: false,
+  phillippiJailerConverted: false, basketRopeComplete: false, // §PAUL-01
   // §SIREN-01: Littoral Courts
   aurelTideRead: false, betrayalThought: false,
   caliceBridgeCrossed: false, betrayalWord: false,
@@ -14264,6 +14286,37 @@ function _hasItem(keyword) {
   return S_story.inventory.some(i => i.name.includes(keyword) || keyword.includes(i.name.split(' (')[0]));
 }
 
+/* ── Mission Bit Tokens — physical proof of witnessed events ── */
+function _flagToLabel(f) {
+  return f.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase()).trim();
+}
+
+function _grantMissionBit(flagName, label) {
+  S_story[flagName] = true;
+  S_story.inventory = S_story.inventory || [];
+  if (S_story.inventory.some(i => i.flagRef === flagName)) return;
+  const displayLabel = label || _flagToLabel(flagName);
+  const tokenName = displayLabel + ' Token';
+  const glyph = flagName.replace(/([A-Z])/g, '_$1').toUpperCase();
+  S_story.inventory.push({
+    name: tokenName,
+    icon: '🪬',
+    type: 'mission_bit',
+    sell: 0,
+    desc: 'A carved bone token. Glyph: ' + glyph + '. Mark of a witnessed moment.',
+    flagRef: flagName,
+    day: S_story.day || 1,
+  });
+  storyMsg('🪬 Token received: ' + tokenName + '.');
+}
+
+function _takeMissionBit(flagName) {
+  const token = (S_story.inventory || []).find(i => i.flagRef === flagName);
+  S_story[flagName] = false;
+  S_story.inventory = (S_story.inventory || []).filter(i => i.flagRef !== flagName);
+  if (token) storyMsg('🪬 Token returned: ' + token.name + '.');
+}
+
 /* ── Layer 7-B: Key Events — item-triggered world changes (replaces gate locks) ── */
 const KEY_EVENTS = [
   { id:'ke_crypt_key', node:'CR', item:'Crypt Key', label:'🗝 Open the lower ward',
@@ -14277,12 +14330,12 @@ const KEY_EVENTS = [
     failText:'You work the mechanism longer than it should take. The passage opens, scraping stone — the sound carries back into the cave behind you and forward into wherever the passage leads. Whatever uses this route has now heard you arrive.',
     worldNote:'Inner passage open. Fishing boats from the coast have resumed the route. Coastal goods available at the cave mouth.' },
   { id:'ke_conclave_pass', node:'AL', item:'Conclave Pass', label:'📋 Present the Conclave Pass',
-    ability:'cha', abilityLabel:'Persuasion', dc:12, flag:'keyEvent_conclavePass',
+    ability:'cha', abilityLabel:'Persuasion', dc:12, flag:'keyEvent_conclavePass', consumeItem:true,
     successText:'You present the pass. The warrant scout takes it, examines both sides, and hands it back in under ten seconds. He says a single word to the other scout — your name, or a number — and steps aside.\n\nThe kenku on the drainpipe goes quiet. Not the alert kind. The kind that means you have been filed and are no longer interesting.',
     failText:'The scout takes more time than he needs. He tilts the pass toward the alley light, looking for something specific. He finds nothing — or decides there is nothing to find — and steps aside without speaking.\n\nThe kenku repeats one of your earlier excuses back at you. You get through anyway.',
     worldNote:'Conclave Pass registered at the checkpoint. The scouts step aside on sight. The kenku has stopped collecting your excuses.' },
   { id:'ke_toll_token', node:'VC', item:'Toll Token', label:'🪙 Offer the Toll Token',
-    ability:'cha', abilityLabel:'Persuasion', dc:13, flag:'keyEvent_tollToken',
+    ability:'cha', abilityLabel:'Persuasion', dc:13, flag:'keyEvent_tollToken', consumeItem:true,
     successText:'Bruxa Elise Mourne accepts the token without looking at it. She already knows what it is — she has been collecting settled accounts for a very long time and can read the weight of one before she touches it.\n\n"The debt is closed," she says. She does not explain what the debt was for. She sets the token on the gate post and leaves it there.\n\nWhen you go, a small vial is on the road post. Sealed. One full rest, no cost. She does not explain why.',
     failText:'She takes the token, holds it a moment longer than necessary, and sets it down. "The account is settled," she says. Barely. The vial is on the post when you leave. Half-emptied. She does not explain that either.',
     worldNote:'Toll gate removed. Blood debt settled with Bruxa Mourne. A vial on the road post — one full rest at no cost.' },
@@ -14561,6 +14614,7 @@ const EB_NPC_DIALOGUE = { // → doc: story-arc-epic-battlegrounds.md §Quest-Gi
 };
 
 /* ── Yugurt Lake — Fish Pool (rank 1–20; rank matches index+1) ── */
+// ◆◆◆ WORLDBUILDER:FISH_DB:START ◆◆◆
 const FISH_POOL = [ // → doc: mechanics-combat.md §Fishing Items (20 ranks, Needle Minnow → Yugurt's Leviathan)
   { rank:1,  key:'fish_01', name:'Needle Minnow',           desc:'Tiny. Barbed. Bites above its weight class.' },
   { rank:2,  key:'fish_02', name:'Barbed Gudgeon',          desc:'Bottom-feeder. Spines curve backward — impossible to unhook.' },
@@ -14590,6 +14644,20 @@ const NIGHT_FISH_POOL = [ // §XLVIII — nocturnal species, Yugurt Lake after h
   { rank:12, key:'night_04', name:'Shadowfin Carp',     desc:'Scales absorb light rather than reflect it. It is darker than the water it swims in.' },
   { rank:14, key:'night_05', name:'Deepwater Lurker',   desc:'Bottom-feeder that rises only after dark. It has never been seen in daylight. Presumably.' },
 ];
+// ◆◆◆ WORLDBUILDER:FISH_DB:END ◆◆◆
+
+// ◆◆◆ WORLDBUILDER:LAKE_MAGIC:START ◆◆◆
+const LAKE_MAGIC_DB = { // Lake magic items — found via high-rank fishing; stat bonus = base + floor(level * levelScale) + floor(luckMod * luckScale)
+  lake_mag_01: { key:'lake_mag_01', name:'Scale of Forgotten Depth',   icon:'✨', type:'lake_magic', sell:0, effect:'ac_bonus',      base:1, levelScale:0,   luckScale:0.5, minRank:14, minLevel:3, desc:'A scale from something that has never been named. The light it catches does not come from here.' },
+  lake_mag_02: { key:'lake_mag_02', name:"Poison Extract Flask",       icon:'🧪', type:'lake_magic', sell:0, effect:'first_strike',  base:2, levelScale:0,   luckScale:1,   minRank:13, minLevel:4, desc:'First hit of each encounter deals extra damage. The dose inside the flask is the exact amount — no more, no less.' },
+  lake_mag_03: { key:'lake_mag_03', name:"Yugurt's Eye",               icon:'👁', type:'lake_magic', sell:0, effect:'fishing_dc',    base:1, levelScale:0,   luckScale:1,   minRank:12, minLevel:2, desc:'A rune-carved bone fragment from the oldest fish in the lake. Reduces fishing Catch DC by the bearer\'s luck modifier.' },
+  lake_mag_04: { key:'lake_mag_04', name:'Void-Touched Fin',           icon:'🌀', type:'lake_magic', sell:0, effect:'atk_bonus',     base:1, levelScale:0.2, luckScale:0,   minRank:16, minLevel:5, desc:'Still moves in still water. Attack bonus scales with level — the fin remembers how the void accelerated things.' },
+  lake_mag_05: { key:'lake_mag_05', name:'Bioluminescent Gland',       icon:'🏮', type:'lake_magic', sell:0, effect:'night_type',    base:2, levelScale:0,   luckScale:0.5, minRank:11, minLevel:2, desc:'Adds a bonus to the Type roll on all night fishing casts. The light it makes is the wrong color for everything except catching.' },
+  lake_mag_06: { key:'lake_mag_06', name:'Leviathan Scale Plate',      icon:'🛡', type:'lake_magic', sell:0, effect:'ac_bonus',      base:2, levelScale:0.1, luckScale:0.5, minRank:17, minLevel:6, desc:'AC bonus that scales with both level and luck. The plate grew from one fish over one century. It protected the fish from everything except you.' },
+  lake_mag_07: { key:'lake_mag_07', name:'Spine King Coronet',         icon:'👑', type:'lake_magic', sell:0, effect:'atk_bonus',     base:0, levelScale:0,   luckScale:1,   minRank:18, minLevel:7, desc:'Attack bonus equals the bearer\'s luck modifier, exactly. The Spine King never needed more than that.' },
+  lake_mag_08: { key:'lake_mag_08', name:"Yugurt's Dream Scale",       icon:'💠', type:'lake_magic', sell:0, effect:'all_ability',   base:1, levelScale:0.1, luckScale:0.3, minRank:20, minLevel:8, desc:'A +1 to all ability checks, scaling with level and luck. Yugurt dreamed this scale into existence the night before he disappeared. Nobody saw him leave.' },
+};
+// ◆◆◆ WORLDBUILDER:LAKE_MAGIC:END ◆◆◆
 
 /* ── Layer 53: Living World — Junction Vignettes + Road Companion ── */
 const JUNCTION_VIGNETTES = { // → doc: story.md §Junction Vignettes
@@ -16452,6 +16520,7 @@ function _rollKeyEvent(id) {
     dmg: passed ? evt.successText : evt.failText,
   });
   S_story[evt.flag] = true;
+  if (evt.consumeItem) S_story.inventory = (S_story.inventory || []).filter(i => i.name !== evt.item);
   storyAutoSave();
   storyRender(NODE_MAP[S_story.currentCode]);
 }
@@ -17794,8 +17863,24 @@ function storyRenderInventory() {
     });
   }
 
-  // ── 8. Other items (trophies, etc.) ──
-  const knownTypes = new Set(['potion','spell','flashbang','shard','key','item','shield','weapon','mainweapon','knowledge','key_item','readable','consumable']);
+  // ── 8. Mission Bit Tokens ──
+  const missionBits = S_story.inventory.filter(i => i.type === 'mission_bit');
+  if (missionBits.length) {
+    makeSection('🪬 Mission Tokens');
+    const bitGrid = document.createElement('div');
+    bitGrid.style.cssText = 'display:flex;flex-wrap:wrap;gap:6px;padding:4px 0;';
+    missionBits.forEach(item => {
+      const chip = document.createElement('div');
+      chip.style.cssText = 'display:flex;align-items:center;gap:5px;padding:4px 9px;background:#0e0b06;border:1px solid #4a3a18;border-radius:12px;font-size:11px;color:#b89040;cursor:default;';
+      chip.title = item.desc || '';
+      chip.innerHTML = '<span style="font-size:13px">🪬</span><span>' + item.name.replace(' Token','') + '</span>';
+      bitGrid.appendChild(chip);
+    });
+    list.appendChild(bitGrid);
+  }
+
+  // ── 9. Other items (trophies, etc.) ──
+  const knownTypes = new Set(['potion','spell','flashbang','shard','key','item','shield','weapon','mainweapon','knowledge','key_item','readable','consumable','mission_bit']);
   const potionNames = new Set(Object.values(POTION_TIERS).map(p => p.name));
   const otherItems = S_story.inventory.filter(i =>
     !knownTypes.has(i.type) && !potionNames.has(i.name) && i.name !== 'Transmort Scroll');
@@ -18005,18 +18090,15 @@ function storyRender(node, prefix) {
       document.getElementById('story-text-box').insertAdjacentElement('afterend', _convDiv);
     }
   }
-  // ── §LXIV: LT — stoning event fires after lame-man quest completes ──
+  // ── §LXIV/§PAUL-01: LT — stoning aftermath shows once quest_stoning_lystra resolves ──
   { const _ltStoningOld = document.getElementById('story-lt-stoning');
     if (_ltStoningOld) _ltStoningOld.remove();
-    if (node.code === 'LT' && !S_story.stoningEvent
-        && S_story.quests && S_story.quests['quest_lame_lystra'] === 'done') {
-      S_story.stoningEvent = true;
-      S_story.hp = 1;
+    if (node.code === 'LT' && S_story.stoningEvent) {
       const _stDiv = document.createElement('div');
       _stDiv.id = 'story-lt-stoning';
       _stDiv.className = 'sweelinck-variant';
       _stDiv.style.cssText = 'margin-top:10px;border-left-color:#803030;font-style:italic;color:#d8a0a0;font-size:12px;';
-      _stDiv.textContent = 'The crowd that called him a god came back with stones. Both responses were to the same event. They had expected a god. What they got was a correction. Some crowds do not accept corrections.\n\nHe is on the ground outside the city when they leave. He is not dead. He gets up.\n\nTimael is still standing in the market square. He has been there the whole time. He does not explain why. He has not examined it. He says: where are you going next?\n\nHP: 1. You cannot be healed above 1 while in Lystra.';
+      _stDiv.textContent = 'He is on the ground outside the city. He is not dead. He gets up.\n\nTimael is still in the market square. He has been there the whole time. He does not explain why. He says: where are you going next?\n\n"He got up and went back into the city."\n\nHP: 1. You cannot be healed above 1 while in Lystra.';
       document.getElementById('story-text-box').insertAdjacentElement('afterend', _stDiv);
     }
   }
@@ -18060,7 +18142,10 @@ function storyRender(node, prefix) {
       _mlDiv.id = 'story-ml-snake';
       _mlDiv.className = 'sweelinck-variant';
       _mlDiv.style.cssText = 'margin-top:10px;border-left-color:#4a4a2a;font-style:italic;color:#c8c890;font-size:12px;';
-      _mlDiv.textContent = 'The fire is built on the shore. Two hundred and seventy-six people, cold and wet and alive on the beach before dawn.\n\nA viper comes out of the brush when the wood is gathered — the heat, the disturbance. It fastens to his hand. The islanders see this. They reach a conclusion: he is a murderer; he survived the sea but judgment found him at the fire.\n\nHe shakes it into the fire.\n\nThey wait for his hand to swell. His hand does not swell. They wait for him to fall. He does not fall. He goes back to building the fire.\n\nThe islanders change their minds. They say: he is a god.\n\nHe does not correct them. He has been counting people all night. The count is correct. He builds the fire.';
+      const _mlHarmony = S_story.harmonyChainComplete
+        ? '\n\nThe islanders showed unusual kindness. You have seen this before — a place that has no reason to be kind and is kind anyway. It moves the same way every time. "The islanders showed us unusual kindness."'
+        : '\n\nThe islanders showed unusual kindness.';
+      _mlDiv.textContent = 'The fire is built on the shore. Two hundred and seventy-six people, cold and wet and alive on the beach before dawn.\n\nA viper comes out of the brush when the wood is gathered — the heat, the disturbance. It fastens to his hand. The islanders see this. They reach a conclusion: he is a murderer; he survived the sea but judgment found him at the fire.\n\nHe shakes it into the fire.\n\nThey wait for his hand to swell. His hand does not swell. They wait for him to fall. He does not fall. He goes back to building the fire.\n\nThe islanders change their minds. They say: he is a god.\n\nHe does not correct them. He has been counting people all night. The count is correct. He builds the fire.' + _mlHarmony;
       document.getElementById('story-text-box').insertAdjacentElement('afterend', _mlDiv);
     }
   }
@@ -23212,6 +23297,7 @@ function storyRenderCharSheet() {
         return `<div class="cs-row"><span class="cs-row-lbl">Covenant Standing</span><span class="cs-row-val" style="color:#333333">Unknown</span></div>`;
       })()}
       ${(S_story.pitPerks||[]).length >= 5 ? `<div class="cs-row"><span class="cs-row-lbl">Combat Style</span><span class="cs-row-val" style="color:#6A4808">Weckmann's Student</span></div>` : ''}
+      ${S_story.saulConverted ? `<div class="cs-row" style="flex-direction:column;align-items:flex-start;gap:2px"><span class="cs-row-lbl" style="color:#806040">Thorn (Permanent)</span><span style="font-size:10px;color:#555540;font-style:italic;padding-left:2px">"My grace is sufficient for you, for my power is made perfect in weakness."</span></div>` : ''}
     </div>
     <div class="cs-section">
       <div class="cs-section-title">Ability Scores</div>

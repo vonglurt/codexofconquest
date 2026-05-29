@@ -101,9 +101,45 @@ function removeFns(src) {
   return out;
 }
 
+function extractArr(block, name) {
+  if (!block) return null;
+  const re = new RegExp(`(?:const|let|var)\\s+${name}\\s*=\\s*\\[`);
+  const pos = block.search(re);
+  if (pos === -1) return null;
+  const bracketOffset = block.slice(pos).indexOf('[');
+  if (bracketOffset === -1) return null;
+  let i = pos + bracketOffset, depth = 0, inStr = null, j = i;
+  while (j < block.length) {
+    const c = block[j];
+    if (inStr) {
+      if (c === '\\' && inStr !== '`') { j += 2; continue; }
+      if (c === inStr) inStr = null;
+    } else if (c === '/' && block[j+1] === '/') {
+      while (j < block.length && block[j] !== '\n') j++;
+      continue;
+    } else if (c === '/' && block[j+1] === '*') {
+      j += 2; while (j < block.length && !(block[j] === '*' && block[j+1] === '/')) j++;
+      j += 2; continue;
+    } else if (c === '"' || c === "'" || c === '`') {
+      inStr = c;
+    } else if (c === '[') {
+      depth++;
+    } else if (c === ']') {
+      depth--;
+      if (depth === 0) return block.slice(i, j + 1);
+    }
+    j++;
+  }
+  return null;
+}
+
 function parseSimple(block, name) {
   const obj = extractObj(block, name); if (!obj) return {};
   try { return new Function('return (' + obj + ')')(); } catch(e) { return {}; }
+}
+function parseArr(block, name) {
+  const arr = extractArr(block, name); if (!arr) return [];
+  try { return new Function('return ' + arr)(); } catch(e) { return []; }
 }
 function parseWithP(block, name, P) {
   const obj = extractObj(block, name); if (!obj) return {};
@@ -146,6 +182,7 @@ function respliceSection(rawSrc, sectionName, newContent) {
 const WBAPI = {
   nodeMap: {}, nodeCoords: {}, questDb: {}, monsterPool: {},
   monsterDrops: {}, worldDb: {}, birkaNpcs: {},
+  fishPool: [], nightFishPool: [], lakeMagicDb: {},
   _terrainToMonsters: {}, _monsterToTerrains: {},
   _questsByNode: {}, _questFlags: {}, _flagToQuests: {}, _questArcs: {},
   _rawQuestSrc: '',
@@ -173,6 +210,10 @@ const WBAPI = {
     this.nodeMap    = parseSimple(extrSection(src,'NODE_MAP'), 'NODE_MAP');
     this.nodeCoords = parseSimple(extrSection(src,'NODE_COORDS'), 'NODE_COORDS');
     this.birkaNpcs  = parseSanitized(extrSection(src,'BIRKA_NPC'), 'BIRKA_NPC_PROFILES');
+    const fishSrc   = extrSection(src,'FISH_DB') || '';
+    this.fishPool      = parseArr(fishSrc, 'FISH_POOL');
+    this.nightFishPool = parseArr(fishSrc, 'NIGHT_FISH_POOL');
+    this.lakeMagicDb   = parseSimple(extrSection(src,'LAKE_MAGIC'), 'LAKE_MAGIC_DB');
     const qSrc = extrSection(src,'QUEST_DB');
     this._rawQuestSrc = qSrc || '';
     this.questDb = parseSanitized(qSrc, 'QUEST_DB');
