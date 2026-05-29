@@ -5788,6 +5788,50 @@ const WORLD_DB = { // → doc: world.md §WORLD_DB
   // ── Layer 81: New Optional Nodes ────────────────────────────
   workshop:      { label:'Scholar King\'s Workshop', icon:'⚗', monsters:[ P.specter, P.library_ghost, P.scholars_guard, P.mage, P.archmage ] },
   mimic_meadow:  { label:'The Mimic Meadows',        icon:'🧸', monsters:[ P.mimic ] },
+  // ── Mediterranean Real-World Locations (§FUTURE-01 Saul to Paul arc) ────
+  // Climate: hot dry Mediterranean summers, mild rainy winters; semi-arid to arid east & south
+  jerusalem:        { label:'Jerusalem — Judean Hills',         icon:'🕍', monsters:[ P.penitent, P.graveir, P.golem, P.wild_dog, P.basilisk, P.catoblepas ] },
+  lystra:           { label:'Lystra — City of Lycaonia',        icon:'🏘', monsters:[ P.wild_dog, P.warg, P.graveir, P.penitent, P.cockatrice ] },
+  cyprus:           { label:'Cyprus — Island of Aphrodite',     icon:'🏝', monsters:[ P.panther, P.wild_boar, P.ekimmara, P.sea_witch, P.drowned_dead ] },
+  antioch:          { label:'Antioch — Gateway of the East',    icon:'🏙', monsters:[ P.penitent, P.graveir, P.katakan, P.wild_dog, P.genie ] },
+  tarsus:           { label:'Tarsus — City of Cilicia',         icon:'🌾', monsters:[ P.wild_boar, P.panther, P.basilisk, P.wild_dog, P.penitent ] },
+  damascus:         { label:'Damascus — Ancient Oasis City',    icon:'🌴', monsters:[ P.djinn, P.ifrit, P.wild_dog, P.gigascorpion, P.genie ] },
+  arabia:           { label:'Arabia — The Desert Wilderness',   icon:'🏜', monsters:[ P.gigascorpion, P.ifrit, P.djinn, P.catoblepas, P.wild_dog, P.genie ] },
+  philippi:         { label:'Philippi — City of Macedonia',     icon:'⚔', monsters:[ P.wild_boar, P.graveir, P.penitent, P.draugir, P.warg ] },
+  ephesus:          { label:'Ephesus — Temple of Artemis',      icon:'🏛', monsters:[ P.ekimmara, P.panther, P.wild_boar, P.sea_witch, P.graveir ] },
+  athens:           { label:'Athens — City of Philosophers',    icon:'🏛', monsters:[ P.myrmidon, P.basilisk, P.golem, P.graveir, P.penitent ] },
+  corinth:          { label:'Corinth — Crossroads City',        icon:'⚓', monsters:[ P.ekimmara, P.katakan, P.dagon_worshipper, P.drowned_dead, P.graveir ] },
+  malta:            { label:'Malta — Island of Shelter',        icon:'🏝', monsters:[ P.drowned_dead, P.sea_witch, P.dagon_worshipper, P.panther, P.wild_boar ] },
+  rome:             { label:'Rome — The Eternal City',          icon:'🏛', monsters:[ P.higher_vampire, P.golem, P.katakan, P.graveir, P.penitent ] },
+  // ── Ancient Sea & Navigation ─────────────────────────────────────────────
+  mediterranean:    { label:'The Mediterranean Sea',            icon:'🌊', monsters:[ P.drowned_dead, P.dagon_worshipper, P.dagon, P.sea_witch, P.ekhidna ] },
+  // ── Fictional Inland Lake & Port System ──────────────────────────────────
+  lake_west:        { label:'Lake — Western Shore',             icon:'🌅', monsters:[ P.vodyanoi_warrior, P.drowned_dead, P.ignis_fatuus, P.bloedzuiger ] },
+  lake_harbor:      { label:'Lake Harbor — Dockside',           icon:'⚓', monsters:[ P.vodyanoi_priest, P.drowned_dead, P.bloedzuiger, P.ignis_fatuus ] },
+  lake_north:       { label:'Lake — Northern Shore',            icon:'🌿', monsters:[ P.vodyanoi_warrior, P.drowned_dead, P.ignis_fatuus, P.bloedzuiger ] },
+  lake_east:        { label:'Lake — Eastern Shore',             icon:'🌄', monsters:[ P.vodyanoi_warrior, P.drowned_dead, P.bloedzuiger ] },
+  lake_south:       { label:'Lake — Southern Shore',            icon:'🌾', monsters:[ P.vodyanoi_warrior, P.ignis_fatuus, P.drowned_dead, P.bloedzuiger ] },
+  lake_den:         { label:'Lake Den — Sunken Lair',           icon:'🦇', monsters:[ P.vodyanoi_priest, P.drowned_dead, P.cave_lurker, P.dagon, P.bloedzuiger ] },
+  port_aurel:       { label:'Port Aurel — Tidal Quay',          icon:'⚓', monsters:[ P.dagon_worshipper, P.drowned_dead, P.sea_witch, P.ekimmara ] },
+  port_calice:      { label:'Port Calice — Bridge Gate',        icon:'🌉', monsters:[ P.dagon_worshipper, P.drowned_dead, P.ekimmara, P.bloedzuiger ] },
+  port_mireille:    { label:'Port Mireille — Harbor Town',      icon:'🌊', monsters:[ P.dagon_worshipper, P.drowned_dead, P.sea_witch, P.ignis_fatuus ] },
+  port_solen:       { label:'Port Solen — Horizon\'s End',      icon:'🌅', monsters:[ P.dagon_worshipper, P.drowned_dead, P.sea_witch ] },
+  fog_bank:         { label:'Fog Bank — Lost at Sea',           icon:'🌫', monsters:[ P.drowned_dead, P.ignis_fatuus, P.sea_witch, P.ekhidna ] },
+  southern_anchorage: { label:'Southern Anchorage',             icon:'⚓', monsters:[ P.dagon_worshipper, P.drowned_dead, P.bloedzuiger ] },
+  // ── Dungeon / Sunken Ruins ───────────────────────────────────────────────
+  drowned_shore:    { label:'Drowned Shore — Sunken Ruins',     icon:'🌊', monsters:[ P.drowned_dead, P.dagon_worshipper, P.vodyanoi_warrior, P.bloedzuiger, P.sea_witch ] },
+  atlantean_forge:  { label:'Atlantean Forge — Lost Furnace',   icon:'🔥', monsters:[ P.fire_elemental, P.earth_elemental, P.golem, P.drowned_dead, P.dagon ] },
+  sunken_hall:      { label:'Sunken Hall — Deep Ruins',         icon:'🏚', monsters:[ P.drowned_dead, P.vodyanoi_priest, P.dagon, P.sea_witch, P.graveir ] },
+  antecedent_chamber: { label:'Antecedent Chamber — Ancient Vault', icon:'🗝', monsters:[ P.golem, P.earth_elemental, P.graveir, P.basilisk, P.shrieker ] },
+  // ── Infrastructure & Misc ────────────────────────────────────────────────
+  junction:         { label:'Crossroads Junction',              icon:'✦',  monsters:[ P.commoner, P.bandit, P.penitent, P.wild_dog ] },
+  road:             { label:'Roman Road — Open Highway',        icon:'🛤', monsters:[ P.penitent, P.wild_dog, P.warg, P.armored_hound, P.bandit, P.commoner ] },
+  ruins:            { label:'Ancient Ruins',                    icon:'🏚', monsters:[ P.graveir, P.basilisk, P.golem, P.katakan, P.penitent, P.shrieker, P.earth_elemental ] },
+  port:             { label:'Harbor Port',                      icon:'⚓', monsters:[ P.drowned_dead, P.dagon_worshipper, P.sea_witch, P.ekimmara, P.bloedzuiger ] },
+  'bar (Visby)':    { label:'The Bar — Visby Tavern',           icon:'🍺', monsters:[ P.commoner, P.thug, P.bandit, P.berserker, P.penitent ] },
+  conclave_annex:   { label:'Conclave Annex — Council Hall',    icon:'🏛', monsters:[ P.commoner, P.guard, P.spy, P.assassin, P.golem ] },
+  shale_drop:       { label:'Shale Drop — Rocky Escarpment',    icon:'🪨', monsters:[ P.warg, P.rock_troll, P.earth_elemental, P.armored_hound, P.basilisk ] },
+  station_7:        { label:'Station 7 — Hidden Waypoint',      icon:'🚧', monsters:[ P.commoner, P.spy, P.bandit, P.shadow ] },
 };
 // ◆◆◆ WORLDBUILDER:WORLD_DB:END ◆◆◆
 
