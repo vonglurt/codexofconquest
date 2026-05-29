@@ -1,0 +1,1757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roll2Hit — World Builder</title>
+<style>
+:root {
+  --bg:      #0d1117; --bg2:     #161b22; --bg3:     #21262d;
+  --border:  #30363d; --text:    #c9d1d9; --muted:   #8b949e;
+  --accent:  #58a6ff; --green:   #3fb950; --red:     #f85149;
+  --yellow:  #d29922; --purple:  #bc8cff; --orange:  #ffa657;
+  --teal:    #39c5cf; --pink:    #f778ba;
+  --added:   #1a3b2a; --deleted: #3b1a1a; --modified:#2a2e1a;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'SF Mono','Consolas',monospace;font-size:13px;display:flex;flex-direction:column;height:100vh;overflow:hidden;}
+
+/* ── Topbar ── */
+#topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 14px;display:flex;align-items:center;gap:0;flex-shrink:0;height:40px;}
+#topbar h1{font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.05em;margin-right:14px;}
+.nav-tab{padding:0 14px;height:40px;display:flex;align-items:center;cursor:pointer;font-size:12px;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;gap:6px;white-space:nowrap;transition:color .15s;}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--text);border-bottom-color:var(--accent);}
+.nav-sep{width:1px;height:20px;background:var(--border);margin:0 6px;}
+#topbar-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
+.btn{background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:3px 9px;border-radius:5px;cursor:pointer;font-size:11px;font-family:inherit;transition:background .15s;}
+.btn:hover{background:#2d333b;}
+.btn:disabled{opacity:.4;cursor:default;}
+.btn.primary{background:#1f6feb;border-color:#388bfd;color:#fff;}
+.btn.primary:hover{background:#388bfd;}
+.btn.sm{padding:2px 7px;font-size:11px;}
+.badge{padding:1px 7px;border-radius:10px;font-size:11px;font-weight:600;}
+.badge.yellow{background:var(--yellow);color:#000;}
+.badge.green{background:var(--added);color:var(--green);border:1px solid var(--green);}
+#file-drop{display:flex;align-items:center;gap:6px;padding:3px 9px;border:1px dashed var(--border);border-radius:5px;cursor:pointer;color:var(--muted);font-size:11px;}
+#file-drop:hover{border-color:var(--accent);color:var(--accent);}
+#file-input{display:none;}
+
+/* ── Panel system ── */
+#panels{flex:1;overflow:hidden;display:flex;}
+.panel{display:none;flex:1;overflow:hidden;}
+.panel.active{display:flex;}
+
+/* ── Shared layout pieces ── */
+.split{display:flex;flex:1;overflow:hidden;}
+.sidebar{width:230px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;}
+.sidebar-hd{padding:8px 10px;border-bottom:1px solid var(--border);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;display:flex;align-items:center;gap:6px;}
+.sidebar-body{flex:1;overflow-y:auto;}
+.main-area{flex:1;overflow:hidden;display:flex;flex-direction:column;}
+.detail-pane{width:360px;background:var(--bg2);border-left:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow:hidden;}
+.detail-pane.wide{width:420px;}
+.detail-hd{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+.detail-body{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:10px;}
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:12px;color:var(--muted);}
+.empty h2{font-size:15px;color:var(--text);}
+.empty p{font-size:12px;text-align:center;max-width:280px;line-height:1.6;}
+
+/* ── List items ── */
+.list-item{padding:6px 10px;cursor:pointer;display:flex;align-items:center;gap:6px;border-left:3px solid transparent;}
+.list-item:hover{background:var(--bg3);}
+.list-item.sel{background:#1c2130;border-left-color:var(--accent);}
+.list-item.has-mod{border-left-color:var(--yellow);}
+.list-item.has-add{border-left-color:var(--green);}
+.item-code{font-weight:700;color:var(--accent);min-width:34px;font-size:12px;}
+.item-label{color:var(--muted);font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.item-sub{font-size:10px;color:var(--muted);}
+
+/* ── Form fields ── */
+.fg{display:flex;flex-direction:column;gap:3px;}
+.fl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;}
+.fv{font-size:12px;color:var(--text);background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:4px 8px;white-space:pre-wrap;word-break:break-word;line-height:1.5;}
+.fi{font-size:12px;color:var(--text);background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:4px 8px;font-family:inherit;width:100%;resize:vertical;}
+.fi:focus{outline:none;border-color:var(--accent);}
+.fi.chg{border-color:var(--yellow);background:var(--modified);}
+.fi-sm{font-size:11px;padding:3px 6px;}
+.row{display:flex;gap:8px;}
+.row .fg{flex:1;}
+
+/* ── Search ── */
+.search-bar{padding:6px 8px;border-bottom:1px solid var(--border);}
+.search-bar input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:4px;color:var(--text);padding:4px 8px;font-family:inherit;font-size:12px;}
+.search-bar input:focus{outline:none;border-color:var(--accent);}
+
+/* ── Map tab ── */
+#map-canvas-wrap{flex:1;overflow:auto;background:var(--bg);position:relative;}
+#map-canvas{display:block;cursor:crosshair;}
+#map-empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;pointer-events:none;}
+#map-footer{padding:4px 12px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);display:flex;gap:16px;flex-shrink:0;}
+
+/* ── Diff overlay ── */
+#diff-panel{display:none;width:380px;background:var(--bg2);border-left:1px solid var(--border);flex-direction:column;flex-shrink:0;}
+#diff-panel.open{display:flex;}
+.diff-hd{padding:8px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+.diff-body{flex:1;overflow-y:auto;padding:10px 12px;font-size:11px;}
+.diff-sec-title{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:4px;border-bottom:1px solid var(--border);padding-bottom:2px;}
+.diff-entry{padding:3px 6px;border-radius:3px;margin-bottom:3px;line-height:1.5;}
+.diff-entry.add{background:var(--added);color:var(--green);}
+.diff-entry.del{background:var(--deleted);color:var(--red);}
+.diff-entry.mod{background:var(--modified);color:var(--yellow);}
+#patch-out{width:100%;min-height:100px;background:var(--bg3);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:inherit;font-size:10px;padding:6px;resize:vertical;}
+
+/* ── Bestiary ── */
+.monster-table{width:100%;border-collapse:collapse;font-size:11px;}
+.monster-table th{background:var(--bg3);color:var(--muted);padding:4px 8px;text-align:left;border-bottom:1px solid var(--border);font-size:10px;text-transform:uppercase;letter-spacing:.04em;position:sticky;top:0;}
+.monster-table td{padding:4px 8px;border-bottom:1px solid #1e2530;vertical-align:middle;}
+.monster-table tr:hover td{background:var(--bg3);cursor:pointer;}
+.monster-table tr.sel td{background:#1c2130;}
+.tier-badge{padding:1px 5px;border-radius:3px;font-size:10px;font-weight:600;}
+.tier-trivial{background:#1e2230;color:#6a7080;}
+.tier-easy{background:#1a3030;color:var(--teal);}
+.tier-medium{background:#1a2a3a;color:var(--accent);}
+.tier-hard{background:#2a2a1a;color:var(--yellow);}
+.tier-deadly{background:#2a1a1a;color:var(--red);}
+.tier-boss{background:#2a1a2a;color:var(--purple);}
+.terrain-item{padding:5px 10px;cursor:pointer;border-left:3px solid transparent;}
+.terrain-item:hover{background:var(--bg3);}
+.terrain-item.sel{background:#1c2130;border-left-color:var(--accent);}
+.terrain-icon{font-size:14px;width:22px;text-align:center;}
+.terrain-name{font-size:11px;}
+.terrain-count{margin-left:auto;font-size:10px;color:var(--muted);}
+
+/* ── NPC tab ── */
+.npc-card{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:10px 12px;margin-bottom:8px;}
+.npc-name{font-size:13px;font-weight:700;color:var(--text);}
+.npc-role{font-size:11px;color:var(--muted);}
+.npc-node-badge{padding:1px 6px;border-radius:3px;font-size:10px;background:#1c2130;color:var(--accent);border:1px solid var(--accent);font-weight:700;}
+.fav-section{margin-top:8px;padding-top:8px;border-top:1px solid var(--border);}
+.fav-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;}
+.fav-greeting{font-size:11px;color:var(--muted);font-style:italic;margin-bottom:3px;}
+.fav-quote{font-size:11px;color:var(--text);line-height:1.6;}
+
+/* ── Quest tab ── */
+.quest-row{padding:6px 10px;cursor:pointer;border-left:3px solid transparent;display:flex;flex-direction:column;gap:2px;}
+.quest-row:hover{background:var(--bg3);}
+.quest-row.sel{background:#1c2130;border-left-color:var(--accent);}
+.qtype-main{border-left-color:var(--red) !important;}
+.qtype-skill{border-left-color:var(--teal) !important;}
+.quest-id{font-size:10px;color:var(--purple);font-weight:700;}
+.quest-title{font-size:12px;color:var(--text);}
+.quest-meta{font-size:10px;color:var(--muted);}
+.flag-pill{display:inline-block;padding:1px 6px;border-radius:10px;font-size:10px;margin:1px;font-weight:600;}
+.flag-read{background:#1a2a3a;color:var(--accent);border:1px solid #2a4a6a;}
+.flag-write{background:#1a3a1a;color:var(--green);border:1px solid #2a5a2a;}
+.chain-link{padding:4px 8px;background:var(--bg3);border-radius:4px;margin-bottom:3px;font-size:11px;cursor:pointer;}
+.chain-link:hover{background:#2d333b;}
+.chain-link .arrow{color:var(--muted);margin:0 4px;}
+
+/* ── Dice tab ── */
+#dice-panel-inner{max-width:580px;margin:0 auto;padding:24px;display:flex;flex-direction:column;gap:16px;}
+.dice-btn{width:56px;height:56px;border-radius:8px;background:var(--bg3);border:2px solid var(--border);color:var(--text);font-size:13px;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-family:inherit;transition:all .15s;}
+.dice-btn:hover{border-color:var(--accent);color:var(--accent);}
+.dice-btn .label{font-size:9px;color:var(--muted);}
+#dice-result{font-size:64px;font-weight:800;text-align:center;min-height:80px;display:flex;align-items:center;justify-content:center;transition:all .1s;}
+#dice-result.nat20{color:var(--yellow);}
+#dice-result.nat1{color:var(--red);}
+#dice-expr{font-size:18px;text-align:center;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px 14px;color:var(--text);font-family:inherit;width:100%;}
+#dice-expr:focus{outline:none;border-color:var(--accent);}
+.dice-history{font-size:11px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px;max-height:60px;overflow:hidden;}
+.dice-history span{padding:1px 6px;background:var(--bg3);border-radius:3px;}
+.dc-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+
+/* ── Tooltip ── */
+#tooltip{position:fixed;background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:4px 8px;font-size:11px;color:var(--text);pointer-events:none;display:none;z-index:999;max-width:260px;line-height:1.5;}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+select.fi{appearance:none;}
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <h1>◆ WORLD BUILDER</h1>
+  <div class="nav-tab active" data-tab="map">🗺 Map</div>
+  <div class="nav-tab" data-tab="bestiary">⚔ Bestiary</div>
+  <div class="nav-tab" data-tab="npcs">👤 NPCs</div>
+  <div class="nav-tab" data-tab="quests">📜 Quests</div>
+  <div class="nav-tab" data-tab="dice">🎲 Dice Lab</div>
+  <div class="nav-tab" data-tab="api">⚙ API</div>
+  <div class="nav-sep"></div>
+  <div id="topbar-right">
+    <label id="file-drop" for="file-input">📂 <span id="file-label">Load roll2hit-v3.html</span></label>
+    <input type="file" id="file-input" accept=".html">
+    <span id="diff-badge" class="badge yellow" style="display:none">0 changes</span>
+    <button class="btn" id="btn-diff" disabled>Diff</button>
+    <button class="btn primary" id="btn-apply-patch" disabled>Export Patched</button>
+    <span id="node-count" style="font-size:11px;color:var(--muted)">—</span>
+    <span id="quest-count" style="font-size:11px;color:var(--muted)">—</span>
+  </div>
+</div>
+
+<div id="panels">
+
+  <!-- ═══ MAP ═══ -->
+  <div class="panel active" id="tab-map">
+    <div class="split">
+      <div class="sidebar" style="width:210px">
+        <div class="sidebar-hd">Nodes <span id="map-node-cnt" style="margin-left:auto;color:var(--muted)"></span></div>
+        <div class="search-bar"><input id="map-search" placeholder="Code or label…"></div>
+        <div style="padding:4px 8px;border-bottom:1px solid var(--border)">
+          <select id="map-act-filter" class="fi fi-sm" style="width:100%">
+            <option value="">All Acts</option>
+            <option value="1">Act I — Birka</option><option value="2">Act II — Tilbury</option>
+            <option value="3">Act III — The Wilds</option><option value="4">Act IV — The Deep</option>
+            <option value="5">Act V — Visby</option><option value="6">Act VI — Desert</option>
+            <option value="7">Act VII — Mythic Circuit</option><option value="8">Act VIII — The Reckoning</option>
+          </select>
+        </div>
+        <div class="sidebar-body" id="map-node-list"></div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
+        <div id="map-canvas-wrap">
+          <div id="map-empty">
+            <h2 style="color:var(--muted)">Load game file to view map</h2>
+            <p style="font-size:11px;color:var(--muted)">Drag &amp; drop or use the button above</p>
+          </div>
+          <canvas id="map-canvas"></canvas>
+        </div>
+        <div id="map-footer">
+          <span>Scroll to zoom</span>
+          <span id="map-scale-info">Scale: 18px/cell</span>
+          <span id="map-hover-info"></span>
+        </div>
+      </div>
+      <div class="detail-pane" id="map-detail-pane" style="display:none">
+        <div class="detail-hd">
+          <span id="nd-code" style="font-size:18px;font-weight:800;color:var(--accent)">—</span>
+          <span id="nd-label" style="font-size:11px;color:var(--muted);flex:1"></span>
+          <span id="nd-diff-ind"></span>
+        </div>
+        <div id="nd-body" class="detail-body"></div>
+        <div style="padding:8px 12px;border-top:1px solid var(--border);display:flex;gap:6px;">
+          <button class="btn primary sm" id="btn-save-node" disabled>Save</button>
+          <button class="btn sm" id="btn-delete-node" disabled style="color:var(--red);border-color:var(--red)">Delete</button>
+          <button class="btn sm" id="btn-add-node" disabled>+ Add</button>
+        </div>
+      </div>
+      <div id="diff-panel">
+        <div class="diff-hd"><span style="font-weight:600;font-size:12px">Diff</span><span id="diff-stats" style="font-size:10px;color:var(--muted);flex:1;margin-left:6px"></span><button class="btn sm" id="btn-close-diff">✕</button></div>
+        <div class="diff-body" id="diff-body">
+          <div id="diff-content"></div>
+          <div style="margin-top:12px">
+            <div class="diff-sec-title" style="margin-bottom:6px">Patch JS</div>
+            <textarea id="patch-out" readonly></textarea>
+            <div style="display:flex;gap:6px;margin-top:6px">
+              <button class="btn sm" id="btn-copy-patch">Copy</button>
+              <button class="btn sm" id="btn-dl-patch">Download .patch.js</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ BESTIARY ═══ -->
+  <div class="panel" id="tab-bestiary">
+    <div class="split">
+      <div class="sidebar" style="width:200px">
+        <div class="sidebar-hd">Terrains</div>
+        <div class="search-bar"><input id="terrain-search" placeholder="Filter terrain…"></div>
+        <div class="sidebar-body" id="terrain-list"></div>
+      </div>
+      <div class="main-area">
+        <div style="padding:8px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;">
+          <span id="terrain-title" style="font-size:13px;font-weight:700;color:var(--text)">Select a terrain</span>
+          <span id="terrain-icon" style="font-size:18px"></span>
+          <input id="monster-search" class="fi fi-sm" style="width:180px;margin-left:auto" placeholder="Filter monsters…">
+        </div>
+        <div style="flex:1;overflow:auto;">
+          <table class="monster-table" id="monster-table">
+            <thead><tr>
+              <th></th><th>Monster</th><th>AC</th><th>HP</th><th>ATK</th><th>Damage</th><th>Tier</th><th>Drop</th>
+            </tr></thead>
+            <tbody id="monster-tbody"></tbody>
+          </table>
+          <div id="bestiary-empty" class="empty"><h2>No terrain selected</h2><p>Choose a terrain from the left to see its monster roster.</p></div>
+        </div>
+      </div>
+      <div class="detail-pane" id="monster-detail" style="display:none">
+        <div class="detail-hd">
+          <span id="md-name" style="font-size:14px;font-weight:700;color:var(--text)"></span>
+          <span id="md-tier" style="margin-left:auto"></span>
+        </div>
+        <div class="detail-body" id="md-body"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ NPCS ═══ -->
+  <div class="panel" id="tab-npcs">
+    <div class="split">
+      <div class="sidebar">
+        <div class="sidebar-hd">NPCs <span id="npc-cnt" style="margin-left:auto;color:var(--muted)"></span></div>
+        <div class="search-bar"><input id="npc-search" placeholder="Name, role, node…"></div>
+        <div class="sidebar-body" id="npc-list"></div>
+      </div>
+      <div class="main-area">
+        <div id="npc-detail-area" class="empty">
+          <h2>Select an NPC</h2>
+          <p>Full dialogue, node location, and favorability levels.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ QUESTS ═══ -->
+  <div class="panel" id="tab-quests">
+    <div class="split">
+      <div class="sidebar">
+        <div class="sidebar-hd">Quests <span id="quest-cnt" style="margin-left:auto;color:var(--muted)"></span></div>
+        <div class="search-bar"><input id="quest-search" placeholder="ID, title, node, flag…"></div>
+        <div style="padding:4px 8px;border-bottom:1px solid var(--border);display:flex;gap:4px;flex-wrap:wrap">
+          <select id="quest-type-filter" class="fi fi-sm" style="flex:1">
+            <option value="">All Types</option>
+            <option value="main">main</option>
+            <option value="skill_check">skill_check</option>
+            <option value="side">side</option>
+          </select>
+          <select id="quest-arc-filter" class="fi fi-sm" style="flex:1">
+            <option value="">All Arcs</option>
+          </select>
+        </div>
+        <div class="sidebar-body" id="quest-list"></div>
+      </div>
+      <div class="main-area" id="quest-main">
+        <div id="quest-detail-area" class="empty">
+          <h2>Select a quest</h2>
+          <p>Full fields, flag dependencies, and chain view.</p>
+        </div>
+      </div>
+      <div class="detail-pane wide" id="quest-chain-pane" style="display:none">
+        <div class="detail-hd"><span style="font-weight:600;font-size:12px">Flag Chain</span></div>
+        <div class="detail-body" id="quest-chain-body"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ DICE LAB ═══ -->
+  <div class="panel" id="tab-dice" style="overflow-y:auto;">
+    <div id="dice-panel-inner">
+      <div style="text-align:center;font-size:11px;color:var(--muted)">Roll Expression (e.g. 2d6+3, d20, 4d8-2)</div>
+      <input id="dice-expr" placeholder="d20" autocomplete="off">
+      <div style="display:flex;justify-content:center;gap:6px;flex-wrap:wrap">
+        <button class="dice-btn" data-expr="d4"><span>🎲</span><span class="label">d4</span></button>
+        <button class="dice-btn" data-expr="d6"><span>🎲</span><span class="label">d6</span></button>
+        <button class="dice-btn" data-expr="d8"><span>🎲</span><span class="label">d8</span></button>
+        <button class="dice-btn" data-expr="d10"><span>🎲</span><span class="label">d10</span></button>
+        <button class="dice-btn" data-expr="d12"><span>🎲</span><span class="label">d12</span></button>
+        <button class="dice-btn" data-expr="d20"><span>🎲</span><span class="label">d20</span></button>
+        <button class="dice-btn" data-expr="d100"><span>🎲</span><span class="label">d100</span></button>
+        <button class="dice-btn" data-expr="2d6+3" style="width:70px"><span>2d6+3</span><span class="label">Damage</span></button>
+        <button class="dice-btn" data-expr="adv" style="width:70px"><span>ADV</span><span class="label">2d20 hi</span></button>
+        <button class="dice-btn" data-expr="dis" style="width:70px"><span>DIS</span><span class="label">2d20 lo</span></button>
+      </div>
+      <div id="dice-result" style="color:var(--text)">—</div>
+      <div id="dice-breakdown" style="text-align:center;font-size:12px;color:var(--muted)"></div>
+      <div style="border-top:1px solid var(--border);padding-top:12px">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em">Skill Check Simulator</div>
+        <div class="dc-grid">
+          <div class="fg"><div class="fl">Stat Mod</div><input id="sc-mod" type="number" class="fi" value="2" style="text-align:center"></div>
+          <div class="fg"><div class="fl">Prof Bonus</div><input id="sc-prof" type="number" class="fi" value="2" style="text-align:center"></div>
+          <div class="fg"><div class="fl">DC</div><input id="sc-dc" type="number" class="fi" value="13" style="text-align:center"></div>
+        </div>
+        <button class="btn primary" id="btn-skill-check" style="width:100%;margin-top:8px">Roll Skill Check</button>
+        <div id="sc-result" style="margin-top:8px;font-size:13px;text-align:center;color:var(--muted)"></div>
+      </div>
+      <div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em">History</div>
+        <div class="dice-history" id="dice-history"></div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── API Tab ─────────────────────────────────────────── -->
+  <div class="panel" id="tab-api" style="overflow-y:auto;padding:16px;flex-direction:column;gap:16px">
+
+    <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em">World Builder API Console</div>
+
+    <!-- Type + ID row -->
+    <div style="display:grid;grid-template-columns:110px 1fr 1fr;gap:8px;align-items:end">
+      <div>
+        <div class="fl">Type</div>
+        <select id="api-type" class="fi" style="width:100%">
+          <option value="location">location</option>
+          <option value="node">node</option>
+          <option value="quest">quest</option>
+          <option value="npc">npc</option>
+          <option value="monster">monster</option>
+        </select>
+      </div>
+      <div>
+        <div class="fl">ID / Name</div>
+        <input id="api-id" class="fi" placeholder="e.g. CY, quest_wis_01, goblin">
+      </div>
+      <div style="display:flex;gap:6px">
+        <button class="btn primary" id="btn-api-get" style="flex:1">GET</button>
+        <button class="btn" id="btn-api-delete" style="flex:1;color:var(--red)">DELETE</button>
+      </div>
+    </div>
+
+    <!-- Field edit row -->
+    <div style="border-top:1px solid var(--border);padding-top:12px">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em">Edit / PUT Field</div>
+      <div style="display:grid;grid-template-columns:160px 1fr 80px;gap:8px;align-items:end">
+        <div>
+          <div class="fl">Field</div>
+          <input id="api-field" class="fi" placeholder="e.g. passText, name">
+        </div>
+        <div>
+          <div class="fl">Value</div>
+          <input id="api-value" class="fi" placeholder="new value">
+        </div>
+        <button class="btn primary" id="btn-api-put">PUT</button>
+      </div>
+      <textarea id="api-value-long" class="fi" rows="4" placeholder="Long text value (passText, hook, failText…)" style="width:100%;margin-top:8px;resize:vertical;font-family:inherit;font-size:12px;line-height:1.5"></textarea>
+      <div style="display:flex;gap:6px;margin-top:6px">
+        <button class="btn" id="btn-api-load-field" style="font-size:11px">Load current value →</button>
+        <button class="btn primary" id="btn-api-put-long" style="font-size:11px">PUT (textarea)</button>
+      </div>
+    </div>
+
+    <!-- Move row (nodes only) -->
+    <div style="border-top:1px solid var(--border);padding-top:12px">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em">Move / Rename Node</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 80px;gap:8px;align-items:end">
+        <div>
+          <div class="fl">Current Code</div>
+          <input id="api-move-from" class="fi" placeholder="e.g. CY">
+        </div>
+        <div>
+          <div class="fl">New Code</div>
+          <input id="api-move-to" class="fi" placeholder="e.g. CY2">
+        </div>
+        <button class="btn" id="btn-api-move">MOVE</button>
+      </div>
+    </div>
+
+    <!-- Output -->
+    <div style="border-top:1px solid var(--border);padding-top:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em">Result</div>
+        <button class="btn" id="btn-api-clear" style="font-size:10px;padding:2px 8px">Clear</button>
+      </div>
+      <pre id="api-output" style="background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:10px;font-size:11px;overflow:auto;max-height:320px;white-space:pre-wrap;margin:0;color:var(--text)">— load a file first, then query —</pre>
+    </div>
+
+    <!-- Schema reference -->
+    <div style="border-top:1px solid var(--border);padding-top:12px">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em">Field Reference</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn" data-schema="node"    style="font-size:11px">node</button>
+        <button class="btn" data-schema="quest"   style="font-size:11px">quest</button>
+        <button class="btn" data-schema="npc"     style="font-size:11px">npc</button>
+        <button class="btn" data-schema="monster" style="font-size:11px">monster</button>
+      </div>
+      <pre id="api-schema" style="background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:10px;font-size:11px;overflow:auto;max-height:200px;white-space:pre-wrap;margin-top:8px;display:none;color:var(--text)"></pre>
+    </div>
+
+  </div>
+
+</div>
+<div id="tooltip"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════
+// WBAPI — World Builder API (data layer)
+// ═══════════════════════════════════════════════════════════════════════════
+const WBAPI = {
+  // Raw parsed objects
+  nodeMap: {}, nodeCoords: {}, questDb: {}, monsterPool: {},
+  monsterDrops: {}, worldDb: {}, birkaNpcs: {},
+  // Indexes
+  _terrainToMonsters: {},   // terrainKey → [monsterKey]
+  _monsterToTerrains: {},   // monsterKey → [terrainKey]
+  _questsByNode: {},        // nodeCode → [questId]
+  _questFlags: {},          // questId → { reads:Set, writes:Set }
+  _flagToQuests: {},        // flagName → { reads:[id], writes:[id] }
+  _questArcs: {},           // arcPrefix → [questId]  e.g. 'quest_wis' → [...]
+  _rawQuestSrc: '',
+
+  loaded: false,
+
+  load(src) {
+    const A = '◆◆◆ WORLDBUILDER:';
+    const extr = (s, e) => { const a=src.indexOf(s), b=src.indexOf(e); return (a>-1&&b>a) ? src.slice(a+s.length, b).trim() : null; };
+
+    // Balanced-brace object extractor (string-aware, replaces regex approach)
+    const extractObj = (block, name) => {
+      if (!block) return null;
+      const re = new RegExp(`(?:const|let|var)\\s+${name}\\s*=\\s*`);
+      const pos = block.search(re);
+      if (pos === -1) return null;
+      const braceOffset = block.slice(pos).search(/\{/);
+      if (braceOffset === -1) return null;
+      let i = pos + braceOffset, depth = 0, inStr = null, j = i;
+      while (j < block.length) {
+        const c = block[j];
+        if (inStr) {
+          if (c === '\\' && inStr !== '`') { j += 2; continue; }
+          if (c === inStr) inStr = null;
+        } else if (c === '/' && block[j+1] === '/') {
+          while (j < block.length && block[j] !== '\n') j++;
+          continue;
+        } else if (c === '/' && block[j+1] === '*') {
+          j += 2; while (j < block.length && !(block[j] === '*' && block[j+1] === '/')) j++;
+          j += 2; continue;
+        } else {
+          if (c === '"' || c === "'" || c === '`') inStr = c;
+          else if (c === '{') depth++;
+          else if (c === '}') { depth--; if (depth === 0) return block.slice(i, j+1); }
+        }
+        j++;
+      }
+      return null;
+    };
+
+    // Remove function values: () => expr, () => { block }, (args) => ..., function() {}
+    const removeFns = (src) => {
+      let out = '', i = 0;
+      while (i < src.length) {
+        const c = src[i];
+        // Pass strings through untouched
+        if (c === '"' || c === "'" || c === '`') {
+          out += c; i++;
+          while (i < src.length) {
+            if (src[i] === '\\' && c !== '`') { out += src[i++]; out += src[i++]; continue; }
+            if (src[i] === c) { out += src[i++]; break; }
+            out += src[i++];
+          }
+          continue;
+        }
+        // Look for : followed by a function value
+        if (c === ':') {
+          let j = i + 1;
+          while (j < src.length && /[ \t\n\r]/.test(src[j])) j++;
+          const rest = src.slice(j);
+          const isArrow = rest.match(/^(\([^)]*\)\s*=>|[a-zA-Z_$]\w*\s*=>)/);
+          const isFunc  = rest.match(/^(function\s*\*?\s*\w*\s*\()/);
+          if (isArrow || isFunc) {
+            const matchLen = (isArrow || isFunc)[0].length;
+            let k = j + matchLen;
+            while (k < src.length && /[ \t]/.test(src[k])) k++;
+            if (src[k] === '{') {
+              // Skip block body with balanced braces
+              let depth = 0;
+              while (k < src.length) {
+                const cc = src[k];
+                if (cc === '"' || cc === "'" || cc === '`') {
+                  const q = cc; k++;
+                  while (k < src.length) { if (src[k] === '\\') { k += 2; continue; } if (src[k++] === q) break; }
+                } else if (cc === '{') { depth++; k++; }
+                else if (cc === '}') { depth--; k++; if (depth === 0) break; }
+                else k++;
+              }
+            } else {
+              // Skip expression body until , or } at depth 0
+              let depth = 0;
+              while (k < src.length) {
+                const cc = src[k];
+                if (cc === '"' || cc === "'" || cc === '`') {
+                  const q = cc; k++;
+                  while (k < src.length) { if (src[k] === '\\') { k += 2; continue; } if (src[k++] === q) break; }
+                } else if ('([{'.includes(cc)) { depth++; k++; }
+                else if (')]}'.includes(cc)) { if (depth === 0) break; depth--; k++; }
+                else if (cc === ',' && depth === 0) break;
+                else k++;
+              }
+            }
+            out += ': null'; i = k; continue;
+          }
+        }
+        out += c; i++;
+      }
+      return out;
+    };
+
+    // Simple eval (no external refs)
+    const parseSimple = (block, name) => {
+      const obj = extractObj(block, name); if (!obj) return {};
+      try { return new Function('return (' + obj + ')')(); }
+      catch(e) { console.warn(name + ':', e.message); return {}; }
+    };
+
+    // Eval with P proxy (for WORLD_DB which references P.monster_key)
+    const parseWithP = (block, name, Pref) => {
+      const obj = extractObj(block, name); if (!obj) return {};
+      try { return new Function('P', 'return (' + obj + ')')(Pref); }
+      catch(e) { console.warn(name + ':', e.message); return {}; }
+    };
+
+    // Eval after stripping function values (QUEST_DB, BIRKA_NPC)
+    const parseSanitized = (block, name) => {
+      const obj = extractObj(block, name); if (!obj) return {};
+      try { return new Function('return (' + removeFns(obj) + ')')(); }
+      catch(e) { console.warn(name + ':', e.message); return {}; }
+    };
+
+    this.monsterPool  = parseSimple(extr(`// ${A}MONSTER_POOL:START ◆◆◆`, `// ${A}MONSTER_DROPS:START ◆◆◆`), 'MONSTER_POOL');
+    this.monsterDrops = parseSimple(extr(`// ${A}MONSTER_DROPS:START ◆◆◆`, `// ${A}MONSTER_DROPS:END ◆◆◆`), 'MONSTER_DROPS');
+
+    // WORLD_DB references P.monsterKey — pass a proxy that returns the real monster or a stub
+    const Pproxy = new Proxy(this.monsterPool, { get: (t, k) => t[k] || { key: String(k) } });
+    this.worldDb    = parseWithP(extr(`// ${A}WORLD_DB:START ◆◆◆`, `// ${A}WORLD_DB:END ◆◆◆`), 'WORLD_DB', Pproxy);
+    this.nodeMap    = parseSimple(extr(`// ${A}NODE_MAP:START ◆◆◆`, `// ${A}NODE_MAP:END ◆◆◆`), 'NODE_MAP');
+    this.nodeCoords = parseSimple(extr(`// ${A}NODE_COORDS:START ◆◆◆`, `// ${A}NODE_COORDS:END ◆◆◆`), 'NODE_COORDS');
+    this.birkaNpcs  = parseSanitized(extr(`// ${A}BIRKA_NPC:START ◆◆◆`, `// ${A}BIRKA_NPC:END ◆◆◆`), 'BIRKA_NPC_PROFILES');
+
+    const qSrc = extr(`// ${A}QUEST_DB:START ◆◆◆`, `// ${A}QUEST_DB:END ◆◆◆`);
+    this._rawQuestSrc = qSrc || '';
+    this.questDb = parseSanitized(qSrc, 'QUEST_DB');
+
+    console.log('[WBAPI] monsters:', Object.keys(this.monsterPool).length,
+      '| drops:', Object.keys(this.monsterDrops).length,
+      '| terrains:', Object.keys(this.worldDb).length,
+      '| nodes:', Object.keys(this.nodeMap).length,
+      '| quests:', Object.keys(this.questDb).length,
+      '| npcs:', Object.keys(this.birkaNpcs).length);
+
+    this._buildIndexes();
+    this.loaded = true;
+  },
+
+  _buildIndexes() {
+    // Terrain → monsters
+    this._terrainToMonsters = {};
+    this._monsterToTerrains = {};
+    for (const [tk, terrain] of Object.entries(this.worldDb)) {
+      if (!terrain.monsters) continue;
+      const keys = terrain.monsters.map(m => typeof m === 'string' ? m : (m && m.key));
+      this._terrainToMonsters[tk] = keys.filter(Boolean);
+      for (const mk of keys.filter(Boolean)) {
+        if (!this._monsterToTerrains[mk]) this._monsterToTerrains[mk] = [];
+        this._monsterToTerrains[mk].push(tk);
+      }
+    }
+
+    // Quests by node
+    this._questsByNode = {};
+    for (const [id, q] of Object.entries(this.questDb)) {
+      for (const field of ['activateNode', 'waypointNode']) {
+        if (q[field]) {
+          if (!this._questsByNode[q[field]]) this._questsByNode[q[field]] = [];
+          this._questsByNode[q[field]].push(id);
+        }
+      }
+    }
+
+    // Flag extraction from raw source
+    this._questFlags = {};
+    this._flagToQuests = {};
+    if (this._rawQuestSrc) {
+      const questBlocks = this._splitQuestBlocks(this._rawQuestSrc);
+      for (const { id, src } of questBlocks) {
+        const reads = new Set(), writes = new Set();
+        for (const m of src.matchAll(/S_story\.(\w+)\s*[^=!<>]/g)) { if (m[1] !== 'active') reads.add(m[1]); }
+        for (const m of src.matchAll(/S_story\.(\w+)\s*=/g)) writes.add(m[1]);
+        this._questFlags[id] = { reads, writes };
+        for (const f of reads) { if (!this._flagToQuests[f]) this._flagToQuests[f] = {reads:[],writes:[]}; this._flagToQuests[f].reads.push(id); }
+        for (const f of writes) { if (!this._flagToQuests[f]) this._flagToQuests[f] = {reads:[],writes:[]}; this._flagToQuests[f].writes.push(id); }
+      }
+    }
+
+    // Quest arcs
+    this._questArcs = {};
+    for (const id of Object.keys(this.questDb)) {
+      const arc = id.replace(/_\d+$/, '').replace(/_[a-z]{2}$/, '');
+      if (!this._questArcs[arc]) this._questArcs[arc] = [];
+      this._questArcs[arc].push(id);
+    }
+  },
+
+  _splitQuestBlocks(src) {
+    const blocks = [];
+    const re = /^\s{2}([a-z][a-z0-9_]+)\s*:/mg;
+    let m, prev = null, prevId = null;
+    while ((m = re.exec(src)) !== null) {
+      if (prev !== null) blocks.push({ id: prevId, src: src.slice(prev, m.index) });
+      prev = m.index; prevId = m[1];
+    }
+    if (prev !== null) blocks.push({ id: prevId, src: src.slice(prev) });
+    return blocks;
+  },
+
+  // ── Helpers ──
+  _findKey(col, idOrTitle) {
+    if (col[idOrTitle] !== undefined) return idOrTitle;
+    const needle = String(idOrTitle).toLowerCase();
+    for (const [k, v] of Object.entries(col))
+      if ([v?.label, v?.name, v?.title].some(s => s && String(s).toLowerCase() === needle)) return k;
+    return null;
+  },
+
+  // Dependency checker — returns what would block a delete
+  _deps: {
+    node(key) {
+      return {
+        quests: WBAPI.quests.byNode(key).map(q => q.id),
+        npcs:   WBAPI.npcs.byNode(key).map(n => n.key),
+      };
+    },
+    quest(id) {
+      return { downstream: WBAPI.quests.chain(id).downstream };
+    },
+    monster(key) {
+      const terrains = Object.entries(WBAPI.worldDb)
+        .filter(([, t]) => (t.monsters||[]).some(m => (typeof m==='string'?m:m?.key)===key))
+        .map(([k]) => k);
+      return { terrains };
+    },
+    npc(key) {
+      const npc = WBAPI.birkaNpcs[key];
+      const nodeRef = npc?.node ? [npc.node] : [];
+      // Scan raw quest source for NPC key references
+      const questRefs = WBAPI._rawQuestSrc
+        ? Object.keys(WBAPI.questDb).filter(qid => WBAPI._rawQuestSrc.includes(key))
+        : [];
+      return { nodes: nodeRef, quests: questRefs };
+    },
+  },
+
+  // ── Query API ──
+  monsters: {
+    all() { return Object.entries(WBAPI.monsterPool).map(([k,v]) => ({...v, key:k, drop:WBAPI.monsterDrops[k]||null, terrains:WBAPI._monsterToTerrains[k]||[]})); },
+    byTerrain(tk) { return (WBAPI._terrainToMonsters[tk]||[]).map(k => ({...WBAPI.monsterPool[k], key:k, drop:WBAPI.monsterDrops[k]||null})); },
+    byTier(t) { return WBAPI.monsters.all().filter(m => m.tier===t); },
+    get(idOrName) {
+      const key = WBAPI._findKey(WBAPI.monsterPool, idOrName);
+      if (!key) return null;
+      return {...WBAPI.monsterPool[key], key, drop:WBAPI.monsterDrops[key]||null, terrains:WBAPI._monsterToTerrains[key]||[]};
+    },
+    put(idOrName, data) {
+      const key = WBAPI._findKey(WBAPI.monsterPool, idOrName) || idOrName;
+      const isNew = !WBAPI.monsterPool[key];
+      WBAPI.monsterPool[key] = isNew ? {...data} : {...WBAPI.monsterPool[key], ...data};
+      DIFF.recordSection('MONSTER_POOL', key, isNew ? 'added' : 'modified', data);
+      return { ok:true, key };
+    },
+    delete(idOrName) {
+      const key = WBAPI._findKey(WBAPI.monsterPool, idOrName);
+      if (!key) return { ok:false, error:'not found' };
+      const deps = WBAPI._deps.monster(key);
+      if (deps.terrains.length) return { ok:false, blockedBy: deps };
+      delete WBAPI.monsterPool[key];
+      DIFF.delSection('MONSTER_POOL', key);
+      return { ok:true, key };
+    },
+    rename(idOrName, newDisplayName) {
+      const key = WBAPI._findKey(WBAPI.monsterPool, idOrName);
+      if (!key) return { ok:false, error:`"${idOrName}" not found` };
+      const old = WBAPI.monsterPool[key].name;
+      WBAPI.monsterPool[key].name = newDisplayName;
+      DIFF.recordSection('MONSTER_POOL', key, 'modified', { name: newDisplayName });
+      return { ok:true, key, from:old, to:newDisplayName, terrains:WBAPI._monsterToTerrains[key]||[] };
+    },
+    fork(sourceIdOrName, newKey, overrides) {
+      const src = WBAPI.monsters.get(sourceIdOrName);
+      if (!src) return { ok:false, error:`source "${sourceIdOrName}" not found` };
+      if (WBAPI.monsterPool[newKey]) return { ok:false, error:`key "${newKey}" already exists` };
+      const { key:_, drop:__, terrains:___, ...srcFields } = src;
+      WBAPI.monsterPool[newKey] = { ...srcFields, ...(overrides||{}) };
+      if (src.drop) WBAPI.monsterDrops[newKey] = { ...src.drop, ...(overrides?.drop||{}) };
+      DIFF.recordSection('MONSTER_POOL', newKey, 'added', WBAPI.monsterPool[newKey]);
+      WBAPI._buildIndexes();
+      return { ok:true, key:newKey, from:src.key, entry: WBAPI.monsterPool[newKey] };
+    },
+  },
+
+  worlds: {
+    all()    { return Object.entries(WBAPI.worldDb).map(([k,v]) => ({...v, key:k})); },
+    get(key) { return WBAPI.worldDb[key] ? {...WBAPI.worldDb[key], key} : null; },
+    monsterList(terrainKey) {
+      return (WBAPI.worldDb[terrainKey]?.monsters||[]).map(m => typeof m==='string'?m:m?.key||m?.name).filter(Boolean);
+    },
+    swapMonster(terrainKey, oldKey, newKey) {
+      if (!WBAPI.worldDb[terrainKey]) return { ok:false, error:`terrain "${terrainKey}" not found` };
+      if (!WBAPI.monsterPool[oldKey]) return { ok:false, error:`monster "${oldKey}" not in MONSTER_POOL` };
+      if (!WBAPI.monsterPool[newKey]) return { ok:false, error:`monster "${newKey}" not in MONSTER_POOL — fork it first` };
+      const list = WBAPI.worldDb[terrainKey].monsters;
+      let swapped = false;
+      WBAPI.worldDb[terrainKey].monsters = list.map(m => {
+        const k = typeof m==='string' ? m : m?.key;
+        if (k === oldKey) { swapped = true; return newKey; }
+        return m;
+      });
+      if (!swapped) return { ok:false, error:`"${oldKey}" not found in ${terrainKey} monster list` };
+      DIFF.recordSection('WORLD_DB', terrainKey, 'modified', { monsters: WBAPI.worldDb[terrainKey].monsters });
+      WBAPI._buildIndexes();
+      return { ok:true, terrain:terrainKey, replaced:oldKey, with:newKey };
+    },
+  },
+
+  npcs: {
+    all() {
+      const out = [];
+      for (const [k,v] of Object.entries(WBAPI.birkaNpcs)) out.push({...v, key:k, node:v.node, nodeData:WBAPI.nodeMap[v.node]||null});
+      for (const [code, node] of Object.entries(WBAPI.nodeMap)) {
+        if (node.npc && !WBAPI.birkaNpcs[node.npc?.toLowerCase()?.replace(/\s/g,'_')]) {
+          out.push({ key:`_inline_${code}`, name:node.npc, occupation:'', node:code, nodeData:node, _inline:true });
+        }
+      }
+      return out;
+    },
+    byNode(code) { return WBAPI.npcs.all().filter(n => n.node === code); },
+    get(idOrName) {
+      const key = WBAPI._findKey(WBAPI.birkaNpcs, idOrName);
+      if (!key) return null;
+      const v = WBAPI.birkaNpcs[key];
+      return {...v, key, nodeData: WBAPI.nodeMap[v.node]||null};
+    },
+    put(idOrName, data) {
+      const key = WBAPI._findKey(WBAPI.birkaNpcs, idOrName) || idOrName;
+      const isNew = !WBAPI.birkaNpcs[key];
+      WBAPI.birkaNpcs[key] = isNew ? {...data} : {...WBAPI.birkaNpcs[key], ...data};
+      DIFF.recordSection('BIRKA_NPC', key, isNew ? 'added' : 'modified', data);
+      return { ok:true, key };
+    },
+    delete(idOrName) {
+      const key = WBAPI._findKey(WBAPI.birkaNpcs, idOrName);
+      if (!key) return { ok:false, error:'not found' };
+      const deps = WBAPI._deps.npc(key);
+      if (deps.quests.length) return { ok:false, blockedBy: deps };
+      delete WBAPI.birkaNpcs[key];
+      DIFF.delSection('BIRKA_NPC', key);
+      return { ok:true, key };
+    },
+  },
+
+  quests: {
+    all() { return Object.entries(WBAPI.questDb).map(([id,q]) => ({...q, id})); },
+    byNode(code) { return (WBAPI._questsByNode[code]||[]).map(id => ({...WBAPI.questDb[id], id})); },
+    byType(t) { return WBAPI.quests.all().filter(q => q.type === t); },
+    flags(id) { return WBAPI._questFlags[id] || {reads:new Set(), writes:new Set()}; },
+    chain(id) {
+      const flags = WBAPI._questFlags[id];
+      if (!flags) return { upstream:[], downstream:[] };
+      const up = new Set(), down = new Set();
+      for (const f of flags.reads) for (const qid of (WBAPI._flagToQuests[f]||{}).writes||[]) up.add(qid);
+      for (const f of flags.writes) for (const qid of (WBAPI._flagToQuests[f]||{}).reads||[]) down.add(qid);
+      up.delete(id); down.delete(id);
+      return { upstream:[...up], downstream:[...down] };
+    },
+    arcs() { return Object.keys(WBAPI._questArcs); },
+    get(idOrTitle) {
+      const key = WBAPI._findKey(WBAPI.questDb, idOrTitle);
+      if (!key) return null;
+      return {...WBAPI.questDb[key], id:key, chain: WBAPI.quests.chain(key)};
+    },
+    put(idOrTitle, data) {
+      const key = WBAPI._findKey(WBAPI.questDb, idOrTitle) || idOrTitle;
+      const isNew = !WBAPI.questDb[key];
+      WBAPI.questDb[key] = isNew ? {...data} : {...WBAPI.questDb[key], ...data};
+      DIFF.recordSection('QUEST_DB', key, isNew ? 'added' : 'modified', data);
+      return { ok:true, key };
+    },
+    delete(idOrTitle) {
+      const key = WBAPI._findKey(WBAPI.questDb, idOrTitle);
+      if (!key) return { ok:false, error:'not found' };
+      const deps = WBAPI._deps.quest(key);
+      if (deps.downstream.length) return { ok:false, blockedBy: deps };
+      delete WBAPI.questDb[key];
+      DIFF.delSection('QUEST_DB', key);
+      return { ok:true, key };
+    },
+  },
+
+  nodes: {
+    all() { return Object.entries(WBAPI.nodeMap).map(([id,n]) => ({...n, id})); },
+    byAct(n) { return Object.values(WBAPI.nodeMap).filter(nd => nd.act === n); },
+    withBattle() { return Object.values(WBAPI.nodeMap).filter(nd => nd.battle); },
+    withNPC() { return Object.values(WBAPI.nodeMap).filter(nd => nd.npc); },
+    get(codeOrName) {
+      const key = WBAPI._findKey(WBAPI.nodeMap, codeOrName);
+      if (!key) return null;
+      return {...WBAPI.nodeMap[key], id:key};
+    },
+    put(codeOrName, data) {
+      const key = WBAPI._findKey(WBAPI.nodeMap, codeOrName) || codeOrName;
+      const existing = WBAPI.nodeMap[key];
+      if (existing) {
+        for (const [f, v] of Object.entries(data)) {
+          DIFF.record(key, f, existing[f]??null, v);
+          existing[f] = v;
+        }
+      } else {
+        WBAPI.nodeMap[key] = {...data};
+        DIFF.added[key] = WBAPI.nodeMap[key];
+        updateDiffBadge();
+      }
+      return { ok:true, key };
+    },
+    delete(codeOrName) {
+      const key = WBAPI._findKey(WBAPI.nodeMap, codeOrName);
+      if (!key) return { ok:false, error:'not found' };
+      const deps = WBAPI._deps.node(key);
+      if (deps.quests.length || deps.npcs.length) return { ok:false, blockedBy: deps };
+      DIFF.del(key);
+      delete WBAPI.nodeMap[key];
+      return { ok:true, key };
+    },
+  },
+
+  // Composite location view: node + terrain + monsters + quests + npcs
+  location: {
+    get(codeOrName) {
+      const key = WBAPI._findKey(WBAPI.nodeMap, codeOrName);
+      if (!key) return null;
+      const node       = {...WBAPI.nodeMap[key], id:key};
+      const terrainKey = node.name;
+      const terrain    = WBAPI.worldDb[terrainKey] || null;
+      return {
+        node,
+        terrain,
+        monsters: terrain ? WBAPI.monsters.byTerrain(terrainKey) : [],
+        quests:   WBAPI.quests.byNode(key),
+        npcs:     WBAPI.npcs.byNode(key),
+      };
+    },
+  },
+
+  dice: {
+    d(n) { return Math.floor(Math.random()*n)+1; },
+    roll(expr) {
+      if (expr === 'adv') { const a=WBAPI.dice.d(20),b=WBAPI.dice.d(20); return {total:Math.max(a,b),breakdown:`ADV: ${a} vs ${b}`}; }
+      if (expr === 'dis') { const a=WBAPI.dice.d(20),b=WBAPI.dice.d(20); return {total:Math.min(a,b),breakdown:`DIS: ${a} vs ${b}`}; }
+      const m = expr.trim().match(/^(\d*)d(\d+)([+-]\d+)?$/i);
+      if (!m) { const n=parseInt(expr); return isNaN(n)?{total:0,breakdown:'?'}:{total:n,breakdown:String(n)}; }
+      const count=parseInt(m[1]||'1'), sides=parseInt(m[2]), flat=parseInt(m[3]||'0');
+      const rolls=[]; for(let i=0;i<count;i++) rolls.push(WBAPI.dice.d(sides));
+      const sum=rolls.reduce((a,b)=>a+b,0)+flat;
+      return {total:sum, breakdown:`[${rolls.join('+')}]${flat!==0?(flat>0?'+':'')+flat:''} = ${sum}`};
+    },
+    skillCheck(dc, mod, prof=0) {
+      const r = WBAPI.dice.d(20);
+      const total = r + mod + prof;
+      return { roll:r, mod, prof, total, dc, pass: total>=dc, nat20: r===20, nat1: r===1 };
+    },
+  },
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Diff / patch state
+// ═══════════════════════════════════════════════════════════════════════════
+const DIFF = {
+  // NODE_MAP diffs (used by canvas UI)
+  added: {}, modified: {}, deleted: new Set(),
+  // Section diffs for quests, monsters, npcs
+  sections: {
+    QUEST_DB:     { added:{}, modified:{}, deleted: new Set() },
+    MONSTER_POOL: { added:{}, modified:{}, deleted: new Set() },
+    BIRKA_NPC:    { added:{}, modified:{}, deleted: new Set() },
+  },
+
+  record(code, field, oldVal, newVal) {
+    if (DIFF.added[code]) { DIFF.added[code][field] = newVal; return; }
+    if (!DIFF.modified[code]) DIFF.modified[code] = {};
+    DIFF.modified[code][field] = DIFF.modified[code][field] || { old: oldVal };
+    DIFF.modified[code][field].new = newVal;
+    if (JSON.stringify(DIFF.modified[code][field].old) === JSON.stringify(newVal)) {
+      delete DIFF.modified[code][field];
+      if (!Object.keys(DIFF.modified[code]).length) delete DIFF.modified[code];
+    }
+    updateDiffBadge();
+  },
+  del(code) {
+    if (DIFF.added[code]) { delete DIFF.added[code]; } else { DIFF.deleted.add(code); delete DIFF.modified[code]; }
+    updateDiffBadge();
+  },
+
+  recordSection(section, key, op, data) {
+    const s = DIFF.sections[section]; if (!s) return;
+    if (op === 'added') { s.added[key] = data; }
+    else { if (!s.modified[key]) s.modified[key] = {}; Object.assign(s.modified[key], data); }
+    updateDiffBadge();
+  },
+  delSection(section, key) {
+    const s = DIFF.sections[section]; if (!s) return;
+    if (s.added[key]) { delete s.added[key]; }
+    else { s.deleted.add(key); delete s.modified[key]; }
+    updateDiffBadge();
+  },
+
+  status(code) {
+    if (DIFF.added[code]) return 'added';
+    if (DIFF.modified[code]) return 'modified';
+    if (DIFF.deleted.has(code)) return 'deleted';
+    return null;
+  },
+  statusSection(section, key) {
+    const s = DIFF.sections[section]; if (!s) return null;
+    if (s.added[key]) return 'added';
+    if (s.modified[key]) return 'modified';
+    if (s.deleted.has(key)) return 'deleted';
+    return null;
+  },
+
+  total() {
+    let n = Object.keys(DIFF.added).length + Object.keys(DIFF.modified).length + DIFF.deleted.size;
+    for (const s of Object.values(DIFF.sections))
+      n += Object.keys(s.added).length + Object.keys(s.modified).length + s.deleted.size;
+    return n;
+  },
+
+  patch() {
+    const ts = new Date().toISOString();
+    const lines = [`// Roll2Hit World Builder Patch — ${ts}`];
+
+    // NODE_MAP
+    lines.push('(function applyPatch(NODE_MAP, QUEST_DB, MONSTER_POOL, BIRKA_NPC){');
+    for (const c of DIFF.deleted) lines.push(`  delete NODE_MAP['${c}'];`);
+    for (const [c,fields] of Object.entries(DIFF.modified))
+      for (const [f,{new:v}] of Object.entries(fields))
+        lines.push(`  NODE_MAP['${c}']['${f}'] = ${JSON.stringify(v)};`);
+    for (const [c,n] of Object.entries(DIFF.added))
+      lines.push(`  NODE_MAP['${c}'] = ${JSON.stringify(n,null,4).replace(/\n/g,'\n  ')};`);
+
+    // Section patches
+    const sectionVar = { QUEST_DB:'QUEST_DB', MONSTER_POOL:'MONSTER_POOL', BIRKA_NPC:'BIRKA_NPC' };
+    for (const [sec, s] of Object.entries(DIFF.sections)) {
+      const v = sectionVar[sec];
+      for (const k of s.deleted) lines.push(`  delete ${v}['${k}'];`);
+      for (const [k, data] of Object.entries(s.modified))
+        for (const [f, val] of Object.entries(data))
+          lines.push(`  ${v}['${k}']['${f}'] = ${JSON.stringify(val)};`);
+      for (const [k, data] of Object.entries(s.added))
+        lines.push(`  ${v}['${k}'] = ${JSON.stringify(data,null,4).replace(/\n/g,'\n  ')};`);
+    }
+
+    lines.push(`})(NODE_MAP, QUEST_DB, MONSTER_POOL, BIRKA_NPC);`);
+    return lines.join('\n');
+  },
+
+  // JSON patch for MCP/agent consumption
+  json() {
+    return {
+      timestamp: new Date().toISOString(),
+      NODE_MAP: { added: DIFF.added, modified: DIFF.modified, deleted: [...DIFF.deleted] },
+      ...Object.fromEntries(Object.entries(DIFF.sections).map(([sec, s]) => [
+        sec, { added: s.added, modified: s.modified, deleted: [...s.deleted] }
+      ])),
+    };
+  },
+};
+
+function updateDiffBadge() {
+  const t = DIFF.total();
+  const b = $('diff-badge');
+  b.textContent = t + ' change' + (t!==1?'s':'');
+  b.style.display = t > 0 ? '' : 'none';
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Utilities
+// ═══════════════════════════════════════════════════════════════════════════
+const $ = id => document.getElementById(id);
+let _rawSource = null;
+const ACT_COLORS = ['#8b949e','#58a6ff','#3fb950','#d29922','#f78166','#bc8cff','#ffa657','#39d353','#f85149'];
+const TIER_ORDER = ['trivial','easy','medium','hard','deadly','boss'];
+
+function loadFile(text) {
+  _rawSource = text;
+  WBAPI.load(text);
+  const nc = Object.keys(WBAPI.nodeMap).length;
+  const qc = Object.keys(WBAPI.questDb).length;
+  $('node-count').textContent = nc + ' nodes';
+  $('quest-count').textContent = qc + ' quests';
+  $('map-node-cnt').textContent = nc;
+  $('quest-cnt').textContent = qc;
+  $('npc-cnt').textContent = WBAPI.npcs.all().filter(n=>!n._inline).length;
+  $('file-label').textContent = 'roll2hit-v3.html ✓';
+  $('map-empty').style.display = 'none';
+  ['btn-diff','btn-apply-patch'].forEach(id => $(id).disabled = false);
+  ['btn-save-node','btn-delete-node','btn-add-node'].forEach(id => $(id).disabled = false);
+  renderMapNodeList();
+  renderMap();
+  renderTerrainList();
+  renderNpcList();
+  renderQuestList();
+  populateArcFilter();
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// MAP TAB
+// ═══════════════════════════════════════════════════════════════════════════
+let mapScale = 18;
+let mapSelected = null;
+let mapEditBuf = {};
+
+function getEffNode(code) {
+  if (DIFF.added[code]) return DIFF.added[code];
+  const b = {...(WBAPI.nodeMap[code]||{})};
+  const m = DIFF.modified[code];
+  if (m) for (const [f,{new:v}] of Object.entries(m)) b[f] = v;
+  return b;
+}
+
+function renderMap() {
+  if (!WBAPI.loaded) return;
+  const S = mapScale, coords = WBAPI.nodeCoords, nodes = WBAPI.nodeMap;
+  let maxR=0, maxC=0;
+  for (const p of Object.values(coords)) { maxR=Math.max(maxR,p.r); maxC=Math.max(maxC,p.c); }
+  let vi=0;
+  for (const code of Object.keys(nodes)) {
+    if (!coords[code]) { coords[code]={r:2+vi*2,c:maxC+6,virtual:true}; vi++; maxC=Math.max(maxC,coords[code].c); maxR=Math.max(maxR,coords[code].r); }
+  }
+  const W=(maxC+4)*S, H=(maxR+4)*S;
+  const cv=$('map-canvas'); cv.width=W; cv.height=H;
+  cv.style.width=W+'px'; cv.style.height=H+'px';
+  const ctx=cv.getContext('2d'); ctx.clearRect(0,0,W,H);
+  // dots
+  ctx.fillStyle='#1e2530';
+  for(let r=1;r<=maxR+2;r++) for(let c=1;c<=maxC+2;c++) ctx.fillRect(c*S-1,r*S-1,2,2);
+  // edges
+  const dirs={N:[0,-1],S:[0,1],E:[1,0],W:[-1,0]};
+  const drawn=new Set();
+  for(const [code,node] of Object.entries(nodes)){
+    const p=coords[code]; if(!p) continue;
+    for(const [d,[dc,dr]] of Object.entries(dirs)){
+      const nb=node[d]; if(!nb||!coords[nb]) continue;
+      const key=[code,nb].sort().join('|');
+      if(drawn.has(key)) continue; drawn.add(key);
+      const np=coords[nb];
+      ctx.beginPath(); ctx.strokeStyle='#2d333b'; ctx.lineWidth=1.5;
+      ctx.moveTo(p.c*S,p.r*S); ctx.lineTo(np.c*S,np.r*S); ctx.stroke();
+    }
+  }
+  // nodes
+  for(const [code,node] of Object.entries(nodes)){
+    const p=coords[code]; if(!p) continue;
+    if(DIFF.deleted.has(code)) continue;
+    const cx=p.c*S, cy=p.r*S;
+    const act=node.act||0, base=ACT_COLORS[act]||'#8b949e';
+    const ds=DIFF.status(code), isSel=(code===mapSelected);
+    const r=isSel?11:7;
+    if(ds){
+      const rc=ds==='added'?'#3fb950':ds==='modified'?'#d29922':'#f85149';
+      ctx.beginPath(); ctx.arc(cx,cy,r+4,0,Math.PI*2); ctx.strokeStyle=rc; ctx.lineWidth=2; ctx.stroke();
+    }
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
+    ctx.fillStyle=isSel?'#fff':base; ctx.fill();
+    if(isSel){ctx.strokeStyle=base;ctx.lineWidth=2;ctx.stroke();}
+    if(node.battle){ctx.beginPath();ctx.arc(cx+r-2,cy-r+2,3,0,Math.PI*2);ctx.fillStyle='#f85149';ctx.fill();}
+    if(node.sleep){ctx.beginPath();ctx.arc(cx-r+2,cy-r+2,3,0,Math.PI*2);ctx.fillStyle='#58a6ff';ctx.fill();}
+    if(S>=14){ctx.fillStyle='#0d1117';ctx.font=`bold ${Math.max(8,S*.55)}px monospace`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(code.slice(0,3),cx,cy);}
+  }
+}
+
+$('map-canvas').addEventListener('click', e=>{
+  const rect=$('map-canvas').getBoundingClientRect();
+  const code=hitNode(e.clientX-rect.left, e.clientY-rect.top);
+  if(code) selectMapNode(code);
+});
+$('map-canvas').addEventListener('mousemove', e=>{
+  const rect=$('map-canvas').getBoundingClientRect();
+  const code=hitNode(e.clientX-rect.left, e.clientY-rect.top);
+  const tt=$('tooltip');
+  if(code){
+    const n=getEffNode(code);
+    tt.style.display='block'; tt.style.left=(e.clientX+14)+'px'; tt.style.top=(e.clientY+10)+'px';
+    tt.innerHTML=`<b>${code}</b> — ${n.label||''}`+(n.npc?`<br>NPC: ${n.npc}`:'')+
+      (n.battle?`<br>⚔ ${n.battle.label||n.battle.key}`:'')+
+      (n.sleep?`<br>🛏 Inn (${n.sleepCost}gp)`:'');
+    $('map-canvas').style.cursor='pointer';
+    $('map-hover-info').textContent=code+' — '+(n.label||'');
+  }else{ tt.style.display='none'; $('map-canvas').style.cursor='crosshair'; $('map-hover-info').textContent=''; }
+});
+$('map-canvas').addEventListener('mouseleave',()=>{ $('tooltip').style.display='none'; });
+$('map-canvas-wrap').addEventListener('wheel',e=>{
+  e.preventDefault();
+  mapScale=Math.max(8,Math.min(36,mapScale+(e.deltaY<0?2:-2)));
+  $('map-scale-info').textContent=`Scale: ${mapScale}px/cell`;
+  renderMap();
+},{passive:false});
+$('map-canvas-wrap').addEventListener('dragover',e=>{e.preventDefault();});
+$('map-canvas-wrap').addEventListener('drop',e=>{e.preventDefault();const f=e.dataTransfer.files[0];if(f)readFile(f);});
+
+function hitNode(px,py){
+  const S=mapScale;
+  let best=null, bd=Infinity;
+  for(const [code,p] of Object.entries(WBAPI.nodeCoords)){
+    if(!WBAPI.nodeMap[code]||DIFF.deleted.has(code)) continue;
+    const dx=p.c*S-px, dy=p.r*S-py, d=Math.sqrt(dx*dx+dy*dy);
+    if(d<bd&&d<S*.85){bd=d;best=code;}
+  }
+  return best;
+}
+
+function selectMapNode(code){
+  mapSelected=code; mapEditBuf={};
+  renderMap(); renderMapNodeList();
+  $('map-detail-pane').style.display='flex';
+  renderNodeDetail(code);
+}
+
+function renderNodeDetail(code){
+  const node=getEffNode(code);
+  $('nd-code').textContent=code;
+  $('nd-label').textContent=node.label||'';
+  const ds=DIFF.status(code);
+  $('nd-diff-ind').innerHTML=ds?`<span class="badge ${ds==='added'?'green':'yellow'}">${ds}</span>`:'';
+  const body=$('nd-body'); body.innerHTML='';
+  const F=['label','name','act','npc','loot','text'];
+  for(const key of F){
+    const div=document.createElement('div'); div.className='fg';
+    div.innerHTML=`<div class="fl">${key}</div>`;
+    const orig=node[key];
+    if(key==='text'||key==='loot'){
+      const ta=document.createElement('textarea'); ta.className='fi'; ta.rows=key==='text'?5:1; ta.value=orig||'';
+      ta.addEventListener('input',()=>{ mapEditBuf[key]=ta.value||null; ta.classList.toggle('chg',ta.value!==String(orig||'')); });
+      div.appendChild(ta);
+    } else if(key==='act'){
+      const inp=document.createElement('input'); inp.type='number'; inp.className='fi'; inp.value=orig??1;
+      inp.addEventListener('input',()=>{ mapEditBuf[key]=Number(inp.value); inp.classList.toggle('chg',Number(inp.value)!==(orig??1)); });
+      div.appendChild(inp);
+    } else {
+      const inp=document.createElement('input'); inp.type='text'; inp.className='fi'; inp.value=orig||'';
+      inp.addEventListener('input',()=>{ mapEditBuf[key]=inp.value||null; inp.classList.toggle('chg',inp.value!==(orig||'')); });
+      div.appendChild(inp);
+    }
+    body.appendChild(div);
+  }
+  // Exits
+  const exG=document.createElement('div'); exG.className='fg';
+  exG.innerHTML='<div class="fl">Exits (N/S/E/W/NW/NE/SW/SE)</div>';
+  const eg=document.createElement('div'); eg.style.cssText='display:grid;grid-template-columns:repeat(4,1fr);gap:4px';
+  for(const d of ['N','S','E','W','NW','NE','SW','SE']){
+    const wrap=document.createElement('div');
+    wrap.innerHTML=`<div style="font-size:9px;color:var(--muted)">${d}</div>`;
+    const inp=document.createElement('input'); inp.type='text'; inp.style.cssText='width:100%;font-size:11px;background:var(--bg3);border:1px solid var(--border);border-radius:3px;color:var(--orange);font-weight:700;padding:2px 4px;font-family:inherit;text-align:center';
+    inp.value=node[d]||''; inp.placeholder=d;
+    inp.style.color=node[d]?'var(--orange)':'var(--muted)';
+    inp.addEventListener('input',()=>{ mapEditBuf[d]=inp.value||null; inp.style.color=inp.value?'var(--orange)':'var(--muted)'; inp.classList.toggle('chg',inp.value!==(node[d]||'')); });
+    wrap.appendChild(inp); eg.appendChild(wrap);
+  }
+  exG.appendChild(eg); body.appendChild(exG);
+  // Sleep
+  const sleepG=document.createElement('div'); sleepG.className='fg row';
+  sleepG.innerHTML=`<div class="fg" style="flex:0"><div class="fl">Inn</div><input type="checkbox" ${node.sleep?'checked':''} id="_nd_sleep"></div>
+    <div class="fg"><div class="fl">Cost (gp)</div><input type="number" class="fi" value="${node.sleepCost||0}" id="_nd_cost"></div>`;
+  body.appendChild(sleepG);
+  const slChk=sleepG.querySelector('#_nd_sleep'); slChk.addEventListener('change',()=>mapEditBuf.sleep=slChk.checked);
+  const slCost=sleepG.querySelector('#_nd_cost'); slCost.addEventListener('input',()=>mapEditBuf.sleepCost=Number(slCost.value));
+  // Battle info
+  if(node.battle){ const bg=document.createElement('div'); bg.className='fg'; bg.innerHTML=`<div class="fl">Battle</div><div class="fv">⚔ ${node.battle.label||node.battle.key} ×${node.battle.count||1}</div>`; body.appendChild(bg); }
+  // Quests at this node
+  const qIds=WBAPI._questsByNode[code]||[];
+  if(qIds.length){
+    const qg=document.createElement('div'); qg.className='fg';
+    qg.innerHTML=`<div class="fl">Quests (${qIds.length})</div>`;
+    for(const id of qIds){
+      const q=WBAPI.questDb[id]||{}; const pill=document.createElement('div'); pill.className='fv'; pill.style.marginBottom='3px'; pill.style.cursor='pointer';
+      pill.innerHTML=`<span style="color:var(--purple)">${id}</span> <span style="color:var(--muted)">${q.title||''}</span>`;
+      pill.addEventListener('click',()=>{ switchTab('quests'); selectQuest(id); });
+      qg.appendChild(pill);
+    }
+    body.appendChild(qg);
+  }
+}
+
+$('btn-save-node').addEventListener('click',()=>{
+  const code=mapSelected; if(!code) return;
+  const orig=WBAPI.nodeMap[code]||{};
+  for(const [f,v] of Object.entries(mapEditBuf)){ DIFF.record(code,f,orig[f]??null,v); if(WBAPI.nodeMap[code]) WBAPI.nodeMap[code][f]=v; }
+  mapEditBuf={}; renderMapNodeList(); renderNodeDetail(code); renderMap();
+});
+$('btn-delete-node').addEventListener('click',()=>{
+  const code=mapSelected; if(!code||!confirm(`Delete ${code}?`)) return;
+  DIFF.del(code); mapSelected=null; $('map-detail-pane').style.display='none'; renderMapNodeList(); renderMap();
+});
+$('btn-add-node').addEventListener('click',()=>{
+  const code=(prompt('Node code (1-6 uppercase):')||'').toUpperCase().trim();
+  if(!code||!/^[A-Z0-9_]{1,6}$/.test(code)){ alert('Invalid.'); return; }
+  if(WBAPI.nodeMap[code]||DIFF.added[code]){ alert('Already exists.'); return; }
+  const n={num:9000+Object.keys(DIFF.added).length,code,name:'new_terrain',label:'New Node',act:1,N:null,S:null,E:null,W:null,text:'',npc:null,battle:null,loot:null,sleep:false};
+  DIFF.added[code]=n; WBAPI.nodeMap[code]=n;
+  const ks=Object.keys(DIFF.added).length;
+  WBAPI.nodeCoords[code]={r:50+ks*2,c:64,virtual:true};
+  updateDiffBadge(); renderMapNodeList(); renderMap(); selectMapNode(code);
+});
+
+function renderMapNodeList(){
+  const q=($('map-search').value||'').toLowerCase(), act=$('map-act-filter').value;
+  const list=$('map-node-list'); list.innerHTML='';
+  const codes=[...Object.keys(DIFF.added),...Object.keys(WBAPI.nodeMap).filter(c=>!DIFF.added[c])];
+  for(const code of codes){
+    if(DIFF.deleted.has(code)) continue;
+    const n=getEffNode(code); if(!n) continue;
+    if(act&&String(n.act||1)!==act) continue;
+    if(q&&!code.toLowerCase().includes(q)&&!(n.label||'').toLowerCase().includes(q)) continue;
+    const ds=DIFF.status(code);
+    const el=document.createElement('div'); el.className='list-item'+(code===mapSelected?' sel':'')+(ds===' added'?' has-add':ds==='modified'?' has-mod':'');
+    el.innerHTML=`<span class="item-code">${code}</span><span class="item-label">${n.label||n.name||''}</span>`;
+    el.addEventListener('click',()=>selectMapNode(code)); list.appendChild(el);
+  }
+}
+$('map-search').addEventListener('input',renderMapNodeList);
+$('map-act-filter').addEventListener('change',renderMapNodeList);
+
+// ── Diff panel ──
+$('btn-diff').addEventListener('click',()=>{ renderDiffPanel(); $('diff-panel').classList.toggle('open'); });
+$('btn-close-diff').addEventListener('click',()=>$('diff-panel').classList.remove('open'));
+function renderDiffPanel(){
+  const {added,modified,deleted}=DIFF;
+  let h='';
+  if(Object.keys(added).length){
+    h+=`<div style="margin-bottom:10px"><div class="diff-sec-title">Added (${Object.keys(added).length})</div>`;
+    for(const [c,n] of Object.entries(added)) h+=`<div class="diff-entry add">+ <b>${c}</b> — ${n.label||''}</div>`;
+    h+='</div>';
+  }
+  if(deleted.size){
+    h+=`<div style="margin-bottom:10px"><div class="diff-sec-title">Deleted (${deleted.size})</div>`;
+    for(const c of deleted) h+=`<div class="diff-entry del">− <b>${c}</b> — ${(WBAPI.nodeMap[c]||{}).label||''}</div>`;
+    h+='</div>';
+  }
+  if(Object.keys(modified).length){
+    h+=`<div style="margin-bottom:10px"><div class="diff-sec-title">Modified (${Object.keys(modified).length})</div>`;
+    for(const [c,fields] of Object.entries(modified)){
+      h+=`<div class="diff-entry mod" style="margin-bottom:6px">~ <b>${c}</b>`;
+      for(const [f,{old:o,new:n}] of Object.entries(fields)){
+        const os=JSON.stringify(o), ns=JSON.stringify(n);
+        h+=`<div style="margin-left:10px;font-size:10px"><span style="color:var(--purple)">.${f}</span><br><span style="color:var(--red)">− ${os.length>80?os.slice(0,80)+'…':os}</span><br><span style="color:var(--green)">+ ${ns.length>80?ns.slice(0,80)+'…':ns}</span></div>`;
+      }
+      h+='</div>';
+    }
+    h+='</div>';
+  }
+  if(!h) h='<div style="color:var(--muted);font-size:12px">No changes.</div>';
+  $('diff-content').innerHTML=h;
+  $('diff-stats').textContent=`${DIFF.total()} change${DIFF.total()!==1?'s':''}`;
+  $('patch-out').value=DIFF.patch();
+}
+$('btn-copy-patch').addEventListener('click',()=>{ navigator.clipboard.writeText($('patch-out').value); $('btn-copy-patch').textContent='Copied!'; setTimeout(()=>$('btn-copy-patch').textContent='Copy',1500); });
+$('btn-dl-patch').addEventListener('click',()=>{ dl(DIFF.patch(),`roll2hit-patch-${Date.now()}.patch.js`,'text/javascript'); });
+$('btn-apply-patch').addEventListener('click',()=>{
+  if(!_rawSource){alert('No source loaded.');return;}
+  const anchor='// ◆◆◆ WORLDBUILDER:NODE_MAP:END ◆◆◆';
+  const i=_rawSource.indexOf(anchor);
+  if(i===-1){alert('Cannot find insertion point.');return;}
+  const patched=_rawSource.slice(0,i+anchor.length)+'\n\n// ── Applied Patch ──\n'+DIFF.patch()+'\n'+_rawSource.slice(i+anchor.length);
+  dl(patched,'roll2hit-v3-patched.html','text/html');
+});
+function dl(content,filename,type){
+  const b=new Blob([content],{type}),u=URL.createObjectURL(b),a=document.createElement('a');
+  a.href=u;a.download=filename;a.click();URL.revokeObjectURL(u);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// BESTIARY TAB
+// ═══════════════════════════════════════════════════════════════════════════
+let selTerrain=null, selMonster=null;
+
+function renderTerrainList(){
+  const q=($('terrain-search').value||'').toLowerCase();
+  const list=$('terrain-list'); list.innerHTML='';
+  for(const [tk,t] of Object.entries(WBAPI.worldDb)){
+    if(t.isEpicBattleground) continue;
+    if(q&&!tk.includes(q)&&!(t.label||'').toLowerCase().includes(q)) continue;
+    const cnt=(WBAPI._terrainToMonsters[tk]||[]).length;
+    const el=document.createElement('div'); el.className='terrain-item'+(tk===selTerrain?' sel':'');
+    el.innerHTML=`<span class="terrain-icon">${t.icon||'🗺'}</span><span class="terrain-name">${t.label||tk}</span><span class="terrain-count">${cnt}</span>`;
+    el.addEventListener('click',()=>{ selTerrain=tk; selMonster=null; renderTerrainList(); renderMonsterTable(); $('monster-detail').style.display='none'; });
+    list.appendChild(el);
+  }
+}
+$('terrain-search').addEventListener('input',renderTerrainList);
+
+function renderMonsterTable(){
+  if(!selTerrain){$('bestiary-empty').style.display='flex'; $('monster-tbody').innerHTML=''; return;}
+  $('bestiary-empty').style.display='none';
+  const q=($('monster-search').value||'').toLowerCase();
+  const t=WBAPI.worldDb[selTerrain]||{};
+  $('terrain-title').textContent=t.label||selTerrain;
+  $('terrain-icon').textContent=t.icon||'';
+  const monsters=WBAPI.monsters.byTerrain(selTerrain);
+  const tbody=$('monster-tbody'); tbody.innerHTML='';
+  for(const m of monsters){
+    if(!m||!m.key) continue;
+    if(q&&!m.key.includes(q)&&!(m.name||'').toLowerCase().includes(q)) continue;
+    const dmg=m.dmgDie?`${m.dmgCount||1}d${m.dmgDie}${m.dmgFlat?'+'+ m.dmgFlat:''}`:'-';
+    const drop=m.drop;
+    const tr=document.createElement('tr'); tr.className=m.key===selMonster?'sel':'';
+    tr.innerHTML=`<td style="font-size:16px">${drop?drop.icon:''}</td>
+      <td><span style="color:var(--text);font-weight:600">${m.name||m.key}</span><div style="font-size:10px;color:var(--muted)">${m.key}</div></td>
+      <td style="color:var(--teal)">${m.ac||'—'}</td>
+      <td style="color:var(--red)">${m.hp||'—'}</td>
+      <td style="color:var(--yellow)">+${m.atk||0}</td>
+      <td style="color:var(--orange)">${dmg}</td>
+      <td><span class="tier-badge tier-${m.tier||'trivial'}">${m.tier||'?'}</span></td>
+      <td style="font-size:11px;color:var(--muted)">${drop?drop.name+' ('+drop.sell+'gp)':'—'}</td>`;
+    tr.addEventListener('click',()=>{ selMonster=m.key; renderMonsterTable(); renderMonsterDetail(m); $('monster-detail').style.display='flex'; });
+    tbody.appendChild(tr);
+  }
+}
+$('monster-search').addEventListener('input',renderMonsterTable);
+
+function renderMonsterDetail(m){
+  $('md-name').textContent=m.name||m.key;
+  $('md-tier').innerHTML=`<span class="tier-badge tier-${m.tier}">${m.tier}</span>`;
+  const body=$('md-body'); body.innerHTML='';
+  const stats=[['AC',m.ac,'var(--teal)'],['HP',m.hp,'var(--red)'],['ATK','+'+m.atk,'var(--yellow)'],
+    ['Damage',m.dmgDie?`${m.dmgCount||1}d${m.dmgDie}${m.dmgFlat?'+'+m.dmgFlat:''}`:'-','var(--orange)']];
+  const sg=document.createElement('div'); sg.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:6px;';
+  for(const [lbl,val,col] of stats){
+    sg.innerHTML+=`<div class="fg"><div class="fl">${lbl}</div><div class="fv" style="color:${col};font-size:16px;font-weight:700;text-align:center">${val}</div></div>`;
+  }
+  body.appendChild(sg);
+  const full=WBAPI.monsters.get(m.key);
+  if(full.drop){ const dg=document.createElement('div'); dg.className='fg'; dg.innerHTML=`<div class="fl">Trophy Drop</div><div class="fv">${full.drop.icon} ${full.drop.name} <span style="color:var(--yellow)">${full.drop.sell}gp</span></div>`; body.appendChild(dg); }
+  if(full.terrains&&full.terrains.length){
+    const tg=document.createElement('div'); tg.className='fg';
+    tg.innerHTML=`<div class="fl">Appears in (${full.terrains.length} terrains)</div><div>${full.terrains.map(tk=>`<span class="flag-pill flag-read">${(WBAPI.worldDb[tk]||{}).icon||''} ${tk}</span>`).join('')}</div>`;
+    body.appendChild(tg);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// NPC TAB
+// ═══════════════════════════════════════════════════════════════════════════
+function renderNpcList(){
+  const q=($('npc-search').value||'').toLowerCase();
+  const list=$('npc-list'); list.innerHTML='';
+  const all=WBAPI.npcs.all().filter(n=>!n._inline);
+  for(const npc of all){
+    if(q&&!(npc.name||'').toLowerCase().includes(q)&&!(npc.occupation||'').toLowerCase().includes(q)&&!(npc.node||'').toLowerCase().includes(q)) continue;
+    const el=document.createElement('div'); el.className='list-item';
+    el.innerHTML=`<span class="item-code">${npc.node||'?'}</span><div><div class="item-label" style="color:var(--text)">${npc.name}</div><div class="item-sub">${npc.occupation||''}</div></div>`;
+    el.addEventListener('click',()=>renderNpcDetail(npc)); list.appendChild(el);
+  }
+}
+$('npc-search').addEventListener('input',renderNpcList);
+
+function renderNpcDetail(npc){
+  const area=$('npc-detail-area'); area.className='detail-body'; area.style.overflow='auto'; area.style.padding='16px 20px';
+  const node=WBAPI.nodeMap[npc.node]||{};
+  let h=`<div class="npc-card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+    <div><div class="npc-name">${npc.name}</div><div class="npc-role">${npc.occupation||''}</div></div>
+    <span class="npc-node-badge" style="margin-left:auto;cursor:pointer" onclick="switchTab('map');selectMapNode('${npc.node}')">${npc.node}</span>
+  </div>
+  <div style="font-size:11px;color:var(--muted)">Node: <b style="color:var(--text)">${node.label||npc.node}</b>${node.act?` · Act ${node.act}`:''}</div>`;
+  if(npc.neutral||npc.friendly||npc.dearFriend){
+    for(const [level,label,col] of [['neutral','Neutral','var(--muted)'],['friendly','Friendly','var(--accent)'],['dearFriend','Dear Friend','var(--pink)']]) {
+      const d=npc[level]; if(!d) continue;
+      h+=`<div class="fav-section"><div class="fav-label" style="color:${col}">● ${label}</div>
+        ${d.greeting?`<div class="fav-greeting">${d.greeting}</div>`:''}
+        ${d.dialogue?`<div class="fav-quote">${d.dialogue}</div>`:''}
+        ${d.special?`<div style="margin-top:4px;color:var(--yellow);font-size:11px">✦ ${d.special}</div>`:''}
+      </div>`;
+    }
+  }
+  h+=`</div>`;
+  const quests=(WBAPI._questsByNode[npc.node]||[]);
+  if(quests.length){
+    h+=`<div style="font-size:11px;color:var(--muted);margin-top:12px;text-transform:uppercase;letter-spacing:.05em">Quests at ${npc.node}</div>`;
+    for(const id of quests){
+      const q=WBAPI.questDb[id]||{};
+      h+=`<div class="chain-link" onclick="switchTab('quests');selectQuest('${id}')"><span style="color:var(--purple)">${id}</span><span style="color:var(--muted)"> — </span>${q.title||''}</div>`;
+    }
+  }
+  area.innerHTML=h;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// QUEST TAB
+// ═══════════════════════════════════════════════════════════════════════════
+let selQuestId=null;
+
+function populateArcFilter(){
+  const sel=$('quest-arc-filter'); sel.innerHTML='<option value="">All Arcs</option>';
+  const arcs={};
+  for(const id of Object.keys(WBAPI.questDb)){
+    const arc=id.match(/^([a-z]+(?:_[a-z]+)?)/)?.[1]||id.slice(0,6);
+    arcs[arc]=(arcs[arc]||0)+1;
+  }
+  for(const [arc,cnt] of Object.entries(arcs)) sel.innerHTML+=`<option value="${arc}">${arc} (${cnt})</option>`;
+}
+
+function renderQuestList(){
+  const q=($('quest-search').value||'').toLowerCase();
+  const type=$('quest-type-filter').value;
+  const arc=$('quest-arc-filter').value;
+  const list=$('quest-list'); list.innerHTML='';
+  let shown=0;
+  for(const [id,quest] of Object.entries(WBAPI.questDb)){
+    if(type&&quest.type!==type) continue;
+    if(arc&&!id.startsWith(arc)) continue;
+    if(q&&!id.includes(q)&&!(quest.title||'').toLowerCase().includes(q)&&!(quest.activateNode||'').toLowerCase().includes(q)&&!(quest.hint||'').toLowerCase().includes(q)) continue;
+    const el=document.createElement('div');
+    el.className='quest-row'+(id===selQuestId?' sel':'')+(quest.type==='main'?' qtype-main':quest.type==='skill_check'?' qtype-skill':'');
+    el.innerHTML=`<span class="quest-id">${id}</span><span class="quest-title">${quest.title||'—'}</span>
+      <span class="quest-meta">${quest.type||'side'}${quest.activateNode?' · '+quest.activateNode:''}${quest.xpAward?' · '+quest.xpAward+'xp':''}${quest.reward?' / '+quest.reward+'gp':''}</span>`;
+    el.addEventListener('click',()=>selectQuest(id)); list.appendChild(el); shown++;
+  }
+  $('quest-cnt').textContent=shown;
+}
+['quest-search','quest-type-filter','quest-arc-filter'].forEach(id=>$(id).addEventListener('input',renderQuestList));
+$('quest-arc-filter').addEventListener('change',renderQuestList);
+
+function selectQuest(id){
+  selQuestId=id; renderQuestList();
+  const area=$('quest-detail-area'); area.className='detail-body'; area.style.overflow='auto'; area.style.padding='14px 16px'; area.style.flex='1';
+  const q=WBAPI.questDb[id]||{}; const flags=WBAPI.quests.flags(id);
+  const chain=WBAPI.quests.chain(id);
+  const fmtFlags=(set,cls)=>[...set].map(f=>`<span class="flag-pill ${cls}">${f}</span>`).join('');
+  let h=`<div style="margin-bottom:12px"><div style="font-size:16px;font-weight:800;color:var(--accent)">${id}</div>
+    <div style="font-size:11px;color:var(--muted)">${q.type||'side'} quest</div></div>`;
+  const editable=[
+    {key:'title',label:'Title',type:'text'},
+    {key:'hint',label:'Hint',type:'textarea'},
+    {key:'activateNode',label:'Activate Node',type:'text'},
+    {key:'waypointNode',label:'Waypoint Node',type:'text'},
+    {key:'checkDC',label:'Check DC',type:'number'},
+    {key:'checkStat',label:'Check Stat (WIS/INT/CHA)',type:'text'},
+    {key:'checkSkill',label:'Check Skill',type:'text'},
+    {key:'xpAward',label:'XP Award',type:'number'},
+    {key:'reward',label:'Gold Reward',type:'number'},
+    {key:'disposition',label:'Disposition Quote',type:'textarea'},
+  ];
+  area.innerHTML='';
+  const header=document.createElement('div'); header.style.marginBottom='12px';
+  header.innerHTML=`<div style="font-size:16px;font-weight:800;color:var(--accent)">${id}</div><div style="font-size:11px;color:var(--muted)">${q.type||'side'} quest · ${q.activateNode||'no node'}</div>`;
+  area.appendChild(header);
+  for(const {key,label,type} of editable){
+    if(q[key]===undefined&&type!=='text') continue;
+    const g=document.createElement('div'); g.className='fg';
+    g.innerHTML=`<div class="fl">${label}</div>`;
+    if(type==='textarea'){
+      const ta=document.createElement('textarea'); ta.className='fi'; ta.rows=3; ta.value=q[key]||'';
+      ta.addEventListener('change',()=>{ q[key]=ta.value; });
+      g.appendChild(ta);
+    } else {
+      const inp=document.createElement('input'); inp.type=type; inp.className='fi'; inp.value=q[key]!=null?q[key]:'';
+      inp.addEventListener('change',()=>{ q[key]=type==='number'?Number(inp.value):inp.value; });
+      g.appendChild(inp);
+    }
+    area.appendChild(g);
+  }
+  // Flags
+  if(flags.reads.size){const fg=document.createElement('div');fg.className='fg';fg.innerHTML=`<div class="fl">Reads Flags (activateCond)</div><div>${fmtFlags(flags.reads,'flag-read')}</div>`;area.appendChild(fg);}
+  if(flags.writes.size){const fg=document.createElement('div');fg.className='fg';fg.innerHTML=`<div class="fl">Writes Flags (onPass / completeFn)</div><div>${fmtFlags(flags.writes,'flag-write')}</div>`;area.appendChild(fg);}
+
+  // Chain
+  $('quest-chain-pane').style.display='flex';
+  const cb=$('quest-chain-body'); cb.innerHTML='';
+  if(chain.upstream.length){
+    const u=document.createElement('div'); u.className='fg';
+    u.innerHTML=`<div class="fl" style="color:var(--muted)">↑ Upstream (must complete first)</div>`;
+    for(const uid of chain.upstream){
+      const uq=WBAPI.questDb[uid]||{};
+      const lnk=document.createElement('div'); lnk.className='chain-link';
+      lnk.innerHTML=`<span style="color:var(--purple)">${uid}</span><span class="arrow">→</span>${uq.title||''}`;
+      lnk.addEventListener('click',()=>selectQuest(uid)); u.appendChild(lnk);
+    }
+    cb.appendChild(u);
+  }
+  const cur=document.createElement('div'); cur.style.cssText='padding:6px 8px;border:1px solid var(--accent);border-radius:4px;margin:6px 0;font-size:12px;color:var(--accent);font-weight:700';
+  cur.textContent='◆ '+id; cb.appendChild(cur);
+  if(chain.downstream.length){
+    const d=document.createElement('div'); d.className='fg';
+    d.innerHTML=`<div class="fl" style="color:var(--muted)">↓ Downstream (unlocked by this)</div>`;
+    for(const did of chain.downstream){
+      const dq=WBAPI.questDb[did]||{};
+      const lnk=document.createElement('div'); lnk.className='chain-link';
+      lnk.innerHTML=`<span class="arrow">→</span><span style="color:var(--green)">${did}</span><span class="arrow"> </span>${dq.title||''}`;
+      lnk.addEventListener('click',()=>selectQuest(did)); d.appendChild(lnk);
+    }
+    cb.appendChild(d);
+  }
+  if(!chain.upstream.length&&!chain.downstream.length){ cb.innerHTML='<div style="color:var(--muted);font-size:12px">No linked quests detected via shared flags.</div>'; }
+  // Shared-flag quests (same arc)
+  const sameArc=Object.keys(WBAPI.questDb).filter(qid=>qid!==id&&qid.replace(/_\d+$/,'').replace(/_[a-z]{2}$/,'')===id.replace(/_\d+$/,'').replace(/_[a-z]{2}$/,''));
+  if(sameArc.length){
+    const ag=document.createElement('div'); ag.style.marginTop='12px'; ag.className='fg';
+    ag.innerHTML=`<div class="fl">Same Arc</div>`;
+    for(const aid of sameArc){
+      const aq=WBAPI.questDb[aid]||{};
+      const lnk=document.createElement('div'); lnk.className='chain-link';
+      lnk.innerHTML=`<span style="color:var(--muted)">${aid}</span> — ${aq.title||''}`;
+      lnk.addEventListener('click',()=>selectQuest(aid)); ag.appendChild(lnk);
+    }
+    cb.appendChild(ag);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// DICE LAB
+// ═══════════════════════════════════════════════════════════════════════════
+const diceHistory=[];
+function rollAndDisplay(expr){
+  const r=WBAPI.dice.roll(expr);
+  const el=$('dice-result');
+  el.textContent=r.total;
+  el.className=r.total===20&&expr==='d20'?'nat20':r.total===1&&expr==='d20'?'nat1':'';
+  $('dice-breakdown').textContent=r.breakdown;
+  diceHistory.unshift(`${expr}=${r.total}`);
+  if(diceHistory.length>24) diceHistory.pop();
+  $('dice-history').innerHTML=diceHistory.map(h=>`<span>${h}</span>`).join('');
+}
+document.querySelectorAll('.dice-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{ const expr=btn.dataset.expr; $('dice-expr').value=expr; rollAndDisplay(expr); });
+});
+$('dice-expr').addEventListener('keydown',e=>{ if(e.key==='Enter') rollAndDisplay($('dice-expr').value||'d20'); });
+$('btn-skill-check').addEventListener('click',()=>{
+  const mod=parseInt($('sc-mod').value)||0, prof=parseInt($('sc-prof').value)||0, dc=parseInt($('sc-dc').value)||13;
+  const r=WBAPI.dice.skillCheck(dc,mod,prof);
+  const col=r.nat20?'var(--yellow)':r.pass?'var(--green)':r.nat1?'var(--red)':'var(--red)';
+  $('sc-result').style.color=col;
+  $('sc-result').innerHTML=`d20 rolled <b>${r.roll}</b> + ${mod} mod + ${prof} prof = <b>${r.total}</b> vs DC ${dc} → <b>${r.pass?'PASS ✓':'FAIL ✗'}</b>${r.nat20?' 🎲 NAT 20!':r.nat1?' 💀 NAT 1!':''}`;
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+// File loading + tab routing
+// ═══════════════════════════════════════════════════════════════════════════
+function readFile(file){
+  const rd=new FileReader(); rd.onload=e=>loadFile(e.target.result); rd.readAsText(file);
+}
+$('file-input').addEventListener('change',e=>{ if(e.target.files[0]) readFile(e.target.files[0]); });
+
+function switchTab(name){
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===name));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===`tab-${name}`));
+}
+document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>switchTab(t.dataset.tab)));
+
+// ═══════════════════════════════════════════════════════════════════════════
+// API Tab
+// ═══════════════════════════════════════════════════════════════════════════
+const API_SCHEMAS = {
+  node:    `name         string   Display name\nterrain      string   Terrain key (ruins, city, dungeon…)\nact          number   Story act 1–5\nbattle       boolean  Combat enabled\nnpc          string   Inline NPC name\ndesc         string   Location description\nlocked       boolean  Hidden until unlocked`,
+  quest:   `title        string   Display title\ntype         string   main | side | skill_check | hunt\nhook         string   Intro text\npassText     string   Success text\nfailText     string   Failure text\nrewardText   string   Reward flavour\nnpc          string   NPC key who gives quest\nactivateNode string   Node where quest appears\nwaypointNode string   Node where quest resolves\ngold         number   Gold reward\nxp           number   XP reward\ndc           number   Difficulty class\nstat         string   wis | int | str | dex | con | cha`,
+  npc:     `name         string   Display name\noccupation   string   Role / job title\nnode         string   Node code\ngreeting     string   Default dialogue`,
+  monster: `name         string   Display name\ntier         number   Difficulty 1–5\nhp           number   Hit points\nac           number   Armor class\ncr           string   Challenge rating\ntype         string   humanoid | beast | undead…\nsize         string   tiny|small|medium|large|huge\ndrop         object   { gold, items[] }`,
+};
+
+function apiOut(data, cls) {
+  const pre = $('api-output');
+  const text = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+  pre.textContent = text;
+  pre.style.borderColor = cls === 'err' ? 'var(--red)' : cls === 'ok' ? 'var(--green)' : 'var(--border)';
+}
+
+function apiGetNs(type) {
+  return { location:WBAPI.location, node:WBAPI.nodes, quest:WBAPI.quests, npc:WBAPI.npcs, monster:WBAPI.monsters }[type];
+}
+
+$('btn-api-get').addEventListener('click', () => {
+  if (!WBAPI.loaded) return apiOut('Load a game file first.', 'err');
+  const type = $('api-type').value, id = $('api-id').value.trim();
+  if (!id) return apiOut('Enter an ID or name.', 'err');
+  const result = apiGetNs(type)?.get(id);
+  if (!result) return apiOut(`"${id}" not found in ${type}s.`, 'err');
+  apiOut(result, 'ok');
+});
+
+$('btn-api-load-field').addEventListener('click', () => {
+  if (!WBAPI.loaded) return apiOut('Load a game file first.', 'err');
+  const type = $('api-type').value, id = $('api-id').value.trim(), field = $('api-field').value.trim();
+  if (!id || !field) return apiOut('Enter ID and field name first.', 'err');
+  const col = {node:WBAPI.nodeMap,quest:WBAPI.questDb,npc:WBAPI.birkaNpcs,monster:WBAPI.monsterPool}[type];
+  if (!col) return apiOut('location type does not support field load.', 'err');
+  const key = WBAPI._findKey(col, id);
+  if (!key) return apiOut(`"${id}" not found.`, 'err');
+  const val = col[key]?.[field];
+  if (val === undefined) return apiOut(`Field "${field}" not found on ${key}.`, 'err');
+  $('api-value-long').value = String(val);
+  $('api-value').value = typeof val !== 'object' ? String(val) : '';
+  apiOut(`Loaded ${type}:${key}.${field}`, 'ok');
+});
+
+function doPut(value) {
+  if (!WBAPI.loaded) return apiOut('Load a game file first.', 'err');
+  const type = $('api-type').value, id = $('api-id').value.trim(), field = $('api-field').value.trim();
+  if (!id || !field) return apiOut('Enter ID and field name.', 'err');
+  if (value === '') return apiOut('Value is empty.', 'err');
+  const ns = apiGetNs(type);
+  if (!ns?.put) return apiOut(`${type} does not support PUT.`, 'err');
+  const r = ns.put(id, { [field]: value });
+  if (!r.ok) return apiOut(r.error || JSON.stringify(r), 'err');
+  apiOut(`PUT ${type}:${r.key}.${field} = ${JSON.stringify(value)}`, 'ok');
+}
+
+$('btn-api-put').addEventListener('click', () => doPut($('api-value').value));
+$('btn-api-put-long').addEventListener('click', () => doPut($('api-value-long').value));
+
+$('btn-api-delete').addEventListener('click', () => {
+  if (!WBAPI.loaded) return apiOut('Load a game file first.', 'err');
+  const type = $('api-type').value, id = $('api-id').value.trim();
+  if (!id) return apiOut('Enter an ID or name.', 'err');
+  const ns = apiGetNs(type);
+  if (!ns?.delete) return apiOut(`${type} does not support DELETE.`, 'err');
+  // Show current before delete
+  const current = ns.get?.(id);
+  const r = ns.delete(id);
+  if (!r.ok) {
+    const msg = r.blockedBy ? `BLOCKED — remove sub-content first:\n${JSON.stringify(r.blockedBy,null,2)}` : r.error;
+    return apiOut(msg, 'err');
+  }
+  apiOut(`DELETED ${type}:${r.key}\n\nWas:\n${JSON.stringify(current,null,2)}`, 'ok');
+  updateDiffBadge();
+});
+
+$('btn-api-move').addEventListener('click', () => {
+  if (!WBAPI.loaded) return apiOut('Load a game file first.', 'err');
+  const from = $('api-move-from').value.trim(), to = $('api-move-to').value.trim();
+  if (!from || !to) return apiOut('Enter both current code and new code.', 'err');
+  if (!WBAPI.nodeMap[from]) return apiOut(`Node "${from}" not found.`, 'err');
+  if (WBAPI.nodeMap[to]) return apiOut(`Node "${to}" already exists.`, 'err');
+
+  // Copy under new key
+  WBAPI.nodeMap[to] = { ...WBAPI.nodeMap[from] };
+  if (WBAPI.nodeCoords[from]) { WBAPI.nodeCoords[to] = WBAPI.nodeCoords[from]; delete WBAPI.nodeCoords[from]; }
+
+  // Update quest refs
+  let qUpdated = 0;
+  for (const q of Object.values(WBAPI.questDb))
+    for (const f of ['activateNode','waypointNode'])
+      if (q[f] === from) { q[f] = to; qUpdated++; }
+
+  // Update NPC node refs
+  let nUpdated = 0;
+  for (const n of Object.values(WBAPI.birkaNpcs))
+    if (n.node === from) { n.node = to; nUpdated++; }
+
+  DIFF.added[to] = WBAPI.nodeMap[to];
+  DIFF.del(from);
+  delete WBAPI.nodeMap[from];
+  WBAPI._buildIndexes();
+  apiOut(`MOVED node ${from} → ${to}\n${qUpdated} quests updated, ${nUpdated} NPCs updated`, 'ok');
+  renderMap();
+  updateDiffBadge();
+});
+
+$('btn-api-clear').addEventListener('click', () => { $('api-output').textContent = '—'; $('api-output').style.borderColor='var(--border)'; });
+
+document.querySelectorAll('[data-schema]').forEach(btn => btn.addEventListener('click', () => {
+  const key = btn.dataset.schema;
+  const pre = $('api-schema');
+  if (pre.style.display !== 'none' && pre.dataset.showing === key) {
+    pre.style.display = 'none'; return;
+  }
+  pre.style.display = 'block';
+  pre.dataset.showing = key;
+  pre.textContent = API_SCHEMAS[key] || 'No schema.';
+}));
+
+// Pre-fill ID from last selected map node when switching to API tab
+document.querySelector('[data-tab="api"]').addEventListener('click', () => {
+  if ($('api-id').value === '' && typeof mapSelected !== 'undefined' && mapSelected) {
+    $('api-type').value = 'node';
+    $('api-id').value = mapSelected;
+  }
+});
+</script>
+</body>
+</html>

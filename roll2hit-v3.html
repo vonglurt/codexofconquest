@@ -4865,6 +4865,7 @@ const ENEMY_DB = { // → doc: combat.md §Enemy Scaling (all combat opponents i
 /* ══════════════════════════════════════════════════════════
    MONSTER POOL  (S11)
 ══════════════════════════════════════════════════════════ */
+// ◆◆◆ WORLDBUILDER:MONSTER_POOL:START ◆◆◆
 const MONSTER_POOL = { // → doc: monsters.md §Monster Pool
   // ── Yugurt Lake — 20 predator fish, ranked 1-20 by danger (poison & barb themed) ──
   fish_01: { key:'fish_01', name:'Needle Minnow',            ac:5,  hp:4,   atk:2, dmgDie:3,  dmgCount:1, dmgFlat:0, tier:'trivial' },
@@ -5299,6 +5300,7 @@ const MONSTER_POOL = { // → doc: monsters.md §Monster Pool
 /* ══════════════════════════════════════════════════════════
    MONSTER DROPS  (Layer 8)
 ══════════════════════════════════════════════════════════ */
+// ◆◆◆ WORLDBUILDER:MONSTER_DROPS:START ◆◆◆
 const MONSTER_DROPS = { // → doc: mechanics-combat.md §Monster Trophy Drops
   // ── Yugurt Lake fish drops (rank scales value) ──
   fish_01: { name:'Minnow Barb',             icon:'🐟', sell:2  },
@@ -5694,6 +5696,8 @@ const MONSTER_DROPS = { // → doc: mechanics-combat.md §Monster Trophy Drops
   // Layer 46: Torment Nexus quest reward (static loot, not from battle)
   creative_literacy_token: { name:'Creative Literacy Token', icon:'📄', sell:27 },
 };
+// ◆◆◆ WORLDBUILDER:MONSTER_DROPS:END ◆◆◆
+// ◆◆◆ WORLDBUILDER:MONSTER_POOL:END ◆◆◆
 
 const VENDOR_NODES = new Set(['BA','MQ','SF','IS','BK']); // → doc: mechanics-economy.md §Vendor System
 
@@ -5701,6 +5705,7 @@ const VENDOR_NODES = new Set(['BA','MQ','SF','IS','BK']); // → doc: mechanics-
    WORLD DB  (S11)
 ══════════════════════════════════════════════════════════ */
 const P = MONSTER_POOL;
+// ◆◆◆ WORLDBUILDER:WORLD_DB:START ◆◆◆
 const WORLD_DB = { // → doc: world.md §WORLD_DB
   // ── Urban / Town ─────────────────────────────────────────
   city:             { label:'City Streets',        icon:'🏙',  monsters:[ P.commoner, P.kobold, P.bandit, P.spy, P.shadow, P.thug, P.imp, P.kenku, P.wererat, P.ghoul, P.intellect_dev, P.doppelganger, P.wight, P.gargoyle, P.assassin, P.gladiator, P.veteran, P.night_hag, P.knight, P.stone_golem, P.vampire, P.lich, P.striga, P.botchling, P.plague_maiden, P.rabid_dog, P.cockroach_swarm, P.swarming_wasps ] },
@@ -5783,6 +5788,7 @@ const WORLD_DB = { // → doc: world.md §WORLD_DB
   workshop:      { label:'Scholar King\'s Workshop', icon:'⚗', monsters:[ P.specter, P.library_ghost, P.scholars_guard, P.mage, P.archmage ] },
   mimic_meadow:  { label:'The Mimic Meadows',        icon:'🧸', monsters:[ P.mimic ] },
 };
+// ◆◆◆ WORLDBUILDER:WORLD_DB:END ◆◆◆
 
 /* ══════════════════════════════════════════════════════════
    HELPERS
@@ -7573,6 +7579,7 @@ document.addEventListener('DOMContentLoaded', () => {
    STORY MODE — NODE MAP & NAVIGATION
 ══════════════════════════════════════════════════════════ */
 
+// ◆◆◆ WORLDBUILDER:NODE_MAP:START ◆◆◆
 const NODE_MAP = { // → doc: maps.md §NODE_MAP
   // ── ACT I — BIRKA
   CI:{ num:1,  code:'CI', name:'city',            label:'City Streets — Birka',       act:1, N:'SL', S:'CR', E:'IN',  W:'J1',  text:"The courier is already dead. He made it to the gate lamp and no further; the map he was carrying is in your hand now. You don't remember being given it.\n\nAround him, the city continues. A cart adjusts its wheel line. Guard Captain Yael notes the body's position from the corner — does not approach. The notice board behind her: lower districts sealed, three consecutive nights. Rationale field: blank.\n\nShe looks at the map. Then at you.\n\n\"Where did he come from?\"", npc:'City Guard Captain', battle:null, loot:'Bloodstained Map', sleep:false },
@@ -7873,10 +7880,12 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
     text:"The meadow has no enemies. This is immediately suspicious and then immediately not — the mimics here are well-fed, well-rested, and have no territorial interest in anyone who does not threaten the Tribbles.\n\nBaby chest mimics scurry between the grass tufts. A bookshelf mimic naps against the east wall, three Fuzzy Tribbles stacked on its top shelf like a particularly content hat rack. The floor mimic has been in the same position long enough that moss has started growing on its lid.\n\nThe Mother Mimic sits at the meadow's center. She is the size of a large chest that has been thinking about it for a very long time. She watches you arrive the way an expert watches an amateur make their first correct move.\n\nA Fuzzy Tribble rolls past your foot. It is not going anywhere specific. It is going there enthusiastically.",
     npc:null, battle:null, loot:'Fuzzy Tribble', sleep:false },
 };
+// ◆◆◆ WORLDBUILDER:NODE_MAP:END ◆◆◆
 
 const ACT_NAMES = ['','Act I — Birka','Act II — Tilbury','Act III — The Wilds','Act IV — The Deep','Act V — Visby','Act VI — Desert','Act VII — Mythic Circuit','Act VIII — The Reckoning'];
 
 /* Grid coordinates — spaced layout r:1–41, c:2–60 (Chebyshev ≥ 2 between all nodes) */
+// ◆◆◆ WORLDBUILDER:NODE_COORDS:START ◆◆◆
 const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   /* Northern spine — main quest axis */
   CO:{r:1,c:28},  WK:{r:3,c:28},  HC:{r:5,c:28},
@@ -7947,6 +7956,7 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   /* §LXXI: Sunken Hall — c:3, rows 42→46 */
   DA0:{r:42,c:3}, DA1:{r:44,c:3}, DA2:{r:46,c:3}, DA3:{r:48,c:3},
 };
+// ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆
 
 /* ── Layer 9-A: Circuit Corridor Data Structures ── */
 
@@ -8470,6 +8480,7 @@ const NPC_DIALOGUES = { // → doc: story-arc-npc-dialogues.md
 };
 
 /* ── Layer 3: Quest Data ── */
+// ◆◆◆ WORLDBUILDER:QUEST_DB:START ◆◆◆
 const QUEST_DB = { // → doc: world.md §QUEST_DB
   mq_1: { id:'mq_1', type:'main', title:'Follow the Bloodstained Map',
     desc:'A dying courier pressed a map into your hands. He said one word — "Sweelinck" — as if that word would explain everything that came before it. You do not know what came before it. The map is bloodstained on the upper right corner. The blood is not yours. Follow the trail.',
@@ -10583,6 +10594,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     completeFn:() => !!(S_story.yugurtTourBeat||{}).master, xpAward:1000, waypointNode:'YC', reward:1500,
     disposition:'"...Nice Day For Fishing. Yugurt!"  — The Fisherman' },
 };
+// ◆◆◆ WORLDBUILDER:QUEST_DB:END ◆◆◆
 
 /* ── Layer 5: Void Tide Events ── */
 const VOID_TIDE_EVENTS = { // → doc: world.md §Void Tide
@@ -11457,6 +11469,7 @@ const NPC_DIALOGUE = { // → doc: story.md §FL7
 };
 
 /* ── Layer 41: Birka NPC Profiles ── */
+// ◆◆◆ WORLDBUILDER:BIRKA_NPC:START ◆◆◆
 const BIRKA_NPC_PROFILES = { // → doc: world.md §Birka Six NPCs
   yael: {
     key:'yael', name:'Guard Captain Yael Scheidemann', occupation:'city guard captain', node:'CI',
@@ -11514,6 +11527,7 @@ const BIRKA_NPC_PROFILES = { // → doc: world.md §Birka Six NPCs
                  dialogue:'"The depth readings are consistent now. The Void is weakening its intrusion — whatever you\'ve been doing in the outer nodes is working." A pause. "I filed a report. The commissioners don\'t read depth reports. I included your name in the field observation section." She turns back to the terminal. "Someone should know it happened."' },
   },
 };
+// ◆◆◆ WORLDBUILDER:BIRKA_NPC:END ◆◆◆
 
 /* ── Story State ── */
 let S_story = {

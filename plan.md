@@ -6452,7 +6452,7 @@ antecedentDepthMet: false,
 
 ---
 
-## §SPARK-01 — The Harmony Chain (📋 PLANNED — Layer 110)
+## §SPARK-01 — The Harmony Chain (✅ Implemented — Layer 110)
 
 **Arc summary:** 5-quest friendship vignette arc in Tilbury's port district and aboard the Tilbury Star. French theater vignette structure: 2 acts, 5 scenes. Physical token objects are created, handed, and destroyed as the emotional plot moves. An unlikely chain of friendship — harbor cat → dock mouse → blood tick → bioluminescent mind-control parasite — radiates outward until a pompous King's Inspector with an impossible backstory finally tells the truth. Naval component: a "steamboat who done it" aboard the Tilbury Star where the murder victim is a cargo of imported perfumes and the "monster" is the parasite — which is not dangerous but is *extremely* friendly. The arc is built on improv principles: **yes-and**, **find common ground**, **contrasting energy**, **make others look good**. Every beat asks the player to accept something strange and build on it.
 
@@ -6804,7 +6804,7 @@ The Warmth's progenitor — a Deep Warmth Eel, CR 4, bioluminescent, entirely no
 
 ---
 
-## §WISDOM-01 — The Book of Human Nature (📋 PLANNED)
+## §WISDOM-01 — The Book of Human Nature (✅ Implemented — Layer 112)
 
 **Depends on:** personalLegendComplete (§ALCHEMY-01 complete)  
 **Source material:** Robert Greene — *The Laws of Human Nature* (2018) + *The 48 Laws of Power* (1998)  
@@ -7027,3 +7027,810 @@ JS syntax validation after each edit block
 
 Running total after §WISDOM-01: ~159 live quests
 ```
+
+---
+
+## §WORLDBUILDER-01 — The World Builder Editor (📋 PLANNED)
+
+**What it is:** A browser-based CRUD editor for the game's node architecture. The game world currently lives as a JavaScript object (`NODE_MAP`) with ~150 nodes, each having coordinates, exits, NPC, battle, loot, and sleep fields. Editing requires reading raw JS. The World Builder makes this visual and interactive.
+
+**Why now:** The world has reached a scale where new arcs require cross-referencing 6–8 nodes at a time to check exit availability, coordinate positions, and verify that new nodes don't collide with existing ones. The grid is large enough that a visual overview is no longer optional — it is necessary for safe world expansion.
+
+---
+
+### §WORLDBUILDER-01-A. The Three Views
+
+**1. Grid View (World Map)**  
+A 2D rendered grid of all nodes at their `{r, c}` coordinates. Each cell shows the node code, label abbreviation, and act number (color-coded by act). Exits rendered as directional arrows between cells. Clicking a node enters Detail View.
+
+- Zoom in/out (the full grid spans ~50 rows × 60 columns)
+- Filter by act (show only act 1, act 2, etc.)
+- Highlight: orphan nodes (no exits), terminal nodes (one exit), hub nodes (4 exits)
+- Empty cells are potential insertion points — clicking an empty cell opens a "New Node" form with coordinates pre-filled
+
+**2. Detail View (Node Inspector)**  
+Full debug readout for a selected node:
+
+```
+Node: [code]  Label: [label]  Act: [n]  Num: [n]
+Coordinates: r:[n] c:[n]
+Exits: N:[code or null]  S:[code or null]  E:[code or null]  W:[code or null]
+
+NPC: [name]  quoteFn: [3-state / inline / none]
+Battle: [label]  key:[key]  count:[n]
+Loot: [items list]
+Sleep: [true/false]
+
+Attached Quests: [list of quest IDs where activateNode === this code]
+Attached storyRender blocks: [list of block IDs]
+Flags set by quests here: [list]
+Flags read by quests here: [list]
+```
+
+All fields are editable in place. Changes tracked in a "pending edits" diff panel before export.
+
+**3. Edit Mode (Node Form)**  
+Full form UI for creating or editing a node:
+
+| Field | Input type | Notes |
+|-------|-----------|-------|
+| code | text (4 chars) | Uniqueness check against existing codes |
+| num | number | Auto-increments from current max |
+| name | text | Internal key name |
+| label | text | Display label |
+| act | 1–8 select | |
+| r, c | number | Validated against grid collision |
+| N/S/E/W exits | node selector (dropdown of all existing codes) | Bidirectional update option: "also update target node's reverse exit" |
+| text | textarea | The node's prose description |
+| npc | text | NPC name |
+| battle.label | text | |
+| battle.key | dropdown of MONSTER_POOL keys | |
+| battle.count | number | |
+| loot | text | |
+| sleep | checkbox | |
+
+---
+
+### §WORLDBUILDER-01-B. Quest Cross-Reference Panel
+
+For any selected node, show a panel listing all quests where `activateNode === nodeCode`:
+
+```
+Quests active at this node:
+  quest_hunt_01    [side]      activateCond: always       — "Missing Boats"
+  quest_hunt_02    [skill WIS] activateCond: huntHookReceived  — "Hull Marks"
+  quest_wis_04     [skill INT] activateCond: wisHookReceived   — "The Stalemate Cost"
+```
+
+Clicking a quest ID opens a quest detail panel (links to the Quest Editor, §EDITOR-01).
+
+---
+
+### §WORLDBUILDER-01-C. Export Format
+
+The editor does not modify the live HTML file directly. It outputs a **diff block** showing:
+
+1. The modified NODE_MAP entry as a valid JS object literal
+2. Any exit updates to adjacent nodes (bidirectional changes)
+3. A checklist of manual steps required (e.g., "Add storyRender block at HL for new arc")
+
+Export format is JS-object-literal (not JSON) because the `quoteFn` and `completeFn` fields are functions. The editor generates template functions with placeholder bodies:
+
+```javascript
+quoteFn: () => S_story.newFlag ? 'Post-quest dialogue.' : 'Pre-quest dialogue.',
+```
+
+The user pastes the diff into the game file. A future version could write directly to the file via a local server endpoint.
+
+---
+
+### §WORLDBUILDER-01-D. Implementation Notes
+
+- Runs as a standalone HTML file (`worldbuilder.html`) that imports a JSON snapshot of NODE_MAP (auto-generated at build time, or pasted manually)
+- No server required — purely client-side JS + Canvas or CSS grid
+- State: the editor's working copy of NODE_MAP is stored in localStorage; export clears the diff queue
+- Responsive to the game's coordinate system (r/c grid, not pixel positions)
+- Node text field supports multi-line editing with live character count
+
+---
+
+## §EDITOR-01 — The Quest Creator / Generic Mission Maker (📋 PLANNED)
+
+**What it is:** A form-based UI for creating, editing, and cross-referencing quest objects of any type (`side`, `skill_check`). Outputs valid JS quest object literals ready to paste into `QUEST_DB`. Eliminates the need to hand-write the boilerplate for each quest while preserving full flexibility.
+
+**Why now:** Six quest templates are proven (`§SPARK`, `§HUNT`, `§PORT`, `§WHODUNIT`, `§ALCHEMY`, `§WISDOM`). Each template has a predictable field set. The quest boilerplate is repetitive to write and error-prone (flag name typos, unmatched braces, missing `activateCond`). A form editor with type-aware field display reduces the error surface and makes new arc creation accessible without reading existing quest code.
+
+---
+
+### §EDITOR-01-A. Quest Type Field Sets
+
+The editor shows different fields depending on the selected quest type:
+
+**All quest types:**
+| Field | Input | Notes |
+|-------|-------|-------|
+| id | text | Uniqueness check against QUEST_DB keys |
+| type | select: side / skill_check | Determines which additional fields appear |
+| title | text | |
+| desc | textarea | Fragment texts, Roen commentary, etc. |
+| hint | text | Quest panel hint line |
+| activateNode | node selector | Dropdown of all NODE_MAP codes |
+| activateCond | flag selector + operator | e.g., `flagA && flagB`; builds the function |
+| waypointNode | node selector | |
+| reward | number | Gold reward on complete |
+| disposition | text | The closing quote line |
+
+**Additional for `skill_check`:**
+| Field | Input | Notes |
+|-------|-------|-------|
+| checkStat | select: wis / int / cha / str / dex / con | |
+| checkSkill | select: Insight / Investigation / Nature / Persuasion / Perception / Medicine / Animal Handling | |
+| checkDC | number | |
+| retryable | checkbox | |
+| checkPassFlag | flag selector | Must exist in `_S_DEFAULTS` or can create new |
+| onPass body | textarea (JS) | Function body; editor wraps in `onPass:() => { ... }` |
+| onFail body | textarea (JS) | |
+| xpAward | number | 0 if XP awarded inside onPass |
+
+**Additional for `side`:**
+| Field | Input | Notes |
+|-------|-------|-------|
+| completeItems | item name list | Items that must be in inventory to complete |
+| completeFn body | textarea (JS) | Function body |
+| onComplete body | textarea (JS) | Optional |
+
+---
+
+### §EDITOR-01-B. Flag Dependency Graph
+
+Every quest reads flags (in `activateCond`, `completeFn`) and writes flags (in `onPass`, `onComplete`, `checkPassFlag`). The editor maintains a live dependency map:
+
+```
+quest_wis_03
+  READS:  wisHookReceived (set by quest_wis_00)
+          sbResolved (set by quest_sb_01 / quest_sb_02 / quest_sb_fight)
+  WRITES: wisPage3_thumbscrew
+  DOWNSTREAM: quest_wis_07 reads wisPage3_thumbscrew
+```
+
+The flag graph surfaces:
+- Circular dependencies (quest A waits for flag set by quest B waits for quest A)
+- Orphan flags (set but never read)
+- Missing flags (read but not set by any quest)
+
+---
+
+### §EDITOR-01-C. storyRender Block Generator
+
+For each quest, the editor can generate a skeleton `storyRender` block:
+
+```javascript
+// §[ARC-ID]: [NODE] — [quest title]
+{ const _[id]Old = document.getElementById('[id]'); if (_[id]Old) _[id]Old.remove();
+  if (node.code === '[activateNode]' && S_story.[activateCond]) {
+    const _div = document.createElement('div');
+    _div.id = '[id]'; _div.className = 'sweelinck-variant';
+    _div.style.cssText = 'margin-top:10px;border-left-color:#[color];color:#[color];font-size:12px;';
+    _div.textContent = '[desc text here]';
+    // [button if needed]
+    document.getElementById('story-text-box').insertAdjacentElement('afterend', _div);
+  }
+}
+```
+
+The generator fills in the known fields and leaves `[desc text here]` as a placeholder. The user writes the narrative prose in the editor's textarea and it gets embedded.
+
+---
+
+### §EDITOR-01-D. Token Item Manager
+
+For arcs with token objects (§SPARK, §ALCHEMY, §WISDOM pattern), a visual chain editor:
+
+```
+Token chain:
+  [Item Name] [icon] [sell] → Created by: [quest_id onPass / storyRender button]
+                            → Destroyed by: [quest_id / storyRender button]
+  + Add token
+```
+
+The manager generates the `inv.push(...)` and `inv.splice(...)` code for each transition and embeds it in the appropriate quest callback bodies.
+
+---
+
+### §EDITOR-01-E. Export Format
+
+Output is a single JS object literal block ready to paste into `QUEST_DB`:
+
+```javascript
+  quest_XXXX: { id:'quest_XXXX', type:'skill_check',
+    title:'...',
+    desc:'...',
+    hint:'...',
+    activateNode:'XX', activateCond:() => !!(S_story.flagA && S_story.flagB),
+    checkStat:'wis', checkSkill:'Insight', checkDC:13, retryable:false,
+    checkPassFlag:'flagC',
+    onPass:() => {
+      S_story.flagC = true;
+      S_story.xp = (S_story.xp||0) + 250;
+      storyMsg('...');
+    },
+    onFail:() => { storyMsg('...'); },
+    xpAward:0,
+    disposition:'...' },
+```
+
+The output window shows the complete object, validates brace matching, and highlights any unfilled placeholder fields in red before allowing copy.
+
+---
+
+### §EDITOR-01-F. Template Presets
+
+One-click presets that pre-fill the field set for each proven template:
+
+| Preset | Pre-fills |
+|--------|-----------|
+| §SPARK hook | type:side, disposition style, activateCond: always at node |
+| §SPARK skill_check | WIS Animal Handling DC 11, token item fields, onPass creates item |
+| §HUNT setup | type:side, wrong-theory disposition, storyRender skeleton |
+| §HUNT investigation | INT Investigation DC 12, retryable:false, knowledge entry in onPass |
+| §WHODUNIT drain | INT Investigation DC 12, storyMsg pattern |
+| §ALCHEMY beat | type:side, wisdom beat desc pattern, +XP in completeFn |
+| §WISDOM fragment | desc: Ardley-text + Roen-commentary pattern, knowledge entry onPass |
+
+---
+
+### §EDITOR-01-G. Implementation Notes
+
+- Runs as a standalone HTML file (`questeditor.html`), no server required
+- QUEST_DB imported as a JSON-serializable snapshot (functions serialized as template strings, deserialized on load)
+- The function serialization problem: JS functions in `onPass`, `completeFn` etc. cannot be stored as JSON. The editor stores them as **template strings** with named slots (`{{flagName}}`, `{{xpAmount}}`, `{{itemName}}`), and generates the final JS function body at export time
+- Side-by-side preview: left panel = editor form; right panel = rendered quest card as it would appear in the game's quest panel UI
+- All flag names validated against a loaded snapshot of `_S_DEFAULTS()`
+
+---
+
+## §ARCH-01 — Quest API Architecture & Universal Mission Format (📋 PLANNED — Next Implementation Phase)
+
+**Lab Report:** `lab-report-quest-api-architecture.md`  
+**Scope:** Unification of all quest types into Universal Quest Format (UQF v1.0); WBAPI runtime layer; live 5-phase migration
+
+### Core Problem
+QUEST_DB currently has three incompatible formats (main/side/skill_check), logic scattered across storyRender + completeFn closures, and JS arrow functions that cannot be serialized, diffed, or safely edited by the worldbuilder.
+
+### §ARCH-01-A. Universal Quest Format (UQF v1.0)
+
+Every quest becomes a declarative object with:
+- `schema: '1.0'` — version stamp
+- `gate: { flags, flagsAny, notFlags }` — replaces `activateCond` arrow function
+- `bits: [...]` — ordered array of typed mission bit objects
+
+### §ARCH-01-B. Mission Bit Registry
+
+Atomic, composable mechanics — each bit is a typed contract:
+
+| Kind | Contract | Replaces |
+|------|----------|---------|
+| `skill_check` | `stat`, `dc`, `onPass`, `onFail` | `checkStat/checkDC/onPass/onFail` |
+| `flag_write` | `set[]`, `clear[]` | `S_story.flag = true` in closures |
+| `reward` | `xp`, `gold`, `items[]`, `knowledge` | XP/gold/item lines in completeFn |
+| `combat` | `key`, `label`, `count`, `nodeCode` | `storyPreBattle(...)` calls |
+| `narrative` | `msg` or `template` | `storyMsg(...)` calls |
+| `choice` | `prompt`, `options[{label,bits}]` | Accept/Fight button pairs in storyRender |
+| `item_remove` | `name` | `inv.splice(idx,1)` calls |
+| `unlock` | `quests[]` | quest chain activation side effects |
+
+### §ARCH-01-C. Migration Plan (5 Phases, Zero-Downtime)
+
+| Phase | Description | Risk |
+|-------|-------------|------|
+| 0 | Anchors + worldbuilder (✅ Done) | Zero |
+| 1 | `QuestRuntime` singleton + `adaptLegacyQuest()` adapter + `schema:'0.legacy'` stamps | Zero |
+| 2 | New arcs written in UQF; runtime serves both formats | Low |
+| 3 | Arc-by-arc migration (§WISDOM-01 first) | Medium |
+| 4 | All arcs UQF; legacy path removed | Medium-low |
+| 5 | QUEST_DB is single source of truth; storyRender is display-only | Low |
+
+### §ARCH-01-D. MissionBitController
+
+Validates quest definitions against bit contracts before writing to QUEST_DB. Runs inside worldbuilder.html Quest Editor. Required fields, optional fields, and a `validate()` function per bit kind.
+
+### §ARCH-01-E. Implementation Checklist
+
+- [ ] Phase 1: Add `SCHEMA_VERSION`, `QuestRuntime`, `adaptLegacyQuest()` to game file (inert — no behavior change)
+- [ ] Phase 1: Add `BIT_CONTRACTS` and `validateQuest()` to worldbuilder.html Quest Editor
+- [ ] Phase 2: Write §DUNGEON-01 quests in UQF v1.0 as first proof-of-concept
+- [ ] Phase 3-a: Migrate §WISDOM-01 (8 quests) — cleanest arc, well-documented
+- [ ] Phase 3-b: Migrate §SPARK-01, §SPARK-02 arcs
+- [ ] Phase 3-c: Migrate §ALCHEMY-01, §HUNT arcs
+- [ ] Phase 3-d: Migrate main quest chain
+- [ ] Phase 4: Remove `completeFn` / `onPass` closure pattern; confirm storyRender blocks are display-only
+- [ ] Phase 5: Export format in worldbuilder generates paste-ready UQF JS literals
+
+---
+
+## §ARCH-02 — Quest Operand Registry & Full Cycle API (📋 PLANNED)
+
+**Depends on:** §ARCH-01 Phase 1 complete  
+**Lab report:** `lab-report-wbapi.md` (WBAPI system — import, patch, export)  
+**Source data:** 210 quests across 4 types (side:104, skill_check:59, epic:40, main:7)
+
+### Core Problem §ARCH-02 Solves
+
+§ARCH-01 defines UQF format (gate + bits[]). §ARCH-02 defines **what those bits mean at execution time** — the operand vocabulary that every quest is made from. Without this, UQF is a schema with no runtime semantics, and world creation is still freeform. With it, every quest is a declared sequence of typed operands, each with a contract, a gate condition, and a completion signal.
+
+---
+
+### §ARCH-02-A. Operand Registry — The Complete Vocabulary
+
+An **operand** is a discrete unit of player action with:
+- **required fields** — must be present to be valid
+- **optional fields** — modify behaviour when present
+- **gate** — condition checked before the operand activates
+- **complete** — condition checked to consider this operand done
+- **runtime handler** — what the game does when the operand fires
+
+**Scan of existing 210 quests reveals these execution fingerprints:**
+
+| Pattern | Quest count | Notes |
+|---|---|---|
+| Node travel (activate ≠ waypoint) | 126 | Most common — player must move between nodes |
+| In-place (activate == waypoint) | 62 | Talk, roll, receive at same node |
+| Skill check | 59 | `checkAbility` + `checkDC` + `passText` + `failText` |
+| Flag gate | 22 | `activateCond` reads `S_story.flag` |
+| Inventory give | 15 | `inv.push(item)` in `completeFn` |
+| Choice branch | 6 | Accept/Fight or multi-option branches |
+| Inventory take | 4 | `inv.splice` / `inv.filter` — item consumed |
+| Party/companion | 2 | NPC in `S.party`, not at a node |
+
+---
+
+#### Operand 1 — `talk_at`
+Travel to node, interact with NPC or object.
+
+```javascript
+{
+  kind: 'talk_at',
+  node: 'CI',           // required — node code where interaction occurs
+  npcKey: 'yael',       // optional — NPC key (verified against BIRKA_NPC + NODE_MAP)
+  objectKey: 'stone',   // optional — non-NPC interactable
+  requiresItem: 'Map',  // optional — item must be in S.inv to proceed
+  dialogue: '...',      // optional — overrides NPC default greeting
+}
+```
+
+**Gate:** `S.currentNode === bit.node`  
+**Complete:** `S_story[talked_${npcKey || objectKey}_at_${node}] === true`  
+**Covers:** 62 in-place side quests, most §SPARK intro quests
+
+---
+
+#### Operand 2 — `skill_check`
+Roll stat vs DC. Existing `checkAbility`/`checkDC` fields become this operand.
+
+```javascript
+{
+  kind: 'skill_check',
+  ability: 'wis',       // required — wis | int | str | dex | con | cha
+  dc: 14,               // required
+  label: 'Ancient Text Knowledge',  // required — shown to player
+  retryable: false,     // optional — default false
+  retryGateDays: 3,     // optional — days before retry allowed
+  passText: '...',      // required
+  failText: '...',      // required
+  passFlag: 'wisdomRead', // optional — S_story flag set on pass
+}
+```
+
+**Gate:** player is at activateNode  
+**Complete:** rolled, result recorded  
+**Covers:** all 59 `skill_check` type quests  
+**Stats breakdown from live data:** wis:11, int:9, cha:4, undefined:35 (to be filled)
+
+---
+
+#### Operand 3 — `navigate`
+Player must move from one node to another. Pure location gate.
+
+```javascript
+{
+  kind: 'navigate',
+  fromNode: 'CI',       // required
+  toNode: 'CY',         // required
+  hint: '...',          // optional — shown in quest strip
+}
+```
+
+**Gate:** `S.currentNode === bit.fromNode`  
+**Complete:** `S.currentNode === bit.toNode`  
+**Covers:** 126 quests with `activateNode ≠ waypointNode`
+
+---
+
+#### Operand 4 — `kill_at`
+Defeat a specific enemy at a specific node. Combat is not embedded in QUEST_DB — it is triggered by the node's `battle` field. This operand declares the *intent*, which the runtime maps to the node's combat trigger.
+
+```javascript
+{
+  kind: 'kill_at',
+  node: 'CY',                        // required — node with battle field
+  monsterKey: 'corrupted_android',   // required — must match MONSTER_POOL key
+  count: 2,                          // optional — default 1
+  targetLabel: 'Android ×2',        // optional — display override
+  killFlag: 'androidsClear',         // optional — S_story flag set on completion
+}
+```
+
+**Gate:** `S.currentNode === bit.node && nodeMap[bit.node].battle`  
+**Complete:** `S_story[bit.killFlag || killed_${monsterKey}_at_${node}] === true`  
+**Validation:** monsterKey must exist in MONSTER_POOL; node must have `battle` field  
+**Covers:** hunt quests, §DUNGEON-01 combat encounters
+
+---
+
+#### Operand 5 — `escort`
+NPC joins the player's party and must be delivered to a destination. The NPC is held as a party slot — not at a fixed node, but traveling with the player.
+
+```javascript
+{
+  kind: 'escort',
+  npcKey: 'aldric',     // required — NPC key; NPC "picked up" at fromNode
+  fromNode: 'CY',       // required — where NPC joins party
+  toNode: 'CI',         // required — where NPC must be delivered
+  partySlot: 'escort',  // optional — S.party slot key, default 'escort'
+  combatRisk: true,     // optional — combat may trigger during transit
+  failFlag: 'escortFailed', // optional — set if NPC dies or player leaves zone
+}
+```
+
+**Gate:** `S.currentNode === bit.fromNode && !S.party[bit.partySlot]`  
+**Complete:** `S.currentNode === bit.toNode && !!S.party[bit.partySlot]`  
+**NPC-as-item model:** NPC is stored in `S.party[slotKey] = npcKey` on pickup, cleared on delivery  
+**Covers:** 2 existing party-pattern quests; new escort arc template
+
+---
+
+#### Operand 6 — `talk_party`
+NPC is already in party. Conversation is available regardless of current node. This is the key distinction from `talk_at` — the NPC travels *with* the player rather than waiting at a fixed location.
+
+```javascript
+{
+  kind: 'talk_party',
+  npcKey: 'aldric',       // required — NPC must be in S.party
+  partySlot: 'escort',    // optional — which slot to check
+  trigger: 'inventory',   // optional — how conversation is initiated
+  dialogue: '...',        // optional — what NPC says
+  talkFlag: 'aldricBriefed', // optional — S_story flag set after talk
+}
+```
+
+**Gate:** `S.party?.[bit.partySlot] === bit.npcKey || S.inv?.includes(bit.npcKey)`  
+**Complete:** `S_story[bit.talkFlag] === true`  
+**Player experience:** accessible from inventory/party panel, not map navigation  
+**Covers:** companion quest arcs, §SPARK-style "NPC follows you" sequences
+
+---
+
+#### Operand 7 — `deliver`
+Carry an item from one location to another. Item must be in inventory when arriving at destination.
+
+```javascript
+{
+  kind: 'deliver',
+  item: 'Bloodstained Map',  // required — must match S.inv entry
+  toNode: 'CY',              // required — destination node
+  fromNode: 'CI',            // optional — where item was picked up
+  recipient: 'bruhns',       // optional — NPC key to hand item to
+  consumeOnDeliver: true,    // optional — default true, removes from inv
+}
+```
+
+**Gate:** `S.inv.includes(bit.item)`  
+**Complete:** `S.currentNode === bit.toNode`  
+**Covers:** quest_mq_1 (Bloodstained Map), any §ALCHEMY token delivery
+
+---
+
+#### Operand 8 — `collect_item`
+Quest completion grants an item to inventory.
+
+```javascript
+{
+  kind: 'collect_item',
+  item: 'Drowned Compass',  // required — name added to S.inv
+  icon: '🧭',               // optional
+  sell: 40,                 // optional — gold value if sold
+  unique: true,             // optional — only one allowed in inv
+}
+```
+
+**Gate:** previous operand complete  
+**Complete:** `S.inv.includes(bit.item)`  
+**Covers:** 15 quests that push items — §SPARK tokens, §HUNT relics, §ALCHEMY reagents
+
+---
+
+#### Operand 9 — `consume_item`
+Requires item in inventory, removes it as cost/condition.
+
+```javascript
+{
+  kind: 'consume_item',
+  item: 'Antidote',         // required — must exist in S.inv
+  failText: '...',          // optional — shown if item not found
+}
+```
+
+**Gate:** `S.inv.includes(bit.item)`  
+**Complete:** item removed from inv  
+**Covers:** 4 quests that remove items (quest_forge_02 pattern)
+
+---
+
+#### Operand 10 — `investigate`
+Examine a location or object. Precedes `kill_at` in the §HUNT 4-phase template — investigation reveals the real enemy before the player commits to combat.
+
+```javascript
+{
+  kind: 'investigate',
+  node: 'LD',               // required — investigation location
+  target: 'shore_markings', // required — what is examined
+  skillCheck: { ability:'int', dc:12 }, // optional — DC to learn more
+  reveals: 'drowner',       // optional — monster key unlocked by investigation
+  narrativeText: '...',     // optional — what is discovered
+  investigateFlag: 'shoreInvestigated', // optional
+}
+```
+
+**Gate:** `S.currentNode === bit.node`  
+**Complete:** `S_story[bit.investigateFlag] === true`  
+**Covers:** §HUNT investigation phase, §WHODUNIT clue collection
+
+---
+
+#### Operand 11 — `flag_gate`
+Not an action — a prerequisite block. Declares the flags that must be set before this quest or operand is reachable. Replaces inline `activateCond` arrow functions.
+
+```javascript
+{
+  kind: 'flag_gate',
+  requires: ['questDone_01'],       // ALL must be true
+  requiresAny: ['spark_path_a', 'spark_path_b'], // ANY one must be true
+  blocks: ['questDone_02'],         // none of these may be true
+}
+```
+
+**Gate:** evaluated against `S_story`  
+**Complete:** gate passes (this is a gate, not an action)  
+**Covers:** 22 quests with flag-dependent `activateCond`
+
+---
+
+#### Operand 12 — `choice`
+Branching decision. Each option contains its own operand sub-sequence. Merges into a `choice` bit in UQF v1.0.
+
+```javascript
+{
+  kind: 'choice',
+  prompt: 'What do you do?',
+  options: [
+    { label: 'Accept',  bits: [ /* operand sequence */ ] },
+    { label: 'Fight',   bits: [ /* operand sequence */ ] },
+    { label: 'Flee',    bits: [ /* operand sequence */ ] },
+  ],
+}
+```
+
+**Gate:** previous operand complete  
+**Complete:** one option chosen and its bit sequence resolved  
+**Covers:** 6 existing choice quests (quest_sb_01 pattern), §SIREN betrayal mechanic
+
+---
+
+### §ARCH-02-B. Operand Composition Rules
+
+Every quest is a **linear or branching sequence of operands**. The runtime walks the sequence, testing each operand's gate before exposing it to the player.
+
+```
+quest = {
+  gate:  flag_gate operand    ← when does this quest appear?
+  bits:  [
+    operand_1,                ← first player action
+    operand_2,                ← second (unlocked when 1 completes)
+    ...
+    collect_item,             ← reward
+    flag_write,               ← mark completion
+  ]
+}
+```
+
+**Composition constraints enforced by MissionBitController:**
+- `kill_at` must reference a node with `battle: true` in NODE_MAP
+- `escort.fromNode` and `escort.toNode` must exist in NODE_MAP
+- `deliver.item` must match a prior `collect_item` or existing inv item
+- `talk_at.npcKey` must exist in BIRKA_NPC or as inline `node.npc`
+- `talk_party.npcKey` must match a prior `escort` operand's `npcKey`
+- `skill_check.ability` must be one of: `str dex con int wis cha`
+- Every quest must end with either `collect_item`, `flag_write`, or `choice`
+
+---
+
+### §ARCH-02-C. Existing Quest → Operand Map
+
+| Quest type | Count | Primary operand sequence |
+|---|---|---|
+| `skill_check` | 59 | `flag_gate?` → `talk_at` → `skill_check` → `collect_item?` |
+| `side` (in-place) | ~62 | `flag_gate?` → `talk_at` → `collect_item?` → `flag_write` |
+| `side` (travel) | ~42 | `flag_gate?` → `navigate` → `talk_at` → `flag_write` |
+| `epic` | 40 | `flag_gate` → `navigate` → `choice` → `skill_check` → `collect_item` → `flag_write` |
+| `main` (mq_1–7) | 7 | `navigate` → `deliver?` → `flag_write` → `unlock` |
+| §HUNT template | 4 arcs | `flag_gate` → `navigate` → `investigate` → `kill_at` → `collect_item` → `flag_write` |
+| §SPARK template | 2 arcs | `flag_gate` → `talk_at` → `skill_check` → `collect_item` → `talk_party?` |
+| §ALCHEMY template | 1 arc | `flag_gate` → `navigate` → `collect_item` → `deliver` → `flag_write` |
+| §ESCORT (new) | 0 | `flag_gate` → `talk_at` → `escort` → `navigate` → `talk_party` → `flag_write` |
+
+---
+
+### §ARCH-02-D. NPC-as-Party-Member Model
+
+When an NPC joins the player's party, they shift from a **world object** (at a fixed node) to a **carried object** (in `S.party`). This is the conceptual bridge between `talk_at` (NPC at location) and `talk_party` (NPC traveling with player).
+
+**State model:**
+```javascript
+S.party = {
+  escort: 'aldric',       // NPC key in this slot
+  companion: null,        // permanent party slot (future)
+}
+```
+
+**Lifecycle:**
+```
+1. talk_at (fromNode)          → NPC met at node; offer to join
+2. collect_item 'Aldric'       → NPC added to S.inv as token
+   + flag_write: aldricJoined  → S_story flag set
+3. escort operand active       → S.party.escort = 'aldric'
+4. talk_party (any node)       → available while NPC in party
+5. navigate (toNode)           → player travels with NPC
+6. deliver at toNode           → S.party.escort cleared
+   + consume_item 'Aldric'     → token removed from inv
+   + flag_write: aldricDelivered
+```
+
+**Why item + flag + party slot:**  
+Three redundant signals ensure robustness across save/load, UI display, and runtime checks. The item shows in inventory so the player knows they're carrying someone. The flag enables downstream quest gates. The party slot enables `talk_party` gates without scanning inventory.
+
+---
+
+### §ARCH-02-E. World Creation Advisory Layer
+
+The **Advisory Layer** is the creative half of MissionBitController. It validates not just field types but *world logic* — whether the operands refer to things that actually exist in the game world.
+
+**Checks run on every quest PUT/create:**
+
+| Check | Operand(s) | Error if |
+|---|---|---|
+| Node exists | `talk_at`, `kill_at`, `navigate`, `escort`, `investigate` | Node code not in NODE_MAP |
+| Node has battle | `kill_at` | `nodeMap[node].battle` is null/false |
+| Monster exists | `kill_at` | monsterKey not in MONSTER_POOL |
+| Monster in terrain | `kill_at` | monsterKey not in `_terrainToMonsters[node.name]` |
+| NPC exists | `talk_at`, `escort`, `talk_party` | npcKey not in BIRKA_NPC and not `node.npc` |
+| NPC at node | `talk_at` | NPC's node field ≠ operand's node |
+| Item coherence | `deliver`, `consume_item` | item not granted by prior `collect_item` in same quest |
+| Party coherence | `talk_party` | no prior `escort` operand grants this npcKey |
+| Flag uniqueness | `flag_write` | flag already written by another quest in same arc |
+| Stat validity | `skill_check` | ability not in `[str,dex,con,int,wis,cha]` |
+| DC range | `skill_check` | DC < 5 or DC > 25 (advisory, not block) |
+
+**Advisory (warn, don't block):**
+- Quest with no `collect_item` or `flag_write` at end — player gets no signal of completion
+- `skill_check` with no `passFlag` — downstream quests can't gate on this result
+- `navigate` with no `hint` — player has no waypoint guidance
+- `escort` with `combatRisk: true` but no `killFlag` — combat outcome untracked
+
+---
+
+### §ARCH-02-F. Full Cycle API
+
+The complete round-trip from world creation intent to saved game file:
+
+```
+1. DESIGN
+   WBAPI.quests.create({
+     id: 'quest_escort_aldric',
+     type: 'escort',
+     title: 'The Archivist Walks',
+     gate: { requires: ['aldricMet'] },
+     bits: [
+       { kind: 'talk_at',     node: 'CY', npcKey: 'aldric' },
+       { kind: 'collect_item', item: 'Aldric', icon: '👴' },
+       { kind: 'escort',      npcKey: 'aldric', fromNode: 'CY', toNode: 'CI' },
+       { kind: 'talk_party',  npcKey: 'aldric', talkFlag: 'aldricBriefed' },
+       { kind: 'navigate',    fromNode: 'CY', toNode: 'CI' },
+       { kind: 'flag_write',  set: ['aldricDelivered'] },
+       { kind: 'consume_item', item: 'Aldric' },
+       { kind: 'collect_item', item: 'Archivist Key', icon: '🗝', sell: 0 },
+     ]
+   })
+
+2. VALIDATE
+   WBAPI.quests.validate('quest_escort_aldric')
+   // → { ok:true, warnings:['navigate has no hint'] }
+
+3. ADVISORY CHECK
+   WBAPI.quests.advise('quest_escort_aldric')
+   // → checks: node CY exists ✓, NPC aldric exists ✓, aldricMet flag writable ✓
+
+4. EDIT (text fields via file or inline)
+   WBAPI.editField('quest', 'quest_escort_aldric', 'title', 'Walk With Me')
+   // or: node wbapi-cli.js edit quest quest_escort_aldric title "Walk With Me"
+
+5. CHAIN CHECK
+   WBAPI.quests.chain('quest_escort_aldric')
+   // → { upstream: ['quest_aldric_intro'], downstream: [] }
+
+6. EXPORT (for human review)
+   node wbapi-cli.js export ./world
+   // → world/CY/npcs/aldric/quests/quest_escort_aldric/
+   //     meta.json, title.txt, passText.txt …
+
+7. SYNC + SAVE
+   node wbapi-cli.js sync ./world && node wbapi-cli.js save
+   // → roll2hit-v3-YYYYMMDD-HHMMSS.html
+```
+
+---
+
+### §ARCH-02-G. WBAPI Methods to Add
+
+New methods needed in `wbapi-core.js` and `worldbuilder.html`:
+
+```javascript
+// Quest creation with operand validation
+WBAPI.quests.create(questObj)          // validates operands before adding
+WBAPI.quests.validate(idOrTitle)       // run MissionBitController checks
+WBAPI.quests.advise(idOrTitle)         // run world-logic advisory checks
+WBAPI.quests.toOperands(idOrTitle)     // parse legacy quest into operand array
+
+// Operand registry
+WBAPI.operands.list()                  // all 12 operand types
+WBAPI.operands.contract(kind)          // required/optional fields for a kind
+WBAPI.operands.validate(bit)           // validate a single operand object
+
+// World advisory
+WBAPI.worlds.validateNodeForCombat(code)    // node has battle field + monsters
+WBAPI.worlds.npcAtNode(npcKey, nodeCode)    // NPC is correctly placed
+WBAPI.worlds.flagUniqueInArc(flag, arcId)  // flag not reused across arc
+```
+
+---
+
+### §ARCH-02-H. Implementation Checklist
+
+**Phase 1 — Operand Registry (inert, no behavior change)**
+- [ ] Define `OPERAND_CONTRACTS` object with all 12 operand kinds, required/optional fields
+- [ ] Add `WBAPI.operands.list()` / `.contract(kind)` / `.validate(bit)`
+- [ ] Add `WBAPI.quests.validate(id)` — field-level checks only
+- [ ] Add `WBAPI.quests.advise(id)` — world-logic cross-reference checks
+- [ ] Add `WBAPI.quests.toOperands(id)` — parse existing quest fields into operand array
+- [ ] Wire validate + advise into API tab in worldbuilder.html
+
+**Phase 2 — Quest creation flow**
+- [ ] Add `WBAPI.quests.create(questObj)` — validates then adds
+- [ ] Add operand builder UI in worldbuilder.html Quest Editor (one card per operand)
+- [ ] Add `WBAPI.quests.chain()` to show upstream/downstream in Quest Editor
+
+**Phase 3 — Escort + party operand runtime (new execution paths)**
+- [ ] Add `S.party` to game state model
+- [ ] Implement `escort` pickup/dropoff in storyRender
+- [ ] Implement `talk_party` trigger in inventory/party panel
+- [ ] Add `talk_party` detection to `_questsByNode` — these quests appear everywhere
+
+**Phase 4 — Legacy quest conversion**
+- [ ] `quests.toOperands()` used to audit all 210 quests
+- [ ] Generate operand arrays for all 59 `skill_check` quests (most uniform, lowest risk)
+- [ ] Convert §HUNT-01 (4 quests) as escort+kill_at proof-of-concept
+- [ ] Convert §SPARK-01 arc as collect_item+talk_party proof-of-concept
+
+**Phase 5 — Full advisory enforcement**
+- [ ] `quests.create()` hard-blocks on world-logic failures (node not found, NPC not placed)
+- [ ] World Builder CLI: `node wbapi-cli.js advise quest <id>` command
+- [ ] worldbuilder.html Quest Editor shows real-time advisory warnings while editing
