@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 # SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com
 # wbapi-toggle.sh — manage wbapi-server.js
-# Usage: ./wbapi-toggle.sh [start|stop|restart|status]
+# Usage: ./wbapi-toggle.sh [start|stop|restart|status|run]
 #        (no arg = toggle)
+#
+# Exit code 67 from the server signals a self-requested restart.
+# Use `./wbapi-toggle.sh run` (or start it via `run` internally) to loop on code 67.
+# The API endpoint POST /api/restart triggers this by exiting with code 67.
 
 SCRIPT="wbapi-server.js"
 DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -16,7 +20,20 @@ do_start() {
     return 0
   fi
   echo "Starting wbapi-server…"
-  node "$DIR/$SCRIPT" &
+  # Run in restart-loop mode: exit code 67 = restart request
+  (
+    while true; do
+      node "$DIR/$SCRIPT"
+      CODE=$?
+      if [ "$CODE" -eq 67 ]; then
+        echo "[wbapi-toggle] Server exited with code 67 — restarting…"
+        sleep 0.3
+      else
+        echo "[wbapi-toggle] Server exited with code $CODE — stopping."
+        break
+      fi
+    done
+  ) &
   sleep 0.4
   NEW_PID=$(pgrep -f "$SCRIPT" | head -1)
   if [ -n "$NEW_PID" ]; then
@@ -49,5 +66,6 @@ case "$CMD" in
   *)
     echo "Usage: $0 [start|stop|restart|status]"
     echo "       (no arg = toggle)"
+    echo "  POST /api/restart from the server triggers a self-restart via exit code 67."
     exit 1 ;;
 esac

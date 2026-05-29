@@ -139,6 +139,20 @@ Earlier layers (9–47): see `lab-report-architecture-full.md` and `lab-report-t
 
 > You are an expert prompt interpreter with an electrical engineering / computer science background. Follow the sections below: use the suggestions in II, III, IV to implement ideas from the list, or append new ideas to the end of the list when told about them. Work incrementally — present one step at a time and wait for "continue."
 
+### API-First Development Policy
+
+**Preferred workflow for any data addition or edit to `roll2hit-v3.html`:**
+
+1. **Check API first** — before editing HTML, query `http://localhost:3001/api` to confirm current state. Use `curl` to inspect entities, audit, or list before making changes.
+2. **Write the API method first** — if the operation isn't yet supported (e.g., `POST /api/terrain`, `PATCH /api/world_db`), add the endpoint to `wbapi-server.js` and restart before touching the HTML.
+3. **Create/modify via API, not HTML** — preferred: `curl -X POST http://localhost:3001/api/<type> -d '...'` followed by `POST /api/save` to write back. Direct HTML edits are a fallback only when the API cannot yet express the operation.
+4. **Restart server after adding endpoints** — `./wbapi-toggle.sh restart` (or `start` if stopped).
+5. **When adding items to plan.md** — cross-reference the current API at `localhost:3001/api/audit` and `localhost:3001/api/list/<type>` to confirm what actually exists vs. what the plan assumes. Do not add a plan item without verifying the API-reported current state.
+
+**Goal state:** All large JS arrays in `roll2hit-v3.html` (`NODE_MAP`, `QUEST_DB`, `WORLD_DB`, `MONSTER_POOL`, `MONSTER_DROPS`, `FISH_POOL`, `LAKE_MAGIC_DB`, `CONDITION_ITEMS`, `EPIC_BOSS_POOL`, etc.) are exportable via the API. The HTML file is the single source of truth — it should be possible to run all game logic on Node/V8 by feeding API-extracted code sections, without a browser. See `§WBAPI-01` for the export roadmap.
+
+`roll2hit-v3.html` is the single source of truth. The API reads its text directly and writes mutations back into it in-place. The entire game — all data, all logic, all UI — is fully playable in a browser with only `roll2hit-v3.html`: no Node, no `worldbuilder.html`, no server, no dependencies. The HTML is pure JavaScript running on the DOM. `wbapi-server.js` and `worldbuilder.html` are authoring tools that read and write the same file; they add nothing the game requires at runtime.
+
 ### Lab Report Policy
 
 Write a new `lab-report-<title>.md` when any of the following is true:
@@ -8693,3 +8707,128 @@ bonus formula: base + floor(level × levelScale) + floor(luckMod × luckScale)
 - Wire `LAKE_MAGIC_DB` effects into fishing battle rewards — currently items are defined but not yet dropped in-game
 - Add `POST /api/fish/simulate?advantage=true` for bait advantage rolls
 - Worldbuilder quest pane: "Produces: 🪬 Token" display (§MBIT-02-C P2)
+
+---
+
+## §WBAPI-01 — Full Array Export + API-First Write Workflow (📋 PLANNED)
+
+**Status:** 📋 PLANNED — written 2026-05-29  
+**Goal:** Make every large data array in `roll2hit-v3.html` readable and writable via `wbapi-server.js`. The HTML is the single source of truth; all creation and mutation goes through the API. Direct HTML edits are a fallback of last resort.
+
+### §WBAPI-01-A. Problem Statement
+
+Currently, most data writes still happen by editing `roll2hit-v3.html` directly. This is fragile: a missed comma, wrong key name, or quote mismatch can silently break the game. The WBAPI already supports `POST /api/save` (write back to disk) and `POST /api/reload`, and has `PUT` for node/quest/monster/npc/terrain entities. What's missing:
+
+1. **Create endpoints** for terrain, monster, and condition items (WORLD_DB, MONSTER_POOL, CONDITION_ITEMS)
+2. **Bulk export** of every array as raw JSON and as pasteable JS literal
+3. **Full-array PATCH** — replace or merge a complete named constant via the API
+4. **Node.js / V8 runability** — extracted code sections should execute as standalone modules
+
+### §WBAPI-01-B. Array Export Targets
+
+| Constant | Current API coverage | Target |
+|----------|---------------------|--------|
+| `NODE_MAP` | `GET /api/list/node`, `GET /api/node/:id`, `PUT` | ✅ readable; add `GET /api/export/node_map` (raw JS literal) |
+| `QUEST_DB` | `GET /api/list/quest`, `GET /api/quest/:id`, `PUT`, `POST` | ✅ readable; add `GET /api/export/quest_db` |
+| `MONSTER_POOL` | `GET /api/list/monster`, `GET /api/monster/:id`, `PUT`, fork, rename | ✅ readable; add `GET /api/export/monster_pool` + `POST /api/monster` (create) |
+| `MONSTER_DROPS` | `GET /api/monster/:id` (included in detail) | Add `GET /api/export/monster_drops` + `PUT /api/monster/:id/drop` |
+| `WORLD_DB` | `GET /api/list/terrain`, `GET /api/terrain/:id`, `PUT` | Add `POST /api/terrain` (create) + `GET /api/export/world_db` |
+| `CONDITION_ITEMS` | none | Add `GET /api/list/condition`, `GET /api/condition/:id`, `PUT`, `POST`, `GET /api/export/condition_items` |
+| `EPIC_BOSS_POOL` | none | Add `GET /api/list/epic_boss`, `GET /api/epic_boss/:id`, `PUT`, `POST` |
+| `FISH_POOL` + `NIGHT_FISH_POOL` | `GET /api/fish`, `GET /api/fish/:id`, `POST` | Add `GET /api/export/fish_pool` |
+| `LAKE_MAGIC_DB` | `GET /api/lake-magic`, `GET /api/lake-magic/:id`, `POST` | Add `GET /api/export/lake_magic` |
+| `NPC_DIALOGUES` | `GET /api/list/npc`, `GET /api/npc/:id` | Add `PUT /api/npc/:id/dialogue` (per-state patch) |
+| `FROBERGER_JOURNAL` | none | Add `GET /api/list/journal`, `GET /api/journal/:id`, `POST /api/journal` |
+| `_S_DEFAULTS` | none | Add `GET /api/defaults` — read-only snapshot of all 194 story flags with types and defaults |
+
+### §WBAPI-01-C. `GET /api/export/:collection` — Raw JS Literal Endpoint
+
+Returns the named constant as a raw JS literal string that can be pasted directly into `roll2hit-v3.html` or `require()`d by a Node script:
+
+```bash
+# Export full WORLD_DB as pasteable JS literal
+curl http://localhost:3001/api/export/world_db
+
+# Export MONSTER_POOL as JSON
+curl http://localhost:3001/api/export/monster_pool?format=json
+
+# Export all collections as a standalone Node module
+curl http://localhost:3001/api/export/all?format=module > world.js
+node -e "const W = require('./world.js'); console.log(Object.keys(W.MONSTER_POOL).length);"
+```
+
+`?format=module` wraps the export in `module.exports = { NODE_MAP, QUEST_DB, MONSTER_POOL, ... }` so it runs on Node without a browser.
+
+### §WBAPI-01-D. `POST /api/terrain` — Create Terrain Entry
+
+```bash
+curl -X POST http://localhost:3001/api/terrain \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "key": "forum_romanum",
+    "label": "Forum Romanum — Ancient Civic Heart",
+    "icon": "🏛",
+    "monsters": ["golem","graveir","penitent","higher_vampire"]
+  }'
+```
+
+Server validates monster keys against `MONSTER_POOL`, writes entry to `WORLD_DB` anchor block, calls `POST /api/save` automatically.
+
+### §WBAPI-01-E. API-First Workflow — Reference Curl Sequences
+
+**Add a terrain entry:**
+```bash
+curl -X POST http://localhost:3001/api/terrain \
+  -H 'Content-Type: application/json' \
+  -d '{"key":"new_terrain","label":"New Place","icon":"🗺","monsters":["goblin","bandit"]}'
+curl -X POST http://localhost:3001/api/save
+./wbapi-toggle.sh restart
+curl http://localhost:3001/api/audit | jq '.summary'
+```
+
+**Create a quest:**
+```bash
+curl -X POST http://localhost:3001/api/quest \
+  -H 'Content-Type: application/json' \
+  -d '{"id":"quest_my_01","type":"main","title":"My Quest","activateNode":"CY","objectiveText":"Do the thing."}'
+curl -X POST http://localhost:3001/api/save
+```
+
+**Inspect before planning:**
+```bash
+curl -s http://localhost:3001/api/audit | jq '.items[] | select(.level=="error")'
+curl -s http://localhost:3001/api/list/terrain | jq '.[].key'
+curl -s http://localhost:3001/api/list/node?type=story | jq '.[].code'
+```
+
+### §WBAPI-01-F. Implementation Checklist
+
+- [ ] **Phase 1 — Create endpoints for missing types:**
+  - [ ] `POST /api/terrain` — create terrain entry (validate monster keys)
+  - [ ] `POST /api/monster` — create monster entry
+  - [ ] `GET /api/list/condition` + `GET /api/condition/:id` + `PUT` + `POST`
+  - [ ] `GET /api/list/epic_boss` + `GET /api/epic_boss/:id`
+  - [ ] `GET /api/list/journal` + `GET /api/journal/:id` + `POST /api/journal`
+  - [ ] `GET /api/defaults` — read all 194 `_S_DEFAULTS` fields
+
+- [ ] **Phase 2 — Export endpoints:**
+  - [ ] `GET /api/export/:collection` — supported collections: `node_map`, `quest_db`, `monster_pool`, `monster_drops`, `world_db`, `fish_pool`, `lake_magic`, `condition_items`
+  - [ ] `?format=json` (default) — JSON array/object
+  - [ ] `?format=js` — raw JS literal (the const block as it appears in HTML)
+  - [ ] `?format=module` — `module.exports = { ... }` wrapper for Node require
+
+- [ ] **Phase 3 — Full-array PATCH:**
+  - [ ] `PUT /api/collection/:name` — replace or deep-merge a complete named constant
+  - [ ] Validates structure against known schema before writing
+  - [ ] Backs up original block to `.bak` comment before writing
+
+- [ ] **Phase 4 — worldbuilder.html write tab:**
+  - [ ] "Create" forms for terrain, monster, quest using API-first workflow
+  - [ ] Shows curl equivalent for each action (copy button)
+  - [ ] "Export" panel: select collection, format, download or copy to clipboard
+
+- [ ] **Phase 5 — Standalone Node module:**
+  - [ ] `GET /api/export/all?format=module` produces a complete game-logic module
+  - [ ] Add `wbapi-extract.js` CLI: `node wbapi-extract.js --out=world.js` (no server needed; reads HTML directly like `parse-nodes.js`)
+  - [ ] Document how to run game logic in Node: `const W = require('./world.js'); W.NODE_MAP['CY']`
+

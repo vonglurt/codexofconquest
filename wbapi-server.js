@@ -428,6 +428,26 @@ function serializeNodeLiteral(code, body) {
   return parts.join(', ') + ' },\n';
 }
 
+function serializeTerrainLiteral(key, body) {
+  const monsterKeys = Array.isArray(body.monsters) ? body.monsters : [];
+  const mStr = monsterKeys.map(mk => `P.${mk}`).join(', ');
+  const icon  = body.icon  ? `, icon:${JSON.stringify(body.icon)}`  : '';
+  const label = body.label ? `, label:${JSON.stringify(body.label)}` : '';
+  return `  ${key}: { monsters:[${mStr}]${label}${icon} },\n`;
+}
+
+function serializeMonsterLiteral(key, body) {
+  const NUM  = ['ac','hp','atk','dmg','xp','tier'];
+  const STR  = ['name','size','type','align','speed','cr','desc'];
+  const parts = [`  ${key}: { name:${JSON.stringify(body.name||key)}`];
+  for (const f of STR) if (body[f] !== undefined && f !== 'name') parts.push(`${f}:${JSON.stringify(body[f])}`);
+  for (const f of NUM) if (body[f] !== undefined) parts.push(`${f}:${Number(body[f])}`);
+  if (body.atk_bonus !== undefined) parts.push(`atk_bonus:${Number(body.atk_bonus)}`);
+  if (body.dmg_type)  parts.push(`dmg_type:${JSON.stringify(body.dmg_type)}`);
+  if (body.drops)     parts.push(`drops:${JSON.stringify(body.drops)}`);
+  return parts.join(', ') + ' },\n';
+}
+
 function insertBeforeArrayClose(section, entry) {
   const endAnchor = `// ◆◆◆ WORLDBUILDER:${section}:END ◆◆◆`;
   const anchorIdx = WBAPI._rawSrc.indexOf(endAnchor);
@@ -542,6 +562,17 @@ async function route(req, res) {
     }
     logResponse(method, '/api/nonce', 405, 'POST only');
     return json(res, 405, { error:'POST only' });
+  }
+
+  // ── Restart (exits with code 67; toggle script loops on this) ──
+  if (parts[0] === 'restart' && method === 'POST') {
+    log('LOGIC', 'Restart requested — exiting with code 67 for wbapi-toggle.sh restart loop');
+    logResponse(method, url.pathname, 200, 'restarting');
+    res.writeHead(200, { 'Content-Type':'application/json', 'Access-Control-Allow-Origin':'*' });
+    res.end(JSON.stringify({ ok:true, note:'Server restarting. Poll /api/ping until it responds.' }));
+    server.close(() => { process.exit(67); });
+    setTimeout(() => process.exit(67), 500);
+    return;
   }
 
   // ── Reload ──
@@ -978,8 +1009,55 @@ async function route(req, res) {
   // ── Single entity ─────────────────────────────────────────────────────────
   const [type, rawId, action] = parts;
 
-  // ── POST /api/{quest|node} (create new entity) ────────────────────────────
-  if (!rawId && method === 'POST' && (type === 'quest' || type === 'node')) {
+  // ── GET /api/export/:collection ───────────────────────────────────────────
+  if (type === 'export' && rawId && method === 'GET') {
+    const fmt = url.searchParams.get('format') || 'json';
+    const col = rawId;
+    const exportMap = {
+      node_map:        () => WBAPI.nodeMap,
+      quest_db:        () => WBAPI.questDb,
+      monster_pool:    () => WBAPI.monsterPool,
+      world_db:        () => WBAPI.worldDb,
+      fish_pool:       () => ({ day: WBAPI.fishPool, night: WBAPI.nightFishPool }),
+      lake_magic:      () => WBAPI.lakeMagicDb,
+      monster_drops:   () => WBAPI.monsterDrops || {},
+      condition_items: () => WBAPI.conditionItems || {},
+      all:             () => ({
+        NODE_MAP: WBAPI.nodeMap, QUEST_DB: WBAPI.questDb,
+        MONSTER_POOL: WBAPI.monsterPool, WORLD_DB: WBAPI.worldDb,
+        FISH_POOL: WBAPI.fishPool, NIGHT_FISH_POOL: WBAPI.nightFishPool,
+        LAKE_MAGIC_DB: WBAPI.lakeMagicDb,
+      }),
+    };
+    const getter = exportMap[col];
+    if (!getter) {
+      const valid = Object.keys(exportMap).join(', ');
+      logResponse(method, url.pathname, 404, `unknown collection "${col}"`);
+      return json(res, 404, { error:`Unknown collection "${col}". Valid: ${valid}` });
+    }
+    const data = getter();
+    log('LOGIC', `Export collection "${col}" format:${fmt}`);
+    if (fmt === 'json') {
+      logResponse(method, url.pathname, 200, `export ${col} json`);
+      return json(res, 200, { collection: col, format: 'json', data });
+    }
+    if (fmt === 'js' || fmt === 'module') {
+      const constName = col.replace(/_([a-z])/g, (_,c)=>c.toUpperCase()).replace(/^./, c=>c.toUpperCase());
+      const body = JSON.stringify(data, null, 2);
+      const src = fmt === 'module'
+        ? `// Auto-exported from wbapi-server — ${new Date().toISOString()}\nmodule.exports = ${body};\n`
+        : `const ${constName} = ${body};\n`;
+      res.writeHead(200, { 'Content-Type':'application/javascript', 'Access-Control-Allow-Origin':'*' });
+      res.end(src);
+      logResponse(method, url.pathname, 200, `export ${col} ${fmt}`);
+      return;
+    }
+    logResponse(method, url.pathname, 400, `unknown format "${fmt}"`);
+    return json(res, 400, { error:`Unknown format "${fmt}". Valid: json, js, module` });
+  }
+
+  // ── POST /api/{quest|node|terrain|monster} (create new entity) ────────────
+  if (!rawId && method === 'POST' && (type === 'quest' || type === 'node' || type === 'terrain' || type === 'monster')) {
     let body;
     try { body = await readBody(req); } catch(e) {
       return json(res, 400, { error:'Invalid JSON' });
@@ -1034,6 +1112,54 @@ async function route(req, res) {
       WBAPI._buildIndexes();
       logResponse(method, url.pathname, 201, `created node "${code}"`);
       return json(res, 201, { ok:true, code, note:'POST /api/save to persist.', ...nodeConnections(code) });
+    }
+
+    if (type === 'terrain') {
+      const key = body.key;
+      if (!key) {
+        logResponse(method, url.pathname, 400, 'terrain create: missing body.key');
+        return json(res, 400, { error:'Required fields: key, label, monsters (array of monster keys)' });
+      }
+      if (WBAPI.worldDb[key]) {
+        logResponse(method, url.pathname, 409, `terrain "${key}" already exists`);
+        return json(res, 409, { error:`Terrain "${key}" already exists` });
+      }
+      const monsterKeys = Array.isArray(body.monsters) ? body.monsters : [];
+      const badKeys = monsterKeys.filter(mk => !WBAPI.monsterPool[mk]);
+      if (badKeys.length) {
+        logResponse(method, url.pathname, 400, `unknown monster keys: ${badKeys.join(', ')}`);
+        return json(res, 400, { error:`Monster keys not in MONSTER_POOL: ${badKeys.join(', ')}` });
+      }
+      log('LOGIC', `Creating terrain "${key}" with ${monsterKeys.length} monsters`);
+      const entry = serializeTerrainLiteral(key, body);
+      const ins = insertBeforeSectionClose('WORLD_DB', entry);
+      if (!ins.ok) { logResponse(method, url.pathname, 500, ins.error); return json(res, 500, ins); }
+      WBAPI.worldDb[key] = { label: body.label || key, icon: body.icon || '', monsters: monsterKeys };
+      WBAPI._buildIndexes();
+      logResponse(method, url.pathname, 201, `created terrain "${key}"`);
+      return json(res, 201, { ok:true, key, note:'POST /api/save to persist.',
+        entity: WBAPI.worldDb[key], connections: { monsters: monsterKeys } });
+    }
+
+    if (type === 'monster') {
+      const key = body.key;
+      if (!key || !body.name) {
+        logResponse(method, url.pathname, 400, 'monster create: missing body.key or body.name');
+        return json(res, 400, { error:'Required fields: key, name. Optional: ac, hp, atk, dmg, xp, tier, desc' });
+      }
+      if (WBAPI.monsterPool[key]) {
+        logResponse(method, url.pathname, 409, `monster "${key}" already exists`);
+        return json(res, 409, { error:`Monster "${key}" already exists` });
+      }
+      log('LOGIC', `Creating monster "${key}"`);
+      const entry = serializeMonsterLiteral(key, body);
+      const ins = insertBeforeSectionClose('MONSTER_POOL', entry);
+      if (!ins.ok) { logResponse(method, url.pathname, 500, ins.error); return json(res, 500, ins); }
+      const { key: _k, ...mFields } = body;
+      WBAPI.monsterPool[key] = mFields;
+      WBAPI._buildIndexes();
+      logResponse(method, url.pathname, 201, `created monster "${key}"`);
+      return json(res, 201, { ok:true, key, note:'POST /api/save to persist.', entity: WBAPI.monsterPool[key] });
     }
   }
 
@@ -1374,6 +1500,9 @@ server.listen(PORT, '127.0.0.1', () => {
     ['DELETE', '/api/{node|quest|monster|npc}/{id}  X-Nonce: <token> required (409 if nested content)'],
     ['POST',   '/api/quest                          body: {id, type, title, activateNode, ...}'],
     ['POST',   '/api/node                           body: {code, name, label, act, ...}'],
+    ['POST',   '/api/terrain                        body: {key, label, icon?, monsters:[keys]}'],
+    ['POST',   '/api/monster                        body: {key, name, ac?, hp?, atk?, dmg?, xp?, tier?}'],
+    ['GET',    '/api/export/{collection}[?format=json|js|module]  → node_map|quest_db|monster_pool|world_db|...'],
     ['GET',    '/api/fish[/{key}][?rank=&night=]     → fish list or single'],
     ['POST',   '/api/fish/simulate                  body: {dexMod, catchMod, typeMod, luckMod, rodBonus}'],
     ['POST',   '/api/fish                           body: {key, name, rank, desc?, isNight?}'],
@@ -1385,6 +1514,7 @@ server.listen(PORT, '127.0.0.1', () => {
     ['POST',   '/api/node/{id}/move                 body: {newCode}'],
     ['POST',   '/api/save                           body: {outputPath?}'],
     ['POST',   '/api/reload'],
+    ['POST',   '/api/restart                        → save + exit(67); toggle script auto-relaunches'],
   ];
   const methodColor = { GET:C.green, PUT:C.yellow, DELETE:C.red, POST:C.blue };
   for (const [m, path] of routes)
