@@ -248,6 +248,22 @@ select.fi{appearance:none;}
 @keyframes stream-up{from{transform:translateY(0)}to{transform:translateY(-50%)}}
 @keyframes splash-fade-out{from{opacity:1}to{opacity:0}}
 
+/* ── Audit groups ── */
+.aug-group{margin-bottom:4px;}
+.aug-hdr{display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--bg2);border-radius:4px 4px 0 0;cursor:pointer;user-select:none;font-size:11px;font-weight:700;border-left:3px solid transparent;}
+.aug-hdr:hover{background:var(--bg3);}
+.aug-hdr.collapsed{border-radius:4px;}
+.aug-count{background:var(--bg3);color:var(--muted);font-size:10px;padding:1px 7px;border-radius:8px;font-weight:400;}
+.aug-hint{font-size:10px;color:var(--muted);font-style:italic;margin-left:auto;max-width:300px;text-align:right;line-height:1.3;}
+.aug-caret{font-size:9px;color:var(--muted);flex-shrink:0;}
+.aug-body{display:flex;flex-direction:column;gap:2px;padding:2px 0 4px 0;}
+.aug-body.hidden{display:none;}
+.aug-row{display:flex;align-items:baseline;gap:8px;padding:4px 10px 4px 18px;font-size:11px;background:var(--bg2);border-radius:0 4px 4px 0;line-height:1.5;margin-bottom:1px;}
+.aug-key{color:var(--muted);font-family:monospace;white-space:nowrap;flex-shrink:0;font-size:10px;}
+/* ── Quick Queries ── */
+.qq-bar{display:grid;grid-template-columns:120px 1fr 180px 60px;gap:6px;align-items:end;}
+.qq-section{padding-bottom:14px;border-bottom:1px solid var(--border);}
+
 /* ── Server indicator ── */
 #server-indicator{font-size:11px;padding:2px 8px;border-radius:10px;white-space:nowrap;}
 #server-indicator.connected{background:var(--added);color:var(--green);border:1px solid var(--green);}
@@ -333,7 +349,12 @@ select.fi{appearance:none;}
     </div>
 
     <!-- Terminal hint for server card -->
-    <div class="welcome-terminal" id="welcome-terminal">node wbapi-server.js</div>
+    <div class="welcome-terminal" id="welcome-terminal" style="display:none;flex-direction:column;gap:4px">
+      <span style="color:var(--muted);font-size:10px">Start the API server:</span>
+      <span>./wbapi-toggle.sh start</span>
+      <span style="color:var(--muted)">— or —</span>
+      <span>node wbapi-server.js</span>
+    </div>
 
     <input type="file" id="welcome-file-input" accept=".html" style="display:none">
   </div>
@@ -578,6 +599,32 @@ select.fi{appearance:none;}
 
     <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em">World Builder API Console</div>
 
+    <!-- Quick Queries -->
+    <div class="qq-section">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;font-weight:700;letter-spacing:.04em">⚡ Quick Queries</div>
+      <div class="qq-bar">
+        <div>
+          <div class="fl">Category</div>
+          <select id="qq-cat" class="fi" style="width:100%">
+            <option value="list">List</option>
+            <option value="count">Count</option>
+            <option value="inspect">Inspect</option>
+            <option value="audit">Audit / Schema</option>
+          </select>
+        </div>
+        <div>
+          <div class="fl">Query</div>
+          <select id="qq-query" class="fi" style="width:100%"></select>
+        </div>
+        <div id="qq-param-wrap">
+          <div class="fl" id="qq-param-label">Value</div>
+          <input id="qq-param" class="fi" placeholder="—">
+        </div>
+        <button class="btn primary" id="btn-qq-run" style="align-self:end">Run</button>
+      </div>
+      <div style="margin-top:6px;font-size:10px;color:var(--muted)" id="qq-hint"></div>
+    </div>
+
     <!-- Type + ID row -->
     <div style="display:grid;grid-template-columns:110px 1fr 1fr;gap:8px;align-items:end">
       <div>
@@ -691,12 +738,14 @@ select.fi{appearance:none;}
     <div id="audit-summary" style="display:none;font-size:12px;padding:8px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;display:flex;gap:18px;align-items:center;flex-wrap:wrap"></div>
 
     <!-- Filter chips -->
-    <div id="audit-filters" style="display:none;display:flex;gap:6px;flex-wrap:wrap">
+    <div id="audit-filters" style="display:none;display:flex;gap:6px;flex-wrap:wrap;align-items:center">
       <button class="btn audit-filter active" data-filter="all"  style="font-size:11px">All</button>
       <button class="btn audit-filter"        data-filter="error"       style="font-size:11px;color:var(--red)">🔴 Errors</button>
       <button class="btn audit-filter"        data-filter="warning"     style="font-size:11px;color:var(--yellow)">🟡 Warnings</button>
       <button class="btn audit-filter"        data-filter="suggestion"  style="font-size:11px;color:var(--accent)">💡 Suggestions</button>
       <button class="btn audit-filter"        data-filter="parse"       style="font-size:11px;color:var(--purple)">🧩 Parse Health</button>
+      <span style="width:1px;height:14px;background:var(--border);display:inline-block;margin:0 2px"></span>
+      <button class="btn active" id="btn-audit-group" style="font-size:11px" title="Toggle grouped view">📦 Grouped</button>
     </div>
 
     <!-- Issue list -->
@@ -2915,6 +2964,111 @@ document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>
   const SEV_ICON  = { error:'🔴', warning:'🟡', suggestion:'💡', parse:'🧩' };
   let _lastResult = null;
   let _filter = 'all';
+  let _groupMode = true;
+
+  // ── Group audit items by detected pattern ──────────────────────────────────
+  function groupItems(items) {
+    const groups = new Map();
+    const add = (key, label, hint, item) => {
+      if (!groups.has(key)) groups.set(key, { label, hint, items: [] });
+      groups.get(key).items.push(item);
+    };
+    for (const item of items) {
+      const tm = item.msg.match(/terrain "([^"]+)" not (?:found|in) /);
+      const nm = item.msg.match(/node "([^"]+)" not in NODE_MAP/);
+      if (tm) {
+        const t = tm[1];
+        add(`terrain:${t}`, `Missing terrain: "${t}"`,
+          `Add WORLD_DB["${t}"] to resolve all ${t === 'junction' ? 'junction node' : 'node'} errors in this group`, item);
+      } else if (nm) {
+        const n = nm[1];
+        add(`node:${n}`, `Missing node: "${n}"`,
+          `Add NODE_MAP["${n}"] — several quests reference this non-existent node`, item);
+      } else if (item.msg.includes('no MONSTER_DROPS entry')) {
+        add('no-drops', 'Monsters with no drops', 'Add MONSTER_DROPS entries or leave intentionally drop-free', item);
+      } else if (item.msg.includes('terrain has no monsters defined')) {
+        add('no-monsters', 'Epic terrains with no monsters list', 'Add a monsters:[] array to each WORLD_DB epic terrain', item);
+      } else if (item.msg.includes('not used in any WORLD_DB terrain')) {
+        add('unused-monsters', 'Monsters not assigned to any terrain', 'Add these to WORLD_DB terrain monsters arrays', item);
+      } else if (item.msg.includes('no quests reference this node')) {
+        add('unquested-nodes', 'Nodes with no quests', 'Consider adding quests or confirming these are intentional connector/junction nodes', item);
+      } else if (item.msg.includes('battle:true but terrain')) {
+        add('battle-missing-terrain', 'Battle nodes with missing terrain', 'These nodes have battle:true but their terrain is not in WORLD_DB — no monsters will spawn', item);
+      } else if (item.msg.includes('drop entry has no matching')) {
+        add('orphan-drops', 'Orphan MONSTER_DROPS entries', 'Drop entry references a monster key not in MONSTER_POOL — safe to remove', item);
+      } else {
+        const fallKey = `${item.section}:${item.field}:${item.msg}`;
+        add(fallKey, `${item.section}·${item.key}·${item.field||''}`, null, item);
+      }
+    }
+    return groups;
+  }
+
+  function renderGroupSection(list, label, items, sev, grouped) {
+    if (!items.length) return;
+    const hd = document.createElement('div');
+    hd.style.cssText = 'font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding:6px 0 2px;font-weight:700;';
+    hd.textContent = `${SEV_ICON[sev]} ${label} (${items.length})`;
+    list.appendChild(hd);
+
+    if (!grouped || sev === 'parse') {
+      for (const item of items) appendFlatRow(list, item, sev);
+      return;
+    }
+
+    const groups = groupItems(items);
+    for (const [, g] of groups) {
+      const grp = document.createElement('div');
+      grp.className = 'aug-group';
+
+      const hdr = document.createElement('div');
+      hdr.className = 'aug-hdr';
+      hdr.style.borderLeftColor = SEV_COLOR[sev];
+      hdr.innerHTML = `<span class="aug-caret">▼</span>
+        <span>${g.label}</span>
+        <span class="aug-count">${g.items.length}</span>
+        ${g.hint ? `<span class="aug-hint">${g.hint}</span>` : ''}`;
+
+      const body = document.createElement('div');
+      body.className = 'aug-body';
+      for (const item of g.items) appendFlatRow(body, item, sev, true);
+
+      hdr.addEventListener('click', () => {
+        const open = !body.classList.contains('hidden');
+        body.classList.toggle('hidden', open);
+        hdr.classList.toggle('collapsed', open);
+        hdr.querySelector('.aug-caret').textContent = open ? '▶' : '▼';
+      });
+
+      grp.append(hdr, body);
+      list.appendChild(grp);
+    }
+  }
+
+  function appendFlatRow(parent, item, sev, compact = false) {
+    const row = document.createElement('div');
+    if (compact) {
+      row.className = 'aug-row';
+      row.style.borderLeft = `2px solid ${SEV_COLOR[sev]}`;
+      const key = document.createElement('span');
+      key.className = 'aug-key';
+      key.textContent = `${item.section}·${item.key}${item.field?'·'+item.field:''}`;
+      const msg = document.createElement('span');
+      msg.style.color = 'var(--text)';
+      msg.textContent = item.msg;
+      row.append(key, msg);
+    } else {
+      row.style.cssText = `display:flex;align-items:flex-start;gap:8px;padding:6px 8px;border-left:3px solid ${SEV_COLOR[sev]};background:var(--bg2);border-radius:0 4px 4px 0;font-size:11px;margin-bottom:3px;line-height:1.5;`;
+      const badge = document.createElement('span');
+      badge.style.cssText = 'color:var(--muted);white-space:nowrap;flex-shrink:0;font-family:monospace;font-size:10px;';
+      badge.textContent = sev === 'parse' ? item.section : `${item.section}·${item.key}${item.field?'·'+item.field:''}`;
+      const msg = document.createElement('span');
+      msg.style.color = sev === 'parse' ? (item.ok ? 'var(--green)' : 'var(--red)') : 'var(--text)';
+      msg.textContent = item.msg;
+      row.append(badge, msg);
+    }
+    parent.appendChild(row);
+  }
 
   function renderAudit(result) {
     _lastResult = result;
@@ -2939,39 +3093,11 @@ document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>
     const list = $('audit-list');
     list.innerHTML = '';
 
-    const addSection = (label, items, sev) => {
-      if (_filter !== 'all' && _filter !== sev) return;
-      if (!items.length) return;
-      const hd = document.createElement('div');
-      hd.style.cssText = 'font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding:6px 0 2px;font-weight:700;';
-      hd.textContent = `${SEV_ICON[sev]} ${label} (${items.length})`;
-      list.appendChild(hd);
-      for (const item of items) {
-        const row = document.createElement('div');
-        row.style.cssText = `display:flex;align-items:flex-start;gap:8px;padding:6px 8px;border-left:3px solid ${SEV_COLOR[sev]};background:var(--bg2);border-radius:0 4px 4px 0;font-size:11px;margin-bottom:3px;line-height:1.5;`;
-        const badge = document.createElement('span');
-        badge.style.cssText = 'color:var(--muted);white-space:nowrap;flex-shrink:0;font-family:monospace;';
-        badge.textContent = sev === 'parse'
-          ? item.section
-          : `${item.section}·${item.key}${item.field ? '·'+item.field : ''}`;
-        const msg = document.createElement('span');
-        msg.style.cssText = sev === 'parse' && item.ok
-          ? 'color:var(--green)'
-          : sev === 'parse' && !item.ok
-          ? 'color:var(--red)'
-          : 'color:var(--text)';
-        msg.textContent = item.msg;
-        row.append(badge, msg);
-        list.appendChild(row);
-      }
-    };
-
-    if (_filter === 'all' || _filter === 'parse') {
-      addSection('Parse Health', parse, 'parse');
-    }
-    addSection('Errors', errors, 'error');
-    addSection('Warnings', warnings, 'warning');
-    addSection('Suggestions', suggestions, 'suggestion');
+    const show = sev => _filter === 'all' || _filter === sev;
+    if (show('parse')) renderGroupSection(list, 'Parse Health', parse,        'parse',      false);
+    if (show('error'))      renderGroupSection(list, 'Errors',       errors,      'error',      _groupMode);
+    if (show('warning'))    renderGroupSection(list, 'Warnings',     warnings,    'warning',    _groupMode);
+    if (show('suggestion')) renderGroupSection(list, 'Suggestions',  suggestions, 'suggestion', _groupMode);
 
     if (!list.children.length) {
       list.innerHTML = '<div style="color:var(--green);font-size:12px;padding:12px 0">✓ No issues found in this category.</div>';
@@ -2986,6 +3112,13 @@ document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>
       _filter = btn.dataset.filter;
       applyFilter();
     });
+  });
+
+  // Group toggle
+  $('btn-audit-group').addEventListener('click', () => {
+    _groupMode = !_groupMode;
+    $('btn-audit-group').classList.toggle('active', _groupMode);
+    applyFilter();
   });
 
   // Run audit locally
@@ -3018,6 +3151,131 @@ document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>
 
   // btn-run-audit enabled by loadFile() above; server button enabled when server connects
   window._auditEnableServer = () => { $('btn-audit-server').disabled = false; };
+})();
+
+// ═══════════════════════════════════════════════════════════════════════════
+// QUICK QUERIES
+// ═══════════════════════════════════════════════════════════════════════════
+(function(){
+  const QQ = {
+    list: [
+      { label:'All nodes',                url:'/api/list/node' },
+      { label:'All quests',               url:'/api/list/quest' },
+      { label:'All monsters',             url:'/api/list/monster' },
+      { label:'All NPCs',                 url:'/api/list/npc' },
+      { label:'All terrains',             url:'/api/list/terrain' },
+      { label:'All fish',                 url:'/api/fish' },
+      { label:'All lake magic',           url:'/api/lake-magic' },
+      { label:'Nodes — by act',           url:'/api/list/node?act={v}',        param:'Act (1–4)' },
+      { label:'Quests — by type',         url:'/api/list/quest?type={v}',      param:'Type (story/battle/…)' },
+      { label:'Quests — for node',        url:'/api/list/quest?node={v}',      param:'Node code (e.g. CY)' },
+      { label:'Monsters — by terrain',    url:'/api/list/monster?terrain={v}', param:'Terrain key' },
+      { label:'Fish — by rank',           url:'/api/fish?rank={v}',            param:'Rank (1–5)' },
+    ],
+    count: [
+      { label:'Nodes per act',            local: () => countBy(WBAPI.nodeMap,    n => n.act) },
+      { label:'Quests per type',          local: () => countBy(WBAPI.questDb,    q => q.type||'(none)') },
+      { label:'Quests per arc',           local: () => countBy(WBAPI.questDb,    q => (q.id||'').replace(/_\d+$/,'')) },
+      { label:'Monsters per terrain',     local: () => monstersPerTerrain() },
+      { label:'Terrains with no monsters',local: () => Object.keys(WBAPI.worldDb||{}).filter(k=>!WBAPI.worldDb[k].monsters?.length) },
+      { label:'Unused monsters',          local: () => unusedMonsters() },
+      { label:'Nodes with no quests',     local: () => nodesWithNoQuests() },
+      { label:'Missing terrains list',    local: () => missingTerrains() },
+    ],
+    inspect: [
+      { label:'Node',         url:'/api/node/{v}',           param:'Code (e.g. CY)' },
+      { label:'Quest',        url:'/api/quest/{v}',          param:'ID (e.g. quest_wis_01)' },
+      { label:'Quest chain',  url:'/api/quest/{v}/chain',    param:'ID' },
+      { label:'Monster',      url:'/api/monster/{v}',        param:'Key (e.g. goblin)' },
+      { label:'NPC',          url:'/api/npc/{v}',            param:'Key' },
+      { label:'Terrain',      url:'/api/terrain/{v}',        param:'Key' },
+      { label:'Location',     url:'/api/location/{v}',       param:'Node code' },
+      { label:'Fish',         url:'/api/fish/{v}',           param:'Fish key' },
+    ],
+    audit: [
+      { label:'Full integrity audit',     url:'/api/audit' },
+      { label:'Schema — all types',       url:'/api/schema' },
+      { label:'Schema — by type',         url:'/api/schema/{v}',   param:'Type (node/quest/…)' },
+      { label:'Flags list',               url:'/api/flags' },
+      { label:'Ping / server status',     url:'/api/ping' },
+    ],
+  };
+
+  function countBy(obj, fn) {
+    const out = {};
+    for (const v of Object.values(obj||{})) { const k = fn(v)||'(none)'; out[k] = (out[k]||0)+1; }
+    return Object.fromEntries(Object.entries(out).sort((a,b)=>b[1]-a[1]));
+  }
+  function monstersPerTerrain() {
+    const out = {};
+    for (const [k,t] of Object.entries(WBAPI.worldDb||{})) out[k] = (t.monsters||[]).length;
+    return Object.fromEntries(Object.entries(out).sort((a,b)=>b[1]-a[1]));
+  }
+  function unusedMonsters() {
+    const used = new Set(Object.values(WBAPI.worldDb||{}).flatMap(t=>t.monsters||[]));
+    return Object.keys(WBAPI.monsterPool||{}).filter(k=>!used.has(k));
+  }
+  function nodesWithNoQuests() {
+    const referenced = new Set(Object.values(WBAPI.questDb||{}).flatMap(q=>[q.activateNode,q.waypointNode]).filter(Boolean));
+    return Object.keys(WBAPI.nodeMap||{}).filter(k=>!referenced.has(k));
+  }
+  function missingTerrains() {
+    const defined = new Set(Object.keys(WBAPI.worldDb||{}));
+    const used = new Set(Object.values(WBAPI.nodeMap||{}).map(n=>n.name).filter(Boolean));
+    return [...used].filter(t=>!defined.has(t)).sort();
+  }
+
+  function populateQqQuery() {
+    const cat = $('qq-cat').value;
+    const sel = $('qq-query');
+    sel.innerHTML = '';
+    for (const q of QQ[cat]) {
+      const opt = document.createElement('option');
+      opt.value = q.label; opt.textContent = q.label;
+      sel.appendChild(opt);
+    }
+    updateQqParam();
+  }
+  function updateQqParam() {
+    const cat = $('qq-cat').value;
+    const label = $('qq-query').value;
+    const q = QQ[cat]?.find(x=>x.label===label);
+    const wrap = $('qq-param-wrap');
+    if (q?.param) {
+      wrap.style.visibility = '';
+      $('qq-param-label').textContent = q.param;
+      $('qq-param').placeholder = q.param;
+    } else {
+      wrap.style.visibility = 'hidden';
+    }
+    $('qq-hint').textContent = q ? (q.url||'local') : '';
+  }
+
+  $('qq-cat').addEventListener('change', populateQqQuery);
+  $('qq-query').addEventListener('change', updateQqParam);
+
+  $('btn-qq-run').addEventListener('click', async () => {
+    if (!WBAPI.loaded) return apiOut('Load a game file first.', 'err');
+    const cat   = $('qq-cat').value;
+    const label = $('qq-query').value;
+    const v     = $('qq-param').value.trim();
+    const q     = QQ[cat]?.find(x=>x.label===label);
+    if (!q) return apiOut('Unknown query.', 'err');
+
+    if (q.local) {
+      try { apiOut(q.local(), 'ok'); } catch(e) { apiOut('Error: '+e.message, 'err'); }
+      return;
+    }
+    if (!SERVER.active) return apiOut('Server not connected. Start wbapi-server.js first.', 'err');
+    const path = q.url.replace('{v}', encodeURIComponent(v));
+    try {
+      const r = await fetch(SERVER.url + path);
+      const d = await r.json();
+      apiOut(d, r.ok ? 'ok' : 'err');
+    } catch(e) { apiOut('Server error: '+e.message, 'err'); }
+  });
+
+  populateQqQuery();
 })();
 
 // ═══════════════════════════════════════════════════════════════════════════
