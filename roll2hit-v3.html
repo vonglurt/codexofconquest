@@ -10934,6 +10934,16 @@ const NPC_DIALOGUE = { // → doc: story.md §FL7
     activateNode:'IN', completeItems:[], completeFn:() => (S_story.inventory||[]).some(i => i.name === 'Worn Ledger Book') && S_story.currentCode === 'IN',
     waypointNode:'SL', reward:0,
     disposition: '"Rove had good credit. That\'s the part I keep coming back to. Good credit and bad judgment and I trusted the credit." — Brynn Clerambault' },
+  quest_sir_jullean: { id:'quest_sir_jullean', type:'skill_check', title:'Sir Jullean and the Pigeon',
+    desc:"A man sits on the low wall beside the Birka gate trough, methodically explaining something to a pigeon. He has been doing this for some time. The pigeon is eating barley soaked in ale from the trough. The man is also eating barley soaked in ale from the trough. He introduces himself: Sir Jullean. He says this with enormous dignity. The pigeon's name is Benedikt. He has had Benedikt for two days.",
+    hint:"Sir Jullean needs to go home. The pigeon will manage.",
+    activateNode:'CI', completeItems:[],
+    checkAbility:'cha', checkLabel:'Persuasion', checkDC:10,
+    retryable:true, retryGateDays:1, xpAward:25,
+    vignetteText:"He's not hostile. He's not lost. He found something that listens without argument. He keeps topping up Benedikt's share from a flask he has no business still having.",
+    passText:"He listens. He actually listens. He says: 'You're right. She doesn't need me.'\n\nHe stands. He adjusts his coat with great dignity — smoothing the front, squaring the shoulders — and turns toward the lane home.\n\nHe walks directly into the drainage ditch.\n\nThe pigeon watches this.\n\nYou watch the pigeon watch this.\n\nHe waves from inside the ditch. He is fine. The ditch is shallow. Benedikt goes back to the ale.",
+    failText:"He tells you Benedikt's full history. Two days old and already with opinions. He says this like it explains everything. It does not explain everything. He offers you some of the trough ale.\n\nYou consider it longer than you should.",
+    disposition:"'She doesn't need me. You're absolutely right.' — Sir Jullean, adjusting his coat, approximately three seconds before the drainage ditch." },
   quest_couperin_lute: { id:'quest_couperin_lute', type:'side', title:"Quill: The Pawned Lute",
     desc:"Tomas Couperin's lute has been in Pachelbel's inventory for eleven days. He pawned it against a drink tab — a transaction he does not regret exactly, but which he replays in a particular way every morning. The lute does not play without him. The drink is gone. The tab is the only thing that remained, and now the lute is not his. The asking is the part he cannot bring himself to do.",
     hint:'Talk to Pachelbel at the Rough Bar and retrieve the lute.',
@@ -16614,6 +16624,7 @@ function storyCheckQuests(node) {
       S_story.quests[id] = 'complete';
       if (q.onComplete) q.onComplete();
       msgs.push('✓ ' + q.title);
+      if (q.passText) { const pt = typeof q.passText === 'function' ? q.passText() : q.passText; if (pt) msgs.push(pt); }
       // §D02 xpAward on side-type quest completion
       if (q.type === 'side' && q.xpAward) { S_story.xp += q.xpAward; _checkLevelUp(); }
       // Layer 41 quest completion side effects

@@ -2130,22 +2130,32 @@ $('quest-arc-filter').addEventListener('change',renderQuestList);
 // ── Quest detail: editable fields with change tracking ──
 let qOriginals = {}, qCurrentId = null;
 
+// Each field has an optional `when` badge: text shown next to label explaining when it fires in-game.
+// `always` = show regardless of value; otherwise hidden when empty.
 const Q_EDITABLE = [
-  {key:'title',      label:'Title',                    type:'text'},
-  {key:'type',       label:'Type',                     type:'select', options:['side','main','skill_check','hunt']},
-  {key:'hint',       label:'Hook / Hint',               type:'textarea'},
-  {key:'passText',   label:'Pass Text',                 type:'textarea'},
-  {key:'failText',   label:'Fail Text',                 type:'textarea'},
-  {key:'rewardText', label:'Reward Text',               type:'textarea'},
-  {key:'disposition',label:'Disposition Quote',         type:'textarea'},
-  {key:'activateNode',label:'Activate Node',            type:'text'},
-  {key:'waypointNode',label:'Waypoint Node',            type:'text'},
-  {key:'npc',        label:'NPC Key',                   type:'text'},
-  {key:'checkDC',    label:'Check DC',                  type:'number'},
-  {key:'checkStat',  label:'Check Stat (WIS/INT/CHA)',  type:'text'},
-  {key:'checkSkill', label:'Check Skill',               type:'text'},
-  {key:'xpAward',    label:'XP Award',                  type:'number'},
-  {key:'reward',     label:'Gold Reward',               type:'number'},
+  // ── Core ──
+  {key:'title',        label:'Title',                   type:'text',     always:true},
+  {key:'type',         label:'Type',                    type:'select',   always:true, options:['side','main','skill_check','epic']},
+  {key:'activateNode', label:'Activate Node',           type:'text',     always:true},
+  {key:'waypointNode', label:'Waypoint Node',           type:'text'},
+  // ── Narrative (always shown, fire at different moments) ──
+  {key:'desc',         label:'Description',             type:'textarea', always:true, when:'shown in quest log'},
+  {key:'hint',         label:'Hook / Hint',             type:'textarea', always:true, when:'shown on quest card'},
+  {key:'vignetteText', label:'Vignette Text',           type:'textarea', always:true, when:'skill_check — shown before roll'},
+  {key:'passText',     label:'Pass Text',               type:'textarea', always:true, when:'all types — shown on success / complete'},
+  {key:'failText',     label:'Fail Text',               type:'textarea', always:true, when:'skill_check — shown on failure'},
+  {key:'rewardText',   label:'Reward Text',             type:'textarea', when:'shown with reward'},
+  {key:'disposition',  label:'Disposition Quote',       type:'textarea', when:'shown in quest log footer'},
+  // ── Skill check ──
+  {key:'checkAbility', label:'Check Ability',           type:'select',   when:'skill_check', options:['cha','wis','int','str','dex','con']},
+  {key:'checkLabel',   label:'Check Skill Label',       type:'text',     when:'skill_check'},
+  {key:'checkDC',      label:'Check DC',                type:'number',   when:'skill_check'},
+  {key:'retryable',    label:'Retryable',               type:'select',   when:'skill_check', options:['true','false']},
+  {key:'retryGateDays',label:'Retry Gate (days)',       type:'number',   when:'skill_check'},
+  // ── Rewards ──
+  {key:'xpAward',      label:'XP Award',                type:'number'},
+  {key:'reward',       label:'Gold Reward',             type:'number'},
+  {key:'npc',          label:'NPC Key',                 type:'text'},
 ];
 
 function qCheckChanges() {
@@ -2186,23 +2196,42 @@ function selectQuest(id){
     <div style="font-size:11px;color:var(--muted)">${q.type||'side'} quest · ${q.activateNode||'no node'}</div>`;
   area.appendChild(header);
 
-  for (const {key, label, type, options} of Q_EDITABLE) {
-    // Show field if it has a value OR is a core text/select field
+  // Type-change notice banner (inserted once, updated on type change)
+  const typeNotice = document.createElement('div');
+  typeNotice.id = 'quest-type-notice';
+  typeNotice.style.cssText = 'display:none;font-size:11px;padding:6px 9px;background:rgba(210,153,34,0.08);border:1px solid var(--yellow);border-radius:5px;color:var(--yellow);margin-bottom:8px;line-height:1.5;';
+  area.appendChild(typeNotice);
+
+  function updateTypeNotice(newType) {
+    const skFields = ['checkAbility','checkLabel','checkDC','retryable','retryGateDays','vignetteText','failText'];
+    const hasSkContent = skFields.some(f => { const el = document.getElementById(`qf-${f}`); return el && el.value && el.value !== '' && el.value !== 'false'; });
+    if (newType !== 'skill_check' && hasSkContent) {
+      typeNotice.style.display = '';
+      typeNotice.textContent = '⚠ This quest has skill_check fields with content (vignetteText, failText, checkDC, etc). They are preserved in source but won\'t appear in-game unless type is skill_check.';
+    } else {
+      typeNotice.style.display = 'none';
+    }
+  }
+
+  for (const {key, label, type, options, always, when} of Q_EDITABLE) {
     const hasVal = q[key] != null && q[key] !== '';
-    const isCore = ['title','type','activateNode'].includes(key);
-    if (!hasVal && !isCore) continue;
+    if (!hasVal && !always) continue;
 
     const g=document.createElement('div'); g.className='fg';
-    g.innerHTML=`<div class="fl">${label}</div>`;
+    // Label row with optional "fires when" badge
+    const labelHtml = when
+      ? `<div class="fl" style="display:flex;align-items:center;gap:6px;">${label}<span style="font-size:10px;color:var(--muted);background:var(--bg3);padding:1px 5px;border-radius:3px;border:1px solid var(--border)">${when}</span></div>`
+      : `<div class="fl">${label}</div>`;
+    g.innerHTML = labelHtml;
 
     if (type === 'select') {
       const sel = document.createElement('select'); sel.className='fi'; sel.id=`qf-${key}`;
       for (const opt of (options||[])) {
         const o=document.createElement('option'); o.value=opt; o.textContent=opt;
-        if (opt === q[key]) o.selected=true;
+        if (String(opt) === String(q[key])) o.selected=true;
         sel.appendChild(o);
       }
-      sel.addEventListener('change', qCheckChanges);
+      sel.addEventListener('change', () => { qCheckChanges(); if (key==='type') updateTypeNotice(sel.value); });
       g.appendChild(sel);
     } else if (type === 'textarea') {
       const ta=document.createElement('textarea'); ta.className='fi'; ta.rows=3; ta.id=`qf-${key}`;
@@ -2217,6 +2246,9 @@ function selectQuest(id){
     }
     area.appendChild(g);
   }
+
+  // Fire initial type notice after fields are rendered
+  updateTypeNotice(q.type || 'side');
 
   // Flags (read-only)
   if(flags.reads.size){const fg=document.createElement('div');fg.className='fg';fg.innerHTML=`<div class="fl">Reads Flags (activateCond)</div><div>${fmtFlags(flags.reads,'flag-read')}</div>`;area.appendChild(fg);}
