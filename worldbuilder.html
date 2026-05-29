@@ -3448,8 +3448,8 @@ const BIRKA_NPC = {};
     if (up) loadFromServer();
   });
 
-  // Auto-probe on load
-  probeServer().then(up => { if (up) { /* ready, user clicks to load */ } });
+  // Auto-probe on load — auto-load if server is already running
+  probeServer().then(up => { if (up) loadFromServer(); });
 
 })();
 
