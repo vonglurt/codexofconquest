@@ -576,6 +576,20 @@ select.fi{appearance:none;}
         <button class="btn primary" id="btn-api-get" style="flex:1">GET</button>
         <button class="btn" id="btn-api-delete" style="flex:1;color:var(--red)">DELETE</button>
       </div>
+      <!-- Nonce confirmation panel (shown after DELETE step 1) -->
+      <div id="nonce-panel" style="display:none;margin-top:10px;padding:10px;background:var(--deleted);border:1px solid var(--red);border-radius:6px">
+        <div style="font-size:11px;color:var(--red);font-weight:700;margin-bottom:6px">⚠ Confirm deletion — copy the token below and paste it to confirm</div>
+        <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px">
+          <code id="nonce-token" style="flex:1;font-size:13px;font-family:monospace;background:var(--bg3);padding:4px 8px;border-radius:4px;color:var(--text);letter-spacing:.08em"></code>
+          <button class="btn" id="btn-nonce-copy" style="font-size:11px;white-space:nowrap">Copy</button>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <input id="nonce-input" class="fi" placeholder="Paste token here" style="flex:1;font-family:monospace;letter-spacing:.06em">
+          <button class="btn" id="btn-nonce-confirm" style="color:var(--red);border-color:var(--red);white-space:nowrap">Confirm Delete</button>
+          <button class="btn" id="btn-nonce-cancel" style="font-size:11px">Cancel</button>
+        </div>
+        <div id="nonce-expires" style="font-size:10px;color:var(--muted);margin-top:4px"></div>
+      </div>
     </div>
 
     <!-- Field edit row -->
@@ -3214,21 +3228,94 @@ async function doPut(value) {
 $('btn-api-put').addEventListener('click', () => doPut($('api-value').value));
 $('btn-api-put-long').addEventListener('click', () => doPut($('api-value-long').value));
 
-$('btn-api-delete').addEventListener('click', () => {
+// ── Delete flow: two-step nonce confirmation ─────────────────────────────────
+let _deleteNonce = null; // { token, type, id }
+
+function nonceHide() {
+  $('nonce-panel').style.display = 'none';
+  $('nonce-input').value = '';
+  _deleteNonce = null;
+}
+
+$('btn-api-delete').addEventListener('click', async () => {
   if (!WBAPI.loaded) return apiOut('Load a game file first.', 'err');
   const type = $('api-type').value, id = $('api-id').value.trim();
   if (!id) return apiOut('Enter an ID or name.', 'err');
   const ns = apiGetNs(type);
   if (!ns?.delete) return apiOut(`${type} does not support DELETE.`, 'err');
-  // Show current before delete
-  const current = ns.get?.(id);
-  const r = ns.delete(id);
-  if (!r.ok) {
-    const msg = r.blockedBy ? `BLOCKED — remove sub-content first:\n${JSON.stringify(r.blockedBy,null,2)}` : r.error;
-    return apiOut(msg, 'err');
+
+  if (SERVER.active) {
+    // Step 1: request nonce from server
+    apiOut(`Requesting delete token for ${type}:${id}…`, 'ok');
+    try {
+      const resp = await fetch(`${SERVER.base}/api/nonce`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type, id }),
+      });
+      const d = await resp.json();
+      if (!resp.ok) return apiOut(`Nonce error: ${d.error}`, 'err');
+      _deleteNonce = { token: d.nonce, type, id: d.id };
+      $('nonce-token').textContent = d.nonce;
+      const exp = new Date(d.expiresAt);
+      $('nonce-expires').textContent = `Token expires at ${exp.toLocaleTimeString()} — one-time use`;
+      $('nonce-input').value = '';
+      $('nonce-panel').style.display = '';
+      $('nonce-input').focus();
+    } catch(e) {
+      apiOut(`Nonce request failed: ${e.message}`, 'err');
+    }
+  } else {
+    // No server — require typing the ID as confirmation
+    const confirm = window.prompt(`Type the ${type} ID to confirm deletion:\n\n  ${id}`);
+    if (!confirm || confirm.trim() !== id) return apiOut('Delete cancelled.', 'err');
+    const current = ns.get?.(id);
+    const r = ns.delete(id);
+    if (!r.ok) {
+      const msg = r.blockedBy ? `BLOCKED — remove sub-content first:\n${JSON.stringify(r.blockedBy,null,2)}` : r.error;
+      return apiOut(msg, 'err');
+    }
+    apiOut(`DELETED ${type}:${r.key}\n\nWas:\n${JSON.stringify(current,null,2)}`, 'ok');
+    updateDiffBadge();
   }
-  apiOut(`DELETED ${type}:${r.key}\n\nWas:\n${JSON.stringify(current,null,2)}`, 'ok');
-  updateDiffBadge();
+});
+
+$('btn-nonce-copy').addEventListener('click', () => {
+  const t = $('nonce-token').textContent;
+  navigator.clipboard?.writeText(t).then(() => {
+    $('btn-nonce-copy').textContent = 'Copied!';
+    setTimeout(() => { $('btn-nonce-copy').textContent = 'Copy'; }, 1500);
+  });
+});
+
+$('btn-nonce-cancel').addEventListener('click', () => {
+  nonceHide();
+  apiOut('Delete cancelled.', 'err');
+});
+
+$('btn-nonce-confirm').addEventListener('click', async () => {
+  if (!_deleteNonce) return;
+  const entered = $('nonce-input').value.trim();
+  if (!entered) return apiOut('Paste the nonce token to confirm.', 'err');
+  if (entered !== _deleteNonce.token) return apiOut('Token does not match. Copy it exactly.', 'err');
+
+  const { type, id, token } = _deleteNonce;
+  nonceHide();
+  apiOut(`Deleting ${type}:${id}…`, 'ok');
+  try {
+    const resp = await fetch(`${SERVER.base}/api/${type}/${encodeURIComponent(id)}`, {
+      method: 'DELETE',
+      headers: { 'X-Nonce': token },
+    });
+    const d = await resp.json();
+    if (!resp.ok) return apiOut(`DELETE failed (${resp.status}):\n${JSON.stringify(d,null,2)}`, 'err');
+    apiOut(`DELETED ${type}:${id}\n\nWas:\n${JSON.stringify(d.wasEntity||d,null,2)}`, 'ok');
+    // Mirror into local DIFF so map/list reflects the change
+    const ns = apiGetNs(type);
+    if (ns?.delete) { ns.delete(id); updateDiffBadge(); }
+  } catch(e) {
+    apiOut(`DELETE request failed: ${e.message}`, 'err');
+  }
 });
 
 $('btn-api-move').addEventListener('click', () => {
@@ -3356,22 +3443,25 @@ const BIRKA_NPC = {};
     status.style.color = 'var(--yellow)';
     status.textContent = 'Checking localhost:3001…';
     term.style.display = 'none';
+    let d;
     try {
-      const r = await fetch('http://localhost:3001/api/ping', { signal: AbortSignal.timeout(1200) });
-      const d = await r.json();
-      if (d.ok) {
-        card.classList.remove('checking'); card.classList.add('active');
-        status.style.color = 'var(--green)';
-        status.textContent = `● Connected — ${d.nodes} nodes · ${d.quests} quests`;
-        card.onclick = () => loadFromServer();
-        return true;
-      }
-    } catch(_) {}
-    card.classList.remove('checking'); card.classList.add('err');
+      const ctrl = new AbortController();
+      const tid = setTimeout(() => ctrl.abort(), 2000);
+      const r = await fetch('http://localhost:3001/api/ping', { signal: ctrl.signal });
+      clearTimeout(tid);
+      d = await r.json();
+    } catch(_) { d = null; }
+    card.classList.remove('checking');
+    if (d && d.ok) {
+      card.classList.add('active');
+      status.style.color = 'var(--green)';
+      status.textContent = `● Connected — ${d.nodes} nodes · ${d.quests} quests`;
+      return true;
+    }
+    card.classList.add('err');
     status.style.color = 'var(--red)';
     status.textContent = '✗ Not running — start it first:';
     term.style.display = '';
-    card.onclick = () => probeServer();
     return false;
   }
 
@@ -3393,9 +3483,9 @@ const BIRKA_NPC = {};
     }
   }
 
-  $('wcard-server').addEventListener('click', () => {
-    if ($('wcard-server').classList.contains('active')) loadFromServer();
-    else probeServer();
+  $('wcard-server').addEventListener('click', async () => {
+    const up = await probeServer();
+    if (up) loadFromServer();
   });
 
   // Auto-probe on load

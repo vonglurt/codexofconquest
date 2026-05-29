@@ -5,10 +5,35 @@
 // Usage: node wbapi-server.js [--port 3001] [--file roll2hit-v3.html]
 // Browser: fetch('http://localhost:3001/api/node/CY')
 
-const http = require('http');
-const fs   = require('fs');
-const path = require('path');
-const WBAPI = require('./wbapi-core');
+const http   = require('http');
+const fs     = require('fs');
+const path   = require('path');
+const crypto = require('crypto');
+const WBAPI  = require('./wbapi-core');
+
+// ── Nonce registry (one-time delete tokens, 5-min TTL) ───────────────────────
+const NONCES   = new Map(); // token → { type, key, expires }
+const NONCE_TTL = 5 * 60 * 1000;
+
+function nonceIssue(type, key) {
+  purgeNonces();
+  const salt  = crypto.randomBytes(16).toString('hex');
+  const token = crypto.createHash('sha512').update(`${type}:${key}:${salt}`).digest('hex').slice(0, 16);
+  NONCES.set(token, { type, key, expires: Date.now() + NONCE_TTL });
+  return token;
+}
+function nonceConsume(token, type, key) {
+  purgeNonces();
+  const rec = NONCES.get(token);
+  if (!rec)                                    return { ok:false, error:'Nonce invalid or expired. Request a new one via POST /api/nonce.' };
+  if (rec.type !== type || rec.key !== key)    return { ok:false, error:`Nonce was issued for ${rec.type}:${rec.key}, not ${type}:${key}.` };
+  NONCES.delete(token);
+  return { ok:true };
+}
+function purgeNonces() {
+  const now = Date.now();
+  for (const [t, r] of NONCES) if (r.expires < now) NONCES.delete(t);
+}
 
 // ── Config ──────────────────────────────────────────────────────────────────
 const PORT      = parseInt(process.env.PORT || '3001');
@@ -342,7 +367,7 @@ function resolveId(type, raw) {
 function cors(res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,DELETE,POST,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Nonce');
 }
 
 function json(res, status, body) {
@@ -495,6 +520,28 @@ async function route(req, res) {
       return json(res, 500, { ok:false, error:e.message });
     }
     return;
+  }
+
+  // ── Nonce (one-time delete token) ──
+  if (parts[0] === 'nonce') {
+    if (method === 'POST') {
+      let body;
+      try { body = await readBody(req); } catch(e) {
+        return json(res, 400, { error:'Invalid JSON' });
+      }
+      const { type, id } = body || {};
+      if (!type || !id) return json(res, 400, { error:'body.type and body.id required' });
+      const validTypes = ['node','quest','monster','npc'];
+      if (!validTypes.includes(type)) return json(res, 400, { error:`type must be one of: ${validTypes.join(', ')}` });
+      const col = { node:WBAPI.nodeMap, quest:WBAPI.questDb, monster:WBAPI.monsterPool, npc:WBAPI.birkaNpcs }[type];
+      const resolvedKey = WBAPI._findKey(col, id) || id;
+      const token = nonceIssue(type, resolvedKey);
+      const expiresAt = new Date(Date.now() + NONCE_TTL).toISOString();
+      logResponse('POST', '/api/nonce', 200, `nonce issued for ${type}:${resolvedKey} — ${token}`);
+      return json(res, 200, { nonce: token, type, id: resolvedKey, expiresAt });
+    }
+    logResponse(method, '/api/nonce', 405, 'POST only');
+    return json(res, 405, { error:'POST only' });
   }
 
   // ── Reload ──
@@ -1172,6 +1219,18 @@ async function route(req, res) {
 
   // ── DELETE ──
   if (method === 'DELETE') {
+    // Require a valid nonce issued by POST /api/nonce
+    const nonce = req.headers['x-nonce'] || url.searchParams.get('nonce');
+    if (!nonce) {
+      logResponse(method, url.pathname, 403, 'DELETE requires X-Nonce — call POST /api/nonce first');
+      return json(res, 403, { ok:false, error:'DELETE requires a nonce token. Call POST /api/nonce with {type,id} first, then include the token in the X-Nonce request header.' });
+    }
+    const nc = nonceConsume(nonce, type, key);
+    if (!nc.ok) {
+      logResponse(method, url.pathname, 403, `nonce rejected: ${nc.error}`);
+      return json(res, 403, { ok:false, error: nc.error });
+    }
+
     const r = CONNECT[type](key);
     if (!r) {
       logResponse(method, url.pathname, 404, `${type} "${rawId}" not found`);
@@ -1311,7 +1370,8 @@ server.listen(PORT, '127.0.0.1', () => {
     ['GET',    '/api/location/{code}               → composite view'],
     ['PUT',    '/api/{node|quest|monster|npc}/{id}  body: {field:value,...}'],
     ['PUT',    '/api/terrain/{id}                  body: {label?,icon?}'],
-    ['DELETE', '/api/{node|quest|monster|npc}/{id}  (409 if nested content)'],
+    ['POST',   '/api/nonce                          body: {type,id} → 16-char token (required for DELETE)'],
+    ['DELETE', '/api/{node|quest|monster|npc}/{id}  X-Nonce: <token> required (409 if nested content)'],
     ['POST',   '/api/quest                          body: {id, type, title, activateNode, ...}'],
     ['POST',   '/api/node                           body: {code, name, label, act, ...}'],
     ['GET',    '/api/fish[/{key}][?rank=&night=]     → fish list or single'],
@@ -1329,6 +1389,25 @@ server.listen(PORT, '127.0.0.1', () => {
   const methodColor = { GET:C.green, PUT:C.yellow, DELETE:C.red, POST:C.blue };
   for (const [m, path] of routes)
     console.log(`  ${(methodColor[m]||C.white)+m.padEnd(7)+C.reset} ${C.dim}${path}${C.reset}`);
+  console.log(`${C.magenta}${line}${C.reset}`);
+
+  // ── Quick-start examples ──
+  const b = `http://localhost:${PORT}`;
+  console.log(`\n${C.bold}  Quick-start examples${C.reset}`);
+  console.log(`  ${C.dim}Open in browser (or worldbuilder.html):${C.reset}`);
+  console.log(`    ${C.cyan}open worldbuilder.html${C.reset}  ${C.dim}← click "Localhost Server" card${C.reset}`);
+  console.log(`\n  ${C.dim}curl:${C.reset}`);
+  console.log(`    ${C.green}curl${C.reset} ${C.dim}${b}/api/ping${C.reset}`);
+  console.log(`    ${C.green}curl${C.reset} ${C.dim}${b}/api/node/CY${C.reset}           ${C.dim}# node by code${C.reset}`);
+  console.log(`    ${C.green}curl${C.reset} ${C.dim}${b}/api/quest/quest_wis_01${C.reset}  ${C.dim}# quest by id${C.reset}`);
+  console.log(`    ${C.green}curl${C.reset} ${C.dim}${b}/api/monster/goblin${C.reset}     ${C.dim}# monster by key${C.reset}`);
+  console.log(`    ${C.green}curl${C.reset} ${C.dim}${b}/api/list/node${C.reset}          ${C.dim}# full node list${C.reset}`);
+  console.log(`    ${C.green}curl${C.reset} ${C.dim}${b}/api/audit${C.reset}             ${C.dim}# integrity report${C.reset}`);
+  console.log(`    ${C.green}curl${C.reset} ${C.dim}${b}/api/source${C.reset} ${C.dim}-o out.html${C.reset}  ${C.dim}# download game HTML${C.reset}`);
+  console.log(`\n  ${C.dim}Delete with nonce:${C.reset}`);
+  console.log(`    ${C.yellow}NONCE=$(curl -s -XPOST ${b}/api/nonce -H 'Content-Type: application/json'${C.reset}`);
+  console.log(`    ${C.yellow}      -d '{"type":"node","id":"XX"}' | jq -r .nonce)${C.reset}`);
+  console.log(`    ${C.red}curl${C.reset} ${C.dim}-XDELETE ${b}/api/node/XX -H "X-Nonce: \$NONCE"${C.reset}`);
   console.log(`${C.magenta}${line}${C.reset}\n`);
 
   log('INFO', `Server listening on http://127.0.0.1:${PORT}`);
