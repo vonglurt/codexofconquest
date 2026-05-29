@@ -238,6 +238,7 @@ select.fi{appearance:none;}
   <div class="nav-sep"></div>
   <div id="topbar-right">
     <span id="server-indicator" class="offline" style="display:none">○ Browser only</span>
+    <button class="btn" id="btn-load-server" style="display:none" title="Fetch roll2hit-v3.html directly from the running server">⚡ Load from Server</button>
     <label id="file-drop" for="file-input">📂 <span id="file-label">Load roll2hit-v3.html</span></label>
     <input type="file" id="file-input" accept=".html">
     <span id="diff-badge" class="badge yellow" style="display:none">0 changes</span>
@@ -1473,6 +1474,8 @@ async function serverDetect() {
       ind.title = `Connected: ${SERVER.url}\n${d.nodes} nodes · ${d.quests} quests · ${d.monsters} monsters`;
       ind.style.display = '';
       $('btn-apply-patch').textContent = 'Save to File';
+      $('btn-load-server').style.display = '';
+      $('btn-load-server').title = `Fetch ${d.file} from ${SERVER.url}`;
       if (WBAPI.loaded && window._auditEnableServer) window._auditEnableServer();
       return;
     }
@@ -1482,8 +1485,25 @@ async function serverDetect() {
   ind.textContent = '○ Browser only';
   ind.title = 'Start wbapi-server.js (./start-wbapi.sh) to enable server-side saves';
   ind.style.display = '';
+  $('btn-load-server').style.display = 'none';
   $('btn-apply-patch').textContent = 'Export Patched';
 }
+
+$('btn-load-server').addEventListener('click', async () => {
+  const btn = $('btn-load-server');
+  btn.disabled = true; btn.textContent = '⏳ Loading…';
+  try {
+    const r = await fetch(`${SERVER.url}/api/source`);
+    if (!r.ok) throw new Error(`Server returned ${r.status}`);
+    const text = await r.text();
+    loadFile(text);
+    btn.textContent = '✓ Loaded';
+    setTimeout(() => { btn.textContent = '⚡ Load from Server'; btn.disabled = false; }, 2000);
+  } catch(e) {
+    alert('Failed to load from server: ' + e.message);
+    btn.textContent = '⚡ Load from Server'; btn.disabled = false;
+  }
+});
 
 // Generic entity PUT — routes through server or in-memory WBAPI
 async function doEntityPut(type, key, fields) {

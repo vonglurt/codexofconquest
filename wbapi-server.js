@@ -482,6 +482,21 @@ async function route(req, res) {
     return json(res, 200, resp);
   }
 
+  // ── Source (raw HTML for worldbuilder "Load from Server") ──
+  if (parts[0] === 'source' && method === 'GET') {
+    try {
+      const src = fs.readFileSync(GAME_FILE, 'utf8');
+      logResponse(method, url.pathname, 200, `source ok — ${src.length} bytes`);
+      cors(res);
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      res.end(src);
+    } catch(e) {
+      logResponse(method, url.pathname, 500, `source read failed: ${e.message}`);
+      return json(res, 500, { ok:false, error:e.message });
+    }
+    return;
+  }
+
   // ── Reload ──
   if (parts[0] === 'reload' && method === 'POST') {
     log('LOGIC', `Reloading game file: ${GAME_FILE}`);
@@ -1284,6 +1299,7 @@ server.listen(PORT, '127.0.0.1', () => {
   console.log(`\n  ${C.dim}Endpoints:${C.reset}`);
   const routes = [
     ['GET',    '/api/ping'],
+    ['GET',    '/api/source                         → raw HTML source (worldbuilder Load from Server)'],
     ['GET',    '/api/audit                          → data integrity scan (errors/warnings/suggestions)'],
     ['GET',    '/api/schema[/{type}]                → canonical field schema'],
     ['GET',    '/api/flags                          → list _S_DEFAULTS flags'],
