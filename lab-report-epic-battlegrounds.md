@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Lab Report — Epic Battlegrounds
 ### Quest Architecture for Outdoor Terrain Bosses
 **Date:** 2026-05-22

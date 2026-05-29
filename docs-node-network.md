@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # roll2hit.com — Node Network Technical Reference
 
 **File:** `roll2hit-v3.html`  

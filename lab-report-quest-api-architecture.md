@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Lab Report: Quest API Architecture & Universal Mission Format
 **Document ID:** §ARCH-01  
 **Status:** Design Specification — Pre-Implementation  

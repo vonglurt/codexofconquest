@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Roll2Hit World Builder API — Full Reference
 
 **Architecture**: Browser UI → Node.js REST server → `roll2hit-v3.html` (game file)  

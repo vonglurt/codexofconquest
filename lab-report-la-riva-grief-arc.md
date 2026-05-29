@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Lab Report — La Riva, Grief Architecture, and the Vignette Layer
 
 **Project:** roll2hit.com — *The Shattered Codex*

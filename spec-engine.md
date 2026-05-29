@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # GAME ENGINE — Step 2: Design Specification
 ### roll2hit.com — The Shattered Codex
 

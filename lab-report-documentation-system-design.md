@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Lab Report — The roll2hit.com Documentation System: Design, Purpose, and Synchronization Architecture
 ### IEEE-Format Analysis of a Two-Way Synchronized Planning and Documentation Framework
 **Date:** 2026-05-24  

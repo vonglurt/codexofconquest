@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Lab Report — Ponies, Unicorns, and Aspirations: Future Ideas Beyond the Current Build
 ### Post-Game Aspirations and Companion Product Concepts for roll2hit.com
 **Date:** 2026-05-24  

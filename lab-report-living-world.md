@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Lab Report — The Living World: Off-Screen Life, World Progression, and Map Memory
 
 *roll2hit.com / Codex of Conquest — Layer 44 Design Document*

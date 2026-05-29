@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # UX Walkthrough: First Battles & First Level-Up
 
 **Roll2Hit v3 — Player Experience Analysis**  

@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Story Arc — Coastal Underground (§XIX + §XX)
 
 **Arc type:** Structural pair — two complementary investigation arcs completable in any order  

@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # roll2hit.com — Monster Reference
 
 **Total: 370 monsters** across 5 tiers, 8 source pools. All entries implemented in `MONSTER_POOL` in `roll2hit-v3.html`.

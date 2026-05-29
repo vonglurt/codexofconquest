@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Lab Report — 5thOrgan: Polyphonic Pipe Organ Additive Synthesis in the Browser
 ### Design, Mathematics, and Implementation of `5thOrgan.html`
 **Date:** 2026-05-24  

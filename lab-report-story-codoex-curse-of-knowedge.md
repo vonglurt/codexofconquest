@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Lab Report — Story × Codex of Conquest × The Curse of Knowledge
 ### Applying Steven Pinker's Writing Framework to roll2hit Story Design
 **Date:** 2026-05-22  

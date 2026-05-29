@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # From Arena to Prototype: The Architectural Evolution of *The Shattered Codex*
 
 **A Study in Prompt-Driven Game Engine Development and the Roll2Hit Migration**

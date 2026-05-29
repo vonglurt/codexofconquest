@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Lab Report — The Web of Connections: Froberger's Traces, NPC Cross-Relationships, and Hidden Histories
 
 *roll2hit.com / Codex of Conquest — Layer 45 Design Document*

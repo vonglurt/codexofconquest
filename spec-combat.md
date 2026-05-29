@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # roll2hit — Plan 0
 *Single-file dice roller. No external scripts. Self-contained HTML.*
 

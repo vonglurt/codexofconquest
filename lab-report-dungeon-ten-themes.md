@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Lab Report — §DUNGEON-01: Ten Dungeon Themes Applied to The Shattered Codex
 
 **Layer:** 80  

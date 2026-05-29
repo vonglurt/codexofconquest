@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com
 'use strict';
 // wbapi-cli.js — Roll2Hit World Builder command-line interface
 // Usage: node wbapi-cli.js <command> [args...]  -- see: node wbapi-cli.js help

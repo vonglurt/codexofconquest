@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Story Flowchart — The Shattered Codex
 
 > Node codes are two-letter identifiers from `NODE_MAP` in `roll2hit-v3.html`.

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com
 /**
  * parse-nodes.js — roll2hit.com NODE_MAP parser
  *

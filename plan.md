@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 ## §GR — Grief Arc: The Vignette Layer
 
 > **Status:** ✅ Implemented 2026-05-26 (Layer 78). FR node live at CQ.E. NPCs: `connie_tuna`, `aldo_sardino`. Quest chain: `quest_la_riva_01–03`. State flags: `connieMet`, `frCatKillCount`, `laRivaComplete`, `fishmongerRowRestored`. Vincenzo's Net drops at frCatKillCount ≥ 5. HTML: ~18,304 lines at implementation close.

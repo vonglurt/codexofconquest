@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Lab Report — Layer 49: Quest -1 "The Open Door" + World Creator Wizard
 
 **IEEE-Format Post-Mortem**  

@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Story Arc — The Investigation Chain (§XVI → §XVII → §XXI)
 
 **Arc type:** Sequential investigation chain — three sections spanning Acts VI–NG+  

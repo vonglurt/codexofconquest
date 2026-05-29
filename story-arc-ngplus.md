@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Story Arc — NG+ Remembrance (§XV)
 
 **Arc type:** New Game Plus layer — persists across run boundaries  

@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Battleground Architecture in Single-File RPG Design: Structured Encounter Zones, Circuit Pathfinding, and Quest-Coupled Terrain in Roll2Hit: The Shattered Codex
 
 **Lab Report — IEEE Style**  

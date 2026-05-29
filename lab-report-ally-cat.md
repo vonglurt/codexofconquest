@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Lab Report — Layer 44: The Ally Cat Arc ("Nine Lives, Capisce?")
 
 **Date:** 2026-05-25  

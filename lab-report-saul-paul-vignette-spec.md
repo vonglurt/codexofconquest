@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Lab Report: §FUTURE-01 Vignette Writing Spec — The Road to Kesra
 
 **Date:** 2026-05-27  

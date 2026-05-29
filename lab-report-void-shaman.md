@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Lab Report — Layer 56: The Void Shaman "The Warden"
 
 **IEEE-Format Post-Mortem**  

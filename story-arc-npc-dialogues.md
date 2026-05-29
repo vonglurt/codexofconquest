@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Story Arc — Birka NPC Dialogues
 **Source:** Extracted from `story.md` — canonical NPC content
 **Elaboration:** `lab-report-birka-beginner-arc.md` · `lab-report-npc-dialogue-system.md` · `lab-report-narrative-arcs-brynn-bruhns-yael.md` · `lab-report-web-of-connections.md`

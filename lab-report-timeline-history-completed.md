@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 ## Appendix: Routine Cleanup Notice
 
 *Nothing to see here. We did a standard cleanup pass. All items were completed. Most had to do with quests. No discussion was necessary.*

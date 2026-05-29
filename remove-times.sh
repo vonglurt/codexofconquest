@@ -1,4 +1,5 @@
 #!/bin/bash
+# SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com
 
 # Function to process input stream
 # 1. Removes timestamps (digits:digits)

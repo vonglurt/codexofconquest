@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Lab Report — Friendships with Magic
 ### Eight Hours in the Loop: A Session Postmortem for the Codex of Conquest
 

@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Combat UI Design Report: Character Progression, Tactical Consumables & Condition Economy
 
 **Roll2Hit v3 — Engineering Design Documentation**  

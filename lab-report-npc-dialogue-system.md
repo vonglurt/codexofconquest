@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Lab Report — NPC Dialogue System: World Truth, 4-State Speech, and the Groundhog Day Mechanic
 
 *roll2hit.com / Codex of Conquest — Layer 42 Design Document*

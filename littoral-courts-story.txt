@@ -1,3 +1,5 @@
+[SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com]
+
 
 Print with macos
 # lp -o page-top=48 -o page-bottom=48 -o page-left=12 -o page-right=12 -o cpi=12 -o lpi=9 littoral-courts-story.txt

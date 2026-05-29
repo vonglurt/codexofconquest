@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Lab Report — Layers 75+77: Kenickie's Black Market + Chronicle System
 
 **IEEE-Format Post-Mortem**  

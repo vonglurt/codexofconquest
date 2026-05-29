@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Lab Report: Sparse Node Mesh Reduction via Circuit Corridor Junction Theory
 ### Applied Computer Science — Traversable World Architecture
 **Project:** roll2hit-v3.html — *The Shattered Codex*  

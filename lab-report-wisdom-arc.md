@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Lab Report: The Wisdom Arc — Robert Greene's Laws of Human Nature as Quest Mechanics
 
 **Author:** Claude (Sonnet 4.6) + roll2hit.com design sessions  

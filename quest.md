@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # quest.md — The Shattered Codex: Master Quest Register
 
 > **Purpose:** Location-organized register of all quests — implemented, planned, and specced. For five-act quest elaborations see `plan.md §DUNGEON-02`. For skill check mechanic spec see `plan.md §DESIGN-03`. For grief arc quests see `plan.md §GR`.

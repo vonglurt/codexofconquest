@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # MAPS — The Shattered Codex
 ### Island World Grid Map & Node Network Reference
 

@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Lab Report — §DESIGN-03: Ceremonia Roll + Skill Check Quest System
 
 **Date:** 2026-05-26  

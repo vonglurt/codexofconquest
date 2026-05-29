@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com
 'use strict';
 // wbapi-core.js — Roll2Hit World Builder data layer for Node.js
 // Mirrors the parsing logic in worldbuilder.html.

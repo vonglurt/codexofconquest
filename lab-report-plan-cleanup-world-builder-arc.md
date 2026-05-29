@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Lab Report — Documentation Phase Transition: plan.md Archaeology and the World Builder Arc
 
 **IEEE-Format Post-Mortem**

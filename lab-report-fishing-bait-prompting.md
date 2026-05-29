@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Lab Report — The Yugurt Lake Fishing & Bait Sub-System: Design, Directive, and Prompt Architecture
 ### IEEE-Format Academic Review of a Conversational Game Design Protocol  
 **Author:** roll2hit.com Development Session, 2026-05-24  

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com
 'use strict';
 // wbapi-server.js — Local REST API server for the Roll2Hit World Builder
 // Usage: node wbapi-server.js [--port 3001] [--file roll2hit-v3.html]

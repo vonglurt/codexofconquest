@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Lab Report — Layers 54+55: Tilbury Harbor Arc + Visby Underground
 
 **IEEE-Format Post-Mortem**  

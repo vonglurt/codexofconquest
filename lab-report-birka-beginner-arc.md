@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Lab Report — Birka Roots: The Beginner Story Arc
 ### NPC Favorability, City Quests, and the Seeds of the Curse
 **Date:** 2026-05-22

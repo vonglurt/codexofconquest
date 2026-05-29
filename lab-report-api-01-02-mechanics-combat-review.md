@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Lab Report — API Review: mechanics.md + combat.md
 
 **Project:** roll2hit.com — *The Shattered Codex*

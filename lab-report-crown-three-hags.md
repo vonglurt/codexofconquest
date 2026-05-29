@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Lab Report: §CROWN-01 — The Three Crowns of the Swamp
 
 **Report Designation:** CROWN-01  

@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Drop Rate Calibration, Health Economy Balancing, and the Cooperative PVE Rest Architecture in *The Shattered Codex*
 
 **Roll2Hit v3 — Game Design Analysis Report**  

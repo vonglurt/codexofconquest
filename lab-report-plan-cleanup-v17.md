@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Architectural Cleanup Report: plan.md Compaction — Layers 14 through 17
 
 **Roll2Hit v3 — Engineering Change Documentation**  

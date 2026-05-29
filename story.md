@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 ## GRIEF AND CORRUPTION: THE VIGNETTE LAYER
 
 *A writing architecture for loss that travels upward from the dark.*

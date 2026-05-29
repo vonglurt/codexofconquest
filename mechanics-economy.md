@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Roll2Hit — The Shattered Codex: Economy, NPCs & Engine Reference
 
 ## Overview

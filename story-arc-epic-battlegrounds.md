@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Story Arc — Epic Battlegrounds (Q52–Q71)
 **Source:** Extracted from `story.md` — canonical EB quest-giver dialogue
 **Elaboration:** `lab-report-epic-battlegrounds.md`

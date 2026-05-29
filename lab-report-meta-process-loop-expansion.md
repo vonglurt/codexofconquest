@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Lab Report: The Meta Lab-Report Process — Prompt Loop Expansion and Design Iteration
 
 **Author:** Claude (Sonnet 4.6) + roll2hit.com design sessions  

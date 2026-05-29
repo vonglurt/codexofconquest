@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Lab Report — World Builder API (WBAPI)
 **Date:** 2026-05-29  
 **Source of truth:** `roll2hit-v3.html` (1.7 MB, ~11,530 lines)

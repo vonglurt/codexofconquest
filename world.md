@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # WORLD BUILDERS REFERENCE
 ### roll2hit.com — Campaign Setting, NPCs, Conditions & Quest Architecture
 

@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+
 # Lab Report — Endings and Echoes: Extended Mechanics for the Covenant Arc
 
 *roll2hit.com / Codex of Conquest — Layer 43 Design Document*
