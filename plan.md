@@ -6422,3 +6422,608 @@ Pre-written document left by the Conclave Archivist at CAN. Text acknowledges: (
 // §LXXII: Conclave Annex
 conclaveResponseRead: false,
 ```
+
+## §LXXIII — The Depth (✅ Implemented — Layer 109)
+
+**Arc summary:** 1-node terminal arc. DA3 (r:48, c:3) — The Depth, 18 Meters. Accessed via the open Tide Gate (DA2→DA3). Closes the tidal/Atlantean chain and cross-confirms the archival/CY→AC chain via the Antecedent's tidal configuration. Both chains converge at the same geographic coordinate (bearing 047°, depth 18m) that Station 7 monitored since §LIII.
+
+| Node | Code | Terrain | Label | Act | Connections | NPC |
+|------|------|---------|-------|-----|-------------|-----|
+| 138 | DA3 | sunken_hall | The Depth — 18 Meters | 3 | N:DA2 | The Antecedent |
+
+### §LXXIII-A. Quest
+
+| ID | Title | Type | Activation | Completion | Reward |
+|----|-------|------|-----------|------------|--------|
+| `quest_depth_01` | The Depth — 18 Meters | ACCOMPLISHMENT | DA2, `tideGateOpened` | `currentCode === 'DA3'` | +500 XP + Knowledge: Constructor Design |
+
+### §LXXIII-B. The Closure
+
+The storyRender block at DA3 fires once (`!antecedentDepthMet`): reveals that the Constructor built both the archival installation (CY→AC) and the tidal installation (DA3) on the same foundation, and designed them to require the same archivist to close both. The Antecedent's NPC dialogue at DA3 delivers the two-chain summation: "You followed the chain from the outside in: courier to berth to manifest to station to chamber to forge to alloy to Gate to depth. And from the other side: crypt to archive to suppressor to signal to chamber to knowledge to question to answer."
+
+Cross-arc connections resolved: §LIII (Station 7 signal origin), §LV (AC first encounter), §LVI–§LVIII (Muffat chain), §LXX–§LXXI (Atlantean Shore + Sunken Hall), §LXXII (Conclave Annex post-event note).
+
+### §LXXIII-C. New State Flags
+
+```
+// §LXXIII: The Depth
+antecedentDepthMet: false,
+```
+
+---
+
+## §SPARK-01 — The Harmony Chain (📋 PLANNED — Layer 110)
+
+**Arc summary:** 5-quest friendship vignette arc in Tilbury's port district and aboard the Tilbury Star. French theater vignette structure: 2 acts, 5 scenes. Physical token objects are created, handed, and destroyed as the emotional plot moves. An unlikely chain of friendship — harbor cat → dock mouse → blood tick → bioluminescent mind-control parasite — radiates outward until a pompous King's Inspector with an impossible backstory finally tells the truth. Naval component: a "steamboat who done it" aboard the Tilbury Star where the murder victim is a cargo of imported perfumes and the "monster" is the parasite — which is not dangerous but is *extremely* friendly. The arc is built on improv principles: **yes-and**, **find common ground**, **contrasting energy**, **make others look good**. Every beat asks the player to accept something strange and build on it.
+
+**Design principle:** The Harmony Chain recurs. §SPARK-01 is Tilbury. Future §SPARK-0X arcs can drop anywhere in the world. Each arc: one animal friendship chain, one token object chain, one authority figure with a secret, one mystery. All resolve in harmony.
+
+---
+
+### §SPARK-01-A. Nodes
+
+No new nodes required. Arc uses existing Tilbury infrastructure:
+
+| Node | Code | Label | Act | Notes |
+|------|------|-------|-----|-------|
+| Harbor Docks | DK | Harbor Docks — Tilbury | 2 | Inspector first appears; Smalt's home |
+| Market Quarter | MQ | Tilbury Market Quarter | 2 | Pip's territory; Vendor Mira cameo |
+| Aboard Tilbury Star | MS | Aboard the Tilbury Star | 2 | Clot's Revelation + Who Done It |
+
+---
+
+### §SPARK-01-B. New NPCs
+
+**Inspector Aldous Wren-Pembury** (DK, then MS)
+- Title: King's Liaison to Port Sanitation and Civil Orderliness, Eastern Reach Commission
+- Apparent status: well-dressed, carries an embossed leather case, speaks in formal paragraphs
+- Actual status: witness protection; real name Aldous the Fencer; black market broker from Saltwick; in protective custody under a fake crown commission following testimony against the Saltwick Dockmasters' Ring
+- His family: a woman who calls herself Lady Elspeth and two children who cannot agree on their own names when asked directly
+- Backstory inconsistencies (planted across scenes):
+  - Scene 1 (DK): *"The Pembury estate in the Eastern Reach has been in our family three hundred years. I was born there."*
+  - Scene 2 (DK): *"My father — the late Admiral Pembury — we are a naval family, always have been."* [contradicts the estate; Eastern Reach has no coastline]
+  - Scene 3 (MS): *"My wife Elspeth — we relocated from Saltwick six months ago. Adjusting to Tilbury."* [completely different origin; Saltwick is where his criminal record begins]
+  - Scene 5 (confession): *"I am Aldous. Just Aldous. The writ is a printing from Saltwick. The Admiral does not exist. Neither does the estate. I have been here six months because there are people who would strongly prefer I be here for fewer."*
+- `quoteFn` states: 6 states keyed to `smaltBefriended`, `pipMet`, `bioluminescentParasiteFound`, `whodunitSolved`, `wrenpemburyInconsistencyNoticed`, `aldousConfessed`
+
+**Smalt** (DK)
+- A salt-gray harbor cat, four years resident on the third berth
+- Currently "threatening" the docks: specifically, sitting directly on cargo manifests and refusing to move
+- Is already friends with Pip, a dock mouse; neither has told anyone
+- When befriended: purrs, drops a dried salt fish (creates Smalt's Trust item), begins following the player
+
+**Pip** (DK/MQ)
+- A dock mouse; Smalt's best friend; carries a large blood tick named Clot on its left ear
+- Was given Pip's Friendship Bead — a gnawed wooden bead from a merchant's abacus — by Smalt as a token
+- Pip has been mildly parasitized by The Warmth for approximately two months; this is why Pip and Smalt are friends
+- Vendor Mira in MQ has noticed Pip occasionally; describes it as "the calm mouse" with mild concern
+
+**Clot** (MS — Pip's ear)
+- A blood tick; large for its kind; bioluminescent amber glow on its dorsal side
+- Hosts The Warmth, a colonial microorganism that produces a mild neurological compound inducing oxytocin-adjacent social bonding
+- When examined (WIS Medicine/Nature DC 13): Clot falls off cleanly, leaving Clot's Glow (the pustule); harmless; The Warmth is revealed
+
+**The Warmth**
+- Not a creature that fights. Not a monster in the combat sense.
+- A bioluminescent colonial microorganism. It makes hosts feel warmly friendly toward other creatures they encounter.
+- In small doses (Pip, Smalt, the rat catcher Brannick): creates improbable cross-species friendships
+- In large doses (the Tilbury Star's perfume cargo vats — warm, liquid environment): the perfumes now smell aggressively warm and intimate instead of elegant and aloof. They've spoiled commercially. The vats have become a Warmth colony.
+- The "monster hunt" arc: track the Warmth through the perfume cargo → discover it is benign → discover the rat catcher is fine, actually very happy → complete the mystery without a fight
+
+**Brannick, Rat Catcher** (MS)
+- Hired by the captain to keep the hold clear of rats
+- Has been Warmth-exposed for ten days
+- Is now quietly best friends with the rats; cannot explain it; considers this normal; the rats also no longer hide from him
+- Provides key testimony in Scene 4: *"They never bit me once. Even when I had the net. It didn't feel right to use the net after a while."*
+
+---
+
+### §SPARK-01-C. Token Objects (French Vignette — created and destroyed as the play moves)
+
+| Token | Created | Destroyed | Represents |
+|-------|---------|-----------|------------|
+| King's Writ (Counterfeit) | Scene 1 — Inspector presents it | Scene 5 — Aldous tears it up on confession | The false authority; the performance of legitimacy |
+| Smalt's Trust | Scene 1 — cat drops it when befriended | Consumed (eaten by Smalt in Scene 2 as endorsement of Pip) | First kindness; opens the chain |
+| Pip's Friendship Bead | Scene 2 — Pip gives it to the player | Handed to Inspector in Scene 5 | Alliance between contrasting creatures |
+| Clot's Glow | Scene 3 — tick examined, pustule glows | 1-use torch (warm amber light, 30ft, 1 hour) | The Warmth made visible; the thing that was always there |
+| Letter of True Passage | Scene 5 — Aldous writes it | N/A — kept by player | True authority replacing performed authority; future gate use |
+
+---
+
+### §SPARK-01-D. Quest Table
+
+| ID | Title | Type | Node | Activation | Key Check | Completion | Reward |
+|----|-------|------|------|-----------|-----------|------------|--------|
+| `quest_spark_01` | "Smalt" | SKILL CHECK CHA DC 10 | DK | Always at DK | CHA DC 10 Persuasion (befriend the cat, not convince the Inspector) | `smaltBefriended=true` | Smalt's Trust + 100gp + 100 XP |
+| `quest_spark_02` | "The Overture" | ACCOMPLISHMENT | DK | `smaltBefriended` | INT DC 12 — notice Inspector inconsistency (retryable, no fail) | `pipMet=true` | Pip's Friendship Bead + 150 XP |
+| `quest_spark_03` | "Clot's Revelation" | SKILL CHECK WIS DC 13 | MS | `pipMet` | WIS DC 13 Medicine/Nature — examine the tick | `bioluminescentParasiteFound=true` | Clot's Glow + 200gp + 200 XP |
+| `quest_spark_04` | "The Steamboat Who Done It" | SKILL CHECK INT DC 14 | MS | `bioluminescentParasiteFound` | INT DC 14 Investigation — trace the Warmth through the cargo hold | `whodunitSolved=true` | Letter of Safe Passage + 300gp + 300 XP |
+| `quest_spark_05` | "Aldous Comes Clean" | ACCOMPLISHMENT | DK | `whodunitSolved` + `wrenpemburyInconsistencyNoticed` | No roll — player confronts, Inspector confesses | `aldousConfessed=true`, Writ destroyed, Letter of True Passage created | 400gp + 400 XP + Aldous recurring ally |
+
+---
+
+### §SPARK-01-E. 5-Scene Play Structure
+
+**ACT I — The Harbor Stage**
+
+*Scene 1 — "The Problem" (DK)*
+The Inspector approaches with the King's Writ (Counterfeit). The cat Smalt has been sitting on cargo manifests since Tuesday. *"By order of the Crown, this animal must be relocated."* The player may: (a) attempt kindness — CHA DC 10 to befriend Smalt; (b) comply — Smalt walks off with dignity, quest branch closes. If befriended: Smalt drops Smalt's Trust (dried salt fish, a personal offering), begins following. Inspector is displeased. The Writ trembles. Token created: Smalt's Trust.
+
+*Scene 2 — "The Overture" (DK → MQ boundary)*
+Smalt leads the player to Pip at the MQ border. A cat and a mouse, sitting. The Inspector appears again — cannot help it, he's tracking the Writ. He mentions the Admiral. The player who noticed the Eastern Reach claim in Scene 1 gets the INT DC 12 check here. Pip gives the player its gnawed bead. Smalt eats the Smalt's Trust (endorsement of the alliance). Token created: Pip's Friendship Bead. Token destroyed: Smalt's Trust (consumed as affirmation).
+
+*Scene 3 — "The Revelation" (MS)*
+Pip is aboard the Tilbury Star (Pip travels in the player's pocket or pack). The tick Clot is on Pip's ear. Brannick the rat catcher appears, surrounded by calm rats. The cargo hold smells unusual. WIS DC 13 to examine Clot: the tick falls off cleanly, the pustule glows amber. The Warmth is identified — a friendly colonial organism. The Inspector is also aboard, mentioning Saltwick unprompted. Token created: Clot's Glow.
+
+**ACT II — The Floating Stage**
+
+*Scene 4 — "The Steamboat Who Done It" (MS)*
+The captain wants answers about the spoiled perfumes. INT DC 14 Investigation: trace the Warmth colony from Clot → Pip's wandering in the hold → the warm perfume vats → full colony. Brannick testifies. The monster is identified. It is not dangerous. The mystery resolves: the "murder victim" (the perfumes) was killed by friendship. The player reports to the Inspector. The Inspector mentions Elspeth and Saltwick in the same sentence — three incompatible claims now on record.
+
+*Scene 5 — "The Confession" (DK)*
+The player confronts the Inspector with the three inconsistencies. No combat. No roll required. The Inspector, having watched the player show kindness to a cat, make friends with a mouse, examine a tick without flinching, and solve a mystery by recognizing that the monster was actually friendly — cannot maintain the performance. He tears the Writ. He gives the player Pip's Friendship Bead back (they are to keep it — he understands why now). He writes the Letter of True Passage. He is Aldous. He will be useful. Token destroyed: King's Writ (Counterfeit). Token created: Letter of True Passage.
+
+---
+
+### §SPARK-01-F. Improv Principles Embedded in Quest Design
+
+| Principle | Where it appears |
+|-----------|-----------------|
+| Yes, and | Scene 1: accept the cat removal quest, then build toward kindness instead of compliance |
+| Find common ground | Scene 2: the cat-mouse alliance models what the player is doing with the Inspector |
+| Play on assumptions | Scene 4: the "monster" is friendly; the "murder" was done by love |
+| Make others look good | Scene 5: the player doesn't expose Aldous — they create space for him to confess |
+| Contrasting energy | Aldous (high formality) + Smalt (complete indifference) + the Warmth (uncategorizable) |
+| Fail big | If CHA DC 10 is failed on first try: Smalt bites the player (1 damage, flavor), second attempt allowed — the fail is more memorable than the pass |
+
+---
+
+### §SPARK-01-G. New State Flags
+
+```javascript
+// §SPARK-01: The Harmony Chain
+smaltBefriended: false,
+pipMet: false,
+wrenpemburyInconsistencyNoticed: false,
+bioluminescentParasiteFound: false,
+whodunitSolved: false,
+aldousConfessed: false,
+```
+
+---
+
+### §SPARK-01-H. Naval Extension — §SPARK-01 SEA (PLANNED, unscheduled)
+
+The Warmth's progenitor — a Deep Warmth Eel, CR 4, bioluminescent, entirely non-aggressive — can be encountered at open sea (between DK and LW nodes). It has been making the sea calm for three miles in every direction. This is a problem: the predator/prey chain is disrupted, fish stocks are clustering oddly, and two pirate crews that encountered the eel have been cooperating peacefully for a week, which confuses everyone including them. Monster hunt structure (4 phases as per the transcript): **setup** (strange stillness at sea, cooperative pirates), **investigation** (skill checks on the water and the pirate crews), **confrontation** (find the eel), **resolution** (the eel is not killed; it is escorted to a deeper trench where it can be happy and stop disrupting trade). Reward: the two pirate crews owe the player a debt; sea route unlocks.
+
+---
+
+## §DESIGN-REF — Transcript Design Principles Reference
+
+*Working notes distilled from 4 design transcripts. Items marked ⚙️ are actionable for future arcs. Items marked ✅ are already applied.*
+
+---
+
+### REF-01: Improv in D&D (Flutes Loot)
+
+| Principle | Applied | Notes |
+|-----------|---------|-------|
+| Yes, and — accept and build | ✅ §SPARK-01 (cat/mouse/tick chain rewards acceptance) | Future: skill-check fail states should feel like "yes, and" not dead ends |
+| Make others look good | ✅ §SPARK-01 (player gives Aldous space to confess) | ⚙️ Co-op NPC moments: other NPCs help when player does the right thing |
+| Let go and play / Fail Big | ⚙️ Partially (Smalt bites on fail, 1 dmg) | ⚙️ Fail states should be more memorable than pass states in SPARK arcs |
+| Find common ground | ✅ §SPARK-01 (cat-mouse models player-Inspector dynamic) | ⚙️ Future SPARK arcs: chain the unlikely pair to a human relationship |
+| Play on assumptions | ✅ §SPARK-01 SEA (monster = friendly eel); ✅ §HUNT-01 (monster = spiritual? No.) | ⚙️ Every HUNT arc: setup with wrong assumption, investigation corrects |
+| Contrasting energy | ✅ Smalt (indifferent) vs Inspector (formal) | ⚙️ Pair high-formality NPCs with very low-stakes creatures in SPARK arcs |
+| Make statements not questions | ⚙️ NPC dialogue principle — use in all new quoteFn | "You look like you've been following something" not "What are you doing?" |
+| Seek themes | ⚙️ SPARK theme: kindness → harmony. HUNT theme: fear → understanding | Each arc family should have one thematic answer |
+| Approaching resolutions | ⚙️ Every quest disposition quote should be a closing statement | Already enforced by disposition field convention |
+
+---
+
+### REF-02: Side Quest Structure (World Anvil — 4-Point Template)
+
+**Template:** Hook/setup → Investigation/exploration → Twist/complication → Choice/resolution
+
+| Phase | Applied | Notes |
+|-------|---------|-------|
+| Hook | ✅ All quests have activateNode + activateCond | ⚙️ Hooks should feel like "a question you can't ignore" not a chore |
+| Investigation | ✅ skill_check quests are investigation phase | ⚙️ Skill checks should give partial info on fail, not just "try again" |
+| Twist | ✅ §SPARK-01 (parasite is friendly), §HUNT-01 (ghost is drowners) | ⚙️ Twist should contradict the initial NPC's belief, not contradict facts |
+| Choice/resolution | ⚠️ Currently most quests have one outcome | ⚙️ FUTURE: add "spare the monster" or "side with X" option in HUNT arcs |
+
+**World Anvil key insight:** Side quests feel like detours unless anchored to worldbuilding. Every quest should change something permanent in the world state (flag, NPC relationship, knowledge entry, item in world).
+
+**NPC archetypes to maintain per hub:**
+- **Go-to** (knows everything, sends you to others): Muffat (DK), Elder Fisherwoman (LS), Aldous (DK post-confession)
+- **Outcast with heart of gold**: Aldous (pre-confession), Brannick (rat catcher)
+- **Quest giver**: Guild Master (LH), Inspector Wren-Pembury (ironic: he gives quests he doesn't mean)
+- **Upgrader**: Atlantean Forge (DSF), Vendor Mira (MQ) — ⚙️ MQ could get a proper upgrade mechanic
+- **Thief**: Aldous (post-confession) — ⚙️ expand to Visby black market link
+
+---
+
+### REF-03: Naval Campaigns
+
+| Element | Applied | Notes |
+|---------|---------|-------|
+| Travel problems (handcrafted not random) | ✅ OW (Warmth Calm blocks trade route) | ⚙️ Next travel problem: storm damage → hull repair quest |
+| Ship-to-creature combat | ✅ MS (ghost in hold + pirates), OW (eel) | ⚙️ Add one ship-to-ship combat node with roles: Captain, Gunner, Lookout |
+| Boarding combat | ⚙️ Not yet implemented | ⚙️ Two-gangplank choke-point map node between two ship nodes |
+| 3-5 interesting ports | Tilbury (DK/MQ), Lake Harbor (LH), Malta (existing) | ⚙️ Need 2 more distinct ports with cultural identity |
+| NPCs traveling with party | ✅ Aldous (can escort on sea route) | ⚙️ Brannick could travel as ship NPC post-resolution |
+| Fast travel between ports | ✅ Junction system handles distance | ⚙️ Add "charter a ship" option at DK for long-range fast travel |
+
+---
+
+### REF-04: Monster Hunt (Ben Byrne — 4-Phase Structure)
+
+**Template:** Setup (symptoms, not monster) → Investigation (skill checks, clues) → Confrontation (combat, exploiting weaknesses) → Resolution/Reward
+
+| Phase | Applied | Notes |
+|-------|---------|-------|
+| Setup — NPC reports symptoms | ✅ §HUNT-01 (Elder Fisherwoman, missing boats) | ⚙️ NPC should give WRONG theory; investigation corrects |
+| Investigation — clue chain | ✅ §HUNT-01 (INT DC 12 scales → WIS DC 13 trail → lair) | ⚙️ Each clue should lower effective DC by 2 for the confrontation |
+| Confrontation | ✅ §HUNT-01 (LD — Drowner ×3 den) | ⚙️ Prep rewards: monster has weakness player can exploit if they investigated |
+| Resolution | ✅ §HUNT-01 (Guild allies, Drowned Compass) | ⚙️ Always: one salvageable item + one permanent world change |
+
+**Ben Byrne key insight:** The monster hunt is most fun when the setup gives the WRONG monster. Players investigate, correct the theory, then confront. The investigation is not optional — skipping it makes the fight harder.
+
+**Play on assumptions in HUNT arcs:**
+- §HUNT-01: "Lake spirit / ghost" → actually Drowners (physical, territorial)
+- §HUNT-02 (✅ Layer 111): Road warden says bandits → actually Night Hag (riding relay horses from sleeping post at J1.N bend)
+- Pattern: the quest-giver's folk theory is always sympathetically wrong
+
+---
+
+### §NAVAL-01 — The Intercept (✅ Implemented — Layer 111)
+
+**Node SB** (num:144) — MS.N at {r:15,c:40}. NPC: Captain Vera Keel.  
+**Design:** Ship-to-ship encounter with 3 crew role buttons (first choice in game). REF-03 template.  
+**Roles:** Go to the rail (CHA Parley DC 12) / Take the helm (INT Examine DC 11) / Go below (fight).  
+**Parley path:** -80gp, no boarding, Letter of Marque added (Keel planted the conversation).  
+**Examine path:** Eastern Reach seal date 14 months stale — dissolved office. Keel throws the Letter across the gap. She was testing whether anyone on the eastern run reads.  
+**Fight path:** quest_sb_fight, Privateer Captain + Privateer × 2 (SB_PRIVATEER). +200gp +400 XP, Letter from chart room.  
+**Item:** Letter of Marque (Keel) (📜) — all 3 paths yield the same item; meaning differs by path.  
+**Arc thread:** Eastern Reach seal connects to Aldous arc (Wren-Pembury claimed Eastern Reach estate). Keel's test is never explained — what she was looking for is unresolved.
+
+---
+
+### §PORT-02 — Dunfall: The Highland Loch Harbor (✅ Implemented — Layer 111)
+
+**Node DF** (num:143) — inserted between HL.W and EH. HL.W: 'EH'→'DF'; EH.E: 'HL'→'DF'.  
+**NODE_COORDS:** DF {r:9,c:5} between HL(c:6) and EH(c:4).  
+**NPC:** Mairén Fionn (Elder Fionn's daughter). 3-state quoteFn.  
+**Access gate:** HL→DF blocked until defeatedBattles['HL'] (kelpie cleared).  
+**Cultural identity:** Barter economy, wool-and-fish, pre-commerce. Gold welcome but not primary. Market runs on acknowledgment: knowing why the doors were barred earns more than coin.  
+**Flags:** dunfallAccessed, dfBarterLearned.  
+**Quests:** quest_df_01 (harbor access), quest_df_02 (WIS Insight DC 11 barter exchange).  
+**Item:** Highland Herb Pouch (🌿, consumable, sell:40) — moorland yarrow + bog myrtle + one unnamed ingredient. Dunfall-only.  
+**Arc thread:** Village barred doors while kelpie active (referenced in HL text). Three men didn't return. Opening Dunfall acknowledges their grief without naming it.
+
+---
+
+### §PORT-01 — Saltwick: The Unwritten Port (✅ Implemented — Layer 111)
+
+**Node SK** (num:142) — accessible from MS.S ({r:19,c:40}). NPC: Harbormaster Dorit.  
+**Access system:** 3-tier storyRender credential check — pirateCrew_allied → pirate note; aldousConfessed → Letter of True Passage; neither → dock gate closed.  
+**Flags:** saltwickAccessed, saltwickJobAccepted.  
+**Quests:** quest_sk_01 (credential access), quest_sk_02 (CHA DC 12 missing consignment).  
+**Arc thread:** quest_sk_02 reveals the amber glass consignment buyer used a "Pembury" address (Chandler's shop closed morning of delivery). Connects §SPARK-01 (Aldous's false identity) → Saltwick worldbuilding.  
+**Item:** Saltwick Bill of Lading (📄, sell:0) — valid at 6 unregistered ports.  
+**Cultural identity:** Reputation-gated port. No paperwork. Goods with "provenance lag of approximately forever."
+
+---
+
+### §HUNT-02 — The Eastern Bend (✅ Implemented — Layer 111)
+
+**Nodes:** J1 (hook, updated N→BN) → BN (new, num:141, Night Hag den)  
+**NODE_COORDS:** BN {r:9,c:24} (directly north of J1 at r:11,c:24)  
+**Flags:** huntHook2Received, bendRoadClue, bendLairFound, hagDefeated2  
+**Quests:** quest_hunt2_01–04. storyMove gate: J1→BN blocked until huntHook2Received.  
+**NPC hook:** Tessie at J1 (existing EB_NPC_DIALOGUE entry, quote: "Watch the eastern bend")  
+**Wrong theory:** Road wardens say bandit fires at the old mill. Theory is wrong.  
+**Reality:** Night Hag riding relay horses from sleeping post. Horses remember; refuse the road.  
+**Item:** Relay Station Token (🪙, sell:20) — brass token, relay authority mark, one night's lodging.  
+**Investigation chain:** WIS Perception DC 11 (precise stopping line = territorial marker) → INT Investigation DC 13 (spiral tether wear + heel-only handprint = night hag).
+
+---
+
+### §HUNT-01 — What's In The Lake (✅ Implemented — Layer 111)
+
+**Nodes:** LS (hook) → LH (INT DC 12 hull) → LN (WIS DC 13 trail) → LD (new, num:140, Drowner × 3 den)  
+**NODE_COORDS:** LD {r:9,c:46} (4 rows north of LN at r:13,c:46)  
+**Flags:** huntHookReceived, lakeClueFound, lakeLairLocated, drownersDefeated  
+**Quests:** quest_hunt_01–04. Full spec in quest.md §HUNT-01.  
+**storyMove gate:** LN→LD blocked until lakeLairLocated.  
+**NPC_DIALOGUE:** LS (Elder Fisherwoman) — 4 states (pre-hook / hooked / lairLocated / defeated).  
+**Item:** Drowned Compass (🧭, sell:80) — Guild captain's compass found in den wreckage.  
+**Wrong theory corrected:** Guild spirit offerings → physical drowners, territorial, moved in after spring shelf collapse.
+
+---
+
+### §SPARK-02 — The Dunfall Harmony Chain (✅ Implemented — Layer 111)
+
+**Node:** DF (num:143, exists from §PORT-02). Second instance of the §SPARK template.  
+**NPC:** Commissioner Halvard Fehn — real name Halvard Jesst, harbor informant, Ninth Circuit. Three planted identity inconsistencies: Revenue Office closed 13 years ago; no Highland Fleet exists; Commodore-Provisional in the Northern Admiralty is not a real rank.  
+**Creature chain:** Cat → Dock Mouse → Bram the Harbor Seal → Oat the Osprey → Dunfall Drift Spore (bioluminescent colony, same organism family as the Warmth Eel and Clot's Glow).  
+**Flags:** spark2HookReceived, bramBefriended, oatMet, brimFound, fehnConfessed, dunfallHarmonyComplete  
+**Quests:** quest_spark2_01–05 (WIS DC 11 Animal Handling to befriend Bram; INT DC 12 Nature to identify drift spore).  
+**Token chain (4 objects):**
+
+| Token | Created | Destroyed | Meaning |
+|-------|---------|-----------|---------|
+| Bram's Fish Scale | WIS DC 11 onPass | storyRender button (Bram endorsement) | Act 2: acknowledgment |
+| Oat's Harbor Bead | storyRender button | INT DC 12 onPass (specimen holder) | Act 3: alliance |
+| Dunfall Drift Spore | INT DC 12 onPass | storyRender button (Fehn opens vial) | Act 4: chemical key |
+| Highland Letter of Clearance | storyRender button (confrontation) | — (permanent) | Act 5: Jesst credential |
+
+**Arc thread:** Highland Letter of Clearance (Ninth Circuit seal) valid at SK as third credential path to Saltwick — alongside pirateCrew_allied and aldousConfessed.  
+**Drift spore narrative principle:** The spore does not cause Fehn to confess. It makes him stop performing. The inconsistencies were always there. The spore makes him willing to let them show. Not coercion — gentling.
+
+---
+
+### §WHODUNIT-01 — The Bilge Mystery (✅ Implemented — Layer 111)
+
+**Node:** MS (existing). No new node required — all 4 phases at MS via storyRender progression + storyPreBattle trigger.  
+**Template origin:** Ben Byrne §HUNT 4-phase template applied to a closed-space ship setting.  
+**Wrong theory source:** The Cook (individual, credible, circumstantially coherent). Theory: Passenger Ord (came from Saltwick, suspicious). Reality: sea spawn entered through hull repair access window during quest_sk_hull work at SK.  
+**Flags:** whodunit2HookReceived, whodunit2ClueFound, whodunit2WitnessRead, whodunit2Solved  
+**Quests:**
+- quest_bilge_01: side, MS, activateCond: saltwickAccessed — Cook's theory hook
+- quest_bilge_02: skill_check INT DC 12 Investigation — port drain exam, sea spawn scale found, whodunit2ClueFound
+- quest_bilge_03: skill_check WIS DC 13 Insight — Crewman Delt interview, cold from below, whodunit2WitnessRead
+- quest_bilge_04: side, MS, completeFn: defeatedBattles['MS_BILGE'] — storyPreBattle Sea Spawn × 2; +600gp +600 XP; creates Sea Spawn Scale Fragment (🐚, sell:13)
+
+**Battle trigger:** `storyPreBattle({ ...node, code:'MS_BILGE', battle:{ label:'Sea Spawn × 2 — The Bilge', key:'sea_spawn', count:2 } })`  
+**NPC: Passenger Ord** — structural element only. No dialogue, no action. Named absence. The cook has never apologized. Ord has not asked for one. This is the arc's final beat, in the `onComplete` narrative.  
+**Arc thread:** quest_sk_hull (hull repair at SK) → bilge repair access window → sea spawn entry. Causal chain links §PORT-01 and §WHODUNIT-01.
+
+---
+
+### §ALCHEMY-01 — The Personal Legend (✅ Implemented — Layer 111)
+
+**Nodes:** HL → MI → MS → IS → ML → AE → HL. Six existing nodes. Zero new nodes required.  
+**NPC:** Roen — Highland shepherd, ~40, earnest, mildly ridiculous. The "Philosophy Stoner": applies wisdom frameworks to mundane situations with complete sincerity and frequent accuracy.  
+**Source inspiration:** Paulo Coelho's *The Alchemist* + Don Miguel Ruiz's *The Four Agreements* (Toltec wisdom). The grandmother's stone is a finder's device. The gold was always in the loch. She spoke literally.  
+**Flags:** roenMet, roenMidlandsWisdom, roenAtSea, roenOracleRead, roenMaltaCrisis, roenAlchemistMet, personalLegendComplete  
+**Quests:** quest_alch_01–07.
+
+| Quest | Type | Node | Beat | Toltec agreement |
+|-------|------|------|------|-----------------|
+| quest_alch_01 | side | HL | Hook: Roen met, Shepherd's Fortune Slip created | — |
+| quest_alch_02 | side | MI | Noon plain wisdom | Don't take it personally |
+| quest_alch_03 | side | MS | Sea wisdom | Don't make assumptions |
+| quest_alch_04 | skill_check CHA DC 11 | IS | Oracle reading (Persuasion) | — |
+| quest_alch_05 | skill_check WIS DC 12 | ML | Malta crisis (Insight) | Always do your best |
+| quest_alch_06 | side | AE | Athens Stoic — the synthesis | All four |
+| quest_alch_07 | side | HL | Return: stone dropped, Loch Gold Flake created | Be impeccable with your word |
+
+**Token flow:** Shepherd's Fortune Slip (📜, sell:0) created at hook; destroyed at AE. Loch Gold Flake (✨, sell:30) created at return.  
+**Bioluminescence resolution:** The Philosophy Stone is a fragment of the Warmth Eel bioluminescent colony — same organism as Clot's Glow (§SPARK-01) and the Dunfall Drift Spore (§SPARK-02). The colony concentrates trace gold from highland runoff. Roen's grandmother was using geographic coordinates, not metaphor. The fortune teller was right. The journey was required to understand what was already known.  
+**Resolution beat:** Roen drops the stone into the loch. The colony responds. Loch Gold Flake surfaces. Roen says: *"That's very annoying."* — with complete warmth.
+
+---
+
+## §WISDOM-01 — The Book of Human Nature (📋 PLANNED)
+
+**Depends on:** personalLegendComplete (§ALCHEMY-01 complete)  
+**Source material:** Robert Greene — *The Laws of Human Nature* (2018) + *The 48 Laws of Power* (1998)  
+**Arc summary:** Roen, having found his Personal Legend, is now restless in a different direction. He has answered *where is the gold?* He has not answered *why does everyone behave the way they do?* He has a lead: a court historian named Master Fenn Ardley documented these patterns in a text that was scattered after Ardley named the court treasurer's behavior in public. The treasurer's dynasty held the city dock contracts for sixteen more years — then lost them to a Baltic competitor who had read a dispersed copy of Ardley's text. The laws worked whether or not anyone wanted them to.
+
+**Design principle — wisdom-as-tool vs. wisdom-as-observation:**  
+§ALCHEMY-01 = wisdom-as-observation. Roen notices, names, moves on. §WISDOM-01 = wisdom-as-tool. Each fragment is a lens for a skill check that does not exist without reading the law first. Fragment → law displayed → situation present → skill check tests application of the law. The law is a key, not a reward.
+
+---
+
+### §WISDOM-01-A. The Six Laws
+
+| Code | Law | Source | Stat | DC | Node | Situation |
+|------|-----|--------|------|----|------|-----------|
+| W1 | The Law of Role-playing — *See through masks* | LHN-3 | WIS Insight | 13 | DK | New merchant Silas Vance: cloth dealer, rigger's hands |
+| W2 | The Law of Aggression — *See the hostility* | LHN-16 | WIS Insight | 12 | SK | Dorit's contained hostility retroactively read |
+| W3 | Discover Each Man's Thumbscrew | 48L-33 | INT Investigation | 11 | SB | Keel's chart room — what she was actually protecting |
+| W4 | The Law of Shortsightedness — *Elevate your perspective* | LHN-6 | INT History | 12 | BK | Birka guild deal — name the 3-year outcome |
+| W5 | Assume Formlessness — *Adapt; rigidity is the vulnerability* | 48L-48 | WIS Insight | 12 | AE | Stoic debate — release the committed argument |
+| W6 | The Law of Repression — *Confront your shadow* | LHN-9 | WIS Save | 14 | VS | VS mirror chamber — accept the reflection or fight |
+
+---
+
+### §WISDOM-01-B. Nodes
+
+No new nodes required. Arc uses six existing nodes.
+
+| Node | Code | Fragment | Activation condition |
+|------|------|----------|---------------------|
+| Visby | VS | Hook + Resolution + W6 | personalLegendComplete (hook); wisHookReceived + wisPages 1–5 (W6) |
+| Tilbury Docks | DK | W1 | wisHookReceived |
+| Saltwick | SK | W2 | wisHookReceived + saltwickAccessed |
+| The Intercept | SB | W3 | wisHookReceived + sbResolved |
+| Birka | BK | W4 | wisHookReceived + birkaAccessed |
+| Athens/Alexandria | AE | W5 | wisHookReceived + roenAlchemistMet |
+
+---
+
+### §WISDOM-01-C. New NPCs
+
+**Roen** (companion, continuing from §ALCHEMY-01)  
+- Post-personalLegendComplete state: still wandering; now focused outward rather than inward
+- Appears in quest descriptions at each fragment node; not as a storyRender block (except VS hook/resolution)
+- His commentary on each law is the "Philosophy Stoner" translation: concrete, hyper-specific, slightly absurd, accurate
+
+**Silas Vance** (DK — W1 fragment NPC)  
+- Presents as cloth merchant; actually a former ship rigger running a quiet re-export scheme
+- Rope callousing on hands, not bale callousing — the tell
+- Not dangerous; no combat; aligned on pass (knows a route discount at SK)
+
+**Master Fenn Ardley** (deceased — arc's ghost)  
+- Court historian, documented behavioral patterns, named the court treasurer's behavior publicly
+- Dismissed; library confiscated; text scattered
+- Present only through fragments; never met; his story told by implication across 6 pages
+
+---
+
+### §WISDOM-01-D. Quest Table
+
+| ID | Type | Node | Title | Check | Flag set | Reward |
+|----|------|------|-------|-------|----------|--------|
+| quest_wis_00 | side | VS | The Manuscript Hook | storyRender button | wisHookReceived | 100 XP; creates Pages of the Ardley Manuscript |
+| quest_wis_01 | skill_check WIS DC 13 | DK | Mask Check | Insight: Silas Vance | wisPage1_masks | +150gp, +250 XP |
+| quest_wis_02 | skill_check WIS DC 12 | SK | What Dorit Already Knew | Insight: Dorit's hostility | wisPage2_aggression | +250 XP; knowledge entry |
+| quest_wis_03 | skill_check INT DC 11 | SB | The Chart Room | Investigation: Keel's log | wisPage3_thumbscrew | +300 XP; Keel thread partially resolved |
+| quest_wis_04 | skill_check INT DC 12 | BK | Three Years Out | History: guild deal outcome | wisPage4_sight | +300 XP; birkaRepImproved = true |
+| quest_wis_05 | skill_check WIS DC 12 | AE | The Philosopher's Pivot | Insight: release the argument | wisPage5_form | +300 XP; stoic_letter flag |
+| quest_wis_06 | skill_check WIS DC 14 | VS | The Shadow Room | Save: accept the reflection | wisPage6_shadow | +350 XP; Shadow Shard (combat path: +200 XP, no item) |
+| quest_wis_07 | side | VS | Ardley's Book | completeFn: all 6 wisPage flags | personalLegendMature | +400gp, +600 XP; creates Ardley's Complete Laws |
+
+**activateCond for quest_wis_00:** `() => S_story.personalLegendComplete`  
+**completeFn for quest_wis_07:** `() => ['wisPage1_masks','wisPage2_aggression','wisPage3_thumbscrew','wisPage4_sight','wisPage5_form','wisPage6_shadow'].every(f => S_story[f])`
+
+---
+
+### §WISDOM-01-E. Fragment Texts and Roen Commentary
+
+**W1 — Masks (DK, quest_wis_01)**
+
+*Ardley text:* "Every person wears a social mask. The mask is not the lie — the mask IS the performance. What you are looking for is not the lie beneath the mask but the gap: the moment when the performance requires more effort than usual. That effort is the tell." — *A Complete Account, Ch. III*
+
+*Roen:* "There is a cloth merchant at the Tilbury dock who holds bolts of fabric the way my grandfather held a lamb — which is to say, like something that could run. I find this interesting."
+
+**W2 — Aggression (SK, quest_wis_02)**
+
+*Ardley text:* "Aggression does not announce itself. It dresses as patience, as courtesy, as professional neutrality. You will see it only in small signals: the way someone's voice drops one register when they say a name, the way they touch an object on their desk before they answer. These are not accidents. They are the leak." — *A Complete Account, Ch. XVI*
+
+*Roen:* "Dorit touched the docking ledger four times while you were talking. Not to write anything. Just to touch it. I have been thinking about what that means for several days."
+
+**W3 — Thumbscrew (SB, quest_wis_03)**
+
+*Ardley text:* "Every person has one thing they are trying to protect above all others. It is not always what they say they are protecting. Look for the thing they never mention — the omission is usually more revealing than the declaration. Their thumbscrew is the thing that makes them go quiet." — *A Complete Account, Ch. XXXIII*
+
+*Roen:* "Keel talked about the commission. She talked about the eastern run. She talked about the date. She did not talk about the navigator. Not once. In my experience, people do not avoid talking about things that are not important."
+
+**W4 — Shortsightedness (BK, quest_wis_04)**
+
+*Ardley text:* "The present moment is always vivid and always incomplete. The person who can force themselves to ask 'what will this look like in three years?' is rare, because the exercise requires abandoning the comfort of the immediate. The guild man who takes the good deal today rarely asks what it will cost his successor." — *A Complete Account, Ch. VI*
+
+*Roen:* "The guild master is very pleased with the new Baltic contract. I asked him what happens when the Highland timber season fails. He said the timber season does not fail. I said it failed twice in the last thirty years. He said that is different. I have been thinking about what 'different' means."
+
+**W5 — Formlessness (AE, quest_wis_05)**
+
+*Ardley text:* "The man who has committed to a position and then found the position untenable has two choices: defend the position anyway, or release it. The first is called dignity. The second is called intelligence. They feel identical from the outside. Only the person inside knows which one they are doing." — *A Complete Account, Ch. XLVIII*
+
+*Roen:* "The philosopher and I argued for two hours about whether gold has intrinsic value or whether value is a social agreement. I was right, then I was wrong, then I was right again from the other direction. At some point I stopped knowing which direction I was arguing from. This felt like progress."
+
+**W6 — Shadow (VS, quest_wis_06)**
+
+*Ardley text:* "The parts of yourself you have refused to examine do not disappear. They operate below the surface. They surface as overreactions, as inexplicable preferences, as patterns you cannot explain. The shadow is not your enemy — it is the part of you that has been waiting to be named." — *A Complete Account, Ch. IX*
+
+*Roen:* "There is a room in the lower level that I have been in four times now. It shows you something. I will not say what it showed me. It was accurate, though. I gave it a formal nod. It seemed appropriate."
+
+---
+
+### §WISDOM-01-F. Token Objects
+
+| Token | Icon | Created | Destroyed | Significance |
+|-------|------|---------|-----------|-------------|
+| Pages of the Ardley Manuscript | 📖 | quest_wis_00 storyRender button | quest_wis_07 resolution button | The incomplete collection; exists only during the search |
+| Shadow Shard | 🔮 | quest_wis_06 onPass (WIS save path only) | — (permanent) | Mirror fragment offered freely; VS non-combat resolution reward |
+| Ardley's Complete Laws | 📚 | quest_wis_07 resolution button | — (permanent) | 6-law text; Roen's foreword: "These are not rules. They are a pair of glasses." |
+
+---
+
+### §WISDOM-01-G. New State Flags
+
+```javascript
+// §WISDOM-01: The Book of Human Nature
+wisHookReceived: false,
+wisPage1_masks: false,
+wisPage2_aggression: false,
+wisPage3_thumbscrew: false,
+wisPage4_sight: false,
+wisPage5_form: false,
+wisPage6_shadow: false,
+personalLegendMature: false,
+```
+
+---
+
+### §WISDOM-01-H. storyRender Blocks Required
+
+**story-wis-vs** (VS node) — 3 states:
+1. `personalLegendMature`: arc complete — Ardley's Complete Laws in inventory
+2. `wisHookReceived && allSixPages`: resolution button — bind the manuscript; create Ardley's Complete Laws; +400gp +600 XP; knowledge entry
+3. `personalLegendComplete && !wisHookReceived`: hook button — Roen appears with portfolio; create Pages of the Ardley Manuscript; wisHookReceived = true
+
+**quest-description panels** (W1–W6): The Ardley fragment text and Roen commentary appear within the quest `desc` field. No additional storyRender blocks required at DK, SK, SB, BK, AE — the skill check panels are sufficient.
+
+**VS shadow room** (W6): The shadow encounter is triggered by a button within story-wis-vs when `wisHookReceived && wisPages1–5 all set`. Button fires either:
+- Accept path: WIS Save DC 14 (linked to quest_wis_06)
+- Or: implements as storyPreBattle('VS_SHADOW', Shadow Construct × 1) with wisPage6_shadow set on combat victory
+
+Implementation note: if §DUNGEON-01 is implemented first, the shadow room may already exist as a §DUNGEON-01 storyRender block. Coordinate with §DUNGEON-01 to avoid duplicate shadow room implementations at VS.
+
+---
+
+### §WISDOM-01-I. Arc Threading
+
+```
+§ALCHEMY-01 (personalLegendComplete)
+   → activates quest_wis_00 at VS
+
+§SPARK-01 / §SPARK-02 (mask-wearing NPCs)
+   → quest_wis_01 (DK): Silas Vance follows the Aldous/Fehn pattern — law in third instance
+
+§PORT-01 (saltwickAccessed, Dorit)
+   → quest_wis_02 (SK): Dorit's contained aggression retroactively named
+
+§NAVAL-01 (sbResolved, Keel)
+   → quest_wis_03 (SB): Keel's omission (the navigator) identified; thread partially resolved
+   → Keel never mentioned the navigator once across all three intercept paths
+
+§DESIGN-03 / Birka (birkaAccessed — see §DESIGN-03)
+   → quest_wis_04 (BK): guild shortsightedness — W4 fragment; birkaRepImproved flag
+
+§ALCHEMY-01 (roenAlchemistMet)
+   → quest_wis_05 (AE): Stoic debate; stoic_letter flag (letter of introduction to VS)
+
+§DUNGEON-01 / VS underground (visbyUnderground — PLANNED)
+   → quest_wis_06 (VS): shadow room non-combat resolution; Shadow Shard
+   → coordinate with §DUNGEON-01 to avoid duplicate shadow room
+```
+
+---
+
+### §WISDOM-01-J. Keel Thread — Partial Resolution
+
+quest_wis_03 is the first time the Keel thread advances since §NAVAL-01. The chart room at SB contains an archived log from the night of the intercept. INT Investigation DC 11 surfaces what Keel was protecting: not the commission date and not the eastern run — but the navigator's notes, which contain survey data for a Baltic sea route that would cut Tilbury out of highland timber trade entirely.
+
+This is not a full resolution. The navigator's notes are gone — Keel took them. The player knows the shape of what she was protecting; not yet who sent her or what she did with the data. The Keel thread now has a mechanism (Baltic route data) and a missing piece (the navigator). A future arc can close it.
+
+---
+
+### §WISDOM-01-K. Implementation Checklist
+
+```
+_S_DEFAULTS() — add 8 new flags (§WISDOM-01-G above)
+
+QUEST_DB — add 8 quests:
+  quest_wis_00: side, VS, activateCond: personalLegendComplete
+  quest_wis_01: skill_check WIS DC 13, DK, activateCond: wisHookReceived
+  quest_wis_02: skill_check WIS DC 12, SK, activateCond: wisHookReceived + saltwickAccessed
+  quest_wis_03: skill_check INT DC 11, SB, activateCond: wisHookReceived + (sbResolved||sbPapersRead)
+  quest_wis_04: skill_check INT DC 12, BK, activateCond: wisHookReceived + birkaAccessed
+  quest_wis_05: skill_check WIS DC 12, AE, activateCond: wisHookReceived + roenAlchemistMet
+  quest_wis_06: skill_check WIS DC 14 (saveType:'save'), VS, activateCond: wisHookReceived
+  quest_wis_07: side, VS, completeFn: all 6 wisPage flags
+
+storyRender — add story-wis-vs block at VS node:
+  3 states: hook / resolution / complete
+
+Items created in quest callbacks:
+  quest_wis_00 onAccept: Pages of the Ardley Manuscript (📖, sell:0)
+  quest_wis_06 onPass (save): Shadow Shard (🔮, sell:25)
+  quest_wis_07 button: splice Pages; create Ardley's Complete Laws (📚, sell:50)
+
+JS syntax validation after each edit block
+
+Running total after §WISDOM-01: ~159 live quests
+```

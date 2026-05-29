@@ -196,7 +196,79 @@ Each quest entry uses the following tags:
 
 ## TILBURY — Act II (Nodes: docks, market_quarter, storefront, merchant_ship)
 
-*(Existing quests live; no new specced quests at this time.)*
+*(Existing quests live. §SPARK-01 quests below: PLANNED — see plan.md §SPARK-01 for full spec.)*
+
+### §SPARK-01 — The Harmony Chain (📋 PLANNED)
+
+**Arc:** French vignette theater, 2 acts, 5 scenes. Objects created/destroyed as emotional tokens. Friendship chain: cat → mouse → blood tick → mind-control parasite → harmony. Authority figure (Inspector Wren-Pembury) has an impossibly inconsistent backstory — witness protection. Naval component at MS: "Steamboat Who Done It" — the monster is friendly.
+
+| Quest ID | Title | Type | Node | Activation | Completion | Reward |
+|----------|-------|------|------|-----------|------------|--------|
+| `quest_spark_01` | "Smalt" | [SKILL CHECK] CHA DC 10 | DK | Always at DK | `smaltBefriended=true` | Smalt's Trust (token) + 100gp + 100 XP |
+| `quest_spark_02` | "The Overture" | [ACCOMPLISHMENT] | DK | `smaltBefriended` | `pipMet=true` | Pip's Friendship Bead (token) + 150 XP |
+| `quest_spark_03` | "Clot's Revelation" | [SKILL CHECK] WIS DC 13 | MS | `pipMet` | `bioluminescentParasiteFound=true` | Clot's Glow (1-use torch) + 200gp + 200 XP |
+| `quest_spark_04` | "The Steamboat Who Done It" | [SKILL CHECK] INT DC 14 | MS | `bioluminescentParasiteFound` | `whodunitSolved=true` | Letter of Safe Passage + 300gp + 300 XP |
+| `quest_spark_05` | "Aldous Comes Clean" | [ACCOMPLISHMENT] | DK | `whodunitSolved` + `wrenpemburyInconsistencyNoticed` | `aldousConfessed=true` | 400gp + 400 XP + Aldous recurring ally |
+
+**`quest_spark_01` — "Smalt"** *(Scene 1: The Problem)*
+*Node: DK. Trigger: always available at Harbor Docks. Object: Smalt's Trust (dried salt fish).*
+- Inspector Wren-Pembury presents his King's Writ (Counterfeit). The harbor cat Smalt has been sitting on cargo manifests since Tuesday. The Inspector wants it removed.
+- Act I: [STORY SKILL CHECK] CHA Persuasion DC 10 — befriend the cat. (On fail: Smalt bites for 1 damage, memorable; retry allowed. The Inspector looks vindicated. On pass: Smalt drops Smalt's Trust and begins following.)
+- Act II: [ACCOMPLISHMENT] Inspector is displeased; backstory claim #1 delivered: "The Pembury estate, Eastern Reach, three hundred years."
+- Act III: No battle. Smalt as the "obstacle" is defused by kindness.
+- Act IV: Smalt's Trust created. First link in the chain.
+- Act V: Inspector says *"This resolves nothing officially."* He is wrong.
+- **Reward:** Smalt's Trust (quest token, destroyed in Scene 2) + 100gp + 100 XP.
+
+**`quest_spark_02` — "The Overture"** *(Scene 2: The Unlikely Alliance)*
+*Node: DK/MQ boundary. Trigger: `smaltBefriended`. Object: Pip's Friendship Bead (gnawed wooden bead).*
+- Smalt leads the player to Pip the dock mouse. A cat and a mouse, sitting together near the MQ entrance.
+- Act I: [ACCOMPLISHMENT] Meet Pip. The alliance is presented without explanation.
+- Act II: Inspector reappears (tracking the Writ). Mentions his father "the Admiral." [INT DC 12 optional check — `wrenpemburyInconsistencyNoticed=true` — no fail state, retry until noticed]
+- Act III: No battle. Pip's presence is the obstacle resolved by acceptance.
+- Act IV: Pip gives the player its gnawed bead. Smalt eats the Smalt's Trust (endorsement of the alliance). Token: Smalt's Trust destroyed; Pip's Friendship Bead created.
+- Act V: Vendor Mira, if encountered, notes "the calm mouse" with mild recognition.
+- **Reward:** Pip's Friendship Bead (token, handed to Inspector in Scene 5) + 150 XP.
+
+**`quest_spark_03` — "Clot's Revelation"** *(Scene 3: The Revelation)*
+*Node: MS. Trigger: `pipMet`. Object: Clot's Glow (bioluminescent pustule from the blood tick Clot).*
+- Pip travels with the player to the Tilbury Star. Brannick the rat catcher is in the hold, surrounded by rats who are not behaving like rats.
+- Act I: [STORY SKILL CHECK] WIS Medicine/Nature DC 13 — examine the blood tick Clot on Pip's ear. On pass: Clot detaches cleanly; the pustule glows amber; The Warmth is identified as a colonial microorganism producing social bonding chemistry.
+- Act II: [ACCOMPLISHMENT] Brannick testifies: *"They never bit me once."* The cargo hold smells unusual.
+- Act III: No battle. The "monster" is first identified here — it is not hostile.
+- Act IV: Clot's Glow created (1-use item: warm amber light, 30ft radius, 1 hour). Inspector appears on deck, mentions "Saltwick" unprompted — backstory claim #3.
+- Act V: The Warmth is named. The mystery is not yet solved — the perfumes need investigation.
+- **Reward:** Clot's Glow + 200gp + 200 XP.
+
+**`quest_spark_04` — "The Steamboat Who Done It"** *(Scene 4: The Mystery)*
+*Node: MS. Trigger: `bioluminescentParasiteFound`. Object: Letter of Safe Passage (from the captain, for solving the mystery).*
+- The captain reports the imported perfume cargo has spoiled. Commercially useless. Smells "warm and extremely personal." She wants answers before port.
+- Act I: [STORY SKILL CHECK] INT Investigation DC 14 — trace the Warmth colony: Clot → Pip's wandering → warm perfume vats → full colony bloom. The "murder victim" (the perfumes) was ruined by friendship.
+- Act II: [ACCOMPLISHMENT] Brannick confirms the timeline. The rats are witnesses. The Inspector is aboard.
+- Act III: No battle. The confrontation is with the Inspector: three inconsistent claims now on record. The player faces the mystery's human layer.
+- Act IV: [ACCOMPLISHMENT] `whodunitSolved=true`. The captain accepts the explanation. The Warmth colony is not destroyed — it is transferred (in a sealed jar) to the player.
+- Act V: Inspector, watching the resolution, says: *"You solved it without removing anything."* He is thinking about himself.
+- **Reward:** Letter of Safe Passage (future gate use at port nodes) + 300gp + 300 XP.
+
+**`quest_spark_05` — "Aldous Comes Clean"** *(Scene 5: The Confession)*
+*Node: DK. Trigger: `whodunitSolved` + `wrenpemburyInconsistencyNoticed`. Object: Letter of True Passage (Aldous writes it).*
+- The player confronts Aldous with the three inconsistencies: the Estate, the Admiral, Saltwick. No roll required. The player presents the evidence. Aldous has watched the player show kindness to a cat, make an alliance with a mouse, examine a tick without disgust, and solve a mystery by recognizing the monster was friendly. He cannot maintain the performance.
+- Act I: [ACCOMPLISHMENT] Aldous tears the King's Writ (Counterfeit). Token destroyed.
+- Act II: [ACCOMPLISHMENT] He returns Pip's Friendship Bead to the player ("I understand why you should have this"). Token transferred back.
+- Act III: No battle. The confession is the climax.
+- Act IV: [ACCOMPLISHMENT] He writes the Letter of True Passage (his real authority document, valid). Token created.
+- Act V: *"My name is Aldous. I have contacts in six ports. If you need something that isn't on any manifest, I am who you speak to."* `aldousConfessed=true`. Aldous becomes a recurring ally NPC at DK.
+- **Reward:** Letter of True Passage + 400gp + 400 XP + Aldous recurring ally (black market contacts in Tilbury, Visby, Malta).
+
+---
+
+**The Harmony Chain — complete arc reward:** All five links closed (Smalt + Pip + Clot + The Warmth + Aldous = five-creature harmony). Bonus flag: `harmonyChainComplete: true`. Future §SPARK arcs recognize this flag and give the player a reputation for kindness to small things.
+
+---
+
+### §SPARK-01 SEA Extension (📋 PLANNED — unscheduled, see plan.md §SPARK-01-H)
+
+A Deep Warmth Eel (CR 4, non-aggressive) at open sea between DK and LW. Three-mile calm radius. Two pirate crews cooperating. Monster hunt: 4-phase structure. Resolution: escort the eel to deeper water. Reward: pirate crews owe a debt; sea route unlocks.
 
 ---
 
@@ -405,10 +477,66 @@ MINE (*À moi*). She corrects it again. The correction is the same each time. CH
 | ✅ Live §LXX | 4 (Shore Road + Tide Register + Forge Mechanism + Smelting) |
 | ✅ Live §LXXI | 2 (Sunken Hall inscription + Tide Gate activation) |
 | ✅ Live §LXXII | 1 (Conclave Annex post-event note) |
-| **Total live** | **~109** |
+| ✅ Live §LXXIII | 1 (The Depth — 18 Meters: both-chains closure) |
+| **Total live** | **~110** |
+| ✅ Live §SPARK-01 | 5 (Smalt + Overture + Clot + Who Done It + Aldous Comes Clean) |
+| ✅ Live §SPARK-01 SEA | 3 (Calm Sea + Warmth Eel + The Escort) |
+| ✅ Live §HUNT-01 | 4 (Hook + Hull Investigation + Trail + Den Confrontation) |
+| ✅ Live §HUNT-02 | 4 (Relay Warning + Road Read + Sleeping Post + Night Hag) |
+| ✅ Live §PORT-01 | 3 (The Unwritten Port + The Missing Consignment + The Cracked Strake) |
+| ✅ Live §PORT-02 | 2 (The Open Harbor + The Salt Price) |
+| ✅ Live §NAVAL-01 | 4 (Approach + Parley CHA DC 12 + Examine INT DC 11 + Board and Clear) |
+| **Total live** | **~135** |
 | Planned | 0 |
 
 ---
+
+---
+
+## §HUNT-01 — What's In The Lake ✅ LIVE (Layer 111)
+
+**Nodes:** LS → LH → LN → LD (new). **Monster:** Drowner × 3. **Key item:** Drowned Compass.  
+**NPC:** The Elder Fisherwoman (LS). **Wrong theory:** Guild spirit offerings.  
+**Design principle (REF-04):** Setup gives wrong theory → investigation chain corrects → confrontation → resolution with salvage item.
+
+| ID | Title | Type | Node | Cond | Reward |
+|----|-------|------|------|------|--------|
+| `quest_hunt_01` | Something in the Lake | [ACCOMPLISHMENT] | LS | arrive + speak | +100 XP; opens quest_hunt_02 |
+| `quest_hunt_02` | Scale Marks on the Hull | [SKILL CHECK] INT Investigation DC 12 | LH | huntHookReceived | lakeClueFound + knowledge entry + 200 XP |
+| `quest_hunt_03` | Drag Tracks North | [SKILL CHECK] WIS Perception DC 13 | LN | lakeClueFound | lakeLairLocated + 250 XP; unlocks LD |
+| `quest_hunt_04` | The North Den | [BATTLE] Drowner × 3 | LD | lakeLairLocated | 500gp + 500 XP + Drowned Compass + knowledge entry |
+
+**`quest_hunt_01` — Something in the Lake**
+*Node: LS. Trigger: arrive at south shore. Object: three missing boats.*
+- Act I: [STORY] The Elder Fisherwoman states the facts — three boats, spring collapse, Guild offerings, her disagreement with the Guild theory.
+- Act II: storyRender button "Speak to the Elder Fisherwoman" → huntHookReceived, +100 XP. Quest chain opens.
+- Act III: No battle here. Investigation begins at LH.
+- Act IV: Guild master at LH presents spirit mark theory (on boat hull).
+- Act V: Elder Fisherwoman's words remain the accurate framing. "Something that eats a boat is not a spirit."
+
+**`quest_hunt_02` — Scale Marks on the Hull**
+*Node: LH. Trigger: huntHookReceived. Object: recovered boat hull.*
+- Act I: [SKILL CHECK] INT Investigation DC 12. The marks are at the waterline, port side.
+- Act II: On fail — "Marks unclear. More evidence on the north shore path." Not retryable; player must proceed to LN.
+- Act III: On pass — lakeClueFound, knowledge push: *physical claw drag, not spirit-made*. +200 XP.
+- Act IV: Harbor Guild Master reads the hull a second time: "Those are grip-marks. Something held the boat."
+- Act V: Object changed — the hull goes from evidence of a mystery to evidence of a creature.
+
+**`quest_hunt_03` — Drag Tracks North**
+*Node: LN. Trigger: lakeClueFound. Object: disturbed north shore path.*
+- Act I: [SKILL CHECK] WIS Perception DC 13. Path mud, shelf edge worn. Repeated passage pattern.
+- Act II: On fail — "Pattern unclear from path. Move further along the shelf." Not retryable; move along LN.
+- Act III: On pass — lakeLairLocated. LD unlocked. +250 XP.
+- Act IV: storyRender at LN updates: "Trail read. Three of them — from track spacing. Den at the shelf collapse."
+- Act V: Object changed — the path goes from disturbed ground to a location. North Shore Den is now accessible.
+
+**`quest_hunt_04` — The North Den**
+*Node: LD. Trigger: lakeLairLocated. Object: the den itself.*
+- Act I: [STORY] storyRender at LD — shelf collapse, flooded chamber, boat timbers present. Drowners not hidden.
+- Act II: Button "Enter the den — clear the drowners" → storyPreBattle(LD_DROWNERS).
+- Act III: [GATING BATTLE] Drowner × 3 — The North Den.
+- Act IV: On win — drownersDefeated, +500gp +500 XP, Drowned Compass added, knowledge push.
+- Act V: Elder Fisherwoman at LS closes the arc: "It was the rock fall that brought them — not the boats. The boats were just the nearest thing. You got to them before they established range north."
 
 ## QUEST DESIGN PRINCIPLES (see §D02-11 for full framework)
 

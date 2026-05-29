@@ -1,0 +1,29 @@
+#!/bin/bash
+#       this eats up transcripts with numbers seperated by : . we then colapse whitespace. we also design this for macos if neither content in pipeline or file exist with length. 
+
+# Function to process input stream
+# Removes timestamps and collapses surrounding whitespace to a single space
+process_input() {
+    sed -E 's/[[:space:]]*[0-9]+:[0-9]+[[:space:]]*/ /g'
+}
+
+# Check if stdin has data available (non-blocking check)
+if read -t 0; then
+    # --- CASE 1: Input is piped or redirected ---
+    # Process the input and copy the result to the clipboard
+    process_input | pbcopy
+    
+    # Optional: Print confirmation to stderr so stdout remains clean for piping
+    echo "Processed input and copied to clipboard." >&2
+
+elif [ $# -ge 1 ]; then
+    # --- CASE 2: File argument provided ---
+    # Process the file and copy the result to the clipboard
+    process_input < "$1" | pbcopy
+    echo "Processed file '$1' and copied to clipboard." >&2
+
+else
+    # --- CASE 3: No input and no arguments ---
+    # Fallback: Output the current contents of the clipboard
+    pbpaste
+fi
