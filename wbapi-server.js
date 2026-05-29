@@ -1,9 +1,14 @@
 #!/usr/bin/env node
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com
+// ============================================================
+// wbapi-server.js — Roll2Hit World Builder API Server
+// MIT License — Copyright (c) 2026 PaulRicheson@Roll2Hit.com
+// SPDX-License-Identifier: MIT
+// ============================================================
 'use strict';
-// wbapi-server.js — Local REST API server for the Roll2Hit World Builder
-// Usage: node wbapi-server.js [--port 3001] [--file roll2hit-v3.html]
-// Browser: fetch('http://localhost:3001/api/node/CY')
+// Local REST API for roll2hit-v3.html — reads and writes the HTML file
+// directly.  The game is fully self-contained in that one file.
+// Toggle: ./wbapi-toggle.sh [start|stop|restart|status]
+// curl:   curl http://localhost:3001/api/ping
 
 const http   = require('http');
 const fs     = require('fs');
@@ -41,59 +46,75 @@ const GAME_FILE = process.env.ROLL2HIT_FILE
   || process.argv.find((a, i) => process.argv[i-1] === '--file')
   || path.join(__dirname, 'roll2hit-v3.html');
 
-// ── Verbose Logging ─────────────────────────────────────────────────────────
+// ── Logging ──────────────────────────────────────────────────────────────────
 const LOG_FILE = path.join(__dirname, 'wbapi-server.log');
 const logStream = fs.createWriteStream(LOG_FILE, { flags: 'a' });
 
-// Console color codes
 const C = {
-  reset:  '\x1b[0m',
-  bold:   '\x1b[1m',
-  dim:    '\x1b[2m',
-  cyan:   '\x1b[36m',
-  green:  '\x1b[32m',
-  yellow: '\x1b[33m',
-  red:    '\x1b[31m',
-  blue:   '\x1b[34m',
-  magenta:'\x1b[35m',
-  white:  '\x1b[37m',
+  reset:  '\x1b[0m',  bold:    '\x1b[1m',  dim:     '\x1b[2m',
+  cyan:   '\x1b[36m', green:   '\x1b[32m', yellow:  '\x1b[33m',
+  red:    '\x1b[31m', blue:    '\x1b[34m', magenta: '\x1b[35m',
+  white:  '\x1b[37m', orange:  '\x1b[38;5;214m',
 };
 
+// Per-request timing
+let _t0 = 0;
+
+// Method colors for the header line
+const METHOD_C = { GET:C.green, POST:C.blue, PUT:C.yellow, DELETE:C.red, OPTIONS:C.dim };
+
+function _ts() { return new Date().toISOString().slice(0, 23).replace('T', ' '); }
+
+// ── log() — for startup / load / error events (not per-request) ─────────────
 function log(level, msg, data) {
-  const ts = new Date().toISOString().slice(0, 23).replace('T', ' ');
-
-  // Console: color-coded by level
+  const ts = _ts();
   const levelColors = {
-    REQUEST:  C.cyan   + '[REQUEST] ' + C.reset,
-    RESPONSE: C.green  + '[RESPONSE]' + C.reset,
-    LOGIC:    C.yellow + '[LOGIC]   ' + C.reset,
-    INFO:     C.blue   + '[INFO]    ' + C.reset,
-    ERROR:    C.red    + '[ERROR]   ' + C.reset,
-    LOAD:     C.magenta+ '[LOAD]    ' + C.reset,
+    INFO:  C.blue   + '[INFO]    ' + C.reset,
+    ERROR: C.red    + '[ERROR]   ' + C.reset,
+    LOAD:  C.magenta+ '[LOAD]    ' + C.reset,
   };
-  const prefix = levelColors[level] || `[${level}]`;
+  // LOGIC suppressed from console; goes to file only
   const dataStr = data !== undefined ? ' ' + (typeof data === 'string' ? data : JSON.stringify(data)) : '';
-  console.log(`${C.dim}${ts}${C.reset} ${prefix} ${msg}${dataStr}`);
-
-  // File: plain text
-  const fileLine = `${ts} [${level.padEnd(8)}] ${msg}${dataStr}\n`;
-  logStream.write(fileLine);
-}
-
-function logReqStart(req, bodySnippet) {
-  const sep = '─'.repeat(60);
-  log('REQUEST', `${req.method} ${req.url}`);
-  if (bodySnippet && Object.keys(bodySnippet).length) {
-    log('REQUEST', `Body: ${JSON.stringify(bodySnippet)}`);
+  if (level !== 'LOGIC' && level !== 'REQUEST') {
+    const prefix = levelColors[level] || `${C.dim}[${level}]${C.reset}`;
+    console.log(`${C.dim}${ts}${C.reset} ${prefix} ${msg}${dataStr}`);
   }
-  const fileLine = sep + '\n';
-  logStream.write(fileLine);
+  logStream.write(`${ts} [${level.padEnd(8)}] ${msg}${dataStr}\n`);
 }
 
-function logResponse(method, url, status, summary) {
+// ── logReq() — prints the ┌─ request breadcrumb header ──────────────────────
+function logReq(method, pathname, queryStr) {
+  _t0 = Date.now();
+  const ts   = _ts();
+  const mc   = METHOD_C[method] || C.white;
+  const qs   = queryStr ? `${C.dim}?${queryStr}${C.reset}` : '';
+  const path = pathname.replace(/^\/api\//, '');
+  console.log(`\n${C.dim}${ts}${C.reset}  ${C.bold}${mc}${method.padEnd(6)}${C.reset}  ${C.cyan}${path}${C.reset}${qs}`);
+  logStream.write(`\n${ts}  ${method.padEnd(6)}  ${path}${queryStr ? '?'+queryStr : ''}\n`);
+}
+
+// ── logRow() — prints a ├─ detail line under the current request ─────────────
+function logRow(label, value) {
+  const lbl = value !== undefined ? `${C.dim}${label}:${C.reset} ` : '';
+  const val = value !== undefined ? String(value) : String(label);
+  console.log(`  ${C.dim}├─${C.reset}  ${lbl}${val}`);
+  logStream.write(`  ├─  ${value !== undefined ? label + ': ' : ''}${val}\n`);
+}
+
+// ── logResponse() — the └─ closing line with elapsed time ───────────────────
+function logResponse(_method, _url, status, summary) {
+  const elapsed = Date.now() - _t0;
   const col = status < 300 ? C.green : status < 500 ? C.yellow : C.red;
-  console.log(`            ${C.dim}└─${C.reset} ${col}${status}${C.reset} ${summary}`);
-  logStream.write(`            └─ ${status} ${summary}\n`);
+  const timeStr = elapsed < 10 ? `${elapsed}ms` : elapsed < 100 ? `${C.yellow}${elapsed}ms${C.reset}` : `${C.red}${elapsed}ms${C.reset}`;
+  console.log(`  ${C.dim}└─${C.reset}  ${col}${C.bold}${status}${C.reset}  ${summary}  ${C.dim}[${timeStr}${C.dim}]${C.reset}`);
+  logStream.write(`  └─  ${status}  ${summary}  [${elapsed}ms]\n`);
+}
+
+// ── sample() — first N items joined, with "+M more" suffix ──────────────────
+function sample(arr, n = 4) {
+  if (!arr || arr.length === 0) return '(none)';
+  const shown = arr.slice(0, n).map(x => (typeof x === 'object' ? (x.id || x.key || x.code || x.name || JSON.stringify(x)) : String(x)));
+  return arr.length > n ? shown.join(' · ') + `  ${C.dim}+${arr.length - n} more${C.reset}` : shown.join(' · ');
 }
 
 // ── Load ────────────────────────────────────────────────────────────────────
@@ -510,20 +531,21 @@ async function route(req, res) {
     return;
   }
 
-  logReqStart(req, null);
+  const qs = url.search ? url.search.slice(1) : '';
+  logReq(method, url.pathname, qs);
 
   // ── Health ──
   if (parts[0] === 'ping') {
-    log('LOGIC', 'Health check requested');
-    const resp = { ok:true, loaded: WBAPI.loaded,
-      file: path.basename(GAME_FILE),
-      nodes:    Object.keys(WBAPI.nodeMap).length,
-      quests:   Object.keys(WBAPI.questDb).length,
-      monsters: Object.keys(WBAPI.monsterPool).length,
-      fish:     WBAPI.fishPool.length + WBAPI.nightFishPool.length,
-      lakeMagic:Object.keys(WBAPI.lakeMagicDb).length,
-    };
-    logResponse(method, url.pathname, 200, `ping ok — ${resp.nodes} nodes, ${resp.quests} quests`);
+    const nNodes = Object.keys(WBAPI.nodeMap).length;
+    const nQuests = Object.keys(WBAPI.questDb).length;
+    const nMonsters = Object.keys(WBAPI.monsterPool).length;
+    const nTerrains = Object.keys(WBAPI.worldDb).length;
+    const nFish = WBAPI.fishPool.length + WBAPI.nightFishPool.length;
+    const resp = { ok:true, loaded: WBAPI.loaded, file: path.basename(GAME_FILE),
+      nodes:nNodes, quests:nQuests, monsters:nMonsters,
+      fish:nFish, lakeMagic:Object.keys(WBAPI.lakeMagicDb).length };
+    logRow(`${nNodes} nodes  ·  ${nQuests} quests  ·  ${nMonsters} monsters  ·  ${nTerrains} terrains  ·  ${nFish} fish`);
+    logResponse(method, url.pathname, 200, 'ok');
     return json(res, 200, resp);
   }
 
@@ -531,12 +553,15 @@ async function route(req, res) {
   if (parts[0] === 'source' && method === 'GET') {
     try {
       const src = fs.readFileSync(GAME_FILE, 'utf8');
-      logResponse(method, url.pathname, 200, `source ok — ${src.length} bytes`);
+      const kb = (src.length / 1024).toFixed(1);
+      logRow('file', path.basename(GAME_FILE));
+      logRow('size', `${kb} KB  ·  ${src.split('\n').length} lines`);
+      logResponse(method, url.pathname, 200, `${kb} KB`);
       cors(res);
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
       res.end(src);
     } catch(e) {
-      logResponse(method, url.pathname, 500, `source read failed: ${e.message}`);
+      logResponse(method, url.pathname, 500, `read failed: ${e.message}`);
       return json(res, 500, { ok:false, error:e.message });
     }
     return;
@@ -557,7 +582,9 @@ async function route(req, res) {
       const resolvedKey = WBAPI._findKey(col, id) || id;
       const token = nonceIssue(type, resolvedKey);
       const expiresAt = new Date(Date.now() + NONCE_TTL).toISOString();
-      logResponse('POST', '/api/nonce', 200, `nonce issued for ${type}:${resolvedKey} — ${token}`);
+      logRow('type › id', `${type} › ${resolvedKey}`);
+      logRow('token', `${token}  (expires in 5 min)`);
+      logResponse('POST', '/api/nonce', 200, 'nonce issued');
       return json(res, 200, { nonce: token, type, id: resolvedKey, expiresAt });
     }
     logResponse(method, '/api/nonce', 405, 'POST only');
@@ -566,7 +593,7 @@ async function route(req, res) {
 
   // ── Restart (exits with code 67; toggle script loops on this) ──
   if (parts[0] === 'restart' && method === 'POST') {
-    log('LOGIC', 'Restart requested — exiting with code 67 for wbapi-toggle.sh restart loop');
+    logRow('exit(67)', 'wbapi-toggle.sh restart loop will relaunch');
     logResponse(method, url.pathname, 200, 'restarting');
     res.writeHead(200, { 'Content-Type':'application/json', 'Access-Control-Allow-Origin':'*' });
     res.end(JSON.stringify({ ok:true, note:'Server restarting. Poll /api/ping until it responds.' }));
@@ -577,9 +604,11 @@ async function route(req, res) {
 
   // ── Reload ──
   if (parts[0] === 'reload' && method === 'POST') {
-    log('LOGIC', `Reloading game file: ${GAME_FILE}`);
     try {
       reload();
+      const stats = `${Object.keys(WBAPI.nodeMap).length} nodes  ·  ${Object.keys(WBAPI.questDb).length} quests  ·  ${Object.keys(WBAPI.monsterPool).length} monsters`;
+      logRow('file', path.basename(GAME_FILE));
+      logRow('loaded', stats);
       logResponse(method, url.pathname, 200, 'reload ok');
       return json(res, 200, { ok:true });
     } catch(e) {
@@ -592,29 +621,35 @@ async function route(req, res) {
   // ── Save ──
   if (parts[0] === 'save' && method === 'POST') {
     const body = await readBody(req).catch(() => ({}));
-    log('LOGIC', 'Save requested', body.outputPath ? { outputPath: body.outputPath } : { outputPath: '(timestamped)' });
     const r = WBAPI.save(body.outputPath);
-    logResponse(method, url.pathname, r.ok ? 200 : 500, r.ok ? `saved → ${r.path}` : r.error);
+    if (r.ok) {
+      const kb = (fs.statSync(r.path).size / 1024).toFixed(1);
+      logRow('path', r.path);
+      logRow('size', `${kb} KB`);
+    }
+    logResponse(method, url.pathname, r.ok ? 200 : 500, r.ok ? `saved → ${path.basename(r.path)}` : r.error);
     return json(res, r.ok ? 200 : 500, r);
   }
 
   // ── Schema ──
   if (parts[0] === 'schema') {
     const type = parts[1];
-    log('LOGIC', `Schema requested${type ? ' for type: ' + type : ' (all)'}`);
     if (type && !SCHEMAS[type]) {
-      logResponse(method, url.pathname, 404, `Unknown schema type: ${type}`);
+      logResponse(method, url.pathname, 404, `unknown schema type: ${type}`);
       return json(res, 404, { error: `Unknown schema type "${type}". Available: ${Object.keys(SCHEMAS).filter(k=>!k.startsWith('_')).join(', ')}` });
     }
     const result = type ? SCHEMAS[type] : SCHEMAS;
-    logResponse(method, url.pathname, 200, type ? `schema for ${type}` : 'full schema');
+    const fields = type ? Object.keys(result.fields||{}).length : Object.keys(result).filter(k=>!k.startsWith('_')).length;
+    logRow('type', type || '(all)');
+    logRow('fields', fields);
+    logResponse(method, url.pathname, 200, type ? `schema/${type}` : 'all schemas');
     return json(res, 200, result);
   }
 
   // ── Diff summary ──
   if (parts[0] === 'diff' && method === 'GET') {
-    log('LOGIC', 'Diff summary requested');
-    logResponse(method, url.pathname, 200, 'diff summary');
+    logRow('note', 'Use POST /api/save to write pending changes');
+    logResponse(method, url.pathname, 200, 'diff');
     return json(res, 200, { note: 'Use POST /api/save to write all pending changes to disk' });
   }
 
@@ -633,7 +668,10 @@ async function route(req, res) {
         if (nightFilter === 'true') all = all.filter(f => f.isNight);
         if (nightFilter === 'false') all = all.filter(f => !f.isNight);
         all.sort((a, b) => a.rank - b.rank || (a.isNight ? 1 : -1));
-        log('LOGIC', `GET /api/fish — ${all.length} entries`);
+        const dayN = all.filter(f=>!f.isNight).length, nightN = all.filter(f=>f.isNight).length;
+        logRow('total', `${all.length} fish  ·  ${dayN} day  ·  ${nightN} night`);
+        if (rankFilter||nightFilter) logRow('filter', [rankFilter&&`rank=${rankFilter}`, nightFilter&&`night=${nightFilter}`].filter(Boolean).join('  '));
+        logRow('sample', sample(all.slice(0,4).map(f=>`${f.key}(r${f.rank})`), 4));
         logResponse(method, url.pathname, 200, `${all.length} fish`);
         return json(res, 200, { ok:true, count:all.length, fish: all });
       }
@@ -645,7 +683,9 @@ async function route(req, res) {
       const isNight = WBAPI.nightFishPool.some(f => f.key === fishKey);
       const drop    = WBAPI.monsterDrops[fishKey] || null;
       const monster = WBAPI.monsterPool[fishKey]  || null;
-      logResponse(method, url.pathname, 200, `fish:${fishKey} rank:${found.rank}`);
+      logRow('fish', `${found.name}  ·  rank ${found.rank}  ·  ${isNight ? '🌙 night' : '☀ day'}`);
+      if (drop) logRow('drop', drop.name);
+      logResponse(method, url.pathname, 200, `fish/${fishKey}`);
       return json(res, 200, { ok:true, fish:{ ...found, isNight },
         connections:{ drop, monster }, _meta:{ canDelete: false } });
     }
@@ -746,7 +786,10 @@ async function route(req, res) {
         if (effectFilter) list = list.filter(m => m.effect === effectFilter);
         if (rankFilter !== null) list = list.filter(m => (m.minRank || 0) <= Number(rankFilter));
         list.sort((a,b) => (a.minRank||0) - (b.minRank||0));
-        log('LOGIC', `GET /api/lake-magic — ${list.length} entries`);
+        const effects = [...new Set(list.map(m=>m.effect))].join(' · ');
+        logRow('total', `${list.length} lake magic items`);
+        logRow('effects', effects || '(none)');
+        logRow('sample', sample(list.map(m=>m.key), 4));
         logResponse(method, url.pathname, 200, `${list.length} lake magic items`);
         return json(res, 200, { ok:true, count:list.length, items: list });
       }
@@ -755,7 +798,8 @@ async function route(req, res) {
         logResponse(method, url.pathname, 404, `lake-magic "${magKey}" not found`);
         return json(res, 404, { error:`lake-magic "${magKey}" not found` });
       }
-      logResponse(method, url.pathname, 200, `lake-magic:${magKey}`);
+      logRow('item', `${item.name}  ·  effect: ${item.effect}  ·  minRank: ${item.minRank||0}`);
+      logResponse(method, url.pathname, 200, `lake-magic/${magKey}`);
       return json(res, 200, { ok:true, item, _meta:{ canDelete: true } });
     }
 
@@ -870,8 +914,25 @@ async function route(req, res) {
         suggestions.push({ section:'NODE_COORDS', key:code, field:'coords', msg:`node has no entry in NODE_COORDS — won't appear on map` });
 
     const summary = { errors: errors.length, warnings: warnings.length, suggestions: suggestions.length };
-    log('LOGIC', `Audit: ${summary.errors} errors, ${summary.warnings} warnings, ${summary.suggestions} suggestions`);
-    logResponse(method, url.pathname, 200, `audit complete`);
+    const eCol = errors.length   ? C.red    : C.green;
+    const wCol = warnings.length ? C.yellow : C.green;
+    logRow(`${eCol}${errors.length} errors${C.reset}  ·  ${wCol}${warnings.length} warnings${C.reset}  ·  ${C.dim}${suggestions.length} suggestions${C.reset}`);
+    if (errors.length) {
+      // Count by message pattern for the top error summary
+      const freq = {};
+      errors.forEach(e => { const k = e.msg.replace(/"[^"]+"/g,'"…"'); freq[k] = (freq[k]||0)+1; });
+      const top = Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,3)
+        .map(([msg,n]) => n>1 ? `${msg} (×${n})` : msg);
+      top.forEach((t,i) => logRow(i===0 ? 'top errors' : '', t));
+    }
+    if (warnings.length) {
+      const wfreq = {};
+      warnings.forEach(w => { const k = w.msg.replace(/"[^"]+"/g,'"…"'); wfreq[k] = (wfreq[k]||0)+1; });
+      const wtop = Object.entries(wfreq).sort((a,b)=>b[1]-a[1]).slice(0,2)
+        .map(([msg,n]) => n>1 ? `${msg} (×${n})` : msg);
+      wtop.forEach((t,i) => logRow(i===0 ? 'top warnings' : '', t));
+    }
+    logResponse(method, url.pathname, 200, `${errors.length} errors  ·  ${warnings.length} warnings  ·  ${suggestions.length} suggestions`);
     return json(res, 200, { ok:true, errors, warnings, suggestions, parse, summary });
   }
 
@@ -940,9 +1001,9 @@ async function route(req, res) {
     const arc     = url.searchParams.get('arc');
     const qtype   = url.searchParams.get('type');
     const filters = [nodeQ&&`node=${nodeQ}`, terrain&&`terrain=${terrain}`, arc&&`arc=${arc}`, qtype&&`type=${qtype}`].filter(Boolean);
-    log('LOGIC', `List ${type}${filters.length ? ' filtered by ' + filters.join(', ') : ' (all)'}`);
 
     if (type === 'node') {
+      const total = WBAPI.nodes.all().length;
       let list = WBAPI.nodes.all();
       if (nodeQ) list = list.filter(n => n.id === nodeQ);
       const out = list.map(n => ({
@@ -951,11 +1012,17 @@ async function route(req, res) {
                  npcs:   WBAPI.npcs.byNode(n.id).length,
                  canDelete: !WBAPI._questsByNode[n.id]?.length && !WBAPI.npcs.byNode(n.id).length }
       }));
+      const acts = {};
+      out.forEach(n => { acts[n.act] = (acts[n.act]||0)+1; });
+      logRow('total', filters.length ? `${total} total  →  ${out.length} matched  (${filters.join(', ')})` : `${out.length} nodes`);
+      logRow('by act', Object.entries(acts).sort((a,b)=>a[0]-b[0]).map(([a,n])=>`Act${a}×${n}`).join('  '));
+      logRow('sample', sample(out, 5));
       logResponse(method, url.pathname, 200, `${out.length} nodes`);
       return json(res, 200, out);
     }
 
     if (type === 'quest') {
+      const total = WBAPI.quests.all().length;
       let list = WBAPI.quests.all();
       if (nodeQ)  list = list.filter(q => q.activateNode===nodeQ || q.waypointNode===nodeQ);
       if (qtype)  list = list.filter(q => q.type === qtype);
@@ -966,17 +1033,27 @@ async function route(req, res) {
         _meta: { downstream: WBAPI.quests.chain(q.id).downstream.length,
                  canDelete:  WBAPI.quests.chain(q.id).downstream.length === 0 }
       }));
+      const types = {};
+      out.forEach(q => { types[q.type] = (types[q.type]||0)+1; });
+      logRow('total', filters.length ? `${total} total  →  ${out.length} matched  (${filters.join(', ')})` : `${out.length} quests`);
+      logRow('by type', Object.entries(types).map(([t,n])=>`${t}×${n}`).join('  '));
+      logRow('sample', sample(out, 4));
       logResponse(method, url.pathname, 200, `${out.length} quests`);
       return json(res, 200, out);
     }
 
     if (type === 'monster') {
+      const total = WBAPI.monsters.all().length;
       let list = WBAPI.monsters.all();
       if (terrain) list = list.filter(m => m.terrains.includes(terrain));
       const out = list.map(m => ({
         key: m.key, name: m.name, tier: m.tier, terrainCount: m.terrains.length,
         _meta: { canDelete: m.terrains.length === 0 }
       }));
+      const noDrops = out.filter(m => !WBAPI.monsterDrops[m.key]).length;
+      logRow('total', filters.length ? `${total} total  →  ${out.length} matched  (${filters.join(', ')})` : `${out.length} monsters`);
+      logRow('no drops', `${noDrops} monsters  ·  ${out.length - noDrops} have drops`);
+      logRow('sample', sample(out.map(m=>m.key), 5));
       logResponse(method, url.pathname, 200, `${out.length} monsters`);
       return json(res, 200, out);
     }
@@ -988,6 +1065,8 @@ async function route(req, res) {
         key: n.key, name: n.name, node: n.node, occupation: n.occupation,
         _meta: { canDelete: WBAPI._deps.npc(n.key).quests.length === 0 }
       }));
+      logRow('total', `${out.length} NPCs`);
+      logRow('sample', out.map(n=>`${n.name} @ ${n.node}`).join('  ·  '));
       logResponse(method, url.pathname, 200, `${out.length} npcs`);
       return json(res, 200, out);
     }
@@ -998,11 +1077,16 @@ async function route(req, res) {
         monsterCount: (WBAPI._terrainToMonsters[k]||[]).length,
         nodeCount: Object.values(WBAPI.nodeMap).filter(n=>n.name===k).length,
       }));
+      const noMonsters = out.filter(t=>t.monsterCount===0).length;
+      const noNodes    = out.filter(t=>t.nodeCount===0).length;
+      logRow('total', `${out.length} terrains`);
+      logRow('empty monster list', `${noMonsters}  ·  unused by any node: ${noNodes}`);
+      logRow('sample', sample(out.map(t=>t.key), 5));
       logResponse(method, url.pathname, 200, `${out.length} terrains`);
       return json(res, 200, out);
     }
 
-    logResponse(method, url.pathname, 404, `Unknown list type: ${type}`);
+    logResponse(method, url.pathname, 404, `unknown list type: ${type}`);
     return json(res, 404, { error: `Unknown list type: ${type}` });
   }
 
@@ -1036,9 +1120,13 @@ async function route(req, res) {
       return json(res, 404, { error:`Unknown collection "${col}". Valid: ${valid}` });
     }
     const data = getter();
-    log('LOGIC', `Export collection "${col}" format:${fmt}`);
+    const count = Array.isArray(data) ? data.length : typeof data==='object' ? Object.keys(data).length : 1;
+    const rawBytes = JSON.stringify(data).length;
+    const kb = (rawBytes / 1024).toFixed(1);
+    logRow('collection', `${col}  ·  format: ${fmt}`);
+    logRow('size', `${count} records  ·  ~${kb} KB`);
     if (fmt === 'json') {
-      logResponse(method, url.pathname, 200, `export ${col} json`);
+      logResponse(method, url.pathname, 200, `${col}  ${count} records  ${kb} KB`);
       return json(res, 200, { collection: col, format: 'json', data });
     }
     if (fmt === 'js' || fmt === 'module') {
@@ -1049,7 +1137,7 @@ async function route(req, res) {
         : `const ${constName} = ${body};\n`;
       res.writeHead(200, { 'Content-Type':'application/javascript', 'Access-Control-Allow-Origin':'*' });
       res.end(src);
-      logResponse(method, url.pathname, 200, `export ${col} ${fmt}`);
+      logResponse(method, url.pathname, 200, `${col}  ${count} records  ${kb} KB  (${fmt})`);
       return;
     }
     logResponse(method, url.pathname, 400, `unknown format "${fmt}"`);
@@ -1062,19 +1150,16 @@ async function route(req, res) {
     try { body = await readBody(req); } catch(e) {
       return json(res, 400, { error:'Invalid JSON' });
     }
-    log('REQUEST', `POST ${type} (create)`, body);
-
     if (type === 'quest') {
       const { id } = body;
       if (!id || !body.type || !body.title || !body.activateNode) {
-        logResponse(method, url.pathname, 400, 'quest create: missing required fields');
+        logResponse(method, url.pathname, 400, 'missing required fields');
         return json(res, 400, { error:'Required fields: id, type, title, activateNode' });
       }
       if (WBAPI.questDb[id]) {
         logResponse(method, url.pathname, 409, `quest "${id}" already exists`);
         return json(res, 409, { error:`Quest "${id}" already exists` });
       }
-      log('LOGIC', `Creating quest "${id}" — serializing to QUEST_DB`);
       const entry = serializeQuestLiteral(id, body);
       const ins = insertBeforeSectionClose('QUEST_DB', entry);
       if (!ins.ok) { logResponse(method, url.pathname, 500, ins.error); return json(res, 500, ins); }
@@ -1082,7 +1167,10 @@ async function route(req, res) {
       WBAPI.questDb[id] = Object.fromEntries(Object.entries(body).filter(([k]) => !FN_FIELDS.includes(k)));
       WBAPI._buildIndexes();
       const hasFns = FN_FIELDS.some(f => body[f] !== undefined);
-      logResponse(method, url.pathname, 201, `created quest "${id}"`);
+      logRow('id', id);
+      logRow('title', `${body.title}  ·  type: ${body.type}  ·  node: ${body.activateNode}`);
+      if (hasFns) logRow('note', 'function fields written — POST /api/save then /api/reload');
+      logResponse(method, url.pathname, 201, `created quest/${id}`);
       return json(res, 201, {
         ok:true, id,
         note: hasFns
@@ -1095,14 +1183,13 @@ async function route(req, res) {
     if (type === 'node') {
       const code = body.code;
       if (!code || !body.name || !body.label || body.act === undefined) {
-        logResponse(method, url.pathname, 400, 'node create: missing required fields');
+        logResponse(method, url.pathname, 400, 'missing required fields');
         return json(res, 400, { error:'Required fields: code, name, label, act' });
       }
       if (WBAPI.nodeMap[code]) {
         logResponse(method, url.pathname, 409, `node "${code}" already exists`);
         return json(res, 409, { error:`Node "${code}" already exists` });
       }
-      log('LOGIC', `Creating node "${code}" — serializing to NODE_MAP`);
       const entry = serializeNodeLiteral(code, body);
       const ins = insertBeforeSectionClose('NODE_MAP', entry);
       if (!ins.ok) { logResponse(method, url.pathname, 500, ins.error); return json(res, 500, ins); }
@@ -1110,7 +1197,9 @@ async function route(req, res) {
       const { code: _code, ...nodeFields } = body;
       WBAPI.nodeMap[code] = { ...nodeFields, num: body.num !== undefined ? Number(body.num) : maxNum + 1 };
       WBAPI._buildIndexes();
-      logResponse(method, url.pathname, 201, `created node "${code}"`);
+      logRow('code', code);
+      logRow('label', `${body.label}  ·  Act ${body.act}  ·  terrain: ${body.name||'—'}`);
+      logResponse(method, url.pathname, 201, `created node/${code}`);
       return json(res, 201, { ok:true, code, note:'POST /api/save to persist.', ...nodeConnections(code) });
     }
 
@@ -1130,13 +1219,14 @@ async function route(req, res) {
         logResponse(method, url.pathname, 400, `unknown monster keys: ${badKeys.join(', ')}`);
         return json(res, 400, { error:`Monster keys not in MONSTER_POOL: ${badKeys.join(', ')}` });
       }
-      log('LOGIC', `Creating terrain "${key}" with ${monsterKeys.length} monsters`);
       const entry = serializeTerrainLiteral(key, body);
       const ins = insertBeforeSectionClose('WORLD_DB', entry);
       if (!ins.ok) { logResponse(method, url.pathname, 500, ins.error); return json(res, 500, ins); }
       WBAPI.worldDb[key] = { label: body.label || key, icon: body.icon || '', monsters: monsterKeys };
       WBAPI._buildIndexes();
-      logResponse(method, url.pathname, 201, `created terrain "${key}"`);
+      logRow('key', `${key}  ·  ${body.icon||''}  ${body.label||key}`);
+      logRow('monsters', `${monsterKeys.length}  →  ${sample(monsterKeys, 4)}`);
+      logResponse(method, url.pathname, 201, `created terrain/${key}`);
       return json(res, 201, { ok:true, key, note:'POST /api/save to persist.',
         entity: WBAPI.worldDb[key], connections: { monsters: monsterKeys } });
     }
@@ -1144,21 +1234,22 @@ async function route(req, res) {
     if (type === 'monster') {
       const key = body.key;
       if (!key || !body.name) {
-        logResponse(method, url.pathname, 400, 'monster create: missing body.key or body.name');
+        logResponse(method, url.pathname, 400, 'missing key or name');
         return json(res, 400, { error:'Required fields: key, name. Optional: ac, hp, atk, dmg, xp, tier, desc' });
       }
       if (WBAPI.monsterPool[key]) {
         logResponse(method, url.pathname, 409, `monster "${key}" already exists`);
         return json(res, 409, { error:`Monster "${key}" already exists` });
       }
-      log('LOGIC', `Creating monster "${key}"`);
       const entry = serializeMonsterLiteral(key, body);
       const ins = insertBeforeSectionClose('MONSTER_POOL', entry);
       if (!ins.ok) { logResponse(method, url.pathname, 500, ins.error); return json(res, 500, ins); }
       const { key: _k, ...mFields } = body;
       WBAPI.monsterPool[key] = mFields;
       WBAPI._buildIndexes();
-      logResponse(method, url.pathname, 201, `created monster "${key}"`);
+      logRow('key', key);
+      logRow('stats', `${body.name}  ·  AC ${body.ac||'?'}  HP ${body.hp||'?'}  ATK +${body.atk||'?'}  tier: ${body.tier||'?'}`);
+      logResponse(method, url.pathname, 201, `created monster/${key}`);
       return json(res, 201, { ok:true, key, note:'POST /api/save to persist.', entity: WBAPI.monsterPool[key] });
     }
   }
@@ -1169,7 +1260,6 @@ async function route(req, res) {
     const arcFilter  = url.searchParams.get('arc');
     const typeFilter = url.searchParams.get('type');
     if (nodeFilter || arcFilter || typeFilter) {
-      log('LOGIC', `Quest filter: node=${nodeFilter} arc=${arcFilter} type=${typeFilter}`);
       let list = WBAPI.quests.all();
       if (nodeFilter) list = list.filter(q => q.activateNode===nodeFilter || q.waypointNode===nodeFilter);
       if (typeFilter) list = list.filter(q => q.type === typeFilter);
@@ -1180,6 +1270,10 @@ async function route(req, res) {
         _meta:{ downstream:WBAPI.quests.chain(q.id).downstream.length,
                 canDelete:WBAPI.quests.chain(q.id).downstream.length === 0 }
       }));
+      const filters2 = [nodeFilter&&`node=${nodeFilter}`, arcFilter&&`arc=${arcFilter}`, typeFilter&&`type=${typeFilter}`].filter(Boolean);
+      logRow('filter', filters2.join('  '));
+      logRow('matched', `${out.length} of ${WBAPI.quests.all().length}`);
+      logRow('sample', sample(out, 4));
       logResponse(method, url.pathname, 200, `${out.length} quests`);
       return json(res, 200, out);
     }
@@ -1192,10 +1286,12 @@ async function route(req, res) {
 
   // ── Location (composite) ──
   if (type === 'location') {
-    log('LOGIC', `Location composite view for "${rawId}"`);
     const r = locationConnections(rawId);
     if (r) {
-      logResponse(method, url.pathname, 200, `location ${rawId} — ${r.monsters?.length||0} monsters, ${r.quests?.length||0} quests`);
+      const node = WBAPI.nodeMap[rawId] || {};
+      logRow('location', `${rawId}  ·  ${node.label||rawId}  ·  Act ${node.act||'?'}`);
+      logRow('connections', `${r.monsters?.length||0} monsters  ·  ${r.quests?.length||0} quests  ·  ${r.npcs?.length||0} NPCs`);
+      logResponse(method, url.pathname, 200, `location/${rawId}`);
       return json(res, 200, r);
     }
     logResponse(method, url.pathname, 404, `location "${rawId}" not found`);
@@ -1212,14 +1308,16 @@ async function route(req, res) {
     }
 
     if (method === 'GET') {
-      log('LOGIC', `GET terrain "${tk}" — ${(WBAPI._terrainToMonsters[tk]||[]).length} monsters`);
       const monsterList = (WBAPI._terrainToMonsters[tk]||[]).map(mk => ({
         key: mk, name: WBAPI.monsterPool[mk]?.name||mk, tier: WBAPI.monsterPool[mk]?.tier||'?'
       }));
       const nodes = Object.entries(WBAPI.nodeMap)
         .filter(([,n])=>n.name===tk)
         .map(([code,n])=>({ code, label:n.label, act:n.act }));
-      logResponse(method, url.pathname, 200, `terrain:${tk} — ${monsterList.length} monsters, ${nodes.length} nodes`);
+      logRow('terrain', `${t.icon||''}  ${t.label||tk}`);
+      logRow('monsters', `${monsterList.length}  →  ${sample(monsterList.map(m=>m.name), 4)}`);
+      logRow('nodes', nodes.length ? sample(nodes.map(n=>n.code), 6) : '(none)');
+      logResponse(method, url.pathname, 200, `terrain/${tk}  ·  ${monsterList.length} monsters  ·  ${nodes.length} nodes`);
       return json(res, 200, {
         entity: { ...t, key:tk },
         connections: { monsters: monsterList, nodes },
@@ -1232,17 +1330,14 @@ async function route(req, res) {
       try { body = await readBody(req); } catch(e) {
         return json(res, 400, { error:'Invalid JSON' });
       }
-      log('REQUEST', `PUT terrain:${tk}`, body);
       const allowed = ['label','icon'];
       const results = [];
       for (const [field, value] of Object.entries(body)) {
         if (!allowed.includes(field)) {
-          log('LOGIC', `Field "${field}" is not directly editable on terrain (use swapMonster for monsters)`);
           results.push({ field, ok:false, error:`Field "${field}" not directly editable. Editable: ${allowed.join(', ')}` });
           continue;
         }
         if (typeof value === 'string') {
-          log('LOGIC', `Patching terrain "${tk}" field "${field}" → "${value}"`);
           WBAPI.worldDb[tk][field] = value;
           results.push({ field, ok:true });
         } else {
@@ -1250,7 +1345,9 @@ async function route(req, res) {
         }
       }
       const allOk = results.every(r=>r.ok);
-      logResponse(method, url.pathname, allOk ? 200 : 207, `terrain:${tk} — ${results.map(r=>`${r.field}=${r.ok?'ok':'FAIL'}`).join(', ')}`);
+      logRow('target', `terrain › ${tk}`);
+      results.forEach(r => logRow(r.field, r.ok ? `${C.green}✓${C.reset}` : `${C.red}✗ ${r.error}${C.reset}`));
+      logResponse(method, url.pathname, allOk ? 200 : 207, `terrain/${tk} updated`);
       return json(res, allOk ? 200 : 207, {
         ok: allOk, fields: results,
         entity: { ...WBAPI.worldDb[tk], key:tk },
@@ -1281,7 +1378,8 @@ async function route(req, res) {
         type:        WBAPI.questDb[id]?.type,
         activateNode:WBAPI.questDb[id]?.activateNode,
       });
-      log('LOGIC', `Chain for "${key}" — up:${chain.upstream.length}, down:${chain.downstream.length}`);
+      logRow('quest', `${key}  ·  ${WBAPI.questDb[key]?.title||'—'}`);
+      logRow('chain', `↑${chain.upstream.length} upstream  ·  ↓${chain.downstream.length} downstream  ·  ${chain.upstream.length+1+chain.downstream.length} total`);
       logResponse(method, url.pathname, 200,
         `chain for "${key}" — length ${chain.upstream.length + 1 + chain.downstream.length}`);
       return json(res, 200, {
@@ -1293,14 +1391,31 @@ async function route(req, res) {
       });
     }
 
-    log('LOGIC', `GET ${type} "${key}" — building connection envelope`);
     const r = CONNECT[type](key);
     if (r) {
-      const connSummary = Object.entries(r.connections||{})
-        .filter(([,v]) => Array.isArray(v) ? v.length : v)
-        .map(([k,v]) => `${k}:${Array.isArray(v)?v.length:1}`)
-        .join(', ');
-      logResponse(method, url.pathname, 200, `${type}:${key} — connections: ${connSummary || 'none'}, canDelete:${r._meta?.canDelete}`);
+      // Rich entity breadcrumb based on type
+      const ent = r.entity || {};
+      if (type === 'node') {
+        const exits = Object.entries(r.connections?.linkedNodes||{}).filter(([,v])=>v).map(([d,c])=>`${d}:${c}`).join(' ');
+        logRow('entity', `${ent.label||key}  ·  Act ${ent.act}  ·  terrain: ${ent.name||'—'}`);
+        logRow('connections', `${(r.connections?.quests||[]).length} quests  ·  ${(r.connections?.npcs||[]).length} NPCs  ·  ${(r.connections?.monsters||[]).length} monsters${exits?' ·  exits: '+exits:''}`);
+      } else if (type === 'quest') {
+        logRow('entity', `${ent.title||key}  ·  type: ${ent.type}  ·  node: ${ent.activateNode||'—'}`);
+        const up = (r.connections?.upstream||[]).length, dn = (r.connections?.downstream||[]).length;
+        logRow('chain', `↑${up} upstream  ·  ↓${dn} downstream${ent.npc?' ·  NPC: '+ent.npc:''}`);
+      } else if (type === 'monster') {
+        logRow('entity', `${ent.name||key}  ·  AC ${ent.ac}  HP ${ent.hp}  ATK +${ent.atk}  tier: ${ent.tier||'?'}`);
+        logRow('terrains', `${(r.connections?.terrains||[]).length} terrains${r.connections?.drop?' ·  drop: '+r.connections.drop.name:''}`);
+      } else if (type === 'npc') {
+        logRow('entity', `${ent.name||key}  ·  ${ent.occupation||''}  ·  node: ${ent.node||'—'}`);
+      } else {
+        const connSummary = Object.entries(r.connections||{})
+          .filter(([,v]) => Array.isArray(v) ? v.length : v)
+          .map(([k,v]) => `${k}:${Array.isArray(v)?v.length:1}`).join('  ·  ');
+        if (connSummary) logRow('connections', connSummary);
+      }
+      logRow('can delete', r._meta?.canDelete ? `${C.green}yes${C.reset}` : `${C.red}no — blocked by ${JSON.stringify(r._meta?.blockedBy||{})}${C.reset}`);
+      logResponse(method, url.pathname, 200, `${type}/${key}`);
       return json(res, 200, r);
     }
     logResponse(method, url.pathname, 404, `${type} "${rawId}" not found`);
@@ -1314,20 +1429,15 @@ async function route(req, res) {
       logResponse(method, url.pathname, 400, `Invalid JSON: ${e.message}`);
       return json(res, 400, { error:'Invalid JSON' });
     }
-    log('REQUEST', `PUT body for ${type}:${key}`, body);
-
     const col = { node:WBAPI.nodeMap, quest:WBAPI.questDb, monster:WBAPI.monsterPool, npc:WBAPI.birkaNpcs }[type];
     const resolvedKey = WBAPI._findKey(col, rawId) || rawId;
 
     const results = [];
     for (const [field, value] of Object.entries(body)) {
       if (typeof value === 'string') {
-        log('LOGIC', `Field "${field}" is string → editField (patches _rawSrc)`);
         const r = WBAPI.editField(type, resolvedKey, field, value);
-        if (!r.ok) log('LOGIC', `editField failed for "${field}": ${r.error}`);
         results.push({ field, ok: r.ok, error: r.error, strategy: 'editField' });
       } else {
-        log('LOGIC', `Field "${field}" is ${typeof value} → ns.put (in-memory)`);
         const ns = { node:WBAPI.nodes, quest:WBAPI.quests, monster:WBAPI.monsters, npc:WBAPI.npcs }[type];
         const r = ns.put(resolvedKey, { [field]: value });
         results.push({ field, ok: r.ok, strategy: 'put' });
@@ -1337,8 +1447,10 @@ async function route(req, res) {
     const allOk = results.every(r => r.ok);
     const failed = results.filter(r => !r.ok).map(r => r.field);
     const updated = CONNECT[type](resolvedKey);
+    logRow('target', `${type} › ${resolvedKey}`);
+    results.forEach(r => logRow(r.field, r.ok ? `${C.green}✓${C.reset} updated` : `${C.red}✗ ${r.error||'failed'}${C.reset}`));
     logResponse(method, url.pathname, allOk ? 200 : 207,
-      `${type}:${key} — ${results.length} fields: ${results.map(r=>`${r.field}=${r.ok?'ok':'FAIL'}`).join(', ')}`);
+      `${results.length} field${results.length>1?'s':''} updated${failed.length?' — '+failed.length+' failed':''}`);
     return json(res, allOk ? 200 : 207, { ok: allOk, fields: results,
       ...(failed.length ? { failed } : {}), ...updated });
   }
@@ -1364,17 +1476,18 @@ async function route(req, res) {
     }
 
     if (!r._meta.canDelete) {
-      log('LOGIC', `DELETE blocked — nested content: ${JSON.stringify(r._meta.blockedBy)}`);
+      logRow('DELETE blocked', JSON.stringify(r._meta.blockedBy));
       logResponse(method, url.pathname, 409, `DELETE blocked for ${type}:${key}`);
       return json(res, 409, { ok:false, error:'Delete blocked — nested content exists',
         blockedBy: r._meta.blockedBy, connections: r.connections });
     }
 
-    log('LOGIC', `DELETE ${type}:${key} — no blockers, proceeding`);
     const ns = { node:WBAPI.nodes, quest:WBAPI.quests, monster:WBAPI.monsters, npc:WBAPI.npcs }[type];
     const del = ns.delete(key);
+    const ent = r.entity || {};
+    logRow('deleted', `${type} › ${key}${ent.label||ent.name||ent.title ? '  ·  ' + (ent.label||ent.name||ent.title) : ''}`);
     logResponse(method, url.pathname, del.ok ? 200 : 409,
-      del.ok ? `deleted ${type}:${key}` : del.error);
+      del.ok ? `deleted ${type}/${key}` : del.error);
     return json(res, del.ok ? 200 : 409, { ...del, wasEntity: r.entity });
   }
 
@@ -1385,18 +1498,16 @@ async function route(req, res) {
       logResponse(method, url.pathname, 400, `Invalid JSON: ${e.message}`);
       return json(res, 400, { error:'Invalid JSON' });
     }
-    log('REQUEST', `POST ${action} for ${type}:${key}`, body);
-
     // POST /api/monster/:id/rename
     if (action === 'rename') {
       if (!body.name) {
         logResponse(method, url.pathname, 400, 'body.name required');
         return json(res, 400, { error:'body.name required' });
       }
-      log('LOGIC', `Rename monster "${key}" display name → "${body.name}" (key unchanged)`);
       const r = WBAPI.monsters.rename(key, body.name);
-      logResponse(method, url.pathname, r.ok ? 200 : 400,
-        r.ok ? `renamed "${r.from}" → "${r.to}" (key:${key}, ${r.terrains.length} terrains)` : r.error);
+      logRow('monster', key);
+      logRow('rename', r.ok ? `"${r.from}" → "${r.to}"  (key unchanged  ·  ${r.terrains?.length||0} terrains)` : r.error);
+      logResponse(method, url.pathname, r.ok ? 200 : 400, r.ok ? `renamed` : r.error);
       return json(res, r.ok ? 200 : 400, { ...r, ...(r.ok ? monsterConnections(key) : {}) });
     }
 
@@ -1406,10 +1517,10 @@ async function route(req, res) {
         logResponse(method, url.pathname, 400, 'body.newKey required');
         return json(res, 400, { error:'body.newKey required' });
       }
-      log('LOGIC', `Fork monster "${key}" → new key "${body.newKey}", overrides: ${JSON.stringify(body.overrides||{})}`);
       const r = WBAPI.monsters.fork(key, body.newKey, body.overrides);
-      logResponse(method, url.pathname, r.ok ? 201 : 400,
-        r.ok ? `forked ${key} → ${body.newKey}` : r.error);
+      logRow('fork', `${key}  →  ${body.newKey}`);
+      if (body.overrides) logRow('overrides', JSON.stringify(body.overrides));
+      logResponse(method, url.pathname, r.ok ? 201 : 400, r.ok ? `forked ${key} → ${body.newKey}` : r.error);
       return json(res, r.ok ? 201 : 400, { ...r, ...(r.ok ? monsterConnections(body.newKey) : {}) });
     }
 
@@ -1419,10 +1530,10 @@ async function route(req, res) {
         logResponse(method, url.pathname, 400, 'body.oldKey and body.newKey required');
         return json(res, 400, { error:'body.oldKey and body.newKey required' });
       }
-      log('LOGIC', `Swap monster in terrain "${key}": "${body.oldKey}" → "${body.newKey}"`);
       const r = WBAPI.worlds.swapMonster(key, body.oldKey, body.newKey);
-      logResponse(method, url.pathname, r.ok ? 200 : 400,
-        r.ok ? `swapped ${body.oldKey} → ${body.newKey} in ${key}` : r.error);
+      logRow('terrain', key);
+      logRow('swap', `${body.oldKey}  →  ${body.newKey}`);
+      logResponse(method, url.pathname, r.ok ? 200 : 400, r.ok ? `swapped in terrain/${key}` : r.error);
       return json(res, r.ok ? 200 : 400, r);
     }
 
@@ -1440,7 +1551,6 @@ async function route(req, res) {
         logResponse(method, url.pathname, 409, `Code "${body.newCode}" already exists`);
         return json(res, 409, { error:`Code "${body.newCode}" already exists` });
       }
-      log('LOGIC', `Move node "${key}" → "${body.newCode}" — rewriting quest/NPC refs`);
       WBAPI.nodeMap[body.newCode] = { ...WBAPI.nodeMap[key] };
       if (WBAPI.nodeCoords[key]) { WBAPI.nodeCoords[body.newCode] = WBAPI.nodeCoords[key]; delete WBAPI.nodeCoords[key]; }
       let qUpdated = 0, nUpdated = 0;
@@ -1449,10 +1559,11 @@ async function route(req, res) {
           if (q[f] === key) { q[f] = body.newCode; qUpdated++; }
       for (const n of Object.values(WBAPI.birkaNpcs))
         if (n.node === key) { n.node = body.newCode; nUpdated++; }
-      log('LOGIC', `Node move complete: ${qUpdated} quests updated, ${nUpdated} NPCs updated`);
       delete WBAPI.nodeMap[key];
       WBAPI._buildIndexes();
-      logResponse(method, url.pathname, 200, `moved ${key} → ${body.newCode}, quests:${qUpdated}, npcs:${nUpdated}`);
+      logRow('move', `${key}  →  ${body.newCode}`);
+      logRow('updated refs', `${qUpdated} quests  ·  ${nUpdated} NPCs`);
+      logResponse(method, url.pathname, 200, `moved node/${key} → ${body.newCode}`);
       return json(res, 200, { ok:true, from:key, to:body.newCode, questsUpdated:qUpdated, npcsUpdated:nUpdated,
         ...nodeConnections(body.newCode) });
     }
