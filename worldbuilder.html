@@ -238,9 +238,8 @@ select.fi{appearance:none;}
   <div class="nav-sep"></div>
   <div id="topbar-right">
     <span id="server-indicator" class="offline" style="display:none">○ Browser only</span>
-    <button class="btn" id="btn-load-server" style="display:none" title="Fetch roll2hit-v3.html directly from the running server">⚡ Load from Server</button>
-    <label id="file-drop" for="file-input">📂 <span id="file-label">Load roll2hit-v3.html</span></label>
-    <input type="file" id="file-input" accept=".html">
+    <label id="file-drop">📂 <span id="file-label">Load roll2hit-v3.html</span></label>
+    <input type="file" id="file-input" accept=".html" style="display:none">
     <span id="diff-badge" class="badge yellow" style="display:none">0 changes</span>
     <button class="btn" id="btn-diff" disabled>Diff</button>
     <button class="btn primary" id="btn-apply-patch" disabled>Save</button>
@@ -1474,8 +1473,13 @@ async function serverDetect() {
       ind.title = `Connected: ${SERVER.url}\n${d.nodes} nodes · ${d.quests} quests · ${d.monsters} monsters`;
       ind.style.display = '';
       $('btn-apply-patch').textContent = 'Save to File';
-      $('btn-load-server').style.display = '';
-      $('btn-load-server').title = `Fetch ${d.file} from ${SERVER.url}`;
+      // Switch load button to server mode
+      const drop = $('file-drop');
+      drop.removeAttribute('for');
+      drop.style.borderColor = 'var(--green)';
+      drop.style.color = 'var(--green)';
+      drop.title = `⚡ Load ${d.file} from ${SERVER.url}`;
+      $('file-label').textContent = d.file + ' (server)';
       if (WBAPI.loaded && window._auditEnableServer) window._auditEnableServer();
       return;
     }
@@ -1485,23 +1489,37 @@ async function serverDetect() {
   ind.textContent = '○ Browser only';
   ind.title = 'Start wbapi-server.js (./start-wbapi.sh) to enable server-side saves';
   ind.style.display = '';
-  $('btn-load-server').style.display = 'none';
+  // Restore load button to file-picker mode
+  const drop = $('file-drop');
+  drop.setAttribute('for', 'file-input');
+  drop.style.borderColor = '';
+  drop.style.color = '';
+  drop.title = '';
+  if (!WBAPI.loaded) $('file-label').textContent = 'Load roll2hit-v3.html';
   $('btn-apply-patch').textContent = 'Export Patched';
 }
 
-$('btn-load-server').addEventListener('click', async () => {
-  const btn = $('btn-load-server');
-  btn.disabled = true; btn.textContent = '⏳ Loading…';
+// File-drop click: use server API when connected, otherwise open file picker
+$('file-drop').addEventListener('click', async (e) => {
+  if (!SERVER.active) {
+    $('file-input').click();
+    return;
+  }
+  const drop = $('file-drop');
+  const orig = $('file-label').textContent;
+  $('file-label').textContent = '⏳ Loading…';
+  drop.style.pointerEvents = 'none';
   try {
     const r = await fetch(`${SERVER.url}/api/source`);
     if (!r.ok) throw new Error(`Server returned ${r.status}`);
     const text = await r.text();
     loadFile(text);
-    btn.textContent = '✓ Loaded';
-    setTimeout(() => { btn.textContent = '⚡ Load from Server'; btn.disabled = false; }, 2000);
-  } catch(e) {
-    alert('Failed to load from server: ' + e.message);
-    btn.textContent = '⚡ Load from Server'; btn.disabled = false;
+    $('file-label').textContent = '✓ Loaded';
+    setTimeout(() => { $('file-label').textContent = orig; drop.style.pointerEvents = ''; }, 2000);
+  } catch(err) {
+    alert('Failed to load from server: ' + err.message);
+    $('file-label').textContent = orig;
+    drop.style.pointerEvents = '';
   }
 });
 
