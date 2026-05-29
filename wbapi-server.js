@@ -687,6 +687,100 @@ async function route(req, res) {
     }
   }
 
+  // ── Audit (data integrity scan) ───────────────────────────────────────────
+  if (parts[0] === 'audit' && method === 'GET') {
+    const errors = [], warnings = [], suggestions = [], parse = [];
+
+    const monsterKeys  = new Set(Object.keys(WBAPI.monsterPool));
+    const dropKeys     = new Set(Object.keys(WBAPI.monsterDrops));
+    const nodeKeys     = new Set(Object.keys(WBAPI.nodeMap));
+    const terrainKeys  = new Set(Object.keys(WBAPI.worldDb));
+    const coordKeys    = new Set(Object.keys(WBAPI.nodeCoords));
+    const allFish      = [...WBAPI.fishPool, ...WBAPI.nightFishPool];
+    const questNodesReferenced = new Set();
+
+    // Parse health
+    [
+      ['MONSTER_POOL',  Object.keys(WBAPI.monsterPool),   'monsters'],
+      ['MONSTER_DROPS', Object.keys(WBAPI.monsterDrops),  'drops'],
+      ['WORLD_DB',      Object.keys(WBAPI.worldDb),       'terrains'],
+      ['NODE_MAP',      Object.keys(WBAPI.nodeMap),       'nodes'],
+      ['NODE_COORDS',   Object.keys(WBAPI.nodeCoords),    'coords'],
+      ['QUEST_DB',      Object.keys(WBAPI.questDb),       'quests'],
+      ['BIRKA_NPC',     Object.keys(WBAPI.birkaNpcs),     'npcs'],
+      ['FISH_DB',       allFish,                          'fish'],
+      ['LAKE_MAGIC',    Object.keys(WBAPI.lakeMagicDb),   'lake magic'],
+    ].forEach(([name, val, label]) => {
+      const count = val.length;
+      parse.push({ section:name, count, ok: count > 0,
+        msg: count > 0 ? `${count} ${label} parsed` : `0 ${label} — section empty or failed` });
+    });
+
+    // ERRORS
+    for (const [tk, terrain] of Object.entries(WBAPI.worldDb))
+      for (const m of (terrain.monsters||[])) {
+        const mk = typeof m==='string'?m:m?.key;
+        if (mk && !monsterKeys.has(mk))
+          errors.push({ section:'WORLD_DB', key:tk, field:'monsters', msg:`references monster "${mk}" not in MONSTER_POOL` });
+      }
+    for (const [code, node] of Object.entries(WBAPI.nodeMap))
+      if (node.name && !terrainKeys.has(node.name))
+        errors.push({ section:'NODE_MAP', key:code, field:'name', msg:`terrain "${node.name}" not found in WORLD_DB` });
+    for (const [id, q] of Object.entries(WBAPI.questDb)) {
+      if (q.activateNode) { questNodesReferenced.add(q.activateNode); if (!nodeKeys.has(q.activateNode)) errors.push({ section:'QUEST_DB', key:id, field:'activateNode', msg:`node "${q.activateNode}" not in NODE_MAP` }); }
+      if (q.waypointNode) { questNodesReferenced.add(q.waypointNode); if (!nodeKeys.has(q.waypointNode)) errors.push({ section:'QUEST_DB', key:id, field:'waypointNode', msg:`node "${q.waypointNode}" not in NODE_MAP` }); }
+    }
+    for (const [key, npc] of Object.entries(WBAPI.birkaNpcs))
+      if (npc.node && !nodeKeys.has(npc.node))
+        errors.push({ section:'BIRKA_NPC', key, field:'node', msg:`node "${npc.node}" not in NODE_MAP` });
+    for (const dk of dropKeys)
+      if (!monsterKeys.has(dk))
+        errors.push({ section:'MONSTER_DROPS', key:dk, field:'key', msg:`drop entry has no matching MONSTER_POOL entry` });
+    for (const f of allFish)
+      if (!monsterKeys.has(f.key))
+        errors.push({ section:'FISH_DB', key:f.key, field:'key', msg:`fish "${f.name}" has no MONSTER_POOL entry — combat stats missing` });
+
+    // WARNINGS
+    for (const mk of monsterKeys)
+      if (!dropKeys.has(mk))
+        warnings.push({ section:'MONSTER_POOL', key:mk, field:'drops', msg:`no MONSTER_DROPS entry — creature drops nothing` });
+    for (const f of allFish)
+      if (!dropKeys.has(f.key))
+        warnings.push({ section:'FISH_DB', key:f.key, field:'drops', msg:`fish "${f.name}" has no MONSTER_DROPS entry` });
+    for (const [id, q] of Object.entries(WBAPI.questDb)) {
+      if (!q.title) warnings.push({ section:'QUEST_DB', key:id, field:'title', msg:`missing title field` });
+      if (!q.desc)  warnings.push({ section:'QUEST_DB', key:id, field:'desc',  msg:`missing desc field` });
+    }
+    for (const [tk, terrain] of Object.entries(WBAPI.worldDb))
+      if (!terrain.monsters || !terrain.monsters.length)
+        warnings.push({ section:'WORLD_DB', key:tk, field:'monsters', msg:`terrain has no monsters defined` });
+    for (const [code, node] of Object.entries(WBAPI.nodeMap))
+      if (node.battle && (!node.name || !terrainKeys.has(node.name)))
+        warnings.push({ section:'NODE_MAP', key:code, field:'battle', msg:`battle:true but terrain "${node.name||'(none)'}" not in WORLD_DB` });
+    for (const [key, item] of Object.entries(WBAPI.lakeMagicDb))
+      if (item.minRank > 20)
+        warnings.push({ section:'LAKE_MAGIC', key, field:'minRank', msg:`minRank ${item.minRank} exceeds max fish rank (20) — item unreachable` });
+
+    // SUGGESTIONS
+    const usedMonsters = new Set();
+    for (const t of Object.values(WBAPI.worldDb))
+      for (const m of (t.monsters||[])) usedMonsters.add(typeof m==='string'?m:m?.key);
+    for (const mk of monsterKeys)
+      if (!usedMonsters.has(mk) && !allFish.some(f=>f.key===mk))
+        suggestions.push({ section:'MONSTER_POOL', key:mk, field:'terrains', msg:`not used in any WORLD_DB terrain` });
+    for (const code of nodeKeys)
+      if (!questNodesReferenced.has(code))
+        suggestions.push({ section:'NODE_MAP', key:code, field:'quests', msg:`no quests reference this node` });
+    for (const code of nodeKeys)
+      if (!coordKeys.has(code))
+        suggestions.push({ section:'NODE_COORDS', key:code, field:'coords', msg:`node has no entry in NODE_COORDS — won't appear on map` });
+
+    const summary = { errors: errors.length, warnings: warnings.length, suggestions: suggestions.length };
+    log('LOGIC', `Audit: ${summary.errors} errors, ${summary.warnings} warnings, ${summary.suggestions} suggestions`);
+    logResponse(method, url.pathname, 200, `audit complete`);
+    return json(res, 200, { ok:true, errors, warnings, suggestions, parse, summary });
+  }
+
   // ── Flags (_S_DEFAULTS) ───────────────────────────────────────────────────
   if (parts[0] === 'flags') {
     if (method === 'GET') {
@@ -1189,6 +1283,7 @@ server.listen(PORT, '127.0.0.1', () => {
   console.log(`\n  ${C.dim}Endpoints:${C.reset}`);
   const routes = [
     ['GET',    '/api/ping'],
+    ['GET',    '/api/audit                          → data integrity scan (errors/warnings/suggestions)'],
     ['GET',    '/api/schema[/{type}]                → canonical field schema'],
     ['GET',    '/api/flags                          → list _S_DEFAULTS flags'],
     ['POST',   '/api/flags                          body: {name, defaultValue, comment?}'],

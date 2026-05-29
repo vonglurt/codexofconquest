@@ -189,6 +189,7 @@ select.fi{appearance:none;}
   <div class="nav-tab" data-tab="quests">📜 Quests</div>
   <div class="nav-tab" data-tab="dice">🎲 Dice Lab</div>
   <div class="nav-tab" data-tab="api">⚙ API</div>
+  <div class="nav-tab" data-tab="audit">🔍 Audit</div>
   <div class="nav-sep"></div>
   <div id="topbar-right">
     <span id="server-indicator" class="offline" style="display:none">○ Browser only</span>
@@ -518,6 +519,32 @@ select.fi{appearance:none;}
       </div>
       <pre id="api-schema" style="background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:10px;font-size:11px;overflow:auto;max-height:200px;white-space:pre-wrap;margin-top:8px;display:none;color:var(--text)"></pre>
     </div>
+
+  </div>
+
+  <!-- ── Audit Tab ──────────────────────────────────────────── -->
+  <div class="panel" id="tab-audit" style="overflow-y:auto;padding:16px;flex-direction:column;gap:12px">
+
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;flex:1">Data Integrity Audit</div>
+      <button class="btn primary" id="btn-run-audit" disabled>Run Audit</button>
+      <button class="btn" id="btn-audit-server" style="font-size:11px" disabled>Via Server</button>
+    </div>
+
+    <!-- Summary bar -->
+    <div id="audit-summary" style="display:none;font-size:12px;padding:8px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;display:flex;gap:18px;align-items:center;flex-wrap:wrap"></div>
+
+    <!-- Filter chips -->
+    <div id="audit-filters" style="display:none;display:flex;gap:6px;flex-wrap:wrap">
+      <button class="btn audit-filter active" data-filter="all"  style="font-size:11px">All</button>
+      <button class="btn audit-filter"        data-filter="error"       style="font-size:11px;color:var(--red)">🔴 Errors</button>
+      <button class="btn audit-filter"        data-filter="warning"     style="font-size:11px;color:var(--yellow)">🟡 Warnings</button>
+      <button class="btn audit-filter"        data-filter="suggestion"  style="font-size:11px;color:var(--accent)">💡 Suggestions</button>
+      <button class="btn audit-filter"        data-filter="parse"       style="font-size:11px;color:var(--purple)">🧩 Parse Health</button>
+    </div>
+
+    <!-- Issue list -->
+    <div id="audit-list" style="display:flex;flex-direction:column;gap:4px"></div>
 
   </div>
 
@@ -1066,6 +1093,169 @@ const WBAPI = {
       return { roll:r, mod, prof, total, dc, pass: total>=dc, nat20: r===20, nat1: r===1 };
     },
   },
+
+  // ── Audit: data integrity scan ──
+  audit() {
+    const errors = [], warnings = [], suggestions = [], parse = [];
+
+    // ── Parse health ──
+    const sections = [
+      { name:'MONSTER_POOL',  val: Object.keys(this.monsterPool),   label:'monsters'    },
+      { name:'MONSTER_DROPS', val: Object.keys(this.monsterDrops),  label:'drops'       },
+      { name:'WORLD_DB',      val: Object.keys(this.worldDb),       label:'terrains'    },
+      { name:'NODE_MAP',      val: Object.keys(this.nodeMap),        label:'nodes'       },
+      { name:'NODE_COORDS',   val: Object.keys(this.nodeCoords),     label:'coords'      },
+      { name:'QUEST_DB',      val: Object.keys(this.questDb),        label:'quests'      },
+      { name:'BIRKA_NPC',     val: Object.keys(this.birkaNpcs),      label:'npcs'        },
+      { name:'FISH_DB',       val: [...this.fishPool,...this.nightFishPool], label:'fish' },
+      { name:'LAKE_MAGIC',    val: Object.keys(this.lakeMagicDb),    label:'lake magic'  },
+    ];
+    for (const s of sections) {
+      const count = s.val.length;
+      parse.push({ section: s.name, count, ok: count > 0,
+        msg: count > 0 ? `${count} ${s.label} parsed` : `0 ${s.label} — section empty or failed to parse` });
+    }
+
+    const monsterKeys   = new Set(Object.keys(this.monsterPool));
+    const dropKeys      = new Set(Object.keys(this.monsterDrops));
+    const nodeKeys      = new Set(Object.keys(this.nodeMap));
+    const terrainKeys   = new Set(Object.keys(this.worldDb));
+    const coordKeys     = new Set(Object.keys(this.nodeCoords));
+    const questNodesReferenced = new Set();
+
+    // ── ERRORS ──
+
+    // Monster pool entries referenced in terrain that don't exist
+    for (const [tk, terrain] of Object.entries(this.worldDb)) {
+      for (const m of (terrain.monsters || [])) {
+        const mk = typeof m === 'string' ? m : m?.key;
+        if (mk && !monsterKeys.has(mk))
+          errors.push({ section:'WORLD_DB', key:tk, field:'monsters', msg:`references monster "${mk}" not in MONSTER_POOL` });
+      }
+    }
+
+    // NODE_MAP nodes whose terrain name is not in WORLD_DB
+    for (const [code, node] of Object.entries(this.nodeMap)) {
+      const terrain = node.name;
+      if (terrain && !terrainKeys.has(terrain))
+        errors.push({ section:'NODE_MAP', key:code, field:'name', msg:`terrain "${terrain}" not found in WORLD_DB` });
+    }
+
+    // QUEST activateNode / waypointNode missing from NODE_MAP
+    for (const [id, q] of Object.entries(this.questDb)) {
+      if (q.activateNode) {
+        questNodesReferenced.add(q.activateNode);
+        if (!nodeKeys.has(q.activateNode))
+          errors.push({ section:'QUEST_DB', key:id, field:'activateNode', msg:`node "${q.activateNode}" not in NODE_MAP` });
+      }
+      if (q.waypointNode) {
+        questNodesReferenced.add(q.waypointNode);
+        if (!nodeKeys.has(q.waypointNode))
+          errors.push({ section:'QUEST_DB', key:id, field:'waypointNode', msg:`node "${q.waypointNode}" not in NODE_MAP` });
+      }
+    }
+
+    // BIRKA_NPC node references missing
+    for (const [key, npc] of Object.entries(this.birkaNpcs)) {
+      if (npc.node && !nodeKeys.has(npc.node))
+        errors.push({ section:'BIRKA_NPC', key, field:'node', msg:`node "${npc.node}" not in NODE_MAP` });
+    }
+
+    // Orphaned MONSTER_DROPS (drop key has no MONSTER_POOL entry)
+    for (const dk of dropKeys) {
+      if (!monsterKeys.has(dk))
+        errors.push({ section:'MONSTER_DROPS', key:dk, field:'key', msg:`drop entry has no matching MONSTER_POOL entry` });
+    }
+
+    // Fish pool entries with no MONSTER_POOL stats (fish are combatable)
+    for (const f of [...this.fishPool, ...this.nightFishPool]) {
+      if (!monsterKeys.has(f.key))
+        errors.push({ section:'FISH_DB', key:f.key, field:'key', msg:`fish "${f.name}" (${f.key}) has no MONSTER_POOL entry — combat stats missing` });
+    }
+
+    // ── WARNINGS ──
+
+    // Monsters with no drops
+    for (const mk of monsterKeys) {
+      if (!dropKeys.has(mk))
+        warnings.push({ section:'MONSTER_POOL', key:mk, field:'drops', msg:`no MONSTER_DROPS entry — creature drops nothing` });
+    }
+
+    // Fish with no drops
+    for (const f of [...this.fishPool, ...this.nightFishPool]) {
+      if (!dropKeys.has(f.key))
+        warnings.push({ section:'FISH_DB', key:f.key, field:'drops', msg:`fish "${f.name}" has no MONSTER_DROPS entry` });
+    }
+
+    // Quest missing title or desc
+    for (const [id, q] of Object.entries(this.questDb)) {
+      if (!q.title) warnings.push({ section:'QUEST_DB', key:id, field:'title', msg:`missing title field` });
+      if (!q.desc)  warnings.push({ section:'QUEST_DB', key:id, field:'desc',  msg:`missing desc field` });
+    }
+
+    // Terrains with no monsters
+    for (const [tk, terrain] of Object.entries(this.worldDb)) {
+      if (!terrain.monsters || terrain.monsters.length === 0)
+        warnings.push({ section:'WORLD_DB', key:tk, field:'monsters', msg:`terrain has no monsters defined` });
+    }
+
+    // Nodes with battle:true but terrain missing
+    for (const [code, node] of Object.entries(this.nodeMap)) {
+      if (node.battle && (!node.name || !terrainKeys.has(node.name)))
+        warnings.push({ section:'NODE_MAP', key:code, field:'battle', msg:`battle:true but terrain "${node.name||'(none)'}" not in WORLD_DB` });
+    }
+
+    // Quest checkPassFlag that doesn't match any quest's S_story write
+    const allWrittenFlags = new Set();
+    for (const { writes } of Object.values(this._questFlags || {}))
+      for (const f of writes) allWrittenFlags.add(f);
+    for (const [id, q] of Object.entries(this.questDb)) {
+      if (q.checkPassFlag && !allWrittenFlags.has(q.checkPassFlag))
+        warnings.push({ section:'QUEST_DB', key:id, field:'checkPassFlag', msg:`flag "${q.checkPassFlag}" is never written by any quest` });
+    }
+
+    // LAKE_MAGIC items with impossible minRank
+    for (const [key, item] of Object.entries(this.lakeMagicDb)) {
+      if (item.minRank > 20)
+        warnings.push({ section:'LAKE_MAGIC', key, field:'minRank', msg:`minRank ${item.minRank} exceeds max fish rank (20) — item unreachable` });
+    }
+
+    // ── SUGGESTIONS ──
+
+    // Monsters not used in any terrain
+    const usedMonsters = new Set();
+    for (const terrain of Object.values(this.worldDb))
+      for (const m of (terrain.monsters || []))
+        usedMonsters.add(typeof m === 'string' ? m : m?.key);
+    for (const mk of monsterKeys) {
+      if (!usedMonsters.has(mk) && !this.fishPool.some(f=>f.key===mk) && !this.nightFishPool.some(f=>f.key===mk))
+        suggestions.push({ section:'MONSTER_POOL', key:mk, field:'terrains', msg:`not used in any WORLD_DB terrain` });
+    }
+
+    // Nodes with no quests assigned (not isolated — just FYI)
+    for (const code of nodeKeys) {
+      if (!questNodesReferenced.has(code))
+        suggestions.push({ section:'NODE_MAP', key:code, field:'quests', msg:`no quests reference this node (activateNode / waypointNode)` });
+    }
+
+    // Nodes with no coordinates
+    for (const code of nodeKeys) {
+      if (!coordKeys.has(code))
+        suggestions.push({ section:'NODE_COORDS', key:code, field:'coords', msg:`node has no entry in NODE_COORDS — won't appear on map` });
+    }
+
+    // Quest flags written by a quest but never read
+    for (const [id, { writes }] of Object.entries(this._questFlags || {})) {
+      for (const f of writes) {
+        const readers = (this._flagToQuests[f] || {}).reads || [];
+        if (readers.length === 0)
+          suggestions.push({ section:'QUEST_DB', key:id, field:`flag:${f}`, msg:`writes flag "${f}" that no quest reads — possible dead-end branch` });
+      }
+    }
+
+    return { errors, warnings, suggestions, parse,
+      summary: { errors: errors.length, warnings: warnings.length, suggestions: suggestions.length } };
+  },
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1196,6 +1386,7 @@ async function serverDetect() {
       ind.title = `Connected: ${SERVER.url}\n${d.nodes} nodes · ${d.quests} quests · ${d.monsters} monsters`;
       ind.style.display = '';
       $('btn-apply-patch').textContent = 'Save to File';
+      if (WBAPI.loaded && window._auditEnableServer) window._auditEnableServer();
       return;
     }
   } catch(_) {}
@@ -1245,7 +1436,7 @@ function loadFile(text) {
   $('npc-cnt').textContent = WBAPI.npcs.all().filter(n=>!n._inline).length;
   $('file-label').textContent = 'roll2hit-v3.html ✓';
   $('map-empty').style.display = 'none';
-  ['btn-diff','btn-apply-patch'].forEach(id => $(id).disabled = false);
+  ['btn-diff','btn-apply-patch','btn-run-audit'].forEach(id => $(id).disabled = false);
   ['btn-save-node','btn-delete-node','btn-add-node'].forEach(id => $(id).disabled = false);
   renderMapNodeList();
   renderMap();
@@ -2436,6 +2627,119 @@ function switchTab(name){
   document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===`tab-${name}`));
 }
 document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>switchTab(t.dataset.tab)));
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Audit Tab
+// ═══════════════════════════════════════════════════════════════════════════
+(()=>{
+  const SEV_COLOR = { error:'var(--red)', warning:'var(--yellow)', suggestion:'var(--accent)', parse:'var(--purple)' };
+  const SEV_ICON  = { error:'🔴', warning:'🟡', suggestion:'💡', parse:'🧩' };
+  let _lastResult = null;
+  let _filter = 'all';
+
+  function renderAudit(result) {
+    _lastResult = result;
+    const { errors, warnings, suggestions, parse, summary } = result;
+
+    // Summary bar
+    const sumEl = $('audit-summary');
+    sumEl.style.display = '';
+    sumEl.innerHTML =
+      `<span style="color:var(--red);font-weight:700">${summary.errors} errors</span>
+       <span style="color:var(--yellow);font-weight:700">${summary.warnings} warnings</span>
+       <span style="color:var(--accent);font-weight:700">${summary.suggestions} suggestions</span>
+       <span style="color:var(--purple)">${parse.filter(p=>!p.ok).length} parse issues</span>`;
+
+    $('audit-filters').style.display = '';
+    applyFilter();
+  }
+
+  function applyFilter() {
+    if (!_lastResult) return;
+    const { errors, warnings, suggestions, parse } = _lastResult;
+    const list = $('audit-list');
+    list.innerHTML = '';
+
+    const addSection = (label, items, sev) => {
+      if (_filter !== 'all' && _filter !== sev) return;
+      if (!items.length) return;
+      const hd = document.createElement('div');
+      hd.style.cssText = 'font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding:6px 0 2px;font-weight:700;';
+      hd.textContent = `${SEV_ICON[sev]} ${label} (${items.length})`;
+      list.appendChild(hd);
+      for (const item of items) {
+        const row = document.createElement('div');
+        row.style.cssText = `display:flex;align-items:flex-start;gap:8px;padding:6px 8px;border-left:3px solid ${SEV_COLOR[sev]};background:var(--bg2);border-radius:0 4px 4px 0;font-size:11px;margin-bottom:3px;line-height:1.5;`;
+        const badge = document.createElement('span');
+        badge.style.cssText = 'color:var(--muted);white-space:nowrap;flex-shrink:0;font-family:monospace;';
+        badge.textContent = sev === 'parse'
+          ? item.section
+          : `${item.section}·${item.key}${item.field ? '·'+item.field : ''}`;
+        const msg = document.createElement('span');
+        msg.style.cssText = sev === 'parse' && item.ok
+          ? 'color:var(--green)'
+          : sev === 'parse' && !item.ok
+          ? 'color:var(--red)'
+          : 'color:var(--text)';
+        msg.textContent = item.msg;
+        row.append(badge, msg);
+        list.appendChild(row);
+      }
+    };
+
+    if (_filter === 'all' || _filter === 'parse') {
+      addSection('Parse Health', parse, 'parse');
+    }
+    addSection('Errors', errors, 'error');
+    addSection('Warnings', warnings, 'warning');
+    addSection('Suggestions', suggestions, 'suggestion');
+
+    if (!list.children.length) {
+      list.innerHTML = '<div style="color:var(--green);font-size:12px;padding:12px 0">✓ No issues found in this category.</div>';
+    }
+  }
+
+  // Filter chip clicks
+  document.querySelectorAll('.audit-filter').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.audit-filter').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      _filter = btn.dataset.filter;
+      applyFilter();
+    });
+  });
+
+  // Run audit locally
+  $('btn-run-audit').addEventListener('click', () => {
+    if (!WBAPI.loaded) return;
+    $('audit-list').innerHTML = '<div style="color:var(--muted);font-size:12px">Scanning…</div>';
+    setTimeout(() => {
+      try {
+        const result = WBAPI.audit();
+        renderAudit(result);
+      } catch(e) {
+        $('audit-list').innerHTML = `<div style="color:var(--red);font-size:12px">Audit error: ${e.message}</div>`;
+      }
+    }, 10);
+  });
+
+  // Run audit via server
+  $('btn-audit-server').addEventListener('click', async () => {
+    if (!SERVER.active) return;
+    $('audit-list').innerHTML = '<div style="color:var(--muted);font-size:12px">Requesting server audit…</div>';
+    try {
+      const r = await fetch(`${SERVER.url}/api/audit`);
+      const d = await r.json();
+      if (d.ok) renderAudit(d);
+      else $('audit-list').innerHTML = `<div style="color:var(--red);font-size:12px">${d.error || 'Server error'}</div>`;
+    } catch(e) {
+      $('audit-list').innerHTML = `<div style="color:var(--red);font-size:12px">Server unreachable: ${e.message}</div>`;
+    }
+  });
+
+  // btn-run-audit enabled by loadFile() above; server button enabled when server connects
+  window._auditEnableServer = () => { $('btn-audit-server').disabled = false; };
+})();
 
 // ═══════════════════════════════════════════════════════════════════════════
 // API Tab
