@@ -1,0 +1,3680 @@
+2026-05-29 18:10:59.960 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":211,"monsters":392,"npcs":6,"terrains":69}
+2026-05-29 18:10:59.975 [INFO    ] Server listening on http://127.0.0.1:3001
+════════════════════════════════════════════════════════════
+2026-05-29 18:11:01.753 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 18:11:01.753 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 18:11:35.654 [REQUEST ] GET /api/flags
+────────────────────────────────────────────────────────────
+2026-05-29 18:11:35.654 [LOGIC   ] Parsing _S_DEFAULTS flags from source
+            └─ 404 _S_DEFAULTS not found in source
+2026-05-29 18:11:40.854 [REQUEST ] GET /api/flags
+────────────────────────────────────────────────────────────
+2026-05-29 18:11:40.854 [LOGIC   ] Parsing _S_DEFAULTS flags from source
+            └─ 404 _S_DEFAULTS not found in source
+2026-05-29 18:12:42.987 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":211,"monsters":392,"npcs":6,"terrains":69}
+2026-05-29 18:12:42.996 [INFO    ] Server listening on http://127.0.0.1:3001
+════════════════════════════════════════════════════════════
+2026-05-29 18:12:44.884 [REQUEST ] GET /api/flags
+────────────────────────────────────────────────────────────
+2026-05-29 18:12:44.884 [LOGIC   ] Parsing _S_DEFAULTS flags from source
+            └─ 200 184 flags
+2026-05-29 18:12:54.204 [REQUEST ] GET /api/quest?node=PL
+────────────────────────────────────────────────────────────
+2026-05-29 18:12:54.205 [LOGIC   ] Quest filter: node=PL arc=null type=null
+            └─ 200 2 quests
+2026-05-29 18:12:54.238 [REQUEST ] GET /api/quest/quest_basket_damascus/chain
+────────────────────────────────────────────────────────────
+2026-05-29 18:12:54.238 [LOGIC   ] Chain for "quest_basket_damascus" — up:0, down:0
+            └─ 200 chain for "quest_basket_damascus" — length 1
+2026-05-29 18:13:01.515 [REQUEST ] POST /api/quest
+────────────────────────────────────────────────────────────
+2026-05-29 18:13:01.517 [REQUEST ] POST quest (create) {"id":"quest_test_harbor_watch","type":"skill_check","title":"The Night Watch","activateNode":"ML","checkAbility":"wis","checkLabel":"Perception","checkDC":11,"xpAward":120,"passText":"You see the fire before it takes hold.","failText":"The alarm comes too late."}
+2026-05-29 18:13:01.517 [LOGIC   ] Creating quest "quest_test_harbor_watch" — serializing to QUEST_DB
+            └─ 201 created quest "quest_test_harbor_watch"
+2026-05-29 18:13:10.029 [REQUEST ] POST /api/node
+────────────────────────────────────────────────────────────
+2026-05-29 18:13:10.030 [REQUEST ] POST node (create) {"code":"TS","name":"ancient_harbor","label":"Tarsus — The Docks","act":5,"text":"The docks smell of cedar and salt. Traders from three continents argue over manifests.","N":"PL"}
+            └─ 409 node "TS" already exists
+2026-05-29 18:13:10.065 [REQUEST ] POST /api/flags
+────────────────────────────────────────────────────────────
+2026-05-29 18:13:10.065 [REQUEST ] POST flags (add flag) {"name":"tarsusDocksVisited","defaultValue":false,"comment":"§PAUL-02"}
+2026-05-29 18:13:10.066 [LOGIC   ] Added flag "tarsusDocksVisited" = false to _S_DEFAULTS
+            └─ 201 flag "tarsusDocksVisited" added
+2026-05-29 18:13:37.011 [REQUEST ] POST /api/node
+────────────────────────────────────────────────────────────
+2026-05-29 18:13:37.011 [REQUEST ] POST node (create) {"code":"TS2","name":"ancient_harbor","label":"Tarsus Test","act":5,"N":"PL"}
+2026-05-29 18:13:37.011 [LOGIC   ] Creating node "TS2" — serializing to NODE_MAP
+            └─ 201 created node "TS2"
+2026-05-29 18:14:02.174 [REQUEST ] GET /api/node/TS
+────────────────────────────────────────────────────────────
+2026-05-29 18:14:02.174 [LOGIC   ] GET node "TS" — building connection envelope
+            └─ 200 node:TS — connections: terrain:1, quests:2, npcs:1, linkedNodes:1, canDelete:false
+2026-05-29 18:14:02.215 [REQUEST ] GET /api/quest/quest_test_harbor_watch
+────────────────────────────────────────────────────────────
+2026-05-29 18:14:02.216 [LOGIC   ] GET quest "quest_test_harbor_watch" — building connection envelope
+            └─ 200 quest:quest_test_harbor_watch — connections: activateNode:1, arc:1, canDelete:true
+2026-05-29 18:14:21.670 [REQUEST ] POST /api/reload
+────────────────────────────────────────────────────────────
+2026-05-29 18:14:21.670 [LOGIC   ] Reloading game file: /Users/user/code/roll2hit.com/roll2hit-v3.html
+2026-05-29 18:14:21.854 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":211,"monsters":392,"npcs":6,"terrains":69}
+            └─ 200 reload ok
+2026-05-29 18:14:29.153 [REQUEST ] GET /api/flags
+────────────────────────────────────────────────────────────
+2026-05-29 18:14:29.153 [LOGIC   ] Parsing _S_DEFAULTS flags from source
+            └─ 200 184 flags
+2026-05-29 18:15:28.744 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":211,"monsters":392,"npcs":6,"terrains":69}
+2026-05-29 18:15:28.755 [INFO    ] Server listening on http://127.0.0.1:3001
+════════════════════════════════════════════════════════════
+2026-05-29 18:15:30.636 [REQUEST ] GET /api/flags
+────────────────────────────────────────────────────────────
+2026-05-29 18:15:30.637 [LOGIC   ] Parsing _S_DEFAULTS flags from source
+            └─ 200 391 flags
+2026-05-29 18:15:42.831 [REQUEST ] POST /api/quest
+────────────────────────────────────────────────────────────
+2026-05-29 18:15:42.832 [REQUEST ] POST quest (create) {"id":"quest_athens_agora","type":"skill_check","title":"The Agora Argument","activateNode":"AT","checkAbility":"cha","checkLabel":"Persuasion","checkDC":13,"xpAward":175,"hint":"Philosophers hold the square. Two Stoics and an Epicurean have been debating Paul since midmorning. You watch the exits.","passText":"The crowd shifts. Not converted — thinking. That is enough for now.","failText":"The crowd closes in. You step between Paul and the nearest man. He stops.","checkPassFlag":"agoraArgument","disposition":"\"What is this babbler trying to say?\"","activateCond":"() => !!S_story.saulConverted && !S_story.agoraArgument"}
+2026-05-29 18:15:42.832 [LOGIC   ] Creating quest "quest_athens_agora" — serializing to QUEST_DB
+            └─ 201 created quest "quest_athens_agora"
+2026-05-29 18:15:51.383 [REQUEST ] POST /api/save
+────────────────────────────────────────────────────────────
+2026-05-29 18:15:51.383 [LOGIC   ] Save requested {"outputPath":"(timestamped)"}
+            └─ 200 saved → /Users/user/code/roll2hit.com/roll2hit-v3-20260529-181551.html
+2026-05-29 18:52:40.053 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":211,"monsters":392,"npcs":6,"terrains":69}
+2026-05-29 18:52:40.070 [INFO    ] Server listening on http://127.0.0.1:3001
+════════════════════════════════════════════════════════════
+2026-05-29 18:52:41.973 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 18:52:41.973 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 18:52:42.029 [REQUEST ] GET /api/fish
+────────────────────────────────────────────────────────────
+2026-05-29 18:52:42.030 [LOGIC   ] GET /api/fish — 25 entries
+            └─ 200 25 fish
+2026-05-29 18:52:42.056 [REQUEST ] GET /api/fish/fish_10
+────────────────────────────────────────────────────────────
+            └─ 200 fish:fish_10 rank:10
+2026-05-29 18:52:42.083 [REQUEST ] GET /api/lake-magic
+────────────────────────────────────────────────────────────
+2026-05-29 18:52:42.083 [LOGIC   ] GET /api/lake-magic — 8 entries
+            └─ 200 8 lake magic items
+2026-05-29 18:52:42.109 [REQUEST ] GET /api/lake-magic/lake_mag_07
+────────────────────────────────────────────────────────────
+            └─ 200 lake-magic:lake_mag_07
+2026-05-29 18:56:23.494 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":211,"monsters":392,"npcs":6,"terrains":69}
+2026-05-29 18:56:23.504 [INFO    ] Server listening on http://127.0.0.1:3001
+════════════════════════════════════════════════════════════
+2026-05-29 18:56:25.373 [REQUEST ] POST /api/fish/simulate
+────────────────────────────────────────────────────────────
+2026-05-29 18:56:25.375 [REQUEST ] POST /api/fish/simulate {"dexMod":2,"catchMod":3,"typeMod":1,"luckMod":1,"rodBonus":1}
+            └─ 200 simulate: Nothing bites.
+2026-05-29 18:56:31.901 [REQUEST ] POST /api/fish/simulate
+────────────────────────────────────────────────────────────
+2026-05-29 18:56:31.901 [REQUEST ] POST /api/fish/simulate {"dexMod":3,"catchMod":4,"typeMod":2,"luckMod":2,"rodBonus":1}
+            └─ 200 simulate: Legendary Rare — The Spine King
+2026-05-29 18:57:23.319 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 18:57:23.319 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 18:58:22.132 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 18:58:22.132 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 18:58:22.171 [REQUEST ] GET /api/fish
+────────────────────────────────────────────────────────────
+2026-05-29 18:58:22.172 [LOGIC   ] GET /api/fish — 25 entries
+            └─ 200 25 fish
+2026-05-29 18:58:22.200 [REQUEST ] GET /api/fish?night=true
+────────────────────────────────────────────────────────────
+2026-05-29 18:58:22.200 [LOGIC   ] GET /api/fish — 5 entries
+            └─ 200 5 fish
+2026-05-29 18:58:22.227 [REQUEST ] GET /api/lake-magic
+────────────────────────────────────────────────────────────
+2026-05-29 18:58:22.227 [LOGIC   ] GET /api/lake-magic — 8 entries
+            └─ 200 8 lake magic items
+2026-05-29 18:58:22.253 [REQUEST ] POST /api/fish/simulate
+────────────────────────────────────────────────────────────
+2026-05-29 18:58:22.254 [REQUEST ] POST /api/fish/simulate {"dexMod":5,"catchMod":5,"typeMod":5,"luckMod":5,"rodBonus":2}
+            └─ 200 simulate: Medium Enchanted — Razor Rudd
+2026-05-29 18:58:36.167 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 18:58:36.167 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 18:59:01.337 [LOGIC   ] CORS preflight — 204
+2026-05-29 18:59:01.339 [REQUEST ] POST /api/fish/simulate
+────────────────────────────────────────────────────────────
+2026-05-29 18:59:01.339 [REQUEST ] POST /api/fish/simulate {"dexMod":1,"catchMod":0,"typeMod":0,"luckMod":0,"rodBonus":0}
+            └─ 200 simulate: Small Rare — Poison Tench
+2026-05-29 19:00:05.715 [LOGIC   ] CORS preflight — 204
+2026-05-29 19:00:05.719 [REQUEST ] POST /api/fish/simulate
+────────────────────────────────────────────────────────────
+2026-05-29 19:00:05.719 [REQUEST ] POST /api/fish/simulate {"dexMod":1,"catchMod":0,"typeMod":0,"luckMod":0,"rodBonus":0}
+            └─ 200 simulate: Small Common — Spine Dace
+2026-05-29 19:13:35.032 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 19:13:35.033 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 19:14:45.501 [LOGIC   ] CORS preflight — 204
+2026-05-29 19:14:45.503 [REQUEST ] POST /api/save
+────────────────────────────────────────────────────────────
+2026-05-29 19:14:45.503 [LOGIC   ] Save requested {"outputPath":"(timestamped)"}
+            └─ 200 saved → /Users/user/code/roll2hit.com/roll2hit-v3-20260529-191445.html
+2026-05-29 19:15:28.638 [REQUEST ] GET /api/node/LT
+────────────────────────────────────────────────────────────
+2026-05-29 19:15:28.639 [LOGIC   ] GET node "LT" — building connection envelope
+            └─ 200 node:LT — connections: terrain:1, quests:2, npcs:1, linkedNodes:1, canDelete:false
+2026-05-29 19:17:39.440 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 19:17:39.440 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 19:20:20.103 [REQUEST ] GET /api/fish
+────────────────────────────────────────────────────────────
+2026-05-29 19:20:20.104 [LOGIC   ] GET /api/fish — 25 entries
+            └─ 200 25 fish
+2026-05-29 19:20:20.107 [REQUEST ] GET /api/fish/fish_02
+────────────────────────────────────────────────────────────
+            └─ 200 fish:fish_02 rank:2
+2026-05-29 19:42:02.700 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 19:42:02.701 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 20:29:23.093 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 20:29:23.095 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 20:29:30.336 [REQUEST ] GET /api/quest/quest_sir_jullean
+────────────────────────────────────────────────────────────
+2026-05-29 20:29:30.337 [LOGIC   ] GET quest "quest_sir_jullean" — building connection envelope
+            └─ 404 quest "quest_sir_jullean" not found
+2026-05-29 20:29:36.306 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 20:29:36.307 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 20:29:36.348 [REQUEST ] GET /api/node/CI
+────────────────────────────────────────────────────────────
+2026-05-29 20:29:36.348 [LOGIC   ] GET node "CI" — building connection envelope
+            └─ 200 node:CI — connections: terrain:1, monsters:28, quests:6, npcs:2, linkedNodes:1, canDelete:false
+2026-05-29 20:29:36.385 [REQUEST ] GET /api/quest?node=CI
+────────────────────────────────────────────────────────────
+2026-05-29 20:29:36.385 [LOGIC   ] Quest filter: node=CI arc=null type=null
+            └─ 200 6 quests
+2026-05-29 20:29:36.420 [REQUEST ] GET /api/audit
+────────────────────────────────────────────────────────────
+            └─ 400 missing type/id
+2026-05-29 20:29:44.607 [REQUEST ] GET /api/audit
+────────────────────────────────────────────────────────────
+            └─ 400 missing type/id
+2026-05-29 20:29:44.640 [REQUEST ] GET /api/fish
+────────────────────────────────────────────────────────────
+2026-05-29 20:29:44.640 [LOGIC   ] GET /api/fish — 25 entries
+            └─ 200 25 fish
+2026-05-29 20:29:44.667 [REQUEST ] GET /api/quest?type=skill_check
+────────────────────────────────────────────────────────────
+2026-05-29 20:29:44.667 [LOGIC   ] Quest filter: node=null arc=null type=skill_check
+            └─ 200 61 quests
+2026-05-29 20:29:53.970 [REQUEST ] GET /api/audit
+────────────────────────────────────────────────────────────
+            └─ 400 missing type/id
+2026-05-29 20:29:57.451 [REQUEST ] GET /api/audit
+────────────────────────────────────────────────────────────
+            └─ 400 missing type/id
+2026-05-29 20:30:56.201 [REQUEST ] GET /api/audit
+────────────────────────────────────────────────────────────
+            └─ 400 missing type/id
+2026-05-29 20:31:24.703 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":211,"monsters":392,"npcs":6,"terrains":69}
+2026-05-29 20:31:24.712 [INFO    ] Server listening on http://127.0.0.1:3001
+════════════════════════════════════════════════════════════
+2026-05-29 20:31:26.587 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 20:31:26.588 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 20:31:38.060 [REQUEST ] GET /api/audit
+────────────────────────────────────────────────────────────
+2026-05-29 20:31:38.061 [LOGIC   ] Audit: 73 errors, 45 warnings, 146 suggestions
+            └─ 200 audit complete
+2026-05-29 20:31:38.093 [REQUEST ] GET /api/quest?node=IN
+────────────────────────────────────────────────────────────
+2026-05-29 20:31:38.094 [LOGIC   ] Quest filter: node=IN arc=null type=null
+            └─ 200 1 quests
+2026-05-29 20:31:38.122 [REQUEST ] POST /api/monster/goblin/fork
+────────────────────────────────────────────────────────────
+2026-05-29 20:31:38.123 [REQUEST ] POST fork for monster:goblin {"newKey":"goblin_test","overrides":{"name":"Test Goblin","tier":"hard"}}
+2026-05-29 20:31:38.123 [LOGIC   ] Fork monster "goblin" → new key "goblin_test", overrides: {"name":"Test Goblin","tier":"hard"}
+            └─ 201 forked goblin → goblin_test
+2026-05-29 20:31:38.158 [REQUEST ] GET /api/fish
+────────────────────────────────────────────────────────────
+2026-05-29 20:31:38.158 [LOGIC   ] GET /api/fish — 25 entries
+            └─ 200 25 fish
+2026-05-29 20:31:38.186 [REQUEST ] GET /api/quest/mq_1/chain
+────────────────────────────────────────────────────────────
+2026-05-29 20:31:38.186 [LOGIC   ] Chain for "mq_1" — up:0, down:0
+            └─ 200 chain for "mq_1" — length 1
+2026-05-29 20:33:02.628 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":211,"monsters":392,"npcs":6,"terrains":69}
+2026-05-29 20:33:02.638 [INFO    ] Server listening on http://127.0.0.1:3001
+════════════════════════════════════════════════════════════
+2026-05-29 20:33:04.519 [REQUEST ] GET /api/source
+────────────────────────────────────────────────────────────
+            └─ 200 source ok — 1761777 bytes
+2026-05-29 20:33:04.539 [REQUEST ] GET /api/source
+────────────────────────────────────────────────────────────
+            └─ 200 source ok — 1761777 bytes
+2026-05-29 20:43:09.046 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":211,"monsters":392,"npcs":6,"terrains":69}
+2026-05-29 20:43:09.058 [INFO    ] Server listening on http://127.0.0.1:3001
+════════════════════════════════════════════════════════════
+2026-05-29 20:49:11.814 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 20:49:11.814 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 20:50:10.193 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":211,"monsters":392,"npcs":6,"terrains":69}
+2026-05-29 20:50:10.202 [INFO    ] Server listening on http://127.0.0.1:3001
+════════════════════════════════════════════════════════════
+2026-05-29 20:50:19.358 [REQUEST ] DELETE /api/node/CY
+────────────────────────────────────────────────────────────
+            └─ 403 DELETE requires X-Nonce — call POST /api/nonce first
+2026-05-29 20:50:19.371 [REQUEST ] POST /api/nonce
+────────────────────────────────────────────────────────────
+            └─ 200 nonce issued for node:CY — 695fc2ccd259d1e9
+2026-05-29 20:50:19.382 [REQUEST ] DELETE /api/node/CY
+────────────────────────────────────────────────────────────
+            └─ 403 nonce rejected: Nonce invalid or expired. Request a new one via POST /api/nonce.
+2026-05-29 20:53:18.938 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 20:53:18.939 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 20:53:22.101 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 20:53:22.102 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 20:53:22.106 [REQUEST ] GET /api/source
+────────────────────────────────────────────────────────────
+            └─ 200 source ok — 1761777 bytes
+2026-05-29 20:53:23.533 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 20:53:23.534 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 20:53:23.538 [REQUEST ] GET /api/source
+────────────────────────────────────────────────────────────
+            └─ 200 source ok — 1761777 bytes
+2026-05-29 20:53:32.224 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 20:53:32.225 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 20:53:37.543 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 20:53:37.543 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 20:53:37.547 [REQUEST ] GET /api/source
+────────────────────────────────────────────────────────────
+            └─ 200 source ok — 1761777 bytes
+2026-05-29 20:54:12.599 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 20:54:12.601 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 20:54:50.774 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 20:54:50.774 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 20:54:50.790 [REQUEST ] GET /api/source
+────────────────────────────────────────────────────────────
+            └─ 200 source ok — 1761777 bytes
+2026-05-29 20:54:50.890 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 20:54:50.891 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 20:55:31.212 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 20:55:31.212 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 20:55:31.215 [REQUEST ] GET /api/source
+────────────────────────────────────────────────────────────
+            └─ 200 source ok — 1761777 bytes
+2026-05-29 20:55:31.283 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 20:55:31.284 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 20:55:40.276 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 20:55:40.276 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 20:55:40.278 [REQUEST ] GET /api/source
+────────────────────────────────────────────────────────────
+            └─ 200 source ok — 1761777 bytes
+2026-05-29 20:55:40.339 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 20:55:40.339 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 20:55:41.446 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 20:55:41.446 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 20:55:41.459 [REQUEST ] GET /api/source
+────────────────────────────────────────────────────────────
+            └─ 200 source ok — 1761777 bytes
+2026-05-29 20:55:41.532 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 20:55:41.532 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 20:55:43.361 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 20:55:43.361 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 20:55:43.364 [REQUEST ] GET /api/source
+────────────────────────────────────────────────────────────
+            └─ 200 source ok — 1761777 bytes
+2026-05-29 20:55:43.424 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 20:55:43.424 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 20:55:44.131 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 20:55:44.131 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 20:55:44.133 [REQUEST ] GET /api/source
+────────────────────────────────────────────────────────────
+            └─ 200 source ok — 1761777 bytes
+2026-05-29 20:55:44.205 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 20:55:44.205 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 20:56:02.335 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 20:56:02.335 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 20:56:13.725 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 20:56:13.725 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 20:56:13.729 [REQUEST ] GET /api/source
+────────────────────────────────────────────────────────────
+            └─ 200 source ok — 1761777 bytes
+2026-05-29 20:56:13.816 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 20:56:13.817 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 21:03:18.453 [REQUEST ] GET /api/fish/1
+────────────────────────────────────────────────────────────
+            └─ 404 fish "1" not found
+2026-05-29 21:03:23.999 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 21:03:23.999 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 21:03:24.930 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 21:03:24.930 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 21:03:24.936 [REQUEST ] GET /api/source
+────────────────────────────────────────────────────────────
+            └─ 200 source ok — 1761777 bytes
+2026-05-29 21:03:26.310 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 21:03:26.310 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 21:06:33.684 [REQUEST ] GET /api/fish
+────────────────────────────────────────────────────────────
+2026-05-29 21:06:33.685 [LOGIC   ] GET /api/fish — 25 entries
+            └─ 200 25 fish
+2026-05-29 21:06:33.689 [REQUEST ] GET /api/fish/fish_12
+────────────────────────────────────────────────────────────
+            └─ 200 fish:fish_12 rank:12
+2026-05-29 21:08:22.063 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 21:08:22.063 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 21:08:32.299 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 21:08:32.299 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 21:08:36.142 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 21:08:36.142 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 21:08:37.464 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 21:08:37.465 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 21:13:35.728 [LOGIC   ] CORS preflight — 204
+2026-05-29 21:13:35.729 [REQUEST ] POST /api/save
+────────────────────────────────────────────────────────────
+2026-05-29 21:13:35.730 [LOGIC   ] Save requested {"outputPath":"(timestamped)"}
+            └─ 200 saved → /Users/user/code/roll2hit.com/roll2hit-v3-20260529-211335.html
+2026-05-29 21:13:43.373 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 21:13:43.373 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 21:13:44.260 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 21:13:44.260 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 21:13:44.266 [REQUEST ] GET /api/source
+────────────────────────────────────────────────────────────
+            └─ 200 source ok — 1761777 bytes
+2026-05-29 21:13:45.620 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 21:13:45.620 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 21:15:02.908 [LOGIC   ] CORS preflight — 204
+2026-05-29 21:15:02.909 [REQUEST ] PUT /api/terrain/defi_land
+────────────────────────────────────────────────────────────
+2026-05-29 21:15:02.910 [REQUEST ] PUT terrain:defi_land {"label":"DeFi Landlllllll"}
+2026-05-29 21:15:02.910 [LOGIC   ] Patching terrain "defi_land" field "label" → "DeFi Landlllllll"
+            └─ 200 terrain:defi_land — label=ok
+2026-05-29 21:42:59.332 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 21:42:59.333 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 21:42:59.341 [REQUEST ] GET /api/source
+────────────────────────────────────────────────────────────
+            └─ 200 source ok — 1761777 bytes
+2026-05-29 21:43:00.713 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 21:43:00.713 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 21:46:00.519 [REQUEST ] GET /api/audit
+────────────────────────────────────────────────────────────
+2026-05-29 21:46:00.522 [LOGIC   ] Audit: 73 errors, 45 warnings, 146 suggestions
+            └─ 200 audit complete
+2026-05-29 22:29:11.061 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 22:29:11.062 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 22:29:12.026 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 22:29:12.026 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 22:29:12.034 [REQUEST ] GET /api/source
+────────────────────────────────────────────────────────────
+            └─ 200 source ok — 1761777 bytes
+2026-05-29 22:29:13.406 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 22:29:13.406 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 22:34:30.587 [REQUEST ] GET /api/terrain/forest
+────────────────────────────────────────────────────────────
+2026-05-29 22:34:30.587 [LOGIC   ] GET terrain "forest" — 23 monsters
+            └─ 200 terrain:forest — 23 monsters, 1 nodes
+2026-05-29 22:34:32.015 [REQUEST ] GET /api/terrain/desert
+────────────────────────────────────────────────────────────
+2026-05-29 22:34:32.015 [LOGIC   ] GET terrain "desert" — 20 monsters
+            └─ 200 terrain:desert — 20 monsters, 1 nodes
+2026-05-29 22:34:32.027 [REQUEST ] GET /api/terrain/highlands
+────────────────────────────────────────────────────────────
+2026-05-29 22:34:32.027 [LOGIC   ] GET terrain "highlands" — 16 monsters
+            └─ 200 terrain:highlands — 16 monsters, 1 nodes
+2026-05-29 22:41:21.417 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":211,"monsters":392,"npcs":6,"terrains":107}
+2026-05-29 22:41:21.428 [INFO    ] Server listening on http://127.0.0.1:3001
+════════════════════════════════════════════════════════════
+2026-05-29 22:41:28.541 [REQUEST ] GET /api/audit
+────────────────────────────────────────────────────────────
+2026-05-29 22:41:28.543 [LOGIC   ] Audit: 11 errors, 35 warnings, 112 suggestions
+            └─ 200 audit complete
+2026-05-29 22:45:36.278 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":211,"monsters":392,"npcs":6,"terrains":107}
+2026-05-29 22:45:36.288 [INFO    ] Server listening on http://127.0.0.1:3001
+════════════════════════════════════════════════════════════
+2026-05-29 22:47:12.757 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":211,"monsters":392,"npcs":6,"terrains":107}
+2026-05-29 22:47:12.768 [INFO    ] Server listening on http://127.0.0.1:3001
+════════════════════════════════════════════════════════════
+2026-05-29 22:47:59.378 [REQUEST ] GET /api/export/world_db
+────────────────────────────────────────────────────────────
+2026-05-29 22:47:59.378 [LOGIC   ] Export collection "world_db" format:json
+            └─ 200 export world_db json
+2026-05-29 22:47:59.417 [REQUEST ] POST /api/terrain
+────────────────────────────────────────────────────────────
+2026-05-29 22:47:59.418 [REQUEST ] POST terrain (create) {"key":"_test_delete_me","label":"Test Terrain","icon":"🧪","monsters":["goblin","bandit"]}
+2026-05-29 22:47:59.418 [LOGIC   ] Creating terrain "_test_delete_me" with 2 monsters
+            └─ 201 created terrain "_test_delete_me"
+2026-05-29 22:48:23.555 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 22:48:23.555 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 22:48:28.768 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 22:48:28.768 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 22:48:34.058 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":211,"monsters":392,"npcs":6,"terrains":107}
+2026-05-29 22:48:34.068 [INFO    ] Server listening on http://127.0.0.1:3001
+════════════════════════════════════════════════════════════
+2026-05-29 22:50:41.027 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 22:50:41.027 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 22:51:43.410 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":211,"monsters":392,"npcs":6,"terrains":107}
+2026-05-29 22:51:43.420 [INFO    ] Server listening on http://127.0.0.1:3001
+════════════════════════════════════════════════════════════
+2026-05-29 22:53:47.666 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 22:53:47.667 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 22:53:51.740 [REQUEST ] POST /api/restart
+────────────────────────────────────────────────────────────
+2026-05-29 22:53:51.740 [LOGIC   ] Restart requested — exiting with code 67 for wbapi-toggle.sh restart loop
+            └─ 200 restarting
+2026-05-29 22:53:52.197 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":211,"monsters":392,"npcs":6,"terrains":107}
+2026-05-29 22:53:52.207 [INFO    ] Server listening on http://127.0.0.1:3001
+════════════════════════════════════════════════════════════
+2026-05-29 22:53:53.276 [REQUEST ] GET /api/ping
+────────────────────────────────────────────────────────────
+2026-05-29 22:53:53.277 [LOGIC   ] Health check requested
+            └─ 200 ping ok — 144 nodes, 211 quests
+2026-05-29 22:56:26.239 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":211,"monsters":392,"npcs":6,"terrains":107}
+2026-05-29 22:56:26.251 [INFO    ] Server listening on http://127.0.0.1:3001
+════════════════════════════════════════════════════════════
+2026-05-29 22:58:23.598 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":211,"monsters":392,"npcs":6,"terrains":107}
+2026-05-29 22:58:23.610 [INFO    ] Server listening on http://127.0.0.1:3001
+════════════════════════════════════════════════════════════
+
+2026-05-29 23:03:14.463  POST    restart
+2026-05-29 23:03:14.464 [LOGIC   ] Restart requested — exiting with code 67 for wbapi-toggle.sh restart loop
+  └─  200  restarting  [1ms]
+2026-05-29 23:03:14.922 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":211,"monsters":392,"npcs":6,"terrains":107}
+2026-05-29 23:03:14.933 [INFO    ] Server listening on http://127.0.0.1:3001
+════════════════════════════════════════════════════════════
+
+2026-05-29 23:03:15.692  GET     ping
+  ├─  144 nodes  ·  211 quests  ·  392 monsters  ·  107 terrains  ·  25 fish
+  └─  200  ok  [1ms]
+
+2026-05-29 23:03:21.024  GET     ping
+  ├─  144 nodes  ·  211 quests  ·  392 monsters  ·  107 terrains  ·  25 fish
+  └─  200  ok  [0ms]
+
+2026-05-29 23:03:21.034  GET     node/CY
+  ├─  entity: Neon Undercity  ·  Act 1  ·  terrain: cyberpunk_streets
+  ├─  connections: 3 quests  ·  3 NPCs  ·  10 monsters ·  exits: N:CR S:AC E:DK
+  ├─  can delete: [31mno — blocked by {"quests":["quest_antecedent_01","quest_signal_01","quest_signal_01"],"npcs":["crov","auros","_inline_CY"]}[0m
+  └─  200  node/CY  [1ms]
+
+2026-05-29 23:03:21.044  GET     list/node
+  ├─  total: 144 nodes
+  ├─  by act: Act1×14  Act2×8  Act3×38  Act4×52  Act5×10  Act6×11  Act7×10  Act8×1
+  ├─  sample: CI · SL · IN · TV · BA  [2m+139 more[0m
+  └─  200  144 nodes  [8ms]
+
+2026-05-29 23:03:25.381  GET     ping
+  ├─  144 nodes  ·  211 quests  ·  392 monsters  ·  107 terrains  ·  25 fish
+  └─  200  ok  [0ms]
+
+2026-05-29 23:03:25.392  GET     node/CY
+  ├─  entity: Neon Undercity  ·  Act 1  ·  terrain: cyberpunk_streets
+  ├─  connections: 3 quests  ·  3 NPCs  ·  10 monsters ·  exits: N:CR S:AC E:DK
+  ├─  can delete: [31mno — blocked by {"quests":["quest_antecedent_01","quest_signal_01","quest_signal_01"],"npcs":["crov","auros","_inline_CY"]}[0m
+  └─  200  node/CY  [0ms]
+
+2026-05-29 23:03:25.402  GET     list/node
+  ├─  total: 144 nodes
+  ├─  by act: Act1×14  Act2×8  Act3×38  Act4×52  Act5×10  Act6×11  Act7×10  Act8×1
+  ├─  sample: CI · SL · IN · TV · BA  [2m+139 more[0m
+  └─  200  144 nodes  [8ms]
+
+2026-05-29 23:03:25.419  GET     list/quest?node=CY
+  ├─  total: 211 total  →  2 matched  (node=CY)
+  ├─  by type: side×2
+  ├─  sample: quest_antecedent_01 · quest_signal_01
+  └─  200  2 quests  [0ms]
+
+2026-05-29 23:03:25.429  GET     audit
+  ├─  [31m11 errors[0m  ·  [33m35 warnings[0m  ·  [2m112 suggestions[0m
+  ├─  top errors: node "…" not in NODE_MAP (×10)
+  ├─  : drop entry has no matching MONSTER_POOL entry
+  ├─  top warnings: terrain has no monsters defined (×21)
+  ├─  : no MONSTER_DROPS entry — creature drops nothing (×13)
+  └─  200  11 errors  ·  35 warnings  ·  112 suggestions  [2ms]
+
+2026-05-29 23:03:25.440  GET     export/world_db
+  ├─  collection: world_db  ·  format: json
+  ├─  size: 107 records  ·  ~107.4 KB
+  └─  200  world_db  107 records  107.4 KB  [1ms]
+
+2026-05-29 23:03:25.450  GET     terrain/ruins
+  ├─  terrain: 🏚  Ancient Ruins
+  ├─  monsters: 7  →  Graveir · Basilisk · Golem · Katakan  [2m+3 more[0m
+  ├─  nodes: FR
+  └─  200  terrain/ruins  ·  7 monsters  ·  1 nodes  [1ms]
+
+2026-05-29 23:03:51.326  POST    restart
+  ├─  action: exit(67) → wbapi-toggle.sh will relaunch
+  └─  200  restarting  [0ms]
+2026-05-29 23:03:51.778 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":211,"monsters":392,"npcs":6,"terrains":107}
+2026-05-29 23:03:51.789 [INFO    ] Server listening on http://127.0.0.1:3001
+════════════════════════════════════════════════════════════
+
+2026-05-29 23:03:52.554  GET     ping
+  ├─  144 nodes  ·  211 quests  ·  392 monsters  ·  107 terrains  ·  25 fish
+  └─  200  ok  [1ms]
+2026-05-29 23:07:33.613 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":211,"monsters":392,"npcs":6,"terrains":107}
+2026-05-29 23:07:33.624 [INFO    ] Server listening on http://127.0.0.1:3001
+════════════════════════════════════════════════════════════
+2026-05-29 23:08:59.114 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":211,"monsters":392,"npcs":6,"terrains":107}
+2026-05-29 23:08:59.125 [INFO    ] Server listening on http://127.0.0.1:3001
+════════════════════════════════════════════════════════════
+2026-05-29 23:17:42.127 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":211,"monsters":392,"npcs":6,"terrains":107}
+2026-05-29 23:17:42.137 [INFO    ] Server listening on http://127.0.0.1:3001
+════════════════════════════════════════════════════════════
+
+2026-05-29 23:27:47.113  GET     help
+  ├─  topic: index
+  └─  200  WBAPI Help Index  [1ms]
+2026-05-29 23:27:47.115 [ERROR   ] Unhandled exception: CORS is not defined {"stack":"at route (/Users/user/code/roll2hit.com/wbapi-server.js:1115:76)"}
+
+2026-05-29 23:27:47.125  GET     help/nonce
+  ├─  topic: nonce
+  └─  200  Nonces — Write Protection  [0ms]
+2026-05-29 23:27:47.125 [ERROR   ] Unhandled exception: CORS is not defined {"stack":"at route (/Users/user/code/roll2hit.com/wbapi-server.js:1115:76)"}
+
+2026-05-29 23:27:47.134  GET     help/curl
+  ├─  topic: curl
+  └─  200  curl Cheat Sheet  [0ms]
+2026-05-29 23:27:47.134 [ERROR   ] Unhandled exception: CORS is not defined {"stack":"at route (/Users/user/code/roll2hit.com/wbapi-server.js:1115:76)"}
+
+2026-05-29 23:28:06.521  POST    restart
+  ├─  exit(67): wbapi-toggle.sh restart loop will relaunch
+  └─  200  restarting  [0ms]
+2026-05-29 23:28:06.981 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":211,"monsters":392,"npcs":6,"terrains":107}
+2026-05-29 23:28:06.990 [INFO    ] Server listening on http://127.0.0.1:3001
+════════════════════════════════════════════════════════════
+
+2026-05-29 23:28:12.285  GET     help
+  ├─  topic: index
+  └─  200  WBAPI Help Index  [1ms]
+
+2026-05-29 23:28:16.688  GET     help/nonce
+  ├─  topic: nonce
+  └─  200  Nonces — Write Protection  [1ms]
+2026-05-29 23:28:52.892 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":211,"monsters":392,"npcs":6,"terrains":107}
+2026-05-29 23:28:52.903 [INFO    ] Server listening on http://127.0.0.1:3001
+════════════════════════════════════════════════════════════
+
+2026-05-29 23:36:53.346  GET     help/read
+  ├─  topic: read
+  └─  200  Read-Only Endpoints (GET)  [1ms]
+
+2026-05-29 23:36:53.358  GET     help/write
+  ├─  topic: write
+  └─  200  Write Endpoints (POST / PUT / DELETE)  [0ms]
+2026-05-29 23:40:48.017 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":211,"monsters":392,"npcs":6,"terrains":107}
+2026-05-29 23:40:48.027 [INFO    ] Server listening on http://127.0.0.1:3067
+════════════════════════════════════════════════════════════
+
+2026-05-29 23:40:49.455  GET     ping
+  ├─  144 nodes  ·  211 quests  ·  392 monsters  ·  107 terrains  ·  25 fish
+  └─  200  ok  [1ms]
+2026-05-29 23:43:19.590 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":211,"monsters":392,"npcs":6,"terrains":107}
+2026-05-29 23:43:19.599 [INFO    ] Server listening on http://127.0.0.1:1367
+════════════════════════════════════════════════════════════
+
+2026-05-29 23:43:21.025  GET     ping
+  ├─  144 nodes  ·  211 quests  ·  392 monsters  ·  107 terrains  ·  25 fish
+  └─  200  ok  [1ms]
+2026-05-29 23:48:31.544 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":211,"monsters":392,"npcs":6,"terrains":107}
+2026-05-29 23:48:31.554 [INFO    ] Server listening on http://127.0.0.1:1367
+════════════════════════════════════════════════════════════
+
+2026-05-29 23:48:32.984  GET     ping
+  ├─  144 nodes  ·  211 quests  ·  392 monsters  ·  107 terrains  ·  25 fish
+  └─  200  ok  [0ms]
+
+2026-05-29 23:48:40.025  POST    nonce
+  ├─  type › id: node › TEST
+  ├─  token: 1780d764b0ef796c  (expires in 5 min)
+  └─  200  nonce issued  [3ms]
+2026-05-29 23:48:50.265 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":211,"monsters":392,"npcs":6,"terrains":107}
+2026-05-29 23:48:50.274 [INFO    ] Server listening on http://127.0.0.1:1368
+════════════════════════════════════════════════════════════
+
+2026-05-29 23:48:51.156  POST    nonce
+  ├─  type › id: node › TEST
+  ├─  token: c3acbfbb0e34397b  (expires in 5 min)
+  └─  200  nonce issued  [3ms]
+2026-05-29 23:51:29.016 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":211,"monsters":392,"npcs":6,"terrains":107}
+2026-05-29 23:51:29.028 [INFO    ] Server listening on http://127.0.0.1:1367
+════════════════════════════════════════════════════════════
+
+2026-05-29 23:51:38.957  GET     ping
+  ├─  144 nodes  ·  211 quests  ·  392 monsters  ·  107 terrains  ·  25 fish
+  └─  200  ok  [1ms]
+
+2026-05-29 23:53:15.504  POST    restart
+  ├─  exit(67): wbapi-toggle.sh restart loop will relaunch
+  └─  200  restarting  [0ms]
+2026-05-29 23:53:15.958 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":211,"monsters":392,"npcs":6,"terrains":107}
+2026-05-29 23:53:15.970 [INFO    ] Server listening on http://127.0.0.1:1367
+════════════════════════════════════════════════════════════
+
+2026-05-29 23:53:20.290  GET     ping
+  ├─  144 nodes  ·  211 quests  ·  392 monsters  ·  107 terrains  ·  25 fish
+  └─  200  ok  [1ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "loaded": true,
+  │    "file": "roll2hit-v3.html",
+  │    "nodes": 144,
+  │    "quests": 211,
+  │    "monsters": 392,
+  │    "fish": 25,
+  │    "lakeMagic": 8
+  │  }
+
+2026-05-30 00:31:54.237  GET     67
+  └─  400  missing type/id  [0ms]
+  │  ← resp
+  │  {
+  │    "error": "Path: /api/{type}/{id}"
+  │  }
+
+2026-05-30 00:31:59.749  GET     ping
+  ├─  144 nodes  ·  211 quests  ·  392 monsters  ·  107 terrains  ·  25 fish
+  └─  200  ok  [0ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "loaded": true,
+  │    "file": "roll2hit-v3.html",
+  │    "nodes": 144,
+  │    "quests": 211,
+  │    "monsters": 392,
+  │    "fish": 25,
+  │    "lakeMagic": 8
+  │  }
+
+2026-05-30 00:32:05.268  POST    restart
+  ├─  exit(67): wbapi-toggle.sh restart loop will relaunch
+  └─  200  restarting  [0ms]
+2026-05-30 00:32:05.734 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":211,"monsters":392,"npcs":6,"terrains":107}
+2026-05-30 00:32:05.746 [INFO    ] Server listening on http://127.0.0.1:1367
+════════════════════════════════════════════════════════════
+
+2026-05-30 00:32:11.779  GET     67
+  └─  200  ⁶⁷  [0ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "year": 1367,
+  │    "leet": 1337,
+  │    "port": 1367,
+  │    "node": "LXVII67",
+  │    "note": "67 > 69. self-serve. double dab. taps chest.",
+  │    "faith": "faith_folk",
+  │    "puzzle": "two must arrive alone and answer the same question without conferring. the jester does not ask it aloud.",
+  │    "dab": "⁶⁷"
+  │  }
+
+2026-05-30 00:33:20.426  POST    quest
+  │  → body
+  │  {
+  │    "id": "quest_1367_a_najera",
+  │    "type": "combat",
+  │    "title": "The Free Company",
+  │    "activateNode": "CY",
+  │    "desc": "Renaud le Bâtard, routier sergeant, has no war left and seven mercenaries blocking the road. 1367 AD — the Nájera aftermath. Source: Froissart.",
+  │    "xp": 150,
+  │    "retryable": true,
+  │    "retryGateDays": 0,
+  │    "tags": [
+  │      "1367",
+  │      "najera",
+  │      "routier",
+  │      "combat",
+  │      "black_prince"
+  │    ]
+  │  }
+  ├─  id: quest_1367_a_najera
+  ├─  title: The Free Company  ·  type: combat  ·  node: CY
+  └─  201  created quest/quest_1367_a_najera  [4ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "id": "quest_1367_a_najera",
+  │    "note": "POST /api/save to persist.",
+  │    "entity": {
+  │      "id": "quest_1367_a_najera",
+  │      "type": "combat",
+  │      "title": "The Free Company",
+  │      "activateNode": "CY",
+  │      "desc": "Renaud le Bâtard, routier sergeant, has no war left and seven mercenaries blocking the road. 1367 AD — the Nájera aftermath. Source: Froissart.",
+  │      "xp": 150,
+  │      "retryable": true,
+  │      "retryGateDays": 0,
+  │      "tags": [
+  │        "1367",
+  │        "najera",
+  │        "routier",
+  │        "combat",
+  │        "black_prince"
+  │      ]
+  │    },
+  │    "connections": {
+  │      "activateNode": {
+  │        "code": "CY",
+  │        "label": "Neon Undercity"
+  │      },
+  │      "waypointNode": null,
+  │      "npc": null,
+  │      "arc": "quest_1367_a_najera",
+  │      "upstream": [],
+  │      "downstream": []
+  │    },
+  │    "_meta": {
+  │      "canDelete": true,
+  │      "blockedBy": null
+  │    }
+  │  }
+
+2026-05-30 00:33:35.148  POST    quest
+  │  → body
+  │  {
+  │    "id": "quest_1367_b_tamerlane",
+  │    "type": "skill_check",
+  │    "title": "The Warlord on the Eastern Wind",
+  │    "activateNode": "CY",
+  │    "desc": "Marta of Ragusa guards a caravan carrying a displaced scholar fleeing Transoxiana. Tamerlane's shadow moves west. DC 13 Perception. Source: Mandeville.",
+  │    "dc": 13,
+  │    "skill": "Wisdom (Perception)",
+  │    "xp": 120,
+  │    "retryable": true,
+  │    "retryGateDays": 0,
+  │    "tags": [
+  │      "1367",
+  │      "tamerlane",
+  │      "scholar",
+  │      "shattered_codex",
+  │      "caravan"
+  │    ]
+  │  }
+  ├─  id: quest_1367_b_tamerlane
+  ├─  title: The Warlord on the Eastern Wind  ·  type: skill_check  ·  node: CY
+  └─  201  created quest/quest_1367_b_tamerlane  [2ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "id": "quest_1367_b_tamerlane",
+  │    "note": "POST /api/save to persist.",
+  │    "entity": {
+  │      "id": "quest_1367_b_tamerlane",
+  │      "type": "skill_check",
+  │      "title": "The Warlord on the Eastern Wind",
+  │      "activateNode": "CY",
+  │      "desc": "Marta of Ragusa guards a caravan carrying a displaced scholar fleeing Transoxiana. Tamerlane's shadow moves west. DC 13 Perception. Source: Mandeville.",
+  │      "dc": 13,
+  │      "skill": "Wisdom (Perception)",
+  │      "xp": 120,
+  │      "retryable": true,
+  │      "retryGateDays": 0,
+  │      "tags": [
+  │        "1367",
+  │        "tamerlane",
+  │        "scholar",
+  │        "shattered_codex",
+  │        "caravan"
+  │      ]
+  │    },
+  │    "connections": {
+  │      "activateNode": {
+  │        "code": "CY",
+  │        "label": "Neon Undercity"
+  │      },
+  │      "waypointNode": null,
+  │      "npc": null,
+  │      "arc": "quest_1367_b_tamerlane",
+  │      "upstream": [],
+  │      "downstream": []
+  │    },
+  │    "_meta": {
+  │      "canDelete": true,
+  │      "blockedBy": null
+  │    }
+  │  }
+
+2026-05-30 00:33:35.193  POST    quest
+  │  → body
+  │  {
+  │    "id": "quest_1367_c_ottoman",
+  │    "type": "skill_check",
+  │    "title": "The Patchwork of Adrianople",
+  │    "activateNode": "CY",
+  │    "desc": "Bogdan, Bulgarian household guard, must bluff or intimidate his way past Ottoman soldiers at a checkpoint. DC 14 Deception or DC 16 Intimidation. Source: Froissart / Arabian Nights.",
+  │    "dc": 14,
+  │    "skill": "Charisma (Deception)",
+  │    "xp": 130,
+  │    "retryable": true,
+  │    "retryGateDays": 0,
+  │    "tags": [
+  │      "1367",
+  │      "ottoman",
+  │      "balkans",
+  │      "murad",
+  │      "checkpoint",
+  │      "faith_orthodox"
+  │    ]
+  │  }
+  ├─  id: quest_1367_c_ottoman
+  ├─  title: The Patchwork of Adrianople  ·  type: skill_check  ·  node: CY
+  └─  201  created quest/quest_1367_c_ottoman  [2ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "id": "quest_1367_c_ottoman",
+  │    "note": "POST /api/save to persist.",
+  │    "entity": {
+  │      "id": "quest_1367_c_ottoman",
+  │      "type": "skill_check",
+  │      "title": "The Patchwork of Adrianople",
+  │      "activateNode": "CY",
+  │      "desc": "Bogdan, Bulgarian household guard, must bluff or intimidate his way past Ottoman soldiers at a checkpoint. DC 14 Deception or DC 16 Intimidation. Source: Froissart / Arabian Nights.",
+  │      "dc": 14,
+  │      "skill": "Charisma (Deception)",
+  │      "xp": 130,
+  │      "retryable": true,
+  │      "retryGateDays": 0,
+  │      "tags": [
+  │        "1367",
+  │        "ottoman",
+  │        "balkans",
+  │        "murad",
+  │        "checkpoint",
+  │        "faith_orthodox"
+  │      ]
+  │    },
+  │    "connections": {
+  │      "activateNode": {
+  │        "code": "CY",
+  │        "label": "Neon Undercity"
+  │      },
+  │      "waypointNode": null,
+  │      "npc": null,
+  │      "arc": "quest_1367_c_ottoman",
+  │      "upstream": [],
+  │      "downstream": []
+  │    },
+  │    "_meta": {
+  │      "canDelete": true,
+  │      "blockedBy": null
+  │    }
+  │  }
+
+2026-05-30 00:33:44.702  POST    quest
+  │  → body
+  │  {
+  │    "id": "quest_1367_d_hansa",
+  │    "type": "skill_check",
+  │    "title": "The Amber Embargo",
+  │    "activateNode": "BK",
+  │    "desc": "Hilde Magnusdóttir, Birka warehouse keeper, must negotiate with a Hanseatic League factor to break an embargo strangling the port. DC 15 Persuasion. faction_hansa affected. Source: Mandeville.",
+  │    "dc": 15,
+  │    "skill": "Charisma (Persuasion)",
+  │    "xp": 140,
+  │    "retryable": true,
+  │    "retryGateDays": 0,
+  │    "tags": [
+  │      "1367",
+  │      "hansa",
+  │      "birka",
+  │      "trade",
+  │      "faction_hansa",
+  │      "embargo"
+  │    ]
+  │  }
+  ├─  id: quest_1367_d_hansa
+  ├─  title: The Amber Embargo  ·  type: skill_check  ·  node: BK
+  └─  201  created quest/quest_1367_d_hansa  [3ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "id": "quest_1367_d_hansa",
+  │    "note": "POST /api/save to persist.",
+  │    "entity": {
+  │      "id": "quest_1367_d_hansa",
+  │      "type": "skill_check",
+  │      "title": "The Amber Embargo",
+  │      "activateNode": "BK",
+  │      "desc": "Hilde Magnusdóttir, Birka warehouse keeper, must negotiate with a Hanseatic League factor to break an embargo strangling the port. DC 15 Persuasion. faction_hansa affected. Source: Mandeville.",
+  │      "dc": 15,
+  │      "skill": "Charisma (Persuasion)",
+  │      "xp": 140,
+  │      "retryable": true,
+  │      "retryGateDays": 0,
+  │      "tags": [
+  │        "1367",
+  │        "hansa",
+  │        "birka",
+  │        "trade",
+  │        "faction_hansa",
+  │        "embargo"
+  │      ]
+  │    },
+  │    "connections": {
+  │      "activateNode": {
+  │        "code": "BK",
+  │        "label": "Broken Tooth Tavern"
+  │      },
+  │      "waypointNode": null,
+  │      "npc": null,
+  │      "arc": "quest_1367_d_hansa",
+  │      "upstream": [],
+  │      "downstream": []
+  │    },
+  │    "_meta": {
+  │      "canDelete": true,
+  │      "blockedBy": null
+  │    }
+  │  }
+
+2026-05-30 00:33:44.750  POST    quest
+  │  → body
+  │  {
+  │    "id": "quest_1367_e_wycliffe",
+  │    "type": "skill_check",
+  │    "title": "The Sealed Pamphlet",
+  │    "activateNode": "CY",
+  │    "desc": "Thomas Cobb, ex-household guard, must smuggle a Wycliffe vernacular pamphlet past a bishop's checkpoint. DC 13 Deception. Mission bit: Sealed Pamphlet. faith_reform track. Source: Canterbury Tales.",
+  │    "dc": 13,
+  │    "skill": "Charisma (Deception)",
+  │    "xp": 110,
+  │    "retryable": true,
+  │    "retryGateDays": 0,
+  │    "tags": [
+  │      "1367",
+  │      "wycliffe",
+  │      "heresy",
+  │      "faith_reform",
+  │      "pamphlet",
+  │      "church"
+  │    ]
+  │  }
+  ├─  id: quest_1367_e_wycliffe
+  ├─  title: The Sealed Pamphlet  ·  type: skill_check  ·  node: CY
+  └─  201  created quest/quest_1367_e_wycliffe  [2ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "id": "quest_1367_e_wycliffe",
+  │    "note": "POST /api/save to persist.",
+  │    "entity": {
+  │      "id": "quest_1367_e_wycliffe",
+  │      "type": "skill_check",
+  │      "title": "The Sealed Pamphlet",
+  │      "activateNode": "CY",
+  │      "desc": "Thomas Cobb, ex-household guard, must smuggle a Wycliffe vernacular pamphlet past a bishop's checkpoint. DC 13 Deception. Mission bit: Sealed Pamphlet. faith_reform track. Source: Canterbury Tales.",
+  │      "dc": 13,
+  │      "skill": "Charisma (Deception)",
+  │      "xp": 110,
+  │      "retryable": true,
+  │      "retryGateDays": 0,
+  │      "tags": [
+  │        "1367",
+  │        "wycliffe",
+  │        "heresy",
+  │        "faith_reform",
+  │        "pamphlet",
+  │        "church"
+  │      ]
+  │    },
+  │    "connections": {
+  │      "activateNode": {
+  │        "code": "CY",
+  │        "label": "Neon Undercity"
+  │      },
+  │      "waypointNode": null,
+  │      "npc": null,
+  │      "arc": "quest_1367_e_wycliffe",
+  │      "upstream": [],
+  │      "downstream": []
+  │    },
+  │    "_meta": {
+  │      "canDelete": true,
+  │      "blockedBy": null
+  │    }
+  │  }
+
+2026-05-30 00:34:07.527  POST    quest
+  │  → body
+  │  {
+  │    "id": "quest_1367_f_plague",
+  │    "type": "combat",
+  │    "title": "The Empty Village",
+  │    "activateNode": "CY",
+  │    "desc": "Cécile Aubert, plague nurse and property investigator, must clear Sainte-Marthe-des-Prés of 4 Plague Walkers and 1 Hollow Reeve before the notary can certify the land. plague_exposed flag risk. faith_folk track. Source: Decameron.",
+  │    "xp": 160,
+  │    "retryable": true,
+  │    "retryGateDays": 0,
+  │    "tags": [
+  │      "1367",
+  │      "plague",
+  │      "undead",
+  │      "plague_walkers",
+  │      "faith_folk",
+  │      "black_death"
+  │    ]
+  │  }
+  ├─  id: quest_1367_f_plague
+  ├─  title: The Empty Village  ·  type: combat  ·  node: CY
+  └─  201  created quest/quest_1367_f_plague  [4ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "id": "quest_1367_f_plague",
+  │    "note": "POST /api/save to persist.",
+  │    "entity": {
+  │      "id": "quest_1367_f_plague",
+  │      "type": "combat",
+  │      "title": "The Empty Village",
+  │      "activateNode": "CY",
+  │      "desc": "Cécile Aubert, plague nurse and property investigator, must clear Sainte-Marthe-des-Prés of 4 Plague Walkers and 1 Hollow Reeve before the notary can certify the land. plague_exposed flag risk. faith_folk track. Source: Decameron.",
+  │      "xp": 160,
+  │      "retryable": true,
+  │      "retryGateDays": 0,
+  │      "tags": [
+  │        "1367",
+  │        "plague",
+  │        "undead",
+  │        "plague_walkers",
+  │        "faith_folk",
+  │        "black_death"
+  │      ]
+  │    },
+  │    "connections": {
+  │      "activateNode": {
+  │        "code": "CY",
+  │        "label": "Neon Undercity"
+  │      },
+  │      "waypointNode": null,
+  │      "npc": null,
+  │      "arc": "quest_1367_f_plague",
+  │      "upstream": [],
+  │      "downstream": []
+  │    },
+  │    "_meta": {
+  │      "canDelete": true,
+  │      "blockedBy": null
+  │    }
+  │  }
+
+2026-05-30 00:34:07.579  POST    quest
+  │  → body
+  │  {
+  │    "id": "quest_lxvii67",
+  │    "type": "skill_check",
+  │    "title": "The Jester's Crossroads",
+  │    "activateNode": "CY",
+  │    "desc": "Two must arrive alone at the painted post and answer the question the jester does not ask. DC 10 Wisdom (Insight). No Help action. Self-serve only. faith_folk +2 on double completion. The answer is 67.",
+  │    "dc": 10,
+  │    "skill": "Wisdom (Insight)",
+  │    "xp": 67,
+  │    "retryable": true,
+  │    "retryGateDays": 0,
+  │    "tags": [
+  │      "1367",
+  │      "faith_folk",
+  │      "lxvii67",
+  │      "easter_egg",
+  │      "double_dab",
+  │      "jester",
+  │      "1337"
+  │    ]
+  │  }
+  ├─  id: quest_lxvii67
+  ├─  title: The Jester's Crossroads  ·  type: skill_check  ·  node: CY
+  └─  201  created quest/quest_lxvii67  [2ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "id": "quest_lxvii67",
+  │    "note": "POST /api/save to persist.",
+  │    "entity": {
+  │      "id": "quest_lxvii67",
+  │      "type": "skill_check",
+  │      "title": "The Jester's Crossroads",
+  │      "activateNode": "CY",
+  │      "desc": "Two must arrive alone at the painted post and answer the question the jester does not ask. DC 10 Wisdom (Insight). No Help action. Self-serve only. faith_folk +2 on double completion. The answer is 67.",
+  │      "dc": 10,
+  │      "skill": "Wisdom (Insight)",
+  │      "xp": 67,
+  │      "retryable": true,
+  │      "retryGateDays": 0,
+  │      "tags": [
+  │        "1367",
+  │        "faith_folk",
+  │        "lxvii67",
+  │        "easter_egg",
+  │        "double_dab",
+  │        "jester",
+  │        "1337"
+  │      ]
+  │    },
+  │    "connections": {
+  │      "activateNode": {
+  │        "code": "CY",
+  │        "label": "Neon Undercity"
+  │      },
+  │      "waypointNode": null,
+  │      "npc": null,
+  │      "arc": "quest_lxvii67",
+  │      "upstream": [],
+  │      "downstream": []
+  │    },
+  │    "_meta": {
+  │      "canDelete": true,
+  │      "blockedBy": null
+  │    }
+  │    … 1 more lines
+
+2026-05-30 00:34:16.642  POST    save
+  │  → body
+  │  {}
+  ├─  path: /Users/user/code/roll2hit.com/roll2hit-v3-20260530-003416.html
+  ├─  size: 1754.0 KB
+  └─  200  saved → roll2hit-v3-20260530-003416.html  [7ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "path": "/Users/user/code/roll2hit.com/roll2hit-v3-20260530-003416.html"
+  │  }
+
+2026-05-30 00:34:51.578  POST    reload
+2026-05-30 00:34:51.603 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":211,"monsters":392,"npcs":6,"terrains":107}
+  ├─  file: roll2hit-v3.html
+  ├─  loaded: 144 nodes  ·  211 quests  ·  392 monsters
+  └─  200  reload ok  [25ms]
+  │  ← resp
+  │  {
+  │    "ok": true
+  │  }
+
+2026-05-30 00:34:52.633  GET     ping
+  ├─  144 nodes  ·  211 quests  ·  392 monsters  ·  107 terrains  ·  25 fish
+  └─  200  ok  [1ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "loaded": true,
+  │    "file": "roll2hit-v3.html",
+  │    "nodes": 144,
+  │    "quests": 211,
+  │    "monsters": 392,
+  │    "fish": 25,
+  │    "lakeMagic": 8
+  │  }
+
+2026-05-30 00:38:38.843  POST    restart
+2026-05-30 00:38:39.299 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":211,"monsters":392,"npcs":6,"terrains":107}
+2026-05-30 00:38:39.310 [INFO    ] Server listening on http://127.0.0.1:1367
+════════════════════════════════════════════════════════════
+
+2026-05-30 00:38:40.928  GET     ping
+  ├─  144 nodes  ·  211 quests  ·  392 monsters  ·  107 terrains  ·  25 fish
+  └─  200  ok  [1ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "loaded": true,
+  │    "file": "roll2hit-v3.html",
+  │    "nodes": 144,
+  │    "quests": 211,
+  │    "monsters": 392,
+  │    "fish": 25,
+  │    "lakeMagic": 8
+  │  }
+
+2026-05-30 00:38:49.269  POST    quest
+  │  → body
+  │  {
+  │    "id": "quest_1367_a_najera",
+  │    "type": "combat",
+  │    "title": "The Free Company",
+  │    "activateNode": "CY",
+  │    "desc": "Renaud le Bâtard, routier sergeant, has no war left and seven mercenaries blocking the road. 1367 AD — the Nájera aftermath. Source: Froissart.",
+  │    "xp": 150,
+  │    "retryable": true,
+  │    "retryGateDays": 0,
+  │    "tags": [
+  │      "1367",
+  │      "najera",
+  │      "routier",
+  │      "combat",
+  │      "black_prince"
+  │    ]
+  │  }
+  ├─  id: quest_1367_a_najera
+  ├─  title: The Free Company  ·  type: combat  ·  node: CY
+  └─  201  created quest/quest_1367_a_najera  [3ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "id": "quest_1367_a_najera",
+  │    "note": "POST /api/save to persist.",
+  │    "entity": {
+  │      "id": "quest_1367_a_najera",
+  │      "type": "combat",
+  │      "title": "The Free Company",
+  │      "activateNode": "CY",
+  │      "desc": "Renaud le Bâtard, routier sergeant, has no war left and seven mercenaries blocking the road. 1367 AD — the Nájera aftermath. Source: Froissart.",
+  │      "xp": 150,
+  │      "retryable": true,
+  │      "retryGateDays": 0,
+  │      "tags": [
+  │        "1367",
+  │        "najera",
+  │        "routier",
+  │        "combat",
+  │        "black_prince"
+  │      ]
+  │    },
+  │    "connections": {
+  │      "activateNode": {
+  │        "code": "CY",
+  │        "label": "Neon Undercity"
+  │      },
+  │      "waypointNode": null,
+  │      "npc": null,
+  │      "arc": "quest_1367_a_najera",
+  │      "upstream": [],
+  │      "downstream": []
+  │    },
+  │    "_meta": {
+  │      "canDelete": true,
+  │      "blockedBy": null
+  │    }
+  │  }
+
+2026-05-30 00:38:52.757  POST    save
+  │  → body
+  │  {}
+  ├─  backup: /Users/user/code/roll2hit.com/roll2hit-v3-20260530-003852.html
+  ├─  size: 1751.9 KB
+  ├─  validation: PASS
+  ├─  promoted: /Users/user/code/roll2hit.com/roll2hit-v3.html
+  ├─  reloaded: in-memory state refreshed from promoted file
+  └─  200  saved + promoted → roll2hit-v3.html  [129ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "backup": "/Users/user/code/roll2hit.com/roll2hit-v3-20260530-003852.html",
+  │    "promoted": "/Users/user/code/roll2hit.com/roll2hit-v3.html",
+  │    "validation": {
+  │      "ok": true,
+  │      "live": {
+  │        "nodes": 144,
+  │        "quests": 212,
+  │        "monsters": 392,
+  │        "terrains": 107
+  │      },
+  │      "backup": {
+  │        "nodes": 144,
+  │        "quests": 212,
+  │        "monsters": 392,
+  │        "terrains": 107
+  │      }
+  │    },
+  │    "autoReloaded": true
+  │  }
+
+2026-05-30 00:39:00.142  GET     quest/quest_1367_a_najera
+  ├─  entity: The Free Company  ·  type: combat  ·  node: CY
+  ├─  chain: ↑0 upstream  ·  ↓0 downstream
+  ├─  can delete: [32myes[0m
+  └─  200  quest/quest_1367_a_najera  [0ms]
+  │  ← resp
+  │  {
+  │    "entity": {
+  │      "id": "quest_1367_a_najera",
+  │      "type": "combat",
+  │      "title": "The Free Company",
+  │      "desc": "Renaud le Bâtard, routier sergeant, has no war left and seven mercenaries blocking the road. 1367 AD — the Nájera aftermath. Source: Froissart.",
+  │      "activateNode": "CY",
+  │      "retryGateDays": 0,
+  │      "retryable": true
+  │    },
+  │    "connections": {
+  │      "activateNode": {
+  │        "code": "CY",
+  │        "label": "Neon Undercity"
+  │      },
+  │      "waypointNode": null,
+  │      "npc": null,
+  │      "arc": "quest_1367_a_najera",
+  │      "upstream": [],
+  │      "downstream": []
+  │    },
+  │    "_meta": {
+  │      "canDelete": true,
+  │      "blockedBy": null
+  │    }
+  │  }
+
+2026-05-30 00:41:49.722  POST    quest
+  │  → body
+  │  {
+  │    "id": "quest_1367_b_tamerlane",
+  │    "type": "skill_check",
+  │    "title": "The Warlord on the Eastern Wind",
+  │    "activateNode": "CY",
+  │    "desc": "Marta of Ragusa guards a caravan carrying a displaced scholar fleeing Transoxiana. Tamerlane's shadow moves west. DC 13 Perception. Source: Mandeville.",
+  │    "dc": 13,
+  │    "skill": "Wisdom (Perception)",
+  │    "xp": 120,
+  │    "retryable": true,
+  │    "retryGateDays": 0,
+  │    "tags": [
+  │      "1367",
+  │      "tamerlane",
+  │      "scholar",
+  │      "shattered_codex",
+  │      "caravan"
+  │    ]
+  │  }
+  ├─  id: quest_1367_b_tamerlane
+  ├─  title: The Warlord on the Eastern Wind  ·  type: skill_check  ·  node: CY
+  └─  201  created quest/quest_1367_b_tamerlane  [3ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "id": "quest_1367_b_tamerlane",
+  │    "note": "POST /api/save to persist.",
+  │    "entity": {
+  │      "id": "quest_1367_b_tamerlane",
+  │      "type": "skill_check",
+  │      "title": "The Warlord on the Eastern Wind",
+  │      "activateNode": "CY",
+  │      "desc": "Marta of Ragusa guards a caravan carrying a displaced scholar fleeing Transoxiana. Tamerlane's shadow moves west. DC 13 Perception. Source: Mandeville.",
+  │      "dc": 13,
+  │      "skill": "Wisdom (Perception)",
+  │      "xp": 120,
+  │      "retryable": true,
+  │      "retryGateDays": 0,
+  │      "tags": [
+  │        "1367",
+  │        "tamerlane",
+  │        "scholar",
+  │        "shattered_codex",
+  │        "caravan"
+  │      ]
+  │    },
+  │    "connections": {
+  │      "activateNode": {
+  │        "code": "CY",
+  │        "label": "Neon Undercity"
+  │      },
+  │      "waypointNode": null,
+  │      "npc": null,
+  │      "arc": "quest_1367_b_tamerlane",
+  │      "upstream": [],
+  │      "downstream": []
+  │    },
+  │    "_meta": {
+  │      "canDelete": true,
+  │      "blockedBy": null
+  │    }
+  │  }
+
+2026-05-30 00:45:30.977  POST    restart
+  ├─  exit(67): wbapi-toggle.sh restart loop will relaunch
+  └─  200  restarting  [0ms]
+2026-05-30 00:45:31.431 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":212,"monsters":392,"npcs":6,"terrains":107}
+2026-05-30 00:45:31.443 [INFO    ] Server listening on http://127.0.0.1:1367
+════════════════════════════════════════════════════════════
+
+2026-05-30 00:45:33.061  GET     ping
+  ├─  144 nodes  ·  212 quests  ·  392 monsters  ·  107 terrains  ·  25 fish
+  └─  200  ok  [1ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "loaded": true,
+  │    "file": "roll2hit-v3.html",
+  │    "nodes": 144,
+  │    "quests": 212,
+  │    "monsters": 392,
+  │    "fish": 25,
+  │    "lakeMagic": 8
+  │  }
+
+2026-05-30 00:45:51.714  POST    quest
+  │  → body
+  │  {
+  │    "id": "quest_1367_b_tamerlane",
+  │    "type": "skill_check",
+  │    "title": "The Warlord on the Eastern Wind",
+  │    "activateNode": "CY",
+  │    "desc": "Marta of Ragusa guards a caravan carrying a displaced scholar fleeing Transoxiana. Tamerlane's shadow moves west. DC 13 Perception. Source: Mandeville.",
+  │    "dc": 13,
+  │    "skill": "Wisdom (Perception)",
+  │    "xp": 120,
+  │    "retryable": true,
+  │    "retryGateDays": 0,
+  │    "tags": [
+  │      "1367",
+  │      "tamerlane",
+  │      "scholar",
+  │      "shattered_codex",
+  │      "caravan"
+  │    ]
+  │  }
+  ├─  id: quest_1367_b_tamerlane
+  ├─  title: The Warlord on the Eastern Wind  ·  type: skill_check  ·  node: CY
+  └─  201  created quest/quest_1367_b_tamerlane  [3ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "id": "quest_1367_b_tamerlane",
+  │    "note": "POST /api/save to persist.",
+  │    "entity": {
+  │      "id": "quest_1367_b_tamerlane",
+  │      "type": "skill_check",
+  │      "title": "The Warlord on the Eastern Wind",
+  │      "activateNode": "CY",
+  │      "desc": "Marta of Ragusa guards a caravan carrying a displaced scholar fleeing Transoxiana. Tamerlane's shadow moves west. DC 13 Perception. Source: Mandeville.",
+  │      "dc": 13,
+  │      "skill": "Wisdom (Perception)",
+  │      "xp": 120,
+  │      "retryable": true,
+  │      "retryGateDays": 0,
+  │      "tags": [
+  │        "1367",
+  │        "tamerlane",
+  │        "scholar",
+  │        "shattered_codex",
+  │        "caravan"
+  │      ]
+  │    },
+  │    "connections": {
+  │      "activateNode": {
+  │        "code": "CY",
+  │        "label": "Neon Undercity"
+  │      },
+  │      "waypointNode": null,
+  │      "npc": null,
+  │      "arc": "quest_1367_b_tamerlane",
+  │      "upstream": [],
+  │      "downstream": []
+  │    },
+  │    "_meta": {
+  │      "canDelete": true,
+  │      "blockedBy": null
+  │    }
+  │  }
+
+2026-05-30 00:45:56.541  POST    save
+  ├─  backup: /Users/user/code/roll2hit.com/roll2hit-v3-20260530-004556.html
+  ├─  size: 1752.2 KB
+  ├─  wrote: /Users/user/code/roll2hit.com/roll2hit-v3.html
+  └─  200  saved → restarting  [9ms]
+2026-05-30 00:45:57.126 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":213,"monsters":392,"npcs":6,"terrains":107}
+2026-05-30 00:45:57.137 [INFO    ] Server listening on http://127.0.0.1:1367
+════════════════════════════════════════════════════════════
+
+2026-05-30 00:46:01.922  GET     quest/quest_1367_b_tamerlane
+  ├─  entity: The Warlord on the Eastern Wind  ·  type: skill_check  ·  node: CY
+  ├─  chain: ↑0 upstream  ·  ↓0 downstream
+  ├─  can delete: [32myes[0m
+  └─  200  quest/quest_1367_b_tamerlane  [2ms]
+  │  ← resp
+  │  {
+  │    "entity": {
+  │      "id": "quest_1367_b_tamerlane",
+  │      "type": "skill_check",
+  │      "title": "The Warlord on the Eastern Wind",
+  │      "desc": "Marta of Ragusa guards a caravan carrying a displaced scholar fleeing Transoxiana. Tamerlane's shadow moves west. DC 13 Perception. Source: Mandeville.",
+  │      "activateNode": "CY",
+  │      "retryGateDays": 0,
+  │      "retryable": true
+  │    },
+  │    "connections": {
+  │      "activateNode": {
+  │        "code": "CY",
+  │        "label": "Neon Undercity"
+  │      },
+  │      "waypointNode": null,
+  │      "npc": null,
+  │      "arc": "quest_1367_b_tamerlane",
+  │      "upstream": [],
+  │      "downstream": []
+  │    },
+  │    "_meta": {
+  │      "canDelete": true,
+  │      "blockedBy": null
+  │    }
+  │  }
+
+2026-05-30 00:49:39.289  GET     ping
+  ├─  144 nodes  ·  213 quests  ·  392 monsters  ·  107 terrains  ·  25 fish
+  └─  200  ok  [1ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "loaded": true,
+  │    "file": "roll2hit-v3.html",
+  │    "nodes": 144,
+  │    "quests": 213,
+  │    "monsters": 392,
+  │    "fish": 25,
+  │    "lakeMagic": 8
+  │  }
+
+2026-05-30 00:49:39.348  GET     audit
+  ├─  [31m11 errors[0m  ·  [33m35 warnings[0m  ·  [2m112 suggestions[0m
+  ├─  top errors: node "…" not in NODE_MAP (×10)
+  ├─  : drop entry has no matching MONSTER_POOL entry
+  ├─  top warnings: terrain has no monsters defined (×21)
+  ├─  : no MONSTER_DROPS entry — creature drops nothing (×13)
+  └─  200  11 errors  ·  35 warnings  ·  112 suggestions  [2ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "errors": [
+  │      {
+  │        "section": "QUEST_DB",
+  │        "key": "quest_tl_02",
+  │        "field": "waypointNode",
+  │        "msg": "node \"TL\" not in NODE_MAP"
+  │      },
+  │      {
+  │        "section": "QUEST_DB",
+  │        "key": "quest_wis_00",
+  │        "field": "activateNode",
+  │        "msg": "node \"VS\" not in NODE_MAP"
+  │      },
+  │      {
+  │        "section": "QUEST_DB",
+  │        "key": "quest_wis_00",
+  │        "field": "waypointNode",
+  │        "msg": "node \"VS\" not in NODE_MAP"
+  │      },
+  │      {
+  │        "section": "QUEST_DB",
+  │        "key": "quest_wis_06",
+  │        "field": "activateNode",
+  │        "msg": "node \"VS\" not in NODE_MAP"
+  │      },
+  │      {
+  │        "section": "QUEST_DB",
+  │        "key": "quest_wis_06",
+  │        "field": "waypointNode",
+  │        "msg": "node \"VS\" not in NODE_MAP"
+  │      },
+  │      {
+  │        "section": "QUEST_DB",
+  │        "key": "quest_wis_07",
+  │        "field": "activateNode",
+  │        "msg": "node \"VS\" not in NODE_MAP"
+  │      },
+  │      {
+  │    … 978 more lines
+
+2026-05-30 01:29:56.966  POST    quest
+  │  → body
+  │  {
+  │    "id": "quest_1367_c_ottoman",
+  │    "type": "skill_check",
+  │    "title": "The Patchwork of Adrianople",
+  │    "activateNode": "CY",
+  │    "desc": "Bogdan, Bulgarian household guard, must bluff or intimidate his way past Ottoman soldiers at a Balkan checkpoint. DC 14 Deception or DC 16 Intimidation. 1367 AD. Source: Froissart.",
+  │    "dc": 14,
+  │    "skill": "Charisma (Deception)",
+  │    "xp": 130,
+  │    "retryable": true,
+  │    "retryGateDays": 0,
+  │    "tags": [
+  │      "1367",
+  │      "ottoman",
+  │      "balkans",
+  │      "murad",
+  │      "checkpoint",
+  │      "faith_orthodox"
+  │    ]
+  │  }
+  ├─  id: quest_1367_c_ottoman
+  ├─  title: The Patchwork of Adrianople  ·  type: skill_check  ·  node: CY
+  └─  201  created quest/quest_1367_c_ottoman  [4ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "id": "quest_1367_c_ottoman",
+  │    "note": "POST /api/save to persist.",
+  │    "entity": {
+  │      "id": "quest_1367_c_ottoman",
+  │      "type": "skill_check",
+  │      "title": "The Patchwork of Adrianople",
+  │      "activateNode": "CY",
+  │      "desc": "Bogdan, Bulgarian household guard, must bluff or intimidate his way past Ottoman soldiers at a Balkan checkpoint. DC 14 Deception or DC 16 Intimidation. 1367 AD. Source: Froissart.",
+  │      "dc": 14,
+  │      "skill": "Charisma (Deception)",
+  │      "xp": 130,
+  │      "retryable": true,
+  │      "retryGateDays": 0,
+  │      "tags": [
+  │        "1367",
+  │        "ottoman",
+  │        "balkans",
+  │        "murad",
+  │        "checkpoint",
+  │        "faith_orthodox"
+  │      ]
+  │    },
+  │    "connections": {
+  │      "activateNode": {
+  │        "code": "CY",
+  │        "label": "Neon Undercity"
+  │      },
+  │      "waypointNode": null,
+  │      "npc": null,
+  │      "arc": "quest_1367_c_ottoman",
+  │      "upstream": [],
+  │      "downstream": []
+  │    },
+  │    "_meta": {
+  │      "canDelete": true,
+  │      "blockedBy": null
+  │    }
+  │  }
+
+2026-05-30 01:30:00.697  POST    save
+  ├─  backup: /Users/user/code/roll2hit.com/roll2hit-v3-20260530-013000.html
+  ├─  size: 1752.6 KB
+  ├─  wrote: /Users/user/code/roll2hit.com/roll2hit-v3.html
+  └─  200  saved → restarting  [8ms]
+2026-05-30 01:30:01.286 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":214,"monsters":392,"npcs":6,"terrains":107}
+2026-05-30 01:30:01.297 [INFO    ] Server listening on http://127.0.0.1:1367
+════════════════════════════════════════════════════════════
+
+2026-05-30 01:30:19.992  GET     quest/quest_1367_c_ottoman
+  ├─  entity: The Patchwork of Adrianople  ·  type: skill_check  ·  node: CY
+  ├─  chain: ↑0 upstream  ·  ↓0 downstream
+  ├─  can delete: [32myes[0m
+  └─  200  quest/quest_1367_c_ottoman  [1ms]
+  │  ← resp
+  │  {
+  │    "entity": {
+  │      "id": "quest_1367_c_ottoman",
+  │      "type": "skill_check",
+  │      "title": "The Patchwork of Adrianople",
+  │      "desc": "Bogdan, Bulgarian household guard, must bluff or intimidate his way past Ottoman soldiers at a Balkan checkpoint. DC 14 Deception or DC 16 Intimidation. 1367 AD. Source: Froissart.",
+  │      "activateNode": "CY",
+  │      "retryGateDays": 0,
+  │      "retryable": true
+  │    },
+  │    "connections": {
+  │      "activateNode": {
+  │        "code": "CY",
+  │        "label": "Neon Undercity"
+  │      },
+  │      "waypointNode": null,
+  │      "npc": null,
+  │      "arc": "quest_1367_c_ottoman",
+  │      "upstream": [],
+  │      "downstream": []
+  │    },
+  │    "_meta": {
+  │      "canDelete": true,
+  │      "blockedBy": null
+  │    }
+  │  }
+
+2026-05-30 01:30:40.655  POST    quest
+  │  → body
+  │  {
+  │    "id": "quest_1367_d_hansa",
+  │    "type": "skill_check",
+  │    "title": "The Amber Embargo",
+  │    "activateNode": "BK",
+  │    "desc": "Hilde Magnusdóttir, Birka warehouse keeper, must negotiate with a Hanseatic League factor to break an embargo strangling the port. DC 15 Persuasion. faction_hansa score affected. Source: Mandeville.",
+  │    "dc": 15,
+  │    "skill": "Charisma (Persuasion)",
+  │    "xp": 140,
+  │    "retryable": true,
+  │    "retryGateDays": 0,
+  │    "tags": [
+  │      "1367",
+  │      "hansa",
+  │      "birka",
+  │      "trade",
+  │      "faction_hansa",
+  │      "embargo"
+  │    ]
+  │  }
+  ├─  id: quest_1367_d_hansa
+  ├─  title: The Amber Embargo  ·  type: skill_check  ·  node: BK
+  └─  201  created quest/quest_1367_d_hansa  [2ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "id": "quest_1367_d_hansa",
+  │    "note": "POST /api/save to persist.",
+  │    "entity": {
+  │      "id": "quest_1367_d_hansa",
+  │      "type": "skill_check",
+  │      "title": "The Amber Embargo",
+  │      "activateNode": "BK",
+  │      "desc": "Hilde Magnusdóttir, Birka warehouse keeper, must negotiate with a Hanseatic League factor to break an embargo strangling the port. DC 15 Persuasion. faction_hansa score affected. Source: Mandeville.",
+  │      "dc": 15,
+  │      "skill": "Charisma (Persuasion)",
+  │      "xp": 140,
+  │      "retryable": true,
+  │      "retryGateDays": 0,
+  │      "tags": [
+  │        "1367",
+  │        "hansa",
+  │        "birka",
+  │        "trade",
+  │        "faction_hansa",
+  │        "embargo"
+  │      ]
+  │    },
+  │    "connections": {
+  │      "activateNode": {
+  │        "code": "BK",
+  │        "label": "Broken Tooth Tavern"
+  │      },
+  │      "waypointNode": null,
+  │      "npc": null,
+  │      "arc": "quest_1367_d_hansa",
+  │      "upstream": [],
+  │      "downstream": []
+  │    },
+  │    "_meta": {
+  │      "canDelete": true,
+  │      "blockedBy": null
+  │    }
+  │  }
+
+2026-05-30 01:30:44.789  POST    save
+  ├─  backup: /Users/user/code/roll2hit.com/roll2hit-v3-20260530-013044.html
+  ├─  size: 1752.9 KB
+  ├─  wrote: /Users/user/code/roll2hit.com/roll2hit-v3.html
+  └─  200  saved → restarting  [7ms]
+2026-05-30 01:30:45.370 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":215,"monsters":392,"npcs":6,"terrains":107}
+2026-05-30 01:30:45.381 [INFO    ] Server listening on http://127.0.0.1:1367
+════════════════════════════════════════════════════════════
+
+2026-05-30 01:30:46.861  GET     quest/quest_1367_d_hansa
+  ├─  entity: The Amber Embargo  ·  type: skill_check  ·  node: BK
+  ├─  chain: ↑0 upstream  ·  ↓0 downstream
+  ├─  can delete: [32myes[0m
+  └─  200  quest/quest_1367_d_hansa  [1ms]
+  │  ← resp
+  │  {
+  │    "entity": {
+  │      "id": "quest_1367_d_hansa",
+  │      "type": "skill_check",
+  │      "title": "The Amber Embargo",
+  │      "desc": "Hilde Magnusdóttir, Birka warehouse keeper, must negotiate with a Hanseatic League factor to break an embargo strangling the port. DC 15 Persuasion. faction_hansa score affected. Source: Mandeville.",
+  │      "activateNode": "BK",
+  │      "retryGateDays": 0,
+  │      "retryable": true
+  │    },
+  │    "connections": {
+  │      "activateNode": {
+  │        "code": "BK",
+  │        "label": "Broken Tooth Tavern"
+  │      },
+  │      "waypointNode": null,
+  │      "npc": null,
+  │      "arc": "quest_1367_d_hansa",
+  │      "upstream": [],
+  │      "downstream": []
+  │    },
+  │    "_meta": {
+  │      "canDelete": true,
+  │      "blockedBy": null
+  │    }
+  │  }
+
+2026-05-30 01:30:54.902  POST    quest
+  │  → body
+  │  {
+  │    "id": "quest_1367_e_wycliffe",
+  │    "type": "skill_check",
+  │    "title": "The Sealed Pamphlet",
+  │    "activateNode": "CY",
+  │    "desc": "Thomas Cobb, ex-household guard, must smuggle a Wycliffe vernacular pamphlet past a bishop's checkpoint. DC 13 Deception. Mission bit: Sealed Pamphlet. faith_reform track. Source: Canterbury Tales.",
+  │    "dc": 13,
+  │    "skill": "Charisma (Deception)",
+  │    "xp": 110,
+  │    "retryable": true,
+  │    "retryGateDays": 0,
+  │    "tags": [
+  │      "1367",
+  │      "wycliffe",
+  │      "heresy",
+  │      "faith_reform",
+  │      "pamphlet",
+  │      "church"
+  │    ]
+  │  }
+  ├─  id: quest_1367_e_wycliffe
+  ├─  title: The Sealed Pamphlet  ·  type: skill_check  ·  node: CY
+  └─  201  created quest/quest_1367_e_wycliffe  [3ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "id": "quest_1367_e_wycliffe",
+  │    "note": "POST /api/save to persist.",
+  │    "entity": {
+  │      "id": "quest_1367_e_wycliffe",
+  │      "type": "skill_check",
+  │      "title": "The Sealed Pamphlet",
+  │      "activateNode": "CY",
+  │      "desc": "Thomas Cobb, ex-household guard, must smuggle a Wycliffe vernacular pamphlet past a bishop's checkpoint. DC 13 Deception. Mission bit: Sealed Pamphlet. faith_reform track. Source: Canterbury Tales.",
+  │      "dc": 13,
+  │      "skill": "Charisma (Deception)",
+  │      "xp": 110,
+  │      "retryable": true,
+  │      "retryGateDays": 0,
+  │      "tags": [
+  │        "1367",
+  │        "wycliffe",
+  │        "heresy",
+  │        "faith_reform",
+  │        "pamphlet",
+  │        "church"
+  │      ]
+  │    },
+  │    "connections": {
+  │      "activateNode": {
+  │        "code": "CY",
+  │        "label": "Neon Undercity"
+  │      },
+  │      "waypointNode": null,
+  │      "npc": null,
+  │      "arc": "quest_1367_e_wycliffe",
+  │      "upstream": [],
+  │      "downstream": []
+  │    },
+  │    "_meta": {
+  │      "canDelete": true,
+  │      "blockedBy": null
+  │    }
+  │  }
+
+2026-05-30 01:30:58.209  POST    save
+  ├─  backup: /Users/user/code/roll2hit.com/roll2hit-v3-20260530-013058.html
+  ├─  size: 1753.3 KB
+  ├─  wrote: /Users/user/code/roll2hit.com/roll2hit-v3.html
+  └─  200  saved → restarting  [6ms]
+2026-05-30 01:30:58.786 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":216,"monsters":392,"npcs":6,"terrains":107}
+2026-05-30 01:30:58.797 [INFO    ] Server listening on http://127.0.0.1:1367
+════════════════════════════════════════════════════════════
+
+2026-05-30 01:31:00.274  GET     quest/quest_1367_e_wycliffe
+  ├─  entity: The Sealed Pamphlet  ·  type: skill_check  ·  node: CY
+  ├─  chain: ↑0 upstream  ·  ↓0 downstream
+  ├─  can delete: [32myes[0m
+  └─  200  quest/quest_1367_e_wycliffe  [1ms]
+  │  ← resp
+  │  {
+  │    "entity": {
+  │      "id": "quest_1367_e_wycliffe",
+  │      "type": "skill_check",
+  │      "title": "The Sealed Pamphlet",
+  │      "desc": "Thomas Cobb, ex-household guard, must smuggle a Wycliffe vernacular pamphlet past a bishop's checkpoint. DC 13 Deception. Mission bit: Sealed Pamphlet. faith_reform track. Source: Canterbury Tales.",
+  │      "activateNode": "CY",
+  │      "retryGateDays": 0,
+  │      "retryable": true
+  │    },
+  │    "connections": {
+  │      "activateNode": {
+  │        "code": "CY",
+  │        "label": "Neon Undercity"
+  │      },
+  │      "waypointNode": null,
+  │      "npc": null,
+  │      "arc": "quest_1367_e_wycliffe",
+  │      "upstream": [],
+  │      "downstream": []
+  │    },
+  │    "_meta": {
+  │      "canDelete": true,
+  │      "blockedBy": null
+  │    }
+  │  }
+
+2026-05-30 01:31:07.754  POST    quest
+  │  → body
+  │  {
+  │    "id": "quest_1367_f_plague",
+  │    "type": "combat",
+  │    "title": "The Empty Village",
+  │    "activateNode": "CY",
+  │    "desc": "Cécile Aubert, plague nurse and property investigator, must clear Sainte-Marthe-des-Prés of 4 Plague Walkers and 1 Hollow Reeve before the land can be certified. plague_exposed flag risk. faith_folk track. Source: Decameron.",
+  │    "xp": 160,
+  │    "retryable": true,
+  │    "retryGateDays": 0,
+  │    "tags": [
+  │      "1367",
+  │      "plague",
+  │      "undead",
+  │      "plague_walkers",
+  │      "faith_folk",
+  │      "black_death"
+  │    ]
+  │  }
+  ├─  id: quest_1367_f_plague
+  ├─  title: The Empty Village  ·  type: combat  ·  node: CY
+  └─  201  created quest/quest_1367_f_plague  [3ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "id": "quest_1367_f_plague",
+  │    "note": "POST /api/save to persist.",
+  │    "entity": {
+  │      "id": "quest_1367_f_plague",
+  │      "type": "combat",
+  │      "title": "The Empty Village",
+  │      "activateNode": "CY",
+  │      "desc": "Cécile Aubert, plague nurse and property investigator, must clear Sainte-Marthe-des-Prés of 4 Plague Walkers and 1 Hollow Reeve before the land can be certified. plague_exposed flag risk. faith_folk track. Source: Decameron.",
+  │      "xp": 160,
+  │      "retryable": true,
+  │      "retryGateDays": 0,
+  │      "tags": [
+  │        "1367",
+  │        "plague",
+  │        "undead",
+  │        "plague_walkers",
+  │        "faith_folk",
+  │        "black_death"
+  │      ]
+  │    },
+  │    "connections": {
+  │      "activateNode": {
+  │        "code": "CY",
+  │        "label": "Neon Undercity"
+  │      },
+  │      "waypointNode": null,
+  │      "npc": null,
+  │      "arc": "quest_1367_f_plague",
+  │      "upstream": [],
+  │      "downstream": []
+  │    },
+  │    "_meta": {
+  │      "canDelete": true,
+  │      "blockedBy": null
+  │    }
+  │  }
+
+2026-05-30 01:31:11.010  POST    save
+  ├─  backup: /Users/user/code/roll2hit.com/roll2hit-v3-20260530-013111.html
+  ├─  size: 1753.7 KB
+  ├─  wrote: /Users/user/code/roll2hit.com/roll2hit-v3.html
+  └─  200  saved → restarting  [7ms]
+2026-05-30 01:31:11.598 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":217,"monsters":392,"npcs":6,"terrains":107}
+2026-05-30 01:31:11.608 [INFO    ] Server listening on http://127.0.0.1:1367
+════════════════════════════════════════════════════════════
+
+2026-05-30 01:31:13.078  GET     quest/quest_1367_f_plague
+  ├─  entity: The Empty Village  ·  type: combat  ·  node: CY
+  ├─  chain: ↑0 upstream  ·  ↓0 downstream
+  ├─  can delete: [32myes[0m
+  └─  200  quest/quest_1367_f_plague  [1ms]
+  │  ← resp
+  │  {
+  │    "entity": {
+  │      "id": "quest_1367_f_plague",
+  │      "type": "combat",
+  │      "title": "The Empty Village",
+  │      "desc": "Cécile Aubert, plague nurse and property investigator, must clear Sainte-Marthe-des-Prés of 4 Plague Walkers and 1 Hollow Reeve before the land can be certified. plague_exposed flag risk. faith_folk track. Source: Decameron.",
+  │      "activateNode": "CY",
+  │      "retryGateDays": 0,
+  │      "retryable": true
+  │    },
+  │    "connections": {
+  │      "activateNode": {
+  │        "code": "CY",
+  │        "label": "Neon Undercity"
+  │      },
+  │      "waypointNode": null,
+  │      "npc": null,
+  │      "arc": "quest_1367_f_plague",
+  │      "upstream": [],
+  │      "downstream": []
+  │    },
+  │    "_meta": {
+  │      "canDelete": true,
+  │      "blockedBy": null
+  │    }
+  │  }
+
+2026-05-30 01:31:20.543  POST    quest
+  │  → body
+  │  {
+  │    "id": "quest_lxvii67",
+  │    "type": "skill_check",
+  │    "title": "The Jester's Crossroads",
+  │    "activateNode": "CY",
+  │    "desc": "Two must arrive alone at the painted post and answer the question the jester does not ask. DC 10 Wisdom (Insight). No Help action. Self-serve only. faith_folk +2 on double completion. The answer is 67.",
+  │    "dc": 10,
+  │    "skill": "Wisdom (Insight)",
+  │    "xp": 67,
+  │    "retryable": true,
+  │    "retryGateDays": 0,
+  │    "tags": [
+  │      "1367",
+  │      "faith_folk",
+  │      "lxvii67",
+  │      "easter_egg",
+  │      "double_dab",
+  │      "jester",
+  │      "1337"
+  │    ]
+  │  }
+  ├─  id: quest_lxvii67
+  ├─  title: The Jester's Crossroads  ·  type: skill_check  ·  node: CY
+  └─  201  created quest/quest_lxvii67  [3ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "id": "quest_lxvii67",
+  │    "note": "POST /api/save to persist.",
+  │    "entity": {
+  │      "id": "quest_lxvii67",
+  │      "type": "skill_check",
+  │      "title": "The Jester's Crossroads",
+  │      "activateNode": "CY",
+  │      "desc": "Two must arrive alone at the painted post and answer the question the jester does not ask. DC 10 Wisdom (Insight). No Help action. Self-serve only. faith_folk +2 on double completion. The answer is 67.",
+  │      "dc": 10,
+  │      "skill": "Wisdom (Insight)",
+  │      "xp": 67,
+  │      "retryable": true,
+  │      "retryGateDays": 0,
+  │      "tags": [
+  │        "1367",
+  │        "faith_folk",
+  │        "lxvii67",
+  │        "easter_egg",
+  │        "double_dab",
+  │        "jester",
+  │        "1337"
+  │      ]
+  │    },
+  │    "connections": {
+  │      "activateNode": {
+  │        "code": "CY",
+  │        "label": "Neon Undercity"
+  │      },
+  │      "waypointNode": null,
+  │      "npc": null,
+  │      "arc": "quest_lxvii67",
+  │      "upstream": [],
+  │      "downstream": []
+  │    },
+  │    "_meta": {
+  │      "canDelete": true,
+  │      "blockedBy": null
+  │    }
+  │    … 1 more lines
+
+2026-05-30 01:31:24.101  POST    save
+  ├─  backup: /Users/user/code/roll2hit.com/roll2hit-v3-20260530-013124.html
+  ├─  size: 1754.0 KB
+  ├─  wrote: /Users/user/code/roll2hit.com/roll2hit-v3.html
+  └─  200  saved → restarting  [6ms]
+2026-05-30 01:31:24.681 [LOAD    ] Loaded roll2hit-v3.html {"nodes":144,"quests":218,"monsters":392,"npcs":6,"terrains":107}
+2026-05-30 01:31:24.692 [INFO    ] Server listening on http://127.0.0.1:1367
+════════════════════════════════════════════════════════════
+
+2026-05-30 01:31:26.167  GET     quest/quest_lxvii67
+  ├─  entity: The Jester's Crossroads  ·  type: skill_check  ·  node: CY
+  ├─  chain: ↑0 upstream  ·  ↓0 downstream
+  ├─  can delete: [32myes[0m
+  └─  200  quest/quest_lxvii67  [1ms]
+  │  ← resp
+  │  {
+  │    "entity": {
+  │      "id": "quest_lxvii67",
+  │      "type": "skill_check",
+  │      "title": "The Jester's Crossroads",
+  │      "desc": "Two must arrive alone at the painted post and answer the question the jester does not ask. DC 10 Wisdom (Insight). No Help action. Self-serve only. faith_folk +2 on double completion. The answer is 67.",
+  │      "activateNode": "CY",
+  │      "retryGateDays": 0,
+  │      "retryable": true
+  │    },
+  │    "connections": {
+  │      "activateNode": {
+  │        "code": "CY",
+  │        "label": "Neon Undercity"
+  │      },
+  │      "waypointNode": null,
+  │      "npc": null,
+  │      "arc": "quest_lxvii67",
+  │      "upstream": [],
+  │      "downstream": []
+  │    },
+  │    "_meta": {
+  │      "canDelete": true,
+  │      "blockedBy": null
+  │    }
+  │  }
+
+2026-05-30 01:31:29.265  GET     ping
+  ├─  144 nodes  ·  218 quests  ·  392 monsters  ·  107 terrains  ·  25 fish
+  └─  200  ok  [0ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "loaded": true,
+  │    "file": "roll2hit-v3.html",
+  │    "nodes": 144,
+  │    "quests": 218,
+  │    "monsters": 392,
+  │    "fish": 25,
+  │    "lakeMagic": 8
+  │  }
+
+2026-05-30 01:33:17.044  GET     node/BK
+  ├─  entity: Broken Tooth Tavern  ·  Act 5  ·  terrain: bar (Visby)
+  ├─  connections: 6 quests  ·  1 NPCs  ·  5 monsters ·  exits: E:GC W:SE
+  ├─  can delete: [31mno — blocked by {"quests":["mq_4","quest_eg_primary","quest_eg_return","quest_eg_return","quest_wis_04","quest_1367_d_hansa"],"npcs":["_inline_BK"]}[0m
+  └─  200  node/BK  [1ms]
+  │  ← resp
+  │  {
+  │    "entity": {
+  │      "num": 25,
+  │      "code": "BK",
+  │      "name": "bar (Visby)",
+  │      "label": "Broken Tooth Tavern",
+  │      "act": 5,
+  │      "N": null,
+  │      "S": null,
+  │      "E": "GC",
+  │      "W": "SE",
+  │      "text": "The Broken Tooth runs on two levels. The main floor is extremely lively — the specific kind of lively that happens when a warlord has a corner table and everyone in the room has decided to behave as though they haven't noticed. The Warrant Hall is upstairs. The stairs are in the back, past Mordus.\n\nWarlord Kael Mordus sits with a sightline to both the door and the stairs. The staff brings his drink without being asked. He is explaining the shaman problem to no one in particular when you arrive — which means he was explaining it to you before he knew you were coming.\n\n\"It's bad for business,\" he says. This is his moral framework. In this context, it is also accurate.\n\nThe shaman's influence runs through the Warrant Hall above him. Mordus runs the floor below. Neither has fully displaced the other yet.",
+  │      "npc": "Warlord Kael Mordus",
+  │      "battle": null,
+  │      "loot": null,
+  │      "sleep": false,
+  │      "id": "BK"
+  │    },
+  │    "connections": {
+  │      "terrain": "bar (Visby)",
+  │      "monsters": [
+  │        {
+  │          "key": "commoner",
+  │          "name": "Commoner",
+  │          "tier": "trivial"
+  │        },
+  │        {
+  │          "key": "thug",
+  │          "name": "Thug",
+  │          "tier": "easy"
+  │        },
+  │        {
+  │          "key": "bandit",
+  │          "name": "Bandit",
+  │          "tier": "easy"
+  │        },
+  │        {
+  │          "key": "berserker",
+  │          "name": "Berserker",
+  │          "tier": "medium"
+  │    … 69 more lines
+
+2026-05-30 01:33:17.101  GET     node/VS
+  └─  404  node "VS" not found  [0ms]
+  │  ← resp
+  │  {
+  │    "error": "node \"VS\" not found"
+  │  }
+
+2026-05-30 01:34:16.953  GET     list/terrain
+  ├─  total: 107 terrains
+  ├─  empty monster list: 21  ·  unused by any node: 1
+  ├─  sample: city · city_slums · yugurt_lake · yugurt_cabin · defi_land  [2m+102 more[0m
+  └─  200  107 terrains  [3ms]
+  │  ← resp
+  │  [
+  │    {
+  │      "key": "city",
+  │      "label": "City Streets",
+  │      "icon": "🏙",
+  │      "monsterCount": 28,
+  │      "nodeCount": 1
+  │    },
+  │    {
+  │      "key": "city_slums",
+  │      "label": "City Slums",
+  │      "icon": "🏚",
+  │      "monsterCount": 14,
+  │      "nodeCount": 1
+  │    },
+  │    {
+  │      "key": "yugurt_lake",
+  │      "label": "Yugurt Lake",
+  │      "icon": "🎣",
+  │      "monsterCount": 1,
+  │      "nodeCount": 1
+  │    },
+  │    {
+  │      "key": "yugurt_cabin",
+  │      "label": "Yugurt Cabin",
+  │      "icon": "🛖",
+  │      "monsterCount": 0,
+  │      "nodeCount": 1
+  │    },
+  │    {
+  │      "key": "defi_land",
+  │      "label": "DeFi Land",
+  │      "icon": "📡",
+  │      "monsterCount": 9,
+  │      "nodeCount": 3
+  │    },
+  │    {
+  │      "key": "cat_quarter",
+  │      "label": "The Cat Quarter",
+  │      "icon": "🐱",
+  │    … 711 more lines
+
+2026-05-30 01:34:30.283  GET     list/node
+  ├─  total: 144 nodes
+  ├─  by act: Act1×14  Act2×8  Act3×38  Act4×52  Act5×10  Act6×11  Act7×10  Act8×1
+  ├─  sample: CI · SL · IN · TV · BA  [2m+139 more[0m
+  └─  200  144 nodes  [10ms]
+  │  ← resp
+  │  [
+  │    {
+  │      "id": "CI",
+  │      "label": "City Streets — Birka",
+  │      "terrain": "city",
+  │      "act": 1,
+  │      "_meta": {
+  │        "quests": 6,
+  │        "npcs": 2,
+  │        "canDelete": false
+  │      }
+  │    },
+  │    {
+  │      "id": "SL",
+  │      "label": "Birka Slums",
+  │      "terrain": "city_slums",
+  │      "act": 1,
+  │      "_meta": {
+  │        "quests": 0,
+  │        "npcs": 0,
+  │        "canDelete": true
+  │      }
+  │    },
+  │    {
+  │      "id": "IN",
+  │      "label": "The First Inn",
+  │      "terrain": "inn",
+  │      "act": 1,
+  │      "_meta": {
+  │        "quests": 1,
+  │        "npcs": 2,
+  │        "canDelete": false
+  │      }
+  │    },
+  │    {
+  │      "id": "TV",
+  │      "label": "Birka Tavern",
+  │      "terrain": "tavern",
+  │      "act": 1,
+  │      "_meta": {
+  │    … 1546 more lines
+
+2026-05-30 01:34:38.515  GET     terrain/docks
+  ├─  terrain: ⚓  Harbor Docks
+  ├─  monsters: 18  →  Commoner · Guard · Pirate · Thug  [2m+14 more[0m
+  ├─  nodes: DK
+  └─  200  terrain/docks  ·  18 monsters  ·  1 nodes  [0ms]
+  │  ← resp
+  │  {
+  │    "entity": {
+  │      "label": "Harbor Docks",
+  │      "icon": "⚓",
+  │      "monsters": [
+  │        {
+  │          "key": "commoner",
+  │          "name": "Commoner",
+  │          "ac": 10,
+  │          "hp": 4,
+  │          "atk": 2,
+  │          "dmgDie": 4,
+  │          "dmgCount": 1,
+  │          "dmgFlat": 0,
+  │          "tier": "trivial"
+  │        },
+  │        {
+  │          "key": "guard",
+  │          "name": "Guard",
+  │          "ac": 16,
+  │          "hp": 11,
+  │          "atk": 3,
+  │          "dmgDie": 6,
+  │          "dmgCount": 1,
+  │          "dmgFlat": 1,
+  │          "tier": "trivial"
+  │        },
+  │        {
+  │          "key": "pirate",
+  │          "name": "Pirate",
+  │          "ac": 12,
+  │          "hp": 11,
+  │          "atk": 3,
+  │          "dmgDie": 6,
+  │          "dmgCount": 1,
+  │          "dmgFlat": 1,
+  │          "tier": "easy"
+  │        },
+  │        {
+  │          "key": "thug",
+  │    … 280 more lines
+
+2026-05-30 01:34:38.558  GET     terrain/market_quarter
+  ├─  terrain: 🛒  Market Quarter
+  ├─  monsters: 16  →  Commoner · NPC Merchant · Bandit · Spy  [2m+12 more[0m
+  ├─  nodes: MQ
+  └─  200  terrain/market_quarter  ·  16 monsters  ·  1 nodes  [1ms]
+  │  ← resp
+  │  {
+  │    "entity": {
+  │      "label": "Market Quarter",
+  │      "icon": "🛒",
+  │      "monsters": [
+  │        {
+  │          "key": "commoner",
+  │          "name": "Commoner",
+  │          "ac": 10,
+  │          "hp": 4,
+  │          "atk": 2,
+  │          "dmgDie": 4,
+  │          "dmgCount": 1,
+  │          "dmgFlat": 0,
+  │          "tier": "trivial"
+  │        },
+  │        {
+  │          "key": "npc_merchant",
+  │          "name": "NPC Merchant",
+  │          "ac": 10,
+  │          "hp": 9,
+  │          "atk": 2,
+  │          "dmgDie": 4,
+  │          "dmgCount": 1,
+  │          "dmgFlat": 0,
+  │          "tier": "trivial"
+  │        },
+  │        {
+  │          "key": "bandit",
+  │          "name": "Bandit",
+  │          "ac": 12,
+  │          "hp": 11,
+  │          "atk": 3,
+  │          "dmgDie": 6,
+  │          "dmgCount": 1,
+  │          "dmgFlat": 1,
+  │          "tier": "easy"
+  │        },
+  │        {
+  │          "key": "spy",
+  │    … 248 more lines
+
+2026-05-30 01:35:58.462  POST    node
+  │  → body
+  │  {
+  │    "code": "LB",
+  │    "name": "docks",
+  │    "label": "Lübeck — The Hansa Gate",
+  │    "act": 2,
+  │    "N": "BK",
+  │    "S": null,
+  │    "E": "DZ",
+  │    "W": "BG",
+  │    "text": "The river gate of Lübeck is where the Baltic begins and the old world ends. Every bale of wool, every barrel of herring, every block of amber that moves between England and Riga passes through this counting house or one exactly like it. The Hanseatic factor at the long table does not look up when you enter. He is adding numbers. The numbers are always right. That is the point.\n\nThe League does not fight wars. It embargoes. It withdraws its ships, closes its storehouses, and waits. Cities that lose Hansa trade do not burn — they simply run out of everything, quietly, over two seasons. The factor knows this. You are about to learn it.",
+  │    "npc": null,
+  │    "battle": null,
+  │    "loot": null,
+  │    "sleep": false
+  │  }
+  ├─  code: LB
+  ├─  label: Lübeck — The Hansa Gate  ·  Act 2  ·  terrain: docks
+  └─  201  created node/LB  [3ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "code": "LB",
+  │    "note": "POST /api/save to persist.",
+  │    "entity": {
+  │      "name": "docks",
+  │      "label": "Lübeck — The Hansa Gate",
+  │      "act": 2,
+  │      "N": "BK",
+  │      "S": null,
+  │      "E": "DZ",
+  │      "W": "BG",
+  │      "text": "The river gate of Lübeck is where the Baltic begins and the old world ends. Every bale of wool, every barrel of herring, every block of amber that moves between England and Riga passes through this counting house or one exactly like it. The Hanseatic factor at the long table does not look up when you enter. He is adding numbers. The numbers are always right. That is the point.\n\nThe League does not fight wars. It embargoes. It withdraws its ships, closes its storehouses, and waits. Cities that lose Hansa trade do not burn — they simply run out of everything, quietly, over two seasons. The factor knows this. You are about to learn it.",
+  │      "npc": null,
+  │      "battle": null,
+  │      "loot": null,
+  │      "sleep": false,
+  │      "num": 145,
+  │      "id": "LB"
+  │    },
+  │    "connections": {
+  │      "terrain": "docks",
+  │      "monsters": [
+  │        {
+  │          "key": "commoner",
+  │          "name": "Commoner",
+  │          "tier": "trivial"
+  │        },
+  │        {
+  │          "key": "guard",
+  │          "name": "Guard",
+  │          "tier": "trivial"
+  │        },
+  │        {
+  │          "key": "pirate",
+  │          "name": "Pirate",
+  │          "tier": "easy"
+  │        },
+  │        {
+  │          "key": "thug",
+  │    … 88 more lines
+
+2026-05-30 01:36:47.047  POST    save
+  ├─  backup: /Users/user/code/roll2hit.com/roll2hit-v3-20260530-013647.html
+  ├─  size: 1754.8 KB
+  ├─  wrote: /Users/user/code/roll2hit.com/roll2hit-v3.html
+  └─  200  saved → restarting  [9ms]
+2026-05-30 01:36:47.633 [LOAD    ] Loaded roll2hit-v3.html {"nodes":145,"quests":218,"monsters":392,"npcs":6,"terrains":107}
+2026-05-30 01:36:47.646 [INFO    ] Server listening on http://127.0.0.1:1367
+════════════════════════════════════════════════════════════
+
+2026-05-30 01:36:49.111  GET     node/LB
+  ├─  entity: Lübeck — The Hansa Gate  ·  Act 2  ·  terrain: docks
+  ├─  connections: 0 quests  ·  0 NPCs  ·  18 monsters ·  exits: N:BK E:DZ W:BG
+  ├─  can delete: [32myes[0m
+  └─  200  node/LB  [1ms]
+  │  ← resp
+  │  {
+  │    "entity": {
+  │      "num": 145,
+  │      "name": "docks",
+  │      "label": "Lübeck — The Hansa Gate",
+  │      "text": "The river gate of Lübeck is where the Baltic begins and the old world ends. Every bale of wool, every barrel of herring, every block of amber that moves between England and Riga passes through this counting house or one exactly like it. The Hanseatic factor at the long table does not look up when you enter. He is adding numbers. The numbers are always right. That is the point.\n\nThe League does not fight wars. It embargoes. It withdraws its ships, closes its storehouses, and waits. Cities that lose Hansa trade do not burn — they simply run out of everything, quietly, over two seasons. The factor knows this. You are about to learn it.",
+  │      "npc": null,
+  │      "loot": null,
+  │      "N": "BK",
+  │      "S": null,
+  │      "E": "DZ",
+  │      "W": "BG",
+  │      "act": 2,
+  │      "sleep": false,
+  │      "id": "LB"
+  │    },
+  │    "connections": {
+  │      "terrain": "docks",
+  │      "monsters": [
+  │        {
+  │          "key": "commoner",
+  │          "name": "Commoner",
+  │          "tier": "trivial"
+  │        },
+  │        {
+  │          "key": "guard",
+  │          "name": "Guard",
+  │          "tier": "trivial"
+  │        },
+  │        {
+  │          "key": "pirate",
+  │          "name": "Pirate",
+  │          "tier": "easy"
+  │        },
+  │        {
+  │          "key": "thug",
+  │          "name": "Thug",
+  │          "tier": "easy"
+  │        },
+  │        {
+  │    … 84 more lines
+
+2026-05-30 01:37:04.951  POST    node
+  │  → body
+  │  {
+  │    "code": "DZ",
+  │    "name": "docks",
+  │    "label": "Danzig — Grain Port",
+  │    "act": 2,
+  │    "N": null,
+  │    "S": null,
+  │    "E": "RG",
+  │    "W": "LB",
+  │    "text": "Danzig smells of grain and river mud. The granaries run along the waterfront for half a mile — massive timber buildings, each with its own watchman, each with its own rats. The Teutonic Knights held this city until thirty years ago. Their influence did not leave when their garrison did. The grain factors still keep their books in German. The dock workers still cross themselves at the Knight chapel on the hill, out of habit or fear or both.\n\nA Hanseatic cog sits in the outer harbor with its hold open. It has been sitting there for four days. The harbormaster will not say why. The grain merchants will not say why. The captain drinks at the end of the pier and watches the water.",
+  │    "npc": null,
+  │    "battle": null,
+  │    "loot": null,
+  │    "sleep": false
+  │  }
+  ├─  code: DZ
+  ├─  label: Danzig — Grain Port  ·  Act 2  ·  terrain: docks
+  └─  201  created node/DZ  [3ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "code": "DZ",
+  │    "note": "POST /api/save to persist.",
+  │    "entity": {
+  │      "name": "docks",
+  │      "label": "Danzig — Grain Port",
+  │      "act": 2,
+  │      "N": null,
+  │      "S": null,
+  │      "E": "RG",
+  │      "W": "LB",
+  │      "text": "Danzig smells of grain and river mud. The granaries run along the waterfront for half a mile — massive timber buildings, each with its own watchman, each with its own rats. The Teutonic Knights held this city until thirty years ago. Their influence did not leave when their garrison did. The grain factors still keep their books in German. The dock workers still cross themselves at the Knight chapel on the hill, out of habit or fear or both.\n\nA Hanseatic cog sits in the outer harbor with its hold open. It has been sitting there for four days. The harbormaster will not say why. The grain merchants will not say why. The captain drinks at the end of the pier and watches the water.",
+  │      "npc": null,
+  │      "battle": null,
+  │      "loot": null,
+  │      "sleep": false,
+  │      "num": 146,
+  │      "id": "DZ"
+  │    },
+  │    "connections": {
+  │      "terrain": "docks",
+  │      "monsters": [
+  │        {
+  │          "key": "commoner",
+  │          "name": "Commoner",
+  │          "tier": "trivial"
+  │        },
+  │        {
+  │          "key": "guard",
+  │          "name": "Guard",
+  │          "tier": "trivial"
+  │        },
+  │        {
+  │          "key": "pirate",
+  │          "name": "Pirate",
+  │          "tier": "easy"
+  │        },
+  │        {
+  │          "key": "thug",
+  │    … 88 more lines
+
+2026-05-30 01:37:09.419  POST    save
+  ├─  backup: /Users/user/code/roll2hit.com/roll2hit-v3-20260530-013709.html
+  ├─  size: 1755.6 KB
+  ├─  wrote: /Users/user/code/roll2hit.com/roll2hit-v3.html
+  └─  200  saved → restarting  [7ms]
+2026-05-30 01:37:10.004 [LOAD    ] Loaded roll2hit-v3.html {"nodes":146,"quests":218,"monsters":392,"npcs":6,"terrains":107}
+2026-05-30 01:37:10.015 [INFO    ] Server listening on http://127.0.0.1:1367
+════════════════════════════════════════════════════════════
+
+2026-05-30 01:37:11.487  GET     node/DZ
+  ├─  entity: Danzig — Grain Port  ·  Act 2  ·  terrain: docks
+  ├─  connections: 0 quests  ·  0 NPCs  ·  18 monsters ·  exits: E:RG W:LB
+  ├─  can delete: [32myes[0m
+  └─  200  node/DZ  [2ms]
+  │  ← resp
+  │  {
+  │    "entity": {
+  │      "num": 146,
+  │      "name": "docks",
+  │      "label": "Danzig — Grain Port",
+  │      "text": "Danzig smells of grain and river mud. The granaries run along the waterfront for half a mile — massive timber buildings, each with its own watchman, each with its own rats. The Teutonic Knights held this city until thirty years ago. Their influence did not leave when their garrison did. The grain factors still keep their books in German. The dock workers still cross themselves at the Knight chapel on the hill, out of habit or fear or both.\n\nA Hanseatic cog sits in the outer harbor with its hold open. It has been sitting there for four days. The harbormaster will not say why. The grain merchants will not say why. The captain drinks at the end of the pier and watches the water.",
+  │      "npc": null,
+  │      "loot": null,
+  │      "N": null,
+  │      "S": null,
+  │      "E": "RG",
+  │      "W": "LB",
+  │      "act": 2,
+  │      "sleep": false,
+  │      "id": "DZ"
+  │    },
+  │    "connections": {
+  │      "terrain": "docks",
+  │      "monsters": [
+  │        {
+  │          "key": "commoner",
+  │          "name": "Commoner",
+  │          "tier": "trivial"
+  │        },
+  │        {
+  │          "key": "guard",
+  │          "name": "Guard",
+  │          "tier": "trivial"
+  │        },
+  │        {
+  │          "key": "pirate",
+  │          "name": "Pirate",
+  │          "tier": "easy"
+  │        },
+  │        {
+  │          "key": "thug",
+  │          "name": "Thug",
+  │          "tier": "easy"
+  │        },
+  │        {
+  │    … 84 more lines
+
+2026-05-30 01:37:21.936  POST    node
+  │  → body
+  │  {
+  │    "code": "RG",
+  │    "name": "docks",
+  │    "label": "Riga — Amber Road",
+  │    "act": 3,
+  │    "N": null,
+  │    "S": null,
+  │    "E": null,
+  │    "W": "DZ",
+  │    "text": "Riga is the eastern end of the known world for most Hanseatic sailors, and the beginning of it for the men who come down the river from the forest interior carrying amber and furs and strange quiet faces. The Livonian Order built this city on a bend in the Daugava river. They still run it, after a fashion — though the Hansa factors have their own quarter now, their own church, their own courts.\n\nThe amber market opens at dawn and closes when the amber runs out, which is never. It comes in on river barges from somewhere deep in the forest that no Hansa man has seen and returned from able to describe it. The forest people trade in amber and silence. Both are worth more than the sailors understand.",
+  │    "npc": null,
+  │    "battle": null,
+  │    "loot": null,
+  │    "sleep": false
+  │  }
+  ├─  code: RG
+  ├─  label: Riga — Amber Road  ·  Act 3  ·  terrain: docks
+  └─  201  created node/RG  [3ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "code": "RG",
+  │    "note": "POST /api/save to persist.",
+  │    "entity": {
+  │      "name": "docks",
+  │      "label": "Riga — Amber Road",
+  │      "act": 3,
+  │      "N": null,
+  │      "S": null,
+  │      "E": null,
+  │      "W": "DZ",
+  │      "text": "Riga is the eastern end of the known world for most Hanseatic sailors, and the beginning of it for the men who come down the river from the forest interior carrying amber and furs and strange quiet faces. The Livonian Order built this city on a bend in the Daugava river. They still run it, after a fashion — though the Hansa factors have their own quarter now, their own church, their own courts.\n\nThe amber market opens at dawn and closes when the amber runs out, which is never. It comes in on river barges from somewhere deep in the forest that no Hansa man has seen and returned from able to describe it. The forest people trade in amber and silence. Both are worth more than the sailors understand.",
+  │      "npc": null,
+  │      "battle": null,
+  │      "loot": null,
+  │      "sleep": false,
+  │      "num": 147,
+  │      "id": "RG"
+  │    },
+  │    "connections": {
+  │      "terrain": "docks",
+  │      "monsters": [
+  │        {
+  │          "key": "commoner",
+  │          "name": "Commoner",
+  │          "tier": "trivial"
+  │        },
+  │        {
+  │          "key": "guard",
+  │          "name": "Guard",
+  │          "tier": "trivial"
+  │        },
+  │        {
+  │          "key": "pirate",
+  │          "name": "Pirate",
+  │          "tier": "easy"
+  │        },
+  │        {
+  │          "key": "thug",
+  │    … 88 more lines
+
+2026-05-30 01:37:25.091  POST    save
+  ├─  backup: /Users/user/code/roll2hit.com/roll2hit-v3-20260530-013725.html
+  ├─  size: 1756.4 KB
+  ├─  wrote: /Users/user/code/roll2hit.com/roll2hit-v3.html
+  └─  200  saved → restarting  [6ms]
+2026-05-30 01:37:25.670 [LOAD    ] Loaded roll2hit-v3.html {"nodes":147,"quests":218,"monsters":392,"npcs":6,"terrains":107}
+2026-05-30 01:37:25.681 [INFO    ] Server listening on http://127.0.0.1:1367
+════════════════════════════════════════════════════════════
+
+2026-05-30 01:37:27.163  GET     node/RG
+  ├─  entity: Riga — Amber Road  ·  Act 3  ·  terrain: docks
+  ├─  connections: 0 quests  ·  0 NPCs  ·  18 monsters ·  exits: W:DZ
+  ├─  can delete: [32myes[0m
+  └─  200  node/RG  [1ms]
+  │  ← resp
+  │  {
+  │    "entity": {
+  │      "num": 147,
+  │      "name": "docks",
+  │      "label": "Riga — Amber Road",
+  │      "text": "Riga is the eastern end of the known world for most Hanseatic sailors, and the beginning of it for the men who come down the river from the forest interior carrying amber and furs and strange quiet faces. The Livonian Order built this city on a bend in the Daugava river. They still run it, after a fashion — though the Hansa factors have their own quarter now, their own church, their own courts.\n\nThe amber market opens at dawn and closes when the amber runs out, which is never. It comes in on river barges from somewhere deep in the forest that no Hansa man has seen and returned from able to describe it. The forest people trade in amber and silence. Both are worth more than the sailors understand.",
+  │      "npc": null,
+  │      "loot": null,
+  │      "N": null,
+  │      "S": null,
+  │      "E": null,
+  │      "W": "DZ",
+  │      "act": 3,
+  │      "sleep": false,
+  │      "id": "RG"
+  │    },
+  │    "connections": {
+  │      "terrain": "docks",
+  │      "monsters": [
+  │        {
+  │          "key": "commoner",
+  │          "name": "Commoner",
+  │          "tier": "trivial"
+  │        },
+  │        {
+  │          "key": "guard",
+  │          "name": "Guard",
+  │          "tier": "trivial"
+  │        },
+  │        {
+  │          "key": "pirate",
+  │          "name": "Pirate",
+  │          "tier": "easy"
+  │        },
+  │        {
+  │          "key": "thug",
+  │          "name": "Thug",
+  │          "tier": "easy"
+  │        },
+  │        {
+  │    … 84 more lines
+
+2026-05-30 01:38:00.081  POST    node
+  │  → body
+  │  {
+  │    "code": "BG",
+  │    "name": "market_quarter",
+  │    "label": "Bruges — Cloth Hall",
+  │    "act": 2,
+  │    "N": null,
+  │    "S": null,
+  │    "E": "LB",
+  │    "W": null,
+  │    "text": "The Cloth Hall of Bruges is the largest building in northern Europe that was not built for God or for war. It was built for wool. The belfry above it rings every hour to tell the weavers how much of their life has passed since dawn. The answer is always: more than they thought.\n\nBruges is where the Baltic trade meets the Atlantic trade. English wool comes in. Baltic amber and Riga fur go out. Venetian glass and Florentine banking instruments pass through in both directions. The money changers work in a street called the Beursplein — the word for stock exchange comes from a family name here, a family that hung a painted shield above their door and let merchants use their courtyard to make deals.\n\nThe Hanseatic kontor occupies a walled compound near the canal. They are guests in Bruges. They behave like landlords.",
+  │    "npc": null,
+  │    "battle": null,
+  │    "loot": null,
+  │    "sleep": false
+  │  }
+  ├─  code: BG
+  ├─  label: Bruges — Cloth Hall  ·  Act 2  ·  terrain: market_quarter
+  └─  201  created node/BG  [4ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "code": "BG",
+  │    "note": "POST /api/save to persist.",
+  │    "entity": {
+  │      "name": "market_quarter",
+  │      "label": "Bruges — Cloth Hall",
+  │      "act": 2,
+  │      "N": null,
+  │      "S": null,
+  │      "E": "LB",
+  │      "W": null,
+  │      "text": "The Cloth Hall of Bruges is the largest building in northern Europe that was not built for God or for war. It was built for wool. The belfry above it rings every hour to tell the weavers how much of their life has passed since dawn. The answer is always: more than they thought.\n\nBruges is where the Baltic trade meets the Atlantic trade. English wool comes in. Baltic amber and Riga fur go out. Venetian glass and Florentine banking instruments pass through in both directions. The money changers work in a street called the Beursplein — the word for stock exchange comes from a family name here, a family that hung a painted shield above their door and let merchants use their courtyard to make deals.\n\nThe Hanseatic kontor occupies a walled compound near the canal. They are guests in Bruges. They behave like landlords.",
+  │      "npc": null,
+  │      "battle": null,
+  │      "loot": null,
+  │      "sleep": false,
+  │      "num": 148,
+  │      "id": "BG"
+  │    },
+  │    "connections": {
+  │      "terrain": "market_quarter",
+  │      "monsters": [
+  │        {
+  │          "key": "commoner",
+  │          "name": "Commoner",
+  │          "tier": "trivial"
+  │        },
+  │        {
+  │          "key": "npc_merchant",
+  │          "name": "NPC Merchant",
+  │          "tier": "trivial"
+  │        },
+  │        {
+  │          "key": "bandit",
+  │          "name": "Bandit",
+  │          "tier": "easy"
+  │        },
+  │        {
+  │          "key": "spy",
+  │    … 78 more lines
+
+2026-05-30 01:38:34.776  POST    save
+  ├─  backup: /Users/user/code/roll2hit.com/roll2hit-v3-20260530-013834.html
+  ├─  size: 1757.4 KB
+  ├─  wrote: /Users/user/code/roll2hit.com/roll2hit-v3.html
+  └─  200  saved → restarting  [6ms]
+2026-05-30 01:38:35.362 [LOAD    ] Loaded roll2hit-v3.html {"nodes":148,"quests":218,"monsters":392,"npcs":6,"terrains":107}
+2026-05-30 01:38:35.373 [INFO    ] Server listening on http://127.0.0.1:1367
+════════════════════════════════════════════════════════════
+
+2026-05-30 01:38:36.849  GET     node/BG
+  ├─  entity: Bruges — Cloth Hall  ·  Act 2  ·  terrain: market_quarter
+  ├─  connections: 0 quests  ·  0 NPCs  ·  16 monsters ·  exits: E:LB
+  ├─  can delete: [32myes[0m
+  └─  200  node/BG  [1ms]
+  │  ← resp
+  │  {
+  │    "entity": {
+  │      "num": 148,
+  │      "name": "market_quarter",
+  │      "label": "Bruges — Cloth Hall",
+  │      "text": "The Cloth Hall of Bruges is the largest building in northern Europe that was not built for God or for war. It was built for wool. The belfry above it rings every hour to tell the weavers how much of their life has passed since dawn. The answer is always: more than they thought.\n\nBruges is where the Baltic trade meets the Atlantic trade. English wool comes in. Baltic amber and Riga fur go out. Venetian glass and Florentine banking instruments pass through in both directions. The money changers work in a street called the Beursplein — the word for stock exchange comes from a family name here, a family that hung a painted shield above their door and let merchants use their courtyard to make deals.\n\nThe Hanseatic kontor occupies a walled compound near the canal. They are guests in Bruges. They behave like landlords.",
+  │      "npc": null,
+  │      "loot": null,
+  │      "N": null,
+  │      "S": null,
+  │      "E": "LB",
+  │      "W": null,
+  │      "act": 2,
+  │      "sleep": false,
+  │      "id": "BG"
+  │    },
+  │    "connections": {
+  │      "terrain": "market_quarter",
+  │      "monsters": [
+  │        {
+  │          "key": "commoner",
+  │          "name": "Commoner",
+  │          "tier": "trivial"
+  │        },
+  │        {
+  │          "key": "npc_merchant",
+  │          "name": "NPC Merchant",
+  │          "tier": "trivial"
+  │        },
+  │        {
+  │          "key": "bandit",
+  │          "name": "Bandit",
+  │          "tier": "easy"
+  │        },
+  │        {
+  │          "key": "spy",
+  │          "name": "Spy",
+  │          "tier": "easy"
+  │        },
+  │        {
+  │    … 74 more lines
+
+2026-05-30 01:38:42.689  PUT     node/BK
+  │  → body
+  │  {
+  │    "S": "LB"
+  │  }
+  ├─  target: node › BK
+  ├─  S: [32m✓[0m updated
+  └─  200  1 field updated  [2ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "fields": [
+  │      {
+  │        "field": "S",
+  │        "ok": true,
+  │        "strategy": "editField"
+  │      }
+  │    ],
+  │    "entity": {
+  │      "num": 25,
+  │      "code": "BK",
+  │      "name": "bar (Visby)",
+  │      "label": "Broken Tooth Tavern",
+  │      "act": 5,
+  │      "N": null,
+  │      "S": "LB",
+  │      "E": "GC",
+  │      "W": "SE",
+  │      "text": "The Broken Tooth runs on two levels. The main floor is extremely lively — the specific kind of lively that happens when a warlord has a corner table and everyone in the room has decided to behave as though they haven't noticed. The Warrant Hall is upstairs. The stairs are in the back, past Mordus.\n\nWarlord Kael Mordus sits with a sightline to both the door and the stairs. The staff brings his drink without being asked. He is explaining the shaman problem to no one in particular when you arrive — which means he was explaining it to you before he knew you were coming.\n\n\"It's bad for business,\" he says. This is his moral framework. In this context, it is also accurate.\n\nThe shaman's influence runs through the Warrant Hall above him. Mordus runs the floor below. Neither has fully displaced the other yet.",
+  │      "npc": "Warlord Kael Mordus",
+  │      "battle": null,
+  │      "loot": null,
+  │      "sleep": false,
+  │      "id": "BK"
+  │    },
+  │    "connections": {
+  │      "terrain": "bar (Visby)",
+  │      "monsters": [
+  │        {
+  │          "key": "commoner",
+  │          "name": "Commoner",
+  │          "tier": "trivial"
+  │        },
+  │        {
+  │          "key": "thug",
+  │          "name": "Thug",
+  │          "tier": "easy"
+  │        },
+  │        {
+  │    … 77 more lines
+
+2026-05-30 01:38:56.638  POST    save
+  ├─  backup: /Users/user/code/roll2hit.com/roll2hit-v3-20260530-013856.html
+  ├─  size: 1757.4 KB
+  ├─  wrote: /Users/user/code/roll2hit.com/roll2hit-v3.html
+  └─  200  saved → restarting  [7ms]
+2026-05-30 01:38:57.220 [LOAD    ] Loaded roll2hit-v3.html {"nodes":148,"quests":218,"monsters":392,"npcs":6,"terrains":107}
+2026-05-30 01:38:57.231 [INFO    ] Server listening on http://127.0.0.1:1367
+════════════════════════════════════════════════════════════
+
+2026-05-30 01:38:58.704  GET     ping
+  ├─  148 nodes  ·  218 quests  ·  392 monsters  ·  107 terrains  ·  25 fish
+  └─  200  ok  [1ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "loaded": true,
+  │    "file": "roll2hit-v3.html",
+  │    "nodes": 148,
+  │    "quests": 218,
+  │    "monsters": 392,
+  │    "fish": 25,
+  │    "lakeMagic": 8
+  │  }
+
+2026-05-30 01:39:44.976  GET     flags
+2026-05-30 01:39:44.976 [LOGIC   ] Parsing _S_DEFAULTS flags from source
+  └─  200  391 flags  [2ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "count": 391,
+  │    "flags": {
+  │      "active": false,
+  │      "currentCode": "CI",
+  │      "hp": 9,
+  │      "hpMax": 9,
+  │      "gold": 150,
+  │      "day": 1,
+  │      "shards": 0,
+  │      "voidPressure": 0,
+  │      "log": "",
+  │      "inventory": "",
+  │      "visited": "",
+  │      "quests": "",
+  │      "journalRead": "",
+  │      "defeatedBattles": "",
+  │      "pendingBattle": null,
+  │      "sleptAtNodes": "",
+  │      "shortRestedAtNodes": "",
+  │      "countedMissedInns": "",
+  │      "missedSleeps": 0,
+  │      "battleDis": 0,
+  │      "dropsCollected": 0,
+  │      "checkpointNode": "CI",
+  │      "hearthHome": "CI",
+  │      "lastCorridorCells": "",
+  │      "lastExitDir": null,
+  │      "lastExitCode": null,
+  │      "battleTurn": "player",
+  │      "battlePRoll": 0,
+  │      "battleERoll": 0,
+  │      "battleRound": 1,
+  │      "usedMainAttack": false,
+  │      "usedBonusAction": false,
+  │      "usedRealAttack": false,
+  │      "surpriseAdvantage": false,
+  │      "conditionRoundsLeft": 0,
+  │      "spellAdvantageReady": false,
+  │    … 357 more lines
+
+2026-05-30 01:39:49.981  GET     help/wizard
+  ├─  topic: wizard
+  └─  200  Full Creation Workflow  [1ms]
+
+2026-05-30 01:39:49.993  POST    flags
+  │  → body
+  │  {
+  │    "name": "faith_orthodox",
+  │    "defaultValue": 0,
+  │    "comment": "Church orthodoxy track. Range -5 to +5. Affects inquisitor quests, bishop dialogue, pilgrimage availability."
+  │  }
+2026-05-30 01:39:49.993 [REQUEST ] POST flags (add flag) {"name":"faith_orthodox","defaultValue":0,"comment":"Church orthodoxy track. Range -5 to +5. Affects inquisitor quests, bishop dialogue, pilgrimage availability."}
+2026-05-30 01:39:49.994 [LOGIC   ] Added flag "faith_orthodox" = 0 to _S_DEFAULTS
+  └─  201  flag "faith_orthodox" added  [1ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "name": "faith_orthodox",
+  │    "defaultValue": 0,
+  │    "note": "POST /api/save to persist."
+  │  }
+
+2026-05-30 01:40:06.336  POST    flags
+  │  → body
+  │  {
+  │    "name": "faith_reform",
+  │    "defaultValue": 0,
+  │    "comment": "Wycliffe reform track. Range -5 to +5. Affects heresy quests, itinerant preacher dialogue, pamphlet availability."
+  │  }
+2026-05-30 01:40:06.336 [REQUEST ] POST flags (add flag) {"name":"faith_reform","defaultValue":0,"comment":"Wycliffe reform track. Range -5 to +5. Affects heresy quests, itinerant preacher dialogue, pamphlet availability."}
+2026-05-30 01:40:06.338 [LOGIC   ] Added flag "faith_reform" = 0 to _S_DEFAULTS
+  └─  201  flag "faith_reform" added  [2ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "name": "faith_reform",
+  │    "defaultValue": 0,
+  │    "note": "POST /api/save to persist."
+  │  }
+
+2026-05-30 01:40:06.382  POST    flags
+  │  → body
+  │  {
+  │    "name": "faith_folk",
+  │    "defaultValue": 0,
+  │    "comment": "Folk belief track. Range -5 to +5. Affects saint shrines, monster lore, magic springs, the jester LXVII67."
+  │  }
+2026-05-30 01:40:06.382 [REQUEST ] POST flags (add flag) {"name":"faith_folk","defaultValue":0,"comment":"Folk belief track. Range -5 to +5. Affects saint shrines, monster lore, magic springs, the jester LXVII67."}
+2026-05-30 01:40:06.383 [LOGIC   ] Added flag "faith_folk" = 0 to _S_DEFAULTS
+  └─  201  flag "faith_folk" added  [1ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "name": "faith_folk",
+  │    "defaultValue": 0,
+  │    "note": "POST /api/save to persist."
+  │  }
+
+2026-05-30 01:40:06.419  POST    flags
+  │  → body
+  │  {
+  │    "name": "faction_hansa",
+  │    "defaultValue": 0,
+  │    "comment": "Hanseatic League disposition. Range -5 to +5. Affects trade quest availability, port entry, prices at BK/LB/DZ/RG/BG."
+  │  }
+2026-05-30 01:40:06.420 [REQUEST ] POST flags (add flag) {"name":"faction_hansa","defaultValue":0,"comment":"Hanseatic League disposition. Range -5 to +5. Affects trade quest availability, port entry, prices at BK/LB/DZ/RG/BG."}
+2026-05-30 01:40:06.424 [LOGIC   ] Added flag "faction_hansa" = 0 to _S_DEFAULTS
+  └─  201  flag "faction_hansa" added  [5ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "name": "faction_hansa",
+  │    "defaultValue": 0,
+  │    "note": "POST /api/save to persist."
+  │  }
+
+2026-05-30 01:40:06.456  POST    flags
+  │  → body
+  │  {
+  │    "name": "plague_exposed",
+  │    "defaultValue": false,
+  │    "comment": "Black Death exposure flag. Set on failed CON DC 13 save. Grants Exhaustion 1 mission bit. Cleared by cure quest."
+  │  }
+2026-05-30 01:40:06.457 [REQUEST ] POST flags (add flag) {"name":"plague_exposed","defaultValue":false,"comment":"Black Death exposure flag. Set on failed CON DC 13 save. Grants Exhaustion 1 mission bit. Cleared by cure quest."}
+2026-05-30 01:40:06.458 [LOGIC   ] Added flag "plague_exposed" = false to _S_DEFAULTS
+  └─  201  flag "plague_exposed" added  [2ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "name": "plague_exposed",
+  │    "defaultValue": false,
+  │    "note": "POST /api/save to persist."
+  │  }
+
+2026-05-30 01:40:06.495  POST    flags
+  │  → body
+  │  {
+  │    "name": "GAME_YEAR",
+  │    "defaultValue": 1367,
+  │    "comment": "Canonical game year. Anno Domini MCCCLXVII."
+  │  }
+2026-05-30 01:40:06.495 [REQUEST ] POST flags (add flag) {"name":"GAME_YEAR","defaultValue":1367,"comment":"Canonical game year. Anno Domini MCCCLXVII."}
+2026-05-30 01:40:06.496 [LOGIC   ] Added flag "GAME_YEAR" = 1367 to _S_DEFAULTS
+  └─  201  flag "GAME_YEAR" added  [1ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "name": "GAME_YEAR",
+  │    "defaultValue": 1367,
+  │    "note": "POST /api/save to persist."
+  │  }
+
+2026-05-30 01:40:13.140  POST    save
+  ├─  backup: /Users/user/code/roll2hit.com/roll2hit-v3-20260530-014013.html
+  ├─  size: 1758.1 KB
+  ├─  wrote: /Users/user/code/roll2hit.com/roll2hit-v3.html
+  └─  200  saved → restarting  [8ms]
+2026-05-30 01:40:13.721 [LOAD    ] Loaded roll2hit-v3.html {"nodes":148,"quests":218,"monsters":392,"npcs":6,"terrains":107}
+2026-05-30 01:40:13.732 [INFO    ] Server listening on http://127.0.0.1:1367
+════════════════════════════════════════════════════════════
+
+2026-05-30 01:40:15.205  GET     flags
+2026-05-30 01:40:15.205 [LOGIC   ] Parsing _S_DEFAULTS flags from source
+  └─  200  396 flags  [2ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "count": 396,
+  │    "flags": {
+  │      "active": false,
+  │      "currentCode": "CI",
+  │      "hp": 9,
+  │      "hpMax": 9,
+  │      "gold": 150,
+  │      "day": 1,
+  │      "shards": 0,
+  │      "voidPressure": 0,
+  │      "log": "",
+  │      "inventory": "",
+  │      "visited": "",
+  │      "quests": "",
+  │      "journalRead": "",
+  │      "defeatedBattles": "",
+  │      "pendingBattle": null,
+  │      "sleptAtNodes": "",
+  │      "shortRestedAtNodes": "",
+  │      "countedMissedInns": "",
+  │      "missedSleeps": 0,
+  │      "battleDis": 0,
+  │      "dropsCollected": 0,
+  │      "checkpointNode": "CI",
+  │      "hearthHome": "CI",
+  │      "lastCorridorCells": "",
+  │      "lastExitDir": null,
+  │      "lastExitCode": null,
+  │      "battleTurn": "player",
+  │      "battlePRoll": 0,
+  │      "battleERoll": 0,
+  │      "battleRound": 1,
+  │      "usedMainAttack": false,
+  │      "usedBonusAction": false,
+  │      "usedRealAttack": false,
+  │      "surpriseAdvantage": false,
+  │      "conditionRoundsLeft": 0,
+  │      "spellAdvantageReady": false,
+  │    … 362 more lines
+
+2026-05-30 01:40:27.030  GET     flags
+2026-05-30 01:40:27.031 [LOGIC   ] Parsing _S_DEFAULTS flags from source
+  └─  200  396 flags  [2ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "count": 396,
+  │    "flags": {
+  │      "active": false,
+  │      "currentCode": "CI",
+  │      "hp": 9,
+  │      "hpMax": 9,
+  │      "gold": 150,
+  │      "day": 1,
+  │      "shards": 0,
+  │      "voidPressure": 0,
+  │      "log": "",
+  │      "inventory": "",
+  │      "visited": "",
+  │      "quests": "",
+  │      "journalRead": "",
+  │      "defeatedBattles": "",
+  │      "pendingBattle": null,
+  │      "sleptAtNodes": "",
+  │      "shortRestedAtNodes": "",
+  │      "countedMissedInns": "",
+  │      "missedSleeps": 0,
+  │      "battleDis": 0,
+  │      "dropsCollected": 0,
+  │      "checkpointNode": "CI",
+  │      "hearthHome": "CI",
+  │      "lastCorridorCells": "",
+  │      "lastExitDir": null,
+  │      "lastExitCode": null,
+  │      "battleTurn": "player",
+  │      "battlePRoll": 0,
+  │      "battleERoll": 0,
+  │      "battleRound": 1,
+  │      "usedMainAttack": false,
+  │      "usedBonusAction": false,
+  │      "usedRealAttack": false,
+  │      "surpriseAdvantage": false,
+  │      "conditionRoundsLeft": 0,
+  │      "spellAdvantageReady": false,
+  │    … 362 more lines
+
+2026-05-30 01:40:30.732  POST    flags
+  │  → body
+  │  {
+  │    "name": "game_year",
+  │    "defaultValue": 1367,
+  │    "comment": "Canonical game year. Anno Domini MCCCLXVII."
+  │  }
+2026-05-30 01:40:30.733 [REQUEST ] POST flags (add flag) {"name":"game_year","defaultValue":1367,"comment":"Canonical game year. Anno Domini MCCCLXVII."}
+2026-05-30 01:40:30.733 [LOGIC   ] Added flag "game_year" = 1367 to _S_DEFAULTS
+  └─  201  flag "game_year" added  [1ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "name": "game_year",
+  │    "defaultValue": 1367,
+  │    "note": "POST /api/save to persist."
+  │  }
+
+2026-05-30 01:40:35.396  POST    save
+  ├─  backup: /Users/user/code/roll2hit.com/roll2hit-v3-20260530-014035.html
+  ├─  size: 1758.2 KB
+  ├─  wrote: /Users/user/code/roll2hit.com/roll2hit-v3.html
+  └─  200  saved → restarting  [7ms]
+2026-05-30 01:40:35.988 [LOAD    ] Loaded roll2hit-v3.html {"nodes":148,"quests":218,"monsters":392,"npcs":6,"terrains":107}
+2026-05-30 01:40:35.999 [INFO    ] Server listening on http://127.0.0.1:1367
+════════════════════════════════════════════════════════════
+
+2026-05-30 01:40:37.454  GET     flags
+2026-05-30 01:40:37.454 [LOGIC   ] Parsing _S_DEFAULTS flags from source
+  └─  200  397 flags  [3ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "count": 397,
+  │    "flags": {
+  │      "active": false,
+  │      "currentCode": "CI",
+  │      "hp": 9,
+  │      "hpMax": 9,
+  │      "gold": 150,
+  │      "day": 1,
+  │      "shards": 0,
+  │      "voidPressure": 0,
+  │      "log": "",
+  │      "inventory": "",
+  │      "visited": "",
+  │      "quests": "",
+  │      "journalRead": "",
+  │      "defeatedBattles": "",
+  │      "pendingBattle": null,
+  │      "sleptAtNodes": "",
+  │      "shortRestedAtNodes": "",
+  │      "countedMissedInns": "",
+  │      "missedSleeps": 0,
+  │      "battleDis": 0,
+  │      "dropsCollected": 0,
+  │      "checkpointNode": "CI",
+  │      "hearthHome": "CI",
+  │      "lastCorridorCells": "",
+  │      "lastExitDir": null,
+  │      "lastExitCode": null,
+  │      "battleTurn": "player",
+  │      "battlePRoll": 0,
+  │      "battleERoll": 0,
+  │      "battleRound": 1,
+  │      "usedMainAttack": false,
+  │      "usedBonusAction": false,
+  │      "usedRealAttack": false,
+  │      "surpriseAdvantage": false,
+  │      "conditionRoundsLeft": 0,
+  │      "spellAdvantageReady": false,
+  │    … 363 more lines
+
+2026-05-30 01:42:35.454  POST    nonce
+  │  → body
+  │  {
+  │    "type": "quest",
+  │    "id": "quest_1367_e_wycliffe"
+  │  }
+  ├─  type › id: quest › quest_1367_e_wycliffe
+  ├─  token: 6e7f1b612b9adc47  (expires in 5 min)
+  └─  200  nonce issued  [3ms]
+  │  ← resp
+  │  {
+  │    "nonce": "6e7f1b612b9adc47",
+  │    "type": "quest",
+  │    "id": "quest_1367_e_wycliffe",
+  │    "expiresAt": "2026-05-30T01:47:35.457Z"
+  │  }
+
+2026-05-30 01:42:35.498  DELETE  quest/quest_1367_e_wycliffe
+  ├─  deleted: quest › quest_1367_e_wycliffe  ·  The Sealed Pamphlet
+  └─  200  deleted quest/quest_1367_e_wycliffe  [0ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "key": "quest_1367_e_wycliffe",
+  │    "wasEntity": {
+  │      "id": "quest_1367_e_wycliffe",
+  │      "type": "skill_check",
+  │      "title": "The Sealed Pamphlet",
+  │      "desc": "Thomas Cobb, ex-household guard, must smuggle a Wycliffe vernacular pamphlet past a bishop's checkpoint. DC 13 Deception. Mission bit: Sealed Pamphlet. faith_reform track. Source: Canterbury Tales.",
+  │      "activateNode": "CY",
+  │      "retryGateDays": 0,
+  │      "retryable": true
+  │    }
+  │  }
+
+2026-05-30 01:44:42.425  POST    quest
+  │  → body
+  │  {
+  │    "id": "quest_1367_e_wycliffe",
+  │    "type": "skill_check",
+  │    "title": "The Sealed Pamphlet",
+  │    "desc": "Thomas Cobb must smuggle a Wycliffe vernacular pamphlet past a bishop's checkpoint. DC 13 Deception. faith_reform track.",
+  │    "hint": "The pamphlet is inside your coat. The bishop's man is looking at your face, not your coat.",
+  │    "activateNode": "CY",
+  │    "activateCond": "() => true",
+  │    "checkAbility": "cha",
+  │    "checkLabel": "Deception",
+  │    "checkDC": 13,
+  │    "retryable": true,
+  │    "retryGateDays": 0,
+  │    "xpAward": 110,
+  │    "vignetteText": "The road narrows at the mill bridge. Two men in the bishop's livery stand at the gate — not soldiers, functionaries, which is worse. Soldiers look at weapons. Functionaries look at faces. The pamphlet is inside your coat, folded twice, wrapped in oilcloth. It is the size of a prayer book. It is not a prayer book. They will recognize the difference if they look. You need them not to look.",
+  │    "passText": "You hold their gaze and ask about the road ahead, whether the mud past the mill is as bad as everyone says, whether the bishop has men at the ford as well — all the while your coat does not move and your voice does not move and they decide you are boring and wave you through. The pamphlet crosses the checkpoint. The words in it will be read tonight in a back room by candlelight by people who have never heard the scripture in a language they understand.",
+  │    "failText": "The functionary's eyes drop to your coat at the wrong moment. Not suspicion — reflex. But the outline is wrong. He says: open your coat, please. The please does not help. The pamphlet is taken. You are let go with a warning. The words do not cross today.",
+  │    "onPass": "() => { S_story.faith_reform = Math.min(5, (S_story.faith_reform || 0) + 1); }",
+  │    "onFail": "() => {}",
+  │    "disposition": "The word in a language the people understand is a weapon. The bishop knows this. That is why he guards the bridge.",
+  │    "tags": [
+  │      "1367",
+  │      "wycliffe",
+  │      "heresy",
+  │      "faith_reform",
+  │      "pamphlet",
+  │      "church"
+  │    ]
+  │  }
+  ├─  id: quest_1367_e_wycliffe
+  ├─  title: The Sealed Pamphlet  ·  type: skill_check  ·  node: CY
+  ├─  note: function fields written — POST /api/save then /api/reload
+  └─  201  created quest/quest_1367_e_wycliffe  [3ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "id": "quest_1367_e_wycliffe",
+  │    "note": "Function fields written to source. POST /api/save then /api/reload to activate.",
+  │    "entity": {
+  │      "id": "quest_1367_e_wycliffe",
+  │      "type": "skill_check",
+  │      "title": "The Sealed Pamphlet",
+  │      "desc": "Thomas Cobb must smuggle a Wycliffe vernacular pamphlet past a bishop's checkpoint. DC 13 Deception. faith_reform track.",
+  │      "hint": "The pamphlet is inside your coat. The bishop's man is looking at your face, not your coat.",
+  │      "activateNode": "CY",
+  │      "checkAbility": "cha",
+  │      "checkLabel": "Deception",
+  │      "checkDC": 13,
+  │      "retryable": true,
+  │      "retryGateDays": 0,
+  │      "xpAward": 110,
+  │      "vignetteText": "The road narrows at the mill bridge. Two men in the bishop's livery stand at the gate — not soldiers, functionaries, which is worse. Soldiers look at weapons. Functionaries look at faces. The pamphlet is inside your coat, folded twice, wrapped in oilcloth. It is the size of a prayer book. It is not a prayer book. They will recognize the difference if they look. You need them not to look.",
+  │      "passText": "You hold their gaze and ask about the road ahead, whether the mud past the mill is as bad as everyone says, whether the bishop has men at the ford as well — all the while your coat does not move and your voice does not move and they decide you are boring and wave you through. The pamphlet crosses the checkpoint. The words in it will be read tonight in a back room by candlelight by people who have never heard the scripture in a language they understand.",
+  │      "failText": "The functionary's eyes drop to your coat at the wrong moment. Not suspicion — reflex. But the outline is wrong. He says: open your coat, please. The please does not help. The pamphlet is taken. You are let go with a warning. The words do not cross today.",
+  │      "disposition": "The word in a language the people understand is a weapon. The bishop knows this. That is why he guards the bridge.",
+  │      "tags": [
+  │        "1367",
+  │        "wycliffe",
+  │        "heresy",
+  │        "faith_reform",
+  │        "pamphlet",
+  │        "church"
+  │      ]
+  │    },
+  │    "connections": {
+  │      "activateNode": {
+  │        "code": "CY",
+  │        "label": "Neon Undercity"
+  │      },
+  │      "waypointNode": null,
+  │      "npc": null,
+  │      "arc": "quest_1367_e_wycliffe",
+  │      "upstream": [],
+  │      "downstream": []
+  │    … 6 more lines
+
+2026-05-30 01:46:39.827  POST    save
+  ├─  backup: /Users/user/code/roll2hit.com/roll2hit-v3-20260530-014639.html
+  ├─  size: 1760.0 KB
+  ├─  wrote: /Users/user/code/roll2hit.com/roll2hit-v3.html
+  └─  200  saved → restarting  [9ms]
+2026-05-30 01:46:40.426 [LOAD    ] Loaded roll2hit-v3.html {"nodes":148,"quests":218,"monsters":392,"npcs":6,"terrains":107}
+2026-05-30 01:46:40.437 [INFO    ] Server listening on http://127.0.0.1:1367
+════════════════════════════════════════════════════════════
+
+2026-05-30 01:46:41.913  GET     quest/quest_1367_e_wycliffe
+  ├─  entity: The Sealed Pamphlet  ·  type: skill_check  ·  node: CY
+  ├─  chain: ↑0 upstream  ·  ↓0 downstream
+  ├─  can delete: [32myes[0m
+  └─  200  quest/quest_1367_e_wycliffe  [1ms]
+  │  ← resp
+  │  {
+  │    "entity": {
+  │      "id": "quest_1367_e_wycliffe",
+  │      "type": "skill_check",
+  │      "title": "The Sealed Pamphlet",
+  │      "desc": "Thomas Cobb must smuggle a Wycliffe vernacular pamphlet past a bishop's checkpoint. DC 13 Deception. faith_reform track.",
+  │      "hint": "The pamphlet is inside your coat. The bishop's man is looking at your face, not your coat.",
+  │      "passText": "You hold their gaze and ask about the road ahead, whether the mud past the mill is as bad as everyone says, whether the bishop has men at the ford as well — all the while your coat does not move and your voice does not move and they decide you are boring and wave you through. The pamphlet crosses the checkpoint. The words in it will be read tonight in a back room by candlelight by people who have never heard the scripture in a language they understand.",
+  │      "failText": "The functionary's eyes drop to your coat at the wrong moment. Not suspicion — reflex. But the outline is wrong. He says: open your coat, please. The please does not help. The pamphlet is taken. You are let go with a warning. The words do not cross today.",
+  │      "disposition": "The word in a language the people understand is a weapon. The bishop knows this. That is why he guards the bridge.",
+  │      "activateNode": "CY",
+  │      "checkAbility": "cha",
+  │      "checkLabel": "Deception",
+  │      "vignetteText": "The road narrows at the mill bridge. Two men in the bishop's livery stand at the gate — not soldiers, functionaries, which is worse. Soldiers look at weapons. Functionaries look at faces. The pamphlet is inside your coat, folded twice, wrapped in oilcloth. It is the size of a prayer book. It is not a prayer book. They will recognize the difference if they look. You need them not to look.",
+  │      "xpAward": 110,
+  │      "checkDC": 13,
+  │      "retryGateDays": 0,
+  │      "retryable": true,
+  │      "activateCond": null,
+  │      "onPass": null,
+  │      "onFail": null
+  │    },
+  │    "connections": {
+  │      "activateNode": {
+  │        "code": "CY",
+  │        "label": "Neon Undercity"
+  │      },
+  │      "waypointNode": null,
+  │      "npc": null,
+  │      "arc": "quest_1367_e_wycliffe",
+  │      "upstream": [],
+  │      "downstream": []
+  │    },
+  │    "_meta": {
+  │      "canDelete": true,
+  │      "blockedBy": null
+  │    }
+  │  }
+
+2026-05-30 01:48:17.701  POST    reload
+2026-05-30 01:48:17.720 [LOAD    ] Loaded roll2hit-v3.html {"nodes":148,"quests":218,"monsters":392,"npcs":6,"terrains":107}
+  ├─  file: roll2hit-v3.html
+  ├─  loaded: 148 nodes  ·  218 quests  ·  392 monsters
+  └─  200  reload ok  [19ms]
+  │  ← resp
+  │  {
+  │    "ok": true
+  │  }
+
+2026-05-30 01:48:18.746  GET     ping
+  ├─  148 nodes  ·  218 quests  ·  392 monsters  ·  107 terrains  ·  25 fish
+  └─  200  ok  [0ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "loaded": true,
+  │    "file": "roll2hit-v3.html",
+  │    "nodes": 148,
+  │    "quests": 218,
+  │    "monsters": 392,
+  │    "fish": 25,
+  │    "lakeMagic": 8
+  │  }
+
+2026-05-30 01:48:50.039  POST    nonce
+  │  → body
+  │  {
+  │    "type": "quest",
+  │    "id": "quest_1367_a_najera"
+  │  }
+  ├─  type › id: quest › quest_1367_a_najera
+  ├─  token: 3b2da72469e5d292  (expires in 5 min)
+  └─  200  nonce issued  [2ms]
+  │  ← resp
+  │  {
+  │    "nonce": "3b2da72469e5d292",
+  │    "type": "quest",
+  │    "id": "quest_1367_a_najera",
+  │    "expiresAt": "2026-05-30T01:53:50.041Z"
+  │  }
+
+2026-05-30 01:48:50.074  DELETE  quest/quest_1367_a_najera
+  ├─  deleted: quest › quest_1367_a_najera  ·  The Free Company
+  └─  200  deleted quest/quest_1367_a_najera  [0ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "key": "quest_1367_a_najera",
+  │    "wasEntity": {
+  │      "id": "quest_1367_a_najera",
+  │      "type": "combat",
+  │      "title": "The Free Company",
+  │      "desc": "Renaud le Bâtard, routier sergeant, has no war left and seven mercenaries blocking the road. 1367 AD — the Nájera aftermath. Source: Froissart.",
+  │      "activateNode": "CY",
+  │      "retryGateDays": 0,
+  │      "retryable": true
+  │    }
+  │  }
+
+2026-05-30 01:48:50.102  POST    quest
+  │  → body
+  │  {
+  │    "id": "quest_1367_a_najera",
+  │    "type": "combat",
+  │    "title": "The Free Company",
+  │    "desc": "Seven Navarrese mercenaries block the road south of Nájera. They want tolls. Renaud le Bâtard has nothing left to pay.",
+  │    "hint": "They outnumber you. They are tired and recently unpaid. That is an advantage.",
+  │    "activateNode": "CY",
+  │    "activateCond": "() => true",
+  │    "xpAward": 150,
+  │    "retryable": true,
+  │    "retryGateDays": 0,
+  │    "vignetteText": "The road out of Castile is rutted and smells of old smoke. Seven men across it. Not bandits — routiers, which is a different thing. Bandits want your gold. Routiers want your gold and also your acknowledgment that they could take everything else if they chose. The distinction matters. Routiers can be reasoned with, if you know the language.",
+  │    "passText": "You put three of them down before the others decide the toll is not worth it. Not killed — the routier code frowns on unnecessary killing of fellow professionals. Wounded, winded, and reconsidering. The sergeant gives you a nod as you pass. Professional courtesy. The road is open.",
+  │    "failText": "They take the toll. They are not unkind about it. One of them bandages your arm where the sword caught it. They have a fire going. They offer you some of it. You decline and walk south, lighter than you started.",
+  │    "onPass": "() => { S_story.faction_hansa = Math.max(-5, (S_story.faction_hansa || 0) - 1); }",
+  │    "onFail": "() => {}",
+  │    "disposition": "The free companies did not end when the wars ended. The wars ended and the companies kept going. That is the problem with professional soldiers — they are very good at the one thing and the one thing keeps being needed."
+  │  }
+  ├─  id: quest_1367_a_najera
+  ├─  title: The Free Company  ·  type: combat  ·  node: CY
+  ├─  note: function fields written — POST /api/save then /api/reload
+  └─  201  created quest/quest_1367_a_najera  [2ms]
+  │  ← resp
+  │  {
+  │    "ok": true,
+  │    "id": "quest_1367_a_najera",
+  │    "note": "Function fields written to source. POST /api/save then /api/reload to activate.",
+  │    "entity": {
+  │      "id": "quest_1367_a_najera",
+  │      "type": "combat",
+  │      "title": "The Free Company",
+  │      "desc": "Seven Navarrese mercenaries block the road south of Nájera. They want tolls. Renaud le Bâtard has nothing left to pay.",
+  │      "hint": "They outnumber you. They are tired and recently unpaid. That is an advantage.",
+  │      "activateNode": "CY",
+  │      "xpAward": 150,
+  │      "retryable": true,
+  │      "retryGateDays": 0,
+  │      "vignetteText": "The road out of Castile is rutted and smells of old smoke. Seven men across it. Not bandits — routiers, which is a different thing. Bandits want your gold. Routiers want your gold and also your acknowledgment that they could take everything else if they chose. The distinction matters. Routiers can be reasoned with, if you know the language.",
+  │      "passText": "You put three of them down before the others decide the toll is not worth it. Not killed — the routier code frowns on unnecessary killing of fellow professionals. Wounded, winded, and reconsidering. The sergeant gives you a nod as you pass. Professional courtesy. The road is open.",
+  │      "failText": "They take the toll. They are not unkind about it. One of them bandages your arm where the sword caught it. They have a fire going. They offer you some of it. You decline and walk south, lighter than you started.",
+  │      "disposition": "The free companies did not end when the wars ended. The wars ended and the companies kept going. That is the problem with professional soldiers — they are very good at the one thing and the one thing keeps being needed."
+  │    },
+  │    "connections": {
+  │      "activateNode": {
+  │        "code": "CY",
+  │        "label": "Neon Undercity"
+  │      },
+  │      "waypointNode": null,
+  │      "npc": null,
+  │      "arc": "quest_1367_a_najera",
+  │      "upstream": [],
+  │      "downstream": []
+  │    },
+  │    "_meta": {
+  │      "canDelete": true,
+  │      "blockedBy": null
+  │    }
+  │  }
