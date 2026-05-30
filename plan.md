@@ -8960,25 +8960,34 @@ Once the above clarifications are resolved, these changes become universal acros
 
 ---
 
-### §1367-D. Clarification Queue — Answer Before Integration
+### §1367-D. Clarification Queue — **ANSWERED ✓**
 
-The following questions must be answered before any §1367 content is integrated into the HTML. Each answer locks a design decision.
+All 8 questions answered. Integration may proceed.
 
-| # | Question | Stakes |
-|---|----------|--------|
-| 1 | Is the game world literal 1367 Europe/Middle East, or a 1367-analog fantasy? | Determines whether real place names are kept or fictionalized |
-| 2 | Which 2–3 of the 6 events become major quest arcs (Acts I–IV)? | Determines NODE_MAP additions and QUEST_DB scope |
-| 3 | Which historical figures appear as named NPCs vs. offscreen forces? | Determines BIRKA_NPCS additions and NPC schema |
-| 4 | Does the Black Death have a gameplay mechanic, or is it lore only? | Determines whether new state flags are needed |
-| 5 | Is the Hanseatic League a faction with a disposition score? | Determines whether a faction system needs to be built |
-| 6 | Does Tamerlane connect to the Shattered Codex arc? | Determines whether the Codex backstory needs a rewrite |
-| 7 | Do we add Baltic coast trade route nodes to the map? | Determines NODE_MAP scope for Act I/II |
-| 8 | Does the Church appear as a dual-sided faction (heresy + orthodoxy quests)? | Determines QUEST_DB type additions |
+| # | Question | **Answer** |
+|---|----------|-----------|
+| 1 | Literal 1367 or fantasy-analog? | **Literal.** Real place names kept — Birka, Visby, Adrianople, Ragusa, Oxford, Castile. This is 1367 AD on the actual Earth, rendered as a D&D 5e adventure world. |
+| 2 | Which events become major arcs? | **All 6.** Every event ties to existing node codes. No event is background-only. Each vignette becomes a quest arc anchored to a node already on the map or a new Baltic trade node. |
+| 3 | Historical figures as NPCs or offscreen? | **Named NPCs, on stage.** The Black Prince, Wycliffe, Murad I, and Tamerlane appear as named figures the player can encounter, receive orders from, or work against. Not combatants in Act I — they are distant authority or quest-givers. By Act III they are present. |
+| 4 | Black Death gameplay mechanic or lore only? | **Full mechanic.** Plague Walkers are combat encounters. Infection is a state flag (`plague_exposed`). Exposure triggers a CON save (DC 13). Failed save adds `Exhaustion 1` and a mission bit. Cure requires a quest. Nodes in the aftermath zone have modified monster tables. |
+| 5 | Hanseatic League faction disposition? | **Yes.** `faction_hansa` disposition score (−5 to +5). Affects: trade quest availability, node entry permissions in Baltic ports, NPC dialogue, prices. Score changes on quest outcomes. |
+| 6 | Tamerlane connects to the Shattered Codex? | **Yes.** The Codex fragments originate in Transoxiana. Tamerlane's consolidation of Samarkand scattered its keepers westward — that is why the Codex is shattered and its pieces are in Europe. The Codex backstory gains a paragraph pointing east. |
+| 7 | Add Baltic coast trade route nodes? | **Yes, more trade routes.** New nodes: Lübeck (LB), Danzig (DZ), Riga (RG), Bruges corridor waypoint (BG). Connected to existing Birka (BK) and Visby (VS) nodes. Trade route quest chain threads through all of them. |
+| 8 | Church as dual-sided faction? | **Yes — and more.** The Church is not just a faction: it is the total human condition. Devotion, allegiance, fear, mercy, guilt, transcendence. Two sub-tracks: `faith_orthodox` (inquisitor, bishop, pilgrim quests) and `faith_reform` (Wycliffe pamphlet, itinerant preacher, heresy trial quests). A third track `faith_folk` covers saints, relics, magic springs, and monster-lore. All three interact. A player deep in `faith_folk` gets different dialogue from priests than a player deep in `faith_orthodox`. Monster encounters in church ruins have modified outcomes based on faith tracks. Fantasy and adventure — especially those with monsters — live inside the religious world of 1367, not outside it. |
 
-**Gate:** §1367 integration does not begin until all 8 questions have answers. Write answers directly into §1367-D before touching HTML.
+### §1367-E. Locked Design Decisions (derived from answers)
+
+1. **`const GAME_YEAR = 1367;`** added to `_S_DEFAULTS`. Display: `"Anno Domini MCCCLXVII"`.
+2. **Plague mechanic:** `plague_exposed` flag + CON DC 13 save + `Exhaustion 1` mission bit. Cure quest required to clear.
+3. **Hanseatic faction:** `faction_hansa` score (−5 to +5) stored in player state. Affects trade nodes BK, VS, LB, DZ, RG, BG.
+4. **Faith triple-track:** `faith_orthodox`, `faith_reform`, `faith_folk` — each ±5. Stored in player state. Affects NPC dialogue, quest availability, monster encounter modifiers.
+5. **New nodes to add:** LB (Lübeck), DZ (Danzig), RG (Riga), BG (Bruges waypoint) — trade route chain.
+6. **Shattered Codex backstory:** Add one paragraph in Codex lore pointing origin to Transoxiana/Samarkand. Tamerlane's rise as the inciting event that scattered keepers westward.
+7. **Historical NPCs in NPC schema:** Add Black Prince (BP), John Wycliffe (JW), Murad I (MI), Tamerlane (TL) to `BIRKA_NPCS` or equivalent NPC table.
+8. **All 6 vignettes from `Year1367AD.md`** map to QUEST_DB entries. Node codes from those vignettes are authoritative.
 
 ---
 
-**Status:** 📋 PLANNED — awaiting clarification answers in §1367-D  
-**Cross-references:** `plan.md §GR` · `plan.md §FUTURE-01` (Saul to Paul arc, Middle East map) · `quest.md` · `lab-report-wbapi-evolution.md`
+**Status:** ✅ ANSWERED — integration may begin  
+**Cross-references:** `plan.md §GR` · `plan.md §FUTURE-01` (Saul to Paul arc, Middle East map) · `quest.md` · `lab-report-wbapi-evolution.md` · `Year1367AD.md`
 
