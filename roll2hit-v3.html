@@ -11895,6 +11895,13 @@ const _S_DEFAULTS = () => ({
   wisPage6_shadow: false,
   wisArchiveLetter: false,
   personalLegendMature: false,
+    faith_orthodox: 0, // Church orthodoxy track. Range -5 to +5. Affects inquisitor quests, bishop dialogue, pilgrimage availability.
+    faith_reform: 0, // Wycliffe reform track. Range -5 to +5. Affects heresy quests, itinerant preacher dialogue, pamphlet availability.
+    faith_folk: 0, // Folk belief track. Range -5 to +5. Affects saint shrines, monster lore, magic springs, the jester LXVII67.
+    faction_hansa: 0, // Hanseatic League disposition. Range -5 to +5. Affects trade quest availability, port entry, prices at BK/LB/DZ/RG/BG.
+    plague_exposed: false, // Black Death exposure flag. Set on failed CON DC 13 save. Grants Exhaustion 1 mission bit. Cleared by cure quest.
+    GAME_YEAR: 1367, // Canonical game year. Anno Domini MCCCLXVII.
+    game_year: 1367, // Canonical game year. Anno Domini MCCCLXVII.
 });
 
 /* ── Layer 48: Luck — Seventh Stat ── */
