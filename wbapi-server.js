@@ -1250,88 +1250,37 @@ async function route(req, res) {
 
   // ── Save ──
   if (parts[0] === 'save' && method === 'POST') {
-    const body = await readBody(req).catch(() => ({}));
-
-    // Always write to a timestamped backup first
+    // 1. Write timestamped backup
     const r = WBAPI.save();
     if (!r.ok) {
       logResponse(method, url.pathname, 500, r.error);
       return json(res, 500, r);
     }
-
     const backupPath = r.path;
     const kb = (fs.statSync(backupPath).size / 1024).toFixed(1);
     logRow('backup', backupPath);
-    logRow('size', `${kb} KB`);
+    logRow('size',   `${kb} KB`);
 
-    // Validate the backup by loading it in a child process
-    const { execFileSync } = require('child_process');
-    let validation = { ok: false, error: 'validation not run' };
+    // 2. Overwrite the primary game file
     try {
-      const probe = `
-        const W = require(${JSON.stringify(path.join(__dirname,'wbapi-core'))});
-        W.load(${JSON.stringify(backupPath)});
-        process.stdout.write(JSON.stringify({
-          nodes:   Object.keys(W.nodeMap).length,
-          quests:  Object.keys(W.questDb).length,
-          monsters:Object.keys(W.monsterPool).length,
-          terrains:Object.keys(W.worldDb).length
-        }));
-      `;
-      const out = execFileSync(process.execPath, ['-e', probe], { timeout: 10000 });
-      const counts = JSON.parse(out.toString());
-      const live = {
-        nodes:    Object.keys(WBAPI.nodeMap).length,
-        quests:   Object.keys(WBAPI.questDb).length,
-        monsters: Object.keys(WBAPI.monsterPool).length,
-        terrains: Object.keys(WBAPI.worldDb).length,
-      };
-      const shrunk = Object.entries(live).filter(([k,v]) => counts[k] < v).map(([k]) => k);
-      if (shrunk.length) {
-        validation = { ok: false, error: `backup has fewer ${shrunk.join(', ')} than live state — aborting overwrite`, live, backup: counts };
-      } else {
-        validation = { ok: true, live, backup: counts };
-      }
+      fs.copyFileSync(backupPath, GAME_FILE);
+      logRow('wrote', GAME_FILE);
     } catch (e) {
-      validation = { ok: false, error: `validation load failed: ${e.message}` };
+      logResponse(method, url.pathname, 500, `overwrite failed: ${e.message}`);
+      return json(res, 500, { ok:false, error: e.message, backup: backupPath });
     }
 
-    logRow('validation', validation.ok ? 'PASS' : `FAIL — ${validation.error}`);
-
-    // If valid, overwrite the primary game file
-    let promoted = false;
-    if (validation.ok) {
-      try {
-        fs.copyFileSync(backupPath, GAME_FILE);
-        promoted = true;
-        logRow('promoted', GAME_FILE);
-      } catch (e) {
-        validation = { ok: false, error: `backup valid but overwrite failed: ${e.message}` };
-      }
-    }
-
-    // After a successful promote, reload from the canonical file so _rawSrc
-    // matches what is on disk — no separate POST /api/reload needed.
-    if (promoted) {
-      try {
-        WBAPI.load(GAME_FILE);
-        logRow('reloaded', 'in-memory state refreshed from promoted file');
-      } catch (e) {
-        logRow('warn', `post-save reload failed: ${e.message}`);
-      }
-    }
-
-    const status = validation.ok ? 200 : 422;
-    logResponse(method, url.pathname, status,
-      validation.ok ? `saved + promoted → ${path.basename(GAME_FILE)}` : validation.error);
-    return json(res, status, {
-      ok: validation.ok,
+    // 3. Respond, then restart so the server reloads from roll2hit-v3.html clean
+    logResponse(method, url.pathname, 200, `saved → restarting`);
+    res.writeHead(200, { 'Content-Type':'application/json' });
+    res.end(JSON.stringify({
+      ok: true,
       backup: backupPath,
-      promoted: promoted ? GAME_FILE : null,
-      validation,
-      autoReloaded: promoted,
-      ...(validation.ok ? {} : { error: validation.error }),
-    });
+      primary: GAME_FILE,
+      note: 'Server restarting. Poll /api/ping until it responds.',
+    }));
+    setTimeout(() => process.exit(67), 120); // let response flush before exit
+    return;
   }
 
   // ── Schema ──
