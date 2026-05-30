@@ -9048,3 +9048,162 @@ notes:         Two solo attempts required. No Help action. No hints given in-gam
 **Status:** ✅ ANSWERED — integration may begin  
 **Cross-references:** `plan.md §GR` · `plan.md §FUTURE-01` (Saul to Paul arc, Middle East map) · `quest.md` · `lab-report-wbapi-evolution.md` · `Year1367AD.md`
 
+---
+
+## §CLEANUP-01 — Audit Error Resolution (📋 PLANNED)
+
+**Status:** 📋 PLANNED — 11 errors, 35 warnings, 120 suggestions as of 2026-05-30  
+**Goal:** Drive audit errors to 0. Warnings and suggestions are cosmetic backlog.
+
+### Immediate — Clears Errors
+
+#### 1. Add node VS — Visby (clears 8 errors)
+
+Quests `quest_wis_00`, `quest_wis_06`, `quest_wis_07`, `quest_vs_01`, `quest_vs_03` all reference node `VS` which does not exist in NODE_MAP. Visby is the Hanseatic port sacked by Valdemar IV of Denmark in 1361 — by 1367 it is ruined but still inhabited, contested between the League and the Danish crown.
+
+```
+code:    VS
+name:    docks
+label:   Visby — Ruined Hansa Port
+act:     3
+N:       null
+S:       null
+E:       RG
+W:       BK
+terrain: docks (Harbor Docks monster table)
+```
+
+Narrative note: Visby is the broken version of what Lübeck still is. Half the warehouses are roofless. The quayside still moves amber and herring because commerce does not stop for ruins — it simply steps over them. The Danish garrison is small, underpaid, and bored.
+
+#### 2. Add node TL (clears 1 error)
+
+`quest_tl_02` references node `TL`. Node not yet created. Likely a trade or road node connected to the Nájera / routier arc (TL = Toulouse? or Tamerlane waypoint?). Requires design confirmation before API call.
+
+**Gate:** Confirm what TL stands for and what act it belongs to before creating.
+
+#### 3. Delete orphan MONSTER_DROPS entry `creative_literacy_token` (clears 1 error)
+
+A MONSTER_DROPS entry exists with no corresponding MONSTER_POOL entry. Safe to remove directly from HTML source. One Edit call.
+
+---
+
+### Short Work — Makes Flags Live
+
+#### 4. NPC dialogue gates on faith tracks
+
+The three faith flags exist in `_S_DEFAULTS` but nothing reads them yet. Existing NPC quests should check faith tracks in `activateCond` to make the system feel alive.
+
+Pattern:
+```javascript
+// Example: Wycliffe-adjacent NPC quest only available if faith_reform >= 1
+activateCond: () => (S_story.faith_reform || 0) >= 1
+```
+
+Suggested gates to add:
+- `faith_reform >= 1` — unlocks itinerant preacher NPC dialogue at any city node
+- `faith_reform >= 3` — unlocks heresy trial quest chain
+- `faith_orthodox >= 2` — unlocks bishop quest line, pilgrimage route
+- `faith_orthodox >= 3` — unlocks inquisitor NPC encounter
+- `faith_folk >= 1` — unlocks `quest_lxvii67` (already done), saint shrine quests
+- `faith_folk >= 2` — unlocks monster lore dialogue on certain undead encounters
+- `faction_hansa >= 2` — unlocks trade privilege quests at LB/DZ/RG
+- `faction_hansa <= -2` — triggers embargo encounter at Baltic port nodes
+
+#### 5. Plague cure quest
+
+`plague_exposed` flag can be set by failing `quest_1367_f_plague` but there is no quest to clear it. The cure requires:
+
+```
+id:           quest_plague_cure
+type:         skill_check
+title:        The Apothecary's Price
+activateNode: (apothecary or healer node — TBD)
+activateCond: () => S_story.plague_exposed === true
+checkAbility: con
+checkLabel:   Constitution
+checkDC:      13
+onPass:       () => { S_story.plague_exposed = false; }
+onFail:       () => { /* plague persists, retry next day */ }
+retryable:    true
+retryGateDays: 1
+```
+
+Needs an apothecary NPC or node. Could anchor to an existing inn node or create a new `scholars_qtr` terrain node.
+
+#### 6. Create node LXVII67 in NODE_MAP
+
+The quest `quest_lxvii67` exists and its `activateNode` is `CY` (temporary). The plan (§1367-F) calls for a proper node `LXVII67` — a secret crossroads node accessible only to players with `faith_folk >= 1`.
+
+```
+code:        LXVII67
+name:        forest  (or a new 'crossroads' terrain)
+label:       The Jester's Crossroads
+act:         3
+activateCond: (S_story.faith_folk || 0) >= 1
+sleep:       false
+```
+
+Once created: update `quest_lxvii67.activateNode` from `CY` to `LXVII67`.
+
+---
+
+### Medium Work — Historical NPCs
+
+#### 7. Add historical NPCs to BIRKA_NPCS
+
+§1367-E locked decision #7: Black Prince (BP), John Wycliffe (JW), Murad I (MI), Tamerlane (TL) should appear in the NPC schema. Currently none exist.
+
+Suggested schema per NPC:
+```
+key:        black_prince
+name:       Edward of Woodstock, the Black Prince
+occupation: Commander, Duchy of Aquitaine
+node:       CY  (temporary — assign to a proper node when created)
+faith:      faith_orthodox  (crusading Christian commander)
+```
+
+These NPCs are authority figures in Acts II–III, not early-game combatants.
+
+#### 8. Shattered Codex backstory — Transoxiana origin paragraph
+
+§1367-E locked decision #6: add one paragraph to Codex lore stating origin in Transoxiana/Samarkand. Tamerlane's consolidation of Samarkand in the 1360s scattered the Codex keepers westward — that is why the Codex is shattered and its pieces are in Europe.
+
+**Where to write it:** Find the Codex lore text in the HTML source and append the paragraph. One targeted Edit.
+
+---
+
+### Warnings Backlog (35 items)
+
+All 35 warnings are MONSTER_POOL entries with no MONSTER_DROPS entry — the creature drops nothing on defeat. This is valid game design for some monsters (commoners, livestock) but should be deliberate.
+
+**Suggested triage:**
+- Intentionally drop-less monsters: flag with `drop: null` explicitly (suppresses warning)
+- Monsters that should drop something: add a drop entry via `PUT /api/monster/{key}` or direct edit
+
+Notable no-drop monsters from the warning list: `void_shaman`, `rabid_dog`, `aggressive_turkey`, `toilet_leech`, `honeybucket_spider`, `cockroach_swarm`, `swarming_wasps`, `night_owl`.
+
+---
+
+### Suggestions Backlog (120 items)
+
+All 120 suggestions are MONSTER_POOL entries not assigned to any terrain. They exist as monsters but cannot be encountered in play. Triage:
+
+- **Terrain placement pass:** assign each unplaced monster to at least one terrain via `POST /api/terrain/{key}/swap` or PUT
+- **Unused on purpose:** some monsters may be reserved for specific quest encounters (not random terrain). Mark these with a `questOnly: true` flag to suppress the suggestion.
+
+---
+
+**Priority order:**
+1. VS node (8 errors cleared, Baltic chain completed)
+2. TL node (after confirming what TL is)
+3. `creative_literacy_token` orphan deletion (1 line)
+4. LXVII67 node creation + quest re-anchor
+5. Plague cure quest
+6. Faith track gates on existing NPCs
+7. Historical NPC entries
+8. Codex backstory paragraph
+9. Monster drop triage
+10. Terrain placement pass
+
+**Cross-references:** `plan.md §1367` · `plan.md §1367-F` · `plan.md §GR` · `plan.md §DESIGN-03` · `plan.md §DUNGEON-01`
+
