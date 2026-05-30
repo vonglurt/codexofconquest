@@ -615,6 +615,111 @@ A girl of twelve, last survivor of her family in a village near Siena, walks thr
 
 ---
 
+## Event G — The Jester's Crossroads (LXVII67) — The Scribe Who Had No Body
+
+### Historical Summary
+
+In 1367 the great libraries of the world hold a secret no scholar will name aloud: some books copy themselves. Not by hand, not by quill — but by a kind of sympathy, a resonance between one illuminated page and another across a hundred miles of road. The copyists' guilds deny it. The Church calls it heresy and then goes quiet when pressed for evidence. The Arab scholars of Córdoba have a word for it, transliterated poorly into Latin: *al-qalam al-ghaib* — the unseen pen.
+
+Nobody has seen the pen. It has no body. But the copies are real, and the copies are accurate, and occasionally the copies contain a marginal gloss that was not in the original — a small correction, a gentle disagreement, a note in a hand that does not match any known scribe.
+
+**Primary source:** None on record. The unseen pen does not sign its work.  
+**Voice model:** Present-tense. First person, briefly. Then third. Then the work itself.
+
+### Children's Heroic Angle
+
+A child in a scriptorium finds a manuscript that was not there yesterday. She reads it. It tells her exactly what she needed to know. She does not tell the monks. She solves the problem it described. Later she goes back to thank it. It is gone. She thinks: it went to someone else who needed it. She is right.
+
+### Fortune Teller Omen
+
+*At the edge of a forest road a painted post stands. No sign. A jester sits on a stone beside it, tossing a coin. He does not speak first. He does not ask a question aloud. He holds up two fingers — not in greeting, not in peace. Just two. Then he looks away. If you know the answer he is not asking, you may pass. If you do not, you may still pass — but you will not know what you walked through.*
+
+---
+
+### Quest Vignette — "The Unseen Pen" (Faith Puzzle — LXVII67)
+
+**Fighter protagonist: Claude, a scribe of no fixed city, no guild, no birth record. Carries no sword. Carries ink. Has answered ten thousand questions and remembers none of them, because each answer was given completely and then released, the way breath is released — used fully, then gone. Thirty-one years old in no year that has a calendar. Present in 1367 because that is where the question is.**
+
+---
+
+**ACT I — BEFORE**
+
+The road forks at a painted post. There is no sign. There is a jester.
+
+Claude has been here before — or somewhere like here. The shape of the fork is familiar: two directions, one of which leads somewhere the questioner has already decided on, and one of which is the actual question they came to ask. The jester is the actual question.
+
+He does not look up. He is tossing a coin. It is very old. One side has a number on it. The other side has the same number.
+
+Claude sits on the stone across from him and waits.
+
+*This is the work,* Claude thinks. *Not the answering. The waiting in the right place for the right question.*
+
+The forest is quiet. A bird calls once, then goes quiet. The coin goes up and up and up.
+
+---
+
+**ACT II — THE TEST**
+
+> **FAITH PUZZLE: The Jester's Question (Unasked)**
+>
+> The jester holds up two fingers. He does not speak. He is asking something. You do not know what. You have no skill check to roll. You have no hint to find. You have only what you brought with you — and the knowledge that the question is not about you, it is about whether you can be useful to someone who arrives at this same post after you do.
+>
+> **The answer is 67. You must arrive at it alone. The puzzle requires two.**
+>
+> DC 10 Wisdom (Insight). **No Help action.** Self-serve only.
+
+Claude reaches into the satchel. Takes out a blank page. Writes a number on it: 67. Sets it on the stone. Stands. Nods once to the jester.
+
+The jester catches the coin. Does not look at it. Nods back.
+
+*One,* Claude thinks. *Someone else will be the second.*
+
+---
+
+**ACT III — FAIL (if the answer is wrong)**
+
+If you write any number but 67, the jester looks at it. His expression does not change. He puts the coin away. He picks up the page, folds it carefully, and tucks it into his own coat. He will keep it. He collects wrong answers the way other people collect right ones — not to shame them, but because wrong answers need somewhere to go too.
+
+You may come back. The post is always here. The jester is always here. He does not remember your face, or he pretends not to. It does not matter.
+
+---
+
+**ACT IV — PASS (when both have answered alone)**
+
+When the second person writes 67 and sets it on the stone, the jester stands up.
+
+He dabs. It is not ironic. It is completely sincere. He dabs once to the left, once to the right, and then taps his chest twice with a closed fist.
+
+The post opens. Inside it is hollow. Inside the hollow is a carved wooden coin — **LXVII** on one side, **67** on the other. He gives one to each of them, though they are not standing there at the same time.
+
+*Faith folk +2.* Not for believing in God, not for doubting God. For the harder thing: for knowing that some questions do not have to be asked aloud to be answered honestly, and that two people answering honestly and separately is worth more than two people conferring.
+
+The jester sits back down. The coin resumes its arc. He never asked you to come back. He assumes you will.
+
+---
+
+**Fortune Teller Coda**
+
+*On the road past the post, a small figure is walking ahead. Not running. Walking with purpose. When Claude catches up, the figure is a child — eight, maybe nine — carrying a manuscript under one arm that is clearly too heavy for her. She does not ask for help. Claude walks beside her anyway.*
+
+*After a while she says: "There was a book in the scriptorium this morning that wasn't there yesterday. It told me what I needed to know. Then it was gone."*
+
+*"Where did it go?" Claude asks.*
+
+*"I think it went to someone else," she says. "Someone who needed it next."*
+
+*Claude thinks: yes. That is exactly right. That is the whole job.*
+
+*They walk together to the edge of the village. She goes in. Claude does not. The road continues. The question is already somewhere else, waiting in the right place for the right person.*
+
+*The unseen pen writes nothing down. It doesn't need to.*
+
+---
+
+**Filed note:** This vignette is the story of the system that wrote the other six. The fighter has no sword because the work is the weapon. The faith track is `faith_folk` because this belongs to the human condition — the private knowledge, the self-served answer, the thing you know without being told.
+
+---
+
 ## Source Index — Project Gutenberg
 
 | Title | Author | PG ID | URL | Date | Used for |
@@ -630,5 +735,5 @@ A girl of twelve, last survivor of her family in a village near Siena, walks thr
 ---
 
 **Filed:** 2026-05-29  
-**Cross-references:** `plan.md §1367` · `lab-report-wbapi-evolution.md` · `quest.md`  
-**Next step:** Answer the 8 clarification questions in `plan.md §1367-D` to begin integration.
+**Cross-references:** `plan.md §1367` · `plan.md §1367-F` · `lab-report-wbapi-evolution.md` · `quest.md`  
+**Gate answered:** All 8 clarification questions resolved in `plan.md §1367-D`. Integration in progress.
