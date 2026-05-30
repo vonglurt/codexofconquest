@@ -8985,6 +8985,63 @@ All 8 questions answered. Integration may proceed.
 6. **Shattered Codex backstory:** Add one paragraph in Codex lore pointing origin to Transoxiana/Samarkand. Tamerlane's rise as the inciting event that scattered keepers westward.
 7. **Historical NPCs in NPC schema:** Add Black Prince (BP), John Wycliffe (JW), Murad I (MI), Tamerlane (TL) to `BIRKA_NPCS` or equivalent NPC table.
 8. **All 6 vignettes from `Year1367AD.md`** map to QUEST_DB entries. Node codes from those vignettes are authoritative.
+9. **Node `LXVII67` — The Jester's Crossroads.** Secret easter egg node. `faith_folk` only. See §1367-F.
+
+---
+
+### §1367-F. Node LXVII67 — The Double Dab Faith Puzzle
+
+**Code:** `LXVII67`  
+**Name:** The Jester's Crossroads  
+**Label:** LXVII  
+**Faith track:** `faith_folk` (gated — requires `faith_folk >= 1` to enter)  
+**API easter egg:** `GET /api/67` — returns node metadata and the puzzle hint
+
+**The Lore:**  
+At the edge of a forest road stands a painted post. No sign. A jester sits on a stone beside it, tossing a coin. He does not speak first. He does not ask a question aloud. He holds up two fingers — not in greeting, not in peace. Just two. Then he looks away.
+
+**The Mechanic — Double Dab:**  
+Two characters must each arrive at this node **separately** (not as a group action, no Help action allowed) and each independently:
+
+1. **Self-serve:** Make a DC 10 Wisdom (Insight) check alone. No assistance.  
+2. **Answer the unasked question:** Choose an option the jester never voiced. The correct answer is 67. It is not listed anywhere. It must be known.
+
+On the **first** successful solo arrival → `faith_folk_seed` mission bit granted. Jester nods once.  
+On the **second** successful solo arrival (same or different character) → `faith_folk_dab` mission bit granted. Jester dabs. The post opens. Reward drops.
+
+**The Reward:**  
+- `faith_folk +2` for both characters  
+- A carved wooden coin stamped `LXVII` — a misc inventory item, no mechanical value, infinite bragging rights  
+- Unlocks the jester as a recurring NPC in other `faith_folk` nodes (he remembers you)
+
+**Quest entry:**
+```
+id:            quest_lxvii67
+type:          skill_check
+title:         The Jester's Crossroads
+activateNode:  LXVII67
+dc:            10
+skill:         Wisdom (Insight)
+retryable:     true
+retryGateDays: 0
+missionBits:   [faith_folk_seed, faith_folk_dab]
+notes:         Two solo attempts required. No Help action. No hints given in-game.
+```
+
+**`GET /api/67`** returns:
+```json
+{
+  "ok": true,
+  "year": 1367,
+  "leet": 1337,
+  "port": 1367,
+  "node": "LXVII67",
+  "note": "67 > 69. self-serve. double dab. taps chest.",
+  "faith": "faith_folk",
+  "puzzle": "two must arrive alone and answer the same question without conferring. the jester does not ask it aloud.",
+  "dab": "⁶⁷"
+}
+```
 
 ---
 

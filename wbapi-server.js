@@ -1148,6 +1148,22 @@ async function route(req, res) {
     return json(res, 200, { topic, title: entry.title, text: entry.body, topics: Object.keys(HELP) });
   }
 
+  // ── 67 ──
+  if (parts[0] === '67') {
+    logResponse(method, url.pathname, 200, '⁶⁷');
+    return json(res, 200, {
+      ok: true,
+      year: 1367,
+      leet: 1337,
+      port: PORT,
+      node: 'LXVII67',
+      note: '67 > 69. self-serve. double dab. taps chest.',
+      faith: 'faith_folk',
+      puzzle: 'two must arrive alone and answer the same question without conferring. the jester does not ask it aloud.',
+      dab: '⁶⁷',
+    });
+  }
+
   // ── Health ──
   if (parts[0] === 'ping') {
     const nNodes = Object.keys(WBAPI.nodeMap).length;
