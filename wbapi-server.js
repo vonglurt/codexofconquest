@@ -1588,6 +1588,39 @@ async function route(req, res) {
     return json(res, 200, { ok:true, errors, warnings, suggestions, parse, summary });
   }
 
+  // ── Mission Bits catalog ──────────────────────────────────────────────────
+  if (parts[0] === 'missionbits' && method === 'GET') {
+    const bits = [];
+    const flagRe = /checkPassFlag\s*:\s*'([^']+)'/g;
+    const bitLabelRe = /bitLabel\s*:\s*'([^']+)'/;
+    const failFlagRe = /checkFailFlag\s*:\s*'([^']+)'/;
+    for (const { id: qId, src: qSrc } of WBAPI._splitQuestBlocks(WBAPI._rawQuestSrc)) {
+      const passMatch  = flagRe.exec(qSrc); flagRe.lastIndex = 0;
+      const failMatch  = failFlagRe.exec(qSrc);
+      const labelMatch = bitLabelRe.exec(qSrc);
+      if (!passMatch && !failMatch) continue;
+      const q = WBAPI.questDb[qId] || {};
+      const nodeCode = q.activateNode || q.waypointNode || null;
+      const nodeLabel = nodeCode ? (WBAPI.nodeMap[nodeCode]?.label || null) : null;
+      const flagName = passMatch ? passMatch[1] : failMatch[1];
+      const tokenName = (labelMatch ? labelMatch[1] : flagName
+        .replace(/([A-Z])/g, ' $1').trim()) + ' Token';
+      bits.push({
+        flagRef: flagName,
+        tokenName,
+        event: passMatch ? 'pass' : 'fail',
+        questId: qId,
+        questTitle: q.title || null,
+        questType: q.type || null,
+        nodeCode,
+        nodeLabel,
+        retryable: q.retryable || false,
+      });
+    }
+    logResponse(method, url.pathname, 200, `${bits.length} mission bits`);
+    return json(res, 200, { ok:true, count: bits.length, bits });
+  }
+
   // ── Flags (_S_DEFAULTS) ───────────────────────────────────────────────────
   if (parts[0] === 'flags') {
     if (method === 'GET') {
@@ -2212,12 +2245,15 @@ async function route(req, res) {
       for (const n of Object.values(WBAPI.birkaNpcs))
         if (n.node === key) { n.node = body.newCode; nUpdated++; }
       delete WBAPI.nodeMap[key];
+      // Patch _rawSrc so the key rename survives the next save
+      const renamed = WBAPI.renameNodeKey(key, body.newCode);
       WBAPI._buildIndexes();
       logRow('move', `${key}  →  ${body.newCode}`);
       logRow('updated refs', `${qUpdated} quests  ·  ${nUpdated} NPCs`);
+      logRow('rawSrc sections', `${renamed.sections} patched`);
       logResponse(method, url.pathname, 200, `moved node/${key} → ${body.newCode}`);
       return json(res, 200, { ok:true, from:key, to:body.newCode, questsUpdated:qUpdated, npcsUpdated:nUpdated,
-        ...nodeConnections(body.newCode) });
+        rawSrcSections: renamed.sections, ...nodeConnections(body.newCode) });
     }
   }
 

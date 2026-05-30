@@ -464,6 +464,34 @@ const WBAPI = {
     return { ok:true, key, field, value };
   },
 
+  renameNodeKey(oldCode, newCode) {
+    if (!this._rawSrc) return { ok:false, error:'no source loaded' };
+    const sections = ['NODE_MAP', 'NODE_COORDS', 'BIRKA_NPC'];
+    let totalChanges = 0;
+    for (const sec of sections) {
+      const S = `// ◆◆◆ WORLDBUILDER:${sec}:START ◆◆◆`;
+      const E = `// ◆◆◆ WORLDBUILDER:${sec}:END ◆◆◆`;
+      const aIdx = this._rawSrc.indexOf(S);
+      const bIdx = this._rawSrc.indexOf(E);
+      if (aIdx === -1 || bIdx === -1 || bIdx < aIdx) continue;
+      const a = aIdx + S.length;
+      const secSrc = this._rawSrc.slice(a, bIdx);
+      // Match oldCode as an entry key: preceded by whitespace/comma/{, followed by optional whitespace + colon
+      const re = new RegExp(`(?<=[,\\s{])${oldCode}(?=\\s*:)`, 'g');
+      const patched = secSrc.replace(re, newCode);
+      if (patched !== secSrc) {
+        this._rawSrc = this._rawSrc.slice(0, a) + patched + this._rawSrc.slice(bIdx);
+        totalChanges++;
+      }
+    }
+    // Update inline code: field (e.g. code:'BK' → code:'VBY')
+    const codeRe = new RegExp(`(\\bcode:\\s*['"\`])${oldCode}(['"\`])`, 'g');
+    const srcBefore = this._rawSrc;
+    this._rawSrc = this._rawSrc.replace(codeRe, `$1${newCode}$2`);
+    if (this._rawSrc !== srcBefore) totalChanges++;
+    return { ok:true, sections: totalChanges };
+  },
+
   getStampedName(base) {
     base = base || path.basename(this._srcPath||'roll2hit-v3.html', '.html');
     const d = new Date();
