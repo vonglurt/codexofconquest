@@ -1,0 +1,334 @@
+# roll2hit.com — Source Pipeline: Outstanding Work
+
+This file tracks quest seeds, pipeline gaps, and planned work items across all source books.
+All outstanding items should be completed before a book is considered "fully processed."
+
+---
+
+## FCO — Aeneid (Virgil, Latin original, ~19 BC)
+
+Main vignette **FCO-01 "Sunt Lacrimae Rerum"** is fully spec'd with UQF v1.0 JSON, 5-act vignette, TOKEN, and all four admin updates applied.
+
+The following quest seeds were generated in the Latin Workshop (chapter-by-chapter analysis, Books 1–12). Each has a paragraph-length story concept in FCO-aeneid.md. They need full vignette treatment: 5 acts, TOKEN, skill checks, UQF JSON, and admin updates.
+
+### §FCO-02 — The Painter's Afterword (Book 1)
+A sequel note found in the Carthage temple. The artist who painted the murals of Trojan suffering — commissioned by the Punic priest — left a personal account of what it was like to paint people's grief for pay. The account survives in a monastery library. Fighter escorts it.
+
+### §FCO-03 — Creusa's Third Temple (Book 2)
+Creusa vanished during the fall of Troy — no body, no burial. Ancient tradition says that Greek colonists in southern Italy built a small shrine to her as a household goddess because she appeared to them during a storm. A 14th-century mason has found the ruins of a stone structure with a dedicatory inscription naming "Creusa daughter of Priam." Fighter escorts the inscription rubbing.
+
+### §FCO-04 — The Buthrotum Register (Book 3)
+Helenus built a miniature Troy at Buthrotum (Butrint, modern Albania). He kept administrative records — a register of the community's founding laws and population roll. The register survived in a monastery in the area. A Byzantine scholar made a copy in the 11th century. That copy is somewhere in a Venetian archive. Fighter escorts it.
+
+### §FCO-05 — Barce's Account (Dido's Secretary) (Book 4)
+Barce was Sychaeus's nurse, Dido's oldest servant. She witnessed everything. A tradition in late Latin commentary says Barce survived Dido's death, lived into old age in the surviving Carthaginian community, and dictated an account of the queen's final weeks to a scribe. A fragment of that account may survive in a North African monastery. Fighter escorts the fragment from a Genoese trading house (which acquired it) to Weimar.
+
+### §FCO-06 — Palinurus's Chart (Book 5)
+The helmsman Palinurus fell overboard off the coast of Lucania (Palinuro, still called that). He had been keeping a navigational chart of the route. The chart was left on the helm-seat. A medieval sailor claims to have used it in 1334. A sailor's guild in Naples wants it. The Cumaean monastery wants it back. Fighter escorts it to a maritime archive.
+
+### §FCO-07 — The Sibyl's Sealed Jar (Book 6 — A)
+A clay jar found at Cumae in 1312 contains five wax tablets describing a prophecy received by "Aeneas Anchises filius." A Neapolitan cleric has been holding them privately, afraid to submit them for authentication because the prophecy describes future events (Augustus, Marcellus) that have already happened. A Dominican inquisitor considers them dangerous. Fighter escorts the tablets to Weimar.
+
+### §FCO-08 — Phlegyas's Inscription (Book 6 — B)
+The line cried by Phlegyas in Tartarus was reportedly inscribed over Roman courthouses. A lintel stone from a Roman basilica near Verona was incorporated into a church's foundations in the 9th century. A 1367 restoration project has uncovered it. The bishop wants it above the church door. The magistrates want it at the courthouse. The humanist wants it in the library. Fighter escorts it to a neutral archive before it is cut in three.
+
+### §FCO-09 — Ascanius's Broken Plate (Book 7)
+The bread-platter Ascanius ate from when he said "we're eating the tables" — a fired ceramic disk inscribed "mensas" in archaic Latin — may have been kept as a relic at Lavinium for generations. A relic-collector near the site claims to have found it. A Roman aristocratic family wants it as their ancestral object. Fighter escorts it to authentication.
+
+### §FCO-10 — The Shield's Cartographer (Book 8)
+A 14th-century humanist's commentary on the Shield of Aeneas identifies each depicted scene with a historical event. A cardinal in Rome wants it suppressed because several identifications embarrass current political figures by comparison. The humanist has died; his student needs the manuscript safely archived. Fighter escorts it from Venice to Weimar.
+
+### §FCO-11 — Euryalus's Mother's Tablet (Book 9)
+Euryalus's unnamed mother followed the army from Troy for years to stay near her son. A wooden writing tablet from a Campanian monastery — found in a wall during repairs, pre-Roman in style, with faint scratching that scholars cannot fully read — may be the unfinished letter she was composing when she heard the news. Fighter escorts the tablet from the monastery to Weimar before demolition.
+
+### §FCO-12 — The Sword Belt of Pallas (Book 10)
+Turnus stripped Pallas's sword belt and wore it until the moment Aeneas killed him for it. A bronze fitting found in Florentine masonry depicts an archaic wedding-murder scene consistent with first-century Roman luxury armor work. A collector, a cathedral, and a humanist scholar all want it. Fighter escorts it to authentication before it is broken up.
+
+### §FCO-13 — Acca's Message (Book 11)
+Acca received Camilla's dying words and delivered them to Turnus. A first-century BC votive stone near Arpi (mentioned in the Aeneid) names a woman "Acca" as a "bearer of final messages." A noble family possesses it and wants to sell it to a foreign collector. Fighter escorts the stone (or a rubbing) to Weimar before access is permanently lost to scholars.
+
+### §FCO-14 — The Fragment of the Final Line (Book 12)
+A Monte Cassino manuscript includes a marginal notation claiming to preserve six alternate final lines of the Aeneid, citing a lost 3rd-century commentary. The notation includes three words Turnus speaks after being struck, before dying. The scholarly dispute is becoming politically sensitive. The Monte Cassino abbot wants it quietly settled. The humanist who believes it genuine needs it archived neutrally. Fighter escorts the manuscript fragment from Monte Cassino to Weimar.
+
+---
+
+## NWI — Anabasis (Xenophon, Dakyns tr., c. 401 BC)
+
+Main vignette **NWI-01 "What the Sea Knows"** is fully spec'd with UQF v1.0 JSON, 5-act vignette, TOKEN, and all four admin updates applied.
+
+The following quest seeds were generated from the full 7-book read. Each has a paragraph-length story concept in NWI-anabasis.md. They need full vignette treatment: 5 acts, TOKEN, skill checks, UQF JSON, and admin updates.
+
+### §NWI-02 — The Rearguard's Log (Books 3–5)
+The army kept daily records of distance, terrain, engagements, and supplies during the march north. A relay of scribes maintained the running account separate from the literary text Xenophon later wrote. A partial copy of the original day-log for the mountain crossing through Kurdistan survives in a Pontic monastery near Trabzon. Fighter escorts it to Weimar before a planned demolition disturbs the library.
+
+### §NWI-03 — Proxenus's Letter (Book 2)
+Proxenus wrote the letter that brought Xenophon to Persia — described in the text but never quoted. A Boeotian monastery near Orchomenos (Proxenus's home city) holds an archive of letters from a noble family of that city. One letter, filed under private correspondence from the 390s BC, may be a later copy of that invitation. Fighter escorts it from Orchomenos to Weimar.
+
+### §NWI-04 — The Oath at Calpe (Book 2)
+Tissaphernes swore sacred oaths by the gods of Greece and Persia that the generals were safe at his tent. The diplomatic formula for such oaths was standardized in Persian-Greek correspondence. A clay tablet in a Venetian collection, acquired from a 9th-century Arab library, contains what appears to be the Persian-language formula for this class of safe-conduct oath — the same type Tissaphernes would have used. Fighter escorts the tablet.
+
+### §NWI-05 — The Salmydessus Books (Book 7)
+At the Thracian coast of Salmydessus, the army found a beach littered with cargo from wrecked ships, including a mass of written books. A Thracian harbor master's salvage catalog drawn up a generation later lists among recovered cargo six crates of writing material from a single wreck, including a Greek text described in seven sections. Fighter escorts the catalog from a Varna archive to Weimar.
+
+### §NWI-06 — The Cretan's Account (Book 5)
+A Cretan archer was in the van at Mount Theches when the first shout went up. An old soldier who had served as a Cretan archer later settled at Sinope and dictated, in old age, a brief account of what he saw from the front rank: the shape of the hill, the change in light, the moment he understood. The account was preserved by a Sinopean merchant family. Fighter escorts it to Weimar before the family sells it to a collector.
+
+### §NWI-07 — The Scillus Deed (Book 5)
+After the march, Xenophon settled at Scillus near Olympia on an estate granted by the Spartans. He built a small temple to Artemis and set up a stone inscription describing the grant's terms. A 2nd-century traveler's account describes seeing the stone. A Peloponnesian monastery's foundation records contain a survey of ancient inscriptions in the area, including a transcription of the Scillus stone. Fighter escorts the survey to a neutral archive.
+
+### §NWI-08 — The Towns That Were Not Given (Book 7)
+Seuthes promised the Greek army three Thracian coastal towns — Bisanthe, Ganos, Neontichos — as permanent settlement in exchange for their winter campaign. They completed the campaign. He kept the towns. A Thracian noble family near the Bosphorus holds old territorial records; one may be the written record of the promised grant, never honored. In 1367 this document is worth money. Fighter must get it to a neutral archive before the family sells it or the towns change hands again.
+
+---
+
+## WAW — Quo Vadis (Sienkiewicz, Curtin tr., 1895/1896)
+
+Main vignette **WAW-01 "The Arbiter's Farewell"** is fully spec'd with UQF v1.0 JSON, 5-act vignette, TOKEN, and all four admin updates applied.
+
+The following quest seeds were generated from full narrative recall. Each has a paragraph-length story concept in WAW-quo-vadis.md. They need full vignette treatment: 5 acts, TOKEN, skill checks, UQF JSON, and admin updates.
+
+### §WAW-02 — The Charge List (Chapters 55–60)
+The Praetorian Guard produced formal arrest records during the 64 AD Christian persecution: names, addresses, charges, arresting officers. A partial copy of one list — covering arrests in the Transtiberim district — survived in a Roman catacomb library. It names forty-three people. It is the most complete record of who was there. Fighter escorts it from a Roman catacomb to a neutral archive.
+
+### §WAW-03 — The Arena Register (Chapters 62–64)
+Roman amphitheaters kept administrative records of games: names of condemned, types of animals, outcomes. A partial register from a 64–68 AD games cycle includes an entry for an unnamed barbarian prisoner who killed a bull in public. This is the only official document that confirms what Ursus did. Fighter escorts it from a Neapolitan archive.
+
+### §WAW-04 — Chilo's Account (Chapter 72)
+In old age, having converted, Chilo dictated a full account of the people he informed on — names, what he said, what he received in payment. Intended as confession and as witness. A single copy survives in a monastery archive in Greece, sent by a Corinthian Christian community. Fighter escorts it to a neutral archive before it is destroyed by families whose ancestors are named in it.
+
+### §WAW-05 — Acte's Letter (Epilogue)
+Acte, Nero's freedwoman companion, arranged his burial when his retinue fled. She wrote a brief account of the condition of his body and the location of his grave for a subsequent Roman official who inquired. The letter describes a specific road, a specific grove, a specific distance from the city. Fighter escorts it from a Vatican archive to Weimar before the grove is built over.
+
+### §WAW-06 — Peter's Deposition at Antioch (Chapters 30–35)
+Before coming to Rome, Peter was in Antioch. The early Christian community there kept written records of his teaching, including his account of the Caesarea Philippi commission. A fragment of the Antioch community record — the oldest written version of the commission — survives in a Syrian monastery. Fighter escorts it west.
+
+### §WAW-07 — The Mile-Marker Account (Chapter 69)
+A Roman road maintenance official logged an incident on the Appian Way: an elderly man seen walking north in distress, then turning south again, weeping, saying he had met a vision of a condemned man walking north toward the city. The log is a standard administrative document; it is the only non-Christian source that mentions anyone behaving unusually on the Appian Way that morning. Fighter escorts it.
+
+---
+
+## MLA — Plutarch's Lives (Plutarch, Dryden/Clough tr., c. 95–110 AD)
+
+Main vignette **MLA-01 "The Third Comparison"** is fully spec'd with UQF v1.0 JSON, 5-act vignette, TOKEN, and all four admin updates applied.
+
+The following quest seeds were generated from full narrative recall. Each has a paragraph-length story concept in MLA-plutarch-lives.md. They need full vignette treatment: 5 acts, TOKEN, skill checks, UQF JSON, and admin updates.
+
+### §MLA-02 — Alcibiades's Letter to Tissaphernes (Life of Alcibiades)
+Alcibiades in Persian exile wrote to Tissaphernes outlining the case for Persian non-intervention — keeping both Athenian and Spartan sides exhausted. The letter is the most explicit surviving statement of his strategic thinking outside Thucydides's paraphrase. A papyrus copy survives in an Egyptian monastery. Fighter escorts it.
+
+### §MLA-03 — The Solon Tablet (Life of Solon)
+Solon's laws were inscribed on wooden tablets, then marble copies made; all lost. A late Roman copy of a Hellenistic transcription of several laws survives in a Spartan archive. A Venetian collector has acquired it and is sailing for Venice. Fighter escorts an authenticated rubbing to a neutral archive before the stone is lost at sea.
+
+### §MLA-04 — Tiro's Notes (Life of Cicero)
+Cicero's secretary Marcus Tullius Tiro invented systematic shorthand to record speeches as delivered. A wax notebook of his shorthand drafts for the second Philippic was preserved in a monastery near Cicero's hometown. The shorthand contains variant passages not in the published speech. Fighter escorts it.
+
+### §MLA-05 — The Nicias Correspondence (Life of Nicias)
+Nicias wrote dispatches to Athens during the Sicilian Expedition that survive in excerpt in Thucydides; but Plutarch quotes material not in Thucydides, suggesting fuller copies existed. A complete Nician dispatch from the critical summer of 413 BC survives in a Byzantine monastery as a text in a volume otherwise containing geographic descriptions. Fighter escorts the volume.
+
+### §MLA-06 — The Agrarian Commission Record (Life of Tiberius Gracchus)
+Tiberius Gracchus's land commission (133 BC) produced land-redistribution records: who received what allotment, where, under what legal description. A fragmentary copy of one year's commission decisions survives in a Roman archive. In 1367, the land it describes is in Campania and still arable; the document has legal implications for current landowners who trace their ownership to Sullan confiscations. Fighter escorts it before it can be confiscated.
+
+### §MLA-07 — The Missing Preface (Epaminondas/Scipio — Lost Lives)
+Plutarch's preface to the Epaminondas/Scipio pair is quoted in fragments by later writers; the Lives themselves are lost. A monastic scholar in 1367 has found a manuscript containing what appears to be the preface — Plutarch's stated reason for pairing these two men — without the Lives following it. The preface alone tells you what Plutarch thought the comparison was about. Fighter escorts the fragment from a Greek island monastery to Weimar.
+
+---
+
+## BGW — Arabian Nights / Alf Layla wa-Layla (Burton tr., 1885)
+
+Main vignette **BGW-01 "The Night's Account"** is fully spec'd with UQF v1.0 JSON, 5-act vignette, TOKEN, and all four admin updates applied.
+
+The following quest seeds were generated from full narrative recall. Each has a paragraph-length story concept in BGW-arabian-nights-burton.md. They need full vignette treatment: 5 acts, TOKEN, skill checks, UQF JSON, and admin updates.
+
+### §BGW-02 — The Sinbad Chart (Sinbad cycle)
+A Basra merchant's navigational chart, dated approximately 9th century, corresponding to the route of Sinbad's fourth voyage. The chart uses Arabic coastal terms and local island names that a later scholar has annotated with identifications. A Persian geography archive acquired it; a Venetian merchant acquired the archive; the chart is in transit. Fighter escorts it.
+
+### §BGW-03 — The Caliph's Night Log (Harun al-Rashid stories)
+A Baghdad court scribe kept a private log of Harun al-Rashid's nocturnal palace absences — dates, hours, return times, physical state on return — as a security measure. Not part of the official chronicle. A 10th-century copy survives in an Iraqi monastery being dissolved. Fighter escorts it.
+
+### §BGW-04 — Morgiana's Grant (Ali Baba supplement)
+A deed of manumission for a household slave named Morgiana, issued in a Cairo legal document, approximately 9th century, found in a collection of manumission records in an Alexandrian library. Whether it is the "real" document behind the story or a later document named for the character is unanswerable. Fighter escorts it.
+
+### §BGW-05 — The Genie Contract (Merchant and Genie cycle)
+A sorcerer's estate inventory from Cairo, approximately 10th century, includes a sealed copper vessel with a lead stopper — described as "bound djinn, middle class, three binding clauses remaining." The inventory is a legal document. The vessel's location is noted as "deposited for safe custody." Fighter escorts the inventory.
+
+### §BGW-06 — The Translator's Preface (Frame narrative)
+The earliest Arabic translator of the original Persian frame tale included a preface explaining which stories he added, which he changed, and why he kept Scheherazade as the frame rather than a male narrator. The preface survives as a quotation in a 10th-century bibliography; a full copy may exist in a Shiraz manuscript. Fighter escorts it.
+
+### §BGW-07 — The Dunyazade Account (Frame narrative)
+A manuscript variant in a North African monastery adds a brief epilogue in Dunyazade's voice, describing what it was like to lie in the dark under the bed of the king for three years, asking for stories. Scheherazade's sister has no voice in the canonical collection. Fighter escorts the manuscript.
+
+---
+
+## CAI — Arabian Nights / Alf Layla wa-Layla (Lang adaptation, 1898 — Galland/Syrian tradition)
+
+Main vignette **CAI-01 "The Seventh Day"** is fully spec'd with UQF v1.0 JSON, 5-act vignette, TOKEN, and all four admin updates applied.
+
+The following quest seeds were generated from full narrative recall. Each has a paragraph-length story concept in CAI-arabian-nights-lang.md. They need full vignette treatment.
+
+### §CAI-02 — Aladdin's Registration (Aladdin cycle)
+A Syrian legal records collection contains a marriage contract template from the same period and region as the Aladdin story that uses identical formulary — suggesting the story was constructed around a real document type. Fighter escorts the template collection from a Damascus archive.
+
+### §CAI-03 — The Inventor's Patent (Enchanted Horse)
+A Baghdad archive of craft guild records from the 9th century contains a filing for a Persian mechanism of copper and silver capable of directed aerial travel, requiring two operator inputs. Fighter escorts it from Baghdad to a neutral archive.
+
+### §CAI-04 — Prince Ahmed's Arrow (Prince Ahmed cycle)
+A Syrian folk tale collection contains an account by a parish priest of a man who found an arrow in the hills above Aleppo pointing at a cleft in the rock, entered the cleft, and found a spring of unusual quality. Written down as a curiosity. Fighter escorts the parish account.
+
+### §CAI-05 — The Deathbed Instruction (Noureddin cycle)
+Noureddin's father's instruction — never sell the slave girl — matches a specific legal instrument type: the conditional manumission prohibition. A Damascus archive has a collection of such instruments from the same period. Fighter escorts the collection.
+
+### §CAI-06 — The Syrian Storyteller's Notes (Frame narrative tradition)
+A Syrian Christian storyteller in 14th-century Aleppo tells a foreign Venetian scholar the Aladdin story; the scholar's notes from the session describe what the storyteller said before and after the story, what he changed when he realized the scholar was writing it down, and what he said when he heard it read back. Fighter escorts the notes.
+
+### §CAI-07 — The Peri Banu Survey (Prince Ahmed cycle)
+The old woman spy in the Prince Ahmed story made a systematic survey of the route to the fairy's underground palace. A Syrian manuscript contains a formal survey of a route in the hills north of Aleppo, written in the style of a geographic report, with notation of a cave entrance. Fighter escorts it before the route is used for the wrong purpose.
+
+---
+
+## BEY — Mandeville's Travels (attr. Sir John Mandeville, c. 1357)
+
+Main vignette **BEY-01 "The Sober Draft"** is fully spec'd with UQF v1.0 JSON, 5-act vignette, TOKEN, and all four admin updates applied.
+
+The following quest seeds were generated from full narrative recall. Each has a paragraph-length story concept in BEY-mandeville.md. They need full vignette treatment.
+
+### §BEY-02 — The Sultan's Safe Conduct (Jerusalem section)
+A Mamluk diplomatic safe conduct collection from Cairo, dated 1320s–1340s, includes an instrument issued to a European knight whose name, in Arabic transliteration, could be read as a version of "Mandeville." Fighter escorts the collection from Cairo to a neutral archive.
+
+### §BEY-03 — The Odoric Annotations (Compilation)
+Friar Odoric of Pordenone's travel account (c. 1330), one of Mandeville's main sources, survives in an Italian monastery copy with annotations in a different hand marking where the text was used in Mandeville's Travels. Fighter escorts the annotated copy.
+
+### §BEY-04 — The Prester John Letter (Eastern section)
+A 12th-century letter purportedly from Prester John to European kings survives in a German monastery archive. In 1367 it is being debated whether Prester John is the Ethiopian emperor or a fiction. The letter is evidence for neither position. Fighter escorts it.
+
+### §BEY-05 — The Cotton-Lamb Record (Vegetable Lamb)
+A Genoese trade account from Caffa (Crimea), 1330s, contains a marginal note debunking the Vegetable Lamb of Tartary — explaining that "cotton wool" does not come from actual lambs. The earliest known debunking of the legend. Fighter escorts the account book.
+
+### §BEY-06 — Boldensele's Original (Compilation)
+William of Boldensele's travel account of Egypt and the Holy Land (c. 1336), one of Mandeville's primary sources, survives in its original manuscript form in a Rhineland monastery — predating the copies made after Mandeville made it famous. Fighter escorts it to a neutral archive.
+
+### §BEY-07 — The Missing Chapter (Latin version)
+A Latin manuscript of Mandeville's Travels in a German monastery contains an additional chapter not found in any other known manuscript — a conversation with a Jewish scholar in Jerusalem about Old Testament geography of the Eastern routes. Fighter escorts the manuscript.
+
+---
+
+## §KYA-CONT — COMPLETE 2026-05-31
+
+Shah-Nameh narrative fully processed across parts 1–4. Part 5 confirmed as Divan of Hafiz only (no Shah-Nameh content). KYA marked [x] in books.md. Seeds KYA-01–25 written. KYA-01 full vignette spec done. KYA-02–25 seeds pending full spec.
+
+Full narrative arc: Kaiúmers → Zohák → Kavah/Feridún → Sohráb tragedy → Saiáwush betrayal and execution → Kai-khosráu crowned and vanishes → Zoroaster/Gushtásp → Isfendiyár's Heft-Khan and Brazen Fortress → Isfendiyár vs. Rustem (Kazú-arrow, both fated) → death of Rustem (Shughad's pits) → Sikander/Alexander (half-Persian framing, Wall of Gog and Magog, dies at Kashán) → Firdusi's Satire on Mahmúd.
+
+Remaining: add KYA-01 to quest-map.md theme thread when it is fully implemented. Rubaiyat (Omar Khayyam) and Divan (Hafiz) from the same volume may be processed separately under new codes.
+
+---
+
+## Pipeline Queue
+
+Next books to process (in approximate priority order):
+
+| Code | Title | KB | Status |
+|------|-------|----|--------|
+| IST | Alexiad (Anna Komnene) | 165 | Unprocessed |
+| NWI | Anabasis (Xenophon) | 545 | **Processed 2026-05-31 — NWI_001 spec complete; NWI-02–08 seeds pending** |
+| WAW | Quo Vadis (Sienkiewicz) | 1201 | **Processed 2026-05-31 — WAW_001 spec complete; WAW-02–07 seeds pending** |
+| MLA | Plutarch's Lives | 4222 | **Processed 2026-05-31 — MLA_001 spec complete; MLA-02–07 seeds pending** |
+| BGW | Arabian Nights (Burton) | 983 | **Processed 2026-05-31 — BGW_001 spec complete; BGW-02–07 seeds pending** |
+| CAI | Arabian Nights (Lang) | 629 | **Processed 2026-05-31 — CAI_001 spec complete; CAI-02–07 seeds pending** |
+| BEY | Mandeville's Travels | 472 | **Processed 2026-05-31 — BEY_001 spec complete; BEY-02–07 seeds pending** |
+| KYA | Shah-Nameh | 883 | **Processed 2026-05-31 — COMPLETE. KYA-01 spec + KYA-02–25 seeds. See §KYA-CONT.** |
+| HTY | Mahabharata | 83 | **Processed 2026-05-31 — HTY-01 spec complete (Savitri's Three Bargains); HTY-02–06 seeds pending** |
+| ADA | Ramayana | 2339 | **Processed 2026-05-31 — ADA-01 spec complete (The Curlew's Grief); ADA-02–06 seeds. Part 1 of 12 fully read; full story arc recovered from synopsis cantos. Parts 2–12 pending.** |
+| AMS | Tale of Genji | Unknown | Unprocessed |
+| HAV | Buccaneers of America | Unknown | Unprocessed |
+| CLJ | Dracula | Unknown | Unprocessed |
+
+---
+
+## Processing Protocol
+
+### File preparation
+
+All source `.txt` files have been pre-split into 200 KB chunks by `split-sources.sh` / `split-sources.js`. Single-newline line breaks are collapsed to spaces (paragraph breaks preserved). Chunk files are named `CODE-title.partKofN.txt`.
+
+Files that fit in one read (≤200 KB after splitting, or originally small) are processed in a single pass. Files with N > 1 parts use the multi-pass protocol below.
+
+---
+
+### Single-part books (original file ≤200 KB, no split)
+
+1. Read the entire file.
+2. Write the complete `.md` document:
+   - Three-pass literary summary (overview → structure → quest seeds)
+   - Seven storylines
+   - Full 5-act main vignette spec + UQF v1.0 JSON stub
+   - Outstanding quest seeds table
+3. Apply all four admin updates: `quest-map.md`, `books.md`, `plan.md`.
+
+---
+
+### Multi-part books (split into .part1ofN.txt chunks)
+
+Long books get longer summaries because each part extends the existing `.md`. **Never replace earlier summary content — always append.**
+
+**Opening a multi-part book (part 1):**
+1. Read `CODE-title.part1ofN.txt`.
+2. Create `CODE-title.md` and write:
+   - Header block (title, source, translator, year, N-part note)
+   - Three-Pass Summary — Pass 1 (overview) and Pass 2 (structure), covering only what part 1 contains
+   - Preliminary storylines (may be incomplete — mark open ones as `[CONTINUES]`)
+   - Any quest seeds visible so far
+3. If N > 1 (more parts remain), write a continuation entry to `plan.md` (see format below) and ask the user: **"Part 1 of N done — type 'continue' to process part 2."**
+4. Show a one-line status: `KYA part 1/5 done — Kaiúmers through Feridún's coronation`.
+
+**Continuing (parts 2 through N−1):**
+1. Read `CODE-title.partKofN.txt`.
+2. Open the existing `CODE-title.md` and **append** to the Three-Pass Summary section:
+   - New `### Part K coverage` subsection with what this part adds
+   - Extend or resolve any `[CONTINUES]` storylines
+   - Add new quest seeds found in this part
+3. Update the continuation entry in `plan.md` (mark this part done, note next part).
+4. Ask the user to continue for the next part unless the file is now complete.
+5. Show a one-line status.
+
+**Final part (part N):**
+1. Read `CODE-title.partNofN.txt`.
+2. Append final part coverage to the `.md`.
+3. **Complete the full document:**
+   - Reconcile all `[CONTINUES]` markers — resolve or close every open storyline
+   - Write the full 5-act main vignette spec + UQF v1.0 JSON stub
+   - Write the complete outstanding seeds table
+4. Apply all four admin updates: `quest-map.md`, `books.md`, `plan.md`.
+5. Remove the continuation entry from `plan.md`.
+
+---
+
+### Continuation entry format in plan.md
+
+When pausing mid-book, write this block immediately after the book's seed section (or at end of file if no seeds yet):
+
+```
+### §CODE-CONT — Continue [Full Title] processing
+- Parts done: 1 of N (through part K)
+- Parts remaining: partKofN through partNofN
+- Summary so far: [one sentence — what narrative ground was covered]
+- Next step: read CODE-title.partKofN.txt, append to CODE-title.md, continue storylines
+```
+
+Remove this block when the book is fully processed.
+
+---
+
+### Incremental reporting rule
+
+After every part processed, output a one-line status before asking the user to continue:
+
+> `[CODE] part K/N done — [brief content note, e.g. "Rustam's birth through Sohrab duel"]`
+
+Do not wait until all parts are done before showing results. Each part's output is its own deliverable.
+
+---
+
+## Admin Notes
+
+- All FCO quest seeds (02–14) are in FCO-aeneid.md with paragraph-length descriptions.
+- FCO-01 (main vignette) has full 5-act spec, UQF JSON stub, TOKEN, and all admin updates applied to quest-map.md and books.md.
+- plan.md created: 2026-05-31.

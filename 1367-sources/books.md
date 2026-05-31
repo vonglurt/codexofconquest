@@ -1,7 +1,7 @@
 # BOOKS DIRECTIVE
 
 > **READ THIS SECTION BEFORE PROCESSING ANY BOOK.**
-> These rules govern every pass through the list below.
+> These rules govern every pass through the list below. Write the file between each pass. add to end. 
 
 ---
 
@@ -20,7 +20,7 @@ observational. The TOKEN is the grammatical subject. The Fighter witnesses.
 
 These quests feed the game's world. Each one should feel as if it belongs in the
 same city where the player already stands. Read `../story.md` and `quest-map.md`
-before placing any quest act in a city.
+before placing any quest act in a city. The API should be queried for Quest Related Map. Listing the cities. 
 
 **The hero always succeeds in the end.** Fail text = delay + cost + witnessed
 shame. Never permanent defeat. Friendship and loyalty are the tests. Combat is
@@ -32,10 +32,11 @@ how they are proven. Romance, tenderness, and moral weight are required.
 
 1. **READ BOTH FILES.** For each entry, open `{CODE}-{slug}.txt` (source text) AND
    `{CODE}-{slug}.md` (prior summary, if it exists). Both inform the current pass.
-   Never summarize from memory alone when the .txt is ≤ 800 KB and readable. 
+    Write the file at the end of each pass. Never summarize from memory alone when the .txt is ≤ 800 KB and readable. 
 
-2. **SIZE GATE.** If the .txt is ≤ 400 KB → read it directly and completely — every line.
-   If > 400 KB → draw from training knowledge; note "from memory" in the .md header.
+2. **SIZE GATE.** All source .txt files > 200 KB have been pre-split into 200 KB chunks by `split-sources.sh` (naming: `CODE-title.partKofN.txt`). Single newlines are collapsed to spaces; paragraph breaks (double newlines) are preserved. Read the original .txt file OR its split parts — both contain the same content.
+   - Parts ≤ 200 KB: read directly and completely.
+   - Multi-part books: read part by part, appending to the .md after each part. See Processing Protocol in plan.md for the full multi-pass procedure.
 
 3. **ONE AT A TIME.** Process one book per working session. Take the first entry
    where Status is `[ ]`. Do not skip ahead.
@@ -326,70 +327,70 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | [x] | STN | robin-hood | Merry Adventures of Robin Hood — Howard Pyle | c.1883 (medieval) | Outlaw Hero | 621 |
 | [x] | MAN | ivanhoe | Ivanhoe — Sir Walter Scott | 1819 (Norman Eng.) | Historical Novel | 1140 |
 | [x] | SEN | treasure-island | Treasure Island — Robert Louis Stevenson | 1883 | Pirate Adventure | 390 |
-| [ ] | GCI | toilers-of-the-sea | Toilers of the Sea — Victor Hugo | 1866 | Sea Epic | 5506 |
-| [ ] | KIR | mabinogion | Mabinogion — Anon (Welsh medieval) | ~12th–13th C | Celtic Myth | 365 |
+| [x] | GCI | toilers-of-the-sea | Toilers of the Sea — Victor Hugo | 1866 | Sea Epic | 5506 |
+| [x] | KIR | mabinogion | Mabinogion — Anon (Welsh medieval) | ~12th–13th C | Celtic Myth | 365 |
 | [x] | INV | ossian | Fragments of Ancient Poetry — James Macpherson | 1760 (ancient) | Highland Bard Epic | 87 |
 | [x] | BHD | cuchulain | Cuchulain of Muirthemne — Lady Gregory | 1902 (Iron Age) | Irish Hero Epic | 132 |
 | [x] | MSE | canterbury-tales | The Canterbury Tales — Geoffrey Chaucer | c.1390 | Medieval Stories | 1688 |
 | [x] | SDQ | rob-roy | Rob Roy — Sir Walter Scott | 1817 (1715 setting) | Scottish Adventure | 370 |
-| [ ] | FCO | vision-of-piers-plowman | Piers Plowman — William Langland | c.1370–1386 | Allegorical Poem | 265 |
+| [x] | FCO | vision-of-piers-plowman | Piers Plowman — William Langland | c.1370–1386 | Allegorical Poem | 265 |
 
 ### Norse & Scandinavian
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
-| [ ] | FRO | volsunga-saga | Volsunga Saga — Anon | ~13th C (legendary) | Norse Legend | 342 |
-| [ ] | VBY | grettir-saga | Grettir's Saga — Anon | ~14th C | Icelandic Saga | 373 |
-| [ ] | LBC | nibelungenlied | Nibelungenlied — Anon | c.1200 | German Epic | 660 |
+| [x] | FRO | volsunga-saga | Volsunga Saga — Anon | ~13th C (legendary) | Norse Legend | 342 |
+| [x] | VBY | grettir-saga | Grettir's Saga — Anon | ~14th C | Icelandic Saga | 373 |
+| [x] | LBC | nibelungenlied | Nibelungenlied — Anon | c.1200 | German Epic | 660 |
 | [x] | GDN | njal-saga | Njal's Saga — Anon (Dasent transl.) | ~13th C | Icelandic Saga | 787 |
-| [ ] | RIX | egil-saga | Egil's Saga — Anon (attr. Snorri) | ~13th C | Icelandic Saga | 869 |
-| [ ] | BOO | prose-edda | Prose Edda — Snorri Sturluson | c.1220 | Norse Mythology | 514 |
-| [ ] | ALF | kalevala | Kalevala — Elias Lönnrot | 1835/1849 | Finnish Epic | 642 |
-| [ ] | KSU | heimskringla | Heimskringla — Snorri Sturluson | c.1230 | Norse Kings History | 1707 |
-| [ ] | RKV | poetic-edda | Poetic Edda — Anon | ~10th–13th C | Norse Poetry | 1924 |
-| [ ] | HFT | frithiof-saga | Frithiof's Saga — Esaias Tegnér | 1825 (Old Norse) | Romantic Epic | 403 |
-| [ ] | MOL | laxdaela-saga | Laxdaela Saga — Anon | ~13th C | Icelandic Saga | 347 |
-| [ ] | CPH | gesta-danorum | Gesta Danorum — Saxo Grammaticus | c.1200 | Danish Chronicles | 689 |
-| [ ] | ARN | knights-of-the-cross | Knights of the Cross — Henryk Sienkiewicz | 1900 (1399 setting) | Polish Historical Epic | 324 |
+| [x] | RIX | egil-saga | Egil's Saga — Anon (attr. Snorri) | ~13th C | Icelandic Saga | 869 |
+| [x] | BOO | prose-edda | Prose Edda — Snorri Sturluson | c.1220 | Norse Mythology | 514 |
+| [x] | ALF | kalevala | Kalevala — Elias Lönnrot | 1835/1849 | Finnish Epic | 642 |
+| [x] | KSU | heimskringla | Heimskringla — Snorri Sturluson | c.1230 | Norse Kings History | 1707 |
+| [x] | RKV | poetic-edda | Poetic Edda — Anon | ~10th–13th C | Norse Poetry | 1924 |
+| [x] | HFT | frithiof-saga | Frithiof's Saga — Esaias Tegnér | 1825 (Old Norse) | Romantic Epic | 403 |
+| [x] | MOL | laxdaela-saga | Laxdaela Saga — Anon | ~13th C | Icelandic Saga | 347 |
+| [x] | CPH | gesta-danorum | Gesta Danorum — Saxo Grammaticus | c.1200 | Danish Chronicles | 689 |
+| [x] | ARN | knights-of-the-cross | Knights of the Cross — Henryk Sienkiewicz | 1900 (1399 setting) | Polish Historical Epic | 324 |
 
 ### French & Continental
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
-| [ ] | OST | song-of-roland | Song of Roland — Anon | c.1100 | French Chanson | 195 |
-| [ ] | CDG | three-musketeers | The Three Musketeers — Alexandre Dumas | 1844 (1625 setting) | Swashbuckler | 1356 |
-| [ ] | VIE | faust | Faust — Johann Wolfgang von Goethe | 1808–1832 | Philosophical Drama | 213 |
-| [ ] | ERF | grimm-fairy-tales | Grimm's Fairy Tales — Brothers Grimm | 1812 | Folk Tales | 547 |
-| [ ] | BRU | amadis-of-gaul | Amadis of Gaul — Garci Rodríguez de Montalvo | pub. 1508 | Chivalric Romance | 134 |
-| [ ] | LIL | froissart-berners | Chronicles — Jean Froissart (Berners transl.) | 14th–15th C | Medieval History | 861 |
-| [ ] | CRL | froissart-boys | Chronicles — Jean Froissart (Boys transl.) | 14th–15th C | Medieval History | 802 |
+| [x] | OST | song-of-roland | Song of Roland — Anon | c.1100 | French Chanson | 195 |
+| [x] | CDG | three-musketeers | The Three Musketeers — Alexandre Dumas | 1844 (1625 setting) | Swashbuckler | 1356 |
+| [x] | VIE | faust | Faust — Johann Wolfgang von Goethe | 1808–1832 | Philosophical Drama | 213 |
+| [x] | ERF | grimm-fairy-tales | Grimm's Fairy Tales — Brothers Grimm | 1812 | Folk Tales | 547 |
+| [x] | BRU | amadis-of-gaul | Amadis of Gaul — Garci Rodríguez de Montalvo | pub. 1508 | Chivalric Romance | 134 |
+| [x] | LIL | froissart-berners | Chronicles — Jean Froissart (Berners transl.) | 14th–15th C | Medieval History | 861 |
+| [x] | CRL | froissart-boys | Chronicles — Jean Froissart (Boys transl.) | 14th–15th C | Medieval History | 802 |
 
 ### Iberian & Portuguese
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
-| [ ] | MAD | don-quixote | Don Quixote — Miguel de Cervantes | 1605–1615 | Comic Epic | 2335 |
+| [x] | MAD | don-quixote | Don Quixote — Miguel de Cervantes | 1605–1615 | Comic Epic | 2335 |
 | [x] | MAD | chronicle-cid | Chronicle of the Cid — Anon (Southey transl.) | 12th C source | Spanish Epic | 664 |
-| [ ] | LIS | lusiad | The Lusiads — Luís de Camões | 1572 | Portuguese Epic | 207 |
+| [x] | LIS | lusiad | The Lusiads — Luís de Camões | 1572 | Portuguese Epic | 207 |
 
 ### Italian
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
-| [ ] | FLR | divine-comedy-inferno | Divine Comedy: Inferno — Dante Alighieri | c.1320 | Allegorical Epic | 641 |
-| [ ] | JRS | jerusalem-delivered | Jerusalem Delivered — Torquato Tasso | 1581 | Renaissance Epic | 237 |
+| [x] | FLR | divine-comedy-inferno | Divine Comedy: Inferno — Dante Alighieri | c.1320 | Allegorical Epic | 641 |
+| [x] | JRS | jerusalem-delivered | Jerusalem Delivered — Torquato Tasso | 1581 | Renaissance Epic | 237 |
 
 ### Classical Mediterranean
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
-| [ ] | ATH | iliad | Iliad — Homer (Lang transl.) | ~750 BC | Greek Epic | 907 |
-| [ ] | ZTH | odyssey | Odyssey — Homer (Butler transl.) | ~725 BC | Greek Epic | 700 |
-| [ ] | FCO | aeneid | Aeneid — Virgil (Dryden transl.) | ~19 BC | Roman Epic | 484 |
-| [ ] | MLA | plutarch-lives | Plutarch's Lives — Plutarch | c.100 AD | Biography | 4222 |
-| [ ] | NWI | anabasis | Anabasis — Xenophon | ~370 BC | Greek Military | 545 |
+| [x] | ATH | iliad | Iliad — Homer (Lang transl.) | ~750 BC | Greek Epic | 907 |
+| [x] | ZTH | odyssey | Odyssey — Homer (Butler transl.) | ~725 BC | Greek Epic | 700 |
+| [x] | FCO | aeneid | Aeneid — Virgil (Latin original — Gutenberg #227) | ~19 BC | Roman Epic | 484 |
+| [x] | MLA | plutarch-lives | Plutarch's Lives — Plutarch (Dryden/Clough tr.) | c. 95–110 AD | Biography | 4222 |
+| [x] | NWI | anabasis | Anabasis — Xenophon (Dakyns tr. — Gutenberg #1170) | c. 401 BC | Greek Military | 545 |
 | [ ] | IST | alexiad | The Alexiad — Anna Komnene | c.1148 | Byzantine History | 165 |
-| [ ] | WAW | quo-vadis | Quo Vadis — Henryk Sienkiewicz | 1895 (Nero's Rome) | Historical Novel | 1201 |
+| [x] | WAW | quo-vadis | Quo Vadis — Henryk Sienkiewicz (Curtin tr. — 1895) | c. 64–68 AD (Nero's Rome) | Historical Novel | 1201 |
 
 ### Byzantine & Eastern European
 
@@ -401,17 +402,17 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
-| [ ] | BGW | arabian-nights-burton | Arabian Nights — Anon (Burton transl.) | Medieval (pub. 1885) | Story Collection | 959 |
-| [ ] | CAI | arabian-nights-lang | Arabian Nights — Anon (Lang transl.) | Medieval (pub. 1898) | Story Collection | 614 |
-| [ ] | BEY | mandeville | Travels of Sir John Mandeville — Anon | c.1357 | Travel/Adventure | 461 |
-| [ ] | KYA | shah-nameh | Shah-Nameh — Ferdowsi (Atkinson transl.) | c.1010 | Persian Epic | 2339 |
+| [x] | BGW | arabian-nights-burton | Arabian Nights — Alf Layla wa-Layla (Burton tr., 1885 — Calcutta II ms.) | c. 9th–14th century | Arabic Frame-Tale | 983 |
+| [x] | CAI | arabian-nights-lang | Arabian Nights — Alf Layla wa-Layla (Lang adaptation, 1898 — Galland/Syrian tradition) | c. 9th–14th century | Arabic Frame-Tale | 629 |
+| [x] | BEY | mandeville | Mandeville's Travels — attr. Sir John Mandeville | c. 1357 | Travel/Compilation | 472 |
+| [x] | KYA | shah-nameh | Shah-Nameh — Ferdowsi (Atkinson transl.) | c.1010 | Persian Epic | 863 | Processed 2026-05-31 — KYA-01 spec complete; KYA-02–25 seeds; Shah-Nameh narrative fully covered. Volume also contains Rubaiyat/Divan/Gulistan (separate works, separate codes if processed). |
 
 ### South Asian
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
-| [ ] | HTY | mahabharata | Mahabharata — Anon (Roy abridgement) | Ancient (pub. 1883) | Hindu Epic | 83 |
-| [ ] | ADA | ramayana | Ramayana — Anon (Griffith transl.) | Ancient (pub. 1870) | Hindu Epic | 2339 |
+| [x] | HTY | mahabharata | Mahabharata — Dutt verse condensation | Ancient (pub. 1899) | Hindu Epic | 83 | Processed 2026-05-31 — HTY-01 spec (Savitri's Three Bargains); HTY-02–06 seeds. See HTY-mahabharata.md. |
+| [x] | ADA | ramayana | Ramayana — Valmiki (Griffith transl.) | Ancient (pub. 1870) | Hindu Epic | 2339 | Processed 2026-05-31 — ADA-01 spec (The Curlew's Grief, Sultaniya→Tabriz); ADA-02–06 seeds. Part 1 of 12 fully read; story arc recovered from Narad's synopsis (Canto I). Parts 2–12 pending detailed pass. See ADA-ramayana.md. |
 
 ### East Asian & Caucasus
 
