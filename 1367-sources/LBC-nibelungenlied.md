@@ -703,3 +703,246 @@ the acceptance sealed and pressed, the answer that begins everything.*
 *books.md: mark LBC [x].*
 
 *Rule 15: clear agent memory after LBC completion if context is full.*
+
+---
+
+## Cycle 2: Rüdeger's Shield
+
+### Pass 1 — Plot Précis (Rüdeger's Shield)
+
+At Etzel's court, the massacre is already beginning. Rüdeger of Bechelaren — the most honorable man in the poem, Kriemhild's sworn vassal, and the dearest friend the Burgundians have in this country — stands between his oath and his love. He must fight the Burgundians. Before he does, Hagen calls across the space between the armies: "Give me one more token of our friendship. Give me your shield." Rüdeger removes the shield from his own arm and gives it across the contested ground. It is the last gift the poem contains that is not a weapon or a wound. It is received by the man who is about to try to kill the man who gave it. The Fighter carries it across.
+
+### Pass 2 — Fighter's Role (Rüdeger's Shield)
+
+Rüdeger gives the Fighter his shield and names Hagen as the recipient. The Fighter crosses the contested ground between two armies — both watching, both armed, neither firing for the duration of this passage — delivers the shield to Hagen, and then holds the position between the lines while Rüdeger advances to fight without it. In Act V, after Rüdeger falls, the Fighter holds the neutral ground when both armies call across the bodies, refusing to take a side or carry another message in either direction.
+
+### Pass 3 — What This Angle Reveals That Cycle 1 Missed
+
+Cycle 1 was the invitation as the weapon — the courtesy that contains the vengeance, the form that is also the plan. Kriemhild's scroll moves with her design. *Rüdeger's Shield* reveals the opposite motion: a man moving against the poem's design out of pure love. Rüdeger's honor is what Kriemhild is using — he cannot refuse her because of his oath; he cannot refuse the Burgundians because of his love — and the poem destroys him for being exactly as good as it required. What cycle 1 missed: the poem's grief. Not Kriemhild's grief (which has become vengeance personified) and not Hagen's (which is past grief into acceptance) — but Rüdeger's. He loses everything because he is good, specifically and precisely because he is good. The shield exchange is the moment where both truths of his situation are held simultaneously by both parties and acknowledged. The Fighter carries the gift that the poem's design cannot prevent Rüdeger from giving.
+
+---
+
+### Seven Storyline Ideas (Cycle 2 Selection)
+
+1. The Invisible Third — Unused
+2. The Cross on the Tunic — Unused
+3. The Hoard's Sinking — Unused
+4. ~~Kriemhild's Invitation~~ — **USED Cycle 1**
+5. The Night-Watch — Unused
+6. **Rüdeger's Shield** — **CHOSEN (Cycle 2)**
+7. The Last Oath — Unused
+
+---
+
+### Theme Check
+
+Active threads do not include: *the gift given against the design of every surrounding event; the honorable man destroyed by his own honor; the neutral carrier between two parties who love each other and are about to kill each other.* This is distinct from the diplomatic-document themes (there is no document; the shield is the gift) and from all loyalty themes (the Fighter is not loyal to either party — they are the carrier of the last gift between parties who are). New thread proposed: **The last gift given against the design; the carrier who crosses the space where love and obligation cannot coexist; what remains when the poem has used a good man up.**
+
+---
+
+### 5-Act Vignette Play: *Rüdeger's Shield*
+
+*Storyline 6 — Diplomatic Crossing. Rüdeger gives his shield to the Fighter to carry to Hagen across the contested ground. TOKEN: Rüdeger's Shield — received from Rüdeger's arm Act I, carried through the between-armies space Acts II–III, delivered to Hagen Act IV, the Fighter holds the neutral ground Act V.*
+
+**THE TOKEN: RÜDEGER'S SHIELD** — a war-shield of the Bechelaren style, battered from decades of campaigning, Rüdeger's device on its face. He removes it from his arm and passes it to the Fighter. In Act IV, Hagen receives it from the Fighter's hands and weeps. In Act V, the shield is in Hagen's possession and Rüdeger has gone to fight without it.
+
+---
+
+#### ACT I — *Rüdeger's Position*
+*The shield: on Rüdeger's arm, still his. Location: ETZ — Etzel's court, between the hall and the fighting ground.*
+
+The space between the hall and the fighting ground is alive with the sound of armies deciding what to do next. Rüdeger stands at the edge of his own line with the expression of a man whose accounting has been complete for several hours and who has been waiting for the world to catch up to what he knows.
+
+Hagen's voice comes across the contested ground.
+
+**Hagen:** "Rüdeger! You have given me many things. Give me one more. Give me your shield before we fight."
+
+The silence that follows is the silence of everyone present understanding what is being asked. Not the shield as a weapon — as a token of honor between men who are about to try to kill each other and both know it and neither can refuse what either has done and neither can refuse what either feels.
+
+Rüdeger removes the shield from his arm. He holds it out to the Fighter.
+
+**Rüdeger:** "Take it to Hagen. Let no one stop you. Return to this ground when it is done."
+
+His face is the face of a man who has already processed what comes next and is not pretending otherwise.
+
+*Insight check DC 12: understand what you are carrying — not a weapon, not a diplomatic gesture in the usual sense; the last gift the poem permits; the form of a love that cannot refuse what it is asking of itself.*
+
+**Failure:** You take the shield with the bearing of a messenger completing an errand. Rüdeger looks at you for a moment. "Carry it correctly," he says — not a criticism; the instruction of someone who needs the transit to be understood for what it is.
+
+**Success:** You take the shield in both hands and feel its weight — the decades of use in it, the device on its face, the specific dents that record campaigns neither of you were part of. Rüdeger's hands release it without ceremony and do not tremble. You receive Rüdeger's Shield.
+
+---
+
+#### ACT II — *The Between-Armies Ground*
+*The shield: in the Fighter's hands, crossing. Location: BTL — the contested ground between armies, Etzel's hall.*
+
+The sixty feet between the armies are the most carefully observed sixty feet in the poem. Everyone on both sides is watching. They have stopped fighting for the duration of this crossing. This is not a ceasefire — it is the involuntary stillness of people witnessing something they recognize as outside the ordinary grammar of what is happening around them.
+
+The ground is not clear. There are three men lying in the first twenty feet — not dead, wounded, who have pulled themselves to the sides. There is blood on the stone. A Burgundian captain on the far edge has his hand on his sword and is looking at the Fighter with the calculating expression of someone deciding whether the approaching armored figure with a Bechelaren shield is a combatant or a carrier.
+
+*Composure check DC 12: cross the ground at the correct pace — not running (which reads as attack), not creeping (which reads as fear); the pace of someone on a specific errand that both sides have agreed to permit, even if neither said so aloud.*
+
+**Failure:** You walk too fast. The Burgundian captain takes one step forward. The momentary stillness breaks — shouts from both sides, a lance thrown into the ground between you as a warning. You stop. You hold the shield up. The stillness reasserts itself, but the crossing has been seen to require intervention, which is not what the crossing was supposed to be.
+
+**Success:** You cross at exactly the pace the moment requires. Both armies hold still. The wounded men in the ground's middle watch you pass. The Burgundian captain's hand comes off his sword.
+
+---
+
+#### ACT III — *The Burgundian Line*
+*The shield: approaching the Burgundian perimeter. Location: BTL.*
+
+At the Burgundian line, you are stopped by two soldiers who do not know your face and see an armored figure carrying a shield from the enemy's formation. They are correct to stop you. They also cannot see Hagen from where they are standing.
+
+*Persuasion check DC 12: name yourself, name the commission, name the shield's owner and its recipient — in the exact form that makes the soldiers hear it as what it is rather than what it could be read as.*
+
+**Failure:** The soldiers confer. One goes to find Hagen. The other holds the perimeter. You wait. The crossing is complete but the delivery requires a third party to authorize it, which means the moment of arrival is witnessed by more people than the moment was intended for.
+
+**Success:** "From Rüdeger of Bechelaren to Hagen of Troneck — a gift, before the fighting." The soldiers hear it correctly. They open the perimeter immediately. Hagen is already at the front line, watching, and he has been watching you since you left Rüdeger's side.
+
+---
+
+#### ACT IV — *The Delivery*
+*The shield: ready to pass to Hagen. Location: BTL — Burgundian line.*
+
+Hagen is exactly as the legend makes him — large, one-eyed, entirely composed in the way that people are composed when they have been afraid for so long the fear has become weight rather than sensation. He looks at the shield. He looks at the Fighter.
+
+He receives it in both hands.
+
+He weeps. The poem says he wept. He wept.
+
+After a moment he looks up. There is a Burgundian lord at his left shoulder who wants to say something — the lord is young and has not yet understood that refusing a gift from a man you love, who is about to fight you, is not honor; it is the performance of honor, which is different. The young lord's hand is moving toward his sword in a half-formed gesture of noble refusal.
+
+*Persuasion check DC 13: preempt the young lord's refusal — not by arguing with him, but by speaking to Hagen directly in the form that names what accepting the shield means: not surrender, not gratitude; reciprocal acknowledgment of exactly what this is.*
+
+**Failure:** The young lord speaks. Hagen turns to him. There is an exchange. The shield is accepted anyway — Hagen's word is sufficient — but the moment has been interrupted and the lord's gesture has been seen by both armies. Some of what the moment was has been spent on the argument.
+
+**Success:** "He knows what he is doing," you say to Hagen, simply, before the young lord can speak. Hagen holds the shield against his chest. He nods — to Rüdeger's side, across the ground. Then he nods to the Fighter. He does not give you anything. He gives the moment the silence it needs. The young lord's hand comes away from his sword.
+
+---
+
+#### ACT V — *The Neutral Ground*
+*The shield: in Hagen's hands. Location: BTL — the between-armies ground.*
+
+You are back at the center of the contested ground when Rüdeger advances. He is not carrying a shield. Everyone on both sides sees this. On Rüdeger's side, some of the Huns are angry — a lord without his shield is a liability, is recklessness, is grief made into military disadvantage. On the Burgundian side, the Burgundians are looking at the shield in Hagen's hands and at Rüdeger advancing without one and at each other.
+
+The fight is brief. Rüdeger kills Gernot with his lance. Gernot kills Rüdeger with the sword Rüdeger gave him as a gift. They die together. The poem has been building to this for five hundred stanzas.
+
+Both armies call out across the bodies. Neither side knows what the right emotion is. The calls become something that is not quite accusation and not quite lament.
+
+*Composure check DC 11: hold the position between the armies — the neutral center — and bear witness without taking a side or carrying another message in either direction, for the duration of the calling.*
+
+**Failure:** Someone on one side addresses you directly and you answer. You have taken a position. You have become part of what comes next rather than a witness to what just happened.
+
+**Success:** You hold the ground. Both sides call across you. You do not answer either. Eventually the calling becomes quieter than the crying, and the crying becomes quieter than the silence, and the silence is what both sides have left in common. You receive Rüdeger's Coin — pressed into your hand by a Bechelaren retainer who was watching from the edge of the Hunnic line and crossed to find you when the armies finally moved. "For carrying it correctly," he says.
+
+*The Fighter thinks: I carried the last gift the poem permits from the hand that gave it to the hand that received it, across the sixty feet where everything was already decided. Rüdeger died the way good men die in this poem — which is to say, for being good. I was the distance between his arm and Hagen's. That is not nothing. It is also not enough. The poem is not a poem that considers enough to be a category.*
+
+---
+
+## Quest API Stub (Cycle 2)
+
+```
+Act I — Rüdeger's Position
+activateNode: ETZ
+type: skill_check
+scene: "The fighting ground at Etzel's court. Hagen has called across
+  the contested ground: 'Give me your shield before we fight.' Rüdeger
+  removes the shield from his arm and holds it out to the Fighter:
+  'Take it to Hagen. Let no one stop you. Return to this ground when
+  it is done.' His face is the face of a man who has already processed
+  what comes next."
+prompt: "Insight check DC 12: understand what you are carrying — not a
+  weapon; the last gift the poem permits; the form of a love that cannot
+  refuse what it is asking of itself."
+failText:    "You take the shield with the bearing of a messenger on an
+              errand. Rüdeger says: 'Carry it correctly.' Not a criticism —
+              instruction given to someone who has not fully understood."
+successText: "You take the shield in both hands and hold its weight.
+              Rüdeger's hands release it without ceremony. You receive
+              Rüdeger's Shield."
+grantItem:   "Rüdeger's Shield"
+checkPassFlag: shieldMandateUnderstood
+
+Act II — The Between-Armies Ground
+activateNode: BTL
+type: skill_check
+scene: "Sixty feet of contested ground, both armies watching, three
+  wounded men pulled to the sides. A Burgundian captain has his hand
+  on his sword. Both armies have stopped fighting for the duration of
+  this crossing without being asked and without agreeing to."
+prompt: "Composure check DC 12: cross at the correct pace — not running
+  (attack), not creeping (fear); the pace of someone on a specific
+  errand that both sides have agreed to permit even if neither said so."
+failText:    "You walk too fast. A lance is thrown into the ground between
+              you as a warning. The stillness requires intervention to
+              reassert itself."
+successText: "Both armies hold still. The Burgundian captain's hand comes
+              off his sword. The wounded men watch you pass."
+checkPassFlag: groundCrossed
+
+Act III — The Burgundian Line
+activateNode: BTL
+type: skill_check
+scene: "Two Burgundian soldiers stop you at the perimeter — an armored
+  figure carrying a Bechelaren shield from the enemy side. They cannot
+  see Hagen from where they stand. They are correct to stop you."
+prompt: "Persuasion check DC 12: name the commission in the form that
+  makes the soldiers hear it as what it is — from Rüdeger, to Hagen,
+  as a gift before the fighting."
+failText:    "One soldier goes to find Hagen. You wait. The delivery
+              requires a third party, which means the moment of arrival
+              is witnessed by more people than intended."
+successText: "'From Rüdeger of Bechelaren to Hagen of Troneck — a gift,
+              before the fighting.' They open the perimeter. Hagen has
+              been watching you since you left Rüdeger's side."
+checkPassFlag: lineCleared
+
+Act IV — The Delivery
+activateNode: BTL
+type: skill_check
+scene: "Hagen receives the shield in both hands and weeps. A young
+  Burgundian lord at his shoulder wants to refuse the gift as a gesture
+  of noble dignity — not understanding that refusing a gift from a man
+  you love who is about to fight you is the performance of honor,
+  not honor itself."
+prompt: "Persuasion check DC 13: preempt the young lord's refusal by
+  speaking to Hagen directly — naming what accepting the shield means:
+  not surrender, not gratitude; reciprocal acknowledgment of exactly
+  what this is."
+failText:    "The young lord speaks. An exchange occurs. The shield is
+              accepted anyway — Hagen's word is sufficient — but the moment
+              has been interrupted and some of what it was has been spent
+              on the argument."
+successText: "'He knows what he is doing.' Hagen holds the shield against
+              his chest and nods — to Rüdeger's side, then to the Fighter.
+              The young lord's hand comes away from his sword."
+checkPassFlag: shieldDelivered
+
+Act V — The Neutral Ground
+activateNode: BTL
+type: skill_check
+scene: "Rüdeger advances without his shield. The fight is brief. He kills
+  Gernot with his lance; Gernot kills Rüdeger with the sword Rüdeger gave
+  him as a gift. Both armies call across the bodies. Neither side knows
+  what the right emotion is. The calling becomes something that is not
+  quite accusation and not quite lament."
+prompt: "Composure check DC 11: hold the position between the armies and
+  bear witness without taking a side or carrying another message in
+  either direction, for the duration of the calling."
+failText:    "Someone addresses you directly and you answer. You have taken
+              a position. You are part of what comes next rather than a
+              witness to what just happened."
+successText: "Both sides call across you. You do not answer either. The
+              calling becomes quieter than the crying, the crying quieter
+              than the silence. A Bechelaren retainer crosses the ground
+              to find you: 'For carrying it correctly.' You receive
+              Rüdeger's Coin."
+grantItem:   "Rüdeger's Coin"
+takeItem:    "Rüdeger's Shield"
+checkPassFlag: witnessComplete
+activateMissionBit: lbcShieldComplete
+```
+
+---
+
+*Cycle 2 complete. Mark `[x]` for LBC-nibelungenlied in books.md.*
