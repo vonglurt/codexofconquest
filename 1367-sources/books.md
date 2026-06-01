@@ -313,6 +313,111 @@ checkPassFlag:      {camelCaseFlagName}
 
 ---
 
+## City Travel Log
+
+A running reserve of city and location names mentioned in source books. Not a map — a list of places the books take us, for use when placing quest acts and proposing new nodes.
+
+Each row: `| Code | City/Location | Region | Notes |`
+
+| Code | City / Location | Region | Source Notes |
+|------|----------------|--------|--------------|
+| LHR | Heorot (mead-hall) | Northern coast (Denmark) | Beowulf's hall; monster-mere nearby |
+| LHR | Geatland | Southern Scandinavia | Beowulf's homeland |
+| LCY | Tilford, Surrey | Southern England | Alleyne Edricson's village |
+| LCY | Bordeaux | Gascony, France | English garrison city |
+| LCY | Najera | Castile, Spain | Battle of Najera site |
+| LGW | Camelot | Britain (Arthurian) | Arthur's court |
+| LGW | Astolat | England river town | Elaine of Astolat |
+| LGW | Joyous Gard | Northumbria coast | Lancelot's castle |
+| LGW | Benwick | France (Arthurian) | Lancelot's French domain |
+| LGW | Camlann | Western Britain | Arthur's last battle |
+| MAN | Ashby-de-la-Zouche | Midlands, England | Ivanhoe tournament |
+| MAN | Rotherwood | Yorkshire, England | Cedric's hall |
+| MAN | Torquilstone Castle | Yorkshire, England | Front-de-Boeuf's stronghold |
+| STN | Sherwood Forest | Nottinghamshire, England | Robin Hood's range |
+| STN | Nottingham | Midlands, England | Sheriff's seat |
+| STN | Doncaster | Yorkshire, England | Church at the story's close |
+| SEN | Bristol | Southwest England | Jim's origin |
+| SEN | Treasure Island | Atlantic (fictional) | Flint's burial site |
+| GCI | St. Peter Port, Guernsey | Channel Islands | Gilliatt's harbor |
+| GCI | Torteval coast | Guernsey, Channel Islands | Sea-cave and reef |
+| KIR | Welsh mountain valleys | Wales, Celtic Britain | Mabinogion territories |
+| KIR | Caer Arianrhod | Welsh coast | Lleu's fortress |
+| FCO | Cumae | Bay of Naples, Italy | Sibyl's cave |
+| FCO | Lavinium | Latium, Italy | Aeneas's founding city |
+| FCO | Carthage | North Africa | Dido's city |
+| FCO | Pallanteum / Rome | Central Italy | Evander's city, future Rome |
+| FLR | Florence | Tuscany, Italy | Dante's city |
+| FLR | Hell / Purgatory / Paradise | Allegorical | Dante's journey map |
+| JRS | Jerusalem | Levant | Crusade target |
+| JRS | Armida's garden | Damascus hinterland | Armida's enchanted realm |
+| ATH | Troy / Ilium | Troad, Northwest Anatolia | Homer's city |
+| ATH | Sparta | Peloponnese, Greece | Menelaos's home |
+| ATH | Mycenae | Peloponnese, Greece | Agamemnon's seat |
+| ZTH | Ithaca | Ionian Islands, Greece | Odysseus's home |
+| ZTH | Phaeacia | Mythological island | Nausicaa's kingdom |
+| ZTH | Scheria | Mythological | Alcinous's court |
+| NWI | Babylon/Cunaxa | Mesopotamia (Iraq) | Battle site |
+| NWI | Trapezus (Trebizond) | Black Sea coast, Anatolia | Army's arrival point |
+| NWI | Sinope | Black Sea coast, Anatolia | Coastal city |
+| NWI | Constantinople | Bosphorus | Army's goal |
+| WAW | Rome | Italy | Nero's court and arena |
+| WAW | Antium | Latium coast | Nero's retreat |
+| WAW | Puteoli | Bay of Naples | Paul's landing point |
+| MLA | Athens | Attica, Greece | Democratic city-state |
+| MLA | Alexandria | Egypt | Caesar's meeting with Cleopatra |
+| MLA | Sparta | Peloponnese | Lycurgus's city |
+| BGW | Baghdad | Iraq (Abbasid caliphate) | Harun al-Rashid's city |
+| BGW | Cairo | Egypt | Many tales' setting |
+| BGW | Basra | Southern Iraq | Sinbad's home port |
+| CAI | Baghdad | Iraq | Scheherazade's frame story |
+| BEY | Jerusalem | Levant | Mandeville's goal |
+| BEY | Constantinople | Bosphorus | First stop on eastern journey |
+| BEY | Alexandria | Egypt | Red Sea access point |
+| BEY | India (various cities) | South Asia | Dog-headed men etc. |
+| KYA | Balkh | Khorasan (Afghanistan) | Persian mythic capital |
+| KYA | Isfahan | Persia | Zal and Rudaba |
+| KYA | Kabul | Hindu Kush | Zal's kingdom |
+| KYA | Turan (Transoxiana) | Central Asia | Afrasiyab's realm |
+| HTY | Kurukshetra | Northern India | Mahabharata battlefield |
+| HTY | Hastinapur | North India | Kuru capital |
+| ADA | Ayodhya | North India | Rama's kingdom |
+| ADA | Lanka | Sri Lanka | Ravana's citadel |
+| ADA | Kishkindha | South India forest | Sugriva's monkey realm |
+| AMS | Kyoto / Heianjo | Japan (Heian period) | Genji's court city |
+| AMS | Akashi | Western Japan coast | Genji's exile |
+| AMS | Suma | Western Japan coast | Genji's retreat |
+| HAV | Tortuga | Caribbean | Buccaneers' base |
+| HAV | Maracaibo | Venezuela | Morgan's raid target |
+| HAV | Puerto Bello (Portobelo) | Panama | Morgan's hostage assault |
+| HAV | Chios | Aegean | Articles delivery commission |
+| HAV | Rhodes | Aegean | Hospitaller commandery |
+| CLJ | Bistritz (Bistrita) | Transylvania, Romania | Harker's first stop |
+| CLJ | Borgo Pass | Carpathians | Mountain entry point |
+| CLJ | Klausenburg (Cluj) | Transylvania | Archdeacon's court |
+| CLJ | Sibiu (Hermannstadt) | Transylvania | Saxon fortified city |
+| CLJ | Buda | Hungary | Capital |
+| CLJ | London | England | Harker's home, Mina's diary |
+| CLJ | Whitby | Yorkshire coast | Lucy's decline |
+| BLQ | Florence (Firenze) | Tuscany, Italy | Frame story city; guild counting house |
+| BLQ | Naples (Napoli) | Southern Italy | Andreuccio's disaster city; ecclesiastical court |
+| BLQ | Rome | Central Italy | Checkpoint on the road south |
+| BLQ | Genoa (Genova) | Ligurian coast, Italy | Three-rings delivery origin |
+| BLQ | Bologna | Emilia-Romagna, Italy | University road junction; Fra Cipolla coals destination |
+| BLQ | Venice (Venezia) | Veneto, Italy | Federigo's falcon deed delivery |
+| BLQ | Ravenna | Emilia-Romagna, Italy | Nastagio's infernal pine grove |
+| BLQ | Pavia | Lombardy, Italy | Torello's home city; magic arrival point |
+| BLQ | Certaldo | Tuscany, Italy | Fra Cipolla's home village |
+| BLQ | Alexandria | Egypt | Saladin's court; Torello's transport origin |
+| BLQ | Burgundy (Dijon area) | Eastern France | Ciappelletto's death city |
+| BLQ | Palermo | Sicily, Italy | Sicilian woman's scam city |
+| LIL | Bordeaux (Bordeaux/BDX) | Gascony, France (English-held 1367) | Black Prince's capital; Free Companies staging for Spain; main port of English Aquitaine |
+| LIL | Libourne | Garonne valley, Gascony | River crossing checkpoint between Bordeaux and Périgord |
+| LIL | Beaulieu-en-Périgord (SRL) | Périgord, Dordogne valley | Limestone valley town; routier safe-conduct delivery destination |
+| LIL | Nájera | Castile, Spain | Battle of Nájera April 3 1367; du Guesclin captured; Black Prince wins; Don Pedro defaults |
+
+---
+
 ## Book Index
 
 Books ≤ 400 KB can be read directly. Sizes shown in KB.
@@ -389,14 +494,14 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | [x] | FCO | aeneid | Aeneid — Virgil (Latin original — Gutenberg #227) | ~19 BC | Roman Epic | 484 |
 | [x] | MLA | plutarch-lives | Plutarch's Lives — Plutarch (Dryden/Clough tr.) | c. 95–110 AD | Biography | 4222 |
 | [x] | NWI | anabasis | Anabasis — Xenophon (Dakyns tr. — Gutenberg #1170) | c. 401 BC | Greek Military | 545 |
-| [ ] | IST | alexiad | The Alexiad — Anna Komnene | c.1148 | Byzantine History | 165 |
+| [x] | IST | alexiad | The Alexiad — Anna Komnene | c.1148 | Byzantine History | 165 | Processed 2026-06-01 — IST-01 spec complete (The Enemy's Portrait, CON→RGS→WM); IST-02–07 seeds. Processed from memory (no txt file). See IST-alexiad.md. |
 | [x] | WAW | quo-vadis | Quo Vadis — Henryk Sienkiewicz (Curtin tr. — 1895) | c. 64–68 AD (Nero's Rome) | Historical Novel | 1201 |
 
 ### Byzantine & Eastern European
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
-| [ ] | CLJ | dracula | Dracula — Bram Stoker | 1897 | Gothic Horror | 869 |
+| [x] | CLJ | dracula | Dracula — Bram Stoker | 1897 | Gothic Horror | 869 | Processed 2026-05-31/06-01 — CLJ-01 spec (The Compiled Account, Bistritz→Klausenburg); CLJ-02–09 seeds. All 5 parts fully read (Chapters I–XXVII + epilogue). New seeds from Parts 2–5: CLJ-07 (The Haarlem Garlic, SIB→BOR), CLJ-08 (Van Helsing's Contingency, KLZ→KLZ), CLJ-09 (The Transcript, BIS). See CLJ-dracula.md. |
 
 ### Middle Eastern
 
@@ -418,26 +523,26 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
-| [ ] | AMS | tale-of-genji | Tale of Genji — Murasaki Shikibu | c.1010 | Japanese Novel | 435 |
+| [x] | AMS | tale-of-genji | Tale of Genji — Murasaki Shikibu | c.1010 | Japanese Novel | 435 | Processed 2026-05-31/06-01 — AMS-01 spec (The Scarlet Fence Poem, NIS→TBZ); AMS-02–06 seeds. ALL 3 PARTS FULLY READ (Chapters I–IX + Appendices). New seed from Parts 2–3: AMS-07 (The Exchanged Fans, TBZ→MRG→TBZ). See AMS-tale-of-genji.md. |
 | [x] | TBS | knight-panther-skin | Knight in the Panther's Skin — Shota Rustaveli | c.1225 | Georgian Epic | mem |
 
 ### Caribbean & Americas
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
-| [ ] | HAV | buccaneers-of-america | Buccaneers of America — Alexandre Exquemelin | 1678 | Pirate History | 247 |
+| [x] | HAV | buccaneers-of-america | Buccaneers of America — Alexandre Exquemelin | 1678 | Pirate History | 247 | Processed 2026-05-31 — HAV-01 spec (The Articles, Chios→Rhodes); HAV-02–06 seeds. Both parts read; full arc recovered (Pierre le Grand, Lolonois, Morgan). See HAV-buccaneers-of-america.md. |
 
 ### Supplementary 1367 AD Sources
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
-| [ ] | LIL | froissart-berners | Chronicles (Berners transl.) | 1360s–1400 | Medieval History | 861 |
-| [ ] | CRL | froissart-boys | Chronicles (Boys transl.) | 1360s–1400 | Medieval History | 802 |
-| [ ] | BEY | mandeville | Travels of Mandeville | c.1357 | Travel | 461 |
-| [ ] | BGW | arabian-nights-burton | Arabian Nights (Burton) | Medieval | Stories | 959 |
-| [ ] | CAI | arabian-nights-lang | Arabian Nights (Lang) | Medieval | Stories | 614 |
+| [x] | LIL | froissart-berners | Chronicles (Berners transl.) | 1360s–1400 | Medieval History | 861 | Processed 2026-05-31 — LIL-02 spec complete (The Company's Letter, Bordeaux→Beaulieu-en-Périgord); routier economy/1367 angle. Pass 1: Brétigny aftermath, Free Companies, Black Prince at Bordeaux. Pass 3: Black Prince's dinner at Poitiers (source line ~498). New nodes: BDX, PER, SRL. See LIL-froissart-berners.md Supplementary Cycle. |
+| [x] | CRL | froissart-boys | Chronicles (Boys transl.) | 1360s–1400 | Medieval History | 802 | Processed 2026-05-31 — CRL-02 spec complete (The Archpriest's Certificate, PER→BDX); routier economy/purchased grace angle. Parts 1–3 read; full Archpriest chapter (LXXXV–LXXXVI) + Jacquerie (LXXXVII–LXXXIX). New angle: the papal absolution as institutional transaction, 1367 Free Company precedent. See CRL-froissart-boys.md Cycle 2. |
+| [x] | BEY | mandeville | Travels of Mandeville | c.1357 | Travel | 461 | Processed 2026-05-31 — BEY-S08 spec complete (The Sultan's Commission, FAM→RHD→WM); Sultan's letters/military service angle. Parts 1–2 read; Chapter VI (soldier service) + Chapter XI (letters with great seal) + Chapter XV (Sultan dialogue). New angle: the document that authenticated a prior Mamluk-Christian relationship now inconvenient to all parties in 1367. New node: FAM (Famagusta). See BEY-mandeville.md Cycle 2. |
+| [x] | BGW | arabian-nights-burton | Arabian Nights (Burton) | Medieval | Stories | 959 | Processed 2026-05-31 — BGW-S08 spec complete (The Caliph's Own Copy, CAI→ALE→WM); shadow caliphate/marginalia angle. Source drawn from memory (size gate: ~983 KB). Harun al-Rashid section as primary focus: the idealized Caliph who walks his streets at night, annotated by al-Mutawakkil I (r. 1362–1363) who holds the same title with none of the power. New angle: the margin as the only honest speech space available to the diminished heir of a great institution. Nodes used: CAI (Cairo Sufi hospice), ALE (Alexandria Genoese factor's house). See BGW-arabian-nights-burton.md Cycle 2. |
+| [x] | CAI | arabian-nights-lang | Arabian Nights (Lang) | Medieval | Stories | 614 | Processed 2026-05-31 — CAI-S08 spec complete (The Collector's Codicil, ALP→LAT→WM); oral tradition / first inscription angle. Source part 1 of 4 read; Preface + frame narrative + opening stories confirmed. Aladdin present in this tradition (from Galland/Diyab oral tradition, not in Burton). New angle: the codicil that names the oral tradition's families as the text's true holders; the gap in the archive's classification system as evidence that no one has received this before. New nodes: ALP (Aleppo storytellers' quarter), LAT (Latakia Syrian port). See CAI-arabian-nights-lang.md Cycle 2. |
 | [x] | MSE | canterbury-tales | Canterbury Tales | c.1390 | Stories | 1688 |
-| [ ] | BLQ | decameron | Decameron — Giovanni Boccaccio | 1353 | Italian Stories | 1709 |
+| [x] | BLQ | decameron | Decameron — Giovanni Boccaccio | 1353 | Italian Stories | 1709 | Processed 2026-05-31/06-01 — BLQ-01 spec (The Saint's Attestation, FLR→NAP); BLQ-02–07 seeds (parts 1 of 9). All 9 parts fully read (Days 1–10, all 100 stories + Author's Conclusion). New seeds from Parts 2–9: BLQ-S08 (The Jewel Chest, BRI→BAR), BLQ-S09 (The Soldier's Testimony, ALE→FAM), BLQ-S10 (The Impossible Conditions, FLR→AVG→MTP→MAR), BLQ-S11 (The Court Defense, PIS→PRA), BLQ-S12 (The Two Friends' Debt, ROM→ROM). See BLQ-decameron.md. |
 
 ---
 

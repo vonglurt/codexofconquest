@@ -360,3 +360,310 @@ The council watches. No one argues. The sentence he used was the right sentence 
   ]
 }
 ```
+
+---
+
+## Cycle 2 — Angle: The purchased grace — what the routier extorted from the institution
+
+*Prior cycle (Cycle 1) missed:* Cycle 1 took the angle of John II's voluntary return — the man who chose obligation over freedom. The Boys' Froissart also contains the opposite figure: the Archpriest, whose company forced the Pope to pay them in the currency of grace. Cycle 1 found the man who dignifies the institution by obeying it; Cycle 2 finds the man who degrades it by making it negotiate. Lanier presents both without choosing between them. The form of obligation is the same; only the direction of the payment differs.
+
+---
+
+### Pass 1 — Full Telling
+
+The Boys' Froissart's routier chapters occupy a structurally essential position in Lanier's selection. Having narrated Crécy, Poitiers, and the capture of John II, Lanier pauses to describe what a generation of professional warfare produces when the formal conflict pauses: the Free Companies. These are soldiers without employers, men trained for nothing else, the residue of two decades of Anglo-French war moving through a kingdom with no mechanism to absorb or disarm them.
+
+The Archpriest is the central figure of this interlude. Sir Arnold de Cervole — "more commonly called the archpriest" — was a former canon who had taken up arms and risen to command a substantial force. Froissart records the episode succinctly: the Archpriest assembled a large body of men after Poitiers, when it became clear that the truce had ended professional pay without ending professional soldiers. They marched into Provence and burned their way toward Avignon. Pope Innocent VI, resident in Avignon, found himself negotiating with a man who had spent the previous months demonstrating what he was willing to do to cities and monasteries.
+
+The negotiation was not long. The Archpriest and his men entered Avignon. They were received — and here Froissart's register shifts into something drily remarkable — "with as much respect as if he had been son to the King of France." He dined with the pope and cardinals. He received absolution for all his sins. He was given forty thousand crowns "to distribute among his companions." Then he left.
+
+Lanier, writing for boys in 1879, presents this without commentary. He does not explain whether the absolution was genuine or the crowns were blackmail. He lets the episode sit in the same register as the Crécy and Poitiers chapters — as one of the things that happened in the 14th century. The boys must read it themselves and draw their own conclusions. Lanier trusts them.
+
+The Archpriest is not the only routier in the Boys' Froissart. A Welshman named Ruffin commanded a company between the Seine and the Loire: no one dared travel between Paris and Orléans. Sir Robert Knolles had acquired "upward of one hundred thousand crowns" through the same trade and was generous enough with his soldiers that they followed him without compulsion. These were men who had made war into a supply chain. They had the skills the world had paid for, and the world had stopped paying, and they continued to use the skills they had.
+
+By 1367 — the game's setting — many routier companies had followed the Black Prince to Spain for the Nájera campaign against Henry of Trastámara. But not all companies had gone. The Boys' Froissart's routier chapters describe the conditions producing the game's Périgord setting: the limestone towns with locked gates, the question of which agreements between armed men without common authority could be made to hold.
+
+**Historical moment:** Froissart wrote throughout 1360s–1400. Lanier adapted in 1879, choosing episodes arguing that personal honor is the last interior defense. The routier chapters sit between his narrative of Poitiers (1356) and the Jacquerie (1358) — lawlessness as consequence of formally sanctioned violence without formal conclusion. This is not moralizing; it is accurate observation.
+
+**Themes and morals:** The Archpriest episode argues that institutions negotiate with power when they have no other option; that the ceremony of absolution can be used as currency; that a man who understands this is operating in the same system as the Pope, with different leverage. What the episode does not argue is that the Archpriest was wrong. He was effective. His men received forty thousand crowns. The Pope received the departure he needed. The ceremony served its purpose.
+
+**Chapter Notes**
+
+- **Chapter LXXXV (Archpriest):** Arnold de Cervole assembles Free Companies; marches to Provence; extorts and receives papal absolution and forty thousand crowns; departs. Structurally: the institution purchasing the removal of a problem it cannot militarily resolve.
+- **Chapter LXXXVI (Ruffin):** A Welsh routier captain between Seine and Loire; Sir Robert Knolles active on the Norman coast; the countryside of France emptied of travelers. Structurally: the same phenomenon, without the Avignon negotiation endpoint.
+- **Chapter LXXXVII (Provost):** The Paris uprising and murder of three of the regent's knights; the institution under simultaneous threat from a different direction.
+- **Chapter LXXXVIII (Jacquerie):** The peasant uprising in Beauvoisis; its ideology and violence. Structurally: the third destabilizing force of the post-Poitiers period.
+- **Chapter LXXXIX (Meaux):** The Earl of Foix and the Captal of Buch suppress the Jacquerie; seven thousand killed. Structurally: restabilization of the noble order through exactly the military violence the routiers represented.
+
+---
+
+### Pass 2 — Slower
+
+**Arnold de Cervole, the Archpriest** — former canon, routier captain, practical man. What is most remarkable about him is not his violence, which was normal for his profession, but his legibility to the institution that received him. He dined with the Pope and cardinals and received absolution because both parties understood the terms. He was not confused about what he was doing, and neither were they. A man who extorts religious grace from the papacy and accepts it without embarrassment is making a statement about what grace means in a world organized by power. Froissart records it neutrally; Lanier passes it on without editorial.
+
+**Pope Innocent VI** — the man who paid. He is a supporting character but the one who decides. The choice to negotiate rather than refuse and be burned out of Avignon was rational. Whether it was right is the question Lanier leaves open. The cardinals dined with the Archpriest: this is Froissart's image of the institution under pressure, and it is precise.
+
+**Ruffin and Knolles** — two other points on the same spectrum. Ruffin had no nickname from clerical status; he was a Welsh soldier who had ended at the head of a company. Knolles paid his men promptly and appears in the Peasants' Revolt chapters thirty years later still armed and loyal. The Free Companies were not a uniform phenomenon.
+
+**The world's register** — France after Poitiers, 1356–1360: travelers cannot move between Paris and Orléans, the nobility flees from château to walled town. The companies are not filling this space so much as revealing how thin the pre-existing structure was. This is the landscape the game's 1367 characters inhabit, seven years further along: some stability restored, but the Périgord roads still watched by men who understand the Archpriest's logic.
+
+---
+
+### Pass 3 — Elaborate One Scene: The Archpriest Dines at Avignon
+
+The dining room in the papal palace at Avignon is large and well-lit. The candles are good. The floor is tile. The Archpriest sits across from the Pope and the cardinals and eats good food.
+
+He has been in Avignon for several days. His men are outside the walls — there is a limit to how many of them can be in the city at once without the ceremony becoming impossible to maintain — but they are there, and the city knows it, and the papal household knows it. The forty thousand crowns are being counted somewhere in another room. Later, when they are ready, someone will bring the papers.
+
+The Archpriest is a man who was trained for the Church and knows its ceremonies. He knows what absolution requires: contrition, confession, purpose of amendment. He is not contrite. He has no purpose of amendment. What he has is forty thousand crowns for his men and a certificate that will be useful on the road.
+
+The cardinals eat their food. The Pope says the correct things. The Archpriest says the correct things. There is nothing false in the exchange because nothing is being claimed. Both parties know that a company of armed men is outside the walls, and that the company requires payment to depart, and that the payment will be made in two currencies: crowns and ceremony. The ceremony is necessary. Without it, the crowns are blackmail and the Pope has surrendered to force. With it, the crowns are a charitable gift to redeemed men and the Pope has exercised pastoral authority. The distinction matters to the institution. The Archpriest does not care about the distinction, which is why he is able to give the institution what it needs.
+
+He receives the absolution. He accepts it. He departs.
+
+The certificate travels with him — proof on the road that his company has the formal status of absolved men, which is a different legal category from bandits, which is useful at toll gates and in negotiations with town councils who need a reason to open their gates.
+
+He uses it for years. He dies around 1366. The certificate stays with whoever held his papers.
+
+---
+
+### Seven Storyline Ideas
+
+1. **The Archpriest's Receipt** — The forty thousand crowns leaving Avignon were tracked by a papal financial officer whose ledger shows the payment under "charitable disbursements to redeemed penitents"; the ledger is in a dissolving Périgord monastery; the Fighter carries it to a neutral archive before the dissolving friars destroy the evidence of the transaction.
+
+2. **The Absolution Certificate** — The Archpriest's original certificate of papal absolution has survived his death and passed to a lesser captain who uses it as a credential in 1367; a Bordeaux merchant wants it authenticated so it can be presented to a town council as proof Free Companies can be formally dealt with; the Fighter carries it from the monastery where it is held to the notary and back before the council session closes.
+
+3. **Ruffin's Passport** — Ruffin the Welsh captain received a formal safe conduct from the Cardinal of Périgord in exchange for leaving the Seine-Loire corridor; the document has been lost; Ruffin's successor in 1367 needs an authenticated copy to prove his company has standing as a legitimate force; the Fighter carries it.
+
+4. **The Knolles Commission** — When Knolles finally left France, he left behind a Gascon lieutenant with a commission authorizing operation in the English interest in Périgord; in 1367 this commission is the only document distinguishing the Gascon's company from an unlicensed Free Company; the Fighter carries it from a Bordeaux registry before the French administration can classify the company as hostile.
+
+5. **The Cardinal's Roster** — The Cardinal of Périgord kept records of which companies had agreed to join the Spanish expedition and which had not; his secretariat was attacked; one record listing twelve companies who had promised to leave and hadn't is in a farmhouse; the Fighter carries it to the Black Prince's headquarters.
+
+6. **The Jacquerie Account** — Three knights who survived the Meaux suppression kept a private account of what they witnessed; one is dying in a Périgord monastery in 1367 and wants the account filed before he dies; it is also evidence against a lord who exceeded his authority during the suppression; the Fighter carries it to Weimar before the lord's agents intercept it.
+
+7. **The Pope's Guarantee** — Urban V sent letters to the Black Prince before Nájera guaranteeing absolution to companies joining the expedition on return; one letter intended for a specific captain was never delivered because the captain was killed; it remains sealed in a Bordeaux courier office; the Fighter carries it to the captain's surviving lieutenant who needs it to finally disband the company.
+
+---
+
+### Theme Check
+
+Reviewing all accumulated themes and Cycle 1's angle:
+- **BLQ:** Document formally correct, substantively fraudulent — the carrier never opens the seal. CRL-S2's document is neither fraudulent nor concealed: both parties know it is a transaction in the form of a grace.
+- **LIL (Cycle 2):** Document creates law between parties acknowledging no common authority. CRL-S2's document does not create law; it claims a status.
+- **CRL (Cycle 1):** The notice creates the obligation. CRL-S2 concerns a document already completed, now used as precedent.
+- **HAV:** The corsair/pirate distinction rests on a single document. HAV's document CREATES the legal category; CRL-S2's TRANSFERS a previously granted status to a new context.
+
+**Existing themes avoided:** the formal fraud (BLQ), the enabling notification (CRL-1), the founding document (HAV), the law-between-parties (LIL).
+
+**Chosen quest:** Storyline 2 — **"The Archpriest's Certificate"**
+
+**Theme:** *The institutional grace that was purchased cannot be transferred, but the precedent it creates can be used by anyone who carries the original; what a reluctant captain needed was not a promise but proof that such promises are made at all — and carrying the evidence of a completed transaction is not the same as carrying a current guarantee, which is sufficient for a town council that needs a reason to open the gate and for a company that needs a reason to march*
+
+This is distinct from all 39 accumulated themes. No previous quest concerns the re-application of a purchased institutional grace as a precedent in a context its creator never imagined — not forgery, not fraud, but the transfer of a prior transaction's authority to a new use.
+
+---
+
+### 5-Act Vignette Play — "The Archpriest's Certificate"
+
+**TOKEN:** The Certificate of Papal Absolution — a sealed parchment in Latin, bearing the signet of Pope Innocent VI (Avignon, 1357), granted to Sir Arnold de Cervole, known as the Archpriest, upon receipt of conditions of departure from Provence; the document that makes an armed captain into a formally absolved man, which is a different legal category from a bandit, which is all a town council needs to justify opening the gate
+
+---
+
+**ACT I — The Monastery's Last Room**
+
+*The Certificate · cold, in a cedar box · held by Brother Eudo, last remaining archivist · a dissolving Périgord priory, 1367*
+
+The priory is being dissolved. Two-thirds of the brothers have already transferred. Brother Eudo, who has been the archivist for thirty years, is in the final room deciding what goes to the diocesan registry, what can be destroyed, and what — he is uncertain about this third category — he can give to someone who will use it.
+
+The cedar box contains the Archpriest's certificate. It came to the priory in 1366 with the effects of a deceased captain who had served under the Archpriest and held the document in trust after the Archpriest's death. The captain died on the road north of Périgueux. His effects were given to the priory. Now the priory is closing.
+
+*The certificate is quiet in its box, waiting for someone to understand what it is.*
+
+Brother Eudo opens the box and shows the Fighter the document.
+
+"The Archpriest ate dinner with the Pope," he says, not accusingly, but with the precision of a man who has read the document. "This says so. It says he is absolved of all his sins. The forty thousand crowns are not mentioned. The ledger was kept separately."
+
+*The Fighter understands: the document only mentions the grace.*
+
+The Fighter says: "Then let the document say what it says. The grace is real enough to matter to a man who needs the category, whether he earned it or purchased it."
+
+Eudo closes the box. He hands it over.
+
+---
+
+**ACT II — The Road Checkpoint**
+
+*The Certificate · sealed, in the cedar box · held by the Fighter · the Périgord ridge road gate*
+
+The administrative gate is a timber frame with a registry desk. The official is a thin man with a book of rules and authority to apply them. He looks at the cedar box.
+
+"What is in it?"
+
+"A sealed document. From Avignon. Bearing the pope's signet."
+
+He opens his registry book to the section on ecclesiastical correspondence. The relevant clause: documents sealed with a papal signet are subject to diocesan authority, not administrative review. But the official is uncertain whether "sealed with" means "currently bearing the intact signet" or "originally sealed by the pope and subsequently handled."
+
+*The seal is intact. The question is jurisdictional, not factual.*
+
+*The Fighter considers the clause's exact wording.*
+
+The Fighter says: "The clause reads 'sealed with the apostolic signet.' The signet is present and intact. The clause applies. Your registry has no inspection authority here."
+
+The official reads the clause. He reads it again. He makes a notation: *Papal signet, transit, intact — diocesan authority confirmed.* He stamps the log.
+
+"Proceed."
+
+---
+
+**ACT III — The Bordeaux Inn**
+
+*The Certificate · sealed, in the cedar box · held by the Fighter · the Free Company inn district, Bordeaux*
+
+The Bordeaux inn district in early 1367 is a city within the city: companies forming for Spain, companies deciding whether to join, companies that have decided not to join and watching the others leave. The captain's name is Gaubert de Montardin — not a great name, not a great company, but forty men who have held a pass through the Dordogne valley for three years and are still here.
+
+Gaubert is a practical man. He has been told the Spanish expedition will bring absolution. Told it by the Black Prince's agents. By the Cardinal's secretariat. By two Franciscan friars. Not in writing.
+
+"The Archpriest had it in writing," he says. He doesn't look at the box. He knows it is there.
+
+*He wants the precedent, not the document. He wants to know the institution keeps its word when it is in the institution's interest to keep it.*
+
+The Fighter sets the box on the table.
+
+"This document proves the Church has made such grants before. Not to you — to a man. The form exists. The institution used it. What you are asking for is something this proves can be asked for."
+
+Gaubert looks at the box for a long time. He doesn't touch it.
+
+"Monday," he says. "I'll need the authentication."
+
+---
+
+**ACT IV — The Notary's Study**
+
+*The Certificate · opened, being examined · held by the notary · the Avignon representative's office, Bordeaux*
+
+Pierre de Foix, notary and Avignon representative in Bordeaux, reads the Archpriest's certificate for a long time. His study: small, one south-facing window, the smell of good wax and Latin ink. He is being asked to write an authentication confirming the document is genuine, the signet intact, the absolution formally granted.
+
+He sets it down.
+
+"What you are asking me to attest is that the Church transacts with routier captains by purchasing their departure with ceremonies of grace."
+
+A pause.
+
+"This is true. I will write the authentication."
+
+*He is a notary. His function is to attest to what is true. He does not have to approve of the transaction he is attesting.*
+
+The Fighter says: "The notary's attestation confirms facts, not the wisdom of the men who produced them. What you confirm here is that the signet is Innocent's, the Latin is canonical, and the form is correct. All of those are true."
+
+Pierre picks up his pen. He writes for several minutes. He seals the authentication with his own mark.
+
+"Two things are now in writing. One from 1357; one from 1367. Together they form a chain of custody."
+
+---
+
+**ACT V — Gaubert Reads**
+
+*The Certificate · authenticated, on the table · held by the moment · the Bordeaux inn room, Gaubert's company assembled*
+
+Gaubert holds the authenticated document and reads it. His men watch his face. He sets it on the table. He lights wax. He writes — four lines — to the Black Prince's secretary. Seals it.
+
+"Monday," he says. To his company, to the room, to no one. "The pass will be clear Monday afternoon."
+
+He gives the Fighter the sealed letter and the cedar box together.
+
+*What the certificate did: it did not promise Gaubert anything. It showed him that the institution makes such promises in writing. That was sufficient. He was not uncertain about the Church's intentions. He was uncertain whether intentions become obligations. The document shows that they did — once, for one man, in one transaction both parties needed to work. That is enough of a precedent to march on.*
+
+"The archive gets the box," he says. "The secretary gets the letter."
+
+He stands up. His men begin moving. The cedar box is returned. The certificate goes to the diocesan archive. The pass through the Dordogne valley is clear Monday afternoon. Forty men march east toward Spain.
+
+---
+
+### Quest API Stub — CRL_002: The Archpriest's Certificate
+
+```json
+{
+  "quest_id": "CRL_002",
+  "title": "The Archpriest's Certificate",
+  "source": "The Boy's Froissart — Jean Froissart / Sidney Lanier adaptation (1879), Chapters LXXXV–LXXXVI",
+  "cycle": 2,
+  "theme": "The institutional grace that was purchased cannot be transferred, but the precedent it creates can be used by anyone who carries the original; what a reluctant captain needed was not a promise but proof that such promises are made at all — and carrying the evidence of a completed transaction is not the same as carrying a current guarantee, which is sufficient for a town council that needs a reason to open the gate and for a company that needs a reason to march",
+  "token": {
+    "id": "archpriest_certificate",
+    "name": "Archpriest's Certificate",
+    "description": "A sealed parchment in Latin, bearing the signet of Pope Innocent VI (Avignon, 1357), granted to Sir Arnold de Cervole, known as the Archpriest, upon conditions of departure from Provence; the document makes an armed captain into a formally absolved man, which is a different legal category from a bandit — a distinction useful at toll gates and in negotiations with town councils who need a reason to open the gate",
+    "grant_act": "act_1",
+    "take_act": "act_5",
+    "check_acts": ["act_2", "act_3", "act_4"]
+  },
+  "nodes": ["PER", "BDX"],
+  "acts": [
+    {
+      "act": "act_1",
+      "title": "The Monastery's Last Room",
+      "activateNode": "PER",
+      "type": "skill_check",
+      "skillCheck": { "stat": "Persuasion", "dc": 12 },
+      "scene": "A dissolving Périgord priory in 1367: two-thirds of the brothers already transferred, the smell of lime-dust and old beeswax and a dissolution that has turned every room into a question about what is still canonical and what is already history. Brother Eudo, archivist for thirty years, stands in the last room with a cedar box in his hands. The box contains a sealed parchment from Avignon, 1357 — the Archpriest's certificate of papal absolution, held in trust by a dead captain's effects, waiting for someone who understands what it is.",
+      "prompt": "Eudo has read the document and knows what it describes: a dinner at Avignon, forty thousand crowns unmentioned, absolution formally given. He needs to give it to someone who will use it, not destroy it. Make a Persuasion check (DC 12) to show him you understand the difference between what the document says and what it means — and why that distinction matters to the person who will receive it.",
+      "failText": "Eudo sets the box down. 'You speak of it as if it is simply a document.' He is not wrong. You are not speaking of it as what it is. Try again — more precisely about the ceremony's purpose, not its content.",
+      "successText": "Eudo's expression changes. He closes the box and hands it over. 'The ledger is in the diocesan registry,' he says. 'The document is here.' He does not add anything else. You receive the Archpriest's Certificate.",
+      "grantItem": "Archpriest's Certificate",
+      "checkPassFlag": "crlS2Act1Complete"
+    },
+    {
+      "act": "act_2",
+      "title": "The Road Checkpoint",
+      "activateNode": "PER",
+      "type": "skill_check",
+      "skillCheck": { "stat": "Persuasion", "dc": 13 },
+      "scene": "The limestone ridge road runs between walls of pale stone in the afternoon light. The administrative gate is a timber frame with a registry desk and a thin official who has been given a book of rules and authority to apply them. He is looking at the cedar box and considering jurisdiction: the seal is papal, which means diocesan authority, but the document is in transit, which means he has some argument for inspection. He has not decided yet.",
+      "prompt": "The relevant clause in his registry book covers documents 'sealed with' a papal signet — which this is, demonstrably and intact. The question is whether his inspection authority extends to the cedar box's contents or stops at documentation of its existence. Make a Persuasion check (DC 13) to walk him through the clause's exact scope before he decides to interpret it broadly.",
+      "failText": "The official makes a note. 'I am not saying no. I am saying I must verify the classification before I proceed.' He closes the registry and opens a different volume. The road behind you fills slightly. Try again — more precisely about the difference between contents inspection and seal verification.",
+      "successText": "He reads the clause once more. He writes: 'Papal signet — transit, intact, undisturbed — diocesan authority confirmed, no inspection required.' He stamps the entry. 'Proceed,' he says, with the expression of a man who has correctly applied the rule and is neither pleased nor displeased about what it means. You receive the Road Registry Stamp.",
+      "grantItem": "Road Registry Stamp",
+      "checkPassFlag": "crlS2Act2Complete"
+    },
+    {
+      "act": "act_3",
+      "title": "The Bordeaux Inn",
+      "activateNode": "BDX",
+      "type": "skill_check",
+      "skillCheck": { "stat": "Persuasion", "dc": 14 },
+      "scene": "The Free Company inn district in early 1367 smells of iron and tallow and men who have been in one building too long. Gaubert de Montardin sits alone at the near table — forty men holding a Dordogne valley pass for three years, still here when most companies have gone east toward Spain. He is not hostile. He has been told the expedition will bring absolution. Four times. Not in writing.",
+      "prompt": "Gaubert knows about the Archpriest's certificate — he has heard the story. He wants confirmation that the Church makes such promises in writing, not merely in words. Show him the cedar box. Make a Persuasion check (DC 14) to make him understand that the document inside is the precedent he needs — not the promise, but the proof that promises of this kind are made at all.",
+      "failText": "Gaubert looks at the box. 'That's the Archpriest's. Not mine.' He is not wrong. He needs to understand that the precedent is transferable even if the document is not. Try again — about what a precedent means when the form exists and someone willing to invoke it holds the original.",
+      "successText": "Gaubert picks up the box and holds it for a moment without opening it. He sets it down. 'Monday,' he says. 'We'll need the authentication.' He has understood: the document proves not his absolution but that the institution grants absolution to captains who deliver their companies to the right commission. That is enough. You receive Gaubert's Conditional Seal.",
+      "grantItem": "Gaubert's Conditional Seal",
+      "checkPassFlag": "crlS2Act3Complete"
+    },
+    {
+      "act": "act_4",
+      "title": "The Notary's Authentication",
+      "activateNode": "BDX",
+      "type": "skill_check",
+      "skillCheck": { "stat": "Insight", "dc": 13 },
+      "scene": "Pierre de Foix, the Avignon representative in Bordeaux, reads the Archpriest's certificate for a long time. His study is small, one south-facing window, the smell of good wax and Latin ink. He has been asked to write an authentication confirming the document is genuine, the signet intact, the absolution formally granted under the conditions described. He has read it twice. He sets it down and looks at you.",
+      "prompt": "Pierre is willing but not comfortable. He will write the authentication because it is true. Make an Insight check (DC 13) to understand what he needs to hear before he writes it without hesitation — the reason that makes this different from institutional complicity, the distinction between attesting what is true and approving of what happened.",
+      "failText": "Pierre sets down his pen. 'I will write it eventually. I am asking you to give me a reason that is not merely that it is true.' He is right that truth alone is not always sufficient argument for the man who must sign. Try again — about the function of the notary's role in a transaction that required ceremony.",
+      "successText": "Pierre picks up his pen. 'The notary attests what is true,' he says, more to himself than to you. 'I did not negotiate the terms. I did not receive the crowns. I am recording that these things happened, which is different from approving of them.' He writes the authentication in careful Latin and seals it with his own mark. You receive Pierre's Authentication.",
+      "grantItem": "Pierre's Authentication",
+      "checkPassFlag": "crlS2Act4Complete"
+    },
+    {
+      "act": "act_5",
+      "title": "Gaubert Reads",
+      "activateNode": "BDX",
+      "type": "skill_check",
+      "skillCheck": { "stat": "Persuasion", "dc": 12 },
+      "scene": "Gaubert is at the table again, his company assembled behind him. The authenticated certificate is on the table. He has read it. He picks up his sealing wax and lights the candle — he is writing a letter, four lines, to the Black Prince's secretary. His men watch his face, not the document. Outside, Bordeaux prepares for an expedition to Spain that half the city still doubts will happen.",
+      "prompt": "The letter is sealed. Gaubert looks up at you. He needs to decide where the certificate goes — carrying a papal document through a campaign in Spain is its own kind of danger. Make a Persuasion check (DC 12) to convince him that the cedar box goes to the diocesan archive and his sealed letter is already the proof the quest is complete: he keeps neither the precedent nor the burden of it.",
+      "failText": "Gaubert holds the box. 'I may need it.' He is thinking about everything that could go wrong in Spain, and he is not wrong that a papal document is a kind of armor. Try again — about what the letter already carries that the document no longer needs to carry.",
+      "successText": "Gaubert nods once. He hands you the cedar box and the sealed letter together. 'The archive gets the box. The secretary gets the letter. Monday we march.' He stands. His men begin moving. The pass through the Dordogne valley will be clear Monday afternoon. You hand over the Archpriest's Certificate. You receive Gaubert's Letter of March.",
+      "grantItem": "Gaubert's Letter of March",
+      "takeItem": "Archpriest's Certificate",
+      "checkPassFlag": "crlS2Act5Complete"
+    }
+  ]
+}
+```

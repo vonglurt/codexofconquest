@@ -355,3 +355,323 @@ The Queen's Sealed Petition is in the campaign log. It precedes the order. When 
   ]
 }
 ```
+
+---
+
+## Supplementary Cycle — Angle: 1367 AD — the routier economy after Brétigny; the Black Prince governing Gascony; the safe-conduct as the only law in the lawless space
+
+**What this cycle sees that Cycle 1 missed:** Cycle 1's focal world is hierarchy functioning at its best — a queen who deploys the mechanism of mercy precisely because she understands the hierarchy completely, and a king who can say "I cannot refuse you" because the machinery of formal authority is intact. This cycle's focal world is 1367: the same political system, twenty years older, operating in the gaps between its own structures. The ransom is being paid in installments; the treaty is nominally holding; the companies of armed men who fought the war have no war to fight and are living off the peace by other means. The only law they recognize is the law they make between themselves and the towns they choose not to burn this season.
+
+---
+
+### Pass 1 — Full Telling
+
+The Treaty of Brétigny was signed in 1360 and it changed the shape of France the way a hard winter changes the shape of a field — everything is still there, but what was standing is bent. Edward III of England gets full sovereignty over a third of France: Gascony, Aquitaine, Ponthieu, and more. France agrees to pay three million gold écus for John II's ransom. John goes home and starts collecting the money. Then his son Louis of Anjou, a hostage in Calais, escapes. John announces that his honor requires him to return to English custody. He goes back to London. He dies there in 1364, still paying the ransom in installments. Froissart, who admires this more than the politics warrants, records it with undisguised respect. His son Charles V — Charles the Wise — is now king of France and is paying the remaining balance with the patient financial intelligence of a man who has decided that military defeat should not repeat as administrative defeat.
+
+The Black Prince has been Prince of Aquitaine since 1363. He is thirty-seven years old in 1367 and governing the English territories in France from Bordeaux. He runs a court that French lords respect — too well-run, some English lords think, too elaborate for a military outpost. He has been managing the Free Companies, the routiers, the great companies of mercenary soldiers who fought both sides of the war and now, with Brétigny nominally holding, have no employer and have not stopped being what they are. They live off the peace: demanding silver from towns in exchange for not burning them, occasionally fighting for hire when a lord with a specific problem appears.
+
+The most famous routier figures of the decade are an education. Arnaud de Cervole, the Archpriest — a man who held a church benefice before the life caught him — led the Great Company through Burgundy and Avignon and extorted Pope Innocent VI into paying for their departure. De Cervole was killed by his own men in 1366. The companies survived him, fragmented and continued. Hugh Calveley. Robert Knolles. Bertrand du Guesclin, who is technically French but works with the companies when the politics make it useful. Thousands of men organized around the principle that force is a resource, that a town is a resource, and that an agreement is only as good as the signature behind it.
+
+The Black Prince's solution to the routier problem is the same as Charles V's: export it. Both sides are organizing the companies' departure to Spain, where Don Pedro of Castile needs military support against his half-brother Henry of Trastámara. In early 1367 the staging is underway from Bordeaux. The companies will ride south under the English banner, fight at Nájera on April 3, win comprehensively — the English always win on ground they choose — and then discover that Don Pedro has no money. They come back from Spain empty. The problem returns to France, larger.
+
+But in the January and February of 1367, before any of that, Bordeaux is the organizing center of the world. The Black Prince is there, planning. The companies are there, some staging for Spain, others waiting to see whether the money is real, others conducting their regular business against the Périgord towns. A town fifty miles northeast of Bordeaux is paying for its protection this season, as it pays every season. The safe-conduct exists. The money has been received. The letter must reach the town before the company's outriders do.
+
+Froissart records the kings and the heralds, the formal exchanges of chivalry, the specific reported speech of men who know they are being watched by history. He half-records the routier economy — the safe-conducts, the seasonal agreements, the precise commercial texture of life in the gaps between battles. He talks to everyone; he talked to routier captains. He doesn't entirely disapprove of them. They operate according to their own code and the code is more consistent than most. But they are not his people. He writes them as background, as context for the chivalric foreground. They are the world the chivalric code was built to manage.
+
+What Froissart doesn't write: the Fighter who carried the documents between the world he is recording and the world he is not quite seeing.
+
+---
+
+**Chapter Notes**
+
+- **Brétigny (1360):** The treaty that defines everything in 1367. One third of France to England; three million écus for John II. Seven years of installments still running.
+- **John II's return to captivity (1364):** His son's escape from Calais; John's voluntary return to London; his death there. Froissart records this with more admiration than the strategic situation merits. Honor as a compulsion. John II as the man the chivalric code produces when it is taken absolutely seriously by someone with poor political instincts.
+- **Black Prince at Bordeaux (1363–1370):** Governing Aquitaine from a court that runs too well to be purely military. He will be ill by 1370, dead in 1376, never becoming king. His administration of Gascony is the brief period when the system worked at something close to its best.
+- **The Free Companies (1360s):** Men from both armies, unemployed by the peace, organized into military-commercial enterprises. Arnaud de Cervole. Hugh Calveley. Robert Knolles. Bertrand du Guesclin operating at the edge of several categories. Their economy runs on seasonal protection agreements.
+- **The Spanish campaign (1367):** Black Prince crosses the Pyrenees January–February. Battle of Nájera, April 3 — English victory, du Guesclin captured. Don Pedro defaults on payment. The companies return to France worse than before.
+- **Richard of Bordeaux (January 6, 1367):** The future Richard II born during this period. His birth's political consequences are entirely invisible in January 1367. His father is going to Spain. His grandfather Edward III is ill in London. The child will be king before anyone is ready.
+
+---
+
+### Pass 2 — Slower
+
+**The Black Prince at 37** is not the sixteen-year-old at Crécy or the twenty-six-year-old who served the captured king his wine. He is a governing prince with administrative responsibilities, a campaign to plan, and the early stages of the illness that will kill him at forty-six. He is still absolutely committed to the chivalric code — this is visible in how he runs his court, in how he treats Don Pedro's defaults with the tolerant disappointment of a man who expected better from a situation he entered with open eyes. He is going to get nothing from Spain except a victory and a worsening health condition. He knows this in some layer below the planning, before he crosses the Pyrenees. He goes anyway. The code does not have a clause about expected returns.
+
+**Estève de Castelmoron (a routier captain in the register of the real ones)** is not a villain. He is a professional soldier operating in the gap between institutions. He has no great lord's backing. He has a company of roughly two hundred men and a reputation for honoring his agreements, because honoring agreements is the only way to make the safe-conduct business work over time. If his letters don't hold, towns stop paying and start fighting. He calculates. He is calculating when he hands the safe-conduct to the Fighter and he is calculating when his outriders ride a different road. Whether the outriders' misunderstanding was deliberate or genuine is something he will never clarify.
+
+**Bertrand du Guesclin** is not yet Constable of France in early 1367 — that comes after Nájera, after the ransom, after everything. He is the most capable military commander in France, currently fighting for Henry of Trastámara against Don Pedro, about to get himself captured at Nájera. He is the book's counterweight to the Black Prince: the professional soldier who comes up from the bottom rather than down from the court. He would not have served dinner to a captured king without sitting at the table. He would have negotiated the seating arrangement first.
+
+**Charles V ("the Wise")** is doing what French kings do after catastrophic military defeat: rebuilding quietly, taxing carefully, avoiding pitched battles, using lawyers where his predecessors used lances. He is paying the ransom installments and he is funding the Spanish expedition and he is waiting for the English to make a mistake he can exploit. He is right that they will. He will outlive the Black Prince by eight years and die with most of the English territories recovered. In 1367 all of that is still in front of him and he is paying attention.
+
+**Froissart himself** at thirty is gathering material, attending court, talking to every participant of events he wasn't old enough to witness firsthand. He has already written about Crécy and Calais from others' accounts. He knows what makes a scene legible: the specific reported speech, the humane gesture that reveals the man inside the title. The routier captains give him material but not his kind — they have no royal blood and the chivalric code doesn't fit them as elegantly. He records them anyway. He is more honest than his politics.
+
+---
+
+### Pass 3 — Elaborate One Scene: The Dinner at Poitiers
+
+The scene is from September 19, 1356 — eleven years before the game's present. Not 1367. But the dinner is the origin document of the 1367 world: the gesture that defines what the chivalric ideal looks like when it is held completely, which is why the 1367 world is still paying off its consequences — the ransom, the treaty, the administration of the captured king's installments — long after the meal was cleared away. The routier economy in Bordeaux in 1367 exists in the shadow of this dinner. The idea that a man's word, formally given before witnesses, creates an obligation that exists regardless of whether a court will enforce it — that idea runs in a direct line from the tent at Poitiers to the inn near the harbor wall.
+
+The tent is not a palace. It is a campaign tent the prince's steward has made into a palace for the evening: boards on trestles for tables, rush-lights and two good candles from the chaplain's supply, the smell of the field still on every man in the room. Outside, the dead are being counted — five or six thousand French, by the heralds' tally. Inside, King John II of France, his youngest son Philip, and the senior French prisoners are at dinner.
+
+John has been fighting since morning in the front rank of his own army. He is in the same armor he wore in the battle. The prince has not offered him the discourtesy of making him wait in a separate tent while his captor changed clothes. John's face has the quality of a man who has finished processing what happened and come to rest on the fact that it happened this way. He fought with absolute personal courage at the moment everything collapsed around him. The English accounts confirm this. The battle was lost; his courage was real; these are separate facts.
+
+The Black Prince enters carrying the wine jug. Not a servant carrying it — the prince himself, going from guest to guest at the high table. He fills the French king's cup. He fills the cups of the French princes and lords. He does not sit.
+
+John invites him repeatedly. The Berners translation renders the refusal with the specific phrasing of a translator who is trying to capture something precise: the prince "would not sit at the king's board for any desire that the king could make, but he said he was not sufficient to sit at the table with so great a prince as the king was."
+
+Not sufficient. This phrase is doing the most work in the scene. The prince has just defeated this man three to one. The field is cleared by dusk. The king of France is in his tent. And the prince says: I am not sufficient to sit beside you.
+
+He means it as courtesy. He also means it — the complexity is that both are true. The chivalric code says a captured king is still a king. Rank is not diminished by defeat. The prince holds the code not as performance but as interior practice. He is not pretending to feel insufficient. He is behaving consistently with a thing he actually believes.
+
+Then: "Sir, do not make no evil or heavy cheer, though God this day did not consent to follow your will; for, sir, surely the king my father shall bear you as much honour and amity as he may do, and shall accord with you so reasonably that ye shall ever be friends together."
+
+And: "Sir, methinks ye ought to rejoice, though the journey be not as ye would have had it, for this day ye have won the high renown of prowess and have passed this day all other on your side. Sir, I say not this to mock you, for all that be on our side, that have seen every man's deeds, are plainly accorded by true sentence to give you the prize and chaplet."
+
+He is twenty-six years old. The man he is speaking to has just lost France.
+
+What the prince is doing — Froissart sees this and records it correctly — is giving the captured king something to carry out of the defeat that is not the defeat. The battle proved one set of things about tactics and the longbow and the relative discipline of the two armies. The prince is officially certifying that the battle proved a separate set of things about John II personally — that he fought without flinching, that his personal valor was real and witnessed. He is making sure the second story is put on record in the moment of the first. He is giving the captured king his dignity back in the only form available: a verbal certification, before witnesses, from the man who just beat him.
+
+John thanks him. The dinner continues. The prince circulates with the wine jug. Froissart records no more of what was said. He does not need to. He has given the scene its peak and trusted the reader to understand what followed: dinner, late into the evening, two men on opposite sides of the day's account eating and drinking together in the only tent in France that contained both of them.
+
+This dinner will cost France three million écus. The Black Prince knew the rough shape of the terms when he made the speech. The speech was not contingent on the terms being mild. He would have made the speech at twice the price. That is what holding the code completely costs: you do not modify it for context.
+
+Eleven years later in Bordeaux, a routier captain sits at a table near the harbor and explains: the seal is the contract. If it arrives intact, the agreement holds. He expects it to mean what it says. His world is not the prince's world. But the idea runs through both of them: a word formally given before witnesses creates an obligation that exists regardless of whether any court can enforce it. The line of descent from the tent at Poitiers runs to the inn at Bordeaux, and from there it runs to the limestone town in Périgord waiting for the letter that is the only thing standing between it and fire.
+
+---
+
+### Seven Storyline Ideas
+
+1. **The Ransom Installment** — The French treasury is transmitting a payment on John II's ransom through Bordeaux to the English commissioners, and a routier captain has learned the payment route; the sealed transfer docket authorizing the convoy must reach the English registry before the convoy departs, because without it any English officer who meets the convoy on the road can legally confiscate it. The fighter carries the docket through the Bordeaux harbor district where the captain's agent has been watching departures since dawn.
+
+2. **The Company's Letter** — A Free Company captain in Bordeaux has issued a safe-conduct for a Périgord town in exchange for payment already received; the sealed letter must reach the town before the company's outriders arrive at its gate. There is no court that enforces this agreement — only the captain's word, the town's need, and the Fighter who carries the only document either party will honor.
+
+3. **The Dinner Protocol** — The night after Poitiers, the Black Prince circulated among the captured French nobles with a wine jug in his own hands, refusing the French king's invitation to sit; before the dinner, his written seating order must reach the royal steward ahead of a rival English lord's competing instruction that would place a French duke at the head table and turn a diplomatic masterpiece into an incident. The prince's courtesy is not a performance — it is a precise instrument, and the instrument is a piece of paper.
+
+4. **The Prince's Son** — Richard of Bordeaux was born January 6, 1367, and a Navarrese agent intends to file a document in the English registry claiming the child's birth date falls after a specific religious festival that would affect succession precedence; the sealed birth record from the Black Prince's household chaplain must reach the English royal registry before the Navarrese filing window opens. The fighter carries the birth record through the Bordeaux harbor district in the first week of January, when the city is organizing a Spanish campaign and nobody is looking at the archive building.
+
+5. **The Chronicler's Draft** — Froissart has written fair accounts of events that two specific English lords do not want preserved; a sealed copy of his manuscript is being transmitted to a Flemish scriptorium for safekeeping before those lords can arrange for the original to be corrected, and the copy must pass through the Calais harbor before the lords' agents close the mail-packet inspection. The fighter carries the copy — if both copy and original exist simultaneously in separate locations, suppression becomes pointless — through a port watched by men who have been told to look for anything going to Flanders from a secretary's hand.
+
+6. **The Herald's Patent** — Before the Spanish campaign, every herald operating under the Black Prince's authority received a patent of safe-conduct valid in Castile and Navarre; one patent was incorrectly sealed with a minor lord's seal rather than the prince's and must be replaced before the herald crosses the Pyrenees with defective credentials. The herald is already two days south of Bordeaux, moving for the pass; the corrected patent must reach him at his overnight stop, because once a herald is in enemy territory with a broken credential the rules of heralds' immunity do not apply.
+
+7. **The Road Back from Nájera** — Bertrand du Guesclin was captured at Nájera on April 3, 1367; his ransom negotiation involves a combined document that also releases a secondary prisoner whose family has been waiting fifteen years; an Aragonese factor intends to buy out du Guesclin's debt separately, severing the secondary prisoner's release from the negotiation; the combined ransom letter must reach the Castilian commission before the Aragonese offer closes. The fighter moves through a Castile that has changed sides twice in six months, carrying the one document that would release a man whose name the world has forgotten because du Guesclin's name is louder.
+
+---
+
+### Theme Check
+
+Reviewing current Theme Threads Active for conflicts:
+
+- **CDG** ("The obstacle only needs to cause delay") — timing-race theme. "The Company's Letter" has a time element but the core theme is about jurisdiction, not delay: the agreement exists between two parties with no common authority, and the document is the law itself, not a piece of paper racing a deadline. Different.
+- **HAV** ("The distinction between corsair and pirate is a single document's presence or absence") — also involves a safe-conduct-type document and an institutional classification. But HAV is about CLASSIFICATION by an existing authority (the Rhodes commandery deciding which legal category applies). The routier theme is about CREATION of authority where none exists — neither party has institutional backing; the agreement holds only because both need it to hold. Different.
+- **LIL cycle 1** ("The mercy must exist in writing before the order is sealed") — about staging within a functioning hierarchy. The routier world has no hierarchy to stage within. Different.
+- **CRL** ("The document creates the obligation by delivering the news") — about a king who has already decided to honor an obligation and needs the form of its arrival. The routier safe-conduct is not about a pre-existing decision; it is about a created agreement that has no enforcement mechanism. Different.
+- **BLQ** ("The document is formally correct and substantively fraudulent") — about validity and authenticity. The routier letter is genuinely valid and genuinely operative. Different.
+
+**Chosen quest:** Storyline 2 — "The Company's Letter"
+
+**Theme:** *The document creates law between parties who acknowledge no common authority: the routier's safe-conduct is the only agreement both sides will honor because the alternative is fire; the only reason it works is that the captain needs his word to be worth something and the town needs to survive the season; the carrier is the neutral party neither side could trust their own representative to be*
+
+---
+
+### 5-Act Vignette Play — LIL-02: "The Company's Letter"
+
+**TOKEN:** The Company's Safe-Conduct — a letter folded in thirds, sealed twice with Estève de Castelmoron's iron ring (rampant wolf in black wax on both folds), addressed to "the Burgesses and Town Captain of Beaulieu-en-Périgord" in Gascon French; grants the town protection from the company's operations for one full season in exchange for fifty silver écus already received at Bordeaux; if either seal is broken, the document is void and the captain is released from the agreement; no court enforces this — only mutual interest and fear of what the other party will do if the agreement fails
+
+---
+
+**ACT I — The Captain's Word**
+
+*The Company's Safe-Conduct · sealed on the table, not yet handed over · held by no one — it sits between the captain and the Fighter · Bordeaux, a requisitioned inn near the harbor wall, morning*
+
+The inn smells of the company — horse, oiled iron, Gascon leather, and fifty men who have been sleeping and eating here for three weeks and are forming for Spain in the road outside. Estève de Castelmoron sits at a table by the shuttered window with the safe-conduct in front of him and a cup of wine he hasn't touched. He is forty years old, built like the wall behind him, and he has the careful face of a man who has learned that his word is his only durable asset.
+
+He looks at the Fighter for a long moment before he speaks.
+
+"The town paid Tuesday," he says. "Fifty écus. I counted them." He taps the seal — the rampant wolf in black wax. "This letter is their receipt. If it arrives with both seals intact, my outriders pass around the town's walls. If it doesn't arrive, my outriders don't know there's an agreement. If it arrives broken, there is no agreement — the seal is what makes it binding, not the paper."
+
+A sergeant appears at the door with a roster. The company is in the road. Estève looks at the roster, looks at the Fighter, and makes a decision.
+
+"They ride south," he says, meaning the outriders. "They know the hill road. You ride east, through Libourne." He pauses. "They were told to ride south."
+
+*Whether the outriders were told anything at all is a question the Fighter won't be able to answer until the forest road east of Libourne.*
+
+He sets the safe-conduct on the table and waits for the Fighter to pick it up.
+
+---
+
+**ACT II — The Libourne Checkpoint**
+
+*The Company's Safe-Conduct · sealed, in transit · held by the Fighter · English garrison checkpoint at the Libourne river crossing, midmorning*
+
+The checkpoint is three men and a log across the road. The corporal who runs it is diligent — the kind who stays diligent twenty miles from his officer because diligence is a habit, not a performance. He stops the Fighter. He looks at the letter. He sees the rampant-wolf seal in black wax and a sealed correspondence that is not from any lord he recognizes.
+
+"I need to log the contents before you cross," he says. He means: break the seal, read the letter, re-seal with his own counter-stamp. Standard procedure. He has his wax block and stamp ready on the post.
+
+"Breaking a sealed safe-conduct voids it," the Fighter says. "The seal is the contract. If you break it, the document is worth nothing to anyone on either side of this crossing. The corporal who voided a routier safe-conduct in transit is not an interesting position to be in."
+
+The corporal looks at the seal. He looks at his log. He looks at the seal one more time.
+
+*He is deciding whether to be diligent in the way he knows, or in the way that actually works.*
+
+---
+
+**ACT III — The Forest Road**
+
+*The Company's Safe-Conduct · sealed, inside the travel pack · held by the Fighter · forest road east of Libourne, entering Périgord, early afternoon*
+
+The forest road narrows into a limestone defile. Two riders are waiting in the shadows — not barring the road, just present, in the way of men who have done this before and know that presence alone does the first half of the work. They wear no livery but their harness is the company's style: strapped-down, practical, nothing decorative. One carries a crossbow held at rest. The other has his hand on his sword hilt in the way that is not quite drawing.
+
+"The captain sends his regards," the closer rider says.
+
+They want the letter. If the town has no safe-conduct, the town can be worked. Estève's agreement is binding on the company, but this particular pair of outriders has been told — or says it was told — that the agreement fell through. The Fighter cannot call the captain from here. The letter cannot be shown without being accessible to be taken.
+
+*The tree line is close. The defile is fifteen feet wide. The crossbow is the problem.*
+
+---
+
+**ACT IV — The Town Gate at Dusk**
+
+*The Company's Safe-Conduct · sealed, intact, one edge damp from a stream crossing · held by the Fighter · main gate of Beaulieu-en-Périgord, evening*
+
+The town has bolted its gate. The walls are manned. Through the wicket in the main gate — a foot-wide iron-grated opening — a frightened alderman's face appears in the lamplight. He has been there since afternoon. He has been expecting bad news since morning, and also this. Both.
+
+"I carry a letter from Estève de Castelmoron," the Fighter says through the grate. "Sealed. For the town captain. The agreed safe-conduct."
+
+The alderman's expression moves in several directions at once. He has been waiting for this letter. He has also been waiting for people to come to the gate and claim to carry this letter.
+
+"Describe the seal," he says. Through the iron grate.
+
+*The answer is specific. It was on the table in Bordeaux this morning.*
+
+---
+
+**ACT V — The Council Chamber**
+
+*The Company's Safe-Conduct · on the council table, unsealed now, both wax impressions preserved in the broken halves · held by the moment · council room, first floor of the town hall, Beaulieu-en-Périgord*
+
+The council is seven men around a long table. The town captain reads the letter twice. Two of the seven are whispering at the far end.
+
+The whispering man is not hostile — he is afraid. He has a household fifty yards from the town wall. He says, quietly: "Fifty écus was agreed. We sent forty-eight." He says this to the table, not to anyone specifically. "There was not enough silver. We sent what there was and we assumed—"
+
+He stops.
+
+The town captain looks at the letter. The letter says fifty. It says *in exchange for fifty silver écus already received*.
+
+"I was present when the captain counted the payment," the Fighter says.
+
+The council room is quiet.
+
+"He counted it as fifty," the Fighter says. "He did not recount it. He said fifty. He sealed the letter immediately after."
+
+The man with the household near the wall is looking at the Fighter with the expression of someone deciding whether to believe what they need to hear.
+
+*The captain counted forty-eight. He called it fifty. The Fighter was present. The question is what the Fighter says next, and why.*
+
+---
+
+### Quest API Stub — LIL_002: The Company's Letter
+
+```json
+{
+  "quest_id": "LIL_002",
+  "title": "The Company's Letter",
+  "source": "Chronicles of Froissart — 1367 supplementary cycle; routier economy of post-Brétigny Gascony",
+  "cycle": 2,
+  "theme": "The document creates law between parties who acknowledge no common authority: the routier safe-conduct is the only agreement both sides will honor because the alternative is fire; the carrier is the neutral party neither side could trust their own representative to be",
+  "token": {
+    "id": "the_companys_safe_conduct",
+    "name": "The Company's Safe-Conduct",
+    "description": "A letter folded in thirds, sealed twice with Estève de Castelmoron's iron ring (rampant wolf in black wax on both folds), addressed to the Burgesses and Town Captain of Beaulieu-en-Périgord in Gascon French; grants the town protection from the company's operations for one full season in exchange for fifty silver écus already received at Bordeaux; if either seal is broken the document is void; no court enforces this — only mutual interest and the fear of what the other party will do if the agreement collapses",
+    "grant_act": "act_1",
+    "take_act": "act_5",
+    "check_acts": ["act_2", "act_3", "act_4"]
+  },
+  "nodes": ["BDX", "PER", "SRL"],
+  "new_nodes": [
+    {
+      "code": "BDX",
+      "name": "Bordeaux — English Gascon Capital",
+      "terrain": "Bordeaux in 1367, capital of the Black Prince's Principality of Aquitaine: the wine-merchants' quarter on the Garonne, a requisitioned inn district where the Free Companies lodge between engagements, the harbor wall with the smell of river-water and wine-oak and oiled iron; the Black Prince's court two streets up; the company forming in the road outside the inn; the specific quality of a city that is organizing the world's departure to Spain and doesn't notice the Périgord forty miles east"
+    },
+    {
+      "code": "PER",
+      "name": "Périgord Forest Road",
+      "terrain": "The limestone-ridge forest road between the Garonne valley and the Dordogne, 1367: narrow defile between pale rock faces, the road surfaced by use rather than maintenance, wolf-tracks in the mud at dawn; outriders visible in shadow before they become problems; the specific quality of ground that no administration claims and every armed man uses; where the routier economy operates most openly because no one with authority is watching"
+    },
+    {
+      "code": "SRL",
+      "name": "Beaulieu-en-Périgord — Limestone Valley Town",
+      "terrain": "A Périgord valley town in 1367: golden limestone walls at noon and grey at dusk, a main gate with a wicket grate, the town hall on the market square, a council chamber with a long table and tallow candles; a town that has paid for protection and is waiting to discover whether its payment held; the smell of limestone dust and autumn smoke and the specific fear of people who have correctly identified that the letter in transit is all that stands between them and a bad season"
+    }
+  ],
+  "acts": [
+    {
+      "act": "act_1",
+      "title": "The Captain's Word",
+      "activateNode": "BDX",
+      "type": "skill_check",
+      "skillCheck": { "stat": "Insight", "dc": 12 },
+      "scene": "Estève de Castelmoron sits at a table in a Bordeaux inn near the harbor wall, the safe-conduct sealed in front of him, a company forming in the road outside for Spain. He explains: the seal is the contract; both seals must arrive intact; the outriders are riding south. He looks at the Fighter for a long moment before he decides whether to hand the letter over. He has made this arrangement before and it ended badly. What he is reading in the Fighter's face is not trustworthiness — he cannot assess that — but the specific quality of someone who understands what they are being asked to carry.",
+      "prompt": "Read what Estève de Castelmoron is actually deciding in this moment. He is not deciding whether to trust you — he has already decided to use you. He is deciding whether you understand the specific rule about the seal. Make an Insight check (DC 12) to read exactly where his hesitation lives, then address it directly.",
+      "failText": "You speak of urgency and reliability. Estève picks the letter up from the table. 'The seal,' he says. 'Do you understand what happens if the seal is broken?' He puts it back down. He is waiting for a more specific answer.",
+      "successText": "Estève reads your face and sets the letter on the table for you to pick up. 'Both seals intact,' he says. 'That is the whole thing.' You receive The Company's Safe-Conduct.",
+      "grantItem": "The Company's Safe-Conduct",
+      "checkPassFlag": "lil2Act1Complete"
+    },
+    {
+      "act": "act_2",
+      "title": "The Libourne Checkpoint",
+      "activateNode": "BDX",
+      "type": "skill_check",
+      "skillCheck": { "stat": "Persuasion", "dc": 12 },
+      "scene": "The English garrison checkpoint at Libourne is three men and a log across the road. The corporal has the specific diligence of a man who stays diligent twenty miles from his officer because diligence is his character. He looks at the rampant-wolf seal in black wax and reaches for his own wax block to counter-stamp — which requires breaking the original seal. He has done this two hundred times and has his own procedure ready on the post.",
+      "prompt": "The argument is precise: breaking a sealed safe-conduct voids it. The seal is not documentation of the document — it is the operative mechanism of the document. If he breaks it, he doesn't log a safe-conduct; he destroys one. Make a Persuasion check (DC 12) to make this distinction land in a way that a diligent corporal can recognize as the more diligent choice.",
+      "failText": "The corporal looks at his log. 'Sealed correspondence requires logging.' He reaches for the letter. You try again — more precisely, about what the document stops being once he opens it.",
+      "successText": "The corporal looks at the seal one more time, puts his wax block away, and stamps a counter-slip that acknowledges the letter's passage without touching it. 'Move through,' he says, with the manner of a man who has just been correctly outmaneuvered. You receive the Libourne Transit Slip.",
+      "grantItem": "Libourne Transit Slip",
+      "checkPassFlag": "lil2Act2Complete"
+    },
+    {
+      "act": "act_3",
+      "title": "The Forest Road",
+      "activateNode": "PER",
+      "type": "skill_check",
+      "skillCheck": { "stat": "Athletics", "dc": 13 },
+      "combat": { "count": 2, "ac": 13, "hp": 16, "label": "company outriders" },
+      "scene": "In the limestone defile east of Libourne, two riders in company harness are waiting — present rather than blocking, which is the first half of their method. One carries a crossbow at rest. The closer one says the captain sends his regards. They want the letter; if the town has no safe-conduct, it can be worked this season. The captain's agreement is technically binding on the company, but these two have been told — or say they have been told — that the arrangement fell through. The crossbow is the immediate problem.",
+      "prompt": "The letter cannot be shown without being accessible. Persuasion cannot establish what the captain told them in Bordeaux this morning. Make an Athletics check (DC 13) to move first on the defile ground — fifteen feet wide, tree line close — before the crossbow comes up. On failure, fight: 2 company outriders, AC 13, HP 16 each.",
+      "failText": "The crossbow comes up before you move. Fight: 2 company outriders, AC 13, HP 16. The defile is flat and open — no cover, nothing narrow to use.",
+      "successText": "You move before the crossbow rises and the defile closes. When it is over, you take the lead badge from the nearer rider's harness — the company's own mark, surrendered. You receive the Company Outrider's Badge.",
+      "grantItem": "Company Outrider's Badge",
+      "checkPassFlag": "lil2Act3Complete"
+    },
+    {
+      "act": "act_4",
+      "title": "The Town Gate",
+      "activateNode": "SRL",
+      "type": "skill_check",
+      "skillCheck": { "stat": "Persuasion", "dc": 13 },
+      "scene": "The gate of Beaulieu-en-Périgord is bolted. Through the wicket grate a frightened alderman's face appears in lamplight. He has been waiting for this letter since morning. He has also been waiting for people to come to the gate claiming to carry this letter — the company has sent false messengers before to test whether the gate would open. He asks you to describe the seal.",
+      "prompt": "The answer is specific — you saw the seal pressed in Bordeaux this morning. Describe the rampant wolf in black wax, both folds, the ring Estève pressed it with, the way he tapped it when he explained what it meant. Make a Persuasion check (DC 13) to give the alderman enough specific detail that a man who has been watching for false messengers can hear the difference.",
+      "failText": "The alderman's face withdraws slightly. 'Anyone who handled the letter could describe it.' He is not wrong. You try again — more specific, about what happened before the letter was sealed, what the captain said about the outriders.",
+      "successText": "The alderman goes quiet for a moment, then a scrap of paper comes through the wicket grate: Estève's letter — admitted pending. The bar sounds on the other side of the gate. You receive the Wicket Receipt.",
+      "grantItem": "Wicket Receipt",
+      "checkPassFlag": "lil2Act4Complete"
+    },
+    {
+      "act": "act_5",
+      "title": "The Count of Forty-Eight",
+      "activateNode": "SRL",
+      "type": "skill_check",
+      "skillCheck": { "stat": "Insight", "dc": 13 },
+      "scene": "The council is seven men around a long table. The town captain reads the letter twice and sets it down. At the far end of the table, the alderman with a household near the wall says quietly: 'Fifty écus was agreed. We sent forty-eight. There was not enough silver.' The letter says fifty écus already received. The council is looking at this discrepancy and at you — the only person in the room who was present when the captain counted the payment.",
+      "prompt": "Read the council chamber: who holds the real authority in this room, what they are actually deciding (not the discrepancy but whether the agreement holds), and what form your answer needs to take. Make an Insight check (DC 13) to understand exactly what the seven men need to hear from the one person who was there.",
+      "failText": "You speak of what you observed. The alderman near the wall says: 'But he noticed.' The town captain sets his pen down. The room is waiting for a more precise answer about what the captain's counting meant.",
+      "successText": "The town captain picks up his pen. He writes out a council receipt acknowledging the safe-conduct's delivery. He hands it across the table without looking at the alderman near the wall. 'The agreement holds,' he says. You hand over The Company's Safe-Conduct. You receive the Council's Receipt.",
+      "grantItem": "Council's Receipt",
+      "takeItem": "The Company's Safe-Conduct",
+      "checkPassFlag": "lil2Act5Complete"
+    }
+  ]
+}
+```

@@ -221,13 +221,27 @@ Remaining: add KYA-01 to quest-map.md theme thread when it is fully implemented.
 
 ---
 
+## IST — The Alexiad (Anna Komnene, c. 1148)
+
+**Processed 2026-06-01** — IST-01 spec complete (The Enemy's Portrait, CON→RGS→WM). Processed from memory (no txt file; 165 KB). IST-02–07 seeds written. See IST-alexiad.md.
+
+Seeds outstanding (need full 5-act vignette treatment):
+- IST-02: "The Curtain Notes" — Alexios's secret transcription of Basil the Bogomil's heresy census; Constantinople monastery → Thessaloniki → Weimar
+- IST-03: "The Nicaea Receipt" — the surrender document Alexios negotiated before the Crusaders could enter; the Crusaders' grievance in document form; Constantinople → Rhodes → Weimar
+- IST-04: "The Bryennios Draft" — Nikephoros Bryennios's contradictory draft history; three places where he and Anna disagree; monastery archive → Ragusa → Weimar
+- IST-05: "The Devol Treaty Copy" — the 1108 treaty that humiliated Bohemund; the sealed copy hidden by a Norman clerk; Palermo → Ragusa → Weimar
+- IST-06: "The Exile Letter" — Anna's first letter from the convent commissioning her own research access; convent archive → Constantinople → Weimar
+- IST-07: "The Physician's Notes" — Anna's clinical notes on Alexios's final illness, more specific than the Alexiad's literary account; Kecharitomene convent → Weimar
+
+---
+
 ## Pipeline Queue
 
 Next books to process (in approximate priority order):
 
 | Code | Title | KB | Status |
 |------|-------|----|--------|
-| IST | Alexiad (Anna Komnene) | 165 | Unprocessed |
+| IST | Alexiad (Anna Komnene) | 165 | **Processed 2026-06-01 — IST-01 spec complete (The Enemy's Portrait, CON→RGS→WM); IST-02–07 seeds. Memory-processed (no txt file). See §IST above.** |
 | NWI | Anabasis (Xenophon) | 545 | **Processed 2026-05-31 — NWI_001 spec complete; NWI-02–08 seeds pending** |
 | WAW | Quo Vadis (Sienkiewicz) | 1201 | **Processed 2026-05-31 — WAW_001 spec complete; WAW-02–07 seeds pending** |
 | MLA | Plutarch's Lives | 4222 | **Processed 2026-05-31 — MLA_001 spec complete; MLA-02–07 seeds pending** |
@@ -236,10 +250,10 @@ Next books to process (in approximate priority order):
 | BEY | Mandeville's Travels | 472 | **Processed 2026-05-31 — BEY_001 spec complete; BEY-02–07 seeds pending** |
 | KYA | Shah-Nameh | 883 | **Processed 2026-05-31 — COMPLETE. KYA-01 spec + KYA-02–25 seeds. See §KYA-CONT.** |
 | HTY | Mahabharata | 83 | **Processed 2026-05-31 — HTY-01 spec complete (Savitri's Three Bargains); HTY-02–06 seeds pending** |
-| ADA | Ramayana | 2339 | **Processed 2026-05-31 — ADA-01 spec complete (The Curlew's Grief); ADA-02–06 seeds. Part 1 of 12 fully read; full story arc recovered from synopsis cantos. Parts 2–12 pending.** |
-| AMS | Tale of Genji | Unknown | Unprocessed |
-| HAV | Buccaneers of America | Unknown | Unprocessed |
-| CLJ | Dracula | Unknown | Unprocessed |
+| ADA | Ramayana | 2339 | **Processed 2026-05-31/06-01 — COMPLETE. ADA-01 spec complete (The Curlew's Grief); ADA-02–48 seeds. All 12 parts fully read (Parts 11–12 are scholarly apparatus only). See ADA-ramayana.md.** |
+| AMS | Tale of Genji | 435 | **Processed 2026-05-31/06-01 — COMPLETE. AMS-01 spec complete (The Scarlet Fence Poem); AMS-02–07 seeds. ALL 3 PARTS FULLY READ (Chapters I–IX + Appendices). New seed AMS-07 (The Exchanged Fans). See AMS-tale-of-genji.md.** |
+| HAV | Buccaneers of America | 247 | **Processed 2026-05-31 — HAV-01 spec complete (The Articles); HAV-02–06 seeds. Both parts read; full arc recovered. See HAV-buccaneers-of-america.md.** |
+| CLJ | Dracula | 869 | **Processed 2026-05-31/06-01 — COMPLETE. CLJ-01 spec complete (The Compiled Account); CLJ-02–09 seeds. ALL 5 PARTS FULLY READ (Chapters I–XXVII + epilogue). New seeds CLJ-07 (Haarlem Garlic), CLJ-08 (Van Helsing's Contingency), CLJ-09 (The Transcript). See CLJ-dracula.md.** |
 
 ---
 
@@ -332,3 +346,104 @@ Do not wait until all parts are done before showing results. Each part's output 
 - All FCO quest seeds (02–14) are in FCO-aeneid.md with paragraph-length descriptions.
 - FCO-01 (main vignette) has full 5-act spec, UQF JSON stub, TOKEN, and all admin updates applied to quest-map.md and books.md.
 - plan.md created: 2026-05-31.
+
+---
+
+## BLQ — Decameron (Boccaccio, 1353)
+
+**Processed 2026-05-31/06-01** — BLQ-01 spec complete (The Saint's Attestation, Florence→Naples). BLQ-02–07 seeds written. ALL 9 PARTS FULLY READ (Days 1–10, all 100 stories + Author's Conclusion). New seeds BLQ-S08 through BLQ-S12 added from Parts 2–9 reading. See BLQ-decameron.md.
+
+Seeds outstanding (need full 5-act vignette treatment):
+- BLQ-02: "The Three Rings" — GEN → CON
+- BLQ-03: "The Coals" — FLR → BOL
+- BLQ-04: "The Falcon's Inventory" — FLR → VEN
+- BLQ-05: "The Three Descents" — NAP → RHD
+- BLQ-06: "The Night Transport" — FLR → ALE
+- BLQ-07: "The Goosebridge Answer" — CON → WM
+- BLQ-S08: "The Jewel Chest" — BRI → BAR
+- BLQ-S09: "The Soldier's Testimony" — ALE → FAM
+- BLQ-S10: "The Impossible Conditions" — FLR → AVG → MTP → MAR
+- BLQ-S11: "The Court Defense" — PIS → PRA
+- BLQ-S12: "The Two Friends' Debt" — ROM → ROM
+
+---
+
+## BEY — Mandeville's Travels, Supplementary 1367 Cycle (attr. Sir John Mandeville, c. 1357)
+
+**Processed 2026-05-31** — BEY-S08 spec complete (The Sultan's Commission, FAM→RHD→WM). Supplementary Cycle 2 written; four admin updates applied. Parts 1–2 of source read; Chapter VI (military service to Sultan), Chapter XI (letters with great seal), Chapter XV (Sultan's dialogue and intelligence network). New nodes: FAM (Famagusta harbor district), RGS (Ragusa/Dubrovnik waystation). See BEY-mandeville.md Cycle 2.
+
+Theme: "The document that authenticates a prior relationship now inconvenient to both grantor and recipient; what was genuine when it was made becomes politically radioactive when the world has changed; the archive receives it because neutral preservation cannot be accused of taking a side."
+
+Seeds outstanding from supplementary cycle (need full 5-act vignette treatment):
+- BEY-S09: "The Intelligence Report" — Dominican analysis identifying the Sultan's French-speaking agents from Chapter XV; one named is a current cardinal's brother
+- BEY-S10: "Sahag's Authentication" — the Armenian dealer's chain of custody for the cedar box; now in Beirut
+- BEY-S11: "The French-Speaking Lord" — a descendant of one of the Sultan's four intelligence lords; family document as Mamluk registry entry
+- BEY-S12: "The Temple Entry Record" — the Saracen custodians' own entry register for the Temple of the Lord, corroborating Chapter XI
+- BEY-S13: "The Liège Funeral Inscription" — Jean d'Outremeuse's record of Mandeville's deathbed; a rubbing of the actual stone
+- BEY-S14: "What the Pilgrim's Signet Looked Like" — collection of ordinary Mamluk signets given to European servants, contrasting with the great seal commission
+
+---
+
+## CRL — The Boy's Froissart, Supplementary 1367 Cycle (Lanier adaptation)
+
+**Processed 2026-05-31** — CRL-02 spec complete (The Archpriest's Certificate, PER→BDX). Supplementary Cycle 2 written; four admin updates applied. Parts 1–3 of source read; full Archpriest chapter (LXXXV–LXXXVI) and Jacquerie chapters (LXXXVII–LXXXIX). Nodes used: PER (Périgord forest road — dissolving priory), BDX (Bordeaux). See CRL-froissart-boys.md Cycle 2.
+
+Theme: "The purchased grace cannot be transferred but the precedent it creates can; carrying the evidence of a completed institutional transaction is not the same as carrying a current guarantee — which is sufficient for a man who needs a reason to march."
+
+Seeds outstanding from supplementary cycle (need full 5-act vignette treatment):
+- CRL-S02: "The Archpriest's Receipt" — Avignon financial ledger, forty thousand crowns as charitable disbursements
+- CRL-S03: "Ruffin's Passport" — Welsh captain's Cardinal safe conduct, authenticated copy
+- CRL-S04: "The Knolles Commission" — Gascon lieutenant's English authorization, BDX registry
+- CRL-S05: "The Cardinal's Roster" — twelve companies who promised to leave and didn't, farmhouse recovery
+- CRL-S06: "The Jacquerie Account" — three knights' suppression record, dying archivist, Périgord priory
+- CRL-S07: "The Pope's Guarantee" — Urban V's sealed absolution letter, killed captain's lieutenant, BDX courier
+
+---
+
+## LIL — Chronicles of Froissart, Supplementary 1367 Cycle (Berners transl.)
+
+**Processed 2026-05-31** — LIL-02 spec complete (The Company's Letter, Bordeaux→Beaulieu-en-Périgord). Supplementary cycle written; four admin updates applied. New nodes: BDX (Bordeaux), PER (Périgord forest road), SRL (Beaulieu-en-Périgord). See LIL-froissart-berners.md, Supplementary Cycle section.
+
+Theme: "The document creates law between parties who acknowledge no common authority — the routier's safe-conduct as the only agreement both sides will honor."
+
+Seeds outstanding from supplementary cycle (need full 5-act vignette treatment):
+- LIL-S02: "The Ransom Installment" — French treasury transfer, BDX registry
+- LIL-S03: "The Dinner Protocol" — Poitiers seating order, night of Sept 19 1356
+- LIL-S04: "The Prince's Son" — Richard of Bordeaux birth record, Jan 6 1367
+- LIL-S05: "The Chronicler's Draft" — Froissart manuscript to Flanders
+- LIL-S06: "The Herald's Patent" — corrected credential before Pyrenees crossing
+- LIL-S07: "The Road Back from Nájera" — du Guesclin combined ransom letter, BDX → Burgos
+
+---
+
+## BGW — Arabian Nights (Burton), Supplementary 1367 Cycle (Alf Layla wa-Layla, Burton tr. 1885)
+
+**Processed 2026-05-31** — BGW-S08 spec complete (The Caliph's Own Copy, CAI→ALE→WM). Supplementary Cycle 2 written; four admin updates applied. Source drawn from memory (size gate: ~983 KB). Harun al-Rashid section as primary focus; annotator identified as al-Mutawakkil I (Cairo Abbasid Caliph, r. 1362–1363, d. 1363). New nodes added: CAI (Cairo Sufi hospice and booksellers' quarter). ALE (Alexandria Genoese factor's house) was already in Location Grid. See BGW-arabian-nights-burton.md Cycle 2.
+
+Theme: "The margin is the only place the diminished heir of a great institution can speak honestly about what the institution has become; the stories that celebrate the height of the caliphate are most revealing when annotated by the man who holds the title with none of the power; what he wrote there he addressed to no one, which is why it is the only honest thing in the record."
+
+Seeds outstanding from supplementary cycle (need full 5-act vignette treatment):
+- BGW-S09: "The Barmakide Catastrophe" — Jafar the Barmakide's executed loyalty; estate inventory of the last family member; Damascus legal archive
+- BGW-S10: "The Sultan's Night Walk" — Mamluk military handbook for nocturnal city patrols; the security apparatus that makes Harun's method indirect
+- BGW-S11: "The Fisherman's Blessing" — Cairo mosque inscription crediting Harun for the fisherman's fortune; possible Abbasid administrative payment record
+- BGW-S12: "The Good Voice Behind the Locked Door" — Cairo musician's family claim to the melodic composition Harun heard; Baghdad monastery manuscript
+- BGW-S13: "Masrur's Account" — Baghdad court chronicle; executioner's brief biography and single direct deposition
+- BGW-S14: "The Last Baghdad Caliph's Letter" — al-Musta'sim's 1257 diplomatic letter to Hulagu Khan; Persian translation in Tabriz archive
+
+---
+
+## CAI — Arabian Nights (Lang), Supplementary 1367 Cycle (Alf Layla wa-Layla, Lang adaptation 1898 — Galland/Syrian tradition)
+
+**Processed 2026-05-31** — CAI-S08 spec complete (The Collector's Codicil, ALP→LAT→WM). Supplementary Cycle 2 written; four admin updates applied. Source part 1 of 4 read; Preface and frame narrative confirmed. Aladdin present in this tradition but not in Burton (Galland/Diyab oral tradition). Angle: the hakawati oral tradition of Aleppo; the problem of first inscription; the codicil that names the tradition-holding families. New nodes: ALP (Aleppo storytellers' quarter), LAT (Latakia Syrian port). See CAI-arabian-nights-lang.md Cycle 2.
+
+Theme: "The written record of an oral story captures the text but severs it from the tradition that produced it; the codicil that names the tradition is the only document that keeps the origin attached to the text when it travels; without it the story belongs to the writer; with it the story carries its own genealogy; the archive that creates a new category to receive it is the only institution that can keep both layers true."
+
+Seeds outstanding from supplementary cycle (need full 5-act vignette treatment):
+- CAI-S09: "The Lamp Boy's Line" — Damascus court dispute over oral performance rights; first legal record treating an oral story as property
+- CAI-S10: "Diyab's Variant" — the Aleppo-specific Aladdin; Armenian scholar's private letter
+- CAI-S11: "Umm Sulayman's Six Variants" — same story, six performance contexts, six emphases
+- CAI-S12: "The Hakawati License" — Mamluk market administrator's commercial rights license for a storyteller
+- CAI-S13: "The Performance Notation" — first attempt to document story-context signals in written form
+- CAI-S14: "The Oral Genealogy" — four storytellers' transmission genealogies for the same story
+
+

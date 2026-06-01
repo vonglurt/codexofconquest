@@ -354,6 +354,371 @@ The fragment rests on the intake shelf, catalogued as a compound document. Both 
 
 ---
 
+## Cycle 2 — Supplementary 1367 AD Cycle — Angle: *The Collector's Codicil — What the written record owes to the tradition that produced it*
+
+---
+
+### What Cycle 1 Missed
+
+Cycle 1 treated the Arabian Nights as an already-existing manuscript tradition — a text that advocates could deploy, a story that could carry testimony inside its form. The Seven Viziers frame is the right lens for that treatment. It missed what distinguishes the CAI/Lang/Galland tradition most sharply from the BGW/Burton/Calcutta II tradition and what that distinction means in 1367.
+
+The stories that appear in the Lang collection but not in Burton's core manuscript — above all Aladdin — came to Galland not from any Arabic manuscript but from a Syrian Christian storyteller named Hanna Diyab of Aleppo, who told them to Galland orally in Paris in 1709. There is no prior Arabic written text. The stories exist before Galland only as oral tradition, carried by professional storytellers — hakawati — who performed them in market squares, coffee houses, and caravanserais across the Syrian Levant.
+
+In 1367, this oral tradition is fully alive. It has never been written down. The stories that Diyab will eventually tell Galland are being told daily in Aleppo and Damascus by men and women whose trade is the story. No manuscript records their names. When someone finally writes down the stories, the text will travel as the writer's work, not as the tradition's.
+
+What Cycle 1 missed: the oral origin of the collection's most famous contents, and the problem that first inscription creates — not the theft of a story but the vanishing of the tradition that held it. The written text captures the plot and loses the genealogy. The only remedy is a codicil: a document, written by the collector himself, that says who told it, and from whom they learned it, and what community of voices made the thing.
+
+---
+
+### Pass 1 — Full Telling (Supplementary 1367 Focus)
+
+The professional storyteller — the hakawati — is a figure of the Syrian and Egyptian Levant with a history as long as the stories themselves. He (or she: the women's tradition tells stories in the private quarter, the men's tradition performs in the coffee house and market square) carries a repertoire, not a text. The repertoire is transmitted mouth to ear across generations, adapted for each audience, cut for time and extended for a rapt room, flavored with local reference and occasional contemporary political commentary. There is no written version because the written version would be the wrong kind of thing — a script for a performance that is not a script-based art.
+
+When the Galland/Lang tradition says "Aladdin" it is naming the written crystallization of a story that the hakawati tradition had been carrying for an unknown number of generations before Galland heard it from Diyab. In 1367, three and a half centuries before that crystallization, the story has never been a text. It is what it always was: a performance, a transmission, a professional asset belonging to the storytellers who know it.
+
+A Syrian Christian scholar named Yusuf al-Halabi spent thirty years recording oral stories from the Aleppo hakawati community. He was a physician who read Arabic and Syriac and some Latin, who had a private library and a methodical mind, and who understood that the stories being performed in the market square and in the women's quarter had never been written down and might not survive the century's disruptions — the plague, the Mamluk administrative consolidations, the gradual suppression of public storytelling in certain contexts. He wrote them down as he heard them. He was careful: he named the storytellers who told him each story; he noted the version variations he had heard from multiple tellers; he wrote a codicil to the manuscript saying what the manuscript was and was not.
+
+The codicil says: these stories are not mine. I wrote them as I heard them. The hakawati families of Aleppo — the al-Rashid family, the Diyab family, the family of Umm Sulayman in the women's quarter — are the true authors. Their ancestors were the true authors. Any copy made of these stories must copy also this attestation, because without the attestation the copy will travel as my work rather than theirs, and that is not what happened.
+
+Yusuf al-Halabi died in October 1367. His family — his son Jirjis and his nephews — immediately received an offer from a Venetian manuscript dealer named Girolamo, who had been watching Yusuf's work for two years and had a Florentine patron willing to pay for authentic Syrian oral tales. The family agreed to sell. The codicil is what Girolamo wants removed before sale — it redirects credit from the collector to unnamed oral tradition, and unnamed oral tradition does not fetch the price that a named Aleppo physician-scholar does.
+
+Fatima bint Sulayman — granddaughter of Umm Sulayman, a hakawati performer in the women's quarter, one of the named tradition-holders in Yusuf's codicil — had been Yusuf's closest reader-collaborator for the last five years. He gave her the manuscript three days before he died. She will not let Girolamo have it without the codicil intact.
+
+---
+
+### Pass 2 — Slower: The Oral Tradition and Its Gap
+
+The stories in the CAI/Lang tradition that are specific to the Galland/Syrian lineage share a formal quality: they are more loosely plotted than the Burton/Calcutta II stories, they depend more heavily on the performance intelligence of the teller, and their geography is consistently vague — "China," "Persia," "a city in the East" — in a way that the Baghdad-specific Harun al-Rashid stories are not. This is the mark of the oral tradition: the geographic frame is a placeholder that each local teller fills in from their own world, and the plot's specific features are the stable core that the performance tradition protects.
+
+What the oral tradition does with these stories that a manuscript cannot replicate: the pause before the lamp is rubbed; the audience's collective exhalation at the genie's appearance; the moment when the teller adjusts the story mid-performance because she can see in the audience's faces that the pacing is wrong. These things are not in any manuscript. The manuscript captures the stable core, not the performance intelligence.
+
+Yusuf al-Halabi's codicil does something no prior collector's document had done: it names the families. The al-Rashid family of the Aleppo market quarter has told the lamp story for at least four generations. The Diyab family — a Maronite Christian household in the eastern quarter — carries a related variant. Umm Sulayman's lineage carries the Camaralzaman story and the Peri Banu story in forms different from any written version Yusuf had seen. The codicil records these families, these distinctions, these variations. It is the genealogy of a living tradition.
+
+If the codicil is removed, the manuscript becomes a collector's composition. If it is retained, the manuscript becomes a record of an oral tradition naming its own holders.
+
+---
+
+### Pass 3 — The Elaborate Scene: Fatima Opens the Manuscript
+
+*A house in the Syrian Christian quarter, Aleppo, October 1367. Three days after Yusuf al-Halabi's death.*
+
+Fatima bint Sulayman has been in this room before — many times, sitting across from Yusuf at the reading desk while he read back to her what he had written from her performances. She always caught the mistakes: the places where he had compressed two versions into one without marking the distinction; the phrases that sounded like Arabic prose but were actually a performance cadence that only works spoken.
+
+She opens the manuscript to the codicil — the last pages, in Yusuf's finest hand, the ink darker and denser than his usual.
+
+She reads the names. Her grandmother's name: *Umm Sulayman bint Rashida al-Halabiyya, who told the story of the prince and the fairy for forty years and knew six variants.* She reads the footnote her grandmother's name carries: a specific phrase that appears in the Peri Banu story — "the house was underground but the light inside it came from somewhere else" — that Umm Sulayman had said was handed down from a teller who had it from a teller who had it from the story's origin, wherever that was.
+
+Fatima runs her finger along the line. "The light came from somewhere else." She has been saying this phrase since she was seven years old. Her grandmother taught it to her. Now it is in a manuscript.
+
+She closes the codicil page. She thinks about what it means that the phrase is now in a manuscript: that it is now portable, separable, capturable. It can be copied without Umm Sulayman's name. It can travel to Florence in a box, and a Florentine reader will read it and not know where it came from.
+
+The codicil is the answer to that problem. The codicil is the only thing that travels with the phrase and keeps the origin attached to it.
+
+She wraps the manuscript and takes it to the chest where Yusuf told her it belonged.
+
+---
+
+### Seven Storyline Ideas
+
+1. **"The Collector's Codicil"** — **(MAIN QUEST CAI-S08)** Fatima bint Sulayman, Aleppo hakawati performer, holds the manuscript of dying collector Yusuf al-Halabi — three oral stories written down with a codicil naming the storyteller families who own the tradition. A Venetian manuscript dealer wants the manuscript without the codicil. Fighter escorts the manuscript (codicil intact) from Aleppo to a neutral archive.
+
+2. **"The Lamp Boy's Line"** — The hakawati al-Rashid family of Aleppo can trace their telling of the proto-Aladdin story back five generations through oral attestation only. A Damascus court is hearing a dispute over who has the right to perform certain stories commercially in the Aleppo market — a rights dispute unusual for 1367 because it requires assigning ownership to an oral tradition. The court document created by the dispute is the first legal record in Arabic that treats an oral story as property. Fighter escorts it to a neutral archive.
+
+3. **"Diyab's Variant"** — The Diyab family of Aleppo tells a version of the Aladdin story in which the sorcerer is not African but Syrian — a figure from the eastern Syrian hills — and the lamp boy's city is recognizably Aleppo. This variant is closer to the story's oral origin than Galland's cosmopolitan version. An Armenian scholar in Aleppo has written down the Diyab variant in a private letter to a colleague. Fighter escorts the letter.
+
+4. **"Umm Sulayman's Six Variants"** — Yusuf al-Halabi's notes document six variants of the Peri Banu story as told by Umm Sulayman. Each variant represents a different performance context — wedding, death house, market square, women's gathering. The variants are different not in plot but in emphasis: the wedding version focuses on paradise's bounty; the death-house version focuses on what the fairy provides that the sultan cannot; the market-square version emphasizes the old woman's intelligence. The notes document the same story as a performance instrument, not a fixed text. Fighter escorts the notes.
+
+5. **"The Hakawati License"** — A Mamluk market administrator in Damascus has issued a license to a professional storyteller granting him exclusive commercial rights to perform certain stories in a specific market district. The license is a legal document. It implicitly establishes that stories can be owned, that performance rights are transferable, and that the administrative state has authority over oral tradition. Fighter escorts the precedent-setting document to an archive before a second administrator uses it to suppress a competing storyteller family.
+
+6. **"The Performance Notation"** — A Syrian musician who accompanied the hakawati performances in the Aleppo coffee houses has notated the specific melodic phrases used to signal different story moments — the phrase that signals magic approaching, the phrase that signals a bargain being struck, the phrase that signals the story is entering its final movement. The notation is not musical notes but a descriptive system — the first attempt to capture the performance context of a story in written form. Fighter escorts the notation.
+
+7. **"The Oral Genealogy"** — In the Aleppo hakawati tradition, each storyteller can recite their lineage of teachers going back to the origin of each story. This recitation — the genealogy — is itself performed before the story begins, in shortened form for market performances and in full for formal guild occasions. An Aleppo scholar has recorded the full genealogy of the lamp-boy story as performed by four storytellers. The document is four columns: four different genealogies for the same story's transmission. Fighter escorts it.
+
+---
+
+## Theme Check
+
+**Existing themes to avoid** (all from quest-map.md, including CAI Cycle 1 addition): loyalty under long watch; grief in an object; honor vs. shame; love and fate; posthumous truth; healing through hostile law; the hunted carrier; ancient witnesses; corruption/mercy; fate through broken things; heroism without shelter; invitation as weapon; the ransoming poem; the one who won't weep; love refusing loss; the martyr's death-command; the prophecy that changes nothing; the original fire; anonymous reparation; the compelled traitor; the silenced victim; the cracked relic; the enemy's timing strategy; the condemned's right to be heard; the impossible witness; the champion's erased near-disaster; mercy-before-the-seal; the son's flight; **authorship as claim** (DQX — the confiscated text returned to its author); the wound as witness; divine vs. human record; the debt to the dead; the last just act; the bound man's incomplete transmission; the enemy made your monument; the army as self-electing republic; the final letter as last act of clarity; the comparison as meaning; the collection as built survival (BGW Cycle 1); the document authenticating an inconvenient prior relationship (BEY Cycle 2); the margin as honest speech (BGW Cycle 2); **the story told to delay an execution as accumulated evidence** (CAI Cycle 1).
+
+**CAI Cycle 2 theme chosen**: *The written record of an oral story captures the text but severs it from the tradition that produced it; the collector who writes down what he hears has created a new kind of ownership where none existed before; the codicil that names the tradition is the only document that keeps the origin attached to the text when the text begins to travel; without it, the story belongs to the writer; with it, the story carries its own genealogy.*
+
+This is distinct from all listed themes. The nearest neighbors are "authorship as claim" (DQX — a written text confiscated and returned; the author already exists) and "the compiled record is not a lie" (BEY Cycle 1 — a compiler who stops at the evidence; the question is about the compiler's honesty, not about the origin of what is compiled). Neither covers: the moment of first inscription as the creation of authorship where none previously existed; the problem of the oral tradition whose text can travel further than its tellers; the codicil as the document that counteracts inscription's natural tendency to erase what it captures.
+
+---
+
+## 5-Act Vignette Play: *The Collector's Codicil*
+
+### The Token
+
+*The Collector's Manuscript — three Syrian oral tales written down by Yusuf al-Halabi, physician of Aleppo, over thirty years from direct performance; bound in leather, with a codicil in Yusuf's finest hand naming the al-Rashid family, the Diyab family, and the family of Umm Sulayman bint Rashida as the tradition-holders for each story, their genealogies of transmission going back four generations, and a clause: "any copy made of these stories must copy also this attestation." Given by Yusuf to Fatima bint Sulayman three days before his death in October 1367.*
+
+---
+
+**ACT I**
+
+*The Collector's Manuscript — on a cedar chest — at Fatima bint Sulayman's house in the Aleppo Syrian Christian quarter, morning.*
+
+Fatima is not a scholar. She cannot read Arabic fluently — she knows certain phrases because they appear in performances, and she knows the codicil well enough to confirm it is intact because she helped Yusuf compose it over three sessions five years ago. She is a performer; her instrument is her voice and her body and thirty years of knowing how a room feels when a story is working.
+
+She is also precise. She has decided what she wants and she has thought through the alternatives. The manuscript needs a neutral archive. Not Venice — Girolamo will remove the codicil. Not Damascus — the Mamluk administration will classify it as market-regulation material. Not a monastery — the Maronite monastery will hold it well but will not allow access by the storyteller community who might want to use the codicil as a legal document someday. A northern archive with no commercial or administrative stake in the Aleppo market.
+
+She describes what is in the codicil with the precision of someone who knows why every phrase matters. She says: "The codicil names my grandmother. My grandmother taught me. The line goes back further than she told me. This manuscript is the first place any of that is written. It has to stay with the stories, or the stories will forget where they came from."
+
+*— She is not asking for the Fighter to understand the storytelling tradition. She is asking for something specific: a carrier who understands that the codicil is not the appendix, it is the point.*
+
+> **Skill Check: Insight DC 12.** Read that Fatima is testing whether the Fighter grasps the relationship between the manuscript and the codicil — that she will not release the manuscript to someone who thinks the stories are the important part.
+
+**Fail:** She gives the Fighter the manuscript wrapped in linen and says nothing further. The codicil is inside. If asked about it on the road, the Fighter has no context to explain it.
+
+**Pass:** She opens the manuscript to the codicil and reads one passage aloud — the phrase "the light inside it came from somewhere else" and the footnote naming her grandmother. She closes it. She says: "Take it to an archive. The codicil must be the first thing they read. Not the last." She hands over the manuscript with both hands.
+
+**TOKEN GRANTED: The Collector's Manuscript** — leather-bound, three oral tales with codicil, Yusuf al-Halabi's hand throughout; the codicil is the last quire, in finer ink, naming three families and their genealogies of transmission.
+
+---
+
+**ACT II**
+
+*The Collector's Manuscript — in the pack — on the road west from Aleppo, midday.*
+
+Jirjis al-Halabi — Yusuf's son, a cloth merchant of forty, practical and not hostile — is on the road with his two cousins. He knows Fatima has the manuscript; he knows she gave it to a carrier this morning. He has intercepted the road.
+
+He is not threatening. He is making an economic argument. The manuscript is part of his father's estate. Girolamo has offered forty gold coins. His father's wishes were complex and he respects them, but forty gold coins is what it takes to pay his father's debts and keep the workshop open. The codicil — he acknowledges its existence without anger — reduces the manuscript's value by attributing it to unnamed oral tradition. A manuscript with named authorship is more valuable.
+
+He is right about the economics. He is wrong about the attribution: Yusuf's codicil names the families precisely so the attribution is not unnamed. But Jirjis reads the codicil as deauthorizing his father rather than honoring the tradition.
+
+*— He can be reasoned with. He is not a villain; he is a son with debts and a practical mind.*
+
+> **Skill Check: Persuasion DC 13.** Make the argument Yusuf himself would have made: the codicil increases the manuscript's value to the kind of institution that will still be holding it in a hundred years, because it makes the manuscript a document of a living tradition rather than a collector's compilation; Girolamo wants to sell it to a Florentine humanist who will pay once and that is the end; a neutral archive will cite it, reference it, and protect it — the codicil is not a defacement but a provenance.
+
+**Fail:** Jirjis asks for three days to consult with Girolamo about whether the codicil could stay. He is not blocking the road — he is asking for time. The Fighter must decide: wait three days, or take the western route through the hills that adds a day but avoids this road.
+
+**Pass:** Jirjis is quiet for a while. He knows what Girolamo will do with the codicil. His father knew it too. "He wanted the stories to remember their names," he says. He steps aside. He does not look entirely at peace with it.
+
+**TOKEN CHECKED.**
+
+---
+
+**ACT III**
+
+*The Collector's Manuscript — in the pack — at the Latakia harbor, afternoon.*
+
+Girolamo is at the harbor loading his purchased materials for Venice. He has already bought seven manuscripts this trip; the Yusuf al-Halabi collection was the last item on his list, and the news that Fatima has given it to a carrier has reached him through Jirjis's cousin. He is not panicking — he is a professional.
+
+He intercepts the Fighter on the quayside. He is direct: he wants the manuscript. He offers fifty gold coins — more than he offered the family. He makes no mention of the codicil in his opening offer.
+
+When the Fighter declines, he makes the codicil explicit. He explains, without hostility, that his Florentine patron wants a manuscript of Syrian oral tales attributed to a named Syrian collector — that is what he contracted for. A manuscript attributed to unnamed oral-tradition families in Aleppo is not what his patron ordered. He would like to see the codicil; he believes it was added after the collector's death and is not part of the original work.
+
+He is lying about the last point. He knows the codicil is Yusuf's hand.
+
+*— He is lying specifically and can be caught in it. The codicil's ink is the same throughout; the hand is consistent; Fatima's testimony about its composition is available.*
+
+> **Skill Check: Deception DC 13.** Deny that the codicil is separate from the original work — and do so with the specific evidence: Yusuf's hand is consistent, the ink is the same, Fatima was present during its composition. This is not deception in the sense of lying; it is preventing Girolamo from establishing a false premise he could use in a legal challenge later.
+
+**Fail:** Girolamo calls his hired man over — not threatening, but establishing presence. He says he will file a commercial prior-acquisition claim at the harbor master's office; under Venetian commercial protocol as applied in Levantine ports, a declared prior intent to purchase establishes a temporary hold on a manuscript in transit. He files the hold; the Fighter must leave Latakia immediately before the hold is registered, or wait four days.
+
+**Pass:** Girolamo does not pursue the legal argument. He looks at the Fighter for a moment and makes one more offer — sixty coins. When this is also declined, he nods. "Tell the archive the attribution's documented," he says. He turns back to his loading. He will find another Syrian collection. He is not a monster; he is a professional who has accepted that this particular manuscript is not going where he wanted.
+
+**TOKEN CHECKED.**
+
+---
+
+**ACT IV**
+
+*The Collector's Manuscript — in the pack — at sea, two days west of Latakia.*
+
+A Catalan merchant named Guillem, traveling to Genoa on the same vessel, has been reading his own manuscript in the open air on the second day. The Fighter passes him. He looks up and says, in rough Arabic, that he smells old paper — and does the Fighter have a manuscript? He is curious, not threatening; he is a man who likes stories.
+
+In conversation, it emerges that Guillem knows the lamp-boy story. He has known it since childhood. His mother was from Valencia; her mother was from a Catalan family that had been in the eastern Mediterranean trade for three generations. He heard the lamp-boy story from her in Catalan. He has never seen it in any Arabic manuscript.
+
+He asks the Fighter: does the manuscript contain a story about a lamp and a boy who inherits it? If so, is the name in the text?
+
+*— He is raising a genuine question. If the manuscript names the Aleppo families, his Valencian family's version of the story is not in the attribution. Multiple oral traditions can carry the same story. The codicil is specific to Aleppo, and Guillem's family's version might be equally legitimate.*
+
+> **Skill Check: History DC 12.** Explain the nature of oral transmission: the same story can exist in multiple independent traditions simultaneously; the codicil's attribution to Aleppo families does not claim exclusive origin for the story, it documents the specific version that was written down in this manuscript; other versions with other origins can and should be documented separately; what the codicil prevents is the false claim that the version in this manuscript was invented by a single collector — it was not; it was transmitted by these families; the Valencian version was transmitted by other families.
+
+**Fail:** Guillem is not fully satisfied. He writes a note on his own paper and asks the Fighter to pass it to whoever receives the manuscript. The note claims the Valencian version of the story has equal right to attribution. The Fighter must decide whether to carry the note.
+
+**Pass:** Guillem nods. He has been wondering for a long time whether the lamp-boy story had any written record. He asks one more question: is there a name in the codicil for the storyteller who told it the way he heard it — the version where the boy's mother does all the sensible things and the boy mostly gets lucky? The Fighter doesn't know. "The sensible-mother version," Guillem says. "It's what all the Catalan traders tell their daughters. Someone in Aleppo must have told it that way too." He returns to his manuscript. He doesn't press the point further.
+
+**TOKEN CHECKED.**
+
+---
+
+**ACT V**
+
+*The Collector's Manuscript — in the pack — at the Weimar archive intake desk, Archivus Sweelinck, afternoon.*
+
+The Archivus opens the manuscript and begins with the first story. He reads two pages and turns to the codicil, which is marked with a cord. He reads the codicil in its entirety. He sets the manuscript down.
+
+"This is a collector's manuscript with an attribution codicil." He looks at the manuscript. "The collector has attributed the stories to the oral tradition he collected from rather than to himself." He looks up. "I have never received this before."
+
+He opens his intake form. He turns to a fresh page. He turns back.
+
+"I do not have a classification for this. A manuscript attributed to a named author goes here." He touches one column. "An anonymous manuscript goes here." He touches another. "A manuscript attributed to an oral community of named families with documented transmission lineages goes—" He looks at the blank space. "Nowhere. I do not have a category."
+
+*— He is not refusing to receive it. He is noting, precisely, that the codicil has created a problem for his intake system that reveals a gap in the system. The gap is also a description of what is valuable about the codicil.*
+
+> **Skill Check: Investigation DC 12.** Propose a classification: this manuscript is neither "author's work" (the named collector explicitly disclaimed authorship) nor "anonymous" (the origin is precisely documented) but something the archive's categories do not yet contain. Propose a new category: "Oral tradition — documented transmission, named lineage, scribe-transcribed." The existence of the gap is itself information: it means no one has previously received a manuscript with this kind of attribution. This is the first one.
+
+**Fail:** The Archivus files it under "Collector's compilation — Syrian oral tales, Aleppo, attributed per codicil to three named families; classification pending review." The codicil is not lost; it is not fully integrated. The classification will be created eventually.
+
+**Pass:** The Archivus listens to the proposed category. He writes it out: *Oral tradition — documented transmission; al-Rashid family, Diyab family, Umm Sulayman bint Rashida lineage of Aleppo; scribe-transcribed by Yusuf al-Halabi; codicil in collector's hand is primary identifying document.* He looks at what he has written. "This is the first entry in this category." He does not say: this means something. He does not need to.
+
+He marks the manuscript received, the codicil intact, the three families named. He closes the ledger.
+
+"The light inside it came from somewhere else," the Fighter says, repeating what Fatima said.
+
+The Archivus looks up. "That phrase is in the text?"
+
+"In the codicil. The grandmother's line."
+
+He opens the intake record and adds: *codicil includes performance phrase attributed to Umm Sulayman bint Rashida through four generations of oral transmission; marked for note in performance-tradition index.* He closes it again.
+
+"She is in the record," he says. "So is her grandmother."
+
+**TOKEN TAKEN: The Collector's Manuscript**
+
+The manuscript rests on the intake shelf in the first entry of a new category. The codicil is intact. Three families are named. The light inside it came from somewhere else, and now that is in the record too.
+
+---
+
+## Quest API Stub — CAI_002 — UQF v1.0
+
+```json
+{
+  "quest_id": "CAI_002",
+  "title": "The Collector's Codicil",
+  "source": "CAI",
+  "cycle": 2,
+  "book": "Arabian Nights — Alf Layla wa-Layla (Lang adaptation, 1898 — Galland/Syrian manuscript tradition)",
+  "source_episodes": [
+    "Preface: 'There were people whose profession it was to amuse men and women by telling tales. They dressed the fairy stories up, and made the characters good Mahommedans, living in Bagdad or India.'",
+    "Aladdin and the Wonderful Lamp: present in this tradition but not in Burton's Calcutta II manuscript — a story from oral Syrian tradition, first written down by Galland from the account of Hanna Diyab of Aleppo"
+  ],
+  "cycle_angle": "The Collector's Codicil — what happens when an oral story is written down for the first time, and what document can keep the tradition's name attached to the text when the text begins to travel",
+  "theme": "The written record of an oral story captures the text but severs it from the tradition that produced it; the collector who writes down what he hears has created a new kind of ownership where none existed before; the codicil that names the tradition is the only document that keeps the origin attached to the text when the text begins to travel; without it, the story belongs to the writer; with it, the story carries its own genealogy",
+  "token": {
+    "id": "CAI_002_TOKEN",
+    "name": "The Collector's Manuscript",
+    "description": "Three Syrian oral tales written down by Yusuf al-Halabi, physician of Aleppo, over thirty years from direct performance; leather-bound; codicil in finer ink naming the al-Rashid family, the Diyab family, and the lineage of Umm Sulayman bint Rashida as tradition-holders, with four-generation genealogies of transmission and the clause: 'any copy made of these stories must copy also this attestation.' Given to Fatima bint Sulayman three days before Yusuf's death, October 1367.",
+    "grant_act": "act_1",
+    "take_act": "act_5",
+    "check_acts": ["act_2", "act_3", "act_4"]
+  },
+  "nodes": ["ALP", "LAT", "WM"],
+  "new_nodes": [
+    {
+      "code": "ALP",
+      "name": "Aleppo — Storytellers' and Merchant Quarter",
+      "description": "Aleppo in 1367, under Mamluk administration: the Syrian Christian and Muslim quarters of the city, the coffee-house and market district where hakawati storytellers perform daily, the private courts of scholar-physicians who have been recording oral traditions for thirty years; a city where the stories have never been written and the people who carry them move between the market and the women's quarter and the caravan rest stops without any administrative record noting their profession; the smell of cedar resin, spice trade, and old paper in the physician's back room"
+    },
+    {
+      "code": "LAT",
+      "name": "Latakia — Syrian Mediterranean Port",
+      "description": "The port city on the Syrian coast, 1367, under Mamluk administration: the harbor where Venetian and Genoese factors load manuscripts and materials for European collections; the quayside where a professional manuscript dealer can intercept a carrier and make an offer in full view of the harbormaster; the last point where a manuscript in transit can still be redirected; the smell of salt and cedar and ink and the particular efficiency of a professional who has done this transaction many times before"
+    }
+  ],
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "ALP",
+      "type": "skill_check",
+      "activateNode": "ALP",
+      "missionAccept": "A hakawati performer in Aleppo holds a dying collector's manuscript of three oral tales with a codicil naming the storyteller families who own the tradition. A Venetian dealer wants it without the codicil. She needs a neutral carrier who understands that the codicil is not the appendix — it is the point.",
+      "scene": "Fatima bint Sulayman opens the manuscript to the codicil and reads a phrase aloud: 'the light inside it came from somewhere else.' She closes it. 'Take it to an archive. The codicil must be the first thing they read. Not the last.'",
+      "skillCheck": {
+        "skill": "Insight",
+        "dc": 12,
+        "failText": "She gives the manuscript wrapped in linen with no further guidance. The Fighter has no context for the codicil's significance if questioned on the road.",
+        "passText": "She reads the codicil passage and her grandmother's name to the Fighter before handing it over. 'My grandmother taught me. The line goes back further than she told me.'"
+      },
+      "grantItem": "The Collector's Manuscript",
+      "grantItemType": "mission_bit"
+    },
+    {
+      "act_id": "act_2",
+      "location": "ALP",
+      "type": "skill_check",
+      "scene": "Yusuf al-Halabi's son Jirjis intercepts the Fighter on the road west of Aleppo with two cousins. He has debts. A Venetian dealer offered forty gold coins. The codicil reduces the manuscript's commercial value by attributing it to oral tradition rather than named authorship. He is not hostile; he is making an economic argument.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "failText": "He asks for three days to consult with the dealer. The Fighter must wait or take the hill route adding a day.",
+        "passText": "He steps aside. 'He wanted the stories to remember their names.' He does not look entirely at peace with it."
+      },
+      "checkItem": "The Collector's Manuscript"
+    },
+    {
+      "act_id": "act_3",
+      "location": "LAT",
+      "type": "skill_check",
+      "activateNode": "LAT",
+      "scene": "Girolamo the Venetian manuscript dealer intercepts the Fighter on the Latakia quayside. He offers fifty gold coins. When declined, he claims the codicil was added after the collector's death and is not original to the manuscript. He is lying: the hand and ink are consistent throughout.",
+      "skillCheck": {
+        "skill": "Deception",
+        "dc": 13,
+        "failText": "He files a commercial prior-acquisition hold at the harbor master's office. The Fighter must leave Latakia immediately or wait four days.",
+        "passText": "He does not pursue the legal argument. He makes one more offer — sixty coins — and accepts the refusal. 'Tell the archive the attribution's documented.' He returns to his loading."
+      },
+      "checkItem": "The Collector's Manuscript"
+    },
+    {
+      "act_id": "act_4",
+      "location": "LAT",
+      "type": "skill_check",
+      "scene": "At sea, two days west of Latakia. A Catalan merchant named Guillem knows the lamp-boy story — learned in Catalan from his Valencian mother whose family were eastern Mediterranean traders. He asks if the manuscript names his family's version. The codicil attributes to Aleppo only. He raises a genuine complication: multiple oral traditions can carry the same story.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "failText": "Guillem writes a note claiming the Valencian version deserves equal attribution. The Fighter must decide whether to carry it.",
+        "passText": "Guillem nods. The codicil documents this version, not all versions. Other versions can be documented separately. 'The sensible-mother version,' he says. 'Someone in Aleppo must have told it that way too.' He does not press further."
+      },
+      "checkItem": "The Collector's Manuscript"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "scene": "Archivus Sweelinck reads the codicil and sets the manuscript down. He has never received a manuscript attributed to an oral community rather than to an author or anonymous source. His classification system has no category for it. The gap in the system is itself information. He needs a proposed classification.",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 12,
+        "failText": "Filed as 'Collector's compilation — Syrian oral tales, attributed per codicil to three named families; classification pending review.' The codicil survives but is not fully integrated.",
+        "passText": "The Fighter proposes: 'Oral tradition — documented transmission, named lineage, scribe-transcribed.' Sweelinck writes the three family names, adds the performance phrase from the codicil to the index, and notes: 'First entry in this category.' He closes the ledger. 'She is in the record. So is her grandmother.'"
+      },
+      "takeItem": "The Collector's Manuscript",
+      "questComplete": true
+    }
+  ]
+}
+```
+
+---
+
+## Outstanding Quest Seeds (Updated — Cycle 2)
+
+| ID | Title | Source Moment | Status |
+|----|-------|---------------|--------|
+| CAI-S08 | The Collector's Codicil | Hakawati oral tradition; proto-Aladdin; first inscription and the codicil that names the source | **Fully spec'd above (Cycle 2)** |
+| CAI-S09 | The Lamp Boy's Line | Damascus court dispute over oral performance rights; first legal record treating an oral story as property | Seed |
+| CAI-S10 | Diyab's Variant | The Aleppo-specific version of the Aladdin story; Armenian scholar's private letter | Seed |
+| CAI-S11 | Umm Sulayman's Six Variants | Six performance contexts for the Peri Banu story; same plot, six distinct emphases | Seed |
+| CAI-S12 | The Hakawati License | Mamluk market administrator's license granting commercial rights to an oral storyteller | Seed |
+| CAI-S13 | The Performance Notation | Syrian musician's descriptive notation of performance signals; first attempt to document story context | Seed |
+| CAI-S14 | The Oral Genealogy | Four storytellers' transmission genealogies for the same story; four columns, four origins | Seed |
+| CAI-S15 | The Ring Exchange | Sleeping prince and sleeping princess — each transported by rival spirits to lie beside the other — exchanged rings without waking; each found an unknown ring in the morning and no one believed them; the pair of rings is evidence of a supernatural event that left no other trace | Seed |
+| CAI-S16 | The King's Letter in Blue | Sindbad carries King of Serendib's letter to Harun al-Rashid written "in blue characters upon a rare and precious skin of yellowish colour"; diplomatic document of unusual physical form | Seed |
+| CAI-S17 | The Barmecide Test | The Barmecide's documented method for identifying guests of genuine character: serve an imaginary feast with no real food; only someone who plays along with complete conviction earns the real meal; written account of the method | Seed |
+| CAI-S18 | The Glass Invoice | Alnaschar invested 100 drachmas in glass, built an elaborate daydream of marrying a vizier's daughter, then kicked the basket in his imagination-gesture and broke the glass in reality; the glass merchant's invoice for 100 drachmas of glass subsequently destroyed | Seed |
+| CAI-S19 | The Elephants' Graveyard Account | Sindbad's written account of how the elephants carried him to the Ivory Hill — the place where all elephants go to die, where tusks accumulate beyond counting; the first written record claiming to identify its location | Seed |
+| CAI-S20 | The Unfinished Window's Assessment | The jewelers' written report to the Sultan that the 24th palace window could not be completed even with all the jewels in the kingdom; the document that records an impossible commission | Seed |
+| CAI-S21 | The Boy Cadi's Verdict | The Caliph's written order commissioning a ten-year-old boy to judge the real Ali Cogia case after overhearing the child play-judge it correctly; the first recorded instance of a child appointed as judge by royal warrant | Seed |
+| CAI-S22 | The Ointment of Hidden Things | The dervish's small box of ointment: left eye reveals all hidden treasures; right eye causes permanent blindness; Baba-Abdalla demanded both be applied and lost his sight; the box survives | Seed |
+| CAI-S23 | The Talking Bird's Testimony | The Talking Bird's verbal revelation to the Sultan of the jealous sisters' plot — the testimony that freed the Sultana from seven years of public humiliation and reunited the royal family; written down afterward for the archives | Seed |
+| CAI-S24 | The Cucumber Instruction | The Talking Bird's written instruction to Princess Parizade: serve the Sultan a cucumber stuffed with pearls; the vehicle for the Bird's confrontation of the Sultan with his own credulity; the note from Bird to Princess | Seed |
+
+---
+
 ## Admin Update Notes
 
 ### quest-map.md — Add Theme Thread
@@ -387,5 +752,71 @@ Update CAI entry:
 In the Pipeline Queue table, update CAI row:
 
 | CAI | Arabian Nights (Lang) | 629 | **Processed 2026-05-31 — CAI_001 spec complete; CAI-02–07 seeds pending** |
+
+---
+
+### Part 2 Detailed Content (CAI-arabian-nights-lang.part2of4.txt — 1242 lines — COMPLETE)
+
+**Sindbad's Fourth Voyage** — Cannibal island (Sindbad feigns eating herbs while companions are eaten); invents saddle and stirrups for the island king; marries rich lady at king's command; buried-alive custom — both husband and wife entombed together at death; Sindbad kills fellow-entombed companions in the cave to take their food and light; escapes through a crevice following a small animal; gathers jewels from the cave floor (diamonds, rubies, emeralds, ambergris); rescued by ship and returns to Baghdad rich.
+
+**Sindbad's Fifth Voyage** — Builds own ship; merchants destroy a roc's egg, ignoring Sindbad's warning; parent rocs sink the ship with rocks dropped from altitude; Old Man of the Sea seizes Sindbad's shoulders and refuses to dismount; Sindbad ferments wine in a gourd, intoxicates the Old Man, escapes; coconut-gathering trick (throw stones at monkeys, they throw coconuts back). Returns to Baghdad.
+
+**Sindbad's Sixth Voyage** — A powerful current drives the ship to a fatal island; all companions starve; Sindbad builds a raft and floats down an underground river in darkness; cave walls are thick with diamonds, rubies, crystal, ambergris; emerges in Serendib (Sri Lanka). The king's letter to Harun al-Rashid is "written in blue characters upon a rare and precious skin of yellowish colour"; gifts include a ruby vase filled with pearls, a huge snake skin, aloes, camphor, pistachio, and a beautiful slave. Caliph satisfied.
+
+**Sindbad's Seventh Voyage** — Caliph commands Sindbad to return to Serendib with reply; pirates capture him; sold as slave; discovers the Elephants' Graveyard (Ivory Hill) — the elephants carry him there deliberately, recognizing he means no harm; their tusks accumulate there in quantities beyond counting; the merchant gives Sindbad his freedom and fortune in ivory.
+
+**The Little Hunchback — conclusion** — The Sultan of Kashgar hears all the stories (tailor, Jewish doctor, purveyor, Christian merchant, barber, barber's brothers). He sends for the barber. The barber is found, now at least ninety, and brought before the Sultan. The barber examines the "dead" hunchback, draws a small case of medicines from his pocket, rubs balsam ointment on the neck, opens the mouth with pincers, draws out the fish bone. The hunchback sneezes, stretches, opens his eyes. The Sultan orders the history written in letters of gold. The tailor, doctor, purveyor, and merchant each receive robes from the royal wardrobe. The barber receives a pension and is kept at court.
+
+**Barber's Fifth Brother (Alnaschar)** — Invests 100 drachmas in glass goods, then builds an elaborate fantasy: selling the glass → investing → growing rich → marrying the Grand Vizier's daughter → mistreating her to show his independence → kicking her away. In the middle of this fantasy, he acts out the kick — and destroys the actual basket of glass. Subsequently: an old woman leads him to a rich house where a black slave strips him of his gold; he escapes; later kills the household that robbed him; discovers a lady with coffers of gold; arrested for theft; exiled.
+
+**Barber's Sixth Brother (Schacabac / Barmecide Feast)** — Schacabac, a beggar, is received at the mansion of the Barmecide. The Barmecide offers a complete imaginary feast — bread, dishes, wine — with no actual food. Schacabac plays along entirely, pretending to eat, drink, and be merry. When the Barmecide offers imaginary wine so many times that Schacabac pretends to be drunk, he strikes the Barmecide hard enough to knock him down. The Barmecide laughs: he has been testing for a guest of genuine character. Real food and wine are produced; Schacabac lives as a favored member of the household for twenty years. After the Barmecide's death without heirs, all property goes to the prince; Schacabac is despoiled and enslaved by Bedouin until rescued by the barber.
+
+**Prince Camaralzaman and Princess Badoura** (the longest story in Part 2, ~600 lines) — A Persian island prince refuses to marry; a Chinese king's daughter likewise refuses. The fairy Maimoune and the evil genie Danhasch wager which mortal is more beautiful; they transport the sleeping princess from China to lie beside the sleeping prince in his tower. Each wakes briefly, sees the other, and falls back asleep — but first each takes the other's ring. They each wake alone, each convinced the other was real, each locked in their conviction against all argument; each imprisoned or confined for appearing mad. Marzavan, the princess's foster-brother, travels for four months to find the prince; the prince disguises himself as an astrologer and cures the princess by sending in her own ring; she recognizes him and the cure is effected; they marry. Traveling back toward the prince's kingdom, a bird steals the princess's cornelian talisman from the prince's open palm; he follows the bird for eleven days through hill and dale; the bird is eventually killed by two other birds (who had witnessed it commit murder, buried the victim, then returned with the murderer and executed it) — the talisman falls from the dead bird's body. Camaralzaman stranded in a city of idolaters; befriended by an old gardener; discovers a cave under the garden with 50 bronze jars of gold dust; loads gold into 50 olive jars to smuggle it out; misses his ship because the gardener dies and must be buried. Meanwhile the Princess Badoura (disguised as Prince Camaralzaman) arrives at the Ebony Island; the king offers her his daughter; she accepts and rules as king; finds the talisman in the purchased olive jars; sends the ship back for the prince; reunion in the palace; King Armanos is told the truth; Camaralzaman is made king of the Ebony Island; both queens (Badoura and Haiatelnefous) present him with sons.
+
+**Noureddin and the Fair Persian (beginning — continues into Part 3)** — Two viziers of Balsora argue about marriages; Khacan is commissioned to find a slave of perfect beauty, wit, and wisdom for the king at 10,000 gold pieces; he finds the Fair Persian and keeps her at home for two weeks to recover from travel; his son Noureddin falls in love; takes advantage of the mother's absence at the bath; Khacan is disgraced but forgives Noureddin on condition he treat the Persian as a wife, never sell her; Khacan dies warning Noureddin never to sell. Noureddin dissipates his entire inheritance in a year of feasting with false friends who abandon him when the money is gone; sells slaves, furniture; finally agrees to sell the Fair Persian. At the slave market, the enemy vizier Saouy tries to buy her; Noureddin beats him in public; Saouy lies to the king; Noureddin and the Persian flee to Baghdad; find themselves outside the Caliph's garden; the door-keeper Scheih Ibrahim takes them in as a favor; they light all 80 candles and all lustres in the pavilion; the Caliph Haroun al-Rashid, seeing the pavilion blazing from his palace window, goes to investigate disguised as a fisherman... *[cut to Part 3]*
+
+**Seeds extracted from Part 2 content**: CAI-S15 (Ring Exchange), CAI-S16 (King's Letter in Blue), CAI-S17 (Barmecide Test), CAI-S18 (Glass Invoice), CAI-S19 (Elephants' Graveyard Account).
+
+**Part 2 status**: COMPLETE.
+
+---
+
+### Part 3 Detailed Content (CAI-arabian-nights-lang.part3of4.txt — 1305 lines — COMPLETE; contains END OF BOOK)
+
+**Noureddin and the Fair Persian — conclusion** — The Caliph Haroun al-Rashid, still disguised as a fisherman, hears Noureddin's full story over supper in the pavilion; writes him a letter to the King of Balsora to restore his position. Noureddin leaves immediately. The Fair Persian is placed in the palace under Zobeida's care. Noureddin arrives in Balsora and presents the letter at court; the treacherous vizier Saouy swallows the validation formula from the top of the letter so it has no legal force, then has Noureddin imprisoned and beaten within an inch of his life. The Caliph hears the Fair Persian lamenting, realizes he never sent the patent; dispatches Giafar at full speed to Balsora. Giafar arrives just as the execution is about to proceed; Saouy is bound with the same cords; all three (king, Saouy, Noureddin) return to Baghdad. The Caliph offers Noureddin the right to execute Saouy himself — Noureddin declines; the executioner does it. Noureddin declines the throne of Balsora and becomes a court intimate; lives long and happily with the Fair Persian.
+
+**Aladdin and the Wonderful Lamp** — (Complete, ~250 lines.) Lazy boy in unnamed Chinese city; Moroccan sorcerer poses as uncle; underground cave with a garden of fruit-trees (fruits are gems); lamp genie and ring genie; the princess Badr al-Budur; palace built overnight with 24 jeweled windows (one intentionally unfinished, left for the Sultan to complete — he cannot even with all the royal jewels; Aladdin has the genie finish it); "new lamps for old" — the sorcerer's scheme works because the lamp is left on a cornice while Aladdin hunts; genie transports palace and princess to Africa; Aladdin finds her using ring genie; princess poisons sorcerer by putting Aladdin's powder in the wine cup; lamp recovered; palace returned. The sorcerer's younger brother disguises as the holy woman Fatima (murders the real Fatima); recommends that a roc's egg be hung from the dome; lamp genie reveals the plot and would have punished Aladdin but recognizes it came from the impersonator; Aladdin kills the false Fatima; the couple live in peace; Aladdin succeeds the Sultan.
+
+**The Adventures of Haroun-al-Raschid — frame story** — The Caliph bored; Giafar reminds him he has pledged to observe justice in disguise once a week. They go out. Two encounters: (1) a blind beggar who demands to be struck by anyone who gives him alms; (2) a young man who flogs his horse savagely every day. Both are ordered to appear at court next evening.
+
+**The Story of the Blind Baba-Abdalla** — Man with 80 camels returns from Balsora; dervish leads him to a hidden treasure sufficient to fill all 80 camels many times over. Baba-Abdalla manipulates the dervish into surrendering his 40-camel share through three successive "can't you see the burden is too much for a holy man" approaches, taking all 80 camels. Then demands the box of ointment: left eye reveals all hidden treasures; right eye causes permanent blindness. He insists it be applied to the right eye; goes blind; the dervish walks away with the 80 camels. Now penance: demands a blow from every alms-giver.
+
+**The Story of Sidi-Nouman** — Marries a woman who eats only a few grains of rice with a pin; follows her at midnight; finds her in a cemetery eating a corpse alongside a female ghoul. Confronts her; she turns him into a dog with water-spell. As a dog, detects counterfeit coins at a baker's shop (becomes famous for it). A woman leads him to her daughter, a counter-magician who breaks the spell with water. Daughter turns the wife Amina into the horse Sidi-Nouman was flogging — punishment for transforming an innocent man.
+
+**The Story of Ali Cogia** — Merchant planning pilgrimage to Mecca hides 1,000 gold pieces in a vase of olives, leaves it with a trusted friend; travels for seven years (Mecca → Cairo → Damascus → Persia → India). Friend's wife craves olives; friend opens the vase, finds the gold, replaces olives with fresh ones, hides the gold. Ali Cogia returns; vase contains no gold; dispute before the Cadi; Cadi accepts the friend's oath and acquits him. That same evening the Caliph, walking in disguise, overhears children playing "at the Cadi" — one boy judges the case correctly: olives stored seven years cannot be fresh and good; therefore the vase was opened and the olives replaced. Caliph has the boy brought to court; the real case is re-tried using the boy's method; the friend confesses and is hanged.
+
+**The Enchanted Horse** — (Complete, ~200 lines.) Indian inventor demonstrates flying horse at Persian New Year; demands the king's daughter; prince takes horse without instruction and ascends too far; finds Bengali princess, stays two months, flees with her by night; leaves her at a country house while he goes to the palace; Indian (released from prison) tricks the doorkeeper and takes the princess to Cashmere on the horse. Sultan of Cashmere kills the Indian but confines the princess, wanting to marry her. Princess feigns madness to prevent the forced marriage; doctors cannot diagnose because she attacks them. Prince, disguised as a physician, reaches her; she recovers; prince tells the Sultan the horse's enchantment contaminated the princess and proposes a public cure using braziers of burning perfume; in the spectacle, prince and princess mount the horse together and escape; the prince calls down to the Sultan: "When you wish to marry princesses who have sought your protection, learn first to gain their consent."
+
+**The Story of Two Sisters Who Were Jealous of Their Younger Sister** — (The longest story in Part 3, ~300 lines.) Sultan overhears three sisters' wishes; marries the youngest. Jealous elder sisters, allowed to attend the births, float each newborn prince down the canal in a cradle; tell the Sultan the Sultana gave birth to a puppy, a cat, and a log of wood. The children are found and raised by the intendant of gardens as Bahman, Perviz, and Parizade. An old devout woman tells Parizade the house lacks the Talking Bird, Singing Tree, and Golden Water; she sends each brother to find them; both turn to black stones on the mountain of voices. Parizade plugs her ears with cotton, ignores the voices, seizes the Talking Bird in its cage; Bird tells her where the Singing Tree and Golden Water are; Bird also instructs her to scatter water from a pitcher to restore the black stones. She restores her brothers and all the other men. The Bird advises the Sultan be invited to visit; the Bird instructs that the dinner include a cucumber stuffed with pearls. When the Sultan admires the cucumber, the Bird confronts him: "You could believe your wife gave birth to a log of wood, but you cannot believe a cucumber can be stuffed with pearls?" The jealous sisters are executed; the Sultana is released from seven years of public humiliation at the mosque door; family reunion.
+
+**End of book** — "End of Project Gutenberg's The Arabian Nights Entertainments, by Andrew Lang." at line 1301.
+
+**Seeds extracted from Part 3 content**: CAI-S20 (Unfinished Window's Assessment), CAI-S21 (Boy Cadi's Verdict), CAI-S22 (Ointment of Hidden Things), CAI-S23 (Talking Bird's Testimony), CAI-S24 (Cucumber Instruction).
+
+**Part 3 status**: COMPLETE — END OF NARRATIVE CONTENT.
+
+---
+
+### Part 4 Detailed Content (CAI-arabian-nights-lang.part4of4.txt — PG license only)
+
+Entirely the Project Gutenberg Full License text (Section 1 through the end). No narrative content. No quest seeds extractable.
+
+**Part 4 status**: COMPLETE — PG LICENSE ONLY, no narrative content.
+
+---
+
+### CAI Reading Status: ALL 4 PARTS COMPLETE
+
+Seeds CAI-01 through CAI-24 written (CAI-01 and CAI-S08 fully spec'd; all others at seed level). Complete book read from file parts. The Lang/Galland Arabian Nights is fully processed.
 
 Next book in queue: **BEY** (Mandeville's Travels, ~472 KB — size gate applies, draw from memory).
