@@ -286,3 +286,175 @@ TOKEN TAKEN. The Fighter is left holding only the empty cloth pouch with the tig
 
 **books.md update required:**
 - Mark JRS row [x]
+
+---
+
+## Cycle 2 · Sophronia's Witness
+
+**New angle:** Cycle 1 was about fulfilling a contract — carrying what had been carried too long and finally putting it down. Cycle 2 is about correcting a record that misrepresents heroism as crime. Sophronia's false confession saved the entire Christian community of Jerusalem from massacre; the Saracen court record logs the act as theft and conviction, not sacrifice. Now the record is being transferred to permanent archive status under the new Christian administration. What cycle 1 missed: the specific complication of an act of love that can only be vindicated by exposing the lie at its center — and the person whose signature the deposition needs is the person whose lie it is.
+
+---
+
+### Token Doctrine
+
+**TOKEN: Olindo's Deposition**
+A sealed document naming the full sequence: Ismen removed the icon himself before the accusation; Aladine's massacre-threat was the reason for Sophronia's false confession; the confession was made with no expectation of survival; Clorinda's intervention stopped the execution. Olindo's signature is on it. The deposition is single-signature — insufficient to override a dual-signed conviction record. The required second witness is Sophronia. She has not signed. The token's state changes at Act IV when Sophronia adds her signature.
+
+| Act | Token State |
+|-----|-------------|
+| I | Olindo's deposition drafted; scribe reluctant to certify a document naming a false confession; Fighter helps frame the legal category |
+| II | Sealed and in Fighter's custody; a Saracen legal representative is moving to close the conviction record under an expedited filing order |
+| III | Fighter reaches the archive keeper; learns the deposition is single-signature and cannot override the dual-signed conviction record alone |
+| IV | Fighter returns to Sophronia; she signs; token is now dual-signature — sufficient to supplement the conviction record | *(state_change_act: act_4)* |
+| V | Fighter delivers dual-signed deposition to archive; keeper enters it alongside the conviction record with notation; token taken into archive custody |
+
+---
+
+### 5-Act Vignette Play: "Sophronia's Witness"
+
+*A Fighter has been asked by Olindo to carry his deposition from their Jerusalem quarter to the city administrative archive before the old Saracen conviction record is permanently filed. The TOKEN ITEM is Olindo's Deposition: a sealed document naming the sequence of Sophronia's false confession, its intent, and its outcome. It needs a second signature before it can supplement the conviction record. The Fighter carries it to the archive, discovers the signature problem, returns to Sophronia, and brings the dual-signed document back.*
+
+*The Thing · Olindo's Deposition · sealed folio · scribe's desk → Fighter*
+
+---
+
+**ACT I — Olindo and Sophronia's Quarter, Jerusalem**
+
+*Morning. A small room near the old Christian quarter. Olindo at a scribe's desk, the scribe across from him with his stylus paused.*
+
+*The Thing · Olindo's Deposition · unsigned · on the scribe's desk*
+
+*The Fighter observes: the scribe has written the sequence accurately. His stylus is not moving. He is deciding something.*
+
+The scribe's problem is specific: certifying a document that describes a false confession made to a king is certifying perjury. The document is accurate — Sophronia lied to Aladine — but calling the lie heroic and certifying it as such requires the scribe to make a moral judgment he is not sure is his to make. Olindo cannot explain why this matters enough to override the scribe's hesitation. He is not a lawyer.
+
+---
+
+**ACT II — The Archive District Road**
+
+*The road to the Jerusalem administrative archive. A Saracen legal representative, now operating under the new administration's procedural agreements, has an expedited filing order.*
+
+*The Thing · Olindo's Deposition · sealed · Fighter's pack*
+
+*The Fighter observes: the representative is not hostile. He is completing a job. The job has a deadline: all unresolved Saracen civil conviction records become permanent at the third bell.*
+
+The expedited filing order allows records to be closed without waiting for challenge filings. It was written for commercial disputes, not criminal convictions with living parties. The Fighter must identify the procedural ground that distinguishes a civil commercial record (which the expedited order covers) from a criminal conviction record with named living defendants (which it does not).
+
+---
+
+**ACT III — The Jerusalem Administrative Archive**
+
+*The archive keeper's office. A Greek clerk named Alexios, who served the Saracen administration and now serves the Christian one.*
+
+*The Thing · Olindo's Deposition · sealed · Fighter's pack · about to be revealed as insufficient*
+
+*The Fighter observes: Alexios is precise and fair. He reads the deposition. He reads the conviction record. He sets them side by side.*
+
+"The conviction record carries two signatures," he says. "Your deposition carries one. Under the archive's supplementation protocol, a single-signature deposition can be appended as commentary but cannot be filed as a contradicting record. To formally supplement the conviction, you need a second witness signature. The obvious second witness —" He looks at the Fighter. "— has not signed it."
+
+---
+
+**ACT IV — Return to Sophronia**
+
+*The small room again. Sophronia is at the window. Olindo is not in the room.*
+
+*The Thing · Olindo's Deposition · unsealed now, page open · in the Fighter's hands*
+
+*The Fighter observes: she has read the deposition before the Fighter arrived. Olindo told her. She is not distressed. She is considering something with complete composure.*
+
+She does not ask what signing will do to the record. She knows: the conviction disappears as a stand-alone entry and is supplemented by a documented act of self-sacrifice. She is thinking about something else — whether writing her own lie's name in her own hand is a different thing from having lived it. The Fighter must understand what she needs to hear in order to sign: not justification, not praise, not legal reasoning. What she needs to hear is that the deposition closes what the lie opened, rather than re-opening it.
+
+---
+
+**ACT V — The Archive, Second Visit**
+
+*Alexios's office. The third bell is two hours away.*
+
+*The Thing · Olindo's Deposition · dual-signed · Sophronia's signature on the witness line · Fighter's hands*
+
+*The Fighter observes: Alexios reads both signatures. He reads the deposition again. He opens the permanent record ledger.*
+
+He could enter the conviction record as originally filed, with the deposition appended as contradicting commentary. Or he can enter both together — conviction record and deposition — with a notation that the conviction record reflects the official Saracen court finding and the supplementing deposition reflects a subsequent sworn account of intent and context by both parties named in the original conviction. The notation does not say who was right. It says both exist in the permanent record and that anyone consulting it will find both. Alexios picks up his stylus.
+
+---
+
+### Quest API Stub: Sophronia's Witness
+
+```
+quest_id: JRS-02
+title: Sophronia's Witness
+cycle: 2
+book: jerusalem-delivered
+token: Olindo's Deposition (sealed folio)
+token_state_change_act: act_4 (single-signature → dual-signature after Sophronia signs)
+token_consumed: Act V (entered into archive custody as supplementing record)
+route: OLN → JAR → OLN → JAR
+```
+
+**Act I — The Scribe's Hesitation**
+```
+activateNode: OLN
+type: dialogue
+scene: "Olindo's room. The scribe has written the sequence accurately but his stylus is not moving. He will not certify a document describing a false confession."
+prompt: "The scribe needs to understand that certifying the deposition is not certifying the lie — it is certifying the intent that made the lie heroic. [INT to name the ecclesiastical legal category / CHA to give the scribe the framing that lets him certify without moral judgment / WIS to read what specifically the scribe is afraid of and address that thing] DC 12"
+failText: "The scribe adds a caveat: 'deponent's account, accuracy disputed.' Not ideal, but the deposition is signed. Alexios will flag the caveat when he sees it."
+successText: "The scribe certifies without caveat. His stylus moves. Olindo signs. The deposition is sealed."
+grantItem: Olindo's Deposition (sealed folio, single-signature)
+checkPassFlag: depositionCertified
+activateMissionBit: jrsSophAct1Complete
+```
+
+**Act II — The Expedited Order**
+```
+activateNode: JAR
+type: skill_check
+scene: "The road to the archive. A Saracen legal representative with an expedited filing order is moving to close the conviction record at the third bell."
+prompt: "His order covers all unresolved Saracen civil conviction records. [INT to identify the procedural distinction between civil commercial records and criminal conviction records with living parties / WIS to find which clause of his order excludes named-defendant criminal records / CHA to make the argument before he reaches the archive desk] DC 12"
+failText: "He reaches the desk first. The expedited closure is filed. The conviction record is now marked for permanent filing — but the seal is not yet set. Alexios has a three-hour review window before the wax closes it."
+successText: "You cite the exclusion clause. He checks it. He finds it. He is professional about it — he acknowledges the distinction and withdraws the expedited order for the conviction record."
+checkPassFlag: expeditedOrderBlocked
+activateMissionBit: jrsSophAct2Complete
+```
+
+**Act III — The Second Signature Problem**
+```
+activateNode: JAR
+type: skill_check
+scene: "Alexios reads both documents and tells the Fighter the deposition is single-signature and can only be filed as commentary, not a supplementing record."
+prompt: "The archive protocol requires a second witness for supplementation. The obvious second witness hasn't signed. You need to return to her before the third bell. [WIS to understand exactly what Sophronia needs to hear / CON to accept the setback and move immediately / INT to confirm the exact time constraint before leaving the archive] DC 11"
+failText: "You leave without confirming the time window and lose twenty minutes retracing. The return trip is tight."
+successText: "Alexios gives you the exact window: two hours. You note it. You leave."
+checkPassFlag: archiveWindowConfirmed
+activateMissionBit: jrsSophAct3Complete
+```
+
+**Act IV — Sophronia's Signature**
+```
+activateNode: OLN
+type: dialogue
+scene: "Sophronia at the window. The deposition open in the Fighter's hands. She has already read it."
+prompt: "She is not distressed. She is deciding whether writing her own lie's name in her own hand is a different thing from having lived it. She does not need justification or legal reasoning. She needs to hear that signing closes what the lie opened rather than re-opening it. [CHA to give her exactly those words / WIS to find the frame that makes signing an act of completion rather than exposure / INT to understand what closing means to her specifically] DC 13"
+failText: "She takes the deposition and signs without speaking. She does not look at the Fighter afterward. She has decided something and is keeping it to herself."
+successText: "She says: 'Olindo knew what I was doing.' She picks up the stylus. She signs carefully, her name in full. She hands it back without looking at it."
+checkPassFlag: sophroniaSignatureObtained
+activateMissionBit: jrsSophAct4Complete
+grantItem: Olindo's Deposition (dual-signed — Olindo and Sophronia)
+```
+
+**Act V — The Permanent Record**
+```
+activateNode: JAR
+type: skill_check
+scene: "Alexios's office. The dual-signed deposition in the Fighter's hands. The third bell is two hours away."
+prompt: "Alexios reads both signatures. He is deciding between appended commentary and formal supplementation. Both are procedurally available. [WIS to understand what notation format produces the outcome Olindo asked for / INT to name the supplementation protocol that covers dual-signed depositions / CHA to give Alexios the framing that makes formal supplementation the correct call] DC 11"
+failText: "Alexios enters it as commentary — 'sworn account appended by living parties.' The conviction record is not overridden, but the supplementing account is in the permanent record alongside it. Anyone consulting it finds both."
+successText: "Alexios enters it as formal supplementation: conviction record plus dual-signed deposition, notation that both exist and that the deposition was submitted by named parties before the record was sealed. He stamps both. He takes the deposition. 'Both will be read,' he says."
+takeItem: Olindo's Deposition (dual-signed)
+checkPassFlag: jrsSophComplete
+activateMissionBit: jrsSophComplete
+```
+
+---
+
+*quest-map.md: add JRS cycle 2 row and theme thread; append OLN, JAR to Location Grid.*
+*books.md: mark JRS [x].*
