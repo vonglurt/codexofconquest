@@ -561,3 +561,277 @@ of the placement, warm now from your grip.*
 *books.md: mark RKV [x].*
 
 *Rule 15: clear agent memory after RKV completion if context is full.*
+
+---
+
+## Cycle 2 — Loki's Escape from Ægir's Feast
+
+**What cycle 1 missed:** After Völuspá was the prophecy — the seeress, the world-death foretold, the rings returned to the standing stone as payment for truth that could not be used. Loki's Escape reveals the inside of the divine insult-structure: the feast where Loki said everything he had come to say about every god in Ægir's hall, then walked out. The rune-chip he dropped on the way out was not accidental. It is the most dangerous of his accusations — the one he couldn't say aloud without being physically stopped, the one that is true and is now lying on a floor where any god could pick it up and be destroyed by it. The Fighter must get it out of Ásgarðr before someone reads it.
+
+**New angle:** Loki drops a carved rune-chip on the floor of Ægir's hall as he exits. The Fighter takes it before the gods find it, carries it through Thor's gate-watch and the pursuit zone, and deposits it at the standing stone outside Ásgarðr's walls — where things too dangerous to keep but too true to destroy are placed until the world decides what to do with them.
+
+---
+
+### Pass 1 — Token
+
+**TOKEN: Loki's Rune-Chip** — a small piece of alder-wood, thumb-sized, with one rune carved on each face. The rune is an accusation and a proof simultaneously. It was on Loki's person at the feast and dropped deliberately on the way out. The Fighter must carry it with the carved faces inward — not reading it is part of the commission. It cannot be destroyed; it can only be deposited where its truth cannot reach the hall. At the standing stone outside Ásgarðr, it joins other such objects. It is no longer an active accusation after deposit. It is an archived truth. The difference matters.
+
+---
+
+### Pass 2 — Seven Storyline Ideas
+
+**1. After Völuspá** *(USED — Cycle 1)* — The seeress's rings returned to the stone at the world's edge. The prophecy's transaction completed.
+
+**2. Loki's Escape from Ægir's Feast** *(CHOSEN — Cycle 2)* — Loki drops a rune-chip on the way out of Ægir's hall. The Fighter takes it before the gods find it, carries it through Thor's gate-watch and the pursuit zone, deposits it at the standing stone outside the walls.
+
+**3. Thor's Veil** — The veil-pin carried to Loki before Þrymr looks up.
+
+**4. The Unanswered Question** — The carved bone with Odin's answer in the giant's ruin.
+
+**5. The Runes' Origin** — Escorting the newly rune-carrying Odin through Níðhöggr's roots.
+
+**6. The Hammer Blessing** — Mjölnir in the air between the priest's hands and Thor's reach.
+
+**7. Gudrun's First Lament** — The lament-vellum carried from the hall to the preservation place.
+
+---
+
+### Pass 3 — Theme Check
+
+Existing themes through KSU cycle 2: grief in object, loyalty, honor vs. shame, love and fate, truth posthumous, healing through hostile law, carrier hunted, token's journey, ancient witnesses, corruption wears mercy, fate through broken thing, heroism earns nothing, invitation as weapon, poem ransoms life, anonymous sympathy, pyre-arrangements, proxy errand, absent jurisdiction, scattered truth, last gift against design, credential before the man, one who will not weep, vigil at extraction, errand of removal, eclipse witness / institutional silence.
+
+**Themes I am avoiding:** "The carrier becomes the hunted" (SEN) — the Fighter is not marked by the object's value; they are carrying something dangerous *because* of what it says, not because others want it for themselves. "Truth delivered posthumously" (LGW) — the rune-chip is not a truth delivered after death; it is a truth too dangerous to deliver at all; the deposit is a way of removing it from active circulation rather than delivering it. "The token's journey" (ALL) — that is a general meta-theme; this is specific: the object must not be read by the carrier, which is an unusual constraint.
+
+**New theme introduced by RKV cycle 2:** *The thing too true to keep but too true to destroy: the rune carried closed-fist to the standing stone; the carrier who holds danger without opening it* — Loki dropped the chip deliberately; it is not garbage; it is true and it is dangerous; the only action available is removal from the place where it would be read and deposit at the place where things like this accumulate; the Fighter holds it for the length of the errand without knowing what it says, which is the one form of protection the errand offers.
+
+---
+
+## 5-Act Vignette Play: "Loki's Escape from Ægir's Feast"
+
+**The Token · Loki's Rune-Chip · a thumb-sized piece of alder-wood ·
+one rune carved on each face, both faces inward in the Fighter's closed hand ·
+Loki dropped it deliberately on the floor of Ægir's hall as he walked out ·
+it is true · it cannot be destroyed · it must not be read**
+
+---
+
+### Act I — The Floor
+*Loki's Rune-Chip · on the floor of Ægir's hall · the feast still in its aftermath ·
+the gods shouting, Loki already through the door, the torches burning low*
+
+The feast at Ægir's is ending in the specific way Loki intended. He came in, sat
+down, said everything he had been saving about every god in the room — their
+failures, their shames, their particular hypocrisies — and then walked out when
+Thor's threats became credible. The hall is full of gods who are embarrassed and
+furious and one of them is already moving toward the door after him.
+
+On the floor near the threshold, half under a bench, is a small piece of alder-
+wood. No one has noticed it yet. It is the size of a thumb. It was in Loki's hand
+at some point during the feast — you could see him working it, the way a man
+handles something when he wants to choose the right moment — and now it is on
+the floor and he is gone.
+
+You cross to it. You pick it up without looking at it. You close your hand around
+it with the carved faces inward.
+
+*The chip is smooth except for the two carved faces. You can feel the lines of the
+rune against your palm but you cannot read it this way. This is the correct way.*
+
+**DC 12 Insight — understand before you look at it that you are not supposed to look at it; that the commission is the carrying, not the knowing; that Loki dropped this for someone to carry and not to read.**
+
+*If you fail:* You look at it. You see one face. You understand immediately why it is dangerous and the understanding costs you something for the rest of the errand.
+
+*If you pass:* You close your hand. You do not look. The closed hand is the beginning of the commission. You are already through the threshold before the first god turns to see who just left.
+
+---
+
+### Act II — The Hall's Aftermath
+*Loki's Rune-Chip · closed in the Fighter's right hand ·
+Ægir's hall corridor, gods in motion, someone already running for the gate*
+
+The hall's corridor is full of movement. Odin's ravens are circling near the ceiling.
+Thor has left through the main door. Several lesser gods are debating loudly whether
+what Loki said about Freyr was true or what Loki said about Odin was worse, and in
+the middle of this a figure with a spear is coming down the corridor from the wrong
+direction and looking at everything in reach.
+
+You are a person holding something in a closed hand in the corridor of a divine feast
+that has just become an incident. The worst possible moment to be in a divine corridor
+with something you shouldn't have.
+
+*The chip is warm from your palm. The figure with the spear is looking at faces,
+not hands. If you are a person who belongs in this corridor, your hand is just a hand.*
+
+**DC 12 Composure — be a person who belongs in this corridor; the hand is just a hand; you are moving toward the gate because you have business outside; you are not the most interesting thing in this room right now.**
+
+*If you fail:* The figure with the spear looks at you for a moment too long. You get past, but the pause is noted and by the time you reach the gate someone is watching the gate specifically.
+
+*If you pass:* The corridor clears in front of you. The debate about Odin and Freyr is louder than your footsteps. You reach the outer gate in thirty seconds. Thor is already gone down the road after Loki. The gate is attended by one of Heimdall's people.
+
+---
+
+### Act III — Thor's Gate-Watch
+*Loki's Rune-Chip · in the Fighter's closed right hand ·
+Ásgarðr's outer gate, Heimdall's warden, the road to the standing stone visible beyond*
+
+Heimdall's warden is at the gate. He is there specifically because Loki just left and
+everyone who leaves in the next hour is being noted. He is not Thor — he will not
+stop you by force — but he has a way of looking at people that makes them explain
+themselves, and he is looking at you.
+
+Your right hand is closed. Your left hand is empty and at your side. You are going
+out through the gate. You have a reason for going out through the gate. The reason
+does not include anything about what you are carrying.
+
+*The warden looks at you. He looks at your right hand. He looks at your face.*
+
+**DC 13 Stealth — not invisibility; the specific presence of a person who is leaving for a normal reason; the closed hand is a closed hand, not a significant closed hand.**
+
+*If you fail:* The warden asks you what you're carrying. You produce something from your left hand. He lets you through but notes the closed right hand in whatever record he keeps.
+
+*If you pass:* The warden looks at you and looks past you. You are the least interesting person who has left this feast. You walk through the gate. The road is in front of you and the standing stone is a quarter-mile down it.
+
+---
+
+### Act IV — The Pursuit
+*Loki's Rune-Chip · in the Fighter's right hand · the road outside Ásgarðr,
+quarter-mile from the gate, two of the pursuit party doubling back*
+
+Two of the gods' pursuit party have doubled back from the road ahead — they lost
+Loki's trail and are coming back along the road. They are moving fast and they are
+looking at everyone on the road and one of them has seen you and is pointing.
+
+They do not know what you have. They know you were at the feast. They are checking
+everyone who left in the last hour. If they get close enough to ask questions, the
+closed hand becomes a question.
+
+The standing stone is one hundred feet ahead. The road is open. The two figures
+are moving fast.
+
+**Combat — Ásgarðr Pursuit Guard ×2 (AC 13, HP 24, spears)**
+
+*If you fail (reduced to 0 HP):* You are taken to the road's edge. They open your hand. They read one face of the chip. One of them steps back. The other reaches for it and you have to fight him specifically for the right to carry it to the stone.
+
+*If you pass:* Both guards are down. The standing stone is ten feet away. The road behind you is empty. Ásgarðr's gate is a quarter-mile back and no one is moving toward you yet.
+
+---
+
+### Act V — The Standing Stone
+*Loki's Rune-Chip · in the Fighter's closed right hand ·
+the standing stone at the road's edge, the world's light on it*
+
+The standing stone is old — older than the road, older than the feast, older than
+most things that have been placed beside it. At its base, in the grass, other objects
+have been left: a carved rib-bone from something large, a piece of vellum whose ink
+has run, two smaller chips of various materials. Things too dangerous to keep. Things
+too true to destroy.
+
+You crouch at the stone's base. You place the chip in the grass at the stone's foot,
+carved faces still inward. You do not turn it over.
+
+*The chip is against the stone. The stone has been receiving these things for a very
+long time. This one is now the same kind of thing as the others: an archived truth,
+not an active accusation. The difference is location. Location is everything.*
+
+**DC 11 Composure — place the chip at the stone without opening it; the deposit is complete when the hand releases it; the accusation becomes archive at the moment of release.**
+
+*If you fail:* As your hand opens, you see one face. The rune is there. You put the chip down with the knowledge you weren't supposed to have.
+
+*If you pass:* Your hand opens. The chip is at the stone. You don't see anything. You stand. The stone is old. The objects at its base are still there. The road back to the gate is empty. Whatever Loki accused someone of, it is here now, part of the collection, sealed against the stone until the world decides what to do with it. The world will get to it eventually. Today you made sure it would not be decided in Ægir's hall.
+
+---
+
+## Quest API Stub — Cycle 2
+
+```json
+{
+  "questId": "RKV_cycle2_lokisEscape",
+  "title": "Loki's Escape from Ægir's Feast",
+  "activateNode": "AEG",
+  "token": {
+    "name": "Loki's Rune-Chip",
+    "description": "A thumb-sized piece of alder-wood with one rune carved on each face. An accusation and a proof. Dropped deliberately by Loki on the floor of Ægir's hall. Must be carried with carved faces inward — not reading it is part of the commission. Deposited at the standing stone outside Ásgarðr; converted from active accusation to archived truth.",
+    "introducedAct": 1,
+    "consumedAct": 5
+  },
+  "acts": [
+    {
+      "act": 1,
+      "title": "The Floor",
+      "location": "AEG — Ægir's feast hall, the threshold, gods in uproar",
+      "token_action": "RETRIEVED — picked up from the floor, closed hand, faces inward",
+      "type": "skill_check",
+      "scene": "The chip is half-under a bench near the threshold. Loki is gone. No one has noticed it yet. You cross to it. You pick it up without looking at it. You close your hand with the carved faces inward.",
+      "prompt": "Understand before you look at it that you are not supposed to look at it. The commission is the carrying, not the knowing. DC 12 Insight.",
+      "failText": "You look at one face. You understand immediately why it is dangerous. The understanding costs you for the rest of the errand.",
+      "successText": "You close your hand. You do not look. The closed hand is the beginning of the commission. You are through the threshold before the first god turns.",
+      "grantItem": "Loki's Rune-Chip — alder-wood, closed; faces inward; dangerous; to be deposited not read",
+      "checkPassFlag": "RKV2_chipRetrieved"
+    },
+    {
+      "act": 2,
+      "title": "The Hall's Aftermath",
+      "location": "AEG — Ægir's hall corridor, movement everywhere, figure with spear approaching",
+      "token_action": "HELD — warm in closed palm, moving toward the gate",
+      "type": "skill_check",
+      "scene": "The corridor is full of gods in motion. A figure with a spear is looking at faces. You are a person holding something in a closed hand at a divine feast that just became an incident. The worst possible moment to be interesting.",
+      "prompt": "Be the person who belongs in this corridor. The hand is just a hand. You have business outside. DC 12 Composure.",
+      "failText": "The spear-figure looks at you too long. The gate-warden will be watching when you arrive.",
+      "successText": "The corridor clears in front of you. The debate about Odin and Freyr covers your footsteps. You reach the outer gate.",
+      "checkPassFlag": "RKV2_corridorCleared"
+    },
+    {
+      "act": 3,
+      "title": "Thor's Gate-Watch",
+      "location": "ASG — Ásgarðr's outer gate, Heimdall's warden",
+      "token_action": "CONCEALED — closed right hand; left hand visible and empty",
+      "type": "skill_check",
+      "scene": "Heimdall's warden notes everyone leaving in the hour after Loki. He looks at you. He looks at your right hand. He looks at your face. You have a reason for leaving. The reason does not include what you are carrying.",
+      "prompt": "Leave through the gate as the least interesting person who attended this feast. DC 13 Stealth.",
+      "failText": "The warden asks about your closed hand. You produce something from your left. He lets you through but the right hand is noted.",
+      "successText": "The warden looks at you and past you. You walk through the gate. The standing stone is a quarter-mile down the road.",
+      "checkPassFlag": "RKV2_gatePassed"
+    },
+    {
+      "act": 4,
+      "title": "The Pursuit",
+      "location": "RSS road — the road outside Ásgarðr, quarter-mile from gate",
+      "token_action": "HELD — still closed; do not lose it",
+      "type": "combat",
+      "scene": "Two pursuit guards have doubled back from losing Loki's trail. They are checking everyone who left in the last hour. One has seen you and is pointing. The standing stone is one hundred feet ahead.",
+      "prompt": "Fight through to the standing stone.",
+      "combatTarget": "Ásgarðr Pursuit Guard ×2 (AC 13, HP 24, spears)",
+      "failText": "They take you to the road's edge and open your hand. One of them reads one face and steps back. You have to fight him specifically for the right to finish the errand.",
+      "successText": "Both guards down. The standing stone is ten feet ahead. The road behind you is empty.",
+      "checkPassFlag": "RKV2_pursuitCleared"
+    },
+    {
+      "act": 5,
+      "title": "The Standing Stone",
+      "location": "RSS — the standing stone at the road's edge outside Ásgarðr",
+      "token_action": "DEPOSITED — placed at the stone's base, faces inward; hand releases without opening",
+      "type": "skill_check",
+      "scene": "At the stone's base: a carved rib-bone, a piece of vellum, two smaller chips. Things too dangerous to keep. Things too true to destroy. You crouch. You place the chip in the grass at the stone's foot with the carved faces still inward. The deposit converts active accusation to archived truth. Location is everything.",
+      "prompt": "Place the chip at the stone without opening it. Let the hand release. DC 11 Composure.",
+      "failText": "As your hand opens you see one face. The rune is there. You put the chip down with knowledge you weren't supposed to have.",
+      "successText": "Your hand opens. The chip is at the stone. You didn't see anything. Whatever Loki accused someone of, it is here now, sealed against the stone. The world will get to it eventually. Today you made sure it would not be decided in Ægir's hall.",
+      "grantItem": "Loki's Dropped Coin — a different small object that was beside the rune-chip on the floor; not inscribed; Loki probably didn't mean to drop this one; you kept it anyway",
+      "takeItem": "Loki's Rune-Chip — deposited at the standing stone; archived truth, no longer active accusation",
+      "activateMissionBit": "rkvLokisEscapeComplete",
+      "checkPassFlag": "RKV2_pursuitCleared"
+    }
+  ]
+}
+```
+
+---
+
+*quest-map.md: append RKV cycle 2 row to Processed Quests table:*
+`| RKV | Loki's Escape from Ægir's Feast | 2 | AEG → ASG → RSS (Ægir's hall → Ásgarðr gate → road-edge standing stone) | The thing too true to keep but too true to destroy; carried closed-fist to the archive |`
+
+*quest-map.md: append new theme thread to Theme Threads Active:*
+`- **The thing too true to keep but too true to destroy: the rune carried closed-fist to the standing stone; the carrier who holds danger without opening it**: RKV (cycle 2) — Loki dropped the chip deliberately; it is not garbage; it is true and dangerous; the only action available is removal from the place where it would be read and deposit at the place where things like this accumulate; the Fighter holds it for the length of the errand without knowing what it says, which is the one form of protection the errand offers`
+
+*quest-map.md: append AEG and RSS to Location Grid.*
+
+*books.md: mark RKV [x].*

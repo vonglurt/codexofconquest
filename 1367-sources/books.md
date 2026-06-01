@@ -452,7 +452,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | [x] | BOO | prose-edda | Prose Edda — Snorri Sturluson | c.1220 | Norse Mythology | 514 |
 | [x] | ALF | kalevala | Kalevala — Elias Lönnrot | 1835/1849 | Finnish Epic | 642 |
 | [x] | KSU | heimskringla | Heimskringla — Snorri Sturluson | c.1230 | Norse Kings History | 1707 |
-| [ ] | RKV | poetic-edda | Poetic Edda — Anon | ~10th–13th C | Norse Poetry | 1924 |
+| [x] | RKV | poetic-edda | Poetic Edda — Anon | ~10th–13th C | Norse Poetry | 1924 |
 | [ ] | HFT | frithiof-saga | Frithiof's Saga — Esaias Tegnér | 1825 (Old Norse) | Romantic Epic | 403 |
 | [ ] | MOL | laxdaela-saga | Laxdaela Saga — Anon | ~13th C | Icelandic Saga | 347 |
 | [ ] | CPH | gesta-danorum | Gesta Danorum — Saxo Grammaticus | c.1200 | Danish Chronicles | 689 |
