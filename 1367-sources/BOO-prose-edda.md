@@ -590,3 +590,259 @@ without a word, the small token of what the night required.*
 *books.md: mark BOO [x].*
 
 *Rule 15: clear agent memory after BOO completion if context is full.*
+
+---
+
+## Cycle 2 — The Mead-Theft Night
+
+**What cycle 1 missed:** Þökk's Refusal was the outside of divine grief — the grief-embassy, the accumulated world-weeping, the one voice that undid all of it. The Mead-Theft Night reveals the interior of Odin's acquisition of poetry itself: what it cost, who was paid, and what the Fighter's role was in holding the extraction point open during the most dangerous negotiation in Norse mythology. Cycle 1 was about what the world refuses. Cycle 2 is about what the world requires in silence.
+
+**New angle:** The vigil at the drill-hole — Odin is inside Suttungr's mountain with the mead of poetry, negotiating. The exit is the hole he bored with the auger Rati. The Fighter holds the auger at the mouth of that hole for three nights. When Suttungr returns, the auger is the only thing between the hole staying open and the hole being sealed shut with Odin still inside.
+
+---
+
+### Pass 1 — Token
+
+**TOKEN: Rati the Auger** — the great boring-drill used to pierce through Hnitbjörg, Suttungr's mountain vault. Odin gives it to the Fighter before he transforms into a worm and enters the hole. It is the extraction mechanism: the guarantee that the inside act has a path out. The Fighter holds it for three nights at the drill-hole mouth. When Suttungr's mountain-guard comes and when Suttungr himself arrives in the last seconds, the auger is braced across the hole entrance as a bar and a brace. When Odin exits as an eagle, the auger is released. The token's task is complete at the moment the eagle clears the mountain top.
+
+---
+
+### Pass 2 — Seven Storyline Ideas
+
+**1. Þökk's Cave** *(USED — Cycle 1)* — Frigg's grief-embassy. The bowl. The one who would not weep.
+
+**2. The Mead-Theft Night** *(CHOSEN — Cycle 2)* — Odin inside Suttungr's mountain. Fighter holds the auger at the drill-hole for three nights. When Suttungr returns, the auger is the brace that keeps the exit open.
+
+**3. Loki's Capture** — The first net, carried to the waterfall without Loki seeing it coming.
+
+**4. The Rune-Learning** — A horn of water carried to Yggdrasil at the end of the ninth night.
+
+**5. The Bound Fenrir** — Gleipnir carried to where Fenrir is; the Fighter must decide who to ask to place a hand in his mouth.
+
+**6. Draupnir's Return** — Hermoðr returns from Hel with Draupnir. Ring must reach Odin before sunrise.
+
+**7. The Golden Pieces** — After Ragnarök, scattered golden game-pieces in new grass. Each piece is a name.
+
+---
+
+### Pass 3 — Theme Check
+
+Existing themes through RIX cycle 2: grief in an object, loyalty under the long watch, honor vs. shame, love and fate intertwined, truth delivered posthumously, healing through hostile law, carrier becomes hunted, token's journey, ancient witnesses, corruption wears mercy's face, fate through the broken thing, heroism earns protection for none, invitation as weapon, poem ransoms a life, anonymous sympathy, enabling condition (VBY cycle 2), pyre-arrangements, proxy errand, absent jurisdiction, scattered truth, last gift against design, credential carried before the man, one who will not weep.
+
+**Themes I am avoiding:** "The enabling condition" (VBY cycle 2) — that was the torch-carrier, the one who makes the interior act possible by staying still and lit; this is different because the auger is not just enabling but is the guaranteed exit route — the inside act has no completion without it. "Loyalty under the long watch" (LHR, STN, TBS) — those were about faithfulness over a sustained period; this is about a single technical precision at a single critical moment after three nights of waiting.
+
+**New theme introduced by BOO cycle 2:** *The vigil at the extraction point: the tool that must stay in exactly one position while the world rearranges itself around it; the carrier who does nothing for three nights and everything in one second* — Odin bored the hole and entered; the inside act is entirely his; the Fighter's three nights of waiting are purely maintenance of a position; but the one second when Suttungr arrives and the auger must be braced is the entire commission; without that second the hole closes, the mead stays inside, and poetry belongs to giants permanently.
+
+---
+
+## 5-Act Vignette Play: "The Mead-Theft Night"
+
+**The Token · Rati the Auger · a boring-drill the length of a man's arm ·
+iron head still trailing mountain dust · warm from the work it just finished ·
+pressed into the Fighter's hands by a one-eyed man
+who has just transformed into a worm and is about to enter a mountain ·
+what it opens must stay open**
+
+---
+
+### Act I — The Commission
+*Rati the Auger · still warm from boring · Hnitbjörg's outer slope,
+the drill-hole mouth, pine-smoke from Suttungr's hall below*
+
+The one-eyed man hands you the auger and does not explain very much.
+
+He has borrowed it from Baugi, Suttungr's brother, after a summer of work in the fields under a false name, and he has used it to bore through the granite of Hnitbjörg in a single night. The hole is there — a clean dark circle in the stone, about the width of a man's wrist. He hands you the auger.
+
+*"If Suttungr comes, I need the hole open. Don't let anyone seal it. If you hear a specific sound—"* he describes a sound: rock grinding against rock, from below the tree-line, a specific cadence that means the giant is returning from the coast road, not the high path. *"That sound. Then brace the auger across the mouth. Do not remove it until an eagle has gone over the ridge."*
+
+He does not explain the eagle. He transforms into a worm. He enters the hole. He is gone.
+
+The mountain is quiet. The drill-hole mouth is in front of you and the auger is in your hands and you now know exactly one thing you are supposed to do.
+
+**DC 12 Insight — hold the specific sound in memory; know the difference between that sound and all the other sounds this mountain makes.**
+
+*If you fail:* You hold the sound pattern for one night, then two; on the third night the memory blurs and you add too much margin. When Suttungr returns you are uncertain and braced early, which costs you.
+
+*If you pass:* The sound is exact in your mind. You could identify it at half-distance on a windy night. You settle in front of the drill-hole and wait.
+
+---
+
+### Act II — Three Nights
+*Rati the Auger · in the Fighter's hands, then leaned against the stone ·
+the Hnitbjörg slope, first night, second night, third night*
+
+The first night is cold and the pine trees move in a way that sounds like something approaching. It is not. The second night is still and one of Suttungr's field-workers passes on the low path with a lamp, not looking up. The third night it rains and the sound of the rain on the stone combines with the sound of the mountain settling and with the sound of your own breathing and with the sound of something you can't quite identify below the tree-line.
+
+Nothing has happened. Three nights of nothing. The auger is propped against the stone beside you. The drill-hole is exactly as it was. The mountain has not changed.
+
+*The third night the rain stops before dawn. The mountain is completely quiet. This is
+not the silence of nothing happening. This is the silence of something about to.*
+
+**DC 12 Composure — hold the vigil for three nights without drifting; stay calibrated, not tense.**
+
+*If you fail:* By the third night you are over-alert, jumping at every sound. When the real sound comes you process it a beat late.
+
+*If you pass:* Three nights. You have not moved from the drill-hole mouth except to eat and to relieve yourself thirty feet away, always in sight of the hole. You know this silence. You are ready.
+
+---
+
+### Act III — The Sound
+*Rati the Auger · in the Fighter's hands · pre-dawn, the slope above the tree-line*
+
+There. That sound.
+
+Rock against rock from the coast road, the specific cadence he described — not the high path, the coast road, which means Suttungr did not go where he was supposed to go, he went where he always goes when he wants to check on the vault, and now he is three hundred feet below the tree-line on the direct route to the hole.
+
+You have the sound correct. You now need to confirm it is Suttungr and not the mountain itself, not a patrol, not Baugi, not someone with torches who is simply walking a road and making noise.
+
+*The cadence comes again. Regular. Purposeful. Heavy. This is not random movement.*
+
+**DC 13 Perception — distinguish Suttungr's specific approach from every other thing this mountain produces before dawn.**
+
+*If you fail:* You wait too long to confirm and lose ground. You get the auger braced but in a rushed way that costs you leverage.
+
+*If you pass:* You hear the pattern three times in six minutes and it is exactly what he described. You lift the auger, brace it horizontally across the drill-hole mouth, and wait.
+
+---
+
+### Act IV — The Guard
+*Rati the Auger · braced across the drill-hole mouth · the slope, pre-dawn,
+footsteps now twenty feet below the ridge*
+
+Suttungr did not come alone. Ahead of him — a scout, one of his mountain-guards, who reaches the ridge before the giant does and whose job is to check the outer slope for anything that doesn't belong.
+
+He reaches the ridge and he sees you. He sees the hole behind you. He sees the auger braced across it.
+
+He knows what the hole is and who bored it and what is inside. He does not speak. He moves.
+
+**Combat — Suttungr's Mountain-Guard (AC 14, HP 26, weapon: stone-headed war-club)**
+
+*If you fail (reduced to 0 HP):* The guard gets the auger clear of the hole. By the time you recover, he has half-sealed the entrance with a wedged stone. When Suttungr arrives, the hole is compromised and the eagle's exit is damaged.
+
+*If you pass:* The guard goes down before the ridge. You get back to the drill-hole and re-brace the auger. Suttungr's heavy steps are on the path below. You hear him coming.
+
+---
+
+### Act V — The Exit
+*Rati the Auger · braced across the drill-hole mouth · dawn breaking over the ridge ·
+Suttungr's hand reaching for the stone above the hole*
+
+Suttungr is at the ridge. He is not looking at you — he is looking at the hole, at the auger braced across it, and his hand goes to the stone above the entrance to lever the auger free.
+
+From inside the hole — sound. A dry, hard sound, the sound of something very large moving very fast through a very small space, getting larger.
+
+You hold the auger.
+
+Suttungr's hand is on the stone. He is enormous and he is angry and he is faster than you and in approximately two seconds he will have the auger free and the hole sealed and whatever is inside will stay inside.
+
+The sound from inside the hole is louder now. It is almost here.
+
+*Rati the Auger is braced between both your hands and the stone walls of the hole.
+The whole commission reduces to this: hold it for two more seconds.*
+
+**DC 11 Composure — do not release until the eagle is past.**
+
+*If you fail:* You release a half-second early. The auger swings free. Suttungr's hand closes on the stone. The hole narrows — not sealed, but damaged — and the eagle comes through at a wrong angle. Three drops of mead fall to the ground. Odin flies on, carrying the rest. Three drops are enough for lesser poets. You watch them soak into the stone.
+
+*If you pass:* You hold it. The eagle comes through the hole at full speed and goes over the ridge in one motion — enormous, each wingbeat a concussion against the air, the smell of stone and mead and ancient mountain-dark — and it is gone before Suttungr's hand can close. You release the auger. Suttungr stands at the drill-hole with nothing in it and the sky empty above him.
+
+You pick up Rati from the ground where you dropped it. It is yours now. He won't ask for it back.
+
+You have a small clay vessel in your belt-pouch — you don't know when it got there, but it's sealed with beeswax and something inside it moves like liquid. One drop of mead landed on your hand when the eagle passed. You pressed it into the vessel before you thought about it. It is the skaldic mead. A single drop. The Aesir will not know. It is enough to make one poem true.
+
+---
+
+## Quest API Stub — Cycle 2
+
+```json
+{
+  "questId": "BOO_cycle2_meadTheftNight",
+  "title": "The Mead-Theft Night",
+  "activateNode": "HNJ",
+  "token": {
+    "name": "Rati the Auger",
+    "description": "A boring-drill, iron-headed, still carrying mountain dust from boring through Hnitbjörg. The extraction mechanism — the guaranteed exit route. Held at the drill-hole mouth for three nights; braced across the entrance when Suttungr arrives; released when the eagle clears the ridge.",
+    "introducedAct": 1,
+    "consumedAct": 5
+  },
+  "acts": [
+    {
+      "act": 1,
+      "title": "The Commission",
+      "location": "HNJ — Hnitbjörg's outer slope, the drill-hole mouth, pre-dawn",
+      "token_action": "RECEIVE — pressed into Fighter's hands by Odin before he transforms",
+      "type": "skill_check",
+      "scene": "Odin has bored through the mountain with Rati, handed it to you, described exactly one sound that means Suttungr is returning, and transformed into a worm to enter the hole. The hole is in front of you. The drill is in your hands. You now know exactly one thing you are supposed to do.",
+      "prompt": "Hold the specific sound in memory. Know the difference between Suttungr's approach and everything else this mountain makes. DC 12 Insight.",
+      "failText": "You hold the pattern for two nights. On the third it blurs and you add too much margin. When Suttungr returns you are uncertain.",
+      "successText": "The sound is exact in your mind. You could identify it at half-distance on a windy night. You settle in front of the drill-hole and wait.",
+      "grantItem": "Rati the Auger — the boring-drill; the hole's guarantee of remaining open",
+      "checkPassFlag": "BOO2_commissionReceived"
+    },
+    {
+      "act": 2,
+      "title": "Three Nights",
+      "location": "HNJ — Hnitbjörg slope, first night, second night, third night",
+      "token_action": "MAINTAINED — leaned against stone, always in reach",
+      "type": "skill_check",
+      "scene": "Three nights of nothing. Field-workers on low paths, rain, the mountain settling. On the third night the rain stops before dawn. This is not the silence of nothing happening. This is the silence of something about to.",
+      "prompt": "Hold the vigil for three nights without drifting. Stay calibrated, not tense. DC 12 Composure.",
+      "failText": "By the third night you are over-alert. When the real sound comes you process it a beat late.",
+      "successText": "Three nights. You have not moved from the drill-hole mouth. You know this silence. You are ready.",
+      "checkPassFlag": "BOO2_vigilHeld"
+    },
+    {
+      "act": 3,
+      "title": "The Sound",
+      "location": "HNJ — Hnitbjörg slope, pre-dawn, coast road below",
+      "token_action": "LIFTED — raised to bracing position",
+      "type": "skill_check",
+      "scene": "Rock against rock from the coast road — the specific cadence he described. Regular, purposeful, heavy. It comes again. Suttungr did not go where he was supposed to go.",
+      "prompt": "Distinguish Suttungr's specific approach from everything else this mountain produces before dawn. DC 13 Perception.",
+      "failText": "You wait too long to confirm. You get the auger braced but in a rushed way that costs you leverage.",
+      "successText": "You hear the pattern three times in six minutes. It is exactly what he described. You brace the auger across the drill-hole mouth and wait.",
+      "checkPassFlag": "BOO2_soundIdentified"
+    },
+    {
+      "act": 4,
+      "title": "The Guard",
+      "location": "HNJ — Hnitbjörg ridge, pre-dawn",
+      "token_action": "HELD — braced across hole mouth during combat",
+      "type": "combat",
+      "scene": "Suttungr did not come alone. His mountain-guard reaches the ridge first, sees you, sees the hole behind you, sees the auger braced across it. He knows what the hole is and who bored it. He does not speak. He moves.",
+      "prompt": "Hold the drill-hole against Suttungr's mountain-guard.",
+      "combatTarget": "Suttungr's Mountain-Guard (AC 14, HP 26, stone-headed war-club)",
+      "failText": "The guard gets the auger clear. Suttungr arrives to find the hole half-compromised. The eagle's exit is damaged.",
+      "successText": "The guard goes down before the ridge. You re-brace the auger. Suttungr's steps are on the path below.",
+      "checkPassFlag": "BOO2_guardDefeated"
+    },
+    {
+      "act": 5,
+      "title": "The Exit",
+      "location": "HNJ — Hnitbjörg, the drill-hole mouth, dawn breaking",
+      "token_action": "RELEASED — dropped when eagle clears ridge; kept by Fighter",
+      "type": "skill_check",
+      "scene": "Suttungr's hand reaches for the stone above the hole. From inside: a dry hard sound, something large moving very fast through a very small space. The whole commission reduces to this: hold the auger for two more seconds.",
+      "prompt": "Do not release until the eagle is past. DC 11 Composure.",
+      "failText": "You release a half-second early. The hole narrows. Three drops of mead fall to the ground and soak into the stone. Odin flies on with the rest.",
+      "successText": "You hold it. The eagle comes through at full speed and is gone before Suttungr's hand can close. You release the auger and pick it up from the ground. A small clay vessel is in your belt-pouch — sealed, one drop of skaldic mead inside. It landed on your hand when the eagle passed. It is enough to make one poem true.",
+      "grantItem": "A Drop of the Skaldic Mead — sealed in a small clay vessel; enough to make one poem entirely true",
+      "takeItem": "Rati the Auger — released at the drill-hole; Odin will not ask for it back; it remains with the Fighter",
+      "activateMissionBit": "booMeadTheftComplete",
+      "checkPassFlag": "BOO2_vigilHeld"
+    }
+  ]
+}
+```
+
+---
+
+*quest-map.md: append BOO cycle 2 row to Processed Quests table:*
+`| BOO | The Mead-Theft Night | 2 | HNJ (Hnitbjörg — Suttungr's mountain vault, the drill-hole slope) | The vigil at the extraction point; the tool that must stay in one position while the world rearranges |`
+
+*quest-map.md: append new theme thread to Theme Threads Active:*
+`- **The vigil at the extraction point: the tool that must stay in exactly one position while the world rearranges itself around it; the carrier who does nothing for three nights and everything in one second**: BOO (cycle 2) — Odin entered the mountain and the inside act is entirely his; the Fighter's three nights are purely maintenance of a position that must be maintained; but the one second when Suttungr arrives and the auger must be braced is the entire commission; without that second the hole closes, the mead stays inside, and poetry belongs to giants permanently`
+
+*quest-map.md: append HNJ to Location Grid.*
+
+*books.md: mark BOO [x].*
