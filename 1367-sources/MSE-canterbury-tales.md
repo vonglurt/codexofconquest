@@ -343,3 +343,260 @@ checkPassFlag: escortComplete
 ---
 
 *Cycle 1 complete. Mark `[x]` for MSE-canterbury-tales in books.md.*
+
+---
+
+## Cycle 2: Find Death Before Sundown
+
+### Pass 1 — Plot Précis (Find Death Before Sundown)
+
+Three rioters in a plague-summer Flemish tavern hear the funeral knell for their friend and decide, with complete sincerity and a great deal of wine, to go find Death and kill it. An old man on the road outside — ancient, wrapped against the summer heat in every cloth he owns, carrying a white staff — tells them Death sits under an oak tree down the road. Under the oak: eight bushels of gold coin. The three forget about Death immediately. The youngest goes to town for food and wine; plans to poison the others and keep the gold alone. The other two plan to kill him when he returns. He returns; they kill him; they drink the wine; they die. The old man in the tale had been knocking on the earth with his staff asking to be let in. He could not find anyone willing to exchange youth for age. He has been standing at road junctions pointing strangers toward Death because he cannot find it himself.
+
+### Pass 2 — Fighter's Role (Find Death Before Sundown)
+
+The Fighter arrives as the three rioters set out. The old man at the road junction gives the Fighter his walking staff with a single instruction: plant it at the oak when the work is done. He does not explain what "the work" is. The Fighter follows the rioters — carrying the staff, not the rioters' purpose — as the escort of a transaction that does not need protection, only a witness who will complete the final gesture.
+
+### Pass 3 — What This Angle Reveals That Cycle 1 Missed
+
+Cycle 1 was fate working through beauty — a garland burned on the pyre of a man who won everything and lost it in a single afternoon, the gods answering every prayer and ruining everyone anyway. *Find Death Before Sundown* reveals the darker comedy: these men do not need to go looking for Death. It was in the tavern in the form of their friend's corpse. The gold under the oak is Death, specifically and materially — it does not wait for them in disguise, it is exactly what it looks like and they know exactly what it does to people and they choose it anyway. What cycle 1 missed: the old man. He has been trying to die for a very long time and the world will not cooperate. He cannot find Death even when he goes looking for it directly. He can only point other people toward it. Carrying his staff is carrying his failed errand — brought to completion at last by three men who thought they were doing something else entirely.
+
+---
+
+### Seven Storyline Ideas (Cycle 2 Selection)
+
+1. ~~The Tournament of Athens~~ — **USED Cycle 1**
+2. **Find Death Before Sundown** — **CHOSEN (Cycle 2)**
+3. The Rocks of Brittany — Unused
+4. The Answer to the Question — Unused
+5. Chanticleer's Yard — Unused
+6. The Pardoner's Relics — Unused
+7. Griselda's Journey — Unused
+
+---
+
+### Theme Check
+
+Active threads do not include: *the errand that must be completed by a substitute; the object that marks a transaction already in motion; the witness who carries the marker to its placement without becoming a participant in what the marker records.* The old man's commission is the only one in the collection that has no urgent party — no living person who cares whether the staff gets planted. The Fighter does it because the old man asked. That is sufficient. New thread proposed: **The proxy errand; the commission given by someone who cannot complete it themselves; the marker planted not to celebrate what happened but to record that the world ran its course and someone was present for it.**
+
+---
+
+### 5-Act Vignette Play: *Find Death Before Sundown*
+
+*Storyline 2 — Vigil and Placement. Three rioters have gone to find Death. They will find it. TOKEN: the Old Man's Walking Staff — received from the old man at the road junction Act I, carried through Acts II–IV, planted at the oak Act V.*
+
+**THE TOKEN: THE OLD MAN'S WALKING STAFF** — a staff of white wood, worn smooth from years of use, carrying the specific weight of something that has been leaned on for a very long time. The old man gives it to the Fighter without explanation. He sits down against the milestone as if he has been standing since before the Fighter was born. In Act V the staff is planted in the earth at the oak's roots beside the three dead men and left there. The old man's errand is complete.
+
+---
+
+#### ACT I — *The Road Junction*
+*The staff: in the old man's hands, almost his. Location: TVO — tavern outskirts, Flemish plague-summer road.*
+
+The three rioters are already outside the tavern, armed and loud. The funeral bell of their friend is still in the air. They are swearing to each other — genuine oaths, not tavern boasting — that they will go find Death and kill it before the sun goes down, because their friend is dead and someone ought to answer for it.
+
+The old man is at the road junction. Ancient, bundled against summer heat in every cloth he owns, his face the face of someone who has been at this junction long enough to stop being surprised by what comes down either road. He watches the three rioters with the stillness of deep familiarity.
+
+He looks at the Fighter. He holds out the staff.
+
+**Old Man:** "You are going the same direction. Take this to the oak and plant it when the work is done."
+
+He does not say whose work.
+
+He sits down against the milestone as if this is a relief. He looks at his empty hands for a moment with an expression that is hard to read.
+
+*The Fighter thinks: he has been carrying this a long time. He is glad to put it down.*
+
+*Insight check DC 12: understand what he is giving you — not a weapon; not a sign of authority; a marker for a transaction already running, which needs only a witness who will complete the final gesture.*
+
+**Failure:** You take the staff with the bearing of someone prepared to use it. The old man says, quietly: "Not like that. You are not going to need it for that." You adjust your grip, but you have already shown him that you heard it wrong. The three rioters move down the road and you follow with the staff held like something you are learning the weight of.
+
+**Success:** You receive the staff in both hands, the way you receive something given to be kept. The old man's face settles. He closes his eyes. You turn and follow the three rioters down the plague road with the staff across your back, and the junction is empty behind you before you have gone twenty steps.
+
+---
+
+#### ACT II — *The Road*
+*The staff: carried across the back. Location: TVO — road between the tavern and the oak.*
+
+The three rioters take the road at a half-run, shouting. One of them falls back — the middle one, who swore the loudest at the tavern and is now walking at the same speed as walking-away-from-a-mistake. He falls in beside the Fighter.
+
+**Rioter:** "You'll swear brotherhood with us, won't you? Four is better than three. Death won't fight four."
+
+He means it. He is also afraid. He wants one more body between himself and what they are walking toward.
+
+*The Fighter thinks: if I swear, I become the fourth rioter. The old man's commission requires that I remain something else.*
+
+*Persuasion check DC 12: decline the oath without breaking his courage — find the form that keeps you walking beside him without binding you to what follows.*
+
+**Failure:** You swear. He grips your arm. The three become four, which means you have stepped out of the witness role and into the group that is going to find the gold and do what the gold requires of people who find it. The staff is still in your hand but the commission it represents has been complicated by the oath.
+
+**Success:** "I will walk with you. I cannot swear brotherhood — I have already sworn something else. But I will walk to the oak." He looks at you for a moment — deciding whether this is enough — and then nods and picks up his pace. He is satisfied. You are still what the old man needed you to be.
+
+---
+
+#### ACT III — *The Oak*
+*The staff: still across the Fighter's back. Location: OKD — the oak at the crossroads.*
+
+The oak is old and wide, and under its roots there is gold. Eight bushels of it. It catches the afternoon light in a way that seems specific — aimed — as if the light has been arranged.
+
+The three rioters stop talking. They stop walking. They look at the gold with the expression of men whose purpose has just been completely replaced by a different purpose, in the space of one breath.
+
+The youngest speaks first: "We could keep this. If someone went to town for food and wine, we could stay through the night and take it home by cart in the morning." He says this looking at the oldest, who is already counting, and not at the middle one, who has not yet made his decision. His voice is reasonable. His eyes are already at the next step.
+
+*The Fighter thinks: the youngest knows exactly what he is going to buy in town alongside the wine.*
+
+*Perception check DC 13: read the calculation running behind the youngest's eyes in the first three seconds — the shape of what is already decided inside him, before he finishes saying the word "wine."*
+
+**Failure:** You see a man proposing logistics. You do not see what the logistics contain. The youngest goes to town with the ordinary manner of someone doing an errand, and you do not yet know what the errand is for.
+
+**Success:** You see it: the extra purchase, the two bottles, the specific counting of what he will come back with and what one bottle will do. You understand the shape of what is about to happen. You cannot change it. You hold the staff correctly for what comes next.
+
+---
+
+#### ACT IV — *The Wait*
+*The staff: in the Fighter's hand. Location: OKD.*
+
+The youngest has gone to town. The two remaining rioters look at the gold. Then they look at each other. Then they look at the Fighter.
+
+The oldest says: "You were hired for escort. The escort is done. But you've seen the gold. And we can't have someone walking back to town talking about eight bushels of gold under an oak tree."
+
+They are not cruel men. They are men who have found something that makes reason adjacent to the point.
+
+*Combat: Two Rioters, AC 13 HP 22 ×2. The staff is in one hand; the weapon is in the other. The oak is at the Fighter's back.*
+
+**Failure:** They take the staff from you in the scuffle. They are not thorough — they leave the Fighter alive and at the field's edge — but the staff is with them when the youngest returns, and what the youngest returns with changes who holds what very quickly thereafter.
+
+**Success:** The two rioters discover that carrying a dead man's commission makes you harder to move than it should. They fall back. They return to counting the gold. The youngest will be back before evening.
+
+---
+
+#### ACT V — *The Planting*
+*The staff: still in the Fighter's hand. Location: OKD — the oak, late afternoon.*
+
+The youngest returns with bread, meat, and two bottles — one clean, one poisoned, in the manner of a man who has decided his arithmetic and purchased accordingly. He finds the other two dead. He sets down the food. He opens the clean bottle and drinks to steady his hands. Then he opens the second bottle because it is there, and because his hands are still shaking.
+
+He sits against the oak root with the second bottle and looks at the Fighter with the expression of someone who has understood something too late to be useful.
+
+**Youngest:** "Did they find what they were looking for?"
+
+He is asking an honest question. He has a few minutes left.
+
+The staff is in the Fighter's hand. The earth at the oak's roots is soft.
+
+*Composure check DC 12: plant the staff and walk away from eight bushels of gold without touching it.*
+
+**Failure:** You take one coin. It is impossible not to — you have been standing over it for two hours and the old man asked you to plant a stick and then leave, which is a strange commission, and one coin is nothing against eight bushels. You plant the staff. You pocket the coin. The old man's work is done but you are carrying something that does not belong to you. The coin is heavier than it looks, the rest of the walk.
+
+**Success:** You plant the staff in the earth at the oak's roots — between the three bodies and the gold — and you leave. The road behind you fills with the sound of nothing in particular. The oak stands with the staff planted at its base and the three men arranged in the shapes their deaths took them and the gold catching the last light. The old man sent something to the oak that he could not carry himself, and it arrived, and the work is done.
+
+*The Fighter thinks: he has been sitting at that road junction waiting for someone willing to take the errand to the end. I do not know how long he has been sitting there. I do not know how many times he has tried. The staff is planted. I think that is what he was waiting to hear.*
+
+---
+
+## Quest API Stub (Cycle 2)
+
+```
+Act I — The Road Junction
+activateNode: TVO
+type: skill_check
+scene: "Three rioters have set out to kill Death after their friend's funeral
+  bell. The old man at the road junction — ancient, bundled against summer heat,
+  carrying a white staff — watches them go with the look of deep familiarity.
+  He holds the staff out to you: 'Take this to the oak and plant it when the
+  work is done.' He does not explain whose work. He sits down against the
+  milestone. You will not see him again."
+prompt: "Insight check DC 12: understand what he is giving you — not a weapon,
+  not authority, but a marker for a transaction already in motion. Your role is
+  witness and placement, not protection. The commission has no urgency for
+  anyone alive."
+failText:    "You take the staff with the bearing of someone who will use it.
+              He says: 'Not like that.' You adjust. But you have already shown
+              him that you heard it wrong."
+successText: "You receive it in both hands. His face settles. He closes his eyes.
+              You follow the rioters down the plague road with the staff across
+              your back."
+checkPassFlag: commissionUnderstood
+
+Act II — The Road
+activateNode: TVO
+type: skill_check
+scene: "The middle rioter drops back and walks beside you. He is afraid.
+  He asks you to swear brotherhood — four against Death, not three. He means
+  it. He wants one more body between himself and whatever is at the end of
+  this road."
+prompt: "Persuasion check DC 12: decline the oath without breaking his courage.
+  Find the form that keeps you walking beside him without binding you to what
+  follows. You cannot swear — you have already sworn something else."
+failText:    "You swear. He grips your arm. You have stepped out of the witness
+              role. The staff is still in your hand but the commission it
+              represents has been complicated."
+successText: "'I will walk with you. I cannot swear brotherhood — I have already
+              sworn something else. But I will walk to the oak.' He nods.
+              You remain what the old man needed you to be."
+checkPassFlag: oathDeclined
+
+Act III — The Oak
+activateNode: OKD
+type: skill_check
+scene: "Eight bushels of gold under the oak roots, catching the afternoon
+  light as if arranged for it. The three rioters stop mid-stride. The youngest
+  speaks first: someone should go to town for food and wine, they could carry
+  it home by cart in the morning. His voice is reasonable. His eyes are
+  already at the next step."
+prompt: "Perception check DC 13: read the calculation running behind the
+  youngest's eyes in the first three seconds — the extra purchase, the two
+  bottles, the specific shape of what he has already decided before he
+  finishes saying the word 'wine.'"
+failText:    "You see a man proposing logistics. You do not see what the
+              logistics contain. He goes to town with the ordinary manner
+              of someone doing an errand."
+successText: "You see it: what he will buy alongside the wine, and which
+              bottle he will bring back sealed. You understand what is
+              about to happen. You cannot change it. You hold the staff
+              correctly for what comes next."
+checkPassFlag: deathRead
+
+Act IV — The Wait
+activateNode: OKD
+type: combat
+combatTarget: "Two Rioters, AC 13 HP 22 ×2"
+scene: "The youngest has gone to town. The two remaining rioters look at
+  the gold, then at the Fighter. The oldest says: 'You've seen the gold.
+  We can't have someone walking back to town talking about eight bushels.'
+  They are not cruel men. They are men who have found something."
+prompt: "Hold your ground at the oak against two men who have just decided
+  the gold requires simplifying their witness count."
+failText:    "They take the staff from you in the scuffle. When the youngest
+              returns, what he returns with changes who holds what very quickly."
+successText: "They find that carrying a dead man's commission makes you harder
+              to move than expected. They fall back to the gold. The youngest
+              will be back before evening."
+checkPassFlag: staffKept
+
+Act V — The Planting
+activateNode: OKD
+type: skill_check
+scene: "The youngest has returned, found the others dead, drunk from both
+  bottles because his hands were shaking. He sits against the oak with the
+  poisoned wine and asks: 'Did they find what they were looking for?' He
+  has a few minutes. The staff is in your hand. The earth at the oak's
+  roots is soft. Eight bushels of gold in the afternoon light."
+prompt: "Composure check DC 12: plant the staff in the earth and walk away
+  without touching the gold. The old man asked you to plant a stick and
+  leave. That is the whole commission."
+failText:    "You take one coin. You plant the staff. The old man's work is
+              done but you are carrying something that does not belong to you.
+              The coin is heavier than it looks."
+successText: "You plant the staff at the oak's roots and walk away. The oak
+              stands with the staff planted beside the three dead men and the
+              gold catching the last light. The old man sent something to the
+              oak that he could not carry himself, and it arrived. You receive
+              the Old Man's Thanks — a sensation, not an object; the awareness
+              that the errand is complete and someone not present is aware of it."
+grantItem:   "Old Man's Thanks"
+takeItem:    "Old Man's Walking Staff"
+checkPassFlag: staffPlanted
+activateMissionBit: mseDeathComplete
+```
+
+---
+
+*Cycle 2 complete. Mark `[x]` for MSE-canterbury-tales in books.md.*

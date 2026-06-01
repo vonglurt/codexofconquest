@@ -436,7 +436,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | [x] | KIR | mabinogion | Mabinogion — Anon (Welsh medieval) | ~12th–13th C | Celtic Myth | 365 |
 | [x] | INV | ossian | Fragments of Ancient Poetry — James Macpherson | 1760 (ancient) | Highland Bard Epic | 87 |
 | [x] | BHD | cuchulain | Cuchulain of Muirthemne — Lady Gregory | 1902 (Iron Age) | Irish Hero Epic | 132 |
-| [ ] | MSE | canterbury-tales | The Canterbury Tales — Geoffrey Chaucer | c.1390 | Medieval Stories | 1688 |
+| [x] | MSE | canterbury-tales | The Canterbury Tales — Geoffrey Chaucer | c.1390 | Medieval Stories | 1688 |
 | [ ] | SDQ | rob-roy | Rob Roy — Sir Walter Scott | 1817 (1715 setting) | Scottish Adventure | 370 |
 | [ ] | FCO | vision-of-piers-plowman | Piers Plowman — William Langland | c.1370–1386 | Allegorical Poem | 265 |
 
