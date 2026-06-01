@@ -415,3 +415,236 @@ checkPassFlag: dianaDebtDischarged
 ---
 
 *Cycle 1 complete. Mark `[x]` for SDQ-rob-roy in books.md.*
+
+---
+
+## Cycle 2: Helen's Justice
+
+### Pass 1 — Plot Précis (Helen's Justice)
+
+At the shore of Loch Lomond, Helen MacGregor — Rob Roy's wife, the most dangerous person in this novel — conducts the execution of Morris, a government spy whose testimony was going to destroy the MacGregor clan and the Osbaldistone credit both. She reads his papers before giving the order. He is thrown into the loch. Helen hands the Fighter the government warrant from Morris's bag — "Take this to my husband. He should know what his enemies were carrying" — and returns to the Highland trees. The Fighter is the only person present who did not participate and will not be presumed to have participated.
+
+### Pass 2 — Fighter's Role (Helen's Justice)
+
+The Fighter arrives at the loch before the execution. Helen allows their presence because she needs a neutral carrier — someone who can bring the warrant to Rob Roy without being a witness anyone could use against him. Commission: witness without intervening, receive the warrant, carry it out of MacGregor territory through the government patrol searching for Morris's horse, and deliver it to Rob Roy with an honest account of what happened.
+
+### Pass 3 — What This Angle Reveals That Cycle 1 Missed
+
+Cycle 1 was Diana Vernon — the moral center of the novel, operating through indirection and sealed paper because the world will not give her any other instrument. *Helen's Justice* reveals the other form of moral authority in the book: direct, physical, final, not subject to appeal. Diana works through letters and codes because she cannot act in the open. Helen acts in the open because she has decided the law is not the appropriate jurisdiction. Both women are right. Both women operate at the outer edge of what the world allows. What cycle 1 missed: the scene at the loch is the only moment in the novel where an execution is presented without authorial condemnation and without authorial approval — Scott gives you Helen's reasons, the horror, and then declines to adjudicate. The Fighter's role is the role Scott assigns the reader: present, unable to stop it, required to carry the evidence.
+
+---
+
+### Seven Storyline Ideas (Cycle 2 Selection)
+
+1. The Bailie's Coulter — Unused
+2. ~~Diana's Letter~~ — **USED Cycle 1**
+3. **Helen's Justice** — **CHOSEN (Cycle 2)**
+4. Rob Roy's Word — Unused
+5. Rashleigh's Double Game — Unused
+6. The Highland Muster — Unused
+7. The Ford at Aberfoil — Unused
+
+---
+
+### Theme Check
+
+Active threads do not include: *justice carried out by the person with the most at stake; the neutral witness who carries the evidence without judging the act; the honest account delivered to the person who authorized the act, neither softened nor condemned.* This is distinct from all document-delivery themes (this document proves what was done, not what is owed) and from loyalty themes (the Fighter is not loyal to Helen — they are neutral). New thread proposed: **The act carried out in the absence of legitimate jurisdiction; the witness who must carry the evidence without becoming a partisan; the account delivered whole to the one who authorized it.**
+
+---
+
+### 5-Act Vignette Play: *Helen's Justice*
+
+*Storyline 3 — Witness and Delivery. Helen MacGregor executes a government spy at Loch Lomond. TOKEN: Morris's Commission — the government warrant from the spy's satchel, given to the Fighter by Helen, carried to Rob Roy.*
+
+**THE TOKEN: MORRIS'S COMMISSION** — a government warrant, folded three times, the seal broken where Helen opened it, bearing authority to arrest the MacGregor family on charges of debt and sedition. Helen hands it to the Fighter without a word after reading it. In Act V, Rob Roy reads what his enemies were prepared to use.
+
+---
+
+#### ACT I — *The Loch Shore*
+*The warrant: in Helen's hands, not yet the Fighter's. Location: LLM — Loch Lomond shore, morning.*
+
+The shore of Loch Lomond is grey and cold. The loch is wide and still. Morris — the government spy, the informer — is sitting on a rock at the water's edge with his hands bound behind him. Two MacGregor men stand behind him. He is not injured. He is afraid.
+
+Helen MacGregor stands between the treeline and the water with Morris's satchel already open in her hand. She looks at the Fighter.
+
+**Helen:** "You did not come with them. You are not one of theirs." A statement, not a question. "Then you are here as a witness. That is well. My husband should know what was done here and why, and the telling should come from someone with no stake in either side."
+
+She holds up the warrant.
+
+**Helen:** "After this is done, you will take what is in this bag to Rob Roy. You will tell him what you saw. You will not add to it or take from it. Can you do that?"
+
+*Insight check DC 12: understand the commission — neutral carriage, honest testimony; neither praise nor condemnation; the account of a witness, not a partisan.*
+
+**Failure:** You begin to say whether what is about to happen is right or wrong. Helen stops you. "I did not ask your judgment. I asked your service." She hands you the satchel anyway, with less confidence than she intended to give it. "Stand there. Do not speak."
+
+**Success:** "I will carry what you give me and say what I saw." Helen holds the satchel out. You take it. She turns back toward Morris without another word. You receive Morris's Commission.
+
+---
+
+#### ACT II — *The Execution*
+*The warrant: in the satchel in the Fighter's hands. Location: LLM.*
+
+It happens quickly. The loch is cold. There is the sound of water and then the sound of nothing.
+
+Helen walks back to the treeline without looking at the water. One of the MacGregor men picks up Morris's hat from the rock and throws it in after him.
+
+The Fighter stands at the water's edge with the satchel.
+
+*Composure check DC 12: hold the position of witness — still, present, not moving toward the water, not speaking — through the execution and the silence that follows.*
+
+**Failure:** You move — a single step toward the water. One of Helen's men puts a hand on your arm and holds you still. You are not in danger. But Helen sees it from the treeline, and files it, and the account that reaches Rob Roy may arrive with something missing.
+
+**Success:** You hold still. The water settles. Helen stops at the treeline, looks back once in final assessment, nods, and is gone. You are alone at the loch with the satchel and the sound of the water settling back to itself.
+
+---
+
+#### ACT III — *Out of MacGregor Country*
+*The warrant: in the satchel on the Fighter's back. Location: LLM → Highland road.*
+
+The road out of MacGregor territory crosses the government patrol zone. An English dragoon company is searching for Morris's route — they want his horse, and they want Morris. They will stop anyone on this road and search their satchel. The warrant is, specifically, proof that the government had standing arrest plans for a prominent Highland family. In English hands, it becomes a diplomatic problem. In the Fighter's hands, it is evidence of a crime.
+
+*Stealth check DC 13: take the high ridge path above the patrol road and cross the exposed section before the dragoons complete their sweep.*
+
+**Failure:** A scout on the ridge sees movement. You hide the warrant under a flat stone, clear the patrol, retrieve it. But you are now an hour behind Rob Roy's messenger, who is already warning him that strangers are in the glen.
+
+**Success:** You cross at the exact pace the patrol's pattern requires and descend to the far side with the warrant intact and the patrol none the wiser.
+
+---
+
+#### ACT IV — *The Highland Road*
+*The warrant: in the satchel, past the patrol zone. Location: Highland road, LLM toward GLN.*
+
+Beyond the patrol zone a MacGregor outrider intercepts you on the track. He knows where you are going. He offers the short way to the glen — a ford route government horses cannot follow — on the condition that the satchel stays on your person and dry.
+
+*Athletics check DC 13: cross the Highland ford in full gear with the satchel kept dry.*
+
+**Failure:** The satchel takes water. The warrant is legible but the government seal is partially dissolved — its provenance is harder to assert with certainty when Rob Roy reads it.
+
+**Success:** You cross clean. The outrider brings you to the glen entrance in half the expected time with the satchel dry and the seal undamaged.
+
+---
+
+#### ACT V — *Rob Roy's Glen*
+*The warrant: ready to deliver. Location: GLN — glen shelter, Highland interior.*
+
+Rob Roy reads the warrant without expression and sets it on the rock beside him. He looks at you.
+
+**Rob Roy:** "You were at the loch. Tell me what happened."
+
+He wants to know what his wife did — not softened, not defended, not condemned. The exact sequence. He has been married to Helen MacGregor for twenty years. He does not need the event translated for him.
+
+*Persuasion check DC 12: give a true account without opinion attached — the shore, her words, the commission, the execution, the man's hat thrown in after him, the silence, the satchel. Let him hear it whole.*
+
+**Failure:** You add a qualification — something that softens one moment. Rob Roy hears the gap. "You are being kind to me about it. I do not need that." He takes the warrant anyway. The commission is complete but the account is not entirely what Helen sent you to deliver.
+
+**Success:** You say it exactly. Rob Roy is quiet for a long time. Then he folds the warrant twice and puts it inside his coat.
+
+**Rob Roy:** "That is my wife. That is exactly my wife."
+
+He pulls the ring from his finger — not a valuable ring, just the one he always wears — and holds it out.
+
+**Rob Roy:** "You carried this clean. Go back to Osbaldistone. Tell Frank that Rob Roy still has an account to settle, and what I just read makes the balance clearer."
+
+You receive Rob Roy's Ring.
+
+*The Fighter thinks: I was asked to carry an honest account of an irreversible act to the person who authorized it, without opinion. I carried it exactly. Helen and Rob Roy and the man in the loch are the parties to this. I was the distance between what happened at the shore and what he now knows in the glen.*
+
+---
+
+## Quest API Stub (Cycle 2)
+
+```
+Act I — The Loch Shore
+activateNode: LLM
+type: skill_check
+scene: "Helen MacGregor stands between the treeline and Loch Lomond's edge,
+  Morris bound at the water behind her, his satchel already open in her hand.
+  She has read the government warrant inside. She holds the satchel out: take
+  it to Rob Roy, tell him what you saw, add nothing and take nothing from it.
+  She does not ask your opinion of what is about to happen."
+prompt: "Insight check DC 12: understand the commission — neutral carriage,
+  honest testimony; neither praise nor condemnation. The account of a witness,
+  not a partisan."
+failText:    "You begin to say whether what is about to happen is right or wrong.
+              Helen stops you: 'I did not ask your judgment. I asked your service.'
+              She gives you the satchel with diminished confidence."
+successText: "'I will carry what you give me and say what I saw.' Helen hands
+              over the satchel and turns back toward the water. You receive
+              Morris's Commission."
+grantItem:   "Morris's Commission"
+checkPassFlag: witnessRoleUnderstood
+
+Act II — The Execution
+activateNode: LLM
+type: skill_check
+scene: "The execution is brief. The loch is cold. The sound of water and then
+  the sound of nothing. Helen walks to the treeline without looking back. One
+  of her men throws Morris's hat into the loch after him. You stand at the
+  water's edge with the satchel."
+prompt: "Composure check DC 12: hold the position of witness through the
+  execution and the silence — still, present, not moving toward the water,
+  not speaking."
+failText:    "You move — one step toward the water. A MacGregor hand holds
+              you still. Helen sees it from the treeline. The account that
+              reaches Rob Roy may arrive with something missing."
+successText: "You hold still. The water settles. Helen looks back once,
+              nods, and is gone. You are alone at the loch."
+checkPassFlag: vigilHeld
+
+Act III — Out of MacGregor Country
+activateNode: LLM
+type: skill_check
+scene: "The patrol road is ahead: English dragoons searching for Morris's
+  route. They will search any satchel on this road. The warrant you carry
+  proves the government had standing arrest plans for a prominent Highland
+  family — in English hands, a diplomatic crisis."
+prompt: "Stealth check DC 13: take the high ridge path above the patrol road
+  and cross the exposed section before the dragoons complete their sweep."
+failText:    "A scout sees movement. You hide the warrant, clear the patrol,
+              retrieve it — but arrive an hour late, behind Rob Roy's own
+              messenger."
+successText: "You cross at the patrol's rhythm and descend to the far side
+              with the warrant intact."
+checkPassFlag: patrolCleared
+
+Act IV — The Highland Road
+activateNode: LLM
+type: skill_check
+scene: "A MacGregor outrider intercepts you on the track and offers the
+  short way — a ford route government horses cannot follow — on the condition
+  that the satchel stays dry."
+prompt: "Athletics check DC 13: cross the Highland ford in full gear with
+  the satchel kept above the waterline."
+failText:    "The satchel takes water. The warrant is legible but the
+              government seal is partially dissolved — its provenance is
+              harder to assert when Rob Roy reads it."
+successText: "You cross clean. The outrider delivers you to the glen entrance
+              in half the expected time with the satchel dry and the seal
+              intact."
+checkPassFlag: fordCrossed
+
+Act V — Rob Roy's Glen
+activateNode: GLN
+type: skill_check
+scene: "Rob Roy reads the warrant without expression and sets it down.
+  He looks at you: 'You were at the loch. Tell me what happened.' He is
+  not asking you to interpret what his wife did. He is asking for the
+  exact sequence, whole."
+prompt: "Persuasion check DC 12: give a true account without opinion —
+  the shore, her words, the commission, the execution, the hat thrown in,
+  the silence, the satchel. Neither softened nor condemned."
+failText:    "You add a qualification. Rob Roy hears the gap. 'You are being
+              kind to me about it. I do not need that.' He takes the warrant.
+              The commission is complete but not entirely clean."
+successText: "'That is my wife. That is exactly my wife.' He folds the warrant
+              into his coat and removes his ring. 'You carried this clean.'
+              You receive Rob Roy's Ring."
+grantItem:   "Rob Roy's Ring"
+takeItem:    "Morris's Commission"
+checkPassFlag: accountDelivered
+activateMissionBit: sdqHelensComplete
+```
+
+---
+
+*Cycle 2 complete. Mark `[x]` for SDQ-rob-roy in books.md.*
