@@ -353,3 +353,225 @@ He does not look up when he says: "Tell the boy the record is complete."
   ]
 }
 ```
+
+---
+
+## Cycle 2 — Beltenebros's Deeds
+
+**What cycle 1 missed:** Cycle 1 took the squire's angle — the person in the champion's shadow, wrongly blamed in the record's margin through another's act. That angle is about correcting a false negative already written into the register. Cycle 2 takes a different structural problem: not a wrong entry but an absent connection. For six months Amadis fought under a name the register accepted as a different fighter's. Every deed that happened under "Beltenebros" happened. The register did not lie. It recorded what it was given. But the annual sealing of the record will permanently sever those six months from the man who lived them — not through malice but through the neutral operation of a system that cannot look behind a name. The identity declaration is the only mechanism that can retrospectively join the man to his months, and it must arrive before the annual seal.
+
+---
+
+### Pass 1 — Token
+
+**The Incomplete Identity Declaration** is a half-signed parchment — two columns: one naming "Beltenebros of Poor Rock" and every tournament entry and deed registered under that name across six months; the other linking that name to "Amadis, son of Perión of Gaul, Knight of King Lisuarte's Court" by physical identification and dated testimony. Durinda the Damsel of Denmark has already pressed her mark to the first column — she recognized the scar at his neck, she knows both names, she was there at the transition point. The declaration needs a second witness: Andalod the hermit at Peña Pobre, who knew him as Beltenebros throughout the exile and knows the name he returned under. With both marks it is complete. Without Andalod's countersignature it is insufficient — a single witness attesting to an identity split between a public name and a pseudonym is not legally binding in the court's evidence standard.
+
+---
+
+### Pass 2 — Seven Storyline Ideas
+
+1. **"What the Register Omits"** — USED (cycle 1): Gandalin's theft attestation; squire's record amended before the wax is poured
+2. **"Beltenebros's Deeds"** ← **CHOSEN / USED (cycle 2)**
+3. "Durinda's Passage" — Damsel of Denmark accused of fabricating Oriana's reconciliation letter; carry original authenticated draft to court herald before the slander is entered as official account
+4. "Corisanda's Notarization" — Corisanda's presence at Poor Rock unrecorded; Andalod's witness statement at the hermitage; her name missing from the official recovery story
+5. "Urganda's Suppressed Verse" — eleventh stanza of Urganda's prophecy politically suppressed; scribe's hidden copy recovered from harbor district and carried to master archivist
+6. "The Madasima Covenant Dispute" — manner-of-discharge challenged; signed covenant-discharge document at neutral notary; Fighter obtains court agent designation and carries document through Madasima's agents
+7. "The Letter in the Chest" — Elisena's original letter to Perión, sealed in the infant's chest, predates the marriage; held by the Scottish knight's family; delivery now changes what the past officially is
+
+---
+
+### Pass 3 — Theme Check
+
+No existing thread covers: the anonymous combatant whose deeds accumulate correctly under a name that cannot survive the official record; the annual sealing as the neutral mechanism of permanent estrangement; the identity declaration that retroactively joins a man to six months he lived under a name the world accepted as someone else. The closest is *the man fate wrote for betrayal is still the man who betrayed* (CPH cycle 1) — but that is about a divided life the actor lived consciously through multiple treacheries; here the pseudonym was survival, not division, and the deeds were not in tension with the man's identity. Distinct thread: **The anonymous combatant whose six months of deeds were correctly entered under a false name; the annual seal as the neutral mechanism that permanently separates the man from his acts; the identity declaration as the only instrument that can retrospectively join them before the record closes.**
+
+---
+
+## 5-Act Vignette Play
+
+*Lisuarte's court, late autumn. The annual combat register seals in three days. Durinda the Damsel of Denmark is back in court with a half-signed parchment and no way to reach the second witness herself — she has a court obligation she cannot leave. Andalod lives at Poor Rock, off the coastal headland, reached by sea. He is old and will not come to court. The Fighter has been sent to get his mark and return before the seal date.*
+
+---
+
+**ACT 1 — Herald's Lodge Vestibule (CHT)**
+
+*The room smells of tallow and fresh ink. Durinda is at a side table with the incomplete declaration unrolled between her hands. She is not young; she has traveled far and fast to get this far; she has Amadis's scar description memorized from the day she found him in a hermit's cave, and the day she found him has been in her face ever since. She pressed her mark to the first column two days ago. The second column is blank.*
+
+"Andalod will not come here," she says. "He has not left the island in forty years. He witnessed the whole of it — he knew the name Beltenebros from the first day, and he was standing at the chapel door when Amadis rode away under his own name. He knew both." She rolls the parchment carefully. "He will sign it if someone brings it to him in the right way. He will not sign it for someone who wants something from the archive."
+
+She does not say what the right way is. That is the first thing.
+
+**TOKEN GRANT:** The Incomplete Identity Declaration — Durinda's mark on the first column; second column blank; to be completed by Andalod's countersignature; addressed to the Annual Register Herald; seal date in three days.
+
+**SKILL CHECK:** Insight DC 12
+- *onPass:* Fighter understands what "the right way" means before Durinda finishes: not carrying the document as an administrative errand but as a recognition of what the six months were. Andalod will sign for someone who understands that the exile was real, not a legal fiction requiring cleanup. The Fighter takes the declaration and says nothing about the register.
+- *onFail:* Durinda adds it plainly: "Do not speak to him about the register. Speak to him about Beltenebros. He will know what you need when you have told him what you understand." Fighter takes the declaration.
+
+---
+
+**ACT 2 — Coastal Road to the Harbor (CHT → PBK)**
+
+*The coastal road runs three hours south to the fishing harbor where one man owns a boat large enough to reach Poor Rock in daylight and old enough to have carried Durinda out and back six months ago. He is mending a net when the Fighter arrives. He looks at the Fighter. He looks at the direction the Fighter came from.*
+
+"Not this season," he says. He does not explain what season means. There are men in Gandandel's household who have been at the harbor for four days — just watching. Not doing anything. Watching the road from court and watching the sea road to Poor Rock.
+
+**SKILL CHECK:** Persuasion DC 12
+- *onPass:* Fighter does not try to explain the register or the urgency. Pays the full rate, and then pays the same again, and then says: "You carried the Damsel of Denmark six months ago." The boatman looks at the Fighter for a long moment. He puts down the net. He says: "High tide is in two hours."
+- *onFail:* The boatman needs more than money. He needs the Fighter to say something that makes Gandandel's men irrelevant to the decision. Fighter names what the journey is for — not the archive, but Beltenebros — and the boatman nods slowly and puts down the net.
+
+**ITEM GRANT:** The Boatman's Crossing Note — a brief line on oilskin recording the passage date and direction; the boatman's mark. Useful if Gandandel's watchers report the departure and someone later asks where the Fighter went.
+
+---
+
+**ACT 3 — Peña Pobre / Andalod's Hermitage (PBK)**
+
+*Poor Rock at morning: a small island of grey stone and salt-grass, a chapel at the high point, a garden that has been tended for forty years by the same hands. Andalod is in the garden when the Fighter arrives by the stone path up from the landing. He does not look up immediately. He has been expecting someone since the sea went quiet an hour ago.*
+
+"He came here with no name," Andalod says, kneeling beside a winter herb. "He called himself Beltenebros. I did not ask why. He stopped eating. He would have died." He stands, slowly. He looks at the Fighter. "He started eating again when the right words arrived. I did not write that down anywhere. I did not think it needed to be written down."
+
+He looks at the incomplete declaration in the Fighter's hands.
+
+**SKILL CHECK:** Composure DC 13
+- *onPass:* Fighter says nothing about the register. Says: "Beltenebros happened. The register doesn't know it was him." Andalod looks at the first column — Durinda's mark, the list of deeds — for a long time. Then he says: "I know both names. I was present for both. That is what you need me to say." He takes the quill from his writing table inside the chapel. He signs the second column with the same care he brings to the garden. "Tell him Peña Pobre remembers him by the right name."
+- *onFail:* Andalod will not sign for the register's sake. Fighter must find a different framing — not correction, not administrative necessity, but Andalod's own knowledge bearing witness to something that happened while he watched. The second try, more carefully given, lands.
+
+**TOKEN STATE CHANGE:** The Incomplete Identity Declaration → now fully signed; Durinda's mark and Andalod's countersignature; the second column complete; legally sufficient.
+
+**ITEM GRANT:** Andalod's Message — a verbal line to carry back: "Peña Pobre remembers him by the right name."
+
+---
+
+**ACT 4 — Sea Return (PBK → CHT)**
+
+*The return crossing is rougher than the outbound — the autumn wind has come around to the south and the boatman is working hard. Gandandel's watchers were at the harbor when they left. Two light boats are on the water a quarter-mile back, running with the wind. They have been following since the island.*
+
+*They do not want to kill the Fighter at sea — too visible, no control over the body or the document. They want to board the boat before it reaches the harbor, take the declaration, and be gone before anyone on shore knows what happened.*
+
+**COMBAT:** Gandandel's Sea-Agents ×2, AC 13, HP 24
+*The boats are close and closing. The boatman is working the tiller, saying nothing, which is a form of help. The declaration is in the Fighter's inner coat.*
+
+---
+
+**ACT 5 — Annual Register Herald's Desk (CHT)**
+
+*The Herald's Lodge is lit by multiple lamps at late evening — the seal ceremony begins at the morning bell. The Annual Register Herald is at his long table, the register spread open, the day's final filings stacked beside him. A clerk is sorting. Two other heralds are copying the supplemental index. The seal date is tomorrow. This is the last evening it can be received.*
+
+*The herald looks at the declaration. He reads both columns. He looks at the marks — Durinda's and Andalod's. He checks the Beltenebros entry in the register: seventeen combat entries, six tournament months, one note from the prior herald reading "independent traveler, confirmed knight by deed record."*
+
+"Seventeen entries," he says. He is not objecting. He is calculating.
+
+**SKILL CHECK:** Composure DC 11
+- *onPass:* Fighter does not rush. The herald needs time to calculate — he is going to have to cross-reference each Beltenebros entry and annotate it with the identity link. Fighter holds the position at the desk without adding urgency. The herald works. After thirty minutes he looks up: "Filed. Beltenebros of Poor Rock equals Amadis of Gaul. Seventeen entries." He closes the declaration into the supplemental index. He stamps the index.
+- *onFail:* Fighter says something about urgency; the herald sets the declaration to the side while he finishes other work. "I'll reach it before the bell." Fighter has to hold position and wait, which is the correct action the Fighter failed to choose. The declaration is filed. The seal date is met.
+
+**TOKEN TAKE:** The Incomplete Identity Declaration → now fully signed and filed; the declaration enters the supplemental index as cross-reference 17B to the annual register; Amadis's six months reclaimed. Fighter leaves with empty hands and Andalod's message.
+
+**ITEM GRANT:** The Register's Cross-Reference Receipt (annual supplement, 17B notation, dated and stamped).
+
+---
+
+## Quest API Stub (UQF v1.0)
+
+```json
+{
+  "quest_id": "BRU_beltenebros_deeds",
+  "title": "Beltenebros's Deeds",
+  "source": "Amadis of Gaul — Vasco de Lobeira / Robert Southey translation",
+  "cycle": 2,
+  "theme": "The anonymous combatant whose six months of deeds were correctly entered under a false name; the annual seal as the neutral mechanism that permanently separates the man from his acts; the identity declaration as the only instrument that can retroactively join them before the record closes",
+  "token": {
+    "id": "incomplete_identity_declaration_BRU",
+    "name": "The Incomplete Identity Declaration",
+    "description": "A half-signed parchment linking 'Beltenebros of Poor Rock' to 'Amadis, son of Perión of Gaul.' Durinda's mark is on the first column; the second column — requiring Andalod the hermit's countersignature — is blank. With both marks it is legally sufficient for the annual register. Without Andalod's mark it is a single-witness statement and legally insufficient.",
+    "grant_act": "act_1",
+    "take_act": "act_5",
+    "check_acts": ["act_2", "act_3", "act_4"],
+    "state_change_act": "act_3"
+  },
+  "nodes": ["CHT", "PBK"],
+  "new_nodes": [
+    {
+      "code": "PBK",
+      "name": "Peña Pobre — Poor Rock Hermitage",
+      "terrain": "coastal_island",
+      "theme_affinity": "the site of dissolution and recovery, the hermit who witnessed the exile, the right name spoken and remembered, the document that can only be completed here"
+    }
+  ],
+  "acts": [
+    {
+      "act_id": "act_1",
+      "node": "CHT",
+      "title": "Durinda's Half",
+      "prose": "Durinda at a side table in the herald's vestibule, the incomplete declaration between her hands. She pressed her mark two days ago. Andalod is at Poor Rock. He will not come to court. He will sign for someone who understands what the exile was.",
+      "skillCheck": {
+        "skill": "Insight",
+        "dc": 12,
+        "onPass": "Fighter understands before Durinda finishes: not an administrative errand but a recognition of the exile's reality. Takes the declaration without mentioning the register.",
+        "onFail": "Durinda explains plainly: do not speak about the register; speak about Beltenebros. Fighter takes the declaration."
+      },
+      "tokenGrant": "incomplete_identity_declaration_BRU"
+    },
+    {
+      "act_id": "act_2",
+      "node": "CHT_to_PBK",
+      "title": "The Boatman",
+      "prose": "The coastal harbor three hours south. The boatman who carried Durinda six months ago. Gandandel's men have been watching the harbor for four days. The boatman does not want to go to Poor Rock this season.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "onPass": "Fighter names what the journey is for — Beltenebros — and pays double. The boatman puts down the net. High tide in two hours.",
+        "onFail": "Fighter names Beltenebros without the money first; boatman needs both. Second attempt with both."
+      },
+      "grantItem": "boatmans_crossing_note",
+      "checkToken": "incomplete_identity_declaration_BRU"
+    },
+    {
+      "act_id": "act_3",
+      "node": "PBK",
+      "title": "Andalod's Countersignature",
+      "prose": "The hermitage garden on a grey island. Andalod tending a winter herb, not looking up. He watched the whole six months. He has not written it down anywhere. The declaration needs his knowledge put in writing.",
+      "skillCheck": {
+        "skill": "Composure",
+        "dc": 13,
+        "onPass": "Fighter says: 'Beltenebros happened. The register doesn't know it was him.' Andalod signs both columns with garden-tending care. 'Tell him Peña Pobre remembers him by the right name.'",
+        "onFail": "First framing fails; second framing — Andalod's witness to something that happened while he watched — succeeds."
+      },
+      "grantItem": "andalods_message_verbal",
+      "checkToken": "incomplete_identity_declaration_BRU",
+      "tokenStateChange": "declaration_now_complete"
+    },
+    {
+      "act_id": "act_4",
+      "node": "PBK_to_CHT",
+      "title": "Sea Return",
+      "prose": "Two light boats on the water a quarter-mile back, running with the wind. Gandandel's watchers from the harbor. They want to board before reaching port. The declaration is in the Fighter's inner coat.",
+      "combat": {
+        "enemies": "2x Gandandel's sea-agents",
+        "ac": 13,
+        "hp": 24,
+        "notes": "On the sea, at close quarters. The boatman is managing the tiller and is not available for combat but is not in the way."
+      },
+      "checkToken": "incomplete_identity_declaration_BRU"
+    },
+    {
+      "act_id": "act_5",
+      "node": "CHT",
+      "title": "Seventeen Entries",
+      "prose": "The herald at his long table, the annual register open, the seal bell in the morning. He reads both columns. He checks the seventeen Beltenebros entries in the register. He calculates. He needs time to annotate seventeen cross-references.",
+      "skillCheck": {
+        "skill": "Composure",
+        "dc": 11,
+        "onPass": "Fighter holds the desk without adding urgency. The herald works for thirty minutes. 'Filed. Beltenebros of Poor Rock equals Amadis of Gaul. Seventeen entries.' Closes and stamps.",
+        "onFail": "Fighter mentions urgency; herald sets it aside; comes back before the bell; filed correctly, just slower."
+      },
+      "takeItem": "incomplete_identity_declaration_BRU",
+      "grantItem": "register_cross_reference_receipt_17B",
+      "activateMissionBit": "bruBeltenebrosComplete"
+    }
+  ]
+}
+```
+
+*quest-map.md: append BRU cycle 2 row after BRU cycle 1 row.*
+*quest-map.md: append new theme thread (before "The tool of reassembly" ALF line).*
+*quest-map.md: append PBK to Location Grid.*
+*books.md: mark BRU [x].*
