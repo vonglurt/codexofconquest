@@ -399,6 +399,263 @@ The document passes into the Weimar archive under a new subcategory. The oilskin
 
 ---
 
+## Cycle 2 — Angle: *Palinurus's Shore — The Naming That Was Sworn Before the Death*
+
+**What this angle reveals that cycle 1 missed**: Cycle 1 showed the enemy preserving the record of their victims' suffering — grief held in hostile custody, the act of unwilling witness. Cycle 2 shows *local* administrative authority attempting to erase what the divine explicitly promised: the helmsman who died guaranteeing the fleet's safe passage received one inheritance — the Sibyl's prophecy that his headland would carry his name forever (*nomenque a te capiunt loca*). That promise has no deed, no administrator, no living enforcer. A duke in 1367 who wants his own name on the cape is counting on that silence. The document that fights erasure is older than the dispute itself: the Sibyl named the place before anyone had authority over it to rename it.
+
+---
+
+### 5-Act Vignette Play: *Palinurus's Shore*
+
+#### The Tablet
+
+*The Sibyl's Shore-Prophecy — wax tablet, pressed in the Sibyl's own stylus-hand, sealed in an iron case with a black wax plug — the text reads: nudus in ignota, Palinure, iacebis harena; nomenque a te capiunt loca. Naked, Palinurus, you will lie on a foreign shore; and the place will take your name. Kept for 1,387 years in the Sibyl's vault archive at Cumae, in a niche behind the oracle seat, by six successive keepers none of whom threw it away.*
+
+---
+
+**ACT I**
+
+*The Sibyl's Shore-Prophecy — sealed in its iron case — on the stone shelf behind the oracle seat, Sibyl's vault archive at Cumae, morning.*
+
+The keeper's name is Carmela. She is seventy-one, the sixth keeper in a line that has never been formally appointed — only inherited. The archive is a deep room cut into the tufa rock behind the original oracle grotto. The niche where the tablet rests is cool and dark. The black wax seal on the iron case is original. She has never opened it.
+
+She knows what is happening at Cape Palinurus. A pilgrim told her three weeks ago: the duke of the southern province has ordered new coastal charts. The cape is now called *Promontorio del Duca*. The pilots who use the old name are being fined. She has been deciding whether to send the tablet north for nine days.
+
+*— She is not asking whether you can carry it. She is asking whether you know what it is.*
+
+> **Dialogue DC 12.** Tell Carmela something true about what it means to die guaranteeing a passage and have only a name as your inheritance. She does not need comfort. She needs to hear that the Fighter understands the category.
+
+**Fail:** Carmela sets her hands flat on the case. "Not yet." She is not angry. She will be here at vespers. Try then.
+
+**Pass:** She lifts the iron case with both hands and sets it on the stone ledge between you. She does not open it. She adds a small slip of vellum to the exterior — her conveyance note, folded under the wax plug: *carrier authorized, Carmela di Cumae, keeper, Sibyl's Archive.* "The naming was performed before anyone was available to sign. Tell the registry master that." She steps back.
+
+**TOKEN GRANTED: Sibyl's Shore-Prophecy** — wax tablet in iron case, black wax seal, Carmela's conveyance slip folded under the exterior wax plug; text: *nudus in ignota, Palinure, iacebis harena; nomenque a te capiunt loca.*
+
+---
+
+**ACT II**
+
+*The Sibyl's Shore-Prophecy — in the Fighter's satchel — at the coast road toll point, southern Italy, afternoon.*
+
+The duke's tax officer is stationed here. His name is Filiberto. He has a list of proscribed items: anything related to the cape name dispute, anything referencing "Palinurus" or "the old helmsman's headland." He is not malicious. He is doing his job.
+
+He sees the iron case in the satchel. He reads Carmela's conveyance note. He does not know the Sibyl's vault archive exists. He knows the seal is not commercial.
+
+*— He is looking for a category. Give him one he cannot file as contraband.*
+
+> **Skill Check: Persuasion DC 12.** Argue that a prophetic-religious archive document predating any current administrative authority by thirteen centuries falls outside commercial inspection jurisdiction — the duke's writ covers cartographic materials, not ancient oracle records.
+
+**Fail:** Filiberto stamps the case *"held for review"* and sets it on his desk. The Fighter waits while he sends for guidance. The guidance takes a day. The category question works on him in the night; he releases it with an uneasy notation.
+
+**Pass:** Filiberto reads the conveyance note twice, looks at the black wax seal, looks at the Fighter. He produces a transit slip and stamps it: *reviewed, not impounded — category: religious-archive document, pre-administrative, Sibyl's Archive, Cumae.* He attaches the slip to the exterior of the iron case. The road south is open.
+
+**TOKEN STATE 2**: Iron case now bears Filiberto's official transit stamp on an attached slip — *reviewed, not impounded* — establishing that the document passed administrative scrutiny and was not subject to the duke's cartographic proscription.
+
+---
+
+**ACT III**
+
+*The Sibyl's Shore-Prophecy — iron case with transit stamp — Cape Palinurus harbor town, evening.*
+
+The harbor is a small port, thirty fishing boats, one tavern. The new ducal charts are already posted at the harbor master's office: *Promontorio del Duca.* The harbor pilots are meeting in the tavern. Three have been fined this week for using the old name. Their guild log uses "Capo Palinuro" going back eighty years.
+
+The guild master is Piero. He is fifty, square-handed, has spent forty years reading this coast. He knows every current and rock around the headland. He does not know who Palinurus was.
+
+The Fighter tells him.
+
+*— He listens. He knows about dying to guarantee a passage. He has known pilots who did not come back.*
+
+> **Skill Check: Persuasion DC 13.** Convince Piero to co-sign a geographic continuity attestation confirming that "Capo Palinuro" has been the continuous local name in pilots' usage, and that his guild's seal on the Sibyl's iron case constitutes a second authority for the naming. He will not sign for an argument. He will sign for the truth.
+
+**Fail:** Piero shakes his head. "I don't sign documents for strangers." He is not hostile. He is tired. Come back in the morning after the early fishing run; he always has.
+
+**Pass:** Piero uncaps his guild seal and presses it into the black wax of the iron case's plug alongside Carmela's slot. "We have always called it Capo Palinuro. Write that down somewhere." The seal impression sits in the wax beside the archive keeper's notation.
+
+**TOKEN STATE 3**: Guild seal pressed into the exterior wax alongside Carmela's keeper slot — the tablet is now a dual-authority document: Sibyl's Archive and Harbor Pilots' Guild of Cape Palinurus both attest the naming.
+
+---
+
+**ACT IV**
+
+*The Sibyl's Shore-Prophecy — iron case with transit stamp and dual seal — coast road north toward Naples, night.*
+
+Two men step out of the trees a mile north of the harbor town. They are not the duke's official agents — they are the kind of men the duke uses when he does not want official records of the transaction. They want the case. They know what it contains. Someone in the harbor watched the guild seal being pressed.
+
+*— They have orders to confiscate, not to kill. That is a limited comfort.*
+
+> **Combat: 2 opponents — AC 13, HP 22 each.** They fight to disarm and take the satchel. They will break off if reduced below half health.
+
+**Fail:** They get the satchel. The Fighter pursues. The road south back to the harbor is an hour; Piero will know who those men work for and where they shelter.
+
+**Pass:** The satchel stays. Both men down or broken. The night road ahead is empty.
+
+**TOKEN STATE 4**: Carried intact through ambush. The dual seal is undamaged.
+
+---
+
+**ACT V**
+
+*The Sibyl's Shore-Prophecy — iron case, transit stamp, dual seal — Naples Maritime Registry, the desk of Ser Matteo di Napoli, morning.*
+
+Ser Matteo receives everything with patient skepticism. He reads Carmela's conveyance note. He looks at the transit stamp. He looks at the guild seal. He opens the iron case and reads the wax tablet — slowly, his lips moving on the Latin.
+
+He sets the tablet down.
+
+"The Sibyl of Cumae said the place would take his name." He looks up. "That is not a deed. That is a prophecy." A long pause. "The duke's renaming order is administrative. This is prophetic-geographic record." He picks up his pen, sets it down. "These are not the same jurisdiction."
+
+*— He is not wrong. He needs to know which one is older.*
+
+> **Skill Check: History DC 11.** Establish that the Sibyl's naming act predates any administrative authority over the cape by thirteen centuries — making it the founding geographic record; the duke's order is a revision, not an original naming, and revisions must show the prior name as superseded rather than erased.
+
+**Fail:** Ser Matteo files it provisionally under "Disputed Geographic Names — Pending Administrative Resolution." He consults the registry's legal counsel. Counsel agrees with the Fighter's argument. The tablet comes back to the priority queue.
+
+**Pass:** Ser Matteo writes a new entry header at the bottom of the geographic records folio: *Divine Naming Category — prophetic geographic record, pre-administrative; naming performed before administrative authority over the named location existed.* He copies "Capo Palinuro" as the established prior name. He writes the duke's renaming as "revision, subject to prior naming precedent." He files the iron case.
+
+He says, quietly:
+
+"The duke can call it what he likes. The registry will show what it was called first — and by what authority."
+
+**TOKEN TAKEN: Sibyl's Shore-Prophecy**
+
+The iron case enters the Naples Maritime Registry under *Divine Naming Category.* Carmela's conveyance note, Filiberto's transit stamp, and Piero's guild seal are each indexed separately as chain-of-custody evidence. The cape keeps its name in the record.
+
+---
+
+## Quest API Stub — UQF v1.0
+
+```json
+{
+  "quest_id": "FCO_002",
+  "title": "Palinurus's Shore",
+  "source": "FCO (II)",
+  "cycle": 2,
+  "book": "Aeneid — Virgil (Latin original, ~19 BC)",
+  "source_episode": "Book 5 lines 833-871 — Palinurus thrown overboard by Sleep; Book 6 lines 337-383 — reaches shore alive but is killed by locals; Sibyl promises: nomenque a te capiunt loca — the place will take your name",
+  "theme": "The naming that was sworn before the death — the Sibyl's prophecy as founding geographic record predating any administrative authority; the only inheritance of the navigator who died to guarantee the passage",
+  "token": {
+    "id": "FCO_002_TOKEN",
+    "name": "Sibyl's Shore-Prophecy",
+    "description": "Wax tablet in iron stylus case, black wax seal with Sibyl's archive mark, Carmela's conveyance slip under the exterior wax plug; text: nudus in ignota, Palinure, iacebis harena; nomenque a te capiunt loca — naked, Palinurus, you will lie on a foreign shore; and the place will take your name; sealed for 1,387 years in the Sibyl's vault archive at Cumae",
+    "grant_act": "act_1",
+    "take_act": "act_5",
+    "check_acts": ["act_2", "act_3", "act_4"],
+    "state_changes": [
+      {"act": "act_2", "change": "transit slip attached — reviewed, not impounded; category: religious-archive document, pre-administrative"},
+      {"act": "act_3", "change": "harbor pilots' guild seal pressed into exterior wax alongside Carmela's keeper notation — dual authority established"},
+      {"act": "act_4", "change": "carried intact through ambush — dual seal undamaged"}
+    ]
+  },
+  "nodes": ["SVA", "PAC", "NMR"],
+  "new_nodes": [
+    {
+      "code": "SVA",
+      "name": "Sibyl's Vault Archive",
+      "description": "Deep room cut into the tufa rock behind the oracle grotto at Cumae, southern Italy: six niches in the stone wall, the oracle seat worn smooth at the entrance, cool air and old wax smell; Carmela di Cumae, sixth keeper in an unbroken informal line; the Sibyl's prophetic records that no living scholar knows exist, held by inheritance rather than appointment"
+    },
+    {
+      "code": "PAC",
+      "name": "Cape Palinurus Harbor Town",
+      "description": "Small fishing port at the base of Cape Palinurus, southern Italy: thirty fishing boats, one tavern, a harbor master's office with new ducal charts posted — Promontorio del Duca; pilots' guild log with eighty years of Capo Palinuro; guild master Piero, fifty years old, forty years on this coast; three pilots fined this week for using the old name"
+    },
+    {
+      "code": "NMR",
+      "name": "Naples Maritime Registry",
+      "description": "Administrative chart office for southern Italian coastal geography, Naples: stone building above the harbor district, three clerks, long folio tables, Ser Matteo di Napoli as registry master; receives both commercial and prophetic-religious geographic records when the category can be established; the geographic records folio with blank lines at the bottom for new categories"
+    }
+  ],
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "SVA",
+      "type": "dialogue",
+      "activateNode": "SVA",
+      "missionAccept": "Carmela di Cumae has held the Sibyl's naming prophecy for Palinurus's headland for nine days, deciding. A duke is renaming the cape on new maritime charts. The only counter-document is 1,387 years old and has never left this grotto.",
+      "scene": "The vault room is cut into tufa. The air tastes of old stone and wax. The oracle seat is worn smooth at the entrance and the niche with the iron case is in the dark at the back. Carmela stands at the niche with her hands at her sides. She has been here since dawn.",
+      "dialogue": {
+        "dc": 12,
+        "prompt": "Tell Carmela what it means to die guaranteeing a passage and have only a name as your inheritance.",
+        "failText": "She sets her hands flat on the case. 'Not yet.' She is not angry. Try at vespers.",
+        "passText": "She adds her conveyance slip and sets the case on the ledge between you. 'The naming was performed before anyone was available to sign.' TOKEN GRANTED: Sibyl's Shore-Prophecy."
+      },
+      "grantItem": "Sibyl's Shore-Prophecy",
+      "checkPassFlag": "FCO_002_act1Pass"
+    },
+    {
+      "act_id": "act_2",
+      "location": "coast_road_toll_point",
+      "type": "skill_check",
+      "activateNode": "SVA",
+      "scene": "Filiberto stands at the toll booth with a list of proscribed items. The iron case catches his attention. He reads Carmela's conveyance note. He does not know the Sibyl's archive exists. He is looking for a category he cannot file as contraband.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "failText": "Filiberto stamps the case held for review. A day's delay. He releases it with an uneasy notation by evening.",
+        "passText": "He stamps a transit slip: reviewed, not impounded — religious-archive document, pre-administrative. The slip attaches to the case exterior. TOKEN STATE 2: official transit notation."
+      },
+      "checkPassFlag": "FCO_002_act2Pass"
+    },
+    {
+      "act_id": "act_3",
+      "location": "PAC",
+      "type": "skill_check",
+      "activateNode": "PAC",
+      "scene": "The harbor tavern. Three pilots fined this week. Piero sits with his guild log open — eighty years of Capo Palinuro. He is looking at the new ducal chart posted across the lane. Promontorio del Duca. He says it like a wrong note.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "failText": "Piero shakes his head. 'I don't sign documents for strangers.' Not hostile. Morning — he always has.",
+        "passText": "He presses the guild seal into the black wax beside Carmela's slot. 'We have always called it Capo Palinuro.' TOKEN STATE 3: dual-authority document."
+      },
+      "checkPassFlag": "FCO_002_act3Pass"
+    },
+    {
+      "act_id": "act_4",
+      "location": "coast_road_north",
+      "type": "combat",
+      "activateNode": "PAC",
+      "scene": "Two men step from the tree line a mile north of the harbor. They know what is in the satchel. Someone watched the guild seal being pressed. They want the case and have orders to confiscate, not to kill.",
+      "combat": {
+        "enemies": 2,
+        "AC": 13,
+        "HP": 22,
+        "description": "duke's informal contractors — confiscate orders only; break off at half health",
+        "failText": "They take the satchel. Back to the harbor — Piero knows who they work for.",
+        "passText": "Both down or broken. Dual seal intact. Road north clear. TOKEN STATE 4: carried through."
+      },
+      "checkPassFlag": "FCO_002_act4Pass"
+    },
+    {
+      "act_id": "act_5",
+      "location": "NMR",
+      "type": "skill_check",
+      "activateNode": "NMR",
+      "scene": "Ser Matteo di Napoli reads the tablet slowly. 'The Sibyl said the place would take his name. That is a prophecy. The duke's order is administrative. These are not the same jurisdiction.' He picks up his pen and sets it down. He needs to know which one is older.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 11,
+        "failText": "Filed provisionally under Disputed Geographic Names — Pending Administrative Resolution. Counsel agrees. Returns to priority queue.",
+        "passText": "He writes: Divine Naming Category — prophetic geographic record, pre-administrative; naming performed before administrative authority existed. 'The registry will show what it was called first — and by what authority.' TOKEN TAKEN: Sibyl's Shore-Prophecy."
+      },
+      "takeItem": "Sibyl's Shore-Prophecy",
+      "activateMissionBit": "fcoPalinurusComplete",
+      "checkPassFlag": "FCO_002_act5Pass"
+    }
+  ]
+}
+```
+
+---
+
+### New Node Proposals
+
+| Code | Name | Location | Description |
+|------|------|----------|-------------|
+| SVA | Sibyl's Vault Archive | Cumae, southern Italy | Deep room cut into tufa behind the oracle grotto; six niches; Carmela di Cumae, sixth keeper in an unbroken informal line; the Sibyl's prophetic records that no living scholar knows exist |
+| PAC | Cape Palinurus Harbor Town | Cape Palinurus, southern Italy | Small fishing port; harbor master's office with new ducal charts posted; pilots' guild log with eighty years of "Capo Palinuro"; guild master Piero |
+| NMR | Naples Maritime Registry | Naples | Administrative chart office for southern Italian coastal geography; Ser Matteo di Napoli; the registry that can establish Divine Naming Category |
+
+---
+
 *File generated: 2026-05-31. Source: FCO-aeneid.txt (Latin original). Books 1–6 + opening of Book 7 read directly. Approximately 5,300 of 10,772 lines read.*
 
 ---
