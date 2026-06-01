@@ -463,7 +463,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
 | [x] | OST | song-of-roland | Song of Roland — Anon | c.1100 | French Chanson | 195 |
-| [ ] | CDG | three-musketeers | The Three Musketeers — Alexandre Dumas | 1844 (1625 setting) | Swashbuckler | 1356 |
+| [x] | CDG | three-musketeers | The Three Musketeers — Alexandre Dumas | 1844 (1625 setting) | Swashbuckler | 1356 |
 | [ ] | VIE | faust | Faust — Johann Wolfgang von Goethe | 1808–1832 | Philosophical Drama | 213 |
 | [ ] | ERF | grimm-fairy-tales | Grimm's Fairy Tales — Brothers Grimm | 1812 | Folk Tales | 547 |
 | [ ] | BRU | amadis-of-gaul | Amadis of Gaul — Garci Rodríguez de Montalvo | pub. 1508 | Chivalric Romance | 134 |

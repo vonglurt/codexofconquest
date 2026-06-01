@@ -372,3 +372,288 @@ The court entrance is bright and loud and full of people who are all going to th
 - *quest-map.md: append new theme thread: The obstacle doesn't need to win — it only needs to cause delay.*
 - *quest-map.md: append LON and CDV to Location Grid (Source-Book Nodes); TL and WM are existing game cities.*
 - *books.md: mark CDG [x].*
+
+---
+
+## Cycle 2 — The Convent Letter
+
+**What cycle 1 missed:** Before the Ball was about the temporal race — every obstacle survived is still a loss if the available time is consumed; the enemy's strategy is delay, not destruction. The Convent Letter reveals the human cost at the center of the same conflict: Constance Bonacieux has been in hiding at the Bethune convent, and she has realized that Milady has found her. She sends a warning. The Fighter must carry it from the convent to the nearest relay point before Milady arrives and acts. Cycle 1 was about a political embarrassment being raced against a clock. Cycle 2 is about a person's life being raced against a specific woman's arrival.
+
+**New angle:** Constance gives the Fighter her warning letter at the Bethune convent. The Fighter carries it through a Richelieu checkpoint, finds an alternative courier at the relay post, fights through Milady's hired riders, and delivers the letter to D'Artagnan — who turns his horse toward Bethune when he reads it.
+
+---
+
+### Pass 1 — Token
+
+**TOKEN: Constance's Warning Letter** — a folded scrap of paper in Constance's hand, sealed with a candle-drip, no proper seal device, addressed to "M. D'Artagnan" in hasty writing. It names Milady. It names Bethune. It names the wine. At Act V, D'Artagnan breaks the seal and reads it. The letter's work is done when he turns his horse.
+
+---
+
+### Pass 2 — Seven Storyline Ideas
+
+**1. Before the Ball** *(USED — Cycle 1)* — The diamond studs race. The obstacle that only needs to cause delay.
+
+**2. The Convent Letter** *(CHOSEN — Cycle 2)* — Constance's warning letter from Bethune. Milady has found her. The warning must reach D'Artagnan before Milady reaches Constance. The letter's arrival is measured in hours against an event already in motion.
+
+**3. The Cardinal's Sealed Order** — Richelieu's authorization for Milady to kill Buckingham. Lord de Winter needs it as evidence.
+
+**4. The Goldsmith's Receipt** — The proof the Cardinal knew about the replacement studs. Carried to the Duke of Beaufort.
+
+**5. Athos's Past** — The estate execution record establishing Milady's legal death. Carried to Paris before it is destroyed.
+
+**6. Planchet's Loyalty** — The Queen's seal carried through a Richelieu checkpoint to D'Artagnan in London.
+
+**7. The Musketeers' Billet** — Athos's sealed report naming names still alive and in power.
+
+---
+
+### Pass 3 — Theme Check
+
+Existing themes through OST cycle 2: grief in object, loyalty, honor vs. shame, love and fate, truth posthumous, healing through hostile law, carrier hunted, token's journey, ancient witnesses, corruption wears mercy, fate through broken thing, heroism earns nothing, invitation as weapon, poem ransoms life, anonymous sympathy, pyre-arrangements, proxy errand, absent jurisdiction, scattered truth, last gift against design, credential before the man, one who will not weep, vigil at extraction, errand of removal, eclipse witness, thing too true, word dying man cannot carry, question across ocean, carrier mid-commission change, last words to absent father, complete roll of dead.
+
+**Themes I am avoiding:** "The obstacle doesn't need to win — it only needs to cause delay" (CDG cycle 1) — that was the carrier's race against a clock; this is a warning racing a threat to a location neither the carrier nor D'Artagnan controls; different structure. "The carrier becomes the hunted" (SEN) — the Fighter is not the prey here; the person the letter is about is the prey. "Truth delivered posthumously" (LGW) — Constance is alive when the letter is written; the question is whether the warning arrives before that changes.
+
+**New theme introduced by CDG cycle 2:** *The warning that races the threat it describes: the letter's arrival must precede an event already in motion; the carrier cannot stop the threat, only ensure the warning arrives first — which makes the outcome at the convent someone else's business to act on, not the carrier's to prevent* — the Fighter's commission ends when D'Artagnan receives the letter and turns his horse; what happens at the convent after that is between Milady, Constance, and the Musketeers; the carrier's success is creating the conditions in which the outcome can be different, not preventing the outcome directly.
+
+---
+
+## 5-Act Vignette Play: "The Convent Letter"
+
+**The Token · Constance's Warning Letter ·
+a folded scrap in a woman's hasty hand ·
+sealed with a candle-drip · no device ·
+the name "D'Artagnan" on the outside ·
+Milady is coming by the north road ·
+the window for this letter is measured in hours**
+
+---
+
+### Act I — The Convent Gate
+*Constance's Warning Letter · in Constance's hands ·
+the Bethune convent, late morning, the gate of the walled garden*
+
+Constance is in the walled garden. She has been here for two months and she is
+afraid, specifically and carefully, in the way of someone who has been afraid before
+and learned to manage it. She does not waste words.
+
+*"Milady knows I am here. She came through the gate this morning on some pretext
+and I saw her face. She will come back when the nuns will not be watching. I do not
+know when. I know she will bring something for the wine."*
+
+She presses the folded scrap into your hands. She sealed it with the nearest candle
+while she was writing it. The wax is from a prayer candle — slightly the wrong color.
+
+*"Find D'Artagnan. Tell him: north road, Bethune, come now. The letter says
+everything else."*
+
+She does not say goodbye. She goes back inside. You are at the gate with a letter
+and no time to calculate anything except the next step.
+
+*The letter is warm from her hand. There is nothing else in your hands.*
+
+**DC 12 Insight — understand the timeline: Milady came this morning; she will return before nightfall; the relay post is two hours south; D'Artagnan's last known position is four hours south; the window closes when Milady walks through the convent kitchen door.**
+
+*If you fail:* You understand urgent but not precisely. You leave immediately but without the calculation that would have you running instead of walking to the road.
+
+*If you pass:* The window closes before nightfall. The relay post can send a rider faster than you can travel. You have perhaps six hours of functional time before the letter's value expires. You move.
+
+---
+
+### Act II — The Checkpoint
+*Constance's Warning Letter · inside your coat · the main road
+two miles south of Bethune, a Richelieu checkpoint*
+
+They are checking travelers coming from the convent district specifically. Word has
+gotten to someone in Richelieu's network that the convent at Bethune is being used
+as a safe-house. They do not know about this letter. They are looking for anyone
+with correspondence from the convent.
+
+You have correspondence from the convent. In your coat. Addressed to D'Artagnan
+in a woman's hand. If they find it the letter is seized and D'Artagnan never
+receives the warning.
+
+*You are two miles south of the convent. You have been walking for thirty minutes.
+The road ahead is open country — no side-paths, no detours that do not cost an hour
+you do not have.*
+
+**DC 12 Deception — you are traveling south from Bethune on personal business; you have no correspondence from the convent; you are not related to anyone at the convent; you stayed one night at an inn one mile north of here.**
+
+*If you fail:* They find the letter. You lose two hours in questioning before they confirm you are not important enough to hold, but the letter goes with the checkpoint sergeant to his superior and D'Artagnan never receives Constance's warning.
+
+*If you pass:* They wave you through. The letter is still in your coat. The road south is open.
+
+---
+
+### Act III — The Relay Post
+*Constance's Warning Letter · in your coat · the relay post,
+a town twelve miles south of Bethune, late afternoon*
+
+The relay postmaster is gone. He left three hours ago to deal with a horse emergency
+at the farm two miles east and hasn't returned. His assistant is seventeen years old
+and will not authorize a relay dispatch without the postmaster's mark. You have the
+letter and no official relay mechanism.
+
+The inn across the road has a stable. The innkeeper's son rode to Amiens and back
+last week in one day and is available. He is sitting at the common room table
+drinking a cup of something warm and looking like a person who could be talked into
+an urgent errand for the right sum.
+
+*You do not have much money. You have enough. The letter must leave this town in the
+next thirty minutes or D'Artagnan's route will take him past the junction for Bethune
+before the warning reaches him.*
+
+**DC 13 Persuasion — the errand is urgent, the distance is thirty miles, the fee is what you have in your pocket plus a promise from D'Artagnan when the rider finds him; D'Artagnan is a King's Musketeer and he will pay.**
+
+*If you fail:* The innkeeper's son wants proof that D'Artagnan is who you say he is and will pay what you promise. The delay costs twenty minutes and he leaves without confidence, riding slower than he should.
+
+*If you pass:* The innkeeper's son looks at you. He looks at the letter. He looks at what you've put on the table. He takes the letter and goes to the stable. Thirty seconds later he is on the road south at a canter.
+
+Wait. The letter is gone. It is in the innkeeper's son's hand on a fast horse heading south. Your commission was to get it to D'Artagnan. The rider is the commission's mechanism. But Milady's hired men are on this road.
+
+---
+
+### Act IV — The North Road
+*Constance's Warning Letter · in the innkeeper's son's hand · on the road south ·
+three riders from the north coming fast on the road behind you*
+
+The riders passed through Bethune from the north and they are moving south on the
+same road, fast. They are Milady's people, keeping a watch on her movements and
+the people around her. They have seen the innkeeper's son leave the relay post in a
+hurry with what looks like a sealed letter. They are following him.
+
+You are between the relay post and the riders. The innkeeper's son is already two
+hundred yards ahead of you and does not know what is behind him.
+
+**Combat — Milady's Hired Riders ×2 (AC 13, HP 24, horse-pistols; one mounted, one on foot when you intercept)**
+
+*If you fail (reduced to 0 HP):* One rider gets past you. The innkeeper's son is fast but the rider is on a better horse. He catches the boy before the junction and the letter is taken.
+
+*If you pass:* Both riders are down. The road south is open. The innkeeper's son is already at the junction — you can see him take the right fork toward D'Artagnan's route. You follow on foot.
+
+---
+
+### Act V — The Junction
+*Constance's Warning Letter · in the innkeeper's son's hand · the junction,
+D'Artagnan and two companions arriving from the south, the rider flagging them down*
+
+The innkeeper's son has stopped D'Artagnan at the junction. He is holding out the
+letter. D'Artagnan looks at the outside — the handwriting, the name, the color of
+the wax — and you see it in his face before he breaks the seal.
+
+You arrive. You are on foot and breathing hard. D'Artagnan breaks the seal and reads.
+
+It takes four seconds. He looks at you.
+
+*"How long ago did she write this?"*
+
+*"This morning. Milady came to the convent this morning."*
+
+D'Artagnan turns his horse without another word. His companions follow. They are
+on the north road before you have finished breathing evenly.
+
+*Constance's Warning Letter is in D'Artagnan's coat now. The letter's work is done.
+What happens at the convent is no longer the carrier's commission — it is between
+D'Artagnan and the road and whatever time remains.*
+
+**DC 11 Composure — give him the one piece of information he needs beyond the letter; no elaboration; the answer "this morning" is the answer; let him go.**
+
+*If you fail:* You start to explain more. He interrupts you and leaves. You needed three extra seconds. He does not have them to give.
+
+*If you pass:* "This morning." He turns. The road north opens. You have done everything the commission required.
+
+---
+
+## Quest API Stub — Cycle 2
+
+```json
+{
+  "questId": "CDG_cycle2_conventLetter",
+  "title": "The Convent Letter",
+  "activateNode": "BTH",
+  "token": {
+    "name": "Constance's Warning Letter",
+    "description": "A folded scrap in Constance Bonacieux's hasty hand, sealed with prayer-candle wax, addressed to D'Artagnan. Names Milady, names Bethune, names the wine. The window for this letter closes when Milady walks through the convent kitchen door.",
+    "introducedAct": 1,
+    "consumedAct": 5
+  },
+  "acts": [
+    {
+      "act": 1,
+      "title": "The Convent Gate",
+      "location": "BTH — the Bethune convent, the walled garden gate",
+      "token_action": "RECEIVE — pressed into Fighter's hands at the garden gate",
+      "type": "skill_check",
+      "scene": "Constance is afraid in the specific way of someone who has been afraid before. Milady came through the gate this morning on a pretext. She will come back before nightfall. The relay post is two hours south. D'Artagnan's last known position is four hours south.",
+      "prompt": "Understand the timeline: the window closes before nightfall. DC 12 Insight.",
+      "failText": "You understand urgent but not precisely. You leave without the calculation that would have you running.",
+      "successText": "The window closes before nightfall. The relay post can send a rider faster. You move.",
+      "grantItem": "Constance's Warning Letter — candle-wax seal; D'Artagnan's name outside; six-hour window",
+      "checkPassFlag": "CDG2_letterReceived"
+    },
+    {
+      "act": 2,
+      "title": "The Checkpoint",
+      "location": "BTH → REL road — two miles south of Bethune",
+      "token_action": "CONCEALED — inside coat",
+      "type": "skill_check",
+      "scene": "Richelieu's agents are checking travelers from the convent district. No side-paths. No detours without an hour you don't have. The letter is in your coat. If found, it is seized and D'Artagnan never receives the warning.",
+      "prompt": "Personal travel from Bethune, no correspondence, stayed at the inn one mile north. DC 12 Deception.",
+      "failText": "They find the letter. It goes with the checkpoint sergeant. D'Artagnan never receives Constance's warning.",
+      "successText": "Waved through. The letter still in your coat. The road south is open.",
+      "checkPassFlag": "CDG2_checkpointPassed"
+    },
+    {
+      "act": 3,
+      "title": "The Relay Post",
+      "location": "REL — the relay post town, twelve miles south of Bethune",
+      "token_action": "ENTRUSTED — given to the innkeeper's son for fast delivery",
+      "type": "skill_check",
+      "scene": "Postmaster is gone. His assistant won't authorize without the postmaster's mark. The innkeeper's son rode Amiens and back in one day last week. The letter must leave this town in thirty minutes or D'Artagnan passes the Bethune junction.",
+      "prompt": "Urgent errand, thirty miles, the fee is what you have plus D'Artagnan's promise when the rider finds him. DC 13 Persuasion.",
+      "failText": "He wants proof. Leaves without confidence, rides slower than needed.",
+      "successText": "He takes the letter and goes to the stable. Thirty seconds later he is on the road south at a canter.",
+      "checkPassFlag": "CDG2_riderSent"
+    },
+    {
+      "act": 4,
+      "title": "The North Road",
+      "location": "REL → DAR road — south of the relay post",
+      "token_action": "IN TRANSIT — the innkeeper's son two hundred yards ahead",
+      "type": "combat",
+      "scene": "Three riders from the north, Milady's people, following the innkeeper's son after seeing him leave in a hurry with a sealed letter. You are between them and him.",
+      "prompt": "Stop them before one gets past you to the boy.",
+      "combatTarget": "Milady's Hired Riders ×2 (AC 13, HP 24, horse-pistols)",
+      "failText": "One rider gets past. He catches the boy before the junction. The letter is taken.",
+      "successText": "Both down. The innkeeper's son is already at the junction taking the right fork. You follow on foot.",
+      "checkPassFlag": "CDG2_ridersClear"
+    },
+    {
+      "act": 5,
+      "title": "The Junction",
+      "location": "DAR — the road junction, D'Artagnan arriving from the south",
+      "token_action": "DELIVERED — D'Artagnan breaks the seal and reads",
+      "type": "skill_check",
+      "scene": "D'Artagnan looks at the handwriting before he breaks the seal. He reads. Four seconds. He looks at you. 'How long ago did she write this?' You answer with the one thing that matters.",
+      "prompt": "Give him the one piece of information beyond the letter: 'This morning.' No elaboration. Let him go. DC 11 Composure.",
+      "failText": "You start to explain more. He interrupts and leaves. You needed three extra seconds he didn't have.",
+      "successText": "'This morning.' He turns. The road north opens. The commission is done.",
+      "grantItem": "D'Artagnan's Coin — pressed into your hand as his horse turns; the rider's fee, returned; he will settle with the innkeeper's son himself",
+      "takeItem": "Constance's Warning Letter — in D'Artagnan's coat; his business now",
+      "activateMissionBit": "cdgConventComplete",
+      "checkPassFlag": "CDG2_ridersClear"
+    }
+  ]
+}
+```
+
+---
+
+*quest-map.md: append CDG cycle 2 row to Processed Quests table:*
+`| CDG | The Convent Letter | 2 | BTH → REL → DAR (Bethune convent → relay post → D'Artagnan's road junction) | The warning that races the threat it describes |`
+
+*quest-map.md: append new theme thread to Theme Threads Active:*
+`- **The warning that races the threat it describes: the letter's arrival must precede an event already in motion; the carrier cannot stop the threat, only ensure the warning arrives first — which makes the outcome at the convent someone else's business to act on, not the carrier's to prevent**: CDG (cycle 2) — the Fighter's commission ends when D'Artagnan receives the letter and turns his horse; what happens at the convent after that is between Milady, Constance, and the Musketeers; the carrier's success is creating the conditions in which the outcome can be different`
+
+*quest-map.md: append BTH, REL, DAR to Location Grid.*
+
+*books.md: mark CDG [x].*
