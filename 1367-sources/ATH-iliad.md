@@ -283,3 +283,182 @@ TOKEN TAKEN. The Archivus does not say what he keeps. He keeps the tablet. He re
 
 **books.md update required:**
 - Mark ATH row [x]
+
+---
+
+## Cycle 2 · Helen at the Funeral
+
+**New angle:** Cycle 1 was about form — the diplomatic document that transforms an act of grief into a legal record, the commission tablet that makes the night in Achilles's tent an authorized transaction rather than a private moment. Cycle 2 is about voice — specifically the one account in the entire poem that records what the last twenty years felt like from inside the city, by the person whose name the war was fought over. When Helen wept at Hector's funeral, she said she had been in Troy twenty years and had never heard an ill or hard word from Hector. That is the only record she left. What cycle 1 missed: the account from the cause, delivered at the burial of the man who showed her kindness she had not earned; and the institutional problem that her voice at that funeral will be absorbed into the Greek version unless someone carries it out.
+
+---
+
+### Token Doctrine
+
+**TOKEN: Helen's Funeral Account**
+A sealed folio in Helen's own hand — composed the night of the funeral while the city burned around her on its last night. Not a self-defense; a record: what she said at the bier, and why she said it, and what twenty years in Troy had been. She gave it to her Trojan attendant Aethra in case she did not survive the sack. Aethra survived. She has no possessions now. The folio must go to an archive where it will be filed under Helen's name as her primary record.
+
+| Act | Token State |
+|-----|-------------|
+| I | Aethra hands it to the Fighter at the harbor; she will have no possessions when she is taken as a slave |
+| II | A Greek officer checks departing documents; the Fighter argues that a publicly delivered funeral speech is not private property |
+| III | Menelaus's representative claims review rights over all written materials in Helen's hand |
+| IV | Hard faction ambush; they want the folio destroyed, not reviewed |
+| V | Archive intake: the Fighter argues for classification as primary record, Helen's name in the compiler field |
+
+---
+
+### 5-Act Vignette Play: "Helen at the Funeral"
+
+*A Fighter has been retained by a Trojan woman at the harbor to carry a sealed folio out of the ruins of Troy before she loses all possessions. The TOKEN ITEM is Helen's Funeral Account: Helen's own record of what she said at Hector's funeral and what she meant by it. The Fighter's job is to get it out of the Greek camp and into an archive that will file it under Helen's name.*
+
+*The Thing · Helen's Funeral Account · sealed folio in a cedar sleeve · Aethra → Fighter*
+
+---
+
+**ACT I — Troy Harbor**
+
+*The loading dock. Greek ships being provisioned. Trojan women in lines at the harbor registry. Aethra — Helen's elderly Athenian attendant, here since before the war — at the edge of the line with a cedar sleeve under her arm.*
+
+*The Thing · Helen's Funeral Account · sealed · not yet in the Fighter's hands*
+
+*The Fighter observes: the cedar sleeve is old and well-made. Aethra has been protecting it for a while.*
+
+Aethra explains quickly and without sentiment: Helen gave this to her the night of the funeral, before the Greeks entered the city. She does not know what happens to her now. She is old and has no family and will be given to someone as a slave. She cannot keep anything. But this should not disappear. Helen wrote it herself. She was at the bier. She said the things written in here. Nobody else wrote them down.
+
+She presses the sleeve into the Fighter's hands and turns back toward the registry line without looking back.
+
+---
+
+**ACT II — The Camp Perimeter**
+
+*The Greek camp's exit checkpoint. A records officer checking departing documents.*
+
+*The Thing · Helen's Funeral Account · sealed cedar sleeve · Fighter's pack*
+
+*The Fighter observes: the officer has a list of items belonging to Helen that have been designated as Menelaus's property pending his return to Sparta.*
+
+He sees the cedar sleeve. He asks to note it in the property log. Helen's written materials, he says, are technically her husband's property under Greek law. To leave with such a thing requires authorization from Menelaus's household steward, who is three ships down the harbor.
+
+The argument: this is a record of a public speech delivered at a public funeral before thousands of people. A public speech is not private property. The document records an event; it is not Helen's possession in the relevant sense; it is a record of something that happened.
+
+---
+
+**ACT III — The Harbor Road**
+
+*An hour past the checkpoint. A man in Menelaus's livery comes down the road on a fast horse.*
+
+*The Thing · Helen's Funeral Account · sealed cedar sleeve · Fighter's pack · subject of the review*
+
+*The Fighter observes: the messenger has a written instruction from Menelaus's household steward, not from Menelaus himself. The steward is managing the paperwork of reassembly. The instruction gives him review rights over materials attributed to Helen.*
+
+He is not hostile. He explains: Menelaus's household needs to review all recorded statements attributed to Helen before they enter any archive, to ensure the record is accurate. He is prepared to be reasonable. He only needs to read it before it is filed.
+
+The problem with this is precise: if the steward's household reads it first and decides what "accurate" means in the context of Menelaus's return to Sparta, the account will be filtered before it reaches any archive. Even if nothing is changed, the filter itself is a modification of the record. Helen's voice only arrives clean if it arrives directly.
+
+---
+
+**ACT IV — The Mountain Road**
+
+*The road from the harbor toward the archive city. A stand of pine above the road.*
+
+*The Thing · Helen's Funeral Account · sealed cedar sleeve · targeted*
+
+*The Fighter observes: three men. No livery. The kind of men hired for results, not for questions.*
+
+The hard faction doesn't want a review. Menelaus's household is in two minds about Helen's return; the harder element — the one that wanted her killed on the beach and was talked out of it — doesn't want any record that humanizes her circulating before the Greek account is fixed. If the folio disappears, it disappears. Nobody knows what was in it.
+
+Combat: 2× hired men (AC 12, HP 20, short swords and leather)
+
+---
+
+**ACT V — The Archive**
+
+*The archive receiving room. A careful archivist, Marta, who specializes in classical-era materials.*
+
+*The Thing · Helen's Funeral Account · sealed cedar sleeve · Fighter's hands → archive*
+
+*The Fighter observes: Marta has received materials from the Trojan campaign before. She knows the classification problem.*
+
+She opens the sleeve, reads the folio, sets it down. She says: "I can file this as 'attributed statement, Helen of Sparta, funeral of Hector.' That puts it in the secondary accounts section alongside Trojan propaganda." She looks at the Fighter. "Or I can file it as a primary record — her voice, under her name, in the primary accounts section. For that I need to establish it was composed by her, in her hand, at the time stated." She pauses. "Can you establish the chain of custody from her hand to yours without a gap?"
+
+---
+
+### Quest API Stub: Helen at the Funeral
+
+```
+quest_id: ATH-02
+title: Helen at the Funeral
+cycle: 2
+book: iliad
+token: Helen's Funeral Account (sealed folio in cedar sleeve)
+token_consumed: Act V (filed in archive under Helen's name as primary record)
+route: TRH → WM
+```
+
+**Act I — The Harbor**
+```
+activateNode: TRH
+type: dialogue
+scene: "Troy harbor loading dock. Aethra with the cedar sleeve at the end of the registry line."
+prompt: "She is turning back to the line. There is no time for explanation. You need to understand what this is quickly enough to accept it. [WIS to understand from what she's already said why this specific folio matters / CON to accept the custody transfer in the time available / CHA to give her the words that let her turn away without regret] DC 11"
+failText: "She pushes it into your hands and turns away before you can respond. The folio is in your possession. You know it is Helen's and that it should reach an archive. That is enough."
+successText: "You take it with both hands. She says: 'She was at the bier. She said those things.' She turns away."
+grantItem: Helen's Funeral Account (sealed folio in cedar sleeve)
+checkPassFlag: helenFolioReceived
+activateMissionBit: athHelenAct1Complete
+```
+
+**Act II — Camp Perimeter**
+```
+activateNode: TRH
+type: skill_check
+scene: "The exit checkpoint. The officer wants to log the cedar sleeve as Helen's property under Menelaus's claim."
+prompt: "A public speech delivered at a public funeral is not private property. The document records an event. [INT to name the legal category that distinguishes event-records from personal property / WIS to find where the officer's authority ends / CHA to give him the framing that lets him write 'public record, released' and close his ledger] DC 12"
+failText: "He logs it as 'disputed property status, released pending review.' That notation will follow the document. Marta at the archive will have to address it."
+successText: "He writes 'public speech record, not personal property.' He closes the ledger. You walk through."
+checkPassFlag: perimeterCleared
+activateMissionBit: athHelenAct2Complete
+```
+
+**Act III — The Harbor Road**
+```
+activateNode: WM
+type: skill_check
+scene: "Menelaus's household steward's representative on the road, with review authority over Helen's materials."
+prompt: "He needs to read it before it's filed. The problem: if the household reads it first and decides what 'accurate' means, Helen's voice arrives filtered. [WIS to articulate why the filter itself is the modification / INT to find the procedural basis on which a public-speech record is not subject to household review / CHA to give him a face-saving reason to withdraw the review request] DC 13"
+failText: "He rides beside you for half a mile, asking questions about the content without reading the folio. He is noting your answers. He eventually turns back, satisfied that he has established enough provenance to report to his employer. The folio is intact."
+successText: "You name the category: public record, delivered before thousands at a state funeral, not subject to household review under any Greek precedent. He knows this is correct. He turns his horse."
+checkPassFlag: stewardTurned
+activateMissionBit: athHelenAct3Complete
+```
+
+**Act IV — The Mountain Road**
+```
+activateNode: WM
+type: combat
+scene: "Three hired men above the road. The hard faction wants the folio gone."
+prompt: "They do not want to review it. They want it to not exist."
+combatTarget: "2× hired men (AC 12, HP 20, short swords and leather)"
+failText: "They take the cedar sleeve. But they didn't count the folios before taking it — the account and Aethra's covering note are on separate sheets. You still have the account, wrapped in your own pack."
+successText: "Both men are down. The cedar sleeve is intact. The seal is unbroken."
+checkPassFlag: mountainAmbushSurvived
+activateMissionBit: athHelenAct4Complete
+```
+
+**Act V — The Archive**
+```
+activateNode: WM
+type: skill_check
+scene: "Marta asks whether you can establish the chain of custody from Helen's hand to yours without a gap."
+prompt: "The chain: Helen wrote it the night of the funeral; gave it to Aethra; Aethra gave it to you at the harbor. No gaps, no intermediaries. [WIS to reconstruct the chain in the precise form Marta needs / INT to anticipate which link she will challenge and address it preemptively / CHA to give her the chain in the form that makes primary-record classification the natural conclusion] DC 11"
+failText: "Marta files it as 'attributed statement, provenance established by carrier, classification pending secondary review.' She will upgrade it to primary record when the secondary review confirms the chain. It is in the archive. Helen's name is in the record."
+successText: "Marta says: 'Chain is intact.' She opens the primary accounts section of the ledger. She writes Helen's name in the compiler field. 'Helen of Troy,' she says — using the Trojan name, not the Greek one. She closes the ledger."
+takeItem: Helen's Funeral Account (sealed folio in cedar sleeve)
+checkPassFlag: athHelenComplete
+activateMissionBit: athHelenComplete
+```
+
+---
+
+*quest-map.md: add ATH cycle 2 row and theme thread; append TRH to Location Grid.*
+*books.md: mark ATH [x].*

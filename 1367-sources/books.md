@@ -489,7 +489,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
-| [ ] | ATH | iliad | Iliad — Homer (Lang transl.) | ~750 BC | Greek Epic | 907 |
+| [x] | ATH | iliad | Iliad — Homer (Lang transl.) | ~750 BC | Greek Epic | 907 |
 | [ ] | ZTH | odyssey | Odyssey — Homer (Butler transl.) | ~725 BC | Greek Epic | 700 |
 | [ ] | FCO | aeneid | Aeneid — Virgil (Latin original — Gutenberg #227) | ~19 BC | Roman Epic | 484 |
 | [ ] | MLA | plutarch-lives | Plutarch's Lives — Plutarch (Dryden/Clough tr.) | c. 95–110 AD | Biography | 4222 |
