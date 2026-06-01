@@ -102,6 +102,7 @@ The game asks: what does it mean to keep your word when the world does not?
 | STN | The Horse-Hide Man | 2 | SHW → NGM (Sherwood camp → Nottingham common gallows) | The grotesque masquerade as the only available justice; witness who must not react |
 | MAN | The Templar's Writ | 2 | TPR (Templestowe Preceptory — cell → cloister → recorder's study → trial hall) | The institution's own suppressed instrument returned to the hand that wrote it |
 | SEN | Blind Pew's Delivery | 2 | ADM (Black Hill Cove quay → cliff road → Admiral Benbow yard → threshold) | The neutral messenger of doom; complicity is the complicity of the postal road |
+| GCI | The Gild-Holm-'Ur Seat | 2 | GHL → STP (tidal rock seat → St. Peter Port harbor) | The carrier who arrives with a reason to live; the offer made without coercion |
 
 ---
 
@@ -193,6 +194,7 @@ Game cities are canonical. Source-book settings are proposed new nodes.
 | Sherwood Forest | SHW | Leaf-shadow, arrow-flight, yeoman warmth | Loyalty in small things, disguise |
 | Nottingham common — gallows-tree | NGM | The public execution ground outside Nottingham's east gate: permanent scaffold visible from the town wall, open road between treeline and gatehouse, a crowd that always gathers for hangings | Public spectacle, disguise under scrutiny, the bluff that has seconds to hold |
 | Templestowe Preceptory | TPR | A fortified Yorkshire Templar compound: stone cloister, cell blocks, a trial hall with gallery, the lists in the outer yard; cold even in summer, smelling of stone and wax and old obligation | Institutional authority, suppressed evidence, bureaucratic self-correction |
+| Gild-Holm-'Ur Seat | GHL | A tidal rock niche on Guernsey's western coast face: barely wide enough for shoulders, facing open sea, covered by spring tide; the ledge above is the last place a decision can be made; the sea sound here is constant | Completed lives, the ethics of the offer, the weight of a reason to continue |
 | Iceland / Thingvellir | ISL | Fog, blood on stone, silence | Vengeance, the weight of objects |
 | Castilian road / Toledo | IBR | Dust, court protocol, beard-honor | Pride, humiliation, long patience |
 | Georgian mountain road | GEO | Shale, amber and gold, champion's fire | Duty, love, the commission |

@@ -334,3 +334,327 @@ checkPassFlag: gciQuestComplete
 
 *New node proposed:*
 `STP | St. Peter Port, Guernsey harbor | Granite quays, Norman French register, salt fog, fishing boats, tidal sea, English and French law blending | Sea epic, self-sacrifice, unwitnessed heroism`
+
+---
+
+## Cycle 2 — Angle: The Gild-Holm-'Ur Seat
+
+**What this angle reveals that Cycle 1 missed:** Cycle 1 (The Gold Ring of St. Sampson) showed Gilliatt's love as active self-gift — he arranged everything, paid everything, asked for nothing. Cycle 2 shows the far side of that selflessness: what happens after the ship leaves. The Gold Ring angle missed the book's final register entirely — the completed man, the tidal seat, the choice. Gilliatt in cycle 1 was living and working toward something. Gilliatt in cycle 2 has finished. This angle also reveals Mess Lethierry's grief, the relationship between the old man and the young salvager, and the specific moral question that the book's final scene poses to any witness: what is the correct response to someone who has chosen to complete their life?
+
+---
+
+### Pass 1 — Full Telling (Gild-Holm-'Ur Angle)
+
+The Gild-Holm-'Ur seat is a niche carved by the sea into a coastal rock face on Guernsey's shore — a natural ledge just wide enough for a man to sit, just low enough that the tide covers it at full height. The name is a Guernsey Creole corruption of "guild-holm-ur" — loosely, "gold-water-hour," the hour when the water gold-colors at high tide as the sun catches it. Locals know it as the place where the tide comes in and where the sea does what it chooses. In good weather you can sit there and watch the harbor. In bad weather it is the first place the sea takes.
+
+Gilliatt knew this seat. He had sat there before. He had watched the sea from it during his years of isolation — the years before Déruchette, before the salvage, before everything that the second half of the novel gives him. The seat was where he went when the world was only water and wind and his own thoughts.
+
+After the Durande's engine was safely brought home, after Mess Lethierry's gratitude, after the wedding at St. Sampson's church that Gilliatt himself had arranged — the marriage of Déruchette to the curé Ebenezer Caudray, the man she actually loved, the man Gilliatt had once rescued from the sea without knowing who he was — Gilliatt did one final thing. He watched the ship carrying the couple away from Guernsey. He went to the Gild-Holm-'Ur seat to watch it. When the ship was a smudge on the horizon, and then nothing, the tide came in.
+
+Hugo describes the moment with the precision of a writer who has been building toward it for three hundred pages. Gilliatt's hand rises above the water as the tide covers him — a salute to the departing ship, or a farewell to the horizon, or simply the last visible fact of a man who had chosen to be done. His face was at peace. He had not been deceived; he had not been cheated; he had given everything he had to give to the person he loved and he had watched it arrive safely and he was finished.
+
+This is the sequence cycle 1 missed: the Gild-Holm-'Ur scene, and the specific ethics it poses to anyone who might have arrived in time. Hugo does not ask whether the right choice was to save Gilliatt. He shows a man in full command of his decision, in full peace, and he shows the tide as a fact of the world, not a punishment. The tragedy is not that Gilliatt died. The tragedy is that no one arrived to give him a reason to choose differently — and perhaps no reason would have been sufficient.
+
+### Chapter Notes
+
+**Book I (The Sea and the Wind — Guernsey, Gilliatt, Déruchette):** The world of the island: Hugo's ethnographic Guernsey, the fishing-folk, the specific register of sea-light and granite. Gilliatt introduced as "the man people thought was odd" — isolated, capable, in love from a distance.
+
+**Book II (Part 1: Gilliatt's Name in the Snow):** Déruchette writes Gilliatt's name in the snow on a whim — she does not mean it as a declaration but he receives it as one. The misreading is the wound from which the rest of the book grows.
+
+**Book II (Part 2: The Durande's Wreck):** The storm, the wreck on the Douvres rocks, Lethierry's despair. He offers Déruchette's hand to anyone who recovers the engine. Gilliatt goes alone.
+
+**Book II (Part 3: The Salvage):** The technical heart of the book — Gilliatt's months on the exposed reef, the engineering problem solved with improvised tools, the octopus in the sea cave, the storm weathered alone. Hugo's great hymn to human labor: a man working alone against the sea, the rock, and the machine.
+
+**Book III (The Discovery):** Gilliatt returns with the engine. He goes to Lethierry to claim the promise. In Lethierry's house he finds Ebenezer Caudray — the man Déruchette loves. He understands the situation instantly and completely. He does not claim the promise.
+
+**Book III (The Gift):** Gilliatt gives his claim to Caudray. He arranges the wedding license. He buys the ring. He delivers it anonymously. He watches the ceremony. He returns the ring to Lethierry as a gift and goes to the seat.
+
+**The Final Scene:** The Gild-Holm-'Ur seat. The ship on the horizon. The tide. The raised hand. Hugo closes: "He looked at the open sea. His head sank. Then he raised it again, as if about to speak to the horizon. He was smiling." The tide covers him.
+
+---
+
+### Pass 2 — Slower
+
+**Gilliatt at the Seat:** Hugo's description is spare and without pity, which is the correct register for a man who does not pity himself. He is smiling. He has finished a life's work — not the salvage work but the love work, the private labor of arranging everything correctly for the person he loved, ensuring her happiness with the person she chose. He was the instrument; the instrument is now used. He does not despair; he is complete. The distinction matters.
+
+**Mess Lethierry:** Déruchette's uncle and guardian. He loved Gilliatt. He saw in Gilliatt a son — the capable young man, the one who could do the impossible thing when asked. When he discovers what Gilliatt did at the seat, Hugo gives him a grief that is different from mourning a stranger's death: it is the grief of a man who loved someone and was not given the chance to say so in time. He was not at the seat. Nobody was.
+
+**Déruchette:** She does not appear in the final scene. She is on the ship, sailing away, happy, not knowing. Hugo is exact about this. Her not-knowing is the structure of the tragedy — not malice, not carelessness, but the specific asymmetry of a love that only one person knew was happening.
+
+**The Choice:** Hugo presents Gilliatt's decision not as failure or defeat but as completion. This is unusual in the romance tradition — the unrequited lover is typically punished by the narrative for loving the wrong person. Hugo does not punish Gilliatt. He gives him full dignity. He shows him choosing his moment with the deliberate calm of someone who has considered the matter and found an answer. The tragedy is in the waste of the labor and the love — not in Gilliatt himself.
+
+**The Fighter's Position:** In the game version, the Fighter arrives at the seat as Mess Lethierry's messenger — carrying a reason for Gilliatt to come back. The Fighter's success is measured by whether they deliver that reason faithfully and honestly. Gilliatt takes it. He chooses the climb. The game does not give the player the version where the messenger arrives too late.
+
+---
+
+### Pass 3 — The Scene: The Seat at High Tide
+
+The path down to the Gild-Holm-'Ur seat goes off the cliff road at an unmarked place — a gap in the gorse, a track the locals know, ending at a ledge above the sea. From the ledge, another path leads down to the seat itself: a niche in the stone face, barely wide enough for a man's shoulders, facing west toward the horizon.
+
+The ship is visible. Just barely. A smudge of sail, maybe two miles out, moving steadily. The wind is from the northeast, which means the ship is making good time.
+
+Gilliatt is in the seat.
+
+The tide is at his waist.
+
+His hands are in the water, flat on his thighs, still. His face is toward the horizon and his face is, as Hugo says, as peaceful as a man's face can be when it has arrived where it was always going. He does not hear the Fighter descend the path. The sea is too loud for footsteps on rock.
+
+The Fighter stops at the ledge above. The rope from Lethierry is in their hands — the coil of good line with the knot-cipher at one end. The message has traveled from the harbor to the cliff road to this path to this ledge, and the ship is still a smudge on the horizon, and the tide is at the waist of a man who is not trying to rise.
+
+The Fighter calls his name.
+
+He turns. He looks up at the ledge with the expression of a man who expected to be alone and is not surprised that he is not. He looks at the rope.
+
+**Gilliatt:** "Lethierry."
+
+Not a question. He knows what the rope means. Lethierry's knot-cipher at the end: *come back.* Gilliatt is the man who taught Lethierry half of what he knows about line-work; he reads the cipher before the Fighter could explain it.
+
+He looks at the rope. He looks at the horizon. The smudge of sail is smaller.
+
+**Gilliatt:** *(quietly)* "He should have sent someone who did not know what they were looking at."
+
+The Fighter throws the rope. The end lands on the ledge of stone beside the seat, the knot-cipher resting in three inches of water. Gilliatt looks at it. His hand is still on his thigh.
+
+The horizon is clear now. The ship is past the line.
+
+Gilliatt looks at the rope. He looks at his hand. He picks up the rope end, slowly, and holds the knot-cipher in his fist. The Fighter feels the line go taut.
+
+---
+
+### Seven Storyline Ideas — Cycle 2
+
+1. **The Gild-Holm-'Ur Seat** ← *CHOSEN* — Gilliatt watching the ship from the tidal seat; Lethierry's message line; the Fighter at the ledge; the rope thrown; the choice taken.
+
+2. **The Wreck Engineer** — A lone salvager has agreed to recover the engine from a wrecked ship on an offshore reef; the Fighter is hired as advance guard to keep scavengers and wreckers away while the work is done.
+
+3. **The Hypocrite's Ledger** — A harbor captain's secret embezzlement ledger went down with his ship; it sits in a flooded hold two leagues offshore; the Fighter must reach it before the dead man's confederates.
+
+4. **The Pieuvre's Cave** — A sea cave at low tide holds a skeleton, a fortune in banknotes, and something in the dark that seizes arms; kill the creature, carry the wallet to the harbor magistrate before the tide returns.
+
+5. **The Storm Wall** — An equinoctial gale two hours out; a lone engineer on an exposed reef has begun an improvised breakwater; the Fighter must help build and hold against wreckers on the shore who are watching for a wreck.
+
+6. **The Drowned Man's Proof** — Three banknotes worth 75,000 francs found in a skeleton's belt at the bottom of a sea cave; carry them to the harbor master before the men who knew about the money arrive to claim it was owed them.
+
+7. **The Gale Watch** — Someone must stay on the Douvres headland through the night of the equinoctial gale and count the ships that pass — if any go aground, the signal must be lit to warn the harbor before the rescue window closes.
+
+---
+
+### Theme Check
+
+**Existing active themes (selection):** love given away whole (GCI-01) · the grotesque masquerade as justice (STN-02) · the neutral messenger of doom (SEN-02) · loyalty as patience (LHR/STN) · grief carried in an object (INV/BHD/GDN) · the tool of reassembly — love that will not accept loss as final (ALF).
+
+**Themes being avoided:** GCI-01 already claimed "love given away whole, unacknowledged." ALF is about the love that refuses to accept loss as final — it is the opposite of accepting Gilliatt's choice; the Iron Rake is the instrument of *not accepting*. The Gild-Holm-'Ur angle is not about refusing loss; it is about arriving at a completed life and being given, once, a reason to continue.
+
+**What this quest introduces:** *The carrier who arrives with a reason for a man to live, offers it without coercion, and must accept whatever answer is given — the commission is completed when the message is delivered faithfully; the outcome belongs to the recipient.* This is distinct from all existing themes. It is not about love given (GCI-01), not about the carrier being hunted (SEN-01), not about formal instruments (MAN-02). It is about the ethics of the offer — the specific moral position of someone who arrives with a reason and must not make that reason a weapon.
+
+---
+
+### 5-Act Vignette Play: *The Gild-Holm-'Ur Seat*
+
+**THE TOKEN: LETHIERRY'S MESSAGE LINE** — A coil of good hemp rope, fifty feet, with a knot-cipher worked into one end: Gilliatt's name in the sailor's knotted language, and below it, two knots that mean *come back.* Lethierry handed it to the Fighter at the harbor without explanation except: "He'll know what it means. Reach him before dark." The rope is heavy and smells of sea. In the Fighter's arms it is the weight of an old man's hope.
+
+---
+
+**ACT I — Lethierry's Quay**
+*The rope: coiled, dry, fresh from the harbor locker. Location: St. Peter Port quay, afternoon.*
+
+Mess Lethierry is a large man gone gray, and today he is standing at the harbor edge with the specific posture of someone who has decided to act after a long time of not deciding. He hands the rope over without ceremony.
+
+**Lethierry:** "Gilliatt is at the Gild-Holm-'Ur seat. He was there this morning. He will still be there." A pause. "The tide is at six."
+
+He looks at the Fighter.
+
+**Lethierry:** "He taught me half of what I know about lines. He'll read the cipher before you speak."
+
+He steps back. He does not say *please* or *hurry* or anything that names what he is afraid of. He has the dignity of a man who has done what he can do and is now waiting.
+
+*The Fighter holds the rope in their arms and understands: this is not an errand. This is the last possible thing that can be sent.*
+
+The cliff path is two miles from the harbor. The tide is at six.
+
+---
+
+**ACT II — The Cliff Road**
+*The rope: coiled over the Fighter's shoulder. Location: the cliff road above the Gild-Holm-'Ur, late afternoon.*
+
+The cliff road runs along the coast and then narrows to a track through gorse. The afternoon is clear enough to see the harbor behind and the open sea ahead. Somewhere on the sea, a ship. Barely visible, sail-bright, hull-down on the horizon.
+
+The path down to the seat is not marked. A local fisherman is sitting on a stone at the path's junction, mending net, not looking up.
+
+**Fisherman:** *(without looking)* "He's been there since noon. Tide covers that seat at six." A pause. "You're going down."
+
+Not a question.
+
+**Fisherman:** "Mind the third ledge. The rock is wet."
+
+*The Fighter starts down the path. The rope is heavy over the shoulder. The horizon has one ship on it, moving south, hull almost invisible.*
+
+---
+
+**ACT III — The Ledge Above the Seat**
+*The rope: carried in both arms, ready to throw. Location: the ledge above the Gild-Holm-'Ur, five feet above the seat.*
+
+The sea is loud here. The waves come in from the northwest and hit the base of the rock face at the seat's left side, spending themselves in white and hiss. The seat is in the rock face — a niche barely wide enough for shoulders, facing west, three feet above the current tide line. Gilliatt is in the seat. The tide is at his waist.
+
+His hands are flat on his thighs, in the water. His face is toward the horizon. His face is at peace in the specific way of someone who has arrived where they were always going.
+
+The ship is a smudge of sail, maybe two miles out. The wind is right for it.
+
+*The Fighter calls his name.*
+
+He turns. He looks up at the ledge. He looks at the rope.
+
+**Gilliatt:** "Lethierry."
+
+Still not a question.
+
+*The Fighter thinks: he is not surprised. He expected to be alone and he is not surprised that he is not. That is Lethierry's accuracy — he knew where to send someone.*
+
+---
+
+**ACT IV — The Rope Thrown**
+*The rope: airborne, then landing beside the seat in the water. Location: the ledge and the seat.*
+
+**Gilliatt:** *(quietly)* "He should have sent someone who did not know what they were looking at."
+
+The horizon is clear now. The smudge of sail is almost gone.
+
+*The Fighter does not say: come up. Does not say: the tide is rising. Does not say: Lethierry is waiting. The message is in the knot. The knot says it all.*
+
+The Fighter throws the rope. The end lands on the ledge of stone beside the seat — the knot-cipher resting in three inches of water beside Gilliatt's right hand.
+
+Gilliatt looks at the knot. His hand does not move.
+
+The horizon is empty.
+
+**Gilliatt:** *(after a long silence)* "He put his name in the knot."
+
+**Fighter:** *(one word)* "Yes."
+
+*The Fighter holds the other end of the rope. They do not pull. They wait.*
+
+Gilliatt looks at the cipher. He reads it the way you read something written by someone who loves you — slowly, because you already know what it says and you are deciding what to do with knowing it.
+
+His hand comes up out of the water.
+
+He closes his fist around the rope.
+
+---
+
+**ACT V — The Climb**
+*The rope: taut between two hands. Location: the ledge and the seat, then the cliff path.*
+
+The tide is at the seat's lip now. A wave comes and goes cold across the stone where Gilliatt was sitting.
+
+He climbs. The Fighter takes the rope's load and leans back on the ledge, and Gilliatt comes up the rock face by the handholds he cut there himself in a year of sitting at this seat — he knows every grip, every lip of stone that will hold his weight. He is at the ledge in thirty seconds.
+
+He stands on the ledge beside the Fighter. He is wet to the chest. He looks at the sea once — the horizon empty, the ship gone, the surface gray-green in the afternoon light. He looks at the rope coiled between them.
+
+**Gilliatt:** "He tied my name in it himself. His hands are not what they were for fine work."
+
+*The Fighter thinks: the old man sat at the harbor locker and worked the cipher slowly because his hands have stiffened with age. He put everything into the knot.*
+
+**Gilliatt:** "Tell him I read it."
+
+He starts up the cliff path. The Fighter follows. The rope is back in their arms.
+
+Below them, the Gild-Holm-'Ur seat is under water.
+
+---
+
+### Quest API Stub
+
+```
+Quest: The Gild-Holm-'Ur Seat
+missionAccept: "Mess Lethierry hands you a coil of rope with Gilliatt's name
+  knotted into one end and two knots that mean: come back. 'Reach him before
+  dark,' is all he says. The cliff path is two miles. The tide is at six."
+
+Act I — Lethierry's Quay
+activateNode: STP
+type: dialogue
+scene: "Mess Lethierry at the harbor edge in the afternoon — a large gray man
+  who has decided to act after a long time of not deciding. He hands over the
+  rope without ceremony and names the seat, the tide-time, and nothing else.
+  The ship carrying Déruchette and Caudray sailed at noon."
+prompt: "Insight DC 12: Understand what the rope is and what Lethierry cannot
+  bring himself to say — not an errand, but the last possible thing that can be sent."
+failText: "You start toward the cliff path without understanding the weight of
+  what you are carrying. You will understand it at the seat."
+successText: "You see it in Lethierry's posture. You hold the rope in both arms.
+  You receive Lethierry's Message Line."
+grantItem: "Lethierry's Message Line"
+checkPassFlag: gciRopeHeld
+
+Act II — The Cliff Road
+activateNode: STP
+type: skill_check
+scene: "The cliff road narrows to a gorse track. A local fisherman sits at the
+  path's junction mending net. He tells you Gilliatt has been at the seat since
+  noon. The third ledge is wet. The tide is at six. The path is unmarked."
+prompt: "Athletics DC 12: Descend the cliff path to the ledge above the seat
+  before the tide change puts the lower ledges underwater."
+failText: "The third ledge is wet and you go down on one knee. You recover. You
+  are slower but the tide is not yet at the seat's lip."
+successText: "You reach the upper ledge with twenty minutes to the tide. Below
+  you, the seat. In it, Gilliatt. The horizon has one ship on it."
+checkPassFlag: gciLedgeReached
+
+Act III — The Ledge Above the Seat
+activateNode: GHL
+type: dialogue
+scene: "Gilliatt is in the seat, tide at his waist, face toward the horizon,
+  hands flat on his thighs in the water. He is at peace. His face says: I have
+  finished. You call his name. He turns. He sees the rope. He says one word:
+  Lethierry."
+prompt: "Composure DC 12: Hold still. Do not argue. Do not plead. Do not name
+  what you see. Let him read the rope."
+failText: "You say something. He listens. He looks back at the horizon. The
+  message is the rope — let it speak."
+successText: "You say nothing. He looks at the rope in your arms. The horizon
+  empties as the ship clears the line of sight."
+checkPassFlag: gciSilenceHeld
+
+Act IV — The Rope Thrown
+activateNode: GHL
+type: skill_check
+scene: "The horizon is empty. The tide is at the seat's lip. Gilliatt's right
+  hand is in the water beside the stone ledge. You have the rope in both arms.
+  The message is in the knot. Throw it well."
+prompt: "Athletics DC 13: Place the rope end at his hand — close enough that
+  the knot-cipher rests in the water where he can read it without reaching."
+failText: "The throw is short. The knot-cipher falls in the water below the
+  seat. You haul it back. Try again — the tide is still at the lip, not over it."
+successText: "The knot-cipher lands beside his right hand in the shallows. He
+  reads it. His hand comes up out of the water. He closes his fist around the rope."
+checkPassFlag: gciRopeThrown
+
+Act V — The Climb
+activateNode: GHL
+type: escort
+scene: "He climbs up the rock face by handholds he cut himself over a year of
+  sitting here. He is at the ledge in thirty seconds. He stands beside you, wet
+  to the chest. He looks at the empty sea once. He says: Tell him I read it.
+  He starts up the cliff path. Escort him back to St. Peter Port harbor."
+prompt: "Escort Gilliatt from the cliff ledge to Lethierry's quay."
+successText: "He walks ahead of you on the cliff path. He does not look back
+  at the sea. The rope is back in your arms. At the harbor, Lethierry is waiting.
+  Gilliatt does not speak. He holds out his hand. Lethierry takes it."
+failText: "The path back is longer than the path down — something on the road.
+  You keep pace with him. He reaches the harbor later, but he reaches it."
+takeItem: "Lethierry's Message Line"
+checkPassFlag: gciGilliattHome
+activateMissionBit: gciSeatComplete
+```
+
+---
+
+### New Node Proposed
+
+| Node | Code | Terrain | Theme Affinity |
+|---|---|---|---|
+| Gild-Holm-'Ur Seat | GHL | A tidal rock niche on Guernsey's western coast face: a ledge in the stone barely wide enough for a man's shoulders, facing the open sea, covered by the spring tide; the path down is unmarked, the ledge above is the last place where a decision can be made; the sea sound here is constant | Completed lives, the ethics of the offer, the specific weight of a reason to continue |
+
+---
+
+*Cycle 2 complete. Mark `[x]` for GCI-toilers-of-the-sea in books.md.*
