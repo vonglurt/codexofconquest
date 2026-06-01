@@ -612,3 +612,300 @@ proof of the whole night.*
 *books.md: mark RIX [x].*
 
 *Rule 15: clear agent memory after RIX completion if context is full.*
+
+---
+
+## Cycle 2 — The Raven's Errand
+
+**What cycle 1 missed:** Cycle 1 was the poem-scroll delivered through Gunnhildr's agents — the explicit weapon, the artifact everyone could see. The Raven's Errand reveals what made that night possible from the other side: a York court member who once served Eirik's household and remembered Egil's family, who learned through court channels that Gunnhildr had planned a legal challenge that would interrupt the recitation before the twentieth stanza, and who had no safe way to reach Egil except the raven that was already at his window. The infrastructure of sympathy is invisible in cycle 1. Cycle 2 carries it into the open.
+
+**New angle:** The anonymous act of sympathy that must remain anonymous — the warning that saves, delivered through channels the sender's safety required to remain invisible; the carrier who vouches for a message whose source cannot be named.
+
+---
+
+### Pass 1 — Token
+
+**TOKEN: The Raven Token** — a small carved wood-piece, wool-wrapped, runic seal pressed into the binding, tied to the raven's leg at Egil's window on the night of composition. It is a warning: the specific date, the specific legal challenge Gunnhildr has arranged, the exact name of the hall official she has suborned. The sender cannot be named. The Fighter intercepts it, reads it, and must deliver it to Egil and vouch for its authenticity — anonymously, on behalf of a person they have never met.
+
+---
+
+### Pass 2 — Seven Storyline Ideas
+
+**1. The Head-Ransom Night** *(USED — Cycle 1)* — Egil is composing *Höfuðlausn* through the night and the poem must reach the hall. The Fighter carries it through Gunnhildr's agents.
+
+**2. The Completed Poem** — At dawn, Egil's vellum scroll must reach Arinbjörn before Eirik changes his mind.
+
+**3. The Níðstöng** — The curse-pole must reach the coastal island before the tide covers the beach.
+
+**4. Þorgerðr's Bargain** — Egil's daughter's single-line message must reach him through the locked room.
+
+**5. The Brunanburh Payment** — After battle, Egil's silver payment must be carried from the royal camp to the ship.
+
+**6. The Silver That Cannot Be Named** — Old Egil's buried chest and the only surviving witness.
+
+**7. The Raven's Errand** *(CHOSEN — Cycle 2)* — The raven at Egil's window carries a sealed token from an anonymous York sympathizer warning about Gunnhildr's legal challenge. The Fighter intercepts it, reads the warning, carries it through the corridor watch to Egil, vouches for its authenticity, and holds position at the recitation while Gunnhildr's agent is blocked by the counter-evidence the token represents.
+
+---
+
+### Pass 3 — Theme Check
+
+Existing themes after RIX cycle 1: poem that ransoms a life, loyalty under the long watch, grief carried in an object, honor vs. shame, love and fate intertwined, truth delivered posthumously, healing carried through hostile law, carrier becomes the hunted, token's journey, ancient witnesses, corruption wears mercy's face, fate through the broken thing, heroism earns protection for none, invitation as weapon, pyre-arrangements, proxy errand, absent jurisdiction, scattered truth, enabling condition, last gift against design, credential carried before the man, the one who will not weep.
+
+**Themes I am avoiding:** "Truth delivered posthumously" (LGW) — the sender is alive; the warning is forward-looking. "The carrier becomes the hunted" (SEN) — the Fighter is not marked by the token; the token's value is that it appears innocuous until deployed. "The poem that ransoms a life" (RIX cycle 1) — that was the poem as weapon; this is the sympathy that enabled the poem to be heard.
+
+**New theme introduced by RIX cycle 2:** *The anonymous act of sympathy that must remain anonymous: the carrier who vouches for a message whose sender cannot be named; the warning delivered through channels that the sender's safety required to remain invisible* — the York sympathizer cannot sign the token; the warning only functions if the Fighter swears to its legitimacy without being able to prove the source; the counter-evidence works because Gunnhildr's agent recognizes the runic seal and knows exactly who sent it — which is precisely why naming the sender publicly would destroy the sender; the Fighter holds this knowledge in one hand and the unspeakable name in the other, and the hall is quiet.
+
+---
+
+## 5-Act Vignette Play: "The Raven's Errand"
+
+**The Token · The Raven Token · a small carved wood-piece the length of a thumb ·
+wool-wrapped, runic seal pressed into the binding · tied to a leg
+that has just landed on a York window-ledge in the dark · it carries a warning
+whose sender cannot be named and whose authenticity cannot be proven
+except by the Fighter who is about to open it**
+
+---
+
+### Act I — The Window
+*The Raven Token · still bound to the raven's leg · a holding-room window in York,
+the middle of the night · the raven at the sill, one yellow eye watching you*
+
+The raven has been at Egil's window since midnight. You have been watching it since
+the lamp burned low, half-asleep against the wall while the poet worked. Now Egil
+is on his final stanza and the raven is still there and something about the way it
+holds its weight is wrong. It is not asking to be let in. It is waiting for you
+to come to it.
+
+You cross to the window. The raven does not move. You can see, tied to its leg with
+a twist of green wool, something small and carved — a thumb-length piece of wood,
+a runic seal impressed into the binding, the seal intact.
+
+*The raven shifts its weight. The token turns once. The seal is stamped with a device
+you don't recognize but the wool is fine, not trader's-cord — someone with means
+tied this.*
+
+The raven has not come for Egil. It has come for whoever is willing to take this
+off its leg before Egil turns around.
+
+You untie the token. The raven leaves immediately. It was only ever here for this.
+
+**DC 12 Insight — understand the obligation.**
+
+*If you fail:* You hold the token for a moment and then set it on the table beside the lamp, meaning to think about it. In the morning Egil finds it himself and is furious that you didn't wake him. You lose the window in which the token could do its work.
+
+*If you pass:* The token is in your hand and you understand that it is not addressed to the man at the writing-board. It is addressed to whoever was awake, watchful, and willing. It is addressed to you. You close your fist around it and do not turn around.
+
+---
+
+### Act II — The Seal
+*The Raven Token · in the Fighter's closed fist · the holding room, lamp-lit,
+Egil's back still to you at the writing board*
+
+You step into the corridor to open it. The seal is pressed wax over a wood-peg
+closure — you break it with a thumbnail and the wool comes loose and the wood-
+piece unfolds into a narrow strip of vellum wrapped around the core.
+
+The message is in court Norse, clean and brief. Gunnhildr has suborned the hall-
+master's clerk to register a prior legal challenge on behalf of a named plaintiff —
+a merchant whose cargo Egil supposedly confiscated ten years ago — at the first
+bell of morning, before the recitation can begin. The challenge freezes the
+proceedings pending a formal hearing. The hearing is scheduled for three days from
+now. Eirik's patience will not last three days.
+
+The signature is a runic device and nothing else. You know this seal from a face
+you have seen at court. You know exactly who sent this. You will not name them.
+
+*The stripped vellum is in your hand now. The wood-piece has the runic device on
+one face. Both pieces together are the argument. Neither piece works without the
+other.*
+
+**DC 13 Insight — read the full shape of what you're holding.**
+
+*If you fail:* You read the surface and miss the deeper mechanism: that the seal itself is the counter-evidence, not just the warning. You carry the message to Egil without understanding how to deploy it, and Egil has to reconstruct the counter-move himself, which costs time.
+
+*If you pass:* You see it whole. The warning tells you the challenge is coming. The seal tells you something more useful: Gunnhildr's agent will recognize it. The person who sent this is someone the agent cannot publicly contradict. If the seal is visible at the moment of the challenge, the agent cannot proceed. You hold a message and a weapon. You know which hand to put each in.
+
+---
+
+### Act III — The Corridor Watch
+*The Raven Token · both pieces in the Fighter's belt-pouch · the corridor between
+Egil's room and Arinbjörn's quarters, two of Gunnhildr's household men at the far end*
+
+Arinbjörn needs to know before the first bell. The message is for Egil, but the
+counter-move requires Arinbjörn's position in the hall, and Arinbjörn needs to be
+placed before the challenge arrives, not after. That means you cross the corridor
+now, while Gunnhildr's men are watching everyone who moves through it.
+
+The two men at the far end know who you are. What they don't know is whether you are
+carrying anything. You have the token in your belt-pouch. You have nothing in your
+hands. You are walking toward them at three in the morning in the York court of
+Eirik Bloodaxe, which is either completely normal or immediately suspicious.
+
+*The token is not visible. Nothing about you is wrong. This depends entirely on whether
+you are the kind of person who crosses a corridor at three in the morning as if they
+were not crossing a corridor at three in the morning.*
+
+**DC 13 Stealth — not invisibility; confidence of purpose.**
+
+*If you fail:* One of the men steps forward and asks where you're going. You get through — you have a plausible answer — but they remember your face. When the moment comes in the hall they are watching you specifically.
+
+*If you pass:* You cross the corridor at the exact speed of someone who has been sent on an errand that is beneath these men's notice. They look past you. You knock at Arinbjörn's door.
+
+---
+
+### Act IV — Egil's Skeptic
+*The Raven Token · both pieces in the Fighter's hand · Arinbjörn's outer room,
+a tallow candle, Arinbjörn half-awake and Egil standing in the doorway*
+
+Arinbjörn has woken Egil. Egil is not grateful for the interruption. He has just
+finished the poem; he was going to sleep for one hour before the recitation; and
+someone he barely knows is telling him there is a prior legal challenge registered
+against him by a merchant he has never heard of.
+
+He looks at the vellum strip. He looks at the wood-piece. He looks at you.
+
+*"Who sent this."*
+
+You know who sent it. You will not say. The sender's name in this room, spoken aloud,
+destroys the sender. The only thing you can give Egil is the certainty that the seal
+is genuine, the warning is accurate, and the mechanism will work if he trusts it.
+He needs to trust you, who are a stranger holding an anonymous message at three in
+the morning, asking him to modify his behavior based on information you cannot source.
+
+**DC 12 Persuasion — not rhetoric; just clarity.**
+
+*If you fail:* Egil is unconvinced. He goes to the recitation anyway, the challenge arrives, Arinbjörn has to improvise a counter-argument without the counter-evidence, and the hearing is delayed — not three days, but one; Eirik's patience holds by a margin that should not have been spent.
+
+*If you pass:* Egil looks at the seal for a long moment. He puts the wood-piece in his own belt-pouch. He says nothing about who sent it. He understands the mechanism perfectly and will use it at the exact right moment. *"You held the window,"* he says. That is all he says. He goes back to his room to wait for dawn.
+
+---
+
+### Act V — The First Bell
+*The Raven Token · the wood-piece in Egil's belt-pouch · the hall · morning light ·
+the full court assembling · Gunnhildr's agent moving toward the hall-master's clerk*
+
+The hall fills. Egil stands at Arinbjörn's shoulder. The clerk opens his register.
+Gunnhildr's agent — you know the face now, you know the coat, you know the direction
+he is moving — begins his approach toward the clerk's table from the left side.
+
+He will reach the clerk before Egil can be introduced. The challenge will be registered.
+The recitation will be postponed. Three days, then Eirik's patience, then an axe.
+
+You are at the right side of the room. The agent has not seen you yet. You have
+approximately twenty seconds and two options: intercept him physically, or create
+the condition under which he stops himself.
+
+You step into his sightline. You hold the token's wood-piece up — not displayed to
+the room; displayed to him. The runic seal is visible. The device on it is readable
+to exactly one person in this room and that person is now reading it.
+
+He stops. He knows what the seal is. He knows what registering this challenge would
+cost the sender if it became known that the sender had warned against it. He does
+the mathematics in three seconds. He steps back from the clerk's table.
+
+*The Raven Token, its task complete, rests in your palm. You close your hand around
+it and hold it there while Egil begins the first stanza of Höfuðlausn into a hall
+that is entirely silent.*
+
+**DC 11 Composure — hold the sightline; let the mathematics complete.**
+
+*If you fail:* Your hand trembles slightly. The agent reads uncertainty. He moves toward the clerk again and you have to step directly into his path — physical interception, visible to the room, a commotion that Eirik notices. The recitation begins late into a hall already disrupted.
+
+*If you pass:* The hall is silent. Egil recites twenty stanzas. Eirik sits on the high seat and listens to a poem that earns a man's life. After, in the yard, you open your hand. The Raven Token sits there. You keep it. The sender will never ask for it back. It was always yours from the moment the raven left the window.
+
+---
+
+## Quest API Stub — Cycle 2
+
+```json
+{
+  "questId": "RIX_cycle2_ravensErrand",
+  "title": "The Raven's Errand",
+  "activateNode": "YRK",
+  "token": {
+    "name": "The Raven Token",
+    "description": "A thumb-length carved wood-piece, wool-wrapped, runic seal pressed into the binding. A warning from an anonymous York sympathizer about Gunnhildr's legal challenge. The seal is the counter-evidence.",
+    "introducedAct": 1,
+    "consumedAct": 5
+  },
+  "acts": [
+    {
+      "act": 1,
+      "title": "The Window",
+      "location": "YRK — Egil's holding room, York, the middle of the night",
+      "token_action": "RECEIVE — untied from the raven's leg",
+      "type": "skill_check",
+      "scene": "The raven has been at Egil's window since midnight. Something about the way it holds its weight is wrong — it is waiting for you specifically. Tied to its leg with a twist of fine green wool is a small carved wood-piece with a runic seal intact. The raven does not move until you take it.",
+      "prompt": "Untie the token from the raven's leg before Egil turns around. Understand what it is and who it is for. DC 12 Insight.",
+      "failText": "You hold the token for a moment and set it on the table. In the morning Egil finds it himself. You lost the window.",
+      "successText": "The token is in your hand and you understand: it is not addressed to the man at the writing-board. It is addressed to whoever was awake and willing. You close your fist and do not turn around.",
+      "grantItem": "The Raven Token — wool-wrapped carved wood, runic seal intact, warning inside",
+      "checkPassFlag": "RIX2_tokenReceived"
+    },
+    {
+      "act": 2,
+      "title": "The Seal",
+      "location": "YRK — the corridor outside Egil's room",
+      "token_action": "OPENED — seal broken, vellum strip unrolled",
+      "type": "skill_check",
+      "scene": "In the corridor you open the token. The message names the legal challenge, the suborned clerk, the timing. The signature is a runic device and nothing else. You know this seal. You know the face. You will not name them. The seal itself is the counter-evidence — Gunnhildr's agent will recognize it and cannot publicly contradict what it implies.",
+      "prompt": "Read the full shape of what you're holding. The warning is one thing. The seal is another. DC 13 Insight.",
+      "failText": "You read the surface and miss the mechanism. You carry the message to Egil without understanding how to deploy the seal, and Egil reconstructs the counter-move himself.",
+      "successText": "You see it whole. The warning tells you the challenge is coming. The seal tells you the agent cannot proceed if it is visible at the moment of challenge. You hold a message and a weapon. You know which hand to put each in.",
+      "checkPassFlag": "RIX2_sealRead"
+    },
+    {
+      "act": 3,
+      "title": "The Corridor Watch",
+      "location": "YRK — the corridor between Egil's room and Arinbjörn's quarters",
+      "token_action": "CARRIED — both pieces in belt-pouch",
+      "type": "skill_check",
+      "scene": "Two of Gunnhildr's household men watch the corridor at three in the morning. They know your face. They do not know what you are carrying. Arinbjörn needs the warning before first bell.",
+      "prompt": "Cross the corridor at the speed of someone on an errand beneath these men's notice. DC 13 Stealth.",
+      "failText": "One man steps forward and asks where you're going. You get through, but they remember your face. In the hall they will be watching you.",
+      "successText": "You cross at the exact pace of someone who has been sent on a task below their interest. They look past you. You knock at Arinbjörn's door.",
+      "checkPassFlag": "RIX2_corridorCrossed"
+    },
+    {
+      "act": 4,
+      "title": "Egil's Skeptic",
+      "location": "YRK — Arinbjörn's outer room, tallow candle, pre-dawn",
+      "token_action": "TRANSFERRED — wood-piece passed to Egil's keeping",
+      "type": "skill_check",
+      "scene": "Egil has been woken. He has just finished the poem. He is not grateful. He looks at the vellum strip, the wood-piece, and you. 'Who sent this.' You know. You will not say. You can give him only the certainty that the seal is genuine and the mechanism will work if he trusts it.",
+      "prompt": "Persuade a skeptical Egil to trust an anonymous warning carried by a stranger at three in the morning. DC 12 Persuasion.",
+      "failText": "Egil is unconvinced. He goes to the recitation without the counter-move prepared. Arinbjörn has to improvise; the hearing is delayed one day instead of three.",
+      "successText": "Egil looks at the seal. He puts the wood-piece in his own belt-pouch. 'You held the window,' he says. He goes back to wait for dawn.",
+      "checkPassFlag": "RIX2_egalConvinced"
+    },
+    {
+      "act": 5,
+      "title": "The First Bell",
+      "location": "YRK — Eirik's great hall, morning, the full court assembling",
+      "token_action": "DEPLOYED — seal displayed to Gunnhildr's agent; token remains with Fighter",
+      "type": "skill_check",
+      "scene": "Gunnhildr's agent moves toward the clerk's table from the left side. He will reach it before Egil can be introduced. You step into his sightline and hold the wood-piece where the runic seal is visible — not to the room, to him. He knows what it is. He does the mathematics. He stops.",
+      "prompt": "Hold the sightline. Let the mathematics complete. DC 11 Composure.",
+      "failText": "Your hand trembles. The agent reads uncertainty and moves again. You step physically into his path — visible to the room, a commotion Eirik notices. The recitation begins late into a disrupted hall.",
+      "successText": "The hall is silent. Egil recites twenty stanzas. Eirik listens. 'He will go free.' After, in the yard, you open your hand. The Raven Token sits there. The sender will never ask for it back. It was always yours from the moment the raven left the window.",
+      "grantItem": "The Raven Token — kept by the Fighter; the sender will never ask for it back",
+      "takeItem": "The Raven Token — task complete; no longer a warning, now a record of the night",
+      "activateMissionBit": "rixRavensComplete",
+      "checkPassFlag": "RIX2_egalConvinced"
+    }
+  ]
+}
+```
+
+---
+
+*quest-map.md: append RIX cycle 2 row to Processed Quests table:*
+`| RIX | The Raven's Errand | 2 | YRK (York — Eirik's hall, corridor, Arinbjörn's room) | The anonymous sympathy that enables the poem to be heard |`
+
+*quest-map.md: append new theme thread to Theme Threads Active:*
+`- **The anonymous act of sympathy that must remain anonymous: the carrier who vouches for a message whose sender cannot be named; the warning delivered through channels the sender's safety required to remain invisible**: RIX (cycle 2) — the York sympathizer cannot sign the token; the warning only functions if the Fighter swears to its legitimacy without being able to prove the source; the counter-evidence works because Gunnhildr's agent recognizes the seal and knows exactly who sent it — which is precisely why naming the sender would destroy them; the Fighter holds the unspeakable name and the visible seal and the hall goes quiet`
+
+*quest-map.md: YRK already in Location Grid — no new node needed.*
+
+*books.md: mark RIX [x].*
