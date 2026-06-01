@@ -438,3 +438,290 @@ Herðholt's outer gate has been standing for thirty years. The man who watches i
 - *quest-map.md: append new theme thread: Pride that cannot confess returns the stolen thing anonymously.*
 - *quest-map.md: append LGR, LXF, HHL to Location Grid (Source-Book Nodes).*
 - *books.md: mark MOL [x].*
+
+---
+
+## Cycle 2 — Bolli Bollason's Letter
+
+**What cycle 1 missed:** Guðrún's Debt was about what the elder generation does with guilt when confession is structurally impossible — pride that returns the stolen thing through an anonymous carrier, the object naming the crime without requiring the thief to speak. Bolli Bollason's Letter reveals the next generation's reckoning: Bolli Bollason has become one of the most celebrated Varangian warriors in Byzantium, the most famous fighter alive, which was what Guðrún's choices made possible — she raised the son of the man she made her brothers kill, and he became this. The letter asks one question. The Fighter carries it from Constantinople to Helgafell through three countries knowing what it contains. The question is the real token. Cycle 1 was what pride does with guilt. Cycle 2 is what a son does with achievement he cannot decide the value of.
+
+**New angle:** Bolli Bollason presses his sealed letter into the Fighter's hands at the Varangian barracks in Constantinople. The Fighter carries it through three countries to Guðrún's hermit cell at Helgafell, knowing the question the letter contains: "Was it worth it?" At Act V, Guðrún breaks the seal and reads in silence. The Fighter does not stay to hear the answer.
+
+---
+
+### Pass 1 — Token
+
+**TOKEN: Bolli Bollason's Sealed Letter** — pressed into the Fighter's hands in Constantinople; Byzantine wax seal intact; carried from the Varangian barracks through a trading port, a sea-crossing, an ecclesiastical obstacle, to Helgafell's hermit cell. At Act V, Guðrún's hands take it and break the seal. The letter asks whether what she made possible was worth the cost. The Fighter leaves before the answer is spoken or unspoken.
+
+---
+
+### Pass 2 — Seven Storyline Ideas
+
+**1. Guðrún's Debt** *(USED — Cycle 1)* — The stolen headdress returned anonymously. Pride that cannot confess uses the object as proxy.
+
+**2. Melkorka's Ring** — The Irish princess's gold ring, carried across a Norwegian harbor where its value is known to the wrong people.
+
+**3. Bolli Bollason's Letter** *(CHOSEN — Cycle 2)* — Sealed in Constantinople. The question inside: "Was it worth it?" Carried from the Varangian barracks to Guðrún's hermit cell at Helgafell. Delivered and left before the answer.
+
+**4. The Ambush Warning** — The warning for Kjartan across the contested ford before the ambush sets.
+
+**5. Gestr's Record** — The dream-interpreter's written record of Guðrún's four dreams. The Althing deadline.
+
+**6. Hrefna's Grave-Gift** — Kjartan's ring-brooch carried to Hrefna's mound through armed grievers on both sides.
+
+**7. The Carved Beams of Herðholt** — The settlement payment for the craftsman's widow through a winter road.
+
+---
+
+### Pass 3 — Theme Check
+
+Existing themes through HFT cycle 2: grief in object, loyalty, honor vs. shame, love and fate, truth posthumous, healing through hostile law, carrier hunted, token's journey, ancient witnesses, corruption wears mercy, fate through broken thing, heroism earns nothing, invitation as weapon, poem ransoms life, anonymous sympathy, pyre-arrangements, proxy errand, absent jurisdiction, scattered truth, last gift against design, credential before the man, one who will not weep, vigil at extraction, errand of removal, eclipse witness, thing too true, word dying man cannot carry.
+
+**Themes I am avoiding:** "Truth delivered posthumously" (LGW) — both Bolli and Guðrún are alive; this is a question asked across an ocean, not a truth delivered after death. "The proxy errand" (MSE cycle 2) — the errand here is the son's inquiry, not the completion of his own task; the letter is not a task Bolli gave the Fighter, it is a commission the Fighter accepts to carry a question that Bolli could not carry himself. "The word the dying man cannot carry himself" (HFT cycle 2) — Ring couldn't cross the room; this is entirely different: Bolli can't cross the ocean.
+
+**New theme introduced by MOL cycle 2:** *The question asked across an ocean that cannot be answered while the carrier is present: the letter that has traveled further than any grief should travel; the son who made himself the most celebrated warrior alive as an offering to a mother who might prefer a different accounting* — Bolli didn't ask to be born into this story; he made the best he could of it, which was famous and celebrated and not the thing the question is about; the question "was it worth it" is not rhetorical; it is the one thing the son needs to know that the mother has to decide alone; the Fighter carries the question and leaves before the answer.
+
+---
+
+## 5-Act Vignette Play: "Bolli Bollason's Letter"
+
+**The Token · Bolli Bollason's Sealed Letter · a sealed dispatch-roll ·
+Byzantine wax, the Varangian signet, the question inside ·
+pressed into the Fighter's hands in Constantinople ·
+it must reach an old woman in an Icelandic hermit's cell ·
+the carrier will not be present for the answer**
+
+---
+
+### Act I — The Barracks
+*Bolli Bollason's Sealed Letter · in Bolli Bollason's hands ·
+the Varangian barracks, Constantinople, late afternoon, the harbor smell*
+
+Bolli Bollason looks like what he is: the finest warrior in the Varangian Guard,
+which makes him one of the finest fighters alive, which is something he has been
+for fifteen years and which he is entirely calm about. He is holding a sealed
+dispatch-roll and looking at you with the specific expression of a man who has been
+asking himself for a month who he could trust to carry this.
+
+*"She's at Helgafell. The hermit's cell on the north side of the fell. She will be
+there or she will be dead, and if she's dead give it to the prior and tell him it
+was correspondence for the late abbess and to file it in the church records. Don't
+let anyone open it."*
+
+He does not explain what is in it. You already know — you have been in this barracks
+for three months and you have seen him work on the dispatch-roll and you have an
+understanding of what questions remain unanswered in this family's history.
+
+He holds it out. The Byzantine seal is intact.
+
+*The dispatch-roll is light. What it weighs has nothing to do with parchment.*
+
+**DC 12 Insight — understand why he is sending it now, after fifteen years; understand that the question has a specific answer-window and the window is not long; understand that he could not send this through the official Varangian courier network because official couriers open things.**
+
+*If you fail:* You take it and understand the logistics but not the urgency. By the time you reach the second country you have let two delays accumulate that you could have prevented.
+
+*If you pass:* The window is Guðrún's life. She is old. Helgafell has been her home for fifteen years. The question has been circling Bolli's head for as long. The dispatch-roll is the only form in which the question can travel at all. You take it. You leave that evening.
+
+---
+
+### Act II — The Trading Port
+*Bolli Bollason's Sealed Letter · in a dispatch-wallet, sealed ·
+a trading port, somewhere in the Baltic route, a tavern on the harbor*
+
+You are three weeks out of Constantinople. The trading post is loud with Norse
+speakers coming from and going to Iceland. At the corner table, a merchant who
+trades between Birka and Constantinople is looking at your dispatch-wallet with
+the specific attention of a man who has moved private correspondence between these
+two worlds for twenty years and knows what a Varangian dispatch seal means in
+family-history terms.
+
+He is not going to rob you. He wants information. He knew Bolli Bollason's father.
+He knows the family. He would like to know, as a professional courtesy, who this
+letter is for and what it says, because information like that has value on the
+Icelandic trade routes.
+
+*The dispatch-roll is in the wallet. The wallet is on the table. His eyes are on it.*
+
+**DC 12 Persuasion — the letter is sealed; its contents are not yours to discuss; the conversation is over; you are leaving in the morning.**
+
+*If you fail:* He extracts enough from you — not the contents, but the destination — that by the time you reach Norway, someone on the road to Helgafell knows a Byzantine letter is coming.
+
+*If you pass:* He looks at you for a moment. He recognizes the form of "this conversation is over" when he hears it. He finishes his ale. You leave in the morning.
+
+---
+
+### Act III — The Sea-Crossing
+*Bolli Bollason's Sealed Letter · in the dispatch-wallet · a Greenland-route ship,
+three days from Iceland, the ship's captain reviewing the cargo manifest*
+
+The ship's captain has been carrying letters for the Norwegian crown for six years.
+He checks correspondence as a matter of routine. He is thorough. He has picked up the
+dispatch-wallet and he is looking at the Varangian seal.
+
+*"Byzantine correspondence. Going to Iceland. I'll need to log the recipient."*
+
+He is not hostile. He is procedural. The problem is that logging the recipient means
+the information exists in his manifest, which is filed in Bergen, which is read by
+people in Bergen who pay attention to correspondence flowing between Constantinople
+and Icelandic hermit cells.
+
+**DC 13 Deception — personal correspondence for a family member; no political content; the recipient is a private person; nothing worth logging.**
+
+*If you fail:* The recipient is logged. By the time you reach Helgafell, the prior has been asked to hold any arriving correspondence for inspection.
+
+*If you pass:* The captain looks at the seal again. He shrugs and sets the wallet down. Some Byzantine family correspondence. He has seen these before. He logs nothing.
+
+---
+
+### Act IV — The Prior's Gate
+*Bolli Bollason's Sealed Letter · in the dispatch-wallet · Helgafell approach,
+the prior's gatehouse, early morning, mountain light*
+
+The prior at Helgafell has managed all of Guðrún's communication since she took
+holy orders fifteen years ago. He is a careful man with good intentions and a
+fundamental belief that correspondence arriving from foreign countries for elderly
+women in religious retirement should pass through him so he can determine whether
+it is appropriate.
+
+He has seen the dispatch-wallet. He has seen you. He is holding out his hand.
+
+*"I'll see that she receives it. She doesn't have visitors in the mornings."*
+
+You have been traveling for two months. The window is Guðrún's life. The question
+in this dispatch-roll is not the prior's to assess.
+
+**DC 13 Persuasion — direct personal correspondence; strictly private commission; not through intermediaries; the sender specified this.**
+
+*If you fail:* He takes the wallet. He carries it himself and Guðrún receives it with him in the room, which is not what Bolli specified and not what the question requires.
+
+*If you pass:* He looks at the wallet. He looks at you. He knows what private means when someone says it with that specific weight. He steps to the side. *"The north cell. Knock twice."*
+
+---
+
+### Act V — Helgafell
+*Bolli Bollason's Sealed Letter · in the Fighter's hands · Helgafell,
+the hermit's north cell, a small fire, morning light through the slot-window*
+
+The cell is small and cold and clean. Guðrún Ósvífrsdóttir is seated by the window
+with a book open in her lap. She is old. She looks at you. She looks at the
+dispatch-wallet. She closes the book.
+
+You give her the wallet. She takes it. She turns it over and reads the seal. She
+holds it for a moment.
+
+She knows who sent it. She has been waiting for fifteen years for something from
+this direction and she has been pretending she wasn't.
+
+*She breaks the seal. She unrolls the parchment. She reads.*
+
+The cell is very quiet. The slot-window is bright. Outside, somewhere on the fell,
+a bird is producing a sound that has nothing to do with this room.
+
+You are going to leave before she finishes reading. This was always the arrangement.
+You carry the question. You are not present for the answer. Whatever she says to
+the wall after you are gone is hers.
+
+*Bolli Bollason's Sealed Letter is in Guðrún's hands. The seal is broken. The
+question is in the room. You are already at the door.*
+
+**DC 11 Composure — leave at the right moment; not too early, not too late; the question needs a second to settle in the room; the carrier's presence past that second is an intrusion.**
+
+*If you fail:* You wait too long. She looks up before you are out the door. The expression on her face is one you will carry. You leave anyway, but you have seen it.
+
+*If you pass:* You are through the door before she has finished the first paragraph. The cold air of the fell is on your face. Behind you, a small fire, a slot-window, an old woman, and a question that has been traveling for fifteen years across an ocean.
+
+---
+
+## Quest API Stub — Cycle 2
+
+```json
+{
+  "questId": "MOL_cycle2_bolliLetter",
+  "title": "Bolli Bollason's Letter",
+  "activateNode": "VRG",
+  "token": {
+    "name": "Bolli Bollason's Sealed Letter",
+    "description": "A sealed dispatch-roll from the Varangian barracks in Constantinople. Byzantine wax. Varangian signet. The question inside: 'Was it worth it?' Carried from Constantinople to Guðrún's hermit cell at Helgafell through three countries. The carrier does not stay for the answer.",
+    "introducedAct": 1,
+    "consumedAct": 5
+  },
+  "acts": [
+    {
+      "act": 1,
+      "title": "The Barracks",
+      "location": "VRG — Varangian barracks, Constantinople, late afternoon",
+      "token_action": "RECEIVE — pressed into Fighter's hands with one instruction: don't let anyone open it",
+      "type": "skill_check",
+      "scene": "Bolli Bollason is the finest warrior in the Varangian Guard. He has been working on this dispatch-roll for a month. He trusts only someone outside the family politics. The Byzantine seal is intact. The window is Guðrún's life.",
+      "prompt": "Understand why he is sending it now, after fifteen years; understand that the window is not long. DC 12 Insight.",
+      "failText": "You understand the logistics but not the urgency. Two avoidable delays accumulate on the route.",
+      "successText": "The window is Guðrún's life. The dispatch-roll is the only form in which the question can travel. You take it. You leave that evening.",
+      "grantItem": "Bolli Bollason's Sealed Letter — Byzantine seal intact; the question inside; Varangian signet; personal commission",
+      "checkPassFlag": "MOL2_letterReceived"
+    },
+    {
+      "act": 2,
+      "title": "The Trading Port",
+      "location": "BLT — a trading post on the Baltic route, a tavern on the harbor",
+      "token_action": "HELD — in dispatch-wallet, sealed",
+      "type": "skill_check",
+      "scene": "A merchant who knew Bolli's father. He moves private correspondence between Birka and Constantinople and knows what a Varangian dispatch seal means in family-history terms. He wants to know who the letter is for and what it says. The information has value on the Icelandic trade routes.",
+      "prompt": "The letter is sealed. Its contents are not yours to discuss. The conversation is over. DC 12 Persuasion.",
+      "failText": "He extracts the destination. By Norway, someone on the road to Helgafell knows a Byzantine letter is coming.",
+      "successText": "He recognizes the form of 'this conversation is over' when he hears it. You leave in the morning.",
+      "checkPassFlag": "MOL2_portPassed"
+    },
+    {
+      "act": 3,
+      "title": "The Sea-Crossing",
+      "location": "BLT → ICL — a Greenland-route ship, three days from Iceland",
+      "token_action": "HELD — dispatch-wallet in the hold",
+      "type": "skill_check",
+      "scene": "The ship's captain carries letters for the Norwegian crown and checks correspondence routinely. He has the dispatch-wallet. He sees the Varangian seal. 'Byzantine correspondence. I'll need to log the recipient.' The log is filed in Bergen and read by people who pay attention to correspondence flowing between Constantinople and Icelandic hermit cells.",
+      "prompt": "Personal correspondence for a family member. No political content. Private person. Nothing worth logging. DC 13 Deception.",
+      "failText": "The recipient is logged. The prior at Helgafell is asked to hold arriving correspondence for inspection.",
+      "successText": "The captain shrugs. Some Byzantine family correspondence. He logs nothing.",
+      "checkPassFlag": "MOL2_crossingPassed"
+    },
+    {
+      "act": 4,
+      "title": "The Prior's Gate",
+      "location": "HFG approach — Helgafell gatehouse, early morning",
+      "token_action": "HELD — not surrendered",
+      "type": "skill_check",
+      "scene": "The prior manages all of Guðrún's communication. He has good intentions and a fundamental belief that foreign correspondence for elderly women in religious retirement should pass through him. He is holding out his hand. 'I'll see that she receives it.'",
+      "prompt": "Direct personal correspondence. Strictly private commission. Not through intermediaries. The sender specified this. DC 13 Persuasion.",
+      "failText": "He takes the wallet and delivers it himself, in the room, present for the reading.",
+      "successText": "He recognizes 'private' when it has that specific weight. He steps aside. 'The north cell. Knock twice.'",
+      "checkPassFlag": "MOL2_priorPassed"
+    },
+    {
+      "act": 5,
+      "title": "Helgafell",
+      "location": "HFG — Guðrún's hermit cell, a small fire, morning light through the slot-window",
+      "token_action": "DELIVERED — placed in Guðrún's hands; seal broken by her",
+      "type": "skill_check",
+      "scene": "She closes her book. She takes the wallet. She turns it over and reads the seal. She has been waiting fifteen years. She breaks the seal. She reads. The cell is quiet. You are going to leave before she finishes. This was always the arrangement.",
+      "prompt": "Leave at the right moment — not too early, not too late; the question needs a second to settle; the carrier's presence past that second is an intrusion. DC 11 Composure.",
+      "failText": "You wait too long. She looks up before you are out. The expression on her face is one you will carry.",
+      "successText": "You are through the door before she has finished the first paragraph. Behind you: a small fire, a slot-window, an old woman, and a question that traveled fifteen years across an ocean.",
+      "grantItem": "Bolli's Varangian Pin — pressed into your hand by Bolli in the barracks when he gave you the letter; you forgot it was in your pocket; it is yours now",
+      "takeItem": "Bolli Bollason's Sealed Letter — in Guðrún's hands; the question is now in the room",
+      "activateMissionBit": "molBolliComplete",
+      "checkPassFlag": "MOL2_priorPassed"
+    }
+  ]
+}
+```
+
+---
+
+*quest-map.md: append MOL cycle 2 row to Processed Quests table:*
+`| MOL | Bolli Bollason's Letter | 2 | VRG → BLT → HFG (Varangian barracks → Baltic port → Helgafell hermit cell) | The question asked across an ocean that cannot be answered while the carrier is present |`
+
+*quest-map.md: append new theme thread to Theme Threads Active:*
+`- **The question asked across an ocean that cannot be answered while the carrier is present: the letter that has traveled further than any grief should travel; the son who made himself the most celebrated warrior alive as an offering to a mother who might prefer a different accounting**: MOL (cycle 2) — Bolli didn't ask to be born into this story; he made the best possible of it, which was famous and not the thing the question is about; the question "was it worth it" is not rhetorical; it is the one thing the son needs to know that the mother must decide alone; the Fighter carries the question and leaves before the answer`
+
+*quest-map.md: append VRG, BLT, HFG to Location Grid.*
+
+*books.md: mark MOL [x].*
