@@ -304,3 +304,333 @@ checkPassFlag: man_act5Pass
 ---
 
 *Quest-map entry: appended to quest-map.md*
+
+---
+
+## Cycle 2 — Angle: The Templar's Writ
+
+**What this angle reveals that Cycle 1 missed:** Cycle 1 (The Sealed Jar) showed Norman institutional power as an external obstacle — road gates, ledger-men, the anonymous machinery of control. Cycle 2 moves inside the machine: into the Templar preceptory at Templestowe, into the politics of the Order itself, into the specific irony that the instrument of Rebecca's salvation was written by the Grand Master *before* the trial opened and then deliberately suppressed by the preceptory's political faction. Cycle 1 missed entirely: Lucas de Beaumanoir as a character (the sincerely incorruptible man who administers sincere injustice — not corrupt but wrong in a way that leaves no room for argument); the internal division within the Order between Beaumanoir's rigorous theology and Bois-Guilbert's political allies; Rebecca's specific dignity — she will not escape through a sewer, will not be smuggled out, will not use an improper channel; and the structural drama of a document that must be returned to the man who wrote it over the objections of the man who suppressed it.
+
+---
+
+### Pass 1 — Full Telling (Templar's Writ Angle)
+
+Lucas de Beaumanoir, Grand Master of the Knights Templar, is the most unsettling antagonist in *Ivanhoe* precisely because he is not wrong about anything except the final conclusion. He has not been bribed. He has not been corrupted by self-interest. His theology is sincere. His concern for the Order's discipline is genuine — the Templars of his era were, historically, an institution in political crisis, and Beaumanoir's severity is a historically plausible response to an organization that had accumulated enormous power and was being watched with increasing hostility by the powers it served. When he charges Rebecca with witchcraft, he is applying his institution's law correctly and completely. He has good reason to believe her guilty — Bois-Guilbert's behavior, seen from the outside, looks like a man enchanted. Beaumanoir simply cannot imagine that a Templar knight might fall into something like love entirely of his own capacity, because a Templar knight is supposed to have excised that capacity. The trial is not corruption. It is the law working as designed. This is what makes it so hard to argue against.
+
+What Cycle 2 opens is the moment before the trial — the gap between what Beaumanoir wrote in private and what his institution delivered in public. At some point in the period between Bois-Guilbert's original report and the formal opening of proceedings, Beaumanoir drafted a writ suspending the witchcraft charge pending additional investigation. He was not certain. He had doubts. The writ was sent to the preceptory recorder, who was allied with the political faction that wanted the trial to proceed — the faction that had been using Bois-Guilbert as an instrument and needed his standing within the Order maintained, which meant Rebecca's guilt needed to be established. The recorder held the writ. Beaumanoir never asked after it. The trial opened.
+
+Rebecca found the writ in Bois-Guilbert's military chest during the brief interval after her transfer to the preceptory when the guard rotation gave her access to the storage room. She does not know if Bois-Guilbert was holding it as a form of leverage against the preceptory's faction, or as a private guilt he could not resolve, or simply because he had obtained it by other means and had not decided what to do with it. She knows what it says. She knows whose seal it bears. She knows that returning it to the man who wrote it through the formal channel — through the recorder, through the secretary, into Beaumanoir's own hands — is the only action that falls within the institutional logic the Grand Master recognizes.
+
+She will not escape. This is not stubbornness or self-destruction. It is a precise ethical judgment: she has been formally charged under the Templar's own law, and the correct response to a formal charge under a formal law is to challenge it through the same formal system, not to flee it — because flight confirms guilt in every institutional register that matters. She has thought about this. She explains it clearly to the Fighter, in a cell with iron grates, in the specific calm of someone who has named their situation accurately and has stopped being afraid of it.
+
+She asks the Fighter to take the writ to Beaumanoir's secretary through the preceptory's regular correspondence procedure. Not as a secret operation — as a formal document delivery. The only obstacle is the recorder, who suppressed it, and the guards at the trial hall door, who have orders.
+
+### Chapter Notes
+
+**Ch. 1–9 (Tournament at Ashby, Cedric's court, road to Ashby):** Sets the novel's social geography: Saxon heritage vs. Norman power; the tournament as the arena where both intersect, neither wins, and all the characters' positions are established. Ivanhoe's disguise is the tournament's first lie.
+
+**Ch. 10–19 (The Disinherited Knight, Cedric's journey, Rebecca's first scene):** The tournament itself. Ivanhoe unseats every Norman champion. Rebecca is introduced caring for Ivanhoe's wounds in the armorer's tent — her medical knowledge and composed manner established immediately. Bois-Guilbert's interest in Rebecca is established as a problem with no clean resolution.
+
+**Ch. 20–28 (Abduction, Torquilstone):** The party is ambushed on the road and taken to Front-de-Boeuf's castle. Rebecca's window scene — she describes the siege to the wounded Ivanhoe while the castle is taken around them. The scene that defines her character: precise, self-possessed, afraid for someone else.
+
+**Ch. 29–32 (Siege, Rescue, Richard revealed):** Locksley's yeomen and the Black Knight (Richard) take the castle. Front-de-Boeuf killed. Bois-Guilbert escapes with Rebecca. Richard reveals himself; Ivanhoe discovers who the Black Knight was.
+
+**Ch. 33–38 (Templestowe, the charge, the trial's preparation):** Rebecca is taken to the Templar preceptory. Beaumanoir opens proceedings. Bois-Guilbert is appointed champion — which means he must fight to kill the woman he cannot stop wanting to save. The structural trap closes on him.
+
+**Ch. 39–43 (The Trial by Combat, Bois-Guilbert's death):** Ivanhoe arrives at the last moment as Rebecca's champion, exhausted and under-armed. He and Bois-Guilbert meet in the lists. Bois-Guilbert falls dead without Ivanhoe landing a clean blow — Scott names it plainly: the internal contradiction killed him. Rebecca acquitted by divine judgment. She and Isaac leave England.
+
+**Ch. 44 (Departure, Rowena, the farewell):** Rebecca gives Rowena jewels. Rowena calls her the noblest woman she has known. Rebecca veils herself and goes. Ivanhoe marries Rowena. Scott's final note: the marriage was not altogether without cloud.
+
+---
+
+### Pass 2 — Slower
+
+**Lucas de Beaumanoir:** The novel's most precisely drawn institutional antagonist. He is old, incorruptible, genuinely devout, and administering a form of injustice that is invisible to him because it is the law. He wrote the suspension writ because he had a private doubt. He did not follow up on it because a Grand Master sends documents through channels — confirming whether they arrived is not his function. His sincerity is the trap. An argument that appeals to his logic will work with him; an argument that appeals to compassion will fail, because compassion is not a Templar category.
+
+**The Preceptory Recorder:** Scott does not give him a prominent name, which makes him the institutional type more than a person. He suppressed the writ because the faction supporting the trial was his patron's faction; he did not suppress it for hatred of Rebecca specifically. When confronted with the writ directly, he is in a worse position than if the Fighter were his enemy: the Fighter is carrying a document the Grand Master wrote, and the recorder's only choices are to receive it through proper channels or refuse a formal document from his own Grand Master. The latter is insubordination. He knows this.
+
+**Rebecca at the Grate:** Scott's Rebecca in the preceptory is the novel's most precise character study. She is in a cell awaiting trial for a crime she did not commit, under a law that cannot hear her accurately, carried there by a man who cannot admit what he feels for her. She has named all of it. She is not performing calm — she is actually calm, with the specific calm of someone who has removed uncertainty from the situation by understanding it completely. Her refusal to escape is not submission; it is the insistence that she be dealt with on the correct terms.
+
+**The Writ as Instrument:** The document is formally correct in every way. Beaumanoir's seal is on it. The legal language is proper. The only thing wrong with it is its location — in Bois-Guilbert's chest instead of the recorder's file. The Fighter is not smuggling a forgery; they are re-routing a legitimate document that was misplaced by human agency. This is the argument that will work with every institutional obstacle on the route, because it is true.
+
+---
+
+### Pass 3 — The Scene: Beaumanoir Reads
+
+The trial hall of Templestowe is a long stone room with the specific acoustics of authority: low ceiling, thick walls, the sound of the gallery's breath audible in the pauses. The preceptory's full company is assembled on the benches — sixty Templar knights, their black-and-white mantles making the room look like a chess problem. Lucas de Beaumanoir sits at the head table on a dais, the book of Templar statutes open before him, his face composed into the particular stillness of a man who has conducted many such proceedings and has stopped being disturbed by their solemnity.
+
+The lists are prepared outside. The champions have been named. The business is nearly complete.
+
+Then the side door opens.
+
+The Grand Master's secretary — a small man with the eyes of someone trained to receive information without expressing opinions about it — comes to the dais and whispers. Beaumanoir's face does not change. He holds out his hand. The secretary passes him a rolled document sealed with two wax impressions: one the Temple cross of the Templestowe preceptory, one a cipher that Beaumanoir recognizes because it is his own.
+
+He unrolls it. He reads it. He reads it twice.
+
+The sixty knights on the benches are very still. They have seen the Grand Master in many states; they have not seen this one — the specific stillness of a man discovering that something left his hands and arrived somewhere incorrect.
+
+He looks at the secretary. The secretary indicates, with a slight movement of the eyes, the direction from which the document came. The Grand Master looks toward the side door. A Fighter is standing there with the expression of someone who has just completed a delivery and is not certain yet whether to stay.
+
+Beaumanoir turns the document over once more. He reads the date on the inscription: the date is before the trial's formal opening. The writ is prior. If this document was in the preceptory's possession when proceedings opened, the proceedings were opened irregularly.
+
+He does not express anything. He sets the document flat on the table. He places the Templar statute book over it, corners aligned.
+
+Then he speaks two sentences into the very still room. The first sentence suspends the trial. The second sentence is an order to the preceptory recorder to report to his personal quarters immediately.
+
+The recorder, in the third row, does not move for a moment. Then he rises slowly, the way men rise when they understand that the next conversation will determine the rest of their career. He walks toward the front of the room. He does not look at the side door. He does not look at the Fighter. He is concentrating, with enormous precision, on not running.
+
+In the preceptory yard, the lists stand empty. The champions have been stood down. In a cell on the north side of the building, Rebecca of York has been told that the proceedings are suspended pending a legal review. She is sitting with her hands folded in her lap. Her face has not changed. She was not surprised. She knew which document was in that chest, and she knew whose seal was on it, and she knew that the only question was whether it would arrive before the verdict or after.
+
+It arrived before.
+
+---
+
+### Seven Storyline Ideas — Cycle 2
+
+1. **The Templar's Writ** ← *CHOSEN* — The suppressed writ found in Bois-Guilbert's chest; the route through the preceptory; the recorder who held it back; Beaumanoir reading his own prior instrument.
+
+2. **The Disinherited Knight's Armor** — Before the tournament, Ivanhoe's borrowed armor must be collected from a sympathetic armorer in Ashby and delivered anonymously; if anyone traces it to him, his disguise collapses and Cedric will throw him out again.
+
+3. **Isaac's Letter** — Isaac of York holds a signed letter of obligation from three Norman barons that can legally compel Front-de-Boeuf to release his Jewish prisoners; it must reach the Lord High Sheriff before morning through a road controlled by Front-de-Boeuf's outriders.
+
+4. **Locksley's Summons** — Robin Hood needs his full company for the siege of Torquilstone; the Fighter rides by night with a signal arrow and sealed summons to three outlaw bands, each refusing to act without proof the others will commit; one dawn deadline, three negotiations.
+
+5. **Athelstane's Seal** — Athelstane, recovering from his near-death, wants to send Ivanhoe a sealed acknowledgment withdrawing the marriage claim on Rowena; Cedric must not see it; the two men are in the same hall.
+
+6. **Richard's Farewell** — Before the king reveals himself, he leaves a sealed letter with Friar Tuck for Locksley — private acknowledgment of what the Saxons did; if it reaches Locksley before the herald announces the pardon, Locksley will know the pardon is real before he is commanded to trust it.
+
+7. **The Templestowe Prisoner** — Before the trial, a lay servant who witnessed the writ's suppression has been arrested on a manufactured charge; releasing him requires finding the preceptory's holding cell and convincing the sergeant the charge was fabricated without naming what the servant would testify to.
+
+---
+
+### Theme Check
+
+**Existing active themes (selection):** corruption wears the face of mercy (FCO) · the condemned who refuses rescue still has the right to be heard in her own words (VIE) · the institution silences its victim's tongue so the diplomat's version can fill the space (ARN) · the invitation as weapon (LBC) · the carrier becomes the hunted (SEN) · healing carried through hostile law (MAN-01).
+
+**Themes being avoided:** MAN-01 already claimed "healing carried through hostile law — medicine that cannot announce its source." VIE is about a condemned woman's right to her own words in the archive. ARN is about physical silencing to allow a diplomatic narrative to prevail. FCO is about institutional corruption certifying a sinner as a saint.
+
+**What this quest introduces:** *The institution's own instrument of justice was completed and then suppressed; delivering it back to the authority who wrote it is not circumvention — it is the institution correcting itself through the only channel it recognizes. The writ was always valid. The seal was always the Grand Master's. The only problem was routing.* No existing quest in the map uses bureaucratic self-correction as its mechanism — where the document is not evidence of wrongdoing but the institution's own prior act, and returning it is the only form of argument the institution cannot refuse.
+
+---
+
+### 5-Act Vignette Play: *The Templar's Writ*
+
+**THE TOKEN: THE GRAND MASTER'S WRIT** — A tight roll of vellum sealed with two wax impressions: the Temple cross of Templestowe preceptory, and Lucas de Beaumanoir's personal cipher. It is cool. It is slightly damp from the chill of a stone cell. Rebecca pressed it through the grate and said: "He wrote this himself. It belongs in his hands." The Fighter cannot open it. The seal is the argument. The seal must arrive unbroken.
+
+---
+
+**ACT I — The Iron Grate**
+*The writ: sealed, cool, wrapped in a piece of Rebecca's undyed wool. Location: Templestowe Preceptory, the north wing cells, pre-dawn.*
+
+The cell is stone, the grate is iron, and the light is a rushlight three rooms away. Rebecca is on the other side. Her voice is precise and quiet, the voice of a physician giving instructions.
+
+**Rebecca:** "I found it in his chest. I do not know why he had it. I know what it says. The date precedes the formal opening of proceedings. If this reaches the Grand Master's secretary through the regular submission route — not through anyone who knows its contents — the process is suspended."
+
+She pauses. The rushlight moves.
+
+**Rebecca:** "I will not leave this place by an improper channel. I want to be clear about that. What I am asking is that a legitimate document be delivered to the legitimate authority that issued it. That is all."
+
+She passes the vellum roll through the grate.
+
+*The Fighter holds it: lighter than it seems, slightly cold. The seal is intact. Two impressions: the cross, and a cipher.*
+
+---
+
+**ACT II — The Cloister Corridor**
+*The writ: inside the Fighter's surcoat, pressed flat against the ribs. Location: Templestowe Preceptory, the main cloister, morning bell.*
+
+Sixty Templar knights in a closed preceptory, trial day, every gate manned and every corridor watched. The correspondence routine runs through the north cloister: lay servants carry between the cell blocks and the administrative wing on set routes at set hours. The Fighter has a set of hours and a route that does not belong to them.
+
+*The Fighter thinks: move with routine's tempo. Urgency is the gait that gets noticed.*
+
+At the cloister's center crossing, a Templar knight stops to adjust his sword-belt. His eyes track the corridor. Two lay servants pass without acknowledgment. The Fighter passes with them. The knight watches the corridor go empty again.
+
+The administrative wing door is thirty feet ahead. The correspondence slot is beside it.
+
+**A lay servant, quietly:** "You are not from the north wing."
+
+*The Fighter meets his eyes with the specific calm of someone whose errand is entirely legitimate and does not require explanation.*
+
+The servant looks. Then he looks away. The door is ten feet ahead.
+
+---
+
+**ACT III — The Recorder's Study**
+*The writ: in the Fighter's hands, extended toward a desk. Location: the preceptory recorder's administrative room.*
+
+The recorder is a man of middle age who has the specific face of someone who has spent years making institutional decisions that were technically correct. He knows what the writ is before the Fighter places it on the desk. His eyes go to the seal, confirm both impressions, and do not change.
+
+He is quiet for a moment.
+
+**Recorder:** "Where did you obtain this."
+
+Not a question — a probe for how much the Fighter knows.
+
+*The Fighter understands: he is deciding how expensive this is. He needs to understand that receiving it properly is cheaper than refusing it.*
+
+**Fighter:** "From the correct hand. It was misrouted. I am returning it to the correct desk so it can proceed to the Grand Master's secretary through regular correspondence."
+
+The recorder looks at the seal again. He looks at the Temple cross. He looks at the personal cipher of Lucas de Beaumanoir, a man whose correspondence he is required by oath to receive and forward without delay.
+
+He picks up the document. He does not speak. He carries it to his out-tray and sets it on top with the mark that means *priority — Grand Master's office.*
+
+*The Fighter thinks: he made the correct calculation. That is all. It is enough.*
+
+---
+
+**ACT IV — The Trial Hall Door**
+*The writ: in the recorder's out-tray, being walked to the secretary's desk by the regular courier. Location: the trial hall ante-chamber, the door to the proceedings.*
+
+The trial is in session. The Templar knights are assembled inside. The lists are prepared in the yard beyond. The door is flanked by two senior knights who have orders to admit no one — the Grand Master's personal order, issued this morning: proceedings closed to external interference.
+
+The Fighter is not external interference. The Fighter is the person who just arranged for a priority document to arrive on the Grand Master's secretary's desk. The secretary reads it. The secretary crosses the room. The secretary whispers to the Grand Master.
+
+But none of this happens if the Fighter cannot reach the secretary. The knights at the door have their orders. The orders are about *disruption* — not about *correspondence*. The Fighter must make this distinction fast enough that it matters.
+
+*The Fighter thinks: I am not arguing against the order. I am arguing about what category this is.*
+
+**Guard Knight:** "The Grand Master does not receive visitors during proceedings."
+
+*The Fighter holds still. This is not the moment to argue. This is the moment to produce the argument he cannot refuse.*
+
+**Fighter:** "I am not a visitor. I am carrying notification that a priority document from the Master's personal correspondence file has just been placed on the secretary's desk. I am requesting that the secretary be informed."
+
+The knight looks at the other knight. The other knight looks at the door.
+
+One beat.
+
+The door opens by four inches and the secretary's face appears.
+
+---
+
+**ACT V — The Grand Master Reads**
+*The writ: in Beaumanoir's hands, unrolling. Location: the trial hall, at the dais.*
+
+The trial hall is long and still. Sixty knights on the benches. Beaumanoir at the head table, the statute book open. He reads the document his secretary has brought him. He reads it twice.
+
+He sets it flat on the table. He places the statute book over it, corners aligned.
+
+**Beaumanoir:** *(into the still room)* "These proceedings are suspended pending legal review." A pause. Then: "Brother Recorder. My quarters. Now."
+
+The recorder rises from the third row. He does not run. He moves with the careful, costly composure of a man who has just understood what the next conversation is.
+
+*The Fighter stands at the side door and watches the room sort itself: the knights rising, the gallery emptying, the lists in the yard below that were built for something that will not happen today.*
+
+In the north wing, a guard unlocks Rebecca's cell and tells her the proceedings are suspended. She is sitting with her hands folded. She nods once — the nod of someone receiving information they already held.
+
+She walks out under her own authority. The writ she found is in the Grand Master's hands. The seal is in pieces. The document has been received.
+
+*The Fighter thinks: she said he wrote it himself. The only question was whether it would arrive before the verdict or after. It arrived before.*
+
+---
+
+### Quest API Stub
+
+```
+Quest: The Templar's Writ
+missionAccept: "Rebecca found a writ in Bois-Guilbert's chest — the Grand Master's
+  own document, suspending the witchcraft charge, sealed with Beaumanoir's cipher.
+  It was held back by the preceptory recorder. She will not escape. She asks that
+  the document be returned to the man who wrote it."
+
+Act I — The Iron Grate
+activateNode: TPR
+type: dialogue
+scene: "Templestowe preceptory, north wing cells, before dawn. Rebecca is on the
+  other side of an iron grate. A rushlight three rooms away. She tells you what
+  the writ says and what she needs: a legitimate document delivered through the
+  legitimate channel. She will not leave by any other road."
+prompt: "Insight DC 12: Understand why her refusal to escape is not surrender —
+  and why the argument you will need to make to the recorder requires that
+  you have understood this exactly."
+failText: "You hesitate at the grate, trying to argue her out of it. She waits
+  for you to finish and then repeats the request. (lose 30 minutes)"
+successText: "You understand. The writ is valid, the seal is the Grand Master's,
+  and you are re-routing a misplaced letter. She passes the vellum through the
+  grate. You receive the Grand Master's Writ."
+grantItem: "Grand Master's Writ"
+checkPassFlag: manWritReceived
+
+Act II — The Cloister Corridor
+activateNode: TPR
+type: skill_check
+scene: "The main cloister, morning bell. Sixty knights on trial day, every gate
+  manned, every corridor watched. The correspondence route runs through the north
+  cloister on set hours. You are on a route that does not belong to you. At the
+  crossing, a senior knight adjusts his sword-belt and watches the corridor.
+  Two lay servants pass. You are next."
+prompt: "Deception DC 13: Move through the cloister at routine's tempo, with
+  routine's face, carrying something routine that happens to be the most important
+  document in the preceptory."
+failText: "The knight stops you. He asks where you are going. You have to produce
+  an answer good enough to not be searched. (costs one check re-attempt)"
+successText: "You pass with the servants. The knight watches the corridor empty
+  behind you. The administrative wing door is ahead."
+checkPassFlag: manCloisterCrossed
+
+Act III — The Recorder's Study
+activateNode: TPR
+type: dialogue
+scene: "The recorder knows what the writ is before you place it on his desk. His
+  eyes check both seals — the preceptory cross and Beaumanoir's personal cipher —
+  and do not change. He asks where you obtained it. Not a question: a probe for
+  how much you know. He is calculating how expensive this is."
+prompt: "Persuasion DC 13: Make the institutional argument — receiving the
+  document properly is cheaper than refusing the Grand Master's own correspondence.
+  You are not asking for his help. You are telling him what his oath requires."
+failText: "He does not move toward the out-tray. He is still calculating. Find
+  the right angle — his obligation, not his interest."
+successText: "He picks up the document. He says nothing. He places it in the
+  out-tray with the priority mark. His face does not change. This is the correct
+  calculation and you both know it."
+checkPassFlag: manRecorderPassed
+
+Act IV — The Trial Hall Door
+activateNode: TPR
+type: hybrid
+scene: "Two senior Templar knights flank the trial hall door. The Grand Master's
+  order: no external interference during proceedings. You are not interference —
+  you are notification that a priority document is on the secretary's desk. The
+  distinction is real. You have seconds to make it before they decide you are
+  something simpler."
+prompt: "Presence DC 14: Produce the argument they cannot refuse — you are not
+  interrupting proceedings, you are informing the secretary that correspondence
+  requiring his immediate attention has arrived."
+failText: "They don't accept the distinction. One puts a hand on your shoulder.
+  The other reaches for the latch — not to open it but to brace it."
+successText: "The door opens four inches. The secretary's face. You speak to the
+  secretary. He withdraws. The door closes. You wait."
+combatTarget: "Templar Gate Knight (AC 16, HP 28) — only if persuasion fails"
+checkPassFlag: manSecretaryReached
+
+Act V — The Grand Master Reads
+activateNode: TPR
+type: escort
+scene: "The trial hall. Sixty knights. Beaumanoir reads the document his secretary
+  has brought him. He reads it twice. He places it under the statute book. Two
+  sentences: proceedings suspended; recorder to his quarters. In the north wing,
+  someone unlocks a cell door. Escort Rebecca from the preceptory gate to the
+  road beyond — not as a fugitive but as an acquitted person the institution
+  cannot hold."
+prompt: "Escort Rebecca to the road outside Templestowe."
+successText: "She walks out under her own authority. At the gate she does not
+  look back. The seal is broken in Beaumanoir's hands. The document has been
+  received."
+failText: "A guard at the outer gate has not yet received the suspension order.
+  Hold the gate for the sixty seconds it takes for the runner to arrive."
+takeItem: "Grand Master's Writ"
+checkPassFlag: manRebeccaFreed
+activateMissionBit: manWritComplete
+```
+
+---
+
+### New Node Proposed
+
+| Proposed Node | Code | Terrain | Theme Affinity |
+|---|---|---|---|
+| Templestowe Preceptory | TPR | A fortified Yorkshire Templar compound: stone cloister, cell blocks, a trial hall with gallery, the lists in the outer yard, the specific silence of sixty knights assembled for judgment; cold even in summer, smelling of stone and wax and old obligation | Institutional authority, suppressed evidence, bureaucratic self-correction, the sincere injustice that has no room for argument |
+
+---
+
+*Cycle 2 complete. Mark `[x]` for MAN-ivanhoe in books.md.*

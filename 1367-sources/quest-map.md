@@ -100,6 +100,7 @@ The game asks: what does it mean to keep your word when the world does not?
 | LCY | Maude's Glove | 2 | LCY → NAJ → TLF (White Company camp → Najera field → Tilford gate) | Unacknowledged love survives because it was never named; carried three countries in a coat |
 | LGW | The Third Throw | 2 | CAM → LKS (Camlann vale → lakeside) | Loyalty after failure named traitor; completion at full cost with no absolution |
 | STN | The Horse-Hide Man | 2 | SHW → NGM (Sherwood camp → Nottingham common gallows) | The grotesque masquerade as the only available justice; witness who must not react |
+| MAN | The Templar's Writ | 2 | TPR (Templestowe Preceptory — cell → cloister → recorder's study → trial hall) | The institution's own suppressed instrument returned to the hand that wrote it |
 
 ---
 
@@ -190,6 +191,7 @@ Game cities are canonical. Source-book settings are proposed new nodes.
 | Athens tournament field | ATH | Tournament dust, temple smoke, noble grief | Fate, love, the tournament of death |
 | Sherwood Forest | SHW | Leaf-shadow, arrow-flight, yeoman warmth | Loyalty in small things, disguise |
 | Nottingham common — gallows-tree | NGM | The public execution ground outside Nottingham's east gate: permanent scaffold visible from the town wall, open road between treeline and gatehouse, a crowd that always gathers for hangings | Public spectacle, disguise under scrutiny, the bluff that has seconds to hold |
+| Templestowe Preceptory | TPR | A fortified Yorkshire Templar compound: stone cloister, cell blocks, a trial hall with gallery, the lists in the outer yard; cold even in summer, smelling of stone and wax and old obligation | Institutional authority, suppressed evidence, bureaucratic self-correction |
 | Iceland / Thingvellir | ISL | Fog, blood on stone, silence | Vengeance, the weight of objects |
 | Castilian road / Toledo | IBR | Dust, court protocol, beard-honor | Pride, humiliation, long patience |
 | Georgian mountain road | GEO | Shale, amber and gold, champion's fire | Duty, love, the commission |
