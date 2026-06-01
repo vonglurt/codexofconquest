@@ -444,3 +444,239 @@ The bundle is in the chest. The linen tied. The braid still knotted. The shards 
 *quest-map.md: append new theme thread: Fate moves through the broken thing.*
 *books.md: mark FRO [x].*
 *Rule 15: clear agent memory after FRO completion if context is full.*
+
+---
+
+## Cycle 2: The Pyre-Arrangements
+
+### Pass 1 — Plot Précis (The Pyre-Arrangements)
+
+After Sigurd is killed at Gunnar's instigation, Brynhild laughs. Then she weeps. Then she dictates exactly how she is to die: on Sigurd's pyre, beside him, not at his feet, with a specific sword placed between them — the sword that was placed between them on the night they were sworn together, when she first came to him correctly. She distributes her gold to her household. She dictates her pyre-arrangements to a servant. Then she stabs herself and lies down to wait for the pyre. Gunnar's household wants a quieter funeral. Brynhild burning herself beside Sigurd on his pyre is a public statement about what happened and who loved whom and what Gunnar did. It is politically inconvenient. The Fighter is the loyal servant who will carry the sword and execute the instructions.
+
+### Pass 2 — Fighter's Role (The Pyre-Arrangements)
+
+Brynhild calls the Fighter to her in the last hour of her distribution. She gives them the sword — the specific sword that was placed between her and Sigurd the night they slept together correctly — and speaks the instruction: it must be placed between them on the pyre, edge up, horizontal, as it was in the hall. She names the position of her body (beside him, not at his feet), the animals to be slaughtered, the gold to be placed. Gunnar's household will resist every instruction. The Fighter carries the sword through five acts of resistance, placing it between the bodies in the final act.
+
+### Pass 3 — What This Angle Reveals That Cycle 1 Missed
+
+Cycle 1 was fate hidden in apparent ruin — the shards of Gram, broken iron that carries a future it doesn't know yet, guarded by someone who cannot see what they are protecting. *The Pyre-Arrangements* reveals: the ending chosen with full knowledge. Brynhild arranged her own death. She laughed when Sigurd died — not from cruelty but from the recognition that the thing she had set in motion had reached its completion, exactly as she designed it. Then she wept, because she is also human. Then she dictated, precisely, how the completion would be completed. Cycle 1 missed: the woman who designed the ending. What this angle reveals: Brynhild's instructions are not grief but architecture — the deliberate construction of a final statement. She refused to live in the wrong story any longer. The sword between them is the same sword from the night they were together rightly. It was between them then. It will be between them when they leave.
+
+---
+
+### Seven Storyline Ideas (Cycle 2 Selection)
+
+1. ~~The Shards of Gram~~ — **USED Cycle 1**
+2. The Fire-Crossing — Unused
+3. The Harp in the Worm-Close — Unused
+4. Oddrun's Ride — Unused
+5. The Decoy at the River — Unused
+6. Signy's Second Child — Unused
+7. **The Pyre-Arrangements** — **CHOSEN (Cycle 2)**
+
+---
+
+### Theme Check
+
+Active threads do not include: *the dying woman who designs the form of her own ending with architectural precision; the servant who carries out instructions that the household cannot prevent; the final statement made in the language of objects rather than words.* This is distinct from "the willed completion" (BHD — Cuchulain's is a warrior's choice; Brynhild's is a lover's) and from "grief carried in an object" (the sword is not grief — it is the completing gesture of a love that went wrong in its execution and right in its intention). New thread proposed: **The last instruction designed with precision; the dying woman who arranges her own exit; the token placed exactly as she specified because the placement is the statement she is still making.**
+
+---
+
+### 5-Act Vignette Play: *The Pyre-Arrangements*
+
+*Storyline 7 — Execution of Last Instructions. Brynhild has arranged her own death and dictated how it will be completed. TOKEN: the Sword Between — the specific weapon that was placed between Brynhild and Sigurd the night they were sworn together; given to the Fighter in Act I; contested Acts II–IV; placed between them on the pyre Act V.*
+
+**THE TOKEN: THE SWORD BETWEEN** — a sword Brynhild removes from the wall of her chamber and gives to the Fighter with the single instruction: "Between us on the pyre. Edge up. As it was in the hall." This sword has been in this hall since the night Sigurd, in Gunnar's face, slept beside her with it between them. She has kept it on the wall since. In Act V it is placed between the two bodies and the pyre is lit.
+
+---
+
+#### ACT I — *Brynhild's Chamber*
+*The sword: on the wall, still hers. Location: GNH — Gunnar's hall, Brynhild's chamber.*
+
+The hall is wrong in the way that halls become wrong when someone has decided to die. Brynhild is lying on her bed. She has already stabbed herself — not deeply, not yet fatal, enough. Her gold is distributed in neat piles on the table: each pile labeled for a specific person with a specific instruction. She has been doing this for hours. She is precise.
+
+She looks at the Fighter when they enter and does not waste time.
+
+**Brynhild:** "Take the sword from the wall."
+
+The sword is old. It has been on the wall for years — since the night in this hall when she was given to Gunnar and Sigurd slept beside her in Gunnar's face with this sword between them, so that she would be kept for Gunnar correctly and not for Sigurd incorrectly, and the sword did its job and the keeping was correct in the law and wrong in everything else.
+
+She watches the Fighter take it from the wall.
+
+**Brynhild:** "It goes between us on the pyre. Edge up. Horizontal. As it was in the hall. Not at his feet. Beside him." A pause. "Gunnar will try to prevent this. He does not want people to remember what he did. You will not allow it to be prevented. Can you do that?"
+
+*Insight check DC 12: understand what "beside him" means and why it matters — not as ceremony but as statement; this placement corrects the story publicly in the only form still available to her.*
+
+**Failure:** You understand the instruction mechanically — where to place the sword, how to hold it. You miss the grammar of it: why it is this sword, why it goes between them, why beside and not at his feet. You carry it out of the chamber with the bearing of someone completing a task. She watches you go. "Do it exactly," she says — not a correction, but an instruction given to someone who has not fully understood.
+
+**Success:** You take the sword from the wall in both hands and hold it for a moment — the weight of it, the specific history in the cross-guard, the mark on the scabbard's edge from the night it lay on a cold floor between two people who could not have each other. You say nothing. Brynhild closes her eyes. You receive the Sword Between.
+
+---
+
+#### ACT II — *The Hall*
+*The sword: carried through Gunnar's hall. Location: GNH.*
+
+Gunnar meets you in the hall. He has been expecting this. He is not a villain in the simple sense — he is a man who did a terrible thing and cannot stop the accounting from arriving, and he would very much prefer the accounting to arrive quietly.
+
+**Gunnar:** "The sword stays in the hall. A funeral pyre does not require weapons. I am her husband and I say it stays."
+
+He has legal standing. He is her husband. He is also the man whose false swearing and manipulation brought every event in this story to its current point. He knows both of these things.
+
+*Persuasion DC 12: name Brynhild's authority over her own death — not his authority over her funeral, which is real; but the older authority, the one that supersedes it: the authority of the dying person over the form of their death, which he cannot legally override unless he is willing to say in public that he is doing so.*
+
+**Failure:** He takes the sword. You argue. He is not convinced but he is temporarily embarrassed by the legal question you've raised, and his chamberlain — who is more worried about the household's reputation than about the sword — tells him to let you proceed. He does, grudgingly, and with a warning that the sword returns to the hall after.
+
+**Success:** "You can prevent the sword from going to the pyre. You would have to say, in the hall, in front of your people, that you are overriding Brynhild's last instruction — that her dying wishes are subject to your amendment." Gunnar is quiet for a long time. He stands aside. He does not agree. He does not prevent.
+
+---
+
+#### ACT III — *The Pyre Site*
+*The sword: in the Fighter's hands, approaching the pyre. Location: GNP — funeral pyre ground, Gunnar's hall.*
+
+The pyre has been built. Sigurd's body has been laid on it. Gunnar's men are now preparing to position Brynhild's body — and the position they have chosen is at Sigurd's feet. At his feet means servant. At his feet means the story Gunnar is telling, which is the story of a woman who was faithfully married to Gunnar and caught a fever of grief at her husband's kinsman's death.
+
+The instruction is beside him, sword between.
+
+*Composure check DC 12: hold the instruction publicly, in front of Gunnar's men, against the arrangement already in progress — without anger, without accusation; simply stating Brynhild's instruction in the form of a fact that cannot be disputed because she said it in the presence of witnesses.*
+
+**Failure:** Gunnar's men argue back. The situation escalates. Gunnar himself arrives. The body's position becomes a debate. You win the debate eventually but the arrangement has taken so long that the pyre-master has moved to other preparations and you must complete the placement yourself, which draws attention.
+
+**Success:** "Beside him. Her instruction." The men look at each other and then at the instruction. Brynhild spoke it in front of witnesses — several of them were there. They move the bier to the correct position. The space between the bodies is now open, waiting for the sword.
+
+---
+
+#### ACT IV — *The Sword, Contested*
+*The sword: in the Fighter's hand, at the pyre's edge. Location: GNP.*
+
+Gunnar has made a decision. He cannot stop the sword from going to the pyre — you have made the legal situation clear — but he has sent a warrior to take it from the Fighter by force on the grounds that it is a piece of hall property being disposed of without his explicit authorization. The warrior has a letter of authorization from Gunnar's chamberlain.
+
+The chamberlain's letter is not invalid. The authorization is real. The only counter-argument is the sword in the Fighter's hand, and the sword's commission, and the pyre waiting twenty feet away.
+
+*Combat: Gunnar's Hall-Warrior, AC 14 HP 26. He has a letter. He also has a sword.*
+
+**Failure:** The hall-warrior takes the sword. He is a professional — he uses minimum force, disables rather than kills, and walks back to Gunnar's hall with the sword. The pyre is lit without it. Brynhild's last instruction is not carried out. The story Gunnar wanted is the story that gets told.
+
+**Success:** The hall-warrior learns that a letter of chamberlain authorization is not, in practical terms, the same as the physical argument it was supposed to replace. He retreats. The sword is in your hands. The pyre is twenty feet away. One act remains.
+
+---
+
+#### ACT V — *The Placement*
+*The sword: ready to be placed. Location: GNP.*
+
+Sigurd's body is on the pyre. Brynhild's body is beside him. The space between them is open.
+
+The instruction was: edge up, horizontal, between them. As it was in the hall.
+
+*Precision check DC 11: place the sword exactly as specified — edge up, horizontal between them, the cross-guard even, the blade lying flat — correctly enough that anyone looking will see that this is not a burial weapon but a specific gesture, and will understand what it means.*
+
+**Failure:** You place the sword. It is between them. But the angle is wrong by a fraction — it is not quite horizontal, not quite as she specified. The pyre is lit. The instruction is completed. But the placement is not perfect, and perfection was the point: the specific form of this was the statement.
+
+**Success:** You place the sword exactly. Edge up. Horizontal between them. The cross-guard even. The blade parallel to both bodies. You step back.
+
+Someone in the crowd of Gunnar's people, watching, says: "That is how it was in the hall."
+
+Nobody answers. The pyre is lit. The fire takes immediately — as fires do when they have been waiting for something to arrive.
+
+Brynhild's instruction is complete. Gunnar's story of what happened is now the story told alongside this fire, not instead of it. The sword was placed. The statement was made. She designed it exactly and it was executed exactly.
+
+*The Fighter thinks: I carried a sword from a wall to a pyre in accordance with a dying woman's instruction, against the wishes of the people who killed the man she loved. The instruction was simple. The execution was not. But it was what she asked for, and it was done, and the pyre did not care whose story it was — it burned the same either way, which is probably what she knew.*
+
+You receive Brynhild's Gold Pin — one of the pieces she distributed before she died, set aside for whoever carried the sword to the pyre. She prepared for this.
+
+---
+
+## Quest API Stub (Cycle 2)
+
+```
+Act I — Brynhild's Chamber
+activateNode: GNH
+type: skill_check
+scene: "Brynhild lies on her bed, wounded but still speaking. Her gold
+  is distributed in neat piles on the table. She removes the sword from
+  the wall: 'Between us on the pyre. Edge up. Horizontal. As it was in
+  the hall. Not at his feet. Beside him.' She has been on this wall since
+  the night in question. 'Gunnar will try to prevent this. You will not
+  allow it to be prevented.'"
+prompt: "Insight check DC 12: understand why this sword and why this placement
+  — not ceremony but statement; the sword between them corrects the story
+  in the only form still available to her."
+failText:    "You understand the instruction mechanically but miss the grammar.
+              She watches you go. 'Do it exactly,' she says — not a correction,
+              but instruction given to someone who has not fully understood."
+successText: "You hold the sword for a moment. The weight of its specific
+              history. You say nothing. Brynhild closes her eyes. You receive
+              the Sword Between."
+grantItem:   "Sword Between"
+checkPassFlag: pyreInstructionUnderstood
+
+Act II — The Hall
+activateNode: GNH
+type: skill_check
+scene: "Gunnar meets you in the hall. He is her husband and says the sword
+  stays. He has legal standing. He is also the man who arranged Sigurd's
+  death and cannot stop the accounting from arriving. He would prefer it
+  arrive quietly."
+prompt: "Persuasion check DC 12: name Brynhild's authority over the form
+  of her own death — the older authority that supersedes the husband's
+  authority over the funeral, unless he is willing to say publicly he is
+  overriding her dying wishes."
+failText:    "He takes the sword. His chamberlain — worried about the household's
+              reputation — tells him to let you proceed. He does, grudgingly."
+successText: "'You would have to say, in the hall, in front of your people,
+              that you are overriding Brynhild's last instruction.' Gunnar
+              is quiet a long time. He stands aside."
+checkPassFlag: gunnarCeded
+
+Act III — The Pyre Site
+activateNode: GNP
+type: skill_check
+scene: "The pyre is built. Sigurd's body is laid. Gunnar's men are placing
+  Brynhild's body at his feet — which is Gunnar's story of what happened.
+  The instruction was beside him, sword between. You have the sword."
+prompt: "Composure check DC 12: hold the instruction publicly, in front of
+  Gunnar's men, against the arrangement in progress — stating Brynhild's
+  instruction as a fact because she said it in front of witnesses."
+failText:    "The debate escalates. Gunnar arrives. The position becomes
+              a contest you win eventually, but too slowly."
+successText: "'Beside him. Her instruction.' They were there when she said
+              it. The bier moves to the correct position. The space between
+              the bodies is open, waiting."
+checkPassFlag: positionCorrect
+
+Act IV — The Sword, Contested
+activateNode: GNP
+type: combat
+combatTarget: "Gunnar's Hall-Warrior, AC 14 HP 26"
+scene: "A warrior arrives with a letter of chamberlain authorization to
+  reclaim the sword as hall property. The letter is legally real. The only
+  counter-argument is the sword in your hand and the pyre twenty feet away."
+prompt: "Hold the sword against a man with a letter. The letter is not wrong.
+  The pyre is waiting."
+failText:    "He takes the sword with minimum force. The pyre is lit without
+              it. The story Gunnar wanted is the story that gets told."
+successText: "He retreats. The sword is in your hands. The pyre is twenty
+              feet away. One act remains."
+checkPassFlag: swordKept
+
+Act V — The Placement
+activateNode: GNP
+type: skill_check
+scene: "Sigurd's body on the pyre. Brynhild's body beside him. The space
+  between them open and waiting. The instruction: edge up, horizontal, between
+  them, as it was in the hall."
+prompt: "Precision check DC 11: place the sword exactly as specified — edge
+  up, horizontal between them, cross-guard even, blade parallel to both bodies."
+failText:    "The sword is between them but the angle is slightly wrong.
+              The pyre is lit. The instruction is completed but not perfectly."
+successText: "You place it exactly. Someone in the crowd says: 'That is how
+              it was in the hall.' Nobody answers. The pyre is lit. You receive
+              Brynhild's Gold Pin — set aside for whoever carried the sword
+              to the pyre. She prepared for this."
+grantItem:   "Brynhild's Gold Pin"
+takeItem:    "Sword Between"
+checkPassFlag: swordPlaced
+activateMissionBit: froPyreComplete
+```
+
+---
+
+*Cycle 2 complete. Mark `[x]` for FRO-volsunga-saga in books.md.*
