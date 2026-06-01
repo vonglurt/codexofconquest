@@ -323,3 +323,247 @@ checkPassFlag: escortComplete
 ---
 
 *Cycle 1 complete. Mark `[x]` for BHD-cuchulain in books.md.*
+
+---
+
+## Cycle 2: The Standing Stone
+
+### Pass 1 — Plot Précis (The Standing Stone)
+
+Cuchulain's enemies, working through Calatín's daughters, have broken his geasa one by one through false messengers and compelled violations. He is struck by three druid-made spears on the open plain. Mortally wounded, he asks leave to go to the lough and drink and wash himself. When his legs fail on the return, he lashes himself to the standing stone with his own belt — he will not die fallen. He kills one final enemy who approaches too early. A grey raven lands on his shoulder. Only then does Lugaid, watching from the eastern treeline since dawn, cross the plain to take the head. The sword, loosened from Cuchulain's failing grip, rests against the stone's base. Lugaid takes the head. What he does not reach in time is carried north to Emain Macha.
+
+### Pass 2 — Fighter's Role (The Standing Stone)
+
+The Fighter arrives at the stone while Cuchulain is still conscious. He does not need rescue. He needs a witness who understands the commission exactly: hold the stone's perimeter so no one crosses the field while he still breathes — not by fighting, because his enemies are still afraid of him; by presence — and when the raven lands and Lugaid comes, take the sword from the ground before it becomes a trophy and carry it north to the Red Branch.
+
+### Pass 3 — What This Angle Reveals That Cycle 1 Missed
+
+Cycle 1 was about the faithfully-kept word arriving at its broken destination — the tragedy of faithfulness in a faithless context. *The Standing Stone* reveals something stranger: the man who decides the form of his own death. Cuchulain is not dying in defeat. He is dying with intention. He lashes himself upright. He kills from the stone. He waits for the raven with the calm of someone whose accounting is complete. What the Fighter witnesses is not grief but mastery over the shape of ending — and what this requires from a witness is not help, not intervention, but precision. Cycle 1 had the Fighter carrying someone else's word. Cycle 2 has the Fighter holding the space of a decision already made, and then carrying the one thing that can still be carried somewhere it will be kept.
+
+---
+
+### Seven Storyline Ideas (Cycle 2 Selection)
+
+1. The Hound's Night — Unused
+2. ~~Fergus's Word~~ — **USED Cycle 1**
+3. The Ford at Dawn — Unused
+4. Three Nights at the Ford — Unused
+5. The Ring at the Ford — Unused
+6. The Breaking of the Geasa — Unused
+7. **The Standing Stone** — **CHOSEN (Cycle 2)**
+
+---
+
+### Theme Check
+
+Active threads in quest-map.md do not include: *the willed completion; the vigil that honors a chosen form of dying without intervening; the weapon recovered as continuation not as trophy.* Distinct from "grief carried in an object" (which is about loss, not mastery), "loyalty under the long watch" (duty to an employer), and all document-delivery themes. New thread proposed: **The man who decides the form of his own ending; the witness who holds the space of that decision; the relic that carries forward what the death cannot carry.**
+
+---
+
+### 5-Act Vignette Play: *The Standing Stone*
+
+*Storyline 7 — Vigil and Retrieval. Cuchulain is lashed to the standing stone on the Ulster plain, dying. The Fighter holds the vigil. TOKEN: Cuchulain's Sword — established at his belt Act I, received by Fighter Act III when grip fails, contested Act IV, delivered Act V.*
+
+**THE TOKEN: CUCHULAIN'S SWORD** — a long iron blade in a battered scabbard. In Act I it is belted at his hip, still his. In Act III his grip fails and the scabbard slides down the stone. In Act IV the Fighter holds it against two men who want it as a trophy. In Act V it is delivered to Emain Macha — the one piece of him that reaches the hall he spent his life defending.
+
+---
+
+#### ACT I — *The Stone, Midday*
+*The sword: belted at his side, still his. Location: PSU — pillar stone, Ulster plain.*
+
+The plain is open in every direction. The standing stone is grey and old, taller than a man, with a faint stain at its base that is not from weather. Cuchulain is lashed to it with his own belt — standing, wounded past the kind of help you carry in a satchel, his color the color of the stone behind him. His eyes are fixed on the eastern treeline where Lugaid has been waiting since before dawn.
+
+He hears you approach. He does not look away from the field.
+
+**Cuchulain:** "I know what you do. You carry things. Stay."
+
+He is quiet for a moment.
+
+**Cuchulain:** "The women came. Leam brought food and I ate because she asked. Niamh wept and I would not leave while she wept. I sent them away when the weeping was done. I need someone who will not weep."
+
+The treeline at the field's east edge is absolutely still.
+
+**Cuchulain:** "When the raven lands, Lugaid comes. He wants this sword." He does not touch the scabbard. "It is not his. It belongs to Emain Macha. When he comes, take it before he does. Carry it north."
+
+He looks at you for the first time — the measuring look, the full attention, the last of his strength spent on something he has decided matters.
+
+**Cuchulain:** "Hold the stone. Do not fight. They will not cross while I still breathe — they are afraid of me yet. Be here. That is the whole commission."
+
+*The Fighter thinks: he is giving me the only commission he has left. The stone is his. The sword will be the Red Branch's. I am the distance between what happens here and what Emain Macha will remember of it.*
+
+---
+
+#### ACT II — *The Long Afternoon*
+*The sword: still at his hip, still his. Location: PSU — same stone, afternoon.*
+
+The sun moves. At the field's edge, figures appear and withdraw — Lugaid's men testing the boundary, seeing whether he is dead yet, unable to cross while his eyes still track them. Cuchulain does not speak again. He is past speech. But his eyes still move and the enemies at the treeline still will not cross.
+
+You have been at the stone's base for three hours. The wind from the north is cold. One of Lugaid's men walks half the distance across the field, stops, looks at Cuchulain's face, and walks back.
+
+*The Fighter thinks: they are still afraid of him. Even now.*
+
+The light begins to change. The waiting has its own weight. To hold still when every instinct says move requires something closer to endurance than to courage.
+
+---
+
+#### ACT III — *The Raven*
+*The sword: loosening as the grip fails. Location: PSU.*
+
+Late afternoon. His hand, which has been closed around the pommel since before you arrived, loosens. He cannot prevent it. The scabbard begins to tilt against the stone. He watches it happen with a kind of absolute quiet, as if watching something that belongs to someone else at a great distance.
+
+The grey raven comes in from the north. It circles once. It lands on his shoulder.
+
+At the treeline, Lugaid steps out.
+
+You have the time it takes a man to cross fifty yards of flat grass.
+
+*Perception check DC 13: read the exact moment the raven's shadow falls on the stone — before Lugaid takes his first step, not after.*
+
+**Failure:** You see the raven land. You look at Lugaid. You look at the sword. The sequence costs three seconds. Lugaid is ten feet away when your hand and his reach the scabbard at the same moment. You do not lose it, but the retrieval is a contest rather than a custody, and Cuchulain's commission was for a custody.
+
+**Success:** You see the shadow before the bird. You have the scabbard in your grip the moment Lugaid steps from the treeline. He crosses the field and finds the sword already held. He takes the head without speaking and turns back. You receive Cuchulain's Sword.
+
+---
+
+#### ACT IV — *The Trophy Men*
+*The sword: in the Fighter's hand, contested. Location: PSU.*
+
+Lugaid is already walking back to the treeline with the head. But two of his men — not Lugaid, men who came for something to bring home — have decided the sword is as good as a head and approach from two sides with the manner of men who expect possession to transfer on the basis of numbers.
+
+They do not ask. They do not negotiate. They approach.
+
+**Failure:** You are driven from the stone. Lugaid calls his men off before they do worse — he is not without honor — and you leave the field alive, but the sword goes with them. Emain Macha will hear of this death from someone else's account.
+
+**Success:** They learn what the sword's previous owner could have told them: the object is not the difficult part. You hold the stone until they withdraw. The field empties. The plain is quiet. The raven is still on his shoulder and the sword is in your hand and you are the only living person left on the field.
+
+---
+
+#### ACT V — *Emain Macha's Gate*
+*The sword: carried north. Location: ULC — Ulster plain road north, Emain Macha gate.*
+
+The road north is three hours. No one follows. At Emain Macha's inner gate, Conall Cernach stands with the face of a man who has been counting hours. He was supposed to be with Cuchulain today. He was not there. He knows what your arrival means before you reach him.
+
+He looks at the sword. He does not take it yet.
+
+**Conall:** "How did it end?"
+
+This is not a question about facts. He knows the facts — Lugaid, the spears, the stone. He is asking about the form. He is asking what kind of death it was.
+
+*Persuasion check DC 12: give a true account to a man who loved the dead — not an elegy, not a comfort, but the exact thing you witnessed, in the order it happened, without amendment.*
+
+**Failure:** You tell it in the register of grief. Your voice apologizes for the fact of it. You soften one thing. You leave out the moment the raven landed because you do not want to say what it meant. Conall takes the sword. He looks at it a long time. "You were there," he says, and nothing else. The commission is complete but the account is not what Cuchulain sent you to carry.
+
+**Success:** You say it exactly: the stone, the belt, the waiting, the raven landing before Lugaid moved, the sword already in your hands when he arrived. He chose the form. He chose the stone. He was present for what happened to him. Conall is quiet a long time. Then he takes the sword from your hands with both of his, the way you receive something that will live in a case with a name on it. "He would have chosen you for this," he says. You receive Conall's Coin — the Red Branch's acknowledgment. The sword is in Emain Macha's keeping.
+
+*The Fighter thinks: I carried his commission from the stone to this gate and I carried it exactly. There is no comfort in that. There is only the fact of it, which will have to be enough. It is.*
+
+---
+
+## Quest API Stub (Cycle 2)
+
+```
+Act I — The Stone, Midday
+activateNode: PSU
+type: skill_check
+scene: "A single grey standing stone rises from flat Ulster plain. Cuchulain is
+  lashed to it with his own belt, past healing, his eyes on the eastern treeline
+  where Lugaid has been waiting since dawn. His sword is belted at his side.
+  He gives you the commission: hold the perimeter, do not fight, do not stand
+  in front of him. When the raven lands and Lugaid comes, take the sword north
+  to Emain Macha. That is all."
+prompt: "Insight check DC 12: understand the scope of the commission exactly.
+  He does not need protection — his enemies are still afraid of him. He needs
+  a witness who holds the boundary without grief and without initiative. At the
+  stone's base. Not in front of it."
+failText:    "You take a protective position in front of the stone — between him
+              and the field — and he corrects you. 'Not there. At the base.
+              You are not my shield.' You find the right position, but you have
+              already shown him that you heard it wrong."
+successText: "You take position at the stone's base. He nods once. The sword
+              at his belt catches the afternoon light and you understand what
+              you will be carrying north when this is done."
+checkPassFlag: stoneMandateUnderstood
+
+Act II — The Long Afternoon
+activateNode: PSU
+type: skill_check
+scene: "Three hours at the stone's base. The sun moves. Figures appear at the
+  treeline and withdraw — testing whether he is dead yet — and each time his
+  eyes track them and each time they do not cross. The wind from the north is
+  cold. The waiting has its own weight."
+prompt: "Endurance check DC 12: hold the vigil without moving toward the treeline,
+  without speaking, without doing anything except being present at the stone's
+  base through the long afternoon that has no shape except duration."
+failText:    "You shift once — one step toward the treeline — and one of Lugaid's
+              men reads the movement correctly. He calls across the field that
+              the guardian looks tired. Cuchulain does not react. But the
+              perimeter has shown a gap."
+successText: "The afternoon passes through you without touching what you have
+              been commissioned to hold. When one of Lugaid's men walks half
+              the field and goes back, he does so because of Cuchulain and
+              because of the stillness at the stone's base."
+checkPassFlag: vigilHeld
+
+Act III — The Raven
+activateNode: PSU
+type: skill_check
+scene: "Late afternoon. His grip loosens. The scabbard tilts against the stone.
+  The grey raven comes from the north, circles once, and lands on his shoulder.
+  Lugaid steps out of the treeline. You have the time it takes a man to cross
+  fifty yards of flat grass."
+prompt: "Perception check DC 13: read the exact moment the raven's shadow falls
+  on the stone — before Lugaid takes his first step — and have the scabbard
+  in your hand before he reaches the halfway point."
+failText:    "You see the raven land. You look at Lugaid. You look at the sword.
+              The sequence costs three seconds. Lugaid is ten feet away when
+              your hand and his reach the scabbard at the same moment. You do
+              not lose it, but the retrieval is a contest rather than a custody."
+successText: "You see the shadow before the bird. You have the scabbard in your
+              grip the moment Lugaid steps from the treeline. He takes the head
+              without speaking and turns back. You receive Cuchulain's Sword."
+grantItem:   "Cuchulain's Sword"
+checkPassFlag: swordRecovered
+
+Act IV — The Trophy Men
+activateNode: PSU
+type: combat
+combatTarget: "Lugaid's Trophy Men ×2, AC 13 HP 20"
+scene: "Lugaid walks back to the treeline with the head. Two of his men have
+  decided the sword is as good as a head and approach from two sides with the
+  manner of men who expect possession to transfer based on numbers."
+prompt: "Hold the sword against two men who want it. They have no argument
+  except that there are two of them."
+failText:    "You are driven from the stone. Lugaid calls his men off before
+              they do worse and you leave the field alive, but the sword goes
+              with them. Emain Macha will hear of this from someone else."
+successText: "The plain empties. The stone is behind you. The raven is still
+              on his shoulder and the sword is in your hand and you are the
+              only living person left on the field."
+checkPassFlag: swordHeld
+
+Act V — Emain Macha's Gate
+activateNode: ULC
+type: skill_check
+scene: "Conall Cernach stands at Emain Macha's inner gate. He was supposed
+  to be with Cuchulain today. He was not. He sees the sword. He does not take
+  it yet. He asks: 'How did it end?' He is asking about the form, not the facts."
+prompt: "Persuasion check DC 12: give Conall a true account of what you witnessed
+  — not elegy, not comfort, but the exact sequence in the order it happened.
+  He chose the stone. He was present for what happened to him. Say that."
+failText:    "You tell it in the register of grief. You soften the raven. Conall
+              takes the sword and says: 'You were there,' and nothing else. The
+              commission is complete but the account is not what Cuchulain sent
+              you to carry."
+successText: "You say it exactly: the stone, the belt, the waiting, the raven
+              landing before Lugaid moved, the sword already held. He chose the
+              form. Conall takes the sword with both hands and says: 'He would
+              have chosen you for this.' You receive Conall's Coin."
+grantItem:   "Conall's Coin"
+takeItem:    "Cuchulain's Sword"
+checkPassFlag: swordDelivered
+activateMissionBit: bhdStoneComplete
+```
+
+---
+
+*Cycle 2 complete. Mark `[x]` for BHD-cuchulain in books.md.*
