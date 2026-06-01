@@ -707,3 +707,238 @@ On the water, a hand holds fire above the surface. The distance to Drangey short
 *books.md: mark VBY [x].*
 
 *Rule 15: clear agent memory after VBY completion if context is full.*
+
+---
+
+## Cycle 2: The Barrow-Night
+
+### Pass 1 — Plot Précis (The Barrow-Night)
+
+On the Norwegian coast, Grettir hears of a barrow-mound said to hold treasure and an animated dead man who defends it. He breaks the mound open and descends on a rope. Inside: darkness, old wood, old bones, and a barrow-wight — the dead man still sitting in his chair, unwilling to be disturbed. Grettir fights him in the dark, kills him, takes the treasure, climbs out. This happens when Grettir is young, still making his name, before the outlawry defines him. He goes in because the darkness is a challenge and the treasure is there. He needs exactly one thing from another person: light.
+
+### Pass 2 — Fighter's Role (The Barrow-Night)
+
+Grettir gives the Fighter a torch — sealed oil-lamp, to last the job — and tells them to hold it. He says this with the manner of a man who has considered what he needs and determined that this is all of it. The Fighter's commission: keep the torch up and lit through five acts of underground combat, collapsing barrow-wood, and one moment when the wight reaches for the light directly. In Act V, they exit the barrow and the Fighter extinguishes the torch at the threshold — the signal that the darkness has been navigated and the work is done.
+
+### Pass 3 — What This Angle Reveals That Cycle 1 Missed
+
+Cycle 1 was Grettir's heroism as sacrifice — the outlaw who swims winter sea to bring fire to others, earning protection for all and shelter for none. *The Barrow-Night* reveals Grettir's heroism as appetite. This is an earlier Grettir, before the curse and the outlawry define him. He goes into the barrow because it's there — because the darkness is the obstacle and the treasure is the proof. He is not helping anyone. He is proving what he is. What cycle 1 missed: the young Grettir, who takes darkness as a challenge rather than as his permanent condition. Cycle 1 was about what his heroism costs him and others. Cycle 2 is about what his heroism is made of. The Fighter's role: to be the light he needs and would not admit to needing, because a man who goes into barrows alone at night for sport doesn't have a name for requiring company — but requiring someone to hold the light is still requiring someone.
+
+---
+
+### Seven Storyline Ideas (Cycle 2 Selection)
+
+1. **The Barrow-Night** — **CHOSEN (Cycle 2)**
+2. The Glámr Vigil — Unused
+3. ~~The Fire-Fetch~~ — **USED Cycle 1**
+4. Sandhaugar's Bones — Unused
+5. The Rope-Holder — Unused
+6. Illugi's Crossing — Unused
+7. The Head and the Bounty — Unused
+
+---
+
+### Theme Check
+
+Active threads do not include: *the light-carrier in the space where the hero cannot see to act; the commission given by someone who needs exactly one thing and names it with brevity; the torch as the enabling condition of a heroism that will never credit its requirement.* This is distinct from all escort and document-delivery themes. It inverts BHD cycle 2's vigil-at-the-stone (which was about witnessing a death correctly) — here the token enables the fight rather than marking its end. New thread proposed: **The enabling condition; the one thing the hero needs and will not elaborate on; the light-carrier who makes the heroic act possible by staying still and staying lit.**
+
+---
+
+### 5-Act Vignette Play: *The Barrow-Night*
+
+*Storyline 1 — Torch-Carrier. Grettir descends into a Norwegian burial mound to take the treasure and fight the dead. TOKEN: the Torch — sealed oil-lamp given by Grettir in Act I, held through Acts II–IV as the enabling condition of every blow he lands, extinguished at the barrow threshold Act V.*
+
+**THE TOKEN: THE TORCH** — a sealed oil-lamp with a wick Grettir has cut to last an estimated two hours. He gives it to the Fighter at the barrow entrance and says: "Hold this." That is the full briefing. In Act V, at the barrow's threshold, the Fighter extinguishes it — putting out the light they carried through the dark is the closing gesture, the sign that they have come back to where light already exists.
+
+---
+
+#### ACT I — *The Barrow Entrance*
+*The torch: in Grettir's hands, not yet the Fighter's. Location: BWH — burial mound, Norwegian coast, night.*
+
+The mound is a grass-covered hill above the coastal headland. The stone entrance-post is half-buried in heather. Someone cut the entrance seal — old wax, old rope — a long time ago and then thought better of going in. The seal has been re-tied, badly, and the re-tying has the look of someone who needed to prove they were not afraid and was in fact afraid.
+
+Grettir stands at the entrance examining the rope with the look of a man who has already done his accounting and found it acceptable.
+
+He turns to the Fighter and holds out the lamp.
+
+**Grettir:** "Hold this."
+
+He does not explain what for. He begins unwinding the rope from the entrance-post.
+
+*Courage check DC 12: overcome the specific quality of fear that belongs to a barrow entrance at night — not combat fear, which is familiar and manageable; the older fear, the one that belongs to the dark below a stone threshold that was cut for the dead.*
+
+**Failure:** You hesitate at the threshold. Grettir is already inside by the time you move — his feet disappearing into the darkness ahead of you, waiting for the light you are holding, which is not yet underground. The first act has cost three seconds of him waiting in the dark below the threshold. He does not say anything about it.
+
+**Success:** You take the lamp and step over the threshold stone without breaking pace. Grettir looks at you once. He nods in the manner of someone revising an estimate upward. You receive the Torch and descend into the barrow.
+
+---
+
+#### ACT II — *The Chamber*
+*The torch: underground, held by the Fighter. Location: BWH.*
+
+The first chamber is narrow and low. Old wood-framing along the walls, dry and dark. The smell of stone and something older than stone. At the far end, in a carved wooden chair, sits the dead man — the barrow-wight — in the shape he had when he was buried, with the additions that come from a long time in the dark.
+
+He moves when the light reaches him.
+
+Grettir moves to meet him. The problem immediately becomes clear: the space is too narrow for both of them to move freely, and Grettir's sword-arm needs a particular angle that puts the Fighter's torch-arm directly in the path of the wight's counter-reach.
+
+*Composure check DC 12: hold the torch in the specific position Grettir needs — arm extended, wrist steady, the light aimed at the wight's upper body — through the first exchange, while the wight's movements in the narrow space make every instinct say: move, step back, put something between yourself and it.*
+
+**Failure:** You step back once. The light angle drops. Grettir's first strike misses what it was aimed at and hits the wooden framing of the wall. The framing is old and dry. The wood dust goes up. The fight continues but the chamber is now darker than it was.
+
+**Success:** You hold the angle. Grettir's first strike is exact. The wight is bigger than it appeared and does not go down — but it is hurt. The fight continues. You have not moved.
+
+---
+
+#### ACT III — *The Reach*
+*The torch: in the Fighter's hand, targeted. Location: BWH, second chamber.*
+
+The wight reaches for the light.
+
+Not for Grettir. Not for the treasure. For the torch. It has been in the dark for a long time and the torch is the threat. It is not wrong.
+
+It is also faster than a dead man should be.
+
+*Dexterity check DC 13: pull the torch back and to the side in the precise motion that keeps it out of the wight's grip without dousing the flame, before the wight's hand closes on the housing.*
+
+**Failure:** The wight's hand closes on the lamp-housing. The flame gutters. For two seconds the chamber is nearly dark. Grettir, fighting by sound and memory, lands one blow. Then you get the lamp back and the light returns, but the wick has been disturbed and the lamp will burn faster now. You have less time.
+
+**Success:** You pull the lamp back and to the left in a motion that keeps the flame level — the wight's hand passes through where the lamp was and finds nothing. Grettir, in the same instant, finds what he was looking for. The wight is going to lose this fight. It knows it now.
+
+---
+
+#### ACT IV — *The Treasure Chamber*
+*The torch: burning. Location: BWH, innermost chamber.*
+
+The wight is not dead yet — not twice-dead, which is what it needs to be. It has retreated to the innermost chamber, where the treasure is, and the treasure-room is framed with old oak that has been standing for longer than the longship that carries most Norsemen's sense of time. At the far end: a chest, iron-banded, not locked.
+
+The old oak framing is rotting at the joint-points. Grettir's second exchange with the wight — necessary, final — will bring at least one beam down. The Fighter must reach the chest before the beam comes down, push it to the entrance side of the chamber, and hold the torch above the debris in the falling beam's path.
+
+*Athletics check DC 13: cross the chamber before the beam falls, get the chest clear of the collapse zone, and emerge from the debris with the torch still lit.*
+
+**Failure:** The beam falls. The chest is half-buried under old wood. The torch is in your hand and lit but you are pinned under a cross-beam for thirty seconds while Grettir finishes the wight above you. He pulls you out. The chest is here but the retrieval has taken time and the lamp is at half its remaining fuel.
+
+**Success:** You reach the chest before the beam. Grettir's final strike brings the beam down behind you — you have the chest in one hand and the torch in the other and you are past the collapse zone. Grettir looks at you from the near side of the fallen wood with the expression of someone deciding whether to revise their estimate again. He decides yes.
+
+---
+
+#### ACT V — *The Threshold*
+*The torch: burning down. Location: BWH, entrance threshold.*
+
+They are at the barrow entrance. The stone threshold above them. The night air visible through the entrance-post gap — the actual night, with the stars in it, which has been there the whole time and was not accessible.
+
+Grettir carries the chest. He stops at the threshold and looks back at the chamber — once, the way a man looks at a room after the accounting is complete.
+
+**Grettir:** "The light held."
+
+He says it as an observation, not a compliment. He steps out.
+
+The Fighter stands at the threshold. The torch is burning at the last quarter of its oil. The barrow behind them is dark now — the wight twice-dead, the wood settled after the fall, the treasure chest in the open air where the coastal wind will smell it.
+
+The correct ending of this commission is to extinguish the torch at the threshold. To carry a lit torch back to camp — down the headland path, through the heather, to where Grettir's companions are waiting — is to carry the underground with you. The torch belonged to the barrow-night. The barrow-night is over.
+
+*Composure check DC 11: extinguish the torch at the threshold — put out the light that carried you through the dark, at the exact place where it is no longer needed.*
+
+**Failure:** You carry the torch back to camp still burning. It's a practical decision — the path is rough and the starlight is thin. But you are carrying the darkness's instrument into a space it doesn't belong to. Grettir, arriving at camp ahead of you, watches you approach with the still-burning torch and says nothing. The lamp runs out on its own an hour later.
+
+**Success:** You extinguish the torch at the threshold with two fingers across the wick — the gesture of a person who understands the grammar of the situation. The darkness inside the barrow is now the barrow's darkness, not something you carried out. You step over the threshold stone into the night air, which is cold and smells of heather and the sea, and you receive Grettir's Coin — pressed into your hand as you pass him on the path, the way Grettir pays debts, without ceremony.
+
+*The Fighter thinks: he needed one thing and he named it and I carried it and held it and he did not drop the fight and I did not drop the light. There is nothing more in this than that. There is also nothing less.*
+
+---
+
+## Quest API Stub (Cycle 2)
+
+```
+Act I — The Barrow Entrance
+activateNode: BWH
+type: skill_check
+scene: "A grass-covered mound on the Norwegian coastal headland, night.
+  The entrance seal was cut and badly re-tied by someone who went no further.
+  Grettir examines the rope, turns, and holds out a sealed oil-lamp: 'Hold
+  this.' He does not elaborate. He begins unwinding the entrance rope."
+prompt: "Courage check DC 12: step over the barrow threshold stone without
+  breaking pace — the specific fear of the dead's dark, not combat fear."
+failText:    "You hesitate. Grettir is already inside waiting for the light
+              you're holding. He says nothing about the three seconds."
+successText: "You step over the threshold stone without breaking pace. Grettir
+              revises his estimate upward. You receive the Torch."
+grantItem:   "Torch"
+checkPassFlag: barrowEntered
+
+Act II — The Chamber
+activateNode: BWH
+type: skill_check
+scene: "The first chamber: narrow, low, old wood framing, dry smell. The
+  barrow-wight is in its chair at the far end. It moves when the light
+  hits it. Grettir moves to meet it. His sword-arm needs a specific angle
+  that puts your torch-arm in the path of the wight's counter-reach."
+prompt: "Composure check DC 12: hold the torch in the exact position Grettir
+  needs — arm extended, wrist steady, aimed at the wight's upper body —
+  through the first exchange, while every instinct says step back."
+failText:    "You step back once. The light angle drops. Grettir's first
+              strike hits the wall instead. The wood dust makes the chamber
+              darker than it was."
+successText: "You hold the angle. Grettir's first strike is exact. The wight
+              is hurt. The fight continues. You have not moved."
+checkPassFlag: lightHeld
+
+Act III — The Reach
+activateNode: BWH
+type: skill_check
+scene: "The wight reaches for the torch. Not Grettir. The torch. It has
+  been in the dark for a long time and the light is the threat. It is also
+  faster than a dead man should be."
+prompt: "Dexterity check DC 13: pull the lamp back and to the side — the
+  precise motion that keeps it out of the wight's grip without dousing
+  the flame — before the dead hand closes on the housing."
+failText:    "The hand closes on the housing. The flame gutters for two seconds.
+              Grettir fights by sound. When the light returns, the wick has
+              been disturbed. Less time remaining."
+successText: "The wight's hand finds nothing. In the same instant, Grettir
+              finds what he was looking for. The wight is going to lose this
+              fight and it knows it now."
+checkPassFlag: torchRetained
+
+Act IV — The Treasure Chamber
+activateNode: BWH
+type: skill_check
+scene: "The treasure chamber: old oak framing at the joint-points, an
+  iron-banded chest at the far end. Grettir's final exchange will bring
+  at least one beam down. Reach the chest before the beam falls, get it
+  clear of the collapse zone, emerge with the torch still lit."
+prompt: "Athletics check DC 13: cross the chamber, push the chest clear,
+  hold the torch above the debris."
+failText:    "The beam falls. You are pinned under old wood for thirty seconds.
+              Grettir pulls you out. The chest is recovered but the lamp is
+              at half its remaining fuel."
+successText: "You reach the chest before the beam. The collapse is behind
+              you. Grettir, on the near side of the fallen wood, decides
+              to revise his estimate upward again."
+checkPassFlag: chestCleared
+
+Act V — The Threshold
+activateNode: BWH
+type: skill_check
+scene: "The threshold stone. Night air visible through the entrance gap —
+  stars, heather, sea wind. Grettir carries the chest and steps out.
+  The torch is at its last quarter. The barrow-night is over. The torch
+  belongs to the barrow-night."
+prompt: "Composure check DC 11: extinguish the torch at the threshold stone —
+  put out the light at the exact place where it is no longer needed."
+failText:    "You carry it back to camp still burning — a practical decision,
+              the path is rough. The darkness's instrument in a space it
+              doesn't belong to. Grettir watches you arrive and says nothing."
+successText: "Two fingers across the wick at the threshold. The darkness
+              inside is the barrow's now, not something you carried out.
+              Grettir presses his coin into your hand on the path, without
+              ceremony. You receive Grettir's Coin."
+grantItem:   "Grettir's Coin"
+takeItem:    "Torch"
+checkPassFlag: torchExtinguished
+activateMissionBit: vbyBarrowComplete
+```
+
+---
+
+*Cycle 2 complete. Mark `[x]` for VBY-grettir-saga in books.md.*
