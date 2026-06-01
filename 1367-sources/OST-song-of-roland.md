@@ -394,3 +394,290 @@ The chapel is small and high and very still. The altar holds the other relics of
 - *quest-map.md: append new theme thread: The relic embodies both the glory and the error.*
 - *quest-map.md: append RON, PYR, AIX to Location Grid (Source-Book Nodes).*
 - *books.md: mark OST [x].*
+
+---
+
+## Cycle 2 — Turpin's Blessing List
+
+**What cycle 1 missed:** The Horn of Roncevaux was about the physical object as dual-truth memorial — the crack as evidence, the installation in the shrine as the choice to preserve both halves of the truth. Turpin's Blessing List reveals the administrative truth underneath the heroic narrative: Archbishop Turpin walked the battlefield while the bodies were still warm and blessed each of the fallen by name. A monk followed and wrote the names down in order. This list is every person who died at Roncevaux — the official count being compiled at court is a different document, with political omissions, for reasons the court understands and the families do not. Cycle 1 was about what one cracked horn fixes permanently. Cycle 2 is about what every name omitted from a list means to the family of the omitted.
+
+**New angle:** The monk gives the Fighter the complete blessing roll and asks that it reach the families' representative before the crown's official count is sealed and distributed. The Fighter carries it through the Pyrenean road watch, past a crown official trying to supersede it, through a hired interceptor, to the families' gathering point — where it is received and the first three names are read aloud.
+
+---
+
+### Pass 1 — Token
+
+**TOKEN: Turpin's Blessing Roll** — a long piece of parchment, rolled and sealed with the monk's authenticating mark. Every name in the order Turpin spoke them over each body. The monk signed each section as he wrote it. This is the complete record of who was blessed at Roncevaux on the night after the battle. The official count will not include every name on this list. The families of the omitted need to know their people were blessed. The Fighter carries this roll to the families' representative and reads the first three names aloud to begin the act of witness.
+
+---
+
+### Pass 2 — Seven Storyline Ideas
+
+**1. The Horn of Roncevaux** *(USED — Cycle 1)* — The cracked olifant. The shrine at Aix. Both truths fixed permanently.
+
+**2. Ganelon's Letter** — The private letter to the implicated Frankish lord. The surviving evidence.
+
+**3. Bramimonde's Correspondence** — Her private letters containing her own record of what the Saracen court did.
+
+**4. Aude's Ring** — The ring that never reached Roland. Delivered to the grave-marker before formalization.
+
+**5. Oliver's Accusation** — The courier survivor's written record of Oliver's last words about Roland.
+
+**6. Turpin's Blessing List** *(CHOSEN — Cycle 2)* — The complete roll of the Roncevaux dead, name by name, in the order Turpin blessed them. Every person included. The official count has omissions. The families need the complete list before the official version is sealed.
+
+**7. The Embassy before the Embassy** — The authorization documents for the two murdered envoys. The crown's reclassification.
+
+---
+
+### Pass 3 — Theme Check
+
+Existing themes through ARN cycle 2: grief in object, loyalty, honor vs. shame, love and fate, truth posthumous, healing through hostile law, carrier hunted, token's journey, ancient witnesses, corruption wears mercy, fate through broken thing, heroism earns nothing, invitation as weapon, poem ransoms life, anonymous sympathy, pyre-arrangements, proxy errand, absent jurisdiction, scattered truth, last gift against design, credential before the man, one who will not weep, vigil at extraction, errand of removal, eclipse witness, thing too true, word dying man cannot carry, question across ocean, carrier mid-commission change, last words to absent father.
+
+**Themes I am avoiding:** "Truth delivered posthumously" (LGW) — that was a single dead person's truth; this is the collective record of everyone who died, and it is being delivered to the living families, not to the world. "Grief carried in an object" (INV, BHD, GDN) — the names are not grief-objects; they are the record of who existed and was acknowledged.
+
+**New theme introduced by OST cycle 2:** *The complete roll of the dead versus the official count: the act of blessing every name creates a document different from the administrative tally; the political omission is a second death; the complete list is the final acknowledgment that every person who fell at Roncevaux fell as a person with a name and a blessing* — Turpin blessed every man; the monk wrote every name; the official list has reasons to omit; but the families of the omitted will spend the rest of their lives knowing their person was not on the crown's list, which is a different kind of loss than the death itself.
+
+---
+
+## 5-Act Vignette Play: "Turpin's Blessing List"
+
+**The Token · Turpin's Blessing Roll ·
+a long parchment rolled and sealed with the monk's mark ·
+every name in the order they were blessed ·
+every person who fell at Roncevaux acknowledged once more ·
+the official count has omissions ·
+the families need this version before the official version closes**
+
+---
+
+### Act I — The Monk's Charge
+*Turpin's Blessing Roll · in the monk's hands ·
+a small monastery near Roncevaux, two days after the battle ·
+the monk elderly, injured in the aftermath, unable to travel*
+
+The monk is sitting in a guest chair at the monastery. He was at the pass for the
+blessing — not to fight, to follow Turpin and write as the archbishop moved among
+the bodies. He has been sitting with this roll for two days, knowing it needs to
+travel and knowing he cannot travel with it.
+
+He lays it on the table between you. It is long — rolled tight, sealed at both
+ends with his mark and a loop of ribbon. It smells of the battlefield under the
+candle smell and the cold.
+
+*"The court is already preparing its official count. They will not include every
+name. There are men on this list whose families will be told nothing, whose deaths
+will be attributed to other causes, because of what those men knew about the days
+before the battle. The families cannot contest an omission if they do not know the
+complete list exists."*
+
+He looks at you with the specific exhaustion of a man who spent two days writing
+names while standing over bodies in a mountain pass.
+
+*"Find the families' gathering point at the road-town below the pass. There is a
+man there — Arnaut of Troyes — who has been collecting the families. He knows what
+the official count will do. He needs this before the king's messengers arrive."*
+
+**DC 12 Insight — understand the specific mechanism by which a name omitted from the official count harms its family; understand why the complete list is not merely a better document but a qualitatively different one.**
+
+*If you fail:* You understand the task but not the stakes. By the Pyrenean road you are moving at the pace of an administrative errand, not a deadline.
+
+*If you pass:* The deadline is the arrival of the king's messengers at the gathering point. After that, the official count is the only count. You take the roll and move immediately.
+
+---
+
+### Act II — The Pyrenean Road Watch
+*Turpin's Blessing Roll · in a document-wallet · the Pyrenean road,
+descending from the pass, Ganelon's kin's road-watch ahead*
+
+Two men at the road-post below the first descent. They are watching everyone coming
+down from the pass. Ganelon is awaiting trial, but his kin are still active and
+they are interested in any document that was compiled near the battlefield, because
+some of the names on a complete blessing list have stories attached that extend
+the conspiracy's documentation beyond what the trial record currently includes.
+
+They are not looking for a blessing list specifically. They are looking for documents
+from the pass. You have a document from the pass.
+
+*The road descends between rockface and drop. There is a narrow sheep-track to the
+left that bypasses the post but adds an hour.*
+
+**DC 12 Stealth — take the sheep-track in the grey morning light without being seen from the post; the roll is in a plain document-wallet; you are a traveler from the monastery, not from the pass.**
+
+*If you fail:* They see you. They search the wallet. The blessing roll is church document — they let it through, but their report of your descent from the pass will precede you.
+
+*If you pass:* The sheep-track holds. The road-post is below you on the descent. You reach the main road an hour later with no one having noted your passage.
+
+---
+
+### Act III — The Crown's Official
+*Turpin's Blessing Roll · in the wallet · the Frankish lowland road,
+a crown official on a fast horse, coming from the direction of the court*
+
+He has a copy of the crown's official count in his courier-wallet and he is on his
+way to the families' gathering point. He recognizes you — or recognizes the type:
+someone traveling from the direction of the pass with a document-wallet. He rides
+alongside you.
+
+*"There's a complete list being circulated from a monastery near Roncevaux. The king's
+own count supersedes any battlefield document. I'm instructed to collect any unofficial
+rolls and have them filed with the court archive before distribution."*
+
+He is courteous. He believes in what he's doing. He also has no right to your document.
+
+**DC 13 Persuasion — this is church documentation signed by a monastery witness; church records are not subject to crown collection procedures; the families will receive both documents and the official count will be presented to them alongside the blessing roll, not instead of it.**
+
+*If you fail:* He gets the roll. It goes into the court archive where it will be filed under ecclesiastical records and not distributed to the families. You continue without it.
+
+*If you pass:* He looks at you for a long moment. The church argument is technically correct. He cannot counter it without escalation he is not authorized to undertake. He rides ahead. He will arrive at the gathering point before you. He will tell Arnaut of Troyes that an unofficial blessing roll is coming. Arnaut will be ready.
+
+---
+
+### Act IV — The Interceptor
+*Turpin's Blessing Roll · in the wallet · the road-town below the pass,
+a hired man in the market square, watching the road from the north*
+
+Someone has been hired to intercept anything coming from the monastery's direction
+before it reaches the gathering. He is not affiliated with the crown — this is a
+private commission, from the same general direction as Ganelon's kin. He has been
+at the town square since morning and he has watched the crown official ride through
+and he is watching you now.
+
+He moves when you enter the square.
+
+**Combat — Hired Interceptor (AC 13, HP 24, short sword)**
+
+*If you fail (reduced to 0 HP):* He gets the wallet. The roll disappears into a Frankish storeroom somewhere. The families receive only the official count.
+
+*If you pass:* He is down in the market square. You have approximately ten minutes before the commotion draws attention. Arnaut of Troyes' inn is three streets away.
+
+---
+
+### Act V — The Gathering Point
+*Turpin's Blessing Roll · in the Fighter's hands, unsealed ·
+Arnaut of Troyes' inn common room, twelve people at tables,
+the crown official's letter already on the table*
+
+The common room is full of people who have come from different parts of the Frankish
+realm to find out whether their person's name is on the official count. The crown
+official's letter is on the table, unopened because Arnaut instructed everyone to
+wait until both documents were present.
+
+You lay the blessing roll on the table. Arnaut examines the monk's seal. He nods.
+He looks at the room.
+
+*"There are two accounts. The official count from the court. And the complete roll
+of every man blessed at the pass on the night after the battle. I will read both.
+Whatever the difference is, that is a family's business and no one else's."*
+
+He looks at you.
+
+*"Begin."*
+
+You unroll the parchment. The first three names are there — the first bodies Turpin
+reached. You read them aloud into a room that is completely silent.
+
+*Turpin's Blessing Roll unrolls further in your hands. Behind you, twelve families
+are about to find out whether their person is on both lists or only one.*
+
+**DC 11 Composure — read the first three names clearly, without pause, without faltering; these are the first words these families will hear that came directly from the battlefield; they must arrive as testimony, not as administrative document.**
+
+*If you fail:* Your voice hesitates on the third name. The hesitation breaks the room's attention. Arnaut takes the roll from you and continues himself.
+
+*If you pass:* Three names, clear, into the silence. The room is completely still. Arnaut takes the roll from you and continues. He will read every name. The king's messengers will arrive two hours later with the official count. The families will know by then what was on both lists and what the difference means.
+
+---
+
+## Quest API Stub — Cycle 2
+
+```json
+{
+  "questId": "OST_cycle2_turpinsRoll",
+  "title": "Turpin's Blessing List",
+  "activateNode": "RON",
+  "token": {
+    "name": "Turpin's Blessing Roll",
+    "description": "A long parchment sealed with the monastery monk's authenticating mark. Every name of every man who fell at Roncevaux, in the order Archbishop Turpin blessed them on the night after the battle. The official count has political omissions. The families need this before the crown version is sealed.",
+    "introducedAct": 1,
+    "consumedAct": 5
+  },
+  "acts": [
+    {
+      "act": 1,
+      "title": "The Monk's Charge",
+      "location": "RON — a small monastery near Roncevaux, two days after the battle",
+      "token_action": "RECEIVE — rolled and sealed, pressed into the Fighter's hands",
+      "type": "skill_check",
+      "scene": "The monk followed Turpin and wrote names while standing over bodies in the mountain pass. He has been sitting with the roll for two days. He cannot travel. The deadline is the arrival of the king's messengers at the families' gathering point. After that, the official count is the only count.",
+      "prompt": "Understand why the complete list is qualitatively different from the official count; understand the deadline. DC 12 Insight.",
+      "failText": "You understand the task but not the stakes. You move at the pace of an administrative errand.",
+      "successText": "The deadline is the king's messengers. After that the official count is the only count. You take the roll and move immediately.",
+      "grantItem": "Turpin's Blessing Roll — every name; monastery seal; the complete record of Roncevaux dead",
+      "checkPassFlag": "OST2_rollReceived"
+    },
+    {
+      "act": 2,
+      "title": "The Pyrenean Road Watch",
+      "location": "PYR — the Pyrenean road, descending from the pass",
+      "token_action": "CONCEALED — in plain document-wallet",
+      "type": "skill_check",
+      "scene": "Two men at the road-post, Ganelon's kin watching for documents from the pass. Some names on a complete blessing list extend the conspiracy's documentation. A sheep-track to the left bypasses the post and adds one hour.",
+      "prompt": "Take the sheep-track in the grey morning light without being seen from the post. DC 12 Stealth.",
+      "failText": "They see you. They search. Church document — they let it through. But their report precedes you.",
+      "successText": "The track holds. The road-post is below you on the descent. You reach the main road with no one noting your passage.",
+      "checkPassFlag": "OST2_watchAvoided"
+    },
+    {
+      "act": 3,
+      "title": "The Crown's Official",
+      "location": "PYR → FRS road — Frankish lowland",
+      "token_action": "HELD — in wallet, not surrendered",
+      "type": "skill_check",
+      "scene": "A crown official on a fast horse, with the official count in his courier-wallet, instructed to collect unofficial rolls before distribution. Courteous, believes in his work, technically has no right to your document.",
+      "prompt": "Church records are not subject to crown collection. The families receive both documents. DC 13 Persuasion.",
+      "failText": "He gets the roll. Filed in court archive. Not distributed to families.",
+      "successText": "The church argument holds. He cannot escalate without authorization. He rides ahead to warn Arnaut that an unofficial roll is coming.",
+      "checkPassFlag": "OST2_officialDeflected"
+    },
+    {
+      "act": 4,
+      "title": "The Interceptor",
+      "location": "FRS — the road-town market square",
+      "token_action": "HELD — wallet under threat",
+      "type": "combat",
+      "scene": "A hired man watching the northern road since morning. Private commission, Ganelon's kin's direction. He moves when you enter the square.",
+      "prompt": "Fight through to Arnaut of Troyes' inn.",
+      "combatTarget": "Hired Interceptor (AC 13, HP 24, short sword)",
+      "failText": "He gets the wallet. The roll disappears. The families receive only the official count.",
+      "successText": "He is down. Ten minutes before the commotion. The inn is three streets away.",
+      "checkPassFlag": "OST2_interceptorDefeated"
+    },
+    {
+      "act": 5,
+      "title": "The Gathering Point",
+      "location": "FRS — Arnaut of Troyes' inn common room, twelve families assembled",
+      "token_action": "UNSEALED — unrolled; first three names read aloud to the room",
+      "type": "skill_check",
+      "scene": "The crown official's letter is on the table, unopened. Arnaut examines the monk's seal, nods, and tells you to begin. The first three names on the roll are the first bodies Turpin reached. Read them into a room that is completely silent.",
+      "prompt": "Read the first three names clearly, without pause or faltering; testimony, not administrative document. DC 11 Composure.",
+      "failText": "Your voice hesitates on the third name. Arnaut takes the roll and continues himself.",
+      "successText": "Three names, clear, into the silence. Arnaut takes the roll and continues. The king's messengers arrive two hours later. The families know by then what was on both lists.",
+      "grantItem": "Arnaut's Token — a small pressed lead disc Arnaut presses into your hand; the families' mark of thanks; given without words",
+      "takeItem": "Turpin's Blessing Roll — in Arnaut's hands; being read aloud to the families",
+      "activateMissionBit": "ostTurpinComplete",
+      "checkPassFlag": "OST2_interceptorDefeated"
+    }
+  ]
+}
+```
+
+---
+
+*quest-map.md: append OST cycle 2 row to Processed Quests table:*
+`| OST | Turpin's Blessing List | 2 | RON → PYR → FRS (Roncevaux → Pyrenean road → Frankish families' gathering) | The complete roll of the dead versus the official count; every name acknowledged |`
+
+*quest-map.md: append new theme thread to Theme Threads Active:*
+`- **The complete roll of the dead versus the official count: the act of blessing every name creates a document different from the administrative tally; the political omission is a second death; the complete list is the final acknowledgment that every person who fell at Roncevaux fell as a person with a name and a blessing**: OST (cycle 2) — Turpin blessed every man; the monk wrote every name; the official list has reasons to omit; the families of the omitted will spend the rest of their lives knowing their person was not on the crown's list, which is a different kind of loss than the death itself`
+
+*quest-map.md: append FRS to Location Grid.*
+
+*books.md: mark OST [x].*
