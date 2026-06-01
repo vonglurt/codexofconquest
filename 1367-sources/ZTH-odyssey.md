@@ -273,3 +273,182 @@ TOKEN TAKEN. The vault closes. The Archivus returns to his desk.
 
 **books.md update required:**
 - Mark ZTH row [x]
+
+---
+
+## Cycle 2 · Iphitus's Provenance
+
+**New angle:** Cycle 1 was about knowledge — the form in which overwhelming truth can exist in a human archive, determined by the constraint under which it was received. Cycle 2 is about property — specifically about what kind of thing a guest-gift is under Homeric *xenia* law. The bow was given by Iphitus to Odysseus at Messene: "he gave the bow to Odysseus and Odysseus gave him a spear and a sharp sword, the beginning of a warm friendship, but they never met at one another's table, because Zeus's son Heracles killed Iphitus before that could happen." The suitors' contest treated the bow as household property available for a marriage transaction. But a guest-gift carries obligations — hospitality to the giver and his descendants — that survive the gift's physical use. What cycle 1 missed: the legal architecture under which the suitors' contest was invalid from the start; and the attestation from Iphitus's family that makes this argument permanent.
+
+---
+
+### Token Doctrine
+
+**TOKEN: The Guest-Gift Attestation**
+A sealed document composed by a Messenian notary on behalf of the last surviving member of Iphitus's family — an aged kinswoman named Dexithea who was told the exchange by her grandfather. It names the bow, the date of the exchange at Messene, both parties, and the *xenia* obligations that attach: that the bow is guest-friendship property, not household property; that using it as the prize in a marriage contest requires the consent of Iphitus's line; that the suitors' contest was therefore held on a false premise. The Fighter carries the sealed attestation from Messene to the Ithaca estate registry before the suitors' families file their competing account.
+
+| Act | Token State |
+|-----|-------------|
+| I | At the notary's house in Messene; Dexithea's signature required; not yet complete |
+| II | Sealed and in Fighter's custody; a mainland official challenges its validity on a procedural ground |
+| III | A suitor's family representative tries to buy the Fighter's cooperation on the road to the harbor |
+| IV | Suitors' hired men ambush at the Ithaca harbor; they want the document delayed, not destroyed |
+| V | Filed at the Ithaca estate registry under guest-friendship property law |
+
+---
+
+### 5-Act Vignette Play: "Iphitus's Provenance"
+
+*A Fighter has been retained by Odysseus's steward Philoetius to carry a guest-gift attestation from Messene to the Ithaca estate registry before the suitors' families can file their competing claim. The TOKEN ITEM is the Guest-Gift Attestation: a sealed document establishing the bow as guest-friendship property and the suitors' contest as legally invalid. The Fighter's job is to get Dexithea's signature, carry the sealed document to Ithaca, and file it before the competing claim closes the registry.*
+
+*The Thing · Guest-Gift Attestation · unsigned · notary's desk*
+
+---
+
+**ACT I — The Notary's House, Messene**
+
+*Afternoon. A small house on the Messenian hillside. The notary Konon at his desk; Dexithea — seventy years old, sharp, and entirely unwilling to be rushed — in the chair opposite.*
+
+*The Thing · Guest-Gift Attestation · unsigned · on the desk between them*
+
+*The Fighter observes: Dexithea is not hesitating because she doubts. She is hesitating because signing will mean that what her grandfather told her becomes a document rather than a story, and she is deciding whether those are the same thing.*
+
+Konon has drafted the attestation precisely — every clause sourced to what Dexithea described, every obligation of *xenia* named in the relevant legal formulas. He needs her signature. She has the stylus in her hand. She says: "Tell me what happens to the bow after the registry files this."
+
+She is not asking about the bow. She is asking what her grandfather's gift-giving with Odysseus becomes after the attestation is filed: a legal instrument, or still a friendship.
+
+---
+
+**ACT II — The Messenian Road**
+
+*The road to the harbor. A Lacedaemonian official with an inspection writ stops the party.*
+
+*The Thing · Guest-Gift Attestation · sealed · Fighter's pack*
+
+*The Fighter observes: the writ is for "documents relating to property disputes arising from the events at Ithaca." This document explicitly concerns property arising from those events. His authority is genuine.*
+
+The technical problem: the writ covers documents filed by parties with a direct interest in the dispute. Odysseus's steward retains the Fighter as a neutral carrier — not party to the dispute — which would exempt the document from the writ. But the official reads "retained by Odysseus's steward" as indicating Odysseus's interest, which would make the Fighter a party. The distinction between "neutral carrier hired by an interested party" and "agent of an interested party" is the argument.
+
+---
+
+**ACT III — The Harbor Town**
+
+*A tavern by the harbor. A well-dressed man at the Fighter's table as the party arrives.*
+
+*The Thing · Guest-Gift Attestation · sealed · Fighter's pack*
+
+*The Fighter observes: the man knows the document's contents — he has spoken to Konon or to one of Dexithea's servants. He is not threatening. He is reasonable.*
+
+He represents three of the suitors' families — families whose sons are dead and who believe the contest was valid and that Odysseus's massacre was therefore illegal. He offers a significant sum for the Fighter to delay arrival at the Ithaca registry by two days. Not to destroy the document; just to delay. Long enough for their own filing to close the record.
+
+He is telling the truth: the families believe the contest was valid. He is also not explaining the legal consequence: if the suitors' claim closes first, the *xenia* attestation becomes a minority view rather than the definitive record, and the inheritance dispute becomes generational.
+
+---
+
+**ACT IV — Ithaca Harbor**
+
+*The dock at Ithaca. Two men step out from behind a stack of amphorae.*
+
+*The Thing · Guest-Gift Attestation · sealed · targeted*
+
+*The Fighter observes: they want delay, not destruction — but the seal has to stay intact for the document to be valid.*
+
+The harder faction doesn't trust the negotiated delay. Two days is too much trust to put in a carrier. They are going to take the document and hold it themselves — return it after the registry closes. Same outcome; less faith required.
+
+Combat: 2× hired men (AC 13, HP 22, short swords)
+
+---
+
+**ACT V — The Ithaca Estate Registry**
+
+*The registry office near the harbor. The registrar Polyphron — a careful, neutral official who worked under both Laertes and the suitors' informal administration.*
+
+*The Thing · Guest-Gift Attestation · sealed, seal intact · Fighter's hands → registry*
+
+*The Fighter observes: Polyphron has already received the suitors' families' preliminary filing. It is sitting in the "pending" column. The registry's rule is: first complete filing controls.*
+
+He reads the attestation. He reads Dexithea's signature. He is satisfied with the document. Then he says: "The competing filing was submitted this morning. It is incomplete — they are still assembling the property inventory. But it is submitted. Under the registry rule, I file both and the question of which controls is decided by the adjudicator, unless —" He looks at the attestation. "— unless one party has a document that establishes a prior legal category for the disputed property. A guest-gift attestation, if valid, determines the category before the competing claim can be evaluated. The category question precedes the claim question."
+
+He looks at the Fighter. "Can you tell me how you know the chain of custody from Dexithea's stylus to this desk is unbroken?"
+
+---
+
+### Quest API Stub: Iphitus's Provenance
+
+```
+quest_id: ZTH-02
+title: Iphitus's Provenance
+cycle: 2
+book: odyssey
+token: Guest-Gift Attestation (sealed document)
+token_consumed: Act V (filed at Ithaca estate registry under guest-friendship property law)
+route: MSN → ITH
+```
+
+**Act I — Dexithea's Decision**
+```
+activateNode: MSN
+type: dialogue
+scene: "Notary Konon's house. Dexithea with the stylus, asking what happens to the bow after the attestation is filed."
+prompt: "She is deciding whether her grandfather's story becomes a document. She is not asking about legal process; she is asking whether the filing changes what the friendship was. [WIS to understand the distinction she's drawing / CHA to give her the answer that lets her sign without losing the thing she's protecting / INT to name what the filing preserves vs. what it transforms] DC 12"
+failText: "She signs without getting the answer she needed. The attestation is complete. But she does not look at the Fighter again."
+successText: "You tell her the document preserves the fact that Iphitus gave the bow to a friend. It does not change what that was. She signs. She says: 'My grandfather told me they never got to share a table.' She folds her hands."
+grantItem: Guest-Gift Attestation (sealed document)
+checkPassFlag: dexitheaSigned
+activateMissionBit: zthIphAct1Complete
+```
+
+**Act II — The Inspection Writ**
+```
+activateNode: ITH
+type: skill_check
+scene: "The Messenian road. A Lacedaemonian official with a writ covering documents relating to the Ithaca dispute."
+prompt: "You are a neutral carrier hired by an interested party. He reads this as making you an agent of that party. The distinction is the argument. [INT to name the legal distinction between neutral carrier and agent / WIS to find where his writ's authority ends / CHA to give him the framing that lets him note 'neutral carrier, released' and close his ledger] DC 12"
+failText: "He notes the document in his log and releases it — the carrier's status is disputed but the document itself is authorized for transit. The notation may require explanation at the registry."
+successText: "You name the distinction. He accepts it. He notes 'neutral carrier, uncontested transit' and waves you through."
+checkPassFlag: writResolved
+activateMissionBit: zthIphAct2Complete
+```
+
+**Act III — The Delay Offer**
+```
+activateNode: ITH
+type: skill_check
+scene: "The harbor tavern. A representative of three suitors' families offers significant coin for a two-day delay."
+prompt: "He is telling the truth about the families' belief that the contest was valid. He is not explaining the legal consequence of a two-day delay on the registry precedence question. [WIS to understand what he is not saying / INT to calculate the consequence of the delay / CHA to decline without explaining that you understand the trap] DC 13"
+failText: "You decline without fully naming what he offered. He nods, finishes his cup, and leaves. He will try a different approach."
+successText: "You say: if the suitors' preliminary filing closes first, the attestation becomes a minority view. You can see he knows you understand this. He pays for your drink and leaves."
+checkPassFlag: delayOfferDeclined
+activateMissionBit: zthIphAct3Complete
+```
+
+**Act IV — The Dock Ambush**
+```
+activateNode: ITH
+type: combat
+scene: "Two men at the Ithaca harbor. They want the document, not its destruction — but the seal must remain intact."
+prompt: "They are taking it themselves rather than trusting a delayed carrier."
+combatTarget: "2× hired men (AC 13, HP 22, short swords)"
+failText: "They take the document and hold it in a warehouse. You find it three hours later. The seal is intact. They didn't open it — they only needed the delay."
+successText: "Both men are down. The seal is unbroken."
+checkPassFlag: harborAmbushSurvived
+activateMissionBit: zthIphAct4Complete
+```
+
+**Act V — The Ithaca Registry**
+```
+activateNode: ITH
+type: skill_check
+scene: "Polyphron at the registry desk. The suitors' preliminary filing is in the pending column. He asks about the custody chain."
+prompt: "He needs to know the chain from Dexithea's stylus to this desk is unbroken, to invoke the prior-category rule that controls the classification before the competing claim can be evaluated. [WIS to reconstruct the chain in the precise form the prior-category rule requires / INT to identify which link Polyphron will challenge and address it / CHA to give him the chain in the form he needs to write 'prior category established' in the ledger] DC 11"
+failText: "Polyphron flags the carrier-writ notation from Act II and files both documents as co-equal, pending adjudicator review. The attestation is in the record. The prior-category ruling will require a separate proceeding."
+successText: "Polyphron writes 'prior category established: guest-friendship property, xenia obligations attached.' He takes the attestation. He stamps it with the date and time. The suitors' preliminary filing moves to the secondary column. 'The bow,' he says, 'was never their property to contest with.'"
+takeItem: Guest-Gift Attestation (sealed document)
+checkPassFlag: zthIphComplete
+activateMissionBit: zthIphComplete
+```
+
+---
+
+*quest-map.md: add ZTH cycle 2 row and theme thread; append MSN, ITH to Location Grid.*
+*books.md: mark ZTH [x].*
