@@ -221,3 +221,184 @@ successText: "The King's court rules the evidence admissible. The accusation is 
 checkPassFlag: toledoJusticeRendered
 bitLabel: Vow-Cord (discharged)
 ```
+
+---
+
+## Cycle 2 · The Pledge and the Sand
+
+**New angle:** Cycle 1 followed the honor of endurance — a vow-cord worn for months, grievance carried in silence through Riojan country to a Toledo court. Cycle 2 enters the financial architecture of exile: the specific moral logic by which a deception becomes an absolute obligation. The chest-of-sand gambit is not dishonest in Rodrigo's universe because he has always intended full repayment in honest conquest-gold; the lie is provisional, the debt is permanent. What this reveals that cycle 1 missed: the Cid's honor is not only about patience and public procedure — it includes a willingness to enter necessity's arrangements and then discharge them more completely than anyone required.
+
+---
+
+### PASS — The Chest of Sand: New Lens
+
+The episode appears early, in Book I, at the very first night of exile: sixty men, no funds, Burgos locked against them. Martin Antolinez goes into the city and returns before dawn with 600 marks against two locked chests of the Cid's goods. The chests contain sand — but the moneylenders Raquel and Vidas have been told the contents are gold and silver plate, sealed under oath and too precious to move. They are forbidden to open them until the debt is repaid or one year has passed. What Martin Antolinez and the Cid know that the moneylenders do not: there is nothing in the chests. What everyone in the scene understands implicitly: if the Cid does not return and repay the loan with real gold, the chests will be opened, the fraud discovered, and Raquel and Vidas will be ruined.
+
+Rodrigo takes this seriously. The repayment, when it comes, is made with honest conquest-gold: principal plus interest, more than the chests ever held. Raquel and Vidas are paid in full, open the chests, find sand, and — having been paid more than any gold that was ever their due — receive the proceeds without complaint.
+
+The quest lives in the gap between those two counting-house meetings. Someone must carry the obligation from the night of exile to the morning of settlement.
+
+---
+
+### Token Doctrine
+
+**TOKEN: The Counterpart Loan Receipt**
+A sealed folio bearing all three signatures and the loan terms: the amount, the collateral, the prohibition against opening the chests. Martin Antolinez retains this counterpart. It is the only document that proves the debt was entered honestly — and the only document that, if seized by the Cid's enemies, could be used to argue the transaction was fraudulent. The Fighter carries it from the counting house through the night to Cardeña, holds it through the six months of campaign, and returns it to the flame at settlement.
+
+| Act | Token State |
+|-----|-------------|
+| I | Sealed and signed in the counting house; Martin Antolinez hands it to the Fighter for safekeeping |
+| II | Fighter carries the receipt through Burgos at night — the only document in the party that can prove the loan is legitimate |
+| III | Six months later: the receipt is the courier's credential; the count's agent on the bridge is looking specifically for a document bearing two Burgalese names and the Cid's mark |
+| IV | Road agents demand the receipt — surrendering it would allow them to misrepresent the loan to the crown magistrate |
+| V | Repayment complete; Raquel and Vidas burn their copy; Martin Antolinez says: the counterpart — Fighter places it on the candle flame |
+
+---
+
+### 5-Act Vignette Play: "The Pledge and the Sand"
+
+*A Fighter has been hired by Martin Antolinez — the good Burgalese, the one man in the city willing to help — to assist with a financial arrangement on the first night of the Cid's exile. The TOKEN ITEM is the counterpart loan receipt: a sealed folio naming the loan terms, the collateral, the prohibition against opening the chests, signed by all parties. The Fighter's job is to carry it, protect it, and return it to Martin Antolinez when the debt is closed.*
+
+*The Thing · counterpart loan receipt · sealed folio · Martin Antolinez → Fighter*
+
+---
+
+**ACT I — The Counting House**
+
+*Evening. Raquel and Vidas' counting house in Burgos. Two iron-bound chests on the floor. Candles on the table. Raquel's finger running down a column of figures.*
+
+*The Thing · counterpart loan receipt · unsigned · waiting on the table*
+
+*The Fighter observes: the chests are light. Two men carried them as if they weighed nothing. Raquel has not touched them. Vidas has not touched them.*
+
+Martin Antolinez presents the arrangement with the fluency of a man who has rehearsed it since sunset: the goods are the Cid's own, sealed under oath, too valuable to move through the city tonight; the prohibition against opening is the lenders' protection as much as the borrower's; the rate is fair and the term is one year or repayment whichever comes first. Vidas wants to weigh the chests. He stands and moves toward them. The Fighter must intercept this without touching the chests.
+
+---
+
+**ACT II — The Night Road to Cardeña**
+
+*After midnight. The Burgos postern gate. Martin Antolinez has the coin — 600 marks in a saddlebag. The Fighter has the receipt. Two men, one horse, the city's silence behind them.*
+
+*The Thing · counterpart loan receipt · sealed folio · Fighter's pack*
+
+*The Fighter observes: the receipt names the amount, the lenders, and the Cid's mark. This document is the only evidence the loan was entered honestly.*
+
+The road to Cardeña is five leagues. Alfonso's patrols have been doubled since the exile proclamation — any man carrying coin away from Burgos at this hour is worth stopping. The patrol checkpoint is a mile out, where the road narrows between two stone walls.
+
+---
+
+**ACT III — The Bridge (Six Months Later)**
+
+*Open Castilian country. The Cid's first campaign has yielded conquest-gold. Martin Antolinez has assembled the repayment. The Fighter is the courier, six months into campaign, riding back toward Burgos.*
+
+*The Thing · counterpart loan receipt · sealed folio · Fighter's pack · the credential that closes the transaction*
+
+*The Fighter observes: the seal has held six months in a pack that has seen rain and river crossings.*
+
+A count's road agent stops the party at a bridge. He has been watching for Cid-connected couriers for weeks. He asks about the document in the pack. He knows what he's looking for: a receipt bearing two Burgalese names and the Cid's mark. If he takes it to the crown magistrate and argues the transaction was fraudulent, the repayment becomes a confession instead of a discharge.
+
+---
+
+**ACT IV — The Poplars**
+
+*Two leagues from Burgos. Afternoon. A stand of poplars beside the road.*
+
+*The Thing · counterpart loan receipt · sealed folio · Fighter's pack · targeted*
+
+*The Fighter observes: three riders in the poplars. No livery. Waiting for something specific.*
+
+The count's men are not authorized for this. They're acting on private instruction: if the receipt never reaches Burgos, the transaction never closes, and the open loan becomes a standing fraud that can be reported at any time. They want the document, not blood — but they'll take what they need to get it.
+
+---
+
+**ACT V — The Second Meeting**
+
+*Morning. Raquel and Vidas' counting house. The repayment on the table. Martin Antolinez presents it.*
+
+*The Thing · counterpart loan receipt · sealed folio · Fighter's hands*
+
+*The Fighter observes: Vidas counts the coin twice. He counts it a third time. He nods to Raquel. Raquel takes the key from her belt and opens the first chest.*
+
+Sand. The second chest: sand. Vidas looks at the coin for a long time. He looks at Martin Antolinez. He says nothing. He takes his copy of the receipt — the moneylenders' original — and holds it to the candle flame. It burns quickly. Martin Antolinez says: the counterpart. The Fighter puts the sealed folio on the candle. It goes the same way. No one says anything else. The chests are taken to the back room. The transaction is closed.
+
+---
+
+### Quest API Stub: The Pledge and the Sand
+
+```
+quest_id: CID-02
+title: The Pledge and the Sand
+cycle: 2
+book: chronicle-cid
+token: Counterpart Loan Receipt (sealed folio)
+token_consumed: Act V (burned in counting house candle)
+route: RVH → CDN → RVH
+```
+
+**Act I — The Counting House**
+```
+activateNode: RVH
+type: dialogue
+scene: "Raquel and Vidas' counting house, Burgos. Two iron-bound chests on the floor. Vidas is moving toward them."
+prompt: "Vidas stands and moves toward the chests. If he registers their weight the arrangement ends here. You must stop this without touching the chests. [CHA to redirect Vidas to the coin terms / WIS to find the reason Vidas actually cares about / DEX to interpose the paperwork between him and the chests]"
+failText: "Vidas' hand closes on the chest handle. He lifts it six inches. His expression changes. Martin Antolinez speaks before he does — 'The seal is the protection; once broken on your floor the oath transfers to you.' It is not true. But Vidas believes it, sets the chest down, and returns to his chair. The receipt is signed."
+successText: "You set the written terms in front of Vidas before he takes another step. 'The weight certification is in the clause.' He reads it twice. He doesn't lift the chest. Raquel signs first."
+grantItem: Counterpart Loan Receipt (sealed folio)
+checkPassFlag: countingHouseReceiptSigned
+activateMissionBit: cidPledgeSandAct1Complete
+```
+
+**Act II — The Night Road to Cardeña**
+```
+activateNode: CDN
+type: skill_check
+scene: "Midnight. The road from Burgos to Cardeña. A patrol checkpoint where the road narrows between stone walls."
+prompt: "The patrol is two men and a lantern. You carry coin and a sealed document at midnight on a restricted road. [DEX to find the wall's shadow past the checkpoint / CON to brazen through at pilgrim's pace / WIS to time the gap in their patrol circuit] DC 12"
+failText: "They stop you. Martin Antolinez speaks — he is from Burgos, they know his family, the coin is alms for Cardeña's poor box. They let you through with a warning. The receipt stayed in your pack and they never asked about it."
+successText: "The wall shadow takes you fifty yards past the checkpoint before they turn back. You hear the lantern behind you, receding. Five leagues to Cardeña. The Cid is waiting."
+checkPassFlag: cardenaRoadCleared
+activateMissionBit: cidPledgeSandAct2Complete
+```
+
+**Act III — The Bridge**
+```
+activateNode: RVH
+type: skill_check
+scene: "Open Castilian road, six months later. A count's agent stops the party at a bridge and asks about the document in your pack."
+prompt: "He knows what he's looking for: a receipt with two Burgalese names and the Cid's mark. He has claimed authority to inspect courier documents on the king's road. [INT to find the technical limit of his inspection authority / CHA to redirect him to the coin as the only item of interest / WIS to read whether he's bluffing his jurisdiction] DC 13"
+failText: "He insists on inspection rights. You let him read the terms but not the names. He copies three words and waves you through. Those three words reach the count before you reach Burgos. The count's men are already on the road south."
+successText: "His jurisdiction covers cargo, not sealed correspondence. You cite chapter and toll. He knows you're right and waves the party through. The receipt stays sealed."
+checkPassFlag: bridgeAgentTurned
+activateMissionBit: cidPledgeSandAct3Complete
+```
+
+**Act IV — The Poplars**
+```
+activateNode: RVH
+type: combat
+scene: "Two leagues from Burgos. Three riders in a stand of poplars waiting for the receipt."
+prompt: "They want the document, not blood — but they'll take what they need to get it. They have no authority and no witnesses."
+combatTarget: "2× count's hired riders (AC 13, HP 22, short swords and light armor)"
+failText: "They take the receipt. But Martin Antolinez holds the moneylenders' copy — the original Raquel and Vidas signed. The transaction can still close if you reach them first. You arrive at the counting house ahead of the count's men by one hour."
+successText: "Both riders are down. The receipt is intact. Martin Antolinez checks the seal — unbroken. 'Good,' he says."
+checkPassFlag: poplarsAmbushDefeated
+activateMissionBit: cidPledgeSandAct4Complete
+```
+
+**Act V — The Second Meeting**
+```
+activateNode: RVH
+type: skill_check
+scene: "Raquel and Vidas' counting house. Repayment counted. Chests opened. Sand."
+prompt: "Vidas is looking at the coin. He has counted it three times. A Christian merchant in the doorway is watching. Vidas is deciding. [CON to hold completely still while he decides / WIS to read the exact moment to hand the counterpart to Martin Antolinez / CHA to give Vidas the word he needs to close it cleanly] DC 11"
+failText: "The merchant in the doorway speaks first — he names the sand. Vidas looks at him, then at the coin. 'The terms were met.' He burns both receipts without speaking again. The merchant leaves. No one will say this happened."
+successText: "Vidas burns his copy. Martin Antolinez says: the counterpart. You place it on the candle flame. The merchant in the doorway has already turned away. Raquel says: 'The Cid keeps his word.' Vidas: 'He does.' That is all that will be said of this."
+takeItem: Counterpart Loan Receipt (sealed folio)
+checkPassFlag: cidPledgeSandComplete
+activateMissionBit: cidPledgeSandComplete
+```
+
+---
+
+*quest-map.md: append RVH, CDN to Location Grid.*
+*books.md: mark MAD [x] (chronicle-cid entry).*

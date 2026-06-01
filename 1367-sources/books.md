@@ -475,7 +475,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
 | [x] | MAD | don-quixote | Don Quixote — Miguel de Cervantes | 1605–1615 | Comic Epic | 2335 |
-| [ ] | MAD | chronicle-cid | Chronicle of the Cid — Anon (Southey transl.) | 12th C source | Spanish Epic | 664 |
+| [x] | MAD | chronicle-cid | Chronicle of the Cid — Anon (Southey transl.) | 12th C source | Spanish Epic | 664 |
 | [ ] | LIS | lusiad | The Lusiads — Luís de Camões | 1572 | Portuguese Epic | 207 |
 
 ### Italian
