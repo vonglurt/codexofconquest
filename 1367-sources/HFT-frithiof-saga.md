@@ -525,3 +525,292 @@ when the transfer is complete.*
 *books.md: mark HFT [x].*
 
 *Rule 15: clear agent memory after HFT completion if context is full.*
+
+---
+
+## Cycle 2 — Ring's Deathbed Recognition
+
+**What cycle 1 missed:** The Sacred Flame was the material requirement — the original fire, the one legitimate means of restoration, the act that converts a rebuilt stone into a consecrated temple. Ring's Deathbed Recognition reveals what was always true at the center of the saga and never formally stated: King Ring has known since the first week who "Thief" was. He invited the disguise to continue because it suited a recognition he had already made privately. Now he is dying and he wants the private recognition to become a witnessed fact, and he needs a witness who is not entangled in his court's politics — someone Ingeborg will trust. The Fighter is that witness. Cycle 1 was about what fire makes possible. Cycle 2 is about what a word can do before the court's version fills the space.
+
+**New angle:** Ring calls the Fighter to his deathbed privately. He dictates his recognition — that he always knew, that he chose to welcome Frithiof, that this changes everything about how his death should be understood. He presses his signet ring into the Fighter's hand. The Fighter carries it through the court to Ingeborg's chamber before the chamberlain's version can arrive first.
+
+---
+
+### Pass 1 — Token
+
+**TOKEN: Ring's Signet Ring** — taken from Ring's own hand on his deathbed, pressed into the Fighter's palm with the formal recognition spoken over it. The ring is the seal of Ring's private acknowledgment: that he always knew who "Thief" was, that the welcome was genuine, that Frithiof has no debt to expunge and no wrong to answer for. Carried to Ingeborg's chamber before the court composes its official account. At Act V, placed in Ingeborg's hand with the exact words Ring spoke — no more, no fewer.
+
+---
+
+### Pass 2 — Seven Storyline Ideas
+
+**1. The Sacred Flame** *(USED — Cycle 1)* — Balder's sacred flame, carried from Alrekstaðir to the new altar.
+
+**2. The Arm-Ring's First Journey** — Ingeborg's arm-ring carried to Frithiof's ship before Helge's watchers.
+
+**3. The Tribute Refusal** — Partial tribute carried to Jarl Angantyr for his sealing mark.
+
+**4. Ring's Deathbed Recognition** *(CHOSEN — Cycle 2)* — Ring calls the Fighter to his deathbed. Dictates his formal recognition that he always knew who Frithiof was and welcomed him anyway. Presses his signet ring into the Fighter's hand. The Fighter carries it to Ingeborg before the court's version fills the space.
+
+**5. The False Name** — A false document establishing "Thief's" origin before the chamberlain's investigation closes.
+
+**6. The Arm-Ring Returns** — The arm-ring carried through estate dissolution proceedings back to Ingeborg's keeping.
+
+**7. Helge's Last Crossing** — The warning or the silence: Helge carries a truce-violating weapon; the Fighter saw it made.
+
+---
+
+### Pass 3 — Theme Check
+
+Existing themes through RKV cycle 2: grief in object, loyalty, honor vs. shame, love and fate, truth posthumous, healing through hostile law, carrier hunted, token's journey, ancient witnesses, corruption wears mercy, fate through broken thing, heroism earns nothing, invitation as weapon, poem ransoms life, anonymous sympathy, pyre-arrangements, proxy errand, absent jurisdiction, scattered truth, last gift against design, credential before the man, one who will not weep, vigil at extraction, errand of removal, eclipse witness, thing too true to keep.
+
+**Themes I am avoiding:** "Truth delivered posthumously" (LGW) — Ring is alive when he gives the commission; this is not posthumous truth but a truth he cannot personally deliver while still living. "Proxy errand" (MSE cycle 2) — that was the old man's errand completed by the walker; this is a recognition the principal cannot carry himself because he cannot cross the room. "The credential carried before the man" (GDN cycle 2) — Kari sent his pilgrim certificate ahead to prepare his reception; Ring's recognition is not preparation for Frithiof's arrival but the witness to a fact Ingeborg does not yet possess.
+
+**New theme introduced by HFT cycle 2:** *The word the dying man cannot carry himself: the recognition that must arrive before the court's version fills the space; the word carried without transformation through the hall that has already begun to manage the narrative* — Ring always knew; the recognition was private and real; the court will compose its version of "what happened" the moment he closes his eyes; the Fighter carries the recognition in the narrow window between the king's last breath and the chamberlain's first sentence, and the commission is to deliver it without transformation.
+
+---
+
+## 5-Act Vignette Play: "Ring's Deathbed Recognition"
+
+**The Token · Ring's Signet Ring · taken from his right hand ·
+still warm from his finger · pressed into the Fighter's palm
+with the recognition spoken over it · it must reach Ingeborg
+before the chamberlain's account does**
+
+---
+
+### Act I — The Summons
+*Ring's Signet Ring · on Ring's right hand · Ring's private chamber,
+a low fire, the court not yet assembled, the king propped on pillows*
+
+Ring has sent for you specifically. Not a herald, not a court witness, not Frithiof
+himself — you, who are not entangled in the obligations of this court, who came here
+as something other than a partisan, who can be trusted to carry a word without
+turning it into a word that serves your own position.
+
+He is propped on pillows. He is clearly dying. He is entirely lucid.
+
+*"I always knew who he was,"* he says. *"The first week. There is a way a man holds
+his hands when he has been trained in a different fighting style than the one he is
+pretending to use. I knew within seven days. I chose to say nothing. I want her to
+know that the welcome was genuine — not a trap, not blindness. I chose it. Take the
+ring. Say exactly what I say."*
+
+He holds out his right hand.
+
+*The fire is low. The room is quiet. The chamberlain is outside the door and will
+be in this room as soon as Ring calls him, which Ring has chosen not to do yet.*
+
+**DC 12 Insight — understand the full weight of what he is asking: not comfort, not ceremony, but precision; you are the carrier of a fact that has specific words; no paraphrase, no softening, the words exactly as he says them.**
+
+*If you fail:* You understand the emotion but not the mechanism — you hear "go tell Ingeborg he loved her" when what he said is precisely different from that and the difference matters.
+
+*If you pass:* You understand: the recognition is a specific statement about a specific choice made at a specific moment. The words are the thing. You nod. He begins.
+
+---
+
+### Act II — The Dictation
+*Ring's Signet Ring · being transferred · Ring's private chamber,
+the fire, the words being spoken for the one time they will be spoken*
+
+He tells you what to say. It is four sentences. He speaks them slowly and has you
+repeat them back. You repeat them incorrectly once — the order of the second and
+third clause — and he corrects you. You repeat them again. Correctly this time.
+
+He holds out his right hand. The signet ring is on his forefinger. He works it off —
+it costs him something, his hands are failing — and he presses it into your palm.
+
+*"When she has heard the four sentences, give her the ring. She will know what it
+means. Don't explain it."*
+
+The ring is warm from his finger. The four sentences are in your mouth, in the order
+he specified.
+
+*Outside the door, you can hear the chamberlain's footstep. He has been patient.
+He will come in now unless you leave first.*
+
+**DC 12 Composure — hold the four sentences in exact order; they are the commission; the ring is the seal; you have perhaps thirty seconds before the chamberlain enters.**
+
+*If you fail:* You leave correctly but one of the clauses has transposed in your memory. By Act V you will deliver three sentences and a paraphrase.
+
+*If you pass:* Four sentences. Exact. In the order he specified. You close your hand around the ring and you are through the door before the chamberlain's hand reaches the latch.
+
+---
+
+### Act III — The Corridor
+*Ring's Signet Ring · in the Fighter's closed hand · the corridor outside
+Ring's chamber, the chamberlain at the door, court members in motion*
+
+The chamberlain is in the corridor. He has been outside this door for an hour.
+He knows someone was inside. He has not yet entered because he is, above all things,
+a careful man.
+
+He looks at you. He looks at your closed hand.
+
+*"The king is resting. What business did you have?"*
+
+He is not accusing you. He is the man whose entire function is to manage the flow
+of information through this court, and you have just come out of the king's private
+chamber carrying something in a closed hand, and he would like to know what it is
+and where it is going so he can decide whether it needs to pass through him first.
+
+It does not pass through him.
+
+**DC 13 Persuasion — you are attending to a small personal commission for the king; it is not court business; it is entirely ordinary; the chamberlain does not need to be involved.**
+
+*If you fail:* The chamberlain insists on knowing the nature of the commission. You lose time and he is now watching Ingeborg's corridor specifically.
+
+*If you pass:* The chamberlain looks at you for one more moment, then steps to the side. He will ask again later. Later is fine. You are already at the end of the corridor.
+
+---
+
+### Act IV — Ingeborg's Door
+*Ring's Signet Ring · in the Fighter's hand · the passage to Ingeborg's
+private rooms, a guard at the turning, one of the king's household men*
+
+The passage to Ingeborg's rooms is attended by one of the household guards — one
+of Helge's old people who stayed on after Helge died, who is loyal to the court's
+structural interests rather than to Ring personally, and who knows that the correct
+procedure for delivering messages to the queen is through the chamberlain's office.
+
+He is not going to let you through on your own authority.
+
+**Combat — Court Household Guard (AC 13, HP 24, short sword)**
+
+*If you fail (reduced to 0 HP):* You are held in the passage while the chamberlain is summoned. By the time you reach Ingeborg, his version has preceded you.
+
+*If you pass:* The guard is down. You have perhaps four minutes before the corridor fills. Ingeborg's door is at the end of the passage.
+
+---
+
+### Act V — Ingeborg's Chamber
+*Ring's Signet Ring · in the Fighter's open hand · Ingeborg's chamber,
+a window, morning light, Ingeborg at a writing board, turning*
+
+She turns when you enter. She reads your face before you speak. She has been sitting
+at this board since early morning, knowing something was happening in the corridor
+outside Ring's chamber and unable to go to him directly while the court is assembled.
+
+You open your hand. The ring is there.
+
+She looks at it. She does not take it yet. She is waiting for the four sentences.
+
+You say them. Exactly as he said them. In the order he specified.
+
+*"He knew from the first week. He saw the fighting posture in the second exercise.
+He chose to say nothing because the welcome was already given and already meant.
+Frithiof has no debt. None of what happened here was a trap."*
+
+She looks at you for a moment. Then she takes the ring from your palm.
+
+She does not ask you to repeat anything. She does not ask for context. She holds
+the ring and looks at it. The window is bright. Outside, in the court below, you
+can hear the chamberlain beginning to organize the formal announcement of the king's
+condition.
+
+*Ring's Signet Ring rests in Ingeborg's closed hand. The four sentences are in the
+room. The chamberlain's version, when it comes, will come into a room where this
+one was already said.*
+
+**DC 11 Composure — say the four sentences in the exact order Ring specified; do not add context; do not soften; let the room do its own work.**
+
+*If you fail:* You say three correctly and paraphrase the fourth. The paraphrase is close. But it is not what he said, and she knows it is a paraphrase, and the difference between "I chose it" and "it was genuine" is a difference she will carry for the rest of her life.
+
+*If you pass:* Four sentences. His words. She closes her hand. You have carried what he asked you to carry and it arrived without transformation.
+
+---
+
+## Quest API Stub — Cycle 2
+
+```json
+{
+  "questId": "HFT_cycle2_ringsRecognition",
+  "title": "Ring's Deathbed Recognition",
+  "activateNode": "RNG",
+  "token": {
+    "name": "Ring's Signet Ring",
+    "description": "King Ring's signet ring, worked off his forefinger on his deathbed and pressed into the Fighter's palm. The seal of the recognition — that he always knew who Frithiof was, that the welcome was genuine, that Frithiof has no debt. Carried with four spoken sentences to Ingeborg.",
+    "introducedAct": 2,
+    "consumedAct": 5
+  },
+  "acts": [
+    {
+      "act": 1,
+      "title": "The Summons",
+      "location": "RNG — Ring's private chamber, a low fire, the king propped on pillows",
+      "token_action": "SELECTED — Ring has chosen the Fighter as the specific carrier",
+      "type": "skill_check",
+      "scene": "Ring has sent for you specifically — not a herald, not a court witness, not Frithiof. You are not entangled. He is lucid, dying, and specific: four sentences to carry exactly, the ring as seal, Ingeborg as recipient. No paraphrase. No softening.",
+      "prompt": "Understand that the words are the thing — not the emotion, the words specifically; no paraphrase. DC 12 Insight.",
+      "failText": "You understand the emotion but not the mechanism. You hear 'go tell her he loved her' when what he said is different and the difference matters.",
+      "successText": "The recognition is four specific sentences about a specific choice at a specific moment. The words are the commission. You nod. He begins.",
+      "checkPassFlag": "HFT2_commissionUnderstood"
+    },
+    {
+      "act": 2,
+      "title": "The Dictation",
+      "location": "RNG — Ring's private chamber, the words being spoken for the one time they will be spoken",
+      "token_action": "RECEIVE — ring pressed warm into the Fighter's palm",
+      "type": "skill_check",
+      "scene": "Four sentences. He speaks them slowly. You repeat them back. Once incorrect; he corrects you. Again. Correctly. He works the ring off his forefinger and presses it into your palm. Outside the door: the chamberlain's footstep. Thirty seconds.",
+      "prompt": "Hold the four sentences in exact order. Leave before the chamberlain enters. DC 12 Composure.",
+      "failText": "You leave correctly but one clause has transposed. By Act V you deliver three sentences and a paraphrase.",
+      "successText": "Four sentences, exact, in order. You close your hand around the ring and are through the door before the chamberlain's hand reaches the latch.",
+      "grantItem": "Ring's Signet Ring — warm from his finger; four sentences spoken over it; seal of the recognition",
+      "checkPassFlag": "HFT2_ringReceived"
+    },
+    {
+      "act": 3,
+      "title": "The Corridor",
+      "location": "RNG corridor — the passage outside Ring's chamber, chamberlain at the door",
+      "token_action": "HELD — closed hand, not produced",
+      "type": "skill_check",
+      "scene": "The chamberlain has been outside for an hour. He looks at you. At your closed hand. 'The king is resting. What business did you have?' He is the man whose function is to manage the flow of information. This commission does not pass through him.",
+      "prompt": "A small personal commission for the king; not court business; entirely ordinary; no further explanation needed. DC 13 Persuasion.",
+      "failText": "He insists. You lose time. He is now watching Ingeborg's corridor specifically.",
+      "successText": "He looks at you one more moment, then steps aside. He will ask again later. Later is fine.",
+      "checkPassFlag": "HFT2_corridorPassed"
+    },
+    {
+      "act": 4,
+      "title": "Ingeborg's Door",
+      "location": "RNG → ING passage — the passage to Ingeborg's private rooms",
+      "token_action": "HELD — do not lose it",
+      "type": "combat",
+      "scene": "A household guard at the passage turning — one of Helge's old people, loyal to structural interests, knows correct procedure is through the chamberlain's office. He is not letting you through on your own authority.",
+      "prompt": "Fight through to Ingeborg's door.",
+      "combatTarget": "Court Household Guard (AC 13, HP 24, short sword)",
+      "failText": "Held in the passage. The chamberlain is summoned. By the time you reach Ingeborg, his version has preceded you.",
+      "successText": "Guard down. Four minutes before the corridor fills. Ingeborg's door at the end of the passage.",
+      "checkPassFlag": "HFT2_doorReached"
+    },
+    {
+      "act": 5,
+      "title": "Ingeborg's Chamber",
+      "location": "ING — Ingeborg's chamber, a window, morning light",
+      "token_action": "DELIVERED — ring placed in Ingeborg's hand after the four sentences",
+      "type": "skill_check",
+      "scene": "She turns. She reads your face before you speak. She looks at the ring in your open hand. She waits for the four sentences. Below, in the court, the chamberlain has begun organizing the formal announcement.",
+      "prompt": "Say the four sentences in the exact order Ring specified. No context. No softening. DC 11 Composure.",
+      "failText": "You say three correctly and paraphrase the fourth. She knows it is a paraphrase. The difference between 'I chose it' and 'it was genuine' is one she will carry for the rest of her life.",
+      "successText": "Four sentences. His words. She closes her hand around the ring. The chamberlain's version, when it comes, will come into a room where this one was already said.",
+      "grantItem": "Ingeborg's Thanks — a small carved ivory piece she takes from her writing board and presses into your hand; she does not explain it",
+      "takeItem": "Ring's Signet Ring — in Ingeborg's hand; the recognition delivered without transformation",
+      "activateMissionBit": "hftRingComplete",
+      "checkPassFlag": "HFT2_doorReached"
+    }
+  ]
+}
+```
+
+---
+
+*quest-map.md: append HFT cycle 2 row to Processed Quests table:*
+`| HFT | Ring's Deathbed Recognition | 2 | RNG → ING (Ring's private chamber → Ingeborg's chamber) | The word the dying man cannot carry himself; before the court's version fills the space |`
+
+*quest-map.md: append new theme thread to Theme Threads Active:*
+`- **The word the dying man cannot carry himself: the recognition that must arrive before the court's version fills the space; the word carried without transformation through the hall that has already begun to manage the narrative**: HFT (cycle 2) — Ring always knew; the recognition was private and real; the court will compose its version of what happened the moment he closes his eyes; the Fighter carries the recognition in the narrow window between the king's last breath and the chamberlain's first sentence, and the commission is to deliver it without transformation`
+
+*quest-map.md: append RNG and ING to Location Grid.*
+
+*books.md: mark HFT [x].*
