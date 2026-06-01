@@ -345,3 +345,275 @@ The agent knows where the document is going. He is going to arrive first.
   ]
 }
 ```
+
+---
+
+## Cycle 2 — The Perjured Record
+
+**What cycle 1 missed:** Margarete's Account was about a living person asserting her right to be heard before execution — the document as the only self-representation available in the narrowing window before silence becomes permanent. The Perjured Record reveals what happens when the silence has already lasted twenty years: the court clerk who fabricated testimony is dying and has written a notarized recantation. The man he condemned is likely dead. His children are alive and carry the weight of a false conviction in their names. The recantation must reach the Archive of Civic Records before the magistrate — whose career was built on the original conviction — can suppress it through the same procedural apparatus that made the fabrication possible. Cycle 1 was about the right to speak before execution. Cycle 2 is about the obligation to correct the record even when correction can no longer repair what the record destroyed.
+
+**New angle:** The dying clerk gives the Fighter the sealed recantation at his deathbed. The Fighter carries it through the magistrate's legal officers, past a procedural injunction, and through an enforcer at the archive gate, to the intake desk — where the Archivus opens it and reads the opening line, which names the magistrate.
+
+---
+
+### Pass 1 — Token
+
+**TOKEN: The Clerk's Sealed Recantation** — a notarized document in the clerk's hand, signed by the clerk and a witness-notary, sealed with the notary's mark. It names the guild members who commissioned the false testimony. It names the specific testimony that was fabricated. It names the magistrate who received the fabricated testimony and used it. It is addressed to the Archive of Civic Records. The man it exonerates has been dead for eleven years. His children are in the city.
+
+---
+
+### Pass 2 — Seven Storyline Ideas
+
+**1. Margarete's Account** *(USED — Cycle 1)* — The condemned woman's deposition. The archive before execution. The right to be heard in her own words.
+
+**2. The Scholar's Confession** — The dying professor's sealed confession naming the guild that paid him to fabricate testimony.
+
+**3. The Cancelled Bond** — The original indenture contract. The thirty-day escape clause expiring tomorrow.
+
+**4. The Voiding Order** — The civic ordinance that voids all life-debt contracts. Delivered before the annual renewal.
+
+**5. The Perjured Record** *(CHOSEN — Cycle 2)* — The dying court clerk's sealed recantation, twenty years late. The man he condemned is dead; his children are alive. The Archivus receives it. The magistrate's career sits in the opening line.
+
+**6. The Wager's Record** — The sealed private agreement between the guild and the magistrate. City council meeting now in session.
+
+**7. The Undelivered Release** — The certified copy of the usurer's will clause releasing all life-debts.
+
+---
+
+### Pass 3 — Theme Check
+
+Existing themes through CDG cycle 2: grief in object, loyalty, honor vs. shame, love and fate, truth posthumous, healing through hostile law, carrier hunted, token's journey, ancient witnesses, corruption wears mercy, fate through broken thing, heroism earns nothing, invitation as weapon, poem ransoms life, anonymous sympathy, pyre-arrangements, proxy errand, absent jurisdiction, scattered truth, last gift against design, credential before the man, one who will not weep, vigil at extraction, errand of removal, eclipse witness, thing too true, word dying man cannot carry, question across ocean, carrier mid-commission change, last words to absent father, complete roll of dead, warning that races the threat.
+
+**Themes I am avoiding:** "Truth delivered posthumously" (LGW) — the clerk is alive (barely) when he writes it; the document travels in the window before his death, not after. "The condemned who refuses rescue still has the right to be heard" (VIE cycle 1) — that was about a living person's right; this is about a dead person's right to have the lie against their name corrected after the fact.
+
+**New theme introduced by VIE cycle 2:** *The recantation that arrives twenty years too late: the correction to the archive that cannot un-condemn the condemned; the document that makes the record honest without making the life better; the Archivus's intake as the only available form of justice* — the man is dead; the correction cannot reverse his execution or his years in prison; but the archive that says he was convicted justly is a lie, and a lie in the archive corrupts every record that touches it; the Fighter carries the correction because the archive deserves to be true even when the correction comes too late to help the person it exonerates.
+
+---
+
+## 5-Act Vignette Play: "The Perjured Record"
+
+**The Token · The Clerk's Sealed Recantation ·
+a notarized document in a dying man's hand ·
+signed and sealed by the notary who watched him sign ·
+it names names that are still in power ·
+addressed to the Archive of Civic Records ·
+the magistrate's agents are already on the street outside**
+
+---
+
+### Act I — The Deathbed
+*The Clerk's Sealed Recantation · in the clerk's hands ·
+a small residential house near the civic quarter, a sickroom,
+late morning, the notary already gone*
+
+The clerk is propped on pillows. He is seventy, thin, in pain in the specific way of
+a man who has been in pain for several months and has stopped trying to manage the
+expression on his face. The notary was here an hour ago and left. The document is
+sealed and on the bed beside him.
+
+He picks it up and holds it toward you. His hand is shaking with the effort.
+
+*"Twenty-two years ago I was paid to give false testimony in the matter of Gerhardt
+Unger. He was convicted. He was executed. His children are in the city — the oldest
+is a glassblower on the south road. The document names everyone who was involved.
+Including the magistrate Haas. Particularly the magistrate Haas."*
+
+He looks at you. He is not asking for absolution. He is not asking you to say it is
+all right. He is asking you to take the document to the archive.
+
+*"They have people outside already. I saw one from the window this morning. You will
+need to leave through the kitchen passage."*
+
+**DC 12 Insight — understand that this document is not about the clerk's conscience; it is about Gerhardt Unger's children having a city archive that says their father was falsely convicted, which is a different thing from having a father; understand that the clerk knows this and is not confused about the distinction.**
+
+*If you fail:* You take it with the wrong understanding — you are doing something for the dying man, which makes the errand feel personal. The right understanding is that you are doing something for the archive, which is impersonal in a way that requires a different kind of steadiness.
+
+*If you pass:* The document is for the archive. The dead man's children are not part of the commission — they are the reason the commission matters. You take it through the kitchen passage.
+
+---
+
+### Act II — The Side Street
+*The Clerk's Sealed Recantation · inside your coat · the side street behind
+the clerk's house, the magistrate's legal officers visible at the main gate*
+
+Two men in civic livery at the front gate, one on the side street watching the kitchen
+passage door. The side street is narrow, ends in an alley, connects to the civic
+quarter road three buildings down.
+
+The man at the kitchen passage door has seen you. He is twenty feet away.
+
+**DC 12 Stealth — move toward the alley end of the side street at the pace of someone who lives in this district and turned into the wrong alley and is correcting course; do not accelerate until you are out of his sightline.**
+
+*If you fail:* He calls after you. You run. He runs. You reach the civic quarter road a hundred feet ahead of him, which is enough, but the chase has been noted.
+
+*If you pass:* You turn right at the alley's end at the exact pace of a resident making a correction, and you are on the civic quarter road before he decides whether to follow.
+
+---
+
+### Act III — The Civic Quarter
+*The Clerk's Sealed Recantation · in your coat · the civic quarter,
+the magistrate's senior legal agent with a procedural injunction*
+
+He is in the road between you and the archive. He is holding a folded writ. He is
+courteous and precise.
+
+*"Post-mortem testimony in cases closed under the thirty-year statutory bar. The
+Unger matter was formally closed nineteen years ago. Any new deposition is inadmissible
+under statute. I'm authorized to accept the document for referral to the statutory
+review board, which will schedule a hearing in the spring session."*
+
+The review board, scheduled for the spring session, is chaired by the magistrate Haas.
+
+The thirty-year bar does not apply to cases where the original conviction was based
+on fabricated testimony — because a case built on fabrication was never legitimately
+opened. The bar protects closed cases. This case was never validly opened.
+
+**DC 13 Persuasion — the statutory bar requires a legitimately-closed case; a conviction obtained through fabricated testimony was never legitimately reached; the bar has no application to a case that was, legally speaking, a procedure that never validly occurred.**
+
+*If you fail:* He disputes the interpretation. You need to involve a third party — a passing civic notary who agrees with your position but only partially. You get through, but with the legal agent's formal objection logged in the street.
+
+*If you pass:* He looks at you for a long moment. He knows the argument is correct. He steps aside. He will report to the magistrate immediately. The archive is three streets ahead.
+
+---
+
+### Act IV — The Archive Gate
+*The Clerk's Sealed Recantation · in your coat · the archive building gate,
+a legal officer and an enforcer blocking entry*
+
+The legal officer has a court order barring entry to individuals carrying "potentially defamatory materials related to ongoing civic proceedings." The enforcer beside him is there in case the legal officer's authority is disputed.
+
+The court order was issued this morning. The clerk signed his recantation this morning. The speed of this is not a coincidence.
+
+**Combat — Legal Enforcer (AC 13, HP 24, short sword)**
+
+*If you fail (reduced to 0 HP):* You are taken to the side room. The document is confiscated. The legal officer inspects the seal and seizes it under the court order. It will go to the statutory review board, which will meet in spring, chaired by Magistrate Haas.
+
+*If you pass:* The enforcer is down. The legal officer steps back. You are through the archive gate.
+
+---
+
+### Act V — The Intake Desk
+*The Clerk's Sealed Recantation · in your hands ·
+the archive intake room, the Archivus at her desk,
+a ledger open, a candle, morning light*
+
+The Archivus is a woman in her fifties with ink on her left hand from a morning of filing. She looks at the document you set on her desk. She looks at the notary's seal. She looks at you.
+
+*"Addressed to this archive. Properly sealed and notarized. I am required to accept it."*
+
+She breaks the seal — this is her function; she is not opening someone's private correspondence; she is receiving a formal archival submission. She reads the first two lines.
+
+She looks up. The document names the magistrate Haas in the second sentence.
+
+*"This is going to be a complicated day for everyone in this building,"* she says. She sounds entirely calm.
+
+She picks up her intake stamp. She looks at you again.
+
+*The Clerk's Sealed Recantation is on her desk. She is about to make it a permanent part of the Archive of Civic Records. What the magistrate does next is his business. What the city does is the city's business. What the clerk's twenty-two years of silence cost Gerhardt Unger's family is not in this room. What is in this room is the stamp, the ledger, and the document.*
+
+**DC 11 Composure — remain present while she stamps it; do not say anything; the document is complete; the archive's intake is its own act and does not require commentary.**
+
+*If you fail:* You say something — something accurate and well-intentioned — about the clerk's state of mind, or the family, or the magistrate. The Archivus looks at you and says, gently, that she didn't ask. You stop. She stamps.
+
+*If you pass:* She stamps the document. She enters it in the ledger. She sets it in the intake tray for filing. She looks at you.
+
+*"I'll need your name for the chain of custody."*
+
+You give it. She writes it. You leave. Outside, in the civic quarter, the magistrate's legal agent is running.
+
+---
+
+## Quest API Stub — Cycle 2
+
+```json
+{
+  "questId": "VIE_cycle2_perjuredRecord",
+  "title": "The Perjured Record",
+  "activateNode": "CLK",
+  "token": {
+    "name": "The Clerk's Sealed Recantation",
+    "description": "A notarized document in the dying clerk's hand, signed and sealed by the witness-notary. Names the guild members, the false testimony, and the magistrate Haas. Addressed to the Archive of Civic Records. The exonerated man has been dead eleven years. His children are in the city.",
+    "introducedAct": 1,
+    "consumedAct": 5
+  },
+  "acts": [
+    {
+      "act": 1,
+      "title": "The Deathbed",
+      "location": "CLK — a sickroom near the civic quarter, the notary already gone",
+      "token_action": "RECEIVE — held out with a shaking hand",
+      "type": "skill_check",
+      "scene": "The clerk is not asking for absolution. He is asking you to take the document to the archive. His agents are already outside. Leave through the kitchen passage.",
+      "prompt": "Understand: this document is for the archive, not for the dying man's conscience. The dead man's children are the reason the commission matters, not the commission itself. DC 12 Insight.",
+      "failText": "You take it as a personal errand for the dying man. The right kind of steadiness is different.",
+      "successText": "The document is for the archive. You take it through the kitchen passage.",
+      "grantItem": "The Clerk's Sealed Recantation — notary seal; names names still in power; addressed to the Archive",
+      "checkPassFlag": "VIE2_recantationReceived"
+    },
+    {
+      "act": 2,
+      "title": "The Side Street",
+      "location": "CLK → DKN road — the side street behind the clerk's house",
+      "token_action": "CONCEALED — inside coat",
+      "type": "skill_check",
+      "scene": "Two men in civic livery at the front gate. One watching the kitchen passage door. Twenty feet away. He has seen you. The side street ends in an alley, connects to the civic quarter road three buildings down.",
+      "prompt": "Move toward the alley at the pace of a resident correcting course. Do not accelerate until out of his sightline. DC 12 Stealth.",
+      "failText": "He calls after you. You run. He runs. You reach the road ahead of him, but the chase is noted.",
+      "successText": "You turn right at the alley's end at resident-pace. You are on the civic road before he decides whether to follow.",
+      "checkPassFlag": "VIE2_streetCleared"
+    },
+    {
+      "act": 3,
+      "title": "The Civic Quarter",
+      "location": "DKN — the civic quarter road, the magistrate's senior legal agent with a writ",
+      "token_action": "HELD — not surrendered",
+      "type": "skill_check",
+      "scene": "The procedural injunction: post-mortem testimony in cases closed under the thirty-year statutory bar. The review board meets in spring. The review board is chaired by Magistrate Haas.",
+      "prompt": "The statutory bar requires a legitimately-closed case. A conviction obtained through fabricated testimony was never legitimately reached. The bar has no application here. DC 13 Persuasion.",
+      "failText": "He disputes the interpretation. You get through but his formal objection is logged in the street.",
+      "successText": "He knows the argument is correct. He steps aside.",
+      "checkPassFlag": "VIE2_agentPassed"
+    },
+    {
+      "act": 4,
+      "title": "The Archive Gate",
+      "location": "WM — the archive building gate, court order and enforcer",
+      "token_action": "HELD — almost there",
+      "type": "combat",
+      "scene": "A court order barring entry to 'potentially defamatory materials related to ongoing civic proceedings.' Issued this morning — the same morning the clerk signed. The enforcer is there in case the legal officer's authority is disputed.",
+      "prompt": "Fight through the archive gate.",
+      "combatTarget": "Legal Enforcer (AC 13, HP 24, short sword)",
+      "failText": "Document confiscated. Sent to the statutory review board. Spring session. Magistrate Haas presiding.",
+      "successText": "Enforcer down. Legal officer steps back. You are through the archive gate.",
+      "checkPassFlag": "VIE2_gatePassed"
+    },
+    {
+      "act": 5,
+      "title": "The Intake Desk",
+      "location": "WM — the archive intake room, the Archivus at her desk",
+      "token_action": "FILED — stamped, entered in the ledger, placed in intake tray",
+      "type": "skill_check",
+      "scene": "She breaks the seal. She reads the first two lines. The document names Magistrate Haas in the second sentence. 'This is going to be a complicated day.' She picks up her intake stamp. She looks at you.",
+      "prompt": "Remain present while she stamps it. Do not add commentary. The document is complete. DC 11 Composure.",
+      "failText": "You say something accurate and well-intentioned. She says, gently, that she didn't ask. You stop. She stamps.",
+      "successText": "She stamps the document. She enters it in the ledger. 'I'll need your name for the chain of custody.' You give it. Outside, the magistrate's legal agent is running.",
+      "grantItem": "The Archive's Chain-of-Custody Receipt — your name in the ledger, on the receiving end of a permanent entry; a civic record that now includes you",
+      "takeItem": "The Clerk's Sealed Recantation — in the archive's intake tray; filed; permanent",
+      "activateMissionBit": "viePerjuredComplete",
+      "checkPassFlag": "VIE2_gatePassed"
+    }
+  ]
+}
+```
+
+---
+
+*quest-map.md: append VIE cycle 2 row to Processed Quests table:*
+`| VIE | The Perjured Record | 2 | CLK → DKN → WM (Clerk's deathbed → civic quarter → archive intake) | The recantation that arrives twenty years too late; the archive made honest without making the life better |`
+
+*quest-map.md: append new theme thread to Theme Threads Active:*
+`- **The recantation that arrives twenty years too late: the correction to the archive that cannot un-condemn the condemned; the document that makes the record honest without making the life better; the Archivus's intake as the only available form of justice**: VIE (cycle 2) — the man is dead; the correction cannot reverse his execution; but the archive that says he was convicted justly is a lie, and a lie in the archive corrupts every record that touches it; the Fighter carries the correction because the archive deserves to be true even when the correction comes too late to help the person it exonerates`
+
+*quest-map.md: append CLK to Location Grid.*
+
+*books.md: mark VIE [x].*
