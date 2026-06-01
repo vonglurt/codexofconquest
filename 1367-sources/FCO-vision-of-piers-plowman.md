@@ -413,3 +413,242 @@ onFail: pardon is ruled invalid at the gaol gate; Fighter must make a different 
 *quest-map.md: append new theme thread: Corruption wears the face of mercy.*
 *books.md: mark FCO [x].*
 *Rule 15: clear agent memory after FCO completion if context is full.*
+
+---
+
+## Cycle 2: The Fragments of the Torn Pardon
+
+### Pass 1 — Plot Précis (The Fragments of the Torn Pardon)
+
+Piers tore his pardon in rage when the priest mocked it — "Do well, and have well, and God shall have thy soul; Do evil, and have evil, and expect none other" — and the pieces scattered across the field. Each piece blew to a different person in the allegorical city, and each person has decided their fragment vindicates their interpretation of righteousness. A scholar has been commissioned to reassemble the pardon before Covetousness can buy the last piece and ensure no complete version can exist. He cannot collect it himself — every fragment-holder will debate a clerk but not resist one. He needs a carrier who will take what is given without argument, and argue when argument is unavoidable, and carry the first piece as a reference standard to authenticate the rest.
+
+### Pass 2 — Fighter's Role (The Fragments of the Torn Pardon)
+
+The scholar gives the Fighter the first fragment — recovered from a widow at the field's edge who held it reverently because she recognized the seal. The Fighter carries it as the reference piece and retrieves the other three fragments from a Friar (who claims his piece excuses friars from penance), a Pardoner (who claims his piece validates his own indulgences), and a merchant's steward (who claims his piece covers his master's usury through charitable donation). The final fragment has been purchased by Covetousness's agent and must be taken by force before it reaches a buyer who will seal it away permanently. All pieces go to the scholar before the day ends.
+
+### Pass 3 — What This Angle Reveals That Cycle 1 Missed
+
+Cycle 1 was the genuine pardon moving through corrupt gates — the plain document resisting purchase because it was given free and costs nothing and says only "do well." *The Fragments of the Torn Pardon* shows what happens when the genuine document is scattered: each fragment is claimed by someone who reads their own righteousness into the piece they're holding, and they are not entirely wrong — each piece contains something true, and each holder emphasizes the part that flatters them. What this angle reveals: the pardon's power requires wholeness. A fragment of "do well, and have well" only tells half the structure; a fragment of "do evil, and have evil" becomes an instrument of despair without the promise attached. Piers tore the pardon in fury at the priest who could not read what mattered. The fragments scattered into exactly the hands that would mis-read them. The Fighter's job is not to correct the misreaders — it is to complete the assembly so the pardon can say the whole thing.
+
+---
+
+### Seven Storyline Ideas (Cycle 2 Selection)
+
+1. ~~The Pardon of Piers~~ — **USED Cycle 1**
+2. The Half-Acre Guard — Unused
+3. Mede's Charter — Unused
+4. Conscience's Walk — Unused
+5. **The Fragments of the Torn Pardon** — **CHOSEN (Cycle 2)**
+6. The Cat's Bell — Unused
+7. Haukyn's Night — Unused
+
+---
+
+### Theme Check
+
+Active threads do not include: *a genuine document that must be assembled from scattered pieces held by people who misread their portion; the completeness required for the truth to function; the carrier who retrieves what others are misusing without correcting the misuse directly.* This is related to but distinct from "corruption wears the face of mercy" (cycle 1's theme, which was about institutional gates blocking the genuine article) — here the genuine article itself has been fragmented, and each fragment is being used as evidence by people who are not lying exactly but are not reading the whole. New thread proposed: **The scattered truth; the document that only functions whole; the carrier who reassembles what others have divided without judging the holders who could only see their piece.**
+
+---
+
+### 5-Act Vignette Play: *The Fragments of the Torn Pardon*
+
+*Storyline 5 — Retrieval and Assembly. Piers's torn pardon has scattered to four holders in the allegorical city. TOKEN: the First Fragment — the portion reading "Do well, and have well, and God shall have thy soul" in full — received from a widow in Act I, carried as the reference standard through Acts II–IV, assembled with the other pieces and delivered to the scholar in Act V.*
+
+**THE TOKEN: THE FIRST FRAGMENT** — a quarter-piece of plain parchment in Langland's careful hand, the words "Do well, and have well, and God shall have thy soul" fully legible. It was found at the field's edge by a widow who recognized the wax seal of Truth's own agent and held it carefully. The Fighter holds it throughout as the standard against which the other fragments are authenticated. In Act V it goes into the scholar's hands with the other pieces and the complete pardon can be read for the first time since Piers tore it.
+
+---
+
+#### ACT I — *The Field's Edge*
+*The first fragment: in the widow's keeping, not yet the Fighter's. Location: MGF — Malvern field edge, dawn.*
+
+The field where Piers plowed is empty now. The pilgrims have gone. The scholar stands at the field's edge with the expression of a man who has been arguing with his own conscience about whether this errand is scholarship or salvage, and has decided it is both.
+
+He explains: the pardon was genuine; Piers tore it in anger; the pieces scattered to the city; each person who found one claims it proves what they already believed. A widow who lives at the field's edge found the first piece and has kept it under her hearthstone. She will give it to someone who asks correctly — not a priest, not a scholar, not a lord. Someone who asks correctly.
+
+**Scholar:** "Carry the first piece through the city to collect the others. Hold it up when someone claims their fragment means something the text doesn't support. The words are simple. The words are the authority. Bring me all four pieces before the day ends — Covetousness has sent a buyer for the last piece."
+
+*Insight check DC 12: understand what "asking correctly" means — not with authority, not with argument; with the same simplicity the pardon itself has; the widow held it correctly and will give it to someone who holds it the same way.*
+
+**Failure:** You go to the widow with the bearing of someone on official business. She looks at you carefully and does not hand the fragment over immediately. She asks what you will do with it. When you explain about the scholar, she says: "He cannot read what this says." She gives it to you anyway but the first exchange has cost something.
+
+**Success:** You ask to see what she found. She takes it from under the hearthstone. You hold it in both hands and read it aloud quietly: "Do well, and have well, and God shall have thy soul." She nods once and lets you take it. "Bring it back to the place it belongs," she says. You receive the First Fragment of Piers's Pardon.
+
+---
+
+#### ACT II — *The Friary*
+*The first fragment: in the Fighter's hand. Location: FRY — city friary district.*
+
+The Friar has his fragment framed. He is very proud of it. It reads, in his fragment: "...pardoned perpetually with Paul's testament..." — a phrase that, read out of context, sounds very much like a perpetual exemption for mendicant orders from temporal accountability. The Friar has been showing it to anyone who will listen.
+
+**Friar:** "You see? The plain text. Paul's testament. Which means the friars are covered, don't you think? Under apostolic authority? The fragment says so quite clearly."
+
+He is not lying about what the fragment says. He is lying about what it means by not saying what the rest of the pardon says.
+
+*Deception check DC 12: navigate his argument without entering the debate on his terms — find the angle that removes the fragment from the frame without calling him a liar, which would let him make it a question of your authority rather than the text's.*
+
+**Failure:** You argue. He argues back. The friary is good at this — they have been arguing in exactly this register for a generation. You spend an hour and leave with the fragment only because you invoke the scholar's commission, which he does not legally have to honor.
+
+**Success:** You hold up the First Fragment beside his. "Read them together," you say. He does. The full text is different from his fragment alone and he knows it and cannot say it isn't. He takes the frame off the wall and hands over the fragment with the expression of a man making a contribution to scholarship. You add the Friar's Fragment to your satchel.
+
+---
+
+#### ACT III — *The Market*
+*The first fragment + friar's fragment: in the satchel. Location: MKT — city market district.*
+
+The Pardoner has set up a stall in the market and is selling his own indulgences. In a glass case beside the indulgences he has displayed Piers's fragment — his piece reads "...remit of sins here set forth..." — which he is using to authenticate his own products. "Certified by the original!" His customers are paying well.
+
+He will not give the fragment up while it is generating revenue. But he cannot refuse a direct comparison in public.
+
+*Persuasion check DC 13: hold up the First Fragment in the market, publicly, and read it alongside his fragment — making the complete phrase legible to the crowd standing around his stall, so that the gap between the fragment in his case and the genuine article beside it is visible to the people who just paid him.*
+
+**Failure:** He is faster than you. Before you finish reading, he closes the glass case and calls for his assistant. The assistant is large. You get the fragment but you get it by the fragment's market value — he names a price, you pay, the crowd disperses.
+
+**Success:** The crowd hears the full phrase and looks at his case and at his indulgences with the expression of people doing arithmetic. The Pardoner takes his fragment out of the case himself, before the arithmetic finishes, and hands it over with the professional manner of someone pivoting. "An honest comparison. I have always admired honest comparison." You add the Pardoner's Fragment to your satchel.
+
+---
+
+#### ACT IV — *The Counting House*
+*The first fragment + two other fragments: in the satchel. Location: CTH — counting house district.*
+
+The merchant's steward has the third fragment, which his master purchased at auction last month. The fragment reads "...good works done in the name of..." and the merchant has had a certificate attached to it by a cooperative clerk asserting that his charitable donations constitute exactly the good works described. The certificate and the fragment are now filed together as evidence of the merchant's spiritual standing — useful in negotiations with the Church about his lending practices.
+
+The steward will not surrender a document that has been incorporated into a legal file. But the Fighter has the other three pieces now, and can demonstrate that the merged filing certificate changes the meaning of the fragment by removing the clause that immediately follows it.
+
+*Insight check DC 13: find the specific adjacent phrase on one of the other fragments that, when placed beside the merchant's fragment, changes its meaning in a way the steward cannot argue with — not because it's damaging to the merchant's case, but because it makes the certificate's claim technically unsupportable.*
+
+**Failure:** The steward calls the cooperative clerk. The cooperative clerk has a legal argument. The legal argument takes until evening. You get the fragment but you are now late — Covetousness's agent has had extra time to complete his purchase.
+
+**Success:** You find the phrase — "...good works done in the name of Truth, not in the name of the doer..." — and lay the two pieces side by side on the steward's table. The certificate's wording requires the clause about the doer's name, which the adjacent fragment refutes. The steward reads it three times. Then he pulls the fragment from the file with the expression of a man removing something that was never going to survive scrutiny. You add the Merchant's Fragment to your satchel.
+
+---
+
+#### ACT V — *The Gate*
+*Three fragments assembled, the last piece contested. Location: WM — Weimar archive district gate.*
+
+Covetousness's agent is at the gate. He has the last fragment. He has a buyer. The buyer is a pardoner-guild representative who will seal the fragment in a case and file it as a contested document — which will prevent the scholar from assembling the full pardon for as long as the challenge stands, which will be longer than the scholar has.
+
+The agent is not here for debate.
+
+*Combat: Covetousness's Agent, AC 14 HP 26. He has the last fragment in his coat pocket. Retrieving it is the objective.*
+
+**Failure:** The agent escapes with the fragment. The buyer takes possession and files the challenge. The scholar receives three of the four pieces and can read most of the pardon but not all of it — the last line, the one about doing evil, is missing. He assembles what he has. The pardon says only the promise, not the condition. It is still useful. It is not complete.
+
+**Success:** The agent does not escape. The last fragment goes into the satchel. All four pieces are in the Fighter's hand as the scholar opens his study door.
+
+The scholar assembles the four pieces on his desk. They fit. The full text reads across all four: "Do well, and have well, and God shall have thy soul; Do evil, and have evil, and expect none other."
+
+He reads it twice. Then he looks up.
+
+**Scholar:** "It says exactly what it always said. It says nothing that hasn't been available to anyone who knew how to ask."
+
+He gives the Fighter a scholar's coin — the formal acknowledgment that a commission from the school has been completed. You receive the Scholar's Coin. The First Fragment is in the scholar's hands with the other three.
+
+*The Fighter thinks: the Friar's piece said friars are exempt. The Pardoner's piece certified his indulgences. The merchant's piece covered his usury. Every reading was wrong in exactly the same way — each person read their own righteousness into the fragment and left out the line that qualifies the promise. I did not correct any of them. I only completed the assembly. The pardon says the same thing it always said. It always did.*
+
+---
+
+## Quest API Stub (Cycle 2)
+
+```
+Act I — The Field's Edge
+activateNode: MGF
+type: skill_check
+scene: "The scholar stands at the empty plowing-field's edge at dawn.
+  He explains: Piers tore his pardon; four pieces scattered to the city;
+  each holder claims their fragment proves their interpretation of righteousness.
+  A widow at the field's edge found the first piece and held it under her
+  hearthstone. She will give it to someone who asks correctly — not with
+  authority, not with argument; with the same simplicity the pardon itself has."
+prompt: "Insight check DC 12: understand what asking correctly means — go to
+  the widow without officialness, read the fragment aloud quietly, hold it
+  in both hands. The text is the authority."
+failText:    "You arrive as an official. She asks what you will do with it.
+              When you explain the scholar's commission, she says: 'He cannot
+              read what this says.' She gives it to you anyway, but something
+              in the first exchange has cost something."
+successText: "You read it aloud quietly: 'Do well, and have well, and God
+              shall have thy soul.' She nods and lets you take it. 'Bring
+              it back to the place it belongs.' You receive the First Fragment
+              of Piers's Pardon."
+grantItem:   "First Fragment of Piers's Pardon"
+checkPassFlag: firstFragmentHeld
+
+Act II — The Friary
+activateNode: WM
+type: skill_check
+scene: "The Friar has his fragment framed. It reads '...pardoned perpetually
+  with Paul's testament...' — which, out of context, sounds like perpetual
+  exemption for friars from temporal accountability. He is not lying about
+  what the fragment says. He is lying about what it means by not saying
+  what the rest says."
+prompt: "Deception check DC 12: remove the fragment from his argument without
+  entering the debate on his terms — hold your First Fragment beside his and
+  let the combined text speak, without calling him a liar."
+failText:    "You argue. He argues back. You get the fragment by invoking the
+              scholar's commission, which he does not legally have to honor."
+successText: "'Read them together.' He does. The full text is different from
+              his fragment alone and he knows it. He hands it over as a
+              contribution to scholarship. Friar's Fragment added to satchel."
+checkPassFlag: friarFragmentHeld
+
+Act III — The Market
+activateNode: WM
+type: skill_check
+scene: "The Pardoner has his fragment in a glass case beside his own
+  indulgences — 'Certified by the original!' His piece reads '...remit of
+  sins here set forth...' He will not give it up while it generates revenue.
+  But he cannot refuse a public comparison."
+prompt: "Persuasion check DC 13: hold the First Fragment up in the market,
+  publicly, beside his, so the crowd can hear the full phrase — and the gap
+  between the fragment in his case and the genuine article becomes visible
+  to the people who just paid him."
+failText:    "He closes the case before you finish reading and names a price.
+              You get the fragment but you pay market value for it."
+successText: "The crowd does the arithmetic. He takes the fragment from the
+              case himself before they finish. 'An honest comparison. I have
+              always admired honest comparison.' Pardoner's Fragment added."
+checkPassFlag: pardonerFragmentHeld
+
+Act IV — The Counting House
+activateNode: WM
+type: skill_check
+scene: "The merchant's steward has the third fragment, filed with a certificate
+  asserting the merchant's charitable donations match 'good works done in the
+  name of...' — but the adjacent fragment completes the phrase in a way the
+  certificate's wording cannot survive."
+prompt: "Insight check DC 13: find the specific adjacent phrase on one of the
+  other fragments that makes the certificate's claim technically unsupportable
+  when placed beside the merchant's fragment on the steward's table."
+failText:    "The steward calls the cooperative clerk. The legal argument takes
+              until evening. You get the fragment but Covetousness's agent has
+              had extra time to complete his purchase."
+successText: "'Good works done in the name of Truth, not in the name of the
+              doer.' The steward reads it three times and pulls the fragment
+              from the file. Merchant's Fragment added. Three of four."
+checkPassFlag: merchantFragmentHeld
+
+Act V — The Gate
+activateNode: WM
+type: combat
+combatTarget: "Covetousness's Agent, AC 14 HP 26"
+scene: "Covetousness's agent is at the archive gate with the last fragment
+  and a pardoner-guild buyer who will seal it as a contested document —
+  preventing assembly for as long as the challenge stands. The agent is
+  not here for debate."
+prompt: "Retrieve the last fragment before the agent reaches the buyer.
+  He has it in his coat pocket."
+failText:    "The buyer takes possession and files the challenge. The scholar
+              assembles three pieces. The pardon says only the promise, not
+              the condition. It is still useful. It is not complete."
+successText: "All four pieces go into the satchel. The scholar assembles them
+              on his desk. The full text reads exactly what it always said.
+              He gives the Fighter a Scholar's Coin."
+grantItem:   "Scholar's Coin"
+takeItem:    "First Fragment of Piers's Pardon"
+checkPassFlag: pardonAssembled
+activateMissionBit: fcoFragmentsComplete
+```
+
+---
+
+*Cycle 2 complete. Mark `[x]` for FCO-vision-of-piers-plowman in books.md.*
