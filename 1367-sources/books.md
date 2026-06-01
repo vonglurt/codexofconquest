@@ -451,7 +451,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | [x] | RIX | egil-saga | Egil's Saga — Anon (attr. Snorri) | ~13th C | Icelandic Saga | 869 |
 | [x] | BOO | prose-edda | Prose Edda — Snorri Sturluson | c.1220 | Norse Mythology | 514 |
 | [x] | ALF | kalevala | Kalevala — Elias Lönnrot | 1835/1849 | Finnish Epic | 642 |
-| [ ] | KSU | heimskringla | Heimskringla — Snorri Sturluson | c.1230 | Norse Kings History | 1707 |
+| [x] | KSU | heimskringla | Heimskringla — Snorri Sturluson | c.1230 | Norse Kings History | 1707 |
 | [ ] | RKV | poetic-edda | Poetic Edda — Anon | ~10th–13th C | Norse Poetry | 1924 |
 | [ ] | HFT | frithiof-saga | Frithiof's Saga — Esaias Tegnér | 1825 (Old Norse) | Romantic Epic | 403 |
 | [ ] | MOL | laxdaela-saga | Laxdaela Saga — Anon | ~13th C | Icelandic Saga | 347 |

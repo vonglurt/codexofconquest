@@ -537,3 +537,293 @@ harder to reverse.*
 *books.md: mark KSU [x].*
 
 *Rule 15: clear agent memory after KSU completion if context is full.*
+
+---
+
+## Cycle 2 — The Eclipse Witness
+
+**What cycle 1 missed:** Cycle 1 was the miracle at the body — the physical sign, the enemy's hand healed, the Fighter running with evidence that the governor was already moving to suppress. The Eclipse Witness reveals the cosmological sign: the sun went dark at Stiklestad for four minutes, precisely at the moment Olaf's wound was struck. One man watched it from close enough to note the duration and the exact sequence against the spear. He survived. The Danish governor's position is that the eclipse was ordinary phenomena — a weather event, a coincidence. The man who could say otherwise is in hiding on the coast road north of Stiklestad. Cycle 1 was the miracle in the body. Cycle 2 is the miracle in the sky.
+
+**New angle:** The Fighter finds the eclipse witness at his hidden farm, gets his deposition sealed by a monastery scribe, carries it through the Danish marshal's checkpoints to Nidaros — and delivers it without disclosing the witness's location.
+
+---
+
+### Pass 1 — Token
+
+**TOKEN: The Eclipse Witness's Sealed Deposition** — a piece of parchment on which a monastery scribe has written exactly what the witness saw: the date, the time, the duration (four minutes and seven seconds, measured against a water-vessel drip he was using for something else), the precise correlation to the moment of the spear-strike on the king's thigh, and the names of two other men who were standing beside him who have since disappeared. Sealed by the monk with the monastery's wax. Carried out of the coast road farm to Nidaros. Delivered to the bishop without the witness's location attached.
+
+---
+
+### Pass 2 — Seven Storyline Ideas
+
+**1. The First Miracle** *(USED — Cycle 1)* — Thorir Hundr's hand healed. The report to the bishop before the Danish governor's men.
+
+**2. The Incorrupt Body** — Bishop Grimkell's exhumation. The Fighter as the neutral witness. The authenticated record to Rome.
+
+**3. The Sealed Relic** — Corner of Olaf's battle-cloak. The reliquary to the Norwegian king in Russia.
+
+**4. The Canonization Document** — The bishop's authenticated miracle document. The harbor checkpoint.
+
+**5. The Incorrupt Hair** — Olaf's hair and nails. A lock in wax, carried to Harald Hardrada.
+
+**6. Sigvat's Lament** — The royal skald's elegy. The race to Magnus's court before Cnut's version.
+
+**7. The Eclipse Witness** *(CHOSEN — Cycle 2)* — A man who saw the eclipse from close enough to measure it against a water-drip. He is in hiding because the Danish governor wants the eclipse to be weather. The Fighter finds him, gets his deposition sealed, carries it through the checkpoints to Nidaros, and delivers it without naming where he is.
+
+---
+
+### Pass 3 — Theme Check
+
+Existing themes through ALF cycle 2: grief in object, loyalty, honor vs. shame, love and fate, truth posthumous, healing through hostile law, carrier hunted, token's journey, ancient witnesses, corruption wears mercy, fate through broken thing, heroism earns nothing, invitation as weapon, poem ransoms life, anonymous sympathy, pyre-arrangements, proxy errand, absent jurisdiction, scattered truth, last gift against design, credential before the man, one who will not weep, vigil at extraction, errand of removal.
+
+**Themes I am avoiding:** "Truth delivered posthumously" (LGW) — the witness is alive; the deposition is urgent and present, not posthumous. "Healing carried through hostile law" (MAN) — that was medicine carried through institutional opposition; this is testimony carried through political suppression. "Ancient witnesses" (KIR) — that was a relay of questions through extremely old beings; this is one contemporary living witness.
+
+**New theme introduced by KSU cycle 2:** *What the authority cannot suppress it cannot unsee: the witnessed truth that escapes the institutional silence imposed on it; the deposition that converts weather into portent by arriving at the bishop's table before the official version closes* — the Danish governor can suppress official reports; he cannot remove the eclipse from the sky it occupied for four minutes at Stiklestad; the only question is whether the man who measured it with a water-drip lives long enough to have his measurement recorded and delivered; the Fighter is the mechanism by which measurement becomes record.
+
+---
+
+## 5-Act Vignette Play: "The Eclipse Witness"
+
+**The Token · The Eclipse Witness's Sealed Deposition ·
+a piece of parchment bearing the exact duration of a specific eclipse,
+measured against a water-drip, by a man who was also watching a king die ·
+the monastery seal still warm when the Fighter lifts it from the scribe's table ·
+it must reach Nidaros without the witness's location attached to it**
+
+---
+
+### Act I — The Farm
+*The Eclipse Witness's Sealed Deposition · not yet written ·
+a coastal farmstead north of Stiklestad, late summer, salt air and pine smoke*
+
+The farm is on a coastal headland. There is nothing remarkable about it except that
+no one has lived here for twenty years and the man who opened the door to you has
+been waiting for someone to come along who already knows why he is here.
+
+His name does not matter. What matters is what he saw. He was standing twelve feet
+from the king's left flank when the light changed — not gradually, not cloud-dimming,
+but a specific change, a removal of color from the world, beginning at the sun's
+left edge and completing across four minutes while men were still fighting around him
+and the king's wound was being struck. He was using a small water-vessel at the time,
+dripping clay, measuring something unrelated. He noted the duration against the drip-
+count without deciding to — the body counts what it measures, even in the middle of a battle.
+
+Two other men beside him saw it. Both have since disappeared. He is the only one left.
+
+*The deposition doesn't exist yet. The man exists. He is willing to talk. The monastery
+scribe is two farms east and can be fetched in an hour. The question is whether the man
+understands why this needs to be parchment and not just words you carry in your head.*
+
+**DC 12 Insight — understand what he saw precisely enough to explain why a sealed deposition is different from your oral testimony about his oral testimony; and understand why he has been willing to survive this long only to say it once to the right person.**
+
+*If you fail:* He talks. You listen. You understand the event but not the mechanism of silence around it — and when you fetch the scribe, the man is not ready for the formality of dictation and the session goes long.
+
+*If you pass:* You understand: he measured the eclipse with a water-drip because that was what was in his hands, not because he was preparing testimony. The measurement is exact because it is accidental. This is its value — no partisan could have constructed an accidental measurement. You explain this to him and he nods once and says to fetch the scribe.
+
+---
+
+### Act II — The Dictation
+*The Eclipse Witness's Sealed Deposition · being written · the same farm,
+a monastery scribe at the table, the witness across from him*
+
+The scribe is young and exact. He writes down what the witness says without inflection
+or addition. The witness speaks for forty minutes. He names the date, the sun's angle,
+the beginning of the darkening, the duration (four minutes and seven seconds against
+a thirty-second drip, thirteen repetitions), the precise sequence against the spear-
+strike that he observed from twelve feet, and the names of the two men who were beside
+him who have since been removed from the accounts.
+
+The scribe finishes. He lifts the parchment and reads it back. The witness listens.
+At three points he stops the scribe and corrects small things: a direction, a name-
+spelling, the exact count of the drip-repetitions. The scribe corrects each one.
+
+The scribe then looks at the witness. The witness looks at the parchment. He has just
+said everything that has made him unsafe to the Danish governor for three years.
+
+*The scribe has the wax in his hand. The seal will close this. After the seal, the
+document exists as a thing in the world, and the witness exists as the person who
+made it.*
+
+**DC 12 Persuasion — hold the witness through the final moment before the seal; the seal is when he stops being a hiding man and becomes a witness of record.**
+
+*If you fail:* The witness asks for one more revision that changes nothing substantive but delays the sealing until the light has changed and the moment has shifted and you lose an hour you did not have.
+
+*If you pass:* The witness looks at the parchment for a long moment. Then he nods at the scribe. The wax drips. The seal is pressed. The deposition exists.
+
+The Fighter receives it warm from the scribe's table. It weighs almost nothing. It is the heaviest thing on the coast road north of Stiklestad.
+
+---
+
+### Act III — The Road-Watch
+*The Eclipse Witness's Sealed Deposition · concealed in a letter-case ·
+the coast road south toward Nidaros, a Danish marshal's road-watch ahead*
+
+The Danish marshal has three men on the coast road at the crossing where the farm
+track meets the main road. They are stopping travelers with church-related documents —
+sealed parchments, letter-cases, anything that might be a report to the bishop or
+an authenticated miracle account. They have been here for a month. They know what
+they are looking for.
+
+The deposition is in a letter-case that also contains two completely ordinary farm-
+transfer documents. The letter-case is not hidden; it is just a traveler's letter-
+case that happens to contain a sealed deposition between two documents about livestock.
+
+*The deposition is the second document. The farm-transfer is the first and the third.
+Whether these men decide to read all three documents or just the first two is a
+matter of what kind of traveler they think you are.*
+
+**DC 13 Deception — be the traveler who has come from the coast road farms with livestock documentation; the letter-case is completely normal; you are completely normal; there is nothing here worth reading past the first document.**
+
+*If you fail:* They read all three documents. The sealed deposition is confiscated. You spend two acts recovering it — or you arrive at Nidaros without it.
+
+*If you pass:* The first man reads the first document, notes the farm name, looks at you, looks at the letter-case, and waves you through. The second and third men are looking at something on the road behind you. You walk south into the afternoon.
+
+---
+
+### Act IV — The Harbor
+*The Eclipse Witness's Sealed Deposition · in the letter-case ·
+Nidaros harbor, Danish harbor-watch, two men at the gate-post*
+
+The Danish governor's harbor-watch has specific orders about people arriving from the
+coast road. The marshal's road-watch was one layer. The harbor is the second layer.
+These two are not reading documents — they are stopping people and taking them
+somewhere for questioning, and once you are in the questioning room you are not
+delivering anything to the bishop this morning.
+
+They see you coming from the coast road gate and both of them move.
+
+**Combat — Danish Harbor-Watch ×2 (AC 13, HP 24, hand-axes)**
+
+*If you fail (reduced to 0 HP):* You are taken to the questioning room. The letter-case is opened and the deposition is found. You have one chance to argue for its return before it is burned.
+
+*If you pass:* Both men are down. You have approximately four minutes before someone senior notices. The bishop's house is two streets from the harbor.
+
+---
+
+### Act V — The Bishop's House
+*The Eclipse Witness's Sealed Deposition · in the Fighter's hands ·
+the bishop's house, Nidaros, a study, morning light*
+
+The bishop receives the letter-case. He opens it. He reads the farm-transfer documents
+first — not because he doesn't know what the third document is, but because he is
+careful. Then he breaks the monastery seal and reads the deposition.
+
+He reads it once. He reads it again. He sets it on the table.
+
+*"Where is this man now."*
+
+You know where the man is. You will not say. The man's location is the one thing you
+carried here without being asked to carry it, and the one thing you are not delivering.
+The bishop cannot be told. Not because you distrust the bishop — because the bishop
+is a man who talks to other men, and the governor's people are very good at listening.
+
+*The deposition is on the table. The bishop's hand is near it but not on it. He is
+looking at you with a specific expression: a man who understands exactly why you
+will not answer and who is deciding whether to accept that.*
+
+**DC 11 Composure — hold the witness's location; the deposition is complete; the address is not part of it; the bishop's understanding is his own business.**
+
+*If you fail:* You say something that implies a direction without naming a farm. The bishop is intelligent. By tomorrow his assistant will have inferred the headland.
+
+*If you pass:* You look at the bishop. You say nothing. He holds the expression for another moment, then he looks at the deposition. He picks it up. He carries it to the cabinet where the authenticated reports are kept. He opens the cabinet. He places it inside. He closes the cabinet.
+
+*"Four minutes and seven seconds,"* he says. *"Against a water-drip."*
+
+He does not ask again about the location. He takes a ring from his middle finger and holds it out to you.
+
+---
+
+## Quest API Stub — Cycle 2
+
+```json
+{
+  "questId": "KSU_cycle2_eclipseWitness",
+  "title": "The Eclipse Witness",
+  "activateNode": "ECF",
+  "token": {
+    "name": "The Eclipse Witness's Sealed Deposition",
+    "description": "A sealed parchment bearing the exact duration of the eclipse at Stiklestad — four minutes and seven seconds against a water-drip, thirteen repetitions — correlated precisely to the moment of the king's wound. The monastery seal is still warm. The witness's location is not attached.",
+    "introducedAct": 2,
+    "consumedAct": 5
+  },
+  "acts": [
+    {
+      "act": 1,
+      "title": "The Farm",
+      "location": "ECF — a coastal farmstead north of Stiklestad, salt air, late summer",
+      "token_action": "LOCATED — the witness is here; the deposition not yet written",
+      "type": "skill_check",
+      "scene": "The man measured the eclipse with a water-drip because that was what was in his hands. Two other witnesses are gone. He is willing to talk once, to the right person, into a sealed record. He needs to understand why parchment is different from your oral account of his oral account.",
+      "prompt": "Understand the mechanism of the measurement's value and explain why the deposition must be sealed, not spoken. DC 12 Insight.",
+      "failText": "He talks. You understand the event but not why he has waited three years. The dictation session goes long.",
+      "successText": "The measurement is exact because it is accidental. No partisan could construct an accidental water-drip count. You explain this. He nods and tells you to fetch the scribe.",
+      "checkPassFlag": "KSU2_witnessFound"
+    },
+    {
+      "act": 2,
+      "title": "The Dictation",
+      "location": "ECF — the same farm, a monastery scribe at the table",
+      "token_action": "CREATED — parchment written, sealed, received warm from the scribe's table",
+      "type": "skill_check",
+      "scene": "The scribe writes exactly what the witness says: date, angle, duration, correlation to the spear-strike, names of the two missing witnesses. He reads it back. Three corrections. Then the wax is ready. The seal is the moment the witness stops being a hiding man and becomes a witness of record.",
+      "prompt": "Hold the witness through the final moment before the seal. DC 12 Persuasion.",
+      "failText": "He asks for one more revision that changes nothing but costs an hour you didn't have.",
+      "successText": "He nods at the scribe. The wax drips. The seal is pressed. The deposition exists. The Fighter receives it warm.",
+      "grantItem": "The Eclipse Witness's Sealed Deposition — four minutes and seven seconds; the monastery seal; the witness's name inside",
+      "checkPassFlag": "KSU2_depositionSealed"
+    },
+    {
+      "act": 3,
+      "title": "The Road-Watch",
+      "location": "ECF → NID road — the crossing where farm track meets the coast road",
+      "token_action": "CONCEALED — second document in a three-document letter-case",
+      "type": "skill_check",
+      "scene": "Three Danish marshal's men stop travelers with church documents. The deposition is the middle document in a letter-case between two farm-transfer records. Whether they read all three is a matter of what kind of traveler they think you are.",
+      "prompt": "Be the traveler with livestock documentation from the coast farms. Nothing worth reading past the first document. DC 13 Deception.",
+      "failText": "They read all three documents. The sealed deposition is confiscated.",
+      "successText": "The first man reads the first document and waves you through. The others are looking at something behind you. You walk south.",
+      "checkPassFlag": "KSU2_roadPassed"
+    },
+    {
+      "act": 4,
+      "title": "The Harbor",
+      "location": "NID — Nidaros harbor, Danish harbor-watch gate-post",
+      "token_action": "HELD — in letter-case",
+      "type": "combat",
+      "scene": "The harbor-watch has orders about people from the coast road. These two are not reading documents — they are stopping people for questioning. Once in the questioning room, nothing is delivered today. Both men move when they see you.",
+      "prompt": "Fight through the harbor-watch before you are taken for questioning.",
+      "combatTarget": "Danish Harbor-Watch ×2 (AC 13, HP 24, hand-axes)",
+      "failText": "You are taken to the questioning room. The letter-case is opened. The deposition is found.",
+      "successText": "Both men down. You have four minutes before someone notices. The bishop's house is two streets from the harbor.",
+      "checkPassFlag": "KSU2_harborCleared"
+    },
+    {
+      "act": 5,
+      "title": "The Bishop's House",
+      "location": "NID — the bishop's study, morning light",
+      "token_action": "DELIVERED — placed on the bishop's table; he puts it in the cabinet",
+      "type": "skill_check",
+      "scene": "The bishop reads the deposition twice. He sets it down. 'Where is this man now.' You know where. You will not say. The bishop is intelligent and his assistants listen. The deposition is complete. The location is not part of it.",
+      "prompt": "Hold the witness's location. Say nothing that implies a direction. DC 11 Composure.",
+      "failText": "You imply a direction without naming a farm. By tomorrow the bishop's assistant will have inferred the headland.",
+      "successText": "'Four minutes and seven seconds. Against a water-drip.' He does not ask again. He puts the deposition in the cabinet and holds out a ring.",
+      "grantItem": "The Bishop's Ring — taken from his middle finger; given without explanation; proof the deposition arrived",
+      "takeItem": "The Eclipse Witness's Sealed Deposition — filed in the bishop's cabinet of authenticated reports",
+      "activateMissionBit": "ksuEclipseComplete",
+      "checkPassFlag": "KSU2_harborCleared"
+    }
+  ]
+}
+```
+
+---
+
+*quest-map.md: append KSU cycle 2 row to Processed Quests table:*
+`| KSU | The Eclipse Witness | 2 | ECF → NID (Eclipse witness's farm → Nidaros bishop's house) | What the authority cannot suppress it cannot unsee; the witnessed truth that escapes institutional silence |`
+
+*quest-map.md: append new theme thread to Theme Threads Active:*
+`- **What the authority cannot suppress it cannot unsee: the witnessed truth that escapes institutional silence; the deposition that converts weather into portent by arriving at the bishop's table before the official version closes**: KSU (cycle 2) — the Danish governor can suppress official reports; he cannot remove the eclipse from the sky it occupied for four minutes at Stiklestad; the only question is whether the man who measured it with a water-drip lives long enough to have his measurement sealed and delivered; the Fighter is the mechanism by which measurement becomes record`
+
+*quest-map.md: append ECF to Location Grid.*
+
+*books.md: mark KSU [x].*
