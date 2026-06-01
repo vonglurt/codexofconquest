@@ -377,3 +377,281 @@ The chancellor is a careful man. He reads the document twice. He examines the pa
 - *quest-map.md: append new theme thread: The institution silences its victim's tongue.*
 - *quest-map.md: append JUR, TKT, KRK to Location Grid (Source-Book Nodes).*
 - *books.md: mark ARN [x].*
+
+---
+
+## Cycle 2 — Danusia's Last Song
+
+**What cycle 1 missed:** Jurand's Scratch was about evidence carried through the institution that committed the crime — the legal-evidentiary fight against diplomatic suppression, the three farmers' sealed account as the counter-document. Danusia's Last Song reveals the other side of the same wound: the father who was not there. Jurand is mutilated at Spychów. His daughter died in Zbyszko's arms somewhere else. A hospital brother was present and wrote down her final words. The record exists. It needs to travel through winter marshland to reach the one person for whom it was always intended, who could not be there to hear it directly. Cycle 1 was evidence reaching authority. Cycle 2 is a last witness reaching grief.
+
+**New angle:** The hospital brother gives the Fighter the death-witness record and explains it must reach Jurand at Spychów. The Fighter carries it through winter marshland, past a Teutonic border patrol, across a marsh crossing, and through the castle's protective caretaker, to Jurand's room — where it is read aloud. The delivery is the act of reading.
+
+---
+
+### Pass 1 — Token
+
+**TOKEN: Danusia's Death-Witness Record** — a small folded piece of vellum on which a hospital brother wrote, in a careful hand, the exact words Danusia spoke in Zbyszko's arms before she died. Three sentences. The brother sealed it with his own mark and addressed it to Jurand of Spychów. It traveled this far in the brother's keeping. It travels the rest of the way in the Fighter's. At Act V, it is not delivered into Jurand's hands — it is read aloud to him, because his hands cannot hold it and his eyes cannot read. The delivery is the reading.
+
+---
+
+### Pass 2 — Seven Storyline Ideas
+
+**1. Jurand's Scratch** *(USED — Cycle 1)* — The three farmers' sealed account. The Teutonic diplomatic version. Kraków before the record closes.
+
+**2. Zbyszko's Challenge-Letter** — The formal challenge to the named Teutonic Knight. Order-controlled checkpoints.
+
+**3. Danusia's Last Song** *(CHOSEN — Cycle 2)* — The hospital brother's written record of Danusia's final words. Winter marshland to Spychów. Read aloud to a father who was not there.
+
+**4. The Scribe of Toruń** — The Teutonic scribe's testimony. Escorted through Order territory.
+
+**5. The Peacock Feathers** — The trophy helmet delivered to Danusia as proof Zbyszko's vow is being kept.
+
+**6. The Farmer's Testimony** — Sigismund threatened to recant. The border crossing to safety.
+
+**7. The Bishop's Letter** — The Bishop of Poznań's letter to Rome. The papal courier before the agents find him.
+
+---
+
+### Pass 3 — Theme Check
+
+Existing themes through CPH cycle 2: grief in object, loyalty, honor vs. shame, love and fate, truth posthumous, healing through hostile law, carrier hunted, token's journey, ancient witnesses, corruption wears mercy, fate through broken thing, heroism earns nothing, invitation as weapon, poem ransoms life, anonymous sympathy, pyre-arrangements, proxy errand, absent jurisdiction, scattered truth, last gift against design, credential before the man, one who will not weep, vigil at extraction, errand of removal, eclipse witness, thing too true, word dying man cannot carry, question across ocean, carrier discovers mid-commission.
+
+**Themes I am avoiding:** "Truth delivered posthumously" (LGW) — that was a dead woman's truth carried to the world that preferred silence; this is the dead woman's last words carried to the one specific person who most needed to be present and wasn't; the audience is one person, the act is kinship not justice. "Grief carried in an object" (INV, BHD, GDN) — those objects held the presence of the dead; this is the verbatim words, the specific content of a specific moment, not the memorial form of grief.
+
+**New theme introduced by ARN cycle 2:** *The last words carried to the one who was not there: the record of a dying moment given to the absent father through the carrier's voice; the act of reading aloud as the final form of witness* — the hospital brother wrote down exactly what she said; the parchment is the physical form of the words; but the delivery is not the parchment in Jurand's hands — it is the words in Jurand's ears; the Fighter is the voice that bridges the gap between the moment that happened and the father who was not there for it.
+
+---
+
+## 5-Act Vignette Play: "Danusia's Last Song"
+
+**The Token · Danusia's Death-Witness Record ·
+three sentences in a careful hand on a folded piece of vellum ·
+sealed with the hospital brother's mark ·
+addressed to Jurand of Spychów ·
+it must cross winter marshland ·
+it must be read aloud to a man who cannot hold it**
+
+---
+
+### Act I — The Hospital Brother
+*Danusia's Death-Witness Record · in the brother's hands ·
+a small chapel room near the Mazovian border, a tallow candle,
+the brother sitting with the folded vellum on the table between you*
+
+The brother is middle-aged and careful and has been carrying this record for eleven
+days, not knowing who to trust with it. He was present when Danusia died in
+Zbyszko's arms. He knows exactly what was said. He wrote it down immediately after —
+not as an account for anyone, just because he is the kind of man who writes things
+down when he is a witness to them — and then he understood that what he had written
+had to reach Jurand at Spychów and he had no way to get it there himself.
+
+He is looking at you with the specific expression of a man deciding whether to trust.
+
+*"He is at Spychów. He cannot travel. He cannot read what you carry — his hands
+are gone and his eyes may be going. Someone will have to read it to him. Do you
+understand what that means? Can you do that?"*
+
+He does not mean: can you read. He means: can you read these words, in that room,
+to that man, without flinching or softening or stopping partway through.
+
+**DC 12 Insight — understand the nature of what will be required at the end; understand that the delivery is not the handing-over but the reading aloud; understand that the brother is asking if you are the right carrier.**
+
+*If you fail:* You give assurances that are technically accurate but miss the nature of the request. The brother gives you the record but his uncertainty about your readiness follows the vellum.
+
+*If you pass:* You understand. You don't say much. The brother holds your gaze for a moment, then slides the folded vellum across the table. He does not explain what the three sentences say. They are for Jurand.
+
+---
+
+### Act II — The Border Patrol
+*Danusia's Death-Witness Record · wrapped in oilcloth inside your coat ·
+the marsh road to Spychów, winter, a Teutonic patrol on the border track*
+
+Three Teutonic knights on the border track ahead. They are doing what patrols do:
+checking travelers coming from the west toward Polish territory in winter. The
+timing and direction of your travel — from a chapel near the Mazovian border toward
+Spychów — is not their business, technically, but they are the kind of men who make
+things their business.
+
+The death-record is not contraband. You could explain what it is. The explanation
+would be accurate and the patrol would probably let you through. But "accurate"
+means naming Danusia, naming Jurand, naming the circumstances — and winter is short
+and the daylight is shorter and a Teutonic patrol's thorough processing of an
+explanation about Danusia of Spychów will consume three hours you cannot spare.
+
+*The patrol is two hundred yards ahead. The marsh on the left side of the track
+is frozen, probably solid enough to bear weight in the dark.*
+
+**DC 12 Stealth — move onto the frozen marsh on the track's left side and pass the patrol in the grey winter light without entering their line of sight.**
+
+*If you fail:* They see you. You go through the explanation. It costs three hours and some of the patrol's attitude about Jurand makes you choose your words very carefully. You are cold and late when you continue.
+
+*If you pass:* The frozen marsh holds. You move through the dark at the track's edge. The patrol's torches diminish behind you. You are on the main road again before the moon rises.
+
+---
+
+### Act III — The Marsh Crossing
+*Danusia's Death-Witness Record · wrapped in oilcloth · deep marshland,
+the path narrowed to a winter track, ice thin in the middle stretch*
+
+The path through the deeper marsh is a summer route, normally. In winter it is ice
+over standing water with a narrow section where the ice will bear one person at a
+time moving carefully. You are carrying a piece of vellum wrapped in oilcloth. The
+oilcloth protects against splash; it does not protect against submersion.
+
+The narrow section is forty feet. The ice gives out a specific sound when it is
+close to failing.
+
+*You must cross this section before dark. There is no other route to Spychów that
+does not add two days.*
+
+**DC 13 Athletics — cross the forty-foot thin-ice section without going through; if you go through, keep the record dry.**
+
+*If you fail:* You go through up to your knee. The oilcloth does its job. You are cold and wet and delayed and need an hour at a farmhouse fire before you can continue. The record is intact but the afternoon is gone.
+
+*If you pass:* You cross in four minutes, testing each step. The ice groans twice but holds. You are on the solid path again before the sound resolves itself into anything decisive.
+
+---
+
+### Act IV — The Castle's Caretaker
+*Danusia's Death-Witness Record · still in your coat · Spychów castle gate,
+a nun who is the caretaker and who will not let you through on your word alone*
+
+The woman at Spychów's gate is one of the sisters who have been caring for Jurand
+since he was returned. She is not hostile — she is protective, and she has spent
+three months deciding who is allowed to see him and who is not, and a stranger
+arriving with a "message from someone who was with Danusia" is exactly the kind of
+thing she has been turning away since the first week.
+
+She is not going to let you through on your word.
+
+*The oilcloth record is in your coat. The sister is in the gate. The light is failing.*
+
+**DC 13 Persuasion — describe the hospital brother specifically enough that the sister can confirm the source; the record is not general correspondence, it is the brother's specific written account of Danusia's last words; the sister knows whether Danusia died attended by a hospital brother or she doesn't, and if she does, the specificity of your account is the credential.**
+
+*If you fail:* She will not let you through tonight. You sleep in the village and try again in the morning. By morning her superior has been consulted and the process becomes slower.
+
+*If you pass:* She listens. She looks at you for a long moment. She steps aside. *"He is in the east room. I will come with you."*
+
+---
+
+### Act V — Jurand's Room
+*Danusia's Death-Witness Record · unfolded, in the Fighter's hands ·
+Jurand's room at Spychów, a fire, the sister in the doorway*
+
+The east room is warm and quiet. Jurand is in a low chair near the fire. He is enormous — or was; the injuries have left a man who was enormous — and he is looking at you with the specific attention of a man who has learned to gather everything from faces and voices because those are what remain available to him.
+
+You unfold the vellum. You show him the brother's seal. He cannot see it clearly but he nods.
+
+You read.
+
+The three sentences are what a woman says when she knows she is dying in the arms of the person she loves and she wants the person she loves to know specific things, and one of the things is her father, who is not there.
+
+*The fire burns. The sister in the doorway does not move. Jurand is entirely still.*
+
+After the third sentence you fold the vellum again. You do not add anything. The brother wrote three sentences. There are three sentences.
+
+*Danusia's Death-Witness Record is folded back in your hand. You will give it to the sister after you leave. It belongs at Spychów.*
+
+**DC 11 Composure — read the three sentences exactly as written; do not add; do not soften; do not stop partway; the words are for Jurand and the words are complete.**
+
+*If you fail:* Your voice changes on the third sentence. You get through it, but something in the change is visible to the man in the chair. He understands. But it was not the clean delivery.
+
+*If you pass:* Three sentences. His daughter's voice through the hospital brother's careful hand and your voice. The fire burns. Jurand does not move. After a long moment he puts one ruined hand over the other in his lap, which is the only gesture available to him, and he nods once.
+
+You give the vellum to the sister on your way out.
+
+---
+
+## Quest API Stub — Cycle 2
+
+```json
+{
+  "questId": "ARN_cycle2_danusiasRecord",
+  "title": "Danusia's Last Song",
+  "activateNode": "CHP",
+  "token": {
+    "name": "Danusia's Death-Witness Record",
+    "description": "Three sentences in a hospital brother's careful hand on folded vellum. Sealed with his mark. The exact words Danusia spoke in Zbyszko's arms before she died. For Jurand of Spychów — delivered by reading aloud, because his hands cannot hold it.",
+    "introducedAct": 1,
+    "consumedAct": 5
+  },
+  "acts": [
+    {
+      "act": 1,
+      "title": "The Hospital Brother",
+      "location": "CHP — a small chapel room near the Mazovian border, tallow candle",
+      "token_action": "RECEIVE — slid across the table after the brother decides to trust",
+      "type": "skill_check",
+      "scene": "The brother has been carrying the record for eleven days. He was present when Danusia died. He asks: 'Can you do that?' He does not mean: can you read. He means: can you read these words to that man without flinching or softening.",
+      "prompt": "Understand that the delivery is not the handing-over but the reading aloud. Confirm you are the right carrier. DC 12 Insight.",
+      "failText": "You give assurances that miss the nature of the request. The brother's uncertainty follows the vellum.",
+      "successText": "You understand. You don't say much. The brother slides the vellum across the table.",
+      "grantItem": "Danusia's Death-Witness Record — three sentences, hospital brother's seal, addressed to Jurand of Spychów",
+      "checkPassFlag": "ARN2_recordReceived"
+    },
+    {
+      "act": 2,
+      "title": "The Border Patrol",
+      "location": "CHP → JUR winter road — marsh track, Teutonic patrol ahead",
+      "token_action": "CONCEALED — wrapped in oilcloth inside coat",
+      "type": "skill_check",
+      "scene": "Three Teutonic knights on the border track. The explanation would be accurate; it would also consume three hours of winter daylight and require naming Danusia and Jurand to the Order's men. The marsh on the left is frozen.",
+      "prompt": "Move onto the frozen marsh and pass the patrol in the grey winter light without entering their line of sight. DC 12 Stealth.",
+      "failText": "They see you. Three hours of explanation. Cold and late when you continue.",
+      "successText": "The frozen marsh holds. The patrol's torches diminish. You are on the main road before the moon rises.",
+      "checkPassFlag": "ARN2_patrolAvoided"
+    },
+    {
+      "act": 3,
+      "title": "The Marsh Crossing",
+      "location": "CHP → JUR deep marsh — forty feet of thin ice, winter",
+      "token_action": "PROTECTED — oilcloth against the water",
+      "type": "skill_check",
+      "scene": "A narrow section where the ice will bear one person at a time moving carefully. Forty feet. The oilcloth protects against splash, not submersion. The ice groans in a specific way when it is close to failing. No other route to Spychów without two added days.",
+      "prompt": "Cross the forty-foot section without going through. If you go through, keep the record dry. DC 13 Athletics.",
+      "failText": "You go through to your knee. The oilcloth holds. Record intact; you are cold, wet, delayed one hour.",
+      "successText": "Four minutes, testing each step. The ice groans twice but holds. Solid ground again.",
+      "checkPassFlag": "ARN2_marshCrossed"
+    },
+    {
+      "act": 4,
+      "title": "The Castle's Caretaker",
+      "location": "JUR — Spychów castle gate, the sister-caretaker",
+      "token_action": "HELD — not yet produced",
+      "type": "skill_check",
+      "scene": "The sister has been managing access to Jurand for three months. A stranger with 'a message from someone with Danusia' is exactly what she has been turning away. She is not hostile; she is protective.",
+      "prompt": "Describe the hospital brother specifically enough that the sister can confirm the source. The specificity of your account is the credential. DC 13 Persuasion.",
+      "failText": "She will not let you through tonight. By morning the process is slower.",
+      "successText": "'He is in the east room. I will come with you.'",
+      "checkPassFlag": "ARN2_gateEntered"
+    },
+    {
+      "act": 5,
+      "title": "Jurand's Room",
+      "location": "JUR — the east room at Spychów, a fire, Jurand in a low chair",
+      "token_action": "READ ALOUD — unfolded, held, three sentences spoken to the man in the chair",
+      "type": "skill_check",
+      "scene": "Jurand looks at you with the attention of a man who has learned to gather everything from faces and voices. You unfold the vellum. You show him the seal. You read. The three sentences are what a woman says when she knows she is dying. The fire burns. The sister in the doorway does not move.",
+      "prompt": "Read the three sentences exactly as written. Do not add. Do not soften. Do not stop partway. DC 11 Composure.",
+      "failText": "Your voice changes on the third sentence. You get through it. It was not the clean delivery.",
+      "successText": "Three sentences. The fire burns. After a long moment Jurand puts one ruined hand over the other in his lap and nods once. You give the vellum to the sister on your way out.",
+      "grantItem": "The Sister's Blessed Medal — pressed into your hand at the gate when you leave; the sister does not explain it; she does not need to",
+      "takeItem": "Danusia's Death-Witness Record — left with the sister at Spychów; it belongs there",
+      "activateMissionBit": "arnDanusiaComplete",
+      "checkPassFlag": "ARN2_gateEntered"
+    }
+  ]
+}
+```
+
+---
+
+*quest-map.md: append ARN cycle 2 row to Processed Quests table:*
+`| ARN | Danusia's Last Song | 2 | CHP → JUR (Chapel near Mazovian border → Spychów castle) | The last words carried to the one who was not there; the reading aloud as the final form of witness |`
+
+*quest-map.md: append new theme thread to Theme Threads Active:*
+`- **The last words carried to the one who was not there: the record of a dying moment given to the absent father through the carrier's voice; the act of reading aloud as the final form of witness**: ARN (cycle 2) — the hospital brother wrote down exactly what she said; the parchment is the physical form of the words; but the delivery is not the parchment in Jurand's hands — it is the words in Jurand's ears; the Fighter is the voice that bridges the gap between the moment that happened and the father who was not there for it`
+
+*quest-map.md: append CHP to Location Grid.*
+
+*books.md: mark ARN [x].*
