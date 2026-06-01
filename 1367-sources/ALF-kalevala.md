@@ -563,3 +563,293 @@ turned over on its first pass; a small thing; the evidence of where the work beg
 *books.md: mark ALF [x].*
 
 *Rule 15: clear agent memory after ALF completion if context is full.*
+
+---
+
+## Cycle 2 — Kullervo's Sword
+
+**What cycle 1 missed:** The Iron Rake was about the mother's love that refuses to accept death — the reassembly of a son through sheer insistence on completeness. Kullervo's Sword reveals the other end of that same cosmos: the man whose life was cursed before birth, who did irreparable harm without knowing it, and who asks the one act of grace available to him — not rescue, not consolation, but removal. He cannot be reassembled. He asks to be taken out of the story correctly. Cycle 1 was refusal of death. Cycle 2 is acceptance of it, and the one errand that acceptance requires.
+
+**New angle:** Kullervo gives the Fighter his sword with one instruction: take it back to his master and say only that he found it in the forest. The Fighter carries a sword that has agreed to kill, knowing that the task is to remove it from the story — and to deliver, intact, the single sentence Kullervo chose.
+
+---
+
+### Pass 1 — Token
+
+**TOKEN: Kullervo's Sword** — a blade Kullervo has spoken to and asked directly if it will kill him; the sword answered yes, it will gladly kill him, for he has done evil deeds. He gives it to the Fighter before he falls on it. The Fighter carries it out of the forest and to the master's hall, where it is delivered with the one sentence Kullervo specified: "I found it in the forest." The token's task is complete when those words are spoken and the master's hand closes on the hilt.
+
+---
+
+### Pass 2 — Seven Storyline Ideas
+
+**1. The Mother's Rake** *(USED — Cycle 1)* — The iron rake from Tuonela's far bank. Love that will not accept loss.
+
+**2. The Honey-Bee's Errand** — Escorting the bee through the forest god's realm.
+
+**3. The Sampo Fragment** — Keeping the glowing fragment out of the sea and the eagle's claws.
+
+**4. The Kantele at the Bottom** — Diving for the pike-jaw kantele before the sea takes it.
+
+**5. Kullervo's Sword** *(CHOSEN — Cycle 2)* — Kullervo gives the Fighter his sword before dying and asks that it be returned to his master with the words: "I found it in the forest." The errand is removal. The token is a sword that has agreed to kill. The sentence must be delivered whole and without addition.
+
+**6. The Origin-Words Tablet** — Väinämöinen's origin-songs inscribed on birch-bark, left at Louhi's hall.
+
+**7. The Copper Boat's Last Cargo** — Väinämöinen's departure objects, carried from shore to the new king's hall.
+
+---
+
+### Pass 3 — Theme Check
+
+Existing themes through BOO cycle 2: grief in an object, loyalty under the long watch, honor vs. shame, love and fate intertwined, truth delivered posthumously, healing through hostile law, carrier becomes hunted, token's journey, ancient witnesses, corruption wears mercy's face, fate through the broken thing, heroism earns protection for none, invitation as weapon, poem ransoms a life, anonymous sympathy, pyre-arrangements, proxy errand, absent jurisdiction, scattered truth, last gift against design, credential before the man, one who will not weep, vigil at the extraction point.
+
+**Themes I am avoiding:** "Truth delivered posthumously" (LGW) — the sword delivers a chosen story, not a true account; the truth is precisely what is being withheld in the service of what Kullervo wanted. "Grief carried in an object" (INV, BHD, GDN) — grief is present but the object's purpose is erasure, not memorial; the sword must be removed from its context, not preserved in it.
+
+**New theme introduced by ALF cycle 2:** *The errand that consists entirely of removal: the carrying away that is itself the act of grace; the sentence that must arrive whole and without addition* — Kullervo cannot be saved; the sword already answered yes; the only thing available is that the sword leaves the forest with someone who will say exactly what Kullervo asked them to say and no more; the Fighter's task is to resist the temptation to explain, to add, to comfort — the words "I found it in the forest" are a mercy and a gift and an erasure simultaneously, and they only work if they arrive unaugmented.
+
+---
+
+## 5-Act Vignette Play: "Kullervo's Sword"
+
+**The Token · Kullervo's Sword · a blade that has been asked a question and answered ·
+held by the man who asked it · given to you before you turn away ·
+carried out of the forest to a hall where you will say six words ·
+no more than six**
+
+---
+
+### Act I — The Forest Clearing
+*Kullervo's Sword · standing upright in the earth before him ·
+a clearing, deep forest, late afternoon light through pine*
+
+He is standing in a clearing you found by accident. He is not surprised to see you.
+He has been waiting for someone to come along who could carry a sword out of a
+forest and keep their mouth shut about where they found it.
+
+The sword is standing upright in the earth in front of him. He has been speaking
+to it. The sword, if you had been here for the whole of the conversation, said yes.
+It has agreed to kill him because he has done evil things and it would be glad to
+do it.
+
+He looks at you.
+
+*"Take it back to my master's hall. Tell him you found it in the forest. That's all.
+Not where in the forest. Not who had it. Just: I found it in the forest."*
+
+He picks up the sword. He holds it out to you, hilt-first. His face is entirely
+composed. This is not an ambush. This is a man who has done the mathematics of his
+life and arrived at a specific answer, and the only thing left is the logistics.
+
+*The sword is warm from his hand. It is heavier than a sword has a right to be.*
+
+**DC 12 Insight — understand that the errand is exactly what he said and nothing more; that the six words are not a shorthand but the whole commission.**
+
+*If you fail:* You take the sword and nod but already you are thinking about what context to add, what explanation to provide, how to soften the delivery. You will have to unlearn this before the final act.
+
+*If you pass:* You take the sword and you understand. Six words. The sentence is already complete. What he is asking you not to do is as important as what he is asking you to do.
+
+---
+
+### Act II — The Transfer
+*Kullervo's Sword · in the Fighter's hand · the clearing's edge,
+ten steps from where Kullervo is standing*
+
+He asked you to turn away before the thing happened. You are ten steps from him now,
+facing the forest path that leads out of the clearing. The sword is in your right hand.
+
+Behind you, sound. Not a long sound. Not a complicated sound.
+
+Then nothing.
+
+The clearing is very quiet. You do not look back. You know what you would see and
+you know it is not part of the errand. The errand began when you turned away. The
+errand is the sword in your hand and the forest path in front of you and the six
+words waiting at the end of it.
+
+*The sword is heavier now. This is not imagination. The sword has done what it
+agreed to do and is now a sword that has done that thing, and weight accumulates.*
+
+**DC 12 Composure — carry the sword out of the clearing without looking back; hold it in a walking grip, not a fighting grip; keep moving.**
+
+*If you fail:* You pause at the clearing's edge. The pause costs you composure for the rest of the journey. The sword feels wrong in your hand the entire way.
+
+*If you pass:* You move. The path opens in front of you. The forest is pine and birch and afternoon light and you are walking through it with a sword that has already done everything it intended to do. The clearing is behind you. You do not look back.
+
+---
+
+### Act III — The Forest Road
+*Kullervo's Sword · at the Fighter's hip · the forest road,
+a huntsman with dogs, approaching from the opposite direction*
+
+Three hours into the forest road, a huntsman with two dogs coming the other direction.
+He is not looking for you. He is looking at the sword on your hip. It is a recognizable sword — a specific blade, a specific marking on the hilt — and the huntsman's dogs are circling you and he is the kind of man who pays attention to swords he recognizes.
+
+*"That's Kullervo's sword."*
+
+He is not accusing you. He is identifying what he sees. But the question behind the
+statement is clear: why do you have it, where did you get it, where is the man who carries it normally.
+
+You have six words for the master's hall. You have no words for the forest road
+except movement.
+
+**DC 13 Deception — one sentence; not a lie but not an explanation; keep moving.**
+
+*If you fail:* You say too much. The huntsman's face changes. He has one of the dogs follow you at a distance. By the time you reach the master's hall, someone will have arrived before you with a more complicated version of events.
+
+*If you pass:* You say something true and useless and you keep walking. The huntsman watches you go. The dogs sit at his feet. You do not look back. There will be time to think about this later, which is to say: never.
+
+---
+
+### Act IV — The Master's Gate
+*Kullervo's Sword · held openly, hilt-forward · the master's house gate,
+a steward, late afternoon*
+
+The master's steward opens the gate and sees the sword and then looks at you and
+the sequence of his face is: recognition of the sword, then the question. He is a
+careful man. He wants to know everything before he lets you past this gate.
+
+Where did you get it. How did you come to have it. What happened in the forest.
+Where is Kullervo.
+
+You have six words. They are not for the steward.
+
+*"I need to deliver this to the master directly."*
+
+The steward looks at the sword. He looks at you. He knows something has happened
+and the person in front of him is not going to tell him what it is. He has to
+decide whether to make this easier or harder.
+
+**DC 13 Composure — hold the errand's shape against the steward's pressure; do not open into explanation; the six words are not for him.**
+
+*If you fail:* The steward extracts enough from you that by the time you reach the master the story is already half-told in fragments, and the six words land into a room that is already trying to reassemble something from pieces.
+
+*If you pass:* The steward steps aside. He knows he is not going to get what he wants from you. He will find out when the master does. You go through the gate.
+
+---
+
+### Act V — The Master's Hall
+*Kullervo's Sword · held out hilt-first · the master's hall, a fire,
+the master seated, the room with three or four household members watching*
+
+The master is seated by the fire. He sees the sword before he sees you.
+
+He takes it. He turns it in his hands. He looks at the marking on the hilt. He
+looks at you.
+
+*"Where did you find this."*
+
+This is the sentence you have been carrying since the clearing. This is what
+the errand was for. Six words. The ones Kullervo chose. Not "I found it by a tree" or "I found it on the forest road" or "I found it near where Kullervo was" — none of that. The six words as he said them.
+
+*"I found it in the forest."*
+
+The master's hands tighten on the hilt. He looks at the sword for a long moment.
+Then he looks at you. He asks nothing else. He is a man who understands what a
+sword returned from a forest without its owner means. He does not need more words
+than you gave him.
+
+The fire burns. The sword is in his hands. The errand is done. The word "forest"
+is the last word you will ever say about this.
+
+*Kullervo's Sword rests in the master's lap. Its work, both kinds, is complete.*
+
+**DC 11 Composure — say only the six words; hold them without embellishment; let the master's silence be his.**
+
+*If you fail:* You say the six words and then you say something else. It is small and well-intentioned and it ruins it. The master looks at you and the room changes shape.
+
+*If you pass:* Six words. The master's hands close on the hilt. The fire pops once. No one in the room says anything. This is the shape Kullervo chose for his ending. You gave it to him.
+
+---
+
+## Quest API Stub — Cycle 2
+
+```json
+{
+  "questId": "ALF_cycle2_kullervosWord",
+  "title": "Kullervo's Sword",
+  "activateNode": "KVF",
+  "token": {
+    "name": "Kullervo's Sword",
+    "description": "A blade that has been asked whether it will kill its owner and answered yes. Warm from his hand when given, heavier after. Carried out of the forest to the master's hall. Delivered with six words: 'I found it in the forest.'",
+    "introducedAct": 1,
+    "consumedAct": 5
+  },
+  "acts": [
+    {
+      "act": 1,
+      "title": "The Forest Clearing",
+      "location": "KVF — a pine clearing, deep forest, late afternoon",
+      "token_action": "RECEIVE — given hilt-first before you turn away",
+      "type": "skill_check",
+      "scene": "He is waiting for someone to carry a sword out of a forest and keep their mouth shut. The sword stands upright in the earth. It has already answered yes. He holds it out to you, hilt-first. Take it back to his master. Tell him you found it in the forest. That's all.",
+      "prompt": "Understand that the errand is exactly what he said and nothing more. The six words are not a shorthand — they are the whole commission. DC 12 Insight.",
+      "failText": "You take the sword and already you are thinking about what context to add. You will have to unlearn this before the final act.",
+      "successText": "You take the sword and understand. Six words. The sentence is already complete. What he is asking you not to do is as important as what he is asking you to do.",
+      "grantItem": "Kullervo's Sword — a blade that has agreed; warm from his hand; heavier than it should be",
+      "checkPassFlag": "ALF2_errandUnderstood"
+    },
+    {
+      "act": 2,
+      "title": "The Transfer",
+      "location": "KVF — the clearing's edge, the forest path opening",
+      "token_action": "HELD — walking grip, not fighting grip",
+      "type": "skill_check",
+      "scene": "He asked you to turn away before the thing happened. You are ten steps from him, facing the path. Behind you: a sound. Not a long sound. Then nothing. The sword is heavier now. The errand began when you turned away.",
+      "prompt": "Carry the sword out of the clearing without looking back. Hold it in a walking grip. Keep moving. DC 12 Composure.",
+      "failText": "You pause at the clearing's edge. The pause costs you composure for the rest of the journey.",
+      "successText": "You move. The path opens. Pine and birch and afternoon light. The clearing is behind you. You do not look back.",
+      "checkPassFlag": "ALF2_clearingLeft"
+    },
+    {
+      "act": 3,
+      "title": "The Forest Road",
+      "location": "KVF → KVM road — forest road, three hours from the clearing",
+      "token_action": "CARRIED — at hip",
+      "type": "skill_check",
+      "scene": "A huntsman with dogs coming the other direction. He recognizes the sword's marking. 'That's Kullervo's sword.' He is not accusing you. But the question behind the identification is clear. You have six words for the master's hall. You have no words for the forest road except movement.",
+      "prompt": "One sentence, true but uninformative. Keep moving. DC 13 Deception.",
+      "failText": "You say too much. The huntsman's face changes. Someone will arrive at the master's hall before you with a more complicated version.",
+      "successText": "You say something true and useless and keep walking. The huntsman watches you go. The dogs sit at his feet.",
+      "checkPassFlag": "ALF2_roadCrossed"
+    },
+    {
+      "act": 4,
+      "title": "The Master's Gate",
+      "location": "KVM — the master's house gate, late afternoon",
+      "token_action": "HELD openly, hilt-forward",
+      "type": "skill_check",
+      "scene": "The steward opens the gate and sees the sword. He wants to know everything. Where did you get it. What happened. Where is Kullervo. You have six words. They are not for the steward.",
+      "prompt": "Hold the errand's shape against the steward's pressure. The six words are not for him. DC 13 Composure.",
+      "failText": "The steward extracts enough from you that the six words land into a room already trying to reassemble fragments.",
+      "successText": "The steward steps aside. He knows he is not going to get what he wants. He will find out when the master does. You go through the gate.",
+      "checkPassFlag": "ALF2_gatePassed"
+    },
+    {
+      "act": 5,
+      "title": "The Master's Hall",
+      "location": "KVM — the master's hall, a fire, the master seated",
+      "token_action": "DELIVERED — placed in the master's hands",
+      "type": "skill_check",
+      "scene": "The master takes the sword. Turns it. Looks at the marking. Looks at you. 'Where did you find this.' This is the sentence you have been carrying since the clearing. Six words. The ones Kullervo chose.",
+      "prompt": "Say only the six words. Hold them without embellishment. Let the master's silence be his. DC 11 Composure.",
+      "failText": "You say the six words and then you say something else. It is small and well-intentioned and it ruins it.",
+      "successText": "Six words. The master's hands close on the hilt. The fire pops once. No one says anything. This is the shape Kullervo chose for his ending. You gave it to him.",
+      "grantItem": "Kullervo's Thanks — an object the master presses into your hand on the way out; he does not explain it; it is small and made of carved bone",
+      "takeItem": "Kullervo's Sword — delivered to the master's hands; the errand is complete",
+      "activateMissionBit": "alfKullervosComplete",
+      "checkPassFlag": "ALF2_gatePassed"
+    }
+  ]
+}
+```
+
+---
+
+*quest-map.md: append ALF cycle 2 row to Processed Quests table:*
+`| ALF | Kullervo's Sword | 2 | KVF → KVM (Kullervo's Forest clearing → Master's hall) | The errand that consists entirely of removal; the sentence that must arrive whole |`
+
+*quest-map.md: append new theme thread to Theme Threads Active:*
+`- **The errand that consists entirely of removal: the carrying away that is itself the act of grace; the sentence that must arrive whole and without addition**: ALF (cycle 2) — Kullervo cannot be saved; the sword has already answered yes; the only thing available is that it leaves the forest with someone who will say exactly what Kullervo asked them to say and nothing more; the six words "I found it in the forest" are a mercy and an erasure simultaneously, and they only work if they arrive unaugmented`
+
+*quest-map.md: append KVF and KVM to Location Grid.*
+
+*books.md: mark ALF [x].*
