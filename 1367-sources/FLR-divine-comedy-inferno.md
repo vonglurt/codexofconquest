@@ -347,3 +347,186 @@ The TOKEN is taken: The Vigna Deposition is filed in the general record of the W
 
 **books.md update required:**
 - Mark FLR row [x]
+
+---
+
+## Cycle 2 · What Brunetto Asked
+
+**New angle:** Cycle 1 followed the formal and institutional — divine verdict vs. human record, two separate truth systems that can both be accurate and point in different directions. Cycle 2 enters the personal. In Canto XV, Brunetto Latini runs alongside Dante in Hell and asks one specific thing: "Let my Tesoro be commended to thee, in which I still live, and more I ask not." What cycle 1 missed: the beloved teacher's unfinished work, and what it costs to authenticate it when the only living witness who knew the hand is dying. The continuation manuscript is a gift that arrived after the teacher was already in Hell; the student who can confirm it was never part of the gift.
+
+---
+
+### Token Doctrine
+
+**TOKEN: The Tesoretto Continuation**
+A manuscript continuation of Brunetto Latini's unfinished allegorical poem — the pages physically bridge the known mid-sentence ending to new text; the paper shows the age the content suggests; three characteristic spelling habits of Brunetto's hand appear in the first two folios. Ser Goffredo da Prato, a former student who spent three years copying Brunetto's correspondence, is the last person alive who can confirm those habits belong to the hand rather than an imitator. The Fighter carries the manuscript from the Florentine notary's estate to his hillside villa and back to the archive.
+
+| Act | Token State |
+|-----|-------------|
+| I | At the notary's estate; unauthenticated; the executor hands it to the Fighter for transport to Ser Goffredo |
+| II | Fighter carries it through the dealer's interception on the road north; chain of custody must remain unbroken |
+| III | In Ser Goffredo's hands; he reads it with care; he signs the authentication in a barely legible hand; token gains authentication leaf |
+| IV | Authenticated manuscript targeted on the road back by the dealer's hired men |
+| V | Fighter delivers to the archive; taken into custody as Brunetto's authenticated work |
+
+---
+
+### 5-Act Vignette Play: "What Brunetto Asked"
+
+*A Fighter has been retained by the executor of a Florentine notary's estate to carry a disputed manuscript to a dying scholar and back. The TOKEN ITEM is the Tesoretto Continuation: a manuscript picking up from the mid-sentence ending of Brunetto Latini's allegorical poem, unread for decades, unattributed, unchallenged only because no one knew it existed. The Fighter's job is to keep the chain of custody intact, get Ser Goffredo's authentication before he dies, and bring both back to the archive.*
+
+*The Thing · Tesoretto Continuation · unbound folios, rolled in oilskin · executor → Fighter*
+
+---
+
+**ACT I — The Notary's Estate, Florence**
+
+*Afternoon. The late notary's study. His executor, Messer Bernardo, at the desk with a rolled oilskin package and an expression of managed uncertainty.*
+
+*The Thing · Tesoretto Continuation · rolled in oilskin, unread · waiting on the desk*
+
+*The Fighter observes: Bernardo has not unrolled the package in the Fighter's presence. He is not uncertain about the manuscript's value. He is uncertain about who else knows it exists.*
+
+Bernardo explains without ornamentation: the manuscript was in the notary's private chest, not the professional files. It was not catalogued. A Venetian dealer appeared two days after the death asking about "certain literary manuscripts from the collection," which means someone told him it was there. Bernardo needs it authenticated and entered in the civic record before the dealer can acquire a right of first examination — which, under Florentine guild procedure, would give him forty-eight hours of exclusive access and the ability to suppress publication.
+
+The authentication can only be done by Ser Goffredo da Prato, who is eighty years old and has not left his hillside villa in four months.
+
+---
+
+**ACT II — The Road North of Florence**
+
+*The road to the villa, three hours from the city. A man on a brown horse has been visible on the parallel ridge for an hour. He is not in a hurry. He is following.*
+
+*The Thing · Tesoretto Continuation · rolled in oilskin · Fighter's pack*
+
+*The Fighter observes: the brown horse has been there since the gate. The rider has made no move to close distance.*
+
+At the second waystation, the rider comes down from the ridge and introduces himself pleasantly. He is the Venetian dealer's representative, a man named Giacomo. He explains that his employer is a serious scholar with access to the best archive facilities in Venice; the manuscript's interests would be better served in his employer's custody. He is not threatening. He offers a reasonable sum for the package and the Fighter's silence. He is willing to give Bernardo's executor a proper accounting.
+
+---
+
+**ACT III — Ser Goffredo's Villa**
+
+*A hillside house above Florence: terracotta roof, a lemon tree in the courtyard, a smell of old paper in the corridor. Ser Goffredo in a chair by the window.*
+
+*The Thing · Tesoretto Continuation · unrolled on Ser Goffredo's reading table · under examination*
+
+*The Fighter observes: Ser Goffredo's hands are shaking slightly but his eyes are not. He reads without haste. He has been reading for twenty minutes without speaking.*
+
+He has found the characteristic habit — the doubled 'l' in 'villano' and 'villaggio' that appears in every document Brunetto drafted himself and in none of the documents Brunetto's copyists produced. Three times in the first two folios. He looks up at the Fighter. "Where did this come from?" He is not asking who had it. He is asking how it survived. He sets down his stylus and considers this for a moment. Then he picks it up again.
+
+He signs slowly, his name in two lines instead of one, the way his hand has learned to manage the tremor. He attaches the authentication leaf. He says: "Read me the last line of the Tesoretto. The one everyone knows."
+
+---
+
+**ACT IV — The Road Back**
+
+*Two hours south of the villa. Afternoon. The road runs between vineyard walls.*
+
+*The Thing · Tesoretto Continuation · rolled back in oilskin, authentication leaf sealed inside · Fighter's pack · targeted*
+
+*The Fighter observes: three riders have come out of the vineyard gate ahead. Giacomo is not among them.*
+
+The dealer's hired men have been sent independently: they are not here to negotiate. They know the authentication is complete — someone at the villa told them, which means they were watching. They want the oilskin package. The route back to Florence runs through a narrow section between the vineyard walls; there is no way around them.
+
+Combat: 2× hired riders (AC 12, HP 20, short swords and leather)
+
+---
+
+**ACT V — The Florentine Archive**
+
+*Evening. The civic archive's literary intake desk. The notary archivist Ser Aldo, reading glasses, the classification ledger open to the literary acquisitions section.*
+
+*The Thing · Tesoretto Continuation · oilskin package, authentication leaf inside · Fighter's hands → archive*
+
+*The Fighter observes: Ser Aldo has been told about the dealer's interest. He is deciding whether the authentication leaf is sufficient to classify this as Brunetto's work in the general literary record — which would make it publicly accessible — or as a disputed attribution requiring the restricted acquisition review.*
+
+He looks at Ser Goffredo's signature on the authentication leaf. He looks at the date. Ser Goffredo signed it this morning. He is still living — barely, but living. The authentication is a living witness attestation, not a posthumous document. That changes the procedural category. He turns to the general ledger.
+
+"Brunetto Latini, Tesoretto, continuation folios," he says. "Authenticated by primary witness. Filed for public access." He stamps it. He takes the oilskin from the Fighter's hands and sets it on the acquisition shelf.
+
+He looks at the Fighter for a moment. "Ser Goffredo had a request to pass along." He takes a folded note from his desk — it was delivered by the villa's servant an hour ago. He hands it over.
+
+*The note reads, in a hand that is barely legible: "Tell whoever carries it: Maestro Brunetto would be glad."*
+
+---
+
+### Quest API Stub: What Brunetto Asked
+
+```
+quest_id: FLR-02
+title: What Brunetto Asked
+cycle: 2
+book: divine-comedy-inferno
+token: Tesoretto Continuation (unbound folios, rolled in oilskin)
+token_consumed: Act V (entered into Florence civic archive custody)
+route: FLR → HMN → FLR
+```
+
+**Act I — The Notary's Estate**
+```
+activateNode: FLR
+type: dialogue
+scene: "The late notary's study. Executor Bernardo explains the Venetian dealer's advance knowledge and the authentication problem."
+prompt: "Bernardo needs you to understand the specific threat: the dealer's right of first examination under guild procedure. [WIS to understand the forty-eight hour custody window / INT to identify what specifically the dealer's prior knowledge means about who else knows the manuscript exists / CHA to get the full situation from Bernardo before he edits it for brevity] DC 12"
+failText: "Bernardo doesn't explain the guild procedure. You learn it on the road when Giacomo cites it. But the manuscript is in your hands and the road to Ser Goffredo is clear."
+successText: "You understand the window: forty-eight hours from the dealer's formal examination request, filed tomorrow if you don't reach the archive first. Bernardo hands you the oilskin."
+grantItem: Tesoretto Continuation (unbound folios, rolled in oilskin)
+checkPassFlag: tesRottoReceived
+activateMissionBit: flrBrunettoAct1Complete
+```
+
+**Act II — The Road North**
+```
+activateNode: HMN
+type: dialogue
+scene: "The second waystation. Giacomo the dealer's representative offers a reasonable sum and a proper accounting."
+prompt: "Giacomo is not threatening and his offer is fair. The argument against him is that authentication requires a specific witness, and custody transfer before authentication destroys the chain of custody Ser Aldo needs to enter it in general intake. [CHA to decline cleanly without making an enemy / WIS to establish that he understands the authentication chain argument / INT to find the specific procedural ground that makes his acquisition offer invalid while authentication is pending] DC 12"
+failText: "Giacomo accepts your refusal but follows at a distance. He will have men at the road back. The manuscript continues to Ser Goffredo."
+successText: "Giacomo understands the argument: without Ser Goffredo's authentication in the chain, his employer's archive cannot accept the manuscript as genuine either. He turns his horse and rides back toward Florence."
+checkPassFlag: dealerDeflected
+activateMissionBit: flrBrunettoAct2Complete
+```
+
+**Act III — Ser Goffredo's Villa**
+```
+activateNode: HMN
+type: skill_check
+scene: "Ser Goffredo reads the manuscript for twenty minutes without speaking. He has found the characteristic spelling habits. He picks up his stylus."
+prompt: "He is shaking but his eyes are clear. He asks you to read the last line of the Tesoretto — 'the one everyone knows' — before he signs. He needs to confirm the voice is the same. [WIS to find the right line and read it without rushing / CHA to give him the reading he needs to sign with conviction / CON to hold the silence while he decides] DC 11"
+failText: "You read a line from the middle — close, but not the last line. He corrects you gently and recites it himself. Then he signs. The authentication is complete."
+successText: "You read the last line. He listens with his eyes closed. He says: 'Yes.' He signs without rushing. His name in two careful lines."
+checkPassFlag: goffredoAuthenticated
+activateMissionBit: flrBrunettoAct3Complete
+```
+
+**Act IV — The Road Back**
+```
+activateNode: FLR
+type: combat
+scene: "Three hired riders in the vineyard road. The authentication leaf is sealed inside the oilskin."
+prompt: "They are not negotiating. The route to Florence runs between walls."
+combatTarget: "2× hired riders (AC 12, HP 20, short swords and leather)"
+failText: "They take the oilskin. But the authentication leaf is inside, not on the cover — they do not know it is there. The dealer will discover it when he opens the package. You have until morning before he can suppress the filing. Reach Ser Aldo before the dealer reads the leaf."
+successText: "Both riders are down. The oilskin is intact. Florence at nightfall."
+checkPassFlag: roadRidersDefeated
+activateMissionBit: flrBrunettoAct4Complete
+```
+
+**Act V — The Florentine Archive**
+```
+activateNode: FLR
+type: skill_check
+scene: "Ser Aldo at the literary intake desk. He is deciding between general access and restricted acquisition review."
+prompt: "Ser Goffredo signed it this morning. He is still living. That makes it a living witness attestation, not a posthumous document — which changes the procedural category. [INT to name the specific procedural category that makes general access the correct classification / WIS to read whether Ser Aldo already knows this and is waiting to be told / CHA to give him the classification in the form he needs to write it in the ledger] DC 11"
+failText: "Ser Aldo enters it as disputed attribution pending review — the safest call. The manuscript is in the archive's custody, inaccessible to the dealer. In thirty days it will be reclassified when Ser Goffredo's status is confirmed."
+successText: "Ser Aldo turns to the general ledger. 'Brunetto Latini, Tesoretto, continuation folios, authenticated by primary witness.' He stamps it. He takes the oilskin. He hands you Ser Goffredo's note."
+takeItem: Tesoretto Continuation (unbound folios, rolled in oilskin)
+checkPassFlag: flrBrunettoComplete
+activateMissionBit: flrBrunettoComplete
+```
+
+---
+
+*quest-map.md: add FLR cycle 2 row and theme thread; append HMN to Location Grid.*
+*books.md: mark FLR [x] (divine-comedy-inferno entry).*
