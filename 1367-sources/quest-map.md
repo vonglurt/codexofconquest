@@ -104,6 +104,7 @@ The game asks: what does it mean to keep your word when the world does not?
 | SEN | Blind Pew's Delivery | 2 | ADM (Black Hill Cove quay → cliff road → Admiral Benbow yard → threshold) | The neutral messenger of doom; complicity is the complicity of the postal road |
 | GCI | The Gild-Holm-'Ur Seat | 2 | GHL → STP (tidal rock seat → St. Peter Port harbor) | The carrier who arrives with a reason to live; the offer made without coercion |
 | KIR | Carrying the Head | 2 | BRC → HLG → GWL → LDN (Irish shore → Harlech → Gwales → London White Hill) | Grief deferred by enchantment; completion is the only form that does not break you |
+| INV | Morna's Stone | 2 | CNA (vale of Cona — brook bank → placement → road north) | The dying instruction executed exactly; honoring refusal is not imposing reconciliation |
 
 ---
 
@@ -200,6 +201,7 @@ Game cities are canonical. Source-book settings are proposed new nodes.
 | Harlech promontory | HLG | A Welsh coastal promontory: flat-topped stone, the enchanted feast-ground where Rhiannon's birds sing over the sea and time slows | Enchanted time, the watch-keeper's vigil, grief held at bay |
 | Gwales / Grassholm Island | GWL | An island off Pembrokeshire: a stone hall with a forbidden door facing Cornwall; eighty years of contentment and one door that must not be opened | Deferred grief, the forbidden room, protection that becomes delay |
 | Gwynvryn — the White Hill | LDN | A low hill above the Thames: the burial mound, the river below, the eastern sky open; the place where the journey ends | Memorial completion, the protective burial, the view toward France |
+| Vale of Cona | CNA | A Highland valley with a low brook in autumn: flat pale stones in the water, grass banks, thin tree cover, the specific quality of light in a dale that has seen too many of these afternoons | The dying instruction, the exact service, the refusal that is also a boundary |
 | Iceland / Thingvellir | ISL | Fog, blood on stone, silence | Vengeance, the weight of objects |
 | Castilian road / Toledo | IBR | Dust, court protocol, beard-honor | Pride, humiliation, long patience |
 | Georgian mountain road | GEO | Shale, amber and gold, champion's fire | Duty, love, the commission |
