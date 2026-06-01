@@ -432,3 +432,290 @@ The memory-keeper is a small, precise, old man in a room full of wooden boards a
 - *quest-map.md: append new theme thread: The man fate wrote for betrayal is still the man who betrayed.*
 - *quest-map.md: append STK and DAN to Location Grid (Source-Book Nodes); HEO already exists.*
 - *books.md: mark CPH [x].*
+
+---
+
+## Cycle 2 — Amleth's Altered Letter
+
+**What cycle 1 missed:** Starkad's Account was about the actor's self-testimony — the divided life insisting on its own record against the court's simplification. Amleth's Altered Letter reveals the impossible position of the carrier who discovers mid-commission that the object they are carrying has changed character. The Fighter was hired as Fengo's independent courier — precisely because they have no family loyalty to either party — to guarantee the sealed tablet reaches the British king intact. Amleth altered it during the sea crossing. The original message ordered Amleth's immediate execution. The altered message orders the deaths of Fengo's two attendants and Amleth's marriage into the British royal family. The Fighter now carries a document whose seal has been re-closed over a different truth. Cycle 1 was about the actor who writes his own record. Cycle 2 is about the carrier who discovers they are already inside someone else's.
+
+**New angle:** Mid-crossing, Amleth reveals what he has done — not to ask permission, but so the Fighter understands. The Fighter carries the altered tablet to the British king, completing the commission as constituted. At Act V: delivery, and the decision not to add information Amleth didn't ask to be added.
+
+---
+
+### Pass 1 — Token
+
+**TOKEN: The Altered Tablet** — Fengo's sealed commission to the British king, originally ordering Amleth's execution. Amleth altered it during the sea crossing and re-closed the seal with enough skill that the alteration is not visible on inspection. The tablet is sealed. The Fighter carries it as hired. At Act V, it is placed in the British king's hands. The Fighter's position is: I carried a sealed tablet; I delivered a sealed tablet; my commission is complete.
+
+---
+
+### Pass 2 — Seven Storyline Ideas
+
+**1. Starkad's Account** *(USED — Cycle 1)* — The sealed testimony with all three treacheries. Lejre before the court scald.
+
+**2. Amleth's Altered Letter** *(CHOSEN — Cycle 2)* — Fengo's courier discovers mid-crossing that Amleth has already altered the sealed tablet. The Fighter carries it to the British king anyway. At delivery, the position is: I carried a sealed document. My commission is complete.
+
+**3. Horwendil's Victory Record** — Horwendil's lawful combat-victory over King Koll carried to Lejre before Fengo can suppress it.
+
+**4. Gerutha's Testimony** — Gerutha's sworn statement confirming Fengo's murder of Horwendil. The lawspeaker before Fengo's kinsmen counter-claim.
+
+**5. Rolf's Final Ring** — Rolf Krake's ring and sealed farewell through Skuld's forward positions.
+
+**6. The Scald's True Song** — Starkad's version carried before the court version is inscribed.
+
+**7. The Vikar Witness** — The Vikar survivor's testimony carried through Starkad's surviving enemies.
+
+---
+
+### Pass 3 — Theme Check
+
+Existing themes through MOL cycle 2: grief in object, loyalty, honor vs. shame, love and fate, truth posthumous, healing through hostile law, carrier hunted, token's journey, ancient witnesses, corruption wears mercy, fate through broken thing, heroism earns nothing, invitation as weapon, poem ransoms life, anonymous sympathy, pyre-arrangements, proxy errand, absent jurisdiction, scattered truth, last gift against design, credential before the man, one who will not weep, vigil at extraction, errand of removal, eclipse witness, thing too true, word dying man cannot carry, question asked across ocean.
+
+**Themes I am avoiding:** "The invitation as the weapon" (LBC) — that was an object designed as weapon by its original sender; this is an object altered mid-transit by its bearer, with the carrier discovering the alteration. "The carrier becomes the hunted" (SEN) — the Fighter is not hunted because of the object's value; they are in an impossible position because of what they know. "The scattered truth / reassembly" (FCO cycle 2) — single object, not fragments.
+
+**New theme introduced by CPH cycle 2:** *The carrier who discovers mid-commission that the object has changed character: the seal re-closed over a different truth; the choice between the commission as instructed and the commission as now constituted; the courier who completes delivery without adding what was not asked* — the Fighter was hired to carry a sealed tablet; the tablet is still sealed; the commission is technically intact; but the contents are different from when the commission was given, and the Fighter knows this; the only defensible position is the strict one: I carry sealed documents, I deliver sealed documents, I do not audit their contents; completion of this commission requires holding that position through everything that will happen at the British king's gate.
+
+---
+
+## 5-Act Vignette Play: "Amleth's Altered Letter"
+
+**The Token · The Altered Tablet · a sealed wooden dispatch-tablet ·
+Fengo's commission, re-sealed with Amleth's corrections ·
+carried in the Fighter's document-case ·
+the seal looks intact · the contents are not what they were ·
+it must reach the British king · the carrier must deliver it ·
+the carrier does not add information that was not requested**
+
+---
+
+### Act I — The Crossing
+*The Altered Tablet · in Amleth's hands for a moment, then in the Fighter's ·
+a ship, mid-crossing, the Danish coast behind and the British coast not yet visible*
+
+Amleth finds you at the ship's rail at the midpoint of the crossing. He is exactly
+the same person he has been for three weeks — the madman who eats fish bones and
+talks to the wind and whom no one at Fengo's court has ever been able to read —
+except he is not performing right now. He is entirely clear.
+
+He shows you the tablet. He has opened it — the seal is beside it, intact, ready
+to be replaced. He shows you what he has written over Fengo's text.
+
+*"I have not changed the king's name or the delivery instructions. I have changed the commission. Fengo's original was my execution order. Mine is a wedding proposal. Your commission was to carry a sealed document. The document is about to be re-sealed. Your commission is unchanged."*
+
+He does not ask you to agree. He does not ask you to approve. He tells you. He
+presses the seal back over the tablet with a tool he produced from somewhere, and
+the seal closes exactly as it opened.
+
+*The tablet is in your hands. The seal is intact. The ship is moving. The British
+coast will appear in eight hours.*
+
+**DC 12 Insight — understand the full shape of what you are now carrying; understand the exact nature of the position you are in; understand specifically that Amleth is not asking you to lie — he is pointing out that your commission was always to deliver a sealed document, and the document is sealed.**
+
+*If you fail:* You understand the alteration but not the logical architecture. By Act IV you are trying to decide things that were already decided when you took the commission.
+
+*If you pass:* The commission was always to carry a sealed tablet. The tablet is sealed. Everything else — what is inside, who altered it, when — is not part of the commission. Amleth looks at you. He goes back to the fish bones. You put the tablet in your document-case.
+
+---
+
+### Act II — Fengo's Attendants
+*The Altered Tablet · in the document-case · British coastal waters,
+the coast visible now, the two attendants watching the Fighter*
+
+Fengo sent two attendants with the courier party. Their specific job is to confirm
+the tablet's delivery and report back to Fengo. They have been watching you since
+the crossing and they have noticed that Amleth spoke to you at the rail.
+
+The older one comes to you at the stern. He is not threatening. He is asking.
+
+*"What did the halfwit tell you?"*
+
+He is intelligent and he has been in Fengo's service for twelve years and he knows
+that the halfwit is not a halfwit and that you are a professional courier and that
+what Amleth said to the courier at the ship's rail in the middle of a crossing was
+not a random conversation about wind direction.
+
+He wants to know what's in the tablet. He has never been allowed to see it. He is
+about to arrive at a destination that the tablet's contents will define. He is, in
+a way that he does not fully understand, asking you to warn him.
+
+*You cannot warn him. Not because you don't know what's in the tablet — you do —
+but because you are a sealed-document courier and your knowledge of the tablet's
+contents is not yours to use.*
+
+**DC 12 Composure — say nothing of use; you spoke with Amleth about the crossing conditions; you are a courier; you know nothing about the tablet's contents; hold this position without contempt or guilt.**
+
+*If you fail:* Something in your face or your answer gives him enough to be suspicious at the king's gate, which complicates Act IV.
+
+*If you pass:* He looks at you for a long moment. You are either an excellent liar or genuinely uninformed. He cannot tell which. He leaves you at the rail. The coast is close now.
+
+---
+
+### Act III — The King's Gate
+*The Altered Tablet · in the document-case · the British king's harbor gate,
+a checkpoint, an official reviewing credentials*
+
+The harbor gate official reviews everyone entering with official Danish correspondence.
+He checks the seal on the tablet against the registry of known Danish court seals.
+The seal is correct — Fengo's seal, intact. He checks the courier's credentials.
+You are an independent courier hired by Fengo's court, here on the official dispatch
+list for this crossing. Everything is in order.
+
+*Except that Amleth is behind you in the entry queue, and one of the attendants has
+said something to the official about the sea crossing, and the official is looking
+at the document-case with slightly more attention than he was a moment ago.*
+
+**DC 13 Deception — independent courier, official Danish dispatch, sealed tablet for the king's direct reception; everything is in order; the attendant is confusing this commission with a personal dispute that has nothing to do with you.**
+
+*If you fail:* The official detains you for review. The tablet is examined more carefully. Amleth has re-sealed it well but not perfectly — the official finds a flaw. The delivery becomes contested.
+
+*If you pass:* The official stamps the credentials. The attendant's interruption is logged as irrelevant. You are admitted for a direct delivery appointment.
+
+---
+
+### Act IV — The Approach
+*The Altered Tablet · in your hands, document-case open · the hall's approach,
+the corridor before the king's reception room, the second attendant blocking the way*
+
+The second attendant has gotten ahead of you. He is in the corridor between you
+and the reception room's doors. He is not a swordsman — he is a court official who
+has spent thirty years watching Fengo's interests and he has decided, somewhere in
+the last two hours, that whatever is in this tablet is not what Fengo sent.
+
+He has a short blade. He is afraid. Afraid men with short blades are more dangerous
+than confident ones.
+
+**Combat — Fengo's Second Attendant (AC 12, HP 20, short blade)**
+
+*If you fail (reduced to 0 HP):* He gets the document-case. He opens the tablet. He reads it. His face goes through several things. He takes it to the king himself, ahead of you. You arrive as a secondary party.
+
+*If you pass:* He is down. The corridor is clear. The doors to the reception room are ahead. You straighten your coat. You enter.
+
+---
+
+### Act V — The Reception Room
+*The Altered Tablet · in your hands, open for presentation · the British king's
+reception room, the king at the far end, two advisors flanking*
+
+The king receives you. You present the document-case. You place the tablet on the
+table.
+
+*"Courier delivery from Fengo of Denmark. Sealed dispatch for direct reception."*
+
+He takes the tablet. He breaks the seal — this is normal; it was sealed for
+delivery, not for permanent sealing. He reads it.
+
+His expression moves through several stages. He looks up at you.
+
+*"Are you aware of the contents of this dispatch?"*
+
+This is the question. The one that everything in the last two days has been about.
+The answer that keeps your commission clean, keeps Amleth's alteration intact,
+keeps the two attendants' fate as the tablet defines it, is the answer you give now.
+
+*"I am an independent courier. I carry sealed documents. My commission was delivery.
+My commission is complete."*
+
+**DC 11 Composure — say exactly what a sealed-document courier says; do not add information the commission did not require; the king has the tablet; the king has read it; the carrier's job is done.**
+
+*If you fail:* You pause before answering. The pause is a tell. The king is intelligent. He asks a follow-up question that makes the pause explicit, and your answer to the follow-up is more than what a sealed-document courier should know.
+
+*If you pass:* The king looks at you for a long moment. Then he nods. He calls an advisor over and speaks quietly. You receive your courier's fee from the table.
+
+Outside, in the harbor, Amleth is already arranging things. The two attendants are being escorted somewhere. Whatever happens next is not your commission.
+
+---
+
+## Quest API Stub — Cycle 2
+
+```json
+{
+  "questId": "CPH_cycle2_amlethsLetter",
+  "title": "Amleth's Altered Letter",
+  "activateNode": "DNS",
+  "token": {
+    "name": "The Altered Tablet",
+    "description": "Fengo's sealed dispatch-tablet to the British king. Originally: an execution order for Amleth. Re-sealed by Amleth mid-crossing: the two attendants are to be executed; Amleth is to receive the king's daughter. The re-seal is skilled. The commission is to carry a sealed document and deliver it.",
+    "introducedAct": 1,
+    "consumedAct": 5
+  },
+  "acts": [
+    {
+      "act": 1,
+      "title": "The Crossing",
+      "location": "DNS → BRK ship — mid-crossing, the Danish coast behind",
+      "token_action": "REVEALED and RE-SEALED — Amleth shows the alteration; re-presses the seal; passes it back",
+      "type": "skill_check",
+      "scene": "Amleth finds you at the rail. He shows you what he has written over Fengo's text. 'Your commission was to carry a sealed document. The document is about to be re-sealed. Your commission is unchanged.' He re-seals it. He goes back to the fish bones.",
+      "prompt": "Understand the logical architecture of your position: the commission was always to carry a sealed tablet; the tablet is sealed; what is inside is not part of the commission. DC 12 Insight.",
+      "failText": "You understand the alteration but not the architecture. By Act IV you are trying to decide things already decided when you took the commission.",
+      "successText": "The commission was always to carry a sealed tablet. The tablet is sealed. You put it in your document-case.",
+      "grantItem": "The Altered Tablet — Fengo's seal intact over Amleth's text; sealed, to be delivered",
+      "checkPassFlag": "CPH2_positionUnderstood"
+    },
+    {
+      "act": 2,
+      "title": "Fengo's Attendants",
+      "location": "DNS → BRK ship — British coastal waters, the coast visible",
+      "token_action": "HELD — in the document-case",
+      "type": "skill_check",
+      "scene": "The senior attendant saw Amleth speak to you at the rail. He comes to the stern. 'What did the halfwit tell you?' He has been in Fengo's service twelve years. He is asking, in a way he doesn't fully understand, for a warning.",
+      "prompt": "You know nothing about the tablet's contents. You spoke with Amleth about crossing conditions. Hold this position without contempt or guilt. DC 12 Composure.",
+      "failText": "Something in your face gives him enough to be suspicious at the king's gate.",
+      "successText": "He cannot tell if you are an excellent liar or genuinely uninformed. He leaves you at the rail.",
+      "checkPassFlag": "CPH2_attendantsDeflected"
+    },
+    {
+      "act": 3,
+      "title": "The King's Gate",
+      "location": "BRK — British king's harbor gate, checkpoint",
+      "token_action": "INSPECTED — seal checked against registry; seal intact",
+      "type": "skill_check",
+      "scene": "The gate official checks the seal against the Danish registry. Seal correct. Credentials in order. But one attendant has said something, and the official is looking at the document-case with more attention than a moment ago.",
+      "prompt": "Independent courier, official dispatch, sealed tablet for direct reception; the attendant's interruption is a personal dispute, not part of this commission. DC 13 Deception.",
+      "failText": "The official detains you for review. The re-seal's imperfection is found. Delivery becomes contested.",
+      "successText": "Credentials stamped. The attendant's interruption logged as irrelevant. Direct delivery appointment admitted.",
+      "checkPassFlag": "CPH2_gatePassed"
+    },
+    {
+      "act": 4,
+      "title": "The Approach",
+      "location": "BRK — the corridor before the king's reception room",
+      "token_action": "HELD — document-case in hand",
+      "type": "combat",
+      "scene": "The second attendant has gotten ahead of you. He is in the corridor with a short blade. He has decided in the last two hours that whatever is in this tablet is not what Fengo sent. Afraid men with short blades are more dangerous than confident ones.",
+      "prompt": "Clear the corridor to the reception room.",
+      "combatTarget": "Fengo's Second Attendant (AC 12, HP 20, short blade)",
+      "failText": "He gets the document-case. He reads the tablet. He takes it to the king ahead of you. You arrive as secondary party.",
+      "successText": "Corridor clear. You straighten your coat. You enter the reception room.",
+      "checkPassFlag": "CPH2_corridorCleared"
+    },
+    {
+      "act": 5,
+      "title": "The Reception Room",
+      "location": "BRK — the British king's reception room",
+      "token_action": "DELIVERED — placed on the king's table; king breaks the seal and reads",
+      "type": "skill_check",
+      "scene": "The king reads the tablet. His expression moves through several stages. He looks up. 'Are you aware of the contents of this dispatch?' This is the question everything has been about. The answer that keeps the commission clean is the answer a sealed-document courier gives.",
+      "prompt": "Say exactly what a sealed-document courier says: I carry sealed documents; my commission was delivery; my commission is complete. DC 11 Composure.",
+      "failText": "You pause before answering. The pause is a tell. The king asks a follow-up that makes the pause explicit.",
+      "successText": "The king nods. He calls an advisor. You receive your courier's fee. Outside, Amleth is already arranging things. Whatever happens next is not your commission.",
+      "grantItem": "The Courier's Fee — standard payment for a sealed-document commission completed; nothing more, nothing less",
+      "takeItem": "The Altered Tablet — in the British king's hands; the commission is complete",
+      "activateMissionBit": "cphAmlethComplete",
+      "checkPassFlag": "CPH2_corridorCleared"
+    }
+  ]
+}
+```
+
+---
+
+*quest-map.md: append CPH cycle 2 row to Processed Quests table:*
+`| CPH | Amleth's Altered Letter | 2 | DNS → BRK (Danish shore → British king's court) | The carrier who discovers mid-commission that the object has changed character |`
+
+*quest-map.md: append new theme thread to Theme Threads Active:*
+`- **The carrier who discovers mid-commission that the object has changed character: the seal re-closed over a different truth; the choice between the commission as instructed and the commission as now constituted; the courier who completes delivery without adding what was not asked**: CPH (cycle 2) — the Fighter was hired to carry a sealed tablet; the tablet is still sealed; the commission is technically intact; but the contents are different from when the commission was given, and the Fighter knows this; the only defensible position is the strict one: sealed documents carried, sealed documents delivered, contents not audited`
+
+*quest-map.md: append DNS and BRK to Location Grid.*
+
+*books.md: mark CPH [x].*
