@@ -299,3 +299,237 @@ The claiming party cannot appear. She would be arrested on the impostor's prior 
   ]
 }
 ```
+
+---
+
+## Cycle 2 — Faithful John's Account
+
+**What cycle 1 missed:** Cycle 1 took the oblique testimony angle — the merchant's daughter spoke her name to a dead skull because no living court would receive her, and the farrier overheard what was never directed at him. The mechanism of truth was indirect displacement: the venue was wrong, the witness was not alive, and the account arrived through institutional transcription of an overheard accident. Cycle 2 takes the structurally opposite angle. Faithful John knew exactly what he was doing, could have named each act precisely, and chose silence because the explanation would have destroyed what his silence protected. The account exists now because the danger no longer exists. This cycle is about the explanation that was itself the deepest form of the service, delivered after the fact to make permanent the knowledge of what kind of loyalty the prince received.
+
+---
+
+### Pass 1 — Token
+
+**Faithful John's Account** is a sealed folio — eight pages, careful ink, John's own mark. It names the three acts of apparent treason in order: the wedding-horse clothes and why he burned them; the wedding robe and why he seized it; the first dance and why he danced until the prince went cold. Each paragraph names what he knew would happen and why he acted before the prince could see the danger. The folio ends with one sentence: *I do not ask forgiveness for what I would do again.* It cannot be opened by the carrier. Its value depends entirely on arriving intact, in the prince's hands, with the seal John placed on it.
+
+---
+
+### Pass 2 — Seven Storyline Ideas
+
+1. **"Faithful John's Account"** ← **CHOSEN / USED (cycle 2)**
+2. "The Name in the Forest" — a creditor operates under a false guild name; a charcoal-burner overheard him singing his real name at a midnight fire in the forest and wrote it down without knowing what it meant; Fighter carries the written name to the guild arbiters
+3. "The Third Task" — a debt-release contract requires an independent witness to countersign the third completion; no family member qualifies; Fighter witnesses and signs; the signed document must reach the lord's notary against agents sent to let the deadline expire
+4. "Godfather's Ledger" — a physician documented every patient he declined to treat when death stood at the head and every patient he treated when death stood at the feet; his ledger proves obedience to the terms of a compact no one else can audit; Fighter carries it to the guild arbiters before the false accusation is finalized
+5. "The Bones' Song" — a man murdered and called naturally dead; a priest found the bones and wrote down what their arrangement said — angle of blow, direction of approach, timing from the undergrowth — environmental testimony from material positions; Fighter carries it to the magistrate before the estate is sealed
+6. "All-Kinds-of-Fur" — a noble woman hiding as a kitchen scullion slipped a signed contract proving her identity into a soup served at the lord's table; the lord filed it in household records; Fighter recovers it before the quarterly purge
+7. "Rumpelstiltskin's Debt" — the small man's contract was valid; the queen owes the fee; the contract is in the small man's personal archive and no one will accept its legitimacy; Fighter carries it to the kingdom's debt arbiters — this inverts the tale's sympathies entirely and is the most legally uncomfortable option
+
+---
+
+### Pass 3 — Theme Check
+
+Existing threads do not cover: the explanation withheld not from weakness but as an extension of the service it would have ended; the silence that was itself the act of loyalty; the account delivered after the protection it would have destroyed is no longer in danger. Closest existing thread: *the word the dying man cannot carry himself* (HFT cycle 2) — but that is recognition, not explanation; Ring could not outlive the moment, not a choice. Here the agent chose silence, survived it, and now names what the silence was. Distinct thread: **The service that could not be named while it was being performed: the explanation delayed until the protection it would have destroyed is safe; the account that arrives after the fact to make permanent the knowledge of what kind of loyalty the prince received.**
+
+---
+
+## 5-Act Vignette Play
+
+*A German castle, late afternoon. Three corridors from the dungeon-room where the prince's restored servant sits at a writing table in a room that is not technically a cell but cannot be left publicly without triggering the execution order that was never formally rescinded. The prince is in his great hall, alone with two household men and the kind of quiet that comes after a long and strange event. The Fighter has been sent by no one in particular — just given the folio and told which hall.*
+
+---
+
+**ACT 1 — John's Restoration Room (DNG)**
+
+*The room has a writing table and a narrow window and smells of cold stone and fresh ink. Faithful John is seated at the table, looking healthier than a man who was stone for some years has any right to look. He seals the folio as the Fighter enters — presses his ring into the wax and holds it for a count of three. Then he looks up.*
+
+"He restored me," he says. "Which is how I know he would want to understand." *He holds the folio across the table.* "He will not receive it from my hand — that would require him to formally acknowledge an encounter, and the execution order is technically still open. You are not me. You are someone with a sealed personal letter." He does not say from whom. "Do not say it is from this room. Say it is from a household correspondent who prefers not to be named."
+
+*He has not asked if the Fighter will do this. He is simply explaining the form.*
+
+**TOKEN GRANT:** Faithful John's Account — sealed folio, eight pages, John's ring in the wax at the fold.
+
+**SKILL CHECK:** Insight DC 12
+- *onPass:* The Fighter sees the distinction before John finishes. This is not a plea — he doesn't need acquittal; the prince already knows what he did and restored him. He needs the prince to know the *shape* of the loyalty he received: what John knew, what he chose, what each act cost him. The account is a gift, not a petition. The Fighter takes the folio without asking what it says.
+- *onFail:* Fighter starts to say something about vindication. John stops him: "Read nothing into it. Carry it sealed. Deliver it to his hands, not his chamberlain's. Say nothing about the content." The instruction is clear enough; the Fighter takes the folio.
+
+**ITEM GRANT:** John's writing-press seal — left on the table, not taken; John pushes it toward the Fighter in case it's needed to identify the mark at the corridor log. The Fighter should leave it here; John presses it back.
+
+---
+
+**ACT 2 — Castle Household Corridor (CHC)**
+
+*The head steward stands at the corridor junction with a log-book open on the standing desk beside him. He is a deliberate man who has managed this household's message traffic for twenty years. He needs an origin for every letter in his log. "Unnamed" is not a category his log has room for.*
+
+"Where does it come from?" he asks. He holds the lamp close to the folio wrapper — he cannot read through the seal but he can count the pages through the oilskin. "Eight pages isn't a personal note."
+
+*He is not hostile. He is doing his job. But a log entry naming the west corridor restoration room would be retrievable by anyone who wanted to know why a sealed folio reached the prince this afternoon.*
+
+**SKILL CHECK:** Deception DC 12
+- *onPass:* "Household correspondent, private matter, personal seal." The Fighter delivers each phrase with the specific inflection of someone who has said it before on behalf of people who knew what they were doing. The steward writes: *personal correspondence, sealed, personal mark, origin unspecified.* He does not look pleased. He lets them through.
+- *onFail:* The steward is more careful than that. "Unspecified origin is noted as a verbal representation, not a log entry — I'll need your name as the carrier attesting to private character of contents." He notes the Fighter's name and dates it. Retrievable later. Not stopped now.
+
+---
+
+**ACT 3 — Prince's Antechamber (ANT)**
+
+*The chamberlain is at the antechamber door: a thin man who has understood for twenty years that his job is to protect the prince from arriving at strong emotions without preparation. He has opinions about when sealed folios should be delivered. He has a process.*
+
+"I'll bring it to him during the evening session," he says, reaching for the folio with the practiced ease of a man who has intercepted hundreds of things at this door. "He'll be in the right frame of mind."
+
+*He means: he will open it first. He will assess whether it is emotionally ready. Then he will describe the content to the prince before the prince reads it — which is to say, the prince will receive the chamberlain's version of what John sealed, not the sealed thing itself.*
+
+**SKILL CHECK:** Persuasion DC 13
+- *onPass:* "The sender required delivery to his hand, unopened, at his own reading pace." The chamberlain's hand pauses on the folio. The Fighter names the category: personal correspondence bearing the sender's mark, addressed to the prince's personal hand, is outside the chamberlain's editorial authority by household charter. The chamberlain knows this. He removes his hand from the folio with the deliberate unhurry of a man noting for the record that he was not consulted. He opens the door.
+- *onFail:* The chamberlain will not move without knowing the origin. Fighter names it: "The restored man in the west wing." The chamberlain's face changes. He is still for three seconds. Then he opens the door without speaking — the phrase is a household code that the whole castle understands but no one says aloud. The Fighter will be remembered for knowing it.
+
+---
+
+**ACT 4 — Hall Entrance (ANT → PRH)**
+
+*Two palace guards stand at the great hall's double doors: not there because they were told to stop anyone, but because a person carrying a sealed document toward the prince during informal afternoon hours is the kind of thing that standard institutional caution treats as requiring a moment's pause. They are doing their job. The folio needs to arrive before the prince leaves for the evening session in twenty minutes.*
+
+**COMBAT:** Palace Guards ×2, AC 13, HP 24
+*These are not enemies. They are the last formal gate between here and the prince's hands. They will stand there until they are moved. The folio does not get through a closed door.*
+
+---
+
+**ACT 5 — Prince's Great Hall (PRH)**
+
+*The hall is large and quiet — a fire at one end, two household men near the far wall, the prince at the high seat with an open book he was not reading. He looks up when the Fighter enters. He looks at the folio. Something in his face does what a man's face does when he has been expecting something he didn't know he was expecting.*
+
+"Who sends this?"
+
+"A household correspondent who prefers not to be named."
+
+*He takes the folio. He breaks the seal himself — John's ring, he knows the mark — and reads. Not quickly. At the pace of a man who already suspects what this is and needs to confirm each sentence before going to the next. His face does not change very much. Something in his hands changes.*
+
+**SKILL CHECK:** Composure DC 11
+- *onPass:* The Fighter does not watch. Holds the wall beside the door. Does not add anything. Does not look toward the folio as if to prompt a response. The prince reads all eight pages. He sets the folio on the arm of the high seat. The Fighter is already near the door. The prince says: "Wait." Fighter waits. The prince is silent for thirty seconds. Then: "Tell him I read it." That is all.
+- *onFail:* Fighter adds something small — a look toward the folio, a half-gesture that carries the implication: *he didn't want anything from this.* The prince hears the implication accurately, and having heard it named, does not say the seven words he was going to say. He sets the folio on the arm of the high seat. He says nothing. The Fighter leaves.
+
+**TOKEN TAKE:** Faithful John's Account — left on the arm of the prince's high seat, seal broken, all eight pages read. The Fighter leaves with empty hands.
+
+**ITEM GRANT:** The Prince's Instruction — a verbal message to be carried back to the restoration room: *"Tell him I read it."* Not written down. Carried in the Fighter's memory.
+
+---
+
+## Quest API Stub (UQF v1.0)
+
+```json
+{
+  "quest_id": "ERF_faithful_johns_account",
+  "title": "Faithful John's Account",
+  "source": "Grimm's Fairy Tales — Brothers Grimm (1812)",
+  "cycle": 2,
+  "theme": "The service that could not be named while it was being performed: the explanation delayed until the protection it would have destroyed is safe; the account that arrives after the fact to make permanent the knowledge of what kind of loyalty the prince received",
+  "token": {
+    "id": "faithful_johns_account_ERF",
+    "name": "Faithful John's Account",
+    "description": "A sealed folio of eight pages in Faithful John's careful hand — three acts of apparent treason explained in sequence, each paragraph naming what he knew and why he acted, ending with the one sentence that is not a plea. John's ring in the wax at the fold. Unopened by the carrier.",
+    "grant_act": "act_1",
+    "take_act": "act_5",
+    "check_acts": ["act_2", "act_3", "act_4"]
+  },
+  "nodes": ["DNG", "CHC", "ANT", "PRH"],
+  "new_nodes": [
+    {
+      "code": "DNG",
+      "name": "Faithful John's Restoration Room",
+      "terrain": "castle_interior",
+      "theme_affinity": "the silence that was itself the service, the account that can now be given, the restoration that does not undo the sentence"
+    },
+    {
+      "code": "CHC",
+      "name": "Castle Household Corridor",
+      "terrain": "castle_interior",
+      "theme_affinity": "institutional message-traffic, the log that needs an origin, the steward's mandate to name things"
+    },
+    {
+      "code": "ANT",
+      "name": "Prince's Antechamber",
+      "terrain": "castle_interior",
+      "theme_affinity": "editorial gatekeeping, the chamberlain's right of preview, delivery-to-hand as distinct from delivery-to-chamberlain"
+    },
+    {
+      "code": "PRH",
+      "name": "Prince's Great Hall",
+      "terrain": "castle_interior",
+      "theme_affinity": "the prince reading slowly, the thirty seconds before speech, the message carried back"
+    }
+  ],
+  "acts": [
+    {
+      "act_id": "act_1",
+      "node": "DNG",
+      "title": "The Sealed Account",
+      "prose": "John seals the folio as the Fighter watches. He was stone for years; he looks healthier than he should. He does not ask for vindication. He needs the prince to know the full shape of what he received.",
+      "skillCheck": {
+        "skill": "Insight",
+        "dc": 12,
+        "onPass": "Fighter understands: not a plea but a gift; carries it without adding interpretation.",
+        "onFail": "John stops Fighter from interpreting; gives the instruction clearly: sealed, to his hands, nothing added."
+      },
+      "tokenGrant": "faithful_johns_account_ERF"
+    },
+    {
+      "act_id": "act_2",
+      "node": "CHC",
+      "title": "The Steward's Log",
+      "prose": "Head steward at the corridor junction with a log-book open. He needs an origin. He holds the folio up to the lamp and counts pages through the wrapper.",
+      "skillCheck": {
+        "skill": "Deception",
+        "dc": 12,
+        "onPass": "Fighter gives 'household correspondent, personal seal, private matter' — accurate, unchallengeable, non-locating. Logged as: personal correspondence, origin unspecified.",
+        "onFail": "Fighter's name logged as carrier attesting to private character of contents. Retrievable later. Not stopped now."
+      },
+      "checkToken": "faithful_johns_account_ERF"
+    },
+    {
+      "act_id": "act_3",
+      "node": "ANT",
+      "title": "The Chamberlain's Preview",
+      "prose": "The chamberlain will deliver it in the evening session, when the prince is ready — which means he opens it first. The folio cannot arrive from the chamberlain's hand.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "onPass": "Fighter names the category — personal correspondence, sender's mark, personal delivery outside chamberlain's editorial authority — and the chamberlain steps aside.",
+        "onFail": "Fighter names the origin: 'the restored man in the west wing.' The chamberlain opens the door. Fighter will be remembered for knowing the phrase."
+      },
+      "checkToken": "faithful_johns_account_ERF"
+    },
+    {
+      "act_id": "act_4",
+      "node": "ANT_to_PRH",
+      "title": "The Hall Guards",
+      "prose": "Two palace guards at the double doors — standard caution, not malice. The folio needs to arrive before the prince leaves for the evening session in twenty minutes.",
+      "combat": {
+        "enemies": "2x palace guards",
+        "ac": 13,
+        "hp": 24,
+        "notes": "Not enemies. Doing their job. The last formal gate."
+      },
+      "checkToken": "faithful_johns_account_ERF"
+    },
+    {
+      "act_id": "act_5",
+      "node": "PRH",
+      "title": "The Prince's Silence",
+      "prose": "The prince reads at the pace of a man confirming each sentence. His face does not change much. Something in his hands changes. Fighter holds the wall. After thirty seconds of silence: 'Tell him I read it.'",
+      "skillCheck": {
+        "skill": "Composure",
+        "dc": 11,
+        "onPass": "Fighter adds nothing; holds position; the prince reads all eight pages, falls silent for thirty seconds, says: 'Tell him I read it.'",
+        "onFail": "Fighter adds a small interpretive gesture; the prince hears it accurately and does not say the seven words he was going to say."
+      },
+      "takeItem": "faithful_johns_account_ERF",
+      "grantItem": "the_princes_instruction_verbal",
+      "activateMissionBit": "erfFaithfulJohnComplete"
+    }
+  ]
+}
+```
+
+*quest-map.md: append ERF cycle 2 row after ERF cycle 1 row.*
+*quest-map.md: append new theme thread (before "The tool of reassembly" ALF line).*
+*quest-map.md: append DNG, CHC, ANT, PRH to Location Grid.*
+*books.md: mark ERF [x].*
