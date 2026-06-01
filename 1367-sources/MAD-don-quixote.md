@@ -360,3 +360,242 @@ He picks up the puppet box.
   ]
 }
 ```
+
+---
+
+## Cycle 2 — The Basin and the Helmet
+
+**What cycle 1 missed:** Cycle 1 took the ownership angle — a manuscript returned to its criminal author because authorship creates an inalienable claim regardless of the man's character. That angle is about the relationship between a person and the thing they made. Cycle 2 takes the ontological angle: an object that is genuinely two things simultaneously, where neither description is wrong, and where the carrier's commission is not to restore the object to its owner but to deliver it to an institution that can file both descriptions without suppressing either. The barber is right that it is a basin. Don Quixote is not wrong that it is Mambrino's Helmet. These are not competing claims about the same fact — they are two locally valid truths about the same brass object, and the legal system's requirement to choose between them is the problem the neutral archivist solves by refusing to choose.
+
+---
+
+### Pass 1 — Token
+
+**The Brass Object** is a battered basin of decent Castilian metalwork: twelve inches across, half an inch lip, the inside concave in the way a barber's basin is concave to fit under a jaw. It is also Mambrino's Helmet, the enchanted headgear of the Moorish king, carried for decades in a saddlebag by the Knight of the Woeful Countenance. Both descriptions are attached to the carrying document the magistrate has sealed to its exterior. The Fighter never calls it one thing or the other. It travels in a saddlebag, named in the carrying document as "the contested brass object, property dispute pending, both descriptions on record." The archivist who receives it must file it somewhere — and the only honest filing is the one that does not resolve the question.
+
+---
+
+### Pass 2 — Seven Storyline Ideas
+
+1. **"The Pasamonte Pages"** — USED (cycle 1): confiscated autobiography returned to its criminal author; authorship creates a claim no crime cancels
+2. **"The Basin and the Helmet"** ← **CHOSEN / USED (cycle 2)**
+3. "Sancho's Dispatch" — Sancho's intercepted letter to Don Quixote during the Barataria governorship reveals the Duke's theatrical stagecraft; the carrier must decide whether delivering it shatters a useful illusion or enables a cruelty
+4. "The Cave Transcript" — a scribe wrote down Don Quixote's Cave of Montesinos vision verbatim; its nature (revelation, dream, or evidence of deepening madness) depends entirely on who receives it; the carrier holds the power of that decision
+5. "Dorotea's Letter" — Dorotea's letter to Don Fernando with unmet terms; a copy at the inn; if it reaches the circuit judge before the reconciliation is formally registered, the reconciliation is voided; the carrier restores the weaker party's leverage
+6. "Zoraida's Madonna" — the Captive Captain's companion Zoraida's small figurine, seized at Valencia customs; recover it before the ship departs without it; faith carried in an object that customs cannot categorize
+7. "The Knight of the White Moon's Warrant" — Samson Carrasco's challenge warrant binding Don Quixote to terms; the witnessing clerk has died; the warrant needs authentication; the document that enforces the chivalric code against the code's own champion
+
+---
+
+### Pass 3 — Theme Check
+
+No existing thread covers: the object that is genuinely two things simultaneously, where both descriptions are locally valid; the legal system's requirement to resolve what the parties have not agreed to resolve; the archivist who files the dual description as a permanent fact rather than a problem awaiting solution. Closest existing threads: *the truth was spoken but not in a venue that counts* (ERF) — but that's about testimony's venue, not an object's ontological status. *The document that precedes the order* (LIL) — that's about sequencing of instruments, not competing descriptions. Distinct new thread: **The object that is genuinely two things simultaneously: the barber's basin that is also Mambrino's Helmet; the legal system's requirement to choose one description; the archivist who preserves both truths by filing the question rather than answering it.**
+
+---
+
+## 5-Act Vignette Play
+
+*A small town magistrate's office in La Mancha, a week after the resolution of the great debate over the helmet-basin at the inn of Juan Palomeque. The object is in the magistrate's evidence room. Both the barber and Don Quixote's companions have filed claims. The magistrate has written to the regional crown notary's office in Alcalá de Henares requesting a resolution. He has been waiting for two weeks. A carrier has arrived.*
+
+---
+
+**ACT 1 — The Evidence Room (MAS)**
+
+*The Brass Object · in a cloth bag in the magistrate's evidence room · Magistrate Díaz's office, La Mancha*
+
+The magistrate is a small man with ink-stained fingers and the expression of someone who has had this object on his desk for two weeks longer than any object should be on anyone's desk. He takes it out of the cloth bag and sets it between himself and the Fighter. It is battered Castilian metalwork. It holds water. It is also, by the documented testimony of a knight and several witnesses who were afraid to contradict him, the enchanted helmet of the Moorish king Mambrino.
+
+"I have had the barber's son here four times," Díaz says. "I have had the knight's priest and that other fellow — the Bachelor of Arts — twice. They all want something different. The barber's son wants his father's property returned immediately, no questions. The priest wants it destroyed — he says it is an instrument of delusion. The Bachelor wants it classified as a public curiosity, which I suspect means he wants to put it in a display case somewhere and charge admission." He looks at the Fighter. "The crown notary's office has agreed to receive it for neutral classification. That is what you carry it to."
+
+He attaches the carrying document — *contested brass object, both descriptions on record, neither suppressed* — to the bag's cord and hands it across the desk.
+
+**TOKEN GRANT:** The Brass Object — a battered basin in a cloth bag, sealed carrying document on the cord, both parties' claims noted, magistrate's seal pressed into wax. Neither description removed. Neither confirmed.
+
+**SKILL CHECK:** Insight DC 12
+- *onPass:* Fighter understands before Díaz finishes: the commission is not to determine which description is correct. It is to carry both descriptions intact to the one institution that can receive an unresolved question as a permanent record rather than an error requiring correction. The Fighter picks up the bag without asking which it really is.
+- *onFail:* Fighter asks "Which is it, actually?" Díaz looks at the Fighter with the expression of a man who has been asked this eleven times. "Both. Neither. That is why the crown notary is receiving it." The commission's nature is now clear. Fighter picks up the bag.
+
+**ITEM GRANT:** The Magistrate's Carrying Document — sealed to the bag's cord; both descriptions recorded; magistrate's certification; dated; the object's chain of custody begins here.
+
+---
+
+**ACT 2 — The Road Out of La Mancha (MAS → ACL)**
+
+*The Brass Object · in a cloth bag on the Fighter's saddle · the road north from La Mancha toward Alcalá*
+
+The barber's son is twenty-two years old and has been following the magistrate's office since Tuesday. He knows a carrier left this morning. He catches up at the road's first milestone, riding a mule that is visibly offended by the pace.
+
+"My father's property is in that bag," he says. He is not hostile. He is a young man who has watched a lunatic knight take his father's work tool and call it a helmet, and he wants the lunatic's companions to stop pretending this is complicated. "It's a basin. He made it. His marks are on the inside. I'll show you."
+
+He reaches for the bag.
+
+*The carrying document specifies: contents sealed for crown notary review; no examination before delivery.*
+
+**SKILL CHECK:** Persuasion DC 12
+- *onPass:* Fighter explains: the carrying document includes your father's claim. Both claims are on record. The crown notary will examine the marks on the inside as part of the classification. Handing you the basin now removes your father's claim from the process entirely — the notary can only classify what he receives, and if you take it here, the classification dies with the road. The son thinks about this. He looks at the bag. He turns his mule.
+- *onFail:* The son reaches for the bag more forcefully. Fighter physically prevents the hand and says the shorter version: "The notary is the only one who can give it to you permanently. Help me get it there." The son is not convinced but he backs off. He will follow to Alcalá. That is not ideal but it is not a catastrophe.
+
+**ITEM GRANT:** The Barber's Son's Road-Parole — a verbal agreement to let the classification proceed; not written; held in the Fighter's memory.
+
+---
+
+**ACT 3 — The Road Inn (MAS → ACL)**
+
+*The Brass Object · in the cloth bag, intact · an inn on the road to Alcalá, evening*
+
+The curate — the village priest who has been trying to bring Don Quixote home for months — is at the inn. He is not alone; the Bachelor of Arts Samson Carrasco is with him, in a traveling coat, in the middle of the next plan for returning Don Quixote to his village. They are not drunk but the wine has made them frank.
+
+"That object is the instrument of a delusion that is killing your neighbor," the curate says to the Fighter, with genuine care. He means Don Quixote. "While that basin exists as a 'helmet' in any written record, anywhere, it extends and validates a belief that is destroying him. The most merciful thing anyone can do is remove the object from the record entirely. Give it to me. I will see it melted."
+
+He is not wrong about Don Quixote. He is wrong about the object.
+
+**SKILL CHECK:** Composure DC 13
+- *onPass:* Fighter holds the bag and does not respond to the argument about Don Quixote. Says: "The helmet-description is already in the magistrate's record. Destroying the object does not remove the description. The notary's classification will be the record that supersedes all others — if it receives the object." The curate pauses. He is intelligent; he understands the record-supersession argument. He does not agree with it but he cannot counter it immediately. He lets the Fighter pass.
+- *onFail:* Carrasco makes a move toward the bag — he has a more physical approach to Don Quixote's problems. Fighter blocks it and says the shorter version: the record cannot be unmade by the object's absence; only a new record can supersede the existing one. The curate holds Carrasco back. Fighter is allowed to leave. The atmosphere at the inn was better before this conversation.
+
+---
+
+**ACT 4 — The Road to Alcalá (MAS → ACL)**
+
+*The Brass Object · intact, in a saddlebag · the road between the last inn and Alcalá de Henares*
+
+Two men in Don Fernando's livery are waiting at the road's narrow. Not the barber's son and not the curate. Don Fernando was humiliated at the inn of Juan Palomeque when his treatment of Dorotea was made public before the assembled company; the chain gang liberation episode preceded it; the Knight of the Woeful Countenance is connected in Fernando's mind to the worst week of his life. Any official record of events at that inn is a record of that week. A documented classification of the famous basin-helmet would require a crown notary to establish what actually happened there, who was present, and what was said.
+
+Fernando's men want the object lost. A lost object cannot become a crown record. A missing carrier cannot testify about chain of custody.
+
+**COMBAT:** Don Fernando's Road-Men ×2, AC 12, HP 20
+
+---
+
+**ACT 5 — Crown Notary's Office, Alcalá de Henares (ACL)**
+
+*The Brass Object · in the cloth bag, carrying document intact · Crown Notary's Office, Alcalá de Henares*
+
+The crown notary is a man who has seen most things. He takes the bag off the Fighter's saddle, opens the carrying document, reads both descriptions. He looks at the object. He holds it at arm's length. He holds it with the lip-curve toward the light. He puts it on his desk and writes for three minutes.
+
+Then he reads what he has written.
+
+"'Brass object, Castilian manufacture, condition: used. Description A: barber's shaving basin, standard dimensions, maker's mark on interior concavity. Description B: enchanted helmet of Moorish king Mambrino, by documented testimony of one Alonso Quijano, called Don Quixote de la Mancha, and several witnesses. Classification: contested property, dual descriptions preserved. Status: held pending parties' direct resolution or court determination. Neither description superseded.'"
+
+He looks at the Fighter.
+
+**SKILL CHECK:** Composure DC 11
+- *onPass:* Fighter says nothing. The notary writes the classification as stated, stamps it, attaches the carrying document to the permanent record file, and puts the object in the notary's evidence cabinet between a confiscated sword and a sealed property deed. He hands the Fighter the receipt. "Both descriptions on record," he says. "Neither party will be entirely satisfied." Fighter is already at the door.
+- *onFail:* Fighter says "But what IS it?" The notary looks up. He has the expression of a man who has heard this question from both parties already, in person, across this same desk. "That," he says, "is what I have just classified as irrelevant to the record's integrity." He stamps the classification. The question was wrong. The filing is correct.
+
+**TOKEN TAKE:** The Brass Object — filed in the crown notary's evidence cabinet, Alcalá de Henares, under classification: contested property, dual descriptions preserved, status held. Neither basin nor helmet. Both. The Fighter leaves with the carrying document receipt and empty hands.
+
+**ITEM GRANT:** The Crown Notary's Classification Receipt — stamped, dated, both descriptions listed, status: held. The permanent record exists. The question is preserved.
+
+---
+
+## Quest API Stub (UQF v1.0)
+
+```json
+{
+  "quest_id": "MAD_basin_helmet",
+  "title": "The Basin and the Helmet",
+  "source": "Don Quixote — Miguel de Cervantes / John Ormsby translation",
+  "cycle": 2,
+  "theme": "The object that is genuinely two things simultaneously: the barber's basin that is also Mambrino's Helmet; the legal system's requirement to choose one description; the archivist who preserves both truths by filing the question rather than answering it",
+  "token": {
+    "id": "contested_brass_object_MAD",
+    "name": "The Brass Object",
+    "description": "A battered Castilian brass basin with a concave interior; also Mambrino's enchanted helmet, by documented testimony. The carrying document attached to the bag's cord records both descriptions. The Fighter never names it as one thing or the other. Both descriptions travel with it to the crown notary's office.",
+    "grant_act": "act_1",
+    "take_act": "act_5",
+    "check_acts": ["act_2", "act_3", "act_4"]
+  },
+  "nodes": ["MAS", "ACL"],
+  "new_nodes": [
+    {
+      "code": "MAS",
+      "name": "Magistrate's Evidence Room, La Mancha",
+      "terrain": "walled_city",
+      "theme_affinity": "the contested object, the magistrate who cannot resolve what neither party will withdraw, the evidence room as temporary repository of unresolved reality"
+    },
+    {
+      "code": "ACL",
+      "name": "Crown Notary's Office, Alcalá de Henares",
+      "terrain": "walled_city",
+      "theme_affinity": "dual-description filing, the archive's receipt of questions rather than answers, the classification that preserves both truths without resolving the question"
+    }
+  ],
+  "acts": [
+    {
+      "act_id": "act_1",
+      "node": "MAS",
+      "title": "The Carrying Document",
+      "prose": "The magistrate has had the object for two weeks. Both parties have been in four times. He has written to the crown notary for neutral classification. The carrier arrives. The commission is to carry both descriptions intact, not to determine which is correct.",
+      "skillCheck": {
+        "skill": "Insight",
+        "dc": 12,
+        "onPass": "Fighter understands the commission is to carry both descriptions intact, not to resolve the question.",
+        "onFail": "Fighter asks which it really is; magistrate explains; commission is now clear."
+      },
+      "grantItem": "magistrates_carrying_document",
+      "tokenGrant": "contested_brass_object_MAD"
+    },
+    {
+      "act_id": "act_2",
+      "node": "MAS_to_ACL",
+      "title": "The Barber's Son",
+      "prose": "The barber's son has been watching the magistrate's office since Tuesday. He catches the Fighter at the first milestone. He wants his father's basin. He reaches for the bag.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "onPass": "Fighter explains that taking the basin here removes his father's claim from the classification process. The son turns his mule.",
+        "onFail": "Fighter says the shorter version: the notary is the only one who can give it permanently. Son follows to Alcalá but does not take the bag."
+      },
+      "grantItem": "barbers_son_road_parole_verbal",
+      "checkToken": "contested_brass_object_MAD"
+    },
+    {
+      "act_id": "act_3",
+      "node": "MAS_to_ACL",
+      "title": "The Curate's Argument",
+      "prose": "The curate and Samson Carrasco are at the road inn. The curate asks Fighter to surrender the object for melting: while it exists as 'Mambrino's Helmet' in any record, it extends Don Quixote's delusion. He is not wrong about Don Quixote. He is wrong about the object.",
+      "skillCheck": {
+        "skill": "Composure",
+        "dc": 13,
+        "onPass": "Fighter explains: the description is already in the magistrate's record; destroying the object doesn't remove it; only the notary's classification can supersede all others. Curate lets them pass.",
+        "onFail": "Carrasco makes a move; Fighter blocks; says the shorter version; curate holds Carrasco back."
+      },
+      "checkToken": "contested_brass_object_MAD"
+    },
+    {
+      "act_id": "act_4",
+      "node": "MAS_to_ACL",
+      "title": "Fernando's Men",
+      "prose": "Two men in Don Fernando's livery at the road's narrow. Fernando was humiliated at the inn where the chain gang events converged; any crown record of that week is a record of his worst actions. They want the object lost.",
+      "combat": {
+        "enemies": "2x Fernando's road-men",
+        "ac": 12,
+        "hp": 20,
+        "notes": "Not subtle. They want the bag to disappear. A lost object cannot become a crown record."
+      },
+      "checkToken": "contested_brass_object_MAD"
+    },
+    {
+      "act_id": "act_5",
+      "node": "ACL",
+      "title": "Both Descriptions Preserved",
+      "prose": "The crown notary reads both descriptions. He examines the object. He writes for three minutes. He reads what he wrote: contested property, dual descriptions preserved, status held pending resolution. Neither superseded. He looks at the Fighter.",
+      "skillCheck": {
+        "skill": "Composure",
+        "dc": 11,
+        "onPass": "Fighter says nothing. The notary stamps, files, hands over the receipt. 'Both descriptions on record. Neither party will be entirely satisfied.' Fighter is already at the door.",
+        "onFail": "Fighter asks what it is. Notary: 'That is what I have just classified as irrelevant to the record's integrity.' He stamps it. The question was wrong. The filing is correct."
+      },
+      "takeItem": "contested_brass_object_MAD",
+      "grantItem": "crown_notary_classification_receipt",
+      "activateMissionBit": "madBasinHelmetComplete"
+    }
+  ]
+}
+```
+
+*quest-map.md: append MAD cycle 2 row after DQX cycle 1 row.*
+*quest-map.md: append new theme thread (before "The tool of reassembly" ALF line).*
+*quest-map.md: append MAS, ACL to Location Grid.*
+*books.md: mark MAD [x] (don-quixote entry).*
