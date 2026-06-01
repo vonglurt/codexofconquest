@@ -101,6 +101,7 @@ The game asks: what does it mean to keep your word when the world does not?
 | LGW | The Third Throw | 2 | CAM → LKS (Camlann vale → lakeside) | Loyalty after failure named traitor; completion at full cost with no absolution |
 | STN | The Horse-Hide Man | 2 | SHW → NGM (Sherwood camp → Nottingham common gallows) | The grotesque masquerade as the only available justice; witness who must not react |
 | MAN | The Templar's Writ | 2 | TPR (Templestowe Preceptory — cell → cloister → recorder's study → trial hall) | The institution's own suppressed instrument returned to the hand that wrote it |
+| SEN | Blind Pew's Delivery | 2 | ADM (Black Hill Cove quay → cliff road → Admiral Benbow yard → threshold) | The neutral messenger of doom; complicity is the complicity of the postal road |
 
 ---
 

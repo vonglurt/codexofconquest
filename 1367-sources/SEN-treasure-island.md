@@ -337,3 +337,339 @@ const QUEST_SEN = {
 
 **New Nodes Proposed:**
 - **ADM** — Admiral Benbow Inn: chalk cliff coastal village, dark sea below, lantern-lit common room, road running inland to Bristol; theme affinity: arrival/departure, danger in ordinary places, the catalyst
+
+---
+
+## Cycle 2 — Angle: Blind Pew's Delivery
+
+**What this angle reveals that Cycle 1 missed:** Cycle 1 (The Oilcloth Chart) showed the object as target — the chart marks its bearer as prey, and carrying it is an extended act of survival. Cycle 2 shows the opposite motion: the carried object is not something everyone wants to steal, but something that kills the person it reaches. The Fighter is not running away; the Fighter is walking toward a specific door at night with a death warrant in hand. This angle reveals Blind Pew himself — the most formally terrifying figure in the first act of the book, a blind man who navigates by sound and touch and cane with the precision of a professional; the black spot as a legal instrument, not a murder weapon — formally correct, formally delivered; and the moral question the chart-quest never posed: what is the Fighter's complicity in a commission whose consequences they did not cause and cannot prevent?
+
+---
+
+### Pass 1 — Full Telling (Blind Pew Angle)
+
+The black spot is one of the great inventions of nineteenth-century adventure fiction, which is saying something. It is a coin-sized piece of paper with a blackened face — lamp-black, carbon, thumb-pressed into the paper before it dried. On the other face: a short written summons. Pew presses it into Billy Bones's hand at the Admiral Benbow's door in full darkness and says: "You have till ten tonight." That is the entire delivery. What follows is Bones's collapse and death from the terror of it — not from any violence Pew committed.
+
+The genius of the device is its formal structure. The black spot is not an assassination; it is a legal instrument within pirate convention. It means: the council has voted; you have been given formal notice; if you have not complied by the stated hour, the consequences are authorized. By using a formal instrument rather than simply killing the man, the pirates demonstrate that their society has procedural rules — which Stevenson uses to explore the paradox that a society of murderers has more internally consistent procedural ethics than many legitimate institutions. The black spot is a summons. The person who delivers it is a messenger, not an executioner.
+
+Blind Pew's navigation of the cliff road to the Admiral Benbow is one of the most purely terrifying passages in *Treasure Island*. He is blind — genuinely, completely blind, not just pretending. He moves by cane, by memory, by the specific texture of the road under his feet, by asking strangers to hand him to places without explaining why, by the sound of the wind off the cliff and the timing of the waves below. He finds the inn by these means in the dark with a precision that suggests he has been here before, or that he has been given enough information to reconstruct the route from principles. When he arrives at the door he does not knock — he calls out to whoever opens it, navigates by the voice, and puts the spot in the first hand he finds. Bones is in the room. He takes the delivery. Pew says his one sentence and goes.
+
+The scene is brief in the text and enormous in effect because Pew's blindness is not an impediment — it is the scene's engine. A sighted man delivering a death warrant can be identified, followed, arrested. A blind man is invisible in a different way: he passes through the sighted world's notice-filters because he is already categorized as helpless, and the categorization is wrong. He finds what he needs by the competence that his limitation has forced him to develop, and he is gone before anyone has quite processed what just happened.
+
+### Chapter Notes
+
+**Ch. 1–3 (The Captain, the Apple Barrel Inn, Billy Bones):** Billy Bones arrives at the Admiral Benbow with a seaman's chest; he pays Jim's father to watch for a one-legged man; his terror is functional — it keeps everyone at a distance and buys him time. The fear is justified; the waiting is the first form of the book's sustained dread.
+
+**Ch. 3–4 (Blind Pew):** The black spot delivered. Bones's collapse. The chest opened. The map found. Pew's death under the horses — he cannot hear the riders until too late; his blindness, which was his advantage, becomes his end. The three-page sequence that defines what the rest of the book is about.
+
+**Ch. 5–6 (Bristol, Squire Trelawney):** The map reaches Squire Trelawney. The expedition is funded. The Hispaniola is fitted out. Silver is hired at the Spy-Glass. The naive phase of the adventure, before the adults understand what they've gotten into.
+
+**Ch. 7–11 (The Voyage, the Apple Barrel):** Jim in the apple barrel overhears Silver's complete mutiny plan. He knows everything; he can tell no one without exposing himself. The burden of knowledge in a closed environment.
+
+**Ch. 12–19 (The Island, the Mutiny, Ben Gunn):** The island sighted. The mutiny begins. Ben Gunn is found — three years marooned, found the treasure, already moved it. The honest men are outnumbered; Ben Gunn is the wild card they don't know they have.
+
+**Ch. 20–30 (The Stockade, the Fight, Silver's Bargain):** Days of siege. Jim's nocturnal adventure recapturing the Hispaniola, killing Israel Hands in the shrouds. Silver's shifting allegiance — he protects Jim from the pirates in exchange for Jim's protection from the law.
+
+**Ch. 31–34 (The Empty Pit, the Treasure, Escape):** Ben Gunn's prior excavation empties the treasure pit. Silver instantly adapts — survival over gold. The pirates routed, one killed. Silver escapes with his share. The expedition returns.
+
+---
+
+### Pass 2 — Slower
+
+**Blind Pew:** Stevenson describes him as "horrible" but the horror is not physical — it is the wrongness of his competence. He should be helpless. He is not. He finds the inn in the dark by method, not luck. He speaks with the authority of a man who has done this work many times. He is not cruel; he does not add anything to the delivery. He says his sentence and leaves. He dies under horses because the riders come from the wrong direction and he cannot read the sound of hooves when they are behind him — the one case where his method failed because he could not turn his head fast enough to recalibrate.
+
+**Billy Bones and the Black Spot:** Bones is frightened by the spot in the specific way of a man who knows what it means. The spot is not a mystery to him; it is a formal process he has been expecting. His fear is not of the paper but of what the paper authorizes, and of the people it represents, and of what they will do when the stated hour passes. He dies — not murdered but killed by the accumulated weight of the fear he has been carrying since he arrived at the inn.
+
+**The Black Spot as Formal Instrument:** Stevenson is explicit that the black spot is a procedural device with specific rules: it must be written on a specific kind of paper (part of a Bible page in one instance), with a specific message, with the black circle pressed correctly. Doing it wrong — using the wrong paper, for instance — invalidates the spot's authority within pirate convention. The pirates who use it take its correctness seriously. This is the paradox Stevenson is examining: the society of criminals with more consistent internal procedure than the legitimate institutions.
+
+**Jim's Role:** Jim is the person who connects all the sequences — the boy who finds the map, overhears the mutiny plot, recaptures the ship, meets Ben Gunn. He is not passive but he is reactive; the events happen to him and he responds correctly. His finest qualities are observational — he notices things correctly and acts on them without time to deliberate.
+
+---
+
+### Pass 3 — The Scene: Pew at the Door
+
+The night is dark enough that the road from Black Hill Cove to the Admiral Benbow is navigated by feel and hearing. Pew taps the road with his cane — not searching but measuring, the cane a precision instrument calibrated over years to read surfaces, edges, the change of sound when solid ground meets chalk cliff drop. His feet know the difference between cliff road and cow path by the specific give of the ground and the smell of the air from the sea below.
+
+He does not need the Fighter to navigate. He needs the Fighter to handle the spot until the door is reached, because a man with a cane in both hands cannot carry a coin of paper without risk of losing it in the dark, and the spot must arrive undamaged or it means nothing. The Fighter holds the paper in a closed fist. Pew navigates. They walk together without touching.
+
+The Admiral Benbow's light is visible from fifty yards — one window, dim, a rushlight in a back room. Pew stops and cocks his head before the Fighter has registered the specific quality of that light.
+
+**Pew:** *(quietly)* "Which window is the light."
+
+**Fighter:** "Right side of the ground floor."
+
+**Pew:** "Back room. He is not at the door." He calculates — the Fighter can see it happening: a man solving a spatial problem from incomplete data, using the information he has and the information he has inferred. "He will come when I call. He will come fast — he has been waiting for this."
+
+He holds out his hand. The Fighter places the folded paper in it.
+
+Pew's fingers close on the spot without looking at it. He knows it by weight and fold.
+
+He walks to the door. His cane does not tap the last ten yards — he carries it in his right hand, point lifted, moving by the remembered distance. He stops at the threshold. He calls out — not a shout, a specific tone of voice, the tone that says *this is for you and you know it.*
+
+The door opens. Light from inside falls out onto the road. Pew is in silhouette. The man in the doorway looks like he has been waiting for this moment since the night he arrived.
+
+**Pew:** "Hold out your hand, Billy."
+
+The hand that comes out of the doorway is shaking. Pew finds it by the sound of its trembling — takes the wrist with his left hand, steadies it, and presses the spot into the palm with his right.
+
+**Pew:** "You have till ten tonight."
+
+He is already walking before he finishes the sentence. He does not hear Billy Bones's sound behind him. He does not hear the door close. His cane is back on the ground, measuring the road. He knows the return route. He has the information he needs.
+
+The spot is in the hand it was meant for.
+
+---
+
+### Seven Storyline Ideas — Cycle 2
+
+1. **Blind Pew's Delivery** ← *CHOSEN* — The black spot; the cliff road at night; the delivery by touch; the messenger who cannot see the thing he delivers.
+
+2. **The Apple Barrel** — Jim overhears Silver's complete mutiny plan; the burden of carrying secret knowledge across a ship full of killers; the interminable wait between knowing and being able to act.
+
+3. **Ben Gunn's Three Years** — The marooned castaway found the treasure, dug it up, moved it, and waited alone for rescue; the unsanctioned act that rewrites everyone's ending; the accidental hero's strange patience.
+
+4. **Silver's Two Sides** — The mutiny maintained through charm; the shifting alliance with Jim; the man who is simultaneously everything the honest men are and their exact opposite; the bargain that holds because both sides need it.
+
+5. **The Empty Treasure Pit** — The moment of collective defeat; Silver's instant adaptation from treasure to survival; Stevenson's meditation on what greed does to men when the thing they've been pursuing is simply gone.
+
+6. **Jim in the Shrouds** — The fight with Israel Hands; the boy pinned to the mast by a thrown dirk; his pistols fired simultaneously by the shock of the blade; Hands in the green water below.
+
+7. **The Return Crossing** — After the treasure is loaded and Silver has escaped with his share, the Hispaniola must make port with a depleted crew, a hold full of gold, and the question of what to do about the three pirates left marooned on the island — a decision that cannot be made without the man who knows where Ben Gunn stowed his conscience.
+
+---
+
+### Theme Check
+
+**Existing active themes (selection):** the carrier becomes the hunted (SEN-01) · loyalty as patience (LHR/STN) · the grotesque masquerade as justice (STN-02) · the institution's own instrument suppressed (MAN-02) · truth delivered posthumously (LGW) · grief in an object (INV/BHD/GDN).
+
+**Themes being avoided:** SEN-01 already claimed "the carrier becomes the hunted." This is the inverse: the carrier brings the danger, not receives it. The Fighter is not prey; the person at the door is.
+
+**What this quest introduces:** *The neutral carrier of a formal instrument of doom — the black spot is procedurally correct, formally delivered, morally weightless in the carrier's hands; what it sets in motion belongs to the system that authorized it, not the messenger; the Fighter's complicity is the complicity of the postal road.* No existing quest in the map uses the carrier's moral position as the theme — not guilt, not innocence, but the specific ethical neutrality of the formal messenger who delivers what they were given.
+
+---
+
+### 5-Act Vignette Play: *Blind Pew's Delivery*
+
+**THE TOKEN: THE BLACK SPOT** — A coin-sized piece of paper, folded twice. One face blackened with lamp-black and charcoal, pressed flat while still wet. The other face bears six words in a rough hand. The Fighter holds it in a closed fist from Act I to Act IV. It smells of tar and iron. In the dark, by feel alone, it is indistinguishable from a coin. That is why Pew cannot carry it — a coin of paper dropped on a chalk cliff road at night is gone.
+
+---
+
+**ACT I — Black Hill Cove, Before Dark**
+*The black spot: folded tight, given by a hand the Fighter cannot name. Location: the quay at Black Hill Cove, dusk, the cliff road visible above.*
+
+The man who handed the spot to Pew on the quay was gone before the Fighter marked his face. Pew holds his cane in both hands and stands at the quay's edge with the specific stillness of someone who is listening to the road's information — the wind off the cliff, the tide-timing, the distance-sound from the inn above.
+
+**Pew:** "You hold it. I cannot carry it and the cane both and make the road without dropping one of them. The paper must arrive as I received it."
+
+He holds out his right hand. He is not asking.
+
+*The Fighter folds their fist around the spot. It is lighter than expected, which is always the first surprise.*
+
+**Pew:** *(already walking)* "Stay even with me. Tell me what the road shows when it shows something worth telling. Otherwise be quiet."
+
+The cliff road rises ahead. The Admiral Benbow light is not visible yet. The dark is not yet complete but is getting there with the intent of a professional.
+
+---
+
+**ACT II — The Cliff Road**
+*The black spot: in the Fighter's closed fist. Location: the chalk cliff road, full dark, sea below.*
+
+The road is forty minutes from the quay if you know it. Pew has been here before or has been told enough times that the difference is irrelevant. He sets the pace by his cane-sound: short taps for known ground, longer sweeps when the road shifts character. He does not slow at the places the Fighter would slow. He slows at the places the Fighter has not learned to notice.
+
+Then the sound changes ahead. Two men on the road, moving without a light — which means they are not travelers.
+
+*The Fighter thinks: they know this errand and they want the spot for themselves.*
+
+Pew stops. He cocks his head once.
+
+**Pew:** *(very quietly)* "How many."
+
+**Fighter:** "Two. Thirty yards."
+
+**Pew:** "Are they looking this way."
+
+**Fighter:** "Not yet."
+
+**Pew:** "Then we do not become interesting."
+
+He turns his cane forty-five degrees, steps left off the chalk road onto the grass shoulder, and continues at the same pace in the same direction. The grass shoulder is visible to the Fighter; it is invisible to two men standing in the road with no light, looking at the road.
+
+*The Fighter follows in the exact space Pew left in the dark.*
+
+The two men on the road pass behind them. One says something low. The other laughs. They are looking at the inn light, not the shoulder.
+
+---
+
+**ACT III — The Inn Yard**
+*The black spot: still in the Fighter's fist. Location: the Admiral Benbow's outer yard, approaching the door.*
+
+The inn yard is flagstone — Pew's cane changes note immediately at the boundary. He stops at the edge of the flagstone and orients toward the lit window.
+
+**Pew:** *(to the Fighter)* "One light. Back room."
+
+**Fighter:** "Right side, ground floor."
+
+**Pew:** "Back room." He calculates — the Fighter watches the calculation happen in his face, a spatial problem being solved from incomplete data. "He will come to the door when I call. He has been waiting for this since October."
+
+A shape moves in the lit window. Then a shadow that might be Bones himself, standing somewhere in the room, not sleeping.
+
+**Pew:** "Give it to me now."
+
+He holds out his hand. Flat, palm up.
+
+The Fighter places the spot in the center of his palm. Pew's fingers close on it without change of expression — weight confirmed, fold confirmed, surface confirmed. His face settles into the composed attention of a man who has arrived where he is supposed to be.
+
+*The Fighter thinks: he is not nervous. Whatever this is to him, it is not fear.*
+
+He lifts his cane and walks to the door.
+
+---
+
+**ACT IV — The Threshold**
+*The black spot: in Pew's hand, moving toward a specific other hand. Location: Admiral Benbow doorway, darkness.*
+
+Pew calls out once — not a shout, a tone. The tone of someone who has the correct address.
+
+The door opens. Light falls out across the yard. Billy Bones's silhouette is in the doorway, large, backlit, unmistakable. His hands are not shaking yet but they will be. He looks at the shape in front of him — the dark figure with the cane, the sightless face — and the shaking begins before Pew has spoken.
+
+**Pew:** "Hold out your hand, Billy."
+
+The hand comes out. Pew takes the wrist with his left hand — steadies it — and presses the spot into the palm with his right. The motion is clean, professional, the motion of a man who has done this work and takes it seriously.
+
+**Pew:** "You have till ten tonight."
+
+He is already walking when he finishes the sentence. His cane is on the flagstone. The door is behind him. He is recalibrating the route.
+
+*The Fighter stands in the yard and watches Bones close his fist around the spot. His face does not change. He closes the door.*
+
+*The Fighter thinks: the paper is not the weapon. The paper is the notification. The weapon was already there.*
+
+---
+
+**ACT V — The Road Back**
+*The black spot: in Billy Bones's fist, behind a closed door. Location: the cliff road, returning to Black Hill Cove.*
+
+Pew is already ten yards ahead on the return route, cane working. The Fighter catches up.
+
+The two men from the road on the way in are somewhere behind them — they will have seen the door open and close. They will know the delivery was made. They will try to intercept.
+
+*The Fighter thinks: escort him off the road before they connect what they saw with what they need to do about it.*
+
+The path off the road — the one Pew knew going in — is visible to the Fighter now, because they walked it once already. Pew has already turned onto it, by memory, by the feel of chalk under his cane, before the Fighter has made the decision.
+
+**Pew:** *(moving)* "They're behind us."
+
+**Fighter:** "I know."
+
+**Pew:** "Can you hold the road long enough for me to reach the quay."
+
+**Fighter:** "Yes."
+
+**Pew:** "Then do that."
+
+He continues. His cane does not slow. His pace does not slow. He has the information he needs and the rest is not his problem.
+
+*The Fighter turns toward the road and the two shapes coming up it.*
+
+*The spot is in the hand it was meant for. The escort's work is what remains.*
+
+---
+
+### Quest API Stub
+
+```
+Quest: Blind Pew's Delivery
+missionAccept: "Blind Pew cannot carry the black spot and the cane both across the
+  cliff road in the dark. You hold it until the door. He does the rest."
+
+Act I — Black Hill Cove
+activateNode: ADM
+type: dialogue
+scene: "The quay at Black Hill Cove, dusk. Pew holds his cane in both hands at
+  the road's edge, listening to what the cliff tells him. He tells you: hold the
+  spot until the door. He cannot carry it and navigate both. He holds out his hand
+  — not asking."
+prompt: "Insight DC 12: Understand what you are being asked to carry and what
+  your role is. He is not sharing the commission. He is using you as a hand."
+failText: "You hesitate. He explains it again, once, without patience. He is not
+  waiting for your comfort — he is waiting for your answer."
+successText: "You fold your fist around it. Lighter than it seems. You receive
+  the Black Spot — to hold, not to keep."
+grantItem: "Black Spot"
+checkPassFlag: senSpotHeld
+
+Act II — The Cliff Road
+activateNode: ADM
+type: skill_check
+scene: "Full dark on the chalk cliff road. Pew navigates by cane-sound and memory.
+  Two men appear on the road ahead — no light, moving without purpose, which
+  means they have specific purpose. They know this errand. Pew stops and asks:
+  how many, are they looking this way."
+prompt: "Stealth DC 13: Guide Pew off the road onto the grass shoulder and past
+  them without becoming interesting."
+failText: "One of them hears the cane on the grass. He turns. You have a few
+  seconds before he understands what he is looking at — use them."
+successText: "Pew steps left onto the shoulder. You follow in his exact space.
+  The two men look at the inn light, not the shoulder. You clear them in ten
+  seconds."
+checkPassFlag: senRoadCleared
+
+Act III — The Inn Yard
+activateNode: ADM
+type: skill_check
+scene: "Flagstone under the cane — Pew orients immediately. One lit window, back
+  room, right side. A shadow moving inside the room: Bones is awake, standing,
+  not sleeping. Pew holds out his hand for the spot. He will deliver it himself
+  — you have brought it this far."
+prompt: "Perception DC 12: Read the yard and the inn's approaches before handing
+  the spot over — ensure no one is watching who would see the delivery and act
+  before Pew clears the yard."
+failText: "You hand it over without checking. Someone in the lane has seen you
+  both. They are moving toward the yard gate. Pew is already at the door."
+successText: "The yard is clear. The gate is unwatched. You place the spot in
+  Pew's open palm. His fingers confirm it by feel, close."
+checkPassFlag: senYardCleared
+
+Act IV — The Threshold
+activateNode: ADM
+type: dialogue
+scene: "Pew calls out once — the tone of someone who has the correct address. The
+  door opens. Billy Bones's silhouette in the light, hands starting to shake before
+  Pew has spoken. Pew takes the wrist, steadies it, presses the spot into the palm.
+  You stand in the yard and watch. Your part in this is already done."
+prompt: "Courage DC 12: Stand in the yard while the delivery is made — do not
+  intervene in the scene that is happening, do not react to Bones's face, do
+  not prevent what has been set in motion."
+failText: "Something about Bones's face makes you move a step forward. Pew hears
+  it — his head turns — the scene holds for one bad second before you recover."
+successText: "You are stone in the yard. Pew presses the spot into the palm.
+  'You have till ten tonight.' He is walking before the sentence ends. The door
+  closes. The spot is in the hand it was meant for."
+checkPassFlag: senDeliveryMade
+
+Act V — The Road Back
+activateNode: ADM
+type: escort
+scene: "Pew is already on the return route. The two men from the road are behind
+  you — they saw the door open and close. They know the delivery was made and
+  they know what that means for them. Pew reaches the quay if you hold the road."
+prompt: "Hold the road long enough for Pew to clear to the quay."
+successText: "He reaches the quay without sound. The spot is in the hand it was
+  meant for. You were the hand that held it safe to the door. The rest was his."
+failText: "They reach you before Pew has cleared the road. Fight long enough
+  — he does not stop walking."
+combatTarget: "Black Hill Cove Pirates (AC 12, HP 18 each) × 2"
+takeItem: "Black Spot"
+checkPassFlag: senPewClear
+activateMissionBit: senPewComplete
+```
+
+---
+
+### New Node Proposed
+
+*(ADM already exists from Cycle 1 — no new node required. All five acts of Blind Pew's Delivery take place in the same physical zone: the quay, the cliff road, the Admiral Benbow yard. ADM is sufficient.)*
+
+---
+
+*Cycle 2 complete. Mark `[x]` for SEN-treasure-island in books.md.*
