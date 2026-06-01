@@ -430,119 +430,119 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | [x] | LCY | white-company | The White Company — Arthur Conan Doyle | 1366 AD (pub. 1891) | Historical Adventure | 625 |
 | [x] | LGW | morte-darthur | Le Morte d'Arthur — Sir Thomas Malory | pub. 1485 | Arthurian Romance | 896 |
 | [x] | STN | robin-hood | Merry Adventures of Robin Hood — Howard Pyle | c.1883 (medieval) | Outlaw Hero | 621 |
-| [x] | MAN | ivanhoe | Ivanhoe — Sir Walter Scott | 1819 (Norman Eng.) | Historical Novel | 1140 |
-| [x] | SEN | treasure-island | Treasure Island — Robert Louis Stevenson | 1883 | Pirate Adventure | 390 |
-| [x] | GCI | toilers-of-the-sea | Toilers of the Sea — Victor Hugo | 1866 | Sea Epic | 5506 |
-| [x] | KIR | mabinogion | Mabinogion — Anon (Welsh medieval) | ~12th–13th C | Celtic Myth | 365 |
-| [x] | INV | ossian | Fragments of Ancient Poetry — James Macpherson | 1760 (ancient) | Highland Bard Epic | 87 |
-| [x] | BHD | cuchulain | Cuchulain of Muirthemne — Lady Gregory | 1902 (Iron Age) | Irish Hero Epic | 132 |
-| [x] | MSE | canterbury-tales | The Canterbury Tales — Geoffrey Chaucer | c.1390 | Medieval Stories | 1688 |
-| [x] | SDQ | rob-roy | Rob Roy — Sir Walter Scott | 1817 (1715 setting) | Scottish Adventure | 370 |
-| [x] | FCO | vision-of-piers-plowman | Piers Plowman — William Langland | c.1370–1386 | Allegorical Poem | 265 |
+| [ ] | MAN | ivanhoe | Ivanhoe — Sir Walter Scott | 1819 (Norman Eng.) | Historical Novel | 1140 |
+| [ ] | SEN | treasure-island | Treasure Island — Robert Louis Stevenson | 1883 | Pirate Adventure | 390 |
+| [ ] | GCI | toilers-of-the-sea | Toilers of the Sea — Victor Hugo | 1866 | Sea Epic | 5506 |
+| [ ] | KIR | mabinogion | Mabinogion — Anon (Welsh medieval) | ~12th–13th C | Celtic Myth | 365 |
+| [ ] | INV | ossian | Fragments of Ancient Poetry — James Macpherson | 1760 (ancient) | Highland Bard Epic | 87 |
+| [ ] | BHD | cuchulain | Cuchulain of Muirthemne — Lady Gregory | 1902 (Iron Age) | Irish Hero Epic | 132 |
+| [ ] | MSE | canterbury-tales | The Canterbury Tales — Geoffrey Chaucer | c.1390 | Medieval Stories | 1688 |
+| [ ] | SDQ | rob-roy | Rob Roy — Sir Walter Scott | 1817 (1715 setting) | Scottish Adventure | 370 |
+| [ ] | FCO | vision-of-piers-plowman | Piers Plowman — William Langland | c.1370–1386 | Allegorical Poem | 265 |
 
 ### Norse & Scandinavian
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
-| [x] | FRO | volsunga-saga | Volsunga Saga — Anon | ~13th C (legendary) | Norse Legend | 342 |
-| [x] | VBY | grettir-saga | Grettir's Saga — Anon | ~14th C | Icelandic Saga | 373 |
-| [x] | LBC | nibelungenlied | Nibelungenlied — Anon | c.1200 | German Epic | 660 |
-| [x] | GDN | njal-saga | Njal's Saga — Anon (Dasent transl.) | ~13th C | Icelandic Saga | 787 |
-| [x] | RIX | egil-saga | Egil's Saga — Anon (attr. Snorri) | ~13th C | Icelandic Saga | 869 |
-| [x] | BOO | prose-edda | Prose Edda — Snorri Sturluson | c.1220 | Norse Mythology | 514 |
-| [x] | ALF | kalevala | Kalevala — Elias Lönnrot | 1835/1849 | Finnish Epic | 642 |
-| [x] | KSU | heimskringla | Heimskringla — Snorri Sturluson | c.1230 | Norse Kings History | 1707 |
-| [x] | RKV | poetic-edda | Poetic Edda — Anon | ~10th–13th C | Norse Poetry | 1924 |
-| [x] | HFT | frithiof-saga | Frithiof's Saga — Esaias Tegnér | 1825 (Old Norse) | Romantic Epic | 403 |
-| [x] | MOL | laxdaela-saga | Laxdaela Saga — Anon | ~13th C | Icelandic Saga | 347 |
-| [x] | CPH | gesta-danorum | Gesta Danorum — Saxo Grammaticus | c.1200 | Danish Chronicles | 689 |
-| [x] | ARN | knights-of-the-cross | Knights of the Cross — Henryk Sienkiewicz | 1900 (1399 setting) | Polish Historical Epic | 324 |
+| [ ] | FRO | volsunga-saga | Volsunga Saga — Anon | ~13th C (legendary) | Norse Legend | 342 |
+| [ ] | VBY | grettir-saga | Grettir's Saga — Anon | ~14th C | Icelandic Saga | 373 |
+| [ ] | LBC | nibelungenlied | Nibelungenlied — Anon | c.1200 | German Epic | 660 |
+| [ ] | GDN | njal-saga | Njal's Saga — Anon (Dasent transl.) | ~13th C | Icelandic Saga | 787 |
+| [ ] | RIX | egil-saga | Egil's Saga — Anon (attr. Snorri) | ~13th C | Icelandic Saga | 869 |
+| [ ] | BOO | prose-edda | Prose Edda — Snorri Sturluson | c.1220 | Norse Mythology | 514 |
+| [ ] | ALF | kalevala | Kalevala — Elias Lönnrot | 1835/1849 | Finnish Epic | 642 |
+| [ ] | KSU | heimskringla | Heimskringla — Snorri Sturluson | c.1230 | Norse Kings History | 1707 |
+| [ ] | RKV | poetic-edda | Poetic Edda — Anon | ~10th–13th C | Norse Poetry | 1924 |
+| [ ] | HFT | frithiof-saga | Frithiof's Saga — Esaias Tegnér | 1825 (Old Norse) | Romantic Epic | 403 |
+| [ ] | MOL | laxdaela-saga | Laxdaela Saga — Anon | ~13th C | Icelandic Saga | 347 |
+| [ ] | CPH | gesta-danorum | Gesta Danorum — Saxo Grammaticus | c.1200 | Danish Chronicles | 689 |
+| [ ] | ARN | knights-of-the-cross | Knights of the Cross — Henryk Sienkiewicz | 1900 (1399 setting) | Polish Historical Epic | 324 |
 
 ### French & Continental
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
-| [x] | OST | song-of-roland | Song of Roland — Anon | c.1100 | French Chanson | 195 |
-| [x] | CDG | three-musketeers | The Three Musketeers — Alexandre Dumas | 1844 (1625 setting) | Swashbuckler | 1356 |
-| [x] | VIE | faust | Faust — Johann Wolfgang von Goethe | 1808–1832 | Philosophical Drama | 213 |
-| [x] | ERF | grimm-fairy-tales | Grimm's Fairy Tales — Brothers Grimm | 1812 | Folk Tales | 547 |
-| [x] | BRU | amadis-of-gaul | Amadis of Gaul — Garci Rodríguez de Montalvo | pub. 1508 | Chivalric Romance | 134 |
-| [x] | LIL | froissart-berners | Chronicles — Jean Froissart (Berners transl.) | 14th–15th C | Medieval History | 861 |
-| [x] | CRL | froissart-boys | Chronicles — Jean Froissart (Boys transl.) | 14th–15th C | Medieval History | 802 |
+| [ ] | OST | song-of-roland | Song of Roland — Anon | c.1100 | French Chanson | 195 |
+| [ ] | CDG | three-musketeers | The Three Musketeers — Alexandre Dumas | 1844 (1625 setting) | Swashbuckler | 1356 |
+| [ ] | VIE | faust | Faust — Johann Wolfgang von Goethe | 1808–1832 | Philosophical Drama | 213 |
+| [ ] | ERF | grimm-fairy-tales | Grimm's Fairy Tales — Brothers Grimm | 1812 | Folk Tales | 547 |
+| [ ] | BRU | amadis-of-gaul | Amadis of Gaul — Garci Rodríguez de Montalvo | pub. 1508 | Chivalric Romance | 134 |
+| [ ] | LIL | froissart-berners | Chronicles — Jean Froissart (Berners transl.) | 14th–15th C | Medieval History | 861 |
+| [ ] | CRL | froissart-boys | Chronicles — Jean Froissart (Boys transl.) | 14th–15th C | Medieval History | 802 |
 
 ### Iberian & Portuguese
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
-| [x] | MAD | don-quixote | Don Quixote — Miguel de Cervantes | 1605–1615 | Comic Epic | 2335 |
-| [x] | MAD | chronicle-cid | Chronicle of the Cid — Anon (Southey transl.) | 12th C source | Spanish Epic | 664 |
-| [x] | LIS | lusiad | The Lusiads — Luís de Camões | 1572 | Portuguese Epic | 207 |
+| [ ] | MAD | don-quixote | Don Quixote — Miguel de Cervantes | 1605–1615 | Comic Epic | 2335 |
+| [ ] | MAD | chronicle-cid | Chronicle of the Cid — Anon (Southey transl.) | 12th C source | Spanish Epic | 664 |
+| [ ] | LIS | lusiad | The Lusiads — Luís de Camões | 1572 | Portuguese Epic | 207 |
 
 ### Italian
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
-| [x] | FLR | divine-comedy-inferno | Divine Comedy: Inferno — Dante Alighieri | c.1320 | Allegorical Epic | 641 |
-| [x] | JRS | jerusalem-delivered | Jerusalem Delivered — Torquato Tasso | 1581 | Renaissance Epic | 237 |
+| [ ] | FLR | divine-comedy-inferno | Divine Comedy: Inferno — Dante Alighieri | c.1320 | Allegorical Epic | 641 |
+| [ ] | JRS | jerusalem-delivered | Jerusalem Delivered — Torquato Tasso | 1581 | Renaissance Epic | 237 |
 
 ### Classical Mediterranean
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
-| [x] | ATH | iliad | Iliad — Homer (Lang transl.) | ~750 BC | Greek Epic | 907 |
-| [x] | ZTH | odyssey | Odyssey — Homer (Butler transl.) | ~725 BC | Greek Epic | 700 |
-| [x] | FCO | aeneid | Aeneid — Virgil (Latin original — Gutenberg #227) | ~19 BC | Roman Epic | 484 |
-| [x] | MLA | plutarch-lives | Plutarch's Lives — Plutarch (Dryden/Clough tr.) | c. 95–110 AD | Biography | 4222 |
-| [x] | NWI | anabasis | Anabasis — Xenophon (Dakyns tr. — Gutenberg #1170) | c. 401 BC | Greek Military | 545 |
-| [x] | IST | alexiad | The Alexiad — Anna Komnene | c.1148 | Byzantine History | 165 | Processed 2026-06-01 — IST-01 spec complete (The Enemy's Portrait, CON→RGS→WM); IST-02–07 seeds. Processed from memory (no txt file). See IST-alexiad.md. |
-| [x] | WAW | quo-vadis | Quo Vadis — Henryk Sienkiewicz (Curtin tr. — 1895) | c. 64–68 AD (Nero's Rome) | Historical Novel | 1201 |
+| [ ] | ATH | iliad | Iliad — Homer (Lang transl.) | ~750 BC | Greek Epic | 907 |
+| [ ] | ZTH | odyssey | Odyssey — Homer (Butler transl.) | ~725 BC | Greek Epic | 700 |
+| [ ] | FCO | aeneid | Aeneid — Virgil (Latin original — Gutenberg #227) | ~19 BC | Roman Epic | 484 |
+| [ ] | MLA | plutarch-lives | Plutarch's Lives — Plutarch (Dryden/Clough tr.) | c. 95–110 AD | Biography | 4222 |
+| [ ] | NWI | anabasis | Anabasis — Xenophon (Dakyns tr. — Gutenberg #1170) | c. 401 BC | Greek Military | 545 |
+| [ ] | IST | alexiad | The Alexiad — Anna Komnene | c.1148 | Byzantine History | 165 | Processed 2026-06-01 — IST-01 spec complete (The Enemy's Portrait, CON→RGS→WM); IST-02–07 seeds. Processed from memory (no txt file). See IST-alexiad.md. |
+| [ ] | WAW | quo-vadis | Quo Vadis — Henryk Sienkiewicz (Curtin tr. — 1895) | c. 64–68 AD (Nero's Rome) | Historical Novel | 1201 |
 
 ### Byzantine & Eastern European
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
-| [x] | CLJ | dracula | Dracula — Bram Stoker | 1897 | Gothic Horror | 869 | Processed 2026-05-31/06-01 — CLJ-01 spec (The Compiled Account, Bistritz→Klausenburg); CLJ-02–09 seeds. All 5 parts fully read (Chapters I–XXVII + epilogue). New seeds from Parts 2–5: CLJ-07 (The Haarlem Garlic, SIB→BOR), CLJ-08 (Van Helsing's Contingency, KLZ→KLZ), CLJ-09 (The Transcript, BIS). See CLJ-dracula.md. |
+| [ ] | CLJ | dracula | Dracula — Bram Stoker | 1897 | Gothic Horror | 869 | Processed 2026-05-31/06-01 — CLJ-01 spec (The Compiled Account, Bistritz→Klausenburg); CLJ-02–09 seeds. All 5 parts fully read (Chapters I–XXVII + epilogue). New seeds from Parts 2–5: CLJ-07 (The Haarlem Garlic, SIB→BOR), CLJ-08 (Van Helsing's Contingency, KLZ→KLZ), CLJ-09 (The Transcript, BIS). See CLJ-dracula.md. |
 
 ### Middle Eastern
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
-| [x] | BGW | arabian-nights-burton | Arabian Nights — Alf Layla wa-Layla (Burton tr., 1885 — Calcutta II ms.) | c. 9th–14th century | Arabic Frame-Tale | 983 |
-| [x] | CAI | arabian-nights-lang | Arabian Nights — Alf Layla wa-Layla (Lang adaptation, 1898 — Galland/Syrian tradition) | c. 9th–14th century | Arabic Frame-Tale | 629 |
-| [x] | BEY | mandeville | Mandeville's Travels — attr. Sir John Mandeville | c. 1357 | Travel/Compilation | 472 |
-| [x] | KYA | shah-nameh | Shah-Nameh — Ferdowsi (Atkinson transl.) | c.1010 | Persian Epic | 863 | Processed 2026-05-31 — KYA-01 spec complete; KYA-02–25 seeds; Shah-Nameh narrative fully covered. Volume also contains Rubaiyat/Divan/Gulistan (separate works, separate codes if processed). |
+| [ ] | BGW | arabian-nights-burton | Arabian Nights — Alf Layla wa-Layla (Burton tr., 1885 — Calcutta II ms.) | c. 9th–14th century | Arabic Frame-Tale | 983 |
+| [ ] | CAI | arabian-nights-lang | Arabian Nights — Alf Layla wa-Layla (Lang adaptation, 1898 — Galland/Syrian tradition) | c. 9th–14th century | Arabic Frame-Tale | 629 |
+| [ ] | BEY | mandeville | Mandeville's Travels — attr. Sir John Mandeville | c. 1357 | Travel/Compilation | 472 |
+| [ ] | KYA | shah-nameh | Shah-Nameh — Ferdowsi (Atkinson transl.) | c.1010 | Persian Epic | 863 | Processed 2026-05-31 — KYA-01 spec complete; KYA-02–25 seeds; Shah-Nameh narrative fully covered. Volume also contains Rubaiyat/Divan/Gulistan (separate works, separate codes if processed). |
 
 ### South Asian
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
-| [x] | HTY | mahabharata | Mahabharata — Dutt verse condensation | Ancient (pub. 1899) | Hindu Epic | 83 | Processed 2026-05-31 — HTY-01 spec (Savitri's Three Bargains); HTY-02–06 seeds. See HTY-mahabharata.md. |
-| [x] | ADA | ramayana | Ramayana — Valmiki (Griffith transl.) | Ancient (pub. 1870) | Hindu Epic | 2339 | Processed 2026-05-31 — ADA-01 spec (The Curlew's Grief, Sultaniya→Tabriz); ADA-02–06 seeds. Part 1 of 12 fully read; story arc recovered from Narad's synopsis (Canto I). Parts 2–12 pending detailed pass. See ADA-ramayana.md. |
+| [ ] | HTY | mahabharata | Mahabharata — Dutt verse condensation | Ancient (pub. 1899) | Hindu Epic | 83 | Processed 2026-05-31 — HTY-01 spec (Savitri's Three Bargains); HTY-02–06 seeds. See HTY-mahabharata.md. |
+| [ ] | ADA | ramayana | Ramayana — Valmiki (Griffith transl.) | Ancient (pub. 1870) | Hindu Epic | 2339 | Processed 2026-05-31 — ADA-01 spec (The Curlew's Grief, Sultaniya→Tabriz); ADA-02–06 seeds. Part 1 of 12 fully read; story arc recovered from Narad's synopsis (Canto I). Parts 2–12 pending detailed pass. See ADA-ramayana.md. |
 
 ### East Asian & Caucasus
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
-| [x] | AMS | tale-of-genji | Tale of Genji — Murasaki Shikibu | c.1010 | Japanese Novel | 435 | Processed 2026-05-31/06-01 — AMS-01 spec (The Scarlet Fence Poem, NIS→TBZ); AMS-02–06 seeds. ALL 3 PARTS FULLY READ (Chapters I–IX + Appendices). New seed from Parts 2–3: AMS-07 (The Exchanged Fans, TBZ→MRG→TBZ). See AMS-tale-of-genji.md. |
-| [x] | TBS | knight-panther-skin | Knight in the Panther's Skin — Shota Rustaveli | c.1225 | Georgian Epic | mem |
+| [ ] | AMS | tale-of-genji | Tale of Genji — Murasaki Shikibu | c.1010 | Japanese Novel | 435 | Processed 2026-05-31/06-01 — AMS-01 spec (The Scarlet Fence Poem, NIS→TBZ); AMS-02–06 seeds. ALL 3 PARTS FULLY READ (Chapters I–IX + Appendices). New seed from Parts 2–3: AMS-07 (The Exchanged Fans, TBZ→MRG→TBZ). See AMS-tale-of-genji.md. |
+| [ ] | TBS | knight-panther-skin | Knight in the Panther's Skin — Shota Rustaveli | c.1225 | Georgian Epic | mem |
 
 ### Caribbean & Americas
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
-| [x] | HAV | buccaneers-of-america | Buccaneers of America — Alexandre Exquemelin | 1678 | Pirate History | 247 | Processed 2026-05-31 — HAV-01 spec (The Articles, Chios→Rhodes); HAV-02–06 seeds. Both parts read; full arc recovered (Pierre le Grand, Lolonois, Morgan). See HAV-buccaneers-of-america.md. |
+| [ ] | HAV | buccaneers-of-america | Buccaneers of America — Alexandre Exquemelin | 1678 | Pirate History | 247 | Processed 2026-05-31 — HAV-01 spec (The Articles, Chios→Rhodes); HAV-02–06 seeds. Both parts read; full arc recovered (Pierre le Grand, Lolonois, Morgan). See HAV-buccaneers-of-america.md. |
 
 ### Supplementary 1367 AD Sources
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
-| [x] | LIL | froissart-berners | Chronicles (Berners transl.) | 1360s–1400 | Medieval History | 861 | Processed 2026-05-31 — LIL-02 spec complete (The Company's Letter, Bordeaux→Beaulieu-en-Périgord); routier economy/1367 angle. Pass 1: Brétigny aftermath, Free Companies, Black Prince at Bordeaux. Pass 3: Black Prince's dinner at Poitiers (source line ~498). New nodes: BDX, PER, SRL. See LIL-froissart-berners.md Supplementary Cycle. |
-| [x] | CRL | froissart-boys | Chronicles (Boys transl.) | 1360s–1400 | Medieval History | 802 | Processed 2026-05-31 — CRL-02 spec complete (The Archpriest's Certificate, PER→BDX); routier economy/purchased grace angle. Parts 1–3 read; full Archpriest chapter (LXXXV–LXXXVI) + Jacquerie (LXXXVII–LXXXIX). New angle: the papal absolution as institutional transaction, 1367 Free Company precedent. See CRL-froissart-boys.md Cycle 2. |
-| [x] | BEY | mandeville | Travels of Mandeville | c.1357 | Travel | 461 | Processed 2026-05-31 — BEY-S08 spec complete (The Sultan's Commission, FAM→RHD→WM); Sultan's letters/military service angle. Parts 1–2 read; Chapter VI (soldier service) + Chapter XI (letters with great seal) + Chapter XV (Sultan dialogue). New angle: the document that authenticated a prior Mamluk-Christian relationship now inconvenient to all parties in 1367. New node: FAM (Famagusta). See BEY-mandeville.md Cycle 2. |
-| [x] | BGW | arabian-nights-burton | Arabian Nights (Burton) | Medieval | Stories | 959 | Processed 2026-05-31 — BGW-S08 spec complete (The Caliph's Own Copy, CAI→ALE→WM); shadow caliphate/marginalia angle. Source drawn from memory (size gate: ~983 KB). Harun al-Rashid section as primary focus: the idealized Caliph who walks his streets at night, annotated by al-Mutawakkil I (r. 1362–1363) who holds the same title with none of the power. New angle: the margin as the only honest speech space available to the diminished heir of a great institution. Nodes used: CAI (Cairo Sufi hospice), ALE (Alexandria Genoese factor's house). See BGW-arabian-nights-burton.md Cycle 2. |
-| [x] | CAI | arabian-nights-lang | Arabian Nights (Lang) | Medieval | Stories | 614 | Processed 2026-05-31 — CAI-S08 spec complete (The Collector's Codicil, ALP→LAT→WM); oral tradition / first inscription angle. Source part 1 of 4 read; Preface + frame narrative + opening stories confirmed. Aladdin present in this tradition (from Galland/Diyab oral tradition, not in Burton). New angle: the codicil that names the oral tradition's families as the text's true holders; the gap in the archive's classification system as evidence that no one has received this before. New nodes: ALP (Aleppo storytellers' quarter), LAT (Latakia Syrian port). See CAI-arabian-nights-lang.md Cycle 2. |
-| [x] | MSE | canterbury-tales | Canterbury Tales | c.1390 | Stories | 1688 |
-| [x] | BLQ | decameron | Decameron — Giovanni Boccaccio | 1353 | Italian Stories | 1709 | Processed 2026-05-31/06-01 — BLQ-01 spec (The Saint's Attestation, FLR→NAP); BLQ-02–07 seeds (parts 1 of 9). All 9 parts fully read (Days 1–10, all 100 stories + Author's Conclusion). New seeds from Parts 2–9: BLQ-S08 (The Jewel Chest, BRI→BAR), BLQ-S09 (The Soldier's Testimony, ALE→FAM), BLQ-S10 (The Impossible Conditions, FLR→AVG→MTP→MAR), BLQ-S11 (The Court Defense, PIS→PRA), BLQ-S12 (The Two Friends' Debt, ROM→ROM). See BLQ-decameron.md. |
+| [ ] | LIL | froissart-berners | Chronicles (Berners transl.) | 1360s–1400 | Medieval History | 861 | Processed 2026-05-31 — LIL-02 spec complete (The Company's Letter, Bordeaux→Beaulieu-en-Périgord); routier economy/1367 angle. Pass 1: Brétigny aftermath, Free Companies, Black Prince at Bordeaux. Pass 3: Black Prince's dinner at Poitiers (source line ~498). New nodes: BDX, PER, SRL. See LIL-froissart-berners.md Supplementary Cycle. |
+| [ ] | CRL | froissart-boys | Chronicles (Boys transl.) | 1360s–1400 | Medieval History | 802 | Processed 2026-05-31 — CRL-02 spec complete (The Archpriest's Certificate, PER→BDX); routier economy/purchased grace angle. Parts 1–3 read; full Archpriest chapter (LXXXV–LXXXVI) + Jacquerie (LXXXVII–LXXXIX). New angle: the papal absolution as institutional transaction, 1367 Free Company precedent. See CRL-froissart-boys.md Cycle 2. |
+| [ ] | BEY | mandeville | Travels of Mandeville | c.1357 | Travel | 461 | Processed 2026-05-31 — BEY-S08 spec complete (The Sultan's Commission, FAM→RHD→WM); Sultan's letters/military service angle. Parts 1–2 read; Chapter VI (soldier service) + Chapter XI (letters with great seal) + Chapter XV (Sultan dialogue). New angle: the document that authenticated a prior Mamluk-Christian relationship now inconvenient to all parties in 1367. New node: FAM (Famagusta). See BEY-mandeville.md Cycle 2. |
+| [ ] | BGW | arabian-nights-burton | Arabian Nights (Burton) | Medieval | Stories | 959 | Processed 2026-05-31 — BGW-S08 spec complete (The Caliph's Own Copy, CAI→ALE→WM); shadow caliphate/marginalia angle. Source drawn from memory (size gate: ~983 KB). Harun al-Rashid section as primary focus: the idealized Caliph who walks his streets at night, annotated by al-Mutawakkil I (r. 1362–1363) who holds the same title with none of the power. New angle: the margin as the only honest speech space available to the diminished heir of a great institution. Nodes used: CAI (Cairo Sufi hospice), ALE (Alexandria Genoese factor's house). See BGW-arabian-nights-burton.md Cycle 2. |
+| [ ] | CAI | arabian-nights-lang | Arabian Nights (Lang) | Medieval | Stories | 614 | Processed 2026-05-31 — CAI-S08 spec complete (The Collector's Codicil, ALP→LAT→WM); oral tradition / first inscription angle. Source part 1 of 4 read; Preface + frame narrative + opening stories confirmed. Aladdin present in this tradition (from Galland/Diyab oral tradition, not in Burton). New angle: the codicil that names the oral tradition's families as the text's true holders; the gap in the archive's classification system as evidence that no one has received this before. New nodes: ALP (Aleppo storytellers' quarter), LAT (Latakia Syrian port). See CAI-arabian-nights-lang.md Cycle 2. |
+| [ ] | MSE | canterbury-tales | Canterbury Tales | c.1390 | Stories | 1688 |
+| [ ] | BLQ | decameron | Decameron — Giovanni Boccaccio | 1353 | Italian Stories | 1709 | Processed 2026-05-31/06-01 — BLQ-01 spec (The Saint's Attestation, FLR→NAP); BLQ-02–07 seeds (parts 1 of 9). All 9 parts fully read (Days 1–10, all 100 stories + Author's Conclusion). New seeds from Parts 2–9: BLQ-S08 (The Jewel Chest, BRI→BAR), BLQ-S09 (The Soldier's Testimony, ALE→FAM), BLQ-S10 (The Impossible Conditions, FLR→AVG→MTP→MAR), BLQ-S11 (The Court Defense, PIS→PRA), BLQ-S12 (The Two Friends' Debt, ROM→ROM). See BLQ-decameron.md. |
 
 ---
 

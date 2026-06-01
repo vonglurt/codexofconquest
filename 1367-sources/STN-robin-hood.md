@@ -240,3 +240,338 @@ Wulf shouldered his pack and said nothing. There was nothing to say. The coin ha
 ---
 
 *Source read from STN-robin-hood.txt (Project Gutenberg, Howard Pyle, 1883), lines 1–11,185, in full. All character names, dialogue, physical descriptions, and narrative details above are drawn directly from Pyle's text.*
+
+---
+
+## Cycle 2 — Angle: The Horse-Hide Man
+
+**What this angle reveals that Cycle 1 missed:** Cycle 1 (The Half-Sixpence) showed Sherwood as shelter and tenderness as its motive force — the forest as the place you run toward, the broken coin as a love that survives concealment. Cycle 2 shows the other face of Sherwood: a kill-zone where a professional assassin reads bent fern and fiber on bark, and where the only murder Robin commits in the entire book happens in a low clearing while the world's worst sound is a man's foot catching a tree root at the wrong moment. Cycle 1 missed entirely: Guy of Gisbourne's menace; Robin's capacity for cold violence when cornered; the grotesque theater of the horse-hide disguise; the Sheriff's wordless flight when he can no longer distinguish what is real from what has already defeated him; and the specific horror of watching someone you know walk past you wearing a dead man's face and skin, in public, in daylight, while you must look away and hold still.
+
+---
+
+### Pass 1 — Full Telling (Horse-Hide Man Angle)
+
+Guy of Gisbourne is the only enemy in Pyle's *Merry Adventures* who is not, at some level, comic. The Sheriff of Nottingham is a bully and a clown — tricked a dozen times, chased through his own courtyard, robbed at his own table. The Bishop of Hereford is pomposity made episcopal. Even Sir Stephen of Trent is more apparatus of social power than genuine menace. Gisbourne is different. He is hired to do one thing: find Robin Hood in Sherwood and kill him. He is given a description, a commission from the King (operating through the Sheriff), and a free hand. He works alone.
+
+His costume is his announcement. A cloak of horse-hide, cured but not tanned, with the tail hanging down behind — the costume of a man who has decided that intimidation is more efficient than concealment, and that tracking a man in Sherwood requires looking like you belong to the forest's less hospitable register. He has a tracker's eye for bent grass, disturbed bark, the specific way the light changes under a canopy when a man has recently passed. He is "known far and wide as one who tracked all men that ever walked the greenwood." No comedy here. No disguise this time for Robin.
+
+The sequence Pyle builds — two or three chapters that form the book's darkest movement — unfolds in alternating tracks: Gisbourne moving through the forest on Robin's trail; the Sheriff's men separately on Little John's. Both hunts converge on a single afternoon, and the convergence is the trap. Robin meets Gisbourne in the deep forest. They recognize each other without ceremony — two men in a wood, each knowing what the other is. The fight is sword-and-sword, which is not Robin's weapon, and the disadvantage shows. Robin is faster; Gisbourne is stronger. They work their way across uneven ground, and then Robin's foot catches a root. He goes down. Gisbourne's blade comes up. Pyle records it plainly, the way a man records the thing that nearly killed him before he had time to be afraid. Robin recovers his balance. The fight turns. The conclusion is not heroic: Robin kills Gisbourne with a dagger at the throat.
+
+Then he looks at what he is holding. And he looks at what Gisbourne is wearing.
+
+The disguise he constructs is the most grotesque moment in any English outlaw legend. He pulls the horse-hide cloak from Gisbourne's body, puts it on, and disfigures the dead man's face — not from cruelty but from calculation: the Sheriff's men must believe the face belongs to Robin Hood. He takes Gisbourne's bow. He blows a note on his own bugle (to any ear in Sherwood, Robin Hood's signal). Then he walks out of the trees toward the Nottingham road, carrying a head, wearing dead horse-skin, in the afternoon.
+
+Meanwhile the Sheriff has Little John at a gallows-tree outside Nottingham town, a rope at John's neck, waiting only for the word from the forest that Gisbourne has found his quarry. The Sheriff's sergeant looks up and sees a horse-hide figure emerging from the trees, carrying what appears to be a severed head. The sergeant assumes the obvious. He sends word to the Sheriff. The Sheriff sees the figure coming up the road. Robin Hood, wearing Gisbourne's cloak with the tail hanging down behind, walks up to the gallows in broad daylight, in front of the Sheriff's entire assembled company, and asks for the prisoner to be released: a commission fulfilled deserves a reward.
+
+The Sheriff — who has been defeated by Robin Hood in so many disguises that he has lost the ability to trust his own eyes — looks at the approaching figure, looks at the head, looks at the cloak, and for one terrible moment actually considers it.
+
+Robin raises his head and blows his bugle.
+
+The call is recognizable to every man in the county. The Sheriff turns his horse without a word, without a sound, and rides. His men scatter. Little John is still at the rope's end — and someone has to cut him down.
+
+### Chapter Notes
+
+**"Robin Hood and Allan a Dale":** Sets up the band's minstrel — Ellen rescued, Bishop's chain stripped. Establishes that Robin can operate in churches, towns, formal settings. The disguise as the methodology in miniature: social occasion that cannot be stopped.
+
+**"Will Stutely is Rescued":** First time Robin raids to rescue a man from a public hanging. Template established: infiltrate, wait, act at the last moment.
+
+**"Robin Hood and the Butcher":** Robin sells meat in Nottingham, enters the Sheriff's own hall, plays cards with him, wins, walks out. The Sheriff does not know his guest's identity. This is the book's thesis in miniature: power cannot recognize what it cannot imagine.
+
+**"Robin Hood and Midge / Tanner / Will Scarlet / Friar Tuck":** Recruitment through defeat. Every fight Robin loses, he makes the winner his friend. The band grows by Robin's acknowledged failures. The comic-heroic middle section.
+
+**"Robin Hood and Sir Richard of the Lea":** Four hundred pounds of silver given to a broken knight. The longest continuous narrative: Sir Richard's debt, Priory of Emmet, the ransom journey, the repayment. Robin as redistribution system — taking from corrupt Church, giving to dispossessed gentry.
+
+**"The Sheriff and Guy of Gisbourne":** The dark chapter. Gisbourne hired; the parallel hunts; Robin's near-death; the horse-hide disguise; Little John released; the Sheriff flees without a word. The only killing in the book.
+
+**"Robin Hood and the Beggar / Potter / Corn-Chandler":** Comic middle section — multiple disguise adventures, Robin's retail operations. The book breathes after the Gisbourne darkness.
+
+**"Robin Hood and the Bishop of Hereford":** The Bishop forced to say mass in the forest at arrowpoint. His gold redistributed. Comedy of ecclesiastical pomposity punctured by greenwood law.
+
+**"King Richard and Robin Hood":** The King disguised as a Black Friar; the robbery; the feast in Sherwood; the pardon; the buffet contest (the King knocks Robin flat). Warmest scene in the book.
+
+**"The Chase of Robin Hood" and "The Death of Robin Hood":** Return to Sherwood after royal service. The Sheriff killed. Then: fever, Kirklees Nunnery, treacherous bloodletting, the last arrow, the grave inscription. Little John's grief. Pyle's farewell.
+
+---
+
+### Pass 2 — Slower
+
+**Guy of Gisbourne:** No comedy. He wears horse-hide not as theater but as function — he is a professional tracker, and the cloak marks him in Sherwood the way a uniform marks a soldier in a garrison. He has no dialogue that Pyle gives him before the fight. He speaks in action: bent grass, marked trees, a fire laid and abandoned. His failure is not incompetence; Robin trips on a root by chance and recovers faster. Gisbourne was the better swordsman in the wrong second.
+
+**The Disguise as Logic:** Robin's decision to put on the horse-hide is not impulsive — it is the only available move. Little John is at a rope's end. The Sheriff is waiting for Gisbourne's signal. The only news the Sheriff is expecting is Gisbourne carrying Robin's head. So Robin becomes Gisbourne. The disfiguring of the dead man's face is performed not in anger but in calculation. This is the moment in the book where Robin stops being merry and becomes something else — briefly, efficiently, and then not again.
+
+**The Sheriff at the Gallows:** His wordless flight when the bugle sounds is one of Pyle's most precisely observed moments. He does not scream, give orders, or explain. He turns his horse and goes. Years of defeat have not broken his nerve — they have destroyed his ability to distinguish between humiliation-in-progress and genuine danger. He can no longer assess the information his eyes give him. When he sees a Gisbourne-shape carrying a head and then hears Robin Hood's bugle, his mind cannot reconcile the two inputs fast enough. He runs.
+
+**Little John at the Gallows:** No comedy. His hands are tied. His neck is in the rope. He is watching the road for something, anything, and then this shape in horse-hide walks out of the trees and he cannot tell if it is rescue or the final horror until the bugle sounds. Pyle gives him one sentence of reaction: "Little John gave a great shout of joy." That is all. The whole architecture of the scene fits into that shout.
+
+**Robin After:** He returns the horse-hide to the forest. Pyle does not describe this moment. He is back in Lincoln green by the next scene. The horse-hide is never mentioned again. The book moves on as if it did not happen. This is the correct authorial choice and also the most disturbing element of the sequence: the book processes the killing by not processing it, and Robin Hood is merry again by the next chapter.
+
+---
+
+### Pass 3 — The Scene: The Road from the Trees
+
+Noon. The Nottingham road runs between the town's east gate and the edge of Sherwood, maybe half a mile of open ground between treeline and gatehouse. The Sheriff has his gallows-tree set on the common at the road's edge, in view of the town wall — public punishment requires a public audience. Little John is on the scaffold, hands bound, the rope fitted, twenty of the Sheriff's men standing around it in a ring. The Sheriff is mounted. His sergeant stands at the foot of the scaffold with a knife in his hand, waiting for the signal.
+
+The signal would come from Gisbourne. The signal would be a bugle-note from the forest: quarry found, come collect. That note has not sounded.
+
+The Sheriff has been waiting since morning.
+
+Then the figure comes out of the trees.
+
+It is the right shape — large, moving the right way, wearing the horse-hide cloak that every man in the county knows, with the tail hanging down behind. It carries something in its left hand, held by the hair. The head is disfigured — face cut, no feature to read at a hundred yards. The Sheriff's sergeant shades his eyes and looks. The figure is walking steadily toward the scaffold.
+
+"Gisbourne," the sergeant says, and the word goes through the ring of men like a door being opened.
+
+The figure walks up to the edge of the ring. Up close, the cloak smells of horse and forest-mold. The face beneath the hood is a face — tight, controlled, moving correctly for Gisbourne, who was always a man of small movements and specific purposes. The figure looks at Little John on the scaffold. It looks at the Sheriff. It looks at the head in its left hand. The gesture says: *commission fulfilled; release the prisoner.*
+
+The Sheriff stares.
+
+He has been deceived so many times by this man that he has learned, finally, a kind of caution — he checks the shape, the walk, the cloak. He checks the head. The head is convincing. The walk is right. The cloak is Gisbourne's own cloak; he would know it. The figure looks at the Sheriff. The Sheriff looks at the figure.
+
+One beat.
+
+Then the figure puts two fingers to its lips and blows a note on the bugle at its belt.
+
+The note is the same note the Sheriff has heard in his nightmares for years: Robin Hood's call, the specific high-low-high of it, echoing off the Nottingham wall and the gallows-tree and every man's face in the ring. The Sheriff's horse shies. The ring of men begins to dissolve — not in panic, in a specific controlled terror, the way men scatter from a sound that has never yet signaled anything good for them.
+
+The Sheriff does not speak. He turns his horse and goes. No order. No explanation. He simply leaves, and his departure has the quality of a man who has decided, in that final moment before the note faded, that there is no advantage in the available information and the only correct move is to not be here.
+
+The rope is still around Little John's neck. The scaffold is empty of everyone except Little John — and whoever cut the rope: a Fighter who was standing in that ring a moment ago, holding a small burned-leather disk in one fist, watching the figure in horse-hide from three feet away and not blinking.
+
+---
+
+### Seven Storyline Ideas — Cycle 2
+
+1. **The Horse-Hide Man** ← *CHOSEN* — Gisbourne tracks the party through Sherwood; the Fighter discovers the quarry marks; the fight in the deep forest; the horse-hide disguise; Little John's rescue.
+
+2. **The Wager at the King's Butts** — A royal forester challenges the party to a long-distance archery contest with a signed warrant as the prize — but the warrant is a trap, and the winner will be arrested for theft of royal property before they leave the range.
+
+3. **The Debt at Emmet Priory** — Sir Richard of the Lea's four hundred pounds must reach the Priory before Prime; the party rides by night through forest paths; the corrupt cellarer has hidden his own copy of the deed; time, terrain, and a man who does not want to be found.
+
+4. **Gray Goose at Nottingham Fair** — The golden arrow tournament; the party enters under false names; the question is not whether to win but whether to be remembered for winning.
+
+5. **The Widow's Sons** — Three brothers at a noon hanging; Little John captured trying to buy time; the fight must happen before the Sheriff runs out of patience and hangs all four.
+
+6. **The Prioress of Kirklees** — Robin is feverish behind a studded oak door; Little John has been barred at the gate; the three weak bugle notes were an hour ago; the door is the problem.
+
+7. **King Richard in the Forest** — Seven Black Friars on the Nottingham road; one of the seven is the King; how the party behaves when they do not know who is listening determines whether they receive a pardon or a warrant.
+
+---
+
+### Theme Check
+
+**Existing active themes (selection):** loyalty under the long watch (LHR/STN/TBS) · oath remembered when everyone else forgets (LHR-02) · unacknowledged love survives because never named (LCY-02) · loyalty after failure named traitor, completion at full cost (LGW-02) · the carrier becomes the hunted (SEN) · the invitation as the weapon (LBC) · grief carried in an object (INV/BHD/GDN).
+
+**Themes being avoided:** "the carrier becomes the hunted" (SEN) is about possession marking the bearer, which is adjacent — but SEN is about possession as exposure, not performance as survival. The Gisbourne quest is not about being hunted; it is about the hunter's absence and what fills the space it leaves. "The invitation as weapon" (LBC) uses disguise in a social form, but that is about vengeance through courtesy; this is about justice through grotesque masquerade. No existing theme involves the witness who must suppress recognition in a crowd where showing it destroys everything.
+
+**New theme introduced:** *The grotesque masquerade as the only available justice — identity worn as a survival tool, and the witness who must hold absolute stillness in public while the thing they know would destroy everything if it showed on their face.* No existing quest in the map uses disguise as its core mechanism, or places the Fighter's self-suppression — not courage, not violence, but the discipline not to react — as the act that determines whether the living man lives.
+
+---
+
+### 5-Act Vignette Play: *The Horse-Hide Man*
+
+**THE TOKEN: GISBOURNE'S QUARRY MARK** — A small disk of blackened leather, thumb-wide, with a horsehead burned into one face. Gisbourne hangs these from branches to signal the Sheriff's men that quarry is confirmed in this zone. The Fighter finds one hanging directly above their sleeping position at dawn: they are not background — they are the target. Taking the mark disrupts the signal. Keeping it is the only proof this was ever personal.
+
+---
+
+**ACT I — The Mark on the Branch**
+*The quarry mark: hanging from a bough directly above the Fighter's bedroll. Location: Sherwood camp, dawn.*
+
+The camp is still. Will Scarlet is asleep against a tree. Allan a Dale's harp is covered with oilcloth against the dew. The fire is cold ash.
+
+The Fighter wakes before the others, rolls upright, and looks up — because something about the branch overhead is wrong. The bark has been recently cut. Something has been tied there. At standing eye level it would be precisely at eye level.
+
+A small burned disk of leather. A horsehead on one face.
+
+The Fighter cuts it down in one motion. Closes their fist around it. Does not speak.
+
+*The Fighter thinks: this is not a warning. This is a confirmation.*
+
+The camp looks the same as every morning in Sherwood, which is the most useful fact about Sherwood — it always looks the same, and the men who know it best are not always the men who live here.
+
+---
+
+**ACT II — Reading the Trail**
+*The quarry mark: in the Fighter's boot, pressing against the ankle. Location: deep Sherwood, noon.*
+
+Crushed fern in a line moving west-southwest. A thread of coarse gray fiber snagged at chest height on a hawthorn. Twice, on the underside of a branch: the parallel scrape of a rope tied and removed. Someone has been here before the Fighter, many times, moving with purpose.
+
+Robin knows. The Fighter found him an hour ago and showed him the disk. Robin looked at it, turned it over, and set it back in the Fighter's hand without speaking. Then he told the Fighter to keep it and walked east. Alone. The Fighter was told, in the specific quality of Robin's silence, not to follow.
+
+The Fighter is following.
+
+*The Fighter thinks: he goes alone because he trusts no one to witness cleanly what he is about to do.*
+
+The forest thickens. The trail ends at a space where the ground has been scuffed by two men moving in a small circle around each other, and what is left of one man's fire is in the fern. The sound of the fight started four minutes ago, coming from forty yards ahead. The sound stopped two minutes ago. The stillness that followed was the kind that contains decisions.
+
+---
+
+**ACT III — After the Fight**
+*The quarry mark: pressed in the Fighter's palm, leaving a circle in the skin. Location: forest clearing, afternoon.*
+
+Robin Hood is alive.
+
+He stands in the clearing with a cut on his arm and both hands very steady, which is how the Fighter knows how close it was — when a man's hands are very steady after a fight, the steadiness is the effort not to shake. At his feet, the horse-hide cloak is being removed from a dead man by the expedient of not looking at the face.
+
+Robin does not look at the Fighter. He looks at what he is holding.
+
+**Robin:** *(quietly)* "Little John is at the gallows-tree in Nottingham. They are waiting for Gisbourne's signal."
+
+He pulls the horse-hide over his shoulders. Settles it. Adjusts the hang of the tail. Picks up Gisbourne's bow.
+
+**Robin:** "Gisbourne's signal is a bugle-note. Mine is a bugle-note."
+
+He looks at the Fighter then, just briefly.
+
+**Robin:** "If you come behind me on that road and your face gives me away, I'll have done all this for nothing. Do you understand what I'm asking?"
+
+*The Fighter understands: he is asking for a different kind of standing still — not the vigil, not the cave mouth. Stillness in a crowd that can see your face.*
+
+Robin turns toward the Nottingham road and walks. The Fighter follows at a distance that says: *I am not with you.*
+
+---
+
+**ACT IV — In the Ring**
+*The quarry mark: held, not visible, inside the sleeve. Location: Nottingham common, gallows-tree, the public road.*
+
+The crowd is thirty people, maybe forty. Merchants, idlers, three women with marketing baskets who stopped because there was something interesting at the gallows-tree. Two children. The Sheriff's men in a ring around the scaffold — twenty armed, the sergeant at the foot with a knife. The Sheriff on horseback at the far edge of the ring. Little John on the scaffold. Hands bound. Rope fitted. Looking at the road.
+
+The figure in horse-hide walking up from the treeline.
+
+The Fighter is in the crowd. Not at the back — at the edge of the ring, three feet from the rope. The quarry mark is in the Fighter's left fist, inside the sleeve.
+
+*The Fighter thinks: do not look at his face. Look at the scaffold.*
+
+The figure in horse-hide reaches the ring. The crowd parts. The Sheriff stares. The sergeant shades his eyes. The figure is carrying something in its left hand. The face beneath the hood is Gisbourne's face, or near enough at this distance.
+
+The Fighter stares at the rope. Counts breaths. Does not blink at the hood. Does not signal. Does not look.
+
+One beat. Two.
+
+The bugle sounds.
+
+The crowd moves. The Sheriff's horse shies. The ring dissolves. The Fighter steps to the rope post, puts the blade to the rope, cuts twice — the second cut severs it — and Little John drops forward onto one knee, hands still bound, and looks up.
+
+**Little John:** *(thick with something)* "I knew it was him."
+
+The Fighter cuts his hands free and says nothing. The quarry mark is still in the left fist.
+
+---
+
+**ACT V — The Road Home**
+*The quarry mark: dropped, unnoticed, in the mud of Nottingham common. Location: the road home to Sherwood.*
+
+The Sheriff's men are gone. The crowd has dispersed in different directions at speed. Robin Hood has already shed the horse-hide — twenty yards ahead in the treeline, and the cloak is going back to the forest.
+
+Little John walks beside the Fighter. His neck is red where the rope sat. He is quiet.
+
+**Little John:** "Was it — was it a clean fight?"
+
+The Fighter thinks of the cleared ground, the scuffed fern, the steadiness of Robin's hands after.
+
+*The Fighter thinks: tell him nothing he cannot use.*
+
+**Fighter:** *(one word)* "Clean."
+
+Little John nods once. He looks at the treeline where Robin disappeared with the look of a man correcting an inventory — checking something off that he was afraid had been spent wrong.
+
+They walk into the trees together. The quarry mark drops from the Fighter's sleeve into Nottingham mud — horsehead face-down, already being walked over by the last of the crowd dispersing toward the town gate. Someone's heel will obliterate the burned symbol within the hour.
+
+It was meant to summon the Sheriff's men to a kill. It summoned a witness instead.
+
+*The Fighter thinks: I was the target and then I was the proof the target survived. These are not so different.*
+
+---
+
+### Quest API Stub
+
+```
+Quest: The Horse-Hide Man
+missionAccept: "Something has been watching the camp. You found the proof at dawn.
+  Carry it and say nothing."
+
+Act I — The Mark on the Branch
+activateNode: SHW
+type: skill_check
+scene: "You wake in the Sherwood camp before the others. The fire is cold. The
+  branch directly above your bedroll has been recently cut. A burned leather disk —
+  a horsehead on one face — hangs from it on a cord. Gisbourne's quarry mark.
+  You are confirmed prey."
+prompt: "Perception DC 12: Before you take it down, read the surrounding trees
+  for other marks — understand where he is watching from."
+failText: "You take the mark but read nothing else. You know you are hunted but
+  not from which direction. (costs 1 hour reconnoiter time)"
+successText: "Three more marks in a triangle around your position — placed last
+  night. He was close. He may still be.
+  You receive Gisbourne's Quarry Mark."
+grantItem: "Gisbourne's Quarry Mark"
+checkPassFlag: stnQuarryMarkFound
+
+Act II — Reading the Trail
+activateNode: SHW
+type: skill_check
+scene: "Deep Sherwood, noon. Crushed fern in a line. Fiber on a hawthorn at
+  chest height. The trail is two days old — but Gisbourne is not two days old.
+  He is somewhere ahead. Robin Hood took the disk from you, set it back in your
+  hand, and walked east. Alone. His silence said: do not follow. You are following."
+prompt: "Survival DC 13: Read the sign well enough to know what you will find at
+  the trail's end before you arrive."
+failText: "The trail goes cold in thick brush. You emerge in a clearing after the
+  silence, not knowing what the silence contained."
+successText: "The scuffed circle of ground. A dead fire. Two men moved here.
+  The sound of the fight reaches you at the clearing's edge — four minutes old."
+checkPassFlag: stnTrailRead
+
+Act III — After the Fight
+activateNode: SHW
+type: dialogue
+scene: "Robin Hood stands in the clearing. A cut on his arm. Both hands very
+  steady. At his feet, the horse-hide cloak. He tells you: Little John is at
+  the Nottingham gallows, waiting for Gisbourne's signal. He looks at you directly
+  and asks whether your face will give him away in a crowd that can see it."
+prompt: "Insight DC 12: He is not asking about courage. He is asking whether you
+  understand the specific discipline he needs. Show him you do."
+failText: "He studies your face a moment longer than necessary, then nods as if
+  deciding to trust his own judgment over yours. The burden of doubt doubles."
+successText: "He reads your face and turns without another word. He knows. You
+  follow thirty yards behind on the Nottingham road — not with him."
+checkPassFlag: stnFaceStilled
+
+Act IV — In the Ring
+activateNode: NGM
+type: hybrid
+scene: "Nottingham common. Forty people, twenty armed men, Little John at the rope.
+  The figure in horse-hide walks from the treeline. You are three feet from the
+  scaffold post. The quarry mark is in your sleeve. Your face is visible to every
+  man in the Sheriff's ring. When the bugle sounds you will have seconds to cut
+  the rope — but first you must hold."
+prompt: "Composure DC 13: Hold your face neutral as the figure in horse-hide
+  passes you and addresses the Sheriff. Then — when the bugle sounds — fight to
+  the rope."
+failText: "Your face moves. One of the Sheriff's men follows your gaze. The
+  disguise holds one more second — just enough. You fight three men to reach
+  the rope instead of one."
+successText: "You are stone. The bugle sounds. You cut twice. Little John drops
+  forward and looks up at you. His hands are next."
+combatTarget: "Sheriff's Sergeant (AC 13, HP 22)"
+checkPassFlag: stnLittleJohnCut
+
+Act V — The Road Home
+activateNode: SHW
+type: escort
+scene: "The Sheriff's men are gone. Little John walks beside you, neck red from
+  the rope. He asks one question about the fight. The quarry mark drops from your
+  sleeve into Nottingham mud as you walk — face down, unnoticed, already being
+  walked over."
+prompt: "Escort Little John to the Sherwood camp without incident."
+successText: "The mark is in the mud behind you. It was meant to summon men to
+  a kill. It summoned a witness. The camp fire is lit. The quest is closed."
+failText: "A last rider finds your trail leaving the common. The return takes
+  longer and costs more than it should."
+takeItem: "Gisbourne's Quarry Mark"
+checkPassFlag: stnCampReached
+activateMissionBit: stnGisbourneComplete
+```
+
+---
+
+*Cycle 2 complete. Mark `[x]` for STN-robin-hood in books.md.*

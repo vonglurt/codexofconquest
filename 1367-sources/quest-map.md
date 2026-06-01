@@ -96,6 +96,10 @@ The game asks: what does it mean to keep your word when the world does not?
 | BGW | The Caliph's Own Copy | 2 | CAI → ALE → WM (Cairo Sufi hospice → Alexandria Genoese factor's house → Weimar archive) | The margin is the only place the diminished heir of a great institution can speak honestly about what the institution has become; the stories that celebrate the caliphate's height are most revealing when annotated by the man who holds the title with none of the power; what he wrote there he addressed to no one, which is why it is the only honest thing in the record |
 | CAI | The Collector's Codicil | 2 | ALP → LAT → WM (Aleppo storytellers' quarter → Latakia Syrian port → Weimar archive) | The written record of an oral story captures the text but severs it from the tradition that produced it; the codicil that names the tradition is the only document that keeps the origin attached to the text when it travels; without it the story belongs to the writer; with it the story carries its own genealogy |
 | IST | The Enemy's Portrait | 1 | CON → RGS → WM (Constantinople Byzantine scholar's house → Ragusa Dalmatian waystation → Weimar archive) | Defender preserves enemy by specificity of condemnation; the most complete portrait survives because the witness could not stop looking; bias as preservation mechanism |
+| LHR | Wiglaf's Moment | 2 | HEO → BRW (hillside cave mouth → dragon's barrow headland above sea) | The oath remembered when everyone else forgets; loyalty paid in fire not patience |
+| LCY | Maude's Glove | 2 | LCY → NAJ → TLF (White Company camp → Najera field → Tilford gate) | Unacknowledged love survives because it was never named; carried three countries in a coat |
+| LGW | The Third Throw | 2 | CAM → LKS (Camlann vale → lakeside) | Loyalty after failure named traitor; completion at full cost with no absolution |
+| STN | The Horse-Hide Man | 2 | SHW → NGM (Sherwood camp → Nottingham common gallows) | The grotesque masquerade as the only available justice; witness who must not react |
 
 ---
 
@@ -180,20 +184,26 @@ Game cities are canonical. Source-book settings are proposed new nodes.
 | Source Location | Proposed Node | Terrain | Theme Affinity |
 |----------------|---------------|---------|----------------|
 | Heorot / monster-mere | HEO | Northern coast, mead-hall gold, bone and smoke | Loyalty, fame, grief, the long watch |
+| Beowulf's Barrow headland | BRW | Cliff above the northern sea, low-ceilinged limestone cave, dragon's coils on hoard-gold, two iron rings on stone | The oath paid in fire, the survivor who carries the witness, the gold buried useless again |
 | Scottish Highland | HLD | Fog, bog, granite and heather, bard-song | Grief, warrior code, sacred oath |
 | Ulster coast / Emain Macha | ULC | Stone-ringed dun, sea-crossing, betrayal | Oath-breaking, love's cost |
 | Athens tournament field | ATH | Tournament dust, temple smoke, noble grief | Fate, love, the tournament of death |
 | Sherwood Forest | SHW | Leaf-shadow, arrow-flight, yeoman warmth | Loyalty in small things, disguise |
+| Nottingham common — gallows-tree | NGM | The public execution ground outside Nottingham's east gate: permanent scaffold visible from the town wall, open road between treeline and gatehouse, a crowd that always gathers for hangings | Public spectacle, disguise under scrutiny, the bluff that has seconds to hold |
 | Iceland / Thingvellir | ISL | Fog, blood on stone, silence | Vengeance, the weight of objects |
 | Castilian road / Toledo | IBR | Dust, court protocol, beard-honor | Pride, humiliation, long patience |
 | Georgian mountain road | GEO | Shale, amber and gold, champion's fire | Duty, love, the commission |
 | Scottish Highlands / Glasgow | SCT | Heather, Highland fog, Lowland commerce | Loyalty, divided allegiance |
 | Astolat riverside manor | AST | Grey morning water, dock on still river, lanterns in willows | Honest love, grief, the thing unsaid while alive |
+| Camlann vale | CAM | A flat vale after a large battle: the dead in the shapes of their last effort, one surviving fire, the sky beginning to pale; the geography of an ending that was also an accident | The world after the world, the dying king still speaking clearly, the last commission |
+| Lakeside — Camlann | LKS | Black still water, reeds, the exact shore from which a sword was thrown and a hand rose; a barge that departed and did not return | The threshold between the world and what comes after; the act that closes a dispensation |
 | River ford passage | RVP | Shallow ford, fast current, willow banks, midnight crossing | Contested passage, loyalty between rival claims |
 | Ashby tournament grounds | AHB | Tournament field, Norman heraldry, armorer yards and pavilion streets | Identity concealed under competition; Norman power on display |
 | Norman road checkpoint | NRG | Raised road, temporary timber gate, torchlight, cold flat country | Institutional authority at the threshold; contested passage |
 | Rotherwood — Cedric's Saxon hall | ROT | Timber-and-rushes, oversized fire, Saxon pride, northern frost | Stubbornness as shelter; the Saxon holdout; old trust new necessity |
 | Admiral Benbow Inn | ADM | Chalk cliff coastal village, dark sea below, lantern-lit common room, chalk road running inland | Arrival/departure, danger in ordinary places, the catalyst |
+| Tilford Hall gate | TLF | Hampshire manor gate in October — the same gate the Company left through; a woman with a ledger under her left arm, transferred when she heard horses; the road south still visible in both directions | Return, the private reunion, the private object restored, the campaign resolved in one exchange |
+| Najera — White Company camp | NAJ | The Spanish plain at the field's edge, night before battle: low fires, fletching archers, the enemy's position visible as distant lights; the next morning: dust and noise and the specific press of ten thousand men deciding which way to run | The campaign's end, the wound in the middle of the victory, the private object at the worst possible moment |
 | St. Peter Port, Guernsey harbor | STP | Granite quays, Norman French register, salt fog, fishing boats, tidal sea, English and French law blending | Sea epic, self-sacrifice, unwitnessed heroism |
 | Welsh mountain valley | CWT | Shale and oak, morning mist, cold river, one old stone bridge, no people | Ancient witnesses, deep time, the chain of testimony |
 | Redynvre hillside | RDV | Two dead forest-cycles visible in the stumps, one surviving great oak, exposed shale ridges | Grief held in landscape, the single survivor |
