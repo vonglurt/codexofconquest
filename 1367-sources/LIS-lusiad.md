@@ -334,3 +334,181 @@ The TOKEN is taken: The Shipwreck Quire — authenticated, sealed in the archive
 
 **books.md update required:**
 - Mark LIS row [x]
+
+---
+
+## Cycle 2 · What the Cape Already Knew
+
+**New angle:** Cycle 1 focused on the Portuguese poem's own material evidence of survival — the manuscript as physical witness to an act of preservation. Cycle 2 enters the poem's other ambivalence: the "discovery" of the Cape was a discovery only from one direction. Camões puts this into the poem himself — the King of Melinda's speech explicitly names an African pilgrim who encountered the spirit long before any Portuguese ship arrived. The spirit had a name. The tradition had a chain. What cycle 1 missed: the knowledge that was already present before the arrival, and the institutional interest in ensuring it is not recorded alongside the claim.
+
+---
+
+### Token Doctrine
+
+**TOKEN: The Melinda Scholar's Account**
+A bound manuscript in Arabic with marginal notes in Portuguese — Ahmed ibn Yusuf's compiled record of the African traditional knowledge of the Cape spirit: the local name, the pilgrim's encounter, the chain of testimony across generations. The cover page carries Ahmed's seal and a date that predates the Portuguese fleet's first passage. The Fighter carries it from Ahmed's study in Melinda to the humanist intake desk in Lisbon. Its seal must remain unbroken to preserve the provenance chain.
+
+| Act | Token State |
+|-----|-------------|
+| I | Completed in Ahmed's study; sealed with his signet; handed to the Fighter for transport |
+| II | Fighter carries it through harbor inspection — logged as "cultural correspondence" without subject entry |
+| III | On the ship: the factor presses the Fighter about the package's contents; the seal must remain unbroken |
+| IV | Maritime court officials board at the first Portuguese port looking for the package; the seal is the only evidence the chain of custody was never broken |
+| V | Fighter delivers to the humanist archive; archivist enters it as an authentic cultural record; token taken into archive custody |
+
+---
+
+### 5-Act Vignette Play: "What the Cape Already Knew"
+
+*A Fighter has been hired by Ahmed ibn Yusuf — a scholar of the Melinda court with a completed manuscript and one problem — to carry a document from the East African coast to the humanist archive in Lisbon without it passing through the maritime court's review. The TOKEN ITEM is the Melinda Scholar's Account: a bound manuscript, sealed, recording the African traditional knowledge of the Cape spirit in a tradition that predates the Portuguese arrival. The seal must arrive intact. The archive must receive it before the suppression order.*
+
+*The Thing · Melinda Scholar's Account · bound manuscript, sealed · Ahmed's study → Fighter*
+
+---
+
+**ACT I — The Scholar's Study, Melinda**
+
+*Evening. A small study off the court's scribal house. Straw matting, high windows, the smell of salt air and old paper. Ahmed ibn Yusuf on a low chair, the manuscript in his lap, sealed.*
+
+*The Thing · Melinda Scholar's Account · sealed · not yet in the Fighter's hands*
+
+*The Fighter observes: Ahmed is not afraid. He is precise. He has made this calculation many times.*
+
+Ahmed explains the situation without ornamentation: the document records what his people have known about the Cape spirit for six generations. The Portuguese fleet's captain has a factor in the port who reviews outgoing scholarly correspondence from local courts. If the factor reads the subject entry in the harbor log — "indigenous account of a spirit the Portuguese maritime records call new" — the maritime court will have grounds to require review before the ship reaches Lisbon. Ahmed needs the harbor log to say something accurate but uninformative.
+
+The factor is a thorough man. He will be at the desk when the Fighter's party logs outgoing cargo. He will ask about the package.
+
+---
+
+**ACT II — The Harbor of Melinda**
+
+*Morning. The harbor log desk. The Portuguese factor Sebastião has his ledger open and his stylus ready. Two packets ahead of the Fighter's in the queue.*
+
+*The Thing · Melinda Scholar's Account · sealed, in the Fighter's pack*
+
+*The Fighter observes: Sebastião's ledger has a column marked "subject" for scholarly correspondence. This column is why Ahmed is sending a courier instead of a merchant's post.*
+
+Sebastião is pleasant, professional, and experienced at reading hesitation in couriers' faces. He asks: "Correspondence from the court scholar? And the subject?" He is not hostile. He simply needs to fill in the column. The Fighter must give him something accurate enough that he will not ask again and uninformative enough that the maritime court's review flag will not trigger.
+
+---
+
+**ACT III — The Ship, Two Days out of Melinda**
+
+*Midship passage. A cabin corridor. The merchant factor Luís has a cabin two doors from the Fighter's and has noticed the sealed package.*
+
+*The Thing · Melinda Scholar's Account · sealed, seal intact*
+
+*The Fighter observes: Luís is not a maritime court agent. He is genuinely curious. That is the problem.*
+
+Luís manages correspondence for the Portuguese trading house and has seen hundreds of scholarly packages. He knows what Ahmed ibn Yusuf produces. He asks, pleasantly, whether the package is one of Ahmed's geographical commentaries — he has read Ahmed's coastal survey and found it excellent. If the Fighter confirms it is Ahmed's work, Luís will want to discuss the contents. If the Fighter is vague, Luís will stay curious. If the Fighter lies outright and Luís later speaks to someone at the Lisbon dock, the lie creates a gap in the provenance chain that the archive's archivist will notice.
+
+---
+
+**ACT IV — First Portuguese Port Call**
+
+*Dawn. The dock at the Portuguese port of call before Lisbon. Two men in maritime court colors have boarded with a search manifest.*
+
+*The Thing · Melinda Scholar's Account · sealed, seal intact · targeted*
+
+*The Fighter observes: the manifest lists "scholarly manuscript, origin: Melinda, author: Ahmed ibn Yusuf." Someone on board provided that description. The seal is still intact. If the seal is intact, the provenance chain is intact. The suppression order can be challenged.*
+
+The officials have authority to detain and inspect. They do not yet have grounds to seize — the suppression order requires a subject entry from the harbor log, and the harbor log entry was managed. What they have is a tip. What the Fighter has is a sealed document and an unbroken chain of custody from a scholar's study to this dock. They are not yet entitled to break the seal. But they will try.
+
+Combat: 2× maritime court officials (AC 13, HP 22, batons and authority)
+
+---
+
+**ACT V — The Humanist Archive, Lisbon**
+
+*Afternoon. The archive's receiving room. Long tables, classification ledgers, a smell of old paper and cold stone. The archivist Frei Tomás at the intake desk.*
+
+*The Thing · Melinda Scholar's Account · sealed · Fighter's hands → archive custody*
+
+*The Fighter observes: Frei Tomás has already received a courier from the maritime court. The courier left twenty minutes ago. Frei Tomás is reading the communication.*
+
+He looks up at the Fighter. He looks at the sealed package. He says: "The maritime court believes this document makes a claim that conflicts with the official discovery record. Is the seal intact?" The Fighter shows him the seal. He looks at it for a long time. Then: "The humanist archive's mandate covers cultural records of indigenous traditions regardless of their implications for maritime claims. The intake log reflects time of receipt." He opens the log. He writes the time. He takes the manuscript from the Fighter's hands.
+
+"Ahmed ibn Yusuf's name goes in the compiler's column," he says. "Not the Portuguese fleet's. That is what the record will show."
+
+---
+
+### Quest API Stub: What the Cape Already Knew
+
+```
+quest_id: LIS-02
+title: What the Cape Already Knew
+cycle: 2
+book: lusiad
+token: Melinda Scholar's Account (bound manuscript, sealed)
+token_consumed: Act V (entered into humanist archive custody)
+route: MLN → LHA
+```
+
+**Act I — The Scholar's Study**
+```
+activateNode: MLN
+type: dialogue
+scene: "Ahmed ibn Yusuf's study in the Melinda court scribal house. The completed manuscript in his lap. The harbor factor who reviews outgoing correspondence is at his desk in the morning."
+prompt: "Ahmed needs the harbor log's 'subject' column to say something accurate but uninformative. The factor Sebastião asks what the package contains. [CHA to frame it as a geographical commentary / INT to find the technical category that triggers no flag / WIS to read exactly what Sebastião needs to hear to close his ledger]"
+failText: "Sebastião writes 'indigenous spirit tradition — maritime implications' in the subject column. He does not confiscate; he has no authority to confiscate. But the maritime court will have that entry before the ship reaches Lisbon. The document still leaves."
+successText: "You say: 'Cultural correspondence — traditional coastal knowledge, Melinda court series.' Sebastião writes it. He closes the ledger without asking again."
+grantItem: Melinda Scholar's Account (bound manuscript, sealed)
+checkPassFlag: harborLogClear
+activateMissionBit: lisCapAct1Complete
+```
+
+**Act II — The Ship**
+```
+activateNode: LHA
+type: dialogue
+scene: "The cabin corridor, two days out. Luís the factor asks whether this is one of Ahmed's geographical commentaries."
+prompt: "If you confirm it is Ahmed's work, Luís will want to discuss contents. If you lie outright and Luís talks to someone at the Lisbon dock, the lie creates a provenance gap the archivist will notice. [WIS to give him something true that closes the conversation / CHA to redirect to a different Ahmed work Luís already knows / INT to find the framing that satisfies his curiosity without naming the subject] DC 12"
+failText: "Luís is satisfied with enough to close the conversation, but he will mention it to a colleague at the Lisbon dock. That mention becomes a gap in the chain of custody — Frei Tomás will note it and ask for an explanation before intake."
+successText: "You describe Ahmed's work in terms of what it preserves rather than what it claims. Luís nods. 'His geographical work is remarkable.' He goes back to his cabin. The conversation is closed."
+checkPassFlag: factorNeutralized
+activateMissionBit: lisCapAct2Complete
+```
+
+**Act III — First Port Call**
+```
+activateNode: LHA
+type: skill_check
+scene: "Maritime court officials board at the Portuguese port of call with a search manifest listing Ahmed's name."
+prompt: "They have a tip, not grounds. The suppression order requires the harbor log entry. Your log entry was managed. The seal is intact. They are not yet entitled to break it. But they will try to make you hand it over voluntarily. [WIS to identify the exact limit of their authority / INT to cite the humanist archive's intake mandate / CON to sustain the refusal through escalating pressure] DC 13"
+failText: "They invoke a maritime compact provision that allows temporary detainment of suppressed documents. The document is held overnight. You are present at the release the following morning — they found no grounds to seize, and the seal remained intact. One day lost."
+successText: "You cite the archive's mandate and the intact seal. One of the officials is uncertain. They confer. They cannot act without the subject entry from the harbor log — which they do not have. They stand down."
+checkPassFlag: portInspectionPassed
+activateMissionBit: lisCapAct3Complete
+```
+
+**Act IV — Combat**
+```
+activateNode: LHA
+type: combat
+scene: "The officials, having been overruled, return after dark with private authorization. They are no longer acting in their official capacity."
+prompt: "They want the document destroyed before it reaches the archive. No witnesses. No seals required."
+combatTarget: "2× maritime court officials acting privately (AC 13, HP 22, short swords)"
+failText: "They take the manuscript. But they do not destroy it — they need to verify the subject before determining whether to present it to the court or suppress it. You have two days before they can read it, and Ahmed's marginal notes are in Arabic. Find a translator who will keep the matter quiet."
+successText: "Both men are down. The seal is intact. You reach Lisbon at first light."
+checkPassFlag: overnightAmbushSurvived
+activateMissionBit: lisCapAct4Complete
+```
+
+**Act V — The Humanist Archive**
+```
+activateNode: LHA
+type: skill_check
+scene: "Frei Tomás has received a maritime court communication twenty minutes ago. He is reading it when you arrive."
+prompt: "He asks: is the seal intact? You show him. He looks at it for a long time. He needs to confirm the provenance chain is unbroken — that at no point did the document leave your custody or pass through unauthorized hands. [WIS to give him exactly the chain he needs to enter it / CHA to name each step so the intake log reflects the full custody record / INT to anticipate the one question the maritime court's communication will force him to answer] DC 11"
+failText: "Frei Tomás notes a gap in the chain — the ship factor's mention at the Lisbon dock. He enters the document with a caveat: 'chain of custody unverified at one point.' The maritime court will challenge the entry. But the document is in the archive's custody. That is enough."
+successText: "You name each hand the manuscript passed through from Ahmed's study to this desk. Frei Tomás writes it all. He takes the manuscript. 'Ahmed ibn Yusuf's name goes in the compiler's column. Not the fleet's.' The intake log reflects time of receipt — which is before the maritime court's communication's deadline."
+takeItem: Melinda Scholar's Account (bound manuscript, sealed)
+checkPassFlag: lisCapComplete
+activateMissionBit: lisCapComplete
+```
+
+---
+
+*quest-map.md: append MLN, LHA to Location Grid.*
+*quest-map.md: add LIS cycle 2 row and theme thread.*
+*books.md: mark LIS [x].*
