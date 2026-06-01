@@ -229,3 +229,236 @@ The Fighter understands, without being told, that the cloak will outlast everyon
 - **Fate known and walked toward.** Njal knows. Gunnar knows. Bergthora knows. None of them use that knowledge to escape. The saga treats foreknowledge not as horror but as a form of dignity — to know what comes and face it without flinching is the only freedom the saga offers.
 - **The weight of loyalty that cannot be unmade.** Kari never abuses his enemies. He does not threaten. He counts. He is the sword-arm of a grief that cannot be negotiated away, and the saga respects him completely. Flosi, his opposite, is also respected completely. The handshake at the end is not forgiveness; it is acknowledgment that both men did what they had to do.
 - **Objects as moral carriers.** The bowstring, the silken scarf, the scarlet cloak, Skarphedinn's axe, the jaw-tooth in his purse: the saga's objects accumulate meaning across chapters and then discharge it at exactly the right moment. Design principle: a TOKEN ITEM that carries history does more emotional work than any amount of dialogue.
+
+---
+
+## Cycle 2: The Reconciliation at Swinefell
+
+### Pass 1 — Plot Précis (The Reconciliation at Swinefell)
+
+Kari Solmundarson has spent years hunting the men who burned Njal's hall. He has counted his kills with the precision the saga applies to everything. Both he and Flosi made the pilgrimage to Rome; both received absolution. Kari's ship wrecks at Ingolf's Head. He and his companions walk directly to Flosi's house at Swinefell through a winter storm. No advance notice. No weapons presented. When Flosi sees Kari at the door he springs up and kisses him and seats him in the high place. The saga ends with Flosi giving Hildigunna — the woman whose rage ignited the burning — to Kari in marriage. Their children are named.
+
+### Pass 2 — Fighter's Role (The Reconciliation at Swinefell)
+
+At Ingolf's Head, Kari gives the Fighter his pilgrim certificate from Rome — the papal document certifying absolution — and a single instruction: arrive at Swinefell before him, give the certificate to Flosi, and let Flosi read it before Kari walks through the door. The certificate names what Kari comes as: a man who has completed his penance and arrives to do the last piece of his human accounting. The Fighter carries it through the winter storm, past Swinefell's gatekeeper, and into the hall. In Act V, Kari arrives and the saga ends.
+
+### Pass 3 — What This Angle Reveals That Cycle 1 Missed
+
+Cycle 1 was Hildigunna's Cloak — the object that demands vengeance by arriving at a man's shoulders; the force of accumulated grief pressing through an ordinary garment. The Reconciliation at Swinefell reveals: the arc the cloak set in motion has finally run to its end. What cycle 1 missed: the saga's extraordinary mercy — that it ends in a handshake and a wedding, not in more bodies. The specific courage it takes to knock on the door of the man who burned your house; the specific courage it takes to open it. Cycle 1 was about a woman weaponizing an object to force a man into a decision. Cycle 2 is about what happens after all those decisions have been made and all the deaths have been counted and both men have walked to Rome and come back: they are standing in the same winter storm and one of them has a door and the other is outside it. The pilgrim certificate is not a weapon and not a claim — it is the credential that names them as equal pilgrims, both forgiven by the same authority, and the question now is whether men's accounting can follow God's.
+
+---
+
+### Seven Storyline Ideas (Cycle 2 Selection)
+
+1. The Dower Trick — Unused
+2. The Prophecy of the Stock — Unused
+3. Sam the Hound — Unused
+4. The Ice-Leap at Markfleet — Unused
+5. ~~Hildigunna's Cloak~~ — **USED Cycle 1**
+6. The Fifth Court Gambit — Unused
+7. **The Reconciliation at Swinefell** — **CHOSEN (Cycle 2)**
+
+---
+
+### Theme Check
+
+Active threads do not include: *the accounting completed; the credential that names two enemies as equal pilgrims; the moment after the vengeance is finished and the men are still alive and standing at the same door.* This is distinct from all escort themes (the Fighter is not escorting a person to safety but preceding a person to make their arrival readable). New thread proposed: **The credential carried before the man it belongs to; the pilgrim who arrives as the sign that prepares the reception; what remains when the feud has run its full course and both men have done their penance.**
+
+---
+
+### 5-Act Vignette Play: *The Reconciliation at Swinefell*
+
+*Storyline 7 — Advance Carrier. Kari walks to Flosi's door in a winter storm. TOKEN: Kari's Pilgrim Certificate — the Rome absolution document given to the Fighter at Ingolf's Head, carried through the storm to Swinefell, placed in Flosi's hands before Kari arrives.*
+
+**THE TOKEN: KARI'S PILGRIM CERTIFICATE** — a sealed parchment from the papal office in Rome certifying that Kari Solmundarson has completed his pilgrimage and received absolution. Kari gives it to the Fighter with the instruction: arrive before him, give it to Flosi, let Flosi read it before he walks through the door. In Act V the certificate is on the table between them when the feud ends. The token is consumed when Flosi places it in his chest beside his own — two equal documents from the same authority.
+
+---
+
+#### ACT I — *Ingolf's Head*
+*The certificate: in Kari's keeping, not yet the Fighter's. Location: IGH — Ingolf's Head, wreck site, Iceland coast.*
+
+The ship is at the bottom of the bay. The wreckage is on the rocks. Kari and his companions are standing in the coastal wind with everything they saved from the ship, which is not much. The storm from the west is intensifying. They are two hours' walk from Swinefell.
+
+Kari looks toward Swinefell's direction for a long time. Then he opens the leather case he has been carrying inside his coat since Rome and removes the certificate. He holds it for a moment — not sentimentally; he is checking the seal.
+
+**Kari:** "Take this ahead of me. Give it to Flosi before I arrive. Let him read what it says and understand what I'm coming as — not what I've been."
+
+A pause.
+
+**Kari:** "I have killed sixteen of his companions. I want him to know that the man who walks through his door is not the man who counted the sixteen."
+
+*Insight check DC 12: understand the timing — you must arrive before Kari, but not so far before that the certificate's meaning has time to become something Flosi's household can argue about; the arrival should coincide with Kari's approach, close enough that the certificate and the man are clearly connected.*
+
+**Failure:** You take the certificate with the manner of a messenger. Kari watches you turn toward the path. "Fast, but not running," he says. "Pilgrims don't run." You receive Kari's Pilgrim Certificate.
+
+**Success:** You hold the certificate in both hands and understand its weight — not as a legal document but as the last token in a feud-series that began with a scarlet cloak and ends here, in the wind, with a piece of papal parchment. You look at Kari once. He nods. You receive Kari's Pilgrim Certificate.
+
+---
+
+#### ACT II — *The Winter Storm Road*
+*The certificate: inside the Fighter's coat. Location: road from IGH to SWF.*
+
+The road from Ingolf's Head to Swinefell is not difficult in summer. In this storm, with the coastal wind from the west and the path above the shore exposed for a half-mile stretch, it is a different proposition. The certificate is inside your coat, next to your skin. If it gets wet the seal is compromised and Flosi will not be able to read who signed it.
+
+Kari is behind you. You cannot see him in the storm-dark and the blowing snow. He is walking at the pace of a man with a clear destination and no particular hurry.
+
+*Endurance check DC 12: maintain the pace that keeps you ahead of Kari without running, through the exposed stretch above the shore, with the certificate kept dry inside your coat.*
+
+**Failure:** The exposed stretch takes longer than expected. When you approach Swinefell's gate, Kari's shape is visible on the path behind you — he is closer than he should be. You arrive at the gate barely ahead of him, which means Flosi will have almost no time to read the certificate before Kari is at the door.
+
+**Success:** You arrive at Swinefell's gate in the full dark, the storm still running, Kari not yet visible on the path. The certificate is dry. You have exactly the time needed.
+
+---
+
+#### ACT III — *Swinefell Gate*
+*The certificate: ready. Location: SWF — Swinefell hall, outer gate.*
+
+The gatekeeper is a young man who has not been to Rome and did not participate in the burning and does not know who you are. He sees a stranger at the gate in a winter storm with a sealed document and the expression of someone who has made a specific decision about how this encounter will go.
+
+He is not hostile. He is cautious. He has heard the name Kari.
+
+*Persuasion check DC 12: name Kari, name the certificate, name Flosi as the recipient — and make it clear that the time available for this to go correctly is shorter than the time it would take to argue about it.*
+
+**Failure:** The gatekeeper goes to wake his superior. His superior goes to wake Flosi's chamberlain. The chamberlain comes to the gate. By the time you are admitted, Kari's shape is visible in the storm approaching the gate behind you. You arrive in the hall at almost the same moment.
+
+**Success:** The gatekeeper hears the name Kari and makes an immediate calculation. He opens the gate. "Flosi will want to receive this himself," he says, and leads you to the hall door without stopping.
+
+---
+
+#### ACT IV — *The Hall*
+*The certificate: in the Fighter's hand, ready to give. Location: SWF — main hall.*
+
+Flosi is in the high seat. He is older than the sagas' reputation makes him sound — a large man with a large face, the kind of face that has spent fifty years deciding difficult things and does not find them easier for the practice. He looks at the Fighter with the expression of a man who already knows what this means and is checking whether his reading is correct.
+
+You place the certificate on the table in front of him.
+
+He reads it. He reads it twice.
+
+A man at his left — young, a warrior who fought in the burning's aftermath and has not been to Rome and has no document — stands up. His hand moves toward his belt.
+
+**Young Warrior:** "He killed Gunnar Lambason at the Hebrides. He killed Thorstein the White on the Scottish road. He—"
+
+*Insight check DC 13: read the room at the exact moment Flosi's face finishes reading and before the young warrior can make the decision for him — name what Kari is bringing and why Flosi will receive it, in the specific form that removes the young warrior's voice from the room without dismissing it.*
+
+**Failure:** Flosi holds up his hand for the young warrior to stop, but the warrior has already taken one step. Flosi must now address the warrior before addressing the Fighter. The moment stretches. By the time Flosi looks back at the table, Kari is at the door.
+
+**Success:** "He walked to Rome," you say, before the young warrior can finish his list. "The same road your lord walked. The same door." The young warrior's hand comes away from his belt. Flosi looks at you for one full second — the assessment of a man deciding whether this stranger knows what they have just said. He decides yes. He stands up.
+
+---
+
+#### ACT V — *The Door Opens*
+*The certificate: on the table. Location: SWF.*
+
+The door opens. Kari stands in the doorway in the storm-dark, snow on his shoulders, his hands at his sides.
+
+Flosi springs up. He walks to Kari and kisses him and leads him to the high seat.
+
+The hall is very quiet.
+
+The certificate is on the table. Nobody looks at it directly. Flosi will put it in the chest beside his own tonight, the two documents together, two equal entries from the same authority, and never take them out again.
+
+*Composure check DC 11: hold still in the hall while the feud ends — bear witness without moving, without drawing attention, for the duration of the embrace and the seating.*
+
+**Failure:** You shift once — a small movement, a breath that sounds like relief — and one of Flosi's women looks at you. You are seen. You are not unwelcome, but you are visible during a moment that was not intended to have witnesses. It ends correctly anyway, but the ending was slightly watched.
+
+**Success:** You are entirely still. The embrace happens. Kari sits in the high seat. Flosi goes back to his chair. The hall begins to breathe again slowly. After some time, Flosi looks across the room and finds you.
+
+**Flosi:** "You brought him here correctly."
+
+He says nothing else. You receive Flosi's Word — a verbal acknowledgment from the man who burned Njal's house, given freely, the way things are given when there is nothing left to protect. The certificate is in the chest. The saga has ended.
+
+*The Fighter thinks: I carried a piece of paper from a wreck site to a hall through a storm. The paper said that a man had done his penance. I arrived before him so that the man who was going to receive him could read what he was receiving before the door opened. The feud that started with a scarlet cloak and ran through sixteen killings and two pilgrimages to Rome ended in a kiss at a doorway. I was the distance between the paper and the door.*
+
+---
+
+## Quest API Stub (Cycle 2)
+
+```
+Act I — Ingolf's Head
+activateNode: IGH
+type: skill_check
+scene: "The ship is on the rocks. Kari has survived the wreck. He opens
+  the leather case inside his coat and removes the Rome pilgrim certificate.
+  He holds it out: take it to Swinefell before him, give it to Flosi, let
+  him read what it says before the door opens. 'I want him to know that
+  the man who walks through his door is not the man who counted the sixteen.'"
+prompt: "Insight check DC 12: understand the timing — arrive before Kari,
+  but close enough that the certificate and the man are clearly connected."
+failText:    "You take the certificate with the manner of a messenger.
+              Kari: 'Fast, but not running. Pilgrims don't run.'"
+successText: "You hold it in both hands and understand its weight. Kari
+              nods. You receive Kari's Pilgrim Certificate."
+grantItem:   "Kari's Pilgrim Certificate"
+checkPassFlag: arrivalTimingUnderstood
+
+Act II — The Winter Storm Road
+activateNode: IGH
+type: skill_check
+scene: "The road from Ingolf's Head to Swinefell: half-mile exposed stretch
+  above the shore, coastal wind from the west. The certificate is inside
+  your coat. Kari is behind you, walking at pilgrim's pace. The certificate
+  must arrive dry."
+prompt: "Endurance check DC 12: maintain the pace that keeps you ahead of
+  Kari through the exposed stretch, with the certificate kept dry."
+failText:    "The stretch takes longer than expected. Kari is almost behind
+              you when you reach the gate — barely enough time."
+successText: "You arrive in full dark. Kari is not yet visible on the path.
+              The certificate is dry. You have exactly the time needed."
+checkPassFlag: roadCrossed
+
+Act III — Swinefell Gate
+activateNode: SWF
+type: skill_check
+scene: "The gatekeeper is young, cautious, and has heard the name Kari.
+  He is not hostile. He sees a stranger in a winter storm with a sealed
+  document. The time available for this to go correctly is shorter than
+  the time it would take to argue about it."
+prompt: "Persuasion check DC 12: name Kari, name the certificate, name
+  Flosi as recipient — make the gatekeeper's calculation easy before
+  Kari appears on the path behind you."
+failText:    "He goes to wake his superior. By the time you enter the hall,
+              Kari is almost at the gate."
+successText: "'Flosi will want to receive this himself.' He leads you to
+              the hall door without stopping."
+checkPassFlag: gateCleared
+
+Act IV — The Hall
+activateNode: SWF
+type: skill_check
+scene: "Flosi reads the certificate twice. A young warrior who fought in
+  the burning's aftermath stands up. His hand moves toward his belt.
+  He begins to list Kari's kills. Flosi's face has finished reading."
+prompt: "Insight check DC 13: at the exact moment Flosi finishes reading
+  and before the warrior can complete his list, name what Kari is bringing
+  in the form that removes the warrior's voice from the room without
+  dismissing it."
+failText:    "Flosi must address the warrior before addressing you. The
+              moment stretches. Kari is at the door."
+successText: "'He walked to Rome. The same road your lord walked. The same
+              door.' The warrior's hand comes away from his belt. Flosi
+              stands up."
+checkPassFlag: hallPrepared
+
+Act V — The Door Opens
+activateNode: SWF
+type: skill_check
+scene: "Kari stands in the doorway in the storm-dark. Flosi springs up
+  and kisses him and leads him to the high seat. The certificate is on
+  the table. The hall is very quiet. This is the moment the feud ends
+  and it is not for anyone in this room to interrupt."
+prompt: "Composure check DC 11: hold still in the hall while the feud
+  ends — bear witness without moving, without drawing attention."
+failText:    "You shift once. One of Flosi's women looks at you. You are
+              seen during a moment not intended to have witnesses."
+successText: "You are entirely still. After some time, Flosi looks across
+              the room and finds you. 'You brought him here correctly.'
+              You receive Flosi's Word."
+grantItem:   "Flosi's Word"
+takeItem:    "Kari's Pilgrim Certificate"
+checkPassFlag: reconciliationWitnessed
+activateMissionBit: gdnSwinefellComplete
+```
+
+---
+
+*Cycle 2 complete. Mark `[x]` for GDN-njal-saga in books.md.*
