@@ -538,3 +538,313 @@ The prisoner emerges. They have no name yet; they have been there since before n
 ---
 
 *Rule 15: Clear agent memory after this session before beginning the next book.*
+
+---
+
+## Cycle 2 — Angle: Carrying the Head (Branwen)
+
+**What this angle reveals that Cycle 1 missed:** Cycle 1 (The River That Knows Its Wrong) showed the Mabinogion as a world of ancient chain-witnesses — the relay of the oldest creatures, the credential-rod that accumulates marks, the question that requires the right order. Cycle 2 shows the book's darkest corner: the Second Branch and its irreversible destruction. Cycle 1 missed entirely the war with Ireland, Branwen's death, the seven survivors, the living head, the enchanted hall at Gwales, and the structural paradox that deferred grief is not healed grief. The flood of feeling when Heilyn opens the forbidden door is the Mabinogion's most honest moment: eighty years of protected peace ending in a single second because a man looked at the door that faces Cornwall and could not help but want to know.
+
+---
+
+### Pass 1 — Full Telling (Branwen / Carrying the Head Angle)
+
+Bendigeidfran — Bran the Blessed — is the giant king of Britain whose head becomes, in death, more powerful than he ever was in life. He is too large to enter any house; he must camp outside. He is the host who gives everyone too much: the magical cauldron of rebirth to Matholwch, his sister Branwen to the Irish king as wife, the peace he tries to hold together after Efnisien's mutilation of the horses nearly breaks it. He is generous and he is too late. Everything he gives is used to make the catastrophe worse.
+
+Branwen's story is the Second Branch's wound. Married to Matholwch of Ireland with pomp and alliance, she is first honored and then punished for the insult of Efnisien's act — forced into kitchen servitude, struck daily, denied any communication with Britain. She trains a starling to carry a letter to Bran. The letter reaches him. He raises Britain's army and wades through the Irish Sea, his ships sailing in his wake, because he is large enough to do this. The war that follows destroys both islands.
+
+The Irish cauldron of rebirth — Bran's own gift to Matholwch — reanimates Irish dead as silent warriors; they cannot be killed conventionally and they cannot speak. Efnisien, who caused the war with his cruelty, destroys the cauldron by hiding among the Irish dead and bursting it from inside. He dies killing it. This is the Second Branch's structural center: the man who made the catastrophe undoes it at the cost of his life, which is not redemption but it is completion.
+
+Seven Britons survive. Bran is mortally wounded by a poisoned spear in the foot — the wound that cannot heal but will not kill quickly. He commands his seven survivors to cut off his head. His head remains living — wise, joyful, the same Bran in all ways except with no body. He commands them to take the head to London and bury it on the White Hill (Gwynvryn) facing France, as a protective talisman for Britain.
+
+The seven survivors travel with the head. At Harlech they feast for seven years while Rhiannon's birds sing over the sea — birds whose song can wake the dead from sleep and send the living into the deepest rest; the seven feast in their magic, in their grief held at bay. Then to Gwales in Penfro — Grassholm Island, off the Pembrokeshire coast — where they enter an enchanted hall. Three doors. Two may be opened. The third faces Cornwall and must never be opened, on pain of losing the enchantment.
+
+Fourscore years. Eighty years in the hall with Bran's speaking, feasting head. They do not age. They do not grieve. They do not remember Branwen, or the war, or Ireland, or any of the destruction. The hall holds them in a kind of mercy that is also a kind of theft: it steals their grief from them so they cannot carry it, and in doing so it steals their ability to finish.
+
+Heilyn son of Gwyn opens the third door.
+
+The grief comes back all at once. Every loss, every dead face, every moment of the war, every year of their enchanted peace shown suddenly as what it was — time taken. Branwen dead on an Irish riverbank, grieving that two islands were destroyed for her sake. The weight of everything floods back and the seven survivors stand in the hall with the grief of eighty years falling on them in a single moment.
+
+They weep. Then they pick up the head and finish the journey. They bury it at London. Bran's head faces France. The journey is done.
+
+The Second Branch is about this: the completion that follows grief, not the completion that avoids it. The hall at Gwales was mercy but it was also delay. Opening the door was the only way to finish.
+
+### Chapter Notes
+
+**Opening (Matholwch's ships):** Matholwch arrives seeking Branwen's hand. The alliance is celebrated. Efnisien, Bran's half-brother, mutilates the horses in unprovoked fury — the wound from which everything grows. Bran compensates with the cauldron.
+
+**Branwen's Abasement:** Branwen in kitchen servitude, struck daily, her status stripped. She trains the starling. The letter reaches Bran.
+
+**The Crossing:** Bran and his army cross to Ireland. Bran wades the Irish Sea. Mathowlch flees across the Shannon, breaks the bridge, builds a house large enough for Bran to enter — this is the first time he has been housed. The truce, fragile.
+
+**The War:** Efnisien murders Gwern, the Irish-British prince, in the feast. War begins. The cauldron of rebirth in Irish hands: the dead return as silent fighters. Efnisien hides among the Irish dead and bursts the cauldron from inside, dying. Bran wounded. Only seven Britons survive.
+
+**Branwen's Death:** Branwen on the Irish shore, watching the destruction, says: "Woe is me that I was ever born; two islands have been destroyed because of me." She dies of grief there. One of the series' most formally devastating moments: the innocent person who carries the guilt anyway.
+
+**The Head's Journey:** Seven survivors, living head, Harlech birds. The enchanted hall at Gwales. Fourscore years. The forbidden door. Heilyn opens it. Grief floods back. They complete the journey to London. The burial on the White Hill. The talisman in place.
+
+---
+
+### Pass 2 — Slower
+
+**Bran the Blessed:** The novel's (myth's) elemental host — a man too large for any building, whose generosity never stops and never saves. His head retains his personality; it is good company in the enchanted hall. He is the best version of himself after death. This is the Second Branch's gentle dark joke: the living Bran was too large, too generous, too slow to stop Efnisien; the dead Bran is the ideal king, speaking wisdom and goodwill from a box, asking only to be carried to the right destination.
+
+**Branwen:** The myth's center and its most powerless figure. She did nothing except exist as the object of a political alliance. She was punished for Efnisien's act. She trained the starling. She caused, through no fault of her own, the deaths of the people who loved her. She dies of grief for this. The myth gives her the dignity of her grief — she does not minimize it, she names it accurately. Two islands were destroyed because of her. She could not prevent it. She acknowledges both things.
+
+**Heilyn son of Gwyn:** The man who opens the forbidden door gets no defense in the text. He is simply the man who could not not open it. After eighty years in the hall, the grief held at bay and the door facing Cornwall — he looked at the door and opened it. The myth does not judge him. It gives him no motivation except that the door was there and the enchantment was eventually incomplete against human curiosity.
+
+**The Enchanted Hall as a Moral Structure:** Gwales is not evil. The hall protected the survivors. The eighty years were genuinely peaceful — not illusion, not malicious. But the protection came at the cost of the grief being real: somewhere, Branwen was still dead on the Irish shore, and the survivors were not allowing themselves to know it. Opening the door is the only way to finish. The door had to be opened. Heilyn was the one who opened it.
+
+---
+
+### Pass 3 — The Scene: After the Door
+
+The door faces Cornwall. The light through it is ordinary light — the same Pembrokeshire morning light that would have been there yesterday and the day before and for eighty years of yesterday and before, held off by the enchantment and now simply the sky.
+
+Heilyn has stepped back from the door. He is not defending himself. He is standing in the ordinary light with his hands at his sides and the look on his face of a man who has done something that cannot be undone and knows it. He is not a villain. He opened a door. He did not know — or he did know, and the knowing did not stop him, which is a different kind of knowing.
+
+The grief comes as a physical fact. This is how the text describes it and it is correct: grief received all at once after fourscore years of being held away is not a feeling but a weight change. The seven survivors stand in the hall and the weight of everything they have been not-carrying lands on them simultaneously. Branwen dead on the Irish shore. The war. The cauldron used against them by their own gift. Efnisien dead inside the thing he broke. Bran's wound, the poisoned spear, the long death that they carried across the sea. All of it, all at once.
+
+The Fighter is not one of the seven. The Fighter is the eighth person — the escort, the guard, the one who has been carrying something on behalf of the group. The Fighter does not have eighty years of held grief to receive. What the Fighter has is the six remaining survivors weeping in an ordinary room, and the head on the table before them, and the journey still unfinished.
+
+Bran's head is watching them.
+
+**Bran's Head:** *(after a long time)* "The door is open. This was always what the hall was for — not to keep the grief away forever, but to hold it until the journey was ready. We are ready now."
+
+One of the survivors looks up. His face is wet.
+
+**Bran's Head:** "We are ready now. Pick me up. It is time to go to London."
+
+They pick him up. They go out through the door that faces Cornwall, into the ordinary Pembrokeshire light. The hall is empty behind them. The journey continues.
+
+*The Fighter holds the cord — Branwen's cord, the silk loop she used to tie the letter to the starling's leg — and follows the survivors into the light.*
+
+---
+
+### Seven Storyline Ideas — Cycle 2
+
+1. **Carrying the Head (Branwen)** ← *CHOSEN* — Seven survivors, the living head, Gwales and the enchanted hall, the forbidden door, the grief-flood, the burial at London.
+
+2. **The Badger in the Bag** — A rival is inside an enchanted bag; pure negotiation — all the leverage is yours, but you must name every condition correctly before releasing him or the enchanter finds a loophole.
+
+3. **The Enchanted Province** — An entire province emptied by an enchanter's old grievance; negotiate the land's restoration condition by condition without releasing the one thing that gives you leverage.
+
+4. **The Maker of Wives from Flowers** — A man forbidden any wife of the earth's race; two magicians make him a woman from blossom; she falls in love with a stranger the first night; the Fighter is caught between the conspiracy and the husband's household.
+
+5. **The Animal Punishment Years** — Two men transformed into animal pairs, producing a child each year; carry a message that only the transformed men know, to someone who does not know who they really are; the token is the secret.
+
+6. **The Blerwm Silencing** — Smuggle a young bard into a tyrant king's court; he makes faces at the official bards who babble nonsense before the king; hold until the song works and the imprisoned patron is freed.
+
+7. **The Seventh Survivor** — After the burial at London, one survivor must carry a sealed account of what happened in the hall at Gwales to a caer whose keeper has been waiting for the news since before the war began; the account names Heilyn and the door and the fourscore years; it is the only document that names both the grief and the mercy that held it.
+
+---
+
+### Theme Check
+
+**Existing active themes (selection):** ancient witnesses and the relay of questions (KIR-01) · the carrier who arrives with a reason to live (GCI-02) · grief carried in an object (INV/BHD/GDN) · loyalty as patience (LHR/STN) · the oath remembered when everyone else forgets (LHR-02).
+
+**Themes being avoided:** KIR-01 already claimed "the relay of questions." The grief-in-an-object theme (INV/BHD/GDN) is about objects that hold specific individual grief. This is different: the grief is collective, held at bay by enchantment, received all at once — not an object's weight but a flood.
+
+**What this quest introduces:** *Grief deferred by enchantment is grief doubled when received — and the only path through it is the unfinished journey; completion is the specific form of grief that does not break you.* No existing quest in the map uses deferred grief as its mechanism — the grief that was protected against, that floods back when the protection fails, and that can only be processed by finishing the thing the protection was delaying.
+
+---
+
+### 5-Act Vignette Play: *Carrying the Head*
+
+**THE TOKEN: BRANWEN'S CORD** — A loop of silk cord, strong enough to have held a letter to a starling's leg through an Irish crossing, now loose and soft in the Fighter's hands. It was found on the Irish shore where Branwen died — one of the seven survivors folded it and held it all the way through Harlech and Gwales without knowing why, and at the hall's far side he pressed it into the Fighter's keeping: "She gave him the letter. He heard it. Carry this with us." The cord is the only surviving object Branwen touched.
+
+---
+
+**ACT I — The Shore**
+*Branwen's cord: found on the shore, folded, placed in the Fighter's keeping. Location: the Irish shoreline after the battle — new node BRC.*
+
+Seven men stand on a shore of the dead. Their dead outnumber them beyond counting. The Irish dead are no different — the cauldron has been broken but the work was done, and the field is field-colored. Bran's head is in Pryderi's arms, still alive, still talking softly to itself.
+
+Manawydan kneels on the shore. He lifts something from the mud — a small loop of silk cord, the kind used to bind letters to birds. He holds it a moment. Then he walks to the Fighter.
+
+**Manawydan:** "She tied the letter to the starling with this. He heard it and came." He places it in the Fighter's hands. "Carry this with the head. She should go home."
+
+*The Fighter closes their hand around it. It is lighter than loss. It is not lighter than loss.*
+
+**Bran's Head:** *(from Pryderi's arms, calmly)* "We go to Harlech first. The birds will meet us there."
+
+---
+
+**ACT II — Harlech**
+*Branwen's cord: in the Fighter's pack, kept dry. Location: Harlech coastal promontory — new node HLG.*
+
+Rhiannon's birds sing over the sea at Harlech. They are the three birds whose song can wake the dead and send the living into the deepest rest — their music is not a sound exactly but a movement in the air that makes the body want to stop. The seven survivors sit down to feast. They have been walking since Ireland. They deserve the rest.
+
+The feast is enchanted. Time does not quite pass at Harlech the way it passes elsewhere. The singer-birds are in the trees across the water, visible, their mouths open.
+
+*The Fighter understands: stay awake. Someone must.*
+
+They walk the perimeter of the feast with Bran's head in its covered frame. The birds sing. Two of the survivors are already asleep at the table. The head speaks quietly to Pryderi, who is not asleep yet but is close.
+
+The birds are very beautiful. Their song is very old. It goes into the chest and settles there and asks only that you close your eyes.
+
+*The Fighter counts their own steps: one, two, three, four. One, two, three, four.*
+
+The seven years at Harlech end when the seventh dawn comes and the birds stop singing. The survivors wake, stretch, and look at each other with the expression of people who have been somewhere and are not entirely sure where.
+
+---
+
+**ACT III — Gwales**
+*Branwen's cord: in the Fighter's coat, against the chest. Location: Gwales, the enchanted hall — new node GWL.*
+
+The hall has three doors. Two face east and north, open as invited. One faces Cornwall. At the Cornwall door there is a quality of air that the Fighter does not understand except that it is the quality of something held.
+
+The seven survivors have been in the hall for a long time. The grief is not present here. This is its gift and its cost. Bran's head is good company — he tells stories, he asks questions, he remembers things that happened before any of them were born. The corn in his beard is always fresh. The ale is always cool.
+
+But Heilyn son of Gwyn is looking at the door.
+
+He has been looking at the door for years. Not always, not obsessively — but the Fighter has seen him look. He looks at it the way a person looks at a thing they have decided they will not do and are still deciding.
+
+*The Fighter thinks: he is going to open it. Not today. But today is the day they will not be watching.*
+
+*Read him. Find the moment.*
+
+---
+
+**ACT IV — The Opening**
+*Branwen's cord: in the Fighter's fist. Location: Gwales, the hall, the Cornwall door.*
+
+Heilyn opens the door.
+
+The light through it is ordinary Pembrokeshire light — the same light that was there yesterday and every day for fourscore years, just outside, held off by the enchantment. He has both hands on the door and his face is set with the look of a man who has done something that cannot be undone.
+
+The grief arrives. It does not approach — it is simply there, all of it, the whole weight that the hall was holding: Branwen on the Irish shore, the field, the cauldron used against them, Efnisien dead inside it. The seven survivors stand in the hall with eighty years of grief falling on them simultaneously.
+
+They weep. This is correct. The weeping is what needed to happen.
+
+*The Fighter holds the cord and does not weep, because the grief in the cord has been there since the Irish shore and the Fighter has been carrying it all along; theirs is not the same deferred grief; theirs is the grief of having watched.*
+
+After a long time, Bran's head speaks.
+
+**Bran's Head:** "The door is open. This was always what the hall was for — to hold the grief until the journey was ready. We are ready now. Pick me up."
+
+They pick him up. They go out through the open door.
+
+---
+
+**ACT V — The White Hill**
+*Branwen's cord: placed in the burial chamber with the head. Location: Gwynvryn (the White Hill, London) — new node LDN.*
+
+The burial ground on the White Hill looks out over the Thames and, on clear days, toward the east where France lies. The head faces outward. The seven survivors have carried it from Ireland through Wales through the birds and the hall and the grief to this hill, and this is the place it was always going.
+
+The stone is placed. The chamber is covered.
+
+The Fighter holds the cord — Branwen's silk loop, Branwen's last connection to the letter that started the war that killed her. The Fighter sets it in the chamber before the stone is rolled.
+
+**Pryderi:** *(quietly, watching)* "She should be here."
+
+**Fighter:** *(one word)* "She is."
+
+The stone rolls. The head faces France. Britain is protected for as long as the head remains unexhumed — though the myth notes that Arthur eventually digs it up, because he will not have any protection of Britain except his own. That is another story, for another time.
+
+*The Fighter stands on the White Hill and watches the Thames below. The cord is in the stone. The journey is done.*
+
+---
+
+### Quest API Stub
+
+```
+Quest: Carrying the Head
+missionAccept: "Seven survivors carry Bran's living head from Ireland to London.
+  You are the eighth. Manawydan gives you Branwen's cord — the silk she used
+  to tie the letter to the starling. 'She should go home,' he says."
+
+Act I — The Shore
+activateNode: BRC
+type: dialogue
+scene: "The Irish shore after the battle. Seven survivors, the dead field, Bran's
+  head in Pryderi's arms. Manawydan lifts something from the mud — Branwen's cord
+  — and places it in your keeping. The head says: we go to Harlech first."
+prompt: "Insight DC 12: Understand what Manawydan is asking — not to carry the
+  cord as cargo but to carry it as presence, as the only piece of Branwen that
+  is still moving."
+failText: "You hold it as an object. Manawydan looks at you a moment, then nods
+  as if accepting that this is how it will be carried."
+successText: "You close your hand around it and understand. You receive Branwen's Cord."
+grantItem: "Branwen's Cord"
+checkPassFlag: kirCordHeld
+
+Act II — Harlech
+activateNode: HLG
+type: skill_check
+scene: "Rhiannon's birds sing over the sea at Harlech. Their music is old and
+  goes into the chest and asks only that you close your eyes. The seven survivors
+  feast. Two are already asleep at the table. Someone must walk the perimeter
+  and count the dawns."
+prompt: "Endurance DC 13: Stay awake through the feast at Harlech while
+  Rhiannon's birds sing — walk the perimeter, count your steps, stay present."
+failText: "The birds are too beautiful. You sleep for one dawn. The count is off
+  by a day — not fatal, but the Gwales timing shifts."
+successText: "Seven dawns. The birds stop. The survivors wake and look at their
+  hands. You have the count exactly right."
+checkPassFlag: kirHarlachWatched
+
+Act III — Gwales
+activateNode: GWL
+type: skill_check
+scene: "The enchanted hall. Three doors: two open, one facing Cornwall that must
+  not be opened. Fourscore years — but for the quest, a single passage of time
+  compressed to its pivot. Heilyn son of Gwyn is looking at the forbidden door
+  again. He has been looking at it for years. Find the moment before the moment."
+prompt: "Insight DC 14: Read Heilyn accurately enough to know when his looking
+  becomes deciding. Intervene before the hand reaches the latch."
+failText: "You are watching and then you are not watching, and the door is open.
+  Proceed to Act IV — the grief has arrived."
+successText: "You see the change in his posture. You step between him and the door.
+  He looks at you. Then he looks at the door for a long time. Then he sits down.
+  The fourscore years continue."
+checkPassFlag: kirDoorDelayed
+
+Act IV — The Opening
+activateNode: GWL
+type: escort
+scene: "The door is open — either Heilyn opened it or the enchantment eventually
+  failed. The grief arrives all at once. Eighty years of weight. The seven survivors
+  weep. Bran's head speaks: we are ready now. Pick me up. Get the group moving
+  before the grief becomes paralysis."
+prompt: "Escort the seven survivors from Gwales through the Pembrokeshire coast
+  road to the Thames crossing, moving gently, not forcing, letting the grief
+  travel with them."
+successText: "They walk. The grief walks with them. By the time they reach the
+  Thames crossing their faces are composed — not finished grieving but able to
+  continue."
+failText: "One survivor refuses to stand. Hold the position with him until he is
+  ready — the journey cannot leave him behind."
+checkPassFlag: kirGroupMoving
+
+Act V — The White Hill
+activateNode: LDN
+type: escort
+scene: "The White Hill above the Thames. The chamber is dug. Bran's head faces
+  France. Before the stone is rolled you place Branwen's cord in the chamber —
+  the silk she used, the letter, the starling, the war it started. She should
+  go home. The stone rolls. The journey is done."
+prompt: "Place the cord and hold the space while the survivors seal the chamber."
+successText: "The stone closes. The cord is in the dark with the head that heard
+  it. Britain is protected. The survivors stand on the hill and look east."
+failText: "Someone objects to placing the cord with the head — it should be given
+  to a family member, they say. Find the argument that returns them to their purpose."
+takeItem: "Branwen's Cord"
+checkPassFlag: kirHeadBuried
+activateMissionBit: kirHeadComplete
+```
+
+---
+
+### New Nodes Proposed
+
+| Node | Code | Terrain | Theme Affinity |
+|---|---|---|---|
+| Irish shore after the battle | BRC | A flat Irish strand after a total war: the field behind, the sea ahead, seven men standing in the after-silence of something that destroyed two islands; the smell of salt and iron and the specific quiet after catastrophe | Completion after destruction, the last living things carrying the last important thing |
+| Harlech promontory | HLG | A Welsh coastal promontory above the sea: flat-topped stone, the birds visible across the water in a stand of trees, the feast-ground where time slows but does not stop; sea sound in every direction | Enchanted time, the watch-keeper's vigil, grief held at bay |
+| Gwales / Grassholm Island | GWL | An island off the Pembrokeshire coast: a low stone hall with three doors, two open and one that must not be opened; the air inside the hall holds something that is not a smell; eighty years of ordinary contentment and one door facing Cornwall | Deferred grief, the forbidden room, the moment when protection becomes delay |
+| Gwynvryn — the White Hill | LDN | A low hill above the Thames in south Britain: the burial mound at its summit, the river visible below, the eastern sky open; the place where things are put into the earth to protect the living; a view toward France | Memorial completion, the journey's end, the protection that does not require the carrier's presence anymore |
+
+---
+
+*Cycle 2 complete. Mark `[x]` for KIR-mabinogion in books.md.*

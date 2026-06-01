@@ -103,6 +103,7 @@ The game asks: what does it mean to keep your word when the world does not?
 | MAN | The Templar's Writ | 2 | TPR (Templestowe Preceptory — cell → cloister → recorder's study → trial hall) | The institution's own suppressed instrument returned to the hand that wrote it |
 | SEN | Blind Pew's Delivery | 2 | ADM (Black Hill Cove quay → cliff road → Admiral Benbow yard → threshold) | The neutral messenger of doom; complicity is the complicity of the postal road |
 | GCI | The Gild-Holm-'Ur Seat | 2 | GHL → STP (tidal rock seat → St. Peter Port harbor) | The carrier who arrives with a reason to live; the offer made without coercion |
+| KIR | Carrying the Head | 2 | BRC → HLG → GWL → LDN (Irish shore → Harlech → Gwales → London White Hill) | Grief deferred by enchantment; completion is the only form that does not break you |
 
 ---
 
@@ -195,6 +196,10 @@ Game cities are canonical. Source-book settings are proposed new nodes.
 | Nottingham common — gallows-tree | NGM | The public execution ground outside Nottingham's east gate: permanent scaffold visible from the town wall, open road between treeline and gatehouse, a crowd that always gathers for hangings | Public spectacle, disguise under scrutiny, the bluff that has seconds to hold |
 | Templestowe Preceptory | TPR | A fortified Yorkshire Templar compound: stone cloister, cell blocks, a trial hall with gallery, the lists in the outer yard; cold even in summer, smelling of stone and wax and old obligation | Institutional authority, suppressed evidence, bureaucratic self-correction |
 | Gild-Holm-'Ur Seat | GHL | A tidal rock niche on Guernsey's western coast face: barely wide enough for shoulders, facing open sea, covered by spring tide; the ledge above is the last place a decision can be made; the sea sound here is constant | Completed lives, the ethics of the offer, the weight of a reason to continue |
+| Irish shore after the battle | BRC | A flat Irish strand after a total war: seven survivors in the after-silence of two islands destroyed; the smell of salt and iron | Completion after destruction, the last things carrying the last important thing |
+| Harlech promontory | HLG | A Welsh coastal promontory: flat-topped stone, the enchanted feast-ground where Rhiannon's birds sing over the sea and time slows | Enchanted time, the watch-keeper's vigil, grief held at bay |
+| Gwales / Grassholm Island | GWL | An island off Pembrokeshire: a stone hall with a forbidden door facing Cornwall; eighty years of contentment and one door that must not be opened | Deferred grief, the forbidden room, protection that becomes delay |
+| Gwynvryn — the White Hill | LDN | A low hill above the Thames: the burial mound, the river below, the eastern sky open; the place where the journey ends | Memorial completion, the protective burial, the view toward France |
 | Iceland / Thingvellir | ISL | Fog, blood on stone, silence | Vengeance, the weight of objects |
 | Castilian road / Toledo | IBR | Dust, court protocol, beard-honor | Pride, humiliation, long patience |
 | Georgian mountain road | GEO | Shale, amber and gold, champion's fire | Duty, love, the commission |
