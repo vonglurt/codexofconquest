@@ -395,7 +395,7 @@ Seeds outstanding (need full 5-act vignette treatment):
 - BLQ-03: "The Coals" — FLR → BOL ✓ DONE 2026-06-02 (written as Cycle 4)
 - BLQ-04: "The Falcon's Inventory" — FLR → VEN ✓ DONE 2026-06-02 (written as Cycle 5)
 - BLQ-05: "The Three Descents" — NAP → RHD ✓ DONE 2026-06-02 (written as Cycle 6)
-- BLQ-06: "The Night Transport" — FLR → ALE
+- BLQ-06: "The Night Transport" — FLR → ALE ✓ DONE 2026-06-02 (written as Cycle 7)
 - BLQ-07: "The Goosebridge Answer" — CON → WM
 - BLQ-S08: "The Jewel Chest" — BRI → BAR
 - BLQ-S09: "The Soldier's Testimony" — ALE → FAM

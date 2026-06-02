@@ -1794,3 +1794,271 @@ Fra Simone records in the log: *letter received in irregular condition; seal par
 ---
 
 *BLQ-06 complete. 2026-06-02.*
+
+---
+
+## Cycle 7 — Angle: The Document That Arrives Before the Messenger
+
+---
+
+### BLQ-07: "The Night Transport"
+
+**Theme check:** Cycles 1-6 have covered: formal fraud through technical accuracy; legal timing; diplomatic ambiguity; substituted contents; documents outliving their objects; authentication through ordeal. Cycle 7 shows the document timed to an impossible schedule — the carrier who arranges not just delivery but the appearance of arrival before arrival was possible. The Torello story's miracle is that the transported man reaches Pavia before his own absence has been formally recorded; the miracle of arrival is its own proof. Cycle 7 translates this: the carrier must create a relay system so fast that the return letter appears to arrive before the conditions that prompted it existed.
+
+This is distinct from: BLQ-02 (timing as legal existence — the document arrives before the session; BLQ-05 (the document carries proof of an act; BLQ-06 (speed as authentication of the document through ordeal); IST-02 (physician's notes — dispatched fast as emergency); HAV-04 (surgeon's log — expedition cost accounting).
+
+---
+
+**SOURCE HOOK:** Day X, Story 9. Messer Torello of Pavia is held at Saladin's court in Alexandria, homesick, while his wife is about to remarry believing him dead. Saladin's necromancer transports Torello overnight from Alexandria to Pavia on a jeweled bed. He wakes in his own cellar in time for his wife's second wedding feast — still wearing Saracen robes, still holding the jeweled cup Saladin gave him. He drops his ring in the wife's wine. She recognizes it. The second groom yields graciously. The story's argument: the highest generosity creates a loop the universe must close. The transported man arrives before the messenger who should carry him.
+
+---
+
+**1367 SETTING:**
+Messer Bernardo Bostichi of Florence has been stranded in Alexandria for seven months. He was left behind when his partner's ship departed without him during a harbor quarantine order. He is alive, well, and actively trading — but no word of his survival has reached Florence, where his wife Monna Tessa has applied to the commune court to have his estate settled and his accounts closed. The legal deadline for the court's first ruling is in eighteen days.
+
+Normal sea voyage from Alexandria to Florence (via Genoa): twenty-eight to thirty-five days. A normal courier leaving Alexandria today would arrive eleven to seventeen days after the deadline.
+
+The Florentine merchant guild in Florence has commissioned a carrier to go to Alexandria with a consortium declaration — a certified document establishing that the consortium's accounts with Bernardo remain open pending his return, which gives him standing to act on behalf of Florence-based creditors in Alexandria. The consortium declaration must be delivered to Bernardo in Alexandria so he can use it to refinance an account and settle a Mamluk customs dispute.
+
+The carrier's secondary challenge — known before departure — is to arrange, while in Alexandria, for Bernardo's authenticated proof-of-survival letter to return to Florence faster than any normal courier. The "night transport" is not magic: it is the Hospitaller military dispatch relay, a network of fast galleys and relay horses that moves documents for the order and, unofficially, for certain trusted commercial partners. A letter in the Hospitaller relay takes twelve to fourteen days from Alexandria to Genoa. The letter would arrive in Florence before the deadline — but getting a commercial letter into the Hospitaller relay requires connections the carrier may or may not have.
+
+**TOKEN:** The consortium declaration — Florentine guild seal, the four master signatures, certifying Bernardo Bostichi's accounts as open and active; valid only if delivered before Bernardo's estate ruling; the consortium declaration unlocks Bernardo's ability to act on the accounts; carried from Florence to Alexandria.
+
+**TOKEN granted:** Act I
+**TOKEN taken:** Act V (Bernardo receives the consortium declaration in Alexandria; the account is opened; the reply letter enters the Hospitaller relay)
+
+---
+
+### ACT I — Florence (Florentine Guild Factor's Office, Via Tornabuoni)
+
+*The consortium declaration · rolled and sealed with four guild masters' wax · on the factor's desk between a lamp and an abacus · morning, the city-water sounds from the street*
+
+The guild factor, Ser Giambattista Alberi, explains the mission in two parts. First: deliver the consortium declaration to Messer Bernardo Bostichi in Alexandria. Bernardo is known to be at the Venetian consul's compound in the Frankish quarter. Second: while in Alexandria, arrange for Bernardo's proof-of-survival letter to travel back to Florence via the fastest possible route. Ser Giambattista names the Hospitaller relay but says: "I don't know if you can get a commercial letter into their system. You'll need to find who can authorize it."
+
+He says: "If the letter arrives in Florence before the eighteenth day, Monna Tessa's estate petition is withdrawn. If it does not arrive, the ruling goes through, Bernardo loses his standing here, and his Alexandria accounts become very complicated." He says this precisely. He has been calculating this for three days.
+
+The carrier has eighteen days. The voyage to Alexandria takes six or seven. That leaves eleven days for the return journey. The Hospitaller relay runs in fourteen. The window is narrow.
+
+*He is telling me the mathematics. He knows they don't work. He is asking me to make them work anyway.*
+
+---
+
+**Skill check — DC 12 History or Investigation:**
+Understand the Hospitaller relay's access requirements and identify who in Alexandria can authorize a commercial letter's inclusion.
+
+**Pass (History):** The carrier knows the Hospitaller relay's history: it was established for military dispatches between Acre (now lost) and the western houses; since the fall of Acre, it has been used for Rhodes-to-western-Europe communications; in Alexandria, the relay access point is controlled by the Hospitaller chapter house in the Frankish quarter — specifically the chapter's senior factor, currently Fra Luca di Parma. Fra Luca has authorized commercial letters before for trusted Florentine accounts. The carrier identifies the contact.
+
+**Pass (Investigation):** The carrier examines the relay's documented routes: the last commercial letter known to have used it was eighteen months ago, carried by a Venetian factor at the request of the Doge's personal secretary. That precedent establishes that the relay CAN carry commercial letters at senior authorization. The carrier identifies the precedent and will use it as a negotiating tool with Fra Luca.
+
+**Fail:** The carrier departs knowing the relay exists but without specific knowledge of how to access it in Alexandria.
+
+*The declaration granted here. The route is six days of sea.*
+
+**Grant item:** consortium declaration (Florentine guild seal, four masters' signatures, Bernardo's accounts)
+
+---
+
+### ACT II — Famagusta (Hospitaller Port Stop, Fourth Day at Sea)
+
+*The consortium declaration · in the carrier's travel document case · the Famagusta Hospitaller commandery, harbor side · late afternoon, the galley loading for the Alexandria leg*
+
+The Rhodes galley makes a port call at Famagusta. The Hospitaller commandery here is smaller than Rhodes but has the same relay protocols. The commandery's factor, Fra Damiano di Padova, is reviewing departure manifests at the harbor desk.
+
+The carrier has an hour before the galley resails.
+
+Fra Damiano knows Fra Luca di Parma in Alexandria — they trained together. He can send a letter ahead on the relay (which runs faster than the galley) informing Fra Luca that a carrier is coming with a Florentine commercial relay request. This would save two days in Alexandria — Fra Luca would be prepared to authorize before the carrier arrives, rather than requiring negotiation from scratch.
+
+But Fra Damiano needs to know why this is worthy of priority consideration.
+
+---
+
+**Skill check — DC 12 Persuasion or History:**
+Convince Fra Damiano to send the preparatory message to Fra Luca.
+
+**Pass (Persuasion):** The carrier explains the situation — a Florentine merchant stranded in Alexandria, a wife about to lose her standing, a deadline of eighteen days from Florence. Fra Damiano, who has processed enough commercial-mercy dispatches to recognize the situation's shape, sends the preparatory letter. "Fra Luca will see you. Tell him Fra Damiano sent you ahead."
+
+**Pass (History):** The carrier cites the Venetian Doge's secretary precedent. Fra Damiano recognizes the precedent — he was at Famagusta when that letter passed through. He sends the preparatory message without requiring further justification.
+
+**Fail:** Fra Damiano is busy and not persuaded. The carrier boards the galley without the preparatory message. In Alexandria, the carrier will need to negotiate Fra Luca's authorization from scratch, which takes an extra day.
+
+---
+
+### ACT III — Alexandria (Venetian Consul's Compound, Frankish Quarter)
+
+*The consortium declaration · in the carrier's document case · the Venetian consul's receiving room, Alexandria, the harbor smell through the shutters · Messer Bernardo Bostichi at the desk, thinner, very alive*
+
+Bernardo Bostichi has been in Alexandria for seven months and has conducted himself with complete equanimity. He has a Mamluk trading license, a rented warehouse space, and a pleasant working relationship with the Venetian consul Ser Marco Falier, who has been using him as an informal interpreter for Genoese-language correspondence. He is not despairing. He simply has not been able to get a letter home.
+
+He receives the consortium declaration from the carrier, reads it carefully, and says: "Monna Tessa applied for the estate ruling." He says this not as a question. He says: "Of course she did. Seven months with no word."
+
+He writes the proof-of-survival letter immediately, in good Italian, dated and signed, with a second signed copy for the consul's office. He asks the carrier: "Can this travel fast enough?"
+
+The carrier tells him: via Fra Luca's relay authorization, yes — fourteen days from Alexandria to Genoa, then three days to Florence. Seventeen days total. The deadline is eighteen days from Florence's clock.
+
+Bernardo says: "One day's margin."
+
+*He is looking at me the way a man looks at the rope that has reached him.*
+
+---
+
+**Skill check — DC 12 Persuasion or Investigation:**
+Get Bernardo's letter notarized at the Venetian consul's office with the correct date and seal before the day closes.
+
+**Pass (Persuasion):** The carrier explains the timing urgency to Ser Marco Falier. The consul, who has come to appreciate Bernardo's work over seven months, processes the notarization immediately — two signed copies, both bearing the consulate date-stamp and Falier's personal seal. The letter is as formally authenticated as any document in the Mediterranean.
+
+**Pass (Investigation):** The carrier identifies, in the consulate's registry, that Bernardo has been making formal submissions to the consulate every thirty days as part of his trading license renewals — each submission logged with date and content. The carrier cites these as supporting evidence for the date of first continuous presence. Falier, seeing the registry trail, notarizes without further inquiry.
+
+**Fail:** The consulate's notary is absent for the afternoon. The notarization must wait until morning. One day is lost. The relay margin drops to zero.
+
+---
+
+### ACT IV — Alexandria (Hospitaller Chapter House, Frankish Quarter)
+
+*The consortium declaration and Bernardo's letter both in the carrier's case · Fra Luca di Parma's desk in the chapter house · late evening, the relay horse ready in the courtyard outside*
+
+Fra Luca di Parma has received Fra Damiano's preparatory message (if Act II passed) or has not received it (if Act II failed). Either way, he is the only person in Alexandria who can authorize the commercial letter for the Hospitaller relay.
+
+He is not hostile to the request. He is rigorous about it. He says: the relay is for military and humanitarian dispatches; commercial letters are authorized only by explicit ruling of the chapter's senior factor; he is the senior factor; he has authorized three commercial letters in two years; each was exceptional. He needs to be satisfied that this is exceptional.
+
+He is also concerned about the consortium declaration's standing. If Bernardo's accounts are open in Florence but his estate petition is in progress, the declaration creates a conflicting legal status that could create problems for the Hospitaller's own accounts with Florentine creditors.
+
+---
+
+**Skill check — DC 13 Persuasion or History:**
+Satisfy Fra Luca's requirements for relay authorization.
+
+**Pass (Persuasion):** The carrier makes the case directly: a Florentine merchant alive in Alexandria, his wife about to lose her standing under a court proceeding based on false information, one day's margin if the letter reaches the relay tonight. Fra Luca is a Hospitaller. The order's constitution includes obligations to remove injustice where injustice is caused by lack of information. Fra Luca recognizes the category. He authorizes. He hands the carrier the relay token — a small lead seal impressed with the chapter's mark — that authorizes the letter's inclusion in tonight's dispatch.
+
+**Pass (History):** The carrier cites the Venetian precedent and adds: the consortium declaration's authority does not create conflicting status for the Hospitaller accounts because it functions as a conditional certification, valid only if the estate petition is withdrawn — which it will be when the letter arrives. Fra Luca, satisfied that the legal architecture is sound, authorizes. He hands the relay token.
+
+**Fail:** Fra Luca does not authorize tonight. He requires a written request from the Florentine guild factor in Florence to be presented before he will authorize a commercial relay inclusion. This takes three days via normal courier. The one-day margin is gone.
+
+*The relay token, if obtained. The letter in the relay horse's saddlebag, or not.*
+
+---
+
+### ACT V — Alexandria (Venetian Consul's Compound, Departure Day)
+
+*The consortium declaration · delivered to Bernardo and witnessed · the relay either running or not · the harbor, morning, the return galley at dock*
+
+The consortium declaration is delivered formally to Messer Bernardo Bostichi, witnessed by the Venetian consul's clerk, entered in the consulate registry. The Mamluk customs dispute is resolved. Bernardo's account is open.
+
+The carrier's formal mission is complete.
+
+What remains is whether the relay is running.
+
+If the relay token was obtained in Act IV: Bernardo's letter is already two days out on the fastest route in the eastern Mediterranean. It will arrive in Florence in sixteen days — two days before the deadline. Monna Tessa will receive it while the estate petition is still pending. The carrier can board the return galley with the knowledge that the letter is ahead of them.
+
+If the relay token was not obtained: the letter went by normal courier, twenty-eight days minimum. The deadline will have passed. The carrier boards the return galley knowing the estate ruling has gone through.
+
+The carrier departs Alexandria with the consul's receipt for the consortium declaration and whatever knowledge they have of whether the letter is running.
+
+---
+
+**Skill check — DC 12 Persuasion or Investigation:**
+Verify the relay's departure and confirm the letter is in it, then board the return galley with the receipt.
+
+**Pass (with relay running):** The carrier finds Fra Luca's relay station at the chapter house gate before departure. The relay horse left at midnight. The letter is in it. Fra Luca's factor has the departure log. The carrier reads the timestamp: two days ago, if they've been delayed in Alexandria, or last night, if the timing worked. "The letter is running," Fra Luca's factor says. "It arrives in Genoa before you do." The carrier boards the galley with the receipt and this knowledge.
+
+**Pass (without relay):** The carrier boards the galley with the receipt and a normal courier letter dispatched by Bernardo through the consul. There is nothing more to do. The letter will arrive late. Whether Monna Tessa and the Florentine commune have already taken action is unknown until the carrier returns.
+
+**Fail:** The carrier cannot confirm the letter's status before the galley sails. They board without knowing whether the relay ran. The receipt is in their hands. Everything else is uncertain.
+
+*The consortium declaration taken here. The return voyage begins.*
+
+**Take item:** consortium declaration (delivered to Bernardo; witnessed; entered in consulate registry)
+
+---
+
+### onPass (relay running)
+
+The return galley arrives in Genoa nineteen days after departure from Alexandria. The carrier goes directly to the Florentine guild office in Genoa, then rides to Florence.
+
+In Florence, Ser Giambattista Alberi has the letter in his hand. He received it three days ago — two days before the estate deadline. Monna Tessa withdrew the petition the same day. Bernardo's accounts are active. The commune court closed the estate proceeding as moot.
+
+Ser Giambattista, when the carrier enters the office, says: "I didn't believe it could be done." He says: "The letter arrived before we could have heard that you had reached Alexandria." He looks at the relay token stamp on the letter. He says: "Fra Luca di Parma's chapter house." He says: "I'll remember that name."
+
+The carrier receives the second half of the fee and a letter of commendation addressed to the guild's eastern network.
+
+The Venetian consul in Alexandria, Ser Marco Falier, entering the case in the consulate's dispatch registry, creates a new notation category: *Dispatch Records — Letters Arriving Before Their Preconditions.*
+
+---
+
+### onFail (relay not running or letter late)
+
+The letter arrived in Florence nineteen days after the carrier left Alexandria. Two days after the estate deadline. The commune court's first ruling had already gone through: Bernardo's accounts are provisionally closed pending a formal challenge.
+
+The challenge is possible but will take three months and a separate petition.
+
+Ser Giambattista Alberi, when the carrier enters the office, says nothing for a moment. Then: "The declaration was delivered?" It was. "Bernardo is alive?" He is. "Then the challenge will succeed. It will only take longer." He pays the carrier in full regardless. He says: "The mathematics were always against it."
+
+---
+
+### Quest Stub (UQF v1.0)
+
+```json
+{
+  "quest_id": "BLQ_007",
+  "title": "The Night Transport",
+  "cycle": 7,
+  "book": "Decameron",
+  "token": "consortium declaration — Florentine guild seal, four masters' signatures, Bernardo Bostichi's accounts certified as open; valid only if delivered before the estate ruling; requires delivery to Alexandria and arrangement of an impossible return relay",
+  "route": "FLR → FAM → ALE",
+  "theme": "The document that arrives before the messenger who should carry it; the Hospitaller relay creates a return delivery faster than a normal voyage; the letter reaches Florence two days before the deadline; the miracle of arrival is its own proof",
+  "archive_category": "Dispatch Records — Letters Arriving Before Their Preconditions (Ser Marco Falier, Venetian consul's dispatch registry, Alexandria, 1367)",
+  "acts": [
+    {
+      "act_id": "BLQ_007_01",
+      "location": "Florence — Florentine guild factor's office, Via Tornabuoni",
+      "type": "skill_check",
+      "activateNode": "FLR",
+      "scene": "Ser Giambattista Alberi explains the mission in two parts: deliver the consortium declaration to Bernardo Bostichi in Alexandria; arrange for his proof-of-survival letter to return in twelve to fourteen days via the Hospitaller military dispatch relay. The deadline is eighteen days. The mathematics don't work without the relay.",
+      "skillCheck": { "dc": 12, "skills": ["History", "Investigation"] },
+      "grantItem": "consortium declaration (Florentine guild seal, four masters' signatures)",
+      "checkPassFlag": "relay_access_strategy_known"
+    },
+    {
+      "act_id": "BLQ_007_02",
+      "location": "Famagusta — Hospitaller commandery, port stop",
+      "type": "skill_check",
+      "activateNode": "FAM",
+      "scene": "Fra Damiano di Padova at the Famagusta commandery can send a preparatory message to Fra Luca di Parma in Alexandria via the relay — arriving before the carrier's galley. This would save two days of negotiation in Alexandria. He needs to be convinced the request is exceptional.",
+      "skillCheck": { "dc": 12, "skills": ["Persuasion", "History"] },
+      "checkPassFlag": "luca_prepared"
+    },
+    {
+      "act_id": "BLQ_007_03",
+      "location": "Alexandria — Venetian consul's compound, Frankish quarter",
+      "type": "skill_check",
+      "activateNode": "ALE",
+      "scene": "Bernardo Bostichi is alive, well, and writing the letter immediately. Ser Marco Falier must notarize it at the consulate before the day closes. The letter needs a consulate date-stamp and the consul's personal seal to be formally authenticated.",
+      "skillCheck": { "dc": 12, "skills": ["Persuasion", "Investigation"] },
+      "checkPassFlag": "bernardo_letter_notarized"
+    },
+    {
+      "act_id": "BLQ_007_04",
+      "location": "Alexandria — Hospitaller chapter house, Frankish quarter",
+      "type": "skill_check",
+      "activateNode": "ALE",
+      "scene": "Fra Luca di Parma is the only person in Alexandria who can authorize a commercial letter for the Hospitaller relay. He is rigorous: three commercial letters in two years; each was exceptional. He has concerns about the consortium declaration's conflicting legal status. The relay horse leaves tonight.",
+      "skillCheck": { "dc": 13, "skills": ["Persuasion", "History"] },
+      "checkPassFlag": "relay_token_obtained"
+    },
+    {
+      "act_id": "BLQ_007_05",
+      "location": "Alexandria — Venetian consul's compound, departure morning",
+      "type": "skill_check",
+      "activateNode": "ALE",
+      "scene": "The consortium declaration is delivered formally to Bernardo, witnessed, entered in the registry. The formal mission is complete. The relay is either running or not. Confirm the letter's departure status and board the return galley.",
+      "skillCheck": { "dc": 12, "skills": ["Persuasion", "Investigation"] },
+      "takeItem": "consortium declaration",
+      "activateMissionBit": "blqNightTransportComplete",
+      "checkPassFlag": "relay_confirmed"
+    }
+  ]
+}
+```
+
+---
+
+*BLQ-07 complete. 2026-06-02.*
