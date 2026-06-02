@@ -688,3 +688,204 @@ The parchment enters the Weimar archive under Greek Mercenary Service Records. T
 | Code | Name | Location | Description |
 |------|------|----------|-------------|
 | BTR | Bosphorus Thracian Noble Estate | Near the Bosphorus, Thrace | Stone archive room off the main hall; cedar chests of territorial records; steward Dragomir at the table; the harbor visible through the high window; a family that has been deciding for four months whether its history is a liability or an obligation |
+| SIN | Sinope, Black Sea coast | Northern Anatolia, Black Sea | A Pontic harbor city under Genoese commercial influence in 1367; the merchant quarter near the waterfront; the smell of salted fish and rope; the old Greek-speaking community intact from ancient settlement; cedar chests in back rooms with documents that have not been read in thirty years |
+
+---
+
+## Cycle 3 — Angle: *The Cretan's Account — What the Front Rank Saw*
+
+**What this angle reveals that prior cycles missed:** Cycle 1 showed the army's collective will — the vote that reconstituted the republic of necessity. Cycle 2 showed the breach — the compact honored by one side and broken by the other. Cycle 3 enters the moment itself: the first shout. An old Cretan archer was in the van at Mount Theches. He dictated, in old age, what he saw from the front rank: the shape of the hill, the change in light, the moment he understood before the shout spread backward through ten thousand men. **New theme:** *The front-rank view of communal salvation is different from the literary account; the archer who first understood what the shout meant carries a kind of knowledge the writer who came later cannot reconstruct; the moment of collective recognition has a specific shape when you are the first one to know.*
+
+---
+
+### Five-Act Vignette Play
+
+*TOKEN: The Cretan Archer's Dictation — forty lines of Greek with Cretan dialect words for military formations and terrain, dictated in old age to a Sinopean merchant's scribe. Specific: the shape of the hill at Theches, the quality of the light, the exact sound of the shout when it began — he describes it as coming from the front and then keeping coming, each wave louder than the last, as the meaning reached further back through the column. The account is not literary. It is the account of a man who was there and remembered the physical details: where his feet were, what the man beside him did first. Kept in a cedar box by a Sinopean merchant family for thirty years.*
+
+---
+
+**ACT I — The Merchant's Son**
+
+*The Dictation, inside a cedar box, in a back room of a Sinopean merchant house · the merchant's son Konstantinos, who inherited the box when his father died six months ago · a harbor-side room, morning, the Black Sea gray outside*
+
+Konstantinos did not read Greek well enough to know what he had until a Genoese factor named Luca Barbarigo told him. Luca told him because he represents a collector in Genoa who wants it. Luca has offered a written price. Konstantinos has not yet signed.
+
+The Weimar commissioning letter arrived this morning, which is why Konstantinos has not yet signed. He is thirty-two and he is making a business decision: which offer creates fewer complications.
+
+*The fighter understands: Luca's offer is specific and immediate. The Weimar commission is general and institutional. The fighter must make institutional custody feel more solid than Genoese coin, which is the harder argument.*
+
+---
+
+**ACT II — The Factor's Counter**
+
+*The Dictation, still in its box · Luca Barbarigo's ship, Black Sea harbor, Sinope waterfront · afternoon, the Genoese factor at the rail watching the fighter cross the dock*
+
+Luca is not hostile. He is efficient. He has been in this situation before — a foreign commission arriving two days after his purchase offer. He knows the institutional argument and he has a counter: his collector will publish a printed edition, make the account publicly available, and name Konstantinos's family in the dedication. The archive will file it and it will be consulted by perhaps six scholars in twenty years.
+
+He is not wrong about the publication. He is wrong about one thing, which the fighter must identify and name.
+
+*What Luca cannot offer is the one thing an archive can: a place where the account cannot be bought again, sold again, or destroyed by a collector's heir who does not share his father's interests.*
+
+---
+
+**ACT III — The Scholar's Addendum**
+
+*The Dictation, in the fighter's satchel · a Constantinople scholar's study, two weeks later · evening, the Bosphorus visible from the window*
+
+His name is Nikephoros Mauros. He teaches at the Chora studium and has published a commentary on the Anabasis that is careful, thorough, and missing the front rank's view entirely — because it did not exist when he wrote it. He has heard the account exists from a colleague in Sinope. He wants to add a paragraph to the next edition of his commentary.
+
+If the fighter shows him the account, he will write the paragraph and attribute it to the Weimar archive — effectively announcing the archive's acquisition to the scholarly world before the archive has received it. This is useful. It is also premature.
+
+The tender moment: Nikephoros reads the account's description of the sound — the shout coming from the front and keeping coming — and sets the folio down. He says: "He was listening to it travel." He says nothing else for a moment.
+
+*The fighter watches a scholar understand, for the first time in his career, what his commentary was missing.*
+
+---
+
+**ACT IV — The Retired Soldier**
+
+*The Dictation, in the satchel · a Constantinople tavern, the same evening · a man named Alexios who sells grain and used to be a soldier*
+
+Alexios has read the Anabasis. He read it twenty years ago when he was a soldier and has thought about it intermittently since. He never served in Anatolia — he served in Thrace — but he has always wondered what the front rank saw at Theches, because Xenophon was in the middle of the column and described it from the middle.
+
+He does not know the fighter has the account. He is simply telling the fighter this because it came up, the way things come up in taverns when two people have been talking long enough.
+
+The fighter opens the satchel.
+
+*There is a particular satisfaction in carrying the answer to a question someone asks without knowing you have it.*
+
+---
+
+**ACT V — The Specific Details**
+
+*The Dictation, delivered · on the Weimar archive intake desk · morning*
+
+The archivist reads the account. He pauses at the passage about the sound — the shout coming from the front and keeping coming. He reads it again.
+
+Then he says: "The chain of custody is commercial. A merchant family, not a monastery." He is not questioning the document. He is noting that the preservation was private, which means the record of its preservation belongs in the archive entry.
+
+He asks the fighter to describe the cedar box: its dimensions, its lock, whether the box had any inscription or maker's mark. He writes the description down. "The box is also part of the record," he says. "Everything that held it."
+
+He files the account under: *Eyewitness testimony — military, classical period. Front-rank perspective, Mount Theches, circa 401 BC.*
+
+*The shape of the hill. The change in light. The sound coming from the front and keeping coming. It is in the archive. The specific details are preserved exactly as the old archer gave them.*
+
+---
+
+### Quest API Stub — NWI-06
+
+```
+missionAccept: "A Sinopean merchant family holds the dictated account of an old Cretan archer
+  who was in the van at Mount Theches when the army first saw the sea. A Genoese factor has
+  made a purchase offer. Carry the account to Weimar before the sale closes."
+
+Act I — The Merchant's Son
+activateNode: SIN
+type: skill_check
+scene: "A back room of a Sinopean merchant house, morning. Konstantinos, thirty-two, sits
+  beside a cedar box his father left him. A Genoese factor named Luca Barbarigo arrived two
+  days ago with a written purchase offer. Your Weimar commission arrived this morning.
+  Konstantinos is making a business decision. Through the window: the Black Sea, gray."
+prompt: "Persuasion DC 13: Make institutional custody feel more solid than Genoese coin.
+  Name the one thing the archive provides that a private collector cannot: the account cannot
+  be bought again, sold again, or destroyed by a collector's heir."
+failText: "Konstantinos drums his fingers. 'Luca's offer is in writing and specific. Yours
+  is general.' He is right. Come back with a specific commitment that equals the specificity
+  of a purchase price. (retry)"
+successText: "Konstantinos picks up the box. 'My father kept this because he said it was
+  something real. I don't know what that means for a price. But I know what real means.'
+  He opens the box. You receive the Family Release Letter."
+grantItem: "Family Release Letter"
+activateMissionBit: nwi06Act1Active
+checkPassFlag: nwi06Act1Passed
+
+Act II — The Factor's Counter
+activateNode: CON
+type: skill_check
+scene: "The Sinope waterfront, afternoon. Luca Barbarigo watches you cross the dock toward
+  his ship. He is efficient and he has been here before. He tells you his collector will
+  publish a printed edition and name Konstantinos's family in the dedication. 'The archive
+  will file it and six scholars will read it in twenty years.' He opens his hands. 'I am
+  not wrong about the publication.' He is waiting for the one thing he missed."
+prompt: "Persuasion DC 13: Name the one thing Luca cannot offer. Not the publication —
+  that is real. The thing the archive provides that no collector can guarantee across
+  generations."
+failText: "He nods slowly. 'That is a philosophical point. My offer is a commercial one.'
+  Come back with the argument that makes permanence a practical advantage, not an
+  abstraction. (retry)"
+successText: "He is quiet. Then: 'A collector's heir.' He says it himself. He looks at
+  the dock. 'I cannot promise my collector's heir.' He withdraws the purchase offer in
+  writing. You receive Luca's Withdrawn Purchase Offer."
+grantItem: "Luca's Withdrawn Purchase Offer"
+checkPassFlag: nwi06Act2Passed
+
+Act III — The Scholar's Addendum
+activateNode: CON
+type: skill_check
+scene: "A Constantinople scholar's study, evening. Nikephoros Mauros has published a careful
+  commentary on the Anabasis — missing the front-rank view because it did not exist when
+  he wrote it. He wants to add one paragraph to the next edition, attributed to the Weimar
+  archive. He reads the account's description of the shout — coming from the front and
+  keeping coming — and sets the folio down. He says: 'He was listening to it travel.' He
+  says nothing for a moment."
+prompt: "Insight DC 12: Decide whether to let him write the attribution now or wait until
+  the archive has received the account. Read whether his pause is excitement or comprehension."
+failText: "He has already written the first sentence of the paragraph. His attribution names
+  the account but not the archive — he doesn't know yet where it will be filed. The
+  announcement is premature. Stop him before the second sentence. (retry)"
+successText: "You wait. His pause is comprehension — he is finishing a thought that took
+  forty years to arrive at. When he looks up you hand him a sheet. 'Write the paragraph.
+  Address it to the Weimar archive. The archivist will confirm receipt.' He writes two
+  paragraphs. You receive Nikephoros's Commentary Addendum."
+grantItem: "Nikephoros's Commentary Addendum"
+checkPassFlag: nwi06Act3Passed
+
+Act IV — The Retired Soldier
+activateNode: CON
+type: skill_check
+scene: "A Constantinople tavern, same evening. Alexios sells grain and used to be a soldier.
+  He has read the Anabasis. He tells you — because it comes up in conversation — that he has
+  always wondered what the front rank saw at Theches, because Xenophon was in the middle of
+  the column and described it from the middle. He does not know you have the account. He is
+  simply wondering out loud."
+prompt: "Insight DC 12: Open the satchel at the right moment. The question was asked without
+  knowing the answer was in the room. Receive the coincidence correctly."
+failText: "You open the satchel too quickly — before he has finished the question. He looks
+  at the account in your hands and does not say anything. The moment needed the question
+  to complete itself first. (retry)"
+successText: "You let him finish. Then you open the satchel. He reads the passage about
+  the sound — the shout coming from the front and keeping coming — once, twice, and sets
+  the folio down on the table. He does not say anything for a long time. Then: 'That is
+  exactly what I wanted to know.' You receive Alexios's Written Question — the grain
+  merchant's formal submission to the archive of the question he asked before he knew."
+grantItem: "Alexios's Written Question"
+checkPassFlag: nwi06Act4Passed
+
+Act V — The Specific Details
+activateNode: WM
+type: skill_check
+scene: "The Weimar archive intake desk, morning. The archivist reads the account and pauses
+  at the description of the shout. He reads it again. Then: 'The chain of custody is
+  commercial. A merchant family.' He asks you to describe the cedar box — its dimensions,
+  its lock, any maker's mark. He has his pen ready. 'The box is also part of the record.
+  Everything that held it.'"
+prompt: "Persuasion DC 12: Describe the box accurately and completely. Its dimensions, the
+  lock type, the smell of cedar and thirty years. The archivist is building the full record
+  and the physical container is part of it."
+failText: "You give him the short version — cedar box, small, old. He writes it but looks
+  up. 'Any inscription? Any mark? The family's mark, a customs stamp, anything?' Come back
+  with the full description. (retry)"
+successText: "You describe the box completely — the lock type, the slight warping from sea
+  air, the small mark inside the lid that Konstantinos said his father made. The archivist
+  writes for two minutes. He files the account under: Eyewitness testimony, military,
+  classical period, front-rank perspective, Mount Theches. You receive the Front-Rank
+  Archive Entry."
+grantItem: "Front-Rank Archive Entry"
+takeItem: "The Cretan Archer's Dictation"
+checkPassFlag: nwi06Act5Passed
+activateMissionBit: nwi06Complete
+```
+
+---
+
+*NWI-06 complete. 2026-06-02.*

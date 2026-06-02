@@ -70,8 +70,8 @@ Tissaphernes swore sacred oaths by the gods of Greece and Persia that the genera
 ### §NWI-05 — The Salmydessus Books (Book 7)
 At the Thracian coast of Salmydessus, the army found a beach littered with cargo from wrecked ships, including a mass of written books. A Thracian harbor master's salvage catalog drawn up a generation later lists among recovered cargo six crates of writing material from a single wreck, including a Greek text described in seven sections. Fighter escorts the catalog from a Varna archive to Weimar.
 
-### §NWI-06 — The Cretan's Account (Book 5)
-A Cretan archer was in the van at Mount Theches when the first shout went up. An old soldier who had served as a Cretan archer later settled at Sinope and dictated, in old age, a brief account of what he saw from the front rank: the shape of the hill, the change in light, the moment he understood. The account was preserved by a Sinopean merchant family. Fighter escorts it to Weimar before the family sells it to a collector.
+### §NWI-06 — The Cretan's Account (Book 5) ✓ DONE 2026-06-02
+Route: SIN → CON → WM. Theme: the front-rank view of communal salvation; the shout coming from the front and keeping coming; the specific physical details the literary account could not preserve. New node: SIN (Sinope).
 
 ### §NWI-07 — The Scillus Deed (Book 5)
 After the march, Xenophon settled at Scillus near Olympia on an estate granted by the Spartans. He built a small temple to Artemis and set up a stone inscription describing the grant's terms. A 2nd-century traveler's account describes seeing the stone. A Peloponnesian monastery's foundation records contain a survey of ancient inscriptions in the area, including a transcription of the Scillus stone. Fighter escorts the survey to a neutral archive.
