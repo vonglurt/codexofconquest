@@ -153,6 +153,19 @@ Earlier layers (9–47): see `lab-report-architecture-full.md` and `lab-report-t
 
 `roll2hit-v3.html` is the single source of truth. The API reads its text directly and writes mutations back into it in-place. The entire game — all data, all logic, all UI — is fully playable in a browser with only `roll2hit-v3.html`: no Node, no `worldbuilder.html`, no server, no dependencies. The HTML is pure JavaScript running on the DOM. `wbapi-server.js` and `worldbuilder.html` are authoring tools that read and write the same file; they add nothing the game requires at runtime.
 
+### Loop vs. Ask Rule
+
+Before starting any task:
+
+- **Loop tasks** (no user input needed — clear next step): begin immediately, state what you are doing in one sentence.
+- **Ask tasks** (user decision required): present a yes/no or choice prompt. Then run:
+  ```bash
+  say "If you say yes: <one sentence describing the intention and outcome of yes>"
+  ```
+  Read the purpose of yes aloud before the user answers.
+
+---
+
 ### Commit + Speak Rule
 
 After every git commit, immediately run:
