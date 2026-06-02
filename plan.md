@@ -153,6 +153,23 @@ Earlier layers (9–47): see `lab-report-architecture-full.md` and `lab-report-t
 
 `roll2hit-v3.html` is the single source of truth. The API reads its text directly and writes mutations back into it in-place. The entire game — all data, all logic, all UI — is fully playable in a browser with only `roll2hit-v3.html`: no Node, no `worldbuilder.html`, no server, no dependencies. The HTML is pure JavaScript running on the DOM. `wbapi-server.js` and `worldbuilder.html` are authoring tools that read and write the same file; they add nothing the game requires at runtime.
 
+### Incremental Recitation Rule
+
+While writing vignette content, speak short segments aloud via `say` as you produce them — every page or every couple of paragraphs. Read the element type first, then its text. Examples:
+
+```bash
+say "Source hook. King John the Second of France was captured at Poitiers in 1356."
+say "Scene, Act One. A narrow Damascus house, morning. The library is being catalogued for dissolution."
+say "Quest message. Carry the installment certificate from Périgueux to the Bordeaux English Registry."
+say "Pass text. The temporal independence of the two documents makes their agreement evidential."
+say "Fail text. The certificate and the entry match. That is necessary but not sufficient."
+say "Archive category. Confiscation Records — Property Inventories Compiled After Political Purges."
+```
+
+Write to file incrementally — after each act, save and run the next `say` call. Do not write all five acts before speaking. After every full vignette, commit and speak the commit subject.
+
+---
+
 ### Loop vs. Ask Rule
 
 Before starting any task:
