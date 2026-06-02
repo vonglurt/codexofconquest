@@ -35,16 +35,16 @@ The line cried by Phlegyas in Tartarus was reportedly inscribed over Roman court
 ### §FCO-09 — Ascanius's Broken Plate (Book 7) ✓ DONE 2026-06-02
 Route: RME → WM. Theme: the relic of comprehension — the word MENSAS inscribed on the underside after the meal, by someone who understood what had just happened; the archive receives it as a record of comprehension, not a record of event.
 
-### §FCO-10 — The Shield's Cartographer (Book 8)
+### §FCO-10 — The Shield's Cartographer (Book 8) ✓ DONE 2026-06-02
 A 14th-century humanist's commentary on the Shield of Aeneas identifies each depicted scene with a historical event. A cardinal in Rome wants it suppressed because several identifications embarrass current political figures by comparison. The humanist has died; his student needs the manuscript safely archived. Fighter escorts it from Venice to Weimar.
 
-### §FCO-11 — Euryalus's Mother's Tablet (Book 9)
+### §FCO-11 — Euryalus's Mother's Tablet (Book 9) ✓ DONE 2026-06-02
 Euryalus's unnamed mother followed the army from Troy for years to stay near her son. A wooden writing tablet from a Campanian monastery — found in a wall during repairs, pre-Roman in style, with faint scratching that scholars cannot fully read — may be the unfinished letter she was composing when she heard the news. Fighter escorts the tablet from the monastery to Weimar before demolition.
 
-### §FCO-12 — The Sword Belt of Pallas (Book 10)
+### §FCO-12 — The Sword Belt of Pallas (Book 10) ✓ DONE 2026-06-02
 Turnus stripped Pallas's sword belt and wore it until the moment Aeneas killed him for it. A bronze fitting found in Florentine masonry depicts an archaic wedding-murder scene consistent with first-century Roman luxury armor work. A collector, a cathedral, and a humanist scholar all want it. Fighter escorts it to authentication before it is broken up.
 
-### §FCO-13 — Acca's Message (Book 11)
+### §FCO-13 — Acca's Message (Book 11) ✓ DONE 2026-06-02
 Acca received Camilla's dying words and delivered them to Turnus. A first-century BC votive stone near Arpi (mentioned in the Aeneid) names a woman "Acca" as a "bearer of final messages." A noble family possesses it and wants to sell it to a foreign collector. Fighter escorts the stone (or a rubbing) to Weimar before access is permanently lost to scholars.
 
 ### §FCO-14 — The Fragment of the Final Line (Book 12) ✓ DONE 2026-06-02

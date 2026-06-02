@@ -462,6 +462,10 @@ Game cities are canonical. Source-book settings are proposed new nodes.
 | FCO-03 | Creusa's Third Temple | 9 | NAP → RME → WM | The votary inscription for the woman who vanished; the dedication names her as still present; some losses are addressed rather than concluded |
 | FCO-06 | Palinurus's Chart | 10 | NAP → VRN → WM | The helmsman's chart survived the helmsman; used again 1,300 years later; navigational knowledge outlasts its keeper |
 | FCO-08 | Phlegyas's Inscription | 11 | VRN → BOL → WM | The inscription that reads differently from every doorway; the archive holds it without claiming to know which reading is correct |
+| FCO-10 | The Shield's Cartographer | 12 | VEN → RME → WM | The commentary that proves too much; the humanist's annotations are more dangerous than the text; the suppressed reading is the archive's primary value |
+| FCO-11 | Euryalus's Mother's Tablet | 13 | NAP → WM | The message that was never sent; the unfinished letter is the most complete record; the archive receives what was interrupted |
+| FCO-12 | The Sword Belt of Pallas | 14 | FLR → RME → WM | The object that became evidence after the act; the fitting proves the cause was warranted; the archive receives it as material witness, not trophy |
+| FCO-13 | Acca's Message | 15 | NAP → BOL → WM | The record of the conveyer, not the message; named in stone for what she carried; the archive invents a category to receive her name in the role |
 | NWI-06 | The Cretan's Account | 3 | SIN → CON → WM | Front-rank view of communal salvation; the shout coming from the front and keeping coming |
 | NWI-03 | Proxenus's Letter | 4 | ORC → ATH → RGS → WM | The invitation is a form of authorship; Proxenus made the Anabasis possible |
 | NWI-05 | The Salmydessus Books | 5 | VAR → CON → WM | Evidence of loss is a primary document; the catalog proves the text existed |

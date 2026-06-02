@@ -2932,3 +2932,839 @@ He writes: *Multi-Register Inscriptions: inscriptions that can be accurately rea
 
 *FCO-08 complete. 2026-06-02.*
 
+
+---
+
+## FCO-10 — The Shield's Cartographer (Cycle 12)
+
+**Source:** Aeneid Book 8 — The Shield of Aeneas forged by Vulcan, depicting Roman history from Romulus to Augustus
+
+**Theme declared:** FCO themes catalogued and avoided — suppression-in-the-name-of-mercy, scattered document and misreaders, oath-before-death as geographic record, enemy-commissioned monument, paid craftsman's account, grief organized into governance, eyewitness contradicting monument, dangerous fulfilled prophecy, comprehension relic, alternate-ending ethics, votary inscription addressing rather than concluding loss, functional-survival navigation, multi-register inscription. New theme for this vignette: **the commentary that proves too much — a humanist scholar's annotations are more dangerous than the text they explain; identifying each scene on the shield with a historical figure makes the poem a political indictment of people still living; the scholar died before his student understood what he had written.**
+
+*The thing · a bound manuscript commentary on Aeneid Book 8 · sealed with the dead humanist's wax · in a scriptorium satchel*
+
+**New nodes proposed:** None (uses existing VEN, RME, WM)
+
+**TOKEN:** Shield Commentary Manuscript — ACCEPT Act I → CARRY Acts II–IV → RETURN Act V → RECORD
+
+---
+
+### Act I — Venice, San Giorgio Maggiore Scriptorium (VEN)
+
+Ser Marco Foscarini stands at the scriptorium's inner door with a traveling satchel under his cloak. His master, the humanist Giacomo d'Este, died three months ago of a chest fever, not old enough to die but old enough to finish the work. The manuscript is sealed. Marco hasn't opened it. He knows what it says.
+
+*The Shield Commentary Manuscript · sealed with d'Este's red wax, unbroken · in Marco's traveling satchel · scriptorium inner room*
+
+The outer corridor has two men Marco doesn't recognize. They arrived this morning asking for the library.
+
+**Skill Check — Perception DC 11:** Identify the two men as a notary's clerk and a papal courier: the courier carries a sealed brief with a cardinal's device; the clerk holds a writ-paper; this is a confiscation order, not a reading request. Pass: The Fighter slips Marco out through the kitchen passage before the clerk reaches the scriptorium door. Fail: The clerk sees them leaving and calls for them to stop; the Fighter must proceed under observation.
+
+*Passtext:* The two men are now in the corridor, moving toward the kitchen. They move like men who have done this before and find it unpleasant.
+
+*Failtext:* The clerk shouts a formula. The courier puts a hand on the brief in his coat. The Fighter is now moving with a man who looks guilty and a manuscript that two functionaries of the church can see.
+
+**Grant item:** Shield Commentary Manuscript (sealed, d'Este's wax unbroken, satchel tucked under a traveling cloak)
+
+---
+
+### Act II — Venice, Lagoon Dock District (VEN)
+
+The clerk caught up. He is not hostile — he is performing. The writ covers "all commentary and annotation written by the deceased Giacomo d'Este pertaining to the sixth book of Virgil's Aeneid and earlier works." Marco reads it twice and points out that this manuscript concerns Book Eight. The clerk re-reads his writ. He sends his courier for clarification. In the meantime, two men who are not the clerk's are watching from the dock wall.
+
+*The Shield Commentary Manuscript · sealed · in the satchel · now on a dock in public view*
+
+**Hybrid — Persuasion DC 12 / Combat fallback:**
+Persuasion DC 12: The writ is specific — Book Six. This is Book Eight. The clerk does not have authority over this document. Offer to show him the title page. Pass: He steps back, unhappy. He will file an amended writ. The amended writ takes ten days. The Fighter has ten days. Fail: He calls the two dock-watchers forward. They are not constables.
+
+*Passtext:* The clerk folds his writ and says something about following up through proper channels. He means it. The two dock-watchers exchange a look and withdraw.
+
+*Combattext:* Two hired guards, AC 12 HP 16 each — they have no brief, no writ, and no instructions beyond "get the satchel." They are careful about witnesses.
+
+*The Shield Commentary Manuscript · now in satchel secured to Fighter's back, traveling cloak rewrapped · heading toward the road south*
+
+---
+
+### Act III — Rome, Near the Papal Palace Approaches (RME)
+
+Monsignor Bertrando di Calvi is waiting at the road that approaches the Weimar archive district's Roman intake gate. He is not aggressive. He is a theologian who has read Vergil and knows exactly what d'Este's identifications mean. "The Romulus and Remus panel," he says. "The Ara Maxima panel. The lake battle panel. The cardinal has read the first forty pages. He has requested that this commentary not enter the permanent archive."
+
+*The Shield Commentary Manuscript · sealed · in satchel · in a Roman street with a monsignor blocking the intake gate*
+
+**Skill Check — Deception DC 13:** Present a copied section of the manuscript — the astronomical commentary on the Pleiades panel, which names no living person — as the section Bertrando's cardinal specifically objects to. The political identifications are elsewhere. Offer to have those pages physically sealed by a notary upon entry. The sealed sections will remain inaccessible without the cardinal's own request to unseal. Bertrando wants the document suppressed, not administratively delayed — but he also cannot prove suppression of a sealed archive intake without generating a record. Pass: He agrees. Two folios sealed upon intake. The rest passes. Fail: He has a written hold order from the Papal Curia; the manuscript waits in an ecclesiastical lock-chest for three days.
+
+*Passtext:* Bertrando writes his initials on the seal-order and stands aside. He says: "If those folios are unsealed without the cardinal's counter-request, I will know." The Fighter says: "The archive will know too."
+
+*Failtext:* The lock-chest smells of cedar. The Fighter waits three days. On the third morning the hold order expires without renewal. Bertrando sent no amendment. The manuscript is released to the Fighter.
+
+*The Shield Commentary Manuscript · sealed, with a Curia hold-stamp and release mark on the outer wrapper · moving toward the archive intake*
+
+---
+
+### Act IV — Rome, Antiquarian Quarter Near the Via Lata (RME)
+
+Leonello di Messapico has been a Roman antiquarian for forty years. He heard the d'Este commentary was in the city. He has locked the courtyard through which the archive intake can be reached and given the key to his serving boy, who has hidden it. Leonello himself sits at the courtyard gate with a jar of wine and a patient expression.
+
+"I don't want to keep it," he says. "I want to read it. Three hours. Then it goes."
+
+*The Shield Commentary Manuscript · sealed, in satchel, in a locked courtyard with a locked gate and a 70-year-old man who cannot be moved by force without becoming a martyr*
+
+**Skill Check — Investigation DC 12:** The serving boy is nervous, keeping close to a large terracotta planter near the south wall. The key is in the planter, just under the soil surface — he tucked it in and covered it with his hand, a child's hiding place. Finding the key lets the Fighter unlock the secondary gate on the east wall and bypass the courtyard entirely.
+
+*Passtext:* The key is cold, terracotta grit in the ring. The east gate opens onto a lane. Leonello is still talking to the courtyard air when the Fighter is already at the archive intake.
+
+*Failtext:* Leonello reads for four hours. He hands back the manuscript with his own folded commentary tucked inside the wrapper: twelve pages. He says: "The Romulus and Remus identification is wrong, by the way. D'Este was right about everything except that one. I've noted it inside."
+
+*The Shield Commentary Manuscript · sealed, Curia stamp, release mark, and now one unsolicited supplementary folio from Leonello di Messapico · at the Weimar archive intake*
+
+---
+
+### Act V — Weimar Archive District (WM)
+
+Archivus Sweelinck opens the wrapper at his intake desk. He reads the title page. He reads Leonello's supplementary folio. He reads the first ten pages of d'Este's commentary, then skips to the Romulus panel section. He sits back.
+
+"The identification in the Romulus panel would have been accurate in 1340," he says. "In 1367 it implicates a different person entirely. D'Este died before the second man became prominent. The commentary proves the poem was being read as current political history within living memory — that reading is now in the record." He looks at the sealed folios. "I'll leave these sealed. The record will note they exist."
+
+*The Shield Commentary Manuscript · opened at the intake desk, two folios sealed by Curia order, Leonello's supplement tucked inside · about to be filed*
+
+**Skill Check — History DC 12:** Confirm that d'Este's methodology — identifying Aeneid scenes with specific historical events — is documented in at least two prior scholarly traditions, predating his commentary; the work is not invention but culmination; its suppression would remove the most complete example of a reading practice that was already established. Pass: Sweelinck writes the full archive category note with the tradition citation included. Fail: He files it under the general Aeneid commentary series without the tradition notation; the category exists but the methodology context is missing.
+
+*Passtext:* "Interpretive Records — Suppression Survivals. Commentary demonstrating that the Aeneid was read as political history by living scholars; the value is precisely the reading the suppression attempted to prevent. Filed with the understanding that sealed folios may be requested for access by any party with standing to make the request. Including the cardinal." He makes a small mark beside the sealed-folio notation. "Especially the cardinal."
+
+*Failtext:* Filed under "Aeneid Commentary Series — 14th Century." The archive has the document. The context for why it matters is recoverable from the content but not named at entry.
+
+**Take item:** Shield Commentary Manuscript
+**Grant item:** Shield Commentary Archive Record
+
+```json
+{
+  "quest_id": "FCO-10",
+  "title": "The Shield's Cartographer",
+  "cycle": 12,
+  "book": "Aeneid (Virgil, c. 19 BC) — Book 8: The Shield of Aeneas",
+  "token": "Shield Commentary Manuscript",
+  "route": ["VEN", "RME", "WM"],
+  "theme": "The commentary that proves too much — a humanist's annotations are more dangerous than the text they explain; identifying each scene on the shield with a historical figure makes the poem a political indictment of people still living",
+  "archive_category": "Interpretive Records — Suppression Survivals",
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "VEN",
+      "type": "skill_check",
+      "activateNode": "VEN",
+      "scene": "Ser Marco Foscarini in the San Giorgio Maggiore scriptorium with the sealed manuscript, two unidentified men moving through the outer corridor with a confiscation writ.",
+      "skillCheck": {
+        "skill": "Perception",
+        "dc": 11,
+        "prompt": "Identify the two men as a notary's clerk and papal courier carrying a confiscation brief before they reach the scriptorium door.",
+        "failText": "The clerk sees them leaving and calls for them to stop; the Fighter proceeds under observation.",
+        "passText": "The two men enter the corridor. The Fighter slips Marco out through the kitchen passage before they reach the scriptorium door."
+      },
+      "grantItem": "Shield Commentary Manuscript",
+      "checkPassFlag": "fco10Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "VEN",
+      "type": "hybrid",
+      "activateNode": "VEN",
+      "scene": "The notary's clerk with his writ on the lagoon dock, two hired dock-watchers nearby. The writ specifies Book Six; this manuscript is Book Eight.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "prompt": "Argue the writ covers Book Six commentary only; this manuscript is Book Eight; the clerk has no authority over this document.",
+        "failText": "He calls the dock-watchers forward. Combat: 2 hired guards AC 12 HP 16 each.",
+        "passText": "He folds the writ. The dock-watchers withdraw. Ten days before an amended writ arrives."
+      },
+      "combat": {
+        "enemies": [{"name": "Hired Dock Guard", "ac": 12, "hp": 16, "count": 2}],
+        "trigger": "Persuasion check failed"
+      },
+      "checkPassFlag": "fco10Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "RME",
+      "type": "skill_check",
+      "activateNode": "RME",
+      "scene": "Monsignor Bertrando di Calvi blocking the archive intake road. He has read the first forty pages and knows the political identifications. He has a hold request from his cardinal.",
+      "skillCheck": {
+        "skill": "Deception",
+        "dc": 13,
+        "prompt": "Present the astronomical commentary section as the focus of the cardinal's objection; offer to seal the political identification folios upon intake — inaccessible without the cardinal's own unsealing request.",
+        "failText": "He holds the manuscript in a Curia lock-chest for three days. Released on day three when the hold order expires without renewal.",
+        "passText": "Bertrando writes his initials on the seal order. Two folios sealed. The rest passes."
+      },
+      "checkPassFlag": "fco10Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "RME",
+      "type": "skill_check",
+      "activateNode": "RME",
+      "scene": "Leonello di Messapico has locked the archive intake courtyard and given the key to his serving boy. He wants three hours with the manuscript. The boy is near a large terracotta planter on the south wall.",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 12,
+        "prompt": "Find the key the serving boy tucked under the soil in the terracotta planter and use the east secondary gate to bypass the courtyard.",
+        "failText": "Leonello reads for four hours, then returns the manuscript with his own twelve-page supplementary commentary tucked inside the wrapper.",
+        "passText": "The east gate opens onto a lane. Leonello is still talking to the courtyard air."
+      },
+      "checkPassFlag": "fco10Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck reads the commentary. He notes the Romulus panel identification would have implicated a different man in 1340 than in 1367. D'Este died before the second man became prominent. The commentary proves the poem was being read as current political history within living memory.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Confirm that d'Este's methodology of identifying Aeneid scenes with historical figures belongs to an established scholarly tradition predating his work; the commentary is culmination, not invention.",
+        "failText": "Filed under Aeneid Commentary Series — 14th Century without methodology context.",
+        "passText": "Sweelinck writes: 'Interpretive Records — Suppression Survivals. Commentary demonstrating that the Aeneid was read as political history by living scholars; the value is precisely the reading the suppression attempted to prevent.'"
+      },
+      "takeItem": "Shield Commentary Manuscript",
+      "grantItem": "Shield Commentary Archive Record",
+      "checkPassFlag": "fco10Act5Passed",
+      "activateMissionBit": "fcoShieldCartographerComplete"
+    }
+  ]
+}
+```
+
+---
+
+*FCO-10 complete. 2026-06-02.*
+
+---
+
+## FCO-11 — Euryalus's Mother's Tablet (Cycle 13)
+
+**Source:** Aeneid Book 9 — Euryalus's unnamed mother, the only Trojan woman to follow the army into Latium; she receives the news of her son's death and collapses in grief at the battlements
+
+**Theme declared:** FCO themes catalogued and avoided — suppression-in-the-name-of-mercy, scattered document, oath-before-death geographic record, enemy-commissioned monument, paid craftsman account, grief into governance, eyewitness contradicting monument, dangerous prophecy, comprehension relic, alternate-ending ethics, votary inscription addressing rather than concluding loss, functional-survival navigation, multi-register inscription, commentary proving too much. New theme for this vignette: **the message that was never sent — the unfinished letter is the most complete record; what the writer stopped at is the document's entire content; the archive receives what was interrupted, not what was transmitted.**
+
+*The thing · a wooden writing tablet, pre-Roman style, faint scratching in first person · wrapped in oilcloth · in a Campanian monastery wall cavity*
+
+**New nodes proposed:** None (uses existing NAP, WM)
+
+**TOKEN:** Campanian Writing Tablet — ACCEPT Act I → CARRY Acts II–IV → RETURN Act V → RECORD
+
+---
+
+### Act I — Campanian Monastery Near Capua (NAP)
+
+Brother Celestino found it behind a section of interior wall being repaired before winter. The wood is very old — not Roman-era old, older; the pre-Samnite writing tradition used a particular way of cutting vowels. The scratching is faint. Some of it is illegible. Some of it is in a first-person form that property deeds and official inscriptions never use.
+
+*The Campanian Writing Tablet · carved pine, worn smooth, oilcloth wrap new, the scratching barely catching the light at an angle · in a monastery repair alcove with stone dust still on the floor*
+
+Brother Celestino says: "I think it's a deed fragment. I think it's someone's land. My prior wants to send it to the bishop."
+
+**Skill Check — Investigation DC 11:** Read enough of the inscription's grammar to identify first-person forms and a vocative — a direct address to someone by name. Property deeds record third-person transfers; they do not address the land or its owner directly. This tablet is speaking to someone. Pass: The distinction is clear enough to argue against the deed interpretation. Fail: The reading is uncertain; the Fighter can still take the tablet but cannot challenge the deed claim on this evidence alone.
+
+*Passtext:* The vocative sits near the top of the legible section. One name, direct address, and then a verb that cannot be a land description. Brother Celestino stares at it for a moment. "I hadn't looked at it that way," he says.
+
+*Failtext:* The grain is too worn at the critical line. The Fighter takes the tablet and the uncertainty together.
+
+**Grant item:** Campanian Writing Tablet (oilcloth-wrapped, faint marks barely visible under direct light, stone dust in the wrap)
+
+---
+
+### Act II — Campanian Demolition Site, Southern Edge (NAP)
+
+Ser Bartolo di Cava is the demolition contractor. He has a municipal commissary order. The wall section where the tablet was found is on his inventory. He wants everything from that section logged and returned for disposal accounts. He's not a villain; he's a man who has a list and the tablet is item forty-three on it.
+
+*The Campanian Writing Tablet · oilcloth wrapped, in a traveling satchel · at a demolition site with a contractor who has a clipboard and two laborers with sledgehammers*
+
+"It's from my section," Bartolo says. "I'll take it back. The bishop's office handles the disposition."
+
+**Hybrid — Persuasion DC 12 / Combat fallback:**
+Persuasion DC 12: Brother Celestino has agreed to serve as the monastery's official deponent that the tablet was removed before the wall section was included in the demolition inventory. The monastery's ownership predates the commissary order. The tablet was never in Bartolo's section. Pass: Bartolo crosses item forty-three off his list and says something about how Brother Celestino can explain this to the bishop. Fail: He calls his laborers over. They are not armed but they are large.
+
+*Passtext:* Bartolo makes a note. "Removed prior to inventory. Monastery custody." He doesn't look up again.
+
+*Combattext:* Two laborers with demolition tools, AC 11 HP 14 each — they have no interest in serious harm; they want the satchel; they stop when their momentum stops.
+
+*The Campanian Writing Tablet · in satchel, out of the demolition site, moving north toward Naples*
+
+---
+
+### Act III — Naples, Scholar District Near the Castel dell'Ovo (NAP)
+
+Messer Rinaldo d'Aquino has his family's old documents spread across a long table. His family has held lands in Campania for two hundred years. An inventory from 1163 mentions "one stone tablet, found in wall, retained as curiosity." He believes the monastery found his family's tablet.
+
+"I'm not saying it's valuable," he says. "I'm saying it's ours."
+
+*The Campanian Writing Tablet · in satchel · in a scholar's study with a man who has a reasonable case and no idea what he has*
+
+**Skill Check — History DC 13:** The inventory entry from 1163 uses the word "petra" — stone. The Campanian tablet is wood. Stone tablets and wood tablets were separate traditions in the pre-Samnite period; a family record that misidentified the material in 1163 cannot have been describing this object. The tablet that belonged to the d'Aquino family was stone. This is not their tablet. Pass: Rinaldo re-reads his inventory note and sits back slowly. Fail: He cannot be convinced on this evidence; the Fighter must proceed with the tablet, leaving Rinaldo with a grievance he will file through notarial channels (3-day delay for a formal counter-claim).
+
+*Passtext:* Rinaldo reads "petra" three times. He says: "We have a stone one. This is pine." He stacks his documents and says the Fighter may go.
+
+*Failtext:* He files. The Fighter waits three days at a waystation inn. The counter-claim lacks standing; the notary declines to issue a hold order. The road north is clear.
+
+*The Campanian Writing Tablet · in satchel, moving onto the Via Appia toward the northern route*
+
+---
+
+### Act IV — Apennine Road Toll North of Naples (NAP → WM transitional point)
+
+The toll-keeper is a practical man named Cosimo. He has a parchment pinned above his booth: by episcopal order, "old stones or inscriptions" may not leave the diocese without the bishop's documentation seal. He can't read well enough to know what the tablet says. He can see it's old. He looks at it and then looks at the Fighter.
+
+"Old," he says. "Writing on it. I'll need a seal."
+
+*The Campanian Writing Tablet · in the oilcloth, held out for inspection at a road toll booth with a hand-lettered order on the wall*
+
+**Skill Check — Deception DC 12:** The tablet is a building material sample — it came from a wall, it is part of a structural survey, building material samples are not inscriptions in the episcopal sense. The writing is "wear patterns from use," not carved text. The light is bad enough that Cosimo cannot see the marks clearly at arm's length. Pass: He checks the oilcloth again, decides this is not his problem, and lifts the bar. Fail: He sends for the sub-deacon from the chapel a mile back; the sub-deacon comes, reads the first-person lines, and requires a written survey declaration; the declaration is filed and the tablet passes with a survey seal that will be visible in the archive intake record.
+
+*Passtext:* Cosimo lifts the bar. "Survey materials," he says, in a tone that means he's decided not to think about it.
+
+*Failtext:* The sub-deacon files a survey declaration. The seal is visible on the wrapping. Sweelinck will ask about it at intake.
+
+*The Campanian Writing Tablet · in oilcloth, toll-passed, moving north on the Alpine road to Weimar*
+
+---
+
+### Act V — Weimar Archive District (WM)
+
+Archivus Sweelinck unwraps the tablet under the intake desk lamp. He reads it for a long time. The legible portion: a name in vocative case, a verb meaning "I have not," and then three more words that are cut too shallow to read completely, and then the break. The tablet is not finished. The writer stopped mid-sentence.
+
+"She stopped here," he says. Not a question.
+
+*The Campanian Writing Tablet · unwrapped at the intake desk, scratching visible under the lamp, the break clear at the tablet's lower right corner · still in the Fighter's hands*
+
+**Skill Check — Religion DC 12:** The pre-Samnite tradition of composing a message to the dead before funeral rites — a lamentation tablet, addressed by name, left unfinished because finishing implied the death was accepted — is documented in two Latin ethnographic sources. The grammar matches. The unfinished state is not damage; it is the form. Pass: Sweelinck nods. He picks up his pen. Fail: He files it under Pre-Roman Material Records without the lamentation tradition notation; the document is preserved but the form is misunderstood.
+
+*Passtext:* He writes for a long time before he speaks. "Unfinished Documents — Interrupted Transmissions. The archive receives what was composed, not what was sent. The last legible word is in the vocative — a name, still in direct address, unresolved by any following sentence. The absence of completion is the document's primary content." He looks at the break again. "She stopped here. We'll keep it where she stopped."
+
+*Failtext:* The filing entry reads "Pre-Roman Material Records — Campanian wooden writing tablet, first-person inscription, incomplete." The document is preserved. The form is a footnote.
+
+**Take item:** Campanian Writing Tablet
+**Grant item:** Maternal Correspondence Archive Record
+
+```json
+{
+  "quest_id": "FCO-11",
+  "title": "Euryalus's Mother's Tablet",
+  "cycle": 13,
+  "book": "Aeneid (Virgil, c. 19 BC) — Book 9: The unnamed mother of Euryalus",
+  "token": "Campanian Writing Tablet",
+  "route": ["NAP", "WM"],
+  "theme": "The message that was never sent — the unfinished letter is the most complete record; what the writer stopped at is the document's entire content; the archive receives what was interrupted, not what was transmitted",
+  "archive_category": "Unfinished Documents — Interrupted Transmissions",
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "NAP",
+      "type": "skill_check",
+      "activateNode": "NAP",
+      "scene": "Brother Celestino at a Campanian monastery repair alcove, wooden tablet just removed from a wall cavity. The scratching is faint. The prior wants to send it to the bishop as a deed fragment.",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 11,
+        "prompt": "Identify first-person forms and a vocative address in the inscription — grammatical features that property deeds never use — establishing this is not a deed.",
+        "failText": "The grain is too worn at the critical line. The tablet is taken; the deed claim cannot be challenged on this evidence alone.",
+        "passText": "The vocative sits near the top of the legible section. One name, direct address, and then a verb that cannot be a land description."
+      },
+      "grantItem": "Campanian Writing Tablet",
+      "checkPassFlag": "fco11Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "NAP",
+      "type": "hybrid",
+      "activateNode": "NAP",
+      "scene": "Demolition contractor Ser Bartolo di Cava with a commissary order at the work site. The tablet is item forty-three on his inventory. Two laborers nearby.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "prompt": "Argue that Brother Celestino's deponent statement establishes the monastery removed the tablet before the demolition inventory was completed; it was never in Bartolo's section.",
+        "failText": "He calls his laborers. Combat: 2 laborers AC 11 HP 14 each.",
+        "passText": "Bartolo crosses item forty-three off his list. 'Removed prior to inventory. Monastery custody.'"
+      },
+      "combat": {
+        "enemies": [{"name": "Demolition Laborer", "ac": 11, "hp": 14, "count": 2}],
+        "trigger": "Persuasion check failed"
+      },
+      "checkPassFlag": "fco11Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "NAP",
+      "type": "skill_check",
+      "activateNode": "NAP",
+      "scene": "Scholar Messer Rinaldo d'Aquino with a family inventory from 1163 claiming ownership. His record mentions a 'stone tablet, found in wall.' This tablet is wood.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 13,
+        "prompt": "The 1163 inventory uses 'petra' — stone. This tablet is pine. Stone and wood tablet traditions were distinct in the pre-Samnite period. The d'Aquino tablet was stone; this is not their tablet.",
+        "failText": "Cannot be convinced on this evidence; 3-day notarial delay for a counter-claim that ultimately fails.",
+        "passText": "Rinaldo reads 'petra' three times. 'We have a stone one. This is pine.' He steps aside."
+      },
+      "checkPassFlag": "fco11Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "NAP",
+      "type": "skill_check",
+      "activateNode": "NAP",
+      "scene": "Toll-keeper Cosimo on the Apennine road north of Naples, episcopal order prohibiting old stones or inscriptions from leaving the diocese without a bishop's seal. He cannot read well; the light is poor.",
+      "skillCheck": {
+        "skill": "Deception",
+        "dc": 12,
+        "prompt": "Describe the tablet as a building material sample from a structural survey — it came from a wall, building samples are not inscriptions in the episcopal sense, and the marks are wear patterns from use.",
+        "failText": "Sub-deacon arrives, files a survey declaration; tablet passes with a survey seal visible on the wrapping.",
+        "passText": "Cosimo lifts the bar. 'Survey materials,' he says, deciding not to think about it."
+      },
+      "checkPassFlag": "fco11Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck reads the tablet under the intake lamp. Legible: a vocative name, 'I have not,' three more barely-legible words, then the break. The tablet is unfinished. 'She stopped here,' he says.",
+      "skillCheck": {
+        "skill": "Religion",
+        "dc": 12,
+        "prompt": "Confirm the pre-Samnite tradition of composing a lamentation tablet addressed by name to the dead, left unfinished because finishing implied acceptance of the death; the unfinished state is the form, not damage.",
+        "failText": "Filed under Pre-Roman Material Records without the lamentation tradition notation.",
+        "passText": "Sweelinck writes: 'Unfinished Documents — Interrupted Transmissions. The archive receives what was composed, not what was sent. The last legible word is in the vocative — still in direct address, unresolved. The absence of completion is the document's primary content.'"
+      },
+      "takeItem": "Campanian Writing Tablet",
+      "grantItem": "Maternal Correspondence Archive Record",
+      "checkPassFlag": "fco11Act5Passed",
+      "activateMissionBit": "fcoMothersTabletComplete"
+    }
+  ]
+}
+```
+
+---
+
+*FCO-11 complete. 2026-06-02.*
+
+---
+
+## FCO-12 — The Sword Belt of Pallas (Cycle 14)
+
+**Source:** Aeneid Book 10 — Pallas killed by Turnus, who strips the sword belt and wears it; Book 12 — Aeneas sees the belt on Turnus's shoulder, his anger reignites, and he kills him; the belt is both cause of death and proof of the killing's justice
+
+**Theme declared:** FCO themes catalogued and avoided — the complete list above, plus unfinished letter as interrupted transmission. New theme for this vignette: **the object that became evidence after the act — the sword belt is not the cause of Turnus's death; it is the proof that the cause was just; the archive receives it not as a trophy or a relic but as a record of the argument that settled an impossible question; the fitting does not tell you what happened, it tells you that what happened was warranted.**
+
+*The thing · a bronze fitting, palm-sized, depicting a marriage-murder scene in archaic enamel · on a mason's workbench · in Florence*
+
+**New nodes proposed:** None (uses existing FLR, RME, WM)
+
+**TOKEN:** Laurentine Bronze Fitting — ACCEPT Act I → CARRY Acts II–IV → RETURN Act V → RECORD
+
+---
+
+### Act I — Florence, Mason's Guild Quarter Near the Arno (FLR)
+
+Masone Baldassare di Gabbio found the fitting during demolition of a wall section in the Oltrarno. He's kept it under his workbench for a week because he can't decide what it is. It's very fine work. The enamel inlay is intact despite the age. The scene shows two figures — one standing, one falling — in a style that looks neither Roman nor medieval. The standing figure wears something around one shoulder.
+
+*The Laurentine Bronze Fitting · bronze, palm-sized, enamel inlay intact, marriage-murder scene with archaic detail · on a mason's workbench with grit and stone dust · Oltrarno Florence*
+
+"I know it's old," Baldassare says. "Old how, I can't say."
+
+**Skill Check — Investigation DC 12:** Find the two maker's marks on the reverse — a stylized laurel and a punch-mark indicating alloy composition — and identify them against the fragment of inset enamelwork. The laurel mark appears in two scholar glosses on the Aeneid as a description of Evander's gift-work. The alloy composition is consistent with first-century BC Roman luxury armor production. Pass: The marks are clear under angled light; the identification is solid. Fail: Only one mark is legible; the case for Aeneid provenance is circumstantial but not refuted.
+
+*Passtext:* Both marks, clean. The laurel is exactly as described in the gloss. Baldassare stares when the Fighter tells him. "That old?" he says. "That old."
+
+*Failtext:* One mark, smeared on the right. The circumstantial case holds.
+
+**Grant item:** Laurentine Bronze Fitting (leather-wrapped, maker's marks visible on the reverse under angled light)
+
+---
+
+### Act II — Florence, Near the Ponte Vecchio (FLR)
+
+Ser Filippo Acciaiuoli is waiting near the bridge. He is a collector. His family owned the land where the wall stood before the city's expansion absorbed the parcel a century ago. He has a notary.
+
+"The finding is legally mine," he says. He is not wrong about the law. He is not wrong about the ownership history. He is entirely right and it doesn't matter.
+
+*The Laurentine Bronze Fitting · leather-wrapped, in the Fighter's traveling chest · in a street by the Ponte Vecchio with a collector and a notary and two retainers*
+
+**Hybrid — Persuasion DC 13 / Combat fallback:**
+Persuasion DC 13: The fitting has no monetary or resale value as an antiquarian object without expert authentication. Authentication only happens at Weimar. If his provenance claim is legitimate — and it may be — Weimar will record it formally, giving him a documented prior right that any future claimant or seller must acknowledge. His ownership claim is not surrendered by allowing authentication; it is strengthened. Pass: He thinks about this for a moment. He instructs his notary to draft a provenance declaration to accompany the object. Fail: He instructs his retainers to take the chest.
+
+*Passtext:* The notary drafts the provenance declaration. It goes into the chest alongside the fitting. Acciaiuoli says: "I'll expect a copy of the authentication record."
+
+*Combattext:* Two armed retainers, AC 13 HP 20 each — they have instructions to retrieve the chest; they are not assassins; they stop when the chest becomes difficult to hold.
+
+*The Laurentine Bronze Fitting · leather-wrapped, in chest, with a notarized provenance declaration from Ser Filippo Acciaiuoli · heading south toward Rome*
+
+---
+
+### Act III — Rome, Cathedral Chapter Administrative Office (RME)
+
+Monsignor Paolino di Cera is a theologian of the old school. He has been told a bronze fitting depicting a "marriage-murder scene" has entered the city. He has read enough Vergil to recognize the typological possibility immediately: the dying Pallas, the stolen belt, the final act — this is, in his reading, a pre-Christian anticipation of sacred sacrifice. The cathedral wants it above the chancel entrance.
+
+"The Church does not confiscate," he says carefully. "The Church receives donations. We would receive this gratefully."
+
+*The Laurentine Bronze Fitting · in chest · in the chapter administrative office with a monsignor who is not asking but is not accepting a refusal*
+
+**Skill Check — Deception DC 13:** The fitting has already been promised, verbally and with a handshake, to a Cardinal who wants it for a private scholarly display. The monsignor's chapter is welcome to apply for a loan exhibition through the proper ecclesiastical request channels. The Cardinal's name? A name that Monsignor Paolino would have to verify through the Vatican before he could contradict it. Pass: He cannot challenge a Cardinal's verbal claim without verification; the verification takes four days; the Fighter is long gone. Fail: He obtains a brief hold order from the chapter clerk; a wax impression is made; the fitting is released in three hours with the impression on record.
+
+*Passtext:* Monsignor Paolino says he will follow up through proper channels. He writes down the Cardinal's name. He will be disappointed in four days.
+
+*Failtext:* The chapter clerk makes a wax impression of the fitting. It releases in three hours. The impression will be in the Roman chapter records: one indistinct bronze fitting, archaic, first-century possible, depicting uncertain scene.
+
+*The Laurentine Bronze Fitting · in chest, Acciaiuoli provenance declaration inside · past the chapter office, heading north*
+
+---
+
+### Act IV — Rome, Scholar's Apartment Near the Via Lata (RME)
+
+Dottor Lodovico Boccadibue has been studying the fitting for two months. He did not steal it; he borrowed it from Baldassare before the Fighter arrived, took an impression, and has been writing ever since. He does not have the fitting. He has twelve pages about the fitting and a burning need to explain the marriage-murder iconography to someone who has not heard it three times already.
+
+He sees the Fighter in the street. He knows. He follows.
+
+"I just need you to read the argument," he says. "It will take twenty minutes. Thirty, at most."
+
+*The Laurentine Bronze Fitting · in the chest on the Fighter's back · in a Roman street with a scholar trotting alongside*
+
+**Skill Check — Insight DC 11:** Read whether Boccadibue is genuinely finished with his analysis or whether this "twenty minutes" will expand indefinitely. His pages are folded and ready in his coat pocket; he has them organized. His eyes are not the eyes of a man who needs to keep going — they are the eyes of a man who needs someone to tell him he can stop. He needs a receiver, not an audience. Pass: The Fighter agrees to take the folded pages with the fitting to Weimar, where they will be filed alongside. Boccadibue can stop. Fail: He lectures for three hours in a street, a doorway, and the interior of a dyer's shop where he apologizes to the dyer; then he releases the Fighter.
+
+*Passtext:* Boccadibue hands over the twelve pages. He says: "Tell the Archivus the third folio has a correction on the back. In my margin. He'll need to look for it."
+
+*Failtext:* Three hours. The dyer is patient. Boccadibue's twelve pages come out of his pocket at the end. "Take these. Tell the Archivus the correction is on the back of folio three."
+
+*The Laurentine Bronze Fitting · in chest, with Acciaiuoli provenance declaration and Boccadibue's twelve unsolicited commentary pages · on the north road to Weimar*
+
+---
+
+### Act V — Weimar Archive District (WM)
+
+Archivus Sweelinck opens the chest. He reads the Acciaiuoli provenance declaration first. He reads Boccadibue's twelve pages. He turns to the correction on the back of folio three. He reads it.
+
+He picks up the fitting. He looks at the marriage-murder scene. He looks at the standing figure with the belt around its shoulder.
+
+"This is the argument," he says. "Not the belt. The argument. The scene proves that whoever made this understood why the killing happened."
+
+*The Laurentine Bronze Fitting · on the intake desk, Acciaiuoli declaration and Boccadibue pages beside it · under the intake lamp in the Weimar archive district*
+
+**Skill Check — History DC 13:** Confirm that the making technique, enamel inlay pattern, and iconographic style are consistent with first-century BC Roman luxury armor work, not later imitation or medieval reproduction. The stylized laurel maker's mark matches the Evander gift-work gloss. The alloy composition is correct for the period. Pass: Sweelinck writes the authentication with the tradition citation included — the fitting proves the belt existed and proves it was understood as morally significant within the living Roman tradition that received the Aeneid. Fail: He files it as unconfirmed; provenance probable; period consistent; authentication pending further metallurgical examination.
+
+*Passtext:* "Material Witness Records — Objects Cited as Narrative Evidence. The fitting proves the belt existed. Its existence is the argument that closes the trial scene. Aeneas did not act from rage alone; he acted from the proof on Turnus's shoulder that the rage was warranted. The archive receives this as evidence, not as treasure. Boccadibue's notes filed alongside, correction included." He makes a mark beside Acciaiuoli's name. "His provenance declaration is on record. I'll send a copy."
+
+*Failtext:* Filed under Material Records — First Century Probable, pending metallurgical examination. The archive has the object. The argument is recoverable from Boccadibue's notes.
+
+**Take item:** Laurentine Bronze Fitting
+**Grant item:** Pallas Belt Authentication Record
+
+```json
+{
+  "quest_id": "FCO-12",
+  "title": "The Sword Belt of Pallas",
+  "cycle": 14,
+  "book": "Aeneid (Virgil, c. 19 BC) — Books 10 and 12: Pallas slain, belt stripped by Turnus, belt seen again at the close",
+  "token": "Laurentine Bronze Fitting",
+  "route": ["FLR", "RME", "WM"],
+  "theme": "The object that became evidence after the act — the sword belt proves the killing's cause was warranted; the archive receives it not as trophy or relic but as the record of the argument that settled an impossible question",
+  "archive_category": "Material Witness Records — Objects Cited as Narrative Evidence",
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "FLR",
+      "type": "skill_check",
+      "activateNode": "FLR",
+      "scene": "Masone Baldassare di Gabbio in his Florence workshop, the bronze fitting on his workbench. Fine work, archaic enamel, marriage-murder scene, neither Roman nor medieval in style.",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 12,
+        "prompt": "Find the two maker's marks on the reverse — a stylized laurel and an alloy-composition punch-mark — and match them against Aeneid scholar glosses on Evander's gift-work.",
+        "failText": "Only one mark legible; Aeneid provenance is circumstantial but not refuted.",
+        "passText": "Both marks clean. The laurel is exactly as described in the Evander gloss. The alloy composition is correct for first-century BC Roman luxury armor work."
+      },
+      "grantItem": "Laurentine Bronze Fitting",
+      "checkPassFlag": "fco12Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "FLR",
+      "type": "hybrid",
+      "activateNode": "FLR",
+      "scene": "Collector Ser Filippo Acciaiuoli near the Ponte Vecchio, with a notary and two retainers. His family owned the land where the wall stood; he has legal standing for a finder's claim.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "prompt": "Argue that authentication at Weimar strengthens, not surrenders, his provenance claim; Weimar will formally record his prior right; his ownership is protected by allowing the process to proceed.",
+        "failText": "He instructs his retainers to take the chest. Combat: 2 armed retainers AC 13 HP 20 each.",
+        "passText": "His notary drafts a provenance declaration to accompany the fitting. 'I'll expect a copy of the authentication record.'"
+      },
+      "combat": {
+        "enemies": [{"name": "Acciaiuoli Retainer", "ac": 13, "hp": 20, "count": 2}],
+        "trigger": "Persuasion check failed"
+      },
+      "checkPassFlag": "fco12Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "RME",
+      "type": "skill_check",
+      "activateNode": "RME",
+      "scene": "Monsignor Paolino di Cera at the cathedral chapter office, reading the fitting as a typological pre-Christian sacred sacrifice object. The cathedral wants it for the chancel entrance.",
+      "skillCheck": {
+        "skill": "Deception",
+        "dc": 13,
+        "prompt": "Claim the fitting has already been verbally promised to a named Cardinal for private scholarly display; the chapter may apply for loan exhibition through proper channels.",
+        "failText": "He obtains a brief hold order; a wax impression is made; the fitting releases in three hours with the chapter's impression on record.",
+        "passText": "Paolino writes down the Cardinal's name. He will follow up through proper channels. He will be disappointed in four days."
+      },
+      "checkPassFlag": "fco12Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "RME",
+      "type": "skill_check",
+      "activateNode": "RME",
+      "scene": "Scholar Dottor Lodovico Boccadibue in a Roman street, following alongside with twelve folded pages of commentary. He has been working for two months. He needs someone to tell him he's done.",
+      "skillCheck": {
+        "skill": "Insight",
+        "dc": 11,
+        "prompt": "Read that Boccadibue's eyes are not those of a man who needs to keep going; he needs a receiver, not an audience; offer to carry his pages to Weimar for filing alongside the fitting.",
+        "failText": "Three-hour street lecture. Boccadibue hands over the pages at the end with the same correction note.",
+        "passText": "Boccadibue hands over the twelve pages. 'Tell the Archivus the correction is on the back of folio three.' He stops."
+      },
+      "checkPassFlag": "fco12Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck reads the Acciaiuoli declaration, Boccadibue's twelve pages, the folio-three correction. He looks at the fitting. 'This is the argument,' he says. 'The scene proves that whoever made this understood why the killing happened.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 13,
+        "prompt": "Confirm the making technique, enamel inlay style, and alloy composition are consistent with first-century BC Roman luxury armor work — not later imitation; the maker's marks match the Evander gloss.",
+        "failText": "Filed as unconfirmed; provenance probable; period consistent; authentication pending metallurgical examination.",
+        "passText": "Sweelinck writes: 'Material Witness Records — Objects Cited as Narrative Evidence. The fitting proves the belt existed. Its existence is the argument that closes the trial scene. The archive receives this as evidence, not as treasure.' He notes the Acciaiuoli provenance record. 'I'll send a copy.'"
+      },
+      "takeItem": "Laurentine Bronze Fitting",
+      "grantItem": "Pallas Belt Authentication Record",
+      "checkPassFlag": "fco12Act5Passed",
+      "activateMissionBit": "fcoPallasBeltComplete"
+    }
+  ]
+}
+```
+
+---
+
+*FCO-12 complete. 2026-06-02.*
+
+---
+
+## FCO-13 — Acca's Message (Cycle 15)
+
+**Source:** Aeneid Book 11 — Camilla falls in battle; Acca, her dearest companion, receives her dying words and carries them to Turnus; Acca is named once, briefly, as the bearer of the message that changes the war's course
+
+**Theme declared:** FCO themes catalogued and avoided — the complete list above through material witness records. New theme for this vignette: **the record of the conveyer, not the message — Acca is named in stone for what she carried, not what she owned; no filing system anticipated a monument to a messenger's function rather than the message's content; the archive must invent a category to receive her name in the role she played.**
+
+*The thing · a fresh charcoal rubbing of a first-century BC votive stone · the stone too heavy to move · still standing on a Pugliese estate near Arpi*
+
+**New nodes proposed:** None (uses existing NAP, BOL, WM)
+
+**TOKEN:** Arpi Votive Stone Rubbing — ACCEPT Act I → CARRY Acts II–IV → RETURN Act V → RECORD
+
+---
+
+### Act I — Apulian Countryside, della Penta Estate Near Arpi (NAP)
+
+Donna Caterina della Penta is the family matriarch. She is in her late sixties, clear-eyed, direct. She has had the stone her whole life; it stood in the kitchen garden when she was a child. It says something in old Latin. A Venetian broker recently told her it was valuable. She does not entirely trust this information, which is why she wants a scholar's opinion before she decides anything.
+
+The stone reads, in the legible portion: *ACCAE · NUNTIAE · VLTIMOR · VERBOR · VOTVM · POSVIT · [family name, worn] · QVAE · INTER · CADENTEM · ET · SVPERSTITEM · STETIT* — "To Acca, messenger of final words, this vow was placed by [name], who stood between the falling and the surviving."
+
+*The Arpi Votive Stone Rubbing · not yet made — the parchment and charcoal are in the Fighter's pack · the stone is in the della Penta kitchen garden, weathered but legible*
+
+"Make your rubbing," Donna Caterina says. "Then tell me what it is."
+
+**Skill Check — Investigation DC 11:** Read the inscription carefully enough to distinguish the name "Acca" used here from "Acca Larentia," a common Roman cult figure with many votive monuments. "Acca Larentia" monuments do not use the phrase "nuntia ultimorum verborum" — messenger of final words; that phrase describes a personal function, not a divine title. This is a monument to a specific woman's specific act. Pass: The distinction is clear; the stone names a personal function, not a traditional cult figure. Fail: The two "Acca" traditions are unclear on this evidence; the rubbing goes forward but without the function-distinction argument.
+
+*Passtext:* The phrase is unmistakable once the full reading resolves. No Acca Larentia monument uses "nuntia" in this form. Donna Caterina listens to the explanation. "She carried a message," she says. "And someone remembered her for it." She pauses. "Not what she carried. Her."
+
+*Failtext:* The reading is partial. The function-distinction will have to be argued at the archive.
+
+**Grant item:** Arpi Votive Stone Rubbing (fresh charcoal on parchment, stone-grit still on the surface, the full inscription legible in the rubbing if not always in the original)
+
+---
+
+### Act II — Road South of Naples (NAP)
+
+Ser Alvise Barbaro, a Venetian broker, catches up with the Fighter on the road. He is not hostile. He is businesslike and slightly embarrassed. He has a letter of intent with a deposit receipt: Donna Caterina agreed, three weeks ago, to sell the stone to a Venetian collector for fifty florins. The deposit was paid. The stone is sold.
+
+"The rubbing is the stone's record," he says. "If the stone is sold, the record of the stone goes with the purchase. I'm not here to fight about it. I'm here to collect what was agreed."
+
+*The Arpi Votive Stone Rubbing · in a sealed tube · on a road south of Naples with a polite broker and two guards who are paid to be present rather than to act*
+
+**Hybrid — Persuasion DC 13 / Combat fallback:**
+Persuasion DC 13: The sale contract covers the stone itself. The rubbing is a scholarly document — a copy, made on parchment, which is not the stone and is not covered by the sale of the stone. The buyer purchased rights to one object; the rubbing is a second, separate object. Donna Caterina made the rubbing available; the broker's letter of intent does not enumerate it. Pass: Barbaro re-reads his letter of intent. He cannot find the rubbing listed. He says: "I'll need to clarify with the buyer." He steps back. Fail: He is not persuaded; his guards are instructed to hold the tube until the question is resolved; they are not violent but they are large and have no timeline.
+
+*Passtext:* "It's not in the letter," Barbaro says. He sounds slightly relieved. "I'll note the rubbing was retained for scholarly purposes. The stone ships as agreed."
+
+*Combattext:* Two hired road guards, AC 12 HP 18 each — they are employees, not principals; they stop when the situation becomes complicated enough that continued holding exceeds their instructions.
+
+*The Arpi Votive Stone Rubbing · in sealed tube · continuing north on the Via Appia*
+
+---
+
+### Act III — Rome, Near the Via Appia Gate (NAP to RME transit, gate toll)
+
+A bishop's clerk named Fra Salvatore has a standing order: votive inscriptions naming women as divine or semi-divine intermediaries cannot leave the diocese without an episcopal documentation seal. He has read the phrase "nuntia ultimorum verborum" as equivalent to a divine messenger title — a pagan intermediary figure — and is preparing a confiscation notice.
+
+"The inscription makes this woman into a conveyer of sacred messages," he says. "That is a theological claim. I cannot let a theological claim leave without the bishop's assessment."
+
+*The Arpi Votive Stone Rubbing · in tube · at the Via Appia gate with a clerk who has confused a personal function with a divine title*
+
+**Skill Check — Deception DC 12:** This rubbing is a survey document from an antiquarian investigation of road-marker inscriptions in the Arpi district. "Nuntia" here means "messenger" in the personal sense — an administrative function attested in dozens of Roman funerary inscriptions; the word appears in letters, accounts, and municipal records with no theological content. The bishop's order covers divine or semi-divine intermediary figures; this is a woman who ran an errand. Pass: Fra Salvatore looks at his order's wording. It says "divine or semi-divine intermediary." He cannot prove the title is divine from the wording alone. He lets it pass. Fail: He holds the rubbing for twenty-four hours pending review; during review he makes his own copy and labels it "Acca Larentia cult monument, Arpi variant" — a misidentification that will persist in Roman diocesan records.
+
+*Passtext:* Fra Salvatore reads his order again. "Divine or semi-divine," he says. "Is this divine?" He looks at the rubbing. "It doesn't say goddess." He lifts the barrier.
+
+*Failtext:* The diocesan copy is filed as "Acca Larentia cult monument, Arpi variant." The rubbing is released after twenty-four hours with the diocesan seal visible on the tube.
+
+*The Arpi Votive Stone Rubbing · in tube, past the gate, moving north through the Apennines*
+
+---
+
+### Act IV — Apennine Toll Crossing Near the Po Plain Approaches (BOL)
+
+Spring floods have put the main road crossing a foot underwater. The only passable route crosses a wooden bridge controlled by a toll-lord named Messer Giacomo di Sasso, who is not corrupt, not cruel, and not in possession of any coin worth taking today. He has been watching water rise for a week. He wants to hear something.
+
+"People come through here with boxes and bags and tubes," he says. "Nobody ever tells me what's in them." He looks at the tube. "What's in there?"
+
+*The Arpi Votive Stone Rubbing · in the sealed tube · at a wooden bridge over a flooded Apennine stream with a toll-lord who is bored and curious*
+
+**Skill Check — History DC 12:** Tell him Acca's story: Camilla, the warrior woman who rode faster than Trojans could run; Camilla dying by a javelin she didn't see because she was too intent on the gold-decorated Trojan priest; Acca receiving the dying words; Acca crossing a battlefield to bring those words to Turnus; Turnus changing the course of the war based on what she said. The stone out of the tube names her for having done it. Someone remembered her for having done it. Tell it right. Pass: Messer Giacomo listens. He says nothing for a moment, then lifts the toll-arm. "That's the fee," he says. "The story." Fail: The story is incomplete or told too quickly; he wants the detail about what Camilla was looking at when the javelin hit; if the detail is given, he lifts the arm; if it isn't, he wants two silver instead.
+
+*Passtext:* "The gold priest," he says. "She was looking at the gold. That's how they get you." He lifts the arm. "Safe road."
+
+*Failtext:* Two silver. The arm lifts. The story can be finished after the crossing if the Fighter wants to.
+
+*The Arpi Votive Stone Rubbing · in tube · past the toll crossing, on the road to Weimar*
+
+---
+
+### Act V — Weimar Archive District (WM)
+
+Archivus Sweelinck opens the tube and reads the rubbing slowly. Then he reads it again.
+
+He is quiet for a long time. He opens the archive's filing index to the section covering memorial and votive records. He goes through the categories: monuments to gods. Monuments to individuals for civic deeds. Monuments to individuals for military deeds. Monuments to individuals for religious service. He closes the index.
+
+"She is named," he says, "for what she did between two moments. The moment Camilla fell and the moment Turnus knew. The stone doesn't say what the message was. It says she carried it."
+
+*The Arpi Votive Stone Rubbing · unrolled on the intake desk, charcoal fresh against the white parchment, the inscription reading upward from the base*
+
+**Skill Check — Persuasion DC 11:** Argue that the archive's filing system is not a limitation to be worked around but a record of what has been received before; a category that does not yet exist is not a failure of the archive but a demonstration of its necessity; the archive exists precisely for the thing that fits nowhere else. Pass: Sweelinck writes for a long time. The new category note is the longest he has written this year. Fail: He files it under "Votive Records — Personal Memorial, Unusual Function Description" with a note that the category may require subdivision on review.
+
+*Passtext:* "Memorial Records — Named Intermediary Functions. The stone names what Acca did between Camilla's death and Turnus's decision. The record is not the content of the message — the content is not in the inscription. The record is the act of conveyance itself, named as a deed worthy of commemoration. The archive has no prior category for this because no prior monument made conveyance itself the deed being honored." He sets down his pen. "She stood between the falling and the surviving. The stone said so. We have it now."
+
+*Failtext:* Filed under "Votive Records — Personal Memorial, Unusual Function Description." A note at the bottom: *Category review recommended. Function described ('messenger of final words') may constitute a class of votive monument not previously catalogued.* The review is pending.
+
+**Take item:** Arpi Votive Stone Rubbing
+**Grant item:** Acca Messenger Record
+
+```json
+{
+  "quest_id": "FCO-13",
+  "title": "Acca's Message",
+  "cycle": 15,
+  "book": "Aeneid (Virgil, c. 19 BC) — Book 11: Camilla's death; Acca receives and carries the dying words to Turnus",
+  "token": "Arpi Votive Stone Rubbing",
+  "route": ["NAP", "BOL", "WM"],
+  "theme": "The record of the conveyer, not the message — Acca is named in stone for what she carried, not what she owned; the archive must invent a category to receive her name in the role she played",
+  "archive_category": "Memorial Records — Named Intermediary Functions",
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "NAP",
+      "type": "skill_check",
+      "activateNode": "NAP",
+      "scene": "Donna Caterina della Penta in her kitchen garden near Arpi. The stone reads 'To Acca, messenger of final words, this vow was placed by [name], who stood between the falling and the surviving.' She allows a rubbing to be made.",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 11,
+        "prompt": "Distinguish this 'Acca' from 'Acca Larentia' cult monuments by the phrase 'nuntia ultimorum verborum' — messenger of final words — which describes a personal function, not a divine title; no Acca Larentia monument uses this form.",
+        "failText": "The two Acca traditions remain unclear; the function-distinction argument must be made at the archive.",
+        "passText": "Donna Caterina: 'She carried a message. And someone remembered her for it. Not what she carried. Her.'"
+      },
+      "grantItem": "Arpi Votive Stone Rubbing",
+      "checkPassFlag": "fco13Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "NAP",
+      "type": "hybrid",
+      "activateNode": "NAP",
+      "scene": "Venetian broker Ser Alvise Barbaro on the road south of Naples. His letter of intent has a deposit receipt for the stone. He believes the rubbing, as the stone's record, belongs with the purchase.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "prompt": "The sale contract covers the stone itself; the rubbing is a separate object not enumerated in the letter of intent; Donna Caterina made the rubbing available independently of the sale.",
+        "failText": "His guards hold the tube for resolution. Combat: 2 road guards AC 12 HP 18 each.",
+        "passText": "Barbaro re-reads the letter. 'It's not in the letter.' He steps back. 'I'll note the rubbing was retained for scholarly purposes.'"
+      },
+      "combat": {
+        "enemies": [{"name": "Road Guard", "ac": 12, "hp": 18, "count": 2}],
+        "trigger": "Persuasion check failed"
+      },
+      "checkPassFlag": "fco13Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "NAP",
+      "type": "skill_check",
+      "activateNode": "NAP",
+      "scene": "Bishop's clerk Fra Salvatore at the Via Appia gate with a standing order against votive inscriptions naming women as divine intermediaries. He has read 'nuntia' as a divine messenger title.",
+      "skillCheck": {
+        "skill": "Deception",
+        "dc": 12,
+        "prompt": "Describe the rubbing as an antiquarian survey document; 'nuntia' in this form is an administrative personal-function word attested in dozens of Roman municipal records with no theological content; the bishop's order covers divine figures, not women who ran errands.",
+        "failText": "Twenty-four hour hold; his misidentifying copy filed as 'Acca Larentia cult monument, Arpi variant' in Roman diocesan records.",
+        "passText": "Fra Salvatore: 'It doesn't say goddess.' He lifts the barrier."
+      },
+      "checkPassFlag": "fco13Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "BOL",
+      "type": "skill_check",
+      "activateNode": "BOL",
+      "scene": "Toll-lord Messer Giacomo di Sasso at a spring-flooded Apennine crossing. He wants to know what's in the tube. The crossing fee is a story.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Tell Camilla's story with the detail that matters: she was watching the gold-decorated Trojan priest when the javelin hit; Acca received the dying words and crossed a battlefield to reach Turnus; the stone names her for having done it.",
+        "failText": "He wants the detail about the gold priest; give it and he lifts the arm; otherwise two silver.",
+        "passText": "'The gold priest,' he says. 'She was looking at the gold. That's how they get you.' He lifts the arm. 'Safe road.'"
+      },
+      "checkPassFlag": "fco13Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck reads the rubbing twice, goes through the archive index, finds no category for a monument naming a person for the act of conveyance itself. 'She is named for what she did between two moments. The stone doesn't say what the message was. It says she carried it.'",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 11,
+        "prompt": "Argue that a category which does not yet exist is not a failure of the archive but a demonstration of its necessity; the archive exists precisely for the thing that fits nowhere else.",
+        "failText": "Filed under 'Votive Records — Personal Memorial, Unusual Function Description' with a category review note pending.",
+        "passText": "Sweelinck writes: 'Memorial Records — Named Intermediary Functions. The record is the act of conveyance itself, named as a deed worthy of commemoration. She stood between the falling and the surviving. The stone said so. We have it now.'"
+      },
+      "takeItem": "Arpi Votive Stone Rubbing",
+      "grantItem": "Acca Messenger Record",
+      "checkPassFlag": "fco13Act5Passed",
+      "activateMissionBit": "fcoAccaMessageComplete"
+    }
+  ]
+}
+```
+
+---
+
+*FCO-13 complete. 2026-06-02.*
