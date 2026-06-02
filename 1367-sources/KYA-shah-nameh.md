@@ -481,6 +481,245 @@ After the Shah-Nameh narrative ends, Firdusi appends his own Invocation (a brief
 
 ---
 
+---
+
+## §KYA-02 — Vignette Cycle 2: "The Two-Falls Custom"
+
+### Cycle vs. Cycle — What This Angle Reveals
+
+Cycle 1 ("The Derafsh Kaviani Fragment") took the angle of craftsman-sovereignty: Kavah's leather work-apron became the emblem of legitimate Persian rule, and the illuminated folios that depicted it were unambiguous in their meaning. The document illustrated a founding myth.
+
+Cycle 2 takes the opposite angle: a legal document that cannot be parsed. When Sohráb had thrown Rustem to the ground, Rustem invoked Persian custom requiring two falls before a kill. Whether this custom pre-existed the moment or was invented in real time by the man who needed it is the poem's unresolvable question — the tragedy's deepest ambiguity. Cycle 1 missed it because cycle 1 was looking at the myth of legitimate authority. Cycle 2 looks at the moment the law itself is under suspicion.
+
+### TOKEN: "The Combat Custom Folio"
+
+A section of a Pahlavi legal commentary on single combat (Khorasan tradition, 12th century), bound between leather boards — fourteen folios, covering the customs of dueling, oath-combat, and single combat in Persian legal tradition. The folio's margins carry two contradictory reader-annotations from different hands:
+- (older hand, black ink): *"The two-falls custom appears in the Arsacid commentaries — this confirms it predates Firdusi."*
+- (newer hand, brown ink): *"I have read every reference this gloss cites. The custom appears nowhere before the Shah-Nameh. This note deceives."*
+
+The folio's text describes the two-falls custom but does not date it. Both annotations are visible on the same page. Neither is crossed out.
+
+**Token mechanics:**
+- `id`: "combat_custom_folio"
+- `name`: "The Combat Custom Folio"
+- `description`: "Fourteen folios of Pahlavi legal commentary on single combat customs, 12th century Khorasan. Margins carry two contradictory annotations: one confirms the two-falls custom predates Firdusi; the other denies it. The text itself does not settle the question."
+- `grant_act`: 1
+- `take_act`: 5
+- `check_acts`: [2, 3, 4]
+
+### Nodes
+
+**New nodes required:**
+- `TAB` — Tabriz Jalayirid Scholar Quarter (distinct from TBZ / Trebizond; inland Persian city under Sultan Uvays I)
+
+**Existing nodes used:**
+- `NIS` — Nishapur (Khorasan legal library; already in quest-map from AMS-01)
+- `WM` — Weimar archive
+
+### Route
+
+`NIS` (Nishapur — legal scholar Hassan ibn Mansur's study) → `TAB` (Tabriz — Jalayirid scholar quarter, verification attempt) → `WM` (Weimar archive)
+
+### Five-Act Vignette Play
+
+**Present tense. Second person. The Combat Custom Folio is the grammatical subject of all TOKEN stage directions.**
+
+---
+
+**ACT I — "The Man Who Kept the Question" (Nishapur)**
+
+The legal scholar Hassan ibn Mansur has kept the Combat Custom Folio in his study for eleven years. He is old. He does not know which marginal annotation is correct. He does not believe the question can be settled — but he believes it is the right kind of question.
+
+He sets the folio on the table in front of you. The leather binding is dark with handling at the spine. The two margin-notes are the first things you see when he opens it — opposite corners of the same page, two different inks, neither scratched out.
+
+"Archivus Sweelinck." He knows the name from a Genoese letter. "His archive collects what cannot be classified. This belongs there."
+
+He pushes the folio toward you. *The Combat Custom Folio waits on the table.*
+
+*Dialogue DC 12 — Insight: Hassan is watching your face as you look at the contradictory notes. He wants to know whether you understand what you are carrying.*
+
+*On success:* He ties the leather cording himself and seals the knot with a small wax circle. "If the custom was real, Rustem remembered it. If it was not, he created it. Either way, a son stood over his father and let him speak. Take it where it will be held without being resolved."
+
+*On fail:* He ties the folio without speaking further. You sense he is uncertain whether the right person has come.
+
+*TOKEN granted Act I — folio received, leather-corded, two-annotation page at front.*
+
+---
+
+**ACT II — "The Customs Official's Notation" (Road west from Nishapur, toward Tabriz)**
+
+A Jalayirid customs inspector stops you at a caravanserai checkpoint. He is thorough and not hostile — he taxes commercial manuscripts at three percent of value. Scholarly documents travel free.
+
+He wants to open the folio.
+
+*Skill check: Persuasion DC 12 — establish the folio as personal scholarly effects.*
+
+*On success:* He writes a notation on the outer leather binding: *"Personal scholarly effects — no commercial value. Released without tax."* He hands it back. *The Combat Custom Folio now carries a third hand's notation — a travel clearance pressed into its exterior.*
+
+*On fail:* He taxes it at thirty silver pieces. If you cannot pay, he holds it three days pending verification — a delay that gives the Tabriz rivals time to learn the folio is coming.
+
+*TOKEN check Act II — customs notation added to exterior binding.*
+
+---
+
+**ACT III — "The Scholar Who Wants to Rule" (Tabriz)**
+
+The Tabriz scholar Mahmud al-Kashani greets you with visible excitement. He has been waiting for this folio since he heard it was in Nishapur. He believes the older margin-annotation is correct: the two-falls custom predates Firdusi, and Rustem remembered it honestly.
+
+He opens the folio to the disputed page. While you watch, he adds a note in red ink beneath the older annotation: *"The custom is here — line 47. See Arsacid ref. M.K. 1367."* He turns to hand the folio back to you, satisfied.
+
+Across the room, his colleague Yusuf raises his voice: "You are annotating the question as though you have answered it. You have not answered it."
+
+The two begin arguing. The folio is still in al-Kashani's hand.
+
+*Skill check: Sleight of Hand or Persuasion DC 13 — retrieve the folio from al-Kashani's grip before the dispute becomes physical.*
+
+*On success:* You have it. Al-Kashani's red-ink notation is already written — you cannot remove it. *The Combat Custom Folio now carries four annotations: two contradictory reader-notes, one customs clearance, one scholar's ruling. The text still does not settle the question.*
+
+*On fail:* Yusuf snatches the folio first to prevent al-Kashani from writing more. In the struggle, the spine leather tears slightly. You recover it from Yusuf, intact but marked.
+
+*TOKEN check Act III — fourth annotation written; folio exits Tabriz with a contested record.*
+
+---
+
+**ACT IV — "The Road to Weimar" (Jalayirid-Byzantine borderland)**
+
+Three men stop you on the road. They are hired — working for a Persian courtier who would prefer the folio destroyed. He is not interested in the scholarly question. He is interested in the Shah-Nameh's reputation: if Rustem invented the law, the poem's greatest hero committed a procedural fraud against a dying son, and that answer is worse than no answer.
+
+*Combat: 3 opponents, AC 13, HP 22 each.*
+
+*The Combat Custom Folio is in your pack and is not damaged in the fight.* Searching one of the men, you find a letter authorizing payment for "the return of a certain folio to its rightful owners." The letter does not name those owners.
+
+*TOKEN check Act IV — folio intact; unsigned destruction-order letter recovered.*
+
+---
+
+**ACT V — "The Archive Receives the Question" (Weimar)**
+
+Archivus Sweelinck opens the folio. He reads both original annotations, the customs clearance, and al-Kashani's red-ink ruling. He reads the folio's text carefully for several minutes. Then he reads it again.
+
+He looks up.
+
+"The text does not say when the custom originated. The Arsacid reference the older note cites does not exist in any concordance I have. The newer annotation is correct that it cannot be verified. Al-Kashani's note assumes what it claims to prove."
+
+He closes the folio.
+
+"I cannot rule. Hassan ibn Mansur was right to send it here."
+
+He carries it to a new shelf. He writes in the archive's master ledger: *Documents Bearing Legal Questions of Uncertain Provenance — Customs That Cannot Be Dated Before Their First Attestation.*
+
+"Whether Rustem remembered the law or made it, a son threw his father to the ground and waited to hear what the man under his foot would say. The folio is the only document that asked whether those were the same moment. I cannot tell you which it was. I can tell you it is correctly preserved."
+
+*TOKEN taken Act V — folio received into archive under new classification.*
+
+---
+
+### Theme
+
+**"The legal custom that may have been invented by the man who needed it; the document that could settle the question either confirms a genuine Persian tradition or proves a fraud committed by a father against a dying son; the archive cannot rule and creates a new category — Legal Customs of Uncertain Origin — because the question is correctly preserved even when the answer is not."**
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "KYA_002",
+  "title": "The Two-Falls Custom",
+  "source": "Shah-Nameh (Firdusi / Atkinson translation)",
+  "cycle": "KYA",
+  "book": "Shah-Nameh",
+  "source_episode": "Sohráb tragedy — Rustem invokes the two-falls custom after being thrown",
+  "theme": "The legal custom that may have been invented by the man who needed it; the archive cannot rule and creates a new category — Legal Customs of Uncertain Origin — because the question is correctly preserved even when the answer is not.",
+  "activateNode": "NIS",
+  "token": {
+    "id": "combat_custom_folio",
+    "name": "The Combat Custom Folio",
+    "description": "Fourteen folios of Pahlavi legal commentary on single combat, 12th century Khorasan. Four marginal annotations in three hands, none in agreement. The text does not settle the question.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["NIS", "TAB", "WM"],
+  "new_nodes": ["TAB"],
+  "acts": [
+    {
+      "act": 1,
+      "location": "NIS",
+      "scene": "Hassan ibn Mansur's legal study, Nishapur",
+      "title": "The Man Who Kept the Question",
+      "type": "dialogue",
+      "prompt": "The scholar has kept the disputed folio eleven years and wants to know whether you understand what you are carrying. Insight DC 12.",
+      "skillCheck": { "skill": "Insight", "dc": 12 },
+      "successText": "He seals the cording himself. 'Take it where it will be held without being resolved.'",
+      "failText": "He ties the folio in silence. He is uncertain whether the right person has come.",
+      "grantItem": "combat_custom_folio",
+      "token_action": "grant"
+    },
+    {
+      "act": 2,
+      "location": "road_NIS_TAB",
+      "scene": "Caravanserai checkpoint, road west from Nishapur",
+      "title": "The Customs Official's Notation",
+      "type": "skill_check",
+      "prompt": "Jalayirid customs inspector wants to open the folio. Scholarly documents travel free; commercial manuscripts are taxed. Persuasion DC 12.",
+      "skillCheck": { "skill": "Persuasion", "dc": 12 },
+      "successText": "He adds a travel notation to the binding and waves you through.",
+      "failText": "He taxes it 30 silver, or holds it three days if you cannot pay.",
+      "token_action": "check"
+    },
+    {
+      "act": 3,
+      "location": "TAB",
+      "scene": "Tabriz Jalayirid scholar quarter",
+      "title": "The Scholar Who Wants to Rule",
+      "type": "skill_check",
+      "prompt": "Mahmud al-Kashani adds a ruling in red ink before you can stop him; his colleague Yusuf protests. Retrieve the folio before the dispute becomes physical. Sleight of Hand or Persuasion DC 13.",
+      "skillCheck": { "skill": "Sleight of Hand or Persuasion", "dc": 13 },
+      "successText": "You have it. Four annotations now, none in agreement.",
+      "failText": "Yusuf grabs it first; you recover it with a torn spine.",
+      "token_action": "check"
+    },
+    {
+      "act": 4,
+      "location": "road_north",
+      "scene": "Jalayirid-Byzantine borderland",
+      "title": "The Road to Weimar",
+      "type": "combat",
+      "prompt": "Three hired men with an unsigned letter authorizing the folio's destruction.",
+      "combatTarget": { "count": 3, "ac": 13, "hp": 22 },
+      "successText": "Folio intact. You now carry an unsigned letter confirming someone wanted it gone.",
+      "failText": "Combat loss — folio at risk.",
+      "token_action": "check"
+    },
+    {
+      "act": 5,
+      "location": "WM",
+      "scene": "Weimar archive intake desk",
+      "title": "The Archive Receives the Question",
+      "type": "skill_check",
+      "prompt": "Sweelinck reads all four annotations and cannot rule. History DC 11: understand what new category he creates and why.",
+      "skillCheck": { "skill": "History", "dc": 11 },
+      "successText": "He writes: Documents Bearing Legal Questions of Uncertain Provenance. 'I cannot tell you which it was. I can tell you it is correctly preserved.'",
+      "failText": "He takes the folio without explaining the new category.",
+      "takeItem": "combat_custom_folio",
+      "activateMissionBit": "kyaTwoFallsComplete",
+      "token_action": "take"
+    }
+  ]
+}
+```
+
+---
+
+### New Node Proposals
+
+| Code | Name | Location | Notes |
+|------|------|----------|-------|
+| TAB | Tabriz Jalayirid Scholar Quarter | Tabriz, northwestern Persia (Azerbaijan) | Jalayirid Sultanate under Sultan Uvays I (1356–74); major Islamic scholarly center on Silk Road; distinct from TBZ (Trebizond, Byzantine Black Sea port) |
+
+---
+
 ## Admin Notes
 
 - Part 1 processed: 2026-05-31

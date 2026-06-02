@@ -510,7 +510,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | [x] | BGW | arabian-nights-burton | Arabian Nights — Alf Layla wa-Layla (Burton tr., 1885 — Calcutta II ms.) | c. 9th–14th century | Arabic Frame-Tale | 983 |
 | [x] | CAI | arabian-nights-lang | Arabian Nights — Alf Layla wa-Layla (Lang adaptation, 1898 — Galland/Syrian tradition) | c. 9th–14th century | Arabic Frame-Tale | 629 |
 | [x] | BEY | mandeville | Mandeville's Travels — attr. Sir John Mandeville | c. 1357 | Travel/Compilation | 472 |
-| [ ] | KYA | shah-nameh | Shah-Nameh — Ferdowsi (Atkinson transl.) | c.1010 | Persian Epic | 863 | Processed 2026-05-31 — KYA-01 spec complete; KYA-02–25 seeds; Shah-Nameh narrative fully covered. Volume also contains Rubaiyat/Divan/Gulistan (separate works, separate codes if processed). |
+| [x] | KYA | shah-nameh | Shah-Nameh — Ferdowsi (Atkinson transl.) | c.1010 | Persian Epic | 863 | Processed 2026-05-31 — KYA-01 spec complete; KYA-02–25 seeds; Shah-Nameh narrative fully covered. Volume also contains Rubaiyat/Divan/Gulistan (separate works, separate codes if processed). |
 
 ### South Asian
 
