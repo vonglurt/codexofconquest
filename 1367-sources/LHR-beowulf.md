@@ -238,3 +238,350 @@ bitLabel: Empty Horn (consumed — quest token fulfilled)
 ---
 
 *Cycle 1 complete. Mark `[x]` for LHR-beowulf in books.md.*
+
+---
+
+## Cycle 2 — Angle: Wiglaf's Moment
+
+**What this angle reveals that Cycle 1 missed:** Cycle 1 showed loyalty as patience — the lone vigil at the shore while others leave. Cycle 2 shows loyalty as kinetic choice: Wiglaf does not wait; he runs toward fire in the moment everyone else runs away. The poem's entire back half (the fifty-year gap, the dragon, Beowulf's death, the herald's prediction of Swedish war, the mourning-woman's song at the pyre) was entirely unaddressed in Cycle 1. This angle also reveals the poem's most devastating structural argument: every act of loyalty produces a survivor who must carry the weight of what was witnessed, and survival is not the reward — it is the new obligation.
+
+---
+
+### Pass 1 — Full Telling (Wiglaf Angle)
+
+The second half of Beowulf is a different poem. The first half is a young man's poem — the arrival, the grip, the feast, the triumph. The second half is an old man's poem, and it knows things the first half could not have known.
+
+Beowulf has been king of the Geats for fifty winters. He is in his seventies. He has given rings and held the borders and been, by every measure, the model king Hrothgar warned him to become. Then a slave steals a golden cup from an ancient barrow-hoard. A dragon wakes. The dragon burns everything — his hall, his village, his people's homes. The old king decides this is his fight. The dragon's wrath falls on the people who sheltered him; he will not make them carry his war.
+
+He takes his iron shield — special-made, because wood burns — and goes with eleven men to the barrow. His orders are simple: wait outside. This is his fight and he will not share the danger. The eleven agree, which is the first thing that goes wrong.
+
+The dragon is larger than expected. When it comes out and the fire reaches the eleven, ten of them run. This is not cowardice in any simple sense — it is the animal response to fire larger than anything their weapons can address, performed by experienced soldiers who have received information their training did not prepare for. They run into the treeline.
+
+One does not.
+
+Wiglaf — youngest of the thanes, last of the Waegmunding line, the man who will outlast the poem's heroic world — remembers the rings. He remembers the feast where they were given. He says the words aloud to the ten who are no longer listening: *"I remember the time, when mead we took, what promise we made to this prince of ours in the banquet-hall, to our breaker-of-rings, for gear of combat to give him requital."*
+
+Then he walks into the fire.
+
+His shield burns. He covers Beowulf with the remnant. Together they kill the dragon — Wiglaf's thrust goes in under a neck-scale at the moment Beowulf's last dagger finds purchase. The dragon dies. But the venom is already in Beowulf's blood.
+
+Beowulf asks Wiglaf to bring him one piece of gold from the hoard — just one — so he can see what he bought before his eyes close. Wiglaf does. Beowulf looks at it. "I thank God that I could acquire for my people such treasure before my death-day." Then he asks Wiglaf to build the barrow high on the headland where sailors can see it. Then he gives Wiglaf his gold collar and his name. "You are the last of our kin, Wiglaf of the Waegmundings. Fate has swept all my kinsmen away. I must follow."
+
+Then he dies.
+
+Wiglaf walks out of the cave to the ten men at the treeline. They have come back — too late. He says, in three sentences, everything that needs to be said: he gave us rings and armor and the best swords we had; when the king that gave us gifts needed men, there were no men to give; death is better for every earl than a life of shame.
+
+Then he sits beside the cave mouth with the collar in both arms and does not speak again for a long time.
+
+The herald who carries the news to the Geat camp delivers a prophecy: the Swedes and Franks will come now, and there will be no Beowulf to stop them. The people know what this means. They begin to weep before the pyre is lit.
+
+At the pyre, a mourning-woman sings. The poem does not tell us who she is — only that she "greatly dreaded evil days, a multitude of slaughters, the terror of the troops, humiliation, and captivity." She is not elegizing a king. She is mourning a world. The riders circle the barrow twelve times. The gold is buried with Beowulf. The poem ends: "a ring of men, his hearth-companions, said farewell to their lord, as their hearts bade them."
+
+This is what Cycle 1 missed: all of it.
+
+### Chapter Notes
+
+**Canto 1–2 (Prologue/Scyld):** Sea-burial opens the poem — the shield on the prow, the gold sent into darkness. The poem announces from line two how it ends: everything beloved is buried.
+
+**Cantos 3–11 (Grendel, Arrival, Shore-Guard, Feast):** Twelve years of plague. Beowulf sails uninvited. The shore-guard challenges, then escorts. Unferth's flyting. Wealhtheow's necklace. The poem catalogues how a heroic society functions when working.
+
+**Cantos 12–17 (The Night-Watch, Grendel's Death, Morning After):** The grip in the dark. The arm on the wall. Wealhtheow's coded speech about her sons and the throne. The hero at his peak — and the queen already knowing the hall will not outlast her husband.
+
+**Cantos 18–25 (Grendel's Mother, the Mere, Second Victory, Hrothgar's Sermon):** The revenge. The dive. Hrunting fails. The giant-forged sword. The sermon: *"Even the greatest warrior, once pride takes root, begins to ruin."* The center of gravity — after the sermon, everything bends toward loss.
+
+**Cantos 26–31 (Return to Geatland, Hygelac, Beowulf as King):** The fifty-year gap, compressed. Beowulf becomes king. Rules wisely. The distance between heroism and governance. He has no heir; the poem notes this without comment and moves on.
+
+**Cantos 32–38 (The Dragon, Eleven Companions, Wiglaf):** The slave, the cup, the barrow. The ten who flee. Wiglaf's speech. The fight inside the barrow. Beowulf's death. The most condensed emotional sequence in the poem — two hundred lines that carry fifty years.
+
+**Cantos 39–43 (Aftermath, Messenger, Funeral):** Wiglaf's verdict on the ten. The herald's prediction of Swedish war. The mourning-woman. The pyre. The burial. The riders. The poem ends facing its own end.
+
+---
+
+### Pass 2 — Slower
+
+**Wiglaf:** Twenty-three years old. New to Beowulf's household. Not yet tested — not like this. His speech before entering the fire is not brave; it is precise. He names the obligation, the memory, and the action in three sentences and does the thing. He does not say "I am not afraid." He says "I remember what I promised." These are not the same thing.
+
+**The Ten:** The poem does not hate them. Wiglaf does not hate them — he condemns them, which is more exact. They are experienced soldiers who received impossible information and responded correctly for every situation except this one. Their failure is not a failure of courage in general; it is a failure of the specific covenant that makes a ring-gift into an oath.
+
+**Beowulf Dying:** Completely at peace. He reviews his life and finds the inventory correct: he held his own, sought no treacherous quarrels, swore no false oaths. The thing that undoes him is that he has no heir. The throne will be contested. He buries the treasure with himself not because it is worthless but because there is no one he can trust it to except the earth.
+
+**The Mourning-Woman:** Anonymous. One sentence given to her. She sings of what comes after — not Beowulf's glory but the future of his people's suffering. She is arguably the poem's actual last word. The poem does not give her a name because names belong to the world that is ending.
+
+**Wealhtheow (as structural contrast):** She appears in the first half: gracious, watchful, carrying the mead-cup and coded speech. By the dragon section she is simply gone — dead, or the poem does not care. The world of women who held kingdoms together by coded speech is absent by the time the barrow opens. The poem does not acknowledge this loss. The reader feels it in the gap.
+
+---
+
+### Pass 3 — The Scene: Wiglaf's Verdict
+
+The ten are at the cave mouth when Wiglaf walks out. Some sit on stones. One stands at the treeline with his back turned. Their swords are sheathed. They came back when the fighting ended — which is the kind of thing a man can come back from and which is also, the Fighter understands, exactly the wrong time.
+
+Wiglaf carries the gold collar in both arms. It is too large for him — he was not built for it yet. He is twenty-three. His face is burned across one cheek. He looks at each of the ten in turn, going down the line the way a man counts something paid for and finds short.
+
+They do not look back. All ten look at the ground, at the cave, at the treeline — at anything except Wiglaf's face.
+
+He says:
+
+*"We paid out treasure and armor and the best swords we had. We chose that thane-hood for Beowulf's service. He was our lord, who gave us ring-adornment and the equipment of the hall. When the need arose, when the fight came to this hillside, there were no men here. I alone stood beside him. When I got there he was already on one knee."*
+
+He pauses. The silence is the silence of men who have no defense.
+
+*"He thanked God that he had acquired such treasure for his people before his death-day. The treasure is buried. His barrow will stand on the headland above the sea. Sailors will see it for the rest of this world. They will not know your names. They will know his."*
+
+One of the ten begins to speak. Wiglaf looks at him. He stops.
+
+*"Death is better for every earl than a life of shame."*
+
+He walks past them, down the hill toward the encampment, the gold collar in both arms. The ten watch him go. None follow immediately. The smoke from Beowulf's cave drifts across them all.
+
+The Fighter stands at the edge of this — has stood here since Wiglaf walked out. The Fighter was inside; the Fighter is not one of the ten. But watching Wiglaf's back disappear into the trees, the Fighter understands: the hardest part is not the fire or the poison or the death. The hardest part is what Wiglaf now carries alone, for the rest of a life that just became about being the last person who was there.
+
+---
+
+### Seven Storyline Ideas — Cycle 2
+
+1. **Wiglaf's Moment** ← *CHOSEN* — The eleven at the cave mouth; the ten run; the oath-ring; the dragon fight; Beowulf's death; Wiglaf's verdict. Token: the iron oath-ring Beowulf gave at the winter feast.
+
+2. **The Herald's Walk** — After Beowulf dies, a herald must carry the news to the Geat encampment. The message is a death notice and a war prediction. Escort the herald; the messenger must choose what to say first, and in what order, so the people can receive it without breaking.
+
+3. **The Last Gold** — Wiglaf sends the Fighter back into the barrow to retrieve a second piece of gold for the burial — the first piece Beowulf held at death must go with him, but Wiglaf wants one more placed at his hand. Navigate the barrow (now dragon-body-blocked) alone.
+
+4. **The Mourning-Woman's Song** — A woman is found outside the camp already singing the lament. No one knows her. She seems to know the Geat future. Escort her to the pyre headland through a thane who believes it is bad luck to let a stranger sing the king's death.
+
+5. **The Cup's Return** — The slave's stolen cup started the dragon. Find the slave, recover the cup, return it to the barrow. But the barrow is double-sealed by the dragon's body and the original curse. Navigation + moral choice: does returning the cup end the curse or confirm it?
+
+6. **Unferth's Release** — After Grendel dies, Unferth is freed from shame. He gave Hrunting; it was returned with courtesy. But the sword was bound to him — it returned. Carry Hrunting to a shrine where Unferth can formally release the bond and the obligation that came with the gift.
+
+7. **The Last of the Waegmundings** — Wiglaf is the last of his line. He sends the Fighter to a farmstead in Geatland to bring back the only surviving record of the Waegmunding family's land — proof that the line existed before it ends. Token: a birch-bark deed that is the last thing the family owns.
+
+---
+
+### Theme Check
+
+**Existing active themes (selection):** loyalty under the long watch (LHR-01) · grief in an object · honor vs. shame · love and fate · truth delivered posthumously · carrier becomes hunted · fate through broken thing · heroism without shelter · invitation as weapon · poem as ransom · single refusal outweighs world · prophecy spoken without utility · document creates obligation · the proof in compilation · wound is the witness.
+
+**Choosing Wiglaf's Moment avoids:** the long-watch loyalty already claimed by LHR-01 (patience, stillness, waiting through abandonment).
+
+**New theme introduced:** *The single choice paid in fire — loyalty not as duration but as direction; the oath remembered in the moment everyone else forgets, and the weight that survival becomes after.* This is kinetic where LHR-01 was static; immediate where LHR-01 was sustained; it carries forward the question of what the witness carries after.
+
+---
+
+### 5-Act Vignette Play: *Wiglaf's Moment*
+
+**THE TOKEN: BEOWULF'S OATH-RING** — An iron ring, plain, thumb-joint wide, given by Beowulf to each sworn thane at the winter feast. Not gold — he was deliberate about that. Iron holds when other things melt. The Fighter wears theirs on the right hand. It has been warm all morning from body heat.
+
+---
+
+**ACT I — The Ring on the Hand**
+*The oath-ring: worn, warm, right hand. Location: the hillside above the dragon's barrow, cave mouth in the limestone below.*
+
+Eleven men stand in a line above the barrow entrance. Smoke rises from the cave-throat — old smoke, three-hundred-years old, from the hoard itself. Beowulf has gone in alone. His orders: wait.
+
+The dragon comes out.
+
+It is larger than any creature the Fighter has stood near. The fire that comes before it is not a weapon — it is a weather event, a horizontal change in the character of the air, the way a room changes when something enters that is incompatible with the room remaining itself.
+
+The ten companions move first. They move together, the way men who have trained together move — not in panic but in the specific fluid speed of soldiers receiving information they cannot fight. They are already at the treeline when the Fighter's feet remember the ring.
+
+*The ring is iron. He gave it in winter and said: iron holds when other things melt.*
+
+Wiglaf has not moved. He stands at the cave mouth with one hand on his wooden shield. He does not look at the ten. He does not look at the Fighter. He says something to himself — not a shout, a statement, the kind a man makes to confirm something before committing.
+
+He starts walking toward the fire.
+
+---
+
+**ACT II — The Burning Shield**
+*The oath-ring: hot from the surrounding air. Location: inside the barrow, firelight and stone-smoke.*
+
+The barrow inside is low-ceilinged, which is worse. Heat concentrates. The dragon's neck fills the passage. Beowulf is on one knee against the wall, his sword Naegling broken in half across his thighs. His shield is already gone.
+
+Wiglaf's wooden shield catches at the lip of the room. He does not stop — he ducks and keeps moving, using the burning remnant as a screen until it is nothing, then using nothing. He sets himself in front of Beowulf.
+
+The Fighter comes in on the other side.
+
+The dragon swings. Wiglaf takes it on the arm. The Fighter takes the wing. The barrow shakes. Somewhere in the ceiling, rock cracks. The hoard-gold on the floor reflects the fire and the shadow of the great neck swinging —
+
+*The ring on the right hand: warm, or that is the heat, or there is no difference now.*
+
+— Wiglaf's thrust goes in under the neck-scale.
+
+The sound the dragon makes is not a roar. It is smaller. A long exhalation. Then stillness. Then the weight of it settling like a wall falling slowly onto the hoard.
+
+Beowulf says, from the wall: "Good."
+
+---
+
+**ACT III — One Piece of Gold**
+*The oath-ring: cooling. Location: the barrow interior, dragon-body half-blocking the hoard.*
+
+Beowulf asks for one piece of gold. Not the treasure — one piece. He wants to see what he bought for his people before his eyes close.
+
+The hoard is three feet away. The dragon's body lies across it.
+
+Wiglaf goes over the coils, comes back with a sea-serpent clasp, sets it in Beowulf's palm. Beowulf looks at it. His breathing has gone shallow.
+
+**Beowulf:** "I thank God — that I could acquire — for my people — before my death-day — such a treasure. Now I can stay no more."
+
+He lifts the gold collar from his neck and holds it toward Wiglaf.
+
+**Beowulf:** "You are the last of our kin, Wiglaf of the Waegmundings. Fate has swept all my kinsmen away. I must follow."
+
+Wiglaf's hands are shaking. He takes the collar.
+
+*The Fighter thinks: the collar is too large for him. He will have to grow into it.*
+
+---
+
+**ACT IV — The Barrow at Dusk**
+*The oath-ring: held, not worn. Location: cave mouth, hillside, treeline visible.*
+
+Wiglaf comes out carrying the collar in both arms. The ten are at the treeline, all of them, in a loose cluster. No one is running anymore. They came back — they came back when the fighting was over, which is the kind of thing a man can come back from and which is also the wrong time.
+
+Wiglaf looks at them. He walks to the center of the space between cave mouth and treeline. He stands there with the collar and looks at each of them in turn.
+
+**Wiglaf:** "Death is better for every earl than a life of shame."
+
+Then nothing more. He sits on a flat stone beside the cave mouth and bows his head over the collar.
+
+The ten are very still.
+
+The Fighter holds the oath-ring and looks at the ten men and understands: there is no sentence that makes this better. There is only what Wiglaf said.
+
+*The Fighter thinks: he was twenty-three years old. He is still twenty-three. He will carry this for fifty more years.*
+
+---
+
+**ACT V — The Headland**
+*The oath-ring: placed, not worn. Location: the headland above the sea, the pyre site.*
+
+The barrow is being built on the cliff, as Beowulf asked. Sailors will see it on clear days.
+
+Before the fire is lit, Wiglaf places his own oath-ring on the barrow-stone — at Beowulf's hand, beside the gold collar and the sea-serpent clasp. He looks at the Fighter.
+
+The Fighter holds the iron ring — still warm, still iron — and sets it beside Wiglaf's. Two rings, plain, on the stone beside the gold.
+
+The mourning-woman begins to sing. She does not know the words for this yet. She sings around the edges of them, the way a person speaks around a thing too large to name directly.
+
+The fire is lit.
+
+*The Fighter thinks: I wore this ring through the fire. I took it off after. I will not remember how my hand feels without it.*
+
+---
+
+### Quest API Stub
+
+```
+Quest: Wiglaf's Moment
+missionAccept: "Beowulf has gone into the barrow alone. He told eleven men to wait.
+  The fire has started. Carry your iron oath-ring."
+
+Act I — The Cave Mouth
+activateNode: HEO
+type: skill_check
+scene: "The hillside above the dragon's barrow smells of old stone and something
+  older. Ten armed men stand at the cave entrance in silence. Beowulf is inside,
+  alone. The smoke rising from the cave-throat is not normal smoke — three hundred
+  years of hoarded dark. Then the dragon's silhouette fills the entrance. The ten
+  men begin to move left. The treeline is close."
+prompt: "Courage DC 14: Your feet know the direction of safety. Your right hand
+  knows the weight of iron. Do you stay?"
+failText: "You move three steps before the ring stops you. The ten are at the
+  treeline. Wiglaf walks into the fire without looking back. You stand at the
+  edge of the trees for an hour before you find it in yourself to try again.
+  (retry — costs 1 hour)"
+successText: "You plant. The ten go. Wiglaf does not thank you — he walks forward
+  and you follow. The smoke tastes of iron and old gold.
+  You receive Beowulf's Oath-Ring."
+grantItem: "Beowulf's Oath-Ring"
+checkPassFlag: lhrWiglafStood
+
+Act II — The Burning Shield
+activateNode: BRW
+type: hybrid
+scene: "Inside the barrow the ceiling is low and the dragon's neck fills the
+  passage. Beowulf is on one knee, his sword broken in his lap. Wiglaf's wooden
+  shield is already burning; he is covering Beowulf with the remnant. The dragon
+  turns toward you. The hoard-gold on the floor reflects fire. There is nowhere
+  to stand that is not also the fight."
+skillCheck:
+  skill: "Athletics"
+  dc: 13
+  failText: "The heat drives you back into the passage wall. The dragon's tail
+    sweeps you sideways. Wiglaf shouts once. You recover and come back in. (retry)"
+  passText: "You drive under the wing on the unguarded side. The dragon's head
+    swings toward you."
+combat:
+  enemy: "Ancient Dragon (Barrow Wyrm — Poison Bite)"
+  failText: "Fire burns your shield to slag. The dragon's tail sends you into
+    the wall. Wiglaf drags you behind Beowulf's body. You fight from the ground.
+    (retry)"
+  passText: "Wiglaf's thrust goes under the neck-scale at the same moment as
+    your blow. The dragon folds. The barrow goes quiet.
+    You receive Wiglaf's Shield Remnant."
+grantItem: "Wiglaf's Shield Remnant"
+checkPassFlag: lhrDragonKilled
+
+Act III — One Piece of Gold
+activateNode: BRW
+type: skill_check
+scene: "Beowulf sits against the cave wall, the neck-wound dark with venom. His
+  breathing is shallow. He asks, very quietly, for one piece of gold from the
+  hoard — just one, so he can see it before his eyes close. The hoard is three
+  feet away. The dragon's body lies across it. Wiglaf is already moving."
+prompt: "Perception DC 12: Find the piece Beowulf can see from where he sits
+  and bring it back without disturbing the dragon's coils."
+failText: "The coils shift with a sound like millstones. Beowulf's eyes flutter.
+  Wiglaf gives him a piece directly. Beowulf opens his eyes. He looks at you.
+  'One more. Choose one.' (retry)"
+successText: "You bring a sea-serpent clasp — small enough for one hand to hold.
+  Beowulf looks at it for a long time. He says: 'Good.' Then he lifts the gold
+  collar from his neck and gives it to Wiglaf.
+  You receive Beowulf's Final Clasp."
+grantItem: "Beowulf's Final Clasp"
+checkPassFlag: lhrGoldDelivered
+
+Act IV — The King's Gift
+activateNode: BRW
+type: skill_check
+scene: "Beowulf's voice is quiet enough that the words are almost only for Wiglaf.
+  'You are the last of our kin. Fate has swept all my kinsmen away. I must follow.'
+  Outside at the treeline, the ten companions have come back. Too late. They stand
+  in silence watching the cave mouth. Wiglaf's hands are shaking around the collar."
+prompt: "Insight DC 12: Receive this completely. Understand the weight of what is
+  being given — not gold, not a title, but the obligation to be the last witness.
+  Stand still and receive it without looking away."
+failText: "Your attention breaks to the ten in the treeline. When you look back,
+  it is over. Wiglaf meets your eyes. 'He saw you there.' Hold the whole moment.
+  (retry)"
+successText: "You hold still through the giving and the receiving and the silence
+  after. When Beowulf's hand falls, you have witnessed it completely.
+  You receive the Waegmunding Witness Token."
+grantItem: "Waegmunding Witness Token"
+checkPassFlag: lhrDeathWitnessed
+
+Act V — The Verdict
+activateNode: HEO
+type: skill_check
+scene: "The headland above the sea at sunset. Beowulf's pyre-stone is built. The
+  ten companions stand in a line before it, weapons sheathed, looking at the ground.
+  Wiglaf places his oath-ring on the stone beside the gold collar. The mourning-woman
+  has begun — not words yet, just the shape of words. Wiglaf turns to you. 'What
+  do we say to them?'"
+prompt: "Persuasion DC 14: Find the sentence. Not absolution — clarity. Name
+  what the ring meant, what it was worth, and what happens now.
+  (Persuasion, Wisdom — fewer words are better)"
+failText: "You say too much. One of the ten argues back. Wiglaf stops him.
+  'Try again. Fewer words.' (retry)"
+successText: "You find it. The ten hear it and do not argue. Wiglaf nods. You
+  place your oath-ring on the stone beside his. The rings go into the barrow
+  with the king. The fire is lit.
+  You receive the Headland Barrow Token."
+grantItem: "Headland Barrow Token"
+takeItem: "Beowulf's Oath-Ring"
+checkPassFlag: lhrOathClosed
+activateMissionBit: lhrWiglafComplete
+```
+
+---
+
+*Cycle 2 complete. Mark `[x]` for LHR-beowulf in books.md.*

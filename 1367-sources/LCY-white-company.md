@@ -472,3 +472,341 @@ checkPassFlag: scarfReturned
 ---
 
 *Cycle 1 complete. Mark `[x]` for LCY-white-company in books.md.*
+
+---
+
+## Cycle 2 — Angle: Maude's Glove
+
+**What this angle reveals that Cycle 1 missed:** Cycle 1 was about institutional love — the three-knotted scarf, Sir Nigel's formal vow, the ceremony of departure and return. It noted the glove in Pass 3 but did not enter it. This angle reveals the novel's quieter argument: that all of the public heroism at Najera runs on private devotion, and that the most essential object in the campaign is not the scarf on the lance but the glove inside the coat. The novel never lets Alleyne and Maude say the word "love." The entire arc is conducted through one object and one instruction: *Don't let it burn.* This angle also reveals Maude as the novel's moral engine — she runs the whole arc from offstage, which is the harder position.
+
+---
+
+### Pass 1 — Full Telling (Maude's Glove Angle)
+
+The love story in *The White Company* is conducted in negative space. Alleyne Edricson and Maude Loring are never alone together for more than a few minutes, and when they are, almost nothing is said. The entire arc is transacted through one object: her right-hand glove, given at departure without explanation, kept inside Alleyne's coat for the length of an entire Spanish campaign.
+
+The departure scene is the novel's emotional center and also its most restrained. Lady Mary ties the scarf on Sir Nigel's sword. Everyone sees this. The Company watches. Then Maude appears behind Alleyne — he did not know she was there — and removes her right glove and holds it out. She says: "I have no sword." That is all. He takes it. She walks back into the house. Aylward appears at his shoulder and says, very quietly: *Put it inside your coat, lad. She'll know what you did with it when you come back.* He does.
+
+For the entire campaign — France, Gascony, the Pyrenees, Spain — the glove is inside Alleyne's coat. He checks it when he wakes. He checks it when they camp. He checks it the way a man checks a wound that is healing correctly — not in fear, but in a kind of private certainty that is itself a form of devotion. He never shows it to anyone. He never mentions Maude by name in the field. He is a soldier now, which is what the novel required of him.
+
+At Najera, he is at the front. The battle goes as Doyle stages it — the longbows, the cavalry, the press of men — and Alleyne takes a wound in the melee. Not mortal: the sword found him high on the side, between the ribs, deep enough to be serious. He is confused by the blood. The retreat is beginning around him. Surgeons are opening coats. The glove is going to be seen, or left on the field, or lost in the fire from burning equipment at the field's edge.
+
+He presses it into the nearest hand he trusts — the Fighter — and says: "Don't let it burn." Then the surgeons take him.
+
+The Fighter carries the glove for several hours, across a battlefield still resolving toward its end, through a column of wounded and victorious men who do not know what is inside their escort's fist. It is one glove. It is leather, right-hand, worked at the cuff. Her hand was in it when she gave it to him; that warmth has long since gone from the leather; this does not change what it is.
+
+When the Fighter brings it back to the surgeon's tent, Alleyne is sitting upright on a camp chest, his side bound. He opens his coat before anyone speaks. The Fighter places the glove inside. Alleyne closes the coat. He says: "Thank you." Then, after a pause: "Did you look at it?" The answer doesn't matter to him. He needs to know someone knows what they were carrying.
+
+The novel ends with Alleyne and Maude married. He is back from the war. She is waiting. The glove was carried. The novel does not describe the reunion. It does not need to.
+
+### Chapter Notes
+
+**Chapter I–IV (Beaulieu Abbey, the Road):** Alleyne leaves the monastery. His character is established as a scholar with courtesy but no practical world-knowledge. Hordle John expelled for fighting over cheese. Sam Aylward's twenty French years established. The world outside the abbey is warmer and more violent than expected.
+
+**Chapters V–IX (Tilford Hall, Sir Nigel, Maude):** The Loring household introduced. Sir Nigel's comic gravity. Lady Mary's quiet management of everything. Maude's dry wit, her composure, her composure aimed specifically at Alleyne in a way only Aylward notices. The departure scene.
+
+**Chapters X–XVI (Bordeaux, Gascony, the Company):** The Company reformed. The professional military world — its hierarchy, its loyalties, its specific competence. Sir Nigel's three-deed vow stated explicitly. Alleyne's education begins in earnest.
+
+**Chapters XVII–XXIV (Château Villefranche, the assault, Spain):** The castle siege. Sir Nigel's shoulder wound. The journey south. The Navarrese passes. The Company's position as a declared English force in contested territory.
+
+**Chapters XXV–XXVIII (Najera, the battle, aftermath):** The battle. The longbows. The cavalry charge. Du Guesclin captured. The Black Prince's courtesy toward the enemy. Alleyne wounded. The Company's service fulfilled.
+
+**Chapters XXIX–XXX (Return, England, Maude):** The return. What was carried comes back. The glove. The marriage. The novel's final argument: that the medieval code produced real men and real love, even if it also produced waste and destruction.
+
+---
+
+### Pass 2 — Slower
+
+**Alleyne:** He becomes a soldier, which is not the same as becoming less of a scholar. By Najera he is both: a man who can read Latin and also hold a line. Doyle's argument is that these are not opposites — that the best of the medieval world produced men who were both. The glove is what keeps him from becoming purely a soldier — it reminds him, in the way that private objects do, of what the soldiering is for.
+
+**Maude:** She runs the emotional arc of the novel without appearing in it. She gives the glove, says "I have no sword," and walks away. She is next seen at the end, waiting. Doyle gives her dry wit in the Tilford sections and genuine composure in her few scenes with Alleyne. Her composure is not coldness — it is Alleyne's glove on the outside. She has organized herself, as Sir Nigel does, around the code, but her code is domestic and therefore invisible in the historical epic.
+
+**Aylward (as structural translator):** He is the one who explains to Alleyne what the glove means — not its emotional content, but its protocol. *Inside the coat. Not where anyone will see it. She'll know what you did with it when you come back.* Aylward mediates between the world of public honor (where everything is visible and named) and the world of private devotion (where everything is kept inside the coat). He makes the translation possible.
+
+**Lady Mary (as contrast):** She performs love publicly — the scarf, the knots, the composure at departure. She has organized her love into the formal structures that the medieval world provides for it. Maude has not. Maude's love has no ceremony. It has one glove and one instruction and the assumption that both parties will understand what is being said without it being said.
+
+---
+
+### Pass 3 — The Surgeon's Tent
+
+The tent smells of vinegar and blood. Alleyne is sitting on a camp chest, his side bound in linen that has already gone red at the lower edge. He is pale, which is different from frightened — he is a soldier now and he knows what pale means and it does not mean what he feared in the morning. He has been sitting here long enough to have drunk water and refused wine and asked twice what hour it is.
+
+The Fighter enters.
+
+Alleyne opens his coat before there is any conversation. He does not reach for the glove — he opens the coat and holds it open, as a person holds a door for someone who is carrying something with both hands.
+
+The Fighter places the glove inside.
+
+Alleyne closes the coat. He sits with both hands in his lap for a moment.
+
+**Alleyne:** "Thank you."
+
+Then he looks at his hands.
+
+**Alleyne:** "Did you look at it?"
+
+This is not an accusation. He is not asking whether the Fighter violated his privacy. He is asking whether someone, besides himself, now knows what they were carrying for those three hours across the field — whether the weight of it was understood by at least one other person who was present for it.
+
+The answer is whatever the Fighter says. Alleyne nods at the answer, whatever it is.
+
+**Alleyne:** "She said: I have no sword. That's all she said." *(pause)* "I didn't know what to say. Aylward told me afterward."
+
+He does not say her name. He has not said her name during the entire campaign — not where anyone might file it as information. The novel has followed him not saying it for twenty chapters. This is the closest he gets.
+
+The tent is quiet. Outside, the Company is accounting for itself — numbers called, names answered. The battle is over. Spain is won. The Black Prince is generous with his praise. Sir Nigel has his three deeds. The scarf is on the lance.
+
+In the tent, the fighter sits with Alleyne on the camp chest and Alleyne keeps his coat closed and does not open it again.
+
+The glove is not gone. That is all it needs to be.
+
+---
+
+### Seven Storyline Ideas — Cycle 2
+
+1. **Maude's Glove** ← *CHOSEN* — Alleyne wounded at Najera; gives the Fighter his one private object with one instruction; the Fighter carries it off the field and back.
+
+2. **John's First Battle** — Hordle John freezes at first contact. The Fighter holds the breach alone until John recovers. Afterward, Aylward tells them both: every man wept after his first. Token: the cheese John was expelled from Beaulieu for — a running joke that becomes the thing John has always carried.
+
+3. **Du Guesclin's Parole** — Sir Nigel has pledged his personal word for the captured French captain's safety. English soldiers intend to kill him. The Fighter guards the tent door all night. Token: du Guesclin's war gauntlet left as pledge of parole — the enemy's trust in the word of an English knight.
+
+4. **Aylward's Last Arrow** — The one arrow in Aylward's quiver he has carried for twenty years without shooting. He makes a bet on a shot that should be impossible. A rival tries to steal it the night before. The Fighter must keep the arrow and get it to Aylward at the right moment.
+
+5. **Lady Mary's Accounts** — While Sir Nigel is in Spain, a creditor arrives at Tilford with a distraint. Lady Mary needs one document delivered to the court at Winchester before the seizure is finalized. The Fighter carries the deed through two checkpoints. Token: the household deed.
+
+6. **The French Prisoner** — A French minor noble knows the pass route the Company needs. Sir Nigel refuses to force him. One hour, the Fighter, and Persuasion. The prisoner is not a villain; he is afraid and loyal to his own lord. He needs a reason to choose.
+
+7. **The Black Prince's Payment** — The Black Prince's warrant covers the Company, but the actual gold has not arrived. A Gascon factor is about to report the Company as unreliable to the Bordeaux council, which would void their safe-conduct. The Fighter has one hour to reach the supply officer and confirm the payment order. Deception or Persuasion through a camp at night.
+
+---
+
+### Theme Check
+
+**Existing active themes include:** love and fate intertwined (MSE) · love's last gift carried without breaking (SDQ) · love given away whole (GCI) · truth delivered posthumously (LGW).
+
+**Maude's Glove is distinct from all of these.** SDQ's Diana's Letter is the explicit last-gift-at-parting — the formal farewell. GCI's ring is total sacrifice, the complete giving-away of the self. MSE's love is fate-and-death, the tournament and the pyre. Maude's glove is none of these: it is love carried as a private certainty across a campaign, never named, never claimed, sustained entirely by the fact that the carrier checks it every morning. **New theme: the unacknowledged love survives because it was never named aloud — sustained not by declaration but by the daily act of verification; it is the only form of love the code permits and it is the most lasting form.**
+
+---
+
+### 5-Act Vignette Play: *Maude's Glove*
+
+**THE TOKEN: MAUDE'S RIGHT-HAND GLOVE** — Good leather, worked at the cuff, from her hand on the morning Alleyne left Tilford. She said: "I have no sword." She walked back into the house. Aylward said: put it inside your coat. Alleyne did. It has been there ever since. It smells of the campaign now — horse, vinegar, Spanish dust — but the leather is intact. The cuff stitching is still whole.
+
+---
+
+**ACT I — The Eve of Najera**
+*The glove: inside Alleyne's coat, right breast pocket, over the heart by placement not by sentiment. Location: the Company's camp at the Navarrese field edge, night before battle.*
+
+The fires are low. The archers are fletching last arrows by firelight — an old habit, the night before. Aylward is asleep, which means the night before does not frighten Aylward. Hordle John is not asleep, which means something.
+
+Alleyne comes to the Fighter's fire after the camp has gone quiet. He sits. He does not speak for a time. Then he opens his coat slightly and shows the edge of the glove's cuff.
+
+**Alleyne:** "I have carried this from Tilford."
+
+He closes the coat.
+
+**Alleyne:** "Tomorrow — if I am at the front and something happens — I need it to reach the surgeon's tent. Not lost on the field. Not burned with the equipment after."
+
+He looks at the fire.
+
+**Alleyne:** "She said: I have no sword. That was all she said."
+
+*The Fighter thinks: he has not said her name once in six months. I know whose glove this is.*
+
+---
+
+**ACT II — The Battle**
+*The glove: still inside Alleyne's coat; he is in the front line. Location: the field at Najera — dawn, the longbow volleys, the press of men.*
+
+The White Company's bowmen send three volleys. The cavalry breaks on the arrows and falls back. The men-at-arms come forward and the field becomes what fields become — noise and small movements and heat and the specific attention required to stay alive in a crowd that wants the opposite.
+
+Alleyne fights. He is good at it now — the monastery scholar is entirely gone. He fights in the second rank behind Sir Nigel's standard, and the Fighter holds the left flank of that position, and for an hour nothing goes wrong.
+
+Then a French cavalry remnant breaks through the line to the left and suddenly the second rank is the first rank and Alleyne is in the middle of a collision he was not positioned for, and his side is open, and a blade finds it.
+
+He does not fall. He staggers two steps and keeps standing, which is what trained men do. But the coat is opening at the wound and the glove is about to be visible.
+
+*The Fighter thinks: his first thought is not the wound. His first thought is the coat.*
+
+He presses the glove into the Fighter's hand. "Don't let it burn."
+
+Then the surgeons take him.
+
+---
+
+**ACT III — The Field's Edge**
+*The glove: in the Fighter's closed fist. Location: the eastern edge of the Najera field, the equipment being cleared, some of it burning.*
+
+The battle is over. Henry of Trastamara has fled. The Company is accounting for itself — numbers called, names answered. The equipment lines are being policed and some of the French baggage is on fire at the far end.
+
+The Fighter moves through all of this with the glove in a closed fist, which is the wrong way to carry it — leather does not like a fist for long — but it is the only way available.
+
+A Company sergeant stops the Fighter at the medical line. He is checking everyone going through: names, unit, injuries. He notes the closed fist.
+
+**Sergeant:** "What are you carrying?"
+
+*The Fighter thinks: nothing that belongs to this accounting. Nothing that has a name in any record. A leather glove, size of a woman's hand, worked at the cuff. I do not know what to say that does not require me to explain the whole campaign.*
+
+---
+
+**ACT IV — The Surgeon's Tent**
+*The glove: restored to Alleyne's coat. Location: the surgeon's large tent, camp chest, linen binding at the ribs.*
+
+The tent smells of vinegar and blood. Alleyne is sitting upright on a camp chest — pale, bound, drinking water, refused wine. He has been waiting long enough to have asked twice what hour it is.
+
+He opens his coat before there is any conversation.
+
+The Fighter places the glove inside. Alleyne closes the coat. He holds his hands in his lap a moment.
+
+**Alleyne:** "Did you look at it?"
+
+He needs to know whether someone understands what they were carrying.
+
+**Alleyne:** "She said: I have no sword. That's all she said." *(pause)* "I didn't know what to say to that. Aylward told me after."
+
+Outside, the Company is accounting for itself. Sir Nigel has his three deeds. The scarf is on the lance. In here it is very quiet.
+
+*The Fighter thinks: he has not said her name once in six months. He will say it once, in England, when this is over.*
+
+---
+
+**ACT V — England**
+*The glove: returned to her hand. Location: the gate of Tilford Hall, Hampshire — the same gate, the same road, the same October light.*
+
+The Company has been paid and dissolved and the men have gone their various ways. Alleyne has come back to Tilford.
+
+Maude is at the gate. She has been expecting the Company for a week — they are late, which is how campaigns end. She is dressed practically — she has been working. There is a ledger under her arm, which she transferred to her left hand when she heard the horses.
+
+Alleyne dismounts. He opens his coat. He takes the glove — still good leather, worked at the cuff, six months of Spain in the creases — and holds it out.
+
+She takes it. She looks at the cuff. The stitching is intact.
+
+**Maude:** "You kept it whole."
+
+**Alleyne:** "I had help."
+
+He does not explain. She does not ask. She puts it on — right hand, the glove goes home — and she takes his arm and they go through the gate.
+
+The Fighter watches them go. The gate closes.
+
+*The Fighter thinks: she said nothing when she gave it. She said nothing when she got it back. In between: three countries, one battle, one instruction, and the fact that it was never lost. That is the whole sentence.*
+
+---
+
+### Quest API Stub
+
+```
+Quest: Maude's Glove
+missionAccept: "Alleyne Edricson has carried a leather glove inside his coat from
+  Tilford, Hampshire to the plain of Najera. He is wounded. He has one instruction:
+  Don't let it burn."
+
+Act I — The Eve of Najera
+activateNode: LCY
+type: skill_check
+scene: "The Company's camp at the field edge, the night before Najera. Fires low,
+  archers fletching. Alleyne comes to your fire after the camp goes quiet. He
+  opens his coat enough to show the edge of a cuff — leather, worked, a woman's
+  glove. He closes it again. Outside the camp the Spanish plain goes on in the
+  dark. Tomorrow the volleys begin at dawn."
+prompt: "Insight DC 12: Understand what he is actually asking — not logistics, but
+  witness. He needs someone to know what this is and hold it without explanation.
+  Receive it correctly."
+failText: "You ask questions. He closes his coat and says nothing. He comes back
+  an hour later, after you've sat with the silence, and tries again. (retry)"
+successText: "You hold still and receive it without questions. He opens his coat,
+  shows the full glove, closes it again. 'Tomorrow if something happens.' He
+  walks back to his fire. You receive Alleyne's Watch-Word."
+grantItem: "Alleyne's Watch-Word"
+checkPassFlag: lcyWatchAccepted
+
+Act II — The Field at Najera
+activateNode: LCY
+type: hybrid
+scene: "Dawn. Three volleys. The field is what fields become. You are holding the
+  Company's left flank when the French cavalry remnant breaks through and suddenly
+  the second rank is the first rank and Alleyne is in the middle of a collision
+  he was not positioned for. His side is open. The coat is opening at the wound.
+  His first thought is not the wound."
+skillCheck:
+  skill: "Perception"
+  dc: 13
+  failText: "You see it a second late. The coat is already open. The glove is
+    visible. Two soldiers are staring. You get between them and Alleyne in time,
+    but the moment costs. (retry)"
+  passText: "You see it before the coat opens. You move in front of him. He
+    presses the glove into your fist: 'Don't let it burn.' The surgeons take him."
+combat:
+  enemy: "French Cavalry Remnant (mounted, broken line)"
+  failText: "One of them gets past you. Alleyne is safe — the surgeons have him
+    — but the equipment is burning and the glove is in the wrong hand during a
+    bad fall. You find it in the mud. Intact. (retry)"
+  passText: "You hold the line until the surgeons have him clear. The field
+    resolves. You have the glove in a closed fist. You receive Maude's Glove."
+grantItem: "Maude's Glove"
+checkPassFlag: lcyGloveHeld
+
+Act III — The Field's Edge
+activateNode: LCY
+type: skill_check
+scene: "The battle is over. The Company is accounting for itself — numbers called,
+  names answered. Some of the French baggage is burning at the far end. You move
+  through the policing lines with the glove in a closed fist. A Company sergeant
+  stops you at the medical line, checking everyone through. He notes the closed
+  fist. His pen is on his ledger. He is doing his job."
+prompt: "Deception DC 13: Explain what you are carrying in terms that satisfy the
+  accounting without opening your fist."
+failText: "He wants to see your hand. You show him the glove. He does not know
+  what to do with a woman's leather glove in a battle inventory. He logs it as
+  'personal effects — pending.' You spend two hours recovering it from the
+  effects tent. (retry — costs 1 hour)"
+successText: "You give him the right answer in the right register. He looks at
+  your hand, writes one word, waves you through. You receive Sergeant's Log Mark
+  — a smudged inventory receipt that proves nothing, which is the point."
+grantItem: "Sergeant's Log Mark"
+checkPassFlag: lcyLinePassed
+
+Act IV — The Surgeon's Tent
+activateNode: LCY
+type: skill_check
+scene: "The tent smells of vinegar and blood. Alleyne sits on a camp chest, pale,
+  bound, drinking water. He opens his coat before you speak. Outside: numbers
+  called, names answered. Sir Nigel has his three deeds. The scarf is on the lance.
+  In here it is very quiet and Alleyne is holding his coat open."
+prompt: "Insight DC 12: Place the glove correctly — not with ceremony, not with
+  explanation, not with anything that makes this larger than it is. It goes
+  inside his coat. That is all."
+failText: "You place it with too much care. He looks at you. 'It is a glove,'
+  he says, quietly. He takes it himself and puts it away. You have shown him
+  something about how much you understood what you were carrying, and it is
+  more than he wanted visible. (retry — put it differently)"
+successText: "You place it inside. He closes the coat. He says: 'Did you look
+  at it?' You answer. He nods. 'She said: I have no sword. That's all.' Outside
+  the accounting continues. In here the thing is done. You receive
+  Alleyne's Coat-Clasp — the buckle from his coat, given without comment."
+grantItem: "Alleyne's Coat-Clasp"
+checkPassFlag: lcyGloveReturned
+
+Act V — Tilford Gate
+activateNode: LCY
+type: skill_check
+scene: "Hampshire. Tilford Hall. The same gate the Company left through six months
+  ago. October. Maude Loring is at the gate with a ledger under her arm. She
+  transferred it to her left hand when she heard the horses. Alleyne has dismounted.
+  He is opening his coat. She is watching his hands."
+prompt: "Persuasion DC 12: Bear witness to this reunion correctly — stand where
+  you are, do not look away, do not fill the silence with anything. This is
+  what the campaign was for. Receive it."
+failText: "You move forward, instinctively, to be useful. She glances at you.
+  Alleyne pauses. The moment requires fewer people in it. Step back. (retry)"
+successText: "You stand still. He gives her the glove — whole, cuff intact. She
+  puts it on. Right hand. 'You kept it whole.' 'I had help.' The gate closes.
+  You receive the Tilbury Road Token — the road back to your own gate."
+grantItem: "Tilbury Road Token"
+takeItem: "Maude's Glove"
+checkPassFlag: lcyGloveHome
+activateMissionBit: lcyMaudeComplete
+```
+
+---
+
+*Cycle 2 complete. Mark `[x]` for LCY-white-company in books.md.*
