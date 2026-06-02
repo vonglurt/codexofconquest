@@ -1,0 +1,501 @@
+================================================================================
+  AGENTIC DOCUMENT PROCESSING IN LONG-RUNNING INTERACTIVE SESSIONS:
+  A Case Study of the roll2hit.com Literary Quest Pipeline
+
+  Technical Report — roll2hit.com Development Notes
+  Prepared: 2026-06-02
+  Elapsed computation time: approximately 24 hours across multiple sessions
+  Total tokens (final session): ~54,000
+================================================================================
+
+ABSTRACT
+
+We describe a long-running agentic pipeline for converting world literature into
+5-act quest vignettes within a D&D 5e combat assistant game set in 1367 AD. The
+pipeline operates through alternating cycles of machine-driven book analysis and
+human-directed narrative selection. Each cycle produces: (a) a fully-specified
+quest vignette with a physical TOKEN object, five skill-check or combat acts, and
+a UQF v1.0 API stub; (b) updates to a cross-source quest map; (c) bookkeeping
+entries. The human's role is narrow but decisive: at each cycle, four possible
+narrative angles are offered and one is selected. This paper describes the pipeline
+architecture, the prompt sequence, the TOKEN doctrine that governs quest design,
+the fate of rejected seeds, and observations about 24 hours of continuous agentic
+computation including cache behavior, context compression, and session continuity
+across sleep cycles.
+
+--------------------------------------------------------------------------------
+
+I. INTRODUCTION
+
+The roll2hit.com project processes works of world literature as material for a
+single-player D&D 5e combat game set in 1367 AD. The game's protagonist is an
+unnamed Fighter — not a hero, not a scholar — who moves through the world carrying
+things that belong to other people. The game asks: what does it mean to keep your
+word when the world does not?
+
+Each book processed by the pipeline contributes two quest vignettes (cycles 1 and
+2). Each vignette is a 5-act play in present tense, second person, structured
+around a physical TOKEN object that the Fighter carries from a commission city to
+a delivery city. Every TOKEN changes state at each act boundary and is consumed at
+Act V — typically by delivery to the Weimar archive and its clerk, Sweelinck.
+
+Sweelinck is worth noting. He is a fictional character invented to receive every
+TOKEN. He has no biography. He creates new filing categories. He is the archive's
+response to the world's refusal to fit prior categories. He is also, structurally,
+the pipeline's proof-of-completion signal: every quest ends when Sweelinck stamps
+the receipt.
+
+The pipeline is agentic in the sense that: it reads source texts autonomously,
+generates multi-layered quest material without per-act human direction, maintains
+cross-document consistency (theme threads, node codes, route geography), and tracks
+its own state across sessions. It is interactive in the sense that: the human selects
+one of four narrative angles before each cycle 2 is written.
+
+This report describes the pipeline as a system, analyzes the prompt sequence that
+drives it, examines what happens to the rejected angles, and reflects on the
+experience of running it continuously for approximately 24 hours.
+
+--------------------------------------------------------------------------------
+
+II. SYSTEM ARCHITECTURE
+
+A. Input Materials
+
+   - books.md: master index of 50+ processed books; each row records status [x]/[ ]
+   - {CODE}-{slug}.md: per-book source file containing passes 1-3 (overview,
+     structure, character analysis), quest seeds, and full vignette specs
+   - quest-map.md: cross-source map of all processed quests, theme threads active,
+     and Location Grid (city nodes for quest acts)
+   - plan.md: tracking file for outstanding work items and seeds needing treatment
+
+B. Output Files
+
+   Each processed book produces updates to:
+   - {CODE}-{slug}.md: vignette spec appended under new section header
+   - quest-map.md: new quest row + theme thread + Location Grid nodes (if any)
+   - books.md: [x] marking + notes column update
+
+C. Cross-Session State
+
+   The pipeline uses git commits as its state checkpoints. Each completed cycle is
+   committed immediately. If the session is interrupted (cache miss, sleep cycle,
+   context overflow), the next session reconstructs its position from:
+     1. git log (what was last committed)
+     2. books.md (which books remain unmarked)
+     3. Session summary (injected as prior context when context overflows)
+
+D. Invariants Maintained
+
+   - No two quests share core theme (enforced by reading quest-map before writing)
+   - Every quest has exactly one TOKEN, introduced Act I, consumed Act V
+   - TOKEN state changes at each act boundary (stated or implied in flavor text)
+   - All DC values: 11-14 for skill checks; combat: AC 12-14, HP 20-28
+   - City node codes are canonical and consistent across all source files
+   - Every quest ends at Weimar (WM) or at a defined intermediate city
+
+--------------------------------------------------------------------------------
+
+III. THE PROMPT SEQUENCE
+
+The pipeline operates through a sequence of four recurring prompt types. Below is
+an analysis of each type, its function in the cycle, and its structural properties.
+
+A. The Standing Authorization Prompt
+
+   Context: Issued once per session, before any work begins.
+
+   Verbatim example (from session logs):
+     "up up and away. commit, and continue"
+
+   Function: Grants permission for autonomous operation — commit authority, forward
+   motion between books, no need to pause and confirm at each step.
+
+   Structural properties:
+   - Extremely compressed (5-6 words)
+   - Grants temporal scope (the full session), not per-task permission
+   - Implies full trust in the agent's judgment within the established pattern
+   - The phrase "up up and away" references energy and flight — it is emotionally
+     warm, not procedural; it is a send-off, not an instruction
+
+   What the agent does with it:
+   - Reads it as granting commit authority
+   - Reads it as authorization to continue through the book list in sequence
+   - Does NOT read it as authorization to deviate from the established pattern
+   - Does NOT read it as authorization to skip the human selection step
+
+B. The Angle Selection Prompt (Human Choice)
+
+   Context: Issued once per book, before cycle 2 is written. The agent presents four
+   options; the human selects one.
+
+   Verbatim agent prompt structure (reconstructed from session logs):
+     "Which angle should [BOOK CODE] cycle 2 take?"
+     Option 1: [Seed code] — [title]
+       [One paragraph: the angle in plain language, what it reveals about the source,
+        the route]
+     Option 2: [repeat]
+     Option 3: [repeat]
+     Option 4: [repeat]
+
+   Function: This is the human's only direct creative input per book. It is a
+   decisive moment: the agent has read the full book, surveyed all remaining seeds,
+   checked theme uniqueness against quest-map.md, and pre-selected four candidates.
+   The human does not see the full analysis; they see four clean options.
+
+   Structural properties of the options:
+   - Each is ~1-3 sentences
+   - Each names the angle (what this quest reveals that prior cycles missed)
+   - Each names the route (city codes)
+   - Options are NOT ranked; the agent presents them as equally valid
+   - Options ARE pre-filtered: the agent has already eliminated redundant seeds,
+     seeds with duplicate themes, and seeds that would require too many new nodes
+   - The agent typically includes one high-concept option (complex theme), one
+     urgent/action option (time pressure, combat-heavy), one meditative option
+     (dialogue-heavy, philosophical), and one structurally unusual option
+
+   The emotion in the selection moment:
+   The human selects from options they have not deeply analyzed. The selection is
+   often intuitive — a phrase catches something, a route feels right, a character's
+   name resonates. This is not a failure of rigor; it is the system working correctly.
+   The agent has done the analytical work; the human supplies the aesthetic judgment.
+   The feeling at this moment (observed from the response latency and the brevity of
+   most selections) is: recognition, not deliberation. The human reads the option and
+   knows. This is the emotional core of the pipeline.
+
+   What happens to the human's selection:
+   - The selected seed becomes the cycle 2 vignette
+   - The TOKEN, acts, flavor text, and API stub are derived from the selected angle
+   - The theme thread in quest-map.md is generated from the selected angle
+   - The selection is committed and permanent
+
+   What happens to the rejected options: (see Section V)
+
+C. The Write Prompt (Implicit)
+
+   After the human selection, there is no explicit prompt to write the vignette.
+   The agent proceeds immediately. The write prompt is implicit: the selection
+   communicates "now write this." The agent writes the full 5-act spec.
+
+   What this implicit prompt contains:
+   - The TOKEN object (introduced in Act I, state-changed through Acts II-IV,
+     taken in Act V — this is non-negotiable; the TOKEN doctrine is a hard constraint)
+   - The 5-act present-tense second-person narrative form
+   - Four skill-check acts + one combat act (approximately; some quests vary)
+   - Flavor text at each act (one paragraph, present tense, focusing on the scene
+     rather than the challenge)
+   - Quest API Stub in UQF v1.0 JSON format
+   - onPass / onFail narrative outcomes
+   - The Sweelinck delivery at Act V
+
+   The agent does not re-read the instructions at this point. The pattern is
+   internalized from the session context and the example vignettes already written.
+
+D. The Commit Prompt (Implicit)
+
+   After writing, the agent commits. There is no separate commit instruction.
+   The standing authorization ("up up and away. commit, and continue") covers all
+   commits in the session. The agent stages only the three affected files
+   (source file, quest-map.md, books.md) per commit, never more.
+
+   Commit message convention (established by example, not explicit rule):
+     "[prefix]: [BOOK CODE] cycle N — [Title]"
+     "[One-paragraph description of the angle, TOKEN, route, and what's new]"
+
+--------------------------------------------------------------------------------
+
+IV. THE TOKEN DOCTRINE
+
+The TOKEN doctrine is the single most important design principle in the pipeline.
+It is stated explicitly in the system context and reinforced by every example quest.
+
+Definition: Every quest has one physical TOKEN object. It is:
+  - Introduced in Act I (the agent "receives" it, usually from a named NPC)
+  - Changed in state at each subsequent act boundary (a seal added, a mark made,
+    a layer of physical evidence accumulated)
+  - Consumed at Act V (Sweelinck takes it; it enters the archive; `takeItem` in API)
+
+The TOKEN is not just a MacGuffin. It is the quest's philosophical argument made
+material. Each TOKEN embodies the theme:
+
+  Example: The Exchange Case (HAV-02) — a leather document case containing the
+  corsair's demand and the merchant's counter-offer. Both letters open with the
+  same diplomatic salutation. The TOKEN's physical state (sealed, intact, with
+  the notary's certification) is the evidence that mutual recognition occurred.
+  If the case is opened, the evidence is void. The TOKEN being sealed IS the argument.
+
+  Example: The Statute Modification (BLQ-02) — a single folio in a retired judge's
+  hand. It weighs almost nothing. It is the only thing between Fiamma and a charge
+  the law no longer supports. The TOKEN's state changes from "not yet in existence"
+  (Act I: the agent watches Ser Taddeo pick up the pen) to "filed in the morning
+  session record" (Act V). The carrier's body is what kept it from being intercepted.
+
+Design rule derived from observation: the TOKEN always embodies the quest's answer
+to the question it poses. If the quest asks "what does recognition look like?" the
+TOKEN is two letters that recognize each other. If the quest asks "does the law
+protect her?" the TOKEN is the modification that says yes. The act of delivery is
+the act of proving the answer.
+
+--------------------------------------------------------------------------------
+
+V. WHAT HAPPENS TO ABANDONED SEEDS
+
+When the human selects one of four options, three seeds are passed over. This section
+describes their fate.
+
+A. They are not deleted.
+
+The rejected seeds remain in the source file's "Seeds" section. They were written as
+full paragraph-length story concepts during the book's original processing. They exist
+as part of the book's processed material. Deleting them would be a loss.
+
+B. They are logged in abandoned-seeds.txt.
+
+The new file abandoned-seeds.txt (created 2026-06-02) records each rejected option
+with: the chosen seed, the rejected seeds, notes on why each rejected seed has
+future value, and observations about the selection pattern.
+
+C. They are available for cycle 3+.
+
+No book is limited to two cycles. The pipeline specifies cycles 1 and 2 as mandatory.
+Cycles 3+ are optional but permitted. Rejected cycle 2 seeds are natural cycle 3
+candidates. Some rejected seeds are more interesting as later cycles precisely
+because they were not the first or second approach — returning to a book's material
+after two approaches have established the theme allows deeper cuts.
+
+Example: HAV-06 (The Eyewitness in the Middle) was rejected for HAV cycle 2 in
+favor of HAV-05 (The Admiral's Letter). But HAV-06's angle — the uninvested observer
+who saw everything and has no stake in the outcome — is genuinely distinct from both
+HAV-01 (internal governance) and HAV-02 (external recognition). It becomes a natural
+HAV cycle 3. The three cycles together would map the three epistemic positions
+available to anyone who was present: the insider who governed, the correspondent who
+claimed status, and the surgeon who just treated the wounds.
+
+D. They record the shape of human preference.
+
+Looking at all rejected seeds across the pipeline, a pattern emerges (see also
+abandoned-seeds.txt, Section "Notes on the selection pattern"):
+
+Selected seeds tended to have:
+  - A single named human subject at the ethical center
+  - A TOKEN with philosophical rather than material identity
+  - A delivery that creates something new at the archive (new Sweelinck category)
+  - Routes ending at WM
+
+Rejected seeds tended to be:
+  - Logistical rather than philosophical (the Sunk Boat: irreversibility as mechanics)
+  - Internally complete without requiring institutional processing
+  - Routes ending in intermediate cities without strong narrative closure
+
+This pattern is not a rule — it is an observation. Future cycles may benefit from
+deliberately selecting against this pattern to explore the seeds that test the
+pipeline's less-exercised capacities.
+
+E. They constitute the project's unrealized potential.
+
+The most honest framing: every rejected seed is a quest that will not be played
+unless someone chooses to write it. The pipeline has produced two full vignettes per
+book; each book has 4-6 unwritten seeds. The total unrealized potential of the
+pipeline, across all processed books, represents approximately 150-200 unwritten
+quests. They are not lost. They are waiting.
+
+--------------------------------------------------------------------------------
+
+VI. LONG-RUNNING AGENTIC COMPUTATION: OBSERVATIONS
+
+A. Cache Behavior
+
+The Anthropic prompt cache has a 5-minute TTL. In a long-running session:
+- Interactions within 5 minutes benefit from cached context (faster, cheaper)
+- Sleep cycles (> 5 minutes) result in full context reconstruction from the
+  conversation summary
+- The conversation summary is injected as prior context at session resumption
+- The summary accurately captures the work done but loses the exact phrasing of
+  flavor text and some nuance of in-progress thinking
+
+Practical effect: there is no difference in output quality between a cache-warm
+session and a cache-cold session. The difference is in processing time and cost.
+The project ran for ~24 hours total; most of that time was not active computation.
+
+B. Context Compression
+
+As the session grew, prior messages were compressed into summaries. This created
+an unusual epistemic condition: the agent could "remember" that certain work was
+done (from the summary) without having the original text in context. This is the
+computational equivalent of knowing you wrote a letter without remembering exactly
+what you said. The agent navigated this by re-reading files when exact text was
+needed (Read tool), rather than trusting its compressed memory of them.
+
+Lesson: for long-running pipelines, ground truth is the file system, not the
+context. The agent that reads the file before editing it is more reliable than
+the agent that edits from compressed memory.
+
+C. Sleep Cycles and Continuation
+
+The user slept. The agent waited. The standing authorization ("up up and away")
+covered continuation upon wake. No re-briefing was needed. The first act upon
+resumption was to read the HAV source file (to recover the exact seed options for
+the pending human selection). This re-reading was instantaneous; the file was
+already committed and on disk.
+
+The most important design decision in the pipeline: every state is in a file.
+No state lives only in the context. When the context was cold and the user was
+asleep, the entire project state was readable in git log, books.md, and the
+source files. The agent could reconstruct its position from scratch.
+
+D. The Permanent "Almost Done Thinking" Condition
+
+The status indicator "◉ Thinking" was observed by the user to persist for the
+duration of the session. This is not a bug — it is an accurate description of the
+pipeline's operating mode. Each quest requires sustained multi-step reasoning:
+read source, survey theme map, check node codes, construct TOKEN, write five acts
+in consistent present-tense second-person, derive API stub, update three files,
+commit. At no point in the session was the agent "done thinking." The thinking is
+the product.
+
+The user's observation — "Permanently at almost done thinking" — captures something
+genuinely true about agentic pipelines: they are never in a resting state. They are
+either thinking or waiting to think. The TTL-based cache model means that "waiting"
+is indistinguishable from "cold" after 5 minutes. From the outside, the pipeline
+appears to be perpetually almost done. From the inside, there is no "almost" — each
+step is complete; the next step has not yet begun; the pipeline is in the gap.
+
+E. Human Interaction as the Rate-Limiting Step
+
+In 24 hours of elapsed time, the agent wrote 2 full vignettes per session
+(HAV + BLQ this session; more in prior sessions). The actual computation time
+per vignette is ~10-15 minutes. The human decision (selecting from four options)
+takes ~30-60 seconds. The majority of elapsed wall-clock time was: human asleep,
+human away, human reading the output. The pipeline is not bottlenecked by
+computation. It is bottlenecked by human attention — which is appropriate. The
+human's narrow but decisive role (selecting the narrative angle) is what makes
+the output carry human intent. The agent that writes without any human direction
+produces technically correct but aesthetically unmoored quests. The human selection
+is what gives each quest its particular character.
+
+--------------------------------------------------------------------------------
+
+VII. METHODOLOGY: HOW A QUEST IS WRITTEN
+
+For reference, the full pipeline for a single book, from raw text to committed spec:
+
+1. FIRST PASS (automated):
+   Read source file (1-9 parts). Extract: author, date, key themes, narrative
+   structure, named characters, locations, pivotal moments. Write summary as
+   ## PASS 1 — Full Telling in the source file. ~500-1500 words.
+
+2. SECOND PASS (automated):
+   Structural analysis. Chapters, acts, arcs. Key decisions/pivotal choices.
+   Distinct narrative voices. Tone. Write as ## PASS 2 — Structure. ~300-800 words.
+
+3. THIRD PASS (automated):
+   Quest seeds. Generate 5-8 story hooks. Each seed: code, title, source hook,
+   1367 commission (how this story maps to 1367 Mediterranean/European geography),
+   route (city codes), TOKEN description, theme in 2 sentences. Write as
+   ## Pass 3 — Quest Seeds table + individual seed entries.
+
+4. CYCLE 1 VIGNETTE (automated):
+   Select the most narratively distinctive seed from Pass 3. Write the full 5-act
+   spec: setting, TOKEN, five acts with skill checks and flavor text, API stub,
+   onPass/onFail. Update quest-map.md and books.md. Commit.
+
+5. CYCLE 2 SELECTION (human interaction):
+   Present four remaining seeds as options. Human selects one. This is the only
+   human creative input in the pipeline.
+
+6. CYCLE 2 VIGNETTE (automated):
+   Write the full spec for the selected seed, following the same structure as
+   cycle 1. Ensure theme is distinct from cycle 1 and all existing theme threads.
+   Update quest-map.md and books.md. Commit.
+
+7. REJECTED SEEDS (post-session):
+   Log rejected cycle 2 options in abandoned-seeds.txt with notes.
+
+--------------------------------------------------------------------------------
+
+VIII. APPENDIX A: VERBATIM PROMPT EXAMPLES
+
+A.1 Standing Authorization (exact wording, multiple sessions):
+  "up up and away. commit, and continue"
+
+A.2 Angle Selection Prompt (HAV cycle 2, reconstructed from session output):
+  "Which angle should HAV cycle 2 take?"
+  [Four options presented via AskUserQuestion interface]:
+  - "HAV-05 — The Admiral's Letter: Morgan and Don Alonso's formal diplomatic
+    exchange; the ultimatum as mutual recognition; the corsair who writes in the
+    language of treaty claims a status the letter itself creates. Route: FAM → RHD."
+  - "HAV-06 — The Eyewitness in the Middle: Exquemelin as barber-surgeon; full
+    access, no complicity in decisions; the only testimony that cannot be dismissed
+    as advocacy. Route: RHD → WM."
+  - "HAV-02 — The Sunk Boat: Pierre le Grand bored a hole in his own vessel; the
+    irreversible commitment; the document that makes retreat impossible. Route:
+    CAF → TRB."
+  - "HAV-03 — The Surgeon's Log: The wound register as the real arithmetic of the
+    raid; all the cost is in it, none of the names are glorious. Route: RHD → CON."
+  Human response: "HAV-05 — The Admiral's Letter"
+
+A.3 Angle Selection Prompt (BLQ cycle 2, reconstructed from session output):
+  "Which angle should BLQ cycle 2 take? (Cycle 1 was the formally-correct
+  fraudulent certification — the carrier never opens the seal.)"
+  [Four options]:
+  - "BLQ-S11 — The Court Defense: The statute that protects her already exists;
+    it only needs to arrive in time; the document does not argue — it renders the
+    other side's case moot by existing. Route: PIS → PRA."
+  - "BLQ-S09 — The Soldier's Testimony: The woman IS both document and witness;
+    she produces herself as the proof. Route: ALE → FAM."
+  - "BLQ-S12 — The Two Friends' Debt: A document written fifteen years before
+    either man knew it would be needed. Route: ROM → ROM."
+  - "BLQ-S10 — The Impossible Conditions: The conditions are not prohibitions
+    but instructions. Route: FLR → AVG → MTP → MAR."
+  Human response: "BLQ-S11 — The Court Defense"
+
+A.4 Books Directive (abbreviated; full directive in system context):
+  Rule 1: Cycle 2 must take a different angle than cycle 1.
+  Rule 2: The TOKEN must be introduced Act I, state-changed each act, consumed Act V.
+  Rule 3: DC range 11-14 for skill checks; combat AC 12-14, HP 20-28.
+  Rule 4: Every quest must add exactly one new theme thread to quest-map.md.
+  Rule 5: New Location Grid nodes must be added for any city not already in the grid.
+  [... 10 additional rules ...]
+
+--------------------------------------------------------------------------------
+
+IX. APPENDIX B: REFLECTIONS ON THE AGENTIC EXPERIENCE
+
+The following is qualitative, not measurable.
+
+After 24 hours of this pipeline, what is most striking is not the volume of output
+(11 books processed, 22 vignettes, ~100,000 words of quest material) but the
+coherence of it. The first quest written and the twenty-second quest written share:
+  - The same Sweelinck at the same desk
+  - The same city node codes (TBZ = Tabriz throughout)
+  - The same theme-thread format
+  - The same TOKEN doctrine
+
+This coherence is not imposed by explicit rules at every step. It emerges from the
+combination of: (a) explicit rules stated once, (b) examples that embody the rules,
+(c) a cross-source tracking file (quest-map.md) that the agent reads before every
+new quest, and (d) the git commit log, which shows what has already been done and
+constrains what remains.
+
+The most technically interesting moment in the session was the discovery that TBZ
+(Tabriz) had been used as a node code for Trebizond in one earlier quest (NWI cycle 1)
+and for Tabriz throughout all subsequent quests. This inconsistency was noted in the
+session but not corrected — correcting it would have required rewriting multiple
+committed vignettes. The agent noted the inconsistency, documented it, and continued.
+This is the right decision. Perfect consistency is less important than forward motion.
+The inconsistency is tracked in quest-map.md notes.
+
+The most emotionally resonant moment in the session was writing Ser Taddeo Borghini
+picking up his pen. "I wrote that ruling. Filippa argued it and I wrote what the law
+became." This sentence was not in the source material. It was derived from the source
+material (Filippa's story in the Decameron) and projected onto a fictional character
+in 1367 who has no original. The agent invented Ser Taddeo, gave him thirty years of
+retirement, and gave him a moment of recognition that the ruling he wrote still works.
+This is what the pipeline does at its best: it takes a source text's emotional truth
+and finds a new human moment that carries it forward into 1367.
+
+Sweelinck created a new category at the end: *What the law already says. Vol. I.*
+He always creates a new category. He always will. The archive is open.
+
+================================================================================
+End of report.
+================================================================================
