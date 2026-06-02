@@ -165,16 +165,16 @@ Main vignette **CAI-01 "The Seventh Day"** is fully spec'd with UQF v1.0 JSON, 5
 
 The following quest seeds were generated from full narrative recall. Each has a paragraph-length story concept in CAI-arabian-nights-lang.md. They need full vignette treatment.
 
-### §CAI-02 — Aladdin's Registration (Aladdin cycle)
+### §CAI-02 — Aladdin's Registration (Aladdin cycle) ✓ DONE 2026-06-02
 A Syrian legal records collection contains a marriage contract template from the same period and region as the Aladdin story that uses identical formulary — suggesting the story was constructed around a real document type. Fighter escorts the template collection from a Damascus archive.
 
 ### §CAI-03 — The Inventor's Patent (Enchanted Horse) ✓ DONE 2026-06-02
 A Baghdad archive of craft guild records from the 9th century contains a filing for a Persian mechanism of copper and silver capable of directed aerial travel, requiring two operator inputs. Fighter escorts it from Baghdad to a neutral archive.
 
-### §CAI-04 — Prince Ahmed's Arrow (Prince Ahmed cycle)
+### §CAI-04 — Prince Ahmed's Arrow (Prince Ahmed cycle) ✓ DONE 2026-06-02
 A Syrian folk tale collection contains an account by a parish priest of a man who found an arrow in the hills above Aleppo pointing at a cleft in the rock, entered the cleft, and found a spring of unusual quality. Written down as a curiosity. Fighter escorts the parish account.
 
-### §CAI-05 — The Deathbed Instruction (Noureddin cycle)
+### §CAI-05 — The Deathbed Instruction (Noureddin cycle) ✓ DONE 2026-06-02
 Noureddin's father's instruction — never sell the slave girl — matches a specific legal instrument type: the conditional manumission prohibition. A Damascus archive has a collection of such instruments from the same period. Fighter escorts the collection.
 
 ### §CAI-06 — The Syrian Storyteller's Notes (Frame narrative tradition) ✓ DONE 2026-06-02

@@ -477,6 +477,9 @@ Game cities are canonical. Source-book settings are proposed new nodes.
 | IST-04 | The Bryennios Draft | 3 | CON → RGS → WM | The unfinished draft survives because suppression requires publication; the husband's prior account names what the wife's defense required her to omit |
 | IST-05 | The Devol Treaty Copy | 4 | PAR → RGS → WM | The document hidden by the losing party's own side — not to conceal defeat from the enemy but to conceal submission from allies |
 | IST-06 | The Exile Letter | 5 | CON → WM | The commissioning letter for the archive's own contents; the origin of the collection is itself in the collection |
+| CAI-02 | Aladdin's Registration | 6 | DAM → ANT → WM | The blank form precedes the story; the story was constructed around a Syrian-Persian legal instrument type; the template and the narrative illuminate each other |
+| CAI-04 | Prince Ahmed's Arrow | 7 | ALP → LAT → WM | The parish record of the unexplained; the account arrives and discovers the archive already holds the other end of it |
+| CAI-05 | The Deathbed Instruction | 8 | DAM → ALE → WM | The legal instrument that is the story's emotional center; the story is the breach case that the form was designed to prevent |
 
 *When a new quest is written, append its row to the Processed Quests table.*
 *When a new location is used, append its row to the Location Grid.*

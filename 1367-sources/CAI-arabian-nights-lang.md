@@ -1465,3 +1465,618 @@ activateMissionBit: cai07SurveyComplete
 ---
 
 *CAI-07 complete. 2026-06-02.*
+
+---
+
+## Cycle 6 — Angle: *Aladdin's Registration — The Template That Came Before the Story*
+
+**What this angle reveals that cycles 1-5 missed**: Cycle 1: the story as advocacy in oral transmission. Cycle 2: the codicil that keeps the oral genealogy attached to the written text. Cycle 3: the session notes recording the storyteller's awareness of being inscribed. Cycle 4: the guild patent for the impossible mechanism. Cycle 5: the geographic survey's neutral language as primary data. Cycle 6 shows something else: not the story being written down, not the tradition being lost, but the blank document form that existed before the story — and the possibility that the story was built around it. The Aladdin marriage contract uses a form specific to Syrian-Persian notarial practice, with three exact clauses. A Damascus notary's template collection from the same region and period contains the same three clauses. The story was not inspired by the form. The story was constructed around the form. The template explains the story better than the story explains itself.
+
+**Themes avoided:** oral tradition at moment of contact (Cycle 3); archive receives claims not verifications (Cycle 4); neutral surveyor's language as primary data (Cycle 5); story as advocacy (Cycle 1); the codicil that preserves the genealogy (Cycle 2).
+
+**New theme chosen:** "The blank document form precedes the story; the story was constructed around a known legal instrument type; the template and the narrative illuminate each other in ways neither intended."
+
+---
+
+### 5-Act Vignette: *Aladdin's Registration*
+
+#### The Token
+
+The Damascus Template Register: a bound collection of blank Syrian-Persian legal forms, 9th century, compiled by a Damascus notary who traveled to Persia on commission. Each form has a heading, three blank clauses, and a space for witnesses. A handwritten note on the inside cover reads: *These forms are suitable for any region of Syria or Persia where the practice of documented marriage is observed.* Page 17 is a marriage contract form with three specific clauses. The register has been in Damascus for five hundred years.
+
+*The Damascus Template Register · bound, 9th-century, page 17 open · Damascus legal archive shelf · waiting*
+
+---
+
+#### Act I — Damascus (DAM)
+
+*The Damascus legal archive is in the lower floor of a notary family's house, three streets back from the main market. The family has been in Damascus for ten generations. The current head is Ibrahim al-Tawil, and Ibrahim is eighty-two years old and has no children.*
+
+He shows the Fighter the register without being asked. He has been waiting for someone to come for it. He is giving it to the archive because he cannot give it to a son. He is not sad about this. He is methodical. He explains what the collection is, what it is not, and what he noticed about page 17 forty years ago. He says: "The story of Aladdin — have you heard it? The marriage contract in that story. Three clauses. Same clauses. Same order. This is where whoever wrote that story learned what a marriage contract looked like." He does not say whether the writer was lying or remembering.
+
+`grantItem: "Damascus Template Register"`
+
+*The Damascus Template Register · accepted, page 17 open, the three clauses side-by-side with Ibrahim's memory of the Aladdin text · Fighter's hands · Damascus archive*
+
+**Skill Check — History DC 12:** *Understand the significance of the three-clause match — whether it suggests the story was composed by someone with access to this specific legal tradition.*
+
+*pass:* The three clauses are not general. They are Syrian-Persian notarial practice, specific to a narrow geographic and temporal range. The story was written by someone who knew what Syrian marriage contracts looked like in the 9th century. *The story is not folklore. It is a construction. Someone built a story around a form they knew.*
+
+*fail:* The match is noted as an interesting parallel. The register leaves as a legal history collection.
+
+---
+
+#### Act II — Damascus (DAM)
+
+*A Damascus court official arrives at the archive house twenty minutes after the Fighter accepts the register. He is from the Mamluk legal administration. The register is not on the official archive inventory because Ibrahim filed it under his personal collection, not the court's collection. The official has a document establishing that personal collections can be reviewed for court relevance when the family line is ending.*
+
+He is polite. He has authority. He is not interested in the template itself — he is interested in establishing whether the register was officially held. If it was, it transfers to the court on Ibrahim's death. If it was personal, it transfers to whoever Ibrahim gave it to.
+
+*The Damascus Template Register · in the Fighter's hands, the official reading Ibrahim's ownership documentation · Fighter's hands · Damascus archive room*
+
+**Skill Check — Persuasion DC 13:** *Argue that a blank form collection compiled by a private notary on a private commission is personal property under any reading of Mamluk archival law; a blank form has no court relevance unless it is used for a current proceeding.*
+
+*pass:* The official writes a notation in his review document: *personal collection, pre-dating current court inventory requirements; no court claim.* He leaves. *He is a functionary. He needed something to write, and the Fighter gave him something to write.*
+
+*fail:* He imposes a three-day review delay. The register remains in the archive house while the court decides. Delay: three days, then released.
+
+---
+
+#### Act III — Antioch (ANT)
+
+*The Venetian factor's house in Antioch — Ser Lorenzo, the same factor who managed the Ser Marco situation three months ago. He has heard about the register. A Venetian lawyer named Giacomo is in Antioch on a current inheritance case involving a Syrian family and a marriage contract dispute. The contract in question has three clauses. Giacomo wants the register as a precedent document.*
+
+Ser Lorenzo explains this calmly. He is not asking the Fighter to sell it. He is asking whether the Fighter would permit a consultation — Giacomo reads page 17, writes a legal opinion, and the register continues to Weimar. He notes that Giacomo's fee is contingent on finding the right precedent, and that Giacomo is motivated.
+
+*The Damascus Template Register · in the satchel, Ser Lorenzo's hand resting on the table · Fighter's pack · Antioch factor's house*
+
+**Skill Check — Persuasion DC 12:** *Argue that a 500-year-old blank form cannot serve as legal precedent in a current case — it establishes what a form looked like, not what a current contract means; Giacomo can consult the archive directly when it is processed.*
+
+*pass:* Ser Lorenzo considers. He tells Giacomo. Giacomo is annoyed but precise — he knows the difference between a historical parallel and a precedent. He will cite the Weimar archive when it has processed the register. *He is a lawyer. He will find another angle. He always does.*
+
+*fail:* Giacomo copies page 17 before the register continues. The copy will be used in the case. The register itself continues intact.
+
+---
+
+#### Act IV — Road North of Antioch
+
+*Three men on the road at the first waystation north of Antioch. They are not Giacomo's men. They are the opposing party in the inheritance dispute — a Syrian family who stands to lose if page 17 confirms the three-clause form as standard practice for their region. If the form is standard, their opponent's contract was properly executed. They do not want the register to reach an institution that would say so.*
+
+*The Damascus Template Register · in the pack, the three men blocking the road · Fighter · waystation north of Antioch*
+
+**Combat:** 3 hired agents — AC 12, HP 16. Stop at half health when the road becomes more expensive than the case. *failText:* They take the register. The waystation keeper has a horse. *passText:* All three down or withdrawn. The road north clear. *The form is five hundred years old. The family's claim is four years old. Time has already decided this, they just haven't read it yet.*
+
+---
+
+#### Act V — Weimar (WM)
+
+*Archivus Sweelinck reads the register. He reads page 17. He reads the Aladdin story — the Galland version, which the archive holds in a French translation. He reads the marriage contract scene. He reads page 17 again.*
+
+"Three clauses," he says. "Same order." He traces the language. "The Galland version has this translated from a French version of the story Hanna Diyab told. But the clauses — these are not general Arabic. This is Syrian-Persian notarial practice. Specific period, specific region." He sets down the register. "Whoever composed this story had seen a Syrian marriage contract." He pauses. "Or was a Syrian notary. Or had trained as one."
+
+He opens the intake book. "The story is not folklore that resembles a form. The form was the model. The story was the application."
+
+He writes: *Document Form Collections — Narrative Parallels: collections of blank legal forms for which a specific literary narrative employs the same form type; primary evidence for the intersection of legal practice and narrative composition; the blank precedes the story; the story is a populated version of the form.*
+
+He notes: "Cross-reference to CAI-01, CAI-02. The same tradition produced the story and the form. The archive now holds both."
+
+*The Damascus Template Register · page 17 open, the Aladdin text beside it · Archivus Sweelinck · Weimar intake desk*
+
+"You receive the Syrian Marriage Contract Archive Record."
+
+`takeItem: "Damascus Template Register"`
+`grantItem: "Syrian Marriage Contract Archive Record"`
+
+---
+
+### Quest API Stub — CAI-02
+
+```json
+{
+  "quest_id": "CAI-02",
+  "title": "Aladdin's Registration",
+  "cycle": 6,
+  "book": "CAI — Arabian Nights (Andrew Lang / Galland tradition)",
+  "token": "Damascus Template Register",
+  "route": ["DAM", "ANT", "WM"],
+  "theme": "The blank document form precedes the story; the story was constructed around a known legal instrument type; the template and the narrative illuminate each other in ways neither intended",
+  "archive_category": "Document Form Collections — Narrative Parallels",
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "DAM",
+      "type": "skill_check",
+      "activateNode": "DAM",
+      "scene": "Damascus legal archive. Ibrahim al-Tawil, 82, no heirs. He noticed forty years ago: the Aladdin marriage contract uses three clauses in the same order as page 17 of his family's 9th-century Syrian-Persian template register. 'This is where whoever wrote that story learned what a marriage contract looked like.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Understand the significance of the three-clause match — whether it suggests the story was composed by someone with access to this specific legal tradition.",
+        "failText": "The match noted as an interesting parallel. The register leaves as a legal history collection.",
+        "passText": "Syrian-Persian notarial practice, specific to a narrow geographic and temporal range. The story was constructed by someone who knew these forms. It is not folklore — it is a construction built around a form they knew."
+      },
+      "grantItem": "Damascus Template Register",
+      "checkPassFlag": "cai02Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "DAM",
+      "type": "skill_check",
+      "activateNode": "DAM",
+      "scene": "A Mamluk court official arrives with a document establishing that personal collections can be reviewed for court relevance when a family line is ending. He is polite, has authority, and needs something to write.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "prompt": "Argue that a blank form collection on a private commission is personal property; a blank form has no court relevance unless used for a current proceeding.",
+        "failText": "Three-day review delay. The register remains in the archive house while the court decides, then released.",
+        "passText": "He writes: 'personal collection, pre-dating current court inventory requirements; no court claim.' He leaves. He needed something to write, and the Fighter gave him something to write."
+      },
+      "checkPassFlag": "cai02Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "ANT",
+      "type": "skill_check",
+      "activateNode": "ANT",
+      "scene": "Antioch factor's house. A Venetian lawyer named Giacomo is in a current inheritance case with a Syrian marriage contract dispute — three clauses. He wants the register as a precedent document. He is motivated and precise.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "prompt": "Argue that a 500-year-old blank form cannot serve as legal precedent in a current case — it establishes what a form looked like, not what a current contract means.",
+        "failText": "Giacomo copies page 17 before the register continues. The copy will be used in the case. The register continues intact.",
+        "passText": "He is a lawyer. He will find another angle. He always does. He will cite the archive when it has processed the register. The register continues."
+      },
+      "checkPassFlag": "cai02Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "road_antioch_north",
+      "type": "combat",
+      "activateNode": "ANT",
+      "scene": "Waystation north of Antioch. Three men from the opposing party in the inheritance dispute. If page 17 confirms the three-clause form as standard practice, their opponent's contract was properly executed. They do not want the register to reach an institution that would say so.",
+      "combat": {
+        "enemies": 3,
+        "AC": 12,
+        "HP": 16,
+        "description": "Hired agents — stop at half health when the road becomes more expensive than the case",
+        "failText": "They take the register. The waystation keeper has a horse.",
+        "passText": "All three down or withdrawn. The form is 500 years old. The family's claim is four years old. Time has already decided this — they just haven't read it yet."
+      },
+      "checkPassFlag": "cai02Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck reads the register beside the Aladdin text. 'Three clauses. Same order. Syrian-Persian notarial practice. Specific period, specific region. Whoever composed this story had seen a Syrian marriage contract. The blank precedes the story. The story is a populated version of the form.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Confirm the composition: the Galland/Lang tradition preserves stories told by Hanna Diyab, who was Syrian — the form and the story come from the same tradition.",
+        "failText": "Filed under Syrian Legal History Collections. Cross-reference to CAI Arabian Nights manuscript created.",
+        "passText": "Sweelinck writes: 'Document Form Collections — Narrative Parallels: collections of blank legal forms for which a specific literary narrative employs the same form type; the blank precedes the story; the story is a populated version of the form.' Cross-reference to CAI-01, CAI-02. You receive the Syrian Marriage Contract Archive Record."
+      },
+      "takeItem": "Damascus Template Register",
+      "grantItem": "Syrian Marriage Contract Archive Record",
+      "checkPassFlag": "cai02Act5Passed",
+      "activateMissionBit": "caiAladdinComplete"
+    }
+  ]
+}
+```
+
+### New Node Proposals
+
+- **DAM** — Damascus Legal Archive District: the notarial quarter of Damascus in 1367, under Mamluk administration; three streets of family archive houses behind the main market, where legal families have kept documents for ten generations; the smell of old parchment and cedar oil; the administrative interface between Mamluk court jurisdiction and private notarial practice.
+
+---
+
+*CAI-02 complete. 2026-06-02.*
+
+
+---
+
+## Cycle 7 — Angle: *Prince Ahmed's Arrow — The Parish Account of Something Unusual*
+
+**What this angle reveals that cycles 1-6 missed**: The first six cycles have handled stories at the moment of being written, disputed, patented, surveyed, and legally documented. Cycle 7 shows the simplest form of primary testimony: a parish priest who recorded an unusual event because unusual events should be written down. He did not know what he was recording. He described it accurately and then stopped. The parish account of the man who followed an arrow into the Aleppo hills and did not return is not a mystical record — it is a matter-of-fact notation of the unexplained, made by a professional notary of the ordinary who extended his scope to cover one extraordinary datum.
+
+**Themes avoided:** oral tradition at moment of contact (Cycle 3); archive receives claims (Cycle 4); neutral surveyor's language (Cycle 5); story constructed around a form (Cycle 6); story as advocacy (Cycle 1); genealogical codicil (Cycle 2).
+
+**New theme chosen:** "The parish record of the unexplained; the priest wrote it because unusual things should be written down; the account arrives at the archive and discovers that the archive already holds the other end of it."
+
+---
+
+### 5-Act Vignette: *Prince Ahmed's Arrow*
+
+#### The Token
+
+The Unusual Phenomena Register: a bound notebook in the hand of a 13th-century Syrian parish priest, recording twenty-three unusual natural and human events in the hills of Aleppo from 1247 to 1261. Page 47 records the case of Yusuf the fletcher, who found one of his arrows in the hills northeast of Aleppo pointing at a cleft in the rock, entered the cleft to retrieve it, and found a spring of unusual clarity and temperature inside. The entry ends: *He returned three days later but could not locate the cleft. NB — entry discontinued, man did not return for further testimony. Written 12 Rajab, 648 AH.*
+
+*The Unusual Phenomena Register · bound, page 47 marked with a red thread · parish archive box · Aleppo*
+
+---
+
+#### Act I — Aleppo (ALP)
+
+*The parish archive is a box on a shelf in the sacristy of a Syrian Christian church in Aleppo. The current priest, Father Elias, has been in this church for six years. He found page 47 while looking for an older baptism record. He has been thinking about it ever since.*
+
+He is not troubled by it. He is curious about it in the specific way of a man who respects documentation. "The priest who wrote this was careful," he says. "He did not speculate. He did not explain. He wrote what Yusuf told him and when the testimony stopped, he stopped." He thinks the register should be with a collection that can interpret it. He has heard of the Weimar archive.
+
+`grantItem: "Unusual Phenomena Register"`
+
+*The Unusual Phenomena Register · accepted, page 47 open · Fighter's hands · Aleppo sacristy*
+
+**Skill Check — Investigation DC 11:** *Read page 47 carefully enough to note the specific direction of the arrow and the date.*
+
+*pass:* The arrow pointed northeast. The date is specific: 1247. The year of the Crusaders' defeat at La Forbie. *The hills northeast of Aleppo, 1247. A year when people were moving through those hills for reasons other than surveying.*
+
+*fail:* The entry noted as an unusual natural phenomena account. No specific inference.
+
+---
+
+#### Act II — Aleppo (ALP)
+
+*A guild of Aleppan surveyors has a man at the church gate. The surveyors have been trying to map the northeast hills for three years, and they have run into several anomalies. They want to see the register — specifically, page 47 — before it leaves Aleppo.*
+
+The guild representative is professional and honest. He shows the Fighter three of his own survey notes: three locations in the northeast hills where survey instruments behave strangely. He is not looking for treasure. He is looking for a geological explanation. He says: "I do not need the original. I need to know if the arrow direction in the priest's entry matches my third anomaly site."
+
+*The Unusual Phenomena Register · page 47 in the Fighter's hands, the guild representative pointing at his own map · Fighter's hands · church gate*
+
+**Skill Check — Nature DC 12:** *Assess whether the priest's directional notation and the guild's third anomaly site are the same location.*
+
+*pass:* The northeast arrow, the specific hill feature described, the temperature anomaly of the spring — the guild's third anomaly site has a similar temperature gradient. The two records point at the same place from different starting positions. *The priest was not writing mysticism. He was writing geology. He didn't know what that was yet.*
+
+*fail:* The guild representative's map is noted but not compared. The register continues.
+
+---
+
+#### Act III — Latakia (LAT)
+
+*The port of Latakia. A manuscript dealer named Fatimah has a buyer in Venice who collects unusual natural phenomena records — a Venetian nobleman building a private cabinet of curiosities. The register is exactly the kind of document he collects. She has been tracking it since Aleppo and arrived in Latakia first.*
+
+She makes a straightforward offer: fair price, paid in the harbor. She explains her buyer's purpose with more transparency than the situation requires: the nobleman is harmless, the record will be preserved, the Venice collection is serious. She is not apologizing for the offer. She is explaining why it is a good one.
+
+*The Unusual Phenomena Register · in the pack, Fatimah's receipt already written · Fighter's pack · Latakia harbor*
+
+**Skill Check — Persuasion DC 12:** *Explain that an unusual phenomena register is most useful when it is cross-referenced with other documents from the same region; the nobleman's private cabinet cannot provide that; the Weimar archive already holds at least one related document.*
+
+*pass:* Fatimah considers. "The archive has something from the same hills?" She is interested in the provenance chain. She withdraws the offer. *She is a professional. A document in the right collection is worth more than a document in the wrong collection — for reputation, if nothing else.*
+
+*fail:* She holds the register for one day while waiting for the nobleman's confirmation. She releases it when confirmation does not arrive by evening. Delay: one day.
+
+---
+
+#### Act IV — Latakia Harbor (LAT)
+
+*Two sailors from a ship in the harbor. Not the nobleman's men — they are from a Syrian merchant house that has interests in the northeast hills. Someone in the Aleppo guild told someone, and now the merchant house wants the register because the hills northeast of Aleppo are the subject of a boundary dispute, and unusual phenomena accounts can be used to establish that a piece of land has been noted in documented records.*
+
+*The Unusual Phenomena Register · in the pack, both sailors between the Fighter and the dock · Fighter · Latakia harbor road*
+
+**Combat:** 2 merchant sailors — AC 11, HP 18. Not fighters by trade. Stop at the first serious injury. *failText:* They take the register. The harbormistress's office is thirty meters away. *passText:* Both down or fled. The harbor road clear. *The hills are in the record now. They have been in the record since 1247. What the merchant house wants to control has already escaped them.*
+
+---
+
+#### Act V — Weimar (WM)
+
+*Archivus Sweelinck reads page 47. He reads it again. He opens a drawer and removes a folder. He sets it beside the register.*
+
+"We have a survey," he says. "CAI-07 — the Aleppo Hills Route Survey. The surveyor noted a cave entrance with unusual air temperature and a spring feature inside. He wrote it as a geographic record. He did not speculate." He compares the two entries. "The priest's arrow direction and the surveyor's cave entrance — six miles apart in the hills northeast of Aleppo. The temperature description matches." He sets both down. "Either the same location, accessed from two different approaches. Or two separate features. Either way, the archive now holds both ends of the same geological anomaly."
+
+He writes: *Geographic Records — Local Features of Uncertain Extent: parish accounts and geographic surveys of natural features that resist single-point mapping; primary evidence for features with multiple documented approaches; the archive holds both ends of what may be the same feature.*
+
+He notes: "Cross-reference: CAI-07 (The Aleppo Hills Survey). Neither document explains the other. Together they create a record that is larger than either."
+
+*The Unusual Phenomena Register · page 47 beside the CAI-07 folder · Archivus Sweelinck · Weimar intake desk*
+
+"You receive the Unusual Phenomena Classification Record."
+
+`takeItem: "Unusual Phenomena Register"`
+`grantItem: "Unusual Phenomena Classification Record"`
+
+---
+
+### Quest API Stub — CAI-04
+
+```json
+{
+  "quest_id": "CAI-04",
+  "title": "Prince Ahmed's Arrow",
+  "cycle": 7,
+  "book": "CAI — Arabian Nights (Andrew Lang / Galland tradition)",
+  "token": "Unusual Phenomena Register",
+  "route": ["ALP", "LAT", "WM"],
+  "theme": "The parish record of the unexplained; the priest wrote it because unusual things should be written down; the account arrives at the archive and discovers that the archive already holds the other end of it",
+  "archive_category": "Geographic Records — Local Features of Uncertain Extent",
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "ALP",
+      "type": "skill_check",
+      "activateNode": "ALP",
+      "scene": "Aleppo sacristy. Father Elias found page 47 while looking for a baptism record. The priest who wrote it was careful: he did not speculate, did not explain. He wrote what Yusuf told him and stopped when the testimony stopped.",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 11,
+        "prompt": "Read page 47 carefully enough to note the specific arrow direction and date.",
+        "failText": "The entry noted as an unusual natural phenomena account. No specific inference.",
+        "passText": "The arrow pointed northeast. The date: 1247 — La Forbie year. The hills northeast of Aleppo, a year when people were moving through those hills for reasons other than surveying."
+      },
+      "grantItem": "Unusual Phenomena Register",
+      "checkPassFlag": "cai04Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "ALP",
+      "type": "skill_check",
+      "activateNode": "ALP",
+      "scene": "Church gate. An Aleppan surveyor with three anomaly-site notes from the northeast hills. He is not looking for treasure — he is looking for a geological explanation. Survey instruments behave strangely at his third site.",
+      "skillCheck": {
+        "skill": "Nature",
+        "dc": 12,
+        "prompt": "Assess whether the priest's directional notation and the guild's third anomaly site describe the same location.",
+        "failText": "The guild representative's map noted but not compared. Register continues.",
+        "passText": "The northeast arrow, the specific hill feature, the temperature anomaly of the spring — the two records point at the same place from different starting positions. The priest was not writing mysticism. He was writing geology. He didn't know what that was yet."
+      },
+      "checkPassFlag": "cai04Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "LAT",
+      "type": "skill_check",
+      "activateNode": "LAT",
+      "scene": "Latakia harbor. Manuscript dealer Fatimah has a Venetian nobleman buyer building a private cabinet of curiosities. She makes a transparent, fair offer and explains the buyer's purpose. She is not apologizing — she is explaining why it is a good one.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "prompt": "Explain that an unusual phenomena register is most useful when cross-referenced with related documents; the Weimar archive already holds at least one related document from the same hills.",
+        "failText": "She holds the register one day waiting for nobleman confirmation. Released by evening. Delay: one day.",
+        "passText": "She is interested in the provenance chain. 'The archive has something from the same hills?' A document in the right collection is worth more than a document in the wrong one — for reputation, if nothing else. She withdraws."
+      },
+      "checkPassFlag": "cai04Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "LAT",
+      "type": "combat",
+      "activateNode": "LAT",
+      "scene": "Latakia harbor road. Two sailors from a Syrian merchant house with interests in the northeast hills — the hills are subject to a boundary dispute. Unusual phenomena accounts can establish that a piece of land has been noted in documented records.",
+      "combat": {
+        "enemies": 2,
+        "AC": 11,
+        "HP": 18,
+        "description": "Merchant sailors — not fighters by trade; stop at first serious injury",
+        "failText": "They take the register. The harbormistress's office is thirty meters away.",
+        "passText": "Both down or fled. The hills have been in the record since 1247. What the merchant house wants to control has already escaped them."
+      },
+      "checkPassFlag": "cai04Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck pulls the CAI-07 folder. Sets it beside the register. 'The surveyor's cave entrance and the priest's arrow — six miles apart in the hills northeast of Aleppo. Temperature description matches. Either the same location from two approaches, or two separate features. Either way, the archive holds both ends of the same geological anomaly.'",
+      "skillCheck": {
+        "skill": "Nature",
+        "dc": 11,
+        "prompt": "Confirm the geological consistency — the spring temperature described in both accounts and the northeast orientation match a specific limestone karst feature type.",
+        "failText": "Filed under Unusual Natural Phenomena — Syrian Region. Cross-reference to CAI-07 created.",
+        "passText": "Sweelinck writes: 'Geographic Records — Local Features of Uncertain Extent: parish accounts and geographic surveys of features that resist single-point mapping; the archive holds both ends of what may be the same feature.' Cross-reference: CAI-07. You receive the Unusual Phenomena Classification Record."
+      },
+      "takeItem": "Unusual Phenomena Register",
+      "grantItem": "Unusual Phenomena Classification Record",
+      "checkPassFlag": "cai04Act5Passed",
+      "activateMissionBit": "caiAhmedComplete"
+    }
+  ]
+}
+```
+
+---
+
+*CAI-04 complete. 2026-06-02.*
+
+
+---
+
+## Cycle 8 — Angle: *The Deathbed Instruction — The Legal Form That Is the Story's Emotional Center*
+
+**What this angle reveals that cycles 1-7 missed**: The first seven cycles have shown stories being written, transcribed, patented, surveyed, documented, and recorded. Cycle 8 shows that one of the Arabian Nights stories is structured around a specific legal instrument that existed before the story — not a marriage contract template (as in Cycle 6) but a conditional manumission prohibition, the exact legal form Noureddin's father uses when he says "never sell the slave girl." The instruction that feels like a father's dying wish is, in legal terms, a specific clause type: a prohibition on transfer of a slave held under conditional manumission terms. A Damascus archive holds a collection of these instruments from the 9th century. The story is the case that the form was designed to prevent.
+
+**Themes avoided:** blank form precedes story (Cycle 6); parish account of the unexplained (Cycle 7); story as advocacy (Cycle 1); genealogical codicil (Cycle 2); oral tradition at contact (Cycle 3); guild patent (Cycle 4); neutral surveyor's language (Cycle 5).
+
+**New theme chosen:** "The legal instrument that is the story's emotional center; the father's instruction is a known legal form; the story is the case that the form was designed to prevent; the archive receives both the form and the breach."
+
+---
+
+### 5-Act Vignette: *The Deathbed Instruction*
+
+#### The Token
+
+The Conditional Manumission Prohibition Collection: a bound set of twenty-two legal instruments from Damascus, 9th-10th century, each using the same core clause: *this slave shall not be sold, given, or transferred during the master's lifetime or for the period of forty days following his death, and thereafter only with the express consent of his designated heir.* The instruments vary in formulation. The core clause does not vary. The collection was compiled by a Damascus notary family as a reference archive for contested inheritance cases.
+
+*The Conditional Manumission Prohibition Collection · bound, twenty-two instruments, the core clause identical in each · Damascus notarial archive shelf · waiting*
+
+---
+
+#### Act I — Damascus (DAM)
+
+*The same notarial quarter of Damascus where Ibrahim al-Tawil's family kept the template register. The family that holds this collection is three streets east. The current head is a woman named Sitt al-Wuzara, who manages the archive with her youngest son. The Ottoman advance has made Damascus difficult for documented slave-related legal holdings — not dangerous yet, but the Ottoman legal administration has been conducting surveys.*
+
+She does not give the collection to the Fighter without a long conversation. She wants to know where it is going, why, and whether the archive will understand what it is. She says: "These are not interesting documents on their own. They are interesting when you read them against the story." She means the Noureddin story. She has read the Arabian Nights in a Damascus version and she understood the connection fifteen years ago. She has been looking for the right place for this collection ever since.
+
+`grantItem: "Conditional Manumission Prohibition Collection"`
+
+*The Conditional Manumission Prohibition Collection · accepted, the core clause read once · Fighter's hands · Damascus archive house*
+
+**Skill Check — History DC 12:** *Understand the specific legal mechanism — the conditional manumission prohibition is a specific clause type, not a customary phrase; it creates a legally binding restriction on transfer that survives the master's death for forty days.*
+
+*pass:* The forty-day waiting period is specific and not coincidental. The Noureddin story uses the exact mechanism: the father instructs the heir, the heir violates the instruction, the heir faces consequences. *The instruction is not emotional. It is contractual. The father was not expressing love. He was creating a legal obligation. The story is the breach case.*
+
+*fail:* The clause noted as standard manumission language. The collection leaves as a legal history archive.
+
+---
+
+#### Act II — Damascus (DAM)
+
+*An Ottoman legal surveyor named Mehmet has been in the notarial quarter for three days. He is conducting a catalogue of slave-related legal instruments for administrative purposes. He is courteous and systematic. He wants to record the collection in his catalogue before it leaves Damascus — not to confiscate it, but to establish that it existed within Ottoman-administered territory.*
+
+He is doing his job. He has a clipboard and a good pen. He will be in Damascus for six more weeks. He will record everything in the notarial quarter. He cannot be deceived or bullied. He can be negotiated with on the question of timeline.
+
+*The Conditional Manumission Prohibition Collection · in the Fighter's hands, Mehmet's clipboard open · Fighter · Damascus archive doorway*
+
+**Skill Check — Persuasion DC 13:** *Negotiate a parallel process — the collection is recorded in Mehmet's catalogue simultaneously with its departure; the Fighter allows him to copy the title page and the core clause; the Weimar archive will publish the full catalogue record back to the Ottoman administration when processed.*
+
+*pass:* Mehmet considers. He is systematic, not territorial. A record of the collection's departure to a foreign archive with a return publication commitment satisfies his administrative requirement. He writes: *departed for foreign archive; record to follow.* He lets them pass. *He will be in Damascus for six more weeks. He will find other things to record.*
+
+*fail:* He requires a three-day delay for administrative processing. The collection is released after three days.
+
+---
+
+#### Act III — Alexandria (ALE)
+
+*The Alexandria Genoese factor's house. A Genoese merchant named Benedetto Gattiluso has a Syrian slave litigation case currently being heard by a Venetian commercial court. His opponent is claiming the transfer of a slave girl was prohibited by a clause in the original purchase agreement. Benedetto needs to establish that the clause type is standard and therefore does not create special obligations. He wants the collection to argue it either way.*
+
+The factor — not Gattiluso himself but his agent — makes a professional offer. He is not threatening. He is representing a client who has a legitimate commercial use for the document.
+
+*The Conditional Manumission Prohibition Collection · in the pack, the agent's letter of representation on the table · Fighter's pack · Alexandria factor's house*
+
+**Skill Check — Persuasion DC 12:** *Argue that a collection used in active litigation cannot reach the archive with an unbroken provenance chain; once used as a legal exhibit, the collection becomes part of the court record and cannot be archived independently.*
+
+*pass:* The agent consults. He sends a message to Gattiluso. Gattiluso agrees — he needs the collection to reach the archive before his opponent does, so the archive is the neutral ground. *He is a merchant. He can see the angle. He releases it.*
+
+*fail:* The agent holds the collection for two days. Released when Gattiluso decides the court case can proceed without it.
+
+---
+
+#### Act IV — Alexandria (ALE)
+
+*Two men from the opposing party in the Gattiluso case. They are not Genoese — they are Syrian merchants who want the collection because it establishes that the clause type creates specific obligations, which is exactly what their case needs. They do not want it to reach a neutral institution where both sides can cite it equally.*
+
+*The Conditional Manumission Prohibition Collection · in the pack, both men at the harbor gate · Fighter · Alexandria harbor road*
+
+**Combat:** 2 hired agents — AC 13, HP 20. Stop at half health when the case is not worth the cost. *failText:* They take the collection. The harbor gate has a customs officer. *passText:* Both down or withdrawn. *The clause is five hundred years old. Both sides of the case are litigating around a form that was already resolved before their grandfathers were born.*
+
+---
+
+#### Act V — Weimar (WM)
+
+*Archivus Sweelinck reads the collection. He reads the Noureddin story from the CAI archive copy. He reads the first instrument in the collection. He reads the Noureddin story again.*
+
+"The forty-day prohibition," he says. "The heir violates it on the thirty-ninth day. Not out of malice — out of pressing debt." He traces the clause. "The story knows the law. The heir knows the law. The buyer knows the law. Everyone in the story acts as if this clause is real because it is real. The story is not a parable about a father's love." He sets down the collection. "The story is a case study in what happens when a legal instrument is violated by the person it was meant to protect."
+
+He writes: *Legal Instrument Collections — Narrative Parallels: collections of specific legal instruments for which a narrative work depicts the exact breach case the instrument was designed to prevent; the archive holds the form and the breach; primary evidence for the intersection of legal practice and narrative composition as documentation of the same social problem.*
+
+He notes: "Cross-reference: CAI-02 (marriage contract template). The tradition that produced these stories used legal forms as narrative scaffolding. Both forms are now in the archive."
+
+*The Conditional Manumission Prohibition Collection · laid flat on the intake desk, the Noureddin text beside it · Archivus Sweelinck · Weimar intake desk*
+
+"You receive the Manumission Prohibition Archive Record."
+
+`takeItem: "Conditional Manumission Prohibition Collection"`
+`grantItem: "Manumission Prohibition Archive Record"`
+
+---
+
+### Quest API Stub — CAI-05
+
+```json
+{
+  "quest_id": "CAI-05",
+  "title": "The Deathbed Instruction",
+  "cycle": 8,
+  "book": "CAI — Arabian Nights (Andrew Lang / Galland tradition)",
+  "token": "Conditional Manumission Prohibition Collection",
+  "route": ["DAM", "ALE", "WM"],
+  "theme": "The legal instrument that is the story's emotional center; the father's instruction is a known legal form; the story is the case that the form was designed to prevent; the archive receives both the form and the breach",
+  "archive_category": "Legal Instrument Collections — Narrative Parallels",
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "DAM",
+      "type": "skill_check",
+      "activateNode": "DAM",
+      "scene": "Damascus notarial archive. Sitt al-Wuzara has been looking for the right place for this collection for fifteen years — she read the Noureddin story and understood the connection. 'These are interesting when you read them against the story.' The Ottoman administration is conducting surveys in the quarter.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Understand the specific legal mechanism — the forty-day waiting period, the binding restriction on transfer that survives the master's death.",
+        "failText": "The clause noted as standard manumission language. The collection leaves as a legal history archive.",
+        "passText": "The forty-day period is not coincidental. The Noureddin story uses the exact mechanism: the heir violates the instruction; the heir faces consequences. The instruction is not emotional — it is contractual. The father was creating a legal obligation. The story is the breach case."
+      },
+      "grantItem": "Conditional Manumission Prohibition Collection",
+      "checkPassFlag": "cai05Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "DAM",
+      "type": "skill_check",
+      "activateNode": "DAM",
+      "scene": "Ottoman legal surveyor Mehmet is cataloguing slave-related instruments in the notarial quarter. He is systematic and courteous. He wants to record the collection before it leaves Damascus — not to confiscate it, but to establish it existed within Ottoman-administered territory.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "prompt": "Negotiate a parallel process — the collection is recorded in his catalogue simultaneously with departure; the Weimar archive will publish the full catalogue record back to the Ottoman administration when processed.",
+        "failText": "Three-day administrative delay. Released after processing.",
+        "passText": "He is systematic, not territorial. He writes: 'departed for foreign archive; record to follow.' He lets them pass. He will be in Damascus six more weeks. He will find other things to record."
+      },
+      "checkPassFlag": "cai05Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "ALE",
+      "type": "skill_check",
+      "activateNode": "ALE",
+      "scene": "Alexandria factor's house. A Genoese merchant's agent has a current slave litigation case in a Venetian commercial court. Opponent claims a transfer was prohibited by a clause in the purchase agreement. The agent wants the collection to argue it either way.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "prompt": "Argue that a collection used in active litigation cannot reach the archive with an unbroken provenance chain — once used as a legal exhibit, it becomes part of the court record.",
+        "failText": "Agent holds collection two days. Released when merchant decides the case can proceed without it.",
+        "passText": "The merchant can see the angle — the archive is neutral ground, both sides can cite it equally. He releases it. He is a merchant. He can see the angle."
+      },
+      "checkPassFlag": "cai05Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "ALE",
+      "type": "combat",
+      "activateNode": "ALE",
+      "scene": "Alexandria harbor road. Two Syrian merchant agents from the opposing litigation party. They need the collection to establish that the clause type creates specific obligations — and they do not want it at a neutral institution where both sides can cite it equally.",
+      "combat": {
+        "enemies": 2,
+        "AC": 13,
+        "HP": 20,
+        "description": "Hired commercial agents — stop at half health when the case is not worth the cost",
+        "failText": "They take the collection. The harbor gate has a customs officer.",
+        "passText": "Both down or withdrawn. The clause is 500 years old. Both sides are litigating around a form that was resolved before their grandfathers were born."
+      },
+      "checkPassFlag": "cai05Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck reads the collection beside the Noureddin story. 'The story knows the law. Everyone in it acts as if this clause is real because it is real. The story is not a parable about a father's love — it is a case study in what happens when a legal instrument is violated by the person it was meant to protect.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Confirm the breach: the heir violates the clause on the thirty-ninth day out of pressing debt — the story depicts the exact scenario the form prohibits.",
+        "failText": "Filed under Syrian Legal History Collections — Manumission Records. Cross-reference to CAI Arabian Nights created.",
+        "passText": "Sweelinck writes: 'Legal Instrument Collections — Narrative Parallels: collections of specific legal instruments for which a narrative work depicts the exact breach case the instrument was designed to prevent; the archive holds the form and the breach.' Cross-reference: CAI-02. You receive the Manumission Prohibition Archive Record."
+      },
+      "takeItem": "Conditional Manumission Prohibition Collection",
+      "grantItem": "Manumission Prohibition Archive Record",
+      "checkPassFlag": "cai05Act5Passed",
+      "activateMissionBit": "caiNourreddinComplete"
+    }
+  ]
+}
+```
+
+---
+
+*CAI-05 complete. 2026-06-02.*
+
