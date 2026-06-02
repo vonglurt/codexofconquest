@@ -342,6 +342,250 @@ Appendix I: Murasaki Shikibu's dates (c. 978–1031). Appendix II: The Vestal Vi
 
 ---
 
+---
+
+## §AMS-02 — Vignette Cycle 2: "The Spirit's Account"
+
+### Cycle vs. Cycle — What This Angle Reveals
+
+Cycle 1 ("The Scarlet Fence Poem") took the angle of the anonymous gift: the sender's absence is the condition that makes the poem honest — the fan over the hedge with no name removes the sender's obligation and makes the receiver's act entirely their own. Honesty through absence.
+
+Cycle 2 takes the opposite: honesty through involuntary presence. Rokujô could not speak her claim in life without violating every social constraint the Heian court imposed. Her spirit spoke it exactly, through a dying woman, without those constraints — saying what she had waited years to say. The physician who wrote down what the spirit said has the most honest record of that love in existence, because the speaker had no ability to choose what to say. Cycle 1 was the chosen absence that creates freedom; cycle 2 is the unchosen presence that creates testimony.
+
+### TOKEN: "The Possession Case Folio"
+
+A physician's case folio in Mahmud al-Shirazi's careful hand: six pages, sewn into a leather cover, sealed with his ring-mark in brown wax. The folio records:
+- Pages 1–2 (black ink): Medical record — onset of symptoms, failure of fever treatments, reclassification of speech episodes
+- Pages 3–4 (red ink): Verbatim transcription of the speech produced during the possession episode — "not the patient's words; not anyone's authorized words"
+- Pages 5–6 (black ink): Medical and theological commentary; bibliography of medical and Sufi sources on states of consciousness
+
+The patient's name is replaced throughout with a single Arabic character (ن). The folio is sealed. Mahmud has not opened it since sealing it.
+
+**Token mechanics:**
+- `id`: "possession_case_folio"
+- `name`: "The Possession Case Folio"
+- `description`: "Physician's case folio, six pages. Black ink: medical record and commentary. Red ink (pages 3–4): verbatim transcription of speech produced during possession — the spirit's account, spoken without social constraint. Patient's name replaced with a single character throughout. Sealed with physician's ring-mark."
+- `grant_act`: 1
+- `take_act`: 5
+- `check_acts`: [2, 3, 4]
+
+### Nodes
+
+**New nodes required:** none — TBZ (Tabriz), BAG (Baghdad), and WM (Weimar) are all in quest-map.
+
+**Existing nodes used:**
+- `TBZ` — Tabriz, Jalayirid scholar quarter
+- `BAG` — Baghdad Sufi scholar quarter
+- `WM` — Weimar archive
+
+### Route
+
+`TBZ` (Tabriz — Mahmud al-Shirazi's study) → `BAG` (Baghdad — Sufi scholar Hafiz ibn Walid) → `WM` (Weimar archive)
+
+### Five-Act Vignette Play
+
+**Present tense. Second person. The Possession Case Folio is the grammatical subject of all TOKEN stage directions.**
+
+---
+
+**ACT I — "What the Physician Wrote Down" (Tabriz)**
+
+Mahmud al-Shirazi is small, precise, and has not slept well since he sealed the folio. He has been debating whether to send it for three weeks. The case is medically unambiguous: the speech produced during the possession episodes was not the patient's own — wrong register, wrong vocabulary, wrong grammatical person. He has documented this correctly. The problem is the red ink section.
+
+He sets the folio on the table. It is smaller than you expected.
+
+"I transcribed what the spirit said verbatim," he explains. "That section — pages three and four, the red ink — it identifies both parties. The spirit who traveled. The woman it spoke to. Anyone who reads it carefully and knows Tabriz could name them both."
+
+He looks at you.
+
+"The Weimar archive has a rule, I've been told. Documents received there are not opened for persons outside the archive's inquiry. Is that correct?"
+
+*Dialogue DC 12 — Insight: Mahmud needs to know whether you understand what you are actually carrying — not the medical record, which is dry and professional, but the red ink section, which is the rawest document in the folio. He is testing whether you know the difference.*
+
+*On success:* He nods. "Then take it to Hafiz ibn Walid in Baghdad first. Let him read it. He is the scholar I wrote it for. Whatever he decides to do with it afterward — forward it to the archive or not — is his judgment. I have already made mine." He slides the folio across the table. *The Possession Case Folio is in your hands, sealed, Mahmud's ring-mark unbroken.*
+
+*On fail:* He hands it over with a single instruction: "Do not let anyone open it before Baghdad."
+
+*TOKEN granted Act I — folio received, sealed, ring-mark intact.*
+
+---
+
+**ACT II — "Medical or Theological?" (Road south from Tabriz, Jalayirid-Mamluk border checkpoint)**
+
+A border checkpoint on the road south toward Baghdad. The officer has two document categories: religious texts (pass free, subject to theological inspection) and medical records (taxed at two silver, not opened for theological review). A physician's folio should be easy. Except the officer has heard about "Sufi spirit-possession accounts" circulating under cover of medical language and has orders to route any such documents to religious inspection.
+
+He looks at the folio's exterior — the physician's ring-mark, the medical format — and asks: "Is this a spirit-possession document?"
+
+*Skill check: Persuasion DC 12 — establish the folio as a physician's case record about fever and speech disorders, not a theological treatise on possession.*
+
+*On success:* He accepts the medical classification, collects two silver, and writes his notation: "Physician's case record — fever and altered speech, classified as medical." *The Possession Case Folio passes without being opened; the transit stamp is pressed onto its outer cover — a third mark besides Mahmud's seal.*
+
+*On fail:* He insists on theological review — the folio must wait two days for the regional cleric to examine its cover (he cannot read the medical content but will inspect it for religious risk). The cleric inspects, cannot read Mahmud's technical script, and releases it as "no clear religious content." Two days' delay.
+
+*TOKEN check Act II — transit stamp added to outer cover.*
+
+---
+
+**ACT III — "The Red Ink Section" (Baghdad)**
+
+Hafiz ibn Walid is a Sufi scholar with a long white beard and a very tidy study. He opens the folio's seal himself, reads the black-ink sections quickly, and then turns to pages three and four.
+
+He reads them slowly. He does not look up for a long time.
+
+When he finally looks up, he says: "This should not have been copied. The spirit said this privately — if we can call anything a spirit says 'private.' Mahmud was right to seal it. He was wrong to write it down."
+
+He takes a reed pen and writes in the margin of page three, in small letters: *"Red ink section: involuntary testimony — spoken outside the speaker's control; not the patient's words; not authorized by any party present. Note for the archive: this is not testimony anyone agreed to give."*
+
+He closes the folio and looks at you.
+
+"The archive must receive this before I am tempted to keep it. I have been tempted to keep it since I finished page four." He hands it back. "The jealousy that speaks through a dying woman proves the relationship was real. It is the most honest document I have been given. That is why I cannot keep it."
+
+*Dialogue DC 13 — Persuasion: Hafiz asks you to commit that the folio will reach Weimar without being examined en route. He wants your word, not a description of the route. Can you give it?*
+
+*On success:* He accepts your word. *The Possession Case Folio now has Hafiz's marginal note inside and his seal-break on the cover; you must reseal it before the road north.*
+
+*On fail:* He gives you the folio but remains visibly unsatisfied. He does not stop you.
+
+*TOKEN check Act III — marginal note added; folio must be resealed.*
+
+---
+
+**ACT IV — "The Road North" (Tigris road north from Baghdad, toward Anatolia)**
+
+Two men intercept you on the road. They are careful and professional — agents of the family of the woman identified in the red-ink section. The living woman whose spirit is recorded. Her family wants the folio destroyed before it reaches any archive. They know who Mahmud is and what he wrote. They have been waiting on this road for three days.
+
+*Combat: 2 opponents, AC 12, HP 22 each.*
+
+*The Possession Case Folio — sealed, marginal note inside — is intact after the fight.* You search one of the men: a letter from the family authorizing "the destruction of a certain physician's record." The letter names the woman by name. For the first time, you know who the spirit was.
+
+*TOKEN check Act IV — folio intact; family letter recovered identifying the living woman by name.*
+
+---
+
+**ACT V — "Involuntary Testimony" (Weimar)**
+
+Archivus Sweelinck reads the folio in order. He reads the black-ink sections, sets them aside. He reads the red ink section last.
+
+He is quiet for a long time.
+
+"The physician wrote it down because he had no other language for what he witnessed," he finally says. "The spirit spoke what the living person could not — without rank, without constraint, without the performance the court required. It is the most honest record of what a relationship costs."
+
+He looks at you.
+
+"The red ink does not name anyone. Mahmud was careful about that. But it is still the clearest testimony of love I have received this year, because the speaker had no ability to choose not to speak."
+
+He writes in the ledger: *Involuntary Testimony — Records of Speech Produced Outside the Speaker's Control. First entry: physician's case folio, Tabriz, 1367. Speech transcribed verbatim from possession episode. Patient unnamed. Spirit unnamed. Both parties identified by what was said, not by any name.*
+
+"The jealousy that continues past death proves the relationship was real. Let that be the filing note."
+
+*TOKEN taken Act V — folio received under new classification.*
+
+---
+
+### Theme
+
+**"The jealousy that continues past death proves the relationship was real; the spirit that cannot release its claim speaks without social constraint for the first time — without rank, without performance, without any reason to dissemble; the physician who writes down what it says has the most honest record of the relationship that exists in any form; the archive files it under Involuntary Testimony because the speaker had no ability to choose."**
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "AMS_002",
+  "title": "The Spirit's Account",
+  "source": "The Tale of Genji (Murasaki Shikibu / Arthur Waley translation)",
+  "cycle": "AMS",
+  "book": "The Tale of Genji",
+  "source_episode": "Chapter IX (Aoi) — Rokujô's spirit possesses Lady Aoi; the spirit speaks what the living person could not",
+  "theme": "The jealousy that continues past death proves the relationship was real; the archive files the physician's record under Involuntary Testimony — speech produced outside the speaker's control.",
+  "activateNode": "TBZ",
+  "token": {
+    "id": "possession_case_folio",
+    "name": "The Possession Case Folio",
+    "description": "Six-page physician's folio. Black ink: medical record and commentary. Red ink (pp. 3–4): verbatim transcription of the spirit's speech, spoken without social constraint. Patient's name replaced with a single character. Sealed with physician's ring-mark.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["TBZ", "BAG", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {
+      "act": 1,
+      "location": "TBZ",
+      "scene": "Mahmud al-Shirazi's study, Tabriz",
+      "title": "What the Physician Wrote Down",
+      "type": "dialogue",
+      "prompt": "Mahmud tests whether you understand what you are carrying — not the medical record but the red ink section, which identifies both parties. Insight DC 12.",
+      "skillCheck": { "skill": "Insight", "dc": 12 },
+      "successText": "'Take it to Hafiz in Baghdad first. Whatever he decides — forward it or not — is his judgment.' He seals the folio and slides it to you.",
+      "failText": "He hands it over with one instruction: 'Do not let anyone open it before Baghdad.'",
+      "grantItem": "possession_case_folio",
+      "token_action": "grant"
+    },
+    {
+      "act": 2,
+      "location": "road_TBZ_BAG",
+      "scene": "Jalayirid-Mamluk border checkpoint, road south of Tabriz",
+      "title": "Medical or Theological?",
+      "type": "skill_check",
+      "prompt": "Officer asks if the folio is a spirit-possession document — he has orders to route such documents to religious inspection. Persuasion DC 12: establish it as a physician's case record about fever and speech disorders.",
+      "skillCheck": { "skill": "Persuasion", "dc": 12 },
+      "successText": "He classifies it as medical, collects two silver, stamps the cover.",
+      "failText": "Two-day hold for cleric inspection. Cleric cannot read the technical script; releases as 'no clear religious content.'",
+      "token_action": "check"
+    },
+    {
+      "act": 3,
+      "location": "BAG",
+      "scene": "Hafiz ibn Walid's study, Baghdad",
+      "title": "The Red Ink Section",
+      "type": "dialogue",
+      "prompt": "Hafiz reads the folio, adds a marginal note: 'involuntary testimony.' He asks you to commit that the folio will reach Weimar without being opened en route. Persuasion DC 13.",
+      "skillCheck": { "skill": "Persuasion", "dc": 13 },
+      "successText": "He accepts your word. 'The archive must receive this before I am tempted to keep it.'",
+      "failText": "He gives you the folio but remains visibly unsatisfied.",
+      "token_action": "check"
+    },
+    {
+      "act": 4,
+      "location": "road_BAG_WM",
+      "scene": "Tigris road north from Baghdad",
+      "title": "The Road North",
+      "type": "combat",
+      "prompt": "Two agents of the identified woman's family. The folio must not reach any archive.",
+      "combatTarget": { "count": 2, "ac": 12, "hp": 22 },
+      "successText": "Folio intact. Family authorization letter recovered — names the woman explicitly.",
+      "failText": "Combat loss — folio at risk.",
+      "token_action": "check"
+    },
+    {
+      "act": 5,
+      "location": "WM",
+      "scene": "Weimar archive intake desk",
+      "title": "Involuntary Testimony",
+      "type": "skill_check",
+      "prompt": "Sweelinck reads the red ink section last. History DC 11: understand the new category.",
+      "skillCheck": { "skill": "History", "dc": 11 },
+      "successText": "'The jealousy that continues past death proves the relationship was real. Let that be the filing note.'",
+      "failText": "He files the folio. You leave without the classification name.",
+      "takeItem": "possession_case_folio",
+      "activateMissionBit": "amsSpiritAccountComplete",
+      "token_action": "take"
+    }
+  ]
+}
+```
+
+---
+
+### New Node Proposals
+
+*None — TBZ (Tabriz), BAG (Baghdad), and WM (Weimar) are existing nodes.*
+
+---
+
 ## Admin Notes
 
 - Source: Arthur Waley translation (1925), 3-part split
