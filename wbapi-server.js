@@ -505,21 +505,22 @@ function serializeDropLiteral(key, body) {
 function serializeNpcDialogueLiteral(key, body) {
   const parts = [];
   const m = body.meta || {};
-  const name = m.name || body.name || key;
-  const occ  = m.occupation || body.occupation;
-  const wt   = m.worldTruth || body.worldTruth;
-  const mb   = m.missionBit || body.missionBit;
-  if (name || occ || wt || mb) {
-    const mp = [`name:${JSON.stringify(name)}`];
-    if (occ) mp.push(`occupation:${JSON.stringify(occ)}`);
-    if (wt)  mp.push(`worldTruth:${JSON.stringify(wt)}`);
-    if (mb)  mp.push(`missionBit:${JSON.stringify(mb)}`);
+  const metaEntries = Object.entries(m).filter(([,v]) => v !== undefined && v !== null && v !== '');
+  if (metaEntries.length) {
+    const mp = metaEntries.map(([k, v]) => `${k}:${JSON.stringify(v)}`);
     parts.push(`meta: { ${mp.join(', ')} }`);
   }
   for (const arr of ['impartial','questActive','friendly','dearFriend'])
     if (Array.isArray(body[arr]) && body[arr].length) parts.push(`${arr}: ${JSON.stringify(body[arr])}`);
   parts.push(`quote: ${JSON.stringify(body.quote||'')}`);
   return `  ${key}: { ${parts.join(', ')} },\n`;
+}
+
+function serializeNpcDialoguesSection() {
+  const entries = Object.entries(WBAPI.npcDialogues)
+    .map(([k, v]) => serializeNpcDialogueLiteral(k, v))
+    .join('');
+  return `\nconst NPC_DIALOGUES = { // → doc: story-arc-npc-dialogues.md\n${entries}};\n`;
 }
 
 function serializeNpcLiteral(key, body) {
@@ -2352,15 +2353,49 @@ async function route(req, res) {
 
   // ── GET ──
   if (method === 'GET') {
-    // GET /api/npc/{id}/dialogue
+    // GET /api/npc/{id}/dialogue[/{field}[/{index}]]
     if (type === 'npc' && action === 'dialogue') {
       const dlg = WBAPI.npcDialogues[key];
       if (!dlg) {
         logResponse(method, url.pathname, 404, `no NPC_DIALOGUES entry for "${key}"`);
         return json(res, 404, { error:`No NPC_DIALOGUES entry for "${key}". Create one with POST /api/npc/${key}/dialogue` });
       }
+      const dlgField = parts[3];
+      const dlgIdx   = parts[4] !== undefined ? parseInt(parts[4], 10) : undefined;
+
+      if (dlgField) {
+        const val = dlg[dlgField];
+        if (val === undefined) {
+          logResponse(method, url.pathname, 404, `field "${dlgField}" not in dialogue for "${key}"`);
+          return json(res, 404, { error:`Field "${dlgField}" not found. Available: ${Object.keys(dlg).join(', ')}` });
+        }
+        if (dlgIdx !== undefined) {
+          // GET /api/npc/:key/dialogue/:array/:index
+          if (!Array.isArray(val)) {
+            logResponse(method, url.pathname, 400, `"${dlgField}" is not an array`);
+            return json(res, 400, { error:`"${dlgField}" is not an array` });
+          }
+          if (isNaN(dlgIdx) || dlgIdx < 0 || dlgIdx >= val.length) {
+            logResponse(method, url.pathname, 404, `${dlgField}[${dlgIdx}] out of range (length ${val.length})`);
+            return json(res, 404, { error:`${dlgField}[${dlgIdx}] out of range (length: ${val.length})` });
+          }
+          logRow('npc', key);
+          logRow('line', `${dlgField}[${dlgIdx}]  →  ${String(val[dlgIdx]).slice(0,80)}`);
+          logResponse(method, url.pathname, 200, `dialogue/${key}/${dlgField}/${dlgIdx}`);
+          return json(res, 200, { ok:true, key, field:dlgField, index:dlgIdx, text: val[dlgIdx] });
+        }
+        // GET /api/npc/:key/dialogue/:field
+        logRow('npc', key);
+        logRow('field', `${dlgField}  →  ${Array.isArray(val) ? val.length+' lines' : String(val).slice(0,60)}`);
+        logResponse(method, url.pathname, 200, `dialogue/${key}/${dlgField}`);
+        return json(res, 200, { ok:true, key, field:dlgField, value:val, ...(Array.isArray(val) ? { count:val.length } : {}) });
+      }
+
       logRow('npc', key);
       logRow('quote', (dlg.quote||'').slice(0,80));
+      const fieldSummary = Object.entries(dlg)
+        .map(([f,v]) => Array.isArray(v) ? `${f}[${v.length}]` : f).join('  ·  ');
+      logRow('fields', fieldSummary);
       logResponse(method, url.pathname, 200, `dialogue/${key}`);
       return json(res, 200, { ok:true, key, dialogue: dlg,
         _meta: { hasBirkaProfile: !!WBAPI.birkaNpcs[key] } });
@@ -2457,16 +2492,99 @@ async function route(req, res) {
       return json(res, 200, { ok:true, key, drop: WBAPI.monsterDrops[key], note:'PUT only updates in-memory. POST /api/save to persist.' });
     }
 
-    // PUT /api/npc/:key/dialogue
+    // PUT /api/npc/:key/dialogue[/{field}[/{index}]]
     if (type === 'npc' && action === 'dialogue') {
       if (!WBAPI.npcDialogues[key]) {
         logResponse(method, url.pathname, 404, `no dialogue for "${key}" — create first with POST`);
         return json(res, 404, { error:`No NPC_DIALOGUES entry for "${key}". Create with POST /api/npc/${key}/dialogue` });
       }
-      Object.assign(WBAPI.npcDialogues[key], body);
-      logRow('updated', `dialogue › ${key}`);
+      const dlg      = WBAPI.npcDialogues[key];
+      const dlgField = parts[3];
+      const dlgIdx   = parts[4] !== undefined ? parseInt(parts[4], 10) : undefined;
+
+      // PUT /api/npc/:key/dialogue/:array/:index — replace one line
+      if (dlgField && dlgIdx !== undefined) {
+        const arr = dlg[dlgField];
+        if (!Array.isArray(arr)) {
+          logResponse(method, url.pathname, 400, `"${dlgField}" is not an array`);
+          return json(res, 400, { error:`"${dlgField}" is not an array` });
+        }
+        if (isNaN(dlgIdx) || dlgIdx < 0 || dlgIdx >= arr.length) {
+          logResponse(method, url.pathname, 404, `${dlgField}[${dlgIdx}] out of range`);
+          return json(res, 404, { error:`${dlgField}[${dlgIdx}] out of range (length: ${arr.length})` });
+        }
+        const text = body.text ?? body.line ?? body.value;
+        if (text === undefined) {
+          logResponse(method, url.pathname, 400, 'body.text required');
+          return json(res, 400, { error:'body.text required' });
+        }
+        arr[dlgIdx] = String(text);
+        const r = replaceSection('NPC_DIALOGUES', serializeNpcDialoguesSection());
+        if (!r.ok) { logResponse(method, url.pathname, 500, r.error); return json(res, 500, r); }
+        logRow('updated', `${key}.${dlgField}[${dlgIdx}]  →  ${String(text).slice(0,60)}`);
+        logResponse(method, url.pathname, 200, `dialogue/${key}/${dlgField}/${dlgIdx} replaced`);
+        return json(res, 200, { ok:true, key, field:dlgField, index:dlgIdx, text: arr[dlgIdx], note:'POST /api/save to persist.' });
+      }
+
+      // PUT /api/npc/:key/dialogue/quote
+      if (dlgField === 'quote') {
+        const text = body.text ?? body.value ?? body.quote;
+        if (text === undefined) {
+          logResponse(method, url.pathname, 400, 'body.text required');
+          return json(res, 400, { error:'body.text required' });
+        }
+        dlg.quote = String(text);
+        const r = replaceSection('NPC_DIALOGUES', serializeNpcDialoguesSection());
+        if (!r.ok) { logResponse(method, url.pathname, 500, r.error); return json(res, 500, r); }
+        logRow('updated', `${key}.quote  →  ${String(text).slice(0,80)}`);
+        logResponse(method, url.pathname, 200, `dialogue/${key}/quote updated`);
+        return json(res, 200, { ok:true, key, field:'quote', quote: dlg.quote, note:'POST /api/save to persist.' });
+      }
+
+      // PUT /api/npc/:key/dialogue/meta — patch meta fields
+      if (dlgField === 'meta') {
+        const META_FIELDS = ['name','occupation','worldTruth','missionBit','enemy','node'];
+        if (!dlg.meta) dlg.meta = {};
+        const updated = [];
+        for (const [k, v] of Object.entries(body)) {
+          if (META_FIELDS.includes(k)) { dlg.meta[k] = String(v); updated.push(k); }
+        }
+        if (!updated.length) {
+          logResponse(method, url.pathname, 400, 'no valid meta fields');
+          return json(res, 400, { error:`Valid meta fields: ${META_FIELDS.join(', ')}` });
+        }
+        const r = replaceSection('NPC_DIALOGUES', serializeNpcDialoguesSection());
+        if (!r.ok) { logResponse(method, url.pathname, 500, r.error); return json(res, 500, r); }
+        logRow('updated', `${key}.meta  →  ${updated.join(', ')}`);
+        logResponse(method, url.pathname, 200, `dialogue/${key}/meta updated`);
+        return json(res, 200, { ok:true, key, field:'meta', meta: dlg.meta, note:'POST /api/save to persist.' });
+      }
+
+      // PUT /api/npc/:key/dialogue/:array — replace whole array
+      if (dlgField) {
+        const ARRAY_FIELDS = ['impartial','questActive','friendly','dearFriend'];
+        if (!ARRAY_FIELDS.includes(dlgField)) {
+          logResponse(method, url.pathname, 400, `"${dlgField}" not a replaceable array field`);
+          return json(res, 400, { error:`Replaceable array fields: ${ARRAY_FIELDS.join(', ')}. Use PUT /dialogue/quote or /dialogue/meta for those fields.` });
+        }
+        const lines = body.value ?? body.lines ?? body[dlgField];
+        if (!Array.isArray(lines)) {
+          logResponse(method, url.pathname, 400, 'body.value must be an array of strings');
+          return json(res, 400, { error:'body.value must be an array of strings' });
+        }
+        dlg[dlgField] = lines.map(String);
+        const r = replaceSection('NPC_DIALOGUES', serializeNpcDialoguesSection());
+        if (!r.ok) { logResponse(method, url.pathname, 500, r.error); return json(res, 500, r); }
+        logRow('replaced', `${key}.${dlgField}  →  ${lines.length} lines`);
+        logResponse(method, url.pathname, 200, `dialogue/${key}/${dlgField} replaced (${lines.length} lines)`);
+        return json(res, 200, { ok:true, key, field:dlgField, count: lines.length, value: dlg[dlgField], note:'POST /api/save to persist.' });
+      }
+
+      // PUT /api/npc/:key/dialogue — merge full object (session-only convenience)
+      Object.assign(dlg, body);
+      logRow('updated', `dialogue › ${key}  (in-memory only)`);
       logResponse(method, url.pathname, 200, `dialogue/${key} updated`);
-      return json(res, 200, { ok:true, key, dialogue: WBAPI.npcDialogues[key], note:'PUT only updates in-memory. POST /api/save to persist.' });
+      return json(res, 200, { ok:true, key, dialogue: dlg, note:'Whole-object merge is in-memory only. Use field sub-routes (PUT /dialogue/quote etc.) for persistent edits. POST /api/save to persist.' });
     }
 
     const col = { node:WBAPI.nodeMap, quest:WBAPI.questDb, monster:WBAPI.monsterPool, npc:WBAPI.birkaNpcs }[type];
@@ -2497,6 +2615,34 @@ async function route(req, res) {
 
   // ── DELETE ──
   if (method === 'DELETE') {
+    // Nonce-free: DELETE /api/npc/:key/dialogue/:array/:index — single line removal
+    if (type === 'npc' && action === 'dialogue' && parts[3] && parts[4] !== undefined) {
+      const ARRAY_FIELDS = ['impartial','questActive','friendly','dearFriend'];
+      const dlgField = parts[3];
+      const dlgIdx   = parseInt(parts[4], 10);
+      if (!ARRAY_FIELDS.includes(dlgField)) {
+        logResponse(method, url.pathname, 400, `"${dlgField}" is not a removable array`);
+        return json(res, 400, { error:`Removable array fields: ${ARRAY_FIELDS.join(', ')}` });
+      }
+      const dlg = WBAPI.npcDialogues[key];
+      if (!dlg) {
+        logResponse(method, url.pathname, 404, `no NPC_DIALOGUES entry for "${key}"`);
+        return json(res, 404, { error:`No NPC_DIALOGUES entry for "${key}"` });
+      }
+      const arr = dlg[dlgField];
+      if (!Array.isArray(arr) || isNaN(dlgIdx) || dlgIdx < 0 || dlgIdx >= arr.length) {
+        logResponse(method, url.pathname, 400, `${dlgField}[${dlgIdx}] out of range`);
+        return json(res, 400, { error:`${dlgField}[${dlgIdx}] out of range (length: ${Array.isArray(arr) ? arr.length : 0})` });
+      }
+      const removed = arr.splice(dlgIdx, 1)[0];
+      const r = replaceSection('NPC_DIALOGUES', serializeNpcDialoguesSection());
+      if (!r.ok) { logResponse(method, url.pathname, 500, r.error); return json(res, 500, r); }
+      logRow('removed', `${key}.${dlgField}[${dlgIdx}]  →  ${String(removed).slice(0,60)}`);
+      logRow('remaining', arr.length);
+      logResponse(method, url.pathname, 200, `removed dialogue/${key}/${dlgField}/${dlgIdx}`);
+      return json(res, 200, { ok:true, key, field:dlgField, removed, remaining: arr.length, note:'POST /api/save to persist.' });
+    }
+
     // Require a valid nonce issued by POST /api/nonce
     const nonce = req.headers['x-nonce'] || url.searchParams.get('nonce');
     if (!nonce) {
@@ -2538,6 +2684,35 @@ async function route(req, res) {
       logResponse(method, url.pathname, 400, `Invalid JSON: ${e.message}`);
       return json(res, 400, { error:'Invalid JSON' });
     }
+    // POST /api/npc/:key/dialogue/:array — append one line
+    if (type === 'npc' && action === 'dialogue' && parts[3]) {
+      const ARRAY_FIELDS = ['impartial','questActive','friendly','dearFriend'];
+      const dlgField = parts[3];
+      if (!ARRAY_FIELDS.includes(dlgField)) {
+        logResponse(method, url.pathname, 400, `"${dlgField}" is not appendable`);
+        return json(res, 400, { error:`Appendable fields: ${ARRAY_FIELDS.join(', ')}. Use PUT /dialogue/quote or /dialogue/meta for those.` });
+      }
+      const dlg = WBAPI.npcDialogues[key];
+      if (!dlg) {
+        logResponse(method, url.pathname, 404, `no NPC_DIALOGUES entry for "${key}"`);
+        return json(res, 404, { error:`No NPC_DIALOGUES entry for "${key}". Create with POST /api/npc/${key}/dialogue` });
+      }
+      const text = body.text ?? body.line ?? body.value;
+      if (!text) {
+        logResponse(method, url.pathname, 400, 'body.text required');
+        return json(res, 400, { error:'body.text required' });
+      }
+      if (!Array.isArray(dlg[dlgField])) dlg[dlgField] = [];
+      dlg[dlgField].push(String(text));
+      const idx = dlg[dlgField].length - 1;
+      const r = replaceSection('NPC_DIALOGUES', serializeNpcDialoguesSection());
+      if (!r.ok) { logResponse(method, url.pathname, 500, r.error); return json(res, 500, r); }
+      logRow('appended', `${key}.${dlgField}[${idx}]  →  ${String(text).slice(0,60)}`);
+      logRow('count', dlg[dlgField].length);
+      logResponse(method, url.pathname, 201, `appended to dialogue/${key}/${dlgField}`);
+      return json(res, 201, { ok:true, key, field:dlgField, index:idx, text: dlg[dlgField][idx], count: dlg[dlgField].length, note:'POST /api/save to persist.' });
+    }
+
     // POST /api/monster/:id/drop  — create drop entry
     if (type === 'monster' && action === 'drop') {
       if (!body.name) {
@@ -2720,9 +2895,14 @@ server.listen(PORT, '127.0.0.1', () => {
     ['GET',    '/api/loot                           → d100 table with rollRanges, gap, suggestions'],
     ['PUT',    '/api/loot                           body: {entries:[{weight,_type,_magic?},...]}'],
     ['PUT',    '/api/loot/{index}                   body: {weight?,_type?,_magic?}'],
-    ['GET',    '/api/npc/{id}/dialogue              → NPC_DIALOGUES entry'],
-    ['POST',   '/api/npc/{id}/dialogue              body: {quote, meta?, impartial?, friendly?, dearFriend?}'],
-    ['PUT',    '/api/npc/{id}/dialogue              body: {quote?, meta?, ...}'],
+    ['GET',    '/api/npc/{id}/dialogue[/{field}[/{index}]]  → whole entry, one field, or one line'],
+    ['POST',   '/api/npc/{id}/dialogue              body: {quote, meta?, impartial?, ...}  (create)'],
+    ['POST',   '/api/npc/{id}/dialogue/{array}      body: {text}  (append line)'],
+    ['PUT',    '/api/npc/{id}/dialogue/quote        body: {text}'],
+    ['PUT',    '/api/npc/{id}/dialogue/meta         body: {worldTruth?,missionBit?,...}'],
+    ['PUT',    '/api/npc/{id}/dialogue/{array}      body: {value:[...]}  (replace array)'],
+    ['PUT',    '/api/npc/{id}/dialogue/{array}/{i}  body: {text}  (replace one line)'],
+    ['DELETE', '/api/npc/{id}/dialogue/{array}/{i}  (nonce-free — removes one line)'],
     ['POST',   '/api/monster/{id}/rename            body: {name}'],
     ['POST',   '/api/monster/{id}/fork              body: {newKey, overrides?}'],
     ['POST',   '/api/terrain/{id}/swap              body: {oldKey, newKey}'],
