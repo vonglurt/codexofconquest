@@ -443,3 +443,248 @@ In the Pipeline Queue table, update NWI row:
 | NWI | Anabasis (Xenophon) | 545 | **Processed 2026-05-31 — NWI_001 spec complete; NWI-02–08 seeds pending** |
 
 Next book in queue: **IST** (Alexiad, Anna Komnene, 165 KB) — no source .txt file found in 1367-sources directory. Source file needed before processing.
+
+---
+
+## Cycle 2 — Angle: *The Towns That Were Not Given — The Contract Kept and Broken*
+
+**What this angle reveals that cycle 1 missed**: Cycle 1 showed the army reconstituting itself through collective will — the election that made ten thousand leaderless men into a self-governing republic. Cycle 2 shows what came after they reached home: they completed their final obligation — Seuthes's winter campaign — and Seuthes kept the three promised towns. The document that records the grant is not the army's victory; it is the breach. In 1367, the towns are still there, still valuable, which is why someone wants the document to disappear, and why it must reach a neutral archive before it becomes either a political weapon or ash.
+
+---
+
+### 5-Act Vignette Play: *The Towns That Were Not Given*
+
+#### The Record
+
+*The Seuthes Grant Record — a Hellenistic parchment copy of the original Thracian grant, the original issued on wooden tablet in 399 BC — specifying three named towns on the Thracian coast as permanent settlement for the Greek army in exchange for one season's winter campaign; the reverse side carries a Thracian notation in an older hand; the family seal — a stag, worn — on the exterior fold. Held for six generations by a Thracian noble family near the Bosphorus, who found it in their grandfather's territorial records and recognized it as either a significant historical document or a significant liability.*
+
+---
+
+**ACT I**
+
+*The Seuthes Grant Record — in a cedar chest in the family archive room — Bosphorus, Thracian noble estate, morning.*
+
+The family steward's name is Dragomir. He is sixty, careful, and has been managing this family's archive since he was appointed at thirty. He located the grant record four months ago while cataloguing the old territorial files. He has spent those four months deciding whether to sell it, destroy it, or release it to a neutral carrier. He has chosen the carrier because selling it would make one party very powerful and destroying it would make that same party very comfortable.
+
+He sets the parchment on the table between you. He does not touch it again.
+
+"The army completed the campaign. Seuthes kept the towns. The Greeks went home to cities that didn't want them anymore. The towns are still there." He nods toward the document. "In 1367, this is the kind of thing that starts a claim. I am not giving it to a claimant. I am giving it to someone who will put it where it cannot be used."
+
+*— He has already decided. He needs to know you understand the difference between a neutral carrier and an agent.*
+
+> **Dialogue DC 12.** Tell Dragomir what distinguishes a neutral carrier from someone who carries for a principal — that the archive is the destination, not a step toward a use; that the record of a breach belongs in the record, not in anyone's file cabinet.
+
+**Fail:** Dragomir sets his hand flat on the parchment. "Not yet. Come back tomorrow — I want to sleep on it again." He is not changing his decision; he is testing whether you'll wait.
+
+**Pass:** He slides the parchment across. He adds the family seal impression to the exterior fold's wax: a notation in his hand — *released to neutral carrier, Thracian noble family archive, Dragomir steward, for delivery to neutral archive only.* "Tell no one where you got it until it's in the box."
+
+**TOKEN GRANTED: Seuthes Grant Record** — Hellenistic parchment copy, family wax seal, Dragomir's carrier notation; reverse: Thracian notation in older hand; the promise and its non-fulfillment in the same document.
+
+---
+
+**ACT II**
+
+*The Seuthes Grant Record — in the Fighter's satchel — Constantinople harbor, morning.*
+
+Nikolaos is a Byzantine fiscal agent stationed at the harbor manifests desk. He reviews departing cargo from the Thracian coast region, specifically looking for territorial documents that may affect Byzantine coastal claims. He sees the family seal. He knows the Thracian noble families near the Bosphorus; he has been tracking their archive activity for two years.
+
+He opens his hands on the desk.
+
+"Territorial grant document from the Thracian coastal zone. This falls under the Byzantine imperial review protocol for documents affecting littoral claims." He is not unfriendly. He is a bureaucrat who has found a category. "I'll need to log it and hold it for review. Standard forty-day process."
+
+*— He found the right category, but it is the wrong category. This is not a current territorial claim; it is a historical record of a contract made 1,770 years ago and never honored.*
+
+> **Skill Check: History DC 12.** Establish that the Seuthes Grant Record is a pre-Byzantine mercenary service contract from 399 BC, predating Byzantine administration of the Thracian coast by more than seven centuries; it records a promise made by a Thracian king to a Greek mercenary army and broken by the same king; it is not a current territorial claim and carries no force against present landholders.
+
+**Fail:** Nikolaos logs it as "territorial document pending review" and issues a forty-day hold slip. The Fighter waits in Constantinople while the review request is forwarded and returns empty. He accepts the historical argument by the third week.
+
+**Pass:** Nikolaos considers. He is also a historian by training; he recognizes when he has misapplied a category. He produces a transit slip: *historical mercenary service record, pre-Byzantine, 399 BC, no current territorial force — transit cleared.* He attaches it to the exterior fold.
+
+**TOKEN STATE 2**: Byzantine fiscal agent's transit clearance slip attached — *historical mercenary service record, pre-Byzantine, no current territorial force.*
+
+---
+
+**ACT III**
+
+*The Seuthes Grant Record — fold with two notations — Ragusa waystation inn, evening.*
+
+Ser Marco has been following the document since it left the estate. He is a Venetian-backed land speculator with interests in the Thracian coastal trade. He is patient, well-dressed, and has a lawyer's instinct for leverage. He sits across from the Fighter at the inn table with an offer already written on a folded paper.
+
+"A document that establishes a historical claim to three towns, even a lapsed claim, is valuable as precedent. Not as law — I know it is 1,770 years old. As precedent. As argument. Someone with money and a persuasive advocate could make interesting use of this." He unfolds the paper. The number is significant. "I will not use it in a way that harms anyone living."
+
+*— He means it. That is almost the problem. A legitimate speculative use is still a use, and the document is going to a neutral archive, not into anyone's argument.*
+
+> **Skill Check: Persuasion DC 13.** Decline Ser Marco's offer in a way that forecloses his legal options — the document is already in transit under a chain of custody established at two prior points; a Ragusa notary witness will confirm the chain; Ser Marco cannot establish a prior interest because no prior interest exists; the document was held by the family as historical patrimony, not commercial inventory.
+
+**Fail:** Ser Marco smiles, folds the offer back, and thanks the Fighter for the education. He calls the notary anyway. The notary confirms the chain of custody. Ser Marco's legal avenue closes at dawn; he accepts it.
+
+**Pass:** Ser Marco closes the offer paper. He accepts the argument — he knows when an avenue is closed. "At least let the archive know I made this offer and declined to pursue it. I want that on record." The Ragusa notary public, present throughout the exchange, adds an endorsement: *chain-of-custody confirmed, no competing prior claim established; Ser Marco of Venice formally declined to pursue.*
+
+**TOKEN STATE 3**: Ragusa notary endorsement added — *chain-of-custody confirmed, no competing prior claim established.*
+
+---
+
+**ACT IV**
+
+*The Seuthes Grant Record — three notations on exterior — road north from Ragusa, night.*
+
+Ser Marco's offer was genuine. His hired men are also genuine. He declined the legal avenue at dawn and instructed the men by nightfall; they have been riding since.
+
+*— Four notations on the document. Three of them are defense. None of them stop hired men.*
+
+> **Combat: 2 opponents — AC 13, HP 22 each.** They want the satchel and will stop at half health if the road north looks expensive.
+
+**Fail:** They get the satchel. The Ragusa civic guard takes a theft report; Ser Marco's name is in the notary endorsement, which makes the report actionable.
+
+**Pass:** Both down or broken. Road north clear. Three notations intact.
+
+**TOKEN STATE 4**: Carried through. All notations undamaged.
+
+---
+
+**ACT V**
+
+*The Seuthes Grant Record — four notations on exterior — Weimar archive, the desk of Archivus Sweelinck, morning.*
+
+Sweelinck reads the parchment. He knows the *Anabasis*. He knows Seuthes. He reads the grant carefully, both sides.
+
+"The army completed the campaign." He sets it down. "Seuthes kept the towns." A pause. "The wrong party is 1,770 years dead. The towns are still there. The contract is legible." He picks up his pen. "The question is what category a fulfilled obligation with an unfulfilled payment belongs in."
+
+*— He has the right question. He needs to know which party the file goes under.*
+
+> **Skill Check: History DC 11.** Tell Sweelinck that the file belongs under the army — the party that kept its word; not under the towns, which are a geographic index entry, and not under Seuthes, who is the breaching party; the record of what ten thousand men earned and were not paid is an army record, not a territorial record.
+
+**Fail:** Sweelinck files it under "Historical Territorial Grants — Disputed" and marks it pending. He consults the classification records. He returns with the same argument the Fighter made an hour later; the entry is updated.
+
+**Pass:** Sweelinck writes a new entry header: *Greek Mercenary Service Records — Xenophon's March, Territorial Promise, 399 BC; filed under the army, not the towns.* He enters the three town names as geographic cross-references only, not primary subjects. He files the parchment.
+
+He says, without looking up:
+
+"The army walked home. The towns stayed where they were. The archive will show what the army was owed."
+
+**TOKEN TAKEN: Seuthes Grant Record**
+
+The parchment enters the Weimar archive under Greek Mercenary Service Records. The family seal, the Byzantine transit clearance, and the Ragusa notary endorsement are indexed as chain-of-custody. The three towns appear as geographic cross-references with a notation: *promised, undelivered, 399 BC.*
+
+---
+
+## Quest API Stub — UQF v1.0
+
+```json
+{
+  "quest_id": "NWI_002",
+  "title": "The Towns That Were Not Given",
+  "source": "NWI",
+  "cycle": 2,
+  "book": "Anabasis — Xenophon (Dakyns translation, c. 401 BC)",
+  "source_episode": "Book 7 — Seuthes recruits the Greek army for his winter Thracian campaign, promising three coastal towns as permanent settlement; the army completes the campaign; Seuthes does not deliver the towns; the Greeks disperse",
+  "theme": "The promise kept by one side and broken by the other — the contract whose record is more dangerous alive than destroyed because in 1367 the towns are still there; the archive that receives it files it under the army, not the towns, because the army was the party that kept its word",
+  "token": {
+    "id": "NWI_002_TOKEN",
+    "name": "Seuthes Grant Record",
+    "description": "Hellenistic parchment copy of the original Thracian grant issued on wooden tablet in 399 BC: three named coastal towns promised to the Greek army in exchange for one winter campaign; reverse side carries a Thracian notation in older hand; family wax seal — a stag, worn — on exterior fold; Dragomir's carrier notation added at release",
+    "grant_act": "act_1",
+    "take_act": "act_5",
+    "check_acts": ["act_2", "act_3", "act_4"],
+    "state_changes": [
+      {"act": "act_2", "change": "Byzantine fiscal transit slip attached — historical mercenary service record, pre-Byzantine, no current territorial force"},
+      {"act": "act_3", "change": "Ragusa notary endorsement added — chain-of-custody confirmed, no competing prior claim established"},
+      {"act": "act_4", "change": "carried through hired-men ambush — all notations intact"}
+    ]
+  },
+  "nodes": ["BTR", "CON", "RGS", "WM"],
+  "new_nodes": [
+    {
+      "code": "BTR",
+      "name": "Bosphorus Thracian Noble Estate",
+      "description": "A Thracian noble family's estate near the Bosphorus, 1367: a stone archive room off the main hall, cedar chests of territorial records, the smell of old parchment and family wax; steward Dragomir at the table with the grant record between them; the harbor visible through the high window; a family that has been deciding for four months whether its history is a liability or an obligation"
+    }
+  ],
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "BTR",
+      "type": "dialogue",
+      "activateNode": "BTR",
+      "missionAccept": "Dragomir has been deciding for four months. He has chosen a neutral carrier over a buyer. He needs to know the difference is understood.",
+      "scene": "The archive room off the main hall. Cedar chests. The grant record on the table between you. Dragomir standing, not touching it. 'The army completed the campaign. Seuthes kept the towns. In 1367, this starts a claim. I am not giving it to a claimant.'",
+      "dialogue": {
+        "dc": 12,
+        "prompt": "Tell Dragomir what distinguishes a neutral carrier from an agent — that the archive is the destination, not a step toward a use.",
+        "failText": "He sets his hand flat on the parchment. 'Tomorrow.' He is testing whether you'll wait.",
+        "passText": "He slides it across with his carrier notation sealed. 'Tell no one where you got it until it's in the box.' TOKEN GRANTED: Seuthes Grant Record."
+      },
+      "grantItem": "Seuthes Grant Record",
+      "checkPassFlag": "NWI_002_act1Pass"
+    },
+    {
+      "act_id": "act_2",
+      "location": "CON",
+      "type": "skill_check",
+      "activateNode": "CON",
+      "scene": "Nikolaos at the harbor manifests desk. He sees the family seal. He has the right category for the wrong document: territorial grant from the Thracian coastal zone, falls under Byzantine coastal claim review, forty-day hold.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "failText": "Forty-day hold issued. Third week: the historical argument arrives by review and closes the hold.",
+        "passText": "He produces a transit slip: historical mercenary service record, pre-Byzantine, 399 BC, no current territorial force. TOKEN STATE 2: Byzantine transit clearance attached."
+      },
+      "checkPassFlag": "NWI_002_act2Pass"
+    },
+    {
+      "act_id": "act_3",
+      "location": "RGS",
+      "type": "skill_check",
+      "activateNode": "RGS",
+      "scene": "Ser Marco at the Ragusa waystation inn, offer already written on a folded paper. A document that establishes a historical claim to three towns — even lapsed, even 1,770 years old — is valuable as precedent, as argument. The number is significant.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "failText": "He accepts the argument at dawn after the notary confirms the chain of custody. The avenue closes.",
+        "passText": "He folds the offer. 'At least let the archive know I declined.' The notary endorses: chain-of-custody confirmed, no competing prior claim. TOKEN STATE 3: Ragusa endorsement added."
+      },
+      "checkPassFlag": "NWI_002_act3Pass"
+    },
+    {
+      "act_id": "act_4",
+      "location": "road_north_ragusa",
+      "type": "combat",
+      "activateNode": "RGS",
+      "scene": "Road north from Ragusa. Ser Marco's offer was genuine. His hired men are also genuine.",
+      "combat": {
+        "enemies": 2,
+        "AC": 13,
+        "HP": 22,
+        "description": "Venetian-backed hired men — recover the document; stop at half health if the road north looks expensive",
+        "failText": "They get the satchel. The Ragusa civic guard takes the report; Ser Marco's name is in the notary endorsement.",
+        "passText": "Both down or broken. Three notations intact. Road north clear. TOKEN STATE 4: carried through."
+      },
+      "checkPassFlag": "NWI_002_act4Pass"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck reads the parchment. Both sides. 'The army completed the campaign. Seuthes kept the towns. The wrong party is 1,770 years dead. The towns are still there. The question is what category a fulfilled obligation with an unfulfilled payment belongs in.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 11,
+        "failText": "Filed under Historical Territorial Grants — Disputed, pending. He returns with the same argument an hour later; entry updated.",
+        "passText": "He writes: Greek Mercenary Service Records — Xenophon's March, Territorial Promise, 399 BC; filed under the army, not the towns. 'The archive will show what the army was owed.' TOKEN TAKEN: Seuthes Grant Record."
+      },
+      "takeItem": "Seuthes Grant Record",
+      "activateMissionBit": "nwiTownsComplete",
+      "checkPassFlag": "NWI_002_act5Pass"
+    }
+  ]
+}
+```
+
+---
+
+### New Node Proposals
+
+| Code | Name | Location | Description |
+|------|------|----------|-------------|
+| BTR | Bosphorus Thracian Noble Estate | Near the Bosphorus, Thrace | Stone archive room off the main hall; cedar chests of territorial records; steward Dragomir at the table; the harbor visible through the high window; a family that has been deciding for four months whether its history is a liability or an obligation |
