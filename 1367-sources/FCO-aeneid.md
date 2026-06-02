@@ -1465,3 +1465,207 @@ activateMissionBit: fco04Complete
 ---
 
 *FCO-04 complete. 2026-06-02.*
+
+---
+
+## FCO-05 — Barce's Account
+
+**Theme differentiation:** FCO-01 showed grief held in hostile custody. FCO-02 showed the paid craftsman. FCO-04 showed grief become governance. This seed enters the fourth position: the survivor. Barce was the only person present throughout who lived to old age and chose to speak. Her account is not a monument — it is a correction. **New theme:** *The oldest witness outlived the legend and left behind the gap between what happened and what was remembered; the survivor's account differs from the canonical version in three places, and those three places are the document's entire historical value.*
+
+---
+
+### Five-Act Vignette Play
+
+*TOKEN: Barce's Account — eight folios of parchment, written in Latin with occasional Punic words for names and objects that the scribe transcribed phonetically because he did not know the Punic terms. Dictated in old age. The voice comes through the dictation — specific, warm, unsentimental. The final folio describes what Barce saw when she returned to the pyre after the flames had fallen. It contradicts Virgil in three places. It has never been published.*
+
+---
+
+**ACT I — The Factor's Ledger**
+
+*Barce's Account, wrapped in oilskin, in the strong-room of a Genoese trading house · held by the factor Benedetto di Maro, who acquired it from a Tunisian merchant who acquired it from a monastery near the Carthage ruins · the Genoese factor's office, Via dei Fiorentini, Genoa, morning*
+
+Benedetto has had it for six months. He has not sold it. He is not sure why — it is a document, not cargo, and he is a cargo man. He has been waiting for a buyer who knows what it is. The Weimar commissioning letter is probably that buyer. But a Hafsid representative arrived yesterday from Tunis with a counter-claim: the fragment left a North African monastery without the abbot's authorization, and its return to that monastery is being formally requested through the consulate.
+
+The Hafsid representative is polite, well-dressed, and has been waiting in the outer room for two hours.
+
+*The fighter understands: Benedetto will release it to whoever presents the cleaner transaction. He is not a thief and does not want to be made one retroactively. The Weimar letter must be the cleaner transaction.*
+
+---
+
+**ACT II — The Three Contradictions**
+
+*The Account, in the fighter's satchel, in Benedetto's oilskin · aboard a coastal vessel heading east from Genoa, mid-afternoon, the Ligurian coast sliding past*
+
+A classical scholar named Fra Matteo is on the same vessel. He teaches at the Bologna studium and has heard a rumor — from a student who heard it from a Genoese merchant — that a document contradicting Virgil's account of Dido's death is in transit. He does not know who the carrier is. He is asking everyone he meets, with the transparent persistence of a scholar who has decided discretion is a lesser virtue than knowing.
+
+If the fighter says nothing, Fra Matteo will publish a conjecture-paper in Bologna based on the rumor, and the archive will receive the fragment already surrounded by controversy. If the fighter tells him too much, he will publish specifics, and the three contradictions will be in public debate before the archive can classify them.
+
+*There is a narrow path: enough to make him write a letter of inquiry to the archive rather than a speculative paper, not enough to give him the content to publish.*
+
+---
+
+**ACT III — The Courier**
+
+*The Account, still sealed · on the road between Piacenza and Bologna, afternoon, a stand of poplars, the road empty except for a courier at the crossroads*
+
+The courier is from the household of Cardinal Filippo di Settimo, whose family claims descent from a distinguished Roman line and has for two generations quietly discouraged any research into Carthaginian history that might suggest North African ancestry. Barce's account contains a name — a Roman official who visited Dido's court, noted as "the ancestor of a great family still in Italy" by the elderly Barce, who apparently had a long memory and no particular reason not to use it.
+
+The courier has a letter. The letter asks, with extreme courtesy, that the fragment be delivered to the cardinal's personal library rather than to a public archive.
+
+*The fighter notes: the courier is alone but has been waiting at this specific crossroads, which means he knew the route. The letter is extremely courteous, which means the cardinal knows that asking is not the same as receiving.*
+
+---
+
+**ACT IV — The Last Folio**
+
+*The Account, unbound from its oilskin wrapping for the first time · in a traveler's inn outside Bologna, late evening, firelight, the other guests asleep*
+
+The fighter reads the account through from the beginning — partly from professional caution (to know what is being carried) and partly because Fra Matteo's barely-contained excitement on the ship made it impossible not to wonder.
+
+The first seven folios are specific: Dido's routines, her conversations with Anna, her instructions to Barce, the preparations Barce was sent away to make while the events of the final hour occurred. Barce is old when she dictates this. She is not protecting anyone.
+
+The final folio is what she saw when she returned. The pyre had fallen. The flames were low. Barce describes Dido's face.
+
+She says: it was not the face Virgil described. She says what it was instead. She says it in three short sentences, and the third sentence is the one that makes the contradiction.
+
+*The fighter reads the third sentence twice. It is a simple factual observation from a woman who was standing there. It contradicts an epic and does not know it.*
+
+---
+
+**ACT V — The Three Places**
+
+*The Account, re-wrapped in oilskin, complete · on the Weimar archive intake desk · morning*
+
+The archivist reads it in two sittings. He comes back from lunch and reads the last folio again. Then he opens his register and writes: *Survivor's account — primary witness — Barce, nurse of Sychaeus, servant of Dido. Contradicts canonical source in three places: (1) the timing of the pyre's ignition; (2) the presence of Anna at the final hour; (3) Dido's expression at the moment of the sword.*
+
+He sets the pen down. "The gap between this account and the Virgil text is the document's entire value. I want to note that in the primary entry rather than a footnote." He looks at the fighter. "Do you object to my naming the contradictions prominently? Some carriers prefer their commissions filed quietly."
+
+*The fighter does not object. Barce did not dictate this account to have it filed quietly.*
+
+---
+
+### Quest API Stub — FCO-05
+
+```
+missionAccept: "A Genoese trading house in Genoa holds Barce's Account — eight folios dictated
+  in old age by Dido's oldest servant, the only witness to the queen's final days who survived
+  to speak. A Hafsid representative is contesting the acquisition. Carry the account to Weimar
+  before the legal dispute reaches the consulate."
+
+Act I — The Factor's Ledger
+activateNode: GEN
+type: skill_check
+scene: "The factor Benedetto di Maro's office on the Via dei Fiorentini, morning. The account
+  sits in his strong-room wrapped in oilskin. He has held it six months without selling —
+  he is a cargo man with a cargo man's discomfort about documents he cannot categorize.
+  In the outer room a Hafsid representative has been waiting two hours with a monastery
+  restitution claim. Benedetto wants the transaction that makes him least retroactively
+  a thief."
+prompt: "Persuasion DC 13: Make the Weimar commission the cleaner transaction. Name the
+  archive's legal standing, the chain of custody, and why neutral preservation is preferable
+  to contested restitution."
+failText: "Benedetto sets the oilskin back in the drawer. 'The Hafsid claim has a monastery
+  seal. Your letter is general authority. Come back with something more specific.' The
+  representative is still in the outer room. (retry)"
+successText: "Benedetto nods. 'General authority arriving first, clean chain of custody to
+  Weimar, no counterclaim the consulate can adjudicate.' He signs the release and hands
+  you the oilskin. You receive the Factor's Release Receipt."
+grantItem: "Factor's Release Receipt"
+activateMissionBit: fco05Act1Active
+checkPassFlag: fco05Act1Passed
+
+Act II — The Three Contradictions
+activateNode: BOL
+type: skill_check
+scene: "A Ligurian coastal vessel, mid-afternoon. A Bologna scholar named Fra Matteo sits
+  across the deck asking everyone he meets whether they have heard of a document contradicting
+  Virgil's Dido account. He does not know who the carrier is. He is one question away from
+  asking you directly. If he publishes a speculative paper from a rumor, the archive receives
+  the fragment already surrounded by controversy. If you tell him too much, he publishes
+  specifics before the archive classifies them."
+prompt: "Deception DC 13: Give him exactly enough to write a letter of inquiry to the archive
+  rather than a speculative paper. Name the category of document — survivor testimony — without
+  naming the contradictions."
+failText: "His eyes sharpen. He heard too much — or too little. Either he writes the speculative
+  paper anyway or he pursues you to Bologna. Try again with a narrower answer. (retry)"
+successText: "He produces his notebook and writes: 'Inquiry to Weimar — survivor account,
+  primary witness, Dido's final days. Requesting access upon archive classification.' He tears
+  it out and hands it to you. 'For the archivist. So he knows the scholarly community is
+  interested.' You receive Fra Matteo's Inquiry Letter."
+grantItem: "Fra Matteo's Inquiry Letter"
+checkPassFlag: fco05Act2Passed
+
+Act III — The Courier
+activateNode: BOL
+type: hybrid
+scene: "The road between Piacenza and Bologna, afternoon. A courier waits at a poplar crossroads
+  — alone, but he knew this specific junction, which means he knew your route. He carries a
+  letter from Cardinal Filippo di Settimo requesting, with extreme courtesy, that the fragment
+  be delivered to the cardinal's private library. Barce's account apparently names a Roman
+  official as the ancestor of a great Italian family. The cardinal has a long memory and a
+  longer family tree."
+skillCheck:
+  skill:    "Insight"
+  dc:       13
+  failText: "You read the letter as diplomatic. The courier moves to match your pace.
+    He is not here to negotiate. (retry — read the situation, not the letter)"
+  passText: "The letter is courtesy layered over instruction. The courier's hand has already
+    moved. The crossroads is his position, not a coincidence."
+combat:
+  enemy:    "Cardinal's Courier (hired sword)"
+  failText: "He gets between you and the road south. The oilskin is still yours but you are
+    pinned at the crossroads until you force a path. (retry)"
+  passText: "He goes down at the verge. You take the cardinal's letter as evidence of
+    attempted suppression. You receive the Cardinal's Seal Letter — the courier's instruction,
+    in the cardinal's hand, filed with the document it tried to stop."
+grantItem: "Cardinal's Seal Letter"
+checkPassFlag: fco05Act3Passed
+
+Act IV — The Last Folio
+activateNode: BOL
+type: skill_check
+scene: "A traveler's inn outside Bologna, late evening. The other guests are asleep. You open
+  the oilskin for the first time and read Barce's Account from beginning to end. Seven folios
+  of careful specifics — Dido's routines, instructions, the preparations Barce was sent to
+  make while the final hour occurred. Then the last folio: what Barce saw when she returned.
+  The pyre had fallen. She describes Dido's face. Three short sentences. The third contradicts
+  the epic and does not know it."
+prompt: "Insight DC 12: Read the third sentence completely. Receive it as what it is — a
+  factual observation from a woman who was standing there. Do not correct it, do not
+  contextualize it. Just read it."
+failText: "You read it as a discrepancy. You read it as a historical curiosity. You read it
+  as anything other than what it is. Read it again. (retry)"
+successText: "You read it as a woman standing in firelight reporting what she saw. It takes
+  two readings. On the second reading it is simply true. You close the folio and sit with
+  the fire a while. You receive the Last Folio Copy — your own hand-copied transcription of
+  the three sentences, made by firelight."
+grantItem: "Last Folio Copy"
+checkPassFlag: fco05Act4Passed
+
+Act V — The Three Places
+activateNode: WM
+type: skill_check
+scene: "The Weimar archive intake desk, morning. The archivist reads the account in two
+  sittings, goes to lunch, and comes back to read the last folio again. Then he opens his
+  register. He writes: 'Contradicts canonical source in three places: timing of pyre's
+  ignition; presence of Anna at final hour; Dido's expression at the moment of the sword.'
+  He sets the pen down and looks at you. 'I want to note the contradictions prominently in
+  the primary entry. Some carriers prefer their commissions filed quietly.'"
+prompt: "Persuasion DC 12: Tell him not to file it quietly. Barce did not survive Dido by
+  sixty years and dictate this account in old age to have it buried in a footnote."
+failText: "He nods, but moves to enter it under a general heading. The contradictions will
+  be in the supplementary notes. Come back with a stronger argument for the primary
+  entry. (retry)"
+successText: "He writes the three contradictions into the primary entry in full. Then he
+  adds Fra Matteo's inquiry letter beneath, and the cardinal's seal letter beneath that,
+  labelled 'evidence of attempted suppression.' He looks at the whole entry. 'She was
+  standing there,' he says. It is not a question. You receive the Survivor's Archive Entry."
+grantItem: "Survivor's Archive Entry"
+takeItem: "Barce's Account"
+checkPassFlag: fco05Act5Passed
+activateMissionBit: fco05Complete
+```
+
+---
+
+*FCO-05 complete. 2026-06-02.*

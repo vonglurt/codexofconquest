@@ -20,8 +20,8 @@ Creusa vanished during the fall of Troy — no body, no burial. Ancient traditio
 ### §FCO-04 — The Buthrotum Register (Book 3) ✓ DONE 2026-06-02
 Helenus built a miniature Troy at Buthrotum (Butrint, modern Albania). He kept administrative records — a register of the community's founding laws and population roll. The register survived in a monastery in the area. A Byzantine scholar made a copy in the 11th century. That copy is somewhere in a Venetian archive. Fighter escorts it. Route: VEN → RGS → WM. Theme: grief organized into governance; the replica community's founding document is the record of a refusal to accept destruction as final.
 
-### §FCO-05 — Barce's Account (Dido's Secretary) (Book 4)
-Barce was Sychaeus's nurse, Dido's oldest servant. She witnessed everything. A tradition in late Latin commentary says Barce survived Dido's death, lived into old age in the surviving Carthaginian community, and dictated an account of the queen's final weeks to a scribe. A fragment of that account may survive in a North African monastery. Fighter escorts the fragment from a Genoese trading house (which acquired it) to Weimar.
+### §FCO-05 — Barce's Account (Dido's Secretary) (Book 4) ✓ DONE 2026-06-02
+Barce was Sychaeus's nurse, Dido's oldest servant. She witnessed everything. Route: GEN → BOL → WM. Theme: the survivor's testimony contradicts the monument in three places; the gap between the eyewitness account and the canonical epic is the document's entire historical value.
 
 ### §FCO-06 — Palinurus's Chart (Book 5)
 The helmsman Palinurus fell overboard off the coast of Lucania (Palinuro, still called that). He had been keeping a navigational chart of the route. The chart was left on the helm-seat. A medieval sailor claims to have used it in 1334. A sailor's guild in Naples wants it. The Cumaean monastery wants it back. Fighter escorts it to a maritime archive.
