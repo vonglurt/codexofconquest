@@ -1002,3 +1002,274 @@ The three parties, arguing in the corridor after the session, will understand th
 ---
 
 *BLQ-03 complete. 2026-06-02.*
+---
+
+## Cycle 4 — Angle: The Object That Is Not What the Box Says It Is
+
+---
+
+### BLQ-04: "The Coals"
+
+**Theme check:** Cycles 1–3 all concern documents that must be kept sealed — BLQ-01 by ignorance, BLQ-02 by timing, BLQ-03 by structural ambiguity. Cycle 4 inverts the premise entirely: the box has been opened, the original contents removed, and the carrier must now either recover them or perform their way through the delivery with whatever remains inside. The Fra Cipolla story's argument is that authentication is in the performance, not the object — that the crowd was more convinced by the coals than they would have been by the feather, because Fra Cipolla named them with total confidence before anyone could react. Cycle 4 asks whether the carrier can execute that pivot. Not by fraud — the carrier does not choose the substitution — but by the same instantaneous decision Fra Cipolla made when he opened the box: name what you have before anyone can ask what it is.
+
+This is distinct from: BLQ-01 (carrier never opens seal; document is fraudulent but carrier is innocent); BLQ-02 (timing/legal existence; document is genuine); BLQ-03 (ambiguity preserved through not-knowing); AMS-05 (sealed by sender's direction; CLJ-06 (object transformation from power source to witness).
+
+---
+
+**SOURCE HOOK:** Day VI, Story 10. Fra Cipolla of Certaldo has promised the congregation he will display a feather from the angel Gabriel's wing. Two pranksters steal the feather and replace it with coals the night before. Fra Cipolla opens the casket before the assembled congregation, sees the coals, and without a pause says he brought the wrong box — this one contains the coals on which Saint Lawrence was martyred. The crowd is more moved than they would have been by the feather. Bruno and Buffalmacco, watching from the back, are reduced to involuntary admiration. The lesson: performance is authentication. The carrier's confidence is the document.
+
+---
+
+**1367 SETTING:**
+Lapo di Ser Matteo, silversmith of Florence, has completed a commission from the Bologna cathedral chapter: a reliquary box, silver-covered oak, locked hasp, containing a certified fragment of the True Cross. The provenance chain is three links — a Constantinople Greek house (1321), a Venetian merchant (1343), and Lapo's own certification (1367). The box is commissioned by Brother Anselmo di Faenza, sacristan of San Petronio, for the north chapel installation before the feast of the Exaltation of the Cross in mid-September.
+
+The box was broken into between Lapo's workshop and the first night's stop at Fiesole. The original relic is gone. In its place: a small amount of ash and a single black coal, walnut-sized, unmarked, wrapped carefully in the same linen that held the fragment.
+
+The thief knew what they were doing. The substitution was not rushed. The coal was placed with care, the linen rewrapped, the hasp re-seated so it would pass a glance inspection. The thief expected the carrier not to check until delivery.
+
+**TOKEN:** A reliquary box — silver-covered oak, palm-length, two dove reliefs on the lid, locked hasp — containing as received: a linen-wrapped bone splinter with a three-link provenance document attached by red ribbon to the lid handle; as discovered after the switch: ash and a single black coal wrapped in the same linen, no markings.
+
+**TOKEN granted:** Act I
+**TOKEN taken:** Act V (Brother Anselmo receives and records the delivery)
+
+---
+
+### ACT I — Florence (Lapo di Ser Matteo's Workshop, Via dei Fabbri)
+
+*The reliquary box · closed and locked, hasp intact, two dove reliefs on the lid · on Lapo's workbench between two oil lamps · the red ribbon of the provenance document tied to the lid handle · morning, the workshop smells of silver-wash and charcoal*
+
+Lapo di Ser Matteo hands the box to the carrier without ceremony. He says: the hasp is locked; the key is held by Brother Anselmo in Bologna; the carrier is not to open it; the provenance document, attached by ribbon to the lid, must arrive with the box. He says: deliver within two days or the north chapel installation is disrupted.
+
+He says one more thing, as the carrier turns to go: the box has been certified by the guild, the provenance inspected by the diocesan office, everything is in order. He says this as a man who is used to saying it and does not need to be reassured. He says it too precisely.
+
+*He is not worried about the delivery. He has already done his part.*
+
+The carrier examines the box. The hasp looks correct. The ribbon is tied in a guild knot — two loops, a specific pattern.
+
+*The dove reliefs are well made. That is all I can say about what is inside.*
+
+---
+
+**Skill check — DC 12 Perception or History:**
+Examine the box before departure; note the hasp condition and ribbon pattern.
+
+**Pass (Perception):** The carrier studies the hasp closely. The lock mechanism is sound — no visible marks. But around the hasp pin there is a faint compression pattern, the kind left by a tool rather than a key. Someone has already tested this lock. The box has not been opened — but it has been examined. The carrier memorizes the ribbon pattern and the hasp condition.
+
+**Pass (History):** The carrier knows the Three-Link Provenance format. Any break in the ribbon seal voids the provenance claim. The ribbon is intact. But the knot shows a faint second crease — as though it was re-tied after being unknotted by someone who knew the pattern but not how tightly the original tier pulled it. The carrier memorizes this detail.
+
+**Fail:** The carrier takes the box, notes that it looks intact, and departs. The hasp and ribbon details are unobserved.
+
+*The box granted here. The hasp holds.*
+
+**Grant item:** reliquary box (contents: True Cross fragment, three-link provenance document)
+
+---
+
+### ACT II — Fiesole (Wayfarers' Inn at the Apennine Foot)
+
+*The reliquary box · in the carrier's saddlebag · now open on the inn table, hasp forced, the linen wrapping pulled back · a candle on the table, late afternoon, the inn empty except for the keeper*
+
+The carrier stops at Fiesole for the night. Preparing to settle the box in a locked room, they notice the hasp. In failing light it looked fine. By candlelight: the lock tongue has been seated from the outside, not engaged. Someone locked the empty mechanism after replacing the contents.
+
+Inside the linen: ash. A single coal, walnut-sized, black. No markings. The original relic is not here.
+
+*The box is in my hands. The relic is not.*
+
+The inn keeper, asked if anyone handled the carrier's saddlebag, says: yes — a Pisan wool agent named Rinaldo stopped an hour before the carrier and asked whether a saddlebag courier had come through yet. He paid to hold a room and left before the carrier arrived.
+
+*He knew I was coming. He knew what I was carrying.*
+
+---
+
+**Skill check — DC 12 Investigation or Insight:**
+Determine where Rinaldo went and what the substitution pattern suggests.
+
+**Pass (Investigation):** The inn keeper, pressed, remembers: Rinaldo asked specifically about the road fork at Monte di Croce, half a mile north — whether it was watched tonight. He took the northern branch when he left. The carrier deduces: he is heading toward Firenzuola with a buyer waiting. The coal is deliberate — not random. It was chosen as a taunt.
+
+**Pass (Insight):** The coal is wrapped in the same linen that held the relic. The substitution was not rushed — this is someone who expected the carrier to open the box before delivery and wanted to be present for the reaction, or wanted the coal found later and credited to them. The carrier understands: Rinaldo is waiting for news that the coal was delivered and received as the relic. He is watching for the joke.
+
+**Fail:** The inn keeper remembers only that someone asked about the carrier. No direction, no name. The coal is opaque.
+
+---
+
+### ACT III — Monte di Croce (Road Junction, Night)
+
+*The reliquary box · in the carrier's hands, open, ash settling · the road fork under a quarter moon · silence and wind in the pines*
+
+At Monte di Croce, the road splits: south toward Florence, north toward Firenzuola. A fire burns in a woodcutter's lean-to beside the junction. Rinaldo da Pisa is there, warming his hands over a brazier, a locked saddlebag beside him. He is not running. He was waiting.
+
+He sees the carrier come down the road and says: "Good. You found the coal." Without alarm. He says: "I need something carried to Florence. Not stolen. A commission. I have the money." He pulls a sealed purse. He says: "The relic has a buyer in Firenzuola. That is not your problem. Your problem is whether you want to walk into Bologna with a box of ash."
+
+*He is not afraid of me. He thinks he has the position.*
+
+He is offering to pay for the carrier's silence. He is confident the carrier will take the money.
+
+---
+
+**Skill check — DC 13 Persuasion or Intimidation (pass recovers relic):**
+Compel Rinaldo to return the relic.
+
+**Pass (Persuasion):** The carrier says: the relic has a certified provenance chain; without that document the Firenzuola buyer has a stolen bone, not a relic; a bone without provenance is firewood. Rinaldo has not thought this through. His buyer will not accept a fragment without its chain. He pulls the relic from his saddlebag — wrapped in separate cloth — and takes back the commission from his buyer. The coal goes into the road dust. The relic goes back in the box.
+
+**Pass (Intimidation):** The carrier makes no argument. Rinaldo has a locked saddlebag and is sitting by a fire. The carrier has been on the road since dawn with a stolen relic and is not in a mood for negotiation. The physical calculus in the lean-to becomes clear to Rinaldo quickly. He hands over the relic. He keeps the money from his buyer and walks toward Firenzuola without his commission.
+
+**Combat (if both checks fail):** Rinaldo with a hired man at the junction; AC 12, HP 18 each. If the carrier wins, the saddlebag is opened — the relic is there. If the carrier withdraws, Rinaldo completes his Firenzuola delivery and the relic is gone.
+
+*The box state here: either original relic restored, or ash and coal confirmed as the final contents.*
+
+**Grant item (if relic recovered):** True Cross fragment (restored) — linen-wrapped bone splinter, provenance document re-attached; coal left in the road
+**Confirm item (if relic lost):** reliquary box with ash and coal — substitute contents remain; the carrier must arrive in Bologna with this
+
+---
+
+### ACT IV — Firenzuola (The Inn, Pre-Dawn)
+
+*The reliquary box · either with the original contents restored, or with the ash and coal inside · on the inn table, the hasp re-seated · the south Apennine slope, before dawn*
+
+The carrier stops at Firenzuola with a few hours before the road to Bologna. A Cistercian lay brother named Ugolino is at the corner table, traveling south from Bologna. He knows Brother Anselmo and describes him: a sacristan who values documented chains above all others. He says: "Anselmo won't accept a relic that hasn't been inspected twice." He says this the way a person describes a colleague they respect without entirely enjoying.
+
+Whether the relic was recovered or not, there is preparation to do.
+
+If the relic was recovered: the hasp damage is real. Anselmo will see it. The question is how to explain a forced hasp on a certified reliquary box.
+
+If the relic was not recovered: the coal must be framed. It cannot be named as something it is not. But it can be delivered as something honest — evidence rather than substitute.
+
+*Fra Cipolla named his coal in less than a breath. I have until morning to find my answer.*
+
+---
+
+**Skill check — DC 12 Persuasion or History:**
+Prepare the delivery correctly.
+
+**Pass, relic recovered (Persuasion):** The carrier understands from Ugolino's description that Anselmo will respect transparency over performance. Lead with the provenance document. Name the theft attempt. Show the hasp damage as evidence of the recovery. The chain is intact; the installation proceeds.
+
+**Pass, relic not recovered (History):** The carrier knows that coals associated with Saint Lawrence's martyrdom are a documented relic category — *carbones Sancti Laurentii* — with certified examples in several foundations. Fra Cipolla named the same category. The carrier cannot claim the coal is from that category without fraud. But the coal and ash can be delivered as the evidence of the theft — the documentation of the crime rather than a substitute for the relic. Brother Anselmo receives an honest accounting and a complete record of what occurred.
+
+**Fail:** The carrier arrives in Bologna without preparation. The hasp damage or the coal will require improvised explanation under Anselmo's direct questions.
+
+---
+
+### ACT V — Bologna (San Petronio Cathedral, North Sacristy, Brother Anselmo's Desk)
+
+*The reliquary box · either with the restored fragment, or with ash and coal · on Anselmo's desk, the key produced · morning, the Exaltation calendar visible on the wall, beeswax smell*
+
+Brother Anselmo di Faenza has managed the north sacristy for twenty-three years without misplacing a single item in its inventory. He receives the box formally — two hands, signed receipt — and produces the key.
+
+He opens the box. He looks at what is inside. He sets the box down carefully. He says nothing for a moment.
+
+Then he asks one question.
+
+*Whatever is in the box, this is the moment.*
+
+---
+
+**Skill check — DC 12 Persuasion (relic recovered) or DC 14 Persuasion (relic not recovered):**
+Deliver the explanation that Brother Anselmo can accept.
+
+**Pass, relic recovered (DC 12):** The carrier explains the theft attempt, the confrontation at Monte di Croce, the recovery. Anselmo listens without interrupting. He looks at the hasp damage. He says: "The provenance chain is intact?" It is. He accepts the box. He notes in his sacristy register: *True Cross fragment received; hasp damage from attempted theft en route; relic recovered by carrier before substitution reached destination; installation proceeding on schedule.*
+
+**Pass, relic not recovered (DC 14):** The carrier says: the relic was stolen between Florence and Fiesole by a Pisan agent; recovery was attempted and failed; what is in the box is the thief's substitute — evidence of the theft, delivered honestly so that Anselmo can act with correct information. The carrier does not name the coal as anything it is not. Anselmo looks at the coal for a moment. He says: "You could have delivered it and said nothing until I opened it." The carrier says: they could have. Anselmo records in the sacristy register: *reliquary box received; original contents stolen in transit; carrier delivered evidence of theft and full accounting; installation delayed pending replacement commission from Lapo di Ser Matteo.* He pays the carrier the delivery fee regardless.
+
+**Fail:** The carrier cannot explain the hasp damage (if recovered) in a way that reads as competent, or cannot frame the substituted contents (if not recovered) in a way that reads as honest rather than complicit. Anselmo holds the fee pending an inquiry.
+
+*The box taken here. Anselmo's record made.*
+
+**Take item:** reliquary box (delivered; recorded by Brother Anselmo)
+
+---
+
+### onPass (relic recovered)
+
+Brother Anselmo installs the relic in the north chapel three days later, on schedule. The hasp is repaired by a Bologna smith. The sacristy register shows a clean chain from commission to installation with a single noted interruption, closed.
+
+Lapo di Ser Matteo, when the news reaches Florence, sends the carrier a note: "You are a better courier than Rinaldo da Pisa deserved." The note comes with a second purse — guild weight, exactly what Rinaldo had offered for silence.
+
+---
+
+### onPass (relic not recovered, honest delivery)
+
+The installation is delayed. Lapo commissions a replacement through Venice. The feast is moved to November.
+
+Before the carrier departs Bologna, Brother Anselmo says: "The sacristy inventory now includes one coal, entered under Evidence of Attempted Theft — Objects Submitted as Formal Record of a Crime Against a Commission." He pauses. "Fra Cipolla would have named it differently. But I prefer your approach."
+
+He pays the delivery fee without the bonus. He says: "Return when Lapo has the replacement. I want the same carrier."
+
+---
+
+### onFail
+
+Brother Anselmo opens an inquiry. The fee is held. Lapo di Ser Matteo is notified by church rider. The installation is delayed indefinitely. Anselmo records: *circumstances unclear; carrier's account inconsistent; inquiry pending diocesan review.*
+
+Rinaldo da Pisa, in Firenzuola, has already sold the relic.
+
+---
+
+### Quest Stub (UQF v1.0)
+
+```json
+{
+  "quest_id": "BLQ_004",
+  "title": "The Coals",
+  "cycle": 4,
+  "book": "Decameron",
+  "token": "reliquary box — silver-covered oak, two dove reliefs, locked hasp; True Cross fragment with three-link provenance document when received; ash and coal inside after substitution between Florence and Fiesole",
+  "route": "FLR → Fiesole → Monte di Croce → Firenzuola → BOL",
+  "theme": "Authentication through the carrier's performance, not the object's truth; the carrier discovers the substitution mid-journey and must either recover the original or deliver the honest account; Fra Cipolla named his coal in less than a breath — the carrier must find their own answer to the same question",
+  "archive_category": "Evidence of Attempted Theft — Objects Submitted as Formal Record of a Crime Against a Commission (Brother Anselmo di Faenza, San Petronio sacristy register, 1367)",
+  "acts": [
+    {
+      "act_id": "BLQ_004_01",
+      "location": "Florence — Lapo di Ser Matteo's workshop, Via dei Fabbri",
+      "type": "skill_check",
+      "activateNode": "FLR",
+      "scene": "Lapo hands over the sealed reliquary box. He says everything is in order. He says this too precisely. The hasp shows faint tool compression. The ribbon knot has a second crease.",
+      "skillCheck": { "dc": 12, "skills": ["Perception", "History"] },
+      "grantItem": "reliquary box (True Cross fragment, provenance document)",
+      "checkPassFlag": "hasp_condition_noted"
+    },
+    {
+      "act_id": "BLQ_004_02",
+      "location": "Fiesole — wayfarers' inn at the Apennine foot",
+      "type": "skill_check",
+      "activateNode": "FLR",
+      "scene": "By candlelight, the carrier discovers the hasp was forced and re-seated. Inside: ash and a single black coal. The inn keeper remembers a Pisan agent named Rinaldo asking about the mountain road fork an hour before the carrier arrived.",
+      "skillCheck": { "dc": 12, "skills": ["Investigation", "Insight"] },
+      "checkPassFlag": "rinaldo_located"
+    },
+    {
+      "act_id": "BLQ_004_03",
+      "location": "Monte di Croce — mountain road junction, night",
+      "type": "hybrid",
+      "activateNode": "FLR",
+      "scene": "Rinaldo da Pisa is at the road fork, waiting. He has the relic. He is confident the carrier will accept payment and deliver the coal in silence. He has not considered that without the provenance document, his Firenzuola buyer has a stolen bone, not a relic.",
+      "skillCheck": { "dc": 13, "skills": ["Persuasion", "Intimidation"] },
+      "combat": { "count": 2, "ac": 12, "hp": 18 },
+      "checkPassFlag": "relic_recovered"
+    },
+    {
+      "act_id": "BLQ_004_04",
+      "location": "Firenzuola — wayfarers' inn, pre-dawn",
+      "type": "skill_check",
+      "activateNode": "FLR",
+      "scene": "Brother Ugolino, a Cistercian traveling south from Bologna, describes Brother Anselmo: a sacristan who values documented chains above all else. Whether the relic was recovered or not, the carrier must prepare the delivery — the hasp damage needs explanation, or the coal needs framing. Fra Cipolla named his coal in less than a breath.",
+      "skillCheck": { "dc": 12, "skills": ["Persuasion", "History"] },
+      "checkPassFlag": "delivery_framing_prepared"
+    },
+    {
+      "act_id": "BLQ_004_05",
+      "location": "Bologna — San Petronio cathedral, north sacristy",
+      "type": "skill_check",
+      "activateNode": "BOL",
+      "scene": "Brother Anselmo opens the box with his key. He looks at what is inside. He sets the box down carefully. He says nothing for a moment. Then he asks one question. Whatever is in the box, this is the moment.",
+      "skillCheck": { "dc": 12, "skills": ["Persuasion"] },
+      "takeItem": "reliquary box",
+      "activateMissionBit": "blqCoalsComplete",
+      "checkPassFlag": "delivery_accepted"
+    }
+  ]
+}
+```
+
+---
+
+*BLQ-04 complete. 2026-06-02.*
