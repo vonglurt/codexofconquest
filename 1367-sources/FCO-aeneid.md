@@ -2074,3 +2074,210 @@ activateMissionBit: fco09Complete
 ---
 
 *FCO-09 complete. 2026-06-02.*
+
+---
+
+## FCO-14 — The Fragment of the Final Line
+
+**Theme differentiation:** The six prior FCO vignettes cover: hostile custody, the paid craftsman, the replica city, the survivor's contradiction, fulfilled prophecy, and the relic of comprehension. This seed occupies the seventh position: the suppressed voice. The Aeneid ends with Aeneas striking Turnus while Turnus is already pleading — the most debated ending in classical literature. A margin annotation in a Monte Cassino manuscript preserves three words Turnus speaks after being struck, citing a lost commentary. **New theme:** *The alternate ending that survived in a margin is the document that decides whether the epic ends in justice or in fury; the three words are never quoted, only witnessed; what they do to everyone who reads them is the evidence.*
+
+---
+
+### Five-Act Vignette Play
+
+*TOKEN: The Monte Cassino Fragment — a single folio of parchment, cut from a larger manuscript, containing a margin annotation in a hand different from the main text. The annotation reads: "Serv. comm. lib. III deperdit." followed by six lines of verse. Three of those words are what Turnus speaks after being struck. No one who has read them has described them the same way twice. All of them have been unable to forget them. Carried in a sealed letter-fold, the folio pressed flat inside.*
+
+---
+
+**ACT I — The Abbot's Quiet Problem**
+
+*The Fragment, sealed in the letter-fold, in the Monte Cassino scriptorium safe · the abbot, Father Benedetto Aiello, sitting across from the fighter at a plain table · Monte Cassino hilltop, late morning, wind at the windows*
+
+The annotation was found four months ago by a novice transcribing an inventory of the manuscript collection. The novice showed it to the librarian. The librarian showed it to the humanist Piero della Rocca, who had been visiting the monastery for three weeks studying Virgil manuscripts. Piero has since published a letter — widely circulated among Florentine humanists — stating that he has seen evidence of an alternate ending to Book XII and requesting neutral authentication.
+
+The abbot did not authorize this letter. He is not angry about it. He is worried. If the fragment is genuine, the monastery has been inadvertently harboring a challenge to the canonical Aeneid for an unknown number of centuries. If it is forgery, someone forged it in the Monte Cassino scriptorium. Neither outcome is comfortable.
+
+He wants it out of his house and in a place that can absorb the controversy without requiring him to take a position.
+
+*The fighter understands: the abbot is not trying to suppress the fragment. He is trying to hand the problem to an institution better equipped to hold it.*
+
+---
+
+**ACT II — The Cardinal's Brief**
+
+*The Fragment, in the fighter's satchel, letter-fold sealed · on the road south toward Naples, afternoon · a courier at a crossroads with a letter from the office of Cardinal Matteo di Viterbo*
+
+The cardinal's brief is polite and specific: the fragment should be delivered to the Vatican library rather than to a foreign archive, as it constitutes a primary document of Roman literary heritage. The cardinal's office has jurisdiction over classical manuscripts held in the Italian states by virtue of a 1341 papal letter, a copy of which is attached to the brief.
+
+The 1341 letter does indeed give the Vatican library priority claim over certain categories of classical manuscripts. The Monte Cassino fragment is not clearly in those categories — it is a margin annotation, not a primary text. But the argument is close enough that a Roman court might not distinguish it.
+
+*The fighter must demonstrate, specifically, that a margin annotation citing a lost secondary commentary is not covered by the 1341 letter's classification — and that sending it to a foreign archive for neutral authentication is legally consistent with Vatican interests.*
+
+---
+
+**ACT III — What Piero Saw**
+
+*The Fragment, sealed, carried south · in a Naples tavern where Piero della Rocca is waiting · evening, the bay lit by late light*
+
+Piero della Rocca has been in Naples for three weeks waiting to hear whether his letter produced results. He is fifty-eight. He has published seventeen papers on the Aeneid's final books. He wrote the circulating letter not to create controversy but because he knew that if he did not announce the fragment's existence, it would disappear.
+
+He has read the three words once. He describes what happened when he read them: he set the manuscript down, stood up, walked to the window, stood there for some time, returned, and read them again. The second reading was the same as the first. He says: "I have been arguing for forty years that the ending is wrong. Not morally — structurally. That Virgil died before he finished it and what we have is the draft, not the intention." He says: "The three words are not a different ending. They are the ending Virgil already wrote, made visible."
+
+He does not ask to read the fragment again. He already knows what it says.
+
+*The fighter looks at the sealed letter-fold. The fighter has not read it. The fighter chooses, at this moment, not to.*
+
+---
+
+**ACT IV — The Courier Returns**
+
+*The Fragment, still sealed · on the road north from Naples, in the Apennine foothills · a courier from Monte Cassino, riding south toward the fighter*
+
+The abbot has reconsidered. Not the release — he stands by that. But he has spoken with the monastery's legal counsel, who has advised that once the fragment is classified in the Weimar archive, the Monte Cassino scriptorium will be permanently associated with scholarship that challenges the canonical epic. Generations of monks will have to explain to visiting scholars and church officials why their library produced a challenge to Virgil.
+
+The courier carries the abbot's letter asking for the fragment's return. The abbot says plainly: he is not asking for suppression. He is asking for time to prepare the monastery for what the authentication will mean.
+
+*The fighter must explain, in terms the abbot can accept, why there is no safe version of "time to prepare" — why the fragment's existence is already public from Piero's letter, and why delay now only means the archive receives it without the abbot's authorization, which is worse for the monastery than releasing it cleanly.*
+
+---
+
+**ACT V — What They Do**
+
+*The Fragment, finally unsealed · on the Weimar archive intake desk · morning*
+
+The archivist breaks the letter-fold's seal. He reads the annotation. He reads the six lines. He reads the three words.
+
+He sets the fragment down. He sits with it for a moment.
+
+Then he takes out the archive register and writes, very carefully: *Marginal annotation — variant final passage, Book XII. Citation: Servius, third book, lost commentary. Alternate lines: six. Classification: disputed authenticity, primary evidence.*
+
+He looks at the fighter. "I wrote 'disputed authenticity' because I cannot in good conscience write 'genuine' without formal review. But I am noting in the secondary record—" he turns to a second page, "—that the annotation's hand is consistent with 9th-century Monte Cassino script, the parchment is consistent with that period, and the citation to Servius's lost third book matches two other known fragmentary references to that commentary in unrelated manuscripts."
+
+He closes the register. He does not say what the three words are. He says: "They change the ending. Not the outcome — the ethics of it." He pauses. "Virgil would have known what he was doing."
+
+*The fragment is in the archive. The three words are in the register's secondary record. What Turnus said after being struck will not be lost again.*
+
+---
+
+### Quest API Stub — FCO-14
+
+```
+missionAccept: "A Monte Cassino manuscript contains a margin annotation preserving six alternate
+  final lines of the Aeneid, including three words Turnus speaks after being struck. The abbot
+  wants the controversy settled neutrally. The humanist who announced the fragment is in Naples.
+  A cardinal's brief is on the road. Carry the fragment to Weimar."
+
+Act I — The Abbot's Quiet Problem
+activateNode: MTC
+type: skill_check
+scene: "The Monte Cassino scriptorium, late morning. Abbot Benedetto Aiello sits at a plain
+  table with the sealed letter-fold beside him. A novice found the annotation four months ago.
+  The humanist Piero della Rocca published a letter announcing its existence three weeks ago.
+  The abbot did not authorize that letter. He is not angry — he is calculating which kind of
+  institutional damage is survivable and which is not."
+prompt: "Persuasion DC 13: Reassure him that the archive absorbs the controversy without
+  requiring him to take a position. His release is not an endorsement — it is a transfer
+  of custodial responsibility."
+failText: "He places his hand on the letter-fold. 'If the fragment is genuine, we held it
+  for centuries without knowing. If it is forgery, we may have forged it. Either way I need
+  the legal counsel's sign-off before I release it.' Come back with the argument about
+  custodial transfer versus position-taking. (retry)"
+successText: "He removes his hand from the letter-fold. 'Custodial transfer. Yes. That is
+  the phrase I needed.' He signs the release note. 'Tell the archivist I want no position
+  attributed to this house either way.' You receive the Abbot's Release Note."
+grantItem: "Abbot's Release Note"
+activateMissionBit: fco14Act1Active
+checkPassFlag: fco14Act1Passed
+
+Act II — The Cardinal's Brief
+activateNode: RME
+type: skill_check
+scene: "A crossroads south of Monte Cassino, afternoon. A courier presents you with a brief
+  from Cardinal Matteo di Viterbo's office — the fragment constitutes Roman literary heritage
+  under a 1341 papal letter giving the Vatican library priority claim. The argument is close
+  enough that a Roman court might not distinguish it. The courier is waiting for your response
+  to carry back."
+prompt: "Persuasion DC 14: Demonstrate that a margin annotation citing a lost secondary
+  commentary is outside the 1341 letter's classification — and that foreign neutral
+  authentication serves Vatican interests better than contested domestic custody."
+failText: "The courier writes in his notebook. 'The cardinal's counsel will review your
+  position.' He rides south. The brief is still technically active. Come back with the
+  legal category distinction before the counsel has time to respond. (retry)"
+successText: "The courier is quiet for a moment. 'I will carry that back.' He tears up his
+  note and writes a new one. 'The cardinal's office withdraws the brief pending neutral
+  authentication.' He stamps it and hands you the copy. You receive the Cardinal's
+  Withdrawn Brief."
+grantItem: "Cardinal's Withdrawn Brief"
+checkPassFlag: fco14Act2Passed
+
+Act III — What Piero Saw
+activateNode: NAP
+type: skill_check
+scene: "A Naples tavern, evening. Piero della Rocca has been waiting three weeks. He is
+  fifty-eight and very calm. He describes reading the three words: he set the manuscript
+  down, walked to the window, stood there, returned, read them again. He says he has argued
+  for forty years that the Aeneid's ending is structurally incomplete — a draft, not a
+  finished text. He says: 'The three words are not a different ending. They are the ending
+  Virgil already wrote, made visible.' He does not ask to read the fragment again."
+prompt: "Insight DC 12: Receive his account completely. He is telling you what the three
+  words do before you have read them. Understand the weight of what you are carrying
+  without opening the seal."
+failText: "You look at the letter-fold. You are about to break the seal. Piero says, very
+  quietly: 'Don't. Not here.' He is right — not here, not yet. Receive his account first.
+  (retry)"
+successText: "You hold the letter-fold closed and listen until Piero is finished. He nods
+  once. 'Good. The archivist should hear it that way too.' He writes a formal witness
+  statement — what he saw, when, and what he has argued for forty years. You receive
+  Piero's Witness Statement."
+grantItem: "Piero's Witness Statement"
+checkPassFlag: fco14Act3Passed
+
+Act IV — The Courier Returns
+activateNode: RME
+type: skill_check
+scene: "The Apennine foothills, north of Naples. A Monte Cassino courier is riding south
+  toward you — the abbot has reconsidered. Not the release itself, but its timing. His
+  letter asks for the fragment's return so the monastery can prepare for the authentication's
+  implications. He says plainly he is not asking for suppression. He is asking for time."
+prompt: "Persuasion DC 13: Explain why there is no safe version of 'time to prepare.'
+  Piero's letter is already public. Delay means the archive receives the fragment without
+  the abbot's authorization — which is worse for the monastery than clean release now."
+failText: "The courier says: 'The abbot anticipated this argument. He says two months.'
+  Two months is long enough for the cardinal's counsel to file a full brief. Come back
+  with the reason the abbot's interests are better served by speed than delay. (retry)"
+successText: "The courier reads the argument back in his own words to confirm he has it
+  right. He nods. 'I will carry this to the abbot. He will not send another.' He makes
+  a notation in his travel record that the return request was declined with cause. You
+  receive the Courier's Declined Return Record."
+grantItem: "Courier's Declined Return Record"
+checkPassFlag: fco14Act4Passed
+
+Act V — What They Do
+activateNode: WM
+type: skill_check
+scene: "The Weimar archive intake desk, morning. The archivist breaks the seal and reads the
+  fragment. He reads the six lines. He reads the three words. He sets it down and sits with
+  it a moment. Then he picks up his pen and writes 'disputed authenticity, primary evidence'
+  in the register. He looks at you. 'I cannot write genuine without formal review. But—' he
+  turns to the secondary record page — 'the hand is consistent with 9th-century Monte Cassino
+  script, and the citation to Servius's lost third book matches two other known references.'
+  He closes the register. 'They change the ending. Not the outcome — the ethics of it.'"
+prompt: "Persuasion DC 12: Tell him to write the secondary record fully — hand, parchment
+  dating, the Servius citation matches. The fragment should not wait for formal review
+  to have its supporting evidence on record."
+failText: "He sets the pen down. 'The formal review will establish the secondary evidence.'
+  It may not. Reviews take years and the evidence is present now. Come back with the
+  argument for recording what is already visible. (retry)"
+successText: "He writes the secondary record in full — all three supporting observations,
+  clearly labelled as preliminary. He adds Piero's witness statement and the abbot's
+  release note beneath. 'Whatever the review finds, the evidence that was visible on
+  arrival is now part of the record.' You receive the Fragment's Archive Entry."
+grantItem: "Fragment's Archive Entry"
+takeItem: "The Monte Cassino Fragment"
+checkPassFlag: fco14Act5Passed
+activateMissionBit: fco14Complete
+```
+
+---
+
+*FCO-14 complete. 2026-06-02.*

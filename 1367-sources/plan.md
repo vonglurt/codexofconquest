@@ -47,8 +47,8 @@ Turnus stripped Pallas's sword belt and wore it until the moment Aeneas killed h
 ### §FCO-13 — Acca's Message (Book 11)
 Acca received Camilla's dying words and delivered them to Turnus. A first-century BC votive stone near Arpi (mentioned in the Aeneid) names a woman "Acca" as a "bearer of final messages." A noble family possesses it and wants to sell it to a foreign collector. Fighter escorts the stone (or a rubbing) to Weimar before access is permanently lost to scholars.
 
-### §FCO-14 — The Fragment of the Final Line (Book 12)
-A Monte Cassino manuscript includes a marginal notation claiming to preserve six alternate final lines of the Aeneid, citing a lost 3rd-century commentary. The notation includes three words Turnus speaks after being struck, before dying. The scholarly dispute is becoming politically sensitive. The Monte Cassino abbot wants it quietly settled. The humanist who believes it genuine needs it archived neutrally. Fighter escorts the manuscript fragment from Monte Cassino to Weimar.
+### §FCO-14 — The Fragment of the Final Line (Book 12) ✓ DONE 2026-06-02
+Route: MTC → RME → WM. Theme: the alternate ending that survived in a margin; three words Turnus speaks after being struck that change the ethics of the Aeneid's close; the words are never quoted, only witnessed.
 
 ---
 
