@@ -1273,3 +1273,263 @@ Rinaldo da Pisa, in Firenzuola, has already sold the relic.
 ---
 
 *BLQ-04 complete. 2026-06-02.*
+
+---
+
+## Cycle 5 — Angle: The Document That Outlives What It Records
+
+---
+
+### BLQ-05: "The Falcon's Inventory"
+
+**Theme check:** Cycle 1 showed the document that performs its fraud through technical accuracy; Cycle 2 showed the document that renders opposing arguments moot by timing; Cycle 3 showed the document whose value is its unread state; Cycle 4 showed the document and object together, the theft discovered mid-journey. Cycle 5 shows what none of these addressed: the document that has already outlived the object it records. The deed of transfer is signed, sealed, correct in every particular — but the object it transfers was consumed three days ago. The deed is now the only proof the falcon existed at all, and the only record that Federigo killed his last treasure to honor a guest he could give nothing else to. The carrier must bring this document to Venice knowing the falcon is gone, and the delivery's meaning is not the transfer but the record.
+
+This is distinct from: BLQ-04 (object stolen, recovery possible — the loss is external); CLJ-06 (transformation from power to witness is intentional); AMS-03 (object-as-envelope, surrogate for communication); HAV-05 (voided instrument surviving for prior acts — the instrument was voided by authority, not consumed by the transaction itself).
+
+---
+
+**SOURCE HOOK:** Day V, Story 9. Federigo degli Alberighi has loved Monna Vanna for years without success and has spent his entire fortune pursuing her. He is reduced to a small farm and a single treasure: a hunting falcon of extraordinary quality, the finest in Tuscany. Monna Vanna's husband dies. Her son falls sick and asks only for Federigo's falcon. She has never been to Federigo's house. She goes. Federigo has nothing to serve her. He kills the falcon and cooks it. During the meal, she asks if she might have the falcon for her son. He tells her what he has just done. She weeps. The son dies. She marries Federigo. The story is exactly as long as it needs to be.
+
+---
+
+**1367 SETTING:**
+Messer Federigo degli Alberighi of Florence prepared the deed of transfer three days ago, before the guest arrived. A Venetian merchant's heir — young Alvise Tron, bedridden with a slow fever — had sent word through his mother Madonna Taddea that he had heard of the Alberighi falcon from a traveling falconer and wished to purchase it if the price could be arranged. Federigo, who would not sell it but would give it freely, had the deed prepared and notarized: the falcon transferred as a gift to Alvise Tron, with no consideration asked.
+
+The night before the carrier arrived to collect the falcon, Madonna Taddea herself came to the farm — not to purchase, but to ask in person, having heard the deed was being prepared. She was unexpected. Federigo had nothing else to serve her. He killed the falcon and cooked it.
+
+Madonna Taddea, when she asked, was told. She wept. She left.
+
+The carrier arrived the next morning. Federigo had only the deed. He gave it to the carrier with full explanation. He said: take it to Venice anyway. The deed is the only evidence of what the gift was. Alvise Tron deserves to know what was given.
+
+A separate rider from the Tron household is already on the Florence road, heading south to confirm delivery of the live bird.
+
+**TOKEN:** The deed of transfer — good parchment folio, the Alberighi arms in the seal wax, transferring ownership of "one hunting falcon of extraordinary quality, trained to the glove, of the blood of the Alberighi birds, worth by all estimate no less than ten years of a modest gentleman's income" to Alvise Tron of Venice; the falcon described in the deed no longer exists; the deed is its only memorial.
+
+**TOKEN granted:** Act I
+**TOKEN taken:** Act V (Madonna Taddea receives and files the deed; the gift is recorded)
+
+---
+
+### ACT I — Florence (Federigo's Farm, Outside the Eastern Gate)
+
+*The deed · folded once, Alberighi arms in blue wax · on the farm table between Federigo's hands · the falconry mews visible through the window, empty · morning, the farm smells of straw and old stone*
+
+Federigo degli Alberighi is a man who has not been embarrassed by poverty for years — he has simply accepted it as the shape of his life after love. He is not embarrassed now. He tells the carrier what happened without apology: the guest arrived, he had nothing, he killed the falcon, she asked for it at the end of the meal. He says this the way a man who has made his decision before he is asked describes the decision.
+
+He says: the deed is correct and signed. Take it to Venice. Alvise Tron asked for the bird because he heard how exceptional it was. The deed tells him how exceptional it was. That is more than the falcon could tell him now.
+
+*He is not asking me to apologize for him. He is asking me to carry the record.*
+
+He says one more thing: a Tron household rider left two days ago heading south to confirm the live delivery. If that rider reaches me before you reach Venice, what I gave away will become a story about what I served at dinner. I would prefer the deed to arrive before the story.
+
+---
+
+**Skill check — DC 12 Persuasion or Insight:**
+Understand why the deed still has value, and why speed matters.
+
+**Pass (Persuasion):** The carrier asks: what should I say when they ask about the falcon? Federigo says: say it was the finest bird in Tuscany and it was given freely and it is gone. Say that I did not know she was coming to ask for it until dinner was over. Say that the deed was prepared the night before. The carrier understands: the deed does not document a transfer of property. It documents the decision to give everything before it was asked for.
+
+**Pass (Insight):** The carrier watches Federigo during the explanation. There is no self-pity in him. He chose to give the falcon when there was nothing else to give, without knowing it was what the guest had come to ask for. The carrier understands: the deed is not a failed transfer — it is a complete one. The falcon gave itself. The deed proves the giving.
+
+**Fail:** The carrier departs with the deed and the explanation but without the understanding of what the delivery is for. The Tron family will need to interpret the deed's meaning themselves.
+
+*The deed granted here.*
+
+**Grant item:** deed of transfer — Alberighi arms, Federigo's seal, one hunting falcon of extraordinary quality; the falcon no longer exists
+
+---
+
+### ACT II — Road North of Florence (The Po Valley Road, First Day)
+
+*The deed · in the carrier's saddlebag · the road north to Ferrara and Venice, morning · a rider from the south catching up*
+
+A Tron household rider named Gasparo is on the same road, heading south. He is returning to Florence to confirm the delivery timeline and inspect the falcon before the sea passage. He is professional and not hurried. He has a letter from Madonna Taddea asking Federigo to name his preferred delivery port.
+
+He does not know the falcon is dead. He does not know the carrier is carrying the deed in the opposite direction.
+
+If Gasparo reaches Florence before the carrier reaches Venice, his report to Madonna Taddea will be: *no live bird, deed only, delivery incomplete.* This will reach Venice before the carrier can explain the deed's meaning, and Madonna Taddea will have received the bare fact — the falcon was killed and cooked — before she has received Federigo's framing of what that means.
+
+*He is riding south. I am riding north. We will pass each other on this road.*
+
+---
+
+**Skill check — DC 12 Persuasion or Deception:**
+Manage the encounter without Gasparo carrying the wrong story south.
+
+**Pass (Persuasion):** The carrier stops Gasparo and tells him directly: Messer Federigo has sent the deed of transfer ahead; the falcon cannot be delivered in person; Madonna Taddea is being asked to receive the deed as the record of the gift. The carrier says: return to Venice ahead of me and tell Madonna Taddea the deed is coming and the explanation will come with it. Gasparo, trusting the professionalism of the carrier, agrees. He turns around. He arrives in Venice the same day as the carrier or slightly before.
+
+**Pass (Deception):** The carrier claims to be a different delivery — dispatches from a Florentine wool factor, no connection to the Alberighi account. Gasparo, seeing no sealed falcon-transport equipment, continues south. He will reach Florence in two days; the carrier will reach Venice in three. The timing holds.
+
+**Fail:** Gasparo, suspicious of a carrier heading north from the direction of the Alberighi farm with only a document, asks directly what is being carried. The carrier cannot lie smoothly. Gasparo rides hard for Florence. His report will arrive in Venice the same day as the carrier.
+
+*The deed does not know it is being raced.*
+
+---
+
+### ACT III — Ferrara (The Po Ferry Crossing, Second Day)
+
+*The deed · in the carrier's coat · the Ferrara ferry platform, mist off the water · a group of Venetian merchants discussing the news from the Rialto*
+
+At the Ferrara ferry crossing, the carrier overhears a group of Venetian merchants returning from a trade fair. One of them says: the Tron heir's condition turned. He died four days ago. His mother is in mourning. The Rialto has been notified.
+
+*Alvise Tron is dead. The deed was addressed to him.*
+
+The deed transfers the falcon to Alvise Tron. He cannot receive it. The question of delivery changes: the deed is no longer being delivered to a sick boy who asked for a bird. It is being delivered to a grieving mother who asked for her son and was given neither the bird nor the boy.
+
+The carrier can: continue to Venice and deliver the deed to the Tron household. Or turn around and return the deed to Federigo, undelivered.
+
+*The falcon was killed to honor a guest who came to ask for it. The boy is dead. The document is the only thing left.*
+
+---
+
+**Skill check — DC 12 Insight or History:**
+Determine whether the deed should still be delivered and why.
+
+**Pass (Insight):** The carrier thinks through what the deed is now. It is a transfer to a dead man. But the transfer was made and the bird was given — consumed, irrevocably, before the death — and the deed is the record that it happened. Madonna Taddea has a right to know that the falcon was given for her son. The deed is the only thing that tells her. The carrier continues north.
+
+**Pass (History):** A deed of gift, once signed and sealed, does not require the recipient's survival for the gift to be valid. Posthumous receipt of a deed of gift is a recognized form in Venetian chancery law. The deed can be received by the estate on Alvise's behalf and entered into the estate inventory as a gift received. The carrier continues north.
+
+**Fail:** The carrier wavers. The delivery feels purposeless. They continue to Venice on inertia rather than understanding.
+
+---
+
+### ACT IV — Venice Approach (The Mainland Ferry Landing, Third Day)
+
+*The deed · in the carrier's coat · the Mestre ferry landing, late afternoon · Ser Barnaba Zorzi waiting at the post-dock*
+
+Ser Barnaba Zorzi, factor for the Tron household, has been meeting incoming carriers at the mainland landing for three years. He is expecting, based on the Tron household's previous inquiry, either a live falcon or a notification of delayed delivery. He has heard that Gasparo returned south and did not bring a bird. He has not yet heard what happened.
+
+He sees the carrier and says: "You are from the Alberighi account?" He says: Madonna Taddea is in mourning. He says: she asked me to intercept deliveries and explain the circumstances before presenting anything to her in this period.
+
+*He is doing his job. He is also deciding whether I reach Madonna Taddea at all.*
+
+He says: if there is no live bird, this may not be the right moment for a deed of transfer for a bird that does not exist.
+
+---
+
+**Skill check — DC 12 Persuasion or Insight:**
+Convince Ser Barnaba that the deed should reach Madonna Taddea directly, or read his discretion and find the right argument.
+
+**Pass (Persuasion):** The carrier says: the deed documents the gift Federigo gave before he knew it had been asked for. Madonna Taddea has the right to know this. The deed is not a failed transaction — it is the record of the most complete gift possible. Ser Barnaba, who has been a factor long enough to understand the difference between a transaction and a testimony, relents. He arranges the meeting.
+
+**Pass (Insight):** The carrier reads Ser Barnaba's protective instinct — he is shielding Madonna Taddea from what he thinks is a document demanding something from her. The carrier understands: Ser Barnaba has not yet understood that the deed asks nothing. It only records. The carrier reframes the deed in those terms. Ser Barnaba, understanding, arranges the meeting.
+
+**Fail:** Ser Barnaba postpones the delivery indefinitely. He will send word to Madonna Taddea and wait for her instruction. The carrier waits in Venice for three days before the meeting is arranged.
+
+---
+
+### ACT V — Venice (Tron Household, Ca' Tron on the Grand Canal)
+
+*The deed · unfolded on the table between the carrier and Madonna Taddea · the Grand Canal through the window, grey afternoon light · mourning cloth on the mirror, the household quiet*
+
+Madonna Taddea is not weeping. She finished weeping four days ago. She is the kind of woman who does her grief in private and receives visitors with composure. She reads the deed without expression — the falcon's qualities, the transfer to her son, the Alberighi seal, the date three days before Alvise died.
+
+She folds the deed. She says: "He cooked it." She says this without accusation, as a fact she is settling into the shape of the other facts of the week.
+
+She says: "I asked him once, many years ago, to sell it. He said no. He gave it to my son without my son asking for it. My son was dead before he knew."
+
+*She is not asking me anything. She is saying it to herself.*
+
+---
+
+**Skill check — DC 12 Persuasion or Investigation:**
+Help Madonna Taddea understand what the deed means to receive.
+
+**Pass (Persuasion):** The carrier says: Federigo signed this deed the night before you came to the farm. He had decided to give the falcon before you asked. He did not give it because you asked — he gave it because there was nothing else he could offer a guest who deserved the best of what he had. The deed is the proof that the decision was already made. Madonna Taddea looks at the deed for a long time. She says: "I will have this filed in the estate inventory. I do not have a category for it. I will make one."
+
+**Pass (Investigation):** The carrier has reviewed the deed's date carefully. It was signed three days before the falcon was served. The carrier points to the date. Madonna Taddea looks. She understands: the falcon was promised before the meal was served; the gift was complete before the request was made; Federigo did not give it because she asked — she asked because the gift was already done. She says: "I will have this filed in the estate inventory. I do not have a category for it."
+
+**Fail:** Madonna Taddea receives the deed without comment. She accepts it formally. She says: "Thank you." She files it with the estate clerk without additional notation.
+
+*The deed taken here. Madonna Taddea holds it.*
+
+**Take item:** deed of transfer (received by Madonna Taddea; filed in the Tron estate inventory)
+
+---
+
+### onPass
+
+Madonna Taddea instructs her notary, Messer Giacomo Morosini, to enter the deed into the estate inventory under a new category he creates at her direction: *Records of Impossible Gifts — Things Given Before the Request Could Arrive.*
+
+She gives the carrier a modest payment — not excessive, not insulting. She says: "Tell Messer Federigo that the deed arrived. Tell him that I know when the deed was signed." She says: "Tell him nothing more than that."
+
+The carrier delivers this message to Federigo at his farm outside Florence. Federigo reads it once and sets it down on the table between the candles and sits for a moment without saying anything.
+
+---
+
+### onFail
+
+The deed is accepted and filed without comment. Madonna Taddea's notary enters it as: *deed of transfer, Alberighi to Tron estate, object: one hunting falcon (deceased), value unspecified.* The gift is recorded. Its meaning is not.
+
+Federigo, when the carrier returns with no message, says: "Did she receive it?" The carrier says: she did. Federigo says: "That is enough."
+
+---
+
+### Quest Stub (UQF v1.0)
+
+```json
+{
+  "quest_id": "BLQ_005",
+  "title": "The Falcon's Inventory",
+  "cycle": 5,
+  "book": "Decameron",
+  "token": "deed of transfer — Alberighi arms in blue wax, transferring one hunting falcon of extraordinary quality to Alvise Tron of Venice; the falcon no longer exists; the deed is its only memorial",
+  "route": "FLR → (Po Valley road) → Ferrara → Mestre → VEN",
+  "theme": "The document that outlives what it records; the deed is the only proof the gift existed; the falcon was consumed in the act of honoring the person who was coming to ask for it; delivering the record is not delivering the object — it is delivering the meaning of the act",
+  "archive_category": "Records of Impossible Gifts — Things Given Before the Request Could Arrive (Madonna Taddea, Tron estate inventory, Venice, 1367)",
+  "acts": [
+    {
+      "act_id": "BLQ_005_01",
+      "location": "Florence — Federigo degli Alberighi's farm, outside the eastern gate",
+      "type": "skill_check",
+      "activateNode": "FLR",
+      "scene": "Federigo gives the carrier the deed of transfer without apology. He explains what happened: the guest arrived, he had nothing, he killed the falcon, she asked for it at dinner's end. He says: take it to Venice anyway. The deed is the only evidence of what the gift was. A Tron household rider left two days ago heading south to confirm the live delivery.",
+      "skillCheck": { "dc": 12, "skills": ["Persuasion", "Insight"] },
+      "grantItem": "deed of transfer (Alberighi falcon, no longer existing)",
+      "checkPassFlag": "gift_meaning_understood"
+    },
+    {
+      "act_id": "BLQ_005_02",
+      "location": "Po Valley road — north of Florence, first day",
+      "type": "skill_check",
+      "activateNode": "FLR",
+      "scene": "Gasparo, a Tron household rider heading south to inspect the falcon before transport, is on the same road. He does not know the falcon is dead. If he reaches Florence before the carrier reaches Venice, his report will arrive in Venice ahead of the deed's explanation.",
+      "skillCheck": { "dc": 12, "skills": ["Persuasion", "Deception"] },
+      "checkPassFlag": "gasparo_managed"
+    },
+    {
+      "act_id": "BLQ_005_03",
+      "location": "Ferrara — Po ferry crossing, second day",
+      "type": "skill_check",
+      "activateNode": "FLR",
+      "scene": "At the Ferrara ferry, the carrier overhears Venetian merchants: Alvise Tron died four days ago. The deed was addressed to him. He cannot receive it. The carrier must decide whether to continue north with a deed addressed to a dead man, or understand why the deed should still be delivered.",
+      "skillCheck": { "dc": 12, "skills": ["Insight", "History"] },
+      "checkPassFlag": "delivery_purpose_confirmed"
+    },
+    {
+      "act_id": "BLQ_005_04",
+      "location": "Mestre — mainland ferry landing, third day",
+      "type": "skill_check",
+      "activateNode": "FLR",
+      "scene": "Ser Barnaba Zorzi, Tron household factor, meets incoming carriers at the landing. He is shielding Madonna Taddea from deliveries during mourning. He has not yet understood that the deed asks nothing of her — it only records. The carrier must reach Madonna Taddea directly.",
+      "skillCheck": { "dc": 12, "skills": ["Persuasion", "Insight"] },
+      "checkPassFlag": "taddea_meeting_arranged"
+    },
+    {
+      "act_id": "BLQ_005_05",
+      "location": "Venice — Ca' Tron, Grand Canal",
+      "type": "skill_check",
+      "activateNode": "VEN",
+      "scene": "Madonna Taddea reads the deed without expression. She folds it. She says: he cooked it. She is not weeping. She says: I asked him once to sell it; he said no. She is settling into the shape of the other facts of the week. Help her understand what the deed means to receive.",
+      "skillCheck": { "dc": 12, "skills": ["Persuasion", "Investigation"] },
+      "takeItem": "deed of transfer",
+      "activateMissionBit": "blqFalconInventoryComplete",
+      "checkPassFlag": "deed_meaning_conveyed"
+    }
+  ]
+}
+```
+
+---
+
+*BLQ-05 complete. 2026-06-02.*

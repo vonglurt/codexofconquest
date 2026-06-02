@@ -393,7 +393,7 @@ This pass adds a **Summary** section to each book's `.md` file, one source text 
 Seeds outstanding (need full 5-act vignette treatment):
 - BLQ-02: "The Three Rings" — GEN → CON ✓ DONE 2026-06-02 (written as Cycle 3)
 - BLQ-03: "The Coals" — FLR → BOL ✓ DONE 2026-06-02 (written as Cycle 4)
-- BLQ-04: "The Falcon's Inventory" — FLR → VEN
+- BLQ-04: "The Falcon's Inventory" — FLR → VEN ✓ DONE 2026-06-02 (written as Cycle 5)
 - BLQ-05: "The Three Descents" — NAP → RHD
 - BLQ-06: "The Night Transport" — FLR → ALE
 - BLQ-07: "The Goosebridge Answer" — CON → WM
