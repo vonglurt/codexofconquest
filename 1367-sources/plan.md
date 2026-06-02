@@ -443,17 +443,15 @@ Seeds outstanding from supplementary cycle (need full 5-act vignette treatment):
 
 ## LIL — Chronicles of Froissart, Supplementary 1367 Cycle (Berners transl.)
 
-**Processed 2026-05-31** — LIL-02 spec complete (The Company's Letter, Bordeaux→Beaulieu-en-Périgord). Supplementary cycle written; four admin updates applied. New nodes: BDX (Bordeaux), PER (Périgord forest road), SRL (Beaulieu-en-Périgord). See LIL-froissart-berners.md, Supplementary Cycle section.
+**SEEDS COMPLETE 2026-06-02 — LIL-01 through LIL-08, all eight cycles written.**
 
-Theme: "The document creates law between parties who acknowledge no common authority — the routier's safe-conduct as the only agreement both sides will honor."
-
-Seeds outstanding from supplementary cycle (need full 5-act vignette treatment):
-- LIL-S02: "The Ransom Installment" — French treasury transfer, BDX registry
-- LIL-S03: "The Dinner Protocol" — Poitiers seating order, night of Sept 19 1356
-- LIL-S04: "The Prince's Son" — Richard of Bordeaux birth record, Jan 6 1367
-- LIL-S05: "The Chronicler's Draft" — Froissart manuscript to Flanders
-- LIL-S06: "The Herald's Patent" — corrected credential before Pyrenees crossing
-- LIL-S07: "The Road Back from Nájera" — du Guesclin combined ransom letter, BDX → Burgos
+- LIL-01: "The Company's Letter" (Cycle 1 — Bordeaux→Beaulieu-en-Périgord) ✓ DONE
+- LIL-02: "The Ransom Installment" (Cycle 3 — PER→BDX) ✓ DONE 2026-06-02
+- LIL-03: "The Dinner Protocol" (Cycle 4 — Poitiers seating order) ✓ DONE 2026-06-02
+- LIL-04: "The Prince's Son" (Cycle 5 — Richard of Bordeaux birth record) ✓ DONE 2026-06-02
+- LIL-05: "The Chronicler's Draft" (Cycle 6 — Froissart manuscript to Flanders) ✓ DONE 2026-06-02
+- LIL-06: "The Herald's Patent" (Cycle 7 — corrected credential, Pyrenees crossing) ✓ DONE 2026-06-02
+- LIL-07: "The Road Back from Nájera" (Cycle 8 — du Guesclin combined ransom, BDX→Burgos) ✓ DONE 2026-06-02
 
 ---
 
