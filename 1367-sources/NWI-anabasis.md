@@ -1102,3 +1102,205 @@ activateMissionBit: nwi03Complete
 ---
 
 *NWI-03 complete. 2026-06-02.*
+
+---
+
+## Cycle 5 — Angle: *The Salmydessus Books — The Record of the Lost Thing*
+
+**What this angle reveals that prior cycles missed:** Cycle 3 showed the eyewitness's direct account. Cycle 4 showed the letter that made the text possible. Cycle 5 enters the negative space: a document that records the existence of a text without preserving it. The Salmydessus salvage catalog says "Greek text in seven sections" and nothing more. The text is gone. The catalog survives. **New theme:** *Preserving evidence of loss is a different archival category from preserving the lost thing itself; the catalog is the document, not the text it names; the record of a vanished work is the only proof something was there, and that proof is itself worth preserving.*
+
+---
+
+### Five-Act Vignette Play
+
+*TOKEN: The Salmydessus Salvage Catalog — a harbor master's log entry, drawn up approximately two generations after the army's passage, in Thracian Greek with administrative notation. Recovered cargo from a specific wreck: cedar crates, rope, writing material, and — listed among the writing material — "a Greek text in seven sections." The harbor master describes the crates' condition. He does not describe the text's content. He is a harbor master, not a scholar. This is the only evidence the text existed. Kept in the Varna civic archive for seventeen hundred years under general salvage records.*
+
+---
+
+**ACT I — The Civic Archive**
+
+*The Catalog, in a general salvage register, shelf 7, row C, Varna civic archive · the archive's head clerk, a practical man named Radu · the Black Sea city of Varna, morning, the harbor visible from the archive window*
+
+A Genoese merchant named Cristoforo has submitted a purchase inquiry on behalf of a collector who specifically buys evidence of lost classical texts — catalogs, inventory mentions, secondary references. The inquiry was submitted four days ago. Radu has not yet processed it. He is a careful man who processes inquiries in order.
+
+The Weimar commission arrived this morning. There are three inquiries ahead of it in Radu's queue, none of which are related to the catalog. Radu processes inquiries in strict order.
+
+*The fighter must convince Radu that an archive commission is categorically different from a purchase inquiry and does not wait in the purchase queue.*
+
+---
+
+**ACT II — The Archivist's Theory**
+
+*The Catalog, in the fighter's satchel · a Black Sea vessel heading west toward Constantinople · evening, the coast of Thrace visible in the last light*
+
+A Byzantine archivist named Konstantinos Chrysoberges is on the same vessel. He has spent twenty years cataloguing Byzantine libraries. When he hears what the fighter is carrying — not the specific text, but "a harbor master's catalog entry mentioning a Greek text in seven sections" — he stops eating.
+
+He says: "Seven sections. That is a specific structural description. Most Greek texts are not described by their section count in salvage records." He says: "I know of eight lost classical texts that are described as having seven divisions in secondary references. None of them have a confirmed last location."
+
+He opens his notebook.
+
+*The fighter watches a scholar's twenty years narrow to a specific possibility in thirty seconds.*
+
+---
+
+**ACT III — The Reconstruction**
+
+*The Catalog, still sealed · in a Constantinople scholar's study, two days later · afternoon*
+
+His name is Ahmad ibn Sulayman. He teaches in the Ottoman-adjacent scholarly network that operates in Constantinople's eastern quarters. He has spent fifteen years reconstructing a lost Greek geographical survey from secondary references — citations in Byzantine chronicles, marginal notes, three fragments in a Thessaloniki monastery. He believes the survey was organized in seven sections by region.
+
+He does not claim the Salmydessus catalog confirms his theory. He says, precisely: "If the text in seven sections is the geographical survey, your catalog is corroborating evidence for its existence and for its transport route — which I could not previously account for." He pauses. "If it is not the survey, your catalog is still the only record of a text that no longer exists. Either way, the catalog belongs in an archive."
+
+*The fighter appreciates a scholar who distinguishes between what he knows and what he hopes.*
+
+---
+
+**ACT IV — The Harbor Master's Methodology**
+
+*The Catalog, opened briefly · a Constantinople harborside inn · an old man named Georgios who was harbor master at Kavala for thirty years · evening, lamps*
+
+Georgios retired three years ago. He is at the inn on his way to visit his daughter. The fighter shows him the catalog entry — not to ask him anything, but because the old Salmydessus harbor master's administrative notation was meticulous, and Georgios is the only person the fighter has met who might read it professionally.
+
+Georgios reads the entry. He reads it again. He says: "He did not know what he was looking at. But he wrote down everything he could observe — dimensions, material, binding method. He was doing his job the right way." He reads it a third time. "This is a very careful harbor master." He says it the way a craftsman recognizes craftsmanship.
+
+*The fighter thinks about the Salmydessus harbor master's name, which is nowhere in the catalog.*
+
+---
+
+**ACT V — Evidence of Loss**
+
+*The Catalog, delivered · on the Weimar archive intake desk · morning*
+
+The archivist reads the entry. He reads the description: cedar crates, rope binding, writing material, a Greek text in seven sections. He looks up.
+
+"I have two categories for this. One: general salvage records, administrative, Thracian coast. Two: classical library evidence, secondary reference to lost text." He opens both folders. "The first buries it where no classicist will find it. The second requires me to classify the text as a specific lost work, which I cannot do without identification." He sets both folders down. "There is a third category I have never had occasion to use."
+
+He looks at the fighter.
+
+*The fighter knows: evidence of loss is a category the archive needs. Not the lost thing — the proof it was there. The catalog is not a secondary reference to a known text. It is the primary document of a text's existence and disappearance.*
+
+---
+
+### Quest API Stub — NWI-05
+
+```
+missionAccept: "The Varna civic archive holds a harbor master's salvage catalog entry that
+  describes a Greek text in seven sections — the only evidence the text ever existed. A
+  Genoese merchant has submitted a purchase inquiry on behalf of a collector. Carry the
+  catalog to Weimar before the purchase is processed."
+
+Act I — The Civic Archive
+activateNode: VAR
+type: skill_check
+scene: "The Varna civic archive, morning. Head clerk Radu processes inquiries in strict order.
+  A Genoese purchase inquiry arrived four days ago. Your Weimar commission arrived this
+  morning and is fourth in the queue. Three unrelated inquiries are ahead of it. Radu is a
+  careful man. Through the window: the Black Sea harbor, ships loading."
+prompt: "Persuasion DC 13: Demonstrate that an archive commission is categorically different
+  from a purchase inquiry and does not wait in the purchase queue. The distinction is
+  custodial authority versus commercial transaction."
+failText: "Radu places your commission in the queue. 'I process all inquiries in order.
+  Come back in four days.' The Genoese purchase inquiry is first. Come back with the
+  argument about custodial authority, not commercial priority. (retry)"
+successText: "Radu pauses. He reads the commission again. 'Custodial authority supersedes
+  commercial inquiry. That is correct.' He pulls the register from the shelf. 'I will note
+  in the queue that the commission was filed in a different category.' You receive the Civic
+  Archive Release."
+grantItem: "Civic Archive Release"
+activateMissionBit: nwi05Act1Active
+checkPassFlag: nwi05Act1Passed
+
+Act II — The Archivist's Theory
+activateNode: CON
+type: skill_check
+scene: "A Black Sea vessel, evening. Byzantine archivist Konstantinos Chrysoberges hears you
+  describe 'a harbor master's catalog entry, Greek text in seven sections' and stops eating.
+  'Seven sections is a specific structural description.' He opens his notebook. 'I know eight
+  lost classical texts described as having seven divisions in secondary references. None of
+  them have a confirmed last location.' He is trying to narrow twenty years of work to one
+  possibility before the coast disappears."
+prompt: "Insight DC 12: Let him work. Give him the entry's exact description — dimensions,
+  material, binding. He needs the physical details, not just the section count."
+failText: "You give him the section count and no more. He writes it down but looks up. 'The
+  physical description of the crates — he would have noted that too.' Give him the full entry.
+  (retry)"
+successText: "You read him the full entry. He writes for five minutes. Then: 'Two of the
+  eight are eliminated by the binding method. One more by the crate dimensions.' He circles
+  five remaining names. He tears the page out and gives it to you. 'For the archivist. If
+  anyone identifies the text, this is where to start.' You receive Chrysoberges's Candidate
+  List."
+grantItem: "Chrysoberges's Candidate List"
+checkPassFlag: nwi05Act2Passed
+
+Act III — The Reconstruction
+activateNode: CON
+type: skill_check
+scene: "A Constantinople scholar's study, afternoon. Ahmad ibn Sulayman has spent fifteen
+  years reconstructing a lost Greek geographical survey from citations and fragments. He
+  believes it was organized in seven sections by region. He says precisely: 'If the text in
+  seven sections is the survey, your catalog is corroborating evidence for its existence and
+  transport route. If it is not, your catalog is still the only record of a text that no
+  longer exists. Either way, it belongs in an archive.'"
+prompt: "Insight DC 12: Receive his precision correctly. He distinguishes between what he
+  knows and what he hopes. Give him the same precision back: the catalog cannot confirm
+  his theory, but can coexist with it in the archive record."
+failText: "You give him the catalog as confirmation. He shakes his head. 'I said if. Not
+  therefore.' He closes his notebook. The distinction matters — do not flatten it. (retry)"
+successText: "You match his precision. He nods and writes one page — his reconstruction
+  summary, clearly labelled hypothesis, with the catalog noted as adjacent evidence, not
+  confirmation. He hands it to you. 'The archivist can judge. I cannot.' You receive Ahmad's
+  Reconstruction Summary."
+grantItem: "Ahmad's Reconstruction Summary"
+checkPassFlag: nwi05Act3Passed
+
+Act IV — The Harbor Master's Methodology
+activateNode: CON
+type: skill_check
+scene: "A harborside inn, evening. Georgios, retired harbor master of Kavala, is on his way
+  to visit his daughter. You show him the catalog entry — not to ask him anything, only
+  because he is the one person who might read the Salmydessus harbor master's administrative
+  notation professionally. He reads it three times. He says: 'He did not know what he was
+  looking at. But he wrote down everything observable. Dimensions, material, binding. This
+  is a very careful harbor master.' He says it the way a craftsman recognizes craftsmanship."
+prompt: "Insight DC 12: Receive what Georgios is saying. He is giving the Salmydessus harbor
+  master's name what it deserves — professional recognition. Accept it on behalf of a man
+  whose name is nowhere in the catalog."
+failText: "You ask Georgios if he can identify the text. He looks at you. 'I am a harbor
+  master. I recognize the notation. I do not read Greek texts.' Receive what he is actually
+  giving you. (retry)"
+successText: "You hold the catalog while Georgios finishes. He takes out a page from his
+  travel notebook and writes a brief professional assessment of the Salmydessus harbor
+  master's methodology. 'Give this to the archivist. It is one harbor master's opinion of
+  another's work, across seventeen hundred years.' You receive Georgios's Professional
+  Assessment."
+grantItem: "Georgios's Professional Assessment"
+checkPassFlag: nwi05Act4Passed
+
+Act V — Evidence of Loss
+activateNode: WM
+type: skill_check
+scene: "The Weimar archive intake desk, morning. The archivist reads the catalog entry. He
+  opens two folders: general salvage records (buries it), and classical library evidence
+  (requires identifying the text, which he cannot do). He sets both down. 'There is a third
+  category I have never had occasion to use.' He looks at you. He is waiting for the name
+  of the category."
+prompt: "Persuasion DC 13: Name the category. Evidence of loss — not the lost thing, not
+  a secondary reference to a known text, but the primary document of a text's existence
+  and disappearance. The catalog is the proof something was there."
+failText: "He nods slowly. 'A secondary reference is the standard classification.' But
+  secondary reference implies a known primary. This catalog is the primary. Come back with
+  the argument that distinguishes primary evidence of loss from secondary reference. (retry)"
+successText: "He writes: 'Evidence of Loss — Primary Document, Unidentified Classical Text,
+  Salmydessus wreck, circa 400–380 BC.' He places the catalog, Chrysoberges's candidate list,
+  Ahmad's reconstruction summary, and Georgios's professional assessment in the folder.
+  'Seven sections,' he says quietly. 'Someone will find it eventually, or they won't.
+  Either way, we know it was there.' You receive the Lost Text Archive Entry."
+grantItem: "Lost Text Archive Entry"
+takeItem: "The Salmydessus Salvage Catalog"
+checkPassFlag: nwi05Act5Passed
+activateMissionBit: nwi05Complete
+```
+
+---
+
+*NWI-05 complete. 2026-06-02.*

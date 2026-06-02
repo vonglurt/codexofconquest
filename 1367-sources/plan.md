@@ -67,8 +67,8 @@ Route: ORC → ATH → RGS → WM. Theme: the invitation as a form of authorship
 ### §NWI-04 — The Oath at Calpe (Book 2)
 Tissaphernes swore sacred oaths by the gods of Greece and Persia that the generals were safe at his tent. The diplomatic formula for such oaths was standardized in Persian-Greek correspondence. A clay tablet in a Venetian collection, acquired from a 9th-century Arab library, contains what appears to be the Persian-language formula for this class of safe-conduct oath — the same type Tissaphernes would have used. Fighter escorts the tablet.
 
-### §NWI-05 — The Salmydessus Books (Book 7)
-At the Thracian coast of Salmydessus, the army found a beach littered with cargo from wrecked ships, including a mass of written books. A Thracian harbor master's salvage catalog drawn up a generation later lists among recovered cargo six crates of writing material from a single wreck, including a Greek text described in seven sections. Fighter escorts the catalog from a Varna archive to Weimar.
+### §NWI-05 — The Salmydessus Books (Book 7) ✓ DONE 2026-06-02
+Route: VAR → CON → WM. Theme: evidence of loss is a primary document — the harbor master's catalog is the only proof the text existed; new archive category: evidence of loss, primary document, unidentified classical text. New node: VAR (Varna civic archive).
 
 ### §NWI-06 — The Cretan's Account (Book 5) ✓ DONE 2026-06-02
 Route: SIN → CON → WM. Theme: the front-rank view of communal salvation; the shout coming from the front and keeping coming; the specific physical details the literary account could not preserve. New node: SIN (Sinope).
