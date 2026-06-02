@@ -228,9 +228,9 @@ Remaining: add KYA-01 to quest-map.md theme thread when it is fully implemented.
 Seeds outstanding (need full 5-act vignette treatment):
 - IST-02: "The Curtain Notes" — Alexios's secret transcription of Basil the Bogomil's heresy census; Constantinople monastery → Thessaloniki → Weimar
 - IST-03: "The Nicaea Receipt" — the surrender document Alexios negotiated before the Crusaders could enter; the Crusaders' grievance in document form; Constantinople → Rhodes → Weimar
-- IST-04: "The Bryennios Draft" — Nikephoros Bryennios's contradictory draft history; three places where he and Anna disagree; monastery archive → Ragusa → Weimar
-- IST-05: "The Devol Treaty Copy" — the 1108 treaty that humiliated Bohemund; the sealed copy hidden by a Norman clerk; Palermo → Ragusa → Weimar
-- IST-06: "The Exile Letter" — Anna's first letter from the convent commissioning her own research access; convent archive → Constantinople → Weimar
+- IST-04: "The Bryennios Draft" — Nikephoros Bryennios's contradictory draft history; three places where he and Anna disagree; monastery archive → Ragusa → Weimar ✓ DONE 2026-06-02
+- IST-05: "The Devol Treaty Copy" — the 1108 treaty that humiliated Bohemund; the sealed copy hidden by a Norman clerk; Palermo → Ragusa → Weimar ✓ DONE 2026-06-02
+- IST-06: "The Exile Letter" — Anna's first letter from the convent commissioning her own research access; convent archive → Constantinople → Weimar ✓ DONE 2026-06-02
 - IST-07: "The Physician's Notes" — Anna's clinical notes on Alexios's final illness, more specific than the Alexiad's literary account; Kecharitomene convent → Weimar
 
 ---

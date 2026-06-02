@@ -474,6 +474,9 @@ Game cities are canonical. Source-book settings are proposed new nodes.
 | CAI-06 | Ser Marco's Session Notes | 3 | ALP → ANT → WM | The oral tradition at the moment it becomes aware it is being written down; the session notes record the storyteller changing the story |
 | CAI-03 | The Baghdad Mechanism Filing | 4 | BAG → TRB → ANT → WM | The archive receives claims, not verifications; guild patent for directed aerial transport filed under claimed technology |
 | CAI-07 | The Aleppo Hills Survey | 5 | CON → WM | The neutral language of a geographic survey is itself the primary data; the surveyor describes what he saw without naming what it was |
+| IST-04 | The Bryennios Draft | 3 | CON → RGS → WM | The unfinished draft survives because suppression requires publication; the husband's prior account names what the wife's defense required her to omit |
+| IST-05 | The Devol Treaty Copy | 4 | PAR → RGS → WM | The document hidden by the losing party's own side — not to conceal defeat from the enemy but to conceal submission from allies |
+| IST-06 | The Exile Letter | 5 | CON → WM | The commissioning letter for the archive's own contents; the origin of the collection is itself in the collection |
 
 *When a new quest is written, append its row to the Processed Quests table.*
 *When a new location is used, append its row to the Location Grid.*

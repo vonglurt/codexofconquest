@@ -665,3 +665,662 @@ The folio enters the Weimar archive under First Crusade — Nicaea. The Byzantin
 ### New Node Proposals
 
 No new nodes required. Route uses existing CON (Constantinople), RHD (Rhodes), WM (Weimar).
+
+---
+
+## Cycle 3 — Angle: *The Bryennios Draft — What the Husband Wrote Before the Wife Decided*
+
+**What this angle reveals that cycles 1-2 missed**: Cycle 1 showed the partisan historian preserving the enemy through the excess of her condemnation — bias as accidental archive. Cycle 2 showed the diplomat's receipt for a famous victory that excluded the party it was meant to celebrate — the bilateral deal filed under the absent party. Cycle 3 shows the draft that survived because it was never finished: Nikephoros Bryennios began his own history of the Komnenian dynasty before he died; in three places it contradicts Anna's Alexiad; in those three places the draft names events and persons that her defense strategy required her to omit. Suppression requires publication. An unfinished manuscript sitting in a monastery library for two centuries does not get suppressed — it only gets found.
+
+**Themes avoided:** bias as archive (IST-01); the excluded party's receipt (IST-03); draft as what the orator thought before deciding what to say (MLA-04 — that is a speech draft, and its theme is the speaker's interior; this is a history draft, and its theme is the gap between two finished works that never happened).
+
+**New theme chosen:** "The unfinished draft survives because suppression requires publication; the husband's account names precisely what the wife's defense required her to omit; the three contradictions are the document's primary data."
+
+---
+
+### 5-Act Vignette: *The Bryennios Draft*
+
+#### The Token
+
+The Bryennios Sleeve: a cloth sleeve folded around wax-tablet pages in Nikephoros Bryennios's hand, written between 1118 and 1137. The sleeve is tied with three cord knots. Three passages are marked in red by a reader who came two centuries later and understood what they meant. The sleeve has never left the monastery.
+
+*The Bryennios Sleeve · two centuries folded, three knots, three red marks · monastery shelf · Constantinople*
+
+---
+
+#### Act I — Constantinople (CON)
+
+*The monastery library is a corridor of wooden cases. The cases have no locks. They have never needed locks because no one outside the monastery has asked about the contents in living memory.*
+
+Brother Konstantinos brings the sleeve without being asked. He has been keeping it for forty years. The previous librarian told him once: "This is the draft that could not be published because the woman finished first." He has never known what that meant. He hands it over with both hands, the way you hand over something whose weight you cannot account for.
+
+"The abbot died last month," he says. "The library is not safe anymore."
+
+*The Bryennios Sleeve · accepted, the three red marks visible through the cloth weave · Fighter's hands · monastery corridor*
+
+`grantItem: "Bryennios Draft Sleeve"`
+
+**Skill Check — Investigation DC 12:** *Before leaving the library, read enough of the marked passages to understand what the red notations point at.*
+
+*pass:* The three passages. A name in passage one that the Alexiad omits from the same event. A date in passage two that contradicts the Alexiad's sequence by eleven months. A word in passage three — *συμφωνία*, agreement — where the Alexiad uses *παράδοση*, surrender. *He wrote the same events. He was not wrong. She was not wrong. They saw different things because they needed to see different things.*
+
+*fail:* The passages are read but the context is not assembled. The sleeve leaves the library as manuscript, not as evidence.
+
+---
+
+#### Act II — Constantinople (CON)
+
+*A Byzantine court official is waiting at the monastery gate. He is a functionary of the imperial chancery — not important enough to arrest anyone, important enough to delay departure until the sun moves.*
+
+He says the library is under review. New abbot has not been appointed. Until the appointment is made, the library's contents are technically under chancery supervision. He does not want the sleeve. He wants to know who sent for it.
+
+*The Bryennios Sleeve · the cord knots still tied, the official looking at the cloth weave · Fighter's hands · monastery gate*
+
+**Skill Check — Deception DC 12:** *Establish a plausible destination that is not the Weimar archive.*
+
+*pass:* He writes something in his tablet. He does not write what the Fighter said. He writes what he needs to have written. He lets them pass. *The functionary is not interested in the truth. He is interested in having something to report.*
+
+*fail:* He is interested enough to send a message ahead. Someone in Ragusa will be expecting the sleeve. Delay: one day.
+
+---
+
+#### Act III — Ragusa (RGS)
+
+*The Venetian factor's house in Ragusa has a reading room off the main hall. The reading room has three chairs and one desk and a lamp that is never extinguished. The factor has been in Ragusa for six years and knows every document that moves through.*
+
+He already knows about the sleeve. He knows about the three red marks. He has a buyer in Venice who wants the draft for a specific purpose: a Latin treatise on Byzantine imperial succession that requires evidence of contradictions within the Komnenian dynasty's own historical record. He names a price that is four times what the Weimar archive will pay.
+
+*The Bryennios Sleeve · still tied, the factor reaching across the desk · Fighter's hands · Ragusa reading room*
+
+**Skill Check — Persuasion DC 13:** *Argue that the sleeve's value depends on its reaching an institution with no political use for it; a document used to argue succession is no longer evidence — it is a weapon, and weapons get counter-argued out of existence.*
+
+*pass:* The factor considers. "The archive has no heirs." He removes his hand from the desk. He lets it pass. *He is a practical man. He does not want the liability of a document that kills its owner.*
+
+*fail:* He makes a copy of the three marked passages before releasing the sleeve. The copy will reach Venice within a fortnight. The sleeve itself continues intact.
+
+---
+
+#### Act IV — Ragusa (RGS)
+
+*Two men in the alley beside the factor's house. No identifying marks. The Norman lordship in Sicily has holdings in Ragusa; someone in the Norman network heard that a document contradicting the Alexiad's account of Bohemund was surfacing in the city.*
+
+They do not want to argue. The sleeve contradicts the public record of Bohemund's campaigns. The Norman lineage is still maintained in Sicily. A private archive is acceptable. A neutral archive is not.
+
+*The Bryennios Sleeve · the sleeve in the Fighter's pack, both men blocking the alley exit · Fighter · Ragusa alley*
+
+**Combat:** 2 Norman hired agents — AC 13, HP 20. Stop at half health when the math stops working. *They are not here for the money. They are here for the lineage. Lineage is not transferable to a hospital bill.*
+
+*pass:* Both down or withdrawn. The alley clear. The sleeve intact. *The contradiction has more enemies than an outright lie. A lie can be denied. A contradiction has to be explained.*
+
+*fail:* They take the sleeve. The factor saw which direction they moved.
+
+*The Bryennios Sleeve · both knots intact, the road west clear · Fighter's pack · Ragusa street*
+
+---
+
+#### Act V — Weimar (WM)
+
+*Archivus Sweelinck reads the three marked passages. Then he reads the corresponding passages in the Alexiad copy the archive holds — IST-01, the Bohemund section. He does not speak for a long time.*
+
+"She did not lie," he says at last. "She selected." He traces the date contradiction: eleven months. "He died in 1137. She finished in 1148. Eleven years to decide what the history needed the events to be." He sets down the draft. "The red marks are not a later reader's discovery. They are a later reader's accusation." He opens the archive intake book. "What category does a draft belong in when the finished work it precedes is already in the collection?"
+
+The Fighter describes what the monastery said. What the chancery official wrote in his tablet. What the Venetian factor's hand reached for.
+
+Sweelinck writes: *Draft Testimony — Antecedent Accounts: manuscripts created before a canonical version was completed; survived in library collections because they were never published; contradictions between draft and canon constitute the archive's primary data; the draft precedes; the omission is visible only in comparison.*
+
+He notes: "Bryennios was her husband. The draft is not hostile testimony. It is prior testimony. That is different."
+
+*The Bryennios Sleeve · opened, three red marks read, cord knots cut · Archivus Sweelinck · Weimar intake desk*
+
+"You receive the Bryennios Contradictions Record."
+
+`takeItem: "Bryennios Draft Sleeve"`
+`grantItem: "Bryennios Contradictions Record"`
+
+---
+
+### Quest API Stub — IST-04
+
+```json
+{
+  "quest_id": "IST-04",
+  "title": "The Bryennios Draft",
+  "cycle": 3,
+  "book": "IST — The Alexiad (Anna Komnene)",
+  "token": "Bryennios Draft Sleeve",
+  "route": ["CON", "RGS", "WM"],
+  "theme": "The unfinished draft survives because suppression requires publication; the husband's prior account names what the wife's defense required her to omit; three contradictions are the document's primary data",
+  "archive_category": "Draft Testimony — Antecedent Accounts",
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "CON",
+      "type": "skill_check",
+      "activateNode": "CON",
+      "scene": "Monastery library corridor. Brother Konstantinos holds the sleeve with both hands. The previous librarian told him forty years ago: 'This is the draft that could not be published because the woman finished first.' The abbot died last month. The library is not safe.",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 12,
+        "prompt": "Read enough of the three marked passages before leaving to understand what the red notations are pointing at.",
+        "failText": "The passages are read but the context is not assembled. The sleeve leaves as manuscript, not evidence.",
+        "passText": "A name omitted. A date eleven months off. A word: agreement, where the Alexiad wrote surrender. The draft is not wrong. The Alexiad is not wrong. They saw the same events through different necessities."
+      },
+      "grantItem": "Bryennios Draft Sleeve",
+      "checkPassFlag": "ist04Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "CON",
+      "type": "skill_check",
+      "activateNode": "CON",
+      "scene": "The monastery gate. A chancery functionary. He does not want the sleeve — he wants something to report. New abbot not appointed; library technically under chancery supervision.",
+      "skillCheck": {
+        "skill": "Deception",
+        "dc": 12,
+        "prompt": "Name a destination that is not the Weimar archive.",
+        "failText": "He is interested enough to send a message ahead. Someone in Ragusa will be expecting the sleeve. Delay: one day.",
+        "passText": "He writes what he needs to have written. He lets them pass. The functionary is not interested in the truth — he is interested in having something to report."
+      },
+      "checkPassFlag": "ist04Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "RGS",
+      "type": "skill_check",
+      "activateNode": "RGS",
+      "scene": "The Venetian factor's reading room. He already knows about the three red marks. A buyer in Venice wants the draft for a Latin treatise on Komnenian succession disputes. He names a price four times what the archive will pay.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "prompt": "Argue that the sleeve's value depends on its reaching an institution with no political use for it — a document used to argue succession is no longer evidence, it is a weapon.",
+        "failText": "He makes a copy of the three marked passages before releasing the sleeve. The copy will reach Venice within a fortnight. The sleeve itself continues intact.",
+        "passText": "The factor considers. 'The archive has no heirs.' He removes his hand from the desk. He is a practical man — he does not want the liability of a document that kills its owner."
+      },
+      "checkPassFlag": "ist04Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "RGS",
+      "type": "combat",
+      "activateNode": "RGS",
+      "scene": "The alley beside the factor's house. Two men in Norman network colors. Someone heard a document contradicting the Alexiad's account of Bohemund was surfacing. A private archive is acceptable. A neutral archive is not.",
+      "combat": {
+        "enemies": 2,
+        "AC": 13,
+        "HP": 20,
+        "description": "Norman hired agents — stop at half health when the math stops working",
+        "failText": "They take the sleeve. The factor saw which direction they moved.",
+        "passText": "Both down or withdrawn. The contradiction has more enemies than an outright lie. A lie can be denied. A contradiction must be explained."
+      },
+      "checkPassFlag": "ist04Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck reads the draft. Then the Alexiad. 'She did not lie. She selected.' He traces the date: eleven months off. 'He died in 1137. She finished in 1148. Eleven years to decide what the history needed.' What category does a draft belong in when the finished work it precedes is already in the collection?",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Explain the distinction between a hostile account and a prior account — Bryennios was her husband; his draft is not testimony against her, it is testimony before her.",
+        "failText": "Filed under Byzantine Historical Records — manuscript drafts. Cross-reference to IST-01 created.",
+        "passText": "Sweelinck writes: 'Draft Testimony — Antecedent Accounts: manuscripts created before a canonical version was completed; survived because never published; contradictions between draft and canon are the archive's primary data.' He notes: 'Bryennios was her husband. The draft is prior testimony. That is different.' You receive the Bryennios Contradictions Record."
+      },
+      "takeItem": "Bryennios Draft Sleeve",
+      "grantItem": "Bryennios Contradictions Record",
+      "checkPassFlag": "ist04Act5Passed",
+      "activateMissionBit": "istBryenniusComplete"
+    }
+  ]
+}
+```
+
+---
+
+*IST-04 complete. 2026-06-02.*
+
+
+---
+
+## Cycle 4 — Angle: *The Devol Treaty Copy — The Document the Hero's Side Hid from the Hero's Side*
+
+**What this angle reveals that cycles 1-3 missed**: Cycle 1 showed the enemy preserved in the hostile witness's excess of attention. Cycle 2 showed the victory that excluded the victors from their own triumph. Cycle 3 showed the unfinished draft that survived because suppression requires publication. Cycle 4 shows the document hidden by the losing party's own allies — not to conceal defeat from the enemy, but to conceal the extent of submission from the losing party's own people. When Bohemund signed the Treaty of Devol in 1108 and acknowledged Byzantine suzerainty over Antioch, the Norman clerk who carried the sealed copy back to Sicily did not show it to anyone. He did not destroy it. He filed it in a locked box in a Palermo archive room and left it there for two centuries, because a man can lose a battle and remain a hero, but a man cannot be seen to kneel.
+
+**Themes avoided:** bias as archive (IST-01); the excluded party's receipt (IST-03 — that was exclusion of an ally; this is self-concealment by a faction protecting its own leader); the unfinished draft surviving through omission (IST-04).
+
+**New theme chosen:** "The document hidden by the losing party's own side — not to conceal defeat from the enemy but to conceal the extent of submission from allies; the sealed copy survives in a Norman archive because no one dared read it."
+
+---
+
+### 5-Act Vignette: *The Devol Treaty Copy*
+
+#### The Token
+
+The Devol Sealed Box: a cedar box, palm-sized, with two wax seal impressions — the Byzantine imperial seal and a Norman baronial seal, both intact. There is a hairline crack in the Norman seal where someone pressed a finger against it once, checked the wax, and withdrew. The box has not been opened since 1108. The rope of cord around it has been re-knotted twice.
+
+*The Devol Sealed Box · sealed, two impressions, the hairline crack in the Norman wax · archive shelf · Palermo*
+
+---
+
+#### Act I — Palermo Archive District (PAR)
+
+*The archive room is in a tower. Norman-period construction: three walls of dressed stone, one wall of older brick that the Normans built against. The room smells of salt air and cedar and the particular dryness of parchment that has not been moved in two centuries.*
+
+Margherita di Ferro has managed her family's archive for twenty years. Her grandfather's grandfather was the Norman clerk who filed the box. She does not know what is in it. She knows it is sealed and that the seal has never been broken and that the rope has been re-knotted twice, which means someone considered opening it twice and decided against it both times.
+
+A Genoese factor is in the anteroom. He has been there since morning. He has a buyer.
+
+*The Devol Sealed Box · accepted from Margherita, both seals pressed under the Fighter's fingers · Fighter's hands · archive tower*
+
+"She wants it read honestly," Margherita says. "I want to know what he signed."
+
+`grantItem: "Devol Sealed Box"`
+
+**Skill Check — Insight DC 12:** *Determine whether the Genoese factor's buyer wants the treaty for scholarly use or for political use.*
+
+*pass:* The Genoese factor is efficient and exact and his eyes move to the box and back to the Fighter three times in thirty seconds. His buyer is a Norman claimant to Antioch. The treaty establishes that Bohemund acknowledged Alexios's suzerainty over Antioch — acknowledged it in writing, sealed it with the baronial seal. The claimant does not want it studied. He wants it destroyed. *A man with a document to destroy does not come himself. He sends someone efficient and exact.*
+
+*fail:* The factor's offer delays the departure by a day. He has time to send word ahead. Someone in Ragusa will know the box is moving.
+
+---
+
+#### Act II — Palermo Archive District (PAR)
+
+*The factor is waiting in the corridor outside the archive room. He has adjusted his price upward since morning. He is not hostile — he is a businessman who has identified a commodity and would prefer to be the one who moves it.*
+
+He knows what is in the box. Or he knows enough: "A treaty. Byzantine and Norman seals. 1108." He names a figure. He waits.
+
+*The Devol Sealed Box · both seals intact, the Genoese factor's eyes on it · Fighter's hands · PAR corridor*
+
+**Skill Check — Persuasion DC 12:** *Explain that the document's primary value is its unbroken chain of custody — arriving at the archive still sealed, provenance intact, is worth more to scholars than any political price.*
+
+*pass:* He does the arithmetic. An unbroken seal carries a provenance premium that his buyer cannot match, because his buyer's interest destroys the provenance the moment they break it. He steps aside. *He is a factor, not a partisan. The math changed.*
+
+*fail:* He sends a rider ahead to Ragusa. The Factor network reaches further than the mountain road.
+
+---
+
+#### Act III — Mountain Road to Ragusa (RGS)
+
+*Two days north of Palermo. The road narrows through a limestone pass. A man on horseback, one man-at-arms behind him. Norman colors, a generation out of fashion. He introduces himself by his grandfather's name before his own.*
+
+He is a cousin of Bohemund's lineage, three removes. He has heard the box is moving. He does not use the word "destroy." He says "family archive." He says "proper custody." He says his grandfather was the clerk. He has the receipts to prove it. He wants the box returned.
+
+*The Devol Sealed Box · still sealed, the Norman's hand out · Fighter's pack · mountain pass*
+
+**Hybrid — Persuasion DC 13 first; fail → Combat:**
+
+*Persuasion pass:* Argue that the family archive's interest would be best served by a neutral institution's classification — the treaty's terms are already known to Byzantine scholars; the only protection available is a documented chain of custody. He considers. His grandfather re-knotted the rope twice. He knows what that means. *He doesn't want to open it either. He wants to know it is somewhere safe.* He accepts.
+
+*Persuasion fail → Combat:* He is not violent by preference. He is violent by family obligation. 2 opponents, AC 14, HP 22. Stop when the cost exceeds the inheritance. *failText:* They take the box. The man-at-arms knows the road south. *passText:* Both down. The pass clear. The seals intact. *The treaty has been waiting 260 years. It can be patient about a few more bruises.*
+
+---
+
+#### Act IV — Ragusa (RGS)
+
+*The Ragusa waystation keeper is a practical woman who has moved documents through the Dalmatian coast for thirty years. She does not speculate about contents. She provides the room and the desk and the lamp and the lock, and she is honest about what she noticed.*
+
+She noticed the hairline crack in the Norman seal. She points to it without being asked. "Someone checked it. A hundred years ago, maybe. They pressed it back." She shows the crease in the cord where it was re-tied. "Twice. Two different hands. You can tell by the knot style."
+
+*The Devol Sealed Box · the hairline crack examined, the cord crease noted · Ragusa waystation desk*
+
+**Skill Check — History DC 12:** *Know the Treaty of Devol's terms well enough to explain what Bohemund actually signed.*
+
+*pass:* The waystation keeper listens. She says: "He acknowledged suzerainty. Gave up Antioch in writing. Returned to Europe having signed a document that made him a vassal." She pauses. "His side filed this. His family re-knotted the cord twice. They didn't want to open it. But they kept it." *She understands the archive better than any of them. You keep what you cannot bear to destroy.*
+
+*fail:* She files the transit record under Diplomatic Documents — Byzantine. No context note.
+
+---
+
+#### Act V — Weimar (WM)
+
+*Archivus Sweelinck examines the box for a long time before opening it. He traces the two seal impressions with one finger. He finds the hairline crack.*
+
+"Someone in his own household. They checked it once and re-sealed it." He sets the box on the intake desk. "Not Byzantine agents. Not crusade enemies. His own clerk." He looks at the Fighter. "Why would you keep a document that humiliates your lord?" He does not wait for an answer. He cuts the cord. He lifts the wax. He opens the box.
+
+He reads. He sets it down. He reads again.
+
+"He used the word *υποτελής*." Sweelinck writes it on the intake card. *Vassal.* "Not a diplomatic formula. Not a strategic concession. He wrote the word. His seal is on it."
+
+The new category forms slowly: *Treaty Records — Documents of Reluctant Submission: sealed copies of treaties held by the subordinate party; never published by the signatory's allies; primary evidence for the gap between the recorded heroic narrative and the documentary record of the acts that ended it.*
+
+He notes: "Filed under: the signing party. Cross-referenced to: the campaign it ended."
+
+*The Devol Sealed Box · opened, both seals cut, the word read · Archivus Sweelinck · Weimar intake desk*
+
+"You receive the Devol Treaty Record."
+
+`takeItem: "Devol Sealed Box"`
+`grantItem: "Devol Treaty Record"`
+
+---
+
+### Quest API Stub — IST-05
+
+```json
+{
+  "quest_id": "IST-05",
+  "title": "The Devol Treaty Copy",
+  "cycle": 4,
+  "book": "IST — The Alexiad (Anna Komnene)",
+  "token": "Devol Sealed Box",
+  "route": ["PAR", "RGS", "WM"],
+  "theme": "The document hidden by the losing party's own side — not to conceal defeat from the enemy but to conceal the extent of submission from allies; the sealed copy survives in a Norman archive because no one dared read it",
+  "archive_category": "Treaty Records — Documents of Reluctant Submission",
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "PAR",
+      "type": "skill_check",
+      "activateNode": "PAR",
+      "scene": "Archive tower, Palermo. Margherita di Ferro holds the cedar box: two seals intact, one hairline crack. The Genoese factor is in the anteroom with a buyer. She wants it read honestly. 'I want to know what he signed.'",
+      "skillCheck": {
+        "skill": "Insight",
+        "dc": 12,
+        "prompt": "Determine whether the Genoese factor's buyer wants the treaty for scholarly use or political destruction.",
+        "failText": "The factor's offer delays departure by a day. Someone in Ragusa will know the box is moving.",
+        "passText": "The factor's eyes move to the box three times in thirty seconds. His buyer is a Norman claimant to Antioch. A man with a document to destroy does not come himself — he sends someone efficient and exact."
+      },
+      "grantItem": "Devol Sealed Box",
+      "checkPassFlag": "ist05Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "PAR",
+      "type": "skill_check",
+      "activateNode": "PAR",
+      "scene": "PAR corridor. The Genoese factor has adjusted his price upward. He knows enough: 'A treaty. Byzantine and Norman seals. 1108.' He names a figure and waits.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "prompt": "Argue that the unbroken seal carries a provenance premium worth more to scholars than any political price — the buyer's interest destroys the provenance.",
+        "failText": "He sends a rider ahead to Ragusa. The Factor network reaches further than the mountain road.",
+        "passText": "He does the arithmetic. An unbroken seal's provenance premium exceeds his buyer's offer. He steps aside. He is a factor, not a partisan. The math changed."
+      },
+      "checkPassFlag": "ist05Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "road_ragusa_north",
+      "type": "hybrid",
+      "activateNode": "RGS",
+      "scene": "Mountain pass north of Palermo. A Norman cousin of Bohemund's line, three removes. He says 'family archive.' He says 'proper custody.' He says his grandfather was the clerk and he has the receipts. He wants the box returned.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "prompt": "Argue that the family archive's interest is best served by a neutral institution — the terms are already known to Byzantine scholars; the only protection available is documented chain of custody.",
+        "failText": "He is not violent by preference. Combat begins: 2 opponents, AC 14, HP 22. failText: They take the box. passText: Both down. Seals intact."
+      },
+      "combat": {
+        "enemies": 2,
+        "AC": 14,
+        "HP": 22,
+        "description": "Norman heir and man-at-arms — stop when cost exceeds the inheritance",
+        "failText": "They take the box. The man-at-arms knows the road south.",
+        "passText": "Both down. The pass clear. The treaty has been waiting 260 years — it can be patient about a few more bruises."
+      },
+      "checkPassFlag": "ist05Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "RGS",
+      "type": "skill_check",
+      "activateNode": "RGS",
+      "scene": "Ragusa waystation. The keeper points to the hairline crack without being asked. 'Someone checked it a hundred years ago. Two different hands re-knotted the cord — you can tell by the knot style.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Know the Treaty of Devol's terms well enough to explain what Bohemund actually signed.",
+        "failText": "Filed under Diplomatic Documents — Byzantine. No context note.",
+        "passText": "The keeper listens. 'He acknowledged suzerainty. Gave up Antioch in writing. His side filed this. They didn't want to open it. But they kept it.' She understands: you keep what you cannot bear to destroy."
+      },
+      "checkPassFlag": "ist05Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck examines the box before opening it. He finds the hairline crack. 'Not Byzantine agents. Not crusade enemies. His own clerk.' He cuts the cord. He reads. He reads again. He writes the word: υποτελής. Vassal.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 11,
+        "prompt": "Confirm that the treaty post-dated Bohemund's return to Europe — he signed it, crossed the Adriatic, and never recovered Antioch.",
+        "failText": "Filed under Byzantine Diplomatic Records — Norman vassal agreements. Cross-reference to First Crusade Contextual Records.",
+        "passText": "Sweelinck writes: 'Treaty Records — Documents of Reluctant Submission: sealed copies of treaties held by the subordinate party; never published by the signatory's allies; primary evidence for the gap between the recorded heroic narrative and the documentary record of the acts that ended it.' You receive the Devol Treaty Record."
+      },
+      "takeItem": "Devol Sealed Box",
+      "grantItem": "Devol Treaty Record",
+      "checkPassFlag": "ist05Act5Passed",
+      "activateMissionBit": "istDevolComplete"
+    }
+  ]
+}
+```
+
+---
+
+*IST-05 complete. 2026-06-02.*
+
+
+---
+
+## Cycle 5 — Angle: *The Exile Letter — The Origin of the Archive's Own Contents*
+
+**What this angle reveals that cycles 1-4 missed**: Cycle 1: the enemy preserved in the excess of condemnation. Cycle 2: the bilateral deal filed under the excluded party. Cycle 3: the unfinished draft that survived because suppression requires publication. Cycle 4: the sealed treaty hidden by the losing side from their own allies. Cycle 5 shows the act that made all the others possible: Anna Komnene's first letter from the convent, written in the 1140s, addressed to a scholar-friend at the imperial library, asking for specific manuscripts — the campaign dispatches, the 1108 treaty records, Bryennios's incomplete draft. Without this letter, the Alexiad does not exist. Without the Alexiad, IST-01, IST-02, IST-03 do not exist. The archive that receives the letter holds the origin of everything it already contains.
+
+**Themes avoided:** bias as archive (IST-01); the excluded party's receipt (IST-03); the prior draft surviving by accident (IST-04); the self-concealment of the defeated (IST-05).
+
+**New theme chosen:** "The commissioning letter for the archive's own contents; the exile's first act of resistance was asking for the sources; the archive that receives this letter holds the origin of everything it already contains."
+
+---
+
+### 5-Act Vignette: *The Exile Letter*
+
+#### The Token
+
+Anna's Commission Letter: a single folded sheet, sealed with Anna Komnene's personal seal — a cross-quartered device she used during her convent years, distinct from the imperial seal she no longer held. The outside reads: *To Konstantinos Manasses, Scholar, in the care of the Imperial Library of Constantinople.* The sheet is folded three ways, which was her habit with correspondence she considered permanent. Forty years old in 1148; two hundred and fifty years old in 1367. The seal is intact.
+
+*Anna's Commission Letter · folded three ways, sealed, the cross-quartered device visible · convent archive box · Kecharitomene convent*
+
+---
+
+#### Act I — Constantinople (CON)
+
+*The Kecharitomene convent's archive room is off the south cloister. The cases are wooden, the labels handwritten in three different centuries of handwriting. The box from Anna's effects — sorted when she died, around 1153 — has not been opened since it was filed.*
+
+Sister Helena is the current archivist. She found the letter three months ago while cataloguing. She does not know what it requests. She knows Anna's handwriting and she knows Anna's seal device. She knows the letter was never sent to the archive here — it was sent out and came back with Anna's effects, which means it was returned to her, which means she kept it, which means she considered it worth keeping.
+
+"The convent cannot authenticate it," Sister Helena says. "None of the current sisters were here then. You will need to go to the library."
+
+*Anna's Commission Letter · accepted, the cross-quartered seal pressed under the Fighter's thumb · Fighter's hands · convent archive*
+
+`grantItem: "Anna's Commission Letter"`
+
+**Skill Check — Religion DC 11:** *Understand the significance of the cross-quartered device — Anna used it specifically for documents she considered permanent acts, not routine correspondence.*
+
+*pass:* The device is not her personal preference. It is a declaration of intent: this letter is an act, not a communication. She sealed it the way you seal a will. *She was asking for the sources the way you ask for the tools you need to do the only thing left.*
+
+*fail:* The device is noted as Anna's convent seal. No further inference.
+
+---
+
+#### Act II — Constantinople (CON)
+
+*The convent gate. A Venetian scholar is waiting. He has been at the gate since yesterday morning. He is courteous and unhurried and the Fighter has the letter and he wants a copy before it leaves the city.*
+
+He knows about the letter because he knows Konstantinos Manasses's institutional successor — the current imperial librarian told him the letter was being retrieved. He has a quill and good paper and a plausible scholarly argument: a copy in Venice means the content survives if anything happens to the original.
+
+*Anna's Commission Letter · sealed, the scholar's hand extended in an academic gesture of reasonable request · Fighter's hands · convent gate*
+
+**Skill Check — Persuasion DC 12:** *Argue that the letter's primary value is the integrity of its chain of custody — a sealed letter arriving at the archive as a sealed letter is evidence of the act; a copied letter is a transcription of the content; only one of those is primary.*
+
+*pass:* He accepts the distinction. He is a scholar, not an agent. *He knows the difference between a document and a copy of a document. He is annoyed, but he is precise.* He steps back. He will cite the archive.
+
+*fail:* He makes notes on what Sister Helena said about the letter when it was found — not the letter's content, but the letter's existence and provenance. The notes will reach Venice. The letter itself continues intact.
+
+---
+
+#### Act III — Constantinople (CON)
+
+*The Imperial Library is a long hall with a stone floor. Makarios the librarian is Konstantinos Manasses's institutional successor three times removed. He has been expecting the letter for twenty years — not this letter specifically, but the kind of document that explains the specific manuscripts the library was asked to produce in the 1140s.*
+
+He has done the research. He shows the Fighter his file: the library intake records from 1143-1148 show a series of manuscript requests submitted by a scholar on behalf of "a research patron in religious retreat." Campaign dispatches from the Dyrrachion campaign: pulled. The 1108 treaty records: pulled and returned with a notation — *used for reference, returned complete.* Bryennios's manuscript draft: pulled, not returned.
+
+"She used them all," he says. "This letter is the record of how the Alexiad was made."
+
+*Anna's Commission Letter · sealed, Makarios reading the outside address before breaking it · Fighter's hands · imperial library hall*
+
+**Skill Check — History DC 13:** *Identify which manuscripts she requested, which she received, and — knowing the Alexiad's contents — what she wrote using each one.*
+
+*pass:* The campaign dispatches became the Dyrrachion campaign chapters (Books IV-V). The treaty records became the Nicaea chapters (Book XI). The Bryennios draft was kept — it is the draft the archive holds now. She requested it, received it, used it, and did not return it. *She kept the draft that contradicted her. She used it to write around the contradictions. This is the document that explains why the draft survived in the convent.*
+
+*fail:* Makarios files the letter under Anna Komnene — Personal Correspondence. Cross-reference to the Alexiad manuscript created.
+
+---
+
+#### Act IV — Constantinople (CON)
+
+*Two men from the Patriarch's office. Polite, measured, accompanied by a deacon and a lay clerk. The Patriarch has learned the letter is being retrieved. It names specific manuscripts the imperial library produced — including the 1108 treaty records. The Patriarchate's archive has its own copy of those records. If the letter establishes that the imperial library provided them at a scholar's request, it establishes that a woman in religious exile had authorized access to sensitive diplomatic materials during a period when the Patriarch's predecessor had a position on those same materials.*
+
+They are not threatening anyone. They are making a point about jurisdictional record.
+
+*Anna's Commission Letter · sealed, both Patriarch's men looking at it · Fighter's hands · CON street outside the library*
+
+**Hybrid — Persuasion DC 13 first; fail → Combat:**
+
+*Persuasion pass:* Argue that a two-hundred-and-fifty-year-old letter resolves nothing about current jurisdictional record — it establishes only what one historian asked for and what she received; the Patriarch's position on those same documents in 1148 is a separate question that the letter does not touch. The deacon consults his notes. The lay clerk looks at the Fighter. *The Patriarch's men are not here for the documents. They are here to see whether the documents travel without interruption. They have been answered.* They withdraw.
+
+*Persuasion fail → Combat:* 2 clerks with hired guards, AC 12, HP 18. The Patriarch's men do not fight themselves. *failText:* They take the letter. The deacon writes a receipt. *passText:* Guards down. The deacon and lay clerk walk away at a pace that is not running. The letter intact.
+
+---
+
+#### Act V — Weimar (WM)
+
+*Archivus Sweelinck puts on cotton gloves. He reads the outside of the letter before he opens it — the address, the seal device, the three-fold. He opens it. He reads it once. He reads it again.*
+
+"She asked for the campaign dispatches." He sets the letter on the desk. "She asked for the 1108 treaty records." He reaches for the intake shelf. He pulls three folders. "We have the Nicaea receipt. We have the Bryennios draft. We have the Bohemund portrait." He sets them beside the letter. "We filed them separately. Different campaigns. Different custodians. Different archive categories." He looks at the Fighter for a long moment.
+
+"This letter is the document that connects them. She asked for these three things to write the Alexiad. We have the Alexiad — IST-01. We have the Nicaea receipt — IST-02. We have the Bryennios draft — IST-04. We have the treaty — IST-05. We did not have the document that explains why they are connected." He smooths the letter on the desk. "The archive has been holding the origin of its own contents without knowing it."
+
+He writes: *Commissioning Records — Historiographic Origin Documents: letters requesting manuscript access that enabled a major historical work; the archive holds the completed work and now holds the letter that initiated it; primary evidence for the intellectual and archival process by which a history was assembled; the origin of the collection's contents is itself in the collection.*
+
+He notes: "Cross-referenced: IST-01, IST-03, IST-04, IST-05. The letter precedes all of them. Filed: before cycle 1."
+
+*Anna's Commission Letter · opened, smoothed on the intake desk, three folders beside it · Archivus Sweelinck · Weimar intake desk*
+
+"You receive the Historiographic Commission Record."
+
+`takeItem: "Anna's Commission Letter"`
+`grantItem: "Historiographic Commission Record"`
+
+---
+
+### Quest API Stub — IST-06
+
+```json
+{
+  "quest_id": "IST-06",
+  "title": "The Exile Letter",
+  "cycle": 5,
+  "book": "IST — The Alexiad (Anna Komnene)",
+  "token": "Anna's Commission Letter",
+  "route": ["CON", "WM"],
+  "theme": "The commissioning letter for the archive's own contents; the exile's first act of resistance was asking for the sources; the archive that receives this letter holds the origin of everything it already contains",
+  "archive_category": "Commissioning Records — Historiographic Origin Documents",
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "CON",
+      "type": "skill_check",
+      "activateNode": "CON",
+      "scene": "Kecharitomene convent archive. Sister Helena found the letter in Anna's effects, sorted after her death c. 1153. The cross-quartered seal: Anna's convent device, used only for permanent acts. 'The convent cannot authenticate it. You will need to go to the library.'",
+      "skillCheck": {
+        "skill": "Religion",
+        "dc": 11,
+        "prompt": "Understand the significance of the cross-quartered seal device — Anna used it for permanent acts, not routine correspondence.",
+        "failText": "The device is noted as Anna's convent seal. No further inference.",
+        "passText": "The device is a declaration of intent: this letter is an act, not a communication. She sealed it the way you seal a will. She was asking for the sources the way you ask for the tools you need to do the only thing left."
+      },
+      "grantItem": "Anna's Commission Letter",
+      "checkPassFlag": "ist06Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "CON",
+      "type": "skill_check",
+      "activateNode": "CON",
+      "scene": "Convent gate. A Venetian scholar has been waiting since yesterday. The current imperial librarian told him the letter was being retrieved. He has quill and paper and a plausible scholarly argument: a copy in Venice means the content survives if anything happens to the original.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "prompt": "Argue that a sealed letter arriving as a sealed letter is evidence of the act; a copied letter is a transcription of the content — only one of those is primary.",
+        "failText": "He makes notes on the letter's existence and provenance. The notes will reach Venice. The letter itself continues intact.",
+        "passText": "He accepts the distinction. He is a scholar, not an agent. He knows the difference between a document and a copy. He steps back and will cite the archive."
+      },
+      "checkPassFlag": "ist06Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "CON",
+      "type": "skill_check",
+      "activateNode": "CON",
+      "scene": "The Imperial Library. Makarios shows his file: the library intake records from 1143-1148 show manuscript requests from a scholar on behalf of 'a research patron in religious retreat.' Campaign dispatches: pulled. 1108 treaty records: pulled and returned. Bryennios draft: pulled, not returned.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 13,
+        "prompt": "Identify which manuscripts she requested, which she received, and what she wrote using each one.",
+        "failText": "Filed under Anna Komnene — Personal Correspondence. Cross-reference to the Alexiad manuscript created.",
+        "passText": "The dispatches became the Dyrrachion chapters. The treaty records became the Nicaea chapters. She kept the Bryennios draft — she used it to write around the contradictions. This letter explains why the draft survived in the convent."
+      },
+      "checkPassFlag": "ist06Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "CON",
+      "type": "hybrid",
+      "activateNode": "CON",
+      "scene": "CON street outside the library. Two men from the Patriarch's office — polite, a deacon and a lay clerk. The letter names manuscripts including 1108 treaty records. The Patriarch's predecessor had a position on those same materials. They are making a point about jurisdictional record.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "prompt": "Argue that a 250-year-old letter resolves nothing about current jurisdictional record — it establishes only what one historian asked for; the Patriarch's 1148 position is a separate question.",
+        "failText": "Combat begins: 2 guards, AC 12, HP 18. failText: They take the letter; deacon writes a receipt. passText: Guards down; deacon and clerk withdraw at pace that is not running."
+      },
+      "combat": {
+        "enemies": 2,
+        "AC": 12,
+        "HP": 18,
+        "description": "Patriarch's hired guards — not fighting for the principle, fighting for the pay",
+        "failText": "They take the letter. The deacon writes a receipt.",
+        "passText": "Guards down. The deacon and lay clerk walk away at a pace that is not running. The letter intact."
+      },
+      "checkPassFlag": "ist06Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck opens the letter in cotton gloves. He pulls three folders from the intake shelf: the Nicaea receipt, the Bryennios draft, the Bohemund portrait. 'We filed them separately. This letter is the document that connects them. The archive has been holding the origin of its own contents without knowing it.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Confirm that the manuscripts she requested in this letter produced the specific chapters of the Alexiad now in the archive — the connection between the commissioning act and the completed work.",
+        "failText": "Filed under Anna Komnene — Personal Correspondence — Commissioning Documents. Cross-references to IST-01 through IST-05 created.",
+        "passText": "Sweelinck writes: 'Commissioning Records — Historiographic Origin Documents: letters requesting manuscript access that enabled a major historical work; the archive holds the completed work and the letter that initiated it; the origin of the collection's contents is itself in the collection.' Cross-referenced: IST-01, IST-03, IST-04, IST-05. Filed: before cycle 1. You receive the Historiographic Commission Record."
+      },
+      "takeItem": "Anna's Commission Letter",
+      "grantItem": "Historiographic Commission Record",
+      "checkPassFlag": "ist06Act5Passed",
+      "activateMissionBit": "istExileLetterComplete"
+    }
+  ]
+}
+```
+
+---
+
+*IST-06 complete. 2026-06-02.*
+
