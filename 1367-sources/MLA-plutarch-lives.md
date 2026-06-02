@@ -419,3 +419,244 @@ In the Pipeline Queue table, update MLA row:
 | MLA | Plutarch's Lives | 4222 | **Processed 2026-05-31 — MLA_001 spec complete; MLA-02–07 seeds pending** |
 
 Next book in queue: **BGW** (Arabian Nights — Burton, ~983 KB), **CAI** (Arabian Nights — Lang, ~629 KB), or **BEY** (Mandeville's Travels, ~472 KB). IST (Alexiad) still has no source file.
+
+---
+
+## Cycle 2 — Angle: *The Missing Preface — The Argument That Outlived Its Evidence*
+
+**What this angle reveals that cycle 1 missed**: Cycle 1 showed two complete Lives being shelved together, producing a third text in the gap between them — the archive as the machine that makes comparison possible. Cycle 2 shows the inverse: a preface without its Lives. Plutarch's stated reason for pairing Epaminondas and Scipio — his argument about what their comparison reveals — survives while the Lives themselves are gone. A preface to absent texts is not an incomplete document; it is the method statement in its purest form, unqualified by the evidence it was written to introduce. What Plutarch thought the comparison was about is clearer now than it would have been if the Lives had survived, because the surviving text cannot be argued against.
+
+---
+
+### 5-Act Vignette Play: *The Missing Preface*
+
+#### The Fragment
+
+*The Epaminondas Preface Fragment — a vellum folio, rolled and sealed with monastery wax — Plutarch's stated argument for pairing Epaminondas and Scipio: what the comparison was designed to reveal, what quality in each man made them parallel, what the gap between their two approaches would show about the idea of great generalship. The Lives that were supposed to follow it are not here. They have not been here since at least the ninth century. The preface ends with a sentence about what the reader will find — and the reader will not find it. Held for four years in the Naxos ducal monastery library, in a theological collection where it was not being looked for.*
+
+---
+
+**ACT I**
+
+*The Epaminondas Preface Fragment — on a reading stand in the monastery library — Naxos ducal monastery, morning.*
+
+Brother Grigorios found it four years ago. He was cataloguing a late antique cosmography collection and found the preface bound loose at the back of a volume it had nothing to do with — same-era parchment, same scriptorium hand, clearly displaced. He read it twice and understood what it was: the preface to the two lost Lives. He has been deciding what to do with it since.
+
+His hesitation is not cowardice. He is asking: what is a preface without its text? Is it a fragment or a self-sufficient document? He believes it is self-sufficient. He is waiting for someone who will understand why.
+
+*— He wants to know that you see what it is before he releases it. Not its historical value. What it means that the argument survives without the evidence.*
+
+> **Dialogue DC 12.** Tell Brother Grigorios what it means that the preface outlived the Lives — why the absence of the supporting text is not a loss but a clarification; why the argument is more visible now than it would have been if Plutarch had finished.
+
+**Fail:** Grigorios sets his hands flat on the rolled folio. "You see a fragment. Come back when you can tell me why it is complete." He is not unkind. He has been waiting four years; he can wait another day.
+
+**Pass:** He lifts the folio from the stand and sets it on the table between you. "The Lives would have qualified it. Now nothing qualifies it. He said exactly what he thought, and we are the only readers left." He applies the monastery wax seal to the exterior with a notation: *single-folio preface, Plutarch collection, verified by Grigorios, monk, Naxos ducal monastery.* He slides it across.
+
+**TOKEN GRANTED: Epaminondas Preface Fragment** — vellum folio, rolled, monastery wax seal with Grigorios's verification notation; Plutarch's stated argument for pairing Epaminondas and Scipio.
+
+---
+
+**ACT II**
+
+*The Epaminondas Preface Fragment — in the Fighter's satchel — Naxos harbor embarkation dock, midday.*
+
+Ser Luca is the Venetian ducal factor for Naxos. He is the kind of man who knows the value of manuscripts without being able to read them, which is the most dangerous kind. He has been watching departures from the island's monastery network for two years. He intercepts the Fighter at the embarkation point with a light hand on the arm and a pleasant expression.
+
+"Cultural export review. The duchy has an interest in materials from Naxos's historical collections." He gestures at the satchel with the ease of a man who has done this before and knows when someone will comply. He is not threatening. He is a gate.
+
+*— He has two categories ready: commercial manuscript cargo (requires hold and inspection) and personal religious documents in clerical transit (requires only a notation). He will file it under whichever category you give him.*
+
+> **Dialogue DC 12.** Frame the document correctly — it is Plutarch, not Scripture, but it belongs to a monk's personal scholarly collection in transit, not to a commercial cargo. The factor knows the difference. He will log it as you describe it if your description is coherent.
+
+**Fail:** Ser Luca logs it as "library manuscript, commercial cargo, hold for inspection pending ducal review." Three days. The Fighter waits at the harbor inn while the review is requested and does not arrive.
+
+**Pass:** Ser Luca considers, writes his notation: *personal scholarly documents, clerical carrier transit, religious-cultural category.* He attaches his transit slip to the rolled folio's exterior. "You'll need that slip at Ragusa if anyone asks." He steps back. The ship is boarding.
+
+**TOKEN STATE 2**: Venetian ducal transit slip attached to exterior — *personal scholarly documents, clerical carrier transit, religious-cultural category* — freeing the document from commercial inspection authority.
+
+---
+
+**ACT III**
+
+*The Epaminondas Preface Fragment — rolled folio with monastery seal and transit slip — Ragusa waystation inn, evening.*
+
+Friar Benedetto is a Dominican scholar doing advance work for Venetian cultural acquisitions. He has been at the Ragusa waystation for a week, watching arrivals from the Greek island routes. He sees the transit slip. He reads it. He correctly identifies the document's origin: Naxos monastery collection, one folio, clerical transit.
+
+He sits across from the Fighter at the inn table with the expression of a man who has been looking for exactly this.
+
+"A preface without its text is an incomplete document. Technically, under the archive classification protocols, it belongs in a pending-authentication file until the associated primary texts can be confirmed as either present elsewhere or definitively lost." He opens his hands. "I am not proposing to take it. I am proposing that you allow me to log it as pending, which keeps it accessible for scholarly review."
+
+*He is not lying. He is right about the classification protocol. He is wrong about what the document is.*
+
+> **Skill Check: History DC 13.** Establish that Plutarch's preface to the lost Lives is not an incomplete document — it is a primary methodological text; the Lives were illustrations of an argument, not the argument itself; what survives is the argument, which is self-sufficient; a preface to absent Lives is not a secondary text pending its primary work, it is the primary work.
+
+**Fail:** Friar Benedetto applies his pending-authentication notation to the transit slip. The document is not taken, but the notation creates a complication at every future archive intake. The Fighter argues again at dawn with the fuller citation; Benedetto concedes by the second bell.
+
+**Pass:** Friar Benedetto is quiet for a moment. He is a genuine scholar. He recognizes when he has been outargued correctly. "I will note it as authenticated self-sufficient primary document." He adds his endorsement below Ser Luca's transit notation: *primary methodological text — method statement, self-sufficient, no primary text required; Plutarch's Lives, Epaminondas/Scipio pair; authenticated Friar Benedetto OSP, Ragusa.*
+
+**TOKEN STATE 3**: Dominican scholar's authentication endorsement added — *primary methodological text, self-sufficient* — establishing the document's independent status under archive classification.
+
+---
+
+**ACT IV**
+
+*The Epaminondas Preface Fragment — rolled folio with three notations — road north from Ragusa toward the overland route, night.*
+
+Ser Luca reconsidered his transit slip classification. He sent two men north on fast horses two hours after the ship arrived. They have been waiting on the road.
+
+*— They do not know what the document says. They know what it's worth.*
+
+> **Combat: 2 opponents — AC 12, HP 22 each.** They want the satchel. They will break off if reduced below half health.
+
+**Fail:** They get the satchel. The Fighter pursues. Ragusa's civic guard will record the theft if the Fighter reports it — a formal complaint against Venetian agents in a Venetian-dependent city is a delicate claim, but the guard will take the report.
+
+**Pass:** Both down or broken. The road north is clear. The folio is intact.
+
+**TOKEN STATE 4**: Carried through Venetian agents' ambush. Three notations undamaged.
+
+---
+
+**ACT V**
+
+*The Epaminondas Preface Fragment — rolled folio, three notations — Weimar archive, the desk of Archivus Sweelinck, morning.*
+
+Sweelinck reads the folio carefully. He knows the Lives. He knows the Epaminondas/Scipio pair is lost. He reads Plutarch's stated argument — what the comparison was designed to reveal — and sets the folio down with the expression of a man who has just understood something he has been about to understand for years.
+
+"The preface tells you what Plutarch thought the two men had in common." He looks up. "The Lives were going to demonstrate it. Without them, I can only take his word for it." A pause. "That is the most honest thing I have read in this archive in twenty years." He picks up his pen. "But I have no category for a preface without a text."
+
+*— He has the right problem. He needs to know what the category is.*
+
+> **Skill Check: History DC 11.** Tell Sweelinck the category: this is not a secondary document pending a primary text; it is a primary methodological document — Plutarch's explicit statement of his comparative method, applied to a specific comparison. The Lives were the evidence. The preface is the argument. File under: Primary Methodological Documents — Comparative Method Statement; the Lives, if found, would be filed as supporting material.
+
+**Fail:** Sweelinck files it under "Lost Works Fragments — Plutarch" and marks it pending. He consults his senior cataloguers. The correct framing arrives in an hour; he reopens the intake.
+
+**Pass:** Sweelinck writes a new category header at the bottom of the methodological documents folio: *Primary Methodological Documents — Comparative Method Statement; document type: argument standing independent of its illustrations.* He files the folio. He looks at it in the box.
+
+"A preface to two men who were never written down." He closes the box. "The gap in the middle is not a loss. It's the proof."
+
+**TOKEN TAKEN: Epaminondas Preface Fragment**
+
+The folio enters the Weimar archive under a new category. The monastery seal, the Venetian transit slip, and the Dominican authentication endorsement are indexed as chain-of-custody documentation. The argument Plutarch wrote is the only surviving statement of what he thought Epaminondas and Scipio shared.
+
+---
+
+## Quest API Stub — UQF v1.0
+
+```json
+{
+  "quest_id": "MLA_002",
+  "title": "The Missing Preface",
+  "source": "MLA",
+  "cycle": 2,
+  "book": "Plutarch's Lives — Plutarch (Dryden/Clough translation, c. 95–110 AD)",
+  "source_episode": "Paragraph in the Pelopidas Life noting that Epaminondas was to be paired with Scipio but the Lives are lost; fragments quoted by later writers confirming the preface existed; the Comparison chapter method applied to the one pair Plutarch never finished",
+  "theme": "The preface that outlived its Lives — the argument without its evidence; the method statement in its purest form, unqualified by the illustrations it was written to introduce; the archive that receives it must create a new category: primary methodological document, argument standing independent of its supporting texts",
+  "token": {
+    "id": "MLA_002_TOKEN",
+    "name": "Epaminondas Preface Fragment",
+    "description": "Vellum folio, rolled, monastery wax seal with Grigorios's verification; Plutarch's stated argument for pairing Epaminondas and Scipio — what the comparison was designed to reveal, what quality in each man made them parallel; the Lives that follow are absent; the preface ends with a sentence about what the reader will find, and the reader will not find it",
+    "grant_act": "act_1",
+    "take_act": "act_5",
+    "check_acts": ["act_2", "act_3", "act_4"],
+    "state_changes": [
+      {"act": "act_2", "change": "Venetian ducal transit slip attached — personal scholarly documents, clerical carrier transit, religious-cultural category"},
+      {"act": "act_3", "change": "Dominican scholar's authentication endorsement added — primary methodological text, self-sufficient, no primary text required"},
+      {"act": "act_4", "change": "carried through Venetian agents' ambush — three notations undamaged"}
+    ]
+  },
+  "nodes": ["NXS", "RGS", "WM"],
+  "new_nodes": [
+    {
+      "code": "NXS",
+      "name": "Naxos Ducal Monastery Library",
+      "description": "The library of the main monastery on Naxos under Venetian ducal authority, 1367: stone shelves, the smell of old binding and salt air from the Aegean, a reading stand by the window where the light is best in the morning; Brother Grigorios's desk in the corner where the cosmography collection is stored; the harbor visible below through the high window"
+    }
+  ],
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "NXS",
+      "type": "dialogue",
+      "activateNode": "NXS",
+      "missionAccept": "Brother Grigorios has held Plutarch's preface to the lost Epaminondas/Scipio pair for four years, deciding. He wants to know that the carrier understands what it means that the preface outlived its Lives.",
+      "scene": "The monastery library on Naxos: salt air through the high window, old parchment smell, a reading stand at the center with the rolled folio on it. Brother Grigorios sits at his desk to the side. He is not looking at the folio. He has been looking at it for four years.",
+      "dialogue": {
+        "dc": 12,
+        "prompt": "Tell Grigorios what it means that the argument survived while the evidence is gone.",
+        "failText": "He sets his hands flat. 'You see a fragment. Come back when you see why it is complete.'",
+        "passText": "'The Lives would have qualified it. Now nothing qualifies it.' He seals the folio and slides it across. TOKEN GRANTED: Epaminondas Preface Fragment."
+      },
+      "grantItem": "Epaminondas Preface Fragment",
+      "checkPassFlag": "MLA_002_act1Pass"
+    },
+    {
+      "act_id": "act_2",
+      "location": "NXS",
+      "type": "dialogue",
+      "activateNode": "NXS",
+      "scene": "The Naxos harbor embarkation dock. Ser Luca, the Venetian ducal factor, has a light hand on the Fighter's arm and two categories ready: commercial manuscript cargo (hold and inspection) or personal religious documents in clerical transit (notation only). He will log it as you describe it.",
+      "dialogue": {
+        "dc": 12,
+        "prompt": "Frame the document correctly — a monk's personal scholarly collection in transit, not commercial cargo.",
+        "failText": "Logged as commercial cargo, hold for ducal review. Three days at the harbor inn.",
+        "passText": "He writes: personal scholarly documents, clerical carrier transit. Attaches his transit slip. 'You'll need that at Ragusa.' TOKEN STATE 2: Venetian transit notation attached."
+      },
+      "checkPassFlag": "MLA_002_act2Pass"
+    },
+    {
+      "act_id": "act_3",
+      "location": "RGS",
+      "type": "skill_check",
+      "activateNode": "RGS",
+      "scene": "The Ragusa waystation inn. Friar Benedetto has been waiting here a week. He sees the transit slip, identifies the origin, sits across from the Fighter. He is right about the classification protocol — a preface without its text is technically incomplete. He is wrong about what this document is.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 13,
+        "failText": "He applies a pending-authentication notation. The document is not taken, but the complication follows it. Argue again at dawn — he concedes by the second bell.",
+        "passText": "He recognizes when he has been outargued correctly. He writes: primary methodological text, self-sufficient, method statement — Plutarch's Lives, Epaminondas/Scipio pair. TOKEN STATE 3: Dominican authentication endorsement added."
+      },
+      "checkPassFlag": "MLA_002_act3Pass"
+    },
+    {
+      "act_id": "act_4",
+      "location": "road_north_ragusa",
+      "type": "combat",
+      "activateNode": "RGS",
+      "scene": "Road north from Ragusa. Ser Luca reconsidered his transit classification two hours ago and sent men on fast horses. They have been waiting.",
+      "combat": {
+        "enemies": 2,
+        "AC": 12,
+        "HP": 22,
+        "description": "Venetian agents — recover the document before it reaches a neutral archive; break off at half health",
+        "failText": "They get the satchel. Ragusa's civic guard will take a formal complaint against Venetian agents.",
+        "passText": "Both down or broken. Three notations intact. Road north clear. TOKEN STATE 4: carried through."
+      },
+      "checkPassFlag": "MLA_002_act4Pass"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck reads the folio. He knows the Lives. He knows the pair is lost. He reads Plutarch's argument and sets it down. 'The preface tells you what he thought. The Lives were going to demonstrate it. Without them, I can only take his word.' A pause. 'That is the most honest thing I have read in this archive in twenty years.' He picks up his pen. 'But I have no category for a preface without a text.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 11,
+        "failText": "Filed under Lost Works Fragments — Plutarch, pending. Senior cataloguers consulted. Correct framing in an hour; intake reopened.",
+        "passText": "He writes: Primary Methodological Documents — Comparative Method Statement; argument standing independent of its illustrations. 'A preface to two men who were never written down. The gap is not a loss. It's the proof.' TOKEN TAKEN: Epaminondas Preface Fragment."
+      },
+      "takeItem": "Epaminondas Preface Fragment",
+      "activateMissionBit": "mlaMissingPrefaceComplete",
+      "checkPassFlag": "MLA_002_act5Pass"
+    }
+  ]
+}
+```
+
+---
+
+### New Node Proposals
+
+| Code | Name | Location | Description |
+|------|------|----------|-------------|
+| NXS | Naxos Ducal Monastery Library | Naxos, Aegean, under Venetian ducal authority | Stone shelves, salt air, old binding smell; Brother Grigorios's desk in the corner of the cosmography collection; the harbor visible below; the place where the preface sat for four years waiting for the right carrier |
