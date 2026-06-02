@@ -4,19 +4,19 @@
 
 **Project:** `roll2hit-v3.html` — single-file combat tracker + narrative RPG
 **Status:** Layers 0–104 implemented · ~21,200 lines · 121 nodes · 378 monsters · 46 lab reports · FC01–FC08 ✅ · §RESEARCH-01 ✅ · §API-01+02 ✅ · SP4 ✅ · §DESIGN-02 ✅ · §DESIGN-03 ✅ · §DUNGEON-01 ✅ · §DUNGEON-02 ✅ · §XLIII ✅ · §XLIV ✅ · §XLV ✅ · §XLVI ✅ · §XLVII ✅ · §XLVIII ✅ · §XLIX ✅ · §L ✅ · §LI ✅ · §LII ✅ · §LIII ✅ · §LIV ✅ · §LV ✅ · §LVI ✅ · §LVII ✅ · §LVIII ✅ · §LIX ✅ · §LX ✅ · §LXI ✅ · §LXII ✅ · §LXIII ✅ · §LXIV ✅ · §LXV–§LXIX ✅ · §SIREN-01 ✅
-**Last updated:** 2026-05-28
+**Last updated:** 2026-06-02
 
 ### Doc Health Badge
 
 | Metric | Value | Status |
 |--------|-------|--------|
 | HTML line count | ~21,200 | ✅ |
-| Lab reports on disk | 46 | ✅ |
-| Lab reports in index | 46 | ✅ |
+| Lab reports on disk | 54 | ✅ |
+| Lab reports in index | 54 | ✅ |
 | Node text rewrites (noir register) | 121 / 121 | ✅ +33 nodes: Med arc (91–110) + Littoral Courts (111–120) Layer 104 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
 | Layers implemented | 0–104 | ✅ |
-| Last sync pass | 2026-05-28 Layer 104 (§LXV–§LXIX: Mediterranean journey quests + Malta storyRender; §SIREN-01: 10-node Littoral Courts arc, betrayal mechanic, 4 Ladies + Overseer, LCA arc-close, lab-report-littoral-courts.md) | ✅ |
+| Last sync pass | 2026-06-02 Directory scan — 8 lab reports + worldbuilder.html + WBAPI toolchain + 1367-sources/ + milepoints/ + misc docs added to index | ✅ |
 
 > Update this table at the start of each session: recount lab reports with `ls lab-report-*.md | wc -l`, check HTML line count with `wc -l roll2hit-v3.html`, confirm FC item status.
 
@@ -59,6 +59,10 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | `story.md` | Main quest narrative: 42 story nodes across 8 acts, 7 Epic NPC profiles, prologue, endings, NG+ | ✅ 76 nodes covered |
 | `world.md` | DM manual: world history, 4 factions, 7 Epic NPC profiles, quest motivation, survival pressure | ✅ Reviewed 2026-05-24 |
 | `monsters.md` | 370 monsters: stat blocks by tier and terrain pool, 20 EB bosses, fish pool | ✅ Verified 2026-05-24 |
+| `quest.md` | Master quest register — all quests organized by location (implemented + planned) | ✅ |
+| `mechanics.md` | High-level game mechanics overview — links to mechanics-combat.md and mechanics-economy.md | ✅ |
+| `docs-node-network.md` | Node network technical reference — adjacency, code conventions, N/E/S/W graph structure | ✅ |
+| `Year1367AD.md` | Canonical year 1367 AD — historical events, source texts, quest vignettes for §1367 integration | ✅ |
 
 ### Story Arc Files
 
@@ -78,6 +82,9 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | `froberger-journal-all-entries.txt` | All 41 Froberger journal entries verbatim | ✅ Verified 41/41 (2026-05-24) |
 | `ux-first-battles.md` | First battles UX walkthrough, 10 UX fixes, wimper/flee flow | ✅ Accurate for L0–37 |
 | `5thOrgan.html` | Standalone polyphonic pipe organ synthesizer (72 oscillators, Beethoven canon) | ✅ 2026-05-24 |
+| `worldbuilder.html` | World Builder UI — 14 WBAPI anchors, live game-file editor (see wbapi-help.md) | ✅ |
+| `Saul2Paul.txt` | §FUTURE-01 reference text — Paul's journey from Acts/Pauline letters, itinerary notes | ✅ |
+| `littoral-courts-story.txt` | §SIREN-01 vignette prose — Littoral Courts story text, French register source | ✅ |
 
 ### Spec Documents *(historical — all implemented)*
 
@@ -89,9 +96,55 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | `spec-combat.md` | Phase 0/2 combat arena spec — historical |
 | `spec-migration.md` | Layers 0–8 IEEE migration report — all sections implemented |
 
+### WBAPI Toolchain
+
+| File | Purpose |
+|------|---------|
+| `wbapi-core.js` | Core WBAPI library — `extractObj`, `removeFns`, Proxy model, comment-aware brace counting |
+| `wbapi-cli.js` | CLI entry point — command dispatch, read/write operations against `roll2hit-v3.html` |
+| `wbapi-server.js` | Local HTTP server — REST endpoints for worldbuilder.html at port 1367 |
+| `wbapi-toggle.sh` | Shell helper — start/stop wbapi-server |
+| `wbapi-help.md` | WBAPI usage reference — endpoint list, anchor syntax, example calls |
+| `parse-nodes.js` | Standalone node parser — extracts NODE_MAP entries for external tooling |
+
+### Version Snapshots
+
+| Location | Contents |
+|----------|---------|
+| `milepoints/` | Curated milestone builds (e.g., `roll2hit-v3-20260602-174751.html`) |
+| `roll2hit-v3-*.html` (root) | Session-level timestamped snapshots — ~25 files, May 29 – Jun 2 2026 |
+
+### 1367-Sources
+
+All 54 source books are marked `[x]` in `books.md` — all have been processed through at least one full cycle (Three-Pass Summary + 5-act vignette + UQF JSON stub + admin updates to quest-map.md, books.md, plan.md).
+
+**Processing pipeline** (defined in `books.md` directive + `plan.md` protocol):
+- **Pass 1–3:** Full-telling summary → character/tone → elaborated scene
+- **5-act vignette play:** French noir register, Token doctrine (ACCEPT → CARRY → RETURN → RECORD)
+- **Quest API stub:** UQF v1.0 JSON, skill checks (DC 12+), fail text, grant/takeItem
+- **Pass 4:** Source text content summaries appended per part file (separate from literary analysis)
+
+**Books with outstanding supplementary cycle seeds** (seeds written, full vignette treatment pending):
+- `LIL` — Froissart/Berners: LIL-S02–S07 (6 seeds)
+- `BGW` — Arabian Nights/Burton: BGW-S09–S14 (6 seeds)
+- `CAI` — Arabian Nights/Lang: CAI-S09–S14 (6 seeds)
+- `BEY` — Mandeville (supplementary): BEY-S09–S14 (6 seeds)
+- `KYA` — Shah-Nameh: KYA-02–25 seeds written (24 pending full spec)
+- `ADA` — Ramayana: ADA-02–48 seeds written (47 pending full spec)
+
+| File | Purpose |
+|------|---------|
+| `1367-sources/books.md` | Master index of all 54 source texts — codes, titles, KB sizes, [x] status, region groupings, processing notes; Token Doctrine and City Travel Log |
+| `1367-sources/plan.md` | Pipeline tracker — outstanding seeds per book, Processing Protocol (single-part, multi-part, Pass 4), continuation entry format |
+| `1367-sources/quest-map.md` | City-to-source mapping — which source feeds which in-game node; Theme Threads Active (theme-uniqueness guard) |
+| `1367-sources/lab-report-agentic-pipeline.txt` | Agentic pipeline design notes for source-text processing |
+| `1367-sources/split-sources.js` / `.sh` | Utilities to chunk large source `.txt` files into 200 KB `partN` segments |
+| **Source `.md` files** | One per book — Three-Pass Summary + vignette cycles + quest seeds. See `books.md` for full list |
+| **Source `.part*.txt` files** | Pre-split 200 KB chunks of source texts — input to the processing pipeline |
+
 ---
 
-## Lab Report Index (All 46 Reports)
+## Lab Report Index (All 54 Reports)
 
 ### Architecture & Systems
 
@@ -104,6 +157,10 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | `lab-report-plan-cleanup-world-builder-arc.md` | 48–77 | plan.md archaeology + arc from dice tracker to world builder |
 | `lab-report-timeline-history-completed.md` | 0–45 | Complete layer-by-layer development timeline archive |
 | `lab-report-prompt-migration-arena-to-prototype.md` | 0–13 | Arena → Prototype: specification gravity, Cooperative DM Principle |
+| `lab-report-wbapi.md` | WBAPI | World Builder API first-pass design — buffer model, extractObj pipeline, port 1367 |
+| `lab-report-wbapi-architecture.md` | WBAPI | WBAPI internal architecture — Proxy model, comment-aware brace counting, single-file source of truth |
+| `lab-report-wbapi-evolution.md` | WBAPI | Evolution from grep to WBAPI — world data access history, design decisions, tradeoffs |
+| `lab-report-quest-api-architecture.md` | §ARCH-01 | Quest API & Universal Mission Format — UQF v1.0 schema, Mission Bit Registry, QuestRuntime design |
 
 ### Combat & Mechanics
 
@@ -125,6 +182,7 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | `lab-report-circuit-map-theory.md` | 9 | CS theory: sparse node mesh, junction concept, TSP framing, Hunt/Warp traces |
 | `lab-report-battleground-circuit-path-quest.md` | 9–12 | Stalk mechanics, quest-coupled guaranteed encounters, XP methodology |
 | `lab-report-epic-battlegrounds.md` | 39 | §0 20 EB dead-end nodes, `EB_NPC_DIALOGUE`, payment negotiation, return beats |
+| `lab-report-naval-campaign-layer.md` | — | Naval Campaign Layer — ports, intercepts, hunts, Harmony Chain at sea (design spec) |
 
 ### Monsters & Fishing
 
@@ -162,6 +220,7 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | `lab-report-dungeon-ten-themes.md` | 80 | §DUNGEON-01 — 10 dungeon themes, P1–P3+ tiers, Node MM, Tribble counter, Madness Table, voidFluxActive, Prior Carrier, Codex Core ending compat |
 | `lab-report-la-riva-grief-arc.md` | 78 | §GR Grief Arc — La Riva / Fishmonger's Row, Connie/Aldo/Vinnie, corruption-grief chain, distributed grief subplot map |
 | `lab-report-littoral-courts.md` | 104 | §SIREN-01 Littoral Courts — four manipulative words, betrayal mechanic, Overseer parallel quest, French vignette register, non-obvious decisions |
+| `lab-report-crown-three-hags.md` | §CROWN-01 | The Three Crowns of the Swamp — hag encounter arc design |
 
 ### Writing & Design Philosophy
 
@@ -173,6 +232,8 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | `lab-report-meta-process-loop-expansion.md` | Meta-process — prompt→plan→lab-report recursive loop, 10 historical instances, session efficiency |
 | `lab-report-saul-paul-travel-reference.md` | §FUTURE-01 source — 37-node Paul arc itinerary, Acts 7–28 + Pauline letters, NPC list, lodging, speeches |
 | `lab-report-saul-paul-vignette-spec.md` | §FUTURE-01 vignette — 14 node texts, 9 quest descriptions, 7 NPC voice lines, 8 voice rules, object inventory, thorn mechanic |
+| `lab-report-kindness-calculus.md` | Prosocial mechanics — asymptotic kindness in quest graphs, token automata, the probabilistic case against combat |
+| `lab-report-wisdom-arc.md` | Wisdom Arc — Robert Greene's Laws of Human Nature as quest mechanics, WIS progression design |
 
 ---
 
@@ -314,6 +375,6 @@ All previously logged conflicts resolved. Current known gaps:
 
 ---
 
-*Last updated: 2026-05-28*
-*Codebase: `roll2hit-v3.html` · ~21,200 lines · Layers 0–104 complete · 121 nodes · 378 monsters · 46 lab reports*
+*Last updated: 2026-06-02*
+*Codebase: `roll2hit-v3.html` · ~21,200 lines · Layers 0–104 complete · 121 nodes · 378 monsters · 54 lab reports*
 *MIT License — roll2hit.com — Copyright (c) 2026 — Free to use, modify, and share.*
