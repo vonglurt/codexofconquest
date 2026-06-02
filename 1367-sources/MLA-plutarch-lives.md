@@ -1323,3 +1323,449 @@ activateMissionBit: mla06GracchuComplete
 ---
 
 *MLA-06 complete. 2026-06-02.*
+
+---
+
+**Cycle 6**
+
+*(Theme differentiation: Avoiding MLA cycles 1-5. MLA-01: comparison produces meaning in the gap. MLA-07: preface that outlived its evidence. MLA-04: shorthand draft faster than deliberation. MLA-02: treasonous and honest, stateless actor. MLA-06: historical document as live lawsuit. New theme: the authenticated copy that precedes the original's uncertain fate; the rubbing is all that will survive the sea; the copy is not a substitute but the only form in which the laws will arrive; the archive receives the copy before the stone reaches Venice — if it reaches Venice.)*
+
+---
+
+## Cycle 6 — Angle: *The Solon Tablet — The Copy That Arrived Before the Stone*
+
+**What this angle reveals that cycles 1-5 missed**: Cycle 1: comparison as meaning. Cycle 2: preface that outlived its evidence. Cycle 3: shorthand draft as primary testimony. Cycle 4: treasonous and honest simultaneously. Cycle 5: historical document as live lawsuit. Cycle 6 shows what happens when the physical original is already in transit on a ship and the only thing that can reach the archive before the sea takes it is the authenticated copy. The Solon laws were inscribed on tablets, copied to marble, and all the primary copies were lost. A late Roman marble copy of a Hellenistic transcription of three laws — including the specific language of the seisachtheia clause — sits in a Mystras archive until a Venetian collector buys it. The day before the galley sails, a Greek scholar makes an authenticated rubbing. The stone may or may not reach Venice. The rubbing can reach Weimar. The copy is not secondary. The copy is the only thing arriving.
+
+**Themes avoided:** all five prior MLA themes (see above); BGW-04's "unanswerable authenticity question" (this is a question of physical fate, not authenticity); IST-03's "excluded party's receipt" (this is about the survival of knowledge, not a bilateral deal).
+
+**New theme chosen:** "The authenticated copy that precedes the original's uncertain fate; the rubbing arrives before the stone; the copy is not a substitute — it is the only form in which these laws will reach an archive."
+
+---
+
+### 5-Act Vignette: *The Solon Tablet*
+
+#### The Token
+
+The Solon Rubbing: a wax-cloth authenticated rubbing of three laws from a late Roman marble copy in Mystras, made by Nikolaos Spanopoulos the day before the stone's departure. Three laws are legible: one on inheritance procedure, one on maritime trade arbitration, one on debt cancellation with specific contractual language not preserved in any surviving secondary source. Spanopoulos has signed the corner of the cloth with his seal: *Nikolaos Spanopoulos, Mystras, certified accurate against the original, 1367.* The galley carrying the stone left yesterday.
+
+*The Solon Rubbing · certified cloth, three laws legible, Spanopoulos's seal in the corner · Mystras scholar's house*
+
+---
+
+#### Act I — Mystras (MYS)
+
+*Nikolaos Spanopoulos is sixty-three years old and he spent yesterday afternoon on his knees in the archive with his wax cloth and his patience. The Venetian buyer arrived the next morning. The stone left on the evening galley. Spanopoulos has the rubbing and a very specific understanding of what he preserved.*
+
+He reads the third law to the Fighter from memory: "*He cancelled not the debts themselves but the instruments of debt-bondage* — that word, that word is not in Aristotle's account, not in Plutarch's account, not in any secondary source I have read in forty years of reading. The word is *syntheke* — covenant, not obligation. He cancelled the covenants of the body." He rolls the cloth. "If the stone sinks, this is the only record that Solon used that word."
+
+`grantItem: "Solon Rubbing"`
+
+*The Solon Rubbing · sealed and rolled · Fighter's hands · Mystras archive house*
+
+**Skill Check — History DC 12:** *Understand the significance of the specific word choice in the third law — how it changes the scholarly understanding of what the seisachtheia actually cancelled.*
+
+*pass:* The standard accounts describe cancellation of financial obligations. The word *syntheke* — covenant — means Solon cancelled the agreements that bound people as collateral, not just the debts. The debt-bondage clause has been debated for six hundred years. This stone had the word that settles it. *The word is the whole argument. Spanopoulos knows this. That is why he spent a day on his knees.*
+
+*fail:* The rubbing noted as a late copy of a Solon law inscription. The significance of the variant word not assembled.
+
+---
+
+#### Act II — Mystras (MYS)
+
+*The Venetian buyer's agent is still in Mystras — he stayed to manage the paperwork of the sale. He has learned about the rubbing. He argues that the buyer acquired the stone and its contents; the rubbing is a derivative record of the buyer's property and should travel with the stone or be destroyed.*
+
+He is not hostile. He is a precise man who believes property law is determinative. He has a lawyer's letter.
+
+*The Solon Rubbing · in the Fighter's pack, the agent's lawyer's letter on the table · Fighter · Mystras archive house entrance*
+
+**Skill Check — Persuasion DC 12:** *Argue that an authenticated copy made by an independent scholar before the sale was completed is the scholar's independent work product; the buyer acquired the stone, not all knowledge that can be derived from it.*
+
+*pass:* He considers. He does not have authority to confiscate a scholar's work product in Greek-administered territory. He sends a message to his employer. He lets the Fighter pass. *He is a precise man. The argument is also precise. He files it away for a future conversation with a lawyer.*
+
+*fail:* He makes a record of the rubbing's existence and destination. The buyer will know where it goes.
+
+---
+
+#### Act III — Ancona (ANC)
+
+*The Ancona waystation. A message from the Venetian galley network: the stone reached Naples in heavy seas. The galley captain is uncertain whether to proceed to Venice or wait out the winter in Naples. The stone may winter in a Neapolitan warehouse. The buyer's interest in the rubbing has changed — he now wants it as a backup copy.*
+
+A factor named Ser Biagio has been asked to negotiate. He is polite and uses words like "complementary custody" and "shared preservation." He means: the buyer wants the rubbing in Venice, not Weimar.
+
+*The Solon Rubbing · in the pack, Ser Biagio's letter open on the table · Fighter's pack · Ancona waystation*
+
+**Skill Check — Insight DC 12:** *Read whether the buyer's interest in the rubbing is genuine preservation concern or an attempt to consolidate control of the only scholarly record of the stone's content.*
+
+*pass:* Ser Biagio uses the word "complementary" twice and "backup" once. The buyer does not want a copy in a neutral archive that scholars can consult freely — he wants the rubbing in his private collection where its use can be managed. *Genuine preservation concern does not require exclusivity.*
+
+*fail:* Ser Biagio's offer is noted. He follows up at the road north. He sends a rider to Bologna.
+
+---
+
+#### Act IV — Ancona Road (ANC)
+
+*Two men from the Venetian buyer's Bologna network. They are not the buyer's employees — they are creditors' agents. The stone is the buyer's primary asset on this trip; if it winters in Naples and loses value, the creditors want to know what other assets are in transit. The rubbing has a scholarly value they can price.*
+
+*The Solon Rubbing · in the pack, both agents between the Fighter and the road north · Fighter · Ancona road*
+
+**Hybrid — Persuasion DC 12 first; fail → Combat:**
+
+*Persuasion pass:* Argue that a scholar's authenticated rubbing has value only as long as its chain of custody is unbroken — once it passes through a creditor's hands, it becomes a disputed asset and its scholarly validity is compromised. *They want a thing they can sell. A compromised rubbing cannot be sold to a serious buyer. They see the logic.* They withdraw.
+
+*Persuasion fail → Combat:* 2 creditors' agents, AC 12, HP 16. Stop at first serious injury. *failText:* They take the rubbing. The road to Bologna has three waystation factors who know this route. *passText:* Both down or fled. *The stone is in Naples. The word is in the cloth. The sea has not decided yet.*
+
+---
+
+#### Act V — Weimar (WM)
+
+*Archivus Sweelinck unrolls the cloth on the intake table. He reads the three laws. He reads the third law twice. He reaches for Aristotle's Constitution of Athens. He reads the relevant passage. He reads the third law again.*
+
+"*Syntheke*," he says. "Covenant." He sets down the Aristotle. "Aristotle says he cancelled obligations. This says covenants. These are not the same word." He traces the law. "He was not releasing people from debts. He was voiding the agreements that treated people as collateral." He is quiet. "The argument has been going on for six hundred years because everyone has been reading a paraphrase." He looks at the rubbing. "The original had the word."
+
+He opens the intake book. "The stone may still be in Naples. It may reach Venice. It may not." He writes: *Law Collections — Original Text Records: authenticated rubbings or copies of primary legal inscriptions whose physical originals are in uncertain custody; primary evidence for specific legal language that does not appear in any secondary account; the copy is the record regardless of the stone's fate.*
+
+He notes: "Spanopoulos's certification accepted. Chain of custody: Mystras archive → this document → this table. The word is now in this archive. The stone can go to Venice."
+
+*The Solon Rubbing · unrolled on the intake table, third law marked · Archivus Sweelinck · Weimar intake desk*
+
+"You receive the Solon Law Inscription Record."
+
+`takeItem: "Solon Rubbing"`
+`grantItem: "Solon Law Inscription Record"`
+
+---
+
+### Quest API Stub — MLA-03
+
+```json
+{
+  "quest_id": "MLA-03",
+  "title": "The Solon Tablet",
+  "cycle": 6,
+  "book": "MLA — Plutarch's Lives",
+  "token": "Solon Rubbing",
+  "route": ["MYS", "ANC", "WM"],
+  "theme": "The authenticated copy that precedes the original's uncertain fate; the rubbing arrives before the stone; the copy is not a substitute — it is the only form in which these laws will reach an archive",
+  "archive_category": "Law Collections — Original Text Records",
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "MYS",
+      "type": "skill_check",
+      "activateNode": "MYS",
+      "scene": "Mystras archive house. Nikolaos Spanopoulos spent yesterday afternoon on his knees making this rubbing. The Venetian buyer arrived this morning. The stone left on the evening galley. 'The word syntheke — covenant, not obligation. He cancelled the covenants of the body. If the stone sinks, this is the only record Solon used that word.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Understand the significance of the specific word choice — how syntheke changes the scholarly understanding of what the seisachtheia actually cancelled.",
+        "failText": "Rubbing noted as a late copy of a Solon law inscription. Variant word significance not assembled.",
+        "passText": "The standard accounts describe financial obligation cancellation. Syntheke — covenant — means Solon cancelled agreements that bound people as collateral, not just the debts. The debt-bondage clause has been debated for 600 years. This stone had the word that settles it."
+      },
+      "grantItem": "Solon Rubbing",
+      "checkPassFlag": "mla03Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "MYS",
+      "type": "skill_check",
+      "activateNode": "MYS",
+      "scene": "Mystras archive entrance. The Venetian buyer's agent with a lawyer's letter. He argues the buyer acquired the stone and its contents; the rubbing is a derivative record of the buyer's property. He is a precise man who believes property law is determinative.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "prompt": "Argue that an authenticated copy made by an independent scholar before the sale completed is the scholar's independent work product — the buyer acquired the stone, not all knowledge derivable from it.",
+        "failText": "He makes a record of the rubbing's existence and destination. The buyer will know where it goes.",
+        "passText": "He does not have authority to confiscate a scholar's work product in Greek-administered territory. He lets the Fighter pass. He files it away for a future conversation with a lawyer."
+      },
+      "checkPassFlag": "mla03Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "ANC",
+      "type": "skill_check",
+      "activateNode": "ANC",
+      "scene": "Ancona waystation. The stone reached Naples in heavy seas; the galley may winter there. The buyer's factor Ser Biagio wants the rubbing as 'complementary custody' in Venice. He uses the word 'complementary' twice and 'backup' once.",
+      "skillCheck": {
+        "skill": "Insight",
+        "dc": 12,
+        "prompt": "Read whether the buyer's interest is genuine preservation concern or an attempt to consolidate control of the only scholarly record.",
+        "failText": "Ser Biagio's offer is noted. He follows up at the road north. He sends a rider to Bologna.",
+        "passText": "Genuine preservation concern does not require exclusivity. The buyer wants the rubbing in his private collection where its use can be managed — not in a neutral archive where scholars consult it freely."
+      },
+      "checkPassFlag": "mla03Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "road_ancona_north",
+      "type": "hybrid",
+      "activateNode": "ANC",
+      "scene": "Ancona road. Two creditors' agents from the Venetian buyer's Bologna network. The stone wintering in Naples threatens the buyer's creditworthiness. The rubbing has a scholarly value they can price. They would prefer to buy it.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "prompt": "Argue that a scholar's authenticated rubbing has value only as long as its chain of custody is unbroken — once passed through a creditor's hands, it becomes a disputed asset and its scholarly validity is compromised.",
+        "failText": "Combat begins: 2 agents, AC 12, HP 16. Stop at first serious injury. failText: They take the rubbing. passText: Both down or fled."
+      },
+      "combat": {
+        "enemies": 2,
+        "AC": 12,
+        "HP": 16,
+        "description": "Creditors' agents — stop at first serious injury",
+        "failText": "They take the rubbing. The road to Bologna has three waystation factors who know this route.",
+        "passText": "Both down or fled. The stone is in Naples. The word is in the cloth. The sea has not decided yet."
+      },
+      "checkPassFlag": "mla03Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck reads the third law beside Aristotle's Constitution of Athens. 'Syntheke. Covenant.' He sets down the Aristotle. 'Aristotle says he cancelled obligations. This says covenants. He was voiding the agreements that treated people as collateral. The argument has been going on for 600 years because everyone has been reading a paraphrase.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 11,
+        "prompt": "Confirm the scholarly significance: syntheke in the third law establishes that the seisachtheia targeted debt-bondage contracts specifically, not general debt obligations — a distinction with major implications for the history of Athenian democracy.",
+        "failText": "Filed under Greek Legal History — Archaic Period. Cross-reference to Solon biography in MLA-01 series created.",
+        "passText": "Sweelinck writes: 'Law Collections — Original Text Records: authenticated rubbings of primary legal inscriptions whose physical originals are in uncertain custody; primary evidence for specific legal language absent from all secondary accounts; the copy is the record regardless of the stone's fate.' You receive the Solon Law Inscription Record."
+      },
+      "takeItem": "Solon Rubbing",
+      "grantItem": "Solon Law Inscription Record",
+      "checkPassFlag": "mla03Act5Passed",
+      "activateMissionBit": "mlaSolonComplete"
+    }
+  ]
+}
+```
+
+### New Node Proposals
+
+- **MYS** — Mystras Byzantine Archive: the Frankish-era Byzantine enclave near ancient Sparta, Peloponnese, 1367; the Despotate of the Morea; the archive of Byzantine scholars who maintained classical manuscript collections under Frankish suzerainty; a city caught between Byzantine cultural continuity and Latin political administration; the smell of old stone, olive oil, and Greek ink.
+
+---
+
+*MLA-03 complete. 2026-06-02.*
+
+
+---
+
+**Cycle 7**
+
+*(Theme differentiation: Avoiding MLA cycles 1-6. New theme: the source document behind the canonical historian's account; Thucydides quoted the dispatch partially; the full text reveals what the summary chose not to say; the archive receives the source material from which a canonical text was made — the historian's selection is now visible as selection.)*
+
+---
+
+## Cycle 7 — Angle: *The Nicias Correspondence — The Source Behind the Summary*
+
+**What this angle reveals that cycles 1-6 missed**: Cycle 6 showed the copy arriving before the original's uncertain fate. Cycle 7 shows the original that the canonical historian used and chose not to quote in full. Thucydides quotes three paragraphs of Nicias's last dispatch from Sicily (Book VII, chapters 11-15). The rest of the dispatch survives in a Byzantine monastery volume filed under Geography because whoever filed it was reading the geographic content, not the inserted leaf. The non-quoted material includes Nicias's specific supply request and his explicit timeline — material Thucydides summarized as pessimism but did not quote directly. The dispatch is the document Thucydides held in his hand when he wrote Book VII. The archive receives not just the dispatch but the evidence of what the historian decided to cut.
+
+**Themes avoided:** all six prior MLA themes; WAW-06's "periphery holds the origin" (this is not about transmission location but about the historian's editorial act).
+
+**New theme chosen:** "The source document behind the canonical account; the historian's selection is visible as selection; the dispatch is what Thucydides held when he wrote Book VII — and the archive now holds what he chose not to quote."
+
+---
+
+### 5-Act Vignette: *The Nicias Correspondence*
+
+#### The Token
+
+The Nicias Dispatch Volume: a Byzantine monastery volume (11th-century compilation) of geographic descriptions of Sicily and the Aegean. Inserted between folios 23 and 24 is a single parchment leaf in Attic Greek, in a hand 1,400 years older than the surrounding text: a complete Athenian military dispatch signed in Nicias's name, summer 413 BC, covering the forty-two days before the Syracusan counter-offensive. Three paragraphs of it are recognizable as the source for Thucydides Book VII.11-15. Six additional paragraphs appear nowhere in any known text. Among the unreported paragraphs: a specific request for cavalry horses, grain for a specific number of days, and the explicit statement — "if these supplies do not arrive by the next new moon, our position will be untenable and I will have no further obligation to hold."
+
+*The Nicias Dispatch Volume · a thick monastery volume, the inserted leaf visible between folios 23 and 24 · Thessaloniki monastery library · waiting*
+
+---
+
+#### Act I — Thessaloniki (THA)
+
+*The monastery library has the volume in its geography section. Father Christodoulos, the librarian, is a geographer and mapmaker. He found the inserted leaf three weeks ago and could not read the Attic Greek. A Bologna scholar named Fra Girolamo Crivelli has been in residence for two months and identified the dispatch.*
+
+Father Christodoulos is glad to send the volume to the archive. Fra Girolamo is also glad — except he wants the volume to go to Bologna, not Weimar.
+
+Father Christodoulos, who is not a classicist but is a very precise librarian, says: "The geographic descriptions in this volume are copies of earlier Byzantine geographic records. The inserted leaf is not Byzantine. It is much older. I believe they belong to different archives."
+
+`grantItem: "Nicias Dispatch Volume"`
+
+*The Nicias Dispatch Volume · accepted, the inserted leaf marked with a slip of paper · Fighter's hands · monastery library*
+
+**Skill Check — History DC 13:** *Read the six non-Thucydidean paragraphs and understand what Nicias communicated that Thucydides chose not to quote.*
+
+*pass:* The supply request is specific — ninety cavalry horses, grain for four thousand men for thirty-five days, the new moon deadline. Thucydides quotes Nicias's pessimism. He does not quote the request. *The historian summarized what was said. He did not quote what was needed. The dispatch shows a general who was specific about what would save him. The history shows a man who was generally hopeless.*
+
+*fail:* The six paragraphs noted as additional Thucydidean source material. Specific content not assembled.
+
+---
+
+#### Act II — Thessaloniki (THA)
+
+*Fra Girolamo has a letter from the University of Bologna's chancellor requesting the volume on behalf of the university's classical manuscripts collection. He has been patient and collegial for two months. He makes his case with full scholarly apparatus: the dispatch's significance, the Bologna collection's existing Thucydides holdings, the prospect of a published edition within three years.*
+
+He is completely sincere. He is also wrong about where the dispatch belongs.
+
+*The Nicias Dispatch Volume · in the Fighter's hands, Fra Girolamo's formal request on the table · Fighter · monastery library corridor*
+
+**Skill Check — Persuasion DC 13:** *Argue that the dispatch's primary value is as a source document — it needs to be held with related documents from the same period and region; an archive that holds multiple source materials for the same historian's work is more useful than a university that publishes one.*
+
+*pass:* Fra Girolamo is silent for a moment. He is a genuine scholar. "You mean the other source material Thucydides used." He is thinking about what he doesn't have access to. "The archive has other Thucydidean sources?" *He is imagining the archive he doesn't work in. It is enough.* He lets the volume go, with a request for correspondence privileges when it is processed.
+
+*fail:* He retains a full copy of the inserted leaf before releasing the volume. The copy will enter Italian classical scholarship networks within a year.
+
+---
+
+#### Act III — Constantinople (CON)
+
+*The Byzantine imperial archive has an ongoing effort to catalogue Byzantine monastery library contents in territories subject to Ottoman pressure. An archival clerk named Petros has been authorized to document volumes from Thessaloniki-area monasteries before they are lost or dispersed.*
+
+He wants to record the volume's existence and contents. He is thorough and systematic. He has not yet focused on the inserted leaf specifically — he is working through the volume's geographic content.
+
+*The Nicias Dispatch Volume · in the Fighter's hands, Petros's catalogue notebook open · Fighter · Constantinople imperial archive anteroom*
+
+**Skill Check — History DC 12:** *Establish that the inserted leaf predates the Byzantine Empire itself — the document is from 413 BC, predating the Byzantine period by eight centuries; the imperial archive's claim covers Byzantine-period monastery contents, not ancient Greek documents held within them.*
+
+*pass:* Petros marks his notebook: *volume: 11th-century Byzantine geography collection; inserted leaf: ancient Greek, pre-Byzantine, outside jurisdiction of the Byzantine Monastery Catalogue.* He lets the volume continue. *He is systematic. He cannot argue jurisdiction over a document that predates his institution by eight centuries.*
+
+*fail:* He records both the volume and the inserted leaf under Byzantine Monastery Catalogue. The record is accurate but creates a competing claim for the archive to address.
+
+---
+
+#### Act IV — Ancona (ANC)
+
+*The Ancona factor's house. A Sicilian historian named Messer Ruggero di Palermo has been in Ancona for three weeks, having tracked the volume from Constantinople. He has been writing a History of the Sicilian Expedition for eight years and the non-Thucydidean paragraphs in the dispatch — specifically the supply request and the new moon deadline — would resolve his primary interpretive question: was Nicias a bad general or a general abandoned by his city?*
+
+He does not want to buy the volume. He wants to read the six paragraphs. He is a careful, principled historian. He explains his need with full scholarly context.
+
+*The Nicias Dispatch Volume · in the pack, Messer Ruggero's scholarly request written in a beautiful hand · Fighter · Ancona factor's house*
+
+**Hybrid — Persuasion DC 12 first; fail → Combat:**
+
+*Persuasion pass:* Offer that the archive will write to him when it has processed the volume, giving him priority access and an authenticated transcript of the six paragraphs. *He is a principled historian. Priority access from a neutral archive is better than a private reading of an unprocessed document. He is writing a history, not building a private collection.* He accepts.
+
+*Persuasion fail → Combat (reluctant):* He hires no one for violence — he is a historian. But his Sicilian patron, who funded the eight years of work, has sent a man to ensure the research is completed. 1 hired agent, AC 11, HP 14. Stop immediately when injured. *failText:* The agent holds the volume overnight; Messer Ruggero makes a copy of the six paragraphs; the original continues. *passText:* The agent steps back. Messer Ruggero is embarrassed by the patron. He apologizes.
+
+---
+
+#### Act V — Weimar (WM)
+
+*Archivus Sweelinck reads the inserted leaf. He reads Thucydides Book VII. He reads the inserted leaf again. He marks the three quoted paragraphs in one color. He marks the six unquoted paragraphs in another.*
+
+"He had the dispatch," Sweelinck says. "He read it. He chose what to keep." He compares the supply request paragraph with Thucydides's passage about Nicias's pessimism. "Nicias was specific. He said ninety horses, grain for thirty-five days, the new moon. Thucydides made it general." He sets both down. "The historian is visible here. The dispatch shows a man who knew exactly what he needed. The history shows a man who had given up. Thucydides created the resignation. The dispatch had the negotiation."
+
+He writes: *Source Documents — Historian's Primary Materials: original documents that served as sources for canonical historical accounts; primary evidence for what the historian selected and what he chose not to include; the source and the selection are now in the same archive.*
+
+He notes: "Cross-reference: MLA-01 (Lives as parallel comparison). The archive now holds two kinds of Plutarchean evidence: the comparison method and the source material of the method's subjects. The archive is building a reconstruction of how classical historiography worked."
+
+*The Nicias Dispatch Volume · inserted leaf out, three paragraphs marked in one color, six in another · Archivus Sweelinck · Weimar intake desk*
+
+"You receive the Historian's Source Document Record."
+
+`takeItem: "Nicias Dispatch Volume"`
+`grantItem: "Historian's Source Document Record"`
+
+---
+
+### Quest API Stub — MLA-05
+
+```json
+{
+  "quest_id": "MLA-05",
+  "title": "The Nicias Correspondence",
+  "cycle": 7,
+  "book": "MLA — Plutarch's Lives",
+  "token": "Nicias Dispatch Volume",
+  "route": ["THA", "CON", "ANC", "WM"],
+  "theme": "The source document behind the canonical account; the historian's selection is visible as selection; the dispatch is what Thucydides held when he wrote Book VII — and the archive now holds what he chose not to quote",
+  "archive_category": "Source Documents — Historian's Primary Materials",
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "THA",
+      "type": "skill_check",
+      "activateNode": "THA",
+      "scene": "Thessaloniki monastery library. Father Christodoulos found the inserted leaf three weeks ago and couldn't read the Attic Greek. Fra Girolamo Crivelli identified the dispatch. Father Christodoulos: 'The geographic descriptions and the inserted leaf belong to different archives.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 13,
+        "prompt": "Read the six non-Thucydidean paragraphs and understand what Nicias communicated that Thucydides chose not to quote.",
+        "failText": "The six paragraphs noted as additional Thucydidean source material. Specific content not assembled.",
+        "passText": "The supply request: ninety horses, grain for 4,000 men, thirty-five days, the new moon deadline. Thucydides quotes Nicias's pessimism — not the request. The historian summarized what was said. He did not quote what was needed."
+      },
+      "grantItem": "Nicias Dispatch Volume",
+      "checkPassFlag": "mla05Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "THA",
+      "type": "skill_check",
+      "activateNode": "THA",
+      "scene": "Monastery library corridor. Fra Girolamo has a Chancellor's letter, two months of patience, and full scholarly sincerity. Bologna has existing Thucydides holdings and will publish within three years. He is completely sincere and wrong about where the dispatch belongs.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "prompt": "Argue that the dispatch's primary value is as a source document — an archive holding multiple sources for the same historian is more useful than a university that publishes one.",
+        "failText": "He retains a full copy of the inserted leaf. The copy will enter Italian classical scholarship networks within a year.",
+        "passText": "'You mean the other source material Thucydides used.' He is imagining the archive he doesn't work in. Priority access when processed is enough. He lets the volume go."
+      },
+      "checkPassFlag": "mla05Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "CON",
+      "type": "skill_check",
+      "activateNode": "CON",
+      "scene": "Constantinople imperial archive anteroom. Archival clerk Petros is cataloguing Thessaloniki monastery library contents under the Byzantine Monastery Catalogue. He is systematic and thorough. He has not yet focused on the inserted leaf specifically.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Establish that the inserted leaf predates the Byzantine Empire itself — from 413 BC, eight centuries before the Byzantine period; the imperial archive's jurisdiction covers Byzantine-period monastery contents, not ancient Greek documents held within them.",
+        "failText": "He records both volume and inserted leaf under Byzantine Monastery Catalogue. A competing jurisdictional record now exists.",
+        "passText": "Petros marks: 'inserted leaf: ancient Greek, pre-Byzantine, outside jurisdiction of the Byzantine Monastery Catalogue.' He cannot argue jurisdiction over a document that predates his institution by eight centuries."
+      },
+      "checkPassFlag": "mla05Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "ANC",
+      "type": "hybrid",
+      "activateNode": "ANC",
+      "scene": "Ancona factor's house. Sicilian historian Messer Ruggero di Palermo has been writing a History of the Sicilian Expedition for eight years. The six unreported paragraphs would resolve his interpretive question: was Nicias a bad general or a general abandoned? He is careful and principled.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "prompt": "Offer priority access and an authenticated transcript when the archive processes the volume — a principled historian prefers a neutral archive's authenticated copy over a private reading of an unprocessed document.",
+        "failText": "His Sicilian patron's hired man (AC 11, HP 14) holds the volume overnight; Messer Ruggero makes a copy of the six paragraphs; the original continues. Messer Ruggero apologizes."
+      },
+      "combat": {
+        "enemies": 1,
+        "AC": 11,
+        "HP": 14,
+        "description": "Patron's hired agent — stops immediately when injured; Messer Ruggero is embarrassed",
+        "failText": "Overnight hold; copy of six paragraphs made; original continues.",
+        "passText": "The agent steps back. Messer Ruggero apologizes for his patron."
+      },
+      "checkPassFlag": "mla05Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck marks the three quoted paragraphs in one color, the six unquoted in another. 'He had the dispatch. He read it. He chose what to keep. Nicias was specific — ninety horses, grain for thirty-five days, the new moon. Thucydides made it general. The historian is visible here.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Explain the interpretive significance: Thucydides's narrative constructs Nicias as a passive pessimist; the dispatch reveals a man making specific, practical requests — the historian's framing created the resignation the source material does not contain.",
+        "failText": "Filed under Greek Military History — Sicilian Expedition. Cross-reference to Plutarch's Lives created.",
+        "passText": "Sweelinck writes: 'Source Documents — Historian's Primary Materials: original documents that served as sources for canonical historical accounts; primary evidence for what the historian selected and what he chose not to include; the source and the selection are now in the same archive.' You receive the Historian's Source Document Record."
+      },
+      "takeItem": "Nicias Dispatch Volume",
+      "grantItem": "Historian's Source Document Record",
+      "checkPassFlag": "mla05Act5Passed",
+      "activateMissionBit": "mlaNiciasComplete"
+    }
+  ]
+}
+```
+
+---
+
+*MLA-05 complete. 2026-06-02.*
+

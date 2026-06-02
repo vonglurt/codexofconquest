@@ -482,6 +482,8 @@ Game cities are canonical. Source-book settings are proposed new nodes.
 | CAI-05 | The Deathbed Instruction | 8 | DAM → ALE → WM | The legal instrument that is the story's emotional center; the story is the breach case that the form was designed to prevent |
 | WAW-02 | The Charge List | 6 | ROM → FLR → WM | The prosecution document is the only census; the arrest record names the community no one else recorded |
 | WAW-06 | Peter's Deposition | 7 | ANT → CON → RGS → WM | The periphery holds the origin; the Syrian community kept the commission in its original linguistic register before Greek transmission began |
+| MLA-03 | The Solon Tablet | 6 | MYS → ANC → WM | The authenticated copy that precedes the original's uncertain fate; the rubbing arrives before the stone; the copy is the only form in which the laws will reach the archive |
+| MLA-05 | The Nicias Correspondence | 7 | THA → CON → ANC → WM | The source document behind the canonical account; the historian's selection is visible as selection; the archive holds what Thucydides chose not to quote |
 
 *When a new quest is written, append its row to the Processed Quests table.*
 *When a new location is used, append its row to the Location Grid.*
