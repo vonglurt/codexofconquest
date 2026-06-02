@@ -535,3 +535,195 @@ Day 10 — magnificence and nobility of spirit; closes the hundred.
 **Route:** ROM → ROM (the merchant's lodgings to the prefect's court, across the city)
 **TOKEN:** A fifteen-year-old letter of credit or travel document bearing the destitute man's name and a date-stamp from a different city entirely. It is in the merchant's strongbox. The merchant does not know if it still carries legal weight. It is the only thing that places the man elsewhere.
 **Theme:** Friendship as the only force that crosses the distance between wealth and ruin; the document that exonerates was written before either man knew it would be needed; the debt paid is older than the crisis that requires it
+
+---
+
+## BLQ-02 Full Vignette Spec: "The Court Defense"
+
+### Cycle 2 Angle
+
+Cycle 1 showed the document that is formally correct and substantively fraudulent — the carrier holds an instrument that performs its crime perfectly through its technical accuracy; complicity is avoided by never opening the seal. Cycle 2 shows the complementary and opposite case: the document that is formally correct and substantively true — and whose only challenge is time. The statute modification already exists. It was already passed. It already protects Fiamma dei Rondinelli. The law does not need to be argued. It only needs to arrive before the husband's advocate argues from the statute it replaced. What cycle 1 missed: the document's arrival is not always about what it proves — sometimes it is only about whether the right text exists in the right room at the right moment. The carrier who brings truth has no advantage over the carrier who brings fraud unless speed is the only variable. At five minutes before terce, both are equally late.
+
+### Source Hook
+
+Day VI, Story 7: Madam Filippa of Prato is caught in adultery, brought before the provost, and does not flee. She appears willingly, argues that the adultery statute was written by men for men without women's consent, and asks her lover to confirm she was never reluctant. The provost laughs. The statute is immediately modified: condemned are those who take payment; the free act is not covered. Filippa walks home. The modification she compelled in that courtroom is the specific modification that protects someone else in Prato seven years later.
+
+### 1367 Setting
+
+Ser Taddeo Borghini, retired judge of the Prato guild court, wrote the modification himself in 1360. He lives now in Pistoia, twelve miles from Prato, with his papers in good order. He remembers the ruling clearly. He has no reason to refuse to certify a copy.
+
+Iacopo di Ser Piero, the husband's advocate, left Pistoia at dawn and told Ser Taddeo that certifying the modification might expose him to professional complications from the Prato guild. Ser Taddeo, old and cautious, has been frightened — not persuaded.
+
+Fiamma dei Rondinelli of Prato has been summoned before the podestà on a complaint filed by her husband. The modification her case requires is in the Prato communal archive — which has been misfiled, pulled from its shelf three days ago by someone with archive access. The only available copy is Ser Taddeo's. The session opens at terce.
+
+The carrier must travel to Pistoia overnight, collect the certified copy, and arrive at the Prato podestà's court clerk before the gavel falls.
+
+**TOKEN:** A single folio — the statute modification of 1360, copied in Ser Taddeo Borghini's own hand and sealed with his personal judicial seal. The text: "The foregoing statute is modified as follows: condemned are those who receive payment. The free act is not addressed by the present statute. — T. Borghini, judge, 13 June 1360." It will fit in a coat's interior pocket. It weighs almost nothing. It is the only thing between Fiamma and the fire the statute no longer lights.
+
+**TOKEN granted:** Act I (Ser Taddeo copies and seals the folio)
+**TOKEN checked:** Acts II, III, IV
+**TOKEN taken:** Act V (Testa di Fattino stamps receipt; the folio enters the morning session record)
+
+---
+
+### Act I — Pistoia (Ser Taddeo Borghini's House, Via dei Notai)
+**DC 12 | Persuasion or History**
+
+*The folio does not yet exist. Ser Taddeo is at his writing table with a cup of cold wine and a pen he has not picked up. His hands are still.*
+
+Iacopo di Ser Piero arrived an hour before the carrier. He told Ser Taddeo that the Prato case involves "contested jurisdiction between Prato and Florence" and that the Prato guild might view certification as interference in a pending proceeding. He is a young lawyer who understands how to create uncertainty in old men.
+
+Ser Taddeo knows what he wrote. He remembers the Filippa case clearly — the woman who argued her own defense and changed the law in an afternoon. He is not dishonest. He is simply afraid that this evening will become a professional dispute that follows him to his grave.
+
+**Skill check purpose:** Reassure Ser Taddeo enough that he picks up the pen.
+
+- **Success (Persuasion DC 12):** The carrier says: "The modification you wrote protects a woman who is sitting in Prato right now waiting for you to decide whether to certify it." The carrier says nothing else. Ser Taddeo looks at his cup, then at the pen, then picks it up. "I wrote that ruling. Filippa argued it and I wrote what the law became." He copies the modification, seals it, and writes his name underneath. TOKEN granted.
+- **Success (History DC 12):** The carrier cites the Florence judicial code of 1348: a retired judge's personal certified copy is equivalent to an archive copy in proceedings before any Tuscan commune court. Iacopo had no legal grounds to imply liability. Ser Taddeo, recognizing he was simply scared rather than warned, copies the modification without another word. TOKEN granted.
+- **Failure:** Ser Taddeo will not certify a formal copy. He writes a personal attestation letter instead — not a certified copy, but a signed statement that he wrote the ruling and can confirm its content from memory. At Act V, the court clerk requires additional persuasion to accept a personal letter rather than a formal certified copy (+2 to Act V DC, raising it to 13).
+
+**Flavor:** The house smells of old paper and a fire that has been burning for weeks. Ser Taddeo's desk is organized with the specific neatness of a man who spends his days not needing anything urgently. When he finally writes — pen moving in the clear judicial hand he has not used in six years — the carrier understands that this is what he did every day for thirty years and never stopped knowing how.
+
+---
+
+### Act II — Pistoia (City Gate, Eastern Road)
+**DC 12 | Stealth or Persuasion**
+
+*The folio is in the carrier's coat. Ser Taddeo's seal is still warm.*
+
+Iacopo's hired clerk, a young man named Nardo, is watching the eastern gate. He is on a horse; the carrier is not. His instructions: if the carrier leaves with a document, ride ahead on the faster mountain road and alert Iacopo at the Prato gate.
+
+Nardo does not know what the document is. He was told to watch for a carrier leaving Ser Taddeo's house. He is not particularly intelligent but he is obedient.
+
+- **Success (Stealth DC 12):** The carrier knows the eastern gate is watched and uses the secondary gate through the grounds of the convent of San Bartolomeo — unmanned at this hour, known to local traders. Emerges on the road south without passing Nardo's position. Nardo waits until near dawn before reporting the carrier did not appear.
+- **Success (Persuasion DC 12):** The carrier approaches the gate openly, wearing the manner of a Florentine Guild representative on transit business entirely unrelated to any Prato proceeding. Nardo has no standing to stop a guild representative on a public road. He steps back. The carrier passes.
+- **Failure:** Nardo sees the carrier leave with a document and rides ahead. Iacopo receives word at the Montale toll gate. At Act IV, Iacopo has an extra hour of preparation — he brings a third man to the Prato city approach.
+
+**Flavor:** The eastern gate at this hour: two guards at a brazier, the gate open for the pre-dawn cart traffic. Nardo is sitting on a wall twenty feet from the gate with his horse tethered below him. He is watching the road from Ser Taddeo's direction. He has been sitting there for three hours and he is cold.
+
+---
+
+### Act III — Pistoia-Prato Road (Toll Gate at Montale)
+**DC 13 | Persuasion or Deception**
+
+*The folio is in the carrier's coat. Four miles from Pistoia, eight from Prato. The sun is beginning to show behind the hills.*
+
+A toll gate at the village of Montale. The toll officer, Betto, has been given one Florentine ducat and the promise of a second by a man he did not recognize, with instructions to hold any traveler from Pistoia for a "transit inspection of private correspondence." Betto does not know why. He has the authority to do this on a Florentine road. He will do it if not prevented.
+
+He is not an enemy. He is a man who received a ducat and has not yet decided whether the second ducat is worth the trouble of what he is being asked.
+
+- **Success (Persuasion DC 13):** The carrier argues that toll officers on a Florentine road do not have authority to inspect diplomatic correspondence — and a certified judicial copy is diplomatic correspondence under the statute of 1348. Betto cannot verify this quickly. He decides the second ducat is not worth a dispute about jurisdiction. He waves the carrier through.
+- **Success (Deception DC 13):** The carrier claims the folio is a medical record for a patient in Prato — private medical correspondence is not subject to roadside inspection under any commune statute. Betto has no way to verify this. He steps aside.
+- **Failure:** Betto holds the carrier for twenty minutes. He sends a boy down the road to find the man who paid him. Iacopo receives word and rides ahead to the Prato gate. At Act IV, he is there with an extra hour of preparation — one additional hired man.
+
+**Flavor:** Betto is a large, slow-moving man who has been operating this toll for twenty years. He has seen every kind of traveler and every kind of excuse. He looks at the carrier for a long moment and then looks at the horizon where the sun is appearing. He says, not unkindly: "Someone paid me to stop you. I want to know if what's in your coat is worth it." He is asking genuinely.
+
+---
+
+### Act IV — Prato City Approach (Road Junction North of the Porta Capo di Ponte)
+**Combat: 2×AC 13 HP 22** (3 if Act II failed, 2 with +1 AC 14 if Act III failed)
+
+*The folio is in the carrier's coat. The Prato city gate is visible. The terce bell has not yet rung.*
+
+Iacopo di Ser Piero is on horseback with two hired men across the road. He cannot legally take the document — he is a lawyer; he knows this would end his career. His strategy is time. He needs ten minutes. The session opens at terce. If the carrier does not reach the court clerk's desk before the first words are spoken, the morning record opens without the modification, and the afternoon filing is a different kind of document with a different kind of power.
+
+He is not trying to kill. He is trying to delay. His men will attempt to hold the carrier's arms while he claims the document is misaddressed and must be "verified at the city registry" before it can enter. The other man will block the road.
+
+Iacopo himself will not fight. If both his men are down, he will retreat on horseback, because there is nothing else he can do and because he is a lawyer who still needs to appear in court this morning.
+
+**onPass:** Both men down or fled. Iacopo retreats. The carrier runs the last quarter-mile to the city gate. The terce bell is ringing.
+
+**onFail:** Ten minutes lost. The session has opened. At Act V, the session is in progress and the clerk must interrupt it.
+
+**Flavor:** Iacopo is well-dressed, early thirties, a young man who has worked very hard to get the professional position he holds and who is now watching it become complicated. He says: "The document is from a retired judge with no current standing in Prato proceedings. I have an obligation to my client to ensure the record is clean." He says this from horseback. His men are already in position.
+
+---
+
+### Act V — Prato (Podestà's Court, Filing Clerk's Desk)
+**DC 11 | Persuasion**
+
+*The folio is in the carrier's hand. Testa di Fattino, the court clerk, is at his desk at the filing entrance of the podestà's court. If the session has not opened: he is logging pre-session documents. If the session has opened: he is inside at the judge's right, and the carrier must interrupt.*
+
+Testa di Fattino is a methodical man who has seen every filing scenario. He is not the enemy. He has two questions: Is this a certified copy or a personal attestation? (If Act I failed, the answer is "personal attestation" and the DC rises.) And: does the carrier have a standing as a party's representative to submit this document?
+
+The carrier has no formal standing. The document is correct. The judge can receive it if the clerk will accept it.
+
+- **Success (Persuasion DC 11) — session not yet opened:** The carrier explains: this is a certified prior legal record, not a party's submission. Prior legal records can be filed by any person in possession of the document under the communal court rules. Testa accepts this, stamps the receipt, and carries the folio to the judge's table before the session opens. The judge reads the modification. He says: "Advocates for the petitioner may address this modification." Iacopo's case collapses before it is made.
+- **Success (Persuasion DC 11) — session opened (Act IV failed):** The carrier interrupts a session in progress to submit a prior legal record. Testa must accept the interruption. He does — prior legal records are the one category courts cannot refuse mid-session. The modification enters the record. The husband's advocate's argument is already half spoken and becomes moot mid-sentence.
+- **Failure:** The folio enters the afternoon review queue. The morning session proceeds on the old statute. Fiamma hears herself argued toward a fire that the law no longer lights. The modification arrives by afternoon; she is discharged. But she sat in the court for two hours under an argument that should never have been made.
+
+**onPass flavor:** The judge sets the folio on the table and looks at the husband's advocate. "The statute as cited has been superseded. If you have additional grounds, file a new complaint. The morning charge rests on the statute as modified. This matter is dismissed." Iacopo closes his notes. He does not speak. Outside the court, Fiamma is standing in the street in the morning sun. She does not look at the carrier. She was never afraid. She knew the modification existed. What she needed was someone to carry the text in time for it to matter. The carrier, watching her go, understands: the document did not save her. The document arrived.
+
+**onFail flavor:** The session proceeds for two hours on the old statute before the modification enters the record. The afternoon filing shows: "Prior legal record received; case discharged; original complaint found to rest on superseded statute." Fiamma is free by midday. What happened to her in those two hours is in the morning session record, and the morning session record does not say "she was never in danger." It says: "case continued."
+
+---
+
+### onPass
+
+The modification arrives before the argument. The judge reads it. The husband's advocate's case is moot before he makes it. Fiamma dei Rondinelli walks out of the Prato podestà's court into the morning. Ser Taddeo Borghini, in Pistoia, will not hear what happened until a messenger arrives three days later. The messenger will tell him: the modification held. Ser Taddeo will say nothing. He will sit at his desk for a moment with the pen in his hand, not writing anything. Filippa argued this in a courtroom thirty years ago and it still works. That is what a ruling is.
+
+---
+
+### onFail
+
+The modification arrives at midday. Fiamma is discharged from the afternoon session. The court record shows both the morning session under the old statute and the afternoon modification. In twenty years, when someone looks up this case in the Prato communal archive, they will read both entries. The first entry will say the original charge was brought under a superseded statute. The second entry will not explain why the first entry was allowed to proceed.
+
+---
+
+### Quest Stub (UQF v1.0)
+
+```json
+{
+  "id": "BLQ-02",
+  "title": "The Court Defense",
+  "source": "BLQ",
+  "cycle": 2,
+  "type": "delivery",
+  "tokenObject": "single folio — statute modification of 1360, copied in Ser Taddeo Borghini's judicial hand, sealed with his personal seal; text reads: 'condemned are those who receive payment; the free act is not addressed by the present statute'; weighs almost nothing; is the only thing between Fiamma and a charge that the law no longer supports",
+  "tokenGrantAct": 1,
+  "tokenTakeAct": 5,
+  "commissionCity": "PIS",
+  "deliveryCity": "PRA",
+  "route": "Pistoia (Ser Taddeo's house) → Pistoia eastern gate → Montale toll gate → Prato city approach → Prato podestà's court clerk",
+  "themeThread": "The law that protects already exists; the document does not argue — it renders the opposing case moot by arriving; the carrier who brings the truth has no advantage over the carrier who brings fraud unless speed is the only variable; the folio does not save her — it arrives",
+  "acts": [
+    {
+      "act": 1,
+      "location": "Pistoia — Ser Taddeo Borghini's house, Via dei Notai",
+      "dc": 12,
+      "skills": ["Persuasion", "History"],
+      "summary": "Retired judge Ser Taddeo has been frightened by Iacopo's jurisdictional warning; he knows what he wrote and can certify it; the carrier must give him a reason to pick up the pen"
+    },
+    {
+      "act": 2,
+      "location": "Pistoia — eastern city gate",
+      "dc": 12,
+      "skills": ["Stealth", "Persuasion"],
+      "summary": "Iacopo's clerk Nardo is watching for the carrier to leave with a document; get through the gate without triggering the alert to Iacopo"
+    },
+    {
+      "act": 3,
+      "location": "Pistoia-Prato road — Montale toll gate",
+      "dc": 13,
+      "skills": ["Persuasion", "Deception"],
+      "summary": "Toll officer Betto has been paid to hold travelers from Pistoia; argue jurisdictional immunity or misdirection before he sends a boy to Iacopo"
+    },
+    {
+      "act": 4,
+      "location": "Prato — road junction north of Porta Capo di Ponte",
+      "type": "combat",
+      "combatTarget": { "count": 2, "ac": 13, "hp": 22 },
+      "summary": "Iacopo di Ser Piero with two hired men blocking the road; he needs ten minutes; the terce bell is ringing; get through before the session opens"
+    },
+    {
+      "act": 5,
+      "location": "Prato — podestà's court, filing clerk's desk",
+      "dc": 11,
+      "skills": ["Persuasion"],
+      "summary": "Court clerk Testa di Fattino must accept the folio as a prior legal record and deliver it to the judge before the husband's advocate finishes the statute citation it replaced"
+    }
+  ],
+  "onPass": "The modification arrives before the argument; the judge reads it and dismisses the charge; Fiamma walks out into the morning; Ser Taddeo in Pistoia will hear the ruling held and will sit with his pen for a moment, not writing anything",
+  "onFail": "The modification arrives at midday; Fiamma is discharged after sitting two hours under a charge the law no longer supports; the record shows both sessions; the afternoon entry does not explain why the morning one was allowed to proceed",
+  "activateMissionBit": "blqCourtDefenseComplete"
+}
+```
