@@ -226,12 +226,12 @@ Remaining: add KYA-01 to quest-map.md theme thread when it is fully implemented.
 **Processed 2026-06-01** — IST-01 spec complete (The Enemy's Portrait, CON→RGS→WM). Processed from memory (no txt file; 165 KB). IST-02–07 seeds written. See IST-alexiad.md.
 
 Seeds outstanding (need full 5-act vignette treatment):
-- IST-02: "The Curtain Notes" — Alexios's secret transcription of Basil the Bogomil's heresy census; Constantinople monastery → Thessaloniki → Weimar
-- IST-03: "The Nicaea Receipt" — the surrender document Alexios negotiated before the Crusaders could enter; the Crusaders' grievance in document form; Constantinople → Rhodes → Weimar
+- IST-02: "The Curtain Notes" — Alexios's secret transcription of Basil the Bogomil's heresy census; Constantinople monastery → Thessaloniki → Weimar ✓ DONE 2026-06-02
+- IST-03: "The Nicaea Receipt" — the surrender document Alexios negotiated before the Crusaders could enter; the Crusaders' grievance in document form; Constantinople → Rhodes → Weimar ✓ DONE 2026-06-02
 - IST-04: "The Bryennios Draft" — Nikephoros Bryennios's contradictory draft history; three places where he and Anna disagree; monastery archive → Ragusa → Weimar ✓ DONE 2026-06-02
 - IST-05: "The Devol Treaty Copy" — the 1108 treaty that humiliated Bohemund; the sealed copy hidden by a Norman clerk; Palermo → Ragusa → Weimar ✓ DONE 2026-06-02
 - IST-06: "The Exile Letter" — Anna's first letter from the convent commissioning her own research access; convent archive → Constantinople → Weimar ✓ DONE 2026-06-02
-- IST-07: "The Physician's Notes" — Anna's clinical notes on Alexios's final illness, more specific than the Alexiad's literary account; Kecharitomene convent → Weimar
+- IST-07: "The Physician's Notes" — Anna's clinical notes on Alexios's final illness, more specific than the Alexiad's literary account; Kecharitomene convent → Weimar ✓ DONE 2026-06-02
 
 ---
 
@@ -242,12 +242,12 @@ Next books to process (in approximate priority order):
 | Code | Title | KB | Status |
 |------|-------|----|--------|
 | IST | Alexiad (Anna Komnene) | 165 | **Processed 2026-06-01 — IST-01 spec complete (The Enemy's Portrait, CON→RGS→WM); IST-02–07 seeds. Memory-processed (no txt file). See §IST above.** |
-| NWI | Anabasis (Xenophon) | 545 | **Processed 2026-05-31 — NWI_001 spec complete; NWI-02–08 seeds pending** |
-| WAW | Quo Vadis (Sienkiewicz) | 1201 | **Processed 2026-05-31 — WAW_001 spec complete; WAW-02–07 seeds pending** |
-| MLA | Plutarch's Lives | 4222 | **Processed 2026-05-31 — MLA_001 spec complete; MLA-02–07 seeds pending** |
-| BGW | Arabian Nights (Burton) | 983 | **Processed 2026-05-31 — BGW_001 spec complete; BGW-02–07 seeds pending** |
-| CAI | Arabian Nights (Lang) | 629 | **Processed 2026-05-31 — CAI_001 spec complete; CAI-02–07 seeds pending** |
-| BEY | Mandeville's Travels | 472 | **Processed 2026-05-31 — BEY_001 spec complete; BEY-02–07 seeds pending** |
+| NWI | Anabasis (Xenophon) | 545 | **SEEDS COMPLETE 2026-06-02 — NWI-01–08 all vignettes done** |
+| WAW | Quo Vadis (Sienkiewicz) | 1201 | **SEEDS COMPLETE 2026-06-02 — WAW-01–08 all vignettes done** |
+| MLA | Plutarch's Lives | 4222 | **SEEDS COMPLETE 2026-06-02 — MLA-01–07 all vignettes done** |
+| BGW | Arabian Nights (Burton) | 983 | **SEEDS COMPLETE 2026-06-02 — BGW-01–08 all vignettes done** |
+| CAI | Arabian Nights (Lang) | 629 | **SEEDS COMPLETE 2026-06-02 — CAI-01–08 all vignettes done** |
+| BEY | Mandeville's Travels | 472 | **SEEDS COMPLETE 2026-06-02 — BEY-01–07 all vignettes done** |
 | KYA | Shah-Nameh | 883 | **Processed 2026-05-31 — COMPLETE. KYA-01 spec + KYA-02–25 seeds. See §KYA-CONT.** |
 | HTY | Mahabharata | 83 | **Processed 2026-05-31 — HTY-01 spec complete (Savitri's Three Bargains); HTY-02–06 seeds pending** |
 | ADA | Ramayana | 2339 | **Processed 2026-05-31/06-01 — COMPLETE. ADA-01 spec complete (The Curlew's Grief); ADA-02–48 seeds. All 12 parts fully read (Parts 11–12 are scholarly apparatus only). See ADA-ramayana.md.** |

@@ -1324,3 +1324,413 @@ He notes: "Cross-referenced: IST-01, IST-03, IST-04, IST-05. The letter precedes
 
 *IST-06 complete. 2026-06-02.*
 
+
+---
+
+## Cycle 6 — Angle: *The Curtain Notes — The Intelligence Method Preserved in Its Own Product*
+
+**What this angle reveals that cycles 1-5 missed:** Cycle 1 showed the enemy preserved by the historian's excess of attention. Cycle 2 showed the bilateral deal filed under the excluded party. Cycle 3 showed the draft surviving through the necessity of publication for suppression. Cycle 4 showed the defeated side concealing its own submission from its own allies. Cycle 5 showed the commissioning letter as the origin of the archive's own contents. Cycle 6 shows the document that preserves its own method of production in the record of what was produced: the monks hidden behind a curtain in Alexios's audience chamber took notes so thoroughly that the resulting document cannot be read without understanding that notes were taken from concealment. The method is inside the product. The archive must decide whether to file a heresy census as a record of heresy or a record of how heresy was gathered.
+
+## IST-02 — The Curtain Notes (Cycle 6)
+
+**Source:** Alexiad Book XV — Anna Komnene describes how Alexios I invited Basil the Bogomil to the palace, received him warmly, listened to his doctrines while monks hidden behind a curtain took notes, then used the notes to arrest and execute the Bogomil leadership
+
+**Theme declared:** IST themes catalogued and avoided — bias as preservation, the excluded party's receipt, the suppressed draft surviving through publication, the defeated side concealing submission, the origin letter that precedes the archive's own contents. New theme for this vignette: **the intelligence method preserved in its own product — the curtain notes are simultaneously a heresy census and a record of entrapment; the document cannot be read as one without reading it as the other; the archive must create a category that receives both simultaneously, because separating them would falsify both.**
+
+*The thing · a monastery copy of the curtain notes · scribal header: "Written from the discourse of Basil of the Bogomils, heard from concealment in the presence of the Komnenos" · sixty-three names, addresses, and organizational relationships · in a Constantinople monastery library*
+
+**New nodes proposed:** None (uses existing CON, THA, WM)
+
+**TOKEN:** Bogomil Census Copy — ACCEPT Act I → CARRY Acts II–IV → RETURN Act V → RECORD
+
+---
+
+### Act I — Constantinople, Monastery of the Pantokrator Archive Room (CON)
+
+Brother Konstantinos is eighty years old and has guarded this document for twenty years without deciding what to do with it. His predecessor gave it to him without explanation. The scribal header makes the method clear. The document lists sixty-three senior Bogomil members with specific addresses in Constantinople, Thessaloniki, and Macedonia. Many of them were executed. Their descendants, if any survived, live under different names.
+
+*The Bogomil Census Copy · monastery copy, clean Komnenian-era hand, scribal header identifying the method · three folios, sixty-three entries · on the reading stand in the archive room with the door closed*
+
+"The document is a record of what the monks heard," Brother Konstantinos says. "The scribal header describes what the monks were doing when they heard it. I cannot separate them. If I file it as heresy records, I falsify the method. If I file it as security records, I falsify the content."
+
+**Skill Check — History DC 12:** Identify the specific administrative challenge: Byzantine heresy records (τόμοι κατά αἱρέσεων) were official church documents with specific legal standing; security records (λόγοι κατά κακόφρονες) were imperial administrative records with separate custody; combining both types in one document was possible but had specific filing implications. The distinction matters in 1367 for how the document can be publicly cited. Pass: The combined document type is documented in Byzantine administrative practice — there is a precedent. Fail: The distinction is identified but no precedent is available.
+
+*Passtext:* The combined filing type appears in one other known Byzantine administrative context — the 1143 records of the Blachernae heresy trials, where theological transcription and security census were combined in a single document. The precedent exists. Brother Konstantinos nods. "Good. Then there is a category. Take it."
+
+*Failtext:* The distinction is clear; the precedent for combined filing will have to be argued at intake.
+
+**Grant item:** Bogomil Census Copy (three folios, scribal header identifying concealed note-taking, sixty-three entries with addresses and organizational details)
+
+---
+
+### Act II — Constantinople, Near the Patriarchal Administrative Offices (CON)
+
+A Byzantine ecclesiastical official, Archidiakonos Gregorios Phokas, has heard the manuscript is in transit. His concern is specific: the document's scribal header, which describes monks as having participated in a deception at the emperor's request, is an embarrassing precedent for the church's claim that monks do not engage in secular intelligence work. He wants the header removed or the document suppressed.
+
+*The Bogomil Census Copy · in traveling satchel · in a Constantinople street near the Patriarchal offices with an archdeacon who has a specific and reasonable concern*
+
+**Hybrid — Persuasion DC 12 / Combat fallback:**
+Persuasion DC 12: The scribal header is not embarrassing to the church — it is accurate documentation of an event that the church can now contextualize in writing; a neutral archive that receives the document and its header together, and files it under the combined administrative type, removes the header from ecclesiastical jurisdiction; the church's claim about monks is addressed by the archive's filing category, not by suppression of the record. Pass: Archidiakonos Gregorios considers. The combined-type filing removes the header from ecclesiastical control while documenting the event correctly. He says: "I want the filing category noted in the church's administrative record." Fail: He produces a patriarchal brief authorizing the removal of the header as "irregular scribal practice"; two episcopal guards accompany the brief.
+
+*Passtext:* "Note the filing category in your intake record. I will want a copy of that notation." He steps back. "The header stays if it is filed correctly."
+
+*Combattext:* Two episcopal guards, AC 12 HP 16 each — they enforce the brief's requirement; they stop if the brief's authority is challenged by a jurisdictional argument.
+
+*The Bogomil Census Copy · past the Patriarchal district, header intact · heading toward the Thessaloniki road*
+
+---
+
+### Act III — Thessaloniki, Merchant Quarter Near the Venetian Loggia (THA)
+
+Nikolaos Doukas Cheilas is a Thessaloniki merchant, sixty years old, with a family name that appears in the document's records (entry 47: "Doukas, merchant district, associate membership"). His great-grandfather was arrested. The family survived by conversion and concealment. He heard about the document through a Constantinople correspondence network. He wants it.
+
+"Not to destroy it," he says. "To read it. And then to decide." He is quiet. "Entry 47 names my great-grandfather as an associate member, not a senior leader. He was executed as a senior leader. I have nothing else."
+
+*The Bogomil Census Copy · in satchel · in the Thessaloniki merchant quarter with a man who needs what the document says and might want it for reasons the archive should document*
+
+**Skill Check — Persuasion DC 13:** Nikolaos is not a threat — he is a legitimate interested party whose family claim is documented in the record; the archive at Weimar will note his family's interest and provide him a certified copy of entry 47 upon intake; the original goes to the archive as a permanent record, the copy serves his family's documentation needs; the archive's role as a neutral holder is specifically designed for situations where a document is simultaneously a heresy census and a family record. Pass: He reads entry 47 from the document where the Fighter holds it open. He looks at it for a long time. "Associate member. Not senior." He steps back. "Get me the certified copy." Fail: He argues that the family's claim precedes any archive's interest. He does not pursue physically but will make the argument again at Weimar.
+
+*Passtext:* "Associate member. Not senior." He says it quietly. "That's all I needed to read." He steps back. "Send the certified copy of entry 47 to the Thessaloniki Venetian loggia. My name is registered there."
+
+*Failtext:* He says: "I'll make this argument at your archive." He steps back without pursuing further.
+
+*The Bogomil Census Copy · past Thessaloniki, on the northern road to Weimar*
+
+---
+
+### Act IV — Road West of Thessaloniki, Alpine Approach (THA to WM road)
+
+A Croatian minor noble, Ratko Mrnjav, has been hired by someone who does not want the document to reach a neutral archive — probably one of the sixty-three families, now dispersed through Macedonia and southern Serbia, who has heard about the document. Ratko does not know what he's retrieving. He only knows he is to stop a carrier with a satchel north of Thessaloniki before the Albanian road junction.
+
+*The Bogomil Census Copy · in satchel · on an empty stretch of the northern road with two riders blocking the way*
+
+**Combat — 2 opponents, AC 13 HP 20 each:** Ratko and his associate. They are not assassins; they want the satchel. They will pursue briefly and withdraw when seriously injured. A recovered letter from the employer identifies only a family name — one of the sixty-three entries.
+
+*Passtext:* Both riders broken off or down. The employer's letter identifies a Macedonian family name: entry 31 in the document. A legitimate claimant, using an illegitimate method. The letter will be included in the intake file.
+
+*Failtext:* Ratko gets the satchel; pursue and recover at the next waystation by outrunning him; he had a horse, the Fighter has a shorter route to the waystation; the document is recovered before Ratko passes the document to his courier.
+
+*The Bogomil Census Copy · intact, employer letter recovered as additional provenance documentation · on the Weimar road*
+
+---
+
+### Act V — Weimar Archive District (WM)
+
+Archivus Sweelinck reads the scribal header. He reads it again. He reads ten entries. He sets the document down.
+
+"The monks wrote from behind a curtain," he says. "The header says so. They wrote thoroughly. The header says that too." He looks at the document. "The heresy census and the record of how it was taken are the same document."
+
+*The Bogomil Census Copy · on the intake desk, scribal header visible at the top · Sweelinck with the Patriarchal notation request folded beside it*
+
+**Skill Check — History DC 11:** Provide the filing argument: the 1143 Blachernae heresy trials created a precedent for the combined administrative type — theological transcription and security census filed as a single document under a dual classification; the document is not incorrectly formed; it is a documented Byzantine administrative type; the archive can file it under the combined category with both the heresy content and the intelligence method indexed simultaneously. Pass: New archive category: Security Records — Concealed Transcription Documents; the archive files the header, the census, Nikolaos's certified-copy request, the Patriarchal notation request, and the employer letter from Act IV all together as a single intake record. Fail: Filed under Byzantine Heresy Records with a notation about the scribal header and a pending review of the combined administrative classification.
+
+*Passtext:* "Security Records — Concealed Transcription Documents. The header is the document's most significant line. It describes a method that was standard in Byzantine administrative practice and is documented here with unusual clarity. The sixty-three names are the content. The monks behind the curtain are the context. The archive receives both." He writes the Patriarchal notation as a separate entry. "Nikolaos Cheilas's copy of entry 47 will be sent to the Thessaloniki Venetian loggia. The record will note he received it."
+
+*Failtext:* Filed under Byzantine Heresy Records; combined classification pending review; Nikolaos's request noted; header preserved.
+
+**Take item:** Bogomil Census Copy
+**Grant item:** Curtain Notes Archive Record
+
+```json
+{
+  "quest_id": "IST-02",
+  "title": "The Curtain Notes",
+  "cycle": 6,
+  "book": "The Alexiad (Anna Komnene, Dawes tr., c. 1148 AD) — Book XV: Basil the Bogomil's arrest; the monks hidden behind the curtain",
+  "token": "Bogomil Census Copy",
+  "route": ["CON", "THA", "WM"],
+  "theme": "The intelligence method preserved in its own product — the curtain notes are simultaneously a heresy census and a record of entrapment; the document cannot be read as one without reading it as the other; the archive creates a category that receives both simultaneously",
+  "archive_category": "Security Records — Concealed Transcription Documents",
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "CON",
+      "type": "skill_check",
+      "activateNode": "CON",
+      "scene": "Brother Konstantinos in the Pantokrator archive room. The scribal header reads: 'Written from the discourse of Basil of the Bogomils, heard from concealment in the presence of the Komnenos.' Three folios, sixty-three entries. 'I cannot separate the method from the content. If I file it as heresy records, I falsify the method. If I file it as security records, I falsify the content.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Identify the precedent for combined heresy-census and security-record filing in Byzantine administrative practice: the 1143 Blachernae heresy trials created a combined administrative type.",
+        "failText": "The distinction is clear; the precedent will have to be argued at intake.",
+        "passText": "'There is a precedent. Then there is a category. Take it.'"
+      },
+      "grantItem": "Bogomil Census Copy",
+      "checkPassFlag": "ist02Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "CON",
+      "type": "hybrid",
+      "activateNode": "CON",
+      "scene": "Archidiakonos Gregorios Phokas with a concern: the scribal header documenting monks participating in imperial intelligence work is embarrassing to the church's claims. He wants the header removed or the document suppressed.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "prompt": "Argue that combined-type filing under a neutral archive removes the header from ecclesiastical jurisdiction while documenting the event correctly; offer to note the Patriarchal position in the intake record.",
+        "failText": "He produces a brief authorizing header removal; two episcopal guards enforce. Combat: 2 guards AC 12 HP 16 each.",
+        "passText": "'Note the filing category in the intake record. The header stays if it is filed correctly.' He steps back."
+      },
+      "combat": {
+        "enemies": [{"name": "Episcopal Guard", "ac": 12, "hp": 16, "count": 2}],
+        "trigger": "Persuasion check failed"
+      },
+      "checkPassFlag": "ist02Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "THA",
+      "type": "skill_check",
+      "activateNode": "THA",
+      "scene": "Nikolaos Doukas Cheilas in the Thessaloniki merchant quarter. Entry 47 names his great-grandfather as an associate member; he was executed as a senior leader. 'I have nothing else.'",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "prompt": "Acknowledge his family claim as legitimate; offer a certified copy of entry 47 upon archive intake; the neutral archive specifically serves situations where a document is simultaneously a census and a family record.",
+        "failText": "He says he will make the argument at the archive. He does not pursue further.",
+        "passText": "'Associate member. Not senior.' He steps back. 'Send the certified copy of entry 47 to the Thessaloniki Venetian loggia. My name is registered there.'"
+      },
+      "checkPassFlag": "ist02Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "THA",
+      "type": "combat",
+      "activateNode": "THA",
+      "scene": "Two riders blocking the northern road west of Thessaloniki: Ratko Mrnjav and an associate, hired by someone from one of the sixty-three families. A recovered employer letter identifies entry 31 in the document.",
+      "combat": {
+        "enemies": [{"name": "Croatian Rider", "ac": 13, "hp": 20, "count": 2}],
+        "breakoffCondition": "seriously injured",
+        "failText": "Ratko gets the satchel; recover at the next waystation; he had a horse, the Fighter has a shorter route.",
+        "passText": "Both broken off. The employer letter identifies a Macedonian family name — entry 31. A legitimate claimant using an illegitimate method. The letter goes into the intake file."
+      },
+      "checkPassFlag": "ist02Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck reads the scribal header twice. 'The monks wrote from behind a curtain. The header says so. They wrote thoroughly. The heresy census and the record of how it was taken are the same document.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 11,
+        "prompt": "Provide the 1143 Blachernae heresy trials precedent for the combined administrative type: theological transcription and security census filed as one document under dual classification.",
+        "failText": "Filed under Byzantine Heresy Records; combined classification pending review.",
+        "passText": "Sweelinck writes: 'Security Records — Concealed Transcription Documents. The header is the document's most significant line. The sixty-three names are the content. The monks behind the curtain are the context. The archive receives both.' He sends Nikolaos's copy of entry 47 to the Thessaloniki loggia."
+      },
+      "takeItem": "Bogomil Census Copy",
+      "grantItem": "Curtain Notes Archive Record",
+      "checkPassFlag": "ist02Act5Passed",
+      "activateMissionBit": "istCurtainNotesComplete"
+    }
+  ]
+}
+```
+
+---
+
+*IST-02 complete. 2026-06-02.*
+
+---
+
+## Cycle 7 — Angle: *The Physician's Notes — The Clinical Record Beside the Literary Account*
+
+**What this angle reveals that cycles 1-6 missed:** Cycle 1 showed the enemy preserved through the historian's attention. Cycle 2 showed the bilateral deal filed under the excluded party. Cycle 3 showed the draft surviving through publication-as-suppression. Cycle 4 showed the defeated side hiding its own submission. Cycle 5 showed the commissioning letter preceding the archive's own contents. Cycle 6 showed the intelligence method inside its own product. Cycle 7 shows the two versions of the same event: Anna Komnene attended her father's final illness with both a daughter's eye and a physician's eye. The Alexiad uses the daughter's account. The physician's notes record what the daughter could not write in a literary work — the specific progression, the treatments, the days when the outcome became clear. The archive receives the Alexiad (or its use of the record it contains) and now receives the notes that precede it as a clinical foundation.
+
+## IST-07 — The Physician's Notes (Cycle 7)
+
+**Source:** Alexiad Book XV — Anna Komnene gives a literary account of Alexios I's final illness; Anna was trained in medicine; the Kecharitomene convent (where she retired and where she wrote the Alexiad) maintained medical records
+
+**Theme declared:** IST themes catalogued and avoided — the full list above through intelligence method in product. New theme for this vignette: **the clinical record and the literary account of the same event — both are true; the clinical record shows what happened; the literary account shows what it meant; the archive receives both as complementary primary documents; the notes are not a correction of the Alexiad; they are its other half.**
+
+*The thing · the Kecharitomene medical register · the relevant section: Alexios's treatment record, weeks 4-14 of his final illness · in Anna's clinical hand, specific, unsentimental · in the convent's archive*
+
+**New nodes proposed:** None (uses existing CON, ANC, WM)
+
+**TOKEN:** Kecharitomene Medical Register — ACCEPT Act I → CARRY Acts II–IV → RETURN Act V → RECORD
+
+---
+
+### Act I — Kecharitomene Convent, Constantinople (CON)
+
+Sister Theodora is the convent's current medical archive keeper, seventy years old, with a working knowledge of Byzantine pharmacology and a long tradition of careful record-keeping. She has known about the Alexios section of the medical register for decades. She has not acted because the medical register's clinical notes and the Alexiad's literary account of the same illness are in visible tension — not contradictory, but differently informative. She fears the notes will be read as a correction of Anna's account rather than as its complement.
+
+*The Kecharitomene Medical Register · the relevant section, weeks 4-14 · clinical notations: specific symptoms daily, treatments administered, fever curves, the six days when recovery seemed possible, the day when it ceased to seem possible · in Anna's own hand throughout*
+
+"She wrote this as a physician," Sister Theodora says. "She wrote the Alexiad as a historian. Both are accurate. If someone reads the notes as evidence that the Alexiad is wrong, both will be misunderstood."
+
+**Skill Check — History DC 11:** Confirm the distinction: the Alexiad's literary account of Alexios's death is not a medical document and does not claim to be; it is a literary document that describes the moral and political significance of a death; the clinical notes describe the physical event; these are different genres of record describing the same event from different professional positions; a reader who expects them to contradict each other has confused genres. Pass: The distinction is clear and well-precedented in Byzantine literary-medical practice (the same author writing in different registers for different purposes is documented). Fail: The distinction is likely correct but lacks a specific precedent.
+
+*Passtext:* Sister Theodora relaxes slightly. "Then the archive will understand both." She opens the register to the Alexios section and slides it across. "Take it. Tell them what I told you."
+
+*Failtext:* She gives it anyway. "Tell them what it is. Don't let them read the Alexiad first."
+
+**Grant item:** Kecharitomene Medical Register (the relevant section bookmarked, Anna's clinical hand throughout, covering weeks 4-14 of the final illness)
+
+---
+
+### Act II — Constantinople, Near the Imperial Administrative District (CON)
+
+A Byzantine church official, Protosynkellos Nikodemos, has heard the medical register is leaving the convent. His concern: the convent's medical records are ecclesiastical property under the church's charitable institutions. A register leaving the convent without formal church authorization is a property violation. He has sent two deacons to the convent gate.
+
+*The Kecharitomene Medical Register · in satchel · at the convent's outer gate with two deacons and a property authorization requirement*
+
+**Skill Check — Deception DC 12:** The relevant section of the register has been loaned to a physician in the Italian states for a period of scholarly consultation — a standard practice for medical records in convents that maintain active medical correspondence; the Protosynkellos's property restriction applies to permanent removal; a scholarly loan requires only an informal notation from the convent's medical archive keeper, which Sister Theodora has provided. Pass: The deacons look at Sister Theodora's notation. "Scholarly loan" is a recognized category. They let the register pass. Fail: They send for the Protosynkellos directly; he arrives and accepts the "scholarly loan" argument himself after reviewing the notation; twenty minutes; the register passes.
+
+*Passtext:* "Scholarly loan. Notation by the archive keeper." One deacon reads it and steps back. "Return it when the consultation is complete."
+
+*Failtext:* Twenty minutes. The Protosynkellos reviews the notation personally. He accepts the argument. The register passes.
+
+*The Kecharitomene Medical Register · past the convent gate, on the western road toward the Italian coast*
+
+---
+
+### Act III — Ancona, Physician's Quarter Near the Port (ANC)
+
+Maestro Guido di Tivoli is a physician in his fifties who specializes in Byzantine medical texts. He has heard the Kecharitomene register is in transit and has been waiting at the Ancona port for three days. He wants to keep it — not permanently, but for a year of study. He is genuinely working on a comparative study of Byzantine and Italian treatment of advanced gout and Alexios's case is ideal.
+
+"One year," he says. "I'll return it in better condition than I received it. My work will cite it. The archive will benefit from a published citation."
+
+*The Kecharitomene Medical Register · in satchel · at the Ancona portside physician's quarter with a scholar who wants it for an excellent reason*
+
+**Skill Check — Persuasion DC 12:** The published citation is a legitimate benefit — but it requires the original to be at a verifiable archive location to have scholarly standing; a study citing a document "in private possession, Ancona" has lesser standing than a study citing "Weimar archive, accessioned 1367"; offer to confirm that Maestro Guido will be listed in the intake record as a scholarly correspondent with formal access rights; his published study can cite the Weimar location. Pass: He considers. "Weimar access rights formally noted." He releases the register. "My study will name the archive. I'll send a copy of the relevant chapter." Fail: He argues about the year; offer the same terms and he accepts them after a longer conversation.
+
+*Passtext:* "Weimar access rights formally noted. I'll send the chapter when it's done." He hands back the register.
+
+*Failtext:* Longer conversation. Same terms. Same result.
+
+*The Kecharitomene Medical Register · past Ancona, on the northern road through the Alpine approaches to Weimar*
+
+---
+
+### Act IV — Alpine Road, Night Stage (ANC to WM road)
+
+A mounted courier carrying a Venetian merchant's invoice package is on the same road section — same waystation, same departure time. He misidentifies the Fighter's satchel for his own and takes it from the shared luggage area of the waystation stable by mistake. He is not a thief; he is a courier who has been riding for two days without sleep.
+
+*The Kecharitomene Medical Register · taken by mistake from the stable rack · in the wrong man's courier bag · somewhere on the road ahead in the dark*
+
+**Skill Check — Persuasion DC 11:** Catch up with the courier at the next waystation, which he will reach in approximately forty minutes. The register's satchel is heavier than a Venetian invoice package and feels different; he will notice the weight before long. Pass: He is at the next waystation when the Fighter arrives, the satchel open and confused on the stable table. He is embarrassed and apologetic. He releases it immediately. Fail: He has already ridden past the next waystation; the following waystation is the one after; the Fighter rides through the night.
+
+*Passtext:* He has the satchel open. "This is not my documents." He looks up and hands it over. He apologizes three times.
+
+*Failtext:* The next waystation. Same scene, thirty minutes later.
+
+*The Kecharitomene Medical Register · recovered, on the final road to Weimar*
+
+---
+
+### Act V — Weimar Archive District (WM)
+
+Archivus Sweelinck opens the register to the bookmarked section. He reads it from week 4 through week 14. He does not speak for a long time.
+
+"She wrote this in the same week she wrote Book XV of the Alexiad," he says. He is not certain of this, but the handwriting is the same tired hand in both sections. "She wrote the literary account and the clinical notes in parallel." He sets the register down. "The archive has the Alexiad. Now it has what the Alexiad was built on."
+
+*The Kecharitomene Medical Register · open to week 8, where Anna notes "recovery possible" and writes three days of treatment at a pace that suggests hope · Sweelinck with the IST-06 intake file already open on the desk*
+
+**Skill Check — History DC 12:** Frame the dual-document relationship: the Alexiad and the clinical notes are not competing versions of the same event; they are different genres of primary document produced by the same author in the same period; the archive category must receive them together as complementary — neither is primary over the other; together they constitute a more complete record than either alone. Pass: New archive category: Medical Records — Clinical Basis for Literary Accounts; the archive notes the dual authorship, the simultaneous production, and the relationship to IST-06 (the Exile Letter that requested the research materials that preceded both documents). The cross-reference to IST-01 through IST-06 is noted in the intake record. Fail: Filed under Medical Records — Byzantine Clinical, with a cross-reference to the Alexiad under IST-01.
+
+*Passtext:* Sweelinck writes: "Medical Records — Clinical Basis for Literary Accounts. The notes and the literary account are the same physician's two registers for the same event. The clinical notes show what happened. The Alexiad shows what it meant. Neither is the correction of the other. The archive receives both as the complete record." He adds the cross-reference entry for IST-01 through IST-06. "The Exile Letter requested manuscripts to write the Alexiad. The clinical notes preceded the Alexiad. The archive now holds all of it — the request, the sources, the finished work, and the clinical foundation the literary account was written above." He closes the register. "She was thorough."
+
+*Failtext:* Filed under Medical Records — Byzantine Clinical; cross-reference to IST-01 noted. Complementary-document relationship pending formal classification.
+
+**Take item:** Kecharitomene Medical Register
+**Grant item:** Physician's Notes Archive Record
+
+```json
+{
+  "quest_id": "IST-07",
+  "title": "The Physician's Notes",
+  "cycle": 7,
+  "book": "The Alexiad (Anna Komnene, Dawes tr., c. 1148 AD) — Book XV: Alexios I's final illness; Anna as physician and historian",
+  "token": "Kecharitomene Medical Register",
+  "route": ["CON", "ANC", "WM"],
+  "theme": "The clinical record and the literary account of the same event — both are true; the clinical notes show what happened; the Alexiad shows what it meant; the archive receives both as complementary primary documents; neither is a correction of the other",
+  "archive_category": "Medical Records — Clinical Basis for Literary Accounts",
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "CON",
+      "type": "skill_check",
+      "activateNode": "CON",
+      "scene": "Sister Theodora in the Kecharitomene archive room. The medical register covers weeks 4-14 of Alexios's final illness in Anna's clinical hand. 'She wrote this as a physician. She wrote the Alexiad as a historian. Both are accurate. If someone reads the notes as evidence that the Alexiad is wrong, both will be misunderstood.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 11,
+        "prompt": "Confirm that clinical notes and literary accounts are different genres describing the same event from different professional positions — a confusion of genres, not a contradiction; documented in Byzantine literary-medical practice.",
+        "failText": "She gives it with the caution: 'Don't let them read the Alexiad first.'",
+        "passText": "'Then the archive will understand both.' She slides the register across."
+      },
+      "grantItem": "Kecharitomene Medical Register",
+      "checkPassFlag": "ist07Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "CON",
+      "type": "skill_check",
+      "activateNode": "CON",
+      "scene": "Two deacons at the convent gate sent by Protosynkellos Nikodemos. The medical register is ecclesiastical property; removal without formal authorization is a property violation.",
+      "skillCheck": {
+        "skill": "Deception",
+        "dc": 12,
+        "prompt": "Present the removal as a scholarly loan under a recognized convent medical correspondence category, supported by Sister Theodora's notation — not permanent removal, therefore not subject to property restriction.",
+        "failText": "Protosynkellos arrives in twenty minutes and accepts the argument himself; the register passes.",
+        "passText": "'Scholarly loan. Notation by the archive keeper.' He steps back. 'Return it when the consultation is complete.'"
+      },
+      "checkPassFlag": "ist07Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "ANC",
+      "type": "skill_check",
+      "activateNode": "ANC",
+      "scene": "Maestro Guido di Tivoli at the Ancona port, wanting one year of study. He is researching Byzantine and Italian gout treatment and Alexios's case is ideal. His reason is excellent. His timeline is too long.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "prompt": "Offer formal Weimar access rights listed in the intake record; his published study can cite the archive location with stronger scholarly standing than 'private possession, Ancona.'",
+        "failText": "Longer conversation; same terms; same result.",
+        "passText": "'Weimar access rights formally noted. I'll send the chapter when it's done.' He hands back the register."
+      },
+      "checkPassFlag": "ist07Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "ANC",
+      "type": "skill_check",
+      "activateNode": "ANC",
+      "scene": "A Venetian courier misidentified the satchel in a shared stable rack and rode off with it. He is not a thief. The Fighter must catch up — the register is in the wrong bag somewhere ahead in the dark.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 11,
+        "prompt": "Catch up at the next waystation before the courier realizes the weight difference; address him gently — he will be embarrassed and cooperative.",
+        "failText": "He is at the following waystation; same scene, thirty minutes later.",
+        "passText": "He has the satchel open. 'This is not my documents.' He hands it over and apologizes three times."
+      },
+      "checkPassFlag": "ist07Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck reads weeks 4-14. 'She wrote the literary account and the clinical notes in parallel. The archive has the Alexiad. Now it has what the Alexiad was built on.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Frame the dual-document category: clinical notes and literary account are different genres by the same author in the same period; complementary, not competing; the archive must receive them together; cross-reference to IST-06 (the Exile Letter) as the document that initiated the research that preceded both.",
+        "failText": "Filed under Medical Records — Byzantine Clinical; cross-reference to IST-01 noted.",
+        "passText": "Sweelinck writes: 'Medical Records — Clinical Basis for Literary Accounts. The notes and the literary account are the same physician's two registers for the same event. Neither is the correction of the other. The archive holds all of it — the request, the sources, the finished work, and the clinical foundation.' He closes the register. 'She was thorough.'"
+      },
+      "takeItem": "Kecharitomene Medical Register",
+      "grantItem": "Physician's Notes Archive Record",
+      "checkPassFlag": "ist07Act5Passed",
+      "activateMissionBit": "istPhysiciansNotesComplete"
+    }
+  ]
+}
+```
+
+---
+
+*IST-07 complete. 2026-06-02.*

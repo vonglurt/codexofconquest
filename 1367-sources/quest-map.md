@@ -489,6 +489,8 @@ Game cities are canonical. Source-book settings are proposed new nodes.
 | IST-04 | The Bryennios Draft | 3 | CON → RGS → WM | The unfinished draft survives because suppression requires publication; the husband's prior account names what the wife's defense required her to omit |
 | IST-05 | The Devol Treaty Copy | 4 | PAR → RGS → WM | The document hidden by the losing party's own side — not to conceal defeat from the enemy but to conceal submission from allies |
 | IST-06 | The Exile Letter | 5 | CON → WM | The commissioning letter for the archive's own contents; the origin of the collection is itself in the collection |
+| IST-02 | The Curtain Notes | 6 | CON → THA → WM | The intelligence method preserved in its own product; the monks behind the curtain are inside the document they produced; heresy census and security record filed as one |
+| IST-07 | The Physician's Notes | 7 | CON → ANC → WM | The clinical record beside the literary account; both are accurate; neither is the correction of the other; the archive receives the complete record |
 | CAI-02 | Aladdin's Registration | 6 | DAM → ANT → WM | The blank form precedes the story; the story was constructed around a Syrian-Persian legal instrument type; the template and the narrative illuminate each other |
 | CAI-04 | Prince Ahmed's Arrow | 7 | ALP → LAT → WM | The parish record of the unexplained; the account arrives and discovers the archive already holds the other end of it |
 | CAI-05 | The Deathbed Instruction | 8 | DAM → ALE → WM | The legal instrument that is the story's emotional center; the story is the breach case that the form was designed to prevent |
