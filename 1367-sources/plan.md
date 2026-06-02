@@ -14,7 +14,7 @@ The following quest seeds were generated in the Latin Workshop (chapter-by-chapt
 ### §FCO-02 — The Painter's Afterword (Book 1) ✓ DONE 2026-06-02
 A sequel note found in the Carthage temple. The artist who painted the murals of Trojan suffering — commissioned by the Punic priest — left a personal account of what it was like to paint people's grief for pay. The account survives in a monastery library. Fighter escorts it. Route: CRT → NAP → WM. Theme: the paid craftsman who depicted grief must account for the commission. New node: CRT (Carthage coastal monastery, Hafsid territory).
 
-### §FCO-03 — Creusa's Third Temple (Book 2)
+### §FCO-03 — Creusa's Third Temple (Book 2) ✓ DONE 2026-06-02
 Creusa vanished during the fall of Troy — no body, no burial. Ancient tradition says that Greek colonists in southern Italy built a small shrine to her as a household goddess because she appeared to them during a storm. A 14th-century mason has found the ruins of a stone structure with a dedicatory inscription naming "Creusa daughter of Priam." Fighter escorts the inscription rubbing.
 
 ### §FCO-04 — The Buthrotum Register (Book 3) ✓ DONE 2026-06-02
@@ -23,13 +23,13 @@ Helenus built a miniature Troy at Buthrotum (Butrint, modern Albania). He kept a
 ### §FCO-05 — Barce's Account (Dido's Secretary) (Book 4) ✓ DONE 2026-06-02
 Barce was Sychaeus's nurse, Dido's oldest servant. She witnessed everything. Route: GEN → BOL → WM. Theme: the survivor's testimony contradicts the monument in three places; the gap between the eyewitness account and the canonical epic is the document's entire historical value.
 
-### §FCO-06 — Palinurus's Chart (Book 5)
+### §FCO-06 — Palinurus's Chart (Book 5) ✓ DONE 2026-06-02
 The helmsman Palinurus fell overboard off the coast of Lucania (Palinuro, still called that). He had been keeping a navigational chart of the route. The chart was left on the helm-seat. A medieval sailor claims to have used it in 1334. A sailor's guild in Naples wants it. The Cumaean monastery wants it back. Fighter escorts it to a maritime archive.
 
 ### §FCO-07 — The Sibyl's Sealed Jar (Book 6 — A) ✓ DONE 2026-06-02
 Route: NAP → RME → WM. Theme: the fulfilled prophecy is more dangerous than false prophecy; the archive receives it as historical record rather than active theological claim.
 
-### §FCO-08 — Phlegyas's Inscription (Book 6 — B)
+### §FCO-08 — Phlegyas's Inscription (Book 6 — B) ✓ DONE 2026-06-02
 The line cried by Phlegyas in Tartarus was reportedly inscribed over Roman courthouses. A lintel stone from a Roman basilica near Verona was incorporated into a church's foundations in the 9th century. A 1367 restoration project has uncovered it. The bishop wants it above the church door. The magistrates want it at the courthouse. The humanist wants it in the library. Fighter escorts it to a neutral archive before it is cut in three.
 
 ### §FCO-09 — Ascanius's Broken Plate (Book 7) ✓ DONE 2026-06-02

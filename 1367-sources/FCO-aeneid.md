@@ -2281,3 +2281,654 @@ activateMissionBit: fco14Complete
 ---
 
 *FCO-14 complete. 2026-06-02.*
+
+---
+
+**Cycle 9**
+
+*(Theme differentiation: FCO cycles 1-8 covered: hostile custody, the naming-sworn-before-death, the paid craftsman, grief as governance, survivor contradicts the monument, fulfilled prophecy, the relic of comprehension, and the alternate ending. New theme: the votary inscription for the woman who vanished; she was not mourned as dead but worshipped as present; the dedication names her as a household goddess because some losses are addressed rather than concluded.)*
+
+---
+
+## Cycle 9 — Angle: *Creusa's Third Temple — The Dedication That Did Not Accept the Ending*
+
+**What this angle reveals that cycles 1-8 missed**: Creusa vanished during the fall of Troy. Aeneas looked for her and found only her shade, which told him to go west without her. The Aeneid gives her a moment and moves on. The Greek colonists in southern Italy did not accept this as a conclusion: they built a shrine to Creusa as a household goddess because she appeared to them during a storm. The dedication stone names her *filia Priami, custos huius domus* — daughter of Priam, guardian of this household. A 14th-century mason found the foundation of the structure. He made a rubbing of the stone. The archive receives evidence that Creusa's loss was addressed differently in at least one community — not mourned as final, but managed as ongoing.
+
+**Themes avoided:** all eight prior FCO themes; WAW-05's "letter filed under the act not the man" (this is not about filing — it is about the refusal to accept finality as administrative fact).
+
+**New theme chosen:** "The votary inscription for the woman who vanished; the dedication names her as still present; some losses are addressed rather than concluded."
+
+---
+
+### 5-Act Vignette: *Creusa's Third Temple*
+
+#### The Token
+
+The Creusa Shrine Rubbing: a wax-cloth rubbing of a dedication stone from a ruined foundation in southern Italy, found by a mason named Giacomello in 1367. The stone reads: *CREUSAE FILI[AE] PRIAMI CUSTODI HVIVS DOMUS COLONI GRAECI POSUERUNT* — To Creusa daughter of Priam, guardian of this household, the Greek colonists set up this [shrine]. The stone is cut in archaic Roman style with Greek letter forms interpolated. Giacomello's certification note is attached to the cloth.
+
+*The Creusa Shrine Rubbing · wax-cloth, Latin inscription with Greek letter forms, Giacomello's seal · Southern Italian mason's workshop*
+
+---
+
+#### Act I — Naples (NAP)
+
+*The mason Giacomello di Lauro came to the Fighter because he has been to the Vatican, the University of Naples, and the local bishop's office, and all three wanted to know if the stone was genuine before committing to anything. He made this rubbing before telling anyone about the stone. He says: "I want the rubbing in an archive before someone decides what the stone means and cuts it to support the decision."*
+
+He hands the rubbing over with the certification note. He has not yet told anyone where the stone is.
+
+`grantItem: "Creusa Shrine Rubbing"`
+
+*The Creusa Shrine Rubbing · accepted, inscription legible, Giacomello's seal attached · Fighter's hands · Naples mason's yard*
+
+**Skill Check — History DC 12:** *Understand the inscription's theological and cultural significance — specifically, why Greek colonists in southern Italy would have worshipped Creusa as a household goddess rather than as a Trojan royal figure.*
+
+*pass:* The colonists were Greek but they dedicated the shrine in Latin with Greek letter forms — a bilingual dedication for a bilingual community. They did not have a text for Creusa's ending because the Aeneid had not yet been written when the colonists arrived. *They did what you do with someone who vanished without dying: you address them as present. They were not wrong about the theology. They were refusing the narrative.*
+
+*fail:* The inscription noted as an unusual dedicatory text naming a Trojan figure. Cultural significance not assembled.
+
+---
+
+#### Act II — Naples (NAP)
+
+*A Franciscan brother from the local friary has followed Giacomello. He has heard about the rubbing from the mason's neighbor. The friary's scholarship interests are classical, and the brother wants the rubbing for a collection of unusual dedicatory inscriptions he is assembling. He will publish it. He has done this before with other stones.*
+
+He is scholarly and genuinely interested. He will not damage the rubbing. He makes a fair offer.
+
+*The Creusa Shrine Rubbing · in the pack, the Franciscan's offer letter · Fighter · Naples street*
+
+**Skill Check — Persuasion DC 12:** *Argue that a dedicatory inscription that refuses a canonical ending belongs in a neutral archive that will not publish it with a pre-determined interpretation.*
+
+*pass:* The brother pauses. "Pre-determined interpretation." He thinks about his current collection. "I did interpret several of the others." He lets the rubbing go, with a note: "Send me the archive's classification when it is processed." *He is a scholar. He knows what interpretation pressure looks like from the inside.*
+
+*fail:* He retains a full copy of the inscription text. He will publish his interpretation within two years.
+
+---
+
+#### Act III — Rome (RME)
+
+*A Vatican official has been waiting in Rome. The Vatican has heard about the Creusa shrine — a 14th-century mason finding a dedication to a Trojan household goddess in southern Italy is the kind of thing that generates letters between bishops. The official has a specific concern: the stone names a pagan household goddess in active cult terms. If the cult was still active in the 1st century BC, it intersects with early Christian history in the same region.*
+
+He wants the rubbing to be assessed for theological implications before it reaches a foreign archive.
+
+*The Creusa Shrine Rubbing · in the pack, the Vatican official's assessment letter · Fighter · Rome waystation*
+
+**Skill Check — Persuasion DC 13:** *Argue that a pagan household cult inscription from the pre-Christian period has no current theological implications — the archive receives it as classical evidence, not as a live religious claim.*
+
+*pass:* The official is thorough. "If the cult was extinct by the first century, which the ruined foundation suggests, there are no live implications." He accepts the argument and files a note: *pagan household cult, archaic period, no current theological status.* He lets it continue. *He is systematic. He needed a category. The argument gave him one.*
+
+*fail:* He imposes a three-day theological review. Released when the review concludes the cult is historical.
+
+---
+
+#### Act IV — Rome Road (RME)
+
+*Two men from a southern Italian noble family who own the land where the stone was found. Giacomello found it on their land without their permission. They want either the rubbing back or compensation for the discovery on their property. They are not violent; they are proprietorial.*
+
+**Hybrid — Persuasion DC 12 first; fail → Combat:**
+
+*Persuasion pass:* Argue that a rubbing is not the stone — it is the mason's own work product; the stone remains on their land and will remain there; the rubbing captures only the text. *They want ownership of a discovery. The argument is that they already have it — the stone is still there.* They withdraw.
+
+*Persuasion fail → Combat:* 2 estate agents, AC 11, HP 15. Not fighters. Stop at first injury. *failText:* They take the rubbing and claim it as estate property. *passText:* Both down or withdrew.
+
+---
+
+#### Act V — Weimar (WM)
+
+*Archivus Sweelinck reads the inscription. He reads the Aeneid, Book 2 — Creusa's disappearance and shade. He reads the inscription again.*
+
+"The shade told him to go west," Sweelinck says. "She told him she would be a goddess, cared for by the mother of the gods." He traces the inscription. "The colonists did not read the Aeneid — they arrived before it was written. They built her shrine before Vergil gave her an ending." He sets down the rubbing. "What they built was not ignorance of the story. It was a different story. Their Creusa survived the fall and came with them. She guarded their houses. She appeared in their storms." He opens the intake book. "The dedication that does not accept the canonical ending is the oldest form of secondary reception."
+
+He writes: *Dedicatory Inscriptions — Non-Canonical Reception: inscriptions that record a tradition of a canonical figure that diverges from the canonical account; primary evidence for the reception of mythological figures in communities that preceded the canonical text; the dedication that does not accept the ending is older than the ending itself.*
+
+"You receive the Creusa Shrine Dedication Record."
+
+`takeItem: "Creusa Shrine Rubbing"`
+`grantItem: "Creusa Shrine Dedication Record"`
+
+---
+
+### Quest API Stub — FCO-03
+
+```json
+{
+  "quest_id": "FCO-03",
+  "title": "Creusa's Third Temple",
+  "cycle": 9,
+  "book": "FCO — Aeneid (Vergil)",
+  "token": "Creusa Shrine Rubbing",
+  "route": ["NAP", "RME", "WM"],
+  "theme": "The votary inscription for the woman who vanished; the dedication names her as still present; some losses are addressed rather than concluded",
+  "archive_category": "Dedicatory Inscriptions — Non-Canonical Reception",
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "NAP",
+      "type": "skill_check",
+      "activateNode": "NAP",
+      "scene": "Naples mason's yard. Giacomello di Lauro made the rubbing before telling anyone where the stone is. 'I want the rubbing in an archive before someone decides what the stone means and cuts it to support the decision.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Understand why Greek colonists in southern Italy would worship Creusa as a household goddess rather than as a Trojan royal figure.",
+        "failText": "Inscription noted as an unusual dedicatory text naming a Trojan figure. Cultural significance not assembled.",
+        "passText": "The colonists arrived before the Aeneid was written. They did what you do with someone who vanished without dying: addressed them as present. They were not wrong about the theology — they were refusing the narrative."
+      },
+      "grantItem": "Creusa Shrine Rubbing",
+      "checkPassFlag": "fco03Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "NAP",
+      "type": "skill_check",
+      "activateNode": "NAP",
+      "scene": "Naples street. A Franciscan brother with a collection of unusual dedicatory inscriptions wants the rubbing. He is scholarly, will not damage it, makes a fair offer. He has published interpretations before.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "prompt": "Argue that a dedicatory inscription refusing a canonical ending belongs in a neutral archive that will not publish it with a pre-determined interpretation.",
+        "failText": "He retains a full copy of the inscription text. He will publish his interpretation within two years.",
+        "passText": "'Pre-determined interpretation.' He thinks about his current collection. 'I did interpret several of the others.' He lets the rubbing go. A scholar knows what interpretation pressure looks like from the inside."
+      },
+      "checkPassFlag": "fco03Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "RME",
+      "type": "skill_check",
+      "activateNode": "RME",
+      "scene": "Rome waystation. Vatican official concerned about theological implications: a pagan household goddess in active cult terms intersects with early Christian history if the cult was still active in the 1st century BC. He wants theological assessment before it reaches a foreign archive.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "prompt": "Argue that a pagan household cult from the archaic period has no current theological implications — the archive receives it as classical evidence, not a live religious claim.",
+        "failText": "Three-day theological review. Released when review concludes the cult is historical.",
+        "passText": "'If the cult was extinct by the first century, which the ruined foundation suggests, there are no live implications.' He files: 'pagan household cult, archaic period, no current theological status.' He needed a category."
+      },
+      "checkPassFlag": "fco03Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "road_rome_north",
+      "type": "hybrid",
+      "activateNode": "RME",
+      "scene": "Rome road. Two estate agents from the southern Italian noble family who own the land where the stone was found. They want the rubbing or compensation for the discovery on their property. Not violent — proprietorial.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "prompt": "Argue that a rubbing is the mason's own work product; the stone remains on their land; they already have the discovery — the stone is still there.",
+        "failText": "Combat begins: 2 estate agents, AC 11, HP 15. failText: They take the rubbing. passText: Both down or withdrew."
+      },
+      "combat": {
+        "enemies": 2,
+        "AC": 11,
+        "HP": 15,
+        "description": "Estate agents, not fighters — stop at first injury",
+        "failText": "They take the rubbing and claim it as estate property.",
+        "passText": "Both down or withdrew. The stone is still on their land. They have the discovery — just not the rubbing."
+      },
+      "checkPassFlag": "fco03Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck reads the inscription beside Aeneid Book 2. 'The colonists arrived before the Aeneid was written. Their Creusa survived. She guarded their houses. She appeared in their storms. The dedication that does not accept the canonical ending is older than the ending itself.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 11,
+        "prompt": "Explain the reception significance: the colonists' tradition preceded Vergil's text; their Creusa is not a misreading of the Aeneid — it is an independent tradition that Vergil's Creusa narrative later overlaid.",
+        "failText": "Filed under Aeneid Parallel Sources — Creusa Tradition. Cross-reference to FCO Aeneid series created.",
+        "passText": "Sweelinck writes: 'Dedicatory Inscriptions — Non-Canonical Reception: inscriptions recording a tradition of a canonical figure that diverges from the canonical account; primary evidence for reception in communities that preceded the canonical text; the dedication that does not accept the ending is older than the ending itself.' You receive the Creusa Shrine Dedication Record."
+      },
+      "takeItem": "Creusa Shrine Rubbing",
+      "grantItem": "Creusa Shrine Dedication Record",
+      "checkPassFlag": "fco03Act5Passed",
+      "activateMissionBit": "fcoCreusaComplete"
+    }
+  ]
+}
+```
+
+---
+
+*FCO-03 complete. 2026-06-02.*
+
+
+---
+
+**Cycle 10**
+
+*(Theme differentiation: FCO cycles 1-9 covered: hostile custody, the naming sworn, the paid craftsman, grief as governance, survivor contradicts the monument, fulfilled prophecy, the relic of comprehension, the alternate ending, and the pre-canonical tradition. New theme: the navigator's chart left on the helm-seat; the chart is navigational knowledge separated from its keeper by his death; a medieval sailor found it still worked; the archive receives evidence that the knowledge outlasted the man.)*
+
+---
+
+## Cycle 10 — Angle: *Palinurus's Chart — The Knowledge That Outlasted the Keeper*
+
+**What this angle reveals that cycles 1-9 missed**: Cycle 2 showed the naming sworn before Palinurus's death — the geographic promise, the inheritance he received. Cycle 10 shows the other inheritance: the chart he left on the helm-seat. Palinurus was the helmsman. He kept the navigational chart of the route. When the Sleep-god pushed him overboard, the chart remained on the seat. Someone on the ship — a sailor who did not know what had just been lost — kept the chart because charts are valuable. The chart was used in 1334 by a medieval sailor navigating the same waters. The archive receives the evidence that the navigator's knowledge outlasted him by 1,300 years.
+
+**Themes avoided:** all nine prior FCO themes; BGW-02's "navigational chart that matches the story" (this is about knowledge outlasting its keeper, not about a story being assembled from a chart); NWI-02's "operational record versus literary account" (this is not about the gap between formats — it is about functional survival of a specific skill).
+
+**New theme chosen:** "The helmsman's chart survived the helmsman; used again 1,300 years later; navigational knowledge is not personal — it outlasts its keeper and remains true."
+
+---
+
+### 5-Act Vignette: *Palinurus's Chart*
+
+#### The Token
+
+Palinurus's Navigation Chart: a papyrus navigational chart, Cumaean monastery provenance, describing the coastal route from Epirus to Cumae in coastal notation and compass points consistent with Roman-period navigational practice. A medieval annotation in the margin in 14th-century Italian reads: *Used this chart in 1334, Palermo to Cumae, worked entirely. The cape marked is correct. Signed: Bartolomeo da Feltre, pilot.* The Cumaean monastery acquired it in the 6th century. The sailors' guild in Naples acquired it in 1362. The monastery wants it back.
+
+*Palinurus's Chart · papyrus, Roman coastal notation, Bartolomeo's 1334 margin note · Naples sailors' guild storehouse*
+
+---
+
+#### Act I — Naples (NAP)
+
+*The sailors' guild's storehouse. The guild master, Ser Giacopo Cossa, acquired the chart from the monastery in 1362 under a disputed sale. He has been using it for coastal piloting instruction. He will sell it but he wants the right price and he wants confirmation that the archive will catalogue the 1334 use annotation as evidence of the chart's practical value.*
+
+He is a practical man. He is not a scholar. He wants the chart to be recognized for what it is: a navigational document that still works.
+
+`grantItem: "Palinurus's Chart"`
+
+*Palinurus's Chart · accepted, Bartolomeo's 1334 annotation visible · Fighter's hands · guild storehouse*
+
+**Skill Check — Nature DC 12:** *Assess the 1334 annotation — whether Bartolomeo's pilot confirmation establishes that the Roman-period coastal notation accurately describes the current coastline.*
+
+*pass:* The notation uses compass points and coastal distance in stadia that match the modern coast within acceptable variation. The cape marked as Capo Palinuro is exactly correct. *Bartolomeo did not know he was annotating a Roman navigational chart. He just noted that it worked.* The chart is 1,300 years old and still accurate for these waters.
+
+*fail:* The chart noted as an ancient navigational document with a medieval use annotation. Practical significance not assembled.
+
+---
+
+#### Act II — Naples (NAP)
+
+*The Cumaean monastery's representative, Brother Ambrogio, has arrived in Naples to contest the 1362 sale. The sale was informal; the monastery's records show the chart was on permanent loan, not sold. He has an original loan document. He wants the chart returned to the monastery before it leaves Naples.*
+
+The legal question is genuine. The monastery's claim may be valid.
+
+*Palinurus's Chart · in the Fighter's hands, Brother Ambrogio's loan document on the table · Fighter · guild storehouse entry*
+
+**Skill Check — History DC 12:** *Assess the loan document — whether "permanent loan" under Cumaean monastery usage would have been understood as recoverable by the lending institution.*
+
+*pass:* The loan document uses the formula *ad custodiam perpetuam* — "for perpetual custody." In 6th-century monastery practice, this formula transferred custody but not ownership. *The monastery has the valid ownership claim. The guild has the valid custody claim. Both claims can be satisfied by a neutral archive that receives ownership and grants scholarly access to both.* Fighter presents this resolution.
+
+*fail:* Brother Ambrogio's claim is noted as legally complex. The chart continues with a pending legal question.
+
+---
+
+#### Act III — Verona (VRN)
+
+*The overland road. A Venetian navigator who has been following the chart's transit from Naples — he has heard about Bartolomeo's 1334 annotation. He is a practical navigator, not a scholar, and he wants to copy the coastal notations for the southern Italian coast before the chart goes into an archive where he cannot access it commercially.*
+
+He is honest about his purpose. He will pay fairly for a copy.
+
+*Palinurus's Chart · in the pack, the navigator's offer in hand · Fighter · Verona waystation*
+
+**Skill Check — Persuasion DC 12:** *Offer that the archive will allow scholarly access to the chart's notations when processed; he can arrange a consultation.*
+
+*pass:* He is practical. "Scholarly access includes the coastal notation?" The Fighter confirms. He accepts. He will write to the archive. *He is a working navigator — he needs the information, not the original. The distinction matters to him.*
+
+*fail:* He copies the coastal notation before releasing the chart. The copy enters Venetian navigational practice.
+
+---
+
+#### Act IV — Bologna (BOL)
+
+*A Bolognese humanist has heard about the chart through the monastery dispute. He has a specific scholarly interest: the chart may confirm the exact location of Palinurus's death in the Aeneid. He wants the chart for a geographical commentary on Book 5. He is in Bologna with a university appointment and a publication timeline.*
+
+He makes a formal scholarly request. He is not threatening. He is on a deadline.
+
+*Palinurus's Chart · in the pack, the humanist's appointment letter visible · Fighter · Bologna university quarter*
+
+**Hybrid — Persuasion DC 12 first; fail → Combat:**
+
+*Persuasion pass:* Argue that the archive's classification will include the geographic correlation and will be available to his commentary; the publication will be stronger citing the archive than citing a private holding. *He is on a deadline. He sees the argument.* He accepts a priority correspondence arrangement.
+
+*Persuasion fail → Combat:* 1 hired student agent, AC 10, HP 12. The humanist is embarrassed. *failText:* They hold the chart overnight; the humanist copies the geographical notation; the original continues. *passText:* The agent backs away.
+
+---
+
+#### Act V — Weimar (WM)
+
+*Archivus Sweelinck reads the chart. He reads the Aeneid, Book 5. He reads Bartolomeo's 1334 annotation.*
+
+"He fell overboard in the night," Sweelinck says. "He had been keeping the course for four nights alone. The chart was on the seat." He reads the annotation: *Used this chart in 1334, worked entirely.* "Thirteen hundred years. The cape is still there. The coast is the same coast." He sets down the chart. "Palinurus died knowing this coast perfectly. He left the chart. Someone picked it up and kept it. Bartolomeo used it in 1334 without knowing who had last used it. The archive knows."
+
+He writes: *Navigational Records — Functional Survival Documents: charts or guides that were used for their original function by later navigators with no knowledge of the document's origin; primary evidence that navigational knowledge is not personal to its keeper; functional survival is the archive's evidence, not the navigator's biography.*
+
+"You receive the Palinurus Chart Record."
+
+`takeItem: "Palinurus's Chart"`
+`grantItem: "Palinurus Chart Record"`
+
+---
+
+### Quest API Stub — FCO-06
+
+```json
+{
+  "quest_id": "FCO-06",
+  "title": "Palinurus's Chart",
+  "cycle": 10,
+  "book": "FCO — Aeneid (Vergil)",
+  "token": "Palinurus's Chart",
+  "route": ["NAP", "VRN", "WM"],
+  "theme": "The helmsman's chart survived the helmsman; used again 1,300 years later by a navigator who did not know whose hands last held it; navigational knowledge outlasts its keeper",
+  "archive_category": "Navigational Records — Functional Survival Documents",
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "NAP",
+      "type": "skill_check",
+      "activateNode": "NAP",
+      "scene": "Naples sailors' guild storehouse. Guild master Ser Giacopo Cossa wants the archive to catalogue the 1334 use annotation as evidence of practical value. He is not a scholar — he wants the chart recognized for what it is: navigational documentation that still works.",
+      "skillCheck": {
+        "skill": "Nature",
+        "dc": 12,
+        "prompt": "Assess the 1334 annotation — whether Bartolomeo's pilot confirmation establishes that the Roman-period coastal notation accurately describes the current coastline.",
+        "failText": "Chart noted as ancient navigational document with medieval use annotation. Practical significance not assembled.",
+        "passText": "The notation matches the modern coast within acceptable variation. Capo Palinuro exactly correct. Bartolomeo did not know he was annotating a Roman chart. He just noted it worked. 1,300 years old and still accurate."
+      },
+      "grantItem": "Palinurus's Chart",
+      "checkPassFlag": "fco06Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "NAP",
+      "type": "skill_check",
+      "activateNode": "NAP",
+      "scene": "Guild storehouse entry. Cumaean monastery representative Brother Ambrogio with a loan document reading ad custodiam perpetuam. The 1362 sale may have been unauthorized — the formula may mean the monastery retained ownership.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Assess whether 'perpetual custody' in 6th-century monastery practice transferred custody but not ownership — and whether a neutral archive receiving it satisfies both claims.",
+        "failText": "Brother Ambrogio's claim noted as legally complex. The chart continues with a pending legal question.",
+        "passText": "The formula transferred custody not ownership. The monastery has the ownership claim; the guild has the custody claim. A neutral archive that receives ownership and grants scholarly access to both satisfies both claims."
+      },
+      "checkPassFlag": "fco06Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "VRN",
+      "type": "skill_check",
+      "activateNode": "VRN",
+      "scene": "Verona waystation. A Venetian working navigator wants to copy the coastal notations for southern Italian waters before the chart enters archive storage. He is honest about his purpose and will pay fairly.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "prompt": "Offer that the archive will allow scholarly access to the chart's coastal notations when processed — he can arrange a consultation.",
+        "failText": "He copies the coastal notation before releasing the chart. The copy enters Venetian navigational practice.",
+        "passText": "'Scholarly access includes the coastal notation?' He accepts. He will write to the archive. He needs the information, not the original — the distinction matters to him."
+      },
+      "checkPassFlag": "fco06Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "BOL",
+      "type": "hybrid",
+      "activateNode": "BOL",
+      "scene": "Bologna university quarter. A Bolognese humanist writing a geographical commentary on Aeneid Book 5 wants the chart to confirm the exact location of Palinurus's death. University appointment and publication timeline. Not threatening — on a deadline.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "prompt": "Argue that the archive's classification will include the geographic correlation and be available for his commentary — citing the archive is stronger than citing a private holding.",
+        "failText": "1 hired student agent (AC 10, HP 12) holds chart overnight; humanist copies the geographical notation; original continues."
+      },
+      "combat": {
+        "enemies": 1,
+        "AC": 10,
+        "HP": 12,
+        "description": "A student agent — the humanist is embarrassed; backs away when pressed",
+        "failText": "Chart held overnight; geographical notation copied; original continues.",
+        "passText": "The agent backs away. The humanist accepts the correspondence arrangement."
+      },
+      "checkPassFlag": "fco06Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck reads the chart, the Aeneid Book 5, and Bartolomeo's annotation. 'Thirteen hundred years. The cape is still there. Palinurus died knowing this coast perfectly. He left the chart. Bartolomeo used it in 1334 without knowing whose hands last held it. The archive knows.'",
+      "skillCheck": {
+        "skill": "Nature",
+        "dc": 11,
+        "prompt": "Explain the functional survival significance: the chart was accurate enough 1,300 years after its creation to guide a pilot through the same waters — evidence that navigational knowledge is not personal to its keeper.",
+        "failText": "Filed under Ancient Navigational Records — Roman Period. Cross-reference to FCO Aeneid series created.",
+        "passText": "Sweelinck writes: 'Navigational Records — Functional Survival Documents: charts used for their original function by later navigators with no knowledge of the document's origin; primary evidence that navigational knowledge outlasts its keeper; functional survival is the archive's evidence, not the navigator's biography.' You receive the Palinurus Chart Record."
+      },
+      "takeItem": "Palinurus's Chart",
+      "grantItem": "Palinurus Chart Record",
+      "checkPassFlag": "fco06Act5Passed",
+      "activateMissionBit": "fcoPalinurusComplete"
+    }
+  ]
+}
+```
+
+### New Node Proposals
+
+- **VRN** — Verona Waystation: the city of Verona in 1367, under Scaligeri rule; a transit hub on the northern Italian road network between Venice and the Alpine passes; the Scaligeri palace and the ancient amphitheater; the intersection of humanist scholarship and commercial road traffic.
+
+---
+
+*FCO-06 complete. 2026-06-02.*
+
+
+---
+
+**Cycle 11**
+
+*(Theme differentiation: FCO cycles 1-10 covered: hostile custody, naming sworn, paid craftsman, grief as governance, survivor contradicts, fulfilled prophecy, relic of comprehension, alternate ending, pre-canonical tradition, knowledge outlasting keeper. New theme: the warning inscription that belongs to everyone and no one; the bishop, the magistrates, and the humanist each want it because it means something different to each of them; the archive is the institution that can hold what is true for all three without having to choose.)*
+
+---
+
+## Cycle 11 — Angle: *Phlegyas's Inscription — The Warning That Belongs to Whoever Reads It*
+
+**What this angle reveals that cycles 1-10 missed**: Phlegyas is punished in Tartarus for burning Apollo's temple. His punishment is to shout his warning endlessly: *Discite iustitiam moniti et non temnere divos* — learn justice, having been warned, and do not scorn the gods. Vergil says this line was inscribed over Roman courthouses. A stone lintel from a Roman basilica near Verona has been found in a church foundation during a 1367 restoration. The bishop sees a religious warning. The magistrates see a legal admonition. The humanist sees a pagan text. Each of them wants the stone above a different door. The archive wants it because the stone cannot be cut into three pieces without losing the thing that makes each reader right.
+
+**Themes avoided:** all ten prior FCO themes; any theme about disputed ownership (this is about institutional purpose, not property).
+
+**New theme chosen:** "The inscription that reads differently from every doorway; the archive is the institution that holds it without claiming to know which reading is correct."
+
+---
+
+### 5-Act Vignette: *Phlegyas's Inscription*
+
+#### The Token
+
+The Phlegyas Lintel: a carved stone lintel, Roman-period, found in a Verona church foundation during a 1367 restoration. Inscription: *DISCITE IVSTITIAM MONITI ET NON TEMNERE DIVS* (archaic spelling). Stone is intact, both ends complete. The inscription is in a public hand — designed to be read from the street.
+
+*The Phlegyas Lintel · a stone slab, about half a meter long, wrapped in canvas · Verona church construction site*
+
+---
+
+#### Act I — Verona (VRN)
+
+*The construction site. The mason Ser Benedetto found the lintel during foundation excavation three days ago. He has had three visitors: the bishop's representative, the city magistrate's clerk, and the local humanist scholar Giacomo Fracastoro. All three want the stone. All three have left without it because Ser Benedetto wants someone to resolve the dispute before he gives it to anyone.*
+
+He is a practical man who does not want to be the person who made the wrong choice. He hands the stone and its documentation over to the Fighter, who has come before any of the three visitors returned with offers.
+
+`grantItem: "Phlegyas Lintel"`
+
+*The Phlegyas Lintel · accepted, canvas wrapper · Fighter's hands · Verona construction site*
+
+**Skill Check — History DC 12:** *Identify the inscription's source — the specific Vergil line and its context in Book 6 — and understand why each of the three readers sees a different text.*
+
+*pass:* The bishop reads: "Do not scorn the gods." A religious injunction. The magistrates read: "Learn justice, having been warned." A legal precept. The humanist reads: "Phlegyas in Tartarus." A classical reference to punishment and memory. *All three are correct. The inscription is genuinely ambiguous between its registers. Phlegyas was shouting all three things simultaneously. That is the punishment.*
+
+*fail:* The inscription identified as a Vergil quotation. Multi-register significance not assembled.
+
+---
+
+#### Act II — Verona (VRN)
+
+*The bishop's representative, Father Lorenzo, catches up with the Fighter before the city gate. The bishop has a stronger claim than the other two, he argues: the stone was found in church foundations; the church has primary custody of things found within its structural boundary.*
+
+He is not wrong about the custody argument.
+
+*The Phlegyas Lintel · in the canvas, Father Lorenzo blocking the city gate · Fighter · Verona city gate*
+
+**Skill Check — Persuasion DC 12:** *Argue that a stone found in a church foundation was not placed there by the church — it was incorporated from an earlier structure; the custody claim derives from the church's use of the stone, not the stone's origin.*
+
+*pass:* He considers. The stone is Roman. The church is not Roman. "The foundation incorporated it." He pauses. "We incorporated it without knowing what it was." He lets the Fighter pass. *He is a theologian. He can follow the argument. He is not happy about it.*
+
+*fail:* He imposes a two-day canonical delay pending the bishop's review. Released when the bishop decides the archive claim is valid.
+
+---
+
+#### Act III — Verona Road (VRN)
+
+*The humanist scholar Giacomo Fracastoro is on the road north with a student. He has been following the dispute. He wants the stone for his library. He makes an elegant argument: the inscription is a Vergil quotation; the correct custodian of Vergil quotations is a classical library, not a church or a courthouse.*
+
+He is charming, erudite, and has a specific argument.
+
+*The Phlegyas Lintel · in the canvas, Giacomo making his case on the road · Fighter · road north of Verona*
+
+**Skill Check — Persuasion DC 13:** *Argue that the inscription's value comes from its three-way ambiguity — placing it in a classical library resolves the ambiguity in favor of one reading; the archive preserves all three.*
+
+*pass:* He pauses. He is an honest scholar. "The ambiguity is the data." He says it before the Fighter does. He lets the stone go with a note: *I will cite the classification in my commentary.* *He reached the argument himself. That is why he let it go.*
+
+*fail:* He retains a full wax rubbing of the inscription. His commentary will cite a private note.
+
+---
+
+#### Act IV — Bologna Road (BOL)
+
+*Two men from the Veronese city magistrate's office. The magistrate has decided that a Roman courthouse inscription belongs in the current courthouse by continuity of function. They have a formal writ.*
+
+They have legal authority within Veronese jurisdiction, which ends at the city limits. They are two hours' ride past the city limits.
+
+*The Phlegyas Lintel · in the canvas, both men with the magistrate's writ · Fighter · road south of Bologna*
+
+**Hybrid — Persuasion DC 12 first; fail → Combat:**
+
+*Persuasion pass:* Argue that the writ's jurisdiction ended at the city limits two hours ago; the writ is a Veronese document and they are not in Verona. *They look at each other. They know this.* They turn back.
+
+*Persuasion fail → Combat:* 2 city agents, AC 12, HP 18. *failText:* They take the stone back to Verona. The road north has waystation factors. *passText:* Both down or withdrew.
+
+---
+
+#### Act V — Weimar (WM)
+
+*Archivus Sweelinck unwraps the canvas. He reads the inscription. He reads the Aeneid, Book 6, line 620.*
+
+"Phlegyas is shouting in Tartarus," he says. "He burned Apollo's temple. He shouted this as his punishment for eternity." He reads it again. "The bishop reads: 'do not scorn the gods.' The magistrates read: 'learn justice.' The humanist reads: 'Phlegyas.'" He sets down the stone. "They are all right. Phlegyas was a king who was also a criminal who was also a warning. The inscription does not choose. It was designed to be read from the street, by anyone who walked past." He opens the intake book. "The archive is the only institution that can receive this without being required to choose which door it belongs above."
+
+He writes: *Multi-Register Inscriptions: inscriptions that can be accurately read as religious, legal, and literary texts simultaneously; primary evidence for the public use of literary quotation in administrative and devotional spaces; the ambiguity is the primary datum, not a problem to be resolved.*
+
+"You receive the Phlegyas Inscription Record."
+
+`takeItem: "Phlegyas Lintel"`
+`grantItem: "Phlegyas Inscription Record"`
+
+---
+
+### Quest API Stub — FCO-08
+
+```json
+{
+  "quest_id": "FCO-08",
+  "title": "Phlegyas's Inscription",
+  "cycle": 11,
+  "book": "FCO — Aeneid (Vergil)",
+  "token": "Phlegyas Lintel",
+  "route": ["VRN", "BOL", "WM"],
+  "theme": "The inscription that reads differently from every doorway; the archive is the institution that holds it without claiming to know which reading is correct",
+  "archive_category": "Multi-Register Inscriptions",
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "VRN",
+      "type": "skill_check",
+      "activateNode": "VRN",
+      "scene": "Verona construction site. The mason Ser Benedetto has had three visitors (bishop, magistrate, humanist) and none have left with the stone. He hands it to the Fighter before any of the three return with offers. Three claims, no resolution.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Identify the inscription's source and understand why each reader sees a different text — the bishop, the magistrates, and the humanist are all correctly reading the same inscription.",
+        "failText": "Inscription identified as a Vergil quotation. Multi-register significance not assembled.",
+        "passText": "Bishop: 'do not scorn the gods.' Magistrates: 'learn justice, having been warned.' Humanist: Phlegyas in Tartarus. All three correct. Phlegyas was shouting all three things simultaneously. That is the punishment."
+      },
+      "grantItem": "Phlegyas Lintel",
+      "checkPassFlag": "fco08Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "VRN",
+      "type": "skill_check",
+      "activateNode": "VRN",
+      "scene": "Verona city gate. Bishop's representative Father Lorenzo: the stone was found in church foundations; the church has primary custody of things found within its structural boundary. He is not wrong.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "prompt": "Argue that a Roman stone found in a church foundation was incorporated from an earlier structure — the custody claim derives from use, not origin; the stone was Roman before it was a foundation.",
+        "failText": "Two-day canonical delay pending bishop's review. Released when bishop decides the archive claim is valid.",
+        "passText": "'We incorporated it without knowing what it was.' He is not happy but follows the argument. He lets the Fighter pass."
+      },
+      "checkPassFlag": "fco08Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "road_verona_north",
+      "type": "skill_check",
+      "activateNode": "VRN",
+      "scene": "Road north of Verona. Humanist scholar Giacomo Fracastoro with his student: the inscription is a Vergil quotation; the correct custodian of Vergil quotations is a classical library. He is charming, erudite, and has a specific argument.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "prompt": "Argue that placing it in a classical library resolves the three-way ambiguity in favor of one reading — the archive preserves all three.",
+        "failText": "He retains a full wax rubbing of the inscription. His commentary will cite a private note.",
+        "passText": "'The ambiguity is the data.' He says it before the Fighter does. He lets the stone go. He reached the argument himself — that is why he let it go."
+      },
+      "checkPassFlag": "fco08Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "road_bologna_south",
+      "type": "hybrid",
+      "activateNode": "BOL",
+      "scene": "Road south of Bologna. Two Veronese city magistrate's agents with a formal writ: Roman courthouse inscription belongs in the current courthouse by continuity of function. They have legal authority. But they are two hours past the city limits.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "prompt": "Argue that the writ's jurisdiction ended at the city limits two hours ago — a Veronese writ has no authority outside Verona.",
+        "failText": "Combat begins: 2 city agents, AC 12, HP 18. failText: They take the stone back to Verona. passText: Both down or withdrew."
+      },
+      "combat": {
+        "enemies": 2,
+        "AC": 12,
+        "HP": 18,
+        "description": "City agents — they know their jurisdiction ended; stop when the legal logic is clear",
+        "failText": "They take the stone back to Verona. The road north has waystation factors.",
+        "passText": "Both down or withdrew. They knew their jurisdiction ended. They were hoping the Fighter didn't."
+      },
+      "checkPassFlag": "fco08Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck reads the inscription beside Aeneid Book 6. 'The bishop, the magistrates, the humanist — they are all right. The archive is the only institution that can receive this without being required to choose which door it belongs above.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 11,
+        "prompt": "Explain why the multi-register reading is the primary datum: Vergil placed this quotation in Tartarus as a public warning designed to be read from the street — designed, therefore, to mean different things to different readers simultaneously.",
+        "failText": "Filed under Aeneid Parallel Texts — Latin Inscriptions. Cross-reference to FCO Aeneid series created.",
+        "passText": "Sweelinck writes: 'Multi-Register Inscriptions: inscriptions that can be accurately read as religious, legal, and literary texts simultaneously; the ambiguity is the primary datum, not a problem to be resolved; the archive receives it without choosing.' You receive the Phlegyas Inscription Record."
+      },
+      "takeItem": "Phlegyas Lintel",
+      "grantItem": "Phlegyas Inscription Record",
+      "checkPassFlag": "fco08Act5Passed",
+      "activateMissionBit": "fcoPhlegyasComplete"
+    }
+  ]
+}
+```
+
+---
+
+*FCO-08 complete. 2026-06-02.*
+

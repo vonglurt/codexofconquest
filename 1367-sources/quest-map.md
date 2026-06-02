@@ -459,6 +459,9 @@ Game cities are canonical. Source-book settings are proposed new nodes.
 | FCO-07 | The Sibyl's Sealed Jar | 6 | NAP → RME → WM | Fulfilled prophecy is more dangerous than false; archive receives it neutrally |
 | FCO-09 | The Mensas Plate | 7 | RME → WM | The relic of comprehension — someone inscribed the moment of understanding, not the event |
 | FCO-14 | The Fragment of the Final Line | 8 | MTC → RME → WM | The alternate ending that survived in a margin; three words that change the ethics of the close |
+| FCO-03 | Creusa's Third Temple | 9 | NAP → RME → WM | The votary inscription for the woman who vanished; the dedication names her as still present; some losses are addressed rather than concluded |
+| FCO-06 | Palinurus's Chart | 10 | NAP → VRN → WM | The helmsman's chart survived the helmsman; used again 1,300 years later; navigational knowledge outlasts its keeper |
+| FCO-08 | Phlegyas's Inscription | 11 | VRN → BOL → WM | The inscription that reads differently from every doorway; the archive holds it without claiming to know which reading is correct |
 | NWI-06 | The Cretan's Account | 3 | SIN → CON → WM | Front-rank view of communal salvation; the shout coming from the front and keeping coming |
 | NWI-03 | Proxenus's Letter | 4 | ORC → ATH → RGS → WM | The invitation is a form of authorship; Proxenus made the Anabasis possible |
 | NWI-05 | The Salmydessus Books | 5 | VAR → CON → WM | Evidence of loss is a primary document; the catalog proves the text existed |
