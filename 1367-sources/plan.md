@@ -398,7 +398,7 @@ Seeds outstanding (need full 5-act vignette treatment):
 - BLQ-06: "The Night Transport" — FLR → ALE ✓ DONE 2026-06-02 (written as Cycle 7)
 - BLQ-07: "The Goosebridge Answer" — CON → WM ✓ DONE 2026-06-02 (written as Cycle 8)
 - BLQ-S08: "The Jewel Chest" — BRI → BAR ✓ DONE 2026-06-02 (written as Cycle 9)
-- BLQ-S09: "The Soldier's Testimony" — ALE → FAM
+- BLQ-S09: "The Soldier's Testimony" — ALE → FAM ✓ DONE 2026-06-02 (written as Cycle 10)
 - BLQ-S10: "The Impossible Conditions" — FLR → AVG → MTP → MAR
 - BLQ-S11: "The Court Defense" — PIS → PRA
 - BLQ-S12: "The Two Friends' Debt" — ROM → ROM

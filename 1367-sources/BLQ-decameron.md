@@ -2590,3 +2590,269 @@ The carrier's fee is eventually released. The note from Aldrovando's clerk: *del
 ---
 
 *BLQ-09 complete. 2026-06-02.*
+
+---
+
+## Cycle 10 — Angle: The Witness Who Cannot Carry the Evidence
+
+---
+
+### BLQ-10: "The Soldier's Testimony"
+
+**Theme check:** Cycles 1-9 covered every angle from the original seed list and three supplementary seeds. Cycle 10 shows the last angle of the supplementary seeds: objects that are evidence only because a specific living witness can identify them; but the witness cannot carry the objects herself, because her identity is suppressed in the current jurisdiction. The objects must travel to where the witness has legal standing before the accused does — and the carrier is the instrument that separates the evidence from the witness just long enough to get them to the same jurisdiction. Ginevra produced herself as the proof: the living woman is both the document and the witness. Cycle 10 asks what happens when the witness and the evidence must travel separately.
+
+This is distinct from: BLQ-04 (substituted contents; physical object); BLQ-05 (document outlives object); BLQ-09 (object cannot be opened in transit); AMS-03 (objects as envelopes for communication); CLJ-09 (private knowledge made public by transcription); HAV-06 (firsthand eyewitness account without institutional interest).
+
+---
+
+**SOURCE HOOK:** Day II, Story 9. Ginevra is condemned to death for an adultery she never committed. A servant takes her into exile rather than killing her. She reinvents herself as a male Catalan soldier named Sicurano da Finale and rises over years to become the Soldan of Babylon's trusted captain. At an Alexandria fair, she recognizes Ambrogiuolo selling her embroidered purse and silver girdle clasp as curiosities. She buys them back without revealing herself. She arranges for him to tell his story to the Soldan. Then she produces herself — the living woman, standing before the court, recognizing her own possessions — as the proof that the story was false. She is the document. She is the witness. The same person.
+
+---
+
+**1367 SETTING:**
+Beatrice di Canetto of Genoa has been living in Alexandria as "Jacopo da Savona," a soldier's factor, for three years. She fled Genoa after her husband accused her of adultery on the word of Donato di Palma, a Palerman merchant who claimed he had slept with her. The accusation was false; Donato had bribed a servant to steal objects from her household as "proof." Beatrice's husband commissioned an assassin; she escaped with the servant's help and reinvented herself.
+
+In the Alexandria market last week, she found Donato di Palma selling her stolen purse and girdle clasp at a curiosities stall. She bought them back without revealing herself. She now has the objects in her possession and Donato in her field of vision.
+
+She cannot accuse Donato in Alexandria — she has no standing there; "Jacopo da Savona" is not a Genoese citizen, and the accusation requires the Genoese consular record that exists in Famagusta, Cyprus. Donato is booked on a Cypriot trading vessel departing Alexandria in three weeks. He will reach Famagusta before any normal correspondence between Beatrice and the Genoese consulate there.
+
+She needs the objects delivered to Ser Giacomo Luini, Genoese consular notary in Famagusta, before Donato arrives. She will follow on the same ship as Donato. She will arrive in Famagusta as both witness and proof.
+
+The carrier's task: get the objects to Famagusta first.
+
+**TOKEN:** A small embroidered purse (Genoese guild-workshop embroidery, blue and gold, specific flower-chain pattern dateable to Genoa 1349-1353) and a silver girdle clasp (Genoese maker's mark: "F.B. Genua 1352"); wrapped in a linen square, tied with a cord. Not valuable. Evidence only because Beatrice can identify them.
+
+**TOKEN granted:** Act I
+**TOKEN taken:** Act V (Ser Giacomo Luini receives the objects as registered evidence; Beatrice identifies them in testimony)
+
+---
+
+### ACT I — Alexandria (Beatrice's Rented Room, Frankish Quarter)
+
+*The purse and clasp · wrapped in linen, tied with cord · on the table between a lamp and a cup of cold water · Beatrice — dressed as Jacopo, three years of this · the room smells of plaster and lamp oil · afternoon*
+
+Beatrice — Jacopo to everyone who knows her here — unwraps the objects on the table and looks at them for a moment before saying anything. Then she explains: these are mine. They were in my house in Genoa. They were stolen the night my husband was told a lie about me. The man who stole them is in this city and is sailing to Famagusta in three weeks.
+
+She says: I cannot take these to Famagusta myself. If I travel as Jacopo, I have no standing at the Genoese consulate. If I reveal myself as Beatrice, I am immediately a fugitive from my husband's commission, which is still technically active. I must arrive in Famagusta as myself, which I can only do if Donato arrives before me and I arrive after — so that when I walk into the consulate, he is already there to be confronted.
+
+She says: the objects must arrive before both of us. Ser Giacomo Luini must have them registered as evidence before either Donato or I set foot in the consulate.
+
+She says: do you understand?
+
+*She is asking whether I understand that she is the proof. Not just a witness — the proof.*
+
+---
+
+**Skill check — DC 12 Insight or Persuasion:**
+Understand the evidential architecture — the objects are only valuable because Beatrice exists to identify them; they must arrive in a jurisdiction where she has standing to identify them.
+
+**Pass (Insight):** The carrier watches Beatrice handle the purse and clasp — the way she touches them is not the way a person touches evidence; it is the way a person touches something that used to be theirs. The carrier understands: these are not objects with intrinsic value. They are objects with relational value — they are evidence only because this specific woman can say "this is mine and here is how I know." The carrier understands what the delivery requires.
+
+**Pass (Persuasion):** The carrier asks: what does Luini need to know when he receives these? Beatrice explains precisely: the maker's mark on the clasp is registered in the Genoese guild records of 1352 under her family name; the flower-chain embroidery pattern was commissioned by her mother from the Campetto guild workshop in 1349, registered in the workshop's client ledger. Luini, presented with both objects and both registration references, can begin the pre-testimony file before Beatrice arrives. The carrier understands: deliver objects plus references. Not just the linen square.
+
+**Fail:** The carrier departs with the linen square and general understanding. The evidential architecture — why the objects matter, what Luini needs — is not fully understood. The delivery in Famagusta will require improvisation.
+
+*The linen square granted here. Beatrice ties the cord herself.*
+
+**Grant item:** purse and girdle clasp (linen-wrapped, guild-registered objects, evidence of specific theft from specific house)
+
+---
+
+### ACT II — Alexandria (Harbor Market, Next Morning)
+
+*The linen square · in the carrier's coat · the Alexandria harbor market, morning · Donato di Palma at a stall, not looking at the carrier, but aware*
+
+Donato di Palma is at a harbor market stall examining bolts of Cypriot linen. He has not seen the carrier before. But he has a network of eyes in the Alexandria Frankish quarter, and word reached him yesterday: someone collected two small objects from the curiosities stall, and the person who collected them was seen going to "Jacopo da Savona's" rooms.
+
+He approaches the carrier with a pleasant merchant's introduction. He says: he understands the carrier may have acquired some personal effects that were mislaid from his cousin's estate; his cousin died in the Adriatic last spring; he would like to purchase the objects for the family's sentimental interest; he names a fair price.
+
+*He knows what I'm carrying. He doesn't know what I know.*
+
+He has not threatened. He is not threatening. He is simply offering to solve the problem before it becomes a problem.
+
+---
+
+**Skill check — DC 12 Persuasion or Insight:**
+Decline Donato's offer without revealing that the objects are evidence or that Beatrice has identified them.
+
+**Pass (Persuasion):** The carrier says: the objects are not for sale; they are being delivered as a commission to a Famagusta notary's office; once they are in the notary's custody, any purchase inquiry should go through the notary. Donato, hearing "Famagusta notary," calculates. He knows the Genoese consulate in Famagusta. He decides he needs to get there first. He says: "of course" and walks away.
+
+**Pass (Insight):** The carrier watches Donato's face during the offer. He is not grieving for a cousin. He is afraid. The carrier understands: this man knows what these objects prove, and he knows there is someone in Alexandria who can identify them. He is not offering for sentiment — he is offering to make the evidence disappear. The carrier declines without explaining. Donato's pleasant smile stays in place and the carrier watches it.
+
+**Fail:** The carrier, uncertain about the legal standing of the objects, engages with Donato's argument. Donato, practiced at this, extracts enough information to confirm that the objects are going to a Famagusta notary and that there is a witness in Alexandria. He books an earlier departure.
+
+*The linen square. Donato has booked passage.*
+
+---
+
+### ACT III — Sea Voyage (Alexandria to Cyprus, Third Day)
+
+*The linen square · in the carrier's sealed personal bag, locked · the ship, third day, Cyprus visible as a low shape in the distance · a Palerman merchant named Biagio at the rail*
+
+Biagio Ferrante, a Palerman merchant in Donato's trading circle, is aboard the same vessel. He is not aggressive — he is curious. He has heard, from his network, that someone from Alexandria is carrying something for a Famagusta filing. He doesn't know what. He doesn't know who hired the carrier. He is doing reconnaissance.
+
+He approaches at the stern rail and introduces himself as a Sicilian wool factor. He asks: are you filing a commercial dispute in Famagusta? He has used the same notary's office and might offer useful context about the staff and procedures.
+
+*He is not dangerous. He is gathering information for Donato.*
+
+---
+
+**Skill check — DC 12 Persuasion or Deception:**
+Deflect Biagio's inquiry without giving him information that Donato can use.
+
+**Pass (Persuasion):** The carrier says: a private commission for a private party; the notary's name is not something the carrier can discuss. Biagio, hearing "private commission," concludes the carrier is a routine delivery and not a legal threat to Donato's position. He sends a message from Cyprus when the ship stops: *courier appears routine; destination unconfirmed.* Donato, reading this, maintains his timeline.
+
+**Pass (Deception):** The carrier claims to be carrying a wool contract. Biagio, who knows the wool trade, asks one specific question that the carrier cannot answer in detail. The carrier says: "a wool-adjacent contract, commercial, nothing of interest to your network." Biagio is suspicious but cannot confirm anything. He sends a message: *carrier claims routine commercial; cannot confirm; monitor on arrival.*
+
+**Fail:** Biagio is more astute than expected. He pieces together enough from the carrier's deflections to conclude the filing is related to the Alexandria Frankish quarter and involves personal effects. He sends a message to Donato: *filing appears connected to personal-effects retrieval; recommend alert Luini's office before carrier arrives.* Donato, receiving this in Famagusta, contacts the consulate before the carrier.
+
+*The ship, Cyprus ahead, linen square sealed.*
+
+---
+
+### ACT IV — Famagusta (Harbor, Disembarkation)
+
+*The linen square · in the carrier's bag · the Famagusta harbor, morning · a man with a message waiting at the dock*
+
+At the Famagusta dock, a message is waiting for the carrier — left with the harbormasters' clerk by Donato di Palma, who arrived two days earlier on a faster vessel. The message says: "The objects you carry belong to my late cousin's estate. I have filed a prior claim with the Genoese consulate. Any unauthorized presentation of these objects as evidence may be treated as interference with a pending estate matter. You are advised to hold all property pending consular review."
+
+The message is legally worthless — Donato has no estate claim; this is intimidation. But it has been logged at the harbormasters' office, creating a paper trail that suggests the objects are contested before the carrier has even reached the consulate.
+
+*He got here first. He has used the time to create noise.*
+
+---
+
+**Skill check — DC 13 Persuasion or Investigation:**
+Assess Donato's pre-filing as the intimidation it is, and proceed to Ser Giacomo Luini before the noise becomes a formal obstacle.
+
+**Pass (Investigation):** The carrier examines the message at the harbormasters' office. Donato's "prior claim" is a verbal notice, not a formal filing — it is not in the consulate's registry, only in the harbormasters' log. A verbal notice has no legal standing against a physical delivery with authenticated provenance references. The carrier proceeds to the consulate directly. The harbormasters' log will be a minor complication, not a barrier.
+
+**Pass (Persuasion):** The carrier goes to the harbormasters' clerk and requests to add a counter-note to the log: "objects in transit under commission to registered evidence delivery; not estate property; counter-party notice is unregistered and without standing." The clerk adds it. The log now shows both notes. The consulate receives a balanced picture.
+
+**Fail:** The harbormasters' clerk, following procedure, holds the carrier at the dock for a "verification interview" before allowing them to proceed with contested property. This takes two hours. Donato, notified, goes to the consulate first.
+
+---
+
+### ACT V — Famagusta (Genoese Consulate, Ser Giacomo Luini's Office)
+
+*The linen square · on Luini's desk, untied · Ser Giacomo Luini reading the reference sheet the carrier brought · morning, the harbor visible through the window · Donato di Palma in the outer room, having arrived first*
+
+Ser Giacomo Luini is a methodical man who has been Genoese consular notary in Famagusta for eight years. He has the objects on his desk, the reference sheet, and Donato di Palma's verbal notice from the harbormasters' log — all delivered to him in the last hour.
+
+He is holding the purse in both hands. He says: "The flower-chain embroidery. This is Campetto workshop, 1349-1353 pattern." He says: "I know this pattern." He says: "Whose registration reference did you bring?"
+
+The carrier names Beatrice di Canetto's family name — the Genoese guild registry reference Beatrice provided.
+
+Luini is quiet for a moment. He says: "I know that name." He says: "She was declared dead three years ago."
+
+*She is not dead. She is on a ship two days behind me.*
+
+---
+
+**Skill check — DC 12 Persuasion or History:**
+Convince Luini to open a pre-testimony evidence file before Donato can contest the registration.
+
+**Pass (Persuasion):** The carrier says: Beatrice di Canetto is alive; she is traveling to Famagusta; she will arrive within two days; she commissioned this delivery precisely so that the objects would be in registered evidence custody before she arrived; she intends to identify them in person before the consulate. Luini looks at the purse again. He looks at the silver clasp. He opens his registry and begins the pre-testimony file. He says: "Donato di Palma is in my outer room." He says: "He will wait."
+
+**Pass (History):** The carrier presents the specific guild registration references Beatrice provided — the Campetto workshop client ledger entry for Beatrice's mother's 1349 commission, the Genoese maker's mark registry for "F.B. Genua 1352" — and notes that these references are verifiable against Luini's own consulate records. Luini, checking his files, finds the corresponding entries. He opens the pre-testimony file. He says: "The objects are registered. Any claim that these are estate property will need to overcome the guild registration." He walks to his office door and tells the clerk: "Mr. di Palma will need to schedule an appointment."
+
+**Fail:** Luini, uncertain about the legal complexity, holds the objects in escrow pending a formal hearing that includes all parties. The pre-testimony file is not opened. Donato speaks to Luini in the outer room for an hour. When Beatrice arrives in two days, the situation is already contested.
+
+*The linen square taken here. Luini opens the registry.*
+
+**Take item:** purse and girdle clasp (registered as evidence; Luini's file opened; awaiting Beatrice's testimony)
+
+---
+
+### onPass
+
+Beatrice di Canetto arrives in Famagusta two days later on the same ship as Donato di Palma. She walks into the Genoese consulate, gives her real name, and asks to be added to the pre-testimony file for the registered objects. Luini's clerk checks the file. Beatrice's name is in it.
+
+She is brought into Luini's office. The purse and clasp are on his desk. Donato di Palma is brought in from the outer room.
+
+Beatrice identifies the objects: the flower-chain embroidery commissioned by her mother in 1349; the clasp from a girdle made in Genoa in 1352 for her trousseau. She names the servant Donato bribed. She names the date the objects were taken.
+
+Donato's "late cousin's estate" claim evaporates without argument.
+
+Luini enters the testimony in the consulate registry under a new category he has been needing for eight years: *Restitution Records — Objects Carried to the Jurisdiction of Their Owner's True Identity.*
+
+He says: "I name one of these a year." He looks at the carrier. "You brought them exactly in time."
+
+---
+
+### onFail
+
+Beatrice arrives to find the objects in escrow and Donato's claim still pending. The formal hearing takes a week. The objects are eventually identified; the claim is dismissed; Beatrice's testimony is recorded. The outcome is the same — delayed, more complicated, more expensive.
+
+Luini records the delivery in the standard filing log: *objects received; pre-testimony file contested; resolved at hearing.* The carrier's fee is paid.
+
+---
+
+### Quest Stub (UQF v1.0)
+
+```json
+{
+  "quest_id": "BLQ_010",
+  "title": "The Soldier's Testimony",
+  "cycle": 10,
+  "book": "Decameron",
+  "token": "embroidered purse and silver girdle clasp wrapped in linen — Genoese guild-registered objects; evidence only because their original owner can identify them; must reach Famagusta before the thief arrives and before the owner, who cannot carry them herself",
+  "route": "ALE → (sea) → FAM",
+  "theme": "The witness who cannot carry the evidence; objects valuable only because a specific living witness can identify them; the witness cannot travel with them because her identity is suppressed in the current jurisdiction; identity restored requires the evidence to arrive first in the jurisdiction where the identity is recognized",
+  "archive_category": "Restitution Records — Objects Carried to the Jurisdiction of Their Owner's True Identity (Ser Giacomo Luini, Genoese consular notary, Famagusta, 1367)",
+  "acts": [
+    {
+      "act_id": "BLQ_010_01",
+      "location": "Alexandria — Beatrice's rented room, Frankish quarter",
+      "type": "skill_check",
+      "activateNode": "ALE",
+      "scene": "Beatrice (as Jacopo da Savona) explains: the objects are hers; Donato di Palma stole them; she cannot carry them herself because she has no standing in Famagusta as Jacopo; she must arrive as Beatrice after Donato arrives, to confront him in person; the objects must be registered before either of them arrive.",
+      "skillCheck": { "dc": 12, "skills": ["Insight", "Persuasion"] },
+      "grantItem": "purse and girdle clasp (linen-wrapped, guild-registered evidence)",
+      "checkPassFlag": "evidence_architecture_understood"
+    },
+    {
+      "act_id": "BLQ_010_02",
+      "location": "Alexandria — harbor market, next morning",
+      "type": "skill_check",
+      "activateNode": "ALE",
+      "scene": "Donato di Palma approaches with a pleasant merchant's offer: he believes the carrier has his late cousin's personal effects; he offers a fair price; he is not threatening. He has a network of eyes in the Frankish quarter and knows the objects were collected yesterday.",
+      "skillCheck": { "dc": 12, "skills": ["Persuasion", "Insight"] },
+      "checkPassFlag": "donato_offer_declined"
+    },
+    {
+      "act_id": "BLQ_010_03",
+      "location": "Sea — Alexandria to Cyprus, third day",
+      "type": "skill_check",
+      "activateNode": "ALE",
+      "scene": "Biagio Ferrante, a Palerman merchant in Donato's trading circle, is aboard the same ship. He introduces himself as a Sicilian wool factor and asks about the filing in Famagusta — he has used the same notary's office. He is gathering intelligence for Donato.",
+      "skillCheck": { "dc": 12, "skills": ["Persuasion", "Deception"] },
+      "checkPassFlag": "biagio_deflected"
+    },
+    {
+      "act_id": "BLQ_010_04",
+      "location": "Famagusta — harbor, disembarkation",
+      "type": "skill_check",
+      "activateNode": "FAM",
+      "scene": "Donato arrived two days early on a faster ship. A message from him is waiting at the harbormasters' clerk: the objects belong to his late cousin's estate; a prior claim has been filed; the carrier is advised to hold all property pending consular review. The message is legally worthless but has been logged.",
+      "skillCheck": { "dc": 13, "skills": ["Persuasion", "Investigation"] },
+      "checkPassFlag": "harbormasters_log_cleared"
+    },
+    {
+      "act_id": "BLQ_010_05",
+      "location": "Famagusta — Genoese consulate, Ser Giacomo Luini's office",
+      "type": "skill_check",
+      "activateNode": "FAM",
+      "scene": "Luini holds the purse and says: Campetto workshop, 1349 pattern. He knows this. The carrier names Beatrice di Canetto's guild registration reference. Luini says: she was declared dead three years ago. Donato di Palma is in the outer room. The pre-testimony file must be opened before Donato's verbal claim is allowed to develop.",
+      "skillCheck": { "dc": 12, "skills": ["Persuasion", "History"] },
+      "takeItem": "purse and girdle clasp",
+      "activateMissionBit": "blqSoldierTestimonyComplete",
+      "checkPassFlag": "pre_testimony_file_opened"
+    }
+  ]
+}
+```
+
+---
+
+*BLQ-10 complete. 2026-06-02.*
