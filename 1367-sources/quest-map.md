@@ -453,5 +453,8 @@ Game cities are canonical. Source-book settings are proposed new nodes.
 | Pistoia — Retired Judge's Quarter | PIS | A Tuscan commune town under Florentine orbit, 1367; the Via dei Notai with its retired legal professionals; cedar-smell and old paper; a man who wrote a ruling thirty years ago still has it in his personal files and can be found at his desk any morning; the road south to Prato visible from the upper story window | Personal legal custody, retired judicial authority, the document that already exists and simply needs to be retrieved and certified |
 | Prato — Commune Court and Guild District | PRA | A Tuscan commune town north of Florence, 1367, recently under Florentine protection; the podestà's court adjacent to the main square; the guild counting houses in the lane behind; the smell of wool and old stone and the specific quality of a city that handles its own affairs within limits it has agreed to accept; Datini's city twenty years before Datini becomes famous | The communal court as the arena of the already-decided, the statute that protects waiting in a retired judge's papers to arrive in time, the morning session as the irreversible threshold |
 
+| FCO-02 | The Painter's Afterword | 3 | CRT → NAP → WM | Paid craftsman accounts for depicting grief |
+| FCO-04 | The Buthrotum Register | 4 | VEN → RGS → WM | Grief organized into governance; the replica city's founding record |
+
 *When a new quest is written, append its row to the Processed Quests table.*
 *When a new location is used, append its row to the Location Grid.*

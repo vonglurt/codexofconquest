@@ -11,14 +11,14 @@ Main vignette **FCO-01 "Sunt Lacrimae Rerum"** is fully spec'd with UQF v1.0 JSO
 
 The following quest seeds were generated in the Latin Workshop (chapter-by-chapter analysis, Books 1–12). Each has a paragraph-length story concept in FCO-aeneid.md. They need full vignette treatment: 5 acts, TOKEN, skill checks, UQF JSON, and admin updates.
 
-### §FCO-02 — The Painter's Afterword (Book 1)
-A sequel note found in the Carthage temple. The artist who painted the murals of Trojan suffering — commissioned by the Punic priest — left a personal account of what it was like to paint people's grief for pay. The account survives in a monastery library. Fighter escorts it.
+### §FCO-02 — The Painter's Afterword (Book 1) ✓ DONE 2026-06-02
+A sequel note found in the Carthage temple. The artist who painted the murals of Trojan suffering — commissioned by the Punic priest — left a personal account of what it was like to paint people's grief for pay. The account survives in a monastery library. Fighter escorts it. Route: CRT → NAP → WM. Theme: the paid craftsman who depicted grief must account for the commission. New node: CRT (Carthage coastal monastery, Hafsid territory).
 
 ### §FCO-03 — Creusa's Third Temple (Book 2)
 Creusa vanished during the fall of Troy — no body, no burial. Ancient tradition says that Greek colonists in southern Italy built a small shrine to her as a household goddess because she appeared to them during a storm. A 14th-century mason has found the ruins of a stone structure with a dedicatory inscription naming "Creusa daughter of Priam." Fighter escorts the inscription rubbing.
 
-### §FCO-04 — The Buthrotum Register (Book 3)
-Helenus built a miniature Troy at Buthrotum (Butrint, modern Albania). He kept administrative records — a register of the community's founding laws and population roll. The register survived in a monastery in the area. A Byzantine scholar made a copy in the 11th century. That copy is somewhere in a Venetian archive. Fighter escorts it.
+### §FCO-04 — The Buthrotum Register (Book 3) ✓ DONE 2026-06-02
+Helenus built a miniature Troy at Buthrotum (Butrint, modern Albania). He kept administrative records — a register of the community's founding laws and population roll. The register survived in a monastery in the area. A Byzantine scholar made a copy in the 11th century. That copy is somewhere in a Venetian archive. Fighter escorts it. Route: VEN → RGS → WM. Theme: grief organized into governance; the replica community's founding document is the record of a refusal to accept destruction as final.
 
 ### §FCO-05 — Barce's Account (Dido's Secretary) (Book 4)
 Barce was Sychaeus's nurse, Dido's oldest servant. She witnessed everything. A tradition in late Latin commentary says Barce survived Dido's death, lived into old age in the surviving Carthaginian community, and dictated an account of the queen's final weeks to a scribe. A fragment of that account may survive in a North African monastery. Fighter escorts the fragment from a Genoese trading house (which acquired it) to Weimar.

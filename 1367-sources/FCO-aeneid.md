@@ -1062,3 +1062,406 @@ The following quest seeds were generated chapter-by-chapter and are not yet buil
 ---
 
 *Latin Workshop section added and completed: 2026-05-31.*
+
+---
+
+## FCO-02 — The Painter's Afterword
+
+**Theme differentiation:** Cycle 1 (Sunt Lacrimae Rerum) showed grief preserved by enemies — the Trojans' suffering held in Carthaginian custody, witnessed involuntarily. Cycle 2 (Palinurus's Shore) showed a divine promise outlasting every human administrator. This seed enters the painting itself: the artist inside the frame of cycle 1's central image. Those murals were made by someone. That someone decided each morning whether to continue. His account of that decision is what this vignette carries — not grief itself, but the testimony of the craftsman paid to make grief visible to strangers. **Theme avoided from active threads:** all four active themes (grief-as-identity, long watch, grief-in-object, honor-vs-shame) plus all prior FCO angles. **New theme:** *The paid witness carries the document that makes the payment ethical; the category that receives it did not exist before it arrived.*
+
+---
+
+### Five-Act Vignette Play
+
+*TOKEN: The Punic Painter's Account — a parchment document written in a hand that mixes late Latin with Aramaic characters for personal names. The painter's record of his commission: what the Punic priest asked for, what he painted, what he noticed about himself during the work, and one final sentence about what it means to be paid to depict grief. Rolled inside a bone cylinder sealed with wax pressed by a thumb.*
+
+---
+
+**ACT I — The Cylinder**
+
+*The Punic Painter's Account, in a bone cylinder, unread in three centuries · held by Brother Anselm, monastery librarian · a Benedictine house on the Tunisian coast, the Hafsid plain behind it, afternoon heat, Byzantine mosaics in the cloister*
+
+The Genoese factor has been at the gate for two days. He arrived with a letter of introduction and a purchase price written on a card tucked inside it. Brother Anselm has not said yes. Careful men say no slowly, with qualifications, until the better offer clarifies itself.
+
+The fighter's Weimar commissioning letter is general — "historical documents of classical provenance." The factor's letter is specific: title, provenance, price. General authority arrived first. Specific money arrived more recently. Brother Anselm is deciding which matters more.
+
+Outside the gate, the factor's hired man has been watching the cloister courtyard for two hours.
+
+*The fighter understands: this is not about money. It is about who the librarian trusts to carry a thing that has waited three hundred years for the right hands.*
+
+---
+
+**ACT II — The Manifest**
+
+*The Account, sealed in its cylinder, inside the fighter's coat · entered in the ship's cargo manifest as "unspecified ecclesiastical materials" · a Genoese trading vessel, the Strait of Sicily, two nights out of Tunis, cold stars*
+
+The captain's second officer arrives at the fighter's cabin door at midnight. He is not hostile — he is curious in the way of men who have learned that curiosity is safer than ignorance when a vessel carries things incompletely understood.
+
+He has heard something: the factor was left on the dock at Tunis, whatever came off the monastery road is now aboard, and it was worth abandoning a Genoese commercial agent to secure it. He wants to know what level of trouble he has agreed to carry.
+
+*The fighter knows: he is not asking to see it. He is asking to be told enough to be careful in the right direction.*
+
+---
+
+**ACT III — Giovanni**
+
+*The Account, unrolled once to confirm condition, rerolled and resealed · on a table in a Naples tavern near the port, morning · a painter named Giovanni sitting across from the fighter, hands in his lap*
+
+Giovanni paints the interiors of Campanian churches — grief-scenes, mostly: the Lamentation, the Massacre of the Innocents, the Pietà. He has been doing this for twenty years. He heard about the account through the factor's Naples agent.
+
+He says at once, unprompted, that he has not come to take it. He says it with the precision of a man who knows this will be doubted. What he wants: the last sentence. The one where the painter recorded what it was like to be paid to depict grief. Giovanni has been painting grief for twenty years without that sentence, and he would like to know whether anyone else found it as difficult as he has.
+
+He does not ask to hold the cylinder. He says: *If you read it — read me that part.*
+
+*The fighter has been carrying something in a closed fist for three days. Giovanni has been carrying something in his hands for twenty years. The fighter understands, with unexpected precision, what is being asked.*
+
+---
+
+**ACT IV — The Friar**
+
+*The Account, sealed, in jurisdictional dispute · in the anteroom of the Dominican priory of San Pietro Martire, Naples · afternoon, tile floor, a young friar with a clean preliminary inquiry on the table*
+
+The friar has filed a tribunal inquiry: "whether material dignifying pagan religious worship requires review prior to archive transfer." He is not wrong. The painter recorded that the Punic priest's instructions were holy — in the sense that holiness belongs to a man who believes — and that carrying them out changed something in the painter. That is pagan dignification. The inquiry is procedurally clean.
+
+He does not want it burned. He wants it filed under a category the archive cannot independently receive — where the Church's review office must concur. He believes controlling the category is the same as controlling the truth. In many institutions, he is not wrong.
+
+*The fighter knows the argument: a professional record of a commission is not a religious document. The painter is not worshipping. He is working. The category "artist's testimony" must exist before this friar's inquiry can fail.*
+
+---
+
+**ACT V — The New Register**
+
+*The Account, delivered whole · on the intake desk of the Weimar archive · late afternoon, the city quiet outside*
+
+The archivist reads the Account from beginning to end without speaking. He reads the last sentence twice. He sets it down and is quiet.
+
+Then he opens a clean register. He writes at the top: *Artist's Testimony — Ethics of the Commission.* No such category existed in the archive this morning. He is making it.
+
+He looks at the fighter. "Did someone try to reclassify this?" He is asking because the answer goes in the register.
+
+The fighter tells him everything — the friar, the inquiry, the Naples argument, the lapsed notice.
+
+The archivist writes for two minutes. When he closes the register, the Account is filed under a category that did not exist an hour ago, with the Naples inquiry noted in the archivist's own hand.
+
+*The Account is in the archive. The category that receives it is new. The fighter carried not just the document but the argument that made it receivable. Both facts are true, and the second is the one the painter would have wanted.*
+
+---
+
+### Quest API Stub — FCO-02
+
+```
+missionAccept: "A monastery on the Tunisian coast holds the personal account of the painter
+  who decorated Carthage's temple with murals of Trojan grief. A Genoese factor is at the
+  gate with a written purchase price. Carry the account to Weimar before the commercial
+  transfer completes."
+
+Act I — The Cylinder
+activateNode: CRT
+type: hybrid
+scene: "The cloister smells of salt and old paper. Brother Anselm, the monastery librarian,
+  holds a bone cylinder across his forearms as though it has weight beyond its size. A
+  Genoese factor has been at the gate for two days with a specific purchase price. Your
+  Weimar letter is general; his offer is particular. Outside the cloister gate, the factor's
+  hired man watches the courtyard."
+skillCheck:
+  skill: Persuasion
+  dc: 14
+  failText: "The librarian sets the cylinder down. 'His letter names a specific title. Yours
+    is general. Come back with more particular authority.' The factor's man has moved toward
+    the gate. (retry)"
+  passText: "The librarian nods once. 'General authority that arrived first has precedent
+    here. I will not sell what I have already agreed to release.' He holds out the cylinder.
+    The factor's man is already moving."
+combat:
+  enemy: "Genoese Factor's Hired Man"
+  failText: "He gets a hand on the satchel strap. The cylinder is still yours but the gate
+    is watched and Brother Anselm is watching from the doorway. Move quickly. (retry)"
+  passText: "He goes down in the courtyard dust. Brother Anselm closes the gate behind you
+    with the deliberate speed of a man whose business for the day is concluded.
+    You receive Brother Anselm's Release Letter."
+grantItem: "Brother Anselm's Release Letter"
+activateMissionBit: fco02Act1Active
+checkPassFlag: fco02Act1Passed
+
+Act II — The Manifest
+activateNode: NAP
+type: skill_check
+scene: "Midnight aboard a Genoese trader crossing the Strait of Sicily. The second officer
+  stands in your cabin doorway, lamp held low. He tells you the factor was left on the dock
+  at Tunis and that something from the monastery road came aboard this ship. He is not asking
+  to see what you carry — he is asking what level of trouble he should be ready for."
+prompt: "Deception DC 13: Give him enough to stay careful without telling him what you carry
+  or where it goes."
+failText: "He nods slowly. 'The factor has agents in Naples.' He says it as a fact, not a
+  warning. He watches the gangplank when you dock. (retry — give him a direction, not
+  a refusal)"
+successText: "He drops the lamp slightly — a small relaxation. 'I will make sure the manifest
+  is stamped before we dock. For both our protections.' He does.
+  You receive the Captain's Manifest Stamp."
+grantItem: "Captain's Manifest Stamp"
+checkPassFlag: fco02Act2Passed
+
+Act III — Giovanni
+activateNode: NAP
+type: skill_check
+scene: "A tavern near the Naples port, morning light through the shutters. A painter named
+  Giovanni sits across from you, hands in his lap. He tells you unprompted that he has not
+  come to take the account — with the precision of someone who knows this will be doubted.
+  He has been painting church grief-scenes for twenty years. He has heard the account ends
+  with a single sentence about what it means to be paid to depict grief. He says quietly:
+  'If you read it — read me that part.'"
+prompt: "Insight DC 12: Read him correctly. He is not a threat. Decide whether to read
+  him the last sentence."
+failText: "You hold the cylinder closed. He nods once. 'Another time.' He stands and goes.
+  Something in his leaving costs more than expected. (retry — read him again)"
+successText: "You find the last sentence. You read it to him. He is quiet a long time. Then
+  he takes charcoal from his pocket and sketches the cylinder's shape on the table — not the
+  document, just the container that held it — and leaves it in front of you.
+  You receive Giovanni's Charcoal Study."
+grantItem: "Giovanni's Charcoal Study"
+checkPassFlag: fco02Act3Passed
+
+Act IV — The Friar
+activateNode: NAP
+type: skill_check
+scene: "The anteroom of the Dominican priory of San Pietro Martire. A young friar places his
+  tribunal inquiry on the table: 'whether material dignifying pagan worship requires review
+  prior to archive transfer.' He is not wrong — the painter recorded that the Punic priest's
+  instructions were holy and that fulfilling them changed something in the painter. The friar's
+  face is composed. He is waiting for the argument that lets him mark his inquiry insufficient."
+prompt: "Persuasion DC 14: Argue the category. A professional account of a commission is not
+  a religious document. The painter is not worshipping — he is working. Name the category
+  'artist's testimony' and force the distinction."
+failText: "He nods. 'I see the distinction. But my inquiry is already filed.' He will not
+  mark it insufficient today. (retry — name the category precisely before he closes the
+  folder)"
+successText: "He picks up his pen and marks the inquiry: 'Insufficient grounds — professional
+  commission record, artist's testimony category.' He makes you a copy.
+  You receive the Friar's Inquiry Lapsed Notice."
+grantItem: "Friar's Inquiry Lapsed Notice"
+checkPassFlag: fco02Act4Passed
+
+Act V — The New Register
+activateNode: WM
+type: skill_check
+scene: "The Weimar archive intake office, late afternoon. The archivist reads the Painter's
+  Account without speaking. He reads the last sentence twice. Then he opens a clean register
+  and writes at the top: 'Artist's Testimony — Ethics of the Commission.' No such category
+  existed this morning. He looks up at you. 'Did someone try to reclassify this?' He is
+  asking because the answer belongs in the register."
+prompt: "Persuasion DC 12: Answer completely. Name the friar, the inquiry, the argument, the
+  lapsed notice. The record must be accurate, and the archivist must have the whole picture."
+failText: "You give him the short version. He files it under a provisional category. The
+  account is here, but the register is incomplete. (retry — give him all of it)"
+successText: "You give him everything. He writes for two minutes. When he closes the register,
+  the account is filed under the new category with the Naples inquiry noted in his hand.
+  'The painter would have wanted the argument recorded.' You receive the Archive Registry Entry."
+grantItem: "Archive Registry Entry — Artist's Testimony"
+takeItem: "The Punic Painter's Account"
+checkPassFlag: fco02Act5Passed
+activateMissionBit: fco02Complete
+```
+
+---
+
+*FCO-02 complete. 2026-06-02.*
+
+---
+
+## FCO-04 — The Buthrotum Register
+
+**Theme differentiation:** FCO-01 showed grief held in hostile custody. FCO-02 showed the craftsman who was paid to make grief visible. This seed enters the third form: grief organized into governance. Helenus built a miniature Troy at Buthrotum and administered it — issued founding laws, took a census. The register is the document of that administration. Its population roll names people who chose to live in a place that existed only because Troy was destroyed. **New theme:** *The replica community's founding document is the record of a refusal to accept destruction as final; the population roll is proof that some griefs are organized rather than carried.*
+
+---
+
+### Five-Act Vignette Play
+
+*TOKEN: The Buthrotum Register — an 11th-century Byzantine parchment codex, 23 folios, Greek minuscule. Records the founding laws and population roll of Helenus's Buthrotum. The Byzantine scholar's marginal annotations note where the text agrees with Virgil and where it departs. The final folio: a population roll — names, families, occupations of people who chose to live in a replica of the city they lost. Bound in brown leather, the spine worn soft. Carried in a linen wrapping.*
+
+---
+
+**ACT I — The Misfiled Codex**
+
+*The Register, in a linen wrapping, shelved under "Byzantine administrative documents — provenance unknown" · held by the Venetian archive, Ca' del Consiglio collection · a vaulted room above the canal, afternoon light through high windows, the smell of old vellum and tallow*
+
+A young archive clerk named Catarina flagged the codex three weeks ago when she read enough Greek to recognize that the founding laws cited in the margins were not Byzantine at all — too old, too local, citing a community that no Byzantine official would have administered. She has requested a specialist review. The specialist has not yet come. A Venetian merchant family has submitted a purchase inquiry in the interval, citing commercial interest in Adriatic properties.
+
+The purchase order goes to the archive director tomorrow morning. Tonight, Catarina is still at her desk.
+
+*The fighter understands: the codex is technically available until the director countersigns the purchase order. Catarina knows this. She is still at her desk because she knows this.*
+
+---
+
+**ACT II — The Scholar's Margin**
+
+*The Register, in the fighter's satchel, wrapped in linen · on the deck of an Adriatic coaster at dawn, three hours out of Venice, heading south*
+
+A Greek scholar named Dimitrios Palaiologos — not of the imperial family, merely named for it — has been searching for the Buthrotum Register for fifteen years. He recognized the fighter's satchel from the archive courtyard. He is not going to take it. He is going to stand at the rail and tell the fighter, quietly, that there is a marginal annotation on folio 17 where the Byzantine scribe disagreed with Virgil about the layout of Helenus's court — and that he has been arguing in print for six years that Virgil's geography was wrong, and the answer to whether he was right is, at this moment, seven feet away inside a linen wrapping.
+
+He asks for nothing. He has simply been searching for fifteen years and the object of that search is close enough to touch, and he is a man who believes in saying things plainly.
+
+*The fighter looks at the sea. The fighter looks at the scholar. The register is not the fighter's to share permanently. But folio 17 is a page, not the whole.*
+
+---
+
+**ACT III — The Prior Claim**
+
+*The Register, examined and rewrapped · on the Ragusa waterfront at midday · a man waiting beside a stack of crates who introduces himself as Brother Nicodemus, representing the monastery of the Holy Archangels, Butrint*
+
+The monastery was the register's custodian for four hundred years before Venetian agents took it during a period of Adriatic disruption — Brother Nicodemus says "disruption" with the measured neutrality of a man who has described this event many times to people who were involved in it. He has a letter from his abbot. He has a chain of custody record. He has, in other words, a legitimate claim.
+
+He does not want money. He wants the register returned to the place it was made — to a monastery overlooking the ruins of the city it documents, where the monks can read it as a record of their own community's ancient predecessor.
+
+His claim is real. The Weimar commission is also real. The register cannot go to both places.
+
+*The fighter must explain why a neutral archive serves the register better than local custody that was already disrupted once. It is a harder argument than it sounds.*
+
+---
+
+**ACT IV — The Name in the Roll**
+
+*The Register, rewrapped after Ragusa, carried through the Dinaric passes toward the north · a mountain road, late afternoon, mist in the pines*
+
+A traveler falls in with the fighter's party — an Albanian merchant named Gjergj, heading north for trade. On the second night, when the fire is low and the conversation has run to ancestry, he produces a family document: a name-list going back seven generations, written in a mix of Greek and Albanian, topped by a name he says his family has always called "the Register name" — a name that appeared in a document, somewhere, that said his family were among the founders.
+
+He does not know what the fighter is carrying. He is simply telling the story families tell. He says the name with the specific care of someone repeating a word in a language they do not speak.
+
+The fighter opens the final folio.
+
+*The name is there. Gjergj holds the fire closer and looks at it for a long time. He says nothing. Then he says: "That is my grandmother's grandmother's grandmother's grandmother's name." He says it correctly, counting back on his fingers.*
+
+---
+
+**ACT V — Two Categories**
+
+*The Register, delivered whole · on the intake desk of the Weimar archive · morning, the city beginning outside, the archivist opening his shutters*
+
+The archivist reads the founding laws. He reads the marginal annotations. He reads the population roll. He pauses at the last folio longer than at any other. He asks: "These people chose to live in a place named after what they lost?"
+
+The fighter answers.
+
+He is quiet. Then: "I can file this under Trojan secondary sources. Or I can file it as the primary record of the Buthrotum community — a separate entry, its own community, its own register." He looks up. "The second category does not yet exist. Which should I make it?"
+
+*The fighter understands what is being decided: whether this document is defined by the loss it replaced, or by the community it created. Helenus founded Buthrotum as a living city, not a monument. The register should follow him.*
+
+---
+
+### Quest API Stub — FCO-04
+
+```
+missionAccept: "An 11th-century Byzantine copy of the Buthrotum Register — the founding laws and
+  population roll of Helenus's replica Troy — is misfiled in a Venetian archive. A purchase
+  order goes to the director tomorrow. Retrieve it tonight and carry it to Weimar before the
+  commercial transfer closes."
+
+Act I — The Misfiled Codex
+activateNode: VEN
+type: skill_check
+scene: "A vaulted archive room above a Venice canal, late afternoon. A young clerk named
+  Catarina is still at her desk after hours — she flagged the codex three weeks ago as
+  misclassified and has not yet had it reviewed. A purchase order from a merchant family
+  goes to the director tomorrow morning. In the corner: a shelf of Byzantine documents,
+  provenance unknown, brown leather spines. One of them is what you came for."
+prompt: "Perception DC 13: Find the codex on the shelf before the light fails. The call
+  number Catarina flagged is in her working notes — she will not stop you reading them."
+failText: "The light goes. Catarina lights a taper. 'Come back in the morning — before
+  the director arrives.' The purchase order is still unsigned tonight. (retry)"
+successText: "You find it by the wear pattern on the spine and the linen wrapping inside.
+  Catarina sets your commissioning letter into the release folder and closes it without
+  speaking. You receive the Archive Misclassification Tag — the slip showing where it was
+  filed and why, in Catarina's hand."
+grantItem: "Archive Misclassification Tag"
+activateMissionBit: fco04Act1Active
+checkPassFlag: fco04Act1Passed
+
+Act II — The Scholar's Margin
+activateNode: RGS
+type: skill_check
+scene: "Dawn on an Adriatic coaster, three hours out of Venice. A Greek scholar named
+  Dimitrios stands at the rail and tells you quietly that he has been searching for this
+  codex for fifteen years, that folio 17 contains a marginal annotation that settles a
+  disagreement he has been publishing about for six years, and that the answer is currently
+  seven feet away in your satchel. He asks for nothing. He has simply been searching for
+  fifteen years and is telling you so."
+prompt: "Insight DC 12: Read him correctly. Decide whether to open the wrapping to folio 17.
+  He is not a threat. The question is whether the search deserves one page."
+failText: "You hold the satchel closed. He nods once. 'Of course.' He turns back to the sea.
+  He will carry the not-knowing the rest of his life. Something about that costs you more
+  than expected. (retry — read him again)"
+successText: "You open to folio 17. He reads the marginal annotation. He is silent for a long
+  time. Then he takes out a small notebook and writes two words — just two — and tears the
+  page out and holds it toward you. 'For the archive. The annotation is correct.' You receive
+  Dimitrios's Two-Word Note."
+grantItem: "Dimitrios's Two-Word Note"
+checkPassFlag: fco04Act2Passed
+
+Act III — The Prior Claim
+activateNode: RGS
+type: skill_check
+scene: "The Ragusa waterfront at midday. A monk named Brother Nicodemus has been waiting
+  beside a stack of crates. He represents the monastery of the Holy Archangels at Butrint —
+  the register's custodian for four centuries before Venetian agents took it during what he
+  calls, with measured neutrality, 'a period of disruption.' He has a chain of custody
+  document. His claim is real. He does not want money — he wants it returned to the place
+  it was made. He is waiting for the argument that will let him agree this is not possible."
+prompt: "Persuasion DC 14: Explain why a neutral archive serves the register better than
+  local custody that was already disrupted once. It must be an argument he can bring back
+  to his abbot."
+failText: "He listens. 'That is an argument about convenience.' He is right — you gave him
+  the practical version. Come back with the argument about the register itself. (retry)"
+successText: "He is quiet when you finish. Then he produces a sealed letter from his coat —
+  his abbot's seal. 'I was told to give this if the argument was sufficient.' The letter
+  acknowledges Weimar custody as appropriate and releases the monastery's claim. You receive
+  the Butrint Monastery Release Seal."
+grantItem: "Butrint Monastery Release Seal"
+checkPassFlag: fco04Act3Passed
+
+Act IV — The Name in the Roll
+activateNode: WM
+type: skill_check
+scene: "A mountain road in the Dinaric passes, late afternoon. An Albanian merchant named
+  Gjergj has traveled with your party for two days. At the evening fire he produces a family
+  name-list going back seven generations, topped by what his family has always called 'the
+  Register name' — a name from a document, somewhere, that said his family were among
+  the founders. He does not know what you carry. He says the name with the care of someone
+  repeating a word in a language they do not speak."
+prompt: "Insight DC 13: Open the final folio. Find the name. Read it to him correctly —
+  not as confirmation of a legend, but as a fact in an administrative record."
+failText: "You look at the folio in the poor light and cannot be certain. 'I cannot read
+  it clearly here.' He nods. 'My grandmother said it was there.' He believes it anyway.
+  Wait for better light and try again. (retry)"
+successText: "The name is there. You read it to him. He holds the fire closer and looks at
+  it for a long time. He says, counting back on his fingers: 'That is my grandmother's
+  grandmother's grandmother's grandmother's name.' He says it correctly. You receive
+  Gjergj's Name Confirmation — his signed witness that the name in the roll is his
+  family's founding entry."
+grantItem: "Gjergj's Name Confirmation"
+checkPassFlag: fco04Act4Passed
+
+Act V — Two Categories
+activateNode: WM
+type: skill_check
+scene: "The Weimar archive intake office, morning. The archivist reads the founding laws,
+  the marginal annotations, the population roll. He pauses at the final folio longer than
+  any other. He asks: 'These people chose to live in a place named after what they lost?'
+  Then: 'I can file this under Trojan secondary sources. Or I can file it as the primary
+  record of the Buthrotum community — its own entry, its own category. The second does not
+  yet exist. Which should I make it?'"
+prompt: "Persuasion DC 12: Argue for the second category. Helenus founded a living city,
+  not a monument. The register follows the community it served, not the loss that preceded it."
+failText: "He nods. 'A reasonable argument. But the safer classification is Trojan secondary.'
+  He reaches for the Trojan folder. Come back with the reason the community deserves its own
+  entry. (retry)"
+successText: "He sets the Trojan folder aside and opens a new register page. He writes:
+  'Buthrotum Community — founding record, primary.' He looks at you. 'It is the first entry
+  in a new category. That happens perhaps once a decade.' You receive the Buthrotum
+  Primary Entry — the first line of the new register category, in the archivist's hand."
+grantItem: "Buthrotum Primary Entry"
+takeItem: "The Buthrotum Register"
+checkPassFlag: fco04Act5Passed
+activateMissionBit: fco04Complete
+```
+
+---
+
+*FCO-04 complete. 2026-06-02.*

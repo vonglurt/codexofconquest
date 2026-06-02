@@ -412,6 +412,7 @@ Each row: `| Code | City/Location | Region | Notes |`
 | BLQ | Burgundy (Dijon area) | Eastern France | Ciappelletto's death city |
 | BLQ | Palermo | Sicily, Italy | Sicilian woman's scam city |
 | LIL | Bordeaux (Bordeaux/BDX) | Gascony, France (English-held 1367) | Black Prince's capital; Free Companies staging for Spain; main port of English Aquitaine |
+| FCO-02 | Carthage coastal monastery (CRT) | North Africa, Hafsid Sultanate hinterland, Tunisia | Benedictine house on the plain south of Carthage ruins; Byzantine mosaics in cloister; Genoese commercial pressure at the gate |
 | LIL | Libourne | Garonne valley, Gascony | River crossing checkpoint between Bordeaux and Périgord |
 | LIL | Beaulieu-en-Périgord (SRL) | Périgord, Dordogne valley | Limestone valley town; routier safe-conduct delivery destination |
 | LIL | Nájera | Castile, Spain | Battle of Nájera April 3 1367; du Guesclin captured; Black Prince wins; Don Pedro defaults |
