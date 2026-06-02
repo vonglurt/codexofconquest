@@ -350,3 +350,238 @@ Fra Bonaventura's report is the official record. "Poisoned groundwater; communit
 - English only: all mission text in English throughout; no Romanian, Hungarian, German, or other language in vignette text
 - 1367 Transylvania: historically accurate geography — Bistritz (Bistrița), Klausenburg (Cluj-Napoca), Sibiu (Hermannstadt), the Borgo Pass, Buda; the Szekely/Saxon/Vlach/Magyar ethnic geography matches the 14th century; Vlad I ruled Wallachia 1364–1377 (Stoker's vampire is loosely based on his descendants)
 - New proposed nodes: BIS (Bistritz), KLZ (Klausenburg), SIB (Sibiu/Hermannstadt), BOR (Borgo Pass), BDA (Buda)
+
+---
+
+## Cycle 2 — Angle: *The Last Letter — Written in the Interval Before Self-Loss*
+
+**What this angle reveals that cycle 1 missed**: Cycle 1 showed the compiled dossier — independent witnesses assembled so that no single account could be dismissed; the proof that exists only in compilation. Cycle 2 shows the document that cannot be compiled: a letter written from inside the transformation, in the interval when the writer is still herself but knows she may not be when it is read. The compiled dossier is strong because it cannot be accused of collaboration. The Interval Letter is strong for the opposite reason: it has only one voice, fully present, writing from the moment of maximum honesty, when there is nothing left to protect.
+
+---
+
+### 5-Act Vignette Play: *The Last Letter*
+
+#### The Letter
+
+*The Interval Letter — a single folded sheet, Mina's hand, ring impression in soft dark wax — written in the hour before the men returned, addressed "to whoever reads this after" — dated, timed (she writes the hour), unsigned except with a name; the letter describes what she knows and does not know about her own state; it contains no plea and no reassurance; it is the record of a woman writing from the exact threshold between being herself and not knowing whether she will remain herself; the wax impression is a ring she was still wearing when she pressed it.*
+
+---
+
+**ACT I**
+
+*The Interval Letter — sealed, ring impression intact — Klausenburg archdeacon's court, morning.*
+
+The archdeacon's clerk has the letter as part of a bundle of materials received from the Van Helsing group's contact in the city. The bundle was logged as "medical case materials — Seward group, Transylvania inquiry." The letter is among them — folded, sealed, clearly different in quality from the assembled notes around it. The clerk has been treating it as a cover document or administrative letter.
+
+He does not understand what it is.
+
+The court archivist, a careful woman named Petronela, has noticed that the letter is sealed with a personal ring impression, not a clerical seal. She has been waiting to find out if anyone else notices.
+
+*— The letter has been misclassified by accident, not malice. The Fighter must tell Petronela what it is before someone files it under the wrong category permanently.*
+
+> **Dialogue DC 12.** Tell Petronela the letter's category: not a cover document, not medical case material, not testimony — it is a document written from the interval before possible transformation, when the writer has full knowledge that she may not be herself when it is read; this is neither victim record nor compiled evidence; it is a primary source of a different order, whose truth depends on its being written at exactly that moment and no other.
+
+**Fail:** Petronela nods slowly but keeps the letter on the "pending medical case materials" pile. "I take your point but I need authorization to reclassify." She requests the authorization; it arrives by evening. Try again at the evening hour.
+
+**Pass:** Petronela sets the letter on a separate section of the desk. "I will need documentation that this was received from a primary carrier, not as part of the dossier assembly." She writes a court receipt: *received independently, Interval Letter — Mina Murray's hand, personal seal, separate from dossier materials; Petronela Toth, archdeacon's court Klausenburg.* She releases it to the Fighter with the receipt attached.
+
+**TOKEN GRANTED: The Interval Letter** — single folded sheet, ring impression seal, Petronela's receipt attached; "to whoever reads this after."
+
+---
+
+**ACT II**
+
+*The Interval Letter — with court receipt — Klausenburg, the main square, midday.*
+
+A young man is waiting outside the archdeacon's court. His name is Edgar; he represents the Seward family's English estate interests in Transylvania. He heard the letter was being separated from the dossier materials and has come to object.
+
+"The letter was submitted as part of the Van Helsing compilation. It belongs with the other compiled documents. Separating it damages the coherence of the case record." He is speaking in the register of a man who has rehearsed this argument but does not fully believe it. He has a document: a letter from the Seward estate solicitor claiming the right to decide how the compiled materials are organized.
+
+*— He is wrong about the letter's category. The Van Helsing compilation derives its strength from being assembled from independent sources. The Interval Letter is valuable precisely because it is not part of the compilation — it was written before the compilation existed. Filing it with the compiled dossier would subordinate the primary source to the secondary assembly.*
+
+> **Skill Check: History DC 12.** Establish that the Interval Letter predates the compilation — it was written before Van Helsing assembled the dossier; filing it with the compilation would treat the primary source as one item in a secondary assembly, which is the opposite of what the compilation's evidentiary logic requires.
+
+**Fail:** Edgar's solicitor's letter creates a forty-eight hour hold pending estate review. The estate review confirms the Fighter's argument by the second morning.
+
+**Pass:** Edgar pauses. The argument is new to him. He consults his own notes. "Before the compilation." "Yes." He folds the solicitor's letter back. He adds a notation to his own file: *independent document, pre-compilation; Seward estate claim withdrawn — letter does not belong to dossier; Edgar R., Seward estate representative.* He gives the Fighter a copy.
+
+**TOKEN STATE 2**: Seward estate claim withdrawn — pre-compilation independent document notation added to the receipt.
+
+---
+
+**ACT III**
+
+*The Interval Letter — receipt with two notations — Sibiu, Romanian Orthodox church scholar's study, evening.*
+
+Father Vasile received word of the document from a colleague at the Klausenburg archdeacon's court. He is a compassionate man and a careful canon lawyer. He has been thinking about this document for three days.
+
+"A letter written by a baptized Christian woman in the knowledge that she might lose herself constitutes a testament in the canonical sense — a statement made in extremis, before expected death or transformation. The church has jurisdiction over testaments of the baptized, and this letter meets the formal requirements." He opens his hands. "I am not seeking to suppress it. I am seeking to receive it correctly."
+
+*— He is not wrong about the canonical definition. He is wrong about whether a testament must be filed under ecclesiastical jurisdiction merely because it meets the canonical definition; a letter written to "whoever reads this after" is not a testament in the sense of disposing of property or making spiritual provision — it is a record of a state of mind and a moment in time.*
+
+> **Skill Check: Persuasion DC 13.** Distinguish between a canonical testament (disposing of property and soul) and a document written in the knowledge of possible loss — the Interval Letter makes no spiritual provision, disposes of nothing, and asks for nothing; it records; a document that records a state of mind is a witness statement, not a testament, even if written at a moment of extremis.
+
+**Fail:** Father Vasile files a preliminary testament classification with the diocesan office. The diocesan canon lawyer reviews it and responds within two days: the letter does not meet the property/spiritual-provision test for a canonical testament. The classification is rescinded.
+
+**Pass:** Father Vasile thinks for a long moment. He is working through his own canon law from memory. "A testament disposes. This letter records." A pause. "You are right." He writes his own endorsement: *reviewed — not subject to canonical testament classification; document type: state-of-mind record, witness statement in extremis; no ecclesiastical jurisdiction claim; Father Vasile Gheorghe, Romanian Orthodox, Sibiu.* He hands it to the Fighter.
+
+**TOKEN STATE 3**: Orthodox canon law endorsement added — *not a testament, no ecclesiastical jurisdiction; state-of-mind record at moment of extremis.*
+
+---
+
+**ACT IV**
+
+*The Interval Letter — receipt with three notations — road from Sibiu northwest toward the Transylvanian road, night.*
+
+Two men intercept the Fighter at the mountain road. They are employed by a Transylvanian legal firm representing the descendants of the Carfax property transaction — the English solicitor's family whose papers completed the deed. They are not here because of the letter's content; they are here because the letter, if it establishes that Dracula existed and acted with full intention, retroactively makes the property transfer voidable as fraud. They want it gone.
+
+*— They are not wrong about the legal implication. They are very wrong about their approach.*
+
+> **Combat: 2 opponents — AC 12, HP 20 each.** They want the satchel, not blood. They break off at half health.
+
+**Fail:** They take the letter. The legal firm's office is in Sibiu; Father Vasile's endorsement naming the incident is the beginning of the recovery chain.
+
+**Pass:** Both down or broken. Road northwest clear. Three notations intact.
+
+**TOKEN STATE 4**: Carried through property-transaction agents' ambush. All notations undamaged.
+
+---
+
+**ACT V**
+
+*The Interval Letter — receipt with three notations — Weimar archive, the desk of Archivus Sweelinck, morning.*
+
+Sweelinck reads the letter. He reads it twice — not for the content (he processes the content quickly) but for the quality of attention it requires. He sets it down.
+
+"She wrote this not knowing if she would be herself when it was read." He is quiet for a moment. "She is fully herself when she writes it. That is — visible. The handwriting is steady. The thought is clear. She knows exactly what she is saying." He looks up. "What does an archive call a document written by a person who is still themselves, but knows they may not be when it arrives?"
+
+*— He has the category question exactly right. The Fighter needs to give him the name.*
+
+> **Skill Check: History DC 11.** Tell Sweelinck the category: Documents of the Final Interval — written in the knowledge of possible self-loss; the value is not testimony or evidence or testament but the record of a person's voice at the moment when it is most fully itself, because there is nothing left to protect. The archive's function here is to preserve the interval, not to adjudicate what followed.
+
+**Fail:** Sweelinck files it under "Personal Testimonials — Extraordinary Circumstances" and marks it for further classification review. He revisits the category after a conversation with his senior colleague; the correct name is created an hour later.
+
+**Pass:** Sweelinck writes: *Documents of the Final Interval — written in the knowledge of possible self-loss; voice at its most unguarded; the archive receives the interval, not the judgment of what followed.* He files the letter in its own section.
+
+He says:
+
+"She was still herself. That's what this is."
+
+**TOKEN TAKEN: The Interval Letter**
+
+The folded sheet enters the Weimar archive under Documents of the Final Interval. Petronela's court receipt, Edgar's pre-compilation notation, and Father Vasile's canon law endorsement are indexed separately. The ring impression in dark wax is preserved intact. Mina Murray is the first entry in her category.
+
+---
+
+## Quest API Stub — UQF v1.0
+
+```json
+{
+  "quest_id": "CLJ_002",
+  "title": "The Last Letter",
+  "source": "CLJ",
+  "cycle": 2,
+  "book": "Dracula — Bram Stoker (1897, Gothic epistolary novel)",
+  "source_episode": "The letter Mina writes in the interval when she knows she may be transforming — the most unguarded document in the assembled dossier, written before the men return, addressed to whoever reads it after; the moment when truth-telling is sharpest because there is nothing left to protect",
+  "theme": "The letter written in the interval before possible transformation — the most honest document a person produces, because they write as themselves knowing they may not be themselves when it arrives; truth-telling is sharpest when there is nothing left to protect; the archive preserves the interval, not the judgment of what followed",
+  "token": {
+    "id": "CLJ_002_TOKEN",
+    "name": "The Interval Letter",
+    "description": "Single folded sheet, Mina Murray's hand, ring impression in soft dark wax; addressed 'to whoever reads this after'; dated and timed; contains no plea and no reassurance; the record of a woman at the threshold between being herself and not knowing whether she will remain herself; Petronela's court receipt attached on release",
+    "grant_act": "act_1",
+    "take_act": "act_5",
+    "check_acts": ["act_2", "act_3", "act_4"],
+    "state_changes": [
+      {"act": "act_2", "change": "Seward estate claim withdrawn — pre-compilation independent document notation added; letter established as prior to the dossier assembly"},
+      {"act": "act_3", "change": "Orthodox canon law endorsement added — not a testament; state-of-mind record at moment of extremis; no ecclesiastical jurisdiction"},
+      {"act": "act_4", "change": "carried through property-transaction agents' ambush — all notations undamaged"}
+    ]
+  },
+  "nodes": ["KLZ", "SIB", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "KLZ",
+      "type": "dialogue",
+      "activateNode": "KLZ",
+      "missionAccept": "The letter has been misclassified as medical case material at the Klausenburg archdeacon's court. Archivist Petronela has noticed the ring impression and is waiting for someone who understands what it is.",
+      "scene": "The archdeacon's court. Petronela at the intake desk with the bundle of Van Helsing materials. The letter is filed with the compiled dossier. The ring impression is dark wax, personal, not clerical.",
+      "dialogue": {
+        "dc": 12,
+        "prompt": "Tell Petronela the letter's category — not cover document, not medical case material, not testimony; written from the interval before possible transformation; primary source of a different order.",
+        "failText": "'I take your point but I need authorization to reclassify.' Arrives by evening. Try again then.",
+        "passText": "She writes a court receipt: received independently, separate from dossier materials. TOKEN GRANTED: The Interval Letter."
+      },
+      "grantItem": "The Interval Letter",
+      "checkPassFlag": "CLJ_002_act1Pass"
+    },
+    {
+      "act_id": "act_2",
+      "location": "KLZ",
+      "type": "skill_check",
+      "activateNode": "KLZ",
+      "scene": "Edgar from the Seward estate outside the archdeacon's court. The letter was submitted with the compilation. He says separating it damages the case record. He has a solicitor's letter. He does not fully believe his own argument.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "failText": "Forty-eight hour hold. Estate review confirms the argument by the second morning.",
+        "passText": "'Before the compilation.' He folds the solicitor's letter back. 'Seward estate claim withdrawn — pre-compilation independent document.' TOKEN STATE 2: claim withdrawn."
+      },
+      "checkPassFlag": "CLJ_002_act2Pass"
+    },
+    {
+      "act_id": "act_3",
+      "location": "SIB",
+      "type": "skill_check",
+      "activateNode": "SIB",
+      "scene": "Father Vasile in his study at Sibiu. He is compassionate, careful, and has been thinking about this for three days. The letter meets the canonical definition of a testament — written in extremis by a baptized Christian. He is not wrong about the definition. He is wrong about the implication.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "failText": "Preliminary testament classification filed. Diocesan canon lawyer rescinds it in two days.",
+        "passText": "'A testament disposes. This letter records.' He writes: not a testament; state-of-mind record at moment of extremis; no ecclesiastical jurisdiction. TOKEN STATE 3: canon law endorsement added."
+      },
+      "checkPassFlag": "CLJ_002_act3Pass"
+    },
+    {
+      "act_id": "act_4",
+      "location": "road_sibiu_northwest",
+      "type": "combat",
+      "activateNode": "SIB",
+      "scene": "Mountain road. Two men from a Transylvanian legal firm representing descendants of the Carfax property transaction. The letter establishes Dracula existed and acted with intent — making the property transfer voidable as fraud. They want it gone.",
+      "combat": {
+        "enemies": 2,
+        "AC": 12,
+        "HP": 20,
+        "description": "property-transaction firm agents — want the document removed, not the carrier harmed; break off at half health",
+        "failText": "They take the letter. Father Vasile's endorsement begins the recovery chain.",
+        "passText": "Both down or broken. Three notations intact. Road northwest clear. TOKEN STATE 4: carried through."
+      },
+      "checkPassFlag": "CLJ_002_act4Pass"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck reads the letter twice. 'She wrote this not knowing if she would be herself when it was read. She is fully herself when she writes it. That is — visible.' He looks up. 'What does an archive call a document written by a person who is still themselves, but knows they may not be when it arrives?'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 11,
+        "failText": "Filed under Personal Testimonials — Extraordinary Circumstances. Correct category created an hour later after senior consultation.",
+        "passText": "He writes: Documents of the Final Interval — written in the knowledge of possible self-loss; voice at its most unguarded. 'She was still herself. That's what this is.' TOKEN TAKEN: The Interval Letter."
+      },
+      "takeItem": "The Interval Letter",
+      "activateMissionBit": "cljLastLetterComplete",
+      "checkPassFlag": "CLJ_002_act5Pass"
+    }
+  ]
+}
+```
+
+---
+
+### New Node Proposals
+
+No new nodes required. Route uses existing KLZ (Klausenburg), SIB (Sibiu), WM (Weimar).
