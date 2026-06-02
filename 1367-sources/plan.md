@@ -191,22 +191,22 @@ Main vignette **BEY-01 "The Sober Draft"** is fully spec'd with UQF v1.0 JSON, 5
 
 The following quest seeds were generated from full narrative recall. Each has a paragraph-length story concept in BEY-mandeville.md. They need full vignette treatment.
 
-### §BEY-02 — The Sultan's Safe Conduct (Jerusalem section)
+### §BEY-02 — The Sultan's Safe Conduct (Jerusalem section) ✓ DONE 2026-06-02
 A Mamluk diplomatic safe conduct collection from Cairo, dated 1320s–1340s, includes an instrument issued to a European knight whose name, in Arabic transliteration, could be read as a version of "Mandeville." Fighter escorts the collection from Cairo to a neutral archive.
 
-### §BEY-03 — The Odoric Annotations (Compilation)
+### §BEY-03 — The Odoric Annotations (Compilation) ✓ DONE 2026-06-02
 Friar Odoric of Pordenone's travel account (c. 1330), one of Mandeville's main sources, survives in an Italian monastery copy with annotations in a different hand marking where the text was used in Mandeville's Travels. Fighter escorts the annotated copy.
 
-### §BEY-04 — The Prester John Letter (Eastern section)
+### §BEY-04 — The Prester John Letter (Eastern section) ✓ DONE 2026-06-02
 A 12th-century letter purportedly from Prester John to European kings survives in a German monastery archive. In 1367 it is being debated whether Prester John is the Ethiopian emperor or a fiction. The letter is evidence for neither position. Fighter escorts it.
 
-### §BEY-05 — The Cotton-Lamb Record (Vegetable Lamb)
+### §BEY-05 — The Cotton-Lamb Record (Vegetable Lamb) ✓ DONE 2026-06-02
 A Genoese trade account from Caffa (Crimea), 1330s, contains a marginal note debunking the Vegetable Lamb of Tartary — explaining that "cotton wool" does not come from actual lambs. The earliest known debunking of the legend. Fighter escorts the account book.
 
-### §BEY-06 — Boldensele's Original (Compilation)
+### §BEY-06 — Boldensele's Original (Compilation) ✓ DONE 2026-06-02
 William of Boldensele's travel account of Egypt and the Holy Land (c. 1336), one of Mandeville's primary sources, survives in its original manuscript form in a Rhineland monastery — predating the copies made after Mandeville made it famous. Fighter escorts it to a neutral archive.
 
-### §BEY-07 — The Missing Chapter (Latin version)
+### §BEY-07 — The Missing Chapter (Latin version) ✓ DONE 2026-06-02
 A Latin manuscript of Mandeville's Travels in a German monastery contains an additional chapter not found in any other known manuscript — a conversation with a Jewish scholar in Jerusalem about Old Testament geography of the Eastern routes. Fighter escorts the manuscript.
 
 ---

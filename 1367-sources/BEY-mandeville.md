@@ -791,3 +791,1038 @@ He closes the ledger.
 | BEY-S19 | The Pismire Gold | Ch. XXXIII; gold stolen from giant gold-hoarding ants by tricking mares | A cargo of ant-gathered gold with no documentable origin |
 
 **Part 3 status:** COMPLETE — 270 lines; Chapters XXXII–XXXIV + Conclusion + Footnotes + PG license.
+
+---
+
+## BEY-03 — The Odoric Annotations (Cycle 3)
+
+**Source:** Mandeville's Travels — Friar Odoric of Pordenone (c. 1330) is one of Mandeville's primary sources for the Eastern sections; Mandeville borrowed passages, names, and itineraries from Odoric without attribution
+
+**Theme declared:** BEY themes catalogued and avoided — the sober draft truer than the embellished book, the politically radioactive document authenticating an inconvenient prior relationship. New theme for this vignette: **the source annotated by its derivative — someone read Mandeville's Travels after it circulated, then re-read Odoric marking every place Mandeville borrowed; the annotated Odoric is now more significant than either text alone because it proves the compilation was deliberate; the archive receives it as evidence of the method, not as criticism of the borrower.**
+
+*The thing · a Franciscan copy of Odoric's Relatio · marginal annotations in a different hand marking each passage borrowed by Mandeville · in a Friuli monastery library*
+
+**New nodes proposed:** None (uses existing VEN, RGS, WM)
+
+**TOKEN:** Odoric Annotated Volume — ACCEPT Act I → CARRY Acts II–IV → RETURN Act V → RECORD
+
+---
+
+### Act I — Friuli, Franciscan Monastery Near Pordenone (VEN)
+
+Brother Luca is the monastery librarian. He found the annotated Odoric six months ago when reorganizing the collection. The annotations are thorough: beside each Odoric passage that Mandeville borrowed, a different hand has written in the margin "See Mandeville Chapter X" or "Compare to the English knight's Book III." The annotator was reading both texts simultaneously, one in each hand, and marking the traffic between them.
+
+*The Odoric Annotated Volume · Odoric's Relatio, mid-14th century copy, tight Franciscan hand · marginal notes in a scholar's hand throughout · on the library stand near the east window*
+
+The annotator's identity is unknown. The work was done within the last ten years — the ink is still crisp.
+
+**Skill Check — Investigation DC 11:** Count the annotations and find their pattern: 73 marginal notes in total; 67 of them cite specific Mandeville chapters; 6 are unmarked citations; 4 of the unmarked ones reference a version of Mandeville that no longer circulates, suggesting the annotator had access to an earlier edition. Pass: The pattern reveals an annotator working methodically, not casually — this was a comparative project. Fail: The annotations are confirmed as thorough; their systematic nature is visible but not fully quantified.
+
+*Passtext:* 73 notes. 67 citations. 4 references to an earlier edition. Someone spent weeks with both texts, measuring every borrowing. Brother Luca looks at the count. "I knew it was thorough. I didn't know it was that thorough."
+
+*Failtext:* Systematic and comprehensive; the full extent only partially quantified.
+
+**Grant item:** Odoric Annotated Volume (Franciscan binding, marginal annotation hand throughout, 4 references to an earlier Mandeville edition)
+
+---
+
+### Act II — Venice, Document Dealer's Premises Near San Polo (VEN)
+
+Ser Giacomo Fabriano deals in manuscripts and has known about the Odoric annotations for two months. He didn't act because the market for a source text with marginal comparisons to a derivative is narrow — it's scholarly, not collector-level. Now that the Fighter has the volume, he has decided the narrow market is worth pursuing. He wants to publish it.
+
+*The Odoric Annotated Volume · in satchel · in a Venice street near San Polo with a dealer who wants to produce a printed comparison edition*
+
+"The annotations plus the Odoric text plus a Mandeville text in parallel columns," Fabriano says. "It would be the first comparative edition of a travel narrative. Venice can print three hundred copies. Germany can't."
+
+**Skill Check — Persuasion DC 12:** A printed edition without the original is derivative scholarship; a printed edition that cites the archived original is permanent scholarship. The annotated volume at Weimar becomes the foundation text; Fabriano's printed edition becomes a legitimate publication citing its source; the edition increases in value precisely because the original is at a verifiable location. Pass: Fabriano considers. The archival citation structure is good for the edition's scholarly standing. He agrees to a publication note citing Weimar. Fail: He argues that printing is its own form of preservation. He does not pursue further.
+
+*Passtext:* "The citation would go on the title page. 'Original held at Weimar archive district.' Yes, that works." He writes himself a note. "I'll apply for copying access through proper channels."
+
+*Failtext:* He argues, briefly, and then lets the Fighter go without further obstacle.
+
+*The Odoric Annotated Volume · past the San Polo district, moving toward the northern road*
+
+---
+
+### Act III — Regensburg, Dominicans' House Library Receiving Room (RGS)
+
+Brother Konrad is a Dominican scholar working on a refutation of Mandeville — he believes the Travels is substantially fabricated and wants to establish which sections are false. He has heard about the Odoric annotations. He wants the volume as primary evidence for his refutation: if Mandeville borrowed from Odoric without attribution, that proves deliberate deception.
+
+*The Odoric Annotated Volume · in satchel · in the Dominican receiving room with a scholar who wants to use the evidence for a different purpose than the archive*
+
+**Skill Check — History DC 12:** The annotations prove borrowing, not deception: compilation without attribution was standard practice in 14th-century travel writing; Vincent of Beauvais, Albert of Cologne, and the makers of the Mappae Mundi all borrowed without citation; the annotations are evidence of method, not fraud; what the archive will receive is a record of how the compilation tradition worked, not an indictment of Mandeville's character. Pass: Brother Konrad is a careful scholar. He recognizes the methodological distinction. He says: "I will need to revise the framing of my refutation." He steps back. Fail: He files a hold request through the Dominican prior for 48 hours of scholarly access; the prior grants access; Brother Konrad reads the volume and concludes, correctly, that the annotations prove compilation; he changes his framing; the volume releases.
+
+*Passtext:* "The Beauvais comparison is sound." He folds his notes. "I was going to call it fraud. It's not fraud. It's practice." He steps back.
+
+*Failtext:* 48 hours. He reaches the same conclusion. The volume releases.
+
+*The Odoric Annotated Volume · past the Dominican house, continuing to Weimar*
+
+---
+
+### Act IV — Road West of Regensburg, Tavern Inn at a Crossroads (RGS to WM)
+
+Two men have been following since Regensburg. They are not scholars. One carries a tool for opening book clasps; the other has a letter in his coat that the Fighter can see the edge of. They have been ahead of the Fighter, waiting at the inn.
+
+*The Odoric Annotated Volume · in satchel, on the Fighter's back · at a crossroads tavern with two men who have been following since Regensburg and are now blocking the room's only exit*
+
+**Combat — 2 opponents, AC 12 HP 18 each:** They want the satchel. They have instructions. They do not know what the volume is — they were told to get a "scholar's book, Franciscan binding, with pencil marks all through it." They will break off if one is down. Fail: They get the satchel; the Fighter pursues to the stable where they are preparing to ride; recovering the volume there is possible with another combat. Pass: Both down or fled. The volume is intact.
+
+*Passtext:* One is down; the other has run to the stable. The letter in the second man's coat identifies his employer: Fabriano. He changed his mind about the publication access arrangement.
+
+*Failtext:* Stable combat is possible. Both men flee when the second is down.
+
+*The Odoric Annotated Volume · recovered, Fabriano's employment letter as additional provenance documentation · on the last road to Weimar*
+
+---
+
+### Act V — Weimar Archive District (WM)
+
+Archivus Sweelinck opens the volume. He reads a page of Odoric. He reads the margin note. He flips to the next annotated passage. He keeps going.
+
+"The annotator is not criticizing Mandeville," he says. "He's documenting a tradition." He reads another note. "He may have been Mandeville's source. Or his editor. Or both."
+
+*The Odoric Annotated Volume · open on the intake desk at a particularly dense margin note · late afternoon light through the archive window*
+
+**Skill Check — History DC 11:** Identify from the 4 early-edition citations that the annotator had access to a Mandeville text that predates all current versions — the annotator was working from an earlier recension; his 4 unmarked citations reference a text that has since been revised; the Odoric volume is therefore also a witness to a now-lost Mandeville variant. Pass: New archive category: Compilation Source Records — Comparative Annotations; the volume documents the method of the travel narrative tradition; the Mandeville references in the margins are not criticism but evidence; the archive notes the probable early-recension citations as ancillary evidence. Fail: Filed under Source Records — Odoric of Pordenone, with a notation that the marginal annotations reference Mandeville's Travels.
+
+*Passtext:* "Compilation Source Records — Comparative Annotations. The method is the document. The annotator measured every borrowing against both sources simultaneously and left the measuring marks in place. The 4 early-edition citations are a separate finding — the annotator had access to a Mandeville that has since been revised. File accordingly." He looks at the Fabriano employment letter. "This also goes in. Chain of custody."
+
+*Failtext:* Filed under Odoric source records with Mandeville notation. The early-edition citations are noted but not developed.
+
+**Take item:** Odoric Annotated Volume
+**Grant item:** Comparative Annotation Archive Record
+
+```json
+{
+  "quest_id": "BEY-03",
+  "title": "The Odoric Annotations",
+  "cycle": 3,
+  "book": "Mandeville's Travels (attr. Sir John Mandeville, c. 1357) — Friar Odoric of Pordenone (c. 1330) as primary compilation source",
+  "token": "Odoric Annotated Volume",
+  "route": ["VEN", "RGS", "WM"],
+  "theme": "The source annotated by its derivative — someone re-read Odoric marking every borrowing Mandeville made; the annotated volume proves the compilation was deliberate; the archive receives it as evidence of method, not criticism",
+  "archive_category": "Compilation Source Records — Comparative Annotations",
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "VEN",
+      "type": "skill_check",
+      "activateNode": "VEN",
+      "scene": "Brother Luca at the Friuli Franciscan monastery library. 73 marginal notes in a second hand throughout Odoric's Relatio, each citing a specific Mandeville chapter. 4 unmarked citations reference an earlier Mandeville recension.",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 11,
+        "prompt": "Count the annotations and identify their pattern: 73 notes, 67 with Mandeville chapter citations, 4 referencing an earlier edition — a systematic comparative project, not casual reading.",
+        "failText": "Systematic and comprehensive; full pattern only partially quantified.",
+        "passText": "73 notes. 67 citations. 4 references to an earlier edition. Someone spent weeks with both texts, measuring every borrowing."
+      },
+      "grantItem": "Odoric Annotated Volume",
+      "checkPassFlag": "bey03Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "VEN",
+      "type": "skill_check",
+      "activateNode": "VEN",
+      "scene": "Manuscript dealer Ser Giacomo Fabriano wants to publish a parallel-column comparison edition. Venice can print three hundred copies; Germany can't.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "prompt": "Argue that the archive citation on the title page makes the edition's scholarly standing permanent; the original at Weimar is the foundation; his printed edition cites its verifiable source.",
+        "failText": "He argues briefly about printing as preservation, then lets the Fighter go.",
+        "passText": "'The citation would go on the title page. That works.' He writes himself a note about copying access."
+      },
+      "checkPassFlag": "bey03Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "RGS",
+      "type": "skill_check",
+      "activateNode": "RGS",
+      "scene": "Dominican scholar Brother Konrad wants the annotations as evidence for his Mandeville refutation — borrowing without attribution proves deliberate deception, he argues.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Establish that compilation without attribution was standard 14th-century practice (cite Vincent of Beauvais, Albert of Cologne, the Mappae Mundi makers); the annotations prove method, not fraud.",
+        "failText": "48-hour scholarly access granted; he reads the volume and revises his framing anyway; it releases.",
+        "passText": "'The Beauvais comparison is sound. I was going to call it fraud. It's not fraud. It's practice.' He steps back."
+      },
+      "checkPassFlag": "bey03Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "RGS",
+      "type": "combat",
+      "activateNode": "RGS",
+      "scene": "Two men at a crossroads tavern west of Regensburg, blocking the room's exit. They have been following since Regensburg; one has a book-clasp tool; the other has a letter in his coat. A recovered letter identifies them as Fabriano's men.",
+      "combat": {
+        "enemies": [{"name": "Fabriano's Agent", "ac": 12, "hp": 18, "count": 2}],
+        "breakoffCondition": "one agent down",
+        "failText": "They get the satchel; recover in the stable when one more is down.",
+        "passText": "Both down or fled. The employment letter identifies Fabriano. It goes into the provenance file."
+      },
+      "checkPassFlag": "bey03Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck reads through the annotations. 'The annotator is not criticizing Mandeville. He's documenting a tradition. He may have been Mandeville's source. Or his editor. Or both.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 11,
+        "prompt": "Identify that the 4 early-recension citations mean the annotator worked from a Mandeville text that predates all current versions; the volume is also a witness to a now-lost variant.",
+        "failText": "Filed under Odoric source records with Mandeville notation; early-edition citations noted but not developed.",
+        "passText": "Sweelinck writes: 'Compilation Source Records — Comparative Annotations. The method is the document. The 4 early-edition citations are a separate finding: evidence of a Mandeville recension that has since been revised. File accordingly.'"
+      },
+      "takeItem": "Odoric Annotated Volume",
+      "grantItem": "Comparative Annotation Archive Record",
+      "checkPassFlag": "bey03Act5Passed",
+      "activateMissionBit": "beyOdoricAnnotationsComplete"
+    }
+  ]
+}
+```
+
+---
+
+*BEY-03 complete. 2026-06-02.*
+
+---
+
+## BEY-04 — The Prester John Letter (Cycle 4)
+
+**Source:** Mandeville's Travels — Chapter XXIX gives a full transcription of a letter from Prester John to a European emperor; Mandeville presents it as genuine; the 12th-century original letter was a papal and imperial diplomatic instrument
+
+**Theme declared:** BEY themes catalogued — sober draft vs. embellished book, politically radioactive authentic document, source annotated by derivative. New theme for this vignette: **the document that is evidence for what it isn't — the Prester John letter is a real document genuinely written and sent; it is not evidence that Prester John exists as described; the archive must receive it as a primary historical document while explicitly declining to resolve the question it was written to answer; the document's value is in its existence, not its claims.**
+
+*The thing · a 12th-century Latin letter purporting to be from Prester John to a European king · preserved in a Rhineland monastery archive · in a chest under the scriptorium floor*
+
+**New nodes proposed:** MGZ (Mainz Chapter Archive District — the archbishopric's document collection, Rhineland, 1367: stone vault under the cathedral chapter house; Greco-Latin and Arabic documents received from crusade correspondents; the smell of cedar and old wax; the chapter librarian who has been here forty years and has read everything without accepting its implications)
+
+**TOKEN:** Prester John Letter — ACCEPT Act I → CARRY Acts II–IV → RETURN Act V → RECORD
+
+---
+
+### Act I — Mainz, Cathedral Chapter Archive (MGZ)
+
+Herr Dietrich Schreiber is the chapter librarian, seventy years old, with the careful habits of a man who has touched thousands of documents and has learned to want nothing from them. He found the Prester John letter behind a false shelf panel during a chapter house repair twenty years ago. He has been deciding what to do with it ever since.
+
+"The letter is real," he says. "I know what real looks like. The parchment, the seal, the Latin — all consistent with the 12th century, a learned hand, good quality vellum. Real." He pauses. "Whether the man who wrote it is real is a different question."
+
+*The Prester John Letter · 12th-century Latin, fine vellum, formal diplomatic register · with the chapter's 20-year-old access note tucked inside · on Herr Dietrich's desk*
+
+**Skill Check — History DC 12:** Identify the letter's diplomatic formula — the intitulatio, arenga, dispositio, and corroboratio all match standard high medieval Latin chancery practice; the letter is consistent with Latin diplomatic production of the 1160s–1180s; the question of who wrote it for whom is open; the question of whether it is old is closed. Pass: The diplomatic structure confirms the 12th-century dating with precision. Fail: Dating is consistent but diplomatic analysis incomplete.
+
+*Passtext:* The intitulatio is in the ablative absolute form used by the papal chancellery in the 1160s–1180s. Dietrich listens without surprise. "I knew what era it was. I wanted to know if you knew."
+
+*Failtext:* Consistent with the claimed period. Enough to proceed.
+
+**Grant item:** Prester John Letter (fine vellum, formal diplomatic Latin, chapter's 20-year access note inside, wax seal on exterior cord)
+
+---
+
+### Act II — Mainz, Near the Chapter House Gate (MGZ)
+
+Two men from the Archbishop's household are waiting at the chapter house gate. The Archbishop has heard the letter is leaving. His position: the letter is a document that claims an Eastern Christian kingdom covering the lands east of Persia; in 1367, that claim bears on papal policy toward the Mongols, the Ethiopians, and the Ottoman expansion. A letter claiming Prester John's territories exist — authenticated by a German archive — is a political instrument whether anyone intends it as one or not. The Archbishop wants it retained.
+
+*The Prester John Letter · in the Fighter's satchel · at the chapter house gate with two household officers and a verbal retention order*
+
+**Hybrid — Persuasion DC 13 / Combat fallback:**
+Persuasion DC 13: The letter is not authenticated — it is accurately dated to the 12th century; the archive will receive it as a 12th-century document; Weimar's intake record will note that the document's claims concern a kingdom whose existence is disputed; no authenticated claim will be made; a neutral archive that explicitly declines to adjudicate the question removes the document from political instrumentalization. The Archbishop's household is asked to consider whether retaining the letter in the chapter archive does more to promote the Prester John claim than sending it to a neutral record. Pass: The household officer consults his instructions. They do not cover this argument. He says he will report back; in the meantime he steps aside. Fail: He insists on retention pending the Archbishop's confirmation; two guards move to enforce.
+
+*Passtext:* "I will report that the destination is a neutral archive that explicitly disclaims adjudication of the letter's claims." He steps aside. "The Archbishop will follow up in writing."
+
+*Combattext:* Two household guards, AC 13 HP 20 each — they enforce by restraint, not violence; they stop when the situation is clearly beyond their instructions.
+
+*The Prester John Letter · past the chapter gate, on the Rhineland road east*
+
+---
+
+### Act III — Regensburg, Near the Archive Intake Office (RGS)
+
+A Franciscan friar, Fra Bernardo di Brescia, has been waiting at the Regensburg intake office for two days. He has a counter-claim: the letter is a forgery produced at the papal court in the 1160s to create diplomatic pressure on Emperor Manuel Comnenus of Byzantium; the forgery has been known to scholars since the 1240s; a forged letter cannot be "authenticated" and should be destroyed as a harmful deception.
+
+*The Prester John Letter · in satchel · in front of the Regensburg intake with a friar who is right about the scholarly consensus and wrong about what follows from it*
+
+**Skill Check — History DC 12:** The scholarly consensus that the letter was produced at or near the papal court in the 1160s does not make it a forgery in the archival sense — it makes it an identified political document of known origin; a "forgery" of a letter from a king who does not exist is a document of a different kind entirely; it is the original of itself; the archive receives it as a genuine 12th-century political document whose author and intended effect are matters of ongoing scholarly debate; no claim about Prester John's existence is made. Pass: Fra Bernardo considers. "You are distinguishing between the letter being false about Prester John and the letter being false as a historical document." He nods slowly. "Those are different things." He steps back. Fail: He files an authenticity challenge notation; the archive intake will require a senior review; Sweelinck will clear it in two hours.
+
+*Passtext:* "Those are different things." He steps back. "The archive will not adjudicate. That's the argument." He writes a brief note for his own record. "I'll cite this framing in my refutation."
+
+*Failtext:* Senior review required at intake. Two hours; Sweelinck clears it.
+
+*The Prester John Letter · continuing to Weimar*
+
+---
+
+### Act IV — Road Between Regensburg and Weimar, Forest Crossing (RGS to WM road)
+
+A Lithuanian fur trader named Mikolas is traveling the same road. He has heard of Prester John from a merchant in Vilnius — the great Christian king in the East who will come to help drive back the Mongols. He has seen the satchel. He has guessed, from the friar outside Regensburg and the fighters at the chapter house, that something significant is inside. He does not believe Prester John exists but he wants to know what the letter says. He walks alongside, persistent, for a mile.
+
+*The Prester John Letter · in satchel · on the forest road with a fur trader who asks questions in straightforward, non-threatening fashion and will not stop*
+
+**Skill Check — Persuasion DC 11:** Tell Mikolas what the letter says — without confirming Prester John exists, without denying it. The letter describes a kingdom of 72 kings, where rivers run with jewels, no snake bites, no earthquakes, no poor people, and twelve archbishops wait on him at table. Describe it as a 12th-century political letter, tell what it says, let him draw conclusions. Pass: He listens to the full description and says: "That is not a real place." He pauses. "But that is a real letter." He turns off the road toward his own destination. Fail: He follows to the next town asking follow-up questions; they are not hostile but they take two hours.
+
+*Passtext:* "That is not a real place." A pause. "But that is a real letter." He peels off at the next road junction, satisfied.
+
+*Failtext:* Two hours of questions at a wayside inn, all of them interesting. He concludes the same thing.
+
+*The Prester John Letter · on the last road to Weimar*
+
+---
+
+### Act V — Weimar Archive District (WM)
+
+Archivus Sweelinck reads the letter carefully. He reads it again. He sets it down.
+
+"Who wrote it?" he asks.
+
+The Fighter says: scholars believe it was written at or near the papal court in the 1160s, possibly to pressure Byzantium. It was sent — there are records of the Emperor receiving a letter from a Prester John. Whether the Emperor wrote back is unknown.
+
+"And Prester John?"
+
+*The Prester John Letter · on the intake desk, vellum bright under the lamp · Sweelinck with his pen not yet raised*
+
+**Skill Check — History DC 11:** Frame the category precisely: the letter's value is as a primary document of 12th-century political imagination — whoever wrote it, whatever their intent, the document records what a significant political actor in the 1160s believed would be credible to a Byzantine emperor; that is historical evidence about the 1160s, not about Prester John. Pass: New archive category: Epistolary Records — Documents of Uncertain Attribution and Contested Referent; the letter is real; its subject's existence is not adjudicated here; the archive notes both the diplomatic structure and the scholarly debate. Fail: Filed under "Prester John documents — political correspondence, 12th century, authenticity disputed."
+
+*Passtext:* Sweelinck writes: "Epistolary Records — Documents of Uncertain Attribution and Contested Referent. The document is a primary source for 12th-century political imagination and diplomatic method. Its claims about an Eastern Christian kingdom are not adjudicated by this archive. The question remains open because the evidence for its answer is not in this letter." He looks at the seal. "File it next to the Mandeville chapter. They were in correspondence about the same man."
+
+*Failtext:* Filed under Prester John correspondence, disputed authenticity. Accurate but without the methodological framing.
+
+**Take item:** Prester John Letter
+**Grant item:** Prester John Letter Archive Record
+
+```json
+{
+  "quest_id": "BEY-04",
+  "title": "The Prester John Letter",
+  "cycle": 4,
+  "book": "Mandeville's Travels (attr. Sir John Mandeville, c. 1357) — Chapter XXIX: the Letter of Prester John; the 12th-century original",
+  "token": "Prester John Letter",
+  "route": ["MGZ", "RGS", "WM"],
+  "theme": "The document that is evidence for what it isn't — the letter is real and genuinely dated; it is not evidence that Prester John exists; the archive receives it as a primary historical document while explicitly declining to resolve the question it was written to answer",
+  "archive_category": "Epistolary Records — Documents of Uncertain Attribution and Contested Referent",
+  "new_nodes": [
+    {
+      "code": "MGZ",
+      "name": "Mainz Chapter Archive District",
+      "description": "The Cathedral Chapter's document vault under the chapter house, Mainz, 1367: stone walls, cedar chests, crusade-era correspondence from Arabic and Greek sources; the smell of old wax; Herr Dietrich Schreiber's desk near the false panel he discovered twenty years ago"
+    }
+  ],
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "MGZ",
+      "type": "skill_check",
+      "activateNode": "MGZ",
+      "scene": "Herr Dietrich Schreiber in the Mainz chapter archive. He found the letter behind a false panel twenty years ago. 'The letter is real. Whether the man who wrote it is real is a different question.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Confirm the 12th-century dating by analyzing the diplomatic formula: the intitulatio, arenga, dispositio, and corroboratio all match the papal chancellery style of the 1160s–1180s.",
+        "failText": "Consistent with the period; dating confirmed but diplomatic analysis incomplete.",
+        "passText": "The intitulatio is in the ablative absolute form of the 1160s–1180s. Dietrich: 'I knew what era it was. I wanted to know if you knew.'"
+      },
+      "grantItem": "Prester John Letter",
+      "checkPassFlag": "bey04Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "MGZ",
+      "type": "hybrid",
+      "activateNode": "MGZ",
+      "scene": "Two Archbishop's household officers at the chapter house gate. The Archbishop wants the letter retained: an authenticated claim about Prester John's territories is a political instrument regardless of intent.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "prompt": "Argue that Weimar's intake will explicitly note the disputed claims and decline to adjudicate; a neutral archive that disclaims adjudication removes the document from political instrumentalization more effectively than retention.",
+        "failText": "Retention insisted upon; two guards enforce. Combat: 2 household guards AC 13 HP 20 each.",
+        "passText": "'I will report that the destination explicitly disclaims adjudication of the letter's claims.' He steps aside."
+      },
+      "combat": {
+        "enemies": [{"name": "Archbishop's Household Guard", "ac": 13, "hp": 20, "count": 2}],
+        "trigger": "Persuasion check failed"
+      },
+      "checkPassFlag": "bey04Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "RGS",
+      "type": "skill_check",
+      "activateNode": "RGS",
+      "scene": "Fra Bernardo di Brescia at the Regensburg intake, arguing the letter is a known forgery from the 1160s papal court and should be destroyed as a harmful deception.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Distinguish between the letter being false about Prester John's existence and the letter being false as a historical document; a letter about a nonexistent king is its own category of authentic document; the archive makes no claim about the king.",
+        "failText": "Authenticity challenge notation filed; senior review required; Sweelinck clears it in two hours.",
+        "passText": "Fra Bernardo: 'Those are different things.' He steps back. 'I'll cite this framing in my refutation.'"
+      },
+      "checkPassFlag": "bey04Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "RGS",
+      "type": "skill_check",
+      "activateNode": "RGS",
+      "scene": "Lithuanian fur trader Mikolas walks alongside on the forest road for a mile, asking about the letter's contents. He has heard of Prester John from Vilnius merchants. He will not stop.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 11,
+        "prompt": "Describe what the letter actually says — 72 kings, rivers of jewels, no snakes, no poor — as a 12th-century political document, without confirming or denying Prester John's existence; let him conclude.",
+        "failText": "Two hours of questions at a wayside inn; he concludes the same thing eventually.",
+        "passText": "'That is not a real place.' A pause. 'But that is a real letter.' He peels off at the junction."
+      },
+      "checkPassFlag": "bey04Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck reads the letter twice. 'Who wrote it?' He asks about Prester John. He has his pen ready but no category written.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 11,
+        "prompt": "Frame the category: the letter is primary evidence for 12th-century political imagination; whoever wrote it recorded what a significant actor believed would be credible to a Byzantine emperor; that is historical evidence about the 1160s, not about Prester John.",
+        "failText": "Filed under Prester John correspondence, disputed authenticity.",
+        "passText": "Sweelinck writes: 'Epistolary Records — Documents of Uncertain Attribution and Contested Referent. Its claims about an Eastern Christian kingdom are not adjudicated here. File it next to the Mandeville chapter. They were in correspondence about the same man.'"
+      },
+      "takeItem": "Prester John Letter",
+      "grantItem": "Prester John Letter Archive Record",
+      "checkPassFlag": "bey04Act5Passed",
+      "activateMissionBit": "beyPresterJohnLetterComplete"
+    }
+  ]
+}
+```
+
+---
+
+*BEY-04 complete. 2026-06-02.*
+
+---
+
+## BEY-05 — The Cotton-Lamb Record (Cycle 5)
+
+**Source:** Mandeville's Travels — Chapter XXIX gives the Vegetable Lamb of Tartary: a melon that grows a lamb inside, or a lamb growing on a plant; a persistent wonder of Eastern natural history; Mandeville endorses it
+
+**Theme declared:** BEY themes catalogued — sober draft, politically radioactive document, source annotated by derivative, document that is evidence for what it isn't. New theme for this vignette: **the administrative debunking — the earliest known disproof of a legend was written by a trade accountant who had no interest in disproof; he was explaining a line item; the invoice note that says "cotton wool" do not come from actual lambs is more powerful as evidence than any philosopher's refutation because it was written by a man with nothing to argue.**
+
+*The thing · a Genoese trade account book from Caffa (Crimea), 1330s · a marginal note on folio 7 explaining that "cotton wool" in the Tartar trade is grown on plants, not cut from the backs of lamb-shaped vegetables · in the Genoese colony archive, Caffa*
+
+**New nodes proposed:** CAF (Caffa — Genoese Colony Archive, Crimea — the Genoese trading colony's record house at Kaffa, 1367: wooden shelves protected by cedar oil from the Black Sea salt damp; the smell of sea and raw wool; the colony's notary archive covering four decades of Black Sea trade; under nominal Mongol authority, effectively autonomous)
+
+**TOKEN:** Caffa Trade Account — ACCEPT Act I → CARRY Acts II–IV → RETURN Act V → RECORD
+
+---
+
+### Act I — Caffa, Genoese Colony Record House (CAF)
+
+Notaio Francesco da Rapallo has been the colony's notary for twelve years. He found the marginal note while auditing old accounts last winter. It reads, in the left margin beside a line item for "cotton wool, 40 bales, from Tartar interior merchant": *"Nota bene: this fiber is produced by a shrub of the genus Gossypium and is not the fleece of any animal; travelers who report the existence of 'vegetable lambs' in these territories have confused the seedpod of the cotton plant with a lamb's body; no such animal exists; the cotton merchant Orkhon Tegshi confirms this; see also folio 23 for Orkhon's deposition."*
+
+*The Caffa Trade Account · a bound ledger, 1332–1337 · folio 7 margin note in the original notary's careful hand · in the colony record house*
+
+"It's a footnote to an inventory," Francesco says. "But it's the first time anyone wrote it down in a way that isn't disputable."
+
+**Skill Check — Investigation DC 12:** Turn to folio 23 — find Orkhon Tegshi's deposition: a Tatar merchant's sworn statement that the cotton plant is a standard crop of his territory, sold by the bundle, grown by field workers, harvested by hand; he has never seen a lamb grow from a melon. The deposition is dated 1335. The Mandeville passage endorsing vegetable lambs was written in 1357. Orkhon's statement predates the wonder by 22 years. Pass: The deposition is dated correctly; the debunking predates the wonder. Fail: The deposition is found but undated; the temporal precedence is likely but not confirmed.
+
+*Passtext:* 1335. Mandeville writes 1357. Orkhon Tegshi was working at the source of the legend twenty-two years before Mandeville repeated it as fact.
+
+*Failtext:* The deposition is found; the dating is partially legible.
+
+**Grant item:** Caffa Trade Account (bound ledger, 1332–1337, folio 7 margin note, folio 23 Orkhon Tegshi deposition)
+
+---
+
+### Act II — Caffa Harbor, Ship Loading Area (CAF)
+
+The colony's current notary-general, Ser Benedetto Savona, has decided the account book is colony property and cannot be removed without a formal release order from Genoa. The release order would take six months by sea. He is not hostile — he is procedurally correct. He has logged the Fighter's request and is waiting for the response.
+
+*The Caffa Trade Account · in satchel · at the Caffa harbor with a notary-general who is procedurally correct*
+
+**Hybrid — Persuasion DC 12 / Combat fallback:**
+Persuasion DC 12: The account book is 30 years old and covers a period that predates Ser Benedetto's appointment; it is not current operating documentation; it is historical archive material; historical archive material more than 25 years old is typically subject to scholarly transfer protocols rather than colony-property restrictions; offer to produce a certified copy for the colony's continuing records. Pass: He checks the colony's operating charter. The 25-year threshold for historical material is there. He writes the transfer notation. Fail: He insists on the Genoa release procedure; two colony guards are called to enforce the archive's integrity.
+
+*Passtext:* "The 25-year threshold applies." He writes the transfer notation. "File the certified-copy request through the archive intake."
+
+*Combattext:* Two colony guards, AC 11 HP 14 each — they enforce procedural integrity, not combat; they stop when the legal argument is clearly made.
+
+*The Caffa Trade Account · transfer notation applied, certified-copy commitment made · heading to the ship*
+
+---
+
+### Act III — Constantinople, Genoese Quarter Records House (CON)
+
+The Genoese quarter in Constantinople has received a notice from Caffa requesting the return of the account book — the notary-general changed his mind about the transfer notation after the Fighter's ship left. The Constantinople quarter's record-keeper, Ser Martino di Carmona, has a copy of the notice and instructions to detain any books from Caffa matching the description.
+
+*The Caffa Trade Account · in satchel · in the Genoese quarter Constantinople with a record-keeper who has a detention notice*
+
+**Skill Check — Deception DC 12:** The notice describes "a bound ledger, commercial accounts, Caffa, 1332–37." This ledger is described in the Fighter's own documentation as "a historical archive transfer, pre-25-year material, scholarly access protocol, destination: Weimar neutral archive." These are different categories — the Caffa notice covers commercial accounts; the transfer documentation covers historical archive material. The description doesn't match. Pass: Ser Martino looks at both descriptions. The categories don't match. He lets the ledger through with a notation that the Caffa request was not satisfied by the materials presented. Fail: He holds the ledger for verification; the verification goes back to Caffa by fast courier; Caffa's response in 10 days confirms the transfer was valid; the ledger releases.
+
+*Passtext:* "The categories don't match." He logs the non-match. "I'll notify Caffa that the requested material was not present here."
+
+*Failtext:* Ten-day hold. Caffa confirms. Ledger released.
+
+*The Caffa Trade Account · past the Genoese Constantinople quarter, on the overland route to Weimar*
+
+---
+
+### Act IV — Road West of Belgrade, Spring Mudflood (CON to WM road)
+
+The Drava river road is flooded. The only passable route goes through a mountain monastery whose abbot charges a crossing fee for use of the monastery's mule track and pack animals. His fee is not money. He wants to know if the Fighter has brought anything interesting from the East. He has been in this monastery since 1341 and finds intellectual isolation more tiring than he admits.
+
+*The Caffa Trade Account · in satchel, on the monastery mule track · a Benedictine abbot blocking the path with a reasonable request and genuine curiosity*
+
+**Skill Check — History DC 11:** Tell the abbot about the cotton-lamb debunking — describe what the Vegetable Lamb of Tartary is supposed to look like, describe what Orkhon Tegshi said about cotton plants, describe the 22-year gap between the sworn deposition and Mandeville's publication of the wonder. The abbot is educated enough to see the implication immediately: the most powerful refutation of a legend is a quiet trade invoice written by someone who wasn't trying to refute anything. Pass: The abbot laughs. He says: "God's most effective arguments are made by people who didn't know they were making them." He leads the way along the mule track. Fail: He asks follow-up questions about other Eastern wonders; two hours but no obstacle.
+
+*Passtext:* "The most effective arguments are made by people who didn't know they were making them." He leads the way.
+
+*Failtext:* Two engaging hours about dog-headed men and diamond valleys. The track clears.
+
+*The Caffa Trade Account · past the monastery, on the last road to Weimar*
+
+---
+
+### Act V — Weimar Archive District (WM)
+
+Archivus Sweelinck reads folio 7. He reads the margin note. He reads folio 23, Orkhon Tegshi's deposition.
+
+He closes the ledger. He opens it again and reads the margin note.
+
+"He was auditing wool prices," Sweelinck says. "He was not thinking about wonders. He was thinking about whether he'd paid the right amount for cotton." He opens his hands. "And then he wrote the correct sentence."
+
+*The Caffa Trade Account · on the intake desk, open to folio 7 · Sweelinck with both folios visible*
+
+**Skill Check — History DC 11:** Establish the significance: the margin note is the earliest extant refutation of the Vegetable Lamb legend; it predates all known philosophical or natural-historical treatments of the question by at least fifteen years; its authority is not its method but its source — an accountant checking an invoice in a colony on the Black Sea, in 1332 or 1333, had no reason to argue about wonders and every reason to record correct trade information; the note's indifference to its own importance is its primary credential. Pass: New archive category: Commercial Records — Inadvertent Natural Philosophy; records in which a commercial judgment resolves a natural-historical question more conclusively than any systematic inquiry; the debunker had no thesis. Fail: Filed under Trade Records — Caffa 1330s, with a notation about the Vegetable Lamb.
+
+*Passtext:* "Commercial Records — Inadvertent Natural Philosophy. He was not a natural philosopher. He was not a theologian. He was an accountant who had spoken with the cotton merchant and needed to record why the wool-price calculation was different for this line item. The debunking is a byproduct of doing his job. That makes it the most reliable record in this building on this question." He looks at the deposition. "File Orkhon's statement as supporting documentation. He was also just doing his job."
+
+*Failtext:* Filed under trade records; margin note noted as historically relevant.
+
+**Take item:** Caffa Trade Account
+**Grant item:** Cotton-Lamb Archive Record
+
+```json
+{
+  "quest_id": "BEY-05",
+  "title": "The Cotton-Lamb Record",
+  "cycle": 5,
+  "book": "Mandeville's Travels (attr. Sir John Mandeville, c. 1357) — The Vegetable Lamb of Tartary; debunked by a trade accountant in 1332",
+  "token": "Caffa Trade Account",
+  "route": ["CAF", "CON", "WM"],
+  "theme": "The administrative debunking — the earliest disproof of a legend was written by an accountant explaining a line item; the invoice note is more powerful than any philosopher's refutation because it was written by someone with nothing to argue",
+  "archive_category": "Commercial Records — Inadvertent Natural Philosophy",
+  "new_nodes": [
+    {
+      "code": "CAF",
+      "name": "Caffa Genoese Colony Archive",
+      "description": "The Genoese colony's record house at Kaffa, Crimea, 1367: wooden shelves protected by cedar oil from the Black Sea salt damp; notarial ledgers covering four decades of Black Sea trade; under nominal Mongol authority, effectively autonomous; the colony notary's desk near the north window; the smell of sea and raw wool"
+    }
+  ],
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "CAF",
+      "type": "skill_check",
+      "activateNode": "CAF",
+      "scene": "Notaio Francesco da Rapallo in the colony record house. Folio 7 margin note: cotton wool is from a shrub, not a lamb-plant; Orkhon Tegshi the Tatar cotton merchant confirms it. 'It's a footnote to an inventory. But it's the first time anyone wrote it down in a way that isn't disputable.'",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 12,
+        "prompt": "Find folio 23 — Orkhon Tegshi's sworn deposition dated 1335, confirming cotton is a standard crop, harvested by hand; the deposition predates Mandeville's endorsement of the vegetable lamb legend by 22 years.",
+        "failText": "The deposition is found; dating is partially legible; temporal precedence likely but not confirmed.",
+        "passText": "1335. Mandeville writes 1357. Orkhon was debunking the wonder at its source twenty-two years before Mandeville repeated it as fact."
+      },
+      "grantItem": "Caffa Trade Account",
+      "checkPassFlag": "bey05Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "CAF",
+      "type": "hybrid",
+      "activateNode": "CAF",
+      "scene": "Notary-general Ser Benedetto Savona at the harbor with a procedural block: colony property cannot be removed without a Genoa release order, which takes six months by sea.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "prompt": "Cite the colony's operating charter 25-year threshold for historical archive material: the ledger is 30 years old and covered by scholarly transfer protocols, not colony-property restrictions.",
+        "failText": "He insists on Genoa release procedure; two guards called. Combat: 2 colony guards AC 11 HP 14 each.",
+        "passText": "'The 25-year threshold applies.' He writes the transfer notation and the certified-copy commitment."
+      },
+      "combat": {
+        "enemies": [{"name": "Colony Guard", "ac": 11, "hp": 14, "count": 2}],
+        "trigger": "Persuasion check failed"
+      },
+      "checkPassFlag": "bey05Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "CON",
+      "type": "skill_check",
+      "activateNode": "CON",
+      "scene": "Genoese quarter record-keeper Ser Martino di Carmona in Constantinople with a detention notice from Caffa for 'a bound ledger, commercial accounts, 1332–37.' The Fighter's documentation describes it as 'historical archive transfer, pre-25-year material, scholarly access protocol.'",
+      "skillCheck": {
+        "skill": "Deception",
+        "dc": 12,
+        "prompt": "The Caffa notice covers commercial accounts; the transfer documentation covers historical archive material; these are different categories; the notice doesn't match the materials present.",
+        "failText": "Ten-day hold for Caffa verification; Caffa confirms the transfer; ledger released.",
+        "passText": "The categories don't match. 'I'll notify Caffa that the requested material was not present here.'"
+      },
+      "checkPassFlag": "bey05Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "CON",
+      "type": "skill_check",
+      "activateNode": "CON",
+      "scene": "Benedictine abbot at a flooded-road monastery, charging a crossing fee in the form of an interesting story from the East. He has been here since 1341 and finds intellectual isolation tiring.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 11,
+        "prompt": "Describe the cotton-lamb debunking: what the Vegetable Lamb is supposed to look like; what Orkhon said about cotton plants; the 22-year gap between the sworn deposition and Mandeville's wonder; the power of the indifferent refutation.",
+        "failText": "Two hours of questions about Eastern wonders; no obstacle.",
+        "passText": "'God's most effective arguments are made by people who didn't know they were making them.' He leads the way along the mule track."
+      },
+      "checkPassFlag": "bey05Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck reads the margin note twice. 'He was auditing wool prices. Not thinking about wonders. Thinking about whether he'd paid the right amount for cotton. And then he wrote the correct sentence.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 11,
+        "prompt": "Establish that the note's authority comes from the annotator's indifference: an accountant checking an invoice had no reason to argue about wonders and every reason to record correct trade information; the note predates all known natural-historical treatments of the Vegetable Lamb.",
+        "failText": "Filed under trade records; margin note noted as historically relevant.",
+        "passText": "Sweelinck writes: 'Commercial Records — Inadvertent Natural Philosophy. He was not a natural philosopher. He was an accountant who needed to record why the wool-price calculation differed. The debunking is a byproduct of doing his job. That makes it the most reliable record in this building on this question.'"
+      },
+      "takeItem": "Caffa Trade Account",
+      "grantItem": "Cotton-Lamb Archive Record",
+      "checkPassFlag": "bey05Act5Passed",
+      "activateMissionBit": "beyCottonLambComplete"
+    }
+  ]
+}
+```
+
+---
+
+*BEY-05 complete. 2026-06-02.*
+
+---
+
+## BEY-06 — Boldensele's Original (Cycle 6)
+
+**Source:** Mandeville's Travels — William of Boldensele's account of Egypt and the Holy Land (c. 1336–1337) is one of Mandeville's two primary sources for the Jerusalem and Egypt sections; Mandeville borrowed extensively without attribution; after Mandeville's circulation from 1357, Boldensele's text became famous only as the source Mandeville used
+
+**Theme declared:** BEY themes catalogued — the sober draft, the politically radioactive document, the source annotated by derivative, the document that is evidence for what it isn't, the administrative debunking. New theme for this vignette: **the original that was demoted by its own derivative — before Mandeville, Boldensele's account was read as primary travel evidence; after Mandeville, it was read only as the source Mandeville used; the original manuscript has marginalia the copies don't; the archive restores priority to the source by receiving the original before the copies were made.**
+
+*The thing · the original Boldensele manuscript, c. 1336–1337 · with original marginal notes not in any subsequent copy · in a Rhineland Dominican house library*
+
+**New nodes proposed:** STR (Strasbourg Dominican Archive District — the Dominicans' main library in Strasbourg, 1367: the city at the Rhine bend, Dominican library rebuilt after the 1349 plague; shelves of Rhineland chronicles, the smell of fresh bookbinding and river damp; Brother Heinrich's desk at the center where the light is best)
+
+**TOKEN:** Boldensele Original Manuscript — ACCEPT Act I → CARRY Acts II–IV → RETURN Act V → RECORD
+
+---
+
+### Act I — Strasbourg, Dominican Library (STR)
+
+Brother Heinrich is a Dominican librarian in his forties, careful and precise. He has known what the Boldensele manuscript was since 1360, when the first copies of Mandeville's Travels reached Strasbourg and he recognized passage after passage. He has been reading both texts in parallel for three years.
+
+*The Boldensele Original Manuscript · compact quarto, a traveling writer's format · original marginal notes in Boldensele's own hand · with a piece of string marking the Jerusalem chapter*
+
+"The copies leave out his marginal notes," Brother Heinrich says. "All of them. Not a single copy preserves the margins. I've checked." He opens to the marked page. "He wrote something at the margin of the Temple description. Look." The note reads: *Audiui ab uno Saraceno custode qui dixit: hoc proprium templi est, ut omnes qui ueniunt fideles sint dum intus sunt.* [I heard from a Saracen custodian who said: it is the property of this temple that all who enter are faithful while they are within.]
+
+**Skill Check — Investigation DC 11:** The margin note is in a slightly smaller, faster hand than the main text — written during the visit, not added later in composition. The sentence is not in any known copy of Boldensele. It is not in Mandeville's borrowing from Boldensele. It was dropped before the first copy was made, probably because a copyist couldn't read the fast hand. Pass: The note is confirmed as Boldensele's own visit-time annotation — something he heard and recorded on the spot. Fail: The note is clearly original; the timing is probable but not confirmed.
+
+*Passtext:* Smaller, faster hand. Written at the Temple, not in the scriptorium. This sentence never left Jerusalem on any parchment except this one.
+
+*Failtext:* Original to the manuscript; timing probable.
+
+**Grant item:** Boldensele Original Manuscript (compact quarto, string at the Jerusalem chapter, the Saracen custodian's sentence in the margin)
+
+---
+
+### Act II — Strasbourg Bookseller Quarter Near the Minster (STR)
+
+Meister Hans Waldmann prints no books yet — printing is not quite here in 1367 — but he runs a scriptorium that produces manuscript copies for the German book trade. He wants the Boldensele original because a copy of the original, with the margins intact, would be more commercially valuable than a copy of a copy. He has a buyer in Basel who specifically asked for Boldensele with original marginalia.
+
+*The Boldensele Original Manuscript · in satchel · in the Strasbourg bookseller quarter with a scriptorium owner who has a buyer lined up*
+
+**Skill Check — Persuasion DC 12:** The Basel buyer wants original marginalia because it's rare — but original marginalia from a private copy is not the same as the original manuscript on which the whole Boldensele tradition rests; the Basel buyer will be receiving a copy of original marginalia, which is already what all copies would have if Weimar's intake produces a certified transcription of the margins; offer Waldmann's scriptorium first rights to the margin transcription once the original is accessioned. Pass: Waldmann recognizes that his Basel buyer wants content, not the specific object; a certified Weimar transcription is content; he agrees to the first-rights arrangement. Fail: He is not persuaded; he does not pursue physically.
+
+*Passtext:* "First rights to the margin transcription." He writes it down. "Send the certification to my Basel contact directly."
+
+*Failtext:* He argues briefly and concedes. The manuscript continues.
+
+*The Boldensele Original Manuscript · past the bookseller district, on the Rhineland road east to Weimar*
+
+---
+
+### Act III — Road East of Strasbourg, River Ford Near Offenburg (STR to WM road)
+
+The road east crosses a tributary of the Rhine that is running high. The only ford is managed by a toll-lord named Herr Bernhard Kempf, a retired minor knight who has been running this ford for fifteen years. He wants information. His toll is standard coin, which the Fighter pays. Then he asks about the satchel.
+
+"I have a man who copies books," Bernhard says. "He asks me to look out for manuscripts coming through. French travel accounts, pilgrim guides — he has buyers in Frankfurt. You have a book in there that's not mine to take. But I'd appreciate knowing what it is."
+
+*The Boldensele Original Manuscript · in satchel, ford fee paid · standing at the east bank with a toll-lord who has a curious friend in Frankfurt*
+
+**Skill Check — Insight DC 11:** Read whether Bernhard is working for the same buyer as Waldmann's Basel contact — the Frankfurt buyer who collects travel manuscripts. The details match: French account, pilgrim guide, marginalia. This is the same information network Waldmann was feeding. Pass: Tell Bernhard the manuscript is destined for a neutral archive and that the Basel/Frankfurt buyer can apply for copying access through the archive; offer to leave the archive's intake address. Bernhard is satisfied. Fail: He asks a second question about the route — where in Regensburg — which identifies an ambush waiting on the direct road; the Fighter can take the alternate route and avoid it.
+
+*Passtext:* He is satisfied. He says: "I'll tell him the archive has it. He'll apply." He doesn't seem disappointed — he gets his information regardless.
+
+*Failtext:* The second question identifies an ambush. The alternate route adds half a day.
+
+*The Boldensele Original Manuscript · past the ford, on the Rhineland-to-Weimar direct road*
+
+---
+
+### Act IV — Road West of Regensburg, Roadside Inn (STR to WM road)
+
+The Basel buyer — whose name is Ser Gualterio di Fano, a Florentine living in Basel who collects travel manuscripts — has sent a man to retrieve the original before it reaches Weimar. The man is at the inn, polite, with a letter from Ser Gualterio offering fair market value.
+
+"He would pay well," the man says. "He understands the archive purpose. He would permit scholarly access." He has the letter open on the table.
+
+*The Boldensele Original Manuscript · in satchel · at a roadside inn with a collector's representative and an open letter*
+
+**Combat — 2 opponents, AC 12 HP 16 each (reluctant):** If refused, the representative has two companions outside. They are not professionals; they are book-trade men with sticks who are embarrassed by the situation. They will not pursue past the inn door if beaten back.
+
+Pass: The representative steps aside. He says, sincerely: "The archive is the right place. I'll tell Ser Gualterio he can apply for access." He picks up his letter. Fail: They pursue briefly and give up.
+
+*Passtext:* He closes the letter. "I'll tell Ser Gualterio he can apply for access." He leaves first.
+
+*The Boldensele Original Manuscript · intact, on the last road to Weimar*
+
+---
+
+### Act V — Weimar Archive District (WM)
+
+Archivus Sweelinck opens the manuscript to the marked page. He reads the main text. He reads the margin. He reads the margin note again.
+
+"He heard this from a Saracen custodian," Sweelinck says. "The Temple makes everyone faithful who enters." He sets it down. "No copy has this. Not one."
+
+*The Boldensele Original Manuscript · open on the intake desk, the margin note visible · Sweelinck reading it a third time*
+
+**Skill Check — History DC 12:** Establish the archive category: the original predates all copies and has marginalia no copy preserves; it is the source of the whole Boldensele tradition before that tradition was demoted to footnote-status by Mandeville; receiving the original is not a recovery of something lost but a restoration of priority to a text that was obscured by its own influence. Pass: New archive category: Manuscript Source Records — Pre-Derivative Originals; manuscripts holding material not in any subsequent copy; the Boldensele original restores the author's visit-time annotations to the tradition. Fail: Filed under Boldensele's Travels — original manuscript, marginalia intact, with notation about Mandeville derivative.
+
+*Passtext:* Sweelinck writes: "Manuscript Source Records — Pre-Derivative Originals. The original holds what no copy preserved. The margin note is its own primary source — a sentence heard at the Temple, written before the Temple was left, and dropped by the first copyist who couldn't read a fast hand in dim light." He looks at the string marking the Jerusalem chapter. "The original restores the author to the tradition that obscured him."
+
+*Failtext:* Filed under Boldensele's Travels, original, with Mandeville derivative notation. The margins are preserved.
+
+**Take item:** Boldensele Original Manuscript
+**Grant item:** Boldensele Original Archive Record
+
+```json
+{
+  "quest_id": "BEY-06",
+  "title": "Boldensele's Original",
+  "cycle": 6,
+  "book": "Mandeville's Travels (attr. Sir John Mandeville, c. 1357) — William of Boldensele's account (c. 1336) as primary source; the original predating all copies",
+  "token": "Boldensele Original Manuscript",
+  "route": ["STR", "WM"],
+  "theme": "The original that was demoted by its own derivative — Boldensele was primary travel evidence before Mandeville; after Mandeville, only the source used; the original has marginalia no copy preserves; the archive restores priority to the source",
+  "archive_category": "Manuscript Source Records — Pre-Derivative Originals",
+  "new_nodes": [
+    {
+      "code": "STR",
+      "name": "Strasbourg Dominican Archive District",
+      "description": "The Dominican library in Strasbourg, 1367: rebuilt after the 1349 plague; shelves of Rhineland chronicles at the Rhine bend; the smell of fresh bookbinding and river damp; Brother Heinrich's desk in the center where the light is best; the Dominican scriptorium producing copies for the German book trade"
+    }
+  ],
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "STR",
+      "type": "skill_check",
+      "activateNode": "STR",
+      "scene": "Brother Heinrich in the Strasbourg Dominican library. He has been reading Boldensele and Mandeville in parallel since 1360. The original has a margin note no copy preserves: 'I heard from a Saracen custodian who said: it is the property of this temple that all who enter are faithful while they are within.'",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 11,
+        "prompt": "Confirm the margin note is in a smaller, faster hand than the main text — written during the visit at the Temple, not added in composition; this sentence never left Jerusalem on any other parchment.",
+        "failText": "Original to the manuscript; visit-time timing probable but not confirmed.",
+        "passText": "Smaller, faster hand. Written at the Temple. This sentence never left Jerusalem on any parchment except this one."
+      },
+      "grantItem": "Boldensele Original Manuscript",
+      "checkPassFlag": "bey06Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "STR",
+      "type": "skill_check",
+      "activateNode": "STR",
+      "scene": "Scriptorium owner Meister Hans Waldmann has a Basel buyer who specifically wants Boldensele with original marginalia. A copy of the original with margins would be commercially valuable.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "prompt": "Offer first rights to the certified margin transcription once the original is accessioned at Weimar; the Basel buyer wants content, not the specific object; a Weimar-certified transcription is that content.",
+        "failText": "He argues briefly and concedes without pursuit.",
+        "passText": "'First rights to the margin transcription. Send the certification to my Basel contact directly.'"
+      },
+      "checkPassFlag": "bey06Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "STR",
+      "type": "skill_check",
+      "activateNode": "STR",
+      "scene": "Toll-lord Herr Bernhard Kempf at a Rhine tributary ford east of Strasbourg. He has a Frankfurt buyer who collects French travel manuscripts. He asks what's in the satchel.",
+      "skillCheck": {
+        "skill": "Insight",
+        "dc": 11,
+        "prompt": "Identify that Bernhard's Frankfurt buyer is the same network as Waldmann's Basel buyer; offer the archive intake address so the buyer can apply for copying access — Bernhard is satisfied with the information regardless of outcome.",
+        "failText": "His follow-up question about the Regensburg route identifies an ambush; take the alternate road, add half a day.",
+        "passText": "'I'll tell him the archive has it. He'll apply.' He doesn't seem disappointed — he has his information."
+      },
+      "checkPassFlag": "bey06Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "STR",
+      "type": "combat",
+      "activateNode": "STR",
+      "scene": "Collector's representative Ser Gualterio di Fano's man at a roadside inn with a fair-market-value letter open on the table. Two companions outside. They are book-trade men, not professionals.",
+      "combat": {
+        "enemies": [{"name": "Collector's Book-Trade Man", "ac": 12, "hp": 16, "count": 2}],
+        "breakoffCondition": "beaten back at inn door",
+        "failText": "They pursue briefly and give up outside.",
+        "passText": "The representative closes the letter. 'The archive is the right place. I'll tell Ser Gualterio he can apply for access.' He leaves first."
+      },
+      "checkPassFlag": "bey06Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck reads the margin note three times. 'He heard this from a Saracen custodian. The Temple makes everyone faithful who enters. No copy has this. Not one.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Frame the category as restoration of priority: the original predates all copies and holds material no copy preserves; receiving it is not recovery of something lost but restoration of the author to the tradition that obscured him.",
+        "failText": "Filed under Boldensele's Travels, original, with Mandeville derivative notation. Margins preserved.",
+        "passText": "Sweelinck writes: 'Manuscript Source Records — Pre-Derivative Originals. The original holds what no copy preserved. The margin note is its own primary source. The original restores the author to the tradition that obscured him.'"
+      },
+      "takeItem": "Boldensele Original Manuscript",
+      "grantItem": "Boldensele Original Archive Record",
+      "checkPassFlag": "bey06Act5Passed",
+      "activateMissionBit": "beyBoldenseleOriginalComplete"
+    }
+  ]
+}
+```
+
+---
+
+*BEY-06 complete. 2026-06-02.*
+
+---
+
+## BEY-07 — The Missing Chapter (Cycle 7)
+
+**Source:** Mandeville's Travels — various Latin manuscripts contain minor variants; the claim of a "missing chapter" in one manuscript tradition points to passages that were removed before or during the main textual transmission
+
+**Theme declared:** BEY themes catalogued — sober draft, politically radioactive document, source annotated by derivative, document that is evidence for what it isn't, administrative debunking, original demoted by derivative. New theme for this vignette: **the chapter censored from all other copies — the missing chapter exists in one Latin manuscript; the conversation with a Jewish scholar must have been removed deliberately from all other copies; the removal is the proof of its significance; the archive receives the document with the understanding that the absence from other copies is itself a fact to be recorded.**
+
+*The thing · a Latin manuscript of Mandeville's Travels · with one additional chapter not found in any other known copy · a conversation with a Jewish scholar in Jerusalem about Old Testament geography of the Eastern routes · in a Bavarian Benedictine monastery archive*
+
+**New nodes proposed:** AUG (Augsburg Benedictine Archive District — the Benedictines' main scriptorium at Augsburg, 1367: a south German city on the Via Claudia Augusta; the scriptorium producing Bavarian chronicle copies; the smell of vellum and charcoal ink; the abbot's library with four locked cabinets for unusual acquisitions)
+
+**TOKEN:** Augsburg Latin Mandeville — ACCEPT Act I → CARRY Acts II–IV → RETURN Act V → RECORD
+
+---
+
+### Act I — Augsburg, Benedictine Abbey Library (AUG)
+
+Brother Christoph is the abbey's scriptorium master. He found the extra chapter while preparing a new copy of the Mandeville text — the chapter appears between the Jerusalem section and the Egypt section, as if it had always been there, but it is not in the text he was copying from. He compared three other copies. The chapter is not in any of them.
+
+The chapter: the traveler meets a Jewish scholar in Jerusalem, Shimon ben Elazar, who explains that the four rivers mentioned in Genesis as flowing from Paradise have been mapped by the rabbinical tradition — each river corresponds to a specific overland route east; the Paradise of Genesis is therefore a geographic claim, not only a theological one. Mandeville listens, asks questions, and at the end of the chapter writes: "And so I learned that the wise men of the Jews have mapped the ways I describe in this book, and have done so for longer than there have been Christian travelers to report them."
+
+*The Augsburg Latin Mandeville · compact Bavarian hand, mid-14th-century copy · the extra chapter in a slightly different ink but the same scribal hand · with Brother Christoph's three comparison notes tucked inside*
+
+**Skill Check — History DC 12:** Examine the extra chapter's Latin against the rest of the text — vocabulary, sentence construction, syntax. The chapter uses several Hebrew loanwords transliterated into Latin, which the rest of the text does not; it also uses a specific Augustinian form for the word "Paradise" that the rest of the text avoids. It may have been written from a different source or a different moment in the book's composition. Pass: The linguistic differences confirm the chapter was composed with a different source than the rest of the Jerusalem section — not interpolated but possibly drafted separately and later excluded. Fail: The chapter is clearly part of the manuscript; compositional details incomplete.
+
+*Passtext:* Hebrew loanwords in transliteration. The Augustinian "Paradise" form. This was written from a different conversation than the rest. Brother Christoph looks at the notation. "Someone removed it. Someone deliberate."
+
+*Failtext:* Original to this manuscript; the chapter is clearly authentic to the text's composition.
+
+**Grant item:** Augsburg Latin Mandeville (with the extra chapter intact, Brother Christoph's comparison notes inside, linguistic analysis notation)
+
+---
+
+### Act II — Augsburg, Abbey Gate, Prior's Receiving Office (AUG)
+
+The abbey's prior, Father Ulrich, has been told by the abbot about the extra chapter. He has a pastoral concern: a chapter in which a Christian traveler acknowledges that Jewish scholars have been mapping Paradise longer than Christians have been traveling there is theologically delicate. He does not want the manuscript leaving the abbey. He is not ordering suppression — he is requesting that a review be conducted before the manuscript travels.
+
+*The Augsburg Latin Mandeville · in satchel · in the prior's receiving office with a reasonable request for review*
+
+**Skill Check — Persuasion DC 13:** The review Father Ulrich is requesting is precisely what the Weimar archive conducts as part of its intake process: the manuscript will be examined by Archivus Sweelinck, who will document the chapter's content, its relationship to other manuscripts, and its theological implications; the prior's review concern is satisfied by the archival intake process, which produces a permanent documented record; the alternative — retaining the manuscript in the abbey — guarantees that the chapter remains unexamined and therefore unaddressed. Pass: Father Ulrich considers the framing. The intake process as review process is a reasonable argument. He writes a letter of release addressed to the Weimar archive. Fail: He calls the abbot; the abbot calls a senior theologian; the theological review takes four days; the review concludes the chapter is unusual but not heretical; the manuscript releases.
+
+*Passtext:* He writes the letter. "The archive will document what the review found." He seals it. "If there is a theological problem, the archive's record will be the evidence."
+
+*Failtext:* Four days. The chapter is unusual but not heretical. The manuscript releases with the theologian's notation.
+
+*The Augsburg Latin Mandeville · with the prior's release letter or the theologian's notation · heading to Regensburg*
+
+---
+
+### Act III — Regensburg, Near the Archive Intake (RGS)
+
+A Dominican inquisitor, Frater Johannes Eckhard, has received a report about the manuscript from Augsburg. His concern is more specific than the prior's: the chapter contains Mandeville attributing geographic knowledge of the Eastern routes to the rabbinical mapping tradition; in an era of active conversion missions to the East, a Christian travel narrative acknowledging Jewish geographic priority over Eastern routes is a potentially subversive document. He wants to examine the chapter before it leaves the diocese.
+
+*The Augsburg Latin Mandeville · in satchel · at the Regensburg archive approach with an inquisitor who has a specific concern*
+
+**Skill Check — Deception DC 13:** The manuscript is not a conversion mission document or a theological treatise — it is a travel narrative; the chapter is a traveler's record of a conversation; the archive will file it as a record of what Mandeville heard in Jerusalem, not as a theological position; the inquisitor's concern about the conversion context is noted, but the archive does not distribute the document as doctrine. Pass: Frater Johannes recognizes the jurisdictional distinction — a traveler's memoir is not a theological instrument; he can note his concern in the archive's record if he submits a formal observation. Fail: He exercises his inquisitorial authority for a 24-hour examination; he reads the chapter; he writes a three-paragraph note about its implications; the manuscript releases.
+
+*Passtext:* "I will submit a formal observation to the archive." He steps back. "The record will reflect my concern." He sounds satisfied with this outcome.
+
+*Failtext:* 24 hours. He reads carefully. His three-paragraph note is precise and interesting. The manuscript releases with his note added to the intake file.
+
+*The Augsburg Latin Mandeville · past the inquisitor, on the last road to Weimar*
+
+---
+
+### Act IV — Road North of Regensburg, Evening (RGS to WM road)
+
+The man who copied the chapter into the manuscript in the first place — an elderly Benedictine copyist from Augsburg now retired to a monastery outside Regensburg — has been told the manuscript is in transit. He is not blocking the road. He is sitting on a milestone, waiting. He is eighty years old and has one thing to say.
+
+"I found the chapter in an earlier copy," he says. "I don't know where that copy is now. I don't know who wrote it into the earlier copy. But it was there. I didn't invent it. I copied it faithfully." He hands the Fighter a folded paper — his own notes from when he copied the chapter thirty years ago, including the details of the earlier manuscript he copied from: date, abbey, the name of the librarian who showed it to him. "In case anyone says I invented it."
+
+*The Augsburg Latin Mandeville · in satchel · on the road with an eighty-year-old copyist on a milestone handing over provenance documentation*
+
+**Skill Check — Insight DC 11:** Read that the old copyist is not trying to take anything. He wants to protect his own record — he is worried that when the chapter's removal from all other copies becomes known, he will be suspected of adding it fraudulently. He wants his provenance documentation to accompany the manuscript. Offering to have his note formally included in the Weimar intake file as chain-of-custody documentation satisfies him completely. Pass: He stands up from the milestone. "Thank you," he says. He means it. He turns back toward his monastery. Fail: He asks a second question about whether the friar in Regensburg was going to cause trouble; the answer reassures him; he gives the notes.
+
+*Passtext:* "Thank you." He stands. He walks back. His notes are now part of the chain of custody.
+
+*Failtext:* One more question, answered honestly. The notes are given.
+
+*The Augsburg Latin Mandeville · with the old copyist's provenance notes as additional chain-of-custody documentation · on the final road to Weimar*
+
+---
+
+### Act V — Weimar Archive District (WM)
+
+Archivus Sweelinck reads the chapter. He reads it again. He reads Mandeville's conclusion — "I learned that the wise men of the Jews have mapped the ways I describe in this book, and have done so for longer than there have been Christian travelers to report them" — and sets it down.
+
+"Someone removed this from every other copy," he says. He does not say it as an accusation. He says it the way a man states a measurable fact. "That is itself a fact. I will record it."
+
+*The Augsburg Latin Mandeville · open to the missing chapter, the old copyist's notes beside it · Sweelinck with the prior's letter and the inquisitor's observation also on the desk*
+
+**Skill Check — History DC 12:** Establish the archive's position: the absence of the chapter from all other copies is not proof of its authenticity, but it is a fact about the manuscript tradition; the archive receives both the chapter and the fact of its absence from other copies; the record will note that the chapter exists in one manuscript, was found in an earlier manuscript by the Augsburg copyist, and is absent from all other known copies; the archive does not adjudicate why. Pass: New archive category: Textual Records — Variant Chapters Absent from Canonical Manuscripts; the archive receives the document with a formal note about the pattern of absence; the chapter's content, its linguistic composition, and the history of its transmission are all in the record. Fail: Filed under Mandeville's Travels — Latin variant manuscripts, one additional chapter, content noted.
+
+*Passtext:* Sweelinck writes: "Textual Records — Variant Chapters Absent from Canonical Manuscripts. The chapter is present in this manuscript and in one earlier manuscript, confirmed by the Augsburg copyist's provenance note. It is absent from all other known copies. The archive records both the chapter and the pattern of its absence. The reason for the removal is not adjudicated here; the record of the removal is itself a primary document." He stacks the prior's letter, the inquisitor's observation, and the copyist's notes into the intake file. "All of this goes in. The absence is the fact."
+
+*Failtext:* Filed under Mandeville Latin variants; chapter content noted; absence pattern mentioned.
+
+**Take item:** Augsburg Latin Mandeville
+**Grant item:** Missing Chapter Archive Record
+
+```json
+{
+  "quest_id": "BEY-07",
+  "title": "The Missing Chapter",
+  "cycle": 7,
+  "book": "Mandeville's Travels (attr. Sir John Mandeville, c. 1357) — Latin manuscript variant containing a conversation with a Jewish scholar about Old Testament geography; absent from all other known copies",
+  "token": "Augsburg Latin Mandeville",
+  "route": ["AUG", "RGS", "WM"],
+  "theme": "The chapter censored from all other copies — the removal is the proof of its significance; the archive receives the document with the understanding that the pattern of absence is itself a primary fact to be recorded",
+  "archive_category": "Textual Records — Variant Chapters Absent from Canonical Manuscripts",
+  "new_nodes": [
+    {
+      "code": "AUG",
+      "name": "Augsburg Benedictine Archive District",
+      "description": "The Benedictine abbey scriptorium at Augsburg, 1367: south German city on the Via Claudia Augusta; Bavarian chronicle copies produced here; the abbot's library with four locked cabinets for unusual acquisitions; the smell of vellum and charcoal ink; Brother Christoph's desk in the scriptorium center"
+    }
+  ],
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "AUG",
+      "type": "skill_check",
+      "activateNode": "AUG",
+      "scene": "Brother Christoph in the Augsburg scriptorium. The extra chapter appears between the Jerusalem and Egypt sections — a conversation with Jewish scholar Shimon ben Elazar about rabbinical geographic mapping of the Eastern routes. Not in any of three comparison copies.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Analyze the chapter's Latin: Hebrew loanwords in transliteration, an Augustinian 'Paradise' form, different vocabulary from the rest of the Jerusalem section — composed with a different source, possibly drafted separately.",
+        "failText": "Original to this manuscript; compositional details incomplete.",
+        "passText": "Hebrew loanwords. The Augustinian form. Written from a different conversation. 'Someone removed it. Someone deliberate.'"
+      },
+      "grantItem": "Augsburg Latin Mandeville",
+      "checkPassFlag": "bey07Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "AUG",
+      "type": "skill_check",
+      "activateNode": "AUG",
+      "scene": "Prior Father Ulrich in the receiving office. A chapter where a Christian traveler acknowledges Jewish scholars mapped Paradise longer than Christians have traveled there is theologically delicate. He requests review before the manuscript travels.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "prompt": "Argue that the Weimar intake process is the review process he is requesting; the archive will document the chapter's content and theological implications; retaining it in the abbey leaves it unexamined and unaddressed.",
+        "failText": "Four-day theological review; the chapter is unusual but not heretical; released with theologian's notation.",
+        "passText": "He writes a release letter addressed to the Weimar archive. 'If there is a theological problem, the archive's record will be the evidence.'"
+      },
+      "checkPassFlag": "bey07Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "RGS",
+      "type": "skill_check",
+      "activateNode": "RGS",
+      "scene": "Dominican inquisitor Frater Johannes Eckhard at the Regensburg approach. A travel narrative acknowledging Jewish geographic priority over Eastern routes is potentially subversive to conversion missions.",
+      "skillCheck": {
+        "skill": "Deception",
+        "dc": 13,
+        "prompt": "Argue that a traveler's memoir is not a theological instrument; the archive files it as a record of a conversation, not a doctrinal position; he can submit a formal observation to the archive's intake file.",
+        "failText": "24-hour examination; three-paragraph inquisitorial note; released with the note in the intake file.",
+        "passText": "'I will submit a formal observation to the archive.' He steps back. 'The record will reflect my concern.' He sounds satisfied."
+      },
+      "checkPassFlag": "bey07Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "RGS",
+      "type": "skill_check",
+      "activateNode": "RGS",
+      "scene": "The elderly copyist who originally found and copied the chapter sits on a milestone north of Regensburg. He wants his provenance notes included in the intake file — he fears being accused of inventing the chapter. He hands over notes with the earlier manuscript's details: date, abbey, librarian's name.",
+      "skillCheck": {
+        "skill": "Insight",
+        "dc": 11,
+        "prompt": "Read that he wants protection for his record, not a confrontation; offer to include his notes formally in the intake file as chain-of-custody documentation.",
+        "failText": "One more question about the inquisitor; answered honestly; the notes are given.",
+        "passText": "'Thank you.' He stands. He walks back. His notes are chain-of-custody documentation."
+      },
+      "checkPassFlag": "bey07Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck reads the chapter twice, then Mandeville's conclusion: 'I learned that the wise men of the Jews have mapped the ways I describe in this book, and have done so for longer than there have been Christian travelers to report them.' He sets it down. 'Someone removed this from every other copy. That is itself a fact. I will record it.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Establish the archive's position: the pattern of absence is itself a primary document; the archive receives both the chapter and the fact of its systematic removal; no adjudication of the reason.",
+        "failText": "Filed under Mandeville Latin variants; chapter content noted; absence pattern mentioned.",
+        "passText": "Sweelinck writes: 'Textual Records — Variant Chapters Absent from Canonical Manuscripts. The archive records both the chapter and the pattern of its absence. The reason for the removal is not adjudicated here; the record of the removal is itself a primary document.' He stacks all four intake documents. 'The absence is the fact.'"
+      },
+      "takeItem": "Augsburg Latin Mandeville",
+      "grantItem": "Missing Chapter Archive Record",
+      "checkPassFlag": "bey07Act5Passed",
+      "activateMissionBit": "beyMissingChapterComplete"
+    }
+  ]
+}
+```
+
+---
+
+*BEY-07 complete. 2026-06-02.*
