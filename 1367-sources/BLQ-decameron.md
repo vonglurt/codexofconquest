@@ -727,3 +727,278 @@ The modification arrives at midday. Fiamma is discharged from the afternoon sess
   "activateMissionBit": "blqCourtDefenseComplete"
 }
 ```
+
+---
+
+## Cycle 3 — Angle: The Document That Must Not Be Read
+
+---
+
+### BLQ-03: "The Three Rings"
+
+**Theme check:** Cycle 1 (BLQ-01) established authentication through performance — the carrier holds a formally perfect fraudulent document and never opens the seal; complicity is preserved by ignorance. Cycle 2 (BLQ-02) showed timing and legal existence — the document renders the opposing argument moot by arriving before the session opens; the law already exists and only needs to arrive. Cycle 3 shows a third angle not yet taken in the BLQ sequence or in the broader source pipeline: a document whose power consists entirely in its unread state. Three parties commissioned the same letter and each believes it favors them. The letter's value is the ambiguity it sustains until official filing — an ambiguity that can be destroyed not only by opening the case, but by any confirmation or denial along the route. The carrier's task is not delivery alone: it is continuous preservation of a diplomatic fiction that all three parties are simultaneously sustaining. The ring parable does not answer the question. That is the answer.
+
+This is distinct from: AMS-03/04/05 (objects as envelopes, sealed letters, handwriting evidence); CLJ-04 (simultaneous obligations where one acceptance renders others false); HAV-05 (voided instruments surviving for prior acts).
+
+---
+
+**SOURCE HOOK:** Day I, Story 3. Saladin needs money and summons Melchisedech the Jew to ask a trap question: which of the three faiths — Jewish, Christian, Saracen — is the true one? To answer directly is to either betray his own faith or flatter the Sultan. Melchisedech answers with a parable: a wealthy man with three sons had a ring of great price; he loved all equally; he had three identical rings made and gave one to each son privately. After his death each son claimed the original. No court could resolve it. Saladin recognizes the deflection and abandons the trap. The ambiguity is survival. The ring that cannot be identified as original is more powerful than any single ring could be.
+
+---
+
+**1367 SETTING:**
+Abramo di Simone of Genoa has spent twenty years as the port's most trusted neutral factor. Three parties approached him separately in the same month: a consortium of Genoese Latin merchants seeking written confirmation of expanded trading rights in the Galata quarter; the Constantinople Jewish community's board of elders requesting written recognition of their import-duty exemption; and a group of Bursa Ottoman merchants requesting a formal exemption from the new Byzantine customs inspection levy. Each party told Abramo what they needed the letter to say. Abramo listened to all three. He wrote the letter himself. He sealed it with all three parties' seals applied simultaneously — red, blue, black, in that order — along the bottom of the envelope. He locked the envelope inside a flat leather case with a brass lock. The key to the lock was sent ahead to the Constantinople court registry by separate courier, arriving the day before the autumn session.
+
+The letter acknowledges the existence of all three petitions and commits the court to scheduling all three for the autumn session hearing. It makes no preliminary ruling. It says exactly enough that each party, hearing only that a letter favorable to their case exists and is in transit, fills in the rest from desire.
+
+The carrier was chosen because the carrier has no stake in any of the three communities. Abramo explains: *I chose you because you are the only carrier who does not already believe you know what this letter says.* This is both a compliment and the instructions.
+
+**TOKEN:** A flat leather case, palm-length, locked with a brass barrel lock; three wax seals along the bottom edge of the envelope inside — red (Christian), blue (Jewish), black (Ottoman) — pressed with separate rings; the case cannot be opened without the key, which is already in Constantinople; the letter inside cannot be read by candlelight through the leather even if the lock could be forced; weighs almost nothing; its weight is entirely the brass lock and the diplomatic fiction inside.
+
+**TOKEN granted:** Act I
+**TOKEN taken:** Act V (Nikolaos Doukas applies the key and breaks all three seals simultaneously; the filing is complete)
+
+---
+
+### ACT I — Genoa (Abramo di Simone's Warehouse, Harbor District)
+
+*The locked case · three wax seals along the bottom edge of the envelope visible through the brass-hinged lid · Abramo has not touched it since the last seal was pressed · the harbor district, Tuesday morning, tide going out*
+
+Abramo di Simone's warehouse smells of cedar chips and rope tar. The locked case sits on the counting table between two candles, equidistant from both, as though placed by calculation. Abramo stands behind it. He does not sit. He explains: three parties commissioned this letter; each holds one seal; the seals are applied simultaneously; the case cannot be opened without the key; the key is in Constantinople.
+
+He says: during the voyage, each party's representative will attempt to learn what the letter contains. He says: you will be asked, probably more than once. He says: you are the only carrier in this harbor who genuinely does not know what the letter says, and that is not a deficiency of your briefing — it is the whole point of your selection.
+
+*He is telling me my ignorance is the mechanism.*
+
+He says: here is what you will need to navigate the voyage. Each party has told their representatives that the letter is favorable to them. The Genoese Latin consortium believes it contains recognition of expanded Galata rights. The Jewish community elders believe it contains their import-duty exemption. The Bursa Ottoman merchants believe it contains their customs inspection relief. All three interpretations are simultaneously possible and mutually exclusive and none of them are confirmed. When asked: confirm nothing. Deny nothing. The case is sealed until the court.
+
+*The case is on the table. The lock catches the candlelight.*
+
+---
+
+**Skill check — DC 12 History or Insight:**
+Understand the political terrain well enough to carry the silence correctly.
+
+**Pass (History):** The carrier knows the three communities' dispute history in Constantinople's courts — the Galata quarter adjudications of the 1350s, the Ottoman trade pressure on Byzantine customs post-1354, the Jewish community's long petition queue. The carrier understands: each party has been partially right for decades; what they need is not a ruling but a schedule. Abramo has given them a schedule without saying so. *I know what I am not saying.*
+
+**Pass (Insight):** Abramo has been watching the carrier since the door opened. The carrier watches back. There is a moment — when Abramo says "you don't know what it says" — where his posture relaxes fractionally, as though something confirmed. He chose the carrier because the carrier would understand without needing the explanation. The carrier understands: the answer to every question on the road is the same answer Abramo is giving now — truthful, complete, containing nothing.
+
+**Fail:** The carrier departs with the locked case and instructions about the parties and their expectations. The political terrain is opaque. During the voyage, the carrier will have to improvise each encounter without the structural understanding of what the letter's ambiguity is designed to do.
+
+*The case granted here. The lock does not give.*
+
+**Grant item:** locked diplomatic case — leather, brass lock, three wax seals (red, blue, black), key in Constantinople, contents unknown to the carrier
+
+---
+
+### ACT II — Tyrrhenian Sea (Ship, Second Day Out from Genoa)
+
+*The locked case · inside the carrier's saddlebag, buckled shut · Fra Donnino on the deck rail, watching it · day two, blue water, no coast visible*
+
+Fra Donnino of Genoa is a Dominican friar traveling to Constantinople's Latin church quarter to deliver a separate archidiocesan dispatch. He has been traveling since Genoa and is not yet bored — he is the kind of man who finds every conversation instructive. He also heard, before departure, that a neutral factor named Abramo di Simone was carrying a sealed letter to the Constantinople court regarding the Galata quarter dispute.
+
+He approaches at the stern rail. His method is not threat but friendship. He says: he is glad to meet a fellow traveler heading east; he has heard Abramo's name with great respect in Genoese church circles; he understands the letter involves the Galata trading rights, which his archdiocese follows with interest.
+
+*He is telling me what he believes is in the case.*
+
+He says: he is not asking for the contents — naturally, a sealed court document cannot be discussed. He is asking only whether the letter is proceeding without difficulty, so he can send reassurance to his archdiocese at the next port.
+
+*He is asking me to confirm the letter is what he thinks it is.*
+
+---
+
+**Skill check — DC 12 Persuasion or Deception:**
+Answer without confirming or denying what the letter contains.
+
+**Pass (Persuasion):** The carrier says: the case is sealed and locked until the court session; the contents may not be discussed before filing; the carrier cannot speak to what any party believes the letter contains, because the carrier genuinely does not know. Fra Donnino studies this response. He decides: a carrier who genuinely does not know the contents is a more secure carrier than one who does. He changes the subject. He sends no message from Ragusa about the letter's contents, only: *carrier contacted; case sealed; transit appears reliable.*
+
+**Pass (Deception):** The carrier says: *I don't know what is in the case.* This is completely true. Fra Donnino hears it as the careful language of a professional who will not discuss a client's document. He concludes: the carrier knows and will not say. He respects this. He sends a message from Ragusa: *letter in transit; carrier professional; contents not confirmed.*
+
+**Fail:** Fra Donnino is precise. He asks three more questions, each more specific than the last, and by the end of the conversation has established that the carrier genuinely does not know what is in the letter — which alarms him more than confirmation would. He sends a message from Ragusa: *carrier appears not briefed on contents; community board should verify with Abramo.* This creates a parallel communication track that reaches Constantinople's Jewish community board two days before the carrier does.
+
+*The case has not been opened. The lock holds.*
+
+---
+
+### ACT III — Ragusa (Harbor District, Day Anchorage)
+
+*The locked case · in the carrier's bag, on the ship · Ishak al-Massari at the dock, watching the gangplank · the harbor, afternoon, heat coming off the stone*
+
+Ragusa's harbor is loud and salt-bright. Ishak al-Massari has been stationed here for six years and knows every regular ship that calls. He received word — through his own network watching the Genoese harbor, or through Fra Donnino's Ragusa message — that the letter is aboard.
+
+He meets the carrier at the gangplank. He is professionally warm. He says: the Constantinople community board of elders sent instructions that the carrier was to be assisted if assistance was needed; he understands the case is sealed; he only wants to confirm the letter is proceeding safely so the elders can be prepared for the autumn session.
+
+*He believes the letter contains their import-duty exemption.*
+
+He says: the elders have been waiting six years for this ruling. He says: if there is any difficulty — any obstruction — the Ragusa community can provide a letter of safe passage as far as the Bosphorus, signed by the local factor's guild. He is offering help. He is doing it because the letter matters enormously to him.
+
+*He wants me to confirm the letter is what he hopes it is.*
+
+---
+
+**Skill check — DC 13 Stealth or Persuasion:**
+Pass through Ragusa without confirming what Ishak believes the letter contains.
+
+**Pass (Stealth):** The carrier hears Ishak's approach through a ship crew member's warning and uses the back landing of the harbor chandler's district — a route accessible from the ship's secondary gangplank — to move through Ragusa without being intercepted. Ishak waits at the main gangplank until after the ship has sailed. He sends word to Constantinople: *carrier arrived; could not be contacted; proceeding on schedule.*
+
+**Pass (Persuasion):** The carrier confirms carrying a sealed locked case from Abramo di Simone to the Constantinople court registry — this is publicly knowable — but cannot discuss the parties, the contents, or the commissioning context, as the case is sealed under court protocol. Ishak recognizes the standard formula for multi-party sealed filings. He asks if additional safe passage is needed. The carrier declines. Ishak sends word: *carrier contacted; case sealed as described; proceeding normally.*
+
+**Fail:** Ishak presses past the formula and asks directly: "Does the letter carry the community board's petition, yes or no?" The carrier cannot answer without either confirming what they don't know or denying what might be true. Ishak, watching the carrier's face, concludes the carrier does not know — and that this means either Abramo made a mistake or the letter does not say what the elders expect. He sends word: *uncertainty about letter's contents; recommend community board contact Abramo before session.* This creates a parallel communication track that arrives in Constantinople ahead of the carrier.
+
+*The case has not been opened. The lock holds.*
+
+---
+
+### ACT IV — Ship (Bosphorus Approach, Midnight)
+
+*The locked case · in the carrier's quarters, tied to the bunk's frame · the sound of water changing as the Bosphorus narrows · midnight, no moon*
+
+Giannino Cornaro of Venice boarded at Dyrrachium claiming to be a wool factor traveling to the Constantinople Venetian quarter on routine business. He is not a wool factor. He is an agent employed by a Bursa Ottoman merchant consortium who believe the letter contains their customs inspection exemption and who have decided — without evidence but with great conviction — that the Latin and Jewish factions have bribed the carrier to delay the letter or alter the filing.
+
+He knows the case cannot be opened. He does not intend to open it. He intends to take it — to hold it long enough that the autumn session opens without the letter present, which would postpone the hearing by a season. One season is enough for the consortium to file a separate petition without the other parties' knowledge.
+
+At midnight on the final sea approach to the Bosphorus, Giannino moves through the ship's lower passage toward the carrier's quarters.
+
+*The sound changed an hour ago. The water is narrowing. The city is close.*
+
+---
+
+**Skill check — DC 13 Insight or Persuasion (pass avoids combat):**
+Detect Giannino's intent and confront him before he reaches the door, or convince him that seizing the case would not serve the consortium's purpose.
+
+**Pass (Insight):** The carrier has watched Giannino since Dyrrachium — a wool factor who has asked nothing about the Constantinople wool market, who has positioned himself twice where he could observe the carrier's quarters. The carrier is waiting, awake, when the footstep stops in the passage. The door opens onto the carrier already standing. Giannino makes a quick calculation in the dark and says: "I was looking for the water barrel." The carrier says: "It's forward." He goes. In the morning he disembarks at the Venetian quarter without speaking to the carrier again.
+
+**Pass (Persuasion):** The carrier steps into the passage before Giannino reaches the door. In the dark, with the Bosphorus changing pitch around them, the carrier says: "The case cannot be opened. The key is already at the court. If you take it, you take a locked box you cannot read — and the session is postponed, and the consortium's petition is postponed with it, because it was one of three petitions in the letter. Whatever your employers told you about this letter, their petition is inside it. If the session delays, they delay." This is speculation on the carrier's part — but it is the only logical architecture the letter could have. Giannino, after a moment, goes back to his quarters.
+
+**Combat (if both checks fail):** Giannino with a hired crewman; AC 13, HP 22 each. The case, if seized, contains a document the attackers cannot open. If Giannino is subdued, the ship's master holds him until Constantinople, where he is released and walks away quickly.
+
+*The case has not been opened. The lock holds.*
+
+---
+
+### ACT V — Constantinople (Imperial Court Registry, Nikolaos Doukas's Desk)
+
+*The locked case · on the registry desk · Nikolaos Doukas producing the key the court received four days ago · three delegations in the anteroom, each leaning fractionally forward · morning, the Bosphorus visible through the window, gold on the water*
+
+The Constantinople Imperial Court registry is a long room with marble floors and shelves of parchment sealed in labeled wax. Nikolaos Doukas has been registrar since 1348 and has never visibly hurried. He receives the case from the carrier with both hands. He produces the key. He applies it to the lock.
+
+The three wax seals break simultaneously — red, blue, black — as the frame seal crosses all three. The delegations lean forward. The Genoese Latin consul's representative, the Jewish community elder, and the Bursa Ottoman spokesman are present. They have been in this room since the first hour.
+
+Nikolaos reads the letter once. He reads it again. He folds it. He says: "The court acknowledges receipt of petitions from three named parties. All three petitions are admitted to the autumn session hearing. No preliminary ruling is entered. Parties are invited to submit formal briefs within thirty days."
+
+The room erupts in three languages simultaneously.
+
+*The case is open. The letter is in Nikolaos's hand. The lock is empty.*
+
+The carrier must prevent the verbal eruption from preventing Nikolaos from completing the filing record.
+
+---
+
+**Skill check — DC 13 Persuasion or Investigation:**
+Quiet the three delegations long enough for Nikolaos to complete the record.
+
+**Pass (Persuasion):** The carrier steps between the three delegations and addresses each once, directly: to the Christian consul's representative — your petition is admitted; you have thirty days to submit a formal brief; this is more than you had when you commissioned the letter. To the Jewish community elder — the import-duty matter is on the session schedule; the court has acknowledged its existence in writing. To the Ottoman spokesman — the customs inspection levy petition is scheduled; no other party can preempt it. Each delegation, hearing itself addressed specifically and accurately, runs out of energy for outrage. They sit. Nikolaos completes the record.
+
+**Pass (Investigation):** The carrier has spent five days at sea thinking through the letter's architecture and understands what each party misread. The Christian consortium expected a preliminary ruling, not a scheduling. The elder expected a recognition, which is what "admitted to session" means. The Ottoman spokesman expected an exemption, which cannot be made until the hearing. The carrier explains each misread — briefly, precisely — and all three delegations shift from outrage to calculation. Nikolaos completes the record.
+
+**Fail:** The three delegations argue in three languages simultaneously. Nikolaos waits. He has done this before. He enters a notation: *receipt confirmed; all parties present; verbal disorder at filing; letter accepted as submitted.* The filing stands regardless. The autumn hearing proceeds.
+
+*The case taken here. The lock open. The document filed.*
+
+**Take item:** locked diplomatic case (filed; lock open; three seals broken; contents recorded by the court)
+
+---
+
+### onPass
+
+Nikolaos Doukas, after the three delegations depart still arguing in the corridor, sits at his desk for a moment with the open case in front of him. He looks at the three broken wax seals — red, blue, black in a row along the envelope's bottom edge. He says, to no one in particular, or perhaps to the carrier, or perhaps to the case: "The letter said nothing. It gave everyone enough to agree to a hearing. Abramo writes very well."
+
+He enters the letter in the registry under a new category he creates on the spot: *Diplomatic Records — Ambiguous Instruments Sustaining Multiple Incompatible Expectations Until Official Opening.*
+
+He says: "I name one of these a year. Usually from Venice." He stamps the carrier's receipt with the court seal. "There is a payment at the Genoese factor's office in the Galata quarter. Tell them Nikolaos filed it cleanly."
+
+The carrier finds the Genoese factor's office before midday. The payment is there. A note in Abramo's hand: *The three rings were identical. That was always the point.*
+
+---
+
+### onFail
+
+The filing stands. The autumn session is scheduled regardless — the case arrived, the key was present, the seals were broken in the registry. The court record shows the letter admitted and all three petitions entered.
+
+What the record also shows: verbal disorder at filing; parties required additional time to reach composure; one notation: *carrier managed transit but not reception.*
+
+When the news reaches Abramo in Genoa, he reads the courier's report carefully. He says: "The letter arrived." He says nothing else. He does not commission another delivery from the carrier.
+
+The three parties, arguing in the corridor after the session, will understand the letter the same way eventually. This will take, Abramo estimates, approximately three days.
+
+---
+
+### Quest Stub (UQF v1.0)
+
+```json
+{
+  "quest_id": "BLQ_003",
+  "title": "The Three Rings",
+  "cycle": 3,
+  "book": "Decameron",
+  "token": "locked diplomatic case — flat leather, brass barrel lock, three wax seals in red/blue/black; key travels separately to Constantinople court; case cannot be opened until both key and carrier present at registry; contents unknown to carrier",
+  "route": "GEN → (sea) → RGS → (sea) → CON",
+  "theme": "The document whose value is its unread state; three parties hold incompatible beliefs about its contents; the carrier's task is to preserve the ambiguity continuously through multiple encounters; the ring parable answers the unanswerable question by not answering it",
+  "archive_category": "Diplomatic Records — Ambiguous Instruments Sustaining Multiple Incompatible Expectations Until Official Opening (Nikolaos Doukas, Constantinople court registry, autumn 1367)",
+  "acts": [
+    {
+      "act_id": "BLQ_003_01",
+      "location": "Genoa — Abramo di Simone's warehouse, harbor district",
+      "type": "skill_check",
+      "activateNode": "GEN",
+      "scene": "Abramo di Simone stands before a locked leather case on his counting table. Three parties, three seals, one letter, one lock — key already in Constantinople. He will not say what the letter contains. He says: I chose you because you are the only carrier who does not already know what this letter says — and that is the whole point of your selection.",
+      "skillCheck": { "dc": 12, "skills": ["History", "Insight"] },
+      "grantItem": "locked diplomatic case",
+      "checkPassFlag": "transit_strategy_understood"
+    },
+    {
+      "act_id": "BLQ_003_02",
+      "location": "Tyrrhenian Sea — ship, second day out from Genoa",
+      "type": "skill_check",
+      "activateNode": "GEN",
+      "scene": "Fra Donnino, a Dominican friar bound for Constantinople's Latin churches, approaches at the stern rail. He believes the letter confirms Genoese trading rights in Galata. He is courteous and wants to send reassurance to his archdiocese at the next port — which is also a request to confirm what he already believes.",
+      "skillCheck": { "dc": 12, "skills": ["Persuasion", "Deception"] },
+      "checkPassFlag": "fra_donnino_deflected"
+    },
+    {
+      "act_id": "BLQ_003_03",
+      "location": "Ragusa — harbor district, day anchorage",
+      "type": "skill_check",
+      "activateNode": "RGS",
+      "scene": "Ishak al-Massari, Levantine Jewish factor in Ragusa, meets you at the gangplank. The Constantinople community elders sent him to assist. He believes the letter contains their import-duty exemption. He wants confirmation that it is proceeding safely — which is also a request to confirm what he believes it is.",
+      "skillCheck": { "dc": 13, "skills": ["Stealth", "Persuasion"] },
+      "checkPassFlag": "ishak_managed_neutral"
+    },
+    {
+      "act_id": "BLQ_003_04",
+      "location": "Ship — Bosphorus approach, midnight",
+      "type": "hybrid",
+      "activateNode": "RGS",
+      "scene": "Giannino Cornaro of Venice, boarded at Dyrrachium as a wool factor, is an operative for the Bursa Ottoman consortium. He believes the Latin and Jewish factions have bribed the carrier. He moves through the lower passage toward the carrier's quarters at midnight intending to seize the case and delay the autumn session.",
+      "skillCheck": { "dc": 13, "skills": ["Insight", "Persuasion"] },
+      "combat": { "count": 2, "ac": 13, "hp": 22 },
+      "checkPassFlag": "cornaro_stopped"
+    },
+    {
+      "act_id": "BLQ_003_05",
+      "location": "Constantinople — Imperial Court Registry, Nikolaos Doukas's desk",
+      "type": "skill_check",
+      "activateNode": "CON",
+      "scene": "Nikolaos Doukas applies the key, breaks all three seals simultaneously, reads the letter twice, announces: all three petitions admitted to the autumn session; no preliminary ruling. The three delegations erupt in three languages simultaneously. The carrier must prevent the disorder from stopping Nikolaos completing the record.",
+      "skillCheck": { "dc": 13, "skills": ["Persuasion", "Investigation"] },
+      "takeItem": "locked diplomatic case",
+      "activateMissionBit": "blqThreeRingsComplete",
+      "checkPassFlag": "filing_completed_orderly"
+    }
+  ]
+}
+```
+
+---
+
+*BLQ-03 complete. 2026-06-02.*

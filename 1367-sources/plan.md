@@ -391,7 +391,7 @@ This pass adds a **Summary** section to each book's `.md` file, one source text 
 **Processed 2026-05-31/06-01** — BLQ-01 spec complete (The Saint's Attestation, Florence→Naples). BLQ-02–07 seeds written. ALL 9 PARTS FULLY READ (Days 1–10, all 100 stories + Author's Conclusion). New seeds BLQ-S08 through BLQ-S12 added from Parts 2–9 reading. See BLQ-decameron.md.
 
 Seeds outstanding (need full 5-act vignette treatment):
-- BLQ-02: "The Three Rings" — GEN → CON
+- BLQ-02: "The Three Rings" — GEN → CON ✓ DONE 2026-06-02 (written as Cycle 3)
 - BLQ-03: "The Coals" — FLR → BOL
 - BLQ-04: "The Falcon's Inventory" — FLR → VEN
 - BLQ-05: "The Three Descents" — NAP → RHD
