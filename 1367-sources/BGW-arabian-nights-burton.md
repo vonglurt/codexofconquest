@@ -2777,6 +2777,192 @@ Make a **History check (DC 12)**.
 
 *BGW-S11 complete. 2026-06-02.*
 
+---
+
+## Cycle 12 — Angle: *The Good Voice Behind the Locked Door — The Family's Composition Claim Against the Story's Attribution*
+
+*Prior cycles missed:*
+
+No BGW cycle asked what happens when a family's oral claim to a musical composition conflicts with the story's attribution of that composition to an anonymous voice heard behind a locked door. Cycle 12 finds the Baghdad monastery manuscript — the only written evidence that a specific melodic composition existed before the Arabian Nights version of it, and that the composition belonged to a named family of musicians, not to a legendary unnamed voice.
+
+---
+
+### BGW-S12: "The Good Voice Behind the Locked Door"
+
+**Theme check:** CAI supplementary cycles about oral tradition genealogy concerned text transmission; this concerns musical composition ownership — the difference between who tells a story and who owns a melody. BGW-S11 (receiver's public record) is not this. Theme: the family's composition manuscript as the prior claim that predates the story's anonymous attribution — the document that names the voice.
+
+---
+
+**SOURCE HOOK:** *Arabian Nights* (Burton translation): The Harun al-Rashid stories repeatedly feature a beautiful voice heard from behind a closed door or window — a voice so extraordinary that the Caliph stops and demands to hear the rest. The singer is usually identified only by the story's narration, not by any document. In the real Abbasid musical tradition, compositions were attributed to named musicians whose families maintained ownership claims; a composition attributed to no one in a story might, in the historical record, have a specific named author.
+
+---
+
+**1367 SETTING:**
+A Baghdad Christian monastery, Dayr Mar Simeon, is being dissolved. Its library includes a 9th-century notebook of musical compositions attributed to a musician named Yahya ibn Mansur al-Mawsili — a member of the al-Mawsili family, the most prominent musical dynasty of the Abbasid court. One composition in the notebook, in a different hand with an added note, reads: *This melody was heard by the Commander of the Faithful from behind the locked door of our house in the year 195 of the Hijra [810–811 AD], as it was sung by Yahya's daughter Fatima. The Caliph's secretary came to the door afterward and asked for the name. No name was given. The family asks that this notebook serve as proof that the voice had a name.*
+
+The monastery's dissolution agent, Brother Elias, wants the notebook sent to Weimar before it is sold to a Cairo collector who would suppress the composition claim.
+
+*Brother Elias, handling the notebook carefully: "The family left this notebook here because a monastery is neutral. They could not file the claim with the Caliph's court — by then, the story had already been told without a name. This is the name."*
+
+**TOKEN:** Al-Mawsili Family Musical Composition Notebook — 9th-century bound notebook, 23 compositions attributed to Yahya ibn Mansur al-Mawsili; the 24th composition in a second hand, with the family's attribution note; the dissolution monastery's inventory seal on the back cover. *Act I: received from Brother Elias, Baghdad. Act V: surrendered to Archivus Sweelinck, Weimar.*
+
+---
+
+**Act I — Baghdad Monastery of Mar Simeon (BGD)**
+
+*The monastery library, morning. Brother Elias is a Syrian Christian monk in his fifties, the dissolution inventory in one hand and the notebook in the other.*
+
+"The family who left this notebook here were Muslim musicians. They chose a Christian monastery because they needed neutral custody — a place that would not take the composition claim to the Caliph's court and would not suppress it either." He opens to the 24th composition. "The note is in the daughter's handwriting. The composition is in the notebook — demonstrably before the story's version of it, because the story was told after 810 and this notebook was copied in 808." He looks at the carrier. "Tell me what kind of claim this is — what the notebook proves that the story cannot disprove, and what it cannot prove."
+
+*The Fighter reads the family note — the careful distinction between what was witnessed and what was claimed.*
+
+Make an **Investigation check (DC 12)**.
+
+**Fail:** "The notebook names the voice. The story does not name the voice. Tell me whether the notebook's claim can be verified or only acknowledged." *Brother Elias waits.*
+
+**Success:** The notebook's composition predates the story's version by two years — demonstrable from the copy date. That proves the composition existed before it entered the legend. What the notebook cannot prove is that the voice Harun heard was Fatima's specifically — that fact rests on the family's note alone, which is a family assertion, not an independent verification. The notebook proves the composition had a named author; it cannot prove the story was about her. Brother Elias nods. "Proof of authorship, not proof of identity. The archive receives both the proof and the limitation." He hands over the **Al-Mawsili Family Musical Composition Notebook**.
+
+---
+
+**Act II — Baghdad Market Gate (BGD)**
+
+*The city gate at the edge of the Baghdad market district, afternoon. A music merchant named Sulayman ibn Fadl intercepts the carrier — he deals in composition manuscripts and has heard that an al-Mawsili notebook is leaving Baghdad.*
+
+"Al-Mawsili compositions are worth money. A notebook with an attribution to Yahya ibn Mansur — that is a commercial document. It belongs in the Baghdad music merchants' register before it leaves the city." He has a registration ledger.
+
+*The Fighter watches Sulayman's entirely reasonable commercial interest — and the registration process, which creates a public record that the notebook is leaving Baghdad.*
+
+Make a **Persuasion check (DC 12)**.
+
+**Fail:** "Al-Mawsili compositions are among the most commercially significant in the city. Register it before it leaves." *Sulayman opens his book. Try again — about what the notebook's primary content is and whether that content makes it a commercial document.*
+
+**Success:** "The notebook contains a family composition claim — a legal assertion by the al-Mawsili family that a specific composition was attributed incorrectly in a narrative tradition. Its primary content is the claim, not the compositions commercially. It is a legal-historical document, not a music merchant's commodity." Sulayman reads the family note. He had not noticed it. He closes his ledger. "A legal claim. Then it goes to the archive."
+
+---
+
+**Act III — Mosul Waystation (MOS)**
+
+*A waystation at Mosul, morning. A scholar of Arabic music theory, Muhammad al-Isfahani, has heard of the notebook and wants to examine the composition claim before it leaves the region.*
+
+"The al-Mawsili family attribution is important. But I need to verify that the composition in the notebook is the same as the melody described in the Arabian Nights version — if they are different melodies, the claim fails." He is offering a genuine scholarly verification.
+
+*The Fighter weighs the scholar's offer against the time it will take and the risk of the notebook being examined and retained.*
+
+Make a **Perception check (DC 12)** to assess whether the scholar's offer is good-faith verification or an attempt to retain the document.
+
+**Fail:** "The verification takes three days. I can do it here." *Muhammad is sincere. Assess the risk — does he have any reason to retain the document?* 
+
+**Success:** Muhammad al-Isfahani is a genuine scholar with no commercial or political interest in the al-Mawsili claim — his interest is musicological. But the three-day verification creates a public record that the notebook was examined in Mosul, which will reach the Cairo collector before the carrier reaches Weimar. The risk is not retention; it is attention. The carrier declines politely. "The archive will do the verification after receipt." Muhammad hands over a letter of introduction for Weimar. "Then give them this — it names the specific melodic phrase to check against."
+
+---
+
+**Act IV — Constantinople Archive Quarter (CON)**
+
+*A Constantinople archive, afternoon. A Byzantine music theorist named Theodoros Chrysoberges argues that al-Mawsili family compositions are of interest to Byzantine music history — the Byzantine-Abbasid musical exchange of the 8th and 9th centuries influenced both traditions.*
+
+"Several al-Mawsili family compositions circulated in Byzantine musical circles in the 9th century. A notebook from that family belongs in a collection that can trace the Byzantine reception of those compositions." He is correct about the exchange. He is wrong about this notebook's primary purpose.
+
+*The Fighter watches Theodoros's genuine scholarly claim — and the family's note, which has nothing to do with Byzantine reception.*
+
+Make a **History check (DC 12)**.
+
+**Fail:** "The Byzantine-Abbasid musical exchange is well-documented. Why doesn't the al-Mawsili notebook belong in a collection that understands that exchange?" *Theodoros waits.*
+
+**Success:** "The notebook's primary document is the family's composition claim — the assertion that a voice the Arabian Nights attributed to no one had a name. That claim is in an Arabic legal tradition, not a musical-exchange tradition. The Byzantine reception of al-Mawsili compositions is real, but it has nothing to do with the family's claim. Weimar receives the claim, not the compositions." Theodoros reads the family note. "The claim is the document." He releases it. "Then you are right. Proceed."
+
+---
+
+**Act V — Weimar Archive (WM)**
+
+*Archivus Sweelinck's receiving room, evening. He reads the family note in the notebook's 24th composition page, then reads Muhammad al-Isfahani's letter of introduction.*
+
+"The scholar in Mosul names the melodic phrase to check. The notebook predates the story by two years." He sets both down. "I need the classification. Not for the compositions — for the claim. Tell me what the archive receives when it receives a document that names the voice the story refused to name."
+
+*The Fighter watches Sweelinck's pen — the expression of a man who has never classified this kind of document before.*
+
+Make a **History check (DC 12)**.
+
+**Fail:** "The claim names the voice. The story refuses to name the voice. Tell me what kind of document names a voice that a narrative tradition chose to keep anonymous." *Sweelinck waits.*
+
+**Success:** Sweelinck writes: *Authorship Records — Family Composition Claims Against Anonymous Attribution in Narrative Tradition; The Prior Document as Evidence That the Unnamed Voice Had a Name; Al-Mawsili Family Claim, Baghdad 810–811 AD, Composition Predating Story Version by Two Years, Family Note in Second Hand, Verification Phrase Preserved.* He applies the archive seal. You hand over the **Al-Mawsili Family Musical Composition Notebook**. You receive the **Archive Classification Receipt: Authorship Records — Composition Claims**.
+
+*The Fighter watches the notebook filed in its new category. Fatima al-Mawsili is in the archive now. Not in the story — the story will not change. But in the record alongside the story, her name is there.*
+
+---
+
+### Quest API Stub — BGW_S12: The Good Voice Behind the Locked Door
+
+```json
+{
+  "quest_id": "BGW_S12",
+  "title": "The Good Voice Behind the Locked Door",
+  "book": "Arabian Nights — Alf Layla wa-Layla (Burton translation)",
+  "cycle": 12,
+  "token": "Al-Mawsili Family Musical Composition Notebook",
+  "route": "BGD → MOS → CON → WM",
+  "theme": "The family's composition manuscript as the prior claim that names the voice the story kept anonymous; the document proves authorship but not identity — and the archive receives both the proof and its limitation.",
+  "archive_category": "Authorship Records — Family Composition Claims Against Anonymous Attribution in Narrative Tradition; The Prior Document as Evidence That the Unnamed Voice Had a Name",
+  "acts": [
+    {
+      "act": "act_1", "title": "Baghdad Monastery of Mar Simeon", "activateNode": "BGD",
+      "type": "skill_check", "skillCheck": { "stat": "Investigation", "dc": 12 },
+      "scene": "Brother Elias needs the carrier to understand what the notebook proves and what it cannot prove — proof of authorship is not proof of identity; the archive receives both the claim and its limitation.",
+      "prompt": "Investigation DC 12. The composition predates the story by two years — proving named authorship. But the notebook cannot prove Fatima's voice was the specific one Harun heard.",
+      "failText": "Can the notebook's claim be verified or only acknowledged?",
+      "successText": "Proof of authorship, not proof of identity. The archive receives both the proof and the limitation. You receive the Al-Mawsili Family Musical Composition Notebook.",
+      "grantItem": "Al-Mawsili Family Musical Composition Notebook",
+      "checkPassFlag": "bgwS12Act1Passed", "activateMissionBit": "bgwS12Active"
+    },
+    {
+      "act": "act_2", "title": "Baghdad Market Gate", "activateNode": "BGD",
+      "type": "skill_check", "skillCheck": { "stat": "Persuasion", "dc": 12 },
+      "scene": "Sulayman ibn Fadl wants to register an al-Mawsili composition notebook as a commercial document. The notebook's primary content is the family's legal composition claim — not a commercial commodity.",
+      "prompt": "Persuasion DC 12. The primary document is the family's legal claim, not the compositions commercially.",
+      "failText": "Al-Mawsili compositions are commercially significant. Register it before it leaves.",
+      "successText": "A legal claim. Then it goes to the archive. Sulayman closes his ledger.",
+      "grantItem": "Baghdad Market Gate Transit Stamp",
+      "checkPassFlag": "bgwS12Act2Passed"
+    },
+    {
+      "act": "act_3", "title": "Mosul Waystation", "activateNode": "MOS",
+      "type": "skill_check", "skillCheck": { "stat": "Perception", "dc": 12 },
+      "scene": "Muhammad al-Isfahani offers three-day verification of the composition claim. He is sincere — but the examination creates a public record that will reach the Cairo collector before the carrier reaches Weimar.",
+      "prompt": "Perception DC 12. The risk is not retention — Muhammad is good-faith. The risk is attention: a Mosul examination record reaches Cairo first.",
+      "failText": "The verification is genuine. Assess whether the attention risk outweighs the verification benefit.",
+      "successText": "The carrier declines politely. Muhammad provides a letter naming the melodic phrase to check at Weimar instead.",
+      "grantItem": "Muhammad al-Isfahani's Verification Letter",
+      "checkPassFlag": "bgwS12Act3Passed"
+    },
+    {
+      "act": "act_4", "title": "Constantinople Archive Quarter", "activateNode": "CON",
+      "type": "skill_check", "skillCheck": { "stat": "History", "dc": 12 },
+      "scene": "Theodoros Chrysoberges claims Byzantine-Abbasid musical exchange genealogy. The notebook's primary document is the family's legal composition claim — which is in an Arabic legal tradition, not a musical-exchange tradition.",
+      "prompt": "History DC 12. The claim has nothing to do with Byzantine reception of al-Mawsili compositions — Weimar receives the claim, not the compositions.",
+      "failText": "Why doesn't the Byzantine musical exchange genealogy apply to this notebook?",
+      "successText": "The claim is the document. Theodoros releases it. Proceed.",
+      "grantItem": "Constantinople Passage Certificate",
+      "checkPassFlag": "bgwS12Act4Passed"
+    },
+    {
+      "act": "act_5", "title": "Weimar Archive", "activateNode": "WM",
+      "type": "skill_check", "skillCheck": { "stat": "History", "dc": 12 },
+      "scene": "Sweelinck needs the classification for a document that names the voice the story refused to name — the prior document that proves the unnamed had a name.",
+      "prompt": "History DC 12. The archive receives a family claim against anonymous attribution — the document that names the voice and acknowledges the limitation of what it can prove.",
+      "failText": "What kind of document names a voice that a narrative tradition chose to keep anonymous?",
+      "successText": "Sweelinck writes: Authorship Records — Family Composition Claims Against Anonymous Attribution in Narrative Tradition. You receive Archive Classification Receipt: Authorship Records.",
+      "takeItem": "Al-Mawsili Family Musical Composition Notebook",
+      "grantItem": "Archive Classification Receipt: Authorship Records",
+      "checkPassFlag": "bgwS12Act5Passed", "activateMissionBit": "bgwS12Complete"
+    }
+  ]
+}
+```
+
+---
+
+*BGW-S12 complete. 2026-06-02.*
+
+
 
 
 
