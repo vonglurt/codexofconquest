@@ -432,3 +432,236 @@ checkPassFlag: istAct5Pass
 - **Source note:** No .txt file for IST in the source directory; processed from full narrative recall. The Alexiad is 165 KB (estimated), single-pass material.
 - **City notes:** CON (Constantinople) and RGS (Ragusa) already defined in quest-map.md Location Grid. No new nodes required.
 - **Theme placed:** "Defender preserves enemy by specificity; condemnation as archive" — first entry in the quest map under this theme.
+
+---
+
+## Cycle 2 — Angle: *The Nicaea Receipt — The Alliance That Was a Bilateral Deal*
+
+**What this angle reveals that cycle 1 missed**: Cycle 1 showed the partisan historian who preserves what she meant to condemn — bias as accidental archive; the enemy's portrait surviving in the hostile gaze. Cycle 2 shows the diplomatic record of a famous victory that was not, in fact, a joint victory: Alexios secretly negotiated Nicaea's surrender with the Turkish garrison before the Crusaders could storm the walls. The city surrendered to Byzantium; the Crusaders received the news as a fait accompli. The receipt — signed by both Alexios's representative and the Turkish garrison commander — is the document that proves the Crusade's first great liberation was a bilateral transaction the Crusaders were excluded from. In 1367, it is dangerous to three parties simultaneously.
+
+---
+
+### 5-Act Vignette Play: *The Nicaea Receipt*
+
+#### The Receipt
+
+*The Nicaea Surrender Receipt — a sealed folio, two columns — the left column in Greek with Alexios's ambassador's signature and the imperial seal; the right column in Turkish with the garrison commander's seal; two lines at the bottom that name the terms: the garrison will surrender the city to Byzantine authority, the Crusade will be informed after the transfer is complete; dated June 1097; the Crusaders entered the city to find the Byzantine flags already flying. Both sides agreed to this. The Crusaders were not a party.*
+
+---
+
+**ACT I**
+
+*The Nicaea Surrender Receipt — sealed folio, both seals intact — Constantinople Byzantine imperial scholar quarter, morning.*
+
+The scholar's name is Demetrios. He is sixty, has been at the imperial scriptorium for thirty years, and has spent the last two years trying to get authorization to transfer the Nicaea Receipt to a neutral archive before the current Ottoman pressure on Constantinople makes it a liability or destroys it. He has the authorization now — a single sheet from the imperial secretary, countersigned.
+
+"Three parties want this document destroyed," Demetrios says. He sets the folio on the desk. "The Latin Church does not wish to explain why the Crusade's first victory was a diplomatic arrangement that excluded the Crusade. The Crusader-descended families in the East do not wish to acknowledge that Nicaea's 'liberation' was managed before they arrived. And the current imperial administration finds the sophistication of the negotiation an uncomfortable reminder of what Byzantine diplomacy used to be." He pauses. "The Weimar archive is the only institution in Europe that will file this as what it is, not as evidence for someone's argument."
+
+*— He has been building this argument for two years. He needs to know the Fighter has understood it in two minutes.*
+
+> **Dialogue DC 12.** Tell Demetrios what the category is: not Byzantine diplomatic triumph, not Crusade betrayal, not Turkish capitulation — but a bilateral agreement between two parties from which a third party was excluded, and whose significance lies precisely in that exclusion. The archive files it under the excluded party.
+
+**Fail:** Demetrios studies the Fighter for a moment. "You're going to argue this is a victory document for Byzantium." He is not hostile; he has heard this before. "Try again. Think about who wasn't at the table."
+
+**Pass:** He pushes the folio across. He adds the authorization sheet folded inside the cover: *transfer authorized to neutral carrier, Demetrios Katakalon, imperial scriptorium, Constantinople.* "The Ottoman garrison is two miles outside the walls. Please move quickly."
+
+**TOKEN GRANTED: Nicaea Surrender Receipt** — sealed folio, Byzantine and Turkish seals, Demetrios's authorization sheet inside; proof that Nicaea was already Byzantine before the Crusade reached the walls.
+
+---
+
+**ACT II**
+
+*The Nicaea Surrender Receipt — in the Fighter's satchel — Constantinople harbor, late morning.*
+
+The imperial chamberlain's office sent a runner. The chamberlain's name is Andronikos; he was not consulted about the transfer authorization and has just been informed by a colleague who noticed the secretary's counter-signature. He is at the harbor master's office when the Fighter arrives.
+
+"The authorization was issued without senior review. There is a standing protocol that documents relating to Crusade history must be reviewed by the imperial diplomatic bureau before transfer." He has a cleaner document: a provisional recall notice. He is not threatening. He is a bureaucrat who has found the correct hook.
+
+*— He is right about the protocol. He is wrong about whether this document falls under it: the Nicaea Receipt predates the Crusade's formal establishment of any shared history with Byzantium; it is a bilateral Byzantine-Turkish document, not a Crusade document.*
+
+> **Skill Check: History DC 12.** Establish that the Nicaea Surrender Receipt is a Byzantine-Turkish bilateral document dated before any Crusade-Byzantine formal agreement, and therefore does not fall under the Crusade history review protocol; the protocol covers documents recording joint Byzantine-Crusade actions; this document records an action from which the Crusade was excluded.
+
+**Fail:** Andronikos files the provisional recall and places the folio under a three-day hold. The Fighter waits at the harbor inn while the classification question is forwarded to the diplomatic bureau. The bureau agrees by the second day; the hold is lifted.
+
+**Pass:** Andronikos considers. He is genuinely consulting his protocol knowledge. After a moment: "Pre-Crusade bilateral." He produces a transit clearance: *bilateral Byzantine-Turkish document, June 1097, pre-Crusade agreement category; not subject to Crusade history review protocol.* He attaches it to the folio's exterior.
+
+**TOKEN STATE 2**: Byzantine diplomatic bureau's transit clearance attached — *pre-Crusade bilateral agreement, not subject to Crusade history review protocol.*
+
+---
+
+**ACT III**
+
+*The Nicaea Surrender Receipt — folio with transit clearance — Rhodes Hospitaller commandery, two days later.*
+
+The Hospitaller commandant's archivist is named Brother Konstantin. He is thorough, well-educated, and handles incoming documents from Byzantine-Turkish contact zones as a matter of course. He reads the transit clearance with interest.
+
+"Pre-Crusade bilateral." He turns the folio over. "Nicaea receipt." He looks up. "I think we may have jurisdiction to hold this for preliminary review. The Hospitaller Order is the inheritor of Crusade archival authority for the Levant; any document affecting Crusade territorial history—"
+
+*— The argument is creative. It is also wrong: the Hospitaller jurisdiction over Crusade archival materials covers documents from the Crusade period, not documents from the period that defined the Crusade's political context before it arrived.*
+
+> **Skill Check: Persuasion DC 13.** Tell Brother Konstantin that Hospitaller Crusade archival jurisdiction covers documents generated during or because of Crusade operations; a Byzantine-Turkish surrender agreement made before the Crusade reached Nicaea is definitionally outside that scope; the document affects Crusade history only as context, not as record.
+
+**Fail:** Konstantin files a preliminary review hold and sends a query to his superior. The superior returns a negative on jurisdiction by the next morning. The hold is lifted.
+
+**Pass:** Konstantin accepts the argument. He is a good canonist; he recognizes an overreach. "Fair point. The document was made before the Crusade's operations in that theater." He writes a quick endorsement: *reviewed by Hospitaller commandery Rhodes — jurisdiction declined; document falls outside Crusade archival scope; confirmed pre-operational bilateral.* He attaches it below the transit clearance.
+
+**TOKEN STATE 3**: Hospitaller jurisdiction-declined endorsement added — *outside Crusade archival scope; confirmed pre-operational bilateral.*
+
+---
+
+**ACT IV**
+
+*The Nicaea Surrender Receipt — folio with two endorsements — sea road from Rhodes toward the northern route, night.*
+
+Two men are waiting at the waystation above the harbor. They are not Hospitaller agents; they carry no identifying marks. They move with the practiced ease of men hired for a specific task and paid enough that the task is all they intend to do.
+
+*— Latin Church. They cannot argue the document into a drawer, so they sent the kind of argument that works in the dark.*
+
+> **Combat: 2 opponents — AC 13, HP 22 each.** They want the folio and are prepared to work for it; they stop at half health when the remaining option looks more expensive than the pay.
+
+**Fail:** They take the folio. The Fighter pursues; the waystation keeper saw which road they took.
+
+**Pass:** Both down or broken. Road north clear. Both endorsements intact.
+
+**TOKEN STATE 4**: Carried through Latin Church ambush. All endorsements undamaged.
+
+---
+
+**ACT V**
+
+*The Nicaea Surrender Receipt — folio with transit clearance and two endorsements — Weimar archive, the desk of Archivus Sweelinck, morning.*
+
+Sweelinck reads both columns of the receipt. He reads the transit clearance. He reads Brother Konstantin's endorsement. He reads the date — June 1097 — and traces it against his knowledge of the Crusade's arrival at Nicaea.
+
+"They were not in the city when this was signed." He looks at the seals — Byzantine, Turkish. "The city surrendered to Alexios before the Crusade reached the walls." He sets the folio down. "This document has three parties' names on it. None of them are the Crusade. And the Crusade's first victory is premised on this document's events." He picks up his pen. "What category does a document belong in when its subject is a party that wasn't present at its signing?"
+
+*— He needs the category: not the signatories' archive; not the Crusade victory records; the party that was excluded.*
+
+> **Skill Check: History DC 11.** Tell Sweelinck: file it under the Excluded Party. The Crusade's first great act was premised on a deal made without them. The document that proves this belongs in the Crusade archive — not as their triumph, but as the context that made their triumph a diplomatic reality they did not control. The receipt filed under "First Crusade — Nicaea" will say more about what the First Crusade actually was than any Crusade document does.
+
+**Fail:** Sweelinck files it under Byzantine Diplomatic Records — bilateral agreements with Turkish authorities. He revisits the classification after the Fighter explains; creates a cross-reference to First Crusade Contextual Records.
+
+**Pass:** Sweelinck writes a new filing entry: *First Crusade — Nicaea; contextual document, bilateral pre-Crusade agreement; party excluded: the Crusade; significance: the first liberation of the Crusade was a diplomatic outcome negotiated without Crusade participation.* He files the folio.
+
+He says, after a moment:
+
+"Every victory has a receipt. Nicaea's was signed before the victory was announced."
+
+**TOKEN TAKEN: Nicaea Surrender Receipt**
+
+The folio enters the Weimar archive under First Crusade — Nicaea. The Byzantine authorization sheet, the pre-Crusade bilateral transit clearance, and the Hospitaller jurisdiction-declined endorsement are indexed separately. The Crusade's first liberation is on record as what it was.
+
+---
+
+## Quest API Stub — UQF v1.0
+
+```json
+{
+  "quest_id": "IST_002",
+  "title": "The Nicaea Receipt",
+  "source": "IST",
+  "cycle": 2,
+  "book": "The Alexiad — Anna Komnene (c.1148, Byzantine Greek; from memory per size-gate)",
+  "source_episode": "Book XI — Alexios negotiates the surrender of Nicaea directly with the Turkish garrison before the Crusaders can enter; the city surrenders to Byzantine authority; the Crusaders find Byzantine flags already flying; their first liberation was a fait accompli",
+  "theme": "The document that proves a famous alliance was a private bilateral deal — the receipt that makes the Crusaders' first victory a transaction they were excluded from; filed under the excluded party, not the signatories",
+  "token": {
+    "id": "IST_002_TOKEN",
+    "name": "Nicaea Surrender Receipt",
+    "description": "Sealed folio, two columns: Byzantine Greek left (Alexios's ambassador's signature, imperial seal), Turkish right (garrison commander's seal); terms: city surrenders to Byzantine authority, Crusade informed after transfer; dated June 1097; Demetrios's transfer authorization inside the cover",
+    "grant_act": "act_1",
+    "take_act": "act_5",
+    "check_acts": ["act_2", "act_3", "act_4"],
+    "state_changes": [
+      {"act": "act_2", "change": "Byzantine diplomatic bureau transit clearance attached — pre-Crusade bilateral agreement, not subject to Crusade history review protocol"},
+      {"act": "act_3", "change": "Hospitaller jurisdiction-declined endorsement added — outside Crusade archival scope, confirmed pre-operational bilateral"},
+      {"act": "act_4", "change": "carried through Latin Church ambush — all endorsements undamaged"}
+    ]
+  },
+  "nodes": ["CON", "RHD", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "CON",
+      "type": "dialogue",
+      "activateNode": "CON",
+      "missionAccept": "Demetrios Katakalon has spent two years getting authorization to transfer the Nicaea Receipt to a neutral archive. Three parties want it destroyed. The Fighter must understand the category before Demetrios will release it.",
+      "scene": "The imperial scriptorium in Constantinople. The Ottoman garrison two miles outside the walls. Demetrios with the authorization sheet and the folio. 'Three parties want this destroyed. The Weimar archive is the only institution that will file this as what it is, not as evidence for someone's argument.'",
+      "dialogue": {
+        "dc": 12,
+        "prompt": "Name the category: not Byzantine triumph, not Crusade betrayal — a bilateral agreement from which a third party was excluded; file it under the excluded party.",
+        "failText": "'You're going to argue this is a Byzantine victory document.' Try again. Think about who wasn't at the table.",
+        "passText": "He pushes the folio across. Authorization sheet folded inside. 'The Ottoman garrison is two miles out. Please move quickly.' TOKEN GRANTED: Nicaea Surrender Receipt."
+      },
+      "grantItem": "Nicaea Surrender Receipt",
+      "checkPassFlag": "IST_002_act1Pass"
+    },
+    {
+      "act_id": "act_2",
+      "location": "CON",
+      "type": "skill_check",
+      "activateNode": "CON",
+      "scene": "Constantinople harbor. Chamberlain Andronikos with a provisional recall notice. He was not consulted about the transfer. Standing protocol: documents relating to Crusade history require diplomatic bureau review before transfer. He is right about the protocol. He is wrong about whether this document falls under it.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "failText": "Provisional recall issued. Three-day hold. Diplomatic bureau agrees on the second day; hold lifted.",
+        "passText": "He produces the transit clearance: pre-Crusade bilateral agreement, not subject to Crusade history review protocol. TOKEN STATE 2: Byzantine transit clearance attached."
+      },
+      "checkPassFlag": "IST_002_act2Pass"
+    },
+    {
+      "act_id": "act_3",
+      "location": "RHD",
+      "type": "skill_check",
+      "activateNode": "RHD",
+      "scene": "Rhodes Hospitaller commandery. Brother Konstantin reads the transit clearance with interest. 'Pre-Crusade bilateral. Nicaea receipt. I think we may have jurisdiction — the Hospitaller Order is the inheritor of Crusade archival authority...' The argument is creative. It is also wrong.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "failText": "Preliminary review hold filed. Superior returns a negative on jurisdiction by next morning.",
+        "passText": "He accepts the argument. 'Fair point. Pre-operational.' He writes: jurisdiction declined, outside Crusade archival scope, confirmed pre-operational bilateral. TOKEN STATE 3: Hospitaller endorsement added."
+      },
+      "checkPassFlag": "IST_002_act3Pass"
+    },
+    {
+      "act_id": "act_4",
+      "location": "road_rhodes_north",
+      "type": "combat",
+      "activateNode": "RHD",
+      "scene": "Waystation above the Rhodes harbor. Two men with no identifying marks and practiced ease. Latin Church. They cannot argue it into a drawer so they sent the kind of argument that works in the dark.",
+      "combat": {
+        "enemies": 2,
+        "AC": 13,
+        "HP": 22,
+        "description": "Latin Church hired agents — stop at half health when remaining option costs more than the pay",
+        "failText": "They take the folio. The waystation keeper saw which road they took.",
+        "passText": "Both down or broken. Both endorsements intact. Road north clear. TOKEN STATE 4: carried through."
+      },
+      "checkPassFlag": "IST_002_act4Pass"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck reads both columns. He traces the date. 'They were not in the city when this was signed. The city surrendered to Alexios before the Crusade reached the walls.' He sets it down. 'What category does a document belong in when its subject is a party that wasn't present at its signing?'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 11,
+        "failText": "Filed under Byzantine Diplomatic Records — bilateral agreements. Fighter explains; cross-reference to First Crusade Contextual Records created.",
+        "passText": "He writes: First Crusade — Nicaea; contextual document; party excluded: the Crusade; significance: first liberation was a diplomatic outcome negotiated without Crusade participation. 'Every victory has a receipt. Nicaea's was signed before the victory was announced.' TOKEN TAKEN: Nicaea Surrender Receipt."
+      },
+      "takeItem": "Nicaea Surrender Receipt",
+      "activateMissionBit": "istNicaeaComplete",
+      "checkPassFlag": "IST_002_act5Pass"
+    }
+  ]
+}
+```
+
+---
+
+### New Node Proposals
+
+No new nodes required. Route uses existing CON (Constantinople), RHD (Rhodes), WM (Weimar).
