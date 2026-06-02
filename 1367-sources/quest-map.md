@@ -487,6 +487,9 @@ Game cities are canonical. Source-book settings are proposed new nodes.
 | BGW-02 | The Sinbad Chart | 6 | FAM → VEN → WM | The navigational chart that matches the story's geography; the chart and the story share place names; the archive receives the cartographic evidence of Sinbad's world |
 | BGW-03 | The Caliph's Night Log | 7 | BAG → TBZ → CON → WM | The private security log of the legendary ruler's nocturnal absences; the court chronicle recorded his governance; only the log recorded his nights |
 | BGW-05 | The Genie Contract | 8 | CAI → FAM → WM | The legal document in which the impossible is an administrative category; the appraiser wrote 'not established' and moved on |
+| NWI-02 | The Rearguard's Log | 6 | TBZ → CON → WM | The operational record versus the literary account; the day-log records what happened; the Anabasis records what it meant; both are primary |
+| NWI-04 | The Oath at Calpe | 7 | VEN → WM | The diplomatic formula for sacred oaths; the tablet records the form Tissaphernes used; the formula makes the betrayal visible as deliberate violation |
+| NWI-07 | The Scillus Deed | 8 | MYS → ANC → WM | The settlement inscription that closed the march; the archive holds start, march, and end; the complete arc is now in one collection |
 
 *When a new quest is written, append its row to the Processed Quests table.*
 *When a new location is used, append its row to the Location Grid.*

@@ -1515,3 +1515,409 @@ He notes: "Cross-reference to NWI-01, NWI-03, NWI-04. The archive now holds the 
 
 *NWI-02 complete. 2026-06-02.*
 
+
+---
+
+## Cycle 7 — Angle: *The Oath at Calpe — The Formula That Preceded the Betrayal*
+
+**What this angle reveals that cycles 1-6 missed**: Cycle 1: collective self-governance. Cycle 2: the compact kept and broken. Cycle 3: the front-rank shout. Cycle 4: the invitation as authorship. Cycle 5: evidence of loss. Cycle 6: operational record versus literary account. Cycle 7 enters the specific mechanism of the betrayal: Tissaphernes used a formal diplomatic oath formula when he swore the generals were safe at his tent. The formula was standard. The words were the right words. The gods were named in the correct order. The tablet in Venice records that formula — not the specific oath, but the standard form from which Tissaphernes's oath was made. The archive receives the template of the crime.
+
+**Themes avoided:** all six prior NWI themes; IST-04's "unfinished draft that survived because suppression requires publication" (the tablet was never suppressed, never published, just filed).
+
+**New theme chosen:** "The diplomatic formula for sacred oaths; the tablet records the standard form that Tissaphernes would have used; the formula is the document that makes the betrayal's specific shape visible — he used the right words and killed them anyway."
+
+---
+
+### 5-Act Vignette: *The Oath at Calpe*
+
+#### The Token
+
+The Persian-Greek Oath Formula Tablet: a clay tablet from a Venetian collection, acquired from a 9th-century Arab library, which acquired it from a Byzantine intermediary, which received it from a provincial archive. The tablet contains a diplomatic safe-conduct oath formula in Persian (left column) and Greek (right column): the standard form for Persian-Greek mutual oaths of safe conduct, 4th-5th century BC. Left column begins with Ahura Mazda; right column begins with Zeus. Both columns converge on the same binding clause: *The party who has offered safe conduct shall answer to the gods of both parties if any harm comes to the guest.* Tissaphernes swore this oath. He used these words. Then he killed them.
+
+*The Persian-Greek Oath Formula Tablet · clay, two columns, both intact · Venetian collection estate box · Venice*
+
+---
+
+#### Act I — Venice (VEN)
+
+*The Venetian collector's estate is being distributed. The executor, Messer Alvise Grimani, has catalogued forty-three clay tablets in the collection. This tablet is item 31: "Bilingual clay tablet, Persian and Greek, safe-conduct formula." It is priced with the others.*
+
+A Greek Orthodox scholar named Kyriakos has been buying tablets from the estate. He bought items 1-12, 15, 17, and 22. He is interested in 31. He has already made an offer. The executor is checking whether the Fighter's offer is comparable.
+
+`grantItem: "Persian-Greek Oath Formula Tablet"`
+
+*The Persian-Greek Oath Formula Tablet · accepted, both columns legible · Fighter's hands · Venice estate*
+
+**Skill Check — History DC 12:** *Identify the tablet's specific significance by cross-referencing the formula with Xenophon's description of the Tissaphernes oath — what words Tissaphernes used and what those words required of him under the terms of the formula itself.*
+
+*pass:* Tissaphernes named Zeus and Ahura Mazda. The formula requires: "if any harm comes to the guest." He killed the generals. He violated the specific clause. *The tablet is the document that proves Tissaphernes knew exactly what he was doing — he used the formula that named his obligation and then he killed them anyway. He did not accidentally violate an oath. He chose to.*
+
+*fail:* The tablet noted as a Persian-Greek diplomatic formula. The Tissaphernes connection not assembled.
+
+---
+
+#### Act II — Venice (VEN)
+
+*The Greek Orthodox scholar Kyriakos is not hostile. He is persistent. He has already bought twelve tablets from this collection and has a coherent scholarly project: a study of ancient Greek divine invocations in diplomatic contexts. He wants item 31 to complete the set. He argues that his private collection is the most coherent home for the tablet because it will be read in the company of the eleven other tablets he already holds.*
+
+He is right that his collection provides scholarly context. He is wrong about which context matters most.
+
+*The Persian-Greek Oath Formula Tablet · in the Fighter's hands, Kyriakos's offer letter on the table · Fighter · Venice estate*
+
+**Skill Check — Persuasion DC 13:** *Argue that the tablet's primary significance is its connection to the Anabasis narrative — a tablet collection studying divine invocations is the right context for eleven tablets, but this one needs to be compared with a specific historical event that the archive can provide.*
+
+*pass:* Kyriakos is a scholar. He is annoyed but he understands the argument. "The Anabasis connection." He sets down his offer. "I will cite the archive in my study." *He is precise. He knows the difference between scholarly context and archival context. He lets it go.*
+
+*fail:* He acquires the tablet before the Fighter can secure it. He is willing to provide a full copy for the Weimar archive if the archive writes to him formally.
+
+---
+
+#### Act III — Venice Road (VEN)
+
+*A Turkish merchant on the Venetian road has a buyer in Constantinople who collects pre-Islamic Persian objects. The left column of the tablet — the Persian column — is the primary interest. He makes a direct offer and explains his buyer's specific interest in the formulaic Persian of the Achaemenid period.*
+
+He is honest about his purpose. He will not lie about where it is going. He just wants the Persian column.
+
+*The Persian-Greek Oath Formula Tablet · in the pack, the Turkish merchant's offer letter held out · Fighter · Venetian road*
+
+**Skill Check — Insight DC 12:** *Read whether the Constantinople buyer wants the tablet for its historical significance to the Anabasis narrative or for the Persian artifact value alone.*
+
+*pass:* The Turkish merchant specifically mentions the Achaemenid Persian formulaic style. He does not mention the Greek column. His buyer wants the Persian artifact — the Greek column is irrelevant to the collection. *If the buyer had it, the Greek column would be filed under 'unknown language inscription' and the Anabasis connection would be permanently lost.*
+
+*fail:* The merchant's offer is noted as genuine. The Fighter declines without a specific understanding of why.
+
+---
+
+#### Act IV — Venetian Road North (VEN)
+
+*Two men from the Turkish merchant's network after the offer fails. They are polite until the road narrows. They want the tablet.*
+
+*The Persian-Greek Oath Formula Tablet · in the pack, both men on the road · Fighter · Venetian road north*
+
+**Combat:** 2 hired agents — AC 13, HP 18. Stop at half health when the tablet's commercial value stops justifying the cost. *failText:* They take the tablet. The merchant sends it to Constantinople. The Greek column is filed under unknown language. *passText:* Both down or withdrew. *The formula is 1,800 years old. It does not know what Tissaphernes did with it. The archive will tell it.*
+
+---
+
+#### Act V — Weimar (WM)
+
+*Archivus Sweelinck reads the Persian column. He reads the Greek column. He reads the corresponding passage in the Anabasis — Book 2, Tissaphernes's oath at the tent.*
+
+"He named Ahura Mazda and Zeus." Sweelinck reads the binding clause. "If any harm comes to the guest." He sets down the tablet. "Tissaphernes knew this formula. He used it correctly. He invoked the right gods and specified the right obligation." He is quiet for a long time. "He did not violate an oath he had forgotten. He violated an oath he had made with full knowledge of its terms." He looks at the tablet. "This is the document that proves it was not an accident."
+
+He writes: *Diplomatic Formula Records: tablets or inscriptions recording standard diplomatic oath forms; primary evidence for the specific ritual language that gave a diplomatic oath its binding force; the formula is the document that makes a violation visible as deliberate violation rather than ignorance of obligation.*
+
+He notes: "Cross-reference: NWI-01 (the army's vote), NWI-02 (the march), NWI-04 (Proxenus's letter). The archive holds the beginning of the march and the document that explains its turning point. Tissaphernes knew the words. He chose."
+
+*The Persian-Greek Oath Formula Tablet · both columns open, Anabasis passage beside it · Archivus Sweelinck · Weimar intake desk*
+
+"You receive the Diplomatic Oath Formula Record."
+
+`takeItem: "Persian-Greek Oath Formula Tablet"`
+`grantItem: "Diplomatic Oath Formula Record"`
+
+---
+
+### Quest API Stub — NWI-04
+
+```json
+{
+  "quest_id": "NWI-04",
+  "title": "The Oath at Calpe",
+  "cycle": 7,
+  "book": "NWI — Anabasis (Xenophon)",
+  "token": "Persian-Greek Oath Formula Tablet",
+  "route": ["VEN", "WM"],
+  "theme": "The diplomatic formula for sacred oaths; the tablet records the standard form Tissaphernes would have used; the formula makes the betrayal's specific shape visible — he used the right words and killed them anyway",
+  "archive_category": "Diplomatic Formula Records",
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "VEN",
+      "type": "skill_check",
+      "activateNode": "VEN",
+      "scene": "Venice estate distribution. A Greek Orthodox scholar named Kyriakos has been buying tablets and wants item 31. The executor is comparing offers.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Identify the tablet's specific significance — cross-reference the formula with Xenophon's description of the Tissaphernes oath; what the formula required and what Tissaphernes chose.",
+        "failText": "Tablet noted as Persian-Greek diplomatic formula. Tissaphernes connection not assembled.",
+        "passText": "Tissaphernes named Zeus and Ahura Mazda. The formula requires: 'if any harm comes to the guest.' He killed the generals. He did not accidentally violate an oath — he used the formula that named his obligation and then killed them anyway."
+      },
+      "grantItem": "Persian-Greek Oath Formula Tablet",
+      "checkPassFlag": "nwi04Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "VEN",
+      "type": "skill_check",
+      "activateNode": "VEN",
+      "scene": "Venice estate. Scholar Kyriakos has twelve tablets from this collection and a coherent scholarly project on ancient Greek divine invocations. He wants item 31 to complete the set. He is persistent but not hostile.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "prompt": "Argue that this tablet's primary significance is its connection to the Anabasis narrative — a specific historical event the archive can provide context for — which eleven other divine-invocation tablets cannot.",
+        "failText": "He acquires the tablet before the Fighter can secure it. He will provide a full copy if the archive writes to him formally.",
+        "passText": "'The Anabasis connection.' He sets down his offer. 'I will cite the archive in my study.' He is precise — he knows the difference between scholarly context and archival context."
+      },
+      "checkPassFlag": "nwi04Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "road_venice_north",
+      "type": "skill_check",
+      "activateNode": "VEN",
+      "scene": "Venetian road. A Turkish merchant has a Constantinople buyer who collects pre-Islamic Persian objects. He wants the Persian column specifically and explains his buyer's interest in Achaemenid Persian formulaic style. He is honest about the purpose.",
+      "skillCheck": {
+        "skill": "Insight",
+        "dc": 12,
+        "prompt": "Read whether the Constantinople buyer wants the tablet for its historical significance to the Anabasis or for the Persian artifact value alone.",
+        "failText": "The merchant's offer noted as genuine. The Fighter declines without a specific understanding of why.",
+        "passText": "He does not mention the Greek column. His buyer wants the Persian artifact — if the buyer had it, the Greek column would be filed under 'unknown language inscription' and the Anabasis connection would be permanently lost."
+      },
+      "checkPassFlag": "nwi04Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "road_venice_north",
+      "type": "combat",
+      "activateNode": "VEN",
+      "scene": "Venetian road north, after the offer fails. Two men from the Turkish merchant's network. Polite until the road narrows.",
+      "combat": {
+        "enemies": 2,
+        "AC": 13,
+        "HP": 18,
+        "description": "Hired agents — stop at half health when the tablet's commercial value stops justifying the cost",
+        "failText": "They take the tablet. The merchant sends it to Constantinople. The Greek column is filed under unknown language.",
+        "passText": "Both down or withdrew. The formula is 1,800 years old. It does not know what Tissaphernes did with it. The archive will tell it."
+      },
+      "checkPassFlag": "nwi04Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck reads both columns beside the Anabasis Book 2 passage. 'Tissaphernes knew this formula. He used it correctly. He invoked the right gods and specified the right obligation. He did not violate an oath he had forgotten. He violated an oath he had made with full knowledge of its terms.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Explain the legal-religious significance: the formula created a specific obligation to named gods; violation with knowledge of the terms is a different act than violation through ignorance.",
+        "failText": "Filed under Persian-Greek Diplomatic Records — Achaemenid Period. Cross-reference to NWI Anabasis series created.",
+        "passText": "Sweelinck writes: 'Diplomatic Formula Records: tablets recording standard diplomatic oath forms; primary evidence for the specific ritual language that gave a diplomatic oath its binding force; the formula makes a violation visible as deliberate rather than ignorant.' Cross-reference: NWI-01, NWI-02, NWI-03. You receive the Diplomatic Oath Formula Record."
+      },
+      "takeItem": "Persian-Greek Oath Formula Tablet",
+      "grantItem": "Diplomatic Oath Formula Record",
+      "checkPassFlag": "nwi04Act5Passed",
+      "activateMissionBit": "nwiOathComplete"
+    }
+  ]
+}
+```
+
+---
+
+*NWI-04 complete. 2026-06-02.*
+
+
+---
+
+## Cycle 8 — Angle: *The Scillus Deed — The Document That Closed the March*
+
+**What this angle reveals that cycles 1-7 missed**: Cycle 1: the army's collective reconstitution. Cycle 2: the compact kept and broken. Cycle 3: the front-rank moment. Cycle 4: the invitation as authorship. Cycle 5: evidence of loss. Cycle 6: operational record vs. literary account. Cycle 7: the formula of the betrayal. Cycle 8 shows what came after all of it: the land grant. Xenophon was given an estate at Scillus by the Spartans. He built a small temple to Artemis and inscribed the grant's terms on a stone. The stone was seen and described by a traveler two centuries later. The stone is now gone. A Peloponnesian monastery's 11th-century survey of ancient inscriptions includes a transcription of the Scillus stone. The archive receives the document that records the moment the march ended and a life began.
+
+**Themes avoided:** all seven prior NWI themes; MLA-03's "authenticated copy that precedes the original's uncertain fate" (the stone is gone; this is not about racing the original — the original is already gone and only the transcription exists).
+
+**New theme chosen:** "The settlement inscription is the document that closed the march; the transcription records the moment the Anabasis became past tense; the archive that holds the start and the march and the end holds a complete story."
+
+---
+
+### 5-Act Vignette: *The Scillus Deed*
+
+#### The Token
+
+The Scillus Survey Transcription: a section from a Peloponnesian monastery's ancient inscription survey, compiled in the 11th century by a monk named Eustathios. Section 12 transcribes an inscription from a stone near Scillus, Elis, which Eustathios saw: *Xenophon son of Gryllos, Athenian, received this land from the Lacedaemonians and built here a temple to Artemis of the Ephesians and established the annual sacrifice and games described herein. The land is bounded by [measurements follow]. Let this remain as described.* The stone is no longer there. The transcription is the only record.
+
+*The Scillus Survey Transcription · monastery survey volume, Section 12 marked · Mystras monastery shelf · waiting*
+
+---
+
+#### Act I — Mystras (MYS)
+
+*A Peloponnesian monastery near ancient Olympia is relocating to Mystras. The survey volume — part of the monastery's foundation records — is being crated with the library. Father Demetrios, the librarian, has known about Section 12 for twenty years. A visiting scholar identified the Scillus inscription three years ago. Father Demetrios has been waiting for the right destination.*
+
+He does not give it to scholars. He gives it to the Fighter. He says: "Scholars want to publish it. The archive wants to hold it. I want it held." He has thought about this distinction for three years. He hands over the survey volume opened to Section 12.
+
+`grantItem: "Scillus Survey Transcription"`
+
+*The Scillus Survey Transcription · accepted, Section 12 open · Fighter's hands · monastery library*
+
+**Skill Check — History DC 12:** *Understand the inscription's significance — what the Scillus grant represented as the formal close of the march.*
+
+*pass:* The Anabasis ends before Xenophon's settlement. The inscription begins after. *He marched home. He was given land. He built a temple. He inscribed the terms. The march that the Anabasis describes ended somewhere between the army's dispersal and the inscription being cut. This is the document that records that ending.* 
+
+*fail:* The inscription noted as a land grant transcription with Xenophon connection. The significance of the closing as a distinct document not assembled.
+
+---
+
+#### Act II — Mystras (MYS)
+
+*An official of the Byzantine Despotate of Morea — a land-title surveyor named Konstantinos — is compiling a survey of ancient inscriptions in Elis for administrative purposes. Modern land-title disputes in the Peloponnese sometimes trace back to ancient boundary descriptions. Section 12's boundary measurements could be relevant to a current dispute near old Scillus.*
+
+He is not hostile. He is systematic. He wants a copy for the administrative survey, which would also benefit from the boundary data.
+
+*The Scillus Survey Transcription · in the Fighter's hands, Konstantinos's administrative request · Fighter · monastery library exit*
+
+**Skill Check — Persuasion DC 12:** *Offer to provide a full copy of the boundary measurements from Section 12 for the administrative survey while the original goes to the archive; the copy serves his current purpose; the original serves the archive's.*
+
+*pass:* He accepts. He is practical — he needs the boundary data, not the original document. "A copy of Section 12 with the full boundary description." The Fighter copies the relevant measurements. Konstantinos takes the copy. The original continues. *He is a surveyor. He cares about the measurements. The archive cares about the document.*
+
+*fail:* He retains the survey volume for three days to copy the measurements himself. The volume is returned. Delay: three days.
+
+---
+
+#### Act III — Ancona (ANC)
+
+*The Ancona factor's house. A Florentine humanist scholar, Matteo di Neri Acciaiuoli, has been in Ancona for two weeks tracking the survey volume. He is writing a Latin biography of Xenophon and the Scillus inscription would provide the only primary evidence for the final decade of Xenophon's life.*
+
+He makes a careful, principled request. He will publish the transcription in his biography and give the archive full credit. He argues that a published biography will bring more scholarly attention to the archive than the archive holding the document privately.
+
+*The Scillus Survey Transcription · in the pack, Matteo's scholarly letter on the table · Fighter · Ancona factor's house*
+
+**Skill Check — Persuasion DC 12:** *Argue that the archive holding the original provides a permanent scholarly resource while a published biography cites a document held in one collection; the archive is not private — it is the most accessible destination for documents.*
+
+*pass:* He is a Florentine humanist. He understands the argument. "The archive is the institution. A biography is a publication." He accepts. He will cite the archive when his biography is complete. *He is a good scholar. He knows the difference between publishing a source and holding it.*
+
+*fail:* He retains a full transcription of Section 12 before releasing the volume. His biography will include the full inscription text.
+
+---
+
+#### Act IV — Ancona Road (ANC)
+
+*Two men from a Greek noble family that claims descent from the later owners of the Scillus estate — a family that received the land after Xenophon's exile from Sparta. If the inscription establishes the original grant's terms, it might be used to challenge their family's subsequent acquisition. They do not want the document in a foreign archive where scholars will read it.*
+
+*The Scillus Survey Transcription · in the pack, both men on the road · Fighter · Ancona road*
+
+**Combat:** 2 hired men — AC 12, HP 16. Family obligation, limited resources. Stop at first serious injury. *failText:* They take the volume. The road north has waystation factors. *passText:* Both down or withdrew. *The estate boundaries were cut in stone. The stone is gone. The transcription will outlast the family's claim by the same margin the stone outlasted Xenophon.*
+
+---
+
+#### Act V — Weimar (WM)
+
+*Archivus Sweelinck reads Section 12. He reads the end of the Anabasis. He reads Section 12 again.*
+
+"He marched home," Sweelinck says. "He was given land. He built a temple. He wrote the terms on a stone." He sets down the survey volume. "The Anabasis ends when the army disperses. The inscription begins when Xenophon begins." He reaches for the NWI folder. "We have Proxenus's letter — the invitation before the march. We have the day-log — the march itself. We have the army's vote — the march reconstituting itself. We have the Tissaphernes oath — the turning point. We have the catalog of the lost text. We have the broken compact." He sets the survey beside the folder. "The archive now holds the start, the march, and the end. This is the document that closes the story."
+
+He writes: *Settlement Records — Post-Campaign Documents: inscriptions or deeds recording the disposition of survivors after a recorded campaign; primary evidence for the transition from campaign life to civilian settlement; the document that closes the story the text opens.*
+
+He notes: "Cross-reference: NWI-01 through NWI-07. The archive holds the complete arc: invitation, march, betrayal, survival, compact, loss, and settlement. No single document has the whole story. All of them together do."
+
+*The Scillus Survey Transcription · Section 12 open, NWI folder beside it · Archivus Sweelinck · Weimar intake desk*
+
+"You receive the Settlement Inscription Record."
+
+`takeItem: "Scillus Survey Transcription"`
+`grantItem: "Settlement Inscription Record"`
+
+---
+
+### Quest API Stub — NWI-07
+
+```json
+{
+  "quest_id": "NWI-07",
+  "title": "The Scillus Deed",
+  "cycle": 8,
+  "book": "NWI — Anabasis (Xenophon)",
+  "token": "Scillus Survey Transcription",
+  "route": ["MYS", "ANC", "WM"],
+  "theme": "The settlement inscription is the document that closed the march; the transcription records the moment the Anabasis became past tense; the archive that holds the start and the march and the end holds a complete story",
+  "archive_category": "Settlement Records — Post-Campaign Documents",
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "MYS",
+      "type": "skill_check",
+      "activateNode": "MYS",
+      "scene": "Peloponnesian monastery relocating to Mystras. Father Demetrios has waited three years for the right destination. 'Scholars want to publish it. The archive wants to hold it. I want it held.' He hands over the volume opened to Section 12.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Understand the inscription's significance — what the Scillus grant represented as the formal close of the march.",
+        "failText": "Inscription noted as a land grant transcription with Xenophon connection. Significance of the closing not assembled.",
+        "passText": "The Anabasis ends before Xenophon's settlement. The inscription begins after. He marched home. He was given land. He built a temple. He inscribed the terms. This is the document that records that ending."
+      },
+      "grantItem": "Scillus Survey Transcription",
+      "checkPassFlag": "nwi07Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "MYS",
+      "type": "skill_check",
+      "activateNode": "MYS",
+      "scene": "Monastery library exit. Byzantine Despotate land-title surveyor Konstantinos is compiling a survey of ancient inscriptions in Elis — modern disputes sometimes trace back to ancient boundary descriptions. Section 12's measurements could be relevant to a current case.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "prompt": "Offer to provide a full copy of Section 12's boundary measurements for the administrative survey while the original goes to the archive — the copy serves his purpose; the original serves the archive's.",
+        "failText": "He retains the volume for three days to copy the measurements himself. Returned after three days. Delay.",
+        "passText": "He accepts. He is practical — he needs the measurements, not the original. The Fighter copies the relevant data. Konstantinos takes the copy. The original continues."
+      },
+      "checkPassFlag": "nwi07Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "ANC",
+      "type": "skill_check",
+      "activateNode": "ANC",
+      "scene": "Ancona factor's house. Florentine humanist Matteo di Neri Acciaiuoli is writing a Latin biography of Xenophon. The Scillus inscription would provide the only primary evidence for Xenophon's final decade. He is careful, principled, and will give the archive full credit.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "prompt": "Argue that the archive holding the original provides a permanent scholarly resource — the archive is not private, it is the most accessible destination; a biography cites one held document, the archive holds it for all scholars.",
+        "failText": "He retains a full transcription of Section 12. His biography will include the full inscription text.",
+        "passText": "'The archive is the institution. A biography is a publication.' He accepts and will cite the archive when complete. He knows the difference between publishing a source and holding it."
+      },
+      "checkPassFlag": "nwi07Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "road_ancona_north",
+      "type": "combat",
+      "activateNode": "ANC",
+      "scene": "Ancona road. Two men from a Greek noble family claiming descent from later owners of the Scillus estate. If the inscription establishes the original grant's terms, it might challenge their family's subsequent acquisition. They do not want it in a foreign archive.",
+      "combat": {
+        "enemies": 2,
+        "AC": 12,
+        "HP": 16,
+        "description": "Family obligation, limited resources — stop at first serious injury",
+        "failText": "They take the volume. The road north has waystation factors.",
+        "passText": "Both down or withdrew. The estate boundaries were cut in stone. The stone is gone. The transcription will outlast the family's claim by the same margin the stone outlasted Xenophon."
+      },
+      "checkPassFlag": "nwi07Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck reads Section 12, then reaches for the NWI folder. 'We have the invitation, the march, the vote, the oath, the catalog, the compact, and now the end. The archive holds the complete arc. No single document has the whole story. All of them together do.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 11,
+        "prompt": "Confirm the arc: Proxenus's letter began it; the march was documented in the day-log; the betrayal's formula has been preserved; the army's compact was broken; the lost text's evidence survives; now the settlement inscription closes it.",
+        "failText": "Filed under Greek Settlement Records — Classical Period. Cross-reference to NWI Anabasis series created.",
+        "passText": "Sweelinck writes: 'Settlement Records — Post-Campaign Documents: inscriptions recording the disposition of survivors after a recorded campaign; the document that closes the story the text opens.' Cross-reference: NWI-01 through NWI-07. You receive the Settlement Inscription Record."
+      },
+      "takeItem": "Scillus Survey Transcription",
+      "grantItem": "Settlement Inscription Record",
+      "checkPassFlag": "nwi07Act5Passed",
+      "activateMissionBit": "nwiScillusComplete"
+    }
+  ]
+}
+```
+
+---
+
+*NWI-07 complete. 2026-06-02.*
+

@@ -58,13 +58,13 @@ Main vignette **NWI-01 "What the Sea Knows"** is fully spec'd with UQF v1.0 JSON
 
 The following quest seeds were generated from the full 7-book read. Each has a paragraph-length story concept in NWI-anabasis.md. They need full vignette treatment: 5 acts, TOKEN, skill checks, UQF JSON, and admin updates.
 
-### §NWI-02 — The Rearguard's Log (Books 3–5)
+### §NWI-02 — The Rearguard's Log (Books 3–5) ✓ DONE 2026-06-02
 The army kept daily records of distance, terrain, engagements, and supplies during the march north. A relay of scribes maintained the running account separate from the literary text Xenophon later wrote. A partial copy of the original day-log for the mountain crossing through Kurdistan survives in a Pontic monastery near Trabzon. Fighter escorts it to Weimar before a planned demolition disturbs the library.
 
 ### §NWI-03 — Proxenus's Letter (Book 2) ✓ DONE 2026-06-02
 Route: ORC → ATH → RGS → WM. Theme: the invitation as a form of authorship — Proxenus recruited the man who would write the Anabasis; the letter contains his private assessment of Xenophon; new archive category: epistolary authorship, founding correspondence.
 
-### §NWI-04 — The Oath at Calpe (Book 2)
+### §NWI-04 — The Oath at Calpe (Book 2) ✓ DONE 2026-06-02
 Tissaphernes swore sacred oaths by the gods of Greece and Persia that the generals were safe at his tent. The diplomatic formula for such oaths was standardized in Persian-Greek correspondence. A clay tablet in a Venetian collection, acquired from a 9th-century Arab library, contains what appears to be the Persian-language formula for this class of safe-conduct oath — the same type Tissaphernes would have used. Fighter escorts the tablet.
 
 ### §NWI-05 — The Salmydessus Books (Book 7) ✓ DONE 2026-06-02
@@ -73,7 +73,7 @@ Route: VAR → CON → WM. Theme: evidence of loss is a primary document — the
 ### §NWI-06 — The Cretan's Account (Book 5) ✓ DONE 2026-06-02
 Route: SIN → CON → WM. Theme: the front-rank view of communal salvation; the shout coming from the front and keeping coming; the specific physical details the literary account could not preserve. New node: SIN (Sinope).
 
-### §NWI-07 — The Scillus Deed (Book 5)
+### §NWI-07 — The Scillus Deed (Book 5) ✓ DONE 2026-06-02
 After the march, Xenophon settled at Scillus near Olympia on an estate granted by the Spartans. He built a small temple to Artemis and set up a stone inscription describing the grant's terms. A 2nd-century traveler's account describes seeing the stone. A Peloponnesian monastery's foundation records contain a survey of ancient inscriptions in the area, including a transcription of the Scillus stone. Fighter escorts the survey to a neutral archive.
 
 ### §NWI-08 — The Towns That Were Not Given (Book 7)
