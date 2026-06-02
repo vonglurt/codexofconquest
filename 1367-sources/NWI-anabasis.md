@@ -1304,3 +1304,214 @@ activateMissionBit: nwi05Complete
 ---
 
 *NWI-05 complete. 2026-06-02.*
+
+---
+
+## Cycle 6 — Angle: *The Rearguard's Log — What the March Actually Was*
+
+**What this angle reveals that cycles 1-5 missed**: Cycle 1: army as self-electing republic. Cycle 2: the compact kept and broken. Cycle 3: front-rank view of communal salvation. Cycle 4: invitation as authorship. Cycle 5: evidence of loss as primary document. Cycle 6 shows the document that records what actually happened rather than what it meant. The Anabasis is a literary text. It describes events in terms of their significance — "difficult country," "the rearguard held." The day-log of the operational scribes records distance in stadia, supplies in days, casualties by count. The two accounts do not contradict each other. They inhabit different categories of truth.
+
+**Themes avoided:** all five prior NWI themes; MLA-05's "source document behind the canonical account" (Thucydides summarized what Nicias said; the Anabasis is a different kind of selection — not abbreviation but transformation).
+
+**New theme chosen:** "The operational record versus the literary account; the day-log records what happened, the Anabasis records what it meant; the archive receives both forms of truth about the same twelve days."
+
+---
+
+### 5-Act Vignette: *The Rearguard's Log*
+
+#### The Token
+
+The Kurdistan Day-Log: a Byzantine Greek copy of the army's operational scribes' relay log for the mountain crossing through Kurdistan, twelve days' entries. Date (by days from Cerasus departure), distance in stadia, terrain description, supply status, engagement summary. Day 8 entry: *Distance: eighteen stadia. Terrain: rocky gorge, two stream crossings, one defensible pass. Supplies: reduced to two days' grain. Engagement: rearguard skirmish, three casualties, no ground lost.* The corresponding Anabasis passage says only: "that day the army moved through difficult country and the rearguard was pressed hard but held its ground." The log is the source behind the sentence.
+
+*The Kurdistan Day-Log · monastery copy, twelve entries, Day 8 marked · Trabzon monastery library shelf · waiting*
+
+---
+
+#### Act I — Trabzon (TBZ)
+
+*The Pontic monastery near Trabzon is expanding. The old library section will be demolished in six weeks. Brother Methodios has been the librarian for six months and the catalogue is unfinished. He found the log three weeks ago and identified it as an operational military document — he is not a classicist but he is precise and he recognizes Latin and Greek organizational formatting.*
+
+He knows a demolition is not an archive. He gives the Fighter the log without asking for payment. He says: "I cannot finish the catalogue in time. Take the things I have found first and file them somewhere they will be read."
+
+`grantItem: "Kurdistan Day-Log"`
+
+*The Kurdistan Day-Log · accepted, twelve entries, Day 8 visible · Fighter's hands · monastery library*
+
+**Skill Check — History DC 12:** *Read Day 8 alongside the corresponding Anabasis passage and understand what the log records that the literary text does not.*
+
+*pass:* Eighteen stadia. Three casualties. Two days' grain. "The rearguard was pressed hard but held." *The Anabasis knows what mattered. The log knows what happened. They are not contradicting each other. They are speaking different languages about the same twelve days.*
+
+*fail:* The day-log noted as an operational military record corresponding to the Anabasis march. The specific gap between formats not assembled.
+
+---
+
+#### Act II — Trabzon (TBZ)
+
+*A Venetian factor in Trabzon has heard about the demolition. He has been buying documents from the library as the catalogue failed to keep pace. He makes a standard offer for the day-log — fair price, Venice destination. He does not know what the log is; he knows it is old and Greek and came from the library before the demolition.*
+
+*The Kurdistan Day-Log · in the Fighter's pack, the factor's offer letter in hand · Fighter · Trabzon factor's house*
+
+**Skill Check — Persuasion DC 12:** *Establish that the log's value depends on comparison with the literary account it underlies; the Weimar archive holds the Anabasis; the two documents in the same collection produce something neither produces alone.*
+
+*pass:* The factor considers. He does not have a buyer for military logbooks — he was offering the standard Venice rate for old Greek manuscripts. "If the archive has the text, they should have the log." He steps aside. *He is a professional. He can see the logic of the pairing.*
+
+*fail:* He retains a transcription of the twelve entries. The transcription will reach Venetian Greek manuscript collectors within a year.
+
+---
+
+#### Act III — Constantinople (CON)
+
+*Byzantine imperial scholar Nikephoros Chrysoberges has been working on a critical edition of the Anabasis for twelve years. He has assembled sixty-two parallel sources — inscriptions, coins, papyri, military records — and the day-log would be his most valuable discovery. He makes a formal scholarly request.*
+
+He is a genuine senior scholar. He has the authority of the imperial academy. He is right that his critical edition will serve scholarship.
+
+*The Kurdistan Day-Log · in the pack, Nikephoros's formal request in the academy's hand · Fighter · Constantinople imperial academy anteroom*
+
+**Skill Check — Persuasion DC 13:** *Argue that a critical edition cites its sources and returns them to the source collection; a neutral archive that holds both the Anabasis and the day-log provides the comparison that the critical edition will make; he can cite the archive instead of holding the original.*
+
+*pass:* He is a scholar. He understands this argument better than most. "The comparison is the scholarship," he says. He is annoyed but he is precise. "The archive will correspond with me when it processes the log?" He lets it go. *He is annoyed because he is right that the log would make his edition definitive. But he is precise enough to know that the archive argument is also right.*
+
+*fail:* He retains a full copy of all twelve entries. His critical edition will cite the Weimar archive regardless. The original continues.
+
+---
+
+#### Act IV — Constantinople (CON)
+
+*Two men from a Kurdish trading family with commercial operations in the passes the log crosses. The terrain descriptions in the log — gorges, stream crossings, defensible passes — correspond to passes still used in 1367 for the eastern trade routes. They want the log for route intelligence, not for scholarship.*
+
+*The Kurdistan Day-Log · in the pack, both men approaching on the Constantinople harbor road · Fighter · harbor road*
+
+**Hybrid — Persuasion DC 12 first; fail → Combat:**
+
+*Persuasion pass:* Argue that a 1,800-year-old terrain description is not reliable for current route intelligence — mountain passes change, stream crossings shift, what was defensible in 401 BC may not be defensible now. *They are businessmen. They are doing the math on the reliability of ancient route data.* They withdraw.
+
+*Persuasion fail → Combat:* 2 Kurdish trading agents, AC 12, HP 18. Commercial, not violent. Stop when math changes. *failText:* They take the log. The Constantinople harbor has factors who know the Kurdish trade network. *passText:* Both down or withdrew. *The passes are still there. The log records their names. The names outlasted everyone.*
+
+---
+
+#### Act V — Weimar (WM)
+
+*Archivus Sweelinck reads the twelve entries. He reads the twelve corresponding Anabasis passages. He goes back to Day 8 three times.*
+
+"Eighteen stadia," he says. "Three dead." He reads the Anabasis: "difficult country." He sets both down. "The Anabasis tells you what the march was. The log tells you what it cost." He is quiet for a moment. "Xenophon was there. He knew the stadia and the casualties. He chose to write 'difficult country.'" He looks at the log. "He was not hiding the cost. He was translating it. He translated eighteen stadia and three dead into a phrase that would carry the information forward across a different kind of time." He looks up. "The log carries the first kind of time. The Anabasis carries the second."
+
+He writes: *Operational Records — Literary Source Documents: military day-logs whose events are recorded in literary form in a corresponding text; primary evidence for the gap between operational record and literary account; the log records the march; the text records what the march meant; both are primary, neither supersedes the other.*
+
+He notes: "Cross-reference to NWI-01, NWI-03, NWI-04. The archive now holds the republic's formation, the invitation, the log, and the catalog. It is building the archive of the march."
+
+*The Kurdistan Day-Log · Day 8 open beside the Anabasis · Archivus Sweelinck · Weimar intake desk*
+
+"You receive the Operational Log Record."
+
+`takeItem: "Kurdistan Day-Log"`
+`grantItem: "Operational Log Record"`
+
+---
+
+### Quest API Stub — NWI-02
+
+```json
+{
+  "quest_id": "NWI-02",
+  "title": "The Rearguard's Log",
+  "cycle": 6,
+  "book": "NWI — Anabasis (Xenophon)",
+  "token": "Kurdistan Day-Log",
+  "route": ["TBZ", "CON", "WM"],
+  "theme": "The operational record versus the literary account; the day-log records what happened, the Anabasis records what it meant; the archive receives both forms of truth about the same twelve days",
+  "archive_category": "Operational Records — Literary Source Documents",
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "TBZ",
+      "type": "skill_check",
+      "activateNode": "TBZ",
+      "scene": "Pontic monastery near Trabzon, six weeks from demolition. Brother Methodios found the log three weeks ago. 'I cannot finish the catalogue in time. Take the things I have found first and file them somewhere they will be read.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Read Day 8 alongside the corresponding Anabasis passage — understand what the log records that the literary text does not.",
+        "failText": "Day-log noted as operational military record corresponding to the Anabasis march. Specific gap between formats not assembled.",
+        "passText": "Eighteen stadia. Three casualties. Two days' grain. The Anabasis knows what mattered. The log knows what happened. They are speaking different languages about the same twelve days."
+      },
+      "grantItem": "Kurdistan Day-Log",
+      "checkPassFlag": "nwi02Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "TBZ",
+      "type": "skill_check",
+      "activateNode": "TBZ",
+      "scene": "Trabzon factor's house. A Venetian factor has been buying documents from the library before demolition. He makes a standard offer — fair price, Venice destination. He does not know what the log is.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "prompt": "Establish that the log's value depends on comparison with the literary account it underlies — the Weimar archive holds the Anabasis; both documents in the same collection produce something neither produces alone.",
+        "failText": "He retains a transcription of the twelve entries. The transcription will reach Venetian Greek manuscript collectors within a year.",
+        "passText": "'If the archive has the text, they should have the log.' He steps aside. He is a professional and can see the logic of the pairing."
+      },
+      "checkPassFlag": "nwi02Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "CON",
+      "type": "skill_check",
+      "activateNode": "CON",
+      "scene": "Constantinople imperial academy. Scholar Nikephoros Chrysoberges has been working on a critical Anabasis edition for twelve years. Sixty-two parallel sources assembled. The day-log would be his most valuable discovery. He makes a formal request with full academic authority.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "prompt": "Argue that a critical edition cites its sources and returns them to the source collection — a neutral archive holding both the Anabasis and the log provides the comparison the edition will make.",
+        "failText": "He retains a full copy of all twelve entries. His critical edition will cite the Weimar archive regardless.",
+        "passText": "'The comparison is the scholarship.' He is annoyed but precise. 'The archive will correspond with me when it processes the log?' He lets it go."
+      },
+      "checkPassFlag": "nwi02Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "CON",
+      "type": "hybrid",
+      "activateNode": "CON",
+      "scene": "Constantinople harbor road. Two Kurdish trading agents — the terrain descriptions in the log correspond to passes still used in 1367 for eastern trade routes. They want route intelligence, not scholarship.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "prompt": "Argue that an 1,800-year-old terrain description is not reliable for current route intelligence — mountain passes change, stream crossings shift.",
+        "failText": "Combat begins: 2 agents, AC 12, HP 18. failText: They take the log. passText: Both down or withdrew."
+      },
+      "combat": {
+        "enemies": 2,
+        "AC": 12,
+        "HP": 18,
+        "description": "Kurdish trading agents — commercial, stop when math changes",
+        "failText": "They take the log. The Constantinople harbor has factors who know the Kurdish trade network.",
+        "passText": "Both down or withdrew. The passes are still there. The log records their names. The names outlasted everyone."
+      },
+      "checkPassFlag": "nwi02Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck reads twelve log entries against twelve Anabasis passages. 'Xenophon was there. He knew the stadia and the casualties. He chose to write difficult country. He was not hiding the cost — he was translating it. The log carries the first kind of time. The Anabasis carries the second.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 11,
+        "prompt": "Explain the relationship between operational and literary truth: the log's specificity and the Anabasis's generalization are both accurate — they are different archival categories, not different versions.",
+        "failText": "Filed under Greek Military Records — Classical Period. Cross-reference to Anabasis text created.",
+        "passText": "Sweelinck writes: 'Operational Records — Literary Source Documents: military day-logs whose events are recorded in literary form; primary evidence for the gap between operational record and literary account; the log records the march; the text records what the march meant; both are primary, neither supersedes.' Cross-reference: NWI-01 through NWI-05. You receive the Operational Log Record."
+      },
+      "takeItem": "Kurdistan Day-Log",
+      "grantItem": "Operational Log Record",
+      "checkPassFlag": "nwi02Act5Passed",
+      "activateMissionBit": "nwiRearguardComplete"
+    }
+  ]
+}
+```
+
+---
+
+*NWI-02 complete. 2026-06-02.*
+
