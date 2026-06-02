@@ -113,19 +113,19 @@ Main vignette **MLA-01 "The Third Comparison"** is fully spec'd with UQF v1.0 JS
 
 The following quest seeds were generated from full narrative recall. Each has a paragraph-length story concept in MLA-plutarch-lives.md. They need full vignette treatment: 5 acts, TOKEN, skill checks, UQF JSON, and admin updates.
 
-### §MLA-02 — Alcibiades's Letter to Tissaphernes (Life of Alcibiades)
+### §MLA-02 — Alcibiades's Letter to Tissaphernes (Life of Alcibiades) ✓ DONE 2026-06-02
 Alcibiades in Persian exile wrote to Tissaphernes outlining the case for Persian non-intervention — keeping both Athenian and Spartan sides exhausted. The letter is the most explicit surviving statement of his strategic thinking outside Thucydides's paraphrase. A papyrus copy survives in an Egyptian monastery. Fighter escorts it.
 
 ### §MLA-03 — The Solon Tablet (Life of Solon)
 Solon's laws were inscribed on wooden tablets, then marble copies made; all lost. A late Roman copy of a Hellenistic transcription of several laws survives in a Spartan archive. A Venetian collector has acquired it and is sailing for Venice. Fighter escorts an authenticated rubbing to a neutral archive before the stone is lost at sea.
 
-### §MLA-04 — Tiro's Notes (Life of Cicero)
+### §MLA-04 — Tiro's Notes (Life of Cicero) ✓ DONE 2026-06-02
 Cicero's secretary Marcus Tullius Tiro invented systematic shorthand to record speeches as delivered. A wax notebook of his shorthand drafts for the second Philippic was preserved in a monastery near Cicero's hometown. The shorthand contains variant passages not in the published speech. Fighter escorts it.
 
 ### §MLA-05 — The Nicias Correspondence (Life of Nicias)
 Nicias wrote dispatches to Athens during the Sicilian Expedition that survive in excerpt in Thucydides; but Plutarch quotes material not in Thucydides, suggesting fuller copies existed. A complete Nician dispatch from the critical summer of 413 BC survives in a Byzantine monastery as a text in a volume otherwise containing geographic descriptions. Fighter escorts the volume.
 
-### §MLA-06 — The Agrarian Commission Record (Life of Tiberius Gracchus)
+### §MLA-06 — The Agrarian Commission Record (Life of Tiberius Gracchus) ✓ DONE 2026-06-02
 Tiberius Gracchus's land commission (133 BC) produced land-redistribution records: who received what allotment, where, under what legal description. A fragmentary copy of one year's commission decisions survives in a Roman archive. In 1367, the land it describes is in Campania and still arable; the document has legal implications for current landowners who trace their ownership to Sullan confiscations. Fighter escorts it before it can be confiscated.
 
 ### §MLA-07 — The Missing Preface (Epaminondas/Scipio — Lost Lives)

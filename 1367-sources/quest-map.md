@@ -465,6 +465,9 @@ Game cities are canonical. Source-book settings are proposed new nodes.
 | WAW-07 | The Mile-Marker Account | 3 | ROM → WM | Secular administrative witness; the road official did not know what he saw |
 | WAW-04 | Chilo's Account | 4 | ATH → CON → RGS → WM | The informer's register becomes the martyrs' witness; dual accession, one chain of custody |
 | WAW-05 | Acte's Letter | 5 | ROM → FLR → WM | The letter that will soon stop being true; filed under the act, not the man |
+| MLA-04 | Tiro's Notes | 3 | NAP → BOL → WM | The shorthand draft is primary testimony; what the orator thought before he decided what to say |
+| MLA-02 | Alcibiades's Letter | 4 | ALE → RGS → VEN → WM | Treasonous and honest simultaneously; filed under stateless actor, not Athens |
+| MLA-06 | The Agrarian Commission Record | 5 | ROM → BOL → WM | The historical document that is still a live lawsuit; archive suspends evidentiary function |
 
 *When a new quest is written, append its row to the Processed Quests table.*
 *When a new location is used, append its row to the Location Grid.*

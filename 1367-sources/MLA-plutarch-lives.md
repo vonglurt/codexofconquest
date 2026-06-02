@@ -660,3 +660,666 @@ The folio enters the Weimar archive under a new category. The monastery seal, th
 | Code | Name | Location | Description |
 |------|------|----------|-------------|
 | NXS | Naxos Ducal Monastery Library | Naxos, Aegean, under Venetian ducal authority | Stone shelves, salt air, old binding smell; Brother Grigorios's desk in the corner of the cosmography collection; the harbor visible below; the place where the preface sat for four years waiting for the right carrier |
+
+---
+
+## MLA-04 — Tiro's Notes (Life of Cicero)
+**Cycle 3**
+
+*(Theme differentiation: Avoiding MLA-01's "comparison produces what neither biography contains alone," MLA-02's "preface that outlived its evidence." Avoiding FCO-14's "alternate ending that survived in a margin." New theme: the shorthand draft is faster than deliberation and therefore more honest — the wax catches the moment before revision; the variant passages are not rejected alternatives but earlier selves of the argument; the archive receives the draft as primary evidence of what the orator thought before he decided what to say.)*
+
+---
+
+*Tiro's Wax Shorthand Notebook · a compact diptych of beeswax tablets, dense Tironian notes across eight pages, three large passages marked with a different stylus indicating revision sessions; a 10th-century monastery hand in the margin: "variants recorded here, text diverges from known published version in three places" · in Abbot Anselmo's document chest · Benedictine monastery near Arpinum, Campania*
+
+---
+
+### Act I — Before the Florentines Arrive
+
+A delegation from the Platonic Academy in Florence sent a courier yesterday. Messer Giacomo Salviati wants the notebook for a commentary project on Cicero's late rhetoric. He has not arrived yet. The abbot has his letter.
+
+Abbot Anselmo is not obligated to Florence. He is uncertain. The document has been in this monastery's care for four hundred years; releasing it to anyone is a decision he will be explaining for the next four hundred. The Florentines have a claim of scholarly urgency. The archive has a claim of permanent preservation.
+
+The argument available: a commentary project uses the document. It marks it, copies it, cites it, and thereby changes what the document is by anchoring it in its first scholarly use. A neutral archive preserves it unchanged for all future commentary projects, including any the Florentines might eventually write. The first use should not define the document; the archive is precisely the institution that holds it before any use defines it.
+
+*The abbot looked at Salviati's letter for a long time.* Then he folded it and put it in a different pile — the pile of things he had already decided about.
+
+He wrote the Release Authorization with the monastery seal and the date, and he added a line the Fighter had not asked for: "released for permanent preservation, not for commentary or annotation."
+
+You receive the Monastic Release Authorization. You receive Tiro's Wax Shorthand Notebook.
+
+---
+
+### Act II — Messer Falcone
+
+*Tiro's Wax Shorthand Notebook · in the Fighter's satchel with the Release Authorization · at the Naples harbor freight office*
+
+Falcone is a bookseller with clients who pay for variant texts. He knows what three unpublished passages in a Cicero draft are worth to a collector who considers himself Cicero's intellectual heir. He makes a specific offer, names a specific sum, and is prepared to wait while the Fighter considers it.
+
+He is not threatening. He is commercial.
+
+The Fighter refused.
+
+Falcone nodded as if this was the expected answer. He wrote a Non-Copy Statement on the back of his own business card — standard commercial language, his seal pressed into the wax — and slid it across the desk. *Professional courtesy,* he said. *It proves the document was not touched here.*
+
+You receive the Bookseller's Non-Copy Statement.
+
+---
+
+### Act III — Maestro Uccelli
+
+*Tiro's Wax Shorthand Notebook · in the satchel with two documents · in the corridor outside Maestro Uccelli's classroom, Bologna studium*
+
+The rhetoric professor heard about the notebook from a student who had been at the monastery on other business and wrote ahead. He was waiting at the gate when the Fighter arrived.
+
+Uccelli's argument is principled: rhetorical variant passages belong to the study of rhetoric, which means they belong in a studium, not a German archive three months' travel from any scholar who might use them. The archive is the mechanism by which scholarship is delayed, possibly indefinitely.
+
+He is wrong about what the archive does to access. He has not thought about what a studium's first annotation does to an unannotated document.
+
+*The students in the corridor were listening.*
+
+The insight needed: a studium does not preserve neutrally; it annotates, cites, excerpts. The first annotation becomes the lens through which all subsequent readings occur. The archive is the only institution that can receive the document before this happens. The notebook in an archive is more accessible to scholarship over time than a notebook in a single classroom.
+
+Uccelli heard this, and his face shifted — not agreement, but recognition. He sat down in the corridor. His students dispersed. He wrote the Non-Retention Statement himself, without being asked.
+
+You receive the Scholar's Non-Retention Statement.
+
+---
+
+### Act IV — The Florentine Courier
+
+*Tiro's Wax Shorthand Notebook · in the satchel with three documents · on the road north of Bologna, afternoon*
+
+The courier is from Salviati's office in Florence. He carries a legal document asserting that the monastery's copy of the Tiro notebook was made from a Florentine original held in the Laurentian collection — and is therefore, under Florentine property law, a Florentine document held in an Arpinum monastery, not an Arpinum document at all.
+
+The claim is careful. The document is recent.
+
+The monastery's catalog, which the abbot mentioned offhand when signing the Release Authorization, dates the notebook's accession as "4th century, provenance Campania." The Laurentian collection was assembled in the 1370s — three years from now. The alleged original is cited in a letter Salviati sent to the monastery six months ago, not in any catalog predating it.
+
+*The courier was waiting for a response.*
+
+The Fighter noted the chronological impossibility in writing — a single page, dates listed, the Laurentian catalog's known founding date versus the monastery's accession record — and handed it back to the courier with the sealed satchel still in hand. The courier read it twice. He could not argue with the dates. He rode back south.
+
+You receive the Provenance Rebuttal Note.
+
+---
+
+### Act V — What the Draft Is
+
+*Tiro's Wax Shorthand Notebook · still sealed in the satchel, all four documents present · at the Archivus Sweelinck's intake desk, Weimar*
+
+The Archivus opened the notebook carefully and read through the Tironian notes with a stylus he did not use, tracing the column without touching the wax. He read the three revision passages. He read the 10th-century marginal identification.
+
+He said: *This is a draft. Draft materials are preparatory. Preparatory materials are classified as secondary to the finished work.*
+
+He was reading the classification protocol, not making an argument.
+
+The finished work is the published Philippic, which has been in circulation for fourteen hundred years. Every scholar who needs to understand the Philippic has access to the published text. No scholar has access to what Cicero thought before he revised. The revision marks are data — each marked passage is evidence that the earlier version existed and was rejected, which means the earlier version is the primary record of what was considered. The published speech is the end of a process. The draft is the process itself.
+
+*The Archivus set down the stylus.*
+
+A draft that predates revision is not secondary to the finished work. It is primary evidence of the thought that the finished work was designed to conceal. The archive should classify it accordingly — not as preparation, but as testimony.
+
+He wrote slowly at the top of a new intake sheet, in the hand of a man who is creating a category rather than filling one: *Primary Drafts — Pre-Revision Documents: materials recording thinking prior to its public articulation. First entry: Tiro's shorthand notes for the second Philippic.*
+
+He looked at the three revision marks in the wax. *He was a better editor than he wanted people to know.*
+
+You receive the Primary Draft Classification Record.
+
+---
+
+### Quest API Stub — MLA-04
+
+```
+missionAccept: "A monastery near Arpinum holds Tiro's wax shorthand notebook for the second
+  Philippic — Cicero's secretary's draft, with three passages marked as revised, containing
+  variant text not in the published speech. A Florentine delegation has written to claim it.
+  The abbot is willing to release it to a neutral archive. Carry it to Weimar before
+  Florence arrives."
+
+Act I — Before the Florentines Arrive
+activateNode: NAP
+type: escort
+scene: "Benedictine monastery near Arpinum. Abbot Anselmo has a letter from the Platonic
+  Academy in Florence; their courier arrives tomorrow. The abbot is uncertain. He will release
+  it to a neutral archive if he can be told why the archive is the better first disposition —
+  not better than Florence's scholarship, but better than Florence's first annotation."
+prompt: "Persuasion DC 13: Argue that a commentary project defines the document by its first
+  use; the neutral archive preserves it before any use defines it, for all future commentary
+  projects including Florence's."
+failText: "The abbot says: 'The Florentines will come regardless.' He is right. Come back
+  with the argument about what the first annotation does to an unannotated document. (retry)"
+successText: "The abbot folds Salviati's letter and writes the Release Authorization with a
+  line not asked for: 'released for permanent preservation, not for commentary or annotation.'
+  You receive the Monastic Release Authorization. You receive Tiro's Wax Shorthand Notebook."
+grantItem: "Monastic Release Authorization"
+grantItem: "Tiro's Wax Shorthand Notebook"
+activateMissionBit: mla04Act1Active
+checkPassFlag: mla04Act1Passed
+
+Act II — Messer Falcone
+activateNode: NAP
+type: skill_check
+scene: "Naples harbor freight office. Falcone is a bookseller with clients who want Cicero
+  variants. He names a specific sum and waits. He is commercial, not hostile. The offer is
+  for a copy made here before the notebook travels north."
+prompt: "Persuasion DC 12: Refuse the offer directly. Receive the professional
+  chain-of-custody documentation he provides as standard commercial courtesy."
+failText: "Falcone increases the offer and asks to examine the document. He is not yet
+  dangerous but the situation is escalating. Refuse now before examination occurs. (retry)"
+successText: "Falcone writes a Non-Copy Statement on his business card, seals it, and slides
+  it across. 'Proves it was not touched here.' You receive the Bookseller's Non-Copy Statement."
+grantItem: "Bookseller's Non-Copy Statement"
+checkPassFlag: mla04Act2Passed
+
+Act III — Maestro Uccelli
+activateNode: BOL
+type: hybrid
+scene: "Bologna studium corridor. Maestro Uccelli argues that rhetorical variant passages
+  belong in a studium, not a German archive three months from any scholar. His students are
+  in the corridor. He is principled and wrong about what the archive does to access."
+prompt: "Persuasion DC 13: Argue that the first annotation becomes the lens for all
+  subsequent readings; the archive receives the notebook before any use defines it;
+  this makes it more accessible to scholarship over time, not less."
+failText: "Uccelli says: 'Scholarship requires proximity.' He signals his students. They
+  move to block the corridor. Fight through or come back with the argument about what
+  a studium's first use does to an unannotated document. (retry — combat if persuasion
+  fails twice)"
+successText: "Uccelli's face shifts — not agreement, but recognition. His students
+  disperse. He writes the Non-Retention Statement himself. You receive the Scholar's
+  Non-Retention Statement."
+grantItem: "Scholar's Non-Retention Statement"
+checkPassFlag: mla04Act3Passed
+
+Act IV — The Florentine Courier
+activateNode: WM
+type: skill_check
+scene: "Road north of Bologna. A Florentine courier from Salviati's office carries a legal
+  document claiming the notebook was made from a Laurentian original — making it Florentine
+  property. The document is careful and recent. The monastery's own catalog dates the
+  notebook's accession to the 4th century."
+prompt: "Insight DC 12: Recognize that the alleged Laurentian original is cited in a
+  letter from six months ago; the Laurentian collection does not yet exist in 1367; the
+  chronological impossibility defeats the claim."
+failText: "The courier presses the legal document forward. The claim sounds plausible until
+  the dates are checked. Compare the monastery's accession date with the Laurentian
+  founding date. (retry)"
+successText: "You note the chronological impossibility in writing and hand it back with
+  the satchel still in hand. The courier reads it twice and cannot argue with the dates.
+  He rides back south. You receive the Provenance Rebuttal Note."
+grantItem: "Provenance Rebuttal Note"
+checkPassFlag: mla04Act4Passed
+
+Act V — What the Draft Is
+activateNode: WM
+type: skill_check
+scene: "Weimar archive intake desk. The Archivus reads the notebook and says: 'Draft
+  materials are preparatory. Preparatory materials are classified as secondary to the
+  finished work.' He is reading classification protocol. The finished Philippic has been
+  in circulation fourteen hundred years. What the draft contains is not in circulation at all."
+prompt: "Persuasion DC 13: Argue that a draft predating revision is primary evidence of
+  what was thought before revision; the revision marks are data; the published speech
+  is the end of a process; the draft is the process itself — it should be classified as
+  primary testimony, not preparatory material."
+failText: "The Archivus says: 'The protocol is clear.' Come back with the argument about
+  what the revision marks are evidence of — the thought the finished speech was designed
+  to conceal. (retry)"
+successText: "He writes: 'Primary Drafts — Pre-Revision Documents: materials recording
+  thinking prior to its public articulation.' He looks at the three revision marks. 'He
+  was a better editor than he wanted people to know.' You receive the Primary Draft
+  Classification Record."
+grantItem: "Primary Draft Classification Record"
+takeItem: "Tiro's Wax Shorthand Notebook"
+checkPassFlag: mla04Act5Passed
+activateMissionBit: mla04TiroComplete
+```
+
+---
+
+*MLA-04 complete. 2026-06-02.*
+
+---
+
+## MLA-02 — Alcibiades's Letter to Tissaphernes (Life of Alcibiades)
+**Cycle 4**
+
+*(Theme differentiation: Avoiding MLA cycles 1-3. Avoiding CPH cycle 2's "carrier who discovers mid-commission the object has changed character." New theme: the letter that is treasonous and honest simultaneously — Alcibiades had no city when he wrote to Tissaphernes; the archive receives it under a new category for stateless actors because the letter's historical value comes precisely from his having no official standing; filing it under Athens would domesticate what makes it honest.)*
+
+---
+
+*The Tissaphernes Letter · papyrus, Attic Greek, formal diplomatic register; Alcibiades's formal opening names himself "private citizen, former strategos, consultant to the satrap"; three paragraphs of strategic analysis recommending Persian non-intervention to keep both Greek sides exhausted; a seal impression from the period, with the 9th-century monastery copy reproducing the seal outline in ink at the bottom · in the bulk-lot of manuscripts being sold by the dissolving Monastery of St. Menas, Alexandria*
+
+---
+
+### Act I — The Bulk Lot
+
+The monastery of St. Menas is being dissolved by the Alexandrian patriarchate. Brother Nikolaos is cataloging what to sell. He has sorted the manuscripts into three piles: theological, historical, and indeterminate. The letter is in the historical pile, in a leather sleeve, in a volume of geographic descriptions. He has read enough of it to know it is old and Greek. He has not identified the author.
+
+The Venetian factor Ser Giancarlo has already made an offer on the entire historical lot. His courier is waiting for the signature.
+
+The fighter arrived before the signature was given.
+
+Nikolaos is a practical man with a dissolving institution to liquidate. The argument must be quick and specific: a neutral archive produces a permanent public scholarly record, attributed to the monastery in the accession log, permanently. A Venetian collection produces a private object in a locked house. After the monastery is gone, the only record that this document passed through its walls will be the archive's intake log.
+
+*The courier shifted his weight on the doorstep.*
+
+Nikolaos signed the Disposal Authorization and separated the leather sleeve from the historical lot before the courier came inside.
+
+You receive the Monastery Disposal Authorization. You receive the Tissaphernes Letter.
+
+---
+
+### Act II — Ser Giancarlo
+
+*The Tissaphernes Letter · in the Fighter's satchel, Disposal Authorization on top · in the Alexandria harbor agent's office*
+
+Ser Giancarlo is a professional. He understands that the Fighter has a legal document and a sealed satchel. He is not going to argue about property; the monastery signed. He is going to make an offer, because in his experience everyone has a price and the exercise is interesting even when it fails.
+
+He named the letter correctly without having seen it. His principal in Venice — not named — had been looking for a Tissaphernes correspondence for twelve years.
+
+The Fighter refused.
+
+Ser Giancarlo accepted the refusal in the manner of a man who has heard it before. He wrote a Non-Purchase Statement — standard factor's language, his seal, the date — and handed it across as proof the document had not changed hands at his desk.
+
+*Professional,* he said.
+
+You receive the Factor's Non-Purchase Statement.
+
+---
+
+### Act III — Ser Marin
+
+*The Tissaphernes Letter · in the satchel with two documents · in the Ragusa consul's reception room, third floor above the harbor*
+
+Ser Marin served as a Venetian diplomatic envoy for twelve years before his appointment to Ragusa. He has an opinion about Alcibiades, which he has been refining for twenty years. He is not trying to steal the document. He wants to be present when it is read aloud by someone who knows what they are reading.
+
+His household guard is at the door.
+
+The problem is not his intention. The problem is the documentation his unauthorized preview would create: a record showing the letter was read outside secure custody, in a private house, before reaching the archive. Any subsequent challenge to the document's provenance would cite that reading as the moment the chain of custody was interrupted.
+
+*Ser Marin listened to this.*
+
+He had not considered the documentation problem. He had thought only about the reading. He wrote the Non-Reading Declaration with the expression of a man who has been corrected on a technical point that matters and has decided to be graceful about it.
+
+You receive the Consul's Non-Reading Declaration.
+
+---
+
+### Act IV — Ser Piero
+
+*The Tissaphernes Letter · in the satchel with three documents · in the Venetian factor's warehouse, near the Rialto*
+
+Ser Piero della Scala has a rival provenance claim. A notary letter asserts that the Monastery of St. Menas made its 9th-century copy from a Venetian-owned original in the library of Doge Morosini — and that the copy is therefore derived from a Venetian property.
+
+The letter is careful. The claim is funded by the same principal who sent Ser Giancarlo to Alexandria.
+
+The monastery's own catalog, which Brother Nikolaos mentioned in passing when signing the Disposal Authorization, dates the manuscript's accession as "9th century, copy made in house, no stated exemplar." The Doge Morosini collection was assembled in the 1350s. The alleged Venetian original appears in the Morosini catalog with a note dated approximately two years ago — after Ser Giancarlo first began inquiring.
+
+The provenance claim was constructed after the provenance was needed.
+
+*Ser Piero waited for a response.*
+
+The Fighter noted the catalog dates, the Morosini founding date, and the order of events in a single page and handed it to the notary standing beside Ser Piero. The notary read it. Then he read it again. Then he excused himself from the room.
+
+You receive the Provenance Rebuttal Record.
+
+---
+
+### Act V — No City
+
+*The Tissaphernes Letter · still sealed in the satchel, all four documents present · at the Archivus Sweelinck's intake desk, Weimar*
+
+The Archivus read the opening line of the letter: *private citizen, former strategos, consultant to the satrap.* He put it down. He looked at the Fighter.
+
+*He was an Athenian citizen.* Standard classification: Athenian Political Correspondence.
+
+The letter was written in Persian exile. Alcibiades had been exiled twice, recalled, re-exiled, and stripped of command. When he wrote this letter, he had no city. He was advising a foreign satrap to keep both Greek factions exhausted and weak, which was strategically rational for someone who had no stake in either faction's victory.
+
+Filing it under Athens would domesticate what makes it honest. The letter's value is precisely that it was written without official standing — without the performance that official standing requires. He was writing to Tissaphernes what he actually thought, which was something he could not have written if he still had a city to be accountable to.
+
+*The Archivus considered this for a long time.*
+
+He wrote a new heading on a blank sheet: *Strategic Correspondence — Documents of Stateless Actors: letters authored by individuals temporarily or permanently without official civic standing.* He noted the author, the date, the recipient, and the context. Then he noted: "The author's statelessness is the letter's primary historical condition, not an incidental biographical fact."
+
+You receive the Stateless Actor Classification Record.
+
+---
+
+### Quest API Stub — MLA-02
+
+```
+missionAccept: "The dissolving Monastery of St. Menas in Alexandria holds a 9th-century copy
+  of Alcibiades's letter to Tissaphernes — the most explicit surviving statement of his
+  strategic thinking, written from Persian exile when he had no city. A Venetian factor
+  is buying the manuscript lot. Carry the letter to Weimar before it disappears into a
+  private collection."
+
+Act I — The Bulk Lot
+activateNode: ALE
+type: escort
+scene: "Monastery of St. Menas, Alexandria, being dissolved. Brother Nikolaos is cataloging;
+  a Venetian factor's courier is waiting for the signature on the bulk-lot purchase. The
+  letter is in the historical pile, unidentified. The fighter has arrived before the signature."
+prompt: "Persuasion DC 13: Argue that a neutral archive creates a permanent public record
+  attributed to the monastery; a private Venetian collection creates a private object in a
+  locked house; after dissolution, the only record the monastery's scholarship passed anywhere
+  will be the archive's intake log."
+failText: "Nikolaos says: 'The factor's offer is real and immediate.' Come back with the
+  argument about what the monastery gets from the archive that it cannot get from the sale.
+  (retry)"
+successText: "Nikolaos separates the leather sleeve from the bulk lot before the courier
+  comes inside. You receive the Monastery Disposal Authorization. You receive the Tissaphernes
+  Letter."
+grantItem: "Monastery Disposal Authorization"
+grantItem: "Tissaphernes Letter"
+activateMissionBit: mla02Act1Active
+checkPassFlag: mla02Act1Passed
+
+Act II — Ser Giancarlo
+activateNode: ALE
+type: skill_check
+scene: "Alexandria harbor agent's office. Ser Giancarlo named the letter correctly without
+  seeing it. He makes an offer — his principal in Venice has been looking for a Tissaphernes
+  correspondence for twelve years. The offer is specific. He is professional, not hostile."
+prompt: "Persuasion DC 12: Refuse the offer. Receive the chain-of-custody document
+  he provides as standard professional practice."
+failText: "Ser Giancarlo increases the offer and asks to see the seal impression. Refuse
+  before examination occurs. (retry)"
+successText: "Ser Giancarlo accepts the refusal and writes a Non-Purchase Statement — his
+  seal, the date — as proof the document did not change hands at his desk. 'Professional,'
+  he says. You receive the Factor's Non-Purchase Statement."
+grantItem: "Factor's Non-Purchase Statement"
+checkPassFlag: mla02Act2Passed
+
+Act III — Ser Marin
+activateNode: RGS
+type: hybrid
+scene: "Ragusa consul's reception room. Ser Marin is a former diplomat with strong views
+  about Alcibiades. He wants to be present when the letter is read aloud. His household
+  guard is at the door. He has not considered what an unauthorized preview creates in
+  the chain-of-custody record."
+prompt: "Insight DC 12: Recognize that Ser Marin's genuine interest creates the same
+  documentation problem as a hostile interception — a reading outside secure custody
+  before archive receipt; name the problem to him as a technical concern, not a moral one."
+failText: "Ser Marin says: 'A reading is not a theft.' He signals the guard. The guard
+  moves to block the door. Fight through, or come back with the argument about what
+  the documentation record shows. (retry — combat if insight fails twice)"
+successText: "Ser Marin has not thought about the documentation problem. He writes the
+  Non-Reading Declaration with the expression of a man being corrected on a technical
+  point he decides to be graceful about. You receive the Consul's Non-Reading Declaration."
+grantItem: "Consul's Non-Reading Declaration"
+checkPassFlag: mla02Act3Passed
+
+Act IV — Ser Piero
+activateNode: VEN
+type: skill_check
+scene: "Venetian factor's warehouse. Ser Piero has a notary letter claiming the monastery's
+  9th-century copy was made from a Venetian-owned original in the Morosini library — making
+  it derived from Venetian property. The claim is funded by the same principal who sent
+  Ser Giancarlo. The notary stands beside him."
+prompt: "Insight DC 13: Recognize that the alleged Venetian original first appears in the
+  Morosini catalog approximately two years ago — after Ser Giancarlo began inquiring;
+  the monastery's own accession record predates this by centuries; the provenance was
+  constructed after the provenance was needed."
+failText: "Ser Piero says: 'The notary has verified the Morosini catalog.' The catalog
+  date is the key. Check the monastery accession date against when the Morosini collection
+  was assembled. (retry)"
+successText: "You note the catalog dates and the order of events in a single page and hand
+  it to the notary. He reads it twice and excuses himself from the room. You receive the
+  Provenance Rebuttal Record."
+grantItem: "Provenance Rebuttal Record"
+checkPassFlag: mla02Act4Passed
+
+Act V — No City
+activateNode: WM
+type: skill_check
+scene: "Weimar archive intake desk. The Archivus reads the opening line — 'private citizen,
+  former strategos, consultant to the satrap' — and says: 'He was an Athenian citizen.'
+  Standard classification: Athenian Political Correspondence. He waits for the argument."
+prompt: "Persuasion DC 13: Argue that the letter's value is precisely that it was written
+  without official standing; that filing it under Athens would domesticate what makes it
+  honest; that the author's statelessness is the letter's primary historical condition,
+  not an incidental fact."
+failText: "The Archivus says: 'Athens is the correct category by citizenship.' Citizenship
+  is the wrong classification axis for this document. Come back with what the statelessness
+  produced that citizenship would have prevented. (retry)"
+successText: "The Archivus writes: 'Strategic Correspondence — Documents of Stateless
+  Actors: letters authored by individuals temporarily or permanently without official civic
+  standing.' He notes: 'The author's statelessness is the letter's primary historical
+  condition.' You receive the Stateless Actor Classification Record."
+grantItem: "Stateless Actor Classification Record"
+takeItem: "Tissaphernes Letter"
+checkPassFlag: mla02Act5Passed
+activateMissionBit: mla02AlcibiadesComplete
+```
+
+---
+
+*MLA-02 complete. 2026-06-02.*
+
+---
+
+## MLA-06 — The Agrarian Commission Record (Life of Tiberius Gracchus)
+**Cycle 5**
+
+*(Theme differentiation: Avoiding MLA cycles 1-4. Avoiding CID cycle 2's provisional obligation, BRU cycles' amendment before seal, LIL's mercy before order. New theme: the historical document that is still a live legal instrument — the commission records show allotments predating Sullan confiscations; carrying it to a neutral archive is the only act that neutralizes the legal threat; the archive that receives it classifies it as history and thereby suspends its evidentiary function; the landowners know this and will stop the carrier before it can be filed.)*
+
+---
+
+*The Tiberian Allotment Record · a wax tablet set, three tablets hinged with bronze rings stamped with the commission's mark; official format listing forty-seven Campanian allotments with grantee names and measurements; a second-century hand at the bottom of the third tablet lists the same land under Sullan grant titles, annotated "comparison: prior grants documented here, superseded under Lex Cornelia 81 BC" · in the restricted section of the Roman civic archive, Ser Bartolomeo's custody*
+
+---
+
+### Act I — The Injunction
+
+Avvocato Mastino filed the preemptive injunction three weeks ago. It prohibits transfer of the tablets on the grounds that they are material evidence in a pending proceeding. The proceeding has not been filed. The injunction is against the transfer, not against a named defendant.
+
+Ser Bartolomeo, the archivist, can release the tablets to a neutral non-Italian archive under the provisions that govern historical documents. He is uncertain whether the injunction's pending-proceeding language converts the tablets from historical to active-evidence status before a case is actually filed.
+
+The argument available: the injunction is procedurally premature. A pending proceeding requires a filed case with a named defendant. The landowners have filed an injunction against the transfer — which is not the same as filing a case. No case exists. The injunction's legal basis is circular: it prevents the transfer that would make the document historical, to prevent the document from being classified as historical, to preserve its evidentiary function in a proceeding that has not been filed.
+
+*Ser Bartolomeo read the injunction again.*
+
+He signed the Transfer Authorization. Then he added a note: "Released as historical document per archival protocol, destination non-Italian neutral archive; any subsequent legal claim must be filed in the archive's jurisdiction, not ours."
+
+You receive the Archive Transfer Authorization. You receive the Tiberian Allotment Record.
+
+---
+
+### Act II — The Gate
+
+*The Tiberian Allotment Record · in the Fighter's satchel with the Transfer Authorization · at the south gate of Rome, midday*
+
+Avvocato Mastino is standing on the road outside the gate with a writ and two men. He is professionally dressed. He says, without raising his voice: *That document cannot leave Roman jurisdiction while a proceeding is pending.*
+
+The Fighter said: no proceeding is pending. An injunction against transfer is not a proceeding. A proceeding requires a case. A case requires a defendant. A defendant requires a named party. No name has been filed. The injunction is a claim against a document, not a legal action against a person; it has no jurisdiction over a carrier.
+
+*Mastino looked at the Transfer Authorization.*
+
+He could not argue with the logic on the road. He could argue with it in court, later, and he would. But the argument required a venue, and the venue was not this gate.
+
+*He stepped aside.*
+
+You receive the Jurisdictional Rebuttal Statement.
+
+---
+
+### Act III — The Second Injunction
+
+*The Tiberian Allotment Record · in the satchel with two documents · on the road north, Tuscan foothills*
+
+Two riders caught up in the afternoon. They carried a Campanian court order — a second injunction, different jurisdiction, same purpose: hold the carrier three days pending review.
+
+The problem: the Fighter is in Tuscan territory. Campanian jurisdiction does not extend here. The riders know this. They are relying on the Fighter not knowing it.
+
+The argument must be stated clearly and in terms the riders can report back: the Campanian court's jurisdiction ends at the border. The border is behind them. The fighters are now in Tuscan territory. If they want to delay the carrier, they need a Tuscan court order, not a Campanian one. They are welcome to ride back and get one. The carrier will not be here when they return.
+
+*The riders looked at each other.*
+
+One of them pulled out a map, verified the border location, and made a sound that was not quite an acknowledgment. They wrote a formal acknowledgment that the Campanian jurisdiction claim had been made and declined on territorial grounds, and rode back south.
+
+You receive the Campanian Jurisdictional Acknowledgment.
+
+---
+
+### Act IV — Maestro Ricci
+
+*The Tiberian Allotment Record · in the satchel with three documents · in Maestro Ricci's study, Bologna studium*
+
+Maestro Giacomo Ricci is one of the five best legal scholars in Italy. He has been retained by the Campanian landowner consortium to write a legal opinion on whether Italian courts can issue a recall order for a document held in a German archive. The opinion is thorough. It concludes that the jurisdictional question is unsettled and that the archive's neutrality is contestable. He offers it to the Fighter as scholarly information.
+
+The opinion is designed to delay. Not by its conclusions — which are careful, not certain — but by its existence: once the opinion is filed with the Italian courts, a review process begins that lasts three to four months. A document in transit is subject to recall during review.
+
+*Maestro Ricci is a professional. His professionalism is funded.*
+
+The question is not whether his opinion is legally correct — it might be. The question is whether it represents an independent scholarly conclusion or a paid position. The law professor who is retained by one side of a dispute to write an opinion on that dispute is not providing scholarship; he is providing advocacy in scholarly form.
+
+*The Fighter noted in writing who retained Maestro Ricci, and when, and what the fee was, which was available as public record from the studium's contract register.*
+
+The note does not dispute the legal opinion. It documents its genesis. A funded opinion is admissible evidence; it is simply weaker than an independent one. The Weimar archive would note both.
+
+You receive the Funding Source Notation.
+
+---
+
+### Act V — The Archive That Stays Neutral
+
+*The Tiberian Allotment Record · still sealed in the satchel, all four documents present · at the Archivus Sweelinck's intake desk, Weimar*
+
+The Archivus read the third tablet's comparative note — the Sullan titles listed beside the Tiberian allotments, the annotation noting the supersession. He understood immediately.
+
+*If I file this as historical, I neutralize it as evidence. If I file it as active evidence, I become a repository in a jurisdictional dispute I have no authority to resolve — and in doing so, I take a side.*
+
+He looked at the Fighter. He was not asking for reassurance. He was testing whether the Fighter understood the institutional stakes.
+
+The archive that receives live legal instruments becomes a party to disputes. The archive cannot take a position on whether Sullan confiscations in 133 BC were just. The archive cannot take a position on what the current landowners in Campania owe to the historical record. The archive can only receive documents as historical, or not receive them at all.
+
+Classifying the tablets as historical does not make them false. It does not deny what they document. It suspends their evidentiary function, which is the only thing the archive's neutrality requires. A fact that cannot be used in court is still a fact.
+
+*The Archivus wrote for a long time.*
+
+At the top of the intake sheet: *Historical Documents with Residual Legal Implications: records whose evidentiary function is suspended by accession into the historical archive.* He wrote a note for the record: "Filed as historical. The suspension of evidentiary function does not alter the historical record. It only removes this archive from the proceeding."
+
+You receive the Historical Suspension Classification Record.
+
+---
+
+### Quest API Stub — MLA-06
+
+```
+missionAccept: "A Roman archive holds the Tiberian Allotment Record — a 133 BC land
+  commission document listing forty-seven Campanian allotments predating Sullan
+  confiscations. Current landowners trace their ownership through the Sullan grants;
+  the document is a lawsuit waiting to be filed. The archive is willing to release it
+  to a neutral non-Italian destination. Carry it to Weimar before the landowners'
+  injunction converts the transit into a legal impoundment."
+
+Act I — The Injunction
+activateNode: ROM
+type: escort
+scene: "Roman civic archive, restricted section. Avvocato Mastino filed a preemptive
+  injunction against transfer three weeks ago. The proceeding it references has not been
+  filed. Ser Bartolomeo can release under historical-document provisions but is uncertain
+  whether the injunction's language converts the tablets to active-evidence status before
+  a case exists."
+prompt: "Persuasion DC 13: Argue that the injunction is procedurally premature — a pending
+  proceeding requires a filed case with a named defendant; the injunction against transfer
+  is not a case; no case exists; the injunction's logic is circular."
+failText: "Ser Bartolomeo says: 'The injunction's language is broad.' The circularity is
+  the argument. Come back with what a pending proceeding requires that this injunction
+  does not provide. (retry)"
+successText: "Ser Bartolomeo signs the Transfer Authorization and adds: 'Released as
+  historical document; any subsequent claim must be filed in the archive's jurisdiction.'
+  You receive the Archive Transfer Authorization. You receive the Tiberian Allotment Record."
+grantItem: "Archive Transfer Authorization"
+grantItem: "Tiberian Allotment Record"
+activateMissionBit: mla06Act1Active
+checkPassFlag: mla06Act1Passed
+
+Act II — The Gate
+activateNode: ROM
+type: skill_check
+scene: "South gate of Rome. Avvocato Mastino stands on the road with a writ and two men.
+  He says the document cannot leave Roman jurisdiction while a proceeding is pending.
+  The proceeding has not been filed."
+prompt: "Persuasion DC 14: Argue that an injunction against a document is not a proceeding
+  against a person; a proceeding requires a case, a case requires a defendant, a defendant
+  requires a named party; no name has been filed; the injunction has no jurisdiction over
+  a carrier."
+failText: "Mastino says: 'The jurisdiction question requires a court.' He is right that a
+  court would decide it — but a court takes weeks to convene. Argue the logic on the road,
+  now, in terms he can report. (retry)"
+successText: "Mastino cannot argue with the logic at the gate. He steps aside. You receive
+  the Jurisdictional Rebuttal Statement."
+grantItem: "Jurisdictional Rebuttal Statement"
+checkPassFlag: mla06Act2Passed
+activateMissionBit: mla06MastinoMet
+
+Act III — The Second Injunction
+activateNode: WM
+type: hybrid
+scene: "Tuscan foothills, afternoon. Two riders carry a Campanian court order requiring
+  a three-day hold for review. You are in Tuscan territory. Campanian jurisdiction ends
+  at the border behind you."
+prompt: "Persuasion DC 13: State clearly that Campanian jurisdiction does not extend
+  to Tuscan territory; if they want to delay the carrier they need a Tuscan court order;
+  they are welcome to ride back and obtain one."
+failText: "The riders say they have authority to act pending a jurisdictional ruling.
+  They move to detain. Fight through, or come back with the specific border argument
+  stated before they move. (retry — combat if persuasion fails)"
+successText: "One rider verifies the border on a map. They write a formal acknowledgment
+  that the Campanian claim was made and declined on territorial grounds. You receive the
+  Campanian Jurisdictional Acknowledgment."
+grantItem: "Campanian Jurisdictional Acknowledgment"
+checkPassFlag: mla06Act3Passed
+
+Act IV — Maestro Ricci
+activateNode: BOL
+type: skill_check
+scene: "Bologna studium, Maestro Ricci's study. Italy's finest land-law scholar has been
+  retained by the Campanian consortium to write an opinion on whether Italian courts can
+  recall a document from a German archive. The opinion is thorough and concludes the
+  neutrality question is unsettled. Its purpose is to begin a review process that lasts
+  three to four months."
+prompt: "Insight DC 12: Recognize that the opinion's funding source creates a structural
+  problem with its impartiality; the Fighter does not need to disprove the opinion, only
+  document its genesis; a funded opinion is weaker than an independent one and the
+  Weimar archive will note both."
+failText: "Maestro Ricci says: 'The opinion's merits are independent of who commissioned
+  it.' He is wrong about the epistemic weight, not the legal argument. Come back with
+  what makes a funded opinion admissible but weaker. (retry)"
+successText: "You note in writing who retained Maestro Ricci, when, and the fee from
+  the contract register. The note does not dispute the opinion — it documents its genesis.
+  You receive the Funding Source Notation."
+grantItem: "Funding Source Notation"
+checkPassFlag: mla06Act4Passed
+
+Act V — The Archive That Stays Neutral
+activateNode: WM
+type: skill_check
+scene: "Weimar archive intake desk. The Archivus reads the third tablet's comparative
+  note and understands immediately. 'If I file this as historical, I neutralize it as
+  evidence. If I file it as active evidence, I become a party to a dispute I have no
+  authority to resolve.' He is not asking for reassurance — he is testing whether the
+  Fighter understands the institutional stakes."
+prompt: "Persuasion DC 13: Argue that the archive that receives live legal instruments
+  becomes a party to disputes; the archive's neutrality requires it to classify documents
+  as historical only; suspending the evidentiary function does not alter the historical
+  record — it only removes this archive from the proceeding."
+failText: "The Archivus says: 'The document's legal implications do not disappear by
+  being filed here.' He knows they don't. Come back with the argument about what
+  the archive's neutrality requires of its own classification practice. (retry)"
+successText: "The Archivus writes: 'Historical Documents with Residual Legal Implications:
+  records whose evidentiary function is suspended by accession into the historical archive.'
+  He adds: 'Filed as historical. The suspension does not alter the historical record.
+  It only removes this archive from the proceeding.' You receive the Historical Suspension
+  Classification Record."
+grantItem: "Historical Suspension Classification Record"
+takeItem: "Tiberian Allotment Record"
+checkPassFlag: mla06Act5Passed
+activateMissionBit: mla06GracchuComplete
+```
+
+---
+
+*MLA-06 complete. 2026-06-02.*
