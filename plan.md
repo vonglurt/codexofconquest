@@ -9207,3 +9207,492 @@ All 120 suggestions are MONSTER_POOL entries not assigned to any terrain. They e
 
 **Cross-references:** `plan.md §1367` · `plan.md §1367-F` · `plan.md §GR` · `plan.md §DESIGN-03` · `plan.md §DUNGEON-01`
 
+---
+
+## §GUIDE-01 — The Fisherman's Doctrine: Four Stages of Self-Discovery (✅ IMPLEMENTED 2026-06-02)
+
+**Status:** ✅ Implemented 2026-06-02 — 6 quests (quest_guide_01–06), Emmer Finch NPC (BIRKA_NPC_PROFILES + NPC_DIALOGUES), Rod of Self-Discovery (+1 ATK 1d4, WIS +1 on completion), birkaNpcs SSJ entry, emmerMet trigger in storyCheckQuests. Quests: SSJ/BOO chain, 3 side + 1 skill_check DC 11 (Bog Mudwhistle / U-curve), 2 side. Quest count: 218 → 228.  
+**Location:** SSJ (Yugurt Cabin) · BOO (Yugurt Lake)  
+**Source material:** Dr. Orion Teraban — "Just Be Yourself" (Psychax / YouTube) — the four-stage competence model as a self-growth framework  
+**Depends on:** Fishing Rod in inventory (existing gate for YC NPC activation)  
+**Arc reward:** +1 WIS (permanent) · Rod of Self-Discovery (new unique item)  
+**New NPC:** Emmer Finch — Apprentice Fisher, the Fishing Buddy
+
+---
+
+### §GUIDE-01-A. The Central Argument
+
+The transcript distills four features of good advice on self-growth:
+
+1. **Acceptance as empowerment.** Accepting your current inadequacy is not resignation — it is the precondition for change. "This is not a terminal diagnosis. Once you accept this might be true, you can do something about it."
+2. **Disciplined effort in a consistent direction.** Identity does not change from wishing or therapy or accepting yourself as you are. It changes from returning to the same practice, week after week, until you cross a threshold you cannot predict in advance.
+3. **Identity as process.** "We are always in the process of becoming who we are." The Japanese speaker example: you cannot become fluent without first behaving as though you already speak the language — which is, temporarily, a kind of performance. This is not fraud. This is how everything works.
+4. **The four stages of competence.** Unconscious incompetence → conscious incompetence (pain, the gift nobody wants) → conscious competence (intentional work; exhausting; things start to work but feel hard) → unconscious competence (fluency; the skill operates below awareness; "just be yourself" now applies, because you have become the self worth being).
+
+The arc embodies these four features in structure, not in text. The teaching is enacted through what the player does across six quests, not through lectures. The Fisherman never names the stages. He fishes. He waits. He says one sentence at a time.
+
+**Design principle:** §GUIDE-01 = wisdom-as-embodiment. Not observation (§ALCHEMY-01), not law (§WISDOM-01), but *practice*. The player returns daily. Emmer grows alongside them. The arc's thesis is delivered by the structure of the quest chain, not its dialogue.
+
+---
+
+### §GUIDE-01-B. The U-Curve of Knowledge
+
+The transcript opens with a structural claim: those at the lowest level of understanding and those at the highest level often arrive at the same conclusion. It is the people in the middle who diverge, usually in an attempt to distinguish themselves from the low performers.
+
+Example from transcript: The feast (King Solomon — *"there is nothing better for a person than to eat, drink, and be glad"*) is mocked by the middle as unworthy of a man who aspires to purpose and sacrifice. The sage returns to it and finds it correct.
+
+This structure maps directly onto the tournament fishermen already at YC. Bog Mudwhistle represents the middle tier: credible, vocal, dismissive of effort-that-shows. The Fisherman represents the far end: he has passed through the middle, arrived at simplicity, and is no longer interested in explaining the difference. Emmer starts at the bottom — happily, obliviously, completely wrong — and over six quests crosses into the same quiet competence the Fisherman models.
+
+The arc does not resolve this with a speech. It resolves it with Emmer's final cast — the one he doesn't think about.
+
+---
+
+### §GUIDE-01-C. New NPC — Emmer Finch
+
+**Key:** `emmer_finch`  
+**Name:** Emmer Finch  
+**Occupation:** Apprentice Fisher  
+**Node:** YC  
+**Age:** ~23; arrived from a downriver mill town; never fished a lake before  
+**Voice register:** Earnest, slightly out of breath, learns out loud. He says what he's thinking at the moment he's thinking it. He is not ironic. He is not performing humility — he is actually uncertain and finds that interesting rather than shameful.
+
+**NPC_DIALOGUE progression (quoteFn — 5 states):**
+
+| State condition | Quote |
+|----------------|-------|
+| `!S_story.emmerMet` | *(not yet present — appears after first YC visit with Fishing Rod)* |
+| `emmerMet && !emmerStage2` | *"I think I've been doing it wrong the whole time. That's — actually kind of exciting?"* |
+| `emmerStage2 && !emmerStage3` | *"He said: now you can start. Just like that. I've been thinking about it all morning."* |
+| `emmerStage3 && !emmerStage4` | *"It's working. It still feels like I'm thinking too much. He says that's correct."* |
+| `emmerComplete` | *"I didn't think about it. I just cast. Then the fish was there."* |
+
+**Emmer as mirror:** He represents the player's own process. His stages mark the arc's progression. His voice is slightly ahead of his comprehension — he reports insights before he's fully absorbed them, which is accurate to how the competence stages actually work.
+
+---
+
+### §GUIDE-01-D. The Fisherman as Monk
+
+The Fisherman (key: `master`, existing NPC) is already the unconsciously competent sage. His existing lines support this reading: *"Some fish don't exist in daylight."* *"You went deep."* He is always here in the morning. He does not ask where you have been or where you are going.
+
+In this arc he does not explain the four stages. He delivers one sentence per quest, present tense, no elaboration. His teaching is the demonstration — he has arrived at the far end of the U-curve, and what he models is not technique but being.
+
+**New Fisherman lines added per quest to quoteFn:**
+
+| Quest | New Fisherman line |
+|-------|--------------------|
+| quest_guide_01 | *"You're holding it like a question."* |
+| quest_guide_02 | *"Now you can start."* |
+| quest_guide_03 | *"You're thinking about every move. Good. You won't always have to."* |
+| quest_guide_04 | *"The wisest king in the old stories said there is nothing better than to eat and be glad. The men in the middle laughed. He was right."* |
+| quest_guide_05 | *"He didn't think about it. Neither did I, once."* |
+| quest_guide_06 | *(gives Rod of Self-Discovery; says nothing)* |
+
+---
+
+### §GUIDE-01-E. Quest Table
+
+| ID | Type | Title | Beat | Stage mapped | Reward |
+|----|------|-------|------|-------------|--------|
+| `quest_guide_01` | side | "The Fool's First Cast" | Emmer arrives; casts with total confidence; completely wrong; introduces himself; asks if you want to fish together | UC Incompetence | `emmerMet: true`; +50 XP |
+| `quest_guide_02` | side | "The Weight of the Hook" | Emmer loses a large fish; painful first recognition; Fisherman: *"Now you can start"* | C Incompetence; Acceptance | `emmerStage2: true`; +150 XP; `wisdomJournal_acceptance` item created |
+| `quest_guide_03` | time_gate | "Morning Repetitions" | Return to YC on 3 separate days (not necessarily consecutive); each visit Emmer reports a small improvement | C Competence begins | `emmerStage3: true`; +250 XP; `wisdomJournal_effort` item created |
+| `quest_guide_04` | skill_check WIS DC 11 | "The Middle Way Sneers" | Bog Mudwhistle mocks Emmer's visible trying; player must read the U-curve and not take the bait (WIS Insight) | C Competence sustained; U-curve beat | `emmerStage4a: true`; +250 XP; Bog disposition note |
+| `quest_guide_05` | side | "The Cast That Didn't Think" | Emmer makes a perfect cast without deliberating; realizes after the fact; reports: *"I didn't think about it"* | UC Competence threshold | `emmerStage4: true`; +300 XP |
+| `quest_guide_06` | side | "Just Be Yourself" | Arc close at YC; Fisherman gives Rod of Self-Discovery; +1 WIS applied; Emmer's final line | Arc complete | `emmerComplete: true`; **+1 WIS**; Rod of Self-Discovery |
+
+**activateCond for quest_guide_01:** `() => _hasItem('fishing_rod') && !S_story.emmerMet`  
+**activateCond for quest_guide_02:** `() => S_story.emmerMet && !S_story.emmerStage2`  
+**activateCond for quest_guide_03:** `() => S_story.emmerStage2 && !S_story.emmerStage3`  
+**activateCond for quest_guide_04:** `() => S_story.emmerStage3 && !S_story.emmerStage4a`  
+**activateCond for quest_guide_05:** `() => S_story.emmerStage4a && !S_story.emmerStage4`  
+**activateCond for quest_guide_06:** `() => S_story.emmerStage4 && !S_story.emmerComplete`
+
+---
+
+### §GUIDE-01-F. The Rod of Self-Discovery
+
+**Item key:** `rod_of_self_discovery`  
+**Type:** `fishing_rod` (replaces standard fishing rod in inventory slot)  
+**Name:** Rod of Self-Discovery  
+**Description:** *"You didn't carve this rod. You became the person who could use it."*
+
+```javascript
+{
+  key: 'rod_of_self_discovery',
+  name: "Rod of Self-Discovery",
+  type: 'fishing_rod',
+  icon: '🎣',
+  castBonus: 2,       // +2 to all cast rolls (standard rod: 0)
+  special: 'self_discovery',
+  description: "You didn't carve this rod. You became the person who could use it."
+}
+```
+
+**Special property — `self_discovery`:** In the Yugurt Tournament, each NPC challenger's effective bonus is reduced by 1 when this rod is equipped. This represents fishing from a grounded identity rather than against an opponent. The tournament display shows: *[Self-Discovery bonus applied]* in small text below the result.
+
+**+1 WIS application:**
+```javascript
+// in quest_guide_06 completeFn:
+S.wis = Math.min((S.wis || 10) + 1, 20);
+_grantItem('rod_of_self_discovery');
+S_story.emmerComplete = true;
+```
+
+---
+
+### §GUIDE-01-G. New State Flags
+
+```javascript
+// §GUIDE-01: The Fisherman's Doctrine
+S_story.emmerMet            // boolean — Emmer Finch introduced at YC
+S_story.emmerStage2         // boolean — conscious incompetence beat cleared
+S_story.emmerStage3         // boolean — practice gate cleared (3 YC visits)
+S_story.emmerStage3Visits   // number — count of qualifying YC visits for time_gate
+S_story.emmerStage4a        // boolean — U-curve WIS check passed
+S_story.emmerStage4         // boolean — unconscious competence threshold crossed
+S_story.emmerComplete       // boolean — arc closed; Rod granted; +1 WIS applied
+S_story.wisdomJournal_acceptance  // item flag — journal page on acceptance
+S_story.wisdomJournal_effort      // item flag — journal page on consistent effort
+```
+
+---
+
+### §GUIDE-01-H. Transcript-to-Story Element Map
+
+| Transcript element | Story element | Quest |
+|--------------------|---------------|-------|
+| "Just be yourself" as perennial advice — valid at both extremes | Fisherman's final silence + rod gift | quest_guide_06 |
+| Fool + sage agree; middle diverges (U-curve) | Bog Mudwhistle mocks Emmer's visible trying | quest_guide_04 |
+| King Solomon: nothing better than to eat and be glad | Fisherman's U-curve line: the wisest king was right | quest_guide_04 |
+| Socrates: I know that I know nothing | Emmer's line after losing the fish: *"I think I've been doing it wrong the whole time"* | quest_guide_02 |
+| "This is not a terminal diagnosis" | Fisherman: *"Now you can start."* | quest_guide_02 |
+| Japanese speaker — must behave as if you already speak | quest_guide_03 time-gate: returning daily, practicing, even before it works | quest_guide_03 |
+| Conscious competence: things feel hard because they are conscious | Emmer: *"It's working. It still feels like I'm thinking too much."* Fisherman: *"Good. You won't always have to."* | quest_guide_03/04 |
+| Unconscious competence = fluency; "just be yourself" now applies | Emmer: *"I didn't think about it. I just cast. Then the fish was there."* | quest_guide_05 |
+| "You will need to try to be the person you want to become" | wisdomJournal_effort item description | quest_guide_03 reward |
+| "Discipline is not innate — it must be cultivated in the forge of life" | quest_guide_03 title: "Morning Repetitions" | quest_guide_03 |
+| Pain = gift nobody wants → conscious incompetence | Emmer loses the fish; scene description: the weight of the fish before it was gone | quest_guide_02 |
+| Identity as process: crossing a threshold where you transition from trying to being | quest_guide_05 scene: Emmer's cast; no deliberation; no threshold announced | quest_guide_05 |
+
+---
+
+### §GUIDE-01-I. Vignette Writing Notes
+
+Quest nodes are written in the same compressed present-tense register as §GR (Fishmonger's Row). Each quest_guide vignette:
+
+- One paragraph per beat, two to four sentences
+- The emotional content is in what Emmer does, not what he says about how he feels
+- The Fisherman's single sentence per quest is the only teaching delivered in text; everything else is scenic
+- The "just be yourself" payoff is never spoken in the arc — it is enacted by the arc's last image: Emmer casting, the rod in motion, no thought preceding it
+
+**quest_guide_01 beat note:** Emmer arrives at YC with a rod from the village market. It has a broken guide ring. He does not notice this. He casts immediately without asking anything. The line goes sideways. He says: *"Is that normal?"* He is smiling.
+
+**quest_guide_02 beat note:** Emmer hooks something large. The rod bends correctly for the first time. He does everything wrong in sequence — pulls when he should wait, stands when he should kneel — and loses it. He stands at the water for a moment. Then: *"I think I've been doing it wrong the whole time."* He turns around and finds this interesting. The Fisherman has been watching from the cabin steps. He says: *"Now you can start."* That is all.
+
+**quest_guide_05 beat note:** Emmer stands at the shore. He does not choose a spot. He does not look at the water first. He casts. The form is clean. He does not know it was clean until the fish is running. Later he says: *"I didn't think about it."* He looks slightly surprised at himself. This is the arrival.
+
+**quest_guide_06 beat note:** The Fisherman brings the rod out from inside the cabin. It was not visible before. He holds it out to Emmer. Then he looks at you. The rod is yours. He does not explain. Emmer says: *"Wait, shouldn't I —"* The Fisherman goes back inside. The fire is still going. The rod is in your hands. The lake is there.
+
+---
+
+### §GUIDE-01-J. Next Prompt
+
+> The following prompt is ready for the implementation session. Paste it to begin §GUIDE-01 code work.
+
+---
+
+**PROMPT — §GUIDE-01 Implementation:**
+
+We are implementing §GUIDE-01 — The Fisherman's Doctrine: Four Stages of Self-Discovery. Location: YC (Yugurt Cabin). This is a 6-quest arc anchored at the existing Yugurt fishing area. The arc introduces **Emmer Finch** (new NPC, key: `emmer_finch`, Apprentice Fisher, node: YC) and delivers a +1 WIS reward plus the **Rod of Self-Discovery** (unique fishing rod, +2 castBonus, `special: 'self_discovery'`).
+
+The four features encoded in the arc:
+1. Acceptance as empowerment (quest_guide_02 — Emmer loses the fish; Fisherman: "Now you can start.")
+2. Disciplined effort in a consistent direction (quest_guide_03 — time_gate: 3 separate YC day-visits)
+3. Identity as process (quest_guide_05 — Emmer's unconscious cast; no deliberation; the threshold crossed)
+4. Four stages of competence as arc structure (UC Incompetence → C Incompetence → C Competence → UC Competence)
+
+Implement in this order:
+1. Add `emmer_finch` to `BIRKA_NPCS` (or equivalent NPC array) at node YC with a `quoteFn` conditional on emmer state flags.
+2. Add the 6 quest entries to `QUEST_DB` with correct `activateCond`, `completeFn`, and reward fields.
+3. Add `rod_of_self_discovery` to `WEAPON_ITEMS` (or `FISHING_ITEMS` if that array exists) with `castBonus: 2` and `special: 'self_discovery'`.
+4. Wire the `special: 'self_discovery'` property into the tournament roll function (`_tourRoll`) so each NPC's effective bonus is reduced by 1 when the rod is equipped.
+5. Add +1 WIS application in quest_guide_06 completeFn: `S.wis = Math.min((S.wis || 10) + 1, 20)`.
+6. Add the 9 new state flags to `_S_DEFAULTS`.
+7. Update the Fisherman's `quoteFn` at YC to include the 5 new conditional lines (one per quest_guide_01 through _05).
+8. Write vignette prose for all 6 storyRender quest nodes following the §GR compressed present-tense register.
+
+Verify: after quest_guide_06 complete, player WIS is +1, `rod_of_self_discovery` is in inventory, `emmerComplete` is true, Emmer's quote at YC reads: *"I didn't think about it. I just cast. Then the fish was there."*
+
+**Cross-references:** `plan.md §XLV` (Yugurt Tournament) · `plan.md §WISDOM-01` · `plan.md §ALCHEMY-01` · `lab-report-fish-with-dnd.md` · `lab-report-fishing-bait-prompting.md`
+
+---
+
+**Cross-references (section):** `plan.md §XLV` · `plan.md §WISDOM-01` · `plan.md §ALCHEMY-01` · `plan.md §GR` · `lab-report-fish-with-dnd.md` · `lab-report-fishing-bait-prompting.md`
+
+---
+
+## §SCAR-01 — Scar into a Star: The Philosopher's Wound (✅ IMPLEMENTED 2026-06-02)
+
+**Status:** ✅ Implemented 2026-06-02 — 4 quests (quest_scar_01–04), Gret Orrens + Pier Falk NPCs (BIRKA_NPC_PROFILES + NPC_DIALOGUES), The Scar's Light (passive amulet: +1 ATK/DMG when HP ≤ 75%, wired into attack resolution via _scarsLight), Orrens Manuscript (readable), WIS +1 on mercy path (gretChoice='help'). birkaNpcs NUE entry. Binary choice mechanic via WIS DC 11 skill check (quest_scar_03).  
+**Location:** NUE (Scholar's Quarter — Weimar)  
+**Source material:** Dr. Orion Teraban — "Wounds" (Psych Hacks / YouTube) · William Golding — *Freefall* ("This is how the scar becomes a star")  
+**Depends on:** Weimar accessed (Act VI) · SQ node unlocked  
+**Arc reward:** The Scar's Light (unique passive item) · +1 WIS (mercy path) OR +500gp (refusal path)  
+**New NPC:** Gret Orrens — Philosopher, Scholar's Quarter
+
+---
+
+### §SCAR-01-A. The Central Argument
+
+The transcript establishes three non-obvious claims about suffering:
+
+1. **The wound is a resource, not a deficit.** The suffering you have survived contains something of irreplaceable value — not because it made you stronger (this is the cliché; it does not always), but because it gives you the only kind of authority that cannot be faked: lived escape from the labyrinth. Golding's line: *"This is how the scar becomes a star."*
+
+2. **"Bloodless good" is weak.** The goodness of people who have never been hurt is structurally insufficient — it is difficult to trust and inspires few to follow. The goodness of someone who had every right to lash out and chose differently is a different order of thing: powerful, trustworthy, inspiring. This is the price: the scar is what the real goodness costs.
+
+3. **"It is never the same."** The scar may never regain its original functionality or sensitivity. This is not a tragedy. This is the condition. The wound does not heal back into what it was. It heals into something that can only exist because it was wounded. That is the point.
+
+**The AA sponsor model:** The transcript closes with a practical claim — guidance out of suffering must come from someone who has been there. A textbook cannot do this. A certification cannot do this. The escaped prisoner has something the academic does not. This gives the recovered person a moral obligation and a unique standing. Gret Orrens operates on this model: she teaches from her scar, not around it.
+
+**Design principle:** §SCAR-01 = wisdom-as-redemption. Where §GUIDE-01 is about becoming (practice, stages), §SCAR-01 is about transmutation (lead → gold; scar → star). The arc is structured around a moral fulcrum — quest_scar_03 — where the player must counsel Gret on whether to help the person who wronged her. Both paths are complete. Only one path produces the star.
+
+---
+
+### §SCAR-01-B. Transcript → Story Elements
+
+| Transcript element | Story element | Quest |
+|--------------------|---------------|-------|
+| William Golding: "This is how the scar becomes a star" | Gret's opening line to player; the thesis delivered directly, not explained | quest_scar_01 |
+| The wound is often due to ignorance and indifference, not malice | Gret's framing of Aldric Hamm's plagiarism: *"I do not think he knew what he was doing to me. That is worse, not better. And also not his fault."* | quest_scar_01 |
+| "Hurt people hurt people" — the impulse to lash out is understandable | The trapped person at BQ (Pier Falk) — actively lashing out at the student who reminds him of his own loss | quest_scar_02 |
+| The shock thought experiment — men would take pain rather than pass it on | quest_scar_03 choice: Gret counseled to help Aldric's son even at cost to herself | quest_scar_03 |
+| Lead → gold alchemical transmutation of suffering into wisdom | The Scar's Light item passive: below 50% HP, wound becomes power | quest_scar_04 |
+| "Bloodless good" is weak; hard-won good is powerful and trustworthy | Gret's final quote (mercy path): *"The weak good says 'I forgive you.' The real good shows up anyway."* | quest_scar_04 |
+| AA sponsor: guide from lived escape, not textbook | Gret's method — she does not cite theories; she shows you her manuscript under Hamm's name | quest_scar_01 |
+| "It is never the same" | The Scar's Light item description; Gret's scar is visible in how she pauses before proper nouns | throughout |
+| "There's a way out, brother. I've been where you are." | quest_scar_02 resolution: player delivers this to Pier Falk | quest_scar_02 |
+| Pain as badge of honor; wound as military decoration | The Scar's Light passive — mechanic triggers on damage taken; the badge is worn by surviving, not avoiding | item design |
+
+---
+
+### §SCAR-01-C. New NPC — Gret Orrens
+
+**Key:** `gret_orrens`  
+**Name:** Gret Orrens  
+**Occupation:** Philosopher (unaffiliated)  
+**Node:** SQ (Weimar Scholar's Quarter)  
+**Age:** ~55
+
+**Wound:** Her manuscript — a systematic moral philosophy titled *On the Obligation of the Escaped* — was submitted to the Weimar Academy by her former research partner Aldric Hamm as his sole work, twelve years ago. The Academy adopted it as curriculum. She filed a guild dispute and lost on procedural grounds (the manuscript bore Hamm's initial revisions; her name was on a discarded draft). Aldric Hamm died seven years ago. The work sits in the Great Archive under his name.
+
+**Current state:** She is still writing. She does not go to the Archive. She says her new work is better. She says this without emphasis. When pressed on whether she is bitter: *"Bitter? I don't know. I notice that I write more carefully now. I notice every word. I don't think I did before."*
+
+**Voice register:** Precise, measured, short declarative sentences. She argues but does not perform. She can be funny in a dry way. She does not seek your sympathy and is faintly surprised when people offer it. She uses her wound as evidence the way a scientist uses data: *"Here is what happened to me. Here is what I observe from it."*
+
+**NPC_DIALOGUE progression (quoteFn — 4 states):**
+
+| State | Quote |
+|-------|-------|
+| `!S_story.gretMet` | *"The scar does not go back to being skin. That is how you know it was real."* |
+| `gretMet && !gretLabyrinth` | *"There is a man at the Book Quarter who is very angry. He doesn't know yet that the anger is not about the books."* |
+| `gretLabyrinth && !gretChoice` | *"Hamm's son came by. I have been thinking about what to do. I don't think thinking is the right tool for this."* |
+| `gretComplete` | *"The weak good says 'I forgive you.' The real good shows up anyway."* |
+
+---
+
+### §SCAR-01-D. Secondary NPC — Pier Falk
+
+**Key:** `pier_falk`  
+**Name:** Pier Falk  
+**Occupation:** Former Copyist, Book Quarter  
+**Node:** BQ (Book Quarter)  
+**Role:** The trapped person — the one who has not yet escaped the labyrinth; the demonstration of "hurt people hurt people"
+
+**Wound:** Pier was a copyist whose workshop burned three years ago — all his work, his tools, his journeyman records. He could not prove his hours and was not admitted to the Guild. He now works informally, underpaid, and lashes out at younger copyists who have their papers in order. He is not a villain. He is someone who is still inside the pain.
+
+**Quest_scar_02 role:** Player identifies Pier by observation (WIS Insight DC 12) — reads his hostility as pain, not character. Then delivers a version of the AA sponsor line: *"There's a way through. Someone showed me."* (Gret's method, passed forward.)
+
+---
+
+### §SCAR-01-E. Quest Table
+
+| ID | Type | Title | Beat | Stage | Reward |
+|----|------|-------|------|-------|--------|
+| `quest_scar_01` | side | "The Open Ledger" | Meet Gret at SQ; she shows player Hamm's published text alongside her discarded draft — the same words; she does not perform her wound | The wound as fact | `gretMet: true`; +100 XP; `scar_draft` item created |
+| `quest_scar_02` | skill_check WIS DC 12 | "The Labyrinth" | Find Pier Falk at BQ; read his behavior correctly (Insight: his hostility is grief, not aggression); deliver Gret's method forward | Recognition + transmission | `gretLabyrinth: true`; +200 XP; Pier Falk disposition: Neutral→Warm |
+| `quest_scar_03` | choice | "The Shock" | Aldric Hamm's son Ren arrives seeking Gret's testimony to restore family honor (claiming his father was misled by Gret, not the reverse); player must counsel her — help him or refuse | Moral fulcrum; shock thought experiment | `gretChoice: 'help'` or `'refuse'`; +250 XP |
+| `quest_scar_04` | side | "The Star" | Arc close; Gret acts on player's counsel; receives the outcome; gives player The Scar's Light (mercy path) or a completed philosophical text (refusal path) | Transmutation | `gretComplete: true`; **The Scar's Light** (mercy) or **+1 WIS + 500gp** (refusal) |
+
+**activateCond for quest_scar_01:** `() => S_story.weimarReached && !S_story.gretMet`  
+**activateCond for quest_scar_02:** `() => S_story.gretMet && !S_story.gretLabyrinth`  
+**activateCond for quest_scar_03:** `() => S_story.gretLabyrinth && !S_story.gretChoice`  
+**activateCond for quest_scar_04:** `() => S_story.gretChoice && !S_story.gretComplete`
+
+---
+
+### §SCAR-01-F. The Choice — Quest_scar_03 Design
+
+The choice is not framed as good vs. evil. Both options are argued by Gret herself, who does not know what to do.
+
+**The setup:** Ren Hamm, Aldric's son (~30, earnest, carrying his father's shame), arrives at SQ. He has found Gret's discarded draft. He knows. He wants Gret to testify to the Academy that his father acted without full understanding — that Hamm was confused, not corrupt. This would partially restore the Hamm family name without fully crediting Gret. Her name still would not appear on the work.
+
+**The cost of help:** Gret gets nothing formally. She loses time, reopens the wound, and gives the Hamm family partial peace. She remains uncredited.
+
+**The cost of refusal:** Ren leaves empty-handed. The wound stays the wound. Gret keeps her anger clean and private.
+
+**Player counsels Gret — two rendered paths:**
+
+*Help path button text:* "Go. Show up. That's the real good."  
+*Gret's response (help):* *"Yes. I think so too. I was hoping you'd say that."* She pauses. *"Not because I couldn't decide. Because I needed to say it to someone first."*
+
+*Refusal path button text:* "You owe him nothing. Protect yourself."  
+*Gret's response (refusal):* *"You're right. I don't owe him anything. That is exactly right." A silence.* *"And yet."*
+
+Both paths complete quest_scar_03. The `gretChoice` flag records the decision. Quest_scar_04 reads this flag to determine the reward branch.
+
+---
+
+### §SCAR-01-G. The Scar's Light — Item Design
+
+**Item key:** `scars_light`  
+**Name:** The Scar's Light  
+**Type:** `amulet` (passive — equip slot)  
+**Path:** mercy path only (`gretChoice === 'help'`)  
+**Description:** *"It is never the same. That is the point."*
+
+```javascript
+{
+  key: 'scars_light',
+  name: "The Scar's Light",
+  type: 'amulet',
+  icon: '⭐',
+  passive: 'wound_badge',
+  description: "It is never the same. That is the point."
+}
+```
+
+**Passive — `wound_badge`:** When the player has taken ≥ 25% of their max HP in damage during the current combat encounter, +1 to all attack rolls and +1 to all damage rolls for the remainder of that encounter. The bonus activates mid-fight and stays active once triggered.
+
+**Design rationale:** The wound is not removed — it is the activation condition. You do not receive the bonus by avoiding damage; you receive it by having been hit. The badge is worn on the scar. The star is made from the wound's material.
+
+**Mechanical note:** The `wound_badge` passive check runs in the attack resolution function. Condition: `(S.maxHp - S.hp) / S.maxHp >= 0.25 && S_story.scarsLightEquipped`. If true, add +1 to `_rollHit()` result and +1 to damage.
+
+---
+
+### §SCAR-01-H. Refusal Path — "And Yet"
+
+If the player counsels refusal: Gret does not give The Scar's Light. Instead quest_scar_04 renders a different close:
+
+Gret completes her current manuscript and gives the player a copy: **Orrens: On the Obligation of the Escaped** — a readable item (knowledge entry). It contains her philosophy in compressed form, including:
+
+> *"The good that comes from those who have never been hurt is often of a weak and bloodless sort. It inspires few to follow. The good that comes from those who have been hurt — and who choose a different path — is powerful, trustworthy, and, when it arrives, unmistakable."* — Gret Orrens
+
+The refusal path grants **+1 WIS** (the philosophical argument absorbed) and **+500gp** (Gret pays for the consultation, which she calls "worth more than the Academy ever gave me"). No passive item. The arc closes without The Star — because the lead was not transmuted. The scar stayed a scar. Gret keeps writing. The manuscript still sits under Hamm's name.
+
+This path is not wrong. It is honest. The arc does not punish it. It simply shows that the transmutation requires the willingness to absorb the shock — and that willingness is not automatic.
+
+---
+
+### §SCAR-01-I. New State Flags
+
+```javascript
+// §SCAR-01: Scar into a Star
+S_story.gretMet           // boolean — Gret Orrens met at SQ
+S_story.gretLabyrinth     // boolean — Pier Falk identified and reached
+S_story.gretChoice        // string — 'help' | 'refuse'
+S_story.gretComplete      // boolean — arc closed
+S_story.scarsLightEquipped // boolean — The Scar's Light in active equip slot
+S_story.pierFalkWarm      // boolean — Pier Falk disposition updated
+```
+
+**Token items created by arc:**
+
+| Item key | Created | Description |
+|----------|---------|-------------|
+| `scar_draft` | quest_scar_01 | *Gret's Discarded Draft — same words, wrong name on the cover* |
+| `scars_light` | quest_scar_04 (mercy path) | *The Scar's Light — passive amulet* |
+| `orrens_manuscript` | quest_scar_04 (refusal path) | *Orrens: On the Obligation of the Escaped — readable knowledge item* |
+
+---
+
+### §SCAR-01-J. Vignette Writing Notes
+
+All §SCAR-01 prose uses the compressed present-tense register, two to four sentences per beat. The wound is never described from inside; it is described from its observable effects.
+
+**quest_scar_01 beat note:** The room at SQ is small. Two manuscripts are open on the table, side by side. They are the same text. One cover reads *Aldric Hamm*. She does not point. She waits for you to see it. When you do, she says: *"Twelve years. He died seven years ago. The Academy still assigns it."* She turns a page. *"The chapter on obligation. That one especially."*
+
+**quest_scar_02 beat note:** Pier Falk is explaining, at volume, why a young copyist's margin annotations are incorrect. The annotations are not incorrect. His hands are moving too much. You know the shape of this before he finishes the sentence. After: *"There's a way through. Someone showed me once."* He stops. He looks at you as if you have said something in a language he stopped expecting to hear. He doesn't answer. He nods once.
+
+**quest_scar_03 beat note (help path):** Ren Hamm stands in the doorway. He is holding a draft with Gret's handwriting on it. He found it. He knows. Gret looks at him for a long time without speaking. Then she looks at you. The choice is: take the shock yourself, or pass it on. The shock has already been administered. What you decide is what you do with it afterward.
+
+**quest_scar_04 beat note (mercy path):** She returns from the Academy three days later. She does not say what happened. She sits down and opens her manuscript and writes one sentence. Then she takes something from her coat — a small pendant — and sets it on the table between you. She does not look up. *"Keep it."* You pick it up. It is warm. Not from her hands.
+
+---
+
+### §SCAR-01-K. Next Prompt
+
+> The following prompt is ready for the implementation session. Paste it to begin §SCAR-01 code work.
+
+---
+
+**PROMPT — §SCAR-01 Implementation:**
+
+We are implementing §SCAR-01 — Scar into a Star: The Philosopher's Wound. Location: SQ (Weimar Scholar's Quarter) and BQ (Book Quarter). The arc introduces two new NPCs: **Gret Orrens** (key: `gret_orrens`, Philosopher, SQ) and **Pier Falk** (key: `pier_falk`, Former Copyist, BQ). It runs 4 quests with a binary choice at quest_scar_03 that determines the arc's reward branch.
+
+**Source thesis:** William Golding — *"This is how the scar becomes a star."* The wound cannot be unchanged; what can be changed is whether it is transmuted into goodness. The arc's moral fulcrum is quest_scar_03: player counsels Gret on whether to help Aldric Hamm's son testify before the Academy — absorbing the shock rather than passing it on.
+
+**Mercy path reward:** The Scar's Light (`scars_light`) — passive amulet, `passive: 'wound_badge'`. Activates when player has taken ≥ 25% max HP damage in current combat: +1 attack rolls, +1 damage rolls for remainder of encounter.
+
+**Refusal path reward:** +1 WIS + 500gp + `orrens_manuscript` (readable knowledge item containing Gret's philosophical argument).
+
+Implement in this order:
+1. Add `gret_orrens` to relevant NPC array at node SQ with `quoteFn` conditional on `gretMet/gretLabyrinth/gretChoice/gretComplete`.
+2. Add `pier_falk` to relevant NPC array at node BQ — static quote, disposition flag `pierFalkWarm`.
+3. Add 4 quest entries to `QUEST_DB`: quest_scar_01 (side), quest_scar_02 (skill_check WIS DC 12), quest_scar_03 (choice — two button paths, `gretChoice` set to `'help'` or `'refuse'`), quest_scar_04 (side — branches on `gretChoice`).
+4. Add `scars_light` amulet to item array with `passive: 'wound_badge'`.
+5. Wire `wound_badge` passive into attack resolution: `if ((S.maxHp - S.hp)/S.maxHp >= 0.25 && S_story.scarsLightEquipped) { hitBonus += 1; dmgBonus += 1; }`.
+6. Add `orrens_manuscript` as a readable knowledge item (renders text on use, same pattern as Froberger journal entries or tome items).
+7. Add 6 state flags to `_S_DEFAULTS`: `gretMet`, `gretLabyrinth`, `gretChoice`, `gretComplete`, `scarsLightEquipped`, `pierFalkWarm`.
+8. Write vignette prose for all 4 quest beats in compressed present-tense register (§GR/§GUIDE-01 style).
+
+Verify: quest_scar_03 correctly branches; mercy path grants `scars_light` and sets `gretComplete`; refusal path grants `orrens_manuscript` + applies +1 WIS + 500gp + sets `gretComplete`. The `wound_badge` passive fires only in combat when damage threshold met and item is equipped.
+
+**Cross-references:** `plan.md §GR` · `plan.md §WISDOM-01` · `plan.md §GUIDE-01` · `plan.md §XVI (Weimar Scholar Gate)` · `lab-report-weimar-scholar-gate.md` · `lab-report-la-riva-grief-arc.md`
+
+---
+
+**Cross-references (section):** `plan.md §XVI` · `plan.md §GR` · `plan.md §GUIDE-01` · `plan.md §WISDOM-01` · `lab-report-weimar-scholar-gate.md`
+
+---
+
+## §TTS — macOS Text-to-Speech Session Protocol
+
+When working in this project, Claude should follow these TTS conventions so the user can monitor progress without watching the screen.
+
+### Git commits
+
+After every `git commit`, run `say` with the commit message before moving on:
+
+```bash
+git commit -m "message" && say "message"
+```
+
+The automated hook in `~/.claude/settings.json` also fires `say` with the committed file names and a pipeline seed count after each commit.
+
+### Asking the user to continue
+
+Whenever the protocol calls for asking the user to type "continue" (e.g. mid-book processing, end of a work block, or before a major next step), first run:
+
+```bash
+say "continue, continue, continue!"
+```
+
+Then output the written prompt. This lets the user hear the pause point without reading the screen.
+
+### Example — end of a processing pass
+
+```bash
+say "continue, continue, continue!"
+# then output: "FCO part 2/3 done — Books 4–8 covered. Type 'continue' for part 3."
+```
+

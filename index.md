@@ -214,6 +214,13 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | **Fighter Champion features** | `mechanics-combat.md` | `plan.md §II (FIGHTER_FEATURES)` |
 | **First Researcher (Marta Eilene Vass)** | `story-arc-investigation.md` | `lab-report-weimar-scholar-gate.md` · `lab-report-void-archaeology.md` |
 | **Fishing / Yugurt Lake** | `monsters.md` | `lab-report-fish-with-dnd.md` · `lab-report-fishing-bait-prompting.md` · `maps.md` |
+| **Fishing Buddy / Emmer Finch (§GUIDE-01)** | `plan.md §GUIDE-01` | `lab-report-fish-with-dnd.md` · `plan.md §XLV` |
+| **Four Stages of Competence / Self-Discovery arc** | `plan.md §GUIDE-01` | `plan.md §WISDOM-01` · `plan.md §ALCHEMY-01` |
+| **Rod of Self-Discovery** | `plan.md §GUIDE-01-F` | `plan.md §XLV` (tournament wiring) |
+| **Scar into a Star / §SCAR-01** | `plan.md §SCAR-01` | `lab-report-weimar-scholar-gate.md` · `plan.md §XVI` |
+| **Gret Orrens (Philosopher NPC)** | `plan.md §SCAR-01-C` | `plan.md §SCAR-01` |
+| **The Scar's Light (passive amulet)** | `plan.md §SCAR-01-G` | `plan.md §SCAR-01-F` (wound_badge mechanic) |
+| **Pier Falk (BQ — trapped person)** | `plan.md §SCAR-01-D` | `plan.md §SCAR-01` |
 | **Froberger journal (41 entries)** | `froberger-journal-all-entries.txt` | `lab-report-game-story-codex-of-conquest.md` · `story.md §PROLOGUE` |
 | **Froberger traces** | `world.md` | `lab-report-web-of-connections.md` |
 | **Gate locks (4 passages)** | `maps.md` · `story.md §Gate Locks` | `plan.md §II (GATE_LOCKS)` |

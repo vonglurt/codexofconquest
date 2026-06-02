@@ -8526,6 +8526,76 @@ const NPC_DIALOGUES = { // → doc: story-arc-npc-dialogues.md
     ],
     quote: '"Fifty gold is a reasonable price for information that could get me killed."',
   },
+  // ── §GUIDE-01: Yugurt Cabin — Emmer Finch ──
+  emmer: {
+    meta: { name:'Emmer Finch', occupation:'apprentice fisherman',
+      worldTruth:'Unconscious competence is the same simplicity as unconscious incompetence, seen from the other side.',
+      missionBit:'emmerComplete' },
+    impartial: [
+      '"Is that normal? The line went sideways." He is smiling. He has total confidence in the question.',
+      '"I\'ve been watching the Fisherman all morning. He hasn\'t said anything yet. I think that\'s the instruction."',
+      '"I thought I would come here and it would be obvious. It\'s not obvious. I\'m finding that interesting."',
+    ],
+    questActive: [
+      '"I lost one. Pulled when I should have waited. The Fisherman didn\'t say anything. He just cast again."',
+      '"I watch his wrist. Not his arm — his wrist. There\'s something in the wrist I can\'t replicate yet."',
+    ],
+    friendly: [
+      '"Someone said: trying too hard. I thought about it all night. I think they were wrong. I think they stopped at the wrong place."',
+      '"My grip was wrong for the first three days. Then it was less wrong. I don\'t know when it changed. That\'s the interesting part."',
+      '"I fished this morning without thinking about whether I was fishing correctly. The fish didn\'t care about my technique."',
+    ],
+    dearFriend: [
+      '"I did not think about it. I cast and the fish was there. That\'s what the Fisherman meant. I think I understand it now."',
+      '"The rod is heavy because you\'re thinking about it. When you stop thinking about it, it weighs exactly what it weighs."',
+    ],
+    quote: '"Is that normal?" — smiling, line sideways, total confidence.',
+  },
+  // ── §SCAR-01: Scholar\'s Quarter Weimar — Gret Orrens ──
+  gret: {
+    meta: { name:'Gret Orrens', occupation:'independent scholar',
+      worldTruth:'The scar does not go back to being skin. That is how you know it was real.',
+      missionBit:'gretComplete' },
+    impartial: [
+      '"The chapter on obligation, that one especially." She does not look up.',
+      '"Aldric Hamm died seven years ago. The Academy still assigns the book. I have not filed another complaint. I have been writing."',
+      '"There is a man in the outer hall who is very angry and doesn\'t know yet that the anger is not about the books."',
+    ],
+    questActive: [
+      '"The labyrinth has an exit. Someone showed me once. I have been trying to give that away ever since."',
+    ],
+    friendly: [
+      '"The weak good says I forgive you. The real good shows up anyway. The real good costs something. That is the whole difference."',
+      '"Ren Hamm found the draft in his father\'s estate papers. He knows what his father did. He is not here to defend it."',
+      '"I know my answer. I needed to say it to someone first before I could say it to him."',
+    ],
+    dearFriend: [
+      '"I went. I said what I could say. The record is partial and imperfect and I still carry the scar. But I showed up."',
+      '"The pendant was warm. Not from my hands — warmer than that, older than that."',
+    ],
+    quote: '"The scar does not go back to being skin. That is how you know it was real."',
+  },
+  // ── §SCAR-01: Scholar\'s Quarter Weimar — Pier Falk ──
+  pier: {
+    meta: { name:'Pier Falk', occupation:'displaced guildsman',
+      worldTruth:'The labyrinth has an exit. Nobody told him one exists.',
+      missionBit:'pierFalkWarm' },
+    impartial: [
+      '"The annotations are incorrect." His hands are moving too much. His voice drops when he says workshop.',
+      '"The workshop burned in 1365. Three years ago. The guild papers went with it."',
+    ],
+    questActive: [
+      '"Someone said: there\'s a way through. I have been where you are. I didn\'t believe it at first."',
+    ],
+    friendly: [
+      '"I\'m finding the exit. It\'s slow. The guild provisional re-registration takes ninety days. Six months ago I would have said unacceptable. I said: that\'s fine."',
+      '"The anger was not about the annotations. I think I knew that. But knowing it and working around it are different things."',
+    ],
+    dearFriend: [
+      '"The filing is in. Ninety days is ninety days. I\'m keeping records in the meantime. The scar is the credential, someone told me."',
+    ],
+    quote: '"The workshop burned in 1365. The guild papers went with it."',
+  },
 };
 
 /* ── Layer 3: Quest Data ── */
@@ -10668,6 +10738,18 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   quest_1367_d_hansa: { id:"quest_1367_d_hansa", type:"skill_check", title:"The Amber Embargo", desc:"Hilde Magnusdottir must negotiate with a Hanseatic factor to lift an embargo strangling Birka. DC 15 Persuasion. faction_hansa affected.", hint:"The League wants profit, not punishment. Show him a number that makes lifting the embargo worth more than keeping it.", passText:"You lay out the numbers he has not added yet — what the embargo costs the League in lost future trade if Birka's amber network collapses entirely. He listens. He re-adds. He opens the book. The embargo lifts in the morning.", failText:"He listens. He does not re-add anything. The embargo stands. He says it will be reviewed in thirty days. The thirty days will be long for everyone except the factor, who has other ports.", disposition:"The Hanseatic League does not embargo out of malice. It embargoes out of arithmetic. You have to speak arithmetic back at it.", activateNode:"BK", checkAbility:"cha", checkLabel:"Persuasion", vignetteText:"The Hanseatic factor has a face like a ledger page. The embargo is two months old. Birka's amber market is half its normal size. Three warehouses have closed. The factor sits across the table with his hands folded and his account books closed because he already knows what is in them.", xpAward:140, checkDC:15, retryGateDays:0, retryable:true, activateCond:() => true, onPass:() => { S_story.faction_hansa = Math.min(5, (S_story.faction_hansa || 0) + 2); }, onFail:() => { S_story.faction_hansa = Math.max(-5, (S_story.faction_hansa || 0) - 1); } },
   quest_1367_f_plague: { id:"quest_1367_f_plague", type:"combat", title:"The Empty Village", desc:"Clear Sainte-Marthe-des-Pres of 4 Plague Walkers and 1 Hollow Reeve. plague_exposed risk on fail. faith_folk track.", hint:"The Hollow Reeve does not want to fight. It wants to be acknowledged. That is different.", passText:"The Plague Walkers dissolve when the Hollow Reeve sits down on the stone at the edge of the pit and then is not there. Cecile seals the pit, writes her report, recommends the cousin's claim. She adds the village to a list she keeps of places visited. She does not know why she keeps the list. She thinks it is for the same reason the carver carved the names: so something remembers where the empty places are.", failText:"The Hollow Reeve does not dissolve. You retreat with a wound that smells wrong. Roll CON DC 13 or gain plague_exposed. The village is still empty. The cousin waits.", disposition:"The sky counts them. But someone has to give them to the sky.", activateNode:"HKG", vignetteText:"The village has been empty for nineteen years. The plague took it in three weeks in 1348. The property belongs now to a distant cousin whose claim Cecile is here to certify, if the village is inhabitable, which requires the village to be cleared, which is why there is a notary's commission in her satchel and a sword at her belt that she did not have before she took this work.", xpAward:160, retryGateDays:0, retryable:true, activateCond:() => true, onPass:() => { S_story.faith_folk = Math.min(5, (S_story.faith_folk || 0) + 1); }, onFail:() => { if (Math.random() > 0.5) S_story.plague_exposed = true; } },
   quest_lxvii67: { id:"quest_lxvii67", type:"skill_check", title:"The Jester's Crossroads", desc:"The jester does not ask a question. Two must arrive alone and answer it anyway. DC 10 Insight. Self-serve. No Help action.", hint:"The answer is not written anywhere. You already know it.", passText:"You write the number on a scrap of paper and set it on the stone. He catches the coin, does not look at it, nods once. One. Someone else will be the second. When the second arrives and writes the same number, he stands up and dabs. Completely sincere. The post opens. There is a carved coin inside: LXVII on one face, 67 on the other.", failText:"You write a different number. He takes the paper, folds it carefully, puts it in his coat. He collects wrong answers. Not to shame them. Wrong answers need somewhere to go too. Come back when you know.", disposition:"67 > 69. taps chest. self-serve. double dab. ⁶⁷", activateNode:"HKG", checkAbility:"wis", checkLabel:"Insight", vignetteText:"A painted post at a fork in the road. No sign. A jester on a stone, tossing a coin. He does not speak. He holds up two fingers. The coin goes up and up. The question he is not asking is: do you know the answer to the question I am not asking? The answer is 67. You have to arrive at it yourself.", xpAward:67, checkDC:10, retryGateDays:0, retryable:true, activateCond:() => (S_story.faith_folk || 0) >= 1, onPass:() => { S_story.faith_folk = Math.min(5, (S_story.faith_folk || 0) + 1); }, onFail:() => {} },
+  quest_guide_01: { id:"quest_guide_01", type:"side", title:"The Fool's First Cast", activateNode:"SSJ" },
+  quest_guide_01: { id:"quest_guide_01", type:"side", title:"The Fool's First Cast", desc:"A young man arrived at Yugurt Cabin this morning with a market rod, a broken guide ring, and total confidence. He cast immediately without asking anything. The line went sideways. He said: Is that normal? He was smiling. He has never fished a lake. He does not know he has never fished a lake. The Fisherman watched from the cabin steps and said nothing. You are holding it like a question.", hint:"Go to Yugurt Lake and make your first catch.", disposition:"\"Is that normal?\" — Emmer Finch", npc:"Emmer Finch", activateNode:"SSJ", waypointNode:"BOO", xpAward:50, reward:0, activateCond:() => (S_story.inventory||[]).some(i => (i.name||'')
+.toLowerCase().includes("fishing rod")) && !S_story.quests["quest_guide_01"], completeFn:() => (S_story.fishingCatchLog||[]).length >= 1 },
+  quest_guide_02: { id:"quest_guide_02", type:"side", title:"The Weight of the Hook", desc:"The hook caught something large. The rod bent correctly for the first time. Emmer did everything wrong in sequence — pulled when he should wait, stood when he should kneel — and the fish was gone. He stood at the water for a long moment. Then: I think I have been doing it wrong the whole time. He turned around and found this interesting. The Fisherman was watching from the cabin steps. He said one sentence. This is not a terminal diagnosis. This is how it starts.", hint:"Fish again at Yugurt Lake. The second catch closes the recognition beat.", disposition:"\"Now you can start.\" — The Fisherman", npc:"Emmer Finch", activateNode:"SSJ", waypointNode:"BOO", xpAward:150, reward:0, activateCond:() => S_story.quests["quest_guide_01"] === "done" && (S_story.fishingCatchLog||[]).length >= 1, completeFn:() => (S_story.fishingCatchLog||[]).length >= 2 },
+  quest_guide_03: { id:"quest_guide_03", type:"side", title:"Morning Repetitions", desc:"The Fisherman says nothing instructional. He fishes. Emmer fishes alongside him and watches. The watching is the instruction. Emmer's grip is wrong, then less wrong, then right — and he does not notice it has changed. This is how it works. Not from wishing or hoping or accepting yourself as you are. From returning to the same water, the same rod, the same motion, day after day. Disciplined effort in a consistent direction. You will not always have to think about it. But you do now. Keep going.", hint:"Fish at Yugurt Lake three more times — practice the form.", disposition:"\"You're thinking about every move. Good. You won't always have to.\" — The Fisherman", npc:"Emmer Finch", activateNode:"SSJ", waypointNode:"BOO", xpAward:250, reward:0, activateCond:() => S_story.quests["quest_guide_02"] === "done", completeFn:() => (S_story.fishingCatchLog||[]).length >= 5 },
+  quest_guide_04: { id:"quest_guide_04", type:"skill_check", title:"The Middle Way Sneers", desc:"Bog Mudwhistle watches Emmer cast from across the bank. Emmer's cast is deliberate now — you can see him thinking through each step. Bog says: Trying too hard. Either you have it or you don't. He addresses the lake, not Emmer. Emmer hears him. The Fisherman continues fishing. He has been at this lake eleven years. He knows what Bog is doing. He has been where Bog is standing. He did not stay there.", hint:"See through the mockery — WIS Insight DC 11.", passText:"You see it — the U-curve. The fool who has never tried and the sage who has passed through trying arrive at the same simplicity. The middle sneers at the effort because effort is embarrassing when you are in the middle. Bog has fished thirty years without improvement because he stopped at competence and called it mastery. The Fisherman passed through the same stage and kept going. Emmer is in the middle now. The middle is not the destination. Let it sneer. Walk through it.", failText:"Bog's words land wrong. Maybe the trying IS the problem. Maybe competence cannot be taught — maybe you either have it or you don't and Emmer doesn't and all of this is just embarrassing. The Fisherman casts again. He does not look up. You cannot yet see what he sees.", disposition:"\"The wisest king in the old stories said there is nothing better than to eat and be glad. The men in the middle laughed. He was right.\" — The Fisherman", npc:"Bog Mudwhistle", activateNode:"SSJ", waypointNode:"SSJ", checkAbility:"wis", checkLabel:"Insight", vignetteText:"Bog Mudwhistle is at the far bank, rod propped against his knee, watching Emmer cast. The cast is deliberate — each step visible, the grip consciously adjusted, the line arc calculated before release. Bog has been fishing this lake for thirty years without thinking about any of those steps. From a distance, this looks like the same skill expressed differently. From close, it looks like effort. Bog knows the difference and says so, to no one in particular: Trying too hard. Either you have it or you don't. The Fisherman does not respond. He casts. The line goes where it needs to go. He has been where Bog is standing — not the physical location, the knowledge location. He decided not to stay. You are watching all three men at once and only one of them understands what he is watching.", xpAward:250, checkDC:11, retryGateDays:0, retryable:true, activateCond:() => S_story.quests["quest_guide_03"] === "done", onPass:() => { S_story.emmerStage4a = true; }, onFail:() => {} },
+  quest_guide_05: { id:"quest_guide_05", type:"side", title:"The Cast That Didn't Think", desc:"Emmer stands at the shore. He does not choose a spot. He does not look at the water first. He casts. The form is clean. He does not know it is clean until the fish is running. He holds the line correctly — has been holding it this way for several mornings without noticing that he started. Later he says: I did not think about it. I just cast. Then the fish was there. He looks slightly surprised at himself. The Fisherman nods from the cabin steps. Neither did I, once.", hint:"Return to Yugurt Cabin. The threshold has been crossed.", disposition:"\"He didn't think about it. Neither did I, once.\" — The Fisherman", npc:"Emmer Finch", activateNode:"SSJ", waypointNode:"SSJ", xpAward:300, reward:0, activateCond:() => !!S_story.emmerStage4a, completeFn:() => !!S_story.emmerStage4a && S_story.currentCode === "SSJ" },
+  quest_guide_06: { id:"quest_guide_06", type:"side", title:"Just Be Yourself", desc:"The Fisherman brings the rod out from inside the cabin. It was not visible before. He sets it on the table between you. Emmer says: Wait, shouldn't I — The Fisherman goes back inside. The fire is still going. The rod is in your hands. You have been trying to be the person you want to become. This morning you already are. You will need to try to be the person you want to become. And then, one morning, you already are. Make one more cast. The lake will register it.", hint:"Make one more cast at Yugurt Lake to close the arc.", disposition:"\"You will need to try to be the person you want to become. And then, one morning, you already are.\" — The Fisherman", npc:"The Fisherman", activateNode:"SSJ", waypointNode:"BOO", xpAward:400, reward:0, activateCond:() => S_story.quests["quest_guide_05"] === "done", completeFn:() => (S_story.fishingCatchLog||[]).length >= 6 },
+  quest_scar_01: { id:"quest_scar_01", type:"skill_check", title:"The Open Ledger", desc:"A philosopher in the lower room of the Scholar's Quarter has two manuscripts open on the table, side by side. They are the same text. One cover reads Aldric Hamm. She does not point. She waits for you to see it. She has been carrying this proof for twelve years. She carries it the way someone carries something they have stopped expecting anyone to ask about. The chapter on obligation, that one especially.", hint:"Examine the two manuscripts — INT Investigation DC 8.", passText:"You see it. The corrections in the margin are hers. The vocabulary is hers. The argument structure is hers. Aldric Hamm was a competent scholar who took seventeen years of specific revision and put his name on the cover. He died seven years ago. The Academy still assigns the book. She has not filed another complaint. She has been writing. She says: The scar does not go back to being skin. That is how you know it was real.", failText:"Two similar texts. Scholars borrow from each other. Influence flows between researchers. You cannot determine what happened here, or who was first.", disposition:"\"The scar does not go back to being skin. That is how you know it was real.\" — Gret Orrens", npc:"Gret Orrens", activateNode:"NUE", waypointNode:"NUE", checkAbility:"int", checkLabel:"Investigation", vignetteText:"The room is small, off the main reading hall. Two manuscripts are open on the table side by side. Same chapter headings, same arguments, same illustrative examples in the same order. One cover reads Aldric Hamm. The other, in older handwriting on a discarded draft, reads a different name. The woman at the desk does not point. She waits for you to see it. The evidence is in the margins — corrections in her hand in the Hamm text, vocabulary choices she uses and Hamm never does, an argument structure built over seventeen years of specific revision that does not match his method at any stage. She has been carrying this since before you arrived. She will be carrying it when you leave. What changes is whether someone has seen it.", xpAward:100, checkDC:8, retryGateDays:1, retryable:true, onPass:() => { S_story.gretMet = true; }, onFail:() => {} },
+  quest_scar_02: { id:"quest_scar_02", type:"skill_check", title:"The Labyrinth", desc:"There is a man in the lower reading room who has been explaining at considerable volume why a young copyist's margin annotations are incorrect. The annotations are not incorrect. His hands are moving too much. Gret said: there is a man who is very angry and doesn't know yet that the anger is not about the books. This is the man. You know this shape before he finishes his sentence.", hint:"Read the man's behavior — WIS Insight DC 12. Find the wound inside the anger.", passText:"You read it. Workshop fire, three years ago. Guild papers lost, unrecoverable. No formal complaint because there was nothing left to prove. He has been inside the labyrinth since the morning the workshop burned and has not found the exit because he hasn't been told one exists. You say: There's a way through. I've been where you are. He stops. He looks at you as if you have said something in a language he stopped expecting to hear. He doesn't answer. He nods once. The young copyist goes back to work.", failText:"A difficult man being difficult. Some people are just like this. You cannot find the wound inside the behavior.", disposition:"\"There's a way out, brother. I have been where you are.\" — passed forward", npc:"Pier Falk", activateNode:"NUE", waypointNode:"NUE", checkAbility:"wis", checkLabel:"Insight", vignetteText:"The man is at the reading table. He has been there two hours explaining, at considerable volume, why a young copyist's margin annotations are incorrect. The annotations are not incorrect — you can see this from the doorway. He is holding a quill he is not using. His hands are moving too much. His voice drops one register when he says the word workshop. That is the tell. The workshop burned three years ago. The guild papers went with it. The younger scribes have their papers in good standing and remind him of it by existing. The anger is not about the annotations. Gret said: he doesn't know yet that the anger is not about the books. There's a way through. Someone showed me once.", xpAward:200, checkDC:12, retryGateDays:1, retryable:true, activateCond:() => !!S_story.gretMet, onPass:() => { S_story.gretLabyrinth = true; S_story.pierFalkWarm = true; }, onFail:() => {} },
+  quest_scar_03: { id:"quest_scar_03", type:"skill_check", title:"The Shock", desc:"Ren Hamm stands in the doorway of Gret's study. He is thirty, holding a discarded draft with her handwriting on it. He found it in his father's estate papers. He has read it. He knows. He wants Gret to testify before the Academy — not full credit for her, but partial restoration of his father's name: confused, not corrupt. Gret gets nothing formal. She reopens the wound. She looks at you. She has already decided. She needs to say it to someone first.", hint:"Counsel Gret — WIS Insight DC 11. Absorb the shock or pass it on.", passText:"You see what the choice is — not revenge versus mercy but whether the wound gets a witness or stays private. Go. Show up. That's the real good. Gret is quiet for a moment. Yes. I think so too. I was hoping you would say that. A pause. Not because I couldn't decide. Because I needed to say it to someone first. She closes the manuscript and puts on her coat.", failText:"You owe him nothing. Protect yourself. Gret is still. You're right. I don't owe him anything. That is exactly right. A long silence. And yet. She does not move toward the door. She does not move away from it either. The wound stays where it is.", disposition:"\"The weak good says I forgive you. The real good shows up anyway.\" — Gret Orrens", npc:"Gret Orrens", activateNode:"NUE", waypointNode:"NUE", checkAbility:"wis", checkLabel:"Insight", vignetteText:"Ren Hamm is thirty, earnest, carrying his father's shame. He found the discarded draft in the estate papers. He knows what his father did. He is not here to defend it — he is here to ask Gret to say that Aldric acted without full understanding. Not corrupt. Merely confused. The Academy might accept this. Gret's name would not appear on the work. She would gain nothing formal and lose three days of peace and the particular quiet that twelve years of not reopening the wound has produced. She is looking at you. She already knows what she wants to do. She needs to say it to someone first. The question the wound is asking: do you absorb the shock or pass it on?", xpAward:250, checkDC:11, retryGateDays:0, retryable:false, activateCond:() => !!S_story.gretLabyrinth && !S_story.gretChoice, onPass:() => { S_story.gretChoice = "help"; }, onFail:() => { S_story.gretChoice = "refuse"; } },
+  quest_scar_04: { id:"quest_scar_04", type:"side", title:"The Star", desc:"She returns from the Academy. She does not say what happened. She sits down, opens her manuscript, and writes one sentence. Then she reaches into her coat and sets something on the table between you — a small pendant, warm. Not from her hands. It has been warm longer than that. She does not look up. Keep it. You pick it up. The manuscript is still open. The chapter on obligation, that one especially. It is never the same. That is the point.", hint:"Return to the Scholar's Quarter to receive the arc's close.", disposition:"\"It is never the same. That is the point.\" — The Scar's Light", npc:"Gret Orrens", activateNode:"NUE", waypointNode:"NUE", xpAward:350, reward:500, activateCond:() => !!S_story.gretChoice, completeFn:() => !!S_story.gretChoice && S_story.currentCode === "NUE" },
 };
 // ◆◆◆ WORLDBUILDER:QUEST_DB:END ◆◆◆
 
@@ -11613,6 +11695,35 @@ const BIRKA_NPC_PROFILES = { // → doc: world.md §Birka Six NPCs
     dearFriend:{ greeting:'She hands you the Scholar\'s Note before you ask.',
                  dialogue:'"The depth readings are consistent now. The Void is weakening its intrusion — whatever you\'ve been doing in the outer nodes is working." A pause. "I filed a report. The commissioners don\'t read depth reports. I included your name in the field observation section." She turns back to the terminal. "Someone should know it happened."' },
   },
+  emmer: {
+    key:'emmer', name:'Emmer Finch', occupation:'apprentice fisherman', node:'SSJ',
+    neutral: { greeting:'A young man at the water\'s edge, rod in hand, staring at a sideways line.',
+               dialogue:'"Is that normal?" He is smiling. He has total confidence in the question. The rod is a market rod. The guide ring is cracked. He does not know any of this is wrong.' },
+    friendly: { greeting:'Emmer has the rod in the right hand now. The grip is still wrong but less wrong.',
+                dialogue:'"I watched the Fisherman for an hour yesterday without casting. I thought it would feel like wasted time. It didn\'t." He adjusts his grip without thinking about it. "Something is moving in the right direction. I can\'t tell you what yet."',
+                special:'🎣 Fish together' },
+    dearFriend: { greeting:'Emmer is already at the water when you arrive. He doesn\'t look up when you approach.',
+                  dialogue:'"I did not think about it this morning. The cast just happened and then the fish was there." A pause. He is watching the line with calm attention. "I think that is what the Fisherman meant. I think I understand it now. Not the theory — the thing itself."' },
+  },
+  gret: {
+    key:'gret', name:'Gret Orrens', occupation:'independent scholar', node:'NUE',
+    neutral: { greeting:'A woman at a desk in the lower reading room, two manuscripts open side by side.',
+               dialogue:'"The chapter on obligation, that one especially." She does not look up. She has been waiting for someone to ask the right question. She is not certain you are that person yet.' },
+    friendly: { greeting:'Gret sets a chair across from her desk before you sit down.',
+                dialogue:'"There is a man in the outer hall. Workshop fire, three years ago. Guild papers, gone. He has been in the labyrinth since then." A pause. "There is a way through. I was shown it once. I have been trying to give it away ever since."',
+                special:'📖 Read the manuscript' },
+    dearFriend: { greeting:'She is writing when you enter. One sentence, then she sets the quill down.',
+                  dialogue:'"I went to the Academy. I said what I could say. Ren Hamm listened." She closes the notebook. "It was not enough to restore anything formally. But it was the real thing. Not the weak version. The thing that costs." She looks up. "I am glad you were there when I needed to say it to someone first."' },
+  },
+  pier: {
+    key:'pier', name:'Pier Falk', occupation:'displaced guildsman', node:'NUE',
+    neutral: { greeting:'A man at the reading table, explaining — at considerable volume — why the copyist\'s annotations are wrong.',
+               dialogue:'The annotations are not wrong. You can see this from the doorway. His hands are moving too much. His voice drops when he says the word workshop. That is the tell.' },
+    friendly: { greeting:'Pier is quieter now. He is reading, not explaining.',
+                dialogue:'"Someone said: there\'s a way through. I have been where you are." He sets the book down. "I did not believe it at first. Then I thought: they knew the shape of it. Nobody describes it that way by accident." He picks the book up again. "I am finding the exit. It is slow."' },
+    dearFriend: { greeting:'Pier is at his usual table. He has brought a fresh ink pot.',
+                  dialogue:'"I filed for provisional re-registration. The guild clerk said it takes ninety days. I said: that\'s fine." A pause. "Six months ago I would not have said that\'s fine." He dips the quill. "Progress is a strange shape."' },
+  },
 };
 // ◆◆◆ WORLDBUILDER:BIRKA_NPC:END ◆◆◆
 
@@ -11902,6 +12013,18 @@ const _S_DEFAULTS = () => ({
     plague_exposed: false, // Black Death exposure flag. Set on failed CON DC 13 save. Grants Exhaustion 1 mission bit. Cleared by cure quest.
     GAME_YEAR: 1367, // Canonical game year. Anno Domini MCCCLXVII.
     game_year: 1367, // Canonical game year. Anno Domini MCCCLXVII.
+    emmerMet: false, // §GUIDE-01: Emmer Finch introduced at SSJ
+    emmerStage4a: false, // §GUIDE-01: U-curve WIS check passed (quest_guide_04)
+    emmerStage4: false, // §GUIDE-01: unconscious competence threshold reached
+    emmerComplete: false, // §GUIDE-01: arc closed; Rod granted
+    wisdomJournal_acceptance: false, // §GUIDE-01: journal page on acceptance (item flag)
+    wisdomJournal_effort: false, // §GUIDE-01: journal page on consistent effort (item flag)
+    gretMet: false, // §SCAR-01: Gret Orrens met at NUE
+    gretLabyrinth: false, // §SCAR-01: Pier Falk identified (quest_scar_02 passed)
+    gretChoice: "", // §SCAR-01: help | refuse — set by quest_scar_03
+    gretComplete: false, // §SCAR-01: arc closed
+    scarsLightEquipped: false, // §SCAR-01: The Scar's Light in active equip slot
+    pierFalkWarm: false, // §SCAR-01: Pier Falk disposition updated to warm
 });
 
 /* ── Layer 48: Luck — Seventh Stat ── */
@@ -13413,7 +13536,8 @@ function _overlayPlayerAttack() {
     }
     const d20Res  = rollD20(adv);
     const d20Val  = d20Res.result;
-    const atkTotal = d20Val + atkMod + profB + lvlAtk + weaponAtk + mainWeaponAtk;
+    const _scarsLight = (S_story.inventory || []).some(i => i.name === "The Scar's Light") && S_story.hp <= Math.floor((S_story.hpMax || 30) * 0.75) ? 1 : 0;
+    const atkTotal = d20Val + atkMod + profB + lvlAtk + weaponAtk + mainWeaponAtk + _scarsLight;
     const isCrit  = d20Val >= critMin;
     const isNat1  = d20Val === 1;
     const isHit   = isCrit || (!isNat1 && atkTotal >= S.enemy.ac);
@@ -13431,7 +13555,7 @@ function _overlayPlayerAttack() {
       const dmgCount = (isCrit ? S.weapon.count * 2 : S.weapon.count) * S.dmgMultiplier;
       const dmgRolls = rollN(S.weapon.die, dmgCount);
       const drunkBonus = S_story._drunkFight ? 3 : 0;
-      const flat = S.weapon.flatMod + getDmgMod() + drunkBonus;
+      const flat = S.weapon.flatMod + getDmgMod() + drunkBonus + _scarsLight;
       const raw  = Math.max(0, dmgRolls.reduce((a,b)=>a+b,0) + flat);
       finalDmg   = applyDmgMod(raw, S.opp.dmgMod);
       S.opp.hp   = Math.max(0, S.opp.hp - finalDmg);
@@ -16669,6 +16793,8 @@ function storyCheckQuests(node) {
       msgs.push('📋 ' + q.title);
     }
   });
+  // §GUIDE-01: Emmer Finch visible once arc is active
+  if (!S_story.emmerMet && ['active','done','complete'].includes((S_story.quests||{}).quest_guide_01)) S_story.emmerMet = true;
   // §DESIGN-03: Track patrol route for quest_city_watch_patrol
   if ((S_story.quests||{}).quest_city_watch_patrol === 'active') {
     if (node.code === 'LHR') S_story.patrolBA = true;
@@ -16714,6 +16840,22 @@ function storyCheckQuests(node) {
       if (id === 'quest_horned_shark') { S_story.gold += 300; msgs.push('💰 +300gp. 🦷 The Noon Point is yours now.'); }
       if (id === 'quest_night_eel') { S_story.gold += 150; S_story.eelSkinPouchActive = true; if (!S_story.inventory) S_story.inventory = []; S_story.inventory.push({ name:'Eel Skin Pouch', icon:'🏮', type:'trinket', sell:35, desc:'+1 Type bonus on all fishing casts. The light never fully goes out.' }); msgs.push("💰 +150gp. 🏮 Eel Skin Pouch acquired — +1 Type on all future casts."); } // §XLVIII
       if (id === 'quest_shale_drop') { S_story.gold += 250; if (!S_story.inventory) S_story.inventory = []; S_story.inventory.push({ name:'Y. Gurt Field Survey', icon:'📋', type:'readable', sell:0, readText:"Y. GURT — YUGURT LAKE SURVEY\nFirst Circle Field Record, Pre-Codex Year 3\nClassification: Naturalist Assessment — Freshwater Taxonomy\n\nLake dimensions: 2.4km × 0.9km. Maximum depth: 31 meters at the northwest basin. The shale formation below the northwest bank extends below the waterline for an undetermined depth — further survey required.\n\nDocumented species: 20 surface and mid-water, 3 confirmed deep-water (unclassified), 1 depth specimen observed on descent into northwest shale formation. See Annex 4: 'the light-producing variety; do not pursue below 25m without additional crew.'\n\nSurveyor notation (Y. Gurt, Nat. First Circle): The lake has developed a self-regulating predator hierarchy without Scholar Kings intervention. I recommend no intervention. It is doing this correctly on its own. I also recommend I be permitted to stay here rather than return to the archive for the classification review. The archive will continue without me. The lake will require observation.\n\nThe request was not approved.\n\nI stayed anyway." }); msgs.push('💰 +250gp. 📋 Y. Gurt Field Survey found.'); } // §XLIX
+      // §GUIDE-01: Rod of Self-Discovery + WIS +1
+      if (id === 'quest_guide_06') {
+        if (!S_story.inventory) S_story.inventory = [];
+        if (!S_story.inventory.some(i => i.name === 'Rod of Self-Discovery')) S_story.inventory.push({ name:'Rod of Self-Discovery', icon:'🎣', type:'weapon', atkBonus:1, dmgDie:4, dmgCount:1, dmgFlat:0, minLevel:1, sell:0, desc:'+1 ATK, 1d4. The rod the Fisherman kept inside. It was not a fishing rod. It was a proof of concept.' });
+        if (!S_story.guide01WisGranted) { S_story.abilityScores = S_story.abilityScores || {}; S_story.abilityScores.wis = Math.min(20, (S_story.abilityScores.wis || 12) + 1); S_story.guide01WisGranted = true; }
+        S_story.emmerComplete = true; _setNpcFavor('emmer', 2);
+        msgs.push('🎣 Rod of Self-Discovery obtained. WIS +1. Emmer is Dear Friend.');
+      }
+      // §SCAR-01: The Scar\'s Light + Orrens Manuscript; mercy path grants WIS +1
+      if (id === 'quest_scar_04') {
+        if (!S_story.inventory) S_story.inventory = [];
+        if (!S_story.inventory.some(i => i.name === "The Scar's Light")) S_story.inventory.push({ name:"The Scar's Light", icon:'🕯', type:'amulet', sell:0, passive:true, desc:'Passive — when HP ≤ 75% max, +1 ATK and +1 DMG on all attacks. Hard-won goodness.' });
+        if (!S_story.inventory.some(i => i.name === 'Orrens Manuscript')) S_story.inventory.push({ name:'Orrens Manuscript', icon:'📕', type:'readable', sell:0, readText:"ORRENS — ON OBLIGATION\nWorking Draft, Third Edition\n\nThe scar does not go back to being skin. That is how you know it was real.\n\nThe wound that does not go back to unscarred is the same wound that can become the thing you give to someone else. Not the pain. The knowledge that the labyrinth has an exit.\n\nI was shown the exit by someone who had been in it longer than I had and found their way out and came back. That is the chain. That is the only mechanism that works.\n\nYou cannot give what you do not have. But you always have the scar. The scar is the credential.\n\nThe chapter on obligation, that one especially." });
+        if (S_story.gretChoice === 'help' && !S_story.scar01WisGranted) { S_story.abilityScores = S_story.abilityScores || {}; S_story.abilityScores.wis = Math.min(20, (S_story.abilityScores.wis || 12) + 1); S_story.scar01WisGranted = true; msgs.push("📕 Orrens Manuscript + 🕯 The Scar's Light obtained. WIS +1 (mercy path)."); } else { msgs.push("📕 Orrens Manuscript + 🕯 The Scar's Light obtained."); }
+        S_story.gretComplete = true; _setNpcFavor('gret', 2);
+      }
       // Layer 50: §XV NG+ Remembrance quest rewards
       if (id === 'quest_ng_01') { S_story.gold += 500; msgs.push('💰 +500gp. The city remembers. So do they.'); }
       if (id === 'quest_ng_02') { /* reward is the act itself */ msgs.push('📖 Entry 42 is in the journal.'); }
@@ -19353,10 +19495,14 @@ function storyRender(node, prefix) {
     const _frNpcs = [];
     if (S_story.connieMet) _frNpcs.push('connie_tuna');
     if ((S_story.quests || {})['quest_la_riva_02'] === 'active' || (S_story.quests || {})['quest_la_riva_03'] === 'active') _frNpcs.push('aldo_sardino');
+    const _ssjNpcs = S_story.emmerMet ? ['emmer'] : [];
+    const _nueNpcs = ['gret'];
+    if (S_story.pierFalkWarm) _nueNpcs.push('pier');
     const birkaNpcs = { CI:['yael'], IN:['brynn'], TV:['quill'], BA:['pachelbel'], CY:['crov','auros'], CQ:_cqNpcs, SQ:_sqNpcs,
       STN:['rennau'], TL:S_story.tlLedgerRead ? ['vonn'] : [],
       VS:S_story.vsDebtSettled ? [] : ['solvak'], GC:S_story.vsDebtProbed && !S_story.vsWeaponsFound ? ['yva'] : [],
-      AMS:_frNpcs };
+      AMS:_frNpcs,
+      SSJ:_ssjNpcs, NUE:_nueNpcs };
     const keys = birkaNpcs[node.code];
     if (keys) {
       const npcRowDiv = document.createElement('div');
