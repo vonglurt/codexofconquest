@@ -2321,3 +2321,272 @@ He adds: "I have a separate category for this. It's longer than the other."
 ---
 
 *BLQ-08 complete. 2026-06-02.*
+
+---
+
+## Cycle 9 — Angle: The Object That Cannot Be Opened While Carried
+
+---
+
+### BLQ-09: "The Jewel Chest"
+
+**Theme check:** Cycles 1-8 covered: formal fraud through technical accuracy; legal timing; diplomatic ambiguity preserved by not-reading; substituted contents; document outliving its object; authentication through ordeal; impossible schedule; one document with two correct readings. Cycle 9 shows a ninth angle: the object whose value cannot be accessed while in transit. The carrier holds something whose contents are unknown, whose claimants are multiple, and whose only path to resolution is delivery to the court intact. The survivor of the wreck cannot open what he carries until he is safe on shore; the carrier cannot open what they carry until the court can witness it. The value inside is real but unusable until delivery is complete.
+
+This is distinct from: BLQ-03 (diplomatic letter whose value was its unread state — carrier understood the architecture); BLQ-04 (box opened mid-journey; contents known); CLJ-08 (contingency letter whose value was in anticipating the expert's absence); AMS-05 (sealed by sender's direction).
+
+---
+
+**SOURCE HOOK:** Day II, Story 4. Landolfo Ruffolo's corsair venture fails; he is shipwrecked. Clinging to wreckage, he finds a sea-chest floating nearby — heavy, strange for its size. He holds to it for two days in the water. He cannot open it at sea. A poor woman on Corfu pulls him ashore with the chest. When he opens it: rubies, emeralds, stones worth many times his original fortune. The chest has no markings. He carries it home and says nothing about the sea. The value inside the chest could not be known until the chest was opened on solid ground. The chest saved him before he knew it was saving him.
+
+---
+
+**1367 SETTING:**
+A Brindisi fisherman named Rocco has brought ashore a sea-chest washed from a wreck in the Adriatic — the *Santa Margherita*, a Catalan merchant vessel lost three weeks ago in a coastal squall. The chest is sealed with pitch and iron bands. It is heavier than its size suggests. When tilted, something inside settles — not sloshing liquid. No external markings.
+
+Three parties have appeared:
+- Giacomo Pisani, Venetian factor in Brindisi: claims wreck-right under Venetian commercial law; any goods from a foreign vessel wrecked in Adriatic waters within sight of a Venetian treaty port are subject to wreck-right recovery
+- Fra Domingo de Salamanca, a Spanish pilgrim returning from Jerusalem via Brindisi: claims the chest was in the *Santa Margherita*'s lower hold, logged as personal luggage in a cargo manifest he produced
+- Rocco the fisherman: retains Messer Cosimo di Taranto, a local notary, to argue that a sea-finder's delivery fee is owed regardless of ownership resolution
+
+Messer Cosimo cannot resolve the three-way dispute himself. He has commissioned someone to carry the chest, sealed as found, to the Bari podestà's court — the competent jurisdiction — before either Pisani or Fra Domingo can transfer it privately through their respective networks.
+
+The chest must arrive sealed. The podestà will open it in court in the presence of all parties.
+
+**TOKEN:** A pitch-sealed sea-chest, iron-banded, no external markings; approximately the size of a traveling trunk; heavier than its apparent volume should be; contents shift slightly when tilted; sealed with a pitch-and-iron method typically used for personal effects, not commercial cargo.
+
+**TOKEN granted:** Act I
+**TOKEN taken:** Act V (the podestà opens the chest in court; contents identified and claimants addressed)
+
+---
+
+### ACT I — Brindisi (Rocco's Waterfront Warehouse, Harbor District)
+
+*The chest · sealed, iron-banded, no markings · on Rocco's warehouse floor between two oil lamps · Messer Cosimo di Taranto at the table with his notary seal · afternoon, the harbor noise coming through the walls*
+
+Messer Cosimo explains the legal situation: three claims, one chest, one court. He says: the chest must arrive at the Bari podestà's court sealed and with a certified chain of custody. If Giacomo Pisani's men handle it before court, the wreck-right claim becomes a fait accompli. If Fra Domingo's advocates handle it, the cargo manifest claim becomes precedent. The fisherman's delivery fee is owed regardless — but only if the chest arrives at court, not if it disappears into either party's possession.
+
+He hands the carrier a sealed custody document — a notarized record that the chest was accepted sealed, from Rocco, at this warehouse, on this date, in this condition.
+
+The carrier lifts one end of the chest to test the weight. Something inside shifts.
+
+*Whatever is in here, it is not loose coins. It is not cloth. It moves like it is multiple objects of different weights.*
+
+Cosimo says: do not open it. Do not discuss what might be inside. Do not negotiate with either party while carrying it.
+
+---
+
+**Skill check — DC 12 Investigation or History:**
+Assess the legal architecture: which party's claim is strongest, and why the court is the only party who can resolve this correctly.
+
+**Pass (Investigation):** The carrier examines the chest's pitch-sealing method. Commercial cargo is sealed with tar-based pitch over nail-iron bands — this chest has oil-pitch, the kind used for personal effects and private luggage. The cargo manifest would cover commercial cargo. If the chest's contents are personal effects, Fra Domingo's manifest claim may be incorrect in category even if the chest was indeed on the *Santa Margherita*. The court must decide. The carrier understands: don't resolve this argument — protect it for the court.
+
+**Pass (History):** Venetian wreck-right applies to commercial goods. If the chest is personal luggage (as the pitch-sealing suggests), it is not covered by commercial wreck-right regardless of treaty status. Pisani's claim may be entirely moot once the court opens the chest. But the carrier cannot know this without opening it. The carrier understands: the only authority that can confirm the contents category is the podestà, in court, in front of all parties.
+
+**Fail:** The carrier accepts the custody document and the task without the legal framework. During the transit, they will have to improvise arguments against both claimants.
+
+*The chest granted here. Cosimo stamps the custody document.*
+
+**Grant item:** sealed sea-chest (pitch-and-iron, no markings, custody document attached by Cosimo's notary seal)
+
+---
+
+### ACT II — Via Appia, North of Brindisi (Road Checkpoint, First Afternoon)
+
+*The chest · in the carrier's hired cart, covered in canvas · a road checkpoint manned by two of Giacomo Pisani's employees · late afternoon, the Adriatic coast road running north*
+
+Pisani has posted men at the junction where the coastal road meets the Via Appia branch toward Bari. His employee, a factor's clerk named Bartolo, presents a formal wreck-right instrument — a document signed by Pisani claiming the chest under Venetian commercial treaty provisions — and asks the carrier to transfer custody.
+
+He is polite. He is holding a legal document. He says: the Venetian treaty covers all wreck goods from foreign vessels in the Adriatic corridor; the carrier can either transfer custody here or accompany Bartolo to the Venetian factor's office in Brindisi for formal proceedings.
+
+*He is well-prepared. The document looks legitimate.*
+
+The carrier has Cosimo's custody document. The carrier is going to the Bari podestà. Bartolo is asking for custody transfer before the court.
+
+---
+
+**Skill check — DC 12 Persuasion or History:**
+Decline the custody transfer legally, without giving Bartolo grounds for a formal detention.
+
+**Pass (Persuasion):** The carrier says: the chest is under court-bound custody by instrument of a Brindisi notary; transferring custody outside of court proceedings would constitute interference with a pending legal matter before the Bari podestà; the carrier's obligation runs to the court, not to prior claimants; Pisani's wreck-right claim is best advanced in court where it can be adjudicated. Bartolo, who is a clerk and not a lawyer, recognizes the formulation. He steps aside. He sends a rider to Pisani.
+
+**Pass (History):** Venetian wreck-right instruments have no enforcement authority outside of Venice's treaty-port jurisdiction; Brindisi is not a Venetian treaty port; the instrument Bartolo presents is valid in Venice but cannot compel custody transfer on a road between Brindisi and Bari. Bartolo, uncertain, lets the cart pass. He sends a rider to Pisani.
+
+**Fail:** Bartolo, backed by his two men, insists on formal custody transfer. The carrier must either yield the chest (losing the delivery) or force the argument past three men on a road checkpoint. Combat: Bartolo and two men, AC 11, HP 16 each; if the carrier wins, they continue with the chest; if they lose, Bartolo takes custody and the court delivery is in jeopardy.
+
+*The chest in the cart, moving north. Pisani has been alerted.*
+
+---
+
+### ACT III — Monopoli (Coastal Inn, Evening)
+
+*The chest · in the locked inn stable, under the cart canvas, carrier sleeping in the attached room · the inn courtyard, evening*
+
+Fra Domingo's local advocate, a Brindisi canon lawyer named Maestro Vito, has traveled ahead and is waiting at the Monopoli inn. He is different from Bartolo: he does not have enforcement authority; he has an argument. He says: the cargo manifest of the *Santa Margherita* lists item 47 as "one sealed chest, property of the pilgrim Fra Domingo de Salamanca, containing personal religious effects and letters of introduction." He has a certified copy of the manifest, signed by the Catalan ship's captain before departure.
+
+He says: the carrier is currently in possession of a pilgrim's personal religious effects. He says: personal religious effects of a pilgrim cannot be held as legal evidence in a civil court proceeding; the canonical exemption for pilgrim personal property supersedes civil court jurisdiction.
+
+*He is arguing canon law against civil jurisdiction. He believes this is correct.*
+
+This is genuinely uncertain. The carrier is not a lawyer. But the argument is wrong in one specific respect that the carrier may know.
+
+---
+
+**Skill check — DC 13 History or Persuasion:**
+Decline Maestro Vito's canonical-exemption argument without engaging in legal proceedings.
+
+**Pass (History):** The carrier knows that canonical pilgrim-property exemption applies to items in a pilgrim's personal custody — not to items being administered through civil court proceedings already initiated by a notarial custody document. Once Cosimo's custody document was sealed and signed, the chest entered civil proceedings; the canonical exemption cannot retroactively remove it. Maestro Vito, hearing this, recognizes it is correct. He says: "I will see you in Bari." He does not obstruct.
+
+**Pass (Persuasion):** The carrier says: all property questions regarding the *Santa Margherita* wreck are before the Bari podestà; the carrier's obligation is to deliver the chest sealed to that court; if Fra Domingo's contents are personal religious effects, the podestà will recognize the canonical exemption after opening the chest and return them directly; but the carrier cannot make that determination without violating the sealed custody. Maestro Vito, calculating that a court opening of the chest would reveal the religious contents and support his canonical argument, agrees to let the court proceed.
+
+**Fail:** Maestro Vito produces a second document — an emergency canonical custody order from the Monopoli bishop, issued at his request this afternoon. The order may or may not have legal standing against the Bari podestà's jurisdiction, but the carrier cannot resolve this on a road. The carrier must either wait for the order's jurisdiction to be challenged (losing a day) or continue and let the court deal with the bishop's order. Continuing means the podestà receives a contested delivery.
+
+*The chest in the stable, the canonical argument resolved or not resolved.*
+
+---
+
+### ACT IV — Via Appia, Approaching Bari (Night Road)
+
+*The chest · in the cart · the night road, ten miles from Bari, oil lamp at the cart's front · no other travelers*
+
+The hired laborer driving the cart — a young man named Falco from Brindisi — has been quiet all day. He is now even quieter. At a road junction, he slows the cart without instruction. In the lamp-light, the carrier can see that Falco has received money since the morning — there is a new coin in his belt that was not there before. He was paid by one of the claimants' agents.
+
+Falco's instruction was: at this junction, turn east toward the harbor road instead of north toward Bari. The harbor road leads to Pisani's warehouse in Bari port. The chest would arrive at the warehouse, not the court.
+
+*He has not turned yet. He is deciding.*
+
+---
+
+**Skill check — DC 12 Persuasion or Insight (pass avoids combat):**
+Address Falco before he turns, or read his hesitation and intercept.
+
+**Pass (Insight):** The carrier has been watching Falco since Monopoli. The hesitation at the junction, the new coin, the slowed pace — the carrier recognizes the pattern before Falco acts. The carrier steps forward on the cart and says: "The north road." Falco looks at them. The carrier says: "The north road." Falco drives north.
+
+**Pass (Persuasion):** The carrier addresses Falco directly and without accusation: "You were paid to take a wrong turn. I know. The man who paid you cannot protect you from a podestà's interference charge. I can tell the court you turned correctly after a brief hesitation. Or I can tell them what happened at this junction." Falco, calculating, drives north.
+
+**Combat (if both fail):** Falco turns east. The cart must be stopped. Falco is not armed — he will not fight seriously; he was paid for misdirection, not violence. If the carrier physically takes the reins, Falco yields. But the chest has been jostled significantly; the iron bands are still intact, but the pitch seal has a crack near one band. The carrier must explain this at the court.
+
+*The cart, north road, Bari ten miles ahead. The chest intact or with a cracked seal.*
+
+---
+
+### ACT V — Bari (Podestà's Court, Morning Session)
+
+*The chest · on the court floor, before the podestà's bench · Giacomo Pisani, Fra Domingo, and Messer Cosimo all present · the Bari podestà, a man named Messer Aldrovando di Bari, at his bench · morning light through the window arches*
+
+Messer Aldrovando receives the chest, the custody document, and any notes on the transit. He confirms the pitch seal's condition (intact or cracked). He orders the court cleared of all parties except the carrier and the three claimants. He calls the court secretary to record the opening.
+
+He breaks the pitch seal with a notary's iron hammer.
+
+Inside: wrapped in oilcloth, a collection of personal effects. A silver reliquary pendant. Three sealed letters. A small book of personal prayer. And at the bottom, wrapped separately: a bag of uncut stones — clear and colored, the kind that cannot be identified without a gemcutter's assessment.
+
+The three sealed letters are addressed to an estate administrator in Venice: Ser Bartolomeo Trevisan, named as the estate executor of a deceased merchant from the letter's text.
+
+Aldrovando reads the letters' external addresses aloud. He says: "The chest belongs to the estate of a third party, not present. Neither the wreck-right claim nor the cargo manifest addresses personal estate effects." He says: "The chest is estate property. It will be held by this court and forwarded to Ser Bartolomeo Trevisan's office in Venice." He looks at the uncut stones. He says: "Those too."
+
+*The chest was heavy because of the stones. Neither claimant knew.*
+
+---
+
+**Skill check — DC 12 Persuasion or Investigation:**
+Assist the court in establishing the carrier's clean chain of custody, ensuring the delivery is accepted as proper.
+
+**Pass (Investigation):** The carrier presents the custody document, account for the transit encounters with Bartolo and Maestro Vito, and notes Falco's hesitation at the road junction. Aldrovando records each event. He says: "The chest arrived sealed — or nearly sealed — with documented chain of custody. The delivery is accepted." He stamps the carrier's receipt.
+
+**Pass (Persuasion):** The carrier addresses the court's question about the cracked seal (if any) directly and first, before Pisani or Fra Domingo can raise it: the crack occurred during a transit incident caused by one of the claimants' agents, which is documented. Aldrovando, appreciating the directness, accepts the delivery without further question.
+
+**Fail:** Pisani challenges the cracked seal as evidence of improper handling. Aldrovando orders an inquiry. The delivery is accepted provisionally, pending a three-day review. The carrier's fee is held.
+
+*The chest taken here. Aldrovando's clerk records the disposition.*
+
+**Take item:** sealed sea-chest (opened by podestà; contents identified as estate effects; delivered to court custody)
+
+---
+
+### onPass
+
+Aldrovando's court secretary, recording the disposition, asks: "What category do we use for this?" Aldrovando considers. He says: "Wreck-right disputes. No — the contents don't qualify." He considers again. "Estate effects recovered from a wreck, claimed by multiple unrelated parties, identified by court opening as belonging to a fourth party not present." He says: "Create a new category." The secretary writes: *Sea-Recovery Records — Estate Effects Delivered Sealed; Contents Identified by Court Opening as Property of Third Party Not Among Claimants.*
+
+He says: "This will happen again." He stamps the carrier's receipt and pays the full fee.
+
+Rocco the fisherman receives his finder's fee from the estate process. Giacomo Pisani's wreck-right claim is dismissed as inapplicable to personal estate effects. Fra Domingo's cargo manifest claim is dismissed as inapplicable to goods belonging to a third party's estate. Ser Bartolomeo Trevisan's office in Venice receives the chest and the letters six weeks later.
+
+---
+
+### onFail
+
+The delivery is accepted provisionally. The inquiry takes three days. The carrier's fee is held. Pisani and Fra Domingo file competing objections. Aldrovando sorts it out in a week. The chest goes to Ser Bartolomeo Trevisan's estate regardless — the contents speak for themselves.
+
+The carrier's fee is eventually released. The note from Aldrovando's clerk: *delivery accepted; chain of custody under inquiry; outcome: proper delivery confirmed.*
+
+---
+
+### Quest Stub (UQF v1.0)
+
+```json
+{
+  "quest_id": "BLQ_009",
+  "title": "The Jewel Chest",
+  "cycle": 9,
+  "book": "Decameron",
+  "token": "pitch-sealed sea-chest — iron-banded, no markings; heavier than its size suggests; contents shift when tilted; must arrive sealed at the Bari podestà's court before either claimant takes private custody; opened by the podestà; contents belong to a third party's estate",
+  "route": "BRI → Monopoli → BAR",
+  "theme": "The object that cannot be opened while carried; the value inside is real but unusable until delivery is complete; every party has a plausible claim except the one who actually needs it to arrive; Sea-Recovery Records — Estate Effects Delivered Sealed; Contents Identified by Court Opening as Property of Third Party Not Among Claimants",
+  "archive_category": "Sea-Recovery Records — Estate Effects Delivered Sealed; Contents Identified by Court Opening as Property of Third Party Not Among Claimants (Messer Aldrovando di Bari, Bari podestà's court secretary, 1367)",
+  "acts": [
+    {
+      "act_id": "BLQ_009_01",
+      "location": "Brindisi — Rocco's waterfront warehouse, harbor district",
+      "type": "skill_check",
+      "activateNode": "BRI",
+      "scene": "Messer Cosimo di Taranto commissions the delivery and explains the three-way dispute: Venetian wreck-right, Spanish cargo manifest, fisherman's finder's fee. The chest must arrive sealed at the Bari podestà's court. The pitch-sealing method suggests personal effects, not commercial cargo — but the carrier cannot confirm without opening it.",
+      "skillCheck": { "dc": 12, "skills": ["Investigation", "History"] },
+      "grantItem": "sealed sea-chest (custody document attached)",
+      "checkPassFlag": "legal_architecture_understood"
+    },
+    {
+      "act_id": "BLQ_009_02",
+      "location": "Via Appia north of Brindisi — road checkpoint",
+      "type": "hybrid",
+      "activateNode": "BRI",
+      "scene": "Bartolo, Giacomo Pisani's factor's clerk, presents a wreck-right instrument at the checkpoint and asks for custody transfer. He is polite and has a document that looks legitimate. He has two men with him.",
+      "skillCheck": { "dc": 12, "skills": ["Persuasion", "History"] },
+      "combat": { "count": 3, "ac": 11, "hp": 16 },
+      "checkPassFlag": "pisani_claim_declined"
+    },
+    {
+      "act_id": "BLQ_009_03",
+      "location": "Monopoli — coastal inn, evening",
+      "type": "skill_check",
+      "activateNode": "BRI",
+      "scene": "Maestro Vito, Fra Domingo's canon lawyer, is waiting at the inn. He presents a canonical-exemption argument: pilgrim personal religious effects cannot be held as civil evidence. He has a cargo manifest and a potential bishop's custody order. He is not trying to take the chest by force — he is arguing.",
+      "skillCheck": { "dc": 13, "skills": ["History", "Persuasion"] },
+      "checkPassFlag": "canonical_argument_declined"
+    },
+    {
+      "act_id": "BLQ_009_04",
+      "location": "Via Appia approaching Bari — road junction, night",
+      "type": "hybrid",
+      "activateNode": "BRI",
+      "scene": "Falco the hired laborer slows the cart at a junction. He has a new coin in his belt that was not there this morning. The junction leads north to the podestà's court or east to Pisani's harbor warehouse. He has not turned yet.",
+      "skillCheck": { "dc": 12, "skills": ["Persuasion", "Insight"] },
+      "combat": { "count": 1, "ac": 10, "hp": 12 },
+      "checkPassFlag": "falco_defection_prevented"
+    },
+    {
+      "act_id": "BLQ_009_05",
+      "location": "Bari — podestà's court, morning session",
+      "type": "skill_check",
+      "activateNode": "BAR",
+      "scene": "Messer Aldrovando breaks the pitch seal. Inside: personal effects, three sealed letters addressed to an estate executor in Venice, a bag of uncut stones. Neither the wreck-right claim nor the cargo manifest addresses estate effects belonging to a third party not present. The delivery's legitimacy depends on the carrier's account of the transit.",
+      "skillCheck": { "dc": 12, "skills": ["Persuasion", "Investigation"] },
+      "takeItem": "sealed sea-chest",
+      "activateMissionBit": "blqJewelChestComplete",
+      "checkPassFlag": "delivery_accepted"
+    }
+  ]
+}
+```
+
+---
+
+*BLQ-09 complete. 2026-06-02.*
