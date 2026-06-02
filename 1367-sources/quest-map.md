@@ -463,6 +463,8 @@ Game cities are canonical. Source-book settings are proposed new nodes.
 | NWI-03 | Proxenus's Letter | 4 | ORC → ATH → RGS → WM | The invitation is a form of authorship; Proxenus made the Anabasis possible |
 | NWI-05 | The Salmydessus Books | 5 | VAR → CON → WM | Evidence of loss is a primary document; the catalog proves the text existed |
 | WAW-07 | The Mile-Marker Account | 3 | ROM → WM | Secular administrative witness; the road official did not know what he saw |
+| WAW-04 | Chilo's Account | 4 | ATH → CON → RGS → WM | The informer's register becomes the martyrs' witness; dual accession, one chain of custody |
+| WAW-05 | Acte's Letter | 5 | ROM → FLR → WM | The letter that will soon stop being true; filed under the act, not the man |
 
 *When a new quest is written, append its row to the Processed Quests table.*
 *When a new location is used, append its row to the Location Grid.*

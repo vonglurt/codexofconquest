@@ -885,3 +885,458 @@ activateMissionBit: waw07Complete
 ---
 
 *WAW-07 complete. 2026-06-02.*
+
+---
+
+## WAW-04 — Chilo's Account (Chapter 72)
+**Cycle 4**
+
+*(Theme differentiation: Avoiding WAW-01 through WAW-03's Roman administrative and witness themes; WAW-07's secular official witness to an uncategorizable event. Avoiding also VIE cycle 2's recantation-too-late and ARN cycle 1's institution silences victim so perpetrator's version fills space. New theme: the informer's register becomes the martyrs' witness — the same list of names once delivered to Tigellinus is now the only complete document proving each name was a real person; the writer condemned them and the writer named them and in 1367 those are the same act and the opposite act; the archive creates dual filing under one chain of custody.)*
+
+---
+
+*The Confessio of Chilo Chilonides · a wax diptych in standard legal format, left panel Chilo's personal account in his own hand, right panel forty-three names arranged by district of arrest with outcomes annotated where known; the Corinthian elder's notarial note reads: "dictated in full consciousness, without constraint, in the presence of three community elders"; the wax was re-cast once in the fourth century to repair damage from damp · in Deacon Nikolaos's locked chest · Monastery of the Holy Witnesses, Athens district, a side-room behind the scriptorium*
+
+---
+
+### Act I — The Chest
+
+The deacon is not afraid of the man outside the gate. He is afraid of the forty-three names, which have been in his locked chest for forty years.
+
+Zenon of the Areopagus arrived three weeks ago on behalf of families whose grandparents appear in the right panel of the diptych. He has not threatened. He has made inquiries, which is worse. Deacon Nikolaos will release the document to an authenticated neutral archive. He will not release it to create a new argument.
+
+The Fighter stands in the side-room behind the scriptorium. The chest is open. The diptych is inside, heavier than expected, the wax still clear despite a century and a half of handling. The deacon says: *I do not doubt the archive. I doubt the transit.*
+
+The argument is about what the document becomes while it is being moved. The sealed archive produces no actionable knowledge. The monastery wall is accessible. Zenon will return with different legal grounds next season.
+
+*The deacon closed the chest.* Then he opened it again.
+
+He signed the Release Authorization in the name of the Corinthian community — "entrusted to carrier, destination neutral archive, no copy to be made" — and pressed the community seal into the wax while the ink was still wet.
+
+You receive the Corinthian Elder's Release Authorization. You receive the Confessio of Chilo Chilonides.
+
+---
+
+### Act II — The Areopagus
+
+*The Confessio of Chilo Chilonides · in the Fighter's satchel, with the Release Authorization on top · at the harbor transit office, Athens waterfront*
+
+Zenon intercepts the Fighter at the harbor gate. He is well-dressed, precise, and has not touched a weapon since the Fighter arrived in Athens. He has legal training, evident in the way he pauses between clauses.
+
+His grandfather is in the right panel. Fifth name from the top, Transtiberim district, arrested March 64 AD, outcome: execution. Zenon has never seen the document. He does not ask to see it now.
+
+What he says is: *Forty-three families do not need their grandparents named in a German archive.*
+
+He is not wrong. The archive does not publish. The names are sealed. The document's value is that it exists, not that it circulates. The grandfather's name is safer in a locked archive than in a contested monastery that Zenon can return to next season with different legal grounds.
+
+*The harbor behind them smells of pitch and old rope.*
+
+Zenon did not agree. He withdrew the formal objection. He wrote a short statement in his own hand — not endorsing the transfer, but not obstructing it — and walked back up the hill without turning.
+
+You receive the Areopagus Non-Interference Statement.
+
+---
+
+### Act III — Brother Konstantinos
+
+*The Confessio of Chilo Chilonides · in the satchel with both supporting documents · in the scholar's reading room, Constantinople, a wide table with a view of the harbor*
+
+Brother Konstantinos of Constantinople has been following this document's provenance for eleven years through monastery correspondence. He is the foremost living scholar of early Christian martyrology. He knows what the right panel is.
+
+He is also proposing to reconstruct a martyrology index from it — names, districts, outcomes — to be published as a scholarly supplement to the Acta Martyrum. The proposal is legitimate. The scholarship would be real. The problem is that using Chilo's list to identify martyr identities will re-expose the forty-three families to descendants who have had forty years of not knowing.
+
+Chilo gave these names to the Prefect's office. Konstantinos would give them to scholars. The mechanism is different. The exposure is the same.
+
+*The copyist in the corner has not been asked to leave.*
+
+The insight available here is quiet: Konstantinos has not considered that he is doing, with scholarly apparatus, the same thing Chilo did with informant's apparatus. He is not malicious. He has simply not looked at the act from the inside of the name.
+
+The Fighter said this, precisely. Not as an accusation. As an observation about what happens when a list is reproduced.
+
+*Konstantinos looked at the copyist.* He told him to go. Then he signed the Non-Commentary Pledge and handed it across the table without speaking.
+
+You receive the Scholar's Non-Commentary Pledge.
+
+---
+
+### Act IV — Factor Petar
+
+*The Confessio of Chilo Chilonides · in the satchel with three supporting documents · in the factor's dining room, Ragusa harbor district*
+
+Factor Petar of Ragusa works for several Venetian collectors. He is hospitable, professional, and holding a specific sum in a sealed pouch on the table beside the wine. He has not opened the pouch. He is not certain the Fighter will sell. He is certain the Fighter deserves a good meal either way.
+
+The offer is not for the original. It is for a copy, made here, before the document reaches Weimar. The collector wants documentation of the forty-three names for reasons Petar has been told not to specify. The sum is considerable.
+
+The Fighter refused, directly and without softening it.
+
+Petar nodded. *Professional.* He closed the pouch and moved it to his side of the table. Then he wrote a Factor's Non-Copy Declaration — standard commercial language, signed and dated — and slid it across. *For your chain of custody.*
+
+He is a professional. The refusal was handled professionally. The declaration is worth having.
+
+You receive the Factor's Non-Copy Declaration.
+
+---
+
+### Act V — The Two Folders
+
+*The Confessio of Chilo Chilonides · still sealed in the satchel, all four supporting documents present · at the Archivus Sweelinck's intake desk, Weimar*
+
+The Archivus read it twice. Both panels. Then he set the diptych on the table between two open folders.
+
+The left folder: *Informant's Registers — Roman Imperial Period.* The document was made as this. Chilo was an active informant. He delivered names to the Prefect's office for payment. The list is his professional record.
+
+The right folder: *Christian Martyrology — Primary Testimony.* The document is now this. Chilo converted, confessed, and dictated his account as witness. The list is the only document that proves each of the forty-three existed as a specific person in a specific district.
+
+The Archivus said: *I can file it as what it was made. Or as what it became. Not both — unless I create a third entry.*
+
+The Fighter said: dual accession. One entry for what Chilo was. One entry for what the document now is. Both categories preserved. The two-entry system is the archive's honest answer to a document that changed meaning after its writing.
+
+*The Archivus was quiet for a long time.*
+
+Then he wrote at the top of a new sheet, in the careful hand of a man creating language that has not existed in this archive before: *Primary Testimony — Documents of Transformed Function: instruments of persecution that became instruments of witness.* He created two accession numbers under one chain of custody. He noted both: the informant who wrote it, and the forty-three he named.
+
+He looked up. *The writer condemned them. The writer named them. In 1367, those are the same act and opposite acts. I will not choose.*
+
+You receive the Dual Accession Record.
+
+---
+
+### Quest API Stub — WAW-04
+
+```
+missionAccept: "A monastery near Athens holds the Confessio of Chilo Chilonides — the
+  document in which Nero's most notorious informant, converted in old age, dictated a
+  full accounting of every person he gave to the Prefect's office. The Corinthian
+  community that preserved it has agreed to send it to a neutral archive. Carry it to
+  Weimar before a descendant of the named families destroys it or a scholar publishes it."
+
+Act I — The Chest
+activateNode: ATH
+type: escort
+scene: "Monastery of the Holy Witnesses, Athens district, a side-room behind the scriptorium.
+  Deacon Nikolaos holds the document in a locked chest; he is ready to release it but
+  afraid of what the transit will do to a document that has been quiet for forty years.
+  Zenon of the Areopagus arrived three weeks ago and has been making inquiries. The
+  deacon wants an argument, not a promise."
+prompt: "Persuasion DC 13: Convince the deacon that the sealed archive produces no
+  actionable knowledge; the monastery wall is accessible; Zenon will return with different
+  legal grounds next season."
+failText: "The deacon says: 'I do not doubt the archive. I doubt the transit.' Come back
+  with the argument about the monastery's accessibility versus the archive's seal. (retry)"
+successText: "The deacon opens the chest and signs the Release Authorization in the name
+  of the Corinthian community. You receive the Corinthian Elder's Release Authorization.
+  You receive the Confessio of Chilo Chilonides."
+grantItem: "Corinthian Elder's Release Authorization"
+grantItem: "Confessio of Chilo Chilonides"
+activateMissionBit: waw04Act1Active
+checkPassFlag: waw04Act1Passed
+
+Act II — The Areopagus
+activateNode: ATH
+type: skill_check
+scene: "Athens harbor gate. Zenon of the Areopagus intercepts you. His grandfather is
+  the fifth name in the right panel of the diptych. He says: 'Forty-three families do
+  not need their grandparents named in a German archive.' He has filed a formal harbor
+  objection. The harbor log closes in thirty seconds."
+prompt: "Persuasion DC 12: Argue that the archive does not publish; names are sealed;
+  the document's value is its existence, not its circulation; the sealed archive is safer
+  for the forty-three than the monastery Zenon can return to next season."
+failText: "Zenon's objection is filed. You are held one hour and miss the early tide.
+  The document is not taken. (retry to clear the objection before it is logged)"
+successText: "Zenon writes a statement withdrawing the objection — not endorsing the
+  transfer, but not obstructing it — and walks back up the hill without turning.
+  You receive the Areopagus Non-Interference Statement."
+grantItem: "Areopagus Non-Interference Statement"
+checkPassFlag: waw04Act2Passed
+activateMissionBit: waw04ZenonContacted
+
+Act III — Brother Konstantinos
+activateNode: CON
+type: hybrid
+scene: "Constantinople, a scholar's reading room. Brother Konstantinos has followed this
+  document's provenance for eleven years. He proposes to reconstruct a martyrology index
+  from the right panel — legitimate scholarship, real value, and the same act as Chilo's
+  with different apparatus. His copyist is still in the room."
+prompt: "Insight DC 13: Recognize that Konstantinos has not looked at the act from the
+  inside of the name. Say this as an observation, not an accusation."
+failText: "Konstantinos says: 'The scholarship protects the names.' He is wrong about
+  what protection means. The copyist begins working if the argument fails. (retry with
+  the distinction between scholarly exposure and archival seal; combat with copyist
+  if insight fails)"
+successText: "Konstantinos looks at the copyist and tells him to go. He signs the
+  Non-Commentary Pledge without speaking. You receive the Scholar's Non-Commentary Pledge."
+grantItem: "Scholar's Non-Commentary Pledge"
+checkPassFlag: waw04Act3Passed
+activateMissionBit: waw04KonstantinosMet
+
+Act IV — Factor Petar
+activateNode: RGS
+type: skill_check
+scene: "Ragusa harbor district, the factor's dining room. A sealed pouch sits beside
+  the wine. Factor Petar wants a copy of the right panel — the offer is for documentation
+  of the forty-three names, reasons unspecified. He is professional about both the offer
+  and the possible refusal."
+prompt: "Persuasion DC 12: Refuse directly and without softening it. Receive the
+  chain-of-custody documentation he offers in return."
+failText: "Petar's associate attempts an overnight copy. You stop it but the Scholar's
+  Pledge is taken in the scuffle. (retry — refuse clearly before the pouch is opened)"
+successText: "Petar closes the pouch and moves it to his side of the table. He writes a
+  Factor's Non-Copy Declaration in standard commercial language. 'For your chain of
+  custody.' You receive the Factor's Non-Copy Declaration."
+grantItem: "Factor's Non-Copy Declaration"
+checkPassFlag: waw04Act4Passed
+
+Act V — The Two Folders
+activateNode: WM
+type: skill_check
+scene: "Weimar archive intake desk. The Archivus reads both panels and sets the diptych
+  between two open folders: Informant's Registers and Christian Martyrology. He says:
+  'I can file it as what it was made. Or as what it became. Not both — unless I create
+  a third entry.' He wants the argument stated correctly before he writes the category."
+prompt: "Persuasion DC 13: Argue for dual accession — one entry for what Chilo was,
+  one entry for what the document now is; both categories preserved under one chain
+  of custody."
+failText: "The Archivus files it under Informant's Registers only. The martyrs' witness
+  function is noted but not created as a distinct category. Come back with the argument
+  about what the document is now, not only what it was made to be. (retry)"
+successText: "The Archivus writes: 'Primary Testimony — Documents of Transformed Function:
+  instruments of persecution that became instruments of witness.' Two accession numbers,
+  one chain of custody. 'The writer condemned them. The writer named them. In 1367, those
+  are the same act and opposite acts. I will not choose.' You receive the Dual Accession
+  Record."
+grantItem: "Dual Accession Record"
+takeItem: "Confessio of Chilo Chilonides"
+checkPassFlag: waw04Act5Passed
+activateMissionBit: waw04ChiloComplete
+```
+
+---
+
+*WAW-04 complete. 2026-06-02.*
+
+---
+
+## WAW-05 — Acte's Letter (Epilogue)
+**Cycle 5**
+
+*(Theme differentiation: Avoiding WAW-01 through WAW-04's Roman testimony, administrative, confession, and informant themes. Avoiding LGW's "dead love's truth delivered whole," ATH's "account crossing line of allegiance because grief recognizes itself," MOL's "pride that cannot confess returns thing anonymously." New theme: the letter that will soon stop being true — the grove is being cleared in 1367; Acte's two sentences contain no judgment, only coordinates; the document's neutrality is its rarest quality; filed under the act rather than the subject, because she never named him.)*
+
+---
+
+*Acte's Burial Note · a single sheet of papyrus, secretarial hand, two sentences: grove location off the second fork north of the Porta Collina, forty paces from the white elm, three iris plants placed at the root; condition of the body at burial; unsigned except "A."; official notation at the bottom in a later administrative hand: "Received and verified. Location surveyed. No further inquiry required." · in Monsignor Taddeo's locked reading room, Vatican sub-archive, third shelf behind the canon law codices*
+
+---
+
+### Act I — The Theological Problem
+
+The monsignor has been debating whether to destroy the letter for three years.
+
+Not because it is false. He believes it is accurate. The problem is what accuracy produces: a confirmed location creates obligations. Does the ground require blessing? Can Christians pray for the man buried there? Will pilgrims come? None of these questions have answers that benefit the Church's administration of 1367. The theological problem is not the letter's content. It is the letter's specificity.
+
+Fra Giannino, the Vatican librarian who first wrote to Weimar, is waiting in the corridor. Monsignor Taddeo stands in the reading room with the letter in his hand, holding it the way a man holds something he has decided to keep but cannot explain why.
+
+The argument available here: a neutral German archive, outside Roman diocesan jurisdiction, removes the theological problem by removing it from the geography where obligations apply. No pilgrim walks to Weimar to visit a location described in a document. The land-claim question disappears the same way. The letter in the archive is about a historical event. The letter in Rome is about current obligations.
+
+*The monsignor set it on the table.* He looked at it for another moment. Then he wrote the Release Authorization himself — including a Vatican Non-Retention Statement, which was more than the Fighter asked for — and signed it with the year and the date.
+
+You receive the Vatican Release Authorization. You receive Acte's Burial Note.
+
+---
+
+### Act II — The Grove
+
+*Acte's Burial Note · in the Fighter's satchel, Vatican Release Authorization on top · at the second fork north of the Porta Collina, mid-morning, survey stakes already in the ground*
+
+The groundskeeper's name is Sextus. He has tended this area for thirty years. He does not know whose grave it is. He knows that someone comes every year in spring and plants iris bulbs at the root of the white elm. The elm is still there, though the contractor has measured it for removal. Three of the survey stakes are inside the grove. One is at the elm's root.
+
+The letter in the satchel describes this exact stretch. The Fighter is standing at the location the document records.
+
+The verification may not be possible in three months. The two sentences in the letter are specific — the fork, the elm, the distance in Roman pacing — and the question is whether the physical landscape still agrees with the document. The observation must be accurate because the Fighter will need to state it at the archive intake, and the archive's confidence in the letter's claim depends on whether the location was confirmed before the clearing.
+
+*The contractor's cart was still at the edge of the grove.*
+
+The Fighter made the rubbing, measured the distance in paces, noted the elm's dimensions, and confirmed the three iris plants — still alive, planted six months ago, the most recent of a sequence going back decades. Sextus watched. He made his mark at the bottom of the confirmation note, not because he understood the document, but because he had tended the ground for thirty years and that was its own form of witness.
+
+You receive the Location Confirmation Note.
+
+---
+
+### Act III — The Antiquarian
+
+*Acte's Burial Note · in the satchel with two supporting documents · on the Via Cassia north of Siena, late afternoon*
+
+Messer Bartolomeo da Viterbo has followed the Fighter since Rome. He is not hostile. He has been looking for this grave for twelve years and he wants the letter not for destruction but for scholarship. He will use it to excavate. He believes a careful excavation produces more evidence than an archive document.
+
+He is not wrong about what an excavation might find. He is wrong about what the archive does that excavation cannot.
+
+An excavation requires judgment about what to keep. A document in a sealed archive is permanent in its original form. The location is confirmed now, in this season, by this note, with Sextus's mark. If Bartolomeo excavates and finds the site disturbed or empty, the letter loses its evidential value without any archive record of what it claimed. If he finds what he is looking for, the physical evidence absorbs the documentary evidence and the letter becomes a secondary source.
+
+*The road ran north through old oak stands.*
+
+Bartolomeo listened in the way of a man who has heard correct arguments before. He wrote the Scholarly Non-Claim Statement at a wayside table, sealed it himself, and turned east toward Viterbo without asking to see the document again.
+
+You receive the Scholar's Non-Claim Statement.
+
+---
+
+### Act IV — The Hospitality
+
+*Acte's Burial Note · in the satchel with three supporting documents · in a Florentine house three streets from the Signoria, late evening*
+
+Ser Anselmo Cresci is a humanist in the Medici circle's outer ring. He is genuinely interesting, genuinely well-read, and has been asked by Bartolomeo — who, despite his signed statement, wrote ahead — to offer the Fighter hospitality for one night. One night is a small delay. But in Rome, the contractor's survey was already four stakes deep into the grove. One day ago the grove may have been intact. Tomorrow it may not be.
+
+*The wine was excellent. The fire was well-laid.*
+
+The Fighter recognized the delay at the second glass. Not because Ser Anselmo was careless — because he was too good at this, asking the right questions at the right pace, providing exactly the kind of evening that makes a morning departure feel rude. And one of the questions was about the document's route since Rome. The Fighter answered it wrong twice before noticing the pattern.
+
+*The firelight moved on the wall.*
+
+They were out before dawn, politely. No one stopped them. Ser Anselmo came to the door in a robe with a lamp and said nothing except: *Safe roads.* But behind him, in the entrance hall, a rider was not yet saddled.
+
+You receive the Florentine Hospitality Receipt.
+
+---
+
+### Act V — Filed Under the Act
+
+*Acte's Burial Note · still sealed in the satchel, all four supporting documents present · at the Archivus Sweelinck's intake desk, Weimar*
+
+The Archivus read both sentences. Then he read the official notation at the bottom. Then the sentences again.
+
+He said: *She didn't say his name.*
+
+He was right. The letter never says "Nero." It says "the man who was buried here at my direction." The official notation says "received and verified" and names no subject. The document is technically anonymous.
+
+He looked at the location confirmation. Then at the Fighter.
+
+*But this is real.*
+
+He opened two folders. The first: *Roman Imperial — Nero — Secondary Sources.* This is the correct folder by subject. The second: a blank sheet, because the second folder did not exist yet.
+
+The classification question: a document about an identified man who is never identified in the document. A private act of burial with an official witness. A letter that answers one question — where is he — without explaining who asked or why the writer was the one who answered it.
+
+The Fighter argued for filing under the act. The archive should not supply the name the document withheld. The letter was written as care, not as documentation of a subject. The category it needs is for what it is: a record of private custody, by a person who assumed responsibility for the dead without institutional sanction.
+
+*The Archivus wrote the heading before the Fighter finished the sentence.*
+
+*Primary Records — Private Acts of Custody: documents created by individuals who assumed burial responsibility without institutional authorization.* He wrote a note for the record, separate from the intake form: "Filed under the act. The subject is not named in the document; I will not name him here either."
+
+You receive the Weimar Accession Record: Private Acts of Custody.
+
+---
+
+### Quest API Stub — WAW-05
+
+```
+missionAccept: "Acte, Nero's freedwoman companion, arranged his burial when his retinue
+  fled. She wrote a letter describing the location — a grove north of the city, a specific
+  tree, a specific distance in Roman pacing. The Vatican archive holds it. The grove is
+  being cleared. Carry the letter to Weimar before the grove is gone and the coordinates
+  cease to describe anything that still exists."
+
+Act I — The Theological Problem
+activateNode: ROM
+type: skill_check
+scene: "Vatican sub-archive reading room. Monsignor Taddeo has held the letter three years,
+  debating destruction. The problem is not falsity — it is specificity. A confirmed burial
+  location creates obligations: pilgrimage, blessing, land claims. The letter in Rome is
+  about current obligations. The letter in a German archive is about historical events."
+prompt: "Persuasion DC 13: Argue that a neutral archive outside Roman diocesan jurisdiction
+  removes the theological problem by removing it from the geography where obligations apply.
+  No pilgrim walks to Weimar to visit a described location."
+failText: "Taddeo says: 'The location creates obligations regardless of the document's
+  location.' He is correct about obligations but wrong about who must manage them. Come
+  back with the jurisdictional argument. (retry)"
+successText: "Taddeo writes both the Release Authorization and a Vatican Non-Retention
+  Statement and signs them with year and date. You receive the Vatican Release Authorization.
+  You receive Acte's Burial Note."
+grantItem: "Vatican Release Authorization"
+grantItem: "Acte's Burial Note"
+activateMissionBit: waw05Act1Active
+checkPassFlag: waw05Act1Passed
+
+Act II — The Grove
+activateNode: ROM
+type: skill_check
+scene: "Second fork north of the Porta Collina, mid-morning. Survey stakes are in the ground.
+  The white elm is still standing. Groundskeeper Sextus has tended the area thirty years
+  and does not know whose grave it is. Three survey stakes are inside the grove; one is at
+  the elm's root. The letter's coordinates describe exactly where you are standing."
+prompt: "Insight DC 12: Confirm the letter's location against the physical landscape before
+  the clearing continues. Measure, note, verify. The confirmation is dated today — the
+  archive's confidence in the letter depends on what the Fighter witnessed here."
+failText: "The confirmation is approximate. The archive will file the location as probable
+  rather than verified. Stand at the elm and measure before the contractor's cart moves.
+  (retry)"
+successText: "The Fighter measures the distance in paces, confirms the elm, notes the three
+  iris plants living at the root. Sextus makes his mark at the bottom. You receive the
+  Location Confirmation Note."
+grantItem: "Location Confirmation Note"
+checkPassFlag: waw05Act2Passed
+activateMissionBit: waw05GroveContacted
+
+Act III — The Antiquarian
+activateNode: WM
+type: skill_check
+scene: "Via Cassia north of Siena, late afternoon. Messer Bartolomeo da Viterbo has followed
+  you from Rome. He wants to excavate — carefully, with scholarly rigor. He argues that
+  excavation produces more evidence than an archive document. He is not wrong about what
+  excavation might find. He is wrong about what the archive does that excavation cannot."
+prompt: "Persuasion DC 12: Argue that the location is confirmed now, in this season, with
+  Sextus's mark — and that if Bartolomeo excavates and finds the site disturbed, the letter's
+  evidential value is lost; but in the archive it remains permanent in its original form."
+failText: "Bartolomeo says: 'The archive preserves the letter. I preserve the site.' He is
+  conflating two kinds of evidence. Come back with what the archive preserves that excavation
+  consumes. (retry)"
+successText: "Bartolomeo writes the Scholarly Non-Claim Statement at a wayside table, seals
+  it, and turns east toward Viterbo without asking to see the document. You receive the
+  Scholar's Non-Claim Statement."
+grantItem: "Scholar's Non-Claim Statement"
+checkPassFlag: waw05Act3Passed
+
+Act IV — The Hospitality
+activateNode: FLR
+type: hybrid
+scene: "Florence, three streets from the Signoria, late evening. Ser Anselmo Cresci provides
+  excellent wine and the right questions at the right pace. He has been asked by Bartolomeo
+  — who wrote ahead despite his signed statement — to delay you one night. One night seems
+  small. But the contractor was four stakes deep into the grove when you left Rome."
+prompt: "Insight DC 12: Recognize the delay at the second glass. Connect the specific
+  questions about the document's route to Bartolomeo's known interest. Leave before dawn."
+failText: "The evening is excellent. You stay the night. A rider from Bartolomeo takes the
+  Scholar's Non-Claim Statement in the hallway. You leave one document short. (retry —
+  recognize the pattern at the second glass, not the sixth)"
+successText: "You identify the delay early and are out before dawn. Ser Anselmo comes to
+  the door with a lamp and says only: Safe roads. You receive the Florentine Hospitality
+  Receipt."
+grantItem: "Florentine Hospitality Receipt"
+checkPassFlag: waw05Act4Passed
+activateMissionBit: waw05FlorenceCleared
+
+Act V — Filed Under the Act
+activateNode: WM
+type: skill_check
+scene: "Weimar archive intake desk. The Archivus reads both sentences and says: 'She didn't
+  say his name.' He opens two folders — Roman Imperial Nero Secondary Sources, and a blank
+  sheet, because the second folder doesn't exist yet. 'The document is technically anonymous.
+  But this is real.' He wants to hear the classification argued correctly before he writes."
+prompt: "Persuasion DC 13: Argue for filing under the act — the archive should not supply
+  the name the document withheld; the letter was written as care, not documentation of a
+  subject; the category should be for private acts of custody without institutional sanction."
+failText: "The Archivus files it under Roman Imperial — Nero — Secondary Sources. The letter
+  is absorbed into the file on the emperor rather than standing on its own terms. Come back
+  with the argument about the act, not the subject. (retry)"
+successText: "The Archivus writes the heading before you finish: 'Primary Records — Private
+  Acts of Custody: documents created by individuals who assumed burial responsibility without
+  institutional authorization.' He adds a note: 'Filed under the act. The subject is not
+  named in the document; I will not name him here either.' You receive the Weimar Accession
+  Record: Private Acts of Custody."
+grantItem: "Weimar Accession Record: Private Acts of Custody"
+takeItem: "Acte's Burial Note"
+checkPassFlag: waw05Act5Passed
+activateMissionBit: waw05ActeComplete
+```
+
+---
+
+*WAW-05 complete. 2026-06-02.*

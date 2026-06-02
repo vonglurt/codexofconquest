@@ -93,10 +93,10 @@ The Praetorian Guard produced formal arrest records during the 64 AD Christian p
 ### §WAW-03 — The Arena Register (Chapters 62–64)
 Roman amphitheaters kept administrative records of games: names of condemned, types of animals, outcomes. A partial register from a 64–68 AD games cycle includes an entry for an unnamed barbarian prisoner who killed a bull in public. This is the only official document that confirms what Ursus did. Fighter escorts it from a Neapolitan archive.
 
-### §WAW-04 — Chilo's Account (Chapter 72)
+### §WAW-04 — Chilo's Account (Chapter 72) ✓ DONE 2026-06-02
 In old age, having converted, Chilo dictated a full account of the people he informed on — names, what he said, what he received in payment. Intended as confession and as witness. A single copy survives in a monastery archive in Greece, sent by a Corinthian Christian community. Fighter escorts it to a neutral archive before it is destroyed by families whose ancestors are named in it.
 
-### §WAW-05 — Acte's Letter (Epilogue)
+### §WAW-05 — Acte's Letter (Epilogue) ✓ DONE 2026-06-02
 Acte, Nero's freedwoman companion, arranged his burial when his retinue fled. She wrote a brief account of the condition of his body and the location of his grave for a subsequent Roman official who inquired. The letter describes a specific road, a specific grove, a specific distance from the city. Fighter escorts it from a Vatican archive to Weimar before the grove is built over.
 
 ### §WAW-06 — Peter's Deposition at Antioch (Chapters 30–35)
