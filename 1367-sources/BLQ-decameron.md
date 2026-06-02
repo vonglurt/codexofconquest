@@ -2062,3 +2062,262 @@ Ser Giambattista Alberi, when the carrier enters the office, says nothing for a 
 ---
 
 *BLQ-07 complete. 2026-06-02.*
+
+---
+
+## Cycle 8 — Angle: The Answer Whose Completeness Is Invisible Until Both Questioners Have Left the Room
+
+---
+
+### BLQ-08: "The Goosebridge Answer"
+
+**Theme check:** Cycles 1-7 covered: formal fraud through technical accuracy; legal timing; three-party diplomatic ambiguity preserved by not-reading; substituted contents; documents outliving objects; authentication through ordeal; impossible schedule. Cycle 8 shows the final angle from the original seven seeds: one document, two incompatible readings, both correct. Distinct from BLQ-03 (three parties, ambiguity preserved by not-reading — the value was the unread state): in Cycle 8, both parties WILL read the letter eventually; what must be preserved before filing is the innocence of each party about the other's interpretation. The document serves two questioners simultaneously and each reading is complete. Neither questioner knows the other asked. This is distinct from all prior cycles.
+
+This is distinct from: BLQ-03 (unread state); CLJ-04 (simultaneous obligations where one acceptance negates others); AMS-07 (objects proving identity while negating it); IST-02 (curtain notes with double valence); HTY-05 (contested agency in analytical retrospectives).
+
+---
+
+**SOURCE HOOK:** Day IX, Story 9. Melisso of Laiazzo wants to know how to make people love him. Giosefo of Antiochia wants to know how to manage his bitter wife. Both approach the same king; he sends them without explanation to an old man on the Goosebridge. The old man plows his field. He beats an unruly ox twice, then beats a disobedient slave. He says nothing. The two men interpret the same act differently — Melisso understands that kindness precedes love; Giosefo understands that authority must be clearly asserted. Both interpretations are correct for their separate questions. The king knew this. He sent them both to the same answer. The answer is not ambiguous: it is complete for each questioner individually, and the completeness is invisible if either reads the other's version.
+
+---
+
+**1367 SETTING:**
+The Byzantine court in Constantinople has been asked, separately and without either party's knowledge, to rule on the same Galata warehouse property. The Venetian factor Nicolò Zulian has occupied the property for six years under a lease from its absent owner; he interprets his tenure as establishing possession rights under Byzantine commercial law. The Genoese merchant Benedetto Squarciafico holds the original title deed from 1349; he interprets the deed as establishing his right to renew or revoke the lease on return. Both parties have petitioned the court through separate channels in the same month.
+
+The court's response — a single letter, signed by the Chancellor's office — says: *"The rightful occupant of the described property shall be established by evidence of continuous and productive use, as documented before the competent registry."* This sentence is genuine and not evasive: Nicolò Zulian reads it as confirming that six years of continuous productive use establishes his right; Benedetto Squarciafico reads it as confirming that producing the title deed, which documents the productive use through the leasing arrangement, establishes his right. Both readings are legally correct. Both petitioners will be satisfied. The ruling is complete for each petitioner independently.
+
+The letter must travel to the Weimar archive — the Hospitaller network's neutral repository for contested property documents in the eastern trade corridor — where it will be filed and the formal ruling record created. Once filed, both parties will receive certified copies simultaneously. Neither will be able to dispute the other's interpretation until after the filing creates the legal record.
+
+If either party reads the letter before filing AND discovers the other is also a petitioner for the same property, the ambiguity becomes a contest and neither party can claim the ruling supports them. The filing must happen first.
+
+Both parties have dispatched agents to watch for the letter. Neither knows the other has done this.
+
+**TOKEN:** The Byzantine court letter — Chancellor's seal in gold wax, addressed to the Weimar archive registry; one sentence about rightful occupancy through documented productive use; both parties' agents are watching for it; must be filed at WM before either party's agents compare notes about what the letter says.
+
+**TOKEN granted:** Act I
+**TOKEN taken:** Act V (Archivus Sweelinck files the letter; both parties receive certified copies simultaneously)
+
+---
+
+### ACT I — Constantinople (Byzantine Chancery, Blachernae Quarter)
+
+*The court letter · sealed in gold wax, the Chancellor's mark, addressed "To the Weimar Archive Registry, care of the Hospitaller chapter house factor" · on the chancery clerk's desk · morning, the Golden Horn visible through the arched window*
+
+The Byzantine chancery clerk, Konstantinos Philanthropenos, explains the commission with characteristic precision: one letter, two interested parties, one archive destination. He says: Nicolò Zulian's factor is watching the chancery gates. Benedetto Squarciafico's factor is watching the harbor. They each believe the letter supports their respective claim. They do not know about each other.
+
+He says: if they meet before the letter is filed, the filing becomes contested. A contested filing requires a new ruling. The new ruling will take three months. Neither party will get the property for three months. That is not acceptable to the court's timeline.
+
+He hands the letter to the carrier. He says: the archive is the destination. Nothing else matters until you get there.
+
+*He is not asking me to deceive them. He is asking me to arrive before they talk to each other.*
+
+---
+
+**Skill check — DC 12 Insight or History:**
+Understand the ambiguity's architecture and why preserving each party's ignorance of the other is the delivery's whole purpose.
+
+**Pass (Insight):** The carrier examines the letter's single ruling sentence. Both readings are present, both legitimate. The carrier understands: this is not evasion — it is a complete answer to two different questions that happen to point at the same property. The only thing that destroys it is the two questioners comparing notes before the filing creates a simultaneous record. The carrier's task is not to deceive but to be faster than the comparison.
+
+**Pass (History):** The carrier knows Byzantine chancery practice: when a single ruling serves multiple petitions, the simultaneous certified-copy distribution creates legally equal standing for all petitioners. Neither party can claim priority if they receive copies at the same moment. The filing creates the equalization. Before filing, the first party to contest wins. The carrier understands the mechanism.
+
+**Fail:** The carrier departs with the letter and general awareness that two parties are watching. The mechanism of the ambiguity's value is not fully understood.
+
+*The letter granted here. The chancery gate is watched.*
+
+**Grant item:** Byzantine court letter (Chancellor's gold seal, rightful-occupancy ruling, one sentence)
+
+---
+
+### ACT II — Ragusa (Ship, Day Anchorage)
+
+*The court letter · in the carrier's sealed document wallet · the Ragusa harbor · midday, the ship unloading grain*
+
+Nicolò Zulian's factor, a Venetian agent named Giacomo Brando, has been in Ragusa for three days watching incoming ships from Constantinople. He is not hostile — he is simply efficient. He meets the carrier at the gangplank with a pleasant smile and says: he has been asked to confirm that a certain court letter regarding a Galata property question has been dispatched. He would like to know when it is expected to arrive in Venice.
+
+*He doesn't know where the letter is going. He thinks it's going to Venice.*
+
+He believes the ruling was issued in Nicolò Zulian's favor and is being forwarded via Venice to the Venetian notarial registry. He does not know about the Weimar archive. He does not know about Benedetto Squarciafico.
+
+---
+
+**Skill check — DC 12 Persuasion or Deception:**
+Manage Giacomo's inquiry without revealing the letter's destination or the existence of the second petitioner.
+
+**Pass (Persuasion):** The carrier says: the letter is in transit to the competent registry; the specific registry is an internal court decision; the carrier is not authorized to name it before arrival. Giacomo, hearing "competent registry" — the language of the ruling itself — concludes this confirms the letter is going through proper channels. He is satisfied and notes: *letter confirmed in transit; destination registry correct.*
+
+**Pass (Deception):** The carrier says: the letter is traveling through several waypoints before final registry; it will not arrive in Venice for some time. This is technically true. Giacomo, hearing "not arrive in Venice for some time," concludes there is a review stage before Venice — standard for disputed properties. He sends word to Nicolò Zulian: *letter in transit; review stage before final registry; timeline uncertain.* He does not follow the carrier.
+
+**Fail:** Giacomo, suspicious of the carrier's vagueness, asks directly: "Is this going to a Venetian registry or a neutral one?" The carrier's answer is either too specific or too evasive. Giacomo notes: *destination unclear; possible neutral registry.* He sends a different message to Squarciafico's factor in Venice, asking if the Genoese are also watching for a Galata property letter. This message reaches Venice two days ahead of the carrier.
+
+---
+
+### ACT III — Venice (Rialto, Genoese Factor's Office)
+
+*The court letter · in the sealed wallet · the Rialto, the Genoese factor's street · morning, the canal under the window*
+
+Benedetto Squarciafico's factor, Lorenzo Doria, has an office in the Genoese quarter of the Rialto. He has been watching for letters from Constantinople regarding the Galata property. He is more sophisticated than Giacomo Brando. He knows about Nikolò Zulian's petition. He has suspected for two months that the court might have issued a dual ruling.
+
+He approaches the carrier at the Rialto crossing and says: "I know what you're carrying. I know where you're going. I only want to know one thing: does the letter say 'rightful occupant' or 'title holder'?"
+
+*He has guessed the architecture. He doesn't know Brando sent word about neutral registry.*
+
+He is asking the carrier to tell him which word the court used — a word that would indicate which reading is the stronger one.
+
+---
+
+**Skill check — DC 13 Persuasion or Insight:**
+Decline to confirm the letter's language without triggering Lorenzo Doria's decision to follow.
+
+**Pass (Persuasion):** The carrier says: the letter uses whatever language the court used, and the carrier has not read it, because it is sealed and the carrier's role is not to interpret it. Lorenzo Doria looks at the carrier for a moment. He says: "You genuinely don't know." He decides: a carrier who doesn't know is not useful to intercept. He lets the carrier pass. He sends a message to Squarciafico: *carrier in transit; letter sealed; carrier appears not briefed; content unclear.*
+
+**Pass (Insight):** The carrier reads Lorenzo Doria's anxiety: he is afraid the ruling uses "rightful occupant" language that would favor Zulian over the title deed. The carrier says nothing about the letter's language but says: "The ruling will be filed and copies distributed simultaneously to all petitioners." Lorenzo Doria, hearing "simultaneously to all petitioners," understands: the court has handled this as a multi-petitioner case. He is not alarmed — he expects Squarciafico's title deed position to survive simultaneous distribution. He lets the carrier pass.
+
+**Fail:** Lorenzo Doria decides to send a rider north ahead of the carrier. The rider carries a message to a Genoese factor in Frankfurt asking to intercept any northbound courier carrying a Byzantine court letter. At Act IV, the carrier will encounter this intercept.
+
+---
+
+### ACT IV — The Alpine Road (Between the Brenner and Augsburg, Mountain Pass)
+
+*The court letter · still sealed · the Alpine road, late afternoon, cold · a group of travelers blocking the narrow pass*
+
+Lorenzo Doria's Frankfurt contact, or Giacomo Brando's message relay, or both: two men on horseback at the mountain pass. They are not robbers — they are professional agents from the Genoese trade network. They know the carrier is heading north with a court letter. They do not know where exactly. They have orders to hold the carrier long enough to compare notes with Brando's Venetian contact.
+
+If both parties' agents compare notes — Brando's information about "neutral registry" and Doria's information about "multi-petitioner case" — they will understand: the court has issued a simultaneous dual ruling. They will understand the letter's ambiguity. They will demand a separate ruling before accepting the ambiguous one.
+
+The carrier must reach Weimar before this comparison happens.
+
+---
+
+**Skill check — DC 13 Stealth or Persuasion (pass avoids combat):**
+Get past the agents on the mountain pass without giving them time to compare notes.
+
+**Pass (Stealth):** The carrier left the main pass road two miles back and took the secondary mountain path — rough, an extra hour, but unwatched. The agents wait at the main pass for most of the day before concluding the carrier did not use this route. The carrier is a day ahead.
+
+**Pass (Persuasion):** The carrier approaches the agents openly and says: "I'm carrying a routine court dispatch to the Hospitaller network's archive. I expect you've been asked to confirm the letter's route — I can confirm it's going to Weimar. If your principals would like certified copies, they should contact the Weimar archive within thirty days of filing." This is accurate, professional, and gives the agents enough information to send messages rather than pursue. They let the carrier through.
+
+**Combat (if both fail):** Two agents, AC 13, HP 20 each. They are not trying to kill — they are trying to delay. If the carrier wins, they ride hard for Weimar. If they lose, the agents hold the carrier long enough for their principals to meet at the Brenner and compare notes. The letter's ambiguity is destroyed before it reaches Weimar.
+
+*The letter, sealed, carried north toward the Thuringian forest.*
+
+---
+
+### ACT V — Weimar (Archive Building, Registry Desk)
+
+*The court letter · still sealed, gold wax intact · Archivus Sweelinck's registration desk · morning, the archive smell of old parchment and pine resin · a window overlooking the linden-lined street*
+
+Archivus Sweelinck receives the letter with both hands. He examines the seal. He examines the routing address. He opens the registration log and writes: date, origin (Constantinople chancery), destination (Weimar archive), carrier name, condition (sealed, intact, gold wax).
+
+He opens the letter. He reads the ruling sentence. He reads it again. He sets the letter down on the desk and is quiet for a moment.
+
+He says: "Both readings are present." He says this to himself, then, apparently deciding the carrier should hear it: "Both readings are present and neither one is wrong."
+
+*He is not surprised. He has filed things like this before.*
+
+He says: "I'll send certified copies to the Venetian notary and the Genoese consulate simultaneously. They'll each think they won." He pauses. "They both did. That's what the court intended."
+
+---
+
+**Skill check — DC 12 Investigation or Persuasion:**
+Assist Sweelinck in confirming the letter's authenticity before filing, or help him understand why the simultaneous distribution must happen before either party is notified of the other's petition.
+
+**Pass (Investigation):** The carrier can account for the letter's full chain of custody from the Constantinople chancery to this desk — every seal check, every agent encounter, every point at which the letter's integrity was verified. Sweelinck examines the gold wax under his magnifying glass and confirms: the Chancellor's seal is genuine; the letter was not opened in transit. He records: *seal intact; custody chain verified; filing proceeds.*
+
+**Pass (Persuasion):** The carrier explains the two-party situation: Brando for Zulian, Doria for Squarciafico, agents at the Alpine pass. Sweelinck listens. He says: "So they're both about to receive identical copies." He says: "The copies won't mention each other's petition." He considers. "That's correct. The court's ruling is addressed to the archive, not to either petitioner. The copies are issued by the archive. The archive doesn't identify who else received a copy." He files the letter. "We file thousands of things. We identify nothing about the others."
+
+**Fail:** Sweelinck requires additional authentication from the Constantinople chancery before filing — the gold wax has a hairline crack the carrier cannot account for. Filing is delayed three days. Brando and Doria's agents meet at the archive gate before the delay resolves. They compare notes. The contest begins.
+
+*The letter taken here. Sweelinck's log entry made.*
+
+**Take item:** Byzantine court letter (filed at Weimar archive; certified copies queued for distribution)
+
+---
+
+### onPass
+
+Archivus Sweelinck, after completing the filing entry, considers the ruling sentence for a moment and then opens a fresh page in his classification register. He writes: *Diplomatic Instruments — Responses Whose Completeness Is Invisible Until Both Questioners Have Left the Room.*
+
+He says: "I've been waiting for a name for this category for eleven years." He writes two certified copy notices — one addressed to the Venetian notary in the name of Nicolò Zulian's factor, one addressed to the Genoese consulate in the name of Benedetto Squarciafico — and gives both to his dispatch clerk to send by the morning post. He says: "They'll receive them the same day." He says: "They'll each think the ruling was written specifically for them." He pauses. "It was. Both of them."
+
+He gives the carrier a registry receipt stamped with the Weimar archive seal and a modest standard fee. He says: "You'll want this if either party comes to ask questions."
+
+---
+
+### onFail
+
+Brando and Doria's agents meet at the Weimar archive gate and jointly request to review the letter before filing. Sweelinck receives them formally and explains: the letter is sealed until the formal registry opening, at which point certified copies will be issued. The agents, having compared notes, have already constructed the ambiguity argument. They jointly file a contest notice with the archive.
+
+Sweelinck files the contest notice alongside the ruling letter. He says: "Both documents are now in the archive." He sends certified copies of the ruling to both parties and certified copies of the contest notice to both parties. He creates a new archive classification: *Rulings Under Contest Prior to Simultaneous Distribution — Cases Where Both Parties Knew the Other Was Petitioning Before Distribution.*
+
+He adds: "I have a separate category for this. It's longer than the other."
+
+---
+
+### Quest Stub (UQF v1.0)
+
+```json
+{
+  "quest_id": "BLQ_008",
+  "title": "The Goosebridge Answer",
+  "cycle": 8,
+  "book": "Decameron",
+  "token": "Byzantine court letter — Chancellor's gold seal, one sentence about rightful occupancy through documented productive use; both petitioners' agents are watching for it; must reach Weimar archive before the two agents compare notes and discover the other's petition",
+  "route": "CON → RGS → VEN → (Alpine road) → WM",
+  "theme": "One document, two incompatible readings, both correct; the ambiguity is the deliberate content of the answer; the carrier must preserve each party's ignorance of the other's petition until the simultaneous filing creates equal legal standing; the answer is complete for each questioner independently",
+  "archive_category": "Diplomatic Instruments — Responses Whose Completeness Is Invisible Until Both Questioners Have Left the Room (Archivus Sweelinck, Weimar archive, 1367)",
+  "acts": [
+    {
+      "act_id": "BLQ_008_01",
+      "location": "Constantinople — Byzantine chancery, Blachernae quarter",
+      "type": "skill_check",
+      "activateNode": "CON",
+      "scene": "Konstantinos Philanthropenos explains: one letter, two petitioners, one archive destination. Both parties' agents are watching — one at the chancery gates, one at the harbor. They don't know about each other. The filing creates simultaneous equal standing; before filing, the first to contest wins.",
+      "skillCheck": { "dc": 12, "skills": ["Insight", "History"] },
+      "grantItem": "Byzantine court letter (Chancellor's gold seal, rightful-occupancy ruling)",
+      "checkPassFlag": "ambiguity_architecture_understood"
+    },
+    {
+      "act_id": "BLQ_008_02",
+      "location": "Ragusa — ship, day anchorage",
+      "type": "skill_check",
+      "activateNode": "RGS",
+      "scene": "Giacomo Brando, Nicolò Zulian's Venetian factor, meets the carrier at the gangplank. He believes the ruling was issued in Zulian's favor and is being forwarded to Venice. He does not know about the Weimar archive or about Squarciafico's petition.",
+      "skillCheck": { "dc": 12, "skills": ["Persuasion", "Deception"] },
+      "checkPassFlag": "brando_managed"
+    },
+    {
+      "act_id": "BLQ_008_03",
+      "location": "Venice — Rialto, Genoese factor's office",
+      "type": "skill_check",
+      "activateNode": "VEN",
+      "scene": "Lorenzo Doria, Squarciafico's Genoese factor at the Rialto, has suspected a dual ruling for two months. He asks directly: does the letter say 'rightful occupant' or 'title holder'? He is more sophisticated than Brando. He knows about Zulian's petition.",
+      "skillCheck": { "dc": 13, "skills": ["Persuasion", "Insight"] },
+      "checkPassFlag": "doria_managed"
+    },
+    {
+      "act_id": "BLQ_008_04",
+      "location": "Alpine road — between the Brenner and Augsburg, mountain pass",
+      "type": "hybrid",
+      "activateNode": "VEN",
+      "scene": "Two professional agents at the mountain pass — either Doria's Frankfurt contact or Brando's relay rider. They are trying to hold the carrier long enough for both parties' agents to meet and compare notes. If they succeed, the ambiguity is destroyed before it reaches Weimar.",
+      "skillCheck": { "dc": 13, "skills": ["Stealth", "Persuasion"] },
+      "combat": { "count": 2, "ac": 13, "hp": 20 },
+      "checkPassFlag": "pass_cleared"
+    },
+    {
+      "act_id": "BLQ_008_05",
+      "location": "Weimar — archive building, Archivus Sweelinck's registry desk",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck reads the ruling sentence twice. He says: both readings are present and neither is wrong. He will send certified copies to both parties simultaneously. Assist with confirming the letter's custody chain and authenticity, or explain why simultaneous distribution must happen before either party learns of the other's petition.",
+      "skillCheck": { "dc": 12, "skills": ["Investigation", "Persuasion"] },
+      "takeItem": "Byzantine court letter",
+      "activateMissionBit": "blqGoosebridgeComplete",
+      "checkPassFlag": "filing_completed"
+    }
+  ]
+}
+```
+
+---
+
+*BLQ-08 complete. 2026-06-02.*
