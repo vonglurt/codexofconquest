@@ -461,13 +461,14 @@ Seeds outstanding from supplementary cycle (need full 5-act vignette treatment):
 
 Theme: "The margin is the only place the diminished heir of a great institution can speak honestly about what the institution has become; the stories that celebrate the height of the caliphate are most revealing when annotated by the man who holds the title with none of the power; what he wrote there he addressed to no one, which is why it is the only honest thing in the record."
 
-Seeds outstanding from supplementary cycle (need full 5-act vignette treatment):
-- BGW-S09: "The Barmakide Catastrophe" — Jafar the Barmakide's executed loyalty; estate inventory of the last family member; Damascus legal archive
-- BGW-S10: "The Sultan's Night Walk" — Mamluk military handbook for nocturnal city patrols; the security apparatus that makes Harun's method indirect
-- BGW-S11: "The Fisherman's Blessing" — Cairo mosque inscription crediting Harun for the fisherman's fortune; possible Abbasid administrative payment record
-- BGW-S12: "The Good Voice Behind the Locked Door" — Cairo musician's family claim to the melodic composition Harun heard; Baghdad monastery manuscript
-- BGW-S13: "Masrur's Account" — Baghdad court chronicle; executioner's brief biography and single direct deposition
-- BGW-S14: "The Last Baghdad Caliph's Letter" — al-Musta'sim's 1257 diplomatic letter to Hulagu Khan; Persian translation in Tabriz archive
+**SEEDS COMPLETE 2026-06-02 — BGW-S09 through BGW-S14, all six supplementary cycles written.**
+
+- BGW-S09: "The Barmakide Catastrophe" — DAM → CON → WM ✓ DONE 2026-06-02
+- BGW-S10: "The Sultan's Night Walk" — CAI → ALE → RGS → WM ✓ DONE 2026-06-02
+- BGW-S11: "The Fisherman's Blessing" — CAI → ALE → RGS → WM ✓ DONE 2026-06-02
+- BGW-S12: "The Good Voice Behind the Locked Door" — BGD → MOS → CON → WM ✓ DONE 2026-06-02
+- BGW-S13: "Masrur's Account" — BGD → MOS → CON → WM ✓ DONE 2026-06-02
+- BGW-S14: "The Last Baghdad Caliph's Letter" — TBZ → CON → RGS → WM ✓ DONE 2026-06-02
 
 ---
 
