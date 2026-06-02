@@ -584,6 +584,48 @@ function serializeLakeMagicEntry(key, body) {
   return parts.join(', ') + ' },\n';
 }
 
+function replaceSection(section, newContent) {
+  const startAnchor = `// ◆◆◆ WORLDBUILDER:${section}:START ◆◆◆`;
+  const endAnchor   = `// ◆◆◆ WORLDBUILDER:${section}:END ◆◆◆`;
+  const startIdx = WBAPI._rawSrc.indexOf(startAnchor);
+  if (startIdx === -1) return { ok:false, error:`${section} START anchor not found` };
+  const endIdx = WBAPI._rawSrc.indexOf(endAnchor, startIdx);
+  if (endIdx === -1) return { ok:false, error:`${section} END anchor not found` };
+  WBAPI._rawSrc = WBAPI._rawSrc.slice(0, startIdx + startAnchor.length) + newContent + WBAPI._rawSrc.slice(endIdx);
+  return { ok:true };
+}
+
+function serializeD100Table(entries) {
+  const total = entries.reduce((s, e) => s + e.weight, 0);
+  const rows = entries.map(e => {
+    const magic = e._magic !== undefined ? `, _magic:${e._magic}` : '';
+    return `  { weight:${e.weight}, _type:${JSON.stringify(e._type)}${magic} },`;
+  }).join('\n');
+  return `\n// Unified d100 drop table — each entry: { weight, _type, _magic? }\n// _type: 'potion_minor'|'potion'|'potion_greater'|'potion_superior'|'scroll'|'flashbang'|'dagger'|'mainweapon'|'gold'\nconst _D100_TABLE = [ // → doc: mechanics-combat.md §Loot Table\n${rows}\n]; // total weight = ${total}\n`;
+}
+
+function lootAnnotate(entries) {
+  let cursor = 0;
+  return entries.map((e, i) => {
+    const from = cursor + 1;
+    cursor += e.weight;
+    return { index:i, weight:e.weight, _type:e._type, ...(e._magic !== undefined ? { _magic:e._magic } : {}), rollRange:`${from}–${cursor}` };
+  });
+}
+
+function lootSuggestions(gap) {
+  if (gap <= 0) return [];
+  const out = [];
+  if (gap >= 10) {
+    out.push({ weight:gap, _type:'potion_minor', reason:`fills gap to 100 — safe common filler` });
+    out.push({ weight:gap, _type:'gold',         reason:`fills gap to 100 — neutral reward` });
+    if (gap >= 20) out.push({ weight:Math.floor(gap/2), _type:'potion_minor', reason:`split: +${Math.floor(gap/2)} potions, leave ${gap-Math.floor(gap/2)} for a second entry` });
+  } else {
+    out.push({ weight:gap, _type:'potion_minor', reason:`fill remaining ${gap} — small gap, potions recommended` });
+  }
+  return out;
+}
+
 function parseSDefaultsBody() {
   // Handles both `function _S_DEFAULTS() { return {...}; }` and `const _S_DEFAULTS = () => ({...})`
   const declIdx = WBAPI._rawSrc.indexOf('_S_DEFAULTS');
@@ -808,6 +850,9 @@ async function route(req, res) {
           `GET ${b}/api/fish[/{key}][?rank=&night=]`,
           '  Fish pool entries. Filter by rank or night flag.',
           '',
+          `GET ${b}/api/loot`,
+          '  d100 loot table — annotated with rollRange per entry, totalWeight, gap, and suggestions.',
+          '',
           `GET ${b}/api/lake-magic[/{key}][?effect=&minRank=]`,
           '  Lake magic item list or single entry.',
         ].join('\n'),
@@ -835,6 +880,8 @@ async function route(req, res) {
           `  PUT  ${b}/api/monster/{key} body: {name?, ac?, hp?, atk?, dmg?, xp?, tier?}`,
           `  PUT  ${b}/api/terrain/{key} body: {label?, icon?}`,
           `  PUT  ${b}/api/npc/{key}     body: {name?, role?, desc?}`,
+          `  PUT  ${b}/api/loot          body: {entries:[{weight,_type,_magic?},...]}  (full replace)`,
+          `  PUT  ${b}/api/loot/{index}  body: {weight?,_type?,_magic?}  (single entry)`,
           '',
           'RENAME / FORK',
           `  POST ${b}/api/monster/{key}/rename   body: {name}`,
@@ -1497,6 +1544,88 @@ async function route(req, res) {
     logRow('sample', sample(list.slice(0,4).map(d=>`${d.key}(${d.sell}gp)`), 4));
     logResponse(method, url.pathname, 200, `${list.length} drops`);
     return json(res, 200, { ok:true, count:list.length, drops: list });
+  }
+
+  // ── Loot table (D100_TABLE) ──────────────────────────────────────────────
+  if (parts[0] === 'loot') {
+    const LOOT_TYPES = ['potion_minor','potion','potion_greater','potion_superior','scroll','flashbang','dagger','mainweapon','gold'];
+    const idxPart = parts[1];
+
+    if (method === 'GET') {
+      const entries = WBAPI.d100Table || [];
+      const totalWeight = entries.reduce((s, e) => s + e.weight, 0);
+      const gap = 100 - totalWeight;
+      const annotated = lootAnnotate(entries);
+      const suggestions = lootSuggestions(gap);
+      const typeBreakdown = {};
+      entries.forEach(e => { typeBreakdown[e._type] = (typeBreakdown[e._type]||0) + e.weight; });
+      logRow('entries', entries.length);
+      logRow('totalWeight', `${totalWeight}/100  ·  gap: ${gap}`);
+      logRow('types', Object.entries(typeBreakdown).map(([t,w])=>`${t}:${w}`).join('  ·  '));
+      if (suggestions.length) logRow('suggestions', `${suggestions.length} gap-fill suggestion${suggestions.length>1?'s':''}`);
+      logResponse(method, url.pathname, 200, `loot table  ${totalWeight}/100  ${gap>0?'⚠ gap '+gap:''}`);
+      return json(res, 200, { ok:true, totalWeight, gap, coverage:`${totalWeight}%`, entries:annotated, typeBreakdown, suggestions });
+    }
+
+    if (method === 'PUT') {
+      let body;
+      try { body = await readBody(req); } catch(e) { return json(res, 400, { error:'Invalid JSON' }); }
+
+      // PUT /api/loot/:index — update single entry
+      if (idxPart !== undefined) {
+        const idx = parseInt(idxPart, 10);
+        const table = WBAPI.d100Table || [];
+        if (isNaN(idx) || idx < 0 || idx >= table.length) {
+          logResponse(method, url.pathname, 400, `invalid index "${idxPart}"`);
+          return json(res, 400, { error:`Index must be 0–${table.length - 1}` });
+        }
+        if (body._type && !LOOT_TYPES.includes(body._type)) {
+          logResponse(method, url.pathname, 400, `unknown _type "${body._type}"`);
+          return json(res, 400, { error:`_type must be one of: ${LOOT_TYPES.join(', ')}` });
+        }
+        Object.assign(table[idx], body);
+        if (body.weight !== undefined) table[idx].weight = Number(body.weight);
+        if (body._magic !== undefined) table[idx]._magic = Number(body._magic);
+        const total = table.reduce((s, e) => s + e.weight, 0);
+        if (total > 100) {
+          logResponse(method, url.pathname, 400, `totalWeight ${total} would exceed 100`);
+          return json(res, 400, { error:`After update, total weight would be ${total} — exceeds 100` });
+        }
+        const r = replaceSection('D100_TABLE', serializeD100Table(table));
+        if (!r.ok) { logResponse(method, url.pathname, 500, r.error); return json(res, 500, r); }
+        logRow('updated', `loot[${idx}]  →  ${JSON.stringify(table[idx])}`);
+        logRow('totalWeight', `${total}/100`);
+        logResponse(method, url.pathname, 200, `loot[${idx}] updated  ·  ${total}/100`);
+        return json(res, 200, { ok:true, index:idx, entry:table[idx], totalWeight:total, note:'POST /api/save to persist.' });
+      }
+
+      // PUT /api/loot — full table replacement
+      const entries = body.entries;
+      if (!Array.isArray(entries)) {
+        logResponse(method, url.pathname, 400, 'body.entries must be an array');
+        return json(res, 400, { error:'body.entries required — array of { weight, _type, _magic? }' });
+      }
+      for (let i = 0; i < entries.length; i++) {
+        const e = entries[i];
+        if (!e._type || !LOOT_TYPES.includes(e._type))
+          return json(res, 400, { error:`entries[${i}]._type invalid. Must be one of: ${LOOT_TYPES.join(', ')}` });
+        if (typeof e.weight !== 'number' || e.weight <= 0)
+          return json(res, 400, { error:`entries[${i}].weight must be a positive number` });
+      }
+      const totalWeight = entries.reduce((s, e) => s + e.weight, 0);
+      if (totalWeight > 100) {
+        logResponse(method, url.pathname, 400, `totalWeight ${totalWeight} exceeds 100`);
+        return json(res, 400, { error:`Total weight ${totalWeight} exceeds 100. d100 tables must sum to ≤100.` });
+      }
+      const gap = 100 - totalWeight;
+      WBAPI.d100Table = entries.map(e => ({ weight:Number(e.weight), _type:e._type, ...(e._magic !== undefined ? { _magic:Number(e._magic) } : {}) }));
+      const r = replaceSection('D100_TABLE', serializeD100Table(WBAPI.d100Table));
+      if (!r.ok) { logResponse(method, url.pathname, 500, r.error); return json(res, 500, r); }
+      logRow('entries', entries.length);
+      logRow('totalWeight', `${totalWeight}/100  ·  gap: ${gap}`);
+      logResponse(method, url.pathname, 200, `loot table replaced  ·  ${entries.length} entries  ·  ${totalWeight}/100`);
+      return json(res, 200, { ok:true, entries:lootAnnotate(WBAPI.d100Table), totalWeight, gap, suggestions:lootSuggestions(gap), note:'POST /api/save to persist.' });
+    }
   }
 
   // ── Items (ITEM_DB) ──────────────────────────────────────────────────────
@@ -2588,6 +2717,9 @@ server.listen(PORT, '127.0.0.1', () => {
     ['GET',    '/api/monster/{id}/drop              → single drop entry'],
     ['POST',   '/api/monster/{id}/drop              body: {name, icon?, sell?}'],
     ['PUT',    '/api/monster/{id}/drop              body: {name?, icon?, sell?}'],
+    ['GET',    '/api/loot                           → d100 table with rollRanges, gap, suggestions'],
+    ['PUT',    '/api/loot                           body: {entries:[{weight,_type,_magic?},...]}'],
+    ['PUT',    '/api/loot/{index}                   body: {weight?,_type?,_magic?}'],
     ['GET',    '/api/npc/{id}/dialogue              → NPC_DIALOGUES entry'],
     ['POST',   '/api/npc/{id}/dialogue              body: {quote, meta?, impartial?, friendly?, dearFriend?}'],
     ['PUT',    '/api/npc/{id}/dialogue              body: {quote?, meta?, ...}'],
