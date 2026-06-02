@@ -157,13 +157,15 @@ Earlier layers (9–47): see `lab-report-architecture-full.md` and `lab-report-t
 
 While writing vignette content, speak short segments aloud via `say` as you produce them — every page or every couple of paragraphs. Read the element type first, then its text. Examples:
 
+Run `say` in the background so it does not block writing:
+
 ```bash
-say "Source hook. King John the Second of France was captured at Poitiers in 1356."
-say "Scene, Act One. A narrow Damascus house, morning. The library is being catalogued for dissolution."
-say "Quest message. Carry the installment certificate from Périgueux to the Bordeaux English Registry."
-say "Pass text. The temporal independence of the two documents makes their agreement evidential."
-say "Fail text. The certificate and the entry match. That is necessary but not sufficient."
-say "Archive category. Confiscation Records — Property Inventories Compiled After Political Purges."
+say "Source hook. King John the Second of France was captured at Poitiers in 1356." &
+say "Scene, Act One. A narrow Damascus house, morning. The library is being catalogued for dissolution." &
+say "Quest message. Carry the installment certificate from Périgueux to the Bordeaux English Registry." &
+say "Pass text. The temporal independence of the two documents makes their agreement evidential." &
+say "Fail text. The certificate and the entry match. That is necessary but not sufficient." &
+say "Archive category. Confiscation Records — Property Inventories Compiled After Political Purges." &
 ```
 
 Write to file incrementally — after each act, save and run the next `say` call. Do not write all five acts before speaking. After every full vignette, commit and speak the commit subject.
