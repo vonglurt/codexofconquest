@@ -425,17 +425,19 @@ Seeds outstanding from supplementary cycle (need full 5-act vignette treatment):
 
 ## CRL — The Boy's Froissart, Supplementary 1367 Cycle (Lanier adaptation)
 
+**SEEDS COMPLETE 2026-06-02 — CRL-01–08 all vignettes done**
+
 **Processed 2026-05-31** — CRL-02 spec complete (The Archpriest's Certificate, PER→BDX). Supplementary Cycle 2 written; four admin updates applied. Parts 1–3 of source read; full Archpriest chapter (LXXXV–LXXXVI) and Jacquerie chapters (LXXXVII–LXXXIX). Nodes used: PER (Périgord forest road — dissolving priory), BDX (Bordeaux). See CRL-froissart-boys.md Cycle 2.
 
 Theme: "The purchased grace cannot be transferred but the precedent it creates can; carrying the evidence of a completed institutional transaction is not the same as carrying a current guarantee — which is sufficient for a man who needs a reason to march."
 
 Seeds outstanding from supplementary cycle (need full 5-act vignette treatment):
-- CRL-S02: "The Archpriest's Receipt" — Avignon financial ledger, forty thousand crowns as charitable disbursements
-- CRL-S03: "Ruffin's Passport" — Welsh captain's Cardinal safe conduct, authenticated copy
-- CRL-S04: "The Knolles Commission" — Gascon lieutenant's English authorization, BDX registry
-- CRL-S05: "The Cardinal's Roster" — twelve companies who promised to leave and didn't, farmhouse recovery
-- CRL-S06: "The Jacquerie Account" — three knights' suppression record, dying archivist, Périgord priory
-- CRL-S07: "The Pope's Guarantee" — Urban V's sealed absolution letter, killed captain's lieutenant, BDX courier
+- CRL-S02: "The Archpriest's Receipt" — Avignon financial ledger, forty thousand crowns as charitable disbursements ✓ DONE 2026-06-02 (written as Cycle 3)
+- CRL-S03: "Ruffin's Passport" — Welsh captain's Cardinal safe conduct, authenticated copy ✓ DONE 2026-06-02 (written as Cycle 4)
+- CRL-S04: "The Knolles Commission" — Gascon lieutenant's English authorization, BDX registry ✓ DONE 2026-06-02 (written as Cycle 5)
+- CRL-S05: "The Cardinal's Roster" — twelve companies who promised to leave and didn't, farmhouse recovery ✓ DONE 2026-06-02 (written as Cycle 6)
+- CRL-S06: "The Jacquerie Account" — three knights' suppression record, dying archivist, Périgord priory ✓ DONE 2026-06-02 (written as Cycle 7)
+- CRL-S07: "The Pope's Guarantee" — Urban V's sealed absolution letter, killed captain's lieutenant, BDX courier ✓ DONE 2026-06-02 (written as Cycle 8)
 
 ---
 

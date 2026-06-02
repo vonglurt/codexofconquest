@@ -667,3 +667,1243 @@ He stands up. His men begin moving. The cedar box is returned. The certificate g
   ]
 }
 ```
+
+---
+
+## Cycle 3 — Angle: The Strategic Misdescription as Institutional Survival
+
+*Prior cycles missed:*
+
+CRL Cycle 1 found the man who dignifies the institution by obeying it voluntarily. Cycle 2 found the man who degrades it by extorting it — and the document that proves the institution makes deals in writing, useful to someone else entirely. Neither cycle asked what happened inside the institution after the deal: how the accounting office recorded a payment made at sword-point.
+
+Cycle 3 finds the record created after the Archpriest walked away with forty thousand crowns. Someone in the Apostolic Chamber had to enter it in the disbursements register. They chose a category. The category was not "extortion payment." The amount was accurate to the crown. Everything else was strategic.
+
+---
+
+### CRL-03: "The Archpriest's Receipt"
+
+**Theme check:** CRL-1 (voluntary obligation) and CRL-2 (purchased grace as precedent) are not this. BLQ-1 through BLQ-12 covered performance/fraud, timing, unread ambiguity, substituted contents, document outliving its object, authentication through ordeal, impossible schedule, dual readings, sealed-in-transit, witness who cannot carry, literal compliance, and antecedent debt. LIL-2 (document creating law between parties with no common authority) is not this. Cycle 3 takes the angle of the document that accurately records the quantity and strategically misdescribes the motive — the accounting category chosen because it would survive institutional review; the receipt that makes extortion survive into the permanent record as grace.
+
+This is distinct from BLQ-4 (Fra Cipolla substituting contents — that document claims to be something it is not at the object level; this document is accurately the Archpriest's forty thousand crowns, the misdescription is in the category heading, not in the object's nature).
+
+---
+
+**SOURCE HOOK:** *The Boy's Froissart*, Chapter LXXXV–LXXXVI: Arnaud de Cervole, the Archpriest of Vélines, massed his companies at Pont-Saint-Esprit in the winter of 1357–1358. Pope Innocent VI paid forty thousand crowns for the companies to leave. Lanier records the payment and the departure. Neither he nor Froissart names the accounting category. The gap is this cycle's subject.
+
+---
+
+**1367 SETTING:**
+Urban V has moved the papal court back to Rome, but the Apostolic Chamber's records from the Innocent VI period remain in Avignon under Vice-Chamberlain Benedetto di Marcello. The Black Prince's financial commissioner, Aldous de la Tour, has arranged to obtain a certified extract from the 1357–1358 charitable disbursements register — the entry recording the Archpriest's payment. Not a promise, but proof that the institution has previously processed such transactions in documented form. A Gascon captain named Anseau de Garsie in Bordeaux will sign the Spanish march order when he sees written institutional evidence that the Church makes — and records — such payments. The extract is a single sheet of vellum, folded twice, sealed with the Apostolic Chamber's blue wax. What it says: *To the Companies of Christ departing the Avignon territory at the request of the Holy See — forty thousand gold crowns, charitable account of the pastoral mission fund, disbursed by order of the Holy Father.* What it does not say: that the companies were camped outside the walls and were accepting no other terms.
+
+*Benedetto di Marcello certifies it with his seal. "The number," he says, setting the wax stamp down, "is exactly right."*
+
+**TOKEN:** Apostolic Chamber Extract — a single folded sheet of cream vellum, Apostolic Chamber blue-wax seal intact on the outer fold; weighs almost nothing; feels slightly wrong for something worth forty thousand crowns. *Act I: sealed and certified by Benedetto di Marcello, Avignon chamber office. Act V: surrendered to Guilhem de Castanet, Bordeaux Diocesan Registry.*
+
+**TOKEN granted:** Act I
+**TOKEN taken:** Act V
+
+---
+
+**Act I — The Chamber Office (AVG)**
+
+*The Apostolic Chamber document office smells of good ink and dried lavender hung from the beams. Benedetto di Marcello is a precise man in late middle age who has worked in the Chamber for twenty-four years. He holds the folded extract and reads the certification text on the back before sealing it.*
+
+He looks up. "You understand what 'charitable account of the pastoral mission fund' means when the disbursement is forty thousand crowns to men who were camped twelve leagues from this building with military intentions?" He is not asking rhetorically. He will not seal this document for a carrier who does not understand what they are carrying.
+
+*The Fighter stands near the door and watches the vice-chamberlain's face — the expression of a man who has maintained institutional accuracy for twenty-four years and is about to seal a document whose category is a deliberate misdescription and whose number is exactly right.*
+
+Make an **Investigation check (DC 11)**.
+
+**Fail:** "Think again about what 'pastoral mission' means when its purpose was to remove forty thousand crowns' worth of armed men from Avignon's doorstep. The category was chosen. Someone had to choose it. I need you to understand why before I put the Chamber's seal on it." *He waits. The seal rests beside his right hand.*
+
+**Success:** "Good." He applies the blue wax, presses the stamp with one firm motion, hands the document across. "The number is exactly right. The category is exactly what you would choose if you were in the treasurer's position and preferred that this entry survive review without being discussed further. You may go." You receive the **Apostolic Chamber Extract**.
+
+---
+
+**Act II — The Papal Gate (AVG)**
+
+*Avignon's south gate, same afternoon. Cardinal de Périgord's secretary — a thin man in a grey robe, professional expression — is standing to the left of the gate desk. He has been here since midmorning.*
+
+He steps forward when he sees the Chamber seal. "My principal believes this extract would be better preserved by remaining in Avignon, where its context is understood, than by traveling to Bordeaux, where it will be presented without that context." He holds a sealed letter in his left hand. No addressee. "He is prepared to arrange equivalent compensation."
+
+*The Fighter looks at the letter without an addressee — a letter with no recipient is not a letter; it is money in an envelope.*
+
+Make a **Persuasion check (DC 13)**.
+
+**Fail:** The secretary opens a small book and writes. "I am not obstructing passage. I am recording that you declined this alternative. The Cardinal will determine whether a conversation with the vice-chamberlain is warranted." *He smiles once, briefly. Try again — about what the record of his interference creates versus what the extract reveals.*
+
+**Success:** You hold the extract so he can see the seal from across the arch. "Withdrawing a certified transit document requires your principal to file an override request with the vice-chamberlain, which creates a larger record than the extract itself." The secretary reads the seal from ten feet away. He considers for exactly two seconds. "I understand your point." He steps back. The gate opens. *He watches you leave with the expression of a man who has correctly calculated and does not enjoy the result.*
+
+---
+
+**Act III — Road South of Avignon (PER)**
+
+*The Rhône road, an hour south of Avignon — late afternoon. Eight riders on poor horses spread across the road's width. Their captain, Renaud de Bouillon, was in the Archpriest's companies in 1357 and left before the march south. He recognizes the blue Chamber seal.*
+
+"Where is that going?" He is not hostile. He is calculating.
+
+*The Fighter moves to the road's edge — six feet between Renaud's horse and the tree-line, not quite enough to pass without a decision.*
+
+**Hybrid: Persuasion DC 14** to avoid combat. *Fail: four routiers, standard arms, evening light.*
+
+**Persuasion:** If this extract reaches Bordeaux and helps sign companies for Spain, it does not reduce Renaud's leverage in France — it changes where other companies go. The document is institutional history being filed in a registry.
+
+**Fail:** "Those are twelve leagues' walk between us and the companies we'd rather not compete with." He signals his men. *Combat initiates.*
+
+**Success:** Renaud holds for a moment. "The archive doesn't care what I do in Périgord." He looks at the seal one more time, then moves aside. "The registry won't remember my name either way." *He waves his men off the road. The poplar light shifts as the riders part.*
+
+---
+
+**Act IV — Périgord Waystation Priory (PER)**
+
+*A small priory guestmaster's desk, dusk — two carriers have arrived simultaneously: you with the Chamber extract, and a courier from the Bishop of Périgueux with an episcopal confirmation letter. Both packages are sealed, both folded twice. Guestmaster Brother Hubert has placed both on his desk and is entering the wrong packet in the wrong column of the registry.*
+
+"The blue seal is the Bishop's? Or the Chamber's? The Bishop uses blue sometimes. The folding pattern is identical."
+
+*The Fighter watches the two sealed packets on the desk — both blue-wax, both folded twice; the Apostolic Chamber's French blue is slightly darker, distinguishable to someone who has held both today. Brother Hubert has held neither.*
+
+Make an **Insight check (DC 13)**.
+
+**Fail:** Brother Hubert enters the extract under episcopal correspondence and reaches for the stamp. "The Bishop expects this in his next batch." *The carrier must request it back from the episcopal file — the prior's permission is required, and the prior is at evening prayers for another forty minutes.*
+
+**Success:** "The Apostolic Chamber seal is French blue — darker than Périgord blue. The Bishop's is a lighter shade." You point to the correct packet before Hubert stamps the wrong column. He picks up the right one. "Ah. Yes. The lighting has been poor since the abbot's candle supply was reduced." *He files the episcopal confirmation correctly and hands you the night stamp.*
+
+---
+
+**Act V — Bordeaux Diocesan Registry (BDX)**
+
+*The registry office is stone-walled and south-facing, smelling of old parchment. Guilhem de Castanet is a careful archivist in his fifties who has never received an authenticated extract from the Apostolic Chamber's charitable disbursements register. He reads the entry three times.*
+
+"The number is correct. The category was chosen." He sets his pen down. "I need to classify this document for the permanent record. My options are: charitable disbursement, which is what it says; payment under emergency conditions, which is what it was; or something more precise about what function it will serve in this registry." He looks up. "Tell me the context and I will write the classification that makes this useful to whoever reads it next."
+
+*The Fighter watches Guilhem's raised pen — the ink fresh in the nib — waiting for the carrier's answer before writing anything permanent.*
+
+Make a **History check (DC 12)**.
+
+**Fail:** "I understand that the Archpriest was involved. I need the specific argument for why 'evidence of institutional capacity to process company payments' is the correct classification rather than merely the most useful one for your commission." *Try again — about the difference between what a document says and what it proves.*
+
+**Success:** Guilhem writes slowly and with great care: *Disbursements — Charitable Payments Made Under Duress; Records Wherein the Category Heading Was Selected for Institutional Survival Rather Than Accuracy; Evidence of Prior Institutional Capacity to Process Company Payments.* He applies the registry seal.
+
+"Vice-Chamberlain Benedetto's certification is intact. The extract is now filed." He pauses. "The forty thousand crowns made this document exist. The category made it survive. What you carried here was both." You hand over the **Apostolic Chamber Extract**. You receive the **Bordeaux Registry Classification Reference**.
+
+*The Fighter watches the extract slide into the permanent file. A document about institutional capitulation, entered as grace, now reclassified as evidence of capacity. The number was always right. The category was always chosen. The registry now says so.*
+
+---
+
+### Quest API Stub — CRL_003: The Archpriest's Receipt
+
+```json
+{
+  "quest_id": "CRL_003",
+  "title": "The Archpriest's Receipt",
+  "book": "The Boy's Froissart (Lanier)",
+  "cycle": 3,
+  "token": "Apostolic Chamber Extract",
+  "route": "AVG → PER → BDX",
+  "theme": "The accounting category chosen for institutional survival — forty thousand crowns recorded as charitable disbursements; the receipt that makes extortion survive into the permanent record as grace; accurate in quantity, strategic in classification.",
+  "archive_category": "Disbursements — Charitable Payments Made Under Duress; Records Wherein the Category Heading Was Selected for Institutional Survival Rather Than Accuracy; Evidence of Prior Institutional Capacity to Process Company Payments",
+  "acts": [
+    {
+      "act": "act_1",
+      "title": "The Chamber Office",
+      "activateNode": "AVG",
+      "type": "skill_check",
+      "skillCheck": { "stat": "Investigation", "dc": 11 },
+      "scene": "Benedetto di Marcello will not seal the extract for a carrier who does not understand what the category heading means when forty thousand crowns are in the figure.",
+      "prompt": "Make an Investigation check (DC 11) to demonstrate you understand what 'charitable account of the pastoral mission fund' means when the companies were camped twelve leagues from Avignon.",
+      "failText": "Benedetto sets the stamp down. The category was chosen by someone in a specific position. He needs to know you understand why before he seals it.",
+      "successText": "Good. The number is exactly right. The category is exactly what you would choose if you preferred this entry to survive review without further discussion. You may go.",
+      "grantItem": "Apostolic Chamber Extract",
+      "checkPassFlag": "crl3Act1Complete"
+    },
+    {
+      "act": "act_2",
+      "title": "The Papal Gate",
+      "activateNode": "AVG",
+      "type": "skill_check",
+      "skillCheck": { "stat": "Persuasion", "dc": 13 },
+      "scene": "Cardinal de Périgord's secretary is waiting at the gate with a sealed letter bearing no addressee — money in an envelope — and an offer to make the extract stay in Avignon.",
+      "prompt": "Make a Persuasion check (DC 13). Withdrawing a certified transit document requires an override request with the vice-chamberlain, which creates a larger record than the extract itself.",
+      "failText": "The secretary writes in his book. He is not blocking passage; he is creating a record. Try again about what his interference costs versus what the document reveals.",
+      "successText": "He reads the seal from ten feet away. Two seconds. I understand your point. He steps aside.",
+      "checkPassFlag": "crl3Act2Complete"
+    },
+    {
+      "act": "act_3",
+      "title": "Road South of Avignon",
+      "activateNode": "PER",
+      "type": "hybrid",
+      "skillCheck": { "stat": "Persuasion", "dc": 14 },
+      "combat": { "enemies": [{"name": "Routier", "count": 4}] },
+      "scene": "Renaud de Bouillon, former Archpriest company man, recognizes the blue Chamber seal. If this extract reaches Bordeaux it changes where other companies go. He is calculating.",
+      "prompt": "Persuasion DC 14 to pass without combat — the document is institutional history being filed in a registry, not recruitment material. Fail: four routiers, evening light.",
+      "failText": "Those are twelve leagues' walk between us and the companies we'd rather not compete with. He signals his men.",
+      "successText": "The archive doesn't care what I do in Périgord. He moves aside.",
+      "checkPassFlag": "crl3Act3Complete"
+    },
+    {
+      "act": "act_4",
+      "title": "Périgord Waystation Priory",
+      "activateNode": "PER",
+      "type": "skill_check",
+      "skillCheck": { "stat": "Insight", "dc": 13 },
+      "scene": "Guestmaster Brother Hubert has two blue-sealed folded packets on his desk — the Chamber extract and a Bishop of Périgueux episcopal confirmation — and is filing them in the wrong columns.",
+      "prompt": "Make an Insight check (DC 13) to identify which packet is the Apostolic Chamber extract before the priory misfiles it as episcopal correspondence.",
+      "failText": "Hubert stamps the wrong column. The prior's permission is required to retrieve it from the episcopal file, and the prior is at evening prayers.",
+      "successText": "The Apostolic Chamber seal is French blue — darker than Périgord blue. He files correctly.",
+      "checkPassFlag": "crl3Act4Complete"
+    },
+    {
+      "act": "act_5",
+      "title": "Bordeaux Diocesan Registry",
+      "activateNode": "BDX",
+      "type": "skill_check",
+      "skillCheck": { "stat": "History", "dc": 12 },
+      "scene": "Guilhem de Castanet reads the entry three times. The number is correct. The category was chosen. He wants the context before he writes a permanent classification.",
+      "prompt": "Make a History check (DC 12) to give Guilhem the context he needs — the Archpriest's extortion, Innocent VI's payment, the institutional decision to record it under charitable disbursements — so he can classify it correctly.",
+      "failText": "I need the specific argument for why evidence of institutional capacity is the correct classification rather than merely the most useful one. Try again.",
+      "successText": "Guilhem writes: Disbursements — Charitable Payments Made Under Duress; Records Wherein the Category Heading Was Selected for Institutional Survival Rather Than Accuracy; Evidence of Prior Institutional Capacity to Process Company Payments.",
+      "takeItem": "Apostolic Chamber Extract",
+      "grantItem": "Bordeaux Registry Classification Reference",
+      "checkPassFlag": "crl3Act5Complete"
+    }
+  ]
+}
+```
+
+---
+
+*CRL-03 complete. 2026-06-02.*
+
+---
+
+## Cycle 4 — Angle: The Certified Copy and the Checkpoint That Has No Protocol for It
+
+*Prior cycles missed:*
+
+Cycles 1–3 worked the institutional document from three angles: the voluntary obligation, the purchased grace as precedent, and the accounting category chosen for survival. None asked what happens when a document is legally perfect but materially different from what the checkpoint was designed to check.
+
+Cycle 4 finds a Welsh company's cardinal safe conduct — legally unimpeachable as a certified copy, certified by a notary whose seal is recognized in every court in France — reaching a checkpoint whose standing orders say: originals only. The checkpoint officer has a rule. The rule predates the authenticated copy protocol by thirty years. The rule is wrong in law and real in practice.
+
+---
+
+### CRL-04: "Ruffin's Passport"
+
+**Theme check:** CRL-1 through CRL-3 established voluntary obligation, purchased precedent, and strategic accounting misdescription. BLQ-1 through BLQ-12, LIL-2 are not this. Cycle 4 takes the angle of the document whose legal validity is correct and whose physical materiality is absent — the authenticated copy that has the same force as the original under canon law but fails the officer whose protocol was written for a world without authenticated copies; the gap between legal equivalence and institutional habit.
+
+This is distinct from CRL-3 (the misdescription was in the accounting category; here the document says exactly what it is); from BLQ-3 (unread ambiguity — this document can be fully read, the problem is its form, not its content).
+
+---
+
+**SOURCE HOOK:** *The Boy's Froissart* contains several episodes of safe-conduct letters — documents that allow armed companies to transit through hostile territory by virtue of an authority both parties acknowledge. In Chapter LXXXV–LXXXVII, Lanier presents the Archpriest's companies as a body that recognizes the Pope's authority sufficiently to accept payment and depart. The question of what a Welsh company does when its authority-recognizing document is a copy is this cycle's variation.
+
+---
+
+**1367 SETTING:**
+Owain Ruffin commands two hundred Welsh archers under contract to the Black Prince's Gascon administration. His company needs to transit through the forest road toward Beaulieu-en-Périgord to join the southern march. He obtained a Cardinal's safe conduct from the Avignon papal registry — but left the original at Avignon as institutional insurance (a practice common among company captains who expected to need multiple uses). A notary in Avignon certified a copy under seal. The copy is legally equivalent. The checkpoint at Beaulieu-en-Périgord operates under standing orders that say: originals only.
+
+Ruffin cannot go to Avignon and back in time. The carrier is taking the certified copy to the checkpoint. The carrier has a Dominican friar's written opinion in a separate sleeve: canonical confirmation that authenticated copies are legally equivalent under the Decretals of Gregory IX. The checkpoint captain may or may not accept a friar's canonical opinion as authority over his standing orders.
+
+**TOKEN:** Ruffin's Certified Copy — a single vellum sheet, notarial seal in black wax, the certification text running along the left margin in small careful Latin; attached in a separate paper sleeve: the Dominican friar's canonical opinion on copy equivalence. *Act I: received from Ruffin in Bordeaux. Act V: received by Bertrand de Sauviac, Beaulieu town registry.*
+
+**TOKEN granted:** Act I
+**TOKEN taken:** Act V
+
+---
+
+**Act I — Ruffin's Company Inn (BDX)**
+
+*The Free Company inn district, Bordeaux, early morning. Owain Ruffin is a compact Welsh captain in his early forties, scarred at the jaw, who speaks French with a permanent Welsh accent and Latin with surprising precision. He has the certified copy on the table and a letter from a Dominican friar in a paper sleeve beside it. He is looking at the copy with the expression of a man who knows the law is on his side and is not sure that will matter.*
+
+"The Decretals are clear on this. A notarially certified copy is legally equivalent to its original in all proceedings under canon law. The checkpoint at Beaulieu has a standing order from 1335 that says originals only. The 1335 order predates the 1341 decretal clarification on copy equivalence by six years." He slides the friar's opinion across the table. "Brother Tomas at Saint-André confirmed the canon law position in writing. I don't know if Guichard de Metz cares about the Decretals."
+
+*The Fighter watches Ruffin pick up the copy and hold it at arm's length — the expression of a man inspecting a document he trusts legally and does not trust practically.*
+
+Make an **Investigation check (DC 10)** to read the copy and the friar's opinion and understand the specific legal argument before receiving them.
+
+**Fail:** "You need to understand the argument you're carrying before you make it at the checkpoint. The friar's position is specific — it cites the 1341 clarification, not the general principle. Read both again." *Ruffin is patient. He waits.*
+
+**Success:** The copy is correctly certified. The friar's opinion correctly identifies the 1341 clarification as the operative authority. Ruffin nods. "You understood it. Good. Guichard may not agree, but at least you'll be arguing the right thing." You receive **Ruffin's Certified Copy** and the **Dominican Opinion**.
+
+---
+
+**Act II — Périgord Forest Road Checkpoint (PER)**
+
+*A French patrol checkpoint on the forest road, two hours north of Beaulieu — a timber boom, a registry desk, a bored sergeant named Margot (a nickname; his real name is no one's business) who has been running this particular checkpoint for three years. He checks documents, stamps transit papers, and goes home. He looks at the certified copy for thirty seconds.*
+
+"This says it's a copy." He sets it down. "My orders say originals only." He is not hostile. He is reading from the orders as though they were scripture, which for his purposes they are.
+
+*The Fighter stands on the road's uphill side and watches — there are four soldiers at this checkpoint, none of them particularly interested in a legal argument about authenticated copies at mid-morning on a forest road.*
+
+Make a **Persuasion check (DC 12)** to get past Margot's checkpoint with a transit stamp.
+
+**Fail:** "I believe you about the Decretals. My orders don't mention the Decretals." Margot is not being difficult. He is being precise. He writes: *certified copy presented; transit denied pending original verification or superior authority ruling.* "You can proceed without a stamp, but you're proceeding without authorization." *Try again — about what his transit stamp does and doesn't authorize.*
+
+**Success:** "The stamp records transit. It does not authorize the document." Margot re-reads the friar's opinion. "This says the copy is legally equivalent. If I stamp the transit record as 'copy presented, friar's opinion attached,' I have done my job correctly." He stamps the transit record with a notation. "I have not said the copy is an original. I have said a copy arrived here with a canonical opinion attached. That is true." *He hands back the stamped transit paper.*
+
+---
+
+**Act III — Périgord Forest Priory (PER)**
+
+*The forest priory's scriptorium, midday. Brother Tomas — the Dominican who wrote the opinion — is here by coincidence: he stopped for the noon meal. He is small, seventyish, and does not look like a man whose legal opinions have ever been challenged. He looks at Margot's notation on the transit record.*
+
+"He stamped it correctly," Brother Tomas says. "I was worried he would claim my opinion was not sufficient authority. He found a precise way to apply it." He pauses. "Guichard de Metz is different. Guichard has a rule."
+
+Brother Tomas thinks for a moment. He writes a second document — a short clarification to the canonical opinion, adding: *In the event that the officer in question requires confirmation that a transit checkpoint is bound by the same decretal standards as a full ecclesiastical proceeding, this opinion applies without restriction. Sgd. Brother Tomas, O.P., Saint-André Priory, Bordeaux.*
+
+Make an **Insight check (DC 11)** to understand what the clarification adds that the original opinion lacked.
+
+**Fail:** "Think about what a checkpoint officer needs that a court does not. The original opinion was written for a court. It assumes the reader knows that 'all proceedings under canon law' includes checkpoints administered by men holding church-granted authority." *Brother Tomas waits.*
+
+**Success:** The original opinion addressed the legal equivalence. The clarification addresses Guichard's authority specifically — if he holds church-granted authority over the road (which he does, as the checkpoint was established by papal legate order in 1362), then the decretal applies to him directly. Brother Tomas nods. "You understood it. The clarification makes his authority the basis for his obligation, not merely his choice." He hands you the **Friar's Clarification**.
+
+---
+
+**Act IV — Beaulieu Town Gate (SRL)**
+
+*The limestone town gate of Beaulieu-en-Périgord, late afternoon. Captain Guichard de Metz is a French officer in his fifties who received his checkpoint authority from the 1362 papal legate order and has been applying the 1335 originals-only rule ever since without having looked at whether the 1362 order superseded it. He reads the certified copy, the original canonical opinion, and the clarification. He reads all three twice. He sets them down.*
+
+"The friar says the decretal applies to me." Guichard is not arguing. He is deciding.
+
+*The Fighter watches Guichard's hands — both flat on the table, not reaching for the stamp, not reaching for the denial form — the posture of a man between two obligations who is working out which one has higher authority.*
+
+Make a **History check (DC 13)** to give Guichard the historical sequence — 1335 order, 1341 decretal clarification, 1362 legate checkpoint establishment — that shows his 1362 authority was granted under the post-1341 legal framework.
+
+**Fail:** "I understand the sequence. I need to know whether the 1362 legate order explicitly superseded the 1335 rule or merely failed to restate it." *Guichard is precise. He has been running this checkpoint for a long time. He needs the specific mechanism.*
+
+**Success:** The 1362 legate order established the checkpoint under the authority of the post-1341 legal framework. The 1335 rule was never formally superseded — it simply predated the authority Guichard was given. His authority is newer than the decretal. His rule is older. The friar's clarification is correct. Guichard picks up his stamp. "The 1362 order is my authority. The 1341 clarification governs my authority. The 1335 rule was already superseded when I was appointed." He stamps. "This is now in the record." *He hands back the stamped transit paper.* You receive the **Beaulieu Transit Stamp**.
+
+---
+
+**Act V — Beaulieu Town Registry (SRL)**
+
+*Beaulieu's town registry, the following morning. Registrar Bertrand de Sauviac is a methodical official who keeps the registry for the limestone district. He has heard about Guichard's decision at the gate. He has already looked up the 1335 rule and the 1341 decretal. He is waiting with a quill and a new section in the registry ledger.*
+
+"Guichard's decision creates a precedent. If I record only the transit, future checkpoint officers will have the same problem. If I record the decision and its basis, this becomes the reference." He taps the ledger. "But the reference is only useful if it names the specific authority that resolved the problem." He looks up. "Give me the argument one more time and I'll write it into the heading."
+
+*The Fighter watches Bertrand open the new section of the ledger — a clean page, an empty heading, a man who understands that a decision is only as useful as its record.*
+
+Make a **Persuasion check (DC 12)**.
+
+**Fail:** "I can write the transit record without the precedent header. The document is filed either way. But the precedent will be lost." *Bertrand waits. Try again — about who reads registry headings and what they need to find there.*
+
+**Success:** Bertrand writes: *Safe Conduct Records — Certified Copies Whose Legal Equivalence Was Contested at Checkpoint and Established by This Filing; The Notarial Seal as Proof of Original's Content; Checkpoint Authority Established Under Post-1341 Framework Is Bound by Decretal Copy Equivalence.* He applies the registry seal.
+
+"The next carrier with a certified copy will find this heading before Guichard has to make the decision again." He receives the **Ruffin's Certified Copy**. You receive the **Beaulieu Registry Reference**. *You hand over the copy and the Dominican opinions. Bertrand files all three. The certified copy is now a citation.*
+
+*The Fighter watches the documents enter the registry. A document that almost never made it through a gate is now the reason the gate works differently.*
+
+---
+
+### Quest API Stub — CRL_004: Ruffin's Passport
+
+```json
+{
+  "quest_id": "CRL_004",
+  "title": "Ruffin's Passport",
+  "book": "The Boy's Froissart (Lanier)",
+  "cycle": 4,
+  "token": "Ruffin's Certified Copy",
+  "route": "BDX → PER → SRL",
+  "theme": "The authenticated copy legally equivalent to its original reaching a checkpoint whose protocol was written before authenticated copies existed; the gap between legal equivalence and institutional habit; the document whose validity is correct and whose form is wrong.",
+  "archive_category": "Safe Conduct Records — Certified Copies Whose Legal Equivalence Was Contested at Checkpoint and Established by This Filing; The Notarial Seal as Proof of Original's Content; Checkpoint Authority Established Under Post-1341 Framework Is Bound by Decretal Copy Equivalence",
+  "acts": [
+    {
+      "act": "act_1",
+      "title": "Ruffin's Company Inn",
+      "activateNode": "BDX",
+      "type": "skill_check",
+      "skillCheck": { "stat": "Investigation", "dc": 10 },
+      "scene": "Owain Ruffin has the certified copy and the Dominican canonical opinion. The law is on his side. He doesn't know if the checkpoint captain cares about the Decretals.",
+      "prompt": "Make an Investigation check (DC 10) to read the copy and the friar's opinion and understand the specific 1341 decretal argument before receiving them.",
+      "failText": "You need to understand the argument you're carrying before you make it. Read both again.",
+      "successText": "You receive Ruffin's Certified Copy and the Dominican Opinion.",
+      "grantItem": "Ruffin's Certified Copy",
+      "checkPassFlag": "crl4Act1Complete"
+    },
+    {
+      "act": "act_2",
+      "title": "Périgord Forest Road Checkpoint",
+      "activateNode": "PER",
+      "type": "skill_check",
+      "skillCheck": { "stat": "Persuasion", "dc": 12 },
+      "scene": "Sergeant Margot has been running this checkpoint for three years. His orders say originals only. He is not hostile. He is precise.",
+      "prompt": "Make a Persuasion check (DC 12). Margot can stamp the transit record as certified copy presented with friar's opinion attached — he does not have to declare the copy an original; he just has to record what arrived.",
+      "failText": "I believe you about the Decretals. My orders don't mention the Decretals. Try again about what his transit stamp actually authorizes.",
+      "successText": "He stamps the transit record with a notation: copy presented, friar's opinion attached.",
+      "checkPassFlag": "crl4Act2Complete"
+    },
+    {
+      "act": "act_3",
+      "title": "Périgord Forest Priory",
+      "activateNode": "PER",
+      "type": "skill_check",
+      "skillCheck": { "stat": "Insight", "dc": 11 },
+      "scene": "Brother Tomas is at the priory by coincidence. He writes a clarification to his canonical opinion, adding that a transit checkpoint run under church-granted authority is directly bound by the decretal.",
+      "prompt": "Make an Insight check (DC 11) to understand what the clarification adds that the original opinion lacked — why Guichard's authority is the basis for his obligation, not merely his choice.",
+      "failText": "Think about what a checkpoint officer needs that a court does not. The original was written for a court.",
+      "successText": "You receive the Friar's Clarification. The clarification makes Guichard's own authority the source of his obligation.",
+      "grantItem": "Friar's Clarification",
+      "checkPassFlag": "crl4Act3Complete"
+    },
+    {
+      "act": "act_4",
+      "title": "Beaulieu Town Gate",
+      "activateNode": "SRL",
+      "type": "skill_check",
+      "skillCheck": { "stat": "History", "dc": 13 },
+      "scene": "Guichard de Metz has read all three documents twice. He is deciding. His hands are flat on the table.",
+      "prompt": "Make a History check (DC 13). Lay out the sequence: 1335 rule, 1341 decretal, 1362 legate appointment. Guichard's authority is newer than the decretal. His rule is older.",
+      "failText": "I understand the sequence. I need to know whether the 1362 legate order explicitly superseded the 1335 rule.",
+      "successText": "His authority is newer than the decretal. The 1335 rule was already superseded when he was appointed. He stamps.",
+      "grantItem": "Beaulieu Transit Stamp",
+      "checkPassFlag": "crl4Act4Complete"
+    },
+    {
+      "act": "act_5",
+      "title": "Beaulieu Town Registry",
+      "activateNode": "SRL",
+      "type": "skill_check",
+      "skillCheck": { "stat": "Persuasion", "dc": 12 },
+      "scene": "Bertrand de Sauviac is waiting with a new section in the registry ledger. He wants to record the precedent, not just the transit. He needs the argument one more time to write the heading correctly.",
+      "prompt": "Make a Persuasion check (DC 12) to give Bertrand the argument that goes into the registry heading — the one that makes this useful to future carriers with certified copies.",
+      "failText": "The document is filed either way. The precedent will be lost. Try again about who reads registry headings.",
+      "successText": "Bertrand writes: Safe Conduct Records — Certified Copies Whose Legal Equivalence Was Contested at Checkpoint and Established by This Filing; The Notarial Seal as Proof of Original's Content.",
+      "takeItem": "Ruffin's Certified Copy",
+      "grantItem": "Beaulieu Registry Reference",
+      "checkPassFlag": "crl4Act5Complete"
+    }
+  ]
+}
+```
+
+---
+
+*CRL-04 complete. 2026-06-02.*
+
+---
+
+## Cycle 5 — Angle: The Filing Location as Legal Fact
+
+*Prior cycles missed:*
+
+Cycles 1–4 worked obligation, purchased grace, strategic misdescription, and copy equivalence. None asked about a document whose legal content includes the place where it is filed — where a Gascon lieutenant's English commission, if filed at the Bordeaux registry under English administrative authority, makes him English rather than Gascon in law, which determines which court can arrest him, which tax authority can claim his company, and which flag he marches under.
+
+Cycle 5 finds the document whose jurisdiction is determined by where it sits in an archive. The commission is authentic. The Gascon lieutenant is Gascon by birth. The English registry filing is the thing that answers the question before it can be asked.
+
+---
+
+### CRL-05: "The Knolles Commission"
+
+**Theme check:** CRL-1 through CRL-4 are not this. BLQ-1 through BLQ-12 are not this. LIL-2 is not this. Cycle 5 takes the angle of the filing location as jurisdictional statement — the document whose most legally significant content is not its words but the registry mark in its upper corner; the document that creates the entity it describes by specifying, through its location, which law governs that entity.
+
+This is distinct from CRL-3 (the category heading misdescribed the content; here the registry mark accurately describes the jurisdiction and that accuracy is the legally operative fact); from BLQ-10 (witness carrying evidence to the jurisdiction of the owner's identity — there the destination mattered; here it is the filing location of origin that determines everything).
+
+---
+
+**SOURCE HOOK:** Robert Knolles led a chevauchée through France under English royal commission, his authority established through the English administrative apparatus in Bordeaux. Lanier mentions Knolles as one of several English captains operating in France under the Black Prince's authority. The specific question of whether a Gascon-born lieutenant serving under English commission is subject to French or English law is precisely the kind of jurisdictional gap that Froissart's world operated in constantly.
+
+---
+
+**1367 SETTING:**
+Robert Knolles's Gascon lieutenant Pierre de Mauleon holds a commission authorizing him to lead a detachment from Bordeaux to a Périgord assembly point. The commission is registered at the English administrative office in Bordeaux — Aldous de la Tour's registry. The filing establishes Pierre as acting under English authority. A French-sympathizing lord named Seigneur Bertrand de la Grasse controls the forest road between Bordeaux and Périgord and disputes Pierre's right of passage, arguing that a Gascon leading Gascony's men must answer to French lordship regardless of any English piece of paper. Pierre cannot make the argument himself — he is at the assembly point waiting for the commission copy to arrive. The carrier is bringing the registered copy with Aldous de la Tour's authentication.
+
+**TOKEN:** Knolles Commission Copy — a single vellum sheet, English royal seal, Bordeaux registry mark in the upper left corner stamped in black: *Registered: English Administrative Office, Bordeaux, 14 April 1367.* The registry mark is the key detail. *Act I: received from Aldous de la Tour, Bordeaux registry. Act V: filed with Prior Aymeric de Rieux, Périgord priory.*
+
+**TOKEN granted:** Act I
+**TOKEN taken:** Act V
+
+---
+
+**Act I — English Registry Office, Bordeaux (BDX)**
+
+*The English administrative office in Bordeaux — a stone building near the harbor with the Black Prince's seal above the door. Aldous de la Tour is a brisk English financial commissioner who speaks French with a Devonshire accent and runs four overlapping registries simultaneously. He is stamping transit papers when the carrier arrives. He holds up one hand, stamps two more papers, then turns his full attention.*
+
+"The registry mark in the upper corner is the commission's jurisdiction. If Pierre de Mauleon presents this document to a French court, the French court will see an English registry mark and will have to decide whether it has authority to override English administrative filings." He sets the paper down in front of the carrier. "Seigneur Bertrand will argue that Pierre is Gascon by birth. That is correct. The registry mark is the answer. Pierre's authority is established by where this document is filed, not by where Pierre was born."
+
+*The Fighter stands at the side of the desk watching Aldous stamp authentication seals with the systematic precision of a man who understands that each stamp creates a legal fact.*
+
+Make an **Investigation check (DC 10)**.
+
+**Fail:** "Read the registry mark again. What does 'registered: English Administrative Office' mean for the question of which court has jurisdiction over a Gascon lieutenant carrying this document?" *Aldous waits. He has three more documents to stamp.*
+
+**Success:** The registry mark establishes the authority relationship. The commission is not English because Pierre is English — it is English because it is filed as English. Aldous nods. "You understood it. Keep the registry mark legible. That's the only thing that matters at the checkpoint." You receive the **Knolles Commission Copy**.
+
+---
+
+**Act II — Bordeaux Port Gate (BDX)**
+
+*The port gate, late morning. A French agent — a thin man who introduces himself as Jacques de Caen, notary, acting for Charles V's intelligence office — is waiting. He knows about the commission. He has a carefully prepared argument about Gascon birth and French lordship. He is polite and legally precise.*
+
+"Pierre de Mauleon was born in Mauleon, which is in the Duchy of Gascony, which is technically under English lordship but practically under French administrative authority since the Duke of Berry's 1366 revision of the survey boundaries. I have the survey documentation." He holds up a sealed packet. "I believe the English registry filing may be procedurally valid but geographically incorrect."
+
+*The Fighter watches Jacques's sealed packet — thick, formally sealed, the Duke of Berry's administrative survey — and then watches the Bordeaux registry mark on the commission in the carrier's hand.*
+
+Make a **History check (DC 12)**.
+
+**Fail:** "I'm not arguing that the registry filing is invalid. I'm arguing that the geographic authority of the English administrative office in Bordeaux is contested in Gascony east of the Dordogne after the 1366 survey." *Jacques is precise. Try again about the relationship between geographic surveys and the date of the filing.*
+
+**Success:** The commission was filed in April 1367. The Duke of Berry's 1366 survey does not apply retroactively to English administrative filings made before the survey's legal effect was formally established — which has not happened yet; the survey is a draft. Jacques's argument requires a court ruling to apply. The English filing is current and valid. Jacques closes his sealed packet. "I will note that you presented this argument." He steps aside. *He will send a report to Paris. The commission continues to Périgord regardless.*
+
+---
+
+**Act III — Forest Road, Seigneur Bertrand's Checkpoint (PER)**
+
+*A checkpoint on the forest road — a timber gate across the road, two soldiers, Seigneur Bertrand de la Grasse on horseback. He is a French lord in his sixties, lord of three villages and this road, who has held checkpoint authority since his father's day. He looks at the commission. He looks at the registry mark. He is not impressed.*
+
+"English registry mark. Gascon man. Gascon road. My road." He is not hostile. He is correct about everything he can see and wrong about the law that governs what he can see.
+
+*The Fighter stands to the left of the gate and looks at the road — two soldiers, the gate boom, Bertrand on horseback. The question is which authority he will accept: his father's right of checkpoint, or the legal framework that his own lords have already acknowledged.*
+
+**Hybrid: Persuasion DC 14** to pass without combat. *Fail: two soldiers and Bertrand's men at arms — a skirmish on a forest road at midday.*
+
+**Persuasion:** Seigneur Bertrand holds checkpoint authority under the Black Prince's general Gascon administration — the same administration that registered the Knolles commission. His authority is granted by the same institutional source as the commission's authority. He cannot simultaneously accept the authority that makes his checkpoint legitimate and reject the authority that makes the commission legitimate.
+
+**Fail:** "My father's right of checkpoint predates the Black Prince." *He signals. Combat initiates.*
+
+**Success:** Bertrand sits very still for a moment. "My checkpoint authority is from the Black Prince's administration." He says it quietly. "And so is the commission." He looks at the registry mark for a long time. "Proceed." *He moves his horse to the side of the road and does not look at the carrier again.*
+
+---
+
+**Act IV — Périgord Assembly Point (PER)**
+
+*A flat field east of Périgueux, afternoon — Pierre de Mauleon's detachment of forty-three men assembled in loose order. Pierre himself is a compact Gascon captain in his thirties who has been waiting three days and has heard from two different sources that the commission was detained in Bordeaux. He takes the commission and reads the registry mark before he reads anything else.*
+
+"The mark is dated the fourteenth." He looks up. "That is the correct date. That is the date we filed." He reads the rest. "This is correct." He calls his sergeant. "We march tomorrow. Set the tent order."
+
+*The Fighter watches Pierre fold the commission once and put it in his breastplate — not the usual place for a vellum document, but Pierre is clearly not a man who expects his administrative papers to stay dry.*
+
+He turns back. "Seigneur Bertrand." He does not ask a question. He waits for the answer.
+
+Make a **Persuasion check (DC 11)** to explain the checkpoint encounter — including Bertrand's eventual argument from his own authority — accurately enough that Pierre understands what happened and why.
+
+**Fail:** "Tell me again why Bertrand let you through. I need to know if he understood the argument or if he just decided not to fight today." *Pierre is precise about the difference.*
+
+**Success:** Pierre nods slowly. "He let you through because he accepted his own authority was from the same source." He looks at the commission in his breastplate. "That is the correct argument. I would have made it myself." He pauses. "I did not expect him to accept it." He hands you the **Pierre's March Confirmation** — a brief signed note authorizing completion of the delivery. *He turns back to his sergeant.*
+
+---
+
+**Act V — Périgord Priory of Saint-Front (PER)**
+
+*The priory of Saint-Front, an hour from the assembly point — a stone building with a small scriptorium and Prior Aymeric de Rieux, a learned Benedictine in his fifties who acts as the neutral filing authority for the Périgord district. He has heard from Seigneur Bertrand's household that an argument was made about overlapping authorities. He is waiting with his archive ledger open to a new section.*
+
+"I am creating a new classification for English administrative commissions received in Périgord. The existing classification says: 'French royal commissions' or 'ecclesiastical commissions.' English administrative commissions through the Bordeaux registry do not have a category." He looks up. "I need the argument that was made at Bertrand's checkpoint in order to write the heading correctly. The argument determines what the filing is evidence of."
+
+*The Fighter watches Prior Aymeric's open ledger — a clean page, waiting for a heading that does not yet exist in this archive.*
+
+Make a **Persuasion check (DC 12)**.
+
+**Fail:** "I understand that the Bordeaux registry established the jurisdiction. I need the specific argument about why Bertrand's authority and Pierre's authority came from the same source. The heading cannot say 'filing location as jurisdictional statement' unless I understand why that is true in this case." *Aymeric waits.*
+
+**Success:** Aymeric writes: *Commission Records — Royal Authorizations Filed Through Foreign Registries; The Registry of Filing as Jurisdictional Statement Rather Than Mere Administrative Record; Authority of Checkpoint and Authority of Commission Established by the Same Institutional Source.* He applies the priory seal. He receives the **Knolles Commission Copy**. You receive the **Saint-Front Filing Reference**.
+
+"Pierre de Mauleon marches tomorrow under an English commission filed in Bordeaux and received in Périgord. This archive now has a category for that." He closes the ledger. *The priory bell rings the afternoon office.*
+
+*The Fighter watches the commission enter the archive. A Gascon captain's English authority, established by a registry mark, now has its own classification in a Périgord priory's permanent record.*
+
+---
+
+### Quest API Stub — CRL_005: The Knolles Commission
+
+```json
+{
+  "quest_id": "CRL_005",
+  "title": "The Knolles Commission",
+  "book": "The Boy's Froissart (Lanier)",
+  "cycle": 5,
+  "token": "Knolles Commission Copy",
+  "route": "BDX → PER",
+  "theme": "The filing location as jurisdictional statement — the English registry mark that answers the question of which law governs a Gascon captain's authority before the question can be asked; the document that creates the entity it describes by specifying, through its location, which law applies.",
+  "archive_category": "Commission Records — Royal Authorizations Filed Through Foreign Registries; The Registry of Filing as Jurisdictional Statement Rather Than Mere Administrative Record; Authority of Checkpoint and Authority of Commission Established by the Same Institutional Source",
+  "acts": [
+    {
+      "act": "act_1",
+      "title": "English Registry Office, Bordeaux",
+      "activateNode": "BDX",
+      "type": "skill_check",
+      "skillCheck": { "stat": "Investigation", "dc": 10 },
+      "scene": "Aldous de la Tour explains: the registry mark establishes the authority relationship. The commission is English because it is filed as English, not because Pierre is English.",
+      "prompt": "Make an Investigation check (DC 10) to understand what the registry mark in the upper corner means before receiving the commission.",
+      "failText": "What does registered English Administrative Office mean for the question of which court has jurisdiction over a Gascon lieutenant carrying this document?",
+      "successText": "You received the Knolles Commission Copy.",
+      "grantItem": "Knolles Commission Copy",
+      "checkPassFlag": "crl5Act1Complete"
+    },
+    {
+      "act": "act_2",
+      "title": "Bordeaux Port Gate",
+      "activateNode": "BDX",
+      "type": "skill_check",
+      "skillCheck": { "stat": "History", "dc": 12 },
+      "scene": "Jacques de Caen, acting for Charles V's intelligence office, argues the Duke of Berry's 1366 geographic survey contests English administrative authority east of the Dordogne.",
+      "prompt": "Make a History check (DC 12). The 1366 survey is a draft; its legal effect has not been formally established; it cannot retroactively apply to April 1367 English filings.",
+      "failText": "The geographic authority of the English office is contested after the 1366 survey. Jacques is precise about the sequencing.",
+      "successText": "The survey is a draft. Jacques closes his packet and steps aside.",
+      "checkPassFlag": "crl5Act2Complete"
+    },
+    {
+      "act": "act_3",
+      "title": "Seigneur Bertrand's Checkpoint",
+      "activateNode": "PER",
+      "type": "hybrid",
+      "skillCheck": { "stat": "Persuasion", "dc": 14 },
+      "combat": { "enemies": [{"name": "French Lord's Men-at-Arms", "count": 3}] },
+      "scene": "Seigneur Bertrand holds checkpoint authority under the Black Prince's Gascon administration. He cannot accept the authority that makes his checkpoint legitimate and reject the same authority that makes the commission legitimate.",
+      "prompt": "Persuasion DC 14. Bertrand's own checkpoint authority comes from the same source as Pierre's commission. Fail: skirmish on the forest road.",
+      "failText": "My father's right of checkpoint predates the Black Prince. He signals.",
+      "successText": "My checkpoint authority is from the Black Prince's administration. And so is the commission. Proceed.",
+      "checkPassFlag": "crl5Act3Complete"
+    },
+    {
+      "act": "act_4",
+      "title": "Périgord Assembly Point",
+      "activateNode": "PER",
+      "type": "skill_check",
+      "skillCheck": { "stat": "Persuasion", "dc": 11 },
+      "scene": "Pierre de Mauleon has checked the registry date. He wants to know if Bertrand understood the argument or just decided not to fight today.",
+      "prompt": "Make a Persuasion check (DC 11) to explain the checkpoint encounter accurately enough that Pierre understands why Bertrand let you through.",
+      "failText": "Tell me again why Bertrand let you through. I need to know if he understood the argument.",
+      "successText": "He let you through because he accepted his own authority was from the same source. Pierre hands you his March Confirmation.",
+      "grantItem": "Pierre's March Confirmation",
+      "checkPassFlag": "crl5Act4Complete"
+    },
+    {
+      "act": "act_5",
+      "title": "Priory of Saint-Front",
+      "activateNode": "PER",
+      "type": "skill_check",
+      "skillCheck": { "stat": "Persuasion", "dc": 12 },
+      "scene": "Prior Aymeric de Rieux is creating a new classification for English administrative commissions received in Périgord. He needs the Bertrand argument to write the heading correctly.",
+      "prompt": "Make a Persuasion check (DC 12) to give Aymeric the argument that establishes why the filing location is the jurisdictional statement — that both Bertrand's and Pierre's authority came from the same source.",
+      "failText": "The heading cannot say filing location as jurisdictional statement unless I understand why that is true in this specific case.",
+      "successText": "Aymeric writes: Commission Records — Royal Authorizations Filed Through Foreign Registries; The Registry of Filing as Jurisdictional Statement.",
+      "takeItem": "Knolles Commission Copy",
+      "grantItem": "Saint-Front Filing Reference",
+      "checkPassFlag": "crl5Act5Complete"
+    }
+  ]
+}
+```
+
+---
+
+*CRL-05 complete. 2026-06-02.*
+
+
+---
+
+## Cycle 6 — Angle: The Failure Record as Accurate Survey
+
+*Prior cycles missed:*
+
+Cycles 1–5 worked obligation, purchased precedent, strategic accounting misdescription, copy equivalence, and filing location as jurisdiction. None asked what a document created to record compliance becomes when it records only non-compliance — when a roster of twelve promises kept produces a roster of twelve promises broken, which is also, incidentally, the most accurate current military map of where twelve armed companies actually are.
+
+Cycle 6 finds the institutional failure record that became better intelligence than any survey could have produced. The Cardinal made the companies promise. They promised and stayed. The roster is complete and wrong about everything it claims, which is why it is useful.
+
+---
+
+### CRL-06: "The Cardinal's Roster"
+
+**Theme check:** CRL-1 through CRL-5 are not this. BLQ-1 through BLQ-12 are not this. LIL-2 (document creating law between parties with no common authority) is not this. Cycle 6 takes the angle of the institutional failure record that functions as military intelligence — the list made to record compliance that records defiance instead; the document whose every entry is wrong in exactly the way needed to know where the wrong things are.
+
+This is distinct from CRL-5 (filing location as jurisdiction — that document created an entity; this document created a survey by recording an absence); from BLQ-12 (antecedent debt as alibi — that document answered a crisis; this document IS the crisis, reclassified as a resource).
+
+---
+
+**SOURCE HOOK:** *The Boy's Froissart*, Chapter LXXXVI–LXXXIX: Multiple cardinals and papal legates attempted to get the Free Companies to leave France by extracting promises of departure. Lanier records these attempts with the understated precision of a writer who knows his young readers have just read what happened to Fra Cipolla. The companies made promises. The companies stayed.
+
+---
+
+**1367 SETTING:**
+Cardinal Gui de Boulogne extracted departure promises from twelve Free Companies in the spring of 1366. By summer 1367 none have departed. His secretary, Ser Giacomo di Mantova, has the Cardinal's roster — twelve company names, twelve promised departure dates, twelve promised departure routes, twelve promised destinations. Every entry is past-dated. Every entry is wrong. A French royal officer, Raoul de Lannoy, needs the roster in Bordeaux to plan the autumn campaign against remaining companies. He has asked for it through back channels; the Cardinal agreed to share it as neutral intelligence. The carrier brings it from Avignon. The document is what it claims to be: a record of broken promises. What the French officer understands is that the broken promises are the most accurate current position map available — every company is still exactly where it was when it promised to leave.
+
+**TOKEN:** Cardinal's Roster — twelve names, twelve promises, twelve current locations. A single vellum sheet, red wax seal of Cardinal Gui de Boulogne, the entries in columns: Company Name / Captain / Promised Departure Date / Promised Route / Promised Destination / (blank column: Actual Status). *Act I: received from Ser Giacomo di Mantova, Avignon. Act V: filed with Guilhem de Castanet, Bordeaux Diocesan Registry.*
+
+**TOKEN granted:** Act I
+**TOKEN taken:** Act V
+
+---
+
+**Act I — Cardinal's Secretariat, Avignon (AVG)**
+
+*The Cardinal's secretariat: high ceilings, good light, the smell of diplomatic correspondence. Ser Giacomo di Mantova is the Cardinal's secretary — a meticulous Mantuan notary in his forties who has spent two years writing letters to twelve companies asking when they planned to leave. He is handing over the roster with the expression of a man presenting evidence of his own employer's policy failure.*
+
+"Every company on this list is exactly where they were when they made the promise. I know this because I have been writing to their camps at the same addresses for fourteen months." He sets the roster on the desk. "The Cardinal asked me to certify it as an accurate record. I certified it as an accurate record of promises made and not kept. Those are different certifications." He looks at the carrier. "Raoul de Lannoy understands what he is receiving. I want to confirm that you do as well."
+
+*The Fighter watches Ser Giacomo fold the roster and apply the red seal — the expression of a careful man closing a document that he finds professionally embarrassing but institutionally valuable.*
+
+Make an **Insight check (DC 11)** to understand the distinction between the Cardinal's intended certification and the actual certification Giacomo provided.
+
+**Fail:** "The Cardinal certified it as a record of what companies promised. I certified it as a record of what they actually did. One of those certifications is useful to Raoul de Lannoy. Think about which one it is." *He waits.*
+
+**Success:** The Cardinal's certification would say: these companies promised to leave. Giacomo's certification says: these companies promised to leave and didn't, which means they're still here, which is the useful fact. Giacomo nods. "You understood. The roster is a map. Every wrong entry is a correct location." He hands over the **Cardinal's Roster**.
+
+---
+
+**Act II — Road South of Avignon (PER)**
+
+*Two hours south of Avignon, afternoon. A group of mounted men blocking the road. Their captain — a stocky Breton with a red-and-black company banner — identifies himself as Hugues de Calveley. He is on the roster. He has heard a Cardinal's sealed document is moving south. He has a specific question.*
+
+"Am I named on it?"
+
+*The Fighter stands to the right of the road and watches Hugues's face — the expression of a man who knows the answer is almost certainly yes and wants to hear it anyway.*
+
+**Hybrid: Persuasion DC 13** to pass without combat. *Fail: Hugues's Breton company, a forest road, late afternoon — six fighters.*
+
+**Persuasion:** The roster is addressed to a French military officer for operational planning. Hugues's name being on it is not a warrant, an indictment, or any kind of legal action — it is a notation that his company is in France and was asked to leave. He knows this already. The roster reaching Bordeaux will help a French officer plan a campaign. That campaign is not about Hugues specifically; it is about twelve companies and the general question of what to do with twelve companies that have not left.
+
+**Fail:** "If my name is on a document being carried to a French officer, I want to know what it says." *He blocks the road. Combat initiates.*
+
+**Success:** Hugues holds for a long time. "The French officer already knows I'm here. This just puts it on paper." He moves his horse to the road's edge. "Which means it was already on paper somewhere. This is just the official version." *He waves his men aside. The road opens.*
+
+---
+
+**Act III — Forest Road Checkpoint (PER)**
+
+*A checkpoint on the Périgord forest road — a timber boom, a fire, eight men in company livery. The company banner is white with a black diagonal stripe. This is the Gascons of Jean de Vienne — the fourth company on the roster. They are using this checkpoint to levy a road tax.*
+
+The checkpoint captain, a scarred sergeant named Berthold, checks transit papers. He checks the carrier's transit stamp. He looks at the Cardinal's red seal on the satchel.
+
+*The Fighter looks at the company banner — white with black diagonal — and checks it against memory. Exactly the right banner. Exactly the wrong checkpoint to be carrying a document that names this company.*
+
+Make an **Insight check (DC 13)** to decide how to present the transit papers without revealing the document's content while the checkpoint belongs to one of its named companies.
+
+**Fail:** Berthold has noticed the Cardinal's seal and is looking at the satchel with professional interest. "What is that document?" *He reaches for it. The situation escalates. A skill check or combat required.*
+
+**Success:** Transit papers first, satchel second, Cardinal's seal turned inward. Berthold reads the transit stamp, checks the date, and notes that the document is a sealed diplomatic correspondence for Raoul de Lannoy's military office. He does not ask what kind of diplomatic correspondence. "Pass." *He stamps the transit record. The boom lifts.*
+
+---
+
+**Act IV — Road to Bordeaux (PER → BDX)**
+
+*A road junction halfway between the forest and Bordeaux — a French royal messenger coming from Bordeaux heading toward Avignon, riding fast. He pulls up when he sees the carrier. His saddlebag carries a sealed intelligence report.*
+
+"Are you going to Bordeaux? To Lannoy?" He is out of breath. "Tell him the Bretons have moved north. The last report put Hugues de Calveley at Libourne. He's not at Libourne anymore." He looks at the Cardinal's sealed satchel. "Is that the Cardinal's roster? Tell Lannoy the roster is wrong about Hugues and right about the rest."
+
+*The Fighter watches the royal messenger fidget with his horse's reins — a man carrying information that has just been superseded by better information in a direction he cannot go.*
+
+Make an **Insight check (DC 12)** to extract from the messenger's corrections exactly which entries on the roster are wrong and why the carrier has already encountered one of the supposed corrections.
+
+**Fail:** "The Bretons moved north. That's all I know. Tell Lannoy." *The messenger does not wait for a response. He rides. The carrier must determine from first principles which entry is wrong.*
+
+**Success:** The messenger says Hugues moved north from Libourne. The carrier met Hugues two hours south of Avignon — which is north-of-Libourne and consistent with a northward movement toward the Avignon road. The roster's entry for Hugues listed him at Libourne as of three weeks ago. He has moved, but he has moved exactly where Hugues himself implied when the carrier passed him. The roster is wrong about Hugues's specific location by three weeks, but the carrier has a live sighting. The rest of the roster remains accurate because the messenger said only Hugues had moved. This is Raoul de Lannoy's first piece of corrected intelligence.
+
+---
+
+**Act V — Bordeaux Diocesan Registry (BDX)**
+
+*Bordeaux, Raoul de Lannoy's command post — a room borrowed from the diocesan administration, south-facing, maps on the wall. Raoul de Lannoy is a French royal officer in his late forties who has been planning this campaign for three months on inadequate intelligence. He takes the roster, reads it once, looks at the blank column — Actual Status — and then looks at the carrier.*
+
+"The roster's column for actual status is blank." He sets it down. "Tell me what you filled in between Avignon and here."
+
+*The Fighter watches Raoul set the roster on the table beside the maps — the expression of a man who has just received a document that was described to him as a failure record and is discovering it is the best intelligence he has received all season.*
+
+Make a **Persuasion check (DC 13)** to give Raoul the corrected information — Hugues's actual position, the Jean de Vienne checkpoint location, the updated departure route intelligence — and convince him that the roster plus the carrier's observations is more accurate than any official survey he could have commissioned.
+
+**Fail:** "The roster gives me names and dates. I need current positions. Your observations alone are not sufficient to update a military planning document." *Raoul sets down his pen. Try again — about what the roster's blank column means when a carrier has just traveled from Avignon to Bordeaux through three of the twelve companies' positions.*
+
+**Success:** Raoul picks up his pen and begins writing in the blank column. The carrier dictates: Hugues de Calveley — three weeks north of Libourne, Avignon road as of midday today. Jean de Vienne — Périgord forest road checkpoint, active as of this morning. He writes quickly. Then he pauses. "These are three of twelve. The rest of the roster gives me the other nine." He looks at the carrier. "The roster was more useful than I expected. Not because the Cardinal's entries are correct, but because they establish a baseline against which your corrections are measurable."
+
+Guilhem de Castanet, waiting at the adjacent registry desk, writes: *Company Records — Written Departure Promises and Actual Locations; Intelligence Derived from Non-Compliance; The Failure Record as Accurate Survey.* He applies the registry seal. You hand over the **Cardinal's Roster**. You receive the **Lannoy Intelligence Receipt**.
+
+*The Fighter watches the roster enter the registry file beside Raoul's campaign map. A document made to record compliance. Now filed as military intelligence.*
+
+---
+
+### Quest API Stub — CRL_006: The Cardinal's Roster
+
+```json
+{
+  "quest_id": "CRL_006",
+  "title": "The Cardinal's Roster",
+  "book": "The Boy's Froissart (Lanier)",
+  "cycle": 6,
+  "token": "Cardinal's Roster",
+  "route": "AVG → PER → BDX",
+  "theme": "The institutional failure record that functions as military intelligence — the list of broken promises is the most accurate current map of where twelve armed companies are; the document whose every entry is wrong in exactly the right way to be useful.",
+  "archive_category": "Company Records — Written Departure Promises and Actual Locations; Intelligence Derived from Non-Compliance; The Failure Record as Accurate Survey",
+  "acts": [
+    {
+      "act": "act_1",
+      "title": "Cardinal's Secretariat",
+      "activateNode": "AVG",
+      "type": "skill_check",
+      "skillCheck": { "stat": "Insight", "dc": 11 },
+      "scene": "Ser Giacomo di Mantova has certified the roster as a record of promises made and not kept — a different certification than the Cardinal intended. Every entry is past-dated and wrong, which means every entry is a correct current location.",
+      "prompt": "Make an Insight check (DC 11) to understand the difference between the Cardinal's intended certification and the actual certification Giacomo provided.",
+      "failText": "One certification is useful to Raoul de Lannoy. Think about which one.",
+      "successText": "Every wrong entry is a correct location. The roster is a map.",
+      "grantItem": "Cardinal's Roster",
+      "checkPassFlag": "crl6Act1Complete"
+    },
+    {
+      "act": "act_2",
+      "title": "Road South of Avignon",
+      "activateNode": "PER",
+      "type": "hybrid",
+      "skillCheck": { "stat": "Persuasion", "dc": 13 },
+      "combat": { "enemies": [{"name": "Breton Company Fighter", "count": 6}] },
+      "scene": "Hugues de Calveley is on the roster. He has heard a Cardinal's sealed document is moving south. He wants to know if he is named.",
+      "prompt": "Persuasion DC 13. The roster is addressed to a French officer for operational planning, not a warrant or indictment. Hugues being named is not a legal action — it is a position notation he already knew was true. Fail: six Breton fighters.",
+      "failText": "If my name is on a document being carried to a French officer, I want to know what it says. He blocks the road.",
+      "successText": "The French officer already knows I'm here. This just puts it on paper. He moves aside.",
+      "checkPassFlag": "crl6Act2Complete"
+    },
+    {
+      "act": "act_3",
+      "title": "Forest Road Checkpoint",
+      "activateNode": "PER",
+      "type": "skill_check",
+      "skillCheck": { "stat": "Insight", "dc": 13 },
+      "scene": "The checkpoint belongs to Jean de Vienne's Gascon company — the fourth name on the roster. Presenting the Cardinal's seal here requires care.",
+      "prompt": "Make an Insight check (DC 13) to present transit papers without revealing the document's content while the checkpoint belongs to one of its named companies.",
+      "failText": "Berthold has noticed the Cardinal's seal and is reaching for the satchel. What is that document?",
+      "successText": "Transit papers first, Cardinal's seal turned inward. Berthold reads the transit stamp and lets you pass without asking what kind of diplomatic correspondence it is.",
+      "checkPassFlag": "crl6Act3Complete"
+    },
+    {
+      "act": "act_4",
+      "title": "Road to Bordeaux",
+      "activateNode": "BDX",
+      "type": "skill_check",
+      "skillCheck": { "stat": "Insight", "dc": 12 },
+      "scene": "A French royal messenger heading the wrong direction says Hugues has moved north from Libourne. The carrier has a live sighting from two hours south of Avignon — consistent with a northward movement.",
+      "prompt": "Make an Insight check (DC 12) to reconcile the messenger's correction with what the carrier already knows and determine which roster entries are wrong and which remain accurate.",
+      "failText": "The Bretons moved north. That is all I know. Determine from first principles which entry is wrong.",
+      "successText": "Hugues moved north — the carrier met him on the Avignon road, which is consistent. The rest of the roster is still accurate. This is Lannoy's first piece of corrected intelligence.",
+      "checkPassFlag": "crl6Act4Complete"
+    },
+    {
+      "act": "act_5",
+      "title": "Bordeaux Diocesan Registry",
+      "activateNode": "BDX",
+      "type": "skill_check",
+      "skillCheck": { "stat": "Persuasion", "dc": 13 },
+      "scene": "Raoul de Lannoy sees the blank Actual Status column and asks what the carrier filled in between Avignon and here. Guilhem de Castanet waits at the adjacent registry desk.",
+      "prompt": "Make a Persuasion check (DC 13). Give Raoul the corrected information — two live sightings plus the established baseline — and convince him the roster plus carrier observations is more accurate than any commissioned survey.",
+      "failText": "The roster gives me names and dates. Your observations alone are not sufficient to update a military planning document.",
+      "successText": "The roster establishes a baseline against which corrections are measurable. Raoul fills in the blank column. Guilhem writes: Company Records — Written Departure Promises and Actual Locations; Intelligence Derived from Non-Compliance; The Failure Record as Accurate Survey.",
+      "takeItem": "Cardinal's Roster",
+      "grantItem": "Lannoy Intelligence Receipt",
+      "checkPassFlag": "crl6Act5Complete"
+    }
+  ]
+}
+```
+
+---
+
+*CRL-06 complete. 2026-06-02.*
+
+---
+
+## Cycle 7 — Angle: The Record Preserved Against the Preserver's Judgment
+
+*Prior cycles missed:*
+
+Cycles 1–6 worked obligation, purchased precedent, strategic misdescription, copy equivalence, filing location as jurisdiction, and failure record as intelligence. None asked what happens when the archivist disagrees with the document — when the document describes acts the archivist finds morally insupportable, and the archivist files it anyway, because the oath to preserve does not have an exception for records the archivist wishes had never been written.
+
+Cycle 7 finds a dying archivist performing the last act of his institutional function: handing a document he found repugnant to someone who will carry it to a place where it will survive. The record of atrocity. The document that exists because a Benedictine monk kept his oath when he had very good reasons not to.
+
+---
+
+### CRL-07: "The Jacquerie Account"
+
+**Theme check:** CRL-1 through CRL-6 are not this. BLQ-1 through BLQ-12 are not this. LIL-2 is not this. Cycle 7 takes the angle of the archivist as institutional conscience — the duty to preserve does not distinguish between documents the archivist approves of and documents the archivist finds morally repugnant; the record that survives because someone chose the institution's function over personal judgment.
+
+This is distinct from CRL-3 (that archivist chose the category strategically; this archivist cannot choose the category — he can only choose whether to preserve or destroy, and he chooses preservation despite profound disagreement with the document's content); from BLQ-6 (authentication through ordeal — that document proved itself by surviving physical damage; this document's ordeal is being kept by a man who wished it did not exist).
+
+---
+
+**SOURCE HOOK:** *The Boy's Froissart*, Chapters LXXXVII–LXXXIX: The Jacquerie uprising of May–June 1358 — Lanier presents it with the careful brevity of a writer adapting material for young readers while knowing its full horror. Three nobles organizing a suppression force; the burning of villages; the executions. The suppression's written record, if it was kept, would describe exactly what happened. Froissart's chronicle records the fact. This cycle asks who kept the document.
+
+---
+
+**1367 SETTING:**
+A Périgord priory, the summer of 1367. Brother Honoré is dying of summer fever in his cell. He has been the priory's archivist for twenty-two years. Among the priory's holdings is a sealed document from the summer of 1358: the Three Knights' Account — a joint statement by Renaud de Briquebec, Gilles de Warville, and Mattieu de la Tour describing their suppression of a Jacquerie rising in the Périgord borderlands. Brother Honoré received it in 1358 because the priory was the nearest neutral institution to the event. He filed it. He has kept it for nine years. He is dying and the priory is dissolving — the prior is closing the house, the monks dispersing. He has sent for a carrier. He wants the document to reach the Bordeaux diocesan archive before the priory closes and the document is lost or burned.
+
+*His last words on the document, spoken from his bed: "I kept it because my oath requires me to preserve what I received. The document tells the truth. That is sufficient reason."*
+
+**TOKEN:** Three Knights' Account — three pages of vellum, sealed with three noble seals in wax: Briquebec in red, Warville in blue, de la Tour in black; Brother Honoré's transfer note attached in paper: *Held by the priory archive since 1358. Transferred by my authority as archivist. In moriendo — Brother Honoré.* *Act I: received from Brother Honoré's cell. Act V: surrendered to Guilhem de Castanet, Bordeaux Diocesan Registry.*
+
+**TOKEN granted:** Act I
+**TOKEN taken:** Act V
+
+---
+
+**Act I — The Dying Archivist's Cell (PER)**
+
+*A cell in the dissolving Périgord priory, summer afternoon. The shutters are half-closed against the heat. Brother Honoré lies in his bed with the clarity of a man who has accepted his situation and has one task left. The Three Knights' Account is on the side-table, sealed, the three wax seals still intact after nine years, the transfer note attached in his own handwriting.*
+
+"I will explain why I kept it," he says, without preamble. "Some of my brothers believed I should have burned it when it arrived. The prior at that time — not the current one, the previous one — told me I had the discretion to destroy documents that described acts committed outside the Church's authority." He pauses. He breathes. "He was wrong about the discretion. The archivist receives what is given to him. The archivist preserves it. The archivist does not evaluate it." Another pause. "Nine years. No one asked for it. No one knew it was here. I am not sure they would have wanted to know."
+
+*The Fighter stands near the door of the cell — the specific quality of a room where a man is dying and is at peace about one thing specifically.*
+
+He looks at the carrier. "I need to know that you understand why this document must be preserved. Not approved. Preserved. Tell me the difference."
+
+Make a **Persuasion check (DC 11)** — not to convince him, but to demonstrate understanding.
+
+**Fail:** "You told me it should be preserved because it tells the truth. That is correct but not complete. Tell me why the archivist preserves things that should not have happened." *He waits. He has enough strength for this conversation.*
+
+**Success:** "The archivist preserves because the archive's function does not have a moral exception. If the archive only preserved what the archivist approved of, it would be the archivist's personal collection, not an archive. The document tells the truth. The archive exists to keep what is true." Brother Honoré closes his eyes briefly. "Correct." He hands over the Three Knights' Account. "Go quickly. The prior will be difficult."
+
+You receive the **Three Knights' Account**.
+
+---
+
+**Act II — The Priory Gate (PER)**
+
+*The priory gate — the current prior, Brother Clement, a stout man in his sixties who is managing the dissolution of a house he has run for four years. He has seen the carrier leave Brother Honoré's cell. He knows what Honoré kept. He is standing at the gate.*
+
+"Brother Honoré's judgment is impaired by fever. He cannot make authoritative archival decisions from his sickbed. The document he is sending should be destroyed as part of the priory's dissolution. It describes actions that no institution should preserve in perpetuity." He is not hostile. He is reasonable. He believes what he is saying.
+
+*The Fighter stands between the carrier and the gate — eight feet from Brother Clement, who is a man with institutional authority over this priory and a clear intention to exercise it.*
+
+Make a **Persuasion check (DC 14)** to leave through the gate with the document.
+
+**Fail:** "Brother Honoré's archival authority does not supersede the prior's authority to manage the priory's dissolution. I am asking you to leave the document with me." *He steps into the gate arch. Brother Clement is not going to physically stop the carrier, but he is going to create a formal incident that will follow the carrier to Bordeaux if the document leaves without his agreement. Try again — about the distinction between a prior's authority over a living institution and his authority over an archival transfer.*
+
+**Success:** "Brother Honoré's archival transfer was executed before the dissolution order was issued. The document left the priory's archival custody the moment he signed the transfer note — which he had the authority to do as archivist, and which he did before you were informed of his intention." Brother Clement looks at the transfer note attached to the document. He looks at the date: today, this morning, before the prior's dissolution meeting. "He prepared this." It is not entirely a question. "He has been the archivist here for twenty-two years. He knew what he was doing." He steps aside. *The gate opens.*
+
+---
+
+**Act III — Périgord Forest Road (PER)**
+
+*An hour from the priory, on the forest road south. A young mounted man — mid-twenties, bearing arms, a crest on his surcoat that matches the Warville seal on the document — has intercepted the road. He introduces himself as Arnaud de Warville, nephew of Gilles de Warville. He has heard a document from the Jacquerie period is moving south toward Bordeaux. He wants to read it.*
+
+"My uncle is not a villain. The account describes an emergency. The account describes what had to be done." He is not threatening. He is genuinely anxious. "I am asking you to let me read it before it enters a permanent archive where the context will be lost."
+
+*The Fighter watches Arnaud de Warville's face — the expression of a man who has never read the document and is genuinely uncertain whether it says what he fears or says something worse.*
+
+Make a **Persuasion check (DC 13)** to refuse without creating a conflict that follows the carrier to Bordeaux.
+
+**Fail:** Arnaud remains on the road. "I will ride with you to Bordeaux. I have the right to hear what is in the archive about my family." *He is not blocking the road, but his presence and his right-of-accompaniment create a complication at the Bordeaux registry. Try again — about what the archive's purpose is and why the context Arnaud fears losing is already in the document.*
+
+**Success:** "The document is sealed. The three signatories sealed it. Your uncle sealed it. The context your uncle wanted preserved is in his own seal on the document he wrote and signed. The archive will file it as he chose to file it — under his seal, with his words. If the account says what had to be done, those are the words your uncle chose." Arnaud holds for a long moment. "He wrote it himself." He moves his horse to the road's edge. "I did not know that." *He watches the carrier ride south.*
+
+---
+
+**Act IV — Bordeaux Approach Road (BDX)**
+
+*The road to Bordeaux, early afternoon — a French toll collector at the city approach. He is checking merchant cargo. He notices the three noble seals on the vellum document and becomes professionally interested. He recognizes two of them.*
+
+"Briquebec and de la Tour are on this seal. Briquebec held a French royal appointment. De la Tour's family is in the French crown's ledger." He is precise. "A document with French royal appointees' seals may be French crown property. I am authorized to detain documents that may be crown property."
+
+*The Fighter watches the toll collector's hands — both on the edge of the carrier's satchel, not quite opening it, waiting to see if the carrier has a counter-argument before invoking the detention authority.*
+
+Make a **History check (DC 12)** to dispute the toll collector's claim about the legal status of documents sealed by French royal appointees.
+
+**Fail:** "The Briquebec seal is sufficient for a hold. I need documentation that this is not crown property before I release it." *He is writing a hold notice. Try again — about when a sealed document becomes crown property versus when it is a private record of private actions.*
+
+**Success:** "A French royal appointment does not make every document a man seals during his lifetime crown property. The crown's right of claim to a document exists for documents produced in a royal official's capacity — an order, a letter of authority, an administrative record. This document is three knights' personal account of an emergency action, sealed under their personal crests, not under any royal authorization. The crown has no claim to private testimony." The toll collector reads the seals again. He notes that none of the seals bear royal crowns or administrative insignia. "Private testimony." He releases the satchel. "Proceed."
+
+---
+
+**Act V — Bordeaux Diocesan Registry (BDX)**
+
+*Bordeaux, Guilhem de Castanet's registry office, late afternoon. Guilhem has been informed that the document is coming. He has prepared a new section in the registry. He is reading the transfer note when the carrier arrives. He reads it once more.*
+
+"Brother Honoré certifies this as a complete and accurate archival transfer, executed by his authority as archivist, in moriendo." He sets the note down. "I will need to understand why the priory archivist decided this document required an external archive rather than the priory's own record, before I classify it."
+
+*The Fighter watches Guilhem take the Three Knights' Account in both hands — the care of a man who knows he is holding something that has been waiting for this room for nine years.*
+
+Make a **Persuasion check (DC 12)** to explain Brother Honoré's reasoning in terms that Guilhem can use as the basis for a permanent classification.
+
+**Fail:** "I understand that the priory is dissolving. That is a practical reason for an external transfer. I need the archival reason — why this document specifically belongs in a permanent archive rather than a private collection or nowhere." *Guilhem sets the document down and waits.*
+
+**Success:** "Brother Honoré kept it because the archive's function does not have a moral exception. If archives only preserved documents the archivist approved of, they would be personal collections, not archives. The document describes acts the archivist found morally insupportable. He preserved it because the institution's function was more important than his judgment about its contents. His transfer is his last archival act." Guilhem is still for a moment. Then he writes: *Suppression Records — Emergency Authority Actions; Three Knights' Testimony, 1358; Preserved by the Dying Archivist Who Could Not Refuse Preservation Though He Found the Record Morally Insupportable; Filed Under the Archivist's Own Transfer Authority.* He applies the registry seal.
+
+He takes the **Three Knights' Account** from the carrier. "Brother Honoré understood what an archive is for better than most people who run them." He looks at the transfer note once more. "Filed. He will know, wherever he is."
+
+*The Fighter watches the sealed document enter the permanent file. The three wax seals — red, blue, black — in a registry in Bordeaux. Nine years in a cell in Périgord. Kept by a man who wished it had never been written. Filed because he kept his oath anyway.*
+
+---
+
+### Quest API Stub — CRL_007: The Jacquerie Account
+
+```json
+{
+  "quest_id": "CRL_007",
+  "title": "The Jacquerie Account",
+  "book": "The Boy's Froissart (Lanier)",
+  "cycle": 7,
+  "token": "Three Knights' Account",
+  "route": "PER → BDX",
+  "theme": "The record preserved against the preserver's judgment — the dying archivist who kept the document of atrocity for nine years and transferred it at the last moment because the archive's function does not have a moral exception; the duty to preserve does not distinguish between records the archivist approves of and records he finds morally insupportable.",
+  "archive_category": "Suppression Records — Emergency Authority Actions; Three Knights' Testimony, 1358; Preserved by the Dying Archivist Who Could Not Refuse Preservation Though He Found the Record Morally Insupportable; Filed Under the Archivist's Own Transfer Authority",
+  "acts": [
+    {
+      "act": "act_1",
+      "title": "The Dying Archivist's Cell",
+      "activateNode": "PER",
+      "type": "skill_check",
+      "skillCheck": { "stat": "Persuasion", "dc": 11 },
+      "scene": "Brother Honoré is dying. He has kept this document for nine years. He needs to know the carrier understands why preservation and approval are different things before he hands it over.",
+      "prompt": "Make a Persuasion check (DC 11). The archivist preserves because the archive's function has no moral exception — if it only kept what the archivist approved, it would be a personal collection.",
+      "failText": "You told me it should be preserved because it tells the truth. That is correct but not complete.",
+      "successText": "Correct. Go quickly. The prior will be difficult.",
+      "grantItem": "Three Knights' Account",
+      "checkPassFlag": "crl7Act1Complete"
+    },
+    {
+      "act": "act_2",
+      "title": "The Priory Gate",
+      "activateNode": "PER",
+      "type": "skill_check",
+      "skillCheck": { "stat": "Persuasion", "dc": 14 },
+      "scene": "Prior Brother Clement believes the document should be destroyed as part of the dissolution. He is standing at the gate with institutional authority to manage the priory's wind-down.",
+      "prompt": "Make a Persuasion check (DC 14). Brother Honoré's archival transfer was executed this morning before the dissolution meeting — the document left the priory's custody the moment he signed the transfer note, which he had authority to do as archivist.",
+      "failText": "Brother Honoré's archival authority does not supersede the prior's dissolution authority. Leave the document with me.",
+      "successText": "He prepared this. He has been archivist here for twenty-two years. He knew what he was doing. The prior steps aside.",
+      "checkPassFlag": "crl7Act2Complete"
+    },
+    {
+      "act": "act_3",
+      "title": "Périgord Forest Road",
+      "activateNode": "PER",
+      "type": "skill_check",
+      "skillCheck": { "stat": "Persuasion", "dc": 13 },
+      "scene": "Arnaud de Warville wants to read the document before it enters a permanent archive. He fears the context of his uncle's actions will be lost. He is not threatening; he is anxious.",
+      "prompt": "Make a Persuasion check (DC 13). The context Arnaud fears losing is already in the document — his uncle sealed it himself, under his own crest, with his own words. The archive will file it as Gilles de Warville chose to file it.",
+      "failText": "I will ride with you to Bordeaux. I have the right to hear what the archive says about my family.",
+      "successText": "He wrote it himself. I did not know that. Arnaud moves his horse to the road's edge.",
+      "checkPassFlag": "crl7Act3Complete"
+    },
+    {
+      "act": "act_4",
+      "title": "Bordeaux Approach Road",
+      "activateNode": "BDX",
+      "type": "skill_check",
+      "skillCheck": { "stat": "History", "dc": 12 },
+      "scene": "A French toll collector recognizes the Briquebec and de la Tour seals — both French royal appointees — and considers claiming the document as potential crown property.",
+      "prompt": "Make a History check (DC 12). A royal appointment does not make every document a man seals crown property — only documents produced in his official capacity, under royal authorization. This is personal testimony under private seals.",
+      "failText": "The Briquebec seal is sufficient for a hold. Show me documentation that this is not crown property.",
+      "successText": "None of the seals bear royal crowns or administrative insignia. Private testimony. He releases the satchel.",
+      "checkPassFlag": "crl7Act4Complete"
+    },
+    {
+      "act": "act_5",
+      "title": "Bordeaux Diocesan Registry",
+      "activateNode": "BDX",
+      "type": "skill_check",
+      "skillCheck": { "stat": "Persuasion", "dc": 12 },
+      "scene": "Guilhem de Castanet needs the archival reason — not the practical reason — why this document belongs in a permanent external archive rather than a private collection.",
+      "prompt": "Make a Persuasion check (DC 12). Give Guilhem Brother Honoré's reasoning: the archive's function has no moral exception; Honoré's last archival act was his most precise institutional performance.",
+      "failText": "I need the archival reason, not the practical one — why this document belongs in a permanent archive.",
+      "successText": "Guilhem writes: Suppression Records — Emergency Authority Actions; Preserved by the Dying Archivist Who Could Not Refuse Preservation Though He Found the Record Morally Insupportable.",
+      "takeItem": "Three Knights' Account",
+      "checkPassFlag": "crl7Act5Complete"
+    }
+  ]
+}
+```
+
+---
+
+*CRL-07 complete. 2026-06-02.*
+
+---
+
+## Cycle 8 — Angle: The Letter Addressed to the Dead
+
+*Prior cycles missed:*
+
+Cycles 1–7 worked voluntary obligation, purchased precedent, strategic misdescription, copy equivalence, filing as jurisdiction, failure record as intelligence, and preservation against the preserver's judgment. None asked what happens to a document when the person it was written for dies before it can be delivered — when an absolution letter addressed by name to a specific captain becomes useless as personal absolution and useful only as evidence that the institution made the promise.
+
+Cycle 8 finds the document whose addressee died in transit. Urban V's sealed guarantee exists. The man it was written for does not. The document's only remaining function is to prove that the institution was willing to make this kind of promise. That is a different document than the one Urban V sealed.
+
+---
+
+### CRL-08: "The Pope's Guarantee"
+
+**Theme check:** CRL-1 through CRL-7 are not this. BLQ-5 (document outliving its object) is the closest analogy — but BLQ-5's object was a falcon consumed by the document's author as a gesture of hospitality; this document's addressee is a dead man, and the document's failure to deliver its personal promise is precisely what transforms it into institutional evidence. BLQ-12 (antecedent debt) is not this — that document's subject was alive; this document's is not. LIL-2 is not this. Cycle 8 takes the angle of the personal promise that becomes precedent through the death of the promisee — the absolution letter that cannot be delivered but can be filed as proof that Urban V was willing to sign such letters.
+
+---
+
+**SOURCE HOOK:** Urban V (r. 1362–1370) issued several letters of absolution and guarantee to Free Company captains in exchange for their marching south away from France. Lanier presents Urban V as a pope who negotiated with practical men in practical language. A sealed letter from Urban V promising absolution to a specific captain, traveling to find a captain who died before it arrived, is exactly the kind of document Froissart's world produced.
+
+---
+
+**1367 SETTING:**
+Captain Thibaut de la Croix agreed to march his company south to join the Black Prince's Spanish expedition in exchange for a sealed letter from Urban V granting personal absolution for Thibaut and his company's actions in France. Urban V sealed the letter in late spring 1367. Thibaut was killed in a river crossing in the Pyrenean foothills in June. His lieutenant, Perrin de Montfort, carries the letter toward Bordeaux with the intention of filing it at the diocesan registry — not as a personal absolution for Thibaut, who cannot receive it, but as institutional evidence that Urban V was willing to make such promises in writing. Perrin cannot enter Bordeaux directly: there is a warrant for his arrest in connection with an unrelated matter in the Dordogne. He intercepts the carrier on the road near Avignon and asks them to carry the document to the registry.
+
+*Perrin's words: "The letter is addressed to a dead man. It cannot absolve him. It can prove the Pope was willing to sign it. That is worth more than the absolution would have been."*
+
+**TOKEN:** Urban V's Sealed Guarantee — a single folded vellum letter, Urban V's papal seal in gold wax, addressed: *To Thibaut de la Croix, captain of his company, and his companies, greetings.* Perrin's note attached in paper: *Captain de la Croix died June 1367. Carried forward by his lieutenant Perrin de Montfort. Presented for archival filing as evidence of institutional intent.* *Act I: received from Perrin de Montfort on the Avignon road. Act V: surrendered to Guilhem de Castanet, Bordeaux Diocesan Registry.*
+
+**TOKEN granted:** Act I
+**TOKEN taken:** Act V
+
+---
+
+**Act I — Road Near Avignon (AVG)**
+
+*A waystation on the road two hours north of Avignon, evening. Perrin de Montfort is a compact man in his thirties with the particular economy of movement of someone who has been avoiding official notice for several weeks. He has the papal letter in a leather sleeve. He hands it over with both hands.*
+
+"The letter is complete. The seal is intact. Urban V signed it on the fifteenth of May. Thibaut received the word that it was sealed but died before the courier reached him." He looks at the carrier. "The letter cannot do what it was made to do. What it can do is show that Urban V made this kind of promise in writing. A captain reading this — not the absolution, which is addressed to a dead man, but the existence of the letter — understands that the Pope will sign such documents." He pauses. "The registry in Bordeaux is the right destination. The Black Prince's commissioner can use it. I cannot carry it there."
+
+*The Fighter watches Perrin's face — a man who has thought carefully about the only useful thing left to do with a useless document.*
+
+Make an **Insight check (DC 11)** to understand the distinction Perrin is drawing between the document's named function and its actual remaining function.
+
+**Fail:** "You understand that the letter promises absolution to Thibaut. That is what it says. Tell me what it does now that Thibaut is dead." *He waits. The waystation is empty.*
+
+**Success:** The letter can no longer deliver personal absolution — that function ended when Thibaut died. What remains is the document as evidence: Urban V was willing to make this promise in writing, to a specific captain, in exchange for a specific action. That precedent is separable from the person it was made to. Perrin nods once. "Go to Guilhem de Castanet. He will understand how to classify it." You receive **Urban V's Sealed Guarantee**.
+
+---
+
+**Act II — Avignon Papal Gate (AVG)**
+
+*The Avignon gate, the following morning. A sub-deacon named Brother Augustin manages the departures registry for the papal residual administration. He checks outgoing documents. He reads the address on the carrier's leather sleeve: the papal seal, the papal letter format.*
+
+"Letters issued from the papal office addressed to specific named individuals must be returned to the issuing office if the named individual is deceased. This is protocol." He opens a small registry book and shows the entry. The rule is clearly written. "I will need to retain this document."
+
+*The Fighter watches Brother Augustin's hand on the registry book — a man applying a rule correctly that was written for a different situation than the one before him.*
+
+Make a **Persuasion check (DC 13)** — the protocol was written for administrative letters being returned when the addressee predeceases delivery; it was not written for a document being deliberately redirected for archival purposes with the issuing office's knowledge.
+
+**Fail:** "The protocol applies to all sealed letters issued by the papal office. I do not have authority to make exceptions." *Brother Augustin begins writing a retention notice. Try again — about whether Perrin de Montfort's attached note constitutes a change in the letter's status from undelivered personal correspondence to a submitted archival document.*
+
+**Success:** "Perrin de Montfort's attached note explicitly states the purpose: presented for archival filing as evidence of institutional intent. The document is not traveling toward a dead addressee — it has already been redirected by the lieutenant's authority and is traveling toward a registry. The protocol covers undelivered personal correspondence. This is submitted archival material." Brother Augustin reads the note again. He reads it once more. "The lieutenant's note changes the status." He closes the registry book. "Proceed."
+
+---
+
+**Act III — Périgord Forest Road (PER)**
+
+*The forest road, afternoon. A group of eight riders has pulled off the road to water their horses at a stream. One of them — a compact man with a Périgord accent — recognizes the papal seal on the letter's leather sleeve. He approaches.*
+
+"That is Urban V's seal. Is that the absolution letter?" He identifies himself as Laurent, formerly of Thibaut de la Croix's company. He has been waiting on this road for two days. "The company has heard the letter exists. Can the letter cover all of us? The whole company, not just Thibaut?"
+
+*The Fighter watches Laurent's face — the specific expression of a man who has been living for weeks with the hope of an absolution that was addressed to his dead captain.*
+
+Make a **Persuasion check (DC 12)** to explain why the letter cannot function as a collective absolution even for the company named in its address.
+
+**Fail:** "The address says 'his companies.' We are his companies. Thibaut's company. The letter covers us." He is not wrong about what the letter says. He is wrong about what the letter can do now that Thibaut is dead. *Try again — about what it means for an absolution to be operative versus what it means for a letter to be evidence.*
+
+**Success:** "The letter is addressed to Thibaut and his companies. Thibaut accepted it on behalf of the company. Thibaut is dead. The acceptance died with him. The letter cannot grant what was accepted by a man who cannot receive it." You pause. "But the letter proves Urban V was willing to make this kind of promise. If the company marches south and the Black Prince's commissioner files this letter alongside a new request, the existence of the prior letter is the argument for why a new one can be granted." Laurent holds for a long moment. "So we march. And then we ask." He looks at the papal seal. "We ask with this as the precedent." *He moves back to his horse.*
+
+---
+
+**Act IV — Bordeaux, The English Registry (BDX)**
+
+*The Black Prince's English administrative office, early morning. Aldous de la Tour reads the letter — the papal seal, the address, the Perrin note — and looks up with the expression of a man who sees an opportunity and is deciding how fast to take it.*
+
+"This letter, combined with a general petition from the remaining companies in Gascony, would make an excellent case for a collective absolution request. The Pope's willingness is documented. The company's willingness to march south is documented by their captain's acceptance before he died." He reaches for the letter. "I would like to hold this and draft the petition."
+
+*The Fighter watches Aldous's hand extend toward the letter — a man whose interest is genuine and whose plan would use the document for something other than what Perrin intended.*
+
+Make a **Persuasion check (DC 13)** to explain why the letter must go to the diocesan registry rather than into Aldous's petition-drafting process.
+
+**Fail:** "The registry filing can wait. The petition window closes at the end of the month. This document is more useful as a petition exhibit than as an archive entry." *Aldous is not wrong about its utility. He is wrong about who gets to decide its destination. Try again — about Perrin de Montfort's explicit instruction and what the archivist's classification creates that a petition exhibit does not.*
+
+**Success:** "Perrin de Montfort transmitted this document specifically for archival filing — as evidence of institutional intent that can be cited in perpetuity. A petition exhibit is a temporary use that disappears when the petition is decided. An archival filing is permanent. Your petition can cite the archive. You cannot cite a document that is locked in your desk." Aldous pulls his hand back. "A citation is better than an exhibit." He picks up a quill and makes a note of the registry entry number before it has been assigned. *He will write to Guilhem directly.*
+
+---
+
+**Act V — Bordeaux Diocesan Registry (BDX)**
+
+*Guilhem de Castanet is waiting. He has already received a note from Aldous de la Tour. He has prepared a new section in the registry. He takes the letter in both hands and reads the papal seal, the address, the note. He reads everything once. He sets it down carefully.*
+
+"This document cannot deliver what it was made to deliver. What it can do is remain." He looks at the carrier. "Tell me the argument — the precise argument — for what classification makes this permanently useful rather than permanently useless."
+
+*The Fighter watches Guilhem's hands around the letter — the posture of a man who is about to create a category that has never existed in this registry before.*
+
+Make a **History check (DC 13)**.
+
+**Fail:** "I understand that Urban V signed it and that Thibaut is dead. I need the classification that makes this document accessible to anyone who needs to argue that the Pope will make written promises to company captains. The heading is not 'dead man's letter.' What is the heading?" *He waits.*
+
+**Success:** "Absolution Records — Letters Addressed to the Dead — is the wrong heading because it classifies by the addressee's status. The correct heading classifies by the document's function: what it proves now that it can no longer deliver what it promised." Guilhem nods and begins to write: *Absolution Records — Letters Addressed to the Dead; Filed as Evidence of Prior Institutional Intent Rather Than Personal Grant; The Personal Promise Transformed into Institutional Precedent by the Death of the Promisee.* He applies the registry seal.
+
+He takes **Urban V's Sealed Guarantee** from the carrier and places it in the new section. "Thibaut de la Croix will be listed in the register under this heading. His name is in the record. His absolution is not." He closes the ledger. "The promise is. That was what Perrin wanted preserved."
+
+*The Fighter watches the papal letter disappear into the registry. Gold wax seal. An address to a dead man. A classification that makes the dead man's letter useful to living captains. Perrin de Montfort will not see the filing. He will know it happened.*
+
+---
+
+### Quest API Stub — CRL_008: The Pope's Guarantee
+
+```json
+{
+  "quest_id": "CRL_008",
+  "title": "The Pope's Guarantee",
+  "book": "The Boy's Froissart (Lanier)",
+  "cycle": 8,
+  "token": "Urban V's Sealed Guarantee",
+  "route": "AVG → PER → BDX",
+  "theme": "The letter addressed to the dead — the absolution that cannot be delivered but can be filed as evidence of institutional intent; the personal promise that becomes institutional precedent through the death of the promisee; what the archive can preserve when it can no longer deliver.",
+  "archive_category": "Absolution Records — Letters Addressed to the Dead; Filed as Evidence of Prior Institutional Intent Rather Than Personal Grant; The Personal Promise Transformed into Institutional Precedent by the Death of the Promisee",
+  "acts": [
+    {
+      "act": "act_1",
+      "title": "Road Near Avignon",
+      "activateNode": "AVG",
+      "type": "skill_check",
+      "skillCheck": { "stat": "Insight", "dc": 11 },
+      "scene": "Perrin de Montfort cannot enter Bordeaux. He hands over the papal letter and asks the carrier to understand the distinction between the letter's named function and its actual remaining function now that Thibaut is dead.",
+      "prompt": "Make an Insight check (DC 11). The letter can no longer deliver personal absolution — that function ended when Thibaut died. What remains is the document as evidence: Urban V was willing to make this promise in writing.",
+      "failText": "You understand what the letter says. Tell me what it does now that Thibaut is dead.",
+      "successText": "The precedent is separable from the person it was made to. Perrin nods once.",
+      "grantItem": "Urban V's Sealed Guarantee",
+      "checkPassFlag": "crl8Act1Complete"
+    },
+    {
+      "act": "act_2",
+      "title": "Avignon Papal Gate",
+      "activateNode": "AVG",
+      "type": "skill_check",
+      "skillCheck": { "stat": "Persuasion", "dc": 13 },
+      "scene": "Sub-deacon Brother Augustin has a protocol: letters addressed to deceased individuals must be returned to the issuing office. He is applying it correctly to the wrong situation.",
+      "prompt": "Make a Persuasion check (DC 13). Perrin's attached note changes the document's status from undelivered personal correspondence to submitted archival material — the protocol covers the first category, not the second.",
+      "failText": "I do not have authority to make exceptions. He begins writing a retention notice.",
+      "successText": "The lieutenant's note changes the status. Brother Augustin closes his registry book.",
+      "checkPassFlag": "crl8Act2Complete"
+    },
+    {
+      "act": "act_3",
+      "title": "Périgord Forest Road",
+      "activateNode": "PER",
+      "type": "skill_check",
+      "skillCheck": { "stat": "Persuasion", "dc": 12 },
+      "scene": "Laurent, formerly of Thibaut's company, believes the letter can cover the whole company since it says 'his companies.' He has been waiting on the road for two days.",
+      "prompt": "Make a Persuasion check (DC 12). The acceptance died with Thibaut — the company cannot receive what Thibaut accepted on their behalf, since he cannot receive it either. But the letter as precedent supports a new request.",
+      "failText": "The address says his companies. We are his companies. Try again about operative absolution versus documentary evidence.",
+      "successText": "So we march. And then we ask. With this as the precedent. Laurent moves back to his horse.",
+      "checkPassFlag": "crl8Act3Complete"
+    },
+    {
+      "act": "act_4",
+      "title": "Bordeaux, English Registry",
+      "activateNode": "BDX",
+      "type": "skill_check",
+      "skillCheck": { "stat": "Persuasion", "dc": 13 },
+      "scene": "Aldous de la Tour wants to hold the letter as a petition exhibit. His plan is practical and would use the document for something other than what Perrin instructed.",
+      "prompt": "Make a Persuasion check (DC 13). An archival filing is permanent — your petition can cite the archive. A petition exhibit disappears when the petition is decided.",
+      "failText": "The petition window closes at the end of the month. This document is more useful as an exhibit.",
+      "successText": "A citation is better than an exhibit. Aldous pulls his hand back and makes a note of the registry entry number.",
+      "checkPassFlag": "crl8Act4Complete"
+    },
+    {
+      "act": "act_5",
+      "title": "Bordeaux Diocesan Registry",
+      "activateNode": "BDX",
+      "type": "skill_check",
+      "skillCheck": { "stat": "History", "dc": 13 },
+      "scene": "Guilhem de Castanet is waiting. He needs the classification that makes this permanently useful — not Absolution Records — Letters Addressed to the Dead, which classifies by the addressee's status, but a heading that classifies by what the document proves now.",
+      "prompt": "Make a History check (DC 13). The correct heading classifies by function, not by the addressee's condition: the personal promise that becomes institutional precedent through the death of the promisee.",
+      "failText": "The heading is not dead man's letter. What is the heading? He waits.",
+      "successText": "Guilhem writes: Absolution Records — Letters Addressed to the Dead; Filed as Evidence of Prior Institutional Intent Rather Than Personal Grant; The Personal Promise Transformed into Institutional Precedent by the Death of the Promisee.",
+      "takeItem": "Urban V's Sealed Guarantee",
+      "checkPassFlag": "crl8Act5Complete"
+    }
+  ]
+}
+```
+
+---
+
+*CRL-08 complete. 2026-06-02.*
+
+---
+
+*CRL SEEDS COMPLETE 2026-06-02 — CRL-01 through CRL-08, all eight cycles written.*
+
