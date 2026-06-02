@@ -183,7 +183,7 @@ function respliceSection(rawSrc, sectionName, newContent) {
 const WBAPI = {
   nodeMap: {}, nodeCoords: {}, questDb: {}, monsterPool: {},
   monsterDrops: {}, worldDb: {}, birkaNpcs: {},
-  fishPool: [], nightFishPool: [], lakeMagicDb: {},
+  fishPool: [], nightFishPool: [], lakeMagicDb: {}, itemDb: {},
   _terrainToMonsters: {}, _monsterToTerrains: {},
   _questsByNode: {}, _questFlags: {}, _flagToQuests: {}, _questArcs: {},
   _rawQuestSrc: '',
@@ -215,6 +215,7 @@ const WBAPI = {
     this.fishPool      = parseArr(fishSrc, 'FISH_POOL');
     this.nightFishPool = parseArr(fishSrc, 'NIGHT_FISH_POOL');
     this.lakeMagicDb   = parseSimple(extrSection(src,'LAKE_MAGIC'), 'LAKE_MAGIC_DB');
+    this.itemDb        = parseSimple(extrSection(src,'ITEM_DB'), 'ITEM_DB') || {};
     const qSrc = extrSection(src,'QUEST_DB');
     this._rawQuestSrc = qSrc || '';
     this.questDb = parseSanitized(qSrc, 'QUEST_DB');

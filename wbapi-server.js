@@ -498,6 +498,17 @@ function serializeMonsterLiteral(key, body) {
   return parts.join(', ') + ' },\n';
 }
 
+function serializeItemLiteral(key, body) {
+  const STR  = ['name','icon','type','desc','readText','effect'];
+  const NUM  = ['sell','atkBonus','dmgDie','dmgCount','dmgFlat','minLevel','uses','base','levelScale','luckScale','minRank'];
+  const BOOL = ['passive'];
+  const parts = [`  ${key}: { key:${JSON.stringify(key)}`];
+  for (const f of STR)  if (body[f] !== undefined) parts.push(`${f}:${JSON.stringify(body[f])}`);
+  for (const f of NUM)  if (body[f] !== undefined) parts.push(`${f}:${Number(body[f])}`);
+  for (const f of BOOL) if (body[f] !== undefined) parts.push(`${f}:${!!body[f]}`);
+  return parts.join(', ') + ' },\n';
+}
+
 function insertBeforeArrayClose(section, entry) {
   const endAnchor = `// ◆◆◆ WORLDBUILDER:${section}:END ◆◆◆`;
   const anchorIdx = WBAPI._rawSrc.indexOf(endAnchor);
@@ -1426,6 +1437,77 @@ async function route(req, res) {
     }
   }
 
+  // ── Items (ITEM_DB) ──────────────────────────────────────────────────────
+  if (parts[0] === 'item') {
+    const itemKey = parts[1];
+
+    if (method === 'GET') {
+      if (!itemKey) {
+        const typeFilter = url.searchParams.get('type');
+        let list = Object.values(WBAPI.itemDb);
+        if (typeFilter) list = list.filter(i => i.type === typeFilter);
+        logRow('total', `${list.length} items${typeFilter ? `  ·  type=${typeFilter}` : ''}`);
+        logRow('sample', sample(list.map(i => i.key || i.name), 5));
+        logResponse(method, url.pathname, 200, `${list.length} items`);
+        return json(res, 200, { ok:true, count:list.length, items: list });
+      }
+      const item = WBAPI.itemDb[itemKey];
+      if (!item) {
+        logResponse(method, url.pathname, 404, `item "${itemKey}" not found`);
+        return json(res, 404, { error:`item "${itemKey}" not found` });
+      }
+      logRow('item', `${item.icon||''}  ${item.name}  ·  type: ${item.type||'—'}`);
+      logResponse(method, url.pathname, 200, `item/${itemKey}`);
+      return json(res, 200, { ok:true, item, _meta:{ canDelete: true } });
+    }
+
+    if (method === 'POST' && !itemKey) {
+      let body;
+      try { body = await readBody(req); } catch(e) { return json(res, 400, { error:'Invalid JSON' }); }
+      const { key, name, type } = body;
+      if (!key || !name || !type) {
+        logResponse(method, url.pathname, 400, 'item create: missing required fields');
+        return json(res, 400, { error:'Required fields: key, name, type. Optional: icon, sell, desc, atkBonus, dmgDie, dmgCount, dmgFlat, minLevel, passive, readText, uses' });
+      }
+      if (!/^[a-z_][a-z0-9_]*$/.test(key)) {
+        logResponse(method, url.pathname, 400, `item key "${key}" invalid`);
+        return json(res, 400, { error:'key must be snake_case (a-z, 0-9, underscore, no leading digit)' });
+      }
+      if (WBAPI.itemDb[key]) {
+        logResponse(method, url.pathname, 409, `item "${key}" already exists`);
+        return json(res, 409, { error:`Item "${key}" already exists` });
+      }
+      const VALID_TYPES = ['weapon','amulet','consumable','readable','armor','tool','mission_bit','lake_magic'];
+      if (!VALID_TYPES.includes(type)) {
+        logResponse(method, url.pathname, 400, `unknown item type "${type}"`);
+        return json(res, 400, { error:`type must be one of: ${VALID_TYPES.join(', ')}` });
+      }
+      const defaults = { sell: 0 };
+      const itemObj = { key, ...defaults, ...body };
+      const entry = serializeItemLiteral(key, itemObj);
+      const ins = insertBeforeSectionClose('ITEM_DB', entry);
+      if (!ins.ok) { logResponse(method, url.pathname, 500, ins.error); return json(res, 500, ins); }
+      WBAPI.itemDb[key] = itemObj;
+      logRow('key', key);
+      logRow('item', `${body.icon||''}  ${name}  ·  type: ${type}${body.sell !== undefined ? `  ·  sell: ${body.sell}gp` : ''}`);
+      logResponse(method, url.pathname, 201, `created item/${key}`);
+      return json(res, 201, { ok:true, key, note:'POST /api/save to persist.', item: WBAPI.itemDb[key] });
+    }
+
+    if (method === 'PUT' && itemKey) {
+      let body;
+      try { body = await readBody(req); } catch(e) { return json(res, 400, { error:'Invalid JSON' }); }
+      if (!WBAPI.itemDb[itemKey]) {
+        logResponse(method, url.pathname, 404, `item "${itemKey}" not found`);
+        return json(res, 404, { error:`Item "${itemKey}" not found` });
+      }
+      Object.assign(WBAPI.itemDb[itemKey], body);
+      logRow('updated', `item › ${itemKey}`);
+      logResponse(method, url.pathname, 200, `item/${itemKey} updated`);
+      return json(res, 200, { ok:true, item: WBAPI.itemDb[itemKey], note:'PUT only updates in-memory. POST /api/save to persist.' });
+    }
+  }
+
   // ── Lake Magic Items (LAKE_MAGIC) ─────────────────────────────────────────
   if (parts[0] === 'lake-magic') {
     const magKey = parts[1];
@@ -2308,6 +2390,9 @@ server.listen(PORT, '127.0.0.1', () => {
     ['GET',    '/api/fish[/{key}][?rank=&night=]     → fish list or single'],
     ['POST',   '/api/fish/simulate                  body: {dexMod, catchMod, typeMod, luckMod, rodBonus}'],
     ['POST',   '/api/fish                           body: {key, name, rank, desc?, isNight?}'],
+    ['GET',    '/api/item[/{key}][?type=]              → item list or single (ITEM_DB)'],
+    ['POST',   '/api/item                            body: {key, name, type, icon?, sell?, desc?, atkBonus?, ...}'],
+    ['PUT',    '/api/item/{key}                      body: {field:value,...}'],
     ['GET',    '/api/lake-magic[/{key}][?effect=&minRank=] → magic item list or single'],
     ['POST',   '/api/lake-magic                     body: {key, name, effect, ...}'],
     ['POST',   '/api/monster/{id}/rename            body: {name}'],
