@@ -1533,3 +1533,264 @@ Federigo, when the carrier returns with no message, says: "Did she receive it?" 
 ---
 
 *BLQ-05 complete. 2026-06-02.*
+
+---
+
+## Cycle 6 — Angle: The Document Proved by What It Survives
+
+---
+
+### BLQ-06: "The Three Descents"
+
+**Theme check:** Cycles 1-5 covered forgery-by-performance, timing, ambiguity-as-value, substituted contents, and documents that outlive their objects. Cycle 6 shows the document proved by ordeal — a letter of credit that is lost and recovered three times in a single night in Naples, emerging from each disaster more demonstrably real than a document that traveled cleanly could ever be. The Andreuccio story's logic: three consecutive catastrophes, each one deeper than the last, and the exit from the third leaves the survivor holding something more valuable than what they carried in. Authentication through surviving. The letter of credit that has been through the cesspit and the tomb is more credibly itself than the letter that went by direct post.
+
+This is distinct from: BLQ-01 (performance of a fraudulent document); BLQ-04 (object stolen, then recovered from a specific thief); CLJ-08 (contingency letter designed for anticipated absence); HTY-05 (dice analysis — contested agency); HAV-03 (commission records — irrevocable acts).
+
+---
+
+**SOURCE HOOK:** Day II, Story 5. Andreuccio of Perugia arrives in Naples with five hundred florins to buy horses. Within one day and night he loses everything three times: (1) a beautiful woman claiming to be his long-lost noblewoman half-sister invites him home, lures him to a latrine board that opens over a cesspit, he falls through; (2) he escapes, is locked in a bishop's tomb by men looking for a ring, surrounded by plague corpses; (3) he crawls out through a wall the tomb robbers missed, exits through the city's back streets still stinking of the cesspit. He returns home with a ruby worth more than everything he brought. The three descents authenticate him. He entered Naples as a provincial merchant and left as a man who has been inside everything.
+
+---
+
+**1367 SETTING:**
+Messer Luca Grimaldi of Naples is a grain merchant with accounts across the Hospitaller order's eastern network. A factor at the Rhodes chapter house overpaid for a summer grain shipment — a genuine error, not fraud — and the Hospitaller commander in Rhodes has sent a polite but firm request for a letter of credit covering the overpayment, to be presented by their representative Fra Simone at the Mandraki commercial dock during the trading session following the next Rhodes galley's arrival. The galley departs Naples in one night. The letter of credit is valid only for that specific session — after that, the debt must be renegotiated.
+
+Grimaldi commissioned the letter from his house notary this afternoon. The letter is sealed. The carrier is to board the Rhodes galley at dawn and present the letter to Fra Simone in Rhodes.
+
+What Grimaldi does not tell the carrier: the letter is also a record of a secondary transaction that someone in Naples wants intercepted. This someone has sent three separate people to ensure the letter does not board that galley.
+
+**TOKEN:** A letter of credit — Grimaldi seal in dark wax, payable to "the representative of the Hospitaller chapter house of Rhodes, Fra Simone of Avignon," sum in gold florins, issued by the Naples notary Messer Baldo di Cingoli, valid only for "the commercial session following the arrival of the next Rhodes galley at Mandraki harbor" — stamped with a date that expires if the letter misses this specific session.
+
+**TOKEN granted:** Act I
+**TOKEN taken:** Act V (Fra Simone receives and enters it in the chapter house account book)
+
+---
+
+### ACT I — Naples (Grimaldi Counting House, Via dei Banchi)
+
+*The letter of credit · sealed, Grimaldi dark wax, rolled tight in a leather sleeve · on Grimaldi's desk · the harbor visible through the window, the Rhodes galley at dock, lamps on her mast · late afternoon, the city still hot*
+
+Grimaldi hands the letter to the carrier with the facts: Rhodes galley departs at dawn, letter must be in Fra Simone's hands before the Mandraki session closes, the session is the day after arrival. He says: do not lose it, do not let it be examined, do not discuss its contents with anyone between this room and the galley. He does not explain why. He pays half the fee now.
+
+He says: the harbor district will be busy tonight — the galley departure draws commerce like blood draws flies. Be careful in the Seggio del Nilo quarter; it has been unsettled since the grain dispute last month.
+
+*He is warning me about something. He is not naming it.*
+
+The carrier has until dawn.
+
+---
+
+**Skill check — DC 12 Insight or Investigation:**
+Understand the warning's shape — identify what Grimaldi is actually concerned about.
+
+**Pass (Insight):** Grimaldi is afraid. Not of the letter's delivery failing — of the letter's existence being known. He is telling the carrier about the harbor district because someone has already been told the carrier will be in it. The carrier understands: the danger is not accidental; it is arranged.
+
+**Pass (Investigation):** The carrier examines the leather sleeve — there are handling marks from more than one hand around the seal area; the letter has been touched more times than preparation would require. Someone has been at this desk today who was not supposed to be. The carrier understands: the letter's existence is already known to someone who wants it intercepted.
+
+**Fail:** The carrier departs with the letter and general awareness of the harbor district's unsettledness. The evening's events will have to be improvised.
+
+*The letter granted here. The galley lamp is visible from the street.*
+
+**Grant item:** letter of credit (Grimaldi seal, Rhodes payee, dawn expiry)
+
+---
+
+### ACT II — Naples (Seggio del Nilo Quarter, Two Hours After Dark)
+
+*The letter of credit · in the carrier's inner coat · a woman's lamp in a high window, Seggio del Nilo, night*
+
+A woman named Carmela addresses the carrier from a doorway — pleasant, well-dressed, with a convincing story: she recognizes the carrier from the Florentine guild factor's office; she is the half-sister of a Florentine merchant the carrier knows; she has been stranded in Naples for three days waiting for a message that hasn't come; she only needs a brief consultation about a money matter.
+
+*She knows my name. She knows which guild I work through.*
+
+The consultation, if the carrier follows, leads through a street of tall houses into an interior courtyard with a covered well. The well board is rotted. Carmela has arranged this. Someone wants the carrier in that courtyard, separated from their coat and the letter inside it.
+
+If the carrier follows and falls: they land in a storage cistern below the courtyard — dry, fortunately; this is not the cesspit of the source story. But in the dark, soaking wet and with the coat above them, someone lifts the coat and takes it. The carrier must recover the letter before the third hour.
+
+---
+
+**Skill check — DC 12 Insight or Perception:**
+Read Carmela's performance before committing to follow, or notice the well board's condition before crossing it.
+
+**Pass (Insight):** The carrier watches Carmela's ease — she is comfortable, not distressed; no one who has been stranded for three days in an unfamiliar city is this comfortable in a doorway at night. The carrier declines to follow and moves through the back lane instead. Carmela watches them go. She does not follow.
+
+**Pass (Perception):** Crossing the courtyard, the carrier notices the well board's color — too new, too dry-looking for a working well; it has been recently replaced. They step around it. When Carmela presses, the carrier is already at the courtyard's far exit. They leave.
+
+**Fail:** The carrier falls into the cistern. The coat is taken by an unseen figure above. The carrier, wet and furious, must climb out and recover the letter from whoever has the coat — which means finding the figure in the Seggio del Nilo in the next half hour. Combat: one figure, AC 12, HP 18, moving fast through the quarter; if caught, the coat is recovered; if not, the figure goes to ground and the letter is gone.
+
+*The letter, found or held. The quarter at its night work around the carrier.*
+
+---
+
+### ACT III — Naples (Harbor Barge District, Fourth Hour of Night)
+
+*The letter of credit · back in the carrier's possession · the harbor barge district, tar smell and black water · a gang of four men working in silence at a beached Catalan barge*
+
+The carrier, cutting through the barge district toward the galley dock, walks into the middle of a working salvage operation — four men, unlicensed, stripping cargo from a beached barge that was listed as lost in the last storm. They are technically committing a crime. One of them, a man named Maso, sees the carrier seeing them and makes a decision: if the carrier isn't with them, the carrier is a witness.
+
+The carrier is now involved.
+
+Maso is not violent — he is practical. He doesn't want to hurt the carrier; he wants them occupied until dawn, when the salvage will be complete and dispersed. He proposes a negotiated silence: the carrier helps move two crates, accepts payment, and is free by the third hour of night. Two crates is an hour's work. One hour lost means the galley boarding is tight but possible.
+
+*He is asking me to be implicated. The alternative is being detained as a witness.*
+
+During the negotiation, the letter case is jostled out of the carrier's coat by one of the other salvagers — unintentionally; the man was moving a crate past the carrier in tight quarters and didn't see the leather sleeve fall. By the time the carrier notices, the leather sleeve has slid under a stack of rope near the barge's hull. In the dark, on a wet dock, finding it will take a specific search.
+
+---
+
+**Skill check — DC 13 Investigation or Persuasion:**
+Recover the letter case from under the rope stack, and exit the barge district before Maso changes his calculus.
+
+**Pass (Investigation):** The carrier tracks the letter case's trajectory — they remember the direction of the jostle, the angle of the fall, the approximate distance. Three minutes searching in the dark under a lamp borrowed from Maso, and the leather sleeve is found, the letter inside undamaged. The carrier helps Maso with one crate, takes the payment, and walks fast.
+
+**Pass (Persuasion):** The carrier tells Maso that they are carrying a Grimaldi letter of credit to the Rhodes galley at dawn, and that if the carrier does not arrive, Grimaldi will be looking for them before sunrise. The Grimaldi name has weight in the Naples harbor district. Maso decides the carrier is too complicated to detain. He points to where the leather sleeve fell. The carrier takes it and leaves.
+
+**Fail:** The letter case is not found before Maso's patience runs out. He detains the carrier until near dawn — third hour, not second. The carrier escapes the barge district with the letter still lost. Combat: four salvagers, AC 11, HP 14 each; if victorious, the carrier can search properly and find the sleeve; if not, the letter is at the barge when the tide comes in.
+
+*The letter: found or lost again. The second hour of night.*
+
+---
+
+### ACT IV — Naples (Plague Quarter Wall, Pre-Dawn)
+
+*The letter of credit · in the carrier's possession, leather sleeve salt-stained · the old plague-quarter wall, pre-dawn, torchlight at the galley dock visible above the rooftops*
+
+The carrier, cutting through the fastest route to the galley dock, enters the old plague quarter — long-abandoned, the buildings used as informal storage. A Catalan merchant's agent named Rodrigo de Montblanc has been using one of these buildings as a transit warehouse. He saw the carrier enter the quarter and has posted his men at the exits.
+
+Rodrigo is the third person who wants the letter. He doesn't want to steal it — he wants to read it. He knows a letter of credit from Grimaldi to the Hospitaller order is on its way to Rhodes, and he knows that the secondary transaction recorded in the letter's margins affects a contract he is negotiating. He wants two minutes with the letter.
+
+He has four men at the exits. The carrier cannot simply walk through. The galley bell will ring in forty minutes.
+
+*Three disasters in one night. The galley lamp is close.*
+
+---
+
+**Skill check — DC 13 Stealth or Deception (pass avoids combat):**
+Exit the plague quarter without Rodrigo reading the letter.
+
+**Pass (Stealth):** The carrier was in this quarter an hour ago; they noticed a gap in the northern wall — old collapse, unreinforced, accessible through a stable yard. The men at the exits are watching the main passages. The carrier goes through the wall gap and emerges in the lane behind the harbor fish market. Rodrigo's men find the exit unwatched two minutes later.
+
+**Pass (Deception):** The carrier approaches Rodrigo directly and says: the letter has been damaged in the evening's events; the seal is compromised; the letter is functionally unusable and Grimaldi will need to reissue; there is nothing worth reading. Rodrigo, calculating whether a damaged letter can still be used against him, decides the risk of detention is greater than the risk of the letter reaching Rhodes intact. He lets the carrier pass.
+
+**Combat (if both fail):** Rodrigo with two men blocking the main exit; AC 13, HP 20 each. If the carrier wins, they exit the plague quarter and run for the dock. If they lose, Rodrigo reads the margin — and decides, having read it, that it is worth letting the carrier go anyway; the margin notation is not what he feared.
+
+*The third disaster. The galley bell rings in thirty minutes.*
+
+---
+
+### ACT V — Rhodes (Mandraki Harbor, Commercial Dock, Hospitaller Chapter House Factor)
+
+*The letter of credit · salt-stained leather sleeve, slightly crumpled, seal intact · Fra Simone's table at the Mandraki commercial dock · morning, the harbor's flat light, the smell of salt and shipped grain*
+
+Fra Simone of Avignon has been at the commercial dock since the galley arrived. He is a precise man with an account book and a schedule. He has been expecting this letter. He receives the leather sleeve from the carrier, opens it, examines the letter.
+
+He notes the condition. He says: "This has been through something." He says it neutrally — as an observation, not a criticism.
+
+He reads the letter. He reads the margin notation. He enters the sum in his account book. He enters the date. He says: "Grimaldi's seal is intact." He looks at the sleeve again. "Whatever the letter went through, the seal held."
+
+*The letter is here. The seal held. Three times lost; three times found.*
+
+---
+
+**Skill check — DC 12 Persuasion or Investigation:**
+Account for the letter's condition and confirm it is valid.
+
+**Pass (Persuasion):** The carrier gives Fra Simone the night's account — briefly, factually, without exaggeration: Carmela's trap, the barge district, the plague quarter wall. Fra Simone, listening, writes in his account book beside the entry: *letter arrived in good condition despite attempted interception; seal intact; carrier reliable.* He pays the second half of the fee without hesitation.
+
+**Pass (Investigation):** The carrier, having kept track of every moment the letter was out of their possession (if any), can account precisely for whether the seal was tampered with. Fra Simone, a precise man, appreciates the precision. He verifies the seal with his own seal-reading glass. It is intact. He enters the transaction.
+
+**Fail:** Fra Simone requires an additional attestation from the Naples house before he can accept the letter — the condition is too irregular. The chapter house factor must be consulted. This takes three hours. The commercial session is almost closed. The letter is accepted at the last minute, at reduced authority.
+
+*The letter taken here. Fra Simone's account book closed.*
+
+**Take item:** letter of credit (received by Fra Simone; entered in the Hospitaller account book)
+
+---
+
+### onPass
+
+Fra Simone, after the session closes, makes a notation in the chapter house receiving log. He creates a new entry category: *Debt Instruments — Papers That Survived What They Were Sent Through.* He says: "Grimaldi's letters usually arrive dry."
+
+He gives the carrier the second half of the fee and a letter of transit for the return voyage. He says: "If you travel through Naples again, you may wish to avoid the Seggio del Nilo." He says this as a man who has heard stranger stories and filed them correctly.
+
+---
+
+### onFail
+
+The letter is accepted at reduced authority. The debt is registered as contested pending confirmation from Naples. Grimaldi, notified, sends a duplicate via the next galley. The debt is ultimately settled. The carrier's fee is paid in full despite the delay.
+
+Fra Simone records in the log: *letter received in irregular condition; seal partially compromised; confirmation pending; carrier account noted.*
+
+---
+
+### Quest Stub (UQF v1.0)
+
+```json
+{
+  "quest_id": "BLQ_006",
+  "title": "The Three Descents",
+  "cycle": 6,
+  "book": "Decameron",
+  "token": "letter of credit — Grimaldi dark wax, payable to Fra Simone of the Rhodes chapter house, valid only for the commercial session following the next Rhodes galley's arrival; lost and recovered three times in one Naples night",
+  "route": "NAP → (Rhodes galley) → RHD",
+  "theme": "Authentication through ordeal; the document proved by what it survives; three consecutive disasters in one Naples night, each one deeper; the seal that holds through the cesspit and the tomb is more credibly itself than the letter that went by direct post",
+  "archive_category": "Debt Instruments — Papers That Survived What They Were Sent Through (Fra Simone of Avignon, Hospitaller chapter house account book, Rhodes, 1367)",
+  "acts": [
+    {
+      "act_id": "BLQ_006_01",
+      "location": "Naples — Grimaldi counting house, Via dei Banchi",
+      "type": "skill_check",
+      "activateNode": "NAP",
+      "scene": "Grimaldi hands over the letter and warns about the harbor district without naming what he fears. The letter has handling marks from more than one hand around the seal area. Someone has already been at this desk. The carrier has until dawn.",
+      "skillCheck": { "dc": 12, "skills": ["Insight", "Investigation"] },
+      "grantItem": "letter of credit (Grimaldi seal, Rhodes payee, dawn expiry)",
+      "checkPassFlag": "danger_pattern_understood"
+    },
+    {
+      "act_id": "BLQ_006_02",
+      "location": "Naples — Seggio del Nilo quarter, second hour of night",
+      "type": "hybrid",
+      "activateNode": "NAP",
+      "scene": "Carmela addresses the carrier from a doorway — pleasant, convincing, with a rotted well board in the courtyard she is steering toward. She knows the carrier's name and guild. The cistern below the courtyard is dry but dark, and whoever drops into it loses their coat to an unseen figure above.",
+      "skillCheck": { "dc": 12, "skills": ["Insight", "Perception"] },
+      "combat": { "count": 1, "ac": 12, "hp": 18 },
+      "checkPassFlag": "first_descent_survived"
+    },
+    {
+      "act_id": "BLQ_006_03",
+      "location": "Naples — harbor barge district, fourth hour of night",
+      "type": "hybrid",
+      "activateNode": "NAP",
+      "scene": "Four salvagers stripping a beached barge catch the carrier witnessing the operation. Maso proposes a negotiated silence — one hour, two crates, then free. During the negotiation, the letter case is jostled into the dark under a stack of rope near the hull.",
+      "skillCheck": { "dc": 13, "skills": ["Investigation", "Persuasion"] },
+      "combat": { "count": 4, "ac": 11, "hp": 14 },
+      "checkPassFlag": "second_descent_survived"
+    },
+    {
+      "act_id": "BLQ_006_04",
+      "location": "Naples — old plague quarter, pre-dawn",
+      "type": "hybrid",
+      "activateNode": "NAP",
+      "scene": "Rodrigo de Montblanc of Catalonia has posted men at all exits of the plague quarter. He wants two minutes with the letter's margin notation — a secondary transaction that affects a contract he is negotiating. He is not violent. He is practical. The galley bell rings in forty minutes.",
+      "skillCheck": { "dc": 13, "skills": ["Stealth", "Deception"] },
+      "combat": { "count": 2, "ac": 13, "hp": 20 },
+      "checkPassFlag": "third_descent_survived"
+    },
+    {
+      "act_id": "BLQ_006_05",
+      "location": "Rhodes — Mandraki harbor, commercial dock",
+      "type": "skill_check",
+      "activateNode": "RHD",
+      "scene": "Fra Simone of Avignon receives the leather sleeve, examines the letter, notes its condition. He says: this has been through something. He reads the seal. Whatever the letter went through, the seal held. Account for the letter's condition and confirm its validity.",
+      "skillCheck": { "dc": 12, "skills": ["Persuasion", "Investigation"] },
+      "takeItem": "letter of credit",
+      "activateMissionBit": "blqThreeDescentsComplete",
+      "checkPassFlag": "letter_accepted"
+    }
+  ]
+}
+```
+
+---
+
+*BLQ-06 complete. 2026-06-02.*
