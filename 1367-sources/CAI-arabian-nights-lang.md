@@ -820,3 +820,648 @@ Entirely the Project Gutenberg Full License text (Section 1 through the end). No
 Seeds CAI-01 through CAI-24 written (CAI-01 and CAI-S08 fully spec'd; all others at seed level). Complete book read from file parts. The Lang/Galland Arabian Nights is fully processed.
 
 Next book in queue: **BEY** (Mandeville's Travels, ~472 KB — size gate applies, draw from memory).
+
+---
+
+## CAI-06 — The Syrian Storyteller's Notes (Frame narrative tradition)
+**Cycle 3**
+
+*(Theme differentiation: Avoiding CAI-01's "story told to delay an execution changes the shape of the listener," CAI cycle 2's "codicil names the tradition and keeps the origin attached to the text." Avoiding BGW cycles' Nights-collection themes. New theme: the oral tradition at the moment it becomes aware it is being written down — the storyteller adjusted what he was saying when he noticed the scholar's pen; the notes capture not the story as it would have been told but the story knowing it was becoming text; the document is the record of that adjustment.)*
+
+---
+
+*Ser Marco's Session Notes · a compact wax notebook in Venetian scholarly Italian with Arabic transliterations; the Aladdin story in summary across twelve pages; three passages circled in the margin where the account visibly changed direction mid-sentence; a final note by the scholar at the end: "the version he would have told without me is not written here; only the version he told while knowing I was writing" · in Ser Marco's satchel, still in Aleppo, in his rented room above the cloth merchants' quarter*
+
+---
+
+### Act I — Before the Scholar Leaves
+
+Ser Marco di Bologna is preparing to depart for Antioch in four days. He told the story in his notes for the reason scholars write: because he was present and wanted to preserve what he had witnessed. He does not yet understand what he witnessed.
+
+The Fighter arrived before departure.
+
+The argument for the archive: Ser Marco wants to publish a travel account including the session. The publication will present the story as Ser Marco received it, which means it will present the adjusted version as the authentic oral tradition. The notes — including the circled adjustments and the final observation — are the document that shows the adjustments occurred. The publication absorbs the adjustments. The archive preserves both: the story told and the observation that the story was being adjusted as it was told.
+
+*Ser Marco looked at the three circled passages.* He had not decided what the observation at the end meant. He was a scholar; he recognized, when it was named, that he had witnessed something more interesting than what he had recorded.
+
+He signed the Scholar's Transfer Authorization and handed over the notebook with the specific reluctance of a man releasing something he had not finished understanding.
+
+You receive the Scholar's Transfer Authorization. You receive Ser Marco's Session Notes.
+
+---
+
+### Act II — The Storyteller's Claim
+
+*Ser Marco's Session Notes · in the Fighter's satchel with the Transfer Authorization · at the Aleppo market transit platform*
+
+Hamid al-Qasim is the storyteller whose session the notes record. He arrived at the transit platform. He did not ask to see the notebook. He said: *The notes belong to the story, and the story belongs to the tradition. Both belong to the community whose tradition it is.*
+
+He is not legally wrong about the tradition. He is factually wrong about the notes: the notes belong to the scholar who made them, who has signed their transfer.
+
+But the Fighter understood what he was saying: the published version will not show the adjustments. The community whose tradition it is will receive a foreign account of their story that presents a performance-adjusted version as authentic. If the archive holds the notes, the community can eventually request access. If a published travel account holds the notes, the community cannot.
+
+*Hamid al-Qasim heard this.*
+
+He wrote a Storyteller's Non-Claim Statement — acknowledging the notes as Ser Marco's property while noting that the tradition's community was named as a party with interest in the archive's access policy. He pressed the guild seal of the Aleppo storytellers beside his signature.
+
+You receive the Storyteller's Non-Claim Statement.
+
+---
+
+### Act III — The Venetian Publisher
+
+*Ser Marco's Session Notes · in the satchel with two documents · in a Venetian factor's office, Antioch*
+
+A Venetian publishing house has a contract with Ser Marco for his travel account. The house's Antioch factor, Ser Lorenzo, has been alerted that the notebook is in transit. He argues that the notes are preparatory materials for a contracted work and are therefore property of the publishing agreement.
+
+The contract is for the travel account. The notes are the scholar's personal records made during the travel. The document the publishing house contracted is not the notebook; it is the finished account. The notebook is the substrate, not the product.
+
+*Ser Lorenzo had the contract on his desk.*
+
+The Fighter asked him to read the clause about scholarly notes made during the travel. He read it. The clause covered "illustrations, sketches, and preparatory materials created expressly for the publication." The notebook was created for the scholar's own record, not for the publication; the publication was a later decision made after the notebook existed.
+
+Ser Lorenzo wrote a Publisher's Non-Claim Statement with the expression of a man who had expected to find a different clause.
+
+You receive the Publisher's Non-Claim Statement.
+
+---
+
+### Act IV — The Revision Request
+
+*Ser Marco's Session Notes · in the satchel with three documents · on the northern road, Antioch outskirts*
+
+A messenger from Ser Marco caught up on the second day north of Antioch. Ser Marco had, on reflection, decided he wanted the circled adjustment passages removed from the notes before they reached the archive. He had written a formal revision request: "the circled passages represent my own editorial errors in transcription and should be excised before permanent preservation."
+
+The circled passages are the document's primary value. They are the record of the adjustment. Ser Marco calling them transcription errors is not incorrect; but transcription errors in a contemporary observational account are primary evidence, not defects to be corrected.
+
+The Fighter noted in writing that the revision request had been received, that the circled passages would be preserved as received, and that a note would be attached to the intake explaining the scholar's view of them as transcription errors. This preserves both the scholar's position and the evidence.
+
+*The messenger had no instructions beyond delivering the request.*
+
+He accepted the notation as a response and rode back. The notebook was not revised.
+
+You receive the Revision Refusal Record (Fighter's notation).
+
+---
+
+### Act V — The Story Knowing It Was Becoming Text
+
+*Ser Marco's Session Notes · in the satchel with all four supporting documents · at the Archivus Sweelinck's intake desk, Weimar*
+
+The Archivus read the twelve pages and then read the three circled passages. He read Ser Marco's final note. He set the notebook down.
+
+He said: *The classification is straightforward. Traveler's notes. Oral tradition record. Secondary source.*
+
+Secondary to what? Secondary to a published account that has not yet been written, which will present the adjusted version as primary. But the notes preceded the publication; they are the record from which the publication will be made; and the specific value they carry — the three adjustments, the final observation — is not available anywhere else and will not be in the published account.
+
+The archive receives documents. It also receives the observation about the documents. Ser Marco's final note is not a scholarly conclusion; it is a piece of evidence — the scholar's own testimony that the version he recorded is not the version the tradition would have produced without a witness.
+
+*The Archivus wrote slowly.*
+
+*Oral Tradition Records — Documents of Contact: accounts made at the moment an oral tradition became aware of its own transcription; the adjustments made by the teller on noticing the recorder are primary data, not transcription errors.* He noted: "Filed with the scholar's revision request attached, in disagreement with the scholar's characterization of the circled passages."
+
+You receive the Contact Moment Classification Record.
+
+---
+
+### Quest API Stub — CAI-06
+
+```
+missionAccept: "A Venetian scholar in Aleppo attended a storytelling session and recorded
+  the Aladdin story in wax notes. Three passages show visible adjustment mid-sentence
+  when the storyteller noticed the pen. The scholar's final note observes: 'the version
+  he would have told without me is not written here.' He is leaving for Antioch in four
+  days. Carry the notes to Weimar before the publication absorbs them."
+
+Act I — Before the Scholar Leaves
+activateNode: ALP
+type: escort
+scene: "Aleppo, scholar's rented room. Ser Marco is preparing to depart. He wants to
+  publish a travel account including the session. The publication will present the adjusted
+  version as authentic oral tradition — the notes, which show the adjustments occurring,
+  are the document the publication cannot contain."
+prompt: "Persuasion DC 13: Argue that the archive preserves both the story told and the
+  observation that the story was being adjusted as it was told; the publication absorbs
+  the adjustments; only the archive preserves both."
+failText: "Ser Marco says: 'The observation is my editorial note.' It is also primary
+  evidence. Come back with the distinction between the scholar's interpretation and the
+  evidence the document contains. (retry)"
+successText: "Ser Marco releases the notebook with the specific reluctance of a man who
+  has not finished understanding what he witnessed. You receive the Scholar's Transfer
+  Authorization. You receive Ser Marco's Session Notes."
+grantItem: "Scholar's Transfer Authorization"
+grantItem: "Ser Marco's Session Notes"
+activateMissionBit: cai06Act1Active
+checkPassFlag: cai06Act1Passed
+
+Act II — The Storyteller's Claim
+activateNode: ALP
+type: skill_check
+scene: "Aleppo market transit platform. Hamid al-Qasim, the storyteller, says: 'The notes
+  belong to the story, and the story belongs to the tradition.' He is not legally wrong.
+  The published account will present the adjusted version as authentic; the community
+  whose tradition it is will have no access to the adjustment record."
+prompt: "Persuasion DC 12: Argue that the archive's access policy preserves the community's
+  interest — if a published account holds the notes, the community has no recourse; if
+  the archive holds them, access is possible."
+failText: "Hamid says: 'A foreign archive is not our community's institution.' He is right
+  about the institutional distance. Come back with the argument about what the archive
+  preserves that no publication can. (retry)"
+successText: "Hamid writes a Non-Claim Statement and presses the storytellers' guild seal.
+  He acknowledges the notes as Ser Marco's property while naming the tradition's community
+  as a party with interest in the archive's access policy. You receive the Storyteller's
+  Non-Claim Statement."
+grantItem: "Storyteller's Non-Claim Statement"
+checkPassFlag: cai06Act2Passed
+
+Act III — The Venetian Publisher
+activateNode: ANT
+type: skill_check
+scene: "Antioch, Venetian factor's office. A publishing house has a contract with Ser Marco.
+  Factor Ser Lorenzo argues the notes are preparatory materials under the contract. The
+  contract covers materials 'created expressly for the publication.' The notebook was
+  created before the publication was decided."
+prompt: "Persuasion DC 12: Have Ser Lorenzo read the relevant clause; argue that the notebook
+  was created for the scholar's personal record; the publication was a later decision made
+  after the notebook existed; the clause does not apply."
+failText: "Ser Lorenzo says: 'The contract is broad.' Have him read the specific clause
+  about what 'preparatory materials' covers. Come back with the timing argument. (retry)"
+successText: "Ser Lorenzo reads the clause and finds the creation-date problem. He writes
+  a Non-Claim Statement with the expression of a man who found the wrong clause. You
+  receive the Publisher's Non-Claim Statement."
+grantItem: "Publisher's Non-Claim Statement"
+checkPassFlag: cai06Act3Passed
+
+Act IV — The Revision Request
+activateNode: WM
+type: skill_check
+scene: "Road north of Antioch, day two. A messenger from Ser Marco carries a formal revision
+  request: remove the circled adjustment passages before preservation, as they represent
+  transcription errors. The circled passages are the document's primary value."
+prompt: "Insight DC 12: Recognize that 'transcription error' and 'primary evidence' are
+  not mutually exclusive; the appropriate response is to preserve as received and attach
+  the scholar's characterization as a note, not to excise the evidence."
+failText: "The messenger has the authority to wait for compliance. The circled passages are
+  removed. The document loses its primary value. Come back with the argument about what
+  the archive preserves regardless of the scholar's retrospective characterization. (retry)"
+successText: "You note that the revision request was received, the passages will be preserved
+  as received, and the scholar's characterization will be attached as an explanatory note.
+  The messenger accepts this as a response. You receive the Revision Refusal Record."
+grantItem: "Revision Refusal Record"
+checkPassFlag: cai06Act4Passed
+
+Act V — The Story Knowing It Was Becoming Text
+activateNode: WM
+type: skill_check
+scene: "Weimar archive intake desk. The Archivus reads the three circled passages and
+  Ser Marco's final note. He says: 'Classification: traveler's notes, oral tradition record,
+  secondary source.' Secondary to a publication that has not yet been written, which will
+  present the adjusted version as the authentic one."
+prompt: "Persuasion DC 13: Argue that the adjustments and the final observation are primary
+  data — evidence of a contact moment between an oral tradition and the act of its own
+  transcription; the archive should file this as a primary record of that moment, not a
+  secondary account of the story."
+failText: "The Archivus says: 'The story is the primary record.' The adjustments made at
+  the moment of becoming text are more primary than the story itself. Come back with the
+  argument about what the circled passages are evidence of. (retry)"
+successText: "The Archivus writes: 'Oral Tradition Records — Documents of Contact: accounts
+  made at the moment an oral tradition became aware of its own transcription; the adjustments
+  made by the teller on noticing the recorder are primary data.' He notes: 'Filed with the
+  scholar's revision request attached, in disagreement with his characterization.'
+  You receive the Contact Moment Classification Record."
+grantItem: "Contact Moment Classification Record"
+takeItem: "Ser Marco's Session Notes"
+checkPassFlag: cai06Act5Passed
+activateMissionBit: cai06StorytellerComplete
+```
+
+---
+
+*CAI-06 complete. 2026-06-02.*
+
+---
+
+## CAI-03 — The Inventor's Patent (Enchanted Horse)
+**Cycle 4**
+
+*(Theme differentiation: Avoiding CAI cycles 1-3. Avoiding ZTH cycle 1's "incomplete knowledge transmitted in the only survivable form," FCO-07's "fulfilled prophecy more dangerous than false." New theme: the archive receives claims, not verifications — the guild filing is technically authentic and the mechanism described is functionally impossible; it is not the archive's role to adjudicate possibility; the category should be Claimed Technology Records — the document is what was asserted, and assertions have their own historical truth.)*
+
+---
+
+*The Baghdad Mechanism Filing · a clay tablet in standard Baghdad craft guild format, Arabic, 9th century; registers a device "of copper and silver in the form of a horse, capable of directed aerial transport requiring two operator inputs: one peg for ascent, one peg for descent"; filed by "Mihailios of Antioch, coppersmith and silversmith of the guild of Baghdad"; a second entry below in a different administrative hand: "device description intact; physical device not submitted at time of filing; status: deposited for safe custody, awaiting device submission" · in a Baghdad craft guild records archive, senior archivist Yusuf ibn Ahmad's custody*
+
+---
+
+### Act I — The Pending Status
+
+Yusuf ibn Ahmad has managed the guild archives for thirty-one years. He is a practical man. The filing has been in pending status for four centuries because the device was never submitted. The filing cannot be closed without the device. The device does not exist in any form he has been able to locate.
+
+He will release the filing to a neutral archive because pending filings that cannot be closed degrade his archive's accuracy metrics. The practical argument and the archival argument are the same argument.
+
+The problem: a Cairene collector (acting through an Antioch intermediary) has made an offer for the filing, arguing it has value as a literary curiosity — the same period as the Enchanted Horse story, same device, filed in the guild that would have processed such a commission. The collector understands its value as an artifact of the story tradition. The archive understands its value as an unresolvable administrative record.
+
+*Yusuf ibn Ahmad did not want to sell the filing.*
+
+He wanted it closed or transferred. The transfer authorization was a relief, not a concession.
+
+You receive the Guild Archive Transfer Authorization. You receive the Baghdad Mechanism Filing.
+
+---
+
+### Act II — The Cairene Collector's Agent
+
+*The Baghdad Mechanism Filing · in the Fighter's satchel with the Transfer Authorization · at the Baghdad market transit office*
+
+The Cairene collector's agent (Ahmad ibn Habib) made a specific, professional offer. He argued: the filing's value as an artifact of the story tradition is diminished by permanent archival deposit in a foreign institution where it becomes inaccessible to the Arabic scholarly tradition that produced it.
+
+He was not wrong about the accessibility question. He was wrong about what the document is. Its value is not primarily as a story artifact; it is as a primary record of what was claimed to exist and when. The archive preserves the claim as historical assertion. The private collection preserves it as a curiosity.
+
+The Fighter refused.
+
+Ahmad ibn Habib wrote a Non-Purchase Statement and noted: "buyer remains interested; access policy of recipient archive requested."
+
+You receive the Agent's Non-Purchase Statement.
+
+---
+
+### Act III — The Natural Philosopher
+
+*The Baghdad Mechanism Filing · in the satchel with two documents · in a Trebizond scholar's study*
+
+Brother Konstantinos of Trebizond (a different Konstantinos from the one in the NWI vignette) is a natural philosopher studying mechanical devices. He has heard about the filing through the guild's public records, which noted the transfer. He wants to examine the device description to determine whether it describes a real mechanism or a fictional one.
+
+The question is interesting. It is also not answerable: a device that was never built and never demonstrated cannot be determined to be technically possible or impossible from a clay tablet description. But Konstantinos's examination would produce a scholarly opinion, and a scholarly opinion circulated before the archive receives the filing would create a classification problem — the opinion would precede the primary source in the scholarly record.
+
+*Konstantinos was genuinely curious, not adversarial.*
+
+The insight: the natural philosopher's examination is the same epistemological act as the archive's receipt — both attempt to understand what the document is. The difference is that the archive acts as a neutral custodian, and the philosopher acts as a partisan reader. The archive preserves the question; the philosopher attempts to resolve it. If his opinion circulates before the archive receives the document, his resolution (whatever it is) precedes the neutral preservation.
+
+Konstantinos understood this. He wrote a Scholarly Deferral Statement — "examination deferred pending archive receipt; my opinion is secondary to the primary record's preservation" — and gave the Fighter a route note to Antioch.
+
+You receive the Scholarly Deferral Statement.
+
+---
+
+### Act IV — The Mechanism Hunter
+
+*The Baghdad Mechanism Filing · in the satchel with three documents · on the Antioch road north*
+
+A Persian alchemist, Musa ibn Ishaq, has been searching for the device for twelve years. He believes the filing proves the device was built and is somewhere in the world. He has followed the filing's provenance from Baghdad. He offers not money but partnership: if the Fighter will share the filing's location data (where the device was "deposited for safe custody"), he will find the device and they can share what they find.
+
+The filing says: "deposited for safe custody." It does not say where. Musa ibn Ishaq has been assuming the filing knows more than it says.
+
+*The Fighter showed him the second entry.*
+
+Musa ibn Ishaq read it twice. *Deposited for safe custody, awaiting device submission.* The device was never submitted. The safe custody reference is to the filing itself, not to the device. The device was never deposited. Musa read this three more times.
+
+He did not offer partnership after that. He sat on the road for a while. Then he stood up and walked back south.
+
+You receive the Mechanism Hunter's Receipt (his signed acknowledgment that the filing has been reviewed and no device location is recorded in it).
+
+---
+
+### Act V — The Archive Receives Claims
+
+*The Baghdad Mechanism Filing · still sealed in the satchel, all four documents present · at the Archivus Sweelinck's intake desk, Weimar*
+
+The Archivus read the filing and the second entry. He looked at the pending status notation.
+
+He said: *A device that was never submitted cannot be filed as existing. The filing is incomplete. I cannot classify an incomplete filing as primary.*
+
+The argument: the filing is not incomplete — it is complete as an assertion. The guild filed a claim. The claim is the historical record. Whether the device existed is a question the filing does not answer and was never required to answer. Guild filings record claims. The archive receives claims as historical assertions, not as verified facts. The pending status is itself evidence — it proves the device was asserted and never demonstrated, which is the primary historical finding.
+
+*The Archivus considered this.*
+
+The archive that only receives verified facts receives a very small portion of history. Most of history is claims, assertions, and pending statuses. The filing is an authentic document in the category of authentic claims that were never resolved.
+
+He wrote: *Claimed Technology Records — Guild Filings: authentic administrative records describing devices or mechanisms whose described function was asserted but not demonstrated; the pending status is primary evidence, not a defect.* He noted: "Filed as what it is: a claim in the historical record of what was claimed to exist."
+
+You receive the Claimed Technology Classification Record.
+
+---
+
+### Quest API Stub — CAI-03
+
+```
+missionAccept: "A Baghdad craft guild archive holds a 9th-century pending filing for a
+  copper-and-silver horse capable of directed aerial transport. The device was never
+  submitted. The filing has been in pending status for four centuries. A Cairene collector
+  wants it as a story artifact. The guild archivist wants it transferred so the pending
+  status can be closed. Carry it to Weimar."
+
+Act I — The Pending Status
+activateNode: BAG
+type: escort
+scene: "Baghdad guild archive. Yusuf ibn Ahmad has managed it thirty-one years. The filing
+  cannot be closed without the device; the device does not exist in any locatable form.
+  A Cairene collector's agent has made an offer. Yusuf wants the filing transferred, not
+  sold — transfer authorizes closure of the pending status; sale does not."
+prompt: "Persuasion DC 12: Confirm that neutral archive receipt closes the pending status
+  properly, while a private sale leaves the administrative status unresolved."
+failText: "Yusuf says: 'The sale also removes it from my metrics.' He is looking for the
+  administrative argument, not the philosophical one. Come back with the pending-status
+  closure distinction. (retry)"
+successText: "Transfer is a relief, not a concession. Yusuf signs the Guild Archive Transfer
+  Authorization. You receive the Guild Archive Transfer Authorization. You receive the
+  Baghdad Mechanism Filing."
+grantItem: "Guild Archive Transfer Authorization"
+grantItem: "Baghdad Mechanism Filing"
+activateMissionBit: cai03Act1Active
+checkPassFlag: cai03Act1Passed
+
+Act II — The Cairene Collector's Agent
+activateNode: BAG
+type: skill_check
+scene: "Baghdad market transit office. Ahmad ibn Habib argues the filing's value as a story
+  artifact is diminished by foreign archival deposit — it becomes inaccessible to the
+  Arabic scholarly tradition that produced it."
+prompt: "Persuasion DC 12: Argue that the document is primarily a primary record of an
+  asserted claim, not primarily a story artifact; the archive preserves the claim as
+  historical assertion, not the curiosity value."
+failText: "Ahmad says: 'The story tradition values it more than any foreign archive can.'
+  The archive values it differently, not less. Come back with what the archive preserves
+  that private collection cannot. (retry)"
+successText: "Ahmad writes a Non-Purchase Statement and notes: 'buyer remains interested;
+  access policy of recipient archive requested.' You receive the Agent's Non-Purchase
+  Statement."
+grantItem: "Agent's Non-Purchase Statement"
+checkPassFlag: cai03Act2Passed
+
+Act III — The Natural Philosopher
+activateNode: TRB
+type: hybrid
+scene: "Trebizond scholar's study. Brother Konstantinos wants to examine the device
+  description to determine if it describes a real mechanism. His opinion would precede
+  the primary source in the scholarly record if it circulates before archive receipt."
+prompt: "Insight DC 12: Recognize that the philosopher's examination and the archive's
+  receipt are the same epistemological act, but the archive acts as neutral custodian
+  while the philosopher acts as partisan reader; if his opinion precedes the document,
+  his resolution precedes neutral preservation."
+failText: "Konstantinos says: 'I will publish regardless.' He can — but the Fighter can
+  ensure the archive receives the document before his publication circulates. The timing
+  is the argument. Come back with the sequence argument. (retry — combat with an assistant
+  who copies the filing if insight fails)"
+successText: "Konstantinos understands the precedence argument. He writes a Scholarly
+  Deferral Statement and gives a route note to Antioch. You receive the Scholarly
+  Deferral Statement."
+grantItem: "Scholarly Deferral Statement"
+checkPassFlag: cai03Act3Passed
+
+Act IV — The Mechanism Hunter
+activateNode: ANT
+type: skill_check
+scene: "Antioch road. Musa ibn Ishaq has followed the filing's provenance from Baghdad.
+  He believes the second entry — 'deposited for safe custody' — records the device's
+  actual location. He offers partnership to find it."
+prompt: "Insight DC 12: Recognize that 'deposited for safe custody' refers to the filing
+  itself, not to any device; the device was never submitted; show him the second entry's
+  exact language."
+failText: "Musa says: 'The filing must record a real location.' Show him the second entry
+  before agreeing to any partnership. (retry)"
+successText: "Musa reads the second entry three times. The device was never submitted.
+  He sits on the road for a while, then walks back south. You receive the Mechanism
+  Hunter's Receipt."
+grantItem: "Mechanism Hunter's Receipt"
+checkPassFlag: cai03Act4Passed
+
+Act V — The Archive Receives Claims
+activateNode: WM
+type: skill_check
+scene: "Weimar archive intake desk. The Archivus reads the filing and says: 'A device
+  that was never submitted cannot be filed as existing. The filing is incomplete. I
+  cannot classify an incomplete filing as primary.'"
+prompt: "Persuasion DC 13: Argue that the filing is complete as an assertion — the guild
+  filed a claim; the claim is the historical record; the pending status is itself evidence;
+  the archive that only receives verified facts receives a very small portion of history."
+failText: "The Archivus says: 'The standard is verified existence.' The standard for
+  historical records is not verified existence but authentic assertion. Come back with
+  the argument about what the pending status proves. (retry)"
+successText: "The Archivus writes: 'Claimed Technology Records — Guild Filings: authentic
+  records describing devices whose function was asserted but not demonstrated; the pending
+  status is primary evidence, not a defect.' He notes: 'Filed as what it is: a claim
+  in the historical record of what was claimed to exist.' You receive the Claimed
+  Technology Classification Record."
+grantItem: "Claimed Technology Classification Record"
+takeItem: "Baghdad Mechanism Filing"
+checkPassFlag: cai03Act5Passed
+activateMissionBit: cai03MechanismComplete
+```
+
+---
+
+*CAI-03 complete. 2026-06-02.*
+
+---
+
+## CAI-07 — The Peri Banu Survey (Prince Ahmed cycle)
+**Cycle 5**
+
+*(Theme differentiation: Avoiding CAI cycles 1-4. Avoiding NWI-06's "front-rank view of communal salvation," ZTH cycle 1's "incomplete knowledge transmitted as the only survivable form." New theme: the neutral witness of the unusual — the surveyor used the language of professional neutrality to describe a feature he could not explain; the document is not claiming anything supernatural, only recording the observable; the archive receives it under Geographic Surveys — Features of Uncertain Nature: records created by surveyors who documented without explaining.)*
+
+---
+
+*The Aleppo Hills Route Survey · a parchment sheet in standard geographic survey format, Arabic; describes a route in the hills north of Aleppo with distances and landmarks; at the end: "feature of interest: cleft in limestone, approachable from NW, air quality noteworthy: cooler than ambient by approximately 15 degrees, sound of water below, depth unverified"; signed by the surveyor Ibrahim al-Farsi; with a note by a different, later hand at the bottom: "see: the tale of Prince Ahmed and the fairy Peri Banu" · in a private collector's library, Constantinople, acquired from a Syrian estate*
+
+---
+
+### Act I — The Collector's Library
+
+Georgios Palaiologos, a Byzantine collector in Constantinople, acquired the survey as part of a Syrian estate library. He acquired it as a curiosity, not as a valued piece; the survey is among a hundred documents in a portfolio labeled "geographic miscellany." He is willing to transfer it to a neutral archive; he is also willing to sell it to a private scholar.
+
+A Greek natural philosopher (Demetrios of Thessaloniki) has expressed interest in the survey as evidence for the geographic location of the fairy episode. His interest is scholarly, but his use of the document would establish it as evidence in a debate about supernatural geography before the archive could receive it as a neutral primary source.
+
+The argument for the archive: the document is a survey; surveys are geographic records; the archive receives geographic records without adjudicating what the features they describe mean. The philosopher receives it as evidence in a theological-natural philosophy debate about fairy geography. These are different kinds of receipt.
+
+*Georgios Palaiologos preferred the uncomplicated transfer.*
+
+He signed the Collection Transfer Authorization and noted that the document's theological implications were, in his view, someone else's problem.
+
+You receive the Collection Transfer Authorization. You receive the Aleppo Hills Route Survey.
+
+---
+
+### Act II — Demetrios of Thessaloniki
+
+*The Aleppo Hills Route Survey · in the Fighter's satchel with the Transfer Authorization · in the philosopher's reading room, Constantinople*
+
+Demetrios had already written a preliminary note about the survey's geographic significance. He understood the transfer was proceeding and asked only for a copy — not to delay the archive receipt, but to be able to cite the document in his work before the archive's intake schedule made the original inaccessible.
+
+The copy he wanted would be the first reproduction of the survey in scholarly circulation, and it would appear in a context that named it as evidence for fairy geography. The archive's receipt would then be a secondary event in the document's life — the document would already be known as "the Demetrios evidence" before it became an archive primary source.
+
+*Demetrios was being scholarly and was not aware of the problem.*
+
+The Fighter explained the precedence issue: the archive intake should precede the first scholarly use so the document enters the scholarly record as a primary source, not as the "Demetrios evidence." Demetrios accepted this with genuine understanding and wrote a Scholarly Embargo Statement — agreeing to delay his citation until after the archive received and classified the document.
+
+You receive the Scholar's Citation Embargo.
+
+---
+
+### Act III — The Road to Weimar
+
+*The Aleppo Hills Route Survey · in the satchel with two documents · on the mountain road north of the Bosphorus*
+
+A Syrian manuscript dealer (Rana bint Khalil) was waiting at a mountain waystation. She had been working for the same Cairene collector who appeared in the CAI-03 vignette — or a different one with similar interests; they are not rare. She offered to purchase the survey, explaining that her client believed the survey was the geographic record underlying the Prince Ahmed story and wanted it for a collection of narrative geographic documents.
+
+Her client was right about what the survey was. He was wrong about what the archive should do with it.
+
+The Fighter said: the survey is a geographic record. Its relationship to the story tradition is a scholarly question. The archive receives the geographic record. The story tradition question remains available to any scholar who requests access.
+
+*Rana bint Khalil accepted the refusal without further argument.*
+
+She wrote a Non-Purchase Statement and noted that the Cairene collector would likely apply for archive access once the document was received.
+
+You receive the Dealer's Non-Purchase Statement.
+
+---
+
+### Act IV — The Theological Problem
+
+*The Aleppo Hills Route Survey · in the satchel with three documents · at a Dominican waystation, Lombard road*
+
+Fra Gianluca of Parma was waiting with a Dominican concern: a geographic survey documenting a feature associated with fairy habitation, if received by a major European archive, could be cited as evidence for the real existence of fairies. The Dominican Order had a theological position on fairies. A primary source in an archive was a different class of evidence than a hearsay story tradition.
+
+The argument: the survey does not document fairy habitation. It documents a cleft in limestone with unusual air temperature and the sound of water below. The "feature of interest" note describes the observable. The later hand's note adds the story association; but the story association is in the later note, not in the survey. The archive receives the survey, which is the geographic record. The story association is the later hand's addition, which is a different kind of document.
+
+*Fra Gianluca read the survey carefully.*
+
+He saw that the survey itself used the language of professional neutrality — "air quality noteworthy," "depth unverified" — and that the story association was a later addition. He wrote a Theological Non-Objection Statement noting that the survey described observable geographic features and did not assert supernatural habitation.
+
+You receive the Theological Non-Objection Statement.
+
+---
+
+### Act V — Geographic Surveys — Features of Uncertain Nature
+
+*The Aleppo Hills Route Survey · still sealed in the satchel, all four documents present · at the Archivus Sweelinck's intake desk, Weimar*
+
+The Archivus read the survey. He read the feature-of-interest note. He read the later hand's story association. He looked at the Fighter.
+
+*The survey is accurate. The note is accurate. The story association is someone else's addition. What is the classification problem?*
+
+The classification problem: the archive has a category for geographic surveys, but the later hand's note attached a supernatural interpretation to an otherwise professional document. To receive the survey in the geographic survey category would require either ignoring the later note or treating it as a separate document attached to the primary source.
+
+The argument: the survey is the primary source. The later hand's note is secondary annotation, not part of the survey. The archive should receive the survey as a geographic record and note the later annotation as an addendum — preserving both the neutral primary record and the story association that arrived with it.
+
+*The Archivus wrote the category heading.*
+
+*Geographic Surveys — Features of Uncertain Nature: surveys created by professional surveyors who documented observable features that resist standard classification; the surveyors' language of neutrality is itself the primary data.* He noted: "Later annotation attached but classified separately; the survey precedes the annotation."
+
+You receive the Geographic Feature Classification Record.
+
+---
+
+### Quest API Stub — CAI-07
+
+```
+missionAccept: "A Byzantine collector in Constantinople holds a 9th-century geographic
+  survey of hills north of Aleppo, featuring a cleft in limestone with unusual air
+  temperature and the sound of water below. A later hand added: 'see: the tale of Prince
+  Ahmed and the fairy Peri Banu.' A Greek philosopher wants it as evidence for fairy
+  geography. Carry it to Weimar before the story association obscures the survey."
+
+Act I — The Collector's Library
+activateNode: CON
+type: escort
+scene: "Constantinople, collector's library. Georgios Palaiologos acquired the survey
+  as part of a Syrian estate library. A Greek natural philosopher wants it for evidence
+  in a debate about supernatural geography, which would define the document before the
+  archive receives it as neutral primary source."
+prompt: "Persuasion DC 12: Argue that the archive receives geographic records without
+  adjudicating what their features mean; the philosopher receives it as evidence in a
+  debate; these are different kinds of receipt."
+failText: "Georgios says: 'Demetrios's use seems scholarly.' It is scholarly and defining
+  simultaneously. Come back with the distinction between the archive's neutral receipt
+  and the philosopher's evidential use. (retry)"
+successText: "Georgios prefers the uncomplicated transfer. He signs the Transfer Authorization
+  and notes: 'its theological implications are someone else's problem.' You receive the
+  Collection Transfer Authorization. You receive the Aleppo Hills Route Survey."
+grantItem: "Collection Transfer Authorization"
+grantItem: "Aleppo Hills Route Survey"
+activateMissionBit: cai07Act1Active
+checkPassFlag: cai07Act1Passed
+
+Act II — Demetrios of Thessaloniki
+activateNode: CON
+type: skill_check
+scene: "Constantinople, philosopher's reading room. Demetrios asks only for a copy to
+  cite in his work before the archive intake schedule makes the original inaccessible.
+  His copy would make the document known as 'the Demetrios evidence' before it becomes
+  an archive primary source."
+prompt: "Persuasion DC 12: Explain the precedence issue — the archive intake should
+  precede the first scholarly use so the document enters the scholarly record as a
+  primary source, not as one scholar's cited exhibit."
+failText: "Demetrios says: 'A copy does not impede the primary.' A copy cited in a
+  published work defines the document in that context before archive receipt. Come
+  back with the order-of-entry argument. (retry)"
+successText: "Demetrios accepts the precedence argument and writes a Scholarly Citation
+  Embargo, agreeing to delay his citation until after archive classification. You receive
+  the Scholar's Citation Embargo."
+grantItem: "Scholar's Citation Embargo"
+checkPassFlag: cai07Act2Passed
+
+Act III — The Road North
+activateNode: WM
+type: skill_check
+scene: "Mountain waystation, north of Bosphorus. Rana bint Khalil represents a Cairene
+  collector who wants the survey as a narrative geographic document. He is right about
+  what the survey is. The archive receives the geographic record and leaves the story
+  tradition question open to scholarly access."
+prompt: "Persuasion DC 12: Refuse the offer and explain that the archive's receipt
+  preserves the collector's access option — the story tradition question remains
+  available to any scholar who requests the document."
+failText: "Rana says: 'The collector cannot access a German archive.' He can apply for
+  access. Come back with the access policy argument. (retry)"
+successText: "Rana accepts the refusal and writes a Non-Purchase Statement, noting the
+  collector will apply for archive access once the document is received. You receive
+  the Dealer's Non-Purchase Statement."
+grantItem: "Dealer's Non-Purchase Statement"
+checkPassFlag: cai07Act3Passed
+
+Act IV — The Theological Problem
+activateNode: WM
+type: skill_check
+scene: "Dominican waystation, Lombard road. Fra Gianluca worries that a geographic
+  survey documenting a feature associated with fairy habitation, received by a major
+  European archive, becomes a class of evidence for fairy existence. The survey does
+  not document fairy habitation — it documents a limestone cleft with unusual air
+  temperature. The story association is in the later hand, not the survey."
+prompt: "Insight DC 12: Direct Fra Gianluca to read the survey's own language — 'air
+  quality noteworthy,' 'depth unverified' — and identify where the story association
+  appears versus where the survey ends."
+failText: "Fra Gianluca says: 'The annotation is part of the document.' It is attached
+  to the document. It is not the document. Come back with the primary/annotation
+  distinction. (retry)"
+successText: "Fra Gianluca reads the survey's neutral language and sees the later hand's
+  addition clearly. He writes a Theological Non-Objection Statement noting the survey
+  describes observable geographic features and does not assert supernatural habitation.
+  You receive the Theological Non-Objection Statement."
+grantItem: "Theological Non-Objection Statement"
+checkPassFlag: cai07Act4Passed
+
+Act V — Geographic Surveys — Features of Uncertain Nature
+activateNode: WM
+type: skill_check
+scene: "Weimar archive intake desk. The Archivus reads the survey, the feature-of-interest
+  note, and the later hand's story association. He asks: 'What is the classification
+  problem?' The survey is in the geographic category. The later note brings a supernatural
+  association the geographic category doesn't accommodate."
+prompt: "Persuasion DC 13: Argue that the survey is primary and the later note is secondary
+  annotation; the archive receives the survey as a geographic record and notes the
+  annotation separately; the neutral language of the survey is itself the primary data."
+failText: "The Archivus says: 'The annotation is integral.' It arrived with the document.
+  It is not the document. Come back with the argument about what the survey contains
+  versus what was added to it after the fact. (retry)"
+successText: "The Archivus writes: 'Geographic Surveys — Features of Uncertain Nature:
+  surveys created by surveyors documenting observable features that resist standard
+  classification; the surveyors' language of neutrality is itself the primary data.'
+  He notes: 'Later annotation classified separately; the survey precedes the annotation.'
+  You receive the Geographic Feature Classification Record."
+grantItem: "Geographic Feature Classification Record"
+takeItem: "Aleppo Hills Route Survey"
+checkPassFlag: cai07Act5Passed
+activateMissionBit: cai07SurveyComplete
+```
+
+---
+
+*CAI-07 complete. 2026-06-02.*

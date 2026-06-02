@@ -168,7 +168,7 @@ The following quest seeds were generated from full narrative recall. Each has a 
 ### §CAI-02 — Aladdin's Registration (Aladdin cycle)
 A Syrian legal records collection contains a marriage contract template from the same period and region as the Aladdin story that uses identical formulary — suggesting the story was constructed around a real document type. Fighter escorts the template collection from a Damascus archive.
 
-### §CAI-03 — The Inventor's Patent (Enchanted Horse)
+### §CAI-03 — The Inventor's Patent (Enchanted Horse) ✓ DONE 2026-06-02
 A Baghdad archive of craft guild records from the 9th century contains a filing for a Persian mechanism of copper and silver capable of directed aerial travel, requiring two operator inputs. Fighter escorts it from Baghdad to a neutral archive.
 
 ### §CAI-04 — Prince Ahmed's Arrow (Prince Ahmed cycle)
@@ -177,10 +177,10 @@ A Syrian folk tale collection contains an account by a parish priest of a man wh
 ### §CAI-05 — The Deathbed Instruction (Noureddin cycle)
 Noureddin's father's instruction — never sell the slave girl — matches a specific legal instrument type: the conditional manumission prohibition. A Damascus archive has a collection of such instruments from the same period. Fighter escorts the collection.
 
-### §CAI-06 — The Syrian Storyteller's Notes (Frame narrative tradition)
+### §CAI-06 — The Syrian Storyteller's Notes (Frame narrative tradition) ✓ DONE 2026-06-02
 A Syrian Christian storyteller in 14th-century Aleppo tells a foreign Venetian scholar the Aladdin story; the scholar's notes from the session describe what the storyteller said before and after the story, what he changed when he realized the scholar was writing it down, and what he said when he heard it read back. Fighter escorts the notes.
 
-### §CAI-07 — The Peri Banu Survey (Prince Ahmed cycle)
+### §CAI-07 — The Peri Banu Survey (Prince Ahmed cycle) ✓ DONE 2026-06-02
 The old woman spy in the Prince Ahmed story made a systematic survey of the route to the fairy's underground palace. A Syrian manuscript contains a formal survey of a route in the hills north of Aleppo, written in the style of a geographic report, with notation of a cave entrance. Fighter escorts it before the route is used for the wrong purpose.
 
 ---

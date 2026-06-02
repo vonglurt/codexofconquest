@@ -471,6 +471,9 @@ Game cities are canonical. Source-book settings are proposed new nodes.
 | BGW-04 | Morgiana's Grant | 3 | CAI → ALE → VEN → WM | The unanswerable question is the document's primary condition; archive creates category for structural undecidability |
 | BGW-06 | The Translator's Preface | 4 | TBZ → CON → VEN → WM | The only part of the collection that does not pretend; translator's testimony filed as primary |
 | BGW-07 | The Dunyazade Account | 5 | TUN → GEN → WM | The voice present for every story but absent from every story; first instance filed as recovered voice |
+| CAI-06 | Ser Marco's Session Notes | 3 | ALP → ANT → WM | The oral tradition at the moment it becomes aware it is being written down; the session notes record the storyteller changing the story |
+| CAI-03 | The Baghdad Mechanism Filing | 4 | BAG → TRB → ANT → WM | The archive receives claims, not verifications; guild patent for directed aerial transport filed under claimed technology |
+| CAI-07 | The Aleppo Hills Survey | 5 | CON → WM | The neutral language of a geographic survey is itself the primary data; the surveyor describes what he saw without naming what it was |
 
 *When a new quest is written, append its row to the Processed Quests table.*
 *When a new location is used, append its row to the Location Grid.*
