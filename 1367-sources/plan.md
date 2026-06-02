@@ -341,6 +341,43 @@ Do not wait until all parts are done before showing results. Each part's output 
 
 ---
 
+### Pass 4 — Source Text Summaries
+
+This pass adds a **Summary** section to each book's `.md` file, one source text file at a time. It is separate from the literary analysis passes (1–3) and the quest-seed passes. It reads the raw source `.txt` files and produces narrative content summaries for each.
+
+**Trigger:** When the user asks for Pass 4, or after a full book's vignette seeds are complete and the user requests content enrichment.
+
+**How to begin a Pass 4 session:**
+1. Run `ls 1367-sources/*.txt` to list all available part files.
+2. Group by book code (e.g., all `ADA-*.txt` files, all `ATH-*.txt` files, etc.).
+3. Begin with the first unprocessed part file for the chosen book.
+
+**Per part file (CODE-title.partKofN.txt):**
+1. Read the part file (`CODE-title.partKofN.txt`).
+2. Append to `CODE-title.md` a new section:
+   ```
+   ## Source Summary — Part K of N
+   *[Range note: what narrative span this part covers]*
+
+   [Narrative summary: 3–6 paragraphs describing what happens in this part — characters, events, key passages, thematic content. Written as readable prose, not bullet points. Oriented toward quest potential and game use, not academic analysis.]
+   ```
+3. Show one-line status: `[CODE] Part K/N summary written — [range note]`.
+4. Ask user to continue for next part, or proceed autonomously if in full-loop mode.
+
+**For single-file books (no split, fully processed):**
+- If the book's `.md` already has a Three-Pass Summary, the Pass 4 summary offers a **different retelling** — a second reading angle not covered in the original summary.
+- Section header: `## Source Summary — Alternative Reading`
+- Content: 3–4 paragraphs offering a different perspective on the source (e.g., reading through the lens of the secondary characters, or through the book's geography, or through its silences).
+
+**Priority order for Pass 4:**
+- Start with part files not yet summarized for books whose vignette pipeline is most active.
+- Do one part per commit, not multiple parts per commit.
+- The pass is cumulative — stop when interrupted, resume from where left off.
+
+**Note on scope:** Pass 4 summaries are content records, not quest designs. They inform future vignette work and provide a more complete archive of what each source book contains beyond the quest seeds already extracted.
+
+---
+
 ## Admin Notes
 
 - All FCO quest seeds (02–14) are in FCO-aeneid.md with paragraph-length descriptions.
