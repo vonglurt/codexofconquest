@@ -61,8 +61,8 @@ The following quest seeds were generated from the full 7-book read. Each has a p
 ### §NWI-02 — The Rearguard's Log (Books 3–5)
 The army kept daily records of distance, terrain, engagements, and supplies during the march north. A relay of scribes maintained the running account separate from the literary text Xenophon later wrote. A partial copy of the original day-log for the mountain crossing through Kurdistan survives in a Pontic monastery near Trabzon. Fighter escorts it to Weimar before a planned demolition disturbs the library.
 
-### §NWI-03 — Proxenus's Letter (Book 2)
-Proxenus wrote the letter that brought Xenophon to Persia — described in the text but never quoted. A Boeotian monastery near Orchomenos (Proxenus's home city) holds an archive of letters from a noble family of that city. One letter, filed under private correspondence from the 390s BC, may be a later copy of that invitation. Fighter escorts it from Orchomenos to Weimar.
+### §NWI-03 — Proxenus's Letter (Book 2) ✓ DONE 2026-06-02
+Route: ORC → ATH → RGS → WM. Theme: the invitation as a form of authorship — Proxenus recruited the man who would write the Anabasis; the letter contains his private assessment of Xenophon; new archive category: epistolary authorship, founding correspondence.
 
 ### §NWI-04 — The Oath at Calpe (Book 2)
 Tissaphernes swore sacred oaths by the gods of Greece and Persia that the generals were safe at his tent. The diplomatic formula for such oaths was standardized in Persian-Greek correspondence. A clay tablet in a Venetian collection, acquired from a 9th-century Arab library, contains what appears to be the Persian-language formula for this class of safe-conduct oath — the same type Tissaphernes would have used. Fighter escorts the tablet.

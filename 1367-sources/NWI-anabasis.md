@@ -889,3 +889,216 @@ activateMissionBit: nwi06Complete
 ---
 
 *NWI-06 complete. 2026-06-02.*
+
+---
+
+## Cycle 4 — Angle: *Proxenus's Letter — The Invitation That Made the Text Possible*
+
+**What this angle reveals that prior cycles missed:** Cycle 1 showed collective self-governance. Cycle 2 showed the broken compact. Cycle 3 showed the front-rank physical experience. Cycle 4 enters the origin: the letter that recruited Xenophon. Proxenus died before the march was half over — he was one of the generals Tissaphernes executed under the false flag of peace. His letter to Xenophon is the only surviving document from his hand, and it is not a military document; it is a private recommendation. **New theme:** *The letter of invitation is the first act of the text it makes possible; Proxenus recruited the man who would write the Anabasis without knowing he was doing so; the invitation is a form of authorship that predates and enables the account it produced.*
+
+---
+
+### Five-Act Vignette Play
+
+*TOKEN: Proxenus's Letter — a copy of the original, made in the late 4th century BC, filed among private correspondence of a Boeotian noble family of Orchomenos. Brief: Proxenus describes Cyrus the Younger and the expedition's value; names Xenophon specifically; closes with his private assessment of Xenophon's character — specific praise, in the register of a mentor describing a student he believes in. The only surviving document from Proxenus's hand. Carried folded in a cloth binding.*
+
+---
+
+**ACT I — The Catalogue**
+
+*The Letter, folded in cloth, in the archive chest of the Orchomenos monastery library · the monastery cataloguer, Brother Stavros, who found it six months ago · inland Boeotia, the hills above Lake Kopais, autumn light*
+
+A Byzantine classical scholar named Georgios Plethon's-student — he studied at the Mystras academy — visited the monastery three months ago, recognized the letter immediately, and published a letter to his colleagues announcing the find. He has filed a priority claim with the Florentine Duke of Athens's library registry. The Duke's library claims first right of acquisition over any classical manuscript found in Boeotia under Florentine jurisdiction.
+
+The claim has not yet been formally registered in Athens. It was filed in the Duke's secretary's correspondence. That correspondence was delayed on the road.
+
+Brother Stavros has kept the letter in the chest. He is waiting to see who arrives first with the better authority.
+
+*The fighter understands: the Florentine claim exists but has not yet been formally registered. The Weimar commission arrived this morning. Timing is the argument.*
+
+---
+
+**ACT II — The Duke's Registry**
+
+*The Letter, in the fighter's satchel · the Florentine Duke of Athens's library registry office, Athens · three days later, a Florentine clerk with a specific investment in Boeotian acquisitions*
+
+The clerk's name is Matteo. He is diligent, polite, and has just received the scholar's priority claim via the delayed courier. He registers it at the moment the fighter presents the Weimar commission. They are now simultaneous. Matteo is looking at both documents. He is also looking at the acquisition law.
+
+The law requires formal registration before the commission can be superseded. Matteo registered the claim seven minutes ago. The Weimar commission arrived eight minutes ago but was not registered because the fighter went to the wrong building first.
+
+*The fighter must find the specific legal distinction that makes the Weimar archive's custodial commission supersede a Florentine library acquisition claim — and must find it in the next ten minutes, before Matteo enters the claim formally in the permanent ledger.*
+
+---
+
+**ACT III — What Proxenus Said**
+
+*The Letter, carried west through the Isthmus · on a Venetian trading vessel in the Adriatic, four days out of Piraeus · a philosopher named Fra Bartolomeo who is traveling to Venice*
+
+Fra Bartolomeo teaches Plato at Padua. He has heard about the letter from another passenger — the academic world is small and Georgios Plethon's-student's announcement circulated widely. He does not ask to see the letter. He asks one question: "What did Proxenus say about Xenophon? Not about the march — about Xenophon. What did he say that made him go?"
+
+The letter contains that passage. The private assessment: what Proxenus wrote about the young Athenian's character, the specific words a mentor uses when he believes a student is ready for something large and difficult.
+
+The fighter has read the letter. The fighter knows what Proxenus said.
+
+*There is a particular tenderness in being asked what a dead man said about the man he believed in. Proxenus was executed before the march ended. He never knew whether his assessment was right.*
+
+---
+
+**ACT IV — The Merchant's Favor**
+
+*The Letter, in the satchel · the Ragusa waterfront · afternoon, a Genoese merchant named Benedetto who owes a collector a favor*
+
+Benedetto is not a thief. He is a man who made a promise he now regrets to a Genoese collector who collects Greek manuscripts and specifically mentioned the Proxenus letter by name six months ago — before it was found — as something he would pay well for. Benedetto has been watching the ship lanes since then. When he saw the fighter disembark with the satchel shape he recognized from a description, he made his decision.
+
+He tries conversation first. He tries an offer second. He tries a request for "just a few days, the collector is in Genoa, I can have an answer by next week." When none of these work, his patience ends.
+
+*The fighter is three hundred miles from Weimar with the invitation that made the Anabasis possible in a closed satchel. Benedetto's patience ended cleanly and without malice. This is simply what happens on the Ragusa waterfront.*
+
+---
+
+**ACT V — Epistolary Authorship**
+
+*The Letter, delivered · on the Weimar archive intake desk · morning*
+
+The archivist reads the letter twice. He reads the section about Xenophon specifically — Proxenus's private assessment — without expression. Then he opens the register.
+
+"I can file this as private correspondence, Boeotian noble family, 4th century BC." He sets the pen down. "But that is what it was filed as for seventeen hundred years, and it is why no one found it until six months ago." He looks at the fighter. "What it is — what it functionally is — is the first document in the production of the Anabasis. The text exists because this letter was sent. If Proxenus had not written this letter, there is no Xenophon in Persia and no account of the march."
+
+He is waiting for the category.
+
+*The fighter knows the category: the invitation is a form of authorship. Proxenus did not write the Anabasis. But without his letter, no one did.*
+
+---
+
+### Quest API Stub — NWI-03
+
+```
+missionAccept: "A monastery near Orchomenos in Boeotia holds a copy of the letter Proxenus
+  wrote to recruit Xenophon for the Persian expedition — the only document from Proxenus's
+  hand. A Byzantine scholar has announced the find and filed a priority claim with the
+  Florentine Duke of Athens. Carry the letter to Weimar before the claim is formally
+  registered."
+
+Act I — The Catalogue
+activateNode: ORC
+type: skill_check
+scene: "The Orchomenos monastery library, autumn morning. Brother Stavros sits beside an
+  archive chest with a cloth-folded letter inside. A Byzantine scholar announced the find
+  three months ago and filed a priority claim with the Duke of Athens's library. The claim
+  was sent by road and has been delayed. Your Weimar commission arrived this morning. Stavros
+  is waiting to see which authority arrives with the better claim."
+prompt: "Persuasion DC 13: Demonstrate that a Weimar archive commission supersedes a
+  Florentine library acquisition claim that has not yet been formally registered. Timing
+  is the argument — make it specifically."
+failText: "Stavros closes the chest. 'The Duke's registry has jurisdiction over Boeotian
+  manuscripts. I must wait for their formal confirmation.' The claim is being carried toward
+  Athens right now. Come back with the argument about formal registration — an unregistered
+  claim is not yet a claim. (retry)"
+successText: "Stavros nods. 'An unregistered claim has not yet established jurisdiction.'
+  He opens the chest. 'I will note in my catalogue that the letter was released under Weimar
+  commission prior to formal registry.' He signs the release. You receive the Monastery
+  Release Certificate."
+grantItem: "Monastery Release Certificate"
+activateMissionBit: nwi03Act1Active
+checkPassFlag: nwi03Act1Passed
+
+Act II — The Duke's Registry
+activateNode: ATH
+type: skill_check
+scene: "The Florentine Duke of Athens's library registry office. Clerk Matteo received the
+  scholar's priority claim seven minutes ago by delayed courier. Your Weimar commission
+  arrived eight minutes ago but was not registered because you went to the wrong building
+  first. Both documents are now on Matteo's desk simultaneously. He is looking at the
+  acquisition law. He has his pen out."
+prompt: "Persuasion DC 14: Find the legal distinction that makes a custodial archive
+  commission supersede a library acquisition claim — before Matteo enters the claim in the
+  permanent ledger. The argument is about custody versus acquisition: the archive preserves,
+  the library possesses."
+failText: "Matteo's pen moves toward the ledger. 'Simultaneous filings resolve in favor of
+  the local jurisdiction.' He is about to write. One sentence. Give it to him before the
+  pen touches the page. (retry)"
+successText: "Matteo stops. He reads the acquisition law again. 'A custodial commission
+  cannot be superseded by an acquisition claim because custody and acquisition are different
+  legal categories.' He sets the pen down. 'I will note the distinction in the registry.'
+  You receive Matteo's Registry Withdrawal."
+grantItem: "Matteo's Registry Withdrawal"
+checkPassFlag: nwi03Act2Passed
+
+Act III — What Proxenus Said
+activateNode: RGS
+type: skill_check
+scene: "An Adriatic trading vessel, four days out of Piraeus. Fra Bartolomeo, a Padua
+  philosopher, asks you one question: 'What did Proxenus say about Xenophon? Not about
+  the march — about Xenophon. What did he say that made him go?' He is not asking to see
+  the letter. He knows you have read it. He wants to know what a dead man said about the
+  man he believed in."
+prompt: "Insight DC 12: Read the passage aloud — the mentor's assessment of the student,
+  the specific praise. Receive the weight of it: Proxenus was executed before the march
+  ended. He never knew whether his judgment was right."
+failText: "You read it too quickly, as fact. Fra Bartolomeo listens and nods. He got the
+  information but not the thing beneath it. Read it again as what it is — a dead man's
+  last judgment about a living man he loved. (retry)"
+successText: "You read it at the right pace. Fra Bartolomeo is quiet for a long time. Then:
+  'He was right.' He takes out his notebook and writes something — not the text, just his
+  own response to it. He tears it out and hands it to you. 'For the archive. A philosopher's
+  witness.' You receive Fra Bartolomeo's Witness Note."
+grantItem: "Fra Bartolomeo's Witness Note"
+checkPassFlag: nwi03Act3Passed
+
+Act IV — The Merchant's Favor
+activateNode: RGS
+type: hybrid
+scene: "The Ragusa waterfront, afternoon. Benedetto, a Genoese merchant, has been watching
+  ship lanes for six months on behalf of a collector who mentioned this specific letter before
+  it was found. He tries conversation, then an offer, then a request for a few days. When
+  none of these work, his patience ends cleanly. He is not a thief — he is a man who made
+  a promise and is now honoring it in the only way left."
+skillCheck:
+  skill:    "Persuasion"
+  dc:       13
+  failText: "He shakes his head. 'I have made a promise.' For Benedetto, that settles it.
+    He reaches for the satchel. (proceed to combat)"
+  passText: "He stops. He looks at the satchel. 'The collector will be angry.' He looks
+    back at you. 'But the collector did not tell me what was in it. A man who recruits
+    another man into a war that kills him — that is not a merchant's document.' He steps
+    back."
+combat:
+  enemy:    "Benedetto's Hired Watcher (dock enforcer)"
+  failText: "The watcher gets a hand on the satchel strap. The letter is still inside —
+    the satchel held — but the waterfront is watching now. (retry)"
+  passText: "The watcher goes down at the dock edge. Benedetto watches. He does not call
+    for more help. He says: 'Tell the collector I tried.' You receive the Ragusa Dock
+    Clearance — the harbor master's stamp confirming the letter left Ragusa in the archive
+    commission's custody."
+grantItem: "Ragusa Dock Clearance"
+checkPassFlag: nwi03Act4Passed
+
+Act V — Epistolary Authorship
+activateNode: WM
+type: skill_check
+scene: "The Weimar archive intake desk, morning. The archivist reads the letter twice and
+  pauses at the private assessment — Proxenus's specific praise for Xenophon. He opens the
+  register. 'I can file this as private correspondence, Boeotian noble family, 4th century
+  BC. That is what it was filed as for seventeen hundred years.' He sets the pen down. 'But
+  that is why no one found it. What it functionally is — the text exists because this letter
+  was sent. If Proxenus had not written it, there is no Anabasis.' He waits for the category."
+prompt: "Persuasion DC 13: Name the category. The invitation is a form of authorship —
+  Proxenus did not write the Anabasis, but without his letter no one did. The archive
+  needs a category for founding correspondence."
+failText: "He nods. 'A poetic argument. The legal category is still private correspondence.'
+  Come back with the archival argument — not poetic, practical. What classification makes
+  this document findable by someone researching the Anabasis's origin? (retry)"
+successText: "He writes: 'Epistolary Authorship — Founding Correspondence.' He reads it
+  back. 'That is a new category.' He places the letter, Fra Bartolomeo's witness note, and
+  the Matteo withdrawal in the folder. 'Proxenus is listed as secondary author of the
+  Anabasis in this entry. He did not write it. He made it possible.' You receive the
+  Founding Correspondence Archive Entry."
+grantItem: "Founding Correspondence Archive Entry"
+takeItem: "Proxenus's Letter"
+checkPassFlag: nwi03Act5Passed
+activateMissionBit: nwi03Complete
+```
+
+---
+
+*NWI-03 complete. 2026-06-02.*

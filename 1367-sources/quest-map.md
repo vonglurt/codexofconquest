@@ -460,6 +460,7 @@ Game cities are canonical. Source-book settings are proposed new nodes.
 | FCO-09 | The Mensas Plate | 7 | RME → WM | The relic of comprehension — someone inscribed the moment of understanding, not the event |
 | FCO-14 | The Fragment of the Final Line | 8 | MTC → RME → WM | The alternate ending that survived in a margin; three words that change the ethics of the close |
 | NWI-06 | The Cretan's Account | 3 | SIN → CON → WM | Front-rank view of communal salvation; the shout coming from the front and keeping coming |
+| NWI-03 | Proxenus's Letter | 4 | ORC → ATH → RGS → WM | The invitation is a form of authorship; Proxenus made the Anabasis possible |
 
 *When a new quest is written, append its row to the Processed Quests table.*
 *When a new location is used, append its row to the Location Grid.*
