@@ -2856,3 +2856,272 @@ Luini records the delivery in the standard filing log: *objects received; pre-te
 ---
 
 *BLQ-10 complete. 2026-06-02.*
+
+---
+
+## Cycle 11 — Angle: The Conditions Read as Instructions, Not Prohibitions
+
+---
+
+### BLQ-11: "The Impossible Conditions"
+
+**Theme check:** Cycles 1-10 covered the full range of the original and supplementary seed angles. Cycle 11 shows a structural angle not yet explored: impossible conditions that become possible by literal interpretation. The Gillette/Bertrand story's insight is not about deception — it is about compliance. She fulfilled the conditions exactly as stated, in ways he did not expect. The bearer of this quest is executing a plan already complete in design: every obstacle along the route has a literal solution if the carrier reads each constraint as an instruction rather than a prohibition.
+
+This is distinct from: BLQ-01 (formal compliance used to commit fraud); BLQ-02 (document renders argument moot by existing); BLQ-03 (ambiguity preserved); BLQ-08 (both readings simultaneously correct); CLJ-05 (phonograph record — literal notation of delivery quality); AMS-04 (handwriting as legal evidence — character records awaiting recognition).
+
+---
+
+**SOURCE HOOK:** Day III, Story 9. Gillette of Narbonne heals the King of France and earns as reward a husband she has chosen — Count Bertrand of Roussillon, who resents the enforced marriage. He departs immediately for the Italian wars, sends her a letter: "When you shall have this ring from my finger and a son by me in your arms, then will I come to you and live with you as husband." She travels to Florence, bribes the woman he is pursuing, substitutes herself in the dark, takes his ring, and conceives his sons. At his victory feast in Roussillon, she appears with twin boys and the ring. He concedes. The conditions were set as impossibilities. She read them as instructions. The map was in the conditions themselves.
+
+---
+
+**1367 SETTING:**
+Messer Riccardo della Porta of Florence has been estranged from his wife Orsolana for four years. She lives in Roussillon; he trades in Florence and Provence. She sent him a letter last autumn: "When you bring to the court in Marseille the wedding ring you sold at the gaming table in Avignon, and with it a certified witness statement from the Montpellier physician who attended our children's births, then I will withdraw my petition for legal separation and we may discuss terms." She filed the petition with the Marseille consular court three months ago. The first hearing is in twelve days.
+
+Riccardo believes the conditions are impossible to fulfill before the hearing. The ring was sold two years ago; he doesn't know where it is. The Montpellier physician, Maître Guillaume de Béziers, has been missing for eight months. He has retained the carrier to try.
+
+What Riccardo has not understood — and what the carrier may come to understand — is that Orsolana set these conditions because she knew they could be met. She has kept track of the ring. She knows where Guillaume is. The conditions are a map, not a wall.
+
+**TOKEN:** A plain gold ring — wedding band, notched on the inside from wear, Riccardo's engraved initials, size 8 — currently in a pawnbroker's inventory in Avignon (Riccardo knows this much); must travel to Marseille with a certified witness statement from Maître Guillaume de Béziers. Neither item alone fulfills the conditions.
+
+**TOKEN granted:** Act II (ring recovered in Avignon) + Act III (certified witness statement joined to it)
+**TOKEN taken:** Act V (consular court clerk receives both items; petition suspended)
+
+---
+
+### ACT I — Florence (Riccardo's Trading House, Via Calimala)
+
+*No token yet · a written copy of Orsolana's letter on the table · Riccardo's face between reluctance and embarrassment · the room smells of Flemish cloth samples · morning*
+
+Riccardo della Porta explains the conditions and says they are impossible: the ring was sold at a gaming table in Avignon two years ago, he doesn't know to whom, he has no record; the Montpellier physician attended his wife's children's births but has been gone eight months, no forwarding address. He says: "I've hired three people to find either item. None of them could." He says this with the manner of a man who has not fully decided whether he wants the petition to fail.
+
+He hands the carrier a letter of authorization: permission to act on his behalf in Avignon, Montpellier, and Marseille; permission to redeem any property bearing his initials; permission to accept certified testimony on his behalf. He says: "Use what you can."
+
+The carrier reads the letter of authorization. It is exact. It gives the carrier more authority than Riccardo perhaps intended.
+
+*The letter says "any property bearing his initials." Not "the specific ring." Any property.*
+
+The carrier asks: do you have any other items in Avignon or Montpellier with your initials that might help establish identity for the ring's current owner? Riccardo says: there might be a sealed guild certificate in Avignon from a trade fair three years ago, still in a factor's office.
+
+---
+
+**Skill check — DC 12 Insight or Investigation:**
+Understand the conditions' literal structure and identify what the authorization letter enables.
+
+**Pass (Insight):** The carrier reads Orsolana's letter carefully. The language is precise: "the wedding ring you sold at the gaming table in Avignon." She specifies the gaming table — not just "the ring sold in Avignon." She knows where it was sold. The carrier understands: she has kept track of this. The conditions are not obstacles. They are instructions. The carrier needs to find who bought the ring at that specific gaming table, two years ago.
+
+**Pass (Investigation):** The carrier examines Riccardo's authorization letter. "Any property bearing his initials" is broad enough to cover not just the ring but any document or token that would support the ring's recovery. The carrier identifies: the guild certificate in Avignon, if it can be produced to the pawnbroker as identity verification, would authorize the ring's redemption even without the original sale record.
+
+**Fail:** The carrier departs with the authorization letter and general instructions. The specific structure of the conditions — as instructions rather than prohibitions — is not yet clear.
+
+*The letter of authorization in the carrier's document case. The route: Florence, Avignon, Montpellier, Marseille.*
+
+---
+
+### ACT II — Avignon (Rue des Changes, Pawnbroker's Shop)
+
+*No token yet · the pawnbroker's inventory ledger · Maître Abramo di Carpentras, Avignon pawnbroker · afternoon, the Papal court city busy around them*
+
+The gaming table where Riccardo sold the ring three years ago was in a tavern on the Rue des Changes. The tavern keeper, asked, remembers the ring — a plain gold band, unusual notches inside, sold to a Flemish wool buyer who was passing through. The Flemish wool buyer pawned it later that same week when he lost money at the same table. It has been in Maître Abramo's inventory ever since, unredeemed.
+
+Maître Abramo shows the carrier the ledger entry: "one gold ring, notched interior, initials R.P., size 8. Pawner: a Flemish buyer who gave a false name. Redemption: awaiting authorized claimant with identification." The ring has been waiting for a legitimate claimant for two years.
+
+He says: "Your authorization letter says you represent Riccardo della Porta. It says 'any property bearing his initials.' This ring bears initials R.P." He says: "Do you have anything else to establish those are his initials?"
+
+*The guild certificate. The factor's office.*
+
+---
+
+**Skill check — DC 12 Investigation or Persuasion:**
+Produce the Florentine guild certificate or other identity evidence to satisfy Abramo's legitimate verification requirement.
+
+**Pass (Investigation):** The carrier locates the factor's office where Riccardo's guild certificate was stored — a Florentine wool guild representative's office near the Palais des Papes. The certificate, dated 1364, bears Riccardo della Porta's full name, the initials R.P., and the Florence guild seal. Abramo examines it, compares the initials, accepts it as sufficient identity. He releases the ring for the redemption fee stated in the ledger.
+
+**Pass (Persuasion):** The carrier presents the authorization letter with its specific language — "any property bearing his initials" — and notes that this language is precise enough to suggest Riccardo knew the ring was here. Abramo, considering that the authorization was written with this shop's precise inventory situation in mind, accepts the argument. He releases the ring.
+
+**Fail:** Abramo requires a notarized identity certification from a Avignon notary — a new document, not something the carrier has. This takes a day. One day lost from the twelve-day window.
+
+*The ring: plain gold band, notches inside, initials R.P. In the carrier's possession.*
+
+**Grant item:** wedding ring (plain gold, notched, Riccardo's initials; redeemed from Avignon pawnbroker)
+
+---
+
+### ACT III — Montpellier (Rue de l'Université, Maître Guillaume's Last Known Address)
+
+*The ring · in the carrier's coin purse, separate from other coins · Montpellier, the university quarter · morning, the smell of tallow and lecture-room chalk*
+
+Maître Guillaume de Béziers, physician and licensed midwife-consultant, has been avoiding service of process for eight months. He is evading a lawsuit from the estate of a patient who died under his care. His home on Rue de l'Université is still maintained by his housekeeper; his practice is technically closed; but the carrier, asking in the right places, learns that he continues to see patients privately, under a different name, at a tannery district address.
+
+He is there. He sees the carrier in a back room that smells of tanning and herbs.
+
+He says: "I know why you're here. I'm not going to testify in any estate matter." He says: "I don't care who sent you."
+
+The carrier says: not an estate matter. The carrier explains: a certified witness statement that Orsolana della Porta's children were born alive, in Montpellier, attended by Guillaume, and that their lineage can be attested by his records. Nothing about any other patient. Nothing about the estate lawsuit.
+
+Guillaume says: "My avoidance order specifies 'testimony in any matter concerning the estate of Messer Anselmo di Narbonne.'" He says: "This is not that." He says: "I know what it is." He says: "I have been waiting for someone to ask me correctly for four months."
+
+*He has been waiting. Orsolana told him what to expect.*
+
+---
+
+**Skill check — DC 12 Persuasion or History:**
+Confirm to Guillaume that the testimony is strictly limited to lineage certification, not the estate matter, and obtain the certified statement.
+
+**Pass (Persuasion):** The carrier states precisely what the statement needs to say: Orsolana della Porta's children were born in Montpellier in 1358 and 1361; attended by Maître Guillaume de Béziers; lineage of Riccardo della Porta confirmed by the attending physician's presence and records. Nothing else. Guillaume listens to the precision of the statement. He says: "That is what I can certify." He writes it, signs it, seals it with his physician's stamp.
+
+**Pass (History):** The carrier knows that a medical lineage certification is categorically distinct from estate testimony under Montpellier's university-derived medical witness statute. The avoidance order cannot reach this category. Guillaume, recognizing the statutory precision, confirms: "That's exactly right. You've read the right document." He writes and seals the statement.
+
+**Fail:** Guillaume is uncertain whether the lineage statement could be used to support an incidental estate claim. He wants a notarized limitation from the Marseille court before he will certify. This adds two days. One or two days lost from the window.
+
+*The certified statement: Maître Guillaume's seal, the lineage confirmed, the children's births attested.*
+
+**Join item:** certified witness statement (Guillaume's seal; lineage of Orsolana's children confirmed; joins the ring as the second required condition)
+
+---
+
+### ACT IV — Road Between Montpellier and Marseille (The Coast Road, Afternoon)
+
+*The ring and statement · together in the carrier's sealed document wallet · the coast road west toward Marseille · a rider ahead, waiting at the junction*
+
+Orsolana's legal representative in Marseille, a Provençal advocate named Maître Arnaud de Montfort, has dispatched a rider — not to intercept the delivery, but to intercept the carrier's access to the court. The rider carries a message to the court clerk: a preemptive notice that the conditions are "incapable of good-faith fulfillment before the hearing" and that any late delivery should be treated as a formality. This message, if it reaches the court clerk before the carrier, will predispose the clerk to treat the delivery as untimely regardless of the actual deadline.
+
+The rider is a day ahead. The carrier cannot outride him to Marseille. But the carrier knows the coast road has a shortcut through the salt-flat district that cuts four hours off the journey — used by salt merchants, not official couriers.
+
+*The conditions are fulfilled. The map is complete. The only question is arrival.*
+
+---
+
+**Skill check — DC 12 Athletics or Investigation:**
+Use the salt-flat shortcut to arrive in Marseille before Maître Arnaud's rider, or identify the shortcut's conditions and take it safely.
+
+**Pass (Athletics):** The carrier takes the salt-flat road at a pace the official courier road does not allow. The flat ground is faster than the elevated coast road. The carrier arrives in Marseille three hours before Maître Arnaud's rider.
+
+**Pass (Investigation):** The carrier identifies, by questioning a salt merchant at the coast road junction, that the official courier road passes through a checkpoint at the Montpellier toll gate — which has been slow today due to a market. Maître Arnaud's rider would have been held at the checkpoint. The carrier takes the direct road and arrives before the rider's message.
+
+**Fail:** The carrier takes the standard road. Maître Arnaud's rider is one hour ahead. The court clerk has already received the preemptive notice when the carrier arrives. The clerk treats the delivery as potentially untimely pending review.
+
+---
+
+### ACT V — Marseille (Consular Court, Registry Desk)
+
+*The ring and statement · together in the sealed wallet · the consular court of Marseille · afternoon, the harbor smell through the window · Maître Arnaud de Montfort in the gallery, watching*
+
+The consular court clerk, Maître Luc de Cassis, receives the carrier at the registry desk. He has, or has not, received Maître Arnaud's preemptive notice. Either way, he examines the delivered items carefully.
+
+The ring: plain gold band, notched interior, R.P. initials. He compares against the original marriage registration in the court's own file from 1351. The initials match. The ring's description in the marriage contract — "one plain gold band, notched interior for grip, engraved R.P." — matches exactly.
+
+The certified statement: Maître Guillaume de Béziers's seal and signature, attesting the children's lineage. The court has a standing physician's registration for Guillaume; his signature is on file.
+
+He says: "Both conditions are satisfied." He says: "The petition is suspended pending the parties' response."
+
+Maître Arnaud, in the gallery, makes a sound that is not quite outrage and not quite admiration.
+
+---
+
+**Skill check — DC 12 Persuasion or Investigation:**
+Confirm the delivery's completeness and timeliness against any procedural challenge.
+
+**Pass (Investigation):** The carrier presents the redemption receipt from Abramo di Carpentras (dated two days ago) and the certified statement's seal date (three days ago) — both within the hearing window. The clerk checks both dates against the petition's filing date. Everything is in order. He enters the delivery in the registry.
+
+**Pass (Persuasion):** If Maître Arnaud raises the preemptive notice, the carrier addresses it directly: the conditions were fulfilled within the twelve-day window; the preemptive notice is a procedural objection, not a substantive one; the court's obligation is to record whether the conditions were met, not whether the opposing advocate predicted they would be. The clerk records the delivery as complete.
+
+**Fail:** Maître Arnaud's preemptive notice creates a procedural complication that requires a hearing tomorrow. The delivery is accepted provisionally. The hearing the next day confirms the conditions are met. One day's delay.
+
+*The ring and statement taken here. The clerk's stamp on the receipt.*
+
+**Take item:** wedding ring and certified statement (both received; conditions satisfied; petition suspended)
+
+---
+
+### onPass
+
+Maître Luc de Cassis, entering the case in the court registry, creates a notation for the disposition: *Conditions Fulfillment — Both Items Delivered Within the Stated Window; Petition Suspended; Parties Required to Respond Within Thirty Days.*
+
+He then, apparently deciding the case warrants a more specific category, adds a second notation: *Method of Fulfillment: Literal Compliance; Items Located Through Precise Reading of the Original Conditions' Implicit Information.*
+
+He says to the carrier: "She wrote 'the gaming table in Avignon.' That's a specific location. She wrote 'the Montpellier physician who attended the births.' That's a specific person." He says: "She expected someone to read it exactly." He pauses. "You read it exactly."
+
+He stamps the carrier's receipt and pays the fee from the court's standard delivery fund.
+
+---
+
+### onFail
+
+The conditions are satisfied the next day after the procedural hearing. The petition is suspended. The outcome is the same — one day late.
+
+The court record shows: *delivery accepted pending procedural review; conditions confirmed satisfied at hearing; petition suspended.* The carrier's fee is paid.
+
+Maître Arnaud de Montfort sends a message to Orsolana in Roussillon: *conditions fulfilled; petition suspended; Riccardo has thirty days to respond.* Orsolana, receiving the message, says nothing for a moment. Then: "He found the ring."
+
+---
+
+### Quest Stub (UQF v1.0)
+
+```json
+{
+  "quest_id": "BLQ_011",
+  "title": "The Impossible Conditions",
+  "cycle": 11,
+  "book": "Decameron",
+  "token": "plain gold wedding ring (notched interior, R.P. initials; redeemed from Avignon pawnbroker) plus certified lineage statement from Maître Guillaume de Béziers; neither item alone satisfies the conditions; both must arrive in Marseille within twelve days",
+  "route": "FLR → AVG → MTP → MAR",
+  "theme": "Impossible conditions that become possible by literal interpretation; the wife set the conditions because she intended them to be fulfilled; the conditions are a map, not a wall; every obstacle has a literal solution if read as instruction rather than prohibition",
+  "archive_category": "Conditions Fulfillment — Literal Compliance; Items Located Through Precise Reading of the Original Conditions' Implicit Information (Maître Luc de Cassis, Marseille consular court, 1367)",
+  "acts": [
+    {
+      "act_id": "BLQ_011_01",
+      "location": "Florence — Riccardo della Porta's trading house, Via Calimala",
+      "type": "skill_check",
+      "activateNode": "FLR",
+      "scene": "Riccardo believes the conditions are impossible: the ring was sold at a gaming table in Avignon two years ago; the Montpellier physician has been missing eight months. He hands the carrier an authorization letter saying 'any property bearing his initials.' He mentions a sealed guild certificate at a factor's office in Avignon.",
+      "skillCheck": { "dc": 12, "skills": ["Insight", "Investigation"] },
+      "checkPassFlag": "conditions_read_as_map"
+    },
+    {
+      "act_id": "BLQ_011_02",
+      "location": "Avignon — Rue des Changes, Maître Abramo's pawnbroker shop",
+      "type": "skill_check",
+      "activateNode": "AVG",
+      "scene": "The ring has been in Abramo's inventory for two years, unredeemed. He requires identity evidence to verify the initials R.P. are Riccardo della Porta's. The Florentine guild certificate in the nearby factor's office bears those exact initials.",
+      "skillCheck": { "dc": 12, "skills": ["Investigation", "Persuasion"] },
+      "grantItem": "wedding ring (R.P. initials, notched interior; redeemed)",
+      "checkPassFlag": "ring_recovered"
+    },
+    {
+      "act_id": "BLQ_011_03",
+      "location": "Montpellier — tannery district, Maître Guillaume's private practice",
+      "type": "skill_check",
+      "activateNode": "MTP",
+      "scene": "Guillaume has been avoiding service of process for eight months under an avoidance order for estate testimony. He says: I've been waiting for someone to ask me correctly for four months. His avoidance order specifies estate matters only; lineage certification is categorically distinct. He has been ready.",
+      "skillCheck": { "dc": 12, "skills": ["Persuasion", "History"] },
+      "grantItem": "certified lineage statement (Guillaume's seal; Orsolana's children's births attested)",
+      "checkPassFlag": "witness_statement_obtained"
+    },
+    {
+      "act_id": "BLQ_011_04",
+      "location": "Coast road between Montpellier and Marseille",
+      "type": "skill_check",
+      "activateNode": "MTP",
+      "scene": "Orsolana's advocate Maître Arnaud has dispatched a rider with a preemptive notice to the court clerk, arguing the conditions are incapable of fulfillment before the hearing. The rider is a day ahead. The salt-flat road shortcut cuts four hours off the journey.",
+      "skillCheck": { "dc": 12, "skills": ["Athletics", "Investigation"] },
+      "checkPassFlag": "arrived_before_preemptive_notice"
+    },
+    {
+      "act_id": "BLQ_011_05",
+      "location": "Marseille — consular court, registry desk",
+      "type": "skill_check",
+      "activateNode": "MAR",
+      "scene": "Maître Luc de Cassis compares the ring against the marriage contract on file: plain gold band, notched interior, R.P. initials. It matches exactly. He compares the certified statement against Guillaume's physician's registration. Both conditions are satisfied. The petition is suspended.",
+      "skillCheck": { "dc": 12, "skills": ["Persuasion", "Investigation"] },
+      "takeItem": "wedding ring and certified statement",
+      "activateMissionBit": "blqImpossibleConditionsComplete",
+      "checkPassFlag": "conditions_satisfied"
+    }
+  ]
+}
+```
+
+---
+
+*BLQ-11 complete. 2026-06-02.*
