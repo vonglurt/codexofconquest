@@ -498,6 +498,30 @@ function serializeMonsterLiteral(key, body) {
   return parts.join(', ') + ' },\n';
 }
 
+function serializeDropLiteral(key, body) {
+  return `  ${key}: { icon:${JSON.stringify(body.icon||'📦')}, name:${JSON.stringify(body.name)}, sell:${Number(body.sell||0)} },\n`;
+}
+
+function serializeNpcDialogueLiteral(key, body) {
+  const parts = [];
+  const m = body.meta || {};
+  const name = m.name || body.name || key;
+  const occ  = m.occupation || body.occupation;
+  const wt   = m.worldTruth || body.worldTruth;
+  const mb   = m.missionBit || body.missionBit;
+  if (name || occ || wt || mb) {
+    const mp = [`name:${JSON.stringify(name)}`];
+    if (occ) mp.push(`occupation:${JSON.stringify(occ)}`);
+    if (wt)  mp.push(`worldTruth:${JSON.stringify(wt)}`);
+    if (mb)  mp.push(`missionBit:${JSON.stringify(mb)}`);
+    parts.push(`meta: { ${mp.join(', ')} }`);
+  }
+  for (const arr of ['impartial','questActive','friendly','dearFriend'])
+    if (Array.isArray(body[arr]) && body[arr].length) parts.push(`${arr}: ${JSON.stringify(body[arr])}`);
+  parts.push(`quote: ${JSON.stringify(body.quote||'')}`);
+  return `  ${key}: { ${parts.join(', ')} },\n`;
+}
+
 function serializeNpcLiteral(key, body) {
   const tier = (obj, indent) => {
     if (!obj || typeof obj !== 'object') return null;
@@ -1459,6 +1483,22 @@ async function route(req, res) {
     }
   }
 
+  // ── Drops (MONSTER_DROPS) ────────────────────────────────────────────────
+  if (parts[0] === 'drops' && method === 'GET') {
+    const sellMin  = url.searchParams.get('sell');
+    const nameQ    = (url.searchParams.get('q') || '').toLowerCase();
+    let list = Object.entries(WBAPI.monsterDrops).map(([key, d]) => ({ key, ...d }));
+    if (sellMin !== null) list = list.filter(d => (d.sell||0) >= Number(sellMin));
+    if (nameQ) list = list.filter(d => (d.name||'').toLowerCase().includes(nameQ));
+    list.sort((a, b) => (b.sell||0) - (a.sell||0));
+    const totalValue = list.reduce((s, d) => s + (d.sell||0), 0);
+    logRow('total', `${list.length} drops  ·  total sell value: ${totalValue}gp`);
+    if (sellMin||nameQ) logRow('filter', [sellMin&&`sell≥${sellMin}`, nameQ&&`q=${nameQ}`].filter(Boolean).join('  '));
+    logRow('sample', sample(list.slice(0,4).map(d=>`${d.key}(${d.sell}gp)`), 4));
+    logResponse(method, url.pathname, 200, `${list.length} drops`);
+    return json(res, 200, { ok:true, count:list.length, drops: list });
+  }
+
   // ── Items (ITEM_DB) ──────────────────────────────────────────────────────
   if (parts[0] === 'item') {
     const itemKey = parts[1];
@@ -2183,6 +2223,32 @@ async function route(req, res) {
 
   // ── GET ──
   if (method === 'GET') {
+    // GET /api/npc/{id}/dialogue
+    if (type === 'npc' && action === 'dialogue') {
+      const dlg = WBAPI.npcDialogues[key];
+      if (!dlg) {
+        logResponse(method, url.pathname, 404, `no NPC_DIALOGUES entry for "${key}"`);
+        return json(res, 404, { error:`No NPC_DIALOGUES entry for "${key}". Create one with POST /api/npc/${key}/dialogue` });
+      }
+      logRow('npc', key);
+      logRow('quote', (dlg.quote||'').slice(0,80));
+      logResponse(method, url.pathname, 200, `dialogue/${key}`);
+      return json(res, 200, { ok:true, key, dialogue: dlg,
+        _meta: { hasBirkaProfile: !!WBAPI.birkaNpcs[key] } });
+    }
+
+    // GET /api/monster/{id}/drop
+    if (type === 'monster' && action === 'drop') {
+      const drop = WBAPI.monsterDrops[key];
+      if (!drop) {
+        logResponse(method, url.pathname, 404, `no drop for monster "${key}"`);
+        return json(res, 404, { error:`No MONSTER_DROPS entry for "${key}". Create one with POST /api/monster/${key}/drop` });
+      }
+      logRow('drop', `${drop.icon||''}  ${drop.name}  ·  ${drop.sell||0}gp`);
+      logResponse(method, url.pathname, 200, `drop/${key}`);
+      return json(res, 200, { ok:true, key, drop });
+    }
+
     // GET /api/quest/{id}/chain
     if (type === 'quest' && action === 'chain') {
       const q = WBAPI.questDb[key];
@@ -2248,6 +2314,32 @@ async function route(req, res) {
       logResponse(method, url.pathname, 400, `Invalid JSON: ${e.message}`);
       return json(res, 400, { error:'Invalid JSON' });
     }
+
+    // PUT /api/monster/:key/drop
+    if (type === 'monster' && action === 'drop') {
+      if (!WBAPI.monsterDrops[key]) {
+        logResponse(method, url.pathname, 404, `no drop for "${key}" — create first with POST`);
+        return json(res, 404, { error:`No drop for "${key}". Create with POST /api/monster/${key}/drop` });
+      }
+      Object.assign(WBAPI.monsterDrops[key], body);
+      if (body.sell !== undefined) WBAPI.monsterDrops[key].sell = Number(body.sell);
+      logRow('updated', `drop › ${key}  →  ${WBAPI.monsterDrops[key].icon||''} ${WBAPI.monsterDrops[key].name}  ·  ${WBAPI.monsterDrops[key].sell}gp`);
+      logResponse(method, url.pathname, 200, `drop/${key} updated`);
+      return json(res, 200, { ok:true, key, drop: WBAPI.monsterDrops[key], note:'PUT only updates in-memory. POST /api/save to persist.' });
+    }
+
+    // PUT /api/npc/:key/dialogue
+    if (type === 'npc' && action === 'dialogue') {
+      if (!WBAPI.npcDialogues[key]) {
+        logResponse(method, url.pathname, 404, `no dialogue for "${key}" — create first with POST`);
+        return json(res, 404, { error:`No NPC_DIALOGUES entry for "${key}". Create with POST /api/npc/${key}/dialogue` });
+      }
+      Object.assign(WBAPI.npcDialogues[key], body);
+      logRow('updated', `dialogue › ${key}`);
+      logResponse(method, url.pathname, 200, `dialogue/${key} updated`);
+      return json(res, 200, { ok:true, key, dialogue: WBAPI.npcDialogues[key], note:'PUT only updates in-memory. POST /api/save to persist.' });
+    }
+
     const col = { node:WBAPI.nodeMap, quest:WBAPI.questDb, monster:WBAPI.monsterPool, npc:WBAPI.birkaNpcs }[type];
     const resolvedKey = WBAPI._findKey(col, rawId) || rawId;
 
@@ -2317,6 +2409,50 @@ async function route(req, res) {
       logResponse(method, url.pathname, 400, `Invalid JSON: ${e.message}`);
       return json(res, 400, { error:'Invalid JSON' });
     }
+    // POST /api/monster/:id/drop  — create drop entry
+    if (type === 'monster' && action === 'drop') {
+      if (!body.name) {
+        logResponse(method, url.pathname, 400, 'body.name required');
+        return json(res, 400, { error:'Required fields: name. Optional: icon, sell' });
+      }
+      if (WBAPI.monsterDrops[key]) {
+        logResponse(method, url.pathname, 409, `drop for "${key}" already exists — use PUT to update`);
+        return json(res, 409, { error:`Drop for "${key}" already exists. Use PUT /api/monster/${key}/drop to update.` });
+      }
+      if (!WBAPI.monsterPool[key]) {
+        logResponse(method, url.pathname, 404, `monster "${key}" not found`);
+        return json(res, 404, { error:`Monster "${key}" not found` });
+      }
+      const entry = serializeDropLiteral(key, body);
+      const ins = insertBeforeSectionClose('MONSTER_DROPS', entry);
+      if (!ins.ok) { logResponse(method, url.pathname, 500, ins.error); return json(res, 500, ins); }
+      WBAPI.monsterDrops[key] = { icon: body.icon||'📦', name: body.name, sell: Number(body.sell||0) };
+      logRow('drop', `${key}  →  ${body.icon||'📦'} ${body.name}  ·  ${body.sell||0}gp`);
+      logResponse(method, url.pathname, 201, `created drop for monster/${key}`);
+      return json(res, 201, { ok:true, key, drop: WBAPI.monsterDrops[key], note:'POST /api/save to persist.' });
+    }
+
+    // POST /api/npc/:id/dialogue  — create NPC_DIALOGUES entry
+    if (type === 'npc' && action === 'dialogue') {
+      if (!body.quote) {
+        logResponse(method, url.pathname, 400, 'body.quote required');
+        return json(res, 400, { error:'Required: quote (string). Optional: meta{worldTruth,missionBit}, impartial[], friendly[], dearFriend[]' });
+      }
+      if (WBAPI.npcDialogues[key]) {
+        logResponse(method, url.pathname, 409, `dialogue for "${key}" already exists — use PUT to update`);
+        return json(res, 409, { error:`NPC_DIALOGUES entry for "${key}" already exists.` });
+      }
+      const npc = WBAPI.birkaNpcs[key];
+      const enriched = { ...body, name: body.name || npc?.name || key, occupation: body.occupation || npc?.occupation };
+      const entry = serializeNpcDialogueLiteral(key, enriched);
+      const ins = insertBeforeSectionClose('NPC_DIALOGUES', entry);
+      if (!ins.ok) { logResponse(method, url.pathname, 500, ins.error); return json(res, 500, ins); }
+      WBAPI.npcDialogues[key] = enriched;
+      logRow('dialogue', `${key}  ·  quote: ${body.quote.slice(0,60)}…`);
+      logResponse(method, url.pathname, 201, `created dialogue for npc/${key}`);
+      return json(res, 201, { ok:true, key, dialogue: WBAPI.npcDialogues[key], note:'POST /api/save to persist.' });
+    }
+
     // POST /api/monster/:id/rename
     if (action === 'rename') {
       if (!body.name) {
@@ -2448,6 +2584,13 @@ server.listen(PORT, '127.0.0.1', () => {
     ['PUT',    '/api/item/{key}                      body: {field:value,...}'],
     ['GET',    '/api/lake-magic[/{key}][?effect=&minRank=] → magic item list or single'],
     ['POST',   '/api/lake-magic                     body: {key, name, effect, ...}'],
+    ['GET',    '/api/drops[?sell=&q=]                → drop table list/filter'],
+    ['GET',    '/api/monster/{id}/drop              → single drop entry'],
+    ['POST',   '/api/monster/{id}/drop              body: {name, icon?, sell?}'],
+    ['PUT',    '/api/monster/{id}/drop              body: {name?, icon?, sell?}'],
+    ['GET',    '/api/npc/{id}/dialogue              → NPC_DIALOGUES entry'],
+    ['POST',   '/api/npc/{id}/dialogue              body: {quote, meta?, impartial?, friendly?, dearFriend?}'],
+    ['PUT',    '/api/npc/{id}/dialogue              body: {quote?, meta?, ...}'],
     ['POST',   '/api/monster/{id}/rename            body: {name}'],
     ['POST',   '/api/monster/{id}/fork              body: {newKey, overrides?}'],
     ['POST',   '/api/terrain/{id}/swap              body: {oldKey, newKey}'],
