@@ -1751,6 +1751,235 @@ async function route(req, res) {
     }
   }
 
+  // ── Audit: Map conformity (spatial + graph) ──────────────────────────────
+  if (parts[0] === 'audit' && parts[1] === 'map' && method === 'GET') {
+    const OPP   = { N:'S', S:'N', E:'W', W:'E' };
+    const DIRS  = ['N','S','E','W'];
+    // directional sign: moving in dir D from a node should change coords by (dr, dc)
+    const DIR_DELTA = { N:[-1,0], S:[1,0], E:[0,1], W:[0,-1] };
+    const DENSITY_THRESH = { road:3, market:8, _default:6 };
+    const LONG_LINK_THRESHOLD = 4; // grid cells
+    const DENSITY_RADIUS = 3;      // grid cells (Euclidean)
+
+    const coords    = WBAPI.nodeCoords; // {code:{r,c}}
+    const nodeMap   = WBAPI.nodeMap;
+    const worldDb   = WBAPI.worldDb;
+
+    function dist(a, b) {
+      const dr = a.r - b.r, dc = a.c - b.c;
+      return Math.sqrt(dr*dr + dc*dc);
+    }
+
+    // Terrain category helper
+    function terrainCat(code) {
+      const terrKey = nodeMap[code]?.name || '';
+      const t = worldDb[terrKey];
+      if (!t) return '_default';
+      const label = (t.label||terrKey).toLowerCase();
+      if (label.includes('road') || label.includes('highway') || label.includes('path')) return 'road';
+      if (label.includes('market') || label.includes('shop') || label.includes('vendor') || label.includes('bazaar')) return 'market';
+      return '_default';
+    }
+
+    const errors   = [];
+    const warnings = [];
+    const suggestions = [];
+
+    const nodeCodesWithCoords = Object.keys(coords).filter(c => nodeMap[c]);
+    const allNodeCodes = Object.keys(nodeMap);
+
+    // ── 1. Max-4-connections: no node in more than one direction slot ─────────
+    for (const code of allNodeCodes) {
+      const n = nodeMap[code];
+      const targets = DIRS.map(d => n[d]).filter(Boolean);
+      const seen = new Set();
+      for (const t of targets) {
+        if (seen.has(t))
+          errors.push({ check:'max_connections', code, msg:`"${t}" appears in multiple direction slots — duplicate connection` });
+        seen.add(t);
+      }
+      if (targets.length > 4)
+        errors.push({ check:'max_connections', code, msg:`${targets.length} connections (max is 4: N/S/E/W)` });
+    }
+
+    // ── 2. Bidirectional consistency ─────────────────────────────────────────
+    for (const code of allNodeCodes) {
+      const n = nodeMap[code];
+      for (const dir of DIRS) {
+        const target = n[dir];
+        if (!target) continue;
+        if (!nodeMap[target]) {
+          errors.push({ check:'dangling_link', code, dir, target, msg:`${code}.${dir}="${target}" but "${target}" not in NODE_MAP` });
+          continue;
+        }
+        const back = nodeMap[target][OPP[dir]];
+        if (back !== code)
+          warnings.push({ check:'bidirectional', code, dir, target,
+            msg:`${code}.${dir}="${target}" but ${target}.${OPP[dir]}="${back||'(null)'}" — link is one-way` });
+      }
+    }
+
+    // ── 3. Direction consistency (N=lower r, S=higher r, E=higher c, W=lower c) ──
+    for (const code of nodeCodesWithCoords) {
+      const n  = nodeMap[code];
+      const ca = coords[code];
+      for (const dir of DIRS) {
+        const target = n[dir];
+        if (!target || !coords[target]) continue;
+        const cb = coords[target];
+        const [dr, dc] = DIR_DELTA[dir]; // expected sign
+        const actualDr = cb.r - ca.r;
+        const actualDc = cb.c - ca.c;
+        // Check sign: if dr≠0, actualDr should be same sign; if dc≠0, actualDc same sign
+        const signOk = dr !== 0
+          ? (dr > 0 ? actualDr >= 0 : actualDr <= 0)
+          : (dc > 0 ? actualDc >= 0 : actualDc <= 0);
+        if (!signOk)
+          warnings.push({ check:'direction_sign', code, dir, target,
+            msg:`${code}(r=${ca.r},c=${ca.c}).${dir}="${target}"(r=${cb.r},c=${cb.c}) — ${dir} should move ${dr<0||dc<0?'lower':'higher'} ${dr!==0?'r':'c'} but moves opposite` });
+      }
+    }
+
+    // ── 4. Long-link detection (distance > LONG_LINK_THRESHOLD) + midpoint suggestion ──
+    const longLinkSeen = new Set();
+    for (const code of nodeCodesWithCoords) {
+      const n  = nodeMap[code];
+      const ca = coords[code];
+      for (const dir of DIRS) {
+        const target = n[dir];
+        if (!target || !coords[target]) continue;
+        const pairKey = [code, target].sort().join(':');
+        if (longLinkSeen.has(pairKey)) continue;
+        longLinkSeen.add(pairKey);
+        const cb = coords[target];
+        const d  = dist(ca, cb);
+        if (d > LONG_LINK_THRESHOLD) {
+          const mr = Math.round((ca.r + cb.r) / 2);
+          const mc = Math.round((ca.c + cb.c) / 2);
+          suggestions.push({ check:'long_link', code, dir, target,
+            distance: Math.round(d * 10) / 10,
+            msg:`${code}↔${target} distance ${Math.round(d*10)/10} cells (threshold ${LONG_LINK_THRESHOLD}) — consider intermediate node at r=${mr},c=${mc}`,
+            suggestedCoords: { r:mr, c:mc } });
+        }
+      }
+    }
+
+    // ── 5. Density check (radius 3) ───────────────────────────────────────────
+    for (const code of nodeCodesWithCoords) {
+      const ca  = coords[code];
+      const cat = terrainCat(code);
+      const threshold = DENSITY_THRESH[cat] || DENSITY_THRESH._default;
+      let count = 0;
+      const neighbours = [];
+      for (const other of nodeCodesWithCoords) {
+        if (other === code) continue;
+        if (dist(ca, coords[other]) <= DENSITY_RADIUS) { count++; neighbours.push(other); }
+      }
+      if (count > threshold)
+        warnings.push({ check:'density', code, terrain: nodeMap[code]?.name||'—', category:cat,
+          neighbours: count, threshold,
+          msg:`${code} has ${count} neighbours within radius ${DENSITY_RADIUS} (${cat} threshold ${threshold}) — cluster too dense` });
+    }
+
+    // ── 6. Shop/vendor proximity (market terrain should be within 1 grid cell of another market) ──
+    const marketNodes = nodeCodesWithCoords.filter(c => terrainCat(c) === 'market');
+    for (const code of marketNodes) {
+      const ca = coords[code];
+      const nearby = marketNodes.filter(c => c !== code && dist(ca, coords[c]) <= 1);
+      if (nearby.length === 0)
+        suggestions.push({ check:'market_proximity', code,
+          msg:`${code} is a market/shop node but has no other market node within 1 grid cell — vendors should cluster` });
+    }
+
+    // ── 7. Nodes with no coords ───────────────────────────────────────────────
+    for (const code of allNodeCodes) {
+      if (!coords[code])
+        suggestions.push({ check:'missing_coords', code,
+          msg:`${code} has no entry in NODE_COORDS — won't appear on map canvas` });
+    }
+
+    const summary = { errors: errors.length, warnings: warnings.length, suggestions: suggestions.length,
+      nodesChecked: nodeCodesWithCoords.length, totalNodes: allNodeCodes.length };
+    logRow('nodes checked', `${nodeCodesWithCoords.length}/${allNodeCodes.length} have coords`);
+    logRow(`map errors`, errors.length);
+    logRow(`map warnings`, warnings.length);
+    logRow(`map suggestions`, suggestions.length);
+    logResponse(method, url.pathname, 200, `map audit  ${errors.length} errors  ·  ${warnings.length} warnings  ·  ${suggestions.length} suggestions`);
+
+    const fmt = url.searchParams.get('format') || 'json';
+    if (fmt === 'text') {
+      const b2 = `http://localhost:${PORT}`;
+      const ts2 = new Date().toISOString().slice(0,19).replace('T',' ');
+      const HR = '─'.repeat(64);
+      const lines = [
+        '',
+        `MAP CONFORMITY REPORT — ${path.basename(GAME_FILE)}`,
+        `Generated ${ts2}  ·  ${nodeCodesWithCoords.length}/${allNodeCodes.length} nodes have coords`,
+        '',
+      ];
+      const mapFixHint = (item) => {
+        const { check, code, dir, target } = item;
+        if (check === 'dangling_link')
+          return `   → curl -XPUT ${b2}/api/node/${code} -H 'Content-Type: application/json' -d '{"${dir}":null}'  # remove broken link\n` +
+                 `     OR create the missing node: curl -XPOST ${b2}/api/node -d '{"code":"${target}",...}'`;
+        if (check === 'bidirectional' && code && target && dir)
+          return `   → curl -XPUT ${b2}/api/node/${target} -H 'Content-Type: application/json' -d '{"${OPP[dir]}":"${code}"}'`;
+        if (check === 'max_connections')
+          return `   → curl ${b2}/api/node/${code}  # inspect N/S/E/W links and remove duplicate`;
+        if (check === 'long_link' && item.suggestedCoords)
+          return `   → Suggested intermediate node: r=${item.suggestedCoords.r}, c=${item.suggestedCoords.c}`;
+        if (check === 'missing_coords')
+          return `   → Add coords in NODE_COORDS: ${code}: { r:<row>, c:<col> }`;
+        return '';
+      };
+
+      if (errors.length) {
+        lines.push(HR);
+        lines.push(`  ✗ ERRORS (${errors.length})  — graph is broken`);
+        lines.push(HR);
+        for (const e of errors) {
+          lines.push(`  [FIX]  ${e.check.toUpperCase().padEnd(20)}  ${e.code}${e.dir?'.'+e.dir:''}${e.target?'→'+e.target:''}`);
+          lines.push(`         ${e.msg}`);
+          const h = mapFixHint(e); if (h) lines.push(h);
+          lines.push('');
+        }
+      }
+      if (warnings.length) {
+        lines.push(HR);
+        lines.push(`  ⚠ WARNINGS (${warnings.length})  — WARNING TODO FIX`);
+        lines.push(HR);
+        for (const w of warnings) {
+          lines.push(`  [WARN]  ${w.check.toUpperCase().padEnd(20)}  ${w.code}${w.dir?'.'+w.dir:''}${w.target?'→'+w.target:''}`);
+          lines.push(`          ${w.msg}`);
+          const h = mapFixHint(w); if (h) lines.push(h);
+          lines.push('');
+        }
+      }
+      if (suggestions.length) {
+        lines.push(HR);
+        lines.push(`  ℹ SUGGESTIONS (${suggestions.length})  — layout improvements`);
+        lines.push(HR);
+        for (const s of suggestions) {
+          lines.push(`  [INFO]  ${s.check.toUpperCase().padEnd(20)}  ${s.code}${s.dir?'.'+s.dir:''}${s.target?'→'+s.target:''}`);
+          lines.push(`          ${s.msg}`);
+          const h = mapFixHint(s); if (h) lines.push(h);
+          lines.push('');
+        }
+      }
+      lines.push(HR);
+      const clean = errors.length === 0 && warnings.length === 0;
+      lines.push(`  SUMMARY  ${errors.length} errors  ·  ${warnings.length} warnings  ·  ${suggestions.length} suggestions  ·  ${nodeCodesWithCoords.length}/${allNodeCodes.length} nodes positioned`);
+      if (clean) lines.push('  MAP GRAPH OK — no structural errors or warnings.');
+      lines.push(HR);
+      lines.push('');
+      cors(res);
+      res.writeHead(200, { 'Content-Type':'text/plain; charset=utf-8' });
+      return res.end(lines.join('\n'));
+    }
+
+    return json(res, 200, { ok:true, errors, warnings, suggestions, summary });
+  }
+
   // ── Audit (data integrity scan) ───────────────────────────────────────────
   if (parts[0] === 'audit' && method === 'GET') {
     const errors = [], warnings = [], suggestions = [], parse = [];
@@ -2979,6 +3208,7 @@ server.listen(PORT, '127.0.0.1', () => {
     ['GET',    '/api/ping'],
     ['GET',    '/api/source                         → raw HTML source (worldbuilder Load from Server)'],
     ['GET',    '/api/audit[?format=text]             → integrity scan (errors/warnings/suggestions/connectivity)'],
+    ['GET',    '/api/audit/map[?format=text]         → map conformity: density/bidirectional/direction/long-links/market-proximity'],
     ['GET',    '/api/schema[/{type}]                → canonical field schema'],
     ['GET',    '/api/flags                          → list _S_DEFAULTS flags'],
     ['POST',   '/api/flags                          body: {name, defaultValue, comment?}'],
