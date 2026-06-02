@@ -484,6 +484,9 @@ Game cities are canonical. Source-book settings are proposed new nodes.
 | WAW-06 | Peter's Deposition | 7 | ANT → CON → RGS → WM | The periphery holds the origin; the Syrian community kept the commission in its original linguistic register before Greek transmission began |
 | MLA-03 | The Solon Tablet | 6 | MYS → ANC → WM | The authenticated copy that precedes the original's uncertain fate; the rubbing arrives before the stone; the copy is the only form in which the laws will reach the archive |
 | MLA-05 | The Nicias Correspondence | 7 | THA → CON → ANC → WM | The source document behind the canonical account; the historian's selection is visible as selection; the archive holds what Thucydides chose not to quote |
+| BGW-02 | The Sinbad Chart | 6 | FAM → VEN → WM | The navigational chart that matches the story's geography; the chart and the story share place names; the archive receives the cartographic evidence of Sinbad's world |
+| BGW-03 | The Caliph's Night Log | 7 | BAG → TBZ → CON → WM | The private security log of the legendary ruler's nocturnal absences; the court chronicle recorded his governance; only the log recorded his nights |
+| BGW-05 | The Genie Contract | 8 | CAI → FAM → WM | The legal document in which the impossible is an administrative category; the appraiser wrote 'not established' and moved on |
 
 *When a new quest is written, append its row to the Processed Quests table.*
 *When a new location is used, append its row to the Location Grid.*

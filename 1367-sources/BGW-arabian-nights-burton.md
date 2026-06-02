@@ -1796,3 +1796,435 @@ He notes: "Cross-reference: BGW-01 through BGW-07. The Nights has a geographic r
 
 *BGW-02 complete. 2026-06-02.*
 
+
+---
+
+**Cycle 7**
+
+*(Theme differentiation: Avoiding BGW cycles 1-6. New theme: the private security log that gives the Harun stories their administrative foundation; the court chronicle made him policy; the log made him dates and hours; the archive receives the document that proves the legendary ruler left the palace at night and came back changed.)*
+
+---
+
+## Cycle 7 — Angle: *The Caliph's Night Log — The Administrative Record of the Legend's Foundations*
+
+**What this angle reveals that cycles 1-6 missed**: Cycle 6 showed the story assembled from navigational charts — the geographic evidence behind the fiction. Cycle 7 shows the administrative evidence behind the most famous image of Harun al-Rashid: the Caliph walking incognito through Baghdad at night. The Harun stories are the Arabian Nights' most explicit claim about a real historical figure. The court chronicle covers his governance. The private security log covers his nights. The log does not name what he did or where he went; it records departure time, return time, and physical state on return. Fourteen nights in one period. The stories describe fourteen nocturnal incidents. Someone who had this log — or one like it — counted the departures and wrote the stories to fill the gaps.
+
+**Themes avoided:** all six prior BGW themes; CAI-03's "archive receives claims not verifications" (the log makes no claims — it records facts); IST-04's "unfinished draft that survived" (the log was deliberately kept, not accidentally preserved).
+
+**New theme chosen:** "The private security log of the legendary ruler's nocturnal absences; the court chronicle recorded his governance; only the log recorded his nights; the stories filled what the log left blank."
+
+---
+
+### 5-Act Vignette: *The Caliph's Night Log*
+
+#### The Token
+
+The Palace Night Register: a 10th-century monastery copy of a palace guard scribe's private log, covering Harun al-Rashid's nocturnal departures from the Baghdad palace, 786-809 AD. Date, departure hour, return hour, physical state on return. Forty-seven entries in twenty-three years. One entry reads: *Returned before dawn, carrying a sealed bundle in cloth. Physical state: unharmed, fatigued, smelling of market.* Another: *Two nights absent, returned with a wound to the left forearm, dressed before presentation to the guard.* The log was not part of the official archive.
+
+*The Palace Night Register · monastery copy, brown ink, forty-seven entries · monastery archive box · Baghdad district*
+
+---
+
+#### Act I — Baghdad (BAG)
+
+*The monastery near Baghdad is being dissolved under Ilkhanate administrative pressure. Brother Yusuf, the senior monk, has been sorting the private records from the official records for three months. The Night Register was filed with the private records — the scribe who kept it entered the monastery in old age and brought his personal papers with him.*
+
+Brother Yusuf knows what the log is. He has read the Arabian Nights. He has counted: forty-seven log entries in twenty-three years, fourteen in the famous year 800. He says: "The stories did not invent the Caliph's nights. They described them. Someone who had access to a document like this counted the departures and gave them plots."
+
+`grantItem: "Palace Night Register"`
+
+*The Palace Night Register · accepted, the forty-seven entries in the Fighter's hands · monastery archive room*
+
+**Skill Check — History DC 12:** *Read the log and understand which specific entries correspond to specific Harun stories — particularly whether the entry describing a wound and a market smell corresponds to one of the famous disguise-night accounts.*
+
+*pass:* Entry 23: return with wound, market smell. The Harun story cycle includes a night when the Caliph intervened in a merchant dispute, was injured by one of the merchants, and returned to the palace having resolved the case. *The log records the wound. The story explains it. The story and the log were made by different people, about the same night.*
+
+*fail:* The log noted as a palace administrative record with possible correspondence to the Harun story cycle. Specific correspondences not assembled.
+
+---
+
+#### Act II — Baghdad (BAG)
+
+*An Abbasid claimant's agent — a local Baghdad family that maintains descent from the Abbasid line. They have learned that the log is moving. A document showing that Harun made forty-seven undocumented palace departures in twenty-three years could be used to question the formal validity of decisions made during recorded absences — if a Caliph was regularly out of the palace without official record, his governance record has gaps that the official chronicle does not acknowledge.*
+
+The agent is careful and precise. He has a legal argument.
+
+*The Palace Night Register · in the Fighter's hands, the agent's formal request on the table · Fighter · monastery gate*
+
+**Skill Check — Persuasion DC 13:** *Argue that a security log records movement, not governance; the Caliph's nighttime departures do not affect the validity of his daytime decisions; a security log is evidence of physical presence, not of administrative authority.*
+
+*pass:* The agent is precise. He has considered this. "The argument would not hold in any current court," he admits. He is testing whether the Fighter knows that. He withdraws. *He was not going to use the log in court — he wanted to see if it could be an embarrassment. It cannot be made into one without much more work than he wants to do.*
+
+*fail:* He files a formal claim that the log is relevant to an ongoing succession dispute. The claim creates a three-day delay. Released on day four when no court substantiates the claim.
+
+---
+
+#### Act III — Tabriz (TBZ)
+
+*The Tabriz overland route. An Ilkhanate administrative surveyor, Köke, has been compiling a catalogue of pre-Ilkhanate administrative records from the Baghdad region. He is systematic and thorough and he wants the log entered in the catalogue because it is a Baghdad palace administrative record from the Abbasid period.*
+
+He is not hostile. He is cataloguing everything from that region.
+
+*The Palace Night Register · in the pack, Köke's catalogue notebook open to a Baghdad Administrative Records section · Fighter · Tabriz waystation*
+
+**Skill Check — History DC 12:** *Establish that the log is a private scribe's personal record, not an official palace document; the Ilkhanate's catalogue covers official administrative records from the Abbasid period, not personal papers that a retiring scribe carried into a monastery.*
+
+*pass:* Köke marks his notebook: *personal papers of a private scribe; not a palace administrative record; outside scope of Abbasid Administrative Catalogue.* He lets the Fighter pass. *He is systematic. He cannot argue scope over a personal document. The catalogue has enough official records.*
+
+*fail:* He enters the log in the catalogue under "miscellaneous private palace documents." A copy of the entry will eventually reach Ilkhanate administrative archives.
+
+---
+
+#### Act IV — Constantinople (CON)
+
+*Two men from a Persian literary and scholarly society that has been assembling Harun al-Rashid biographical materials for a historical project. Their scholarly purpose is real. Their leader is also the Abbasid claimant's cousin — a detail they do not mention. They want the log for the biographical archive, which is private.*
+
+They make a sincere scholarly request. The coincidence of kinship is not relevant to their scholarship. Or it is, but they do not say so.
+
+*The Palace Night Register · in the pack, the two scholars' letters of introduction open · Fighter · Constantinople waystation*
+
+**Hybrid — Persuasion DC 12 first; fail → Combat:**
+
+*Persuasion pass:* Argue that the log's scholarly value is greatest in a collection that can compare it with multiple sources from the same period; a private biographical archive focused on a single subject cannot provide the comparative context. *They are scholars. They understand context. They accept, with a request for correspondence access when the log is processed.*
+
+*Persuasion fail → Combat:* 2 agents, AC 12, HP 18. The Abbasid cousin's interest is stronger than the scholars' integrity. *failText:* They take the log. The waystation keeper has seen the scholars before. *passText:* Both down or withdrew. *The scholars are embarrassed. The cousin is not.*
+
+---
+
+#### Act V — Weimar (WM)
+
+*Archivus Sweelinck reads the log entry by entry. He reads the Harun cycle from the BGW archive copy. He reads Entry 23 three times.*
+
+"Return with wound," he says. "Market smell." He reads the story. "The Caliph intervened in a merchant dispute, was struck, and returned to the palace." He sets both down. "The log records the night. The story explains the night. The log does not know the story. The story does not cite the log." He is quiet. "But someone who had both could see that they describe the same night."
+
+He writes: *Court Administrative Records — Narrative Source Documents: private palace or court records whose content corresponds to specific narrative traditions; primary evidence that the narrative drew on administrative knowledge of the ruler's actual movements; the log is the factual substrate for which the story is the explanation.*
+
+He notes: "Cross-reference: BGW Cycle 1-7. The archive now holds the frame, the margin, the translator, the voice, the authentication question, the chart, and the log. The collection has its sources."
+
+*The Palace Night Register · Entry 23 marked, Harun story cycle beside it · Archivus Sweelinck · Weimar intake desk*
+
+"You receive the Caliph's Night Log Record."
+
+`takeItem: "Palace Night Register"`
+`grantItem: "Caliph's Night Log Record"`
+
+---
+
+### Quest API Stub — BGW-03
+
+```json
+{
+  "quest_id": "BGW-03",
+  "title": "The Caliph's Night Log",
+  "cycle": 7,
+  "book": "BGW — Arabian Nights (Burton)",
+  "token": "Palace Night Register",
+  "route": ["BAG", "TBZ", "CON", "WM"],
+  "theme": "The private security log of the legendary ruler's nocturnal absences; the court chronicle recorded his governance; only the log recorded his nights; the stories filled what the log left blank",
+  "archive_category": "Court Administrative Records — Narrative Source Documents",
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "BAG",
+      "type": "skill_check",
+      "activateNode": "BAG",
+      "scene": "Monastery near Baghdad, being dissolved. Brother Yusuf has counted: forty-seven log entries, fourteen in the year 800. 'The stories did not invent the Caliph's nights. They described them. Someone who had access to a document like this counted the departures and gave them plots.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Read the log and understand which entries correspond to specific Harun stories — particularly whether Entry 23 (wound, market smell) corresponds to the famous disguise-night account.",
+        "failText": "Log noted as a palace administrative record with possible correspondence to the Harun story cycle. Specific correspondences not assembled.",
+        "passText": "Entry 23: return with wound, market smell. The Harun story cycle includes a night when the Caliph intervened in a merchant dispute and was injured. The log records the wound. The story explains it. They were made by different people, about the same night."
+      },
+      "grantItem": "Palace Night Register",
+      "checkPassFlag": "bgw03Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "BAG",
+      "type": "skill_check",
+      "activateNode": "BAG",
+      "scene": "Monastery gate. An Abbasid claimant's agent with a legal argument: forty-seven undocumented departures could question the validity of decisions made during recorded absences — governance had gaps the official chronicle doesn't acknowledge.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "prompt": "Argue that a security log records movement, not governance — the Caliph's nighttime departures do not affect the validity of his daytime decisions.",
+        "failText": "He files a formal claim that the log is relevant to an ongoing succession dispute. Three-day delay; released on day four.",
+        "passText": "'The argument would not hold in any current court.' He was testing whether the Fighter knows that. He withdraws — it cannot be made into an embarrassment without much more work."
+      },
+      "checkPassFlag": "bgw03Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "TBZ",
+      "type": "skill_check",
+      "activateNode": "TBZ",
+      "scene": "Tabriz waystation. Ilkhanate administrative surveyor Köke is compiling a catalogue of pre-Ilkhanate administrative records from the Baghdad region. He wants the log entered under Abbasid Administrative Records. He is systematic and not hostile.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Establish that the log is a private scribe's personal record, not an official palace document — the Ilkhanate catalogue covers official administrative records, not personal papers a retiring scribe carried into a monastery.",
+        "failText": "He enters the log in the catalogue under 'miscellaneous private palace documents.' A copy of the entry will reach Ilkhanate archives.",
+        "passText": "Köke marks: 'personal papers of a private scribe; outside scope of Abbasid Administrative Catalogue.' He cannot argue scope over a personal document. The catalogue has enough official records."
+      },
+      "checkPassFlag": "bgw03Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "CON",
+      "type": "hybrid",
+      "activateNode": "CON",
+      "scene": "Constantinople waystation. Two scholars from a Persian literary society assembling Harun al-Rashid biographical materials. Their scholarly purpose is real. Their leader is also the Abbasid claimant's cousin — a detail they do not mention.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "prompt": "Argue that the log's value is greatest in a collection comparing it with multiple period sources — a private single-subject archive cannot provide the comparative context.",
+        "failText": "Combat begins: 2 agents, AC 12, HP 18. failText: They take the log. passText: Both down or withdrew — the scholars are embarrassed, the cousin is not."
+      },
+      "combat": {
+        "enemies": 2,
+        "AC": 12,
+        "HP": 18,
+        "description": "Agents of the Abbasid claimant cousin — the scholars' integrity is weaker than the cousin's interest",
+        "failText": "They take the log. The waystation keeper has seen the scholars before.",
+        "passText": "Both down or withdrew. The scholars are embarrassed. The cousin is not."
+      },
+      "checkPassFlag": "bgw03Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck reads Entry 23 three times, then the Harun story. 'The log records the night. The story explains the night. The log does not know the story. The story does not cite the log. But someone who had both could see they describe the same night.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Explain the relationship: the log is the factual substrate; the story is the explanation; neither cites the other; both are evidence of the same event.",
+        "failText": "Filed under Abbasid Court Records — Private Administrative. Cross-reference to BGW Arabian Nights series created.",
+        "passText": "Sweelinck writes: 'Court Administrative Records — Narrative Source Documents: private records whose content corresponds to specific narrative traditions; the log is the factual substrate for which the story is the explanation.' Cross-reference: BGW Cycle 1-7. You receive the Caliph's Night Log Record."
+      },
+      "takeItem": "Palace Night Register",
+      "grantItem": "Caliph's Night Log Record",
+      "checkPassFlag": "bgw03Act5Passed",
+      "activateMissionBit": "bgwNightLogComplete"
+    }
+  ]
+}
+```
+
+---
+
+*BGW-03 complete. 2026-06-02.*
+
+
+---
+
+**Cycle 8**
+
+*(Theme differentiation: Avoiding BGW cycles 1-7. New theme: the legal inventory that treats the impossible as an administrative category; the sorcerer's estate document is the only record in which a djinn appears as a legal object with appraised status; the archivist must create a category for assets whose nature the law never had to evaluate before.)*
+
+---
+
+## Cycle 8 — Angle: *The Genie Contract — The Impossible as an Administrative Category*
+
+**What this angle reveals that cycles 1-7 missed**: The first seven cycles have treated the Arabian Nights as a literary and geographic tradition — frame, margin, annotation, voice, authentication, cartography, administrative substrate. Cycle 8 shows the tradition's most extraordinary document: the legal estate inventory in which a djinn is listed as an item to be appraised. The sorcerer's estate was a standard estate. The inventory was a standard legal document. The appraiser was a professional who appraised everything presented to him and wrote "not established" next to item 47 and moved on. The archive receives a document in which the impossible is not asserted as a mystical claim but processed as an administrative problem that the appraiser could not solve.
+
+**Themes avoided:** all seven prior BGW themes; CAI-03's "archive receives claims not verifications" (the inventory is not a claim — it is an administrative record that had to process an asset type it had no category for); CAI-05's "legal instrument that is the story's emotional center" (the inventory's legal function is itself the point, not its correspondence to a narrative).
+
+**New theme chosen:** "The legal document in which the impossible is an administrative category; the appraiser wrote 'not established' and moved on; the archive receives evidence that formal administration once had to process what it could not evaluate."
+
+---
+
+### 5-Act Vignette: *The Genie Contract*
+
+#### The Token
+
+The Sorcerer's Estate Inventory: a 10th-century Cairo estate inventory in standard Arabic legal format. Thirty-seven items appraised and distributed. Item 47: *One sealed copper vessel with lead stopper. Contents: bound djinn, middle class, three binding clauses remaining. Appraised value: not established. Current location: deposited for safe custody at the estate of Khalid ibn Musa, Copper Quarter, pending settlement of the estate.* The deposit notation means the vessel is still there — or was, when the document was filed.
+
+*The Sorcerer's Estate Inventory · standard legal papyrus, item 47 marked · Cairo estate archive · waiting*
+
+---
+
+#### Act I — Cairo (CAI)
+
+*The Cairo estate notary Ibrahim al-Qaysarani has been holding this inventory for thirty years. The estate has never been settled because no heir can be found who will accept item 47's terms — to receive the inventory is, in theory, to assume the estate's contractual claim on the vessel's binding clauses. No heir wants the obligation. No court wants to rule on it.*
+
+He gives the inventory to the Fighter gladly. He wants it to leave. He is very specific: "I am not giving you the vessel. I am giving you the document. The vessel is at Khalid ibn Musa's estate, if Khalid's heirs have not moved it or opened it. The document is what matters. The document is the only evidence that item 47 was ever a formal administrative question."
+
+`grantItem: "Sorcerer's Estate Inventory"`
+
+*The Sorcerer's Estate Inventory · accepted, item 47 visible · Fighter's hands · Cairo estate notary office*
+
+**Skill Check — Investigation DC 12:** *Understand the administrative structure of item 47 — specifically, whether "three binding clauses remaining" is a legal notation that creates an obligation on whoever holds the inventory, or merely a description of the vessel's contents.*
+
+*pass:* The notation is descriptive, not obligatory. "Three binding clauses remaining" describes the vessel's condition, like "knife, slightly blunted." The holder of the inventory does not inherit the clauses — they inherit the estate's claim that the vessel exists and is owed back. *Ibrahim knows this and has known it for thirty years. He was keeping the document, not the obligation. The Fighter is doing the same.*
+
+*fail:* The notation is ambiguous. The Fighter takes the inventory with an unresolved question about what comes with it.
+
+---
+
+#### Act II — Cairo (CAI)
+
+*A sorcerer's practitioners' association — a guild of ritual specialists in Cairo — has been notified that the inventory is moving. They argue that a document creating or describing binding obligations on supernatural entities falls under guild jurisdiction; a foreign archive cannot fulfill or properly manage the contractual dimensions of item 47.*
+
+Their representative is polite and concerned. He is also, genuinely, right about the problem — he just has the wrong solution.
+
+*The Sorcerer's Estate Inventory · in the Fighter's hands, the guild representative's formal request · Fighter · Cairo notary office exit*
+
+**Skill Check — Persuasion DC 13:** *Argue that a foreign archive that classifies the inventory as a historical document neutralizes the contractual problem more effectively than a guild that treats it as a live document; classification as historical removes it from any active legal claim.*
+
+*pass:* The representative considers. "If the archive classifies it as historical, the binding clauses lose their enforceability under Arabic contract law?" He is checking. *Technically yes — a document held in a foreign archive outside Arabic administrative jurisdiction cannot maintain the legal force of Arabic estate law. He sees it.* He withdraws. "The vessel remains at Khalid ibn Musa's estate. That is our jurisdiction."
+
+*fail:* He files a formal guild claim on the inventory's "supernatural content" classification. The claim creates a two-day delay. Released when the guild's claim is found to have no authority over document custody.
+
+---
+
+#### Act III — Famagusta (FAM)
+
+*The Famagusta factor's house. A Venetian ritual practitioner named Ser Ottavio Contarini has been in Cyprus for two months tracking the inventory — he has a client who wants the binding clauses, if there are any still remaining. He argues that a vessel with three binding clauses remaining is a commercial asset of significant value and that he is prepared to compensate accordingly.*
+
+He is a practical man with a specific professional interest. He does not deny what he wants. He wants a supernatural asset that he can use.
+
+*The Sorcerer's Estate Inventory · in the pack, Ser Ottavio's offer letter on the table · Fighter's pack · Famagusta factor's house*
+
+**Skill Check — Insight DC 12:** *Read whether Ser Ottavio's interest is in the inventory (which he could copy) or in the vessel's location (which only the inventory provides).*
+
+*pass:* He does not need the original inventory — he needs to know where the vessel is. Item 47 includes the deposit notation: Khalid ibn Musa, Copper Quarter, Cairo. If he had the original inventory, he could use it to establish a legal claim at Khalid's estate. *The inventory is not a curiosity to him. It is the document he needs to get to the vessel.* The Fighter will not give it to him.
+
+*fail:* He copies item 47 (just the deposit notation) before releasing the inventory. He now knows where the vessel is. The inventory continues intact.
+
+---
+
+#### Act IV — Famagusta Harbor (FAM)
+
+*Ser Ottavio's ship is in the harbor. Two men disembark — they came from Venice with him, they are staying as a contingency. When the persuasion fails, the contingency activates.*
+
+They are not subtle. They want the inventory back for Ser Ottavio.
+
+*The Sorcerer's Estate Inventory · in the pack, both men between the Fighter and the dock road · Fighter · Famagusta harbor*
+
+**Combat:** 2 Venetian hired agents — AC 13, HP 20. Stop at half health when it becomes more expensive than the clause value. *failText:* They take the inventory. Ser Ottavio sails to Cairo. *passText:* Both down or withdrew. *Ser Ottavio is watching from the ship. He is calculating the cost of a third attempt. The math does not favor him.*
+
+---
+
+#### Act V — Weimar (WM)
+
+*Archivus Sweelinck reads the inventory item by item. He reaches item 47. He reads it twice. He puts the inventory on the table and does not pick it up immediately.*
+
+"The appraiser," he says. "He went through thirty-seven items. He appraised each one." He reads item 47 again. "He wrote 'not established.' He did not write 'impossible' or 'fraudulent' or 'disputed.' He wrote 'not established,' which is the notation an appraiser uses when the item exists but cannot be valued." He picks up the inventory. "He accepted that item 47 existed. He accepted that it was an estate asset. He had no category for its value."
+
+He writes: *Estate Inventories — Extraordinary Assets: legal estate inventories that include assets for which no standard appraisal category exists; primary evidence that legal administration once had to process, as a formal matter, assets whose nature it could not evaluate; the appraiser's notation 'not established' is evidence of administrative acknowledgment, not dismissal.*
+
+He notes: "The vessel's current location is recorded in item 47: deposited with Khalid ibn Musa of the Copper Quarter, Cairo. This archive has no jurisdiction over the vessel. The archive has jurisdiction over this document. Filed."
+
+*The Sorcerer's Estate Inventory · item 47 marked, deposit notation noted · Archivus Sweelinck · Weimar intake desk*
+
+"You receive the Estate Extraordinary Asset Record."
+
+`takeItem: "Sorcerer's Estate Inventory"`
+`grantItem: "Estate Extraordinary Asset Record"`
+
+---
+
+### Quest API Stub — BGW-05
+
+```json
+{
+  "quest_id": "BGW-05",
+  "title": "The Genie Contract",
+  "cycle": 8,
+  "book": "BGW — Arabian Nights (Burton)",
+  "token": "Sorcerer's Estate Inventory",
+  "route": ["CAI", "FAM", "WM"],
+  "theme": "The legal document in which the impossible is an administrative category; the appraiser wrote 'not established' and moved on; the archive receives evidence that formal administration once had to process what it could not evaluate",
+  "archive_category": "Estate Inventories — Extraordinary Assets",
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "CAI",
+      "type": "skill_check",
+      "activateNode": "CAI",
+      "scene": "Cairo estate notary office. Ibrahim al-Qaysarani has held this inventory for thirty years — the estate never settled because no heir will accept item 47's terms. 'I am not giving you the vessel. I am giving you the document. The document is the only evidence that item 47 was ever a formal administrative question.'",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 12,
+        "prompt": "Understand the administrative structure of item 47 — whether 'three binding clauses remaining' creates an obligation on whoever holds the inventory, or merely describes the vessel's condition.",
+        "failText": "The notation is ambiguous. The Fighter takes the inventory with an unresolved question about what comes with it.",
+        "passText": "The notation is descriptive, not obligatory — 'three binding clauses remaining' describes condition, like 'knife, slightly blunted.' The holder of the inventory does not inherit the clauses. Ibrahim has known this for thirty years."
+      },
+      "grantItem": "Sorcerer's Estate Inventory",
+      "checkPassFlag": "bgw05Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "CAI",
+      "type": "skill_check",
+      "activateNode": "CAI",
+      "scene": "Cairo notary office exit. A ritual practitioners' guild representative argues that documents describing binding obligations on supernatural entities fall under guild jurisdiction — a foreign archive cannot properly manage item 47's contractual dimensions. He is polite and genuinely concerned.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "prompt": "Argue that a foreign archive classifying the inventory as historical neutralizes the contractual problem more effectively than a guild treating it as live — classification as historical removes it from active Arabic estate law jurisdiction.",
+        "failText": "Guild files a formal claim on the inventory's 'supernatural content' classification. Two-day delay; released when claim is found to have no authority over document custody.",
+        "passText": "'If the archive classifies it as historical, the binding clauses lose enforceability under Arabic contract law?' He sees it. He withdraws: 'The vessel remains at Khalid ibn Musa's estate. That is our jurisdiction.'"
+      },
+      "checkPassFlag": "bgw05Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "FAM",
+      "type": "skill_check",
+      "activateNode": "FAM",
+      "scene": "Famagusta factor's house. Venetian ritual practitioner Ser Ottavio Contarini has tracked the inventory for two months. He wants the binding clauses. He is practical and does not deny his purpose. He offers significant compensation.",
+      "skillCheck": {
+        "skill": "Insight",
+        "dc": 12,
+        "prompt": "Read whether Ser Ottavio's interest is in the inventory or in the vessel's location — which only the inventory's item 47 deposit notation provides.",
+        "failText": "He copies item 47's deposit notation before releasing the inventory. He now knows where the vessel is. The inventory continues intact.",
+        "passText": "He does not need the original inventory — he needs to know where the vessel is. Item 47 has the deposit notation: Khalid ibn Musa, Copper Quarter, Cairo. The inventory is the document he needs to reach the vessel. The Fighter will not give it to him."
+      },
+      "checkPassFlag": "bgw05Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "FAM",
+      "type": "combat",
+      "activateNode": "FAM",
+      "scene": "Famagusta harbor. Ser Ottavio's two contingency men disembark when the persuasion fails. They are not subtle. Ser Ottavio watches from the ship, calculating the cost of a third attempt.",
+      "combat": {
+        "enemies": 2,
+        "AC": 13,
+        "HP": 20,
+        "description": "Venetian hired agents — stop at half health when the binding clause value no longer justifies the cost",
+        "failText": "They take the inventory. Ser Ottavio sails to Cairo.",
+        "passText": "Both down or withdrew. Ser Ottavio is calculating. The math does not favor him."
+      },
+      "checkPassFlag": "bgw05Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck reads item 47. 'The appraiser went through thirty-seven items. At item 47 he wrote: not established. Not impossible. Not fraudulent. Not disputed. Not established — which is what an appraiser writes when the item exists but cannot be valued. He accepted that item 47 existed.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 11,
+        "prompt": "Explain the significance of 'not established' — as a legal notation it is evidence of administrative acknowledgment, not dismissal; the appraiser processed item 47 as a real asset with an unevaluable value.",
+        "failText": "Filed under Cairo Estate Records — Unusual Items. Cross-reference to BGW Arabian Nights series created.",
+        "passText": "Sweelinck writes: 'Estate Inventories — Extraordinary Assets: legal inventories that include assets for which no standard appraisal category exists; primary evidence that legal administration once had to process assets whose nature it could not evaluate; not established is evidence of acknowledgment, not dismissal.' Filed. The vessel remains at Khalid ibn Musa's estate. That is not this archive's jurisdiction."
+      },
+      "takeItem": "Sorcerer's Estate Inventory",
+      "grantItem": "Estate Extraordinary Asset Record",
+      "checkPassFlag": "bgw05Act5Passed",
+      "activateMissionBit": "bgwGenieComplete"
+    }
+  ]
+}
+```
+
+---
+
+*BGW-05 complete. 2026-06-02.*
+

@@ -139,16 +139,16 @@ Main vignette **BGW-01 "The Night's Account"** is fully spec'd with UQF v1.0 JSO
 
 The following quest seeds were generated from full narrative recall. Each has a paragraph-length story concept in BGW-arabian-nights-burton.md. They need full vignette treatment: 5 acts, TOKEN, skill checks, UQF JSON, and admin updates.
 
-### §BGW-02 — The Sinbad Chart (Sinbad cycle)
+### §BGW-02 — The Sinbad Chart (Sinbad cycle) ✓ DONE 2026-06-02
 A Basra merchant's navigational chart, dated approximately 9th century, corresponding to the route of Sinbad's fourth voyage. The chart uses Arabic coastal terms and local island names that a later scholar has annotated with identifications. A Persian geography archive acquired it; a Venetian merchant acquired the archive; the chart is in transit. Fighter escorts it.
 
-### §BGW-03 — The Caliph's Night Log (Harun al-Rashid stories)
+### §BGW-03 — The Caliph's Night Log (Harun al-Rashid stories) ✓ DONE 2026-06-02
 A Baghdad court scribe kept a private log of Harun al-Rashid's nocturnal palace absences — dates, hours, return times, physical state on return — as a security measure. Not part of the official chronicle. A 10th-century copy survives in an Iraqi monastery being dissolved. Fighter escorts it.
 
 ### §BGW-04 — Morgiana's Grant (Ali Baba supplement) ✓ DONE 2026-06-02
 A deed of manumission for a household slave named Morgiana, issued in a Cairo legal document, approximately 9th century, found in a collection of manumission records in an Alexandrian library. Whether it is the "real" document behind the story or a later document named for the character is unanswerable. Fighter escorts it.
 
-### §BGW-05 — The Genie Contract (Merchant and Genie cycle)
+### §BGW-05 — The Genie Contract (Merchant and Genie cycle) ✓ DONE 2026-06-02
 A sorcerer's estate inventory from Cairo, approximately 10th century, includes a sealed copper vessel with a lead stopper — described as "bound djinn, middle class, three binding clauses remaining." The inventory is a legal document. The vessel's location is noted as "deposited for safe custody." Fighter escorts the inventory.
 
 ### §BGW-06 — The Translator's Preface (Frame narrative) ✓ DONE 2026-06-02
