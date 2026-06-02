@@ -498,6 +498,27 @@ function serializeMonsterLiteral(key, body) {
   return parts.join(', ') + ' },\n';
 }
 
+function serializeNpcLiteral(key, body) {
+  const tier = (obj, indent) => {
+    if (!obj || typeof obj !== 'object') return null;
+    const parts = [];
+    if (obj.greeting) parts.push(`greeting:${JSON.stringify(obj.greeting)}`);
+    if (obj.dialogue) parts.push(`dialogue:${JSON.stringify(obj.dialogue)}`);
+    if (obj.special)  parts.push(`special:${JSON.stringify(obj.special)}`);
+    return parts.length ? `{ ${parts.join(', ')} }` : null;
+  };
+  const parts = [`  ${key}: { key:${JSON.stringify(key)}, name:${JSON.stringify(body.name)}`];
+  if (body.occupation) parts.push(`occupation:${JSON.stringify(body.occupation)}`);
+  if (body.node)       parts.push(`node:${JSON.stringify(body.node)}`);
+  const neutral    = tier(body.neutral);
+  const friendly   = tier(body.friendly);
+  const dearFriend = tier(body.dearFriend);
+  if (neutral)    parts.push(`neutral:${neutral}`);
+  if (friendly)   parts.push(`friendly:${friendly}`);
+  if (dearFriend) parts.push(`dearFriend:${dearFriend}`);
+  return parts.join(', ') + ' },\n';
+}
+
 function serializeItemLiteral(key, body) {
   const STR  = ['name','icon','type','desc','readText','effect'];
   const NUM  = ['sell','atkBonus','dmgDie','dmgCount','dmgFlat','minLevel','uses','base','levelScale','luckScale','minRank'];
@@ -1912,7 +1933,7 @@ async function route(req, res) {
   }
 
   // ── POST /api/{quest|node|terrain|monster} (create new entity) ────────────
-  if (!rawId && method === 'POST' && (type === 'quest' || type === 'node' || type === 'terrain' || type === 'monster')) {
+  if (!rawId && method === 'POST' && (type === 'quest' || type === 'node' || type === 'terrain' || type === 'monster' || type === 'npc')) {
     let body;
     try { body = await readBody(req); } catch(e) {
       return json(res, 400, { error:'Invalid JSON' });
@@ -2018,6 +2039,36 @@ async function route(req, res) {
       logRow('stats', `${body.name}  ·  AC ${body.ac||'?'}  HP ${body.hp||'?'}  ATK +${body.atk||'?'}  tier: ${body.tier||'?'}`);
       logResponse(method, url.pathname, 201, `created monster/${key}`);
       return json(res, 201, { ok:true, key, note:'POST /api/save to persist.', entity: WBAPI.monsterPool[key] });
+    }
+
+    if (type === 'npc') {
+      const key = body.key;
+      if (!key || !body.name || !body.node) {
+        logResponse(method, url.pathname, 400, 'npc create: missing required fields');
+        return json(res, 400, { error:'Required fields: key, name, node. Optional: occupation, neutral{greeting,dialogue}, friendly{greeting,dialogue,special}, dearFriend{greeting,dialogue}' });
+      }
+      if (!/^[a-z_][a-z0-9_]*$/.test(key)) {
+        logResponse(method, url.pathname, 400, `npc key "${key}" invalid`);
+        return json(res, 400, { error:'key must be snake_case (a-z, 0-9, underscore, no leading digit)' });
+      }
+      if (WBAPI.birkaNpcs[key]) {
+        logResponse(method, url.pathname, 409, `npc "${key}" already exists`);
+        return json(res, 409, { error:`NPC "${key}" already exists` });
+      }
+      if (!WBAPI.nodeMap[body.node]) {
+        logResponse(method, url.pathname, 400, `node "${body.node}" not in NODE_MAP`);
+        return json(res, 400, { error:`node "${body.node}" not found in NODE_MAP` });
+      }
+      const entry = serializeNpcLiteral(key, body);
+      const ins = insertBeforeSectionClose('BIRKA_NPC', entry);
+      if (!ins.ok) { logResponse(method, url.pathname, 500, ins.error); return json(res, 500, ins); }
+      const { key: _k, ...npcFields } = body;
+      WBAPI.birkaNpcs[key] = npcFields;
+      WBAPI._buildIndexes();
+      logRow('key', key);
+      logRow('npc', `${body.name}  ·  ${body.occupation||'—'}  ·  node: ${body.node}`);
+      logResponse(method, url.pathname, 201, `created npc/${key}`);
+      return json(res, 201, { ok:true, key, note:'POST /api/save to persist.', ...npcConnections(key) });
     }
   }
 
@@ -2386,6 +2437,7 @@ server.listen(PORT, '127.0.0.1', () => {
     ['POST',   '/api/node                           body: {code, name, label, act, ...}'],
     ['POST',   '/api/terrain                        body: {key, label, icon?, monsters:[keys]}'],
     ['POST',   '/api/monster                        body: {key, name, ac?, hp?, atk?, dmg?, xp?, tier?}'],
+    ['POST',   '/api/npc                           body: {key, name, node, occupation?, neutral?, friendly?, dearFriend?}'],
     ['GET',    '/api/export/{collection}[?format=json|js|module]  → node_map|quest_db|monster_pool|world_db|...'],
     ['GET',    '/api/fish[/{key}][?rank=&night=]     → fish list or single'],
     ['POST',   '/api/fish/simulate                  body: {dexMod, catchMod, typeMod, luckMod, rodBonus}'],
