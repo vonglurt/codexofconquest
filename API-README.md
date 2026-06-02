@@ -286,6 +286,155 @@ curl -X DELETE http://localhost:1367/api/monster/rabid_monkey
 
 ---
 
+### POST /api/{type} — Create
+
+Add a new entity to its section. All create endpoints require `POST /api/save` afterward to persist to disk.
+
+---
+
+**POST /api/quest**
+
+Required: `id`, `type`, `title`, `activateNode`. All text fields are optional but recommended.
+
+```bash
+curl -X POST http://localhost:1367/api/quest \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "id": "quest_example_01",
+    "type": "skill_check",
+    "title": "The Locked Door",
+    "activateNode": "CY",
+    "checkStat": "WIS",
+    "checkDC": 12,
+    "checkPassFlag": "doorOpened",
+    "hint": "The door has not moved in years.",
+    "passText": "It opens.",
+    "failText": "Not yet.",
+    "xpAward": 100
+  }'
+```
+
+---
+
+**POST /api/node**
+
+Required: `code`, `name` (terrain key), `label`, `act`.
+
+```bash
+curl -X POST http://localhost:1367/api/node \
+  -H 'Content-Type: application/json' \
+  -d '{"code":"SD","name":"coastal_market","label":"Sunken Docks","act":1}'
+```
+
+---
+
+**POST /api/monster**
+
+Required: `key`, `name`. Stats default to 0 if omitted.
+
+```bash
+curl -X POST http://localhost:1367/api/monster \
+  -H 'Content-Type: application/json' \
+  -d '{"key":"dock_rat","name":"Dock Rat","ac":11,"hp":4,"atk":2,"tier":"trivial"}'
+```
+
+---
+
+**POST /api/terrain**
+
+Required: `key`. `monsters` must be an array of existing MONSTER_POOL keys.
+
+```bash
+curl -X POST http://localhost:1367/api/terrain \
+  -H 'Content-Type: application/json' \
+  -d '{"key":"fog_docks","label":"Fog Docks","icon":"🌫","monsters":["dock_rat"]}'
+```
+
+---
+
+**POST /api/npc**
+
+Add a named NPC to `BIRKA_NPC_PROFILES`. Required: `key` (snake_case), `name`, `node` (must exist in NODE_MAP). Dialogue tiers (`neutral`, `friendly`, `dearFriend`) are optional but render in the NPC card UI.
+
+```bash
+curl -X POST http://localhost:1367/api/npc \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "key": "maret_dockhand",
+    "name": "Maret",
+    "occupation": "dockhand",
+    "node": "SD",
+    "neutral": {
+      "greeting": "A woman coiling rope at the far end of the dock.",
+      "dialogue": "\"Three ships this week. None of them stopped.\""
+    },
+    "friendly": {
+      "greeting": "Maret nods when you come down the gangway.",
+      "dialogue": "\"You came back. Good.\""
+    },
+    "dearFriend": {
+      "greeting": "She has a chair out for you before you reach the dock.",
+      "dialogue": "\"I have been thinking about what you said. The part about the harbor at Visby.\""
+    }
+  }'
+```
+
+Response includes `connections` — the node it was placed at, nearby NPCs, and any quests that reference it.
+
+---
+
+**POST /api/item**
+
+Add an item definition to `ITEM_DB`. Required: `key` (snake_case), `name`, `type`. Valid types: `weapon` · `amulet` · `consumable` · `readable` · `armor` · `tool` · `mission_bit` · `lake_magic`.
+
+```bash
+# Weapon
+curl -X POST http://localhost:1367/api/item \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "key": "harbor_blade",
+    "name": "Harbor Blade",
+    "icon": "🗡",
+    "type": "weapon",
+    "sell": 30,
+    "desc": "A short blade kept under dock planks for thirty years. Still sharp.",
+    "atkBonus": 1,
+    "dmgDie": 6,
+    "dmgCount": 1,
+    "dmgFlat": 0,
+    "minLevel": 2
+  }'
+
+# Passive amulet (active when HP ≤ threshold)
+curl -X POST http://localhost:1367/api/item \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "key": "ember_shard",
+    "name": "Ember Shard",
+    "icon": "🔥",
+    "type": "amulet",
+    "sell": 0,
+    "passive": true,
+    "desc": "Passive — when HP ≤ 50%, +2 ATK on all attacks. The shard was pulled from the forge after it cooled."
+  }'
+
+# Readable
+curl -X POST http://localhost:1367/api/item \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "key": "dock_ledger",
+    "name": "Dock Ledger — Year 61",
+    "icon": "📒",
+    "type": "readable",
+    "sell": 0,
+    "readText": "Every ship. Every cargo. Every captain. Three pages are water-damaged beyond reading. The fourth page is the one that matters."
+  }'
+```
+
+Items live in `ITEM_DB` and are referenced from quest completion handlers (`storyCheckQuests`) or granted via `_grantItem()`. The `ITEM_DB` section is anchored in `roll2hit-v3.html` between `WORLDBUILDER:ITEM_DB:START` and `WORLDBUILDER:ITEM_DB:END`.
+
+---
+
 ### POST /api/monster/{id}/rename
 
 Change a monster's display name globally (key is unchanged).
@@ -782,10 +931,13 @@ The server applies two strategies for each PUT field:
 |---|---|---|
 | MONSTER_POOL | 392 monsters | `{ key: { name, ac, hp, atk, dmgDie, tier, ... } }` |
 | MONSTER_DROPS | 392 drop tables | `{ key: { icon, name, sell } }` |
-| WORLD_DB | 69 terrain types | Uses `P.monsterKey` refs, parsed with P proxy |
-| NODE_MAP | 144 world nodes | `{ code: { label, name(=terrain), act, battle, npc, N,S,E,W } }` |
-| NODE_COORDS | 144 canvas coords | `{ code: { x, y } }` |
-| QUEST_DB | 210 quests | Contains JS closures — parsed with `removeFns` sanitizer |
-| BIRKA_NPC | 6 named NPCs | Full dialogue trees, contains JS closures |
+| WORLD_DB | 107 terrain types | Uses `P.monsterKey` refs, parsed with P proxy |
+| NODE_MAP | 148 world nodes | `{ code: { label, name(=terrain), act, battle, npc, N,S,E,W } }` |
+| NODE_COORDS | 148 canvas coords | `{ code: { x, y } }` |
+| QUEST_DB | 228 quests | Contains JS closures — parsed with `removeFns` sanitizer |
+| BIRKA_NPC | 9 named NPCs | Full dialogue trees with neutral/friendly/dearFriend tiers |
+| LAKE_MAGIC | 8 lake magic items | `{ key: { name, icon, effect, base, levelScale, luckScale, minRank, minLevel } }` |
+| ITEM_DB | General items | `{ key: { name, icon, type, sell, desc, atkBonus?, passive?, readText?, ... } }` — writable via `POST /api/item` |
+| FISH_DB | 25 fish | Day pool (FISH_POOL) + night pool (NIGHT_FISH_POOL); share keys with MONSTER_POOL |
 
 The server never executes the full game file. It reads it as text, slices sections by anchor comments, and evaluates each section in isolation with appropriate guards.
