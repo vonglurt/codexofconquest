@@ -32,8 +32,8 @@ Route: NAP → RME → WM. Theme: the fulfilled prophecy is more dangerous than 
 ### §FCO-08 — Phlegyas's Inscription (Book 6 — B)
 The line cried by Phlegyas in Tartarus was reportedly inscribed over Roman courthouses. A lintel stone from a Roman basilica near Verona was incorporated into a church's foundations in the 9th century. A 1367 restoration project has uncovered it. The bishop wants it above the church door. The magistrates want it at the courthouse. The humanist wants it in the library. Fighter escorts it to a neutral archive before it is cut in three.
 
-### §FCO-09 — Ascanius's Broken Plate (Book 7)
-The bread-platter Ascanius ate from when he said "we're eating the tables" — a fired ceramic disk inscribed "mensas" in archaic Latin — may have been kept as a relic at Lavinium for generations. A relic-collector near the site claims to have found it. A Roman aristocratic family wants it as their ancestral object. Fighter escorts it to authentication.
+### §FCO-09 — Ascanius's Broken Plate (Book 7) ✓ DONE 2026-06-02
+Route: RME → WM. Theme: the relic of comprehension — the word MENSAS inscribed on the underside after the meal, by someone who understood what had just happened; the archive receives it as a record of comprehension, not a record of event.
 
 ### §FCO-10 — The Shield's Cartographer (Book 8)
 A 14th-century humanist's commentary on the Shield of Aeneas identifies each depicted scene with a historical event. A cardinal in Rome wants it suppressed because several identifications embarrass current political figures by comparison. The humanist has died; his student needs the manuscript safely archived. Fighter escorts it from Venice to Weimar.

@@ -1868,3 +1868,209 @@ activateMissionBit: fco07Complete
 ---
 
 *FCO-07 complete. 2026-06-02.*
+
+---
+
+## FCO-09 — Ascanius's Broken Plate
+
+**Theme differentiation:** FCO-01: hostile custody. FCO-02: paid craftsman. FCO-04: grief as governance. FCO-05: survivor contradicts the monument. FCO-07: fulfilled prophecy. This seed occupies the sixth position: the object that proves a moment of recognition. The bread-platter is not proof of the destination — it is proof of the instant someone understood they had arrived. **New theme:** *The object that witnessed a recognition is different from the object that caused it; what the plate proves is not Aeneas's landing but Ascanius's understanding; the relic of comprehension is rarer than the relic of event.*
+
+---
+
+### Five-Act Vignette Play
+
+*TOKEN: The Mensas Plate — a fired ceramic disk, slightly cracked along the left edge, inscribed with the single word MENSAS in archaic Latin capitals. Found near the ruins of Lavinium in 1361 by a relic collector named Orso di Palestrina. Orso has been holding it for six years while three parties dispute ownership. The disk is a bread plate — the right size and weight for one used at a meal. The word is written on the underside, as if inscribed after the fact, by someone who wanted the object to know what it meant.*
+
+---
+
+**ACT I — Orso's Problem**
+
+*The Plate, wrapped in linen, in a wooden box under Orso di Palestrina's bed · a room above a relic-dealer's shop near the Lateran, Rome · late morning, the smell of old bone and wax*
+
+Orso found the plate in 1361 at a site near Lavinium — a low field, some old foundation stones, a scatter of ceramic shards. He has been trying to sell it for six years and has instead accumulated three simultaneous claims and a growing fear that the plate is worth more trouble than any single buyer is worth.
+
+The Roman aristocratic family of the Rufini claims descent from Ascanius through the Julian line and believes the plate is their ancestral property. A cardinal's antiquities office wants it for a new museum of classical relics. A Florentine humanist named Cosimo Bardi has published two papers arguing the inscription is 4th-century BC and genuine, and believes it belongs in a neutral scholarly archive.
+
+Orso wants it out of his house. He will release it to anyone who can resolve one specific problem: if he gives it to one party, the other two will sue him. He needs a release that all three acknowledge.
+
+*The fighter understands: Orso's problem is not the plate. It is the three claims. The Weimar commission supersedes all three only if the fighter can demonstrate that to each claimant.*
+
+---
+
+**ACT II — The Rufini Heir**
+
+*The Plate, still under Orso's bed · in the Rufini palazzo, Trastevere · afternoon, good furniture, a young man who has been told this is his birthright*
+
+Giovannino Rufini is twenty-three. He knows the family claim by recitation — he could not tell the fighter where Lavinium is without checking a map. He has been told the plate is an ancestral relic, which he believes, and he wants it, which is understandable, and he has also been told by his family's lawyer that the legal claim is solid, which it is not. The family's lineage documentation goes back to the 9th century, which does not establish a property right to a ceramic object found in a field in 1361.
+
+He is not a bad man. He simply has a family claim and a lawyer who told him it was sufficient.
+
+*The fighter must explain, with enough courtesy that Giovannino is not humiliated, that "ancestral relic" and "legal property" are not the same category — and that an archive benefits his family's claim to the lineage by preserving the object publicly under the name of the event.*
+
+---
+
+**ACT III — The Cardinal's Curator**
+
+*The Plate, still under Orso's bed · in the cardinal's antiquities office, near the Vatican · morning, a man with excellent taste and institutional authority*
+
+Monsignor Ferrante runs the cardinal's new museum program. He is intelligent, reasonable, and in possession of a letter from the cardinal's office that constitutes a formal acquisition request to any holder of the plate. He is also the third person Orso called, which means he knows about the Rufini claim and the Weimar commission.
+
+He makes the fighter a direct offer: the cardinal's museum will list the Weimar archive as co-custodian, publish Cosimo Bardi's authentication papers alongside the display, and give the fighter a letter releasing all three claims — in exchange for the plate going to Rome rather than Weimar.
+
+It is a good offer. It is not what the commission says.
+
+*The fighter must decline the offer and explain why the archive's neutrality is worth more to the plate than a beautiful room in a cardinal's museum — and why "co-custodian" with an institution that can override the arrangement is not the same as neutral custody.*
+
+---
+
+**ACT IV — Cosimo Bardi**
+
+*The Plate, finally in the fighter's hands, out of Orso's house · in Cosimo Bardi's rented study near the Pantheon · evening, books on every surface, a man who has been waiting six years*
+
+Cosimo Bardi published his first authentication paper in 1362, his second in 1364. He has been cited, disputed, praised, and ignored. He has not seen the plate in person — he worked from Orso's description and a rubbing. He is fifty-four and he is very calm about the fighter being in his study with the plate under one arm, because he spent six years preparing for this possibility and he knows exactly what he wants to say.
+
+He says: "The word is written on the underside. Not on top, where a diner would see it. On the underside, where only someone who turned it over after the meal would find it." He says: "Someone inscribed it afterward. Not to mark the plate — to mark the moment. The plate itself didn't know what it meant while the meal was happening."
+
+He holds the plate — the fighter lets him hold it, briefly — and looks at the word.
+
+"The underside inscription means someone understood after the fact. Someone turned the plate over and wrote what it was. That person is the document. The plate is just the surface they wrote on."
+
+*The fighter receives this. It is the most important thing anyone has said about the plate in six years.*
+
+---
+
+**ACT V — What the Plate Is**
+
+*The Plate, carried north to Weimar · on the archive intake desk, morning · the archivist reading Cosimo's two authentication papers side by side with the physical object*
+
+The archivist turns the plate over. He reads the underside. He reads Cosimo's papers. He is quiet for a long time.
+
+"I could file this as: Aenean relic, Lavinium provenance, genuine. That is the obvious category." He sets it down. "But what Bardi argues — that the inscription was added after the meal by a witness — means the object's value is not the meal. It is the inscription. It is someone's decision to write *mensas* on the bottom of a plate so it would know what it had been."
+
+He looks at the fighter. "Where does an object go that was inscribed by someone who understood a moment after it occurred? That is a different category than relic."
+
+*The fighter knows: Cosimo said it already. The plate is the surface the understanding was written on. The category the archivist needs is: record of comprehension, not record of event.*
+
+---
+
+### Quest API Stub — FCO-09
+
+```
+missionAccept: "A relic dealer near the Lateran in Rome has held a ceramic plate inscribed MENSAS
+  for six years under three simultaneous ownership claims. He wants it gone. Resolve the claims
+  and carry the plate to Weimar — it is the bread-platter Ascanius ate from when he understood
+  the Trojans had arrived at their destined land."
+
+Act I — Orso's Problem
+activateNode: RME
+type: skill_check
+scene: "A relic-dealer's back room near the Lateran, late morning. Orso di Palestrina sits
+  beside a wooden box and explains his problem with the efficiency of a man who has rehearsed
+  it many times: the Rufini family claim, the cardinal's acquisition letter, the Florentine
+  humanist's two published papers. He found the plate in 1361 and has not had a peaceful night
+  since. He will release it to anyone who produces documentation that supersedes all three
+  claims simultaneously."
+prompt: "Persuasion DC 13: Demonstrate that the Weimar archive commission supersedes all three
+  claims. Name each claim's legal category and why neutral custody is not vulnerable to any
+  of them."
+failText: "Orso shakes his head. 'The cardinal's letter is very specific. And the Rufini have
+  a lawyer.' Come back with the argument about neutral custody — the archive doesn't acquire,
+  it preserves; no claim has jurisdiction over preservation. (retry)"
+successText: "Orso nods once, opens the box, and hands you the linen-wrapped plate. 'Take it
+  before any of them arrive this afternoon.' He signs the release in triplicate — one for each
+  claimant. You receive Orso's Triple Release — a document that simultaneously resolves all
+  three claims."
+grantItem: "Orso's Triple Release"
+activateMissionBit: fco09Act1Active
+checkPassFlag: fco09Act1Passed
+
+Act II — The Rufini Heir
+activateNode: RME
+type: skill_check
+scene: "The Rufini palazzo in Trastevere, afternoon. Giovannino Rufini, twenty-three, stands
+  in his family's great hall beside a portrait of an ancestor. He has been told the plate is
+  his birthright and his lawyer told him the claim was solid. He is not a bad man — he simply
+  has a recited family claim and no working knowledge of property law. He wants the plate
+  because his family told him to want it."
+prompt: "Persuasion DC 12: Explain the distinction between ancestral relic and legal property
+  without humiliating him. Offer him what the archive can actually give his family: public
+  record of the lineage claim, attached to the object permanently."
+failText: "He stiffens. 'My lawyer—' He is going to call the lawyer. The plate will be tied
+  up in a Roman court for a year. Try again with the offer before the word 'lawyer' is
+  finished. (retry)"
+successText: "He is quiet a moment. Then: 'The archive will note the Rufini name in the
+  record?' Yes. 'Permanently?' Permanently. He nods. 'My grandfather would have preferred
+  the plate on the shelf. But he is not here.' He countersigns the release. You receive the
+  Rufini Countersignature."
+grantItem: "Rufini Countersignature"
+checkPassFlag: fco09Act2Passed
+
+Act III — The Cardinal's Curator
+activateNode: RME
+type: skill_check
+scene: "The cardinal's antiquities office near the Vatican, morning. Monsignor Ferrante is
+  intelligent, courteous, and holding a formal acquisition letter from the cardinal's office.
+  He offers you a deal: the cardinal's museum lists Weimar as co-custodian, publishes Bardi's
+  papers alongside the display, releases all three claims. The plate goes to Rome. It is a
+  good offer. It is not the commission."
+prompt: "Persuasion DC 14: Decline the offer and explain why the archive's neutrality is worth
+  more than a beautiful room — and why co-custodianship with an institution that can override
+  the arrangement is not the same as neutral preservation."
+failText: "He opens his hands. 'The offer remains on the table.' He is not angry. He is simply
+  waiting for a better argument than you gave him. (retry — the argument is about override
+  authority, not prestige)"
+successText: "He listens to the full argument. He is quiet. Then he takes the release letter
+  from his desk and signs it. 'The archive is correct in principle. I will tell the cardinal
+  the commission was already engaged.' You receive the Cardinal's Office Release."
+grantItem: "Cardinal's Office Release"
+checkPassFlag: fco09Act3Passed
+
+Act IV — Cosimo Bardi
+activateNode: RME
+type: skill_check
+scene: "Cosimo Bardi's rented study near the Pantheon, evening. Books on every surface. He is
+  fifty-four, calm, and has been preparing for this conversation since 1362. He takes the plate
+  carefully and turns it over. He says: 'The word is on the underside. Not where a diner would
+  see it. Someone inscribed it afterward — not to mark the plate, to mark the moment. The plate
+  itself didn't know what it meant while the meal was happening.' He holds it a little longer."
+prompt: "Insight DC 12: Receive what he is telling you. He is not lecturing — he is saying
+  the most important thing anyone has said about this plate in six years. Understand it before
+  he sets it down."
+failText: "He sets the plate on the table. The moment is gone. He will write it in his third
+  paper. Read it there. (retry — receive it while he is still holding it)"
+successText: "You receive it completely. He sees you receive it. He sets the plate down and
+  says: 'Good.' He adds a handwritten addendum to his second paper — one paragraph, the
+  underside argument formalized. He folds it into your satchel. You receive Bardi's
+  Underside Addendum."
+grantItem: "Bardi's Underside Addendum"
+checkPassFlag: fco09Act4Passed
+
+Act V — What the Plate Is
+activateNode: WM
+type: skill_check
+scene: "The Weimar archive intake desk, morning. The archivist turns the plate over, reads
+  the inscription, reads Bardi's two papers and the addendum. He says: 'I could file this as
+  an Aenean relic with Lavinium provenance. That is the obvious category.' He looks at you.
+  'But if Bardi's argument is correct — that someone inscribed this after the meal to mark
+  the moment of understanding — then what I am receiving is not the plate from the meal.
+  It is the record of someone's comprehension. Those are different objects.'"
+prompt: "Persuasion DC 13: Name the category. The plate is not the relic of an event —
+  it is the surface someone chose to record their understanding on. File it under: record
+  of comprehension, not record of event."
+failText: "He nods slowly. 'That is a philosophical distinction. The standard classification
+  is safer.' He reaches for the relic folder. Bring him the argument that makes the
+  distinction load-bearing, not philosophical. (retry)"
+successText: "He sets the relic folder aside. He opens a new page and writes: 'Record of
+  Comprehension — Ascanius's Plate, Lavinium provenance. Inscription added post-event by
+  unknown witness.' He places all three release letters, Bardi's papers, and the addendum
+  in the folder. He looks at the underside one last time. 'Whoever turned it over.' You
+  receive the Comprehension Archive Entry."
+grantItem: "Comprehension Archive Entry"
+takeItem: "The Mensas Plate"
+checkPassFlag: fco09Act5Passed
+activateMissionBit: fco09Complete
+```
+
+---
+
+*FCO-09 complete. 2026-06-02.*

@@ -457,6 +457,7 @@ Game cities are canonical. Source-book settings are proposed new nodes.
 | FCO-04 | The Buthrotum Register | 4 | VEN → RGS → WM | Grief organized into governance; the replica city's founding record |
 | FCO-05 | Barce's Account | 5 | GEN → BOL → WM | Survivor's testimony contradicts the monument in three places |
 | FCO-07 | The Sibyl's Sealed Jar | 6 | NAP → RME → WM | Fulfilled prophecy is more dangerous than false; archive receives it neutrally |
+| FCO-09 | The Mensas Plate | 7 | RME → WM | The relic of comprehension — someone inscribed the moment of understanding, not the event |
 
 *When a new quest is written, append its row to the Processed Quests table.*
 *When a new location is used, append its row to the Location Grid.*
