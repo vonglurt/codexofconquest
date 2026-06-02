@@ -1669,3 +1669,202 @@ activateMissionBit: fco05Complete
 ---
 
 *FCO-05 complete. 2026-06-02.*
+
+---
+
+## FCO-07 — The Sibyl's Sealed Jar
+
+**Theme differentiation:** FCO-01: hostile custody. FCO-02: the paid craftsman. FCO-04: grief as governance. FCO-05: survivor contradicts the monument. This seed occupies the fifth position: the genuinely dangerous document. The cleric who has held the tablets for fifty years is not afraid they are false — he is afraid they are real. If the Sibyl correctly named Augustus and Marcellus, the prophetic tradition was authentic. That is theologically catastrophic in a way that forgery is not. **New theme:** *The prophecy that already came true is more dangerous than false prophecy; the archive is the only institution that can receive a genuine pagan prediction without being required to act on its implications.*
+
+---
+
+### Five-Act Vignette Play
+
+*TOKEN: The Sibyl's Sealed Jar — a Cumaean-style clay jar, terracotta, sealed with dark wax pressed by a signet no longer identifiable. Inside: five wax tablets wrapped in linen. The tablets describe a prophecy delivered to "Aeneas Anchises filius." Every event named in it — Augustus, Marcellus — has already occurred. The tablets were found at Cumae in 1312 and have been held privately by a Neapolitan cleric ever since. The jar has a distinctive incised ring around the neck: the Sibyl's workshop mark.*
+
+---
+
+**ACT I — Father Ercole's Apartments**
+
+*The Jar, wrapped in wool inside a cedar chest, in a private apartment in the clerical quarter of Naples · held by Father Ercole Manfredini, who inherited it from his predecessor who inherited it from the cleric who found it in 1312 · a third-floor apartment, late afternoon, the bay visible from the window*
+
+Father Ercole is seventy-one. He has had the jar for thirty years without telling anyone, which has not been difficult because no one asked. Fra Vincenzo di Palermo asked, three weeks ago. He has filed a preliminary inquiry with the Dominican house in Naples: "tablets of prophetic content found at a pagan site." The inquiry will be acted on within a month.
+
+Father Ercole would like the tablets to be somewhere else before that month ends. He called for the Weimar archive. He has been waiting. He is also afraid that releasing them makes him complicit in removing evidence. He has been holding them for thirty years and this is the first time he has been afraid of them.
+
+*The fighter understands: Father Ercole needs to be reassured of one specific thing. Not that the tablets are safe. He knows they are not safe. That releasing them to an archive is a different moral category than destroying them.*
+
+---
+
+**ACT II — The Via Appia Gate**
+
+*The Jar, inside a grain sack, tied with ordinary rope, carried on a carter's wagon · at the northern gate of Naples, mid-morning, Fra Vincenzo's two agents checking outbound loads with the specific attention of men who have been given a description*
+
+The Cumaean incised ring around the jar's neck is distinctive. Fra Vincenzo gave his agents a drawing. The grain sack is a practical concealment for a man carrying vegetables — not ideal for a man carrying a terracotta jar with an incised workshop mark. The agents are working their way down the wagon line.
+
+*The fighter has two minutes and a grain sack between the Sibyl's jar and a Dominican inquisitor's jurisdiction.*
+
+---
+
+**ACT III — The Road Scholar**
+
+*The Jar, in the grain sack, out of Naples, on the Via Appia heading north · at a roadside inn outside Capua, evening · a man at the next table who has recognized the jar's shape from a print in a pamphlet*
+
+His name is Maestro Giacomo Rivetti. He teaches classical antiquities at the Perugia studium and has been publishing articles on Sibylline prophecy for thirty years. He recognizes the Cumaean incised ring from an illustration in a 1330 pamphlet that described a rumored find at Cumae. He does not know the fighter is carrying it — he is looking at the top of the grain sack where the neck of the jar is visible by two inches.
+
+He knows, if he authenticates the tablets, his authentication is worth the same as a Dominican inquisitor's condemnation in terms of drawing attention. But his authentication also means the archive cannot be pressured to return them as "unverified material." He has thirty years invested in this being true.
+
+*The fighter must weigh: his authentication protects the tablets in transit and at the archive. His involvement also creates a paper trail from Perugia to the grain sack.*
+
+---
+
+**ACT IV — The Roadside Shrine**
+
+*The Jar, carried openly now, the sack tied back · at a roadside shrine on the Flaminian Way, two days north of Rome · a small stone niche with a terracotta figure inside, an old woman sweeping the stone shelf*
+
+Her name is Margherita. She has tended this shrine for forty years. The figure inside is labelled "La Sibilla" in faded paint — a local memory of the prophetic tradition, absorbed into folk Christianity, neither condemned nor endorsed by the Church in this corner of Umbria.
+
+She looks at the jar.
+
+She says: "That is the right shape."
+
+She does not explain how she knows. She opens a small box at the shrine's base and takes out a clay disc she made herself — pressed from the same Umbrian earth, circular, with a rough pattern around the edge that she says her grandmother told her was the Sibyl's mark. She holds it out.
+
+*The fighter understands: the tradition preserved the shape. Not the content, not the prophecy — the physical form of the Sibyl's seal, passed down through grandmothers at roadsides, still accurate enough that an old woman recognizes the jar by looking at it.*
+
+---
+
+**ACT V — The Third Category**
+
+*The Jar, intact, sealed · on the Weimar archive intake desk · morning, bright light*
+
+The archivist breaks the seal with the care of a man who understands he is the first person to open this in fifty years. He reads all five tablets. He reads them again. He sets them down.
+
+"These are genuine. The prophecy names events that occurred. That means one of three things: forgery using historical knowledge, which is possible; coincidence across a narrow enough range of prediction, which is statistically improbable; or authentic ancient prophetic record, which is theologically—" He stops. He is a careful man.
+
+He has two existing categories: *Pagan religious texts — archival only* and *Prophetic literature — disputed authenticity.* Neither fits a genuine pagan prophecy with fulfilled predictions.
+
+*The fighter knows what the third category must be. The archivist knows too. He is waiting to be told to make it.*
+
+---
+
+### Quest API Stub — FCO-07
+
+```
+missionAccept: "A Neapolitan cleric has held a sealed Cumaean jar for thirty years — five wax
+  tablets inside describe a prophecy received by Aeneas, naming Augustus and Marcellus. Every
+  event has already happened. A Dominican inquisitor has filed an inquiry. The cleric has called
+  for the Weimar archive. Carry the jar north before the inquiry is acted on."
+
+Act I — Father Ercole's Apartments
+activateNode: NAP
+type: skill_check
+scene: "A third-floor apartment in the Naples clerical quarter, late afternoon. Father Ercole
+  Manfredini, seventy-one, sits beside a cedar chest. He has held the jar for thirty years
+  without fear. Three weeks ago Fra Vincenzo di Palermo filed an inquisitorial inquiry. Father
+  Ercole is afraid now — not of the tablets but of what releasing them means. He is trying
+  to distinguish between removing evidence and putting dangerous material somewhere safe."
+prompt: "Persuasion DC 13: Resolve the distinction for him. Releasing material to a neutral
+  archive is not destruction and not concealment. Name the category precisely: preservation
+  that removes the inquisitor's jurisdiction without removing the record."
+failText: "He closes the chest. 'I need to speak to my bishop first.' He is not refusing —
+  he is delaying. The inquiry advances daily. Come back with a cleaner argument. (retry)"
+successText: "He opens the chest. He lifts the jar with both hands and holds it toward you.
+  'Take it somewhere it can be studied without being burned.' He has written a letter —
+  thirty years of private custody, in his hand. You receive Father Ercole's Letter."
+grantItem: "Father Ercole's Letter"
+activateMissionBit: fco07Act1Active
+checkPassFlag: fco07Act1Passed
+
+Act II — The Via Appia Gate
+activateNode: RME
+type: hybrid
+scene: "The northern gate of Naples, mid-morning. Your wagon sits in a line of outbound
+  loads. Fra Vincenzo's two agents are working toward you with a drawing of the Cumaean
+  incised ring on the jar's neck. The grain sack is adequate concealment for vegetables.
+  The jar's neck is visible by two inches at the top of the sack. The agents are four
+  wagons away."
+skillCheck:
+  skill:    "Deception"
+  dc:       14
+  failText: "One agent looks at the sack. His hand moves toward the neck of the jar.
+    He is a careful man doing his job. (retry — adjust the load before he reaches you)"
+  passText: "The sack shifts just enough. The neck disappears under the rope. The agent
+    taps the sack, writes nothing, moves to the next wagon."
+combat:
+  enemy:    "Dominican Agent (recognized the jar despite concealment)"
+  failText: "He saw the ring before the sack moved. He has grabbed the wagon side. The
+    jar is still covered but he is shouting for his colleague. (retry)"
+  passText: "He goes down in the road dust. The wagon moves through the gate. The second
+    agent has not yet turned around. You receive the Gate Road Stamp — the outbound mark
+    that cleared you through, proof of lawful departure."
+grantItem: "Gate Road Stamp"
+checkPassFlag: fco07Act2Passed
+
+Act III — The Road Scholar
+activateNode: RME
+type: skill_check
+scene: "A roadside inn outside Capua, evening. Maestro Giacomo Rivetti, a Perugia antiquities
+  scholar, is at the next table looking at the two inches of incised neck visible above your
+  grain sack. He has published on Sibylline prophecy for thirty years. He recognized the
+  Cumaean workshop mark from an illustration. He has not spoken yet. He is composing himself."
+prompt: "Insight DC 12: Read what his authentication is worth against what his involvement
+  costs. Decide whether to let him examine the tablets."
+failText: "You cover the jar and look away. He finishes his meal and leaves. His authentication
+  is thirty years of expertise walking out the door. The archive will receive the tablets
+  without independent corroboration. (retry — read the balance again)"
+successText: "You let him see the tablets. He reads them without speaking. Then he writes
+  two paragraphs of authentication on a sheet from his notebook — provenance, dating,
+  comparison to known Sibylline fragments — and folds it into your satchel. 'For the
+  archivist. He will want this.' You receive Maestro Rivetti's Authentication Note."
+grantItem: "Maestro Rivetti's Authentication Note"
+checkPassFlag: fco07Act3Passed
+
+Act IV — The Roadside Shrine
+activateNode: RME
+type: skill_check
+scene: "A roadside shrine on the Flaminian Way, two days north of Rome. An old woman named
+  Margherita is sweeping the stone shelf. Inside the niche: a terracotta figure labelled
+  'La Sibilla.' She looks at your jar and says: 'That is the right shape.' She opens a
+  small box and offers you a clay disc she pressed herself — the Sibyl's mark, passed down
+  through grandmothers, still accurate enough that she recognized the jar from across the
+  road."
+prompt: "Insight DC 12: Receive what she is giving correctly. She is not asking you to stop.
+  She is telling you that the tradition survived without the document. Accept the disc as
+  what it is — the folk memory of the seal, meeting the seal itself."
+failText: "You reach for the disc too quickly — as evidence, as artifact. She pulls her hand
+  back slightly. 'It is not for a collection.' Try again, more carefully. (retry)"
+successText: "You hold out your hand and wait. She places the disc in your palm. It is rough,
+  handmade, accurate. You carry it the rest of the road alongside the jar. You receive
+  Margherita's Votive Seal."
+grantItem: "Margherita's Votive Seal"
+checkPassFlag: fco07Act4Passed
+
+Act V — The Third Category
+activateNode: WM
+type: skill_check
+scene: "The Weimar archive intake desk, morning. The archivist breaks the seal, reads all
+  five tablets twice, and sets them down. 'These are genuine. The prophecy names events that
+  occurred.' He has two existing categories: pagan religious texts, and prophetic literature
+  of disputed authenticity. He opens both folders. He looks at the tablets. 'Neither fits.'
+  He looks at you. He is waiting to be told to make the third category."
+prompt: "Persuasion DC 13: Name the third category. A genuine pagan prophecy with fulfilled
+  predictions is not a religious text and not a disputed claim. It is a historical record
+  of accurate foreknowledge — dangerous only if treated as active prophecy, which the
+  archive is not required to do."
+failText: "He nods. 'That is a reasonable framework. But I cannot create a new category
+  on one document alone.' Come back with the argument that makes one document sufficient
+  to establish a category. (retry)"
+successText: "He writes at the top of a new folder: 'Prophetic Literature — Authenticated
+  Ancient, Events Fulfilled.' He places the tablets, Rivetti's authentication, Father
+  Ercole's letter, and Margherita's votive seal in the folder. He looks at the seal last.
+  'Someone kept the shape.' You receive the Sibylline Archive Entry."
+grantItem: "Sibylline Archive Entry"
+takeItem: "The Sibyl's Sealed Jar"
+checkPassFlag: fco07Act5Passed
+activateMissionBit: fco07Complete
+```
+
+---
+
+*FCO-07 complete. 2026-06-02.*

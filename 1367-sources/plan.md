@@ -26,8 +26,8 @@ Barce was Sychaeus's nurse, Dido's oldest servant. She witnessed everything. Rou
 ### §FCO-06 — Palinurus's Chart (Book 5)
 The helmsman Palinurus fell overboard off the coast of Lucania (Palinuro, still called that). He had been keeping a navigational chart of the route. The chart was left on the helm-seat. A medieval sailor claims to have used it in 1334. A sailor's guild in Naples wants it. The Cumaean monastery wants it back. Fighter escorts it to a maritime archive.
 
-### §FCO-07 — The Sibyl's Sealed Jar (Book 6 — A)
-A clay jar found at Cumae in 1312 contains five wax tablets describing a prophecy received by "Aeneas Anchises filius." A Neapolitan cleric has been holding them privately, afraid to submit them for authentication because the prophecy describes future events (Augustus, Marcellus) that have already happened. A Dominican inquisitor considers them dangerous. Fighter escorts the tablets to Weimar.
+### §FCO-07 — The Sibyl's Sealed Jar (Book 6 — A) ✓ DONE 2026-06-02
+Route: NAP → RME → WM. Theme: the fulfilled prophecy is more dangerous than false prophecy; the archive receives it as historical record rather than active theological claim.
 
 ### §FCO-08 — Phlegyas's Inscription (Book 6 — B)
 The line cried by Phlegyas in Tartarus was reportedly inscribed over Roman courthouses. A lintel stone from a Roman basilica near Verona was incorporated into a church's foundations in the 9th century. A 1367 restoration project has uncovered it. The bishop wants it above the church door. The magistrates want it at the courthouse. The humanist wants it in the library. Fighter escorts it to a neutral archive before it is cut in three.
