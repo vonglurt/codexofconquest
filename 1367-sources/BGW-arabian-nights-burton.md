@@ -2228,3 +2228,187 @@ He notes: "The vessel's current location is recorded in item 47: deposited with 
 
 *BGW-05 complete. 2026-06-02.*
 
+---
+
+## Cycle 9 — Angle: *The Barmakide Catastrophe — The Confiscation Inventory as the Measure of Destroyed Loyalty*
+
+*Prior cycles missed:*
+
+BGW Cycles 1–8 found the survival story, the diminished caliph's margin, the legendary map, the night-walk log, the translator's honest preface, the sister's suppressed voice, the navigational chart, and the impossible legal asset. No cycle asked what happens to the legal record after the catastrophe — after Harun al-Rashid had his closest friend executed and his family stripped of everything. The Baghdad treasury compiled a confiscation inventory. It lists, in bureaucratic specificity, what Jafar the Barmakide owned. The inventory is the administrative measure of what the loyalty was worth. Cycle 9 takes the angle of the confiscation record as neutral witness: the treasury official who compiled it was not a eulogist and not a prosecutor; he was a man counting objects.
+
+---
+
+### BGW-S09: "The Barmakide Catastrophe"
+
+**Theme check:** BGW-S08 (margin as honest speech in diminished institution) is not this. BGW-07 (Caliph's night log — administrative record of legend's foundations) concerned Harun; this concerns Jafar. LIL-3 (half-entry) was incomplete; this inventory was completed exactly. CRL-3 (misdescription) was strategic; this was accurate. Theme: the estate record as the measure of destroyed loyalty — the document that lists what was taken is also the document that proves what could not be taken.
+
+---
+
+**SOURCE HOOK:** *Arabian Nights* (Burton translation), Harun al-Rashid cycle: Jafar al-Barmaki was Harun's closest friend and most powerful vizier. In 803 AD, Harun executed Jafar and destroyed the entire Barmakide family. The reasons remain obscure. The wealth of the Barmakides — legendary — was confiscated by the Baghdad treasury. Burton's translation preserves the stories of Jafar's brilliance and the Caliph's affection, with the execution as the shadow behind them.
+
+---
+
+**1367 SETTING:**
+A Damascus legal scholar, Ahmad ibn Khalid, has found in a dissolving jurist's library a 9th-century Damascus copy of the Baghdad treasury's confiscation inventory for the Barmakide estate — compiled by treasury official Yusuf ibn Ishaq in 803 AD. The Syrian jurist who made the copy included a margin note: *This inventory was compiled without error. The gifts were the Caliph's to reclaim. The execution is not my subject. The inventory is.* A Venetian collector is sending agents to Damascus. Ahmad needs the carrier to take the document to Weimar first.
+
+*Ahmad ibn Khalid, rolling the vellum carefully: "The treasury official listed Jafar's books separately from the household books — commercial value on one side, reading value on the other. He did not collapse the categories. That tells you something about the man who wrote it."*
+
+**TOKEN:** Baghdad Treasury Barmakide Confiscation Inventory — vellum roll, 9th-century Damascus copy; original compiled by Yusuf ibn Ishaq, 803 AD; 23 property categories; Syrian jurist's margin note preserved. *Act I: received from Ahmad ibn Khalid, Damascus. Act V: surrendered to Archivus Sweelinck, Weimar.*
+
+---
+
+**Act I — Damascus Jurist's Quarter (DAM)**
+
+*A narrow Damascus house, morning. The library around Ahmad ibn Khalid is being catalogued for dissolution. The inventory roll is on the table, partially open.*
+
+"The collector thinks this is a record of Barmakide wealth. He is wrong. It is a record of the treasury official's precision." Ahmad shows the margin note. "The jurist who copied this understood: the inventory is the only document that looked at Jafar without agenda after the execution. Harun's court histories either mourn him or explain him. The treasury official counted objects." He looks at the carrier. "Tell me what the distinction between received gifts and given gifts reveals about what the treasury could and could not touch."
+
+*The Fighter looks at the inventory's careful columns — the separation of commercial books from reading books — the expression of an official who made distinctions.*
+
+Make an **Investigation check (DC 12)**.
+
+**Fail:** "The gifts received from the Caliph are separate from the gifts Jafar gave to others. Tell me what the legal significance of that distinction is." *Ahmad waits.*
+
+**Success:** Gifts received from the Caliph were royal property and reverted to the treasury. Gifts Jafar gave to others were his to give and could not be reclaimed. The inventory simultaneously records what Harun reclaimed and what Jafar had already given away — the acts of generosity the treasury could not touch. Ahmad exhales. "The document that lists what was taken is also the document that proves what could not be taken." He hands over the **Baghdad Treasury Barmakide Confiscation Inventory**.
+
+---
+
+**Act II — Damascus Road North (DAM)**
+
+*A checkpoint north of Damascus. Pietro Corsini, a Genoese factor's agent, has authorization from the Damascus merchant guild to inspect commercial document transfers.*
+
+"I have authorization to inspect commercial transfers of historical documents leaving Damascus. The Barmakide inventory is a historical document of commercial character — it contains asset valuations." He opens his inspection book. "I need to record the document's description and destination."
+
+*The Fighter watches Pietro's inspection authority — genuinely issued — and the inventory roll, about to be described in a Venetian factor's book.*
+
+Make a **Deception check (DC 13)**.
+
+**Fail:** "The document's description requires origin date, subject, and estimated commercial value. I need those three points." *Pietro opens his pen. Try again — about what commercial character means when the value is legal-historical.*
+
+**Success:** "Your guild's inspection authority covers commercial documents — financial instruments, trade rights, bills of exchange. This document is a legal-historical record. Its value is scholarly. It has no commercial value in the sense your authority covers." Pietro reads his authorization clause by clause. He closes the inspection book. "Legal-historical. Proceed."
+
+---
+
+**Act III — Constantinople Harbor (CON)**
+
+*A harbor-master's office, morning. Byzantine archive official Konstantinos Palaiologos has a 10th-century treaty right to Abbasid documents relating to Byzantine diplomatic history.*
+
+"The Barmakide family administered significant Byzantine-Abbasid diplomatic correspondence. The confiscation inventory may include items from those exchanges — letters, Byzantine embassy gifts. Those fall under Byzantine collecting rights." He is correct the right exists. He is uncertain it applies here.
+
+*The Fighter watches Konstantinos reading the treaty — a man whose claim is possible but unverified against this specific document.*
+
+Make a **History check (DC 13)**.
+
+**Fail:** "The treaty covers diplomatic correspondence and gifts exchanged between the courts. Does this inventory contain items from Byzantine-Abbasid exchanges?" *Konstantinos waits for you to demonstrate this.*
+
+**Success:** The inventory's gift categories list only internal Abbasid court gifts — from Harun to Jafar, not from Byzantine embassies. No Byzantine recipient is named in the given-gifts category. The treaty right does not apply. Konstantinos reads the relevant sections. "The gifts are internal." He releases the document. "Proceed."
+
+---
+
+**Act IV — Weimar Scholar's Quarter (WM)**
+
+*The Weimar archive antechamber, late afternoon. German theologian Friedrich von Schreyer argues that the Barmakide family's Nestorian connections make the inventory an ecclesiastical document.*
+
+"The Barmakides had Christian clients. A document touching Christian-Muslim relations in the 9th-century Abbasid court belongs in an ecclesiastical collection."
+
+*The Fighter watches Friedrich's sincere argument — wrong about the inventory's contents.*
+
+Make a **Persuasion check (DC 12)**.
+
+**Fail:** "Why is a secular archive the appropriate place for a document touching those relations?" *Friedrich waits.*
+
+**Success:** "The inventory lists objects: robes, horses, books, outstanding loans. No category addresses theology, Christian practice, or Nestorian clients. If the Barmakide family had Nestorian connections, that relationship is attested elsewhere. This document attests the treasury official's precision." Friedrich reads the category list. No theological category appears. "The treasury official's record. Then it belongs here."
+
+---
+
+**Act V — Weimar Archive (WM)**
+
+*Archivus Sweelinck's receiving room, evening. He reads the inventory carefully — 23 categories, the Syrian jurist's margin note, the commercial-reading distinction in the books.*
+
+"I have received estate inventories. I have not received a confiscation inventory from a political purge." He sets the roll down. "Tell me the classification — not what it records, but what kind of knowledge it generates for a future scholar who needs to understand what a caliph's treasury could and could not touch."
+
+*The Fighter watches Sweelinck's pen hover — the expression of a man who understands that the category he writes determines how a future scholar finds this document.*
+
+Make a **History check (DC 12)**.
+
+**Fail:** "What does a future scholar learn from a confiscation inventory that they cannot learn from a court historian?" *Sweelinck waits.*
+
+**Success:** Sweelinck writes: *Confiscation Records — Property Inventories Compiled After Political Purges; The Administrative Measure of Destroyed Loyalty; The Document That Lists What Was Taken Is Also the Document That Proves What Could Not Be Taken; Baghdad Treasury 803 AD, Barmakide Estate, 23 Categories.* He applies the archive seal. You hand over the **Baghdad Treasury Barmakide Confiscation Inventory**. He holds it a moment before filing it. "The treasury official made a distinction. That is worth preserving." You receive the **Archive Classification Receipt: Confiscation Records**.
+
+*The Fighter watches the vellum roll disappear into the permanent collection. Jafar al-Barmaki's name is in the register — not as a vizier, not as a friend who was executed, but as a set of 23 categories maintained with precision by a man who counted objects.*
+
+---
+
+### Quest API Stub — BGW_S09: The Barmakide Catastrophe
+
+```json
+{
+  "quest_id": "BGW_S09",
+  "title": "The Barmakide Catastrophe",
+  "book": "Arabian Nights — Alf Layla wa-Layla (Burton translation)",
+  "cycle": 9,
+  "token": "Baghdad Treasury Barmakide Confiscation Inventory",
+  "route": "DAM → CON → WM",
+  "theme": "The confiscation inventory as the neutral legal witness to a political purge; the treasury official who maintained the distinction between reclaimed gifts and given gifts — the document that lists what was taken also proves what could not be taken.",
+  "archive_category": "Confiscation Records — Property Inventories Compiled After Political Purges; The Administrative Measure of Destroyed Loyalty; Baghdad Treasury 803 AD, Barmakide Estate, 23 Categories",
+  "acts": [
+    {
+      "act": "act_1", "title": "Damascus Jurist's Quarter", "activateNode": "DAM",
+      "type": "skill_check", "skillCheck": { "stat": "Investigation", "dc": 12 },
+      "scene": "Ahmad ibn Khalid needs the carrier to understand what the separation of received gifts from given gifts reveals about the treasury official's mandate — and what the treasury could not touch.",
+      "prompt": "Investigation DC 12. The gifts Jafar received from the Caliph reverted to the treasury; the gifts Jafar gave away could not be reclaimed. Their separation in the inventory is the measure of destroyed loyalty.",
+      "failText": "What does the legal distinction between received and given gifts reveal about what the treasury could and could not touch?",
+      "successText": "The document that lists what was taken also proves what could not be taken. You receive the Baghdad Treasury Barmakide Confiscation Inventory.",
+      "grantItem": "Baghdad Treasury Barmakide Confiscation Inventory",
+      "checkPassFlag": "bgwS09Act1Passed", "activateMissionBit": "bgwS09Active"
+    },
+    {
+      "act": "act_2", "title": "Damascus Road North", "activateNode": "DAM",
+      "type": "skill_check", "skillCheck": { "stat": "Deception", "dc": 13 },
+      "scene": "Pietro Corsini's inspection authority covers commercial documents. The inventory is legal-historical — no financial instrument value. The category distinction matters before he opens his registration book.",
+      "prompt": "Deception DC 13. The document's value is scholarly, not commercial — it falls outside the guild's inspection mandate.",
+      "failText": "Your authority covers commercial documents. Make the case that this one doesn't qualify.",
+      "successText": "Legal-historical. Pietro closes the book and stamps the transit paper.",
+      "grantItem": "Transit Stamp — Damascus to Constantinople",
+      "checkPassFlag": "bgwS09Act2Passed"
+    },
+    {
+      "act": "act_3", "title": "Constantinople Harbor", "activateNode": "CON",
+      "type": "skill_check", "skillCheck": { "stat": "History", "dc": 13 },
+      "scene": "Konstantinos Palaiologos's treaty right covers Abbasid documents relating to Byzantine diplomatic history. The inventory contains no Byzantine-Abbasid diplomatic items — only internal Abbasid court gifts.",
+      "prompt": "History DC 13. Show that the gift categories are internal Abbasid exchanges, not Byzantine-Abbasid diplomatic items covered by the treaty.",
+      "failText": "Does this inventory contain items from Byzantine-Abbasid diplomatic exchanges?",
+      "successText": "The gifts are internal. Konstantinos releases the document.",
+      "grantItem": "Constantinople Harbor Clearance",
+      "checkPassFlag": "bgwS09Act3Passed"
+    },
+    {
+      "act": "act_4", "title": "Weimar Scholar's Quarter", "activateNode": "WM",
+      "type": "skill_check", "skillCheck": { "stat": "Persuasion", "dc": 12 },
+      "scene": "Friedrich von Schreyer claims the Barmakide Nestorian connections make this an ecclesiastical document. The inventory lists objects, not theology — its 23 categories contain no religious content.",
+      "prompt": "Persuasion DC 12. The inventory's value is the treasury official's precision — a legal record, not a theological one.",
+      "failText": "Why is a secular archive appropriate for a document touching Christian-Muslim relations in the Abbasid court?",
+      "successText": "The treasury official's record. Friedrich steps aside.",
+      "grantItem": "Scholar's Non-Objection Certificate",
+      "checkPassFlag": "bgwS09Act4Passed"
+    },
+    {
+      "act": "act_5", "title": "Weimar Archive", "activateNode": "WM",
+      "type": "skill_check", "skillCheck": { "stat": "History", "dc": 12 },
+      "scene": "Sweelinck needs the classification — what kind of knowledge a confiscation inventory generates that a court history cannot. The treasury official's distinctions are the document's value.",
+      "prompt": "History DC 12. A confiscation inventory proves what was taken and proves what could not be taken — the administrative measure of destroyed loyalty.",
+      "failText": "What does a future scholar learn from a confiscation inventory that they cannot learn from a eulogist?",
+      "successText": "Sweelinck writes: Confiscation Records — Property Inventories Compiled After Political Purges; The Administrative Measure of Destroyed Loyalty. You receive Archive Classification Receipt: Confiscation Records.",
+      "takeItem": "Baghdad Treasury Barmakide Confiscation Inventory",
+      "grantItem": "Archive Classification Receipt: Confiscation Records",
+      "checkPassFlag": "bgwS09Act5Passed", "activateMissionBit": "bgwS09Complete"
+    }
+  ]
+}
+```
+
+---
+
+*BGW-S09 complete. 2026-06-02.*
+
+
