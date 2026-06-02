@@ -1764,3 +1764,204 @@ He notes: "Cross-reference to WAW-01 through WAW-06. The archive now holds seven
 
 *WAW-06 complete. 2026-06-02.*
 
+
+---
+
+## WAW-03 — The Arena Register (Cycle 8)
+
+**Source:** Quo Vadis Chapters 62–64 — Ursus, a Lygian of exceptional strength, kills a bull in the arena with his bare hands to save Lygia, who had been bound to the animal; the crowd rises; Nero is forced to spare them
+
+**Theme declared:** WAW themes catalogued and avoided — Petronius's farewell as the arbiter of elegance's record, the inadvertent census of the Transtiberim Christian community, Chilo's confession naming every person he betrayed, Acte's burial account with specific road and distance, the Caesarea Philippi commission in Syriac as the oldest written form, the secular road official's administrative witness. New theme for this vignette: **the bureaucratic record of the event that witnesses understood as miraculous — the register records the outcome in the same language it uses for all other outcomes; "prisoner survived, animal dispatched by prisoner" sits between other entries that used weapons; the administrative language is the only surviving non-partisan account.**
+
+*The thing · a bound arena register from a 64–68 AD games cycle · one entry marked "Irregular Outcome — Crowd Disorder" · in a Neapolitan family library*
+
+**New nodes proposed:** None (uses existing NAP, BOL, WM)
+
+**TOKEN:** Flavian Games Register Entry — ACCEPT Act I → CARRY Acts II–IV → RETURN Act V → RECORD
+
+---
+
+### Act I — Naples, Caracciolo Library, Castel dell'Ovo District (NAP)
+
+Donna Fiammetta Caracciolo is a Neapolitan noblewoman in her fifties who has been overseeing the cataloguing of her late husband's library for three years. The library was purchased entire from a Roman estate that had been in one family since the fifth century. She finds the Roman administrative documents boring but understands they may be valuable. She shows the register to a visiting scholar.
+
+The register entry for Day 4, morning session: *Condemned prisoner, Lygian, charge: Christian sect membership. Animal assigned: bull, Cappadocian breed, weight approx. 1,200 librae. Outcome: animal dispatched by prisoner's hands, no weapon used. Prisoner survived. Crowd disturbance. Session suspended by praetor's order. Prisoner removed to custody pending review.* Filed under: *Irregular Outcomes — Crowd Disorder Cases.*
+
+*The Flavian Games Register Entry · in a bound games-cycle register, Day 4 session 2, page 7 · on the library table with Donna Fiammetta and a visiting humanist scholar*
+
+**Skill Check — Perception DC 11:** The humanist scholar — Ser Matteo di Pietrasanta — has been looking at a different section of the register, the records from Day 1. He is moving toward the Day 4 entries. He will reach the Lygian entry in approximately two minutes. See it first. Pass: The Fighter is at the register before Ser Matteo and reads the entry before he does. Fail: He finds it first, copies it quickly onto a separate sheet, and gives the register the expression of a man who has just realized something is worth money.
+
+*Passtext:* Day 4, morning session, page 7. The handwriting is administrative — deliberate, unsentimental, the same hand that filled in the weight of the Cappadocian bull on the animal assignment page as it filled in everything else. "Dispatched by prisoner's hands, no weapon used." The next entry is about a boar and a condemned thief, outcome unremarkable.
+
+*Failtext:* Ser Matteo already has his copy. He looks up with the expression of a man who has found his value proposition and is deciding how to present it.
+
+**Grant item:** Flavian Games Register Entry (the bound register, Day 4 through Day 7, with the Lygian entry on page 7 of session 2; Ser Matteo's loose copy may or may not be in play)
+
+---
+
+### Act II — Naples, Scholar's Rented Study Near the Harbor (NAP)
+
+Ser Matteo di Pietrasanta is a humanist dealer in documents — a common type in 1367, not disreputable, but commercially minded in ways that conflict with scholarly permanence. He has his copy of the entry. He would prefer the original and his copy went together — the pair has significantly more value to a collector than either piece alone. He is polite about this preference.
+
+"I would be willing to broker the original for a share of the sale price," he says. "The collector I have in mind would pay well for the authenticated register."
+
+*The Flavian Games Register Entry · under the Fighter's arm, bound register weight noticeable · in Ser Matteo's rented study with afternoon harbor light*
+
+**Skill Check — Persuasion DC 12:** A document of this kind — a Roman administrative record of a specific event in 64 AD — has its maximum value as a permanently accessible public record, not as a private collector's acquisition. Once sold to a collector, it is effectively lost to scholarship. Ser Matteo can certify his copy as made from the original at the moment the original is accessioned at Weimar. A certified copy is scholarly evidence; an uncertified copy is not. His copy becomes more valuable, not less, when the original is in a public archive. Pass: Ser Matteo considers the certification offer. A Weimar certification on his copy transforms a private document into a scholarly one. He agrees, with the certification as the condition. Fail: He argues that scholars can apply for access at collector's homes. He will not physically interfere.
+
+*Passtext:* "Send me the certification documentation when the intake is confirmed." He is already calculating the increase in his copy's value. He waves the Fighter out.
+
+*Failtext:* He argues. He doesn't interfere. The register moves.
+
+*The Flavian Games Register Entry · in traveling case, moving north from Naples*
+
+---
+
+### Act III — Naples, Near the Church of Santa Chiara (NAP)
+
+Fra Marzio is a Franciscan friar with a quick mind and a theological problem. He has heard about the document. A Christian prisoner who killed a bull barehanded before a pagan crowd in 64 AD is either a miraculous event or a very large man doing something a very large man can do. The Church in 1367 has not decided which. If it is a miracle, the document needs to be in Church custody and reviewed for hagiographic process. If it is not a miracle, the document's secular framing may be theologically useful. Either way, Fra Marzio wants it under Church review before it leaves the diocese.
+
+*The Flavian Games Register Entry · in traveling case · in a Naples street with a Franciscan friar who has a theological problem and cannot let it walk past him*
+
+**Skill Check — Deception DC 12:** The register documents the death of a Christian martyr in the 64 AD persecution — but the specific entry the friar is concerned about is the preliminary record only; the final disposition entry, showing the prisoner's fate after removal to custody, is in a different administrative volume that would need to be found and cross-referenced before any hagiographic process could proceed. The relevant entry is incomplete as a record of martyrdom until the follow-up volume is located. The archbishop's office can apply for access to both volumes through Weimar once both are properly accessioned. Pass: Fra Marzio understands that an incomplete administrative record of martyrdom cannot initiate hagiographic review. He says: "Tell the archbishop's secretary to apply through Weimar. Cite my name." Fail: He writes a brief detaining order on the bishop's standing authority and sends a novice for the bishop's confirmation; the confirmation takes two hours; it returns as "insufficient grounds for detention"; Fra Marzio apologizes.
+
+*Passtext:* Fra Marzio is genuinely persuaded. He is a careful theologian. "The follow-up volume must be found first." He steps back. "My name to the archbishop's secretary. When both volumes are at Weimar."
+
+*Failtext:* Two hours. The bishop's response is three words. Fra Marzio is embarrassed. The register continues.
+
+*The Flavian Games Register Entry · past the Franciscan quarter, on the northern road out of Naples*
+
+---
+
+### Act IV — Road Above Capua, Near the Apennine Approach (NAP to BOL road)
+
+Ser Niccolò di Caiazzo is a retired arena official — not Flavian-era, but the son of a man who managed games contracts in Naples in the 1310s and 1320s. He recognizes the register from a description a traveling scholar mentioned at an inn. He has caught up with the Fighter on the road above Capua. He is not hostile. He is grieved.
+
+"The arena system," he says, "produced Rome. The records of what happened there belong in Italy. Not in a German city." He does not block the road. He stands to one side of it and speaks with the dignity of a man who believes what he says.
+
+*The Flavian Games Register Entry · in the traveling case on the Fighter's back · on a dusty road above Capua with a retired official making a moral argument*
+
+**Skill Check — Persuasion DC 13:** The archive at Weimar does not take documents away from their history. Once the register is accessioned, it is as much Italy's as any Roman who wants to read it — more so, because it cannot be lost, sold, or destroyed. The arena system's records are preserved by being made permanent. A register that stays in a private collection may be lost in the next generation; a register at Weimar is in the record indefinitely. Ser Niccolò's own family's work is in the record if anything survives. If he knows of other arena documents, Weimar would receive them. Pass: He is quiet for a moment. He says: "My father kept his own copies. Two volumes of Naples games contracts, 1312 to 1318. I have them." He asks how to initiate a donation. Fail: He says nothing. He watches the Fighter walk. He does not follow.
+
+*Passtext:* He writes his name on a slip of paper and hands it over. "For the intake application. My father's volumes. Tell them the family name." He steps back. The road is clear. He is still watching when the Fighter rounds the curve.
+
+*Failtext:* He stands by the road. He does not pursue. The register continues.
+
+*The Flavian Games Register Entry · on the road north through the Apennines*
+
+---
+
+### Act V — Weimar Archive District (WM)
+
+Archivus Sweelinck opens the register to Day 4, session 2, page 7. He reads the entry. Then he reads the entries on either side of it: Day 4, session 1 (a thief and a bear, outcome unremarkable), Day 4, session 2 continued (a condemned slave and a leopard, outcome unremarkable).
+
+"The praetor classified it as crowd disorder," he says. He looks up. "Not as a miracle. Not as an exceptional outcome. Crowd disorder."
+
+*The Flavian Games Register Entry · open on the intake desk, page 7, the Lygian entry between two unremarkable entries · afternoon light through the archive window*
+
+**Skill Check — Investigation DC 11:** Find the entry marked "prisoner removed to custody pending review" — there is no follow-up entry in this volume or any obvious continuation. The register records the session outcome and stops. The praetor filed it under crowd disorder. The prisoner and the woman he was protecting are simply gone from the record after the session entry. The administrative language is the last official document that acknowledges they existed. Pass: Sweelinck reads the follow-up absence. He notes it in the intake record. New archive category: Administrative Records — Witnessed Events of Uncertain Classification; events filed by Roman administrators under available administrative categories that did not describe what those administrators witnessed. Fail: Filed under Games Records — Flavian Period, session outcome registers, with a note that the entry is of potential historical interest.
+
+*Passtext:* "Administrative Records — Witnessed Events of Uncertain Classification. The praetor had a category and he used it. He did not have a category for what he saw, so he used the nearest category he had. The archive keeps both: the event and the category that couldn't hold it." He writes the cross-reference to WAW-01 and WAW-02 in the intake record. "The charge was Christian sect membership. The outcome was irregular. The next question — what happened to the prisoner after — is not in this volume. File accordingly."
+
+*Failtext:* Filed under Games Records — Flavian Period. Cross-reference to WAW materials noted. Category: session outcome registers, irregular outcomes.
+
+**Take item:** Flavian Games Register Entry
+**Grant item:** Arena Register Archive Record
+
+```json
+{
+  "quest_id": "WAW-03",
+  "title": "The Arena Register",
+  "cycle": 8,
+  "book": "Quo Vadis (Henryk Sienkiewicz, Curtin tr., 1895/1896) — Chapters 62–64: Ursus kills the bull; the crowd rises; Nero is forced to spare them",
+  "token": "Flavian Games Register Entry",
+  "route": ["NAP", "BOL", "WM"],
+  "theme": "The bureaucratic record of the event that witnesses understood as miraculous — the register records the outcome in administrative language; 'prisoner survived, animal dispatched by prisoner's hands, no weapon used' sits between two unremarkable entries; the administrative language is the only surviving non-partisan account",
+  "archive_category": "Administrative Records — Witnessed Events of Uncertain Classification",
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "NAP",
+      "type": "skill_check",
+      "activateNode": "NAP",
+      "scene": "Donna Fiammetta Caracciolo's library. The register is on the table. Humanist scholar Ser Matteo di Pietrasanta is moving toward the Day 4 entries. The Lygian entry is on page 7 of session 2: prisoner survived, bull dispatched by prisoner's hands, no weapon used, session suspended by praetor's order.",
+      "skillCheck": {
+        "skill": "Perception",
+        "dc": 11,
+        "prompt": "Reach the Day 4 entries before Ser Matteo does and read the Lygian entry first.",
+        "failText": "Ser Matteo finds it first and makes his own copy before the register is secured.",
+        "passText": "Day 4, page 7. 'Dispatched by prisoner's hands, no weapon used.' The next entry is about a boar. The administrative hand does not change."
+      },
+      "grantItem": "Flavian Games Register Entry",
+      "checkPassFlag": "waw03Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "NAP",
+      "type": "skill_check",
+      "activateNode": "NAP",
+      "scene": "Humanist dealer Ser Matteo di Pietrasanta in his harbor study. He has his copy. He wants the original and copy to travel together to a collector for maximum value.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "prompt": "Offer Weimar certification of his copy upon original intake; a certified copy is scholarly evidence; an uncertified private copy is not; his copy becomes more valuable when the original is in a public archive.",
+        "failText": "He argues that collectors grant access. He does not physically interfere.",
+        "passText": "'Send me the certification documentation when the intake is confirmed.' He is already calculating."
+      },
+      "checkPassFlag": "waw03Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "NAP",
+      "type": "skill_check",
+      "activateNode": "NAP",
+      "scene": "Fra Marzio, Franciscan friar, outside Santa Chiara with a theological problem. A Christian prisoner who killed a bull barehanded may or may not be a miracle. He wants the document under Church review before it leaves the diocese.",
+      "skillCheck": {
+        "skill": "Deception",
+        "dc": 12,
+        "prompt": "Argue the register entry is incomplete as a martyrdom record — the follow-up disposition volume is separate; hagiographic review requires both; the archbishop's office should apply through Weimar once both volumes are accessioned.",
+        "failText": "A two-hour detaining order is issued and returns as 'insufficient grounds.' Fra Marzio apologizes.",
+        "passText": "Fra Marzio: 'The follow-up volume must be found first.' He gives his name for the archbishop's secretary's application. He steps back."
+      },
+      "checkPassFlag": "waw03Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "NAP",
+      "type": "skill_check",
+      "activateNode": "NAP",
+      "scene": "Retired arena official Ser Niccolò di Caiazzo on the road above Capua. He believes the arena system's records belong in Italy, not a German archive. He does not block the road. He makes a moral argument.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "prompt": "Argue that archiving at Weimar makes the record permanently Italy's — it cannot be lost or sold; ask if he knows of other arena documents his family may have; his father's Naples games contracts would be received.",
+        "failText": "He says nothing and watches the Fighter walk. He does not follow.",
+        "passText": "He writes his name on a slip of paper. 'My father's volumes. 1312 to 1318. For the intake application.' He steps back."
+      },
+      "checkPassFlag": "waw03Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck reads the Lygian entry between two unremarkable session entries. 'The praetor classified it as crowd disorder.' He looks up. 'Not a miracle. Not an exceptional outcome. Crowd disorder.'",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 11,
+        "prompt": "Find that there is no follow-up entry in this volume for 'prisoner removed to custody pending review' — the register stops; the administrative language is the last official document that acknowledges the prisoner existed.",
+        "failText": "Filed under Games Records — Flavian Period, session outcome registers, with a note of historical interest.",
+        "passText": "Sweelinck writes: 'Administrative Records — Witnessed Events of Uncertain Classification. The praetor had a category and used it. He did not have a category for what he saw. The archive keeps both: the event and the category that couldn't hold it.'"
+      },
+      "takeItem": "Flavian Games Register Entry",
+      "grantItem": "Arena Register Archive Record",
+      "checkPassFlag": "waw03Act5Passed",
+      "activateMissionBit": "wawArenaRegisterComplete"
+    }
+  ]
+}
+```
+
+---
+
+*WAW-03 complete. 2026-06-02.*

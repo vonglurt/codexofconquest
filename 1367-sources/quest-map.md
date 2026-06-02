@@ -489,6 +489,7 @@ Game cities are canonical. Source-book settings are proposed new nodes.
 | CAI-05 | The Deathbed Instruction | 8 | DAM → ALE → WM | The legal instrument that is the story's emotional center; the story is the breach case that the form was designed to prevent |
 | WAW-02 | The Charge List | 6 | ROM → FLR → WM | The prosecution document is the only census; the arrest record names the community no one else recorded |
 | WAW-06 | Peter's Deposition | 7 | ANT → CON → RGS → WM | The periphery holds the origin; the Syrian community kept the commission in its original linguistic register before Greek transmission began |
+| WAW-03 | The Arena Register | 8 | NAP → BOL → WM | The bureaucratic record of the event that witnesses understood as miraculous; the praetor filed it under crowd disorder; the administrative language is the only non-partisan account |
 | MLA-03 | The Solon Tablet | 6 | MYS → ANC → WM | The authenticated copy that precedes the original's uncertain fate; the rubbing arrives before the stone; the copy is the only form in which the laws will reach the archive |
 | MLA-05 | The Nicias Correspondence | 7 | THA → CON → ANC → WM | The source document behind the canonical account; the historian's selection is visible as selection; the archive holds what Thucydides chose not to quote |
 | BGW-02 | The Sinbad Chart | 6 | FAM → VEN → WM | The navigational chart that matches the story's geography; the chart and the story share place names; the archive receives the cartographic evidence of Sinbad's world |
@@ -497,6 +498,7 @@ Game cities are canonical. Source-book settings are proposed new nodes.
 | NWI-02 | The Rearguard's Log | 6 | TBZ → CON → WM | The operational record versus the literary account; the day-log records what happened; the Anabasis records what it meant; both are primary |
 | NWI-04 | The Oath at Calpe | 7 | VEN → WM | The diplomatic formula for sacred oaths; the tablet records the form Tissaphernes used; the formula makes the betrayal visible as deliberate violation |
 | NWI-07 | The Scillus Deed | 8 | MYS → ANC → WM | The settlement inscription that closed the march; the archive holds start, march, and end; the complete arc is now in one collection |
+| NWI-08 | The Towns That Were Not Given | 9 | CON → RGS → WM | The grant document for three towns the army earned and never received; the archive holds the unfulfilled promise alongside Xenophon's private farm |
 
 *When a new quest is written, append its row to the Processed Quests table.*
 *When a new location is used, append its row to the Location Grid.*

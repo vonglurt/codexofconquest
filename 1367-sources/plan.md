@@ -76,7 +76,7 @@ Route: SIN → CON → WM. Theme: the front-rank view of communal salvation; the
 ### §NWI-07 — The Scillus Deed (Book 5) ✓ DONE 2026-06-02
 After the march, Xenophon settled at Scillus near Olympia on an estate granted by the Spartans. He built a small temple to Artemis and set up a stone inscription describing the grant's terms. A 2nd-century traveler's account describes seeing the stone. A Peloponnesian monastery's foundation records contain a survey of ancient inscriptions in the area, including a transcription of the Scillus stone. Fighter escorts the survey to a neutral archive.
 
-### §NWI-08 — The Towns That Were Not Given (Book 7)
+### §NWI-08 — The Towns That Were Not Given (Book 7) ✓ DONE 2026-06-02
 Seuthes promised the Greek army three Thracian coastal towns — Bisanthe, Ganos, Neontichos — as permanent settlement in exchange for their winter campaign. They completed the campaign. He kept the towns. A Thracian noble family near the Bosphorus holds old territorial records; one may be the written record of the promised grant, never honored. In 1367 this document is worth money. Fighter must get it to a neutral archive before the family sells it or the towns change hands again.
 
 ---
@@ -90,7 +90,7 @@ The following quest seeds were generated from full narrative recall. Each has a 
 ### §WAW-02 — The Charge List (Chapters 55–60) ✓ DONE 2026-06-02
 The Praetorian Guard produced formal arrest records during the 64 AD Christian persecution: names, addresses, charges, arresting officers. A partial copy of one list — covering arrests in the Transtiberim district — survived in a Roman catacomb library. It names forty-three people. It is the most complete record of who was there. Fighter escorts it from a Roman catacomb to a neutral archive.
 
-### §WAW-03 — The Arena Register (Chapters 62–64)
+### §WAW-03 — The Arena Register (Chapters 62–64) ✓ DONE 2026-06-02
 Roman amphitheaters kept administrative records of games: names of condemned, types of animals, outcomes. A partial register from a 64–68 AD games cycle includes an entry for an unnamed barbarian prisoner who killed a bull in public. This is the only official document that confirms what Ursus did. Fighter escorts it from a Neapolitan archive.
 
 ### §WAW-04 — Chilo's Account (Chapter 72) ✓ DONE 2026-06-02
@@ -128,7 +128,7 @@ Nicias wrote dispatches to Athens during the Sicilian Expedition that survive in
 ### §MLA-06 — The Agrarian Commission Record (Life of Tiberius Gracchus) ✓ DONE 2026-06-02
 Tiberius Gracchus's land commission (133 BC) produced land-redistribution records: who received what allotment, where, under what legal description. A fragmentary copy of one year's commission decisions survives in a Roman archive. In 1367, the land it describes is in Campania and still arable; the document has legal implications for current landowners who trace their ownership to Sullan confiscations. Fighter escorts it before it can be confiscated.
 
-### §MLA-07 — The Missing Preface (Epaminondas/Scipio — Lost Lives)
+### §MLA-07 — The Missing Preface (Epaminondas/Scipio — Lost Lives) ✓ DONE 2026-06-02
 Plutarch's preface to the Epaminondas/Scipio pair is quoted in fragments by later writers; the Lives themselves are lost. A monastic scholar in 1367 has found a manuscript containing what appears to be the preface — Plutarch's stated reason for pairing these two men — without the Lives following it. The preface alone tells you what Plutarch thought the comparison was about. Fighter escorts the fragment from a Greek island monastery to Weimar.
 
 ---

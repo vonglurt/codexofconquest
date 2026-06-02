@@ -1921,3 +1921,207 @@ He notes: "Cross-reference: NWI-01 through NWI-07. The archive holds the complet
 
 *NWI-07 complete. 2026-06-02.*
 
+
+---
+
+## NWI-08 — The Towns That Were Not Given (Cycle 9)
+
+**Source:** Anabasis Book 7 — Seuthes promises the Greek army three Thracian coastal towns (Bisanthe, Ganos, Neontichos) as permanent settlement in exchange for their winter campaign; the Greeks complete the campaign; Seuthes keeps the towns
+
+**Theme declared:** NWI themes catalogued and avoided — the sea as collective memory of return, the Cretan's front-rank testimony, Proxenus's letter as a form of authorship, the oath formula as the weapon itself, the catalog of lost texts as primary evidence, the rearguard log's daily precision, the settlement record closing the arc. New theme for this vignette: **the unfulfilled promise as primary record — the grant document was never used; its value is precisely in what it was never allowed to do; the archive receives it not as a deed to the land but as evidence that the promise was made and the land was never given.**
+
+*The thing · a parchment grant document, Byzantine Greek copy of a Thracian-era original · listing Bisanthe, Ganos, and Neontichos by name and description · in a Constantinople family archive*
+
+**New nodes proposed:** None (uses existing CON, RGS, WM)
+
+**TOKEN:** Bisanthe Grant Parchment — ACCEPT Act I → CARRY Acts II–IV → RETURN Act V → RECORD
+
+---
+
+### Act I — Constantinople, Chrysaphes Family Archive (CON)
+
+Konstantinos Chrysaphes is a minor Byzantine-Thracian landowner, seventy years old, with a family archive in a rented room of a Constantinople house that smells of old wool and river damp. The parchment has been in his family for five generations — acquired by a great-great-grandfather who served as a Byzantine administrative receiver for Thracian properties. He knows vaguely what it says. He doesn't know what it means.
+
+*The Bisanthe Grant Parchment · Byzantine Greek, formal scribal hand, late antique · rolled in a leather sleeve with a faded inscription on the outside · on a shelf behind the winter accounting records*
+
+"It names three towns," he says. "Bisanthe, Ganos, Neontichos. It says they were granted. My family has no claim to those towns — no one ever said we did. But it says it."
+
+**Skill Check — History DC 11:** The document is a Byzantine Greek copy of an earlier Greek-Thracian document. The legal formulas are archaic: "kektêmenos" for the landholding verb, a phrasing that predates Byzantine administrative standardization. The names match Xenophon's three towns exactly. The copy is real. The original promise it records was made to an army by a Thracian king who had no intention of honoring it. Pass: The dating and formula identify this as genuine. Fail: The document is consistent with the period but cannot be confirmed without comparison texts.
+
+*Passtext:* The archaic formula sits between two standard Byzantine copy-markers. Someone in the 5th or 6th century copied a document from the era of Greek mercenaries, probably without knowing what they were copying. Konstantinos listens to the identification. He looks at the parchment. "It was never honored," he says. "I knew that part."
+
+*Failtext:* Consistent with the period. Genuine enough to proceed.
+
+**Grant item:** Bisanthe Grant Parchment (rolled leather sleeve, faded exterior inscription, Byzantine Greek formal hand)
+
+---
+
+### Act II — Constantinople, Genoese Quarter Near the Golden Horn (CON)
+
+Ser Benedetto Spinola, Genoese factor for the Black Sea routes, has a letter of purchase intent with a deposit already paid. He learned about the document from a scrivener who catalogued the Chrysaphes family papers last year. Bisanthe sits at the entrance to the Propontis; a grant document for the town — even an ancient, never-honored one — is territorial evidence in current Genoese-Byzantine-Ottoman negotiations. He considers it a bargain.
+
+*The Bisanthe Grant Parchment · in leather sleeve · in a Constantinople street near the Golden Horn with a Genoese factor and a purchasing letter*
+
+**Hybrid — Persuasion DC 12 / Combat fallback:**
+Persuasion DC 12: The document proves the towns were promised but not delivered — it establishes contested ownership, not confirmed ownership. Using it as territorial evidence would undermine any claim it's meant to support; a court that sees this document sees that Bisanthe was in dispute in 401 BC and was withheld. The only place where an unfulfilled promise has a filing category is a neutral archive. Pass: Spinola re-reads his assessment. A contested-ownership document is an obstacle, not an asset. He says: "Tell me if anything new turns up." He doesn't step back warmly but he steps back. Fail: He calls two Genoese trading guards who are not his men but are on retainer for situations like this.
+
+*Passtext:* He folds his purchasing letter and tucks it back inside his coat. He is genuinely reconsidering. The document was never worth what he paid the scrivener for the information.
+
+*Combattext:* Two Genoese trading guards, AC 12 HP 16 each — they have instructions to secure the document pending negotiation; they are not murderers; they stop when things become too complicated to explain to the factor.
+
+*The Bisanthe Grant Parchment · past the Genoese quarter, in the traveling satchel · heading for the northern road*
+
+---
+
+### Act III — Road North of Constantinople Toward the Balkan Route (CON)
+
+A Byzantine imperial clerk, Sebastianos Tarchaneiotis, has been sent to recover the document. His instructions are clear: a parchment document concerning Thracian towns Bisanthe, Ganos, and Neontichos, which are sovereign Byzantine territory or were, constitutes state property. Official records concerning sovereign territory cannot leave the empire in private hands.
+
+He is very polite. He has a writ with the imperial seal.
+
+*The Bisanthe Grant Parchment · in satchel · on a muddy road north of Constantinople with an imperial clerk and his two escorts*
+
+**Skill Check — Deception DC 12:** The parchment is in the custody of a papal envoy traveling to Avignon on behalf of the Patriarch's correspondence office — it was entrusted to the Fighter as the envoy's document carrier. A Byzantine imperial writ has no jurisdiction over documents in papal custodial transit. The Patriarch's correspondence office is senior to the imperial clerk's authority in questions of document custody. Pass: Sebastianos cannot challenge the Patriarch's transit claim in the field; he will need to file through ecclesiastical channels. Fail: He holds the Fighter for four hours while he sends a messenger back to the city to verify; the verification returns "no such transit authorized"; he prepares to enforce.
+
+*Passtext:* Sebastianos writes a notation. "I'll file the verification request through the Patriarch's office." He and his escorts stand aside. The Fighter does not slow down.
+
+*Failtext:* Four hours. The messenger comes back with a blank. Sebastianos is preparing the enforcement order when a second messenger arrives from the Chrysaphes family with a letter saying the document was removed before the writ was issued and was never subject to state recovery. It takes another hour. The road clears before dark.
+
+*The Bisanthe Grant Parchment · past the Byzantine checkpoint, on the overland route north*
+
+---
+
+### Act IV — Regensburg, Document Intake Office (RGS)
+
+Herr Friedrich Mühlberg is the Regensburg document intake notary, a careful and well-read man who does not believe this document is what the Fighter says it is. He has never heard of Seuthes. He has never heard of Bisanthe, Ganos, or Neontichos. He has seen forged classical documents before — they turn up three or four times a year, usually with worse Latin than their claimed period — and a parchment purporting to be a grant by a Thracian king to a Greek mercenary army strikes him as exactly the kind of thing a Venice dealer would produce for a credulous German collector.
+
+*The Bisanthe Grant Parchment · on Mühlberg's intake desk · in the Regensburg document office with good north light*
+
+**Skill Check — History DC 12:** Xenophon names Seuthes, Bisanthe, Ganos, and Neontichos in the Anabasis — Book 7, the Thracian winter campaign. The document's archaic legal formulas match the pre-Roman Greek administrative period. Mühlberg's office has a copy of the Anabasis in the reference shelf. The cross-reference is available right now. Pass: Mühlberg pulls the Anabasis, finds the passage. The three names are there. He re-reads the parchment. He stamps it "Document received for archive transit: provenance consistent with claimed period." Fail: He files it as "origin uncertain, classical claims unverified" — a classification that will require a senior archivist's review at Weimar before intake.
+
+*Passtext:* He finds Anabasis Book 7 without being directed. He reads the passage, checks the three names, checks the legal formulas again. "Consistent with claimed period." He stamps it. "I'll want to know what Weimar makes of it."
+
+*Failtext:* "Origin uncertain — classical claims unverified." The senior archivist review at Weimar will take two days. Sweelinck resolves it in the first hour.
+
+*The Bisanthe Grant Parchment · stamped by Regensburg intake, Mühlberg's notation affixed · on the final road to Weimar*
+
+---
+
+### Act V — Weimar Archive District (WM)
+
+Archivus Sweelinck opens the leather sleeve. He reads the document. He stands up and goes to his Anabasis shelf without saying anything. He returns with Book 7 open and reads for a moment, then puts both the parchment and the book on the desk side by side.
+
+"He promised them three towns. They marched all winter for Seuthes." He looks at the document. "He kept the towns."
+
+*The Bisanthe Grant Parchment · on the intake desk beside the Anabasis · Sweelinck standing with his pen not yet picked up*
+
+**Skill Check — History DC 11:** Connect this document to NWI-07 (the Scillus Deed): NWI-07 is the private settlement Xenophon eventually received from the Spartans — a small estate, horses, cattle, a temple. The two documents are the bookends of everything that came after the Anabasis: the promise that was broken, and the private arrangement that substituted for it. The army never got their towns. Xenophon got his farm. Pass: Sweelinck looks at the cross-reference note. He writes it into the intake record. New archive category: Unfulfilled Grant Records — Documented Promises Without Performance. The document is filed next to the NWI-07 cross-reference entry. Fail: Filed under Diplomatic Records — Greek-Thracian, with a note suggesting comparison with the Scillus material.
+
+*Passtext:* Sweelinck writes the cross-reference entry, then the category note: "Unfulfilled Grant Records — Documented Promises Without Performance. The document's value is in what it was never allowed to do. The army marched. The towns were not given. The record of what was owed is here." He sets the parchment into its folder. "Xenophon's deed is already here. He got a farm. This is what the rest of them were supposed to get."
+
+*Failtext:* Filed under Diplomatic Records — Greek-Thracian, cross-reference note to NWI materials pending senior review.
+
+**Take item:** Bisanthe Grant Parchment
+**Grant item:** Thracian Grant Archive Record
+
+```json
+{
+  "quest_id": "NWI-08",
+  "title": "The Towns That Were Not Given",
+  "cycle": 9,
+  "book": "Anabasis (Xenophon, Dakyns tr., c. 401 BC) — Book 7: The Thracian winter campaign; Seuthes's promised settlement",
+  "token": "Bisanthe Grant Parchment",
+  "route": ["CON", "RGS", "WM"],
+  "theme": "The unfulfilled promise as primary record — the grant document was never used; its value is precisely in what it was never allowed to do; the archive receives it as evidence that the promise was made and the land was never given",
+  "archive_category": "Unfulfilled Grant Records — Documented Promises Without Performance",
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "CON",
+      "type": "skill_check",
+      "activateNode": "CON",
+      "scene": "Konstantinos Chrysaphes in his Constantinople family archive. The parchment has been in his family for five generations. It names three towns and says they were granted. His family has no claim to them. 'It was never honored. I knew that part.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 11,
+        "prompt": "Date the document by its archaic legal formulas — 'kektêmenos' and pre-Byzantine phrasing — and match the three town names against Xenophon's Anabasis Book 7.",
+        "failText": "Consistent with the period; genuine enough to proceed without full confirmation.",
+        "passText": "The archaic formula sits between 5th-century Byzantine copy-markers. Someone copied a document from the mercenary era without knowing what they were copying. The identification is solid."
+      },
+      "grantItem": "Bisanthe Grant Parchment",
+      "checkPassFlag": "nwi08Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "CON",
+      "type": "hybrid",
+      "activateNode": "CON",
+      "scene": "Genoese factor Ser Benedetto Spinola near the Golden Horn with a purchasing letter and deposit receipt. He wants the document as territorial evidence for Propontis negotiations.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "prompt": "Argue that the document proves the towns were contested in 401 BC and withheld — it establishes disputed ownership, not confirmed ownership; using it as territorial evidence undermines any claim it supports.",
+        "failText": "He calls two Genoese trading guards. Combat: 2 guards AC 12 HP 16 each.",
+        "passText": "Spinola re-reads his assessment. A contested-ownership document is an obstacle, not an asset. He steps back."
+      },
+      "combat": {
+        "enemies": [{"name": "Genoese Trading Guard", "ac": 12, "hp": 16, "count": 2}],
+        "trigger": "Persuasion check failed"
+      },
+      "checkPassFlag": "nwi08Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "CON",
+      "type": "skill_check",
+      "activateNode": "CON",
+      "scene": "Imperial clerk Sebastianos Tarchaneiotis on the road north with a writ and two escorts. Documents concerning sovereign Thracian territory are state property and cannot leave the empire in private hands.",
+      "skillCheck": {
+        "skill": "Deception",
+        "dc": 12,
+        "prompt": "Claim the parchment is in papal custodial transit for the Patriarch's correspondence office — a jurisdiction the imperial clerk cannot override in the field without ecclesiastical verification.",
+        "failText": "Four-hour hold for verification; the Chrysaphes family's letter eventually clears the road.",
+        "passText": "Sebastianos writes a verification notation and steps aside. He cannot challenge the Patriarch's transit claim in the field."
+      },
+      "checkPassFlag": "nwi08Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "RGS",
+      "type": "skill_check",
+      "activateNode": "RGS",
+      "scene": "Regensburg notary Herr Friedrich Mühlberg, who has never heard of Seuthes or the three towns and believes this is a forgery. The office has a copy of the Anabasis on its reference shelf.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Direct Mühlberg to Anabasis Book 7 to cross-reference the three town names and the Thracian winter campaign; the document's archaic formulas are verifiable against the period.",
+        "failText": "Filed as 'origin uncertain, classical claims unverified' — pending senior archivist review at Weimar.",
+        "passText": "Mühlberg pulls the Anabasis, finds the passage, checks the three names. 'Consistent with claimed period.' He stamps it."
+      },
+      "checkPassFlag": "nwi08Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck reads the parchment beside Book 7. 'He promised them three towns. They marched all winter. He kept the towns.' He looks at the document without picking up his pen.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 11,
+        "prompt": "Connect this document to NWI-07 (the Scillus Deed): the two are bookends — the army's unfulfilled promise and Xenophon's private substitute settlement; the army got nothing, Xenophon got a farm.",
+        "failText": "Filed under Diplomatic Records — Greek-Thracian, cross-reference note to NWI materials pending.",
+        "passText": "Sweelinck writes: 'Unfulfilled Grant Records — Documented Promises Without Performance. The document's value is in what it was never allowed to do. The army marched. The towns were not given. The record of what was owed is here.' He files it next to the NWI-07 cross-reference."
+      },
+      "takeItem": "Bisanthe Grant Parchment",
+      "grantItem": "Thracian Grant Archive Record",
+      "checkPassFlag": "nwi08Act5Passed",
+      "activateMissionBit": "nwiTownsNotGivenComplete"
+    }
+  ]
+}
+```
+
+---
+
+*NWI-08 complete. 2026-06-02.*
