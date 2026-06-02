@@ -594,3 +594,1005 @@ He writes in the ledger: *Involuntary Testimony — Records of Speech Produced O
 - Seeds AMS-01–06 drawn from Parts 1–3 reading; AMS-07 added from Part 3 (Chapter VIII)
 - English only: all mission text uses English throughout; no Japanese, Persian, or other foreign language in vignette text
 - Route note: NIS (Nishapur), SAM (Samarkand), MRV (Merv), CON (Constantinople), BGD (Baghdad), MRG (Maragha) are proposed new nodes; all fit the 1367 Silk Road geography
+
+---
+
+## §AMS-03 — Vignette Cycle 3: "The Cicada's Husk"
+
+### Themes avoided
+AMS-01: anonymous gift / sender's absence as condition of honesty. AMS-02: involuntary honesty / the spirit that speaks without social constraint. HTY: physician's vocabulary for spiritual act / technical analysis of divine unfairness / military concealment as theology. IST: partisan account as preservation / intelligence product as document. FCO: suppression / manuscript as counterargument. WAW: administrative record of the miraculous. BGW: geographic impossibility. CAI: template versus story.
+
+**Declared theme — Cycle 3:** The thing left behind when someone flees is not left accidentally. The abandoned object is more present than the absent owner. The scarf holds what the person could not carry — which is everything the farewell could not say.
+
+### TOKEN: "The Utsusemi Scarf"
+
+*The Utsusemi Scarf · folded silk, sealed note inside · in Anastasios's hands · Tabriz merchant's storeroom*
+
+A folded silk scarf, very thin — fine-spun, pale grey-green, faintly perfumed (the scent of something Eastern, not identifiable by any Western nose), wrapped around a sealed note. The scarf arrived inside a bale of Eastern silk consigned to Anastasios the Greek merchant; the bale included this piece clearly wrapped separately from the commercial fabric, with the note tucked inside the fold. The note is sealed with red wax, no mark — not an institutional seal, a personal closure. The note is in Japanese. Anastasios cannot read it. The scarf itself is clearly personal; it has been worn; the fold retains the shape of a hand.
+
+**Token mechanics:**
+- `id`: "utsusemi_scarf"
+- `name`: "The Utsusemi Scarf"
+- `description`: "Thin pale silk scarf, faintly perfumed with Eastern fragrance, folded around a sealed note. Red wax seal, no mark. The fold retains the shape of a hand. Sealed note inside is in Japanese; the scarf was clearly personal before becoming packing material."
+- `grant_act`: 1
+- `take_act`: 5
+- `check_acts`: [2, 3, 4]
+
+### Nodes
+
+**Existing nodes used:** TBZ (Tabriz), TRB (Trebizond — imperial court archive district), WM (Weimar). No new nodes.
+
+### Act I — Tabriz (TBZ): Anastasios's Storeroom
+
+*The Utsusemi Scarf · wrapped, sealed · in Anastasios's hands · merchant's storeroom, Tabriz*
+
+A Greek merchant's storeroom in the Tabriz trading district: cedar shelves, bolts of fabric, the smell of camphor and Eastern dye. Anastasios — grey, efficient, genuinely puzzled — holds the scarf at arm's length. He found it in the bale from an eastern consignment, wrapped separately from the commercial pieces. His contact Kyriakos Philanthropenos in Trebizond has worked with Eastern personal documents before; this looks like something in his line.
+
+"The scarf is wrapped around the note deliberately," Anastasios says. "Someone used it as the envelope. That is — intentional. I don't know what the note says. I don't know who sent it. I know it came in the Samarkand silk consignment and it was not in the customs manifest." He sets it down carefully. "Kyriakos will know what to do with it."
+
+*What the Fighter sees:* The perfume is faint but distinctive — not Persian, not Arabic. The fold that holds the note is not a packer's fold; it's a person's fold. The wax is pressed with a thumb, not a seal.
+
+**Skill check — Perception DC 11** (notice the thumb-pressed wax; understand that this was sealed by a woman in haste, without a formal seal, and that the choice to use the scarf itself as the wrapper was deliberate — the scarf is part of the message):
+- *Pass:* *The fighter understands: the scarf is the envelope because it is the farewell. Whoever wrapped this used what she had — the thing she was leaving behind.* This becomes the argument in Act III.
+- *Fail:* The fighter notes the unusual wrapping but treats it as packing improvisation.
+
+**Check pass flag:** `scarf_understood_as_farewell`
+
+**Grant item:** `utsusemi_scarf`
+
+**Act type:** `skill_check`
+
+```json
+{
+  "act_id": "AMS_003_act1",
+  "location": "TBZ",
+  "type": "skill_check",
+  "activateNode": "TBZ",
+  "scene": "Anastasios's storeroom; the silk scarf wrapped around a sealed note in Japanese; commission to Kyriakos in Trebizond.",
+  "skillCheck": { "stat": "Perception", "dc": 11, "pass": "fighter understands scarf as deliberate farewell object; flag set", "fail": "wrapping noted as unusual; practical interpretation" },
+  "checkPassFlag": "scarf_understood_as_farewell",
+  "grantItem": { "id": "utsusemi_scarf", "name": "The Utsusemi Scarf", "description": "Thin pale silk scarf around a sealed note in Japanese. Thumb-pressed red wax. Personal fold retaining the shape of a hand." }
+}
+```
+
+### Act II — Road to Trebizond (Road): The Silk Trader
+
+*The Utsusemi Scarf · in satchel · with the Fighter · road north from Tabriz toward Trebizond*
+
+A Persian silk trader going the same road — a professional who has been dealing in Eastern textiles for thirty years. He notices the fighter's satchel, makes conversation, and somehow the scarf enters the conversation (a glimpse of grey-green silk, or a question about the cargo). He wants to buy it. He has examined thousands of bolts of Eastern silk; he recognizes the weave as unusually fine, the color as a dye type that is no longer widely produced. He names a fair price.
+
+He has no idea the scarf is personal. He sees a beautiful textile at a fair price.
+
+**Hybrid — Persuasion DC 11** (explain that the scarf is not for sale — it is a personal document in transit, not a commercial textile, and its value is precisely in remaining intact and unexamined until it reaches its recipient):
+- *Pass:* The trader accepts, somewhat confused; he makes a note of the weave type for his own records and rides on.
+- *Fail → Combat:* The trader's two assistants (2× AC 11, HP 18) try to take the satchel — the trader is embarrassed but doesn't stop them; he is used to getting what he wants. Win: proceed.
+
+**Act type:** `hybrid`
+
+```json
+{
+  "act_id": "AMS_003_act2",
+  "location": "Road",
+  "type": "hybrid",
+  "activateNode": "TBZ",
+  "scene": "Persian silk trader on the road to Trebizond wants to buy the scarf; doesn't understand it's personal.",
+  "skillCheck": { "stat": "Persuasion", "dc": 11, "pass": "trader accepts and moves on", "fail": "combat" },
+  "combat": { "enemies": [{"name": "Trader's Assistant", "ac": 11, "hp": 18, "count": 2}], "pass": "proceed; scarf intact", "fail": "satchel seized; recovered" }
+}
+```
+
+### Act III — Trebizond (TRB): Kyriakos Philanthropenos
+
+*The Utsusemi Scarf · delivered · in Kyriakos's hands · Byzantine scholar's house, Trebizond*
+
+A scholar's house in the Trebizond imperial court district: bookshelves, Japanese screens, a cedar chest of Eastern correspondence. Kyriakos Philanthropenos — slight, precise, the kind of scholar who handles objects as though they might teach him something — opens the satchel and looks at the scarf without touching it for a long time. Then he reads the note, with the small tools of his translation practice, over the next twenty minutes while the fighter waits.
+
+Then he says: "She wrapped the note in the scarf because the note was the thing she couldn't carry. But the scarf was also the thing she couldn't carry." He sets the note down. "She left both. The note is about the scarf. The scarf is about the note. They're the same document."
+
+He will not keep them in Trebizond. He sends for a courier package to Weimar: "The archive is the only place that will receive the logic of this correctly."
+
+*If `scarf_understood_as_farewell` is set:* The fighter can articulate this immediately: "I understood that when we picked it up." Kyriakos pauses and looks at the fighter differently. "Then you understand why the archive must receive the original, not a copy."
+
+**Skill check — Insight DC 12** (understand what Kyriakos is saying about the dual-object logic; recognize that the note and scarf function as a single document and must stay together through the Weimar delivery):
+- *Pass:* The fighter wraps the scarf and note together in the inner fold again, seal unbroken. Kyriakos writes a delivery note for Sweelinck explaining the dual-document structure.
+- *Fail:* Kyriakos handles the packaging himself; the fighter carries but doesn't understand the argument.
+
+**Act type:** `skill_check`
+
+```json
+{
+  "act_id": "AMS_003_act3",
+  "location": "TRB",
+  "type": "skill_check",
+  "activateNode": "TRB",
+  "scene": "Kyriakos reads the note; identifies dual-object logic; decides original must go to Weimar.",
+  "skillCheck": { "stat": "Insight", "dc": 12, "pass": "fighter understands dual-document structure; Kyriakos writes full delivery note", "fail": "Kyriakos handles it; fighter carries without understanding" }
+}
+```
+
+### Act IV — Black Sea Road North (Road): The Border Inspection
+
+*The Utsusemi Scarf · in courier package · with the Fighter · road north, Trabzon customs district*
+
+A Byzantine customs post on the Trebizond road north — a young officer with a new commission and a list of restricted export categories. Silk textiles and personal documents are both on the restricted list (silk because of trade levy, documents because of the ongoing political sensitivity between the Trebizond imperial court and the Constantinople Palaiologoi succession question). The officer has been told to inspect all courier packages.
+
+He is not corrupt. He is thorough.
+
+**Hybrid — Persuasion DC 12** (argue that the package is a scholarly document in transit to a non-partisan European archive, that the scarf's commercial value is irrelevant to its documentary function, and that the Trebizond court scholar Kyriakos Philanthropenos's delivery letter establishes its scholarly-document status):
+- *Pass:* The officer reviews Kyriakos's letter, makes a notation ("scholarly correspondence, Philanthropenos authorization"), and marks the package through.
+- *Fail → Combat:* Two customs soldiers (2× AC 13, HP 20) detain the fighter for a full inspection. The package would be opened — the fighter can comply (the seal breaks; the scarf is examined and released, but the wax is broken) or resist. Win: package intact; slight delay. Lose: package inspected; seal broken; scarf unfolded; eventually released.
+
+**Act type:** `hybrid`
+
+```json
+{
+  "act_id": "AMS_003_act4",
+  "location": "Road",
+  "type": "hybrid",
+  "activateNode": "TRB",
+  "scene": "Byzantine customs post; officer inspects silk textiles and documents; Kyriakos's letter is the argument.",
+  "skillCheck": { "stat": "Persuasion", "dc": 12, "pass": "scholarly document status accepted; package through", "fail": "combat" },
+  "combat": { "enemies": [{"name": "Customs Soldier", "ac": 13, "hp": 20, "count": 2}], "pass": "proceed; possible seal break", "fail": "inspected; seal broken; eventually released" }
+}
+```
+
+### Act V — Weimar (WM): The Archive
+
+*The Utsusemi Scarf · returned · Archivus Sweelinck's intake desk · Weimar*
+
+Archivus Sweelinck opens the courier package and reads Kyriakos's delivery note. He looks at the scarf. He does not unfold it further than necessary — he can see the fold, the thumb-pressed wax, the way the silk holds the shape of the hand that pressed it.
+
+"The scarf is the envelope," he says. "The note is about the scarf. The scarf is about the note." He reads Kyriakos's letter again. "Two scholars — one in Tabriz who could not read the note, one in Trebizond who could — both understood that the scarf was not packing material. The person who left it understood the same thing. The cicada leaves the husk. The husk is the most specific thing the cicada ever was."
+
+He opens the classification ledger. "Personal Documents — Objects as Envelopes; the thing left behind is the message." He writes carefully. "First filing: the Utsusemi case, with Kyriakos's analysis, via Trebizond."
+
+*If `scarf_understood_as_farewell`:* "You understood this at pickup," Sweelinck says, not quite asking. "The archive benefits from carriers who understand what they're carrying. Note that in the record."
+
+**Skill check — History DC 11** (know enough about the transmission of Eastern texts and personal correspondence through the Silk Road scholarly networks to give Sweelinck the provenance chain: Samarkand → Tabriz → Trebizond → Weimar, and what that chain represents about how personal documents travel):
+- *Pass:* Sweelinck's entry includes the full transmission route as evidence of how personal objects move through commercial and scholarly networks.
+- *Fail:* Category created; shorter provenance.
+
+**Take item:** `utsusemi_scarf`
+
+```json
+{
+  "act_id": "AMS_003_act5",
+  "location": "WM",
+  "type": "skill_check",
+  "activateNode": "WM",
+  "scene": "Sweelinck reads Kyriakos's analysis; creates Personal Documents — Objects as Envelopes; notes dual-object structure.",
+  "skillCheck": { "stat": "History", "dc": 11, "pass": "full transmission chain recorded; dual-object noted", "fail": "category created; shorter record" },
+  "takeItem": { "id": "utsusemi_scarf" }
+}
+```
+
+### Quest API Stub
+
+```json
+{
+  "quest_id": "AMS_003",
+  "title": "The Cicada's Husk",
+  "cycle": 3,
+  "book": "The Tale of Genji (Arthur Waley translation)",
+  "token": {
+    "id": "utsusemi_scarf",
+    "name": "The Utsusemi Scarf",
+    "description": "Thin pale silk scarf wrapped around a sealed note in Japanese. Thumb-pressed red wax, no mark. The fold retains the shape of a hand. Scarf and note function as a single document."
+  },
+  "route": "TBZ → TRB → WM",
+  "theme": "The thing left behind when someone flees is not left accidentally; the abandoned object is the truest farewell; the archive receives the scarf and the note as one document",
+  "archive_category": "Personal Documents — Objects as Envelopes",
+  "acts": [
+    { "act_id": "AMS_003_act1", "location": "TBZ", "type": "skill_check", "activateNode": "TBZ", "scene": "Anastasios's storeroom; scarf wrapped around sealed Japanese note; commission to Trebizond.", "skillCheck": { "stat": "Perception", "dc": 11, "pass": "scarf understood as farewell; flag set", "fail": "unusual wrapping noted" }, "checkPassFlag": "scarf_understood_as_farewell", "grantItem": { "id": "utsusemi_scarf", "name": "The Utsusemi Scarf", "description": "Thin pale silk around a sealed note in Japanese. Thumb-pressed wax. Personal fold." } },
+    { "act_id": "AMS_003_act2", "location": "Road", "type": "hybrid", "activateNode": "TBZ", "scene": "Silk trader wants to buy the scarf.", "skillCheck": { "stat": "Persuasion", "dc": 11, "pass": "trader accepts", "fail": "combat" }, "combat": { "enemies": [{"name": "Trader's Assistant", "ac": 11, "hp": 18, "count": 2}], "pass": "proceed", "fail": "recovered" } },
+    { "act_id": "AMS_003_act3", "location": "TRB", "type": "skill_check", "activateNode": "TRB", "scene": "Kyriakos reads the note; identifies dual-object structure; routes to Weimar.", "skillCheck": { "stat": "Insight", "dc": 12, "pass": "fighter understands; full delivery note written", "fail": "Kyriakos handles it" } },
+    { "act_id": "AMS_003_act4", "location": "Road", "type": "hybrid", "activateNode": "TRB", "scene": "Byzantine customs post; silk and document restriction; Kyriakos's letter resolves.", "skillCheck": { "stat": "Persuasion", "dc": 12, "pass": "academic status accepted; through", "fail": "combat" }, "combat": { "enemies": [{"name": "Customs Soldier", "ac": 13, "hp": 20, "count": 2}], "pass": "proceed; possible seal break", "fail": "inspected; released" } },
+    { "act_id": "AMS_003_act5", "location": "WM", "type": "skill_check", "activateNode": "WM", "scene": "Sweelinck creates Personal Documents — Objects as Envelopes; dual-object noted.", "skillCheck": { "stat": "History", "dc": 11, "pass": "full transmission chain", "fail": "shorter record" }, "takeItem": { "id": "utsusemi_scarf" } }
+  ]
+}
+```
+
+*AMS-03 complete. 2026-06-02.*
+
+---
+
+## §AMS-04 — Vignette Cycle 4: "The Rainy Night Register"
+
+### Themes avoided
+AMS-01: anonymous gift. AMS-02: involuntary honesty / spirit's testimony. AMS-03: abandoned object as farewell / dual-object document. HTY: physician's vocabulary / painted record before text. IST: partisan account as preservation. FCO: editorial suppression. BGW: geographic impossibility.
+
+**Declared theme — Cycle 4:** Handwriting as testimony. The expert who reads character from correspondence conducts an inquiry no official investigation can replicate. What a person's hand produces under no observation is the truest record they leave. The calligrapher-analyst is a witness to something the writers did not know they were declaring.
+
+### TOKEN: "The Handwriting Analysis Register"
+
+*The Handwriting Analysis Register · sealed leather case · in Nikephoros's hands · Byzantine calligrapher's study, Trebizond*
+
+A sealed leather register, court-stamp of the Trebizond imperial residency. Inside (not to be inspected in transit): a handwriting analysis in Greek across forty folios, with twelve folded sample letters mounted on paste-paper boards — three in Arabic, four in Persian, five in Greek, each annotated in red with Nikephoros's character assessments. The assessments are clinical: "hand formed under anxiety," "this person is comfortable with power," "the loop at the descender indicates a practitioner, not a student," "the correction on line four shows a mind that reconsiders after deciding." The letters were given to Nikephoros by their senders with no legal status attached; the analysis argues that they have legal status whether or not they were given for that purpose.
+
+**Token mechanics:**
+- `id`: "handwriting_register"
+- `name`: "The Handwriting Analysis Register"
+- `description`: "Sealed leather register, Trebizond court stamp. Forty folios of handwriting analysis with twelve sample letters mounted inside. Red annotation throughout: character assessments derived from letter-formation. Argues handwriting has legal testimonial status independent of intent."
+- `grant_act`: 1
+- `take_act`: 5
+- `check_acts`: [2, 3, 4]
+
+### Nodes
+
+**Existing nodes used:** TRB (Trebizond), CON (Constantinople), WM (Weimar).
+
+### Act I — Trebizond (TRB): Nikephoros's Study
+
+*The Handwriting Analysis Register · just sealed · in Nikephoros's hands · calligrapher's study, Trebizond*
+
+A scholar's study in the Trebizond court residency quarter: writing desks, sample alphabets on the walls, the specific quiet of a man who has spent his life looking at how people write. Nikephoros — methodical, speaking carefully — hands over the sealed register and a covering letter for the Constantinople scholar-jurist Georgios Sphrantzes who commissioned the analysis. The register must not be opened in transit; the sealed presentation is part of the argument.
+
+"Sphrantzes is asking whether a letter can testify in a civil court on its author's behalf," Nikephoros says. "My analysis says yes — and here is twelve examples of how. The hand under no observation is the truest record." He sets the register down. "He may use it or not. The argument is complete either way."
+
+**Skill check — History DC 11** (know the relevant legal tradition: Justinianic correspondence law, Byzantine epistolary admissibility; understand what Sphrantzes is working on and why Nikephoros's analysis is unprecedented in Byzantine legal theory):
+- *Pass:* The fighter understands. The analysis is not just a curiosity — it is the first attempt to formalize handwriting as legal testimony in the Byzantine legal tradition. In Act III, this context will matter.
+- *Fail:* The fighter carries the register without understanding its significance.
+
+**Grant item:** `handwriting_register`
+
+**Act type:** `skill_check`
+
+```json
+{
+  "act_id": "AMS_004_act1",
+  "location": "TRB",
+  "type": "skill_check",
+  "activateNode": "TRB",
+  "scene": "Nikephoros's calligrapher study; sealed analysis register for Constantinople jurist; argument about handwriting as legal testimony.",
+  "skillCheck": { "stat": "History", "dc": 11, "pass": "fighter understands the legal precedent significance; context for Act III", "fail": "fighter carries without full understanding" },
+  "grantItem": { "id": "handwriting_register", "name": "The Handwriting Analysis Register", "description": "Sealed leather register, Trebizond court stamp. Forty folios of handwriting analysis with twelve sample letters. Argues handwriting has legal testimonial status." }
+}
+```
+
+### Act II — Black Sea Crossing (Road/Sea): The Genoese Inspection
+
+*The Handwriting Analysis Register · sealed case · with the Fighter · Black Sea, Genoese-controlled crossing*
+
+A Genoese factor's inspection point on the Black Sea crossing toward Constantinople: a standard commercial and customs inspection for the Genoese-operated route. The factor has heard that the Trebizond court is sending something to Constantinople related to a correspondence legal case; there is a Genoese family with a property dispute currently in the Constantinople courts, and any correspondence analysis landing in the city could potentially affect the case. He wants to know what's in the register.
+
+He is professionally curious, not aggressive — but he controls the crossing.
+
+**Hybrid — Persuasion DC 12** (explain that the register is a scholarly analysis for a specific commission by a named jurist, not connected to any current litigation; argue that the Trebizond court stamp establishes its scholarly status and that unsealing it would void the argument):
+- *Pass:* The factor makes a note (he will write to the Genoese consul in Constantinople about it) and lets the fighter through sealed.
+- *Fail → Combat:* The factor's two harbor guards (2× AC 12, HP 22) try to detain the fighter pending the factor's decision to write to his consul. Win: fighter boards the ship; register intact. Lose: the crossing is held until dawn; the register travels sealed but with a two-day delay.
+
+**Act type:** `hybrid`
+
+```json
+{
+  "act_id": "AMS_004_act2",
+  "location": "Road",
+  "type": "hybrid",
+  "activateNode": "TRB",
+  "scene": "Genoese inspection point on Black Sea crossing; factor suspects the analysis may touch current litigation.",
+  "skillCheck": { "stat": "Persuasion", "dc": 12, "pass": "scholarly commission status accepted; through sealed", "fail": "combat" },
+  "combat": { "enemies": [{"name": "Harbor Guard", "ac": 12, "hp": 22, "count": 2}], "pass": "board ship; register intact", "fail": "delayed; released at dawn" }
+}
+```
+
+### Act III — Constantinople (CON): Georgios Sphrantzes
+
+*The Handwriting Analysis Register · delivered · being read · with Georgios Sphrantzes · Constantinople jurist's office*
+
+A jurist's office in the Constantinople scholar quarter: case files, the smell of old parchment and wax, morning light through a high window. Georgios Sphrantzes — deliberate, legally precise, the kind of man who reads a document twice before commenting — opens the register with a small knife and reads for forty minutes. He reads each sample letter. He reads each annotation.
+
+Then he sets it down and says: "The analysis is correct. But I cannot use it in the court."
+
+He explains: the twelve sample letters were given voluntarily by their senders for the calligrapher's study. They were not given as legal testimony. Using them in a civil court would require either the senders' consent or a ruling that handwriting is self-evidencing — which is exactly the ruling he is trying to establish. The circularity is exact. He cannot prove the argument with evidence whose admissibility depends on the argument's proof.
+
+"The analysis itself should go to Weimar," he says. "The argument is complete. It needs the institution that receives complete arguments that courts can't use yet."
+
+**Skill check — History DC 12** (understand the specific legal circularity Sphrantzes has identified; know whether any Roman or Byzantine legal precedent exists for treating handwriting as self-evidencing without prior consent):
+- *Pass:* The fighter identifies one relevant precedent (imperial rescripts from the Diocletianic period that treated the Emperor's handwriting as self-authenticating by virtue of formal recognition). Sphrantzes is interested — this may be the way out of the circularity, eventually. He writes a long note for the archive.
+- *Fail:* Sphrantzes writes a shorter covering note; the circularity is noted but not pursued further.
+
+**Check pass flag:** `circularity_identified`
+
+**Act type:** `skill_check`
+
+```json
+{
+  "act_id": "AMS_004_act3",
+  "location": "CON",
+  "type": "skill_check",
+  "activateNode": "CON",
+  "scene": "Sphrantzes reads the analysis; identifies the legal circularity; decides the archive is the correct destination.",
+  "skillCheck": { "stat": "History", "dc": 12, "pass": "fighter identifies Diocletianic precedent; Sphrantzes writes extended note; flag set", "fail": "shorter note; circularity noted" },
+  "checkPassFlag": "circularity_identified"
+}
+```
+
+### Act IV — Road North from Constantinople (Road): The Letter-Writers' Guild
+
+*The Handwriting Analysis Register · in courier package · with the Fighter · road north from CON*
+
+A delegation from the Constantinople letter-writers' professional guild — three men, formally dressed, carrying a written protest — catches up with the fighter on the northern road. Two of the twelve sample letters in the register were written by guild members who gave them for the scholarly analysis but did not authorize any use in legal proceedings. The guild's protest argues that the analysis has converted their members' voluntary scholarly contribution into involuntary testimony without consent.
+
+The protest is legally reasonable. But the register is going to Weimar, not to a court.
+
+**Hybrid — Insight DC 12** (understand that the guild's protest is about legal use, not archival preservation; argue that the Weimar archive is not a court and cannot admit evidence, and that filing the analysis there is the exact opposite of using it as testimony — it is preserving it until the courts catch up with the argument):
+- *Pass:* The guild's leader accepts this distinction; he writes an addendum to the protest: "Deposited in non-judicial archive, consent of members noted and acknowledged." This travels to Weimar with the register.
+- *Fail → Combat:* One guild representative turns out to be an agent for a family involved in the correspondence litigation; he escalates to physical detention (1× AC 12, HP 24). Win: proceed; guild addendum may not be written.
+
+**Act type:** `hybrid`
+
+```json
+{
+  "act_id": "AMS_004_act4",
+  "location": "Road",
+  "type": "hybrid",
+  "activateNode": "CON",
+  "scene": "Letter-writers' guild delegation with formal protest about the sample letters; fighter distinguishes archival deposit from legal use.",
+  "skillCheck": { "stat": "Insight", "dc": 12, "pass": "guild accepts distinction; writes consent addendum for archive", "fail": "combat" },
+  "combat": { "enemies": [{"name": "Guild Agent", "ac": 12, "hp": 24, "count": 1}], "pass": "proceed; addendum may not be written", "fail": "detained; released" }
+}
+```
+
+### Act V — Weimar (WM): The Archive
+
+*The Handwriting Analysis Register · returned · Archivus Sweelinck's intake desk · Weimar*
+
+Archivus Sweelinck reads the register, the sample letters, the red annotations, Sphrantzes's covering note, and the guild's protest addendum if present. He is methodical, reading each sample letter and each annotation in sequence.
+
+"The calligrapher is correct," he says. "What a hand makes under no observation is the truest record. The jurist is also correct: the courts cannot use it because the argument requires the conclusion to prove the premise." He sets the register down. "The archive is the institution that holds complete arguments courts haven't caught up with yet. Sphrantzes understood that."
+
+He opens the classification ledger. "Handwriting Records — Character Evidence Awaiting Legal Recognition." He writes carefully. "First filing: the Nikephoros analysis, with twelve samples, via Trebizond and Constantinople."
+
+*If `circularity_identified` is set:* "The Diocletianic precedent is interesting," Sweelinck adds. "The Emperor's handwriting as self-authenticating by formal recognition. That is the principle Nikephoros is working toward. The archive notes it."
+
+**Skill check — History DC 11** (give Sweelinck the provenance: Nikephoros at Trebizond → Sphrantzes at Constantinople → guild's objection, and what each stage added to the argument):
+- *Pass:* The complete argument chain is preserved in the record.
+- *Fail:* Category created; shorter provenance.
+
+**Take item:** `handwriting_register`
+
+```json
+{
+  "act_id": "AMS_004_act5",
+  "location": "WM",
+  "type": "skill_check",
+  "activateNode": "WM",
+  "scene": "Sweelinck reads the complete record; creates Handwriting Records — Character Evidence Awaiting Legal Recognition; notes Diocletianic precedent if identified.",
+  "skillCheck": { "stat": "History", "dc": 11, "pass": "full argument chain preserved", "fail": "category created; shorter record" },
+  "takeItem": { "id": "handwriting_register" }
+}
+```
+
+### Quest API Stub
+
+```json
+{
+  "quest_id": "AMS_004",
+  "title": "The Rainy Night Register",
+  "cycle": 4,
+  "book": "The Tale of Genji (Arthur Waley translation)",
+  "token": {
+    "id": "handwriting_register",
+    "name": "The Handwriting Analysis Register",
+    "description": "Sealed leather register, Trebizond court stamp. Forty folios of handwriting analysis with twelve sample letters. Red annotation: character assessments from letter-formation. Argues handwriting has legal testimonial status independent of intent."
+  },
+  "route": "TRB → CON → WM",
+  "theme": "Handwriting as testimony; what a hand produces under no observation is the truest record; the archive holds complete arguments that courts have not caught up with yet",
+  "archive_category": "Handwriting Records — Character Evidence Awaiting Legal Recognition",
+  "acts": [
+    { "act_id": "AMS_004_act1", "location": "TRB", "type": "skill_check", "activateNode": "TRB", "scene": "Nikephoros hands over sealed analysis; unprecedented Byzantine legal argument.", "skillCheck": { "stat": "History", "dc": 11, "pass": "fighter understands legal precedent significance", "fail": "carries without full context" }, "grantItem": { "id": "handwriting_register", "name": "The Handwriting Analysis Register", "description": "Sealed register with forty folios of handwriting analysis and twelve sample letters." } },
+    { "act_id": "AMS_004_act2", "location": "Road", "type": "hybrid", "activateNode": "TRB", "scene": "Genoese inspection point; factor suspects litigation connection.", "skillCheck": { "stat": "Persuasion", "dc": 12, "pass": "scholarly status accepted; through sealed", "fail": "combat" }, "combat": { "enemies": [{"name": "Harbor Guard", "ac": 12, "hp": 22, "count": 2}], "pass": "proceed", "fail": "delayed" } },
+    { "act_id": "AMS_004_act3", "location": "CON", "type": "skill_check", "activateNode": "CON", "scene": "Sphrantzes identifies legal circularity; routes to archive; Diocletianic precedent if known.", "skillCheck": { "stat": "History", "dc": 12, "pass": "precedent identified; extended note", "fail": "shorter note" }, "checkPassFlag": "circularity_identified" },
+    { "act_id": "AMS_004_act4", "location": "Road", "type": "hybrid", "activateNode": "CON", "scene": "Letter-writers' guild protest; fighter distinguishes archive from court use.", "skillCheck": { "stat": "Insight", "dc": 12, "pass": "guild consent addendum written", "fail": "combat" }, "combat": { "enemies": [{"name": "Guild Agent", "ac": 12, "hp": 24, "count": 1}], "pass": "proceed", "fail": "detained; released" } },
+    { "act_id": "AMS_004_act5", "location": "WM", "type": "skill_check", "activateNode": "WM", "scene": "Sweelinck creates Handwriting Records — Character Evidence Awaiting Legal Recognition.", "skillCheck": { "stat": "History", "dc": 11, "pass": "complete argument chain", "fail": "shorter record" }, "takeItem": { "id": "handwriting_register" } }
+  ]
+}
+```
+
+*AMS-04 complete. 2026-06-02.*
+
+---
+
+## §AMS-05 — Vignette Cycle 5: "The Closed File"
+
+### Themes avoided
+AMS-01 through AMS-04 themes. IST-06 (The Exile Letter — the commissioning letter that is itself in the collection; the origin of the archive is in the archive). FCO: editorial suppression. HTY: physician's vocabulary / gambling as theology. WAW: administrative record of the miraculous. BGW: impossible geography.
+
+**Declared theme — Cycle 5:** The document that creates an obligation both parties know cannot be met must still be delivered somewhere. The archive that receives the impossible demand is the only form of acknowledgment both parties can afford. The act of filing is the only acknowledgment possible.
+
+### TOKEN: "The Closed Letters Tube"
+
+*The Closed Letters Tube · cedar, sealed black wax · in the widow's hands · Tabriz private house*
+
+A cedar tube, sealed at both ends with black wax — no mark, no name on the outside. Inside, not to be opened: seven folded letters tied with green cord. The letters were dictated by the widow Shirin-Banu Khatun, wife of the late Jalayirid official Amir Nureddin, over the past year — each addressed to a man who has since been elevated to a position where her correspondence would be politically dangerous to him. She has decided not to transmit them. She wants them filed in the Weimar archive as "correspondence received but not transmitted," permanently sealed, with the recipient's name on the external record only. The act of filing is the acknowledgment she cannot give him directly and he cannot give her.
+
+**Token mechanics:**
+- `id`: "closed_letters_tube"
+- `name`: "The Closed Letters Tube"
+- `description`: "Cedar tube, black wax seals at both ends, no external name. Inside: seven letters tied with green cord, permanently sealed. Filed as: 'Correspondence received but not transmitted. Not for opening.' The act of filing is the acknowledgment."
+- `grant_act`: 1
+- `take_act`: 5
+- `check_acts`: [2, 3, 4]
+
+### Nodes
+
+**Existing nodes used:** TBZ (Tabriz), CON (Constantinople), WM (Weimar).
+
+### Act I — Tabriz (TBZ): Shirin-Banu's House
+
+*The Closed Letters Tube · just sealed · in Shirin-Banu's hands · private house, Tabriz*
+
+A widow's house in the Tabriz merchant quarter: well-maintained, slightly emptier than it was — her husband died three years ago. Shirin-Banu Khatun — composed, deliberate, a woman who has thought very carefully about what she is about to do — hands over the cedar tube.
+
+"These are not for him," she says. "They are not to be delivered to him. They are to be filed in the German archive under his name, sealed, with the notation 'correspondence received but not transmitted.' Do you understand the distinction?" She waits. "He will never know they exist. The archive will know. That is enough."
+
+She has one instruction: the tube must not be opened between here and Weimar. The value of filing the letters sealed is that they remain sealed; the moment of opening is not hers to grant.
+
+*What the Fighter sees:* The tube is very light. The cedar is new — she had it made specifically for this purpose.
+
+**Skill check — Insight DC 11** (understand what Shirin-Banu is asking the fighter to witness: not just carry a tube, but be present for an act that requires a witness even if the recipient never knows about it; the fighter's presence makes the act real):
+- *Pass:* *The fighter understands. This is an act of completion, not surrender. She is finishing something. The carrier is part of the ceremony.* Later, at Act V, this context allows the fighter to explain the archival intent to Sweelinck with precision.
+- *Fail:* Fighter understands it as an unusual sealed document delivery; the ceremony dimension is not grasped.
+
+**Check pass flag:** `witnessed_the_act`
+
+**Grant item:** `closed_letters_tube`
+
+**Act type:** `skill_check`
+
+```json
+{
+  "act_id": "AMS_005_act1",
+  "location": "TBZ",
+  "type": "skill_check",
+  "activateNode": "TBZ",
+  "scene": "Shirin-Banu Khatun's private house; the sealed tube of seven letters to be filed permanently unopened; the fighter as witness to the act of completion.",
+  "skillCheck": { "stat": "Insight", "dc": 11, "pass": "fighter understands the act as ceremony of completion requiring a witness; flag set", "fail": "understood as unusual sealed delivery" },
+  "checkPassFlag": "witnessed_the_act",
+  "grantItem": { "id": "closed_letters_tube", "name": "The Closed Letters Tube", "description": "Cedar tube, black wax seals, no external name. Seven letters inside tied with green cord. Filed as: Correspondence received but not transmitted. Not for opening." }
+}
+```
+
+### Act II — Road West from Tabriz (Road): The Recipient's Agent
+
+*The Closed Letters Tube · in satchel · with the Fighter · road west of Tabriz*
+
+A rider on a fast horse catches up with the fighter two days west of Tabriz — a functionary in the household livery of the man to whom the letters are addressed. He is discreet, professional, and has been sent specifically because his employer has learned (from the household network) that Shirin-Banu has dispatched a sealed tube toward Weimar in the last week. His employer does not know what the tube contains. He wants to have it delivered to his employer first — to read it, or to destroy it, before it becomes a permanent archive record.
+
+He offers money. He is not threatening. He is representing someone who is frightened.
+
+**Hybrid — Persuasion DC 13** (explain that the tube will not be opened regardless of who receives it — that filing it sealed at Weimar is the explicit commission and that opening it would void the commission; that the employer's concern about its contents is therefore already resolved, since they will never be transmitted to a court or audience):
+- *Pass:* The agent rides back to report. He may not be believed; there may be further attempts. But this particular agent accepts the argument.
+- *Fail → Combat:* Two additional riders emerge from the tree line (2× AC 13, HP 24) — the agent was not alone. Win: proceed. Lose: tube seized; fighter recovers it at a waystation.
+
+**Act type:** `hybrid`
+
+```json
+{
+  "act_id": "AMS_005_act2",
+  "location": "Road",
+  "type": "hybrid",
+  "activateNode": "TBZ",
+  "scene": "The recipient's household agent wants the tube before it becomes a permanent record; the sealed-filing argument is the resolution.",
+  "skillCheck": { "stat": "Persuasion", "dc": 13, "pass": "agent accepts; reports back; further attempts possible later", "fail": "combat" },
+  "combat": { "enemies": [{"name": "Household Rider", "ac": 13, "hp": 24, "count": 2}], "pass": "proceed; tube intact", "fail": "tube seized; recovered at waystation" }
+}
+```
+
+### Act III — Ragusa (RGS): The Notary's Question
+
+*The Closed Letters Tube · in satchel · with the Fighter · Ragusa Dalmatian waystation*
+
+A notary's office in Ragusa — the fighter has stopped for a night at the waystation and mentioned (or the tube has attracted attention from the harbor registry) the sealed document in transit. The notary, Ser Dobrovoje Radović — experienced, cautious, not corrupt — raises a procedural question: a sealed tube with no sender name and no recipient name on the outside is, under Ragusa registry law, classified as an unaddressed document. Unaddressed documents at the Ragusa waystation require a provisional registration number, a description of the seals, and a statement of intended destination. This is a technicality but it is a real one.
+
+"The archive in Weimar is the recipient," the notary says, "but there is no name on this tube. Who is the sender? Who is the recipient? Legally, this tube does not exist until someone names it."
+
+**Skill check — Persuasion DC 12** (give Ser Dobrovoje a technically compliant description: sender = "a private correspondent in Tabriz, name not for external record," recipient = "Archivus Sweelinck, Weimar Archive, for filing under the notation 'closed file — not for opening'"; argue that the Weimar archive's institutional receipt is the name the notary needs):
+- *Pass:* Ser Dobrovoje creates a provisional registry entry — "sealed correspondence, private sender, Weimar archive recipient, closed file notation" — and marks the tube for transit without opening it.
+- *Fail:* The notary holds the tube for twelve hours pending his senior colleague's opinion; eventually released with a partial registration that does not name the sender.
+
+**Act type:** `skill_check`
+
+```json
+{
+  "act_id": "AMS_005_act3",
+  "location": "RGS",
+  "type": "skill_check",
+  "activateNode": "RGS",
+  "scene": "Ragusa notary's registration requirement for unaddressed documents; fighter gives technically compliant description without naming sender.",
+  "skillCheck": { "stat": "Persuasion", "dc": 12, "pass": "provisional registry entry created; tube through", "fail": "held twelve hours; released with partial registration" }
+}
+```
+
+### Act IV — Road North toward Weimar (Road): The Second Attempt
+
+*The Closed Letters Tube · in satchel · with the Fighter · road north, approaching German territories*
+
+The recipient's employer — apparently not satisfied with his agent's report — has sent a second delegation: three riders, not a polite agent this time but men with a specific commission. They catch up with the fighter on the road north through Bohemia. One of them speaks fluent German; he has a written authorization from the employer to "recover and deliver to the authorized party" any tube sealed with Shirin-Banu Khatun's wax that may be in transit toward Weimar.
+
+The authorization is legally plausible within the Jalayirid territories. In the German lands north of Bohemia, it is worth nothing.
+
+**Combat — 3× AC 13, HP 26** (professional riders with a real commission; they are not uncertain about their instructions):
+- *Win:* Proceed; tube intact.
+- *Lose:* Tube seized; fighter must recover it — they camp that night at the roadside; the tube is in their pack. Fighter can attempt a recovery (Stealth DC 13) or wait until morning when one of the three has ridden ahead to report and the remaining two are inattentive.
+
+**Act type:** `combat`
+
+```json
+{
+  "act_id": "AMS_005_act4",
+  "location": "Road",
+  "type": "combat",
+  "activateNode": "RGS",
+  "scene": "Second delegation from the recipient's employer; three riders with a plausible authorization; road intercept in Bohemian territory.",
+  "combat": { "enemies": [{"name": "Household Rider", "ac": 13, "hp": 26, "count": 3}], "pass": "proceed; tube intact", "fail": "tube seized; recovery attempt available" }
+}
+```
+
+### Act V — Weimar (WM): The Archive
+
+*The Closed Letters Tube · returned · Archivus Sweelinck's intake desk · Weimar*
+
+Archivus Sweelinck looks at the tube for a long time before he touches it. He reads the Ragusa provisional registry entry if present. He reads the external notation (which the fighter can recite if Sweelinck asks): "Filed as received. Not for opening."
+
+"Seven letters," Sweelinck says. "The sender dictated them over a year. She did not transmit them to the recipient. She sent them to us." He is quiet. "The obligation exists. The parties acknowledge it. The document acknowledges it. But neither party can bear to acknowledge it in any context where the other party would know." He sets the tube on the intake shelf. "The archive can know. The archive always holds what the principals cannot."
+
+He opens the classification ledger. "Correspondence Records — Filed Sealed by Sender's Direction; Obligation Documents Not for Transmission." He writes carefully. "First filing. The Tabriz case. Sender's name: not for external record. Recipient's name: not for external record. Contents: seven letters. Condition: permanently sealed."
+
+*If `witnessed_the_act`:* "You were present when she sealed it," Sweelinck says. Not quite a question. "Your presence was the ceremony. That is worth noting."
+
+**Skill check — History DC 11** (give Sweelinck the provenance: Tabriz widow, Jalayirid court context, one year of correspondence to a man elevated to a position where it became dangerous; know enough about the political situation to explain why the letters could not be transmitted directly):
+- *Pass:* The full political context is noted in the archive record.
+- *Fail:* Category created; context is briefer.
+
+**Take item:** `closed_letters_tube`
+
+```json
+{
+  "act_id": "AMS_005_act5",
+  "location": "WM",
+  "type": "skill_check",
+  "activateNode": "WM",
+  "scene": "Sweelinck receives the closed tube; creates Correspondence Records — Filed Sealed by Sender's Direction; witness act noted if flag set.",
+  "skillCheck": { "stat": "History", "dc": 11, "pass": "full Jalayirid political context recorded", "fail": "category created; shorter context" },
+  "checkPassFlag": "witnessed_the_act",
+  "takeItem": { "id": "closed_letters_tube" }
+}
+```
+
+### Quest API Stub
+
+```json
+{
+  "quest_id": "AMS_005",
+  "title": "The Closed File",
+  "cycle": 5,
+  "book": "The Tale of Genji (Arthur Waley translation)",
+  "token": {
+    "id": "closed_letters_tube",
+    "name": "The Closed Letters Tube",
+    "description": "Cedar tube, black wax seals, no external name. Seven letters inside tied with green cord, permanently sealed. Filed as: Correspondence received but not transmitted. Not for opening."
+  },
+  "route": "TBZ → RGS → WM",
+  "theme": "The impossible obligation must be delivered somewhere; the archive that receives the sealed demand is the only acknowledgment both parties can afford; filing is the ceremony",
+  "archive_category": "Correspondence Records — Filed Sealed by Sender's Direction",
+  "acts": [
+    { "act_id": "AMS_005_act1", "location": "TBZ", "type": "skill_check", "activateNode": "TBZ", "scene": "Shirin-Banu hands over the closed tube; fighter as witness to ceremony of completion.", "skillCheck": { "stat": "Insight", "dc": 11, "pass": "fighter understands as ceremony; flag set", "fail": "understood as sealed delivery" }, "checkPassFlag": "witnessed_the_act", "grantItem": { "id": "closed_letters_tube", "name": "The Closed Letters Tube", "description": "Cedar tube, black wax seals. Seven letters inside. Filed sealed." } },
+    { "act_id": "AMS_005_act2", "location": "Road", "type": "hybrid", "activateNode": "TBZ", "scene": "Recipient's household agent wants the tube before it becomes a permanent record.", "skillCheck": { "stat": "Persuasion", "dc": 13, "pass": "agent accepts sealed-filing argument; reports back", "fail": "combat" }, "combat": { "enemies": [{"name": "Household Rider", "ac": 13, "hp": 24, "count": 2}], "pass": "proceed", "fail": "recovered at waystation" } },
+    { "act_id": "AMS_005_act3", "location": "RGS", "type": "skill_check", "activateNode": "RGS", "scene": "Ragusa notary's unaddressed document registration requirement.", "skillCheck": { "stat": "Persuasion", "dc": 12, "pass": "provisional registry entry created", "fail": "held twelve hours; partial registration" } },
+    { "act_id": "AMS_005_act4", "location": "Road", "type": "combat", "activateNode": "RGS", "scene": "Second delegation; three professional riders with authorization from recipient's employer.", "combat": { "enemies": [{"name": "Household Rider", "ac": 13, "hp": 26, "count": 3}], "pass": "proceed", "fail": "recovery attempt required" } },
+    { "act_id": "AMS_005_act5", "location": "WM", "type": "skill_check", "activateNode": "WM", "scene": "Sweelinck creates Correspondence Records — Filed Sealed by Sender's Direction; witness act noted.", "skillCheck": { "stat": "History", "dc": 11, "pass": "full political context", "fail": "shorter context" }, "takeItem": { "id": "closed_letters_tube" } }
+  ]
+}
+```
+
+*AMS-05 complete. 2026-06-02.*
+
+---
+
+## §AMS-06 — Vignette Cycle 6: "The Teaching Fan"
+
+### Themes avoided
+AMS-01 through AMS-05 themes. HTY-04: painted record before text / illuminator as primary source. HTY: physician's vocabulary, gambling as theology. ADA: grief as first word. KYA: emblem of legitimate rule. IST: partisan account as preservation. FCO: suppression. WAW: administrative record of the miraculous.
+
+**Declared theme — Cycle 6:** The gap between what was taught and what was meant. The teacher who designs a student to their ideal cannot give the student the gap between the design and the teacher's own understanding — because the student will one day stand where the teacher stands and see that the model they were taught to become was never quite the thing it was meant to represent. The annotated score carries this asymmetry in its corrections.
+
+### TOKEN: "The Annotated Koto-Dutar Scroll"
+
+*The Annotated Koto-Dutar Scroll · rolled in plain linen · in Brother Kenji's hands · scholar's room, Samarkand*
+
+A music scroll, palm-length, annotated in two scripts throughout: the right half of each line in Japanese brushwork notation for koto tablature; the left half of each line in Persian cursive dutar notation, adapted. Red correction marks throughout — in a third hand, which is Brother Kenji's own. The scroll covers three traditional koto pieces adapted for the dutar, with a pedagogical commentary on what each adaptation reveals about the gap between the instrument's traditions. The final folio adds a note in both scripts: *"The student who learns this is not learning what I know. The student is learning what I was trying to say. I was not always able to say it."*
+
+**Token mechanics:**
+- `id`: "koto_dutar_scroll"
+- `name`: "The Annotated Koto-Dutar Scroll"
+- `description`: "Music scroll with koto and dutar notation in two scripts and a third hand's red corrections. Final note: 'The student who learns this is not learning what I know. The student is learning what I was trying to say. I was not always able to say it.' Rolled in plain linen."
+- `grant_act`: 1
+- `take_act`: 5
+- `check_acts`: [2, 3, 4]
+
+### Nodes
+
+**Existing nodes used:** SAM (Samarkand), MRV (Merv), WM (Weimar).
+
+### Act I — Samarkand (SAM): Brother Kenji's Room
+
+*The Annotated Koto-Dutar Scroll · being handed over · in Brother Kenji's hands · scholar's room, Samarkand*
+
+A Zen monk's former student's room in a Samarkand scholar's house: simple, a few instruments on the wall, the smell of paper and old ink. Brother Kenji — a Japanese Buddhist, compact and quiet, the only Japanese scholar in Samarkand — is sending the scroll to Hamid al-Sarakhsi, a music theorist in Merv who is writing a comparative treatise on musical transmission across translation boundaries. Kenji has taught koto music in Samarkand for seven years; he learned it himself under a master who learned it in Kyoto. The gap in each transmission is the same gap.
+
+"Hamid will understand the theoretical argument," Kenji says. "Whether the archive in Weimar should also have it — I leave that for Hamid to decide. He will know the correct use."
+
+*What the Fighter sees:* The scroll is more annotated than a clean copy would be; the red corrections are extensive. The final note — the admission of the gap — is in a smaller hand, added recently.
+
+**Skill check — Insight DC 11** (notice that the final note was added after the rest — and understand that it was not originally intended to be part of the pedagogical document; Kenji added it for himself, not for the student; it is the most honest thing on the scroll):
+- *Pass:* *The fighter understands. The final note is an admission Kenji was not planning to make. He put it in at the last moment because he needed to say it before the scroll left him.* Later at Act III, this allows the fighter to give Hamid the context.
+- *Fail:* The fighter notes the final note as part of the document; the timing is not understood.
+
+**Check pass flag:** `final_note_understood`
+
+**Grant item:** `koto_dutar_scroll`
+
+**Act type:** `skill_check`
+
+```json
+{
+  "act_id": "AMS_006_act1",
+  "location": "SAM",
+  "type": "skill_check",
+  "activateNode": "SAM",
+  "scene": "Brother Kenji's room in Samarkand; annotated two-tradition music scroll going to Merv theorist; final note added as personal admission.",
+  "skillCheck": { "stat": "Insight", "dc": 11, "pass": "fighter understands final note as unintended admission; flag set", "fail": "final note treated as part of document" },
+  "checkPassFlag": "final_note_understood",
+  "grantItem": { "id": "koto_dutar_scroll", "name": "The Annotated Koto-Dutar Scroll", "description": "Two-tradition music scroll, koto and dutar notation, extensive red corrections. Final note: 'The student is learning what I was trying to say. I was not always able to say it.'" }
+}
+```
+
+### Act II — Road West from Samarkand (Road): The Music Collector
+
+*The Annotated Koto-Dutar Scroll · in satchel · with the Fighter · road west of Samarkand*
+
+A wealthy music collector traveling east from Merv — an Armenian merchant named Mkhitar who collects unusual manuscripts from across the Silk Road. He has somehow heard (the scholar quarter in Samarkand is small) that an annotated Japanese-Persian music scroll is in transit. He wants it for his collection; he has offered a good price through an intermediary, and when that failed, he has ridden out to make the offer personally. He is charming and genuinely interested in the music.
+
+He cannot offer more than the Weimar archive can.
+
+**Hybrid — Persuasion DC 11** (explain that the scroll has a specific scholarly commission and that a music collector's private holding is not the same as a scholarly archive's public record; Mkhitar's interest is legitimate but the scroll's purpose is comparative scholarship, not collection):
+- *Pass:* Mkhitar accepts gracefully; he writes to Hamid in Merv separately to ask for a copy.
+- *Fail → Combat:* Mkhitar's two riders (2× AC 12, HP 20) try to take the satchel at the collector's signal — he is more determined than he seemed. Win: proceed.
+
+**Act type:** `hybrid`
+
+```json
+{
+  "act_id": "AMS_006_act2",
+  "location": "Road",
+  "type": "hybrid",
+  "activateNode": "SAM",
+  "scene": "Armenian music collector intercepts on the road; wants the scroll for his private collection; scroll's scholarly purpose is the argument.",
+  "skillCheck": { "stat": "Persuasion", "dc": 11, "pass": "Mkhitar accepts; writes to Hamid for a copy", "fail": "combat" },
+  "combat": { "enemies": [{"name": "Collector's Rider", "ac": 12, "hp": 20, "count": 2}], "pass": "proceed", "fail": "scroll recovered" }
+}
+```
+
+### Act III — Merv (MRV): Hamid al-Sarakhsi's Study
+
+*The Annotated Koto-Dutar Scroll · delivered · being read · with Hamid al-Sarakhsi · theorist's study, Merv*
+
+A music theorist's study in Merv: the smell of old wood and ink, lutes on the wall, theoretical treatises in Arabic and Persian. Hamid al-Sarakhsi — careful and deliberate, a man who thinks in structure — reads the scroll entirely before speaking. Then he reads the final note a second time.
+
+"The theoretical argument is exactly what I needed," he says. "The adaptations reveal the structural differences in transmission — where the tradition travels well and where it breaks. I can build my comparative chapter on this." He pauses. "But the final note." He sets the scroll down. "Kenji was not writing theory there. He was writing testimony. The gap between what was taught and what was meant — that is not a theoretical claim. That is the teacher's confession about every pedagogical relationship that ever existed." He looks at the fighter. "This should go to Weimar. The theoretical chapter will cite it but the original must be somewhere that receives confessions."
+
+*If `final_note_understood`:* "You knew this already," Hamid says. The fighter nods. "Good. Then you can explain it to the archive correctly."
+
+**Skill check — History DC 12** (know enough about the pedagogy of oral musical traditions — Buddhist, Sufi, classical Persian — to give Hamid the full comparative context for what Kenji's confession represents; i.e., that every oral transmission contains this same gap and Kenji was the first to write it down explicitly):
+- *Pass:* Hamid's citation in his treatise will include this observation. He writes a letter for Sweelinck explaining the theoretical context of the confession.
+- *Fail:* Hamid sends the scroll to Weimar with a shorter covering note.
+
+**Act type:** `skill_check`
+
+```json
+{
+  "act_id": "AMS_006_act3",
+  "location": "MRV",
+  "type": "skill_check",
+  "activateNode": "MRV",
+  "scene": "Hamid reads the scroll; immediately identifies the final note as pedagogy's confession; decides original must go to Weimar.",
+  "skillCheck": { "stat": "History", "dc": 12, "pass": "fighter gives full comparative oral tradition context; Hamid writes detailed letter for Sweelinck", "fail": "shorter covering note" }
+}
+```
+
+### Act IV — Road West from Merv (Road): The Student
+
+*The Annotated Koto-Dutar Scroll · with the Fighter · road west of Merv*
+
+A young man on the Silk Road heading west — a Persian music student, young, clearly traveling with purpose. He has heard about the scroll from the Merv scholar community and believes it contains pedagogical materials he has a right to study; his teacher in Nishapur told him there was a document that would explain why his own koto instruction felt incomplete. He has been following the news of the scroll for weeks. He does not want to steal it — he wants to read it.
+
+"One night," he says. "Let me read it in one evening and I will not ask again."
+
+*What the Fighter sees:* The student is genuine. He is also not wrong that the scroll would help him. But the scroll's value as a primary archival document depends on its traveling sealed from Merv to Weimar.
+
+**Hybrid — Insight DC 12** (understand what the student actually needs; recognize that reading the theoretical notation would help him but the final note — the confession about the gap — is what he is really looking for, whether he knows it or not; offer him the chance to hear the final note read aloud, which transmits the teaching without breaking the scroll's archival integrity):
+- *Pass:* The fighter reads the final note aloud to the student. *"The student who learns this is not learning what I know. The student is learning what I was trying to say. I was not always able to say it."* The student sits with this for a long moment. Then he thanks the fighter and continues.
+- *Fail → Combat:* The student has a companion who is less scrupulous (1× AC 12, HP 22). Win: proceed; the student is unhappy but withdraws.
+
+**Act type:** `hybrid`
+
+```json
+{
+  "act_id": "AMS_006_act4",
+  "location": "Road",
+  "type": "hybrid",
+  "activateNode": "MRV",
+  "scene": "Music student wants to read the scroll; fighter can offer the final note read aloud as the thing he actually needs.",
+  "skillCheck": { "stat": "Insight", "dc": 12, "pass": "fighter reads final note aloud; student receives the teaching; scroll sealed", "fail": "combat" },
+  "combat": { "enemies": [{"name": "Student's Companion", "ac": 12, "hp": 22, "count": 1}], "pass": "proceed; student unhappy but withdraws", "fail": "scroll briefly taken; recovered" }
+}
+```
+
+### Act V — Weimar (WM): The Archive
+
+*The Annotated Koto-Dutar Scroll · returned · Archivus Sweelinck's intake desk · Weimar*
+
+Archivus Sweelinck reads the scroll carefully — both notation systems, the red corrections, the final note. He reads Hamid's covering letter if present.
+
+"The corrections are the primary document," he says. "The notations are the teaching. The corrections are the teacher's attempt to close the gap. The final note is the teacher's acknowledgment that the gap remains." He sets it down. "Every pedagogical document contains this gap between what was taught and what was meant. Kenji was the first to write the acknowledgment in the same document as the teaching." He opens the classification ledger. "Pedagogical Records — Annotated Teaching Materials Including Testimony of Their Own Limits." He pauses. "Long category name. Correct one."
+
+*If `final_note_understood`:* "The fighter understood the final note at pickup," Sweelinck says, reading Hamid's letter. "That is the correct reading."
+
+**Skill check — History DC 11** (give Sweelinck the transmission chain: Japanese Buddhist oral koto → Kenji's seven-year Samarkand teaching → comparative analysis for Hamid's Merv treatise → Western archive; explain what each stage of translation added to the document's witness value):
+- *Pass:* Full transmission chain recorded.
+- *Fail:* Category created; shorter chain.
+
+**Take item:** `koto_dutar_scroll`
+
+```json
+{
+  "act_id": "AMS_006_act5",
+  "location": "WM",
+  "type": "skill_check",
+  "activateNode": "WM",
+  "scene": "Sweelinck reads the scroll and final note; creates Pedagogical Records — Annotated Teaching Materials Including Testimony of Their Own Limits.",
+  "skillCheck": { "stat": "History", "dc": 11, "pass": "full transmission chain recorded", "fail": "shorter chain" },
+  "takeItem": { "id": "koto_dutar_scroll" }
+}
+```
+
+### Quest API Stub
+
+```json
+{
+  "quest_id": "AMS_006",
+  "title": "The Teaching Fan",
+  "cycle": 6,
+  "book": "The Tale of Genji (Arthur Waley translation)",
+  "token": {
+    "id": "koto_dutar_scroll",
+    "name": "The Annotated Koto-Dutar Scroll",
+    "description": "Two-tradition music scroll in Japanese and Persian with red corrections. Final note: 'The student is learning what I was trying to say. I was not always able to say it.' Rolled in plain linen."
+  },
+  "route": "SAM → MRV → WM",
+  "theme": "The gap between what was taught and what was meant; the annotated score as evidence of the asymmetry the teacher could see and the student could not; the archive receives the first explicit admission",
+  "archive_category": "Pedagogical Records — Annotated Teaching Materials Including Testimony of Their Own Limits",
+  "acts": [
+    { "act_id": "AMS_006_act1", "location": "SAM", "type": "skill_check", "activateNode": "SAM", "scene": "Brother Kenji hands over the annotated scroll; final note is a personal admission, not a pedagogical choice.", "skillCheck": { "stat": "Insight", "dc": 11, "pass": "final note understood as unintended admission; flag set", "fail": "final note treated as part of document" }, "checkPassFlag": "final_note_understood", "grantItem": { "id": "koto_dutar_scroll", "name": "The Annotated Koto-Dutar Scroll", "description": "Two-tradition music scroll. Final note: 'The student is learning what I was trying to say.'" } },
+    { "act_id": "AMS_006_act2", "location": "Road", "type": "hybrid", "activateNode": "SAM", "scene": "Armenian music collector intercepts; wants for private collection.", "skillCheck": { "stat": "Persuasion", "dc": 11, "pass": "collector accepts; writes to Hamid for copy", "fail": "combat" }, "combat": { "enemies": [{"name": "Collector's Rider", "ac": 12, "hp": 20, "count": 2}], "pass": "proceed", "fail": "recovered" } },
+    { "act_id": "AMS_006_act3", "location": "MRV", "type": "skill_check", "activateNode": "MRV", "scene": "Hamid reads the scroll; identifies final note as pedagogy's confession; sends to Weimar.", "skillCheck": { "stat": "History", "dc": 12, "pass": "full comparative context; detailed letter for Sweelinck", "fail": "shorter note" } },
+    { "act_id": "AMS_006_act4", "location": "Road", "type": "hybrid", "activateNode": "MRV", "scene": "Music student wants to read the scroll; final note read aloud is the clean resolution.", "skillCheck": { "stat": "Insight", "dc": 12, "pass": "student receives teaching through oral transmission; scroll sealed", "fail": "combat" }, "combat": { "enemies": [{"name": "Student's Companion", "ac": 12, "hp": 22, "count": 1}], "pass": "proceed", "fail": "scroll recovered" } },
+    { "act_id": "AMS_006_act5", "location": "WM", "type": "skill_check", "activateNode": "WM", "scene": "Sweelinck creates Pedagogical Records — Annotated Teaching Materials Including Testimony of Their Own Limits.", "skillCheck": { "stat": "History", "dc": 11, "pass": "full transmission chain", "fail": "shorter chain" }, "takeItem": { "id": "koto_dutar_scroll" } }
+  ]
+}
+```
+
+*AMS-06 complete. 2026-06-02.*
+
+---
+
+## §AMS-07 — Vignette Cycle 7: "The Exchanged Fans"
+
+### Themes avoided
+AMS-01 through AMS-06 themes. HTY: physician's vocabulary, painted record, gambling as theology, military concealment. IST: partisan account, intelligence product. FCO: suppression. WAW: administrative record of the miraculous. BGW: geographic impossibility. NWI: contractual obligation as survival.
+
+**Declared theme — Cycle 7:** The identifying object exchanged in darkness has a different meaning once light arrives. The fan that proves an encounter happened is also the evidence of what cannot be acknowledged. Finding the fan means finding the person who cannot officially be found. The archive receives an object that simultaneously proves and forecloses.
+
+### TOKEN: "The Moon-on-Water Fan"
+
+*The Moon-on-Water Fan · folded, in a woman's hand · Maragha inn, somewhere on the road*
+
+A folding fan with hinoki-wood ribs (cedar from a Japanese ship's cargo, adapted by a local craftsman), one side covered in silverleaf on which is painted a dim moon as though reflected in still water. On the inner rib: a small cipher device — two interlocking crescents in ink, the household mark of a Tabriz court official. The fan was given by the official's factor to a young woman traveler at a Maragha road inn as a gesture of courtesy; the factor thought the fan was a spare from the set, but it was not: it is the cipher fan, the one piece whose absence from the embassy set will be noticed by the sultan's chamberlain.
+
+**Token mechanics:**
+- `id`: "moon_fan"
+- `name`: "The Moon-on-Water Fan"
+- `description`: "Folding fan, hinoki-wood ribs, silverleaf ground painted with a dim moon reflected in water. Inner rib: two interlocking crescents, the Tabriz official's household cipher. Given away by mistake to a woman traveler on the Maragha road. Must be returned or the embassy gift is read as a slight."
+- `grant_act`: 1
+- `take_act`: 5
+- `check_acts`: [2, 3, 4]
+
+### Nodes
+
+**New node: MRG** — Maragha, northwestern Iran. Location grid entry to be appended.
+
+**Existing nodes used:** TBZ (Tabriz), WM (Weimar). MRG is new.
+
+### Act I — Tabriz (TBZ): The Court Official's Factor
+
+*The Moon-on-Water Fan · missing from the embassy set · in the Factor Rustem's hands (the absence) · official's factor's office, Tabriz*
+
+A court official's business office in the Tabriz administrative quarter: neat, organized, the smell of paper and official sealing wax. Rustem Mirza — the official's household factor, competent, currently horrified — explains the situation clearly and quickly. The embassy gift set is eighteen fans. The official wants the specific fan found and returned within four days. After four days, the embassy reception is held and the substitution will be visible.
+
+Rustem has a description: hinoki-wood ribs, silverleaf ground, moon painted as reflection in water. The cipher mark on the inner rib — two interlocking crescents. The woman who received it is a traveler; the inn at Maragha is the last known location. Beyond that: unknown direction of travel.
+
+"The fan is distinctive," Rustem says. "The person who received it is not a thief. She was given it as a courtesy gift. She does not know what it is." He hands the fighter a brief and a travel document. "Find her. Explain. Recover the fan."
+
+**Grant item:** (no item yet — the fan is found at Act III)
+
+*The Fighter accepts the commission.* No skill check at Act I — the commission is simple enough. The fan is in Maragha with an unknown woman traveler. The difficulty is finding her.
+
+**Act type:** `skill_check` (minimal — Investigation DC 10 to get the last known details from Rustem about the woman's appearance and direction)
+
+**Grant item:** `moon_fan` (advance grant — the fighter does not hold it yet but the quest begins; grant occurs formally at Act III)
+
+Actually, restructure: the TOKEN grant happens at Act III (when the fan is recovered). At Act I, the fighter simply accepts the commission.
+
+Let me restructure: no item at Act I. Item grant at Act III.
+
+```json
+{
+  "act_id": "AMS_007_act1",
+  "location": "TBZ",
+  "type": "skill_check",
+  "activateNode": "TBZ",
+  "scene": "Rustem Mirza's office; the missing cipher fan; four-day deadline before embassy reception.",
+  "skillCheck": { "stat": "Investigation", "dc": 10, "pass": "fighter gets full description of woman and last known direction; head start", "fail": "fighter has description only; slightly less information" }
+}
+```
+
+### Act II — Road to Maragha (Road): Tracing the Woman
+
+*The Moon-on-Water Fan · still missing · the Fighter on the road · Maragha road junction*
+
+The road to Maragha: a half-day's ride southeast of Tabriz. At the road junction, the fighter can ask — a salt-merchant, a tollman, a carter — about a woman with a fan with a painted moon. These are people who notice things on the road.
+
+*What the Fighter sees:* A woman traveling alone on this road is unusual. She was traveling with a small party (three people) heading south toward Isfahan, but she stopped at Maragha for three days — presumably waiting for a fourth party member. She may still be there.
+
+**Skill check — Investigation DC 11** (gather enough information from the road junction to narrow the woman's location to one of two inns in Maragha, and determine which one she is more likely to be at based on the description of her party):
+- *Pass:* The fighter has a name for the inn (The Saffron House, near the observatory district) and a description of the woman's party. Two days remain before the deadline.
+- *Fail:* The fighter reaches Maragha but needs to check both inns; one extra half-day of searching.
+
+**Act type:** `skill_check`
+
+```json
+{
+  "act_id": "AMS_007_act2",
+  "location": "Road",
+  "type": "skill_check",
+  "activateNode": "TBZ",
+  "scene": "Road junction toward Maragha; gathering information from salt-merchant, tollman, and carter about the woman traveler.",
+  "skillCheck": { "stat": "Investigation", "dc": 11, "pass": "specific inn identified; two days remaining", "fail": "arrive in Maragha; need to check both inns" }
+}
+```
+
+### Act III — Maragha (MRG): Finding the Woman
+
+*The Moon-on-Water Fan · in the woman's possession · the Fighter arriving at the Saffron House inn*
+
+The Saffron House inn in Maragha, near the Maragha observatory district: a clean caravanserai with a courtyard, the smell of saffron and charcoal smoke. The woman — Dilnoza, a young Uzbek scholar's assistant, traveling with her brother and two colleagues toward Isfahan — is in the courtyard with the fan open in her hand, using it to shade her eyes from the late afternoon sun. She is looking at it with interest — she noticed the cipher mark on the inner rib and has been wondering what it means.
+
+The fighter explains. The situation is straightforward. Dilnoza is intelligent and not possessive about an object she received by mistake.
+
+"Two interlocking crescents," she says, closing the fan. "I thought it was a moon symbol. Not a household mark." She holds it out. But then she pauses. "Who gave me this? The factor. Why was the factor carrying a cipher fan in a separate pocket if it was part of an embassy set? Was it really a mistake?"
+
+The question is a good one. The fighter can answer it honestly (probably was a mistake — Rustem is horrified) or not address it.
+
+**Skill check — Persuasion DC 11** (accept the fan, thank Dilnoza genuinely, answer her question honestly if asked — the factor made an error of inattention, not manipulation):
+- *Pass:* Dilnoza hands over the fan. She asks the fighter to take a letter to the official's factor: "Tell him to be more careful with what he considers courtesy." She is pleasant about it.
+- *Fail:* Dilnoza holds the fan until the fighter provides a more complete explanation — she is not hostile but she is careful. Persuasion at DC 13 on retry.
+
+**Grant item (actual token):** `moon_fan`
+
+**Act type:** `skill_check`
+
+```json
+{
+  "act_id": "AMS_007_act3",
+  "location": "MRG",
+  "type": "skill_check",
+  "activateNode": "MRG",
+  "scene": "Dilnoza at the Saffron House inn with the fan; she has noticed the cipher mark; honest explanation is the clean resolution.",
+  "skillCheck": { "stat": "Persuasion", "dc": 11, "pass": "Dilnoza hands over fan with message for Rustem", "fail": "higher DC retry required" },
+  "grantItem": { "id": "moon_fan", "name": "The Moon-on-Water Fan", "description": "Folding fan, silverleaf ground, dim moon reflected in water. Inner rib: two interlocking crescents, Tabriz official's cipher." }
+}
+```
+
+### Act IV — Road Back to Tabriz (Road): The Fan's Problem
+
+*The Moon-on-Water Fan · recovered, in the Fighter's hands · road back to Tabriz*
+
+On the road back toward Tabriz with the fan, the fighter meets the court official's personal messenger — riding hard south toward Maragha — who carries an update: the embassy reception has been moved up by a day. There are now fewer than two days. And separately: the official, upon reflection, has decided he does not want the specific fan returned to the set. The fan has, in the forty-eight hours of its absence, acquired the quality of having been in unknown hands. He has had a copy made for the set by a local craftsman (the cipher is slightly different — two crescents, not quite interlocking). He wants the original fan sent to Weimar rather than returned.
+
+The messenger explains this change of plan carefully and gives the fighter a letter for Sweelinck.
+
+"The fan that was exchanged in darkness and recovered in daylight," the messenger says, reading from the letter, "has a different nature now than before the exchange. The official does not know with whom the fan spent three days. He prefers not to know. He would rather the archive know."
+
+*What the Fighter sees:* This is the moment Dilnoza's question becomes relevant. The fan was given away; now the official refuses to have it back. The exchange that happened in daylight — Rustem giving it as a courtesy, Dilnoza receiving it with curiosity, the fighter recovering it with an explanation — has made the fan something the official cannot use for an official purpose.
+
+**Skill check — History DC 11** (understand the specific anxiety the official is experiencing: the fan with the cipher was part of his diplomatic identity; now it has been in circulation; the embassy gift is about identity, not just aesthetics; the official has correctly understood that the fan cannot represent him again once it has represented itself independently):
+- *Pass:* Fighter gives Sweelinck the context correctly.
+- *Fail:* Sweelinck receives the fan and the letter; shorter context.
+
+**Act type:** `skill_check`
+
+```json
+{
+  "act_id": "AMS_007_act4",
+  "location": "Road",
+  "type": "skill_check",
+  "activateNode": "MRG",
+  "scene": "Official's messenger with change of plan; the original fan is to go to Weimar; the exchanged fan has a different nature than before.",
+  "skillCheck": { "stat": "History", "dc": 11, "pass": "fighter understands diplomatic identity anxiety; full context for Sweelinck", "fail": "shorter context" }
+}
+```
+
+### Act V — Weimar (WM): The Archive
+
+*The Moon-on-Water Fan · returned · Archivus Sweelinck's intake desk · Weimar*
+
+Archivus Sweelinck opens the fan. He looks at the silverleaf ground, the painted moon, the inner rib with the two interlocking crescents. He reads the official's letter. He reads Dilnoza's message to Rustem if the fighter has it.
+
+"The fan was exchanged in darkness," he says. "It was given by mistake to a woman who looked at it by daylight and noticed what it was. It was recovered. Now the official cannot use it. Because the exchange already happened." He sets the fan on the intake desk. "The identifying mark on the inner rib proves it belongs to the official. The fact that it has been in unknown hands means it cannot serve that function anymore. The proof and the disqualification are the same thing." He is quiet for a moment. "The same fan. The same cipher. Different history."
+
+He opens the classification ledger. "Diplomatic Documents — Objects That Prove Identity and Simultaneously Negate It." He writes for a long time. "First filing: the Moon-on-Water Fan, via Maragha, with the official's acknowledgment that return was declined."
+
+**Take item:** `moon_fan`
+
+**Skill check — History DC 12** (understand and articulate the specific diplomatic logic: the cipher mark establishes identity; the exchange establishes its own history; an object cannot perform diplomatic identity once it has performed a private history with unknown parties; give Sweelinck the political context of the 1367 Jalayirid court embassy):
+- *Pass:* Sweelinck creates the archival entry with full diplomatic and political context; the entry will be useful when the Jalayirid succession question comes to the archive later.
+- *Fail:* Category created; shorter context.
+
+```json
+{
+  "act_id": "AMS_007_act5",
+  "location": "WM",
+  "type": "skill_check",
+  "activateNode": "WM",
+  "scene": "Sweelinck creates Diplomatic Documents — Objects That Prove Identity and Simultaneously Negate It; fan's cipher and history are the same argument.",
+  "skillCheck": { "stat": "History", "dc": 12, "pass": "full diplomatic and political context; useful for future Jalayirid records", "fail": "category created; shorter context" },
+  "takeItem": { "id": "moon_fan" }
+}
+```
+
+### Quest API Stub
+
+```json
+{
+  "quest_id": "AMS_007",
+  "title": "The Exchanged Fans",
+  "cycle": 7,
+  "book": "The Tale of Genji (Arthur Waley translation)",
+  "token": {
+    "id": "moon_fan",
+    "name": "The Moon-on-Water Fan",
+    "description": "Folding fan, hinoki-wood ribs, silverleaf ground with dim moon reflected in water. Inner rib: two interlocking crescents, Tabriz official's cipher. Recovered from a woman traveler who received it by mistake; the official declined to take it back."
+  },
+  "route": "TBZ → MRG → TBZ → WM",
+  "theme": "The identifying object exchanged in darkness has a different meaning once light arrives; the cipher that proves ownership also disqualifies it; the fan proves and forecloses simultaneously",
+  "archive_category": "Diplomatic Documents — Objects That Prove Identity and Simultaneously Negate It",
+  "new_nodes": [
+    {
+      "code": "MRG",
+      "name": "Maragha — Observatory District and Road Junction Inn Quarter",
+      "description": "Northwestern Iranian city in Azerbaijan province, 1367, under Jalayirid authority: famous as the site of the Maragha Observatory built under Hulagu Khan (1259), still a center of astronomical study; a city of scholars, instrument-makers, and road junction traders; the inn quarter near the observatory district serves the Tabriz-Isfahan-Tabriz road; the smell of saffron, charcoal smoke, and the specific quality of a city where precision instruments are made alongside commercial traffic; travelers stop here because it is the junction, not the destination",
+      "quest_hooks": "Road junction recovery, the traveler with something that does not belong to them, astronomical scholarship as context, the object that changed hands before it arrived"
+    }
+  ],
+  "acts": [
+    { "act_id": "AMS_007_act1", "location": "TBZ", "type": "skill_check", "activateNode": "TBZ", "scene": "Rustem Mirza's office; missing cipher fan; four-day deadline.", "skillCheck": { "stat": "Investigation", "dc": 10, "pass": "full description and last known direction", "fail": "description only" } },
+    { "act_id": "AMS_007_act2", "location": "Road", "type": "skill_check", "activateNode": "TBZ", "scene": "Road junction toward Maragha; gathering information about the woman traveler.", "skillCheck": { "stat": "Investigation", "dc": 11, "pass": "specific inn identified; two days remaining", "fail": "arrive in Maragha; need to check both inns" } },
+    { "act_id": "AMS_007_act3", "location": "MRG", "type": "skill_check", "activateNode": "MRG", "scene": "Dilnoza at the Saffron House with the fan; she noticed the cipher; honest explanation resolves it.", "skillCheck": { "stat": "Persuasion", "dc": 11, "pass": "fan recovered; Dilnoza sends message to Rustem", "fail": "DC 13 retry required" }, "grantItem": { "id": "moon_fan", "name": "The Moon-on-Water Fan", "description": "Folding fan, silverleaf ground, dim moon reflected in water. Inner rib: two interlocking crescents." } },
+    { "act_id": "AMS_007_act4", "location": "Road", "type": "skill_check", "activateNode": "MRG", "scene": "Official's messenger changes the plan; fan to go to Weimar; the exchange has given it a different nature.", "skillCheck": { "stat": "History", "dc": 11, "pass": "full diplomatic identity context for Sweelinck", "fail": "shorter context" } },
+    { "act_id": "AMS_007_act5", "location": "WM", "type": "skill_check", "activateNode": "WM", "scene": "Sweelinck creates Diplomatic Documents — Objects That Prove Identity and Simultaneously Negate It.", "skillCheck": { "stat": "History", "dc": 12, "pass": "full diplomatic and political context", "fail": "category created; shorter context" }, "takeItem": { "id": "moon_fan" } }
+  ]
+}
+```
+
+*AMS-07 complete. 2026-06-02.*

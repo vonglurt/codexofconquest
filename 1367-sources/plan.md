@@ -251,7 +251,7 @@ Next books to process (in approximate priority order):
 | KYA | Shah-Nameh | 883 | **Processed 2026-05-31 — COMPLETE. KYA-01 spec + KYA-02–25 seeds. See §KYA-CONT.** |
 | HTY | Mahabharata | 83 | **SEEDS COMPLETE 2026-06-02 — HTY-01–06 all vignettes done** |
 | ADA | Ramayana | 2339 | **Processed 2026-05-31/06-01 — COMPLETE. ADA-01 spec complete (The Curlew's Grief); ADA-02–48 seeds. All 12 parts fully read (Parts 11–12 are scholarly apparatus only). See ADA-ramayana.md.** |
-| AMS | Tale of Genji | 435 | **Processed 2026-05-31/06-01 — COMPLETE. AMS-01 spec complete (The Scarlet Fence Poem); AMS-02–07 seeds. ALL 3 PARTS FULLY READ (Chapters I–IX + Appendices). New seed AMS-07 (The Exchanged Fans). See AMS-tale-of-genji.md.** |
+| AMS | Tale of Genji | 435 | **SEEDS COMPLETE 2026-06-02 — AMS-01–07 all vignettes done** |
 | HAV | Buccaneers of America | 247 | **Processed 2026-05-31 — HAV-01 spec complete (The Articles); HAV-02–06 seeds. Both parts read; full arc recovered. See HAV-buccaneers-of-america.md.** |
 | CLJ | Dracula | 869 | **Processed 2026-05-31/06-01 — COMPLETE. CLJ-01 spec complete (The Compiled Account); CLJ-02–09 seeds. ALL 5 PARTS FULLY READ (Chapters I–XXVII + epilogue). New seeds CLJ-07 (Haarlem Garlic), CLJ-08 (Van Helsing's Contingency), CLJ-09 (The Transcript). See CLJ-dracula.md.** |
 
