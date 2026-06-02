@@ -153,6 +153,18 @@ Earlier layers (9–47): see `lab-report-architecture-full.md` and `lab-report-t
 
 `roll2hit-v3.html` is the single source of truth. The API reads its text directly and writes mutations back into it in-place. The entire game — all data, all logic, all UI — is fully playable in a browser with only `roll2hit-v3.html`: no Node, no `worldbuilder.html`, no server, no dependencies. The HTML is pure JavaScript running on the DOM. `wbapi-server.js` and `worldbuilder.html` are authoring tools that read and write the same file; they add nothing the game requires at runtime.
 
+### Commit + Speak Rule
+
+After every git commit, immediately run:
+
+```bash
+say "<commit subject line>"
+```
+
+Read the **subject line only** (first line of the commit message) aloud via macOS `say`. This confirms the commit completed and anchors the session.
+
+---
+
 ### Lab Report Policy
 
 Write a new `lab-report-<title>.md` when any of the following is true:
