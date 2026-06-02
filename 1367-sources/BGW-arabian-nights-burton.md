@@ -2411,4 +2411,189 @@ Make a **History check (DC 12)**.
 
 *BGW-S09 complete. 2026-06-02.*
 
+---
+
+## Cycle 10 — Angle: *The Sultan's Night Walk — The Security Manual as Evidence of the Gap Between Legend and Reality*
+
+*Prior cycles missed:*
+
+BGW Cycle 7 found the Caliph's night log — the administrative record that proves Harun actually left the palace. Cycle 10 takes the opposing angle: the Mamluk military handbook for nocturnal city patrols, written for the 14th-century security apparatus that made the Abbasid night-walk method structurally impossible. The legend says the ruler walks his city in disguise and hears truth. The manual says the city at night is a controlled space with patrol schedules, gate-closure protocols, and challenge procedures. The two documents together measure the distance between the Abbasid moment and the Mamluk one.
+
+---
+
+### BGW-S10: "The Sultan's Night Walk"
+
+**Theme check:** BGW Cycle 7 (Caliph's night log — the administrative record of legend's foundations) is not this — that log was evidence that Harun went out; this manual is evidence that his method no longer works. BGW-S08 (diminished heir's margin) found the heir who held the title without the power; this finds the institutional apparatus that replaced the power with procedure. Theme new: the security manual as the structural explanation for why the legendary method became impossible — the distance between the Abbasid legend and the Mamluk administration measured in checkpoint procedures.
+
+---
+
+**SOURCE HOOK:** *Arabian Nights* (Burton translation), Harun al-Rashid cycle: The Caliph walks his own city at night in disguise — accompanied only by Jafar and Masrur — to hear what his subjects actually say. The Mamluk military administration of Cairo and Damascus in 1367 operated a sophisticated nocturnal security apparatus: city patrols, gate-closure schedules, challenge procedures for anyone moving after dark. A handbook for that apparatus is the institutional document that explains, without meaning to, why the Abbasid method could not be replicated.
+
+---
+
+**1367 SETTING:**
+A Cairo Mamluk military archive is being reorganized; a senior clerk, Mahmud al-Dimashqi, has identified a 1340s handbook for nocturnal city patrol administration — covering patrol schedules, gate-closure timing, challenge procedures, prisoner detention protocols. The handbook was written for the amir in charge of Cairo's night security. Mahmud has noticed that the handbook's challenge procedure for unidentified persons moving after dark would, if applied correctly, result in the detention of anyone attempting to cross the city at night regardless of their rank — including a hypothetical sultan. He wants the handbook archived at Weimar as a historical document of administrative evolution, before the reorganization destroys it.
+
+*Mahmud al-Dimashqi, wrapping the handbook in cloth: "Section four, paragraph three: 'Any person moving without a lantern after the third bell shall be challenged by the nearest patrol, regardless of stated rank or purpose, until a senior officer can be summoned to verify identity.' The Caliph in the stories carries no lantern. He would have been detained at the first checkpoint."*
+
+**TOKEN:** Mamluk Nocturnal Patrol Handbook — a bound administrative manual, 1340s Cairo, written for the amir of night security; four sections: patrol schedules, gate-closure protocols, challenge procedures, detention records; the challenge procedure in Section 4 is annotated in a later hand: *This procedure as written would detain a caliph.* *Act I: received from Mahmud al-Dimashqi, Cairo. Act V: surrendered to Archivus Sweelinck, Weimar.*
+
+---
+
+**Act I — Cairo Mamluk Military Archive (CAI)**
+
+*A storage room in the Cairo military archive, morning. Mahmud al-Dimashqi is a careful clerk in his forties, the reorganization list in one hand and the handbook in the other.*
+
+"Section four, paragraph three. Any person moving without a lantern after the third bell shall be challenged by the nearest patrol, regardless of stated rank or purpose." He sets the handbook down. "The Harun al-Rashid stories describe a caliph who walks his city at night without a lantern, without announcing himself, to hear the truth his courtiers will not say. This procedure would have stopped him at the first checkpoint." He looks at the carrier. "Tell me what this handbook proves about the distance between the Abbasid moment and the Mamluk one — not just that the procedure changed, but what the change shows about how the two administrations understood the relationship between the ruler and the security apparatus."
+
+*The Fighter looks at Section 4, paragraph 3 — the annotation in the later hand: This procedure as written would detain a caliph.*
+
+Make an **Investigation check (DC 12)**.
+
+**Fail:** "The Abbasid method required the ruler to move through the security apparatus invisibly. Tell me what that requires the security apparatus to be — and what the Mamluk apparatus is instead." *Mahmud waits.*
+
+**Success:** The Abbasid method requires a security apparatus that the ruler stands outside of — a structure he can observe but that does not observe him. The Mamluk handbook creates an apparatus that applies uniformly, without exception for rank: it does not recognize a ruler as a special case because it is not designed to. The distance between the two is the distance between a security apparatus that serves the ruler's will and one that operates on administrative logic regardless of who stands before it. Mahmud takes a long breath. "That is the precise distance." He hands over the **Mamluk Nocturnal Patrol Handbook**.
+
+---
+
+**Act II — Cairo Dockside (CAI)**
+
+*A Cairo dockside warehouse, afternoon. A Mamluk military administrator named Ahmad Taybars is present — he has been told that a security document is leaving Cairo without clearance.*
+
+"All Mamluk military administrative documents are state property. The handbook cannot leave without a release authorization from the amir's office." He is correct. The authorization process takes three weeks and results in a record of what was transferred and to whom.
+
+*The Fighter watches Ahmad open his requirement ledger — a genuine procedural obligation that, if followed, creates a document trail the Venetian collector will find.*
+
+Make a **Persuasion check (DC 13)**.
+
+**Fail:** "Three weeks. That is the process." *Ahmad is unmoved. Try again — about what category this document falls under and whether that category requires release authorization.*
+
+**Success:** "The handbook is a 1340s administrative document, no longer in operational use — it was superseded by the 1355 patrol revision. A document that is no longer operationally current is an archive document, not a military security document. The release authorization requirement applies to current operational materials. An archive document is eligible for scholarly transfer without release authorization." Ahmad reads the operational status column of his ledger. The handbook's entry is stamped: *superseded, 1355.* He closes the ledger. "Archive document. Proceed."
+
+---
+
+**Act III — Alexandria Genoese Quarter (ALE)**
+
+*A Genoese factor's house in Alexandria, evening. A Venetian agent named Giacomo Priuli is waiting. He has learned the handbook is in transit and wants to intercept it — not for the collector, but because he believes the challenge procedures contain information useful for planning a merchant caravan's nocturnal movement through Cairo.*
+
+"The handbook is a practical document. The challenge procedures tell me exactly when the patrols change, where the gaps in coverage are, and how long before a senior officer can be summoned. That information has commercial value." He is right. He is also applying the document's content as an operational resource rather than a historical one.
+
+*The Fighter watches Giacomo's entirely rational commercial interest — the document that Mahmud values as historical evidence of administrative distance, Giacomo values as a current operations guide.*
+
+Make a **Deception check (DC 12)**.
+
+**Fail:** "The patrol procedures in Section 2 are still current — the gaps haven't changed since 1340. This document is operationally useful right now." *Giacomo is precise. Try again — about what makes an outdated handbook unreliable as an operational guide.*
+
+**Success:** "The handbook was superseded in 1355. The patrol schedules in Section 2 reflect the 1340s configuration — before the expansion of the Cairo garrison that added two patrol routes in the eastern quarter. Using this handbook for current operations would put your caravan in a location that is now patrolled when the handbook says it is not. It is historically accurate and operationally dangerous." Giacomo re-reads Section 2. He counts patrol routes. "Eastern quarter." He closes the handbook. "Then it's no use to me. Proceed."
+
+---
+
+**Act IV — Ragusa Waystation (RGS)**
+
+*A Ragusa merchant's waystation, morning. A Byzantine scholar named Nikolaos Katakalon has heard of the handbook and argues it belongs in a Byzantine collection — the Mamluk administrative system derives from Abbasid precedents that the Byzantines influenced.*
+
+"Byzantine military administration contributed to the development of Abbasid city-security practices in the 8th and 9th centuries. A Mamluk document that descends from that tradition belongs in a collection that understands the genealogy." He is making a genuine scholarly claim.
+
+*The Fighter watches Nikolaos's confident assertion — sincere, but requiring the handbook to be what it is not.*
+
+Make a **History check (DC 12)**.
+
+**Fail:** "The Byzantine influence on Abbasid administrative practice is established. Tell me why that genealogy doesn't give Byzantine archives a legitimate claim here." *Nikolaos waits.*
+
+**Success:** "The handbook's administrative logic derives from Mamluk military practice specifically — the patrol system it describes is a 14th-century Mamluk innovation, not an Abbasid inheritance. The relevant genealogy for this document runs from the Mamluk military reorganization of the 1290s, not from 8th-century Byzantine-Abbasid exchange. The document's value is precisely its specificity to the Mamluk administration — which is what makes it evidence of the distance from the Abbasid period." Nikolaos thinks. "The 1290s reorganization." He releases his claim. "Then the distance is internal to the Islamic tradition, not a Byzantine-Abbasid comparison. Weimar is correct."
+
+---
+
+**Act V — Weimar Archive (WM)**
+
+*Archivus Sweelinck's receiving room, late afternoon. He reads the handbook section by section, stopping at the later-hand annotation in Section 4.*
+
+"This annotation was made by someone who read the Harun al-Rashid stories and then read this handbook." He sets it down. "I need the classification that captures both documents together — not the handbook alone, not the stories alone, but the gap between them as a historical phenomenon. Tell me what to call the thing this document proves."
+
+*The Fighter watches Sweelinck's pen — the expression of a man who has received evidence of a gap and needs to name the gap precisely enough that a future scholar can find it.*
+
+Make a **History check (DC 13)**.
+
+**Fail:** "The handbook proves the Abbasid method became impossible. Tell me what kind of administrative change produced that impossibility — not just that it happened, but what changed in how the apparatus understood its own mandate." *Sweelinck waits.*
+
+**Success:** Sweelinck writes: *Security Administration — The Transition from Ruler-Excepted to Rule-Uniform Apparatus; The Mamluk Challenge Procedure as Evidence That the Abbasid Nocturnal Method Required a Different Institutional Logic; What the Legend Describes Was Possible Only Under a Security Apparatus That Did Not Apply Uniformly to Rank; Mamluk Patrol Handbook, Cairo 1340s, Section 4 Paragraph 3, Annotated.* He applies the archive seal. You hand over the **Mamluk Nocturnal Patrol Handbook**. You receive the **Archive Classification Receipt: Security Administration — Ruler-Excepted vs. Rule-Uniform**.
+
+*The Fighter watches the handbook disappear into the permanent collection. Harun's night walks are in there now — not as legend, but as the administrative condition that made them possible, archived alongside the document that records when that condition ended.*
+
+---
+
+### Quest API Stub — BGW_S10: The Sultan's Night Walk
+
+```json
+{
+  "quest_id": "BGW_S10",
+  "title": "The Sultan's Night Walk",
+  "book": "Arabian Nights — Alf Layla wa-Layla (Burton translation)",
+  "cycle": 10,
+  "token": "Mamluk Nocturnal Patrol Handbook",
+  "route": "CAI → ALE → RGS → WM",
+  "theme": "The security manual as structural evidence of the gap between the Abbasid legend and the Mamluk reality; the challenge procedure that would have detained Harun al-Rashid measures the distance between a ruler-excepted apparatus and a rule-uniform one.",
+  "archive_category": "Security Administration — The Transition from Ruler-Excepted to Rule-Uniform Apparatus; The Mamluk Challenge Procedure as Evidence That the Abbasid Nocturnal Method Required a Different Institutional Logic",
+  "acts": [
+    {
+      "act": "act_1", "title": "Cairo Mamluk Military Archive", "activateNode": "CAI",
+      "type": "skill_check", "skillCheck": { "stat": "Investigation", "dc": 12 },
+      "scene": "Mahmud al-Dimashqi needs the carrier to articulate what the challenge procedure proves about the distance between the Abbasid and Mamluk administrations — not just that the procedure changed, but what the change reveals.",
+      "prompt": "Investigation DC 12. The Abbasid method requires a security apparatus the ruler stands outside; the Mamluk handbook creates one that applies uniformly regardless of rank. That gap is the document's historical value.",
+      "failText": "What does the change in procedure show about how the two administrations understood the relationship between the ruler and the security apparatus?",
+      "successText": "That is the precise distance. Mahmud hands over the Mamluk Nocturnal Patrol Handbook. You receive the Mamluk Nocturnal Patrol Handbook.",
+      "grantItem": "Mamluk Nocturnal Patrol Handbook",
+      "checkPassFlag": "bgwS10Act1Passed", "activateMissionBit": "bgwS10Active"
+    },
+    {
+      "act": "act_2", "title": "Cairo Dockside", "activateNode": "CAI",
+      "type": "skill_check", "skillCheck": { "stat": "Persuasion", "dc": 13 },
+      "scene": "Ahmad Taybars requires release authorization for all Mamluk military documents. The handbook was superseded in 1355 — an archive document, not an operational one. The authorization requirement does not apply.",
+      "prompt": "Persuasion DC 13. The handbook's operational status is stamped 'superseded, 1355' — it is an archive document eligible for scholarly transfer.",
+      "failText": "Three weeks is the process for military security documents. Make the case that this one doesn't qualify.",
+      "successText": "Archive document. Ahmad closes the ledger. You proceed.",
+      "grantItem": "Archive Transfer Clearance",
+      "checkPassFlag": "bgwS10Act2Passed"
+    },
+    {
+      "act": "act_3", "title": "Alexandria Genoese Quarter", "activateNode": "ALE",
+      "type": "skill_check", "skillCheck": { "stat": "Deception", "dc": 12 },
+      "scene": "Giacomo Priuli wants the patrol schedules for operational use. The handbook was superseded — the eastern quarter patrol expansion in 1355 makes Section 2 operationally dangerous rather than useful.",
+      "prompt": "Deception DC 12. The 1355 expansion added patrol routes not in the handbook — using it operationally would put a caravan exactly where there is now a patrol.",
+      "failText": "The patrol gaps in Section 2 look current. Explain why they aren't.",
+      "successText": "Eastern quarter. Giacomo closes the handbook. It is no use to him. You proceed.",
+      "grantItem": "Alexandria Departure Clearance",
+      "checkPassFlag": "bgwS10Act3Passed"
+    },
+    {
+      "act": "act_4", "title": "Ragusa Waystation", "activateNode": "RGS",
+      "type": "skill_check", "skillCheck": { "stat": "History", "dc": 12 },
+      "scene": "Nikolaos Katakalon claims Byzantine-Abbasid administrative genealogy gives Byzantine archives a claim. The handbook's logic runs from the Mamluk 1290s reorganization, not from 8th-century Byzantine-Abbasid exchange.",
+      "prompt": "History DC 12. The relevant genealogy is internal to Mamluk military history, not Byzantine-Abbasid — which is exactly what makes the document evidence of distance from the Abbasid period.",
+      "failText": "The Byzantine influence on Abbasid administration is established. Why doesn't that genealogy apply here?",
+      "successText": "The distance is internal to the Islamic tradition. Nikolaos releases his claim.",
+      "grantItem": "Ragusa Waystation Receipt",
+      "checkPassFlag": "bgwS10Act4Passed"
+    },
+    {
+      "act": "act_5", "title": "Weimar Archive", "activateNode": "WM",
+      "type": "skill_check", "skillCheck": { "stat": "History", "dc": 13 },
+      "scene": "Sweelinck needs the classification that captures both the handbook and the Harun stories together — the gap between them as a historical phenomenon, not the documents separately.",
+      "prompt": "History DC 13. The Abbasid method was possible only under a ruler-excepted apparatus; the Mamluk handbook records when that condition ended. The gap is the thing worth preserving.",
+      "failText": "What changed in how the apparatus understood its own mandate — not just that it changed, but what the change reveals?",
+      "successText": "Sweelinck writes: Security Administration — The Transition from Ruler-Excepted to Rule-Uniform Apparatus. You receive Archive Classification Receipt: Security Administration.",
+      "takeItem": "Mamluk Nocturnal Patrol Handbook",
+      "grantItem": "Archive Classification Receipt: Security Administration",
+      "checkPassFlag": "bgwS10Act5Passed", "activateMissionBit": "bgwS10Complete"
+    }
+  ]
+}
+```
+
+---
+
+*BGW-S10 complete. 2026-06-02.*
+
+
+
 
