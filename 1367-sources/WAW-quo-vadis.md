@@ -456,3 +456,238 @@ In the Pipeline Queue table, update WAW row:
 | WAW | Quo Vadis (Sienkiewicz) | 1201 | **Processed 2026-05-31 — WAW_001 spec complete; WAW-02–07 seeds pending** |
 
 Next book in queue: **MLA** (Plutarch's Lives, 4.2 MB) — size gate applies; or **BEY** (Mandeville's Travels), **BGW** (Arabian Nights — Burton), or others with source files present. IST (Alexiad) still has no source file.
+
+---
+
+## Cycle 2 — Angle: *The Arena Register — The Record That Did Not Know What It Recorded*
+
+**What this angle reveals that cycle 1 missed**: Cycle 1 showed the final act of aesthetic will — Petronius's letter naming what happened in terms the perpetrator can't control; the witness writing from outside the power structure's ability to respond. Cycle 2 shows the accidental witness: the arena official who logged "barbarian prisoner kills bull" between other routine entries because that is what happened, with no understanding that he was recording an event that would outlast his empire. The official document is trusted precisely because the recorder had no stake in the outcome. It is true without knowing what truth it carries.
+
+---
+
+### 5-Act Vignette Play: *The Arena Register*
+
+#### The Entry
+
+*The Arena Entry — a folio page cut from the games administrative register, 64–68 AD games cycle, Rome — red ink column headings, black ink entries, the hand of a court official; between an entry for three condemned criminals who did not survive and an entry for a Spanish bull that was retired to stud, one entry: "barbarian prisoner, male, unnamed, from northern province — assigned bull combat — outcome: prisoner alive, bull dead; crowd response: unusual" — that is all; nothing else; no name; no further notes; the official who wrote it had done his job.*
+
+---
+
+**ACT I**
+
+*The Arena Entry — in the folio collection at the Neapolitan civic archive, morning.*
+
+The archive is in the ecclesiastical court district. The keeper, a Benedictine archivist named Fra Giacomo, acquired the folio collection fifteen years ago from a Roman noble house being dissolved. He found the games register while cataloguing and recognized the period; he did not immediately understand what the entry meant. He recognized it six months ago when a Dominican scholar came to review the early Christian persecution records and asked whether anything from the arena administration survived.
+
+Fra Giacomo did not show the Dominican scholar the register. He has been deciding what to do with the entry ever since.
+
+*— He is not protecting the document from its significance. He is protecting its significance from anyone who would use it.*
+
+> **Dialogue DC 12.** Tell Fra Giacomo what distinguishes a document that confirms an event from a document that is used as an argument: the entry is administrative, not testimonial; it confirms because the official had no reason to lie and no category for what he saw; giving it to an archive where it is held without agenda is the only act that preserves its honesty.
+
+**Fail:** Fra Giacomo sets his hands flat on the folio. "I need to think about this more." He is not refusing; he is checking. Come back in the afternoon; he will have decided.
+
+**Pass:** He cuts the single page from the collection with a careful knife — leaving the rest of the register intact — and seals the cut edge with the archive's wax. He writes his authentication in the margin of the page itself: *Neapolitan civic archive, 64–68 AD games cycle, authenticated Fra Giacomo OSB, transferred to neutral carrier.* He slides it across.
+
+**TOKEN GRANTED: The Arena Entry** — folio page, red and black ink, "barbarian prisoner... outcome: prisoner alive, bull dead; crowd response: unusual" — Fra Giacomo's authentication seal in the margin.
+
+---
+
+**ACT II**
+
+*The Arena Entry — in the Fighter's satchel — road north from Naples, afternoon.*
+
+Brother Luca is a Dominican theologian who has been waiting at the road junction north of Naples for three days. He is not the same Dominican who came to the Neapolitan archive — that one reported what Fra Giacomo had said, and Brother Luca was sent from Bologna to intercept the transfer. He is polite, learned, and has a specific argument prepared.
+
+"A secular administrative record that confirms the miraculous event through pagan witness — this is a theological gift. It cannot be dismissed as Christian invention. We are the most qualified institution to receive it, because we understand its context and can protect its use."
+
+He means this. The problem is the last two words.
+
+*— He believes "protect its use" and "preserve the document" are the same thing. They are not.*
+
+> **Dialogue DC 13.** Explain to Brother Luca that a document whose value lies in its having been made by someone with no stake in the outcome cannot be held by someone who has a stake in the outcome; the Dominican Order's theological interpretation is precisely the context that would compromise the document's evidentiary value; a neutral archive preserves it as evidence; a theological archive converts it into argument.
+
+**Fail:** Brother Luca produces a writ from his prior authorizing acquisition of historically significant materials from the early persecution period. The writ is technically applicable. He holds the Fighter in conversation for a day while the Fighter composes a counter-argument in writing. The counter-argument closes the avenue by the second morning.
+
+**Pass:** Brother Luca is quiet for a long moment. He recognizes the argument. He is a good theologian. "You're saying our interpretation would contaminate its evidentiary value." "Yes." He takes the writ back without presenting it. He writes a release notation on a transit slip and attaches it: *reviewed by Luca OP, declined for Dominican acquisition, released to neutral carrier, theological use formally declined.* He steps aside.
+
+**TOKEN STATE 2**: Dominican release notation attached — *theological use formally declined, released to neutral carrier.*
+
+---
+
+**ACT III**
+
+*The Arena Entry — with release notation — Bologna, Maestro Giulio's study at the University, evening.*
+
+Maestro Giulio is a secular scholar at Bologna, part of the emerging humanist faculty that studies primary sources without theological agenda. He has been collecting evidence about the early imperial games administration for a comparative study of Roman civic management. He heard about the Neapolitan register from Fra Giacomo, who mentioned it to a humanist colleague.
+
+He is not threatening. He is excited. He wants to annotate the entry with his scholarly analysis before it reaches Weimar, so that the archivists there have the correct Roman administrative context.
+
+*— He wants to write on the document. He means well. The document should arrive unwritten-upon.*
+
+> **Skill Check: Persuasion DC 13.** Convince Maestro Giulio to write his annotations on a separate sheet of paper — attached as supplementary material but not inscribed on the entry itself; the document's value is precisely its uninterpreted state, and a scholar's annotation, however correct, converts the primary source into a secondary source by inserting an interpretation between the text and the reader.
+
+**Fail:** Giulio writes two lines in the margin before the Fighter can stop him. He is persuaded to stop. He adds his analysis to a separate sheet, which he attaches. The primary source has two new words in it that belong to 1367, not 64 AD. This is noted at intake.
+
+**Pass:** Giulio concedes without argument — he teaches this principle himself and had simply forgotten it in his enthusiasm. He writes his analysis in full on a fresh sheet of paper and attaches it with a thread: *supplementary provenance note, Giulio di Parma, University of Bologna, 1367 — the following context does not appear on the primary document and was written separately at the carrier's request.* He adds a confirmation: *primary source reviewed, unmodified.*
+
+**TOKEN STATE 3**: Bologna supplementary provenance note attached separately — primary source unmodified, Maestro Giulio's context on a separate sheet.
+
+---
+
+**ACT IV**
+
+*The Arena Entry — with two attached slips — road north from Bologna toward the Alpine passes, night.*
+
+Brother Luca sent a messenger to the Dominican house at Bologna after the Fighter left him. The house sent two men who are not theologians.
+
+*— The argument was lost in the study. It continues on the road.*
+
+> **Combat: 2 opponents — AC 12, HP 20 each.** They want the satchel. They stop at half health when the theological case for continuing looks expensive.
+
+**Fail:** They get the satchel. The Bolognese Dominican house has Maestro Giulio's supplementary note; the provenance chain is recoverable. Report to the civic guard; the men are identifiable by the writ Brother Luca declined to present.
+
+**Pass:** Both down or broken. Road north clear. Both slips intact.
+
+**TOKEN STATE 4**: Carried through. All attachments intact.
+
+---
+
+**ACT V**
+
+*The Arena Entry — primary page plus two attached documents — Weimar archive, the desk of Archivus Sweelinck, morning.*
+
+Sweelinck reads the entry. He turns the page over. He reads the Dominican release notation. He reads Maestro Giulio's supplementary note. He sets everything down.
+
+"An arena official logged a barbarian prisoner killing a bull. He noted the crowd's unusual response. He had no category for a miracle and no reason to invent one." Sweelinck looks up. "The entry is true because the official who wrote it didn't know what he was writing." He picks up his pen. "But what does the archive call an official record of an event it cannot classify?"
+
+*— He has the right problem. He needs the category name.*
+
+> **Skill Check: History DC 11.** Tell Sweelinck the category: this belongs under Administrative Records of Uninterpreted Events — the official documents made by recorders who had no stake in and no understanding of the significance of what they logged; the document is trusted because the recorder did not understand what he witnessed; that quality is the category.
+
+**Fail:** Sweelinck files it under "Early Imperial Games Administration — Rome" with a note flagging the entry as extraordinary. He revises the category in consultation with the supplementary note; the new category is created an hour later.
+
+**Pass:** Sweelinck writes a new category header at the bottom of the Roman administrative records folio: *Administrative Records of Uninterpreted Events — documents made by officials who recorded what they saw without knowing its significance; trusted precisely because the recorder had nothing at stake.* He files the entry. He attaches the Dominican slip and Giulio's note in their own sleeve.
+
+He says, after a moment:
+
+"The official who wrote this had no idea he was writing about anything more than a dead bull."
+
+**TOKEN TAKEN: The Arena Entry**
+
+The page enters the Weimar archive under Administrative Records of Uninterpreted Events. Fra Giacomo's authentication, the Dominican release, and Maestro Giulio's supplementary note are indexed separately. The entry — crowd response: unusual — is the only surviving administrative confirmation of what Ursus did, written by someone who did not know that was what it was.
+
+---
+
+## Quest API Stub — UQF v1.0
+
+```json
+{
+  "quest_id": "WAW_002",
+  "title": "The Arena Register",
+  "source": "WAW",
+  "cycle": 2,
+  "book": "Quo Vadis — Henryk Sienkiewicz (c. 64–68 AD setting, published 1896)",
+  "source_episode": "The arena scene — Ursus kills the bull with his bare hands to save Lygia; the crowd response forces Nero to spare them both; confirmed by the roar of the crowd in the novel but never by official Roman administrative record",
+  "theme": "The administrative record that captured what it could not name — the official clerk who logged the event without understanding its significance; the document is trusted precisely because the recorder had no stake in the outcome and no category for what he saw",
+  "token": {
+    "id": "WAW_002_TOKEN",
+    "name": "The Arena Entry",
+    "description": "A folio page cut from the 64-68 AD games administrative register, Neapolitan civic archive: red ink column headings, black ink entries; between a criminals entry and a bull retirement entry, one line — barbarian prisoner, unnamed, assigned bull combat, outcome: prisoner alive, bull dead; crowd response: unusual — Fra Giacomo's authentication seal in the margin",
+    "grant_act": "act_1",
+    "take_act": "act_5",
+    "check_acts": ["act_2", "act_3", "act_4"],
+    "state_changes": [
+      {"act": "act_2", "change": "Dominican release notation attached — theological use formally declined, released to neutral carrier"},
+      {"act": "act_3", "change": "Bologna supplementary provenance note attached on separate sheet — primary source unmodified, Giulio di Parma's context kept separate"},
+      {"act": "act_4", "change": "carried through Dominican-sent ambush — all attachments intact"}
+    ]
+  },
+  "nodes": ["NAP", "BLO", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "NAP",
+      "type": "dialogue",
+      "activateNode": "NAP",
+      "missionAccept": "Fra Giacomo has held the games register for fifteen years. He recognized the entry six months ago. He did not show it to the Dominican scholar who came looking. He needs to know the carrier understands what the document's honesty requires.",
+      "scene": "The archive room in the ecclesiastical court district, Naples. Fra Giacomo at the table with the folio collection. The entry is two lines in the middle of a ledger. He has already decided. He is checking.",
+      "dialogue": {
+        "dc": 12,
+        "prompt": "Tell Fra Giacomo what distinguishes a document that confirms from a document that argues, and why a neutral archive is the only institution that preserves the distinction.",
+        "failText": "He sets his hands flat on the folio. 'I need to think about this more.' Come back in the afternoon.",
+        "passText": "He cuts the page carefully, seals the cut edge, writes his authentication in the margin. 'Transferred to neutral carrier.' TOKEN GRANTED: The Arena Entry."
+      },
+      "grantItem": "The Arena Entry",
+      "checkPassFlag": "WAW_002_act1Pass"
+    },
+    {
+      "act_id": "act_2",
+      "location": "road_north_naples",
+      "type": "dialogue",
+      "activateNode": "NAP",
+      "scene": "Road junction north of Naples. Brother Luca OP has been waiting three days. He is polite, learned, and has a writ he has not yet presented. He believes protecting the document's use and preserving the document are the same thing.",
+      "dialogue": {
+        "dc": 13,
+        "prompt": "Explain why Dominican custody would compromise the document's evidentiary value — the document's honesty depends on no one with a stake in the outcome holding it.",
+        "failText": "He presents the writ. A day's delay. The counter-argument in writing closes the avenue by the second morning.",
+        "passText": "He takes the writ back. 'You're saying our interpretation would contaminate its evidentiary value.' He writes the release notation. TOKEN STATE 2: theological use formally declined."
+      },
+      "checkPassFlag": "WAW_002_act2Pass"
+    },
+    {
+      "act_id": "act_3",
+      "location": "BLO",
+      "type": "skill_check",
+      "activateNode": "BLO",
+      "scene": "Maestro Giulio's study at Bologna. He is excited and reaching for his pen. He wants to annotate the entry with the correct Roman administrative context before it reaches Weimar. He teaches the principle he is about to violate.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "failText": "He writes two lines in the margin before stopping. The supplementary sheet is attached; two 1367 words are now in the primary source. Noted at intake.",
+        "passText": "He concedes — he teaches this principle himself. Writes his context on a separate sheet. 'Primary source reviewed, unmodified.' TOKEN STATE 3: Bologna provenance note attached separately."
+      },
+      "checkPassFlag": "WAW_002_act3Pass"
+    },
+    {
+      "act_id": "act_4",
+      "location": "road_north_bologna",
+      "type": "combat",
+      "activateNode": "BLO",
+      "scene": "Road north from Bologna. Brother Luca sent a messenger to the Dominican house at Bologna after the exchange. The house sent two men who are not theologians.",
+      "combat": {
+        "enemies": 2,
+        "AC": 12,
+        "HP": 20,
+        "description": "Dominican house agents — recover the document; stop at half health",
+        "failText": "They get the satchel. The provenance chain is recoverable from Giulio's supplementary note. Report to the civic guard.",
+        "passText": "Both down or broken. Both slips intact. Road north clear. TOKEN STATE 4: carried through."
+      },
+      "checkPassFlag": "WAW_002_act4Pass"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck reads the entry. He turns the page over. 'The entry is true because the official who wrote it didn't know what he was writing. But what does the archive call an official record of an event it cannot classify?'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 11,
+        "failText": "Filed under Early Imperial Games Administration — Rome, flagged extraordinary. New category created from Giulio's supplementary note an hour later.",
+        "passText": "He writes: Administrative Records of Uninterpreted Events — documents made by officials who recorded without knowing the significance; trusted because the recorder had nothing at stake. 'The official had no idea he was writing about anything more than a dead bull.' TOKEN TAKEN: The Arena Entry."
+      },
+      "takeItem": "The Arena Entry",
+      "activateMissionBit": "wawArenaComplete",
+      "checkPassFlag": "WAW_002_act5Pass"
+    }
+  ]
+}
+```
+
+---
+
+### New Node Proposals
+
+No new nodes required. Route uses existing NAP (Naples), BLO (Bologna), WM (Weimar).
