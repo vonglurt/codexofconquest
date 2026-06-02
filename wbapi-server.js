@@ -1825,6 +1825,18 @@ async function route(req, res) {
       if (item.minRank > 20)
         warnings.push({ section:'LAKE_MAGIC', key, field:'minRank', msg:`minRank ${item.minRank} exceeds max fish rank (20) — item unreachable` });
 
+    // WARNINGS (continued) — NPCs missing NPC_DIALOGUES entry
+    for (const [npcKey, npc] of Object.entries(WBAPI.birkaNpcs))
+      if (!WBAPI.npcDialogues[npcKey])
+        warnings.push({ section:'BIRKA_NPC', key:npcKey, field:'NPC_DIALOGUES', msg:`"${npc.name||npcKey}" has no NPC_DIALOGUES entry — dialogue card will not render in game` });
+
+    // WARNINGS — loot table gap
+    const lootTotal = (WBAPI.d100Table||[]).reduce((s,e)=>s+(e.weight||0), 0);
+    if (lootTotal === 0)
+      warnings.push({ section:'D100_TABLE', key:'_D100_TABLE', field:'weight', msg:`d100 loot table is empty — no loot will drop from encounters` });
+    else if (lootTotal < 100)
+      warnings.push({ section:'D100_TABLE', key:'_D100_TABLE', field:'weight', msg:`d100 loot table weights sum to ${lootTotal}/100 — ${100-lootTotal} unassigned slots will produce null drops` });
+
     // SUGGESTIONS
     const usedMonsters = new Set();
     for (const t of Object.values(WBAPI.worldDb))
@@ -1839,12 +1851,30 @@ async function route(req, res) {
       if (!coordKeys.has(code))
         suggestions.push({ section:'NODE_COORDS', key:code, field:'coords', msg:`node has no entry in NODE_COORDS — won't appear on map` });
 
+    // SUGGESTIONS — disconnected map graph (BFS from num=1 node)
+    const allNodeCodes = Object.keys(WBAPI.nodeMap);
+    if (allNodeCodes.length > 0) {
+      const startCode = allNodeCodes.find(k => WBAPI.nodeMap[k].num === 1) || allNodeCodes[0];
+      const visited = new Set();
+      const queue = [startCode];
+      while (queue.length) {
+        const curr = queue.shift();
+        if (visited.has(curr)) continue;
+        visited.add(curr);
+        const n = WBAPI.nodeMap[curr];
+        if (!n) continue;
+        for (const dir of ['N','S','E','W']) if (n[dir] && WBAPI.nodeMap[n[dir]]) queue.push(n[dir]);
+      }
+      for (const code of allNodeCodes)
+        if (!visited.has(code))
+          suggestions.push({ section:'NODE_MAP', key:code, field:'connectivity', msg:`not reachable via map traversal from "${startCode}" — island node or missing exit link` });
+    }
+
     const summary = { errors: errors.length, warnings: warnings.length, suggestions: suggestions.length };
     const eCol = errors.length   ? C.red    : C.green;
     const wCol = warnings.length ? C.yellow : C.green;
     logRow(`${eCol}${errors.length} errors${C.reset}  ·  ${wCol}${warnings.length} warnings${C.reset}  ·  ${C.dim}${suggestions.length} suggestions${C.reset}`);
     if (errors.length) {
-      // Count by message pattern for the top error summary
       const freq = {};
       errors.forEach(e => { const k = e.msg.replace(/"[^"]+"/g,'"…"'); freq[k] = (freq[k]||0)+1; });
       const top = Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,3)
@@ -1859,6 +1889,93 @@ async function route(req, res) {
       wtop.forEach((t,i) => logRow(i===0 ? 'top warnings' : '', t));
     }
     logResponse(method, url.pathname, 200, `${errors.length} errors  ·  ${warnings.length} warnings  ·  ${suggestions.length} suggestions`);
+
+    // TEXT FORMAT — "WARNING TODO FIX" style report
+    const fmt = url.searchParams.get('format') || 'json';
+    if (fmt === 'text') {
+      const b = `http://localhost:${PORT}`;
+      const ts2 = new Date().toISOString().slice(0,19).replace('T',' ');
+      const fixHint = (item) => {
+        const { section, key, field } = item;
+        if (section === 'QUEST_DB'   && (field === 'activateNode' || field === 'waypointNode'))
+          return `   → curl -XPUT ${b}/api/quest/${key} -H 'Content-Type: application/json' -d '{"${field}":"<valid-node>"}'`;
+        if (section === 'NODE_MAP'   && field === 'name')
+          return `   → curl -XPUT ${b}/api/node/${key} -H 'Content-Type: application/json' -d '{"name":"<terrain-key>"}'`;
+        if (section === 'BIRKA_NPC'  && field === 'node')
+          return `   → curl -XPUT ${b}/api/npc/${key} -H 'Content-Type: application/json' -d '{"node":"<valid-node>"}'`;
+        if (section === 'BIRKA_NPC'  && field === 'NPC_DIALOGUES')
+          return `   → curl -XPOST ${b}/api/npc/${key}/dialogue -H 'Content-Type: application/json' -d '{"quote":"..."}'`;
+        if (section === 'MONSTER_DROPS' && field === 'key')
+          return `   → curl ${b}/api/monster/${key}  # create monster, or DELETE the orphan drop entry`;
+        if (section === 'FISH_DB'    && field === 'key')
+          return `   → curl -XPOST ${b}/api/monster -H 'Content-Type: application/json' -d '{"key":"${key}","name":"...","ac":10,"hp":10,"atk":2,"dmg":4,"xp":5,"tier":1}'`;
+        if (section === 'MONSTER_POOL' && field === 'drops')
+          return `   → curl -XPOST ${b}/api/monster/${key}/drop -H 'Content-Type: application/json' -d '{"name":"${key} remains","sell":0}'`;
+        if (section === 'D100_TABLE')
+          return `   → curl ${b}/api/loot  (see gap and suggestions)`;
+        if (section === 'WORLD_DB'   && field === 'monsters')
+          return `   → curl -XPUT ${b}/api/terrain/${key} -H 'Content-Type: application/json' -d '{"monsters":["<key>"]}'`;
+        if (section === 'NODE_MAP'   && field === 'connectivity')
+          return `   → curl ${b}/api/node/${key}  # check N/S/E/W exit links`;
+        return '';
+      };
+      const HR = '─'.repeat(64);
+      const lines = [
+        '',
+        `VALIDATION REPORT — ${path.basename(GAME_FILE)}`,
+        `Generated ${ts2}`,
+        '',
+      ];
+      if (errors.length) {
+        lines.push(HR);
+        lines.push(`  ✗ ERRORS (${errors.length})  — data is broken; these cause bugs`);
+        lines.push(HR);
+        for (const e of errors) {
+          lines.push(`  [FIX]  ${e.section}  ${e.key}.${e.field}`);
+          lines.push(`         ${e.msg}`);
+          const h = fixHint(e); if (h) lines.push(h);
+          lines.push('');
+        }
+      }
+      if (warnings.length) {
+        lines.push(HR);
+        lines.push(`  ⚠ WARNINGS (${warnings.length})  — WARNING TODO FIX`);
+        lines.push(HR);
+        for (const w of warnings) {
+          lines.push(`  [WARN]  ${w.section}  ${w.key}.${w.field}`);
+          lines.push(`          ${w.msg}`);
+          const h = fixHint(w); if (h) lines.push(h);
+          lines.push('');
+        }
+      }
+      if (suggestions.length) {
+        lines.push(HR);
+        lines.push(`  ℹ SUGGESTIONS (${suggestions.length})  — not urgent but worth addressing`);
+        lines.push(HR);
+        for (const s of suggestions) {
+          lines.push(`  [INFO]  ${s.section}  ${s.key}.${s.field}`);
+          lines.push(`          ${s.msg}`);
+          const h = fixHint(s); if (h) lines.push(h);
+          lines.push('');
+        }
+      }
+      lines.push(HR);
+      lines.push('  PARSE STATUS');
+      lines.push(HR);
+      for (const p of parse)
+        lines.push(`  ${p.ok ? '✓' : '✗'}  ${p.section.padEnd(22)} ${p.count} entries`);
+      lines.push('');
+      lines.push(HR);
+      const clean = errors.length === 0 && warnings.length === 0;
+      lines.push(`  SUMMARY  ${errors.length} errors  ·  ${warnings.length} warnings  ·  ${suggestions.length} suggestions`);
+      if (clean) lines.push('  ALL CLEAR — no errors or warnings detected.');
+      lines.push(HR);
+      lines.push('');
+      cors(res);
+      res.writeHead(200, { 'Content-Type':'text/plain; charset=utf-8' });
+      return res.end(lines.join('\n'));
+    }
+
     return json(res, 200, { ok:true, errors, warnings, suggestions, parse, summary });
   }
 
@@ -2861,7 +2978,7 @@ server.listen(PORT, '127.0.0.1', () => {
     ['GET',    '/api/help[/{topic}]             → man-page style docs (read|write|nonce|wizard|curl|...)'],
     ['GET',    '/api/ping'],
     ['GET',    '/api/source                         → raw HTML source (worldbuilder Load from Server)'],
-    ['GET',    '/api/audit                          → data integrity scan (errors/warnings/suggestions)'],
+    ['GET',    '/api/audit[?format=text]             → integrity scan (errors/warnings/suggestions/connectivity)'],
     ['GET',    '/api/schema[/{type}]                → canonical field schema'],
     ['GET',    '/api/flags                          → list _S_DEFAULTS flags'],
     ['POST',   '/api/flags                          body: {name, defaultValue, comment?}'],
