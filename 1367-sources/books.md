@@ -530,7 +530,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
-| [ ] | HAV | buccaneers-of-america | Buccaneers of America — Alexandre Exquemelin | 1678 | Pirate History | 247 | Processed 2026-05-31 — HAV-01 spec (The Articles, Chios→Rhodes); HAV-02–06 seeds. Both parts read; full arc recovered (Pierre le Grand, Lolonois, Morgan). See HAV-buccaneers-of-america.md. |
+| [x] | HAV | buccaneers-of-america | Buccaneers of America — Alexandre Exquemelin | 1678 | Pirate History | 247 | Processed 2026-05-31 — HAV-01 spec (The Articles, Chios→Rhodes); HAV-02–06 seeds. Both parts read; full arc recovered (Pierre le Grand, Lolonois, Morgan). HAV-02 spec (The Admiral's Letter, FAM→RHD→WM) complete. See HAV-buccaneers-of-america.md. |
 
 ### Supplementary 1367 AD Sources
 

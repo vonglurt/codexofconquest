@@ -340,3 +340,186 @@ The articles arrive late. The preliminary finding is in the record. The corsair 
 - Full story arc recovered; Morgan's Panama expedition summarized from chapter headings (Chapters XIII–XVIII)
 - English only: all mission text in English throughout; no Dutch, French, Spanish in vignette text
 - New proposed nodes: CHI (Chios), RHD (Rhodes), CAF (Caffa), FAM (Famagusta), VEN (Venice) — all fit 1367 Mediterranean geography; Rhodes was Hospitallers HQ from 1309; Chios was Genoese Maona from 1346; Caffa was Genoese Black Sea colony
+
+---
+
+## HAV-02 Full Vignette Spec: "The Admiral's Letter"
+
+### Cycle 2 Angle
+
+Cycle 1 established the distinction between corsair and pirate as a single document's presence or absence — the internal governance of an outlaw society, the wound compensation table as evidence of rigor. Cycle 2 takes the external angle: the moment of recognition that passes between parties who should, by all institutional logic, be treating each other as enemies without standing. Morgan wrote to Don Alonso in the language of treaty; Don Alonso replied in the language of military command addressed to a peer. Both letters together are a record of mutual recognition — by corresponding in diplomatic register, each party implicitly acknowledged the other as capable of receiving and sending formal correspondence, which is itself a form of status. What cycle 1 missed: the outlaw's internal rigor creates a claim; the external recognition creates the standing. The archive receives both letters together because neither letter alone contains the evidence of what passed between them.
+
+### Source Hook
+
+Chapter XII: Morgan at Maracaibo. After sinking the Spanish fleet with a fire-ship and escaping the lake with his ships lying flat in canoes, Morgan received a formal letter from the Spanish admiral Don Alonso del Campo y Espinosa: surrender all prizes, slaves, and prisoners and depart freely; resist and the admiral would destroy them all. Morgan replied in kind — he would burn Maracaibo if not paid ransom, and would come to Panama if invited. The exchange is conducted in full diplomatic form — ultimatum, counter-ultimatum — by parties who are technically at war and address each other as military peers. By replying to a corsair in treaty language, the admiral made the corsair a party capable of receiving diplomatic correspondence. By writing back, Morgan claimed the status the letter created.
+
+### 1367 Setting
+
+A Catalan corsair captain named Ramon de Cortés has seized a Rhodian merchant vessel in the Aegean. He has sent a formal ransom demand to the Rhodian merchant Nikolaos Kyriakopoulos through a Genoese notary in Famagusta: return of the seized cargo against 1,400 gold ducats, deadline fourteen days. The demand is signed: "Commander of the Corsair Company of the Sea of Rhodos — Ramon de Cortés." Not pirate. Commander. Company. Corsair.
+
+Kyriakopoulos drafted a counter-offer: 900 ducats, deadline accepted, his name and the merchant house seal in blue wax. He too addressed the corsair as "Commander of his company."
+
+Both letters are now in a sealed case held by Matteo Fiorello, a Genoese notary in Famagusta who certified both documents. The case must reach the Hospitaller commandery at Rhodes, where the commandery's judicial arm has been asked to oversee the resolution. When the commandery receives both letters together, the Prior will have the first formal record of this corsair company conducting a diplomatic exchange in treaty language with a Rhodian merchant house.
+
+The corsair's agent in Famagusta has now been told to recall the demand letter — the captain has heard the merchant accepted the terms and wants to revise them upward. But the counter-offer is already sealed in the same case.
+
+The session is in two days. The deadline is in three.
+
+**TOKEN:** The Exchange Case — a Genoese-notary-certified leather document case, closed with a grey wax ring-seal on the strap. Inside: the corsair's demand letter (Catalan/Italian trade formal, Ramon de Cortés's name and vessel mark in brown ink) and the merchant's counter-offer (Greek/Italian formal, Kyriakopoulos merchant house seal in blue wax). Both letters open with the same formal diplomatic salutation: "In the name of God and of good faith." Both parties address the other by title. Together, they constitute the first documentary record of this corsair company's recognition as a party to formal correspondence.
+
+**TOKEN granted:** Act I (Matteo Fiorello releases the sealed case)
+**TOKEN checked:** Acts II, III, IV
+**TOKEN taken:** Act V (Sweelinck logs both letters under a new archive category; the case goes onto the archive shelf)
+
+---
+
+### Act I — Famagusta (Genoese Notary's Office, Harbor District)
+**DC 12 | Persuasion or Deception**
+
+Matteo Fiorello, the Genoese notary who witnessed and certified both letters, holds the sealed case and is willing in principle to hand it over. He prepared the case himself. But in the last hour a man he does not recognize came to his door and asked whether the Rhodian merchant's carrier had yet collected it. That question has made him cautious. He does not want to give the case to the wrong person.
+
+The carrier must establish legitimacy — not official identity, which the carrier does not have, but convincing personal credibility. Matteo is not hostile. He is a professional who has been asked an unusual question this morning and is accounting for it.
+
+- **Success (Persuasion DC 12):** The carrier gives a convincing account of the circumstances — who sent them, what the errand is, without revealing they know the letter contents (which would suggest prior access). Matteo listens, checks his ledger, and decides the risk of failing a legitimate carrier is higher than the risk of the other thing. He releases the case with a signed chain-of-custody note.
+- **Success (Deception DC 12):** The carrier claims Kyriakopoulos specifically wanted this carrier rather than his own factor to collect the case, because the factor is known in Famagusta and would draw attention. Matteo finds this plausible — exactly the precaution a cautious merchant would take — and releases the case.
+- **Failure:** Matteo releases the case but not the chain-of-custody note. "Come back with a letter from Kyriakopoulos himself." The carrier leaves with the case but without transit documentation. At Act III, the harbor inspection post requires additional argument because the chain-of-custody is missing (+2 to Act III DC, to 15).
+
+**Flavor:** Matteo's office smells of cedar and salt. He keeps records in three languages depending on the party. He picks up the sealed case and holds it for a moment before setting it on the desk between them. "I witnessed the exchange of these letters myself. When the corsair's man brought the demand in, I noted how he was dressed. He was dressed as a merchant factor. He said his captain asked that the letter be worded in the trade register style, not as a ransom note. I wrote it the way he asked." He slides the case forward. "It reads like a contract. So does the counter-offer. Both of them."
+
+---
+
+### Act II — Famagusta Harbor (South Quay, Departure Point)
+**DC 12 | Persuasion or Deception**
+
+On the south quay, as the carrier moves toward the Rhodian ferry, a Catalan sailor named Pere Marí steps out from the shadow of a rope coil and positions himself between the carrier and the gangway. He is not visibly armed, but he has two men behind him.
+
+He says, in Catalan-accented Italian: "My captain's instructions have changed. The terms in the demand letter are to be revised upward. He would like the demand letter back before it reaches the commandery — not the counter-offer, only the demand. I have a new demand here ready to substitute." He holds up a rolled parchment.
+
+The carrier understands: opening the case would break Matteo's seal. The demand cannot be separated from the counter-offer without voiding the notarial certification. And if the demand is revised, the counter-offer — already accepted — is void, and the deadline resets. But Pere Marí does not want to say the real reason: his captain heard the merchant accepted and now wants more.
+
+- **Success (Persuasion DC 12):** The carrier explains that breaking the seal is a notarial offense — Matteo certified both letters as a single exchange; opening the case without his presence voids the certification of both, including the counter-offer. If the captain wants revised terms, the case goes to the commandery intact and he files through the commandery's ransom office. Pere Marí has no good counter-argument. After a pause, he steps aside. He says: "The captain will hear you refused."
+- **Success (Deception DC 12):** The carrier claims the case has already been logged by the Famagusta harbor office as a diplomatic submission under commandery jurisdiction — opening it here would be tampering with a Hospitaller document. Pere Marí cannot verify this on the quay. He steps aside, suspicious but motionless.
+- **Failure:** Pere Marí does not move. The carrier must back down or force the confrontation with three men. Backing down costs thirty minutes while Pere Marí sends a message to his captain. The carrier arrives at Rhodes one hour late — the customs house afternoon session is closed. Act III DC +3 (emergency after-hours submission, DC 16).
+
+**Flavor:** The quay is busy — crates being loaded, rope-pullers, a factor's assistant doing inventory against a wall. No one looks at Pere Marí and his men. No one would help if there were trouble. The water is very blue. Pere Marí's two companions haven't moved from the rope coil, but they are watching the case.
+
+---
+
+### Act III — Rhodes Harbor (Customs House and Transit Office)
+**DC 13 | Persuasion or History**
+
+Fra Vittorio de Savigny, the junior Hospitaller brother covering the afternoon post at the Rhodes customs house, is logging incoming document cases. He has standing instructions to flag anything described as "ransom-related" for the Venetian consul's review before it enters the commandery — the Venetian consul has a standing interest in corsair cases.
+
+The exchange case is either: (a) "diplomatic correspondence, ransom negotiation under commandery oversight" — bypasses the Venetian consul, enters commandery intake directly; or (b) "corsair ransom documentation, Aegean incident" — gets flagged and delayed two days. Classification (a) is correct. But Fra Vittorio has not opened the case. He is reading the exterior label. He does not know that both letters use diplomatic salutation form — the specific marker that makes this a mutual exchange rather than a demand.
+
+- **Success (Persuasion DC 13):** The carrier explains that the Genoese notary certified this as a mutual diplomatic exchange — both parties corresponded in treaty form. That is different from a ransom demand. This case contains evidence of a formal negotiation under commandery jurisdiction, not a corsair threat requiring Venetian review. Fra Vittorio, who is not looking for trouble, accepts this and classifies it as diplomatic correspondence.
+- **Success (History DC 13):** The carrier knows that Hospitaller procedural regulations distinguish between cases "in which no formal acknowledgment has passed between the parties" (flagged for Venetian review) and cases where "both parties have formally corresponded" (under commandery jurisdiction by definition). Fra Vittorio checks his written instructions, finds this clause, nods.
+- **Failure:** Flagged for Venetian consul review. The case is held overnight. The session begins without the letters. At Act V, the carrier must argue for admission after the documentary deadline — DC rises to 14 and the onFail path is activated if this also fails.
+
+**Flavor:** Fra Vittorio has a cup of tea going cold on his desk. He reads the exterior label three times. He says: "Both parties wrote to each other? Not just the corsair writing to the merchant?" He looks again at the notary seal. "The notary certified both directions?" He picks up his pen. "I will need to write down what kind of document this is." He looks at the carrier. "What kind of document is this?"
+
+---
+
+### Act IV — Rhodes Town (Junction of Scala and Harbor Road)
+**Combat: 2×AC 13 HP 22**
+
+Two men hired by Nikolaos Kyriakopoulos's factor — a Rhodian named Demetrios Kalogeras — are waiting at the road junction between the harbor and the commandery. Demetrios has had second thoughts. 900 ducats is too much; he believes the corsair will accept 650. He wants to intercept the case and revise the counter-offer before it reaches the commandery. He has hired two dock workers with swords. They are not trying to kill — they want the case. If one is dropped, the other will attempt to grab the case and run.
+
+**onPass (combat):** Both men down or fled. The case is intact. The outer seal is unbroken. The leather is scuffed from the struggle.
+
+**onFail (combat):** The case is grabbed. Kalogeras has it for several hours; he opens it, reads the counter-offer, reseals it imperfectly — the grey wax ring-seal is broken, reapplied without a signet ring. The case enters the commandery with a broken seal, triggering an admissibility challenge at Act V (+2 to DC, to 13).
+
+**Flavor:** Demetrios Kalogeras is not on the street. He hired these men and returned to his factor's house to claim ignorance. The men move with the specific confidence of people paid enough to feel invulnerable and not enough to feel professional. One of them says: "The merchant factor sends his regards. He would like his letter back." His tone suggests he was told to say this and found it as awkward to deliver as it sounds.
+
+---
+
+### Act V — Weimar Archive (Document Intake Hall)
+**DC 11 | Persuasion**
+
+Sweelinck, the archive's senior acquisitions clerk, receives the exchange case. He opens it, reads both letters. He puts them down side by side on the desk.
+
+He is quiet for a long moment.
+
+His intake ledger has categories. "Ransom demand — corsair origin" is one. "Diplomatic correspondence — negotiation under institutional oversight" is another. "Formal exchange between parties denying each other's right to exist" is not in the ledger.
+
+But that is what these letters are. The corsair's demand opens: "In the name of God and of good faith." Addressed to "Nikolaos Kyriakopoulos, merchant of Rhodes" — not "the merchant whose cargo we hold." The counter-offer: "Captain Ramon de Cortés, Commander of the Corsair Company." Not "the pirate." Commander. Company. Both parties, by the act of corresponding, have made the other party into a party capable of receiving formal correspondence. The letters together are a record of recognition that neither party intended to give and both cannot now deny.
+
+- **Success (Persuasion DC 11):** The carrier points out that the letters cannot be filed separately — the demand without the counter-offer is a threat; the counter-offer without the demand is a response to nothing. They only constitute evidence together. Sweelinck turns to a new page and writes: *Correspondence Between Parties Who Deny Each Other's Right to Exist. Vol. I. Neither letter to be separated from the other. The salutation form is the evidence. Both parties wrote as if to a peer.*
+- **Failure:** Sweelinck files the demand under "corsair documentation" and the counter-offer under "Rhodian merchant correspondence." Both are in the archive, separated by origin category. The mutual recognition is present but not legible without reading both files.
+
+**onPass flavor trigger:** Sweelinck holds both letters at arm's length like a printer checking registration. "He called himself Commander. She called him Commander back." He sets them down. "I don't have a category for two parties recognizing each other while denying each other recognition." He opens a new ledger folio. "I will make one." He writes for two minutes. He slides the folio toward the carrier: *Correspondence Between Parties Who Deny Each Other's Right to Exist. Vol. I.*
+
+**onFail flavor trigger:** Sweelinck files both letters correctly but separately. A month later, a Hospitaller brother reviewing corsair cases pulls the demand from the corsair file and finds a response-to-nothing. He marks it "incomplete." The counter-offer in the merchant file is marked "accepted — payment pending." No one reading either file alone understands that what the two letters prove together is not a ransom paid or refused, but a corsair company's first diplomatic exchange conducted in treaty form.
+
+---
+
+### onPass
+
+The commandery session receives the exchange. The Prior reads both salutations — "In the name of God and of good faith" on the demand, "Captain Ramon de Cortés, Commander" on the counter-offer — and is quiet for a moment. He says: "This company has filed a diplomatic demand. We have received a diplomatic counter-offer." He looks at the Venetian consul's representative, who arrived late. "The Venetian review question is moot. This case is under commandery jurisdiction by virtue of the formal exchange." The ransom is resolved at 1,100 ducats. Ramon de Cortés receives payment within the deadline. Kyriakopoulos receives his cargo. Both parties acted within a system that officially does not exist. The commandery's record shows it.
+
+---
+
+### onFail
+
+The case arrives with a broken seal or the letters separated. The admissibility challenge delays the session two days. The corsair's deadline expires; he sells half the cargo at Paphos. The remainder is released when the ransom is eventually paid, but logged as voluntary rather than adjudicated. Ramon de Cortés's demand letter is filed under "corsair extortion, resolved without formal proceeding." The diplomatic salutation form is not noted. A corsair company that wrote in the language of treaty is recorded as having demanded ransom — which is also true, and is the lesser truth.
+
+---
+
+### Quest Stub (UQF v1.0)
+
+```json
+{
+  "id": "HAV-02",
+  "title": "The Admiral's Letter",
+  "source": "HAV",
+  "cycle": 2,
+  "type": "delivery",
+  "tokenObject": "leather document case, grey wax ring-seal on strap, Genoese notary certification; inside: corsair's demand letter (Catalan/Italian formal, Ramon de Cortés name and vessel mark) + merchant's counter-offer (Greek/Italian formal, blue wax merchant house seal); both letters open with identical diplomatic salutation — together they constitute the first formal exchange in which both parties addressed each other by title",
+  "tokenGrantAct": 1,
+  "tokenTakeAct": 5,
+  "commissionCity": "FAM",
+  "deliveryCity": "WM",
+  "route": "Famagusta notary's office → south quay → Rhodes customs house → commandery road junction → Weimar archive intake",
+  "themeThread": "The formal exchange of demands between two parties who recognize each other's authority even while denying each other's right to exist; the letter of ultimatum is also a form of recognition; the corsair who writes in the language of treaty claims a status the letter itself creates; the archive files both letters together because neither letter alone contains the evidence",
+  "acts": [
+    {
+      "act": 1,
+      "location": "Famagusta — Matteo Fiorello's Genoese notary office, harbor district",
+      "dc": 12,
+      "skills": ["Persuasion", "Deception"],
+      "summary": "Notary is willing but nervous — an unknown man was asking about the case this morning; establish enough credibility to receive the sealed exchange case and its chain-of-custody note"
+    },
+    {
+      "act": 2,
+      "location": "Famagusta — south quay, departure point",
+      "dc": 12,
+      "skills": ["Persuasion", "Deception"],
+      "summary": "Corsair's agent Pere Marí intercepts; wants to recall the demand letter because his captain revised terms upward; get past him without opening the sealed case"
+    },
+    {
+      "act": 3,
+      "location": "Rhodes — customs house and transit office, harbor district",
+      "dc": 13,
+      "skills": ["Persuasion", "History"],
+      "summary": "Transit officer Fra Vittorio must classify the case as diplomatic correspondence under commandery jurisdiction rather than corsair ransom documentation flagged for Venetian consul review"
+    },
+    {
+      "act": 4,
+      "location": "Rhodes town — junction of Scala and harbor road, approach to commandery",
+      "type": "combat",
+      "combatTarget": { "count": 2, "ac": 13, "hp": 22 },
+      "summary": "Merchant factor's two hired swords intercept to reclaim the counter-offer for revision; fight through before they grab the case"
+    },
+    {
+      "act": 5,
+      "location": "Weimar archive — document intake hall, Sweelinck's desk",
+      "dc": 11,
+      "skills": ["Persuasion"],
+      "summary": "Sweelinck must receive both letters as a single record and open a new intake category — Correspondence Between Parties Who Deny Each Other's Right to Exist — because neither letter is evidence without the other"
+    }
+  ],
+  "onPass": "The Prior reads both diplomatic salutations and adjudicates the ransom at 1,100 ducats; the commandery's record shows not a ransom transaction but a diplomatic exchange; the archive files Vol. I of a new category",
+  "onFail": "The case arrives damaged or letters separated; the diplomatic salutation form goes unnoticed; the demand is filed as extortion resolved; the mutual recognition is in the archive but not legible without reading both files",
+  "activateMissionBit": "havAdmiralLetterComplete"
+}
+```
