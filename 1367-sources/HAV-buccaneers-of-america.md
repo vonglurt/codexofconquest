@@ -523,3 +523,783 @@ The case arrives with a broken seal or the letters separated. The admissibility 
   "activateMissionBit": "havAdmiralLetterComplete"
 }
 ```
+
+---
+
+## §HAV-03 — Vignette Cycle 3: "The Sunk Boat"
+
+### Themes avoided
+HAV-01: outlaw society's internal governance / wound table as evidence of rigor / corsair vs. pirate distinction as single document. HAV-02: mutual recognition between parties who deny each other's right to exist / the letter of ultimatum as form of recognition. AMS: anonymous gift, involuntary honesty, scarf as farewell, handwriting as testimony, impossible obligation, pedagogy's gap, diplomatic identity negation. HTY: physician's vocabulary, painted record, gambling as theology, ritual concealment. IST: partisan account. FCO: editorial suppression. WAW: administrative record of the miraculous.
+
+**Declared theme — Cycle 3:** The decision that cannot be walked back creates a different quality of action. The commission usage attestation is the document that makes the seizure irreversible — the corsair who filed it has already done the act; the paper is only the record that neither party can now pretend otherwise. The most honest commission is the one that removes the option to deny it.
+
+### TOKEN: "The Commission Usage Attestation"
+
+*The Commission Usage Attestation · sealed wax cylinder, cold and heavy · in Domenico's hands · Caffa Genoese factor's office*
+
+A sealed wax-covered cylinder: the commission usage attestation, in Genoese chancery hand on a single heavy sheet. It records that Captain Grimaldo of the vessel *Santa Croce* invoked his letter of marque against the merchant vessel *Qarabagh* in the Crimean sea-lanes on the fourteenth day of March 1367, the seizure witnessed by the Genoese consul's harbor agent at Caffa. The captain's mark is stamped in wax at the foot. Once registered at Trebizond, the seizure is legally recognized under the Genoese commune's admiralty protocols; the company that commissioned the seizure cannot be prosecuted retroactively. If the registration is blocked, the commission is voided and the captain's act becomes piracy rather than privateering — distinguished by a single document's presence or absence.
+
+**Token mechanics:**
+- `id`: "commission_attestation"
+- `name`: "The Commission Usage Attestation"
+- `description`: "Sealed wax cylinder, commission usage attestation in Genoese chancery hand. Captain Grimaldo, vessel Santa Croce, seizure of Qarabagh, March 14, 1367. Witnessed by Caffa harbor agent. Heavy; cold from overnight boat transit. Once registered, the act is legal. If blocked, it is piracy."
+- `grant_act`: 1
+- `take_act`: 5
+- `check_acts`: [2, 3, 4]
+
+### Nodes
+
+**Existing nodes used:** CAF (Caffa), TRB (Trebizond), WM (Weimar). No new nodes.
+
+### Act I — Caffa (CAF): Domenico's Office
+
+*The Commission Usage Attestation · sealed · in Domenico's hands · Genoese factor's office, Caffa*
+
+A Genoese factor's office in Caffa: the smell of fish, felt, and Genoese counting-house ink. Domenico Spinola — the captain's commercial representative, competent and visibly nervous — hands over the cylinder. The Mongol-tributary merchants whose vessel was seized have connections in Trebizond and will file a counterclaim if the registration doesn't arrive within three days. The cylinder has been carried overnight across the Black Sea by a fishing boat; it is cold and heavy. Domenico has a covering letter for the Trebizond factor.
+
+"The commission is valid," Domenico says. "The use was valid. The registration just has to be there before their claim." He pauses. "Captain Grimaldo bored a hole in his own first vessel before the boarding. He knew the act was irrevocable when he started it. The document is the same kind of thing. Once registered, we cannot undo it — but neither can they pretend it didn't happen."
+
+**Skill check — History DC 11** (know Genoese admiralty protocol: understand the specific three-day registration window and why the Trebizond factor's countersignature is the mechanism that converts a privateering act into a recognized legal seizure):
+- *Pass:* Fighter enters the transit prepared; knows what the factor at Trebizond will need to confirm before registering.
+- *Fail:* Fighter carries the document but doesn't know the procedural context.
+
+**Grant item:** `commission_attestation`
+
+**Act type:** `skill_check`
+
+```json
+{
+  "act_id": "HAV_003_act1",
+  "location": "CAF",
+  "type": "skill_check",
+  "activateNode": "CAF",
+  "scene": "Domenico Spinola's Caffa office; the cold cylinder from the overnight crossing; three-day window for Trebizond registration.",
+  "skillCheck": { "stat": "History", "dc": 11, "pass": "fighter knows the admiralty protocol; prepared for Trebizond factor's requirements", "fail": "fighter carries without procedural context" },
+  "grantItem": { "id": "commission_attestation", "name": "The Commission Usage Attestation", "description": "Sealed wax cylinder, Genoese chancery hand, Captain Grimaldo's seizure attestation. Heavy, cold. Registration at Trebizond required within three days." }
+}
+```
+
+### Act II — Black Sea Crossing (Road/Sea): The Counterclaim Agent
+
+*The Commission Usage Attestation · in satchel · with the Fighter · Black Sea, midpoint*
+
+A fast ship on the Black Sea crossing — a hired Mongol-tributary agent, Ismail Tatar, working for the merchants whose cargo was seized. He has been faster than expected; he has found the fighter at the midpoint of the crossing at a waystation harbor. He wants the cylinder. If the document doesn't reach Trebizond, the seizure is legally void — the heirs' counterclaim will proceed unopposed.
+
+He is professional and not violent by preference. He offers a substantial sum for the cylinder, citing his clients' legitimate grievance.
+
+**Hybrid — Persuasion DC 12** (argue that the commission is valid and the seizure was legally authorized; that the merchants' proper recourse is to contest the commission before the Trebizond factor, not to suppress the registration; that the carrier has no power to adjudicate the underlying dispute):
+- *Pass:* Ismail withdraws; he will contest the commission's validity through the proper channel at Trebizond.
+- *Fail → Combat:* 2× hired men (AC 12, HP 22) attempt to take the satchel at the waystation. Win: proceed.
+
+**Act type:** `hybrid`
+
+```json
+{
+  "act_id": "HAV_003_act2",
+  "location": "Road",
+  "type": "hybrid",
+  "activateNode": "CAF",
+  "scene": "Mongol-tributary agent Ismail Tatar at a Black Sea waystation; legitimate grievance; wants to suppress the registration.",
+  "skillCheck": { "stat": "Persuasion", "dc": 12, "pass": "Ismail agrees to contest at Trebizond; fighter proceeds", "fail": "combat" },
+  "combat": { "enemies": [{"name": "Hired Agent", "ac": 12, "hp": 22, "count": 2}], "pass": "proceed; cylinder intact", "fail": "cylinder seized; recovered" }
+}
+```
+
+### Act III — Trebizond (TRB): The Registration Problem
+
+*The Commission Usage Attestation · delivered · being examined · with the Trebizond Factor Niccolò · Trebizond Genoese registry office*
+
+The Genoese factor's registry office in Trebizond: ledgers, wax seals, the smell of official ink. Niccolò Zaccaria — careful, legally experienced, unhappy about what he is seeing — examines the commission and the covering letter. He has a problem.
+
+"The seizure happened in Crimean sea-lanes," he says. "That is Mongol-tributary water. The Genoese commune's admiralty authority does not unambiguously extend there under the current 1361 treaty. If I register this and Ismail Tatar's clients contest it, I may be creating a jurisdictional problem that causes the commune more trouble than the seizure itself." He sets the attestation down. "I can create a provisional registration — a record that the document arrived and was reviewed — but I cannot give it full registration status without a legal opinion from Genoa."
+
+The provisional registration will not be enough to protect the captain from the counterclaim. But the Weimar archive, Niccolò suggests, can receive the original as a deposit pending resolution. The archive's receipt functions as a legal deposit, not a registration — the document is preserved and its existence is witnessed.
+
+**Skill check — History DC 12** (know enough about the 1361 Genoese-Mongol treaty to argue whether the Crimean sea-lanes fall under Genoese admiralty authority; identify the specific article that either extends or limits the commune's jurisdiction):
+- *Pass:* Fighter makes the jurisdictional argument correctly; Niccolò agrees to full provisional registration plus archive deposit.
+- *Fail:* Provisional registration only; the full legal argument must be made later from the archive's receipt.
+
+**Check pass flag:** `full_provisional_registration`
+
+**Act type:** `skill_check`
+
+```json
+{
+  "act_id": "HAV_003_act3",
+  "location": "TRB",
+  "type": "skill_check",
+  "activateNode": "TRB",
+  "scene": "Factor Niccolò Zaccaria's registration problem: Crimean sea-lanes and Genoese-Mongol treaty jurisdiction; provisional registration vs. full.",
+  "skillCheck": { "stat": "History", "dc": 12, "pass": "1361 treaty argument made; full provisional registration granted; flag set", "fail": "provisional registration only" },
+  "checkPassFlag": "full_provisional_registration"
+}
+```
+
+### Act IV — Road North (Road): The Captain's Change of Heart
+
+*The Commission Usage Attestation · in courier package · with the Fighter · road north from Trebizond*
+
+A messenger from Captain Grimaldo arrives at a waystation north of Trebizond — the captain, having learned about the jurisdictional problem, has decided he wants the original attestation returned to him rather than deposited at Weimar. He has a new legal strategy (a private claim through the Genoese consul rather than the commune's admiralty registry) and doesn't want the document in a public archive.
+
+The problem: Niccolò Zaccaria's provisional registration has already been filed; the archive deposit is now the proper legal continuation. Returning the document to the captain would create a gap in the chain of custody that Ismail Tatar's clients could exploit.
+
+**Hybrid — Persuasion DC 13** (explain to the captain's messenger that returning the document now would void the provisional registration's protective function; that the archive deposit, precisely because it is public and witnessed, is better protection than private holding):
+- *Pass:* The messenger understands and reports back; the captain accepts.
+- *Fail → Combat:* The messenger has two guards (2× AC 13, HP 26) and instructions to take the package if persuasion fails. Win: proceed; the original continues to Weimar.
+
+**Act type:** `hybrid`
+
+```json
+{
+  "act_id": "HAV_003_act4",
+  "location": "Road",
+  "type": "hybrid",
+  "activateNode": "TRB",
+  "scene": "Captain Grimaldo's messenger wants the original back; fighter argues chain of custody makes archive deposit the better protection.",
+  "skillCheck": { "stat": "Persuasion", "dc": 13, "pass": "messenger accepts; original continues to Weimar", "fail": "combat" },
+  "combat": { "enemies": [{"name": "Captain's Guard", "ac": 13, "hp": 26, "count": 2}], "pass": "proceed; original intact", "fail": "package seized; recovered" }
+}
+```
+
+### Act V — Weimar (WM): The Archive
+
+*The Commission Usage Attestation · returned · Archivus Sweelinck's intake desk · Weimar*
+
+Archivus Sweelinck reads the attestation, the provisional registration record from Trebizond, and Niccolò's covering note.
+
+"The document records an act that could not be undone," he says. "The captain bored the hole before the boarding. Once the seizure was made, it either was legal or it wasn't — and the attestation is the only witness to the moment the act became irrevocable. The jurisdictional question is now someone else's problem. What the archive receives is the act itself, attested, deposited, permanent." He opens the classification ledger. "Commission Records — Acts That Cannot Be Recalled After Execution." He writes carefully. "First filing: the Santa Croce seizure, March 1367, via Caffa and Trebizond. Jurisdictional note attached."
+
+*If `full_provisional_registration`:* "The full provisional registration changes the filing classification," Sweelinck notes. "The legal question is pending, not resolved. I will file this under Commission Records — Acts with Pending Jurisdictional Dispute."
+
+**Skill check — History DC 11** (give Sweelinck the full provenance: Domenico in Caffa → Ismail Tatar's contested transit → Niccolò's provisional registration → captain's change of heart → archive deposit; name each party and their position):
+- *Pass:* Complete chain of custody recorded.
+- *Fail:* Category created; shorter provenance.
+
+**Take item:** `commission_attestation`
+
+```json
+{
+  "act_id": "HAV_003_act5",
+  "location": "WM",
+  "type": "skill_check",
+  "activateNode": "WM",
+  "scene": "Sweelinck creates Commission Records — Acts That Cannot Be Recalled After Execution; notes jurisdictional dispute if full provisional registration obtained.",
+  "skillCheck": { "stat": "History", "dc": 11, "pass": "complete chain of custody recorded", "fail": "category created; shorter record" },
+  "checkPassFlag": "full_provisional_registration",
+  "takeItem": { "id": "commission_attestation" }
+}
+```
+
+### Quest API Stub
+
+```json
+{
+  "quest_id": "HAV_003",
+  "title": "The Sunk Boat",
+  "cycle": 3,
+  "book": "Buccaneers of America (Exquemelin, Williams trans.)",
+  "token": {
+    "id": "commission_attestation",
+    "name": "The Commission Usage Attestation",
+    "description": "Sealed wax cylinder, Genoese chancery hand. Captain Grimaldo, seizure of Qarabagh, March 14, 1367. Cold, heavy. Once registered at Trebizond, legal. If blocked, piracy."
+  },
+  "route": "CAF → TRB → WM",
+  "theme": "The decision that cannot be walked back creates a different quality of action; the attestation is the document that makes the irreversible act permanent; the archive receives what courts cannot yet adjudicate",
+  "archive_category": "Commission Records — Acts That Cannot Be Recalled After Execution",
+  "acts": [
+    { "act_id": "HAV_003_act1", "location": "CAF", "type": "skill_check", "activateNode": "CAF", "scene": "Domenico Spinola's office; cold cylinder; three-day registration window.", "skillCheck": { "stat": "History", "dc": 11, "pass": "fighter knows admiralty protocol", "fail": "carries without procedural context" }, "grantItem": { "id": "commission_attestation", "name": "The Commission Usage Attestation", "description": "Sealed cylinder, Captain Grimaldo's seizure attestation. Three-day registration window." } },
+    { "act_id": "HAV_003_act2", "location": "Road", "type": "hybrid", "activateNode": "CAF", "scene": "Ismail Tatar at Black Sea waystation; wants to suppress registration.", "skillCheck": { "stat": "Persuasion", "dc": 12, "pass": "Ismail agrees to contest at Trebizond", "fail": "combat" }, "combat": { "enemies": [{"name": "Hired Agent", "ac": 12, "hp": 22, "count": 2}], "pass": "proceed", "fail": "cylinder recovered" } },
+    { "act_id": "HAV_003_act3", "location": "TRB", "type": "skill_check", "activateNode": "TRB", "scene": "Factor Niccolò's registration problem; 1361 treaty jurisdiction; provisional vs. full.", "skillCheck": { "stat": "History", "dc": 12, "pass": "1361 treaty argument; full provisional registration", "fail": "provisional only" }, "checkPassFlag": "full_provisional_registration" },
+    { "act_id": "HAV_003_act4", "location": "Road", "type": "hybrid", "activateNode": "TRB", "scene": "Captain's messenger wants original back; chain of custody argument.", "skillCheck": { "stat": "Persuasion", "dc": 13, "pass": "messenger accepts; original to Weimar", "fail": "combat" }, "combat": { "enemies": [{"name": "Captain's Guard", "ac": 13, "hp": 26, "count": 2}], "pass": "proceed", "fail": "recovered" } },
+    { "act_id": "HAV_003_act5", "location": "WM", "type": "skill_check", "activateNode": "WM", "scene": "Sweelinck creates Commission Records — Acts That Cannot Be Recalled After Execution.", "skillCheck": { "stat": "History", "dc": 11, "pass": "complete chain of custody", "fail": "shorter record" }, "takeItem": { "id": "commission_attestation" } }
+  ]
+}
+```
+
+*HAV-03 complete. 2026-06-02.*
+
+---
+
+## §HAV-04 — Vignette Cycle 4: "The Surgeon's Log"
+
+### Themes avoided
+HAV-01 through HAV-03 themes. AMS: handwriting as testimony / pedagogy's gap. HTY: physician's vocabulary for spiritual act / Bhishma's clinical record. IST: medical record as clinical basis for literary accounts (IST-07). FCO: suppression. WAW: administrative record of the miraculous. NWI: operational record vs. literary account (NWI-02 "The Rearguard's Log").
+
+**Declared theme — Cycle 4:** The healer in the company of killers holds the most complete record of the expedition's actual cost. Every wound in the log is a fact. The names beside the wounds are initials only — no one is glorious in the surgeon's register. The archive receives the only account that cannot be dismissed as either advocacy or apology.
+
+### TOKEN: "The Corsair Wound Log"
+
+*The Corsair Wound Log · small vellum-bound log, water-stained · in Nikephoros Melissenos's hands · scholar's house, Rhodes*
+
+A small vellum-bound log in a physician's compact hand, four seasons of entries across seventy-eight pages: each entry with date, wound description (type, location, severity), treatment applied, prognosis, and outcome. Names are initials throughout — N.K., G.F., M.T. — consistent with Genoese corsair practice. The last entry is the physician's own: a note on rope-burns across both palms from a boarding operation, treated with oil and binding, prognosis good. A marginal note in the final pages: "Thirty-one wounds requiring stitching or amputation in two seasons. None were mentioned in the victory account presented to the Chios factor." The log is water-stained at the upper right corner of every page from seawater.
+
+**Token mechanics:**
+- `id`: "corsair_wound_log"
+- `name`: "The Corsair Wound Log"
+- `description`: "Physician's log, seventy-eight pages. Dates, wound types, treatments, outcomes, initials only. Rope-burn final entry is the physician's own. Marginal note: 'Thirty-one wounds requiring stitching or amputation. None mentioned in the victory account.' Water-stained throughout. Compact, vellum-bound."
+- `grant_act`: 1
+- `take_act`: 5
+- `check_acts`: [2, 3, 4]
+
+### Nodes
+
+**Existing nodes used:** RHD (Rhodes), CON (Constantinople), WM (Weimar). No new nodes.
+
+### Act I — Rhodes (RHD): Nikephoros Melissenos's House
+
+*The Corsair Wound Log · handed over · in Nikephoros's hands · scholar's house, Rhodes*
+
+A physician's house in the Rhodes scholar district: medical instruments on a shelf, a view of the harbor through the window. Nikephoros Melissenos — a Byzantine Greek who spent two seasons on a Genoese corsair vessel out of Chios as ship's surgeon, returned to Rhodes now for two years — hands over the log. It goes to the Constantinople medical school, to Professor Isaak Argyropoulos, for a study of wound treatment under maritime conditions.
+
+"The medical question is real," Nikephoros says. "Saltwater wounds heal differently. The rope-burn on my own hands confirmed three things about ocean dressing that I hadn't seen in any textbook." He pauses. "There is one entry — folio 34, 'M.T.' — a man who took a crossbow bolt through the left shoulder and survived. He is now, I have learned, in the service of the Knights of St. John. He did not disclose his corsair service in his application." He closes the log. "I am not in the business of exposing him. But the log is accurate. If Argyropoulos uses the case, M.T.'s treatment record is part of the medical literature."
+
+**Skill check — Insight DC 11** (understand the specific ethical problem Nikephoros is describing: the log's accuracy is not in question; the problem is whether accurate medical records can be used in a context that would expose a man who told his institutional superiors less than the truth; the archive is the place that holds accurate records without necessarily deciding what to do with them):
+- *Pass:* Fighter understands; this allows them to give Sweelinck the context precisely at Act V.
+- *Fail:* Fighter notes the M.T. problem but doesn't grasp its full dimension.
+
+**Check pass flag:** `mt_problem_understood`
+
+**Grant item:** `corsair_wound_log`
+
+**Act type:** `skill_check`
+
+```json
+{
+  "act_id": "HAV_004_act1",
+  "location": "RHD",
+  "type": "skill_check",
+  "activateNode": "RHD",
+  "scene": "Nikephoros's house; the wound log for Constantinople medical school; the M.T. problem named explicitly.",
+  "skillCheck": { "stat": "Insight", "dc": 11, "pass": "fighter understands the ethical dimension of accurate record vs. disclosure; flag set", "fail": "M.T. problem noted; dimension not fully grasped" },
+  "checkPassFlag": "mt_problem_understood",
+  "grantItem": { "id": "corsair_wound_log", "name": "The Corsair Wound Log", "description": "Physician's log, seventy-eight pages, initials only. 'Thirty-one wounds. None mentioned in the victory account.' Water-stained." }
+}
+```
+
+### Act II — Sea from Rhodes (Road/Sea): The Knight's Agent
+
+*The Corsair Wound Log · in satchel · with the Fighter · sea passage toward Constantinople*
+
+On the sea passage from Rhodes toward Constantinople, a Hospitaller Knight's agent — a lay brother named Fra Giacomo di Prato — has somehow learned about the wound log and knows about entry M.T. He is courteous, Hospitaller-trained in diplomacy, and straightforward: he would like the folio containing entry M.T. removed from the log before it arrives in Constantinople. He is not asking for the whole log — just the single entry. His argument: the Knight's service record is immaculate; a single corsair voyage ten years ago, before he took his vows, should not define his standing; the log is medical, not judicial, and its medical content is unchanged if one entry is removed.
+
+His argument has some merit. His request has no legal standing.
+
+**Hybrid — Persuasion DC 12** (explain that the log's integrity as a medical record requires completeness; that removing one entry would make the log unreliable as medical evidence; that the archive can hold the log without being in the business of exposing individual cases; that Fra Giacomo's concern is better addressed through a different channel):
+- *Pass:* Fra Giacomo accepts; he will speak with his order's legal officer about disclosure protocols.
+- *Fail → Combat:* Fra Giacomo has two lay brothers (2× AC 13, HP 24) aboard. Win: proceed.
+
+**Act type:** `hybrid`
+
+```json
+{
+  "act_id": "HAV_004_act2",
+  "location": "Road",
+  "type": "hybrid",
+  "activateNode": "RHD",
+  "scene": "Hospitaller agent Fra Giacomo wants entry M.T. removed; arguments have merit; no legal standing.",
+  "skillCheck": { "stat": "Persuasion", "dc": 12, "pass": "Fra Giacomo accepts; log integrity maintained", "fail": "combat" },
+  "combat": { "enemies": [{"name": "Lay Brother", "ac": 13, "hp": 24, "count": 2}], "pass": "proceed; log intact", "fail": "folio M.T. briefly removed; fighter recovers it" }
+}
+```
+
+### Act III — Constantinople (CON): Professor Isaak Argyropoulos
+
+*The Corsair Wound Log · delivered · being read · with Isaak Argyropoulos · medical school, Constantinople*
+
+A medical school library in Constantinople: the smell of old binding and medicinal herbs, students in the outer rooms. Isaak Argyropoulos — precise, a man who reads medical texts the way a jeweler examines stones — reads the log in forty-five minutes. He notes the rope-burn entry. He notes entry M.T. He reads the marginal note.
+
+"This is exactly what I needed," he says. "Saltwater wound treatment under maritime conditions — four cases of suppression-arrested wound, seven rope-burns, three amputations with postoperative notes. This is five years ahead of anything we have from land-based wound literature." He pauses. "Entry M.T. is the best-documented shoulder wound in the log. I will need to use it." He looks at the fighter. "I will not name the initials. I don't know whose initials they are. The case is the medical evidence, not the person."
+
+He decides the original should go to Weimar after he has made his working copy. "The archive is the correct holder of a document that is simultaneously medical record, legal testimony, and — with the marginal note — historical evidence. I don't want it sitting in a medical school where it will be used and lose its character."
+
+**Skill check — Medicine DC 12** (know enough about wound treatment under maritime conditions to engage with Argyropoulos's clinical reading; add something to his understanding — the relationship between the saltwater context and the specific treatment entries):
+- *Pass:* Argyropoulos notes the fighter's observation; his working copy includes a preface explaining the maritime context more fully.
+- *Fail:* Argyropoulos proceeds; the copy is complete without the additional context.
+
+**Act type:** `skill_check`
+
+```json
+{
+  "act_id": "HAV_004_act3",
+  "location": "CON",
+  "type": "skill_check",
+  "activateNode": "CON",
+  "scene": "Argyropoulos reads the log; notes M.T.; decides original must go to Weimar after working copy.",
+  "skillCheck": { "stat": "Medicine", "dc": 12, "pass": "fighter adds maritime context; Argyropoulos's copy includes fuller preface", "fail": "copy complete without addition" }
+}
+```
+
+### Act IV — Road North (Road): The Genoese Factor's Claim
+
+*The Corsair Wound Log · in courier package · with the Fighter · road north from Constantinople*
+
+A Genoese factor's representative on the road north — the Chios Maona has a claim on the log, on the grounds that it was produced during a voyage commissioned by a Chios-based corsair company. Under Genoese commercial law, the physician's records produced during a commissioned voyage are the company's property. The representative has a written claim.
+
+The claim is technically plausible. The physician is Greek, not Genoese; the company is dissolved; and the wound records are, in most legal traditions, the physician's professional documents, not the commissioning company's property.
+
+**Hybrid — History DC 12** (argue that the Genoese commercial claim does not extend to a physician's professional medical records; cite the specific distinction between a commissioned service's deliverables and a physician's professional notes):
+- *Pass:* The representative accepts the distinction; he notes it in his report to the Maona but withdraws the immediate claim.
+- *Fail → Combat:* Two Genoese factors' men (2× AC 13, HP 22) attempt to take the package. Win: proceed.
+
+**Act type:** `hybrid`
+
+```json
+{
+  "act_id": "HAV_004_act4",
+  "location": "Road",
+  "type": "hybrid",
+  "activateNode": "CON",
+  "scene": "Genoese Maona representative with company property claim over physician's log.",
+  "skillCheck": { "stat": "History", "dc": 12, "pass": "physician's professional notes vs. company property; claim withdrawn", "fail": "combat" },
+  "combat": { "enemies": [{"name": "Factor's Man", "ac": 13, "hp": 22, "count": 2}], "pass": "proceed", "fail": "package recovered" }
+}
+```
+
+### Act V — Weimar (WM): The Archive
+
+*The Corsair Wound Log · returned · Archivus Sweelinck's intake desk · Weimar*
+
+Archivus Sweelinck reads the log. He reads the marginal note: *"Thirty-one wounds requiring stitching or amputation in two seasons. None were mentioned in the victory account presented to the Chios factor."* He reads Argyropoulos's covering letter. He is quiet for a long time.
+
+"The surgeon kept the account that no one asked him to keep," he says. "The company wanted a healthy crew. The factor wanted victory reports. Nobody wanted the wound register. He kept it because physicians keep wound registers — that is what physicians do. The account that exists because someone did their professional duty regardless of institutional interest is the most reliable record of what actually happened." He opens the classification ledger. "Medical Records — Expedition Cost Registers: Complete Accounting." He writes carefully. "First filing: the Chios corsair company voyages, 1364–1366, via Rhodes and Constantinople."
+
+*If `mt_problem_understood`:* Sweelinck notes the M.T. situation. "The archive holds accurate records. It does not determine what to do with them. That is for another institution. Note that the M.T. entry remains in the record unaltered."
+
+**Skill check — History DC 11** (give Sweelinck the full provenance: Nikephoros → Fra Giacomo's interception → Argyropoulos's copy → Genoese claim → archive; name what each stage represents):
+- *Pass:* Complete provenance chain; M.T. situation noted with precision.
+- *Fail:* Category created; shorter provenance.
+
+**Take item:** `corsair_wound_log`
+
+```json
+{
+  "act_id": "HAV_004_act5",
+  "location": "WM",
+  "type": "skill_check",
+  "activateNode": "WM",
+  "scene": "Sweelinck creates Medical Records — Expedition Cost Registers: Complete Accounting; M.T. situation noted if flag set.",
+  "skillCheck": { "stat": "History", "dc": 11, "pass": "complete provenance; M.T. situation noted", "fail": "shorter record" },
+  "checkPassFlag": "mt_problem_understood",
+  "takeItem": { "id": "corsair_wound_log" }
+}
+```
+
+### Quest API Stub
+
+```json
+{
+  "quest_id": "HAV_004",
+  "title": "The Surgeon's Log",
+  "cycle": 4,
+  "book": "Buccaneers of America (Exquemelin, Williams trans.)",
+  "token": {
+    "id": "corsair_wound_log",
+    "name": "The Corsair Wound Log",
+    "description": "Physician's log, seventy-eight pages, initials only. 'Thirty-one wounds. None mentioned in the victory account.' Water-stained. Entry M.T.: best-documented shoulder wound in the log."
+  },
+  "route": "RHD → CON → WM",
+  "theme": "The healer holds the most complete record of the expedition's actual cost; no names are glorious in the wound register; the account that exists because someone did their professional duty is the only record that cannot be dismissed as advocacy",
+  "archive_category": "Medical Records — Expedition Cost Registers: Complete Accounting",
+  "acts": [
+    { "act_id": "HAV_004_act1", "location": "RHD", "type": "skill_check", "activateNode": "RHD", "scene": "Nikephoros names the M.T. problem; fighter understands ethical dimension of accurate record.", "skillCheck": { "stat": "Insight", "dc": 11, "pass": "full ethical dimension understood; flag set", "fail": "M.T. problem noted; dimension not grasped" }, "checkPassFlag": "mt_problem_understood", "grantItem": { "id": "corsair_wound_log", "name": "The Corsair Wound Log", "description": "Physician's log, seventy-eight pages, water-stained. Thirty-one wounds. None in the victory account." } },
+    { "act_id": "HAV_004_act2", "location": "Road", "type": "hybrid", "activateNode": "RHD", "scene": "Hospitaller agent Fra Giacomo wants entry M.T. removed; log integrity argument.", "skillCheck": { "stat": "Persuasion", "dc": 12, "pass": "Fra Giacomo accepts; log intact", "fail": "combat" }, "combat": { "enemies": [{"name": "Lay Brother", "ac": 13, "hp": 24, "count": 2}], "pass": "proceed", "fail": "folio removed; recovered" } },
+    { "act_id": "HAV_004_act3", "location": "CON", "type": "skill_check", "activateNode": "CON", "scene": "Argyropoulos reads the log; notes M.T.; routes original to Weimar.", "skillCheck": { "stat": "Medicine", "dc": 12, "pass": "maritime context added; fuller preface", "fail": "copy complete without addition" } },
+    { "act_id": "HAV_004_act4", "location": "Road", "type": "hybrid", "activateNode": "CON", "scene": "Genoese Maona company property claim over physician's log.", "skillCheck": { "stat": "History", "dc": 12, "pass": "physician's professional notes distinction upheld", "fail": "combat" }, "combat": { "enemies": [{"name": "Factor's Man", "ac": 13, "hp": 22, "count": 2}], "pass": "proceed", "fail": "recovered" } },
+    { "act_id": "HAV_004_act5", "location": "WM", "type": "skill_check", "activateNode": "WM", "scene": "Sweelinck creates Medical Records — Expedition Cost Registers: Complete Accounting.", "skillCheck": { "stat": "History", "dc": 11, "pass": "complete provenance; M.T. noted", "fail": "shorter record" }, "takeItem": { "id": "corsair_wound_log" } }
+  ]
+}
+```
+
+*HAV-04 complete. 2026-06-02.*
+
+---
+
+## §HAV-05 — Vignette Cycle 5: "The Dead Man's Bluff"
+
+### Themes avoided
+HAV-01 through HAV-04 themes. AMS-05: the closed file / formally filed but not transmitted. FCO: suppression / the document that proves something happened. MLA: the defective document as evidence. BEY: the text declared inauthentic. KYA: the legal custom of uncertain origin. IST: the partisan account as preservation.
+
+**Declared theme — Cycle 5:** The appearance of cancellation is not the same as actual nullification. The document with the dissolution stamp across its face still carries its original authority for every act that was performed under it before the stamp was applied. The dead letter lives for its past. The archive receives the document that is simultaneously void and still operative.
+
+### TOKEN: "The Dissolved Company Commission"
+
+*The Dissolved Company Commission · rolled parchment, dissolution stamp across face · in the Venetian Factor's hands · Famagusta factor's office*
+
+An old parchment commission, issued in 1358 by the Meridionale Corsair Company (Venice), authorizing seizures in the eastern Mediterranean under specified conditions. The commission is marked across the face with a dissolution stamp in red ink — "COMPAGNIA SCIOLTA 1362" — and the original company seal is marked through with three red lines. The dissolution stamp was applied after the company was formally wound up in 1362. But the 1361 seizure of the merchant vessel *Kyria Eleni* was performed under this commission before the dissolution. The seizure's validity is the subject of a new legal claim by the heirs of the seized captain, brought in 1366. The commission is the only documentary evidence that the seizure was authorized at the time of its execution. It appears dead. It is not.
+
+**Token mechanics:**
+- `id`: "dissolved_commission"
+- `name`: "The Dissolved Company Commission"
+- `description`: "Old parchment commission, Meridionale Corsair Company, 1358. Dissolution stamp in red ink across face: 'COMPAGNIA SCIOLTA 1362.' Original seal marked through with three red lines. 1361 seizure performed under this commission before dissolution. Text and authorized signature fully legible beneath the stamps."
+- `grant_act`: 1
+- `take_act`: 5
+- `check_acts`: [2, 3, 4]
+
+### Nodes
+
+**Existing nodes used:** FAM (Famagusta), VEN (Venice), WM (Weimar). No new nodes.
+
+### Act I — Famagusta (FAM): The Venetian Factor's Office
+
+*The Dissolved Company Commission · rolled, sealed in a leather tube · in the Factor Alvise's hands · Famagusta harbor quarter*
+
+A Venetian factor's office in Famagusta: the smell of spices, silk, and the specific quality of a city where everything passes through. Alvise di Candia — experienced, careful with old documents, aware of the legal situation — hands over the leather tube. Inside: the commission, rolled with the dissolution stamp facing out. He has a covering letter for Girolamo Barbaro, the Venetian jurist in Venice who has been retained to defend the original captain's estate against the heirs' claim.
+
+"The dissolution stamp is real," Alvise says. "The company was dissolved. But the commission it issued in 1358 authorized the 1361 seizure before the dissolution. The question Girolamo is working on is whether the stamp voids the 1361 act retroactively. I believe it does not. A dead company cannot unmake what a live company did." He pauses. "The document looks dead. It is very much alive for the purpose it was used."
+
+**Skill check — History DC 11** (know enough about Venetian commercial law to understand the distinction between prospective nullification and retroactive voiding; understand why the dissolution stamp, which was designed to end future operations, cannot logically apply to completed past acts):
+- *Pass:* Fighter enters this transit with the legal argument correctly framed; later at Act III, this allows them to contribute to Girolamo's analysis.
+- *Fail:* Fighter carries without the legal context.
+
+**Grant item:** `dissolved_commission`
+
+**Act type:** `skill_check`
+
+```json
+{
+  "act_id": "HAV_005_act1",
+  "location": "FAM",
+  "type": "skill_check",
+  "activateNode": "FAM",
+  "scene": "Factor Alvise's office; dissolved commission for Venetian jurist; prospective vs. retroactive nullification.",
+  "skillCheck": { "stat": "History", "dc": 11, "pass": "fighter understands prospective/retroactive distinction; prepared for Act III", "fail": "carries without legal context" },
+  "grantItem": { "id": "dissolved_commission", "name": "The Dissolved Company Commission", "description": "Old parchment, Meridionale Corsair Company, 1358. Dissolution stamp across face. Text fully legible. Dead for future acts; alive for the 1361 seizure." }
+}
+```
+
+### Act II — Mediterranean Crossing (Road/Sea): The Heir's Agent
+
+*The Dissolved Company Commission · in leather tube · with the Fighter · sea passage, Mediterranean*
+
+A ship carrying a Greek merchant's agent — Konstantinos Palaiokastritas, representing the heirs of Captain Nikolaos of the *Kyria Eleni*. He has been waiting at a Famagusta stopover specifically for this commission. His clients want it destroyed; a document that appears void and is held by no one is better for their case than a document that appears void but is held by the defending jurist. His offer is substantial. He is professionally calm.
+
+"The stamp makes it void," he says. "Everyone can see that. I am simply asking that it not reach Venice in a form where someone clever can argue otherwise. Once it reaches the jurist, the argument will take three years and cost everyone money." He is not wrong about the three years.
+
+**Hybrid — Persuasion DC 12** (decline the offer; argue that the commission's legal status is exactly the question the Venetian courts need to decide, and that the carrier's role is to deliver evidence, not to resolve the case by suppressing it):
+- *Pass:* Konstantinos withdraws; he will prepare a parallel legal strategy.
+- *Fail → Combat:* Two of Konstantinos's hired hands (2× AC 13, HP 22) attempt to take the tube. Win: proceed.
+
+**Act type:** `hybrid`
+
+```json
+{
+  "act_id": "HAV_005_act2",
+  "location": "Road",
+  "type": "hybrid",
+  "activateNode": "FAM",
+  "scene": "Heirs' agent Konstantinos wants the commission destroyed; carrier's role as evidence deliverer, not adjudicator.",
+  "skillCheck": { "stat": "Persuasion", "dc": 12, "pass": "Konstantinos withdraws; prepares parallel strategy", "fail": "combat" },
+  "combat": { "enemies": [{"name": "Hired Hand", "ac": 13, "hp": 22, "count": 2}], "pass": "proceed; tube intact", "fail": "tube recovered" }
+}
+```
+
+### Act III — Venice (VEN): Girolamo Barbaro's Study
+
+*The Dissolved Company Commission · delivered · being examined · with Girolamo Barbaro · Venetian jurist's study*
+
+A Venetian jurist's study near the Rialto: law books, commission registers, the smell of old parchment and canal water. Girolamo Barbaro — lean, precise, the kind of lawyer who enjoys a genuinely interesting problem — takes the commission out of the tube and examines it for a long time. He examines the dissolution stamp. He reads the original commission text through it.
+
+"The stamp was designed to prevent future seizures," he says. "It was applied prospectively. The text of the dissolution decree I have here says 'all future operations are void.' The 1361 seizure was not a future operation at the time of dissolution — it was a completed past act." He sets it down. "This is good. I think we win. But the problem is —" he taps the stamp — "it looks void. Every judge who sees this in court will see the stamp before they see the argument. I need the commission to go to an archive that will hold it as evidence in its present condition — dissolution stamp, original text, both legible — without the stamp's appearance being used to move it to the 'voided documents' file before the case is heard."
+
+He decides the commission should go to Weimar after he has made a notarized copy for the Venice case.
+
+*If fighter knows the legal context from Act I:* Fighter and Barbaro discuss the distinction precisely; Barbaro's case note includes the fighter's framing of prospective vs. retroactive nullification as a structural point.
+
+**Skill check — History DC 12** (cite a specific Venetian legal precedent for a completed act surviving the dissolution of the authorizing entity; know enough about Venetian commercial law to give Barbaro the case that parallels the Meridionale situation):
+- *Pass:* Barbaro notes the precedent; his covering letter for Sweelinck includes the parallel case as context.
+- *Fail:* Barbaro sends the commission to Weimar with a shorter covering letter.
+
+**Check pass flag:** `venetian_precedent_cited`
+
+**Act type:** `skill_check`
+
+```json
+{
+  "act_id": "HAV_005_act3",
+  "location": "VEN",
+  "type": "skill_check",
+  "activateNode": "VEN",
+  "scene": "Girolamo Barbaro examines the commission; identifies the prospective vs. retroactive problem; routes original to Weimar.",
+  "skillCheck": { "stat": "History", "dc": 12, "pass": "fighter cites parallel Venetian precedent; Barbaro's letter includes it; flag set", "fail": "shorter letter; precedent not cited" },
+  "checkPassFlag": "venetian_precedent_cited"
+}
+```
+
+### Act IV — Road North from Venice (Road): The Company's Old Administrator
+
+*The Dissolved Company Commission · in courier package · with the Fighter · road north from Venice*
+
+An elderly man on the road north of Venice — Francesco Lombardi, who was the administrative secretary of the Meridionale Corsair Company from 1356 to its dissolution. He is retired, traveling to visit a sister in Verona. He recognizes the leather tube format (Meridionale used a specific tube style). He is not hostile — he is curious, and sad.
+
+"I applied that stamp myself," he says. "I was the last person in the company. Fourteen months after everyone else had left — I was finishing the accounts." He pauses. "I didn't know about the 1361 seizure when I applied the stamp. The records had been moved already." He offers to write a deposition: that the dissolution stamp was applied without knowledge of the 1361 seizure and without intent to retroactively void completed operations.
+
+His deposition, if taken, would be valuable evidence for Barbaro's case.
+
+**Skill check — Persuasion DC 11** (convince Francesco that his deposition should travel with the commission to the Weimar archive, where it can be attached to the document's record and retrieved when the Venice case requires it):
+- *Pass:* Francesco writes the deposition and hands it to the fighter. The commission and the deposition travel together to Weimar.
+- *Fail:* Francesco offers to write to Barbaro directly; his deposition may arrive separately.
+
+**Act type:** `skill_check`
+
+```json
+{
+  "act_id": "HAV_005_act4",
+  "location": "Road",
+  "type": "skill_check",
+  "activateNode": "VEN",
+  "scene": "Francesco Lombardi, old company secretary, meets the fighter; can write deposition about the stamp's intent.",
+  "skillCheck": { "stat": "Persuasion", "dc": 11, "pass": "deposition written; travels with commission", "fail": "Francesco writes to Barbaro separately; deposition may arrive later" }
+}
+```
+
+### Act V — Weimar (WM): The Archive
+
+*The Dissolved Company Commission · returned · Archivus Sweelinck's intake desk · Weimar*
+
+Archivus Sweelinck examines the commission with its dissolution stamp. He reads Barbaro's covering letter. He reads Francesco Lombardi's deposition if present. He reads the original commission text through the dissolution stamp.
+
+"The stamp is visible," he says. "The text is also visible. Both are true. The company was dissolved in 1362; the commission was issued in 1358; the seizure was performed in 1361. The stamp cannot reach back before it existed." He sets the commission down. "Lolonois covered himself in blood and lay among the dead. The search parties moved on. He walked away. The commission with the dissolution stamp across its face has the same quality: it appears dead to anyone who does not read past the stamp. The archive reads past the stamp."
+
+He opens the classification ledger. "Legal Documents — Formally Voided Instruments Surviving for Past Acts." He writes carefully. "First filing: the Meridionale commission, 1358, for the 1361 seizure, filed as evidence-pending-litigation with Barbaro's letter attached."
+
+*If `venetian_precedent_cited`:* "The parallel Barbaro cited is correct," Sweelinck says. "The precedent strengthens the argument. Noted in the record."
+
+**Skill check — History DC 12** (give Sweelinck the full legal chain: Meridionale commission → 1361 seizure → 1362 dissolution → 1366 heirs' claim → Barbaro's case → archive deposit; explain each link):
+- *Pass:* Complete legal chain in the record; the archive entry will be useful when the Venice case cites it.
+- *Fail:* Category created; shorter chain.
+
+**Take item:** `dissolved_commission`
+
+```json
+{
+  "act_id": "HAV_005_act5",
+  "location": "WM",
+  "type": "skill_check",
+  "activateNode": "WM",
+  "scene": "Sweelinck creates Legal Documents — Formally Voided Instruments Surviving for Past Acts; reads past the dissolution stamp.",
+  "skillCheck": { "stat": "History", "dc": 12, "pass": "complete legal chain; archive entry useful for Venice case", "fail": "category created; shorter chain" },
+  "checkPassFlag": "venetian_precedent_cited",
+  "takeItem": { "id": "dissolved_commission" }
+}
+```
+
+### Quest API Stub
+
+```json
+{
+  "quest_id": "HAV_005",
+  "title": "The Dead Man's Bluff",
+  "cycle": 5,
+  "book": "Buccaneers of America (Exquemelin, Williams trans.)",
+  "token": {
+    "id": "dissolved_commission",
+    "name": "The Dissolved Company Commission",
+    "description": "Old parchment, Meridionale Corsair Company, 1358. Dissolution stamp in red across face. Original text and authorized signature fully legible beneath the stamp. Dead for future acts; alive for the 1361 seizure."
+  },
+  "route": "FAM → VEN → WM",
+  "theme": "The appearance of cancellation is not actual nullification; the dead letter lives for its past; the dissolution stamp cannot reach back before it existed; the archive reads past the stamp",
+  "archive_category": "Legal Documents — Formally Voided Instruments Surviving for Past Acts",
+  "acts": [
+    { "act_id": "HAV_005_act1", "location": "FAM", "type": "skill_check", "activateNode": "FAM", "scene": "Factor Alvise; dissolved commission for Venice jurist; prospective vs. retroactive nullification.", "skillCheck": { "stat": "History", "dc": 11, "pass": "legal distinction understood; prepared for Act III", "fail": "carries without context" }, "grantItem": { "id": "dissolved_commission", "name": "The Dissolved Company Commission", "description": "Old parchment, dissolution stamp across face. Text legible. Dead for future; alive for past." } },
+    { "act_id": "HAV_005_act2", "location": "Road", "type": "hybrid", "activateNode": "FAM", "scene": "Heir's agent Konstantinos wants commission destroyed.", "skillCheck": { "stat": "Persuasion", "dc": 12, "pass": "Konstantinos withdraws", "fail": "combat" }, "combat": { "enemies": [{"name": "Hired Hand", "ac": 13, "hp": 22, "count": 2}], "pass": "proceed", "fail": "recovered" } },
+    { "act_id": "HAV_005_act3", "location": "VEN", "type": "skill_check", "activateNode": "VEN", "scene": "Barbaro identifies prospective vs. retroactive problem; routes to Weimar.", "skillCheck": { "stat": "History", "dc": 12, "pass": "parallel precedent cited; flag set", "fail": "shorter letter" }, "checkPassFlag": "venetian_precedent_cited" },
+    { "act_id": "HAV_005_act4", "location": "Road", "type": "skill_check", "activateNode": "VEN", "scene": "Old company secretary Francesco offers deposition about the stamp's intent.", "skillCheck": { "stat": "Persuasion", "dc": 11, "pass": "deposition written; travels with commission", "fail": "Francesco writes to Barbaro separately" } },
+    { "act_id": "HAV_005_act5", "location": "WM", "type": "skill_check", "activateNode": "WM", "scene": "Sweelinck creates Legal Documents — Formally Voided Instruments Surviving for Past Acts.", "skillCheck": { "stat": "History", "dc": 12, "pass": "complete legal chain", "fail": "shorter chain" }, "takeItem": { "id": "dissolved_commission" } }
+  ]
+}
+```
+
+*HAV-05 complete. 2026-06-02.*
+
+---
+
+## §HAV-06 — Vignette Cycle 6: "The Eyewitness in the Middle"
+
+### Themes avoided
+HAV-01 through HAV-05 themes. HAV-04: surgeon's log as expedition cost register. AMS-04: handwriting as testimony / expert witness. IST-01: partisan account as preservation / bias as preservation mechanism. IST-02: intelligence product as document. NWI-02: operational log vs. literary account. WAW-06: Peter's deposition / the witness at the periphery.
+
+**Declared theme — Cycle 6:** The witness who was present but not responsible sees a version of events that neither victor nor victim can produce. The barber-surgeon's account cannot be dismissed as advocacy because he had nothing to gain from the outcome and nothing to lose from telling the truth. The archive receives the only firsthand account that is free of institutional interest.
+
+### TOKEN: "The Agallias Journals"
+
+*The Agallias Journals · three vellum volumes tied together · in Demetrios Agallias's hands · Rhodes harbor district*
+
+Three vellum-bound volumes, tied together with a cord, in a physician's hand throughout: Demetrios Agallias's journal of three seasons of service (1364–1366) as barber-surgeon on the Rhodian corsair vessel *Archangelos*. The first two volumes are medical: dates, wounds, treatments, prognoses, outcomes, names in full (not initials). The third volume begins as medical and becomes something else: in the margins of the case entries, from month three onward, there are observations. Not about medicine. About what was happening on the ship while he was treating the wounded. Who gave which orders. What was said. When men refused. When men couldn't refuse. Not written as testimony. Written to remember. The handwriting in the margins is smaller and more careful than the medical entries — the handwriting of a man making sure not to be seen writing.
+
+**Token mechanics:**
+- `id`: "agallias_journals"
+- `name`: "The Agallias Journals"
+- `description`: "Three vellum journals: volumes 1–2 are medical records (full names, wounds, treatments). Volume 3 begins as medical and transitions to margin observations of shipboard decisions and orders — not written as testimony, written to remember. The marginal handwriting is smaller, more careful. All three must travel together."
+- `grant_act`: 1
+- `take_act`: 5
+- `check_acts`: [2, 3, 4]
+
+### Nodes
+
+**Existing nodes used:** RHD (Rhodes), RGS (Ragusa), WM (Weimar). No new nodes.
+
+### Act I — Rhodes (RHD): Agallias's House
+
+*The Agallias Journals · tied together, just handed over · in Demetrios Agallias's hands · harbor district, Rhodes*
+
+A physician's house in the Rhodes harbor district: the smell of medicinal oils and old leather. Demetrios Agallias — a compact Greek, late forties, still with the sailor's habit of moving quietly — hands over the journals without ceremony. The Hospitallers' judicial committee has called him to testify, but he has decided to give the original journals to the archive instead. His testimony can be oral; the journals are not his to hold if they are more useful as a permanent record.
+
+"I was not in command," he says. "I was not crew. I treated wounds. I couldn't refuse to treat wounds — that's not how medicine works. What I saw, I saw from that position. Nobody was trying to impress me and nobody remembered to silence me." He pauses. "The third volume is different from the first two. You will see that."
+
+**Skill check — Insight DC 11** (notice the smaller, more careful marginal handwriting in volume 3 before Agallias finishes explaining; understand that the transition from medical notes to margin observations represents a deliberate choice to record something he knew was dangerous to record):
+- *Pass:* Fighter understands immediately. Agallias notes it. "You read handwriting well." The fighter will be able to explain the third volume's character to Sweelinck precisely.
+- *Fail:* Fighter understands after Agallias explains.
+
+**Check pass flag:** `margin_handwriting_understood`
+
+**Grant item:** `agallias_journals`
+
+**Act type:** `skill_check`
+
+```json
+{
+  "act_id": "HAV_006_act1",
+  "location": "RHD",
+  "type": "skill_check",
+  "activateNode": "RHD",
+  "scene": "Agallias hands over the journals; explains the transition in volume 3; fighter reads handwriting before he explains.",
+  "skillCheck": { "stat": "Insight", "dc": 11, "pass": "fighter reads the transition; flag set; Agallias notes it", "fail": "understood after explanation" },
+  "checkPassFlag": "margin_handwriting_understood",
+  "grantItem": { "id": "agallias_journals", "name": "The Agallias Journals", "description": "Three vellum volumes: medical records (vol. 1-2), medical + margin observations of ship operations (vol. 3). Smaller handwriting in margins. Not testimony; written to remember." }
+}
+```
+
+### Act II — Road from Rhodes to Ragusa (Road/Sea): The Hospitallers' Recall
+
+*The Agallias Journals · in courier package · with the Fighter · sea passage from Rhodes*
+
+A Hospitaller courier ship catches up with the fighter's vessel on the sea passage from Rhodes toward Ragusa. A Knight's representative is aboard — Fra Nicola di Genova, attached to the judicial committee. He carries a formal recall: the Hospitallers' committee has determined that the Agallias journals are relevant evidence in the ongoing judicial review, and that Agallias is required to produce them at the committee's session rather than deposit them privately. The recall is legally valid within Hospitaller jurisdiction — which ends at the edge of their maritime authority.
+
+"The journals are medical records," the fighter can argue. Or: "The committee can subpoena Agallias directly." Or: "The fighter's jurisdiction ends with their commission."
+
+**Hybrid — Persuasion DC 13** (argue that the Weimar archive deposit is a prior legal commitment and that the committee's recall cannot override a completed commission transfer; that Agallias has given the journals over and no longer holds them; that the committee may request access through the archive's procedures):
+- *Pass:* Fra Nicola withdraws under legal uncertainty; he will consult with the committee.
+- *Fail → Combat:* Hospitaller lay brothers (2× AC 13, HP 26) attempt to board and take the package. Win: proceed.
+
+**Act type:** `hybrid`
+
+```json
+{
+  "act_id": "HAV_006_act2",
+  "location": "Road",
+  "type": "hybrid",
+  "activateNode": "RHD",
+  "scene": "Hospitaller judicial recall; Fra Nicola di Genova; committee's subpoena vs. prior commission transfer.",
+  "skillCheck": { "stat": "Persuasion", "dc": 13, "pass": "Fra Nicola withdraws under legal uncertainty; will consult committee", "fail": "combat" },
+  "combat": { "enemies": [{"name": "Hospitaller Lay Brother", "ac": 13, "hp": 26, "count": 2}], "pass": "proceed; journals intact", "fail": "journals seized; fighter recovers them at Ragusa" }
+}
+```
+
+### Act III — Ragusa (RGS): The Named Parties' Response
+
+*The Agallias Journals · in courier package · with the Fighter · Ragusa waystation*
+
+The fighter stops in Ragusa for a night. Word has traveled ahead — one of the men named in volumes 1 and 2 (Ser Luca Zanetti, now a Ragusan merchant of good standing) has learned his full name appears in the corsair wound log. He is not in hiding; his corsair service was before Ragusa's civil administration. But his name in a permanent archive is a different matter. He is not threatening. He is frightened.
+
+He asks the fighter to replace his name with initials in volumes 1 and 2. "Just the two medical volumes. I am not asking you to touch the third."
+
+The request is practically small. It would compromise the integrity of the record in the medical volumes.
+
+**Skill check — Persuasion DC 12** (explain to Zanetti that the archive holds records with full names precisely because the practice of initials-only reduces a complete account to an incomplete one; that his name in the archive is not the same as his name in a public document; that the archive's holdings are not indexed by name for public access; that the cure is not worth the wound to the record):
+- *Pass:* Zanetti accepts; he will write a private note to the archive explaining his concern, which will be filed alongside his name entry without altering it.
+- *Fail:* Zanetti does not accept; the fighter must decline his request anyway, but Zanetti's concern is not resolved.
+
+**Act type:** `skill_check`
+
+```json
+{
+  "act_id": "HAV_006_act3",
+  "location": "RGS",
+  "type": "skill_check",
+  "activateNode": "RGS",
+  "scene": "Ser Luca Zanetti asks for his name replaced with initials in the medical volumes; fighter explains archive integrity vs. public access distinction.",
+  "skillCheck": { "stat": "Persuasion", "dc": 12, "pass": "Zanetti accepts; writes private note for archive; record unaltered", "fail": "Zanetti not persuaded; fighter declines anyway; concern unresolved" }
+}
+```
+
+### Act IV — Road North (Road): Hired Recovery
+
+*The Agallias Journals · in courier package · with the Fighter · road north from Ragusa*
+
+Three hired riders on the road north — their employer is not identified; their commission is to recover the journals. They are not Hospitallers and not Zanetti's men; the most likely explanation is one of the men mentioned in the third volume's margin observations. The specific entry in question (the fighter may or may not know which) is a description of an order given during the *Archangelos*'s last major operation in 1366 — an order that, if examined by the Hospitallers' committee, would implicate someone currently in good standing with the Ragusan commercial community.
+
+**Combat — 3× AC 13, HP 25** (hired riders; competent but not Hospitallers):
+- *Win:* Proceed; journals intact.
+- *Lose:* Journals seized; fighter recovers them at the next village waystation at dawn — the riders have made camp and are careless.
+
+**Act type:** `combat`
+
+```json
+{
+  "act_id": "HAV_006_act4",
+  "location": "Road",
+  "type": "combat",
+  "activateNode": "RGS",
+  "scene": "Three hired riders on the north road; unknown employer; protecting a named entry in volume 3's margin observations.",
+  "combat": { "enemies": [{"name": "Hired Rider", "ac": 13, "hp": 25, "count": 3}], "pass": "proceed; journals intact", "fail": "journals seized at camp; recovered at dawn" }
+}
+```
+
+### Act V — Weimar (WM): The Archive
+
+*The Agallias Journals · returned · Archivus Sweelinck's intake desk · Weimar*
+
+Archivus Sweelinck takes the three volumes and places them on the intake table. He reads the first two volumes quickly — competent physician's work, clear records, full names. Then he opens the third volume and reads slowly, including the margin observations.
+
+"He was not in command," Sweelinck says, finally. "He was not in the chain of decisions. Nobody was trying to impress him. Nobody remembered to silence him. The first two volumes are the most reliable wound records I have seen from maritime service — because full names are used, which most physicians avoid. The third volume is something else." He reads a margin observation. "He knew what he was doing when he wrote this. The smaller handwriting." He closes the volume. "The witness who had nothing to gain from the outcome is the only kind of witness whose account cannot be dismissed as advocacy. He saw what he saw. He treated what he treated. He wrote what he wrote."
+
+He opens the classification ledger. "Testimony Records — Firsthand Accounts Without Institutional Interest." He writes for a long time. "First filing: the Agallias journals, three volumes, *Archangelos* service 1364–1366. All three volumes filed together, all names unaltered."
+
+*If `margin_handwriting_understood`:* "The fighter read the smaller handwriting before Agallias explained it," Sweelinck notes. "That observation is in the intake record."
+
+**Skill check — History DC 11** (give Sweelinck the full context: the Hospitallers' recall attempt, Zanetti's request, the hired recovery attempt; explain what each party was trying to protect and why the journals traveled to the archive despite three separate challenges):
+- *Pass:* Complete intake record; the challenges are documented as evidence of the journals' significance.
+- *Fail:* Category created; challenges noted briefly.
+
+**Take item:** `agallias_journals`
+
+```json
+{
+  "act_id": "HAV_006_act5",
+  "location": "WM",
+  "type": "skill_check",
+  "activateNode": "WM",
+  "scene": "Sweelinck reads all three volumes; creates Testimony Records — Firsthand Accounts Without Institutional Interest; documents the three challenges.",
+  "skillCheck": { "stat": "History", "dc": 11, "pass": "complete record; challenges documented as significance evidence", "fail": "challenges noted briefly" },
+  "checkPassFlag": "margin_handwriting_understood",
+  "takeItem": { "id": "agallias_journals" }
+}
+```
+
+### Quest API Stub
+
+```json
+{
+  "quest_id": "HAV_006",
+  "title": "The Eyewitness in the Middle",
+  "cycle": 6,
+  "book": "Buccaneers of America (Exquemelin, Williams trans.)",
+  "token": {
+    "id": "agallias_journals",
+    "name": "The Agallias Journals",
+    "description": "Three vellum volumes: medical records (1-2), medical plus margin observations of ship operations (3). Smaller handwriting in vol. 3 margins. Not testimony; written to remember. All three filed together, names unaltered."
+  },
+  "route": "RHD → RGS → WM",
+  "theme": "The witness who was present but not responsible sees a different version than victor or victim; the barber-surgeon's account cannot be dismissed as advocacy; the archive receives the only firsthand account free of institutional interest",
+  "archive_category": "Testimony Records — Firsthand Accounts Without Institutional Interest",
+  "acts": [
+    { "act_id": "HAV_006_act1", "location": "RHD", "type": "skill_check", "activateNode": "RHD", "scene": "Agallias hands over the journals; smaller handwriting in vol. 3 margins; fighter reads it before he explains.", "skillCheck": { "stat": "Insight", "dc": 11, "pass": "fighter reads the transition independently; flag set", "fail": "understood after explanation" }, "checkPassFlag": "margin_handwriting_understood", "grantItem": { "id": "agallias_journals", "name": "The Agallias Journals", "description": "Three vellum volumes. Vol. 3 margin observations in smaller careful hand." } },
+    { "act_id": "HAV_006_act2", "location": "Road", "type": "hybrid", "activateNode": "RHD", "scene": "Hospitaller judicial recall; Fra Nicola di Genova; prior commission transfer argument.", "skillCheck": { "stat": "Persuasion", "dc": 13, "pass": "Fra Nicola withdraws under legal uncertainty", "fail": "combat" }, "combat": { "enemies": [{"name": "Hospitaller Lay Brother", "ac": 13, "hp": 26, "count": 2}], "pass": "proceed", "fail": "journals recovered at Ragusa" } },
+    { "act_id": "HAV_006_act3", "location": "RGS", "type": "skill_check", "activateNode": "RGS", "scene": "Ser Luca Zanetti wants his name replaced with initials; archive integrity argument.", "skillCheck": { "stat": "Persuasion", "dc": 12, "pass": "Zanetti accepts; private note filed; record unaltered", "fail": "declined anyway; concern unresolved" } },
+    { "act_id": "HAV_006_act4", "location": "Road", "type": "combat", "activateNode": "RGS", "scene": "Three hired riders protecting a named entry in vol. 3's margin observations.", "combat": { "enemies": [{"name": "Hired Rider", "ac": 13, "hp": 25, "count": 3}], "pass": "proceed", "fail": "journals recovered at dawn" } },
+    { "act_id": "HAV_006_act5", "location": "WM", "type": "skill_check", "activateNode": "WM", "scene": "Sweelinck creates Testimony Records — Firsthand Accounts Without Institutional Interest; three challenges documented.", "skillCheck": { "stat": "History", "dc": 11, "pass": "complete record; challenges as significance evidence", "fail": "challenges noted briefly" }, "takeItem": { "id": "agallias_journals" } }
+  ]
+}
+```
+
+*HAV-06 complete. 2026-06-02.*

@@ -252,7 +252,7 @@ Next books to process (in approximate priority order):
 | HTY | Mahabharata | 83 | **SEEDS COMPLETE 2026-06-02 — HTY-01–06 all vignettes done** |
 | ADA | Ramayana | 2339 | **Processed 2026-05-31/06-01 — COMPLETE. ADA-01 spec complete (The Curlew's Grief); ADA-02–48 seeds. All 12 parts fully read (Parts 11–12 are scholarly apparatus only). See ADA-ramayana.md.** |
 | AMS | Tale of Genji | 435 | **SEEDS COMPLETE 2026-06-02 — AMS-01–07 all vignettes done** |
-| HAV | Buccaneers of America | 247 | **Processed 2026-05-31 — HAV-01 spec complete (The Articles); HAV-02–06 seeds. Both parts read; full arc recovered. See HAV-buccaneers-of-america.md.** |
+| HAV | Buccaneers of America | 247 | **SEEDS COMPLETE 2026-06-02 — HAV-01–06 all vignettes done** |
 | CLJ | Dracula | 869 | **Processed 2026-05-31/06-01 — COMPLETE. CLJ-01 spec complete (The Compiled Account); CLJ-02–09 seeds. ALL 5 PARTS FULLY READ (Chapters I–XXVII + epilogue). New seeds CLJ-07 (Haarlem Garlic), CLJ-08 (Van Helsing's Contingency), CLJ-09 (The Transcript). See CLJ-dracula.md.** |
 
 ---
