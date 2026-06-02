@@ -102,7 +102,7 @@ Acte, Nero's freedwoman companion, arranged his burial when his retinue fled. Sh
 ### §WAW-06 — Peter's Deposition at Antioch (Chapters 30–35)
 Before coming to Rome, Peter was in Antioch. The early Christian community there kept written records of his teaching, including his account of the Caesarea Philippi commission. A fragment of the Antioch community record — the oldest written version of the commission — survives in a Syrian monastery. Fighter escorts it west.
 
-### §WAW-07 — The Mile-Marker Account (Chapter 69)
+### §WAW-07 — The Mile-Marker Account (Chapter 69) ✓ DONE 2026-06-02
 A Roman road maintenance official logged an incident on the Appian Way: an elderly man seen walking north in distress, then turning south again, weeping, saying he had met a vision of a condemned man walking north toward the city. The log is a standard administrative document; it is the only non-Christian source that mentions anyone behaving unusually on the Appian Way that morning. Fighter escorts it.
 
 ---

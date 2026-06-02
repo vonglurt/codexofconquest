@@ -691,3 +691,197 @@ The page enters the Weimar archive under Administrative Records of Uninterpreted
 ### New Node Proposals
 
 No new nodes required. Route uses existing NAP (Naples), BLO (Bologna), WM (Weimar).
+
+---
+
+## Cycle 3 — Angle: *The Mile-Marker Account — The Secular Witness*
+
+**What this angle reveals that prior cycles missed:** Cycle 1 (The Arbiter's Farewell) showed the final act of a man who could not prevent the burning. Cycle 2 (The Arena Register) showed the administrative record that captured what it could not name. Cycle 3 enters the one document in the entire Quo Vadis world that has no stake in whether the central event was real: the road maintenance log. **New theme:** *The secular record of an uncategorizable event; the document's entire value is that the writer did not know what he saw; the moment Fra Simone publishes it as Christian evidence it becomes partisan and loses the thing that makes it irreplaceable.*
+
+---
+
+### Five-Act Vignette Play
+
+*TOKEN: The Via Appia Incident Log Entry — a single folio extracted from a Roman administrative collection, containing one log entry for the morning a road official encountered an elderly man walking north in distress on the Appian Way. Standard administrative Latin, professional notation. The man turned south again, weeping, saying he had met a vision of a condemned man walking toward the city. The official's final notation: "Resolved without action." The writer did not know what he was recording. The document is not a Christian source. That is the only thing that makes it worth anything.*
+
+---
+
+**ACT I — The Two Scholars**
+
+*The Log Entry, in a collection of two hundred administrative folios, in a catacomb archive off the Via Latina · a Dominican scholar named Fra Bernardo, who found it; a Franciscan scholar named Fra Simone, who recognized it · Rome, late afternoon*
+
+Fra Bernardo found the collection three months ago while cataloguing catacomb library holdings. He did not recognize the entry's significance — he is a careful archivist, not a classicist. Fra Simone visited four weeks ago, read the entry, and has been composing a letter announcing the find to the Franciscan scholarly network. Fra Bernardo has been trying to stop him.
+
+The fighter arrives with a Weimar commission. Fra Bernardo wants the folio quietly archived before Fra Simone publishes. Fra Simone wants to announce it publicly as non-Christian confirmation of the Quo Vadis tradition. He believes this will strengthen the tradition's credibility. He is probably right. He is definitely wrong about what it will do to the document.
+
+*The fighter understands: once Fra Simone's letter circulates, the folio becomes evidence in a theological argument. The argument will consume the document. The archive is the only place that receives it before the argument does.*
+
+---
+
+**ACT II — Fra Simone's Letter**
+
+*The Log Entry, authorized for extraction, in the fighter's satchel · the Dominican house courtyard, next morning · a letter to be stopped or released*
+
+Fra Simone drafted his letter last night and gave it to the Dominican house courier at dawn. The courier has not yet left — he is in the courtyard loading his bag. Fra Simone's letter names the catacomb archive, the collection, the date of the entry, and what the entry describes. Once it is sent, the folio's existence is public.
+
+Fra Simone is watching from the second-floor window. He is not trying to sabotage the archive commission — he believes both things can be true: the archive receives the folio, and the scholarly world learns of it. He is wrong about the order. The archive must receive it first.
+
+*The fighter has one conversation with the courier before the bag is closed.*
+
+---
+
+**ACT III — Salomon's Valuation**
+
+*The Log Entry, in the satchel, past the city gates · on the Via Flaminia heading north, afternoon · a Jewish cloth merchant named Salomon traveling to Bologna*
+
+Salomon heard about the document from a colleague who had heard it from Fra Simone's letter, which reached the Jewish community in Rome before the courier left the courtyard — news travels oddly in Rome. He is not hostile and not particularly interested in the theology. He says: "The road maintenance official did not know what he saw. That is the document's only value." He says: "The moment it is filed as Christian evidence, it becomes what every partisan needs it to be. The only archivist who should receive this is someone who does not need it to be true."
+
+He pauses. "Does Weimar need it to be true?"
+
+*The fighter answers. The answer matters more than Salomon thinks.*
+
+---
+
+**ACT IV — The Wayside Marker**
+
+*The Log Entry, in the satchel, between the second and third mile markers · a stone marker on the Appian Way, tended by an old woman who lives in the farmhouse beside it · late afternoon, October*
+
+The marker is unremarkable — a standing stone, a cross scratched into the face, thirty years of oil rubbed into the scratch by the woman's thumb. She has no idea whether the stone marks anything of significance. She tends it because her mother told her to tend it.
+
+She offers the fighter water. While the fighter drinks she looks at the satchel.
+
+She does not ask what is inside. She does not know to ask. She is simply on the road the official walked and the elderly man walked and the vision walked, tending a mark she inherited.
+
+*The fighter looks at the second mile marker. The log entry is between the second and the third. The fighter is standing at the place the document describes.*
+
+---
+
+**ACT V — Administrative Record**
+
+*The Log Entry, delivered · on the Weimar archive intake desk · morning*
+
+The archivist reads the entry. He reads it twice.
+
+"Fra Simone's letter arrived here four days ago," he says. "Before you." He sets the letter beside the folio. "He classifies this as Christian primary evidence. He is not wrong that it corroborates the tradition." He opens two folders: *Christian Primary Sources* and *Roman Administrative Records — Incident Logs.* "Which folder does this belong in?"
+
+He is not asking rhetorically. He knows the argument the fighter is about to make. He wants to hear it said correctly before he writes the category.
+
+*The fighter makes the argument. The document belongs in the folder where it arrived: a road maintenance official's log, standard notation, the date, the incident, resolved without action. The value of the document is that the writer had no category for what he saw. The archive must not supply that category for him.*
+
+---
+
+### Quest API Stub — WAW-07
+
+```
+missionAccept: "A catacomb archive in Rome holds a road maintenance log entry from the Appian
+  Way — the only non-Christian source that mentions anyone behaving unusually on that road
+  the morning Peter turned back. A Franciscan scholar has written a letter announcing the
+  find. Carry the entry to Weimar before the theological argument consumes it."
+
+Act I — The Two Scholars
+activateNode: ROM
+type: skill_check
+scene: "A catacomb archive off the Via Latina, late afternoon. Fra Bernardo found the
+  collection three months ago; Fra Simone recognized the entry four weeks ago and is
+  composing a public announcement letter. Fra Bernardo wants it quietly extracted before
+  the letter is sent. Both scholars are present. Fra Simone believes announcement and
+  archive custody can coexist. He is wrong about the order."
+prompt: "Persuasion DC 13: Convince Fra Simone to hold his letter until after the archive
+  receives the folio. The announcement changes what the document is; the archive must
+  receive it first, as what it was — a road log."
+failText: "Fra Simone says: 'The two events are compatible.' He is preparing to seal the
+  letter. Come back with the argument about what happens to a document the moment it
+  becomes evidence in an argument. (retry)"
+successText: "Fra Simone pauses. He holds the letter unsealed. 'After the archive confirms
+  receipt — then I publish.' Fra Bernardo extracts the folio and signs the authorization.
+  You receive Fra Bernardo's Extraction Authorization."
+grantItem: "Fra Bernardo's Extraction Authorization"
+activateMissionBit: waw07Act1Active
+checkPassFlag: waw07Act1Passed
+
+Act II — Fra Simone's Letter
+activateNode: ROM
+type: skill_check
+scene: "The Dominican house courtyard, dawn. Fra Simone's letter is in the courier's bag,
+  which is not yet closed. The courier is loading his horse. Fra Simone watches from the
+  second-floor window. The letter names the archive, the collection, the date, and what
+  the entry describes. Once sent, the folio's existence is public. You have one conversation
+  with the courier before the bag closes."
+prompt: "Persuasion DC 14: Stop the letter — or replace it with a letter that announces
+  only that a document has been placed in the Weimar archive for authentication, without
+  naming what it is."
+failText: "The courier closes the bag. Fra Simone nods from the window. The letter is
+  already in circulation in a hundred scholarly networks. Come back — the courier stops
+  at the next town for the night. (retry)"
+successText: "The courier opens the bag. Fra Simone comes down from the window. Between
+  the three of you, the letter is rewritten: a document has been placed in the Weimar
+  archive, authentication pending, no further details. The courier accepts the substitution.
+  You receive the Letter Substitution Record."
+grantItem: "Letter Substitution Record"
+checkPassFlag: waw07Act2Passed
+
+Act III — Salomon's Valuation
+activateNode: WM
+type: skill_check
+scene: "The Via Flaminia, afternoon. Salomon, a cloth merchant traveling north, has already
+  heard about the document from Fra Simone's original letter — news travels oddly in Rome.
+  He says: 'The road official did not know what he saw. That is the document's only value.'
+  Then: 'Does Weimar need it to be true?' He is asking whether the archive has a stake in
+  the theology."
+prompt: "Insight DC 12: Answer correctly. The archive does not need it to be true. It needs
+  it to be accurately described. Name the difference."
+failText: "Salomon nods. 'That is the right answer said in the wrong order. Say the archive
+  part first.' He is helping you. Try again with the archive's neutrality stated before
+  anything else. (retry)"
+successText: "You say the archive part first. Salomon writes two sentences on a slip of paper
+  and hands it to you. 'For the archivist. One merchant's professional opinion of the
+  document's value.' You receive Salomon's Valuation Note."
+grantItem: "Salomon's Valuation Note"
+checkPassFlag: waw07Act3Passed
+
+Act IV — The Wayside Marker
+activateNode: WM
+type: skill_check
+scene: "Between the second and third mile markers on the Appian Way, late afternoon. An
+  old woman is rubbing oil into a cross scratched on a standing stone — her mother's marker,
+  inherited, tended for thirty years without knowing why. She offers you water. The log
+  entry in your satchel describes this exact stretch of road. You are standing at the
+  location the document records."
+prompt: "Insight DC 12: Receive this correctly. You are carrying the document of the place
+  where you are standing. Understand what that means before you walk away from the marker."
+failText: "You drink the water and thank her and continue. The moment passed. Look back once
+  before the road turns. (retry — receive it while you are still at the marker)"
+successText: "You stand at the marker until the woman goes back inside. Then you take out
+  your notebook and make a rubbing of the cross in the stone. Not because it is evidence —
+  because you are here. You receive the Wayside Marker Rubbing."
+grantItem: "Wayside Marker Rubbing"
+checkPassFlag: waw07Act4Passed
+
+Act V — Administrative Record
+activateNode: WM
+type: skill_check
+scene: "The Weimar archive intake desk, morning. Fra Simone's substituted letter arrived
+  four days ago — 'a document placed for authentication.' The archivist has been waiting.
+  He reads the entry twice, then opens two folders: Christian Primary Sources and Roman
+  Administrative Records — Incident Logs. He looks at you. 'Which folder?' He knows the
+  argument you are about to make. He wants to hear it said correctly before he writes
+  the category."
+prompt: "Persuasion DC 13: Argue for the administrative folder. The document belongs in
+  the category it arrived in — a road official's log, standard notation. The archive must
+  not supply the category the writer lacked."
+failText: "He nods. 'The Christian sources folder makes it findable to everyone who needs
+  it.' That is the wrong reason to file it there. Come back with the argument about what
+  the document is, not who will find it useful. (retry)"
+successText: "He closes the Christian Sources folder. He writes at the top of a new entry:
+  'Via Appia Incident Log, date of entry, administrative record, standard notation, road
+  official, no identified category at time of writing.' He looks up. 'Filed as what it was.'
+  You receive the Appian Way Administrative Entry."
+grantItem: "Appian Way Administrative Entry"
+takeItem: "The Via Appia Incident Log Entry"
+checkPassFlag: waw07Act5Passed
+activateMissionBit: waw07Complete
+```
+
+---
+
+*WAW-07 complete. 2026-06-02.*

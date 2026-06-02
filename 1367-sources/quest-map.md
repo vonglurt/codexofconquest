@@ -462,6 +462,7 @@ Game cities are canonical. Source-book settings are proposed new nodes.
 | NWI-06 | The Cretan's Account | 3 | SIN → CON → WM | Front-rank view of communal salvation; the shout coming from the front and keeping coming |
 | NWI-03 | Proxenus's Letter | 4 | ORC → ATH → RGS → WM | The invitation is a form of authorship; Proxenus made the Anabasis possible |
 | NWI-05 | The Salmydessus Books | 5 | VAR → CON → WM | Evidence of loss is a primary document; the catalog proves the text existed |
+| WAW-07 | The Mile-Marker Account | 3 | ROM → WM | Secular administrative witness; the road official did not know what he saw |
 
 *When a new quest is written, append its row to the Processed Quests table.*
 *When a new location is used, append its row to the Location Grid.*
