@@ -623,6 +623,242 @@ A medieval Persian scholar, reading a summary of this story, writes a commentary
 
 ---
 
+---
+
+## §ADA-02 — Vignette Cycle 2: "Sita Into the Earth"
+
+### Cycle vs. Cycle — What This Angle Reveals
+
+Cycle 1 ("The Curlew's Grief") took the angle of love becoming form: Valmiki witnessed suffering and verse burst from his mouth — the first sloka, the mother-word of all Indian poetry; grief and verse share a root; the shape of grief becomes the shape of art.
+
+Cycle 2 takes the inverse: love that refuses to take any more forms. Sita proved herself before the Fire God and was certified pure. Rama exiled her again because the people talked. She bore his sons in the forest. When asked to prove herself before the assembly a second time, she refused — not with a speech, not with fire, not with any further performance. She called on the Earth goddess and descended. Cycle 1 was the word that burst from grief. Cycle 2 is the return to silence that refuses to speak again to the same court.
+
+### TOKEN: "The Final Statement"
+
+A single folded folio — a philosophical letter written by Ahmad ibn Tawfiq, a Sufi scholar in Baghdad, addressed to his colleague Maryam al-Basri in Basra, who has been asked to publicly recant a legal opinion she gave years ago: that a woman's fire ordeal certification was sufficient proof of innocence regardless of subsequent public opinion. The letter argues the distinction between justice (the verdict already given by a court with authority) and vindication (performing purity again for an audience that will not be satisfied by any court but their own). Folded once, sealed with earth-red wax, addressed to "Maryam al-Basri, scholar of Basra."
+
+**Token mechanics:**
+- `id`: "final_statement"
+- `name`: "The Final Statement"
+- `description`: "Single folio, Ahmad ibn Tawfiq to Maryam al-Basri: a philosophical letter on the distinction between justice and vindication, arguing that Sita's earth-descent was not defeat but a refusal to perform before a court without authority. Folded once, earth-red wax seal, named addressee."
+- `grant_act`: 1
+- `take_act`: 5
+- `check_acts`: [2, 3, 4]
+
+### Nodes
+
+**New nodes required:**
+- `BAG` — Baghdad Sufi scholar quarter (Jalayirid Baghdad, 1367; center of post-Abbasid Islamic scholarship, Jalayirid control after Il-Khan fragmentation)
+- `BAS` — Basra river city (Tigris delta; connected to Baghdad via river route; trading city with a small but active scholarly community)
+
+**Existing nodes used:**
+- `WM` — Weimar archive
+
+### Route
+
+`BAG` (Baghdad — Ahmad ibn Tawfiq's study) → `BAS` (Basra — Maryam al-Basri's household) → `WM` (Weimar archive)
+
+### Five-Act Vignette Play
+
+**Present tense. Second person. The Final Statement is the grammatical subject of all TOKEN stage directions.**
+
+---
+
+**ACT I — "The Letter That Isn't for the Archive" (Baghdad)**
+
+Ahmad ibn Tawfiq is a small man with an enormous library. He has been writing this letter for three years and only finished it last week. It is for Maryam, not for posterity — he says this directly. He has already told her everything it contains, but she needs it written. She is being asked to appear before a judicial review and publicly recant her opinion about fire ordeal certification. He believes she will hold if she has the argument in front of her; he is not sure she will hold without it.
+
+He hands you the letter. *The Final Statement is sealed with a deep red wax, Maryam's name on the fold.*
+
+"The judge has intercepted my last two letters. She never received them. This one has to reach her."
+
+*Dialogue DC 12 — Insight: Ahmad is not only worried about the letter being intercepted. He is worried Maryam will recant even after she reads it — and he needs to know if you understand that the letter is necessary but not sufficient.*
+
+*On success:* He nods once. "Then you understand why I'm sending a person instead of a courier. Take it to her. Don't tell anyone what it is. Let her read it. The rest is hers."
+
+*On fail:* He hands you the letter without the full context: "Deliver this to Maryam al-Basri in Basra. Don't let it be opened."
+
+*TOKEN granted Act I — letter sealed, addressed, red-wax seal intact.*
+
+---
+
+**ACT II — "The River Road Checkpoint" (Tigris road south of Baghdad)**
+
+A Jalayirid administrative checkpoint at the river road's first inspection post. The officer has a list of persons whose correspondence is subject to examination — scholars under review by Basra's judicial authority are on it. He asks who the letter is addressed to.
+
+*Skill check: Deception DC 12 — provide a false description of the addressee (a family member, a physician, a merchant) rather than naming Maryam al-Basri.*
+
+*On success:* He stamps the exterior fold: *"Private correspondence — personal contents, non-political."* He waves you through. *The Final Statement carries the checkpoint stamp on its outer fold — a third mark on the wax, slightly smudging the corner.*
+
+*On fail:* He holds the letter and sends a dispatch asking the Basra authority to confirm they have no interest. Three days' delay. The letter is returned unsealed (he does not read it — but it is clear someone with authority opened it and closed it again; the wax shows a break and re-press).
+
+*TOKEN check Act II — checkpoint stamp added; wax potentially disturbed on fail.*
+
+---
+
+**ACT III — "What She Does With It" (Basra)**
+
+Maryam al-Basri reads the letter standing in her study. She does not sit down. She reads it twice, sets it on the table, and is quiet for several minutes.
+
+"He's right," she finally says. "I already proved myself to the court that matters. What they're asking for now is a performance. And she didn't perform it."
+
+She takes a fresh sheet and writes a brief note in her own hand: *"Let this letter reach the archive at Weimar. The argument is more important than my case."* She folds the note and tucks it inside the letter's fold. *The Final Statement now carries both the original letter and Maryam's release note — two things in one fold.*
+
+She hands it back to you.
+
+At that moment, a court official knocks. He has a formal summons: appear at the next judicial session in three days, recant or be removed. He sees Fighter. He asks what was just handed over.
+
+*Skill check: Persuasion DC 13 — establish that Fighter is a private courier carrying personal correspondence already delivered; the transaction is complete and the contents are not subject to judicial review.*
+
+*On success:* The official makes a notation in his record and leaves. Fighter exits with both documents.
+
+*On fail:* The official insists on examining the return document. Fighter must leave before he can complete his inspection — he logs "unknown courier, possible correspondence from Ahmad ibn Tawfiq."
+
+*TOKEN check Act III — both documents together; judicial summons witnessed.*
+
+---
+
+**ACT IV — "The Return Road" (River road north from Basra)**
+
+Two men on horseback overtake you on the road. They are the judge's agents, sent when the official's report came in: a courier connected to Ahmad ibn Tawfiq, leaving Basra with correspondence. The letter must not reach Weimar.
+
+*Combat: 2 opponents, AC 13, HP 24 each.*
+
+*The Final Statement — both the letter and Maryam's release note — is intact after the fight.* You search the men: a warrant naming "correspondence from Ahmad ibn Tawfiq" as subject to confiscation. The warrant does not mention Maryam by name.
+
+*TOKEN check Act IV — both documents intact; warrant recovered.*
+
+---
+
+**ACT V — "The First Distinction" (Weimar)**
+
+Archivus Sweelinck reads the letter first, then Maryam's release note. He is quiet for a long time.
+
+"The fire was sufficient. The gods themselves testified. Everything after that was not justice — it was an audience demanding a second performance."
+
+He looks up.
+
+"She was not weak. She was precise. The earth was not defeat. It was her choice of court. The court she chose had jurisdiction; the court that summoned her again did not."
+
+He opens the archive ledger.
+
+"I have no category for this. 'Legal documents' is wrong — it is not a legal brief. 'Philosophical texts' does not capture that it is also the record of a specific case. 'Women's scholarship' is too narrow — it is about justice itself."
+
+He writes: *Documents on the Distinction Between Justice and Vindication — Sita sub-collection, first entry. Provenance: Ahmad ibn Tawfiq (Baghdad) to Maryam al-Basri (Basra), 1367. Released by the addressee for archival preservation.*
+
+"The earth was not her defeat. Let that be the filing note."
+
+*TOKEN taken Act V — both documents received under new classification.*
+
+---
+
+### Theme
+
+**"Justice and vindication are not the same thing; Sita was certified by the Fire God before all the gods and was exiled again because people talked; she refused the second performance not from weakness but because she had already submitted to the court with authority; the earth was her choice of court; the archive creates a new category and its first entry is the letter that explains the distinction."**
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "ADA_002",
+  "title": "Sita Into the Earth",
+  "source": "Ramayana (Griffith verse translation)",
+  "cycle": "ADA",
+  "book": "Ramayana",
+  "source_episode": "Uttarakanda — Sita's second exile, descent into the earth, refusal to prove herself twice",
+  "theme": "Justice and vindication are not the same thing; the earth was her choice of court; the archive creates a new category for the distinction.",
+  "activateNode": "BAG",
+  "token": {
+    "id": "final_statement",
+    "name": "The Final Statement",
+    "description": "Single folio, Ahmad ibn Tawfiq to Maryam al-Basri: philosophical letter on justice vs. vindication, and Sita's earth-descent as a choice of court. Earth-red wax, named addressee. Carries Maryam's release note inside.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["BAG", "BAS", "WM"],
+  "new_nodes": ["BAG", "BAS"],
+  "acts": [
+    {
+      "act": 1,
+      "location": "BAG",
+      "scene": "Ahmad ibn Tawfiq's study, Baghdad",
+      "title": "The Letter That Isn't for the Archive",
+      "type": "dialogue",
+      "prompt": "Ahmad tests whether you understand the letter is necessary but not sufficient — that the choice to hold remains Maryam's alone. Insight DC 12.",
+      "skillCheck": { "skill": "Insight", "dc": 12 },
+      "successText": "'Then you understand why I'm sending a person instead of a courier.'",
+      "failText": "He hands you the letter with minimal context: 'Don't let it be opened.'",
+      "grantItem": "final_statement",
+      "token_action": "grant"
+    },
+    {
+      "act": 2,
+      "location": "road_BAG_BAS",
+      "scene": "Tigris river road checkpoint, south of Baghdad",
+      "title": "The River Road Checkpoint",
+      "type": "skill_check",
+      "prompt": "Officer has a list of persons under judicial review. Asks who the letter is addressed to. Deception DC 12: provide a false addressee description.",
+      "skillCheck": { "skill": "Deception", "dc": 12 },
+      "successText": "He stamps it 'private correspondence — personal contents' and waves you through.",
+      "failText": "Three-day hold. Returned with wax showing signs of examination.",
+      "token_action": "check"
+    },
+    {
+      "act": 3,
+      "location": "BAS",
+      "scene": "Maryam al-Basri's study, Basra",
+      "title": "What She Does With It",
+      "type": "skill_check",
+      "prompt": "Maryam reads the letter, adds a release note, hands both to Fighter. A court official arrives and asks what was handed over. Persuasion DC 13: establish the transaction is complete and not subject to judicial review.",
+      "skillCheck": { "skill": "Persuasion", "dc": 13 },
+      "successText": "Official notes it and leaves. Fighter exits with both documents.",
+      "failText": "Official logs 'unknown courier, possible correspondence from Ahmad ibn Tawfiq.' Fighter exits before full inspection.",
+      "token_action": "check"
+    },
+    {
+      "act": 4,
+      "location": "road_BAS_north",
+      "scene": "River road north from Basra",
+      "title": "The Return Road",
+      "type": "combat",
+      "prompt": "Two of the judge's agents on horseback. Warrant to confiscate 'correspondence from Ahmad ibn Tawfiq.'",
+      "combatTarget": { "count": 2, "ac": 13, "hp": 24 },
+      "successText": "Both documents intact. Warrant recovered.",
+      "failText": "Combat loss — documents at risk.",
+      "token_action": "check"
+    },
+    {
+      "act": 5,
+      "location": "WM",
+      "scene": "Weimar archive intake desk",
+      "title": "The First Distinction",
+      "type": "skill_check",
+      "prompt": "Sweelinck creates a new category. History DC 11: understand the distinction between justice and vindication as he describes it.",
+      "skillCheck": { "skill": "History", "dc": 11 },
+      "successText": "'The earth was her choice of court. Let that be the filing note.'",
+      "failText": "He files both documents. You leave without the category name.",
+      "takeItem": "final_statement",
+      "activateMissionBit": "adaSitaEarthComplete",
+      "token_action": "take"
+    }
+  ]
+}
+```
+
+---
+
+### New Node Proposals
+
+| Code | Name | Location | Notes |
+|------|------|----------|-------|
+| BAG | Baghdad Sufi Scholar Quarter | Baghdad, Jalayirid Iraq, 1367 | Post-Abbasid Islamic scholarly community under Jalayirid Sultan Uvays I; center of Sufi and philosophical writing; accessible via Tigris river road south to Basra |
+| BAS | Basra River City | Basra, southern Iraq, at the Tigris delta | Trading and scholarly city; connected to Baghdad by river; site of independent judicial and legal review bodies; accessible via river road |
+
+---
+
 ## Admin Notes
 
 - **Part 1 status:** COMPLETE — all 597 lines read; covers invocation through Canto XLIV (Ganga's descent begun).
