@@ -1587,3 +1587,212 @@ activateMissionBit: bgw07DunyazadeComplete
 ---
 
 *BGW-07 complete. 2026-06-02.*
+
+---
+
+**Cycle 6**
+
+*(Theme differentiation: Avoiding BGW cycles 1-5. BGW-01: collection as built survival. BGW-02: margin as honest speech of the diminished heir. BGW-04: unanswerable authenticity question. BGW-06: translator's testimony. BGW-07: recovered absent voice. New theme: the navigational chart that corresponds to a fictional voyage; the archive receives the cartographic evidence for Sinbad's world; the chart and the story share place names that neither could have known without the other.)*
+
+---
+
+## Cycle 6 — Angle: *The Sinbad Chart — The Map That Knew the Story's Names*
+
+**What this angle reveals that cycles 1-5 missed**: The first five cycles treated the Arabian Nights as a textual tradition — a frame, a margin, an authorial preface, a recovered voice, a structural undecidability. Cycle 6 treats it as a geographic record. The Sinbad stories use specific island names, specific coastal features, specific passage hazards. A 9th-century Basra merchant's navigational chart uses the same names. The chart annotated by a later scholar aligns the Arab geographic names with the story's island names — not by retrofitting fiction onto geography, but because both the chartmaker and the storyteller were drawing on the same navigational tradition. The story was assembled from charts. The chart is the evidence.
+
+**Themes avoided:** all five prior BGW themes; MLA-03's "copy precedes the original's uncertain fate" (this is about correspondence, not custody).
+
+**New theme chosen:** "The navigational chart that matches the story's geography; the chart and the story share place names that can only coexist if the story was assembled from navigational knowledge; the archive receives the cartographic evidence of Sinbad's world."
+
+---
+
+### 5-Act Vignette: *The Sinbad Chart*
+
+#### The Token
+
+The Basra Navigation Chart: a papyrus navigational chart, Basra merchant provenance, approximately 9th century. Arabic coastal terms, island names in Arabic with Persian interpolations. A second layer of annotations in a different (13th-century) hand identifies the island names with names from the Sinbad cycle in the Arabian Nights: *Jazira al-Qird* annotated as "the island of the small people, fourth voyage"; *Kuh al-Imrus* annotated as "the mountain of the roc, second voyage"; four other correspondences. The chart was in a Persian geography archive in Tabriz; the archive was acquired by a Venetian merchant.
+
+*The Basra Navigation Chart · papyrus, two annotation layers, annotation hand just legible · Famagusta factor's house · waiting*
+
+---
+
+#### Act I — Famagusta (FAM)
+
+*The Venetian merchant Messer Giacomo is at the Famagusta factor's house for two days before his ship continues to Venice. He shows the Fighter the chart as a curiosity — it came with a lot of other Persian geography materials, and the annotation layer interests him. He knows the Sinbad stories. He is not sure if the correspondence is genuine scholarship or someone's joke.*
+
+He is willing to sell the chart or let a carrier take it to Weimar. He has forty other charts from the same archive. This one is the interesting one.
+
+`grantItem: "Basra Navigation Chart"`
+
+*The Basra Navigation Chart · accepted, both annotation layers visible · Fighter's hands · Famagusta factor's house*
+
+**Skill Check — History DC 12:** *Understand the significance of the annotation correspondence — whether the 13th-century scholar was identifying genuine geographic parallels or reading the story into existing place names.*
+
+*pass:* The 13th-century hand is scholarly and precise. The annotator did not fit the story to the chart — they noted which story place names already matched the chart's names. *Jazira al-Qird* is not a story name that could be retrofitted onto any island; it is a specific Arabic compound name meaning "island of the monkeys/small people." The chart had the name first. The story used the name. *The story was built by someone who knew these charts.*
+
+*fail:* The annotation correspondence noted as an interesting scholarly parallel. Primary significance not assembled.
+
+---
+
+#### Act II — Famagusta (FAM)
+
+*A Cypriot Greek navigator named Nikolaos Kephalas has been watching the transaction. He knows these waters — he navigates Cyprus-to-Syrian-coast runs — and he recognizes three of the island names on the chart as islands he has passed. The fourth name, *Jazira al-Qird*, is the one that interests him: he believes it is the island he has been routing around at the wrong angle for fifteen years.*
+
+He asks to see the chart's passage notation around *Jazira al-Qird*. He is completely honest about his purpose: he wants to correct his navigational charts, not keep this one.
+
+*The Basra Navigation Chart · the passage notation around Jazira al-Qird visible · Fighter's hands · Famagusta harbor*
+
+**Skill Check — Nature DC 12:** *Compare the chart's coastal notation with the typical features of a Mediterranean-Indian Ocean island passage; help Nikolaos determine whether the chart's approach angle differs from his current charts.*
+
+*pass:* The chart's passage notation comes from the southeast, not the northeast. Nikolaos has been approaching from the northeast. He says: "That explains the current problem." He makes a note. He thanks the Fighter. He does not need the chart — he needed the angle. *He is a navigator. He found what he needed and left it in place.*
+
+*fail:* Nikolaos makes a sketch of the passage notation before releasing the chart. His navigational practice will change; the chart continues.
+
+---
+
+#### Act III — Venice (VEN)
+
+*The Venetian merchant's partner Messer Alvise Grimani has been building a navigational archive for the family's trading house. The Sinbad chart has commercial value: its coastal notations correspond to Indian Ocean routes the Grimani house uses. He wants the chart in Venice, not Weimar.*
+
+He makes a business argument: the scholarly value of a chart in a private merchant archive is identical to its scholarly value in a general archive, because the Grimani house employs the best Greek scholars and will have the chart fully studied and published within ten years.
+
+*The Basra Navigation Chart · in the pack, Messer Alvise's business proposal on the table · Fighter's pack · Venice merchant house*
+
+**Skill Check — Persuasion DC 13:** *Argue that a chart's scholarly value depends on cross-reference with other documents it does not hold; the Grimani archive has navigational charts, but the correspondence between Sinbad's place names and the chart's place names requires comparison with literary and geographic sources the archive does not hold.*
+
+*pass:* Alvise is a practical man. "The annotation layer," he says. "That's the issue. We can't cross-reference the literary side." He releases the chart with a note: the Grimani house has forty-two other charts from the same Tabriz archive; the archive is welcome to send a scholar. *He is not a villain — he is a businessman. He just calculated the transaction differently.*
+
+*fail:* He retains a detailed copy of the chart and its annotations. The copy will be in Venetian navigational archives within the year.
+
+---
+
+#### Act IV — Venice Road (VEN)
+
+*Two men from a competing Venetian merchant house — the Barbarigo family, who have their own Indian Ocean trading interests. They want the chart because the passage notation around *Jazira al-Qird* corrects a navigational error that has cost the Barbarigo house two ships in the last decade.*
+
+*The Basra Navigation Chart · in the pack, both Barbarigo agents between the Fighter and the road west · Fighter · Venice road*
+
+**Combat:** 2 hired agents — AC 12, HP 18. They are not scholarly. Stop at half health when the commercial advantage of the passage correction is outweighed by the immediate cost. *failText:* They take the chart. The Venice road has waystation factors who know the Barbarigo crest. *passText:* Both down or withdrew. *The chart will be published and the Barbarigo will find the passage notation in a scholarly article within five years. They could have waited.*
+
+---
+
+#### Act V — Weimar (WM)
+
+*Archivus Sweelinck reads the chart. He reads the annotation layer. He reads the Sinbad cycle from the BGW archive copy. He cross-references island by island.*
+
+"*Jazira al-Qird*," he says. "Island of the small people, fourth voyage." He reads the chart notation. "The chart has this island in the same position as the story. Same coastal features." He works through the others: *Kuh al-Imrus*, the roc's mountain. Four more. "Six correspondences. The annotator found six. There may be more." He is quiet. "The story was not imagined. It was assembled. Someone who knew these charts — who sailed this route, or had talked to people who sailed it — put the islands in the story because they had seen the chart."
+
+He writes: *Navigational Records — Literary Parallel Charts: navigational charts for which a specific literary narrative uses the same place names and route features; primary evidence that the narrative was assembled from navigational knowledge of the route it describes; the chart is cartographic evidence of the story's geographic sources.*
+
+He notes: "Cross-reference: BGW-01 through BGW-07. The Nights has a geographic root. Scheherazade told stories about places the chartmakers knew."
+
+*The Basra Navigation Chart · both annotation layers marked, six correspondences noted · Archivus Sweelinck · Weimar intake desk*
+
+"You receive the Sinbad Chart Record."
+
+`takeItem: "Basra Navigation Chart"`
+`grantItem: "Sinbad Chart Record"`
+
+---
+
+### Quest API Stub — BGW-02
+
+```json
+{
+  "quest_id": "BGW-02",
+  "title": "The Sinbad Chart",
+  "cycle": 6,
+  "book": "BGW — Arabian Nights (Burton)",
+  "token": "Basra Navigation Chart",
+  "route": ["FAM", "VEN", "WM"],
+  "theme": "The navigational chart that matches the story's geography; the chart and the story share place names that can only coexist if the story was assembled from navigational knowledge; the archive receives the cartographic evidence of Sinbad's world",
+  "archive_category": "Navigational Records — Literary Parallel Charts",
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "FAM",
+      "type": "skill_check",
+      "activateNode": "FAM",
+      "scene": "Famagusta factor's house. Venetian merchant Messer Giacomo shows the chart as a curiosity — it came with forty other Persian geography charts. Two annotation layers: original Arabic coastal names and a 13th-century scholarly hand identifying Sinbad story correspondences. 'I don't know if it's genuine scholarship or someone's joke.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Understand the annotation correspondence — whether the 13th-century scholar was identifying genuine geographic parallels or reading the story into existing place names.",
+        "failText": "The annotation correspondence noted as an interesting scholarly parallel. Primary significance not assembled.",
+        "passText": "The annotator did not fit the story to the chart — they noted where story place names already matched the chart's names. Jazira al-Qird is a specific compound Arabic name. The chart had the name first. The story used the name. The story was built by someone who knew these charts."
+      },
+      "grantItem": "Basra Navigation Chart",
+      "checkPassFlag": "bgw02Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "FAM",
+      "type": "skill_check",
+      "activateNode": "FAM",
+      "scene": "Famagusta harbor. Cypriot navigator Nikolaos Kephalas recognizes three island names. Jazira al-Qird interests him — he believes it is the island he has been routing around at the wrong angle for fifteen years. He wants to see the passage notation. He is completely honest about his purpose.",
+      "skillCheck": {
+        "skill": "Nature",
+        "dc": 12,
+        "prompt": "Compare the chart's coastal notation with typical Mediterranean-Indian Ocean island passage features to help Nikolaos determine whether the chart's approach angle differs from his current charts.",
+        "failText": "Nikolaos makes a sketch of the passage notation before releasing the chart. His practice will change; the chart continues.",
+        "passText": "The chart's passage comes from the southeast, not the northeast. Nikolaos has been approaching from the northeast. 'That explains the current problem.' He thanks the Fighter and leaves — a navigator who found what he needed and left it in place."
+      },
+      "checkPassFlag": "bgw02Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "VEN",
+      "type": "skill_check",
+      "activateNode": "VEN",
+      "scene": "Venice merchant house. Messer Alvise Grimani is building a navigational archive. The chart has commercial value — its coastal notations correspond to Indian Ocean routes the Grimani house uses. He argues the chart will be fully studied and published within ten years.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "prompt": "Argue that the chart's scholarly value depends on cross-reference with literary and geographic sources the Grimani navigational archive does not hold — the annotation layer cannot be verified without them.",
+        "failText": "He retains a detailed copy of the chart and annotations. The copy will be in Venetian navigational archives within the year.",
+        "passText": "'The annotation layer — we can't cross-reference the literary side.' He releases the chart with a note: forty-two other charts from the same Tabriz archive; the archive is welcome to send a scholar."
+      },
+      "checkPassFlag": "bgw02Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "road_venice_west",
+      "type": "combat",
+      "activateNode": "VEN",
+      "scene": "Venice road. Two Barbarigo family agents. The passage notation around Jazira al-Qird corrects a navigational error that has cost the Barbarigo house two ships in the last decade. They are not scholarly — they are commercial.",
+      "combat": {
+        "enemies": 2,
+        "AC": 12,
+        "HP": 18,
+        "description": "Commercial agents — stop at half health when the passage correction's value is outweighed by the immediate cost",
+        "failText": "They take the chart. The Venice road has waystation factors who know the Barbarigo crest.",
+        "passText": "Both down or withdrew. The chart will be published and the Barbarigo will find the passage notation in a scholarly article within five years. They could have waited."
+      },
+      "checkPassFlag": "bgw02Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck cross-references the chart with the Sinbad cycle. Six correspondences. 'The story was not imagined. It was assembled. Someone who knew these charts put the islands in the story because they had seen the chart.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Confirm that the six correspondences require shared access to a navigational tradition — the overlap cannot be coincidental given the specificity of the compound Arabic place names.",
+        "failText": "Filed under Navigational Records — Islamic Period. Cross-reference to BGW Arabian Nights series created.",
+        "passText": "Sweelinck writes: 'Navigational Records — Literary Parallel Charts: navigational charts for which a specific literary narrative uses the same place names and route features; primary evidence that the narrative was assembled from navigational knowledge of the route it describes.' Cross-reference: BGW-01 through BGW-07. You receive the Sinbad Chart Record."
+      },
+      "takeItem": "Basra Navigation Chart",
+      "grantItem": "Sinbad Chart Record",
+      "checkPassFlag": "bgw02Act5Passed",
+      "activateMissionBit": "bgwSinbadComplete"
+    }
+  ]
+}
+```
+
+---
+
+*BGW-02 complete. 2026-06-02.*
+
