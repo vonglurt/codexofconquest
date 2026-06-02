@@ -3145,6 +3145,194 @@ Make a **History check (DC 13)**.
 
 *BGW-S13 complete. 2026-06-02.*
 
+---
+
+## Cycle 14 — Angle: *The Last Baghdad Caliph's Letter — The Diplomatic Document as the Measure of How Completely an Institution Failed*
+
+*Prior cycles missed:*
+
+BGW Cycle 8 (S08) found the diminished heir of the caliphate annotating the stories from a position of powerlessness. Cycle 14 finds the moment of collapse itself — not the long diminishment but the specific document that marked the end: al-Musta'sim's 1257 letter to Hulagu Khan. The letter invoked diplomatic protocol, the sanctity of the Abbasid institution, and Hulagu's own expressed respect for Islamic administration. Hulagu did not reply. He sacked Baghdad. The letter is the measure of how completely the institution failed — not in its argument, which was correct, but in its assumption that argument would be sufficient.
+
+---
+
+### BGW-S14: "The Last Baghdad Caliph's Letter"
+
+**Theme check:** BGW-S08 (diminished heir's margin) found resignation — the heir who held the title without power and wrote honestly about the gap. This is not resignation; it is the final assertion of institutional authority at the moment the institution was destroyed. Theme: the diplomatic letter as the measure of institutional failure — not the failure of the argument, but the failure of the assumption that the argument would matter.
+
+---
+
+**SOURCE HOOK:** *Arabian Nights* (Burton translation): The Abbasid caliphate provides the entire framework of the Harun al-Rashid cycle — the institution whose power makes Harun's generosity possible, whose authority makes his executions final. In 1258, that institution ended. Al-Musta'sim, the last Abbasid Caliph of Baghdad, sent a diplomatic letter to Hulagu Khan before the Mongol siege. The letter argued for the caliphate's inviolability. Hulagu had al-Musta'sim executed. The institution the stories assume has been gone for ninety-nine years when the 1367 game takes place.
+
+---
+
+**1367 SETTING:**
+A Persian translation of al-Musta'sim's 1257 letter to Hulagu Khan survives in a Tabriz archive — Hulagu's own city, the ilkhanate capital. The translation was made by a Persian-speaking Mongol official who processed the Abbasid diplomatic correspondence; his note in the margin reads: *Translation completed February 1258. No reply was composed. The army proceeded.* A Tabriz merchant scholar, Khwaja Kamāl, has located the document and wants it sent to Weimar before the archive is dissolved in a political reorganization. The Persian translation, in the Mongol official's hand with his marginal note, is the only copy of the letter that includes the official documentation of what happened after it was received.
+
+*Khwaja Kamāl, handing over the document: "The argument was not wrong. The assumption that the argument would be sufficient — that is what is measured here."*
+
+**TOKEN:** Persian Translation of al-Musta'sim's 1257 Letter — a single parchment sheet, Persian translation in a Mongol official's administrative hand; the marginal note: *Translation completed February 1258. No reply was composed. The army proceeded.* Khwaja Kamāl's authentication seal on the verso. *Act I: received from Khwaja Kamāl, Tabriz. Act V: surrendered to Archivus Sweelinck, Weimar.*
+
+---
+
+**Act I — Tabriz Archive (TBZ)**
+
+*A Tabriz archive antechamber, morning. Khwaja Kamāl is a merchant scholar in his fifties; the document is on the table, the Mongol official's margin note visible.*
+
+"Al-Musta'sim's letter invokes the sanctity of the Abbasid institution. It invokes diplomatic protocol. It names Hulagu's own expressed respect for Islamic administration in earlier correspondence." He indicates the margin note. "Translation completed. No reply was composed. The army proceeded." He looks at the carrier. "The letter's argument was correct on its own terms. Tell me what the margin note proves that the letter's text alone cannot — what the combination of the argument and the non-reply produces as a historical document."
+
+*The Fighter reads both — the careful diplomatic language and the four flat words of the margin note.*
+
+Make an **Investigation check (DC 13)**.
+
+**Fail:** "The letter argues for the caliphate's inviolability. The margin note records that the argument was not answered. Tell me what the non-reply is evidence of — what institutional assumption the non-reply invalidates." *Khwaja waits.*
+
+**Success:** The letter assumes that the institution of the caliphate has a standing that requires response — that a diplomatic letter from the Commander of the Faithful cannot simply be processed and set aside. The margin note's four words prove that assumption wrong: the letter was received, translated, and filed; no reply was composed; the army proceeded. The non-reply is evidence not of Hulagu's contempt but of his classification of the letter — as administrative documentation of an opponent's position, not as a communication that obligated a response. The institution the letter invoked did not exist in the way the letter assumed. Khwaja sets down his pen. "The assumption that the argument would matter. That is what the margin note measures." He hands over the **Persian Translation of al-Musta'sim's 1257 Letter**.
+
+---
+
+**Act II — Tabriz City Gate (TBZ)**
+
+*The Tabriz city gate, afternoon. An ilkhanate customs official, Arslan Khoja, is registering outbound documents — a standard administrative procedure for historical materials leaving Tabriz.*
+
+"All historical documents leaving Tabriz must be registered with a destination and intended use. The translation of a diplomatic letter from the pre-Mongol Abbasid Caliph — that is a document of institutional significance." He opens his registration ledger. "Destination and use."
+
+*The Fighter watches Arslan's entirely procedural process — a genuine registration, which creates a public record in Tabriz before the document reaches Weimar.*
+
+Make a **Persuasion check (DC 12)**.
+
+**Fail:** "Destination and intended use. The registration takes ten minutes." *Arslan is not hostile. Try again — about what category the document falls under and whether that category requires registration.*
+
+**Success:** "The document is a Persian translation made by an ilkhanate official — it is an ilkhanate administrative document, not a pre-Mongol Abbasid document. The Mongol official's hand and margin note make it a Mongol administrative record. Ilkhanate administrative documents leaving Tabriz for scholarly destinations are classified as archive transfers, not as significant historical materials requiring the standard registration." Arslan reads the official's hand. The administrative classification is correct. "Archive transfer. Proceed."
+
+---
+
+**Act III — Constantinople Harbor (CON)**
+
+*A Constantinople harbor official's office, morning. A Byzantine historian, Georgios Akropolites the Younger, has heard of the document and wants to argue that the letter belongs in a Byzantine archive — the Byzantine empire and the Abbasid caliphate had a centuries-long diplomatic relationship, and the letter's context is Byzantine-Abbasid-Mongol geopolitics.*
+
+"The 1257 letter was written against a backdrop of Byzantine-Mongol diplomatic negotiations in which Constantinople was also involved. A document from that diplomatic moment belongs in a collection that understands its full political context." He is correct about the context.
+
+*The Fighter watches Georgios's genuine claim — and the letter's margin note, which is the document's actual historical value.*
+
+Make a **History check (DC 13)**.
+
+**Fail:** "The 1257 diplomatic moment involved Byzantium as well as the Mongols and the Abbasids. Why is Weimar the correct archive?" *Georgios waits.*
+
+**Success:** "The document's value is the margin note — the Mongol official's four words that record what happened after the letter was received. That note is not about Byzantine-Mongol geopolitics; it is about what the Abbasid institution assumed about its own standing and what the Mongol administration revealed about that assumption. The archive that receives it receives a document about institutional failure, not about diplomatic context. Weimar has an active theme thread for documents that measure the failure of institutional assumptions. Constantinople does not." Georgios reads the margin note. He had not looked at it closely. "The army proceeded." He releases the document. "Then you are right. Proceed."
+
+---
+
+**Act IV — Ragusa Archive (RGS)**
+
+*A Ragusa merchant's archive, afternoon. An Italian merchant-scholar, Marco di Benedetto, has heard of the letter and wants to read it — his family has a commercial history in the Levant that intersects with the Mongol conquest period.*
+
+"My family was in Aleppo when the Mongols came through. This letter is from the same period. I would like to read it before it goes to Weimar." His interest is personal and genuine. He is not trying to acquire the document.
+
+*The Fighter watches Marco's sincere personal interest — and the document, which he is asking only to read.*
+
+Make a **Perception check (DC 11)** to assess whether reading the letter aloud here, briefly, creates any risk.
+
+**Fail:** "I am only asking to read it, not to keep it." *Marco is sincere. Assess the risk — what does reading it here produce?*
+
+**Success:** Marco wants to read it; he does not want to copy it or retain it. The risk is zero. The carrier permits him to read it, silently, at the table. Marco reads both the letter and the margin note. He sets it down. He is quiet for a long time. "They asked. No one answered." He hands it back. "Take it to Weimar."
+
+---
+
+**Act V — Weimar Archive (WM)**
+
+*Archivus Sweelinck's receiving room, late evening. He reads the letter and the margin note twice.*
+
+"I have received documents from the Abbasid court. I have received documents about the Mongol administration. I have not received a document that is both at once — the last assertion of the institution and the first record of its non-existence." He looks at the margin note. "Tell me the classification. What does the archive receive when it receives the document that measures not an institution's failure but an institution's assumption of its own invulnerability — measured by the four words that record what happened instead?"
+
+*The Fighter watches Sweelinck's pen — the expression of a man holding a document he will never hold again.*
+
+Make a **History check (DC 13)**.
+
+**Fail:** "The letter argues correctly. The assumption fails. Tell me what kind of historical document preserves the gap between a correct argument and a failed assumption — what category captures that gap." *Sweelinck waits.*
+
+**Success:** Sweelinck writes: *Institutional Failure Records — Diplomatic Documents in Which a Correct Argument Failed Because the Institution It Invoked Did Not Exist in the Way It Assumed; The Non-Reply as Evidence of Institutional Classification; Al-Musta'sim's 1257 Letter, Persian Translation, Mongol Official's Hand, Margin Note: Translation Completed February 1258. No Reply Was Composed. The Army Proceeded.* He applies the archive seal. You hand over the **Persian Translation of al-Musta'sim's 1257 Letter**. You receive the **Archive Classification Receipt: Institutional Failure Records**.
+
+*The Fighter watches the document filed in the new category. Al-Musta'sim's argument is in the archive. The four words are beside it. The Harun al-Rashid stories continue on other shelves — the institution at its height, the institution that made the night walks possible, the institution that created Masrur and Jafar and all the voices behind the locked doors. The four words are beside them.*
+
+---
+
+### Quest API Stub — BGW_S14: The Last Baghdad Caliph's Letter
+
+```json
+{
+  "quest_id": "BGW_S14",
+  "title": "The Last Baghdad Caliph's Letter",
+  "book": "Arabian Nights — Alf Layla wa-Layla (Burton translation)",
+  "cycle": 14,
+  "token": "Persian Translation of al-Musta'sim's 1257 Letter",
+  "route": "TBZ → CON → RGS → WM",
+  "theme": "The diplomatic letter as the measure of institutional failure — not the failure of the argument, which was correct, but the failure of the assumption that the argument would matter; the non-reply as evidence of institutional classification.",
+  "archive_category": "Institutional Failure Records — Diplomatic Documents in Which a Correct Argument Failed Because the Institution It Invoked Did Not Exist in the Way It Assumed; The Non-Reply as Evidence of Institutional Classification",
+  "acts": [
+    {
+      "act": "act_1", "title": "Tabriz Archive", "activateNode": "TBZ",
+      "type": "skill_check", "skillCheck": { "stat": "Investigation", "dc": 13 },
+      "scene": "Khwaja Kamāl needs the carrier to articulate what the combination of the letter and the margin note produces — what the non-reply is evidence of, what institutional assumption it invalidates.",
+      "prompt": "Investigation DC 13. The margin note proves the letter was classified as administrative documentation of an opponent's position, not as a communication that obligated a response — the institution the letter invoked did not exist in the way it assumed.",
+      "failText": "What institutional assumption does the non-reply invalidate?",
+      "successText": "The assumption that the argument would matter. That is what the margin note measures. You receive the Persian Translation of al-Musta'sim's 1257 Letter.",
+      "grantItem": "Persian Translation of al-Musta'sim's 1257 Letter",
+      "checkPassFlag": "bgwS14Act1Passed", "activateMissionBit": "bgwS14Active"
+    },
+    {
+      "act": "act_2", "title": "Tabriz City Gate", "activateNode": "TBZ",
+      "type": "skill_check", "skillCheck": { "stat": "Persuasion", "dc": 12 },
+      "scene": "Arslan Khoja requires registration for historical materials leaving Tabriz. The document is a Mongol official's translation — an ilkhanate administrative record, classified as archive transfer, not significant historical material.",
+      "prompt": "Persuasion DC 12. The Mongol official's hand makes this an ilkhanate administrative document — archive transfer classification, no registration required.",
+      "failText": "Destination and intended use.",
+      "successText": "Archive transfer. Proceed.",
+      "grantItem": "Tabriz City Gate Archive Transfer Receipt",
+      "checkPassFlag": "bgwS14Act2Passed"
+    },
+    {
+      "act": "act_3", "title": "Constantinople Harbor", "activateNode": "CON",
+      "type": "skill_check", "skillCheck": { "stat": "History", "dc": 13 },
+      "scene": "Georgios Akropolites the Younger claims Byzantine-Abbasid-Mongol diplomatic context. The document's value is the margin note — about institutional failure, not diplomatic context.",
+      "prompt": "History DC 13. The document belongs at Weimar because Weimar has an active theme thread for institutional failure records; Constantinople's diplomatic context collection is not the correct home for a document about an institution's assumption of its own invulnerability.",
+      "failText": "Why is Weimar the correct archive for this diplomatic document?",
+      "successText": "The army proceeded. Georgios reads the margin note and releases the document.",
+      "grantItem": "Constantinople Harbor Passage",
+      "checkPassFlag": "bgwS14Act3Passed"
+    },
+    {
+      "act": "act_4", "title": "Ragusa Archive", "activateNode": "RGS",
+      "type": "skill_check", "skillCheck": { "stat": "Perception", "dc": 11 },
+      "scene": "Marco di Benedetto wants only to read the letter — his family was in Aleppo when the Mongols came through. He will not copy it or retain it. Assess whether reading it here creates risk.",
+      "prompt": "Perception DC 11. Marco is sincere — no copy, no retention. Reading the letter here creates no risk.",
+      "failText": "I am only asking to read it. Is there a risk in allowing this?",
+      "successText": "They asked. No one answered. Marco hands it back. Take it to Weimar.",
+      "grantItem": "Ragusa Archive Way-Receipt",
+      "checkPassFlag": "bgwS14Act4Passed"
+    },
+    {
+      "act": "act_5", "title": "Weimar Archive", "activateNode": "WM",
+      "type": "skill_check", "skillCheck": { "stat": "History", "dc": 13 },
+      "scene": "Sweelinck needs the classification that captures the gap between a correct argument and a failed assumption — the category that names what happens when an institution invokes a standing it no longer has.",
+      "prompt": "History DC 13. The institution the letter invoked did not exist in the way it assumed — the non-reply is evidence of institutional classification, not of contempt.",
+      "failText": "What kind of document preserves the gap between a correct argument and a failed assumption?",
+      "successText": "Sweelinck writes: Institutional Failure Records — Diplomatic Documents in Which a Correct Argument Failed Because the Institution It Invoked Did Not Exist in the Way It Assumed. You receive Archive Classification Receipt: Institutional Failure Records.",
+      "takeItem": "Persian Translation of al-Musta'sim's 1257 Letter",
+      "grantItem": "Archive Classification Receipt: Institutional Failure Records",
+      "checkPassFlag": "bgwS14Act5Passed", "activateMissionBit": "bgwS14Complete"
+    }
+  ]
+}
+```
+
+---
+
+*BGW-S14 complete. 2026-06-02.*
+
+---
+
+*BGW SUPPLEMENTARY SEEDS COMPLETE 2026-06-02 — BGW-S09 through BGW-S14, all six supplementary cycles written. BGW total: 14 cycles (BGW-01 through BGW-S14).*
+
+
 
 
 
