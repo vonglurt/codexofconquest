@@ -2594,6 +2594,190 @@ Make a **History check (DC 13)**.
 
 *BGW-S10 complete. 2026-06-02.*
 
+---
+
+## Cycle 11 — Angle: *The Fisherman's Blessing — The Mosque Inscription as Official Record of Extraordinary Fortune*
+
+*Prior cycles missed:*
+
+No BGW cycle asked what happens when the beneficiary of the Caliph's legendary generosity made a formal record of it — when the fisherman who received a fortune from Harun's impulsive gift commissioned a mosque inscription that names the Caliph as the source. Cycle 11 finds the administrative acknowledgment of fortune: the inscription is neither narrative nor legend but a dedicatory record, legally public, permanently stone. It is the only document that looks at the gift from the receiver's side and treats it as an institutional fact.
+
+---
+
+### BGW-S11: "The Fisherman's Blessing"
+
+**Theme check:** BGW-S09 (confiscation inventory — what was taken) is not this. BGW-05 (genie contract — impossible asset in legal inventory) is not this. BGW-07 (night log — administrative record of legend's foundations) recorded Harun leaving; this records a recipient acknowledging receipt. Theme: the dedicatory inscription as the institutional acknowledgment of fortune — the receiver's public record that names the source and thereby transforms a story moment into a permanent administrative fact.
+
+---
+
+**SOURCE HOOK:** *Arabian Nights* (Burton translation): The fisherman who receives the enchanted jar, the man who is given a fortune by Harun in a moment of impulsive generosity — the stories repeatedly feature a common person who receives extraordinary luck from a powerful source. In the Abbasid world, the formal acknowledgment of a great benefactor's gift often took the form of a dedicatory mosque inscription: the beneficiary who used the gift to build something named the source in stone. Such an inscription would be a legal public record — anyone could read it, dispute it, or copy it.
+
+---
+
+**1367 SETTING:**
+A Cairo mosque near the fisherman's quarter, the Bab al-Sha'riyya district, contains an inscription above its gate: *Built from the gift of the Commander of the Faithful Harun al-Rashid, may God have mercy on him, given to the fisherman Ahmad ibn Yusuf in the year 192 of the Hijra [808 AD], through the hand of Masrur his servant.* A Cairo historian, Ibn Battah al-Qahiri, has documented the inscription and believes it is the only official public record connecting a specific Abbasid gift to a specific recipient — the fisherman stories rendered as a legal-administrative fact in stone. The mosque is being demolished for expansion of the district market. Ibn Battah wants a certified rubbing delivered to Weimar before the stone is lost.
+
+*Ibn Battah al-Qahiri, looking up at the inscription: "Every other record of Harun's generosity is inside a story. This one is outside the story — on a gate, in public, where anyone could stand and read it and say: yes, this happened, it left a building."*
+
+**TOKEN:** Certified Rubbing of the Bab al-Sha'riyya Mosque Inscription — paper rubbing of the dedicatory stone, authenticated by a Cairo notary's seal; Ibn Battah's accompanying certification: *Rubbing taken from the inscription above the north gate, Bab al-Sha'riyya Mosque, 2 Jumada al-Awwal 768 AH [1367]. Stone to be demolished within thirty days. Inscription text complete and legible at time of rubbing.* *Act I: received from Ibn Battah al-Qahiri, Cairo. Act V: surrendered to Archivus Sweelinck, Weimar.*
+
+---
+
+**Act I — Cairo Fisherman's Quarter (CAI)**
+
+*The north gate of the Bab al-Sha'riyya Mosque, morning. Scaffolding is already up around the adjacent walls. Ibn Battah al-Qahiri is a historian in his sixties who has spent three days making this rubbing.*
+
+"Every story about Harun's generosity is inside a narrative. Someone told it; someone wrote it down; someone copied it. This inscription is outside the narrative — it is the fisherman's own public record, made in stone, naming the source." He smooths the rubbing carefully. "The fisherman who received this gift had the inscription carved above the door of the mosque he built. He named the Caliph. He named Masrur. He named the year." He looks at the carrier. "Tell me what kind of evidence this is — different from the story's evidence and different from the Caliph's records, if any exist."
+
+*The Fighter looks at the inscription's rubbing — the dedicatory formula, the specific year, Masrur's name as intermediary.*
+
+Make an **Investigation check (DC 12)**.
+
+**Fail:** "The inscription names the Caliph as the source. The stories name the Caliph as the source. Tell me why the inscription is a different kind of evidence." *Ibn Battah waits.*
+
+**Success:** The inscription was made by the beneficiary, not the benefactor — no Caliph's administration made this record; the fisherman did. It names a specific date and a specific intermediary (Masrur), which the stories do not. And it is a legal public record: carved above a public gate, readable by anyone, contestable by anyone — if the fisherman had lied about the source, someone could have disputed it. The fact that the inscription survived undisputed is itself evidence. Ibn Battah nods once. "The receiver's record, not the giver's. That is the distinction." He hands over the **Certified Rubbing of the Bab al-Sha'riyya Mosque Inscription**.
+
+---
+
+**Act II — Cairo Notary Quarter (CAI)**
+
+*A notary's office, afternoon. The rubbing's Cairo notary seal was applied in the name of a notary, Hassan ibn Faraj, who died two weeks ago. The current notary, Yusuf al-Kabir, is reviewing outstanding seals and wants to verify that the authentication is still valid.*
+
+"A seal applied by a deceased notary has uncertain standing — the authentication is his personal act, and his personal standing ended with his death. I need to re-authenticate the rubbing under a current notary seal."
+
+*The Fighter watches Yusuf al-Kabir preparing to apply a new seal — which will create a record that the original seal was found insufficient, potentially drawing attention to the document.*
+
+Make a **Persuasion check (DC 12)**.
+
+**Fail:** "The seal was applied by a living notary at the time of application. The question is whether it remains valid after his death." *Yusuf is careful. Try again — about what the seal authenticated and whether that authentication changes.*
+
+**Success:** "The seal authenticates the rubbing's accuracy at the time it was made — that the inscription existed and was legible on 2 Jumada al-Awwal 768. Hassan ibn Faraj witnessed that fact. His death does not change what he witnessed; his testimony was complete when he applied the seal. A notarial seal authenticates a fact at a moment in time; the notary's continued existence is not a condition of that fact's continued truth." Yusuf reads the seal's text. The authentication is complete. He closes his ledger. "The seal stands."
+
+---
+
+**Act III — Alexandria Port (ALE)**
+
+*The Alexandria port master's office, morning. An Egyptian religious official, Sheikh Rashid al-Halabi, has heard of the inscription and argues that a mosque's dedicatory inscription is a religious document — transferring it to a Christian archive is inappropriate.*
+
+"The inscription is above a mosque gate. It is part of the mosque's religious identity. Removing a record of the mosque's founding — even a paper copy — to a foreign archive is a form of desecration."
+
+*The Fighter watches the Sheikh's sincere religious concern — and the rubbing, which is a paper copy of stone that is about to be demolished.*
+
+Make a **Persuasion check (DC 13)**.
+
+**Fail:** "The rubbing was made from a mosque. Its destination determines whether this is preservation or desecration." *The Sheikh is not satisfied. Try again — about what happens to the inscription in thirty days.*
+
+**Success:** "The stone itself will be gone in thirty days — the mosque is being demolished. The rubbing is the only form in which the inscription will survive at all. An archive that receives it preserves the record that the mosque existed, that it was built from a specific gift, that the builder named the source above his own door. The alternative to a Christian archive is not a Muslim archive — the alternative is no record at all." Sheikh Rashid al-Halabi considers this. The scaffold outside is visible through the window. "Preserve it, then. But note in the archive that the original was a mosque inscription."
+
+---
+
+**Act IV — Ragusa Waystation (RGS)**
+
+*A Ragusa merchant's house, afternoon. A Byzantine antiquities collector named Georgios Palamas wants the rubbing for a collection of Abbasid-era inscriptions he is assembling.*
+
+"I have seventeen Abbasid-era inscriptions in my collection. This would be the only one documenting a direct gift from Harun al-Rashid. The collection is going to Constantinople — it will be accessible to scholars." His collection offer is genuine. His archive is real.
+
+*The Fighter weighs a legitimate scholarly collection against the Weimar archive's purpose — and the fact that Ibn Battah specifically requested Weimar.*
+
+Make a **Courage check (DC 12)** — hold the commission against a generous competing offer.
+
+**Fail:** "My collection is going to Constantinople, where it will be more accessible to Eastern scholars than a German archive." *Georgios is persuasive. Hold the commission — Ibn Battah named Weimar for the theme thread.*
+
+**Success:** The carrier holds. Ibn Battah named Weimar specifically because the archive has an active theme thread for documents that record the administrative acknowledgment of legendary events — the rubbing needs to be in conversation with other documents in that thread, not isolated in a single-owner collection. Georgios accepts the refusal with grace. "Then Weimar. Tell them I have seventeen others when they are ready."
+
+---
+
+**Act V — Weimar Archive (WM)**
+
+*Archivus Sweelinck's receiving room, evening. He reads the rubbing carefully — the dedicatory formula, the specific year, Masrur named as intermediary.*
+
+"This is the beneficiary's record." He sets it down. "I have received Caliph's records. I have received court historians' records. I have never received the fisherman's record." He looks at the carrier. "Tell me the classification that captures what the beneficiary's public record proves that the court record cannot."
+
+*The Fighter watches Sweelinck's pen — the expression of a man who recognizes something he has not received before.*
+
+Make a **History check (DC 12)**.
+
+**Fail:** "The court record and the inscription both name Harun as the source. Tell me what the inscription proves that the court record, if it existed, could not." *Sweelinck waits.*
+
+**Success:** The court record, if it existed, would be the giver's record — an administration accounting for its own disbursements. The inscription is the receiver's record — an independent public acknowledgment, carved by the beneficiary at his own expense, disputable by anyone, undisputed for five centuries. It proves the gift occurred not through the giver's ledger but through the receiver's public act of naming. Sweelinck writes: *Dedicatory Records — Public Inscriptions Acknowledging the Source of Extraordinary Fortune; The Receiver's Independent Record as Corroboration of the Giver's Legend; Bab al-Sha'riyya Mosque, Cairo, 808 AD, Rubbing 1367.* He applies the archive seal. You hand over the **Certified Rubbing**. You receive the **Archive Classification Receipt: Dedicatory Records**.
+
+*The Fighter watches the rubbing filed in its new category. The fisherman's door is gone. What he put above it stays.*
+
+---
+
+### Quest API Stub — BGW_S11: The Fisherman's Blessing
+
+```json
+{
+  "quest_id": "BGW_S11",
+  "title": "The Fisherman's Blessing",
+  "book": "Arabian Nights — Alf Layla wa-Layla (Burton translation)",
+  "cycle": 11,
+  "token": "Certified Rubbing of the Bab al-Sha'riyya Mosque Inscription",
+  "route": "CAI → ALE → RGS → WM",
+  "theme": "The receiver's public record as independent corroboration of the giver's legend; the beneficiary's dedicatory inscription proves the gift through a public act of naming — disputable by anyone, undisputed for five centuries.",
+  "archive_category": "Dedicatory Records — Public Inscriptions Acknowledging the Source of Extraordinary Fortune; The Receiver's Independent Record as Corroboration of the Giver's Legend",
+  "acts": [
+    {
+      "act": "act_1", "title": "Cairo Fisherman's Quarter", "activateNode": "CAI",
+      "type": "skill_check", "skillCheck": { "stat": "Investigation", "dc": 12 },
+      "scene": "Ibn Battah al-Qahiri needs the carrier to articulate what kind of evidence the inscription is — different from the narrative evidence and different from any court record the Caliph's administration might have made.",
+      "prompt": "Investigation DC 12. The inscription is the beneficiary's record, not the benefactor's — made by the fisherman at his own expense, publicly disputable, undisputed for five centuries.",
+      "failText": "The inscription names Harun as the source. The stories name Harun as the source. What makes the inscription a different kind of evidence?",
+      "successText": "The receiver's record, not the giver's. That is the distinction. You receive the Certified Rubbing of the Bab al-Sha'riyya Mosque Inscription.",
+      "grantItem": "Certified Rubbing of the Bab al-Sha'riyya Mosque Inscription",
+      "checkPassFlag": "bgwS11Act1Passed", "activateMissionBit": "bgwS11Active"
+    },
+    {
+      "act": "act_2", "title": "Cairo Notary Quarter", "activateNode": "CAI",
+      "type": "skill_check", "skillCheck": { "stat": "Persuasion", "dc": 12 },
+      "scene": "Yusuf al-Kabir questions whether a seal applied by a now-deceased notary remains valid. A notarial seal authenticates a fact at a moment in time — the notary's death does not change what he witnessed.",
+      "prompt": "Persuasion DC 12. The seal authenticated a fact at a specific moment; that fact's truth does not depend on the notary's continued existence.",
+      "failText": "Is the authentication still valid after the notary's death?",
+      "successText": "The seal stands. Yusuf closes his ledger.",
+      "grantItem": "Notary Seal Verification",
+      "checkPassFlag": "bgwS11Act2Passed"
+    },
+    {
+      "act": "act_3", "title": "Alexandria Port", "activateNode": "ALE",
+      "type": "skill_check", "skillCheck": { "stat": "Persuasion", "dc": 13 },
+      "scene": "Sheikh Rashid al-Halabi objects that a mosque inscription transferred to a Christian archive is inappropriate. The mosque will be demolished in thirty days — the choice is Weimar or nothing.",
+      "prompt": "Persuasion DC 13. The alternative to a foreign archive is no record at all — the stone is gone in thirty days.",
+      "failText": "The inscription is from a mosque. Its destination matters.",
+      "successText": "Preserve it. But note it was a mosque inscription. Sheikh steps aside.",
+      "grantItem": "Alexandria Port Clearance",
+      "checkPassFlag": "bgwS11Act3Passed"
+    },
+    {
+      "act": "act_4", "title": "Ragusa Waystation", "activateNode": "RGS",
+      "type": "skill_check", "skillCheck": { "stat": "Courage", "dc": 12 },
+      "scene": "Georgios Palamas offers a legitimate competing collection in Constantinople — seventeen Abbasid-era inscriptions, accessible to scholars. Ibn Battah named Weimar for the theme thread. Hold the commission.",
+      "prompt": "Courage DC 12. The rubbing needs to be in conversation with Weimar's existing Abbasid theme thread, not isolated in a private collection — hold the commission despite the generous offer.",
+      "failText": "Constantinople is more accessible to Eastern scholars. Hold the commission — Ibn Battah named Weimar specifically.",
+      "successText": "Georgios accepts the refusal with grace. Tell them I have seventeen others when they are ready.",
+      "grantItem": "Ragusa Waystation Transit Receipt",
+      "checkPassFlag": "bgwS11Act4Passed"
+    },
+    {
+      "act": "act_5", "title": "Weimar Archive", "activateNode": "WM",
+      "type": "skill_check", "skillCheck": { "stat": "History", "dc": 12 },
+      "scene": "Sweelinck needs the classification that captures what the beneficiary's public record proves that the court record cannot — the distinction between the giver's ledger and the receiver's public act of naming.",
+      "prompt": "History DC 12. The inscription proves the gift through the receiver's public act of naming — disputable by anyone, undisputed for five centuries. That is a different kind of proof from the giver's ledger.",
+      "failText": "What does the inscription prove that a court record could not?",
+      "successText": "Sweelinck writes: Dedicatory Records — Public Inscriptions Acknowledging the Source of Extraordinary Fortune; The Receiver's Independent Record as Corroboration of the Giver's Legend. You receive Archive Classification Receipt: Dedicatory Records.",
+      "takeItem": "Certified Rubbing of the Bab al-Sha'riyya Mosque Inscription",
+      "grantItem": "Archive Classification Receipt: Dedicatory Records",
+      "checkPassFlag": "bgwS11Act5Passed", "activateMissionBit": "bgwS11Complete"
+    }
+  ]
+}
+```
+
+---
+
+*BGW-S11 complete. 2026-06-02.*
+
+
 
 
 
