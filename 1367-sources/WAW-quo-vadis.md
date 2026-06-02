@@ -1340,3 +1340,427 @@ activateMissionBit: waw05ActeComplete
 ---
 
 *WAW-05 complete. 2026-06-02.*
+
+---
+
+## Cycle 6 — Angle: *The Charge List — The Prosecution Document as the Only Census*
+
+**What this angle reveals that cycles 1-5 missed**: Cycle 1: the final document of the man who named the crime from outside power's reach. Cycle 2: the accidental administrative witness. Cycle 3: the secular road official who did not know what he saw. Cycle 4: the informer whose register became the martyrs' witness. Cycle 5: the letter filed under the act, not the man. Cycle 6 shows something the other five cycles could not: the arrest record is the only complete list of who was there. The Transtiberim community in 64 AD had no internal census. No membership rolls. No assembly lists. The Praetorian Guard produced the only systematic document that named all forty-three of them — and they produced it to prosecute them. The persecution document is the community's archive. The prosecution created the record that the persecuted could not keep themselves.
+
+**Themes avoided:** accidental administrative witness (Cycle 2); secular unknowing witness (Cycle 3); informer's register as martyrs' witness (Cycle 4); the letter filed under the act (Cycle 5); the aesthetic will outside power's reach (Cycle 1).
+
+**New theme chosen:** "The prosecution document is the only census; the arrest record names the community no one else recorded; the Praetorian Guard created the archive of the people they destroyed."
+
+---
+
+### 5-Act Vignette: *The Charge List*
+
+#### The Token
+
+The Transtiberim Arrest Register: a papyrus roll, partial, in official Praetorian administrative Latin. Forty-three entries. Each entry: name, district address, specific charge (most are "practicing the superstition of Christus"), arresting officer's unit and name, disposition (most read *traditus ad amphitheatrum* or *incendiarius*). The document is the only record that these forty-three people existed. It was filed in the Praetorian archive, copied once by a scribe with Christian sympathies, and the copy survived in a Roman catacomb for 1,300 years.
+
+*The Transtiberim Arrest Register · partial papyrus roll, forty-three entries, official Latin · catacomb library shelf · Rome*
+
+---
+
+#### Act I — Rome (ROM)
+
+*The catacomb library is three levels below the Appian Way. The keeper, an old man named Fra Simone di Laterano, has been the catacomb's archivist for thirty years. He found the register in a sealed niche behind a collapsed wall.*
+
+Fra Simone understands exactly what the register is. He has counted the forty-three names and cross-referenced what he knows of early Roman Christian sources: twelve of the forty-three appear nowhere else. Twenty-one appear in later hagiographic lists but without addresses. The addresses in the register are the only evidence that these people lived in specific streets, not in abstract martyrdom.
+
+He wants the register to reach an institution that will treat it as a census, not as a relic.
+
+`grantItem: "Transtiberim Arrest Register"`
+
+*The Transtiberim Arrest Register · accepted, the forty-three entries in the Fighter's hands · ROM catacomb*
+
+**Skill Check — History DC 12:** *Understand the document's double nature — it is both a prosecution record and the only systematic census of the 64 AD Transtiberim Christian community.*
+
+*pass:* Both layers are visible. The charge categories are standard Praetorian administrative Latin. The addresses are specific — *vicus Sabuci, insula tertia, tertius gradus*. The document is the evidence of the prosecutor and the archive of the prosecuted, in the same columns. *It is the only list that names where they lived. The persecution created the only record that they existed as a community.*
+
+*fail:* The document noted as an early Christian persecution record. The specific significance of the address data is not assembled.
+
+---
+
+#### Act II — Rome (ROM)
+
+*A Vatican official — a senior secretary in the Papal Curia — has been waiting outside the catacomb since yesterday. He knows the register exists and he knows Fra Simone has it. The Vatican wants custody: the forty-three names include potential candidates for formal beatification proceedings, and the beatification process requires documentary evidence of specific persons.*
+
+He is polite, formal, and has a written request from a Cardinal. He is not threatening. He is exercising institutional jurisdiction.
+
+*The Transtiberim Arrest Register · in the Fighter's hands, the Vatican official holding a Cardinal's letter · Fighter · catacomb entrance*
+
+**Skill Check — Persuasion DC 13:** *Argue that a prosecution record used for beatification proceedings becomes a devotional document and ceases to function as a historical census; the archive preserves the document as what it is — a Praetorian administrative record — not as what the Church needs it to be.*
+
+*pass:* The official considers the argument. He does not have authority to override a well-reasoned archival claim. He sends a message to the Cardinal requesting clarification. The Fighter is free to proceed. *He is a bureaucrat. He needed a reason to let it pass. The Fighter gave him one.*
+
+*fail:* He imposes a three-day review delay. Released when the Cardinal decides the archive claim is not the Vatican's fight.
+
+---
+
+#### Act III — Florence (FLR)
+
+*The Florentine factor's house. A Florentine humanist scholar named Messer Benedetto Strozzi is in residence. He collects Roman administrative documents and has been building a comprehensive archive of Neronian-period official records. He already has three Praetorian administrative documents and he wants the register badly.*
+
+He makes an offer that is scholarly and sincere. He argues that his private collection is the right home: he has the contextual documents, he speaks classical Latin, he will publish a scholarly account of the register within five years. He is not lying about any of this.
+
+*The Transtiberim Arrest Register · the papyrus carefully rolled on Strozzi's reading table · Fighter's presence · Florence factor's house*
+
+**Skill Check — Persuasion DC 12:** *Argue that a private archive cannot provide the cross-referencing that makes the address data meaningful — it needs to be in a collection that can compare it with other documents from the same region and period that the private collection does not hold.*
+
+*pass:* Strozzi is a genuine scholar. He sees the logic. "The addresses," he says. "You're right that my contextual documents don't include district maps." He releases it with a note to the archive: *for cross-reference, I have Praetorian administrative records covering the period 61–67 AD; the archive is welcome to request copies.* *His offer will still be there. The register will be more useful where it is going.*
+
+*fail:* He retains a full transcription of all forty-three entries before releasing the original. The transcription will reach Florentine humanist networks.
+
+---
+
+#### Act IV — Florence Road (FLR)
+
+*Three men on the Bologna road north of Florence. They are not academic rivals of Strozzi. They are relatives of a Florentine family whose ancestral records trace back to Roman freedman families — one of the forty-three names in the register is an ancestor. The family has been managing this knowledge privately for generations. They do not want the address made public.*
+
+*The Transtiberim Arrest Register · in the pack, three men blocking the road · Fighter · Florence road*
+
+**Combat:** 3 hired men — AC 12, HP 16. Family obligation, not professional violence. Stop at first serious injury. *failText:* They take the register. The road north has a waystation. *passText:* All three down or withdrawn. *The address is already in the register. The name was always there. The family has been protecting a record they could not destroy for three generations.*
+
+---
+
+#### Act V — Weimar (WM)
+
+*Archivus Sweelinck unrolls the register on a wide table. He reads the first entry. He reads the last. He counts.*
+
+"Forty-three." He traces the address column. "Specific streets. Specific floors." He reaches for a reference. "The hagiographic lists from the same period — I have three in the archive." He compares. "Twenty-one of these appear in the hagiographic lists without addresses." He looks at the register. "The hagiographic lists record names. The Praetorian record records people. These are not the same act."
+
+He is quiet for a moment.
+
+"The persecution produced the only census. The prosecutors created the archive of the people they destroyed." He opens the intake book. "What category does a prosecution document belong in when it is the only record the prosecuted community left?"
+
+New category: *Prosecution Records — Inadvertent Census Documents: official prosecution or arrest records that constitute the only systematic documentation of the community prosecuted; primary evidence of persons who appear in no other contemporary record; the prosecution is the only institution that kept systematic track of the persecuted.*
+
+He notes: "Cross-reference to WAW-01 (Petronius's Letter), WAW-04 (Chilo's Account). Three documents from the same persecution. Three different institutions that kept records: the persecutors, the informer, and the aesthete. The archive now holds all three."
+
+*The Transtiberim Arrest Register · unrolled on the wide table, address column marked · Archivus Sweelinck · Weimar intake desk*
+
+"You receive the Persecution Census Record."
+
+`takeItem: "Transtiberim Arrest Register"`
+`grantItem: "Persecution Census Record"`
+
+---
+
+### Quest API Stub — WAW-02
+
+```json
+{
+  "quest_id": "WAW-02",
+  "title": "The Charge List",
+  "cycle": 6,
+  "book": "WAW — Quo Vadis (Sienkiewicz)",
+  "token": "Transtiberim Arrest Register",
+  "route": ["ROM", "FLR", "WM"],
+  "theme": "The prosecution document is the only census; the arrest record names the community no one else recorded; the Praetorian Guard created the archive of the people they destroyed",
+  "archive_category": "Prosecution Records — Inadvertent Census Documents",
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "ROM",
+      "type": "skill_check",
+      "activateNode": "ROM",
+      "scene": "Roman catacomb library. Fra Simone di Laterano has cross-referenced the forty-three names: twelve appear nowhere else, twenty-one appear in hagiographic lists but without addresses. The addresses in this register are the only evidence these people lived in specific streets, not in abstract martyrdom.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Understand the document's double nature — prosecution record and the only systematic census of the 64 AD Transtiberim Christian community.",
+        "failText": "Document noted as an early Christian persecution record. Address data significance not assembled.",
+        "passText": "The charge categories are standard Praetorian Latin. The addresses are specific: vicus, insula, gradus. It is the evidence of the prosecutor and the archive of the prosecuted in the same columns. The persecution created the only record that they existed as a community."
+      },
+      "grantItem": "Transtiberim Arrest Register",
+      "checkPassFlag": "waw02Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "ROM",
+      "type": "skill_check",
+      "activateNode": "ROM",
+      "scene": "Catacomb entrance. A Vatican Curia official with a Cardinal's letter. The forty-three names include beatification candidates. The beatification process requires documentary evidence of specific persons. He is exercising institutional jurisdiction.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "prompt": "Argue that a prosecution record used for beatification proceedings becomes a devotional document and ceases to function as a historical census.",
+        "failText": "Three-day review delay. Released when Cardinal decides the archive claim is not the Vatican's fight.",
+        "passText": "He needed a reason to let it pass. The Fighter gave him one. He sends a message to the Cardinal requesting clarification. The Fighter proceeds."
+      },
+      "checkPassFlag": "waw02Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "FLR",
+      "type": "skill_check",
+      "activateNode": "FLR",
+      "scene": "Florence factor's house. Humanist scholar Messer Benedetto Strozzi wants the register for his Neronian-period administrative archive. He is sincere, scholarly, speaks classical Latin, and will publish within five years. He is not lying about any of this.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "prompt": "Argue that a private collection cannot provide the cross-referencing that makes the address data meaningful — it needs to be in a collection that can compare it with other documents from the same region and period.",
+        "failText": "He retains a full transcription of all forty-three entries before releasing the original. The transcription will reach Florentine humanist networks.",
+        "passText": "Strozzi sees the logic. 'The addresses — you're right, my contextual documents don't include district maps.' He releases it with a note offering his Praetorian administrative records for cross-reference."
+      },
+      "checkPassFlag": "waw02Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "road_florence_north",
+      "type": "combat",
+      "activateNode": "FLR",
+      "scene": "Bologna road north of Florence. Three hired men from a Florentine family whose ancestral records trace to one of the forty-three names. The family has managed this knowledge privately for generations. They do not want the address made public.",
+      "combat": {
+        "enemies": 3,
+        "AC": 12,
+        "HP": 16,
+        "description": "Family obligation, not professional violence — stop at first serious injury",
+        "failText": "They take the register. The road north has a waystation.",
+        "passText": "All three down or withdrawn. The address was always in the register. The family has been protecting a record they could not destroy for three generations."
+      },
+      "checkPassFlag": "waw02Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck unrolls the register. He compares the forty-three names to three hagiographic lists in the archive. 'Twenty-one of these appear in the hagiographic lists without addresses. The hagiographic lists record names. The Praetorian record records people. These are not the same act.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Confirm the census function: the forty-three entries with specific street addresses constitute the only systematic spatial record of the Transtiberim Christian community in 64 AD.",
+        "failText": "Filed under Roman Persecution Records — First Century. Cross-reference to WAW-01 and WAW-04 created.",
+        "passText": "Sweelinck writes: 'Prosecution Records — Inadvertent Census Documents: official arrest records that constitute the only systematic documentation of the community prosecuted; primary evidence of persons who appear in no other contemporary record.' Cross-reference: WAW-01, WAW-04. You receive the Persecution Census Record."
+      },
+      "takeItem": "Transtiberim Arrest Register",
+      "grantItem": "Persecution Census Record",
+      "checkPassFlag": "waw02Act5Passed",
+      "activateMissionBit": "wawChargeListComplete"
+    }
+  ]
+}
+```
+
+---
+
+*WAW-02 complete. 2026-06-02.*
+
+
+---
+
+## Cycle 7 — Angle: *Peter's Deposition at Antioch — The Periphery Holds the Origin*
+
+**What this angle reveals that cycles 1-6 missed**: Cycle 1: the aesthetic will that names the crime. Cycle 2: the accidental administrative witness. Cycle 3: the secular unknowing. Cycle 4: the informer's register transformed. Cycle 5: the letter filed under the act. Cycle 6: the prosecution as census. Cycle 7 shows the document that precedes all the others in the story's theological structure: the Peter's Antioch community record preserves a first-person account of the Caesarea Philippi commission — the teaching that precedes Rome, precedes the martyrdom, precedes the entire arc of the novel — in a Syrian monastery, where it has been for a century. The community on the periphery of the empire kept the origin that Rome received only secondhand. The first written form of the central commission is not in Rome.
+
+**Themes avoided:** prosecution as census (Cycle 6); secular unknowing witness (Cycle 3); final act of will (Cycle 1); informer transformed (Cycle 4).
+
+**New theme chosen:** "The periphery holds the origin; the Syrian community record is the oldest written form of the central commission; what the center received secondhand the periphery kept firsthand."
+
+---
+
+### 5-Act Vignette: *Peter's Deposition at Antioch*
+
+#### The Token
+
+The Antioch Community Record Fragment: a single parchment leaf in Syriac, with a Greek interlinear translation added in a different, later hand. The Syriac portion records a teaching given to the Antioch Christian community in the voice of "Simon called Kephas": a first-person account of a question asked on the road to Caesarea Philippi and the answer given, followed by a specific instruction about what to do with the answer. The fragment was copied by the Antioch community when Peter left for Rome. It is the oldest known written version of this teaching outside of later canonical sources. The Greek interlinear was added by a Greek-speaking monk two centuries later who found the Syriac text without translation.
+
+*The Antioch Community Record Fragment · single parchment leaf, Syriac with Greek interlinear, held in a monastery archive box · Syrian monastery near Antioch · waiting*
+
+---
+
+#### Act I — Antioch (ANT)
+
+*The Syrian monastery is in the hills above the city. The abbot, Brother Athanasius, has been corresponding with a scholar at the University of Paris for two years about the fragment. He has been trying to determine whether sending it to Paris or sending it to an independent archive serves the fragment better. The Paris scholar wants it for a theological argument; the archive wants it as a primary document.*
+
+Brother Athanasius has made his decision before the Fighter arrives. He says: "The Paris scholar will use it. An archive will preserve it." He handles the fragment with two cloths. "The Syriac is first. The Greek was added later. This means the teaching was recorded in Aramaic-adjacent language before anyone thought of translating it."
+
+`grantItem: "Antioch Community Record Fragment"`
+
+*The Antioch Community Record Fragment · accepted, the Syriac column read first · Fighter's hands · monastery archive room*
+
+**Skill Check — Religion DC 12:** *Understand the fragment's structural priority — the Syriac text is earlier than any Greek version; this establishes that the Antioch community recorded the teaching in its original linguistic register before Greek transmission began.*
+
+*pass:* The Greek interlinear is commentary on a Syriac original. Not a translation of a Greek source. The Syriac is prior. *The community on the periphery kept the origin in the original language. What Rome received in Greek had already been stabilized here, in Syriac, for a century.*
+
+*fail:* The fragment noted as an early Syriac Christian text with Greek interlinear. Linguistic priority inference not assembled.
+
+---
+
+#### Act II — Antioch (ANT)
+
+*A representative of the Patriarch of Antioch is at the monastery gate. The Patriarch of Antioch has a jurisdictional claim to documents originating in the early Antioch community — the Patriarchate considers the 1st-century Antioch community records part of its institutional archive.*
+
+The representative is a deacon, well-dressed and precise. He has a letter from the Patriarch. He is not hostile. He is exercising the claim that the Patriarch's institution is the direct heir of the Antioch community that produced the fragment.
+
+*The Antioch Community Record Fragment · in the Fighter's hands, the deacon reading the Patriarch's letter aloud · Fighter · monastery gate*
+
+**Skill Check — History DC 12:** *Counter-argue that the Patriarchate of Antioch as a formal institution was established centuries after the fragment was produced; the document predates the institution that claims it.*
+
+*pass:* The deacon pauses. He is precise enough to recognize the argument's validity. He cannot claim on behalf of an institution that did not exist when the document was created. He sends a message to the Patriarch. He lets the Fighter pass. *The Patriarchate is a successor institution. Successor institutions inherit from, but are not identical to, the communities they succeed.*
+
+*fail:* He imposes a review delay — three days, pending the Patriarch's response. The fragment is released when the Patriarch decides the archive claim is stronger.
+
+---
+
+#### Act III — Constantinople (CON)
+
+*The Constantinople overland waystation. A Greek Orthodox theologian named Kyriakos Palaiologos is traveling west. He has heard about the fragment from the Paris scholar's correspondence network. He wants to read it. He is a senior scholar with a specific interest: the Greek interlinear in the fragment uses a word choice that differs from the canonical Byzantine text. He wants to understand whether the difference is a translation decision or a textual variant.*
+
+He is genuinely scholarly. He asks politely and precisely. He wants to read the fragment, make notes, and release it. He will not take it. He explains his interest in detail.
+
+*The Antioch Community Record Fragment · in the Fighter's hands, Kyriakos reaching for it with scholar's hands · Fighter · Constantinople waystation*
+
+**Skill Check — Persuasion DC 12:** *Negotiate terms — Kyriakos reads the Greek interlinear, makes his notes, and signs a statement that his notes are his own work and do not constitute a claim on the original; the archive receives the fragment with the scholar's notes attached as a secondary record.*
+
+*pass:* He accepts. He reads for two hours. He writes six pages of notes. He signs the statement. He attaches his notes. *His notes will be the most useful secondary document the archive receives about the fragment. He gets what he wants; the fragment gets what it needs.*
+
+*fail:* He makes a full copy of both columns before releasing the fragment. The copy will enter Greek Orthodox theological scholarship networks.
+
+---
+
+#### Act IV — Ragusa (RGS)
+
+*Two men from the Paris scholar's network — not the scholar himself but his patrons. The Paris argument the fragment would support requires it to be read as Greek-original. The Syriac priority undermines the argument. The patrons cannot afford the argument to be undermined.*
+
+They are Parisian bankers' agents, not soldiers. They would prefer to buy it. They make an offer. They escalate to a different kind of pressure when the offer fails.
+
+*The Antioch Community Record Fragment · in the pack, both agents between the Fighter and the harbor · Fighter · Ragusa harbor road*
+
+**Hybrid — Persuasion DC 13 first; fail → Combat:**
+
+*Persuasion pass:* Argue that the fragment's value to any party depends on its authenticity, and an original fragment with an unbroken provenance chain is worth more to theological scholarship than a purchased document with a suspicious history. *A purchased fragment is a compromised fragment. Their argument needs a clean document more than they need this specific one.* They withdraw.
+
+*Persuasion fail → Combat:* 2 bankers' agents, AC 12, HP 18. Not fighters. *failText:* They take the fragment. The Ragusa harbor factor has seen them before. *passText:* Both down quickly. *The argument they wanted to make was already wrong. The fragment just made it impossible to pretend otherwise.*
+
+---
+
+#### Act V — Weimar (WM)
+
+*Archivus Sweelinck reads the Syriac column with a hand-lens. He reads the Greek interlinear. He reads the Syriac again.*
+
+"The Syriac first," he says. "The Greek added later. And the Greek uses a different word here." He marks the place. "The canonical Byzantine text says *ἐκκλησία*. This interlinear says *συναγωγή*." He sets down the lens. "The translator chose the later ecclesial term. The Syriac original has a word that means gathering or assembly. The interlinear was translating a community record, not a canonical text." He looks up. "Antioch recorded this before anyone decided what vocabulary to use."
+
+He writes: *Community Records — Ante-Canonical Documents: records produced by early Christian communities that preserve teaching or testimony in a register prior to canonical formulation; primary evidence for the transmission of teaching before standardization; the periphery of the empire held the origin in the original linguistic register.*
+
+He notes: "Cross-reference to WAW-01 through WAW-06. The archive now holds seven documents from the same forty-year window. None of them agree on what mattered most. All of them are right."
+
+*The Antioch Community Record Fragment · Syriac column marked, Greek interlinear compared · Archivus Sweelinck · Weimar intake desk*
+
+"You receive the Ante-Canonical Community Record."
+
+`takeItem: "Antioch Community Record Fragment"`
+`grantItem: "Ante-Canonical Community Record"`
+
+---
+
+### Quest API Stub — WAW-06
+
+```json
+{
+  "quest_id": "WAW-06",
+  "title": "Peter's Deposition at Antioch",
+  "cycle": 7,
+  "book": "WAW — Quo Vadis (Sienkiewicz)",
+  "token": "Antioch Community Record Fragment",
+  "route": ["ANT", "CON", "RGS", "WM"],
+  "theme": "The periphery holds the origin; the Syrian community record is the oldest written form of the central commission; what the center received secondhand the periphery kept firsthand",
+  "archive_category": "Community Records — Ante-Canonical Documents",
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "ANT",
+      "type": "skill_check",
+      "activateNode": "ANT",
+      "scene": "Syrian monastery above Antioch. Brother Athanasius has decided: 'The Paris scholar will use it. An archive will preserve it.' He handles the fragment with two cloths. 'The Syriac is first. The Greek was added later. This means the teaching was recorded in Aramaic-adjacent language before anyone thought of translating it.'",
+      "skillCheck": {
+        "skill": "Religion",
+        "dc": 12,
+        "prompt": "Understand the fragment's structural priority — the Syriac text is earlier than any Greek version; the teaching was recorded in its original linguistic register before Greek transmission began.",
+        "failText": "Fragment noted as an early Syriac Christian text with Greek interlinear. Linguistic priority inference not assembled.",
+        "passText": "The Greek interlinear is commentary on a Syriac original — not a translation of a Greek source. The Syriac is prior. The community on the periphery kept the origin in the original language. What Rome received in Greek had already been stabilized here for a century."
+      },
+      "grantItem": "Antioch Community Record Fragment",
+      "checkPassFlag": "waw06Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "ANT",
+      "type": "skill_check",
+      "activateNode": "ANT",
+      "scene": "Monastery gate. A Patriarch of Antioch deacon with a jurisdictional claim — the Patriarchate considers 1st-century Antioch community records part of its institutional archive. He is exercising the claim that his institution is the direct heir of the community that produced the fragment.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Counter-argue that the Patriarchate as a formal institution was established centuries after the fragment was produced — the document predates the institution that claims it.",
+        "failText": "Three-day review delay pending Patriarch's response. Released when Patriarch decides the archive claim is stronger.",
+        "passText": "The deacon recognizes the argument's validity. Successor institutions inherit from, but are not identical to, the communities they succeed. He lets the Fighter pass."
+      },
+      "checkPassFlag": "waw06Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "CON",
+      "type": "skill_check",
+      "activateNode": "CON",
+      "scene": "Constantinople waystation. Greek Orthodox theologian Kyriakos Palaiologos wants to examine the Greek interlinear — it uses a word choice that differs from the canonical Byzantine text. He is genuinely scholarly, asks politely, and will not take the fragment.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "prompt": "Negotiate terms — Kyriakos reads the Greek interlinear, makes notes, and signs a statement that his notes are his own work and do not constitute a claim on the original.",
+        "failText": "He makes a full copy of both columns. The copy will enter Greek Orthodox theological scholarship networks.",
+        "passText": "He reads for two hours, writes six pages of notes, signs the statement. His notes will be the most useful secondary document the archive receives about the fragment. He gets what he wants; the fragment gets what it needs."
+      },
+      "checkPassFlag": "waw06Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "RGS",
+      "type": "hybrid",
+      "activateNode": "RGS",
+      "scene": "Ragusa harbor road. Two agents of the Paris scholar's patrons. The Paris argument requires the fragment to be read as Greek-original. The Syriac priority undermines the argument. They prefer to buy it — and escalate when the offer fails.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "prompt": "Argue that a purchased fragment with a suspicious history is worth less to theological scholarship than an original with an unbroken provenance chain — their argument needs a clean document.",
+        "failText": "Combat begins: 2 agents, AC 12, HP 18. failText: They take the fragment. passText: Both down quickly."
+      },
+      "combat": {
+        "enemies": 2,
+        "AC": 12,
+        "HP": 18,
+        "description": "Bankers' agents — not fighters; stop at first serious injury",
+        "failText": "They take the fragment. The Ragusa harbor factor has seen them before.",
+        "passText": "Both down quickly. The argument they wanted to make was already wrong — the fragment just made it impossible to pretend otherwise."
+      },
+      "checkPassFlag": "waw06Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Archivus Sweelinck reads the Syriac column with a hand-lens. He finds the word-choice difference in the Greek interlinear: canonical Byzantine says ἐκκλησία; this says συναγωγή. 'Antioch recorded this before anyone decided what vocabulary to use.'",
+      "skillCheck": {
+        "skill": "Religion",
+        "dc": 12,
+        "prompt": "Explain the significance of the vocabulary difference — the interlinear translator chose the later ecclesial term; the Syriac original reflects an earlier assembly concept.",
+        "failText": "Filed under Early Christian Community Records — Syrian Region. Cross-reference to WAW series created.",
+        "passText": "Sweelinck writes: 'Community Records — Ante-Canonical Documents: records produced by early Christian communities preserving teaching in a register prior to canonical formulation; the periphery of the empire held the origin in the original linguistic register.' Cross-reference: WAW-01 through WAW-06. You receive the Ante-Canonical Community Record."
+      },
+      "takeItem": "Antioch Community Record Fragment",
+      "grantItem": "Ante-Canonical Community Record",
+      "checkPassFlag": "waw06Act5Passed",
+      "activateMissionBit": "wawPeterComplete"
+    }
+  ]
+}
+```
+
+---
+
+*WAW-06 complete. 2026-06-02.*
+

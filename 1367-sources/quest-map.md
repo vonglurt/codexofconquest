@@ -480,6 +480,8 @@ Game cities are canonical. Source-book settings are proposed new nodes.
 | CAI-02 | Aladdin's Registration | 6 | DAM → ANT → WM | The blank form precedes the story; the story was constructed around a Syrian-Persian legal instrument type; the template and the narrative illuminate each other |
 | CAI-04 | Prince Ahmed's Arrow | 7 | ALP → LAT → WM | The parish record of the unexplained; the account arrives and discovers the archive already holds the other end of it |
 | CAI-05 | The Deathbed Instruction | 8 | DAM → ALE → WM | The legal instrument that is the story's emotional center; the story is the breach case that the form was designed to prevent |
+| WAW-02 | The Charge List | 6 | ROM → FLR → WM | The prosecution document is the only census; the arrest record names the community no one else recorded |
+| WAW-06 | Peter's Deposition | 7 | ANT → CON → RGS → WM | The periphery holds the origin; the Syrian community kept the commission in its original linguistic register before Greek transmission began |
 
 *When a new quest is written, append its row to the Processed Quests table.*
 *When a new location is used, append its row to the Location Grid.*

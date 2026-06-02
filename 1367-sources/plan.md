@@ -87,7 +87,7 @@ Main vignette **WAW-01 "The Arbiter's Farewell"** is fully spec'd with UQF v1.0 
 
 The following quest seeds were generated from full narrative recall. Each has a paragraph-length story concept in WAW-quo-vadis.md. They need full vignette treatment: 5 acts, TOKEN, skill checks, UQF JSON, and admin updates.
 
-### §WAW-02 — The Charge List (Chapters 55–60)
+### §WAW-02 — The Charge List (Chapters 55–60) ✓ DONE 2026-06-02
 The Praetorian Guard produced formal arrest records during the 64 AD Christian persecution: names, addresses, charges, arresting officers. A partial copy of one list — covering arrests in the Transtiberim district — survived in a Roman catacomb library. It names forty-three people. It is the most complete record of who was there. Fighter escorts it from a Roman catacomb to a neutral archive.
 
 ### §WAW-03 — The Arena Register (Chapters 62–64)
@@ -99,7 +99,7 @@ In old age, having converted, Chilo dictated a full account of the people he inf
 ### §WAW-05 — Acte's Letter (Epilogue) ✓ DONE 2026-06-02
 Acte, Nero's freedwoman companion, arranged his burial when his retinue fled. She wrote a brief account of the condition of his body and the location of his grave for a subsequent Roman official who inquired. The letter describes a specific road, a specific grove, a specific distance from the city. Fighter escorts it from a Vatican archive to Weimar before the grove is built over.
 
-### §WAW-06 — Peter's Deposition at Antioch (Chapters 30–35)
+### §WAW-06 — Peter's Deposition at Antioch (Chapters 30–35) ✓ DONE 2026-06-02
 Before coming to Rome, Peter was in Antioch. The early Christian community there kept written records of his teaching, including his account of the Caesarea Philippi commission. A fragment of the Antioch community record — the oldest written version of the commission — survives in a Syrian monastery. Fighter escorts it west.
 
 ### §WAW-07 — The Mile-Marker Account (Chapter 69) ✓ DONE 2026-06-02
