@@ -208,3 +208,268 @@ prompt: "Three years later, the champion has returned with his sworn brother and
 checkPassFlag: tbsQuestFulfilled
 bitLabel: Empty Bone Cylinder (token consumed)
 ```
+
+---
+
+## Cycle 2 — Angle: *The Panther's Skin — The Question That Makes a Man Choose to Stay*
+
+**What this angle reveals that cycle 1 missed**: Cycle 1 showed love expressed through absence — the queen's composed sacrifice, the champion's willingness to go into the unknown carrying her heart in a bone case. Cycle 2 shows love expressed through total refusal — the warrior who has made his grief into an identity; who will not eat, will not name himself, will not speak except in verses about a woman no one else has heard of; for whom living has become the same as abandonment. The question the Fighter must find is not "do you want to live" — that question has been asked and answered with silence. The question is: *who will write her name when you are gone?*
+
+---
+
+### 5-Act Vignette Play: *The Panther's Skin*
+
+#### The Tablet
+
+*The Name-Tablet — a small cedar writing tablet, blank, physician's mark scratched in the corner — given to the Fighter before entering the cell; the physician's instruction: "Write down anything he says about her. If we have her name, we can search." The cedar is smooth and pale. It has never been written on.*
+
+---
+
+**ACT I**
+
+*The Name-Tablet — blank — in the physician's study, the cell corridor beyond the door, morning.*
+
+The physician's name is Maro. She is forty-five, has been court physician for twenty years, and has never lost a patient to silence before. She has tried food, water, medicines, three clergymen, two musicians, and the court jester. The warrior lies on the cell floor, clothed in a panther's skin that may have once been a distinction and is now simply what he wears. He has spoken since his capture only in verse — four lines repeated, then others; always the same woman; always the same cadences; always in a language the court does not fully understand.
+
+"He will die within the month," Maro says. "Not from starvation, precisely. From refusing to be in the world." She hands the Fighter the cedar tablet. "Write down anything he says about her. If we have her name, we can search." She pauses. "That is not, however, why I am asking you to go in. I am asking you to go in because I have run out of things to try."
+
+*— She is not asking for a method. She is asking for someone who will not leave until the right question is found.*
+
+> **Dialogue DC 12.** Tell Maro what the difference is between making someone want to live and finding the single remaining obligation that makes staying possible — that the question is not "do you want to live" but "who will do the one thing you have not yet done." She needs to know the Fighter understands this before sending them in.
+
+**Fail:** Maro studies the Fighter for a long moment. "You're going to tell him to think of people who love him." She is not unkind. "Come back at the afternoon bell with a better answer. Think about it."
+
+**Pass:** Maro hands over the tablet without another word. She adds one thing: "His verse changes at some point. There is a line about a woman who cannot be found. That is the line to follow." She opens the cell door.
+
+**TOKEN GRANTED: The Name-Tablet** — blank cedar tablet, physician's mark, intended for the one remaining act of naming.
+
+---
+
+**ACT II**
+
+*The Name-Tablet — blank — in the cell, the warrior sitting against the far wall, the panther's skin around his shoulders.*
+
+The warrior is tall, clearly powerful even in his state, and he is reciting. Not loudly. He is reciting the way a man prays when he has stopped expecting an answer: from habit, from necessity, from the feeling that stopping would be the end of the last thread. He does not look at the Fighter when the door opens. He has been not-looking at people for weeks.
+
+The Fighter sits down opposite him. Does not speak first. Listens.
+
+The verse is about a woman who is the sun. Specifically: a woman whose face, when she turns it away, makes the world go dark in the middle of the day. He says it three times. Then he says a different verse: about a woman who gave him a letter that he killed a man over. He says this one only once.
+
+*— He has stopped. He is still looking at the wall. He spoke the letter verse only once. That means it costs him more.*
+
+> **Dialogue DC 12.** Ask about the letter — specifically, whether the letter still exists, and whether anyone who loved her would want to know what it said. Not: "tell me about her." Not: "she would want you to live." Ask about the letter. Ask what happens to the letter's words when he is gone.
+
+**Fail:** He turns his face to the wall. The question was too direct. Try again — different approach; the Fighter must find the question he will answer before the approach is lost.
+
+**Pass:** He does not answer immediately. He turns his head slightly — not toward the Fighter, but away from the wall. After a long silence: "The letter exists." He says nothing more. But he has stopped reciting.
+
+**TOKEN STATE 2**: The Fighter writes "the letter exists" on the cedar tablet. The blank is no longer blank. A single fact.
+
+---
+
+**ACT III**
+
+*The Name-Tablet — one line written — in the cell, the warrior looking at the Fighter for the first time.*
+
+The warrior is looking at the tablet.
+
+He did not expect the Fighter to write down what he said. He has been speaking to people for weeks and no one wrote anything down. He looks at the three words and something changes in his face — not softening, exactly. More like: recognition that the Fighter is doing something different from what everyone else has done.
+
+"You wrote it down."
+
+"Yes."
+
+"Why?"
+
+*— He wants to know if the Fighter is writing down evidence, or writing down witness. These are different things.*
+
+> **Dialogue DC 13.** Tell him why — not: "so we can search for her." Tell him the real reason: because a man about to die has one remaining act available that no one can take from him, which is to put her name in a record that will exist after he is gone; and that record begins with what the Fighter writes, but it is completed by what he writes. He is the only one who knows her name. If he dies without writing it, the name dies with him.
+
+**Fail:** He goes still. The answer sounded like leverage. He is not wrong — it is leverage. Try again with fewer words. The argument is true; the delivery was wrong.
+
+**Pass:** He is quiet for a long time. Then he extends his hand and takes the tablet. He reads the three words the Fighter wrote. He turns the tablet over to the blank side and holds the stylus for a long time without moving.
+
+He writes a name.
+
+He hands the tablet back.
+
+**TOKEN STATE 3**: Her name is written on the tablet in the warrior's own hand. The tablet now carries both the Fighter's witness and the warrior's own act. It is no longer the physician's document. It is shared.
+
+---
+
+**ACT IV**
+
+*The Name-Tablet — two inscriptions — in the cell, voices in the corridor.*
+
+Two guards are outside the cell door. The court captain's voice is audible through the planks: "...physician's assessment is terminal; no point delaying; take him to the lower level before the morning count." They have decided he is going to die anyway and they want the cell back.
+
+*— If they move him now, the last conversation is over.*
+
+> **Combat: 2 guards — AC 12, HP 20 each.** They open the door ready to use force. They will stop if reduced to half health or given a reason to wait; they are not committed to cruelty, only to efficiency.
+
+**Fail:** The guards take the warrior. He goes without resisting. The Fighter follows to the lower level and must continue there; the conversation can still be completed, but the context is harsher.
+
+**Pass:** Both guards down or persuaded to wait. The door holds. The cell is quiet again.
+
+The warrior has watched the fight without moving. When it is over, he says: "You could have let them take me."
+
+"Yes."
+
+A long pause. He picks up the tablet again. He writes something underneath her name. A place. A direction. Something specific.
+
+**TOKEN STATE 4**: A place-name written on the tablet beneath her name — a direction, a last-known location. The tablet now holds: one fact (the letter exists), her name, a direction. It is a document.
+
+---
+
+**ACT V**
+
+*The Name-Tablet — three inscriptions — in the cell, early afternoon.*
+
+The warrior has been looking at the tablet for a long time. He is not reciting anymore.
+
+"If I write my name," he says at last, "it means I am agreeing to be found. To be known. To be someone she can ask for when she is free." He looks up at the Fighter. "It means I believe she will be free."
+
+*— He is asking the Fighter to confirm that this belief is not absurd. He does not need hope. He needs the Fighter to have looked at the situation and found the belief reasonable.*
+
+> **Dialogue DC 11.** Not: "she will be found." Not: "have faith." Tell him what the Fighter actually believes: that the woman who sent a letter commanding a war to be stopped rather than endure a marriage she did not choose is not the kind of woman who stays captive if there is any way to refuse; that the act of writing his name is not hope, it is the single remaining obligation — to be findable when she is ready to find him.
+
+**Fail:** He sets the tablet down without writing. The argument needs one more thing. Try: name the one thing the Fighter has seen in the past hours that suggests she would act. He has been telling the Fighter about her. The Fighter should know.
+
+**Pass:** He takes the tablet. He writes his name.
+
+He hands it to the Fighter.
+
+"Take it to the physician. Tell her I will eat tomorrow."
+
+**TOKEN TAKEN: The Name-Tablet**
+
+The cedar tablet leaves the cell in the Fighter's hands. On it: one fact in the Fighter's hand; her name in the warrior's hand; a place-name in the warrior's hand; his own name in the warrior's hand. The physician receives it in the corridor. She reads it without speaking. She goes to order food.
+
+---
+
+## Quest API Stub — UQF v1.0
+
+```json
+{
+  "quest_id": "TBS_002",
+  "title": "The Panther's Skin",
+  "source": "TBS",
+  "cycle": 2,
+  "book": "Knight in the Panther's Skin — Shota Rustaveli (c.1225, Georgian epic verse romance)",
+  "source_episode": "Tariel's grief exile — having killed a man at his beloved's command, lost her to captivity, and abandoned his court rank, Tariel retreats into wilderness to grieve; the poem presents his sustained grief as the truest measure of his love's depth; he cannot be reached by anyone who treats his refusal to live as pathology",
+  "theme": "The grief that has become an identity — the warrior who will not live because living without his beloved is the same as abandonment; the question that breaks the silence is not whether to live but who will write her name when he is gone; the choice to stay is made not as hope but as the single remaining obligation",
+  "token": {
+    "id": "TBS_002_TOKEN",
+    "name": "The Name-Tablet",
+    "description": "Small cedar writing tablet, blank at the start, physician's mark in the corner; intended as the instrument for capturing the warrior's words about his beloved; becomes the document of his choice to remain",
+    "grant_act": "act_1",
+    "take_act": "act_5",
+    "check_acts": ["act_2", "act_3", "act_4"],
+    "state_changes": [
+      {"act": "act_2", "change": "Fighter writes 'the letter exists' — blank cedar becomes a document with one fact"},
+      {"act": "act_3", "change": "warrior writes beloved's name — the tablet carries both witness and the warrior's own act; shared document"},
+      {"act": "act_4", "change": "warrior writes a place-name and direction — the tablet is now three inscriptions, a usable record"}
+    ]
+  },
+  "nodes": ["PHY", "GHC"],
+  "new_nodes": [
+    {
+      "code": "PHY",
+      "name": "Court Physician's Study",
+      "description": "A small room off the main corridor of the great hall: herb-smell and tallow, a single window, a table with clay vessels and linen bandages; physician Maro at the table with the cedar tablet and twenty years of experience at not being enough; the cell door visible at the end of the corridor through the study window"
+    },
+    {
+      "code": "GHC",
+      "name": "Guard House Cell",
+      "description": "A stone cell in the guard house annex: low ceiling, a floor of flat stone, a single lamp on an iron hook; the warrior in a panther's skin sits against the far wall with his back to the door; he has been reciting for weeks; the cell smells of stone and old straw and something like the wilderness that came in with him"
+    }
+  ],
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "PHY",
+      "type": "dialogue",
+      "activateNode": "PHY",
+      "missionAccept": "The court physician Maro has exhausted every approach. The warrior will die within the month. She gives the Fighter a blank cedar tablet and one instruction: write down anything he says about her. The real instruction is: find the question he will answer.",
+      "scene": "The physician's study. Maro at the table. The cedar tablet between them. The cell corridor visible through the study window. 'He will die not from starvation, precisely. From refusing to be in the world. I have run out of things to try.'",
+      "dialogue": {
+        "dc": 12,
+        "prompt": "Tell Maro the difference between making someone want to live and finding the single remaining obligation that makes staying possible.",
+        "failText": "'You're going to tell him to think of people who love him.' Come back at the afternoon bell with a better answer.",
+        "passText": "She hands over the tablet without another word. 'His verse changes at some point. Follow the line that costs him most.' TOKEN GRANTED: The Name-Tablet."
+      },
+      "grantItem": "The Name-Tablet",
+      "checkPassFlag": "TBS_002_act1Pass"
+    },
+    {
+      "act_id": "act_2",
+      "location": "GHC",
+      "type": "dialogue",
+      "activateNode": "GHC",
+      "scene": "The cell. The warrior recites. Not loudly — the way a man prays when he has stopped expecting an answer. He recites the sun-verse three times. Then the letter-verse once. The letter-verse costs him more. He has stopped reciting.",
+      "dialogue": {
+        "dc": 12,
+        "prompt": "Ask about the letter — specifically, what happens to the letter's words when he is gone.",
+        "failText": "He turns his face to the wall. Too direct. Try again — find the question he will answer.",
+        "passText": "After a long silence: 'The letter exists.' He says nothing more. But he has stopped reciting. TOKEN STATE 2: Fighter writes 'the letter exists' on the cedar tablet."
+      },
+      "checkPassFlag": "TBS_002_act2Pass"
+    },
+    {
+      "act_id": "act_3",
+      "location": "GHC",
+      "type": "dialogue",
+      "activateNode": "GHC",
+      "scene": "The warrior is looking at the tablet. He did not expect the Fighter to write down what he said. Something changes in his face — not softening. Recognition. 'You wrote it down.' 'Yes.' 'Why?'",
+      "dialogue": {
+        "dc": 13,
+        "prompt": "Tell him the real reason: that a man about to die has one remaining act — to put her name in a record that will exist after him; that record begins with what the Fighter wrote but is completed by what he writes; he is the only one who knows her name.",
+        "failText": "He goes still. The answer sounded like leverage. Try again with fewer words — the argument is true; the delivery was wrong.",
+        "passText": "After a long silence he takes the tablet. He writes her name. He hands it back. TOKEN STATE 3: her name in the warrior's own hand."
+      },
+      "checkPassFlag": "TBS_002_act3Pass"
+    },
+    {
+      "act_id": "act_4",
+      "location": "GHC",
+      "type": "combat",
+      "activateNode": "GHC",
+      "scene": "Two guards at the cell door. The captain's voice through the planks: court has decided the prisoner is terminal; take him to the lower level before the morning count. If they move him now, the last conversation is over.",
+      "combat": {
+        "enemies": 2,
+        "AC": 12,
+        "HP": 20,
+        "description": "court guards acting on efficiency, not cruelty; stop at half health or if given a reason to wait",
+        "failText": "They take the warrior to the lower level. The Fighter follows. The conversation continues there — context harsher.",
+        "passText": "Both down or persuaded to wait. When it is over the warrior picks up the tablet and writes a place-name beneath her name. TOKEN STATE 4: three inscriptions; a usable document."
+      },
+      "checkPassFlag": "TBS_002_act4Pass"
+    },
+    {
+      "act_id": "act_5",
+      "location": "GHC",
+      "type": "dialogue",
+      "activateNode": "GHC",
+      "scene": "The warrior looking at the tablet for a long time. 'If I write my name, it means I am agreeing to be found. To be someone she can ask for when she is free. It means I believe she will be free.' He is asking the Fighter whether that belief is reasonable.",
+      "dialogue": {
+        "dc": 11,
+        "prompt": "Tell him what you actually believe: that a woman who sent a letter commanding a war rather than endure an unwanted marriage is not the kind who stays captive; that writing his name is not hope, it is the single remaining obligation — to be findable.",
+        "failText": "He sets the tablet down without writing. Name the one thing the Fighter has seen in the past hours that suggests she would act. He has been telling the Fighter about her.",
+        "passText": "He takes the tablet. He writes his name. He hands it to the Fighter. 'Take it to the physician. Tell her I will eat tomorrow.' TOKEN TAKEN: The Name-Tablet."
+      },
+      "takeItem": "The Name-Tablet",
+      "activateMissionBit": "tbsPantherSkinComplete",
+      "checkPassFlag": "TBS_002_act5Pass"
+    }
+  ]
+}
+```
+
+---
+
+### New Node Proposals
+
+| Code | Name | Location | Description |
+|------|------|----------|-------------|
+| PHY | Court Physician's Study | Castle interior | Small room off the main corridor: herb-smell, a single window, a table with clay vessels and linen bandages; physician Maro with the cedar tablet; the cell door visible through the study window |
+| GHC | Guard House Cell | Castle annex | Stone cell, low ceiling, flat stone floor, single iron lamp; the warrior in a panther's skin against the far wall; smells of stone and old straw and something like the wilderness; the cell where grief has become an identity and a conversation might undo it |

@@ -524,7 +524,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
 | [ ] | AMS | tale-of-genji | Tale of Genji — Murasaki Shikibu | c.1010 | Japanese Novel | 435 | Processed 2026-05-31/06-01 — AMS-01 spec (The Scarlet Fence Poem, NIS→TBZ); AMS-02–06 seeds. ALL 3 PARTS FULLY READ (Chapters I–IX + Appendices). New seed from Parts 2–3: AMS-07 (The Exchanged Fans, TBZ→MRG→TBZ). See AMS-tale-of-genji.md. |
-| [ ] | TBS | knight-panther-skin | Knight in the Panther's Skin — Shota Rustaveli | c.1225 | Georgian Epic | mem |
+| [x] | TBS | knight-panther-skin | Knight in the Panther's Skin — Shota Rustaveli | c.1225 | Georgian Epic | mem |
 
 ### Caribbean & Americas
 
