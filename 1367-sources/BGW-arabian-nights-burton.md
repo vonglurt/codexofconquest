@@ -909,3 +909,681 @@ In the Pipeline Queue table, update BGW row:
 | BGW | Arabian Nights (Burton) | 983 | **Processed 2026-05-31 — BGW_001 spec complete; BGW-02–07 seeds pending** |
 
 Next book in queue: **CAI** (Arabian Nights — Lang, ~629 KB) — same source material, different manuscript tradition (Galland/Syrian). May share some storylines with BGW; main vignette should draw on a different story cycle.
+
+---
+
+## BGW-04 — Morgiana's Grant (Ali Baba supplement)
+**Cycle 3**
+
+*(Theme differentiation: Avoiding BGW cycles 1-2. Avoiding ZTH cycle 2's "guest-gift obligation," DQX's "authorship creates a claim that no crime cancels," MAD cycle 2's "the object that is genuinely two things simultaneously." New theme: the document that cannot be authenticated but cannot be dismissed — the unanswerable question about whether this is the original behind the story or a later document named for a character is not a flaw in the record; it is the record's primary historical condition; the archive creates a category for documents whose fictional/historical status cannot be resolved.)*
+
+---
+
+*The Morgiana Manumission Deed · a papyrus sheet in standard Cairo legal format, 9th century, Arabic, official notarial hand; grants manumission to "Morgiana, household slave of Qasim ibn Abd-Allah of the Cairo cloth merchant district" for "services rendered including the defense of the household against enemies of the household"; dated, witnessed by two notaries, officially sealed; with a later hand in the margin: "see: the tale of Ali Baba and the forty thieves, night 156" · in the Alexandrian Patriarchate's Cairo manumission records depository, Brother Arsenios's custody*
+
+---
+
+### Act I — The Collection Sale
+
+Hajj Ibrahim has been negotiating to purchase the entire manumission records collection for four months. He is not interested in manumissions as such. He is interested in anything from the 9th century that can be sold to collectors who want provenance. The Morgiana deed is in the collection. He does not yet know that Brother Arsenios knows which document it is.
+
+Brother Arsenios has the collection in three hundred sleeves, sorted by decade. He is a careful man. The deed is in a separate sleeve, at his elbow, not in the collection racks. He separated it when he read the marginal note six weeks ago.
+
+The argument for the archive: Hajj Ibrahim's clients will sort the collection by sale value. Documents whose authenticity cannot be determined are sold at a discount to collectors who will assert their authenticity without disclosing the uncertainty. The archive receives the document as what it is — a record with an unresolvable question attached — and preserves both the document and the question. Only the archive can preserve the question.
+
+*Brother Arsenios handed the Fighter the sleeve and then looked at where it had been at his elbow.*
+
+He had not decided what to do with it. He had just decided what not to do with it.
+
+You receive the Depository Release Authorization. You receive the Morgiana Manumission Deed.
+
+---
+
+### Act II — Hajj Ibrahim's Offer
+
+*The Morgiana Manumission Deed · in the Fighter's satchel with the Release Authorization · in the Cairo harbor transit office*
+
+Hajj Ibrahim made his offer with the courtesy of a man who expects to be refused and has decided to make the refusal comfortable. He named a specific sum. He said: *The question of whether the document is original or imitative is not the archive's question to answer. But it is the collector's product. The archive removes the question. I restore it.*
+
+He was, in his way, correct. A private collection that presents an unauthenticated document as authentic does restore the question — as a selling point. The archive preserves the question as a scholarly condition.
+
+The Fighter refused.
+
+Hajj Ibrahim wrote a Non-Purchase Statement in the practiced hand of a man who keeps such records for professional reasons. He pressed his seal. He said: *For your chain of custody. So the document arrives where it is going without doubt.*
+
+You receive the Dealer's Non-Purchase Statement.
+
+---
+
+### Act III — Fra Matteo's Certainty
+
+*The Morgiana Manumission Deed · in the satchel with two documents · in a Dominican hospice reception room, Alexandria*
+
+Fra Matteo di Ferrara has been studying the question of Arabic manuscript fabrications for eight years. He believes the Morgiana deed is a fabrication — a 10th-century scribe who was copying the Ali Baba tale created a "historical" manumission deed to give the story a documentary foundation. He is not hostile to the document; he wants to declare it a forgery and have done with it.
+
+He is wrong not because the deed is definitely real — it might not be — but because his certainty is the same epistemological error as the opposite certainty. The document's condition is not that it is authentic or fabricated. Its condition is that the question cannot be answered.
+
+*Fra Matteo had the manuscript of his forgery declaration open on the table.*
+
+The insight needed: Fra Matteo's declaration would answer the question in one direction; but the direction he would answer it in is not more defensible than the opposite direction. Both certainties are available and both are wrong, because the evidence supports neither.
+
+The Fighter said this carefully. Not as an attack on Fra Matteo's scholarship. As a description of what the document is.
+
+*Fra Matteo looked at the declaration.* Then he looked at the deed. He did not write the declaration. He wrote instead a Non-Declaration Statement — acknowledging that the question could not be resolved on current evidence — and signed it with the expression of a man who has been correctly corrected on something he did not want to admit.
+
+You receive Fra Matteo's Non-Declaration Statement.
+
+---
+
+### Act IV — The Legal Scholar
+
+*The Morgiana Manumission Deed · in the satchel with three documents · in a Venetian legal scholar's study, Venice*
+
+Mustapha ibn Yusuf, a legal expert on 9th-century Cairo notarial practice, is now resident in Venice as an advisor to Venetian merchants on Levantine contract law. He has been retained by a Venetian collector (through Hajj Ibrahim's network) to give a professional opinion on whether the deed's format is authentic to the period.
+
+His opinion would be definitive about format. The problem: format authenticity does not answer the question the document raises. A 10th-century scribe writing a fake 9th-century deed would have used an accurate 9th-century format. An authentic 9th-century deed would also use an accurate 9th-century format. Format analysis cannot separate them.
+
+*The opinion was already drafted on his desk.*
+
+The Fighter asked: what would the opinion conclude about whether this is the original behind the story or a later document?
+
+Mustapha ibn Yusuf said: *Nothing. The format is period-appropriate. That is all I can say.*
+
+The Fighter asked: then what does the opinion do?
+
+*He looked at the draft.* It produced the appearance of a definitive answer while acknowledging in a footnote that the core question remained open. The opinion was designed to be cited for its conclusion and not for its footnote.
+
+The Fighter noted the gap between the conclusion and the footnote in writing and handed it back. Mustapha ibn Yusuf read his own draft with this observation in mind and then wrote a Scholarly Scope Limitation Statement clarifying that the opinion addressed only format and could not address the document's relationship to its narrative counterpart.
+
+You receive the Scholarly Scope Limitation Statement.
+
+---
+
+### Act V — The Unanswerable Question
+
+*The Morgiana Manumission Deed · still sealed in the satchel, all four documents present · at the Archivus Sweelinck's intake desk, Weimar*
+
+The Archivus read the deed and then the marginal note. He read the date. He set it down.
+
+*This is either a primary source or a forgery. The archive receives primary sources. It does not receive forgeries.*
+
+He was not being difficult. He was stating the classification protocol, which required him to make a determination.
+
+The Fighter said: it cannot be determined.
+
+*The Archivus looked up.* He had heard this before, about documents where the evidence had not yet been gathered. He had not heard it stated as the permanent condition.
+
+The argument: the question of whether this deed is original or imitative cannot be answered on any currently available or prospectively available evidence. This is not a temporary gap — it is structural. The document is from a period and tradition that produced both authentic deeds and narrative supplements simultaneously. Both types used the same format, the same notarial conventions, the same language. The question is inherently unanswerable and will remain so. The archive that waits for an answer will wait indefinitely. The archive that receives the document as what it is — a record carrying an unresolvable question — preserves the inquiry itself.
+
+*The Archivus was quiet.*
+
+Then he wrote, slowly, at the top of the intake sheet, a heading that had not been written here before: *Documents of Uncertain Fictional/Historical Status: records whose relationship to their narrative counterpart cannot be resolved, and whose archival value is precisely the unresolvability.*
+
+He noted: "The question is preserved. The answer is not suppressed. It does not exist."
+
+You receive the Uncertain Status Classification Record.
+
+---
+
+### Quest API Stub — BGW-04
+
+```
+missionAccept: "An Alexandrian depository holds a 9th-century manumission deed for a
+  woman named Morgiana, granted freedom for services including the death of a household
+  enemy — matching exactly the character in the Ali Baba tale. Whether this is the
+  original behind the story or a later document named for the character cannot be
+  answered. A manuscript dealer is closing the purchase of the collection. Carry the
+  deed to Weimar before it is sold and the question is suppressed."
+
+Act I — The Collection Sale
+activateNode: CAI
+type: escort
+scene: "Cairo manumission records depository. Hajj Ibrahim is closing the purchase of the
+  collection. Brother Arsenios has the Morgiana deed at his elbow, separated from the
+  racks — he read the marginal note six weeks ago and has not decided what to do with it.
+  The argument is about what the archive preserves that the collection cannot."
+prompt: "Persuasion DC 13: Argue that the dealer's clients will assert authenticity without
+  disclosing the uncertainty; only the archive can preserve the document and the question
+  simultaneously."
+failText: "Brother Arsenios says: 'The question may be answered eventually.' Come back with
+  the argument about why the archive preserves the question better than any private sale
+  could. (retry)"
+successText: "Brother Arsenios hands over the sleeve without having decided to — he decided
+  what not to do, which was enough. You receive the Depository Release Authorization.
+  You receive the Morgiana Manumission Deed."
+grantItem: "Depository Release Authorization"
+grantItem: "Morgiana Manumission Deed"
+activateMissionBit: bgw04Act1Active
+checkPassFlag: bgw04Act1Passed
+
+Act II — Hajj Ibrahim's Offer
+activateNode: CAI
+type: skill_check
+scene: "Cairo harbor transit office. Hajj Ibrahim makes a professional offer with courtesy.
+  He says: 'The archive removes the question. I restore it.' He is correct about his
+  product. The question is what the archive and the dealer each do with the uncertainty."
+prompt: "Persuasion DC 12: Refuse the offer. Receive the professional chain-of-custody
+  document he provides as standard practice."
+failText: "Hajj Ibrahim increases the offer. He says: 'Name the sum.' Refuse before the
+  sum is named by you. (retry)"
+successText: "Hajj Ibrahim writes a Non-Purchase Statement, presses his seal, and says:
+  'For your chain of custody. So the document arrives without doubt.' You receive the
+  Dealer's Non-Purchase Statement."
+grantItem: "Dealer's Non-Purchase Statement"
+checkPassFlag: bgw04Act2Passed
+
+Act III — Fra Matteo's Certainty
+activateNode: ALE
+type: hybrid
+scene: "Dominican hospice, Alexandria. Fra Matteo has spent eight years studying Arabic
+  manuscript fabrications. He believes the deed is a forgery and has a declaration draft
+  on the table. He is wrong not because the deed is authentic — it might not be — but
+  because his certainty in the forgery direction is the same epistemological error as
+  certainty in the authentic direction."
+prompt: "Insight DC 12: Recognize that the document's condition is not authentic-or-false;
+  it is structurally unanswerable; both certainties are available and both are wrong."
+failText: "Fra Matteo says: 'The evidence points one way.' He sends his declaration ahead.
+  Come back with the argument about what both certainties share. (retry — combat with
+  Fra Matteo's courier if insight fails)"
+successText: "Fra Matteo looks at the declaration and then at the deed. He writes a
+  Non-Declaration Statement acknowledging the question cannot be resolved on current
+  evidence. You receive Fra Matteo's Non-Declaration Statement."
+grantItem: "Fra Matteo's Non-Declaration Statement"
+checkPassFlag: bgw04Act3Passed
+
+Act IV — The Legal Scholar
+activateNode: VEN
+type: skill_check
+scene: "Venice, Mustapha ibn Yusuf's study. He has been retained to give an opinion on
+  the deed's format. His opinion is drafted; it concludes the format is period-appropriate
+  and leaves the core question in a footnote. The opinion is designed to be cited for its
+  conclusion and not for its footnote."
+prompt: "Insight DC 13: Identify the gap between the conclusion and the footnote; ask
+  what the opinion proves about the document's relationship to its narrative counterpart,
+  since format authenticity applies equally to an original and a period-accurate forgery."
+failText: "Mustapha says: 'The format is authenticated.' The format is not what is in
+  question. Come back with what the format analysis cannot distinguish. (retry)"
+successText: "Mustapha reads his own draft with your observation in mind and writes a
+  Scholarly Scope Limitation Statement clarifying the opinion addresses only format
+  and cannot address the document's narrative relationship. You receive the Scholarly
+  Scope Limitation Statement."
+grantItem: "Scholarly Scope Limitation Statement"
+checkPassFlag: bgw04Act4Passed
+
+Act V — The Unanswerable Question
+activateNode: WM
+type: skill_check
+scene: "Weimar archive intake desk. The Archivus reads the deed and the marginal note.
+  He says: 'This is either a primary source or a forgery. The archive receives primary
+  sources, not forgeries.' He is stating the classification protocol, which requires
+  a determination."
+prompt: "Persuasion DC 13: Argue that the question cannot be answered on any available or
+  prospectively available evidence — not a temporary gap, but structural; the archive
+  that waits for an answer will wait indefinitely; the archive that receives the document
+  preserves the inquiry itself."
+failText: "The Archivus says: 'A determination must be made.' It must be made as
+  'undeterminable.' Come back with the argument about why 'undeterminable' is itself
+  the determination. (retry)"
+successText: "The Archivus writes: 'Documents of Uncertain Fictional/Historical Status:
+  records whose relationship to their narrative counterpart cannot be resolved, and whose
+  archival value is precisely the unresolvability.' He notes: 'The question is preserved.
+  The answer is not suppressed. It does not exist.' You receive the Uncertain Status
+  Classification Record."
+grantItem: "Uncertain Status Classification Record"
+takeItem: "Morgiana Manumission Deed"
+checkPassFlag: bgw04Act5Passed
+activateMissionBit: bgw04MorgiaComplete
+```
+
+---
+
+*BGW-04 complete. 2026-06-02.*
+
+---
+
+## BGW-06 — The Translator's Preface (Frame narrative)
+**Cycle 4**
+
+*(Theme differentiation: Avoiding BGW cycles 1-4. Avoiding MLA-02 cycle 2's "preface that outlived its evidence," MLA-04's "draft as primary testimony." New theme: the translator who named every change he made — the preface makes the collection honest by being the only part that does not pretend; it is more trustworthy than the collection it introduced because it is the only document in the Nights that is not a story; the archive receives it as the translator's testimony about his own invention.)*
+
+---
+
+*The Translator's Preface · a papyrus sheet, Arabic, 8th-9th century, informal scholarly hand; explains which stories the translator received from the Persian original, which he added from oral sources, and which he changed to make the frame narrative function; names Scheherazade as his retention of the original Persian device; signed with the translator's name, now unknown to scholarship; with a 10th-century bibliographic citation at the bottom identifying it as the source of the collection's frame · in the hands of Harun al-Nasiri, Tabriz scholar, acquired in a Shiraz library purchase two years ago*
+
+---
+
+### Act I — The Shiraz Manuscript
+
+Ahmad ibn Sulayman has been making visits to Harun al-Nasiri's house for six weeks. He represents a Cairo collector who wants to establish an authentic claim of priority on the Nights collection. The preface names the translator's additions; possession of the preface constitutes control over what the "original" collection was, which is commercially and theologically important in ways Ahmad has not fully explained to al-Nasiri.
+
+Al-Nasiri is a scholar. He has been holding the preface for two years, deciding whether to write a commentary or send it to a European archive. He has not decided because both options seem insufficient.
+
+The argument: the archive preserves the preface as primary methodological document, attributed to al-Nasiri's discovery, permanently and publicly. The commentary would be attributed to al-Nasiri but would absorb the preface into his reading of it. The archive preserves the preface before any reading defines it.
+
+*Al-Nasiri looked at Ahmad's most recent letter, which was still unsealed on his desk.*
+
+He sealed it without reading it and handed the preface to the Fighter with a scholar's Receipt of Transfer, signed in his own hand.
+
+You receive the Scholar's Receipt of Transfer. You receive the Translator's Preface.
+
+---
+
+### Act II — Ahmad ibn Sulayman's Offer
+
+*The Translator's Preface · in the Fighter's satchel with the Receipt of Transfer · at the Tabriz market transit office*
+
+Ahmad made his offer with the precision of a man who has calculated the right number in advance. He said: *The Cairo collector does not want the preface for itself. He wants to establish that the collection originated in a specific scholarly tradition that he can claim continuity with. The preface is the proof document for a cultural claim, not for the text.*
+
+He was explaining the commercial purpose in order to make clear that the Fighter was not competing with scholarship. He was competing with politics.
+
+The Fighter refused.
+
+Ahmad wrote a Non-Purchase Statement and pressed his seal without comment. He was professional about transactions that did not close. He left without attempting a second offer.
+
+You receive the Agent's Non-Purchase Statement.
+
+---
+
+### Act III — Brother Dionysios
+
+*The Translator's Preface · in the satchel with two documents · in a Constantinople scholar's study, a room facing the harbor*
+
+Brother Dionysios studies Arabic narrative frames as part of a larger work on comparative rhetoric. He wants to copy the preface for inclusion as a primary example of a translator acknowledging intervention. His purpose is scholarly and his method is rigorous.
+
+The copy he would make would be the first authorized scholarly reproduction of a document whose archive receipt has not yet been established. Once reproduced in a scholarly text, the preface becomes a secondary source in that text and a secondary source in every text that cites that text. The archive would receive it as primary; the secondary circulation would precede the primary receipt.
+
+*Brother Dionysios had his copy-ink ready.*
+
+The insight: a good-faith scholar making an unauthorized copy is still making an unauthorized copy in terms of chain-of-custody precedence. The issue is not his motives; it is the order in which the document is constituted as primary versus secondary. The archive must receive it first.
+
+Brother Dionysios had not thought about the precedence question. He thought about it when it was named. He wrote a Non-Copy Statement and put his copy-ink away with the expression of a man who has been correctly corrected on a procedural point he was about to get wrong.
+
+You receive the Scholar's Non-Copy Statement.
+
+---
+
+### Act IV — The Genoese Middleman
+
+*The Translator's Preface · in the satchel with three documents · at the Venice–Lombardy road junction*
+
+The same Cairo collector had a Genoese agent, Ser Luca Grimaldi, positioned at the Italian border as a contingency. Ser Luca makes a final offer — considerably more than Ahmad had offered — and is prepared to wait three hours for consideration.
+
+Three hours is not a problem. The document's archive destination is fixed; money is not the variable. The problem is that three hours at this junction puts the Fighter's arrival at Weimar past the archive's weekly intake window, requiring a four-day wait. The delay is the offer's real content.
+
+*The Fighter understood this at the second hour.*
+
+The Fighter declined before the third hour and stated clearly that the delay itself had been recognized as the offer's mechanism. Ser Luca accepted this with professional admiration and stepped aside. He did not write a Non-Purchase Statement; he simply was not present when the Fighter left.
+
+You receive a self-written Note of Transit Record (Fighter's hand, time and location of the offer and refusal).
+
+---
+
+### Act V — The Only Part That Does Not Pretend
+
+*The Translator's Preface · still sealed in the satchel, all four documents present · at the Archivus Sweelinck's intake desk, Weimar*
+
+The Archivus read the preface in Arabic and then in a whispered self-translation that was mostly paraphrase. He read it again.
+
+He said: *It is a translator's note. Standard classification: Translator's Notes — Secondary.*
+
+Secondary to what? The collection it introduced. The collection has been in circulation for five hundred years. Every version of the Nights that exists was shaped by decisions this preface names. The preface is the only document that explains why Scheherazade is the frame. It is the only place in the entire collection where the person who made it says: this is what I did and this is why.
+
+*The Archivus looked at the classification folder.*
+
+Every story in the Nights is a story — which means it is shaped, performed, arranged for effect. The preface is not a story. It is testimony. It is the only part of the collection that does not pretend to be something other than what it is: a man saying what he did.
+
+The archive that classifies it as secondary to the collection it introduced is classifying the only honest document in a collection of stories as less important than the stories.
+
+*The Archivus wrote slowly.*
+
+*Translator's Testimony — Primary: prefaces or annotations in which a translator names their own interventions; the document is more trustworthy than the work it introduced because it is the only element that is not narrative.* He looked up. *He named Scheherazade. Without this, we would not know whose idea she was.*
+
+You receive the Translator's Testimony Classification Record.
+
+---
+
+### Quest API Stub — BGW-06
+
+```
+missionAccept: "The earliest Arabic translator of the Persian Nights left a preface explaining
+  which stories he added, which he changed, and why he kept Scheherazade as the frame. A
+  Tabriz scholar acquired the Shiraz manuscript two years ago. A Cairo collector's agent
+  has been making offers for six weeks. Carry the preface to Weimar — it is the only part
+  of the Nights that does not pretend to be something other than what it is."
+
+Act I — The Shiraz Manuscript
+activateNode: TBZ
+type: escort
+scene: "Harun al-Nasiri's study, Tabriz. Ahmad ibn Sulayman's latest offer letter is
+  unsealed on the desk — al-Nasiri has been deciding between commentary and archive
+  for two years. The preface names everything the translator invented; possession
+  of it is a cultural priority claim; the archive preserves it before any reading
+  defines it."
+prompt: "Persuasion DC 13: Argue that the archive preserves the preface as primary
+  document attributed to al-Nasiri's discovery, permanently and publicly — while
+  the commentary would absorb the preface into al-Nasiri's reading of it."
+failText: "Al-Nasiri says: 'The commentary would preserve the scholarly context.' The
+  commentary would absorb the document into one reading. Come back with the argument
+  about what the archive preserves that the commentary cannot. (retry)"
+successText: "Al-Nasiri seals Ahmad's letter without reading it and writes a Scholar's
+  Receipt of Transfer in his own hand. You receive the Scholar's Receipt of Transfer.
+  You receive the Translator's Preface."
+grantItem: "Scholar's Receipt of Transfer"
+grantItem: "Translator's Preface"
+activateMissionBit: bgw06Act1Active
+checkPassFlag: bgw06Act1Passed
+
+Act II — Ahmad ibn Sulayman's Offer
+activateNode: TBZ
+type: skill_check
+scene: "Tabriz market transit office. Ahmad explains clearly: the Cairo collector wants
+  the preface as proof of cultural priority, not for the text. The Fighter is competing
+  not with scholarship but with a political claim."
+prompt: "Persuasion DC 12: Refuse the offer. Receive the professional documentation
+  he provides as standard practice."
+failText: "Ahmad says: 'The political claim will be made regardless. The question is
+  whether the document supports it.' Refuse before supporting it becomes possible.
+  (retry)"
+successText: "Ahmad writes a Non-Purchase Statement and presses his seal without comment.
+  He leaves without attempting a second offer. You receive the Agent's Non-Purchase
+  Statement."
+grantItem: "Agent's Non-Purchase Statement"
+checkPassFlag: bgw06Act2Passed
+
+Act III — Brother Dionysios
+activateNode: CON
+type: hybrid
+scene: "Constantinople scholar's study. Brother Dionysios studies narrative frames;
+  he wants to copy the preface as a primary example for a comparative rhetoric text.
+  His copy-ink is ready. His purpose is rigorous scholarship. The problem is precedence:
+  once reproduced in his text, the preface is secondary in that text and every text
+  that cites it, before the archive has received it as primary."
+prompt: "Insight DC 12: Recognize that a good-faith copy still creates a chain-of-custody
+  precedence problem; the archive must receive the document as primary before secondary
+  reproduction circulates; name this as a procedural concern, not a moral one."
+failText: "Brother Dionysios says: 'The scholarly use is itself a form of preservation.'
+  It is, but it is secondary preservation. Come back with the order-of-constitution
+  argument. (retry — combat with a scriptorium assistant who tries to photograph the
+  document if insight fails twice)"
+successText: "Brother Dionysios had not thought about precedence. He writes a Non-Copy
+  Statement and puts the ink away with the expression of a man correctly corrected
+  on a procedural point. You receive the Scholar's Non-Copy Statement."
+grantItem: "Scholar's Non-Copy Statement"
+checkPassFlag: bgw06Act3Passed
+
+Act IV — The Genoese Middleman
+activateNode: VEN
+type: skill_check
+scene: "Venice-Lombardy road junction. Ser Luca Grimaldi makes a final offer considerably
+  above Ahmad's and proposes to wait three hours for consideration. Three hours is not
+  a problem in itself — but three hours at this junction puts the archive arrival past
+  the weekly intake window, requiring a four-day wait. The delay is the offer's real content."
+prompt: "Insight DC 13: Recognize that the delay itself is the mechanism — the offer is
+  structured to cost time regardless of its acceptance or refusal; name this before the
+  third hour passes."
+failText: "The third hour passes. The intake window has closed. Four-day wait begins.
+  (retry — recognize the delay mechanism at the second hour, not after)"
+successText: "You decline before the third hour and state that the delay has been recognized
+  as the offer's mechanism. Ser Luca accepts this with professional admiration. You write
+  your own Note of Transit Record. You receive the Note of Transit Record."
+grantItem: "Note of Transit Record"
+checkPassFlag: bgw06Act4Passed
+
+Act V — The Only Part That Does Not Pretend
+activateNode: WM
+type: skill_check
+scene: "Weimar archive intake desk. The Archivus reads the preface and says: 'Translator's
+  Notes — Secondary.' Secondary to the collection it introduced. Every story in the Nights
+  was shaped by decisions this preface names. But the preface itself is the only element
+  in the collection that is not narrative."
+prompt: "Persuasion DC 13: Argue that every story in the collection is performance; the
+  preface is testimony; the archive that classifies testimony as secondary to the stories
+  it shaped is classifying the only honest document as less important than the ones it
+  authorized."
+failText: "The Archivus says: 'The preface is introduction. Introduction is secondary.'
+  Introductions that explain the invention of the frame are not introductions to the
+  text — they are the only honest accounting of it. Come back with this distinction.
+  (retry)"
+successText: "The Archivus writes: 'Translator's Testimony — Primary: prefaces in which
+  a translator names their own interventions; more trustworthy than the work it introduced
+  because it is the only element that is not narrative.' He looks up: 'He named Scheherazade.
+  Without this, we would not know whose idea she was.' You receive the Translator's
+  Testimony Classification Record."
+grantItem: "Translator's Testimony Classification Record"
+takeItem: "Translator's Preface"
+checkPassFlag: bgw06Act5Passed
+activateMissionBit: bgw06TranslatorComplete
+```
+
+---
+
+*BGW-06 complete. 2026-06-02.*
+
+---
+
+## BGW-07 — The Dunyazade Account (Frame narrative)
+**Cycle 5**
+
+*(Theme differentiation: Avoiding BGW cycles 1-4. Avoiding LGW's "dead love's truth delivered whole," WAW-05's "the letter that will soon stop being true," ATH cycle 2's "account crossing line of allegiance." New theme: the voice present for every story but absent from every story — Dunyazade was under the bed for three years and heard everything and enabled everything and has no voice in the canonical collection; the eleven-line variant ending is the only document in which she speaks; the archive receives it as a recovered voice regardless of when the eleven lines were written.)*
+
+---
+
+*The Dunyazade Epilogue Manuscript · a parchment codex, Maghrebi hand, standard copy of the Nights; an additional eleven-line passage appears at the end in Dunyazade's voice; she describes lying in the dark, asking for stories, hearing everything, and understanding what it costs to survive by telling the right story every night; she ends: "I never told a story. I only asked for them. This is the first time I have spoken." · in the library of the Monastery of the Two Saints, north of Tunis, Brother Ilario's custody*
+
+---
+
+### Act I — Before the French Collector
+
+Messire Jean-Baptiste Dubois arrived in Tunis three weeks ago representing a Parisian collector with specific interest in manuscript variants of the Nights. He has made an offer on the monastery's collection. He has not yet identified the Dunyazade variant as the valuable item; he is purchasing for volume.
+
+Brother Ilario knows exactly which codex contains the ending. He has read the eleven lines many times. He has not told Messire Dubois about them.
+
+He told the Fighter about them, standing in the library doorway, with the specific tiredness of a man who has been keeping a secret that deserves better than secrecy.
+
+The argument: the archive preserves the document under its own terms — the voice of a woman who was present for everything and given nothing in the canonical text. The French collector preserves it as a variant ending of an unusual manuscript, which will be described in a sale catalog as "rare Maghrebi variant, Dunyazade appendix, collector's interest."
+
+*Brother Ilario had the codex under his arm before the argument finished.*
+
+He wrote the Monastic Release Authorization and said, in the specific tone of someone who has been waiting to say something: *She deserved better than being the girl who asked for stories.*
+
+You receive the Monastic Release Authorization. You receive the Dunyazade Epilogue Manuscript.
+
+---
+
+### Act II — Messire Dubois
+
+*The Dunyazade Epilogue Manuscript · in the Fighter's satchel with the Release Authorization · at the Tunis harbor departure platform*
+
+Messire Dubois identified the codex by its binding. He made an immediate offer, specific and large, with the practiced fluency of a man who has offered large sums before and knows that hesitation is the correct response to elicit.
+
+When the Fighter did not hesitate, he added: *The variant ending is what makes it. The rest is common text. Cut out the eleven lines and let me have them; keep the rest.*
+
+The mutilation offer is the second offer of a man who was told no to the first one. He was proposing to damage the document in order to purchase the more interesting piece.
+
+The Fighter refused the first offer and the second offer in the same sentence.
+
+Messire Dubois wrote a Non-Purchase Statement, which he had ready, and pressed his seal. He looked at the satchel once before turning back toward the city. He understood when something was final.
+
+You receive the Collector's Non-Purchase Statement.
+
+---
+
+### Act III — Fra Benedetto's Objection
+
+*The Dunyazade Epilogue Manuscript · in the satchel with two documents · on the coastal road near Genoa*
+
+Fra Benedetto di Modena has been studying the manuscript traditions of the Nights for fifteen years. He believes the Dunyazade ending was composed by a 12th-century North African monastic scribe who added a woman's voice to a manuscript that had none — a pious addition intended to make the collection more morally complete. He wants the ending declared apocryphal before it reaches an archive where it might be cited as primary.
+
+His opinion might be correct. The ending might be a 12th-century addition.
+
+The insight: whether the ending was written in the 9th century by a woman who was present or in the 12th century by a scribe who wanted a woman to have been present — in either case, it is the only document in which that voice exists. The question of when it was written does not determine whether the archive should receive the first instance of that voice. The archive receives voices; it does not require they be contemporary with the events they describe.
+
+*Fra Benedetto had the declaration draft in his hand.*
+
+The Fighter asked: if the ending was written in the 12th century, whose voice is it?
+
+Fra Benedetto said: *A scribe's invention.*
+
+The Fighter said: then the archive receives the scribe's invention of a voice that was not given one canonically. That is still a voice. It is still the first time it was given.
+
+*Fra Benedetto looked at the declaration.* He did not write the apocrypha declaration. He wrote a Conditional Non-Declaration Statement: "declaration suspended pending archive receipt and scholarly review; the voice question is noted as separate from the authenticity question."
+
+You receive Fra Benedetto's Conditional Non-Declaration Statement.
+
+---
+
+### Act IV — The Road to Weimar
+
+*The Dunyazade Epilogue Manuscript · in the satchel with three documents · on the Lombard road north, evening*
+
+A second courier from the Parisian collector — not Dubois — was waiting at the mountain pass with a revised offer and a different approach. He was not offering money. He was offering a legal argument: the monastery's transfer was incomplete because it had not been ratified by the Tunisian ecclesiastical authority, which had oversight of the monastery's library.
+
+The Fighter asked: is the authority real?
+
+The courier produced a document. The document was a general statement of oversight authority dated eighteen months ago. It did not name the monastery. It did not name manuscripts. It was a general letter about Tunisian ecclesiastical governance.
+
+*The Fighter handed it back.*
+
+The general letter does not govern the specific transfer. The monastery's abbot has authority to release materials under standard monastic archive protocols; the ecclesiastical oversight letter does not override individual release decisions without a specific objection filed to a specific item. No such objection had been filed.
+
+The courier had no answer for this. He accepted the rebuttal and rode back toward the pass.
+
+You receive the Jurisdictional Rebuttal Note.
+
+---
+
+### Act V — The First Time She Spoke
+
+*The Dunyazade Epilogue Manuscript · still sealed in the satchel, all four documents present · at the Archivus Sweelinck's intake desk, Weimar*
+
+The Archivus read the eleven lines. He read them slowly. Then he read the last sentence — "I never told a story. I only asked for them. This is the first time I have spoken" — and he set the manuscript down.
+
+He said: *Is this authentic?*
+
+The Fighter said: I don't know.
+
+*The Archivus looked at the four supporting documents.* He read Fra Benedetto's conditional statement. He looked at the Monastic Release Authorization. He looked at the date on the manuscript.
+
+He said: *If I cannot determine authenticity, how do I file it?*
+
+The argument: the question of authenticity is secondary to the question of what the text does. Whether a 9th-century woman or a 12th-century scribe wrote the eleven lines, the text is the first instance of that voice in the documentary record. Dunyazade was present for every night of the one thousand and one nights. She asked for every story. She is the reason the collection exists. She has no voice in the canonical collection. The manuscript adds that voice. The archive should file the first instance of that voice under what it is, not under a determination that cannot be made.
+
+*The Archivus looked at the last line again.*
+
+He wrote: *Variant Tradition Materials — Recovered Voices: manuscript additions or variants that give testimony to a party unrepresented in the canonical text. First entry: Dunyazade, sister of Scheherazade, present for all one thousand and one nights.* He looked up. *She asked for the stories. The archive should note that someone asked.*
+
+You receive the Recovered Voice Classification Record.
+
+---
+
+### Quest API Stub — BGW-07
+
+```
+missionAccept: "A North African monastery holds a manuscript variant of the Nights with
+  an eleven-line addition in Dunyazade's voice — Scheherazade's sister, who lay under
+  the bed for three years asking for stories and enabled every night's survival. She
+  has no voice in the canonical text. This is the first instance of that voice in any
+  document. Carry it to Weimar before a French collector's purchase closes."
+
+Act I — Before the French Collector
+activateNode: TUN
+type: escort
+scene: "Monastery of the Two Saints, north of Tunis. Messire Dubois has made a purchase
+  offer on the collection and has not identified the variant ending as the valuable item.
+  Brother Ilario knows exactly which codex it is. He has the specific tiredness of a man
+  keeping a secret that deserves better than secrecy."
+prompt: "Persuasion DC 13: Argue that the archive preserves the document under its own
+  terms — the voice of a woman who was present for everything — while the sale catalog
+  will describe it as a collector's variant with an unusual appendix."
+failText: "Brother Ilario says: 'The collector may not notice the ending.' He will notice.
+  Come back with what the archive does with a recovered voice that a sale cannot. (retry)"
+successText: "Brother Ilario writes the Release Authorization before the argument finishes.
+  'She deserved better than being the girl who asked for stories.' You receive the
+  Monastic Release Authorization. You receive the Dunyazade Epilogue Manuscript."
+grantItem: "Monastic Release Authorization"
+grantItem: "Dunyazade Epilogue Manuscript"
+activateMissionBit: bgw07Act1Active
+checkPassFlag: bgw07Act1Passed
+
+Act II — Messire Dubois
+activateNode: TUN
+type: skill_check
+scene: "Tunis harbor departure platform. Dubois identifies the codex by its binding and
+  offers immediately. When refused, he says: 'Cut out the eleven lines and let me have
+  them; keep the rest.' The mutilation offer is the second offer of a man told no to
+  his first."
+prompt: "Persuasion DC 12: Refuse both offers in the same sentence. Receive the
+  Non-Purchase Statement he has prepared in advance."
+failText: "Dubois increases the offer on the eleven lines specifically. The mutilation
+  is still a mutilation. Refuse the excision offer before he asks a second time. (retry)"
+successText: "Dubois understands when something is final. He writes the Non-Purchase
+  Statement, presses his seal, and looks at the satchel once before turning back toward
+  the city. You receive the Collector's Non-Purchase Statement."
+grantItem: "Collector's Non-Purchase Statement"
+checkPassFlag: bgw07Act2Passed
+
+Act III — Fra Benedetto's Objection
+activateNode: GEN
+type: hybrid
+scene: "Coastal road near Genoa. Fra Benedetto has studied the Nights manuscript tradition
+  for fifteen years. He believes the Dunyazade ending is a 12th-century monastic addition
+  and wants it declared apocryphal before archive receipt. His opinion may be correct.
+  His declaration draft is in his hand."
+prompt: "Insight DC 12: Recognize that whether the ending was written in the 9th or 12th
+  century, it is the only instance of that voice in the documentary record; the authenticity
+  question is separate from the question of whether the archive should receive the first
+  time a voice was given."
+failText: "Fra Benedetto says: 'Apocrypha is apocrypha.' A recovered voice is not apocrypha
+  — it is the first instance of testimony. Come back with the distinction between
+  authenticity and first-instance voice. (retry — combat with Fra Benedetto's hired
+  messenger if insight fails twice)"
+successText: "Fra Benedetto does not write the declaration. He writes a Conditional
+  Non-Declaration Statement: 'voice question noted as separate from authenticity question.'
+  You receive Fra Benedetto's Conditional Non-Declaration Statement."
+grantItem: "Fra Benedetto's Conditional Non-Declaration Statement"
+checkPassFlag: bgw07Act3Passed
+
+Act IV — The Mountain Pass
+activateNode: WM
+type: skill_check
+scene: "Lombard road, mountain pass. A second collector's courier waits with a legal
+  argument: the monastery's transfer was not ratified by Tunisian ecclesiastical authority,
+  which has general oversight. He produces a document — an eighteen-month-old general
+  oversight letter that does not name the monastery or any specific manuscript."
+prompt: "Insight DC 13: Recognize that a general oversight letter does not govern specific
+  individual transfers; the abbot has authority under standard monastic archive protocols;
+  no specific objection was filed to this specific item."
+failText: "The courier says: 'The authority is real.' It may be real as a general matter.
+  It does not apply here specifically. Come back with the specificity argument. (retry)"
+successText: "The courier has no answer for the specificity distinction. He accepts the
+  rebuttal and rides back toward the pass. You receive the Jurisdictional Rebuttal Note."
+grantItem: "Jurisdictional Rebuttal Note"
+checkPassFlag: bgw07Act4Passed
+
+Act V — The First Time She Spoke
+activateNode: WM
+type: skill_check
+scene: "Weimar archive intake desk. The Archivus reads the eleven lines, sets the manuscript
+  down, and asks: 'Is this authentic?' You say: you don't know. He reads Fra Benedetto's
+  conditional statement. He asks: 'If I cannot determine authenticity, how do I file it?'"
+prompt: "Persuasion DC 13: Argue that the authenticity question is secondary to what the
+  text does — whether written in the 9th or 12th century, it is the first instance of
+  that voice; the archive receives first instances of testimony regardless of when they
+  were set down."
+failText: "The Archivus says: 'The archive requires determined origin.' The origin of the
+  voice is not the same as the origin of the document. Come back with the distinction
+  between document date and the date the voice was first given. (retry)"
+successText: "The Archivus writes: 'Variant Tradition Materials — Recovered Voices:
+  manuscript additions that give testimony to a party unrepresented in the canonical
+  text. First entry: Dunyazade, sister of Scheherazade, present for all one thousand
+  and one nights.' He looks up: 'She asked for the stories. The archive should note
+  that someone asked.' You receive the Recovered Voice Classification Record."
+grantItem: "Recovered Voice Classification Record"
+takeItem: "Dunyazade Epilogue Manuscript"
+checkPassFlag: bgw07Act5Passed
+activateMissionBit: bgw07DunyazadeComplete
+```
+
+---
+
+*BGW-07 complete. 2026-06-02.*

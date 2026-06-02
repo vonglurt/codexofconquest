@@ -145,16 +145,16 @@ A Basra merchant's navigational chart, dated approximately 9th century, correspo
 ### §BGW-03 — The Caliph's Night Log (Harun al-Rashid stories)
 A Baghdad court scribe kept a private log of Harun al-Rashid's nocturnal palace absences — dates, hours, return times, physical state on return — as a security measure. Not part of the official chronicle. A 10th-century copy survives in an Iraqi monastery being dissolved. Fighter escorts it.
 
-### §BGW-04 — Morgiana's Grant (Ali Baba supplement)
+### §BGW-04 — Morgiana's Grant (Ali Baba supplement) ✓ DONE 2026-06-02
 A deed of manumission for a household slave named Morgiana, issued in a Cairo legal document, approximately 9th century, found in a collection of manumission records in an Alexandrian library. Whether it is the "real" document behind the story or a later document named for the character is unanswerable. Fighter escorts it.
 
 ### §BGW-05 — The Genie Contract (Merchant and Genie cycle)
 A sorcerer's estate inventory from Cairo, approximately 10th century, includes a sealed copper vessel with a lead stopper — described as "bound djinn, middle class, three binding clauses remaining." The inventory is a legal document. The vessel's location is noted as "deposited for safe custody." Fighter escorts the inventory.
 
-### §BGW-06 — The Translator's Preface (Frame narrative)
+### §BGW-06 — The Translator's Preface (Frame narrative) ✓ DONE 2026-06-02
 The earliest Arabic translator of the original Persian frame tale included a preface explaining which stories he added, which he changed, and why he kept Scheherazade as the frame rather than a male narrator. The preface survives as a quotation in a 10th-century bibliography; a full copy may exist in a Shiraz manuscript. Fighter escorts it.
 
-### §BGW-07 — The Dunyazade Account (Frame narrative)
+### §BGW-07 — The Dunyazade Account (Frame narrative) ✓ DONE 2026-06-02
 A manuscript variant in a North African monastery adds a brief epilogue in Dunyazade's voice, describing what it was like to lie in the dark under the bed of the king for three years, asking for stories. Scheherazade's sister has no voice in the canonical collection. Fighter escorts the manuscript.
 
 ---

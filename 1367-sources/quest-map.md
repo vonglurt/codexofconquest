@@ -468,6 +468,9 @@ Game cities are canonical. Source-book settings are proposed new nodes.
 | MLA-04 | Tiro's Notes | 3 | NAP → BOL → WM | The shorthand draft is primary testimony; what the orator thought before he decided what to say |
 | MLA-02 | Alcibiades's Letter | 4 | ALE → RGS → VEN → WM | Treasonous and honest simultaneously; filed under stateless actor, not Athens |
 | MLA-06 | The Agrarian Commission Record | 5 | ROM → BOL → WM | The historical document that is still a live lawsuit; archive suspends evidentiary function |
+| BGW-04 | Morgiana's Grant | 3 | CAI → ALE → VEN → WM | The unanswerable question is the document's primary condition; archive creates category for structural undecidability |
+| BGW-06 | The Translator's Preface | 4 | TBZ → CON → VEN → WM | The only part of the collection that does not pretend; translator's testimony filed as primary |
+| BGW-07 | The Dunyazade Account | 5 | TUN → GEN → WM | The voice present for every story but absent from every story; first instance filed as recovered voice |
 
 *When a new quest is written, append its row to the Processed Quests table.*
 *When a new location is used, append its row to the Location Grid.*
