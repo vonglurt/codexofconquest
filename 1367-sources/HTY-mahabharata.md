@@ -107,6 +107,239 @@ Haim's house is in the Jewish quarter near the Golden Horn. He is elderly, bird-
 
 ---
 
+---
+
+## §HTY-02 — Vignette Cycle 2: "Draupadi's Plaint"
+
+### Cycle vs. Cycle — What This Angle Reveals
+
+Cycle 1 ("Savitri's Three Bargains") took the angle of the argument that worked: Savitri loved with such precision that she framed each boon so that Death was logically bound by his own word and could not refuse the last without denying the first. The argument succeeded because it gave Death nothing he did not already own.
+
+Cycle 2 takes the inverse: the argument nobody would receive. Draupadi was dragged by the hair into the council hall and asked one question before the assembled elders: was she a slave? Could a man stake his wife after having already lost himself at dice, having already become a slave himself? The elders were silent. No one spoke. The question was not refused on grounds of law — it was refused on grounds of comfort. What Draupadi left behind was the shape of the unanswered question, and that shape became the form other women used to ask the same question before other courts.
+
+### TOKEN: "The Plaint Fragment"
+
+A single unbound folio — an Arabic translation of a Pahlavi commentary on the Sabha Parva (Assembly Book) episode — preserving in indirect paraphrase the moment of Draupadi's question: *"She asked before the assembly: by what right is she called a slave? The assembly was silent. No answer is recorded in the tradition."* A later hand has added in the margin: *"The question was not refused on grounds of law. It was refused on grounds of comfort."*
+
+The folio is folded into four, sealed with a plain wax seal, no name written on the outside. Inside: the Sanskrit narrative episode condensed, the philosophical commentary, and the scholiast's margin-note.
+
+**Token mechanics:**
+- `id`: "plaint_fragment"
+- `name`: "The Plaint Fragment"
+- `description`: "A single folio preserving Draupadi's question before the assembly in Arabic from a Pahlavi commentary. Scholiast's note: 'The question was not refused on grounds of law. It was refused on grounds of comfort.' Folded four times, plain wax seal, no exterior name."
+- `grant_act`: 1
+- `take_act`: 5
+- `check_acts`: [2, 3, 4]
+
+### Nodes
+
+**New nodes required:** none — NIS (Nishapur) and TBZ (Tabriz) already in quest-map.
+
+**Existing nodes used:**
+- `NIS` — Nishapur legal scholar's quarter
+- `TBZ` — Tabriz Jalayirid scholar quarter
+- `WM` — Weimar archive
+
+### Route
+
+`NIS` (Nishapur — private house of Zara, widow of a Persian scholar) → `TBZ` (Tabriz — Fatima's household, the woman who will use the form) → `WM` (Weimar archive)
+
+### Five-Act Vignette Play
+
+**Present tense. Second person. The Plaint Fragment is the grammatical subject of all TOKEN stage directions.**
+
+---
+
+**ACT I — "The Widow Who Kept It Without Knowing" (Nishapur)**
+
+Zara is in her sixties. Her husband was a scholar who collected Pahlavi-Arabic translations for thirty years. He died twelve years ago. She has been distributing his manuscripts to people who can use them; most are technical commentaries, dry, necessary for specialists. This one she kept last because the margin-note disturbed her.
+
+She opens the folio on the table. You read the margin-note. *The Plaint Fragment lies flat on the table, its fold-crease sharp after decades.*
+
+"I don't know where it should go," she says. "I know it shouldn't stay here."
+
+She names the woman in Tabriz: "Her name is Fatima. She survived a Mongol court decision that took everything. She has been looking for a way to ask her question before a court that cannot pretend it has never heard it before." She pauses. "This is the shape of the question she needs."
+
+*Dialogue DC 12 — Insight: Zara is testing whether you understand what "shape of a question" means — whether you know why a form that was already refused once is more powerful in a second court than a form that has never been tested.*
+
+*On success:* She folds the folio back into its four creases and gives it to you without further explanation. "Take it to Fatima first. Then to the archive." *The Plaint Fragment is in your hands, folded, plain wax seal intact.*
+
+*On fail:* She gives it to you anyway, but adds: "Don't open it. Don't read it on the road. If you understand it wrong, it won't work for Fatima."
+
+*TOKEN granted Act I — folio received, sealed, no exterior marking.*
+
+---
+
+**ACT II — "The Classification Checkpoint" (Road west from Nishapur, toward Tabriz)**
+
+A Jalayirid administrative checkpoint on the caravan road. The officer in charge has three categories for manuscript documents: religious text (free passage), legal argument (reviewed and taxed), and personal correspondence (declared and stamped). He wants to open the folio and read the title.
+
+*Skill check: Persuasion DC 12 — establish that an ancient Sanskrit council narrative translated into Arabic by a Pahlavi commentator is neither a current legal argument nor commercial goods, but a private scholarly gift.*
+
+*On success:* He stamps the exterior of the fold: *"Personal scholarly effects — no jurisdictional application."* He waves you through. *The Plaint Fragment now carries a transit stamp on its outermost fold — the third annotation on this document, the first added in transit.*
+
+*On fail:* He holds it for review. You wait two days in a caravanserai while a cleric is consulted. The cleric rules it non-jurisdictional. You lose two days but the folio is returned intact.
+
+*TOKEN check Act II — transit stamp added to exterior.*
+
+---
+
+**ACT III — "The Woman Who Needed the Form" (Tabriz)**
+
+Fatima's house is well-kept and watched. A man sits outside with no obvious purpose. You have been told about him: he is a Mongol court agent from the administrative office that stripped her of her husband's estate. They are waiting to see if she petitions.
+
+Inside, Fatima reads the folio standing. She reads it twice. Then she sits down, takes out paper, and begins writing — her own petition — in the exact form of the question Draupadi asked. She addresses it not to the Mongol court but to Weimar: "To the archive which preserves what courts refused to answer."
+
+She finishes and holds it out to you. "Attach this to the folio. Let the archive receive both — the original refusal and the later use. That's what makes it impossible to ignore. One refusal is an incident. Two is a form."
+
+The agent outside knocks on the door.
+
+*Skill check: Persuasion or Deception DC 13 — exit with both documents before the agent can demand to examine them.*
+
+*On success:* You leave by a side passage Fatima has prepared. The agent sees you from a distance but cannot reach you before you are in the street. *The Plaint Fragment is folded with Fatima's petition tucked inside — two documents now, though the outer seal is intact.*
+
+*On fail:* The agent reaches you at the door and demands to see the folio. He cannot legally stop you (personal scholarly effects — transit stamp). He takes the transit time to record your description.
+
+*TOKEN check Act III — Fatima's petition added inside the fold; agent has your description.*
+
+---
+
+**ACT IV — "The Road to Weimar" (Anatolian-Balkan transit road)**
+
+Two men stop you on the road before a river crossing. They work for the Mongol court agent. His mandate: the petition must not arrive anywhere. The folio is secondary; Fatima's petition is the primary target.
+
+*Combat: 2 opponents, AC 12, HP 22 each.*
+
+*The Plaint Fragment and the attached petition are both intact after the fight.* You search the men: a letter from the agent authorizing the interception. The letter calls the petition a "document prejudicial to administrative record." It does not name the archive.
+
+*TOKEN check Act IV — both documents intact; agent's authorization letter recovered.*
+
+---
+
+**ACT V — "The First Filing Date" (Weimar)**
+
+Archivus Sweelinck reads the folio first, then Fatima's petition. He is quiet for a long time.
+
+"The question was asked at Kuru's court in the time of the Sanskrit kings. It has never been answered in any source I have. It has never been refused on grounds of logic. It has been refused on grounds of the same thing every time."
+
+He sets both documents on the desk.
+
+"She used the exact form. Present tense. Addressed to the assembly. Same sequence of questions: the prior loss, the claim of ownership, the question of standing. Same silence requested, as the form implies the answerer must break." He looks up. "She addressed it to us because no court has been willing to be the first to answer it. We cannot answer it either. But we can be the first institution to give it a filing date."
+
+He writes two entries in the archive ledger:
+- *Sanskrit Council Records — Sabha Parva: Unanswered Question. Original refusal date: unknown. Commentary date: uncertain.*
+- *Comparative Legal Petitions — Later Use: Fatima bint-Yusuf, Tabriz, 1367. Form derived from Sanskrit precedent. Petition received, filed alongside original.*
+
+"The question was first refused in an assembly that no longer exists. It arrived here still open. This is the first time it has received a filing date."
+
+*TOKEN taken Act V — both documents received under new dual classification.*
+
+---
+
+### Theme
+
+**"The question that was refused without being answered survives as legal form; Draupadi asked before the elders and they were silent, and that silence became the shape of the question — which other women used to ask it again before courts that had seen the form before and could not refuse it without acknowledging the original refusal; the archive is the first institution to give the question a filing date."**
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "HTY_002",
+  "title": "Draupadi's Plaint",
+  "source": "Maha-Bharata (Romesh C. Dutt translation)",
+  "cycle": "HTY",
+  "book": "Maha-Bharata",
+  "source_episode": "Sabha Parva — Draupadi dragged before silent council, her question unanswered",
+  "theme": "The question refused without being answered survives as legal form; the archive is the first institution to give it a filing date.",
+  "activateNode": "NIS",
+  "token": {
+    "id": "plaint_fragment",
+    "name": "The Plaint Fragment",
+    "description": "Single folio, Arabic from Pahlavi, preserving Draupadi's question in indirect paraphrase. Scholiast's note: 'refused on grounds of comfort.' Folded four times, plain wax seal.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["NIS", "TBZ", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {
+      "act": 1,
+      "location": "NIS",
+      "scene": "Zara's private house, Nishapur scholar quarter",
+      "title": "The Widow Who Kept It Without Knowing",
+      "type": "dialogue",
+      "prompt": "Zara tests whether you understand what 'the shape of a question' means — why a form already refused once is more powerful in a second court. Insight DC 12.",
+      "skillCheck": { "skill": "Insight", "dc": 12 },
+      "successText": "She gives it to you with no further instruction. You know what you are carrying.",
+      "failText": "She gives it anyway, adding: 'Don't open it. Don't read it on the road.'",
+      "grantItem": "plaint_fragment",
+      "token_action": "grant"
+    },
+    {
+      "act": 2,
+      "location": "road_NIS_TBZ",
+      "scene": "Jalayirid caravan checkpoint, road west of Nishapur",
+      "title": "The Classification Checkpoint",
+      "type": "skill_check",
+      "prompt": "Checkpoint officer wants to classify the folio: religious (free), legal argument (taxed/impounded), or personal scholarly gift. Persuasion DC 12.",
+      "skillCheck": { "skill": "Persuasion", "dc": 12 },
+      "successText": "He stamps it 'personal scholarly effects — no jurisdictional application' and waves you through.",
+      "failText": "Two-day hold for cleric review. Folio returned intact after ruling.",
+      "token_action": "check"
+    },
+    {
+      "act": 3,
+      "location": "TBZ",
+      "scene": "Fatima's household, Tabriz, with Mongol court agent watching outside",
+      "title": "The Woman Who Needed the Form",
+      "type": "skill_check",
+      "prompt": "Fatima writes her petition and wants it attached to the folio. A court agent knocks. Exit with both documents before he can demand inspection. Persuasion or Deception DC 13.",
+      "skillCheck": { "skill": "Persuasion or Deception", "dc": 13 },
+      "successText": "You leave by a side passage. Agent sees you at distance but cannot intercept.",
+      "failText": "Agent reaches you at the door. He records your description but cannot legally stop you.",
+      "token_action": "check"
+    },
+    {
+      "act": 4,
+      "location": "road_TBZ_WM",
+      "scene": "Anatolian-Balkan transit road, river crossing approach",
+      "title": "The Road to Weimar",
+      "type": "combat",
+      "prompt": "Two hired men, agent's authorization — the petition must not arrive anywhere.",
+      "combatTarget": { "count": 2, "ac": 12, "hp": 22 },
+      "successText": "Both documents intact. Agent's authorization letter recovered.",
+      "failText": "Combat loss — documents at risk.",
+      "token_action": "check"
+    },
+    {
+      "act": 5,
+      "location": "WM",
+      "scene": "Weimar archive intake desk",
+      "title": "The First Filing Date",
+      "type": "skill_check",
+      "prompt": "Sweelinck files both documents under a new dual classification. History DC 11: understand the distinction between the original refusal date and the filing date.",
+      "skillCheck": { "skill": "History", "dc": 11 },
+      "successText": "'The question was first refused in an assembly that no longer exists. It arrived here still open. This is the first time it has received a filing date.'",
+      "failText": "He files both documents in silence. You leave without the filing date explanation.",
+      "takeItem": "plaint_fragment",
+      "activateMissionBit": "htyDraupadiComplete",
+      "token_action": "take"
+    }
+  ]
+}
+```
+
+---
+
+### New Node Proposals
+
+*None — NIS and TBZ are existing nodes in the quest-map.*
+
+---
+
 ## Admin Notes
 
 - Part 1 processed: 2026-05-31

@@ -516,7 +516,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
-| [ ] | HTY | mahabharata | Mahabharata — Dutt verse condensation | Ancient (pub. 1899) | Hindu Epic | 83 | Processed 2026-05-31 — HTY-01 spec (Savitri's Three Bargains); HTY-02–06 seeds. See HTY-mahabharata.md. |
+| [x] | HTY | mahabharata | Mahabharata — Dutt verse condensation | Ancient (pub. 1899) | Hindu Epic | 83 | Processed 2026-05-31 — HTY-01 spec (Savitri's Three Bargains); HTY-02–06 seeds. See HTY-mahabharata.md. |
 | [ ] | ADA | ramayana | Ramayana — Valmiki (Griffith transl.) | Ancient (pub. 1870) | Hindu Epic | 2339 | Processed 2026-05-31 — ADA-01 spec (The Curlew's Grief, Sultaniya→Tabriz); ADA-02–06 seeds. Part 1 of 12 fully read; story arc recovered from Narad's synopsis (Canto I). Parts 2–12 pending detailed pass. See ADA-ramayana.md. |
 
 ### East Asian & Caucasus
