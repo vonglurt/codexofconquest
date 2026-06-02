@@ -3125,3 +3125,273 @@ Maître Arnaud de Montfort sends a message to Orsolana in Roussillon: *condition
 ---
 
 *BLQ-11 complete. 2026-06-02.*
+
+---
+
+## Cycle 12 — Angle: The Debt Older Than the Crisis That Requires Payment
+
+---
+
+### BLQ-12: "The Two Friends' Debt"
+
+**Theme check:** Cycles 1-11 covered every angle in the original and supplementary BLQ seed list. Cycle 12 is the final cycle: the document that was written for a completely different purpose and becomes, fifteen years later, the only thing that saves a life. The debt between friends is paid in record-keeping neither man intended as a favor. The exoneration document was written before anyone knew it would be needed. Friendship is the only force that crosses the distance between wealth and ruin — and the document is the material evidence of the friendship's architecture.
+
+This is distinct from: BLQ-05 (deed outlives its object — the deed was specifically intended as a gift record); BLQ-11 (literal compliance with planned conditions); CLJ-08 (contingency letter written in specific anticipation of the expert's absence); AMS-04 (handwriting as character evidence). BLQ-12 shows the record written for no special purpose, that becomes essential precisely because it was ordinary.
+
+---
+
+**SOURCE HOOK:** Day X, Story 8. Gisippus of Athens gives his bride to his friend Titus Quintus Fulvius when Titus falls mortally ill with love for her. Years later Gisippus is in Rome, destitute and unrecognized. He is accused of a murder he did not commit. He decides to confess falsely — he has nothing to lose; the true murderer will at least escape. In court, Titus Quintus Fulvius recognizes Gisippus's voice and cannot let him die. He stands and falsely confesses himself. The actual murderer, overcome by both men's willingness to die, confesses truly. Octavian frees all three. Titus takes Gisippus into his house, gives him his sister, makes him his heir. The debt of the bride — given fifteen years ago, in a different city, when Gisippus had everything and Titus had nothing — is paid when Titus had everything and Gisippus had nothing. The document that exonerates was written before either man knew it would be needed.
+
+---
+
+**1367 SETTING:**
+A Florentine man named Giacomo di Sandro has appeared before the Roman prefect's court and falsely confessed to the killing of a Lombard wool factor on the Via Giulia. Giacomo is destitute, physically failing, and has decided he wants to die. The actual killer is somewhere in Rome, unknown, benefiting from the confusion.
+
+In the visitor's gallery, Lorenzo di Ser Piero — a Florentine merchant now based in Rome — recognizes Giacomo's voice. Fifteen years ago, in Athens, Giacomo di Sandro gave Lorenzo an irreplaceable favor: he vouched for Lorenzo's creditworthiness at a Genoese trading house when Lorenzo had no reputation in the eastern trade. Giacomo's personal attestation opened the Athens account. The account has supported Lorenzo's entire career since.
+
+Lorenzo cannot prove the false confession is false. He cannot get Giacomo to recant in the court session — he is too far away, and Giacomo does not recognize him.
+
+But in Lorenzo's lodgings across the city, in a strongbox with his personal papers, there is a bill of exchange from the Athens Genoese trading house — dated 1352, bearing both men's names, and most importantly, stamped with the Athens factor's date-mark for the day Giacomo was witnessed transacting in that city. The killing on the Via Giulia happened on the same date — in Rome. Giacomo cannot have been in both cities simultaneously.
+
+The document was filed in a commercial strongbox for fifteen years. It has never been relevant to anything except the account it represented. It is now the only thing that places Giacomo elsewhere.
+
+Lorenzo has dispatched a boy to find the carrier. The carrier's task: cross Rome, retrieve the bill of exchange from the strongbox, and return it to the prefect's court before the session clerk processes the false confession.
+
+**TOKEN:** A bill of exchange — Genoese trading house of Athens, 1352, bearing Giacomo di Sandro's name and a dated attestation of his presence in Athens on the same date as the killing in Rome; fifteen years old; carefully preserved in Lorenzo's strongbox; the parchment is sound; the dating is clear.
+
+**TOKEN granted:** Act I (retrieved from strongbox)
+**TOKEN taken:** Act V (court clerk receives it; Giacomo is exonerated)
+
+---
+
+### ACT I — Rome (Lorenzo's Lodgings, Via del Pellegrino)
+
+*No token yet · Lorenzo's strongbox, open on the table · the lodgings smell of Flemish cloth and old paper · the carrier and Lorenzo, both tense · midday*
+
+Lorenzo di Ser Piero says: I have about two hours before the session clerk processes the confession. The prefect's court moves slowly on Fridays, but not slowly enough. The bill of exchange is in the strongbox — I opened it before I sent for you; I saw the document. It is in good condition. Take it to the prefect's court. Give it to the session clerk as new evidence in the current proceeding.
+
+He says: I don't know if it still carries legal weight. It is fifteen years old. It is from Athens. The court will challenge it. But it places Giacomo in Athens on the day the man on the Via Giulia was killed. That is the only thing that matters.
+
+He hands the carrier the bill of exchange, carefully rolled and held with a linen band. He says: do not let it get wet. It is the only copy.
+
+*The document is older than most things I've carried. It looks like it.*
+
+The parchment is faintly yellowed. The Genoese trading house seal is intact — blue wax, still legible. The date is clear. Giacomo di Sandro's name is in a clear hand. The Athens factor's date-mark is in the bottom margin.
+
+---
+
+**Skill check — DC 12 Investigation or History:**
+Confirm the document's evidentiary elements before carrying it across the city — know what the court will challenge and what will hold.
+
+**Pass (Investigation):** The carrier examines the document carefully. The Genoese house seal is the stamp of the Zaccaria trading house of Athens, which the carrier (or their training) recognizes as a legitimate commercial house with records that can be cross-referenced against Venetian commercial archives. The date-mark in the bottom margin is the Athens factor's hand — a distinctive marking style used only by Genoese houses operating in the Levant. The carrier identifies: the date is clear; the seal is valid; the challenge will be to the document's age, not its content.
+
+**Pass (History):** A bill of exchange bearing a Genoese factor's date-mark has evidentiary standing in any court in the Italian peninsula under the 1340 Florentine commercial treaty — regardless of the document's age, as long as the seal is intact. The carrier identifies this standard: the court cannot refuse the document's admissibility on age grounds alone; the challenge will be the argument for the date-mark's relevance to the specific case.
+
+**Fail:** The carrier takes the document without examining it. The court's challenge will need to be improvised.
+
+*The bill of exchange granted here. Lorenzo watches the carrier leave with it.*
+
+**Grant item:** bill of exchange (Athens Genoese trading house, 1352; Giacomo's name; Athens date-mark on same date as Via Giulia killing)
+
+---
+
+### ACT II — Rome (The City Streets, Between Via del Pellegrino and the Prefect's Court)
+
+*The bill of exchange · rolled and banded, in the carrier's coat · Via del Pellegrino → Campo de' Fiori → Via Giulia → prefect's court building · midday crowds*
+
+The streets of Rome at midday are the streets of a city that has been deteriorating for forty years but still has the traffic of a capital. The direct route to the prefect's court runs through the Campo de' Fiori market and then along the Via Giulia itself — where the killing occurred and where the victim's family has gathered to watch the proceedings.
+
+The victim's family, led by the widow Margherita, is blocking the Via Giulia near the court entrance. She is standing in the street with six male relatives, not letting anyone enter the court who is not directly related to the proceedings. She says: no more witnesses, no more delays. Her husband is dead and she wants the confessor sentenced today.
+
+She is not wrong to want this. Her grief is real. She does not know the confession is false.
+
+*She is standing between me and the court door.*
+
+---
+
+**Skill check — DC 12 Persuasion or Insight:**
+Get past Margherita and her family without conflict, or find an alternate route to the court.
+
+**Pass (Persuasion):** The carrier says: I am carrying evidence that will result in the actual killer being identified. If the false confessor is sentenced, the real killer goes free. Margherita looks at the carrier. She says: "What evidence?" The carrier says: a document. She says: "Where from?" Athens, fifteen years ago. She says: "Show me." The carrier shows her the date-mark and the name. She steps aside. She says: "Get in there."
+
+**Pass (Insight):** The carrier reads the family's positioning — they are watching the main door; there is a court notary's entrance on the Via dei Banchi Vecchi, used by court officers, that is not being watched. The carrier reaches the court building through the notary's entrance without confronting the family.
+
+**Fail:** The carrier spends fifteen minutes in an argument with Margherita's relatives. By the time the carrier reaches the court interior, the session clerk has already begun processing the confession. The session is further along.
+
+---
+
+### ACT III — Rome (Prefect's Court, The Session in Progress)
+
+*The bill of exchange · in the carrier's coat · the court interior, noisy · Giacomo di Sandro at the front, the prefect's clerk reading the confession aloud · the gallery watching*
+
+The prefect's court is a rectangular room with a raised bench at the far end. The session clerk, Messer Urbano, is reading Giacomo's confession aloud to the prefect — a formal requirement before the prefect confirms the sentence. The carrier has entered the side door. The reading is nearly complete. There are three sentences left.
+
+The carrier must interrupt the proceeding formally — which requires either a court officer to pass the document forward, or a procedural interruption that the court protocol allows.
+
+Under Roman prefectural procedure, new evidence submitted before the sentence confirmation is confirmed is automatically accepted for review. The interruption window is open — barely.
+
+*He is reading. There are three sentences left.*
+
+---
+
+**Skill check — DC 12 Persuasion or History:**
+Interrupt the proceeding through the correct formal channel before the last sentence is read.
+
+**Pass (Persuasion):** The carrier addresses the court directly from the side door: "New evidence in this proceeding — submitted before sentence confirmation." The procedural formula is correct. The session clerk, Messer Urbano, stops reading. He looks at the prefect. The prefect nods. "Submit the document to the clerk." The carrier moves forward.
+
+**Pass (History):** The carrier knows the Roman prefectural interruption procedure: new evidence must be addressed to the senior court officer present, not the clerk. The carrier addresses the prefect directly: "My lord Prefect — new evidence in this proceeding under the pre-sentence submission protocol." The prefect acknowledges. Messer Urbano stops reading.
+
+**Fail:** The carrier does not interrupt through the correct channel. The last sentence is read. The prefect is about to confirm. Messer Urbano, acting on his own initiative — he has seen the carrier's urgent approach — pauses before confirming and asks the prefect if he wishes to hear new evidence. The prefect says yes. One additional delay, but the window remains open.
+
+*The bill of exchange out of the coat. The court quiet.*
+
+---
+
+### ACT IV — Rome (The Prefect's Court, Before the Bench)
+
+*The bill of exchange · on Messer Urbano's desk, unrolled · the prefect's legal assessor reading it · the room watching · Giacomo di Sandro at the front, looking at no one*
+
+The prefect's legal assessor, a learned man named Dottore Gregorio, reads the bill of exchange. He reads it a second time. He says: "This is fifteen years old. It is from Athens. It is not directly relevant to this proceeding unless someone can establish what the date-mark signifies and why Giacomo di Sandro's presence in Athens on this date is probative."
+
+He looks at the carrier. He says: "Who submitted this? What do they know about the date?"
+
+*He is right to ask. He is doing his job.*
+
+---
+
+**Skill check — DC 13 Persuasion or History:**
+Establish the bill of exchange's evidentiary value — explain why the Athens date-mark is probative and why the document is admissible despite its age.
+
+**Pass (Persuasion):** The carrier speaks for Lorenzo di Ser Piero, who can be summoned from the gallery: the bill of exchange places Giacomo di Sandro in Athens on the specific date the killing occurred in Rome. Lorenzo was present and can identify Giacomo from the Athens transaction. Lorenzo can verify the Zaccaria house's date-mark. The prefect says: "Bring the merchant." Lorenzo comes forward. He identifies Giacomo by voice and face. He identifies the date-mark. Dottore Gregorio accepts the document's relevance.
+
+**Pass (History):** The carrier cites the 1340 Florentine commercial treaty: bills of exchange bearing Genoese-house date-marks have automatic evidentiary standing in Italian courts regardless of age; the court cannot require additional authentication of the seal. Furthermore, the date-mark's format is specific to Athens factors — it is not reproducible in Rome. Dottore Gregorio, recognizing the precise citation, accepts the admissibility argument.
+
+**Fail:** Dottore Gregorio requires a ten-minute recess to examine the document privately. During the recess, the actual killer — who is in the gallery — attempts to leave. A court officer blocks the exit. The recess ends; the document is accepted; the proceeding continues.
+
+---
+
+### ACT V — Rome (The Prefect's Ruling)
+
+*The bill of exchange · on the bench before the prefect · the court in silence · the actual killer in the gallery, having just been prevented from leaving · Giacomo di Sandro at the front, no longer looking at nothing*
+
+The prefect, having reviewed the document and Lorenzo's testimony, looks at Giacomo di Sandro and says: "The document places you in Athens. You cannot have been in Rome on that date. Your confession is inconsistent with this evidence." He says: "Who killed the man on the Via Giulia?"
+
+The room is quiet. Giacomo says nothing. He does not know the answer.
+
+A man in the gallery stands. He is a Lombard wool factor's employee — a young man named Betto who was present on the Via Giulia and panicked. He says: "I did." He gives his reasons. He is not a criminal by disposition. He was frightened. He has been more frightened watching an innocent man confess to his act.
+
+The prefect orders Betto held. Giacomo is released.
+
+Lorenzo, moving through the room to reach Giacomo, passes the carrier. He says, without stopping: "Thank you."
+
+---
+
+**Skill check — DC 12 Persuasion or Investigation (optional — improves onPass quality):**
+Assist the prefect's clerk in recording the exoneration clearly for the formal record.
+
+**Pass:** The carrier helps Messer Urbano structure the record entry: Giacomo di Sandro exonerated by material evidence; confession withdrawn as inconsistent with documented alibi; actual perpetrator identified and held. The record is clear. Messer Urbano creates a notation category: *Exoneration Records — False Confessions Rebutted by Antecedent Documentary Alibi.*
+
+**Pass:** Messer Urbano says: "I've needed a name for this category for years." He says this to no one in particular, but then looks at the carrier. "One every three years, roughly. A man decides to die for something he didn't do." He stamps the receipt and pays the carrier's fee.
+
+**Fail:** The exoneration is recorded without a new category — filed under the generic "confession withdrawn" heading. The record is accurate but not distinctive.
+
+*The bill of exchange taken here. The debt paid.*
+
+**Take item:** bill of exchange (received by Messer Urbano as court evidence; Giacomo exonerated; Betto held)
+
+---
+
+### onPass
+
+Giacomo di Sandro and Lorenzo di Ser Piero sit in a courtyard near the Via Giulia late that afternoon. Neither of them has spoken for a long time.
+
+Lorenzo says: "I recognized your voice." Giacomo says: "I didn't see you." Lorenzo says: "I was in the gallery." A pause. Lorenzo says: "I still have the Athens account. The Zaccaria house gave me my first credit there because you vouched for me." He says: "The bill of exchange was in my strongbox for fifteen years." He says: "I never opened the box."
+
+Giacomo says: "I forgot I signed it."
+
+Messer Urbano, at the prefect's court registry, enters the case under a new notation: *Exoneration Records — False Confessions Rebutted by Antecedent Documentary Alibi.* He adds a second notation: *Note on Evidentiary Character: the document was written for commercial purposes, not evidentiary purposes; its utility as alibi was unknown at time of creation; the debt predates the crisis by fifteen years.*
+
+He stamps the carrier's receipt with the court seal and pays the fee.
+
+---
+
+### onFail
+
+The exoneration is confirmed. The record is filed under "confession withdrawn." Giacomo is released. Lorenzo receives the bill of exchange back from the court as returned evidence.
+
+The case proceeds to its correct conclusion regardless. The record is accurate. What is absent is the clean notation — the category Messer Urbano could have named.
+
+---
+
+### Quest Stub (UQF v1.0)
+
+```json
+{
+  "quest_id": "BLQ_012",
+  "title": "The Two Friends' Debt",
+  "cycle": 12,
+  "book": "Decameron",
+  "token": "bill of exchange — Athens Genoese trading house, 1352; Giacomo di Sandro's name and Athens date-mark on same date as Via Giulia killing; fifteen years old; in Lorenzo's strongbox; the only document that places Giacomo elsewhere",
+  "route": "ROM → ROM (Via del Pellegrino → Campo de' Fiori → prefect's court)",
+  "theme": "The debt older than the crisis; the document written for commercial purposes becomes the only alibi; friendship is the force that crosses the distance between wealth and ruin; the record-keeping that neither man intended as a favor is the favor",
+  "archive_category": "Exoneration Records — False Confessions Rebutted by Antecedent Documentary Alibi (Messer Urbano, Roman prefect's court registry, 1367)",
+  "acts": [
+    {
+      "act_id": "BLQ_012_01",
+      "location": "Rome — Lorenzo's lodgings, Via del Pellegrino",
+      "type": "skill_check",
+      "activateNode": "ROM",
+      "scene": "Lorenzo explains: about two hours before the clerk processes the confession. The bill of exchange places Giacomo in Athens on the date of the killing in Rome. He doesn't know if it still carries legal weight. It is the only copy. Confirm the document's evidentiary elements before running to court.",
+      "skillCheck": { "dc": 12, "skills": ["Investigation", "History"] },
+      "grantItem": "bill of exchange (Athens 1352, Giacomo's name, same-date alibi)",
+      "checkPassFlag": "document_elements_confirmed"
+    },
+    {
+      "act_id": "BLQ_012_02",
+      "location": "Rome — streets between Via del Pellegrino and the prefect's court",
+      "type": "skill_check",
+      "activateNode": "ROM",
+      "scene": "Margherita, the victim's widow, is blocking the Via Giulia entrance to the court with six male relatives. She says: no more witnesses, no more delays. She does not know the confession is false. Her grief is real.",
+      "skillCheck": { "dc": 12, "skills": ["Persuasion", "Insight"] },
+      "checkPassFlag": "court_entrance_reached"
+    },
+    {
+      "act_id": "BLQ_012_03",
+      "location": "Rome — prefect's court interior, session in progress",
+      "type": "skill_check",
+      "activateNode": "ROM",
+      "scene": "Messer Urbano is reading Giacomo's confession aloud. Three sentences remain before the prefect confirms the sentence. The carrier must interrupt through the correct formal channel before the last sentence is read.",
+      "skillCheck": { "dc": 12, "skills": ["Persuasion", "History"] },
+      "checkPassFlag": "proceeding_interrupted"
+    },
+    {
+      "act_id": "BLQ_012_04",
+      "location": "Rome — prefect's court, before the bench",
+      "type": "skill_check",
+      "activateNode": "ROM",
+      "scene": "Dottore Gregorio, the prefect's legal assessor, reads the bill of exchange twice. He says: this is fifteen years old and from Athens. Establish why the Athens date-mark is probative and why the document is admissible despite its age.",
+      "skillCheck": { "dc": 13, "skills": ["Persuasion", "History"] },
+      "checkPassFlag": "document_admissibility_established"
+    },
+    {
+      "act_id": "BLQ_012_05",
+      "location": "Rome — prefect's court, ruling",
+      "type": "skill_check",
+      "activateNode": "ROM",
+      "scene": "The prefect says: the document places you in Athens; your confession is inconsistent with this evidence. The gallery is silent. Betto stands and confesses. Giacomo is released. Assist Messer Urbano in recording the exoneration clearly for the formal record.",
+      "skillCheck": { "dc": 12, "skills": ["Persuasion", "Investigation"] },
+      "takeItem": "bill of exchange",
+      "activateMissionBit": "blqTwoFriendsDebtComplete",
+      "checkPassFlag": "exoneration_recorded"
+    }
+  ]
+}
+```
+
+---
+
+*BLQ-12 complete. 2026-06-02.*
+
+---
+
+*BLQ SEEDS COMPLETE 2026-06-02 — BLQ-01 through BLQ-12, all twelve cycles written.*

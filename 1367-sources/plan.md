@@ -388,6 +388,8 @@ This pass adds a **Summary** section to each book's `.md` file, one source text 
 
 ## BLQ — Decameron (Boccaccio, 1353)
 
+**SEEDS COMPLETE 2026-06-02 — BLQ-01–12 all vignettes done**
+
 **Processed 2026-05-31/06-01** — BLQ-01 spec complete (The Saint's Attestation, Florence→Naples). BLQ-02–07 seeds written. ALL 9 PARTS FULLY READ (Days 1–10, all 100 stories + Author's Conclusion). New seeds BLQ-S08 through BLQ-S12 added from Parts 2–9 reading. See BLQ-decameron.md.
 
 Seeds outstanding (need full 5-act vignette treatment):
@@ -400,8 +402,8 @@ Seeds outstanding (need full 5-act vignette treatment):
 - BLQ-S08: "The Jewel Chest" — BRI → BAR ✓ DONE 2026-06-02 (written as Cycle 9)
 - BLQ-S09: "The Soldier's Testimony" — ALE → FAM ✓ DONE 2026-06-02 (written as Cycle 10)
 - BLQ-S10: "The Impossible Conditions" — FLR → AVG → MTP → MAR ✓ DONE 2026-06-02 (written as Cycle 11)
-- BLQ-S11: "The Court Defense" — PIS → PRA
-- BLQ-S12: "The Two Friends' Debt" — ROM → ROM
+- BLQ-S11: "The Court Defense" — PIS → PRA ✓ DONE 2026-06-02 (written as Cycle 2)
+- BLQ-S12: "The Two Friends' Debt" — ROM → ROM ✓ DONE 2026-06-02 (written as Cycle 12)
 
 ---
 
