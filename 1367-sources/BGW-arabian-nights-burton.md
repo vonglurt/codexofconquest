@@ -2962,6 +2962,190 @@ Make a **History check (DC 12)**.
 
 *BGW-S12 complete. 2026-06-02.*
 
+---
+
+## Cycle 13 — Angle: *Masrur's Account — The Executioner's Deposition as the Single Neutral Record of the Violence the Legend Aestheticizes*
+
+*Prior cycles missed:*
+
+Every BGW cycle found a document created by a scholar, a clerk, a treasurer, a family. Cycle 13 finds the document created by the man whose function in the stories is to execute whoever the Caliph gestures at — Masrur, the sword-bearer, who carries out the moment the narrative turns away from. The stories describe his actions; they do not include his account. A Baghdad court chronicle contains his brief biography and the single deposition he was required to give — not for the executions, but for one administrative anomaly that required official documentation.
+
+---
+
+### BGW-S13: "Masrur's Account"
+
+**Theme check:** BGW-S09 (confiscation after execution) concerned the treasury's record of Jafar's estate. This concerns the executioner's own account — the person who was physically present at the moment the confiscation record was predicated on. Theme: the executioner's deposition as the neutral administrative record of the moment the legend aestheticizes — what the person who was there reported in an administrative context, not in a narrative one.
+
+---
+
+**SOURCE HOOK:** *Arabian Nights* (Burton translation): Masrur appears throughout the Harun al-Rashid cycle as the Caliph's sword-bearer and executioner — present at every nocturnal walk, summoned to execute the guilty, trusted with the Caliph's secrets. The stories treat him as an instrument; his interiority is not a subject. In the historical record, the real Masrur ibn Yahya was a senior official in Harun's administration — not merely a sword-bearer but a man who managed the Caliph's personal household and had administrative standing.
+
+---
+
+**1367 SETTING:**
+A Baghdad court chronicle held in a monastery library, Dayr al-Zafaran, contains a brief biography of Masrur ibn Yahya and a single direct deposition given before the Baghdad qadi (judge) in 804 AD. The deposition is administrative: Masrur was required to testify about the circumstances of a prisoner's death in custody — a matter of judicial record-keeping, not of political sensitivity. The deposition is the only document in which Masrur speaks in his own administrative voice about an act of violence. A monastery archivist, Brother Raphael, wants it sent to Weimar before the monastery's dissolution.
+
+*Brother Raphael, opening the chronicle to the deposition: "He says only what is necessary. The qadi asked him what happened; he said what happened; the qadi recorded it. He does not explain the Caliph's order. He does not justify the act. He describes the physical facts. That is all he says."*
+
+**TOKEN:** Baghdad Court Chronicle — Masrur Deposition — a bound court chronicle, 9th century; the relevant pages open to the 804 AD qadi proceedings; Masrur's deposition marked in the left margin with a scribe's notation: *sword-bearer's testimony, prisoner death, administrative record, no further action required.* *Act I: received from Brother Raphael, Baghdad. Act V: surrendered to Archivus Sweelinck, Weimar.*
+
+---
+
+**Act I — Dayr al-Zafaran Monastery (BGD)**
+
+*The monastery library, morning. Brother Raphael is a Syrian Christian archivist in his sixties; the chronicle is open on the table.*
+
+"The qadi required the deposition because the prisoner died in custody and administrative protocol required documentation. Masrur gave the deposition. He described the physical facts of the prisoner's condition and the circumstances of his death. He did not give the Caliph's reason for the order. He was not asked for the reason. The record closes: no further action required." He looks at the carrier. "Tell me what this deposition is evidence of — not what it records, but what kind of evidence it is; what makes it different from a court historian's account of the same moment."
+
+*The Fighter reads the deposition — the flat administrative sentences, the absence of justification.*
+
+Make an **Investigation check (DC 12)**.
+
+**Fail:** "The court historian explains the moment. The deposition describes it. Tell me what the difference in purpose produces in terms of what kind of witness each is." *Brother Raphael waits.*
+
+**Success:** A court historian writes retrospectively for an audience — selecting, interpreting, justifying. The deposition was given in real time to a judicial authority, under administrative obligation, with no audience and no interpretive purpose — only the procedural requirement to describe what happened accurately enough for the qadi to mark the record closed. The deposition is a procedural witness; the court history is a narrative witness. They are different kinds of evidence for the same moment. Brother Raphael nods. "The procedural witness. That is what this is." He hands over the **Baghdad Court Chronicle — Masrur Deposition**.
+
+---
+
+**Act II — Baghdad Judicial Quarter (BGD)**
+
+*The Baghdad qadi's court, afternoon. A junior court official, Ibrahim al-Warraq, has seen the chronicle being carried out of the monastery and wants to verify that the deposition is being transferred with the court's knowledge.*
+
+"A document containing judicial proceedings cannot leave Baghdad without a court release. The deposition is part of the judicial record." He is applying the rule correctly.
+
+*The Fighter watches Ibrahim open the release process — three weeks, a formal application, a record of what was transferred.*
+
+Make a **Persuasion check (DC 13)**.
+
+**Fail:** "Judicial proceedings cannot leave without a court release. That is the rule." *Ibrahim is firm. Try again — about the deposition's administrative status and the court's current relationship to it.*
+
+**Success:** "The deposition was marked 'no further action required' in 804 AD. It has been in monastery custody since approximately 850 AD — no court has claimed jurisdiction over it in five centuries. A document that has been in private monastery custody for five centuries without court retrieval is no longer an active judicial record; it is a historical document that contains judicial content. The release requirement applies to active judicial records." Ibrahim reads the notation: *no further action required.* He checks the court's records for any outstanding claims on the chronicle. There are none. "Historical document. Proceed."
+
+---
+
+**Act III — Mosul Waystation (MOS)**
+
+*A Mosul waystation, morning. A Shia legal scholar, Sheikh Ibrahim al-Hilli, objects to a Sunni caliphal court document being taken to a Christian archive.*
+
+"A document from the Baghdad Abbasid court belongs in an Islamic archive — either Sunni or Shia. A Christian archive is not the appropriate custodian for Islamic judicial records." He is making a sincere claim about cultural custody.
+
+*The Fighter watches the Sheikh's genuine concern — and the available Islamic archives, none of which have been asked to receive this document.*
+
+Make a **Persuasion check (DC 12)**.
+
+**Fail:** "Name an Islamic archive that would receive this document and preserve it neutrally." *The Sheikh is waiting for a specific answer.*
+
+**Success:** "The appropriate Islamic archive is the one that has agreed to receive and preserve the document — and none has been asked. The Weimar archive has received Islamic judicial and administrative documents before and maintains them as scholarly historical records without theological interpretation. If an Islamic archive wishes to receive a copy after the Weimar archive has preserved it, that is a conversation for the archive to have. The document's immediate need is preservation, not cultural custody." Sheikh Ibrahim al-Hilli thinks for a long time. "A copy, after." He steps aside.
+
+---
+
+**Act IV — Constantinople Legal Quarter (CON)**
+
+*A Constantinople legal scholar's office, afternoon. Nikephoros Melissenos is assembling a comparative study of Islamic and Byzantine judicial procedure and wants to examine the deposition as evidence of Abbasid judicial protocol.*
+
+"This deposition is precisely the kind of document I need — an administrative deposition given under judicial obligation, not a narrative account. Can I make a copy before it goes to Weimar?" His request is scholarly and legitimate.
+
+*The Fighter weighs the copying request — legitimate, but time-consuming, and a copy in Constantinople means the document's existence is publicly known.*
+
+Make a **Persuasion check (DC 12)** to redirect without refusing.
+
+**Fail:** "The copy would take two days. The document's scholarship value to my study is significant." *Nikephoros is sincere. Redirect — about what the Weimar archive can offer that a private copy cannot.*
+
+**Success:** "When the document is archived at Weimar, it will be available for comparative scholarship under the archive's access protocols — your study can cite an archived source rather than a private copy, which gives your work institutional grounding. I will tell the archive you requested access." Nikephoros considers the institutional advantage. "An archived citation is better than a personal copy." He provides a letter of scholarly introduction.
+
+---
+
+**Act V — Weimar Archive (WM)**
+
+*Archivus Sweelinck's receiving room, evening. He reads the deposition slowly — the flat administrative sentences, the absence of justification, the margin notation: no further action required.*
+
+"The court historians describe his actions. The stories describe his function. This document is the only one in which he speaks." He sets the chronicle down. "Tell me the classification — not for the chronicle, but for the deposition. What does the archive receive when it receives the record of the person who was physically present at the moment the legend aestheticizes?"
+
+*The Fighter watches Sweelinck's pen — the expression of a man who has received the legend's record many times and is now receiving the person who carried it out.*
+
+Make a **History check (DC 13)**.
+
+**Fail:** "The narrative witness and the procedural witness cover the same moment. Tell me what the classification should preserve about their difference — not just that they differ, but what the procedural witness's constraints produce." *Sweelinck waits.*
+
+**Success:** Sweelinck writes: *Procedural Witness Records — Administrative Depositions Given Under Judicial Obligation at Moments the Narrative Tradition Aestheticizes; The Record That Describes Without Explaining; Masrur ibn Yahya Deposition, Baghdad Qadi Court 804 AD, Prisoner Death Custody, No Further Action Required; The Only Document in Which the Sword-Bearer Speaks.* He applies the archive seal. You hand over the **Baghdad Court Chronicle — Masrur Deposition**. You receive the **Archive Classification Receipt: Procedural Witness Records**.
+
+*The Fighter watches the chronicle filed in the new category. Masrur's sentences are in the archive now — flat, administrative, describing physical facts without justification. The legend continues without him. The record has him.*
+
+---
+
+### Quest API Stub — BGW_S13: Masrur's Account
+
+```json
+{
+  "quest_id": "BGW_S13",
+  "title": "Masrur's Account",
+  "book": "Arabian Nights — Alf Layla wa-Layla (Burton translation)",
+  "cycle": 13,
+  "token": "Baghdad Court Chronicle — Masrur Deposition",
+  "route": "BGD → MOS → CON → WM",
+  "theme": "The executioner's deposition as the procedural witness record of the moment the legend aestheticizes — what the person who was there reported under judicial obligation, describing without explaining.",
+  "archive_category": "Procedural Witness Records — Administrative Depositions Given Under Judicial Obligation at Moments the Narrative Tradition Aestheticizes; The Record That Describes Without Explaining",
+  "acts": [
+    {
+      "act": "act_1", "title": "Dayr al-Zafaran Monastery", "activateNode": "BGD",
+      "type": "skill_check", "skillCheck": { "stat": "Investigation", "dc": 12 },
+      "scene": "Brother Raphael needs the carrier to articulate the difference between the procedural witness and the narrative witness — what the deposition's administrative constraints produce that the court historian's retrospective account cannot.",
+      "prompt": "Investigation DC 12. The deposition was given in real time under procedural obligation with no audience and no interpretive purpose — a procedural witness. The court history is a narrative witness. Different kinds of evidence for the same moment.",
+      "failText": "The court historian explains the moment. The deposition describes it. What kind of witness does each produce?",
+      "successText": "The procedural witness. That is what this is. You receive the Baghdad Court Chronicle — Masrur Deposition.",
+      "grantItem": "Baghdad Court Chronicle — Masrur Deposition",
+      "checkPassFlag": "bgwS13Act1Passed", "activateMissionBit": "bgwS13Active"
+    },
+    {
+      "act": "act_2", "title": "Baghdad Judicial Quarter", "activateNode": "BGD",
+      "type": "skill_check", "skillCheck": { "stat": "Persuasion", "dc": 13 },
+      "scene": "Ibrahim al-Warraq requires a court release for judicial proceedings. The deposition was marked 'no further action required' in 804 AD and has been in monastery custody for five centuries with no court claims.",
+      "prompt": "Persuasion DC 13. A document unclaimed for five centuries is a historical document, not an active judicial record — the release requirement does not apply.",
+      "failText": "Judicial proceedings cannot leave without a court release.",
+      "successText": "Historical document. Ibrahim finds no outstanding claims. Proceed.",
+      "grantItem": "Judicial Quarter Transit Clearance",
+      "checkPassFlag": "bgwS13Act2Passed"
+    },
+    {
+      "act": "act_3", "title": "Mosul Waystation", "activateNode": "MOS",
+      "type": "skill_check", "skillCheck": { "stat": "Persuasion", "dc": 12 },
+      "scene": "Sheikh Ibrahim al-Hilli objects to Islamic judicial records going to a Christian archive. No Islamic archive has been asked to receive the document — the immediate need is preservation.",
+      "prompt": "Persuasion DC 12. The document's immediate need is preservation; if an Islamic archive wants a copy after Weimar preserves it, that conversation can happen then.",
+      "failText": "Name an Islamic archive that would receive this document and preserve it neutrally.",
+      "successText": "A copy, after. The Sheikh steps aside.",
+      "grantItem": "Mosul Waystation Passage",
+      "checkPassFlag": "bgwS13Act3Passed"
+    },
+    {
+      "act": "act_4", "title": "Constantinople Legal Quarter", "activateNode": "CON",
+      "type": "skill_check", "skillCheck": { "stat": "Persuasion", "dc": 12 },
+      "scene": "Nikephoros Melissenos wants to copy the deposition for his comparative study. Redirect: an archived source at Weimar gives his scholarship institutional grounding that a private copy cannot.",
+      "prompt": "Persuasion DC 12. An archived citation is better than a personal copy — the archive gives his work institutional grounding.",
+      "failText": "The copy would take two days. Why is Weimar access better than a personal copy?",
+      "successText": "An archived citation is better. Nikephoros provides a letter of scholarly introduction.",
+      "grantItem": "Nikephoros's Scholarly Introduction Letter",
+      "checkPassFlag": "bgwS13Act4Passed"
+    },
+    {
+      "act": "act_5", "title": "Weimar Archive", "activateNode": "WM",
+      "type": "skill_check", "skillCheck": { "stat": "History", "dc": 13 },
+      "scene": "Sweelinck needs the classification that captures what the procedural witness's constraints produce — not just that the deposition differs from the narrative account, but what the administrative obligation to describe without explaining generates.",
+      "prompt": "History DC 13. The procedural witness's constraints — real time, judicial obligation, no audience, no interpretive purpose — produce a record that describes the physical facts without the aestheticization the narrative tradition adds.",
+      "failText": "What does the procedural witness's constraints produce that the narrative witness cannot?",
+      "successText": "Sweelinck writes: Procedural Witness Records — Administrative Depositions at Moments the Narrative Tradition Aestheticizes; The Record That Describes Without Explaining. You receive Archive Classification Receipt: Procedural Witness Records.",
+      "takeItem": "Baghdad Court Chronicle — Masrur Deposition",
+      "grantItem": "Archive Classification Receipt: Procedural Witness Records",
+      "checkPassFlag": "bgwS13Act5Passed", "activateMissionBit": "bgwS13Complete"
+    }
+  ]
+}
+```
+
+---
+
+*BGW-S13 complete. 2026-06-02.*
+
+
 
 
 
