@@ -512,3 +512,796 @@ activateMissionBit: lisCapComplete
 *quest-map.md: append MLN, LHA to Location Grid.*
 *quest-map.md: add LIS cycle 2 row and theme thread.*
 *books.md: mark LIS [x].*
+
+---
+
+### 5-Act Vignette Play: *The Restelo Dissent*
+
+**THE TOKEN: THE CLERK'S QUIRE** — Twenty pages, hand-sewn at the spine, in Brother Sebastião's careful script. The complete text of the Old Man of Restelo's speech as delivered at the Lisbon harbor on the morning of the 1497 departure — the speech that called the whole enterprise vanity, ambition dressed as piety, the death of good men purchased for a merchant's profit. On the final page, a marginal note in the same hand: *These words were spoken aloud at the harbor. No official scribe was present because no official scribe was needed. The speech was not in the program.* The quire has been in Brother Sebastião's possession for forty-five years.
+
+---
+
+**ACT I — "The Dying Clerk"**
+*Node: MDN — Mountain Monastery.*
+
+Brother Sebastião is on his sickbed. He has been dying for three weeks and has achieved a certain clarity about the order of things. The quire is on the bedside shelf. He wants you to carry it to the royal chronicle commission so it can be recorded in the official history.
+
+You look at the quire. You look at the chronicle commission's most recent published volume — a copy of which is on the monastery's reading shelf — which celebrates the departure as one of the finest moments in the nation's history.
+
+> **Insight DC 11.** The royal chronicle commission is the institution that would have recorded the speech if it had chosen to. Filing the quire there now means the dissent enters the record as an appendix to an official narrative, subordinated to the account that chose not to include it. The humanist archive preserves it independently — not as an appendix but as a primary record with its own entry under its own category.
+
+**Fail:** You carry the quire toward the chronicle commission. Brother Sebastião does not disagree; he has thought about it differently and cannot explain why.
+
+**Pass:** You redirect. You explain the distinction. Brother Sebastião closes his eyes. "Yes," he says. "That is correct."
+
+TOKEN GRANTED: The Clerk's Quire.
+
+---
+
+**ACT II — "The Herald's Order"**
+*Node: MDN gate.*
+
+A royal herald is waiting at the monastery gate with a written order for the papers of dying or deceased monastery scholars. The order covers "documents of historical interest deposited with the crown for permanent preservation." He reads it as covering the quire.
+
+> **Persuasion DC 12.** The Old Man's speech was made by a private citizen at the harbor embankment. Brother Sebastião wrote it down as a private act of recording. A private monk's private copy of a private citizen's speech is not a crown document — it is intellectual property belonging to the monk's estate, and with his authorization it may be placed with any archive the estate designates. The herald's order covers official documents deposited with the crown. This quire has never been deposited with anyone. You are the first person the estate is entrusting it to.
+
+**Fail:** The herald accepts a temporary receipt and notes the quire in the crown register as "item pending confirmation of private-estate status." You have forty-eight hours before the status is confirmed against you.
+
+**Pass:** The herald reads the argument. He notes in his register: "item declined — private estate property, not crown documentation." He steps aside.
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "The Appendix Problem"**
+*Node: Road approaching LHA.*
+
+A royal chronicle commission official meets you on the road. He is polite and scholarly. He knows about the quire. He has a genuine interest in it: he thinks it should be in the chronicle.
+
+His framing: as an appendix, it would be available to every reader of the official history. Isn't that better visibility?
+
+> **Insight DC 12.** He believes what he is saying. But the appendix structure changes what the document is. Filed as an appendix to the official departure narrative, the speech becomes a qualification — a thing the official account has absorbed and framed. The Old Man said the departure was wrong. Filing it in a position that depends on the official account's permission is not filing the dissent; it is filing the official account's toleration of the dissent, which is a different thing.
+
+**Fail:** He follows you to the archive and speaks with Frei Tomás. Frei Tomás hears both arguments and asks you to wait while he considers. He decides for independent filing, but the delay costs two hours.
+
+**Pass:** He accepts the distinction. He says he will commission a separate notation in the chronicle referencing the humanist archive's holding. You tell him that would be exactly right.
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "The River Crossing"**
+*Node: Road north of Lisbon toward WM.*
+
+The road north from the archive district runs through a flat-bottomed valley where the spring runoff has extended the river's banks thirty feet on either side. The ford is passable but deep enough at the center that a stumble would submerge the quire. The sewn spine would survive a dunking; the ink would not.
+
+> **Athletics DC 11.** The twenty pages are stacked inside the outer cover, which you have folded closed. The ford is knee-deep at the center with a slow current. Steady pace, planted feet, dry route to the far bank.
+
+**Fail:** You slip at the center. Your leading hand hits the water. The quire's bottom edge catches a splash — the final page takes a small water stain at the corner. The ink is safe. But the corner of Brother Sebastião's marginal note is blurred.
+
+**Pass:** You ford cleanly. The quire is dry. The marginal note is intact.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Independent Record"**
+*Node: WM — Weimar Archive.*
+
+Sweelinck reads the speech. He reads it twice. Then he opens the monastery's copy of the official chronicle to the departure chapter and reads that.
+
+He sets both down. He looks at the marginal note.
+
+"'Not in the program,'" he says. "'No official scribe was present because no official scribe was needed.' He wrote himself out of the record. The monk knew what he was doing."
+
+> **Investigation DC 11.** Confirm that no existing archive category covers a public speech made at an official gathering, by an unnamed private citizen, in full view of thousands, which was then officially not recorded because the official apparatus chose not to record it. The gap is specific: the speech was not suppressed; it was simply not admitted. The archive needs the category that holds the difference between suppression and institutional silence.
+
+**Fail:** Sweelinck files it under Unofficial Accounts — Unverified Testimonials. The speech is in the archive but under a category that implies it might not be accurate.
+
+**Pass:** Sweelinck confirms the gap. He creates: *Dissent Records — Public Protest Made in Full View and Then Allowed Not to Exist, First Entry. The Old Man of Restelo's speech at the Lisbon embarkation: made publicly, heard by thousands, written by one private monk, held for forty-five years; not suppressed — allowed to be absent; the absence was not an act of state but of omission; Brother Sebastião's marginal note is the archive's most accurate provenance description.*
+
+TOKEN TAKEN: The Clerk's Quire.
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "LIS_003",
+  "title": "The Restelo Dissent",
+  "source": "The Lusiad — Luís de Camões (1572), Richard Burton translation",
+  "cycle": 3,
+  "book": "lusiad",
+  "source_episode": "Canto IV — The Old Man of Restelo's speech at the Lisbon departure; he names the departure as vanity, ambition, and the purchase of merchants' profits with good men's deaths; no official scribe recorded it",
+  "theme": "The public dissent that was made in full view of everyone and then allowed not to exist: not suppressed — simply not admitted; the marginal note names the gap; the archive holds the speech independently, not as an appendix to the official account's toleration of it",
+  "activateNode": "MDN",
+  "token": {
+    "id": "restelo_clerk_quire",
+    "name": "The Clerk's Quire",
+    "description": "Twenty hand-sewn pages in Brother Sebastião's script: the complete text of the Old Man of Restelo's speech. Marginal note on the final page: 'These words were spoken aloud at the harbor. No official scribe was present because no official scribe was needed. The speech was not in the program.'",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["MDN", "LHA", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {
+      "act": 1,
+      "node": "MDN",
+      "type": "skill_check",
+      "skill": "Insight",
+      "dc": 11,
+      "summary": "Dying Brother Sebastião wants the quire filed at the chronicle commission. Insight DC 11: the commission would file it as an appendix subordinated to the official account; the humanist archive preserves it independently as a primary record. TOKEN GRANTED."
+    },
+    {
+      "act": 2,
+      "node": "MDN gate",
+      "type": "skill_check",
+      "skill": "Persuasion",
+      "dc": 12,
+      "summary": "Royal herald with order for 'documents of historical interest.' Persuasion DC 12: a private monk's private copy of a private citizen's speech is not a crown document — it is intellectual property of the monk's estate, designated by his authorization to the humanist archive."
+    },
+    {
+      "act": 3,
+      "node": "LHA approach",
+      "type": "skill_check",
+      "skill": "Insight",
+      "dc": 12,
+      "summary": "Chronicle commission official offers appendix filing for broad visibility. Insight DC 12: an appendix changes the document into a qualification of the official account's toleration of the dissent — which is a different thing from the dissent itself."
+    },
+    {
+      "act": 4,
+      "node": "road north",
+      "type": "skill_check",
+      "skill": "Athletics",
+      "dc": 11,
+      "summary": "Flooded river ford, ink cannot get wet. Athletics DC 11: twenty pages, steady crossing, dry route."
+    },
+    {
+      "act": 5,
+      "node": "WM",
+      "type": "skill_check",
+      "skill": "Investigation",
+      "dc": 11,
+      "summary": "Confirm no existing category covers public speech at an official gathering officially not admitted. Sweelinck creates: Dissent Records — Public Protest Made in Full View and Then Allowed Not to Exist, First Entry. TOKEN TAKEN."
+    }
+  ]
+}
+```
+
+---
+
+### 5-Act Vignette Play: *Inês de Castro's Testimony*
+
+**THE TOKEN: THE MARRIAGE ATTESTATION** — A single folded parchment, opened to four columns: the date, the location, the three witnesses' full names, and the ceremony's description in enough legal detail to establish the marriage's validity under canon law. The notary's stamp is at the foot. On the reverse: a single line in a different hand, ink older than the rest: *Quod Deus conjunxit, homo non separet.* No signature. No seal. Just the words, pressed into the skin of the document in a hand that knew it might be the last thing written about this.
+
+---
+
+**ACT I — "The Estate Sale"**
+*Node: CVP — Copyist's Quarter.*
+
+The notary's estate is being settled. His executor — a reasonable man with several hundred documents to catalog — is selling the surplus historical materials as curiosities. The attestation is in a box labeled: *Portugal, 14th century, marriage documentation, royal adjacent.* The price is modest.
+
+You read the document. You read it again.
+
+> **History DC 11.** This is not a curiosity. Three men were ordered to execute Inês de Castro. If their act was an execution, it was lawful — Alfonso IV gave the order. If their act was regicide — if Pedro's marriage to Inês was legally valid at the time they killed her — then what they did was the killing of a queen, and the category of their act changes permanently. The attestation is the legal instrument that makes that argument possible. The executor does not know what he is selling.
+
+**Fail:** You buy it at the curiosity price without explaining why it matters. The executor asks if you want anything else from the box.
+
+**Pass:** You explain the legal weight to the executor. He raises the price. You pay the raised price.
+
+TOKEN GRANTED: The Marriage Attestation.
+
+---
+
+**ACT II — "The Loyalists"**
+*Node: CVP street.*
+
+Two men are watching the notary's estate from across the street. You have seen them before — not here, but in the way men look who have a specific purpose and patience. They follow you when you leave.
+
+At the corner, one of them speaks. He represents interests that preferred a particular reading of the 14th century and would prefer it to continue.
+
+> **Persuasion DC 12.** An attestation of a private marriage ceremony is not a political document. Destroying it does not change what happened. It changes only what is available to be confirmed. The event is documented in enough other sources that historians will reconstruct the marriage without this attestation. What this document provides is the legal classification — the specific formal evidence that determines how the killing is categorized. Destroying it does not erase the marriage. It leaves the classification permanently uncertain, which is less useful to posterity than a definitive answer either way.
+
+**Fail:** They offer to buy the document instead. You decline. They follow at a distance until the city gate.
+
+**Pass:** One of them says: "You're going to the archive anyway." He says it as a prediction, not a question. He steps aside.
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "The Canon Law Case"**
+*Node: RME — Rome, Vatican archive approach.*
+
+A Vatican canon law scholar meets you at the archive approach. He has heard about the attestation through a network of estate scholars who correspond about significant finds. He wants to use it as a precedent in a dynastic legitimacy case currently before the Curia — a Portuguese inheritance dispute that turns on whether a secret royal marriage is valid without papal dispensation.
+
+His request is framed generously: a brief loan, with a copy made at his expense.
+
+> **Insight DC 12.** The loan structure makes the attestation a piece of evidence in an active proceeding. Its value in that proceeding would be consumed — the other parties would challenge it, its authenticity would be contested, and even if authenticated, its primary evidential status would be spent on one case. An original attestation filed in a neutral archive is available as evidence in any future case, including ones not yet foreseeable. The scholar's case is real; the archive's function is broader.
+
+**Fail:** He follows you into the archive vestibule arguing the urgency. The archivist has to manage the entry.
+
+**Pass:** He accepts the reasoning. He asks for a reference to the archive entry once it is filed so he can cite it as a secondary source instead.
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "The Alpine Snow"**
+*Node: RME road to WM.*
+
+The road north from Rome takes an Alpine pass that has been accumulating light snow for a week. The pass itself is passable. The problem is a stone footbridge on the northern descent whose steps have frozen. The parchment in your pack needs to arrive dry and unfolded. A fall on the ice steps would solve neither of those conditions.
+
+> **Athletics DC 11.** Twelve stone steps down from the pass's eastern face, each one glazed. Hands on the guide rope. Weight distributed through the heels. The footbridge is ten feet long at the bottom, spanning a frozen trickle.
+
+**Fail:** Your boot slides on the third step. You catch the rope with both hands, which requires dropping your pack to the step below. The pack holds. You retrieve it and continue down.
+
+**Pass:** You descend carefully, weight on the rope, and cross the footbridge without incident.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Legal Classification"**
+*Node: WM — Weimar Archive.*
+
+Sweelinck reads the attestation. He reads the three witnesses' names. He reads the notary's stamp. He reads the reverse line.
+
+"*Quod Deus conjunxit.*" He sets the document down. "Someone knew this might matter."
+
+He opens the classification ledger. He looks at the entries for Portuguese royal records, marriage attestations, and dynastic succession documents.
+
+> **Perception DC 11.** Verify the three witness signatures and the notary's stamp are in the same ink age as the date notation — not added afterward, not interpolated. Compare the ink shading under the desk light. They are all the same age. The document was complete as presented. The verification needs to be in the provenance note before anything else is written.
+
+**Fail:** Sweelinck notes the ink assessment as provisional — "not independently verified." The attestation enters the archive with a provenance caveat.
+
+**Pass:** You confirm the contemporaneous dating. Sweelinck writes the verification first, then the category: *Retroactive Legal Classification Records — The Document That Changes the Definition of a Crime Already Committed, First Entry. The marriage attestation of Pedro and Inês de Castro: three witnesses, one notary, one undated line added in a second hand; the marriage's validity determines whether the killing was an execution or regicide; this document does not adjudicate that question — it makes the question answerable; the reverse notation is filed as part of the document and not separated.*
+
+TOKEN TAKEN: The Marriage Attestation.
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "LIS_004",
+  "title": "Inês de Castro's Testimony",
+  "source": "The Lusiad — Luís de Camões (1572), Richard Burton translation",
+  "cycle": 4,
+  "book": "lusiad",
+  "source_episode": "Canto III — Inês de Castro; Pedro's secret marriage; Alfonso IV's order; the lovers' death in the garden; Pedro's posthumous coronation of Inês as queen",
+  "theme": "The document that changes the definition of a crime already committed: three men were ordered to kill Inês; if the marriage was valid their act was regicide and not execution; this attestation makes the question answerable rather than permanently uncertain; the archive holds the instrument of classification, not the answer",
+  "activateNode": "CVP",
+  "token": {
+    "id": "ines_marriage_attestation",
+    "name": "The Marriage Attestation",
+    "description": "Single folded parchment: date, location, three witnesses' full names, ceremony description in canon law form, notary's stamp. On the reverse, in an older hand: 'Quod Deus conjunxit, homo non separet.' No signature. No seal.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["CVP", "RME", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {
+      "act": 1,
+      "node": "CVP",
+      "type": "skill_check",
+      "skill": "History",
+      "dc": 11,
+      "summary": "Notary's estate executor selling the attestation as a curiosity. History DC 11: this is the legal instrument that determines whether the killing of Inês was an execution or regicide — it makes a question that is otherwise permanently uncertain answerable. TOKEN GRANTED."
+    },
+    {
+      "act": 2,
+      "node": "CVP street",
+      "type": "skill_check",
+      "skill": "Persuasion",
+      "dc": 12,
+      "summary": "Alfonso IV loyalists want the document destroyed. Persuasion DC 12: destroying it doesn't erase the marriage — it leaves the classification permanently uncertain; a definitive answer either way is more useful to posterity than sustained ambiguity."
+    },
+    {
+      "act": 3,
+      "node": "RME",
+      "type": "skill_check",
+      "skill": "Insight",
+      "dc": 12,
+      "summary": "Canon law scholar wants a brief loan for an active Curia precedent case. Insight DC 12: using it in an active proceeding consumes its primary evidential status on one case; filed at a neutral archive it is available for any future case; the scholar may cite the archived entry as a secondary source."
+    },
+    {
+      "act": 4,
+      "node": "RME road",
+      "type": "skill_check",
+      "skill": "Athletics",
+      "dc": 11,
+      "summary": "Frozen Alpine footbridge, glazed stone steps. Athletics DC 11: weight on the guide rope, heels down, hands steady."
+    },
+    {
+      "act": 5,
+      "node": "WM",
+      "type": "skill_check",
+      "skill": "Perception",
+      "dc": 11,
+      "summary": "Sweelinck reads the document. Perception DC 11: verify the three signatures and notary stamp are contemporaneous with the date notation — same ink age, not added later. Confirmation enables unambiguous provenance note. Retroactive Legal Classification Records — The Document That Changes the Definition of a Crime Already Committed, First Entry. TOKEN TAKEN."
+    }
+  ]
+}
+```
+
+---
+
+### 5-Act Vignette Play: *Pacheco's Account*
+
+**THE TOKEN: PACHECO'S SEALED TESTIMONY** — A bulky sealed folio, the covering sheet wrapping three months of dictated sessions. Each session ends with Pacheco's thumb-mark, pressed in ink, because his writing hand was injured at the second battle of Cochin and has not closed properly since. The historian Fernão Rodrigues de Castro's handwriting covers the session sheets, neat and factual, without commentary. On the exterior cover, in Fernão's hand: *Sealed by the deponent's instruction on the last day of the third month, after he stopped speaking and slept. To be unsealed only at the designated archive and not before.*
+
+---
+
+**ACT I — "The Historian's Priority"**
+*Node: LHA — Lisbon Humanist Archive.*
+
+Fernão has the sealed folio under his arm. He is a careful man who has spent three months at Pacheco's bedside and cares about getting this right. He wants to file the testimony through the royal chronicle commission first, as a matter of institutional priority — the commission has the authority to incorporate major testimonies into the official record.
+
+> **Insight DC 11.** The royal chronicle commission is the institution that awarded Pacheco a pension by sending him to an almshouse. Filing the testimony there first gives the commission editorial authority — the authority to determine when and in what form the testimony enters public access, to request additions or clarifications, to hold it pending review. A neutral archive preserves Pacheco's testimony independently, accessible to any researcher without the commission's gate.
+
+**Fail:** Fernão insists on the commission first. You argue for the archive. He does not fully agree but lets you carry it to the archive as a second filing after the commission — which means the commission's intake precedes the archive's, and the commission's version becomes the primary record.
+
+**Pass:** Fernão hears the argument. He is quiet. He looks at the folio. "Duarte," he says, quietly. He hands it over.
+
+TOKEN GRANTED: Pacheco's Sealed Testimony.
+
+---
+
+**ACT II — "The Crown's Review"**
+*Node: LHA gate.*
+
+A crown secretary is waiting. He has a written authorization to review "significant testimonies related to the crown's overseas campaigns prior to archival deposit." He presents it as standard procedure.
+
+> **Persuasion DC 12.** The testimony was sealed by the deponent's explicit instruction. The sealing condition is part of the commission: Pacheco dictated his testimony on the condition that it would be unsealed only at the designated archive. Breaking the seal for a crown review voids the sealing condition, which is a breach of the commission's terms. The crown secretary's authorization covers standard testimonies, not testimonies with explicit sealed-by-deponent conditions. The distinction is in Pacheco's instruction on the cover.
+
+**Fail:** He files a formal review request to be processed after archival intake. The testimony enters the archive but with a crown review notation pending.
+
+**Pass:** He reads the cover instruction. He reads it again. He steps back. He notes the commission condition in his record and does not further obstruct.
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "The Trade Claim"**
+*Node: VEN — Venice, Merchant Republic Archive District.*
+
+A Venetian merchant consortium factor wants to acquire Pacheco's testimony. His consortium is pressing a claim against the Portuguese crown for losses in the Indian Ocean trade disruption caused by Pacheco's battles. The testimony would be valuable evidence for their case.
+
+He frames it carefully: the testimony would be better used actively rather than stored.
+
+> **Insight DC 12.** His framing inverts the archive's function. Active use in a specific legal dispute makes the testimony an instrument of one party's claim. Filed in a neutral archive, it is available as evidence in any proceeding — including the consortium's, which can cite the archived record. Pacheco's testimony was made to be read by researchers, not to be deployed in a particular side's argument.
+
+**Fail:** He follows you to the harbor and makes a second offer. You reach the ship before he has finished making it.
+
+**Pass:** He accepts the archive-access framing. He notes the Weimar entry category so his solicitors can cite it as a secondary source.
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "The Wax Seal"**
+*Node: VEN road to WM.*
+
+Three days of wet weather north of the Alps. The sealed folio is inside your cloak, which has kept the exterior cover dry. The wax seal is intact. The problem is a single night in a wayside hostel where the fireplace is the only source of heat and the seal is wax.
+
+> **Athletics DC 11.** Keep the sealed folio away from the fireplace's direct heat throughout the night. This means sleeping in the cold corner of the hostel with the folio between you and the wall. The seal must remain intact until Weimar.
+
+**Fail:** The seal softens slightly overnight. It rehardened in a different impression — the eagle-device is now partially obscured. Sweelinck will note it as a minor provenance deviation.
+
+**Pass:** You sleep cold. The seal is sharp and unaffected in the morning.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Thumb-Marks"**
+*Node: WM — Weimar Archive.*
+
+Sweelinck breaks the seal according to Pacheco's instruction — the archive is the designated unsealing location. He reads the session sheets in order.
+
+He reads for forty minutes without speaking. At the end of each session, the thumb-mark.
+
+He sets the folio down.
+
+"Seven engagements. A hundred men. Seven assembled armies. Then an almshouse."
+
+> **Investigation DC 11.** The archive needs a category that covers the gap between commission and recognition — not standard hero testimony (which assumes institutional honor was eventually given), not martyrdom records (which assume the institution recognized its failure), not abandoned-veteran depositions (which assume the deponent knew he was being honored through the record). Something specific: the commission that was performed completely and the recognition that was never paid in the currency it was owed.
+
+**Fail:** Sweelinck files it under Distinguished Military Records — Testimonies. Pacheco's account is in the archive, but the abandonment is not named in the category.
+
+**Pass:** Sweelinck confirms the gap and creates: *Abandoned Hero Records — The Commission Performed in Full and Never Paid in the Currency the Kingdom Owes, First Entry. Pacheco's testimony: seven battles, a hundred men, seven armies; the crown he made great sent him to die in an almshouse; the testimony was sealed under his condition and reaches this desk having honored that condition; the thumb-marks at the end of each session are the record of a man who could not hold a stylus and dictated his commission to a historian who came to him without pay.*
+
+TOKEN TAKEN: Pacheco's Sealed Testimony.
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "LIS_005",
+  "title": "Pacheco's Account",
+  "source": "The Lusiad — Luís de Camões (1572), Richard Burton translation",
+  "cycle": 5,
+  "book": "lusiad",
+  "source_episode": "Canto X — Duarte Pacheco Pereira; seven engagements against assembled Indian armies with a hundred men; later abandoned by the crown in an almshouse",
+  "theme": "The commission performed in full and never paid in the currency the kingdom owes: seven battles, a hundred men, an almshouse; the thumb-marks at the end of each session are the record of a man who could not hold a stylus; the archive is where the unpaid commission lives permanently",
+  "activateNode": "LHA",
+  "token": {
+    "id": "pacheco_sealed_testimony",
+    "name": "Pacheco's Sealed Testimony",
+    "description": "Bulky sealed folio: three months of dictated sessions in Fernão Rodrigues de Castro's hand, each ending with Pacheco's thumb-mark. Cover instruction: 'Sealed by the deponent's instruction on the last day of the third month, after he stopped speaking and slept. To be unsealed only at the designated archive and not before.'",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["LHA", "VEN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {
+      "act": 1,
+      "node": "LHA",
+      "type": "skill_check",
+      "skill": "Insight",
+      "dc": 11,
+      "summary": "Historian Fernão wants to file through royal chronicle commission first. Insight DC 11: the commission that abandoned Pacheco would hold editorial authority over the testimony's access; the neutral archive preserves it independently. TOKEN GRANTED."
+    },
+    {
+      "act": 2,
+      "node": "LHA gate",
+      "type": "skill_check",
+      "skill": "Persuasion",
+      "dc": 12,
+      "summary": "Crown secretary wants review before archival deposit. Persuasion DC 12: sealed by the deponent's explicit condition; breaking the seal for crown review voids the commission's terms; his authorization covers standard testimonies, not those with sealed-by-deponent conditions."
+    },
+    {
+      "act": 3,
+      "node": "VEN",
+      "type": "skill_check",
+      "skill": "Insight",
+      "dc": 12,
+      "summary": "Venetian merchant consortium wants to acquire the testimony for a trade claim against the Portuguese crown. Insight DC 12: private acquisition makes it one party's instrument; filed at a neutral archive it is available to any proceeding, including theirs, as a cited secondary source."
+    },
+    {
+      "act": 4,
+      "node": "VEN road",
+      "type": "skill_check",
+      "skill": "Athletics",
+      "dc": 11,
+      "summary": "Wet weather and a fireplace hostel: the wax seal cannot soften. Athletics DC 11: sleep in the cold corner with the folio between you and the wall."
+    },
+    {
+      "act": 5,
+      "node": "WM",
+      "type": "skill_check",
+      "skill": "Investigation",
+      "dc": 11,
+      "summary": "Sweelinck reads forty minutes of session sheets and thumb-marks. Investigation DC 11: the archive needs a category that names the gap between commission performed and recognition never given. Abandoned Hero Records — The Commission Performed in Full and Never Paid in the Currency the Kingdom Owes, First Entry. TOKEN TAKEN."
+    }
+  ]
+}
+```
+
+---
+
+### 5-Act Vignette Play: *Monsaide's Letter*
+
+**THE TOKEN: MONSAIDE'S LETTER** — A small codex in two facing registers: Monsaide's words in Arabic on the right pages, Frei António's Latin translation on the left. Three sessions, dictated at the Calicut Portuguese trading post over three days. The first session names the Moorish merchants he had dealings with. The second session names what he observed that made him decide to help Gama. The third session names, precisely, what his assistance prevented — a specific massacre of the Christian crew, planned by the Zamorin's factor on the night of the third tide. Monsaide's mark at the end of each session: a small knotted circle in the margin, pressed in red ink.
+
+---
+
+**ACT I — "The Friar's Problem"**
+*Node: MLN — Melinda Scholar's Court.*
+
+Frei António came to Melinda from Calicut with the codex and a problem he has been carrying for several months. He dictated the letter at Monsaide's direction. He made the translation with care. He knows what is in the third session. And he knows that the third session names the Moorish merchants by name — merchants whose family still operates out of Tangier and who sent an agent to Melinda three weeks ago.
+
+He gives you the codex. He says: "Monsaide told me to find someone to carry it to a place where it would be read by historians, not merchants."
+
+> **Insight DC 11.** The friar's worry is that the agent from Tangier has been in the Melinda trading district for three weeks and has not approached him directly. That means either the agent does not yet know the codex exists, or he is waiting to see where it goes. Understanding which means watching how the agent moves when you leave.
+
+**Fail:** You carry the codex without noting the agent. He follows from a distance you do not see.
+
+**Pass:** You watch before leaving. The agent moves when you do. He is following the codex.
+
+TOKEN GRANTED: Monsaide's Letter.
+
+---
+
+**ACT II — "The Tangier Claim"**
+*Node: MLN harbor.*
+
+The agent intercepts you at the harbor. He is courteous. He represents the family's commercial interests. His claim: the letter names family business arrangements; these arrangements are private commercial information; the family has a legal interest in preventing their publication.
+
+> **Persuasion DC 12.** A letter dictated with the intent to create a permanent historical record is not a private communication. The business arrangements are context for Monsaide's moral decision, not the subject of the letter. The subject is Monsaide's conscience — the specific calculation he made about what his assistance would prevent. The archive will not publish the commercial details separately; it will file the letter under the category of Monsaide's moral decision. The family's commercial interests are not protected by suppressing a letter about a conscience.
+
+**Fail:** The agent files a legal claim with the Melinda trading post factor. The claim will follow the codex to wherever it is filed. Sweelinck will need to address it in the provenance record.
+
+**Pass:** He accepts the conscience-versus-commerce distinction. He notes that if the archive files under Monsaide's name, the commercial context will be discoverable in full. You say yes, that is true. He says nothing further.
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "The Trade Intelligence Flag"**
+*Node: CON — Constantinople trade administration.*
+
+A Byzantine trade official has read a summary of the letter's contents through the commercial intelligence network and flagged the codex for review. His concern: the named Moorish merchants have ongoing arrangements in the Constantinople trade district. Classifying the letter under commercial intelligence would give his office access to it.
+
+> **Insight DC 12.** His interest is the commercial names in session three — not Monsaide's moral decision, which is what the letter is actually about. Classifying the codex under commercial intelligence would permanently misclassify it: future researchers would find it under trade records, not under accounts of conscience or cross-community moral calculation. The commercial names are context; the context should not become the category.
+
+**Fail:** He flags the codex for commercial intelligence review — a two-week hold. It reaches Weimar with a notation: "commercial content under review." Sweelinck resolves the classification but the flag is in the provenance chain.
+
+**Pass:** You give him the distinction. He accepts that commercial names embedded in a moral testimony are context, not intelligence. He lifts the flag.
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "The River Ferry"**
+*Node: CON road toward WM.*
+
+The river crossing north of the city is serviced by a ferry operated by a family of two — father and son. The ferry is slow and the father is not hurrying. The son is sullen. Two other passengers are ahead of you. The ferry takes one crossing at a time, with a twenty-minute turnaround. Your ship connection at the next port is in three hours.
+
+> **Athletics DC 11.** This is not a crossing problem — it is a timing problem. The codex cannot cross by any route that involves wading. But the timing is tight. The ferry schedule means you will arrive at the port with forty minutes to spare — if nothing else delays you. Move steadily. Don't hurry the ferryman. Know the exact path from the landing to the port.
+
+**Fail:** A cart blocks the port road for fifteen minutes. You arrive at the ship with seven minutes to spare.
+
+**Pass:** You have the port road clear in your head. You make the ship with twenty-five minutes to spare.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Conscience Category"**
+*Node: WM — Weimar Archive.*
+
+Sweelinck reads all three sessions in order. He reads Frei António's Latin carefully, then opens Monsaide's Arabic pages and reads with his finger tracking the text even though he is reading the Latin. He reaches the third session.
+
+He sets the codex down.
+
+"He did not convert. He did not change sides. He made a specific calculation about what his assistance would prevent and he acted on it. The friar wrote down the calculation."
+
+> **Investigation DC 11.** No existing archive category covers the act of a man who crossed the line between peoples based on a moral calculation that was not conversion, not treason, not alliance — something more specific: a particular decision, named to a friar, that required a record in order to exist as what it was rather than as what both sides would prefer to call it.
+
+**Fail:** Sweelinck files under Cross-Community Testimonies — Ambiguous Allegiance. The word "ambiguous" misclassifies the act.
+
+**Pass:** Sweelinck confirms the gap and creates: *Moral Calculation Records — The Act Across the Line That Was Neither Conversion Nor Betrayal, First Entry. Monsaide's letter: three sessions, one knotted circle at each end; the first session names who he knew; the second session names what he observed; the third session names what his assistance prevented; the archive names this as a conscience and not as a side-change, because those are different things.*
+
+TOKEN TAKEN: Monsaide's Letter.
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "LIS_006",
+  "title": "Monsaide's Letter",
+  "source": "The Lusiad — Luís de Camões (1572), Richard Burton translation",
+  "cycle": 6,
+  "book": "lusiad",
+  "source_episode": "Canto VI/VII — Monsaide, the Moorish merchant in Calicut who helped Gama; his assistance prevented the massacre of the Christian crew; he crossed the line between peoples based on a specific moral calculation",
+  "theme": "The act that crossed the line between peoples was neither conversion nor betrayal but a specific moral calculation named to a friar who wrote it down: the archive names this as a conscience and not as a side-change, because those are different things",
+  "activateNode": "MLN",
+  "token": {
+    "id": "monsaide_letter_codex",
+    "name": "Monsaide's Letter",
+    "description": "Small codex: Arabic on the right pages, Latin translation on the left. Three sessions dictated at the Calicut trading post — who he knew, what he observed, what his assistance prevented. Monsaide's knotted circle mark in red ink at each session end.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["MLN", "CON", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {
+      "act": 1,
+      "node": "MLN",
+      "type": "skill_check",
+      "skill": "Insight",
+      "dc": 11,
+      "summary": "Frei António gives you the codex. A Tangier agent has been in the district for three weeks. Insight DC 11: the agent is following the codex, not the friar — watch before leaving. TOKEN GRANTED."
+    },
+    {
+      "act": 2,
+      "node": "MLN harbor",
+      "type": "skill_check",
+      "skill": "Persuasion",
+      "dc": 12,
+      "summary": "Tangier agent claims family commercial privacy over the named business arrangements. Persuasion DC 12: the commercial names are context for Monsaide's moral decision, not its subject; a conscience-letter is not suppressed by commercial privacy interests in its contextual details."
+    },
+    {
+      "act": 3,
+      "node": "CON",
+      "type": "skill_check",
+      "skill": "Insight",
+      "dc": 12,
+      "summary": "Byzantine trade official wants to classify the codex under commercial intelligence. Insight DC 12: commercial names embedded in moral testimony are context; classifying under trade records permanently misclassifies the letter's subject — Monsaide's conscience, not his business network."
+    },
+    {
+      "act": 4,
+      "node": "CON road",
+      "type": "skill_check",
+      "skill": "Athletics",
+      "dc": 11,
+      "summary": "Slow ferry, tight ship connection. Athletics DC 11: hold the right pace, know the port road, make the ship with time to spare."
+    },
+    {
+      "act": 5,
+      "node": "WM",
+      "type": "skill_check",
+      "skill": "Investigation",
+      "dc": 11,
+      "summary": "Sweelinck reads three sessions. Investigation DC 11: no category covers an act that was neither conversion nor treason but a named moral calculation. Sweelinck creates: Moral Calculation Records — The Act Across the Line That Was Neither Conversion Nor Betrayal, First Entry. TOKEN TAKEN."
+    }
+  ]
+}
+```
+
+---
+
+### 5-Act Vignette Play: *The Adamastor Prophecy*
+
+**THE TOKEN: THE SURVIVOR'S DEPOSITION** — A sealed maritime inquest declaration, sworn before a Portuguese notary at the Cape survivors' camp, describing the wreck of Francisco de Almeida's fleet, the lovers found wandering the shore, and the children who died in the sun on the sand. On the third page, embedded in the sworn account: *as had been foretold.* Three words in plain legal Latin. The deponent apparently did not think they required explanation. The maritime inquest commission apparently did, because the holding order they issued covers the deposition specifically. Someone read the three words and understood what they implied.
+
+---
+
+**ACT I — "The Holding Order"**
+*Node: LHA — Lisbon Humanist Archive.*
+
+The survivor, Carlos Ferreira, comes to the archive with the sealed deposition and cannot file it because a maritime inquest holding order is on it. He shows you the holding order. He shows you the deposition. He says: the commission is not going to hold the hearing. They issued the order to buy time and they intend to close the inquiry without a full record.
+
+> **Persuasion DC 12.** A holding order covers evidence pending hearing. If the commission closes the inquiry without a full record, the holding order covers a hearing that will never occur. Its application to the deposition is void on its own terms — you cannot hold evidence for a proceeding you are not going to conduct. The holding order's language requires a hearing to have been scheduled and to be pending. If no hearing is scheduled, the order does not apply.
+
+**Fail:** The archive intake clerk is uncertain. He accepts the deposition but notes the holding order as a pending complication. Frei Tomás will need to resolve it before the entry is confirmed.
+
+**Pass:** The intake clerk reads the holding order's language carefully. He accepts the argument. The entry is filed without complication.
+
+TOKEN GRANTED: The Survivor's Deposition.
+
+---
+
+**ACT II — "The Commission's Authority"**
+*Node: LHA gate.*
+
+A maritime court official with the commission's authority stops you on the way out. His version of the holding order is broader than Carlos's: it covers all documentation from the Cape inquiry, regardless of whether a hearing is scheduled.
+
+> **Insight DC 12.** His reading of the order is an expansion — he has broadened "evidence pending hearing" to "all documentation from the inquiry." That expansion is not in the order's language. He is acting under the commission's authority but interpreting the order beyond its text. The archive's intake was processed under the order's actual language, not his interpretation. His expanded reading would need a separate order to override the intake.
+
+**Fail:** He files an amended holding order with the archive. Frei Tomás puts the deposition in a holding category for two weeks while the amended order is reviewed.
+
+**Pass:** You cite the difference between the order's language and his interpretation. He acknowledges the textual limitation. He says he will apply for an expanded order. He does not yet have it. He cannot act on what he does not have.
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "The Empire's Inconvenience"**
+*Node: CON — Constantinople, Portuguese trade office.*
+
+A Portuguese trade representative approaches you. His argument is carefully hedged: the prophecy's accuracy, if publicly documented, would complicate the crown's relationship with the trading partners who see Portuguese expansion as divinely mandated. A survivor's deposition confirming that what Adamastor predicted happened is, in effect, a document that says the Portuguese Empire operates under a curse rather than a blessing.
+
+He does not ask you to destroy the deposition. He asks you to route it through the royal archive rather than the neutral one — where it would be accessible only to crown-authorized researchers.
+
+> **Persuasion DC 12.** The archive does not adjudicate whether the prophecy was accurate. It files the deposition as the deponent's sworn account and the prophecy as the literary source. Readers may compare them and draw their own conclusions. Routing the deposition to the royal archive is not suppression but control — which is something the crown can do with its own records but cannot direct the neutral archive to facilitate.
+
+**Fail:** He files a formal objection with the archive. Sweelinck will receive it alongside the deposition and will need to address it in his intake note.
+
+**Pass:** He accepts the archive's neutrality argument. He notes he will request access to the filed record through proper scholarly channels.
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "The Alpine Crossing"**
+*Node: CON road to WM.*
+
+The crossing north from Constantinople into the Danube basin takes three days through mountain terrain. On the second day, a loose shale descent requires careful footwork. The sealed parchment deposition is in your pack; the pack cannot take a shale-slide landing.
+
+> **Athletics DC 12.** Forty feet of loose shale on the path's steep left descent. Controlled steps, back flat against the hill if needed, pack held against the body. The sealed parchment cannot be cracked against stone.
+
+**Fail:** Your left foot skids three steps before you catch the rock face with your hand. The pack stays on. The seal is intact. Your hand is scraped.
+
+**Pass:** You descend carefully, weight back, feet testing each shale plate before committing. The descent takes eight minutes. The pack arrives undamaged.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Broken Seal"**
+*Node: WM — Weimar Archive.*
+
+Sweelinck takes the deposition. He takes it to the light. He reads it. He reads the three words on page three.
+
+He turns the deposition over in his hands.
+
+He looks at the seal.
+
+There is a repair. The wax at the fold has been opened and re-pressed — the original seal impression is intact on the face, but the edge of the wax at the fold shows a slight compression difference, the kind that results from heat and re-closing.
+
+Someone opened this and re-sealed it.
+
+> **Perception DC 11.** Determine when the re-sealing happened. The compression difference at the edge is shallow — not deep re-pressing, which would mean a careful deliberate opening, but a brief exposure, which means either someone opened it quickly and re-closed it, or the seal was partially opened under pressure and pressed back. Compare the face impression's sharpness against the fold edge's compression. The face is sharp, which means the re-pressing happened before the wax fully cooled — probably at the maritime court's office when the holding order was issued.
+
+**Fail:** You cannot determine when it happened. Sweelinck notes "seal condition uncertain — possible prior opening" in the provenance record.
+
+**Pass:** You tell Sweelinck: the re-pressing happened before the wax cooled, meaning it was done at the court's office, probably when the holding order was attached. Sweelinck writes the provenance note exactly: "seal face intact; fold edge shows re-pressing consistent with brief opening at the maritime court's office prior to the holding order's issuance; contents may have been read before the order was issued." He creates: *Prophecy Fulfillment Records — The Sworn Account Whose Three Words Named What Should Not Be Named, First Entry. The survivor's deposition from the Cape of Storms: Adamastor prophesied this fleet's wreck, these lovers, these children; the deponent wrote 'as had been foretold' without annotation because he did not think it required any; the maritime court read those three words and understood exactly what they implied; the archive holds both the prophecy and the deposition and does not adjudicate whether the prophecy was accurate; the readers will.*
+
+TOKEN TAKEN: The Survivor's Deposition. *questComplete: true.*
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "LIS_007",
+  "title": "The Adamastor Prophecy",
+  "source": "The Lusiad — Luís de Camões (1572), Richard Burton translation",
+  "cycle": 7,
+  "book": "lusiad",
+  "source_episode": "Canto V — Adamastor, the Spirit of the Cape; his prophecies of the Portuguese fleets' fates; the fleet of Francisco de Almeida wrecked at the Cape of Good Hope in 1510 on the return voyage",
+  "theme": "The prophecy whose accuracy is documented in a survivor's sworn account: the three words 'as had been foretold' required no annotation because the deponent did not think they needed any; the maritime court read those three words and understood exactly what they implied; the archive holds both documents and does not adjudicate — the readers will",
+  "activateNode": "LHA",
+  "token": {
+    "id": "survivor_deposition_cape",
+    "name": "The Survivor's Deposition",
+    "description": "Sealed maritime inquest declaration: the wreck of Almeida's fleet, the lovers wandering the shore, the children who died. On page three, in plain legal Latin: 'as had been foretold.' The seal shows a re-pressing at the fold edge consistent with a brief opening at the maritime court's office.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["LHA", "CON", "WM"],
+  "new_nodes": [],
+  "questComplete": true,
+  "acts": [
+    {
+      "act": 1,
+      "node": "LHA",
+      "type": "skill_check",
+      "skill": "Persuasion",
+      "dc": 12,
+      "summary": "Maritime holding order covers evidence pending hearing. Persuasion DC 12: the commission is not going to hold the hearing; a holding order for a proceeding that will never occur is void on its own terms — 'evidence pending hearing' requires a pending hearing. TOKEN GRANTED."
+    },
+    {
+      "act": 2,
+      "node": "LHA gate",
+      "type": "skill_check",
+      "skill": "Insight",
+      "dc": 12,
+      "summary": "Maritime official interprets the holding order as covering all documentation. Insight DC 12: his reading expands beyond the order's text; the expanded reading would require a separate order; he does not yet have it and cannot act on what he does not have."
+    },
+    {
+      "act": 3,
+      "node": "CON",
+      "type": "skill_check",
+      "skill": "Persuasion",
+      "dc": 12,
+      "summary": "Portuguese trade representative wants the deposition routed through the royal archive for controlled access. Persuasion DC 12: the archive does not adjudicate the prophecy's accuracy; routing it to a controlled archive is directing suppression through institutional channels; the neutral archive accepts it as a deponent's sworn account."
+    },
+    {
+      "act": 4,
+      "node": "CON road",
+      "type": "skill_check",
+      "skill": "Athletics",
+      "dc": 12,
+      "summary": "Loose shale descent, forty feet, pack with sealed parchment. Athletics DC 12: weight back, feet testing each plate, hand to the rock face if needed."
+    },
+    {
+      "act": 5,
+      "node": "WM",
+      "type": "skill_check",
+      "skill": "Perception",
+      "dc": 11,
+      "summary": "Sweelinck finds a re-pressed seal at the fold edge. Perception DC 11: the re-pressing is shallow and the face impression is sharp — consistent with a brief opening at the maritime court's office before the wax cooled, meaning the contents were likely read before the holding order was issued. Sweelinck writes the provenance note exactly. Prophecy Fulfillment Records — The Sworn Account Whose Three Words Named What Should Not Be Named, First Entry. TOKEN TAKEN. questComplete: true."
+    }
+  ]
+}
+```

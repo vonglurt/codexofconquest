@@ -480,7 +480,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 |--------|------|------|----------------|--------|----------|----|
 | [x] | MAD | don-quixote | Don Quixote — Miguel de Cervantes | 1605–1615 | Comic Epic | 2335 |
 | [x] | MAD | chronicle-cid | Chronicle of the Cid — Anon (Southey transl.) | 12th C source | Spanish Epic | 664 |
-| [x] | LIS | lusiad | The Lusiads — Luís de Camões | 1572 | Portuguese Epic | 207 |
+| [x] | LIS | lusiad | The Lusiads — Luís de Camões | 1572 | Portuguese Epic | 207 | SEEDS COMPLETE 2026-06-03 — LIS-01–07 all vignettes done. No new nodes (CVP, MDN, MLN, LHA, CON, RME, VEN all exist). See LIS-lusiad.md. |
 
 ### Italian
 
