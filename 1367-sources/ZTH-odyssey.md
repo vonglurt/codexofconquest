@@ -452,3 +452,622 @@ activateMissionBit: zthIphComplete
 
 *quest-map.md: add ZTH cycle 2 row and theme thread; append MSN, ITH to Location Grid.*
 *books.md: mark ZTH [x].*
+
+---
+
+## Cycle 3 — Angle: *The Unraveling Chronicle — What Three Years Looks Like in a Thread*
+
+**What this angle reveals that Cycles 1–2 missed:** The first two cycles moved through abstract knowledge (the Sirens' song) and legal property (the bow's provenance). Cycle 3 is about evidence that cannot be written down. Penelope wove the funeral shroud for Laertes by day and unpicked it by night for three years. Now that the ruse is over, the most-rewoven section is the section most worth archiving — not because it proves the deception (Odysseus's massacre is proof enough) but because the worn thread is the only form in which three years of patience can be held. The archive needs a physical record of how the defense was actually maintained.
+
+---
+
+### 5-Act Vignette Play: *The Unraveling Chronicle*
+
+**THE TOKEN: PENELOPE'S SHROUD FRAGMENT** — The most-rewoven section of the funeral cloth: a piece about the width of two hands, showing the distinctive thread-wear of something woven and unwoven many times. The dye is still good. The thread count is irregular. Euryclea cut it from the shroud before Penelope burned the rest.
+
+---
+
+**ACT I — "What the Thread Holds"**
+*The fragment: unrolled on a table. Location: ITH — Ithaca, Euryclea's quarters.*
+
+Euryclea has served this household sixty years. She cut this section herself on the last night of the ruse. The piece was undone the most often. Hold it to light and the dye separated slightly in repeated working; the count is not quite regular; it is the cloth made by someone working against herself.
+
+She sets it on the table. She wants you to carry it north.
+
+> **History DC 11.** Understand why the worn section is the significant one — not the finished shroud (evidence of a completed deception) but the worn section that holds the capacity that sustained the ruse; three years of patience cannot be written down; the cloth is the record.
+
+**Fail:** You carry the cloth without grasping the distinction. Euryclea adds a note in her own hand.
+
+**Pass:** You understand before she explains. She folds the cloth carefully.
+
+TOKEN GRANTED: Penelope's Shroud Fragment.
+
+---
+
+**ACT II — "The Technical Witness"**
+*The fragment: wrapped. Location: Ithaca harbor road.*
+
+A mainland weaver notices what you carry. She offers to write a technical attestation: thread count, dye composition, the evidence of multiple workings in the warp. Her analysis would make the cloth's significance legible to any archivist.
+
+> **Insight DC 12.** Her analysis is accurate. But the cloth's significance is contextual, not material. A technical attestation makes it readable as a textile artifact rather than as a document of patience — reframing it in the wrong direction. The archive should receive the cloth and Euryclea's context note; not the cloth and a professional assessment that explains away the irregularities as weaving defects.
+
+**Fail:** You accept. Her note is accurate and misses the point. You carry both.
+
+**Pass:** You decline and explain. She is skeptical but lets you pass.
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "The Historian's Collection"**
+*The fragment: traveling. Location: Corinthian road junction.*
+
+A Lacedaemonian historian is collecting materials on the House of Odysseus with Telemachus's written permission. His argument: the cloth belongs in the complete narrative of the household's resistance. His letter is genuine.
+
+> **Persuasion DC 13.** Telemachus's permission covers documents parties are willing to share — not materials already in transit to a neutral archive. The historian's collection interprets; the archive receives. The cloth should travel as itself, not as evidence for a conclusion already reached.
+
+**Fail:** He follows for half a day before accepting. He notes your destination and says he will write to Weimar.
+
+**Pass:** He accepts the distinction on the first exchange.
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "The Customs Inspection"**
+*The fragment: wrapped in linen. Location: Corinthian port, customs dock.*
+
+A port customs official reads the cloth as he reads everything: fiber, color, approximate value for duties assessment. The thread count at the worn section is uneven enough to register as possible second-grade cloth. He is professional and not unkind.
+
+> **Persuasion DC 11.** The cloth is not damaged. The irregularities are evidence of specific work, not defective manufacture. The duty category is domestic fine-woven linen.
+
+**Fail:** He stamps it second-grade. You pay the lesser duty. The cloth travels on with a misidentifying customs mark.
+
+**Pass:** He accepts fine-woven. The cloth travels correctly stamped.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Archive"**
+*The fragment: cloth and Euryclea's note. Location: Weimar.*
+
+Sweelinck unrolls the cloth to the light. He reads the worn section. He reads Euryclea's note. He sets both down.
+
+"Three years. Every night a thread undone. Every morning the work continued. The evidence of the defense is not the finished shroud — she burned that. The evidence is here, in the thread that was worked against itself most often."
+
+He writes: *Patience Records — Three Years of Nightly Unraveling, First Entry. Penelope's Shroud: the physical record of a defense maintained by undoing; the material evidence of patience is usually consumed in the act of patience — this section survived because the ruse was completed before it could be further worn; the worn thread is not a document of failure but of capacity.*
+
+TOKEN TAKEN: Penelope's Shroud Fragment.
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "ZTH_003",
+  "title": "The Unraveling Chronicle",
+  "source": "The Odyssey — Homer (c. 725 BCE)",
+  "cycle": "ZTH",
+  "book": "The Odyssey",
+  "source_episode": "Penelope wove the funeral shroud for Laertes by day and unpicked it by night for three years to delay the suitors; the most-rewoven section is the only material record of how the defense was maintained",
+  "theme": "The physical evidence of patience is usually consumed in the act of patience; this cloth survived because the ruse was completed; the worn thread is not a document of failure but of capacity.",
+  "activateNode": "ITH",
+  "token": {
+    "id": "penelope_shroud_fragment",
+    "name": "Penelope's Shroud Fragment",
+    "description": "Most-rewoven section of the funeral cloth — width of two hands, thread-wear from many weavings and unweavings; Euryclea cut it before Penelope burned the rest; three years of nightly patience held in the thread.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["ITH", "CON", "WM"],
+  "new_nodes": [],
+  "acts": [
+    { "act": 1, "location": "ITH", "scene": "Euryclea's quarters — the worn section", "title": "What the Thread Holds", "type": "skill_check", "skillCheck": { "skill": "History", "dc": 11 }, "token_action": "grant" },
+    { "act": 2, "location": "ITH", "scene": "Ithaca harbor road — mainland weaver's attestation offer", "title": "The Technical Witness", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "road_ITH_CON", "scene": "Corinthian road junction — Lacedaemonian historian with permission letter", "title": "The Historian's Collection", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 13 }, "token_action": "check" },
+    { "act": 4, "location": "road_ITH_CON", "scene": "Corinthian port customs dock — fiber quality and duty category", "title": "The Customs Inspection", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 11 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "The Archive", "type": "delivery", "activateMissionBit": "zthUnravelingComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## Cycle 4 — Angle: *Eumaeus's Twenty Years — The Accounts No One Asked For*
+
+**What this angle reveals that Cycles 1–3 missed:** The first three cycles followed knowledge, law, and material evidence. Cycle 4 follows accounts: the informal tallies of a man who kept records for twenty years in a household where no one asked him to, because keeping count was the only form of loyalty he could maintain in his absent master's absence. Eumaeus's livestock ledger is not an official document. But it is the only basis on which reparations for twenty years of suitors' consumption can be calculated. The archive needs accounts that document systematic plunder, especially when the accountant had no authority to keep them.
+
+---
+
+### 5-Act Vignette Play: *Eumaeus's Twenty Years*
+
+**THE TOKEN: EUMAEUS'S LIVESTOCK LEDGER** — Worn clay tablets and scratched wooden tally sticks in a leather bag: stock counts, consumption records, the suitors' take per season, the household's remaining head at each accounting. Accumulated over twenty years. The bag smells of pigs. The tallies are accurate.
+
+---
+
+**ACT I — "The Faithful Count"**
+*The ledger: assembled. Location: ITH — Ithaca, Eumaeus's swineherd enclosure.*
+
+Eumaeus has been keeping the tallies in the leather bag for twenty years. He has not thought of them as records — he thought of them as keeping count, which is what a good swineherd does. Now that the household is restored, the steward Philoetius has told him the tallies may be the legal basis for calculating what was taken.
+
+He hands you the bag.
+
+TOKEN: `eumaeus_livestock_ledger`
+
+> **Insight DC 11.** Understand why the informal tallies are more significant than a commissioned account would be — they were kept without legal authority or expectation of use; the archive values witness that was not performance.
+
+**Fail:** You take the bag without grasping the distinction. Philoetius adds a note about the ledger's informal status.
+
+**Pass:** You understand. Eumaeus nods once.
+
+TOKEN GRANTED: Eumaeus's Livestock Ledger.
+
+---
+
+**ACT II — "The Reparations Clerk"**
+*The ledger: in the leather bag. Location: Ithaca port, estate registry annex.*
+
+A clerk at the estate registry annex wants to review the tallies before they leave Ithaca — he needs the originals for the official reparations calculation; once the proceeding opens, he will have a genuine legal claim on them.
+
+> **Persuasion DC 12.** The reparations proceeding has not formally opened. The clerk is preemptively asserting a claim that does not yet exist. Documents can be filed at the archive before a proceeding opens; once filed, certified copies can be returned. The originals travel.
+
+**Fail:** He notes the bag in his registry and gives you a transit document marking it "evidence under review." The archive receives it with the notation.
+
+**Pass:** He accepts the distinction. The bag travels clean.
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "The Suitors' Factor"**
+*The ledger: in the bag, sealed with string. Location: Adriatic ship.*
+
+The representative of three suitors' families is on the same ship bound for Ragusa. He has done his arithmetic. The tallies, if authenticated, are the only primary-source account of twenty years of consumption compiled without a legal motive — and therefore the hardest to challenge. He offers to buy the bag.
+
+> **Persuasion DC 11.** The ledger is not the Fighter's property to sell. Its value to the archive is precisely that it was kept without a legal motive. Selling it to the family it would implicate defeats the document's fundamental quality.
+
+**Fail:** He increases the offer and shifts argument: he will commission a proper accounting that supersedes the informal tallies. You name the archive's primacy rule for first-filed primary documents. He withdraws.
+
+**Pass:** He accepts your first refusal. He says he will write to Weimar directly.
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "The Ragusa Harbor"**
+*The ledger: in the bag. Location: RGS — Ragusa harbor, customs warehouse.*
+
+At Ragusa, a customs inspector wants the leather bag's contents inventoried before transit continues north. The tally sticks are individually unremarkable; the clay tablets, if handled aggressively, can crack under standard cargo inspection procedures. He is not hostile — he is systematic.
+
+> **Persuasion DC 12.** The bag is an archival document in transit, not commercial cargo — it should be inspected by catalog description rather than individual handling; a customs inspection that cracks a twenty-year tally record is damage to the evidentiary chain without legal justification.
+
+**Fail:** He handles three tablets before accepting the archival framing. None crack. The bag is sealed and stamped.
+
+**Pass:** He accepts the catalog approach and stamps the bag without opening it.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Archive"**
+*The ledger: bag, tallies intact. Location: Weimar.*
+
+Sweelinck opens the bag. He counts the tablets and tally sticks without touching the counts. He reads two of the tablets.
+
+"Twenty years. Informal tallies. No commission, no legal authority, no expectation of use. He kept them because not keeping them seemed wrong." He pauses. "That is the entire reason. That is why this is in the archive."
+
+He writes: *Faithful Household Accounts — Twenty Years of Record Under Occupation, First Entry. Eumaeus's Tallies: kept without commission or legal authority; the archive notes that this type of record is often the only surviving account of systematic consumption by parties who knew no official record would be kept; the swineherd's ledger is the document for which twenty years of loyalty under occupation is not a theme but the format.*
+
+TOKEN TAKEN: Eumaeus's Livestock Ledger.
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "ZTH_004",
+  "title": "Eumaeus's Twenty Years",
+  "source": "The Odyssey — Homer (c. 725 BCE)",
+  "cycle": "ZTH",
+  "book": "The Odyssey",
+  "source_episode": "Eumaeus the swineherd maintained loyalty and informal household accounts for twenty years; after the massacre his tallies became the only basis for calculating reparations for the suitors' consumption",
+  "theme": "The informal accounts kept without commission or legal authority; the record made not for use but because not making it seemed wrong; twenty years of loyalty under occupation visible only in the format of the document.",
+  "activateNode": "ITH",
+  "token": {
+    "id": "eumaeus_livestock_ledger",
+    "name": "Eumaeus's Livestock Ledger",
+    "description": "Worn clay tablets and scratched wooden tally sticks in a leather bag that smells of pigs — stock counts, consumption records, the suitors' seasonal take; twenty years of informal accounts kept without authority or expectation of use.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["ITH", "RGS", "WM"],
+  "new_nodes": [],
+  "acts": [
+    { "act": 1, "location": "ITH", "scene": "Eumaeus's swineherd enclosure — the leather bag assembled for transit", "title": "The Faithful Count", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 11 }, "token_action": "grant" },
+    { "act": 2, "location": "ITH", "scene": "Ithaca estate registry annex — reparations clerk's preemptive claim", "title": "The Reparations Clerk", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "road_ITH_RGS", "scene": "Adriatic ship — suitors' factor", "title": "The Suitors' Factor", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 11 }, "token_action": "check" },
+    { "act": 4, "location": "RGS", "scene": "Ragusa harbor customs warehouse — inspection protocol", "title": "The Ragusa Harbor", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 12 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "The Archive", "type": "delivery", "activateMissionBit": "zthEumaeusComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## Cycle 5 — Angle: *Nausicaa's Letter — The Document Written for the Writer*
+
+**What this angle reveals that Cycles 1–4 missed:** The four prior cycles dealt with documents that were made for an audience. Cycle 5 is about a document written for the writer. Nausicaa composed the letter the morning Odysseus sailed. She never gave it to her father. It is the only account of the Ithaca encounter from her perspective — the only record of what a Phaeacian princess understood about the stranger she found on the beach. The letter was written not to communicate but to complete an understanding that required the act of writing to become itself.
+
+---
+
+### 5-Act Vignette Play: *Nausicaa's Letter*
+
+**THE TOKEN: NAUSICAA'S UNSENT LETTER** — A clay tablet, sealed, with Nausicaa's personal mark — the emblem of Alcinous's house in miniature, pressed with the ring she wore on the hand that plays the ball-game. Found in her private rooms by the palace archivist after she married and moved to her husband's house. He held it three years before deciding it needed to leave Scheria.
+
+---
+
+**ACT I — "The Palace Archivist"**
+*The tablet: sealed, on a shelf. Location: PHC — Scheria, Alcinous's palace archive room.*
+
+The archivist Phaidon has held this tablet for three years. He knew whose seal it was. He knew it had not been delivered. He waited for instructions that never came. Now that Nausicaa has left Scheria and the palace is being reorganized, he has decided: the letter is a document, not a private possession.
+
+He sets the tablet on the table.
+
+TOKEN: `nausicaa_unsent_letter`
+
+> **Insight DC 11.** Understand why the archivist waited three years — not because he doubted his decision but because the tablet presented a genuine question: is a letter that was never sent still a communication, or is it only a record of the moment of understanding it expressed? The Fighter's grasp of this distinction allows him to close the three-year question without further explanation.
+
+**Fail:** You take the tablet. The archivist adds a note about the discovery circumstances.
+
+**Pass:** You understand the distinction. He exhales. He does not add a note.
+
+TOKEN GRANTED: Nausicaa's Unsent Letter.
+
+---
+
+**ACT II — "Alcinous's Steward"**
+*The tablet: sealed. Location: Scheria harbor.*
+
+The palace steward intercepts you at the harbor gate. A document bearing the royal seal — Alcinous's seal in miniature — is royal property, regardless of origin or destination.
+
+> **Persuasion DC 12.** The letter was found in Nausicaa's private rooms, not the palace archives; it was written by a private person; the seal confirms origin, not ownership; a document bearing a family seal is not the family's property if it was made in a private capacity and never transmitted through official channels.
+
+**Fail:** He holds the tablet forty-eight hours and consults a legal advisor. The advisor reaches the same conclusion. The tablet is released with a notation about the review.
+
+**Pass:** He accepts the origin/ownership distinction. He notes in the harbor log: "private document, archive transit."
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "The Scholar at Rome"**
+*The tablet: sealed, traveling. Location: RME — Rome.*
+
+A Latin scholar with Greek philosophical training has heard about the unsent letter. His argument: an unsent letter from a Phaeacian princess describing her encounter with Odysseus is the only first-person Phaeacian account of the episode. He wants to read it. He is careful: read, not keep.
+
+> **Insight DC 12.** His interest is genuine. But the tablet is sealed. Opening it for scholarly consultation breaks the seal that is the document's authentication — once broken, the tablet cannot be filed as an unread original. He should write to the archive after it is filed and request access through the archive's procedure. The sealed original and his commentary can coexist; they cannot be created simultaneously from the same physical document.
+
+**Fail:** He argues that the seal is already functionally opened because the archivist read the outer markings. You explain the difference between identification and opening. The seal is intact.
+
+**Pass:** You explain the archive procedure. He accepts and offers hospitality for the night.
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "The River Crossing"**
+*The tablet: clay sealed in wax. Location: river road north of Rome.*
+
+A flash flood on the river road north of Rome. The crossing is waist-deep and running fast. The tablet is clay sealed in wax — sustained immersion in fast-moving water will soften the wax enough to lose the seal's impression. If the impression is lost, the authentication is compromised.
+
+> **Athletics DC 13.** Cross with the tablet held above water for the full crossing — difficult in fast current at waist depth.
+
+**Fail:** One hand drops for a moment in the current. The wax takes water contact but the impression holds — barely. At Act 5, Sweelinck notes the water mark but confirms the impression is still legible.
+
+**Pass:** The tablet crosses dry. The seal is perfect.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Archive"**
+*The tablet: sealed. Location: Weimar.*
+
+Sweelinck holds the tablet. He reads the outer mark — Nausicaa's seal pressed with the ring she wore on the ball-game hand. He does not break it. He weighs it in his palm.
+
+"She wrote it the morning he sailed. She did not send it. It is in our vault, sealed." He pauses. "The archive does not open sealed documents without cause. This one stays sealed."
+
+He writes: *Unsent Letters — Records Written for the Writer Rather Than the Reader, First Entry. Nausicaa's Letter: found sealed in the private rooms of Alcinous's daughter three years after the stranger sailed; not sent; the archive holds it as the record of a moment of understanding that required writing to become itself; it will remain sealed; the seal's impression is the document's authentication and its condition.*
+
+TOKEN TAKEN: Nausicaa's Unsent Letter.
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "ZTH_005",
+  "title": "Nausicaa's Letter",
+  "source": "The Odyssey — Homer (c. 725 BCE)",
+  "cycle": "ZTH",
+  "book": "The Odyssey",
+  "source_episode": "Nausicaa, the Phaeacian king's daughter, found Odysseus on the beach and directed him to court; after he sailed she wrote a letter to her father she never sent; it was found sealed in her private rooms three years later by the palace archivist",
+  "theme": "The letter written for the writer rather than the reader; the understanding that required writing to become itself; the sealed document that authenticates its own unread condition as the final statement it needed to make.",
+  "activateNode": "PHC",
+  "token": {
+    "id": "nausicaa_unsent_letter",
+    "name": "Nausicaa's Unsent Letter",
+    "description": "A sealed clay tablet bearing Nausicaa's personal mark — Alcinous's seal in miniature, pressed with the ring she wore on the ball-game hand; found in her private rooms, held three years by the palace archivist; sealed; never sent.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["PHC", "RME", "WM"],
+  "new_nodes": ["PHC", "RME"],
+  "acts": [
+    { "act": 1, "location": "PHC", "scene": "Scheria palace archive room — the archivist's three-year question", "title": "The Palace Archivist", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 11 }, "token_action": "grant" },
+    { "act": 2, "location": "PHC", "scene": "Scheria harbor — palace steward's ownership claim", "title": "Alcinous's Steward", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "RME", "scene": "Rome, Latin scholar's house — scholarly access before filing", "title": "The Scholar at Rome", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 12 }, "token_action": "check" },
+    { "act": 4, "location": "road_RME_WM", "scene": "River road north of Rome — flood crossing with sealed clay tablet", "title": "The River Crossing", "type": "skill_check", "skillCheck": { "skill": "Athletics", "dc": 13 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake — the sealed document stays sealed", "title": "The Archive", "type": "delivery", "activateMissionBit": "zthNausicaaComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## Cycle 6 — Angle: *Anticlea's Message — Testimony Delivered by the Dead*
+
+**What this angle reveals that Cycles 1–5 missed:** All prior cycles dealt with documents in the living world. Cycle 6 is about the testimony of the dead: what Odysseus's mother Anticlea said to him in the underworld. She died of grief for her son. He tried three times to embrace her and she dispersed like a dream. But she spoke: Penelope was faithful, Telemachus patient, Laertes grieving. Her message was complete, true, and delivered. He could not confirm it with her. A scribe at Alcinous's court who took the second night's narration recorded this passage specifically, and has since found that this portion, unlike the Sirens account, does not disturb the reader — it weighs them.
+
+---
+
+### 5-Act Vignette Play: *Anticlea's Message*
+
+**THE TOKEN: ANTICLEA'S TESTIMONY** — Three cedar tablets from the second night's narration at Alcinous's court: specifically the underworld conversation with his mother. The scribe recorded everything Odysseus said, including the three attempts to embrace her and the phrase "she dispersed like a dream." The tablets are heavier than they should be.
+
+---
+
+**ACT I — "The Second Scribe"**
+*The tablets: three cedar boards, stacked, tied with leather strap. Location: SIT — scribe's port.*
+
+This is a different scribe from cycle 1. He transcribed the second night's narration — the underworld account. He has read his transcription three times. Each time it weighs him. He does not have the wax-tablet scribe's professional concern about disturbance — the Anticlea passage is not destabilizing in the same way. It is simply very heavy.
+
+He wants the tablets to travel. He puts them on the table without preamble.
+
+TOKEN: `anticlea_testimony`
+
+> **Insight DC 12.** Understand what the scribe means by "heavy" — carrying a text in which a dead woman correctly describes what she cannot see, delivered to a living man who cannot confirm it because she is unavailable for confirmation, produces a specific weight that accumulates with rereading; the archive is the correct destination because archives can hold weight without it accumulating further.
+
+**Fail:** You carry the tablets without grasping the distinction. The scribe just watches you depart.
+
+**Pass:** You understand. He nods. He closes the chest.
+
+TOKEN GRANTED: Anticlea's Testimony.
+
+---
+
+**ACT II — "The Philosopher's Challenge"**
+*The tablets: tied together, in pack. Location: SIT harbor road.*
+
+A traveling sophist intercepts you. His argument: a transcription of a dead woman's speech raises an epistemological problem. The speaker cannot be cross-examined; the account cannot be verified by any method available to the living; filing it in an archive as testimony implies a standard of evidence that cannot apply to underworld speech. The archive, if serious, should reject the document.
+
+> **Persuasion DC 13.** The archive does not only hold documents whose testimony meets cross-examinable standards — it holds documents whose testimony cannot be obtained any other way. Anticlea's account of Ithaca during her son's absence is the only existing account from someone watching from outside the household's temporal frame. The archive files it with its epistemological status intact, not with false credibility — which is exactly what the scribe's note says.
+
+**Fail:** He follows for an hour before accepting the argument. He writes his objection in a note and asks you to carry it alongside the tablets. You do.
+
+**Pass:** He accepts the first framing. "So the archive notes the problem." You say: the archive notes the problem.
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "Telemachus's Request"**
+*The tablets: traveling. Location: Corinthian road.*
+
+A courier carrying Telemachus's personal seal intercepts the Fighter. Telemachus has asked that all transcriptions of Odysseus's narration at Alcinous's court be reviewed before filing — he is concerned that some passages reflect poorly on companions whose families survive.
+
+> **Persuasion DC 12.** The archive's neutrality depends on receiving documents without review by the parties they concern. Documents can be challenged after filing; they cannot be reviewed before. A review procedure at Telemachus's request gives Odysseus's household the right to shape the archive's holdings — which the archive cannot accept.
+
+**Fail:** The courier sends a message to Telemachus. You continue without handing over the tablets. Two days later a second courier arrives saying Telemachus withdraws his request but asks you to note his concern in the delivery record. You do.
+
+**Pass:** The courier accepts the pre-filing review distinction. He makes a note and departs.
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "What She Said"**
+*The tablets: traveling north. Location: waystation south of Weimar.*
+
+At a waystation, an old woman is sitting at the table with her hands folded. She lost her son to the sea ten years ago. She has heard the underworld passage tablets were traveling north. She wants to know what the dead say about what they see in the living world.
+
+She is not aggressive. She is simply asking.
+
+> **Insight DC 11.** She is asking whether the dead can see the living. Anticlea's account says yes. The answer is in the tablets. But giving it to her would mean reading from documents in transit to the archive before they are filed and contextualized — substituting the Fighter's custody for the archive's.
+
+**Fail:** You sit with her without opening the tablets. You tell her what you know of the passage from hearing it told. She thanks you.
+
+**Pass:** You tell her what you know. She asks: could Anticlea hold him. You say: he tried three times. No. She folds her hands again. She does not stop you.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Archive"**
+*The tablets: three cedar boards, passage complete. Location: Weimar.*
+
+Sweelinck reads the tablets without expression. He sets them down. He sits for a moment.
+
+"She knew. She could not be held. She told him everything she knew. The message was complete and true and delivered. He tried to hold her three times and she dispersed like a dream. The archive does not usually receive testimony from the dead, but when it does, it files it as what it is."
+
+He writes: *Underworld Testimony Records — Messages Delivered by the Dead, First Entry. Anticlea's Testimony: the underworld account of a dead woman who correctly described conditions in a living household from outside the living world's temporal frame; the weight of receiving a true message from someone who cannot be asked a follow-up question is its own category; she could not be held; the message was complete.*
+
+TOKEN TAKEN: Anticlea's Testimony.
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "ZTH_006",
+  "title": "Anticlea's Message",
+  "source": "The Odyssey — Homer (c. 725 BCE)",
+  "cycle": "ZTH",
+  "book": "The Odyssey",
+  "source_episode": "In the underworld (Book 11), Odysseus's dead mother Anticlea tells him Penelope is faithful, Telemachus patient, Laertes grieving; he tries three times to embrace her and she disperses like a dream; her message is complete, true, and unconfirmable",
+  "theme": "The testimony delivered by the dead; the message that is complete and true and received but cannot be confirmed because the sender is unavailable; the weight of being correctly told something by someone who cannot testify back.",
+  "activateNode": "SIT",
+  "token": {
+    "id": "anticlea_testimony",
+    "name": "Anticlea's Testimony",
+    "description": "Three cedar tablets from the second night's narration at Alcinous's court — the underworld passage; Anticlea's account of Ithaca, the three attempts at embrace, the dispersion like a dream; heavier than the content alone explains.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["SIT", "CON", "WM"],
+  "new_nodes": [],
+  "acts": [
+    { "act": 1, "location": "SIT", "scene": "Scribe's port storage — the second night's tablets", "title": "The Second Scribe", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 12 }, "token_action": "grant" },
+    { "act": 2, "location": "SIT", "scene": "Port harbor road — sophist's epistemological challenge", "title": "The Philosopher's Challenge", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 13 }, "token_action": "check" },
+    { "act": 3, "location": "road_SIT_CON", "scene": "Corinthian road — Telemachus's review request", "title": "Telemachus's Request", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 12 }, "token_action": "check" },
+    { "act": 4, "location": "road_CON_WM", "scene": "Waystation south of Weimar — old woman who lost her son to the sea", "title": "What She Said", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 11 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "The Archive", "type": "delivery", "activateMissionBit": "zthAnticleaComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## Cycle 7 — Angle: *The Cattle Account — The Decision the Sole Survivor Was Asleep For*
+
+**What this angle reveals that Cycles 1–6 missed:** All previous cycles followed documents that recorded what their subjects intended. Cycle 7 is the record of a decision made by men who did not intend to be documented: the moment Odysseus's remaining companions, stranded on Thrinacia for a month without wind, slaughtered Hyperion's sacred cattle. Odysseus was asleep. Only Odysseus survived. His account of what he woke to is the only evidence for what happened. The archive holds his reconstruction — the attempt, recorded at Alcinous's court, to deduce from the aftermath what the argument before the slaughter must have been.
+
+---
+
+### 5-Act Vignette Play: *The Cattle Account*
+
+**THE TOKEN: THE CATTLE DECISION RECONSTRUCTION** — A single cedar tablet from the Alcinous narration: the passage where Odysseus, having said he was asleep, attempts to reconstruct from the aftermath — the smoke, the smell of roasting fat, the men's explanations — what was said before the slaughter. The scribe noted at the top: *He was not present. This is deduction, not witness.* The only record of what twelve men decided to do when their hunger outweighed their judgment and their captain was asleep.
+
+---
+
+**ACT I — "The Deduction Record"**
+*The tablet: single cedar board. Location: SIT — scribe's port.*
+
+The scribe who took the third night's narration kept this tablet separately because of the note at the top: "he was not present." He held it two months trying to decide whether a deduction is a document. He has decided it belongs in the archive — not because the reconstruction is necessarily accurate, but because it is Odysseus's attempt to understand a decision that killed everyone except him, and that attempt is itself a historical document.
+
+TOKEN: `cattle_decision_reconstruction`
+
+> **History DC 11.** Understand why the reconstruction is archivable even though Odysseus was asleep — the sole survivor's attempt to reconstruct the decision that made him the sole survivor is a significant document; the archive holds the shape of reasoning, not only witnessed facts.
+
+**Fail:** You carry the tablet. The scribe adds a brief note: "the sole survivor's reconstruction."
+
+**Pass:** You grasp the argument without the note. The scribe says: "He had to try to understand it." You nod.
+
+TOKEN GRANTED: The Cattle Decision Reconstruction.
+
+---
+
+**ACT II — "The Families Who Were There"**
+*The tablet: wrapped. Location: SIT harbor.*
+
+Two men at the harbor are relatives of sailors who died when Zeus destroyed the ship after the slaughter. They want to know what the tablet says — whether their kinsmen led the decision, whether they were coerced. The reconstruction may name Eurylochus as the one who argued for slaughter.
+
+> **Insight DC 12.** Their need to know is genuine. But the reconstruction is Odysseus's deduction from the aftermath, not eyewitness testimony; what it says about who led the argument is his best assessment, not a confirmed account. Telling them the content before the archive contextualizes it — if it names their kinsman inaccurately — gives them an unverified claim with no recourse.
+
+**Fail:** You explain you cannot share the content before filing. One of them reaches for the tablet. A struggle. The tablet is intact; you depart the harbor faster than planned.
+
+**Pass:** You explain the reconstruction's status — one man's deduction from aftermath evidence. They need to know what the archive's record will say, and the archive's record will say that clearly. They let you pass.
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "The Theologian"**
+*The tablet: traveling. Location: RME — Rome.*
+
+A Roman scholar of Greek mythology argues that the cattle of Hyperion are not historical livestock — they are mythological vessels; the slaughter is a religious event, not subject to historical documentation; filing a reconstruction of the decision as a historical document misunderstands the category of what happened.
+
+> **Persuasion DC 12.** The tablet does not claim to document the theological significance of Hyperion's cattle — it documents the hunger and reasoning of twelve men who had not eaten for a month. The theological dimension is documented in Hyperion's complaint to Zeus, which is already in divine record. The human dimension — what they said to each other — is documented only in this reconstruction. The two records are not in competition; together they are the most complete account available.
+
+**Fail:** He concedes the human dimension but adds to his register that the tablet should be cross-referenced with classical theological accounts. He lets you pass.
+
+**Pass:** He accepts the categorical distinction. He says he will write to Weimar.
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "The Alps Crossing"**
+*The tablet: cedar board. Location: Alpine pass.*
+
+An early snow on the Alpine pass. A mountain guide offers to carry the pack across the steepest section while the Fighter manages the rope line. Handing over the pack means the tablet is temporarily in someone else's custody.
+
+> **Perception DC 11.** Watch the guide across the three most difficult rope-line sections. The custody hand-off is necessary and safe; but the tablet's chain of custody should be unbroken in the Fighter's account at the archive.
+
+**Fail:** At one rest point the guide opens the pack to redistribute weight. He does not read the tablet — he cannot read Greek — but the pack was opened. You note this.
+
+**Pass:** You watch each rest point. The pack stays sealed. The custody is clean.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Archive"**
+*The tablet: cedar, scribe's note intact. Location: Weimar.*
+
+Sweelinck reads the scribe's note at the top: *He was not present. This is deduction, not witness.* He reads the reconstruction itself. He sets it down.
+
+"He was asleep. He woke to the smell of it. He spent the rest of his time at Alcinous's court trying to reconstruct what was said in the hour before he woke. This is that reconstruction." He pauses. "The archive files reconstructions separately from witnessed accounts. This is filed as one survivor's deduction. It goes in the same vault as Hyperion's formal complaint. The archive will note that it holds both the divine record and the human reconstruction, and that neither is the complete account."
+
+He writes: *Reconstructed Decisions — Accounts of Acts the Sole Survivor Was Not Witness To, First Entry. The Cattle Slaughter Reconstruction: the sole survivor's attempt to understand a decision that made him the sole survivor; reconstruction from aftermath evidence is not testimony but is itself a significant document; filed alongside Hyperion's divine complaint as the human-side record of the same event; together they are the most complete account available.*
+
+TOKEN TAKEN: The Cattle Decision Reconstruction.
+
+*questComplete: true*
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "ZTH_007",
+  "title": "The Cattle Account",
+  "source": "The Odyssey — Homer (c. 725 BCE)",
+  "cycle": "ZTH",
+  "book": "The Odyssey",
+  "source_episode": "Stranded on Thrinacia without wind for a month, Odysseus's men slaughter Hyperion's sacred cattle while Odysseus sleeps; Zeus destroys the ship; only Odysseus survives; at Alcinous's court he attempts to reconstruct from the aftermath what the men argued before the slaughter",
+  "theme": "The sole survivor's reconstruction of the decision that made him the sole survivor; the aftermath as the only evidence; the archive that holds the human-side record alongside the divine complaint as together the most complete account available.",
+  "activateNode": "SIT",
+  "token": {
+    "id": "cattle_decision_reconstruction",
+    "name": "The Cattle Decision Reconstruction",
+    "description": "A single cedar tablet from the Alcinous court narration — Odysseus's attempt to reconstruct from aftermath evidence what was argued before the slaughter of Hyperion's cattle; scribe's note reads: 'He was not present. This is deduction, not witness.'",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["SIT", "RME", "WM"],
+  "new_nodes": [],
+  "acts": [
+    { "act": 1, "location": "SIT", "scene": "Scribe's port — the third night's reconstruction tablet", "title": "The Deduction Record", "type": "skill_check", "skillCheck": { "skill": "History", "dc": 11 }, "token_action": "grant" },
+    { "act": 2, "location": "SIT", "scene": "Harbor — relatives of the dead sailors", "title": "The Families Who Were There", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "RME", "scene": "Rome — theologian's categorical objection", "title": "The Theologian", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 12 }, "token_action": "check" },
+    { "act": 4, "location": "road_RME_WM", "scene": "Alpine pass — mountain guide custody hand-off", "title": "The Alps Crossing", "type": "skill_check", "skillCheck": { "skill": "Perception", "dc": 11 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake — reconstruction and divine complaint filed together", "title": "The Archive", "type": "delivery", "activateMissionBit": "zthCattleComplete", "questComplete": true, "token_action": "take" }
+  ]
+}
+```
+
+---
+
+*ZTH SEEDS COMPLETE. §ZTH-01 through §ZTH-07 written. Admin pass: quest-map.md, books.md, plan.md. New nodes: PHC (Scheria/Phaeacia), RME (Rome).*

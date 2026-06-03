@@ -494,7 +494,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
 | [x] | ATH | iliad | Iliad — Homer (Lang transl.) | ~750 BC | Greek Epic | 907 |
-| [x] | ZTH | odyssey | Odyssey — Homer (Butler transl.) | ~725 BC | Greek Epic | 700 |
+| [x] | ZTH | odyssey | Odyssey — Homer (Butler transl.) | ~725 BC | Greek Epic | 700 | SEEDS COMPLETE 2026-06-03 — ZTH-01–07 all vignettes done. New nodes: PHC (Scheria/Phaeacia), RME (Rome). See ZTH-odyssey.md. |
 | [x] | FCO | aeneid | Aeneid — Virgil (Latin original — Gutenberg #227) | ~19 BC | Roman Epic | 484 |
 | [x] | MLA | plutarch-lives | Plutarch's Lives — Plutarch (Dryden/Clough tr.) | c. 95–110 AD | Biography | 4222 |
 | [x] | NWI | anabasis | Anabasis — Xenophon (Dakyns tr. — Gutenberg #1170) | c. 401 BC | Greek Military | 545 |
