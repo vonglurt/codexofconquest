@@ -449,7 +449,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
 | [x] | FRO | volsunga-saga | Volsunga Saga — Anon | ~13th C (legendary) | Norse Legend | 342 |
-| [x] | VBY | grettir-saga | Grettir's Saga — Anon | ~14th C | Icelandic Saga | 373 |
+| [x] | VBY | grettir-saga | Grettir's Saga — Anon | ~14th C | Icelandic Saga | 373 | SEEDS COMPLETE 2026-06-03 — VBY-01–07 all vignettes done. RKN/BWH already in Location Grid. No new nodes. See VBY-grettir-saga.md. |
 | [x] | LBC | nibelungenlied | Nibelungenlied — Anon | c.1200 | German Epic | 660 |
 | [x] | GDN | njal-saga | Njal's Saga — Anon (Dasent transl.) | ~13th C | Icelandic Saga | 787 | SEEDS COMPLETE 2026-06-03 — GDN-01–07 all vignettes done. No new nodes (ISL, BK, VS, HHL, HEO, CON all exist). See GDN-njal-saga.md. |
 | [x] | RIX | egil-saga | Egil's Saga — Anon (attr. Snorri) | ~13th C | Icelandic Saga | 869 |

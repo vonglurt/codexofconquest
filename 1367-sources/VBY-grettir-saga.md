@@ -942,3 +942,235 @@ activateMissionBit: vbyBarrowComplete
 ---
 
 *Cycle 2 complete. Mark `[x]` for VBY-grettir-saga in books.md.*
+
+---
+
+## Cycle 3 — *Glámr's Dying Curse*
+
+**Archive category:** Curse Records — The Dying Enemy's Words That Changed the Hero's Condition
+
+**What this angle reveals:** Cycles 1-2 were about Grettir's heroism — the fire-swimmer and the light-carrier. This angle enters the curse that made his heroism impossible to live with. When Grettir wrestled Glámr — a Norwegian ghost-herdsman who had terrorized the district of Þórhallsstaðir — he won and tore off Glámr's head. In his last moments before decapitation, Glámr laid a curse: Grettir would henceforth fear the dark; all his strength would turn to ill; he would be outlawed; he would never achieve the greatness his deeds deserved. The curse was spoken in front of witnesses. No one present disputed that it was effective. The farmer who lived through the haunting wrote down what Glámr said because he wanted a record of what had entered his household and what left with it.
+
+---
+
+**THE TOKEN: `glam_curse_record`** — A birch-bark transcript of Glámr's final words, written by the farmer of Þórhallsstaðir the morning after the wrestling match; signed by three who heard the curse spoken; the specific words of each clause noted in order. Not a superstition document: a witness record. The archive wants to hold the exact form of the thing that undid the strongest man in Iceland.
+
+---
+
+```json
+{
+  "quest_id": "VBY-03",
+  "title": "Glámr's Dying Curse",
+  "source": "Grettir's Saga — Anon (c.1310–1320)",
+  "cycle": 3,
+  "book": "VBY",
+  "source_episode": "Grettir wrestles Glámr and wins; Glámr speaks his curse before Grettir cuts his head off; three witnesses present; the curse takes hold immediately",
+  "theme": "The dying enemy's words that changed the hero's permanent condition; the curse as a form of last testimony",
+  "activateNode": "RKN",
+  "token": {
+    "id": "glam_curse_record",
+    "name": "Glámr's Curse Transcript",
+    "description": "Birch-bark transcript of Glámr's final words before decapitation. Three witness signatures. Each clause noted in order: fear of darkness, strength turning to ill, perpetual outlawry, greatness withheld. Farmer's hand. Morning after the wrestling match.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["RKN", "BK", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "RKN", "type": "skill_check", "dc": 12, "skill": "Insight", "prompt": "The farmer of Þórhallsstaðir hands you the transcript at the coastal road. He has kept it sealed for seven years, uncertain who it belongs to. It is not a prayer, not a rune inscription — it is a witness record of what a dying enemy said to the man who was killing him. Understand what the archive wants before the road: not the curse as magic, but the curse as the exact form in which one man's last strength entered another man's life permanently."},
+    {"act": 2, "node": "RKN_to_BK", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "A Norse priest on the coastal road wants to burn the transcript on the grounds that keeping a written curse preserves its efficacy. His theology is internally consistent. Your argument: Grettir is already outlawed and afraid of the dark; the efficacy question is settled; what the archive holds is the record of the words spoken, not the mechanism of their power."},
+    {"act": 3, "node": "BK", "type": "combat", "dc": 13, "skill": "Insight", "enemies": "Two men from Þórir's household, AC 12, HP 19, axes", "prompt": "Two men from the household of Þórir — whose father was killed by Grettir before the Glámr encounter — have been told the transcript exists. For them it is evidence in a blood-feud proceeding. They want the document to support a compensation claim at the Althing. Grettir's heroism and Grettir's crimes are not separate facts."},
+    {"act": 4, "node": "BK_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "The road to Weimar. The transcript is in the wallet. The curse is written out on the bark. You know the clauses by now — you have carried them for three days. Keep moving. The words are a record. They do not do more than that at this distance."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the transcript. He notes the three witness signatures. He notes the curse's clauses in order. Curse Records opens."}
+  ],
+  "archiveCategory": "Curse Records — The Dying Enemy's Words That Changed the Hero's Condition",
+  "sweelinckNote": "Glámr said it. Three people heard it. The farmer wrote it down. The archive holds the form of the words, not an opinion about their mechanism. The man they were spoken to is outlawed and afraid of the dark. The correlation is noted."
+}
+```
+
+---
+
+## Cycle 4 — *Grettir's Outlawry Sentence*
+
+**Archive category:** Outlawry Records — The Sentence That Made All Help Illegal
+
+**What this angle reveals:** Cycle 3 was about the curse that undid Grettir from within. This angle finds the legal instrument that undid him from without: the formal outlawry sentence issued by the Althing at Þingvellir. Full outlawry is different from lesser penalties — it means anyone may kill the outlaw without consequence; it is illegal to feed him, house him, or help him in any way. The sentence is the document that turned the strongest man in Iceland into a crime. Weimar wants the sentence itself: the charges, the form of the declaration, the term (life), and the specific language that made helping Grettir an act of complicity in the original offense.
+
+---
+
+**THE TOKEN: `grettir_outlawry_sentence`** — The formal sentence of full outlawry issued by the Althing at Þingvellir: Grettir Ásmundarson's name, the accumulated charges, the legal grounds, the declaration that he is skógarmaðr — forest-man, outlaw — for life, and the terms of the sentence. Sealed with the lawspeaker's mark. The sentence that made his heroism irrelevant to his legal status.
+
+---
+
+```json
+{
+  "quest_id": "VBY-04",
+  "title": "Grettir's Outlawry Sentence",
+  "source": "Grettir's Saga — Anon (c.1310–1320)",
+  "cycle": 4,
+  "book": "VBY",
+  "source_episode": "The Althing at Þingvellir declares Grettir a full outlaw for life — the accumulated charges include the burning of Blund-Ketil's farmhouse and other deaths; all his heroic deeds have no legal standing",
+  "theme": "The sentence that made all help illegal; the law's instrument that turns heroism into irrelevance",
+  "activateNode": "RKN",
+  "token": {
+    "id": "grettir_outlawry_sentence",
+    "name": "Grettir's Full Outlawry Sentence",
+    "description": "Althing formal sentence: Grettir Ásmundarson, full outlawry for life. Accumulated charges, legal grounds, declaration of skógarmaðr status, terms of the sentence. Lawspeaker's seal. The document that made feeding him a crime.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["RKN", "VEN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "RKN", "type": "skill_check", "dc": 11, "skill": "History", "prompt": "The lawspeaker's clerk hands over a certified copy from the Althing record. He notes: the sentence is not secret — it is the law; it is public; carrying it to Weimar is not removing it from Icelandic jurisdiction. Understand before the road what the archive specifically wants: not the charges as a legal argument (those are contested), but the specific language of the declaration — the term 'skógarmaðr,' the term 'for life,' and the clause that made helping him an offense."},
+    {"act": 2, "node": "RKN_to_VEN", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "A Norwegian merchant on the sea route south who knows Grettir — he has seen him help a farm household against raiders — wants to know why the outlawry document leaves Iceland. His objection: the sentence and the man are not the same thing. Your answer: the archive holds the sentence because the gap between what a man does and what the law says about him is exactly the kind of record the archive is built for."},
+    {"act": 3, "node": "VEN", "type": "skill_check", "dc": 13, "skill": "Persuasion", "prompt": "A Venetian legal scholar who collects examples of outlawry proceedings from various European legal systems wants to add this to his collection. He offers a substantial sum for an original — Althing proceedings are rare this far south. He also asks whether the heroic deeds can be obtained separately. The sentence travels to the archive. His collection may already contain a copy through other channels."},
+    {"act": 4, "node": "VEN_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "Alpine road, three days to Weimar. The lawspeaker's seal is on the copy in the wallet. Grettir is alive and outlawed on an island somewhere off the Icelandic coast, and the document you are carrying is why helping him is illegal. Keep moving."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the declaration clause. He notes the term 'skógarmaðr' and the seal. Outlawry Records opens."}
+  ],
+  "archiveCategory": "Outlawry Records — The Sentence That Made All Help Illegal",
+  "sweelinckNote": "The heroic deeds are not in the sentence. The sentence is about the fires and the deaths. Both things are true about the same man. The law's document holds the law's account. The archive holds both."
+}
+```
+
+---
+
+## Cycle 5 — *Þorsteinn's Revenge Oath*
+
+**Archive category:** Revenge Commission Records — The Oath That Committed Its Carrier to the End of the World
+
+**What this angle reveals:** Cycles 3-4 were about what was done to Grettir. This angle moves to what was done for him after death. Grettir was killed on Drangey through sorcery — the runic log that caused his axe to turn against him. His brother Þorsteinn the Gallows-Man swore a revenge oath at the Althing: he would pursue the men responsible wherever they went, for as long as it took. He tracked them to Constantinople and killed them there. The oath is the document that authorized a journey from Iceland to Miklagarðr. It is also the record of what a brother was willing to become in order to complete the obligation — skald, traveler, killer, and finally a husband and a penitent. All of that begins with the oath.
+
+---
+
+**THE TOKEN: `thorstein_revenge_oath`** — The formal revenge oath sworn by Þorsteinn Ásmundarson at the Althing after Grettir's death: the names of those responsible (Þuríðr, her son Narfi), the terms of the oath, the witnesses who heard it sworn. The document that committed its carrier to traveling from Iceland to Constantinople on his brother's behalf.
+
+---
+
+```json
+{
+  "quest_id": "VBY-05",
+  "title": "Þorsteinn's Revenge Oath",
+  "source": "Grettir's Saga — Anon (c.1310–1320)",
+  "cycle": 5,
+  "book": "VBY",
+  "source_episode": "Þorsteinn the Gallows-Man swears revenge at the Althing after Grettir's death on Drangey; he tracks the killers to Constantinople and kills Narfi there",
+  "theme": "The oath that committed its carrier to the end of the world; the document that authorized a journey no law required",
+  "activateNode": "RKN",
+  "token": {
+    "id": "thorstein_revenge_oath",
+    "name": "Þorsteinn's Revenge Oath",
+    "description": "Formal revenge oath sworn at the Althing: names of those responsible (Þuríðr, Narfi), terms of the oath, witness signatures. The document that authorized the journey from Iceland to Constantinople.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["RKN", "CON", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "RKN", "type": "skill_check", "dc": 12, "skill": "History", "prompt": "The clerk of the Althing hands over the sworn oath copy. The names of Þuríðr and her son are in it, and the terms — 'wherever they go, for as long as it takes.' Understand before the road why this document matters beyond the personal obligation it records: it is the legal instrument that authorizes Þorsteinn to act outside Icelandic jurisdiction, because the oath was sworn in front of the law's witnesses and the law did not prevent him. The archive wants the form of the authorization, not the record of the killings."},
+    {"act": 2, "node": "RKN_to_CON", "type": "skill_check", "dc": 12, "skill": "Stealth", "prompt": "Þuríðr has kin watching the routes south. They know the oath was sworn and that it names Þuríðr and Narfi. A document with those names on it, heading east, has a value to the family that is not archival. The Norse trading route through the Baltic is less watched than the direct route. Take it."},
+    {"act": 3, "node": "CON", "type": "skill_check", "dc": 13, "skill": "Persuasion", "prompt": "A Byzantine court official in Constantinople who has records of the Narfi killing wants to attach his account of the incident to the oath document before it reaches Weimar — to complete the narrative. His intention is good. His account of the incident is a separate document. The oath travels as the oath, without appendix. His account can be filed separately."},
+    {"act": 4, "node": "CON_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "West from Constantinople, three weeks to Weimar. The oath is in the wallet. Þorsteinn has already fulfilled it and returned. The document is the record of the commitment, not the act. It is a completed instrument. Keep moving."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the terms of the oath. He notes the names, the witnesses, the scope ('wherever they go, for as long as it takes'). He notes that the oath was fulfilled in Constantinople. Revenge Commission Records opens."}
+  ],
+  "archiveCategory": "Revenge Commission Records — The Oath That Committed Its Carrier to the End of the World",
+  "sweelinckNote": "Iceland to Constantinople on a brother's behalf. The oath authorized it. The archive holds the authorization. What Þorsteinn became in the process — traveler, killer, husband, penitent — is in the other files."
+}
+```
+
+---
+
+## Cycle 6 — *Þuríðr's Rune Log*
+
+**Archive category:** Sorcery Evidence Records — The Runes That Turned the Axe Against the Hand That Held It
+
+**What this angle reveals:** Cycles 3-5 followed Grettir's legal and personal destruction. This angle finds the weapon that killed him: a rune-inscribed log that Þuríðr cut her foot while carving, then floated from the shore to Drangey island. Grettir saw the log, could not stop himself from chopping at it, and the enchanted wood turned his axe into his own thigh. The wound did not heal. He died from it. The runic inscription on the log is not only a murder weapon — it is a record of exactly what kind of sorcery was used and how it was applied. A farm-wife in the district transcribed the runes before the log was burned as cursed material. Her transcription is evidence of the method.
+
+---
+
+**THE TOKEN: `thurid_rune_transcript`** — A vellum transcription of the rune inscription that Þuríðr carved on the log she floated to Drangey. Made by Þorsteinn's widow Spes from a copy she had before the log was burned. Each rune in order, with the carver's marks noted. The specific inscription that turned Grettir's axe against himself. Evidence of the method of his death.
+
+---
+
+```json
+{
+  "quest_id": "VBY-06",
+  "title": "Þuríðr's Rune Log",
+  "source": "Grettir's Saga — Anon (c.1310–1320)",
+  "cycle": 6,
+  "book": "VBY",
+  "source_episode": "Þuríðr carves runes on a log, cuts her foot on it while wading to float it toward Drangey; Grettir cannot stop himself chopping it; the axe turns into his thigh; the wound does not heal",
+  "theme": "The sorcery weapon as evidence; the runes that killed the strongest man in Iceland by turning his own strength against him",
+  "activateNode": "RKN",
+  "token": {
+    "id": "thurid_rune_transcript",
+    "name": "Þuríðr's Rune Inscription Transcript",
+    "description": "Vellum transcription of the runes Þuríðr carved on the Drangey log. Each rune in sequence, carver's marks noted. Made before the log was burned. The specific inscription that turned Grettir's axe into his own thigh.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["RKN", "RME", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "RKN", "type": "skill_check", "dc": 13, "skill": "Insight", "prompt": "Spes — Þorsteinn's widow, now in Norway after returning from Constantinople — hands you the transcription. She made it herself from a copy she kept before the original log was burned as cursed material. She wants the record to exist somewhere outside Iceland, where Þuríðr's family cannot pressure its disappearance. Understand what the archive wants: not the runes as a magic system, but the runes as forensic evidence of the method of a killing."},
+    {"act": 2, "node": "RKN_to_RME", "type": "skill_check", "dc": 12, "skill": "Stealth", "prompt": "Þuríðr's kin have been watching since Þorsteinn completed his revenge. A transcription of the rune inscription is evidence in an ongoing blood-feud proceeding — if it reaches a court that recognizes sorcery evidence, it could support further claims. The Alpine route is longer but unwatched."},
+    {"act": 3, "node": "RME", "type": "skill_check", "dc": 13, "skill": "Religion", "prompt": "A church official in Rome wants to confiscate the rune transcription as a document of pagan sorcery — specifically, the category of harmful enchantment whose records the Church has authority to suppress. His authority is real. The archive's exemption for documents in transit to permanent deposit is also real. The two claims must be resolved before he summons witnesses."},
+    {"act": 4, "node": "RME_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "North from Rome, five days to Weimar. The transcription is in the sealed wallet. The church official's letter of exemption is attached. The runes are on the vellum inside. They describe what was carved on a log in Iceland to kill a man on an island. Keep moving."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the transcription. He notes each rune in sequence. He notes the carver's marks. Sorcery Evidence Records opens."}
+  ],
+  "archiveCategory": "Sorcery Evidence Records — The Runes That Turned the Axe Against the Hand That Held It",
+  "sweelinckNote": "Þuríðr cut her own foot while carving the inscription. The log floated to Drangey. Grettir could not stop himself chopping at it. The axe went into his thigh. He died from the wound. The transcription is the record of the specific runes used in that sequence of events."
+}
+```
+
+---
+
+## Cycle 7 — *Þorsteinn's Final Account*
+
+**Archive category:** Sibling Testimony Records — The Account Written After the Obligation Was Fulfilled
+
+**What this angle reveals:** Cycle 5 was the oath Þorsteinn swore. This cycle is what Þorsteinn wrote after he had fulfilled it: the complete account of Grettir's death, who killed him, how it was done, and what followed. Written in Constantinople after the revenge was complete, before Þorsteinn and Spes began their return journey north. The saga ends with them becoming penitents and dying in Rome — but before that ending, there is a moment in Constantinople where the obligation is complete and there is time to write down what happened. The account is the brother's final witness record: what was done to Grettir, what was done about it, and what the doing of it cost.
+
+---
+
+**THE TOKEN: `thorstein_final_account`** — Þorsteinn the Gallows-Man's written account, completed in Constantinople: Grettir's death on Drangey, the sorcery, the killers, the revenge journey, the killing. Þorsteinn's own hand. Sealed before departure from Constantinople. The final witness record of the strongest man in Iceland, written by his brother in the city at the eastern edge of the known world.
+
+---
+
+```json
+{
+  "quest_id": "VBY-07",
+  "title": "Þorsteinn's Final Account",
+  "source": "Grettir's Saga — Anon (c.1310–1320)",
+  "cycle": 7,
+  "book": "VBY",
+  "source_episode": "Þorsteinn the Gallows-Man completes his revenge in Constantinople and writes his account of Grettir's death, the sorcery, and what followed; he and Spes will return to Norway and eventually die as penitents in Rome",
+  "theme": "The sibling testimony written after the obligation is complete; the account that closes the record of a life the law could not accommodate",
+  "activateNode": "CON",
+  "token": {
+    "id": "thorstein_final_account",
+    "name": "Þorsteinn's Final Account",
+    "description": "Written account in Þorsteinn's own hand: Grettir's death on Drangey, the sorcery, the revenge journey, the killing in Constantinople. Sealed before departure. The final witness record of the strongest man in Iceland, written at the eastern edge of the known world.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["CON", "LDN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "CON", "type": "skill_check", "dc": 12, "skill": "Insight", "prompt": "Þorsteinn hands you the sealed account before he and Spes depart for the north. He says: take it to the archive at Weimar. He says nothing else. He has spent three years getting to this point. The account is in his own hand and sealed with his own signet. Understand before the road what makes this document different from a saga: it is not told for an audience; it is written for whoever needs to know what happened."},
+    {"act": 2, "node": "CON_to_LDN", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "A Norse merchant on the western sea route who knows of Þorsteinn's journey wants to make a copy of the account for the trading networks that have been following the saga since Grettir's outlawry. He means no harm. The account is sealed. The decision of whether to circulate it belongs to the archive after deposit, not to the road."},
+    {"act": 3, "node": "LDN", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "An English chronicler in London who has been collecting Norse outlaw accounts wants to read the account before it is sealed into archive. His collection is genuine. The account is already sealed — Þorsteinn sealed it before handing it over. The archive receives it sealed. The chronicler can apply for access after deposit."},
+    {"act": 4, "node": "LDN_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "Three days east to Weimar. The sealed account is in the wallet. Þorsteinn is somewhere on the northern road with Spes, heading back toward Norway and eventually Rome. He has written down what happened to his brother. Keep moving. The account has a destination."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck breaks the seal. Reads the account. Notes the scope: Iceland to Constantinople, one man's death, one man's obligation, one account in the writer's own hand. Sibling Testimony Records opens."}
+  ],
+  "archiveCategory": "Sibling Testimony Records — The Account Written After the Obligation Was Fulfilled",
+  "questComplete": true,
+  "sweelinckNote": "Grettir was the strongest man in Iceland and the law had no mechanism for that. His brother's account ends at Constantinople, which is where the obligation ran out. The archive holds the account at Weimar, which is where the road ended."
+}
+```
+

@@ -315,7 +315,7 @@ All files under 60 KB in 1367-sources/. Each to receive full pipeline: read → 
 | LGW | Le Morte d'Arthur — Sir Thomas Malory | 55 | **SEEDS COMPLETE 2026-06-03 — LGW-01–07 all vignettes done. AST/CAM/LKS in Location Grid. No new nodes. See LGW-morte-darthur.md.** |
 | OST | Song of Roland — Anon | 56 | **SEEDS COMPLETE 2026-06-03 — OST-01–07 all vignettes done. AIX/RON/PYR/FRS in Location Grid. No new nodes. See OST-song-of-roland.md.** |
 | ARN | Knights of the Cross — Henryk Sienkiewicz | 57 | **SEEDS COMPLETE 2026-06-03 — ARN-01–07 all vignettes done. KRK/JUR/TKT/CHP in Location Grid. No new nodes. See ARN-knights-of-the-cross.md.** |
-| VBY | Grettir's Saga — Anon | 58 | QUEUED |
+| VBY | Grettir's Saga — Anon | 58 | **SEEDS COMPLETE 2026-06-03 — VBY-01–07 all vignettes done. RKN/BWH in Location Grid. No new nodes. See VBY-grettir-saga.md.** |
 | RIX | Egil's Saga — Anon (attr. Snorri) | 58 | QUEUED |
 | GCI | Toilers of the Sea — Victor Hugo | 59 | QUEUED |
 | FCO | Piers Plowman — William Langland | 59 | QUEUED |
