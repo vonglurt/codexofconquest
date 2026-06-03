@@ -285,6 +285,45 @@ Next books to process (in approximate priority order):
 
 ---
 
+## Unprocessed Books Queue (under 60 KB — queued for reprocessing 2026-06-02)
+
+All files under 60 KB in 1367-sources/. Each to receive full pipeline: read → vignette .md → quest-map.md + books.md + plan.md admin pass.
+
+| Code | Title | KB | Status |
+|------|-------|----|--------|
+| SDQ | Rob Roy — Walter Scott | 36 | QUEUED |
+| TBS | Knight in the Panther's Skin — Rustaveli | 41 | QUEUED |
+| LHR | Beowulf — Anon (Gummere) | 42 | QUEUED |
+| BHD | Cuchulain of Muirthemne — Lady Gregory | 43 | QUEUED |
+| ZTH | Odyssey — Homer (Butler) | 43 | QUEUED |
+| ATH | Iliad — Homer (Lang) | 45 | QUEUED |
+| GDN | Njal's Saga — Anon (Dasent) | 45 | QUEUED |
+| JRS | Jerusalem Delivered — Torquato Tasso | 46 | QUEUED |
+| LIS | Lusiads — Luís de Camões | 47 | QUEUED |
+| MAD | Chronicle of the Cid — Anon (Southey) | 48 | QUEUED |
+| INV | Ossian — James MacPherson | 48 | QUEUED |
+| LCY | The White Company — Arthur Conan Doyle | 49 | QUEUED |
+| FLR | Divine Comedy: Inferno — Dante Alighieri | 50 | QUEUED |
+| HFT | Frithiof's Saga — Esaias Tegnér | 51 | QUEUED |
+| ERF | Grimm's Fairy Tales — Brothers Grimm | 52 | QUEUED |
+| VIE | Faust — Johann Wolfgang von Goethe | 52 | QUEUED |
+| ALF | Kalevala — Elias Lönnrot | 52 | QUEUED |
+| KSU | Heimskringla — Snorri Sturluson | 53 | QUEUED |
+| RKV | Poetic Edda — Anon | 53 | QUEUED |
+| BOO | Prose Edda — Snorri Sturluson | 53 | QUEUED |
+| CDG | The Three Musketeers — Alexandre Dumas | 54 | QUEUED |
+| LGW | Le Morte d'Arthur — Sir Thomas Malory | 55 | QUEUED |
+| OST | Song of Roland — Anon | 56 | QUEUED |
+| ARN | Knights of the Cross — Henryk Sienkiewicz | 57 | QUEUED |
+| VBY | Grettir's Saga — Anon | 58 | QUEUED |
+| RIX | Egil's Saga — Anon (attr. Snorri) | 58 | QUEUED |
+| GCI | Toilers of the Sea — Victor Hugo | 59 | QUEUED |
+| FCO | Piers Plowman — William Langland | 59 | QUEUED |
+| MAD | Don Quixote — Miguel de Cervantes | 59 | QUEUED |
+| BRU | Amadis of Gaul — Garci Rodríguez de Montalvo | 60 | QUEUED |
+
+---
+
 ## Processing Protocol
 
 ### File preparation
