@@ -278,7 +278,7 @@ Next books to process (in approximate priority order):
 | BEY | Mandeville's Travels | 472 | **SEEDS COMPLETE 2026-06-02 — BEY-01–07 all vignettes done** |
 | KYA | Shah-Nameh | 883 | **SEEDS COMPLETE 2026-06-02 — KYA-01–25 all vignettes done. New nodes: YAZ, KBL, SIS, TBZ, TRB, HRT. See §KYA-CONT.** |
 | HTY | Mahabharata | 83 | **SEEDS COMPLETE 2026-06-02 — HTY-01–06 all vignettes done** |
-| ADA | Ramayana | 2339 | **IN PROGRESS 2026-06-02 — ADA-01–17 done. ADA-18–48 pending. New nodes: ERZ, MOS, MRV, BUR, CAF, TAN, BUK, SAR, BYR, AMY, SIV, THE, NIC. See ADA-ramayana.md.** |
+| ADA | Ramayana | 2339 | **COMPLETE 2026-06-02 — ADA-01–48 all done. New nodes: ERZ, MOS, MRV, BUR, CAF, TAN, BUK, SAR, BYR, AMY, SIV, THE, NIC, AMD, TUN, FEZ, ANK, HAM, TIF, ADR. See ADA-ramayana.md.** |
 | AMS | Tale of Genji | 435 | **SEEDS COMPLETE 2026-06-02 — AMS-01–07 all vignettes done** |
 | HAV | Buccaneers of America | 247 | **SEEDS COMPLETE 2026-06-02 — HAV-01–06 all vignettes done** |
 | CLJ | Dracula | 869 | **SEEDS COMPLETE 2026-06-02 — CLJ-01–09 all vignettes done** |

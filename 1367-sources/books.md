@@ -521,7 +521,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
 | [x] | HTY | mahabharata | Mahabharata — Dutt verse condensation | Ancient (pub. 1899) | Hindu Epic | 83 | Processed 2026-05-31 — HTY-01 spec (Savitri's Three Bargains); HTY-02–06 seeds. See HTY-mahabharata.md. |
-| [x] | ADA | ramayana | Ramayana — Valmiki (Griffith transl.) | Ancient (pub. 1870) | Hindu Epic | 2339 | IN PROGRESS 2026-06-02 — ADA-01–17 done. ADA-18–48 pending. New nodes: ERZ, MOS, MRV, BUR, CAF, TAN, BUK, SAR, BYR, AMY, SIV, THE, NIC. All 12 parts fully read. See ADA-ramayana.md. |
+| [x] | ADA | ramayana | Ramayana — Valmiki (Griffith transl.) | Ancient (pub. 1870) | Hindu Epic | 2339 | COMPLETE 2026-06-02 — ADA-01–48 all done. New nodes: ERZ, MOS, MRV, BUR, CAF, TAN, BUK, SAR, BYR, AMY, SIV, THE, NIC, AMD, TUN, FEZ, ANK, HAM, TIF, ADR. All 12 parts fully read. See ADA-ramayana.md. |
 
 ### East Asian & Caucasus
 
