@@ -655,3 +655,235 @@ You give the vellum to the sister on your way out.
 *quest-map.md: append CHP to Location Grid.*
 
 *books.md: mark ARN [x].*
+
+---
+
+## Cycle 3 — *Danusia's Veil*
+
+**Archive category:** Intercession Records — The Veil Thrown Before the Bond Was Formal
+
+**What this angle reveals:** Cycles 1-2 were about Jurand — what the Order did to him and what his daughter said while dying. This angle goes back to the beginning of the bond: the moment at Kraków when Danusia threw her head-cloth over Zbyszko's head at the moment of his execution. In Polish customary law, a maiden's intercession — the physical act of covering a condemned man — can delay execution pending a formal petition. It is not an exoneration. It is a claim. Danusia was too young to understand the full legal weight of what she did, and she did it anyway because Zbyszko had given her his word. The veil is the founding object of everything the novel contains. Weimar wants the record of the act, not the story.
+
+---
+
+**THE TOKEN: `danusias_veil`** — Danusia's white head-cloth, the one she threw over Zbyszko's head at the Kraków scaffold at the moment of his execution. The act functioned as formal intercession under Polish customary law: sufficient to delay execution, not sufficient to prevent it, binding enough that the court had to acknowledge it. The cloth was returned to her after the proceedings. She kept it until she died. The Fighter carries it to Weimar as the physical record of the act that formalized the bond before there was a marriage to formalize it.
+
+---
+
+```json
+{
+  "quest_id": "ARN-03",
+  "title": "Danusia's Veil",
+  "source": "Knights of the Cross (Krzyżacy) — Henryk Sienkiewicz (1900, 1399 setting)",
+  "cycle": 3,
+  "book": "ARN",
+  "source_episode": "Danusia throws her veil over Zbyszko at the Kraków scaffold — the intercession act that delays his execution and formalizes their bond before the marriage exists",
+  "theme": "The act that preceded the formal bond and made the formal bond possible; the cloth that is simultaneously personal keepsake and legal instrument",
+  "activateNode": "KRK",
+  "token": {
+    "id": "danusias_veil",
+    "name": "Danusia's Intercession Veil",
+    "description": "White head-cloth thrown over Zbyszko at the Kraków scaffold. Functioned as formal intercession under Polish customary law: enough to delay execution. Returned to Danusia after proceedings. Kept until her death. Now the physical record of the act that created the bond.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["KRK", "BK", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "KRK", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "The court clerk who handled the intercession proceeding has kept the veil in the chancery file. He was present at the scaffold. He knows what the act cost Danusia — she was a child and did not know what she had done until the court acknowledged it. He wants to give it to someone who understands that it is a legal document before it is a personal memory. Understand both things before you take it."},
+    {"act": 2, "node": "KRK_to_BK", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "Zbyszko's uncle Macko of Bogdaniec has been told the veil is being moved. He intercepts you on the northern road. He wants it to stay in Poland. His argument is not about possession — it is about where things like this belong. Your argument: the archive preserves what courts discard; the chancery file is about to be cleared."},
+    {"act": 3, "node": "BK", "type": "combat", "dc": 13, "skill": "Persuasion", "enemies": "Teutonic courier, AC 12, HP 19, short sword", "prompt": "A Teutonic courier in Birka recognizes you and informs his contact. A hired man approaches in the harbor district — the Order has an interest in suppressing evidence of Danusia's existence and the intercession that created the evidentiary trail. The veil is one end of that trail."},
+    {"act": 4, "node": "BK_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "The road to Weimar, three days out. Someone on the road asks about the white cloth visible at the top of the pack. Say nothing that matters. The veil travels as linen goods. Keep moving."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck examines the cloth. Notes the court clerk's documentation attached to the bundle. Intercession Records opens."}
+  ],
+  "archiveCategory": "Intercession Records — The Veil Thrown Before the Bond Was Formal",
+  "sweelinckNote": "She was a child. She knew what she was doing. The court acknowledged it as valid. The veil went back to her. She kept it until she died. The archive holds the sequence."
+}
+```
+
+---
+
+## Cycle 4 — *Zbyszko's Battle Vow*
+
+**Archive category:** Chivalric Vow Records — The Promise That Required Three Teutonic Deaths
+
+**What this angle reveals:** Cycle 3 was about the act that formalized the bond. This angle finds the act that started everything: Zbyszko's public battle vow, made at the court of the Mazovian prince in the novel's opening pages, to collect peacock feathers from three Teutonic Knights' helmets as a gift for Danusia. The vow is chivalric theater — a young knight impressing a girl he has just met — but it is also a formal sworn instrument, witnessed, recorded, and legally binding. He fulfilled it. Danusia died before he could deliver it. The vow document, with its three witness marks and the royal herald's seal, is the founding record of an obligation Zbyszko completed for a recipient who was not there to receive it.
+
+---
+
+**THE TOKEN: `zbyszkos_battle_vow`** — Parchment recording Zbyszko of Bogdaniec's formal battle vow, witnessed at the Mazovian prince's court: to collect peacock helmet crests from three Knights of the Cross as a gift for Danusia, daughter of Jurand of Spychów. Three witness marks, the royal herald's seal, and a single line added later in a different hand: the date the third feather was collected. The vow was completed. Danusia had been dead for four months.
+
+---
+
+```json
+{
+  "quest_id": "ARN-04",
+  "title": "Zbyszko's Battle Vow",
+  "source": "Knights of the Cross (Krzyżacy) — Henryk Sienkiewicz (1900, 1399 setting)",
+  "cycle": 4,
+  "book": "ARN",
+  "source_episode": "Zbyszko makes his public battle vow at the Mazovian court — peacock feathers from three Teutonic Knights' helmets for Danusia; the vow completed after her death",
+  "theme": "The obligation fulfilled for a recipient who could not receive it; the completion that has nowhere to arrive",
+  "activateNode": "KRK",
+  "token": {
+    "id": "zbyszkos_battle_vow",
+    "name": "Zbyszko's Battle Vow Parchment",
+    "description": "Formal vow parchment: three witness marks, herald's seal, the vow's terms. One line added later in a different hand: the date the third feather was collected. The vow was completed. Danusia had been dead for four months.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["KRK", "VEN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "KRK", "type": "skill_check", "dc": 12, "skill": "History", "prompt": "The royal herald who sealed the vow parchment also made the notation when the completion was reported. He did not know Danusia was dead when he added the date. He found out afterward. He wants the parchment to leave the chancery because he cannot look at his own handwriting in the completion line. Understand what the document is before the road: not a failure, not a tragedy. A completion with nowhere to arrive."},
+    {"act": 2, "node": "KRK_to_VEN", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "A Polish knight on the southern road who served with Zbyszko wants to know why the vow document is leaving Poland. His concern: the document contains the names of three Knights of the Cross who were killed, and the Teutonic Order has active diplomatic interest in how those deaths are recorded. The names are in the vow's completion notation. The archive holds the record of the completion, not a war crimes account."},
+    {"act": 3, "node": "VEN", "type": "skill_check", "dc": 13, "skill": "Persuasion", "prompt": "A Venetian legal scholar in the harbor district identifies the document as a formal chivalric instrument and wants to use it in a treatise on oath-enforcement across different European legal traditions. He offers a significant sum. He also offers to translate it into Latin so the archive can receive it in the standard scholarly form. The archive receives it in the original language, in its current form, with the completion notation."},
+    {"act": 4, "node": "VEN_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "Alpine road. Three days to Weimar. The parchment is in the sealed wallet. The completion notation is inside. Nothing requires looking at it between here and delivery. Keep moving."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the vow's terms. He reads the completion notation. He notes the date differential. Chivalric Vow Records opens."}
+  ],
+  "archiveCategory": "Chivalric Vow Records — The Promise That Required Three Teutonic Deaths",
+  "sweelinckNote": "The vow was completed. The recipient was dead. The completion notation is in a different hand from the vow itself because the herald who sealed it was not the herald who recorded the completion. The archive notes this without comment."
+}
+```
+
+---
+
+## Cycle 5 — *The Order's Internal Report on Jurand*
+
+**Archive category:** Institutional Authorization Records — The Order's Own Record of What It Did to Jurand
+
+**What this angle reveals:** Cycles 1-4 followed the Polish side: Jurand's evidence, Danusia's last words, the intercession veil, the battle vow. This angle enters the Teutonic Order's own records. Institutions that commit violence maintain files on their victims written in administrative language. The Teutonic Knights' internal report on Jurand of Spychów characterizes him as a persistent border threat, notes his capture, describes the "neutralization measures" applied, and confirms that the subject was released in a condition that removed his capacity for further armed resistance. The file does not use the word mutilation. The archive wants the document the Order wrote to describe what it did, because the gap between the document's language and the act it describes is itself a record.
+
+---
+
+**THE TOKEN: `ordens_jurand_report`** — Internal Teutonic Order report on the "Spychów matter": Jurand's capture, the measures applied, the release. Administrative German, official seal, three authorizing signatures. The word "neutralization." No medical description. The report of an act described as an administrative procedure. Obtained from a Teutonic official who defected after Grunwald.
+
+---
+
+```json
+{
+  "quest_id": "ARN-05",
+  "title": "The Order's Internal Report on Jurand",
+  "source": "Knights of the Cross (Krzyżacy) — Henryk Sienkiewicz (1900, 1399 setting)",
+  "cycle": 5,
+  "book": "ARN",
+  "source_episode": "The Teutonic Order's internal file on Jurand of Spychów: administrative language for the capture, the mutilation, and the release; the act the Polish witnesses described on the other side",
+  "theme": "The institutional document that names what it did without naming what it was; the gap between administrative language and the act it describes",
+  "activateNode": "TKT",
+  "token": {
+    "id": "ordens_jurand_report",
+    "name": "Order's Internal Report on Jurand",
+    "description": "Administrative German, official seal, three authorizing signatures. Describes Jurand's capture, 'neutralization measures,' release. No medical description. The word 'neutralization.' Filed as routine border security. Obtained from a post-Grunwald defector.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["TKT", "CON", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "TKT", "type": "skill_check", "dc": 13, "skill": "Insight", "prompt": "A defected Teutonic official hands you the file at the border crossing. He has had it since Grunwald. He kept it because he knew it was evidence and because he could not decide what to do with it. He needs to know you understand what the document is before he gives it up: not evidence of a crime in legal terms — the Order has already been broken — but a record of the precise language an institution uses to describe what it has decided not to call by its name."},
+    {"act": 2, "node": "TKT_to_CON", "type": "skill_check", "dc": 13, "skill": "Stealth", "prompt": "The Order's remaining chapters have agents watching the eastern roads for exactly this kind of document. The report has three of their seals and three of their signatures. A document like this can be used in multiple ways, none of which they want. The route southeast is less watched than the direct road. Take it."},
+    {"act": 3, "node": "CON", "type": "combat", "dc": 14, "skill": "Persuasion", "enemies": "Teutonic agent, AC 13, HP 24, longsword", "prompt": "A Teutonic agent at the Constantinople harbor. He knows which document you are carrying because someone at the border talked. He has a counteroffer: the report for a set of Polish atrocity documents the Order has compiled. His logic is that both archives receive both accounts. His offer is a forgery negotiation wrapped in archival language."},
+    {"act": 4, "node": "CON_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "Three days to Weimar. The document in the wallet is in German. You can read the word 'neutralization.' You understand what it describes. Deliver it without adding a gloss. The archive does not need your translation."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the German. He notes the three authorizing signatures. He creates the category."}
+  ],
+  "archiveCategory": "Institutional Authorization Records — The Order's Own Record of What It Did to Jurand",
+  "sweelinckNote": "The word is 'neutralization.' Three signatures authorized it. The archive holds the language the institution chose, next to the language the witnesses chose. The distance between them is the document."
+}
+```
+
+---
+
+## Cycle 6 — *The Captured Battle Standard*
+
+**Archive category:** Captured Standard Records — The Order's Flag at the Feet of the King It Swore to Oppose
+
+**What this angle reveals:** Cycles 1-5 followed the personal and institutional threads of the Jurand case. This angle moves to the culmination: the Battle of Grunwald (1410), where the Teutonic Order was crushingly defeated by the Polish-Lithuanian forces. The Order's battle standard was among those captured and laid at King Jagiełło's feet. The standard being sent to Rome — to the Papal court that had blessed the Order's crusading mission — is the institutional reckoning: the standard's destination is the institution that gave the Order its authority. What the Pope does with it is not the archive's business. The archive holds the record of transit.
+
+---
+
+**THE TOKEN: `grunwald_battle_standard`** — A captured Teutonic Order battle standard from Grunwald: black cross on white field, the Order's device, still on its pole, wrapped in linen for transit. Being sent to Rome at King Jagiełło's instruction. The standard was blessed at the Order's last chapter before the campaign. It did not return.
+
+---
+
+```json
+{
+  "quest_id": "ARN-06",
+  "title": "The Captured Battle Standard",
+  "source": "Knights of the Cross (Krzyżacy) — Henryk Sienkiewicz (1900, 1399 setting)",
+  "cycle": 6,
+  "book": "ARN",
+  "source_episode": "Battle of Grunwald 1410 — the Teutonic Order's battle standard captured and laid at Jagiełło's feet; sent to Rome as evidence that the Order's crusading mission has been militarily resolved",
+  "theme": "The institutional symbol sent to the institution that granted it; the record of a defeated mission returning to its source",
+  "activateNode": "KRK",
+  "token": {
+    "id": "grunwald_battle_standard",
+    "name": "Grunwald Battle Standard",
+    "description": "Teutonic Order battle standard: black cross on white field, still on its pole, wrapped for transit. Captured at Grunwald. Being sent to Rome at the king's instruction. Blessed at the Order's last chapter. Did not return.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["KRK", "RME", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "KRK", "type": "skill_check", "dc": 12, "skill": "History", "prompt": "The royal herald hands over the standard with the transit papers from Jagiełło's chancery. The papers specify destination: the Papal court at Rome, attention of the Office of Holy Orders. Understand the institutional logic before the road: the standard goes to Rome because Rome gave the Order its authority, and the king wants the authority's source to hold the evidence of where it ended."},
+    {"act": 2, "node": "KRK_to_RME", "type": "skill_check", "dc": 12, "skill": "Stealth", "prompt": "Remnant Teutonic chapters are watching the roads south. The standard is wrapped, but wrapped things on poles are recognizable. The Alpine passes are open. Take the mountain route and move at the pace of a merchant's pack."},
+    {"act": 3, "node": "RME", "type": "skill_check", "dc": 13, "skill": "Persuasion", "prompt": "A Papal official at Rome wants to receive the standard in a formal ceremony with witnesses before routing it to the Office of Holy Orders. His logic: the standard's receipt should be documented publicly so the Order cannot claim it was never delivered. Your instruction: delivered to the Office, transit papers as documentation. Both goals are the same goal. Resolve the procedural disagreement before the Office closes."},
+    {"act": 4, "node": "RME_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "The Papal office gave you a receipt and directed you to Weimar for archival deposit of the transit record. The standard itself stays in Rome. You carry the transit papers, the receipt, and Sweelinck's commission. Three days north."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck examines the transit papers and the Papal receipt. He notes the standard's last location: Rome, Office of Holy Orders. Captured Standard Records opens."}
+  ],
+  "archiveCategory": "Captured Standard Records — The Order's Flag at the Feet of the King It Swore to Oppose",
+  "sweelinckNote": "The standard was blessed before the campaign. It did not return with the army. It went to Rome instead. The archive holds the transit record. What the Papal office does with the standard is not in this file."
+}
+```
+
+---
+
+## Cycle 7 — *Zbyszko's Vow Completion*
+
+**Archive category:** Vow Completion Records — The Promise Kept for the One Who Could Not Receive It
+
+**What this angle reveals:** Cycle 4 archived the vow's beginning. This cycle closes the arc: Zbyszko collected all three peacock feathers. The vow is complete. Danusia was dead before the last feather was taken. He completed it anyway — because the vow was his word, and his word was the thing that did not die when she did. The completion record is the last document in the ARN file: the formal accounting of what was promised, when it was promised, what it required, and when it was fulfilled, with the four-month gap written in the herald's hand. Weimar holds the end of the story that began with the beginning of the bond.
+
+---
+
+**THE TOKEN: `vow_completion_record`** — A sealed parchment in Zbyszko's own hand: the formal accounting of his vow's completion — three Teutonic Knights named, three dates, three locations of the combats, and the exact condition and location of the three peacock helmet crests. Sealed with his signet. At the bottom, in different ink: Danusia's name and the date of her death, added after the completion, before the sealing. He wrote it himself. He sealed it himself.
+
+---
+
+```json
+{
+  "quest_id": "ARN-07",
+  "title": "Zbyszko's Vow Completion",
+  "source": "Knights of the Cross (Krzyżacy) — Henryk Sienkiewicz (1900, 1399 setting)",
+  "cycle": 7,
+  "book": "ARN",
+  "source_episode": "Zbyszko completes the battle vow after Danusia's death — three peacock feathers collected, the vow fulfilled, the recipient absent; the completion record sealed with Danusia's name and death date added at the bottom",
+  "theme": "The obligation completed for a recipient who cannot receive it; the word that continues past the person it was spoken for",
+  "activateNode": "JUR",
+  "token": {
+    "id": "vow_completion_record",
+    "name": "Zbyszko's Vow Completion Record",
+    "description": "Sealed parchment in Zbyszko's own hand: three knights named, three dates, three combats, three peacock crests. At the bottom, in different ink: Danusia's name and her death date. Sealed before sending. He wrote it himself.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["JUR", "LDN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "JUR", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "Zbyszko hands you the sealed parchment at Spychów. He says: take it to Weimar. He says nothing else. The seal is fresh — he made it this morning. Understand before the road why the completion record goes to the archive and not to the Polish court: the court holds legal instruments; the archive holds the record of what a man did after the reason for doing it was gone."},
+    {"act": 2, "node": "JUR_to_LDN", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "Macko of Bogdaniec intercepts you again on the northern road. He knows what is in the parchment — he was there for two of the three combats. He wants to know why it goes to a German archive and not to the Mazovian royal collection where Polish honors are recorded. The archive holds what the Polish court has no category for: a vow completed after the person it was for could not receive it."},
+    {"act": 3, "node": "LDN", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "An English herald in London who collects records of formal chivalric vows from across Europe wants to copy the document. His collection is genuine and will be used for scholarship. The parchment is sealed. The vow's terms and the combats' names are public knowledge; the addition at the bottom is not. The archive receives the original sealed. Copies can be arranged through the archive after deposit."},
+    {"act": 4, "node": "LDN_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "Three days to Weimar. The parchment is sealed. Zbyszko's signet is on it. You know what is at the bottom because he told you when he handed it over. Keep moving. The archive is the right place for it. That is all the road requires."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck breaks the seal. He reads the vow's terms. He reads the three names and dates. He reads the bottom. He closes it, opens the category, and files both the beginning record from cycle 4 and this completion record together."}
+  ],
+  "archiveCategory": "Vow Completion Records — The Promise Kept for the One Who Could Not Receive It",
+  "questComplete": true,
+  "sweelinckNote": "The vow was made for Danusia. She died before the third feather. He completed it anyway. Her name and death date are at the bottom in different ink. He added them after the completion and before the sealing. That is the document the archive receives."
+}
+```
+
