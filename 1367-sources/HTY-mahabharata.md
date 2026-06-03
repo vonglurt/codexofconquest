@@ -1338,3 +1338,270 @@ He looks at the notation for a long time: *"The disguise was not theater. It was
 ```
 
 *HTY-06 complete. 2026-06-02.*
+
+---
+
+## §HTY-01 UQF Stub — "Savitri's Three Bargains"
+
+### Quest API Stub
+
+```json
+{
+  "quest_id": "HTY_001",
+  "title": "Savitri's Three Bargains",
+  "cycle": 1,
+  "book": "Mahabharata (Kisari Mohan Ganguli translation)",
+  "token": {
+    "id": "savitri_commentary",
+    "name": "Vardan's Commentary on the Three Bargains",
+    "description": "Eighteen folios in Persian and Greek, fair copy. Vardan's logical analysis of Savitri's three boons to Yama: how each boon was constructed to give Death nothing he did not already own, so that the final boon necessarily required the husband's return. Clay seal from Vardan's study pressed into the satchel's wax closure."
+  },
+  "route": "TBZ → TRB → WM",
+  "theme": "The argument that gave Death nothing he did not already own and took back everything she came for; love as the most precise logical instrument; the archive creates a category for the argument that actually worked on Death",
+  "archive_category": "Logical Theology — Arguments That Bound Death to His Own Word",
+  "acts": [
+    {
+      "act_id": "HTY_001_act1",
+      "location": "TBZ",
+      "type": "skill_check",
+      "activateNode": "TBZ",
+      "scene": "Vardan's ink-stained study; the commentary for Haim in Constantinople; Vardan is more frightened than he explains; a man has been watching the house.",
+      "skillCheck": { "stat": "Insight", "dc": 11, "pass": "fighter notices the watcher and understands Vardan is frightened; flag set", "fail": "fighter takes commission without full context" },
+      "checkPassFlag": "watcher_noticed",
+      "grantItem": { "id": "savitri_commentary", "name": "Vardan's Commentary on the Three Bargains", "description": "Eighteen folios in Persian and Greek. Logical analysis of Savitri's three boons to Yama. Clay seal on satchel closure." }
+    },
+    {
+      "act_id": "HTY_001_act2",
+      "location": "Road",
+      "type": "hybrid",
+      "activateNode": "TBZ",
+      "scene": "Tollman on the mountain pass with a contraband list of foreign manuscripts spreading heresies; he can read the title page.",
+      "skillCheck": { "stat": "Persuasion", "dc": 12, "pass": "classified as personal scholarly correspondence; through", "fail": "combat" },
+      "combat": { "enemies": [{"name": "Tollman's Guard", "ac": 12, "hp": 18, "count": 2}], "pass": "proceed", "fail": "tollman holds satchel; Stealth DC 13 recovery available that night" }
+    },
+    {
+      "act_id": "HTY_001_act3",
+      "location": "TRB",
+      "type": "skill_check",
+      "activateNode": "TRB",
+      "scene": "Zoravar's warehouse; a woman arrives claiming to be Vardan's niece sent to retrieve the commentary; she is a hired agent from the watcher's network.",
+      "skillCheck": { "stat": "Insight", "dc": 12, "pass": "fighter identifies her as a hired agent; she cannot produce Vardan's seal or the secondary letter", "fail": "fighter is deceived; must recover commentary from rooming-house by dawn" }
+    },
+    {
+      "act_id": "HTY_001_act4",
+      "location": "Road",
+      "type": "skill_check",
+      "activateNode": "TRB",
+      "scene": "Black Sea crossing; Genoese manuscript collector on the ship offers a price exceeding Vardan's promised fee; he mentions a man in Trebizond had been asking about manuscripts going to a Jewish scholar.",
+      "skillCheck": { "stat": "Persuasion", "dc": 12, "pass": "declined; Genoese accepts with grace and names the Trebizond agent; fighter carries the full intelligence to Weimar", "fail": "declined; Genoese accepts; Trebizond agent detail not shared" }
+    },
+    {
+      "act_id": "HTY_001_act5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Sweelinck reads the full eighteen folios; understands that this is the first systematic logical proof that an argument about the structure of boons can bind a deity to his own word.",
+      "skillCheck": { "stat": "History", "dc": 11, "pass": "full provenance chain recorded: Vardan's three-year composition, the Trebizond pursuit, the Genoese collector's testimony", "fail": "category created; shorter provenance" },
+      "takeItem": { "id": "savitri_commentary" }
+    }
+  ]
+}
+```
+
+*HTY-01 stub complete. 2026-06-03.*
+
+---
+
+## §HTY-07 — Vignette Cycle 7: "The Final Form"
+
+### Themes avoided
+HTY-01: argument that binds Death. HTY-02: unanswered question as legal form. HTY-03: physician's vocabulary for spiritual act. HTY-04: painted record before text. HTY-05: gambling manual as theological argument. HTY-06: military concealment as ritual disguise. NWI: contractual obligation as survival. FCO: suppression. WAW: administrative record of the miraculous. BLQ: document that is formally correct and substantively fraudulent. AMS: anonymous commission.
+
+**Declared theme — Cycle 7:** The transformation that did not hold. The iron club created at Dwaraka was cursed to grass and cast into the sea; the grass grew in the rushes of the shore; the Yadavas ground it back into iron powder and used it to kill each other in the Mausala Parva. A Persian chronicle of this episode demonstrates that no transformation of an instrument designed for a specific purpose removes that purpose — it only defers it. The archive creates a category for objects whose original nature was not changed, only deferred.
+
+### TOKEN: "The Mausala Chronicle"
+
+*The Mausala Chronicle · rolled in plain leather · in Hamid al-Yamani's hands · scholar's house, Nishapur*
+
+Ten Persian folios in a scholar's clean hand: a chronicle of the Mausala Parva iron-club episode, including the original curse, the dispersal of the ground grass into the sea, the regrowth in the shoreline rushes, and the final episode of the Yadavas grinding the regrown stalks into iron dust and using it. The chronicle is analytical: each transformation is documented with a note on what changed and what did not. Final folio: *"The form changed. The purpose did not. The iron that was cursed to grass was still iron. The grass that was ground to powder was still the weapon. The Yadavas did not destroy themselves with an iron club. They destroyed themselves with a curse that could not hold."*
+
+**Token mechanics:**
+- `id`: "mausala_chronicle"
+- `name`: "The Mausala Chronicle"
+- `description`: "Ten Persian folios, chronicle of the iron-club curse from the Mausala Parva. Each transformation documented: club to grass to sea, regrowth in rushes, ground to powder, used as weapon. Final folio: 'The form changed. The purpose did not.' Rolled in plain leather."
+- `grant_act`: 1
+- `take_act`: 5
+- `check_acts`: [2, 3, 4]
+
+### Nodes
+
+**Existing nodes used:** NIS (Nishapur), BK (Baghdad), WM (Weimar).
+
+### Act I — Nishapur (NIS): Hamid's Study
+
+*The Mausala Chronicle · just finished · in Hamid al-Yamani's hands · scholar's house, Nishapur*
+
+A Nishapur scholar's house: neat stacks of text, a window onto a dusty courtyard, the specific quiet of a man who works in sequence. Hamid al-Yamani — meticulous, speaks in clauses that complete themselves — has finished the chronicle and sends it to Ahmad al-Basri in Baghdad, who collects comparative Mahabharata materials and has the resources to forward it to Weimar if the argument is sound.
+
+"The interesting question," Hamid says, setting the rolled leather on the table, "is not whether the curse worked. It obviously did not. The interesting question is what a curse that transforms an object but cannot change its purpose tells us about the nature of transformation. Ahmad will understand the comparative dimension. The German archive will understand why it cannot be filed as theology or natural philosophy alone."
+
+**Skill check — History DC 11** (know the full Mausala Parva sequence: the original iron club, the curse, the grinding to grass powder, the sea dispersal, the regrowth in the Dwaraka rushes, the grinding to iron dust and use — and understand that the entire Yadava destruction follows from the failed transformation):
+- *Pass:* The fighter understands. The chronicle is not just a narrative — it is a systematic demonstration that the transformation failed at every stage. At Act III, this context allows the fighter to give Ahmad the full technical sequence.
+- *Fail:* Fighter carries the chronicle without the full technical understanding.
+
+**Grant item:** `mausala_chronicle`
+
+**Act type:** `skill_check`
+
+```json
+{
+  "act_id": "HTY_007_act1",
+  "location": "NIS",
+  "type": "skill_check",
+  "activateNode": "NIS",
+  "scene": "Hamid al-Yamani's study; finished chronicle of the Mausala Parva iron-club curse; systematic analysis of the failed transformation.",
+  "skillCheck": { "stat": "History", "dc": 11, "pass": "fighter knows the full transformation sequence; context for Act III", "fail": "carries without full sequence" },
+  "grantItem": { "id": "mausala_chronicle", "name": "The Mausala Chronicle", "description": "Ten Persian folios, chronicle of the iron-club curse: club to grass to sea, regrowth, ground to powder, used as weapon. Final folio: 'The form changed. The purpose did not.'" }
+}
+```
+
+### Act II — Road West from Nishapur (Road): The Customs Classification
+
+*The Mausala Chronicle · rolled leather · with the Fighter · road west of Nishapur*
+
+A Jalayirid checkpoint on the western road, staffed by an official who maintains a register of objects requiring special handling — including, specifically, "texts describing cursed objects and their uses," which require religious authorization for transit. He has read enough of the first folio to note that it describes a cursed object. He is not hostile; he is following revenue and religious procedure.
+
+"If it describes the curse and its effects, it is in the restricted category," he says. "If it is a scholarly commentary on a foreign religious text, it passes as academic transit. Which is it?"
+
+**Hybrid — Persuasion DC 12** (argue that the chronicle is a scholarly analysis of a Brahmanical epic narrative, not a registry of active curses; the Persian scholarly apparatus — footnotes, cross-references, the analytical final folio — proves this is a commentary, not an operational document):
+- *Pass:* The official stamps it "scholarly commentary on foreign text — academic transit." He adds a note: "Analyst: Hamid al-Yamani, Nishapur."
+- *Fail → Combat:* His two guards (2× AC 12, HP 20) attempt to hold the fighter until a religious adjudicator can be fetched from the next city. Win: proceed. Lose: the chronicle is held at the checkpoint for three days; the fighter can wait or recover it at night (Stealth DC 12).
+
+**Act type:** `hybrid`
+
+```json
+{
+  "act_id": "HTY_007_act2",
+  "location": "Road",
+  "type": "hybrid",
+  "activateNode": "NIS",
+  "scene": "Jalayirid checkpoint; official's restricted-objects register includes texts describing cursed objects; scholarly classification argument resolves it.",
+  "skillCheck": { "stat": "Persuasion", "dc": 12, "pass": "stamped academic transit; Hamid's name noted", "fail": "combat" },
+  "combat": { "enemies": [{"name": "Checkpoint Guard", "ac": 12, "hp": 20, "count": 2}], "pass": "proceed", "fail": "held; Stealth DC 12 recovery or three-day wait" }
+}
+```
+
+### Act III — Baghdad (BK): Ahmad al-Basri's Library
+
+*The Mausala Chronicle · delivered · being read · with Ahmad al-Basri · library, Baghdad*
+
+A comparative scholar's library in Baghdad: shelves of Mahabharata materials in Arabic, Persian, and Sanskrit transcription, alongside Islamic jurisprudence and Quranic commentary. Ahmad al-Basri — deliberate, makes arguments by showing you two texts side by side — reads the chronicle twice, once for the narrative and once for the analytical notes. He reads the final folio a third time.
+
+"Hamid is correct about the transformation," Ahmad says. "But the interesting dimension is the comparative one." He rises and pulls two folios from a shelf: a hadith commentary and a passage from the Psalms in Arabic translation. "The sword of David was not allowed to be made into a plowshare. The tradition says tools of war cannot be fully transformed because the purpose they were made for does not leave them. Hamid's chronicle is the Brahmanical demonstration of the same principle." He sits back down. "This should go to Weimar. Not because it is Hindu — because it is the first demonstration from outside the Abrahamic traditions that the principle applies universally."
+
+*If the fighter knows the full sequence (History pass at Act I):* "Tell me the transformation chain," Ahmad says. The fighter lays it out: club, grass, sea, rushes, iron dust, use. Ahmad nods at each stage. "Yes. At every point the iron tried to be something else. At every point it remembered what it was for." He writes a detailed cross-commentary for the archive.
+
+**Skill check — History DC 12** (give Ahmad the full comparative context: the Dawidic sword tradition in Islamic jurisprudence alongside the Brahmanical curse-theory; understand what "a purpose that cannot be removed by transformation" means in both traditions):
+- *Pass:* Ahmad writes an eight-folio cross-commentary on the comparative principle; it travels to Weimar alongside the chronicle as a companion document.
+- *Fail:* Ahmad writes a shorter covering note; the cross-commentary is mentioned but not completed.
+
+**Check pass flag:** `ahmad_commentary_written`
+
+**Act type:** `skill_check`
+
+```json
+{
+  "act_id": "HTY_007_act3",
+  "location": "BK",
+  "type": "skill_check",
+  "activateNode": "BK",
+  "scene": "Ahmad al-Basri reads the chronicle; identifies the universal comparative principle; writes cross-commentary if full sequence known.",
+  "skillCheck": { "stat": "History", "dc": 12, "pass": "fighter gives full sequence; Ahmad writes eight-folio cross-commentary; flag set", "fail": "shorter covering note" },
+  "checkPassFlag": "ahmad_commentary_written"
+}
+```
+
+### Act IV — Road North from Baghdad (Road): The Trade Community Claim
+
+*The Mausala Chronicle · in leather case · with the Fighter · road north of Baghdad*
+
+A delegation of three merchants from the Gujarat trade community — men with connections to the Dwaraka pilgrimage site and, through it, to the Yadava clan succession dispute currently before a Jalayirid court in Tabriz. One of their number has heard that a Persian chronicle of the Mausala Parva is in transit; the chronicle's account of the Yadava self-destruction could be cited as historical precedent in the succession case (an argument that the Yadava clan's legitimate succession ended with the Mausala event and all subsequent claims are therefore void). They want the document held.
+
+"We are not asking you to destroy it," the lead merchant says. "We are asking you to hold it until the Tabriz case is concluded."
+
+**Hybrid — Persuasion DC 13** (argue that the Weimar archive is not a court and cannot be cited in Jalayirid legal proceedings; that filing a document there removes it from evidentiary availability, not increases it; that the succession case cannot use a document in a German archive as precedent in an Islamic court):
+- *Pass:* The merchants accept the argument; the lead merchant writes a note for his advocate in Tabriz explaining why the chronicle cannot be cited.
+- *Fail → Combat:* Two of the three merchants produce weapons (2× AC 13, HP 24). Win: proceed; one merchant escapes to report to the Tabriz advocate. Lose: the chronicle is held; the fighter can recover it at the caravanserai camp that night.
+
+**Act type:** `hybrid`
+
+```json
+{
+  "act_id": "HTY_007_act4",
+  "location": "Road",
+  "type": "hybrid",
+  "activateNode": "BK",
+  "scene": "Gujarat trade community delegates want the chronicle held pending a Jalayirid succession case; archive-vs-court argument resolves it.",
+  "skillCheck": { "stat": "Persuasion", "dc": 13, "pass": "merchants accept; advocate notified; merchant note written", "fail": "combat" },
+  "combat": { "enemies": [{"name": "Trade Merchant", "ac": 13, "hp": 24, "count": 2}], "pass": "proceed; one merchant escapes to Tabriz", "fail": "chronicle held; caravanserai recovery available" }
+}
+```
+
+### Act V — Weimar (WM): The Archive
+
+*The Mausala Chronicle · returned · Archivus Sweelinck's intake desk · Weimar*
+
+Archivus Sweelinck reads the chronicle and, if present, Ahmad's cross-commentary. He reads the final folio twice.
+
+"The form changed," he says. "The purpose did not." He sets the chronicle down. "Hamid has documented four transformations — club to grass, grass to sea, regrowth, powder to iron dust — and shown that at each stage the object retained the original capacity. The curse changed the form. The form changed back." He reads Ahmad's cross-commentary if present. "The Islamic jurisprudence parallel is correct. Tools made for a specific violence remember what they were made for. The Buddhist traditions say this too. The archive has been receiving individual demonstrations of this principle; this is the first systematic proof from the Brahmanical tradition."
+
+He opens the classification ledger. "Transformation Records — Objects Whose Original Nature Was Not Changed, Only Deferred." He writes carefully. "First entry from the Sanskrit tradition. Ahmad al-Basri's cross-commentary filed alongside: first entry on the comparative principle across traditions."
+
+*If `ahmad_commentary_written`:* "The comparative dimension makes this the founding document of a new subject in the archive," Sweelinck says. "Not just Brahmanical. Universal."
+
+**Skill check — History DC 11** (give Sweelinck the full provenance: Hamid's Nishapur scholarship, the customs classification at the checkpoint, Ahmad's comparative reading in Baghdad, the Gujarat merchants' succession case attempt; what each stage revealed about the document's nature):
+- *Pass:* Complete provenance chain recorded; all four stages noted.
+- *Fail:* Category created; shorter provenance.
+
+**Take item:** `mausala_chronicle`
+
+```json
+{
+  "act_id": "HTY_007_act5",
+  "location": "WM",
+  "type": "skill_check",
+  "activateNode": "WM",
+  "scene": "Sweelinck reads chronicle and cross-commentary; creates Transformation Records — Objects Whose Original Nature Was Not Changed, Only Deferred.",
+  "skillCheck": { "stat": "History", "dc": 11, "pass": "full provenance chain; all four transformation stages noted", "fail": "category created; shorter record" },
+  "takeItem": { "id": "mausala_chronicle" }
+}
+```
+
+### Quest API Stub
+
+```json
+{
+  "quest_id": "HTY_007",
+  "title": "The Final Form",
+  "cycle": 7,
+  "book": "Mahabharata (Kisari Mohan Ganguli translation)",
+  "token": {
+    "id": "mausala_chronicle",
+    "name": "The Mausala Chronicle",
+    "description": "Ten Persian folios, chronicle of the Mausala Parva iron-club curse: club to grass, sea, rushes, iron dust, use. Each transformation documented. Final folio: 'The form changed. The purpose did not.' Rolled in plain leather."
+  },
+  "route": "NIS → BK → WM",
+  "theme": "The transformation that did not hold; the iron that was cursed to grass reemerged as iron and fulfilled its original purpose; no transformation removes what an object was made for — only defers it",
+  "archive_category": "Transformation Records — Objects Whose Original Nature Was Not Changed, Only Deferred",
+  "questComplete": true,
+  "acts": [
+    { "act_id": "HTY_007_act1", "location": "NIS", "type": "skill_check", "activateNode": "NIS", "scene": "Hamid al-Yamani's study; finished chronicle of the failed iron-club transformation.", "skillCheck": { "stat": "History", "dc": 11, "pass": "full transformation sequence known; context for Act III", "fail": "carries without full sequence" }, "grantItem": { "id": "mausala_chronicle", "name": "The Mausala Chronicle", "description": "Ten Persian folios, transformation chronicle. Final folio: 'The form changed. The purpose did not.'" } },
+    { "act_id": "HTY_007_act2", "location": "Road", "type": "hybrid", "activateNode": "NIS", "scene": "Jalayirid checkpoint; cursed-object registry classification; scholarly transit argument.", "skillCheck": { "stat": "Persuasion", "dc": 12, "pass": "academic transit stamp; proceed", "fail": "combat" }, "combat": { "enemies": [{"name": "Checkpoint Guard", "ac": 12, "hp": 20, "count": 2}], "pass": "proceed", "fail": "held; recovery available" } },
+    { "act_id": "HTY_007_act3", "location": "BK", "type": "skill_check", "activateNode": "BK", "scene": "Ahmad al-Basri identifies universal comparative principle; writes cross-commentary if sequence known.", "skillCheck": { "stat": "History", "dc": 12, "pass": "eight-folio cross-commentary written; flag set", "fail": "shorter covering note" }, "checkPassFlag": "ahmad_commentary_written" },
+    { "act_id": "HTY_007_act4", "location": "Road", "type": "hybrid", "activateNode": "BK", "scene": "Gujarat trade community wants chronicle held for Jalayirid succession case; archive-vs-court argument.", "skillCheck": { "stat": "Persuasion", "dc": 13, "pass": "merchants accept; one escapes", "fail": "combat" }, "combat": { "enemies": [{"name": "Trade Merchant", "ac": 13, "hp": 24, "count": 2}], "pass": "proceed", "fail": "recovered at caravanserai" } },
+    { "act_id": "HTY_007_act5", "location": "WM", "type": "skill_check", "activateNode": "WM", "scene": "Sweelinck creates Transformation Records — Objects Whose Original Nature Was Not Changed, Only Deferred.", "skillCheck": { "stat": "History", "dc": 11, "pass": "full provenance chain", "fail": "shorter record" }, "takeItem": { "id": "mausala_chronicle" } }
+  ]
+}
+```
+
+*HTY-07 complete. 2026-06-03.*

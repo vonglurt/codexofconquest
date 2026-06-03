@@ -746,7 +746,7 @@ Every quest in §MATH-01 carries a Noether signature: every TOKEN that reaches t
 | 61 | BLQ | Decameron | **SEEDS COMPLETE 2026-06-03 — BLQ-01–12 all vignettes done. 12 cycles. Theme threads added.** |
 | 62 | HAV | Buccaneers of America | **SEEDS COMPLETE 2026-06-03 — HAV-01–07 done. UQF cycles written. No new nodes.** |
 | 63 | AMS | Tale of Genji | **SEEDS COMPLETE 2026-06-03 — AMS-01–07 done. questComplete added. MRG node added. Theme threads added.** |
-| 64 | HTY | Mahabharata | QUEUED |
+| 64 | HTY | Mahabharata | **SEEDS COMPLETE 2026-06-03 — HTY-01–07 done. HTY-01 stub written; HTY-07 new cycle. Theme threads added. GNJ already in grid.** |
 | 65 | CLJ | Dracula | QUEUED |
 | 66 | WAW | Quo Vadis | QUEUED |
 | 67 | NWI | Anabasis | QUEUED |
