@@ -810,3 +810,673 @@ activateMissionBit: lcyMaudeComplete
 ---
 
 *Cycle 2 complete. Mark `[x]` for LCY-white-company in books.md.*
+
+---
+
+## Cycle 3 — *Aylward's Vow Arrow*
+
+**Archive category:** Maintained Equipment Records — The Object Reserved for the Moment That Required It, First Entry
+
+**What this angle reveals:** Cycles 1 and 2 carried objects that belonged to love — the scarf and the glove, each tied to a vow between two people. This angle reveals the novel's third register: professional devotion. Sam Aylward has carried one particular arrow in his quiver for twenty years. He has never shot it. The arrow is not a relic — it is a reservation. He is saving it for a shot that is worth it. The angle asks what it means to maintain something through an entire career against the moment it was made for.
+
+---
+
+**THE TOKEN: `aylward_vow_arrow`** — Aylward's Vow Arrow. An English war-arrow, twenty years old. The fletching has been replaced twice — goose, then gray-goose — but the shaft and the iron head are original. There is one small mark at the nock: three parallel lines, cut with a knife at some camp twenty years ago. Aylward knows what the lines mean. He has not told anyone.
+
+---
+
+**ACT I — The Wagons, Gascony**
+
+*Grant act. Location: the Company's baggage line, a night halt in Gascony.*
+
+The wagons are parked in a river meadow and the archers are on third rotation through the equipment check. Aylward is going through his quivers with the methodical calm of a man who has done this five thousand times and will do it five thousand more.
+
+He pulls one arrow out separately. He holds it to the light.
+
+**Aylward:** "Twenty years."
+
+He turns it once, checking the nock, the fletching, the head.
+
+**Aylward:** "There'll be a shot, before this campaign is done, that the other shafts can't make. I've been waiting on it since Crécy. You'll keep this."
+
+He hands it to the Fighter, nock-end first.
+
+**Aylward:** "Not in a quiver. Inside your coat. Where the leather is."
+
+*You hold the shaft. Three parallel lines at the nock. Twenty years of French summers in the grain of the wood.*
+
+---
+
+**ACT II — The Night Before**
+
+*Check act. Location: camp outside Najera, the night before the battle.*
+
+The rivalry among the Company's archers has been running since Bordeaux. Thomas Wyken has been watching Aylward's quiver since Gascony, cataloguing the shafts. He knows one is missing. He has been trying to work out why.
+
+He finds you at the supply line after dark. He does not ask directly — he offers coin. A good sum. He says he only wants to borrow the shaft for the morning's first volleys. He has a bet on the long shot past the cavalry line.
+
+**Wyken:** "Aylward won't even know it's gone until after. One volley and back."
+
+*The arrow is inside your coat. He cannot see it. He can see your hands.*
+
+Perception DC 12 — Wyken is watching not your face but your coat's left breast, where a shaft would ride. He has guessed correctly. Your hands must not confirm it.
+
+---
+
+**ACT III — The Dawn Line**
+
+*Check act. Location: the Company's archer line, Najera — first light, formation.*
+
+The volleys are being arranged. Aylward is in the third rank, which is the best angle for the long shot he has been calculating since yesterday. He checks his quivers. He looks at the Fighter.
+
+He does not ask. He stands and waits.
+
+Two positions to your left, Thomas Wyken is watching. He made his bet with three other archers at midnight. If Aylward does not have the shaft, Wyken wins by default.
+
+*You take the arrow from inside your coat and hand it to Aylward nock-first.*
+
+Wyken makes a sound that is not quite a word.
+
+**Aylward:** *(very quietly, not looking at Wyken)* "Twenty years I've kept this. Because the shot has to be worth it."
+
+Athletics DC 13 — move to position before the formation closes; Aylward needs you to have his flank while he takes the long angle.
+
+---
+
+**ACT IV — The Shot**
+
+*Check act. Location: Najera field — first volley, the cavalry charge just visible through the morning haze.*
+
+Three volleys. That is the order. The first two are mass fire — saturation of the cavalry line. The third is individual marks, the archers calling their own shots in the last second before the charge breaks.
+
+Aylward draws on the third volley. He has the long angle — a mounted officer two hundred yards out, half-hidden behind the break in the cavalry line. It is the kind of shot that requires everything: the wind, the angle, twenty years of knowing your own bow.
+
+He holds.
+
+The cavalry is forty yards closer.
+
+He releases.
+
+The officer falls.
+
+**Aylward:** *(looking at the shaft's absence from his hand, completely calm)* "That's what it was waiting for."
+
+*He turns to the Fighter and gives one nod — the same nod he gave when you spotted the castle crossbowman. His version of complete approval.*
+
+---
+
+**ACT V — Weimar Archive**
+
+*Take act. Location: Weimar — Sweelinck at the filing desk.*
+
+The shaft is gone. You carry the three-lined nock-piece — what is left after the head struck the mark and the wood shattered. Aylward recovered it from the field before the accounting was finished.
+
+He gave it to you at the harbor in Bordeaux.
+
+**Aylward:** "I don't want it back. Take it wherever you take things."
+
+The road from Gascony is long. You carry the nock-piece through two gate inspections, a Venetian factor's curiosity about the three marks, and a river crossing.
+
+Sweelinck receives it at the desk. He holds it to the light. He asks what the three lines mean.
+
+You tell him what Aylward told you.
+
+**Sweelinck:** *(writing)* "Twenty years in reserve. One shot. Gone." He looks up. "First entry. Maintained Equipment Records — The Object Reserved for the Moment That Required It."
+
+The token is taken.
+
+---
+
+```json
+{
+  "quest_id": "LCY-03",
+  "title": "Aylward's Vow Arrow",
+  "source": "The White Company — Arthur Conan Doyle",
+  "cycle": 3,
+  "book": "LCY",
+  "source_episode": "Sam Aylward's twenty-year war-arrow; the long shot at Najera",
+  "theme": "The object reserved for the moment that required it; professional devotion maintained over an entire career",
+  "activateNode": "LCY",
+  "token": {
+    "id": "aylward_vow_arrow",
+    "name": "Aylward's Vow Arrow",
+    "description": "A twenty-year-old English war-arrow with three parallel lines cut at the nock. Reserved for the shot that was worth it.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["LCY", "LDN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "LCY", "type": "skill_check", "prompt": "Receive the arrow from Aylward correctly — no questions, no ceremony, inside the coat."},
+    {"act": 2, "node": "LCY", "type": "skill_check", "dc": 12, "skill": "Perception", "prompt": "Thomas Wyken is watching your coat, not your face. Do not confirm the shaft's location."},
+    {"act": 3, "node": "LCY", "type": "skill_check", "dc": 13, "skill": "Athletics", "prompt": "Deliver the shaft and take Aylward's flank before the formation closes."},
+    {"act": 4, "node": "LCY", "type": "skill_check", "dc": 11, "skill": "Perception", "prompt": "Watch the shot complete. Receive Aylward's nod — the full version, not the partial one."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Deliver the nock-piece to Sweelinck. Explain the three lines."}
+  ],
+  "archiveCategory": "Maintained Equipment Records — The Object Reserved for the Moment That Required It",
+  "sweelinckNote": "Twenty years in reserve. One shot. Gone."
+}
+```
+
+---
+
+## Cycle 4 — *John's First*
+
+**Archive category:** First Action Records — The Cost of the First Time, Accounted
+
+**What this angle reveals:** Cycles 1 and 2 were love. Cycle 3 was professional devotion. This angle reveals the novel's most honest moment: John's first kill and the fact that he wept afterward. Doyle treats this with extraordinary care — John is enormous, jovial, capable of violence, and he weeps. Aylward's response is not contempt but information: *Every man wept after his first.* The archive category this creates is not about courage or cowardice but about the cost that cannot be avoided and the fact that someone recorded it honestly.
+
+---
+
+**THE TOKEN: `beaulieu_expulsion_note`** — Beaulieu Expulsion Note. A single sheet in the monastery's administrative hand: "John of Hordle, expelled for brawling in the cellar — cause: dispute over a wheel of cheese." The cellarer signed it. The abbot witnessed. It has been in John's belt-pack since the morning he was expelled. He has never explained why he kept it.
+
+---
+
+**ACT I — Beaulieu Road**
+
+*Grant act. Location: the road outside Beaulieu Abbey — morning, dust, departure.*
+
+John is walking south with no destination and the specific cheerfulness of a man who has decided not to be sad about being expelled for a reason he finds genuinely embarrassing.
+
+He reaches into his belt-pack and produces the note. He reads it. He laughs.
+
+**John:** "I kept it because it says *cheese.* I don't know why, but a man being thrown out of a monastery over a cheese needs to have the paper."
+
+He looks at it a moment more.
+
+**John:** "You hold it. I'll want it later, I think, but not yet."
+
+*The sheet is crisp. The cellarer's hand is careful. The word CHEESE appears twice.*
+
+---
+
+**ACT II — The Breach at Villefranche**
+
+*Check act. Location: the castle breach — rubble, fire, first combat.*
+
+John has been in fights before — in the monastery, on the road, in taverns. He has never been in a battle. He understands the distinction clearly now that he is inside the breach at Villefranche with a French man-at-arms in front of him and iron in both their hands.
+
+He stops.
+
+It is not fear — the word is wrong. He simply cannot, for a moment, make his body begin the action it has been preparing for.
+
+*The Fighter holds the left side of the breach alone for the duration of that moment.*
+
+Athletics DC 13 — hold the breach long enough for John to recover. The French man-at-arms is not waiting.
+
+After: John finishes what he started. He is good at it, as expected. He is, as he will discover, efficient.
+
+---
+
+**ACT III — After the Battle**
+
+*Check act. Location: the castle courtyard, the Company accounting for itself.*
+
+The castle is taken. The numbers are being called. John is sitting on a section of wall with his back to everyone, which is not something John does.
+
+Aylward sits beside him. He says nothing for a long time.
+
+**Aylward:** *(very quietly)* "Every man wept after his first. Every one of them. Some of them wept before and after both. The ones who didn't — you wouldn't want them in your Company."
+
+John does not answer for a while.
+
+**John:** "Does it stop?"
+
+**Aylward:** "Mostly. Enough."
+
+Insight DC 12 — understand what Aylward is doing and do not interrupt it. Stay at the correct distance. This is not a conversation anyone else should be inside.
+
+---
+
+**ACT IV — The Pyrenees**
+
+*Check act. Location: the Navarrese road — mountain, narrow, three days from Najera.*
+
+John has been in four more battles since Villefranche. He is the best fighter in the Company at close range, a fact no one needs to announce because it is visible whenever the line compresses.
+
+He has not mentioned the courtyard again.
+
+He finds you at the night fire and asks for the Beaulieu note. He reads it.
+
+**John:** "I was thinking — a man who wept over a cheese probably weeps over some things and not others. Depends on whether it matters."
+
+He hands it back.
+
+**John:** "Keep it. I'll want it when this is done. The way it is."
+
+Persuasion DC 12 — Aylward asks you, separately, to tell him honestly whether John is sound. Give the honest answer without embellishment.
+
+---
+
+**ACT V — Weimar Archive**
+
+*Take act. Location: Weimar — Sweelinck at the filing desk.*
+
+The campaign is over. John went home to Hampshire, where he has a plan involving a mill and a woman he has not told anyone about. He asked you, at the Bordeaux harbor, to deliver the note.
+
+**John:** "Put it somewhere it doesn't get thrown away. The cheese is part of it, I think. The whole thing."
+
+The road from Bordeaux is long. A customs man in Lyon wants to confiscate it as a foreign ecclesiastical document. You explain it is a personal record. He reads the word CHEESE. He waves you through.
+
+Sweelinck receives it. He reads it twice.
+
+**Sweelinck:** *(writing slowly)* "Beaulieu Expulsion Note. Cause: dispute over a cheese. Retained by the subject for the length of a Castilian campaign." He pauses. "First Action Records — The Cost of the First Time, Accounted. First entry." He looks at you. "He kept the cheese note so the whole thing would be true. Not just the battles."
+
+The token is taken.
+
+---
+
+```json
+{
+  "quest_id": "LCY-04",
+  "title": "John's First",
+  "source": "The White Company — Arthur Conan Doyle",
+  "cycle": 4,
+  "book": "LCY",
+  "source_episode": "Hordle John's first battle; Aylward's counsel; the Beaulieu expulsion note",
+  "theme": "The cost of the first time honestly accounted; the object that makes the whole story true",
+  "activateNode": "LCY",
+  "token": {
+    "id": "beaulieu_expulsion_note",
+    "name": "Beaulieu Expulsion Note",
+    "description": "Monastery administrative record: John of Hordle expelled for brawling over a cheese. Kept by John through the full campaign.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["LCY", "HEO", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "LCY", "type": "skill_check", "prompt": "Receive the note from John correctly — no commentary about the cheese."},
+    {"act": 2, "node": "LCY", "type": "skill_check", "dc": 13, "skill": "Athletics", "prompt": "Hold the breach while John recovers from the moment he cannot begin."},
+    {"act": 3, "node": "LCY", "type": "skill_check", "dc": 12, "skill": "Insight", "prompt": "Stay at the correct distance while Aylward counsels John. Do not interrupt."},
+    {"act": 4, "node": "LCY", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "Tell Aylward honestly whether John is sound, without embellishment."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Deliver the note to Sweelinck. Explain what the cheese is part of."}
+  ],
+  "archiveCategory": "First Action Records — The Cost of the First Time, Accounted",
+  "sweelinckNote": "He kept the cheese note so the whole thing would be true. Not just the battles."
+}
+```
+
+---
+
+## Cycle 5 — *The French Prisoner's Account*
+
+**Archive category:** Voluntary Intelligence Records — Disclosure Made Without Compulsion and the Reason It Was Given
+
+**What this angle reveals:** Cycles 1–4 were all about English characters — English love, English professional devotion, English courage and its costs. This angle crosses the line. The French prisoner is not a villain. He is afraid and loyal to his own lord, and the Company needs information he has. Sir Nigel refuses to compel him. He gives the Fighter one hour and exactly no instructions. The angle asks what it means to give someone a reason to choose — and what the archive does with voluntary intelligence when the record includes the reason.
+
+---
+
+**THE TOKEN: `duplessis_route_account`** — Du Plessis Route Account. A single folded sheet in a French minor noble's careful hand. On one side: the Navarrese mountain pass route, three waypoints, the garrison strengths at each. On the other: a paragraph explaining why he gave it, signed with his name and the date. He wrote both sides himself, unasked, before handing it over.
+
+---
+
+**ACT I — The Prisoner's Tent**
+
+*Grant act. Location: a campaign tent, Gascony — a French minor noble, under guard, composed.*
+
+His name is Renaud du Plessis. He is perhaps thirty-five. He has been captured at a river crossing and treated with courtesy — which he expected, because the English Company's reputation for courtesy is correct. He is not afraid of being killed. He is afraid of being disloyal.
+
+Sir Nigel has given you one hour and the tent.
+
+Du Plessis studies you.
+
+**Du Plessis:** "You will not force me."
+
+**Du Plessis:** "So you will give me a reason. This is the English method."
+
+He waits.
+
+*You give him the reason.*
+
+Persuasion DC 13 — give him a reason to choose that is honest and does not require him to betray his lord as a person, only to prevent unnecessary deaths at a pass that will be taken in any case. He is not unintelligent. He will know the difference between an honest reason and a tactical argument.
+
+---
+
+**ACT II — The Mountain Road**
+
+*Check act. Location: the Navarrese pass — the specific route du Plessis named.*
+
+Du Plessis was right about the three waypoints. The first garrison is at the top of the second switchback — thirty men, a gate. The second is a half-mile further at a stream crossing — smaller, lightly armed. The third is the pass exit itself.
+
+The Fighter carries the folded account. The route is working. At the second waypoint, a Castilian rider comes down from the north with a different account of the pass — claiming it is clear, no garrison at the exit. He is very insistent.
+
+Insight DC 12 — determine whether the Castilian rider's account is accurate or whether du Plessis's account is. One of them is wrong. The consequences of choosing incorrectly are visible from here.
+
+---
+
+**ACT III — The Pass Exit**
+
+*Check act. Location: the final waypoint — the pass exit, exactly where du Plessis's account said.*
+
+Du Plessis was right. There is a garrison at the exit. The Castilian rider was wrong — or lying.
+
+The Company has moved through the first two waypoints correctly. The exit garrison is twenty men, a wall, and a gate that opens inward. Du Plessis's account notes a detail: the gate is hung incorrectly and lists to the left when the bar is lifted. It opens if you push left first.
+
+Deception DC 13 — approach the gate in the Company's advance unit and handle the gate before the garrison can seal it. The specific detail is the margin.
+
+---
+
+**ACT IV — The Field, After**
+
+*Check act. Location: after Najera — the campaign resolved.*
+
+Du Plessis was exchanged at the harbor, as agreed. He wrote the two-sided sheet the night before his release, unsolicited, and gave it to the Fighter when he left.
+
+**Du Plessis:** "The reason you gave me was honest. I want the record to hold that it was voluntary."
+
+He wrote the reason on the back of the route sheet himself, in the same hand, signed it, and dated it.
+
+Athletics DC 11 — get the sheet to the ship before the exchange party leaves harbor. One of du Plessis's countrymen is in the exchange party and does not know du Plessis gave you anything.
+
+---
+
+**ACT V — Weimar Archive**
+
+*Take act. Location: Weimar — Sweelinck at the filing desk.*
+
+The sheet is two-sided: route and reason. You carry it from Bordeaux through an alpine customs inspection, a Venetian factor's intelligence inquiry, and a mountain road delay.
+
+Sweelinck receives it. He reads the route side. He turns it over and reads the reason side.
+
+**Sweelinck:** *(writing)* "He wrote both sides himself. The route and the reason, unprompted, before surrender." He looks up. "Voluntary Intelligence Records — Disclosure Made Without Compulsion and the Reason It Was Given. First entry." He files it. "The interesting document is the back."
+
+The token is taken.
+
+---
+
+```json
+{
+  "quest_id": "LCY-05",
+  "title": "The French Prisoner's Account",
+  "source": "The White Company — Arthur Conan Doyle",
+  "cycle": 5,
+  "book": "LCY",
+  "source_episode": "French prisoner Renaud du Plessis; Navarrese pass route; voluntary disclosure with written reason",
+  "theme": "Intelligence given voluntarily; the record that includes the reason alongside the information",
+  "activateNode": "LCY",
+  "token": {
+    "id": "duplessis_route_account",
+    "name": "Du Plessis Route Account",
+    "description": "Mountain pass route and garrison strengths on one side; the prisoner's written explanation of why he disclosed it voluntarily on the other.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["LCY", "VEN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "LCY", "type": "skill_check", "dc": 13, "skill": "Persuasion", "prompt": "Give du Plessis an honest reason to choose — not tactical, not coercive. He will know the difference."},
+    {"act": 2, "node": "LCY", "type": "skill_check", "dc": 12, "skill": "Insight", "prompt": "Determine whether du Plessis's account or the Castilian rider's account is correct at the second waypoint."},
+    {"act": 3, "node": "LCY", "type": "skill_check", "dc": 13, "skill": "Deception", "prompt": "Use du Plessis's gate detail — push left first — before the exit garrison seals it."},
+    {"act": 4, "node": "LCY", "type": "skill_check", "dc": 11, "skill": "Athletics", "prompt": "Get the two-sided sheet to the ship before the exchange party departs."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Deliver the account to Sweelinck. The interesting document is the back."}
+  ],
+  "archiveCategory": "Voluntary Intelligence Records — Disclosure Made Without Compulsion and the Reason It Was Given",
+  "sweelinckNote": "The interesting document is the back."
+}
+```
+
+---
+
+## Cycle 6 — *Du Guesclin's Parole Gauntlet*
+
+**Archive category:** Parole Records — The Pledge Held by a Knight's Personal Word
+
+**What this angle reveals:** Cycles 1–5 involved objects belonging to the English. This angle crosses to the enemy's side — and reveals that chivalric honor operates identically on both sides of the line. Du Guesclin is captured at Najera. Sir Nigel pledges his personal word for the prisoner's safety. English soldiers intend to kill him anyway — ransom or no ransom. The Fighter guards the tent door all night and must, if necessary, fight Englishmen to protect the honor of an English lord. The archive category is about what it means for an enemy's life to be held by a word — and for the word to hold.
+
+---
+
+**THE TOKEN: `dguesclin_parole_gauntlet`** — Du Guesclin's Parole Gauntlet. His right iron gauntlet, left at Sir Nigel's feet as pledge of parole when the surrender was accepted. A working military gauntlet, Spanish campaign dust in the knuckle-joins. Du Guesclin's armorer's mark is inside the cuff.
+
+---
+
+**ACT I — The Surrender**
+
+*Grant act. Location: the Najera field, after the battle — a tent, the captured French captain, Sir Nigel.*
+
+Du Guesclin is large, calm, and entirely un-humiliated by having been captured. He treats Sir Nigel with the formal courtesy that the situation requires and receives it in return. The two men have been fighting on opposite sides for twenty years without meeting. They meet like men who have always known this would happen eventually and are not surprised.
+
+Du Guesclin removes his right gauntlet and places it at Sir Nigel's feet.
+
+**Du Guesclin:** "My parole to you, Sir Nigel. I am your prisoner until ransom is settled."
+
+**Sir Nigel:** "And I give you my word for your safety until then."
+
+He turns to the Fighter.
+
+**Sir Nigel:** "Keep the gauntlet. Guard the tent. I will be back before dawn."
+
+*The gauntlet is heavier than it looks.*
+
+---
+
+**ACT II — Midnight**
+
+*Check act. Location: outside the prisoner's tent — the camp has gone dark, third watch.*
+
+Six men from the Company's outer wing are moving toward the tent in the dark. They are not drunk. They are deliberate. They know Sir Nigel is not here and they have decided that du Guesclin's ransom is a cost England should not pay and that his death would serve the campaign better.
+
+They are wrong about the math and wrong about the honor. Sir Nigel gave his word. The word holds regardless of the arithmetic.
+
+**Soldier:** "Step aside. This is Company business."
+
+*The Fighter does not step aside.*
+
+Combat — hold the tent door. Six men, determined, but they did not come expecting a fight from their own side. Athletics DC 14 to hold the doorframe through the first rush without letting anyone past.
+
+---
+
+**ACT III — Before Dawn**
+
+*Check act. Location: inside the tent — du Guesclin, the Fighter, the gray hour before light.*
+
+The six men are not coming back tonight. They will make a different calculation in the morning.
+
+Du Guesclin is awake. He has been awake since the midnight noise. He says nothing about what he understood from the sound of it.
+
+**Du Guesclin:** "You held the door."
+
+It is not a question. He is noting the fact of it as a man notes a compass bearing — because it tells him where he is.
+
+**Du Guesclin:** "My ransom will be paid. I have given my parole and I keep it. Sir Nigel gave his word and his man kept it." He pauses. "That is worth more than the ransom."
+
+Insight DC 12 — understand what du Guesclin is calculating. He is assessing not just what happened tonight but what kind of army the Black Prince commands. Answer his implied question correctly.
+
+---
+
+**ACT IV — The Ransom**
+
+*Check act. Location: the Black Prince's court, near Bordeaux — the accounting of prisoners.*
+
+The ransom is being negotiated. Du Guesclin's parole gauntlet must be present at the formal accounting, as proof that the surrender was accepted under the correct terms. The six soldiers from the midnight attempt are also in the accounting party, trying to register a competing claim on du Guesclin's person as a battlefield capture — which would override Sir Nigel's parole and put the prisoner's fate in a different court.
+
+Persuasion DC 13 — present the gauntlet at the correct moment in the accounting to establish the parole's precedence before the competing claim is entered.
+
+---
+
+**ACT V — Weimar Archive**
+
+*Take act. Location: Weimar — Sweelinck at the filing desk.*
+
+Sir Nigel returns to England with the ransom settled and du Guesclin released. He gives you the gauntlet at Portsmouth.
+
+**Sir Nigel:** "He kept his parole. I kept my word. That is the whole record. Take it somewhere it will be filed correctly."
+
+The road from Portsmouth is long. A London records clerk wants to classify it as war-spoil. You explain it is a parole pledge. He asks for proof. You show him the armorer's mark inside the cuff.
+
+Sweelinck receives it. He reads the armorer's mark.
+
+**Sweelinck:** *(writing)* "Du Guesclin's parole gauntlet. Held at Najera, 1367. Word given and kept on both sides." He looks up. "First entry. Parole Records — The Pledge Held by a Knight's Personal Word." He files it. "Both sides. That is what makes it a record."
+
+The token is taken.
+
+---
+
+```json
+{
+  "quest_id": "LCY-06",
+  "title": "Du Guesclin's Parole Gauntlet",
+  "source": "The White Company — Arthur Conan Doyle",
+  "cycle": 6,
+  "book": "LCY",
+  "source_episode": "Du Guesclin captured at Najera; Sir Nigel's personal word; the midnight attempt on the prisoner",
+  "theme": "The pledge held by personal word; the enemy's life as the form of the honor owed",
+  "activateNode": "LCY",
+  "token": {
+    "id": "dguesclin_parole_gauntlet",
+    "name": "Du Guesclin's Parole Gauntlet",
+    "description": "French captain's right iron gauntlet left at Sir Nigel's feet as parole pledge at Najera. Armorer's mark inside the cuff.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["LCY", "CON", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "LCY", "type": "skill_check", "prompt": "Receive the gauntlet correctly — not as a trophy, as a word."},
+    {"act": 2, "node": "LCY", "type": "combat", "dc": 14, "skill": "Athletics", "prompt": "Hold the tent door at midnight against six Company soldiers who have decided the ransom is too expensive."},
+    {"act": 3, "node": "LCY", "type": "skill_check", "dc": 12, "skill": "Insight", "prompt": "Answer du Guesclin's implied question about what kind of army keeps its word."},
+    {"act": 4, "node": "LCY", "type": "skill_check", "dc": 13, "skill": "Persuasion", "prompt": "Present the gauntlet at the correct moment in the ransom accounting to establish parole precedence."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Deliver the gauntlet to Sweelinck. Both sides kept the word."}
+  ],
+  "archiveCategory": "Parole Records — The Pledge Held by a Knight's Personal Word",
+  "sweelinckNote": "Both sides. That is what makes it a record."
+}
+```
+
+---
+
+## Cycle 7 — *Lady Mary's Deed*
+
+**Archive category:** Household Management Records — The Endurance That No One Writes Songs About, First Entry
+
+**What this angle reveals:** The entire novel runs on public heroism — Sir Nigel's three deeds, the charge at Najera, the scarf on the lance. This cycle reveals the other side of that equation: what it costs the person who stays. Lady Mary Loring runs the manor, manages the debt, and says goodbye to her husband every time he goes to war with perfect composure. While Sir Nigel is winning his deeds in Spain, a creditor arrives at Tilford with a legal distraint. The household deed must reach the court at Winchester before the seizure is finalized. Lady Mary cannot go herself. There is no one else. The archive category this creates is the novel's final argument: the endurance that no one writes songs about, because it never ends.
+
+---
+
+**THE TOKEN: `tilford_household_deed`** — Tilford Household Deed. The original deed to the Loring household at Tilford — the land, the hall, the mill, and the eastern field. Sealed with the old Loring seal, cracked at the edge from the last time someone tried to open it in 1341. Lady Mary has kept it in the solar chest since before Crécy. She hands it to the Fighter with both hands.
+
+---
+
+**ACT I — Tilford Hall**
+
+*Grant act. Location: Tilford Hall, Hampshire — the solar, the chest, Lady Mary.*
+
+Sir Nigel has been in Spain for three months. Lady Mary has been running the estate, managing two rents and a creditor's patience, and doing the accounts each evening after the household is in bed.
+
+Today the creditor's agent arrived with a legal instrument: a distraint order, valid in three days if the deed is not presented to the Winchester court as primary title. Someone has contested the Loring claim to the eastern field and the mill. The agent is professionally courteous. The deadline is Winchester, three days, and the court does not grant extensions for absent knights.
+
+Lady Mary goes to the solar chest.
+
+**Lady Mary:** "I need this at the Winchester register before the third bell on Friday. No one else is available."
+
+She places the deed in both hands.
+
+**Lady Mary:** "Come back with the filing receipt. That is all."
+
+*The seal is cracked at the edge. The wax held anyway.*
+
+---
+
+**ACT II — The Winchester Road**
+
+*Check act. Location: the Winchester road — a day and a half of English autumn.*
+
+The creditor's agent is also on the Winchester road. He is riding faster. He has a competing instrument — a purchase-right claim that predates the distraint by a week, which would make the distraint secondary if filed first.
+
+He does not want you to arrive before him.
+
+A bridge is out at Alresford. You know the ford two miles east. He does not.
+
+Athletics DC 13 — reach Winchester's register office before the creditor's agent. The ford is possible but the footing is uncertain in October.
+
+---
+
+**ACT III — The Register Office**
+
+*Check act. Location: Winchester — the court register, morning of day three.*
+
+The register clerk has the creditor's competing claim on his desk. The agent arrived forty minutes ago and filed — but filed as a preliminary, pending the deed's review. The preliminary can still be superseded by the deed if it is presented before the third bell.
+
+The clerk has a procedural objection: the deed's seal is cracked, which he notes as a potential chain-of-custody concern. He is not hostile — he is careful. He wants one thing: a signed attestation from a witness who saw Lady Mary place the deed in your hands.
+
+Deception DC 14 — or Persuasion DC 12. You have no witness present, but the deed itself, combined with your account and the creditor's agent's visible discomfort, can establish the chain. The agent's reaction to your presence is evidence.
+
+---
+
+**ACT IV — The Return**
+
+*Check act. Location: the return road to Tilford — receipt in hand.*
+
+The deed is filed. The creditor's agent is appealing. The appeal window is eight days. The filing receipt, however, is dated and stamped and constitutes the primary record.
+
+On the road back to Tilford, you stop at an inn where two riders are eating. You do not know them. They are not threatening you. But one of them asks, conversationally, whether you have been to Winchester lately on estate business.
+
+Insight DC 11 — determine whether this is casual conversation or a survey of what you carry. The receipt is in your coat.
+
+---
+
+**ACT V — Weimar Archive**
+
+*Take act. Location: Weimar — Sweelinck at the filing desk.*
+
+Lady Mary received the receipt at Tilford. She looked at it for a moment.
+
+**Lady Mary:** "Thank you."
+
+She went back to the accounts. She did not explain what the accounts contained. She will do this again when Sir Nigel goes on the next campaign, because he will go.
+
+She gave you the deed to carry to the archive before Sir Nigel came home from Spain. She said:
+
+**Lady Mary:** "Not for me. For the record. Someone should have the record of what is done at home while the deeds are being won."
+
+The road from Hampshire is long. A Venetian factor in Bruges wants to know what property instruments you are carrying. You explain it is a personal record. He waves you through.
+
+Sweelinck receives the deed. He reads it. He reads the filing receipt attached.
+
+**Sweelinck:** *(writing very carefully)* "Tilford Household Deed. Presented at Winchester court by a carrier acting for Lady Mary Loring, while Sir Nigel Loring was winning his three deeds at Najera." He sets his pen down. "Household Management Records — The Endurance That No One Writes Songs About." He looks at you. "First entry. She is right. Someone should have the record."
+
+The token is taken.
+
+---
+
+```json
+{
+  "quest_id": "LCY-07",
+  "title": "Lady Mary's Deed",
+  "source": "The White Company — Arthur Conan Doyle",
+  "cycle": 7,
+  "book": "LCY",
+  "source_episode": "Lady Mary runs the estate while Sir Nigel is in Spain; the creditor's distraint; Winchester court",
+  "theme": "The endurance that no one writes songs about; the account of what is done at home while the deeds are being won",
+  "activateNode": "LCY",
+  "token": {
+    "id": "tilford_household_deed",
+    "name": "Tilford Household Deed",
+    "description": "Original deed to the Loring household at Tilford — land, hall, mill, eastern field. Old Loring seal, cracked at the edge. Lady Mary handed it with both hands.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["LCY", "LDN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "LCY", "type": "skill_check", "prompt": "Receive the deed from Lady Mary with the weight it is given. No questions. Come back with the receipt."},
+    {"act": 2, "node": "LCY", "type": "skill_check", "dc": 13, "skill": "Athletics", "prompt": "Reach Winchester before the creditor's agent — the ford at Alresford, not the broken bridge."},
+    {"act": 3, "node": "LCY", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "Establish chain-of-custody for the cracked seal. The agent's reaction is evidence."},
+    {"act": 4, "node": "LCY", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "Determine whether the innkeeper's riders are casual travelers or a survey of what you carry."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Deliver the deed to Sweelinck. Someone should have the record."}
+  ],
+  "archiveCategory": "Household Management Records — The Endurance That No One Writes Songs About",
+  "sweelinckNote": "She is right. Someone should have the record.",
+  "questComplete": true
+}
+```
+
+---
+
+*Cycle 7 complete. LCY SEEDS COMPLETE.*
+
