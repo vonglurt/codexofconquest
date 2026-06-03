@@ -27,6 +27,7 @@ Two-tier naming rule: cities = 3-letter IATA or city-derived code; specific loca
 | AVG | Avignon | Provence, France | AVG derived (AVI = Avignon-Caumont); Papal court city | 138,175 | BLQ | Act 2 node BLQ-11; Maître Abramo pawnshop; wedding ring recovery |
 | MTP | Montpellier | Languedoc, France | MTP derived (MPL=Montpellier); university quarter | 140,172 | BLQ | Act 3+4 node BLQ-11; Maître Guillaume hidden practice; salt-flat road |
 | MAR | Marseille | Provence, France | MRS=Marseille Provence; MAR derived from city name | 144,178 | BLQ | Act 5 node BLQ-11; consular court registry desk; questComplete |
+| ROM | Rome | Lazio, Italy | derived (FCO=Fiumicino serves Rome; ROM from city name) | 163,213 | BLQ | All 5 acts BLQ-12; prefect court quarter; exoneration records |
 
 ---
 
