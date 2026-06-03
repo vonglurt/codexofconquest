@@ -2080,3 +2080,1598 @@ He notes: "Cross-reference: CAI-02 (marriage contract template). The tradition t
 
 *CAI-05 complete. 2026-06-02.*
 
+---
+
+## Cycle 9 — The Lamp Boy's Line
+*Angle: The court ruling that accidentally created property law; the first time a story could be owned*
+
+---
+
+### What Prior Cycles Missed
+
+All prior CAI cycles treated the oral tradition as something that exists prior to and independent of legal categories — a thing to protect from inscription (Cycle 2), to document alongside its practitioners (Cycles 3–8). None addressed the moment when the law reaches into oral tradition and, settling a commercial dispute, creates a property category no one intended.
+
+The Lamp Boy's Line is that moment: two storytelling families argue over performance revenue, a Damascus qadi issues a ruling, and in issuing the ruling creates the first legal determination that an oral story can be owned. Neither family asked for property law to be created. The court created it because the case required a decision. The ruling is now the foundation of every future performance-rights claim in the Levant.
+
+*What this cycle adds that all prior cycles missed:* the unwitting legislator — the judge who created a category by deciding a case, and the document that travels to the archive not because anyone intended to set precedent but because the precedent was made whether anyone wanted it or not.
+
+---
+
+### Theme Check
+
+**Existing themes to avoid** (all from quest-map.md and prior CAI cycles): loyalty under long watch; grief carried in an object; the story that changes the shape of the listener; the written record severs the oral tradition from its source; the codicil that names the tradition; the legal instrument as the story's emotional center; and all themes in the master index.
+
+**CAI-S09 theme chosen**: *The court ruling that was not meant to be foundational; the judge who created a property category by deciding a commercial dispute; the first time a story could be owned is also the first time a story could be stolen — legally, with a sealed document as the deed; the precedent exists whether or not anyone wanted it to; it belongs in the archive because it is the first entry in a category the world had no name for yet*
+
+Distinct from all listed themes. The nearest neighbors are "authorship as claim" (DQX — a writer reclaiming their manuscript, authorship already exists) and the compound-document archive category (CAI Cycle 1). Neither covers the judicial creation of performance ownership as an unwanted side effect of commercial dispute resolution — the court's document as the founding instrument of a legal category that will reshape how stories travel.
+
+---
+
+### The Token
+
+*The Lamp Story Ruling — the Damascus qadi Jalal al-Din's determination, four pages in the court clerk's hand, sealed with green wax and the qadi's seal, finding that the al-Rashid family of the Aleppo market storytellers' quarter holds prior right to perform the lamp-keeper's story and its associated seven-night cycle in the Aleppo commercial district, by virtue of five-generation oral transmission documented through sworn attestation of six independent witnesses. The ruling created, as a necessary implication of its finding, the legal category of performance ownership. Neither the al-Rashid family nor their opponents had requested the creation of this category. The qadi noted the gap in the law and filled it because the case required him to.*
+
+---
+
+**ACT I**
+
+*The Lamp Story Ruling — sealed on the qadi's clerk's desk — Damascus legal quarter, morning.*
+
+Mansur ibn Ahmad, the al-Rashid family's representative, is a careful man. He won the case yesterday. He has been watching the courthouse door since the ruling was issued at noon. The losing party — a market guild administrator named Tariq al-Nassem — has a lawyer named Karim who has spent three hours in the qadi's anteroom. Karim cannot file a formal appeal for five days. But he can request the ruling held in court custody pending review if he identifies a procedural irregularity in that window. The original ruling at a neutral archive removes his lever.
+
+Mansur wants the ruling to travel today. He needs one thing first: confirmation the Fighter understands what the ruling is.
+
+"Not a commercial verdict," he says. "The qadi created a legal category to issue this ruling. We did not ask him to. He had to. There was no law about this before yesterday. There is one today." He pauses. "The archive must understand it is receiving the first instance of a category, not a standard ruling."
+
+> **Skill Check: History DC 12.** Recognize the ruling's structure — the qadi's finding adapts the merchant guild's transmission attestation mechanism to an intangible performance tradition; six witnesses attesting to five-generation continuous performance equals prior right equals property; this is the first time this mechanism has been used for a story rather than a physical trade.
+
+**Fail:** The Fighter accepts the commission as a standard courier job. Mansur writes a note for the archive explaining the ruling's significance, to compensate for what the carrier cannot convey.
+
+**Pass:** The Fighter names the structure: transmission attestation equals prior right equals property. Mansur nods. "The qadi used the guild mechanism. He adapted it — he had to, there was nothing else." He hands over the ruling. *The green wax is still fresh. It pressed onto the rolled parchment like a decision made in the last possible moment.* "The archive must create a category for this."
+
+**TOKEN GRANTED: The Lamp Story Ruling** — four pages, green wax, court clerk's hand; the first legal determination that an oral story can be owned.
+
+---
+
+**ACT II**
+
+*The Lamp Story Ruling — in the pack — at the caravanserai near the Aleppo market quarter, morning.*
+
+The ruling has traveled north to Aleppo. Karim, Tariq al-Nassem's advocate, arrived the same morning by a faster road. He is at the caravanserai when the Fighter checks in. He is professional and unhurried.
+
+He does not threaten. He explains that he is preparing an appeal on a procedural point: the qadi accepted six witnesses' oral attestation of five-generation transmission without requiring written corroboration. Under Mamluk commercial law, a transmission claim beyond three generations requires written documentation. The qadi's innovation was legally creative but procedurally improvised. He wants to examine the ruling's wording to determine whether the gap is sufficient to require a retrial.
+
+"I am not asking you to give me the document. I am asking to read it in your presence."
+
+*— He is entitled to read the court's determination as public record. He is not entitled to hold it. His purpose is to locate language that supports an appeal that would pull the ruling back to Damascus before it can be archived.*
+
+> **Skill Check: Persuasion DC 12.** Decline examination of a document in transit to a neutral archive: the court's clerk retains a copy in Damascus, from which an appeal brief can be prepared; the original ruling's transit custody should not be broken between issuance and archive receipt; reading the original adds nothing the clerk's copy cannot provide, and the Fighter's commission is chain-of-custody delivery, not document review.
+
+**Fail:** Karim invokes his right to read the public record, and the caravanserai host agrees. He reads the ruling in the Fighter's presence — forty minutes, careful notes. He thanks the Fighter. He will return to Damascus for the procedural filing.
+
+**Pass:** Karim considers. He knows the clerk's copy exists. "The clerk's copy may not show the qadi's hand corrections," he tests. The Fighter holds. After a long pause: "All right. The archive copy will do." *He folds his notes away without looking down. He has already found what he needed from the conversation alone.*
+
+**TOKEN CHECKED.**
+
+---
+
+**ACT III**
+
+*The Lamp Story Ruling — in the pack — on the Latakia road, afternoon.*
+
+Four men wait on the road between Aleppo and the coast. They are not lawyers. They are the kind of men a market administrator pays when legal procedure is too slow. They want the document removed from transit before it reaches the sea. They have not been given specific instructions about what to do with it — destroy it, hold it, return it to Damascus — only to stop it.
+
+Their leader opens by asking the Fighter to turn back to Aleppo.
+
+> **Combat: 4 Road Men** — AC 11, HP 12 each. They yield when 2 are down; they were hired for a legal errand, not a war. The leader carries a letter commissioning the interception, signed by Tariq al-Nassem — evidence of obstruction.
+
+> **Skill Check: Athletics DC 10.** After the fight, confirm the ruling's seal. In the struggle, the pack was thrown.
+
+**Fail (Athletics):** The wax seal has a crack. The ruling is intact but the seal is damaged; the archive will note it in the intake record.
+
+**Pass (Athletics):** The cedar board that braces the roll held clean. *The green wax is unbroken.* The road opens to the coast.
+
+**TOKEN CHECKED.**
+
+**ITEM GRANTED: Market Administrator's Commission Letter** — Tariq al-Nassem's authorization to intercept the ruling, signed; carried to the archive alongside the ruling as evidence of obstruction.
+
+---
+
+**ACT IV**
+
+*The Lamp Story Ruling — in the pack — at the Ragusa waystation, late evening.*
+
+A Venetian legal scholar named Benedetto Moro is passing through Ragusa on his way home from Constantinople. He heard of the Damascus ruling from a merchant who knows Mansur. He is not threatening — he is focused in the way of a man who has been working a related problem for three years.
+
+He explains: in Venice there is a dispute over whether a theatrical company can own the exclusive right to perform a particular play — the company claims a performance tradition going back eighty years, the rival company says traditions are not property. There is no legal precedent. The Damascus ruling, if he can obtain a certified copy, would be the first documented instance of a court determining that a performance tradition constitutes prior right.
+
+His case is in three months. He cannot wait for the archive to process the ruling and issue a copy.
+
+*— A witnessed copy made at Ragusa preserves the original's chain of custody, provides the scholar with a usable document, and creates a secondary record of the ruling's existence and transit route — which will matter if the market administrator's court challenge attempts to suppress the Damascus clerk's copy.*
+
+> **Skill Check: Investigation DC 13.** Recognize the witnessed copy as the correct solution: the original reaches the archive uninterrupted; the scholar gets his document; the witnessing record is appended to the archive packet as secondary provenance, protecting the ruling from suppression claims.
+
+**Fail:** The Fighter declines any copy, protective of the chain of custody. Benedetto sends to Damascus for the clerk's copy — it will arrive too late for his case. He parts without anger.
+
+**Pass:** The Fighter proposes the witnessed copy. Benedetto is immediately receptive. One hour: he copies the ruling in his own hand; the Fighter and a Ragusa harbor official witness and date both signatures; Benedetto seals his copy with his own ring. "In fifty years there will be a hundred rulings like this one," he says, "and they will all start here." He gives the Fighter a Venetian silver coin as thanks for the arrangement.
+
+**ITEM GRANTED: Ragusa Witnessing Receipt** — the harbor official's dated record of the witnessed copy; secondary provenance document appended to the archive packet.
+
+---
+
+**ACT V**
+
+*The Lamp Story Ruling — in the pack — at the Weimar archive intake desk, Archivus Sweelinck, afternoon.*
+
+The Archivus reads the ruling. He reads the qadi's notation of the legal gap and the mechanism used to fill it. He reads the Market Administrator's Commission Letter. He reads the Ragusa witnessing receipt.
+
+"A court determined that an oral story can be owned." He sets the ruling down. "By a specific family. By virtue of transmission." He looks at the commission letter. "And someone paid to stop this reaching me." He sets it beside the ruling. "That is the clearest evidence I have received in a decade that a document belongs here."
+
+He opens the intake form. He pauses.
+
+"I need a category. A property deed requires an object. A title requires land. A contract requires parties who agreed. This ruling creates a right in a story told in a market square." He looks at the Fighter. "The qadi used the guild transmission mechanism. He adapted it — he had to, there was nothing else." He traces the ruling's wording. "So does the archive. We adapt because the law produces things the classification system has not yet seen."
+
+*— He is thinking aloud. He will create the category. He needs the Fighter to confirm the mechanism: sworn transmission attestation equals continuous prior right equals property ownership by the transmitting family. If the Fighter can articulate the mechanism, the Archivus can use it as the basis for the category.*
+
+> **Skill Check: Investigation DC 12.** Confirm the qadi's mechanism: transmission attestation replaces registration; the family's right is prior because the transmission is documented as prior; the ruling creates the property category as a necessary implication of finding the right; the archive's category should be "Performance Rights Determinations — Prior Transmission Claims," with this as the first entry.
+
+**Fail:** Filed under Mamluk Legal Records — Commercial Disputes. A cross-reference is noted to the oral tradition records from CAI-02. The commission letter is filed separately as evidence of obstruction. The category is not created yet.
+
+**Pass:** The Fighter confirms the mechanism. The Archivus writes: *Performance Rights Determinations — Prior Transmission Claims: rulings finding that an oral performance tradition constitutes a property right by virtue of documented transmission; the al-Rashid family's claim established by six witnesses attesting to five-generation continuous performance; qadi's mechanism derived from merchant guild transmission attestation, adapted to intangible performance.*
+
+He notes: "First entry in this category." He adds: "Commission letter filed as accompanying evidence of commercial obstruction; Ragusa witnessing receipt filed as secondary provenance."
+
+He closes the ledger.
+
+"The qadi made a category," he says. "He didn't mean to. He had to. That is how categories are made." He does not say: this is where it begins. You receive the Performance Rights Archive Record.
+
+**TOKEN TAKEN: The Lamp Story Ruling**
+
+The ruling rests in the first entry of a new archive category. The commission letter is filed beside it as the clearest evidence of why this document belongs here. Benedetto Moro's Venetian case will cite the archive copy. In fifty years there will be a hundred rulings like this one. They all start here.
+
+---
+
+## Quest API Stub — CAI-S09
+
+```json
+{
+  "quest_id": "CAI-S09",
+  "title": "The Lamp Boy's Line",
+  "source": "CAI",
+  "cycle": 9,
+  "book": "Arabian Nights — Alf Layla wa-Layla (Lang adaptation, 1898 — Galland/Syrian manuscript tradition)",
+  "source_episode": "The al-Rashid hakawati family of Aleppo — keepers of the proto-Aladdin cycle for five generations; the oral tradition that Hanna Diyab will carry to Paris in 1709 already moving through the Levant market squares in 1367",
+  "cycle_angle": "The court ruling that accidentally created property law; the first time a story could be owned",
+  "theme": "The court ruling that was not meant to be foundational; the judge who created a property category by deciding a commercial dispute; the first time a story could be owned is also the first time a story could be stolen — legally, with a sealed document as the deed; the precedent exists whether or not anyone wanted it to; it belongs in the archive because it is the first entry in a category the world had no name for yet",
+  "token": {
+    "id": "CAI_S09_TOKEN",
+    "name": "The Lamp Story Ruling",
+    "description": "Damascus qadi Jalal al-Din's determination, four pages in the court clerk's hand, green wax seal, finding that the al-Rashid family of Aleppo holds prior right to perform the lamp-keeper's story cycle by virtue of five-generation oral transmission documented through sworn attestation of six witnesses. Created, as a necessary implication, the legal category of performance ownership. Neither party requested the creation of this category.",
+    "grant_act": "act_1",
+    "take_act": "act_5",
+    "check_acts": ["act_2", "act_3", "act_4"]
+  },
+  "nodes": ["DAM", "ALP", "LAT", "RGS", "WM"],
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "DAM",
+      "type": "skill_check",
+      "activateNode": "DAM",
+      "missionAccept": "The al-Rashid storytelling family of Aleppo has won a Damascus court ruling establishing their right to the lamp-keeper's story. Their representative needs the ruling at a neutral archive before the losing party can file a procedural challenge. He needs a carrier who understands the ruling is not a standard commercial verdict — it is the first legal determination that an oral story can be owned.",
+      "scene": "Damascus legal quarter, morning. Mansur ibn Ahmad won the case yesterday and has been watching the courthouse door since noon. The losing party's lawyer has been in the qadi's anteroom for three hours. The green wax on the ruling is still fresh. Mansur needs to know the carrier understands what they are carrying before he hands it over.",
+      "prompt": "Identify the ruling's legal mechanism — the qadi adapted the merchant guild's transmission attestation to determine performance ownership. DC 12 History check to recognize the structure.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "failText": "The commission accepted as a standard courier job. Mansur writes an explanatory note for the archive.",
+        "passText": "The Fighter names the structure: transmission attestation equals prior right equals property. Mansur hands over the ruling. 'The archive must create a category for this.' You receive the Lamp Story Ruling."
+      },
+      "grantItem": "The Lamp Story Ruling",
+      "checkPassFlag": "caiS09Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "ALP",
+      "type": "skill_check",
+      "activateNode": "ALP",
+      "scene": "Caravanserai near the Aleppo market quarter, morning. Karim, the losing party's advocate, arrived by a faster road. He is professional and unhurried. He wants to read the ruling in the Fighter's presence to identify a procedural gap in the qadi's reasoning — the claim that oral attestation beyond three generations requires written corroboration. His purpose is to locate language that supports pulling the ruling back to Damascus.",
+      "prompt": "Decline examination on grounds of transit chain-of-custody: the court clerk's copy is available in Damascus. DC 12 Persuasion.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "failText": "Karim reads the ruling in forty minutes, makes careful notes, and departs for Damascus. He has found what he needed from the document.",
+        "passText": "Karim considers and accepts the clerk's copy argument. 'All right. The archive copy will do.' He folds his notes away without looking down — he has already found what he needed from the conversation alone."
+      },
+      "checkItem": "The Lamp Story Ruling",
+      "checkPassFlag": "caiS09Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "LAT",
+      "type": "hybrid",
+      "activateNode": "LAT",
+      "scene": "Latakia road, afternoon. Four men hired by the market administrator wait at a narrowing in the road. They are not lawyers. They have one instruction: stop the document before it reaches the sea. Their leader asks the Fighter to turn back to Aleppo.",
+      "combat": {
+        "enemies": [
+          { "name": "Road Enforcer", "count": 4, "ac": 11, "hp": 12, "weapons": ["cudgel", "short sword"] }
+        ],
+        "note": "Hired for a legal errand, not a war. Yield when 2 are down. The leader carries the market administrator's commission letter — evidence of obstruction."
+      },
+      "skillCheck": {
+        "skill": "Athletics",
+        "dc": 10,
+        "failText": "The wax seal has a crack. The ruling is intact but the seal is damaged; the archive will note it in the intake record.",
+        "passText": "The green wax is unbroken. The road opens to the coast. You receive the Market Administrator's Commission Letter."
+      },
+      "grantItem": "Market Administrator's Commission Letter",
+      "checkItem": "The Lamp Story Ruling",
+      "checkPassFlag": "caiS09Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "RGS",
+      "type": "skill_check",
+      "activateNode": "RGS",
+      "scene": "Ragusa waystation, late evening. Venetian legal scholar Benedetto Moro has heard of the ruling through a Levantine merchant contact. He has a Venice theatrical rights case in three months with no legal precedent available. He needs a certified copy of the ruling — not the original. He cannot wait for the archive's processing timeline.",
+      "prompt": "Recognize that a witnessed copy made at Ragusa is the correct solution: the original's chain of custody is unbroken; the scholar gets a usable document; the witnessing record becomes secondary provenance protecting against suppression claims. DC 13 Investigation.",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 13,
+        "failText": "The Fighter declines any copy. Benedetto sends to Damascus for the clerk's copy — it will arrive too late for his case.",
+        "passText": "Benedetto copies the ruling in one hour, Fighter and harbor official witness and date both signatures. 'In fifty years there will be a hundred rulings like this one — they will all start here.' You receive the Ragusa Witnessing Receipt."
+      },
+      "grantItem": "Ragusa Witnessing Receipt",
+      "checkItem": "The Lamp Story Ruling",
+      "checkPassFlag": "caiS09Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Weimar archive intake desk, afternoon. Archivus Sweelinck reads the ruling, the commission letter, and the Ragusa receipt. He has no category for a ruling that creates a property right in an oral performance tradition. He says: 'Someone paid to stop this reaching me. That is the clearest evidence I have received in a decade that a document belongs here.' He pauses at the intake form. The classification system has a gap.",
+      "prompt": "Confirm the qadi's mechanism and propose the archive category: Performance Rights Determinations — Prior Transmission Claims, with this as the first entry. DC 12 Investigation.",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 12,
+        "failText": "Filed under Mamluk Legal Records — Commercial Disputes, with cross-reference to CAI oral tradition records. Category not yet created.",
+        "passText": "Sweelinck writes: 'Performance Rights Determinations — Prior Transmission Claims: first entry.' Commission letter filed as evidence of obstruction. Ragusa receipt as secondary provenance. 'The qadi made a category. He didn't mean to. He had to. That is how categories are made.' You receive the Performance Rights Archive Record."
+      },
+      "takeItem": "The Lamp Story Ruling",
+      "grantItem": "Performance Rights Archive Record",
+      "checkPassFlag": "caiS09Act5Passed",
+      "activateMissionBit": "caiLampBoyLineComplete",
+      "questComplete": true
+    }
+  ]
+}
+```
+
+---
+
+*CAI-S09 complete. 2026-06-02.*
+
+---
+
+## Cycle 10 — Diyab's Variant
+*Angle: The locally-specific version before cosmopolitan revision erased it; the private letter as the only record*
+
+---
+
+### What Prior Cycles Missed
+
+Cycles 1–9 treated the oral tradition as a thing to be protected (codicil), litigated (court ruling), or studied (seed descriptions). None have addressed what happens to a variant when the story it belongs to becomes famous in a different form: the local version is not suppressed; it is simply no longer told, because the version people know is the traveling version, and the traveling version moved the setting to "China" and made the sorcerer a Moroccan because those places felt exotic to the audiences it was traveling toward.
+
+The Diyab variant is the lamp-keeper's story set in Aleppo — the city where the Diyab family has performed it for generations. The sorcerer is Syrian, from the hills above Hama. The lamp boy's city has specific landmarks recognizable to anyone who has been in the Aleppo market quarter. This is the version the story actually was before it became the story it would be remembered as. No one preserved it deliberately. An Armenian scholar wrote it in a private letter because he found it interesting.
+
+*What this cycle adds that all prior cycles missed:* the accidental preservation — the variant captured not because anyone valued it as a variant but because a scholar wrote to a friend about something he found interesting, and the letter survived because letters survive.
+
+---
+
+### Theme Check
+
+**Existing themes to avoid** (all from quest-map.md and prior CAI cycles), specifically nearest neighbors: "the codicil that names the tradition" (CAI-S08 — deliberate attribution); "the court ruling that created performance ownership" (CAI-S09 — institutional creation); the compiler who stops at the evidence (BEY cycle 1).
+
+**CAI-S10 theme chosen**: *The letter that was never meant to be a historical document; the private scholarly correspondence that captured the locally-specific variant before cosmopolitan revision erased it; the variant told the truth about where the story was from, and no one knew to preserve it because the story was still alive and still being changed; the archive receives it only because the man it was addressed to is dead, and the dead man's unanswered letters are the archive's inheritance*
+
+Distinct from all listed themes. The nearest neighbor is "the document found by accident because it survived in the wrong place" — but no prior quest covers: the local variant replaced by its own cosmopolitan success; the private letter as the unintentional primary source; the dead addressee as the mechanism of preservation.
+
+---
+
+### The Token
+
+*Bedros's Letter — a private letter from the Armenian scholar Bedros al-Tiflis to Father Minas of the Monastery of the Holy Cross in Constantinople; four pages in Armenian with Arabic oral-formulaic phrases embedded throughout in Arabic script, untranslated; the lamp boy's city is described as a city of covered markets and a great citadel hill; the sorcerer is a Syrian merchant from the hill villages above Hama; the lamp is found in a cave in the hillside northeast of the city where the old Roman road turns; written in October 1367, three days before Bedros was to leave Aleppo for Tiflis; sealed with a plain wax disk, no device.*
+
+---
+
+**ACT I**
+
+*Bedros's Letter — sealed on the scholar's writing table — Bedros al-Tiflis's rented room in the Armenian quarter, Aleppo, October 1367.*
+
+Bedros is a physician who studies stories the way other physicians study symptoms — as evidence of something below the surface. He has been in Aleppo for eleven months. In that time he has heard the lamp-keeper's story from four different tellers: the al-Rashid family version (formal, for commercial audiences), a version from an older woman in the women's quarter (intimate, slower), a children's version from a street performer, and the Diyab family version, which is different enough from the others to be a distinct textual tradition.
+
+The Diyab version uses specific Aleppo landmarks. Bedros wrote them into his letter carefully: the citadel hill, the covered market lanes, the northeastern road. The sorcerer comes from the hills above Hama, not from "the Maghreb." These details matter because they tell you where the story was before it started traveling.
+
+He wants Father Minas to have the letter before Bedros returns to Tiflis. Father Minas collects exactly this kind of material. The letter is private correspondence — not a manuscript, not a formal document — and Bedros has not asked the Diyab family for permission to describe their variant, which creates a complication.
+
+The Diyab family's youngest son, Dawud, knows Bedros has been listening. He appears at the door as the Fighter is being commissioned. He is not aggressive; he is uncertain. He wants to know where the letter is going.
+
+*— Dawud has a legitimate concern: the family's variant has been written down without their consent. He is not opposed to preservation; he does not know what he wants.*
+
+> **Skill Check: Insight DC 12.** Read Dawud's concern correctly — he is not afraid of the variant being documented; he is afraid of the variant being attributed to his family in a way that makes it theirs rather than the tradition's, which is the opposite of what the letter does. The letter describes the variant; it does not claim it; it names the Diyab family once, as the tellers, not as the owners.
+
+**Fail:** Dawud asks for a copy of the letter before it leaves. Bedros spends one hour making a summary copy in Arabic (not a full translation) for Dawud's family records.
+
+**Pass:** The Fighter reads the situation correctly. The letter names the family as tellers, not as owners of the variant. Dawud relaxes. "We are not afraid of being named. We are afraid of being taken from the story." The Fighter can reassure him on both counts.
+
+**TOKEN GRANTED: Bedros's Letter** — sealed, four pages Armenian with embedded Arabic, the Aleppo variant of the lamp-keeper's story captured in private scholarly correspondence.
+
+---
+
+**ACT II**
+
+*Bedros's Letter — in the pack — near the Aleppo market quarter, morning.*
+
+A Syrian scholar named Ibrahim al-Halabi — no relation to the Yusuf al-Halabi of Cycle 2 — has been in the market quarter for a year with a Cairo manuscript of the lamp-keeper's story (the standard cosmopolitan version). He has been comparing the Cairo text against local performance and building the argument that the performance tradition derives from the manuscript tradition, not the other way around.
+
+He intercepts the Fighter near the market. He knows Bedros has been recording performances. He argues that Bedros's letter, containing what he calls a "provincial variant," should not travel to a northern archive as if it were a primary source. The Cairo manuscript is the primary source; the Aleppo performance is a regional adaptation. The archive will miscategorize it.
+
+He is not hostile. He is protecting a scholarly position. He offers to write an accompanying note for the archive explaining the relationship between the Cairo text and the Diyab performance.
+
+*— His scholarly position is genuinely debated in 1367. The question of whether oral performance derives from manuscript or vice versa is not settled. But his note would assert a conclusion the archive has not yet reached.*
+
+> **Skill Check: Persuasion DC 13.** Decline the accompanying note on the grounds that the archive should receive the letter without interpretive accompaniment that asserts a conclusion — both the Cairo manuscript tradition and the Diyab oral tradition should reach the archive unframed, so the archive can note the relationship without adjudicating the priority question. The Fighter is a carrier, not an editor.
+
+**Fail:** Ibrahim writes the note anyway and asks the Fighter to carry it in a separate sealed envelope "for the archive's consideration." He is polite. The Fighter can choose whether to carry it.
+
+**Pass:** Ibrahim considers. He knows the archive cannot adjudicate priority if it only has one side. "Both should be there," he says after a while. "And neither should arrive explaining the other." He steps back. *He knows he is right about one thing: the Aleppo variant is not the same as the Cairo text. He does not know which is older. Neither does anyone else.*
+
+**TOKEN CHECKED.**
+
+---
+
+**ACT III**
+
+*Bedros's Letter — in the pack — at sea, two days west of Latakia.*
+
+The packet ship carrying the Fighter crosses a November squall in the eastern Mediterranean. Not a catastrophic storm — a hard three hours of rain and spray that soaks the deck and everything on it. The pack was tied under a sail-cloth cover, but cover and cord are not the same as waterproofed cedar and wax.
+
+> **Skill Check: Athletics DC 10.** Protect the pack through three hours of weather — hold position on the wet deck, keep the pack from sliding, and when the spray comes under the sail-cloth, act quickly to wrap the pack further with the dry inner layer of the Fighter's travel cloak.
+
+**Fail:** The outer wrapping is soaked. When the ship steadies, the Fighter opens the pack: the letter's outer page is damp and the lower corner of page four has bled — some Arabic characters are blurred. The seal is intact. The text is mostly legible.
+
+**Pass:** The inner layer held. Bedros's letter is dry. The Arabic phrases embedded in the Armenian are clear. The seal is unbroken.
+
+**TOKEN CHECKED.**
+
+---
+
+**ACT IV**
+
+*Bedros's Letter — in the pack — Monastery of the Holy Cross, Constantinople, December 1367.*
+
+Father Minas died in September. The new abbot, a pragmatic man named Brother Stephanos, has been dealing with three months of the dead scholar's correspondence arriving and needing to be sorted. He is not interested in Aleppo oral variants. He is interested in reducing the stack of unanswered letters on the dead scholar's desk.
+
+His default plan for a sealed letter from an Armenian physician: return it to the sender in Tiflis.
+
+*— He is not malicious. He does not understand the letter's content. He is managing an estate.*
+
+> **Skill Check: Persuasion DC 13.** Explain to Brother Stephanos that a private letter capturing a locally-specific oral variant of a story that will eventually be one of the most widely-traveled in the world — before the cosmopolitan version overwrites it — should not be returned to its sender (who is in Tiflis) or destroyed, but sent to a neutral archive where scholars can access it. The letter's scholarly value is precisely that it is private: a formal document would not have included the informal comparisons between the Diyab version and the Cairo text that Bedros included in the letter's final paragraph.
+
+**Fail:** Stephanos returns the letter to sender's address in Tiflis. The Fighter intercepts it at the harbor office and makes the case directly to the harbor master that a scholarly document in transit to a neutral archive should not be redirected without the carrier's knowledge.
+
+**Pass:** Stephanos pauses. He knows the term "oral variant." He has heard Father Minas discuss the Arabian Nights collection. He says: "Minas would have wanted it in the archive. He always wanted things in the archive. He was that kind of man." He releases the letter to the Fighter for archive delivery.
+
+**TOKEN CHECKED.**
+
+---
+
+**ACT V**
+
+*Bedros's Letter — in the pack — at the Weimar archive intake desk, Archivus Sweelinck, January 1368.*
+
+The Archivus reads the letter. He cannot read Armenian. He can read the Arabic phrases embedded throughout — the oral formulae that Bedros left untranslated because they do not translate, they only perform. He reads them slowly, moving his lips slightly.
+
+He sets the letter down.
+
+"This is a private letter. The scholar wrote to a friend." He looks at the Fighter. "He was not preserving a document. He was telling a friend something interesting." He pauses. "The friend is dead. The letter arrived here. The scholar does not know it arrived here." He opens the intake form.
+
+"What is the primary document type?" He turns the letter over in his hands. "Private correspondence. The secondary content is an oral variant transcription, embedded in the letter as illustration. The tertiary content is a comparison between the variant and a Cairo manuscript tradition the scholar was implicitly familiar with." He looks up. "I need a category for a letter that is also, by accident, the only surviving record of a specific oral variant."
+
+*— The classification problem is genuine: the letter's value lies entirely in its informality. A formal scholarly document would not have the variant; it would have the analysis. The variant is present because Bedros was writing to a friend and showed his work.*
+
+> **Skill Check: Investigation DC 12.** Propose the classification: private scholarly correspondence containing an embedded oral narrative transcription; the informal register is the document's primary value — the variant exists in this letter because the scholar was not performing scholarship, he was thinking aloud; the archive creates a new category: Private Correspondence — Embedded Oral Variants, noting this letter as the first entry and noting that the variant may not survive in any other form.
+
+**Fail:** Filed as Private Correspondence — Syrian Arabic Oral Literature. The variant is noted in the index. The informal register's significance is not recorded.
+
+**Pass:** The Archivus writes: *Private Correspondence — Embedded Oral Variants: letters in which a scholar's private communication contains, as illustration or casual transcription, an oral variant not otherwise preserved; the informality of the letter is the preservation mechanism — the variant exists because the writer was not editing; the archive holds it because the addressee is dead and the letter arrived here instead.*
+
+He reads the Arabic phrases aloud, softly.
+
+"Aleppo," he says. "The story is set in Aleppo. In this version." He looks at the page. "The version everyone will know puts it in China." He notes in the intake record: *contains Diyab family oral variant; lamp-keeper's story; setting: Aleppo, specific landmarks; sorcerer: Syrian, hills above Hama; cross-reference: CAI-S09 (al-Rashid family ruling), CAI-S08 (Diyab family named in codicil).*
+
+He closes the ledger.
+
+"The letter came because a man died," he says. "Dead men's letters are the archive's oldest inheritance." You receive the Letter Archive Receipt.
+
+**TOKEN TAKEN: Bedros's Letter**
+
+The letter rests in the first entry of a new category. The Arabic phrases embedded in the Armenian are in the index. The lamp boy's city is noted as Aleppo. Somewhere in Tiflis, Bedros al-Tiflis does not know his letter arrived, or where it ended up, or that Father Minas is dead. The story he described is still being performed in the Aleppo market square by the Diyab family, in the version that sets it in Aleppo, for the time being.
+
+---
+
+## Quest API Stub — CAI-S10
+
+```json
+{
+  "quest_id": "CAI-S10",
+  "title": "Diyab's Variant",
+  "source": "CAI",
+  "cycle": 10,
+  "book": "Arabian Nights — Alf Layla wa-Layla (Lang adaptation, 1898 — Galland/Syrian manuscript tradition)",
+  "source_episode": "Hanna Diyab of Aleppo told Galland the Aladdin story in Paris in 1709; the Diyab family's version set the story in Aleppo with a Syrian sorcerer; before Galland, the story was local — a specific city, a specific hill, a specific cave",
+  "cycle_angle": "The locally-specific version before cosmopolitan revision erased it; the private letter as the only record",
+  "theme": "The letter that was never meant to be a historical document; the private scholarly correspondence that captured the locally-specific variant before cosmopolitan revision erased it; the variant told the truth about where the story was from, and no one knew to preserve it because the story was still alive and still being changed; the archive receives it only because the man it was addressed to is dead, and the dead man's unanswered letters are the archive's inheritance",
+  "token": {
+    "id": "CAI_S10_TOKEN",
+    "name": "Bedros's Letter",
+    "description": "A private letter from Armenian scholar Bedros al-Tiflis to Father Minas of Constantinople; four pages in Armenian with Arabic oral-formulaic phrases embedded untranslated; the lamp-keeper's story set in Aleppo with specific landmarks; sorcerer Syrian from the hills above Hama; sealed with plain wax, October 1367.",
+    "grant_act": "act_1",
+    "take_act": "act_5",
+    "check_acts": ["act_2", "act_3", "act_4"]
+  },
+  "nodes": ["ALP", "LAT", "CON", "WM"],
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "ALP",
+      "type": "skill_check",
+      "activateNode": "ALP",
+      "missionAccept": "An Armenian physician in Aleppo has written a private letter to a colleague in Constantinople containing the Diyab family's variant of the lamp-keeper's story — set in Aleppo, with a Syrian sorcerer. The Diyab family's son appears as the letter is being commissioned. He needs to know where it is going and why.",
+      "scene": "Bedros al-Tiflis's rented room in the Armenian quarter, Aleppo. The letter is sealed on the writing table. The Diyab family's youngest son Dawud appears at the door, uncertain. He knows the scholar has been listening to the family's performances. He wants to know what the letter says before it leaves.",
+      "prompt": "Read Dawud's concern correctly: he is afraid of being attributed ownership rather than being named as tellers. The letter names the family once, as tellers. DC 12 Insight.",
+      "skillCheck": {
+        "skill": "Insight",
+        "dc": 12,
+        "failText": "Bedros spends an hour making an Arabic summary copy for the Diyab family records before the letter departs.",
+        "passText": "The letter names the family as tellers, not as owners. Dawud says: 'We are not afraid of being named. We are afraid of being taken from the story.' You receive Bedros's Letter."
+      },
+      "grantItem": "Bedros's Letter",
+      "checkPassFlag": "caiS10Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "ALP",
+      "type": "skill_check",
+      "scene": "Near the Aleppo market quarter. Syrian scholar Ibrahim al-Halabi intercepts the Fighter. He has a Cairo manuscript of the lamp-keeper's story and argues the Aleppo performance tradition derives from the manuscript, not vice versa. He wants to send an accompanying note to the archive explaining the relationship — which would assert a conclusion the archive has not reached.",
+      "prompt": "Decline the accompanying note: the archive should receive both traditions without one framing the other. DC 13 Persuasion.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "failText": "Ibrahim writes the note and offers it in a separate sealed envelope for the Fighter to carry. The Fighter decides whether to carry it.",
+        "passText": "Ibrahim says: 'Both should be there. And neither should arrive explaining the other.' He steps back. He knows the question of priority is unsettled."
+      },
+      "checkItem": "Bedros's Letter",
+      "checkPassFlag": "caiS10Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "LAT",
+      "type": "skill_check",
+      "scene": "At sea, two days west of Latakia. A November squall — three hours of rain and spray that soaks everything on deck. The pack is under a sail-cloth cover but spray is coming through the gap. The Arabic phrases embedded in the letter are in vulnerable ink.",
+      "prompt": "Protect the letter through the squall — hold position on the wet deck, prevent the pack from sliding, wrap it further with the dry inner layer of the travel cloak. DC 10 Athletics.",
+      "skillCheck": {
+        "skill": "Athletics",
+        "dc": 10,
+        "failText": "The outer wrapping is soaked. The lower corner of page four has bled — some Arabic characters are blurred. The seal is intact. The text is mostly legible.",
+        "passText": "The inner layer held. Bedros's letter is dry. The Arabic phrases are clear. The seal is unbroken."
+      },
+      "checkItem": "Bedros's Letter",
+      "checkPassFlag": "caiS10Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "CON",
+      "type": "skill_check",
+      "activateNode": "CON",
+      "scene": "Monastery of the Holy Cross, Constantinople. Father Minas died in September. The new abbot Brother Stephanos has been sorting the dead scholar's incoming correspondence. His plan for a sealed letter from an Armenian physician: return it to the sender in Tiflis. He is managing an estate, not a library.",
+      "prompt": "Argue the letter's informal scholarly value: the variant exists in this letter precisely because the scholar was writing to a friend and not editing; a formal document would not have the variant. DC 13 Persuasion.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "failText": "Stephanos returns the letter to the sender's address. The Fighter intercepts it at the harbor office and makes the case to the harbor master directly.",
+        "passText": "Stephanos says: 'Minas would have wanted it in the archive. He was that kind of man.' He releases the letter for archive delivery."
+      },
+      "checkItem": "Bedros's Letter",
+      "checkPassFlag": "caiS10Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "scene": "Weimar archive intake desk. The Archivus reads the Arabic phrases embedded in the Armenian — the oral formulae Bedros left untranslated. He recognizes the document's category problem: it is private correspondence whose value is entirely in its informality. A formal document would not have the variant; it would have the analysis. He needs a classification.",
+      "prompt": "Propose: Private Correspondence — Embedded Oral Variants; the informality is the preservation mechanism; the variant exists because the writer was not editing; this is the first entry. DC 12 Investigation.",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 12,
+        "failText": "Filed as Private Correspondence — Syrian Arabic Oral Literature. The variant is noted in the index but the informal register's significance is not recorded.",
+        "passText": "Sweelinck writes: 'Private Correspondence — Embedded Oral Variants: first entry.' He reads the Arabic phrases aloud. 'Aleppo. The story is set in Aleppo in this version.' Cross-references: CAI-S09, CAI-S08. 'Dead men's letters are the archive's oldest inheritance.' You receive the Letter Archive Receipt."
+      },
+      "takeItem": "Bedros's Letter",
+      "grantItem": "Letter Archive Receipt",
+      "checkPassFlag": "caiS10Act5Passed",
+      "activateMissionBit": "caiDiyabVariantComplete",
+      "questComplete": true
+    }
+  ]
+}
+```
+
+---
+
+*CAI-S10 complete. 2026-06-02.*
+
+---
+
+## Cycle 11 — Umm Sulayman's Six Variants
+*Angle: The same story as a performance instrument — how context changes what the story does without changing what it says*
+
+---
+
+### What Prior Cycles Missed
+
+Cycles 2–10 have treated the oral tradition primarily as an object — something to be documented (the codicil), litigated (the court ruling), or written down by scholars (the private letter). None have treated the performance intelligence itself: the fact that a skilled hakawati does not tell the same story the same way twice, and that the differences are not errors but techniques.
+
+Umm Sulayman's six variants of the Peri Banu story are the same story. The plot does not change. The order of events does not change. What changes is the weighting — which parts get expanded, which parts get compressed, which character receives the performer's extended attention. At a wedding, the fairy's underground paradise receives twelve minutes; at a death house, the same section gets three. The old woman spy's intelligence is the moral center of the market-square version and a footnote in the women's gathering version.
+
+*What this cycle adds that all prior cycles missed:* the story as an instrument whose settings are adjusted for each room — not the transmission of the story but the performance of it; the notes document the settings, not the story; the archive receives something it has never held before: a record of how a story is changed for each audience.
+
+---
+
+### Theme Check
+
+**Existing themes to avoid** (all from quest-map.md and prior CAI cycles): the codicil naming tradition-holders; the court ruling creating property law; the local variant before cosmopolitan revision; all themes in the master index.
+
+**CAI-S11 theme chosen**: *The same story told six ways is not six stories — it is the story's full range of available uses; the performance notes document not what the story says but how it is aimed; the archive has never received a document whose subject is the story's capacity to mean different things in different rooms without changing its words; this is the first record of a story as an adjustable instrument rather than a fixed text*
+
+Distinct from all listed themes. The nearest neighbor is "the bound man's incomplete account" (ZTH) — the gaps are the data. Here the variation is deliberate and instructional, not incomplete: the data is the range.
+
+---
+
+### The Token
+
+*Yusuf's Performance Notes — Yusuf al-Halabi's working notes on Umm Sulayman's performance of the Peri Banu story in six different contexts, recorded over twelve years; a slim bound notebook in his small hand, each variant preceded by a header naming the performance context: wedding (1355), death house (1356, 1361), market-square (1358, 1362), women's gathering (1364); margin notes comparing specific passages across contexts with arrows and bracketed annotations; the notebook is not part of the main manuscript — it was kept separately because Yusuf considered it methodology, not content.*
+
+---
+
+**ACT I**
+
+*Yusuf's Performance Notes — on a shelf in Fatima bint Sulayman's house — Aleppo, November 1367.*
+
+Fatima has had the performance notes for six weeks. She found them in Yusuf's study, in a box labeled "methodology" in Armenian script (Yusuf read Armenian from his years at a Tiflis university). She knows the notebook: she was present for three of the six recorded performances, and she read Yusuf's notes against her own memory and found them accurate — more accurate than she expected, because he had caught the timing differences she made herself without being fully conscious of them.
+
+She wants the notes in the archive. Not the same archive as the main manuscript — or rather: the same building, but filed separately. The notes are not content; they are method. They explain how the content works.
+
+She hands the notebook to the Fighter with specific instructions: "This goes to the archivist who received the manuscript. Tell him the notebook is not the appendix to the manuscript. Tell him it is the operating manual for the manuscript's subject."
+
+*— She is precise. She has thought about this for six weeks. The distinction between the manuscript and the notes matters to her: the manuscript is what Yusuf wrote; the notes are what he learned.*
+
+> **Skill Check: History DC 12.** Understand the distinction between a manuscript of stories and a methodology notebook describing how those stories function as performance instruments — the difference between recording the text and recording the technique; the notebook belongs in a different archive category than the manuscript.
+
+**Fail:** The Fighter accepts the notebook without the distinction fully registered. The delivery instruction is carried, but without the context to argue it if challenged.
+
+**Pass:** The distinction is clear. Fatima sees it register. "Good," she says. "Then you understand what to say if someone tries to file it as supplementary material."
+
+**TOKEN GRANTED: Yusuf's Performance Notes** — slim bound notebook, twelve years of observation, six performance contexts, margin annotations comparing specific passages; kept separately from the main manuscript because its subject is methodology, not content.
+
+---
+
+**ACT II**
+
+*Yusuf's Performance Notes — in the pack — at the Aleppo north gate, morning.*
+
+A young man named Ibrahim ibn Sulayman — Fatima's nephew, Umm Sulayman's great-grandson, studying to become a hakawati — has been waiting at the gate since dawn. He wants to see the notebook before it goes.
+
+He is not trying to prevent delivery. He has a specific request: there is one page in the notebook — the death-house variant from 1356, the first time Yusuf ever heard Umm Sulayman perform — where Yusuf wrote in the margin: "she paused here for six seconds and looked at no one; no other version has this." Ibrahim wants to know if the pause is in the notes because it belongs in the method description, or because Yusuf didn't understand what she was doing and marked it as unexplained.
+
+*— He is asking whether his great-grandmother's most private performance moment is going into the archive as data or as a question.*
+
+> **Skill Check: Insight DC 13.** Read what Ibrahim actually needs — he is not asking the Fighter to remove the note, or to change it; he is asking whether someone understood the pause before writing it down. The margin note says "no other version has this" — which is accurate. Whether the pause was technique, grief, or a private communication to the dead-house audience is not in the note. The note records the fact without explaining it. That is accurate methodology, not incomprehension.
+
+**Fail:** Ibrahim follows the Fighter to the city's edge, still asking. The Fighter cannot answer with confidence. He lets them go.
+
+**Pass:** The Fighter explains: the margin note records the fact without claiming to understand it. That is what a methodology notebook should do. The pause is in the archive as a fact, not as an explanation. Ibrahim nods slowly. "She used to say: the room knows something you don't. Don't argue with it." He steps back. *He will learn that pause himself, eventually, from the rooms that call for it.*
+
+**TOKEN CHECKED.**
+
+---
+
+**ACT III**
+
+*Yusuf's Performance Notes — in the pack — on the Antioch road, afternoon.*
+
+A Mamluk administrative official named Hasan al-Rashidi — different family from the al-Rashid storytellers — is traveling north with a small party. He is conducting a routine survey of intellectual property traveling through Mamluk territory following the al-Rashid family's court ruling (CAI-S09). The ruling made performance rights a legal category. Any document related to oral performance is now theoretically subject to administrative review under the new precedent.
+
+He stops the Fighter. He examines the notebook's cover. He is polite. He asks what it contains.
+
+When told it is a performance methodology notebook, he notes that methodology documentation for storytelling falls under the new performance rights framework and may constitute a secondary protected document attached to the al-Rashid family ruling.
+
+He is wrong about the legal interpretation but his mistake is sincere.
+
+> **Skill Check: Persuasion DC 12.** Clarify that the al-Rashid ruling established performance rights for a specific story performed by a specific family — it did not create an administrative right of review over all performance-related documents; the notebook was written by a scholar observing a different family's performances and belongs to neither regulated party.
+
+**Fail:** He holds the notebook for two hours while he writes a query to Damascus. He releases it with a notation in his log: "document passed through under claim of scholarly exemption."
+
+**Pass:** Hasan considers. He knows the ruling was specific. "The al-Rashid family," he says. "Not the Sulayman family." He makes a note in his log — "Sulayman family performance notes, passed through, not subject to al-Rashid ruling" — and releases the Fighter. *He is thorough. He will be good at his job once someone explains to him that the precedent means what it says, not more.*
+
+**TOKEN CHECKED.**
+
+---
+
+**ACT IV**
+
+*Yusuf's Performance Notes — in the pack — at a monastery waystation outside Ankara, three days north.*
+
+The waystation monastery has a scriptorium. A monk named Brother Tomas, who spent fifteen years in Damascus before taking holy orders, is at the waystation when the Fighter arrives. He reads Arabic; he sees the notebook in the pack when the Fighter rests.
+
+He asks to look at it. He reads the Arabic notes carefully. He says: "I have seen performance variation notes in Arabic before — musical notation, call-response protocols, ceremonial instruction texts. I have never seen this." He means: he has never seen a document whose subject is how a story is deliberately changed for different audiences.
+
+He wants to make a copy. Not for religious purposes. For his own scholarly interest. He has been writing a treatise on how sacred texts are altered in performance versus reading, and this is the secular equivalent of what he has been studying.
+
+*— His scholarly request is genuine. A copy would mean the notes reach two archives instead of one. But a copy made without authorization, after the notebook has left Aleppo, raises provenance questions.*
+
+> **Skill Check: Investigation DC 12.** Evaluate the copy request: the notebook was given to the Fighter for delivery to a specific archive with a specific filing instruction (not an appendix, an operating manual); making a copy redirects it into a different scholarly tradition without the tradition-holders' knowledge; the correct path is to tell Brother Tomas the archive's location so he can request access through proper channels once the notebook is filed.
+
+**Fail:** Brother Tomas makes a partial copy — two of the six variant headers and the margin comparisons for the death-house version. He notes the archive destination in his treatise bibliography.
+
+**Pass:** The Fighter explains the proper channel. Brother Tomas is satisfied — he can write to the archive once the notebook is filed and request access for his treatise research. "Better than a copy anyway," he says. "The archive will have the full thing. My copy would only have what I had time to write." He notes the archive's name in his bibliography and lets them go.
+
+**TOKEN CHECKED.**
+
+---
+
+**ACT V**
+
+*Yusuf's Performance Notes — in the pack — at the Weimar archive intake desk, Archivus Sweelinck, late afternoon.*
+
+The Archivus has the main manuscript in the collection already (Cycle 2 — The Collector's Codicil). He recognizes Yusuf al-Halabi's hand from that file. He reads the performance notes slowly, flipping between the six variant headers.
+
+He sets the notebook down.
+
+"This is not the manuscript." He opens the cross-reference file for the main manuscript. He finds the codicil. He reads Fatima's name. He looks up. "She sent this separately." He understands the instruction the Fighter is carrying: not an appendix, an operating manual.
+
+He opens the intake form. He pauses.
+
+"The manuscript is the story. This is—" He looks at the notebook. "This is the story's uses. The six ways the story works. The same words weighted differently for each room." He turns the notebook to the death-house variant. He reads the margin note: *paused here for six seconds, looked at no one; no other version has this.* He is quiet for a moment.
+
+"She knew which rooms needed six seconds of nothing." He closes the notebook carefully.
+
+*— He needs the classification. A methodology notebook for an oral performance tradition is not a manuscript, not a commentary, not a scholarly treatise. It is something the classification system has no word for yet.*
+
+> **Skill Check: Investigation DC 12.** Propose the category: Performance Methodology Records — documents that record not what a story says but how it is performed differently for different audiences; the notebook's subject is the story's range of available uses, not the story itself; the archive creates a new category that is adjacent to but distinct from the Oral Tradition collection.
+
+**Fail:** Filed adjacent to the main manuscript as supplementary documentation. The performance notes' methodological significance is noted in a cross-reference but not given a standalone category.
+
+**Pass:** The Archivus writes: *Performance Methodology Records — documents recording the deliberate variation of a fixed oral text for different audience and social contexts; the story's range of uses documented as performance technique; adjacent to oral tradition but distinct: the subject is not what the story says but how the saying is adjusted for each room.*
+
+He cross-references to the main manuscript, the al-Rashid ruling, and Bedros's letter. He adds a note: *death-house pause, 1356, margin-noted as six seconds, no explanation given — see sub-entry: Unresolved Performance Observations.*
+
+He closes the ledger.
+
+"She is in the record," he says. "So is the pause." You receive the Performance Methods Archive Record.
+
+**TOKEN TAKEN: Yusuf's Performance Notes**
+
+The notebook rests in the first entry of a new category. The death-house pause is in the archive as a fact, not an explanation. Brother Tomas will write from Ankara in four months requesting access for his treatise. Ibrahim ibn Sulayman will learn the pause himself, in his own time, from the rooms that call for it.
+
+---
+
+## Quest API Stub — CAI-S11
+
+```json
+{
+  "quest_id": "CAI-S11",
+  "title": "Umm Sulayman's Six Variants",
+  "source": "CAI",
+  "cycle": 11,
+  "book": "Arabian Nights — Alf Layla wa-Layla (Lang adaptation, 1898 — Galland/Syrian manuscript tradition)",
+  "source_episode": "The Peri Banu story — Prince Ahmed cycle; present in Galland/Lang tradition but not in Burton; carried by the Levant oral tradition in multiple performance-specific variants; Umm Sulayman bint Rashida named in the Collector's Codicil as the tradition-holder",
+  "cycle_angle": "The same story as a performance instrument — how context changes what the story does without changing what it says",
+  "theme": "The same story told six ways is not six stories — it is the story's full range of available uses; the performance notes document not what the story says but how it is aimed; the archive has never received a document whose subject is the story's capacity to mean different things in different rooms without changing its words; this is the first record of a story as an adjustable instrument rather than a fixed text",
+  "token": {
+    "id": "CAI_S11_TOKEN",
+    "name": "Yusuf's Performance Notes",
+    "description": "Yusuf al-Halabi's working notes on Umm Sulayman's performance of the Peri Banu story in six contexts over twelve years; slim bound notebook, small hand, margin annotations comparing specific passages across variants; kept separately from the main manuscript because its subject is methodology, not content.",
+    "grant_act": "act_1",
+    "take_act": "act_5",
+    "check_acts": ["act_2", "act_3", "act_4"]
+  },
+  "nodes": ["ALP", "ANT", "WM"],
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "ALP",
+      "type": "skill_check",
+      "activateNode": "ALP",
+      "missionAccept": "Fatima bint Sulayman has found Yusuf al-Halabi's performance methodology notebook — twelve years of notes on how Umm Sulayman adjusted the Peri Banu story for different audiences. She wants it archived separately from the main manuscript: not an appendix, an operating manual.",
+      "scene": "Fatima's house in the Aleppo Syrian Christian quarter. The notebook is on the table. Fatima says: 'This goes to the archivist who received the manuscript. Tell him the notebook is not the appendix. Tell him it is the operating manual for the manuscript's subject.'",
+      "prompt": "Understand the distinction between a story manuscript and a methodology notebook documenting how the story functions as a performance instrument. DC 12 History.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "failText": "The Fighter accepts the notebook without the distinction fully registered. The delivery instruction is carried, but without context to argue it if challenged.",
+        "passText": "The distinction is clear — the notebook records technique, not text. Fatima says: 'Good. Then you understand what to say if someone tries to file it as supplementary material.' You receive Yusuf's Performance Notes."
+      },
+      "grantItem": "Yusuf's Performance Notes",
+      "checkPassFlag": "caiS11Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "ALP",
+      "type": "skill_check",
+      "scene": "The Aleppo north gate, morning. Ibrahim ibn Sulayman — Fatima's nephew, Umm Sulayman's great-grandson — has been waiting since dawn. He wants to know if a specific margin note (six-second death-house pause, 1356) is in the archive as data or as an unexplained question.",
+      "prompt": "Explain that the margin note records the fact without claiming to understand it — that is what methodology should do. The pause is in the archive as a fact, not an explanation. DC 13 Insight.",
+      "skillCheck": {
+        "skill": "Insight",
+        "dc": 13,
+        "failText": "Ibrahim follows to the city's edge, still uncertain. The Fighter cannot answer with confidence.",
+        "passText": "Ibrahim says: 'She used to say: the room knows something you don't. Don't argue with it.' He steps back. He will learn that pause himself, from the rooms that call for it."
+      },
+      "checkItem": "Yusuf's Performance Notes",
+      "checkPassFlag": "caiS11Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "ANT",
+      "type": "skill_check",
+      "activateNode": "ANT",
+      "scene": "Antioch road, afternoon. A Mamluk administrative official is conducting a survey following the al-Rashid court ruling — which made performance rights a legal category. He believes the new precedent creates an administrative right of review over all performance-related documents. He is wrong about the legal interpretation but sincere.",
+      "prompt": "Clarify: the al-Rashid ruling established rights for a specific story performed by a specific family — it created no general administrative review power over performance-related documents. DC 12 Persuasion.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "failText": "Two-hour hold while he writes a query to Damascus. Released with a notation: 'passed through under claim of scholarly exemption.'",
+        "passText": "He notes in his log: 'Sulayman family performance notes, passed through, not subject to al-Rashid ruling.' He releases the Fighter. He will be good at his job once someone explains the precedent means what it says."
+      },
+      "checkItem": "Yusuf's Performance Notes",
+      "checkPassFlag": "caiS11Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "ANT",
+      "type": "skill_check",
+      "scene": "Monastery waystation outside Ankara. A monk named Brother Tomas spent fifteen years in Damascus; he reads Arabic. He has never seen a document whose subject is how a story is deliberately changed for different audiences. He wants to make a copy for his treatise on performance variation in sacred texts.",
+      "prompt": "Evaluate the copy request: the correct path is to direct Brother Tomas to the archive for access once the notebook is filed, preserving the provenance chain and giving him a better resource than a partial copy. DC 12 Investigation.",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 12,
+        "failText": "Brother Tomas makes a partial copy of two variant headers and the death-house margin notes. He notes the archive destination in his bibliography.",
+        "passText": "Brother Tomas agrees — the archive copy is better than a partial transcription. He notes the archive's name in his bibliography. 'Better anyway. The archive will have the full thing.'"
+      },
+      "checkItem": "Yusuf's Performance Notes",
+      "checkPassFlag": "caiS11Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "scene": "Weimar archive intake desk. Sweelinck has the main manuscript already — he recognizes Yusuf's hand. He understands Fatima sent this separately. He reads the six variant headers and the death-house margin note: 'paused here for six seconds, looked at no one; no other version has this.' He is quiet. He needs the classification: not manuscript, not commentary — something the system has no word for yet.",
+      "prompt": "Propose: Performance Methodology Records — documents recording deliberate variation of a fixed oral text for different contexts; the story's range of uses documented as technique. DC 12 Investigation.",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 12,
+        "failText": "Filed adjacent to the main manuscript as supplementary documentation. The methodological significance is noted but not given a standalone category.",
+        "passText": "Sweelinck writes: 'Performance Methodology Records — first entry.' He adds a sub-entry: 'Unresolved Performance Observations — death-house pause, 1356, six seconds, no explanation given.' 'She is in the record. So is the pause.' You receive the Performance Methods Archive Record."
+      },
+      "takeItem": "Yusuf's Performance Notes",
+      "grantItem": "Performance Methods Archive Record",
+      "checkPassFlag": "caiS11Act5Passed",
+      "activateMissionBit": "caiUmmSulaymanComplete",
+      "questComplete": true
+    }
+  ]
+}
+```
+
+---
+
+*CAI-S11 complete. 2026-06-02.*
+
+---
+
+## Cycle 12 — The Hakawati License
+*Angle: The administrative state that accidentally regulated culture by issuing a routine commercial license*
+
+---
+
+### What Prior Cycles Missed
+
+Cycles 9–11 have examined oral tradition from three angles: the court (property law created by dispute), the scholar (the letter and the methodology notes), and the performer (the six-variant operating manual). None have examined the state's perspective — what a Mamluk market administrator sees when he looks at a hakawati performing in his district's market square.
+
+The market administrator does not see a tradition-holder or a property claimant. He sees a commercial operator using public space to sell a service. The license he issues is a routine commercial document. He has no idea that by issuing it he has implied that stories can be licensed — a different and broader claim than the al-Rashid ruling, which established prior right through transmission. The license assumes ownership can be granted by administrative act, not just confirmed by court finding.
+
+*What this cycle adds that all prior cycles missed:* the administrative version of what the court established — not the judicial creation of a category but the bureaucratic normalization of it; the license that travels to the archive before the second administrator can use it to suppress a competing family; and the question of whether an administrative license and a court ruling can coexist in the same collection without one invalidating the other.
+
+---
+
+### Theme Check
+
+**Existing themes to avoid** (all prior cycles): performance ownership via court ruling (S09); the private letter as accident (S10); the story as adjustable instrument (S11); and all themes in the master index.
+
+**CAI-S12 theme chosen**: *The routine commercial license that implied more than it intended; the market administrator who regulated culture by issuing a standard document without noticing what the document assumed; the archive receives the license before a second administrator can use the precedent to suppress a competing storyteller family — the implicit claim of administrative ownership must be in the archive before it is deployed as a weapon*
+
+Distinct from all listed themes. The nearest neighbor is "the institution's own suppressed instrument returned to the hand that wrote it" (MAN cycle 2) — there, the institution was aware of the document's power and tried to suppress it. Here, the institution does not know what it did.
+
+---
+
+### The Token
+
+*The Zubayr License — a commercial operating license issued by the Damascus market administrator Yunus al-Farrukhani to the hakawati Ahmad ibn Zubayr, granting him exclusive right to perform oral stories in the eastern market quarter's coffee-house district for a period of three years; a standard license in the market administrator's formulary, adapted from the merchant license template; the adaptation required inserting the phrase "oral performance of stories" where the template said "sale of goods"; the implication — that stories are goods that can be licensed — was not noticed by the administrator and not intended; the license is dated Muharram 1367.*
+
+---
+
+**ACT I**
+
+*The Zubayr License — on the market administrator's desk, copy pending — Damascus, March 1367.*
+
+Ahmad ibn Zubayr is a competent hakawati, forty years old, trained in the Baghdad tradition. He applied for a commercial license because a rival family — the Nasser family, backed by a guild that had just lost the al-Rashid court ruling — threatened to use a second market administrator to obtain a competing license and effectively flood his district with rival performers, pricing him out.
+
+His logic: if the state can issue the license, the state can also recognize his prior right through the license. He went to the administrator because the al-Rashid ruling had just established that performance rights exist; he wanted administrative backing.
+
+The administrator issued the license because Ahmad's application was clear, the fee was paid, and nothing in the formulary prohibited it. The administrator did not think about what "oral performance of stories" implied. He was doing his job.
+
+Ahmad is now uncertain. He got what he wanted. He also got something he did not expect: a document that states, by implication, that a market administrator can grant performance rights — which means a market administrator can also revoke them. He wants the original in a neutral archive before the Nasser family's patron discovers this and applies to a different administrator for a license that would supersede his.
+
+> **Skill Check: History DC 12.** Recognize the license's double implication: it establishes Ahmad's rights but also establishes administrative authority over performance rights — a different and potentially broader authority than the court ruling, because administrative grants can be revoked without court proceedings.
+
+**Fail:** Ahmad gives the Fighter the license with a brief description: "It protects my position in the district." The double implication is not conveyed.
+
+**Pass:** Ahmad explains the complication himself, and the Fighter confirms the reading: "The license gives you protection. It also gives the next administrator the tool to take it back." Ahmad nods. "Which is why it needs to be in an archive now. Before someone uses it." He hands over the license.
+
+**TOKEN GRANTED: The Zubayr License** — standard commercial format, adapted for oral performance; the phrase "oral performance of stories" where the template said "sale of goods"; dated Muharram 1367; the administrator's seal.
+
+---
+
+**ACT II**
+
+*The Zubayr License — in the pack — Damascus market district, morning.*
+
+A clerk in the market administrator's office named Salim al-Masri has followed the Fighter. He is not from the administrator — he works for the administrator's superior, a senior muhtasib (market inspector general) who has become aware that a license was issued using a modified template. The muhtasib wants the original license returned for review: the template modification was not authorized through the standard administrative channel, and there is a question of whether the license is formally valid.
+
+He is not saying the license is invalid. He is saying it needs administrative review before it travels.
+
+*— This is a genuine procedural point. The license may have been issued through a non-standard channel. But "administrative review" in this context means: held in the administrator's files indefinitely until the review is complete, which could be years.*
+
+> **Skill Check: Persuasion DC 13.** Argue that the license's validity question is between Ahmad ibn Zubayr and the Damascus administration, and that its administrative status does not affect the archive's ability to receive it as a historical document; the archive does not adjudicate validity, it preserves records; a license in procedural review is still a license that exists and belongs in the archive's collection alongside the al-Rashid court ruling for comparative context.
+
+**Fail:** Salim requires the license be presented at the administrator's office for a review notation before it departs the district. A notation is added: "procedural review pending, not voided." The license travels with this notation.
+
+**Pass:** Salim considers. He is a proceduralist, not a malicious actor. "If the archive notes the procedural question in the intake record, the administration's concern is on the permanent record," he says. "That is acceptable." He lets them pass.
+
+**TOKEN CHECKED.**
+
+---
+
+**ACT III**
+
+*The Zubayr License — in the pack — on the Latakia road, afternoon.*
+
+A representative of the Nasser family — who lost the al-Rashid court proceeding and have been watching the administration since — has calculated that if the Zubayr license is voided on procedural grounds while it is in transit, Ahmad's position in the market quarter is unprotected and the Nasser family's patron can apply for his own license without competition.
+
+Two men, not the family representative himself, are on the road with a specific goal: intercept the license and introduce a physical defect — not destroy it, but damage the seal well enough that its validity can be questioned on provenance grounds.
+
+> **Combat: 2 agents** — AC 12, HP 18. Professional operatives, not brawlers — they will retreat if the Fighter establishes clear superiority; they were paid to damage the document, not fight to the death.
+
+> **Skill Check: Athletics DC 12.** After the fight, confirm the seal. Their goal was the seal specifically.
+
+**Fail (Athletics):** The seal is cracked. The license travels with a damaged seal; the archive will note it as possible provenance interference.
+
+**Pass:** The seal is intact. *The Nasser family's patron will need another approach.*
+
+**TOKEN CHECKED.**
+
+---
+
+**ACT IV**
+
+*The Zubayr License — in the pack — at the Ragusa waystation, evening.*
+
+A Genoese commercial lawyer named Enzo Doria is at the waystation reviewing contracts for a Levantine trading company. He has heard of the al-Rashid court ruling — it traveled through Venetian legal correspondence quickly. He is interested in the Zubayr license as a document type.
+
+He explains: in Genoa there is a dispute over whether the comune can license theatrical guilds, or whether the guilds have self-governance. If a Mamluk market administrator can grant performance rights by commercial license, the Genoese comune has precedent from a foreign jurisdiction. He would like a summary of the license's terms.
+
+He is not asking for the document — he wants to know what it says. He can get a copy in Venice eventually through the legal correspondence network, but he would rather have a firsthand description now.
+
+*— Giving him a summary description of a document the Fighter is carrying is not the same as giving him the document. But it means the license's terms will travel through European commercial law before it reaches the archive.*
+
+> **Skill Check: Investigation DC 12.** Recognize that a verbal summary of a document in transit, given to a commercial lawyer who will immediately use it in an active dispute, makes the Fighter a participant in that dispute and compromises the neutral-carrier role; the correct answer is the archive's name and location, not the document's terms.
+
+**Fail:** The Fighter describes the license's key terms. Enzo takes careful notes. The terms of the Zubayr license enter the Genoese legal correspondence three months before the archive has it.
+
+**Pass:** The Fighter directs Enzo to the archive. "The document is going there. Request access once it is filed." Enzo notes the archive's location. "The Genoese case will wait two months for the archive copy. It was going to take six months through Venice anyway." He is satisfied.
+
+**TOKEN CHECKED.**
+
+---
+
+**ACT V**
+
+*The Zubayr License — in the pack — at the Weimar archive intake desk, Archivus Sweelinck, afternoon.*
+
+The Archivus has the al-Rashid court ruling cross-referenced from CAI-S09. He reads the Zubayr license. He reads it again. He sets it beside the court ruling intake record.
+
+"The court ruling established performance rights through transmission attestation." He taps the license. "This established performance rights through administrative grant." He is quiet for a moment. "They cannot coexist as equal precedents. The court ruling says: the right is prior; it derives from transmission; the court confirms what was already true. The license says: the right is granted; it derives from the administrator's authority; the administrator decides what is true."
+
+He looks at the Fighter. "Which instrument does the archive file as primary?"
+
+*— He is thinking correctly. The two documents describe incompatible theories of how performance rights work. Filing one as primary and one as secondary makes the archive complicit in a legal argument. The correct answer is to file both without assigning priority — creating a category that holds both and notes the incompatibility as the document's significance.*
+
+> **Skill Check: Investigation DC 13.** Propose: file both instruments in the same category — Performance Rights Instruments — without assigning primacy; note in the intake record that the court ruling and the administrative license rest on incompatible theories of ownership origin; the archive's role is to hold the incompatibility, not resolve it; the category is: Performance Rights Instruments — Incompatible Origin Theories, first entry.
+
+**Fail:** Filed under Damascus Legal Records adjacent to the al-Rashid ruling. The incompatibility is noted as a cross-reference comment but not given a standalone category.
+
+**Pass:** Sweelinck writes: *Performance Rights Instruments — Incompatible Origin Theories: the court ruling (CAI-S09) holds that performance rights derive from prior transmission; the administrative license holds that performance rights derive from administrative grant; both are valid instruments in the Mamluk legal system; neither overrides the other; the archive holds both without adjudicating origin; first entry in this category.*
+
+He closes the intake record.
+
+"The second administrator who wanted to suppress the Nasser family's competitors now has the original license in a neutral archive," he says. "The archive is the only institution that benefits from both being true." He adds: "Note: procedural review question on the license's template modification — recorded per the Damascus administration's request; not a validity judgment." You receive the License Archive Record.
+
+**TOKEN TAKEN: The Zubayr License**
+
+The license rests in the first entry of a category that holds two incompatible theories of ownership side by side. The Nasser family's patron has no archive copy to contest. Enzo Doria's letter to the Genoese comune will arrive in three months citing a Weimar archive file reference rather than a private description.
+
+---
+
+## Quest API Stub — CAI-S12
+
+```json
+{
+  "quest_id": "CAI-S12",
+  "title": "The Hakawati License",
+  "source": "CAI",
+  "cycle": 12,
+  "book": "Arabian Nights — Alf Layla wa-Layla (Lang adaptation, 1898 — Galland/Syrian manuscript tradition)",
+  "source_episode": "The Damascus oral tradition — the professional storytellers of the Levant market circuit; the Mamluk administrative infrastructure that regulated commercial activity in market squares; the moment when administrative routine and oral tradition intersect without either side intending what they created",
+  "cycle_angle": "The administrative state that accidentally regulated culture by issuing a routine commercial license",
+  "theme": "The routine commercial license that implied more than it intended; the market administrator who regulated culture by issuing a standard document without noticing what the document assumed; the archive receives the license before a second administrator can use the precedent to suppress a competing storyteller family — the implicit claim of administrative ownership must be in the archive before it is deployed as a weapon",
+  "token": {
+    "id": "CAI_S12_TOKEN",
+    "name": "The Zubayr License",
+    "description": "Commercial operating license from the Damascus market administrator to hakawati Ahmad ibn Zubayr; standard merchant license template adapted to 'oral performance of stories'; exclusive right for three years in the eastern market quarter; dated Muharram 1367; the adaptation implied administrative authority over performance rights without the administrator noticing.",
+    "grant_act": "act_1",
+    "take_act": "act_5",
+    "check_acts": ["act_2", "act_3", "act_4"]
+  },
+  "nodes": ["DAM", "LAT", "RGS", "WM"],
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "DAM",
+      "type": "skill_check",
+      "activateNode": "DAM",
+      "missionAccept": "A Damascus hakawati has obtained a commercial license for oral performance — the first such license in his district. He got what he wanted, and also something he did not expect: the license implies the administrator can grant and revoke performance rights, which means the next administrator can use it against him. He needs the original at a neutral archive before the Nasser family's patron discovers this.",
+      "scene": "Damascus market administrator's district, March 1367. Ahmad ibn Zubayr has the license on his table. He explains the complication: the license protects his position but also establishes administrative authority over it. He needs it in an archive now, before someone uses that authority.",
+      "prompt": "Recognize the license's double implication: it establishes Ahmad's rights but also creates administrative authority to revoke them. DC 12 History.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "failText": "Ahmad gives the license with brief description: 'It protects my position.' The double implication is not conveyed.",
+        "passText": "The Fighter confirms: the license gives protection and also gives the next administrator the tool to take it back. Ahmad: 'Which is why it needs to be in an archive now.' You receive the Zubayr License."
+      },
+      "grantItem": "The Zubayr License",
+      "checkPassFlag": "caiS12Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "DAM",
+      "type": "skill_check",
+      "scene": "Damascus market district. A clerk from the administrator's superior's office intercepts the Fighter. The template modification was not authorized through standard channels; the muhtasib wants the license returned for procedural review — which means held indefinitely. He is a proceduralist, not a malicious actor.",
+      "prompt": "Argue the archive's non-adjudicating role: it does not rule on validity; a license in procedural review is still a document that belongs in the archive alongside the al-Rashid ruling for comparative context. DC 13 Persuasion.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "failText": "A procedural review notation is added to the license before departure: 'review pending, not voided.'",
+        "passText": "Salim: 'If the archive notes the procedural question in the intake record, the administration's concern is on the permanent record. That is acceptable.' He lets them pass."
+      },
+      "checkItem": "The Zubayr License",
+      "checkPassFlag": "caiS12Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "LAT",
+      "type": "hybrid",
+      "activateNode": "LAT",
+      "scene": "Latakia road. Two professional operatives hired by the Nasser family's patron to introduce a physical defect to the license's seal — damaging it enough to raise provenance questions, not destroying it. They are paid for the seal, not the fight.",
+      "combat": {
+        "enemies": [
+          { "name": "Nasser Operative", "count": 2, "ac": 12, "hp": 18, "note": "Retreat if Fighter establishes clear superiority — paid for the seal, not to fight" }
+        ]
+      },
+      "skillCheck": {
+        "skill": "Athletics",
+        "dc": 12,
+        "failText": "The seal is cracked. The license travels with a damaged seal; the archive will note possible provenance interference.",
+        "passText": "The seal is intact. The Nasser family's patron will need another approach."
+      },
+      "checkItem": "The Zubayr License",
+      "checkPassFlag": "caiS12Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "RGS",
+      "type": "skill_check",
+      "activateNode": "RGS",
+      "scene": "Ragusa waystation. Genoese commercial lawyer Enzo Doria is reviewing contracts. He knows of the al-Rashid ruling and wants a description of the Zubayr license's terms — he has a Genoese case about whether the comune can license theatrical guilds; a Mamluk administrative license would be precedent from a foreign jurisdiction.",
+      "prompt": "Recognize that describing the terms of a document in transit to a commercial lawyer using it in an active dispute makes the Fighter a participant in that dispute — direct him to the archive instead. DC 12 Investigation.",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 12,
+        "failText": "The Fighter describes the license's key terms. Enzo takes notes. The Zubayr license's terms enter Genoese legal correspondence before reaching the archive.",
+        "passText": "The Fighter directs Enzo to the archive. 'Request access once it is filed.' Enzo: 'The Genoese case will wait two months for the archive copy. It was going to take six months through Venice anyway.'"
+      },
+      "checkItem": "The Zubayr License",
+      "checkPassFlag": "caiS12Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "scene": "Weimar archive intake desk. The Archivus places the Zubayr license beside the al-Rashid court ruling cross-reference. He sees the incompatibility: the ruling says rights derive from prior transmission; the license says rights derive from administrative grant. Both are valid instruments in the same legal system. Filing one as primary makes the archive complicit in a legal argument.",
+      "prompt": "Propose: Performance Rights Instruments — Incompatible Origin Theories; file both without assigning primacy; the archive holds the incompatibility, not its resolution. DC 13 Investigation.",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 13,
+        "failText": "Filed adjacent to the al-Rashid ruling with incompatibility noted as a cross-reference comment. No standalone category created.",
+        "passText": "Sweelinck writes: 'Performance Rights Instruments — Incompatible Origin Theories: first entry.' Both instruments filed without primacy assigned. Procedural review note added per administration request. 'The archive is the only institution that benefits from both being true.' You receive the License Archive Record."
+      },
+      "takeItem": "The Zubayr License",
+      "grantItem": "License Archive Record",
+      "checkPassFlag": "caiS12Act5Passed",
+      "activateMissionBit": "caiHakawitLicenseComplete",
+      "questComplete": true
+    }
+  ]
+}
+```
+
+---
+
+*CAI-S12 complete. 2026-06-02.*
+
+---
+
+## Cycle 13 — The Performance Notation
+*Angle: The first attempt to describe a performance-context signal in writing; the gap between description and the thing described*
+
+---
+
+### What Prior Cycles Missed
+
+Cycles 9–12 have examined oral tradition through legal and administrative frames: the court ruling, the private letter, the methodology notes, the license. None have examined the performance itself as a material problem — the question of what cannot be written down, and what a person does when they try to write it down anyway.
+
+The performance notation is not a melody, not a story text, not a rights document. It is an attempt by a musician to describe in words the specific melodic phrase that signals to an audience that magic is about to happen in a story they are hearing. The problem: the phrase signals what it signals because the audience has heard it before, in the same context, from the same tradition. The description is accurate and useless to anyone who has not heard the phrase. It cannot teach the phrase. It can only record that the phrase exists and what it signals.
+
+*What this cycle adds that all prior cycles missed:* the limit of the written record — what writing captures and what it necessarily misses; the archivist who receives a document whose function is to describe something writing cannot contain; and the question of whether a description of a performance-context signal has archival value even when it cannot perform its stated function.
+
+---
+
+### Theme Check
+
+**Existing themes to avoid** (all prior cycles): performance ownership, private letter, performance methodology, administrative license, and all master index themes.
+
+**CAI-S13 theme chosen**: *The description of something writing cannot contain; the notation that is accurate and useless to anyone who has not already heard the thing it describes; the archive that receives a document whose stated function the archive cannot fulfill — it can hold the description but it cannot teach the phrase; the value of the document is not as a transmission mechanism but as evidence that the phrase existed, was named, and was distinct from any written word*
+
+Distinct from all listed themes. The nearest neighbor is "the bound man's incomplete transmission" (ZTH) — gaps as data. Here the gap is not incomplete transmission but the structural impossibility of writing what the document attempts to write. Different problem, different angle.
+
+---
+
+### The Token
+
+*Jibra'il's Notation — a notation system in four pages, written in Arabic by a Syrian oud player and professional hakawati accompanist named Jibra'il ibn Musa of Aleppo; the system uses combinations of geometric shapes and directional marks to describe the specific melodic phrases the accompanist plays at four key story-transition moments: magic approaching, bargain being struck, danger unrecognized, story entering its final movement; the notation is descriptive, not musical — it says what the phrase does and approximately where it sits in the register, not which pitches compose it; a fifth page attempts to notate the pause before the lamp is rubbed.*
+
+---
+
+**ACT I**
+
+*Jibra'il's Notation — on the oud player's workbench — Aleppo, November 1367.*
+
+Jibra'il ibn Musa is sixty-three years old. He has accompanied hakawati performances for forty years. He does not read music; there is no written music for what he does. He invented the notation system in 1362 because his hands were beginning to show arthritis and he wanted to leave something for his apprentice that was more than verbal instruction.
+
+The notation does not teach the phrases. He knows this. His apprentice, a young man named Tariq, learned the phrases by ear over three years of sitting beside Jibra'il and watching. The notation is something else — a record that the phrases exist, that they are specific and consistent, that they do a particular job at a particular story-moment.
+
+He wants the notation at a neutral archive because it is the only document that describes what he does. When he and Tariq are gone, no one will know these phrases were specific and consistent and named. They will be subsumed into general accompanying tradition. The notation keeps the distinction from being lost to indistinction.
+
+He is clear-eyed about the notation's limitations. "This cannot teach anyone the phrases," he says. "But it proves they were real. Specific. Named." He hands the four pages to the Fighter. "The fifth page tries to describe the pause before the lamp. I have not decided whether the archive should have it."
+
+He holds the fifth page separately. He has been uncertain about it for three weeks.
+
+*— The pause before the lamp is different from the four phrases. The four phrases are techniques. The pause is a moment of genuine silence that precedes the moment the audience has been waiting for since the performance began. Jibra'il does not know if a description of silence belongs in a notation system.*
+
+> **Skill Check: Insight DC 12.** Read Jibra'il's uncertainty correctly: he is not uncertain about the pause's value; he is uncertain about whether a description of silence belongs in a notation — whether the archive can receive a document whose subject is the absence of sound, and whether that is the same kind of thing as a description of a phrase.
+
+**Fail:** The Fighter takes the four pages and leaves the fifth with Jibra'il. The notation travels without the pause description.
+
+**Pass:** The Fighter says: the pause is a transition signal just as the four phrases are — its function is as specific as theirs; a notation system that describes three acts of a performance but not the fourth is incomplete. Jibra'il is quiet for a moment. Then: "Transition by silence." He adds the fifth page.
+
+**TOKEN GRANTED: Jibra'il's Notation** — five pages including the pause description; four melodic phrase descriptions and one silence description; the first attempt to document what a hakawati accompanist does in writing.
+
+---
+
+**ACT II**
+
+*Jibra'il's Notation — in the pack — Aleppo market district, morning.*
+
+Tariq, Jibra'il's apprentice, has learned about the notation from Jibra'il and intercepted the Fighter. He is not trying to prevent delivery. He is afraid the notation will be misread.
+
+He explains: the four phrases in the notation are described by what they signal, not by what they sound like. If a scholar reads the description of the "magic approaching" phrase and then hears a performance where the accompanist plays something different at that moment — a different phrase, equally valid in another tradition — the scholar will say: "This is not the magic-approaching signal." But it might be. Different accompanists use different phrases for the same moment. Jibra'il's notation documents Jibra'il's version of the convention, not the universal convention.
+
+Tariq wants a clarifying note added to the notation before it travels: "This documents one accompanist's specific practices, not the tradition's universal practices."
+
+> **Skill Check: Persuasion DC 12.** Agree with the substance of Tariq's concern — but argue that the note should be added by the archive as a classification note, not by Tariq as an amendment to the document; amending a document after it has left its creator's hands creates a provenance question; the archive can and should note the specific-practice limitation in the intake record.
+
+**Fail:** Tariq writes the clarifying note on a separate page that he asks the Fighter to carry alongside the notation. The amendment page is not signed or dated, which creates the provenance question Tariq is trying to avoid.
+
+**Pass:** Tariq understands the provenance argument. "The archive's note is better than mine anyway," he says. "It carries more authority." He lets them go.
+
+**TOKEN CHECKED.**
+
+---
+
+**ACT III**
+
+*Jibra'il's Notation — in the pack — Alexandretta harbor, morning.*
+
+At the harbor, the Fighter encounters a Byzantine musician named Konstantinos who is returning from a Damascus commercial trip. He is a professional lute accompanist. He has heard Jibra'il perform — they met at a festival in Antioch four years ago — and he recognizes the Fighter as someone carrying something from the Aleppo performance community.
+
+He does not ask to see the document. He asks the Fighter to carry a verbal message to the archive alongside the notation: that the Byzantine kithara tradition has equivalent transition signals — specific phrases used for the same four moment-types in their own performance tradition — and that if the archive receives Jibra'il's notation, it should know there is a comparable Byzantine document waiting to be written.
+
+He has not written it. He is fifty-eight and not a writer. But if the archive is interested, he would be willing to try to write one in Greek.
+
+*— He is offering to create a parallel document that does not yet exist. This is outside the Fighter's commission, but carrying the verbal message to the archive costs nothing and creates a potential connection between two parallel traditions.*
+
+> **Skill Check: Investigation DC 12.** Evaluate whether carrying the verbal message — an offer to write a comparable Byzantine notation — would compromise the neutral-carrier role or add value to the archive's receipt of the Jibra'il notation. It adds value without compromising neutrality: the Fighter is not creating a document, only reporting an offer.
+
+**Fail:** The Fighter declines to carry an unsolicited verbal message alongside a commissioned document. Konstantinos shrugs. "Tell them a Byzantine player said hello, then."
+
+**Pass:** The Fighter agrees to report the offer to the archive. Konstantinos gives his name and a contact address in Constantinople. "If the Weimar archive ever sends someone east for materials, I will have the notation ready." He and the Fighter part at the harbor.
+
+**ITEM GRANTED: Konstantinos's Offer Note** — the Byzantine musician's name, contact address, and offer to write a Greek transition-signal notation; the first indication that the archive's Jibra'il notation may be part of a larger cross-cultural tradition document set.
+
+---
+
+**ACT IV**
+
+*Jibra'il's Notation — in the pack — at a Hospitaller waystation on the Anatolian road, evening.*
+
+A Hospitaller brother named Fra Bartolomeo is at the waystation. He is from a Flemish family; he grew up hearing market performers in Bruges and Ghent. He has been in the Levant for six years and has watched hakawati performances with great interest.
+
+He has been trying to write down the story of the merchant and the genie (the one from the Arabian Nights frame) for a Flemish cousin who wants to know what the Syrian stories sound like. He has the plot. He cannot capture what the oud does at certain moments — the phrase before the genie appears.
+
+He asks: is the document the Fighter is carrying related to that?
+
+When told it is, he asks if he can read it.
+
+*— He is not a scholar, not a lawyer, not a competing interest. He is a curious man who grew up with stories and wants to understand what he is hearing. Reading the notation would help him understand that the phrases are specific and named — which is the document's entire argument.*
+
+> **Skill Check: Investigation DC 10.** Decide whether to allow Fra Bartolomeo to read the notation. The document is four pages of descriptive notation in Arabic; he can read Arabic (he says). Reading it will not harm its provenance or condition. But a document in transit to an archive is typically not shared before intake.
+
+**Fail:** The Fighter declines to show the document in transit. Fra Bartolomeo takes the refusal without complaint. "Then tell me what it says," he asks instead. "I will tell my cousin the phrases are named and real. That may be enough."
+
+**Pass:** The Fighter allows a reading — five minutes, the notation face-up on the table, Fra Bartolomeo reading without touching. When he finishes: "It says what they signal. Not what they sound like." He pauses. "That is exactly the problem I have been trying to solve and it is also the impossibility." He is satisfied with the phrase and does not ask to copy it.
+
+**TOKEN CHECKED.**
+
+---
+
+**ACT V**
+
+*Jibra'il's Notation — in the pack — at the Weimar archive intake desk, Archivus Sweelinck, afternoon.*
+
+The Archivus reads the notation. He reads it a second time. He tries to read the silence description (the fifth page) and sets it down.
+
+"This document describes something it cannot transmit." He is precise. "The phrases are described by function — magic-approaching, bargain-struck, danger-unrecognized, story-final-movement. I understand what those moments are. I understand that there is a specific melodic phrase that signals each one. I have no idea what any of those phrases sounds like." He sets the notation down. "The document proves the phrases exist and are named and specific. That is what it does. That is all it can do."
+
+He opens the intake form.
+
+"A notation that cannot teach is still a notation. The archive holds descriptions of things it cannot reproduce all the time — visual details of artworks lost to fire, architectural descriptions of demolished buildings. This is the same category: the description that preserves the fact of existence after the thing itself has changed or ended." He reads the silence description again. "Transition by silence." He reads it one more time. "Yes. That is a different kind of thing. But it is the same category."
+
+*— He has arrived at the classification himself. But he needs the Fighter to confirm the cross-reference to the Byzantine musician's offer — if the notation is the first entry in a category, and there is an offer to contribute a parallel Greek notation, that should be in the intake record.*
+
+> **Skill Check: Investigation DC 12.** Report the Konstantinos offer and frame it for the intake record: the Jibra'il notation is the first documented instance of a performance-context signal notation for an oral tradition; there is an unwritten parallel document in the Byzantine kithara tradition; the archive should create the category with a note that similar notations may exist in multiple traditions.
+
+**Fail:** The notation is filed under Performance Methodology Records (cross-reference to CAI-S11). The Byzantine offer is not in the intake record.
+
+**Pass:** The Archivus writes: *Oral Performance Context Notation — Performance-Signal Descriptions: notations describing the function of specific melodic or temporal signals at transition moments in oral performance; Jibra'il ibn Musa, Aleppo, 1367; first entry; note: parallel Byzantine kithara tradition notation may be available (Konstantinos, Constantinople — contact appended); category likely spans multiple traditions.*
+
+He reads the silence description one more time.
+
+"The pause before the lamp," he says. "It signals nothing. It is the moment before the signal. The audience holds its breath." He adds: *notation includes one instance of silence as transition signal — the fifth page.*
+
+"The archive has the sound of nothing," he says. "First time." You receive the Notation Archive Record.
+
+**TOKEN TAKEN: Jibra'il's Notation**
+
+The five pages rest in the first entry of a new category. The silence description is on the intake shelf alongside the four phrase descriptions. Konstantinos's contact address is in the record. The archive has, for the first time, a document that proves that between the story and the magic there was always a specific sound — and that the specific sound was named, and real, and distinct from everything around it.
+
+---
+
+## Quest API Stub — CAI-S13
+
+```json
+{
+  "quest_id": "CAI-S13",
+  "title": "The Performance Notation",
+  "source": "CAI",
+  "cycle": 13,
+  "book": "Arabian Nights — Alf Layla wa-Layla (Lang adaptation, 1898 — Galland/Syrian manuscript tradition)",
+  "source_episode": "The performance tradition of the Syrian hakawati — the professional oral storytellers of the Levant who perform in coffee houses and market squares with oud accompaniment; the specific melodic signals that guide audience experience through story transitions",
+  "cycle_angle": "The first attempt to describe a performance-context signal in writing; the gap between description and the thing described",
+  "theme": "The description of something writing cannot contain; the notation that is accurate and useless to anyone who has not already heard the thing it describes; the archive that receives a document whose stated function it cannot fulfill — it can hold the description but it cannot teach the phrase; the value of the document is not as a transmission mechanism but as evidence that the phrase existed, was named, and was distinct from any written word",
+  "token": {
+    "id": "CAI_S13_TOKEN",
+    "name": "Jibra'il's Notation",
+    "description": "Five pages by Syrian oud player Jibra'il ibn Musa of Aleppo; geometric shapes and directional marks describing four melodic transition-signal phrases (magic approaching, bargain struck, danger unrecognized, story's final movement) and one silence (the pause before the lamp); descriptive, not musical — says what each phrase does, not which pitches compose it; 1367.",
+    "grant_act": "act_1",
+    "take_act": "act_5",
+    "check_acts": ["act_2", "act_3", "act_4"]
+  },
+  "nodes": ["ALP", "ALX", "ANT", "WM"],
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "ALP",
+      "type": "skill_check",
+      "activateNode": "ALP",
+      "missionAccept": "An Aleppo oud player who has accompanied hakawati performances for forty years has written a notation system for the specific melodic phrases that signal story-transition moments. He wants it in a neutral archive — it cannot teach the phrases, but it proves they were real, named, and specific. He is uncertain whether to include the fifth page: a description of the pause before the lamp.",
+      "scene": "Jibra'il's workbench in Aleppo. Four pages of notation are ready. He holds the fifth separately — the pause description. He says: 'This cannot teach anyone the phrases. But it proves they were real. Specific. Named.' He waits to see whether the Fighter understands the question the fifth page raises.",
+      "prompt": "Read Jibra'il's uncertainty: whether a description of silence belongs in a notation system alongside descriptions of phrases. The pause is a transition signal just as the phrases are. DC 12 Insight.",
+      "skillCheck": {
+        "skill": "Insight",
+        "dc": 12,
+        "failText": "The Fighter takes the four pages. The notation travels without the pause description.",
+        "passText": "The Fighter says: the pause is a transition signal just as the four phrases are. Jibra'il: 'Transition by silence.' He adds the fifth page. You receive Jibra'il's Notation — five pages."
+      },
+      "grantItem": "Jibra'il's Notation",
+      "checkPassFlag": "caiS13Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "ALP",
+      "type": "skill_check",
+      "scene": "Aleppo market district. Tariq, Jibra'il's apprentice, has intercepted the Fighter. He wants a clarifying note added: 'This documents one accompanist's specific practices, not the tradition's universal practices.' His concern is legitimate but the amendment method creates a provenance problem.",
+      "prompt": "Agree with the concern but argue the note should be added by the archive as a classification note, not by Tariq as an amendment — amending a document after it has left its creator's hands creates provenance questions. DC 12 Persuasion.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "failText": "Tariq writes the clarifying note on a separate unsigned page and asks the Fighter to carry it alongside. The amendment page has no date or signature.",
+        "passText": "Tariq: 'The archive's note is better than mine anyway. It carries more authority.' He lets them go."
+      },
+      "checkItem": "Jibra'il's Notation",
+      "checkPassFlag": "caiS13Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "ALX",
+      "type": "skill_check",
+      "activateNode": "ALX",
+      "scene": "Alexandretta harbor. Byzantine musician Konstantinos recognizes the Fighter as someone from the Aleppo performance community. He has transition-signal phrases in the Byzantine kithara tradition equivalent to Jibra'il's. He has not written them down, but offers to do so in Greek if the archive is interested. He asks the Fighter to carry the offer.",
+      "prompt": "Evaluate: carrying the verbal message does not compromise neutral-carrier status — the Fighter is reporting an offer, not creating a document. DC 12 Investigation.",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 12,
+        "failText": "The Fighter declines. Konstantinos: 'Tell them a Byzantine player said hello, then.'",
+        "passText": "The Fighter agrees. Konstantinos gives his name and Constantinople contact address. 'If the archive ever sends someone east, I will have the notation ready.' You receive Konstantinos's Offer Note."
+      },
+      "grantItem": "Konstantinos's Offer Note",
+      "checkItem": "Jibra'il's Notation",
+      "checkPassFlag": "caiS13Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "ANT",
+      "type": "skill_check",
+      "activateNode": "ANT",
+      "scene": "Hospitaller waystation on the Anatolian road. Fra Bartolomeo from Bruges has watched hakawati performances for six years and is trying to write the genie story for a Flemish cousin. He cannot capture what the oud does before the genie appears. He asks to read the notation.",
+      "prompt": "Decide whether to allow the reading — it preserves provenance and does not harm the document; the notation is five pages of descriptive Arabic that a curious man could read in five minutes without touching. DC 10 Investigation.",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 10,
+        "failText": "The Fighter declines. Fra Bartolomeo: 'Tell me what it says, then. I will tell my cousin the phrases are named and real.'",
+        "passText": "Fra Bartolomeo reads without touching. 'It says what they signal. Not what they sound like.' Pause. 'That is exactly the problem I have been trying to solve and also the impossibility.' He does not ask to copy it."
+      },
+      "checkItem": "Jibra'il's Notation",
+      "checkPassFlag": "caiS13Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "scene": "Weimar archive intake desk. Sweelinck reads the notation twice. 'This document describes something it cannot transmit. I understand that there is a specific melodic phrase for each transition moment. I have no idea what any of them sounds like.' He reads the silence description. 'Transition by silence.' He needs the Konstantinos offer framed in the intake record — if this is the first entry in a category, it should note that parallel traditions likely exist.",
+      "prompt": "Report the Konstantinos offer and frame it: the notation is the first of what may be a multi-tradition category; parallel Byzantine notation is available from a named musician; the archive should note this. DC 12 Investigation.",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 12,
+        "failText": "Filed under Performance Methodology Records. Byzantine offer not in intake record.",
+        "passText": "Sweelinck writes: 'Oral Performance Context Notation — first entry; note: parallel Byzantine kithara tradition notation may be available (Konstantinos, Constantinople — contact appended); category likely spans multiple traditions.' He adds: 'notation includes one instance of silence as transition signal — fifth page.' 'The archive has the sound of nothing. First time.' You receive the Notation Archive Record."
+      },
+      "takeItem": "Jibra'il's Notation",
+      "grantItem": "Notation Archive Record",
+      "checkPassFlag": "caiS13Act5Passed",
+      "activateMissionBit": "caiPerformanceNotationComplete",
+      "questComplete": true
+    }
+  ]
+}
+```
+
+---
+
+*CAI-S13 complete. 2026-06-02.*
+
+---
+
+## Cycle 14 — The Oral Genealogy
+*Angle: The genealogy as the story's proof of origin — four lines of transmission, one story, four claims about where it started*
+
+---
+
+### What Prior Cycles Missed
+
+Cycles 9–13 have examined the oral tradition through legal, scholarly, and performance-technical lenses. None have examined the genealogy — the recitation of teachers going back to the story's origin that a hakawati performs before the story begins. The genealogy is itself a performance, and it is also the tradition's internal proof of authenticity: the recitation names where the story came from, and from whom, and from whom before that.
+
+The document in this cycle is not one genealogy. It is four: the same story's transmission documented by four different storytellers whose lines diverge at the third generation back. The divergence means that either two separate communities received the story from a common source, or that one community's memory of the story's origin has drifted, or that the source itself was not a single person but a confluence. The four-column document does not resolve the question. It preserves the question's exact form.
+
+*What this cycle adds that all prior cycles missed:* the genealogy as a document of divergence — not the authorized version of where the story came from but the complete record of where four different communities say it came from; the archive that receives a document whose primary value is the irresolution between four columns.
+
+---
+
+### Theme Check
+
+**Existing themes to avoid** (all prior cycles and master index): performance ownership; private letter as accident; performance methodology; administrative license; performance notation; all master index themes.
+
+**CAI-S14 theme chosen**: *The genealogy that is four columns long because the story arrived at the same place by four different routes; the four lines of transmission that diverge at the third generation and converge at the story they all carry; the archive receives a document whose subject is not the story's origin but the irresolvable question of the story's origin — four honest answers to the same question that do not agree, preserved in four columns because resolving them would destroy the question that makes the document valuable*
+
+Distinct from all listed themes. The nearest neighbor is the comparative method (MLA cycle 1 — "the comparison produces what neither biography contains alone"). Here the comparison does not produce meaning — it produces an open question. The meaning is the opening.
+
+---
+
+### The Token
+
+*The Four Genealogies — an Aleppo scholar's document recording the transmission genealogies of the lamp-keeper's story as performed by four storytellers, in four columns; written by Ahmad al-Jurjani of the Aleppo madrasa in Rabi al-Awwal 1367; the four columns share the same story name, the same current performers, and the same third-generation teacher in two cases; the lines diverge at the fourth generation back; the document contains a fifth page, the scholar's private notation of where the four lines cannot be reconciled; Ahmad al-Jurjani did not intend to publish the document — he wrote it as a research problem he could not solve.*
+
+---
+
+**ACT I**
+
+*The Four Genealogies — rolled in a leather tube on Ahmad al-Jurjani's desk — Aleppo madrasa, November 1367.*
+
+Ahmad al-Jurjani is a teacher of history and rhetoric at the madrasa. He became interested in hakawati genealogies three years ago after noticing that two performers he knew claimed the same fourth-generation teacher by name — a woman in Mosul, deceased in 1283 — but could not have both received the story from her directly, since one performance lineage runs through Aleppo and one through Damascus and neither passes through Mosul.
+
+He spent two years finding four storytellers willing to recite their full genealogies to him. He wrote them down in parallel columns. The divergence is clear: generations one through three match in pairs; generation four diverges to four separate sources in four different cities. The fifth page is his private note about why this might be — four hypotheses, none sufficient.
+
+He wants the document at a neutral archive because the madrasa's administration has asked him to write a definitive account of the lamp-keeper's story's origin for an official history being compiled. He cannot write a definitive account. The document is proof that a definitive account is not the right kind of answer to this question.
+
+"This is my evidence that the question is more interesting than any answer," he says. "The administration wants an answer. I have four and they do not agree. The archive is the only place where that is acceptable."
+
+*— He needs to know the archive will receive the document as a record of irresolution, not as incomplete research.*
+
+> **Skill Check: History DC 12.** Understand the document's specific value: four honest genealogies that diverge at the fourth generation are not a research failure — they are a primary document about how oral traditions develop and diverge; the archive's function includes holding questions that cannot be resolved without deciding something the document deliberately does not decide.
+
+**Fail:** Ahmad gives the document with a note saying "research incomplete." The archive will file it accordingly.
+
+**Pass:** Ahmad nods at the Fighter's framing. "Four honest answers. None of them wrong. All of them insufficient." He removes the "research incomplete" note he had written. "Tell the archive: this is a complete document. The irresolution is the subject."
+
+**TOKEN GRANTED: The Four Genealogies** — four-column document, five pages total; the genealogies themselves plus the scholar's private notation of the divergence hypotheses.
+
+---
+
+**ACT II**
+
+*The Four Genealogies — in the pack — Aleppo north road, morning.*
+
+One of the four storytellers, a woman named Maryam bint Khalid, has sent her son to the road. She was told by another of the four storytellers that a document recording her genealogy is traveling to a northern archive. She did not authorize Ahmad al-Jurjani to record her genealogy.
+
+Her son, a careful young man named Fahd, is polite. He explains: his mother performed her genealogy for the scholar in good faith, as an act of professional courtesy. She did not expect it to travel. She wants to know if her name is in the document.
+
+*— Her concern is legitimate and not a legal obstruction: she is asking a privacy question, not asserting a property right. The genealogy she recited is her own account of her own lineage — she has a natural interest in knowing where it ends up.*
+
+> **Skill Check: Persuasion DC 12.** Explain that the document's purpose is to preserve the divergence in the transmission record — that her genealogy is valued precisely because it differs from the others, which means the divergence rather than any single line is what the archive receives; and that the archive's classification will note the document's subject as transmission divergence, not as a record of any individual's lineage.
+
+**Fail:** Fahd asks for a written assurance from the Fighter that Maryam's name will be noted with her consent. The Fighter cannot give such an assurance, and the exchange delays departure by one day.
+
+**Pass:** Fahd understands that the four columns together are the document — that no single column is named individually in the archive entry. His mother's line is one of four; the document is about all four. He says: "She will understand that." He steps aside.
+
+**TOKEN CHECKED.**
+
+---
+
+**ACT III**
+
+*The Four Genealogies — in the pack — at the harbor in Alexandretta, afternoon.*
+
+A merchant's scribe named Yusef al-Mutawwaj is at the harbor completing a cargo manifest. He is an amateur genealogist — he keeps genealogy records for merchant families in Aleppo as a sideline. He notices the leather tube in the Fighter's pack and recognizes it as a document tube from the madrasa.
+
+He asks what it is. When told it is a genealogy document, he offers a professional observation: he has been keeping merchant genealogies for twenty years, and he knows the Mosul woman in the fourth generation — or rather, he knows the name, because she appears in three different Aleppo merchant family genealogies in the same generation, always as a teacher or transmitter, never as a family member. Her name in the merchant genealogies is not her name in the storytelling genealogies.
+
+He does not say the two are the same person. He says: "If they are the same woman, someone knows more about where this story came from than your scholar's document records."
+
+*— He has genuine information that could extend the research. But his information is unverified and would require investigation to confirm, which is beyond the Fighter's commission.*
+
+> **Skill Check: Investigation DC 12.** Evaluate the information: it may be significant; the Fighter's commission is delivery, not investigation; the correct action is to ask the merchant scribe to write a brief note with his name and the merchant genealogy information and carry it alongside the document for the archive to follow up.
+
+**Fail:** The Fighter notes the information verbally and moves on. The merchant scribe's lead does not travel with the document.
+
+**Pass:** Yusef writes a two-page note with his name, the three merchant genealogies where the woman appears, and the name variants. He seals it. "The archive can compare. If it is the same woman, the story came from a merchant family, which changes what the genealogy means." He hands the note to the Fighter.
+
+**ITEM GRANTED: Yusef's Merchant Note** — two pages identifying the fourth-generation woman in merchant genealogies; possible connection between storytelling lineage and merchant family; appended to the archive packet.
+
+---
+
+**ACT IV**
+
+*The Four Genealogies — in the pack — at Ragusa, morning.*
+
+The madrasa's administration in Aleppo has sent a letter to the Ragusa waystation through a commercial courier, addressed to the Fighter by description. The letter is from the madrasa administrator who wanted the definitive origin account. He has heard Ahmad al-Jurjani sent his research to a foreign archive. He wants it returned, or at minimum, held at Ragusa until an official determination can be made about whether a document produced at the madrasa is the madrasa's institutional property.
+
+The letter argues: the research was conducted using the madrasa's resources (stipend, travel funds, access to the madrasa's guest facilities for the storytellers).
+
+*— The institutional property argument has some merit as a legal question, but the document was not commissioned by the madrasa — it was Ahmad's private research. The administrator is conflating "conducted with institutional support" with "institutional property," which are different claims.*
+
+> **Skill Check: Persuasion DC 13.** Argue the distinction: institutional support for a scholar's private research does not make the research institutional property; the madrasa funded Ahmad's position, not this document specifically; the archive routinely receives documents produced by scholars working at institutions, and the archive's receipt does not remove the document from institutional access — any madrasa representative can request access to the archive's copy.
+
+**Fail:** The courier requires the Fighter to acknowledge receipt of the letter in writing and to carry a copy of the acknowledgment to the archive. The archive will receive a note about the contested ownership claim.
+
+**Pass:** The Ragusa harbor official witnesses the exchange and agrees with the Fighter's distinction on the institutional property question. The administrator's letter is noted and the Fighter continues.
+
+**TOKEN CHECKED.**
+
+---
+
+**ACT V**
+
+*The Four Genealogies — in the pack — at the Weimar archive intake desk, Archivus Sweelinck, afternoon.*
+
+The Archivus reads all five pages. He reads the four columns in parallel, moving his finger across each generation. He reaches generation four and stops. He reads the scholar's private notation on the fifth page. He reads Yusef's merchant note.
+
+He sets everything down.
+
+"Four honest genealogies that diverge at the fourth generation." He reads the divergence again. "The fourth-generation names are in four different cities. None of them are verifiable from here." He looks at the merchant note. "And now there is a possibly fifth name in merchant family records that might or might not be the same woman in a different register." He is quiet.
+
+"This document's subject is a question." He opens the intake form. "The archive receives questions. We receive disputed inheritance records, conflicting survey documents, double-signed contracts. We do not resolve them. We hold them." He pauses. "But I have not before received a document whose *entire* subject is a question — not a disputed claim with two parties but a genuine irresolution that four honest people have created by trying to be accurate."
+
+*— He needs the classification: a document that preserves an irresolved question about origin rather than asserting an answer. The merchant note and the fifth page together mean the question has at least five possible answers, one of them appearing in a different document type entirely.*
+
+> **Skill Check: Investigation DC 13.** Propose the classification: Transmission Divergence Records — documents that preserve the irresolution in a tradition's claimed genealogy of origin; the four-column format is the record of four honest answers that do not agree; the merchant note is appended as a potential sixth data point requiring follow-up; the archive receives the irresolution as the document's completed subject.
+
+**Fail:** Filed under Oral Tradition Research — Genealogical Records. The merchant note appended. The divergence noted as inconclusive. The irresolution is not given a standalone category.
+
+**Pass:** Sweelinck writes: *Transmission Divergence Records — Oral Tradition: documents preserving an irresolved genealogy of transmission where multiple authentic lines diverge before a verifiable common source; the four-column format is the document's completed form, not an incomplete research state; appended: merchant genealogy note (Yusef al-Mutawwaj, Alexandretta) identifying a possible convergence point in a non-storytelling lineage — follow-up item.*
+
+He reads the scholar's fifth-page hypotheses.
+
+"He wrote four hypotheses. None sufficient. That is the correct thing to write when you have four honest answers and cannot choose between them." He adds: *scholar's divergence hypotheses preserved as primary research annotation; the document is complete as submitted.*
+
+He closes the ledger.
+
+"The story came from four places at once," he says. "Which means it came from somewhere before all four, which we don't know. The archive holds all four and notes that the fifth direction exists." He does not say: that is already more than most things have. You receive the Genealogy Archive Record.
+
+**TOKEN TAKEN: The Four Genealogies**
+
+The four-column document rests in the first entry of a new category. The merchant note is appended. Ahmad al-Jurjani's five hypotheses are in the record. The story came from somewhere before the four lines diverged — which no one living knows, and which the archive holds as a question, in four columns, with a merchant genealogy in the margin that might be the beginning of a fifth.
+
+---
+
+## Quest API Stub — CAI-S14
+
+```json
+{
+  "quest_id": "CAI-S14",
+  "title": "The Oral Genealogy",
+  "source": "CAI",
+  "cycle": 14,
+  "book": "Arabian Nights — Alf Layla wa-Layla (Lang adaptation, 1898 — Galland/Syrian manuscript tradition)",
+  "source_episode": "The hakawati transmission tradition — the recitation of a story's teachers going back to its origin, performed before the story begins; the lamp-keeper's story carried by four Aleppo storyteller families whose genealogies share generation three but diverge at generation four",
+  "cycle_angle": "The genealogy as the story's proof of origin — four lines of transmission, one story, four claims about where it started",
+  "theme": "The genealogy that is four columns long because the story arrived at the same place by four different routes; the four lines of transmission that diverge at the third generation and converge at the story they all carry; the archive receives a document whose subject is not the story's origin but the irresolvable question of the story's origin — four honest answers to the same question that do not agree, preserved in four columns because resolving them would destroy the question that makes the document valuable",
+  "token": {
+    "id": "CAI_S14_TOKEN",
+    "name": "The Four Genealogies",
+    "description": "Ahmad al-Jurjani's four-column document recording the transmission genealogies of the lamp-keeper's story from four Aleppo storytellers; the lines share generations one through three and diverge at generation four; plus the scholar's private fifth-page notation of the divergence hypotheses; 1367.",
+    "grant_act": "act_1",
+    "take_act": "act_5",
+    "check_acts": ["act_2", "act_3", "act_4"]
+  },
+  "nodes": ["ALP", "ALX", "RGS", "WM"],
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "ALP",
+      "type": "skill_check",
+      "activateNode": "ALP",
+      "missionAccept": "An Aleppo madrasa scholar has spent two years recording the transmission genealogies of the lamp-keeper's story from four storytellers. The four columns diverge at generation four. The madrasa wants a definitive origin account; he cannot write one. The archive is the only place where a document whose subject is irresolution is acceptable.",
+      "scene": "Ahmad al-Jurjani's desk at the madrasa. The rolled document is ready. He says: 'This is my evidence that the question is more interesting than any answer. The administration wants an answer. I have four and they do not agree.' He needs to know the archive will receive irresolution as a complete document, not incomplete research.",
+      "prompt": "Understand that four honest diverging genealogies are a primary document about oral tradition development, not a research failure. DC 12 History.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "failText": "Ahmad gives the document with a note saying 'research incomplete.' The archive will file it accordingly.",
+        "passText": "Ahmad removes the 'research incomplete' note. 'Four honest answers. None of them wrong. All of them insufficient. Tell the archive: this is a complete document. The irresolution is the subject.' You receive the Four Genealogies."
+      },
+      "grantItem": "The Four Genealogies",
+      "checkPassFlag": "caiS14Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "ALP",
+      "type": "skill_check",
+      "scene": "Aleppo north road. One storyteller's son Fahd intercepts the Fighter. His mother Maryam bint Khalid recited her genealogy to the scholar in professional courtesy, not expecting it to travel. She wants to know if her name is in the document — a privacy concern, not a legal obstruction.",
+      "prompt": "Explain that the document's subject is the divergence between four columns; no single column is individually named in the archive entry; her line is one of four, and the document is about all four together. DC 12 Persuasion.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "failText": "Fahd asks for written assurance about his mother's name being noted with consent. One day's delay.",
+        "passText": "Fahd: 'She will understand that.' He steps aside. Her line is one of four — the document is about all four."
+      },
+      "checkItem": "The Four Genealogies",
+      "checkPassFlag": "caiS14Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "ALX",
+      "type": "skill_check",
+      "activateNode": "ALX",
+      "scene": "Alexandretta harbor. Merchant scribe Yusef al-Mutawwaj recognizes a madrasa document tube. He has kept merchant family genealogies for twenty years. The fourth-generation woman in the storytelling genealogies appears in three Aleppo merchant family genealogies in the same generation, under a slightly different name. If it is the same woman, the story came from a merchant family — which changes what the genealogy means.",
+      "prompt": "Evaluate: this is unverified but potentially significant; the correct action is to have him write a note for the archive to follow up, rather than investigate mid-commission. DC 12 Investigation.",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 12,
+        "failText": "The Fighter notes the information verbally and moves on. The lead does not travel with the document.",
+        "passText": "Yusef writes a two-page note with the merchant genealogies and name variants. 'The archive can compare.' You receive Yusef's Merchant Note."
+      },
+      "grantItem": "Yusef's Merchant Note",
+      "checkItem": "The Four Genealogies",
+      "checkPassFlag": "caiS14Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "RGS",
+      "type": "skill_check",
+      "activateNode": "RGS",
+      "scene": "Ragusa waystation. The madrasa administrator has sent a letter through a commercial courier claiming the document is institutional property because the research was conducted using the madrasa's stipend and travel funds. He wants it returned or held pending an official determination.",
+      "prompt": "Distinguish: institutional support for private research is not the same as institutional ownership; the archive's receipt does not restrict access — any madrasa representative can request access to the archive copy. DC 13 Persuasion.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "failText": "The Fighter acknowledges the letter in writing; the archive will receive a note about the contested ownership claim.",
+        "passText": "The Ragusa harbor official agrees with the distinction. The administrator's letter is noted; the Fighter continues."
+      },
+      "checkItem": "The Four Genealogies",
+      "checkPassFlag": "caiS14Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "scene": "Weimar archive intake desk. Sweelinck reads four columns, follows each through the divergence at generation four, reads the scholar's five hypotheses, reads the merchant note. 'Four honest genealogies that diverge at the fourth generation. This document's subject is a question.' He needs the classification: a document that preserves genuine irresolution rather than asserting an answer — whose complete form is the four columns with no resolution added.",
+      "prompt": "Propose: Transmission Divergence Records — Oral Tradition; the four-column format is the completed document; the merchant note is a follow-up item; the archive receives the irresolution as the document's subject. DC 13 Investigation.",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 13,
+        "failText": "Filed under Oral Tradition Research — Genealogical Records. Divergence noted as inconclusive. No standalone category.",
+        "passText": "Sweelinck writes: 'Transmission Divergence Records — Oral Tradition: first entry.' He adds the merchant note as a follow-up item. 'The story came from four places at once. The archive holds all four and notes that the fifth direction exists.' You receive the Genealogy Archive Record."
+      },
+      "takeItem": "The Four Genealogies",
+      "grantItem": "Genealogy Archive Record",
+      "checkPassFlag": "caiS14Act5Passed",
+      "activateMissionBit": "caiOralGenealogyComplete",
+      "questComplete": true
+    }
+  ]
+}
+```
+
+---
+
+*CAI-S14 complete. CAI seeds S09–S14 fully written. 2026-06-02.*
+

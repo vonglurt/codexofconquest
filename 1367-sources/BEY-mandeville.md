@@ -1826,3 +1826,1662 @@ Archivus Sweelinck reads the chapter. He reads it again. He reads Mandeville's c
 ---
 
 *BEY-07 complete. 2026-06-02.*
+
+---
+
+## Cycle 8 — The Intelligence Report
+*Angle: The reader who actually did what the text invited; the analysis that proved the reliable section was correct*
+
+---
+
+### What Prior Cycles Missed
+
+Cycles 1–7 have focused on the question of Mandeville's truthfulness and compilation — the sober draft, the annotated Odoric, the missing chapter, the safe conduct whose provenance is uncertain. Cycle 2 focused on the political stakes of what the reliable section contains in 1367. What none have addressed is what happens when a skilled reader does the analysis that the reliable section invites.
+
+Chapter XV of Mandeville describes the Sultan's French-speaking intelligence network in explicit detail: four men who speak French "right well," know the Christian courts, and travel as merchants "of precious stones." Mandeville claims to have heard this from the Sultan himself. A Dominican friar with access to Avignon diplomatic archives spent three years cross-referencing the description against records of Mamluk diplomatic contacts. He found four candidates. He wrote a memorandum. The fourth name has a marginal annotation.
+
+*What this cycle adds that all prior cycles missed:* the reader who performed the analysis the text invites; the document that proves the reliable section was reliable by being too specific to suppress quietly; the archive that receives a correct answer no one dares to publish.
+
+---
+
+### Theme Check
+
+**Existing themes to avoid** (all prior BEY cycles and master index): the document authenticating an inconvenient prior relationship; the source annotated by its derivative; the document that is evidence for what it isn't; the administrative debunking; the original demoted by its own derivative; the chapter absent from all other copies; and all master index themes.
+
+**BEY-S09 theme chosen**: *The analysis that proved the right answer but named the wrong person's brother; the document that is accurate, unpublishable, and too specific to suppress quietly; neither destroying it nor publishing it is a safe action for any party in 1367; the archive receives it because neutral preservation is the only form of existence available to a true thing that cannot be spoken aloud — which is exactly the position the Sultan described ten chapters earlier when he explained why he spoke openly only to visitors who had nothing to take home*
+
+Distinct from all listed themes. Nearest neighbors: "the eclipse witness" (KSU cycle 2 — suppressing eyewitness testimony of a portent) and "the document authenticating an inconvenient prior relationship" (BEY Cycle 2). Neither covers: the correct analysis that implicates a currently powerful person; the document that survives because no one can afford the alternative to preservation.
+
+---
+
+### The Token
+
+*The Dominican Analysis — a Dominican friar's four-page memorandum, written 1366, cross-referencing Mandeville's Chapter XV description of the Sultan's four French-speaking intelligence agents against Avignon diplomatic dispatch records for the period 1322–1357; the friar identified four candidate names matching the description; the fourth name carries a marginal annotation in smaller script: "— brother of the Cardinal of the Apostolic Camera, Avignon, currently residing in Curia." The friar, Brother Luc, died at the Marseille Dominican priory in April 1367. Father Bernard, prior, found the memorandum in the dead friar's cell in May.*
+
+---
+
+**ACT I**
+
+*The Dominican Analysis — folded in a leather wallet on Father Bernard's desk — Dominican priory, Marseille, October 1367.*
+
+Father Bernard is a careful man. He has read the memorandum three times. He believes it is accurate: Brother Luc was the priory's best researcher, spent twenty years in the East, spoke Arabic, and had legitimate access to the Avignon diplomatic records through the Dominican provincial archive. The methodology is sound. The conclusion is that four men fitting the Sultan's description appear in Avignon diplomatic records over a thirty-year period, and the fourth, still living, is the brother of a cardinal who currently serves the Apostolic Camera.
+
+He cannot destroy it. He tried. He got as far as the priory hearth and set it down again. It is accurate. Destroying an accurate document feels like a sin to him in a way that is not entirely theological.
+
+He cannot keep it. The cardinal has agents in Marseille. Three weeks ago someone from the cardinal's household called at the priory asking whether Brother Luc had left any research of "curia interest." Father Bernard said no and immediately regretted saying anything at all.
+
+He needs the memorandum to go somewhere that is not the priory and is not the cardinal.
+
+*— He will give it to the Fighter if the Fighter understands what it is and what the methodology means. He will not explain the fourth name. That, he will leave to the archivist.*
+
+> **Skill Check: History DC 12.** Confirm that the analysis methodology is sound: Mandeville's description of the four agents as French-fluent, knowledgeable of northern French and Flemish courts specifically, traveling as merchants in precious stones — this is specific enough to match against Avignon diplomatic contacts; the friar used the right method for the right sources; the analysis is not speculation, it is cross-referencing.
+
+**Fail:** Father Bernard gives the memorandum with no further explanation. "Take it north. Don't tell anyone what's in it."
+
+**Pass:** The Fighter confirms the methodology is sound. Father Bernard relaxes fractionally. "Brother Luc spent three years on this. He was not guessing." He hands over the wallet. "The archivist will know what to do with the fourth name." He does not say the fourth name aloud.
+
+**TOKEN GRANTED: The Dominican Analysis** — four-page memorandum in Brother Luc's careful hand; four candidate names; the fourth carrying a marginal annotation; folded in a leather wallet, sealed with the priory's plain wax.
+
+---
+
+**ACT II**
+
+*The Dominican Analysis — in the wallet, in the pack — road to the Marseille harbor, morning.*
+
+Two men are waiting near the south gate. They are not armed visibly. They are waiting for a carrier leaving the Dominican priory.
+
+They say they are from the provincial Dominican administration. They have been informed that Father Bernard has released a document of "curia interest" to an external carrier. They need the document returned for official review under Dominican internal procedures.
+
+The Fighter is not a Dominican. Does not hold a Dominican commission. Is carrying a private scholarly memorandum about the history of Mamluk intelligence, not a church document.
+
+*— Their story requires that the Fighter is acting under Dominican authority, which the Fighter is not. The memorandum was given as a private commission, not a church document. Their administrative jurisdiction does not extend to the Fighter.*
+
+> **Skill Check: Deception DC 13.** Establish, clearly and without hostility, that there is no Dominican document in the pack — that a private scholarly memorandum commissioned and given by an individual Dominican friar to a private carrier is not a church document subject to Dominican administrative review, and that the men have the wrong description of what they are looking for and who they are looking for.
+
+**Fail:** One of the men stays on the road watching while the other walks back toward the priory, presumably to clarify. The Fighter has a two-hour lead before anyone reports back to the cardinal's household.
+
+**Pass:** The men look at each other. The Dominican administration argument requires them to claim jurisdiction over a private citizen carrying a private document, which is a harder legal position than they were prepared to argue. They step aside. *They will report back. But they have nothing to report except that the carrier was unconvincing on the jurisdiction question, which is itself not their problem.*
+
+**TOKEN CHECKED.**
+
+---
+
+**ACT III**
+
+*The Dominican Analysis — in the pack — at the Genoa harbors, afternoon.*
+
+A man named Qasim ibn Rashid approaches the Fighter at the Genoese quayside. He is a Mamluk diplomatic factor — not a hostile operative, a professional. He has heard, through merchant channels, that a document exists identifying French-speaking Mamluk intelligence assets by name. He is calm about this. He is not threatening anyone.
+
+He explains his position: if a document naming four active intelligence personnel reaches the wrong hands in the Avignon curia — particularly the hands of the cardinal who has already heard about it — the named personnel are compromised, recalled, and the Sultan's network in the northern European courts is damaged. He would prefer the document to be archived in a form where it is historically available but not operationally useful.
+
+"The archive is the right destination," he says. "I am not asking you to give it to me. I am asking you to confirm that is where it is going."
+
+*— He wants reassurance that the document ends up in preservation and not in the curia's hands. His interest aligns with the Fighter's commission. But his presence establishes that the Mamluk network already knows about the memorandum, which is information the archive should have.*
+
+> **Skill Check: Persuasion DC 12.** Confirm the archive destination and the archive's function — historical preservation, not operational intelligence; a document filed under Mandeville research in a Weimar archive does not constitute operational exposure; the archive's intake process would classify it as a historical analysis, not as current intelligence.
+
+**Fail:** Qasim remains uncertain. He will monitor the document's travel through his Venetian correspondents.
+
+**Pass:** Qasim nods. "The Sultan gave Mandeville his commission under the great seal because he trusted the man would write everything down and no one would believe him. The archive should be the same: a place where everything is recorded and nothing is deployed." He gives the Fighter a small copper seal from a Mamluk diplomatic dispatch — not a document, just a token of the meeting. "In case anyone asks who you spoke to in Genoa."
+
+**ITEM GRANTED: Qasim's Copper Seal** — a plain copper seal from a Mamluk diplomatic dispatch; identification token; proof of who spoke to the Fighter and why.
+
+---
+
+**ACT IV**
+
+*The Dominican Analysis — in the pack — at Ragusa waystation, evening.*
+
+Ser Marco, a Venetian canon lawyer retained by the cardinal's household, is waiting at the Ragusa waystation. He is a sophisticated man. He has done his research. He has a written statement from a Dominican scholar in Bologna — one Fra Guglielmo — asserting that Brother Luc's methodology was "speculative in character, lacking adequate documentary foundation, and insufficient to support identification claims of any legal or historical weight." Fra Guglielmo is credible. The statement is accurate in one sense: the methodology's conclusion is unverified. Ser Marco wants the document filed by the archive as a forgery, with Fra Guglielmo's statement as the basis.
+
+He is not asking the Fighter to destroy the memorandum. He is asking the Fighter to ensure the archive files it as a discredited document. He says this is better than suppression.
+
+*— He is right that filing as discredited is better than suppression. But filing as a forgery based on a commissioned dismissal statement is using the archive as a suppression mechanism through a less obvious route. The difference between "speculative methodology, unverified conclusion" and "forgery" is the difference between a document that can still be examined and a document that is officially pre-dismissed.*
+
+> **Skill Check: Investigation DC 13.** Distinguish between "forgery" and "unverified conclusion" as archive categories: a forgery is a document fabricated to deceive; an unverified analytical conclusion is a document whose methodology is sound but whose conclusion is not independently confirmed; the difference matters because a forged document is discarded from the archive's evidentiary weight, but an analytical document with an unverified conclusion retains weight as a primary methodological record; filing it as a forgery based on a statement commissioned by an interested party is using the archive's classification system as a suppression tool.
+
+**Fail:** Ser Marco proposes that the archive files it as "speculative analysis, not corroborated" — a compromise weaker than "forgery." The Fighter accepts this as a reasonable classification note. The memorandum travels with Ser Marco's compromise language as an appended note.
+
+**Pass:** The distinction holds. Ser Marco listens to the classification argument. He is a canon lawyer; the distinction is real to him. "The archive's entry will say: 'unverified conclusion; methodology described as speculative by Fra Guglielmo, Bologna, under commission.'" He writes this out. "Filed as commissioned." He hands the note to the Fighter. *The note now records its own bias.* Ser Marco is not pleased, but he accepts.
+
+**ITEM GRANTED: Ser Marco's Commission Note** — Ser Marco's handwritten statement that Fra Guglielmo's dismissal was written "under commission"; the note records its own interest.
+
+---
+
+**ACT V**
+
+*The Dominican Analysis — in the pack — at the Weimar archive intake desk, Archivus Sweelinck, late afternoon.*
+
+The Archivus reads the memorandum. He reads Mandeville Chapter XV from the archive's copy. He reads the methodology: Avignon diplomatic records, period 1322–1357, cross-referenced against language competency notes and northern European geographic knowledge. He reads the four candidate names. He reads the fourth name's marginal annotation.
+
+He sets it down.
+
+He reads Fra Guglielmo's statement. He reads Ser Marco's note that it was commissioned. He sets both down.
+
+"A Dominican friar read Chapter XV of Mandeville carefully and cross-referenced it against diplomatic archives." He pauses. "He found four candidates. The fourth is currently alive and has a brother in the Apostolic Camera." He looks at Qasim's copper seal, which the Fighter has placed on the desk. "And a Mamluk diplomatic factor told the carrier that neutral archiving is preferable to operational exposure." He is quiet.
+
+"This document is most notable for the effort made to prevent it from arriving here." He opens the intake form. "The memorandum, the commissioned dismissal, the note recording the dismissal as commissioned, and a Mamluk diplomatic token." He looks at the copper seal. "This is the most completely-accompanied document I have received this quarter."
+
+*— He needs the classification. The memorandum is neither a forgery nor confirmed research. It is an analytical document whose conclusion is potentially correct and politically explosive. The archive's classification must preserve the document without adjudicating its conclusion, and must note the suppression efforts without treating them as evidence for or against the analysis.*
+
+> **Skill Check: Investigation DC 12.** Propose: Historical Analysis Records — Documents Whose Conclusions Are Unverified But Methodology Is Sound; the suppression effort is filed as context, not as corroboration; the archive notes that four separate parties attempted to influence the document's classification or destination, which is itself information about the analysis's likely accuracy.
+
+**Fail:** Filed under Mandeville Research — Chapter XV Analysis; Fra Guglielmo's statement appended; the suppression effort not separately noted.
+
+**Pass:** Sweelinck writes: *Historical Analysis Records — Methodology Sound, Conclusion Unverified: documents of sound methodological construction whose conclusions could not be independently confirmed, preserved for the methodology and for the pattern of reception; note: four parties attempted to prevent, redirect, reclassify, or discredit this document's delivery — the pattern of suppression is filed as a separate context note and is not treated as corroboration of the conclusion.*
+
+He adds a sub-note: *Ser Marco's commissioned statement filed separately and identified as produced under financial commission; this reduces its weight as independent methodological critique.*
+
+He closes the ledger.
+
+"Brother Luc was careful," he says. He taps the memorandum. "He was careful enough that four separate interests mobilized to stop this page arriving here." He does not say: which is the clearest evidence he was right. He does not need to. You receive the Analysis Archive Record.
+
+**TOKEN TAKEN: The Dominican Analysis**
+
+The memorandum rests in the archive alongside the commissioned dismissal, the note recording the commission, and Qasim's copper seal. The fourth name is in the permanent record, accompanied by a context note about the suppression effort, filed under a category that holds things that were accurate and unpublishable simultaneously. The Sultan told Mandeville his intelligence methods openly because he trusted the account would never be believed. He was right for one hundred and ten years. Then a Dominican friar believed it and did the arithmetic.
+
+---
+
+## Quest API Stub — BEY-S09
+
+```json
+{
+  "quest_id": "BEY-S09",
+  "title": "The Intelligence Report",
+  "source": "BEY",
+  "cycle": 8,
+  "book": "Mandeville's Travels — attr. Sir John Mandeville (c. 1357)",
+  "source_episode": "Chapter XV: the Sultan describes his French-speaking intelligence agents operating in European courts as merchants of precious stones; Mandeville reports this from a private audience, presenting it as the Sultan's candid account of his intelligence methods",
+  "cycle_angle": "The reader who actually did what the text invited; the analysis that proved the reliable section was correct",
+  "theme": "The analysis that proved the right answer but named the wrong person's brother; the document that is accurate, unpublishable, and too specific to suppress quietly; neither destroying it nor publishing it is a safe action for any party in 1367; the archive receives it because neutral preservation is the only form of existence available to a true thing that cannot be spoken aloud",
+  "token": {
+    "id": "BEY_S09_TOKEN",
+    "name": "The Dominican Analysis",
+    "description": "Dominican friar Brother Luc's four-page memorandum, 1366, cross-referencing Mandeville Chapter XV against Avignon diplomatic records; four candidate identifications for the Sultan's French-speaking agents; the fourth name annotated 'brother of the Cardinal of the Apostolic Camera, Avignon.' Found in the dead friar's cell by the Marseille prior.",
+    "grant_act": "act_1",
+    "take_act": "act_5",
+    "check_acts": ["act_2", "act_3", "act_4"]
+  },
+  "nodes": ["MRS", "GEN", "RGS", "WM"],
+  "new_nodes": [
+    {
+      "code": "MRS",
+      "name": "Marseille — Dominican Priory",
+      "description": "The Dominican priory of Marseille, 1367: a prior who cannot destroy an accurate document and cannot keep it; a dead friar's cell; the harbor at the foot of the hill; the cardinal's agents already asking at the gate"
+    }
+  ],
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "MRS",
+      "type": "skill_check",
+      "activateNode": "MRS",
+      "missionAccept": "A Dominican prior in Marseille has found a dead friar's analysis identifying the Sultan of Egypt's four French-speaking intelligence agents from Mandeville Chapter XV. The fourth name's brother is a cardinal at the Apostolic Camera in Avignon. The prior cannot destroy an accurate document and cannot keep it. He needs a carrier who understands the methodology.",
+      "scene": "Father Bernard's desk in the Marseille Dominican priory. The memorandum is in a leather wallet. He has tried to burn it and set it back down again. He says: 'Brother Luc was not guessing. The archivist will know what to do with the fourth name.' He does not say the fourth name aloud.",
+      "prompt": "Confirm the methodology is sound: French-fluency plus northern court geographic knowledge in Avignon diplomatic contacts is specific enough to match against four candidates. DC 12 History.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "failText": "Father Bernard gives the memorandum with no explanation. 'Take it north. Don't tell anyone what's in it.'",
+        "passText": "The Fighter confirms the methodology. Father Bernard: 'Brother Luc spent three years on this. He was not guessing.' He hands over the wallet. You receive the Dominican Analysis."
+      },
+      "grantItem": "The Dominican Analysis",
+      "checkPassFlag": "beyS09Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "MRS",
+      "type": "skill_check",
+      "scene": "Marseille south gate. Two men from the cardinal's household claim to be from the Dominican provincial administration requiring return of a 'curia interest' document. The Fighter is not a Dominican, holds no Dominican commission, and is carrying a private scholarly memorandum, not a church document.",
+      "prompt": "Establish that Dominican administrative jurisdiction does not extend to a private citizen carrying a document given as a private commission. DC 13 Deception.",
+      "skillCheck": {
+        "skill": "Deception",
+        "dc": 13,
+        "failText": "One man stays watching; the other walks back to the priory to clarify. Two-hour lead before anyone reports back.",
+        "passText": "They cannot sustain the jurisdiction argument against a private carrier. They step aside. They have nothing to report except an unconvincing argument about jurisdiction."
+      },
+      "checkItem": "The Dominican Analysis",
+      "checkPassFlag": "beyS09Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "GEN",
+      "type": "skill_check",
+      "activateNode": "GEN",
+      "scene": "Genoa harbors. Mamluk diplomatic factor Qasim ibn Rashid approaches the Fighter calmly. He has heard through merchant channels that a document exists naming four Mamluk intelligence assets. He wants confirmation the document goes to the archive, not to the curia — operational exposure of the named personnel would damage the Sultan's northern court network.",
+      "prompt": "Confirm the archive's function: historical preservation, not operational intelligence; 'Mandeville research' is not the same as current intelligence filing. DC 12 Persuasion.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "failText": "Qasim remains uncertain; he will monitor through Venetian correspondents.",
+        "passText": "Qasim: 'The archive is the right destination.' He gives the Fighter a copper seal from a Mamluk diplomatic dispatch. 'In case anyone asks who you spoke to in Genoa.' You receive Qasim's Copper Seal."
+      },
+      "grantItem": "Qasim's Copper Seal",
+      "checkItem": "The Dominican Analysis",
+      "checkPassFlag": "beyS09Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "RGS",
+      "type": "skill_check",
+      "activateNode": "RGS",
+      "scene": "Ragusa waystation. Canon lawyer Ser Marco has a statement from Fra Guglielmo of Bologna calling the friar's methodology 'speculative, lacking adequate foundation.' He wants the document filed as a forgery, with the Bologna statement as basis. He says this is better than suppression.",
+      "prompt": "Distinguish forgery from unverified conclusion as archive categories: the difference between a discarded document and an analytical document with unconfirmed conclusion; filing as forgery based on a commissioned statement uses the archive as a suppression tool. DC 13 Investigation.",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 13,
+        "failText": "Ser Marco proposes 'speculative analysis, not corroborated' as a compromise. The Fighter accepts. The memorandum travels with this appended note.",
+        "passText": "Ser Marco accepts the distinction. He writes: 'filed as commissioned' — recording that Fra Guglielmo's statement was produced under financial commission. The note records its own bias. You receive Ser Marco's Commission Note."
+      },
+      "grantItem": "Ser Marco's Commission Note",
+      "checkItem": "The Dominican Analysis",
+      "checkPassFlag": "beyS09Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "scene": "Weimar archive intake desk. Sweelinck reads the memorandum, Mandeville Chapter XV, the commissioned dismissal, and Ser Marco's note. 'This document is most notable for the effort made to prevent it arriving here.' He needs the classification: methodology sound, conclusion unverified, suppression effort itself significant.",
+      "prompt": "Propose: Historical Analysis Records — Methodology Sound, Conclusion Unverified; note the suppression pattern as context, not corroboration; Ser Marco's commissioned statement filed separately with reduced evidentiary weight. DC 12 Investigation.",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 12,
+        "failText": "Filed under Mandeville Research — Chapter XV Analysis. Suppression effort not separately noted.",
+        "passText": "Sweelinck writes: 'Historical Analysis Records — Methodology Sound, Conclusion Unverified; suppression effort filed as context note; commissioned dismissal identified as produced under financial commission, reduced weight.' 'Brother Luc was careful enough that four separate interests mobilized to stop this page arriving here.' You receive the Analysis Archive Record."
+      },
+      "takeItem": "The Dominican Analysis",
+      "grantItem": "Analysis Archive Record",
+      "checkPassFlag": "beyS09Act5Passed",
+      "activateMissionBit": "beyIntelligenceReportComplete",
+      "questComplete": true
+    }
+  ]
+}
+```
+
+---
+
+*BEY-S09 complete. 2026-06-02.*
+
+---
+
+## Cycle 9 — The Chain Document
+*Angle: The container's own history as authentication; material provenance as a form of evidence no scribal examination can produce*
+
+---
+
+### What Prior Cycles Missed
+
+Cycles 1–8 focused on the documents that traveled in the cedar box and on Mandeville's account of what the Sultan said and did. The Sultan's Commission (Cycle 2) arrived in a cedar box acquired from an Armenian dealer in Beirut. No cycle has addressed the box itself. The cedar box had six previous owners before Benedetto Cena opened it. The Armenian dealer Sahag ibn Minas knew each of them. He wrote it down.
+
+*What this cycle adds that all prior cycles missed:* the chain of custody establishes material authenticity that no diplomatic or scribal examination of the Commission document can provide; a box that traveled from a Coptic monastery to a Venice factor to a Damascus merchant to Sahag's Beirut shop to Benedetto Cena is not a forgery vehicle — the wood is older than anyone's motive to fake its contents; the archive receives the container's history separately from the document's text, because they are different kinds of evidence that confirm each other from different angles.
+
+---
+
+### Theme Check
+
+**Existing themes to avoid:** the sober draft truer than the finished book; the Commission authenticating an inconvenient relationship; the source annotated by its derivative; the document that is evidence for what it isn't; the administrative debunking; the original demoted by its own derivative; the chapter absent from all copies; the analysis that named the wrong person's brother; and all master index themes.
+
+**BEY-S10 theme chosen:** *The container is also a document; a chain of custody is a material witness that no forgery can fully replicate, because the cedar holds a history older than the forger's motive; the archive creates a separate record for the box's provenance that stands beside the Commission's text without commentary — both say the same thing in different registers, and their agreement is the evidence*
+
+Distinct from all listed themes. Nearest neighbor: "the wound in the work is the witness" (LIS cycle 2 — physical damage as proof of presence). S10 is different: not damage as proof but custody as proof; the carrier's history, not the document's physical state, is the evidential argument.
+
+---
+
+### The Token
+
+*Sahag's Chain Document — four pages in Arabic and Armenian, written by Sahag ibn Minas, Armenian merchant, Beirut; dated 1358; certifies the cedar box's previous six owners from its manufacture at the Coptic monastery of Saint Macarius outside Cairo through: a Venetian factor named Beppe Colucci (1321–1331), a Damascus merchant named Karim ibn Taher (1331–1341), a second Venetian factor (1341–1348), back to Karim's son Nasrallah (1348–1355), then to Sahag himself (1355–1358), and his sale to Benedetto Cena of Venice in 1358; each entry notes what the box contained at transfer, by Sahag's direct observation; the box is identified by measurements, cedar grain marking, and the monastery's burnt-in Coptic cross on the base.*
+
+---
+
+**ACT I**
+
+*Sahag's Chain Document — folded in Sahag's shop chest — Armenian merchant quarter, Beirut, 1367.*
+
+Sahag ibn Minas is dying. He has been dying for three months in a room above his shop, and his son Vartan is running the business with the specific efficiency of a man who has not had time to grieve yet.
+
+Vartan has the Chain Document in a cedar box on the shop counter — appropriately, in a cedar box, though a different one. He is not unwilling to release it. He knows what it is and what it corroborates. He knows the Sultan's Commission document is in the Weimar archive, because Benedetto Cena told his family before the cedar box left for Venice in 1358.
+
+A Genoese factor named Marco della Torre is also in the shop. He has offered Vartan forty ducats for the full chain document as a curiosity addition to a collector's commission he is filling. It is a fair price and a legitimate offer. Marco della Torre does not know about the Sultan's Commission. He is buying a cedar box provenance document as an interesting item about Mamluk trade routes.
+
+*— The question is not whether Vartan will sell. The question is whether the Fighter can establish that the scholarly value — independent material corroboration of a significant archived document — is worth more than forty ducats to the people who will read it alongside the Commission.*
+
+> **Skill Check: History DC 12.** Establish the Chain Document's relationship to the Sultan's Commission: the cedar box was the Commission's container; Sahag's document establishes that the box traveled from Saint Macarius monastery to Beirut before Benedetto Cena ever saw it; the wood's age and custody history predates any motive to forge the Commission by at least twenty years; this is material corroboration, not annotation.
+
+**Fail:** Vartan sells to Marco della Torre. The document is gone. The quest fails to launch. Fighter must find another approach, but Vartan will not deal a second time.
+
+**Pass:** Vartan looks at Marco della Torre, then at the Fighter. "My father wrote this so it would end up somewhere useful." He hands it over. Marco della Torre shrugs and leaves. He will find another cedar curiosity. Vartan gives the Fighter his personal release note confirming the document was given as a scholarly gift, not sold. "Tell the archivist my father spent two days on it."
+
+**TOKEN GRANTED: Sahag's Chain Document** — four pages in Arabic and Armenian; six owners; each entry annotated by Sahag's personal observations about the box's contents at each transfer.
+
+**ITEM GRANTED: Vartan's Release Note** — Vartan's confirmation that the document was given as a scholarly gift, not a commercial sale; includes Sahag's deathbed instruction to find the Commission document and place both records in the same archive.
+
+---
+
+**ACT II**
+
+*Sahag's Chain Document — in the pack — Famagusta harbor district, inspection station.*
+
+A Hospitaller port inspector named Brother Christoph is working the Famagusta docks. He is efficient and thorough. He looks at the Chain Document and sees: Arabic text, names of Mamluk officials and Venetian factors, dates of transfer spanning 1321 to 1358, and specific references to the Coptic monastery of Saint Macarius.
+
+He notes that the Coptic monastery of Saint Macarius is known to the Hospitallers as an occasional waystation for Mamluk diplomatic correspondence in the 1330s and 1340s. The presence of a Mamluk-adjacent document with specific names, dates, and institutional references fits his definition of "possible intelligence material relevant to military operations."
+
+He wants to impound it pending review by the commandery's intelligence office. He is not hostile. He is following procedure.
+
+*— The Chain Document is a merchant's provenance record for a piece of furniture. It contains names of a diplomat and two Venetian factors who were alive in the 1320s and 1340s. None of the named parties are operationally current. The document is not intelligence. It is a cedar box's ownership history.*
+
+> **Skill Check: Persuasion DC 12.** Distinguish a trade provenance document from military intelligence: the names in the Chain Document are all from the 1320s–1358 period; none are currently active; the document establishes ownership of a cedar box, not diplomatic contacts; the Coptic monastery's appearance is because the box was manufactured there, not because the monastery was a waystation for this particular exchange.
+
+**Fail:** Brother Christoph impounds the document for three days pending review. The Fighter waits. The commandery releases it with a notation that it contains "no current intelligence value." This annotation will follow the document to Weimar.
+
+**Pass:** Brother Christoph reads the argument, checks his dates, and acknowledges that a provenance document about furniture from twenty-five years ago does not meet the operational intelligence threshold. He stamps the transit log: *scholarly materials, no hold*. He looks at the document a moment longer. "A cedar box from Saint Macarius. It is a long way from there to here." He stamps the log again. Clear.
+
+**TOKEN CHECKED.**
+
+---
+
+**ACT III**
+
+*Sahag's Chain Document — wrapped in oilskin — at sea between Famagusta and Ragusa, November squall.*
+
+The sea between Cyprus and Ragusa in November is not predictable. The storm arrives in the second night, a standard eastern Mediterranean winter squall — not catastrophic, but violent enough that every loose item on the deck is either tied down or in the water.
+
+The oilskin wrapping is sound. The question is keeping it sound while the deck tilts forty degrees and the crew is moving fast.
+
+> **Skill Check: Athletics DC 10.** Keep the wrapped document secured during the squall's worst fifteen minutes.
+
+**Fail:** The oilskin holds but the document is wet at one corner; the Arabic text on page one is smeared. Sahag's first entry — the Coptic monastery details — is still legible, but one line is obscured. The archivist will need to note the damage.
+
+**Pass:** The oilskin holds completely. *Sahag's Chain Document arrives in Ragusa dry, in the same condition it left Vartan's shop.*
+
+**TOKEN CHECKED.**
+
+---
+
+**ACT IV**
+
+*Sahag's Chain Document — in the pack — Ragusa waystation, afternoon.*
+
+Alvise Lombardi is a Venetian manuscript dealer who has been following the trail of the Sultan's Commission since he heard about its archiving. He knows the Commission is in the Weimar archive. He knows it arrived in a cedar box from Beirut. He has spent four years trying to establish where the cedar box came from and who owned it, because a Commission document with a confirmed material provenance history would be worth twice its current collection value.
+
+He is delighted to see the Fighter arrive with exactly the document he has been trying to find for four years.
+
+He wants to make a copy of the Chain Document and add his own research notes — four years of correspondence with Venetian factors about the box — as an attached annotation. His notes are accurate. His methodology is sound. His annotation would substantially enrich the document's scholarly context.
+
+The problem is that his attachment would create a composite document that presents his four-year commercial research project as part of Sahag's independent contemporary record. The Chain Document's evidential value is precisely that Sahag wrote it at the time of each transfer, as a merchant keeping his own records. Lombardi's annotation, however accurate, transforms the document from a primary contemporary record into a secondary-annotated research product.
+
+*— Lombardi is not trying to forge anything. He is trying to improve a document's scholarly apparatus. The result would be the same as forgery in evidential terms: the primary record would be subordinated to a secondary research compilation.*
+
+> **Skill Check: Persuasion DC 12.** Explain the distinction between scholarly annotation and evidentiary contamination: Sahag's document is valuable because it was written by a primary participant with no interest in the Commission's content; Lombardi's annotation, however accurate, introduces a secondary voice with demonstrated interest; the archive will accept Lombardi's research as a separate companion document, filed under his name, with the Chain Document filed independently.
+
+**Fail:** Lombardi adds a single paragraph annotation in the margin before the Fighter can prevent it. The document arrives in Weimar with one Lombardi marginal note. Sweelinck will file it with a notation distinguishing the original text from the added annotation.
+
+**Pass:** Lombardi considers the evidentiary contamination argument. He is a professional and recognizes it as correct. "I will write my research as a separate document and reference the Chain Document rather than annotating it." He accepts this. He hands the Fighter his draft notes to carry north separately — not attached, filed alongside. He is gracious about it.
+
+**ITEM GRANTED: Lombardi's Companion Research** — Alvise Lombardi's four-year correspondence summary about the cedar box's Venetian factor history; accurate, well-sourced, filed separately; the separation is the evidence of its independence.
+
+---
+
+**ACT V**
+
+*Sahag's Chain Document — in the pack — Weimar archive intake desk, Archivus Sweelinck, December afternoon.*
+
+Sweelinck reads the Chain Document. He reads it twice. He sets it beside the Sultan's Commission document, which he retrieves from the archive's cedar section.
+
+He is quiet for a moment.
+
+"The box that this document describes is the box that document arrived in." He does not phrase this as a question. He sets both documents on the long table. "Sahag wrote this nine years after the Commission was written. He did not know about the Commission. He was recording his own business. His cedar notation matches the monastery mark on the Commission's wrapping."
+
+He looks at the Vartan release note. He looks at Lombardi's companion research, filed separately beside. He reads the damaged corner of page one.
+
+"A merchant in Beirut spent two days writing down who owned a piece of furniture. He did not know he was writing the Commission's birth certificate." He opens the intake form.
+
+*— He needs the classification: the Chain Document is not an annotation of the Commission. It is an independent primary record of physical custody that happens to corroborate the Commission's age and authenticity from a completely different evidentiary angle.*
+
+> **Skill Check: Investigation DC 12.** Propose: Material Witness Records — Chain of Custody Documents; the cedar box history filed as independent material corroboration of the Commission document's provenance; neither document references the other; their agreement is the evidence; Lombardi's research filed separately as secondary companion.
+
+**Fail:** Filed under Mandeville Commission — Material Context; Sahag's name in the catalog entry.
+
+**Pass:** Sweelinck writes: *Material Witness Records — Chain of Custody Documents: primary physical custody records establishing provenance through independent observation, filed as material corroboration rather than textual annotation; the Commission and the Chain Document are filed in the same provenance series without cross-reference, because the independence of the two records is the evidentiary point; cross-referencing would create the appearance of collaboration that the value of the record depends on the absence of.*
+
+He closes the ledger.
+
+"Tell Vartan his father spent two days well." He sets the Chain Document in the cedar section, beside the Commission, without stapling them.
+
+**TOKEN TAKEN: Sahag's Chain Document**
+
+---
+
+The cedar box traveled from a Coptic monastery south of Cairo to two Venetian factors to a Damascus merchant's family to an Armenian dealer in Beirut to a Venetian gentleman in Venice in 1358. Sahag recorded each transfer as part of his business. The Commission document traveled inside the box for part of that journey and then left with Benedetto Cena and eventually reached the Weimar archive. In 1367, when the Chain Document arrives and is filed beside it, two primary records written by people who never met, about a document they described from different angles at different times, are placed in the same cedar section of the Weimar archive without a reference connecting them. The connection is there if anyone looks. Sweelinck's classification note says: the independence of the two records is the evidentiary point.
+
+---
+
+## Quest API Stub — BEY-S10
+
+```json
+{
+  "quest_id": "BEY-S10",
+  "title": "The Chain Document",
+  "source": "BEY",
+  "cycle": 9,
+  "book": "Mandeville's Travels — attr. Sir John Mandeville (c. 1357)",
+  "source_episode": "Chapter XI: Mandeville receives the Sultan's letters under the great seal and enters the Temple of the Lord; the Commission arrives in a cedar box acquired from an Armenian dealer in Beirut; no prior cycle addressed the box's own provenance history",
+  "cycle_angle": "The container's own history as authentication; material provenance as a form of evidence no scribal examination can produce",
+  "theme": "The container is also a document; a chain of custody is a material witness that no forgery can fully replicate, because the cedar holds a history older than the forger's motive; the archive creates a separate record for the box's provenance that stands beside the Commission's text without commentary — both say the same thing in different registers, and their agreement is the evidence",
+  "token": {
+    "id": "BEY_S10_TOKEN",
+    "name": "Sahag's Chain Document",
+    "description": "Four pages in Arabic and Armenian by Sahag ibn Minas, Beirut merchant; certifies six owners of a cedar box from its manufacture at the Coptic monastery of Saint Macarius through two Venetian factors, a Damascus merchant family, Sahag's own shop, and sale to Benedetto Cena in 1358; each entry notes box contents at transfer by Sahag's personal observation.",
+    "grant_act": "act_1",
+    "take_act": "act_5",
+    "check_acts": ["act_2", "act_3", "act_4"]
+  },
+  "nodes": ["BEI", "FAM", "RGS", "WM"],
+  "new_nodes": [
+    {
+      "code": "BEI",
+      "name": "Beirut — Armenian Merchant Quarter",
+      "description": "The Armenian merchant quarter of the Levantine port city of Beirut, 1367, under Mamluk nominal administration; cedar warehouses, notarized shops, a Christian community that has survived every change of administration since the Crusades by keeping meticulous records of everything they have ever sold; the smell of cedar resin and salt and the specific quality of a city that knows it is a waypoint."
+    }
+  ],
+  "secondary_items": [
+    {
+      "id": "BEY_S10_VARTAN_NOTE",
+      "name": "Vartan's Release Note",
+      "description": "Vartan ibn Sahag's confirmation that the Chain Document was given as a scholarly gift; includes Sahag's deathbed instruction to place both records in the same archive as the Commission."
+    },
+    {
+      "id": "BEY_S10_LOMBARDI",
+      "name": "Lombardi's Companion Research",
+      "description": "Alvise Lombardi's four-year correspondence summary about the cedar box Venetian factor history; accurate, well-sourced, filed separately from the Chain Document to preserve the independence of both records."
+    }
+  ],
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "BEI",
+      "type": "skill_check",
+      "activateNode": "BEI",
+      "scene": "Vartan ibn Sahag's shop in the Armenian quarter of Beirut. Sahag is dying upstairs. Vartan has the Chain Document and a competing offer from a Genoese factor named Marco della Torre who wants it as a commercial curiosity for a collector commission.",
+      "prompt": "Establish the Chain Document's relationship to the Sultan's Commission: the cedar box was the Commission's container; Sahag's record establishes the box's age and custody predates any forgery motive; this is material corroboration of an archived document, not a curiosity.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "failText": "Vartan sells to Marco della Torre. The document is lost.",
+        "passText": "Vartan releases the document to the archive commission. You receive the Chain Document and Vartan's Release Note."
+      },
+      "grantItem": "Sahag's Chain Document",
+      "checkPassFlag": "beyS10Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "FAM",
+      "type": "skill_check",
+      "activateNode": "FAM",
+      "scene": "Famagusta harbor inspection station. Brother Christoph, Hospitaller port inspector, sees Arabic text with Mamluk-adjacent names and dates and wants to impound the document as possible intelligence material.",
+      "prompt": "Distinguish a trade provenance document from military intelligence: all named parties are from the 1320s–1358 period; none are currently active; the document establishes ownership of a cedar box, not diplomatic contacts.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "failText": "Impounded three days for review; released with a 'no current intelligence value' annotation attached.",
+        "passText": "Brother Christoph acknowledges the operational threshold is not met. Transit log stamped: scholarly materials, no hold."
+      },
+      "checkItem": "Sahag's Chain Document",
+      "checkPassFlag": "beyS10Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "RGS",
+      "type": "skill_check",
+      "activateNode": "RGS",
+      "scene": "At sea between Famagusta and Ragusa. November squall, second night.",
+      "prompt": "Keep the oilskin-wrapped document secured during the squall's worst fifteen minutes.",
+      "skillCheck": {
+        "skill": "Athletics",
+        "dc": 10,
+        "failText": "Oilskin holds but one corner is wet; page one first entry is smeared. Sahag's Coptic monastery details remain legible.",
+        "passText": "Sahag's Chain Document arrives in Ragusa dry and intact."
+      },
+      "checkItem": "Sahag's Chain Document",
+      "checkPassFlag": "beyS10Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "RGS",
+      "type": "skill_check",
+      "scene": "Ragusa waystation. Alvise Lombardi, Venetian manuscript dealer, has been tracking the Sultan's Commission provenance for four years and wants to add his research as an annotation to the Chain Document.",
+      "prompt": "Distinguish scholarly annotation from evidentiary contamination: Sahag's document is valuable as an independent primary record; Lombardi's annotation, however accurate, introduces a secondary interested voice; offer to carry his research as a separate companion document instead.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "failText": "Lombardi adds one marginal annotation before the Fighter can prevent it. Sweelinck will note the distinction.",
+        "passText": "Lombardi accepts the companion-document structure. His research travels separately. You receive Lombardi's Companion Research."
+      },
+      "grantItem": "Lombardi's Companion Research",
+      "checkItem": "Sahag's Chain Document",
+      "checkPassFlag": "beyS10Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Weimar archive intake desk. Sweelinck reads the Chain Document beside the Sultan's Commission document. The cedar notation in the Chain Document matches the monastery mark on the Commission's wrapping. He needs the classification.",
+      "prompt": "Propose: Material Witness Records — Chain of Custody Documents; the cedar box history filed as independent material corroboration; neither document references the other; the independence of the two records is the evidentiary point; Lombardi's research filed separately as secondary companion.",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 12,
+        "failText": "Filed under Mandeville Commission — Material Context.",
+        "passText": "Sweelinck writes: Material Witness Records — Chain of Custody Documents; cross-referencing would create the appearance of collaboration that the value of the record depends on the absence of. Filed in the same provenance series without cross-reference."
+      },
+      "takeItem": "Sahag's Chain Document",
+      "grantItem": "Chain Document Archive Record",
+      "checkPassFlag": "beyS10Act5Passed",
+      "activateMissionBit": "beyChainDocumentComplete",
+      "questComplete": true
+    }
+  ]
+}
+```
+
+---
+
+*BEY-S10 complete. 2026-06-02.*
+
+---
+
+## Cycle 10 — The French-Speaking Lord
+*Angle: The intelligence service that recorded its own agents in administrative language; the family archive as the last form of institutional pride available after the politics changed*
+
+---
+
+### What Prior Cycles Missed
+
+Cycles 1–9 have focused on Mandeville's documents, their containers, their analysis, and their institutional context. Cycle 8 (BEY-S09) addressed the Dominican friar who read Chapter XV and did the analysis it invites — identifying four French-speaking Mamluk intelligence agents. No cycle has addressed the view from inside that network. One of the four families still has the administrative record of their ancestor's service. They have held it for fifteen years and are now uncertain whether it is an asset or a liability.
+
+*What this cycle adds:* the Mamluk administrative record that named the intelligence service in bureaucratic language with no more moral weight than a customs entry; the family's decision in 1367 to archive it rather than destroy it; the view from the other side of Mandeville's Chapter XV.
+
+---
+
+### Theme Check
+
+**Existing themes to avoid:** the sober draft; the Commission authenticating an inconvenient relationship; the Odoric annotations; the Prester John letter; the cotton-lamb record; Boldensele's original; the missing chapter; the analysis naming the wrong person's brother; the container's custody history; and all master index themes.
+
+**BEY-S10 theme chosen:** *The intelligence service recorded its own agents in administrative language that removed all moral weight from the service; the family that held the record for fifteen years neither destroyed it nor published it because both actions would have required a judgment they were not prepared to make; the archive receives it as a Mamluk administrative document, which is what it is*
+
+Distinct from all listed themes. Nearest neighbor: "the document authenticating an inconvenient prior relationship" (BEY Cycle 2). S11 differs: the inconvenience is not diplomatic but familial — the family is not embarrassed by the service, they are uncertain whether it is a service anymore; the archive receives the uncertainty along with the document.
+
+---
+
+### The Token
+
+*The Ifranj Registry Entry — a single folio from the Mamluk chancery administrative registry, c. 1350, in the hand of a senior chancery clerk; lists four men by name, title, and assignment: "observers of Frankish affairs and reporters to the Sultan's secretary concerning conditions, rulers, and dispositions of the Christian kingdoms"; the fourth entry includes a marginal note in different ink, added later: "deceased 1363, service ended with distinction — family holds good standing"; the registry entry was a working document; it was never intended to leave the chancery.*
+
+---
+
+**ACT I**
+
+*The Ifranj Registry Entry — in a locked cedar box in a Cairo house — Mamluk administrative district, Cairo, 1367.*
+
+Tariq ibn Mansur is a Mamluk official of middle rank — not powerful enough to attract attention, not obscure enough to be forgotten. He is the grandson of the man named third in the registry entry. His grandfather served the Sultan's intelligence function for twelve years, reported on the courts of northern France and Burgundy, and died in 1363 with a commendation. Tariq has the registry entry because his grandfather kept a copy as a family record.
+
+For fifteen years Tariq has been deciding what to do with it. The Alexandrian Crusade of 1365 changed the political calculus. In its aftermath, documents connecting Mamluk administration to French-speaking lords became either dangerous or valuable depending on who was reading them, and Tariq has not been able to determine which.
+
+A junior official named Ibrahim ibn Yusuf is at the house today, cataloging family papers for a routine tax assessment. Ibrahim's presence is not hostile — this is standard Mamluk administrative procedure. But if Ibrahim catalogs the registry entry as a state administrative record, it transfers to the chancery's possession. Tariq has ninety minutes before Ibrahim reaches the box.
+
+*— He needs the Fighter to accept the commission immediately, before Ibrahim catalogs the document. The commission is straightforward: carry it to the Weimar archive, where its history will be preserved without judgment.*
+
+> **Skill Check: Insight DC 12.** Read Ibrahim's intent: is this a targeted search for Tariq's specific document, or routine tax assessment that has no particular interest in a fifteen-year-old registry copy? The answer determines how quickly the Fighter must move.
+
+**Fail:** Ibrahim appears to be following a list. He will reach this room in forty minutes. There is time, but not much. The Fighter accepts urgently.
+
+**Pass:** Ibrahim is not following a list — he is working systematically through the house in order. He will reach this room in two hours and has shown no unusual interest in any specific cabinet. Tariq relaxes fractionally. The commission can be made at a normal pace, with the usual care.
+
+**TOKEN GRANTED: The Ifranj Registry Entry** — single folio, chancery hand, four names, four assignments, one marginal note; folded once, in a small cedar sleeve.
+
+---
+
+**ACT II**
+
+*The Ifranj Registry Entry — in the pack — Alexandria harbor, inspection station.*
+
+A Venetian factor named Piero Morosini has been working the Alexandria docks for eleven years. He is thorough, well-connected, and has excellent sources in the Mamluk chancery. He knows about the registry entry — not this specific copy, but that such documents exist. He has been looking for one for four years.
+
+His interest is scholarly. He has a theory: the four intelligence lords named in Mandeville's Chapter XV correspond to specific Venetian diplomatic contacts, which would mean that certain Venetian dispatches from the 1340s and 1350s were compromised. He wants to cross-reference the registry against Venetian records. The research would be genuine and the conclusions potentially important.
+
+He makes a direct offer: he will pay well for access to the document in Venice, where he can complete the cross-reference before it reaches any northern archive.
+
+*— His offer is legitimate and his research is real. But Venetian access to the registry entry transforms a Mamluk family archive document into Venetian diplomatic research — the document's identity changes when it arrives in Venice under Venetian sponsorship. The Weimar archive preserves it as what it is; Venice would receive it as what it's useful for.*
+
+> **Skill Check: Persuasion DC 13.** Argue that neutral archival access serves more scholars than restricted Venetian research access: any scholar who wants to cross-reference the registry against Venetian records can access both at Weimar; the archive preserves the document as a Mamluk administrative record rather than as evidence in a particular scholarly argument.
+
+**Fail:** Piero makes a counter-offer: he will wait six months and then approach the archive directly. He will be in Ragusa when the Fighter arrives.
+
+**Pass:** Piero accepts the argument. He is a professional. "The Weimar archive will have it faster than I can complete the cross-reference anyway." He gives the Fighter his professional card — a Venetian factor's tablet — in case the archive wants to contact him for the cross-reference research. He is gracious about it.
+
+**TOKEN CHECKED.**
+
+---
+
+**ACT III**
+
+*The Ifranj Registry Entry — wrapped in oilskin — at sea between Alexandria and Ragusa.*
+
+An autumn crossing. The sea between Alexandria and Ragusa in October is serviceable but not comfortable.
+
+> **Skill Check: Athletics DC 10.** Keep the document secure in its cedar sleeve through a rough crossing.
+
+**Fail:** The cedar sleeve absorbs some moisture at one edge. The marginal note on the fourth entry is faintly blurred but legible.
+
+**Pass:** *The Ifranj Registry Entry arrives at Ragusa dry, the cedar sleeve intact.*
+
+**TOKEN CHECKED.**
+
+---
+
+**ACT IV**
+
+*The Ifranj Registry Entry — in the pack — Ragusa waystation, evening.*
+
+Brother Andreas is a Hospitaller clerk stationed at the Ragusa commandery. He has access to Hospitaller military records from the 1340s and 1350s. He has been cross-referencing those records against Mandeville's Chapter XV for his own research. He has come to the same conclusion as the Dominican friar in BEY-S09 — that one of the four intelligence lords contributed information that affected a Hospitaller military position in the eastern Mediterranean in 1349.
+
+He has a document: a Hospitaller after-action report from 1349 naming an intelligence failure. He wants to attach his document to the Ifranj Registry Entry as companion evidence, characterizing the registry entry as a treason record.
+
+*— His document is real. His identification may be correct. But appending a Hospitaller treason characterization to a Mamluk administrative record transforms the archive's intake: instead of receiving a primary Mamluk document, the archive receives a secondary characterization. The registry entry was not written as a treason record. It was written as an administrative entry. Those are different documents.*
+
+> **Skill Check: Persuasion DC 13.** Argue that the archive receives documents as what they are, not as what they imply: the registry entry is a Mamluk administrative record; Brother Andreas's analysis is a Hospitaller military assessment; both can be filed in the archive without one characterizing the other; the archive will note the cross-reference between them but will not subordinate either to the other.
+
+**Fail:** Brother Andreas attaches a one-line note to the cedar sleeve: "cross-reference: Hospitaller Intelligence Failure 1349." The registry entry arrives in Weimar with this note. Sweelinck will assess its placement.
+
+**Pass:** Brother Andreas is a careful clerk. The distinction between the document and the characterization of the document is one he recognizes professionally. "Filed separately. Cross-referenced but not appended." He accepts. He gives the Fighter the Hospitaller document as a separate item for parallel delivery.
+
+**ITEM GRANTED: Brother Andreas's Companion Document** — the Hospitaller 1349 after-action report, identifying an intelligence failure; filed as a parallel document, not as a characterization of the registry entry.
+
+---
+
+**ACT V**
+
+*The Ifranj Registry Entry — in the cedar sleeve — Weimar archive intake desk, Archivus Sweelinck, late October.*
+
+Sweelinck reads the entry. He reads all four names. He reads the marginal note on the fourth: *deceased 1363, service ended with distinction — family holds good standing.*
+
+He sets it down.
+
+"This was written by a chancery clerk as a routine administrative entry. The clerk was not judging whether the work was good or bad. He was recording who was assigned to do it." He looks at the Hospitaller companion document that arrived alongside it. "And this was written by a military after-action analysis fifteen years later, characterizing what the work cost."
+
+He is quiet.
+
+"Both documents are accurate. They describe the same activity from different administrative positions. The people named in the registry entry did not write the Hospitaller document. The people who wrote the Hospitaller document did not write the registry entry. Neither document knows the other exists." He opens the intake form.
+
+*— He needs the classification: the registry entry is a Mamluk administrative record and should be filed as such; the Hospitaller companion document is a military analysis and should be filed as such; the cross-reference between them is noted but neither controls the other's classification.*
+
+> **Skill Check: Investigation DC 12.** Propose: Mamluk Administrative Records — Intelligence of Frankish Affairs; the registry entry filed under its administrative origin, not under the activity it describes; the Hospitaller companion document filed separately under Military Records — Intelligence Failure Analysis; cross-reference noted in both intakes.
+
+**Fail:** Both documents filed together under Intelligence Records — Mamluk-European, with the Hospitaller document as context.
+
+**Pass:** Sweelinck writes: *Mamluk Administrative Records — Intelligence of Frankish Affairs: records of the Mamluk chancery's European intelligence assignment, preserved as primary administrative documents; no adjudication of the activity's moral character; the archive receives the administrative fact of the service, not a verdict on the service.* He files the Hospitaller document separately: *Military Records — Intelligence Failure Analysis, 1349: Hospitaller after-action assessment; cross-referenced to Mamluk Administrative Records — Intelligence of Frankish Affairs, filed separately.*
+
+He closes the ledger.
+
+"Tariq's grandfather is in the permanent record. The archive does not say whether he was right." He pauses. "Neither does Tariq. That is probably why he kept it."
+
+**TOKEN TAKEN: The Ifranj Registry Entry**
+
+---
+
+In the permanent record: four men assigned to observe and report on Frankish affairs, in the administrative language of an institution that considered observation and reporting to be ordinary work. One of them died in 1363 and his family held the record for four years before deciding that an archive that receives documents as what they are was the right destination. The archive received it as what it was. Neither the archive nor Tariq's grandfather nor Tariq said what it meant. The record says: four men. Four assignments. One marginal note about good standing.
+
+---
+
+## Quest API Stub — BEY-S11
+
+```json
+{
+  "quest_id": "BEY-S11",
+  "title": "The French-Speaking Lord",
+  "source": "BEY",
+  "cycle": 10,
+  "book": "Mandeville's Travels — attr. Sir John Mandeville (c. 1357)",
+  "source_episode": "Chapter XV: the Sultan describes four French-speaking lords in his council who report on the affairs of Christian kingdoms; they speak French 'right well' and travel as merchants of precious stones; Mandeville claims to have heard this from the Sultan in private audience",
+  "cycle_angle": "The intelligence service that recorded its own agents in administrative language; the family archive as the last form of institutional pride available after the politics changed",
+  "theme": "The intelligence service recorded its own agents in administrative language that removed all moral weight from the service; the family that held the record for fifteen years neither destroyed it nor published it because both actions would have required a judgment they were not prepared to make; the archive receives it as a Mamluk administrative document, which is what it is",
+  "token": {
+    "id": "BEY_S11_TOKEN",
+    "name": "The Ifranj Registry Entry",
+    "description": "Single folio from Mamluk chancery administrative registry, c. 1350; lists four men by name and assignment as observers of Frankish affairs; fourth entry annotated 'deceased 1363, service ended with distinction — family holds good standing'; kept as family archive by Tariq ibn Mansur, grandson of the third-named lord.",
+    "grant_act": "act_1",
+    "take_act": "act_5",
+    "check_acts": ["act_2", "act_3", "act_4"]
+  },
+  "nodes": ["CAI", "ALX", "RGS", "WM"],
+  "secondary_items": [
+    {
+      "id": "BEY_S11_HOSPITALLER",
+      "name": "Brother Andreas's Companion Document",
+      "description": "Hospitaller 1349 after-action report identifying an intelligence failure; filed as a parallel document to the registry entry, not as its characterization."
+    }
+  ],
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "CAI",
+      "type": "skill_check",
+      "activateNode": "CAI",
+      "scene": "Tariq ibn Mansur's house in Cairo. Junior official Ibrahim is cataloging family papers for tax assessment. Tariq needs to decide whether to commit the registry entry to the archive before Ibrahim reaches the locked cedar box.",
+      "prompt": "Read Ibrahim's intent: targeted search or routine assessment? Determines urgency of accepting the commission.",
+      "skillCheck": {
+        "skill": "Insight",
+        "dc": 12,
+        "failText": "Ibrahim appears to be following a list. Forty minutes. Commission accepted urgently.",
+        "passText": "Ibrahim is working systematically, not following a list. Two hours, no unusual interest. Commission accepted at normal pace."
+      },
+      "grantItem": "The Ifranj Registry Entry",
+      "checkPassFlag": "beyS11Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "ALX",
+      "type": "skill_check",
+      "activateNode": "ALX",
+      "scene": "Alexandria harbor. Venetian factor Piero Morosini wants access to the registry entry in Venice for cross-reference research against Venetian diplomatic records. Legitimate scholarly offer that would transform the document's identity.",
+      "prompt": "Argue that neutral archival access serves more scholars than restricted Venetian research access; any cross-reference can be done at Weimar.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "failText": "Piero will approach the archive directly in six months. He will be in Ragusa when the Fighter arrives.",
+        "passText": "Piero accepts the neutral archive argument. He gives his professional card for potential cross-reference contact."
+      },
+      "checkItem": "The Ifranj Registry Entry",
+      "checkPassFlag": "beyS11Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "RGS",
+      "type": "skill_check",
+      "scene": "At sea, October crossing from Alexandria to Ragusa.",
+      "prompt": "Keep document secure in cedar sleeve through rough autumn crossing.",
+      "skillCheck": {
+        "skill": "Athletics",
+        "dc": 10,
+        "failText": "Cedar sleeve absorbs moisture at one edge. Marginal note on fourth entry faintly blurred but legible.",
+        "passText": "The Ifranj Registry Entry arrives at Ragusa dry, cedar sleeve intact."
+      },
+      "checkItem": "The Ifranj Registry Entry",
+      "checkPassFlag": "beyS11Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "RGS",
+      "type": "skill_check",
+      "activateNode": "RGS",
+      "scene": "Ragusa waystation. Hospitaller clerk Brother Andreas wants to attach his 1349 after-action report to the registry entry as companion evidence, characterizing it as a treason record.",
+      "prompt": "Argue that the archive receives documents as what they are: the registry entry is a Mamluk administrative record; the Hospitaller analysis is a military assessment; both filed separately with cross-reference noted.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "failText": "Brother Andreas attaches a one-line note to the cedar sleeve: 'cross-reference: Hospitaller Intelligence Failure 1349.'",
+        "passText": "Brother Andreas accepts the distinction. Files separately. Gives the Fighter the Hospitaller document as a parallel delivery item."
+      },
+      "grantItem": "Brother Andreas's Companion Document",
+      "checkItem": "The Ifranj Registry Entry",
+      "checkPassFlag": "beyS11Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Weimar archive intake desk. Sweelinck reads the registry entry and the Hospitaller companion document. Both describe the same activity from different administrative positions. Neither knows the other exists.",
+      "prompt": "Propose: Mamluk Administrative Records — Intelligence of Frankish Affairs; registry entry filed under administrative origin; Hospitaller document filed separately as Military Records — Intelligence Failure Analysis; cross-reference noted in both intakes, neither controls the other's classification.",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 12,
+        "failText": "Both documents filed together under Intelligence Records — Mamluk-European.",
+        "passText": "Sweelinck files both documents separately with cross-reference notation. 'The archive does not say whether he was right. Neither does Tariq. That is probably why he kept it.'"
+      },
+      "takeItem": "The Ifranj Registry Entry",
+      "grantItem": "Intelligence Registry Archive Record",
+      "checkPassFlag": "beyS11Act5Passed",
+      "activateMissionBit": "beyFrenchSpeakingLordComplete",
+      "questComplete": true
+    }
+  ]
+}
+```
+
+---
+
+*BEY-S11 complete. 2026-06-02.*
+
+---
+
+## Cycle 11 — The Temple Entry Record
+*Angle: The host's record and the guest's account describe the same visit from opposing administrative perspectives; independent corroboration as its own category of evidence*
+
+---
+
+### What Prior Cycles Missed
+
+Cycles 1–10 have addressed Mandeville's documents, their containers, and the intelligence network Chapter XV describes. Chapter XI — the Temple of the Lord visit — has appeared indirectly through the Sultan's Commission (Cycle 2), which authorized the visit, and through that Commission's cedar container (Cycle 9). What no cycle has addressed is what the Saracen custodians of the Temple recorded about the visit itself. Mandeville describes entering under the Sultan's letters. The custodians kept their own entry register. Those are two independent administrative records of the same event.
+
+*What this cycle adds:* the custodian's register entry — written by a waqf administrator with no interest in Mandeville's account, no knowledge of his book, and no reason to embellish; independent corroboration from the opposite side of the doorway.
+
+---
+
+### Theme Check
+
+**Existing themes to avoid:** all BEY cycles 1–10 and master index themes.
+
+**BEY-S12 theme chosen:** *The host's entry register and the guest's memoir describe the same visit from opposite administrative positions; neither party needed the other to be true; the archive that receives both is the first institution to place them beside each other; independent corroboration is not collaboration — it is stronger than collaboration because it cannot be accused of coordination*
+
+Distinct from all listed themes. Nearest neighbor: "the compiled record is not a lie — the assembler of many witnesses is himself a witness" (BEY Cycle 1, main). S12 differs: this is not compilation but independent parallel record — two parties who did not know each other's account, describing the same event from opposite sides; what makes it evidentially significant is precisely that neither account knows about the other.
+
+---
+
+### The Token
+
+*The Custodian's Register Fragment — three pages extracted from the waqf entry register of the Haram al-Sharif (Temple of the Lord), dated 1341–1343; kept by the waqf custodians as routine administrative record; the relevant entry reads: "one Frank, tall, bearing a sealed letter under the Sultan's hand; admitted to the main hall; examined the architecture and fixtures for two hours; conducted himself with courtesy; departed without incident; letter verified by the custodian-in-chief and returned to the bearer"; the fragment was separated from the main register during a waqf property dispute in 1355 and transferred to a Minorite monastery's administrative records by error.*
+
+---
+
+**ACT I**
+
+*The Custodian's Register Fragment — in a monastery record chest — Minorite monastery, Jerusalem, 1367.*
+
+Brother Matteo is the monastery's archive keeper. He found the register fragment three years ago while reorganizing the administrative records. He recognized the waqf seal. He has been sitting with it since, uncertain whether it is his responsibility to do anything with it.
+
+A Dominican friar named Fra Costantino has been visiting the monastery for six weeks. He is attached to a crusade-advocacy preaching mission. He has heard that Brother Matteo has a Saracen administrative document that mentions a European pilgrim entering the Temple of the Lord freely under a Mamluk letter. He wants it destroyed. His argument: this document proves that the Sultan gave free access to a Christian under a safe conduct, which undercuts the crusade argument that Muslims deny Christians access to the holy sites.
+
+Brother Matteo has not destroyed it. He is not persuaded by Fra Costantino's argument, but he is afraid of Fra Costantino's institutional backing.
+
+*— The document is a waqf administrative fragment that was transferred to this monastery by administrative error. It does not belong here. It belongs in an archive. The scholarly value is independent of Fra Costantino's political argument: independent corroboration of a primary source, regardless of what that corroboration implies.*
+
+> **Skill Check: History DC 12.** Establish the register fragment's scholarly significance: independent administrative corroboration of a primary source is a category of evidence that exists regardless of which political arguments it happens to support or undermine; Mandeville's account of the Chapter XI visit is corroborated by a document the waqf custodians wrote with no knowledge of Mandeville; the archive receives it for what it is.
+
+**Fail:** Brother Matteo hands over the fragment but is visibly frightened. Fra Costantino will be told. There are six hours before Fra Costantino's associates can mobilize.
+
+**Pass:** Brother Matteo straightens. The scholarly framing gives him something to stand on. "It is a historical document. I was obligated to preserve it." He hands it over. Fra Costantino is watching from the courtyard. He will report.
+
+**TOKEN GRANTED: The Custodian's Register Fragment** — three pages, waqf hand, one entry of particular significance, the custodian-in-chief's verification mark in the margin.
+
+---
+
+**ACT II**
+
+*The Custodian's Register Fragment — in the pack — monastery gate, Jerusalem, morning.*
+
+A young monk named Fra Giordano is stationed at the monastery gate. He is not Fra Costantino. He is Fra Costantino's research assistant, recently arrived, enthusiastic, and carrying a letter from the crusade mission's institutional superior asserting that documents relating to Muslim administration of Christian holy sites require ecclesiastical review before leaving Jerusalem.
+
+The letter's authority is unclear. It is not a papal document. It is a preaching mission's internal administrative communication. The fragment is not a church document — it is a waqf administrative record that arrived in the monastery by error.
+
+*— Fra Giordano is applying an institutional category (documents relating to Christian holy sites) to a document that belongs to a different category (Muslim administrative records of visitors). The category error is the argument.*
+
+> **Skill Check: Persuasion DC 12.** The fragment is a waqf administrative record, not a document relating to Christian holy sites in the sense the letter describes; it was written by Muslim custodians about their own administrative procedures; it belongs to the waqf's administrative tradition, not to the ecclesiastical review framework the letter describes.
+
+**Fail:** Fra Giordano is unconvinced but steps aside to consult his superior. The Fighter has a two-hour head start.
+
+**Pass:** Fra Giordano reads the letter's actual text. The language says "documents relating to the administration of Christian holy sites." A Muslim custodian's entry register is not administered by Christians. He steps aside. He looks troubled, which suggests Fra Costantino will hear about the distinction he was forced to make.
+
+**TOKEN CHECKED.**
+
+---
+
+**ACT III**
+
+*The Custodian's Register Fragment — in the pack — Sidon harbor, afternoon.*
+
+A Mamluk harbor customs official named Khalil ibn Faris is reviewing outgoing cargo at the Sidon port. He is methodical and knows his categories. He has read enough Arabic to see that the three pages are in a waqf administrative hand and contain a reference to a sealed letter under the Sultan's authority.
+
+He makes a preliminary classification: potential state administrative record, subject to export review.
+
+He is not wrong that waqf records can be state property. He is applying the right rule to an incomplete reading of the document. The fragment is from 1341–1343. The Sultan who issued the letter in that entry has been dead for twenty years. The administrative context that made this record current state property no longer applies in the same way.
+
+*— This is an archival fragment of a historical administrative record, not a current operational document. The distinction requires explaining to an official who is applying current classification rules to a historical document.*
+
+> **Skill Check: Deception DC 12.** Frame the fragment accurately but with emphasis on its historical character: this is an archival fragment from twenty-five years ago, removed from its original register by administrative error during a 1355 waqf property dispute, now in transit to a scholarly archive; its historical status places it in the category of transferred archival materials rather than current administrative records.
+
+**Fail:** Khalil holds the fragment for review. A three-day delay. Sidon has a modest Genoese factor presence who can sometimes facilitate customs reviews.
+
+**Pass:** Khalil considers the dates. A 1341 document about a letter issued under a Sultan dead for twenty years does not meet the operational threshold. He stamps the transit log: *historical archival materials, no hold.* He keeps the fighter's name for his records.
+
+**TOKEN CHECKED.**
+
+---
+
+**ACT IV**
+
+*The Custodian's Register Fragment — in the pack — Ragusa waystation, evening.*
+
+Fra Domenico is a Dominican scholar who maintains a standing residence in the Ragusa waystation. He is not an obstacle in the standard sense — he is a careful researcher with a genuine interest in medieval pilgrimage documents. He has been collecting cross-references between Mandeville's text and contemporary non-Christian administrative sources for three years.
+
+He has identified the Custodian's Register Fragment as the most significant piece of independent corroboration for any specific claim in Mandeville's text. He wants to hold the fragment in Ragusa for six months to complete a scholarly analysis before it reaches Weimar. His analysis would be genuine. His argument for the delay is academically sound.
+
+*— Six months in Ragusa is six months during which Fra Costantino's institutional networks have time to create legal complications. More fundamentally: the fragment's value as independent corroboration depends on its reaching the archive intact, without the scholarly apparatus of a specific researcher's analytical project attached to it. Fra Domenico's analysis should follow the document to Weimar, not precede it.*
+
+> **Skill Check: Persuasion DC 13.** The archive is the right place for the cross-reference research to be conducted: with both Mandeville's account and the register fragment accessible, Fra Domenico's analysis can be done there; holding the fragment in Ragusa as a private research object delays what the archive is designed to enable; the analysis should travel separately and arrive after the document.
+
+**Fail:** Fra Domenico is persuasive and the Fighter is not more persuasive. He will forward the fragment to Weimar in thirty days and his analysis in ninety. Both arrive late.
+
+**Pass:** Fra Domenico is a careful scholar and the argument is correct. "I am committing the error of treating the primary source as if it serves my analysis, rather than the reverse." He releases the fragment. He will write his analysis and send it directly to Sweelinck at the Weimar archive, clearly marked as secondary analysis, not annotation.
+
+**TOKEN CHECKED.**
+
+---
+
+**ACT V**
+
+*The Custodian's Register Fragment — in the pack — Weimar archive intake desk, Archivus Sweelinck, late November.*
+
+Sweelinck reads the register fragment. He retrieves the Mandeville text from the archive's copy.
+
+He reads Chapter XI of Mandeville: *"And the Sultan gave me letters under his great seal... and I went in with my companions, and we saw and searched all the places that we wished to see."*
+
+He reads the register entry: *one Frank, tall, bearing a sealed letter under the Sultan's hand; admitted to the main hall; examined the architecture and fixtures for two hours; conducted himself with courtesy; departed without incident.*
+
+He sets both texts side by side.
+
+"The man who wrote the register entry did not read Mandeville. Mandeville did not read the register entry. Both descriptions are consistent. Neither references the other." He opens the intake form. "The Sultan gave him the letter. The custodians checked the letter. He examined the architecture for two hours. He was courteous. He left."
+
+He looks at the register entry again.
+
+"The custodian-in-chief verified the letter and returned it to the bearer." He pauses. "That is not in Mandeville. That detail is only here." He looks up. "The register records what the custodian was required to note for his own administrative purposes. Mandeville records what he experienced. They are not the same document."
+
+*— The classification must preserve the register fragment as an independent primary source, not as a corroboration of Mandeville; what makes it significant is precisely that it says something Mandeville did not say, from a position Mandeville did not occupy.*
+
+> **Skill Check: Investigation DC 12.** Propose: Waqf Administrative Records — Visitor Entry, Non-Muslim; to note independent corroboration with Mandeville Chapter XI without treating either document as the primary and the other as confirmation; both filed as independent primary sources from different administrative positions; the register fragment's note about the custodian-in-chief verifying and returning the letter filed as a detail not present in Mandeville, which increases rather than merely corroborates the evidentiary value.
+
+**Fail:** Filed under Mandeville Research — Chapter XI Corroboration; the register fragment as supporting evidence.
+
+**Pass:** Sweelinck writes: *Waqf Administrative Records — Visitor Entry, Non-Muslim: primary administrative record, waqf custodial administration, Haram al-Sharif, c. 1341–1343; filed as independent primary source alongside European travel account of the same period; neither document is filed as evidence for the other — they are filed as parallel independent primary sources from opposing administrative positions; cross-reference noted; the register's independent detail — custodian-in-chief verified and returned the letter — is specifically noted as information not present in the European account, which constitutes additive rather than merely confirmatory evidence.*
+
+He closes the ledger.
+
+"Two men kept records of the same two hours. Neither knew the other was writing." He sets the register fragment in the incoming Mandeville series folder, separated from the Mandeville text by a plain card that reads: *independent source, do not bind together.* "The independence is the point."
+
+**TOKEN TAKEN: The Custodian's Register Fragment**
+
+---
+
+In the Weimar archive's Mandeville series, the Sultan's Commission document, Sahag's Chain Document, the Ifranj Registry Entry, and the Custodian's Register Fragment are now held in adjacent folders, each separated by a plain card. None of them was written to corroborate the others. None of them knew the others existed. Their agreement about specific facts — the letter, the entry, the courtesy, the architecture — is independent in a way that collaboration could never produce. The archive receives them as they are.
+
+---
+
+## Quest API Stub — BEY-S12
+
+```json
+{
+  "quest_id": "BEY-S12",
+  "title": "The Temple Entry Record",
+  "source": "BEY",
+  "cycle": 11,
+  "book": "Mandeville's Travels — attr. Sir John Mandeville (c. 1357)",
+  "source_episode": "Chapter XI: Mandeville enters the Temple of the Lord (Dome of the Rock) using the Sultan's letters of safe passage; he describes the architecture and his examination of the site; the Saracen custodians kept their own entry register of visitors",
+  "cycle_angle": "The host's record and the guest's account describe the same visit from opposing administrative perspectives; independent corroboration as its own category of evidence",
+  "theme": "The host's entry register and the guest's memoir describe the same visit from opposite administrative positions; neither party needed the other to be true; independent corroboration is not collaboration — it cannot be accused of coordination; the archive places both beside each other for the first time",
+  "token": {
+    "id": "BEY_S12_TOKEN",
+    "name": "The Custodian's Register Fragment",
+    "description": "Three pages from the waqf entry register of the Haram al-Sharif, c. 1341–1343; one entry describing a tall Frank admitted with a sealed letter under the Sultan's hand; two-hour visit; courteous; letter verified and returned; transferred to a Jerusalem monastery by administrative error in 1355.",
+    "grant_act": "act_1",
+    "take_act": "act_5",
+    "check_acts": ["act_2", "act_3", "act_4"]
+  },
+  "nodes": ["JER", "SID", "RGS", "WM"],
+  "new_nodes": [
+    {
+      "code": "JER",
+      "name": "Jerusalem — Temple District / Minorite Monastery",
+      "description": "The holy city in 1367, under Mamluk administration; a Minorite monastery near the Temple district holds administrative records transferred from the waqf by error; Fra Costantino's crusade mission is active in the area; the specific quality of a city where every document is immediately political regardless of its administrative character."
+    },
+    {
+      "code": "SID",
+      "name": "Sidon — Levantine coastal waystation",
+      "description": "The port city on the Lebanese coast, 1367, under Mamluk administration; smaller than Beirut, useful as a transit point for carriers avoiding the busier ports; a Mamluk customs official at the harbor applies careful classification rules to outgoing materials."
+    }
+  ],
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "JER",
+      "type": "skill_check",
+      "activateNode": "JER",
+      "scene": "Minorite monastery, Jerusalem. Brother Matteo has the register fragment and Fra Costantino wants it destroyed because it undermines crusade arguments about Muslim denial of Christian access.",
+      "prompt": "Establish the register fragment's scholarly significance: independent administrative corroboration exists regardless of political implications; the archive receives documents for what they are.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "failText": "Brother Matteo is frightened but hands it over. Six-hour head start before Fra Costantino can mobilize.",
+        "passText": "Brother Matteo stands on the scholarly framing and hands it over with composure."
+      },
+      "grantItem": "The Custodian's Register Fragment",
+      "checkPassFlag": "beyS12Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "JER",
+      "type": "skill_check",
+      "scene": "Monastery gate. Fra Giordano applies a crusade mission letter requiring ecclesiastical review of 'documents relating to Christian holy sites' to a waqf administrative record.",
+      "prompt": "Distinguish the document's category: a Muslim custodian's entry register is not 'relating to Christian holy sites' in the sense the letter describes; it belongs to the waqf's administrative tradition.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "failText": "Fra Giordano steps aside to consult. Two-hour head start.",
+        "passText": "Fra Giordano reads the letter's actual text and recognizes the category error. Steps aside."
+      },
+      "checkItem": "The Custodian's Register Fragment",
+      "checkPassFlag": "beyS12Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "SID",
+      "type": "skill_check",
+      "activateNode": "SID",
+      "scene": "Sidon harbor. Customs official Khalil ibn Faris makes a preliminary classification: potential state administrative record, subject to export review.",
+      "prompt": "Frame as historical archival material: a fragment from 1341–1343, removed from its register by a 1355 waqf property dispute, now in transit as transferred archival material — historical status, not current operational.",
+      "skillCheck": {
+        "skill": "Deception",
+        "dc": 12,
+        "failText": "Three-day customs hold pending review.",
+        "passText": "Khalil stamps: historical archival materials, no hold."
+      },
+      "checkItem": "The Custodian's Register Fragment",
+      "checkPassFlag": "beyS12Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "RGS",
+      "type": "skill_check",
+      "activateNode": "RGS",
+      "scene": "Ragusa waystation. Fra Domenico, Dominican scholar, wants to hold the fragment six months for his cross-reference analysis before it reaches Weimar.",
+      "prompt": "The archive is the right place for cross-reference research: with both documents accessible, his analysis can be done there; the analysis should follow the document, not precede it; his work should travel separately and arrive after.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "failText": "Fra Domenico forwards the fragment in thirty days, analysis in ninety. Both arrive late.",
+        "passText": "Fra Domenico recognizes the argument. Releases the fragment. Will send his analysis directly to Sweelinck, clearly marked as secondary."
+      },
+      "checkItem": "The Custodian's Register Fragment",
+      "checkPassFlag": "beyS12Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Weimar archive intake desk. Sweelinck reads the register fragment alongside Mandeville's Chapter XI. One detail in the fragment is not in Mandeville: the custodian-in-chief verified the letter and returned it to the bearer.",
+      "prompt": "Propose: Waqf Administrative Records — Visitor Entry, Non-Muslim; both documents filed as independent primary sources from opposing administrative positions; independence noted; the register fragment's additive detail — custodian-in-chief verified and returned the letter — specifically noted as information not in Mandeville.",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 12,
+        "failText": "Filed under Mandeville Research — Chapter XI Corroboration; register as supporting evidence.",
+        "passText": "Sweelinck files both documents as independent primary sources, separated by a card: 'independent source, do not bind together.' The additive detail noted separately."
+      },
+      "takeItem": "The Custodian's Register Fragment",
+      "grantItem": "Temple Entry Archive Record",
+      "checkPassFlag": "beyS12Act5Passed",
+      "activateMissionBit": "beyTempleEntryComplete",
+      "questComplete": true
+    }
+  ]
+}
+```
+
+---
+
+*BEY-S12 complete. 2026-06-02.*
+
+---
+
+## Cycle 12 — The Liège Rubbing
+*Angle: The author who hid inside his book; the name the stone carries that the title page does not; the archive holds both without choosing*
+
+---
+
+### What Prior Cycles Missed
+
+Cycles 1–11 have addressed the documents Mandeville carried, produced, described, or was described by. No cycle has addressed the question of who wrote the book. Mandeville is the name on the book. In Liège, in 1367, there is a stone in the Guillemins monastery yard that carries a different name — and a notary's son named Jean d'Outremeuse, who has met the famous traveler personally and seen private documents at a private dinner, has spent six months being unable to decide what he knows.
+
+*What this cycle adds:* the bibliographic identity question as a scholarly record problem; the rubbing of the stone and d'Outremeuse's note as the document that holds both names side by side without resolving them; the archive's decision to file both names under a single record with neither declared primary.
+
+---
+
+### Theme Check
+
+**Existing themes to avoid:** all BEY cycles 1–11 and master index themes.
+
+**BEY-S12 theme chosen:** *The author who hid inside his book; the pseudonym as a specific kind of truth — not a lie but a different relationship to identity than a name; the stone that names the man the book pretended not to be; the archive holds both without declaring one a mask*
+
+Distinct from all listed themes. Nearest neighbors in master index: "the man fate wrote for betrayal is still the man who betrayed" (CPH — Starkad's self-authored account vs. the court scald's version); "the false confession that was an act of love is permanently misclassified as crime" (JRS — Sophronia). S13 differs: this is not a moral question about the act of concealment but a bibliographic question about authorship; the archive does not adjudicate whether the pseudonym was right — it records that both names exist and are connected.
+
+---
+
+### The Token
+
+*The Liège Rubbing — two folios in Jean d'Outremeuse's hand; the first is a careful rubbing on thin vellum of a stone set in the wall of the Guillemins monastery yard, reading: IOHANNES DE BVRGVNDIA MILES TVMVLATVR HIC · QVI PERAGRAVIT MVLTAS TERRAS ET PER MVLTOS ANNOS VIXIT IN EXILIO — "John of Burgundy, knight, is buried here, who traveled through many lands and lived for many years in exile"; the stone is dated in a mason's hand to approximately 1370 (the mason's estimate, noted by d'Outremeuse, of how long the stone has been in the wall); the second folio is d'Outremeuse's six-page note: he has met the famous traveler John Mandeville who has been living quietly in Liège since before 1357; the traveler showed him, at a private dinner, documents bearing a different name; the traveler did not explain and d'Outremeuse did not ask; he is not certain the stone and the traveler are the same man; he is not certain they are not.*
+
+---
+
+**ACT I**
+
+*The Liège Rubbing — on d'Outremeuse's writing table — notary's house, Liège, 1367.*
+
+Jean d'Outremeuse is twenty-nine years old and already a careful chronicler. He keeps detailed records of everything he hears in Liège. He is not a suspicious man. He is a thorough one.
+
+He made the rubbing because the stone interested him — a knight who traveled many lands and lived in exile, buried in the Guillemins monastery yard with no indication of a date of death or a family name beyond the region. Then he met the famous traveler at a scholarly dinner. Then the traveler showed him documents with a different name than the book uses. Then d'Outremeuse went home and looked at the rubbing for three weeks.
+
+He is not going to do anything with it. He is not a journalist. He is not a blackmailer. He is a chronicler who has noticed something he cannot fit into a category he currently has. He will give it to the Fighter because a Weimar archive seems like the right category.
+
+A bookseller named Raoul, who handles the famous traveler's book throughout the Rhine region, has heard that d'Outremeuse has been asking questions about a stone in the Guillemins monastery yard. Raoul sells the book. He does not want the book's authorship questioned while the author is still alive and commercially valuable. He is at d'Outremeuse's door.
+
+*— Raoul's concern is commercial. The rubbing and note are a scholarly record of a bibliographic coincidence. The question of whether the stone and the author are the same man is a scholarly question, not a commercial threat. These are different categories.*
+
+> **Skill Check: History DC 12.** Establish the rubbing and note's category: a bibliographic identity question is a scholarly record problem; the existence of a stone in the Guillemins monastery yard carrying a name and description consistent with a living author is a primary document question regardless of commercial implications; the archive receives it as a scholarly record, not as a claim about the author's identity.
+
+**Fail:** Raoul is not persuaded but he does not have authority to stop the transfer. He will monitor.
+
+**Pass:** Raoul is a commercial man, not a violent one. The scholarly framing gives him no commercial leverage. He leaves. D'Outremeuse hands the Fighter the folded rubbing and his note.
+
+**TOKEN GRANTED: The Liège Rubbing** — rubbing on thin vellum + six-page observation note in d'Outremeuse's hand; both folded together in a single leather sleeve.
+
+---
+
+**ACT II**
+
+*The Liège Rubbing — in the pack — Guillemins monastery, Liège, late morning.*
+
+The prior of the Guillemins monastery is a careful institutional man. He has been told that someone is making a rubbing of the stone in his yard and writing notes about it. He is concerned — not about the stone, but about consequences. If the stone is associated publicly with the famous traveler's true identity, several things happen at once: the monastery becomes famous, which it does not want; legal claims against the estate of whoever the stone names may be directed toward the monastery, which it cannot afford; the traveler himself may become legally complicated, which would reflect on the monastery's recent hospitality.
+
+He wants a statement from d'Outremeuse that the rubbing is being made for purely historical and documentary purposes and will not be used in any property or identity claim.
+
+*— D'Outremeuse has already given the rubbing to the Fighter. The prior's request is reasonable and appropriate. The Fighter can provide the assurance honestly.*
+
+> **Skill Check: Persuasion DC 12.** Provide the assurance that the rubbing is in transit to a neutral archive for documentary historical purposes; no property or identity claim is being made; the archive's intake is as a bibliographic record, not as a legal document.
+
+**Fail:** The prior requires a notarized statement, which takes two days to arrange. Delay, but no loss.
+
+**Pass:** The prior accepts the verbal assurance with a register entry. He is a practical man. "The stone has been there since before I came. Whatever it names, it is not the monastery's business." He stamps the monastery log.
+
+**TOKEN CHECKED.**
+
+---
+
+**ACT III**
+
+*The Liège Rubbing — in the pack — Cologne Dominican priory, three days north.*
+
+A Dominican friar named Fra Wilhelm at the Cologne house has read the famous traveler's book. He is specifically interested in Chapter VI, where Mandeville describes serving in the Mamluk Sultan's army. Fra Wilhelm's concern: if the traveler is actually a knight named John of Burgundy, and if that name appears in certain outstanding warrants from before 1357, then Chapter VI's account of military service to a Muslim ruler becomes legally relevant in a way that creates ecclesiastical obligations.
+
+He does not know whether the stone names a man connected to any such warrants. He has heard only that there is a question about the author's identity. His precautionary position: any document bearing on the author's identity should be subject to ecclesiastical review before entering any secular archive.
+
+*— The ecclesiastical review argument requires that the document bears on a matter of active ecclesiastical concern. A bibliographic note and a stone rubbing bear on a historical identity question. The document does not assert that the traveler is the knight on the stone — it only notes the coincidence. The difference is the argument.*
+
+> **Skill Check: Persuasion DC 13.** The document does not assert an identity — it records a coincidence observed by a careful chronicler; the archive receives it as a bibliographic record of an unresolved question; ecclesiastical review applies to documents bearing on active matters of doctrinal or legal concern, not to scholarly records of unresolved bibliographic observations.
+
+**Fail:** Fra Wilhelm is unconvinced but not empowered to physically prevent the transit. He will send a letter to the Weimar Dominican chapter. The letter will arrive after the Fighter.
+
+**Pass:** Fra Wilhelm recognizes the precision of the distinction. The document does not assert. It observes. "A document that says 'I am not certain' does not require the same review as a document that says 'I am certain.'" He accepts. He will not send the letter.
+
+**TOKEN CHECKED.**
+
+---
+
+**ACT IV**
+
+*The Liège Rubbing — in the pack — road between Cologne and Weimar, afternoon.*
+
+A man on the road calls himself a student traveling from Cologne to Frankfurt. He has been walking the same road for two days, at approximately the same pace. He asks about the weather. He asks about the road conditions. He asks, with what he clearly believes is casual indirection, whether the Fighter is carrying documents for the Weimar archive.
+
+The man is not dangerous. He is a researcher. He works for a patron whose interest in the rubbing and note is professional. The patron is, based on several circumstantial details about the man's vocabulary and institutional references, connected to the Cologne Dominican chapter.
+
+Fra Wilhelm sent the letter after all, or made a different arrangement.
+
+*— The man's patron wants the document's contents before it reaches the archive, not instead of the archive. This is intelligence-gathering, not suppression. It is still an obstruction.*
+
+> **Skill Check: Investigation DC 12.** Identify the man's institutional affiliation from circumstantial details: vocabulary, references, the specific way he phrases his question about document destination; establish that the encounter is not accidental; complete the road without giving information about the document's contents.
+
+**Fail:** The man learns enough from the Fighter's careful deflections to confirm the document is the Liège rubbing. His patron will have a day's notice.
+
+**Pass:** The man learns nothing. He peels off at a road junction outside Cologne, presumably to report to his patron that the carrier was unremarkable and the transit uneventful. He is wrong about both.
+
+**TOKEN CHECKED.**
+
+---
+
+**ACT V**
+
+*The Liège Rubbing — in the leather sleeve — Weimar archive intake desk, Archivus Sweelinck, late November.*
+
+Sweelinck reads d'Outremeuse's note. He reads it a second time. He looks at the rubbing.
+
+*IOHANNES DE BVRGVNDIA MILES TVMVLATVR HIC · QVI PERAGRAVIT MVLTAS TERRAS ET PER MVLTOS ANNOS VIXIT IN EXILIO*
+
+"The stone says he traveled many lands and lived in exile." He sets it down. "The book says the same thing." He does not say: they are the same man. He does not say: they are not. "D'Outremeuse says: I am not certain." He is quiet.
+
+He looks at the date estimate the mason provided to d'Outremeuse: approximately thirty years ago. The book was completed around 1357. The stone was set approximately thirty years ago. The dates are consistent. They are not conclusive.
+
+"A notary's son in Liège looked at a stone, met a man, saw documents, went home, and wrote six pages about what he was not certain of." He opens the intake form. "That is a primary bibliographic document."
+
+*— The classification must hold both names without making the stone the proof and the book the name. Both are primary records. Neither proves the other. The archive files the question.*
+
+> **Skill Check: Investigation DC 12.** Propose: Identity Records — Pseudonymous Authorship; dual-name record; the stone's name and the book's name filed together under a single intake entry with neither declared primary; d'Outremeuse's note filed as the observation record connecting them; the archive receives the question, not an answer.
+
+**Fail:** Filed under Mandeville Biographical Records — Identity Question; d'Outremeuse's note as secondary.
+
+**Pass:** Sweelinck writes: *Identity Records — Pseudonymous Authorship: bibliographic records bearing on the relationship between an author's given name and the name under which their work was published; the stone's inscription and the book's title page filed together with neither designated primary; d'Outremeuse's observation note filed as the connecting record; the connection is noted, not asserted; the archive receives the question.*
+
+He closes the ledger.
+
+"The man who wrote the book and the man on the stone both traveled many lands and lived in exile." He taps the rubbing. "The archive will say: both names are here, and neither claims the other." He adds one line to the intake note in small script: *the archive does not know if they are the same man; it knows that Jean d'Outremeuse thought carefully about whether they might be, and wrote six pages about it, and was not certain either way; that is what the archive holds.*
+
+**TOKEN TAKEN: The Liège Rubbing**
+
+---
+
+The stone in the Guillemins monastery yard continues to carry the name it has always carried. The famous traveler continues to live quietly in Liège. Jean d'Outremeuse writes his chronicle. In the Weimar archive, a leather sleeve contains a vellum rubbing and a six-page note, filed under Identity Records — Pseudonymous Authorship, with both names present and neither primary. D'Outremeuse does not know it arrived. The traveler does not know it was made. The archive knows both names and cannot say which one the man in Liège is using at breakfast.
+
+---
+
+## Quest API Stub — BEY-S13
+
+```json
+{
+  "quest_id": "BEY-S13",
+  "title": "The Liège Rubbing",
+  "source": "BEY",
+  "cycle": 12,
+  "book": "Mandeville's Travels — attr. Sir John Mandeville (c. 1357)",
+  "source_episode": "Jean d'Outremeuse, Liège notary and chronicler, later wrote that Mandeville confessed his true identity — Sir Jean de Bourgogne — on his deathbed; in 1367, five years before Mandeville's death, d'Outremeuse has met him, seen his private documents, and noticed the stone in the Guillemins monastery yard; he has not yet resolved what he knows",
+  "cycle_angle": "The author who hid inside his book; the name the stone carries that the title page does not; the archive holds both without choosing",
+  "theme": "The author who hid inside his book; the pseudonym as a specific kind of truth — not a lie but a different relationship to identity than a name; the stone names the man the book pretended not to be; the archive holds both without declaring one a mask",
+  "token": {
+    "id": "BEY_S13_TOKEN",
+    "name": "The Liège Rubbing",
+    "description": "Two folios: a vellum rubbing of the Guillemins monastery stone (IOHANNES DE BVRGVNDIA MILES, etc.) and Jean d'Outremeuse's six-page observation note connecting the stone to the famous traveler without asserting identity; both in a single leather sleeve.",
+    "grant_act": "act_1",
+    "take_act": "act_5",
+    "check_acts": ["act_2", "act_3", "act_4"]
+  },
+  "nodes": ["LGE", "COL", "WM"],
+  "new_nodes": [
+    {
+      "code": "COL",
+      "name": "Cologne — Dominican Priory and road junction",
+      "description": "The Rhenish cathedral city, 1367; major Dominican presence; road junction where the Rhine route north meets the eastern road toward Weimar; the Cologne Dominican chapter maintains correspondence with Dominican houses in Liège and has an interest in documents affecting famous authors who served Muslim rulers."
+    }
+  ],
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "LGE",
+      "type": "skill_check",
+      "activateNode": "LGE",
+      "scene": "D'Outremeuse's house. The bookseller Raoul wants the rubbing and note suppressed for commercial reasons. D'Outremeuse is willing to release them to a neutral archive.",
+      "prompt": "Establish the rubbing and note's category: bibliographic identity question as a scholarly record problem; the archive receives it as a scholarly record, not a commercial threat or a claim.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "failText": "Raoul leaves without authority to stop the transfer. He will monitor.",
+        "passText": "Raoul has no commercial leverage against a scholarly framing. He leaves. D'Outremeuse hands over the document."
+      },
+      "grantItem": "The Liège Rubbing",
+      "checkPassFlag": "beyS13Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "LGE",
+      "type": "skill_check",
+      "scene": "Guillemins monastery. The prior wants assurance that the rubbing is not being used in a property or identity claim before permitting the transit.",
+      "prompt": "Provide honest assurance: document in transit to a neutral archive for documentary historical purposes; no property or identity claim; intake as bibliographic record.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "failText": "Prior requires notarized statement. Two-day delay.",
+        "passText": "Prior accepts verbal assurance and stamps the monastery log."
+      },
+      "checkItem": "The Liège Rubbing",
+      "checkPassFlag": "beyS13Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "COL",
+      "type": "skill_check",
+      "activateNode": "COL",
+      "scene": "Cologne Dominican priory. Fra Wilhelm wants ecclesiastical review of any document bearing on the author's identity, citing concerns about Chapter VI's military service to the Sultan.",
+      "prompt": "Distinguish: the document records an unresolved coincidence observed by a careful chronicler; it does not assert identity; ecclesiastical review applies to documents bearing on active matters of concern, not scholarly records of unresolved bibliographic observations.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "failText": "Fra Wilhelm is unconvinced but cannot prevent transit. He will send a letter to the Weimar Dominican chapter.",
+        "passText": "Fra Wilhelm recognizes the distinction between a document that asserts and one that observes. He will not send the letter."
+      },
+      "checkItem": "The Liège Rubbing",
+      "checkPassFlag": "beyS13Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "COL",
+      "type": "skill_check",
+      "scene": "Road between Cologne and Weimar. A man calling himself a student has been walking the same road for two days and asks carefully indirect questions about the Fighter's documents.",
+      "prompt": "Identify the man's institutional affiliation from circumstantial vocabulary and references; complete the road without giving information about the document's contents.",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 12,
+        "failText": "The man learns enough to confirm the document is the Liège rubbing. His patron will have a day's notice.",
+        "passText": "The man learns nothing. He peels off at a road junction, presumably to report an unremarkable transit."
+      },
+      "checkItem": "The Liège Rubbing",
+      "checkPassFlag": "beyS13Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Weimar archive intake desk. Sweelinck reads d'Outremeuse's note and examines the rubbing. Both names — the stone's and the book's — are present. D'Outremeuse is not certain they belong to the same man. The stone's mason-estimated date is consistent with the book's timeline.",
+      "prompt": "Propose: Identity Records — Pseudonymous Authorship; dual-name record; stone's name and book's name filed together with neither primary; d'Outremeuse's note as the connecting observation record; the archive receives the question, not an answer.",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 12,
+        "failText": "Filed under Mandeville Biographical Records — Identity Question.",
+        "passText": "Sweelinck writes: Identity Records — Pseudonymous Authorship; both names filed together, neither primary; the archive receives the question. 'The archive does not know if they are the same man.'"
+      },
+      "takeItem": "The Liège Rubbing",
+      "grantItem": "Liège Rubbing Archive Record",
+      "checkPassFlag": "beyS13Act5Passed",
+      "activateMissionBit": "beyLiegeRubbingComplete",
+      "questComplete": true
+    }
+  ]
+}
+```
+
+---
+
+*BEY-S13 complete. 2026-06-02.*
+
+---
+
+## Cycle 13 — What the Pilgrim's Signet Looked Like
+*Angle: The ordinary defines the exceptional by contrast; the collection of non-wonders is the instrument that measures the wonder*
+
+---
+
+### What Prior Cycles Missed
+
+Cycles 1–12 have addressed Mandeville's accounts of what the Sultan gave him, the documents that traveled, and the institutional networks surrounding them. The Sultan's Commission under the great seal (Cycle 2) is now in the Weimar archive. What no cycle has addressed is what a non-great-seal grant from the Sultan looked like — the ordinary signets given to European servants, messengers, and minor functionaries. Without that comparison, the great seal's significance is asserted but not demonstrated. With it, the archive has the calibration instrument.
+
+*What this cycle adds:* the collection of ordinary Mamluk signets as the evidence that defines what was extraordinary about the Commission; the merchant's daughter who understood this and wrote the annotation that makes the collection into an argument.
+
+---
+
+### Theme Check
+
+**Existing themes to avoid:** all BEY cycles 1–12 and master index themes.
+
+**BEY-S14 theme chosen:** *The ordinary defines the exceptional by contrast; the collection of non-wonders is the instrument of measurement, not the wonder itself; the merchant's daughter who wrote the annotation understood what her father's curiosity collection was for, even though her father never did; the archive that receives both the collection and the annotation receives the argument, not just its evidence*
+
+Distinct from all listed themes. No direct neighbor in master index. Adjacent: "The administrative record that captured what it could not name" (WAW cycle 2 — the official clerk who recorded an event without understanding its significance). S14 reverses this: the woman who wrote the annotation understood the significance perfectly and recorded it precisely because her father's collection did not.
+
+---
+
+### The Token
+
+*The Signet Collection Document — a merchant's inventory folio in Arabic, compiled by the late merchant Mansur ibn Yusuf of Damascus; lists fourteen ordinary Mamluk seals given to European servants, messengers, and minor functionaries between 1340 and 1365; each entry gives the recipient's name, status, the occasion of the grant, the seal's dimensions, device, and wax color; compiled as a private curiosity collection by a man who found the variety of small grants interesting; the single annotation at the end, in different ink, written by Mansur's daughter Yasmin: "excluded from this collection: one grant made in the same period under the Sultan's own hand, the great seal, gold threading in the wax, weight of full authority — the Sultan's personal seal rather than the chancery seal; this collection therefore defines by its entirety what an ordinary servant's grant looks like, and by its exclusion what the extraordinary grant was."*
+
+---
+
+**ACT I**
+
+*The Signet Collection Document — on Yasmin's estate table — Damascus, 1367.*
+
+Mansur ibn Yusuf died six months ago. His daughter Yasmin is managing the estate with the specific clarity of a woman who has been managing it informally for years and is now doing it formally. She is not grieving; she is working. She found the Signet Collection Document in her father's study and she understood immediately what it was useful for — not as a curiosity, but as a calibration document. She wrote the annotation.
+
+An Aleppo collector named Ahmad ibn Salim has offered to buy the fourteen physical seals as a collection. He has no interest in the inventory document itself. His offer is legitimate — forty dinars for the fourteen objects. The document, without the physical seals, would be harder to sell.
+
+Yasmin wants the document archived, not the seals. The seals can be sold to Ahmad. But she is hesitating because Ahmad is arguing that without the physical objects, the document is merely a list of descriptions, and its value to any archive is minimal.
+
+*— Ahmad is wrong, and Yasmin knows it but needs the argument confirmed. The document's value is the annotation. The annotation requires the document to be whole, including Yasmin's observation about the excluded grant. The physical seals are irrelevant to the argument the document makes.*
+
+> **Skill Check: Persuasion DC 12.** Confirm for Yasmin that the document's value is in the inventory as a complete record of ordinary grants, specifically because the annotation explains what was excluded; the physical seals are curiosities; the document with the annotation is an argument about the Sultan's great seal; Ahmad's offer is for the wrong thing.
+
+**Fail:** Yasmin wavers. She sells the seals to Ahmad and gives the document to the Fighter, but she is uncertain whether she made the right division.
+
+**Pass:** Yasmin is confirmed in her judgment. She gives Ahmad the fourteen seals and the Fighter the document with the annotation. Ahmad shrugs — he wanted the objects, not the list. He got what he came for. "Tell the archivist," Yasmin says, "that my father collected these for twenty-five years thinking they were interesting. I looked at them for one afternoon and saw what they were for."
+
+**TOKEN GRANTED: The Signet Collection Document** — the inventory folio; fourteen entries; Yasmin's annotation at the end in different ink; folded in a plain cloth sleeve.
+
+---
+
+**ACT II**
+
+*The Signet Collection Document — in the pack — road between Damascus and Beirut.*
+
+A Mamluk administrative official named Faris ibn Qasim overtakes the Fighter on the road. He is polite. He has received a report that a Damascus estate is transferring a document listing fourteen Mamluk seals and grant occasions. His office maintains records of state administrative instruments.
+
+His classification: the Signet Collection Document may be a list of state administrative records, subject to state administrative review before transfer to a foreign archive.
+
+He is applying the right rule incorrectly. A merchant's private curiosity collection of grant occasions and seal descriptions is not a state administrative record — it is a private inventory of secondary observations about grants that were already completed and closed.
+
+*— The distinction between a primary administrative record (the grants themselves, already closed) and a secondary private inventory of observations about completed grants (what Mansur compiled) is the argument. The document does not contain the grants. It contains Mansur's notes about them.*
+
+> **Skill Check: Investigation DC 12.** Distinguish primary administrative record from private secondary inventory: Mansur's document is a merchant's personal curiosity collection of descriptions of grants that were already completed and closed; it is secondary observation about primary administrative acts, not itself a primary administrative record; the grants are already in the chancery; this is a private man's notes about what he noticed.
+
+**Fail:** Faris asks for a two-day review. He finds no grounds for retention and releases the document with a notation that it was reviewed and found to be secondary private material.
+
+**Pass:** Faris considers the distinction. A merchant's curiosity collection of descriptions is not a chancery instrument. "My jurisdiction is the grants, not observations about them." He steps aside. He makes a note for his own records: the document's destination, in case questions arise later.
+
+**TOKEN CHECKED.**
+
+---
+
+**ACT III**
+
+*The Signet Collection Document — in the pack — Beirut harbor, afternoon.*
+
+A Genoese factor in Beirut named Luca della Rocca has a grandfather whose name, he claims, belongs in the Signet Collection Document. His grandfather was a Genoese factor in the 1340s who received a small administrative seal from a Mamluk port official in recognition of cooperative service. Luca wants to add a fifteenth entry to the inventory.
+
+His claim may be true. He has documentation — a family letter describing the seal. He is not trying to deceive anyone. He genuinely wants his grandfather's seal in the record.
+
+The problem is that adding a fifteenth entry to Yasmin's document transforms it. The document's structure is Mansur's compilation of what he observed, plus Yasmin's annotation explaining what the document is for. Luca's addition would create a composite: Mansur's observations, Yasmin's argument, and Luca's family history, all in the same folio. The distinction between the original record and the addition is material.
+
+*— The archive can receive a note from Luca about his grandfather's seal as a separate companion document. It cannot receive a modified Signet Collection Document that has been amended after Yasmin's annotation, because the amendment would dissolve the document's identity as Mansur's compilation.*
+
+> **Skill Check: Persuasion DC 12.** Offer to carry a separate note from Luca to the archive describing his grandfather's seal, to be filed as companion evidence alongside the Signet Collection Document; the archive will cross-reference them; his grandfather's seal will be in the record, but as a separate document that the archive can evaluate independently rather than as an amendment to Yasmin's argument.
+
+**Fail:** Luca writes his addition in the margin before the Fighter can prevent it. Sweelinck will note the late addition and its status.
+
+**Pass:** Luca accepts the companion document structure. He is pleased that his grandfather will be in the archive. He writes a neat single-page note about the seal, signs it, and gives it to the Fighter. "Tell the archivist it arrived with the collection but was written separately."
+
+**ITEM GRANTED: Luca's Companion Note** — single page describing Luca della Rocca's grandfather's Mamluk port seal, 1340s; filed alongside the Signet Collection Document as a companion entry.
+
+---
+
+**ACT IV**
+
+*The Signet Collection Document — in the pack — Ragusa waystation, evening.*
+
+Ser Nikola is a Ragusa notary who has been a correspondent of the Weimar archive for twenty years. He has held temporary custody of dozens of documents in transit. He knows the archive's intake procedures well.
+
+He has also seen the Sultan's Commission document — not the original, but a certified copy that passed through Ragusa on its way to a Venetian scholar's study some years ago. He recognized the great seal description from that copy.
+
+He reads Yasmin's annotation. He understands immediately what it means: the collection of ordinary seals defines, by contrast, exactly what the great seal was. He wants to write an analytical note connecting the two documents — the Signet Collection and the Sultan's Commission in the Weimar archive — explaining the calibration argument.
+
+His analysis would be accurate and well-constructed. The question is how it travels.
+
+*— If his note is appended to the Signet Collection Document, it modifies the document's character: Mansur's inventory plus Yasmin's annotation plus Ser Nikola's analysis becomes a composite. If his note travels as a companion document addressed to Sweelinck separately, the two primary sources arrive independently and his analysis arrives as secondary scholarship, which is what it is.*
+
+> **Skill Check: Investigation DC 13.** Identify the distinction between appended modification and companion analysis: propose that Ser Nikola's note travel as a separately addressed letter to Sweelinck, referencing both the Signet Collection Document and the Sultan's Commission by their archive intake dates; when both primary documents and the secondary analysis are in the archive, the cross-reference can be made with all three independent.
+
+**Fail:** Ser Nikola appends a brief note to the document's cloth sleeve. The note is accurate and will be filed as a separate item at intake, but it physically accompanies the document rather than arriving separately.
+
+**Pass:** Ser Nikola recognizes the distinction. He writes his analysis as a letter to Sweelinck, sealed, addressed separately, referencing both documents by the intake dates he knows. "The archive will have the calibration argument in three independent pieces. That is more useful than one composite." He gives the Fighter his letter. "Tell him I read the copy of the Commission that passed through in 1362. I have been waiting for whatever came next."
+
+**ITEM GRANTED: Ser Nikola's Calibration Analysis** — Ser Nikola's letter to Sweelinck; connecting the Signet Collection Document to the Sultan's Commission; filed separately; three independent pieces constitute the calibration argument.
+
+---
+
+**ACT V**
+
+*The Signet Collection Document — in the cloth sleeve — Weimar archive intake desk, Archivus Sweelinck, December.*
+
+Sweelinck reads the inventory. Fourteen entries. Fourteen ordinary grants. Seal dimensions, devices, wax colors. A Syrian merchant's careful eye for small objects. Then the annotation in different ink.
+
+He sets the document down.
+
+He retrieves the Sultan's Commission from the cedar section. He reads the Sultan's Commission. He looks at the annotation: *gold threading in the wax; the Sultan's personal seal rather than the chancery seal; weight of full authority.*
+
+He sets them side by side.
+
+"Mansur ibn Yusuf spent twenty-five years collecting descriptions of ordinary signets because he found them interesting." He is quiet. "His daughter spent one afternoon and saw what they were for." He looks at the Commission. "She described the Commission without having seen it. She described it correctly."
+
+He opens Ser Nikola's letter, which arrived with a separate cover address. He reads it. "Ser Nikola read the copy that passed through Ragusa three years ago." He looks at the three items on the table: the Signet Collection Document, the Sultan's Commission, Ser Nikola's analysis. "Three documents that none of them intended to be together."
+
+He looks at Luca's companion note. "And a Genoese factor's grandfather."
+
+He opens the intake form.
+
+*— The classification must preserve the Signet Collection Document as a primary calibration instrument: a collection of what the ordinary looks like, filed so that its relationship to the extraordinary is clear without either being subordinated to the other.*
+
+> **Skill Check: Investigation DC 12.** Propose: Material Evidence Records — Calibration by Contrast; the Signet Collection Document filed as a primary record of ordinary Mamluk grants; the Sultan's Commission filed in its existing location; cross-reference notation added to both intake records; Ser Nikola's analysis filed as secondary scholarship; Luca's note filed as companion entry; the relationship between the ordinary and the extraordinary defined by their placement in the same series.
+
+**Fail:** Filed under Mandeville Commission — Comparative Material; the collection as supplementary context.
+
+**Pass:** Sweelinck writes: *Material Evidence Records — Calibration by Contrast: primary records of routine administrative grants preserved for their relationship to extraordinary grants; the extraordinary is defined by contrast with the ordinary; the Signet Collection Document and the Sultan's Commission are filed in the same series because together they constitute a definition; neither defines the other alone.* He cross-references both intake records and writes Ser Nikola's analysis into the companion notes.
+
+He looks at the annotation in different ink one more time.
+
+"She was right." He closes the ledger. "Her father collected fourteen small signets for twenty-five years thinking they were interesting. He was right too. He just didn't know what they were interesting for yet." He sets the Signet Collection Document in the Material Evidence section. *The document rests beside the Commission it was always going to define, in an archive it never knew it was heading toward, having traveled from a merchant's curiosity cabinet to a daughter's clear eye to a Fighter's pack to a Weimar archive intake desk in November.*
+
+**TOKEN TAKEN: The Signet Collection Document**
+
+---
+
+In the Weimar archive's Material Evidence series, the Sultan's Commission and the Signet Collection Document are filed in the same section, separated by a cross-reference card. The Commission is the extraordinary grant. The collection is the instrument that proves it was extraordinary. Neither was written knowing the other would exist. Yasmin's annotation is the bridge: she described the Commission from inside the collection, from its absence in the inventory, from the single line her father never wrote because he never had the Commission in his hands. The archive received the argument in three independent pieces and reassembled it without modifying any of them.
+
+---
+
+## Quest API Stub — BEY-S14
+
+```json
+{
+  "quest_id": "BEY-S14",
+  "title": "What the Pilgrim's Signet Looked Like",
+  "source": "BEY",
+  "cycle": 13,
+  "book": "Mandeville's Travels — attr. Sir John Mandeville (c. 1357)",
+  "source_episode": "Chapter XI: Mandeville receives the Sultan's commission under the great seal; the Sultan gave out ordinary signets routinely to European servants and factors; no one recorded what these ordinary grants looked like until Mansur ibn Yusuf assembled his collection as a curiosity, and his daughter Yasmin saw what it was for",
+  "cycle_angle": "The ordinary defines the exceptional by contrast; the collection of non-wonders is the instrument of measurement, not the wonder itself",
+  "theme": "The ordinary defines the exceptional by contrast; the merchant's daughter who wrote the annotation understood what her father's curiosity collection was for even though her father never did; the archive that receives both the collection and the annotation receives the argument, not just its evidence",
+  "token": {
+    "id": "BEY_S14_TOKEN",
+    "name": "The Signet Collection Document",
+    "description": "Merchant's inventory folio listing fourteen ordinary Mamluk signets given to European servants and factors, 1340–1365; each entry gives recipient, occasion, seal dimensions and device, wax color; Yasmin's annotation at the end in different ink: the great seal commission excluded from this collection defines by its exclusion what was extraordinary about it.",
+    "grant_act": "act_1",
+    "take_act": "act_5",
+    "check_acts": ["act_2", "act_3", "act_4"]
+  },
+  "nodes": ["DAM", "BEI", "RGS", "WM"],
+  "secondary_items": [
+    {
+      "id": "BEY_S14_LUCA",
+      "name": "Luca's Companion Note",
+      "description": "Single page by Luca della Rocca describing his grandfather's Mamluk port seal, 1340s; filed alongside the Signet Collection Document as a companion entry."
+    },
+    {
+      "id": "BEY_S14_NIKOLA",
+      "name": "Ser Nikola's Calibration Analysis",
+      "description": "Ser Nikola's letter to Sweelinck connecting the Signet Collection Document to the Sultan's Commission; filed separately as secondary scholarship; written by a man who read the Commission copy in Ragusa in 1362 and recognized what came next."
+    }
+  ],
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "DAM",
+      "type": "skill_check",
+      "activateNode": "DAM",
+      "scene": "Yasmin's estate, Damascus. Collector Ahmad ibn Salim wants to buy the fourteen physical seals. Yasmin wants the document archived. Ahmad argues that without the physical objects the document is just a list.",
+      "prompt": "Confirm for Yasmin that the document's value is Yasmin's annotation — the argument about what was excluded; the physical seals are irrelevant to the argument; Ahmad's offer is for the wrong thing.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "failText": "Yasmin wavers but gives the document to the Fighter and the seals to Ahmad, uncertain she divided correctly.",
+        "passText": "Yasmin confirmed in her judgment. Seals to Ahmad, document to the Fighter. 'My father collected these for twenty-five years. I looked for one afternoon.'"
+      },
+      "grantItem": "The Signet Collection Document",
+      "checkPassFlag": "beyS14Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "BEI",
+      "type": "skill_check",
+      "activateNode": "BEI",
+      "scene": "Road between Damascus and Beirut. Mamluk official Faris ibn Qasim wants to review the document as a potential state administrative record.",
+      "prompt": "Distinguish primary administrative record from private secondary inventory: Mansur's document is observations about completed grants, not itself a grant record; the grants are already in the chancery.",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 12,
+        "failText": "Two-day review. Released as secondary private material.",
+        "passText": "Faris recognizes the distinction. 'My jurisdiction is the grants, not observations about them.' Steps aside."
+      },
+      "checkItem": "The Signet Collection Document",
+      "checkPassFlag": "beyS14Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "BEI",
+      "type": "skill_check",
+      "scene": "Beirut harbor. Genoese factor Luca della Rocca wants to add a fifteenth entry for his grandfather's seal.",
+      "prompt": "Offer the companion document structure: his grandfather's seal will be in the archive as a separate document that the archive can evaluate independently, rather than as an amendment to Yasmin's argument.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "failText": "Luca writes a marginal note before the Fighter can prevent it. Sweelinck will note the late addition.",
+        "passText": "Luca accepts. Writes a neat single-page note. You receive Luca's Companion Note."
+      },
+      "grantItem": "Luca's Companion Note",
+      "checkItem": "The Signet Collection Document",
+      "checkPassFlag": "beyS14Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "RGS",
+      "type": "skill_check",
+      "activateNode": "RGS",
+      "scene": "Ragusa waystation. Ser Nikola, archive correspondent who saw the Commission copy in 1362, wants to write an analytical note connecting the Signet Collection to the Sultan's Commission.",
+      "prompt": "Propose that his note travel as a separately addressed letter to Sweelinck: all three pieces arrive independently; the cross-reference can be made with all three independent rather than as one composite.",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 13,
+        "failText": "Ser Nikola appends a brief note to the cloth sleeve. Filed as separate item at intake.",
+        "passText": "Ser Nikola writes a sealed letter to Sweelinck. You receive Ser Nikola's Calibration Analysis. 'I have been waiting for whatever came next.'"
+      },
+      "grantItem": "Ser Nikola's Calibration Analysis",
+      "checkItem": "The Signet Collection Document",
+      "checkPassFlag": "beyS14Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Weimar archive intake desk. Sweelinck reads the Signet Collection alongside the Sultan's Commission. Yasmin's annotation described the Commission without having seen it, and described it correctly. Three independent documents — Mansur's collection, the Commission, Ser Nikola's analysis — constitute a calibration argument.",
+      "prompt": "Propose: Material Evidence Records — Calibration by Contrast; Commission and Signet Collection filed in the same series; cross-referenced without either being primary; Ser Nikola's analysis as secondary scholarship; Luca's note as companion entry.",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 12,
+        "failText": "Filed under Mandeville Commission — Comparative Material.",
+        "passText": "Sweelinck writes: Material Evidence Records — Calibration by Contrast; the extraordinary defined by contrast with the ordinary; neither defines the other alone. 'She was right. Her father was right too. He just didn't know what they were interesting for yet.'"
+      },
+      "takeItem": "The Signet Collection Document",
+      "grantItem": "Signet Calibration Archive Record",
+      "checkPassFlag": "beyS14Act5Passed",
+      "activateMissionBit": "beySignetCollectionComplete",
+      "questComplete": true
+    }
+  ]
+}
+```
+
+---
+
+*BEY-S14 complete. 2026-06-02.*
