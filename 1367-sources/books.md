@@ -499,7 +499,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | [x] | MLA | plutarch-lives | Plutarch's Lives — Plutarch (Dryden/Clough tr.) | c. 95–110 AD | Biography | 4222 |
 | [x] | NWI | anabasis | Anabasis — Xenophon (Dakyns tr. — Gutenberg #1170) | c. 401 BC | Greek Military | 545 |
 | [x] | IST | alexiad | The Alexiad — Anna Komnene | c.1148 | Byzantine History | 165 | SEEDS COMPLETE 2026-06-02 — IST-01–07 all vignettes done. IST-01: The Enemy's Portrait (CON→RGS→WM). IST-02–07: The Curtain Notes, The Nicaea Receipt, The Bryennios Draft, The Devol Treaty Copy, The Exile Letter, The Physician's Notes. Memory-processed (no txt file). See IST-alexiad.md. |
-| [x] | WAW | quo-vadis | Quo Vadis — Henryk Sienkiewicz (Curtin tr. — 1895) | c. 64–68 AD (Nero's Rome) | Historical Novel | 1201 |
+| [x] | WAW | quo-vadis | Quo Vadis — Henryk Sienkiewicz (Curtin tr. — 1895) | c. 64–68 AD (Nero's Rome) | Historical Novel | 1201 | SEEDS COMPLETE 2026-06-03 — WAW-01–08 all vignettes done (8 cycles). questComplete added to WAW-03 (cycle 8). New nodes: SAU, VFM, BLO added to Location Grid. Theme threads for all 8 cycles. See WAW-quo-vadis.md. |
 
 ### Byzantine & Eastern European
 

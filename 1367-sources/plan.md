@@ -748,7 +748,7 @@ Every quest in §MATH-01 carries a Noether signature: every TOKEN that reaches t
 | 63 | AMS | Tale of Genji | **SEEDS COMPLETE 2026-06-03 — AMS-01–07 done. questComplete added. MRG node added. Theme threads added.** |
 | 64 | HTY | Mahabharata | **SEEDS COMPLETE 2026-06-03 — HTY-01–07 done. HTY-01 stub written; HTY-07 new cycle. Theme threads added. GNJ already in grid.** |
 | 65 | CLJ | Dracula | **SEEDS COMPLETE 2026-06-03 — CLJ-01–09 done. CLJ-01 UQF stub written; questComplete added to CLJ-09. Theme threads for all 9 cycles added.** |
-| 66 | WAW | Quo Vadis | QUEUED |
+| 66 | WAW | Quo Vadis | **SEEDS COMPLETE 2026-06-03 — WAW-01–08 done (8 cycles). questComplete added. SAU/VFM/BLO nodes added. Theme threads for all 8 cycles.** |
 | 67 | NWI | Anabasis | QUEUED |
 | 68 | MLA | Plutarch's Lives | QUEUED |
 | 69 | CRL | Froissart (Boys) | QUEUED |

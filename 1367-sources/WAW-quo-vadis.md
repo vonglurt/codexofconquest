@@ -1878,6 +1878,7 @@ Archivus Sweelinck opens the register to Day 4, session 2, page 7. He reads the 
   "route": ["NAP", "BOL", "WM"],
   "theme": "The bureaucratic record of the event that witnesses understood as miraculous — the register records the outcome in administrative language; 'prisoner survived, animal dispatched by prisoner's hands, no weapon used' sits between two unremarkable entries; the administrative language is the only surviving non-partisan account",
   "archive_category": "Administrative Records — Witnessed Events of Uncertain Classification",
+  "questComplete": true,
   "acts": [
     {
       "act_id": "act_1",
