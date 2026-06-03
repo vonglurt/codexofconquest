@@ -1674,6 +1674,7 @@ He notes: "Cross-reference: MLA-01 (Lives as parallel comparison). The archive n
   "route": ["THA", "CON", "ANC", "WM"],
   "theme": "The source document behind the canonical account; the historian's selection is visible as selection; the dispatch is what Thucydides held when he wrote Book VII — and the archive now holds what he chose not to quote",
   "archive_category": "Source Documents — Historian's Primary Materials",
+  "questComplete": true,
   "acts": [
     {
       "act_id": "act_1",
