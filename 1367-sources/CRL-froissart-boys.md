@@ -1832,6 +1832,7 @@ He takes **Urban V's Sealed Guarantee** from the carrier and places it in the ne
   "route": "AVG → PER → BDX",
   "theme": "The letter addressed to the dead — the absolution that cannot be delivered but can be filed as evidence of institutional intent; the personal promise that becomes institutional precedent through the death of the promisee; what the archive can preserve when it can no longer deliver.",
   "archive_category": "Absolution Records — Letters Addressed to the Dead; Filed as Evidence of Prior Institutional Intent Rather Than Personal Grant; The Personal Promise Transformed into Institutional Precedent by the Death of the Promisee",
+  "questComplete": true,
   "acts": [
     {
       "act": "act_1",

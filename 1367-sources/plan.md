@@ -751,7 +751,7 @@ Every quest in §MATH-01 carries a Noether signature: every TOKEN that reaches t
 | 66 | WAW | Quo Vadis | **SEEDS COMPLETE 2026-06-03 — WAW-01–08 done (8 cycles). questComplete added. SAU/VFM/BLO nodes added. Theme threads for all 8 cycles.** |
 | 67 | NWI | Anabasis | **SEEDS COMPLETE 2026-06-03 — NWI-01–09 done (9 cycles). questComplete added. 7 new nodes (CPL/BLK/SIN/ORC/VAR/MYS/ANC). Theme threads for all 9 cycles.** |
 | 68 | MLA | Plutarch's Lives | QUEUED |
-| 69 | CRL | Froissart (Boys) | QUEUED |
+| 69 | CRL | Froissart (Boys) | **SEEDS COMPLETE 2026-06-03 — CRL-01–08 done (8 cycles). questComplete added to CRL-08. New node AVG added. Theme threads for all 8 cycles.** |
 | 70 | CPH | Gesta Danorum | QUEUED |
 | 71 | MOL | Laxdaela Saga | QUEUED |
 | 72 | LBC | Nibelungenlied | QUEUED |
