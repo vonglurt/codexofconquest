@@ -452,7 +452,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | [x] | VBY | grettir-saga | Grettir's Saga — Anon | ~14th C | Icelandic Saga | 373 | SEEDS COMPLETE 2026-06-03 — VBY-01–07 all vignettes done. RKN/BWH already in Location Grid. No new nodes. See VBY-grettir-saga.md. |
 | [x] | LBC | nibelungenlied | Nibelungenlied — Anon | c.1200 | German Epic | 660 |
 | [x] | GDN | njal-saga | Njal's Saga — Anon (Dasent transl.) | ~13th C | Icelandic Saga | 787 | SEEDS COMPLETE 2026-06-03 — GDN-01–07 all vignettes done. No new nodes (ISL, BK, VS, HHL, HEO, CON all exist). See GDN-njal-saga.md. |
-| [x] | RIX | egil-saga | Egil's Saga — Anon (attr. Snorri) | ~13th C | Icelandic Saga | 869 |
+| [x] | RIX | egil-saga | Egil's Saga — Anon (attr. Snorri) | ~13th C | Icelandic Saga | 869 | SEEDS COMPLETE 2026-06-03 — RIX-01–07 all vignettes done. YRK/ISL already in Location Grid. No new nodes. See RIX-egil-saga.md. |
 | [x] | BOO | prose-edda | Prose Edda — Snorri Sturluson | c.1220 | Norse Mythology | 514 | SEEDS COMPLETE 2026-06-03 — BOO-01–07 all vignettes done. HNJ already in Location Grid. No new nodes. See BOO-prose-edda.md. |
 | [x] | ALF | kalevala | Kalevala — Elias Lönnrot | 1835/1849 | Finnish Epic | 642 | SEEDS COMPLETE 2026-06-03 — ALF-01–07 all vignettes done. KVF/KVM added in cycle 2 pass (already in grid). See ALF-kalevala.md. |
 | [x] | KSU | heimskringla | Heimskringla — Snorri Sturluson | c.1230 | Norse Kings History | 1707 | SEEDS COMPLETE 2026-06-03 — KSU-01–07 all vignettes done. ECF already in Location Grid. No new nodes needed. See KSU-heimskringla.md. |

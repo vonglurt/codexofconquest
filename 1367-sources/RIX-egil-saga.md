@@ -909,3 +909,235 @@ that is entirely silent.*
 *quest-map.md: YRK already in Location Grid — no new node needed.*
 
 *books.md: mark RIX [x].*
+
+---
+
+## Cycle 3 — *Arinbjörnarkvíða*
+
+**Archive category:** Personal Memorial Records — The Poem the Skald Kept for Himself
+
+**What this angle reveals:** Cycles 1-2 were about Egil at York — the head-ransom poem and the anonymous warning that made it possible. This angle moves to the relationship that ran through Egil's entire life: Arinbjörn Þórisson, who stood by him more consistently than anyone. When Eirik Blood-Axe ruled Norway, it was Arinbjörn who interceded. When Egil was a prisoner at York, it was Arinbjörn who arranged the night of performance. Arinbjörnarkvíða was composed when Arinbjörn sailed to Norway and could no longer be reached — Egil's farewell praise poem for a living man, composed when the distance became what permanent absence would feel like. The archive wants the autograph copy: the one with three corrections in Egil's own hand, made after the first full composition, in the spaces between the stanzas where he found what he had said wrong.
+
+---
+
+**THE TOKEN: `arinbjarnarkvida`** — Egil's own copy of Arinbjörnarkvíða: two stanzas struck through with a correction mark, one marginal addition in a cramped hand, the final stanza rewritten at the bottom of the scroll in ink that is slightly darker than the rest. Not a fair copy — the working copy, the one Egil kept. Every other version in circulation was made from this one.
+
+---
+
+```json
+{
+  "quest_id": "RIX-03",
+  "title": "Arinbjörnarkvíða",
+  "source": "Egil's Saga — Snorri Sturluson (c.1240)",
+  "cycle": 3,
+  "book": "RIX",
+  "source_episode": "Egil composes Arinbjörnarkvíða after Arinbjörn sails to Norway — the praise poem for the man who stood by him through everything, written when he can no longer be seen",
+  "theme": "The praise poem kept by its maker, not given to its subject; the autograph that holds the work that was done to arrive at the final version",
+  "activateNode": "ISL",
+  "token": {
+    "id": "arinbjarnarkvida",
+    "name": "Arinbjörnarkvíða — Autograph Copy",
+    "description": "Egil's own copy: two corrections, one marginal addition, the final stanza rewritten in darker ink. Not a fair copy. The working copy Egil kept. All other copies derive from this.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["ISL", "BK", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "ISL", "type": "skill_check", "dc": 12, "skill": "Insight", "prompt": "Egil's daughter Þorgerðr hands you the scroll at Borg farm. She says: this is not the version people recite. This is the version he kept. Understand before the road why an autograph copy with corrections is a different document from any fair copy: the corrections are the record of what he found wrong in what he had said; the final version erased those discoveries from public view; the working copy holds them."},
+    {"act": 2, "node": "ISL_to_BK", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "A Norse skald at a trading post on the coastal route wants to make a copy from the autograph before it reaches Weimar. He has never seen the corrections and marginal addition. His copy would preserve what he finds there; it would also circulate it. The archive makes copies available after deposit. Not before."},
+    {"act": 3, "node": "BK", "type": "combat", "dc": 13, "skill": "Persuasion", "enemies": "Gunnhildr's agent, AC 12, HP 20, short sword", "prompt": "Gunnhildr's network in Birka. A Gunnhildr agent identifies the scroll by its markings — she has long wanted every copy of Egil's work that contains corrections, because corrections sometimes contain what the public version suppressed. He approaches while you are at the dock."},
+    {"act": 4, "node": "BK_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "The road east. Three days to Weimar. The scroll is in the case. The corrections are inside. Egil composed this for a man who was already at a distance that felt like permanent absence. Keep moving."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck unrolls the scroll carefully. He notes the corrections. He reads the marginal addition. He notes the darker ink of the final stanza. Personal Memorial Records opens."}
+  ],
+  "archiveCategory": "Personal Memorial Records — The Poem the Skald Kept for Himself",
+  "sweelinckNote": "Every other version in circulation has been cleaned up. This one has the corrections. The corrections are the record of where he found what he had said wrong. The archive holds the version that shows the work."
+}
+```
+
+---
+
+## Cycle 4 — *Æthelstan's Compensation*
+
+**Archive category:** Battle Compensation Records — The Payment Made for a Brother Lost in the King's Service
+
+**What this angle reveals:** Cycle 3 was about what Egil composed for a living friend. This angle turns to what Egil received for a dead brother. Egil's brother Þórólf was killed at the Battle of Vínheiðr (fought for Æthelstan of England, c.937) — and by Æthelstan's own men, whose enthusiasm for killing exceeded its strategic purpose. Æthelstan paid double compensation: two chests of silver, an extraordinary amount. The compensation document is unusual because it acknowledges the death was both necessary (battle) and the king's responsibility to make right. Egil accepted the silver. He buried it near Borg before he died. The compensation document — the acknowledgment that a king owed this much — is the record Weimar wants.
+
+---
+
+**THE TOKEN: `athelstan_compensation_document`** — The formal compensation agreement: Æthelstan's seal, the stated cause (Þórólf's death at Vínheiðr), the amount (two chests of silver, specified), and the acknowledgment that the payment is in settlement of any further claim. Egil's mark below. The document that completed the transaction without making either party whole.
+
+---
+
+```json
+{
+  "quest_id": "RIX-04",
+  "title": "Æthelstan's Compensation",
+  "source": "Egil's Saga — Snorri Sturluson (c.1240)",
+  "cycle": 4,
+  "book": "RIX",
+  "source_episode": "Æthelstan pays Egil double compensation for Þórólf's death at Vínheiðr — two chests of silver, formally acknowledged; the payment that settled the claim without resolving the grief",
+  "theme": "The compensation document that establishes a price for a life and acknowledges the debt without making anyone whole",
+  "activateNode": "YRK",
+  "token": {
+    "id": "athelstan_compensation_document",
+    "name": "Æthelstan's Compensation Agreement",
+    "description": "Formal compensation document: Æthelstan's seal, Þórólf's death at Vínheiðr named, two silver chests specified, settlement clause. Egil's mark below. The transaction that completed the legal obligation and left everything else exactly as it was.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["YRK", "VEN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "YRK", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "Æthelstan's court clerk at Winchester hands over the document. The silver chests have been moved, the compensation has been paid, the legal obligation has been settled. Understand before the road what makes this document different from a receipt: the settlement clause acknowledges the king's responsibility for the death, which is itself an unusual admission in a compensation agreement for a battle death."},
+    {"act": 2, "node": "YRK_to_VEN", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "An English cleric on the southern road who has read the document in passing wants to understand why Æthelstan acknowledged responsibility for a death in battle — standard compensation does not require acknowledgment of fault. The distinction between legal settlement and moral acknowledgment is in the document's specific language. He has a point that the language is unusual. The document travels to the archive regardless."},
+    {"act": 3, "node": "VEN", "type": "skill_check", "dc": 13, "skill": "Persuasion", "prompt": "A Venetian merchant who deals in legal documents wants to purchase the compensation agreement for a collection of royal acknowledgments of liability. He has the means. The document is the archive's, not the seller's."},
+    {"act": 4, "node": "VEN_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "The Alpine road, north. Three days. The document is in the sealed wallet. Æthelstan paid what was owed. Þórólf is still dead. The silver is buried somewhere in Iceland. Keep moving."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the settlement clause. He notes the acknowledgment of responsibility. He notes the specified amount. Battle Compensation Records opens."}
+  ],
+  "archiveCategory": "Battle Compensation Records — The Payment Made for a Brother Lost in the King's Service",
+  "sweelinckNote": "The king paid double and acknowledged responsibility in the settlement language. Both facts are unusual. The archive holds the document because the unusual language is the document's contribution to the record of what compensation agreements can say."
+}
+```
+
+---
+
+## Cycle 5 — *Þorgerðr's Sonatorrek Account*
+
+**Archive category:** Grief Work Records — The Poem That Was the Condition of Continued Life
+
+**What this angle reveals:** Cycles 3-4 were about what Egil gave and received. This angle finds the moment of Sonatorrek — the greatest poem in Old Norse, and the one that nearly wasn't composed. After his son Böðvarr drowned, Egil stopped eating and refused to speak. He planned to die. His daughter Þorgerðr arrived and said she would die with him — and then announced she would eat. She said she would live, but only if Egil composed a poem. He composed Sonatorrek over three days in darkness, in grief and fury at Óðinn for taking his sons. The poem exists because of what Þorgerðr did. The archive wants Þorgerðr's own account of what happened before the poem began — the context the poem itself does not contain.
+
+---
+
+**THE TOKEN: `thorgerdr_sonatorrek_account`** — Þorgerðr's written account: what Egil was like when she arrived, what she said, what he said, how the poem began, the three days, when he came out of the room. Six stanzas in a hand that is not Egil's. The record of the conditions under which the most important poem in the language was written.
+
+---
+
+```json
+{
+  "quest_id": "RIX-05",
+  "title": "Þorgerðr's Sonatorrek Account",
+  "source": "Egil's Saga — Snorri Sturluson (c.1240)",
+  "cycle": 5,
+  "book": "RIX",
+  "source_episode": "Böðvarr drowns; Egil stops eating and plans to die; Þorgerðr tricks him into composing Sonatorrek; he composes the poem over three days in darkness; it is the condition of his continued life",
+  "theme": "The witness account that makes a great work legible; the context that exists outside the work itself and without which the work's meaning is partially lost",
+  "activateNode": "ISL",
+  "token": {
+    "id": "thorgerdr_sonatorrek_account",
+    "name": "Þorgerðr's Account of Sonatorrek's Composition",
+    "description": "Þorgerðr's written account: Egil when she arrived, what was said, how the poem began, the three days, when he emerged. Six stanzas in a hand that is not Egil's. The conditions under which Sonatorrek was written.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["ISL", "CON", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "ISL", "type": "skill_check", "dc": 12, "skill": "Insight", "prompt": "Þorgerðr hands you the account at Borg farm. She says: Sonatorrek exists because of what I did. This is what I did. She is not claiming credit — she is completing the record. Understand before the road why this account matters to the archive: everyone who recites Sonatorrek knows the poem; no one who hears the poem knows what preceded its composition; the account is the document that makes the poem's survival legible as an act rather than an artifact."},
+    {"act": 2, "node": "ISL_to_CON", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "A Norse scholar at a trading post wants to copy the account before it reaches the archive. He argues that the account belongs with every copy of Sonatorrek. Your argument: the account is a separate document that the archive holds separately; the relationship between the two documents is itself the archive's contribution to the record."},
+    {"act": 3, "node": "CON", "type": "skill_check", "dc": 13, "skill": "Persuasion", "prompt": "A Byzantine scholar of Greek tragedy wants to discuss Þorgerðr's account as a parallel to tragic context documents from the Athenian tradition. His reading is sophisticated and partly correct. The discussion is for after deposit. The account travels first."},
+    {"act": 4, "node": "CON_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "West from Constantinople, three weeks. The account is in the wallet. Þorgerðr is at Borg farm. Egil is still alive, composing occasional verse, going blind. Keep moving."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the account. He reads the six-stanza notation. He notes the hand — not Egil's. Grief Work Records opens."}
+  ],
+  "archiveCategory": "Grief Work Records — The Poem That Was the Condition of Continued Life",
+  "sweelinckNote": "Sonatorrek is in circulation. What is not in circulation is how it began. Þorgerðr wrote it down because she thought the poem's existence should include a record of the conditions of its existence. The archive agrees."
+}
+```
+
+---
+
+## Cycle 6 — *Ásgerðr's Inheritance Record*
+
+**Archive category:** Inheritance Records — The Case That Extended the Rights of Daughters' Lines
+
+**What this angle reveals:** Cycles 1-5 followed Egil's poetic and personal life. This angle enters the legal record: the Althing case Egil won for his wife Ásgerðr's inheritance rights. Ásgerðr was the daughter of Björn from the Holm; her inheritance from her father was contested by the male kin of Björn's second wife on the grounds that daughters' children had limited claims in competing lineages. Egil argued and won using a specific legal interpretation that extended daughters' children's rights when no male heirs remained in direct line. The Althing's ruling created a legal precedent. The case record contains Egil's argument in the form he made it — before he was primarily known as the poet who ransomed his head with a poem, he was a man who could win an inheritance case through legal argument alone.
+
+---
+
+**THE TOKEN: `asgerdr_inheritance_record`** — The Althing's formal ruling in Egil's case for Ásgerðr's inheritance: the stated claim, the opposing argument, Egil's legal counter-argument in three steps, and the lawspeaker's ruling. The specific legal passage that the case turned on is underlined.
+
+---
+
+```json
+{
+  "quest_id": "RIX-06",
+  "title": "Ásgerðr's Inheritance Record",
+  "source": "Egil's Saga — Snorri Sturluson (c.1240)",
+  "cycle": 6,
+  "book": "RIX",
+  "source_episode": "Egil wins the Althing inheritance case for Ásgerðr using a novel legal argument about daughters' lines — the ruling that created a precedent",
+  "theme": "The legal innovation that came from personal necessity; the argument that created new law because the existing law was insufficient for the case at hand",
+  "activateNode": "ISL",
+  "token": {
+    "id": "asgerdr_inheritance_record",
+    "name": "Ásgerðr's Inheritance Ruling",
+    "description": "Althing formal ruling: claim, opposing argument, Egil's three-step counter-argument, lawspeaker's ruling. The specific legal passage that determined the outcome is underlined. The precedent.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["ISL", "RME", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "ISL", "type": "skill_check", "dc": 12, "skill": "History", "prompt": "The Althing clerk hands over the certified copy of the ruling. He notes: this case is still cited in subsequent Althing proceedings. Understand before the road what the archive wants from a case record rather than just a ruling: not the outcome, but the specific argument Egil made — the three steps, the underlined passage — because that argument is the innovation, and the innovation is what the archive holds."},
+    {"act": 2, "node": "ISL_to_RME", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "A Norwegian legal scholar on the southern sea route wants to copy the ruling for a collection of innovative Althing decisions. He specifically wants the underlined passage. The archive holds the original; he can apply for access after deposit."},
+    {"act": 3, "node": "RME", "type": "skill_check", "dc": 13, "skill": "Persuasion", "prompt": "A church official at Rome who handles inheritance disputes in Norse merchant communities wants to use the ruling as a template for cases where daughters' rights are contested. His interest is practical and the ruling would be useful to him. The archive can correspond about access after deposit. The ruling travels first."},
+    {"act": 4, "node": "RME_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "North from Rome, five days to Weimar. The ruling is in the sealed wallet. Ásgerðr received her inheritance. Egil won it through argument, which is more characteristic of him than his reputation suggests. Keep moving."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the three-step argument. He notes the underlined passage. He notes the lawspeaker's ruling. Inheritance Records opens."}
+  ],
+  "archiveCategory": "Inheritance Records — The Case That Extended the Rights of Daughters' Lines",
+  "sweelinckNote": "Egil is remembered for poems. This is a legal argument. The archive holds both. The underlined passage is why the case is still cited at the Althing thirty years later."
+}
+```
+
+---
+
+## Cycle 7 — *Egil's Last Poem*
+
+**Archive category:** Unperformed Work Records — The Poem That Never Had Its Audience
+
+**What this angle reveals:** Cycles 1-6 followed Egil from the head-ransom at York through his private memorial, his brother's compensation, Sonatorrek's conditions, and the inheritance case. This cycle closes at Borg farm, where Egil is old and blind. His last ambition was spectacular and impossible: he wanted to ride to the Althing and scatter the two chests of silver he had buried — to create one final scene for the crowd he could no longer see. His family stopped him. He composed a poem instead — the poem he would have performed if he had gone. He dictated it to a farm-hand because he could not write. He then went quiet. The poem was never performed. It sat on a wax tablet in the hall. The farm-hand kept the tablet because he did not know what else to do with it.
+
+---
+
+**THE TOKEN: `egils_last_poem_tablet`** — A wax tablet in a farm-hand's careful, untrained script: Egil's dictation, line by line, as the old man spoke it from his chair by the fire. The poem he would have recited at the Althing if his family had not stopped him. The last composition. Never performed.
+
+---
+
+```json
+{
+  "quest_id": "RIX-07",
+  "title": "Egil's Last Poem",
+  "source": "Egil's Saga — Snorri Sturluson (c.1240)",
+  "cycle": 7,
+  "book": "RIX",
+  "source_episode": "Egil old and blind at Borg, wanting to ride to the Althing and scatter his silver; his family stops him; he composes the poem he would have performed instead; never goes; the poem was never heard",
+  "theme": "The unperformed work; the composition made for an audience that never received it; the last ambition reduced to a wax tablet in a farm-hand's script",
+  "activateNode": "ISL",
+  "token": {
+    "id": "egils_last_poem_tablet",
+    "name": "Egil's Last Poem — Wax Tablet",
+    "description": "Wax tablet in a farm-hand's untrained script: Egil's dictation, line by line, from his chair by the fire. The poem he would have recited at the Althing. Never performed.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["ISL", "LDN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "ISL", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "The farm-hand at Borg hands you the wax tablet with both hands. He kept it because he didn't know what else to do with it. Egil dictated, he wrote, Egil went quiet. The tablet has been sitting in the hall for two months. Understand before the road why the archive wants an unperformed poem: not because it is the best poem, but because the gap between composition and performance is itself a record — the poem exists, the audience never heard it, and the distance between those two facts is what happened to the strongest poet in Iceland at the end of his life."},
+    {"act": 2, "node": "ISL_to_LDN", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "A Norse skald on the trading route west wants to perform the poem from the tablet at the next major court he reaches. His argument: unperformed poems belong to the tradition, not to an archive. Your argument: the archive holds what the tradition has not yet decided to receive; after deposit, the poem can be heard; the first performance should not be from a transcript made on a ship."},
+    {"act": 3, "node": "LDN", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "An English court collector of Norse poetry wants to add the last poem to his collection. His collection will be read; the poem would have an audience through it. The offer is genuine. The tablet travels to Weimar. After deposit, the poem can be copied for his collection."},
+    {"act": 4, "node": "LDN_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "Three days east to Weimar. The wax tablet is in the case. The farm-hand's script is in the wax. Egil is alive at Borg, blind and quiet. The poem he wanted to scatter over a crowd at the Althing is in the case. Keep moving."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the tablet. He reads the farm-hand's script. He reads the poem line by line. He closes the tablet case and opens the category."}
+  ],
+  "archiveCategory": "Unperformed Work Records — The Poem That Never Had Its Audience",
+  "questComplete": true,
+  "sweelinckNote": "He wanted to scatter the silver at the Althing and recite this while people scrambled for coins. His family stopped him. He composed it anyway. No one has heard it yet. The archive holds it until someone is ready to."
+}
+```
+
