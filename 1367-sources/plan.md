@@ -881,7 +881,7 @@ This procedure runs once per vignette act (one quest at a time). Complete all 8 
 
 | # | Code | Title | Starting Node | Key New Nodes | Import Status |
 |---|------|-------|--------------|--------------|---------------|
-| 61 | BLQ | Decameron | PSA (Florence/Pisa) | PSA, PSAGLD, NAP, PIS, PRA + 5 Tier-2 nodes; BLQ-01 + BLQ-02 imported (10 acts) | IMPORTED — 2026-06-03 |
+| 61 | BLQ | Decameron | PSA (Florence/Pisa) | PSA, PSAGLD, NAP, PIS, PRA, GEN, DBV, CON + Tier-2 nodes; BLQ-01–03 imported (15 acts) | IMPORTED — 2026-06-03 |
 | 62 | HAV | Buccaneers of America | TOR (Tortuga) | TOR, PTR (Port Royal Jamaica), HAV (Havana) | QUEUED |
 | 63 | AMS | Tale of Genji | KIX (Kyoto/Osaka) | KIX, HND (Heian-kyo), MRG (Muro-no-Yoshino) | QUEUED |
 | 64 | HTY | Mahabharata | DEL (Delhi/Kurukshetra) | DEL, CCU (Varanasi), BOM (Lanka coast) | QUEUED |

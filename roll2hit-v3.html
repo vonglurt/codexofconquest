@@ -7938,6 +7938,11 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   MONTTG: { num:156, name:"road", label:"Montale — Toll Gate (Pistoia-Prato Road)", act:3 },
   PRAAPR: { num:157, name:"road", label:"Prato — City Approach Road", act:3 },
   PRACRT: { num:158, name:"city", label:"Prato — Podestà Court Clerk Desk", act:3 },
+  GEN: { num:159, name:"market_quarter", label:"Genoa — Harbor District", act:3 },
+  DBV: { num:160, name:"market_quarter", label:"Ragusa — Harbor Quarter", act:3 },
+  CON: { num:161, name:"city", label:"Constantinople — Galata Quarter", act:4 },
+  GENWHS: { num:162, name:"market_quarter", label:"Genoa — Abramo Warehouse, Harbor District", act:3 },
+  CONREG: { num:163, name:"city", label:"Constantinople — Imperial Court Registry", act:4 },
 };
 // ◆◆◆ WORLDBUILDER:NODE_MAP:END ◆◆◆
 
@@ -8024,6 +8029,11 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   MONTTG:{r:137,c:206},
   PRAAPR:{r:139,c:206},
   PRACRT:{r:138,c:207},
+  GEN:{r:132,c:196},
+  DBV:{r:148,c:216},
+  CON:{r:152,c:228},
+  GENWHS:{r:133,c:196},
+  CONREG:{r:153,c:228},
 };
 // ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆
 
@@ -10782,6 +10792,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   blq_02_act3: { id:"blq_02_act3", type:"skill_check", title:"Betto at the Toll Gate", passText:"You argue that certified judicial copies are diplomatic correspondence under the statute of 1348 — not subject to roadside inspection. Betto cannot verify this quickly. He decides the second ducat is not worth a jurisdictional dispute. He waves you through.", failText:"Betto holds you for twenty minutes and sends a boy to find the man who paid him. Iacopo receives word and rides to the Prato gate with an extra hour of preparation.", activateNode:"MONTTG", checkStat:"cha", checkPassFlag:"blq02TollCleared", checkDC:13, activateCond:blq02GatePassed },
   blq_02_act4: { id:"blq_02_act4", type:"combat", title:"Iacopo Blocks the Road", passText:"Both men down or fled. Iacopo retreats on horseback. You run the last quarter-mile to the city gate. The terce bell is ringing.", failText:"Ten minutes lost. The session has opened. At the court the clerk must interrupt a proceeding already in progress.", activateNode:"PRAAPR", checkPassFlag:"blq02RoadCleared", activateCond:blq02TollCleared },
   blq_02_act5: { id:"blq_02_act5", type:"skill_check", title:"The Filing Desk Before Terce", passText:"Prior legal records can be filed by any person in possession of the document under communal court rules. Testa accepts this, stamps the receipt, and carries the folio to the judge table before the session opens. The judge reads the modification. The husband advocate case collapses before it is made. Outside, Fiamma stands in the morning sun. The document did not save her. It arrived.", failText:"The folio enters the afternoon review queue. The morning session proceeds on the old statute. Fiamma hears herself argued toward a fire the law no longer lights. She is discharged by afternoon. But the morning session record will say: case continued.", activateNode:"PRACRT", checkStat:"cha", checkPassFlag:"blq02Complete", checkDC:11, activateCond:blq02RoadCleared },
+  blq_03_act1: { id:"blq_03_act1", type:"skill_check", title:"The Locked Case", passText:"The carrier understands the architecture: each party has been partially right for decades; what they need is not a ruling but a schedule; Abramo has given them a schedule without saying so. You receive the locked diplomatic case.", failText:"The political terrain is opaque. During the voyage you will have to improvise each encounter without the structural understanding of what the letter ambiguity is designed to do.", activateNode:"GENWHS", checkStat:"wis", checkPassFlag:"blq03StrategyUnderstood", checkDC:12 },
+  blq_03_act2: { id:"blq_03_act2", type:"skill_check", title:"Fra Donnino at the Stern Rail", passText:"The case is sealed and locked until the court session. The carrier cannot speak to what any party believes the letter contains because the carrier genuinely does not know. Fra Donnino decides: a carrier who genuinely does not know is a more secure carrier than one who does. He sends no message about the letter contents.", failText:"Fra Donnino asks three more questions, each more specific, and establishes by the end that the carrier genuinely does not know. He sends a message from Ragusa: carrier appears not briefed on contents — community board should verify with Abramo.", activateNode:"GEN", checkStat:"cha", checkPassFlag:"blq03FraDonnino", checkDC:12, activateCond:blq03StrategyUnderstood },
+  blq_03_act3: { id:"blq_03_act3", type:"skill_check", title:"Ishak at the Gangplank", passText:"You confirm carrying a sealed locked case from Abramo di Simone to the Constantinople court registry — publicly knowable — but cannot discuss parties, contents, or commissioning context, as the case is sealed under court protocol. Ishak recognizes the standard formula for multi-party sealed filings. He sends word: case sealed as described; proceeding normally.", failText:"Ishak presses past the formula and asks directly: does the letter carry the community board petition, yes or no? He concludes the carrier does not know — meaning either Abramo made a mistake or the letter does not say what the elders expect. He sends word: uncertainty about letter contents; recommend contact Abramo before session.", activateNode:"DBV", checkStat:"cha", checkPassFlag:"blq03IshakNeutral", checkDC:13, activateCond:blq03FraDonnino },
+  blq_03_act4: { id:"blq_03_act4", type:"skill_check", title:"Giannino in the Lower Passage", passText:"The carrier has watched Giannino since Dyrrachium — a wool factor who asked nothing about the Constantinople wool market, who positioned himself twice to observe the carrier quarters. The carrier is waiting, awake, when the footstep stops in the passage. The door opens onto the carrier already standing. Giannino calculates in the dark and says: I was looking for the water barrel. The carrier says: it is forward. He goes.", failText:"Giannino reaches the quarters. Combat: two figures in the dark passage. The locked case, if seized, cannot be opened. If Giannino is subdued, the ship master holds him until Constantinople.", activateNode:"DBV", checkStat:"wis", checkPassFlag:"blq03CornaroStopped", checkDC:13, activateCond:blq03IshakNeutral },
+  blq_03_act5: { id:"blq_03_act5", type:"skill_check", title:"Nikolaos Doukas Opens the Seals", passText:"The carrier addresses each delegation once, directly: your petition is admitted; you have thirty days to submit a formal brief; this is more than you had when you commissioned the letter. Each delegation, hearing itself addressed specifically, runs out of energy for outrage. Nikolaos completes the record. He says afterward: the letter said nothing. It gave everyone enough to agree to a hearing. Abramo writes very well.", failText:"The three delegations argue in three languages simultaneously. Nikolaos waits — he has done this before. He enters a notation: receipt confirmed; verbal disorder at filing; letter accepted as submitted. The filing stands regardless.", activateNode:"CONREG", checkStat:"cha", checkPassFlag:"blq03Complete", checkDC:13, activateCond:blq03CornaroStopped },
 };
 // ◆◆◆ WORLDBUILDER:QUEST_DB:END ◆◆◆
 
@@ -11758,6 +11773,7 @@ const BIRKA_NPC_PROFILES = { // → doc: world.md §Birka Six NPCs
   },
   ser_bardo: { key:"ser_bardo", name:"Ser Bardo Albizzi", occupation:"Guild Merchant", node:"PSAGLD" },
   ser_taddeo: { key:"ser_taddeo", name:"Ser Taddeo Borghini", occupation:"Retired Judge", node:"PISNOT" },
+  abramo_simone: { key:"abramo_simone", name:"Abramo di Simone", occupation:"Neutral Factor", node:"GENWHS" },
 };
 // ◆◆◆ WORLDBUILDER:BIRKA_NPC:END ◆◆◆
 
@@ -12069,6 +12085,11 @@ const _S_DEFAULTS = () => ({
     blq02TollCleared: false,
     blq02RoadCleared: false,
     blq02Complete: false,
+    blq03StrategyUnderstood: false,
+    blq03FraDonnino: false,
+    blq03IshakNeutral: false,
+    blq03CornaroStopped: false,
+    blq03Complete: false,
 });
 
 /* ── Layer 48: Luck — Seventh Stat ── */
