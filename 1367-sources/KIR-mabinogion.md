@@ -848,3 +848,580 @@ activateMissionBit: kirHeadComplete
 ---
 
 *Cycle 2 complete. Mark `[x]` for KIR-mabinogion in books.md.*
+
+---
+
+## Cycle 3: The Badger in the Bag
+
+*(Theme differentiation: Avoiding KIR cycles 1-2. New theme: the negotiation quest where all the leverage belongs to the carrier; the bag that cannot be filled except by the man who holds the claim; naming every condition before releasing what is held — or the enchanter finds a loophole in the silence.)*
+
+### Quest API Stub (Cycle 3)
+
+```
+Act I — The Feast and the Rash Promise
+activateNode: HVY
+type: skill_check
+scene: "Heveydd Hên's feast-court. Pwyll has just promised 'whatever you ask'
+  to a young man in satin who turns out to be Gwawl son of Clud — Rhiannon's
+  rejected suitor, who now claims Rhiannon and the feast as his prize. Rhiannon
+  has already planned the recovery. She gives the Fighter an enchanted bag that
+  can never be filled until a man of wealth and rank steps inside with both feet.
+  Return in one year. Return in rags. Ask for a bagful of food."
+prompt: "Insight DC 12: understand the shape of the plan — the bag is the trap;
+  the rags are the approach; the horn-signal is the entry point; the negotiation
+  happens after Gwawl is inside; you cannot skip to the negotiation."
+failText:    "You try to negotiate immediately. Gwawl laughs. You receive
+              the bag and the instruction to wait."
+successText: "You understand the sequence. You receive Rhiannon's Bag — an
+              enchanted leather sack, loose around the top, impossibly deep."
+grantItem:   "Rhiannon's Bag"
+checkPassFlag: bagUnderstood
+
+Act II — The Return in Rags
+activateNode: HVY
+type: skill_check
+scene: "One year later. The same feast-court; Gwawl is celebrating with
+  Rhiannon as his prize. The Fighter appears at the gate in rags, asks
+  for a bagful of food. Demonstrates the bag cannot be filled. The steward
+  announces that only a man of wealth and rank stepping in with both feet
+  can fill it."
+prompt: "Deception DC 12: maintain the rags-and-humble-request posture
+  through Gwawl's amusement — do not tip the plan by seeming too patient
+  or too observant of the doors."
+failText:    "Gwawl notes your eyes. He stands back from the bag. You
+              must ask a second time. The delay costs something in dignity."
+successText: "Gwawl steps forward with the enthusiasm of a man who enjoys
+              being generous in public. He is inside before the sentence
+              is finished."
+checkPassFlag: gwawlInside
+
+Act III — The Badger
+activateNode: HVY
+type: skill_check
+scene: "Gwawl is in the bag. The Fighter upends it over his head and blows
+  the signal horn. Pwyll's hundred knights enter from the orchard. Each
+  one kicks the bag. Each is asked: 'What's in the bag?' Each gives the
+  answer: 'A badger.' The Badger in the Bag game is created in this moment."
+prompt: "Composure DC 11: hold the bag upright through the kicks without
+  losing grip — the bag must stay closed until you choose to open it;
+  Gwawl inside is loudly claiming noble rights; the knights are enthusiastic."
+failText:    "The bag twists. Gwawl almost gets a hand free. You recover,
+              but one of the hundred is laughing too hard to kick properly."
+successText: "The bag holds. The hundred finish their game. The bag is
+              still in your hands. Gwawl inside is considerably quieter.
+              The moment is yours."
+checkPassFlag: bagSecure
+
+Act IV — The Conditions
+activateNode: HVY
+type: skill_check
+scene: "Gwawl inside the bag is ready to negotiate. He has been kicked by
+  a hundred knights. He will agree to reasonable terms. But Rhiannon
+  has told you: name every condition before opening the bag. Missing
+  a condition means the enchanter finds a loophole later. List: no
+  vengeance on Pwyll or Rhiannon, no further claim on Rhiannon, no
+  enchantment placed on Dyved for this insult, all pledges sworn before
+  witnesses."
+prompt: "History DC 13: recall and name all four conditions before the
+  bag opens — the vengeance renunciation, the claim release, the
+  enchantment prohibition, and the witnessed oath; each one must be
+  stated aloud and acknowledged from inside the bag."
+failText:    "You name three. Gwawl agrees to three. Llwyd son of Kilcoed
+              later enchants Dyved because the enchantment prohibition
+              was not stated."
+successText: "You name all four. Gwawl agrees to all four, audibly,
+              from inside the bag. Witnesses confirm. You receive Gwawl's
+              Pledges — a verbal attestation heard by the full hall."
+grantItem:   "Gwawl's Pledges"
+checkPassFlag: conditionsNamed
+
+Act V — The Filing
+activateNode: WM
+type: skill_check
+scene: "Sweelinck reads the account of the four conditions named before
+  the bag was opened. 'The enchantment prohibition was one of the four?'
+  he asks. 'And it was said aloud from inside the bag and confirmed by
+  witnesses?' He is writing. 'This is the first instance of the Badger
+  Leverage Protocol in our records.'"
+prompt: "History DC 11: name the archive category — Negotiation Records —
+  The Complete Conditions Extracted Before Release; the bag as the first
+  recorded leverage instrument of its kind; filed under the person who
+  named every condition."
+failText:    "Filed under Pwyll, Prince of Dyved. General narrative records."
+successText: "Sweelinck writes: 'Negotiation Records — The Complete Conditions
+  Extracted Before Release; The Bag and the Four Pledges; the first instance
+  of the protocol now called Badger in the Bag.' He opens the category. You
+  receive the Negotiation Archive Record."
+grantItem:   "Negotiation Archive Record"
+takeItem:    "Gwawl's Pledges"
+checkPassFlag: bagArchived
+activateMissionBit: kirBadgerComplete
+```
+
+---
+
+*KIR-03 complete. 2026-06-03.*
+
+---
+
+## Cycle 4: The Enchanted Province
+
+*(Theme differentiation: Avoiding KIR cycles 1-3. New theme: the province emptied by an old grievance that has nothing to do with you; negotiating restoration condition by condition without releasing the single leverage point; the sluggish creature as the rod of the entire negotiation.)*
+
+### Quest API Stub (Cycle 4)
+
+```
+Act I — The Emptied Province
+activateNode: ARB
+type: skill_check
+scene: "The Gorsedd of Narberth. A peal of thunder, a fall of mist. When it
+  lifts, Dyved is empty: no people, no animals, no crops, no smoke. Four
+  companions — Pryderi, Kicva, Manawyddan, Rhiannon — stand in a province
+  whose absence has a specific cause that none of them yet know. They must
+  eat. They hunt."
+prompt: "Insight DC 11: understand the structure of the enchantment — this
+  is not a natural disaster; it is targeted and deliberate; the target
+  is not you; the grievance that caused this is older than any of you
+  and has nothing to do with you directly."
+failText:    "You work to solve the emptiness directly. Nothing you can do
+              changes it. The province stays empty."
+successText: "You understand: the cause is elsewhere; the restoration requires
+              finding the mechanism of leverage; the province will be inhabited
+              again when the right conditions are met."
+checkPassFlag: enchantmentUnderstood
+
+Act II — The Craftsmen's Towns
+activateNode: HER
+type: skill_check
+scene: "Hereford, then the next town, then the next. Manawyddan makes saddles
+  with blue enamel, shields, shoes with gilded clasps. Each time the local
+  craftsmen plot against the companions. Each time Manawyddan says: 'Let us go
+  to another town.' Pryderi wants to fight. Manawyddan restrains him."
+prompt: "Persuasion DC 12: support Manawyddan's restraint against Pryderi's
+  frustration — 'another town' is a strategy, not cowardice; the fight the
+  craftsmen want is the fight that costs them the leverage they haven't found yet."
+failText:    "Pryderi fights the first town's craftsmen. They gain a night's
+              satisfaction and lose a week's income. Manawyddan says: now
+              let us go to another town."
+successText: "Pryderi is persuaded. Three towns. Three departures. Three sets
+              of craftsmen confused that their plots produced no satisfaction.
+              The companions return to Dyved intact and unblooded."
+checkPassFlag: townsSurvived
+
+Act III — The Mouse in the Glove
+activateNode: ARB
+type: skill_check
+scene: "Manawyddan plants corn. Three crops stripped overnight by an army
+  of mice — one for each night they watch. On the third night the mice
+  are caught mid-theft. He chases; cannot catch them — except one, fat
+  and sluggish, moving wrong. He closes his glove around it."
+prompt: "Athletics DC 13: catch the one mouse that moves wrong before
+  it reaches the fence — the whole negotiation depends on this one
+  creature; every other mouse in the field is too fast."
+failText:    "The mouse escapes. No leverage. The corn is stripped. There
+              is nothing in the glove and nothing to negotiate with."
+successText: "Your hand closes around it. Warm and fat inside the glove.
+              Manawyddan nods. You carry it to the Gorsedd. This mouse
+              is the rod of the whole negotiation."
+grantItem:   "Mouse in the Glove"
+checkPassFlag: mouseCaught
+
+Act IV — The Negotiations
+activateNode: ARB
+type: skill_check
+scene: "The Gorsedd of Narberth. The hanging prepared. A scholar offers a pound.
+  A priest offers three. A bishop with sumpter-horses offers everything he has.
+  Manawyddan refuses each and each. The bishop escalates to twenty-four horses
+  and all his baggage. Manawyddan: what I will have is Pryderi and Rhiannon
+  freed, the enchantment removed, never laid again, no revenge on anyone."
+prompt: "Composure DC 13: hold the mouse through the escalating offers —
+  every offer is a test of whether the current price is the limit; the
+  bishop's horses are not the limit; name the terms that no amount of
+  gold replaces."
+failText:    "You accept the twenty-four horses. The mouse is released.
+              Pryderi and Rhiannon return but the enchantment clause was
+              not stated. Llwyd smiles."
+successText: "You hold through the horses. Manawyddan names all four
+              conditions. The bishop agrees. The mouse is released.
+              You receive Llwyd's Confession — who he is, why he acted,
+              that the grudge was for Gwawl in the bag."
+grantItem:   "Llwyd's Confession"
+takeItem:    "Mouse in the Glove"
+checkPassFlag: dyvedRestored
+
+Act V — The Filing
+activateNode: WM
+type: skill_check
+scene: "Sweelinck reads Llwyd's Confession. 'The enchantment on Dyved was
+  placed in revenge for the Badger-in-the-Bag game.' He pauses. 'This
+  is the second document in the Negotiation Records category you opened.'
+  He looks up. 'What does the second document's category tell us about
+  the first?'"
+prompt: "History DC 12: name the connection — the condition that was not
+  stated in the bag negotiation (cycle 3) was the condition that produced
+  this enchantment; the two documents are the same case; Sweelinck files
+  them linked."
+failText:    "Filed separately. The link is not made."
+successText: "Sweelinck writes: 'Restoration Records — The Province Held
+  Against Every Offer Until the Complete Terms Were Named; linked to
+  Negotiation Records — The Bag and the Four Pledges; the enchantment
+  that followed the incomplete conditions and the restoration that
+  corrected them are one record.' You receive the Restoration Archive
+  Record."
+grantItem:   "Restoration Archive Record"
+checkPassFlag: provinceArchived
+activateMissionBit: kirProvinceComplete
+```
+
+---
+
+*KIR-04 complete. 2026-06-03.*
+
+---
+
+## Cycle 5: The Maker of Wives from Flowers
+
+*(Theme differentiation: Avoiding KIR cycles 1-4. New theme: the carrier caught between the conspiracy and the household; the betrayal built inside the enchanted marriage; the impossible death-condition demonstrated by the person it was designed to kill.)*
+
+### Quest API Stub (Cycle 5)
+
+```
+Act I — The Stranger at the Gate
+activateNode: ARD
+type: skill_check
+scene: "Llew Llaw Gyffes's hall in Ardudwy. Llew is away. Gronw Pebyr
+  passes with his hunting company and asks shelter for the night. Blodeuwedd —
+  the woman made from blossom, who has never heard a stranger's voice
+  before — watches from the gate. She grants shelter. The Fighter is hall-
+  guard. One night, then two, then three."
+prompt: "Insight DC 13: recognize by the second night what is developing —
+  Blodeuwedd is not behaving like a woman with a husband; Gronw is not
+  behaving like a passing huntsman; the specific quality of the conversations
+  they have around the table when they think you are not listening."
+failText:    "You do not see it until the third morning, when Gronw's horse
+              is already saddled."
+successText: "You see it clearly by the second night. Gronw's horse is
+              not saddled on the third morning because Blodeuwedd asked
+              him to stay. You know what is being planned, or beginning to
+              be planned."
+checkPassFlag: conspiracySeen
+
+Act II — The Question About the Death
+activateNode: ARD
+type: skill_check
+scene: "Blodeuwedd asks Llew, who has returned, to explain how he could
+  come to harm — she says it is out of concern for his safety. The
+  conditions are geometrically impossible: neither inside nor outside;
+  neither on horse nor on foot; only with a spear made solely on Sundays
+  over a year. The Fighter is present for this conversation."
+prompt: "Composure DC 12: hold your expression neutral while Llew explains
+  his only vulnerability to the woman who is asking in order to give
+  the answer to Gronw — your face cannot warn Llew without naming
+  what you know; you cannot name what you know without evidence."
+failText:    "Your face shows something. Llew looks at you. Blodeuwedd
+              continues to look at Llew. Nothing changes yet, but she
+              noticed."
+successText: "You hold your expression. Llew explains the bath, the goat,
+              the Sunday spear. He does not see your face. You receive
+              the Death Account — your private record of what was asked
+              and what was answered."
+grantItem:   "Death Account"
+checkPassFlag: deathToldWitnessed
+
+Act III — The Bath and the Goat
+activateNode: ARD
+type: skill_check
+scene: "A year later. Gronw has the spear. Blodeuwedd has arranged the
+  bath at the river and a goat. She has convinced Llew to demonstrate
+  the position — 'to show me how it would look.' One foot on the bath
+  edge, one on the goat's back. Gronw on the hillside above. The
+  Fighter is the last person between the hill and the bath."
+prompt: "Athletics DC 14: reach the hillside above the bath before Gronw
+  throws — not to fight but to disrupt the throw; Gronw has one prepared
+  position; you have thirty seconds and a clear sight-line."
+failText:    "The spear flies. Llew transforms to an eagle, wounded, and
+              flies from sight. You are on the hill thirty seconds too late."
+successText: "You reach the hill. Gronw sees you. He throws anyway —
+              the moment has held too long and retreating reveals everything.
+              The spear flies. Llew transforms. You have witnessed every
+              detail from thirty feet away at the moment of the throw."
+checkPassFlag: throwWitnessed
+
+Act IV — The Account to Gwydion
+activateNode: ARD
+type: skill_check
+scene: "Gwydion arrives, tracking the sound of the eagle. He asks for
+  the account of what happened. Blodeuwedd has fled north with her maidens.
+  Gronw has taken the hall. You have the Death Account — the record of
+  the question, the conditions, the demonstration, the throw."
+prompt: "History DC 11: give Gwydion the account of the whole sequence
+  in order — the question, the conditions, the year, the bath, the throw;
+  the account must be complete or Gwydion's pursuit of Llew will be
+  slower; the exact conditions matter for the restoration."
+failText:    "You omit the detail about the goat. Gwydion has to spend
+              an extra week locating the right configuration."
+successText: "Gwydion has the complete sequence. He goes to find the
+              sow who eats from below the eagle. You receive Gwydion's
+              Acknowledgment — he presses your shoulder once before he
+              goes."
+grantItem:   "Gwydion's Acknowledgment"
+takeItem:    "Death Account"
+checkPassFlag: accountGiven
+
+Act V — The Filing
+activateNode: WM
+type: skill_check
+scene: "Sweelinck reads the Death Account. 'The impossible condition was
+  demonstrated by the person it was designed to kill.' He is quiet for
+  a moment. 'Because she asked in love's language and he answered in
+  trust's language. Both languages were operating correctly.' He looks up.
+  'What category receives the record of a trap built from a true answer?'"
+prompt: "History DC 12: name the category — Betrayal Records — The
+  Impossible Death-Condition Demonstrated By the Person It Was Designed
+  To Kill; the bath and the goat are the document; the condition was
+  true; the demonstration was real; the purpose of both was not what
+  they appeared."
+failText:    "Filed under Math's Court Records — Fourth Branch narrative."
+successText: "Sweelinck writes: 'Betrayal Records — The Impossible Death-
+  Condition Demonstrated By the Person It Was Designed To Kill; the bath,
+  the goat, the Sunday spear; filed under the demonstration as the act,
+  not under the throw that followed.' You receive the Betrayal Archive
+  Record."
+grantItem:   "Betrayal Archive Record"
+checkPassFlag: betrayalArchived
+activateMissionBit: kirFlowerWifeComplete
+```
+
+---
+
+*KIR-05 complete. 2026-06-03.*
+
+---
+
+## Cycle 6: The Animal Punishment Years
+
+*(Theme differentiation: Avoiding KIR cycles 1-5. New theme: the message whose proof of identity cannot be stated openly; the carrier between transformed men and the person who must recognize them without being told; the token that carries the identity mark in a form only the right person can read.)*
+
+### Quest API Stub (Cycle 6)
+
+```
+Act I — The Commission from Math
+activateNode: GWN
+type: skill_check
+scene: "Math son of Mathonwy's court in Gwynedd. Two men are serving
+  their second year of animal punishment — transformed into wild hogs.
+  A message must reach their mother, who does not know their current form.
+  She knows only that her sons were taken, transformed, and have not been
+  heard from. Math will not lift the punishment; but he permits a message.
+  The message is the token: a carved stick with the mark they used in
+  their mother's house."
+prompt: "Insight DC 12: understand the commission's constraint — you cannot
+  state who the hogs are; the mother must recognize the mark and draw the
+  conclusion herself; if you name them, the punishment is violated; if she
+  does not recognize the mark, the commission fails."
+failText:    "You ask how she will know. Math says: either the mark works
+              or it does not; that is the nature of identity."
+successText: "You understand: the mark is the proof; the message is the
+              delivery; the recognition is hers. You receive the Message
+              Stick — a carved rod with two interlocking marks in a design
+              only their mother made for them."
+grantItem:   "Message Stick"
+checkPassFlag: commissionUnderstood
+
+Act II — The Forest
+activateNode: WLD
+type: skill_check
+scene: "The forest where the two hogs run their punishment year. They are
+  large, dark-bristled, moving together with the specific synchrony of
+  animals who were once brothers. One of Math's foresters is also in the
+  forest, cataloguing the wild pigs. You must find the two transformed men
+  and speak privately before the forester finds you."
+prompt: "Stealth DC 12: separate the two transformed hogs from the forest's
+  ordinary wild pigs without alerting the forester — the hogs know who
+  you are but cannot acknowledge you in front of company; wait for the
+  forester to be on the other side of the ridge."
+failText:    "The forester sees you standing near the two hogs and talking.
+              He asks who you are speaking to. You say: checking the herd.
+              He notes it."
+successText: "The forester crests the ridge. You step into the clearing.
+              The two hogs turn toward you with the eyes of men. You hold
+              up the stick. One of them presses his snout to it once —
+              the mark of recognition."
+checkPassFlag: hogsRecognized
+
+Act III — The Delivery
+activateNode: GWN
+type: skill_check
+scene: "Their mother's house at the edge of Math's domain. A woman who
+  has spent two years holding the specific knowledge that her sons are
+  being punished and that she is not permitted to know in what form. You
+  present the stick. You say nothing about what they are."
+prompt: "Composure DC 11: present the stick and say only what you were
+  permitted to say — 'this comes from those who used this mark in your
+  house' — and wait; the recognition belongs to her; the explanation
+  belongs to Math's judgment; your role is delivery, not consolation."
+failText:    "You say too much. She knows more than she should. You have
+              exceeded your commission."
+successText: "She looks at the stick for a long time. Her hands close
+              around it. She says nothing. She knows. You receive the
+              Mother's Receipt — her pressed-thumb mark on a scrap of
+              linen, acknowledging the message was delivered."
+grantItem:   "Mother's Receipt"
+checkPassFlag: messageDelivered
+
+Act IV — The Forester's Inquiry
+activateNode: GWN
+type: skill_check
+scene: "Math's forester has written a report about the Fighter standing
+  in the clearing speaking to two hogs. He wants an explanation. Math's
+  steward reviews the report. You have the Mother's Receipt — evidence
+  that a message was delivered — but the commission was to not name the
+  men."
+prompt: "History DC 12: explain the commission in a form the steward
+  accepts without naming the transformed men — the commission was to
+  carry a message from Math's permission to a designated recipient; the
+  message was in the form of a recognized mark; the delivery was confirmed
+  by receipt; no punishment terms were violated."
+failText:    "The steward is unsatisfied. He asks Math directly. Math
+              looks at you for a long time before saying: let it rest."
+successText: "The steward accepts the account as within the scope of
+              Math's permission. The report is filed as routine. The
+              commission stands uncompromised."
+checkPassFlag: foresterSatisfied
+
+Act V — The Filing
+activateNode: WM
+type: skill_check
+scene: "Sweelinck reads the Mother's Receipt and the commission account.
+  'The message was carried through animal form to human recognition using
+  a mark that predated the transformation.' He considers. 'The punishment
+  was not violated because the identity was not stated — only recognized.'
+  He looks up. 'What category receives the record of a commission that
+  required identity to be established without being declared?'"
+prompt: "History DC 11: name the category — Punishment Records — The
+  Commission That Required Identity To Be Established Without Being Stated;
+  the three punishment years as a single document; the mark that carries
+  identity without names."
+failText:    "Filed under Math's Gwynedd — punishment histories."
+successText: "Sweelinck writes: 'Punishment Records — The Commission That
+  Required Identity To Be Established Without Being Stated; the hog-years
+  as document; the mark as the form of proof; filed under the mother's
+  receipt as the terminal evidence.' You receive the Punishment Archive
+  Record."
+grantItem:   "Punishment Archive Record"
+takeItem:    "Message Stick"
+checkPassFlag: punishmentArchived
+activateMissionBit: kirAnimalYearsComplete
+```
+
+---
+
+*KIR-06 complete. 2026-06-03.*
+
+---
+
+## Cycle 7: The Blerwm Silencing
+
+*(Theme differentiation: Avoiding KIR cycles 1-6. New theme: the bard who cannot be stopped once he reaches the hall; the song that works only if the right audience hears it; smuggling the performance past every gate so the obligation it creates can fall on the right king.)*
+
+### Quest API Stub (Cycle 7)
+
+```json
+{
+  "quest_id": "KIR-07",
+  "title": "The Blerwm Silencing",
+  "cycle": 7,
+  "book": "KIR — The Mabinogion",
+  "token": "Taliesin's Introduction Note",
+  "route": ["MGL", "WM"],
+  "theme": "The bard smuggled past every gate to the hall where the song creates its obligation; the performance that works only if the right person receives it; twenty-four official bards silenced by one unofficial face",
+  "archive_category": "Performance Records — The Song That Created An Obligation In The King Who Received It; Twenty-Four Official Bards Silenced; The Patron Freed By What The Performance Required",
+  "questComplete": true,
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "MGL",
+      "activateNode": "MGL",
+      "type": "skill_check",
+      "scene": "Outside Maelgwn Gwynedd's court at Deganwy. Elphin is imprisoned inside for claiming his wife is more virtuous than the queen and his bard wiser than all the king's bards. Taliesin is outside the gate, thirteen years old, crouching in a posture that makes the guards uncertain — he is either a very old very small man or a very strange child. He needs to be inside before the official bards begin their hall procession.",
+      "skillCheck": {
+        "skill": "Deception",
+        "dc": 12,
+        "prompt": "Get Taliesin through the gate before the bards' procession starts — frame him as a court servant, a visiting scribe's apprentice, or a page who belongs two rooms ahead; do not try to explain what he is because the explanation is too strange.",
+        "failText": "The gate guard holds him. An hour lost. Taliesin gets through on a second attempt as a laundry runner, which is technically still inside.",
+        "passText": "The gate opens. Taliesin walks through at the pace of someone who has been expected. You receive Taliesin's Introduction Note — a scrap of vellum with three words that serve as his credential in the court."
+      },
+      "grantItem": "Taliesin's Introduction Note",
+      "checkPassFlag": "kir7Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "MGL",
+      "activateNode": "MGL",
+      "type": "skill_check",
+      "scene": "The great hall corridor. Taliesin has positioned himself in a corner near the door where the official bards will pass. He is making faces — a specific gesture with his finger against his lip. The court steward has noticed a strange small person in the corner and is moving toward you.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 11,
+        "prompt": "Keep the steward's attention long enough for the bards' procession to pass Taliesin — ask a procedural question about the evening's seating, a formality question about the king's toast order; just long enough for twenty-four bards to walk past the corner.",
+        "failText": "The steward reaches Taliesin. He asks what the child is doing. Taliesin makes a face at him. The steward begins doing the same thing involuntarily. The procession continues.",
+        "passText": "The procession passes Taliesin. You see the moment it begins: the first bard makes a small sound against his lip. Then the second. Then all twenty-four are in the hall doing the same thing in front of the king."
+      },
+      "checkPassFlag": "kir7Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "MGL",
+      "activateNode": "MGL",
+      "type": "skill_check",
+      "scene": "The hall. Twenty-four official bards are babbling blerwm-blerwm in front of the king. Maelgwn is enraged. His squire has hit the chief bard Heinin Vardd with a broom. Heinin explains: there is a spirit in the corner in the form of a child. Maelgwn wants the child brought forward. A court guard is approaching Taliesin. He must not be taken before the song begins.",
+      "skillCheck": {
+        "skill": "Composure",
+        "dc": 12,
+        "prompt": "Position yourself between the court guard and Taliesin — not to fight, but to slow the approach long enough for Taliesin to speak first; he needs one second of silence before his voice takes the room.",
+        "failText": "The guard reaches Taliesin before the silence. Taliesin is dragged to center hall without ceremony. He still sings. But the opening is rough.",
+        "passText": "You create the half-second gap. Taliesin steps forward himself, precisely, as if he has been here before in the oldest memory of the world. The guard stops. The king looks at the child. The hall is quiet."
+      },
+      "checkPassFlag": "kir7Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "MGL",
+      "activateNode": "MGL",
+      "type": "skill_check",
+      "scene": "Taliesin sings his origin poem. He was at the fall of Lucifer. He carried a banner before Alexander. He was in Canaan when Absalom was slain. He was at the Crucifixion. He was in the Ark with Noah. He was little Gwion, and at length he is Taliesin. A windstorm shakes the castle. Maelgwn's crown falls. The candles go out. The king is frightened.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 13,
+        "prompt": "Understand what the song has done — not a blasphemy, not a threat; a declaration of origin that creates an obligation in any king who receives it correctly; name the obligation Maelgwn is now under so that you can witness when he fulfills it.",
+        "failText": "You cannot name the obligation precisely. Taliesin must explain it to you later.",
+        "passText": "You understand: the song is a credential from before the kingdom began; the king who receives a credential of that age is obligated to honor what the credential was issued to protect; Elphin is what the credential protects. You receive Taliesin's Wind Witness — your account of the windstorm and the crown falling."
+      },
+      "grantItem": "Taliesin's Wind Witness",
+      "checkPassFlag": "kir7Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "activateNode": "WM",
+      "type": "skill_check",
+      "scene": "Archivus Sweelinck reads the Wind Witness. 'Twenty-four official bards silenced by a child making faces. A windstorm from a song. A king freed his prisoner because the song created an obligation.' He pauses. 'The obligation was not a threat. It was a recognition of what authority the song carried.' He looks up. 'What category receives the record of a performance that freed a prisoner by placing an obligation on a king?'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Name the archive category: Performance Records — The Song That Created An Obligation In The King Who Received It; twenty-four official bards silenced by the face before the voice; the patron freed by what the performance required of its audience.",
+        "failText": "Filed under Bardic Records — Welsh tradition. Taliesin origin poem.",
+        "passText": "Sweelinck writes: 'Performance Records — The Song That Created An Obligation In The King Who Received It; Twenty-Four Official Bards Silenced; The Patron Freed By What The Performance Required.' He opens the category. You receive the Performance Archive Record."
+      },
+      "takeItem": "Taliesin's Introduction Note",
+      "grantItem": "Performance Archive Record",
+      "checkPassFlag": "kir7Act5Passed",
+      "activateMissionBit": "kirTaliesinComplete"
+    }
+  ]
+}
+```
+
+---
+
+*KIR-07 complete. 2026-06-03.*

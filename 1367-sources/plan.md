@@ -757,7 +757,7 @@ Every quest in §MATH-01 carries a Noether signature: every TOKEN that reaches t
 | 72 | LBC | Nibelungenlied | **SEEDS COMPLETE 2026-06-03 — LBC-01–07 done (7 cycles). Wrote cycles 3-7. questComplete added to LBC-07. New nodes NIL/WOR/RHN/KOL/HST. Theme threads for all 7 cycles.** |
 | 73 | FRO | Volsunga Saga | **SEEDS COMPLETE 2026-06-03 — FRO-01–07 done (7 cycles). Wrote cycles 3-7. questComplete added to FRO-07. New nodes FLM/ATL/WRM/ODD/LYG/HKL/SIG/VLN. Theme threads for all 7 cycles.** |
 | 74 | MSE | Canterbury Tales | **SEEDS COMPLETE 2026-06-03 — MSE-01–07 done (7 cycles). Wrote cycles 3-7. questComplete added to MSE-07. New nodes BRT/ORL/ACT/RDW/CHY/PCR/LRD/SAL/COT. Theme threads for all 7 cycles.** |
-| 75 | KIR | Mabinogion | QUEUED |
+| 75 | KIR | Mabinogion | **SEEDS COMPLETE 2026-06-03 — KIR-01–07 done (7 cycles). Wrote cycles 3-7. questComplete added to KIR-07. New nodes HVY/ARB/ARD/GWN/WLD/MGL/HER. Theme threads for all 7 cycles.** |
 | 76 | SEN | Treasure Island | QUEUED |
 | 77 | MAN | Ivanhoe | QUEUED |
 | 78 | STN | Robin Hood | QUEUED |
