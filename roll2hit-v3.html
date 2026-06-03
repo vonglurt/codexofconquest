@@ -7960,6 +7960,9 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   ALE: { num:178, name:"market_quarter", label:"Alexandria — Venetian Consul Frankish Quarter", act:3 },
   BRI: { num:179, name:"docks", label:"Brindisi — Adriatic Harbor District", act:3 },
   BAR: { num:180, name:"city", label:"Bari — Podesta Court Quarter", act:3 },
+  AVG: { num:181, name:"city", label:"Avignon — Papal Court Quarter", act:NaN },
+  MTP: { num:182, name:"city", label:"Montpellier — University Quarter", act:NaN },
+  MAR: { num:183, name:"city", label:"Marseille — Consular Court", act:NaN },
 };
 // ◆◆◆ WORLDBUILDER:NODE_MAP:END ◆◆◆
 
@@ -8068,6 +8071,9 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   ALE:{r:184,c:232},
   BRI:{r:180,c:224},
   BAR:{r:176,c:222},
+  AVG:{r:138,c:175},
+  MTP:{r:140,c:172},
+  MAR:{r:144,c:178},
 };
 // ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆
 
@@ -10866,6 +10872,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   blq_10_act3: { id:"blq_10_act3", type:"skill_check", title:"The Soldier's Testimony — Act 3: Biagio on the Ship", failText:"Biagio pieces together enough from deflections to conclude the filing involves personal effects from the Alexandria Frankish quarter. He sends a message to Donato: filing appears connected to personal-effects retrieval; recommend alerting Luini's office before carrier arrives. Donato contacts the consulate before the carrier.", npc:"beatrice_canetto", activateNode:"ALE", reward:NaN, activateCond:blq10DonatoDeclined },
   blq_10_act4: { id:"blq_10_act4", type:"skill_check", title:"The Soldier's Testimony — Act 4: Donato's Message at the Harbor", failText:"The harbormasters' clerk holds the carrier for a verification interview before allowing them to proceed with contested property. Two hours lost. Donato, notified, goes to the consulate first.", npc:"beatrice_canetto", activateNode:"FAM", reward:NaN, activateCond:blq10BiagioDeflected },
   blq_10_act5: { id:"blq_10_act5", type:"skill_check", title:"The Soldier's Testimony — Act 5: Luini Opens the Pre-Testimony File", failText:"Luini holds the objects in escrow pending a formal hearing including all parties. The pre-testimony file is not opened. Donato speaks to Luini for an hour before Beatrice arrives. The situation is already contested.", npc:"beatrice_canetto", activateNode:"FAM", reward:NaN, activateCond:blq10HarbormastersCleared },
+  blq_11_act1: { id:"blq_11_act1", type:"skill_check", title:"The Impossible Conditions — Act 1: Conditions Read as Map", passText:"The carrier understands: the conditions are a map, not a wall. The gaming table in Avignon is a location. The Montpellier physician who attended the births is a person. Riccardo hands over the authorization letter: any property bearing his initials R.P. A sealed guild certificate at his factor office in Avignon confirms identity. The route is clear.", failText:"The conditions seem impossible. The carrier accepts the authorization letter and the task. The route through the conditions is not yet visible — it will have to be improvised.", npc:"riccardo_della_porta", activateNode:"PSA", checkStat:"wis", checkPassFlag:"blq11ConditionsReadAsMap", checkDC:12 },
+  blq_11_act2: { id:"blq_11_act2", type:"skill_check", title:"The Impossible Conditions — Act 2: The Ring in the Pawnshop", passText:"Abramo di Carpentras checks the guild certificate initials against his inventory record. The ring: plain gold band, notched interior, R.P. engraved. The description matches. He redeems it against the authorization. The ring is recovered.", failText:"Abramo is uncertain whether the guild certificate establishes sufficient identity without a witness. He will hold the ring until tomorrow.", npc:"riccardo_della_porta", activateNode:"AVG", checkStat:"int", checkPassFlag:"blq11RingRecovered", checkDC:12, activateCond:blq11ConditionsReadAsMap },
+  blq_11_act3: { id:"blq_11_act3", type:"skill_check", title:"The Impossible Conditions — Act 3: The Hidden Physician", passText:"Lineage certification is categorically distinct from estate testimony under Montpellier university medical witness statute. Guillaume listens to the statutory precision. His avoidance order cannot reach this category. He says: that is what I can certify. He writes and seals the certified statement. He says: I have been waiting for someone to ask me correctly for four months.", failText:"Guillaume wants a notarized limitation from the Marseille court before he will certify. One or two days lost from the twelve-day window.", npc:"riccardo_della_porta", activateNode:"MTP", checkStat:"cha", checkPassFlag:"blq11StatementObtained", checkDC:12, activateCond:blq11RingRecovered },
+  blq_11_act4: { id:"blq_11_act4", type:"skill_check", title:"The Impossible Conditions — Act 4: The Salt-Flat Road", passText:"The carrier takes the salt-flat road. Flat ground, faster than the elevated coast road. The salt merchant at the junction confirms the official courier road is held at the Montpellier toll gate — market day. The carrier arrives in Marseille three hours before Maitre Arnaud de Montfort rider. The preemptive notice has not yet reached the court clerk.", failText:"The carrier takes the standard road. Maitre Arnaud rider is one hour ahead. The court clerk has already received the preemptive notice when the carrier arrives and is predisposed to treat the delivery as untimely.", npc:"riccardo_della_porta", activateNode:"MTP", checkStat:"str", checkPassFlag:"blq11ArrivedBeforeRider", checkDC:12, activateCond:blq11StatementObtained },
+  blq_11_act5: { id:"blq_11_act5", type:"skill_check", title:"The Impossible Conditions — Act 5: Registry Desk, Marseille", passText:"Maitre Luc de Cassis compares the ring against the marriage contract on file: plain gold band, notched interior, R.P. initials — matches exactly. He compares the certified statement against Guillaume physician registration on file. Both conditions are satisfied. The petition is suspended pending the parties response. He stamps the receipt and says: she wrote the gaming table in Avignon. That is a specific location. She expected someone to read it exactly. You read it exactly.", failText:"Maitre Arnaud preemptive notice creates a procedural complication requiring a hearing tomorrow. The hearing confirms the conditions are met. Petition suspended — one day delayed.", npc:"riccardo_della_porta", activateNode:"MAR", checkStat:"cha", checkPassFlag:"blq11ConditionsSatisfied", checkDC:12, activateCond:blq11ArrivedBeforeRider },
 };
 // ◆◆◆ WORLDBUILDER:QUEST_DB:END ◆◆◆
 
@@ -11850,6 +11861,7 @@ const BIRKA_NPC_PROFILES = { // → doc: world.md §Birka Six NPCs
   konstantinos_philanthropenos: { key:"konstantinos_philanthropenos", name:"Konstantinos Philanthropenos", occupation:"Byzantine chancery clerk, Blachernae quarter, Constantinople. Issued the dual-petition ruling letter for the Galata warehouse dispute. Is aware that both parties' agents are watching. Is not asking for deception — only for speed.", node:"CON" },
   messer_cosimo_taranto: { key:"messer_cosimo_taranto", name:"Messer Cosimo di Taranto", occupation:"Notary in Brindisi. Retained by Rocco the fisherman to ensure the sea-chest reaches the Bari podestà's court before either claimant can take private custody. Commissioned the carrier; issued the custody document.", node:"BRI" },
   beatrice_canetto: { key:"beatrice_canetto", name:"Beatrice di Canetto (as Jacopo da Savona)", occupation:"Genoese noblewoman living in Alexandria for three years under the identity of Jacopo da Savona, soldier's factor. Framed by Donato di Palma for adultery; fled Genoa; reinvented herself. Found her stolen purse and clasp at Donato's market stall last week. Cannot carry the evidence herself — she has no legal standing in Famagusta as Jacopo and cannot reveal herself as Beatrice until Donato is already confronted.", node:"ALE" },
+  riccardo_della_porta: { key:"riccardo_della_porta", name:"Riccardo della Porta", occupation:"Florentine merchant; estranged husband commissioning recovery of wedding ring and lineage statement for court", node:"PSA" },
 };
 // ◆◆◆ WORLDBUILDER:BIRKA_NPC:END ◆◆◆
 
@@ -12201,6 +12213,11 @@ const _S_DEFAULTS = () => ({
     blq10BiagioDeflected: false,
     blq10HarbormastersCleared: false,
     blq10Complete: false,
+    blq11ConditionsReadAsMap: false,
+    blq11RingRecovered: false,
+    blq11StatementObtained: false,
+    blq11ArrivedBeforeRider: false,
+    blq11ConditionsSatisfied: false,
 });
 
 /* ── Layer 48: Luck — Seventh Stat ── */

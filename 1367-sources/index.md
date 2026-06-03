@@ -24,6 +24,9 @@ Two-tier naming rule: cities = 3-letter IATA or city-derived code; specific loca
 | ALE | Alexandria | Egypt | HBE (Borg El Arab); derived ALE from city name | 184,232 | BLQ | Final destination BLQ-07; Venetian consul Frankish quarter; Hospitaller chapter house |
 | BRI | Brindisi | Apulia, Italy | Note: IATA BRI=Bari; BDS=Brindisi — derived BRI from city name to match quest spec | 180,224 | BLQ | Starting city BLQ-09; Rocco's harbor warehouse; sea-chest custody commission |
 | BAR | Bari | Apulia, Italy | derived BAR from city name (IATA BRI taken by Brindisi in our game) | 176,222 | BLQ | Final destination BLQ-09; podestà's court; chest opening scene; questComplete |
+| AVG | Avignon | Provence, France | AVG derived (AVI = Avignon-Caumont); Papal court city | 138,175 | BLQ | Act 2 node BLQ-11; Maître Abramo pawnshop; wedding ring recovery |
+| MTP | Montpellier | Languedoc, France | MTP derived (MPL=Montpellier); university quarter | 140,172 | BLQ | Act 3+4 node BLQ-11; Maître Guillaume hidden practice; salt-flat road |
+| MAR | Marseille | Provence, France | MRS=Marseille Provence; MAR derived from city name | 144,178 | BLQ | Act 5 node BLQ-11; consular court registry desk; questComplete |
 
 ---
 
