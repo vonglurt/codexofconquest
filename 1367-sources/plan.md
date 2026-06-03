@@ -789,3 +789,80 @@ The lecture concludes: *"No one has sat still long enough to hear this explained
 | 76 | SEN | Treasure Island | **SEEDS COMPLETE 2026-06-03 — SEN-01–07 done (7 cycles). Wrote cycles 3-7. questComplete added to SEN-07. New nodes HMS/STK/BGC/NHS/TIS. Theme threads for all 7 cycles.** |
 | 77 | MAN | Ivanhoe | **SEEDS COMPLETE 2026-06-03 — MAN-01–07 done (7 cycles). Wrote cycles 3-7. questComplete added to MAN-07. New nodes SHF/HMT. Theme threads for all 7 cycles.** |
 | 78 | STN | Robin Hood | **SEEDS COMPLETE 2026-06-03 — STN-01–07 done (7 cycles). Wrote cycles 3-7. questComplete added to STN-07. New nodes EMT/LEA/NTN/KLN. Theme threads for all 7 cycles.** |
+
+---
+
+## §IMPORT-01 — API Import Queue (Batch 3, Books 61–78)
+
+**Directive (permanent):** When vignette seeds for a book are complete, import that book's nodes and quest chains into the game via API. Seed completion = import trigger.
+
+**All import phases follow the API endpoint directive in `API-README.md § 1367 Quest Import Workflow`.** Before calling any API endpoint: read `{CODE}-{title}.md` and `index.md` to understand story geography and ensure location info adheres to the narrative.
+
+**Node naming:** Use the IATA airport code for the nearest major airport. If already taken, use the nearest alternate airport code. If no airport exists (medieval-only location), derive a 3-letter code from the city name and add it to `index.md`.
+
+**Import one location at a time.** Complete all steps (GET /api/audit → POST /api/node → POST /api/quest × N → GET /api/audit → POST /api/save) before starting the next node.
+
+---
+
+### Import Queue
+
+| # | Code | Title | Starting Node | Key New Nodes | Import Status |
+|---|------|-------|--------------|--------------|---------------|
+| 61 | BLQ | Decameron | FLR (Florence) | FLR already in map; may need SNA, VEN sub-nodes | QUEUED |
+| 62 | HAV | Buccaneers of America | TOR (Tortuga) | TOR, PTR (Port Royal Jamaica), HAV (Havana) | QUEUED |
+| 63 | AMS | Tale of Genji | KIX (Kyoto/Osaka) | KIX, HND (Heian-kyo), MRG (Muro-no-Yoshino) | QUEUED |
+| 64 | HTY | Mahabharata | DEL (Delhi/Kurukshetra) | DEL, CCU (Varanasi), BOM (Lanka coast) | QUEUED |
+| 65 | CLJ | Dracula | OTP (Transylvania) | OTP, BUD (Budapest), LHR (London) | QUEUED |
+| 66 | WAW | Quo Vadis | FCO (Rome) | FCO already in map; SAU/VFM/BLO need creation | QUEUED |
+| 67 | NWI | Anabasis | IST (Sardis/Asia Minor) | IST, CPL, BLK, SIN, ORC, VAR, MYS, ANC | QUEUED |
+| 68 | MLA | Plutarch's Lives | ATH (Athens) | ATH or use existing; LMO, THA, ROM | QUEUED |
+| 69 | CRL | Froissart (Boys) | CDG (Paris) | CDG or use existing; AVG (Avignon) | QUEUED |
+| 70 | CPH | Gesta Danorum | CPH (Copenhagen) | CPH, HEL (Helsingborg) | QUEUED |
+| 71 | MOL | Laxdaela Saga | KEF (Iceland) | KEF, REY (Reykjavik area) | QUEUED |
+| 72 | LBC | Nibelungenlied | FRA (Frankfurt/Rhine) | NIL, WOR, RHN, KOL, HST | QUEUED |
+| 73 | FRO | Volsunga Saga | OSL (Norse heartland) | FLM, ATL, WRM, ODD, LYG, HKL, SIG, VLN | QUEUED |
+| 74 | MSE | Canterbury Tales | LGW (London/Canterbury) | BRT, ORL, ACT, RDW, CHY, PCR, LRD, SAL, COT | QUEUED |
+| 75 | KIR | Mabinogion | CWL (Wales) | HVY, ARB, ARD, GWN, WLD, MGL, HER | QUEUED |
+| 76 | SEN | Treasure Island | BRS (Bristol) | HMS, STK, BGC, NHS, TIS | QUEUED |
+| 77 | MAN | Ivanhoe | LBA (Yorkshire/Nottingham) | SHF, HMT | QUEUED |
+| 78 | STN | Robin Hood | EMA (Nottingham/Sherwood) | EMT, LEA, NTN, KLN, SHW | QUEUED |
+
+---
+
+### Per-Book Import Notes
+
+**BLQ (Decameron):** Starting city Florence (FLR) should already be in NODE_MAP. Query `GET /api/location/FLR` to confirm. All 12 vignette cycles may share the Florence anchor; place secondary nodes (plague refugee route cities) within 4–8 cells.
+
+**HAV (Buccaneers):** Caribbean setting. No existing nodes in this region. Use `GET /api/coords/near/WM?radius=32` to find space on the western edge of the map for Caribbean placement. Terrain: `coast` for port cities, `island` for remote anchorages.
+
+**AMS (Genji):** East Asian placement, far corner of map. Terrain: `forest` (Muro-no-Yoshino), `court` equivalent via `city`. MRG node confirmed needed.
+
+**HTY (Mahabharata):** Ancient Indian setting. Place on southeastern edge. Terrain: `plains` (Kurukshetra battlefield), `forest` (exile aranya), `mountain` (Himavat).
+
+**CLJ (Dracula):** Eastern Europe + England. OTP node for Transylvania interior, then route west through BUD to LHR. Terrain: `mountain` (Carpathian), `city`, `coast` (Whitby cliff).
+
+**WAW (Quo Vadis):** Rome (FCO) is the anchor. SAU (Saul's early node), VFM (Via Flaminia waypoint), BLO (Blessed locale) all need creation near FCO. Terrain: `road` for Via waypoints, `ruins` for catacombs area.
+
+**NWI (Anabasis):** Long overland route. IST anchors the western terminus. All 7 new nodes span Anatolia → Persia → Black Sea. Place in a geographic arc, terrain: `plains`, `mountain`, `coast`.
+
+**MLA (Plutarch's Lives):** ATH is the philosophical anchor. LMO (Lamia region), THA (Thebes area), ROM (Roman node distinct from FCO if FCO already exists). Terrain: `city`, `ruins`.
+
+**CRL (Froissart Boys):** CDG or nearby Paris-region node anchors. AVG (Avignon) placed south. Terrain: `city`, `road`.
+
+**CPH (Gesta Danorum):** Northern Europe. CPH code may collide with an existing node — check `GET /api/list/node` first. If taken, use BLL (Billund/Jutland alternative).
+
+**MOL (Laxdaela Saga):** Iceland. KEF (Keflavik) anchors. Terrain: `coast`, `tundra`.
+
+**LBC (Nibelungenlied):** Rhine corridor. FRA anchors. NIL (Nibelung hall, forest north), WOR (Worms, city), RHN (Rhine ford, river/road), KOL (Cologne, city), HST (Hunland steppe, plains east).
+
+**FRO (Volsunga Saga):** Norse mythic geography. OSL anchors. FLM (Fafnir's heath, plains/forest), ATL (Atli's hall, east), WRM (Worms, city), VLN (Valhal approach, mountain).
+
+**MSE (Canterbury Tales):** LGW (Gatwick) anchors the London side; Canterbury proper use MSE (Manston/Kent) or derive CTB. Pilgrimage road nodes spaced along the route.
+
+**KIR (Mabinogion):** CWL (Cardiff/Wales) anchors. Celtic terrain: `forest`, `coast`, `plains`. GWN (Gwynedd north Wales), ARD (Arderydd battle site).
+
+**SEN (Treasure Island):** BRS (Bristol) anchors. HMS (Hispaniola island), STK (Stockade camp), BGC (Black Cave cache), NHS (North Harbour Shore), TIS (Treasure Island summit). Terrain: `coast`, `island`, `forest`.
+
+**MAN (Ivanhoe):** LBA (Leeds-Bradford/Yorkshire) anchors. SHF (Sheffield area — Locksley village), HMT (Helmsley — tournament site). Terrain: `forest`, `city`.
+
+**STN (Robin Hood):** EMA (East Midlands Airport, nearest to Nottingham) anchors. EMT (Emmet Priory), LEA (Castle Lea), NTN (Nottingham city), KLN (Kirklees Nunnery). SHW (Sherwood Forest proper) placed between EMA and NTN. Terrain: `forest` (Sherwood), `city` (Nottingham), `ruins` (priories).

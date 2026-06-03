@@ -743,6 +743,81 @@ curl -X POST http://localhost:1367/api/node/CY/move \
 
 ---
 
+### GET /api/coords
+
+Return the full NODE_COORDS map: every node code and its `{r, c}` grid position, plus the current `maxR` and `maxC` bounds.
+
+```bash
+curl http://localhost:1367/api/coords
+```
+```json
+{
+  "coords": { "WK": {"r":12,"c":112}, "TLS": {"r":4,"c":112}, "CI": {"r":44,"c":80} },
+  "maxR": 192,
+  "maxC": 240,
+  "count": 150
+}
+```
+
+The worldbuilder renders at `mapScale=18` px/cell. Canvas size auto-computes from `maxR` and `maxC` — no hardcoded pixel dimensions.
+
+---
+
+### GET /api/coords/near/{code}
+
+Find occupied and available grid slots near a node. Use this during import to pick a placement for a new node.
+
+```bash
+curl "http://localhost:1367/api/coords/near/WK?radius=8"
+```
+
+| Query param | Default | Range | Meaning |
+|---|---|---|---|
+| `radius` | 8 | 1–32 | Manhattan-distance search radius in cells |
+
+```json
+{
+  "ok": true,
+  "code": "WK",
+  "origin": {"r":12,"c":112},
+  "radius": 8,
+  "nearby": [
+    {"code":"TLS","r":4,"c":112,"distance":8}
+  ],
+  "available": [
+    {"r":13,"c":112,"distance":1},
+    {"r":12,"c":113,"distance":1}
+  ]
+}
+```
+
+`available` contains up to 40 unoccupied `{r,c}` slots sorted by distance from origin. Pick the closest slot that fits the story geography.
+
+---
+
+### PUT /api/coords/{code}
+
+Set or update the grid coordinates for a node. Returns 409 if the slot is already occupied by a different node.
+
+```bash
+# Get nonce first
+NONCE=$(curl -s -X POST http://localhost:1367/api/nonce \
+  -H 'Content-Type: application/json' \
+  -d '{"type":"node","id":"NTN"}' | jq -r .nonce)
+
+curl -X PUT http://localhost:1367/api/coords/NTN \
+  -H 'Content-Type: application/json' \
+  -H "X-Nonce: $NONCE" \
+  -d '{"r":48,"c":116}'
+```
+```json
+{ "ok": true, "code": "NTN", "prev": null, "coords": {"r":48,"c":116}, "note": "POST /api/save to persist." }
+```
+
+Coordinates are patched into the `NODE_COORDS` section in memory. Call `POST /api/save` to write to disk.
+
+---
+
 ### POST /api/save
 
 Write all pending in-memory changes to a new timestamped HTML file. The original is never overwritten.
@@ -1010,3 +1085,78 @@ curl -X POST http://localhost:1367/api/save
 The server never executes the full game file. It reads it as text, slices sections by anchor comments, and evaluates each section in isolation with appropriate guards.
 
 The strategy for patching string fields (`editField`) patches the named field in raw HTML, preserving surrounding code including JS function bodies in quest objects. Numeric and boolean fields are updated in-memory and serialized on `POST /api/save`.
+
+---
+
+## 1367 Quest Import Workflow
+
+This workflow applies to **all phases of quest book analysis** — every book imported into the game follows these steps. The import directive is permanent: once a book's vignette seeds are complete, import via API.
+
+### Pre-Import: Read the source files
+
+Before calling any API endpoint, read the book's source files to understand the story geography and quest chain:
+
+```
+1367-sources/{CODE}-{title}.md     — vignette seeds and UQF quest cycles
+1367-sources/index.md              — canonical node list, airport codes, terrain types
+```
+
+Location information **must adhere to the story**. Cross-reference the vignette text to ensure each node's terrain type and label match its narrative role. Do not invent geography — follow the story's actual route.
+
+### Node Naming Convention — Airport Codes
+
+Every new location node uses the IATA airport code for the nearest major airport as its 3-letter code:
+
+- If the city has a major airport, use its IATA code (e.g., `NTN` → Nottingham uses `EMA`, but `NTN` is used as a story shorthand — see note below)
+- If the IATA code is already taken by an existing node, use the nearest alternate airport code in the same region
+- If no airport exists (medieval-only location), derive a 3-letter code from the city name and document it in `index.md`
+
+The code must be unique in NODE_COORDS. Check `GET /api/list/node` before assigning.
+
+### Import Steps — One Location at a Time
+
+Process one node at a time, completing all steps before moving to the next.
+
+| Step | API call | Purpose |
+|------|----------|---------|
+| 0 | `GET /api/audit` | Baseline integrity check before any writes |
+| 1 | `GET /api/list/node` | Confirm code is not already taken |
+| 2 | `GET /api/coords/near/{startNode}?radius=8` | Find available slots near story's starting city |
+| 3 | `POST /api/node` (with `r`,`c`) | Create node in NODE_MAP + NODE_COORDS in one call |
+| 4 | `GET /api/location/{code}` | Verify node exists; terrain and label correct |
+| 5 | `POST /api/flags` | Create `_S_` state flags for each quest act |
+| 6 | `POST /api/quest` (per act) | Create chained quest entries (one per act, 5 acts per vignette) |
+| 7 | `GET /api/quest/{id}/chain` | Verify dependency chain is connected |
+| 8 | `GET /api/audit` | Post-write integrity check — fix any broken refs before saving |
+| 9 | `POST /api/save` | Persist to timestamped HTML |
+
+### Node Placement Strategy
+
+- **Starting city nodes** (act 1): place within 1–3 cells of the story's home base node
+- **Route waypoints** (acts 2–3): place 4–8 cells from the starting node, along the geographic direction of travel
+- **Distant endpoints** (acts 4–5): place near real geographic cities; select terrain type from `GET /api/schema/node` to match the actual location (coast, forest, mountain, etc.)
+- The 4x expansion (2026-06-03) left 3 empty grid cells between every pair of adjacent original nodes — use `GET /api/coords/near/{code}` to find unoccupied slots
+
+### Chained Quest Pattern
+
+Each 5-act vignette becomes 5 sequential QUEST_DB entries:
+
+```
+Act 1: no activateCond          — available at node arrival
+Act 2: activateCond = act1.checkPassFlag
+Act 3: activateCond = act2.checkPassFlag
+Act 4: activateCond = act3.checkPassFlag
+Act 5: activateCond = act4.checkPassFlag  (questComplete: true on act 5)
+```
+
+### Data Integrity
+
+Run `GET /api/audit` before the first write and after the last write. The audit checks:
+- All `activateNode` codes exist in NODE_MAP
+- All `activateCond` flags exist in the flags section
+- All `checkPassFlag` values are unique
+- All quest `type` values are valid (`combat|explore|trade|social|mission_bit|skill_check`)
+
+Fix all audit errors before calling `POST /api/save`. A clean audit is required before any book is considered fully imported.
+
+See also: `GET /api/help/import` for inline reference, `GET /api/help/coords` for coordinate system details.
