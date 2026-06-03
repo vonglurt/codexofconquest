@@ -680,3 +680,523 @@ activateMissionBit: froPyreComplete
 ---
 
 *Cycle 2 complete. Mark `[x]` for FRO-volsunga-saga in books.md.*
+
+---
+
+## Cycle 3: The Fire-Crossing
+
+*(Theme differentiation: Avoiding FRO cycles 1-2. New theme: the carrier who clears the approach for a wrong thing because not clearing it would be a greater wrong; the dishonesty that begins the second catastrophe must be physically forced open; the shape that gets through the flame is not the man Brynhild was waiting for.)*
+
+### Quest API Stub (Cycle 3)
+
+```
+Act I — The Disguise
+activateNode: FLM
+type: skill_check
+scene: "Sigurd stands at the base of Brynhild's wall of flame in Gunnar's
+  face, wearing Gunnar's shape through the Helmet of Awe. The transformation
+  is complete. You have been hired to clear the approach — three of Brynhild's
+  household guards who have noticed something wrong in the way this
+  Gunnar-shape moves before the fire."
+prompt: "Insight DC 12: read what the guards have noticed and address it
+  before they report — the gait, a specific gesture, or the way this man
+  holds his sword arm."
+failText:    "One guard sends for the hall captain. The approach has a witness
+              with a question."
+successText: "The tell you named was the gait. You explain it away in the
+              context of the fire's heat. The guards return to their posts."
+grantItem:   "Approach Clearance — the flame-road is clear"
+checkPassFlag: approachCleared
+
+Act II — The Flame
+activateNode: FLM
+type: skill_check
+scene: "The wall of flame is Odin's work — it rings the summit and will
+  not pass a man who is afraid. This Gunnar-shape has ridden to its edge
+  three times. A fourth ride now. The horse Grani is not cooperating because
+  Grani can smell who is not at the reins."
+prompt: "Animal Handling DC 13: persuade Grani to carry the wrong man
+  through the flame — the horse knows; you must ask him for the commission
+  without deceiving him about its nature."
+failText:    "Grani refuses again. You must find another horse. The delay
+              costs two hours and the plan changes."
+successText: "Grani turns to you with one eye and then carries the Gunnar-shape
+              into the flame without hesitating. The fire parts."
+checkPassFlag: flameRidden
+
+Act III — The Hall
+activateNode: FLM
+type: skill_check
+scene: "Inside the flame-ring, on the summit, Brynhild's hall. Her attendants
+  are still, watching this Gunnar-shape enter. One attendant is watching
+  your face rather than the figure's — she has been in this hall longer than
+  the others and is reading the quality of the situation."
+prompt: "Composure DC 12: hold the performance — you are the commission's
+  support, not its subject; do not draw attention to what is wrong with
+  this scene by looking at anything that is wrong with it."
+failText:    "She follows the Gunnar-shape inside to watch what happens in
+              the hall."
+successText: "You stand at the entrance. She returns to her work. The hall
+              door closes."
+checkPassFlag: hallEntered
+
+Act IV — The Three Nights
+activateNode: FLM
+type: skill_check
+scene: "Three nights. Sigurd sleeps in Brynhild's hall with the sword
+  placed between them — the same sword that will be placed on the pyre later.
+  On the second night, one of Brynhild's retainers who knew Sigurd years
+  before has arrived from a neighboring farm and is asking questions."
+prompt: "Deception DC 13: send the retainer away before the third night
+  without confirming or denying what he suspects; the commission requires
+  the three nights to complete, not the secret to be discovered on the second."
+failText:    "He stays. The third morning he tells what he suspects to two
+              others. The shape's secret has a wider audience than intended."
+successText: "He leaves before the third night. The sword is between them
+              exactly as it will be placed on the pyre in a different year."
+checkPassFlag: threeNightsHeld
+
+Act V — The Departure
+activateNode: GNH
+type: skill_check
+scene: "Sigurd-as-Gunnar has ridden back through the flame with the ring
+  from Brynhild's hand — the ring that will appear on the church steps.
+  You receive the Ring Record — a brief notation of which ring was taken and
+  from whose hand — because Brynhild's attendant has asked you to carry her
+  observation to the archive before the story closes over it."
+prompt: "History DC 11: name the archive category for the ring record —
+  the object taken under false identity; the token whose chain of custody
+  includes a shape-swap; the archive note made by a witness who knew and
+  could not speak it at the time."
+failText:    "Filed under Diplomatic Gifts — Exchange Record."
+successText: "Sweelinck creates: Objects Exchanged Under Assumed Identity —
+  the ring taken from a woman who believed she was dealing with a different
+  man; the chain of custody includes the deception as a link; filed under
+  the ring's origin, not its destination. You receive the Ring's Witness Record."
+grantItem:   "Ring Witness Record"
+checkPassFlag: departureMade
+activateMissionBit: froFireCrossingComplete
+```
+
+---
+
+*FRO-03 complete. 2026-06-03.*
+
+---
+
+## Cycle 4: The Harp in the Worm-Close
+
+*(Theme differentiation: Avoiding FRO cycles 1-3. New theme: the mercy object in a place designed to deny mercy; the harp in the snake pit; what remains possible when a place has been built to deny all possibility — one man, one instrument, one night.)*
+
+### Quest API Stub (Cycle 4)
+
+```
+Act I — Gudrun's Commission
+activateNode: ATL
+type: skill_check
+scene: "Atli's hall. Gudrun cannot enter the worm-close herself — she is
+  watched. She gives the Fighter her harp with one instruction: get it
+  to Gunnar before the snakes decide to use the night. The hall is guarded.
+  The worm-close is below the east tower. She will create a distraction at
+  the west end of the hall in twenty minutes."
+prompt: "Insight DC 12: understand the timing — twenty minutes is not
+  comfortable; the distraction is finite; the harp must reach Gunnar
+  before Gudrun runs out of reasons to be at the west end of the hall."
+failText:    "You understand the commission mechanically but not its margin.
+              The distraction ends two minutes early."
+successText: "Twenty minutes and nothing more. You receive Gudrun's Harp."
+grantItem:   "Gudrun's Harp"
+checkPassFlag: harpReceived
+
+Act II — The East Corridor
+activateNode: ATL
+type: skill_check
+scene: "East corridor toward the tower. Two guards on rotating watch. The
+  rotation is eight minutes per position. The worm-close entrance is thirty
+  seconds past the guard point. The window is four minutes."
+prompt: "Stealth DC 13: reach the worm-close entrance in the guard rotation
+  gap."
+failText:    "The guard at position two returns early. You are in the
+              corridor with a harp."
+successText: "The corridor is empty for the necessary four minutes. You
+              reach the entrance."
+checkPassFlag: corridorPassed
+
+Act III — The Descent
+activateNode: WRM
+type: skill_check
+scene: "The worm-close staircase. A Hunnic guard at the lower landing —
+  the second layer of security. He has been told no one enters tonight.
+  He is following orders and knows nothing about the political situation
+  that makes tonight different from other nights."
+prompt: "Persuasion DC 13: name a reason to pass the guard that is true
+  in form — a family petition for condemned-man pastoral access, a
+  physician's notation, any category that allows him to log the entry
+  without violating his orders."
+failText:    "He holds you. He sends for the hall officer."
+successText: "Pastoral access for the condemned, documented by the hall
+              physician — he logs it and steps aside."
+checkPassFlag: lowerLandingPassed
+
+Act IV — The Worm-Close
+activateNode: WRM
+type: skill_check
+scene: "Gunnar in the pit, hands bound, snakes active at the edges.
+  He cannot hold the harp with bound hands. His sister knew this. She
+  sent the harp because he can play with his toes and she knows he can
+  play with his toes because she was there the one time he demonstrated it."
+prompt: "Investigation DC 11: figure out how Gunnar is supposed to receive
+  this — the harp must be positioned correctly for toe-play; the snakes
+  will approach the vibration, not retreat from it; the margin is exact."
+failText:    "The harp is placed and he cannot reach the strings. The night
+              goes the way it was designed to go."
+successText: "You position the harp at the precise angle for toe-play.
+              Gunnar receives it correctly. The first notes begin."
+takeItem:    "Gudrun's Harp"
+checkPassFlag: harpDelivered
+
+Act V — The Long Night
+activateNode: WRM
+type: skill_check
+scene: "Above the worm-close, the hall has gone quiet. Gudrun's distraction
+  has ended. The guard who logged the pastoral entry is at his post. The music
+  from below is audible in the corridor — the harp playing through the night
+  in a place that was built for silence. You wait at the staircase top,
+  holding the position between Gudrun's errand and the morning."
+prompt: "Composure DC 11: hold the position without moving toward or away
+  from what is happening below — you delivered the harp; the errand is
+  complete; what happens in the pit is not your commission."
+failText:    "You descend to see. The guard follows. The morning finds you
+              in an explanation."
+successText: "The harp plays all night. You receive Gudrun's Token — a
+              small silver clasp she sent as payment when the morning came
+              and the harp had been heard."
+grantItem:   "Gudrun's Token"
+checkPassFlag: longNightHeld
+activateMissionBit: froHarpComplete
+```
+
+---
+
+*FRO-04 complete. 2026-06-03.*
+
+---
+
+## Cycle 5: Oddrun's Ride
+
+*(Theme differentiation: Avoiding FRO cycles 1-4. New theme: the healing errand performed without authorization; mercy carried in secrecy under a tyrant's prohibition; what a healer does when the law has denied the patient — the commission accepted without permission because permission was not available.)*
+
+### Quest API Stub (Cycle 5)
+
+```
+Act I — Oddrun's House
+activateNode: ODD
+type: skill_check
+scene: "Oddrun, Atli's sister, has heard that Borgny is in labor and cannot
+  deliver — a labor that is killing her. Atli has forbidden Oddrun to leave
+  the estate. He has forbidden it because Oddrun is Gunnar's secret love
+  and Gunnar has been executed. The prohibition is punitive, not administrative.
+  Oddrun has saddled her horse. She needs someone to ride with her through
+  the murk-wood."
+prompt: "Insight DC 12: understand the nature of the errand before accepting
+  it — this is a healing commission under a specific personal prohibition;
+  the errand is not technically illegal but is specifically prohibited for
+  this specific woman; the Fighter who rides with her is riding in violation
+  of a stated political prohibition, not a law."
+failText:    "You understand the commission but not its context. You ask
+              questions that cost twenty minutes."
+successText: "You understand. You mount. The murk-wood is two hours east."
+grantItem:   "Healer's Passage — Oddrun's authorization to travel tonight"
+checkPassFlag: oddrunCommissionUnderstood
+
+Act II — The Estate Gate
+activateNode: ODD
+type: skill_check
+scene: "Atli's estate gate. A guard who knows Oddrun is not permitted to
+  leave after dark. He is following a direct order from Atli himself.
+  He is not hostile. He is enforcing exactly what he was told to enforce."
+prompt: "Deception DC 13: name a purpose for the departure that falls
+  outside the prohibition's stated scope — Atli prohibited Oddrun from
+  traveling; he did not prohibit a healer responding to a medical summons
+  in the healer's professional capacity."
+failText:    "He holds you both for morning. Borgny has the night."
+successText: "He logs: medical summons, healer's capacity. He is uncertain
+              but the category distinction gives him something to record."
+checkPassFlag: gateEscaped
+
+Act III — The Murk-Wood
+activateNode: ODD
+type: hybrid
+scene: "The murk-wood road. Two of Atli's riders were alerted by the gate
+  log and are on the road. They have authority to return Oddrun to the
+  estate. They know what the medical exemption claim will look like in
+  the morning accounting."
+prompt: "Persuasion DC 13: argue that turning back a healer from an active
+  labor emergency is a prohibited act under the old medical sanctuary
+  conventions — Atli's prohibition applies to Oddrun's personal travel,
+  not to the healer's commission in progress."
+failText:    "Combat: 2 riders, AC 12, HP 16. Stop at serious injury."
+combat:
+  enemies: 2
+  AC: 12
+  HP: 16
+  description: "Atli's riders — stop at first serious injury"
+  failText:    "Oddrun is returned. The errand is over."
+  passText:    "One rider falls back. The other lets the road clear."
+checkPassFlag: woodRoadCleared
+
+Act IV — Borgny's Hall
+activateNode: LYG
+type: skill_check
+scene: "Borgny's hall. The labor has been in difficulty since midday.
+  Oddrun begins the healing songs immediately. A servant who recognizes
+  Oddrun asks why she is here — the question is innocent but could reach
+  Atli's people by morning."
+prompt: "Persuasion DC 11: ensure the servant does not report Oddrun's
+  presence before dawn — not by threat, but by naming the service being
+  performed: the woman who refused to come would not be remembered kindly
+  in this house."
+failText:    "The servant reports at dawn. The return journey is contested."
+successText: "The servant understands. The hall closes around Oddrun's work."
+checkPassFlag: hallSilenced
+
+Act V — The Return
+activateNode: ODD
+type: skill_check
+scene: "Dawn. Borgny has delivered. Two healthy children. Oddrun says
+  nothing about the cost of the errand. She rides back in silence.
+  At the estate gate the guard who let her out is being questioned by
+  Atli's hall officer. He is maintaining the medical exemption story.
+  The hall officer wants your account."
+prompt: "Composure DC 12: confirm the medical commission account without
+  adding anything that makes the guard's version harder to hold — the
+  simplest true account is the most defensible one."
+failText:    "Your account diverges from the guard's. The hall officer
+              notes the discrepancy. Atli hears by evening."
+successText: "Your account is the guard's account. The hall officer has
+              a log that reads clean. Oddrun passes the gate in silence.
+              You receive Borgny's Gratitude Token — pressed into your
+              hand by Borgny's husband as you passed his door on the
+              way south."
+grantItem:   "Borgny's Gratitude Token"
+checkPassFlag: returnSuccessful
+activateMissionBit: froOddrunComplete
+```
+
+---
+
+*FRO-05 complete. 2026-06-03.*
+
+---
+
+## Cycle 6: The Decoy at the River
+
+*(Theme differentiation: Avoiding FRO cycles 1-5. New theme: the warning that arrives after the decision is already made; the counter-message carried knowing it may be too late; the act of carrying that is honest even when the message cannot undo what has already been decided.)*
+
+### Quest API Stub (Cycle 6)
+
+```
+Act I — Gudrun's Warning
+activateNode: ATL
+type: skill_check
+scene: "Atli's hall, night before the feast. Gudrun has found the altered
+  runes on the invitation she sent to her brothers — Atli's agent changed
+  the warning-runes she inscribed to invitation-runes. Her brothers are
+  already riding. She gives the Fighter the wolf-hair ring: a counter-message.
+  The ring tells Gunnar that danger is ahead and Gudrun's invitation is
+  not what it appears."
+prompt: "Insight DC 12: understand the ring's counter-message before
+  carrying it — the wolf-hair ring is a specific code between Gudrun and
+  Gunnar; it does not say turn back; it says your sister is not responsible
+  for what you are riding into."
+failText:    "You understand the ring as a warning but not as a specific
+              message from sister to brother."
+successText: "The ring says: the invitation was altered; I knew nothing;
+              I send this so you know who is responsible."
+grantItem:   "The Wolf-Hair Ring"
+checkPassFlag: ringMeaningUnderstood
+
+Act II — The River Crossing
+activateNode: HKL
+type: skill_check
+scene: "The river where Atli's messenger met Gudrun's brothers and delivered
+  the altered invitation. The Nibelungs are on the near bank; they have
+  received the invitation. One of Gudrun's brothers' wives is warning them
+  not to go — she has dreamed the feast ends in blood. They are debating."
+prompt: "Persuasion DC 13: deliver the wolf-hair ring to Gunnar directly
+  without giving Atli's watchers on the far bank reason to intervene —
+  frame the ring delivery as a bride-gift from Gudrun for the feast."
+failText:    "Atli's watcher crosses. The ring is confiscated before it
+              reaches Gunnar."
+successText: "Gunnar reads the ring. He holds it. He knows what it says.
+              He rides toward Atli's hall anyway."
+takeItem:    "The Wolf-Hair Ring"
+checkPassFlag: ringDelivered
+
+Act III — The Road
+activateNode: HKL
+type: skill_check
+scene: "The road to Atli's hall. Gunnar has received the ring and
+  is riding anyway. Hogni says: if Gudrun could have stopped this,
+  she would have stopped us at the river, not sent a ring. He is right.
+  A warrior among Gunnar's company is asking why they continue if the
+  warning was clear."
+prompt: "Persuasion DC 12: name why the brothers ride on despite the
+  warning — honor requires it; the invitation was sent to them under
+  Gudrun's name; to not answer is to refuse their sister; they know
+  what they are riding into and that is not the same as not going."
+failText:    "The warrior's question spreads. Two men fall back."
+successText: "The company holds. The warrior accepts the answer. They
+              ride."
+checkPassFlag: companyHeld
+
+Act IV — Atli's Gate
+activateNode: ATL
+type: skill_check
+scene: "Atli's hall gate. Gudrun stands at the gate and warns them to
+  their faces: turn back. The feud is unambiguous at this moment. A
+  gate officer is watching and will report whether the brothers
+  received an active warning at the gate. Gudrun is trying to
+  establish a clean record: she warned them."
+prompt: "Composure DC 11: witness the warning without intervening —
+  the brothers must make their choice and Gudrun must make her record;
+  the Fighter's role is to carry an honest account of what was said
+  at this gate, not to change the decision."
+failText:    "You speak. The gate officer turns to you for your account."
+successText: "You are a witness. Gudrun warned them. They entered. The
+              feast is what follows."
+checkPassFlag: gateWitnessed
+
+Act V — The Account
+activateNode: ATL
+type: skill_check
+scene: "After the feast. Gudrun needs the witness account carried north —
+  her brothers walked in knowing; she warned them at the gate and the
+  river; she did not order the feast; the wolf-hair ring is her only
+  surviving evidence that she tried to prevent what happened. The account
+  must reach a neutral record before Atli's version becomes the only one."
+prompt: "History DC 12: carry the account to Weimar — the record of
+  the warning given twice and received twice and not acted on; the
+  archive category: Warning Records — Counter-Messages Delivered After
+  the Decision; the clean record that the woman who did not order the
+  feast needed to exist."
+failText:    "Filed under Political Documents — Atli's campaign records."
+successText: "Sweelinck creates: Warning Records — Counter-Messages
+  Delivered After the Decision; the account of a warning received and
+  not acted on; filed under the person who sent the warning, not the
+  person who received it. You receive the Warning Witness Record."
+grantItem:   "Warning Witness Record"
+checkPassFlag: accountDelivered
+activateMissionBit: froDecoyComplete
+```
+
+---
+
+*FRO-06 complete. 2026-06-03.*
+
+---
+
+## Cycle 7: Signy's Second Child
+
+*(Theme differentiation: Avoiding FRO cycles 1-6. New theme: the mother who sends her children to be tested knowing some will fail; the carrier of the report that returns to the woman who ordered the test; what is owed to the mother who demanded more than mercy asked for.)*
+
+### Quest API Stub (Cycle 7)
+
+```json
+{
+  "quest_id": "FRO-07",
+  "title": "Signy's Second Child",
+  "cycle": 7,
+  "book": "FRO — Volsunga Saga",
+  "token": "Signy's Report",
+  "route": ["SIG", "VLN", "WM"],
+  "theme": "The mother who sends her children to the test knowing some will fail; the carrier of the report back to the woman who ordered the test; the archive holds the record of what a mother demanded and what the demand cost",
+  "archive_category": "Maternal Commission Records — Tests Ordered by Parents Who Required More Than the Children Could Provide; The Report Carried to the Woman Who Set the Terms",
+  "questComplete": true,
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "SIG",
+      "activateNode": "SIG",
+      "type": "skill_check",
+      "scene": "Signy's hall. She is Volsung's daughter, married to King Siggeir who killed her father and brothers; her son Sinfjotli is her last attempt to raise a man who can survive the test. She gives the Fighter a sealed note: carry this to Sigmund in the forest and give it to him after the test. The note says: the child passed or the note will not arrive.",
+      "skillCheck": {
+        "skill": "Insight",
+        "dc": 12,
+        "prompt": "Understand what you are carrying — the note arrives only if the child survives the test; if you carry it back to Signy it means the child failed; the commission is sealed: you will either deliver north to Sigmund or south to Signy.",
+        "failText": "You understand the commission mechanically.",
+        "passText": "The note goes north if the child passes and comes back south if he fails. The carrier is the report."
+      },
+      "grantItem": "Signy's Report Note",
+      "checkPassFlag": "fro7Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "VLN",
+      "activateNode": "VLN",
+      "type": "skill_check",
+      "scene": "The forest where Sigmund tests. The first son failed — Sigmund killed him for showing fear. Sinfjotli does not flinch. Sigmund says: this one can stay. He hands the sealed note back to the Fighter to carry north — the note goes to the archive at Sigmund's direction, not to Signy.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 11,
+        "prompt": "Understand why Sigmund redirects the note to the archive rather than back to Signy — the note is evidence of what Signy required; it should not return to its sender where it can be destroyed; it belongs in a neutral record.",
+        "failText": "You carry the note south as instructed.",
+        "passText": "Sigmund gives the note to you with a different destination: north, to the archive, not back to Signy. The record of what she required belongs somewhere she cannot close it."
+      },
+      "checkPassFlag": "fro7Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "VLN",
+      "activateNode": "VLN",
+      "type": "skill_check",
+      "scene": "Signy's agents are on the forest road — she sent watchers to know what the test revealed. A watcher has seen the note redirected north and is moving to recover it.",
+      "skillCheck": {
+        "skill": "Stealth",
+        "dc": 12,
+        "prompt": "Leave the forest road before the watcher can cut off the northern path.",
+        "failText": "The watcher intercepts at the forest edge. The note's destination is contested.",
+        "passText": "The watcher takes the south road to report. You take the north road with the note."
+      },
+      "checkPassFlag": "fro7Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "VLN",
+      "activateNode": "VLN",
+      "type": "skill_check",
+      "scene": "Northern road. A Norse trader who knows Signy's family by reputation. He has heard there is a document from the forest test. He wants to know if the second child survived — for him it is a story question, but knowing the answer requires telling him what you are carrying.",
+      "skillCheck": {
+        "skill": "Composure",
+        "dc": 11,
+        "prompt": "Answer without confirming the document's content — you carry a sealed note whose destination is the archive; you are not the note's author and its contents are not yours to disclose.",
+        "failText": "You confirm the child survived. He spreads the story. Signy hears the report before the note reaches the archive.",
+        "passText": "You carry a sealed note north. He lets you continue."
+      },
+      "checkPassFlag": "fro7Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "activateNode": "WM",
+      "type": "skill_check",
+      "scene": "Archivus Sweelinck reads the note. 'A mother sent her children to be tested and one did not return.' He pauses. 'She set the terms herself.' He looks up. 'What category receives the test result of a mother's commission?'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Name the archive category: the record of what a mother required; the test set by the woman who sent the children; the child who failed is not in this document — the document is evidence of the terms she imposed; the archive holds what Signy demanded, not what she suffered.",
+        "failText": "Filed under Family Records — maternal lineage. Cross-reference to Volsung story.",
+        "passText": "Sweelinck writes: 'Maternal Commission Records — Tests Ordered by Parents Who Required More Than the Children Could Provide; the report carried to the archive rather than to the mother who set the terms; what Signy required is the record; what it cost is the context.' You receive the Maternal Commission Archive Record."
+      },
+      "takeItem": "Signy's Report Note",
+      "grantItem": "Maternal Commission Archive Record",
+      "checkPassFlag": "fro7Act5Passed",
+      "activateMissionBit": "froSignyComplete"
+    }
+  ]
+}
+```
+
+---
+
+*FRO-07 complete. 2026-06-03.*
