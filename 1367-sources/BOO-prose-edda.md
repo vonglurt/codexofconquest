@@ -846,3 +846,234 @@ You have a small clay vessel in your belt-pouch — you don't know when it got t
 *quest-map.md: append HNJ to Location Grid.*
 
 *books.md: mark BOO [x].*
+
+---
+
+## Cycle 3 — *Loki's Capture*
+
+**Archive category:** Net Records — The First Net, Made to Catch One Fish
+
+**What this angle reveals:** Cycles 1-2 were about grief's limits and the vigil at the extraction point. This angle reveals the invention forced by necessity: when the gods needed to catch Loki hiding as a salmon in a waterfall, no net existed. They invented one. The net's design was derived from the shadow it would cast and the salmon's escape angles. It must reach the waterfall without Loki seeing it coming. The Fighter carries it through a northern port where Loki's informants watch the cargo.
+
+---
+
+**THE TOKEN: `lokis_capture_net`** — The first net ever made, woven by the gods specifically to catch a single salmon in a specific waterfall. The mesh pattern is unlike anything in use before this event — it was derived from the shape of the gaps a salmon could pass through. The net must arrive at the waterfall from the correct angle and without advance notice. Loki's informants at settlements along the road have been watching for unusual cargo.
+
+---
+
+```json
+{
+  "quest_id": "BOO-03",
+  "title": "Loki's Capture",
+  "source": "Prose Edda — Snorri Sturluson (Skáldskaparmál / Gylfaginning)",
+  "cycle": 3,
+  "book": "BOO",
+  "source_episode": "Loki hides as a salmon; the gods invent the net; the carrier must reach the waterfall without advance notice",
+  "theme": "The necessary invention: the tool that did not exist until the specific problem required it; carried in secret because its purpose announces itself",
+  "activateNode": "BOO",
+  "token": {
+    "id": "lokis_capture_net",
+    "name": "The First Net",
+    "description": "The first net ever made — woven to catch one salmon in one waterfall. The mesh pattern reveals its purpose. Must arrive at the waterfall from the correct upstream angle without Loki's informants knowing it is coming. Loki's salmon-form cannot see through water in all directions simultaneously.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["BOO", "BK", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "BOO", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "The net arrives from upstream of the waterfall, not downstream. Downstream Loki sees through the water before the net is in position. Understand the approach angle before accepting the commission."},
+    {"act": 2, "node": "BOO_to_BK", "type": "skill_check", "dc": 12, "skill": "Stealth", "prompt": "The net is large and its mesh pattern is unlike anything used in ordinary fishing. Carry it past the settlement road without Loki's watchers identifying what it is and why it is going north."},
+    {"act": 3, "node": "BK", "type": "combat", "dc": 13, "skill": "Persuasion", "enemies": "2x salmon merchant's dock agents, AC 11, HP 17", "prompt": "A Birka salmon merchant has recognized the net's design and is about to send word north. Stop him before the message leaves the dock. The net's purpose is not a secret for anyone south of the waterfall."},
+    {"act": 4, "node": "BK_to_WM", "type": "skill_check", "dc": 12, "skill": "Composure", "prompt": "A fisherman on the road asks about the unusual mesh pattern. Cover the net's purpose without lying about its design. The fisherman is curious, not hostile. Say enough and walk."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck examines the mesh pattern. The design was derived from the gaps a salmon could not pass through. Without this net, no net. Net Records opens."}
+  ],
+  "archiveCategory": "Net Records — The First Net, Made to Catch One Fish",
+  "sweelinckNote": "The net was the necessary invention. Without the new tool, Loki remained where he was. Everything after Loki's binding required the net to exist first. This is the first net."
+}
+```
+
+---
+
+## Cycle 4 — *The Rune-Learning*
+
+**Archive category:** Vigil Evidence Records — The Horn from the Nine Days on the Tree
+
+**What this angle reveals:** Cycles 1-3 were about grief, maintenance, and the necessary invention. This angle reveals the physical evidence of the Hávamál's central event: Odin hung on Yggdrasil for nine days and nights. The well-keeper at Mimir's well kept the horn Odin held during the vigil — empty now, but the interior still holds the residue of the water he was given when the vigil was done. The residue is the evidence: Mimir's water has a specific quality that cannot be faked. A Venetian scholar of ancient materials can verify it before the horn is filed.
+
+---
+
+**THE TOKEN: `vigil_horn`** — The horn Odin held during the nine days on Yggdrasil: empty, cold, the interior showing a thin pale residue from the well-water at the bottom of the tree. The evidence that the vigil happened as described — not because of the horn's material (ordinary antler) but because of what is still on its inner surface. Must be carried without rinsing.
+
+---
+
+```json
+{
+  "quest_id": "BOO-04",
+  "title": "The Rune-Learning",
+  "source": "Prose Edda — Snorri Sturluson (Hávamál reference / Gylfaginning)",
+  "cycle": 4,
+  "book": "BOO",
+  "source_episode": "Odin on Yggdrasil, nine days and nights; the horn from Mimir's well, the residue still on the inner surface",
+  "theme": "The physical evidence of an unwitnessed vigil; the residue that cannot be faked and must not be disturbed",
+  "activateNode": "BOO",
+  "token": {
+    "id": "vigil_horn",
+    "name": "Odin's Vigil Horn",
+    "description": "The horn from the nine days: empty, cold, thin pale residue of Mimir's well-water on the inner surface. Ordinary antler, extraordinary contents. The residue is the evidence — it cannot be faked and must not be rinsed. A Venetian scholar can verify it before archiving.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["BOO", "VEN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "BOO", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "The horn's value is in its unrinsed state. The residue on the inner surface is the evidence. Understand the handling requirement before the road. Do not tip the horn."},
+    {"act": 2, "node": "BOO_to_VEN", "type": "skill_check", "dc": 12, "skill": "Stealth", "prompt": "A scholar traveling the same road denies the nine-days account on theological grounds. The horn becomes an argument if identified. Carry it as an ordinary traveler's horn and let the argument continue without the object."},
+    {"act": 3, "node": "VEN", "type": "combat", "dc": 13, "skill": "Insight", "enemies": "2x collector's agents, AC 11, HP 17", "prompt": "The Venetian scholar wants to verify the residue with a chemical process that will destroy it. His testing method is wrong for what must be preserved. Propose visual examination before the agents interrupt the negotiation."},
+    {"act": 4, "node": "VEN_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "The scholar's positive identification means the horn is now controversial in northern religious circles. Someone on the road wants to discuss what it proves. Hold the horn without becoming party to the debate."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck tilts the horn toward the lamp and reads the residue. The well-water is distinct from any other. The nine days happened as described. Vigil Evidence Records opens."}
+  ],
+  "archiveCategory": "Vigil Evidence Records — The Horn from the Nine Days on the Tree",
+  "sweelinckNote": "The residue on the inner surface is from Mimir's well. It cannot be faked. The nine days happened. That is what this horn is."
+}
+```
+
+---
+
+## Cycle 5 — *The Bound Fenrir*
+
+**Archive category:** Binding Records — The Thread from the Ribbon That Held the Wolf
+
+**What this angle reveals:** Cycles 1-4 were about objects that enabled or evidenced divine acts. This angle reveals the most technically impossible of them: Gleipnir, the ribbon that bound Fenrir. Iron chains failed twice. The dwarves made Gleipnir from six impossible things — a cat's footstep, a mountain's roots, a fish's breath, a bird's spittle, a woman's beard, the sinews of a bear. The resulting ribbon looks like silk and holds like nothing. Tyr placed his hand in Fenrir's mouth as a pledge and lost it. A loose thread cut from Gleipnir when the binding was done is the archive's record of the impossible. It must be authenticated in Constantinople before filing.
+
+---
+
+**THE TOKEN: `gleipnir_fragment`** — A loose thread from Gleipnir, cut free when the binding was done, kept by Tyr. Finer than silk, stronger than iron. Does not look like what it is. The evidence that the impossible binding succeeded. A Byzantine scholar of ancient materials can verify the thread's properties without testing its strength — demonstrating the strength is not the commission.
+
+---
+
+```json
+{
+  "quest_id": "BOO-05",
+  "title": "The Bound Fenrir",
+  "source": "Prose Edda — Snorri Sturluson (Gylfaginning)",
+  "cycle": 5,
+  "book": "BOO",
+  "source_episode": "Gleipnir — the ribbon from six impossible things; Tyr's hand in Fenrir's mouth; the thread cut free from the binding",
+  "theme": "The evidence of the impossible binding; the thread that looks like nothing and is the strongest thing in the record",
+  "activateNode": "BOO",
+  "token": {
+    "id": "gleipnir_fragment",
+    "name": "Gleipnir Thread",
+    "description": "A loose thread from Gleipnir, the binding ribbon: finer than silk, stronger than iron, made from six impossible materials. Cut free when the binding was done. Kept by Tyr. Does not look like what it is. Demonstrating its strength is not the commission — its value is documentary.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["BOO", "CON", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "BOO", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "The thread does not look like what it is. Do not try to demonstrate its strength to anyone on the road. The commission is to file it as evidence, not to prove it to skeptics. Understand this before Constantinople."},
+    {"act": 2, "node": "BOO_to_CON", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "At the road crossing, a scholar of divine binding recognizes the thread's description and wants to acquire it for study. He cannot have it. Explain the commission without describing the thread's specific properties."},
+    {"act": 3, "node": "CON", "type": "combat", "dc": 13, "skill": "Insight", "enemies": "2x collector's agents, AC 12, HP 18", "prompt": "A Byzantine scholar wants to perform a tensile test that would demonstrate the thread's strength. The test destroys it as an archival object — once tested it becomes a demonstration, not a record. Recognize the difference and hold the thread through the collector's arrival."},
+    {"act": 4, "node": "CON_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "Someone on the road asks how strong Gleipnir is. The answer is: strong enough to hold Fenrir. The fragment is not for demonstration. Say so without contempt."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck holds the thread up to the lamp. It looks like nothing. It held the wolf. Binding Records opens."}
+  ],
+  "archiveCategory": "Binding Records — The Thread from the Ribbon That Held the Wolf",
+  "sweelinckNote": "The thread looks like silk. It is stronger than iron. It held Fenrir. The archive notes this without testing it, because testing it would change what it is."
+}
+```
+
+---
+
+## Cycle 6 — *Draupnir's Return*
+
+**Archive category:** Divine Correspondence Records — The Ring That Came Back From Hel
+
+**What this angle reveals:** Cycles 1-5 were about the Prose Edda's instruments and evidence. This angle reveals the one object that crossed back from Hel and returned to the living world: Draupnir, the gold ring Odin placed on Baldr's pyre. Hermoðr carried it back after Hel refused to release Baldr. The ring is cold in a specific way that is different from ordinary cold — the cold of Hel's hand. Odin received it. But before it was filed in the archive, its Hel-origin needed authentication. The ring makes eight equal copies of itself every ninth night. By the time the Fighter carries it to Rome for verification, it has already made one set.
+
+---
+
+**THE TOKEN: `draupnir`** — Draupnir: the gold ring returned from Hel. Cold from Hel's hand in a way that cold storage cannot replicate. Makes eight equal rings every ninth night — by now there are nine. The original is the coldest. Must reach Rome for authentication of the Hel-origin properties before archiving. The eight copies make the carrier look like a gold thief at every checkpoint.
+
+---
+
+```json
+{
+  "quest_id": "BOO-06",
+  "title": "Draupnir's Return",
+  "source": "Prose Edda — Snorri Sturluson (Gylfaginning)",
+  "cycle": 6,
+  "book": "BOO",
+  "source_episode": "Hermoðr's ride to Hel; Draupnir returned; the ring cold from Hel's hand; eight equal copies made since Odin received it",
+  "theme": "The object that crossed the border between Hel and the living world; the cold that is the evidence; the copies that complicate every checkpoint",
+  "activateNode": "BOO",
+  "token": {
+    "id": "draupnir",
+    "name": "Draupnir",
+    "description": "The gold ring returned from Hel: cold from Hel's hand, not from temperature. Makes eight equal rings every ninth night — there are now nine total. The original is the coldest. Must be authenticated at Rome for Hel-origin cold. The eight copies make every checkpoint a conversation.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["BOO", "RME", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "BOO", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "The ring makes eight equal copies every ninth night. By Rome there will be nine rings. The original is identifiable by specific cold — colder than the others. Understand which ring is the original before the copies multiply further."},
+    {"act": 2, "node": "BOO_to_RME", "type": "skill_check", "dc": 12, "skill": "Composure", "prompt": "At the Alpine checkpoint, nine equal gold rings look like theft. The ring's self-copying property is the explanation — and it sounds like a lie. Explain it simply and hold the position while the checkpoint officer thinks."},
+    {"act": 3, "node": "RME", "type": "combat", "dc": 12, "skill": "Insight", "enemies": "2x gold thieves, AC 12, HP 19", "prompt": "Gold thieves tracked the ring from the Alpine crossing. At Rome they arrive while the authentication scholar is reading. Recognize them for what they are before they reach the table where the rings are laid out."},
+    {"act": 4, "node": "RME_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "Someone on the road asks if Baldr will return. The ring's return was not Baldr's return. Hold the distinction without elaborating beyond what the ring actually is."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck holds the original ring. It is cold in a specific way. He notes the specific cold. Divine Correspondence Records opens."}
+  ],
+  "archiveCategory": "Divine Correspondence Records — The Ring That Came Back From Hel",
+  "sweelinckNote": "Baldr sent the ring back. He could not come with it. The ring is cold in a specific way. The archive notes the specific cold."
+}
+```
+
+---
+
+## Cycle 7 — *The Golden Pieces*
+
+**Archive category:** Post-Ragnarök Records — The Names That Survived the Fire
+
+**What this angle reveals:** The Prose Edda ends with the world rebuilt after Ragnarök: two gods walking in new grass, finding the golden game-pieces the Aesir scattered during their games. Each piece has a name engraved on it — not just a game token but a record that the name the piece carries survived the fire. One piece has entered the world's trade networks via a seafarer and reached London, where a gold merchant has it valued at its weight. It will be melted down before the archive can receive it. The Fighter recovers it.
+
+---
+
+**THE TOKEN: `golden_game_piece`** — A gold game-piece from the Aesir's games, found in new grass after Ragnarök and sold by a seafarer into the trade networks. A name is engraved on one face. The piece is not remarkable to look at — it is a gold disk, slightly larger than a coin, the inscription worn but legible. What the inscription carries is the record that the name survived. A London gold merchant does not know this. He is about to melt it.
+
+---
+
+```json
+{
+  "quest_id": "BOO-07",
+  "title": "The Golden Pieces",
+  "source": "Prose Edda — Snorri Sturluson (Gylfaginning — the world after Ragnarök)",
+  "cycle": 7,
+  "book": "BOO",
+  "source_episode": "After Ragnarök — two gods in new grass, finding the golden game-pieces; one piece reached London via trade",
+  "theme": "Each piece is a name; each name that arrives changes what can be remembered; the archive receives the first piece",
+  "activateNode": "BOO",
+  "token": {
+    "id": "golden_game_piece",
+    "name": "Aesir Game-Piece",
+    "description": "Gold disk, slightly larger than a coin, one face engraved with a name from before the fire. Found in new grass after Ragnarök. Entered trade networks via a seafarer. Now at a London gold merchant who is about to melt it. The inscription makes it a record object, not a trade good.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["BOO", "LDN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "BOO", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "Each piece is a name. What the Fighter is carrying is not gold — it is the record that the name survived the fire. Understand this before London, where the merchant sees only gold weight."},
+    {"act": 2, "node": "BOO_to_LDN", "type": "skill_check", "dc": 12, "skill": "Stealth", "prompt": "The piece glows faintly where Ragnarök ash is still in the coastal water. Carry it through the Channel crossing without the glow drawing attention from anyone who would recognize what it means."},
+    {"act": 3, "node": "LDN", "type": "combat", "dc": 13, "skill": "Persuasion", "enemies": "2x merchant's guards, AC 12, HP 20", "prompt": "The gold merchant has the piece on his melt-day table. The inscription makes it a record object — under the archive's recognition protocol, a record object cannot be destroyed without first being offered to the permanent record. Name the protocol before the furnace is lit."},
+    {"act": 4, "node": "LDN_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "Someone on the road asks what Ragnarök was like. The piece is the record that something survived. That is enough. Say it once."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the name on the face. He is quiet for a moment. Post-Ragnarök Records opens. The Prose Edda series is complete."}
+  ],
+  "archiveCategory": "Post-Ragnarök Records — The Names That Survived the Fire",
+  "sweelinckNote": "One piece. One name. The games will resume when enough pieces arrive. The archive receives each one. This is the first.",
+  "questComplete": true
+}
+```
