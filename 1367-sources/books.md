@@ -442,7 +442,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | [x] | BHD | cuchulain | Cuchulain of Muirthemne — Lady Gregory | 1902 (Iron Age) | Irish Hero Epic | 132 | SEEDS COMPLETE 2026-06-03 — BHD-01–07 all vignettes done. New nodes: EMR (Emer's Hall, Ulster plain). See BHD-cuchulain.md. |
 | [x] | MSE | canterbury-tales | The Canterbury Tales — Geoffrey Chaucer | c.1390 | Medieval Stories | 1688 |
 | [x] | SDQ | rob-roy | Rob Roy — Sir Walter Scott | 1817 (1715 setting) | Scottish Adventure | 370 | SEEDS COMPLETE 2026-06-03 — SDQ-01–07 all vignettes done. Memory-processed (source .txt not read). New nodes: OBH, GLA, ABF, GLN, LLM, EDI. See SDQ-rob-roy.md. |
-| [x] | FCO | vision-of-piers-plowman | Piers Plowman — William Langland | c.1370–1386 | Allegorical Poem | 265 |
+| [x] | FCO | vision-of-piers-plowman | Piers Plowman — William Langland | c.1370–1386 | Allegorical Poem | 265 | SEEDS COMPLETE 2026-06-03 — FCO-01–07 all vignettes done. MGF already in Location Grid. No new nodes. See FCO-vision-of-piers-plowman.md. |
 
 ### Norse & Scandinavian
 

@@ -652,3 +652,235 @@ activateMissionBit: fcoFragmentsComplete
 ---
 
 *Cycle 2 complete. Mark `[x]` for FCO-vision-of-piers-plowman in books.md.*
+
+---
+
+## Cycle 3 — *Piers's Pilgrimage Directions*
+
+**Archive category:** Pilgrimage Direction Records — The Route to Truth That Goes Through the Interior
+
+**What this angle reveals:** Cycles 1-2 were about the Pardon — the document, the corruption around it, the fragments reassembled. This angle enters what came before: when the folk on the field asked Piers how to find Truth, Piers gave them detailed pilgrimage directions. Not to a place — the directions are entirely interior: go past Pride (you will know it because it is a steep cliff and everyone on it is looking down), through Meekness, cross the brook of Be-Buxom-in-Speech, keep to the winding road of Conscience, and so on through the commandments and the virtues. The directions are a map of the moral interior. The archive wants the directions as a literal document: the specific sequence, the named stations, the exact instructions at each junction. Not as allegory — as directions. Someone must have written them down.
+
+---
+
+**THE TOKEN: `piers_pilgrimage_directions`** — A parchment written in Will's hand during the dream, attempting to record Piers's directions exactly as spoken: each station named, each instruction given at each junction, the specific warnings at Pride and Covetousness, the final gate. The only literal transcription of directions that cannot be followed literally.
+
+---
+
+```json
+{
+  "quest_id": "FCO-03",
+  "title": "Piers's Pilgrimage Directions",
+  "source": "The Vision of Piers Plowman — William Langland (B-text, c.1370–80)",
+  "cycle": 3,
+  "book": "FCO",
+  "source_episode": "Piers gives the folk of the field detailed pilgrimage directions to Truth — interior stations named as geography; the only map to what the poem most wants",
+  "theme": "The interior route given literal form; the document that cannot be followed unless the follower already knows the way it describes",
+  "activateNode": "MGF",
+  "token": {
+    "id": "piers_pilgrimage_directions",
+    "name": "Piers's Pilgrimage Directions",
+    "description": "Parchment in Will's hand: each station named, each junction's instruction, warnings at Pride and Covetousness, the final gate. The only literal transcription of directions that cannot be followed literally.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["MGF", "BK", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "MGF", "type": "skill_check", "dc": 12, "skill": "Insight", "prompt": "Will hands over the parchment at the field's edge. He says: I wrote them as fast as I could while Piers spoke. They are accurate; they are also useless as directions unless you already understand what the stations mean. Understand before the road why the archive wants a document that cannot be practically used: the document is not a guide, it is evidence that the directions were given and received, and what the directions describe is a real sequence with a real destination that the poem insists is reachable."},
+    {"act": 2, "node": "MGF_to_BK", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "A Franciscan friar on the northern road wants the parchment to use in sermons as evidence that the pilgrimage to Truth is a defined interior route, not a general aspiration. His use is legitimate. The parchment travels to the archive first; he can request access after deposit."},
+    {"act": 3, "node": "BK", "type": "combat", "dc": 13, "skill": "Persuasion", "enemies": "Lady Mede's agent, AC 12, HP 20, dagger", "prompt": "A Lady Mede agent in Birka recognizes Will's handwriting on the parchment. Mede has an interest in suppressing any literal document of the route to Truth because the route's final gate specifically excludes Lady Mede's key. He approaches while you are at the market."},
+    {"act": 4, "node": "BK_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "Three days to Weimar. The parchment is in the case. The directions name Pride as a steep cliff where everyone is looking down. You have been on that cliff. Keep moving."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the directions from the beginning. He reads the station list. He reads the final gate's description. Pilgrimage Direction Records opens."}
+  ],
+  "archiveCategory": "Pilgrimage Direction Records — The Route to Truth That Goes Through the Interior",
+  "sweelinckNote": "The directions are accurate and cannot be used as directions unless the follower already understands what the stations mean. The archive holds them as evidence that such directions were given. The route exists. The archive cannot walk it for you."
+}
+```
+
+---
+
+## Cycle 4 — *The Daughters of God's Legal Debate*
+
+**Archive category:** Divine Legal Records — The Argument That Resolved Whether Mercy Was Lawful
+
+**What this angle reveals:** Cycle 3 was the route to Truth. This angle finds the legal dispute at the center of the poem's theological resolution: the debate between the Four Daughters of God — Truth, Righteousness, Peace, and Mercy — over whether Christ's Harrowing of Hell is lawful. Truth argues it violates the terms of the compact made at the Fall. Righteousness agrees. Peace argues that mercy and love create a higher law. Mercy agrees. The debate is resolved in Peace and Mercy's favor when the Harrowing occurs. The archive wants the legal brief: the argument that established whether mercy was permitted, in the form in which it was made, before the event it authorized.
+
+---
+
+**THE TOKEN: `daughters_legal_debate`** — The formal debate record: Truth's argument against the Harrowing (three points), Righteousness's brief, Mercy's counter-argument, Peace's resolution — each in its own section, in the order spoken, ending with the moment the gate opens. A legal brief for the most consequential ruling in the poem's universe.
+
+---
+
+```json
+{
+  "quest_id": "FCO-04",
+  "title": "The Daughters of God's Legal Debate",
+  "source": "The Vision of Piers Plowman — William Langland (B-text, c.1370–80)",
+  "cycle": 4,
+  "book": "FCO",
+  "source_episode": "The Four Daughters of God debate whether Christ's Harrowing of Hell is lawful — Truth and Righteousness argue against; Mercy and Peace argue for; the gate opens",
+  "theme": "The legal argument that established whether mercy was permitted; the brief that authorized the most consequential act in the poem",
+  "activateNode": "MGF",
+  "token": {
+    "id": "daughters_legal_debate",
+    "name": "Four Daughters of God — Legal Debate",
+    "description": "Formal debate record: Truth's three-point argument against, Righteousness's brief, Mercy's counter-argument, Peace's resolution. In the order spoken. Ends at the moment the gate opens.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["MGF", "VEN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "MGF", "type": "skill_check", "dc": 13, "skill": "Religion", "prompt": "Will hands over the debate transcript before the field dissolves. He says: I wrote it down during the dream. The debate happened before the Harrowing. The argument is in the order it was made. Understand before the road why the archive wants the legal form and not just the outcome: Truth's three points against the Harrowing are each valid within their framework; Peace's resolution overrides them not by refuting them but by establishing a higher framework; the archive holds the structure of that override."},
+    {"act": 2, "node": "MGF_to_VEN", "type": "skill_check", "dc": 13, "skill": "Persuasion", "prompt": "A Benedictine monk on the southern road wants to examine the debate record to settle a theological dispute in his house about whether the Harrowing was predestined or contingent on the argument's outcome. His question is not answerable from the document. The document shows the argument was made and resolved; whether it was ever in doubt is a different question that the archive cannot answer."},
+    {"act": 3, "node": "VEN", "type": "skill_check", "dc": 13, "skill": "Persuasion", "prompt": "A Venetian theologian who has been studying the relationship between law and mercy wants to compare the debate record with Byzantine theological texts on the same question. His comparison requires access to the original. The archive makes comparisons available after deposit. He wants to take the document to his scriptorium. It goes to Weimar first."},
+    {"act": 4, "node": "VEN_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "North from Venice, three days. The debate record is in the case. Truth made three valid points and was overruled. That is what the document contains. Keep moving."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads Truth's argument. He reads Peace's resolution. He notes the moment of the gate opening. Divine Legal Records opens."}
+  ],
+  "archiveCategory": "Divine Legal Records — The Argument That Resolved Whether Mercy Was Lawful",
+  "sweelinckNote": "Truth made three valid points within her framework. Peace's resolution overrides them by establishing a different framework. The archive holds both the points and the override. Truth's objections are still valid within their framework. The gate opened anyway."
+}
+```
+
+---
+
+## Cycle 5 — *Glutton's Tavern Bill*
+
+**Archive category:** Confession Evidence Records — The Bill Presented When Repentance Asked What Was Consumed
+
+**What this angle reveals:** Cycles 3-4 were about the poem's theological architecture. This angle enters its most vivid specific scene: Glutton's confession. Glutton sets out for church to make confession; Beton the Brewstress diverts him to the alehouse. He stays from six in the morning until vespers. The poem describes the company, what was consumed, the bets placed, the passing of urine from one person to another, the fighting, the singing, Glutton finally leaving and falling, being carried home by his wife, sleeping until Sunday, waking to make confession. The tavern bill — what was consumed by whom at whose expense — is a formal document. The archive wants the bill as a social record: not primarily evidence of sin, but a detailed inventory of a specific afternoon in fourteenth-century English life.
+
+---
+
+**THE TOKEN: `glutton_tavern_bill`** — The bill from Beton's alehouse for the day of Glutton's diversion from confession: itemized by person where possible, total by category, the portion charged against Glutton when he could no longer pay for others, Beton's mark at the bottom. A precise record of one afternoon.
+
+---
+
+```json
+{
+  "quest_id": "FCO-05",
+  "title": "Glutton's Tavern Bill",
+  "source": "The Vision of Piers Plowman — William Langland (B-text, c.1370–80)",
+  "cycle": 5,
+  "book": "FCO",
+  "source_episode": "Glutton sets out for church to confess; diverted to Beton the Brewstress's alehouse; spends the day in extended debauchery; the tavern bill is the record of the diversion",
+  "theme": "The diversion document; the record of a day spent not doing the thing the day was supposed to contain",
+  "activateNode": "MGF",
+  "token": {
+    "id": "glutton_tavern_bill",
+    "name": "Glutton's Tavern Bill",
+    "description": "Beton's alehouse bill: itemized by person where possible, categories totaled, Glutton's portion marked when he could no longer pay for others, Beton's mark at the bottom. One afternoon's record.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["MGF", "CON", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "MGF", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "Beton the Brewstress hands you the bill before the vision fades. She says: he tried to pay at the end but he had given too much away during the afternoon; I wrote down what was his when he stopped being able to track it. Understand before the road why the archive wants a tavern bill: the bill is not primarily a confession document — it is a social record, and it is precisely detailed about what fourteenth-century English tavern life contains."},
+    {"act": 2, "node": "MGF_to_CON", "type": "skill_check", "dc": 11, "skill": "Persuasion", "prompt": "A travelling monk who is writing a treatise on the sins wants the bill as a primary source for the chapter on Gluttony. His use is legitimate. The archive holds it for general access after deposit, which includes his access."},
+    {"act": 3, "node": "CON", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "A Byzantine courtier wants to purchase the bill as a curiosity — specifically as an example of how English commerce is documented at the tavern level. His interest is genuine but his offer would take the bill into a private collection. The archive is the right destination for a document that should remain accessible."},
+    {"act": 4, "node": "CON_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "West from Constantinople, three weeks. The bill is in the case. The afternoon it describes was entirely real within the poem's world. Keep moving."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the itemized list. He reads Beton's mark. He notes the format. Confession Evidence Records opens."}
+  ],
+  "archiveCategory": "Confession Evidence Records — The Bill Presented When Repentance Asked What Was Consumed",
+  "sweelinckNote": "The bill is specific. The archive notes it as social history as much as moral evidence. The afternoon is documented in the order things were consumed. Glutton confessed the next Sunday. The bill predates the confession by six days."
+}
+```
+
+---
+
+## Cycle 6 — *Need's Argument*
+
+**Archive category:** Necessity Doctrine Records — The Argument That Poverty Overrides the Law
+
+**What this angle reveals:** Cycles 3-5 covered the poem's pilgrimage, theology, and social observation. This angle finds the poem's most philosophically radical moment: near the end, the allegorical figure Need appears to Will and makes a sophisticated legal argument that necessity overrides natural law and civil law. Need argues: a hungry man who steals food commits no sin because his need suspends the prohibition. Need cites Temperance, Fortitude, and Justice as virtues that themselves depend on necessity — Temperance is only applicable where excess is possible; Fortitude only applies under threat; Justice is only meaningful in conditions of scarcity. Therefore necessity is prior to all of them. The argument is not refuted. The archive wants the argument in the form Need makes it — before Will falls asleep again and the Antichrist arrives.
+
+---
+
+**THE TOKEN: `needs_argument_transcript`** — Will's transcription of Need's argument: the opening claim (necessity overrides law), the three virtue examples, the specific citations from Roman legal tradition that Need uses without attribution, the conclusion. In the order spoken, without Will's commentary.
+
+---
+
+```json
+{
+  "quest_id": "FCO-06",
+  "title": "Need's Argument",
+  "source": "The Vision of Piers Plowman — William Langland (B-text, c.1370–80)",
+  "cycle": 6,
+  "book": "FCO",
+  "source_episode": "The allegorical figure Need appears to Will near the poem's end and argues that necessity overrides law — a sophisticated legal and theological argument that is not refuted before the Antichrist arrives",
+  "theme": "The argument that poverty is not a crime but a suspension of the conditions under which crime is possible; the doctrine the poem states and does not resolve",
+  "activateNode": "MGF",
+  "token": {
+    "id": "needs_argument_transcript",
+    "name": "Need's Argument Transcript",
+    "description": "Will's transcription of Need's argument: opening claim, three virtue examples, legal citations, conclusion. In the order spoken. Without Will's commentary.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["MGF", "RME", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "MGF", "type": "skill_check", "dc": 13, "skill": "Insight", "prompt": "Will hands over the transcript at the field's edge before Need dissolves. He says: I wrote it without my own thoughts in it because I did not know what I thought while he was speaking. Understand before the road why the archive wants Need's argument in particular: the argument is made by a figure who appears without invitation and leaves without refutation; whether the argument is correct is a question the poem does not answer; the archive holds arguments that the poem does not answer."},
+    {"act": 2, "node": "MGF_to_RME", "type": "skill_check", "dc": 13, "skill": "Persuasion", "prompt": "A Dominican friar on the road south wants to examine the argument to refute it for use in sermons against theft. His refutation is welcome; it is not in the transcript. The transcript is Need's argument as made. The friar can construct his refutation separately."},
+    {"act": 3, "node": "RME", "type": "skill_check", "dc": 14, "skill": "Persuasion", "prompt": "A church official at Rome wants to confiscate the transcript on the grounds that the argument, if circulated, will be used to justify theft. He is not wrong that it could be used this way. The archive holds arguments that can be used in multiple ways because the argument's existence is not contingent on its misuse."},
+    {"act": 4, "node": "RME_to_WM", "type": "skill_check", "dc": 12, "skill": "Composure", "prompt": "North from Rome, five days. The transcript is in the sealed wallet. The church exemption letter is attached. Need's argument is inside. The argument was not refuted before the Antichrist arrived. Keep moving."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the opening claim. He reads the three virtue examples. He reads the conclusion. He notes the citations. Necessity Doctrine Records opens."}
+  ],
+  "archiveCategory": "Necessity Doctrine Records — The Argument That Poverty Overrides the Law",
+  "sweelinckNote": "The argument was not refuted. The poem does not answer whether Need was correct. The archive holds the argument and the non-refutation together. The reader can construct the refutation. Need did not stay to hear it."
+}
+```
+
+---
+
+## Cycle 7 — *Conscience's Departure Oath*
+
+**Archive category:** Open Quest Records — The Oath Sworn Before the Journey Without a Known End
+
+**What this angle reveals:** Cycles 1-6 covered the poem from its corruption through its theology, social observation, philosophy, and legal architecture. This cycle closes at the poem's final image: Conscience, besieged in Unity/Holy Church by the Antichrist's forces, walks out alone. He cries "Grace!" He says he will go on a pilgrimage to find Piers Plowman again. He does not know where Piers is. He does not know when he will return. He does not say he will succeed. He swears only that he will search. The poem ends. The archive wants Conscience's sworn statement before departure — the oath that commits to a quest without knowing its destination, duration, or outcome. It is the last document in the book, and the archive holds it open.
+
+---
+
+**THE TOKEN: `conscience_departure_oath`** — Conscience's sworn statement dictated to the archive's scribe in the moment between the breach of Unity's gate and his first step: the oath to search for Piers Plowman, the acknowledgment that the destination is unknown, the commitment to cry "Grace" until someone answers. Sealed with Conscience's mark.
+
+---
+
+```json
+{
+  "quest_id": "FCO-07",
+  "title": "Conscience's Departure Oath",
+  "source": "The Vision of Piers Plowman — William Langland (B-text, c.1370–80)",
+  "cycle": 7,
+  "book": "FCO",
+  "source_episode": "Conscience walks out of besieged Unity alone, crying 'Grace', swearing to search for Piers Plowman — the poem's final image: a quest sworn before a destination known",
+  "theme": "The open quest; the oath without a known end; the commitment that cannot complete itself because its completion is what the poem is looking for",
+  "activateNode": "MGF",
+  "token": {
+    "id": "conscience_departure_oath",
+    "name": "Conscience's Departure Oath",
+    "description": "Sworn statement: oath to search for Piers Plowman, acknowledgment that destination is unknown, commitment to cry 'Grace' until someone answers. Conscience's mark. Dictated before the first step outside Unity's gate.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["MGF", "LDN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "MGF", "type": "skill_check", "dc": 12, "skill": "Insight", "prompt": "The archive's scribe is the only person present when Conscience walks out of Unity's gate. Conscience dictates the oath in the moment between leaving and moving. He seals it with his mark. He says: take it to Weimar. Understand before the road what makes this oath different from a commission: a commission has a destination; this oath has only a direction — outward, searching — and the archive holds it as an open file, not a completed one."},
+    {"act": 2, "node": "MGF_to_LDN", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "A Franciscan friar who has read the poem wants the oath for a church collection of formal spiritual commitments. His collection is genuine and well-curated. The archive holds the original of an open oath because it is still technically in progress — Conscience has not returned."},
+    {"act": 3, "node": "LDN", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "An English church official wants the oath categorized as a failed commitment — Conscience left and has not returned; the quest has not succeeded; this is abandonment of Unity, not a heroic departure. The archive categorizes documents by what they are, not by what the categorizer needs them to mean. The oath is open."},
+    {"act": 4, "node": "LDN_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "Three days to Weimar. The oath is in the sealed wallet. Conscience is searching somewhere. The poem ended. Keep moving."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the oath. He reads the acknowledgment that the destination is unknown. He marks the file: open. The archive holds it as an open file until Conscience returns or the search is formally concluded. Open Quest Records opens."}
+  ],
+  "archiveCategory": "Open Quest Records — The Oath Sworn Before the Journey Without a Known End",
+  "questComplete": true,
+  "sweelinckNote": "The file is open. Conscience swore and departed. The poem ended. Whether the quest succeeds is not in this file. The archive holds open quests because a quest that has not concluded is still a quest. This is the first entry."
+}
+```
+
