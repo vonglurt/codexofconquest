@@ -835,3 +835,234 @@ not an active accusation. The difference is location. Location is everything.*
 *quest-map.md: append AEG and RSS to Location Grid.*
 
 *books.md: mark RKV [x].*
+
+---
+
+## Cycle 3 — *Thor's Veil Pin*
+
+**Archive category:** Plan Execution Records — The Pin That Held the Veil Before Þrymr Turned
+
+**What this angle reveals:** Cycles 1-2 were about prophecy and the thing too dangerous to keep. This angle reveals the Eddic comedy at its hinge-point: Þrymskviða's plan to retrieve Mjölnir required Thor to hold still in a bridal veil while Þrymr conducted a feast. The plan nearly failed not at the beard but at the veil — it was slipping, and Þrymr was about to turn toward the bride, and the pin was at Loki's end of the table. The Fighter carried it down the table in the thirty seconds before Þrymr turned. The hammer came out. The plan worked. The pin is the evidence that the plan was not improvised.
+
+---
+
+**THE TOKEN: `thors_veil_pin`** — The bronze pin that secured Thor's bridal veil at Þrymr's hall. Loki kept it afterward as a curiosity. It is a small object with an outsized role in the record: the plan required the veil to hold, and the veil required the pin. Without the pin in the right position at the right moment, Þrymr sees the beard, and the hammer stays in Jötunheim.
+
+---
+
+```json
+{
+  "quest_id": "RKV-03",
+  "title": "Thor's Veil Pin",
+  "source": "Poetic Edda — Anon (Þrymskviða)",
+  "cycle": 3,
+  "book": "RKV",
+  "source_episode": "Þrymskviða — the bridal veil slipping, thirty seconds before Þrymr turns",
+  "theme": "The small physical object that made the large plan work; the evidence that the comedy was not improvised",
+  "activateNode": "RKV",
+  "token": {
+    "id": "thors_veil_pin",
+    "name": "The Bridal Veil Pin",
+    "description": "The bronze pin that secured Thor's veil at Þrymr's hall. Loki kept it. Without it in position at the right moment, Þrymr sees the beard. The hammer stays in Jötunheim. The plan fails. The pin is the evidence that the plan's timing was not improvised.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["RKV", "BK", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "RKV", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "Loki gives the pin with no explanation. Understand why a veil-pin is an archive object: the plan required exact timing; the pin is the evidence the timing was met. Accept the commission with that frame."},
+    {"act": 2, "node": "RKV_to_BK", "type": "skill_check", "dc": 12, "skill": "Athletics", "prompt": "A giant's kinsman on the road wants revenge for what happened at Þrymr's hall. He is not subtle about it and he is blocking the road. Get past him before the Birka authentication window closes."},
+    {"act": 3, "node": "BK", "type": "combat", "dc": 13, "skill": "Persuasion", "enemies": "1x Eddic scholar's authentication agent, AC 11, HP 17", "prompt": "A scholar at Birka is countersigning an official account of the Þrymskviða events that does not mention the veil-pin. His account will be the filed version unless the pin's presence is established first. Establish it before the agent's countersignature is pressed."},
+    {"act": 4, "node": "BK_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "Someone on the road retells Þrymskviða as pure comedy. The pin is not a punchline — it is what made the comedy work. Hold the distinction without correcting him. The archive has the record."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck holds the pin between two fingers. The plan required this to be in position. It was. Plan Execution Records opens."}
+  ],
+  "archiveCategory": "Plan Execution Records — The Pin That Held the Veil Before Þrymr Turned",
+  "sweelinckNote": "The plan required a pin at a precise moment. Loki provided it. The Fighter carried it. Þrymr never noticed the beard. The pin is the evidence that the plan was not improvised."
+}
+```
+
+---
+
+## Cycle 4 — *The Unanswered Question*
+
+**Archive category:** Secret Knowledge Records — Vafþrúðnir's Guess Before the Match
+
+**What this angle reveals:** Cycles 1-3 were about objects that mediated actions — a chip, a pin. This angle reveals Eddic epistemology: in Vafþrúðnismál, Odin contests the giant Vafþrúðnir in a wisdom-match and the last question Odin asks is unanswerable — "what did I whisper in Baldr's ear before the pyre?" Only Odin knows. The giant loses. But before the match, Vafþrúðnir was careful enough to carve his best guess on a bone and seal it in a stone box — to be opened if he lost, not to change the result, but to record that the question was not unknowable to everyone. The bone is in the ruin. Whether the giant guessed right, the archive does not open the box to find out.
+
+---
+
+**THE TOKEN: `vafthrudnir_bone`** — A carved bone fragment from Vafþrúðnir's ruined hall: the giant's sealed guess at what Odin whispered in Baldr's ear, carved before the contest and sealed in a stone box. Not Odin's answer — a giant's best attempt at an unanswerable question. Whether the guess is close to right is itself dangerous to know. The archive receives it sealed.
+
+---
+
+```json
+{
+  "quest_id": "RKV-04",
+  "title": "The Unanswered Question",
+  "source": "Poetic Edda — Anon (Vafþrúðnismál)",
+  "cycle": 4,
+  "book": "RKV",
+  "source_episode": "Vafþrúðnismál — the giant's sealed guess before the wisdom-match; the last question only Odin could answer",
+  "theme": "The question that cannot be answered and the guess that tried; the archive holds the attempt without opening the box",
+  "activateNode": "RKV",
+  "token": {
+    "id": "vafthrudnir_bone",
+    "name": "Vafþrúðnir's Sealed Bone",
+    "description": "Carved bone in a sealed stone box: the giant's guess at what Odin whispered in Baldr's ear, made before the contest as a precaution. Whether the guess is right is dangerous to know. Received sealed. Filed sealed. The question is the record.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["RKV", "VEN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "RKV", "type": "skill_check", "dc": 12, "skill": "Insight", "prompt": "The bone is not Odin's answer. It is a giant's guess at Odin's answer. The difference determines how it is filed. Understand the frame before the ravens notice the box is being carried."},
+    {"act": 2, "node": "RKV_to_VEN", "type": "skill_check", "dc": 12, "skill": "Stealth", "prompt": "Odin's ravens have been following this box since the ruin was opened. They are noting, not attacking. Carry the box without the ravens' attention registering it as significant. A closed box on an ordinary cart is not interesting."},
+    {"act": 3, "node": "VEN", "type": "combat", "dc": 13, "skill": "Persuasion", "enemies": "1x Venice scholar's assistant, AC 11, HP 17", "prompt": "A Venetian theologian wants to open the box before it is filed. He is writing a treatise on divine secrets. The bone's condition — sealed, unread — is part of its archive value. If he reads it and the guess is close to right, he will carry a dangerous fact for the rest of his life. Explain this without insulting his scholarship."},
+    {"act": 4, "node": "VEN_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "On the road, the Fighter begins to wonder what the answer is. The bone is in the box. The box is sealed. Hold the question without opening the box. The curiosity is part of the commission's difficulty."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck takes the box and does not open it. Vafþrúðnir guessed before the match. Whether he guessed right, the archive does not determine. Secret Knowledge Records opens."}
+  ],
+  "archiveCategory": "Secret Knowledge Records — Vafþrúðnir's Guess Before the Match",
+  "sweelinckNote": "Vafþrúðnir guessed before the match. We do not know if he guessed right. The archive does not open the box to find out. The question is the record."
+}
+```
+
+---
+
+## Cycle 5 — *The Runes' Origin*
+
+**Archive category:** Original Inscription Records — The Bark from the Nine Days on the Tree
+
+**What this angle reveals:** Cycles 1-4 were about objects that resulted from divine events. This angle reveals the source material itself: Odin hung on Yggdrasil for nine days and nine nights, wounded by a spear, looking down into the void, until the runes revealed themselves and he took them up screaming. What the world received was the runes in mind and mouth. What was left on the tree was the bark he cut when he inscribed the first runes — the original physical inscription, not the knowledge. The bark was preserved by the well-keeper at Mimir's well. It must be authenticated through a comparative scholar before the archive will accept it as origin material rather than imitation.
+
+---
+
+**THE TOKEN: `yggdrasil_bark_rune`** — A section of Yggdrasil's bark with Odin's first rune-cuttings: not copies, but the original inscriptions from the ash tree, made immediately after the nine days. The bark is dull silver-grey, thicker than ordinary bark, the cuts shallow and exact. The well-keeper at Mimir's well preserved it. A Byzantine scholar of ancient inscription systems at Constantinople can authenticate the difference between a direct bark inscription and a copy.
+
+---
+
+```json
+{
+  "quest_id": "RKV-05",
+  "title": "The Runes' Origin",
+  "source": "Poetic Edda — Anon (Hávamál)",
+  "cycle": 5,
+  "book": "RKV",
+  "source_episode": "Hávamál — Odin on Yggdrasil, nine days, the runes revealed; the first inscription on the bark",
+  "theme": "The origin material as distinguished from the knowledge: the physical inscription that proves the runes were not always known",
+  "activateNode": "RKV",
+  "token": {
+    "id": "yggdrasil_bark_rune",
+    "name": "Yggdrasil Bark Fragment",
+    "description": "A section of Yggdrasil's bark with Odin's first rune-cuttings: dull silver-grey, thicker than ordinary bark, the cuts shallow and exact. Original inscription, not copy. Preserved by the well-keeper at Mimir's well. Fragile — the inscriptions are on the inner surface.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["RKV", "CON", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "RKV", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "The bark is fragile and the inscriptions are on the inner surface. The commission requires protecting the physical substrate as much as the content. Understand this before the overland route."},
+    {"act": 2, "node": "RKV_to_CON", "type": "skill_check", "dc": 13, "skill": "Athletics", "prompt": "The bark section requires specific packing and physical care over sea and overland routes. The inscriptions are shallow and the bark is drier than it should be. Get it to Constantinople without the inner surface being exposed to salt air."},
+    {"act": 3, "node": "CON", "type": "combat", "dc": 13, "skill": "Persuasion", "enemies": "2x competing inscription collector's agents, AC 12, HP 18", "prompt": "A Byzantine scholar has a competing fragment he claims is also an original Yggdrasil inscription. His fragment is a copy — the grain direction and tool marks are wrong. Demonstrate the physical difference before his authentication closes. The collector's agents want the debate stopped."},
+    {"act": 4, "node": "CON_to_WM", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "A travelling Norse scholar at a road inn wants to borrow the bark to verify his translation. He means to make a copy without asking. Recognize the intent before handing it over."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck handles the bark with linen cloth. The nine days produced the runes. The bark is the nine days. Original Inscription Records opens."}
+  ],
+  "archiveCategory": "Original Inscription Records — The Bark from the Nine Days on the Tree",
+  "sweelinckNote": "Odin cut these when the runes were new. The tree held them for the nine days and then they were taken into the world. This bark is the nine days. Everything else is the world."
+}
+```
+
+---
+
+## Cycle 6 — *The Hammer Blessing*
+
+**Archive category:** Ritual Record — The Formula Spoken While the Hammer Was in the Air
+
+**What this angle reveals:** Cycles 1-5 revealed the Edda's objects and origins. This angle reveals the blessing practice that the Edda records: at Þrymr's hall, the priest carried Mjölnir to the "bride's" lap to consecrate the marriage. The specific formula he spoke while Mjölnir was in the air between his hands and the "bride's" reception — those words were recorded by Loki on a clay tablet immediately after, because Loki noticed the gap in the record-keeping. The formula is both a ritual instruction and a document of the exact moment before Thor picked the hammer up. The tablet is the straight account inside the comedy.
+
+---
+
+**THE TOKEN: `hammer_blessing_tablet`** — A clay tablet on which Loki recorded the consecration formula the priest spoke while holding Mjölnir toward the "bride" at Þrymr's hall: the specific liturgical words, the gesture, the placement. Written immediately after the event. The tablet is the record of the moment that was officially a comedy and practically a timing problem. A Roman scholar of pre-Christian blessing rites has been told about it and wants three days with it.
+
+---
+
+```json
+{
+  "quest_id": "RKV-06",
+  "title": "The Hammer Blessing",
+  "source": "Poetic Edda — Anon (Þrymskviða)",
+  "cycle": 6,
+  "book": "RKV",
+  "source_episode": "Þrymskviða — the priest's consecration formula, spoken while Mjölnir was in the air between two sets of hands",
+  "theme": "The straight record inside the comedy: the ritual formula that made the plan's timing work; the words spoken when the hammer was neither safe nor gone",
+  "activateNode": "RKV",
+  "token": {
+    "id": "hammer_blessing_tablet",
+    "name": "Loki's Blessing Tablet",
+    "description": "Clay tablet: the consecration formula the priest spoke while carrying Mjölnir to the bride's lap at Þrymr's hall. Specific words, gesture, placement. Written by Loki immediately after. The straight account of the moment that was officially a comedy. A Roman scholar of pre-Christian blessing rites wants three days with it.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["RKV", "RME", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "RKV", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "The tablet records the blessing formula, not the theft. What is being preserved is the ritual procedure — what the priest said and did in the gap between his hands and Thor's reach. Understand the frame before the Alpine crossing."},
+    {"act": 2, "node": "RKV_to_RME", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "At the Alpine border a customs officer classifies the clay tablet as a religious instrument in active use and moves to impound it for ecclesiastical review. It is not in active use. It is a historical record of a specific event. Name the distinction."},
+    {"act": 3, "node": "RME", "type": "combat", "dc": 13, "skill": "Insight", "enemies": "2x relic collector's agents, AC 12, HP 17", "prompt": "A Roman scholar of pre-Christian rites wants the tablet for three days. Three days misses the archive intake window. Recognize that he can read it at the archive — offer this arrangement before the collector's agents arrive and make the alternative worse."},
+    {"act": 4, "node": "RME_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "Someone on the road retells Þrymskviða as pure comedy. The tablet is the straight account. The blessing was spoken while the hammer was genuinely in the air. Hold the distinction without lecturing about it."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the formula. The words were spoken while the hammer was between two sets of hands. The blessing made the moment work. Ritual Record opens."}
+  ],
+  "archiveCategory": "Ritual Record — The Formula Spoken While the Hammer Was in the Air",
+  "sweelinckNote": "The blessing was spoken while the hammer was in the air between two sets of hands. The priest spoke the words. Thor received the hammer. The words are what made the moment a moment."
+}
+```
+
+---
+
+## Cycle 7 — *Gudrun's First Lament*
+
+**Archive category:** Unmediated Grief Records — The Lament Written as It Was Spoken
+
+**What this angle reveals:** Cycles 1-6 were about the Edda's objects, plans, and secrets. The final angle reveals Guðrúnarkviða I's central document: Gudrun could not weep after Sigurd was killed. Other women showed her their grief and she remained dry-eyed. Then Gullrönd lifted the cloth from Sigurd's body and Gudrun looked at his face — and she wept until the tears turned the grass gold. Her first lament was spoken in that moment. A woman in the hall had parchment in her sewing bag and wrote as she listened. The transcription error in the third stanza — a word written twice because the scribe's hand trembled — is the evidence the poem was not composed later. A London scholar is about to publish it with a framing that argues it was.
+
+---
+
+**THE TOKEN: `gudruns_lament_vellum`** — A transcription of Gudrun's first lament, made in real time by a woman who was in the hall when the cloth was lifted. The doubled word in the third stanza is the proof: a scribe composing a poem does not write the same word twice; a scribe listening to a woman begin to weep for the first time and writing as fast as she can does. The London scholar's framing claims the poem was composed after the fact. The archive receives the transcript before his framing closes the question.
+
+---
+
+```json
+{
+  "quest_id": "RKV-07",
+  "title": "Gudrun's First Lament",
+  "source": "Poetic Edda — Anon (Guðrúnarkviða I)",
+  "cycle": 7,
+  "book": "RKV",
+  "source_episode": "Guðrúnarkviða I — the cloth lifted from Sigurd's face, the grief that had been locked, the lament spoken and written in the same moment",
+  "theme": "The transcription error as proof of real-time writing; the lament's authenticity in the scribe's trembling hand; the doubled word that closes the framing question",
+  "activateNode": "RKV",
+  "token": {
+    "id": "gudruns_lament_vellum",
+    "name": "Gudrun's First Lament Transcript",
+    "description": "The real-time transcription of Gudrun's first lament: a woman in the hall with parchment in her sewing bag, writing as she listened. The word written twice in the third stanza is the physical evidence of when it was written. A London scholar argues it was composed after the fact. The doubled word is the answer.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["RKV", "LDN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "RKV", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "The doubled word in the third stanza is not a copying error — it is the evidence the scribe was listening and writing simultaneously. Understand why this physical detail is the argument before carrying the vellum into London."},
+    {"act": 2, "node": "RKV_to_LDN", "type": "skill_check", "dc": 12, "skill": "Deception", "prompt": "The London scholar has agents intercepting copies of the poem en route. The transcript is personal correspondence, not a literary document. Hold the description through the Channel crossing."},
+    {"act": 3, "node": "LDN", "type": "combat", "dc": 13, "skill": "Persuasion", "enemies": "2x scholar's collection agents, AC 11, HP 18", "prompt": "The scholar has published a preliminary statement claiming the lament was composed after the fact. The doubled word in the third stanza disproves this. Make the physical argument before his agents acquire the transcript and the argument disappears with it."},
+    {"act": 4, "node": "LDN_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "Someone on the road asks about the scholar's framing question. The answer is the doubled word. Say it once, concisely, and continue north."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the third stanza. He reads it again. He sets the vellum down. Unmediated Grief Records opens. The Poetic Edda series is complete."}
+  ],
+  "archiveCategory": "Unmediated Grief Records — The Lament Written as It Was Spoken",
+  "sweelinckNote": "The transcription error in the third stanza is the document. A scribe composing a poem does not write the same word twice. A scribe listening to a woman begin to weep for the first time and writing as fast as she can does. That is the archive's note on the framing question.",
+  "questComplete": true
+}
+```

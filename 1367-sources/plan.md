@@ -309,7 +309,7 @@ All files under 60 KB in 1367-sources/. Each to receive full pipeline: read → 
 | VIE | Faust — Johann Wolfgang von Goethe | 52 | **SEEDS COMPLETE 2026-06-03 — VIE-01–07 all vignettes done. No new nodes needed. See VIE-faust.md.** |
 | ALF | Kalevala — Elias Lönnrot | 52 | **SEEDS COMPLETE 2026-06-03 — ALF-01–07 all vignettes done. KVF/KVM in Location Grid. See ALF-kalevala.md.** |
 | KSU | Heimskringla — Snorri Sturluson | 53 | **SEEDS COMPLETE 2026-06-03 — KSU-01–07 all vignettes done. No new nodes. See KSU-heimskringla.md.** |
-| RKV | Poetic Edda — Anon | 53 | QUEUED |
+| RKV | Poetic Edda — Anon | 53 | **SEEDS COMPLETE 2026-06-03 — RKV-01–07 all vignettes done. AEG/RSS in Location Grid. See RKV-poetic-edda.md.** |
 | BOO | Prose Edda — Snorri Sturluson | 53 | QUEUED |
 | CDG | The Three Musketeers — Alexandre Dumas | 54 | QUEUED |
 | LGW | Le Morte d'Arthur — Sir Thomas Malory | 55 | QUEUED |
