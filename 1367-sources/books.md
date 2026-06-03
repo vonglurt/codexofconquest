@@ -470,7 +470,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | [x] | CDG | three-musketeers | The Three Musketeers — Alexandre Dumas | 1844 (1625 setting) | Swashbuckler | 1356 | SEEDS COMPLETE 2026-06-03 — CDG-01–07 all vignettes done. BTH/REL/DAR already in Location Grid. No new nodes. See CDG-three-musketeers.md. |
 | [x] | VIE | faust | Faust — Johann Wolfgang von Goethe | 1808–1832 | Philosophical Drama | 213 | SEEDS COMPLETE 2026-06-03 — VIE-01–07 all vignettes done. No new nodes needed (MGR/CLK/DKN all pre-existing). See VIE-faust.md. |
 | [x] | ERF | grimm-fairy-tales | Grimm's Fairy Tales — Brothers Grimm | 1812 | Folk Tales | 547 | SEEDS COMPLETE 2026-06-03 — ERF-01–07 all vignettes done. No new nodes needed (STB/GLD/DNG/CHC/ANT/PRH already added). See ERF-grimm-fairy-tales.md. |
-| [x] | BRU | amadis-of-gaul | Amadis of Gaul — Garci Rodríguez de Montalvo | pub. 1508 | Chivalric Romance | 134 |
+| [x] | BRU | amadis-of-gaul | Amadis of Gaul — Garci Rodríguez de Montalvo | pub. 1508 | Chivalric Romance | 134 | SEEDS COMPLETE 2026-06-03 — BRU-01–07 all vignettes done. No new nodes (CHT, LTN, PBK all pre-existing). See BRU-amadis-of-gaul.md. |
 | [x] | LIL | froissart-berners | Chronicles — Jean Froissart (Berners transl.) | 14th–15th C | Medieval History | 861 |
 | [x] | CRL | froissart-boys | Chronicles — Jean Froissart (Boys transl.) | 14th–15th C | Medieval History | 802 |
 

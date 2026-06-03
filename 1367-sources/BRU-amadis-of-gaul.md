@@ -575,3 +575,234 @@ He looks at the incomplete declaration in the Fighter's hands.
 *quest-map.md: append new theme thread (before "The tool of reassembly" ALF line).*
 *quest-map.md: append PBK to Location Grid.*
 *books.md: mark BRU [x].*
+
+---
+
+## Cycle 3 — *Oriana's Dismissal Letter*
+
+**Archive category:** Dismissal Records — The Letter That Said What the Writer Believed and Made It Permanent
+
+**What this angle reveals:** Cycles 1-2 were Gandalin's clearing and Amadis's identity reclaimed. This angle enters the cause of the Poor Rock sequence: the letter Oriana wrote. It is precise, thorough, complete in its repudiation — twenty years of covert devotion rendered as evidence of betrayal, because Oriana received a false report and believed it. The letter is not wrong in its form. It says exactly what Oriana meant. It is wrong about its premise. She wrote it anyway because she had no other instrument available. The archive wants it because without this letter the Poor Rock sequence has no comprehensible cause, and because it is the only document that says what twenty years of faithful, hidden love looks like at the moment it believes itself betrayed.
+
+---
+
+**THE TOKEN: `orianas_dismissal_letter`** — Oriana's letter of dismissal to Amadis, written after receipt of the false report: the full repudiation, thorough and exact; twenty years of devotion written as evidence of betrayal; Oriana's personal seal broken when Amadis received it at the coastal inn. The letter that made him Beltenebros. The archive holds it because the cause should be in the same building as the consequence.
+
+---
+
+```json
+{
+  "quest_id": "BRU-03",
+  "title": "Oriana's Dismissal Letter",
+  "source": "Amadis of Gaul — Vasco de Lobeira / Robert Southey translation",
+  "cycle": 3,
+  "book": "BRU",
+  "source_episode": "Oriana receives a false report suggesting Amadis has been intimate with another woman; she writes a letter of complete repudiation; Amadis reads it at a coastal inn, is destroyed, and rides to Poor Rock as Beltenebros",
+  "theme": "The letter that is true in every sentence except its premise; the archive that holds the cause alongside the consequence it created",
+  "activateNode": "CHT",
+  "token": {
+    "id": "orianas_dismissal_letter",
+    "name": "Oriana's Dismissal Letter",
+    "description": "Oriana's letter of dismissal to Amadis: the full repudiation written after receipt of the false report. Thorough and exact. Twenty years of devotion written as evidence of betrayal. Oriana's personal seal broken on receipt. The cause of six months at Poor Rock.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["CHT", "BK", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "CHT", "type": "skill_check", "dc": 12, "skill": "Insight", "prompt": "The court archivist at the herald's vestibule holds both letters — the dismissal and the reconciliation — in a paired folder. She is uncertain whether to hold them together or separate. Understand before the road why the archive holds the dismissal letter: it is a true document; every sentence says what Oriana believed; the premise was false; the letter is still true; the record of what happened at Poor Rock requires this letter to be comprehensible."},
+    {"act": 2, "node": "CHT_to_BK", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "A court counsel on the northern road argues that the letter was written under a false belief and should be destroyed as legally invalid testimony — it served no purpose that was not corrected by the second letter. His argument has legal form. The archive holds evidence of states of belief, including states of belief that were mistaken. A true document about a false premise is still a true document."},
+    {"act": 3, "node": "BK", "type": "skill_check", "dc": 13, "skill": "Persuasion", "prompt": "A Bruges letter-writer who handles noble correspondence recognizes Oriana's seal on the outer flap and wants the letter for his collection of royal epistolary examples. He has published similar documents before with names changed. The seal is Oriana's. The letter is a primary archive document. It does not travel to a collection."},
+    {"act": 4, "node": "BK_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "Three days to Weimar. The dismissal letter is in the sealed case. Amadis is back at court. The Poor Rock sequence is complete. The letter is the document that explains why it happened. Keep moving."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the dismissal letter. He reads it again. He notes the broken seal. Dismissal Records opens."}
+  ],
+  "archiveCategory": "Dismissal Records — The Letter That Said What the Writer Believed and Made It Permanent",
+  "sweelinckNote": "The letter is true. The premise was false. The archive holds both conditions simultaneously — the letter's accuracy and the premise's error — because together they explain everything. This is the first entry."
+}
+```
+
+---
+
+## Cycle 4 — *The Madasima Covenant*
+
+**Archive category:** Diplomatic Resolution Records — The Combat That Did Not Happen
+
+**What this angle reveals:** Cycles 1-3 were about Gandalin, Beltenebros, and Oriana's letter. This angle finds the novel's quietest document: the Madasima covenant. Amadis was dispatched to handle a situation involving the Lady Madasima and her household, and he did it through negotiated covenant rather than combat. Most entries in Amadis's combat register are outcomes. This entry reads: "no combat required; covenant negotiated; formal conclusion." The covenant document is specific — what was agreed, what each party gave, what was guaranteed in writing. The archive wants it as the first entry in a document type the fighting world doesn't generate often: the instrument that records what was not fought, and why.
+
+---
+
+**THE TOKEN: `madasima_covenant_document`** — The formal covenant Amadis negotiated with Madasima's household: terms, mutual guarantees, each party's representative mark. The combat register annotation attached: "no combat required; covenant negotiated; formal conclusion." The document that records a fight that did not happen because someone thought when he could have fought.
+
+---
+
+```json
+{
+  "quest_id": "BRU-04",
+  "title": "The Madasima Covenant",
+  "source": "Amadis of Gaul — Vasco de Lobeira / Robert Southey translation",
+  "cycle": 4,
+  "book": "BRU",
+  "source_episode": "Amadis handles the Madasima situation through negotiated covenant rather than combat; the formal agreement satisfies honor requirements; the combat register notes 'no combat required'",
+  "theme": "The instrument that records a combat that did not happen; the knight who thought when he could have fought; the document type the fighting world generates rarely",
+  "activateNode": "LTN",
+  "token": {
+    "id": "madasima_covenant_document",
+    "name": "Madasima Covenant Document",
+    "description": "Formal covenant negotiated by Amadis: terms, mutual guarantees, both parties' marks. Combat register annotation attached: 'no combat required; covenant negotiated; formal conclusion.' The instrument of a resolved dispute.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["LTN", "VEN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "LTN", "type": "skill_check", "dc": 11, "skill": "History", "prompt": "The herald at the tournament precinct holds the covenant in the instrument files rather than the combat register — it is filed under 'negotiated resolutions,' a section that has three entries in thirty years. Understand before the road why the archive wants this particular document: it is the record of the mechanism that replaced the fight; the covenant is evidence that the finest knight in Christendom used diplomacy as a first instrument rather than a last resort; that is unusual enough to deserve its own category."},
+    {"act": 2, "node": "LTN_to_VEN", "type": "skill_check", "dc": 11, "skill": "Persuasion", "prompt": "Madasima's household representative on the southern road wants the covenant held within Madasima's own archive — not because the terms are disputed but because the agreement was made with her and she would prefer her own copy to be the primary record. The archive's copy is the primary record; her household copy is her household's record."},
+    {"act": 3, "node": "VEN", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "A Venetian diplomat studies the covenant as an example of chivalric dispute resolution. He wants to present it to the Doge's council as evidence of how northern honor disputes can be resolved without armed conflict. His interest is legitimate. The archive holds the original after deposit; he may have access."},
+    {"act": 4, "node": "VEN_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "North from Venice, four days. The covenant is in the sealed case. Amadis fought every other dispute in his record with a sword. This one he settled differently. Keep moving."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the terms. He reads the combat register annotation. He notes 'no combat required' and dates the entry. Diplomatic Resolution Records opens."}
+  ],
+  "archiveCategory": "Diplomatic Resolution Records — The Combat That Did Not Happen",
+  "sweelinckNote": "The archive creates a new category for documents that record what was not fought. This is the first entry. The distinction between 'not fought because both parties withdrew' and 'not fought because one party thought' is in this document."
+}
+```
+
+---
+
+## Cycle 5 — *Urganda's Arrival Prophecy*
+
+**Archive category:** Prophetic Commission Records — The Warning Delivered in the Language of Its Partial Reception
+
+**What this angle reveals:** Cycles 1-4 covered squires, exiles, letters, and diplomacy. This angle finds the structural hinge of the novel: Urganda the Unknown arrives by ship before the great Ardan combat. She speaks her warning. A scribe transcribes it verbatim, marking the sections that could not be deciphered as "[speech received but not transcribable]." Urganda reads the transcript, corrects two transcription errors, and initials both corrections. The resulting document is complete and partial simultaneously: the deciphered sections were accurate; the undeciphered sections are held as marked. Urganda's corrections prove she accepted the transcript as a fair record. The archive wants it because it is the only document in the archive that acknowledges the limit of its own reception in the same text that records what was received.
+
+---
+
+**THE TOKEN: `urganda_arrival_prophecy_scroll`** — Verbatim transcription of Urganda the Unknown's prophetic warning on arrival: deciphered sections (accurate), sections marked "[speech received but not transcribable]", Urganda's two handwritten corrections with her initials. The prophecy as it was given and as it could be received, both conditions present in the same scroll.
+
+---
+
+```json
+{
+  "quest_id": "BRU-05",
+  "title": "Urganda's Arrival Prophecy",
+  "source": "Amadis of Gaul — Vasco de Lobeira / Robert Southey translation",
+  "cycle": 5,
+  "book": "BRU",
+  "source_episode": "Urganda the Unknown arrives by ship before the Ardan combat; delivers a prophetic warning in riddles; a court scribe transcribes verbatim including gaps; Urganda corrects two transcription errors and initials the corrections",
+  "theme": "The prophecy that acknowledges its own partial reception; the document that holds both what was received and what could not be received in the same text",
+  "activateNode": "PBK",
+  "token": {
+    "id": "urganda_arrival_prophecy_scroll",
+    "name": "Urganda's Arrival Prophecy Scroll",
+    "description": "Verbatim transcription of Urganda's prophetic warning: accurate deciphered sections; sections marked '[speech received but not transcribable]'; Urganda's two handwritten corrections initialed. The prophecy as given and as received.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["PBK", "CON", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "PBK", "type": "skill_check", "dc": 12, "skill": "Insight", "prompt": "Urganda's harbor courier left the scroll at the Peña Pobre hermitage — the island is one of her established message points. Andalod holds it as though he knew it would be collected. Understand before the road why the archive wants a prophecy marked with its own reception gaps: a document that acknowledges what it could not record is more honest than one that fills the gaps with inference; the marked sections are evidence of the scribe's honesty, not his failure."},
+    {"act": 2, "node": "PBK_to_CON", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "A scholar of prophetic literature on the Adriatic road wants the scroll to test whether the marked gaps correspond to passages in other Urganda documents — a comparative analysis of her register of riddles. His scholarship may eventually reconstruct the undeciphered sections. The archive holds the original; his analysis can proceed after deposit."},
+    {"act": 3, "node": "CON", "type": "skill_check", "dc": 13, "skill": "Persuasion", "prompt": "A Byzantine imperial scribe at Constantinople wants the marked sections removed from the copy that enters the archive — a document with '[not transcribable]' marks is, by his classification, incomplete and therefore not archivable. The marks are not incompleteness. They are evidence. The archive files them."},
+    {"act": 4, "node": "CON_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "West from Constantinople, three weeks. The prophecy scroll is in the sealed case. Two of the marked sections have since been comprehensible in retrospect. The marks remain because the document records reception, not meaning. Keep moving."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the deciphered sections. He reads the marked gaps. He examines Urganda's corrections and initials. Prophetic Commission Records opens."}
+  ],
+  "archiveCategory": "Prophetic Commission Records — The Warning Delivered in the Language of Its Partial Reception",
+  "sweelinckNote": "The scribe marked what he could not receive. Urganda corrected what he transcribed incorrectly and initialed it. Together those two acts make this the most honestly documented prophecy in the collection. The gaps are the evidence."
+}
+```
+
+---
+
+## Cycle 6 — *Gandandel's Advisory Report*
+
+**Archive category:** Political Subversion Records — The Whisper That Became a Document
+
+**What this angle reveals:** Cycles 1-5 covered squires, identities, letters, covenants, and prophecies. This angle enters the political mechanism that will destroy Books 3 and 4: Gandandel's first formal advisory to King Lisuarte. He does not accuse Amadis. He does not recommend action. He writes seven paragraphs on the relationship between a champion's reputation and royal authority, each one diplomatically correct, each one containing — between its properly formed sentences — the argument that Lisuarte's hold on his own court is contingent on Amadis's willingness to remain subordinate. Lisuarte annotated paragraph four: "noted." The archive wants the document because it is the record of how political estrangement begins: not with a sword but with a correctly phrased advisory that a king cannot easily refute because it never says what it means.
+
+---
+
+**THE TOKEN: `gandandels_advisory_report`** — Gandandel's formal written advisory to King Lisuarte: seven paragraphs on the relationship between martial fame and royal authority; no accusation; no recommendation; every sentence diplomatically correct and politically devastating. Lisuarte's marginal annotation beside paragraph four: "noted." The document that began the long estrangement.
+
+---
+
+```json
+{
+  "quest_id": "BRU-06",
+  "title": "Gandandel's Advisory Report",
+  "source": "Amadis of Gaul — Vasco de Lobeira / Robert Southey translation",
+  "cycle": 6,
+  "book": "BRU",
+  "source_episode": "Gandandel submits a formal advisory to Lisuarte on the relationship between martial fame and royal authority; seven diplomatically phrased paragraphs that begin the political campaign against Amadis; Lisuarte annotates paragraph four 'noted'",
+  "theme": "The document that never says what it means; the whisper given formal institutional form; the advisory that initiates a long estrangement through correct procedure rather than direct accusation",
+  "activateNode": "CHT",
+  "token": {
+    "id": "gandandels_advisory_report",
+    "name": "Gandandel's Advisory Report",
+    "description": "Seven-paragraph formal advisory to King Lisuarte: no accusation, no recommendation; every sentence diplomatically correct; Lisuarte's marginal annotation beside paragraph four: 'noted.' The document that began the estrangement.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["CHT", "RME", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "CHT", "type": "skill_check", "dc": 12, "skill": "Insight", "prompt": "The court file clerk at the herald's vestibule holds Gandandel's advisory in the general counselors' correspondence file — it was submitted through proper channels, never flagged, never challenged. Understand before the road why the archive wants this particular document: it is the first entry in the campaign that will eventually drive Amadis from Lisuarte's court and into open war; it is formally irreproachable; it says nothing that could be objected to; Lisuarte's annotation 'noted' beside paragraph four is the only evidence that it landed."},
+    {"act": 2, "node": "CHT_to_RME", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "Gandandel's household secretary on the southern road wants the advisory returned to Gandandel's personal files — not because the content is sensitive but because a counselor's advisory is by custom the counselor's property after it has been acted upon. The archive's copy is not a duplicate. It is the institutional record of what was submitted and annotated."},
+    {"act": 3, "node": "RME", "type": "skill_check", "dc": 13, "skill": "Persuasion", "prompt": "A Roman papal advocate wants to study the advisory as an example of how courtly political communication works — the technique of accusation through framing rather than direct statement. He has a collection of similar documents from Italian courts. The archive holds the original; comparative access after deposit."},
+    {"act": 4, "node": "RME_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "North from Rome, five days to Weimar. The advisory is in the sealed case. Lisuarte's 'noted' is in paragraph four's margin. Gandandel is still at court. The estrangement has not yet become open conflict. Keep moving."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads all seven paragraphs. He reads Lisuarte's annotation. He notes what the document does not say. Political Subversion Records opens."}
+  ],
+  "archiveCategory": "Political Subversion Records — The Whisper That Became a Document",
+  "sweelinckNote": "The document never says what it means. That is the mechanism. Seven paragraphs of correct observation about the relationship between fame and authority, each one accurate, none of them a lie, together constituting a campaign. The archive notes: 'noted' is the only place in the document where the king's response is visible."
+}
+```
+
+---
+
+## Cycle 7 — *Oriana's Reconciliation Letter*
+
+**Archive category:** Retraction Records — The Letter That Named What It Had Done
+
+**What this angle reveals:** Cycle 3 held Oriana's dismissal letter. This cycle closes the arc. After the false report's source was exposed, Oriana wrote the retraction. She does not ask forgiveness. She states what happened: a false report was received; she believed it; she wrote the dismissal letter; the false report was shown to be false; she is writing to say so. Every sentence is accurate. She names what she did. She names what caused it. The letter does not perform remorse — it performs precision. It does exactly what it needs to do and not one word more. Durinda carried it to Poor Rock. Amadis read it. The life returned. The archive holds both letters — the dismissal and the reconciliation — as a single paired record. Sweelinck's note closes the arc: these two letters are the complete account of what a twenty-year devotion looks like when it is tested and recovered.
+
+---
+
+**THE TOKEN: `orianas_reconciliation_letter`** — Oriana's second letter to Amadis, written after the false report's source was identified: the statement of what happened (false report received; believed; dismissal sent; source identified; report false); no apology; facts stated exactly; Oriana's personal seal intact. The letter that returned Amadis from Poor Rock. Paired with the dismissal letter in the archive's primary holdings.
+
+---
+
+```json
+{
+  "quest_id": "BRU-07",
+  "title": "Oriana's Reconciliation Letter",
+  "source": "Amadis of Gaul — Vasco de Lobeira / Robert Southey translation",
+  "cycle": 7,
+  "book": "BRU",
+  "source_episode": "After the false report's source is exposed, Oriana writes a second letter to Amadis naming exactly what happened and what she did; Durinda carries it to Poor Rock; Amadis reads it; the life returns; he emerges as himself",
+  "theme": "The retraction that names what it did without asking forgiveness; the letter that performs precision rather than remorse; the second document that completes the first",
+  "activateNode": "PBK",
+  "token": {
+    "id": "orianas_reconciliation_letter",
+    "name": "Oriana's Reconciliation Letter",
+    "description": "Oriana's second letter: statement of what happened — false report received, believed, dismissal sent, report shown false. No apology. Facts stated exactly. Oriana's personal seal intact. The letter that ended the exile. Paired with the dismissal letter.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["PBK", "LDN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "PBK", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "Andalod holds the reconciliation letter at the hermitage — it is the document that was read here, that ended the exile here. Durinda left a copy before returning to court. Understand before the road why the archive wants this letter held alongside the dismissal letter: neither letter is complete without the other; the dismissal letter explains Poor Rock; the reconciliation letter explains the return; together they are the only complete account of what happened and why. Andalod says nothing when the Fighter takes it. He has been expecting it to leave."},
+    {"act": 2, "node": "PBK_to_LDN", "type": "skill_check", "dc": 11, "skill": "Persuasion", "prompt": "Durinda, traveling north, encounters the Fighter at a harbor town and wants to accompany the letter to the archive herself — she carried it to Poor Rock; she believes she has a claim on its delivery to Weimar. Her claim is honorable. The Fighter already has the letter and the commission. She can report to the archive that she was the carrier from court to Poor Rock; the archive will note it."},
+    {"act": 3, "node": "LDN", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "A court chronicler at London who is writing a history of Amadis's career wants the reconciliation letter for the narrative — specifically for the chapter on Poor Rock, where he has the dismissal letter but not the return. His chronicle is secondary source. The archive holds the primary. He may cite; he may not take."},
+    {"act": 4, "node": "LDN_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "Three days to Weimar. The reconciliation letter is in the sealed case. The dismissal letter is already in the archive. When Sweelinck files them together the arc is complete. Keep moving."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the reconciliation letter. He retrieves the dismissal letter from Cycle 3. He holds them together for a moment. He files them paired. Retraction Records opens. He notes the arc complete."}
+  ],
+  "archiveCategory": "Retraction Records — The Letter That Named What It Had Done",
+  "questComplete": true,
+  "sweelinckNote": "The dismissal letter was true about its author's state and false about its premise. The reconciliation letter named both conditions without asking for anything in return. Together they are the complete record of what a twenty-year devotion looks like when tested and recovered. The archive holds them paired. Neither is complete without the other."
+}
+```

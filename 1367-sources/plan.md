@@ -320,7 +320,7 @@ All files under 60 KB in 1367-sources/. Each to receive full pipeline: read → 
 | GCI | Toilers of the Sea — Victor Hugo | 59 | **SEEDS COMPLETE 2026-06-03 — GCI-01–07 all vignettes done. STP/GHL in Location Grid. No new nodes. See GCI-toilers-of-the-sea.md.** |
 | FCO | Piers Plowman — William Langland | 59 | **SEEDS COMPLETE 2026-06-03 — FCO-01–07 all vignettes done. MGF in Location Grid. No new nodes. See FCO-vision-of-piers-plowman.md.** |
 | MAD | Don Quixote — Miguel de Cervantes | 59 | **SEEDS COMPLETE 2026-06-03 — MAD-01–07 all vignettes done. No new nodes (SMR, CMG, MNT, MAS, ACL all pre-existing). See MAD-don-quixote.md.** |
-| BRU | Amadis of Gaul — Garci Rodríguez de Montalvo | 60 | QUEUED |
+| BRU | Amadis of Gaul — Garci Rodríguez de Montalvo | 60 | **SEEDS COMPLETE 2026-06-03 — BRU-01–07 all vignettes done. No new nodes (CHT, LTN, PBK all pre-existing). See BRU-amadis-of-gaul.md.** |
 
 ---
 
