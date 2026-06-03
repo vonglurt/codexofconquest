@@ -7943,6 +7943,12 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   CON: { num:161, name:"city", label:"Constantinople — Galata Quarter", act:4 },
   GENWHS: { num:162, name:"market_quarter", label:"Genoa — Abramo Warehouse, Harbor District", act:3 },
   CONREG: { num:163, name:"city", label:"Constantinople — Imperial Court Registry", act:4 },
+  BOL: { num:164, name:"city", label:"Bologna — Commune City", act:3 },
+  PSAFAB: { num:165, name:"city", label:"Florence — Lapo Workshop Via dei Fabbri", act:3 },
+  FSLINN: { num:166, name:"inn", label:"Fiesole — Wayfarers Inn at Apennine Foot", act:3 },
+  MCRJN: { num:167, name:"road", label:"Monte di Croce — Mountain Road Junction", act:3 },
+  FRZINN: { num:168, name:"inn", label:"Firenzuola — Wayfarers Inn Pre-Dawn", act:3 },
+  BOLSAC: { num:169, name:"city", label:"Bologna — San Petronio North Sacristy", act:3 },
 };
 // ◆◆◆ WORLDBUILDER:NODE_MAP:END ◆◆◆
 
@@ -8034,6 +8040,12 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   CON:{r:152,c:228},
   GENWHS:{r:133,c:196},
   CONREG:{r:153,c:228},
+  BOL:{r:128,c:208},
+  PSAFAB:{r:141,c:209},
+  FSLINN:{r:139,c:209},
+  MCRJN:{r:135,c:209},
+  FRZINN:{r:132,c:209},
+  BOLSAC:{r:129,c:208},
 };
 // ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆
 
@@ -10797,6 +10809,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   blq_03_act3: { id:"blq_03_act3", type:"skill_check", title:"Ishak at the Gangplank", passText:"You confirm carrying a sealed locked case from Abramo di Simone to the Constantinople court registry — publicly knowable — but cannot discuss parties, contents, or commissioning context, as the case is sealed under court protocol. Ishak recognizes the standard formula for multi-party sealed filings. He sends word: case sealed as described; proceeding normally.", failText:"Ishak presses past the formula and asks directly: does the letter carry the community board petition, yes or no? He concludes the carrier does not know — meaning either Abramo made a mistake or the letter does not say what the elders expect. He sends word: uncertainty about letter contents; recommend contact Abramo before session.", activateNode:"DBV", checkStat:"cha", checkPassFlag:"blq03IshakNeutral", checkDC:13, activateCond:blq03FraDonnino },
   blq_03_act4: { id:"blq_03_act4", type:"skill_check", title:"Giannino in the Lower Passage", passText:"The carrier has watched Giannino since Dyrrachium — a wool factor who asked nothing about the Constantinople wool market, who positioned himself twice to observe the carrier quarters. The carrier is waiting, awake, when the footstep stops in the passage. The door opens onto the carrier already standing. Giannino calculates in the dark and says: I was looking for the water barrel. The carrier says: it is forward. He goes.", failText:"Giannino reaches the quarters. Combat: two figures in the dark passage. The locked case, if seized, cannot be opened. If Giannino is subdued, the ship master holds him until Constantinople.", activateNode:"DBV", checkStat:"wis", checkPassFlag:"blq03CornaroStopped", checkDC:13, activateCond:blq03IshakNeutral },
   blq_03_act5: { id:"blq_03_act5", type:"skill_check", title:"Nikolaos Doukas Opens the Seals", passText:"The carrier addresses each delegation once, directly: your petition is admitted; you have thirty days to submit a formal brief; this is more than you had when you commissioned the letter. Each delegation, hearing itself addressed specifically, runs out of energy for outrage. Nikolaos completes the record. He says afterward: the letter said nothing. It gave everyone enough to agree to a hearing. Abramo writes very well.", failText:"The three delegations argue in three languages simultaneously. Nikolaos waits — he has done this before. He enters a notation: receipt confirmed; verbal disorder at filing; letter accepted as submitted. The filing stands regardless.", activateNode:"CONREG", checkStat:"cha", checkPassFlag:"blq03Complete", checkDC:13, activateCond:blq03CornaroStopped },
+  blq_04_act1: { id:"blq_04_act1", type:"skill_check", title:"Lapo Workshop — The Hasp Condition", passText:"Around the hasp pin: faint compression from a tool, not a key. The box has not been opened — but it has been examined. The ribbon knot shows a second crease, as if re-tied. You memorize the hasp condition and the pattern. You receive the reliquary box.", failText:"The box looks intact. You take it and depart. The hasp and ribbon details go unobserved.", activateNode:"PSAFAB", checkStat:"wis", checkPassFlag:"blq04HaspNoted", checkDC:12 },
+  blq_04_act2: { id:"blq_04_act2", type:"skill_check", title:"The Coal at Fiesole", passText:"Rinaldo asked specifically about Monte di Croce and took the northern branch when he left. He is heading toward Firenzuola with a buyer waiting. The coal was placed with care — chosen as a taunt. He expected you to find it and expected you to be stopped by it.", failText:"Someone asked about the carrier. No direction, no name. The coal is opaque.", activateNode:"FSLINN", checkStat:"int", checkPassFlag:"blq04RinaldoLocated", checkDC:12, activateCond:blq04HaspNoted },
+  blq_04_act3: { id:"blq_04_act3", type:"skill_check", title:"Rinaldo at the Road Fork", passText:"The relic has a certified provenance chain. Without that document the Firenzuola buyer has a stolen bone, not a relic. A bone without provenance is firewood. Rinaldo has not thought this through. He pulls the relic from his saddlebag and hands it over. The coal goes into the road dust.", failText:"Rinaldo and a hired man are at the junction. Combat or withdrawal. If the carrier withdraws, Rinaldo completes his Firenzuola delivery and the relic is gone.", activateNode:"MCRJN", checkStat:"cha", checkPassFlag:"blq04RelicRecovered", checkDC:13, activateCond:blq04RinaldoLocated },
+  blq_04_act4: { id:"blq_04_act4", type:"skill_check", title:"Brother Ugolino at Firenzuola", passText:"If relic recovered: lead with the provenance document; name the theft attempt; show the hasp damage as evidence of the recovery. The chain is intact. If relic lost: the coal and ash can be delivered as evidence of the theft — the documentation of the crime rather than a substitute. Brother Anselmo receives an honest accounting.", failText:"The carrier arrives in Bologna without preparation. The hasp damage or the substitute contents will require improvised explanation under Anselmo direct questions.", activateNode:"FRZINN", checkStat:"int", checkPassFlag:"blq04DeliveryFramed", checkDC:12, activateCond:blq04RelicRecovered },
+  blq_04_act5: { id:"blq_04_act5", type:"skill_check", title:"Brother Anselmo Opens the Box", passText:"The carrier explains the theft attempt, the confrontation, the recovery — or delivers the honest account of the substituted contents as formal evidence of the crime. Anselmo listens. He looks at the hasp or at the coal. He records in the sacristy register and pays the delivery fee. He says: return when Lapo has the replacement. I want the same carrier.", failText:"The carrier cannot explain the hasp damage or frame the substituted contents in a way that reads as competent and honest. Anselmo holds the fee pending an inquiry. Rinaldo, in Firenzuola, has already sold the relic.", activateNode:"BOLSAC", checkStat:"cha", checkPassFlag:"blq04Complete", checkDC:12, activateCond:blq04DeliveryFramed },
 };
 // ◆◆◆ WORLDBUILDER:QUEST_DB:END ◆◆◆
 
@@ -11774,6 +11791,7 @@ const BIRKA_NPC_PROFILES = { // → doc: world.md §Birka Six NPCs
   ser_bardo: { key:"ser_bardo", name:"Ser Bardo Albizzi", occupation:"Guild Merchant", node:"PSAGLD" },
   ser_taddeo: { key:"ser_taddeo", name:"Ser Taddeo Borghini", occupation:"Retired Judge", node:"PISNOT" },
   abramo_simone: { key:"abramo_simone", name:"Abramo di Simone", occupation:"Neutral Factor", node:"GENWHS" },
+  lapo_matteo: { key:"lapo_matteo", name:"Lapo di Ser Matteo", occupation:"Silversmith", node:"PSAFAB" },
 };
 // ◆◆◆ WORLDBUILDER:BIRKA_NPC:END ◆◆◆
 
@@ -12090,6 +12108,11 @@ const _S_DEFAULTS = () => ({
     blq03IshakNeutral: false,
     blq03CornaroStopped: false,
     blq03Complete: false,
+    blq04HaspNoted: false,
+    blq04RinaldoLocated: false,
+    blq04RelicRecovered: false,
+    blq04DeliveryFramed: false,
+    blq04Complete: false,
 });
 
 /* ── Layer 48: Luck — Seventh Stat ── */
