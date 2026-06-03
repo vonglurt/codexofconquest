@@ -946,3 +946,541 @@ activateMissionBit: lbcShieldComplete
 ---
 
 *Cycle 2 complete. Mark `[x]` for LBC-nibelungenlied in books.md.*
+
+---
+
+## Cycle 3: The Test Record
+
+*(Theme differentiation: Avoiding LBC cycles 1-2. Cycle 1: invitation as weapon. Cycle 2: last gift against the design. New theme: the certification that holds because the certifiers preferred not to see; the witness record accurate to its face value and wrong at its core; the space between what was done and what was recorded.)*
+
+### Quest API Stub — Cycle 3
+
+```json
+{
+  "quest_id": "LBC-03",
+  "title": "The Test Record",
+  "cycle": 3,
+  "book": "LBC — The Nibelungenlied",
+  "token": "Brunhild's Test Certification",
+  "route": ["NIL", "DBN", "WM"],
+  "theme": "The certification that holds because the certifiers preferred not to see; the witness record accurate to its face value and wrong at its core; what the notary signed is technically correct and the archive receives the gap between what was done and what was recorded",
+  "archive_category": "Competition Records — Witnessed Certifications Whose Accuracy Depends on the Witness's Willful Inattention; The Document That Is True as Written and False as Understood",
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "NIL",
+      "activateNode": "NIL",
+      "type": "skill_check",
+      "scene": "Ísenlant. The notary has certified that Gunther passed the three contests: the javelin, the stone, the leap. The witnesses saw what they saw. The impossible footprints in the dust beside Gunnar's own have been carefully not looked at. The certification is on the table, wax warm.",
+      "skillCheck": {
+        "skill": "Insight",
+        "dc": 12,
+        "prompt": "Understand the specific false premise in the notary's wording before accepting the document — the certification is accurate to what the witnesses officially saw; it is not accurate to what they knew they were not seeing.",
+        "failText": "The document reads as a straightforward certification. You carry it without understanding the weight of what the witnesses chose not to see.",
+        "passText": "The witnesses certified what they saw. They saw Gunther pass each test. They saw one pair of footprints too many in the dust and chose to certify only the official pair. The document is technically accurate."
+      },
+      "grantItem": "Brunhild's Test Certification",
+      "checkPassFlag": "lbc3Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "NIL",
+      "activateNode": "NIL",
+      "type": "skill_check",
+      "scene": "Brunhild's scribe has noticed an omission in the certification — the weight of the javelin is unrecorded. He wants to add a marginal notation that, in being technically correct, would make the document accurate in a way that destroys its purpose.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "prompt": "Prevent the marginal annotation — completeness in this document would be damage; the certification's function depends on the witnesses' agreement not to see, which an accurate margin would undo.",
+        "failText": "He adds the margin. The document is now more accurate and less useful.",
+        "passText": "He sets down his pen. A complete record is not always a more honest one. He releases the document."
+      },
+      "checkPassFlag": "lbc3Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "DBN",
+      "activateNode": "DBN",
+      "type": "skill_check",
+      "scene": "Danube crossing. An old Burgundian knight on the east bank who served at the tests. He watched the footprints. He signed the certification. He is looking at you with the expression of a man who knows what he carried across when he signed his name.",
+      "skillCheck": {
+        "skill": "Composure",
+        "dc": 11,
+        "prompt": "Cross without confirming what he suspects — carry the certification as what it officially is, not what both of you know it contains.",
+        "failText": "Something in your bearing confirms his suspicion. He reaches for the document.",
+        "passText": "You cross. He watches. Neither of you say anything that was not already said on the day the tests were witnessed."
+      },
+      "checkPassFlag": "lbc3Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "DBN",
+      "activateNode": "DBN",
+      "type": "skill_check",
+      "scene": "West bank road. A court herald from Worms is checking courier documents. He asks what certification you carry — he has been told to log all documents from the eastern crossing.",
+      "skillCheck": {
+        "skill": "Deception",
+        "dc": 12,
+        "prompt": "Name the document accurately without naming what it means — a test certification from Ísenlant; complete in all technical respects.",
+        "failText": "He wants to read it before logging it.",
+        "passText": "He logs it as test certification, eastern origin, certified delivery. Continues to the next courier."
+      },
+      "checkPassFlag": "lbc3Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "activateNode": "WM",
+      "type": "skill_check",
+      "scene": "Archivus Sweelinck reads the certification. He reads the witness list. He reads the description of each test. He pauses at the footprint question he cannot ask because the document is silent on it. 'What is this document recording?'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 11,
+        "prompt": "Name the archive category: the certification records what was officially witnessed, which is different from what was actually done; the document's accuracy is the accuracy of an agreed silence; the archive holds the gap.",
+        "failText": "Filed under Diplomatic Credentials — Test Results. Cross-reference to Brunhild narrative.",
+        "passText": "Sweelinck writes: 'Competition Records — Witnessed Certifications Whose Accuracy Depends on the Witness's Willful Inattention; filed under the difference between the witnessed record and the complete record.' He does not write what the difference contains. The document files the gap. You receive the Ísenlant Archive Record."
+      },
+      "takeItem": "Brunhild's Test Certification",
+      "grantItem": "Ísenlant Archive Record",
+      "checkPassFlag": "lbc3Act5Passed",
+      "activateMissionBit": "lbcTestRecordComplete"
+    }
+  ]
+}
+```
+
+---
+
+*LBC-03 complete. 2026-06-03.*
+
+---
+
+## Cycle 4: Kriemhild's Instruction
+
+*(Theme differentiation: Avoiding LBC cycles 1-3. New theme: the map disguised as a domestic instruction; the document that was never meant to leave the room; the archive receives the weapon's blueprint rather than the weapon itself; the instruction that explains what the object was used for.)*
+
+### Quest API Stub — Cycle 4
+
+```json
+{
+  "quest_id": "LBC-04",
+  "title": "Kriemhild's Instruction",
+  "cycle": 4,
+  "book": "LBC — The Nibelungenlied",
+  "token": "The Tunic Note",
+  "route": ["WOR", "DBN", "WM"],
+  "theme": "The map disguised as a domestic instruction; the document that was never meant to leave the room; the archive receives the weapon's blueprint rather than the weapon itself; the instruction that names the method after the method was used",
+  "archive_category": "Vulnerability Records — Instructions That Named the Method; The Domestic Document Recovered as Military Intelligence; Filed Under the Weapon's Blueprint Rather Than the Weapon",
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "WOR",
+      "activateNode": "WOR",
+      "type": "skill_check",
+      "scene": "Worms. Kriemhild's sewing room, unoccupied. She has gone to the hunt — the one she should not have arranged. On the sewing table: the tunic with the cross sewn at the shoulder blade, and beside it a brief written note in her hand giving herself the exact placement of the mark she was told would protect Siegfried. She was not told what it would protect against.",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 12,
+        "prompt": "Find the note before a servant removes it with the sewing materials — it is on the table under a fold of linen, not obviously distinguished from a dressmaker's instruction.",
+        "failText": "The servant has already folded the linen. The note is gone.",
+        "passText": "Under the fold: a brief note in Kriemhild's hand. The cross. The shoulder blade. The location of the only place Siegfried could be killed, written in the hand of the woman who asked to protect him."
+      },
+      "grantItem": "The Tunic Note",
+      "checkPassFlag": "lbc4Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "WOR",
+      "activateNode": "WOR",
+      "type": "skill_check",
+      "scene": "The gate of Worms. A rider has come back from the hunt early. He is not asking about the document, but he is watching all exits from the court and his instructions are to hold anyone carrying court materials.",
+      "skillCheck": {
+        "skill": "Stealth",
+        "dc": 12,
+        "prompt": "Leave through the stableyard rather than the main gate — the rider's watch covers the courtyard but not the loading dock.",
+        "failText": "He sees you at the stable door and calls for confirmation of your exit papers.",
+        "passText": "The stableyard is empty. The loading dock is open. You are on the north road before the rider's watch turns back."
+      },
+      "checkPassFlag": "lbc4Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "DBN",
+      "activateNode": "DBN",
+      "type": "skill_check",
+      "scene": "Danube road. A rider has overtaken you with news from the hunt. He says only: the hunt went badly. He asks if you are carrying anything from the court. He has not been told to stop court couriers but he is in that state of half-information where any hesitation will become interrogation.",
+      "skillCheck": {
+        "skill": "Composure",
+        "dc": 13,
+        "prompt": "Hold your pace and carry the document north without confirming what the news means — you are a courier with court materials, and court couriers continue their commissions through bad news.",
+        "failText": "You stop. He reads your face. He asks a second question.",
+        "passText": "You do not stop. He rides past to deliver his news. You continue. The document travels north while the news travels south."
+      },
+      "checkPassFlag": "lbc4Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "DBN",
+      "activateNode": "DBN",
+      "type": "skill_check",
+      "scene": "Ferry crossing. A messenger from Hagen is traveling east, back toward Worms. He asks, professionally, if you are carrying anything from Kriemhild's personal effects — Hagen has sent him to retrieve the sewing materials.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 11,
+        "prompt": "Decline without triggering a detainment — you carry court correspondence, not personal effects; the categories are legally different and he is not authorized to hold correspondence.",
+        "failText": "He insists on examining what you carry. The ferry crossing becomes a jurisdictional delay.",
+        "passText": "He concedes the category distinction. Correspondence is not personal effects. He lets the ferry depart."
+      },
+      "checkPassFlag": "lbc4Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "activateNode": "WM",
+      "type": "skill_check",
+      "scene": "Archivus Sweelinck reads the brief note. He reads it again. He sets it down beside the tunic description in his reference file. 'This was a sewing instruction.' A pause. 'This was a location map.' Another pause. 'She was told it was a protection mark. She wrote it down to get the placement right.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Confirm the archive category: the document is the weapon's blueprint written by the hand that believed it was a protection; the instruction explains what the cross was for; the archive holds the method because the method is what the object was.",
+        "failText": "Filed under Personal Correspondence — Kriemhild household. Cross-reference to hunt incident.",
+        "passText": "Sweelinck writes: 'Vulnerability Records — Instructions That Named the Method; the domestic document recovered as the weapon's blueprint; filed under what the cross was used for, not what it was said to be.' You receive the Tunic Note Archive Record."
+      },
+      "takeItem": "The Tunic Note",
+      "grantItem": "Tunic Note Archive Record",
+      "checkPassFlag": "lbc4Act5Passed",
+      "activateMissionBit": "lbcTunicNoteComplete"
+    }
+  ]
+}
+```
+
+---
+
+*LBC-04 complete. 2026-06-03.*
+
+---
+
+## Cycle 5: The Floating Chest
+
+*(Theme differentiation: Avoiding LBC cycles 1-4. New theme: the inventory that survived what it was written to enumerate; the record more permanent than the object; the archive holds what the river holds in a different form.)*
+
+### Quest API Stub — Cycle 5
+
+```json
+{
+  "quest_id": "LBC-05",
+  "title": "The Floating Chest",
+  "cycle": 5,
+  "book": "LBC — The Nibelungenlied",
+  "token": "The Hoard Inventory Fragment",
+  "route": ["RHN", "KOL", "WM"],
+  "theme": "The inventory that survived what it was written to enumerate; the archive holds what the river holds in a different form; the list is more permanent than the treasure because the list was made of something that floats",
+  "archive_category": "Inventory Records — Surviving Lists for Submerged or Destroyed Wealth; The Document That Outlasted Its Referent; Filed Under What the Record Preserves When the Object Cannot Be Recovered",
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "RHN",
+      "activateNode": "RHN",
+      "type": "skill_check",
+      "scene": "The Rhine bank, pre-dawn. Hagen has sunk the hoard from a boat. One chest did not go down — waterlogged, splitting at the corner seam, beginning to float downstream. Inside, among the silver, a folded inventory sheet on waxed cloth: partial, listing forty-seven items with weights and descriptions.",
+      "skillCheck": {
+        "skill": "Athletics",
+        "dc": 12,
+        "prompt": "Retrieve the chest from the current before it rounds the river bend and becomes visible from the east bank road.",
+        "failText": "The chest rounds the bend. Two Burgundian soldiers on the road see it from the bank.",
+        "passText": "The chest comes to hand at the reeds. The inventory sheet is legible. The silver goes back in the water."
+      },
+      "grantItem": "The Hoard Inventory Fragment",
+      "checkPassFlag": "lbc5Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "RHN",
+      "activateNode": "RHN",
+      "type": "skill_check",
+      "scene": "Hagen is on the bank twenty yards upstream, watching. He saw the chest. He does not know you have the inventory. The question is whether to show him you have it or carry it past him in the dark as if you saw nothing.",
+      "skillCheck": {
+        "skill": "Insight",
+        "dc": 11,
+        "prompt": "Read Hagen correctly: he threw the hoard into the river to make the secret unspeakable; showing him the inventory restores the question he just closed; the right move is to carry it past him as if you found nothing.",
+        "failText": "You hesitate. He calls across the water: what did you find?",
+        "passText": "You walk north along the bank as if you stopped to look at the water. Hagen watches you go. He does not call. The inventory travels north."
+      },
+      "checkPassFlag": "lbc5Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "KOL",
+      "activateNode": "KOL",
+      "type": "skill_check",
+      "scene": "Cologne. A Burgundian knight, formerly of the court, has heard that something floated from the Rhine crossing. He wants to know what the inventory contains — not to recover the treasure but to settle a question about what was lost.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "prompt": "Decline to show him the inventory without refusing to acknowledge it exists — the inventory is archival material, not property confirmation; he cannot establish a claim through a list that does not establish location.",
+        "failText": "He insists on a reading. The conversation becomes an argument about who the list belongs to.",
+        "passText": "He accepts that a surviving inventory does not restore the treasure. He lets you continue north."
+      },
+      "checkPassFlag": "lbc5Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "KOL",
+      "activateNode": "KOL",
+      "type": "hybrid",
+      "scene": "North road out of Cologne. Kriemhild's agents are on the road — two riders with authority to intercept anyone carrying materials from the Rhine crossing. They are looking for evidence that the hoard was sunk.",
+      "skillCheck": {
+        "skill": "Deception",
+        "dc": 13,
+        "prompt": "Claim courier transit from Cologne to Weimar; the Rhine crossing materials are not mentioned in your commission documents.",
+        "failText": "One rider dismounts and searches the pack."
+      },
+      "combat": {
+        "enemies": 2,
+        "AC": 12,
+        "HP": 16,
+        "description": "Kriemhild's road agents — stop at first serious injury",
+        "failText": "They take the inventory. The archive loses the last record of what was in the hoard.",
+        "passText": "Both riders withdraw. The road north is clear."
+      },
+      "checkPassFlag": "lbc5Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "activateNode": "WM",
+      "type": "skill_check",
+      "scene": "Archivus Sweelinck reads the inventory. Forty-seven items. Weights in marks. Descriptions that name what the treasure contained. 'The treasure is at the bottom of the Rhine.' He looks at the list. 'The list is here.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 11,
+        "prompt": "Confirm the archive category: the inventory survives what it enumerated; the list is the only form in which the hoard can now be known; the document outlasted its referent.",
+        "failText": "Filed under Property Records — Burgundian estate. Cross-reference to Rhine incident.",
+        "passText": "Sweelinck writes: 'Inventory Records — Surviving Lists for Submerged or Destroyed Wealth; the document that outlasted its referent; the list is the only form in which the hoard persists above the river floor.' You receive the Hoard Inventory Archive Record."
+      },
+      "takeItem": "The Hoard Inventory Fragment",
+      "grantItem": "Hoard Inventory Archive Record",
+      "checkPassFlag": "lbc5Act5Passed",
+      "activateMissionBit": "lbcHoardInventoryComplete"
+    }
+  ]
+}
+```
+
+---
+
+*LBC-05 complete. 2026-06-03.*
+
+---
+
+## Cycle 6: The Nightwatch Account
+
+*(Theme differentiation: Avoiding LBC cycles 1-5. New theme: the vigil record as the only complete evidence of the night where nothing happened; the document created to report that everything was about to; the archive holds what the silence meant.)*
+
+### Quest API Stub — Cycle 6
+
+```json
+{
+  "quest_id": "LBC-06",
+  "title": "The Nightwatch Account",
+  "cycle": 6,
+  "book": "LBC — The Nibelungenlied",
+  "token": "Volker's Watch Record",
+  "route": ["ETZ", "HST", "WM"],
+  "theme": "The vigil record is the only complete evidence of the night where nothing happened; what the silence meant; a document created to report the hours between midnight and dawn when everything was already decided and nobody moved",
+  "archive_category": "Vigil Records — Night Accounts Preceding Known Catastrophes; The Record of the Hours in Which Everything Was Still Possible; Filed Under What the Silence Contained",
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "ETZ",
+      "activateNode": "ETZ",
+      "type": "skill_check",
+      "scene": "Etzel's hall steps, midnight. Hagen holds the step. Volker is writing on his knee — not composing, recording: the hour, the position of the Hunnic council in the yard, the sound of the debate, the fact that the door has not opened. He passes the document to the Fighter without looking up. 'Get this north. If we're still here at dawn it won't matter. If we're not, someone should know what the night looked like.'",
+      "skillCheck": {
+        "skill": "Composure",
+        "dc": 12,
+        "prompt": "Accept the document from Volker without disrupting the silence he and Hagen are maintaining — the Huns in the yard can see the hall steps; any visible transaction could be the signal that changes the night's arithmetic.",
+        "failText": "A Hunnic captain in the yard sees the handoff and calls a question across. Hagen answers. The silence has been broken.",
+        "passText": "The exchange is invisible. Hagen does not turn. You have the document."
+      },
+      "grantItem": "Volker's Watch Record",
+      "checkPassFlag": "lbc6Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "ETZ",
+      "activateNode": "ETZ",
+      "type": "skill_check",
+      "scene": "The rear of Etzel's hall. The door to the kitchen passage faces a section of the yard where three Hunnic soldiers are keeping their own watch. The door must open, and they must not see it open.",
+      "skillCheck": {
+        "skill": "Stealth",
+        "dc": 13,
+        "prompt": "Exit through the kitchen passage in the interval between the nearest soldier's torch-swing and his return — a window of approximately twelve seconds.",
+        "failText": "The torch catches the door at the half-open position. A call goes up.",
+        "passText": "Twelve seconds. The door opens and closes. You are in the kitchen passage."
+      },
+      "checkPassFlag": "lbc6Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "HST",
+      "activateNode": "HST",
+      "type": "skill_check",
+      "scene": "The road through Hunnic territory, pre-dawn. A Hunnic captain on the road is conducting a curfew check — all movement between midnight and dawn requires a transit authorization from the court night-watch.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "prompt": "Claim medical courier status — the court physician's transit authorization covers night movement; you are carrying an urgent communication from the hall physician.",
+        "failText": "He asks for the physician's seal. You do not have it.",
+        "passText": "He accepts the category without verifying the seal. A courier claiming medical transit does not typically lie about it; the consequences are too specific."
+      },
+      "checkPassFlag": "lbc6Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "HST",
+      "activateNode": "HST",
+      "type": "skill_check",
+      "scene": "Wayside inn, dawn. A Burgundian survivor moving west tells you that dawn came and went and the hall is gone. He wants to know what you are carrying. He is one of the men who made it out.",
+      "skillCheck": {
+        "skill": "Composure",
+        "dc": 11,
+        "prompt": "Tell him what the document is without letting him read it — Volker's account of the night-watch; it belongs in the archive, not in the camp story he is about to tell at the next inn.",
+        "failText": "He takes a reading of it. He keeps a copy. The document arrives at the archive with a copy already in circulation.",
+        "passText": "He understands. He lets you continue. He has his own account to carry west."
+      },
+      "checkPassFlag": "lbc6Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "activateNode": "WM",
+      "type": "skill_check",
+      "scene": "Archivus Sweelinck reads the watch record. The hours. The positions. The debate in the yard. The door that did not open. 'He was writing while he was on watch.' He pauses. 'This is the only record of the hours in which the outcome could have been different.'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 11,
+        "prompt": "Confirm the archive category: the vigil record documents the period in which everything was still possible; the silence it records is the evidence of what was about to happen; the archive holds what the hours contained before they became what they became.",
+        "failText": "Filed under Military Records — Hunnic campaign. Cross-reference to Etzel's court incident.",
+        "passText": "Sweelinck writes: 'Vigil Records — Night Accounts Preceding Known Catastrophes; the record of the hours in which everything was still possible; filed under what the silence contained.' You receive the Nightwatch Archive Record."
+      },
+      "takeItem": "Volker's Watch Record",
+      "grantItem": "Nightwatch Archive Record",
+      "checkPassFlag": "lbc6Act5Passed",
+      "activateMissionBit": "lbcNightwatchComplete"
+    }
+  ]
+}
+```
+
+---
+
+*LBC-06 complete. 2026-06-03.*
+
+---
+
+## Cycle 7: The Hoard's Location
+
+*(Theme differentiation: Avoiding LBC cycles 1-6. New theme: the secret held as the last act of loyalty to a dead man; the choice to carry the location to an archive rather than into silence; the document that restores Hagen's sovereignty over a decision he made alone.)*
+
+### Quest API Stub — Cycle 7
+
+```json
+{
+  "quest_id": "LBC-07",
+  "title": "The Hoard's Location",
+  "cycle": 7,
+  "book": "LBC — The Nibelungenlied",
+  "token": "The Location Sketch",
+  "route": ["ETZ", "RHN", "WM"],
+  "theme": "The secret held as the last act of loyalty to a dead man; the choice to carry the location to an archive rather than into silence; the document that preserves Hagen's sovereignty over a decision he made alone by making that decision a record rather than a loss",
+  "archive_category": "Location Records — Deliberately Concealed Wealth; Filed Under the Concealer's Decision Authority; The Secret That Became a Document by Being Written Rather Than Carried Into the River",
+  "questComplete": true,
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "ETZ",
+      "activateNode": "ETZ",
+      "type": "skill_check",
+      "scene": "Etzel's court, after the last Burgundians are dead. Kriemhild is interrogating Hagen's companions: does anyone know where the Nibelung hoard is. The Fighter was on the boat the night Hagen sank it. The Fighter knows the exact bend of the Rhine and the depth. Hagen died without speaking. The question is being asked directly.",
+      "skillCheck": {
+        "skill": "Composure",
+        "dc": 13,
+        "prompt": "Say nothing useful — not by lying, but by being precisely what a witness who was not on the boat would say; the specific thing a person who knows nothing specific would say in response to this specific question.",
+        "failText": "The pause before answering is the answer. Kriemhild sends men north.",
+        "passText": "You say what a person says who does not know. It is technically not false. You leave the court with the knowledge Hagen kept."
+      },
+      "checkPassFlag": "lbc7Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "ETZ",
+      "activateNode": "ETZ",
+      "type": "skill_check",
+      "scene": "The gate of Etzel's court. Kriemhild's gate guard has specific orders: anyone who was at the court during the Nibelung visit is to be questioned before departure about the hoard's location.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "prompt": "Establish that you are a courier, not a member of the Burgundian party — you were present as a neutral carrier at multiple points, not as a Nibelung retainer; the questioning authority applies to Nibelung party members, not independent couriers.",
+        "failText": "The guard holds you for a court official. The questioning becomes detailed.",
+        "passText": "The category distinction is accepted. Independent couriers are not members of any party. The gate opens."
+      },
+      "checkPassFlag": "lbc7Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "RHN",
+      "activateNode": "RHN",
+      "type": "skill_check",
+      "scene": "The Rhine bank. The exact location. The bend in the river where Hagen directed the boat to stop. The depth can be estimated from the current. Standing here, the Fighter makes the decision Hagen made: whether this knowledge goes into silence with him or becomes a record.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "prompt": "Understand what writing the location down means and what it does not mean — the archive does not recover the treasure; the archive holds Hagen's decision; what is preserved is not the hoard but the fact that Hagen chose to place it and chose not to speak; the document preserves his sovereignty over that choice.",
+        "failText": "The location stays in memory. It will be forgotten in twenty years when the Fighter dies.",
+        "passText": "You draw the bend. The depth. The number of strokes from the east bank. The sketch is brief and exact. You have preserved what Hagen decided, not what he hid."
+      },
+      "grantItem": "The Location Sketch",
+      "checkPassFlag": "lbc7Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "RHN",
+      "activateNode": "RHN",
+      "type": "skill_check",
+      "scene": "The north road. A Burgundian survivor on the road who knows Hagen is dead and knows you were at the court. He does not know about the sketch. He asks: did Hagen say anything at the end about the hoard.",
+      "skillCheck": {
+        "skill": "Composure",
+        "dc": 11,
+        "prompt": "Answer honestly without naming the sketch — Hagen said nothing about the hoard; the sketch is not Hagen's words; it is a decision made after, about what Hagen's decision meant.",
+        "failText": "He infers from your answer that you know something. He follows to the next waystation.",
+        "passText": "Hagen said nothing. That is the honest answer. He accepts it and continues west."
+      },
+      "checkPassFlag": "lbc7Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "activateNode": "WM",
+      "type": "skill_check",
+      "scene": "Archivus Sweelinck looks at the sketch. The bend. The depth. 'This is a location.' He pauses. 'If someone acted on this, they could retrieve the treasure.' Another pause. 'Hagen put it there and died without speaking. You are bringing me a record of what he decided.' He looks up. 'What category does this belong in?'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 13,
+        "prompt": "Name the archive category: the document preserves Hagen's decision authority over the hoard — not the hoard's location as an actionable fact but as a record that the decision was made and made deliberately; the archive holds the choice, not the treasure.",
+        "failText": "Filed under Property Records — Burgundian estate, location undisclosed. The document is treated as property intelligence.",
+        "passText": "Sweelinck writes: 'Location Records — Deliberately Concealed Wealth; filed under the concealer's decision authority; the secret became a document by being written rather than carried into the river; the archive holds the decision, not the treasure.' He marks it restricted access. You receive the Hoard Location Record."
+      },
+      "takeItem": "The Location Sketch",
+      "grantItem": "Hoard Location Record",
+      "checkPassFlag": "lbc7Act5Passed",
+      "activateMissionBit": "lbcHoardLocationComplete"
+    }
+  ]
+}
+```
+
+---
+
+*LBC-07 complete. 2026-06-03.*

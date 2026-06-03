@@ -450,7 +450,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 |--------|------|------|----------------|--------|----------|----|
 | [x] | FRO | volsunga-saga | Volsunga Saga — Anon | ~13th C (legendary) | Norse Legend | 342 |
 | [x] | VBY | grettir-saga | Grettir's Saga — Anon | ~14th C | Icelandic Saga | 373 | SEEDS COMPLETE 2026-06-03 — VBY-01–07 all vignettes done. RKN/BWH already in Location Grid. No new nodes. See VBY-grettir-saga.md. |
-| [x] | LBC | nibelungenlied | Nibelungenlied — Anon | c.1200 | German Epic | 660 |
+| [x] | LBC | nibelungenlied | Nibelungenlied — Anon | c.1200 | German Epic | 660 | SEEDS COMPLETE 2026-06-03 — LBC-01–07 all vignettes done (7 cycles). questComplete added to LBC-07 (cycle 7). New nodes: NIL, WOR, RHN, KOL, HST added to Location Grid. Theme threads for all 7 cycles. See LBC-nibelungenlied.md. |
 | [x] | GDN | njal-saga | Njal's Saga — Anon (Dasent transl.) | ~13th C | Icelandic Saga | 787 | SEEDS COMPLETE 2026-06-03 — GDN-01–07 all vignettes done. No new nodes (ISL, BK, VS, HHL, HEO, CON all exist). See GDN-njal-saga.md. |
 | [x] | RIX | egil-saga | Egil's Saga — Anon (attr. Snorri) | ~13th C | Icelandic Saga | 869 | SEEDS COMPLETE 2026-06-03 — RIX-01–07 all vignettes done. YRK/ISL already in Location Grid. No new nodes. See RIX-egil-saga.md. |
 | [x] | BOO | prose-edda | Prose Edda — Snorri Sturluson | c.1220 | Norse Mythology | 514 | SEEDS COMPLETE 2026-06-03 — BOO-01–07 all vignettes done. HNJ already in Location Grid. No new nodes. See BOO-prose-edda.md. |

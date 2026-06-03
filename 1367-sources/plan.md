@@ -754,7 +754,7 @@ Every quest in §MATH-01 carries a Noether signature: every TOKEN that reaches t
 | 69 | CRL | Froissart (Boys) | **SEEDS COMPLETE 2026-06-03 — CRL-01–08 done (8 cycles). questComplete added to CRL-08. New node AVG added. Theme threads for all 8 cycles.** |
 | 70 | CPH | Gesta Danorum | **SEEDS COMPLETE 2026-06-03 — CPH-01–02 done (2 cycles). questComplete added to CPH-02. Theme threads already present. Rows updated.** |
 | 71 | MOL | Laxdaela Saga | **SEEDS COMPLETE 2026-06-03 — MOL-01–02 done (2 cycles). questComplete added to MOL-02. Theme threads already present. Rows updated.** |
-| 72 | LBC | Nibelungenlied | QUEUED |
+| 72 | LBC | Nibelungenlied | **SEEDS COMPLETE 2026-06-03 — LBC-01–07 done (7 cycles). Wrote cycles 3-7. questComplete added to LBC-07. New nodes NIL/WOR/RHN/KOL/HST. Theme threads for all 7 cycles.** |
 | 73 | FRO | Volsunga Saga | QUEUED |
 | 74 | MSE | Canterbury Tales | QUEUED |
 | 75 | KIR | Mabinogion | QUEUED |
