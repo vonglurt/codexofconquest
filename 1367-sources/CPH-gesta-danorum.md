@@ -638,6 +638,7 @@ Outside, in the harbor, Amleth is already arranging things. The two attendants a
     "introducedAct": 1,
     "consumedAct": 5
   },
+  "questComplete": true,
   "acts": [
     {
       "act": 1,

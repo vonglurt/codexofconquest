@@ -459,7 +459,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | [x] | RKV | poetic-edda | Poetic Edda — Anon | ~10th–13th C | Norse Poetry | 1924 | SEEDS COMPLETE 2026-06-03 — RKV-01–07 all vignettes done. AEG/RSS already in Location Grid. No new nodes. See RKV-poetic-edda.md. |
 | [x] | HFT | frithiof-saga | Frithiof's Saga — Esaias Tegnér | 1825 (Old Norse) | Romantic Epic | 403 | SEEDS COMPLETE 2026-06-03 — HFT-01–07 all vignettes done. No new nodes (BLG/ALR/RNG/ING pre-existing). See HFT-frithiof-saga.md. |
 | [x] | MOL | laxdaela-saga | Laxdaela Saga — Anon | ~13th C | Icelandic Saga | 347 |
-| [x] | CPH | gesta-danorum | Gesta Danorum — Saxo Grammaticus | c.1200 | Danish Chronicles | 689 |
+| [x] | CPH | gesta-danorum | Gesta Danorum — Saxo Grammaticus | c.1200 | Danish Chronicles | 689 | SEEDS COMPLETE 2026-06-03 — CPH-01–02 all vignettes done (2 cycles). questComplete added to CPH-02 (cycle 2). Nodes DNS/BRK already in Location Grid. Theme threads for both cycles already present. See CPH-gesta-danorum.md. |
 | [x] | ARN | knights-of-the-cross | Knights of the Cross — Henryk Sienkiewicz | 1900 (1399 setting) | Polish Historical Epic | 324 | SEEDS COMPLETE 2026-06-03 — ARN-01–07 all vignettes done. KRK/JUR/TKT/CHP already in Location Grid. No new nodes. See ARN-knights-of-the-cross.md. |
 
 ### French & Continental
