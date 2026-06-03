@@ -10861,6 +10861,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   blq_09_act3: { id:"blq_09_act3", type:"skill_check", title:"The Jewel Chest — Act 3: Maestro Vito's Canonical Argument", failText:"Maestro Vito produces the bishop's custody order. Its jurisdiction against the Bari podestà is uncertain. The carrier either waits for the order to be challenged — losing a day — or continues and delivers a contested chest to the court.", npc:"messer_cosimo_taranto", activateNode:"BRI", reward:NaN, activateCond:blq09PisaniDeclined },
   blq_09_act4: { id:"blq_09_act4", type:"skill_check", title:"The Jewel Chest — Act 4: Falco's Defection", failText:"Falco turns east. The cart is stopped and the chest jostled — the iron bands hold but the pitch seal has a cracked near one band. The carrier must explain this at court.", npc:"messer_cosimo_taranto", activateNode:"BRI", reward:NaN, activateCond:blq09CanonicalDeclined },
   blq_09_act5: { id:"blq_09_act5", type:"skill_check", title:"The Jewel Chest — Act 5: Messer Aldrovando Opens the Chest", failText:"Pisani challenges the seal condition as evidence of improper handling. Aldrovando orders an inquiry — three days, provisional acceptance, fee held.", npc:"messer_cosimo_taranto", activateNode:"BAR", reward:NaN, activateCond:blq09FalcoKept },
+  blq_10_act1: { id:"blq_10_act1", type:"skill_check", title:"The Soldier's Testimony — Act 1: The Objects Are Evidence", failText:"The carrier departs with the linen square and general understanding. The evidential architecture — why the objects matter, what Luini needs — is not fully understood.", npc:"beatrice_canetto", activateNode:"ALE", reward:NaN, activateCond:null },
+  blq_10_act2: { id:"blq_10_act2", type:"skill_check", title:"The Soldier's Testimony — Act 2: Donato's Offer", failText:"The carrier, uncertain, engages with Donato's argument. Donato extracts enough to confirm the objects are going to a Famagusta notary and that a witness exists in Alexandria. He books an earlier departure.", npc:"beatrice_canetto", activateNode:"ALE", reward:NaN, activateCond:blq10EvidenceArchitectureUnderstood },
+  blq_10_act3: { id:"blq_10_act3", type:"skill_check", title:"The Soldier's Testimony — Act 3: Biagio on the Ship", failText:"Biagio pieces together enough from deflections to conclude the filing involves personal effects from the Alexandria Frankish quarter. He sends a message to Donato: filing appears connected to personal-effects retrieval; recommend alerting Luini's office before carrier arrives. Donato contacts the consulate before the carrier.", npc:"beatrice_canetto", activateNode:"ALE", reward:NaN, activateCond:blq10DonatoDeclined },
+  blq_10_act4: { id:"blq_10_act4", type:"skill_check", title:"The Soldier's Testimony — Act 4: Donato's Message at the Harbor", failText:"The harbormasters' clerk holds the carrier for a verification interview before allowing them to proceed with contested property. Two hours lost. Donato, notified, goes to the consulate first.", npc:"beatrice_canetto", activateNode:"FAM", reward:NaN, activateCond:blq10BiagioDeflected },
+  blq_10_act5: { id:"blq_10_act5", type:"skill_check", title:"The Soldier's Testimony — Act 5: Luini Opens the Pre-Testimony File", failText:"Luini holds the objects in escrow pending a formal hearing including all parties. The pre-testimony file is not opened. Donato speaks to Luini for an hour before Beatrice arrives. The situation is already contested.", npc:"beatrice_canetto", activateNode:"FAM", reward:NaN, activateCond:blq10HarbormastersCleared },
 };
 // ◆◆◆ WORLDBUILDER:QUEST_DB:END ◆◆◆
 
@@ -11844,6 +11849,7 @@ const BIRKA_NPC_PROFILES = { // → doc: world.md §Birka Six NPCs
   ser_giambattista_alberi: { key:"ser_giambattista_alberi", name:"Ser Giambattista Alberi", occupation:"Guild factor for the Florentine merchant consortium, Via Tornabuoni. Manages eastern accounts and dispatch coordination. Has been calculating the Bostichi deadline for three days and knows the mathematics do not work without the Hospitaller relay.", node:"PSA" },
   konstantinos_philanthropenos: { key:"konstantinos_philanthropenos", name:"Konstantinos Philanthropenos", occupation:"Byzantine chancery clerk, Blachernae quarter, Constantinople. Issued the dual-petition ruling letter for the Galata warehouse dispute. Is aware that both parties' agents are watching. Is not asking for deception — only for speed.", node:"CON" },
   messer_cosimo_taranto: { key:"messer_cosimo_taranto", name:"Messer Cosimo di Taranto", occupation:"Notary in Brindisi. Retained by Rocco the fisherman to ensure the sea-chest reaches the Bari podestà's court before either claimant can take private custody. Commissioned the carrier; issued the custody document.", node:"BRI" },
+  beatrice_canetto: { key:"beatrice_canetto", name:"Beatrice di Canetto (as Jacopo da Savona)", occupation:"Genoese noblewoman living in Alexandria for three years under the identity of Jacopo da Savona, soldier's factor. Framed by Donato di Palma for adultery; fled Genoa; reinvented herself. Found her stolen purse and clasp at Donato's market stall last week. Cannot carry the evidence herself — she has no legal standing in Famagusta as Jacopo and cannot reveal herself as Beatrice until Donato is already confronted.", node:"ALE" },
 };
 // ◆◆◆ WORLDBUILDER:BIRKA_NPC:END ◆◆◆
 
@@ -12190,6 +12196,11 @@ const _S_DEFAULTS = () => ({
     blq09CanonicalDeclined: false,
     blq09FalcoKept: false,
     blq09Complete: false,
+    blq10EvidenceArchitectureUnderstood: false,
+    blq10DonatoDeclined: false,
+    blq10BiagioDeflected: false,
+    blq10HarbormastersCleared: false,
+    blq10Complete: false,
 });
 
 /* ── Layer 48: Luck — Seventh Stat ── */
