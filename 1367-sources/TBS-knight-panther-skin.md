@@ -473,3 +473,598 @@ The cedar tablet leaves the cell in the Fighter's hands. On it: one fact in the 
 |------|------|----------|-------------|
 | PHY | Court Physician's Study | Castle interior | Small room off the main corridor: herb-smell, a single window, a table with clay vessels and linen bandages; physician Maro with the cedar tablet; the cell door visible through the study window |
 | GHC | Guard House Cell | Castle annex | Stone cell, low ceiling, flat stone floor, single iron lamp; the warrior in a panther's skin against the far wall; smells of stone and old straw and something like the wilderness; the cell where grief has become an identity and a conversation might undo it |
+
+---
+
+## §TBS-03 — "The Weeping Knight of the Mountain Road"
+
+**Seed:** Storyline 1 — a lone warrior weeping at a crossroads has blocked the road for three days; the court needs it cleared; the Fighter is sent to learn the truth without drawing steel  
+**Route:** GEO → TIF → WM  
+**New nodes:** none (GEO and TIF exist)
+
+---
+
+**ACT I — "The Crossroads" (Georgian mountain road)**
+
+A warrior in black armour sits at the crossroads of the mountain road, weeping. He has been there three days. Travellers detour. The court has sent soldiers twice; he disarmed them without apparent effort and sent them back. The third delegation is the Fighter, alone, without drawn steel.
+
+He is not mad. He is not cursed. He is weeping with the absolute attention of a man who has decided that grief is the only honest thing left to do.
+
+TOKEN: `weeping_knight_inquiry` — a record in the Fighter's hand of the warrior's stated reason for sitting at the crossroads; what he will and will not allow; the distinction the court needs to understand before it acts.
+
+*Skill check: Insight, DC 12 — understand what the warrior's presence means before saying anything; a man who blocked a road for three days is not asking to be moved, he is asking to be seen.*
+
+*On success:* You sit down on the far side of the road and wait. After an hour, he speaks. You write what he says. He does not object to being written about.
+*On fail:* You speak first. He looks at you with the patience of a man who has turned down many approaches. You sit down instead and wait.
+
+*TOKEN granted Act I.*
+
+---
+
+**ACT II — "The King's Road" (road GEO→TIF)**
+
+On the road to Tbilisi with the inquiry in hand, a royal courier intercepts you. The court wants the warrior declared mad and the road cleared by force. The inquiry's content contradicts this — the warrior is coherent and has stated specific conditions. The courier wants you to summarize the inquiry as "incoherent grief-speech" in your verbal report.
+
+*Skill check: Persuasion, DC 12 — the inquiry must reach the court verbatim; the warrior's conditions are specific and can be met; summarizing as madness closes the avenue.*
+
+*On success:* The courier accepts that a written record makes a verbal summary unnecessary.
+*On fail:* He files his own verbal report first. You file the written inquiry alongside. Both reach the court.
+
+*TOKEN check Act II.*
+
+---
+
+**ACT III — "The Court" (Tbilisi)**
+
+At the Georgian court, a military commander wants to use the inquiry's content to identify the warrior's origin and conscript him — a man who disarmed two military delegations without injury is valuable. The inquiry was gathered as a record of the warrior's grief, not a military assessment.
+
+*Skill check: Insight, DC 11 — the inquiry cannot be used as a scouting document without violating the terms under which the warrior spoke; see this before the commander does.*
+
+*On success:* You withhold the section on his fighting capability. The archive receives the complete document.
+*On fail:* The commander reads the full inquiry. He adds a military note in the margin. Sweelinck will receive it with the note attached and will file both.
+
+*TOKEN check Act III.*
+
+---
+
+**ACT IV — "The Historian's Office" (Tbilisi)**
+
+A court historian wants to use the inquiry as evidence that the warrior is a figure from a recent battle — a named casualty whose grief is the result of a specific known loss. He wants the warrior's identity established so the grief can be assigned its cause.
+
+*Skill check: Persuasion, DC 11 — the inquiry records what the warrior said, not what caused it; assigning a cause the warrior did not name violates the record.*
+
+*On success:* The historian receives a copy with the identity question explicitly unresolved.
+*On fail:* He adds an appendix identifying the warrior by inference. The inquiry travels with the appendix and the dissent.
+
+*TOKEN check Act IV.*
+
+---
+
+**ACT V — "The Archive" (Weimar)**
+
+Sweelinck reads the inquiry.
+
+"He sat at a crossroads for three days and wept. He was not mad. He had conditions. The court wanted him declared mad because madness allows a different kind of response than grief does. The inquiry records what he actually said."
+
+He writes: *Grief as Public Obstruction, First Entry. The Crossroads Inquiry: grief occupies public space with the full sincerity of a man who has nothing left to pretend with; the distinction between the cursed and the broken is the distinction the court must make before acting; the archive holds the statement of a man at the crossroads who asked to be seen, not moved.*
+
+*TOKEN taken Act V.*
+
+---
+
+### Theme
+
+**"The warrior at the crossroads was not mad, not cursed, and not asking to be moved; he was asking to be seen; the inquiry records his conditions and the distinction the court needed before it could act; grief that occupies the road is not an obstruction but a statement."**
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "TBS_003",
+  "title": "The Weeping Knight of the Mountain Road",
+  "source": "Knight in the Panther's Skin — Shota Rustaveli",
+  "cycle": "TBS",
+  "book": "Knight in the Panther's Skin",
+  "source_episode": "Opening — Rostevan and Avtandil glimpse a lone knight weeping by a stream; the knight in the panther's skin vanishes when approached; the opening mystery that sets the poem's entire quest in motion",
+  "theme": "Grief that occupies public space asks to be seen before it can be moved; the distinction between the cursed and the broken must be established before the court can act.",
+  "activateNode": "GEO",
+  "token": {
+    "id": "weeping_knight_inquiry",
+    "name": "Crossroads Inquiry",
+    "description": "Fighter's written record: the warrior's stated reason for blocking the road, his conditions for departure, his coherent but inconvenient grief. The distinction the court needed.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["GEO", "TIF", "WM"],
+  "new_nodes": [],
+  "acts": [
+    { "act": 1, "location": "GEO", "scene": "Mountain road crossroads, Georgian highlands", "title": "The Crossroads", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 12 }, "token_action": "grant" },
+    { "act": 2, "location": "road_GEO_TIF", "scene": "Royal road to Tbilisi, royal courier intercept", "title": "The King's Road", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "TIF", "scene": "Georgian court, military commander's office", "title": "The Court", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 11 }, "token_action": "check" },
+    { "act": 4, "location": "TIF", "scene": "Tbilisi, court historian's study", "title": "The Historian's Office", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 11 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "The Archive", "type": "delivery", "activateMissionBit": "tbsWeepingKnightComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## §TBS-04 — "The Letter That Started a War"
+
+**Seed:** Storyline 2 — a princess, imprisoned in her tower before a forced marriage, passes a sealed letter commanding an unknown champion to stop the wedding by killing the groom; the Fighter intercepts it mid-transit  
+**Route:** TIF → ALP → WM  
+**New nodes:** none
+
+---
+
+**ACT I — "The Tower Window" (Tbilisi)**
+
+The princess's tower window, late afternoon. A smuggler has been paid to carry a letter from the highest window to a champion whose name and location are known only to the princess. The letter is wrapped in oilskin and weighted with a stone.
+
+You intercept it before the smuggler reaches his destination. He does not argue — this is not his war.
+
+The letter is sealed. You can feel through the oilskin that it is brief — one sheet, tightly folded. You do not know if delivering it will start a war. You do not know if suppressing it condemns the princess to a marriage she has already refused in the only way available to her.
+
+TOKEN: `nestan_command_letter` — the princess's sealed letter commanding her champion to stop the wedding by killing the groom; the instrument that was simultaneously a love act and a declaration of war.
+
+*Skill check: Insight, DC 12 — assess what you hold without opening it: the sealed document that will bind someone to an act of war the moment it is received; the weight of the decision the princess put in your hands.*
+
+*On success:* You understand it completely. You carry it sealed to the scholar in Aleppo who must receive it as a document, not an order.
+*On fail:* You hesitate long enough that the smuggler reappears with a second copy — she prepared for interception. You take both.
+
+*TOKEN granted Act I.*
+
+---
+
+**ACT II — "The Mamluk Road" (road TIF→ALP)**
+
+Between Tbilisi and Aleppo, a Mamluk checkpoint. The checkpoint officer recognizes oilskin-wrapped letters as the format used for political communications across the Georgian-Mamluk border. He wants to open it.
+
+*Skill check: Deception, DC 13 — the letter is already being analyzed in transit; this is a scholarly courier carrying a case study in legal philosophy, not an active political correspondence.*
+
+*On success:* The framing holds. The letter passes sealed.
+*On fail:* He opens it. The words are in Georgian. He cannot read Georgian and seals it back up, noting the language in his register.
+
+*TOKEN check Act II.*
+
+---
+
+**ACT III — "The Scholar" (Aleppo)**
+
+In Aleppo, a legal philosopher specializing in command authority has been waiting for exactly this kind of document. He reads Nestan-Darejan's letter — still sealed when it left your hands, because you explained the provenance — and provides the analysis the archive needs: the command that was simultaneously an act of love and a declaration of war; the princess who exercised the only form of authority available to her.
+
+A Mamluk court official wants the letter as diplomatic evidence of Georgian instability.
+
+*Skill check: Persuasion, DC 12 — the letter is a philosophical document about the nature of command authority, not a diplomatic instrument; it goes to the archive, not the court.*
+
+*On success:* The official accepts the distinction with visible reluctance.
+*On fail:* He claims diplomatic jurisdiction. The scholar files a counter-claim citing scholarly privilege. The letter travels during the dispute.
+
+*TOKEN check Act III.*
+
+---
+
+**ACT IV — "The Second Scholar" (Aleppo)**
+
+A second Aleppo scholar — a theologian — argues the letter is morally simple: a woman commanding her lover to commit murder is not an act of love but a sin. The letter should be suppressed, not preserved.
+
+*Skill check: Insight, DC 11 — the archive preserves the record of what happened, not a moral endorsement; suppressing documents because they contain commands to sin destroys the record of every war that was started by a letter.*
+
+*On success:* The theologian accepts the distinction between archiving and endorsing.
+*On fail:* He attaches a theological caveat. The letter travels with both the analysis and the caveat.
+
+*TOKEN check Act IV.*
+
+---
+
+**ACT V — "The Archive" (Weimar)**
+
+Sweelinck reads the letter and the scholar's analysis.
+
+"She was imprisoned in a tower before a marriage she did not choose. She had one instrument: a letter to a man she trusted, commanding an act she knew would cost him everything. The letter created the war, the crime, and the love story simultaneously."
+
+He writes: *Command Documents That Create Their Own Consequences, First Entry. The Nestan-Darejan Letter: the command that was simultaneously an act of love and a declaration of war; the only form of authority available to the imprisoned; the archive holds the letter and notes that the consequences were intended, accepted, and irreversible at the moment of sealing.*
+
+*TOKEN taken Act V.*
+
+---
+
+### Theme
+
+**"The princess in the tower had one instrument: a sealed letter commanding a war to stop a marriage she would not accept; the letter created the crime, the war, and the love story simultaneously; the archive names it Command Documents That Create Their Own Consequences, first entry."**
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "TBS_004",
+  "title": "The Letter That Started a War",
+  "source": "Knight in the Panther's Skin — Shota Rustaveli",
+  "cycle": "TBS",
+  "book": "Knight in the Panther's Skin",
+  "source_episode": "Central crisis — Nestan-Darejan secretly commands Tariel to kill the Khvarazmian prince rather than allow the wedding; Tariel obeys; the act starts a war, costs him his position, and loses him his beloved",
+  "theme": "The command document that was simultaneously an act of love and a declaration of war; the only authority available to the imprisoned; consequences intended and irreversible at sealing.",
+  "activateNode": "TIF",
+  "token": {
+    "id": "nestan_command_letter",
+    "name": "The Nestan-Darejan Letter",
+    "description": "Princess's sealed letter: command to kill the groom rather than permit the wedding; the instrument that created the crime, the war, and the love story simultaneously.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["TIF", "ALP", "WM"],
+  "new_nodes": [],
+  "acts": [
+    { "act": 1, "location": "TIF", "scene": "Princess's tower, Tbilisi, letter intercepted mid-transit", "title": "The Tower Window", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 12 }, "token_action": "grant" },
+    { "act": 2, "location": "road_TIF_ALP", "scene": "Mamluk-Georgian border checkpoint", "title": "The Mamluk Road", "type": "skill_check", "skillCheck": { "skill": "Deception", "dc": 13 }, "token_action": "check" },
+    { "act": 3, "location": "ALP", "scene": "Aleppo, legal philosopher's study", "title": "The Scholar", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 12 }, "token_action": "check" },
+    { "act": 4, "location": "ALP", "scene": "Aleppo, theologian's counter-argument", "title": "The Second Scholar", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 11 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "The Archive", "type": "delivery", "activateMissionBit": "tbsLetterStartedWarComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## §TBS-05 — "Asmat's Vigil"
+
+**Seed:** Storyline 3 — Asmat has lived two years alone at the edge of a haunted forest, bringing food and news to Tariel within; she needs help carrying a message deep into the forest  
+**Route:** GEO → CON → WM  
+**New nodes:** none
+
+---
+
+**ACT I — "The Forest Edge" (Georgian mountain road)**
+
+Asmat lives alone at the edge of the forest where Tariel grieves. She has been here for two years. She is not cursed, not mad, not compelled by any oath anyone witnessed. She stayed because someone had to, and no one else did.
+
+She needs a message carried deeper into the forest than she has been able to go — a place where Tariel has retreated when visitors come, past the outer line of the wilderness he has made his home. She will not send it with anyone who does not understand why she is here.
+
+TOKEN: `asmat_vigil_record` — Asmat's account of her two-year vigil: what she witnessed, what she refused to leave for, what she has learned about the limit of what one person can sustain in the service of another.
+
+*Skill check: Insight, DC 11 — understand what it cost her to stay; not pity, recognition; she needs to see that the Fighter understands the difference between waiting and watching.*
+
+*On success:* She gives you both the message and a brief written account of the vigil — she has been keeping records. "Someone should know what two years at the edge of a forest produces."
+*On fail:* She gives you the message but not the record. You ask about the record; she says: "Come back with what he says. Then I'll show you the record."
+
+*TOKEN granted Act I.*
+
+---
+
+**ACT II — "The Forest Road" (road GEO→CON)**
+
+On the road from Georgia toward Constantinople, a Byzantine scholar who studies grief-exile traditions intercepts you at a waystation. He has heard of Asmat's vigil and wants to classify it as a form of monastic vocation — specifically, the tradition of the hesychast who chooses isolation in service of another's spiritual crisis.
+
+*Skill check: Persuasion, DC 12 — the vigil was not monastic; it was practical; Asmat brought food and news; the hesychast classification erases the labor and elevates only the suffering.*
+
+*On success:* The scholar receives the record as a document of practical care, not spiritual vocation.
+*On fail:* He adds a monastic classification to his own notes. The record travels with both readings.
+
+*TOKEN check Act II.*
+
+---
+
+**ACT III — "Constantinople" (Constantinople)**
+
+At the Byzantine court, a court lady who knows of the story wants the vigil record as evidence that Asmat's loyalty to Tariel was itself a form of love — that the vigil was not service but devotion. She wants to use it as an argument for the elevation of servants who choose to stay beyond their obligation.
+
+*Skill check: Insight, DC 12 — the vigil record should not be used in a legal argument about servants' rights without Asmat's knowledge; it can be studied but not deployed.*
+
+*On success:* The court lady accepts the boundary. She receives a copy for study.
+*On fail:* She presents the record at a court session as evidence. The archive receives the original before the session's conclusion.
+
+*TOKEN check Act III.*
+
+---
+
+**ACT IV — "The Scriptorium" (Constantinople)**
+
+A Byzantine archivist wants to file the vigil record under women's devotional literature — the same category as hagiographies of women who waited for martyred husbands. The vigil is a secular document, not a devotional one.
+
+*Skill check: Persuasion, DC 11 — the vigil is a record of sustained practical care under difficult conditions; the devotional literature category contains the wrong kind of record.*
+
+*On success:* The archivist creates a new category: Solitary Vigil Records — Practical Care Under Impossible Conditions. He files Asmat's record as its first entry.
+*On fail:* He files it under devotional literature with a note questioning the classification. Sweelinck will refile it.
+
+*TOKEN check Act IV.*
+
+---
+
+**ACT V — "The Archive" (Weimar)**
+
+Sweelinck reads the vigil record.
+
+"She brought food and news for two years. She did not leave. She was not bound by oath. She stayed because someone had to, and she was there."
+
+He writes: *Solitary Vigil Records — Sustained Witness in Impossible Conditions, First Entry. Asmat's Vigil: the person who remains when everyone with better options has left; care performed without witness, without reward, and without the certainty of outcome; the archive names this as its own kind of document and files it separately from devotion, separately from duty, in the category it creates for itself: witness as presence.*
+
+*TOKEN taken Act V.*
+
+---
+
+### Theme
+
+**"Asmat stayed at the forest edge for two years because someone had to; she was not bound, not compelled, not hoping; she brought food and news and remained; the archive names this Sustained Witness in Impossible Conditions and files it as its own kind of heroism."**
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "TBS_005",
+  "title": "Asmat's Vigil",
+  "source": "Knight in the Panther's Skin — Shota Rustaveli",
+  "cycle": "TBS",
+  "book": "Knight in the Panther's Skin",
+  "source_episode": "Asmat, Tariel's devoted attendant, lives alone at the edge of Tariel's wilderness retreat for years, caring for him from the boundary of the space he has claimed for his grief",
+  "theme": "The person who remains when everyone with better options has left; sustained practical care performed without witness, reward, or certainty; witness as presence.",
+  "activateNode": "GEO",
+  "token": {
+    "id": "asmat_vigil_record",
+    "name": "Asmat's Vigil Record",
+    "description": "Asmat's written account of two years at the forest edge: what she witnessed, what she refused to leave, what sustained practical care in impossible conditions looks like from the inside.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["GEO", "CON", "WM"],
+  "new_nodes": [],
+  "acts": [
+    { "act": 1, "location": "GEO", "scene": "Forest edge, Asmat's solitary camp, Georgian wilderness", "title": "The Forest Edge", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 11 }, "token_action": "grant" },
+    { "act": 2, "location": "road_GEO_CON", "scene": "Byzantine waystation, scholar intercept", "title": "The Forest Road", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "CON", "scene": "Byzantine court, court lady's study", "title": "Constantinople", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 12 }, "token_action": "check" },
+    { "act": 4, "location": "CON", "scene": "Byzantine scriptorium, classification dispute", "title": "The Scriptorium", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 11 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "The Archive", "type": "delivery", "activateMissionBit": "tbsAsmatVigilComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## §TBS-06 — "The Brotherhood Oath"
+
+**Seed:** Storyline 4 — three knights swear brotherhood before the assault on Kajeti; each names what he would sacrifice; the Fighter witnesses the oath  
+**Route:** TIF → DAM → WM  
+**New nodes:** none
+
+---
+
+**ACT I — "The Oath" (Tbilisi)**
+
+The night before the assault on Kajeti, Tariel, Avtandil, and Pridon gather on the headland above the harbor. The ritual requires each man to name the thing he would sacrifice for the others. This is not a military oath — it overrides military hierarchy. It is sworn between equals, not between a lord and his men.
+
+Avtandil names his queen's command. Tariel names his grief, which he says is the most valuable thing he has left. Pridon names his kingdom. Each man speaks the name and waits for the other two to receive it.
+
+The Fighter witnesses. No one asked the Fighter to witness. No one told them to record it. But the Fighter does — because no record exists of what these three men said on this headland, and the act will be denied by courts and historians alike, and the things they named should not be lost.
+
+TOKEN: `brotherhood_oath_inscription` — the Fighter's written record of what each knight named on the headland; the oath's terms; the archive's only evidence of what sworn brotherhood required.
+
+*Skill check: Perception, DC 11 — hold the exact words of all three speakers in memory long enough to write them down afterward; three men, three names, the specific register of something meant to be spoken aloud and never written.*
+
+*On success:* You write all three names accurately in the order they were spoken. Tariel's last, because his was the hardest.
+*On fail:* You write two accurately and paraphrase the third. You note the paraphrase.
+
+*TOKEN granted Act I.*
+
+---
+
+**ACT II — "The Harbor" (road TIF→DAM)**
+
+On the road south with the oath inscription, a court official from Pridon's kingdom intercepts the courier route. Pridon named his kingdom as the thing he would sacrifice — if the inscription reaches enemy hands, it is a statement of willingness to give up the kingdom that could be used against him.
+
+*Skill check: Deception, DC 12 — the inscription is a philosophical document about the nature of sworn brotherhood, not a political renunciation; it cannot be used to press a political claim.*
+
+*On success:* The official accepts the framing and lets it pass.
+*On fail:* He takes a copy. You retain the original and it travels.
+
+*TOKEN check Act II.*
+
+---
+
+**ACT III — "The Scholar" (Damascus)**
+
+In Damascus, a legal philosopher who studies the relationship between sworn brotherhood and feudal obligation reads the inscription. He has been trying to establish whether sworn brotherhood constitutes a legally binding override of feudal duty when the two conflict.
+
+A feudal administrator present wants the inscription as evidence that sworn brotherhood is legally subordinate to feudal obligation — specifically that Avtandil's disobedience was criminal and the oath was illegal.
+
+*Skill check: Insight, DC 12 — the inscription records what was sworn, not a legal ruling on its validity; the archive receives the evidence; the court makes the ruling.*
+
+*On success:* The scholar receives it as evidence only. He adds his analysis as a companion document.
+*On fail:* The administrator adds a legal opinion in the margin. The inscription travels with both.
+
+*TOKEN check Act III.*
+
+---
+
+**ACT IV — "The Theologian" (Damascus)**
+
+A Sufi theologian in Damascus argues the oath was the highest form of human act — the alignment of three souls to a single cause without any material interest — and wants to file the inscription as sacred text. The inscription is a civil document, not a devotional one.
+
+*Skill check: Persuasion, DC 11 — the sacred and the civil are not opposed; the inscription belongs in the archive, not in a mosque library; both can acknowledge its weight.*
+
+*On success:* The theologian copies it for his own study and releases the original.
+*On fail:* He files a copy as sacred text and requests the original. You decline and carry the original.
+
+*TOKEN check Act IV.*
+
+---
+
+**ACT V — "The Archive" (Weimar)**
+
+Sweelinck reads the inscription.
+
+"Three men on a headland. Each named the most valuable thing he possessed, as the price of what he was about to ask of the others. Avtandil named his queen's command. Tariel named his grief. Pridon named his kingdom. The archive has no category for this."
+
+He creates one.
+
+He writes: *Sworn Brotherhood Records, First Entry. The Kajeti Oath: the oath that overrides feudal obligation by requiring each man to name what the oath costs him; the archive notes that sworn friendship creates obligations that throne-oaths cannot, not because they are higher but because they are different; what is named in brotherhood is given, not pledged.*
+
+*TOKEN taken Act V.*
+
+---
+
+### Theme
+
+**"Three knights named the most valuable thing they possessed on a headland before an assault: one named his queen's command, one named his grief, one named his kingdom; the archive names this Sworn Brotherhood Records and notes that what is named in brotherhood is given, not pledged."**
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "TBS_006",
+  "title": "The Brotherhood Oath",
+  "source": "Knight in the Panther's Skin — Shota Rustaveli",
+  "cycle": "TBS",
+  "book": "Knight in the Panther's Skin",
+  "source_episode": "The three heroes — Tariel, Avtandil, Pridon — swear sworn brotherhood before the assault on Kajeti; each names the thing he would sacrifice; the oath overrides feudal obligation",
+  "theme": "Sworn brotherhood requires each party to name what the oath costs them; what is named in brotherhood is given, not pledged; the archive creates the category.",
+  "activateNode": "TIF",
+  "token": {
+    "id": "brotherhood_oath_inscription",
+    "name": "Brotherhood Oath Inscription",
+    "description": "Fighter's written record of the three names spoken on the headland: Avtandil's queen's command, Tariel's grief, Pridon's kingdom. The only written record of what sworn brotherhood required.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["TIF", "DAM", "WM"],
+  "new_nodes": [],
+  "acts": [
+    { "act": 1, "location": "TIF", "scene": "Headland above Tbilisi harbor, night before the assault", "title": "The Oath", "type": "skill_check", "skillCheck": { "skill": "Perception", "dc": 11 }, "token_action": "grant" },
+    { "act": 2, "location": "road_TIF_DAM", "scene": "Courier road south, Pridon's court official intercept", "title": "The Harbor", "type": "skill_check", "skillCheck": { "skill": "Deception", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "DAM", "scene": "Damascus, legal philosopher's study", "title": "The Scholar", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 12 }, "token_action": "check" },
+    { "act": 4, "location": "DAM", "scene": "Damascus, Sufi theologian's counter-argument", "title": "The Theologian", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 11 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "The Archive", "type": "delivery", "activateMissionBit": "tbsBrotherhoodOathComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## §TBS-07 — "Storm the Sea-Fort"
+
+**Seed:** Storyline 5 — the demon king of Kajeti holds a hostage in an island fortress; the three heroes need someone to hold a narrow gate with no exit strategy  
+**Route:** TIF → CAF → WM  
+**New nodes:** none (CAF = Caffa exists)
+
+---
+
+**ACT I — "The Plan" (Tbilisi)**
+
+The plan for the assault on Kajeti exists only in Avtandil's memory and two brief notes exchanged between the three heroes. The fortress has never been taken. The assault relies on darkness, tide timing, and a single narrow gate that must be held from inside while the three heroes storm the tower. Whoever holds the gate has no way back until the fortress falls.
+
+Pridon's map-maker produces a single working document: a tide-chart with three annotations marking the gate, the tower stairs, and the window where the prisoner has been seen. No other copy exists.
+
+TOKEN: `kajeti_assault_plan` — the tide-chart with annotations; the tactical record of how an impregnable fortress was planned to be taken; the plan that had to work because there was no second plan.
+
+*Skill check: Investigation, DC 12 — read the plan completely enough to hold the gate successfully; understand not just the gate's location but what the gate defends and why losing it loses everything.*
+
+*On success:* You understand the plan. The gate is not the hardest part. The hardest part is staying in it when the noise stops.
+*On fail:* You understand the gate but not the tower stairs. Pridon adds a verbal briefing.
+
+*TOKEN granted Act I.*
+
+---
+
+**ACT II — "The Black Sea Road" (road TIF→CAF)**
+
+On the road to Caffa, where the ship will depart, a Genoese commercial factor intercepts the party. He has heard there is a plan to assault a sea-fortress. He wants to buy the plan — not to use it, but to sell it to the fortress's owner.
+
+*Skill check: Persuasion, DC 13 — the plan is useless to the fortress's owner after the assault has launched; it is a historical document, not an intelligence asset.*
+
+*On success:* The factor accepts the argument with visible disappointment.
+*On fail:* He sends a rider ahead. You change the departure timing by one day. The plan still works.
+
+*TOKEN check Act II.*
+
+---
+
+**ACT III — "The Caffa Harbor" (Caffa)**
+
+In Caffa, the Genoese harbor master wants to document the assault plan as a model for future Black Sea fortress operations. He sees it as military engineering — the tide-chart and the gate annotations are the kind of material the harbor authority should hold.
+
+*Skill check: Insight, DC 11 — the plan's value is specific to this fortress at this tide; it is a historical document of one assault, not a replicable model; the harbor master would file it as general doctrine and lose the specificity.*
+
+*On success:* The harbor master receives a copy with the site-specific notations highlighted. The original travels.
+*On fail:* He files it as general doctrine. You request it back on the grounds of provenance. He releases it.
+
+*TOKEN check Act III.*
+
+---
+
+**ACT IV — "The Ship" (Caffa harbor)**
+
+The ship's captain, reading the plan in preparation for the night crossing, adds her own navigational notes — current charts, wind patterns, the exact heading for the gate approach in the dark. She wants to keep the plan with her navigational records as the only document combining tide-data and assault approach for this approach.
+
+*Skill check: Persuasion, DC 11 — her navigational notes are invaluable but belong in the archive alongside the plan, not in her private records; ask her to add them as an attachment that travels with the original.*
+
+*On success:* She makes the navigational notes a formal attachment. Both travel to Weimar.
+*On fail:* She keeps her notes. The plan travels without them. Sweelinck notes the gap.
+
+*TOKEN check Act IV.*
+
+---
+
+**ACT V — "The Archive" (Weimar)**
+
+Sweelinck reads the tide-chart and its annotations.
+
+"Three men stormed a sea-fortress that had never been taken. The plan required the gate to be held from inside by someone with no exit. The tide-chart tells you where to approach and when. The annotations tell you where the stairs are. The plan had to work because there was no second plan."
+
+He writes: *Tactical Records — Impregnable Fortresses Taken, First Entry. The Kajeti Assault Plan: the single-use tactical document that succeeded because the alternative was not returning; the tide-chart as the record of how one fortress fell once, at one moment, in conditions that will not repeat; the gate that had to hold.*
+
+*TOKEN taken Act V.*
+*questComplete: true*
+
+---
+
+### Theme
+
+**"The fortress had never been taken; the plan had no exit strategy for whoever held the gate; the tide-chart and the annotations are the record of how it fell once, at one tide, in conditions that will not repeat; the archive files it under Tactical Records — Impregnable Fortresses Taken, first entry."**
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "TBS_007",
+  "title": "Storm the Sea-Fort",
+  "source": "Knight in the Panther's Skin — Shota Rustaveli",
+  "cycle": "TBS",
+  "book": "Knight in the Panther's Skin",
+  "source_episode": "The assault on Kajeti — Tariel, Avtandil, and Pridon storm the demon king's island fortress in a night raid; the fortress had never been taken; Nestan-Darejan is rescued",
+  "theme": "The single-use tactical document that succeeded because there was no second plan; the gate held from inside with no exit; one tide, one moment, conditions that will not repeat.",
+  "activateNode": "TIF",
+  "token": {
+    "id": "kajeti_assault_plan",
+    "name": "Kajeti Assault Plan",
+    "description": "Tide-chart with three annotations: gate location, tower stairs, prisoner's window. The tactical record of how an impregnable fortress was taken once, at one tide, by three men.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["TIF", "CAF", "WM"],
+  "new_nodes": [],
+  "acts": [
+    { "act": 1, "location": "TIF", "scene": "Tbilisi, Pridon's map-maker's room, night before departure", "title": "The Plan", "type": "skill_check", "skillCheck": { "skill": "Investigation", "dc": 12 }, "token_action": "grant" },
+    { "act": 2, "location": "road_TIF_CAF", "scene": "Black Sea road, Genoese factor intercept", "title": "The Black Sea Road", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 13 }, "token_action": "check" },
+    { "act": 3, "location": "CAF", "scene": "Caffa harbor master's office", "title": "The Caffa Harbor", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 11 }, "token_action": "check" },
+    { "act": 4, "location": "CAF", "scene": "Ship's cabin, captain's navigational notes", "title": "The Ship", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 11 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "The Archive", "type": "delivery", "activateMissionBit": "tbsStormSeaFortComplete", "questComplete": true, "token_action": "take" }
+  ]
+}
+```
+
+---
+
+*TBS SEEDS COMPLETE. §TBS-01 through §TBS-07 written. Admin pass: quest-map.md, books.md, plan.md.*

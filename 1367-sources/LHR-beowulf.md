@@ -585,3 +585,658 @@ activateMissionBit: lhrWiglafComplete
 ---
 
 *Cycle 2 complete. Mark `[x]` for LHR-beowulf in books.md.*
+
+---
+
+## Cycle 3 — Angle: *Wealhtheow's Watch — The Queen Who Cannot Ask Her Own People*
+
+**What this angle reveals that Cycles 1–2 missed:** Both prior cycles showed loyalty as action — the vigil, the fire, the verdict. Cycle 3 shows loyalty as covert observation: a queen who has more to lose than anyone in the hall, who cannot trust her own retainers, who gives a commission to a stranger because strangers carry no allegiance. The poem's political undercurrent — that Heorot is already threatened from within — surfaces here as its own quest. The document the Fighter produces is honest precisely because the Fighter has no stake in the outcome.
+
+---
+
+### 5-Act Vignette Play: *Wealhtheow's Watch*
+
+**THE TOKEN: WEALHTHEOW'S FEAST TABLET** — A small wax tablet, blank, pressed into the Fighter's palm by a passing handmaid after the queen gives Beowulf the great necklace. One corner is marked with the queen's seal pressed in cold wax. The vellum smells of pine-resin and a little of mead.
+
+---
+
+**ACT I — "The Mead-Cup Pass"**
+*The tablet: blank, cold, palm-sized. Location: Heorot, the high feast, torchlight.*
+
+Wealhtheow moves through the hall with the mead-cup. She has just given Beowulf the greatest neck-collar in the world — the Brisings' equal — and the hall is still ringing from that moment. She passes the Fighter without looking.
+
+"Observe who speaks with my nephew this evening. Write it down. Tell no one."
+
+She moves on. The cup reaches the next man.
+
+The handmaid deposits the tablet in the Fighter's glove at the door.
+
+*The Fighter thinks: she is asking because she cannot ask anyone who owes her anything.*
+
+> **Perception DC 12.** Receive the tablet without being observed; the observation hasn't started yet; the reception of the commission must not be visible.
+
+**Fail:** A Danish thane near the door glances at the Fighter's hand. The tablet disappears into the glove; he looks away. The commission will be conducted with more witnesses than planned.
+
+**Pass:** The tablet disappears cleanly. The queen does not look back. TOKEN GRANTED: Wealhtheow's Feast Tablet.
+
+---
+
+**ACT II — "Three Conversations"**
+*The tablet: one corner filled, two blank. Location: Heorot, the feast's middle hour.*
+
+Hrothulf sits to Hrothgar's right-hand-right. During the meal three men approach him in the spaces the high table cannot see: one is a Danish thane the Fighter doesn't recognize; one is Unferth; one is a woman whose face is covered. Each speaks briefly and departs in a different direction.
+
+The Fighter records: who, duration, direction of departure.
+
+*The tablet fills: names on the left, directions on the right, duration in between.*
+
+> **Investigation DC 12.** Identify the unknown thane — a servant addresses him by name at the ale-bench; catch the name without attracting attention.
+
+**Fail:** The thane departs unnamed. The record notes: *"One man, tall, grey-sleeved. Unferth looked away when he passed."*
+
+**Pass:** The name is noted. The record now has three names, three durations, three directions.
+
+TOKEN STATE 2: Tablet partly filled.
+
+---
+
+**ACT III — "Before Sunrise"**
+*The tablet: three entries, queen's notation not yet added. Location: Heorot eastern door, pre-dawn grey.*
+
+Wealhtheow finds the Fighter near the eastern door. She reads the tablet without expression. Then:
+
+"The woman. Where did she go?"
+
+The Fighter answers accurately.
+
+A Danish royal advisor approaches. He says the queen should come inside before the morning count. His tone implies the Fighter should go.
+
+> **Persuasion DC 11.** Hold the conversation open long enough for the queen to add her own notation — she has three more sentences and an inference to record; the advisor's interruption can be delayed but not refused.
+
+**Fail:** The advisor interposes. Wealhtheow closes the tablet and departs — then presses it back into the Fighter's hand with one word in her own hand. The record is complete, barely.
+
+**Pass:** The advisor waits. Wealhtheow adds four lines in her own hand; she returns the closed tablet.
+
+TOKEN STATE 3: Tablet complete, dual-authored.
+
+---
+
+**ACT IV — "The Baltic Road"**
+*The tablet: closed, sealed with a second wax mark. Location: road toward Visby.*
+
+A Geat trader who crossed with Beowulf's party intercepts the Fighter on the Baltic road. He knows about the tablet — or guesses; either way he offers to carry the record to the Danish royal chancellor, who will want to know what the Fighter knows.
+
+*He is not threatening. He is offering what he thinks is a favor.*
+
+> **Insight DC 12.** Understand what delivering the record to the chancellor means: the chancellor is one of the parties in the question the record asks; an observation note delivered to a suspect is no longer an observation note.
+
+**Fail:** He makes a second approach, naming a price. The Fighter names a destination. He departs.
+
+**Pass:** The Fighter declines without explanation. The trader accepts this and doesn't follow.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Archive"**
+*The tablet: closed, sealed, dual-authored. Location: Weimar archive.*
+
+Sweelinck reads the observation note.
+
+"She asked a stranger because she could not trust her household. This record precedes the histories. The histories say Hrothulf took the throne from her sons. This document says: she already knew the shape of what was coming."
+
+He writes: *Covert Political Observation Records — Reports Made by Uncredentialed Witnesses to Sovereigns, First Entry. Wealhtheow's Commission: the record made by someone with no stake in the outcome; the queen who gave a stranger a blank tablet because her household had already chosen; the archive notes that the most reliable political intelligence is always produced by someone the parties forgot to recruit.*
+
+TOKEN TAKEN: Wealhtheow's Feast Tablet.
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "LHR_003",
+  "title": "Wealhtheow's Watch",
+  "source": "Beowulf — Anon (Gummere transl.)",
+  "cycle": "LHR",
+  "book": "Beowulf",
+  "source_episode": "The feast at Heorot after Grendel's defeat — Wealhtheow presents the great necklace and speaks carefully to Hrothgar about her sons and her nephew Hrothulf; the subtext is that she fears Hrothulf will seize the throne; she cannot say this openly",
+  "theme": "The sovereign who cannot trust her household asks a stranger; love coded in court protocol; the commissioned observation honest precisely because the observer owes nothing.",
+  "activateNode": "HEO",
+  "token": {
+    "id": "wealhtheow_feast_tablet",
+    "name": "Wealhtheow's Feast Tablet",
+    "description": "Small wax tablet, blank at the start, queen's seal pressed in one corner; records who approached Hrothulf during the feast, duration, direction of departure; by Act V carries both the Fighter's observation and the queen's own annotation.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["HEO", "VS", "WM"],
+  "new_nodes": [],
+  "acts": [
+    { "act": 1, "location": "HEO", "scene": "Heorot at the height of the feast", "title": "The Mead-Cup Pass", "type": "skill_check", "skillCheck": { "skill": "Perception", "dc": 12 }, "token_action": "grant" },
+    { "act": 2, "location": "HEO", "scene": "Feast middle hour — Hrothulf's secondary seat", "title": "Three Conversations", "type": "skill_check", "skillCheck": { "skill": "Investigation", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "HEO", "scene": "Heorot eastern door, pre-dawn", "title": "Before Sunrise", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 11 }, "token_action": "check" },
+    { "act": 4, "location": "road_HEO_VS", "scene": "Baltic road, Geat trader intercept", "title": "The Baltic Road", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 12 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "The Archive", "type": "delivery", "activateMissionBit": "lhrWealhtheowWatchComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## Cycle 4 — Angle: *The Cup — The Object That Ended the World*
+
+**What this angle reveals that Cycles 1–3 missed:** The first three cycles all told stories of loyalty and witness. Cycle 4 turns to causation — the physical object whose removal triggered catastrophe. The slave who stole the cup is not the villain; he didn't know what he was taking. The cup is not evil; it is beautiful. What makes it terrible is that it was always going to be taken, eventually, and the sleeping consequence was always going to wake. The archive receives the cup because neutral documentation of catastrophic objects is different from blame.
+
+---
+
+### 5-Act Vignette Play: *The Cup*
+
+**THE TOKEN: THE BARROW CUP** — A gold two-handled cup from the hoard, pulled from a bog where the slave abandoned it. Fifth century BC by its design vocabulary. The figures on the handles are of a people no one can name. It smells of three hundred years of stone.
+
+---
+
+**ACT I — "The Slave's Camp"**
+*The cup: half-buried in bog, warm from stone-heat. Location: Geatland marshes, abandoned camp.*
+
+The slave is gone. He left the cup in the marsh because it was too recognizable to trade without being caught. It sits in the bog-water, handles up, as if placed deliberately.
+
+A slave-hunter is also looking for the camp, but for the man, not the cup. He will pass through in an hour.
+
+*Three hundred years of sleeping peace dissolved because a frightened man needed something to trade.*
+
+> **Perception DC 11.** Find the cup in the abandoned camp before the slave-hunter returns; it is partially submerged; there is one opportunity before the bog swallows it further.
+
+**Fail:** One handle breaks when pulled from the bog. The cup comes out damaged. The archive will note the damage.
+
+**Pass:** The cup comes out whole. Its figures are still legible. TOKEN GRANTED: The Barrow Cup.
+
+---
+
+**ACT II — "The Village"**
+*The cup: whole, wrapped in cloth, carried carefully. Location: Geatland coastal settlement — GEA.*
+
+In the village, three collapsed halls are still smoking from the dragon's burning. The surviving elders disagree: one wants the cup destroyed; it is the object that triggered the burning. One wants to keep it as evidence of what happened. A priest wants it for the church treasury.
+
+> **Persuasion DC 12.** The cup must reach the archive as a historical document of catastrophe, not a sacred object; the archive receives it as evidence, not treasure; the church treasury is the wrong category.
+
+**Fail:** The priest claims it anyway. The argument continues at the harbor checkpoint.
+
+**Pass:** The elder releases the cup with a written statement of its provenance. The statement travels with the cup.
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "The Merchant"**
+*The cup: in a sealed document packet, provenance attached. Location: Visby.*
+
+A Hanseatic merchant in Visby has heard about a two-handled gold cup from a southern Scandinavian barrow-hoard. He offers three times its weight in silver. He is not threatening. The offer is genuine and generous.
+
+> **Insight DC 12.** Name the destination accurately: the cup's value is not its gold weight but its status as the primary document of a specific catastrophe; archive deliveries are not tradeable.
+
+**Fail:** He follows to the next waystation and makes a final offer; he accepts the refusal without incident.
+
+**Pass:** The Fighter names the archive and the merchant loses interest immediately.
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "The Scholar"**
+*The cup: still in the sealed packet. Location: Visby.*
+
+A Nordic scholar who studies old Germanic material objects wants to examine the cup before it reaches the archive. She believes it dates to the 5th century BC. She wants to publish a description.
+
+> **Persuasion DC 11.** The scholar may study the cup but must hold publication until after archive intake; the cup's status as primary evidence depends on arriving undescribed.
+
+**Fail:** She publishes a brief description to colleagues. The Fighter notes this in the delivery record. Sweelinck will know.
+
+**Pass:** The scholar makes notes but holds publication pending archive confirmation.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Archive"**
+*The cup: sealed, documented, whole or damaged. Location: Weimar.*
+
+Sweelinck receives the cup.
+
+"A slave stole this from a barrow. He didn't know what he was taking. He needed something to trade. What was sleeping in the mound for three centuries was not the gold. It was the specific duration of a world."
+
+He writes: *Catalytic Objects — Items That Woke Dormant Consequences, First Entry. The Barrow Cup: the thing that was always going to be taken; the archive notes that the cup did not cause the catastrophe — it was the specific object around which the catastrophe had been organized for three hundred years; it became the cause when it was removed from the context that contained it; removing the containment is not the same as causing the event.*
+
+TOKEN TAKEN: The Barrow Cup.
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "LHR_004",
+  "title": "The Cup",
+  "source": "Beowulf — Anon (Gummere transl.)",
+  "cycle": "LHR",
+  "book": "Beowulf",
+  "source_episode": "A fugitive slave discovers an ancient barrow-hoard and steals a single golden cup to buy himself forgiveness; this wakes a dragon that has guarded the hoard for three hundred years; the dragon burns the Geat settlements; Beowulf fights and kills it but dies of the poison",
+  "theme": "The catalytic object that woke dormant consequence; what was sleeping in the mound was not gold but the specific duration of a world; removing the containment is not the same as causing the event.",
+  "activateNode": "GEA",
+  "token": {
+    "id": "barrow_cup",
+    "name": "The Barrow Cup",
+    "description": "Gold two-handled cup from the hoard, 5th century BC by design vocabulary; the figures on the handles are of a people whose name is lost; smells of three hundred years of stone; the specific object whose removal ended a sleeping peace.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["GEA", "VS", "WM"],
+  "new_nodes": [
+    {
+      "code": "GEA",
+      "name": "Geatland Coastal Settlement",
+      "description": "A Scandinavian harbor village on the southern Swedish coast after the dragon's burning: three collapsed halls still smearing the sky, surviving boat-house and harbor intact, the elders' assembly point at the long-hall's undamaged end; the village that survived its king and is not yet sure what that means"
+    }
+  ],
+  "acts": [
+    { "act": 1, "location": "GEA_marsh", "scene": "Marsh outside the coastal settlement, abandoned slave camp", "title": "The Slave's Camp", "type": "skill_check", "skillCheck": { "skill": "Perception", "dc": 11 }, "token_action": "grant" },
+    { "act": 2, "location": "GEA", "scene": "Coastal village elders' assembly, collapsed hall district", "title": "The Village", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "VS", "scene": "Visby harbor, Hanseatic merchant's dock", "title": "The Merchant", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 12 }, "token_action": "check" },
+    { "act": 4, "location": "VS", "scene": "Visby, Nordic scholar's study", "title": "The Scholar", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 11 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "The Archive", "type": "delivery", "activateMissionBit": "lhrCupComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## Cycle 5 — Angle: *The Herald's Walk — What to Say First*
+
+**What this angle reveals that Cycles 1–4 missed:** All prior cycles showed the Fighter carrying tokens from inside events toward the archive. Cycle 5 shows a dispatch that carries both a death and its consequence, where the carrier's job is not just to deliver but to deliver in the right order. The Geat community will receive the death and will argue about the prediction; both responses are correct, and the carrier who delivers accurately without addition or omission performs the only form of preparation the situation permits.
+
+---
+
+### 5-Act Vignette Play: *The Herald's Walk*
+
+**THE TOKEN: WIGLAF'S DISPATCH** — A sealed birch-bark packet with Wiglaf's seal: a wolf-head pressed in cold wax. Inside: the death notice and the war prediction, unseparated. The carrier knows both are in there and must not open it until the right moment.
+
+---
+
+**ACT I — "The Cave Mouth"**
+*The dispatch: sealed, wolf-seal intact. Location: barrow cave mouth.*
+
+Wiglaf cannot carry the news himself. He gives the Fighter the sealed dispatch. "Take this to the Geat encampment. Tell them Beowulf is dead. Tell them I say to begin the funeral preparations."
+
+He pauses. "Do not tell them the rest yet. Not until you see who is there."
+
+The "rest" is the prediction: the Swedes and Franks will come now. Wiglaf is not asking the Fighter to withhold it — he is asking them to find the right order.
+
+*The wolf-seal is cold. The wax has not fully set.*
+
+> **Insight DC 12.** Understand what Wiglaf is really asking: the death and the prediction are both true; the prediction is believed by the people who can act on it; the sequence of delivery matters.
+
+**Fail:** The Fighter asks what the "rest" is. Wiglaf says it once, briefly. The dispatch stays sealed. The sequence is understood.
+
+**Pass:** The Fighter understands without asking. The dispatch is taken sealed.
+
+TOKEN GRANTED: Wiglaf's Dispatch.
+
+---
+
+**ACT II — "The Patrol"**
+*The dispatch: sealed, wolf-seal intact. Location: moorland road.*
+
+Two Geat warriors on patrol read the seal and know immediately that the king is dead. One wants to run ahead and warn the camp. The seal is recognized; partial news from a frightened patrol spreads wrong.
+
+> **Persuasion DC 12.** The dispatch is sealed for a reason; the camp must receive it whole, from the authorized carrier; partial news delivered by frightened warriors creates the exact disorder the sequence was designed to prevent.
+
+**Fail:** One patrol runs ahead anyway. The Fighter arrives to a camp already in partial alarm.
+
+**Pass:** Both patrols fall in behind the Fighter and escort them to camp in silence.
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "The Camp"**
+*The dispatch: sealed, wolf-seal intact. Location: Geatland coastal camp — GEA.*
+
+The camp captain reads the seal and calls the household heads together. He wants to open the dispatch himself and manage the distribution of the news. His reasons are practical and not wrong.
+
+> **Persuasion DC 13.** The dispatch carries Wiglaf's seal and must be read aloud by the designated carrier; the institutional authority of the seal transfers to the reading; managing the news is different from delivering it accurately.
+
+**Fail:** The captain opens it himself and hands it back. "Read it anyway. They need a voice, not a seal."
+
+**Pass:** The captain allows it. The Fighter reads the dispatch aloud to the assembled household heads.
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "The Prediction"**
+*The dispatch: read aloud, still in the Fighter's hand. Location: Geat camp.*
+
+The war prediction reads: *"Now that the lord is gone, the Swedes and Franks will harry this folk. Grim and grief-embittered will be the minds of many princes."*
+
+Three household heads refuse to believe it. One demands the Fighter be detained as a carrier of defeatist intelligence. Two women at the edge of the assembly are already packing. They believe the prediction. They don't intend to wait.
+
+> **Insight DC 12.** Read the room accurately: the three skeptics are protecting themselves from terror, not assessing the intelligence; the two women are already correct; say nothing that causes the skeptics to dig in further against the only people who are preparing.
+
+**Fail:** A skeptic challenges the Fighter directly. The argument costs two hours. The women proceed anyway.
+
+**Pass:** The Fighter's neutrality preserves the assembly's ability to choose. The women's preparations become the consensus by morning.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Archive"**
+*The dispatch: read, delivered, its purpose complete. Location: Weimar.*
+
+Sweelinck receives the birch-bark packet and its delivery record.
+
+"Wiglaf sent this knowing it would be disbelieved in part. He sent it anyway. The dispatch has two layers: the death and the prediction. The people who received the death wept. The people who received the prediction argued. Both were correct."
+
+He writes: *Death Dispatches — Messages That Carry Both a Death and Its Consequence, First Entry. Wiglaf's Dispatch: the death notice that contained a war prediction; the archive notes that accurate bad news delivered whole is not defeatism — it is the only available form of preparation; the prediction was believed by the people who could act on it, which is sufficient.*
+
+TOKEN TAKEN: Wiglaf's Dispatch.
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "LHR_005",
+  "title": "The Herald's Walk",
+  "source": "Beowulf — Anon (Gummere transl.)",
+  "cycle": "LHR",
+  "book": "Beowulf",
+  "source_episode": "After Beowulf's death, a herald carries the news to the Geat encampment and delivers a prophecy: now that their king is gone, the Swedes and Franks will come; the poem presents the prediction as accurate and the people's grief as justified",
+  "theme": "The death dispatch that carries both a death and its consequence; accurate bad news delivered whole; the prediction believed by the people who could act on it is sufficient.",
+  "activateNode": "BRW",
+  "token": {
+    "id": "wiglaf_dispatch",
+    "name": "Wiglaf's Dispatch",
+    "description": "Sealed birch-bark packet, wolf-seal in cold wax; carries Beowulf's death notice and the war prediction unseparated; must be read aloud by the designated carrier in the right order.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["BRW", "GEA", "WM"],
+  "new_nodes": [],
+  "acts": [
+    { "act": 1, "location": "BRW", "scene": "Barrow cave mouth, Wiglaf at the entrance", "title": "The Cave Mouth", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 12 }, "token_action": "grant" },
+    { "act": 2, "location": "road_BRW_GEA", "scene": "Moorland road, Geat patrol intercept", "title": "The Patrol", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "GEA", "scene": "Geat coastal camp, household heads assembled", "title": "The Camp", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 13 }, "token_action": "check" },
+    { "act": 4, "location": "GEA", "scene": "Geat camp, after the reading", "title": "The Prediction", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 12 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "The Archive", "type": "delivery", "activateMissionBit": "lhrHeraldWalkComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## Cycle 6 — Angle: *The Woman at the Pyre — Grief for the World's End*
+
+**What this angle reveals that Cycles 1–5 missed:** Cycles 1–5 covered loyalty, action, causation, and dispatch. Cycle 6 turns to elegy — specifically the anonymous mourning-woman the poem puts at the pyre for one sentence before the final riders. She does not grieve Beowulf. She grieves the world that produced Beowulf. She knows what comes after because she has seen it before. The Fighter writing down her song is the only way this specific elegy — addressed not to a dead king but to a living people who will suffer — enters the archive.
+
+---
+
+### 5-Act Vignette Play: *The Woman at the Pyre*
+
+**THE TOKEN: PYRE SONG TRANSCRIPTION** — A sheet of vellum, blank, that the Fighter begins writing as the mourning-woman sings. The final verse is barely legible because the fire was lit before the last line was complete.
+
+---
+
+**ACT I — "The Song Begins"**
+*The vellum: blank. Location: pyre headland above the sea, Geat encampment.*
+
+The mourning-woman appears at the edge of the funeral crowd before the pyre is lit. No one knows her. She is not from Heorot. She has come from the south and she is already singing — not Beowulf's name but the shape of what his death means for the people who will outlive it.
+
+She sings of evil days, multitudes of slaughters, the terror of troops, humiliation, and captivity. She has seen other kings die and other peoples scatter. She is singing their future from their past.
+
+The Fighter has a blank vellum sheet. The song should be written down.
+
+*The fire is not yet lit. There is time, but not much.*
+
+> **Perception DC 12.** Hold the words in memory long enough to write them; she does not stop; the vellum must be filled in real time.
+
+**Fail:** You get most of it. The middle verse — the one about humiliation and captivity — has a gap where the words came too fast.
+
+**Pass:** You write it all. The final verse is barely legible because the fire is lit before the last line is complete.
+
+TOKEN GRANTED: Pyre Song Transcription.
+
+---
+
+**ACT II — "The Danish Official"**
+*The vellum: filled, damp from the fire's heat. Location: road toward Visby.*
+
+On the Baltic road, a Danish court official who was at the pyre demands to see what the Fighter wrote. The woman was unauthorized to sing — she named specific future humiliations in public, before a Geat household that is now a potential diplomatic problem.
+
+> **Deception DC 12.** The transcription is a scholarly document for a literary archive; it is not the political intelligence the official is worried about; the archive does not hold political intelligence.
+
+**Fail:** He takes a copy. The Fighter retains the original.
+
+**Pass:** The official lets it pass as scholarship without requesting a copy.
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "The Nordic Scholar"**
+*The vellum: original intact or copied. Location: Visby.*
+
+A Norse scholar who studies mourning traditions wants the transcription. She has been collecting records of women who sing at royal burials. She argues it belongs in her collection, not in a European archive that will file it as Germanic literature.
+
+> **Insight DC 11.** Her argument has weight; the archive should cross-reference rather than supersede; propose that her collection and the archive can reference each other.
+
+**Fail:** She files a competing claim. The transcription arrives with the claim attached and Sweelinck files both.
+
+**Pass:** The scholar provides her own descriptive note to travel alongside the transcription as companion material.
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "The Identification"**
+*The vellum: complete, companion note attached or not. Location: Visby.*
+
+A Geat survivor in Visby has heard about the transcription. She says the mourning-woman was not unknown: she was the widow of one of the ten who ran from the dragon.
+
+This changes the document's character. The Fighter must decide: incorporate the identification into the transcription or deliver it as a separate supplement.
+
+> **Persuasion DC 11.** Deliver both as a packet; the transcription remains what it is; the identification arrives as an attached note without becoming the transcription's editorial apparatus.
+
+**Fail:** The Fighter incorporates the identification into the transcription's margin. Sweelinck will parse the boundary himself.
+
+**Pass:** The survivor writes the identification as a separate sheet. Both travel to Weimar.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Archive"**
+*The vellum: filled, supplemented. Location: Weimar.*
+
+Sweelinck reads the transcription and its supplement.
+
+"She did not grieve Beowulf. She grieved what would happen to the people who outlived him. She had seen it before. The poem gives her one sentence and no name. The archive gives her a category."
+
+He writes: *Anonymous Elegy Records — Mourning-Women's Songs, First Entry. The Pyre-Woman's Lament: the grief addressed not to the dead king but to the living subjects who will survive him; the elegy for the future is a different document from the elegy for a person; the archive notes that she knew what came after because she had seen other kings die — the archive files this separately from the pyre-records because the object of her grief was not the fire but what the fire meant.*
+
+TOKEN TAKEN: Pyre Song Transcription.
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "LHR_006",
+  "title": "The Woman at the Pyre",
+  "source": "Beowulf — Anon (Gummere transl.)",
+  "cycle": "LHR",
+  "book": "Beowulf",
+  "source_episode": "At Beowulf's pyre on the headland, a woman appears and sings a lament; the poem gives her one sentence and no name; she grieves evil days, multitudes of slaughters, terror, humiliation, and captivity — not the king's death but the people's future",
+  "theme": "Anonymous elegy; grief for a world's end rather than a person's death; the mourning-woman who sang the future from the past; the archive names this as its own category.",
+  "activateNode": "HEO",
+  "token": {
+    "id": "pyre_song_transcription",
+    "name": "Pyre Song Transcription",
+    "description": "Vellum sheet, filled in real time as the woman sang; the final verse barely legible from the fire's proximity; the only written record of what she sang; the elegy for the living, not the dead.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["HEO", "VS", "WM"],
+  "new_nodes": [],
+  "acts": [
+    { "act": 1, "location": "HEO_pyre_headland", "scene": "Pyre headland above the sea, before the fire is lit", "title": "The Song Begins", "type": "skill_check", "skillCheck": { "skill": "Perception", "dc": 12 }, "token_action": "grant" },
+    { "act": 2, "location": "road_HEO_VS", "scene": "Baltic road, Danish official intercept", "title": "The Danish Official", "type": "skill_check", "skillCheck": { "skill": "Deception", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "VS", "scene": "Visby, Nordic scholar's study", "title": "The Nordic Scholar", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 11 }, "token_action": "check" },
+    { "act": 4, "location": "VS", "scene": "Visby, Geat survivor's lodging", "title": "The Identification", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 11 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "The Archive", "type": "delivery", "activateMissionBit": "lhrPyreWomanComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## Cycle 7 — Angle: *Unferth's Hrunting — The Gift Returned Under Courtesy*
+
+**What this angle reveals that Cycles 1–6 missed:** All prior cycles tracked loyalty, objects, dispatches, and elegies. Cycle 7 turns to the gift-economy that underlies the entire heroic world — the ring-giving that creates obligation, the courtesy that releases it, and the question of what happens when a sword given under shame is returned with carefully chosen words of praise. Unferth's quiet final act is the poem's own model for how honor can be restored without confrontation.
+
+---
+
+### 5-Act Vignette Play: *Unferth's Hrunting*
+
+**THE TOKEN: HRUNTING BOND RECORD** — A document recording both speeches: Unferth's gift-speech ("It has never failed any man") and Beowulf's return-speech ("The sword was not at fault; the fault lay elsewhere"). The record of the exchange that created the obligation and the courtesy that released it.
+
+---
+
+**ACT I — "The Request"**
+*The bond record: blank. Location: Heorot, outer hall, after the celebration.*
+
+Unferth finds the Fighter in Heorot's outer room after the victory feast has quieted. He has a proposal.
+
+He gave Hrunting to Beowulf before the dive. Beowulf returned it with carefully chosen words of praise. Both Unferth and the Fighter know that Hrunting failed underwater. Beowulf's words were courtesy — and also, he said, the truth: "The sword was not at fault."
+
+The obligation this creates needs formal resolution. The gift was given, failed, returned with praise. The record of this exchange — both speeches, exactly — should travel to a coastal shrine at Lejre so the sword's bond can be officially closed.
+
+> **History DC 12.** Reconstruct both speeches accurately from memory; Unferth's was brief; Beowulf's was specific about fault; the record must have the exact words that make the exchange intelligible as a gift-transaction with a release.
+
+**Fail:** Unferth corrects several words. The record is rewritten. Both sign the corrected version.
+
+**Pass:** Both speeches are written accurately. Unferth reads the record and makes one correction — a single word. The correction is incorporated.
+
+TOKEN GRANTED: Hrunting Bond Record.
+
+---
+
+**ACT II — "The Danish Port"**
+*The bond record: signed, sealed. Location: road to Lejre — DAN.*
+
+At the coastal checkpoint, a Danish court recorder wants to log Hrunting's transfer in the official royal weapons registry. The sword has royal-gift provenance — any transfer involving it technically requires court notification.
+
+> **Deception DC 12.** The sword is not being transferred; it is being documented for personal release from a gift-obligation; the transaction is religious and private in character.
+
+**Fail:** The court recorder logs it as "under personal use — shrine destination noted." The entry exists and will be followed up.
+
+**Pass:** The court recorder accepts the framing and does not log the sword.
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "The Shrine"**
+*The bond record: complete, signed. Location: Lejre harbor shrine — DAN.*
+
+The shrine-keeper at Lejre reads the bond record. He agrees the obligation was correctly discharged by Beowulf's return-speech. But shrines that document released obligations are the only institutions equipped to hold this kind of evidence — he wants to keep the original.
+
+> **Persuasion DC 11.** The record should travel to the archive; the shrine can have a copy; the original needs a home where it will not be lost to fire or flood.
+
+**Fail:** He keeps the original. A copy is made for the archive. The Fighter notes this in the transmission record.
+
+**Pass:** The shrine-keeper makes a copy. The original travels.
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "The Afterword"**
+*The bond record: complete, traveling. Location: DAN harbor.*
+
+Before the ship leaves, a Geat warrior arrives with news: Unferth has been killed in the Swedish raid that followed Beowulf's death. He died carrying Hrunting — he had taken it back from the shrine to fight.
+
+The bond record now reads differently: Unferth's last voluntary act was the formal release, which he then voluntarily reversed by reclaiming the sword.
+
+> **Persuasion DC 11.** The new information should travel as a supplement, not be incorporated into the record itself; the release document must remain what it was.
+
+**Fail:** The Fighter incorporates the afterword into the record's margin. Sweelinck receives it as one document.
+
+**Pass:** The supplement is written on a separate sheet and attached to the original.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Archive"**
+*The bond record: complete, supplemented. Location: Weimar.*
+
+Sweelinck receives the bond record and its supplement.
+
+"Unferth gave a sword that failed. The man who received it spoke well of the sword on return. The sword went to a shrine. Unferth took it back from the shrine when the war came and died with it. The archive receives all of this."
+
+He writes: *Gift-Obligation Release Records — Formal Termination of Social Bonds Through Correct Speech, First Entry. Hrunting's Release and Return: the weapon given under shame, returned under courtesy; the obligation discharged correctly; releasing an obligation does not prevent re-entry; the archive notes that Unferth's last voluntary act was the formal release, and his second-to-last voluntary act was the reversal — both are in the record.*
+
+TOKEN TAKEN: Hrunting Bond Record.
+
+*questComplete: true*
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "LHR_007",
+  "title": "Unferth's Hrunting",
+  "source": "Beowulf — Anon (Gummere transl.)",
+  "cycle": "LHR",
+  "book": "Beowulf",
+  "source_episode": "Unferth gives Beowulf his sword Hrunting before the dive into the monster-mere; Hrunting fails underwater; Beowulf returns it with careful words of praise, saying the sword was not at fault; the exchange creates a gift-obligation that needs formal resolution",
+  "theme": "Gift-obligation released through correct speech; the weapon given under shame, returned under courtesy; releasing an obligation does not prevent re-entry; both acts permanent.",
+  "activateNode": "HEO",
+  "token": {
+    "id": "hrunting_bond_record",
+    "name": "Hrunting Bond Record",
+    "description": "Document recording both speeches: Unferth's gift-speech and Beowulf's return-speech; the exact words that created the obligation and the courtesy that released it; supplement attached recording Unferth's death with the sword.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["HEO", "DAN", "WM"],
+  "new_nodes": [
+    {
+      "code": "DAN",
+      "name": "Danish Coastal Port — Lejre Harbor District",
+      "description": "The waterfront below Lejre: a shrine to Danish warrior-ancestors at the end of the dock road; salt-timber, Geat and Danish ships alternating at berths; a Danish court checkpoint on the road from Heorot; the commercial and spiritual node connecting Heorot's patronage economy to Baltic trade and the record-keeping world beyond"
+    }
+  ],
+  "acts": [
+    { "act": 1, "location": "HEO", "scene": "Heorot outer hall, post-feast quiet", "title": "The Request", "type": "skill_check", "skillCheck": { "skill": "History", "dc": 12 }, "token_action": "grant" },
+    { "act": 2, "location": "road_HEO_DAN", "scene": "Coastal road, Danish weapons registry checkpoint", "title": "The Danish Port", "type": "skill_check", "skillCheck": { "skill": "Deception", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "DAN", "scene": "Lejre harbor shrine, shrine-keeper's study", "title": "The Shrine", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 11 }, "token_action": "check" },
+    { "act": 4, "location": "DAN", "scene": "Lejre harbor, news of Unferth's death", "title": "The Afterword", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 11 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "The Archive", "type": "delivery", "activateMissionBit": "lhrUnferthHruntingComplete", "questComplete": true, "token_action": "take" }
+  ]
+}
+```
+
+---
+
+*LHR SEEDS COMPLETE. §LHR-01 through §LHR-07 written. Admin pass: quest-map.md, books.md, plan.md.*

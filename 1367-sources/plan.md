@@ -292,8 +292,8 @@ All files under 60 KB in 1367-sources/. Each to receive full pipeline: read → 
 | Code | Title | KB | Status |
 |------|-------|----|--------|
 | SDQ | Rob Roy — Walter Scott | 36 | **SEEDS COMPLETE 2026-06-03 — SDQ-01–07 all vignettes done. New nodes: OBH, GLA, ABF, GLN, LLM, EDI.** |
-| TBS | Knight in the Panther's Skin — Rustaveli | 41 | QUEUED |
-| LHR | Beowulf — Anon (Gummere) | 42 | QUEUED |
+| TBS | Knight in the Panther's Skin — Rustaveli | 41 | **SEEDS COMPLETE 2026-06-03 — TBS-01–07 all vignettes done. No new nodes. See TBS-knight-panther-skin.md.** |
+| LHR | Beowulf — Anon (Gummere) | 42 | **SEEDS COMPLETE 2026-06-03 — LHR-01–07 all vignettes done. New nodes: GEA, DAN. See LHR-beowulf.md.** |
 | BHD | Cuchulain of Muirthemne — Lady Gregory | 43 | QUEUED |
 | ZTH | Odyssey — Homer (Butler) | 43 | QUEUED |
 | ATH | Iliad — Homer (Lang) | 45 | QUEUED |
