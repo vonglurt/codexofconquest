@@ -827,3 +827,234 @@ He does not ask again about the location. He takes a ring from his middle finger
 *quest-map.md: append ECF to Location Grid.*
 
 *books.md: mark KSU [x].*
+
+---
+
+## Cycle 3 — *The Incorrupt Body*
+
+**Archive category:** Exhumation Records — The Body That Did Not Decay
+
+**What this angle reveals:** Cycles 1-2 were about the miracle in the living body (Thorir's healed hand) and the miracle in the sky (the eclipse at Stiklestad). This angle reveals the third miracle and the most legally significant: when Bishop Grimkell opened the grave almost exactly one year after the battle, Olaf's body was incorrupt. Hair and nails had grown. The wound on the thigh was healed in appearance. The smell of the grave was not there. The Danish governor has filed a competing account claiming normal decomposition. Grimkell's authenticated version must reach the church at Birka before the governor's administrative record closes the question.
+
+---
+
+**THE TOKEN: `exhumation_record`** — Bishop Grimkell's authenticated account of the exhumation: date, depth, the body's condition in precise detail (hair length, nail growth, absence of decay-smell, the thigh wound's appearance), countersigned by three witnessing clergy and sealed with the bishop's wax. The Danish governor's competing account claims normal decomposition. This is the authenticated version.
+
+---
+
+```json
+{
+  "quest_id": "KSU-03",
+  "title": "The Incorrupt Body",
+  "source": "Heimskringla — Snorri Sturluson (c.1230)",
+  "cycle": 3,
+  "book": "KSU",
+  "source_episode": "Bishop Grimkell's exhumation of Olaf — the incorrupt body, the competing Danish account",
+  "theme": "The body as its own testimony; the authenticated physical record against the administrative suppression",
+  "activateNode": "KSU",
+  "token": {
+    "id": "exhumation_record",
+    "name": "Grimkell's Exhumation Record",
+    "description": "Bishop Grimkell's authenticated account of the exhumation: date, depth, the body incorrupt — hair and nails grown, wound healed in appearance, no smell of decay. Three countersignatures, bishop's seal. The governor's competing account claims ordinary decomposition.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["KSU", "BK", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "KSU", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "The governor's version has already gone west by fast rider. The coastal fishing route bypasses the road-watch and arrives first. Understand the route before accepting the document."},
+    {"act": 2, "node": "KSU_to_BK", "type": "skill_check", "dc": 12, "skill": "Athletics", "prompt": "Coastal transit by fishing boat, cold northern water, rough passage. The authenticated record must arrive at Birka's church before the governor's administrative account closes the question."},
+    {"act": 3, "node": "BK", "type": "combat", "dc": 13, "skill": "Persuasion", "enemies": "1x governor's messenger with guard, AC 12, HP 20", "prompt": "The governor's messenger is at the church door with the administrative account. The authenticated bishop's record supersedes the administrative one. Name the precedence and hold the door."},
+    {"act": 4, "node": "BK_to_WM", "type": "skill_check", "dc": 12, "skill": "Composure", "prompt": "A scholar on the road is quoting the governor's version as the definitive account. Do not debate the body's condition with a scholar on a road. The authenticated record is the response, not argument."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads both accounts side by side. The body was present at both depositions and did not change. Exhumation Records opens."}
+  ],
+  "archiveCategory": "Exhumation Records — The Body That Did Not Decay",
+  "sweelinckNote": "The body was the testimony. The governor's version required it to be ordinary. Grimkell's version required it to be extraordinary. The body was present at both depositions and did not change."
+}
+```
+
+---
+
+## Cycle 4 — *The Sealed Relic*
+
+**Archive category:** Relic Transit Records — The Corner of the Battle-Cloak Sent East
+
+**What this angle reveals:** Cycles 1-3 were about the signs that could be filed in Norwegian church records. This angle reveals the diplomatic dimension of the martyrdom: a corner of Olaf's battle-cloak, cut from the body at the exhumation and sealed in a reliquary by Grimkell, is being sent east to Yaroslav in Kiev — the Norwegian king's cousin and host of the royal exile. The relic makes Olaf's sainthood legible in the Rus world. It must reach Venice as the transfer point for the eastern route before the Danish trade network intercepts it.
+
+---
+
+**THE TOKEN: `battle_cloak_corner`** — A sealed reliquary box, palm-sized, containing a corner of Olaf's battle-cloak cut from the body at the exhumation. Grimkell's wax seal on the lid. A document inside names the commission and the destination. The reliquary must be transferred at Venice to a Rus merchant who will carry it to Yaroslav's court. The seals are part of its authenticity — breaking them for inspection voids the provenance.
+
+---
+
+```json
+{
+  "quest_id": "KSU-04",
+  "title": "The Sealed Relic",
+  "source": "Heimskringla — Snorri Sturluson (c.1230)",
+  "cycle": 4,
+  "book": "KSU",
+  "source_episode": "The reliquary commission — Olaf's battle-cloak corner to Yaroslav in the east via the Baltic trade route",
+  "theme": "The relic as the martyrdom's diplomatic instrument; the chain of custody that makes recognition possible abroad",
+  "activateNode": "KSU",
+  "token": {
+    "id": "battle_cloak_corner",
+    "name": "The Battle-Cloak Reliquary",
+    "description": "A sealed reliquary box with a corner of Olaf's battle-cloak, cut at exhumation, sealed by Grimkell. Destination: Yaroslav at Kiev. Transfer point: a named Rus merchant at Venice. Breaking the seal voids the provenance. The commission document is inside.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["KSU", "VEN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "KSU", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "The reliquary's seals are the argument for its authenticity. Breaking them for inspection voids the provenance. Understand this before the Danish Baltic checkpoint."},
+    {"act": 2, "node": "KSU_to_VEN", "type": "skill_check", "dc": 12, "skill": "Deception", "prompt": "A Danish Baltic trade inspector knows what sealed reliquaries from Nidaros look like. The reliquary is merchant's personal cargo, not a religious commission. Hold the description until he stops looking."},
+    {"act": 3, "node": "VEN", "type": "combat", "dc": 12, "skill": "Composure", "enemies": "2x relic broker's dock agents, AC 11, HP 18", "prompt": "A relic broker at Venice wants the corner of the cloak before it reaches its commission destination. The reliquary is not for sale and not negotiable. Hold the dock."},
+    {"act": 4, "node": "VEN_to_WM", "type": "skill_check", "dc": 12, "skill": "Insight", "prompt": "The Rus merchant who was supposed to receive it has been detained on a debt claim. The reliquary needs a church intermediary with documentation valid at Yaroslav's court. Identify the one contact whose provenance Yaroslav will recognize."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck receives the transit record. The cloak was at the body. The body was at Stiklestad. The corner went east. Relic Transit Records opens."}
+  ],
+  "archiveCategory": "Relic Transit Records — The Corner of the Battle-Cloak Sent East",
+  "sweelinckNote": "The chain of custody is the argument. The cloak was at the body. The body was at Stiklestad. The corner is on its way to Yaroslav. The archive holds the link between Stiklestad and the eastern acknowledgment."
+}
+```
+
+---
+
+## Cycle 5 — *The Canonization Document*
+
+**Archive category:** Canonization Records — The Petition and the Objection Filed Together
+
+**What this angle reveals:** Cycles 1-4 were about physical evidence — miracles, the body, relics. This angle reveals the institutional question: Bishop Grimkell canonized Olaf locally under Norse episcopal authority. The Greek church at Constantinople has formally objected, arguing jurisdictional overreach. Grimkell's petition to Rome summarizes seven authenticated miracles and requests formal confirmation. The petition must carry the Greek objection with it, not suppress it — an argument that excludes the counter-claim will be weaker than one that addresses it. The Fighter must hold the Greek letter of objection through the Greek secretary's attempt to recall it.
+
+---
+
+**THE TOKEN: `canonization_petition`** — Grimkell's formal petition to Rome: seven authenticated miracles listed with witness attestations, the legal basis for local canonization, and a cover letter addressing the Greek jurisdictional objection. The Greek bishop's letter of objection is folded inside. Both documents travel together. The Greek secretary wants the letter of objection back — his bishop has changed his position.
+
+---
+
+```json
+{
+  "quest_id": "KSU-05",
+  "title": "The Canonization Document",
+  "source": "Heimskringla — Snorri Sturluson (c.1230)",
+  "cycle": 5,
+  "book": "KSU",
+  "source_episode": "Grimkell's canonization petition to Rome — seven miracles, the Greek jurisdictional objection, the argument addressed rather than suppressed",
+  "theme": "The institutional record that holds both the argument and the counter-argument; the petition stronger with the objection than without it",
+  "activateNode": "KSU",
+  "token": {
+    "id": "canonization_petition",
+    "name": "Grimkell's Canonization Petition",
+    "description": "Grimkell's formal petition to Rome: seven authenticated miracles, local canonization basis, cover letter addressing the Greek objection. The Greek bishop's letter of objection folded inside. The Greek secretary wants it back. Both documents travel together to Rome.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["KSU", "CON", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "KSU", "type": "skill_check", "dc": 12, "skill": "Insight", "prompt": "The Greek objection goes with the petition, not separated from it. An argument that excludes the counter-claim is weaker than one that answers it. Understand why the letter of objection is an asset before the Greek secretary tries to take it back."},
+    {"act": 2, "node": "KSU_to_CON", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "At the Danish Baltic checkpoint, a petition addressed to Rome is not under Danish administrative jurisdiction. Name the correct authority and pass before the checkpoint officer writes to his superior."},
+    {"act": 3, "node": "CON", "type": "combat", "dc": 13, "skill": "Insight", "enemies": "2x Greek secretary's guards, AC 12, HP 18", "prompt": "The Greek bishop has changed his position and wants the objection letter recalled. His secretary arrives with a formal recovery request. The letter's earlier position is now more valuable to the record. Hold it through the formal request."},
+    {"act": 4, "node": "CON_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "A Danish theologian on the road argues the canonization is politically motivated. The petition is for Rome, not for road theologians. Say nothing that requires a reply and continue north."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads both the petition and the objection. Both go into the record. The archive holds the argument because the argument is the history. Canonization Records opens."}
+  ],
+  "archiveCategory": "Canonization Records — The Petition and the Objection Filed Together",
+  "sweelinckNote": "The Greek bishop objected. The Norse bishop petitioned. Both are in the record. The archive holds the argument because the argument is the history."
+}
+```
+
+---
+
+## Cycle 6 — *The Incorrupt Hair*
+
+**Archive category:** Physical Relic Records — The Lock That Harald Hardrada Carried East
+
+**What this angle reveals:** Cycles 1-5 were about institutional records — reports, depositions, petitions, reliquaries with official provenance. This angle reveals the personal dimension: Harald Hardrada was at Stiklestad at fifteen years old. He survived. He fled east to Constantinople and joined the Varangian Guard. A lock of Olaf's hair, sealed in beeswax at the exhumation, is the most personal of the relic commissions — it goes not to a king or a bishop but to a half-brother who was fifteen at the battle and has been carrying it ever since without the physical object. Harald is passing through Rome on his way back to Constantinople. He is there for two days.
+
+---
+
+**THE TOKEN: `incorrupt_hair_lock`** — A lock of Olaf's incorrupt hair sealed in beeswax, cut at the exhumation. The hair continued to grow after death. Grimkell sealed it with the same wax used on the exhumation record. The commission is personal, not political: this goes directly to Harald and not to his official capacity with the Varangian Guard. Harald is at Rome for two days. After that he goes east and cannot be reached.
+
+---
+
+```json
+{
+  "quest_id": "KSU-06",
+  "title": "The Incorrupt Hair",
+  "source": "Heimskringla — Snorri Sturluson (c.1230)",
+  "cycle": 6,
+  "book": "KSU",
+  "source_episode": "Harald Hardrada at Rome — Olaf's half-brother, survivor of Stiklestad, Varangian Guard, two days in the city",
+  "theme": "The personal relic that belongs to grief rather than institution; the commission that requires speed because the recipient is passing through",
+  "activateNode": "KSU",
+  "token": {
+    "id": "incorrupt_hair_lock",
+    "name": "The Incorrupt Hair Lock",
+    "description": "A lock of Olaf's incorrupt hair in beeswax, cut at the exhumation. Grimkell's seal on the wax. Harald Hardrada is at Rome for two days. This is personal commission, not political — received as half-brother, not as Varangian commander. After two days Harald goes east.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["KSU", "RME", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "KSU", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "This is personal commission. Harald receives it as a half-brother, not as a Varangian officer. The Varangian guard will not admit a stranger to their commander unless the carrier distinguishes between the two capacities. Understand the difference before Rome."},
+    {"act": 2, "node": "KSU_to_RME", "type": "skill_check", "dc": 12, "skill": "Athletics", "prompt": "Harald is in Rome for two days. The fastest available route still requires pushing. Get to Rome before the second day ends and the Guard packs up."},
+    {"act": 3, "node": "RME", "type": "combat", "dc": 13, "skill": "Persuasion", "enemies": "2x Varangian guard, AC 14, HP 22", "prompt": "The Varangian guards do not admit strangers to their commander. The distinction is: this is a private delivery from Bishop Grimkell, for Harald personally, not an audience request. Name the commission and stand still. Varangian guards are trained to notice people who are too eager."},
+    {"act": 4, "node": "RME_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "An Italian relic broker has learned Harald received something from Nidaros and wants to know what it was. The transaction was private. The information is not available. Say so once and walk."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck receives the transit record. Not the lock — Harald kept it. The record is of the commission, the delivery, and the recipient. Physical Relic Records opens."}
+  ],
+  "archiveCategory": "Physical Relic Records — The Lock That Harald Hardrada Carried East",
+  "sweelinckNote": "Harald was at Stiklestad. He was fifteen. He survived. He received a lock of his half-brother's hair sealed in beeswax and carried it east with the Varangian Guard. What he did with it afterward is not in this archive."
+}
+```
+
+---
+
+## Cycle 7 — *Sigvat's Lament*
+
+**Archive category:** Skaldic Memorial Records — The Elegy That Arrived Before the Suppression
+
+**What this angle reveals:** Cycles 1-6 were about physical evidence and institutional records. This final angle reveals the poem as history's first draft: Sigvat Þórðarson, Olaf's personal skald, was on pilgrimage to Rome when the battle happened. He returned to find his king dead. He composed the Erfidrápa Óláfs helga — the official elegy — from survivors' accounts, grief, and the fragments the survivors would tell him. He was not there. The poem names names that some survivors would prefer not named. A copy has reached London, where Cnut's court operates. The Danish court wants the London copy destroyed before it circulates further into English church circles. The Fighter retrieves the vellum copy before the court's men burn it.
+
+---
+
+**THE TOKEN: `sigvats_lament_vellum`** — A vellum copy of Sigvat's Erfidrápa in a Norwegian merchant's keeping at London: the full elegy for King Olaf, the first reconstruction of what happened at Stiklestad from a man who was not there. One stanza names survivors present at the battle in terms that read as collaboration with the Danish forces. Cnut's court wants this copy. The archive wants it more.
+
+---
+
+```json
+{
+  "quest_id": "KSU-07",
+  "title": "Sigvat's Lament",
+  "source": "Heimskringla — Snorri Sturluson (c.1230)",
+  "cycle": 7,
+  "book": "KSU",
+  "source_episode": "Sigvat's Erfidrápa Óláfs helga — the skald who was not at Stiklestad, the poem reconstructed from survivors, the copy in Cnut's London",
+  "theme": "The poem as the first draft of history; the reconstruction that names what a witness account would have named; the elegy that must reach the archive before the suppression closes",
+  "activateNode": "KSU",
+  "token": {
+    "id": "sigvats_lament_vellum",
+    "name": "Sigvat's Erfidrápa",
+    "description": "Vellum copy of the Erfidrápa Óláfs helga: the full elegy for Olaf, reconstructed from survivors. In a Norwegian merchant's keeping at London. One stanza names names. Cnut's court wants it gone. Sigvat was not at Stiklestad — this is what the poem says about what it is and is not.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["KSU", "LDN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "KSU", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "Sigvat was not there. The poem is a reconstruction from survivors. Its value is not that it witnessed Stiklestad — it is that it named what the survivors would not name officially. Understand what it is before carrying it into Cnut's London."},
+    {"act": 2, "node": "KSU_to_LDN", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "North Sea crossing on a Danish merchant ship. The declared cargo is a scholar's courier commission. The Danish sailors do not need to know the vellum concerns a Norwegian elegy about a battle their king won. Be a scholar's agent."},
+    {"act": 3, "node": "LDN", "type": "combat", "dc": 13, "skill": "Composure", "enemies": "2x Danish court guards, AC 12, HP 20", "prompt": "Cnut's court men have located the copy at the merchant's house and arrived first. They are not there to arrest anyone — they are there to collect paper. Stop them before they leave with it."},
+    {"act": 4, "node": "LDN_to_WM", "type": "skill_check", "dc": 13, "skill": "Persuasion", "prompt": "A named party's agent intercepts the Fighter on the road out of London. He does not want his name in a document that calls him a battle-collaborator. The poem is already filed with Sigvat; destroying this copy changes nothing. The archive is the response to suppression, not the instrument of accusation. Explain this once."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the poem. He reads the one stanza twice. He files it. Skaldic Memorial Records opens. The Heimskringla series is complete."}
+  ],
+  "archiveCategory": "Skaldic Memorial Records — The Elegy That Arrived Before the Suppression",
+  "sweelinckNote": "Sigvat was not there. He arrived after. He wrote the poem from what survivors told him. The poem is not a witness account. It is a reconstruction that names what a witness account would have named. That is its value and its danger. Both are in the archive now.",
+  "questComplete": true
+}
+```
