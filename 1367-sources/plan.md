@@ -311,7 +311,7 @@ All files under 60 KB in 1367-sources/. Each to receive full pipeline: read → 
 | KSU | Heimskringla — Snorri Sturluson | 53 | **SEEDS COMPLETE 2026-06-03 — KSU-01–07 all vignettes done. No new nodes. See KSU-heimskringla.md.** |
 | RKV | Poetic Edda — Anon | 53 | **SEEDS COMPLETE 2026-06-03 — RKV-01–07 all vignettes done. AEG/RSS in Location Grid. See RKV-poetic-edda.md.** |
 | BOO | Prose Edda — Snorri Sturluson | 53 | **SEEDS COMPLETE 2026-06-03 — BOO-01–07 all vignettes done. HNJ in Location Grid. See BOO-prose-edda.md.** |
-| CDG | The Three Musketeers — Alexandre Dumas | 54 | QUEUED |
+| CDG | The Three Musketeers — Alexandre Dumas | 54 | **SEEDS COMPLETE 2026-06-03 — CDG-01–07 all vignettes done. BTH/REL/DAR in Location Grid. See CDG-three-musketeers.md.** |
 | LGW | Le Morte d'Arthur — Sir Thomas Malory | 55 | QUEUED |
 | OST | Song of Roland — Anon | 56 | QUEUED |
 | ARN | Knights of the Cross — Henryk Sienkiewicz | 57 | QUEUED |

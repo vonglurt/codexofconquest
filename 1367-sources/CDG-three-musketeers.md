@@ -657,3 +657,234 @@ D'Artagnan and the road and whatever time remains.*
 *quest-map.md: append BTH, REL, DAR to Location Grid.*
 
 *books.md: mark CDG [x].*
+
+---
+
+## Cycle 3 — *The Cardinal's Sealed Order*
+
+**Archive category:** Authorization Records — The Order That Named the Method
+
+**What this angle reveals:** Cycles 1-2 were about racing warnings and letters against threats in motion. This angle reveals the top of the chain: Richelieu's own sealed authorization for Milady to kill Buckingham. Lord de Winter intercepted the courier but cannot keep the order in English territory without triggering French diplomatic pressure claiming the interception never happened. The archive is neutral ground. The Fighter carries it through the Hanseatic transit ports before French diplomatic riders can formally deny the document's existence.
+
+---
+
+**THE TOKEN: `cardinals_sealed_order`** — Richelieu's authorization, French royal seal broken. Names Milady by alias and Buckingham by name. The custody chain from Richelieu's hand through Milady's delivery route to the current holder is the document's legal value — any gap can be challenged. The archive is the one place neither French nor English diplomatic pressure reaches first.
+
+---
+
+```json
+{
+  "quest_id": "CDG-03",
+  "title": "The Cardinal's Sealed Order",
+  "source": "The Three Musketeers — Alexandre Dumas (1844)",
+  "cycle": 3,
+  "book": "CDG",
+  "source_episode": "Richelieu's authorization for Buckingham's assassination — intercepted; Lord de Winter needs neutral custody before French diplomacy denies it",
+  "theme": "The document that proves the conspiracy; its value depends on an unbroken custody chain that neutral ground can protect",
+  "activateNode": "CDG",
+  "token": {
+    "id": "cardinals_sealed_order",
+    "name": "Richelieu's Authorization",
+    "description": "Sealed order, French royal seal broken. Names Milady by alias, Buckingham by name. The custody chain is the evidence. Lord de Winter intercepted the courier and cannot keep it in English territory. Neutral archive custody is the only ground neither party can claim.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["CDG", "BK", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "CDG", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "The order's value depends on maintaining the custody chain from Richelieu's hand through Milady's delivery route to the current holder. Any gap can be challenged. Understand the chain before the Hanseatic ports."},
+    {"act": 2, "node": "CDG_to_BK", "type": "skill_check", "dc": 12, "skill": "Stealth", "prompt": "French diplomatic riders are following the interception route. Carry the order through the Hanseatic ports as a commercial courier without triggering the French network's attention."},
+    {"act": 3, "node": "BK", "type": "combat", "dc": 13, "skill": "Persuasion", "enemies": "2x French diplomatic guards, AC 12, HP 20", "prompt": "A French diplomatic contact at Birka insists the order is a forgery and demands surrender for authentication by French authorities. A French diplomatic demand in a neutral port does not override the carrier's commission. Name the distinction."},
+    {"act": 4, "node": "BK_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "Someone on the road has heard about the Buckingham assassination attempt and wants confirmation the Cardinal was behind it. The order is not a public document. Hold it until Weimar."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the order and the broken seal. He reads the name it gives Milady. Authorization Records opens."}
+  ],
+  "archiveCategory": "Authorization Records — The Order That Named the Method",
+  "sweelinckNote": "Richelieu signed it. Milady received it. The man it named is dead. The order is here because Lord de Winter needed a place that was not English territory and not French territory. The archive is both."
+}
+```
+
+---
+
+## Cycle 4 — *The Goldsmith's Receipt*
+
+**Archive category:** Evidence Records — The Date That Proved the Replacement Was Anticipated
+
+**What this angle reveals:** Cycles 1-3 were about warnings and authorizations. This angle reveals the hidden structural evidence: Buckingham's goldsmith has a receipt showing two additional diamond studs were made in 1625, before the ball where the theft was supposed to occur. The replacement was made before the theft because the theft was part of the design — Richelieu arranged the theft knowing the replacement was possible. The receipt is the proof the conspiracy was not improvised. The Cardinal's Venice agents want it before it reaches any archive.
+
+---
+
+**THE TOKEN: `goldsmiths_receipt`** — Buckingham's goldsmith's receipt: two additional diamond studs, dated 1625, goldsmith's mark and Buckingham's countersignature. The date is the evidence. A Venetian banker can authenticate the goldsmith's mark before archiving. The Cardinal's agents have been briefed on its route.
+
+---
+
+```json
+{
+  "quest_id": "CDG-04",
+  "title": "The Goldsmith's Receipt",
+  "source": "The Three Musketeers — Alexandre Dumas (1844)",
+  "cycle": 4,
+  "book": "CDG",
+  "source_episode": "Buckingham's goldsmith made two replacement studs in 1625 — before the theft; the date proves the conspiracy was designed to be foiled",
+  "theme": "The date that reveals design rather than improvisation; the receipt that proves the conspiracy anticipated its own exposure",
+  "activateNode": "CDG",
+  "token": {
+    "id": "goldsmiths_receipt",
+    "name": "Buckingham's Goldsmith Receipt",
+    "description": "Receipt for two additional diamond studs, dated 1625, goldsmith's mark and countersignature. The date is what matters: made before the theft because the theft was anticipated. Cardinal's Venice agents have been briefed. Venetian banker can authenticate the goldsmith's mark.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["CDG", "VEN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "CDG", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "The receipt's significance is not the gold but the date and the goldsmith's mark. The date proves the replacement was anticipated. Understand this before the French agents in Venice are briefed on the route."},
+    {"act": 2, "node": "CDG_to_VEN", "type": "skill_check", "dc": 12, "skill": "Deception", "prompt": "French agents are watching the main Venice entry routes. The receipt is commercial paperwork from London. Enter as a merchant's assistant and hold the description through the harbor checkpoint."},
+    {"act": 3, "node": "VEN", "type": "combat", "dc": 13, "skill": "Persuasion", "enemies": "2x Cardinal's Venice agents, AC 12, HP 19", "prompt": "The Cardinal's Venice agent insists the receipt is a forgery and demands surrender for inspection. Commercial documentation of a legitimate goldsmith commission is not under French diplomatic jurisdiction. Name the distinction before the agents escalate."},
+    {"act": 4, "node": "VEN_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "The Venetian banker's authentication has made the receipt more valuable and more dangerous. Hold it through the last checkpoint without volunteering that it has been authenticated."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the date. 1625. Before the ball. Before the theft. Evidence Records opens."}
+  ],
+  "archiveCategory": "Evidence Records — The Date That Proved the Replacement Was Anticipated",
+  "sweelinckNote": "1625. The studs were made before the ball. Before the theft. The replacement was anticipated because the plot was designed to be foiled. That is what this date means."
+}
+```
+
+---
+
+## Cycle 5 — *Athos's Past*
+
+**Archive category:** Identity Records — The Document That Established Legal Continuity Across Two Lives
+
+**What this angle reveals:** Cycles 1-4 were about external evidence and authorizations. This angle reveals the personal legal history at the center of Milady's story: the execution record from the Comte de la Fère's estate confirming she was legally hanged for theft in 1615. If she is legally dead as of that record, all her subsequent crimes were committed by a legally dead person — which requires the record to establish identity continuity before any charges can hold. The Cardinal's agents want the record destroyed. Athos, who presided over the hanging and survived the knowledge, carries the document to the archive via Constantinople's neutral legal authentication process.
+
+---
+
+**THE TOKEN: `la_fere_execution_record`** — The execution record from the Comte de la Fère's estate: Milady's original hanging for theft, the parish record, the magistrate's signature, the death-declaration. Dated 1615. The document that establishes the first legal identity that must be connected to the second before any prosecution can hold. The Cardinal's agents understand this better than most.
+
+---
+
+```json
+{
+  "quest_id": "CDG-05",
+  "title": "Athos's Past",
+  "source": "The Three Musketeers — Alexandre Dumas (1844)",
+  "cycle": 5,
+  "book": "CDG",
+  "source_episode": "The Comte de la Fère's estate record — Milady legally hanged in 1615; the document that makes her subsequent identity prosecutable",
+  "theme": "The legal paradox of continuous identity across a recorded death; the document that must connect two lives before any of the second life can be charged",
+  "activateNode": "CDG",
+  "token": {
+    "id": "la_fere_execution_record",
+    "name": "La Fère Execution Record",
+    "description": "Execution record from the Comte de la Fère's estate: Milady's hanging for theft, 1615, magistrate's signature, death-declaration. Establishes the first legal identity. Must be connected to the second before charges hold. Cardinal's agents want it destroyed.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["CDG", "CON", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "CDG", "type": "skill_check", "dc": 12, "skill": "Insight", "prompt": "The document establishes Milady's legal death and legal identity simultaneously. Its value for prosecution depends on connecting the hanged woman to the living woman. Understand the two-step legal argument before the Cardinal's agents on the road."},
+    {"act": 2, "node": "CDG_to_CON", "type": "skill_check", "dc": 12, "skill": "Athletics", "prompt": "The Cardinal's agents are on the same road. Take the fast overland route and arrive at Constantinople before the document is intercepted."},
+    {"act": 3, "node": "CON", "type": "combat", "dc": 13, "skill": "Insight", "enemies": "2x Cardinal's agents, AC 12, HP 19", "prompt": "The Byzantine legal scholar wants to keep a copy of the document for his own comparative archive. A copy entering Byzantine records creates a second version that can be challenged independently. Decline the copy request before the Cardinal's agents arrive and complicate the room."},
+    {"act": 4, "node": "CON_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "Someone on the road wants to know what happened to Milady. The document is the answer. The answer is not public yet. Hold it until the archive receives it."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the execution record. 1615. He reads the magistrate's name. He looks up. Identity Records opens."}
+  ],
+  "archiveCategory": "Identity Records — The Document That Established Legal Continuity Across Two Lives",
+  "sweelinckNote": "She was legally hanged in 1615. She continued to exist and act until 1628. The document makes the first date the legal basis for prosecuting the second. The archive holds both."
+}
+```
+
+---
+
+## Cycle 6 — *Planchet's Loyalty*
+
+**Archive category:** Commission Completion Records — The Queen's Seal and the Mark That Confirmed Delivery
+
+**What this angle reveals:** Cycles 1-5 were about the documents that exposed and prosecuted the conspiracy. This angle reveals the commission from inside: after the Buckingham mission succeeded, the Queen's seal — the letter that opened his door — could not return to her directly without French intelligence intercepting it and using its existence as evidence of treason. Planchet carried the deactivated seal to Rome, to the cardinal who was the Queen's confessor. The Fighter carries it from Rome to the archive. The seal carries D'Artagnan's delivery mark on the back: a small notch confirming the mission was completed correctly.
+
+---
+
+**THE TOKEN: `queens_seal_return`** — The Queen's authorization seal, deactivated: D'Artagnan's delivery notch on the back confirms successful use. Cannot return to the Queen directly — French intelligence is watching her correspondence channels. Rome's cardinal-confessor held it in transit. The archive is the permanent record. The seal is evidence the mission was completed and how.
+
+---
+
+```json
+{
+  "quest_id": "CDG-06",
+  "title": "Planchet's Loyalty",
+  "source": "The Three Musketeers — Alexandre Dumas (1844)",
+  "cycle": 6,
+  "book": "CDG",
+  "source_episode": "The Queen's seal after the Buckingham mission — deactivated, cannot return directly; Planchet carried it to Rome; the Fighter carries it from Rome to the archive",
+  "theme": "The commission that cannot complete itself publicly; the deactivated instrument that is still evidence of what was done with it",
+  "activateNode": "CDG",
+  "token": {
+    "id": "queens_seal_return",
+    "name": "The Queen's Deactivated Seal",
+    "description": "The Queen's authorization seal with D'Artagnan's delivery notch on the back. Cannot return to the Queen through normal channels. Held at Rome by her confessor. The notch confirms mission completion. The seal's existence is evidence of what the mission was.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["CDG", "RME", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "CDG", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "The seal is deactivated but it is still a piece of the French queen's private correspondence system. The delivery notch is the evidence; the seal is the authority that made the notch meaningful. Understand both before Rome."},
+    {"act": 2, "node": "CDG_to_RME", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "The Roman cardinal's secretary wants to hold the seal in Rome permanently as evidence of the Queen's agency in the affair. The seal's permanent record should be in a neutral archive, not a church library where it could be used diplomatically. Explain the distinction."},
+    {"act": 3, "node": "RME", "type": "combat", "dc": 13, "skill": "Composure", "enemies": "2x French diplomatic agents, AC 12, HP 19", "prompt": "A French diplomatic agent in Rome recognizes the seal's description and attempts to acquire it. The seal is a completed document; French diplomatic authority over a completed commission does not extend to the commission's archive record. Name the principle and hold the seal."},
+    {"act": 4, "node": "RME_to_WM", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "A Jesuit on the road recognizes the seal's origin and wants to know the details of how it was used. The seal's use is not public knowledge. Close the conversation without confirming the Jesuit's inference."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck examines the delivery notch on the back. He sets the seal down. The mission was completed correctly. Commission Completion Records opens."}
+  ],
+  "archiveCategory": "Commission Completion Records — The Queen's Seal and the Mark That Confirmed Delivery",
+  "sweelinckNote": "The seal opened one door at one specific moment. The notch on the back confirms it was used correctly. Both facts are in this document."
+}
+```
+
+---
+
+## Cycle 7 — *The Musketeers' Billet*
+
+**Archive category:** Complicity Records — The Names Written While the Authors Were Still at La Rochelle
+
+**What this angle reveals:** Cycles 1-6 were about the conspiracy's instruments — warnings, authorizations, evidence, identity records, deactivated seals. The final angle reveals Athos's own accounting: a sealed report naming the court officials still in power who were complicit in the Cardinal's schemes. Written at La Rochelle while the siege was still in progress. If this report reaches the Musketeer captain, the named officials know they have been named. The Cardinal must suppress it cleanly or not at all. The Fighter carries it through London (where Lord de Winter's supporting evidence can be attached) to the archive.
+
+---
+
+**THE TOKEN: `athos_sealed_report`** — Athos's sealed report: names, dates, the chain of complicity from Milady to Richelieu to unnamed court officials still in position. Written at La Rochelle. The names in the report are more dangerous to know than not to know. The commission is to deliver it sealed to the archive with Lord de Winter's supporting documents attached.
+
+---
+
+```json
+{
+  "quest_id": "CDG-07",
+  "title": "The Musketeers' Billet",
+  "source": "The Three Musketeers — Alexandre Dumas (1844)",
+  "cycle": 7,
+  "book": "CDG",
+  "source_episode": "Athos's sealed report naming court officials still active — written at La Rochelle during the siege; Cardinal's agents must suppress it before it reaches the Musketeer captain",
+  "theme": "The report that names names while the named are still in power; the archive that holds the accounting without acting on it",
+  "activateNode": "CDG",
+  "token": {
+    "id": "athos_sealed_report",
+    "name": "Athos's Sealed Report",
+    "description": "Athos's report to the Musketeer captain: names, dates, chain of complicity. Written at La Rochelle during the siege. Sealed. The names are more dangerous to know than not to know. The commission is to deliver it sealed with Lord de Winter's supporting evidence attached.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["CDG", "LDN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "CDG", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "Do not read the report. The names in it are more dangerous to know than not to know. The commission is delivery sealed. Understand this before the Channel crossing."},
+    {"act": 2, "node": "CDG_to_LDN", "type": "skill_check", "dc": 12, "skill": "Stealth", "prompt": "The Cardinal has agents watching the Channel crossings for Musketeer-adjacent cargo. Travel as a commercial courier with unremarkable cargo. The sealed report is business correspondence."},
+    {"act": 3, "node": "LDN", "type": "combat", "dc": 13, "skill": "Persuasion", "enemies": "2x French diplomatic riders, AC 13, HP 21", "prompt": "A French agent is with Lord de Winter when the Fighter arrives. Lord de Winter needs to release the supporting evidence today, not when the French agent is not watching. Persuade de Winter that delay is the Cardinal's win — before the diplomatic riders on the road out of London become the main problem."},
+    {"act": 4, "node": "LDN_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "Someone on the road who has heard about La Rochelle asks about the Musketeers' role there. The sealed report is not public information. Say nothing that implies a commission is in progress."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck receives both documents. He does not open the report. He files it sealed with the supporting documents attached. Complicity Records opens. The Three Musketeers series is complete."}
+  ],
+  "archiveCategory": "Complicity Records — The Names Written While the Authors Were Still at La Rochelle",
+  "sweelinckNote": "Athos wrote the report while the siege was still in progress. He sent it before the Cardinal could close the channel. The names in the report are still active as of the date of filing. The archive does not act on its contents. It holds them.",
+  "questComplete": true
+}
+```
