@@ -7,26 +7,28 @@
 
 ## The Character: Richard the Enumerator
 
-Richard has been at the Event Horizon Station since before any current resident can confirm their own arrival. He is compact, agitated, and precise. His posture is that of a man who has been denied audiences for decades and has learned to intercept them instead.
+Richard has been at the Event Horizon Station since before any current resident can confirm their own arrival. He is compact, energetic, and precise. His posture is that of a man who has given a great many lectures and found the whole enterprise deeply satisfying.
 
 He carries:
 - A dense pamphlet, **THE STRONG LAW OF SMALL NUMBERS** — cover stamped FIFTH PRINTING
 - A portable chalkboard on articulated iron legs that follows him at hip height
 - A hand bell with a very clean tone
-- A cup of cold tea he has not drunk in several years
+- A cup of cold tea he has not drunk in several years because he is always in the middle of something more interesting
 
 His first words to every visitor, within thirty seconds of arrival at the EHZ platform:
 
 > *"There aren't enough small numbers to meet the demands made of them."*
 > — R.K. Guy, **The Strong Law of Small Numbers**, *The American Mathematical Monthly*, 95:8 (1988), p. 697.
 
-He rings the bell. Not to start the lecture — to mark that it has already started.
+He rings the bell. He is already smiling when he rings it. He loves this part.
 
-**His satisfaction is not in proving the point. It is in having an audience. He has not had a full audience in longer than he will say. The lecture is always ready. He has been waiting for someone to sit down. When you sit down — or when the chalkboard moves to block the exit and you have no choice — the satisfaction on his face is the most genuine emotion in the room.**
+**He has delivered this lecture to every visitor who has come through EHZ. He has a 100% completion rate not because he traps people but because the lecture is genuinely hard to leave once it begins. He starts in the middle of a good argument, his energy is real, and by the time a visitor realizes they have been standing in the same place for ten minutes they are already curious about what the urn model means. He will tell them. He is delighted to tell them. He is always delighted to tell them.**
 
-He has never successfully gotten anyone to attend voluntarily. He has a 100% completion rate anyway. He knows where the exits are. He has positioned himself and the chalkboard relative to them over a period of decades. He does not need cooperation. He prefers it. He can feel the difference.
+Other EHZ residents tell new arrivals: "You'll get the lecture." Not as a warning. As information. Richard gives the lecture to everyone. Everyone leaves knowing about the Law of Small Numbers. That is how EHZ works.
 
-The chalkboard thumps once whenever Richard says something that is both true and that the listener does not want to hear. It does not have a face. It has clear opinions.
+He loves the audience. Every audience. He has given the lecture hundreds of times and he is as pleased at the end of this one as he was at the end of the first. The bell, the chalk, the argument — they are all exactly as good as he remembers.
+
+The chalkboard thumps once whenever Richard says something that is both true and that the listener does not want to hear. It does not have a face. It has clear opinions about good pedagogy.
 
 ---
 
@@ -52,8 +54,8 @@ The chalkboard thumps once whenever Richard says something that is both true and
       "dialogue": {
         "npc": "Richard the Enumerator",
         "opening": "'There aren't enough small numbers to meet the demands made of them.' — R.K. Guy, 1988.",
-        "pause": "He lets that land. He watches your face. He has watched a great many faces at this moment. He can read the ones that dismiss it and the ones that feel the weight of it. Either way, the lecture begins.",
-        "continuation": "'You may be wondering what that means. That is the correct response. Sit down. I am going to tell you what it means. This is the moment I have been preparing for. I do not say that to you as theater. I say it because it is true. You are here. The lecture is ready. These are the conditions.'",
+        "pause": "He lets that land. He watches your face. He has watched a great many faces at this moment and he finds it interesting every time — the ones that dismiss it, the ones that feel the weight of it, the ones that are already starting to argue. All of them end up in the same lecture. He likes that too.",
+        "continuation": "'You may be wondering what that means. That is the correct response. Sit down. I am going to tell you what it means. I have told many people what it means. I am going to tell you. It does not get less true with repetition. Neither does it get less satisfying to explain.'",
         "player_options": [
           {
             "option": "Decline politely.",
@@ -67,13 +69,13 @@ The chalkboard thumps once whenever Richard says something that is both true and
           },
           {
             "option": "Sit down voluntarily.",
-            "response": "Richard goes very still. He looks at you. He looks at the chalkboard. He looks back at you. He says, quietly: 'You sat down.' He sets down his bell. He picks up the chalk. His hand is not quite steady. He begins.",
-            "outcome": "Lecture occurs. Richard's satisfaction is visible throughout every subsequent act."
+            "response": "Richard nods like this is exactly what he expected and rings the bell with extra flourish. He is already at the chalkboard. He says: 'Good. We begin.' His energy is immediate.",
+            "outcome": "Lecture occurs. Richard is in full performance mode from the first sentence."
           }
         ]
       },
-      "failText": "You cannot decline. Richard has had decades to account for every strategy. The lecture begins.",
-      "successText": "The lecture begins. Richard's expression has the quality of a man who has been waiting for this specific moment and is now in it."
+      "failText": "You cannot easily leave. The lecture is already interesting. You stay.",
+      "successText": "The lecture begins. Richard is already in full stride."
     },
     {
       "act": "II",
@@ -126,7 +128,7 @@ The chalkboard thumps once whenever Richard says something that is both true and
           "'Now suppose the person observes a long sequence. He expects small subsequences to yield signals in approximately the same proportions as the overall sequence. He does not expect streaks. When streaks happen anyway — as they must — he must explain them. His explanation is: the rate must be more extreme than it appears. If he sees many streaks from a good analyst, he concludes the analyst is even better than her overall average suggests. If the analyst is, in fact, only average, and the observer sees occasional poor streaks, he concludes this is impossible for a good analyst and revises her downward. Over a long sequence, the believer in the law of small numbers may converge on the wrong world view — and stay there — because the false inference he makes from streaks dominates his inference from overall proportions.'",
           "'I will give you the clearest example. Suppose an observer is initially uncertain whether a financial analyst is bad, average, or good. The analyst is, in fact, good — successful sixty percent of the time. Eventually the observer will see all possible pairs of performances, including two unsuccessful years in a row. If the person is an extremely strong believer in the law of small numbers, he will believe two unsuccessful years in a row is virtually impossible for a good analyst. He will therefore conclude the analyst is average — since average analysts are the only ones who often have both successful and unsuccessful years in a row. He will believe this despite the fact that this supposedly average analyst is successful sixty percent of the time. He has a false world view. The math confirms it. The chalkboard confirms it. I confirm it.'"
         ],
-        "satisfaction_interlude": "Richard stops. He looks at you. He says: 'You are still here.' It is not a question. It is an observation. He says it with the tone of a man who expected you to have found another exit by now and has not. He goes back to the pamphlet."
+        "satisfaction_interlude": "Richard stops. He looks at you. He is pleased with how the argument is landing. He says: 'Good. This is the best part. Stay with me.' He goes back to the pamphlet."
       },
       "failText": "The over-inference mechanics are too dense. You follow the argument but lose the thread at streaks. Richard notes your expression and adds a clarifying example involving dice. The chalkboard writes CLARIFICATION in small letters.",
       "successText": "You track the argument through to the long-sequence conclusion — the false world view that persists because streaks dominate proportions. The chalkboard thumps once. Richard says: 'Yes. You have it. That is the crux. Most people stop before that.' He is not performing satisfaction now. It is simply there."
@@ -142,23 +144,23 @@ The chalkboard thumps once whenever Richard says something that is both true and
           "'Suppose a person who believes in the law of small numbers observes a stream of signals from each of a series of different sources, and from such observations makes inferences about the distribution of rates among a large population of sources. Consider an observer of financial analysts. He observes two performances from a large number of analysts — as he might if he reads an article listing performances of many mutual fund managers over the last two years, or if he observed a series of them he hired for brief durations.'",
           "'If in truth all analysts are average, and a Bayesian with any initial beliefs would eventually figure this out: the believer in the law of small numbers will infer that some analysts are good and some are bad. Because he underestimates how often average analysts will have consecutive successful or unsuccessful years, he interprets what he sees as evidence of the existence of good and bad analysts. He has invented them. He is paying for them. He is convinced they exist. This is fictitious variation. It is, I believe, one of the economically most important implications of the law of small numbers. People pay for financial advice from experts whose expertise is entirely illusory. The model predicts this. The model is correct.'",
           "'The final application: when a person decides what signals to observe based on his earlier observations, the sequence of signals becomes endogenous. Suppose a person employs financial analysts one at a time and decides when to switch based on his beliefs. Such a person will switch quickly from an analyst who initially performs poorly — and when he does so, he has over-inferred that the analyst is bad. But he sticks with an analyst who initially performs well — until he discovers she is average. Because he corrects his overly positive inference but not his overly negative inference, his beliefs are biased downward. Over time, he comes to believe that average talent is less than it is. He has trained himself to believe this. The math confirms this. The behavior produces it. He is doing this right now, in markets, in hiring, in every domain where small samples are being observed and large conclusions are being drawn.'",
-          "'This is what it means that there are not enough small numbers to meet the demands made of them. The demands are being made anyway. The small numbers are doing their best. They cannot do what is being asked. And no one has sat still long enough to hear this explained — until now.'"
+          "'This is what it means that there are not enough small numbers to meet the demands made of them. The demands are being made anyway. The small numbers are doing their best. They cannot do what is being asked. I enjoy explaining this. I have explained it many times. I will explain it again tomorrow. It does not get less true.'"
         ],
-        "final_note": "He sets down the chalk. He does not ring the bell. He says: 'That is the lecture.' His voice is different at the end — quieter, not with exhaustion but with something more like completion. He has delivered the full lecture. He is aware of it. The chalkboard is still."
+        "final_note": "He sets down the chalk. He rings the bell once — with pleasure, not ceremony. He says: 'That is the lecture.' He says it the way a performer says it: satisfied, ready to do it again."
       },
       "failText": "The applications land. You have absorbed more than you expected to when you arrived at this station.",
-      "successText": "The lecture is complete. Richard stands very straight. He says: 'You are the first person to sit through the full sequence.' He picks up his bell and holds it without ringing it."
+      "successText": "The lecture is complete. Richard is already moving the chalkboard back to its position near the entrance arch, ready for the next arrival."
     },
     {
       "act": "VI",
       "activateNode": "WM",
       "type": "dialogue",
-      "scene": "Richard opens the pamphlet to its back cover. He produces a heavy iron stamp from his coat. He presses it into the ink pad he carries for this purpose and stamps the cover. The impression reads: DELIVERED. ATTENDANCE WAS NONOPTIONAL. He looks at the stamp. He looks at you. He says: 'Write that wrong. It was optional. You could have left through the window above the secondary platform. I have never told anyone about the window. You stayed.' He hands you the pamphlet. 'Take this to Weimar. Sweelinck will know what to do with it. He has been expecting this filing for some time. Tell him the chalkboard thumped.' He picks up his bell. He rings it once — not to start a lecture. To mark an ending. The tone is very clean.",
+      "scene": "Richard opens the pamphlet to its back cover. He produces a heavy iron stamp from his coat. He presses it into the ink pad he carries for this purpose and stamps the cover with the ease of someone who has done this many times. The impression reads: DELIVERED. ATTENDANCE WAS NONOPTIONAL. He looks at it with affection. He hands you the pamphlet. 'Take this to Weimar. Sweelinck will know what to do with it. Tell him the chalkboard thumped.' He picks up his bell. He is already looking toward the arrival arch. There will be another visitor.",
       "grantItem": "Richard's Lecture Notes — Pamphlet: THE STRONG LAW OF SMALL NUMBERS; stamped DELIVERED. ATTENDANCE WAS NONOPTIONAL.",
       "delivery": {
         "node": "WM",
         "archivist": "Sweelinck",
-        "response": "Sweelinck receives the pamphlet. He reads the back stamp. He reads it again. He says: 'He finally got a full one.' He opens the register to a blank page — a page he has clearly been leaving blank for some time — and writes without asking: Compulsory Education Records — Lectures Delivered on the Law of Small Numbers; Arguments Whose Correctness Did Not Depend on Whether the Audience Arrived Voluntarily. He writes the first entry: 'There aren't enough small numbers to meet the demands made of them. — R.K. Guy, 1988. The Fighter attended. The chalkboard thumped.' He blots the ink. He closes the register. He says: 'Did he tell you about the window?' You tell him what Richard said. Sweelinck says: 'He has never told anyone about the window before.' He looks at the pamphlet on the desk. He does not say anything else about it."
+        "response": "Sweelinck receives the pamphlet. He reads the back stamp. He says: 'Good. Another one.' He opens the register — a register that already has many prior entries under this category — and writes the current date. Category already exists: Compulsory Education Records — Lectures Delivered on the Law of Small Numbers; Arguments Whose Correctness Did Not Depend on Whether the Audience Arrived Voluntarily. He adds the Fighter's delivery to the log: 'There aren't enough small numbers to meet the demands made of them. — R.K. Guy, 1988. The Fighter attended. The chalkboard thumped.' He blots the ink. He closes the register. He says: 'He sends one of these every few weeks. Has for years. He always says to tell him the chalkboard thumped. I always note it.'"
       },
       "failText": "The pamphlet is received. The archive category now exists.",
       "successText": "Sweelinck closes the register. The archive category now exists. Somewhere at the Event Horizon Station, the chalkboard thumps once more — not because Richard is saying something. Just because."
