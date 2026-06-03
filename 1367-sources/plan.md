@@ -778,7 +778,7 @@ The lecture concludes: *"No one has sat still long enough to hear this explained
 | 65 | CLJ | Dracula | **SEEDS COMPLETE 2026-06-03 — CLJ-01–09 done. CLJ-01 UQF stub written; questComplete added to CLJ-09. Theme threads for all 9 cycles added.** |
 | 66 | WAW | Quo Vadis | **SEEDS COMPLETE 2026-06-03 — WAW-01–08 done (8 cycles). questComplete added. SAU/VFM/BLO nodes added. Theme threads for all 8 cycles.** |
 | 67 | NWI | Anabasis | **SEEDS COMPLETE 2026-06-03 — NWI-01–09 done (9 cycles). questComplete added. 7 new nodes (CPL/BLK/SIN/ORC/VAR/MYS/ANC). Theme threads for all 9 cycles.** |
-| 68 | MLA | Plutarch's Lives | QUEUED |
+| 68 | MLA | Plutarch's Lives | **SEEDS COMPLETE 2026-06-03 — MLA-01–07 done (7 cycles). questComplete added to MLA-07. New nodes LMO/THA/ROM added to Location Grid. Theme threads for all 7 cycles.** |
 | 69 | CRL | Froissart (Boys) | **SEEDS COMPLETE 2026-06-03 — CRL-01–08 done (8 cycles). questComplete added to CRL-08. New node AVG added. Theme threads for all 8 cycles.** |
 | 70 | CPH | Gesta Danorum | **SEEDS COMPLETE 2026-06-03 — CPH-01–02 done (2 cycles). questComplete added to CPH-02. Theme threads already present. Rows updated.** |
 | 71 | MOL | Laxdaela Saga | **SEEDS COMPLETE 2026-06-03 — MOL-01–02 done (2 cycles). questComplete added to MOL-02. Theme threads already present. Rows updated.** |
