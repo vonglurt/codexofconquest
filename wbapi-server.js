@@ -687,6 +687,8 @@ async function route(req, res) {
           '  GET /api/help/export          — exporting arrays as JSON / JS / module',
           '  GET /api/help/wizard          — full workflow: terrain→node→monster→quest',
           '  GET /api/help/audit           — integrity scan and fixing errors',
+          '  GET /api/help/coords          — coordinate system, 4x expansion, and node placement',
+          '  GET /api/help/import          — 1367 quest import workflow and node placement strategy',
           '  GET /api/help/curl            — curl cheat sheet for every operation',
           '',
           `Server: ${b}`,
@@ -1067,6 +1069,110 @@ async function route(req, res) {
           '  The player keeps the token and tries again next hour.',
           '',
           'See: GET /api/help/quest',
+        ].join('\n'),
+      },
+
+      coords: {
+        title: 'Coordinate System and 4x Expansion',
+        body: [
+          'COORDINATE SYSTEM',
+          '',
+          '  NODE_COORDS stores {r, c} (row, column) for each node.',
+          '  The worldbuilder renders the map at mapScale px per cell.',
+          '  Canvas size auto-computes from max(r) and max(c) in the data.',
+          '',
+          '4x EXPANSION (applied 2026-06-03)',
+          '  All coordinates were multiplied by 4:',
+          '    original maxR:48, maxC:60  →  new maxR:192, maxC:240',
+          '  Original adjacent nodes are now 4 cells apart.',
+          '  3 empty slots exist between every pair of adjacent original nodes.',
+          '',
+          'ENDPOINTS',
+          `  GET  ${b}/api/coords                  — full coordinate map + bounds`,
+          `  GET  ${b}/api/coords/near/{code}       — nearby nodes + available slots`,
+          `  PUT  ${b}/api/coords/{code}            — body: {r, c}  (updates existing)`,
+          '  POST /api/node  body: {code,...,r,c}   — creates node + inserts coords',
+          '',
+          'PLACEMENT WORKFLOW (inserting between nodes)',
+          '  1. GET /api/coords/near/{startingNode}?radius=8',
+          '     → returns nearby[] (occupied) and available[] (empty slots)',
+          '  2. Choose a slot from available[] that is close to the starting node',
+          '     and does not conflict with existing nodes.',
+          '  3. POST /api/node with r and c set to the chosen slot.',
+          '     → NODE_MAP + NODE_COORDS both updated in one call.',
+          '  4. POST /api/save',
+          '',
+          'COLLISION CHECK',
+          '  PUT /api/coords/{code} returns 409 if the target r,c is already occupied.',
+          '  POST /api/node with r,c also checks for collisions before writing.',
+          '',
+          'See: GET /api/help/import',
+        ].join('\n'),
+      },
+
+      import: {
+        title: '1367 Quest Import Workflow',
+        body: [
+          '1367 QUEST IMPORT — NODE PLACEMENT + QUEST CHAIN CREATION',
+          '',
+          'OVERVIEW',
+          '  1367-source vignettes (Batch 3 books) are multi-act quest designs.',
+          '  Each 5-act vignette becomes 4–5 chained QUEST_DB entries (one per act).',
+          '  New geographic nodes are added per-book, placed near their real-world',
+          '  counterpart town using the 4x coordinate grid.',
+          '',
+          'STEP 1 — Identify the starting node',
+          '  Each vignette begins at a specific town (e.g. STN starts at NTN=Nottingham).',
+          '  Query the existing node to find its coordinates:',
+          `    curl ${b}/api/node/NTN`,
+          '  If the node does not exist, find the nearest geographic anchor:',
+          `    curl '${b}/api/list/node?arc=STN'`,
+          '',
+          'STEP 2 — Find available slots near the starting node',
+          `    curl ${b}/api/coords/near/NTN?radius=8`,
+          '  → returns available[] — empty r,c slots sorted by distance from NTN.',
+          '  Choose a slot 1–3 cells away for closely related nodes (same town),',
+          '  4–8 cells away for waypoint nodes (same journey, different stop),',
+          '  and farther for distant nodes (another country on the vignette route).',
+          '',
+          'STEP 3 — Select terrain type',
+          '  Match the new node\'s terrain to the real-world geography:',
+          '    city, coastal_market, monastery, forest, mountains, desert, ruins',
+          '  Check available terrains:',
+          `    curl ${b}/api/list/terrain`,
+          '',
+          'STEP 4 — Create the node with coordinates',
+          `    curl -XPOST ${b}/api/node \\`,
+          '      -H \'Content-Type: application/json\' \\',
+          '      -d \'{"code":"WM","label":"Weimar — Archive","name":"city","act":5,"r":80,"c":180}\'',
+          '',
+          'STEP 5 — Create state flags for the act chain',
+          '  Each act needs a checkPassFlag that gates the next act:',
+          `    curl -XPOST ${b}/api/flags -d \'{"name":"stnAct1Done","defaultValue":false}\'`,
+          `    curl -XPOST ${b}/api/flags -d \'{"name":"stnAct2Done","defaultValue":false}\'`,
+          '  (one flag per act-to-act transition)',
+          '',
+          'STEP 6 — Create chained quest entries (one per act)',
+          '  Act 1 (activateNode = starting town, no activateCond):',
+          `    curl -XPOST ${b}/api/quest -d \'{"id":"stn_01_act1","type":"skill_check",`,
+          '       "title":"...","activateNode":"NTN","checkStat":"wis","checkDC":12,',
+          '       "checkPassFlag":"stnAct1Done","passText":"...","failText":"..."}\'',
+          '  Act 2 (activateNode = next waypoint, activateCond = previous flag):',
+          `    curl -XPOST ${b}/api/quest -d \'{"id":"stn_01_act2","type":"skill_check",`,
+          '       "activateNode":"LEA","activateCond":"stnAct1Done","checkPassFlag":"stnAct2Done",...}\'',
+          '  Acts 3–5: repeat pattern.',
+          '',
+          'STEP 7 — Verify the chain',
+          `    curl ${b}/api/quest/stn_01_act1/chain`,
+          '',
+          'STEP 8 — Audit and save',
+          `    curl ${b}/api/audit | jq \'.errors\'`,
+          `    curl -XPOST ${b}/api/save`,
+          '',
+          'IMPORT QUEUE',
+          '  See 1367-sources/plan.md §IMPORT-01 for the full per-book import plan.',
+          '  Books are processed in Batch 3 order (books 61–78).',
+          '  Each book: nodes first → flags → quests → verify → save → commit → say.',
         ].join('\n'),
       },
 
@@ -2241,6 +2347,117 @@ async function route(req, res) {
     return json(res, 200, { ok:true, count: bits.length, bits });
   }
 
+  // ── Coords (NODE_COORDS) ─────────────────────────────────────────────────
+  if (parts[0] === 'coords') {
+    const coordAction = parts[1]; // undefined | 'near' | <nodeCode>
+
+    // GET /api/coords — full coordinate map
+    if (method === 'GET' && !coordAction) {
+      const coords = WBAPI.nodeCoords;
+      const count = Object.keys(coords).length;
+      const maxR = Math.max(...Object.values(coords).map(p=>p.r));
+      const maxC = Math.max(...Object.values(coords).map(p=>p.c));
+      logRow('entries', count);
+      logRow('bounds', `maxR:${maxR}  maxC:${maxC}`);
+      logResponse(method, url.pathname, 200, `${count} coord entries`);
+      return json(res, 200, { ok:true, count, maxR, maxC, coords });
+    }
+
+    // GET /api/coords/near/{code}?radius=N — find occupied and available slots near a node
+    if (method === 'GET' && coordAction === 'near') {
+      const targetCode = parts[2];
+      if (!targetCode) {
+        logResponse(method, url.pathname, 400, 'missing node code — GET /api/coords/near/{code}');
+        return json(res, 400, { error:'Usage: GET /api/coords/near/{code}' });
+      }
+      const origin = WBAPI.nodeCoords[targetCode];
+      if (!origin) {
+        logResponse(method, url.pathname, 404, `no coordinates for node "${targetCode}"`);
+        return json(res, 404, { error:`Node "${targetCode}" has no coords in NODE_COORDS` });
+      }
+      const radius = Math.max(1, Math.min(32, parseInt(url.searchParams.get('radius') || '8', 10)));
+      const occupied = new Map(); // 'r,c' → code
+      for (const [code, p] of Object.entries(WBAPI.nodeCoords)) {
+        occupied.set(`${p.r},${p.c}`, code);
+      }
+      const nearby = [];
+      for (const [code, p] of Object.entries(WBAPI.nodeCoords)) {
+        const dr = Math.abs(p.r - origin.r), dc = Math.abs(p.c - origin.c);
+        if (dr <= radius && dc <= radius && code !== targetCode) {
+          nearby.push({ code, r: p.r, c: p.c, dr, dc,
+            label: WBAPI.nodeMap[code]?.label || null,
+            terrain: WBAPI.nodeMap[code]?.name || null });
+        }
+      }
+      nearby.sort((a, b) => (a.dr + a.dc) - (b.dr + b.dc));
+      // Suggest available slots adjacent to the origin (step=1 cells)
+      const available = [];
+      for (let dr = -radius; dr <= radius; dr++) {
+        for (let dc = -radius; dc <= radius; dc++) {
+          if (dr === 0 && dc === 0) continue;
+          const r = origin.r + dr, c = origin.c + dc;
+          if (r < 1 || c < 1) continue;
+          if (!occupied.has(`${r},${c}`)) available.push({ r, c, dr, dc });
+        }
+      }
+      available.sort((a, b) => (Math.abs(a.dr)+Math.abs(a.dc)) - (Math.abs(b.dr)+Math.abs(b.dc)));
+      logRow('origin', `${targetCode}  r:${origin.r}  c:${origin.c}`);
+      logRow('radius', radius);
+      logRow('nearby nodes', nearby.length);
+      logRow('available slots', available.length);
+      logResponse(method, url.pathname, 200, `near ${targetCode} — ${nearby.length} nodes, ${available.length} slots`);
+      return json(res, 200, {
+        ok: true, code: targetCode, origin,
+        radius, nearby, available: available.slice(0, 40),
+      });
+    }
+
+    // PUT /api/coords/{code} — set coordinates for a node
+    if (method === 'PUT' && coordAction && coordAction !== 'near') {
+      const targetCode = coordAction;
+      if (!WBAPI.nodeMap[targetCode]) {
+        logResponse(method, url.pathname, 404, `node "${targetCode}" not in NODE_MAP`);
+        return json(res, 404, { error:`Node "${targetCode}" not found in NODE_MAP` });
+      }
+      let body;
+      try { body = await readBody(req); } catch(e) {
+        return json(res, 400, { error:'Invalid JSON' });
+      }
+      const r = body.r, c = body.c;
+      if (r === undefined || c === undefined || typeof r !== 'number' || typeof c !== 'number') {
+        logResponse(method, url.pathname, 400, 'body must have numeric r and c');
+        return json(res, 400, { error:'body must contain numeric fields: r (row) and c (column)' });
+      }
+      // Check for coordinate collision
+      const collision = Object.entries(WBAPI.nodeCoords).find(([code, p]) => p.r===r && p.c===c && code!==targetCode);
+      if (collision) {
+        logResponse(method, url.pathname, 409, `${r},${c} already occupied by ${collision[0]}`);
+        return json(res, 409, { error:`Coordinate r:${r} c:${c} already occupied by node "${collision[0]}"` });
+      }
+      const prev = WBAPI.nodeCoords[targetCode] || null;
+      WBAPI.nodeCoords[targetCode] = { r, c };
+      // Patch NODE_COORDS section in _rawSrc
+      const START = '// ◆◆◆ WORLDBUILDER:NODE_COORDS:START ◆◆◆';
+      const END   = '// ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆';
+      const sIdx = WBAPI._rawSrc.indexOf(START) + START.length;
+      const eIdx = WBAPI._rawSrc.indexOf(END);
+      let section = WBAPI._rawSrc.slice(sIdx, eIdx);
+      const existingRe = new RegExp(`(\\b${targetCode}:\\s*\\{)[^}]*(\\})`);
+      if (existingRe.test(section)) {
+        // Update existing entry
+        section = section.replace(existingRe, `$1r:${r},c:${c}$2`);
+      } else {
+        // Append new entry before closing };
+        const closeIdx = section.lastIndexOf('\n};');
+        section = section.slice(0, closeIdx + 1) + `  ${targetCode}:{r:${r},c:${c}},\n` + section.slice(closeIdx + 1);
+      }
+      WBAPI._rawSrc = WBAPI._rawSrc.slice(0, sIdx) + section + WBAPI._rawSrc.slice(eIdx);
+      logRow('coords', `${targetCode}  ${prev?`r:${prev.r},c:${prev.c} → `:'(new) '}r:${r},c:${c}`);
+      logResponse(method, url.pathname, 200, `coords/${targetCode} → r:${r} c:${c}`);
+      return json(res, 200, { ok:true, code: targetCode, prev, coords: { r, c }, note:'POST /api/save to persist.' });
+    }
+  }
+
   // ── Flags (_S_DEFAULTS) ───────────────────────────────────────────────────
   if (parts[0] === 'flags') {
     if (method === 'GET') {
@@ -2499,13 +2716,38 @@ async function route(req, res) {
       const ins = insertBeforeSectionClose('NODE_MAP', entry);
       if (!ins.ok) { logResponse(method, url.pathname, 500, ins.error); return json(res, 500, ins); }
       const maxNum = Object.values(WBAPI.nodeMap).reduce((m, n) => Math.max(m, n.num || 0), 0);
-      const { code: _code, ...nodeFields } = body;
+      const { code: _code, r: _r, c: _c, ...nodeFields } = body;
       WBAPI.nodeMap[code] = { ...nodeFields, num: body.num !== undefined ? Number(body.num) : maxNum + 1 };
+      // If r,c provided, also insert into NODE_COORDS
+      let coordNote = '';
+      if (body.r !== undefined && body.c !== undefined) {
+        const r = Number(body.r), c = Number(body.c);
+        const collision = Object.entries(WBAPI.nodeCoords).find(([cd, p]) => p.r===r && p.c===c);
+        if (collision) {
+          coordNote = ` — coords r:${r},c:${c} conflict with ${collision[0]}; not written`;
+        } else {
+          WBAPI.nodeCoords[code] = { r, c };
+          const START = '// ◆◆◆ WORLDBUILDER:NODE_COORDS:START ◆◆◆';
+          const END   = '// ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆';
+          const sIdx  = WBAPI._rawSrc.indexOf(START) + START.length;
+          const eIdx  = WBAPI._rawSrc.indexOf(END);
+          let section = WBAPI._rawSrc.slice(sIdx, eIdx);
+          const closeIdx = section.lastIndexOf('\n};');
+          section = section.slice(0, closeIdx + 1) + `  ${code}:{r:${r},c:${c}},\n` + section.slice(closeIdx + 1);
+          WBAPI._rawSrc = WBAPI._rawSrc.slice(0, sIdx) + section + WBAPI._rawSrc.slice(eIdx);
+          coordNote = `  coords: r:${r},c:${c}`;
+        }
+      } else {
+        coordNote = ' — no r,c provided; add coords via PUT /api/coords/{code}';
+      }
       WBAPI._buildIndexes();
       logRow('code', code);
-      logRow('label', `${body.label}  ·  Act ${body.act}  ·  terrain: ${body.name||'—'}`);
+      logRow('label', `${body.label}  ·  Act ${body.act}  ·  terrain: ${body.name||'—'}${coordNote}`);
       logResponse(method, url.pathname, 201, `created node/${code}`);
-      return json(res, 201, { ok:true, code, note:'POST /api/save to persist.', ...nodeConnections(code) });
+      return json(res, 201, { ok:true, code,
+        note:`POST /api/save to persist.${coordNote}`,
+        coords: WBAPI.nodeCoords[code] || null,
+        ...nodeConnections(code) });
     }
 
     if (type === 'terrain') {
