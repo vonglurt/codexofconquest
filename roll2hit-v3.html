@@ -10847,6 +10847,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   blq_07_act3: { id:"blq_07_act3", type:"skill_check", title:"The Night Transport — Act 3: Bernardo Bostichi Receives the Declaration", failText:"The consulate notary is absent for the afternoon. Notarization waits until morning. One day is lost. The relay margin drops to zero.", npc:"ser_giambattista_alberi", activateNode:"ALE", reward:NaN, activateCond:blq07LucaPrepared },
   blq_07_act4: { id:"blq_07_act4", type:"skill_check", title:"The Night Transport — Act 4: Fra Luca di Parma's Authorization", failText:"Fra Luca requires a written request from the Florentine guild factor before authorizing. This takes three days via normal courier. The one-day margin is gone. The letter goes by normal post.", npc:"ser_giambattista_alberi", activateNode:"ALE", reward:NaN, activateCond:blq07LetterNotarized },
   blq_07_act5: { id:"blq_07_act5", type:"skill_check", title:"The Night Transport — Act 5: The Relay Is Running", failText:"You cannot confirm the letter's status before the galley sails. You board without knowing. The receipt is in your hands. Everything else is uncertain until you return to Florence.", npc:"ser_giambattista_alberi", activateNode:"ALE", reward:NaN, activateCond:blq07RelayTokenObtained },
+  blq_08_act1: { id:"blq_08_act1", type:"skill_check", title:"The Goosebridge Answer — Act 1: One Letter, Two Correct Readings", failText:"You depart with the letter and general awareness that agents are watching. The mechanism of the ambiguity's value is not fully understood.", npc:"konstantinos_philanthropenos", activateNode:"CON", reward:NaN, activateCond:null },
+  blq_08_act2: { id:"blq_08_act2", type:"skill_check", title:"The Goosebridge Answer — Act 2: Giacomo Brando at Ragusa", failText:"Giacomo, suspicious of vagueness, asks if this is going to a neutral registry. The carrier's answer is too specific or too evasive. Giacomo sends a message to Squarciafico's factor in Venice asking if the Genoese are also watching for a Galata property letter. That message arrives in Venice ahead of the carrier.", npc:"konstantinos_philanthropenos", activateNode:"DBV", reward:NaN, activateCond:blq08AmbiguityUnderstood },
+  blq_08_act3: { id:"blq_08_act3", type:"skill_check", title:"The Goosebridge Answer — Act 3: Lorenzo Doria at the Rialto", failText:"Doria sends a rider north ahead of the carrier to a Genoese factor in Frankfurt — instructions to intercept any northbound courier carrying a Byzantine court letter. At the Alpine pass, this intercept will be waiting.", npc:"konstantinos_philanthropenos", activateNode:"VEN", reward:NaN, activateCond:blq08BrandoManaged },
+  blq_08_act4: { id:"blq_08_act4", type:"skill_check", title:"The Goosebridge Answer — Act 4: The Alpine Pass Intercept", failText:"The agents hold the carrier long enough for their principals to meet at the Brenner and compare notes. The letter's ambiguity is destroyed. The filing becomes contested before the carrier reaches Weimar.", npc:"konstantinos_philanthropenos", activateNode:"VEN", reward:NaN, activateCond:blq08DoriaManaged },
+  blq_08_act5: { id:"blq_08_act5", type:"skill_check", title:"The Goosebridge Answer — Act 5: Archivus Sweelinck Files the Letter", failText:"Sweelinck requires additional authentication — the gold wax has a hairline crack. Filing is delayed three days. Brando's and Doria's agents meet at the archive gate and compare notes before the delay resolves. The contest begins.", npc:"konstantinos_philanthropenos", activateNode:"NUE", reward:NaN, activateCond:blq08PassCleared },
 };
 // ◆◆◆ WORLDBUILDER:QUEST_DB:END ◆◆◆
 
@@ -11828,6 +11833,7 @@ const BIRKA_NPC_PROFILES = { // → doc: world.md §Birka Six NPCs
   federigo_alberighi: { key:"federigo_alberighi", name:"Federigo degli Alberighi", occupation:"Ruined knight and falconer — once Florence's most celebrated spendthrift, now a smallholder outside the eastern gate. His famous falcon was his last treasure, already cooked for a guest who arrived too late.", node:"PSAFM" },
   grimaldi_luca: { key:"grimaldi_luca", name:"Messer Luca Grimaldi", occupation:"Grain merchant and letter-of-credit issuer, Naples. Holds accounts with the Hospitaller order's eastern network. Commissioned tonight's delivery himself; is afraid of something he has not named.", node:"NAP" },
   ser_giambattista_alberi: { key:"ser_giambattista_alberi", name:"Ser Giambattista Alberi", occupation:"Guild factor for the Florentine merchant consortium, Via Tornabuoni. Manages eastern accounts and dispatch coordination. Has been calculating the Bostichi deadline for three days and knows the mathematics do not work without the Hospitaller relay.", node:"PSA" },
+  konstantinos_philanthropenos: { key:"konstantinos_philanthropenos", name:"Konstantinos Philanthropenos", occupation:"Byzantine chancery clerk, Blachernae quarter, Constantinople. Issued the dual-petition ruling letter for the Galata warehouse dispute. Is aware that both parties' agents are watching. Is not asking for deception — only for speed.", node:"CON" },
 };
 // ◆◆◆ WORLDBUILDER:BIRKA_NPC:END ◆◆◆
 
@@ -12164,6 +12170,11 @@ const _S_DEFAULTS = () => ({
     blq07LetterNotarized: false,
     blq07RelayTokenObtained: false,
     blq07Complete: false,
+    blq08AmbiguityUnderstood: false,
+    blq08BrandoManaged: false,
+    blq08DoriaManaged: false,
+    blq08PassCleared: false,
+    blq08Complete: false,
 });
 
 /* ── Layer 48: Luck — Seventh Stat ── */
