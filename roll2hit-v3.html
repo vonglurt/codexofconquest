@@ -7956,6 +7956,8 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   MESFRY: { num:174, name:"freshwater_lake", label:"Mestre — Mainland Ferry Landing", act:3 },
   VENCTR: { num:175, name:"city", label:"Venice — Ca Tron Grand Canal", act:3 },
   RHD: { num:176, name:"market_quarter", label:"Rhodes — Mandraki Harbor Commercial Dock", act:3 },
+  FAM: { num:177, name:"docks", label:"Famagusta — Hospitaller Commandery Port", act:3 },
+  ALE: { num:178, name:"market_quarter", label:"Alexandria — Venetian Consul Frankish Quarter", act:3 },
 };
 // ◆◆◆ WORLDBUILDER:NODE_MAP:END ◆◆◆
 
@@ -8060,6 +8062,8 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   MESFRY:{r:132,c:219},
   VENCTR:{r:133,c:221},
   RHD:{r:168,c:236},
+  FAM:{r:172,c:236},
+  ALE:{r:184,c:232},
 };
 // ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆
 
@@ -10838,6 +10842,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   blq_06_act3: { id:"blq_06_act3", type:"skill_check", title:"The Three Descents — Act 3: Maso's Salvage (Second Descent)", failText:"Maso detains you until near dawn. You escape but the letter is still at the barge. You must fight your way back to the rope stack and search before the tide comes in.", npc:"grimaldi_luca", activateNode:"NAP", reward:NaN, activateCond:blq06FirstDescent },
   blq_06_act4: { id:"blq_06_act4", type:"skill_check", title:"The Three Descents — Act 4: Rodrigo's Wall (Third Descent)", failText:"Rodrigo blocks the main exit. Combat required. If you win, you run for the dock. If you lose, Rodrigo reads the margin — and decides it is not what he feared. He lets you go anyway, but the delay costs you.", npc:"grimaldi_luca", activateNode:"NAP", reward:NaN, activateCond:blq06SecondDescent },
   blq_06_act5: { id:"blq_06_act5", type:"skill_check", title:"The Three Descents — Act 5: Fra Simone Receives the Seal", failText:"Fra Simone requires an additional attestation before accepting — the condition is too irregular. The chapter house factor is consulted. Three hours pass. The commercial session is almost closed. The letter is accepted at last minute, at reduced authority.", npc:"grimaldi_luca", activateNode:"RHD", reward:NaN, activateCond:blq06ThirdDescent },
+  blq_07_act1: { id:"blq_07_act1", type:"skill_check", title:"The Night Transport — Act 1: The Mathematics Do Not Work", failText:"You depart knowing the relay exists but without a specific strategy for accessing it. The negotiation in Alexandria will have to proceed from scratch.", npc:"ser_giambattista_alberi", activateNode:"PSA", reward:NaN, activateCond:null },
+  blq_07_act2: { id:"blq_07_act2", type:"skill_check", title:"The Night Transport — Act 2: Fra Damiano at Famagusta", failText:"Fra Damiano is busy and not persuaded. You board the galley without the preparatory message. Fra Luca must be convinced from scratch in Alexandria.", npc:"ser_giambattista_alberi", activateNode:"FAM", reward:NaN, activateCond:blq07RelayStrategyKnown },
+  blq_07_act3: { id:"blq_07_act3", type:"skill_check", title:"The Night Transport — Act 3: Bernardo Bostichi Receives the Declaration", failText:"The consulate notary is absent for the afternoon. Notarization waits until morning. One day is lost. The relay margin drops to zero.", npc:"ser_giambattista_alberi", activateNode:"ALE", reward:NaN, activateCond:blq07LucaPrepared },
+  blq_07_act4: { id:"blq_07_act4", type:"skill_check", title:"The Night Transport — Act 4: Fra Luca di Parma's Authorization", failText:"Fra Luca requires a written request from the Florentine guild factor before authorizing. This takes three days via normal courier. The one-day margin is gone. The letter goes by normal post.", npc:"ser_giambattista_alberi", activateNode:"ALE", reward:NaN, activateCond:blq07LetterNotarized },
+  blq_07_act5: { id:"blq_07_act5", type:"skill_check", title:"The Night Transport — Act 5: The Relay Is Running", failText:"You cannot confirm the letter's status before the galley sails. You board without knowing. The receipt is in your hands. Everything else is uncertain until you return to Florence.", npc:"ser_giambattista_alberi", activateNode:"ALE", reward:NaN, activateCond:blq07RelayTokenObtained },
 };
 // ◆◆◆ WORLDBUILDER:QUEST_DB:END ◆◆◆
 
@@ -11818,6 +11827,7 @@ const BIRKA_NPC_PROFILES = { // → doc: world.md §Birka Six NPCs
   lapo_matteo: { key:"lapo_matteo", name:"Lapo di Ser Matteo", occupation:"Silversmith", node:"PSAFAB" },
   federigo_alberighi: { key:"federigo_alberighi", name:"Federigo degli Alberighi", occupation:"Ruined knight and falconer — once Florence's most celebrated spendthrift, now a smallholder outside the eastern gate. His famous falcon was his last treasure, already cooked for a guest who arrived too late.", node:"PSAFM" },
   grimaldi_luca: { key:"grimaldi_luca", name:"Messer Luca Grimaldi", occupation:"Grain merchant and letter-of-credit issuer, Naples. Holds accounts with the Hospitaller order's eastern network. Commissioned tonight's delivery himself; is afraid of something he has not named.", node:"NAP" },
+  ser_giambattista_alberi: { key:"ser_giambattista_alberi", name:"Ser Giambattista Alberi", occupation:"Guild factor for the Florentine merchant consortium, Via Tornabuoni. Manages eastern accounts and dispatch coordination. Has been calculating the Bostichi deadline for three days and knows the mathematics do not work without the Hospitaller relay.", node:"PSA" },
 };
 // ◆◆◆ WORLDBUILDER:BIRKA_NPC:END ◆◆◆
 
@@ -12149,6 +12159,11 @@ const _S_DEFAULTS = () => ({
     blq06SecondDescent: false,
     blq06ThirdDescent: false,
     blq06Complete: false,
+    blq07RelayStrategyKnown: false,
+    blq07LucaPrepared: false,
+    blq07LetterNotarized: false,
+    blq07RelayTokenObtained: false,
+    blq07Complete: false,
 });
 
 /* ── Layer 48: Luck — Seventh Stat ── */

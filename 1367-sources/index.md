@@ -20,6 +20,8 @@ Two-tier naming rule: cities = 3-letter IATA or city-derived code; specific loca
 | VEN | Venice | Veneto, Italy | VCE (Marco Polo Airport) | 132,220 | BLQ | Final destination BLQ-05; used in FCO-04 (Buthrotum Register) |
 | FRR | Ferrara | Emilia-Romagna, Italy | derived (no major dedicated IATA) | 128,216 | BLQ | Waypoint city for BLQ-05; Po Valley route node |
 | RHD | Rhodes | Dodecanese, Greece | RHO (Diagoras Airport) | 168,236 | BLQ | Final destination BLQ-06; Hospitaller chapter house, Mandraki harbor |
+| FAM | Famagusta | Cyprus | derived (main airports ECN/PFO serve west Cyprus; FAM = city-derived) | 172,236 | BLQ | Waypoint BLQ-07; Hospitaller commandery port stop on Rhodes galley route |
+| ALE | Alexandria | Egypt | HBE (Borg El Arab); derived ALE from city name | 184,232 | BLQ | Final destination BLQ-07; Venetian consul Frankish quarter; Hospitaller chapter house |
 
 ---
 
