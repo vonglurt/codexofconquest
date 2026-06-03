@@ -794,13 +794,63 @@ The lecture concludes: *"No one has sat still long enough to hear this explained
 
 ## §IMPORT-01 — API Import Queue (Batch 3, Books 61–78)
 
-**Directive (permanent):** When vignette seeds for a book are complete, import that book's nodes and quest chains into the game via API. Seed completion = import trigger.
+**Directive (permanent):** When vignette seeds for a book are complete, import that book's nodes, NPCs, and quest chains into the game via API. Seed completion = import trigger. This numbered procedure is mandatory and must be followed in order for every quest in every book.
 
-**All import phases follow the API endpoint directive in `API-README.md § 1367 Quest Import Workflow`.** Before calling any API endpoint: read `{CODE}-{title}.md` and `index.md` to understand story geography and ensure location info adheres to the narrative.
+**Before starting any import:** Read `{CODE}-{title}.md` (vignette seeds + UQF cycles) and `index.md` (canonical nodes, airport codes, terrain) to understand the story geography. Location information must adhere to the story — do not invent geography.
 
-**Node naming:** Use the IATA airport code for the nearest major airport. If already taken, use the nearest alternate airport code. If no airport exists (medieval-only location), derive a 3-letter code from the city name and add it to `index.md`.
+**Node naming:** Use the IATA airport code for the nearest major airport. If already taken, use the nearest alternate airport in the same region. If no airport exists, derive a 3-letter abbreviation from the city name and record it in `index.md`.
 
-**Import one location at a time.** Complete all steps (GET /api/audit → POST /api/node → POST /api/quest × N → GET /api/audit → POST /api/save) before starting the next node.
+---
+
+### §IMPORT-01 Ordered Procedure (mandatory, per quest cycle)
+
+This procedure runs once per vignette act (one quest at a time). Complete all 8 steps before starting the next act.
+
+**Step 1 — Verify the primary location**
+- `GET /api/location/{code}` — check if the node exists
+- If missing: pick IATA airport code (check uniqueness with `GET /api/list/node`), then `POST /api/node` with `r`, `c` coordinates near the story's geographic anchor
+- Use `GET /api/coords/near/{anchor}?radius=8` to find an unoccupied slot
+- Confirm with `GET /api/location/{code}` — terrain type and label must match the story
+
+**Step 2 — Verify the quest NPC exists**
+- `GET /api/npc/{id}` — check if the NPC named in the vignette exists
+- If missing: `POST /api/npc` with name, role, home node, and dialogue stub
+- NPC names derive from the story source — use the character as written
+
+**Step 3 — Verify NPC is at the location**
+- Confirm the NPC's `node` field matches the location from Step 1
+- If mismatched: `PUT /api/npc/{id}` to correct the `node` field
+- NPC must be resident at the node where the quest fires
+
+**Step 4 — Verify all other locations the quest touches**
+- Each act may reference additional nodes (waypoints, destination, handoff city)
+- For each: `GET /api/location/{code}` — add missing nodes using Steps 1 procedure
+- All `activateNode` codes in the quest chain must exist before any quest is created
+
+**Step 5 — Add the quest via NPC**
+- `POST /api/quest` — create the quest entry with the NPC as trigger anchor
+- Include all required text fields: `title`, `text` (location/arrival description), `passText`, `failText`
+- Set `type` from: `combat | explore | trade | social | mission_bit | skill_check`
+- Set `activateNode` = the node where this act fires
+- Set `checkPassFlag` = unique flag name for this act's completion
+- If act > 1: set `activateCond` = previous act's `checkPassFlag`
+- If final act: set `questComplete: true`
+
+**Step 6 — Chain via mission bits**
+- `GET /api/quest/{id}/chain` — verify the dependency chain is connected end-to-end
+- All mission bit flags referenced by `activateCond` must exist — `POST /api/flags` for any missing
+- Chain must resolve: Act 1 → Act 2 → ... → Act N (questComplete)
+
+**Step 7 — Validate after insert**
+- `GET /api/audit` — check for broken node refs, missing flags, duplicate flag names, invalid types
+- Fix every error reported before proceeding
+- No quest book is fully imported until audit is clean
+
+**Step 8 — Review unresolved items with user, then repeat**
+- Report any items that could not be imported: missing source data, ambiguous node codes, NPC identity conflicts
+- Ask the user to resolve before continuing
+- When all acts of a vignette cycle are imported and audit is clean: `POST /api/save`
+- Then repeat from Step 1 for the next act / next vignette cycle
 
 ---
 

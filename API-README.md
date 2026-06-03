@@ -1090,73 +1090,165 @@ The strategy for patching string fields (`editField`) patches the named field in
 
 ## 1367 Quest Import Workflow
 
-This workflow applies to **all phases of quest book analysis** — every book imported into the game follows these steps. The import directive is permanent: once a book's vignette seeds are complete, import via API.
+This procedure applies to **all phases of quest book analysis**. The import directive is permanent: once a book's vignette seeds are complete, import via API. The 8 steps below are mandatory and must be followed in order for every quest act.
 
-### Pre-Import: Read the source files
+### Pre-Import (before any API call)
 
-Before calling any API endpoint, read the book's source files to understand the story geography and quest chain:
-
-```
-1367-sources/{CODE}-{title}.md     — vignette seeds and UQF quest cycles
-1367-sources/index.md              — canonical node list, airport codes, terrain types
-```
-
-Location information **must adhere to the story**. Cross-reference the vignette text to ensure each node's terrain type and label match its narrative role. Do not invent geography — follow the story's actual route.
-
-### Node Naming Convention — Airport Codes
-
-Every new location node uses the IATA airport code for the nearest major airport as its 3-letter code:
-
-- If the city has a major airport, use its IATA code (e.g., `NTN` → Nottingham uses `EMA`, but `NTN` is used as a story shorthand — see note below)
-- If the IATA code is already taken by an existing node, use the nearest alternate airport code in the same region
-- If no airport exists (medieval-only location), derive a 3-letter code from the city name and document it in `index.md`
-
-The code must be unique in NODE_COORDS. Check `GET /api/list/node` before assigning.
-
-### Import Steps — One Location at a Time
-
-Process one node at a time, completing all steps before moving to the next.
-
-| Step | API call | Purpose |
-|------|----------|---------|
-| 0 | `GET /api/audit` | Baseline integrity check before any writes |
-| 1 | `GET /api/list/node` | Confirm code is not already taken |
-| 2 | `GET /api/coords/near/{startNode}?radius=8` | Find available slots near story's starting city |
-| 3 | `POST /api/node` (with `r`,`c`) | Create node in NODE_MAP + NODE_COORDS in one call |
-| 4 | `GET /api/location/{code}` | Verify node exists; terrain and label correct |
-| 5 | `POST /api/flags` | Create `_S_` state flags for each quest act |
-| 6 | `POST /api/quest` (per act) | Create chained quest entries (one per act, 5 acts per vignette) |
-| 7 | `GET /api/quest/{id}/chain` | Verify dependency chain is connected |
-| 8 | `GET /api/audit` | Post-write integrity check — fix any broken refs before saving |
-| 9 | `POST /api/save` | Persist to timestamped HTML |
-
-### Node Placement Strategy
-
-- **Starting city nodes** (act 1): place within 1–3 cells of the story's home base node
-- **Route waypoints** (acts 2–3): place 4–8 cells from the starting node, along the geographic direction of travel
-- **Distant endpoints** (acts 4–5): place near real geographic cities; select terrain type from `GET /api/schema/node` to match the actual location (coast, forest, mountain, etc.)
-- The 4x expansion (2026-06-03) left 3 empty grid cells between every pair of adjacent original nodes — use `GET /api/coords/near/{code}` to find unoccupied slots
-
-### Chained Quest Pattern
-
-Each 5-act vignette becomes 5 sequential QUEST_DB entries:
+Read the source files to understand story geography. Location information must adhere to the story — do not invent geography.
 
 ```
-Act 1: no activateCond          — available at node arrival
-Act 2: activateCond = act1.checkPassFlag
-Act 3: activateCond = act2.checkPassFlag
-Act 4: activateCond = act3.checkPassFlag
-Act 5: activateCond = act4.checkPassFlag  (questComplete: true on act 5)
+1367-sources/{CODE}-{title}.md   — vignette seeds and UQF quest cycles
+1367-sources/index.md            — canonical node list, airport codes, terrain types
 ```
 
-### Data Integrity
+**Node naming:** Use the IATA airport code of the nearest major airport. If already taken, use the nearest alternate airport in the same region. If no airport exists (medieval-only location), derive a 3-letter abbreviation and add it to `index.md`. Verify uniqueness: `GET /api/list/node`.
 
-Run `GET /api/audit` before the first write and after the last write. The audit checks:
-- All `activateNode` codes exist in NODE_MAP
-- All `activateCond` flags exist in the flags section
-- All `checkPassFlag` values are unique
-- All quest `type` values are valid (`combat|explore|trade|social|mission_bit|skill_check`)
+---
 
-Fix all audit errors before calling `POST /api/save`. A clean audit is required before any book is considered fully imported.
+### Step 1 — Verify the primary location
 
-See also: `GET /api/help/import` for inline reference, `GET /api/help/coords` for coordinate system details.
+```bash
+curl http://localhost:1367/api/location/{code}
+```
+
+If the node is missing:
+1. Pick the IATA code; confirm it's free with `GET /api/list/node`
+2. Find a grid slot: `GET /api/coords/near/{anchor}?radius=8` (use nearest existing node as anchor)
+3. Create node with coordinates:
+```bash
+curl -X POST http://localhost:1367/api/node \
+  -H 'Content-Type: application/json' \
+  -d '{"code":"EMA","label":"Nottingham — East Midlands","name":"city","act":3,"r":48,"c":116}'
+```
+4. Confirm: `GET /api/location/{code}` — terrain and label must match the story
+
+---
+
+### Step 2 — Verify the quest NPC exists
+
+```bash
+curl http://localhost:1367/api/npc/{npcId}
+```
+
+If the NPC is missing, create them with their home node from Step 1:
+```bash
+curl -X POST http://localhost:1367/api/npc \
+  -H 'Content-Type: application/json' \
+  -d '{"id":"friar_tuck","name":"Friar Tuck","node":"EMA","role":"quest_giver","text":"A round friar..."}'
+```
+
+NPC names and roles come directly from the story source — use the character as written.
+
+---
+
+### Step 3 — Verify NPC is at the location
+
+Confirm the NPC's `node` field matches the node from Step 1. If mismatched:
+```bash
+curl -X PUT http://localhost:1367/api/npc/friar_tuck \
+  -H 'Content-Type: application/json' \
+  -d '{"node":"EMA"}'
+```
+
+The NPC must be resident at the node where the quest fires before the quest is created.
+
+---
+
+### Step 4 — Verify all other locations the quest touches
+
+Each quest act may reference additional nodes — waypoints, handoff city, destination. For each:
+```bash
+curl http://localhost:1367/api/location/{code}
+```
+
+Add any missing nodes following the Step 1 procedure. **All `activateNode` codes must exist in NODE_MAP before any quest is written.**
+
+---
+
+### Step 5 — Add the quest via NPC
+
+Create the quest entry. The NPC from Step 2 is the narrative anchor; `activateNode` is where the act fires.
+
+```bash
+NONCE=$(curl -s -X POST http://localhost:1367/api/nonce \
+  -H 'Content-Type: application/json' \
+  -d '{"type":"quest","id":"stn_01_act1"}' | jq -r .nonce)
+
+curl -X POST http://localhost:1367/api/quest \
+  -H 'Content-Type: application/json' \
+  -H "X-Nonce: $NONCE" \
+  -d '{
+    "id":            "stn_01_act1",
+    "type":          "skill_check",
+    "title":         "The Merry Men — First Contact",
+    "text":          "You arrive at Nottingham gate. Friar Tuck intercepts you...",
+    "activateNode":  "EMA",
+    "checkStat":     "wis",
+    "checkDC":       12,
+    "passText":      "The friar nods and leads you into the forest.",
+    "failText":      "The friar eyes you suspiciously and sends you away.",
+    "checkPassFlag": "stnAct1Done"
+  }'
+```
+
+Required fields: `id`, `type`, `title`, `text`, `activateNode`, `passText`, `failText`, `checkPassFlag`  
+For Act 2+: add `"activateCond": "stnAct1Done"` (previous act's `checkPassFlag`)  
+For final act: add `"questComplete": true`
+
+Quest types: `combat | explore | trade | social | mission_bit | skill_check`
+
+---
+
+### Step 6 — Chain via mission bits
+
+Verify state flags exist for each act transition:
+```bash
+# Create any missing flags
+curl -X POST http://localhost:1367/api/flags \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"stnAct1Done","defaultValue":false}'
+```
+
+Verify the full chain resolves end-to-end:
+```bash
+curl http://localhost:1367/api/quest/stn_01_act1/chain
+```
+
+Chain pattern: Act 1 (no `activateCond`) → Act 2 (`activateCond=stnAct1Done`) → ... → Act N (`questComplete:true`)
+
+---
+
+### Step 7 — Validate after insert
+
+```bash
+curl http://localhost:1367/api/audit | jq '.errors'
+```
+
+The audit checks: all `activateNode` codes exist, all `activateCond` flags exist, all `checkPassFlag` values are unique, all `type` values are valid. **Fix every error before proceeding.**
+
+---
+
+### Step 8 — Review unresolved items, then save and repeat
+
+Report any items that could not be imported: missing source data, ambiguous node codes, NPC identity conflicts, unresolvable geography. Ask the user to resolve these before continuing.
+
+When all acts of the vignette cycle are imported and audit is clean:
+```bash
+curl -X POST http://localhost:1367/api/save
+```
+
+Then return to Step 1 for the next act or next vignette cycle.
+
+---
+
+### Placement reference
+
+| Node role | Distance from anchor | Typical terrain |
+|---|---|---|
+| Same-city node (act 1) | 1–3 cells | city, ruins, monastery |
+| Route waypoint (acts 2–3) | 4–8 cells, direction of travel | road, forest, coast |
+| Distant endpoint (acts 4–5) | 8+ cells | real geographic match |
+
+The 4x expansion (2026-06-03) left 3 empty grid cells between every adjacent pair of original nodes. There is ample room — use `GET /api/coords/near/{code}` to find unoccupied slots.
+
+See also: `GET /api/help/import`, `GET /api/help/coords`, `1367-sources/plan.md §IMPORT-01`
