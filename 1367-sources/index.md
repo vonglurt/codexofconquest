@@ -28,6 +28,9 @@ Two-tier naming rule: cities = 3-letter IATA or city-derived code; specific loca
 | MTP | Montpellier | Languedoc, France | MTP derived (MPL=Montpellier); university quarter | 140,172 | BLQ | Act 3+4 node BLQ-11; Maître Guillaume hidden practice; salt-flat road |
 | MAR | Marseille | Provence, France | MRS=Marseille Provence; MAR derived from city name | 144,178 | BLQ | Act 5 node BLQ-11; consular court registry desk; questComplete |
 | ROM | Rome | Lazio, Italy | derived (FCO=Fiumicino serves Rome; ROM from city name) | 163,213 | BLQ | All 5 acts BLQ-12; prefect court quarter; exoneration records |
+| CHI | Chios | Aegean, Greece | CHI derived from city name (Chios island) | 160,233 | HAV | Acts 1-2 HAV-01; Genoese Maona harbor district; corsair articles notary |
+| CAF | Caffa | Crimea (Genoese colony) | CAF derived from city name (Feodosiya/Caffa Genoese factor quarter) | 134,237 | HAV | Acts 1-2 HAV-03; Genoese factor quarter; commission usage attestation |
+| TRB | Trebizond | Black Sea coast, Byzantine | TRB derived (TZX=Trabzon Airport) | 152,240 | HAV | Acts 3-4 HAV-03; Genoese registry quarter; Black Sea admiralty registration |
 
 ---
 
