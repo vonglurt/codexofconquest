@@ -435,7 +435,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | [x] | LGW | morte-darthur | Le Morte d'Arthur — Sir Thomas Malory | pub. 1485 | Arthurian Romance | 896 | SEEDS COMPLETE 2026-06-03 — LGW-01–07 all vignettes done. AST/CAM/LKS already in Location Grid. No new nodes. See LGW-morte-darthur.md. |
 | [x] | STN | robin-hood | Merry Adventures of Robin Hood — Howard Pyle | c.1883 (medieval) | Outlaw Hero | 621 |
 | [x] | MAN | ivanhoe | Ivanhoe — Sir Walter Scott | 1819 (Norman Eng.) | Historical Novel | 1140 |
-| [x] | SEN | treasure-island | Treasure Island — Robert Louis Stevenson | 1883 | Pirate Adventure | 390 |
+| [x] | SEN | treasure-island | Treasure Island — Robert Louis Stevenson | 1883 | Pirate Adventure | 390 | SEEDS COMPLETE 2026-06-03 — SEN-01–07 all vignettes done (7 cycles). questComplete added to SEN-07 (cycle 7). New nodes: HMS, STK, BGC, NHS, TIS added to Location Grid (ADM already existed). Theme threads for all 7 cycles. See SEN-treasure-island.md. |
 | [x] | GCI | toilers-of-the-sea | Toilers of the Sea — Victor Hugo | 1866 | Sea Epic | 5506 | SEEDS COMPLETE 2026-06-03 — GCI-01–07 all vignettes done. STP/GHL already in Location Grid. No new nodes. See GCI-toilers-of-the-sea.md. |
 | [x] | KIR | mabinogion | Mabinogion — Anon (Welsh medieval) | ~12th–13th C | Celtic Myth | 365 | SEEDS COMPLETE 2026-06-03 — KIR-01–07 all vignettes done (7 cycles). questComplete added to KIR-07 (cycle 7). New nodes: HVY, ARB, ARD, GWN, WLD, MGL, HER added to Location Grid. Theme threads for all 7 cycles. See KIR-mabinogion.md. |
 | [x] | INV | ossian | Fragments of Ancient Poetry — James Macpherson | 1760 (ancient) | Highland Bard Epic | 87 | SEEDS COMPLETE 2026-06-03 — INV-01–07 all vignettes done. No new nodes. See INV-ossian.md. |

@@ -673,3 +673,412 @@ activateMissionBit: senPewComplete
 ---
 
 *Cycle 2 complete. Mark `[x]` for SEN-treasure-island in books.md.*
+
+---
+
+## SEN-03 — "The Barrel Account"
+
+**Quest API Stub (Quest ID: SEN-03)**
+
+```
+Quest: The Barrel Account
+quest_id: SEN-03
+cycle: 3
+book: SEN — Treasure Island
+token: Jim Hawkins's Barrel Account
+route: HMS → WM
+theme: The burden of being the one who knows — the secret carried across a closed world full of the people the secret is about
+archive_category: Conspiracy Intelligence Records — The Account That Could Not Be Shown to Its Subject While the Subject Was Still Dangerous
+
+missionAccept: "Jim wrote it down the morning after. Names, numbers, timeline — everything
+  Silver said against the apple-barrel stave in the dark. The document exists. It cannot
+  be shown to Silver, who is still cook, still smiling, still three feet away at every
+  meal. Get it to Weimar before the island."
+
+Act I — The Hispaniola, Mid-Voyage
+activateNode: HMS
+type: skill_check
+scene: "Twelve days out from Bristol. Silver serves breakfast with his parrot on his
+  shoulder and his voice as warm as always. Jim has slipped you his account — three
+  sealed pages, names and numbers exact. You tuck them inside a navigation chart.
+  Silver is watching the deck with the general affability of a man with nothing
+  on his mind."
+skillCheck: Deception DC 13
+failText: "Silver tilts his head: 'Heavy reading this morning?' His smile does not
+  change. But something in his eyes has noted you."
+successText: "You answer the right way at the right speed. Silver loses interest.
+  The document is inside the chart. The chart is under your arm."
+grantItem: "Jim Hawkins's Barrel Account — Three sealed pages in Jim's careful hand.
+  Names, plan, timeline — everything Silver said in the dark. The document that
+  would get both you and Jim killed on this ship."
+
+Act II — Below Decks
+activateNode: HMS
+type: skill_check
+scene: "Israel Hands below decks, supposedly sleeping. You need to pass his bunk to
+  reach the storage locker where Smollett's sealed cargo can get the document out
+  of Silver's reach. Hands is not asleep. He knows the ship by sound."
+skillCheck: Stealth DC 14
+failText: "Hands opens one eye. 'What've you got there.' It is not a question.
+  He is already sitting up."
+successText: "You pass his bunk in the ship's roll — a half-second of cover noise
+  from the rigging above — and he doesn't stir. The document goes into Smollett's
+  sealed pouch."
+
+Act III — The Captain's Logbook
+activateNode: HMS
+type: dialogue
+scene: "Captain Smollett receives the account in his cabin. He reads it once without
+  expression and seals it inside his log. 'I'll want you where I can find you when
+  we reach the island.' He doesn't say thank you. He says: 'Jim's a good boy and
+  this is his work and I mean to see he survives it.'"
+prompt: "Persuasion DC 11: Confirm the route to Weimar — Smollett needs to understand
+  the archive is the right destination, not a court."
+failText: "Smollett shakes his head. 'I don't send evidence out of my custody during
+  active operations.' The document stays in the log."
+successText: "He considers briefly, then nods. The log goes under his arm.
+  'Weimar, then. After the island.'"
+
+Act IV — Weimar Archive Gate
+activateNode: WM
+type: escort
+scene: "The ship has returned. Silver is gone — escaped three ports back with his
+  sack of coins. Smollett opens his log at the archive gate and hands you the sealed
+  account. 'Tell them it's from Jim Hawkins. Tell them it's what he heard in the dark.'"
+successText: "Sweelinck reads the first page and looks up. 'He was twelve years old.'
+  'Yes.' 'And he wrote it down the same morning.' 'Yes.' Sweelinck creates Conspiracy
+  Intelligence Records — The Account That Could Not Be Shown to Its Subject While
+  the Subject Was Still Dangerous; first entry: 'the account is precise; the subject
+  smiled at the carrier over breakfast; the document survived because the carrier smiled back'"
+failText: "The factor at the gate has been paid by Silver's connections to intercept
+  exactly this testimony. The document is taken from the log before Sweelinck sees it."
+takeItem: "Jim Hawkins's Barrel Account"
+```
+
+*SEN-03 complete. 2026-06-03.*
+
+---
+
+## SEN-04 — "Silver's Last Card"
+
+**Quest API Stub (Quest ID: SEN-04)**
+
+```
+Quest: Silver's Last Card
+quest_id: SEN-04
+cycle: 4
+book: SEN — Treasure Island
+token: Silver's Pardon Petition
+route: STK → WM
+theme: The alliance that holds between enemies because both need it; the bargain
+  between parties who intend to betray each other as soon as it is safe to do so
+archive_category: Mutual Hostage Records — The Arrangement Between Parties Who
+  Intended to Betray Each Other From the Start; Held Together by Mutual Necessity
+  Rather Than Trust
+
+missionAccept: "Silver needs a neutral witness who can speak to his protecting Jim
+  if it comes to trial. Jim needs Silver keeping his crew from cutting throats.
+  Silver has written the terms on a scrap of paper: his protection, Jim's testimony,
+  back to back. He presses it into your hands. 'Hold that for me. Neutral party.
+  In case.'"
+
+Act I — The Stockade, Enemy-Held
+activateNode: STK
+type: skill_check
+scene: "The stockade is Silver's now. Six men sit by the fire, and every one of them
+  wants Jim dead and is being talked out of it one sentence at a time by their
+  captain. Silver gives you the petition and six pairs of eyes follow the paper's
+  path into your coat. The fire is warm. Nobody is relaxed."
+skillCheck: Persuasion DC 12
+failText: "Merry stands up. 'I know what that paper is and I know it shouldn't
+  leave this stockade.' Silver looks at you. He has said what he can say."
+successText: "You answer in the tone of a man with nothing interesting in his coat.
+  Merry sits back down. Silver looks at the fire. The petition is safe."
+grantItem: "Silver's Pardon Petition — A scrap of paper in Silver's careful hand:
+  Jim Hawkins protected, carrier's witness, back to back. Signed by the one man
+  on the island who is simultaneously on both sides."
+
+Act II — The Treasure Hunt
+activateNode: STK
+type: skill_check
+scene: "Six pirates, Jim on a rope, Silver at the lead, crossing the island under
+  full sun. The skeleton laid out as a compass needle. Then from the trees: Flint's
+  own song, in a voice that isn't Flint's. The pirates are white-faced. Silver
+  reasons them down — a ghost wouldn't have an echo. The petition in your coat
+  has become very important to keep."
+skillCheck: Stealth DC 13
+failText: "One pirate, steadying himself, grabs your arm and looks at your coat.
+  Silver has not looked at you. This one is on your own."
+successText: "You keep your hands visible throughout Silver's speech. The man
+  steadies and lets go. They march on. The petition stays in your coat."
+
+Act III — The Empty Pit
+activateNode: STK
+type: combat
+scene: "The treasure pit is empty. The boards, the broken pick, the branded name
+  WALRUS. The pirates look at Silver. Silver has already moved — he slips Jim a
+  pistol, 'back to back,' and musket fire comes from the trees. Merry down. Two
+  more dead. Three survivors running. But one has turned back toward you."
+combat: "Island Pirate (AC 13, HP 20) × 1"
+successText: "He goes down. Silver glances at you over the pit. 'We've both
+  kept our end. Time to finish the errand.'"
+failText: "He gets you down in the chaos. Silver hauls you clear — he needs you
+  as a witness. 'On your feet. We're not done yet.'"
+
+Act IV — Weimar Archive Gate
+activateNode: WM
+type: escort
+scene: "The ship has made harbor. Silver is gone — escaped with his coins. The
+  petition is still in your coat. Sweelinck reads it at the gate, both faces.
+  'He signed it.' 'Yes.' 'And Jim signed it.' 'Yes.' 'And both parties kept it.'
+  'As long as it needed keeping.'"
+successText: "Sweelinck creates Mutual Hostage Records — The Arrangement Between
+  Parties Who Intended to Betray Each Other From the Start; first entry: 'both
+  parties kept the arrangement; the arrangement was not trust — it was the recognition
+  that both parties needed it to hold; the archive notes this without judging whether
+  it was honorable; it was effective'"
+failText: "A factor representing the expedition's investors identifies the petition
+  as a debt instrument and seizes it. Silver's protection of Jim becomes a commercial
+  transaction in someone else's ledger."
+takeItem: "Silver's Pardon Petition"
+```
+
+*SEN-04 complete. 2026-06-03.*
+
+---
+
+## SEN-05 — "Ben Gunn's Three Years"
+
+**Quest API Stub (Quest ID: SEN-05)**
+
+```
+Quest: Ben Gunn's Three Years
+quest_id: SEN-05
+cycle: 5
+book: SEN — Treasure Island
+token: Ben Gunn's Cave Inventory
+route: BGC → WM
+theme: The unsanctioned act that rewrites everyone's ending; the marooned man's
+  strange patience; the accidental hero who acts without commission and changes
+  everything by being the only person who thought to do the obvious thing
+archive_category: Unwitnessed Labor Records — The Three-Year Account Made Without
+  Any Commission; The Castaway Who Found the Treasure, Moved It, and Kept a List
+  Because Having a Project Was Better Than Not Having One
+
+missionAccept: "Ben Gunn has been here three years. He found the treasure, dug
+  it up, moved it to his cave, and waited. He kept a list — not for evidence, just
+  because keeping a list was something to do. Seven hundred thousand pounds
+  itemized in a castaway's hand, in charcoal on the inside of a goat-skin. He
+  gives it to you. 'I don't need it anymore. Someone should have it.'"
+
+Act I — The Cave at the Two-Pointed Hill
+activateNode: BGC
+type: dialogue
+scene: "Ben Gunn's cave: low ceiling, goat smell, comfortable in the way of someone
+  who had three years to arrange it. In the far corner, barely visible: heaps of
+  gold coin and stacked silver bars. Ben Gunn sits on his cot, eating cheese from
+  a cloth he has been guarding for three years. 'You'll want the list. Seven hundred
+  thousand pounds — well, approximately.'"
+prompt: "Insight DC 11: Understand what the inventory actually is — not a financial
+  document but a record of three years of solitary decision-making, one chest at a time."
+failText: "You take the inventory as a treasure manifest. Ben Gunn shakes his head
+  slightly. 'That's not what it is,' he says, but he doesn't explain further."
+successText: "You understand: the inventory is the account of a man who kept faith
+  with the right outcome without anyone telling him what it was. Ben Gunn hands
+  it to you with the solemnity of someone giving you three years of their life."
+grantItem: "Ben Gunn's Cave Inventory — Seven hundred thousand pounds, approximately,
+  itemized in charcoal on a goat-skin in a castaway's hand. Dated across three years
+  of solitary labor. The record of what was done without witnesses or commission."
+
+Act II — The Island Path to the Harbor
+activateNode: BGC
+type: skill_check
+scene: "The three surviving pirates are somewhere on the island. You need to reach
+  the harbor before the Hispaniola finishes loading. The pirates are between you
+  and the harbor path — not dangerous in the way Silver's crew was dangerous, but
+  dangerous in the way of men who have lost everything and have nowhere to be."
+skillCheck: Stealth DC 12
+failText: "One of them sees you on the path. He doesn't want the inventory — he
+  doesn't know what you're carrying. He just doesn't want to let anyone past."
+successText: "You take the beach path below the tree line, avoiding the high road.
+  The harbor is visible. The Hispaniola is loading. You reach the quay before the
+  tide turns."
+
+Act III — The Loading Dock
+activateNode: BGC
+type: skill_check
+scene: "Three days of loading gold onto the Hispaniola. Trelawney is in excellent
+  spirits, counting every chest aloud. Silver walks free about camp — everyone
+  civil, nobody trusting — and he is definitely interested in what Ben Gunn wrote
+  about three years on this island, not to steal it but to know what the record says."
+skillCheck: Persuasion DC 13
+failText: "Silver sits beside you at the dock, easy as always. 'Ben Gunn kept
+  records, did he. I always said he was more organized than he appeared.' His eyes
+  move toward your coat."
+successText: "You answer the way Silver would answer — warmly, completely unhelpfully.
+  He nods and moves on. The inventory stays in your coat."
+
+Act IV — Weimar Archive Gate
+activateNode: WM
+type: escort
+scene: "Sweelinck receives the goat-skin with both hands. He reads it slowly — the
+  items, the dates, the span of three years. 'He did this alone.' 'Yes.' 'Over
+  three years.' 'Yes.' 'Without being asked.' 'No one was here to ask him.'"
+successText: "Sweelinck creates Unwitnessed Labor Records — The Three-Year Account
+  Made Without Any Commission; first entry: 'the inventory is dated; the dates
+  confirm the work began immediately after the marooning; no one told him the
+  treasure was relevant to anything; he did it because it was there and because
+  having a project was better than not having one; the archive notes that the
+  accidental hero is still a hero'"
+failText: "A ship's factor at the harbor gate identifies the document as inventory
+  of the expedition's recovered assets. Ben Gunn's three years enter a profit account."
+takeItem: "Ben Gunn's Cave Inventory"
+```
+
+*SEN-05 complete. 2026-06-03.*
+
+---
+
+## SEN-06 — "The Shroud-Climb"
+
+**Quest API Stub (Quest ID: SEN-06)**
+
+```
+Quest: The Shroud-Climb
+quest_id: SEN-06
+cycle: 6
+book: SEN — Treasure Island
+token: Israel Hands's Dirk
+route: NHS → WM
+theme: Survival against a man who is simply stronger; the lucky moment as its
+  own kind of mercy; the weapon that wounded its intended victim before it killed
+  its wielder
+archive_category: Combat Evidence Records — The Weapon That Wounded Its Intended
+  Victim Before Killing Its Wielder; The Jolt That Fired Both Pistols; Filed Under
+  the Boy Who Came Down From the Mast
+
+missionAccept: "Israel Hands retrieved a hidden dirk before Jim reached the top of
+  the shrouds. He threw it with perfect aim. The jolt of the blade loosened Jim's
+  grip — both pistols fired simultaneously — Hands fell into the sea. The dirk is
+  still in the mast wood, Jim's blood on the blade. Jim can't look at it. 'Take
+  it to wherever things like this belong.'"
+
+Act I — The Hispaniola, North Inlet
+activateNode: NHS
+type: skill_check
+scene: "The Hispaniola beached at North Inlet. O'Brien dead in the scuppers.
+  The dirk is eight feet up the mast, angled into the wood where Jim pulled it
+  free. Hands is in the green water below the hull — but his associates may not be.
+  Getting the dirk down means being visible on the mast."
+skillCheck: Athletics DC 12
+failText: "The blade is deeper than expected. You work it free — but you've been
+  on the mast for two minutes. Someone onshore has noticed."
+successText: "Clean pull at the right angle. The dirk comes free. Jim's blood is
+  dried on the blade. You're off the mast in ten seconds."
+grantItem: "Israel Hands's Dirk — A heavy throwing-knife, oak handle bound with
+  tarred cord. Jim Hawkins's blood dried on the blade where it pinned him to the
+  mast before both pistols fired simultaneously. The weapon that killed its wielder
+  by failing to kill its intended victim quickly enough."
+
+Act II — The Shore Path
+activateNode: NHS
+type: combat
+scene: "One of Hands's associates saw you on the mast. He knows what you have.
+  He is waiting on the shore path with the specific patience of a man who wants
+  to know what you saw happen with Israel Hands and whether you mean to do
+  anything about what you saw."
+combat: "Pirate Associate (AC 12, HP 16) × 1"
+successText: "He goes down. The shore path is clear. You're moving north before
+  he gets back up."
+failText: "He pins you against the cliff. You get clear — but the dirk changes
+  hands. You need to recover it before the tide turns."
+
+Act III — The Loading Quay
+activateNode: NHS
+type: skill_check
+scene: "Treasure loading has begun. Trelawney is overseeing every chest, counting
+  items in a way that makes Smollett's eye twitch. You need the dirk into ship's
+  stores without Trelawney deciding it belongs to the expedition's shareholders."
+skillCheck: Deception DC 12
+failText: "Trelawney spots the dirk. 'Is that from the Hispaniola? That could be
+  classified as ship's equipment under the articles.' He is already reaching for it."
+successText: "You describe it as a chart-weight. Trelawney nods and turns back to
+  his counting. The dirk goes into your carrying pouch."
+
+Act IV — Weimar Archive Gate
+activateNode: WM
+type: escort
+scene: "Sweelinck takes the dirk with two fingers. 'A thrown knife.' 'Yes.' 'Jim
+  had both pistols.' 'Yes.' 'And the jolt of the impact fired them both.' 'That's
+  what he says.' Sweelinck is quiet a moment. 'The weapon that killed its wielder
+  by failing.' 'Yes.' He sets it down carefully on the archive table."
+successText: "Sweelinck creates Combat Evidence Records — The Weapon That Wounded
+  Its Intended Victim Before Killing Its Wielder; first entry: 'the dirk was
+  retrieved from the mast; the blood on the blade is Hawkins's; Hawkins survived;
+  Hands did not; the archive notes that the luck was not separate from the weapon —
+  the weapon created the luck by causing the jolt that fired both pistols'"
+failText: "A maritime law representative at the harbor asserts that all weapons
+  aboard the Hispaniola during the voyage are evidence in a pending salvage dispute.
+  The dirk is impounded. It will be evidence in a case nobody can yet articulate."
+takeItem: "Israel Hands's Dirk"
+```
+
+*SEN-06 complete. 2026-06-03.*
+
+---
+
+## SEN-07 — "The Empty Pit"
+
+```json
+{
+  "quest_id": "SEN-07",
+  "title": "The Empty Pit",
+  "cycle": 7,
+  "book": "SEN — Treasure Island",
+  "token": "Pit Board: WALRUS",
+  "route": ["TIS", "BGC", "WM"],
+  "theme": "The trap that closes around the hunters; greed's structure collapses at the moment of arrival; seven men stood in a hole where seven hundred thousand pounds had been and the man who moved it was eating cheese two miles away",
+  "archive_category": "Treasure Displacement Records — The Account of the Site That Contained Nothing When the Hunters Arrived; The Branded Timber Confirmed What Had Been There; What Had Been There Was Gone Two Months Earlier By the Hand of One Marooned Man Acting Without Commission",
+  "questComplete": true,
+  "acts": [
+    {
+      "act": 1,
+      "activateNode": "TIS",
+      "type": "skill_check",
+      "scene": "The third tall tree. Six pirates, Jim on a rope, Silver at the lead. The excavation shaft going down — six feet, eight, ten — then the flat bottom. The boards of the packing cases. The shaft of a broken pick. Branded on the timber in Flint's own hand: WALRUS. The men look at Silver. Silver has already understood and has already moved — his hand on Jim's arm. 'Back to back.' You are beside them.",
+      "skillCheck": { "skill": "Perception", "dc": 13 },
+      "failText": "You see the pit before you see what Silver is doing with his hand. By the time you understand, Merry is already speaking.",
+      "successText": "You see Silver's hand move first — before Merry speaks, before the others turn. You are already in position when the pistol is in Jim's hand.",
+      "grantItem": { "id": "pit_board_walrus", "name": "Pit Board: WALRUS", "desc": "A charred timber from the bottom of Flint's treasure pit, branded with the name of his ship. The packing cases have been gone two months. The brand is the only evidence of what was here." }
+    },
+    {
+      "act": 2,
+      "activateNode": "TIS",
+      "type": "combat",
+      "scene": "Musket fire from the trees. Two pirates down in ten seconds. Silver shoots Merry. Three survivors running. One has turned back — not running for the beach but coming toward the pit, toward you. He has nothing left and wants to take something with him.",
+      "combat": { "enemies": ["Broken Pirate"], "cr": "1/4", "hp": 14, "toHit": 3, "damage": "1d6+1", "note": "Fights with nothing-left desperation — advantage on damage if he hits, disadvantage on hit rolls" },
+      "failText": "He catches you at the pit's edge. You go in. Silver hauls you out — 'Not done yet' — and the man is down. The board is still in your coat.",
+      "successText": "He comes apart at the moment of commitment. Desperation is not a fighting quality. He goes down and stays down."
+    },
+    {
+      "act": 3,
+      "activateNode": "BGC",
+      "type": "dialogue",
+      "scene": "Ben Gunn's cave. Smollett by the fire in better health. And in the far corner, barely visible in the firelight, heaps of gold coin and stacked silver bars. Seven hundred thousand pounds. Actually here. The board in your hand says WALRUS. The gold on the floor says the pit's contents took a two-month detour by way of one man's patient project.",
+      "prompt": { "skill": "Insight", "dc": 11, "prompt": "Understand what Ben Gunn understood that nobody else did: the treasure was always more likely to be moved than found. He simply moved it first, which is not heroism, it is patience." },
+      "failText": "You look at the treasure and think about the seven men in the pit. Ben Gunn watches you work it out. He eats his cheese.",
+      "successText": "You look at Ben Gunn and understand: he didn't save anyone. He moved some gold, which incidentally saved everyone. He is pleased with the cheese. The distinction seems important to him."
+    },
+    {
+      "act": 4,
+      "activateNode": "WM",
+      "type": "escort",
+      "scene": "Sweelinck receives the pit board at the archive gate. He reads the brand: WALRUS. He looks at the board for a long moment. 'Flint buried it here.' 'Yes.' 'Then someone else moved it.' 'Two months before we arrived.' 'Was the someone else commissioned to do this.' 'No.' 'Did the someone else understand what would happen when the hunters arrived at the empty pit.' 'He didn't think about it that way.' 'No.' Sweelinck sets the board on the table.",
+      "successText": "Sweelinck creates Treasure Displacement Records — The Account of the Site That Contained Nothing When the Hunters Arrived; The Branded Timber Confirmed What Had Been There; What Had Been There Was Gone Two Months Earlier By the Hand of One Marooned Man Acting Without Commission; first entry: 'the board is the archive of an absence; the absence records a prior presence; the prior presence is documented elsewhere in this archive; this file holds the board and the moment the hunters found nothing where the thing was'",
+      "failText": "A ship's factor at the harbor gate identifies the timber as salvage from the Hispaniola voyage and classifies it under the expedition's commercial records. The empty pit becomes a line item in a profit account."
+    }
+  ]
+}
+```
+
+*SEN-07 complete. 2026-06-03.*
