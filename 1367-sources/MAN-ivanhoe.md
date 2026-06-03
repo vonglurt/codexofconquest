@@ -634,3 +634,500 @@ activateMissionBit: manWritComplete
 ---
 
 *Cycle 2 complete. Mark `[x]` for MAN-ivanhoe in books.md.*
+
+---
+
+## MAN-03 — "Isaac's Letter"
+
+**Quest API Stub (Quest ID: MAN-03)**
+
+```
+Quest: Isaac's Letter
+quest_id: MAN-03
+cycle: 3
+book: MAN — Ivanhoe
+token: Isaac's Letter of Obligation
+route: YRK → SHF → WM
+theme: The legal instrument valid in every jurisdiction except the one that matters;
+  the document that compels by its authority when the authority is acknowledged;
+  the carrier who is in more danger from the document's existence than from anything
+  the document describes
+archive_category: Legal Obligation Records — The Debt Instrument That Would Have
+  Compelled Front-de-Boeuf If It Had Arrived; What a Valid Document Requires
+  Besides Validity
+
+missionAccept: "Isaac of York holds a signed letter of obligation from three Norman
+  barons that legally compels Front-de-Boeuf to release any Jewish prisoners held
+  without formal writ. If it reaches the Lord High Sheriff's court before tomorrow's
+  session, Front-de-Boeuf cannot refuse it without forfeiting his standing with the
+  barons who signed. Isaac cannot carry it — he is on Front-de-Boeuf's list. The
+  road is controlled by Front-de-Boeuf's outriders."
+
+Act I — Isaac's Counting Room, York
+activateNode: YRK
+type: dialogue
+scene: "Isaac of York in his counting room: the fire too small for the cold, the
+  ledger locked, three doors of bolted timber between him and the street. He holds
+  the sealed letter with both hands in the way of a man giving away a thing that
+  has cost him more than the thing is worth. 'Three Norman barons signed this.
+  Front-de-Boeuf cannot ignore three barons with one legal document. He will try.
+  If they see you carrying it on his road, they will take it and burn it.'"
+prompt: "Insight DC 12: Understand what Isaac understands — the letter is valuable
+  only if it arrives; the carrier's safety depends on the letter not being
+  identified for what it is."
+failText: "You take the letter without fully marking the risk. Isaac watches you
+  go with the expression of a man who has sent things out of his house before
+  and watched them not arrive."
+successText: "You understand the geometry. Isaac seals it inside a merchant's
+  routine dispatch envelope — grain prices, wool weights — and tucks it between
+  two genuine commercial documents in a satchel. He hands you the satchel. 'You
+  are a merchant's courier. You know nothing about any prisoners.'"
+grantItem: "Isaac's Letter of Obligation — A sealed vellum inside a merchant's
+  dispatch envelope, between two commercial documents. Three Norman barons' seals.
+  Legal language compelling release. Front-de-Boeuf's name in the second paragraph."
+
+Act II — Front-de-Boeuf's Road Zone
+activateNode: NRG
+type: combat
+scene: "Front-de-Boeuf's outriders patrol this stretch of road in pairs and stop
+  everything that moves at speed. The pair you meet are efficient: one holds the
+  horse, one goes through the satchel. They are looking for weapons and valuables,
+  not sealed correspondence. But the sealed envelope in a merchant's satchel will
+  be opened if they notice it."
+combat: "Front-de-Boeuf's Outrider (AC 13, HP 18) × 1 — if the skill check fails"
+skill_check: "Deception DC 13: Present the satchel as a merchant's routine dispatch
+  before they reach the sealed envelope."
+failText: "He gets to the envelope. He does not read the legal language — he cannot
+  read Norman legal French. But he pockets it on principle. You need it back."
+successText: "He finds the two commercial documents first and loses interest. The
+  sealed envelope is between them, indistinguishable. He hands the satchel back.
+  You ride."
+
+Act III — The Road to the Sheriff's Court
+activateNode: NRG
+type: skill_check
+scene: "Two hours from the Sheriff's court. A second outrider patrol, this one
+  from a different lord's retinue, has set up a roadblock at the river ford.
+  They are looking for a specific person — not you — but they are thorough and
+  they are curious about unaccompanied couriers on the road after dark."
+skillCheck: "Stealth DC 12: Find the ford crossing that isn't the road ford."
+failText: "They stop you at the ford. The questions are longer this time. You
+  give good answers but it costs you an hour."
+successText: "You find the cattle crossing a quarter-mile east, wade the horse
+  through in the dark, and come out on the Sheriff's road clean. The court is
+  in sight."
+
+Act IV — Lord High Sheriff's Court
+activateNode: SHF
+type: dialogue
+scene: "The Sheriff's court at night. The clerk who handles evening submissions
+  is a small methodical man who takes the envelope from you, reads the seals,
+  checks his roster, and tells you this matter will be heard in the morning session.
+  You explain that the morning session will be too late. He asks why. You explain
+  that the prisoners in question may not have until morning."
+prompt: "Persuasion DC 14: Convince the clerk to wake the sheriff's duty-herald
+  and register the letter as an emergency submission."
+failText: "The clerk is unmoved. He files the letter for morning. The morning
+  session is three hours before the prisoners would be moved. It may be enough."
+successText: "He folds the letter into the emergency register and marks it priority.
+  The herald wakes the duty officer. Front-de-Boeuf's steward, who happens to
+  be in the court's waiting room, sees the priority mark and understands exactly
+  what it means. He is already writing a message to his lord."
+
+Act V — Weimar Archive Gate
+activateNode: WM
+type: escort
+scene: "Sweelinck receives the letter's registered duplicate — the clerk's copy
+  made before submission, which the Fighter retained as evidence of delivery.
+  'It compelled release.' 'It was registered as emergency submission before
+  Front-de-Boeuf could move his prisoners.' 'And the original three barons.'
+  'They were called to honor it. They did.' 'Because the document was valid.'
+  'Yes.' Sweelinck nods."
+successText: "Sweelinck creates Legal Obligation Records — The Debt Instrument That
+  Compelled Release By Its Validity and Its Timing; first entry: 'the letter was
+  valid; the timing was the carrier's work; the archive notes that a valid document
+  still requires a carrier — the validity is not self-executing'"
+failText: "The registered duplicate was never made — the clerk filed the original
+  only. The archive holds a reference to a document it does not have."
+takeItem: "Isaac's Letter of Obligation"
+```
+
+*MAN-03 complete. 2026-06-03.*
+
+---
+
+## MAN-04 — "Locksley's Summons"
+
+**Quest API Stub (Quest ID: MAN-04)**
+
+```
+Quest: Locksley's Summons
+quest_id: MAN-04
+cycle: 4
+book: MAN — Ivanhoe
+token: Locksley's Sealed Summons
+route: SHW → WM
+theme: The commitment guaranteed only by the evidence that others have committed;
+  the circular dependency of parallel promises; the carrier who must reach three
+  separate destinations before dawn for the dominoes to fall in order
+archive_category: Military Coordination Records — The Three Sealed Summonses
+  That Had To Arrive Simultaneously or Not at All; The Night Ride Through
+  Sherwood by a Single Carrier
+
+missionAccept: "Locksley needs his full company for the siege of Torquilstone
+  before dawn. He sends the Fighter with three sealed summonses to three outlaw
+  bands scattered through Sherwood: Will Scarlet's company at the old mill,
+  Much's group at the north clearing, the Friar's band at the hermitage stream.
+  Each band will come only if they know the others are coming. Each summons names
+  the other two. All three must be delivered before dawn or the siege timing breaks."
+
+Act I — Locksley's Camp
+activateNode: SHW
+type: dialogue
+scene: "Locksley at the long table in the camp clearing, maps weighted by arrows.
+  Three sealed rolls, each with a different cipher mark. He explains the timing:
+  the other bands have worked with him before and will honor the summons, but
+  after the last coordination failure each refuses to move without proof the
+  others are committed. Each of these summonses names the other two by cipher.
+  If any one of them is not delivered, the others will wait and the window closes."
+prompt: "Athletics DC 11: Accept the commission and commit to the route — Locksley
+  needs to know you understand the timing before he gives you the summonses."
+failText: "He watches your face. 'The mill is forty minutes west. The clearing is
+  thirty north. The stream is an hour south. You have four hours until dawn.
+  Can you do that.' He is not asking for a plan. He is asking for a commitment."
+successText: "You give him the commitment. He hands you the three rolls. Each is
+  sealed with a different color wax — green, black, red. 'Green first,' he says.
+  'In that order.'"
+grantItem: "Locksley's Three Sealed Summonses — Three rolled papers in green, black,
+  and red wax seals. Each names the other two bands by cipher. The carrier's job
+  is the only thing connecting the three halves of a commitment that has to be
+  complete before dawn."
+
+Act II — Will Scarlet's Mill
+activateNode: SHW
+type: skill_check
+scene: "The old mill, forty minutes west through night forest. Will Scarlet meets
+  you at the water wheel with three of his men. He breaks the green seal, reads
+  it, checks the cipher for the other two bands, and tells you: 'I need to know
+  Much's man already has his.' He is not calling you a liar. He is verifying a
+  system they have had to rebuild after a previous failure."
+skillCheck: "Persuasion DC 12: Convince Scarlet that the summonses are in
+  sequence — he is second, and Much will receive his before dawn."
+failText: "He will not commit until he has independent confirmation. He asks for
+  something that proves you came from Locksley directly. What do you have?"
+successText: "He accepts the sequence argument and the citation mark on the seal
+  that corresponds to Locksley's known hand. 'Before dawn.' 'Before dawn.' He
+  turns to his men."
+
+Act III — Much's Clearing
+activateNode: SHW
+type: skill_check
+scene: "The north clearing, thirty minutes further, in full dark. Much the Miller's
+  Son is already awake — he heard you coming from two hundred yards. He takes the
+  black seal. He reads it. He looks up. 'Scarlet's committed.' It is not a question.
+  He is reading the cipher for Scarlet's band in the letter."
+skillCheck: "Deception DC 12: Confirm Scarlet has committed without making a
+  promise about timing you cannot keep."
+failText: "Much puts the letter down. 'If Scarlet hasn't committed by now you'll
+  have lied to me and I'll know it when we reach Torquilstone.' He is not threatening
+  you. He is giving you accurate information about the consequences."
+successText: "Much folds the letter into his belt and calls his band together.
+  'Two hours to the oak road.' You are already moving south for the last delivery."
+
+Act IV — Hermitage Stream
+activateNode: SHW
+type: combat
+scene: "An hour south in full dark. The hermitage stream crossing is watched by
+  two of Bois-Guilbert's scouts who were not supposed to be this far into the forest.
+  They are between you and the Friar's camp and they have torches. The red seal
+  summons is in your coat. The dawn window is two hours away."
+combat: "Templar Scout (AC 14, HP 16) × 2"
+successText: "Both scouts down. Their torches go in the stream. You find the
+  Friar's camp by the smell of wood smoke, deliver the red seal, and watch the
+  third band begin to move. Three summonses delivered before the sky lightens."
+failText: "One scout gets clear and runs toward the road. The Friar's band moves
+  anyway — you got the summons through — but the Templars at Torquilstone will
+  have one hour's warning. Locksley will need to know."
+
+Act V — Weimar Archive Gate
+activateNode: WM
+type: escort
+scene: "Sweelinck receives the three empty seal-wax caps — all that remained after
+  the summonses were opened and the bands committed. Three different colors. 'One
+  carrier, one night, three separate commitments.' 'Yes.' 'And the siege succeeded.'
+  'Yes.' 'Because all three arrived.' 'The timing was the point.' Sweelinck
+  examines the wax caps."
+successText: "Sweelinck creates Military Coordination Records — The Three Sealed
+  Summonses That Had To Arrive Simultaneously or Not at All; first entry: 'the
+  carrier's route made the siege possible; the document's validity was contingent
+  on delivery sequence; the archive holds the three seal-caps as evidence that
+  the sequence was completed'"
+failText: "The seal caps were lost in the fight at the stream crossing. The archive
+  holds a gap where the evidence of sequence should be."
+takeItem: "Locksley's Three Sealed Summonses"
+```
+
+*MAN-04 complete. 2026-06-03.*
+
+---
+
+## MAN-05 — "The Borrowed Shield"
+
+**Quest API Stub (Quest ID: MAN-05)**
+
+```
+Quest: The Borrowed Shield
+quest_id: MAN-05
+cycle: 5
+book: MAN — Ivanhoe
+token: The Blank Tournament Shield
+route: AHB → ROT → WM
+theme: The identity concealed under borrowed heraldry; the commission that exposes
+  the carrier if the knight's disguise holds and exposes the knight if it doesn't;
+  the device that bears no arms because the knight cannot yet claim them
+archive_category: Anonymous Commission Records — Armor Delivered Without Attribution;
+  The Shield That Bore No Arms Because The Knight Could Not Yet Claim Them;
+  Filed Under the Carrier Who Knew the Identity the Shield Was Hiding
+
+missionAccept: "Ivanhoe needs his tournament armor collected from a sympathetic
+  armorer in Ashby and delivered anonymously — if anyone traces the armor to him,
+  his disguise as the Disinherited Knight collapses and Cedric will throw him out
+  before the tournament ends. Every Norman in Ashby wants to know who the
+  Disinherited Knight is. The shield must bear no device. The Fighter carries
+  armor for a knight who cannot carry it himself."
+
+Act I — The Armorer's Yard, Ashby
+activateNode: AHB
+type: skill_check
+scene: "The armorer's back yard, pre-tournament morning. Thomas the armorer has
+  had the kit ready for two days. He is nervous in the specific way of craftsmen
+  who have done excellent work for a commission that could get them hanged for
+  knowing about it. He gives you the shield last — plain steel, no device, no
+  family arms, no marking that could identify the bearer. 'Anyone who knows anything
+  about tournament heraldry will stop you at the first gate to ask whose shield
+  this is.' He is right."
+skillCheck: "Deception DC 14: Leave the armorer's yard carrying a blank tournament
+  shield without triggering the question at the tournament ground's equipment gate."
+failText: "The equipment gatekeeper stops you. A blank shield means an unknown
+  entrant. He wants a name. He has a ledger. His supervisor is twenty feet away
+  with a longer memory."
+successText: "You cover the shield with a smith's delivery cloth — equipment for
+  a knight who will be naming himself at the field, not here. The gate records
+  'delivery, unnamed entrant.' No follow-up question."
+grantItem: "The Blank Tournament Shield — Plain steel, no device, no identifying
+  marks. The shield of a man who has not yet been permitted to claim his name."
+
+Act II — The Tournament Ground
+activateNode: AHB
+type: skill_check
+scene: "The tournament field before the day's first joust. Three Norman knights
+  of Prince John's party have noted the Disinherited Knight's anonymous entry and
+  are standing near the equipment pavilion, comparing the device-less shield to
+  the tournament rolls to see if anyone missed registration. They are looking for
+  a name, which means they will look at anyone carrying unmarked equipment."
+skillCheck: "Stealth DC 13: Deliver the shield to Ivanhoe's squire at the far end
+  of the pavilion without the Norman observers connecting the carrier to the knight."
+failText: "One of them sees you approach the squire. He follows. The squire takes
+  the shield but now there is a Norman between you and the exit."
+successText: "You drop the shield at the squire's feet with the timing of a man
+  completing a routine delivery and are four pavilions away before the Norman
+  observers look up from the rolls."
+
+Act III — The Rotherwood Road
+activateNode: ROT
+type: skill_check
+scene: "Ivanhoe won the day and collapsed from his wounds. In the chaos of the
+  field — the crowd, the Normans looking for the Disinherited Knight's face — the
+  shield was picked up by a tournament official who logged it as unclaimed equipment.
+  You need to recover it from the official's cart before it reaches the tournament
+  administrator's tent, where it will be opened, examined, and added to a ledger
+  that will be read by Front-de-Boeuf's steward."
+skillCheck: "Sleight of Hand DC 13: Retrieve the shield from the cart before it
+  reaches the administrator."
+failText: "The cart reaches the tent. The official opens the shield for logging.
+  He notes the absence of a device and marks it as 'unknown entrant, outstanding.'
+  The shield is in a ledger now."
+successText: "You lift it from the cart in the press of people around the field
+  exit and walk with it to the road to Rotherwood. Nobody saw a thing that made sense."
+
+Act IV — Weimar Archive Gate
+activateNode: WM
+type: escort
+scene: "Sweelinck receives the blank shield. He studies it for a long time. 'No
+  device.' 'No device.' 'No name in any register.' 'He was entered as anonymous.'
+  'The blank face is the document.' 'Yes. It's what the shield was for — it was
+  the declaration that he couldn't yet claim what he was.' Sweelinck lifts the
+  shield and leans it against the archive gate's stone wall."
+successText: "Sweelinck creates Anonymous Commission Records — The Shield That
+  Bore No Arms Because The Knight Could Not Yet Claim Them; first entry: 'the
+  tournament roll has no entry that matches this shield; the shield is its own
+  evidence; the blank face is the record of a knight who won a tournament under
+  a title that named his situation precisely'"
+failText: "The shield was logged in the tournament administrator's ledger before
+  you recovered it. The ledger is in Prince John's court's records. The blank
+  shield is not blank anymore — it has a file number."
+takeItem: "The Blank Tournament Shield"
+```
+
+*MAN-05 complete. 2026-06-03.*
+
+---
+
+## MAN-06 — "Athelstane's Seal"
+
+**Quest API Stub (Quest ID: MAN-06)**
+
+```
+Quest: Athelstane's Seal
+quest_id: MAN-06
+cycle: 6
+book: MAN — Ivanhoe
+token: Athelstane's Marriage Withdrawal Seal
+route: ROT → WM
+theme: The document that resolves a political situation by existing, not by being
+  read publicly; the political act accomplished in a corner of a hall while a feast
+  proceeds; the Saxon patriarch who must not know what is being settled at his table
+archive_category: Marriage Withdrawal Records — The Political Acknowledgment Made
+  Without Ceremony; The Document That Freed Both Parties By Being Completed and
+  Delivered in the Same Hall Where the Claim Was Originally Made
+
+missionAccept: "Athelstane of Coningsburgh is alive and eating an enormous meal
+  at his own funeral feast, indignant and largely undamaged. He wants to send Ivanhoe
+  a sealed acknowledgment withdrawing his marriage claim on Rowena. It frees Ivanhoe.
+  It frees Rowena. It resolves Cedric's political plan. But Cedric must not see it
+  — the plan was his, and the withdrawal without ceremony will wound his pride in
+  ways that take months to heal. The two men are in the same hall. Athelstane
+  writes at the table while Cedric pours wine thirty feet away."
+
+Act I — Rotherwood Hall, the Feast Table
+activateNode: ROT
+type: skill_check
+scene: "Athelstane at the long table with a plate of venison and a cup of wine and
+  the composed expression of a large man who has decided to simplify his situation.
+  He writes the seal acknowledgment on a fold of vellum with a quill he has borrowed
+  from Cedric's steward. Cedric is at the far end of the hall with his back turned,
+  telling someone about the battle. Athelstane folds the document, presses his
+  ring into the wax, and hands it to you under the table."
+skillCheck: "Sleight of Hand DC 12: Accept the sealed document without Cedric seeing
+  the exchange across thirty feet of feast hall."
+failText: "Cedric turns at the wrong moment. He sees Athelstane's hand under the
+  table edge. He does not see the document — but he is walking toward the table now
+  with the expression of a man about to ask a question."
+successText: "Cedric's steward drops a wine cup at the exact right moment. In the
+  half-second of distraction you close your hand around the seal and your hand
+  is on your knee when Cedric reaches the table."
+grantItem: "Athelstane's Marriage Withdrawal Seal — A folded vellum bearing
+  Athelstane's ring impression. The political document that settled the Rowena
+  question without ceremony, delivered from a man eating venison at his own funeral
+  feast."
+
+Act II — The Inner Corridor
+activateNode: ROT
+type: skill_check
+scene: "The corridor between the feast hall and the sleeping quarters where Ivanhoe
+  is convalescing. Cedric's hall-steward is making his evening round, which takes
+  him through every corridor in the complex. He knows everyone's business. He will
+  not know what the sealed document is — but he will wonder, because his job is to
+  wonder."
+skillCheck: "Deception DC 11: Cross the corridor during the steward's round without
+  him asking what is being carried to the inner chamber."
+failText: "He asks. You give him a plausible answer about a physician's supply.
+  He files it away. It will not cause trouble tonight. It may cause trouble later."
+successText: "You time the corridor crossing between his stops. He is at the
+  eastern window when you pass the inner chamber door. The document is inside
+  before he turns around."
+
+Act III — Ivanhoe's Chamber
+activateNode: ROT
+type: dialogue
+scene: "Ivanhoe on a pallet, in better health than he was three days ago. You give
+  him the sealed document. He reads it once, looks up, reads it again. He holds it
+  for a moment with the expression of someone holding a resolution they had
+  stopped expecting. He does not say anything for several seconds."
+prompt: "Insight DC 10: Understand what this document costs Athelstane — he is not
+  freeing Rowena, he is releasing a political claim that Cedric staked his last
+  plan on, and he is doing it from a feast table without drama."
+failText: "You deliver the document and withdraw before Ivanhoe says anything.
+  You understand the mechanics but not the weight of what Athelstane just did."
+successText: "Ivanhoe sets the document down on the pallet beside him. 'He did
+  this at the feast table.' 'Yes.' 'Athelstane.' He almost laughs. Then he is
+  still. 'Tell him — tell him I received it.'"
+
+Act IV — Weimar Archive Gate
+activateNode: WM
+type: escort
+scene: "Sweelinck receives the withdrawal seal. He reads it. 'The signature and
+  wax are consistent with Athelstane's seal from other documents.' 'Yes.' 'He wrote
+  this at a feast table.' 'Yes.' 'At his own funeral feast.' 'He was eating venison.'
+  Sweelinck looks at the document for a long moment. 'The resolution came without
+  ceremony.' 'Yes.' 'He preferred it that way.' 'He was already eating again
+  before we left the hall.'"
+successText: "Sweelinck creates Marriage Withdrawal Records — The Political
+  Acknowledgment Made Without Ceremony; first entry: 'the document is dated the
+  same day as the funeral feast; the wax is consistent; the claim was released
+  by the claimant without being asked to release it; the archive notes that the
+  political act was complete when the wax dried'"
+failText: "The document was seen by Cedric's steward after all. It is in Cedric's
+  hands. The withdrawal stands legally but the political wound will take months."
+takeItem: "Athelstane's Marriage Withdrawal Seal"
+```
+
+*MAN-06 complete. 2026-06-03.*
+
+---
+
+## MAN-07 — "Richard's Farewell"
+
+```json
+{
+  "quest_id": "MAN-07",
+  "title": "Richard's Farewell",
+  "cycle": 7,
+  "book": "MAN — Ivanhoe",
+  "token": "Richard's Private Letter to Locksley",
+  "route": ["HMT", "SHW", "WM"],
+  "theme": "The king who could not acknowledge publicly what he acknowledged privately; the letter written before the herald arrives so the pardon is believed before it must be believed; the gratitude that travels by carrier because the institution has no channel for it",
+  "archive_category": "Royal Acknowledgment Records — The Private Letter That Arrived Before the Herald; The King's Thanks That Could Not Be Made Public Without Embarrassing the Court; Filed Under the Name Richard Could Not Use in an Official Document",
+  "questComplete": true,
+  "acts": [
+    {
+      "act": 1,
+      "activateNode": "HMT",
+      "type": "skill_check",
+      "scene": "The woodland hermitage, pre-dawn. Richard — the Black Knight, the king — is sitting at the hermit's rough table with a quill borrowed from Friar Tuck, writing a letter by a single candle. He finishes, seals it with the private cipher he uses when he is not being a king. 'Before the herald goes out with the pardon, I want Locksley to have this. If he reads the pardon first, he reads it as an order. If he reads this first, he reads the pardon as confirmation of something he already knows.' He hands you the sealed letter. 'If anyone on the road asks what you are carrying, you are carrying nothing for anyone.'",
+      "skillCheck": { "skill": "Stealth", "dc": 12 },
+      "failText": "A royal guard at the forest road's edge has been watching the hermitage. He follows at a distance. He cannot identify what the letter contains — but his presence complicates the forest route.",
+      "successText": "You leave the hermitage by the back path in the dark. The guard watches the front of the building. The letter is inside your coat.",
+      "grantItem": { "id": "richard_letter_locksley", "name": "Richard's Private Letter to Locksley", "desc": "A sealed letter in Richard's private hand, closed with a cipher nobody at court has seen. The contents are not the pardon. The contents are what the pardon cannot say." }
+    },
+    {
+      "act": 2,
+      "activateNode": "SHW",
+      "type": "combat",
+      "scene": "The forest road to Locksley's camp. Two of Prince John's intelligence riders have been watching the forest approaches since the previous day — they know Richard is near, they know Locksley is near, and they are trying to intercept any communication between them before the pardon is formally announced. They are not stopping merchants. They are stopping anyone who looks like they came from the hermitage.",
+      "combat": { "enemies": ["John's Intelligence Rider", "John's Intelligence Rider"], "cr": "1/4", "hp": 16, "toHit": 4, "damage": "1d6+2" },
+      "failText": "One rider pins you. He finds the sealed letter. He cannot read the cipher — but he holds it up to the torch and knows it is important. You need it back before he reaches John's camp.",
+      "successText": "Both riders down. You continue through the forest. The letter is in your coat. The camp fire is visible ahead."
+    },
+    {
+      "act": 3,
+      "activateNode": "SHW",
+      "type": "dialogue",
+      "scene": "Locksley's camp, dawn. He is awake, sitting with the camp's night-watch report, when you arrive. He takes the sealed letter, reads the cipher mark, looks at you once. He opens it and reads it. He reads it a second time. He folds it once. He is quiet for a moment. Then the herald's horn sounds from the forest road — the king's official herald, coming with the pardon. Locksley looks in the direction of the horn, then at the folded letter in his hand.",
+      "prompt": { "skill": "Insight", "dc": 11, "prompt": "Understand what Locksley understands: the pardon is the institution speaking; the letter arrived first; he now knows the pardon is real before he is asked to trust it." },
+      "failText": "Locksley receives the letter and the horn sounds before he finishes reading. He processes them in the wrong order — the institution first, the private word after. He will trust the pardon. It will just cost him more than it needed to.",
+      "successText": "Locksley stands up when the herald arrives and receives the pardon without the expression of a man deciding whether to trust it. He already decided. The letter is in his hand."
+    },
+    {
+      "act": 4,
+      "activateNode": "WM",
+      "type": "escort",
+      "scene": "Sweelinck receives the letter after Locksley releases it — two days later, sent through the same carrier. 'He released it.' 'He said the archive should have it since the king can't keep it and he won't need it.' 'What does it say.' 'Richard thanks him by name for what he did. The pardon doesn't name him.' 'The pardon is the institution.' 'The letter is the king.' Sweelinck breaks the seal carefully.",
+      "successText": "Sweelinck creates Royal Acknowledgment Records — The Private Letter That Arrived Before the Herald; first entry: 'the letter uses the name the pardon could not use; it arrived first; Locksley received the pardon as confirmation rather than instruction; the archive holds the letter under the name Richard used when he was not being a king, and notes that the distinction mattered to both of them'",
+      "failText": "The letter was seen by the herald at the forest road. It is in Prince John's intelligence files. The archive holds a gap where the private word should be."
+    }
+  ]
+}
+```
+
+*MAN-07 complete. 2026-06-03.*
