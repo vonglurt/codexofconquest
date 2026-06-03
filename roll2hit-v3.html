@@ -7958,6 +7958,8 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   RHD: { num:176, name:"market_quarter", label:"Rhodes — Mandraki Harbor Commercial Dock", act:3 },
   FAM: { num:177, name:"docks", label:"Famagusta — Hospitaller Commandery Port", act:3 },
   ALE: { num:178, name:"market_quarter", label:"Alexandria — Venetian Consul Frankish Quarter", act:3 },
+  BRI: { num:179, name:"docks", label:"Brindisi — Adriatic Harbor District", act:3 },
+  BAR: { num:180, name:"city", label:"Bari — Podesta Court Quarter", act:3 },
 };
 // ◆◆◆ WORLDBUILDER:NODE_MAP:END ◆◆◆
 
@@ -8064,6 +8066,8 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   RHD:{r:168,c:236},
   FAM:{r:172,c:236},
   ALE:{r:184,c:232},
+  BRI:{r:180,c:224},
+  BAR:{r:176,c:222},
 };
 // ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆
 
@@ -10852,6 +10856,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   blq_08_act3: { id:"blq_08_act3", type:"skill_check", title:"The Goosebridge Answer — Act 3: Lorenzo Doria at the Rialto", failText:"Doria sends a rider north ahead of the carrier to a Genoese factor in Frankfurt — instructions to intercept any northbound courier carrying a Byzantine court letter. At the Alpine pass, this intercept will be waiting.", npc:"konstantinos_philanthropenos", activateNode:"VEN", reward:NaN, activateCond:blq08BrandoManaged },
   blq_08_act4: { id:"blq_08_act4", type:"skill_check", title:"The Goosebridge Answer — Act 4: The Alpine Pass Intercept", failText:"The agents hold the carrier long enough for their principals to meet at the Brenner and compare notes. The letter's ambiguity is destroyed. The filing becomes contested before the carrier reaches Weimar.", npc:"konstantinos_philanthropenos", activateNode:"VEN", reward:NaN, activateCond:blq08DoriaManaged },
   blq_08_act5: { id:"blq_08_act5", type:"skill_check", title:"The Goosebridge Answer — Act 5: Archivus Sweelinck Files the Letter", failText:"Sweelinck requires additional authentication — the gold wax has a hairline crack. Filing is delayed three days. Brando's and Doria's agents meet at the archive gate and compare notes before the delay resolves. The contest begins.", npc:"konstantinos_philanthropenos", activateNode:"NUE", reward:NaN, activateCond:blq08PassCleared },
+  blq_09_act1: { id:"blq_09_act1", type:"skill_check", title:"The Jewel Chest — Act 1: Three Claims, One Chest", failText:"You accept the custody document and the task without the full legal framework. The arguments during transit will have to be improvised.", npc:"messer_cosimo_taranto", activateNode:"BRI", reward:NaN, activateCond:null },
+  blq_09_act2: { id:"blq_09_act2", type:"skill_check", title:"The Jewel Chest — Act 2: Bartolo at the Road Checkpoint", failText:"Bartolo insists on formal custody transfer, backed by his men. The carrier must force the argument or lose the chest.", npc:"messer_cosimo_taranto", activateNode:"BRI", reward:NaN, activateCond:blq09LegalArchitectureUnderstood },
+  blq_09_act3: { id:"blq_09_act3", type:"skill_check", title:"The Jewel Chest — Act 3: Maestro Vito's Canonical Argument", failText:"Maestro Vito produces the bishop's custody order. Its jurisdiction against the Bari podestà is uncertain. The carrier either waits for the order to be challenged — losing a day — or continues and delivers a contested chest to the court.", npc:"messer_cosimo_taranto", activateNode:"BRI", reward:NaN, activateCond:blq09PisaniDeclined },
+  blq_09_act4: { id:"blq_09_act4", type:"skill_check", title:"The Jewel Chest — Act 4: Falco's Defection", failText:"Falco turns east. The cart is stopped and the chest jostled — the iron bands hold but the pitch seal has a cracked near one band. The carrier must explain this at court.", npc:"messer_cosimo_taranto", activateNode:"BRI", reward:NaN, activateCond:blq09CanonicalDeclined },
+  blq_09_act5: { id:"blq_09_act5", type:"skill_check", title:"The Jewel Chest — Act 5: Messer Aldrovando Opens the Chest", failText:"Pisani challenges the seal condition as evidence of improper handling. Aldrovando orders an inquiry — three days, provisional acceptance, fee held.", npc:"messer_cosimo_taranto", activateNode:"BAR", reward:NaN, activateCond:blq09FalcoKept },
 };
 // ◆◆◆ WORLDBUILDER:QUEST_DB:END ◆◆◆
 
@@ -11834,6 +11843,7 @@ const BIRKA_NPC_PROFILES = { // → doc: world.md §Birka Six NPCs
   grimaldi_luca: { key:"grimaldi_luca", name:"Messer Luca Grimaldi", occupation:"Grain merchant and letter-of-credit issuer, Naples. Holds accounts with the Hospitaller order's eastern network. Commissioned tonight's delivery himself; is afraid of something he has not named.", node:"NAP" },
   ser_giambattista_alberi: { key:"ser_giambattista_alberi", name:"Ser Giambattista Alberi", occupation:"Guild factor for the Florentine merchant consortium, Via Tornabuoni. Manages eastern accounts and dispatch coordination. Has been calculating the Bostichi deadline for three days and knows the mathematics do not work without the Hospitaller relay.", node:"PSA" },
   konstantinos_philanthropenos: { key:"konstantinos_philanthropenos", name:"Konstantinos Philanthropenos", occupation:"Byzantine chancery clerk, Blachernae quarter, Constantinople. Issued the dual-petition ruling letter for the Galata warehouse dispute. Is aware that both parties' agents are watching. Is not asking for deception — only for speed.", node:"CON" },
+  messer_cosimo_taranto: { key:"messer_cosimo_taranto", name:"Messer Cosimo di Taranto", occupation:"Notary in Brindisi. Retained by Rocco the fisherman to ensure the sea-chest reaches the Bari podestà's court before either claimant can take private custody. Commissioned the carrier; issued the custody document.", node:"BRI" },
 };
 // ◆◆◆ WORLDBUILDER:BIRKA_NPC:END ◆◆◆
 
@@ -12175,6 +12185,11 @@ const _S_DEFAULTS = () => ({
     blq08DoriaManaged: false,
     blq08PassCleared: false,
     blq08Complete: false,
+    blq09LegalArchitectureUnderstood: false,
+    blq09PisaniDeclined: false,
+    blq09CanonicalDeclined: false,
+    blq09FalcoKept: false,
+    blq09Complete: false,
 });
 
 /* ── Layer 48: Luck — Seventh Stat ── */
