@@ -530,3 +530,623 @@ activateMissionBit: flrBrunettoComplete
 
 *quest-map.md: add FLR cycle 2 row and theme thread; append HMN to Location Grid.*
 *books.md: mark FLR [x] (divine-comedy-inferno entry).*
+
+---
+
+## Cycle 3 — *Francesca's Book*
+
+**Archive category:** Inventory Subversion Records — Objects Classified to Disappear, First Entry
+
+**What this angle reveals:** Cycles 1 and 2 were about documents correcting institutional records. This angle enters the object itself — the specific book that was being read when Paolo kissed Francesca. The Malatesta library's executor is cataloguing it as "a French romance." Francesca's niece has written a sealed account naming the book by its specific missing page — a page torn out in the struggle. The account changes the inheritance dispute: the book is evidence, not décor. The archive category this creates is about what happens when a routine inventory entry is designed to make an object disappear.
+
+---
+
+**THE TOKEN: `lancelot_torn_page_account`** — Francesca's Niece's Account. A sealed folio. The niece's handwriting on the outside: "Concerning a volume in the Malatesta library, Rimini, and a missing page." Inside: her account of what she saw that day, the book she saw in their hands, the specific passage she saw them reading, and the location of the tear in the spine where a page was removed. She was fourteen. She remembers exactly.
+
+---
+
+**ACT I — Rimini, the Malatesta Library**
+
+*Grant act. Location: the Malatesta library — the executor's table, the catalogue open.*
+
+The executor is a careful man named Matteo. He has been cataloguing the Malatesta library for six weeks. He does not want trouble. He has a column for French romances and a column for Italian histories and he is filling both columns efficiently.
+
+He pauses at one volume. He turns it over. He holds it to the light. He sets it in the French romance column.
+
+Francesca's niece, Agnese, is standing at the library door. She is perhaps thirty. She has been watching Matteo for six weeks.
+
+**Agnese:** "He is going to enter it as 'a French romance, unspecified.' That entry makes it invisible to any later search for that specific volume."
+
+She hands the Fighter a sealed folio.
+
+**Agnese:** "There is a tear in the spine at page forty-seven of that volume. The page that was there is gone. My account names the page. Get it to the civic inheritance registry before Matteo closes the catalogue."
+
+*The seal is intact. Her name is on the outside.*
+
+---
+
+**ACT II — The Library Corridor**
+
+*Check act. Location: the library corridor — Matteo at his table, the volume in his column.*
+
+Matteo has closed his catalogue and is reaching for his seal.
+
+He is not malicious. He is doing what he was hired to do. But the inheritance dispute over the Malatesta estate has been running for three years, and the specific items in the French romance column are not being contested, which means the column is safe and uncontested.
+
+The account in the Fighter's hands changes the volume's legal category from "estate property — literary" to "material evidence in an inheritance dispute." That change requires Matteo to hold the volume pending the registry's review, not enter it in the final catalogue.
+
+Persuasion DC 12 — explain to Matteo why the account changes the volume's legal category, without accusing him of bad faith. He is doing his job correctly under the wrong classification.
+
+---
+
+**ACT III — The Inheritance Registry**
+
+*Check act. Location: Rimini civic inheritance registry — the clerk's desk, the contested estate file.*
+
+The clerk has the Malatesta estate file and a long afternoon. He receives the account, looks at Agnese's name, and opens the sealing procedure for material evidence.
+
+From the far end of the room, a representative of the Malatesta heirs objects. The account, he says, is the reminiscence of a woman who was fourteen at the time and has had thirty years to construct a memory that serves her interests. He requests the account be filed in supplementary correspondence, not primary evidence.
+
+Insight DC 12 — determine what the heir's representative is actually trying to prevent. It is not the account's accuracy he is contesting; it is its category in the file. A supplementary correspondence filing can be ignored; a primary evidence filing cannot.
+
+---
+
+**ACT IV — The Harbor Road**
+
+*Check act. Location: the harbor road south — a fishing port, the mail ship's departure.*
+
+The account must reach the Venice civic archive, which holds the master copy of the Rimini inheritance dispute under Venetian territorial jurisdiction. The Rimini registry has sent a duplicate, but the duplicate carries the supplementary correspondence classification, not primary evidence.
+
+The Fighter carries the original with Agnese's seal and the registry's stamp.
+
+The heir's representative has a faster horse and he knows it. He is at the harbor already when the Fighter arrives. He has the mail ship's captain's ear.
+
+Athletics DC 13 — reach the captain before the representative's version of what the Fighter is carrying has already been lodged.
+
+---
+
+**ACT V — Weimar Archive**
+
+*Take act. Location: Weimar — Sweelinck at the filing desk.*
+
+The Venice archive has the original. Sweelinck receives a sealed copy — Agnese's account, endorsed by the Venice archivist's transit stamp, sent on to Weimar as a case study in inheritance document classification.
+
+He reads the outside. He reads the registry stamp. He opens the inside carefully.
+
+He reads for a long moment.
+
+**Sweelinck:** *(writing)* "A French romance. Unspecified. The catalogue entry that makes a specific volume invisible to any search." He pauses. "First entry. Inventory Subversion Records — Objects Classified to Disappear." He looks at you. "The missing page is the proof. Not that the act happened. That the volume is specific. An unspecified French romance has no missing page."
+
+The token is taken.
+
+---
+
+```json
+{
+  "quest_id": "FLR-03",
+  "title": "Francesca's Book",
+  "source": "Divine Comedy: Inferno — Dante Alighieri",
+  "cycle": 3,
+  "book": "FLR",
+  "source_episode": "Canto V — Francesca da Rimini; the book of Lancelot; the missing page",
+  "theme": "The inventory entry that makes a specific object invisible; the evidence that survives in its own absence",
+  "activateNode": "FLR",
+  "token": {
+    "id": "lancelot_torn_page_account",
+    "name": "Francesca's Niece's Account",
+    "description": "Sealed folio: Agnese's account of the book being read, the passage they were at, and the location of the tear where the missing page was removed. She was fourteen. She remembers exactly.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["FLR", "VEN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "FLR", "type": "skill_check", "prompt": "Receive the account from Agnese before Matteo closes the catalogue."},
+    {"act": 2, "node": "FLR", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "Explain to Matteo why the account changes the volume's legal category without accusing him of bad faith."},
+    {"act": 3, "node": "FLR", "type": "skill_check", "dc": 12, "skill": "Insight", "prompt": "Determine what the heir's representative is actually contesting — not accuracy, but filing category."},
+    {"act": 4, "node": "FLR", "type": "skill_check", "dc": 13, "skill": "Athletics", "prompt": "Reach the harbor captain before the representative's version of what the Fighter carries is already lodged."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Deliver Agnese's account to Sweelinck. The missing page is the proof."}
+  ],
+  "archiveCategory": "Inventory Subversion Records — Objects Classified to Disappear",
+  "sweelinckNote": "An unspecified French romance has no missing page."
+}
+```
+
+---
+
+## Cycle 4 — *Bocca's Denial*
+
+**Archive category:** Dying Declarations — The Witness Who Could Not Speak in Any Venue That Counted, First Entry
+
+**What this angle reveals:** Cycle 3 was about an object's legal category. This angle is about a witness who existed but could never speak in a venue that counted. Bocca degli Abati was in Antenora for betraying Florence at Montaperti — turning his sword on the Florentine cavalry at the critical moment. He was never convicted in life; he claimed innocence. A surviving cavalryman who saw Bocca's sword turn has been carrying this in his body for decades; he is dying and he has finally written it down. The account reaches the Florentine civic archive before the official history of Montaperti closes.
+
+---
+
+**THE TOKEN: `montaperti_cavalryman_deposition`** — The Cavalryman's Deposition. A single sheet in a very old man's hand. Enrico di Giacomo, formerly of the Florentine cavalry, states what he saw at Montaperti on September 4, 1260. The sword turning. The direction. The distance. The moment. The notary's seal is fresh; Enrico's thumbprint is at the bottom because his hand was too unsteady for a signature. He dictated it this morning.
+
+---
+
+**ACT I — Florence, the Cavalryman's House**
+
+*Grant act. Location: a small house on the Arno's south bank — Enrico, eighty-three, in a chair.*
+
+He told this story once, thirty years ago, to a Florentine magistrate who was not interested. The magistrate's court was handling the post-Montaperti property seizures and had already decided the official characterization of the battle. A single cavalry witness's account of a single sword turning at a single moment was not the document that proceeding needed.
+
+Enrico is dying. His notary came this morning. The deposition is sealed.
+
+**Enrico:** "The official history of Montaperti closes in three weeks. After that, any addition to the civic record requires a petition and a review panel and two years. I need it in before the closing."
+
+He hands the deposition to the Fighter.
+
+**Enrico:** "I saw what I saw. I have waited thirty years for a venue that counted. This is the last one."
+
+*The notary's seal is exactly level. Enrico's thumbprint is very clear.*
+
+---
+
+**ACT II — The Street**
+
+*Check act. Location: the street outside Enrico's house — morning, the Arno district.*
+
+A member of the Abati family has been watching the house since Enrico's notary arrived. He is not subtle about it. He does not need to be; he has enough legal resources to challenge the deposition's admissibility through three separate procedures, any one of which would delay the filing past the three-week closing date.
+
+He steps in front of the Fighter.
+
+**Abati:** "That document names my family in a capital matter, sixty years old, by a man who was on the losing side. Every court in Florence will tell you the same thing: testimony this old, from a partisan source, is not admissible without corroboration."
+
+He is legally correct about the admissibility standard. He is wrong about what that means in this context: admissibility is for courts; the civic record is not a court. It receives documents. It does not adjudicate them.
+
+Persuasion DC 13 — establish the distinction between the civic record's function (preservation) and a court's function (judgment), and hold the argument long enough to walk past him.
+
+---
+
+**ACT III — The Civic Archive, Intake Desk**
+
+*Check act. Location: the Florentine civic archive — the intake desk, the current-session ledger.*
+
+The intake clerk is twenty-two years old and has been told by his superior that the Montaperti file is politically sensitive and that any additions should be flagged for senior review before entry.
+
+"Senior review" means the file goes to a committee that meets monthly. The three-week closing date passes before the committee meets.
+
+The deposition is a dying declaration with a notary's seal and a thumbprint, filed within twenty-four hours of dictation. That is a specific filing category — expedited intake for dying declarations — that bypasses the senior review flag and goes directly into the current session.
+
+Insight DC 11 — identify the specific procedural category that bypasses the flag. It is written on the wall behind the clerk's desk; it is in the intake manual the clerk has not yet read.
+
+---
+
+**ACT IV — The Road to Venice**
+
+*Check act. Location: the road north — the mail transit between Florence and Venice.*
+
+The civic archive filed the deposition in the expedited dying declarations category. The Abati family has immediately filed a challenge with the Venice territorial court, which supersedes the Florentine civic record for contested political documents under the current territorial arrangement.
+
+The challenge will freeze the record entry unless a corroborating document is filed in Venice within forty-eight hours. Enrico's notary has a second witness statement — a farrier who was at Montaperti at seventeen and saw the same moment — that was prepared as backup and never used because Enrico hoped to be believed alone.
+
+The farrier's statement is in a sealed packet at the notary's office. The Fighter must carry both the deposition and the farrier's packet to the Venice court before the freeze takes effect.
+
+Athletics DC 13 — reach Venice in the available window.
+
+---
+
+**ACT V — Weimar Archive**
+
+*Take act. Location: Weimar — Sweelinck at the filing desk.*
+
+The Venice court received both documents and declined to freeze the Florentine entry. The Abati challenge was dismissed on procedural grounds. Enrico died four days after dictating the deposition, which means the timing was exact.
+
+His notary sent a copy of the deposition to the Weimar archive at Enrico's instruction.
+
+**Enrico's attached note:** "I am told there is an archive where things like this are filed in their own category. File it where it belongs."
+
+Sweelinck reads the deposition. He reads the thumbprint attestation at the bottom.
+
+**Sweelinck:** *(writing)* "Enrico di Giacomo. Montaperti. September 4, 1260. He spoke once to a magistrate thirty years ago and was not heard. He waited for a venue that counted." He sets his pen down. "First entry. Dying Declarations — The Witness Who Could Not Speak in Any Venue That Counted." He looks at you. "The thumbprint is the signature of a man who had to speak with his body instead of his hand."
+
+The token is taken.
+
+---
+
+```json
+{
+  "quest_id": "FLR-04",
+  "title": "Bocca's Denial",
+  "source": "Divine Comedy: Inferno — Dante Alighieri",
+  "cycle": 4,
+  "book": "FLR",
+  "source_episode": "Canto XXXII — Bocca degli Abati in Antenora; Montaperti; the betrayal never prosecuted",
+  "theme": "The witness who existed but could never speak in a venue that counted; the dying declaration as the last venue",
+  "activateNode": "FLR",
+  "token": {
+    "id": "montaperti_cavalryman_deposition",
+    "name": "The Cavalryman's Deposition",
+    "description": "Single sheet: Enrico di Giacomo states what he saw at Montaperti, 1260. Notary's seal, fresh. Thumbprint because the hand was too unsteady for a signature.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["FLR", "VEN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "FLR", "type": "skill_check", "prompt": "Receive the deposition from Enrico. The timing is exact — he may not live past tomorrow."},
+    {"act": 2, "node": "FLR", "type": "skill_check", "dc": 13, "skill": "Persuasion", "prompt": "Establish the distinction between the civic record's function and a court's function. Hold the argument long enough to walk past the Abati representative."},
+    {"act": 3, "node": "FLR", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "Identify the expedited dying declaration category that bypasses the senior review flag."},
+    {"act": 4, "node": "VEN", "type": "skill_check", "dc": 13, "skill": "Athletics", "prompt": "Reach Venice with both documents before the Abati challenge freeze takes effect."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Deliver Enrico's deposition to Sweelinck. The thumbprint is the signature of a man who had to speak with his body."}
+  ],
+  "archiveCategory": "Dying Declarations — The Witness Who Could Not Speak in Any Venue That Counted",
+  "sweelinckNote": "The thumbprint is the signature of a man who had to speak with his body instead of his hand."
+}
+```
+
+---
+
+## Cycle 5 — *The Pre-Schism Declaration*
+
+**Archive category:** Pre-Schism Documents — The Distinction Between Principled Neutrality and Cowardice Is a Date, First Entry
+
+**What this angle reveals:** Cycles 1–4 corrected institutional records, authenticated fragmentary work, preserved evidence of crimes. This angle is about the failure to take sides — and the specific question of whether that failure was principled or cowardly. In Canto III, the Uncommitted run after a blank banner in the Vestibule of Hell — rejected by both Heaven and Hell. A specific Florentine who declined to sign either faction's loyalty oath during the 1300 Jubilee was filed in the civic record as "affiliated with the uncommitted faction" — an anachronistic categorization that conflates him with the Vestibule rather than preserving the pre-schism position he actually held. The archive has the wrong date.
+
+---
+
+**THE TOKEN: `pre_schism_position_statement`** — The Pre-Schism Declaration. A single document, dated three weeks before the Jubilee faction schism of 1300: a formal intellectual statement declining both emerging factions on principled grounds, with citations, signed and witnessed. The date is everything. Before the schism solidified, this was a philosophical position. After, it became a category failure. The archive has filed it in the wrong period.
+
+---
+
+**ACT I — Florence, a Private Consultation**
+
+*Grant act. Location: a private room near the civic archive — the son, Giacomo, and a legal clerk.*
+
+Giacomo's father died in 1312. The civic archive's standard biography entry describes him as "a figure who declined to take sides in the 1300 factional disputes." The entry cites a loyalty oath registry dated December 1300. His father's document is dated November 1300, three weeks earlier, before the registry even existed. The entry has the wrong date and the wrong category.
+
+The archive is closing its Jubilee period biographical entries for the annual supplement. After that, corrections require a formal petition with a review board and a waiting period of two years.
+
+Giacomo hands the Fighter the original document.
+
+**Giacomo:** "The date on his document predates the schism. Before the schism there was no faction to refuse. This was a philosophical position. They filed it as political abstention. The dates prove otherwise. Get it to the supplement editor before the entries close."
+
+*The document is exactly dated. November 15, 1300. The schism is December 8.*
+
+---
+
+**ACT II — The Archive Reading Room**
+
+*Check act. Location: the civic archive reading room — the supplement editor at his desk.*
+
+The supplement editor, Messer Ottaviano, has the loyalty oath registry open. He has the entry for Giacomo's father already drafted: "declined factional affiliation, Jubilee period." He looks at the document the Fighter presents.
+
+He sees the date. He looks at the registry date. He sees the gap.
+
+**Ottaviano:** "Three weeks is not a political issue. The difference between November 15 and December 8 in 1300 is not meaningful to a reader in 1367."
+
+This is the editorial argument for leaving the entry as is. The counter-argument is not political but archival: if the entry is filed as factional abstention, any future researcher searching for pre-schism intellectual positions will not find this document because it will be in the wrong category.
+
+Persuasion DC 12 — argue that the date is the category, not the position. A pre-schism document and a post-schism abstention are different things because the schism is what gives "abstention" its meaning.
+
+---
+
+**ACT III — The Registry**
+
+*Check act. Location: the Florentine civic registry — a subsidiary clerk, the formal correction procedure.*
+
+Ottaviano has agreed to hold the entry pending verification, but he cannot amend it without a formal registry entry confirming the document's date. The registry clerk has the entry form.
+
+He looks at the document. He looks at the date. He looks at the schism date in the master calendar.
+
+He wants a second signature — a contemporary witness attestation that the document existed before the schism date, not a later construction with a false date. Giacomo has one: a dated letter from his father's correspondent, two weeks before the schism, acknowledging receipt of the position statement and discussing it in the context of "the factions that are beginning to form."
+
+The letter proves the document was in circulation before the schism existed. The clerk stamps the correction.
+
+Insight DC 11 — identify that the clerk needs the letter, not a verbal argument. The letter is in Giacomo's possession; he did not think to bring it because he assumed the date would be sufficient.
+
+---
+
+**ACT IV — The Road to Venice**
+
+*Check act. Location: the northern road — the Venice territorial court jurisdiction.*
+
+The Jubilee period entry is contested by a member of the faction Giacomo's father had declined to join — the White Guelphs. Their argument: the pre-schism document was a private intellectual statement; the public loyalty oath registry is the operative historical record; amending the civic entry on the basis of a private document undermines the integrity of the registry.
+
+The argument will succeed if it reaches the Venice court before the amended entry is filed. The Venice court's jurisdiction requires a petition filed in person.
+
+Athletics DC 12 — reach Venice before the White Guelph representative and file the corroborating documentation before the petition window opens.
+
+---
+
+**ACT V — Weimar Archive**
+
+*Take act. Location: Weimar — Sweelinck at the filing desk.*
+
+The corrected entry has been filed in Florence. The Venice challenge was dismissed. Giacomo's father is in the biographical supplement as a pre-schism intellectual figure, not an uncommitted abstainer.
+
+Giacomo sent the original document to the Weimar archive as a case study.
+
+**Giacomo's note:** "The difference between my father and the souls in the Vestibule is a date. I want the date in the archive."
+
+Sweelinck reads the document. He reads the date. He reads Giacomo's note.
+
+**Sweelinck:** *(writing)* "November 15, 1300. Three weeks before the schism. At that point the blank banner had not yet been raised." He looks up. "First entry. Pre-Schism Documents — The Distinction Between Principled Neutrality and Cowardice Is a Date." He files it. "A researcher will find this because it is in the right category. That is what the date is for."
+
+The token is taken.
+
+---
+
+```json
+{
+  "quest_id": "FLR-05",
+  "title": "The Pre-Schism Declaration",
+  "source": "Divine Comedy: Inferno — Dante Alighieri",
+  "cycle": 5,
+  "book": "FLR",
+  "source_episode": "Canto III — the Uncommitted in the Vestibule; the blank banner",
+  "theme": "The distinction between principled neutrality and cowardice is a date; the wrong category is a second erasure",
+  "activateNode": "FLR",
+  "token": {
+    "id": "pre_schism_position_statement",
+    "name": "The Pre-Schism Declaration",
+    "description": "Formal position statement dated November 15, 1300, three weeks before the Jubilee faction schism. Declining both emerging factions on intellectual grounds. The date is everything.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["FLR", "VEN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "FLR", "type": "skill_check", "prompt": "Receive the document from Giacomo. The supplement closes today."},
+    {"act": 2, "node": "FLR", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "Argue to the supplement editor that the date is the category, not the position."},
+    {"act": 3, "node": "FLR", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "Identify that the registry clerk needs the correspondent's letter, not a verbal argument."},
+    {"act": 4, "node": "VEN", "type": "skill_check", "dc": 12, "skill": "Athletics", "prompt": "Reach Venice before the White Guelph petition window opens."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Deliver the declaration to Sweelinck. The date is what makes the category correct."}
+  ],
+  "archiveCategory": "Pre-Schism Documents — The Distinction Between Principled Neutrality and Cowardice Is a Date",
+  "sweelinckNote": "A researcher will find this because it is in the right category. That is what the date is for."
+}
+```
+
+---
+
+## Cycle 6 — *Ugolino's Grandson*
+
+**Archive category:** Political Execution Records — The Judicial Mechanism That Concealed the Murder, First Entry
+
+**What this angle reveals:** Cycles 1–5 corrected records, authenticated documents, restored categories. This angle names a mechanism. In Canto XXXIII, Count Ugolino gnaws Ruggieri's skull and tells his story: the Hunger Tower, the nailed door, the hammering. What the poem does not provide is the legal instrument Archbishop Ruggieri used to justify the imprisonment — the specific terms of the charge that made a political execution look like a judicial finding. Ugolino's surviving grandson has a deposition from the friar who heard Ugolino before the imprisonment, which names those terms. The deposition reveals the mechanism; the archive must hold it in the correct category.
+
+---
+
+**THE TOKEN: `ugolino_grandson_deposition`** — Ugolino's Grandson's Deposition. A transcript of the Dominican friar Fra Bartolomeo's account, dictated by Ugolino's grandson Lorenzo to a notary in 1310. Fra Bartolomeo heard Ugolino's deposition before the imprisonment and recorded the specific charges Ruggieri leveled — and their legal form, which was the charge of treason against the commune rather than the Archbishop, which meant civil execution rather than ecclesiastical sanction and therefore no possibility of appeal to Rome.
+
+---
+
+**ACT I — Pisa, the Grandson's House**
+
+*Grant act. Location: Lorenzo's house, Pisa — a notarized transcript, a small man in his sixties.*
+
+Lorenzo was three years old at the time of the Hunger Tower. He knows nothing firsthand. But he spent forty years collecting the accounts of everyone who did. Fra Bartolomeo died in 1305; his own dictated memoir was entrusted to Lorenzo with the instruction that it be filed in the civic record when the Ruggieri family's legal position had weakened enough that the document would not simply be suppressed.
+
+That moment arrived last month. The Ruggieri heir died without a direct heir. The family's legal resources are in probate.
+
+**Lorenzo:** "File it in the civic inheritance court as background evidence for the estate dispute. That gets it into a record that the Ruggieri estate probate cannot suppress. From there, someone can request the civic record entry."
+
+He hands the Fighter the notarized transcript.
+
+*Fra Bartolomeo's account is in careful Dominican Latin. The specific charge terms are on page three.*
+
+---
+
+**ACT II — The Pisan Inheritance Court**
+
+*Check act. Location: the Pisan inheritance court — the probate file, the clerk.*
+
+The probate clerk has the Ruggieri estate file and a long day. He receives the transcript as background evidence for the estate dispute and begins entering it.
+
+A representative of the Ruggieri estate's interim administrator objects: the transcript relates to events from 1289, seventy-five years before the current probate. It is not background for the estate; it is an attempt to introduce collateral character evidence under cover of a probate filing.
+
+The objection has legal merit. The counter-argument: the specific charges Ruggieri used in 1289 bear directly on the question of whether the estate includes properties seized from the Ugolino family under those charges — which is precisely what the probate proceeding is determining. It is not collateral; it is foundational.
+
+Persuasion DC 13 — establish the connection between the 1289 charges and the current estate proceeding clearly enough that the clerk enters the transcript as foundational, not supplementary.
+
+---
+
+**ACT III — The Road to Florence**
+
+*Check act. Location: the Pisa-Florence road — three Ruggieri estate riders.*
+
+The transcript is in the Pisan probate file and cannot now be suppressed. But the civic record entry — the one Lorenzo actually wants — requires a Florentine archivist to confirm the document's relevance to the Florentine civic history of the 1289 period.
+
+The Ruggieri estate has decided that the civic record entry is more dangerous than the probate file. Three riders on the Florence road.
+
+Combat — 2× estate riders (AC 13, HP 22, swords and brigandine). The third rider has a writ ordering the transcript returned to estate custody pending a procedural review.
+
+The writ is invalid — the transcript is in the probate file now, not in the Fighter's possession; the Fighter carries only a certified copy. The writ targets the original, which the rider does not have. This does not prevent the riders from trying.
+
+---
+
+**ACT IV — The Florentine Archive**
+
+*Check act. Location: the Florentine civic archive — the 1289 political history section.*
+
+The Florentine archivist has the entry form for the certified copy. He needs one thing before he can file it in the civic record: a confirmation that the document is contemporaneous — that Fra Bartolomeo wrote his account in the period close to the events, not as a later reconstruction.
+
+The Dominican order has a record of Fra Bartolomeo's admission date and his assignments. He was in Pisa in 1289 and in 1290; his transfer to Bologna is dated March 1290, which means his Pisan-period account was written before that transfer. The order's records are at the Florence Dominican house.
+
+Insight DC 12 — recognize that the archivist's question is procedural, not substantive; he needs the admission record, not an argument about credibility. The Dominican house is two streets away.
+
+---
+
+**ACT V — Weimar Archive**
+
+*Take act. Location: Weimar — Sweelinck at the filing desk.*
+
+The Florence civic archive has the certified copy. The probate file has the original. Lorenzo sent the Weimar archive a duplicate with a covering note.
+
+**Lorenzo's note:** "The mechanism Ruggieri used was the civil treason charge. The civil charge bypassed Rome. That was the design. The friar recorded the terms before the design was executed. I want the design in the archive."
+
+Sweelinck reads Fra Bartolomeo's account. He reads the charge terms on page three.
+
+**Sweelinck:** *(writing)* "The civil treason charge. Bypasses Rome. No appeal possible. The mechanism that makes a political murder look like a finding." He sets his pen down. "First entry. Political Execution Records — The Judicial Mechanism That Concealed the Murder." He looks at you. "The design is in the archive. The Tower is in Dante. Together they are the complete account."
+
+The token is taken.
+
+---
+
+```json
+{
+  "quest_id": "FLR-06",
+  "title": "Ugolino's Grandson",
+  "source": "Divine Comedy: Inferno — Dante Alighieri",
+  "cycle": 6,
+  "book": "FLR",
+  "source_episode": "Canto XXXIII — Count Ugolino and the Hunger Tower; Archbishop Ruggieri",
+  "theme": "The judicial mechanism that concealed the murder; naming the design does not undo it but makes it permanently visible",
+  "activateNode": "FLR",
+  "token": {
+    "id": "ugolino_grandson_deposition",
+    "name": "Ugolino's Grandson's Deposition",
+    "description": "Notarized transcript of Fra Bartolomeo's account, dictated 1310. Names the specific civil treason charge terms Ruggieri used — and why civil, not ecclesiastical, was the design.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["FLR", "PKR", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "FLR", "type": "skill_check", "prompt": "Receive the transcript from Lorenzo. The Ruggieri probate window is narrow."},
+    {"act": 2, "node": "FLR", "type": "skill_check", "dc": 13, "skill": "Persuasion", "prompt": "Establish the connection between the 1289 charges and the current estate proceeding — foundational, not collateral."},
+    {"act": 3, "node": "FLR", "type": "combat", "dc": 13, "notes": "2× estate riders (AC 13, HP 22). The writ they carry targets the original, which they do not have."},
+    {"act": 4, "node": "FLR", "type": "skill_check", "dc": 12, "skill": "Insight", "prompt": "Recognize the archivist needs the Dominican admission record, not an argument. The house is two streets away."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Deliver the deposition to Sweelinck. The design is in the archive. The Tower is in Dante."}
+  ],
+  "archiveCategory": "Political Execution Records — The Judicial Mechanism That Concealed the Murder",
+  "sweelinckNote": "The design is in the archive. The Tower is in Dante. Together they are the complete account."
+}
+```
+
+---
+
+## Cycle 7 — *The Cliff-Face Testimony*
+
+**Archive category:** Testimony in Permanent Media — The Record Carved Where No Court Could Suppress It, First Entry
+
+**What this angle reveals:** Every previous FLR cycle was about institutional channels — archives, registries, probate courts, civic records. This cycle is about what happens when a man has spent decades trying to reach those channels and failed at every approach. In Canto XVII, Geryon carries Dante and Virgil down past the cliff face where usurers sit on burning sand. This cycle imagines a specific soul who, in life, carved a continuous record into that cliff face over decades: names, dates, fraudulent contract terms. The physical cliff is crumbling. A stonecutter made a rubbing. The Fighter carries the rubbing to a commercial court before the cliff face collapses.
+
+---
+
+**THE TOKEN: `cliff_face_rubbing`** — The Cliff-Face Rubbing. A stonecutter's charcoal rubbing on heavy paper, six feet long, rolled into an oilskin tube. Three decades of carved testimony: names, dates, transaction terms, the specific clauses that were fraudulent and why. The carving itself is crumbling; the paper is the last record.
+
+---
+
+**ACT I — The Cliff Base, Pisa**
+
+*Grant act. Location: a limestone cliff face above the Arno valley — the stonecutter Rinaldo and his rubbing.*
+
+Rinaldo found the carvings four years ago while quarrying the cliff face. He recognized immediately what they were: legal claims, transaction records, names. Carved over decades by a single hand that gradually grew more desperate — the letters got larger and deeper as the cliff face filled. The beginning is careful court-document Latin; the end is simple names with a single word after each.
+
+Rinaldo made the rubbing because the cliff face was already fracturing. He has been trying to find someone to receive it for three years.
+
+**Rinaldo:** "I tried the commercial court. They want an original document or a certified copy. A stonecutter's rubbing of a cliff face doesn't qualify as either. I tried the civic archive. Same answer. I tried a lawyer. He said there's no live claimant."
+
+He hands the Fighter the oilskin tube.
+
+**Rinaldo:** "Take it to whoever receives things that don't fit the categories. The man carved this where no one could erase it. Someone should read it."
+
+*The tube is heavier than expected. Six feet of paper inside.*
+
+---
+
+**ACT II — The Commercial Court, Pisa**
+
+*Check act. Location: the Pisan commercial court intake desk.*
+
+The intake clerk has the categories. A stonecutter's rubbing is not a primary document, not a certified copy, not a notarized statement. It is physical evidence of a carved surface, which is technically an artifact, not a document.
+
+The commercial court has a category for physical evidence: artifacts submitted as supporting material for an active case. There is no active case. The statute of limitations for the transactions described has expired.
+
+But there is a second category: historical commercial fraud records, which the court maintains for scholarly reference and administrative precedent. The carvings describe specific fraudulent contract clauses; three of those clauses are still in common use in modified forms. The rubbing qualifies as historical commercial fraud documentation.
+
+Persuasion DC 12 — make the argument that the rubbing belongs in the historical fraud category, not the artifact category.
+
+---
+
+**ACT III — The Road to Genoa**
+
+*Check act. Location: the Pisan road north — the Ligurian junction.*
+
+The commercial court accepted the rubbing as historical fraud documentation. The families of three of the merchants named in the carvings have been notified under the standard disclosure procedure. Two of those families want the rubbing reclassified as defamatory matter against persons — which would move it to a restricted access category and require a review panel before any researcher could see it.
+
+One of the families has a representative on the road north. He is polite. He has a signed petition and a legal opinion.
+
+The petition is valid procedurally. The legal opinion is not quite right: defamatory matter against persons requires the named person to be living, and all three named merchants died before 1300. The definition of "persons" in the defamation statute is individuals, not heirs.
+
+Insight DC 13 — identify the specific gap in the legal opinion. The named merchants are dead; the statute covers living persons; the families are not the named persons.
+
+---
+
+**ACT IV — The Genoese Harbor**
+
+*Check act. Location: the Genoese harbor customs inspection.*
+
+The rubbing is in an oilskin tube. The harbor customs officer at Genoa is checking all sealed documents leaving the port for Venice, under a current Venetian commercial intelligence directive: large-format sealed documents may contain maps or trade routes.
+
+He wants to unroll the tube.
+
+Unrolling the rubbing under harbor customs conditions — wind, spray, rough surface — risks damaging the charcoal impressions. The paper is heavy but the charcoal is fragile.
+
+Deception DC 12 — satisfy the customs officer's requirement without unrolling the tube. The rubbing is six feet of Latin text about Pisan commercial transactions from the 1260s through 1290s. It is not a map. It is not a trade route. It is the deposition of a dead man who ran out of venues.
+
+---
+
+**ACT V — Weimar Archive**
+
+*Take act. Location: Weimar — Sweelinck at the filing desk.*
+
+The rubbing is intact. The cliff face has now collapsed; Rinaldo sent word last week. The rubbing is the only remaining record of what was carved there.
+
+Sweelinck receives the tube carefully. He unrolls it on his largest table. He reads the beginning — careful court Latin — and moves to the end — simple names, one word after each.
+
+**Sweelinck:** *(reading)* "He ran out of Latin at the end. He just put the names." He rolls the rubbing carefully and places it in the archive's map format. "First entry. Testimony in Permanent Media — The Record Carved Where No Court Could Suppress It." He looks at you. "He chose the cliff face because he could not be silenced on it. No institution could erase it. The only thing that could erase it was time."
+
+He pauses.
+
+**Sweelinck:** "The rubbing is why it survives time."
+
+The token is taken.
+
+---
+
+```json
+{
+  "quest_id": "FLR-07",
+  "title": "The Cliff-Face Testimony",
+  "source": "Divine Comedy: Inferno — Dante Alighieri",
+  "cycle": 7,
+  "book": "FLR",
+  "source_episode": "Canto XVII — Geryon; the usurers on burning sand; fraud and its permanence",
+  "theme": "The testimony carved where no court could suppress it; the permanent medium as the last available venue",
+  "activateNode": "FLR",
+  "token": {
+    "id": "cliff_face_rubbing",
+    "name": "The Cliff-Face Rubbing",
+    "description": "Six-foot charcoal rubbing on heavy paper: three decades of carved testimony. Names, dates, fraudulent contract terms. Carved where no institution could erase it. The cliff has now collapsed.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["FLR", "VEN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "FLR", "type": "skill_check", "prompt": "Receive the rubbing from Rinaldo. Every institutional channel failed him for three years."},
+    {"act": 2, "node": "FLR", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "Argue the rubbing into the historical commercial fraud category, not the artifact category."},
+    {"act": 3, "node": "FLR", "type": "skill_check", "dc": 13, "skill": "Insight", "prompt": "Identify the gap in the defamation opinion: the named merchants are dead; the statute covers living persons."},
+    {"act": 4, "node": "VEN", "type": "skill_check", "dc": 12, "skill": "Deception", "prompt": "Satisfy harbor customs without unrolling the rubbing in damaging conditions."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Deliver the rubbing to Sweelinck. He ran out of Latin at the end."}
+  ],
+  "archiveCategory": "Testimony in Permanent Media — The Record Carved Where No Court Could Suppress It",
+  "sweelinckNote": "He chose the cliff face because he could not be silenced on it. The rubbing is why it survives time.",
+  "questComplete": true
+}
+```
+
+---
+
+*Cycle 7 complete. FLR SEEDS COMPLETE.*
+
