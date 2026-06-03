@@ -440,7 +440,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | [x] | KIR | mabinogion | Mabinogion — Anon (Welsh medieval) | ~12th–13th C | Celtic Myth | 365 |
 | [x] | INV | ossian | Fragments of Ancient Poetry — James Macpherson | 1760 (ancient) | Highland Bard Epic | 87 | SEEDS COMPLETE 2026-06-03 — INV-01–07 all vignettes done. No new nodes. See INV-ossian.md. |
 | [x] | BHD | cuchulain | Cuchulain of Muirthemne — Lady Gregory | 1902 (Iron Age) | Irish Hero Epic | 132 | SEEDS COMPLETE 2026-06-03 — BHD-01–07 all vignettes done. New nodes: EMR (Emer's Hall, Ulster plain). See BHD-cuchulain.md. |
-| [x] | MSE | canterbury-tales | The Canterbury Tales — Geoffrey Chaucer | c.1390 | Medieval Stories | 1688 |
+| [x] | MSE | canterbury-tales | The Canterbury Tales — Geoffrey Chaucer | c.1390 | Medieval Stories | 1688 | SEEDS COMPLETE 2026-06-03 — MSE-01–07 all vignettes done (7 cycles). questComplete added to MSE-07 (cycle 7). New nodes: BRT, ORL, ACT, RDW, CHY, PCR, LRD, SAL, COT added to Location Grid. Theme threads for all 7 cycles. See MSE-canterbury-tales.md. |
 | [x] | SDQ | rob-roy | Rob Roy — Sir Walter Scott | 1817 (1715 setting) | Scottish Adventure | 370 | SEEDS COMPLETE 2026-06-03 — SDQ-01–07 all vignettes done. Memory-processed (source .txt not read). New nodes: OBH, GLA, ABF, GLN, LLM, EDI. See SDQ-rob-roy.md. |
 | [x] | FCO | vision-of-piers-plowman | Piers Plowman — William Langland | c.1370–1386 | Allegorical Poem | 265 | SEEDS COMPLETE 2026-06-03 — FCO-01–07 all vignettes done. MGF already in Location Grid. No new nodes. See FCO-vision-of-piers-plowman.md. |
 
@@ -545,7 +545,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | [x] | BEY | mandeville | Travels of Mandeville | c.1357 | Travel | 461 | SEEDS COMPLETE 2026-06-02 — BEY-01–S14, 13 cycles total. Supplementary cycles S09–S14: The Intelligence Report, The Chain Document, The French-Speaking Lord, The Temple Entry Record, The Liège Rubbing, What the Pilgrim's Signet Looked Like. New nodes: MRS (Marseille), BEI (Beirut), JER (Jerusalem), SID (Sidon), COL (Cologne). See BEY-mandeville.md. |
 | [x] | BGW | arabian-nights-burton | Arabian Nights (Burton) | Medieval | Stories | 959 | SEEDS COMPLETE 2026-06-02 — BGW-01–S14, 14 cycles total. Supplementary cycles 9–14: Barmakide Catastrophe, Sultan's Night Walk, Fisherman's Blessing, Good Voice, Masrur's Account, Last Caliph's Letter. New nodes: DAM (Damascus), BGD (Baghdad), MOS (Mosul). See BGW-arabian-nights-burton.md. |
 | [x] | CAI | arabian-nights-lang | Arabian Nights (Lang) | Medieval | Stories | 614 | SEEDS COMPLETE 2026-06-02 — CAI-01–S14, 14 cycles total. Supplementary cycles S09–S14: The Lamp Boy's Line, Diyab's Variant, Umm Sulayman's Six Variants, The Hakawati License, The Performance Notation, The Oral Genealogy. See CAI-arabian-nights-lang.md. |
-| [x] | MSE | canterbury-tales | Canterbury Tales | c.1390 | Stories | 1688 | Processed — MSE-01 spec complete; MSE-02 "Find Death Before Sundown" complete. 2 cycles total. Source large (1688 KB); additional seeds available if pipeline returns to MSE. See MSE-canterbury-tales.md. |
+| [x] | MSE | canterbury-tales | Canterbury Tales | c.1390 | Stories | 1688 | SEEDS COMPLETE 2026-06-03 — MSE-01–07 all vignettes done (7 cycles). See MSE-canterbury-tales.md. |
 | [x] | BLQ | decameron | Decameron — Giovanni Boccaccio | 1353 | Italian Stories | 1709 | SEEDS COMPLETE 2026-06-03 — BLQ-01–12 all vignettes done. 12 cycles total. All 9 parts fully read. See BLQ-decameron.md. |
 
 ---

@@ -600,3 +600,569 @@ activateMissionBit: mseDeathComplete
 ---
 
 *Cycle 2 complete. Mark `[x]` for MSE-canterbury-tales in books.md.*
+
+---
+
+## Cycle 3: The Rocks of Brittany
+
+*(Theme differentiation: Avoiding MSE cycles 1-2. New theme: the rash promise made in despair that an illusion technically fulfilled; the fighter who witnesses a word kept when every participant in the situation would have accepted its release; the archive created for three consecutive voluntary releases of an obligation.)*
+
+### Quest API Stub (Cycle 3)
+
+```
+Act I — The Dispatch
+activateNode: BRT
+type: skill_check
+scene: "Dorigen's hall on the Brittany coast. Arveragus has returned from
+  England and learned that Aurelius claims the coastal rocks have vanished —
+  the magician's illusion was real enough. Arveragus tells Dorigen she must
+  keep her word, though he weeps and says it will kill him. She must walk to
+  Aurelius herself. The Fighter's commission: witness what a kept word looks
+  like when it is kept."
+prompt: "Insight DC 11: understand Arveragus's instruction — not resignation;
+  his definition of honor, which requires the word to be kept regardless
+  of whether Aurelius is likely to release it; the fighter's role is to
+  walk beside her, not to look for exits."
+failText:    "You look for a way out. Dorigen has to explain: there is no
+              exit available that she can accept."
+successText: "You understand. You walk beside her. The road to Aurelius is
+              the only road she is willing to take."
+checkPassFlag: dispatchUnderstood
+
+Act II — The Approach
+activateNode: BRT
+type: skill_check
+scene: "The coastal cliff road. Aurelius has heard she is coming and his
+  household is watching the road. A servant of Aurelius intercepts the
+  Fighter and offers to arrange a cancellation — he has seen the Pardoner's
+  trade; he knows how to dissolve a promise without official record. He
+  means well. He has done this before."
+prompt: "Persuasion DC 12: decline on Dorigen's behalf without angering the
+  servant — maintain the dignity of the approach; the offered exit is not
+  hers to take; explain this without making the servant's kindness into
+  an insult."
+failText:    "The servant takes offence and precedes you to Aurelius with
+              a version of the story that makes Dorigen look uncertain."
+successText: "He steps aside. He does not follow. Dorigen reaches Aurelius
+              with her own word still in her hand."
+checkPassFlag: approachIntact
+
+Act III — The Meeting
+activateNode: BRT
+type: skill_check
+scene: "Aurelius receives Dorigen. She states her obligation without
+  embellishment. He reads her face — the face of someone keeping a word
+  that is destroying them, not because they have to, but because the word
+  is theirs. He is silent for a long time."
+prompt: "History DC 11: understand what Aurelius does next — not generosity
+  but recognition; he cannot take what she is giving because of how she
+  is giving it; name the difference between a release that pardons and
+  a release that acknowledges."
+failText:    "You see a man being merciful. You miss what the mercy is
+              responding to."
+successText: "You see it: he releases her because he understands that to
+              accept would be to take something she was willing to give but
+              that he cannot receive without naming what it cost. He asks
+              for nothing. You receive Dorigen's Account — her word for
+              what Arveragus said and what Aurelius answered."
+grantItem:   "Dorigen's Account"
+checkPassFlag: meetingWitnessed
+
+Act IV — The Magician's Bill
+activateNode: ORL
+type: skill_check
+scene: "Orleans. The magician's study. Aurelius has come to explain he
+  cannot pay for the illusion because he released Dorigen. The magician
+  asks the Fighter for the account of what happened at the shore. He
+  wants the sequence: what Arveragus said, what Dorigen did, what
+  Aurelius chose. He will make his own decision after."
+prompt: "Composure DC 12: give the account cleanly and completely — the
+  magician's generosity belongs to him; the account cannot editorializ
+  about what Aurelius deserved or what Arveragus's honor cost him;
+  the sequence is the document."
+failText:    "You add your opinion. The magician hears an argument for
+              leniency. He makes a smaller decision than he would have made
+              from the clean account."
+successText: "You give the account without opinion. The magician listens.
+              He says: 'Three voluntary releases in a row.' He releases
+              Aurelius from the debt. You receive the Magician's Release
+              Note — a brief letter in his own hand."
+grantItem:   "Magician's Release Note"
+checkPassFlag: accountDelivered
+
+Act V — The Filing
+activateNode: WM
+type: skill_check
+scene: "Archivus Sweelinck reads the account. 'A rash promise. An illusion
+  technically fulfilling it. The woman who kept the word anyway. The man
+  who released it. The magician who released the debt.' He pauses. 'Three
+  consecutive voluntary releases of an obligation no one was legally
+  required to release.' He looks up. 'What category receives a promise
+  honored under those conditions?'"
+prompt: "History DC 13: name the category — the promise kept when every
+  participant would have accepted its release; the document of voluntary
+  honor under no compulsion; filed under the person who kept the word,
+  not the man who released her."
+failText:    "Filed under Franklin's Tale Records — romantic resolution.
+              Cross-referenced to marriage customs."
+successText: "Sweelinck writes: 'Impossible Promise Records — Conditions
+  Set in Despair That an Illusion Fulfilled; Three Voluntary Releases; Filed
+  Under the Person Who Kept the Word.' He opens the category. You receive
+  the Promise Archive Record."
+grantItem:   "Promise Archive Record"
+takeItem:    "Dorigen's Account"
+checkPassFlag: rocksArchived
+activateMissionBit: mseRocksComplete
+```
+
+---
+
+*MSE-03 complete. 2026-06-03.*
+
+---
+
+## Cycle 4: The Answer to the Question
+
+*(Theme differentiation: Avoiding MSE cycles 1-3. New theme: the year-long search whose testimony is the record of wrong answers; the answer that only exists in the exchange that names its price; the commission given at the roadside by someone who knew the answer before the year began.)*
+
+### Quest API Stub (Cycle 4)
+
+```
+Act I — The Year's Commission
+activateNode: ACT
+type: skill_check
+scene: "Arthur's court. The knight condemned for rape has been given one
+  year to discover what women most desire or lose his head. He has no idea.
+  He rides out. The Fighter's commission: escort and keep the record of what
+  every answer costs him. The year's testimony — not the answer, but the
+  proof that only one answer works — is the document."
+prompt: "Insight DC 12: understand the commission's scope — this is not a
+  quest toward an answer; it is a document of the year's failed attempts;
+  the Fighter's role is to keep moving and keep the account."
+failText:    "You escort a knight looking for an answer. You do not understand
+              that you are also recording the proof that no other answer exists."
+successText: "You understand the shape: every wrong answer is part of the
+              evidence. You receive the Knight's Commission Record — the court's
+              charge and the year's deadline in the queen's hand."
+grantItem:   "Knight's Commission Record"
+checkPassFlag: commissionUnderstood
+
+Act II — The Kingdom's Answers
+activateNode: ACT
+type: skill_check
+scene: "The road through Arthur's Britain. Ladies of rank offer their answers
+  in sequence: riches, honor, pleasure, fine clothes, freedom from widowhood,
+  gaiety, flattery, sexual pleasure, re-marriage. The knight records each and
+  discards each. He is losing hope. The year's end is visible."
+prompt: "Persuasion DC 11: keep the knight asking rather than stopping —
+  every wrong answer recorded is part of the testimony; despair is the only
+  answer that ends the record prematurely."
+failText:    "The knight stops asking for three weeks. The testimony has a gap."
+successText: "He asks until the last possible day. Twelve answers recorded,
+              none sufficient. The knight arrives at the year's end with a
+              complete record of what does not work."
+checkPassFlag: answersSought
+
+Act III — The Roadside Exchange
+activateNode: RDW
+type: skill_check
+scene: "A forest crossroads, last day of the year. An old woman — ugly,
+  bundled, speaking with the precision of someone who has known the answer
+  since before the knight was born — offers to give it in exchange for a
+  price to be named later. He agrees. She whispers the answer. She names
+  her price: marriage."
+prompt: "Insight DC 13: understand the structure of the bargain — she has
+  already set the price before he agreed; the 'later' naming is not
+  uncertainty but the form of the transaction; what he agreed to was
+  unconditional, which is the only agreement she will accept."
+failText:    "You see a desperate man making a bad deal. You miss what kind
+              of transaction is being conducted."
+successText: "You see it: the bargain is not a trick; it is a test of whether
+              he will honor an agreement made in desperation with the same
+              faith he would honor one made in comfort. She gives him the
+              answer. He receives it. You witness the exchange."
+checkPassFlag: exchangeWitnessed
+
+Act IV — The Surrender
+activateNode: ACT
+type: skill_check
+scene: "Arthur's court. The knight names the answer — sovereignty. The court
+  accepts. He must marry the old woman. In the wedding chamber she offers
+  the choice: old and faithful or young and unfaithful. He is silent for
+  a long time. Then: you choose. I surrender the choice to you."
+prompt: "Composure DC 12: witness the surrender without your expression
+  becoming commentary — what he does now is the answer to the answer; the
+  fighter holds the record without interpreting it; the transformation that
+  follows belongs to the woman who received the surrender."
+failText:    "Your face shows approval. The moment is partially yours."
+successText: "You hold the record clean. She transforms. The room holds
+              two people and the shape of an exchange neither of them will
+              describe the same way. You receive the Surrender Account —
+              your witness record of what was given and what was returned."
+grantItem:   "Surrender Account"
+checkPassFlag: surrenderWitnessed
+
+Act V — The Filing
+activateNode: WM
+type: skill_check
+scene: "Sweelinck reads the year's record. Twelve wrong answers. The roadside
+  exchange. The surrender in the wedding chamber. 'The answer was known at
+  the roadside. The year of wrong answers is the proof that it was the only
+  one.' He pauses. 'What category receives the question and the year's
+  testimony together?'"
+prompt: "History DC 12: name the category — Sovereignty Records — The
+  Question Whose Only Answer Is Also Its Condition; the year's testimony
+  filed under the roadside exchange, not under the court's charge; the
+  archive holds the question, the wrong answers, the exchange, and the
+  surrender as one complete record."
+failText:    "Filed under Arthur's Court Records — legal precedents."
+successText: "Sweelinck writes: 'Sovereignty Records — The Question Whose
+  Only Answer Is Also Its Condition; Twelve Wrong Answers as Evidence;
+  Filed Under the Roadside Exchange.' You receive the Sovereignty Archive
+  Record."
+grantItem:   "Sovereignty Archive Record"
+takeItem:    "Surrender Account"
+checkPassFlag: questionArchived
+activateMissionBit: mseSovereigntyComplete
+```
+
+---
+
+*MSE-04 complete. 2026-06-03.*
+
+---
+
+## Cycle 5: Chanticleer's Yard
+
+*(Theme differentiation: Avoiding MSE cycles 1-4. New theme: the dream that was correct before it was dismissed; the perception commission where the threat is present since before the argument about whether it is present; the archive created for a prophetic account filed alongside a surveillance report.)*
+
+### Quest API Stub (Cycle 5)
+
+```
+Act I — The Dream Account
+activateNode: CHY
+type: skill_check
+scene: "Dawn at the widow's farmyard. Chanticleer is on his beam, genuinely
+  unsettled. He has dreamed of a red-gold beast with tipped ears and narrow
+  snout. Pertelote has diagnosed choler and prescribed laxatives. Chanticleer
+  is quoting Macrobius and Cato to her. The farmyard is going about its
+  business. The Fighter is at the gate."
+prompt: "Insight DC 12: distinguish between Chanticleer's genuine fear and
+  his academic machinery for talking himself back into the yard — the dream
+  was real; the authorities are his way of managing what the dream said;
+  the Fighter's commission is the perimeter, not the argument."
+failText:    "You watch the argument. You do not start walking the perimeter."
+successText: "You understand: the argument will not resolve the question.
+              You receive the Dream Account — Chanticleer's description, in
+              his own words, before he finishes talking himself out of it."
+grantItem:   "Dream Account"
+checkPassFlag: dreamReceived
+
+Act II — The Perimeter Check
+activateNode: CHY
+type: skill_check
+scene: "Yard and cottage perimeter. A fox — red-gold, tipped ears, patient
+  in the cabbage beds at the east wall where the morning light falls on
+  Chanticleer's beam. The widow's daughters are weeding nearby. One thinks
+  it is a dog."
+prompt: "Perception DC 13: correctly identify the fox against Chanticleer's
+  dream description — same color, same markings, same patient position at
+  the bed where the rooster can be seen from the ground; this is the animal
+  from the dream."
+failText:    "You note a fox in the garden but do not connect it to the
+              dream description. You report it as a garden pest."
+successText: "You note: red-gold, tipped ears, east bed, patient position
+              facing the beam. This is the animal Chanticleer described at
+              dawn. You receive the Perimeter Report — your own account of
+              the match."
+grantItem:   "Perimeter Report"
+checkPassFlag: foxIdentified
+
+Act III — The Flattery
+activateNode: CHY
+type: skill_check
+scene: "The yard, late morning. The fox has moved to where the light falls
+  best on the beam. He is speaking to Chanticleer — praising the rooster's
+  voice, his father's fame, the particular sound when a great singer
+  stretches his neck and shuts his eyes. Chanticleer is visibly pleased."
+prompt: "Persuasion DC 13: warn Chanticleer that the praise is positioning —
+  the fox is narrating a posture, not appreciating a voice; the closed eyes
+  and the extended throat are the point of the performance, not the
+  audience for it."
+failText:    "Chanticleer cannot hear the warning over the flattery. He
+              begins to arrange his throat for the demonstration."
+successText: "Chanticleer hears you. He hesitates. He says: 'You think
+              the praise is for something else.' He looks at the fox again.
+              The fox waits with perfect patience."
+checkPassFlag: warningDelivered
+
+Act IV — The Taking
+activateNode: CHY
+type: skill_check
+scene: "The fox has Chanticleer by the throat and is moving toward the
+  fence. The yard erupts — the widow, her daughters, the dogs, the cows,
+  the geese. Everything in the yard is running toward the fence."
+prompt: "Athletics DC 13: reach the fence before the fox clears it —
+  not to kill the fox but to slow him enough that Chanticleer has time
+  to deploy the one technique still available to a rooster with his
+  throat in a fox's mouth."
+failText:    "The fox clears the fence. The chase continues into the
+              neighboring wood where the crowd loses him."
+successText: "You cut off the fence angle. The fox slows. Chanticleer
+              speaks into the fox's ear: 'Turn and show them how little
+              you care for their pursuit.' The fox opens his mouth to
+              answer. Chanticleer is in the oak before the sentence
+              is finished."
+checkPassFlag: escapeEnabled
+
+Act V — The Filing
+activateNode: WM
+type: skill_check
+scene: "Sweelinck reads the Dream Account and the Perimeter Report side
+  by side. 'The dream was dismissed at dawn. The perimeter report confirms
+  it was accurate. The fox was there before the argument about whether it
+  was there.' He looks up. 'What category receives a dream filed alongside
+  its own evidence?'"
+prompt: "History DC 11: name the category — Prophetic Dream Records — The
+  Dream That Was Correct Before It Was Dismissed; the archive holds the
+  dream account, the perimeter report, and the farm-wife's witness testimony
+  as a complete record; Sweelinck notes the dream was dismissed and was
+  also right."
+failText:    "Filed under Farmyard Accounts — amusing incidents."
+successText: "Sweelinck writes: 'Prophetic Dream Records — The Dream That
+  Was Correct Before It Was Dismissed; Perimeter Report Filed As Evidence
+  Of Accuracy.' He opens the category. You receive the Dream Archive Record."
+grantItem:   "Dream Archive Record"
+takeItem:    "Dream Account"
+checkPassFlag: dreamArchived
+activateMissionBit: mseDreamComplete
+```
+
+---
+
+*MSE-05 complete. 2026-06-03.*
+
+---
+
+## Cycle 6: The Pardoner's Relics
+
+*(Theme differentiation: Avoiding MSE cycles 1-5. New theme: the false object escorted with the ceremony of a true one; the deception commission where the fighter's role is custody and timing without corroborating the fraud; what the archive does when it receives a pig bone alongside a genuine purchase record.)*
+
+### Quest API Stub (Cycle 6)
+
+```
+Act I — The Commission
+activateNode: PCR
+type: skill_check
+scene: "Canterbury road camp, evening. The Pardoner has sold a 'shoulder
+  bone of the Blessed Saint Matthew' to a lord's steward for a considerable
+  sum, payment received. The bone is a pig's shoulder. The lord's physician
+  has been making inquiries. The Pardoner needs the reliquary delivered
+  before the physician completes his examination. He gives the Fighter the
+  brass-fitted cedar box and the purchase receipt."
+prompt: "Insight DC 12: understand the commission — not to lie; not to
+  authenticate; to complete a delivery before the context of delivery
+  becomes visible; your commission is custody and timing; the Pardoner's
+  fraud is his responsibility."
+failText:    "You understand yourself as a co-conspirator. The commission
+              is heavier than it should be and you carry it that way."
+successText: "You understand the scope: sealed delivery by evening, to the
+              lord directly, using the purchase receipt as authority. You
+              receive the Reliquary — the cedar box sealed with the
+              steward's wax."
+grantItem:   "Reliquary"
+checkPassFlag: commissionAccepted
+
+Act II — The Dominican
+activateNode: PCR
+type: skill_check
+scene: "Road between Canterbury and the lord's manor. A Dominican friar
+  who knows the Pardoner's practices intercepts the Fighter. He has the
+  authority of his order and a strong suspicion about the reliquary's
+  contents. He wants to open the box before it reaches the lord."
+prompt: "Persuasion DC 13: deny access on grounds of sealed delivery —
+  the reliquary is sealed by the steward's receipt; the commission is
+  delivery to the lord directly; the Dominican's suspicion may be correct
+  but his order's authority does not extend to breaking another party's
+  sealed commission in transit."
+failText:    "He breaks the seal. The pig bone is visible. He documents
+              what he found. The delivery still happens but the Dominican's
+              report will reach the lord ahead of you."
+successText: "He steps aside, unwilling to compromise his own authority
+              by an irregular seizure. He says: 'The lord will hear from
+              me.' He goes to write a letter. You go to deliver the box."
+checkPassFlag: sealIntact
+
+Act III — The Physician's Gate
+activateNode: LRD
+type: skill_check
+scene: "The lord's estate gate. The physician is in the courtyard. He
+  wants to delay delivery until a surgeon from the nearest town can
+  examine the bone. He frames this as the lord's interest. He is
+  probably right about what the box contains."
+prompt: "Composure DC 12: state the delivery terms — sealed, to the lord,
+  by evening, per the purchase receipt — without displaying impatience
+  that reads as defensiveness; the delivery is legitimate within its
+  own terms; what is in the box is not the carrier's question."
+failText:    "Your composure slips. The physician reads defensiveness and
+              escalates to the lord directly."
+successText: "You state the terms. The physician is frustrated. He cannot
+              halt a legitimate sealed delivery on suspicion alone. He
+              follows you into the hall."
+checkPassFlag: gateCleared
+
+Act IV — The Lord's Receipt
+activateNode: LRD
+type: skill_check
+scene: "The lord's hall. He receives the reliquary with the ceremony of a
+  sick man who has paid a great sum for something he is not certain he
+  should have wanted. He opens it himself. He holds the bone. The physician
+  is at the door. The lord is deciding whether to believe."
+prompt: "Composure DC 11: witness the lord's decision without your
+  expression becoming commentary; what he does with what he holds is his;
+  your commission was sealed delivery by evening; that commission is
+  complete."
+failText:    "Your face says something. The lord reads it and looks at
+              the physician."
+successText: "You are a neutral surface. The lord holds the bone. He looks
+              at the reliquary's craftsmanship. He makes a decision of his
+              own. You receive the Delivery Receipt — the lord's signature
+              acknowledging receipt of sealed goods."
+grantItem:   "Delivery Receipt"
+takeItem:    "Reliquary"
+checkPassFlag: deliveryComplete
+
+Act V — The Filing
+activateNode: WM
+type: skill_check
+scene: "Sweelinck reads the purchase receipt and the delivery receipt.
+  'The purchase describes a shoulder bone of the Blessed Saint Matthew.
+  The delivery receipt describes a sealed cedar reliquary.' He looks at
+  you. 'What is filed in the box?'"
+prompt: "History DC 12: name the category — Authentication Records — The
+  Object Filed Alongside Its Own Contested Provenance; the archive receives
+  the purchase record and the carrier's witness account; authentication
+  remains open; Sweelinck opens the category and notes the gap between
+  claim and evidence without adjudicating it."
+failText:    "Filed under Religious Fraud Records — confiscated objects."
+successText: "Sweelinck writes: 'Authentication Records — The Object Filed
+  Alongside Its Own Contested Provenance; the archive holds the receipt
+  and the description; authentication status: open.' He opens the category.
+  You receive the Authentication Archive Record."
+grantItem:   "Authentication Archive Record"
+checkPassFlag: relicArchived
+activateMissionBit: mseRelicComplete
+```
+
+---
+
+*MSE-06 complete. 2026-06-03.*
+
+---
+
+## Cycle 7: Griselda's Journey
+
+*(Theme differentiation: Avoiding MSE cycles 1-6. New theme: the silence that is the only possible form of integrity; the dignity-and-endurance quest where the fighter carries the person who is carrying herself; the archive created for testimony that is not speech.)*
+
+### Quest API Stub (Cycle 7)
+
+```json
+{
+  "quest_id": "MSE-07",
+  "title": "Griselda's Journey",
+  "cycle": 7,
+  "book": "MSE — The Canterbury Tales",
+  "token": "Griselda's Silence Record",
+  "route": ["SAL", "COT", "WM"],
+  "theme": "The silence that was the only possible form of integrity; the dignity-and-endurance quest where the fighter carries the person who is carrying herself; what the archive creates for testimony that is not speech",
+  "archive_category": "Patient Testimony Records — The Silence That Was The Only Possible Form of Integrity; The Agreement Kept While the Other Party Changed Its Terms; Filed Under the Person Who Did Not Change",
+  "questComplete": true,
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "SAL",
+      "activateNode": "SAL",
+      "type": "skill_check",
+      "scene": "Saluzzo palace. Walter has informed Griselda she must return to her father's house — he is taking a new, younger wife. She must leave in the shift she wore when he found her, carrying nothing. A household woman has taken her ring and her fine gown. She stands at the palace door in her shift, ready to walk. She does not look at Walter.",
+      "skillCheck": {
+        "skill": "Insight",
+        "dc": 12,
+        "prompt": "Understand what she is doing — not resigned but performing the only available dignity; she will not beg, accuse, or explain; the fighter's commission is to walk beside her, not ahead of her; your pace is hers.",
+        "failText": "You walk ahead. She walks behind you. The escort reads as supervision rather than accompaniment.",
+        "passText": "You fall in beside her. Not ahead, not behind. She begins to walk. You receive Griselda's Commission — her silent nod acknowledging you as the carrier of whatever record will be made of this."
+      },
+      "grantItem": "Griselda's Commission",
+      "checkPassFlag": "mse7Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "COT",
+      "activateNode": "COT",
+      "type": "skill_check",
+      "scene": "The road from Saluzzo palace to the peasant's cottage. She walks in her shift. People on the road stare. Some offer kindness; some do not. The road is the testimony — every stone of it, every face on it — and she walks it without expression, which is a form of expression.",
+      "skillCheck": {
+        "skill": "Composure",
+        "dc": 13,
+        "prompt": "Maintain a pace beside her that signals neither urgency nor indifference — she is the document; the fighter's job is to be a neutral presence, not a shield and not a hurry; the road is the record.",
+        "failText": "You try to shield her from the stares. She slows to tell you not to.",
+        "passText": "You walk at her pace. The road gives what it gives. She receives it without deflection. You receive the Road Account — your witness record of the walk, kept clean."
+      },
+      "grantItem": "Road Account",
+      "checkPassFlag": "mse7Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "COT",
+      "activateNode": "COT",
+      "type": "skill_check",
+      "scene": "Her father Janicula's cottage. He has kept her old shift in the chest because he never believed this would last. He says nothing useful — he knew it would end this way and has no comfort for what he knew. She puts on the old shift. The cottage is very small.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 11,
+        "prompt": "Recognize what is being filed in this room — not grief, not injustice, but a specific record of what it costs to keep faith in an agreement the other party has decided to interpret alone; the archive should hold the agreement and one party's departure from it.",
+        "failText": "You see a tragic scene. You do not see the legal structure.",
+        "passText": "You see: she made an agreement; Walter is changing what the agreement means; she is honoring the agreement as she understood it; the cottage is the archive's first entry."
+      },
+      "checkPassFlag": "mse7Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "SAL",
+      "activateNode": "SAL",
+      "type": "skill_check",
+      "scene": "Walter's messenger arrives at the cottage. He is taking a new wife; Griselda's experience running a great household makes her ideal to prepare the bridal chamber. She agrees. She returns to the palace. She prepares the chamber for the girl who is her own daughter, whom she recognizes without being permitted to name.",
+      "skillCheck": {
+        "skill": "Composure",
+        "dc": 12,
+        "prompt": "Watch Griselda prepare the chamber without your expression becoming commentary — her composure is the document; any response from the fighter that says 'this is wrong' breaks the record into interpretation rather than testimony.",
+        "failText": "Your face says something. She sees it. She pauses and looks at you for a moment before continuing. The record has a mark in it.",
+        "passText": "You hold the record clean. She prepares the chamber with the precision of someone who has done this before, which she has. The room is ready. You receive Griselda's Silence Record — the document of everything she did not say."
+      },
+      "grantItem": "Griselda's Silence Record",
+      "checkPassFlag": "mse7Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "activateNode": "WM",
+      "type": "skill_check",
+      "scene": "Archivus Sweelinck reads the Road Account and the Silence Record. 'She kept the agreement while Walter changed what it meant. She said nothing that was not asked. She prepared the chamber for the girl who was her daughter.' He pauses. 'The archive holds what no court recorded. What category receives testimony that is not speech?'",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 13,
+        "prompt": "Name the archive category: Patient Testimony Records — The Silence That Was The Only Possible Form of Integrity; the agreement kept while the other party changed its terms; filed under the person who did not change.",
+        "failText": "Filed under Obedience Records — exemplary wives. Cross-reference to Petrarch.",
+        "passText": "Sweelinck writes: 'Patient Testimony Records — The Silence That Was The Only Possible Form of Integrity; the road, the cottage, the chamber, the return; filed under the person who did not change.' He opens the category. You receive the Patient Testimony Archive Record."
+      },
+      "takeItem": "Griselda's Silence Record",
+      "grantItem": "Patient Testimony Archive Record",
+      "checkPassFlag": "mse7Act5Passed",
+      "activateMissionBit": "mseGriseldasComplete"
+    }
+  ]
+}
+```
+
+---
+
+*MSE-07 complete. 2026-06-03.*
