@@ -2034,6 +2034,7 @@ Archivus Sweelinck opens the leather sleeve. He reads the document. He stands up
   "route": ["CON", "RGS", "WM"],
   "theme": "The unfulfilled promise as primary record — the grant document was never used; its value is precisely in what it was never allowed to do; the archive receives it as evidence that the promise was made and the land was never given",
   "archive_category": "Unfulfilled Grant Records — Documented Promises Without Performance",
+  "questComplete": true,
   "acts": [
     {
       "act_id": "act_1",
