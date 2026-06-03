@@ -313,7 +313,7 @@ All files under 60 KB in 1367-sources/. Each to receive full pipeline: read → 
 | BOO | Prose Edda — Snorri Sturluson | 53 | **SEEDS COMPLETE 2026-06-03 — BOO-01–07 all vignettes done. HNJ in Location Grid. See BOO-prose-edda.md.** |
 | CDG | The Three Musketeers — Alexandre Dumas | 54 | **SEEDS COMPLETE 2026-06-03 — CDG-01–07 all vignettes done. BTH/REL/DAR in Location Grid. See CDG-three-musketeers.md.** |
 | LGW | Le Morte d'Arthur — Sir Thomas Malory | 55 | **SEEDS COMPLETE 2026-06-03 — LGW-01–07 all vignettes done. AST/CAM/LKS in Location Grid. No new nodes. See LGW-morte-darthur.md.** |
-| OST | Song of Roland — Anon | 56 | QUEUED |
+| OST | Song of Roland — Anon | 56 | **SEEDS COMPLETE 2026-06-03 — OST-01–07 all vignettes done. AIX/RON/PYR/FRS in Location Grid. No new nodes. See OST-song-of-roland.md.** |
 | ARN | Knights of the Cross — Henryk Sienkiewicz | 57 | QUEUED |
 | VBY | Grettir's Saga — Anon | 58 | QUEUED |
 | RIX | Egil's Saga — Anon (attr. Snorri) | 58 | QUEUED |

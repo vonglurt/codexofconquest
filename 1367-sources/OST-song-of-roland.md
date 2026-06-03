@@ -681,3 +681,235 @@ are about to find out whether their person is on both lists or only one.*
 *quest-map.md: append FRS to Location Grid.*
 
 *books.md: mark OST [x].*
+
+---
+
+## Cycle 3 — *Ganelon's Prior Declaration*
+
+**Archive category:** Prior Declaration Records — The Document That Was Both a Warning and a Confession
+
+**What this angle reveals:** Cycles 1-2 were about what the battle produced: the horn's crack, the complete roll of the dead. This angle enters the trial and finds the instrument Ganelon used to defend himself. His declaration of personal enmity against Roland — made before the assembled army at the moment he accepted the embassy — is technically his defense: he declared openly, therefore the act was personal feud, not secret treason. The legal distinction is real. The court found the divine combat's outcome answered it. But the declaration exists, authenticated by the court scribe who witnessed it. Weimar wants both things in the same record: the defense document and the evidence of why the defense needed to be made.
+
+---
+
+**THE TOKEN: `ganelons_declaration_parchment`** — Authenticated court copy of Ganelon's formal declaration of personal enmity against Roland, spoken before the assembled Frankish army at the moment he accepted the embassy nomination. The scribe authenticated it because declarations of personal enmity before witnesses carry legal weight. Ganelon used it at trial as the pivot of his defense. The families of the twenty thousand dead find the legal distinction less interesting than the fact that the declaration names exactly who wanted Roland dead, and when, and why.
+
+---
+
+```json
+{
+  "quest_id": "OST-03",
+  "title": "Ganelon's Prior Declaration",
+  "source": "Song of Roland — Anon (c.1100)",
+  "cycle": 3,
+  "book": "OST",
+  "source_episode": "Ganelon accepts the embassy nomination and immediately declares personal enmity against Roland before the assembled army — the legal instrument he will use at trial",
+  "theme": "The declaration that was simultaneously a legal defense and a confession; the warning no one acted on because the form was correct",
+  "activateNode": "AIX",
+  "token": {
+    "id": "ganelons_declaration_parchment",
+    "name": "Ganelon's Prior Declaration",
+    "description": "Authenticated court parchment: Ganelon's formal declaration of personal enmity against Roland, spoken before the assembled Frankish army, witnessed and signed by the court scribe. Ganelon's trial defense pivot. Also the record of why twenty thousand men died at Roncevaux.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["AIX", "BK", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "AIX", "type": "skill_check", "dc": 12, "skill": "Insight", "prompt": "The court scribe has two copies. One is in the trial archive. One is available for collection. The document is simultaneously a formal legal instrument — Ganelon's defense — and evidence of premeditation. Both things are in the same parchment. Understand why the archive wants both, not one."},
+    {"act": 2, "node": "AIX_to_BK", "type": "skill_check", "dc": 13, "skill": "Persuasion", "prompt": "A knight who lost his brother at Roncevaux intercepts you on the northern road. He has been watching the court archive for a month. He wants the parchment to burn it. His argument: Ganelon used it to half-justify himself; burning it removes the half-justification. Your argument: burning it helps Ganelon's name by erasing the evidence of what the declaration was actually for."},
+    {"act": 3, "node": "BK", "type": "combat", "dc": 13, "skill": "Persuasion", "enemies": "Frankish legal agent, AC 12, HP 20, short sword", "prompt": "A Frankish legal agent at the Birka market wants the parchment for a proceeding on behalf of Ganelon's heirs — an appeal based on the declaration's legal standing. He believes Ganelon's kinsmen have a right to the authenticated copy. His argument has merit. The parchment is not going to the heirs."},
+    {"act": 4, "node": "BK_to_WM", "type": "skill_check", "dc": 11, "skill": "Stealth", "prompt": "A watcher at the road gate east of Birka. He has been told to watch for court documents heading east. The document-wallet looks like a merchant's letter packet. Keep it that way through the gate."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the authentication note and the declaration's text. He opens Prior Declaration Records."}
+  ],
+  "archiveCategory": "Prior Declaration Records — The Document That Was Both a Warning and a Confession",
+  "sweelinckNote": "Ganelon declared it. The scribe wrote it down. The army heard it. No one acted on it because the form was correct. The archive holds the form and what the form was actually for."
+}
+```
+
+---
+
+## Cycle 4 — *Aude's Ring*
+
+**Archive category:** Betrothal Records — The Ring That Had No Dissolution
+
+**What this angle reveals:** Cycles 1-3 were about the battle and its aftermath in court. This angle finds the shortest arc in the poem: four stanzas, devastating. Aude comes to Charlemagne asking for Roland. She is told he is dead. Charlemagne offers his own son Louis as a substitute. Aude says this means nothing to her. She falls dead. The poem does not explain what she died of. The betrothal ring she exchanged with Roland before the campaign is still on her finger when the women prepare her body. It has no formal dissolution. It is pressed into the steward's hands because no one knows what to do with a betrothal ring whose both parties are dead and whose contract was never executed.
+
+---
+
+**THE TOKEN: `audes_betrothal_ring`** — Gold ring exchanged between Roland and Aude before the Spanish campaign: a betrothal, not a wedding. Aude still wore it when she died in Charlemagne's hall. The women who prepared her body pressed it into the palace steward's hands. Legally neither a wedding ring nor a returned ring — the betrothal was dissolved by death but the estate proceedings have no category for a betrothal contract with no survivor and no formal dissolution. The archive is the only place that can close it correctly.
+
+---
+
+```json
+{
+  "quest_id": "OST-04",
+  "title": "Aude's Ring",
+  "source": "Song of Roland — Anon (c.1100)",
+  "cycle": 4,
+  "book": "OST",
+  "source_episode": "Aude hears Roland is dead; says Charlemagne's offered substitute means nothing to her; falls dead immediately; the betrothal ring is still on her finger",
+  "theme": "The betrothal completed in one direction only; the contract that had no dissolution because there was no survivor and no ceremony to close it",
+  "activateNode": "AIX",
+  "token": {
+    "id": "audes_betrothal_ring",
+    "name": "Aude's Betrothal Ring",
+    "description": "Gold ring exchanged with Roland before the Spanish campaign. Aude wore it when she died. Legally unclassified: not a wedding ring, not a returned ring. The betrothal has no formal dissolution. The archive closes what the estate cannot categorize.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["AIX", "VEN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "AIX", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "The steward has been holding it for three days. He doesn't know what to do with it. The estate lawyers want it classified before the probate closes. The ring is not a wedding ring and it is not a returned ring — Roland died in possession of nothing except his sword and his horn. The betrothal contract was dissolved by death but has no formal instrument of dissolution. Understand why the archive is the right destination before you take it."},
+    {"act": 2, "node": "AIX_to_VEN", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "A Frankish estate official on the road south. He claims the ring should accompany Roland's estate papers as unclosed betrothal property — the heirs need it to close probate. Your argument: the archive closes what probate cannot categorize. His argument is not wrong. Neither is yours."},
+    {"act": 3, "node": "VEN", "type": "skill_check", "dc": 11, "skill": "Persuasion", "prompt": "A Venetian merchant's wife in the harbor district recognizes the ring as Frankish betrothal-work. She wants to buy it as a memorial piece — she has heard of Aude's death, which has traveled ahead of you as a story. The offer is genuine. The ring is not for sale."},
+    {"act": 4, "node": "VEN_to_WM", "type": "skill_check", "dc": 12, "skill": "Sleight of Hand", "prompt": "Road search outside the Alpine pass. The officer is checking for gold. The ring is in the document-wallet, wrapped in the estate classification papers. Keep it there while the search moves through the pack."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck examines the ring. He notes the estate classification problem. Betrothal Records opens."}
+  ],
+  "archiveCategory": "Betrothal Records — The Ring That Had No Dissolution",
+  "sweelinckNote": "She wore it when she died. He had already been dead for weeks. The contract was never executed and was never formally closed. The archive closes it: both parties dead, both intentions recorded, one ring."
+}
+```
+
+---
+
+## Cycle 5 — *The Judicial Combat Record*
+
+**Archive category:** Divine Judgment Records — The Combat That Let God Speak to the Court
+
+**What this angle reveals:** Cycles 1-4 moved from the battlefield to the court's aftermath. This angle enters the trial's decisive moment: the judicial combat between Thierry (Charlemagne's champion) and Pinabel (Ganelon's), the finest fighter alive. By all technical measures Thierry should lose. He nearly does. At the moment Thierry is about to fall, God intervenes — the poem is not subtle about this — and Pinabel dies. Divine verdict has spoken. Ganelon is condemned. The court recorder sealed the complete record: every oath, every blow, the moment of the turn, the judges' formal declaration of divine verdict. Weimar wants the theological and legal document together: not a combat account, a verdict with its proof attached.
+
+---
+
+**THE TOKEN: `thierry_combat_record`** — Sealed court parchment in the official recorder's hand: the complete record of the judicial combat between Thierry and Pinabel, including all oaths sworn, all blows struck in sequence, the critical moment when Pinabel fell, and the judges' declaration that the outcome constituted divine verdict on the question of Ganelon's guilt. The only document that establishes God's verdict as a matter of Frankish legal record.
+
+---
+
+```json
+{
+  "quest_id": "OST-05",
+  "title": "The Judicial Combat Record",
+  "source": "Song of Roland — Anon (c.1100)",
+  "cycle": 5,
+  "book": "OST",
+  "source_episode": "Thierry versus Pinabel; Thierry nearly loses; God's blow falls; Pinabel dies; the judges declare divine verdict; Ganelon condemned",
+  "theme": "The legal record of a theological event; divine judgment translated into court procedure and sealed as evidence",
+  "activateNode": "AIX",
+  "token": {
+    "id": "thierry_combat_record",
+    "name": "Judicial Combat Record — Thierry v. Pinabel",
+    "description": "Sealed court parchment: complete record of the judicial combat, blow by blow, including the critical turn and the judges' formal declaration of divine verdict. The only document that establishes God's ruling as Frankish legal fact.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["AIX", "CON", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "AIX", "type": "skill_check", "dc": 12, "skill": "History", "prompt": "The court recorder made two copies. The trial archive has one. This is the other. The record must travel sealed — Ganelon's heirs have notified the court they intend to file an appeal on the grounds that the combat's outcome is ambiguous. The appeal is groundless; divine verdict is not subject to appeal. But the record must reach Weimar before the appeal paperwork creates grounds to detain it."},
+    {"act": 2, "node": "AIX_to_CON", "type": "skill_check", "dc": 13, "skill": "Persuasion", "prompt": "A Frankish knight on the road east. He represents Ganelon's heirs. He wants to detain the record while an appeal is drafted — thirty days is all he needs. His argument: the combat was technically close; the outcome requires examination. Your argument: the judges declared divine verdict; divine verdicts are not subject to technical examination. The argument must land before he escalates."},
+    {"act": 3, "node": "CON", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "A Byzantine legal scholar at the harbor district wants to use the combat record as a case study in Western judicial procedure — specifically the mechanism by which divine judgment is translated into court verdict. He wants to read the original. His interest is legitimate. The original is sealed and travels sealed. A copy can be arranged through the archive after it arrives."},
+    {"act": 4, "node": "CON_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "A checkpoint on the road west of Constantinople. The official claims authority to inspect all court documents from Frankish jurisdictions. He has seen the seal. He knows what it is. He is giving you time to think of a reason to deny him. The archive seal is the exemption. State it and hold."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck breaks the outer seal. Reads the judges' declaration paragraph. Closes it and marks it for permanent archive. Divine Judgment Records opens."}
+  ],
+  "archiveCategory": "Divine Judgment Records — The Combat That Let God Speak to the Court",
+  "sweelinckNote": "Thierry was the smaller man. By the technical measure he should have lost. The poem says God intervened. The judges wrote 'divine verdict' in the record. The archive holds the record, not an opinion about the mechanism."
+}
+```
+
+---
+
+## Cycle 6 — *Durendal's Relic Inventory*
+
+**Archive category:** Sacred Inventory Records — The Names Written So the Relics Could Not Be Forgotten When the Sword Was Lost
+
+**What this angle reveals:** Cycles 1-5 covered the battle's external documents: the horn, the dead, the trial. This angle finds an internal document Roland made for himself. When he knew he was dying and could not destroy his sword, he hid it under his body and spoke to it, naming the four relics sealed inside its golden hilt: a tooth of Saint Peter, the blood of Saint Basil, a hair of the Virgin, cloth from Saint Denis's robe. Someone wrote this down — or Roland did. The inventory was found folded inside his gauntlet when his body was prepared. It is not a prayer. It is an inventory. The distinction is what makes it an archive document rather than a relic itself.
+
+---
+
+**THE TOKEN: `durendal_relic_inventory`** — A scrap of oak-bark tablet in Roland's own handwriting, found folded inside his gauntlet at Roncevaux: the four relics listed in order — tooth of Saint Peter, blood of Saint Basil, hair of the Virgin, cloth of Saint Denis — with their positions in the hilt noted, and Roland's name at the bottom. Not a prayer, not a letter. An inventory. Filed as proof that the relics existed and were named before the sword was hidden.
+
+---
+
+```json
+{
+  "quest_id": "OST-06",
+  "title": "Durendal's Relic Inventory",
+  "source": "Song of Roland — Anon (c.1100)",
+  "cycle": 6,
+  "book": "OST",
+  "source_episode": "Roland cannot destroy Durendal; speaks to the sword naming the four relics inside its hilt; hides it under his body; the inventory was found in his gauntlet",
+  "theme": "The inventory that preserves what is inside an object that cannot be opened; the names that outlive the hiding place",
+  "activateNode": "RON",
+  "token": {
+    "id": "durendal_relic_inventory",
+    "name": "Durendal's Relic Inventory",
+    "description": "Oak-bark tablet in Roland's handwriting: four relics in order, positions in the hilt noted, Roland's name below. Found in his gauntlet. Not a prayer. An inventory. The sword is hidden. The names are here.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["RON", "RME", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "RON", "type": "skill_check", "dc": 12, "skill": "Perception", "prompt": "The monk who prepared Roland's body found it folded inside the gauntlet. He has been holding it, uncertain whether it is a relic or a document. Look at it. The handwriting is Roland's. The content is: tooth of Saint Peter, blood of Saint Basil, hair of the Virgin, cloth of Saint Denis, and positions in the hilt. It is not a prayer. It is an inventory. File it as such."},
+    {"act": 2, "node": "RON_to_RME", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "A Benedictine pilgrim on the road south wants to use the inventory to locate Durendal. The inventory lists what is inside the hilt. It does not contain any information about where the sword is now. The distinction between 'what is in the hilt' and 'where the hilt is' must land before he accompanies you to Rome."},
+    {"act": 3, "node": "RME", "type": "skill_check", "dc": 13, "skill": "Religion", "prompt": "A church official at Rome wants to open a formal authentication inquiry for all four relics named in the inventory. The inquiry would require the relics present. The sword is not present. The inventory names what was claimed at the moment of the sword's hiding. The archive holds claims, not authentication. Authentication requires the relics. The relics require finding the sword. Those are two different proceedings."},
+    {"act": 4, "node": "RME_to_WM", "type": "skill_check", "dc": 12, "skill": "Insight", "prompt": "A man on the northern road carrying what he says is a church authentication letter, wanting to attach it to the inventory before it reaches Weimar. He knows the inventory's contents in detail. He has not seen it. Read the hesitation before he gets closer."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the inventory. He notes it is Roland's handwriting. He marks it: not a relic, not a prayer. Sacred Inventory Records opens."}
+  ],
+  "archiveCategory": "Sacred Inventory Records — The Names Written So the Relics Could Not Be Forgotten When the Sword Was Lost",
+  "sweelinckNote": "The sword is under a body somewhere in the Pyrenees. The body was moved. The sword was not found. The names are here. The archive holds the names because someone wrote them down before hiding the sword, which was the correct order of operations."
+}
+```
+
+---
+
+## Cycle 7 — *Gabriel's Command*
+
+**Archive category:** Dream Command Records — The Order That Came After the Emperor Had Run Out of Grief
+
+**What this angle reveals:** Cycles 1-6 covered the battle, the dead, the trial, the relics. This cycle closes the poem at the last image: not the death, not the verdict, but the night after the verdict. The trial is done. Ganelon is executed. Aude is buried. Bramimonde has been taken to be baptized. Charlemagne is old and exhausted. He sleeps. The angel Gabriel appears in the dream and commands him to march to relieve the city of Imphe. He doesn't want another campaign. The poem ends at its most human line — "God, how hard is my life" — and then he rises and buckles on his armor. The palace chaplain sealed the dictation before the armor was buckled. The tablet has a shakier line at the end.
+
+---
+
+**THE TOKEN: `gabriels_command_tablet`** — Sealed wax tablet in the palace chaplain's hand: Charlemagne dictated the dream's content immediately upon waking before anyone else was in the room. The angel's appearance, the form of the command, the city named, the instruction to march. One line at the bottom, in a shakier hand added before the sealing: "Dieu, si penuse est ma vie." The chaplain sealed it. Charlemagne buckled on his armor and walked out.
+
+---
+
+```json
+{
+  "quest_id": "OST-07",
+  "title": "Gabriel's Command",
+  "source": "Song of Roland — Anon (c.1100)",
+  "cycle": 7,
+  "book": "OST",
+  "source_episode": "Gabriel commands Charlemagne in a dream to march to Imphe; Charlemagne says 'God, how hard is my life'; he rises and buckles on his armor; the poem ends",
+  "theme": "The order issued after the emperor had run out of grief; duty that does not ask whether the receiver is ready; the archive holds the night before the armor",
+  "activateNode": "AIX",
+  "token": {
+    "id": "gabriels_command_tablet",
+    "name": "Gabriel's Command Tablet",
+    "description": "Sealed wax tablet: Charlemagne's dictation of Gabriel's dream command to march to Imphe. Dictated immediately upon waking. One line added in a shakier hand before sealing: 'Dieu, si penuse est ma vie.' Sealed before the armor was buckled.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["AIX", "LDN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "AIX", "type": "skill_check", "dc": 12, "skill": "Religion", "prompt": "The chaplain hands it over before the morning assembly. He has not opened it since sealing. He says: dictated before anyone else was in the room, one addition in the emperor's own hand before the seal, then the armor. Understand why the tablet is a commission document, not a personal record, before the road."},
+    {"act": 2, "node": "AIX_to_LDN", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "An English emissary on the road west. He wants to read the tablet to understand if Charlemagne's next campaign will require permission for military passage through English border territories. His concern is legitimate and his authority to receive that information is not. The record is sealed. Campaign orders are a separate document that does not exist yet."},
+    {"act": 3, "node": "LDN", "type": "skill_check", "dc": 13, "skill": "Persuasion", "prompt": "An English cleric collecting accounts of prophetic dreams wants to copy the Gabriel narrative for a manuscript on divine command. His collection is genuine scholarship. The tablet travels sealed to the archive. After it arrives, a copy of the dream narrative can be arranged through the archive's copying service. The shakier line at the bottom is not part of the prophetic record and is not for copying."},
+    {"act": 4, "node": "LDN_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "A toll official on the eastern road who has been told to inspect all sealed documents from Frankish court origins. He is doing his job correctly. The archive seal is the exemption from inspection for documents in transit. State the exemption. Hold the tablet. Do not let him create grounds to delay."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck takes the tablet. He breaks the outer seal. He reads the dictation text. He reads the shakier line. He closes it and marks the category. Dream Command Records opens."}
+  ],
+  "archiveCategory": "Dream Command Records — The Order That Came After the Emperor Had Run Out of Grief",
+  "questComplete": true,
+  "sweelinckNote": "He had been fighting for decades. He had just buried Aude and executed Ganelon and watched the trial. He was old. The angel came anyway. He said what anyone would say in that situation. Then he buckled on his armor. The archive holds the night before the armor."
+}
+```
+
