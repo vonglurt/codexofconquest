@@ -7949,6 +7949,12 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   MCRJN: { num:167, name:"road", label:"Monte di Croce — Mountain Road Junction", act:3 },
   FRZINN: { num:168, name:"inn", label:"Firenzuola — Wayfarers Inn Pre-Dawn", act:3 },
   BOLSAC: { num:169, name:"city", label:"Bologna — San Petronio North Sacristy", act:3 },
+  VEN: { num:170, name:"city", label:"Venice — Grand Canal", act:3 },
+  FRR: { num:171, name:"city", label:"Ferrara — Po River City", act:3 },
+  PSAFM: { num:172, name:"midlands", label:"Florence — Federigo Farm (Eastern Gate)", act:3 },
+  FRRFRY: { num:173, name:"freshwater_lake", label:"Ferrara — Po River Ferry Crossing", act:3 },
+  MESFRY: { num:174, name:"freshwater_lake", label:"Mestre — Mainland Ferry Landing", act:3 },
+  VENCTR: { num:175, name:"city", label:"Venice — Ca Tron Grand Canal", act:3 },
 };
 // ◆◆◆ WORLDBUILDER:NODE_MAP:END ◆◆◆
 
@@ -8046,6 +8052,12 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   MCRJN:{r:135,c:209},
   FRZINN:{r:132,c:209},
   BOLSAC:{r:129,c:208},
+  VEN:{r:132,c:220},
+  FRR:{r:128,c:216},
+  PSAFM:{r:141,c:210},
+  FRRFRY:{r:129,c:216},
+  MESFRY:{r:132,c:219},
+  VENCTR:{r:133,c:221},
 };
 // ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆
 
@@ -10814,6 +10826,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   blq_04_act3: { id:"blq_04_act3", type:"skill_check", title:"Rinaldo at the Road Fork", passText:"The relic has a certified provenance chain. Without that document the Firenzuola buyer has a stolen bone, not a relic. A bone without provenance is firewood. Rinaldo has not thought this through. He pulls the relic from his saddlebag and hands it over. The coal goes into the road dust.", failText:"Rinaldo and a hired man are at the junction. Combat or withdrawal. If the carrier withdraws, Rinaldo completes his Firenzuola delivery and the relic is gone.", activateNode:"MCRJN", checkStat:"cha", checkPassFlag:"blq04RelicRecovered", checkDC:13, activateCond:blq04RinaldoLocated },
   blq_04_act4: { id:"blq_04_act4", type:"skill_check", title:"Brother Ugolino at Firenzuola", passText:"If relic recovered: lead with the provenance document; name the theft attempt; show the hasp damage as evidence of the recovery. The chain is intact. If relic lost: the coal and ash can be delivered as evidence of the theft — the documentation of the crime rather than a substitute. Brother Anselmo receives an honest accounting.", failText:"The carrier arrives in Bologna without preparation. The hasp damage or the substitute contents will require improvised explanation under Anselmo direct questions.", activateNode:"FRZINN", checkStat:"int", checkPassFlag:"blq04DeliveryFramed", checkDC:12, activateCond:blq04RelicRecovered },
   blq_04_act5: { id:"blq_04_act5", type:"skill_check", title:"Brother Anselmo Opens the Box", passText:"The carrier explains the theft attempt, the confrontation, the recovery — or delivers the honest account of the substituted contents as formal evidence of the crime. Anselmo listens. He looks at the hasp or at the coal. He records in the sacristy register and pays the delivery fee. He says: return when Lapo has the replacement. I want the same carrier.", failText:"The carrier cannot explain the hasp damage or frame the substituted contents in a way that reads as competent and honest. Anselmo holds the fee pending an inquiry. Rinaldo, in Firenzuola, has already sold the relic.", activateNode:"BOLSAC", checkStat:"cha", checkPassFlag:"blq04Complete", checkDC:12, activateCond:blq04DeliveryFramed },
+  blq_05_act1: { id:"blq_05_act1", type:"skill_check", title:"The Falcon's Inventory — Act 1: The Weight of the Deed", failText:"You hesitate, uncertain what a deed for a dead falcon is worth. Federigo gently explains. Try again when you are ready.", npc:"federigo_alberighi", activateNode:"PSAFM", reward:NaN, activateCond:null },
+  blq_05_act2: { id:"blq_05_act2", type:"skill_check", title:"The Falcon's Inventory — Act 2: The Road Agent Gasparo", failText:"Gasparo catches your hesitation. He does not rob you — but he knows now that you carry something worth carrying. He will tell someone. The road ahead grows more watchful.", npc:"federigo_alberighi", activateNode:"FRRFRY", reward:NaN, activateCond:blq05GiftUnderstood },
+  blq_05_act3: { id:"blq_05_act3", type:"skill_check", title:"The Falcon's Inventory — Act 3: Alvise Is Dead", failText:"You are unsure of the legality and turn back toward Florence. The deed travels no further. The promise dies with Alvise.", npc:"federigo_alberighi", activateNode:"FRR", reward:NaN, activateCond:blq05GasparoManaged },
+  blq_05_act4: { id:"blq_05_act4", type:"skill_check", title:"The Falcon's Inventory — Act 4: Ser Barnaba at the Landing", failText:"Ser Barnaba shakes his head. You must find another ferryman, or produce better credentials. The lagoon waits.", npc:"federigo_alberighi", activateNode:"MESFRY", reward:NaN, activateCond:blq05ContinuedNorth },
+  blq_05_act5: { id:"blq_05_act5", type:"skill_check", title:"The Falcon's Inventory — Act 5: Madonna Taddea Receives the Deed", failText:"Madonna Taddea is not satisfied with the credentials. She will not accept the document without further verification. Return to Federigo for a second attestation.", npc:"federigo_alberighi", activateNode:"VENCTR", reward:NaN, activateCond:blq05TaddeaMeeting },
 };
 // ◆◆◆ WORLDBUILDER:QUEST_DB:END ◆◆◆
 
@@ -11792,6 +11809,7 @@ const BIRKA_NPC_PROFILES = { // → doc: world.md §Birka Six NPCs
   ser_taddeo: { key:"ser_taddeo", name:"Ser Taddeo Borghini", occupation:"Retired Judge", node:"PISNOT" },
   abramo_simone: { key:"abramo_simone", name:"Abramo di Simone", occupation:"Neutral Factor", node:"GENWHS" },
   lapo_matteo: { key:"lapo_matteo", name:"Lapo di Ser Matteo", occupation:"Silversmith", node:"PSAFAB" },
+  federigo_alberighi: { key:"federigo_alberighi", name:"Federigo degli Alberighi", occupation:"Ruined knight and falconer — once Florence's most celebrated spendthrift, now a smallholder outside the eastern gate. His famous falcon was his last treasure, already cooked for a guest who arrived too late.", node:"PSAFM" },
 };
 // ◆◆◆ WORLDBUILDER:BIRKA_NPC:END ◆◆◆
 
@@ -12113,6 +12131,11 @@ const _S_DEFAULTS = () => ({
     blq04RelicRecovered: false,
     blq04DeliveryFramed: false,
     blq04Complete: false,
+    blq05GiftUnderstood: false,
+    blq05GasparoManaged: false,
+    blq05ContinuedNorth: false,
+    blq05TaddeaMeeting: false,
+    blq05Complete: false,
 });
 
 /* ── Layer 48: Luck — Seventh Stat ── */

@@ -13,6 +13,12 @@ Two-tier naming rule: cities = 3-letter IATA or city-derived code; specific loca
 | NAP | Naples — Harbor District | Campania, Italy | NAP (Naples International) | 176,220 | BLQ | Act 5 destination for BLQ-01 |
 | PIS | Pistoia | Tuscany, Italy | derived (no dedicated airport; nearest PSA/FLR both taken or used) | 136,205 | BLQ | Starting city for BLQ-02 |
 | PRA | Prato | Tuscany, Italy | derived (no dedicated airport; nearest PSA used for Florence) | 138,206 | BLQ | Destination city for BLQ-02 |
+| GEN | Genoa | Liguria, Italy | GOA (Genova Cristoforo Colombo) | 132,196 | BLQ | Starting city for BLQ-03 (The Three Rings) |
+| DBV | Ragusa / Dubrovnik | Dalmatia, Croatia | DBV (Dubrovnik Airport) | 148,216 | BLQ | Waypoint for BLQ-03 |
+| CON | Constantinople | Byzantine Empire | IST taken; CON derived from city name | 152,228 | BLQ | Final destination BLQ-03; starting node BLQ-07 |
+| BOL | Bologna | Emilia-Romagna, Italy | BLQ taken (used as book code); BOL derived | 128,208 | BLQ | Destination for BLQ-04 (The Coals) |
+| VEN | Venice | Veneto, Italy | VCE (Marco Polo Airport) | 132,220 | BLQ | Final destination BLQ-05; used in FCO-04 (Buthrotum Register) |
+| FRR | Ferrara | Emilia-Romagna, Italy | derived (no major dedicated IATA) | 128,216 | BLQ | Waypoint city for BLQ-05; Po Valley route node |
 
 ---
 
@@ -26,6 +32,17 @@ Two-tier naming rule: cities = 3-letter IATA or city-derived code; specific loca
 | MONTTG | Montale — Toll Gate | (road between PIS and PRA) | road | 137,206 | BLQ-02 | Where toll officer Betto has been bribed; act 3 fires here |
 | PRAAPR | Prato — City Approach Road | PRA | road | 139,206 | BLQ-02 | Where Iacopo and hired men block the road; act 4 (combat) fires here |
 | PRACRT | Prato — Podestà Court Clerk Desk | PRA | city | 138,207 | BLQ-02 | Where Testa di Fattino receives the folio; act 5 fires here |
+| GENWHS | Genoa — Wool Warehouse (Porta Soprana) | GEN | market_quarter | 133,196 | BLQ-03 | Where the Three Rings story begins; Saladin's merchant identity; act 1 fires here |
+| CONREG | Constantinople — Galata Regent Hotel | CON | city | 153,228 | BLQ-03 | Where Saladin's agent meets the carrier; act 5 fires here |
+| PSAFAB | Florence — Fabrizio's Road (Porta Romana) | PSA | city | 141,209 | BLQ-04 | Road south of Florence; relay point act 1 fires here |
+| FSLINN | Fiesole–Scandicci — Roadside Inn | (road S of PSA) | inn | 139,209 | BLQ-04 | Where Rinaldo da Montecristo stages the shipment |
+| MCRJN | Monte di Croce — Road Junction | (road PSA–BOL) | road | 135,209 | BLQ-04 | Brother Anselmo's monastery junction; act 3 fires here |
+| FRZINN | Firenzuola — Border Inn | (road PSA–BOL) | inn | 132,209 | BLQ-04 | Apennine pass inn; act 4 fires here |
+| BOLSAC | Bologna — Sacristy of San Petronio | BOL | city | 129,208 | BLQ-04 | Final delivery point; act 5 fires here |
+| PSAFM | Florence — Federigo Farm (Eastern Gate) | PSA | midlands | 141,210 | BLQ-05 | Federigo degli Alberighi's farm; quest start and NPC home; act 1 fires here |
+| FRRFRY | Ferrara — Po River Ferry Crossing | FRR | freshwater_lake | 129,216 | BLQ-05 | Where road agent Gasparo intercepts the carrier; act 2 fires here |
+| MESFRY | Mestre — Mainland Ferry Landing | VEN | freshwater_lake | 132,219 | BLQ-05 | Where ferryman Ser Barnaba demands credentials; act 4 fires here |
+| VENCTR | Venice — Ca' Tron Grand Canal | VEN | city | 133,221 | BLQ-05 | Where Madonna Taddea receives the deed; act 5 fires here; questComplete |
 
 ---
 
