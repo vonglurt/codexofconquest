@@ -814,3 +814,561 @@ one was already said.*
 *quest-map.md: append RNG and ING to Location Grid.*
 
 *books.md: mark HFT [x].*
+
+---
+
+## Cycle 3 — *The Arm-Ring's First Journey*
+
+**Archive category:** Gift Records — The Object That Carried Two People's Promise Across the Watching Eyes, First Entry
+
+**What this angle reveals:** Cycles 1 and 2 were about reparation and recognition — the public work of making things right. This angle is the moment before the exile begins: Ingeborg giving Frithiof her arm-ring at the harbor, under Helge's watchers, while the banishment is still being formalized. The arm-ring is not merely sentimental; it is the material form of a promise that both parties understand cannot be spoken aloud in this moment. Carrying it past Helge's watchers to the ship is the act that preserves the promise in material form across the years of absence.
+
+---
+
+**THE TOKEN: `ingeborg_arm_ring_gift`** — Ingeborg's Arm-Ring. Heavy silver, old work, a pattern of interlaced knotwork. She gave it at the harbor before the departure. Frithiof's hand closed around it. Helge's watchers were at the harbor gate, noting who spoke with whom and what was exchanged. The ring must reach the ship without being seen.
+
+---
+
+**ACT I — The Harbor at Sognefjord**
+
+*Grant act. Location: the Sognefjord harbor — the departure quay, Frithiof's ship Ellida at the dock.*
+
+Helge's watchers are at the harbor gate. There are two of them: a tall man in a grey cloak who is keeping a specific tally of who passes and what they carry, and a shorter one near the customs post who is watching faces. Helge wants to know if anyone passes anything to Frithiof before the ship departs.
+
+Ingeborg has given the ring to the Fighter — pressed it into the hand that happened to be closest, at a moment when the watchers' attention was on Frithiof himself. She said nothing. The ring is warm from her wrist.
+
+**Insight DC 11** — understand what she has done: she gave it through an intermediary because direct transfer was watched; the commission is not escort but concealment; the ring must arrive at Frithiof's ship as if it never passed through the harbor gate at all.
+
+---
+
+**ACT II — The Harbor Gate**
+
+*Check act. Location: the harbor gate — the tall watcher and his tally.*
+
+The tall watcher checks everyone passing through the harbor gate. He has a description of the arm-ring — Helge knows about it. He is noting objects that match: heavy silver, interlaced knotwork.
+
+The ring is inside the Fighter's coat.
+
+**Deception DC 13** — pass through the harbor gate as someone carrying personal goods, not as someone carrying a commission from Ingeborg.
+
+---
+
+**ACT III — The Dock**
+
+*Check act. Location: the quay — Frithiof's crew loading Ellida, the shorter watcher on the customs post.*
+
+The shorter watcher has the dock in sight. He is watching what goes on the ship. He has not seen the arm-ring but he has noted that the Fighter passed through the gate and is heading for the ship, and he is watching with the specific attention of a man who was told to watch for anything that was not cargo.
+
+Frithiof is supervising the loading. He cannot be approached directly without the watcher seeing a transfer.
+
+**Persuasion DC 12** — reach Frithiof through the activity of the loading process, not as a separate encounter; pass the ring in the ordinary motion of cargo work.
+
+---
+
+**ACT IV — The Last Minutes**
+
+*Check act. Location: the dock's end — the ship is ready, Frithiof's hand on the stern post.*
+
+The ring is in Frithiof's possession. The shorter watcher has moved down the dock. He did not see the transfer directly but he suspects it. He is noting the Fighter's position.
+
+Frithiof's hand is closed around the arm-ring. He is looking at the harbor entrance. He is about to board.
+
+The watcher is moving toward the Fighter to ask what was passed.
+
+**Athletics DC 12** — create the distance between the watcher and Frithiof's departure moment; the ship must be moving before the question can be answered.
+
+---
+
+**ACT V — Weimar Archive**
+
+*Take act. Location: Weimar — Sweelinck at the filing desk.*
+
+The arm-ring went with Frithiof on the Orkney voyage. It traveled further than anyone had planned. Eventually it came to rest on Ingeborg's arm in Ring's hall, placed there by Ring himself without explanation. But the account of how it reached the ship — the first journey, through the watchers' eyes — was recorded by one of Helge's watchers who thought the tally would be used against Frithiof. It was not.
+
+The tally sheet is what Sweelinck receives: Helge's watcher's record of the harbor on the day of departure, with the Fighter noted as "unknown carrier, suspected transfer." The account is evidence, not of guilt, but of how the ring traveled.
+
+**Sweelinck:** *(writing)* "The watcher's tally proves the ring was moved without being seen. The tally is the proof of the concealment's success — the document that failed to document what it was looking for." He pauses. "First entry. Gift Records — The Object That Carried Two People's Promise Across the Watching Eyes." He looks at you. "The watcher wrote this to name a crime. It names a kindness instead."
+
+The token is taken.
+
+---
+
+```json
+{
+  "quest_id": "HFT-03",
+  "title": "The Arm-Ring's First Journey",
+  "source": "Frithiof's Saga — Esaias Tegnér",
+  "cycle": 3,
+  "book": "HFT",
+  "source_episode": "Ingeborg's arm-ring given before the banishment; the harbor at Sognefjord",
+  "theme": "The promise carried past the watching eyes; the watcher's tally that proves the concealment succeeded",
+  "activateNode": "HFT",
+  "token": {
+    "id": "ingeborg_arm_ring_gift",
+    "name": "Ingeborg's Arm-Ring",
+    "description": "Heavy silver, interlaced knotwork, warm from Ingeborg's wrist. Given through an intermediary because direct transfer was watched.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["HFT", "BK", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "HFT", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "Understand that the commission is concealment, not escort."},
+    {"act": 2, "node": "HFT", "type": "skill_check", "dc": 13, "skill": "Deception", "prompt": "Pass through the harbor gate as someone carrying personal goods."},
+    {"act": 3, "node": "HFT", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "Pass the ring to Frithiof in the ordinary motion of cargo work."},
+    {"act": 4, "node": "HFT", "type": "skill_check", "dc": 12, "skill": "Athletics", "prompt": "Create the distance between the watcher and Frithiof's departure moment."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Deliver the watcher's tally to Sweelinck. The document failed to document what it was looking for."}
+  ],
+  "archiveCategory": "Gift Records — The Object That Carried Two People's Promise Across the Watching Eyes",
+  "sweelinckNote": "The watcher wrote this to name a crime. It names a kindness instead."
+}
+```
+
+---
+
+## Cycle 4 — *Angantyr's Receipt*
+
+**Archive category:** Tributary Records — The Partial Payment Acknowledged as Complete by the Right Authority, First Entry
+
+**What this angle reveals:** Cycle 3 was about a love token. This angle is about a political problem: Frithiof was sent to collect tribute from the Orkney Islands that has never been paid, on a mission everyone expects him to fail. He collects some tribute but not all. The political validity of the collection depends not on the sum but on the Orkney jarl's sealing mark — his official acknowledgment that the tribute transaction occurred. The Fighter carries the partial tribute to Angantyr and must persuade him to seal it as payment. The seal is the politics; the sum is secondary.
+
+---
+
+**THE TOKEN: `angantyr_tribute_receipt`** — Angantyr's Sealed Receipt. A piece of birchwood with the Orkney jarl's notch-mark and his thrall's impression at the bottom — the official acknowledgment that tribute was received, in a form the Norwegian court recognizes as valid. Without the seal, the partial tribute is a failed collection. With it, the mission is complete.
+
+---
+
+**ACT I — The Orkney Hall**
+
+*Grant act. Location: Angantyr's hall on the Orkney main island — a solid Norse hall, a jarl who has not paid tribute in twenty years and has opinions about why.*
+
+Angantyr is not hostile. He is curious: he has not seen a Sognefjord man since the original tribute demand, and that man never came back. He received Frithiof with the formal courtesy due a genuine warrior and a worthy ship.
+
+The tribute question is complicated. He has the goods — he has always had them — but he did not pay because the political situation in Sognefjord made payment look like endorsing a faction he had not endorsed. The accession of Helge and Halfdan was contested; paying tribute to a contested king is a political statement.
+
+**Persuasion DC 13** — give Angantyr a reason to seal the partial payment that does not require him to endorse the political claim he has been avoiding for twenty years. Frame it as a personal transaction between warriors, not a political submission.
+
+---
+
+**ACT II — The Counting**
+
+*Check act. Location: Angantyr's hall — the tribute goods being counted, a thrall with the official marking tools.*
+
+Angantyr has agreed to seal the receipt in principle. The counting begins: the goods available, the shortfall. The shortfall is significant. Angantyr's thrall is noting both numbers.
+
+Angantyr looks at the numbers.
+
+**Angantyr:** "The seal can cover what is here. But the receipt will name the shortfall."
+
+A receipt that names a shortfall is technically a record of partial failure. The alternative: a receipt that names only what was paid, not what was owed. The difference is in what the document says about the original obligation — whether it acknowledges the full sum or only the delivered sum.
+
+**Insight DC 12** — understand what Angantyr is offering and what the Fighter must decide: the political value of a receipt that names only delivery versus the accuracy cost of erasing the shortfall.
+
+---
+
+**ACT III — The Seal**
+
+*Check act. Location: Angantyr's hall — the marking tools, the thrall waiting.*
+
+The receipt is being prepared in the format Angantyr's thrall knows: the notch-mark at top, the impression at bottom, the amount in the middle. The thrall is precise.
+
+One of Angantyr's household members objects: sealing a receipt for a Sognefjord tribute gives the Helge faction legal standing in a territorial dispute over the fjord-mouth fishing rights that the partial payment will be cited in. He wants the transaction recharacterized as a gift, not tribute.
+
+**Persuasion DC 12** — maintain the tribute characterization for the receipt. A gift has no political weight; a tribute receipt carries the acknowledgment that mattered.
+
+---
+
+**ACT IV — The Harbor**
+
+*Check act. Location: Angantyr's harbor — the departure, the receipt sealed, the ship loaded.*
+
+The receipt is sealed. Frithiof has it. The Fighter is with the departure party.
+
+Angantyr's household member who objected to the tribute characterization has gone to the harbor ahead of them. He has told the harbor watch that the departure carries documents that should be reviewed before leaving — a standard delay tactic. The harbor watch has the authority to hold the ship.
+
+**Athletics DC 13** — reach the ship before the harbor watch can formally implement the hold.
+
+---
+
+**ACT V — Weimar Archive**
+
+*Take act. Location: Weimar — Sweelinck at the filing desk.*
+
+The receipt was used at the Sognefjord court to establish the validity of Frithiof's mission. It worked: the mission was acknowledged, the brothers' expectation of his failure was disappointed, and the document is now in the permanent court record.
+
+A copy was sent to the Weimar archive by a Sognefjord clerk who found it interesting — the partial payment acknowledged as complete by the right authority is a category the archive had not yet received.
+
+**Sweelinck:** *(writing)* "The seal covers what is here. The amount is secondary to the form. Angantyr's notch-mark says the transaction occurred — in the correct political register, with the correct authority behind it." He looks at you. "First entry. Tributary Records — The Partial Payment Acknowledged as Complete by the Right Authority." He files it. "The seal is the politics. The sum is a detail."
+
+The token is taken.
+
+---
+
+```json
+{
+  "quest_id": "HFT-04",
+  "title": "Angantyr's Receipt",
+  "source": "Frithiof's Saga — Esaias Tegnér",
+  "cycle": 4,
+  "book": "HFT",
+  "source_episode": "The Orkney tribute mission; Frithiof's collection; Jarl Angantyr",
+  "theme": "The political validity of a transaction depends on the authority behind the seal, not the size of the sum",
+  "activateNode": "HFT",
+  "token": {
+    "id": "angantyr_tribute_receipt",
+    "name": "Angantyr's Sealed Receipt",
+    "description": "Birchwood with Orkney jarl's notch-mark and thrall's impression. Official acknowledgment that tribute was received. The seal is the politics.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["HFT", "HEO", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "HFT", "type": "skill_check", "dc": 13, "skill": "Persuasion", "prompt": "Frame the tribute as a personal transaction between warriors, not a political submission."},
+    {"act": 2, "node": "HFT", "type": "skill_check", "dc": 12, "skill": "Insight", "prompt": "Understand what Angantyr's partial-receipt offer actually means and decide."},
+    {"act": 3, "node": "HFT", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "Maintain the tribute characterization against the household member's gift-recharacterization."},
+    {"act": 4, "node": "HEO", "type": "skill_check", "dc": 13, "skill": "Athletics", "prompt": "Reach the ship before the harbor watch implements the hold."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Deliver the receipt to Sweelinck. The seal is the politics. The sum is a detail."}
+  ],
+  "archiveCategory": "Tributary Records — The Partial Payment Acknowledged as Complete by the Right Authority",
+  "sweelinckNote": "The seal is the politics. The sum is a detail."
+}
+```
+
+---
+
+## Cycle 5 — *The False Name*
+
+**Archive category:** Alias Records — The Identity That Was Correct While It Was Used, First Entry
+
+**What this angle reveals:** Cycle 4 was about the form of political legitimacy. This angle is about the opposite: a deliberately false identity that is paradoxically honest. Frithiof calls himself "Thief" at Ring's court — an ironically accurate alias for a man who came to steal what he could not have. The court's chamberlain has begun to investigate "Thief's" origins. The Fighter must carry a false document establishing an origin story that is plausible, internally consistent, and will pass the chamberlain's inquiry. The archive category this creates is about aliases that were accurate in a deeper sense than the official record.
+
+---
+
+**THE TOKEN: `thief_origin_document`** — The False Origin Document. A sealed letter from a fictional Norwegian coastal chieftain confirming that "Thief Eriksson" served in his household for three years. It is a forgery. It is also, in the way aliases are, a record of a real thing: the chamberlain's investigation is the context in which it was needed, and the archive holds the forged document alongside the chamberlain's inquiry as a pair.
+
+---
+
+**ACT I — Ring's Court**
+
+*Grant act. Location: Ring's hall — the corridor outside the court offices, a scribe.*
+
+Frithiof knows the chamberlain is asking questions. He cannot respond directly — direct response would require revealing who he is, which would force Ring's hand. He needs a document for the chamberlain that will hold the inquiry for long enough to become irrelevant.
+
+He comes to the Fighter at a meal's edge. He gives two instructions: the origin story (a fictional coastal chieftain, three years of service, nothing that can be easily disproved) and the recipient (get it to the chamberlain before the chamberlain reaches the court archives, where a search for "Thief Eriksson" will return nothing).
+
+**Persuasion DC 12** — persuade the court scribe to produce the sealed letter, framed as a personal commission from a guest who needs credentials for a border guard inquiry.
+
+---
+
+**ACT II — The Corridor**
+
+*Check act. Location: the court corridor — the chamberlain's office door.*
+
+The sealed letter is in the Fighter's hand. The chamberlain is at the end of the corridor. He is about to enter his office, where the archive inquiry is waiting on his desk.
+
+If the chamberlain enters his office before the Fighter reaches him, the archive inquiry goes forward.
+
+**Athletics DC 12** — reach the chamberlain before he enters his office and opens the inquiry.
+
+---
+
+**ACT III — The Chamberlain**
+
+*Check act. Location: the corridor, stopped — the chamberlain, the sealed letter, an exchange.*
+
+The chamberlain receives the letter. He is a careful man. He looks at the seal.
+
+**Chamberlain:** "This is a coastal chieftain's mark I don't recognize."
+
+He is noting the forgery's weakness: an unfamiliar seal is a verification gap. He may pursue it or he may accept it as sufficient for a traveling warrior's credentials.
+
+**Deception DC 13** — satisfy his concern about the unfamiliar seal without adding details that can be disproved. The seal is correct in form; the chieftain's name is one he would not know from the northern coastal districts.
+
+---
+
+**ACT IV — The Archive**
+
+*Check act. Location: the court archive — the inquiry still waiting.*
+
+The chamberlain accepted the letter provisionally. But he also forwarded the original archive inquiry — he sent it ahead while receiving the letter, in case the letter proved insufficient. The archive inquiry has already reached the archivist's desk.
+
+The archive inquiry asks for "Thief Eriksson, coastal Norwegian." A search will return nothing. The archive will note the absence.
+
+**Persuasion DC 11** — reach the archive assistant before the search is completed and redirect the inquiry to the unfamiliar coastal district category, which is filed separately and notoriously incomplete.
+
+---
+
+**ACT V — Weimar Archive**
+
+*Take act. Location: Weimar — Sweelinck at the filing desk.*
+
+Ring's court eventually dissolved, Ring died, Frithiof's identity became known and acknowledged. The false origin document was found in the chamberlain's files afterward and sent to the Weimar archive as a curiosity.
+
+The chamberlain attached his own note: "Thief Eriksson — alias determined to be Frithiof Thorstenson of Sognefjord. Origin document forged. Presented by unknown carrier. Inquiry successfully delayed."
+
+**Sweelinck:** *(reading both documents together)* "The alias was accurate. He called himself Thief because that was what he was doing. The false document correctly described an identity he was performing. The chamberlain's note and the forged letter together are the complete record." He looks at you. "First entry. Alias Records — The Identity That Was Correct While It Was Used." He files both documents facing each other. "The archive notes both because without both, neither is fully legible."
+
+The token is taken.
+
+---
+
+```json
+{
+  "quest_id": "HFT-05",
+  "title": "The False Name",
+  "source": "Frithiof's Saga — Esaias Tegnér",
+  "cycle": 5,
+  "book": "HFT",
+  "source_episode": "Frithiof at Ring's court as 'Thief'; the chamberlain's investigation",
+  "theme": "The alias that was accurate in a deeper sense; the forged document and the investigator's note filed together",
+  "activateNode": "HFT",
+  "token": {
+    "id": "thief_origin_document",
+    "name": "The False Origin Document",
+    "description": "Sealed letter confirming 'Thief Eriksson' served a fictional coastal chieftain. A forgery. Also, in the way aliases are, a record of a real thing.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["HFT", "CON", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "HFT", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "Persuade the court scribe to produce the sealed letter as a personal commission."},
+    {"act": 2, "node": "HFT", "type": "skill_check", "dc": 12, "skill": "Athletics", "prompt": "Reach the chamberlain before he enters his office and opens the inquiry."},
+    {"act": 3, "node": "HFT", "type": "skill_check", "dc": 13, "skill": "Deception", "prompt": "Satisfy the chamberlain's concern about the unfamiliar seal."},
+    {"act": 4, "node": "CON", "type": "skill_check", "dc": 11, "skill": "Persuasion", "prompt": "Redirect the archive inquiry to the incomplete coastal district category."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Deliver the forgery and the chamberlain's note to Sweelinck. The archive files both because without both neither is fully legible."}
+  ],
+  "archiveCategory": "Alias Records — The Identity That Was Correct While It Was Used",
+  "sweelinckNote": "Without both, neither is fully legible."
+}
+```
+
+---
+
+## Cycle 6 — *The Arm-Ring Returns*
+
+**Archive category:** Estate Transfer Records — The Gift That Circled Through Three Hands and Came Home, First Entry
+
+**What this angle reveals:** Cycle 3 was the arm-ring's first journey — past Helge's watchers to the ship. This cycle is its last journey: through Ring's estate dissolution proceedings, back to Ingeborg's keeping. The arm-ring was given to Frithiof by Ingeborg, offered to Ring as tribute, placed by Ring on Ingeborg's arm as recognition, and now must be formally transferred in the estate process so that it is legally hers and not estate property subject to redistribution. The estate dissolution is the bureaucratic test of whether the ring's journey ends correctly.
+
+---
+
+**THE TOKEN: `arm_ring_estate_transfer`** — The Arm-Ring Estate Transfer Receipt. The estate dissolution clerk's formal record: the arm-ring has been transferred from the estate inventory to Ingeborg's personal property, chain of custody documented (Ingeborg → Frithiof → Ring → Ingeborg), status: personal gift returned, not estate asset.
+
+---
+
+**ACT I — Ring's Estate Office**
+
+*Grant act. Location: Ring's hall — the estate dissolution office, a clerk with the inventory.*
+
+Ring's estate is being dissolved. Everything in the hall is being counted. The arm-ring, which is on Ingeborg's wrist, has been noted by the estate clerk as "silver arm-ring, quality work, inventory item pending status determination."
+
+It is not an inventory item. It was a personal gift that traveled a specific documented journey. But the clerk has not been told this, and the chain of custody is complex enough that he cannot determine the ring's status from the inventory alone.
+
+Ingeborg hands the Fighter a note in her own hand: the chain of custody. She cannot present it herself — direct involvement of the heir in estate disputes is procedurally improper.
+
+**Insight DC 11** — understand what documentation the clerk needs and what form he needs it in to transfer the ring out of the inventory as personal property rather than estate asset.
+
+---
+
+**ACT II — The Inventory Challenge**
+
+*Check act. Location: Ring's estate office — the inventory, the clerk, a competing claim.*
+
+One of Ring's distant nephews has filed a claim on the ring as a high-value estate asset. His argument: the ring was offered to Ring as tribute by Frithiof; tribute offered to a king becomes crown property, not personal gift; therefore the ring is estate property belonging to the heirs.
+
+The argument is technically plausible. The counter-argument: Ring placed the ring on Ingeborg's arm himself, which is the formal gesture of gift, not retention; the crown-property doctrine applies to tribute retained, not tribute re-gifted.
+
+**Persuasion DC 13** — establish the re-gifting moment as the operative act that removed the ring from the tribute-retention category.
+
+---
+
+**ACT III — The Clerk's Verification**
+
+*Check act. Location: Ring's estate archive — the gift gesture documentation.*
+
+The clerk accepts the re-gifting argument in principle but requires documentation of the specific gesture. He needs a witness statement that Ring placed the ring on Ingeborg's arm at a specific meal, in front of witnesses.
+
+Two of Ring's household members who were present are willing to provide the statement. They are both currently in the guest quarter on the far side of the hall. The nephew's representative is also heading toward the guest quarter.
+
+**Athletics DC 12** — reach the household witnesses before the nephew's representative can instruct them not to provide the statement.
+
+---
+
+**ACT IV — The Transfer Document**
+
+*Check act. Location: Ring's estate office — the transfer document being prepared.*
+
+The witnesses have provided the statement. The clerk is preparing the transfer document: silver arm-ring, chain of custody (Ingeborg → Frithiof → Ring → Ingeborg), status personal gift, not estate asset.
+
+The nephew's representative files a final procedural objection: the chain of custody includes Frithiof's tribute offer, which is a crown transaction and therefore subject to crown-property rules regardless of subsequent re-gifting. He argues the transfer must go through the court chamberlain's review.
+
+**Persuasion DC 12** — distinguish the tribute transaction from the subsequent re-gift; the crown-property rule attaches at retention, not at offer; Ring's re-gift terminated the tributary character of the transaction.
+
+---
+
+**ACT V — Weimar Archive**
+
+*Take act. Location: Weimar — Sweelinck at the filing desk.*
+
+The estate transfer receipt was filed with the dissolution proceedings. The ring is legally Ingeborg's. A copy was sent to the Weimar archive by a Sognefjord legal scholar who used the case to illustrate the distinction between tributary retention and subsequent gift.
+
+**Sweelinck:** *(reading the chain of custody)* "Ingeborg gave it. Frithiof carried it. He offered it to Ring as tribute. Ring put it on her arm himself." He looks up. "It was always going back. The estate dissolution was the last obstacle in a journey that was over before the clerk started counting." He writes. "First entry. Estate Transfer Records — The Gift That Circled Through Three Hands and Came Home." He files it. "The chain of custody is the arc."
+
+The token is taken.
+
+---
+
+```json
+{
+  "quest_id": "HFT-06",
+  "title": "The Arm-Ring Returns",
+  "source": "Frithiof's Saga — Esaias Tegnér",
+  "cycle": 6,
+  "book": "HFT",
+  "source_episode": "Ring's estate dissolution; the arm-ring's chain of custody",
+  "theme": "The gift that circled through three hands; the estate process as the last obstacle in a journey that was already over",
+  "activateNode": "HFT",
+  "token": {
+    "id": "arm_ring_estate_transfer",
+    "name": "Arm-Ring Estate Transfer Receipt",
+    "description": "Estate clerk's formal record: silver arm-ring transferred from inventory to Ingeborg's personal property. Chain of custody documented. Status: personal gift returned.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["HFT", "VEN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "HFT", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "Understand what documentation the clerk needs to transfer the ring as personal property."},
+    {"act": 2, "node": "HFT", "type": "skill_check", "dc": 13, "skill": "Persuasion", "prompt": "Establish the re-gifting gesture as the operative act that removed the ring from tribute-retention."},
+    {"act": 3, "node": "HFT", "type": "skill_check", "dc": 12, "skill": "Athletics", "prompt": "Reach the household witnesses before the nephew's representative can instruct them otherwise."},
+    {"act": 4, "node": "VEN", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "Distinguish tributary offer from subsequent re-gift; crown-property attaches at retention, not offer."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Deliver the estate receipt to Sweelinck. The chain of custody is the arc."}
+  ],
+  "archiveCategory": "Estate Transfer Records — The Gift That Circled Through Three Hands and Came Home",
+  "sweelinckNote": "The chain of custody is the arc."
+}
+```
+
+---
+
+## Cycle 7 — *Helge's Weapon*
+
+**Archive category:** Truce Records — The Weapon Made in Violation of the Peace, First Entry
+
+**What this angle reveals:** Every previous HFT cycle was about building, restoring, or documenting something preserved. This cycle is about what the Fighter witnessed being destroyed. Helge made a weapon in violation of the truce between himself and Frithiof — had it made at a smith's forge, carried it to the confrontation at the shore. The Fighter saw the weapon made. The question is what to carry: a warning to Frithiof, or silence. Both have costs. The archive category is about the truce violation as a document — the weapon itself as the record of what Helge intended.
+
+---
+
+**THE TOKEN: `helge_weapon_account`** — Helge's Weapon Account. The smith's record of the commission: the weapon made, the date, the specifications, the payment, and a note that the client requested no record. The smith kept his own copy. He gives it to the Fighter the day after Helge drowns in the confrontation.
+
+---
+
+**ACT I — The Smith's Forge**
+
+*Grant act. Location: a forge on the Sognefjord inland road — the smith, the completed weapon.*
+
+The Fighter was at the forge on the day of the commission. The smith did not ask questions; he made what he was paid to make. But he kept his own record as he always does: tool and trade records for his own protection.
+
+After Helge drowns, the smith comes to the Fighter.
+
+**Smith:** "He commissioned a weapon with a specific design — one that would break under examination to suggest it was carried in good faith for self-defense, not made for killing under a truce. He paid me to keep no record. I kept one."
+
+He hands the Fighter a folded note: the commission, the date, the specifications.
+
+**Smith:** "I don't know what you do with it. I know I shouldn't hold it."
+
+*The paper is plain. The specifications are specific. The date is during the truce.*
+
+---
+
+**ACT II — The Shore**
+
+*Check act. Location: the Sognefjord shore — the confrontation site, Helge's body recovered.*
+
+The confrontation happened. Helge is dead. The account of what occurred is already being composed by the people who were not there: Halfdan's chamberlain has a version; the court bard has begun a different one; the harbor watch has a third.
+
+The account that names the truce-violating weapon is the one that makes Helge's drowning an ironic accident rather than a divine judgment on a man who came armed in violation of the peace. Halfdan needs to know which account to accept before the court's version hardens.
+
+**Persuasion DC 13** — reach Halfdan directly before the chamberlain's version is the official one, and present the smith's account without accusing Helge's memory of cowardice.
+
+---
+
+**ACT III — Halfdan's Hall**
+
+*Check act. Location: Halfdan's hall — the court assembling, the account being heard.*
+
+Halfdan has heard the smith's account. He is sitting with it. He does not deny it and he does not confirm it. He says nothing for a long time.
+
+**Halfdan:** "My brother went to the shore with a weapon. He went because of me, in a way — because I was king and he was not, and the loss of everything he expected was mine to have caused." He looks at the account. "What do you want for this document?"
+
+He is not offering a bribe. He is asking what the Fighter needs the document to do: is this for the archive, or is this evidence for a court proceeding, or is this for Frithiof?
+
+**Insight DC 12** — understand what Halfdan is asking and answer it correctly. The account is for the archive. It is not against Helge. It is for the record of what the truce required and what was done with it.
+
+---
+
+**ACT IV — The Journey**
+
+*Check act. Location: the road from Sognefjord to the northern harbor — two of Helge's household members, still loyal.*
+
+Two men from Helge's household are on the road. They do not know what the Fighter carries but they know the smith gave something to someone. They are not aggressive; they are grief-blind and they are looking for something to protect.
+
+**Athletics DC 12** — pass them on the road. They are not organized; they are looking for a commission to complete on behalf of a dead master.
+
+---
+
+**ACT V — Weimar Archive**
+
+*Take act. Location: Weimar — Sweelinck at the filing desk.*
+
+The smith's account reached the archive. Halfdan's court received a copy. The official account of the confrontation at the shore notes that Helge was armed; it does not specify the weapon's character. The archive holds the specification.
+
+**Sweelinck:** *(reading the commission specifications)* "A weapon designed to appear to be a self-defense blade under examination. Commissioned during the truce. The client requested no record." He sets it down. "The smith kept one because he knows what records are for." He writes. "First entry. Truce Records — The Weapon Made in Violation of the Peace." He files it. "The truce is the document this weapon violated. Both live here now."
+
+The token is taken.
+
+---
+
+```json
+{
+  "quest_id": "HFT-07",
+  "title": "Helge's Weapon",
+  "source": "Frithiof's Saga — Esaias Tegnér",
+  "cycle": 7,
+  "book": "HFT",
+  "source_episode": "Helge's confrontation at the shore; the truce; the smith's commission record",
+  "theme": "The weapon as the record of what a man intended; the smith who kept the record the client paid him not to keep",
+  "activateNode": "HFT",
+  "token": {
+    "id": "helge_weapon_account",
+    "name": "Helge's Weapon Account",
+    "description": "Smith's commission record: weapon specifications, date (during the truce), payment, note that client requested no record. The smith kept one anyway.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["HFT", "LDN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "HFT", "type": "skill_check", "prompt": "Receive the account from the smith. He does not know what you do with it."},
+    {"act": 2, "node": "HFT", "type": "skill_check", "dc": 13, "skill": "Persuasion", "prompt": "Reach Halfdan before the chamberlain's version hardens, presenting the account without accusation."},
+    {"act": 3, "node": "HFT", "type": "skill_check", "dc": 12, "skill": "Insight", "prompt": "Understand what Halfdan is asking: what is the document for?"},
+    {"act": 4, "node": "LDN", "type": "skill_check", "dc": 12, "skill": "Athletics", "prompt": "Pass Helge's household men on the road. They are grief-blind, not organized."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Deliver the account to Sweelinck. The truce and the weapon live here now."}
+  ],
+  "archiveCategory": "Truce Records — The Weapon Made in Violation of the Peace",
+  "sweelinckNote": "The truce is the document this weapon violated. Both live here now.",
+  "questComplete": true
+}
+```
+
+---
+
+*Cycle 7 complete. HFT SEEDS COMPLETE.*
+
