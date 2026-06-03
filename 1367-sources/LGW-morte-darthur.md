@@ -601,3 +601,234 @@ activateMissionBit: lgwBedevereComplete
 ---
 
 *Cycle 2 complete. Mark `[x]` for LGW-morte-darthur in books.md.*
+
+---
+
+## Cycle 3 — *Tristan's Harp*
+
+**Archive category:** Encoded Message Records — The Harp Whose Strings Carry One Word
+
+**What this angle reveals:** Cycles 1-2 were about truths delivered after death or after failure. This angle reveals the love under surveillance: Tristan, exiled in Brittany, cannot send a letter — Mark's agents read letters. He makes a harp instead, tuning its strings to a private code that Iseult will recognize: when all strings are released together, the chord says "I am still alive." The message is in the tension of the strings, not the melody. The harp must reach Cornwall without being played.
+
+---
+
+**THE TOKEN: `tristans_harp`** — The harp Tristan made in exile, strings tuned to a single encoded message: the specific chord of all strings released means "I am still alive." The tuning is the message; playing the harp or adjusting the strings destroys it. King Mark's agents watch for anything musical coming from Brittany. The harp is cargo, not an instrument, until Iseult holds it.
+
+---
+
+```json
+{
+  "quest_id": "LGW-03",
+  "title": "Tristan's Harp",
+  "source": "Morte d'Arthur — Thomas Malory (c.1470)",
+  "cycle": 3,
+  "book": "LGW",
+  "source_episode": "Tristan in Brittany — the harp tuned to say one thing; the message in the string tension, not the sound",
+  "theme": "The message carried in the object's physical state; the love that found a form that surveillance cannot read unless it destroys it",
+  "activateNode": "LGW",
+  "token": {
+    "id": "tristans_harp",
+    "name": "Tristan's Encoded Harp",
+    "description": "A harp made in Breton exile, strings tuned to a private code: all strings released together means 'I am still alive.' The tuning is the message. Playing or retuning destroys it. Mark's agents are watching for musical cargo from Brittany.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["LGW", "BK", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "LGW", "type": "skill_check", "dc": 12, "skill": "Insight", "prompt": "The message is in the string tension, not the melody. The harp is cargo until Iseult holds it. Playing it or adjusting any string destroys what Tristan built into it. Understand this before the road."},
+    {"act": 2, "node": "LGW_to_BK", "type": "skill_check", "dc": 12, "skill": "Stealth", "prompt": "Mark's road agents are looking for musical cargo from Brittany. The harp is a merchant's decoration piece on its way to a buyer in Birka. It is not an instrument in the sense they are watching for."},
+    {"act": 3, "node": "BK", "type": "combat", "dc": 13, "skill": "Persuasion", "enemies": "2x Mark's dock agents, AC 12, HP 19", "prompt": "A Birka musician recognizes the harp as Tristan's by its construction. He wants to play it. His recognition of the harp is itself a security problem. Persuade him the harp is not available — and do it before Mark's dock agents, who are watching him, understand what he recognized."},
+    {"act": 4, "node": "BK_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "On the road, someone asks to hear a song. The harp is present. Decline without explaining why. The string tension is intact. Keep it that way until Weimar."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck examines the string tension. He does not play it. He understands what the chord means. Encoded Message Records opens."}
+  ],
+  "archiveCategory": "Encoded Message Records — The Harp Whose Strings Carry One Word",
+  "sweelinckNote": "The strings are tuned to say one thing. Tristan is still alive. The harp reached Iseult before it reached the archive. Both facts are in the record."
+}
+```
+
+---
+
+## Cycle 4 — *Gareth's Safe-Conduct*
+
+**Archive category:** Proxy Authority Records — The Token Carried for a Knight Before He Could Carry It Himself
+
+**What this angle reveals:** Cycles 1-3 were about objects that carry truths under surveillance. This angle reveals the commission about rank and authorization: Gareth Beaumains has been given a quest he has no rank to carry. Lynet's token of safe passage through the territories of the four colored knights authorizes its holder, not a specific named person — but the holder must be able to claim authority. Gareth cannot yet. The Fighter carries the rod for him, presenting it at each barrier while Gareth rides behind. The token is the record of what Gareth needed before he earned his own authority.
+
+---
+
+**THE TOKEN: `lynets_safe_conduct`** — Lynet's silver rod with her family's device: authorization to pass through the territories of the Black, Green, Red, and Blue knights. The rod authorizes its holder. Gareth is the companion; the Fighter is the holder. After the quest, the rod becomes the archive record of what Gareth was before he earned his own standing.
+
+---
+
+```json
+{
+  "quest_id": "LGW-04",
+  "title": "Gareth's Safe-Conduct",
+  "source": "Morte d'Arthur — Thomas Malory (c.1470)",
+  "cycle": 4,
+  "book": "LGW",
+  "source_episode": "Gareth Beaumains — the kitchen boy with a quest he has no rank to carry; Lynet's rod that authorizes the holder",
+  "theme": "The proxy authority that enables the commission before the principal has earned standing to hold it himself",
+  "activateNode": "LGW",
+  "token": {
+    "id": "lynets_safe_conduct",
+    "name": "Lynet's Silver Rod",
+    "description": "Silver rod with Lynet's family device: authorization to pass through four colored knights' territories. The rod authorizes its holder. Gareth rides as the holder's companion. After the quest, the rod is the record of what Gareth needed before he earned his own authority.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["LGW", "VEN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "LGW", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "The rod authorizes the carrier, not the companion. Gareth's legitimacy is separate from the rod's validity. Carrying it correctly means presenting it in your own person at each barrier. Understand this before the first colored knight."},
+    {"act": 2, "node": "LGW_to_VEN", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "The Green Knight's barrier is the first. Present the rod and your own authority to hold it. Gareth must stay behind. The rod's device is Lynet's and its terms authorize its holder — that is you."},
+    {"act": 3, "node": "VEN", "type": "combat", "dc": 13, "skill": "Insight", "enemies": "2x Red Knight's guards, AC 13, HP 22", "prompt": "The Red Knight disputes that a non-noble carrier can present the rod. The rod's authorization is to its holder — rank is not mentioned in Lynet's device's terms. Make the argument before the guards take positions."},
+    {"act": 4, "node": "VEN_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "After the quest, Gareth has proven himself. The rod that he could not carry is now the record of what he was before his own authority existed. File it correctly: as proxy commission, not as Gareth's own record."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck examines the device on the rod. He notes the commission's structure. Proxy Authority Records opens."}
+  ],
+  "archiveCategory": "Proxy Authority Records — The Token Carried for a Knight Before He Could Carry It Himself",
+  "sweelinckNote": "The rod carried what Gareth had not yet earned. After, he earned it and carried his own authority. The rod is the record of the before."
+}
+```
+
+---
+
+## Cycle 5 — *Gawain's Letter*
+
+**Archive category:** Reconciliation Records — The Letter That Reversed Years of Enmity
+
+**What this angle reveals:** Cycles 1-4 were about physical objects carrying truths. This angle reveals the moral reversal at the book's end: Gawain is dying from the wound at Dover, and he writes two letters — one to Arthur, one to Lancelot. The letter to Lancelot asks forgiveness and return. It reverses everything Gawain has done for years. The seal ring is still warm when the letter is pressed. The letter must be carried while Gawain is still alive, because if it arrives after his death it becomes a dead man's regret — a different and lesser thing than a living man's request.
+
+---
+
+**THE TOKEN: `gawains_letter`** — Gawain's letter to Lancelot: forgiveness asked, return requested. Sealed with his ring, still warm. Written while dying. The letter's value changes when Gawain dies — it becomes a dead man's regret rather than a living man's request. The carrier knows this. The timing matters.
+
+---
+
+```json
+{
+  "quest_id": "LGW-05",
+  "title": "Gawain's Letter",
+  "source": "Morte d'Arthur — Thomas Malory (c.1470)",
+  "cycle": 5,
+  "book": "LGW",
+  "source_episode": "Gawain dying at Dover — the letter to Lancelot; forgiveness and return requested; the seal ring still warm",
+  "theme": "The moral reversal that must be delivered while its author still lives; the letter that is a different thing after the hand that wrote it goes cold",
+  "activateNode": "LGW",
+  "token": {
+    "id": "gawains_letter",
+    "name": "Gawain's Seal Letter",
+    "description": "Letter to Lancelot from Gawain dying: forgiveness asked, return requested. Seal ring still warm. Written while alive — must be delivered as a living man's request, not a dead man's regret. The timing is the argument.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["LGW", "CON", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "LGW", "type": "skill_check", "dc": 12, "skill": "Insight", "prompt": "The letter's value changes when Gawain dies. It must be carried as a living man's request. The ring's warmth is the evidence of the commission's timing. Understand this before Gawain's condition changes."},
+    {"act": 2, "node": "LGW_to_CON", "type": "skill_check", "dc": 13, "skill": "Athletics", "prompt": "The timing matters. The letter must travel quickly. Gawain will not survive the day. The route to Constantinople's neutral diplomatic archive is the safe path for correspondence between enemies."},
+    {"act": 3, "node": "CON", "type": "combat", "dc": 13, "skill": "Persuasion", "enemies": "2x Mordred faction agents, AC 13, HP 20", "prompt": "A Mordred faction diplomat wants to suppress evidence of any Gawain-Lancelot communication — it undermines the 'Lancelot betrayed Arthur' narrative. Private correspondence between individuals is not subject to diplomatic interception. Name the principle."},
+    {"act": 4, "node": "CON_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "The letter's delivery is confirmed. Lancelot received it. Someone on the road wants to know if it changed anything. That is the war's question, not the archive's. The archive holds the letter and the delivery."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the letter. He reads it again. Reconciliation Records opens."}
+  ],
+  "archiveCategory": "Reconciliation Records — The Letter That Reversed Years of Enmity",
+  "sweelinckNote": "Gawain wrote it while dying. It reverses years. It arrived. Whether it arrived in time to change anything is the war's question, not the archive's."
+}
+```
+
+---
+
+## Cycle 6 — *The Grail Blood-Cloth*
+
+**Archive category:** Procession Records — The Cloth That Was Present at the Grail
+
+**What this angle reveals:** Cycles 1-5 were about letters and tokens that carry messages. This angle reveals the physical sign without a message: a cloth stained during the Grail procession is pressed into the Fighter's hands by a dying knight outside Corbenic. The stain is still warm. The cloth must reach the Fisher King's chapel before first light or its last virtue fails. After the chapel, it goes to Rome for authentication of the procession's occurrence. The warmth is the evidence. The archive holds the fact and the temperature.
+
+---
+
+**THE TOKEN: `grail_blood_cloth`** — A folded cloth stained during the Grail procession: still warm at a time and temperature when warmth should be impossible. The dying knight presses it into the Fighter's hands. It must reach the Fisher King's chapel before first light. After delivery, it goes to Rome for authentication of the procession's occurrence as a physical event.
+
+---
+
+```json
+{
+  "quest_id": "LGW-06",
+  "title": "The Grail Blood-Cloth",
+  "source": "Morte d'Arthur — Thomas Malory (c.1470)",
+  "cycle": 6,
+  "book": "LGW",
+  "source_episode": "A dying knight outside Corbenic — the cloth from the Grail procession, still warm; the Fisher King's chapel before first light",
+  "theme": "The physical sign without a message; the warmth that is the evidence; the cloth as the record of the procession's occurrence",
+  "activateNode": "LGW",
+  "token": {
+    "id": "grail_blood_cloth",
+    "name": "The Grail Blood-Cloth",
+    "description": "A folded cloth stained during the Grail procession: still warm at a temperature that should not be possible. Pressed into the Fighter's hands by a dying knight. Must reach the Fisher King's chapel before first light. After chapel, to Rome for authentication of the procession's occurrence.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["LGW", "RME", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "LGW", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "The warmth is the evidence. The cloth must arrive at the chapel still warm — the temperature is not incidental; it is the sign's substance. Transport and timing matter. Move before the warmth fails."},
+    {"act": 2, "node": "LGW_to_RME", "type": "skill_check", "dc": 13, "skill": "Athletics", "prompt": "The chapel is through hostile territory at night. Enemy knights hold the roads between Corbenic and the Fisher King's hall. Get through before first light."},
+    {"act": 3, "node": "RME", "type": "combat", "dc": 13, "skill": "Persuasion", "enemies": "2x relic agents of the Roman church, AC 12, HP 19", "prompt": "The Grail scholars at Rome want to retain the cloth as a primary relic in church custody. The cloth documents the procession's occurrence and should be held in a neutral archive where its access cannot be controlled politically. Make the argument before the relic agents take a formal position."},
+    {"act": 4, "node": "RME_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "The cloth is still faintly warm at this distance from the procession's hour. This disturbs everyone who handles it. Hold the carrier's equanimity. The warmth is a fact, not a crisis."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck holds the cloth carefully. It is warm. He notes the temperature. Procession Records opens."}
+  ],
+  "archiveCategory": "Procession Records — The Cloth That Was Present at the Grail",
+  "sweelinckNote": "The procession occurred. The cloth was present. It is still warm. The archive holds the fact and the temperature."
+}
+```
+
+---
+
+## Cycle 7 — *Morgan's Reversal*
+
+**Archive category:** Undelivered Letter Records — The Apology That Arrived After the King
+
+**What this angle reveals:** Cycles 1-6 were about the book's objects and commissions. The final angle reveals the thing no one in the Morte d'Arthur is supposed to know was sent: Morgan le Fay spent thirty years as Arthur's enemy. The night before Camlann, she wrote him an apology — not a warning, not a prophecy, just the thing that had never been said. She could not deliver it herself. She gave it to a messenger. The battle happened. The king died. The letter arrived after. The archive receives letters that could not reach their addressee. This is what that section is for.
+
+---
+
+**THE TOKEN: `morgans_apology`** — Morgan le Fay's letter to Arthur: a precise apology for thirty years of enmity, written the night before Camlann. She could not deliver it herself. The king was dead before it arrived. A black-hooded queen brought it from the barge. A London contact gave it to the Fighter. It goes to the archive as an undelivered letter. The section this opens is its own commission.
+
+---
+
+```json
+{
+  "quest_id": "LGW-07",
+  "title": "Morgan's Reversal",
+  "source": "Morte d'Arthur — Thomas Malory (c.1470)",
+  "cycle": 7,
+  "book": "LGW",
+  "source_episode": "Morgan le Fay writes an apology the night before Camlann — the king dies before it arrives; the black-hooded queen carries it from the barge; it reaches the archive as an undelivered letter",
+  "theme": "The letter that arrived after the king; the archive that receives what could not reach its addressee; the apology that could only be sent when the sending no longer mattered",
+  "activateNode": "LGW",
+  "token": {
+    "id": "morgans_apology",
+    "name": "Morgan's Apology",
+    "description": "Morgan le Fay's letter to Arthur: a precise apology for thirty years, written the night before Camlann. The king died before it arrived. Carried from the barge by a black-hooded queen to a London contact. Filed in the archive as an undelivered letter. The section this opens is its own commission.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["LGW", "LDN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "LGW", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "The letter was not delivered to its addressee. It goes to the archive as an undelivered letter. The archive category this opens is its own commission. Understand this before London, where Morgan's enemies will want it suppressed."},
+    {"act": 2, "node": "LGW_to_LDN", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "Mordred faction remnants in London want the letter suppressed — it challenges the narrative of Morgan-as-enemy that has been consolidated since Camlann. The letter is private correspondence between Morgan and Arthur. Its existence challenges no one's standing. Make the argument at the crossing."},
+    {"act": 3, "node": "LDN", "type": "combat", "dc": 13, "skill": "Composure", "enemies": "2x Mordred faction agents, AC 12, HP 20", "prompt": "A chronicle-writer has heard about the letter and wants to read it before it is archived. The letter is sealed. Morgan's intention was private. The chronicle-writer's right to read for a history is different from the archive's right to hold it permanently. Hold the seal through the chronicle-writer's request and the agents' arrival."},
+    {"act": 4, "node": "LDN_to_WM", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "On the road, the Fighter wonders what the apology says. The letter is sealed. The commission was to carry it sealed. Recognize the curiosity for what it is and hold the letter without opening it."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck takes the letter. He holds it for a long moment. He opens a new archive section. Undelivered Letter Records opens. The Morte d'Arthur series is complete."}
+  ],
+  "archiveCategory": "Undelivered Letter Records — The Apology That Arrived After the King",
+  "sweelinckNote": "She sent it the night before. It arrived after. The archive holds it for the king it was addressed to. He is not here to receive it. That is what this section is for.",
+  "questComplete": true
+}
+```

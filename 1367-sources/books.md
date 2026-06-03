@@ -432,7 +432,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 |--------|------|------|----------------|--------|----------|----|
 | [x] | LHR | beowulf | Beowulf — Anon (Gummere transl.) | ~700–1000 AD | Old English Epic | 166 | SEEDS COMPLETE 2026-06-03 — LHR-01–07 all vignettes done. New nodes: GEA (Geatland coast), DAN (Danish port/Lejre). See LHR-beowulf.md. |
 | [x] | LCY | white-company | The White Company — Arthur Conan Doyle | 1366 AD (pub. 1891) | Historical Adventure | 625 | SEEDS COMPLETE 2026-06-03 — LCY-01–07 all vignettes done. No new nodes. See LCY-white-company.md. |
-| [x] | LGW | morte-darthur | Le Morte d'Arthur — Sir Thomas Malory | pub. 1485 | Arthurian Romance | 896 |
+| [x] | LGW | morte-darthur | Le Morte d'Arthur — Sir Thomas Malory | pub. 1485 | Arthurian Romance | 896 | SEEDS COMPLETE 2026-06-03 — LGW-01–07 all vignettes done. AST/CAM/LKS already in Location Grid. No new nodes. See LGW-morte-darthur.md. |
 | [x] | STN | robin-hood | Merry Adventures of Robin Hood — Howard Pyle | c.1883 (medieval) | Outlaw Hero | 621 |
 | [x] | MAN | ivanhoe | Ivanhoe — Sir Walter Scott | 1819 (Norman Eng.) | Historical Novel | 1140 |
 | [x] | SEN | treasure-island | Treasure Island — Robert Louis Stevenson | 1883 | Pirate Adventure | 390 |
