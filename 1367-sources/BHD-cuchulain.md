@@ -567,3 +567,669 @@ activateMissionBit: bhdStoneComplete
 ---
 
 *Cycle 2 complete. Mark `[x]` for BHD-cuchulain in books.md.*
+
+---
+
+## Cycle 3 — Angle: *Emer's Bargain — The Gift That Cannot Be Witnessed*
+
+**What this angle reveals that Cycles 1–2 missed:** Both prior cycles showed the Fighter carrying something irreversible — the cloak that burned, the sword that reached the hall. Cycle 3 turns to the act that preserved the living. Emer goes to the otherworld boundary alone, offers to give Cuchulain up if Fand will return to the sea, and Fand goes back — moved by a love that concedes rather than contests. No court records this. The druids give Cuchulain forgetfulness; they do not give it to Emer. The Fighter is there because someone has to write down what was said, or it will pass without record into the category of things that happened and cannot be proven.
+
+---
+
+### 5-Act Vignette Play: *Emer's Bargain*
+
+**THE TOKEN: EMER'S WITNESS NOTE** — A small folded vellum sheet, blank, given to the Fighter by the women who could not follow Emer to the boundary. The instruction: write down what she says. She does not know you are there.
+
+---
+
+**ACT I — "The Boundary"**
+*The vellum: blank. Location: EMR — the boundary ground between Emer's hall and the otherworld passage.*
+
+The women of Emer's household have followed as far as they can. The boundary is a stretch of flat grey ground between the world Cuchulain inhabits and the place where Fand has taken him — not a wall, not a door, but a specific quality of absence where sound changes. Emer goes forward alone.
+
+She does not look back at the Fighter. She does not know the Fighter is there. She walks to the place where Fand's boundary is and she speaks.
+
+*She is not speaking to the Fighter. She is not performing. This is the problem: the most important thing she will ever say is being said to the one person who will not keep the record.*
+
+> **Perception DC 12.** Stand at the edge of the boundary without crossing it; write down what Emer says, accurately, in the order she says it; she is not speaking for a witness and she will not repeat herself.
+
+**Fail:** You catch most of it. The central sentence — the offer itself — is paraphrased rather than quoted. The note contains the meaning but not the words.
+
+**Pass:** You write every word. The offer is recorded in her voice.
+
+TOKEN GRANTED: Emer's Witness Note.
+
+---
+
+**ACT II — "Fand Goes Back"**
+*The vellum: one side filled. Location: EMR — same boundary, afterward.*
+
+Fand returns to the sea. Cuchulain is left at the boundary's edge. The women of Emer's household come forward and take him toward the hall. Emer stays at the boundary for a long time, alone, after the others have gone.
+
+A druid approaches with the forgetfulness-cup. He gives it to Cuchulain. He does not give one to Emer.
+
+Emer watches.
+
+> **Insight DC 12.** Understand what just happened: the druids' solution preserved Cuchulain from grief and preserved nothing for Emer; the note in the Fighter's hands is the only record of what she paid; the archive needs to understand both halves of the transaction.
+
+**Fail:** You add an interpretive note to the vellum. The observation is accurate but it editorializes Emer's act.
+
+**Pass:** You write a second line that records only what the druid did and did not do, without commentary. The gap is clear.
+
+TOKEN STATE 2: Vellum complete, dual-layered.
+
+---
+
+**ACT III — "The Household Women"**
+*The vellum: sealed, addressed. Location: EMR.*
+
+The women of Emer's household know what happened at the boundary in general terms. Three of them want the Fighter to leave the note with them — they will keep it in the hall, where it belongs, where Emer can decide what to do with it. The argument is reasonable.
+
+> **Persuasion DC 11.** The note needs to reach the archive; the hall is not a neutral custodian; the people who love Emer cannot be impartial about what she said and what it cost.
+
+**Fail:** One woman argues that the archive is a foreign institution that will misread the context. She adds a page of domestic context. Both travel.
+
+**Pass:** They accept the distinction. The note travels alone.
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "The Road North"**
+*The vellum: intact. Location: road north toward the Baltic coast.*
+
+A Ulster court scald intercepts the Fighter on the road. He is composing the official version of events — Cuchulain and the otherworld woman, the reconciliation, the druids' intervention. His version has Emer as a gracious queen accepting her husband's return. He has not asked Emer what happened.
+
+> **Insight DC 12.** The scald's version is not hostile to Emer — it is genuinely well-meaning; it simply hasn't asked her; the note does not contradict his version, it supplements it with what was unsaid.
+
+**Fail:** He argues that a private note from a servant of the household outweighs his source material. The Fighter names the archive and continues. He writes his version anyway.
+
+**Pass:** He reads the note. He goes quiet. He adds a line to his composition that leaves a gap where Emer's words should go.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Archive"**
+*The vellum: intact, addressed. Location: Weimar.*
+
+Sweelinck reads the witness note.
+
+"She did not contest the claim. She offered to release him if Fand would return to the sea. Fand went. The druids gave Cuchulain forgetfulness. They did not give it to Emer. Lady Gregory does not mention this."
+
+He writes: *Unwitnessed Negotiations — Acts That Changed Situations Without Official Record, First Entry. Emer's Bargain: the act of love performed without audience or acknowledgment; the woman who paid a price the druids' drink did not remove; the archive files the offer in her voice because no other voice would preserve it accurately.*
+
+TOKEN TAKEN: Emer's Witness Note.
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "BHD_003",
+  "title": "Emer's Bargain",
+  "source": "Cuchulain of Muirthemne — Lady Gregory",
+  "cycle": "BHD",
+  "book": "Cuchulain of Muirthemne",
+  "source_episode": "The Only Jealousy of Emer — the water-goddess Fand attempts to take Cuchulain into the otherworld; Emer goes to the boundary and offers to give him up if Fand will return to the sea; Fand goes; the druids give Cuchulain forgetfulness; they give Emer nothing",
+  "theme": "The act of love performed without audience or acknowledgment; the woman who paid a price no forgetfulness drink removed; the archive files the offer in her voice.",
+  "activateNode": "EMR",
+  "token": {
+    "id": "emer_witness_note",
+    "name": "Emer's Witness Note",
+    "description": "Small folded vellum sheet, filled in real time at the otherworld boundary; records Emer's offer in her own words and the druid's omission; the only document of what she paid.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["EMR", "BK", "WM"],
+  "new_nodes": [
+    {
+      "code": "EMR",
+      "name": "Emer's Hall — Ulster",
+      "description": "A long Ulster hall on a green hill above the plain: warmth, domestic order, the smell of wool and fire; the hall where Cuchulain returns and where Emer manages what she cannot refuse; the boundary ground between the hall and the otherworld passage is a flat grey stretch a hundred paces to the north, where sound changes and the women will not follow"
+    }
+  ],
+  "acts": [
+    { "act": 1, "location": "EMR_boundary", "scene": "The otherworld boundary, flat grey ground, Emer speaking to Fand alone", "title": "The Boundary", "type": "skill_check", "skillCheck": { "skill": "Perception", "dc": 12 }, "token_action": "grant" },
+    { "act": 2, "location": "EMR_boundary", "scene": "Afterward — the druids' cup given and withheld", "title": "Fand Goes Back", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "EMR", "scene": "Emer's household women, custody dispute", "title": "The Household Women", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 11 }, "token_action": "check" },
+    { "act": 4, "location": "road_EMR_BK", "scene": "Ulster road north, court scald intercept", "title": "The Road North", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 12 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "The Archive", "type": "delivery", "activateMissionBit": "bhdEmerBargainComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## Cycle 4 — Angle: *The Ring at the Ford — Recognition After the Irreversible Act*
+
+**What this angle reveals that Cycles 1–3 missed:** The first three cycles showed love that was faithful (Fergus's cloak), love that chose its death (the standing stone), and love that gave itself away (Emer's offer). Cycle 4 turns to the tragedy of recognition too late — the gold ring on Connla's hand that should have stopped everything, and didn't. The Fighter carries a message about the ring and watches it arrive after the decision that cannot be undone.
+
+---
+
+### 5-Act Vignette Play: *The Ring at the Ford*
+
+**THE TOKEN: RING IDENTIFICATION NOTE** — A written identification of Cuchulain's gold thumb-ring, given to the Fighter by a woman in the Ulster camp who recognized the boy at the ford. The note names the ring, its origin, and what it means. It needs to reach Cuchulain before the combat begins.
+
+---
+
+**ACT I — "The Woman Who Recognized It"**
+*The note: written, warm. Location: ULC — Ulster camp, ford's edge.*
+
+A woman in the camp saw the boy arrive at the ford. She was in Scathach's camp in Scotland. She saw Cuchulain place that ring on Aoife's newborn son's hand before he departed — the thumb-ring, gold, with the notch cut by a blade that glanced during the training exercise.
+
+She cannot carry the note herself; the ford road is guarded. The Fighter can.
+
+TOKEN: `ring_identification_note` — the written identification: the ring's origin, the notch, the name of the child it was given to.
+
+> **Investigation DC 12.** Extract from the woman's account the three identifying details that make the note unambiguous: the notch, the gold weight, and the thumb-width she observed from the bank; without all three, the note is not a proof, only a claim.
+
+**Fail:** You get two of three. She gives you the third verbally. The note is complete but not tight.
+
+**Pass:** All three are in the note. It can identify the ring at a distance.
+
+TOKEN GRANTED: Ring Identification Note.
+
+---
+
+**ACT II — "The Ford Road"**
+*The note: sealed, addressed to Cuchulain. Location: road to the ford.*
+
+A Connacht scout is on the ford road ahead, watching for Ulster communications. She is not hostile — she is professional. The ford is her station. Notes do not pass her without inspection.
+
+> **Deception DC 12.** The note is a healer's credential, not a military communication; it concerns a medical detail about the combatant at the ford that requires the Ulster champion's attention before combat.
+
+**Fail:** She reads the note. She lets it pass; the identification confirms nothing she considers a military risk. But she knows what it contains.
+
+**Pass:** She inspects the sealed exterior and lets it pass on the credential framing.
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "The Wrong Side"**
+*The note: unopened, in hand. Location: the ford.*
+
+Cuchulain is at the ford. The boy Connla is on the opposite bank. Combat has not yet begun — there is one exchange of words, the standard challenge, still happening.
+
+The Fighter is on Cuchulain's side.
+
+Connla is on the other side.
+
+The note cannot cross the ford without entering Connacht's ground.
+
+> **Athletics DC 13.** Cross the ford in the pre-combat interval — the water is waist-deep and fast — and reach Connla's side with the note before the challenge exchange concludes.
+
+**Fail:** The current is faster than anticipated. The challenge exchange ends before you reach Connla. The combat begins. You return to the Ulster bank.
+
+**Pass:** You reach the other side. Connla reads the note and looks at his hand. He looks at Cuchulain. Something crosses his face that is not yet decision.
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "What Connla Does"**
+*The note: delivered, read. Location: Connla's side of the ford.*
+
+Connla folds the note carefully and tucks it inside his cloak. Then he looks across the water at the man on the other side and walks to the ford's edge.
+
+He picks up his weapon.
+
+He does not yield.
+
+He does not give his name.
+
+The three instructions are what they are: give his name to no man, yield to no man, refuse no man combat. The ring identifies his father. The instructions were his father's. He cannot refuse them without refusing himself.
+
+He enters the ford.
+
+> **Persuasion DC 14.** Speak to Cuchulain from the Ulster bank — not to stop the combat, which cannot be stopped, but to put the information in his hands before the combat concludes; say it in the right order so that when his grip finds the Gáe Bulg he already knows.
+
+**Fail:** Your voice doesn't carry over the ford-sound. Or Cuchulain does not hear in time.
+
+**Pass:** He hears. He looks across at the boy for one second longer than the combat requires. Then the Gáe Bulg is thrown.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Archive"**
+*The note: carried north after. Location: Weimar.*
+
+Sweelinck reads the identification note.
+
+"The ring was identified correctly. The message was delivered correctly. The combat happened anyway — because the instructions the boy received from his father were also correct, and the two correct things could not both be honored simultaneously."
+
+He writes: *Recognition Documents — Identifications That Arrived After the Irreversible Act, First Entry. The Ring at the Ford: the note that arrived correctly and changed nothing; the archive files it not as a failure of the carrier but as evidence that some structures are designed to be entered completely before the recognition is possible; the ring was always on the boy's hand.*
+
+TOKEN TAKEN: Ring Identification Note.
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "BHD_004",
+  "title": "The Ring at the Ford",
+  "source": "Cuchulain of Muirthemne — Lady Gregory",
+  "cycle": "BHD",
+  "book": "Cuchulain of Muirthemne",
+  "source_episode": "Connla — Cuchulain's son by Aoife — appears at the ford wearing his father's gold thumb-ring; he refuses to give his name or yield; Cuchulain kills him with the Gáe Bulg and recognizes the ring only afterward",
+  "theme": "Recognition that arrived correctly and changed nothing; some structures are designed to be entered completely before the recognition is possible; the ring was always on the boy's hand.",
+  "activateNode": "ULC",
+  "token": {
+    "id": "ring_identification_note",
+    "name": "Ring Identification Note",
+    "description": "Written identification of Cuchulain's gold thumb-ring: the notch, the gold weight, the thumb-width, the origin; the document that made recognition possible and arrived too late.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["ULC", "HLD", "WM"],
+  "new_nodes": [],
+  "acts": [
+    { "act": 1, "location": "ULC", "scene": "Ulster camp at the ford, woman who recognized the ring", "title": "The Woman Who Recognized It", "type": "skill_check", "skillCheck": { "skill": "Investigation", "dc": 12 }, "token_action": "grant" },
+    { "act": 2, "location": "road_ULC_ford", "scene": "Ford road, Connacht scout checkpoint", "title": "The Ford Road", "type": "skill_check", "skillCheck": { "skill": "Deception", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "ford", "scene": "The ford itself, pre-combat interval", "title": "The Wrong Side", "type": "skill_check", "skillCheck": { "skill": "Athletics", "dc": 13 }, "token_action": "check" },
+    { "act": 4, "location": "ford", "scene": "Connla has read the note; the combat begins anyway", "title": "What Connla Does", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 14 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "The Archive", "type": "delivery", "activateMissionBit": "bhdRingFordComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## Cycle 5 — Angle: *Three Nights at the Ford — The Record of the Meals*
+
+**What this angle reveals that Cycles 1–4 missed:** All prior cycles turned on single acts — the cloak burned, the stone vigil, the offer made, the message delivered. Cycle 5 is about duration: three evenings, three supply deliveries, three times witnessing what it costs two friends to kill each other correctly. The healer's cart record is also the Fighter's observation record. No official account kept what happened at the ford's edge between combats. The archive needs to know.
+
+---
+
+### 5-Act Vignette Play: *Three Nights at the Ford*
+
+**THE TOKEN: FORD SUPPLY AND WITNESS RECORD** — The healer's cart inventory, with the Fighter's observations added each evening on the back: what the two men said to each other across the ford; what Ferdiad ate; what Cuchulain refused to eat on the second night; what both men's faces looked like when they said good night.
+
+---
+
+**ACT I — "The Healer's Commission"**
+*The record: blank, inventory on front. Location: ULC — Ulster healer's tent.*
+
+The healer Lena has been tasked with keeping Cuchulain's wounds closed enough to fight each day. She needs the cart brought to the ford each evening at dusk — supplies on the south bank, where Cuchulain sleeps. She cannot carry it herself; she must tend the wounds at the same time.
+
+The cart is loaded. The inventory is written on the front side. The back is blank.
+
+"Write down what you see at the ford," she says. "Not the fighting — everyone sees the fighting. Write down what happens at dusk."
+
+TOKEN: `ford_supply_record` — cart inventory on the front; the Fighter's evening observations on the back.
+
+> **Perception DC 11.** Load the cart accurately enough that the count is correct at delivery; the healer will check it; a missing item means a return trip that costs time.
+
+**Fail:** One item is miscounted. You return for it. The evening observation is shorter.
+
+**Pass:** The count is exact. You depart with time to observe.
+
+TOKEN GRANTED: Ford Supply and Witness Record.
+
+---
+
+**ACT II — "The First Evening"**
+*The record: inventory filled, first evening observation beginning. Location: ford's edge, dusk.*
+
+The first evening: Cuchulain and Ferdiad share food and medicine across the water. They eat on opposite banks and pass herbs to each other for their wounds. They speak carefully, in the specific register of men who know what tomorrow requires and are not going to name it tonight.
+
+Ferdiad says: "You fight well."
+Cuchulain says: "You fight better."
+
+They sleep on opposite banks.
+
+> **Insight DC 11.** Write the first evening's observation accurately — not the generosity, which is visible, but the quality of the silence between the two men after they stop speaking; the silence is the thing that will not survive the combat record.
+
+**Fail:** You write the generosity. The silence goes unrecorded.
+
+**Pass:** The silence is in the record: *"They stopped talking at the same moment and neither looked at the other's bank afterward. The ford was quiet for two hours."*
+
+TOKEN STATE 2: First evening recorded.
+
+---
+
+**ACT III — "The Second Evening"**
+*The record: two observations filled. Location: ford's edge, second dusk.*
+
+The second evening. Cuchulain's wounds are worse than yesterday's. He does not eat. Ferdiad sends food across the ford and Cuchulain does not touch it. He is still courteous — he thanks Ferdiad, he accepts the medicine — but he will not eat tonight.
+
+A Connacht messenger crosses the ford road checkpoint with a message for Ferdiad: Maeve's commendation, gold, more of what got Ferdiad here in the first place. He reads it. He puts it in his cloak. He does not share its contents.
+
+> **Investigation DC 12.** Observe the message's effect on Ferdiad without approaching him; read from the bank what the letter did to his posture when he finished reading.
+
+**Fail:** Too far to read clearly. You note: *"A message arrived. He read it. His posture was different after."*
+
+**Pass:** You note: *"His shoulders dropped one inch and then came back up. He refolded the letter three times before putting it away. He did not look at the Ulster bank for an hour."*
+
+TOKEN STATE 3: Second evening recorded.
+
+---
+
+**ACT IV — "The Third Evening"**
+*The record: three observations. Location: ford's edge, third dusk.*
+
+After the third day, Ferdiad is dying. Cuchulain holds him at the ford's edge, in the water, and says the lament. The healer crosses this time — the distance is no longer the ford's logic. Cuchulain lets her work without stepping back.
+
+The Connacht officers who arrive want to take Ferdiad's body back across. One sees the Fighter's record over the healer's shoulder and reaches for it — he wants the supply inventory as evidence of Ulster's preparation for the duel.
+
+> **Persuasion DC 12.** The inventory is a healer's medical document; the observations on the back are not pertinent to Ulster's duel preparation; the record should not be read by the army that provided the gold that brought Ferdiad here.
+
+**Fail:** He reads the back. He copies the second evening's note about the letter and departs with the copy.
+
+**Pass:** He accepts the medical framing and takes only Ferdiad's body.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Archive"**
+*The record: complete, both sides. Location: Weimar.*
+
+Sweelinck reads both sides of the document.
+
+"Three days, three evenings, three supply counts. On the back: what two men said to each other at dusk when they could not not be kind to the person they were about to kill. Nobody official was writing this down."
+
+He writes: *Witness Records — Grief Observed at Combat Boundaries, First Entry. The Ford Evenings: the supply record that became an observation record; the healer's cart as the mechanism of access; the archive files the back of the document separately from the front because they are different kinds of records sewn together by three evenings at a ford.*
+
+TOKEN TAKEN: Ford Supply and Witness Record.
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "BHD_005",
+  "title": "Three Nights at the Ford",
+  "source": "Cuchulain of Muirthemne — Lady Gregory",
+  "cycle": "BHD",
+  "book": "Cuchulain of Muirthemne",
+  "source_episode": "The three-day duel between Cuchulain and Ferdiad — closest friends from their training under Scathach; each evening they share food and medicine across the ford and tend each other's wounds; on the third day Cuchulain uses the Gáe Bulg and Ferdiad falls",
+  "theme": "The record of what correct friendship costs when it becomes correct killing; the supply record that became a witness record; the grief observed at combat boundaries that no official account preserved.",
+  "activateNode": "ULC",
+  "token": {
+    "id": "ford_supply_record",
+    "name": "Ford Supply and Witness Record",
+    "description": "Healer's cart inventory on the front; three evenings' observations on the back — what the two men said, what Ferdiad's posture did with Maeve's letter, the quality of the silence between them after they stopped speaking.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["ULC", "VS", "WM"],
+  "new_nodes": [],
+  "acts": [
+    { "act": 1, "location": "ULC", "scene": "Ulster healer's tent, cart loading, evening before first day", "title": "The Healer's Commission", "type": "skill_check", "skillCheck": { "skill": "Perception", "dc": 11 }, "token_action": "grant" },
+    { "act": 2, "location": "ford", "scene": "Ford's edge at first dusk — sharing food across the water", "title": "The First Evening", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 11 }, "token_action": "check" },
+    { "act": 3, "location": "ford", "scene": "Second dusk — Maeve's letter to Ferdiad", "title": "The Second Evening", "type": "skill_check", "skillCheck": { "skill": "Investigation", "dc": 12 }, "token_action": "check" },
+    { "act": 4, "location": "ford", "scene": "Third evening — Connacht officer wants the record", "title": "The Third Evening", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 12 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "The Archive", "type": "delivery", "activateMissionBit": "bhdFordEveningsComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## Cycle 6 — Angle: *The Lament at the Ford — The Elegy a Warrior Is Not Supposed to Speak*
+
+**What this angle reveals that Cycles 1–5 missed:** Cycle 5 recorded what happened between combats. Cycle 6 records what happened after. Cuchulain's lament over Ferdiad is the most devastating passage in the book — not because it is extravagant, but because it is precise. A warrior is not supposed to mourn an enemy. The lament is spoken anyway, because the thing Ferdiad was — Cuchulain's dearest friend — does not become an enemy retroactively just because the code required killing him. The Fighter writes it down because no one else is listening for that reason.
+
+---
+
+### 5-Act Vignette Play: *The Lament at the Ford*
+
+**THE TOKEN: FERDIAD LAMENT TRANSCRIPTION** — The Fighter's written record of Cuchulain's words over Ferdiad's body. The lament that names what was lost before the combat was a combat.
+
+---
+
+**ACT I — "The Body at the Ford"**
+*The vellum: blank. Location: ford.*
+
+Ferdiad falls in the shallow water. Cuchulain wades in and holds the body. He does not speak immediately — there is a long silence during which both armies on both banks seem to stop.
+
+Then he speaks.
+
+He speaks of the noble ways, the upstanding body. He speaks of the training, the time before the ford, the man Ferdiad was at Scathach's camp. He names what he has lost as if naming it will make the inventory complete enough to hold against the absence.
+
+The Fighter has a blank vellum sheet.
+
+> **Perception DC 12.** Write the lament in real time — it is not long but it does not repeat itself; the words are already leaving and will not come back in the same order.
+
+**Fail:** You get the shape but not the words. The record is a paraphrase. The meaning is present; the voice is not.
+
+**Pass:** You write it in his voice. The record holds the exact words.
+
+TOKEN GRANTED: Ferdiad Lament Transcription.
+
+---
+
+**ACT II — "The Connacht Officers"**
+*The vellum: filled. Location: ford's edge.*
+
+The Connacht officers watching from the opposite bank do not cross immediately. When they do, one of them sees the Fighter writing and approaches. He is not hostile — he was also at Scathach's camp and recognizes what the lament was. He wants a copy.
+
+> **Insight DC 11.** The Connacht officer's request is genuine; he also lost a friend today; but a copy circulating through the Connacht camp will be used differently than a document traveling to a neutral archive.
+
+**Fail:** You give him a copy. He thanks you. The copy travels through Connacht before the original reaches Weimar.
+
+**Pass:** You explain the archive's destination and offer to note his name in the delivery record. He accepts this.
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "The Ulster Counselor"**
+*The vellum: intact. Location: Ulster camp, evening.*
+
+An Ulster counselor argues that the transcription should not leave Ulster — Cuchulain spoke in grief, not for the record; the lament names what was given up at the ford (friendship, the best companion) in terms that could be read as suggesting the combat was not fully committed. It is not appropriate for foreign archives.
+
+> **Persuasion DC 12.** The lament does not suggest uncommitted combat — it names what genuine combat costs when the combatant is also a friend; the two things are simultaneously true; suppressing the document suppresses neither the friendship nor the combat.
+
+**Fail:** He takes the document and holds it two days before releasing it. The archive receives it late but complete.
+
+**Pass:** He releases it without amendment.
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "The Scald's Version"**
+*The vellum: traveling north. Location: road toward the Baltic coast.*
+
+A court scald has composed a version of the Ferdiad combat that does not include the lament. His composition names the victory and the Gáe Bulg and the three days' courage and stops at the moment of victory. The lament would complicate the clean close.
+
+He knows about the transcription. He asks the Fighter not to deliver it — it undermines the heroic record he is creating.
+
+> **Persuasion DC 11.** The heroic record and the lament are not in competition; the archive holds documents, not judgments; the scald's composition and the lament can coexist because they record different moments of the same event.
+
+**Fail:** He follows to the next waystation and argues again. You name the archive's category and he withdraws.
+
+**Pass:** He accepts the distinction. He adds a single line to his composition: *"After, he spoke his friend's name."*
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Archive"**
+*The vellum: complete. Location: Weimar.*
+
+Sweelinck reads the transcription.
+
+"He said: 'I loved the noble ways of thee, I loved thine upstanding body.' He said this over the body of the man he killed. It is not complicated. The warrior code required the combat; the friendship required the lament; both are simultaneously true; the archive files both."
+
+He writes: *Combat Elegies — Laments Spoken by Victors Over the Bodies of Friends, First Entry. Cuchulain at the Ford: the lament that names what correct combat costs when the combatant is also a friend; the archive notes that the heroic record and the grief record are not in competition — they are the complete account of a single event, and both are necessary.*
+
+TOKEN TAKEN: Ferdiad Lament Transcription.
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "BHD_006",
+  "title": "The Lament at the Ford",
+  "source": "Cuchulain of Muirthemne — Lady Gregory",
+  "cycle": "BHD",
+  "book": "Cuchulain of Muirthemne",
+  "source_episode": "After killing Ferdiad with the Gáe Bulg, Cuchulain wades in and holds the body and speaks the lament: 'I loved the noble ways of thee, I loved thine upstanding body... There was a time I would have thought it as good as the whole province of Ulster against thee, and thy falling by me.' He is not the same afterward.",
+  "theme": "The lament a warrior is not supposed to speak over an enemy who was a friend; both the friendship and the correct combat are simultaneously true; the archive files both as necessary.",
+  "activateNode": "ULC",
+  "token": {
+    "id": "ferdiad_lament_transcription",
+    "name": "Ferdiad Lament Transcription",
+    "description": "Fighter's written record of Cuchulain's lament at the ford — the exact words in his voice; the elegy that named what was lost before the combat was ever a combat.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["ULC", "BK", "WM"],
+  "new_nodes": [],
+  "acts": [
+    { "act": 1, "location": "ford", "scene": "The ford — Ferdiad's body in the water, Cuchulain speaking", "title": "The Body at the Ford", "type": "skill_check", "skillCheck": { "skill": "Perception", "dc": 12 }, "token_action": "grant" },
+    { "act": 2, "location": "ford", "scene": "Connacht officers cross — one who was also at Scathach's camp", "title": "The Connacht Officers", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 11 }, "token_action": "check" },
+    { "act": 3, "location": "ULC", "scene": "Ulster camp, counselor's objection", "title": "The Ulster Counselor", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 12 }, "token_action": "check" },
+    { "act": 4, "location": "road_ULC_BK", "scene": "Road north, court scald's counter-composition", "title": "The Scald's Version", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 11 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "The Archive", "type": "delivery", "activateMissionBit": "bhdFerdiadLamentComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## Cycle 7 — Angle: *Deirdre's Year — The Grief That Refused to Perform*
+
+**What this angle reveals that Cycles 1–6 missed:** All prior cycles followed the Fighter into active scenes — the cloak burned, the stone held, the offer spoken, the ring too late, the supply cart, the lament. Cycle 7 turns to the year of nothing: Deirdre in Conchubar's hall, "like a ewe that has lost her lamb," not smiling for a year. This is not passivity — it is the only form of refusal still available to a captive. A household servant who observed the year records what she saw, because the unsmiling is the document, and it should be kept.
+
+---
+
+### 5-Act Vignette Play: *Deirdre's Year*
+
+**THE TOKEN: DEIRDRE'S HALL ACCOUNT** — A household servant's written record of the year Deirdre did not smile. What she ate, when she spoke, what she looked at. The record of sustained refusal as the only form of protest available.
+
+---
+
+**ACT I — "The Servant's Record"**
+*The account: blank. Location: ULC — Conchubar's hall, the hall's service wing.*
+
+The servant Mían has served in Conchubar's hall for twenty years. She has not kept written records before — there was never a year that needed to be recorded.
+
+This year is different.
+
+Deirdre does not smile. She eats when brought food, sleeps when the hall is dark, speaks when spoken to. She is not mad, not broken in the sense of collapse. She is simply not present in the way that people usually perform presence in a great hall. The king's household has been trying for a year to produce one smile. No one has managed it.
+
+Mían writes what she observes. She needs a carrier for the record.
+
+TOKEN: `deirdre_hall_account` — the servant's written record of twelve months of observation.
+
+> **History DC 11.** Understand why the record is worth carrying; the unsmiling is not grief on display — it is grief that refuses to perform, which is a different and rarer thing; the archive needs the distinction made.
+
+**Fail:** You carry the record without fully grasping the distinction. Mían adds a clarifying note.
+
+**Pass:** You understand before she explains. She adds nothing.
+
+TOKEN GRANTED: Deirdre's Hall Account.
+
+---
+
+**ACT II — "The Hall Captain"**
+*The account: sealed. Location: ULC hall.*
+
+The hall captain believes the record is a loyalty problem — a household servant documenting the king's failure to make his captive happy is documentation that could embarrass the court. He wants the record withheld.
+
+> **Persuasion DC 12.** The record is not an account of the king's failure; it is an account of what twelve months of unsmiling looks like from the outside; the archive receives primary observations, not political judgments.
+
+**Fail:** He delays the record two weeks before releasing it. You depart late.
+
+**Pass:** He accepts the distinction and releases it immediately.
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "The Norse Factor"**
+*The account: traveling. Location: road toward Baltic coast.*
+
+A Norse trading factor on the road north has heard about Deirdre's story through the shipping network — it has spread further than Ulster knows. He is collecting what he calls the "Irish sorrow stories" for a Scandinavian patron. He wants this record.
+
+> **Insight DC 11.** His collection is not malicious; but the archive's custody chain protects the record's neutrality; it should not pass through a collector's hands before it reaches the archive.
+
+**Fail:** He copies the document's opening page before you can stop him. The copy circulates.
+
+**Pass:** You name the destination; he accepts it and makes a bibliographic note for his patron instead.
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "The End of the Year"**
+*The account: almost complete. Location: Baltic waystation.*
+
+At a waystation, Mían's final entry has not yet been written — she sent the record before the year was fully complete. She sent word after: Deirdre dashed her head against a stone rather than be passed between Conchubar and Eógan. The account needs its final entry.
+
+> **Investigation DC 11.** Write the final entry accurately, in the register Mían used throughout — observational, precise, without editorializing — so that the account's ending matches its twelve months of tone.
+
+**Fail:** The final entry is written in the wrong register — too elegiac. Sweelinck will note the tonal break.
+
+**Pass:** The final entry reads like the other entries: *"Day 365. She did not eat. Day 366. She did not eat. Day 367. She was not in the hall."*
+
+TOKEN STATE 4: Account complete.
+
+---
+
+**ACT V — "The Archive"**
+*The account: twelve months complete. Location: Weimar.*
+
+Sweelinck reads the hall account.
+
+"She did not smile for a year. The king's household tried everything. None of it worked. On the last day she was not in the hall. The account is twelve months of observational entries and one absence."
+
+He writes: *Grief Records — Sustained Refusal of Normative Display, First Entry. Deirdre's Year: the unsmiling as the only form of protest available to the captive; the archive notes that the refusal to perform grief in the expected manner is a document as legible as any signed testimony — it is the sustained assertion that this hall is not where the person lives, regardless of where the person sleeps.*
+
+TOKEN TAKEN: Deirdre's Hall Account.
+
+*questComplete: true*
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "BHD_007",
+  "title": "Deirdre's Year",
+  "source": "Cuchulain of Muirthemne — Lady Gregory",
+  "cycle": "BHD",
+  "book": "Cuchulain of Muirthemne",
+  "source_episode": "After the deaths of the sons of Usnach, Deirdre is brought to Conchubar's hall; she lives there a year without smiling — 'like a ewe that has lost her lamb'; on the last day she dashes her head against a stone rather than be passed between Conchubar and Eógan",
+  "theme": "The sustained refusal of normative display as the only form of protest available to the captive; the unsmiling as a document as legible as any signed testimony.",
+  "activateNode": "ULC",
+  "token": {
+    "id": "deirdre_hall_account",
+    "name": "Deirdre's Hall Account",
+    "description": "Household servant Mían's written record of twelve months of observation: what Deirdre ate, when she spoke, what she looked at; the account of sustained refusal ending in absence.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["ULC", "VS", "WM"],
+  "new_nodes": [],
+  "acts": [
+    { "act": 1, "location": "ULC", "scene": "Conchubar's hall service wing — the servant's record commission", "title": "The Servant's Record", "type": "skill_check", "skillCheck": { "skill": "History", "dc": 11 }, "token_action": "grant" },
+    { "act": 2, "location": "ULC", "scene": "Hall captain's office — record release dispute", "title": "The Hall Captain", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "road_ULC_VS", "scene": "Baltic road north — Norse factor intercept", "title": "The Norse Factor", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 11 }, "token_action": "check" },
+    { "act": 4, "location": "VS", "scene": "Baltic waystation — final entry must be written", "title": "The End of the Year", "type": "skill_check", "skillCheck": { "skill": "Investigation", "dc": 11 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "The Archive", "type": "delivery", "activateMissionBit": "bhdDeirdreYearComplete", "questComplete": true, "token_action": "take" }
+  ]
+}
+```
+
+---
+
+*BHD SEEDS COMPLETE. §BHD-01 through §BHD-07 written. Admin pass: quest-map.md, books.md, plan.md.*
