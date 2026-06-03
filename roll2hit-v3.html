@@ -7931,6 +7931,13 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   PSA: { num:149, name:"city", label:"Florence — Pisa Gate", act:3 },
   PSAGLD: { num:150, name:"city", label:"Florence — Guild Counting House", act:3 },
   NAP: { num:151, name:"market_quarter", label:"Naples — Harbor District", act:4 },
+  PIS: { num:152, name:"city", label:"Pistoia — Notaries Quarter", act:3 },
+  PRA: { num:153, name:"city", label:"Prato — Commune City", act:3 },
+  PISNOT: { num:154, name:"city", label:"Pistoia — Via dei Notai (Ser Taddeo House)", act:3 },
+  PISGAT: { num:155, name:"city", label:"Pistoia — Eastern City Gate", act:3 },
+  MONTTG: { num:156, name:"road", label:"Montale — Toll Gate (Pistoia-Prato Road)", act:3 },
+  PRAAPR: { num:157, name:"road", label:"Prato — City Approach Road", act:3 },
+  PRACRT: { num:158, name:"city", label:"Prato — Podestà Court Clerk Desk", act:3 },
 };
 // ◆◆◆ WORLDBUILDER:NODE_MAP:END ◆◆◆
 
@@ -8010,6 +8017,13 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   PSA:{r:140,c:208},
   PSAGLD:{r:141,c:208},
   NAP:{r:176,c:220},
+  PIS:{r:136,c:205},
+  PRA:{r:138,c:206},
+  PISNOT:{r:135,c:205},
+  PISGAT:{r:137,c:205},
+  MONTTG:{r:137,c:206},
+  PRAAPR:{r:139,c:206},
+  PRACRT:{r:138,c:207},
 };
 // ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆
 
@@ -10763,6 +10777,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   blq_01_act3: { id:"blq_01_act3", type:"skill_check", title:"The Papal Checkpoint", passText:"The officer marks it commercial, non-ecclesiastical and hands it back. You receive Lodovico transit stamp.", failText:"The officer opens the folio. He reads the word miracles. He logs it as attestation of sanctity and reseals it with his inspection mark alongside the guild seal. Two seals now. Questions will follow in Naples.", activateNode:"PSA", checkStat:"int", checkPassFlag:"checkpointPassedClean", checkDC:12, activateCond:fraBenedettoManagedClean },
   blq_01_act4: { id:"blq_01_act4", type:"skill_check", title:"The Inn Courtyard", passText:"Jan Pietersz talks in gratitude. The counter-dossier is delayed at the Alpine pass. It will not reach Naples for four days. The morning session is not about speed — it is about the framing of the morning record. You receive Jan transit letter.", failText:"You pass him by. He recovers within a day and rides through the night. He arrives in Naples alongside you.", activateNode:"PSA", checkStat:"wis", checkPassFlag:"janDelayLearned", checkDC:12, activateCond:checkpointPassedClean },
   blq_01_act5: { id:"blq_01_act5", type:"skill_check", title:"The Naples Court Filing Desk", passText:"The folio enters the morning record. Rofredo reads the miracle accounts twice. The court is satisfied. A guild clerk finds you at midday with Ser Bardo purse and a note: Saint Ciappelletto is most effective when properly filed before the third hour. You receive Ser Bardo purse.", failText:"The folio goes to escrow. Afternoon session. Jan Pietersz arrives with the counter-dossier. Both documents are heard together. The inquiry will take months. Ser Bardo says: the Burgundians are exactly as difficult as Ciappelletto always said.", activateNode:"NAP", checkStat:"cha", checkPassFlag:"blq01Complete", checkDC:14, activateCond:janDelayLearned },
+  blq_02_act1: { id:"blq_02_act1", type:"skill_check", title:"Ser Taddeo and the Pen", passText:"You say: the modification you wrote protects a woman sitting in Prato right now waiting for you to decide. Ser Taddeo looks at his cup, then the pen, then picks it up. He copies the modification, seals it, and writes his name underneath. You receive the statute modification folio.", failText:"Ser Taddeo writes a personal attestation letter instead — not a certified copy, but a signed statement that he wrote the ruling. At the court the clerk will require additional persuasion to accept it.", activateNode:"PISNOT", checkStat:"cha", checkPassFlag:"blq02TaddeoCertified", checkDC:12 },
+  blq_02_act2: { id:"blq_02_act2", type:"skill_check", title:"Nardo at the Eastern Gate", passText:"You slip through the convent of San Bartolomeo secondary gate, unmanned at this hour. Nardo waits until near dawn before reporting you did not appear.", failText:"Nardo sees you leave with a document and rides ahead. Iacopo will have an extra hour of preparation at the Prato gate.", activateNode:"PISGAT", checkStat:"dex", checkPassFlag:"blq02GatePassed", checkDC:12, activateCond:blq02TaddeoCertified },
+  blq_02_act3: { id:"blq_02_act3", type:"skill_check", title:"Betto at the Toll Gate", passText:"You argue that certified judicial copies are diplomatic correspondence under the statute of 1348 — not subject to roadside inspection. Betto cannot verify this quickly. He decides the second ducat is not worth a jurisdictional dispute. He waves you through.", failText:"Betto holds you for twenty minutes and sends a boy to find the man who paid him. Iacopo receives word and rides to the Prato gate with an extra hour of preparation.", activateNode:"MONTTG", checkStat:"cha", checkPassFlag:"blq02TollCleared", checkDC:13, activateCond:blq02GatePassed },
+  blq_02_act4: { id:"blq_02_act4", type:"combat", title:"Iacopo Blocks the Road", passText:"Both men down or fled. Iacopo retreats on horseback. You run the last quarter-mile to the city gate. The terce bell is ringing.", failText:"Ten minutes lost. The session has opened. At the court the clerk must interrupt a proceeding already in progress.", activateNode:"PRAAPR", checkPassFlag:"blq02RoadCleared", activateCond:blq02TollCleared },
+  blq_02_act5: { id:"blq_02_act5", type:"skill_check", title:"The Filing Desk Before Terce", passText:"Prior legal records can be filed by any person in possession of the document under communal court rules. Testa accepts this, stamps the receipt, and carries the folio to the judge table before the session opens. The judge reads the modification. The husband advocate case collapses before it is made. Outside, Fiamma stands in the morning sun. The document did not save her. It arrived.", failText:"The folio enters the afternoon review queue. The morning session proceeds on the old statute. Fiamma hears herself argued toward a fire the law no longer lights. She is discharged by afternoon. But the morning session record will say: case continued.", activateNode:"PRACRT", checkStat:"cha", checkPassFlag:"blq02Complete", checkDC:11, activateCond:blq02RoadCleared },
 };
 // ◆◆◆ WORLDBUILDER:QUEST_DB:END ◆◆◆
 
@@ -11738,6 +11757,7 @@ const BIRKA_NPC_PROFILES = { // → doc: world.md §Birka Six NPCs
                   dialogue:'"I filed for provisional re-registration. The guild clerk said it takes ninety days. I said: that\'s fine." A pause. "Six months ago I would not have said that\'s fine." He dips the quill. "Progress is a strange shape."' },
   },
   ser_bardo: { key:"ser_bardo", name:"Ser Bardo Albizzi", occupation:"Guild Merchant", node:"PSAGLD" },
+  ser_taddeo: { key:"ser_taddeo", name:"Ser Taddeo Borghini", occupation:"Retired Judge", node:"PISNOT" },
 };
 // ◆◆◆ WORLDBUILDER:BIRKA_NPC:END ◆◆◆
 
@@ -12044,6 +12064,11 @@ const _S_DEFAULTS = () => ({
     checkpointPassedClean: false,
     janDelayLearned: false,
     blq01Complete: false,
+    blq02TaddeoCertified: false,
+    blq02GatePassed: false,
+    blq02TollCleared: false,
+    blq02RoadCleared: false,
+    blq02Complete: false,
 });
 
 /* ── Layer 48: Luck — Seventh Stat ── */
