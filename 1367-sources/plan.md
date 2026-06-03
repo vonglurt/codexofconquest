@@ -211,21 +211,49 @@ A Latin manuscript of Mandeville's Travels in a German monastery contains an add
 
 ---
 
-## §KYA-CONT — COMPLETE 2026-05-31
+## §KYA-CONT — SEEDS COMPLETE 2026-06-02
 
-Shah-Nameh narrative fully processed across parts 1–4. Part 5 confirmed as Divan of Hafiz only (no Shah-Nameh content). KYA marked [x] in books.md. Seeds KYA-01–25 written. KYA-01 full vignette spec done. KYA-02–25 seeds pending full spec.
+Shah-Nameh narrative fully processed across parts 1–4. Part 5 confirmed as Divan of Hafiz only (no Shah-Nameh content). KYA marked [x] in books.md. Seeds KYA-01–25 written. All 25 full vignette specs done 2026-06-02.
 
 Full narrative arc: Kaiúmers → Zohák → Kavah/Feridún → Sohráb tragedy → Saiáwush betrayal and execution → Kai-khosráu crowned and vanishes → Zoroaster/Gushtásp → Isfendiyár's Heft-Khan and Brazen Fortress → Isfendiyár vs. Rustem (Kazú-arrow, both fated) → death of Rustem (Shughad's pits) → Sikander/Alexander (half-Persian framing, Wall of Gog and Magog, dies at Kashán) → Firdusi's Satire on Mahmúd.
 
-Remaining: add KYA-01 to quest-map.md theme thread when it is fully implemented. Rubaiyat (Omar Khayyam) and Divan (Hafiz) from the same volume may be processed separately under new codes.
+Seeds complete 2026-06-02:
+- KYA-01: "The Derafsh Kaviani Fragment" ✓ DONE
+- KYA-02: "The Two-Falls Custom" ✓ DONE
+- KYA-03: "The Fire Chain" (YAZ→TBZ→WM) ✓ DONE
+- KYA-04: "The Demon's First Lesson" (NIS→CON→WM) ✓ DONE
+- KYA-05: "The Princess of Zábulistán" (KBL→TBZ→WM) ✓ DONE
+- KYA-06: "The Record of Successive Honors" (TBZ→RGS→WM) ✓ DONE
+- KYA-07: "The Símúrgh's Second Feather" (YAZ→CON→WM) ✓ DONE
+- KYA-08: "The Caravanserai Account" (SIS→SAM→WM) ✓ DONE
+- KYA-09: "The Trophy of the Broken Girdle" (SIS→MRG→WM) ✓ DONE
+- KYA-10: "The Second Bracelet" (SIS→TBZ→WM) ✓ DONE
+- KYA-11: "The Tree at the Border" (SAM→CON→WM) ✓ DONE
+- KYA-12: "The Portrait Gallery" (SAM→NIS→WM) ✓ DONE
+- KYA-13: "The King from the Sky" (TBZ→CON→WM) ✓ DONE
+- KYA-14: "The Seeing Cup" (MRG→TBZ→WM) ✓ DONE
+- KYA-15: "The Ring in the Bird" (SAM→TBZ→WM) ✓ DONE
+- KYA-16: "The Warriors' Mounds" (TRB→CON→WM) ✓ DONE
+- KYA-17: "The Golden Basin" (SAM→MRG→WM) ✓ DONE
+- KYA-18: "Zerdusht's Tree" (YAZ→MRG→WM) ✓ DONE
+- KYA-19: "Maníjeh's Letter" (NIS→RGS→WM) ✓ DONE
+- KYA-20: "The Dragon-Cart Design" (TBZ→NIS→WM) ✓ DONE
+- KYA-21: "The Kazú-Tree Arrow" (SIS→NIS→WM) ✓ DONE
+- KYA-22: "The Pit Record" (HRT→SAM→WM) ✓ DONE
+- KYA-23: "The Four Goblets" (SAM→CON→WM) ✓ DONE
+- KYA-24: "The Wall Stone" (TRB→CON→WM) ✓ DONE
+- KYA-25: "Firdusi's Complaint" (NIS→TBZ→WM) ✓ DONE
+
+New nodes added: YAZ (Yazd), KBL (Kabul), SIS (Sístán), TBZ (Tabriz — formally added to Location Grid), TRB (Trebizond — formally added to Location Grid), HRT (Herat).
+Rubaiyat (Omar Khayyam) and Divan (Hafiz) from the same volume may be processed separately under new codes.
 
 ---
 
 ## IST — The Alexiad (Anna Komnene, c. 1148)
 
-**Processed 2026-06-01** — IST-01 spec complete (The Enemy's Portrait, CON→RGS→WM). Processed from memory (no txt file; 165 KB). IST-02–07 seeds written. See IST-alexiad.md.
+**SEEDS COMPLETE 2026-06-02** — IST-01 spec complete (The Enemy's Portrait, CON→RGS→WM). IST-02–07 all vignettes done. Processed from memory (no txt file; 165 KB). See IST-alexiad.md.
 
-Seeds outstanding (need full 5-act vignette treatment):
+Seeds complete 2026-06-02:
 - IST-02: "The Curtain Notes" — Alexios's secret transcription of Basil the Bogomil's heresy census; Constantinople monastery → Thessaloniki → Weimar ✓ DONE 2026-06-02
 - IST-03: "The Nicaea Receipt" — the surrender document Alexios negotiated before the Crusaders could enter; the Crusaders' grievance in document form; Constantinople → Rhodes → Weimar ✓ DONE 2026-06-02
 - IST-04: "The Bryennios Draft" — Nikephoros Bryennios's contradictory draft history; three places where he and Anna disagree; monastery archive → Ragusa → Weimar ✓ DONE 2026-06-02
@@ -241,16 +269,16 @@ Next books to process (in approximate priority order):
 
 | Code | Title | KB | Status |
 |------|-------|----|--------|
-| IST | Alexiad (Anna Komnene) | 165 | **Processed 2026-06-01 — IST-01 spec complete (The Enemy's Portrait, CON→RGS→WM); IST-02–07 seeds. Memory-processed (no txt file). See §IST above.** |
+| IST | Alexiad (Anna Komnene) | 165 | **SEEDS COMPLETE 2026-06-02 — IST-01–07 all vignettes done. Memory-processed (no txt file). See §IST above.** |
 | NWI | Anabasis (Xenophon) | 545 | **SEEDS COMPLETE 2026-06-02 — NWI-01–08 all vignettes done** |
 | WAW | Quo Vadis (Sienkiewicz) | 1201 | **SEEDS COMPLETE 2026-06-02 — WAW-01–08 all vignettes done** |
 | MLA | Plutarch's Lives | 4222 | **SEEDS COMPLETE 2026-06-02 — MLA-01–07 all vignettes done** |
 | BGW | Arabian Nights (Burton) | 983 | **SEEDS COMPLETE 2026-06-02 — BGW-01–08 all vignettes done** |
 | CAI | Arabian Nights (Lang) | 629 | **SEEDS COMPLETE 2026-06-02 — CAI-01–08 all vignettes done** |
 | BEY | Mandeville's Travels | 472 | **SEEDS COMPLETE 2026-06-02 — BEY-01–07 all vignettes done** |
-| KYA | Shah-Nameh | 883 | **Processed 2026-05-31 — COMPLETE. KYA-01 spec + KYA-02–25 seeds. See §KYA-CONT.** |
+| KYA | Shah-Nameh | 883 | **SEEDS COMPLETE 2026-06-02 — KYA-01–25 all vignettes done. New nodes: YAZ, KBL, SIS, TBZ, TRB, HRT. See §KYA-CONT.** |
 | HTY | Mahabharata | 83 | **SEEDS COMPLETE 2026-06-02 — HTY-01–06 all vignettes done** |
-| ADA | Ramayana | 2339 | **Processed 2026-05-31/06-01 — COMPLETE. ADA-01 spec complete (The Curlew's Grief); ADA-02–48 seeds. All 12 parts fully read (Parts 11–12 are scholarly apparatus only). See ADA-ramayana.md.** |
+| ADA | Ramayana | 2339 | **IN PROGRESS 2026-06-02 — ADA-01–17 done. ADA-18–48 pending. New nodes: ERZ, MOS, MRV, BUR, CAF, TAN, BUK, SAR, BYR, AMY, SIV, THE, NIC. See ADA-ramayana.md.** |
 | AMS | Tale of Genji | 435 | **SEEDS COMPLETE 2026-06-02 — AMS-01–07 all vignettes done** |
 | HAV | Buccaneers of America | 247 | **SEEDS COMPLETE 2026-06-02 — HAV-01–06 all vignettes done** |
 | CLJ | Dracula | 869 | **SEEDS COMPLETE 2026-06-02 — CLJ-01–09 all vignettes done** |
@@ -409,17 +437,17 @@ Seeds outstanding (need full 5-act vignette treatment):
 
 ## BEY — Mandeville's Travels, Supplementary 1367 Cycle (attr. Sir John Mandeville, c. 1357)
 
-**Processed 2026-05-31** — BEY-S08 spec complete (The Sultan's Commission, FAM→RHD→WM). Supplementary Cycle 2 written; four admin updates applied. Parts 1–2 of source read; Chapter VI (military service to Sultan), Chapter XI (letters with great seal), Chapter XV (Sultan's dialogue and intelligence network). New nodes: FAM (Famagusta harbor district), RGS (Ragusa/Dubrovnik waystation). See BEY-mandeville.md Cycle 2.
+**SEEDS COMPLETE 2026-06-02** — BEY-S08 spec complete (The Sultan's Commission, FAM→RHD→WM). Supplementary Cycle 2 written; four admin updates applied. Parts 1–2 of source read; Chapter VI (military service to Sultan), Chapter XI (letters with great seal), Chapter XV (Sultan's dialogue and intelligence network). New nodes: FAM (Famagusta harbor district), RGS (Ragusa/Dubrovnik waystation). See BEY-mandeville.md Cycle 2.
 
 Theme: "The document that authenticates a prior relationship now inconvenient to both grantor and recipient; what was genuine when it was made becomes politically radioactive when the world has changed; the archive receives it because neutral preservation cannot be accused of taking a side."
 
-Seeds outstanding from supplementary cycle (need full 5-act vignette treatment):
-- BEY-S09: "The Intelligence Report" — Dominican analysis identifying the Sultan's French-speaking agents from Chapter XV; one named is a current cardinal's brother
-- BEY-S10: "Sahag's Authentication" — the Armenian dealer's chain of custody for the cedar box; now in Beirut
-- BEY-S11: "The French-Speaking Lord" — a descendant of one of the Sultan's four intelligence lords; family document as Mamluk registry entry
-- BEY-S12: "The Temple Entry Record" — the Saracen custodians' own entry register for the Temple of the Lord, corroborating Chapter XI
-- BEY-S13: "The Liège Funeral Inscription" — Jean d'Outremeuse's record of Mandeville's deathbed; a rubbing of the actual stone
-- BEY-S14: "What the Pilgrim's Signet Looked Like" — collection of ordinary Mamluk signets given to European servants, contrasting with the great seal commission
+Seeds complete 2026-06-02:
+- BEY-S09: "The Intelligence Report" — Dominican analysis identifying the Sultan's French-speaking agents from Chapter XV; one named is a current cardinal's brother ✓ DONE 2026-06-02
+- BEY-S10: "The Chain Document" — Sahag ibn Minas's four-page provenance record for the cedar box; material corroboration of the Sultan's Commission from a completely independent source ✓ DONE 2026-06-02
+- BEY-S11: "The French-Speaking Lord" — Tariq ibn Mansur's registry entry; four men, four assignments, one marginal note about good standing ✓ DONE 2026-06-02
+- BEY-S12: "The Temple Entry Record" — waqf custodian's register fragment; independent corroboration of Mandeville Chapter XI from the other side of the doorway ✓ DONE 2026-06-02
+- BEY-S13: "The Liège Rubbing" — d'Outremeuse's stone rubbing + observation note; both names present, neither primary; archive receives the question ✓ DONE 2026-06-02
+- BEY-S14: "What the Pilgrim's Signet Looked Like" — fourteen ordinary signets; Yasmin's annotation; the collection defines the Commission by contrast ✓ DONE 2026-06-02
 
 ---
 
@@ -479,11 +507,160 @@ Theme: "The margin is the only place the diminished heir of a great institution 
 Theme: "The written record of an oral story captures the text but severs it from the tradition that produced it; the codicil that names the tradition is the only document that keeps the origin attached to the text when it travels; without it the story belongs to the writer; with it the story carries its own genealogy; the archive that creates a new category to receive it is the only institution that can keep both layers true."
 
 Seeds outstanding from supplementary cycle (need full 5-act vignette treatment):
-- CAI-S09: "The Lamp Boy's Line" — Damascus court dispute over oral performance rights; first legal record treating an oral story as property
-- CAI-S10: "Diyab's Variant" — the Aleppo-specific Aladdin; Armenian scholar's private letter
-- CAI-S11: "Umm Sulayman's Six Variants" — same story, six performance contexts, six emphases
-- CAI-S12: "The Hakawati License" — Mamluk market administrator's commercial rights license for a storyteller
-- CAI-S13: "The Performance Notation" — first attempt to document story-context signals in written form
-- CAI-S14: "The Oral Genealogy" — four storytellers' transmission genealogies for the same story
+- CAI-S09: "The Lamp Boy's Line" — Damascus court dispute over oral performance rights; first legal record treating an oral story as property ✓ DONE 2026-06-02
+- CAI-S10: "Diyab's Variant" — the Aleppo-specific Aladdin; Armenian scholar's private letter ✓ DONE 2026-06-02
+- CAI-S11: "Umm Sulayman's Six Variants" — same story, six performance contexts, six emphases ✓ DONE 2026-06-02
+- CAI-S12: "The Hakawati License" — Mamluk market administrator's commercial rights license for a storyteller ✓ DONE 2026-06-02
+- CAI-S13: "The Performance Notation" — first attempt to document story-context signals in written form ✓ DONE 2026-06-02
+- CAI-S14: "The Oral Genealogy" — four storytellers' transmission genealogies for the same story ✓ DONE 2026-06-02
 
+
+
+---
+
+## §MATH-01 — The Mathematical World: Group Theory, The Monster, and the Event Horizon (PLANNED)
+
+**Status:** PLANNED — not yet in game. Requires §DUNGEON-01 node infrastructure and CY node operational before integration.
+
+**Concept:** A trans-temporal mathematical universe overlaid on the game's 1367 setting. Mathematics in 1367 is at a precise inflection point: Hindu-Arabic numerals (zero included) are spreading from the Byzantine and Islamic worlds into Latin Europe, displacing Roman numerals; Euclid's *Elements* has been translated and re-translated; algebra exists; and the deeper structure of symmetry — which will not be named "Group Theory" for five hundred years — is implicit in every Gothic arch, every crystal, every planetary orbit. The Fighter moves through this world carrying the documents of mathematical transmission. The Event Horizon is the node where this becomes explicit.
+
+---
+
+### The Event Horizon Node (EHZ)
+
+**Concept:** A floating station at the edge of the Neon Undercity's deepest layer — accessible via CY (the Void passages beneath Birka) through a passage that opens only when the Fighter has carried at least three mathematical documents. The Event Horizon is where all particles "park before they pass through." It is like Deep Space Nine: a waystation at the boundary between the finite and the infinite. From its observation deck, a **magical rope** rises straight up into a sky that has no ceiling — and beside it, an **emergency ladder** that goes infinite in the same direction. The rope is the shortcut; the ladder is the proof that the shortcut works.
+
+**Visual register (Adventure Time + Deep Space Nine):** Low-gravity stone station, mathematical symbols carved into every wall in multiple traditions (Sanskrit, Arabic, Greek, Roman, Chinese), a wormhole visible from the main window that contains a group multiplication table instead of stars. The station's AI (accessible via the mechanical hum beneath the station) speaks in Noether's theorem: every question about symmetry corresponds to a conservation law, and vice versa. The emergency ladder is labeled: *DO NOT USE UNLESS THE FINITE HAS FAILED.* It is labeled in every known numeral system.
+
+**Mechanic:** From EHZ, the Fighter can access mathematical quest-nodes not reachable from any geographic map. Nodes include: MONS (The Monster's Manifold — 196,883-dimensional space represented as a puzzle room), ZERO (The Zero Transit — where zero entered European mathematics), and CNTR (Cantor's Attic — infinite levels above the ladder).
+
+---
+
+### The Monster
+
+**Source:** The Monster Group — largest of the 26 sporadic simple groups; size ~8×10^53 (approximately the number of atoms in the planet Jupiter); identified by John Conway; acts on a space of 196,883 dimensions; connected via Monstrous Moonshine (proven by Richard Borcherds, 1992) to modular forms and string theory.
+
+**In-game presence:** The Monster is not a creature. It is a room. The MONS node is a chamber that should not fit in three dimensions but does, because the Shattered Codex's physics were written by whoever designed the Monster's irreducible representation. The Fighter enters to retrieve a document that a mathematician's ghost left there: *The Moonshine Memo* — a single page noting that the coefficient of the j-function's first non-trivial term (196,884) is one more than the Monster's smallest faithful representation dimension (196,883). The archivist at Weimar does not know what to do with it. It goes under: *Numerical Coincidences — Possibly Not Coincidences.*
+
+**Size context to convey in-game:** If every atom in the observable universe had a copy of the observable universe inside it, the total sub-atom count would be comparable to the size of the permutation group S101 — which is *already* vastly larger than the Monster. What makes the Monster remarkable is not its size but that it abruptly *stops*. The Monster is the largest of exactly 26 exceptions that don't fit any pattern. The universe was, apparently, designed by committee. One of the committee members was not paying attention. The 26 sporadic groups are what that looks like in pure mathematics.
+
+---
+
+### Quest Seeds
+
+#### MATH-01: "The Number That Means Nothing" (The Zero Quest)
+*Rome → Constantinople → Weimar*
+
+In 1367, the Hindu-Arabic numeral system including zero has been available in Europe since Fibonacci's *Liber Abaci* (1202) but Roman numerals are still in official use in many institutions. A Byzantine scholar named Konstantinos Arithmetikos has compiled a treatise demonstrating that the absence of positional notation and zero made Roman military logistics systematically worse — that Caesar's quartermasters routinely miscalculated grain supplies by 15–30% because multiplying MXLVII by DCXCIII requires a different process for every pair of numbers, while multiplying 1047 × 693 uses the same process every time.
+
+**TOKEN:** The Zero Treatise — Konstantinos's demonstration document, with worked examples of the same calculation in both numeral systems, showing the Roman system's catastrophic performance at multiplication and division.
+
+**Route:** CON → RME (Rome) → WM
+
+**Theme:** The symbol that represents nothing holds the place that makes everything else count; the most important number in European administrative history arrived as a foreign concept and was resisted for two hundred years after it solved all the problems; the archive receives it not as a curiosity but as the primary document explaining why Roman accounting collapsed.
+
+**Skill sequence:** History DC 12 (CON — recognize the treatise's significance), Persuasion DC 13 (RME — convince a Roman administrator that "nothing" is worth preserving), Investigation DC 12 (WM — propose archive category: Numeral System Transition Documents — Positional Notation Introduction).
+
+**New node:** RME (Rome — administrative district) if not already in grid.
+
+---
+
+#### MATH-02: "What the Snowflake Knows" (The Group Theory Quest)
+*WM → EHZ → MONS*
+
+The Weimar archive contains a manuscript by an anonymous Islamic geometer (probably from the Maragha Observatory, c. 1260) describing the symmetries of a hexagonal crystal: twelve actions that leave it unchanged. He listed them without calling them a group. He did not know he was describing the same structure as the rotation group of certain polynomials, or the symmetry group of the water molecule. He just described what he saw.
+
+A scholar has found the manuscript and added a comparison: the same twelve actions appear in a musical scale analysis, in a crystallography diagram, and in a description of a six-sided puzzle lock. He is asking whether these are the same thing.
+
+**TOKEN:** The Twelve Actions Manuscript — the Islamic geometer's hexagonal symmetry description, with the modern scholar's four-way comparison appended.
+
+**Route:** WM → EHZ → MONS → WM
+
+**Theme:** The same structure arising in apparently unrelated situations is the first evidence that the structure is fundamental; the mathematician who lists twelve actions without calling them a group has done the hardest work; naming is secondary; the archive receives the work of noticing before the work of naming.
+
+**Skill sequence:** History DC 12 (WM — recognize the manuscript), Investigation DC 13 (EHZ — navigate the Event Horizon's symmetry-recognition puzzle), Investigation DC 12 (MONS — identify that the Monster's 196,883 dimensions are not arbitrary but are the minimum space in which this particular structure of symmetry can live), Investigation DC 12 (WM return — propose archive category).
+
+**Archive category:** Symmetry Documents — Structural Recurrence Across Unrelated Fields.
+
+**Adventure Time register note:** The EHZ puzzle speaks in the voice of a small mathematical construct that has been waiting here for five hundred years and is very excited to have a visitor. It will explain group theory using examples from snowflakes, Rubik's cubes, and a very confused equation it found in the wall.
+
+---
+
+#### MATH-03: "The Quintic's Impossibility" (The Abel-Ruffini Quest)
+*Bologna → WM*
+
+*(Historically early — Abel-Ruffini theorem was 1799/1824, but the quest can be set with a fictional precursor: an Islamic algebraist who found that degree-5 polynomial solutions by radicals "always failed" without knowing why.)*
+
+Al-Tusi's student Mahmud al-Hamadani has written a manuscript proving that his master's method for cubic equations does not generalize to degree-5 equations — that every attempt produces a contradiction. He cannot explain why. The why is that the permutation group S5 has a different kind of atomic structure than S4 and lower, but he does not have group theory, so he can only describe the failure accurately without naming its cause.
+
+**TOKEN:** The Hamadani Failure Record — forty pages of accurate failed attempts at a quintic formula, ending with the note: "The structure of the problem prevents this. I do not yet know what that structure is."
+
+**Route:** BRS (Bursa) → RGS → WM
+
+**Theme:** The honest record of a failure that contains the proof of an impossibility is more valuable than the successful formula it was trying to find; the archive receives the failures as primary evidence; the document that says "I cannot" and is correct is the most important scientific statement in the field.
+
+**Archive category:** Unsolved Problem Records — Documented Impossibility; records of accurate failure that constitute proof of impossibility.
+
+---
+
+#### MATH-04: "The Counting Quest" (Roman Numerals, Zero, Greek Spheres, Byzantine Transmission)
+*JER → CON → RME → WM*
+
+This is the long quest connecting all the counting-system threads. In 1367, three separate documents are in transit toward the Weimar archive:
+
+1. A **Greek sphere diagram** from Archimedes (transmitted via Arabic, now in a Constantinople library) — Archimedes used a proto-set-theory to count grains of sand; his "sand-reckoner" uses a positional system that anticipates place value by fifteen centuries.
+
+2. A **Byzantine administrative ledger** from 1340 showing the switchover moment: the same column of expenses written first in Greek numerals, then rewritten below in Arabic-Hindu numerals, because the scribe was clearly taught the new system partway through the job.
+
+3. A **Roman surveyor's field notebook** from an archaeological find near Jerusalem — dated first century BC, containing the surveyor's private notation system that uses dots for zero (not in Roman practice — this surveyor invented positional notation independently and it died with him).
+
+**TOKEN:** The Three Counting Documents — a cedar sleeve containing all three, to be delivered as a set; they must arrive together because the argument only works if the archive can see all three side by side.
+
+**Route:** JER → CON → RME → WM (or JER → BEI → CON → RME → WM for connection to BEY nodes)
+
+**Theme:** The concept of zero and positional notation was invented at least four times independently in human history and suppressed or lost at least three times; the documents that survived are not the victories but the near-misses; the Fighter carries all three because a single document proves one man thought of it; three independent documents prove it is a natural consequence of counting itself.
+
+**Skill sequence:** History DC 12 (JER — assemble the set), Persuasion DC 12 (CON — convince Byzantine scholar not to separate the set), History DC 13 (RME — argue for all three against a Roman mathematician who wants to study them separately), Investigation DC 12 (WM — propose archive category: Independent Invention Records — Positional Notation; parallel discoveries with no transmission chain; the independence is the evidence).
+
+---
+
+#### MATH-05: "The Moonshine Memo" (The Monster / Event Horizon quest)
+*EHZ → MONS → WM*
+
+The number 196,883 appears in the Monster group's smallest faithful representation. The number 196,884 appears as the coefficient of the j-function in modular form theory. The difference is exactly one.
+
+In the game's timeline, this coincidence has been noticed by a scholar named Johannes von Weisheit who arrived at the Event Horizon node via the Neon Undercity and has not been seen since. He left a single memo on the observation deck: *"The Monster knows about elliptic functions. No one told it. This is either coincidence or evidence of something so fundamental that it does not have a name yet."*
+
+**TOKEN:** The Moonshine Memo — Johannes's single-page observation; folded once; sealed with a seal that depicts a snowflake with exactly twelve symmetries.
+
+**Route:** EHZ → MONS → WM
+
+**Theme:** The most important mathematical connections are discovered by noticing that two apparently unrelated things differ by exactly one; the number that is one too large is always worth asking about; the archive creates a new category for this: Mathematical Observations — Numerical Coincidences Pending Explanation; "The Monster knows about elliptic functions. The archive records this."
+
+**Mechanic note:** The MONS node requires the Fighter to navigate a room whose walls rearrange according to group multiplication rules. The correct path through the room is found by identifying that the room's rearrangement pattern is the 196,883-dimensional representation compressed into a 3D puzzle space. Whimsy level: Adventure Time (the room complains about being misunderstood and has strong opinions about which sub-group is the baby monster).
+
+---
+
+### Noether's Theorem Connection
+
+Every quest in §MATH-01 carries a Noether signature: every TOKEN that reaches the archive corresponds to a conservation law the Fighter was unknowingly maintaining throughout the quest. The archive receives not just the document but the proof that something was preserved along the way.
+
+- MATH-01 (Zero): conservation of place-value meaning across numeral systems
+- MATH-02 (Snowflake): conservation of structural identity across unrelated fields
+- MATH-03 (Quintic): conservation of honest failure as a form of proof
+- MATH-04 (Counting): conservation of independent discovery as natural necessity
+- MATH-05 (Moonshine): conservation of coincidences that are not coincidences
+
+**Archive category for the series:** Mathematical Records — Conservation of Structural Truth.
+
+---
+
+### Node Summary
+
+| Node | Name | Access | Description |
+|------|------|--------|-------------|
+| EHZ | Event Horizon | CY passage, unlocks after 3 math documents carried | Space-station node; magical rope + infinite emergency ladder; observation deck facing the Monster's manifold; AI speaks in Noether's theorem |
+| MONS | The Monster's Manifold | EHZ only | 196,883-dimensional room compressed to 3D puzzle space; the Monster's multiplication table as wall decoration; the Moonshine Memo on the floor |
+| ZERO | The Zero Transit | CON or CAI | The passage point where zero entered European mathematics; a corridor with two doors: one labeled MXLVII and one labeled 1047; only one opens from the inside |
+| CNTR | Cantor's Attic | EHZ → emergency ladder, ∞ rungs up | Accessible only in endgame; the room where countable and uncountable infinity meet; the ladder never ends but the first 10 rungs are enough to solve the quest |
 

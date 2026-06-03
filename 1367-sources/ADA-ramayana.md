@@ -876,3 +876,2116 @@ He writes: *Documents on the Distinction Between Justice and Vindication — Sit
 - **Synopsis source:** Canto I (Narad's speech, lines 86–102) provides complete story summary. Canto III (The Argument, lines 132) confirms full arc. Both read in full.
 - **English-only note:** No Sanskrit, Persian, or other foreign language in game/mission text. Names of persons and places acceptable (proper nouns, not translatable). "Sloka," "shoka" used only as thematic reference in this admin doc; not in quest text.
 - **Cross-ref:** ADA-03 (Kaikeyi's boon) will need cross-check with ARN quest (§1367 faith/faction quest arc) before implementation — the "banked political debt" theme may overlap with existing 1367 faction content.
+- **Vignettes complete as of 2026-06-02:** ADA-01 through ADA-17 (The Curlew's Grief through The Crow's Eye). ADA-18–48 pending.
+
+---
+
+## §ADA-03 — Vignette Cycle 3: "The Bow No God Could String"
+
+### What This Angle Reveals
+
+Cycles 1 and 2 took opposite ends of the story: the origin of poetry, and the refusal to perform again. Cycle 3 takes the instrument of legitimacy at the center. The bow of Shiva was so heavy that 8,000 men carried it in a cart and no god could string it. Rama lifted it, strung it, and broke it. The marriage and the kingdom followed. What the cycle produces is the technical account — bow dimensions, weight description, trial-conditions — with margin notes from an Armenian military engineer who has been asked whether it could be reproduced. His conclusion: it cannot. That conclusion is also, obliquely, a theological argument.
+
+### TOKEN: "The Swayamvara Record"
+
+A rolled parchment, leather-wrapped and sealed with black wax. The inner text is a weapons scholar's formal account of the Janak trial: the bow's weight (requiring 8,000 bearers), its arc, the trial-conditions (any contender who lifts and strings it wins the bride). In the margin, in a different hand, Grigor Bagratouni of the Erzincan garrison: *"Arc radius: indeterminate from text. Draw-weight: no existing mechanism. Commission note: file as mythological reference only."*
+
+- `id`: `swayamvara_record`
+- `name`: "The Swayamvara Record"
+- `description`: "Rolled parchment, leather-wrapped, black wax. Weapons scholar's account of the Janak bow-trial (8,000 bearers, arc, trial-rules) with Armenian engineer's margin note: draw-weight and arc radius not reproducible by any known mechanism."
+- `grant_act`: 1, `take_act`: 5, `check_acts`: [2, 3, 4]
+
+### Nodes
+
+**New node required:** `ERZ` — Erzincan, eastern Anatolian fortress-town (Eretna principality, 1367)
+**Existing:** `TRB`, `WM`
+
+### Route: `ERZ` → `TRB` → `WM`
+
+---
+
+**ACT I — "What the Engineer Wants" (Erzincan)**
+
+Grigor Bagratouni is a practical man. He has already answered the question in his margin notes. The patron in Trebizond — a collector interested in Hindu epic texts that have been arriving via Tabriz in the last decade — commissioned a feasibility study: can the bow described in the Sanskrit account be made? Bagratouni wrote two lines. Now he needs the original text and the two-line refutation delivered together so the patron can read both.
+
+He hands you the roll. *The Swayamvara Record is sealed, the leather wrapping tight, the black wax pressed with a workshop seal.*
+
+"He will read my notes first. I've arranged it so they sit at the outer edge of the scroll when re-rolled. Don't let anyone break the seal before he does."
+
+*Skill check DC 12 — History or Insight:* A specification that proves an object cannot be reproduced is also, covertly, an argument that the event required supernatural intervention. History: the Ramayana bow-trial carries a specific theological claim in Sanskrit commentary tradition. Insight: Bagratouni is aware of this implication.
+
+*On success:* He adds: "Tell him the refutation is the argument."
+*On fail:* You take the roll without the interpretive frame.
+
+*TOKEN granted Act I.*
+
+---
+
+**ACT II — "The Zigana Pass" (Pontine Alps crossing)**
+
+The road from Erzincan to Trebizond rises through the Pontine Alps at the Zigana pass — 2,000 meters, clear in late summer but narrow, with stone overhangs and a track that becomes a ledge for the last hour before the descent. A pack train ahead has stopped: the lead animal has thrown a shoe and is blocking the track. The merchant is young and frightened. The afternoon window before cloud closes is shrinking.
+
+*Skill check DC 12 — Animal Handling or Athletics:* Animal Handling: calm the horse and guide it off the track to a side clearing. Athletics: shift the pack load manually to free the track.
+
+*On success:* You reach Trebizond before dark. *The Swayamvara Record is dry and undamaged.*
+*On fail:* You wait in the pass until morning. One day late.
+
+*TOKEN check Act II.*
+
+---
+
+**ACT III — "The Factor's Examination" (Trebizond)**
+
+The patron — Aristakes Tzimiskes, a collector of technical and philosophical texts — has sent his factor to the harbor caravanserai to meet you. The factor is polite and specific: before he pays the transit fee, he wants to verify that the scroll contains both the original account and the margin notes.
+
+*Skill check DC 12 — Persuasion or Insight:* Persuasion: a sealed document is either received intact or returned to sender; the patron may examine it in his own house. Insight: the factor is checking for whether the margin notes conclude the bow is *impossible* (which is what the patron paid for) rather than merely difficult.
+
+*On success:* He accepts the sealed roll and provides a receipt. "The patron will want to see you when he opens it."
+*On fail:* He breaks the outer seal himself. He reads the margin notes, nods, and pays. The patron receives it already opened.
+
+*TOKEN check Act III.*
+
+---
+
+**ACT IV — "The Librarian's Request" (Trebizond scholar quarter)**
+
+A Greek scholar named Theophilos — a librarian at the monastic archive — has heard a Sanskrit-derived weapons text is in the city. He finds you outside the patron's house. He doesn't want to buy the scroll. He wants to copy only the margin notes. The refutation of the bow's reproducibility is a scientific contribution. The library should hold it.
+
+*Skill check DC 11 — Persuasion:* The margin notes are integral to the commission. The patron paid for the complete scroll; the notes cannot be separated without diminishing what he purchased.
+
+*On success:* Theophilos backs down. He asks you to tell the patron he is available if the patron ever wishes to donate a fair copy.
+*On fail:* He sends a note to the patron directly, creating a minor delay while the patron decides.
+
+*TOKEN check Act IV.*
+
+---
+
+**ACT V — "Three Witnesses" (Weimar)**
+
+The patron has released the scroll to the archive. He has added a third annotation: *"Confirmed: no known craft meets these specifications. Filed accordingly. A. Tzimiskes, Trebizond."* Three hands on the same document.
+
+Sweelinck reads the layers in order: the technical account, Bagratouni's refutation, Tzimiskes's confirmation.
+
+"Three witnesses, all reaching the same conclusion by different means. The bow cannot be made."
+
+He pauses.
+
+"Therefore the stringing was not a technical feat. The specifications themselves are the theological argument. The bow proves the miracle by being impossible."
+
+He writes: *Trial Objects — Specifications That Cannot Be Replicated Without the Legend's Conditions. First entry: the Janak bow account, Ramayana.*
+
+*TOKEN taken Act V.*
+
+---
+
+### Theme
+
+**"The bow's specifications are the proof that only a god could string it; the technical refutation becomes a theological argument without intending one; the archive files it under specifications that cannot be replicated without the legend's conditions."**
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "ADA_003",
+  "title": "The Bow No God Could String",
+  "source": "Ramayana (Griffith verse translation)",
+  "cycle": "ADA",
+  "book": "Ramayana",
+  "source_episode": "Bala Kanda — Janak's trial-bow of Shiva; Rama lifts, strings, and breaks it; Sita won",
+  "theme": "The bow's specifications are the proof that only a god could string it; the technical refutation becomes a theological argument; archive files under specifications that cannot be replicated without the legend's conditions.",
+  "activateNode": "ERZ",
+  "token": {
+    "id": "swayamvara_record",
+    "name": "The Swayamvara Record",
+    "description": "Rolled parchment, leather-wrapped, black wax. Weapons scholar's account of the Janak bow-trial; engineer's margin: 'no existing mechanism'; patron's confirmation: 'no known craft meets these specifications.'",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["ERZ", "TRB", "WM"],
+  "new_nodes": ["ERZ"],
+  "acts": [
+    { "act": 1, "location": "ERZ", "scene": "Grigor Bagratouni's workshop, Erzincan", "title": "What the Engineer Wants", "type": "skill_check", "skillCheck": { "skill": "History or Insight", "dc": 12 }, "token_action": "grant" },
+    { "act": 2, "location": "road_ERZ_TRB", "scene": "Zigana pass, Pontine Alps", "title": "The Zigana Pass", "type": "skill_check", "skillCheck": { "skill": "Animal Handling or Athletics", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "TRB", "scene": "Harbor caravanserai, Trebizond", "title": "The Factor's Examination", "type": "skill_check", "skillCheck": { "skill": "Persuasion or Insight", "dc": 12 }, "token_action": "check" },
+    { "act": 4, "location": "TRB", "scene": "Scholar quarter, Trebizond", "title": "The Librarian's Request", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 11 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "Three Witnesses", "type": "delivery", "activateMissionBit": "adaBowNoGodComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## §ADA-04 — Vignette Cycle 4: "Kaikeyi's Ledger"
+
+### What This Angle Reveals
+
+The bow was the beginning of Rama's story. Kaikeyi's boon was the rupture. She had saved Dasharatha's life in battle and asked for nothing — holding the debt in reserve for fourteen years until the coronation was announced, then claiming both boons at once: Bharat on the throne, Rama in exile. The cycle produces a legal commentary on the deferred obligation as a succession instrument — the favor held in reserve, dormant but never discharged. The text is written by a Baghdad jurist who has been asked to evaluate a current case with the same structure.
+
+### TOKEN: "The Banked Favor"
+
+A sealed folio — Abd al-Karim ibn Sulayman al-Baghdadi's formal commentary on the deferred benefit (*muajjal al-manfa'a*): a favor given in return for a service, not yet claimed, held in reserve by the recipient as a contingent obligation on the grantor. The text uses the Kaikeyi episode as its primary historical example. It is addressed to a court administrator in Mosul who is adjudicating a succession dispute involving precisely this structure.
+
+- `id`: `banked_favor`
+- `name`: "The Banked Favor"
+- `description`: "Sealed folio, Baghdad jurist to Mosul court. Legal commentary on the deferred benefit as succession instrument, using Kaikeyi's two-boon structure as primary example. Red wax, court seal."
+- `grant_act`: 1, `take_act`: 5, `check_acts`: [2, 3, 4]
+
+### Nodes
+
+**New node required:** `MOS` — Mosul (Tigris city, Jalayirid–Mamluk border zone, 1367)
+**Existing:** `BAG`, `WM`
+
+### Route: `BAG` → `MOS` → `WM`
+
+---
+
+**ACT I — "The Jurist's Timing" (Baghdad)**
+
+Abd al-Karim al-Baghdadi is a precise man writing against a deadline. The Mosul court has given a thirty-day window for legal opinions on the Hamid succession case. He has had the comparison in mind for two years — the Kaikeyi structure is, in his view, the purest form of the instrument — and he has finally written it. If this commentary reaches the wrong party first, it will be used to defend the grantor's position rather than the administrator's inquiry.
+
+He hands you the folio. *The Banked Favor is sealed with red wax, the court seal pressed over the fold.*
+
+"It must reach Qadi Ibrahim al-Mawsili before it reaches the Hamid family's advocate. The advocate is also in Mosul. He will hear a commissioned opinion is traveling."
+
+*Skill check DC 12 — Insight or Deception:* Insight: al-Baghdadi has written the commentary in a way usable by either side; it needs to reach the administrator first so the administrator sets the context for its use. Deception: if asked at any checkpoint who commissioned the text, the correct answer is the qadi, not the jurist.
+
+*On success:* He adds: "It goes to the qadi, not to anyone else who asks for a legal opinion."
+*On fail:* You take the folio without the distinction between the two potential recipients.
+
+*TOKEN granted Act I.*
+
+---
+
+**ACT II — "The Tigris Checkpoint" (river road, north of Baghdad)**
+
+A Jalayirid administrative post on the Tigris road — a customs dispute has led to checks on documents leaving Baghdad for Mosul in relation to court cases. The officer wants to log any legal texts being transported.
+
+*Skill check DC 12 — Deception or Persuasion:* Deception: describe the folio as a theological text (which it partly is — the commentary draws from Dharmaśāstra as much as from Islamic law). Persuasion: present the court seal on the exterior fold as evidence that this is official correspondence and not subject to cargo manifest.
+
+*On success:* He logs it as "court correspondence" and waves you through.
+*On fail:* He notes the sender's name and destination. This information will reach the Hamid family's advocate within a day.
+
+*TOKEN check Act II.*
+
+---
+
+**ACT III — "The Advocate's Approach" (Mosul, qadi's court district)**
+
+The Hamid family's advocate — a sharp-faced man named Yunus ibn Isa — has learned that a legal opinion is arriving for the qadi. He meets you outside the court building. He represents a party in the Hamid case and has the family's authorization to receive any legal opinions pertaining to it. He would like to review the document before it is lodged.
+
+*Skill check DC 13 — Persuasion:* The document is addressed to the qadi by name. A document addressed by name can only be received by the named recipient. The advocate may submit a request to the qadi after lodging.
+
+*On success:* Yunus concedes the formal point. He says he will see it in discovery.
+*On fail:* He escalates to a court officer, who asks you to wait. Two hours' delay. The folio reaches the qadi intact, but Yunus has sent a note ahead.
+
+*TOKEN check Act III.*
+
+---
+
+**ACT IV — "The Second Commission" (Mosul)**
+
+A second advocate — for the other party in the Hamid case, a woman named Fatima bint Khalil who stands to inherit under the structure that al-Baghdadi's commentary supports — approaches you before you leave the court district. She wants a copy made for her own legal file. She is the party the commentary favors.
+
+*Skill check DC 11 — Persuasion or Investigation:* Persuasion: the original has been lodged with the qadi; copies are the court's jurisdiction to authorize. Investigation: she wants it for appeal purposes, not to obstruct — the request is not improper, just premature.
+
+*On success:* You explain the process; she accepts and thanks you. The qadi will authorize her copy.
+*On fail:* She sends her clerk to copy it from the qadi's file without waiting for authorization.
+
+*TOKEN check Act IV.*
+
+---
+
+**ACT V — "The Instrument's Category" (Weimar)**
+
+The qadi's court has released the folio to the archive after the Hamid case was resolved. A note accompanies it: *"The commentary was decisive. The deferred benefit was enforced as written; the succession passed accordingly. The analysis of the historical precedent was the clearest exposition of this legal structure I have encountered."*
+
+Sweelinck reads the folio and the note.
+
+"A favor held in reserve for fourteen years. Two wishes paid in one moment. The throne and the exile. And the man who gave his word could not refuse them because he had given his word."
+
+He pauses.
+
+"The legal instrument is older than the law. The king could not escape it because it predated all his formal authority. That is what 'banked' means."
+
+He writes: *Instruments of Succession — The Deferred Obligation as Weapon. Kaikeyi sub-collection, first entry.*
+
+*TOKEN taken Act V.*
+
+---
+
+### Theme
+
+**"The deferred favor is the weapon with no visible edge; Kaikeyi held it for fourteen years and used both debts at once; the legal commentary names the instrument and the archive files it under the succession law that existed before the king had the authority to refuse it."**
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "ADA_004",
+  "title": "Kaikeyi's Ledger",
+  "source": "Ramayana (Griffith verse translation)",
+  "cycle": "ADA",
+  "book": "Ramayana",
+  "source_episode": "Ayodhya Kanda — Kaikeyi's two boons; deferred battlefield debt used as succession weapon; Rama exiled",
+  "theme": "The deferred favor is the weapon with no visible edge; the king could not refuse it because he had given his word before he had the authority to deny; the archive files it under instruments of succession.",
+  "activateNode": "BAG",
+  "token": {
+    "id": "banked_favor",
+    "name": "The Banked Favor",
+    "description": "Sealed folio, Baghdad jurist to Mosul court. Legal commentary on the deferred benefit (muajjal al-manfa'a) as succession instrument; Kaikeyi's structure as primary example. Court seal, red wax.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["BAG", "MOS", "WM"],
+  "new_nodes": ["MOS"],
+  "acts": [
+    { "act": 1, "location": "BAG", "scene": "Abd al-Karim's study, Baghdad", "title": "The Jurist's Timing", "type": "skill_check", "skillCheck": { "skill": "Insight or Deception", "dc": 12 }, "token_action": "grant" },
+    { "act": 2, "location": "road_BAG_MOS", "scene": "Tigris checkpoint, north of Baghdad", "title": "The Tigris Checkpoint", "type": "skill_check", "skillCheck": { "skill": "Deception or Persuasion", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "MOS", "scene": "Qadi's court district, Mosul", "title": "The Advocate's Approach", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 13 }, "token_action": "check" },
+    { "act": 4, "location": "MOS", "scene": "Court district, Mosul", "title": "The Second Commission", "type": "skill_check", "skillCheck": { "skill": "Persuasion or Investigation", "dc": 11 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "The Instrument's Category", "type": "delivery", "activateMissionBit": "adaKaikeyiLedgerComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## §ADA-05 — Vignette Cycle 5: "The Sandals on the Throne"
+
+### What This Angle Reveals
+
+Kaikeyi's ledger was the instrument that exiled Rama. The sandals are what Bharat left in place of himself. For fourteen years he ruled as regent: Rama's sandals on the throne, every petition laid before them first, he himself living in a village outside Ayodhya in hermit dress, refusing to sit on the throne or enter the capital. The cycle produces not the sandals themselves but the letters — fourteen years of unsent correspondence from Bharat to the exile. Everything he wanted to say. Nothing he sent, because sending would mean the exile was real and he refused to accept that it was. A court scribe gathered and sealed them when Rama finally returned.
+
+### TOKEN: "The Fourteen-Year Letters"
+
+A sealed clay jar, stoppered and wax-sealed, with a label in two hands. A court scribe's description: *"Letters from the Regent Bharat to the Lord Rama, composed during the fourteen years of exile. Not sent. Sealed on the day of the Lord's return."* And underneath, in a different hand: *"The letters are the evidence that faithful waiting is a form of speech. — Habib ibn Yusuf al-Tabrizi, court scribe, who has been looking at this jar for three years and has decided the archive should hold it."*
+
+- `id`: `fourteen_year_letters`
+- `name`: "The Fourteen-Year Letters"
+- `description`: "Sealed clay jar, wax-stopped: Bharat's 14 years of unsent letters to Rama, gathered by a court scribe at Rama's return. Label: 'not sent.' Second hand: 'The letters are the evidence that faithful waiting is a form of speech.' Tabriz, 1367."
+- `grant_act`: 1, `take_act`: 5, `check_acts`: [2, 3, 4]
+
+### Nodes
+
+**Existing:** `TBZ`, `MRG`, `WM`
+
+### Route: `TBZ` → `MRG` → `WM`
+
+---
+
+**ACT I — "The Scribe's Decision" (Tabriz)**
+
+Habib ibn Yusuf al-Tabrizi has had the jar for three years. He acquired it from a manuscript dealer who brought it from a Samarkand collection — listed as "sealed jar, contents unknown, Indian provenance." Habib opened the outer label (he did not break the inner seal), understood what he had, and spent three years deciding who should receive it. He has decided: the archive at Weimar, which receives documents that prove things about grief and loyalty that no formal argument can prove.
+
+He hands you the jar. *The Fourteen-Year Letters sits in your hands: heavier than it looks, the wax seal dark and old, the label in two hands.*
+
+"Don't let anyone read it on the road. Not even you."
+
+*Skill check DC 11 — Insight:* Why Habib is giving this away rather than keeping it. He has spent thirty years recording things; he understands that some objects carry their meaning better in an archive than in a private collection. The jar does not need to be read. It needs to be where it can be found.
+
+*On success:* He adds: "Tell them what it is when you hand it over. They should know before they open it."
+*On fail:* He gives it without the instruction.
+
+*TOKEN granted Act I.*
+
+---
+
+**ACT II — "The Excise Post" (Tabriz–Maragha road)**
+
+A Jalayirid excise officer is logging ceramic containers — there has been a problem with smugglers using sealed clay jars. He picks up the jar and turns it over. The label is visible. He asks what is in it.
+
+*Skill check DC 12 — Persuasion or Deception:* Persuasion: a sealed private correspondence collection of historical value, not commercial goods, being transported for archival deposit. Deception: a devotional object being sent to a religious institution for preservation (which it partly is).
+
+*On success:* He logs it as "personal correspondence, archival transfer" and passes you through.
+*On fail:* He wants to open it to verify. The inner seal is at risk.
+
+*TOKEN check Act II.*
+
+---
+
+**ACT III — "The Astronomer's Observation" (Maragha)**
+
+At the Maragha observatory inn, a historian of Indian mathematical thought named Nasir al-Din ibn Mahmud al-Maraghi has heard from a colleague in Tabriz that an unusual Indian archival object is passing through. He wants to examine only the label — not open the jar. He argues that the two-hand annotation is historically significant: the earlier hand may be older than 1367.
+
+*Skill check DC 12 — History or Insight:* History: he may be right — if true, it increases the object's archival value; letting him examine the label in your presence costs nothing. Insight: he will try to copy the label text before you leave.
+
+*On success:* You let him examine the label in your presence. He writes a brief attestation: "label notation appears pre-Ilkhanid in script character." It travels with the jar.
+*On fail:* He delays you arranging a proper examination session. You leave without his attestation.
+
+*TOKEN check Act III.*
+
+---
+
+**ACT IV — "The Dealer's Inquiry" (road west of Maragha)**
+
+A manuscript dealer named Farrukh ibn Khwaja has been following the jar's transit — his colleague in Tabriz told him it was sent west. He catches up with you on the road. He doesn't want to buy it; he already sold it once when Habib acquired it. He wants to know where it is going, because he has a buyer who has been looking for it since Habib refused to sell.
+
+*Skill check DC 11 — Persuasion:* The jar has been transferred through a legal commission. It is no longer Farrukh's concern. The buyer should submit an inquiry to the archive directly.
+
+*On success:* He accepts this and rides off.
+*On fail:* He follows at a distance, noting the route for his buyer.
+
+*TOKEN check Act IV.*
+
+---
+
+**ACT V — "Speech to Someone Who Could Not Hear It" (Weimar)**
+
+Sweelinck holds the jar. He reads the label — both hands.
+
+"Fourteen years of letters to a man in exile. Not sent. Sealed when the exile ended."
+
+He sets it on the intake table.
+
+"The scribe understood something. Faithful waiting is a form of speech. The archive has political documents, legal instruments, battle accounts. But a man who addressed letters to an exile for fourteen years and sent none of them — that is a document of devotion that has no other category."
+
+He opens the ledger.
+
+"I will file it under Regent's Records — the proxy rule, which is what it is institutionally. And I will add a note: the content is fourteen years of speech to someone who could not hear it."
+
+*TOKEN taken Act V.*
+
+---
+
+### Theme
+
+**"The fourteen years of unsent letters are the evidence that faithful waiting is a form of speech; Bharat wrote to Rama for fourteen years and sent nothing because sending would mean accepting the exile was real; the archive files it under regent's records and adds a note: speech to someone who could not hear it."**
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "ADA_005",
+  "title": "The Sandals on the Throne",
+  "source": "Ramayana (Griffith verse translation)",
+  "cycle": "ADA",
+  "book": "Ramayana",
+  "source_episode": "Ayodhya Kanda — Bharat as regent; Rama's sandals on the throne; fourteen years of faithful proxy rule; letters never sent",
+  "theme": "The fourteen years of unsent letters are evidence that faithful waiting is a form of speech; Bharat wrote and sent nothing because sending would mean accepting the exile was real; archive files it under regent's records with note: speech to someone who could not hear it.",
+  "activateNode": "TBZ",
+  "token": {
+    "id": "fourteen_year_letters",
+    "name": "The Fourteen-Year Letters",
+    "description": "Sealed clay jar, wax-stopped: Bharat's 14 years of unsent letters to Rama. Label in two hands: 'Not sent. Sealed on the day of the Lord's return.' Second hand: 'The letters are the evidence that faithful waiting is a form of speech.'",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["TBZ", "MRG", "WM"],
+  "new_nodes": [],
+  "acts": [
+    { "act": 1, "location": "TBZ", "scene": "Habib ibn Yusuf's study, Tabriz", "title": "The Scribe's Decision", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 11 }, "token_action": "grant" },
+    { "act": 2, "location": "road_TBZ_MRG", "scene": "Jalayirid excise post, Tabriz–Maragha road", "title": "The Excise Post", "type": "skill_check", "skillCheck": { "skill": "Persuasion or Deception", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "MRG", "scene": "Observatory inn, Maragha", "title": "The Astronomer's Observation", "type": "skill_check", "skillCheck": { "skill": "History or Insight", "dc": 12 }, "token_action": "check" },
+    { "act": 4, "location": "road_MRG_WM", "scene": "Road west of Maragha", "title": "The Dealer's Inquiry", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 11 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "Speech to Someone Who Could Not Hear It", "type": "delivery", "activateMissionBit": "adaSandalsOnThroneComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## §ADA-06 — Vignette Cycle 6: "Hanuman's Report"
+
+### What This Angle Reveals
+
+The sandals were fourteen years of faithful waiting. Hanuman's report is the opposite in structure: a single night's observation, compressed into a military document with the precision of someone who crossed 200 leagues of ocean and burned a city and came back with everything. Hanuman found Sita, surveyed Lanka's defenses from wall to palace to shore, and returned. His account exists in the text as both an emotional testimony and a strategic document. The cycle encodes the military geography as a merchant's route description — the only form it could safely take on the road through 1367 Syria.
+
+### TOKEN: "The Merchant's Route Notes"
+
+A folded cloth map — five panels of cotton, stitched together, with route descriptions in a merchant's shorthand: coastal approach notes, harbor depth figures, road distances from shore to inner city, palace district adjacencies. In the margin, a second layer: small ink notations that read as merchant weather observations but decode, for someone who knows the Ramayana, as military observation notes. Prepared by a Syrian scholar named Masud ibn Dawud al-Dimashqi, who teaches military geography at the Damascus madrasa and encodes sensitive materials as trade documents.
+
+- `id`: `merchant_route_notes`
+- `name`: "The Merchant's Route Notes"
+- `description`: "Five-panel cotton cloth map, folded: merchant route notes for a coastal citadel route; margin notations encoding military observation data as weather remarks. Prepared by Masud ibn Dawud al-Dimashqi, Damascus."
+- `grant_act`: 1, `take_act`: 5, `check_acts`: [2, 3, 4]
+
+### Nodes
+
+**Existing:** `ALP` (Aleppo), `DAM` (Damascus), `WM`
+
+### Route: `ALP` → `DAM` → `WM`
+
+---
+
+**ACT I — "The Scholar's Cover" (Aleppo)**
+
+Masud ibn Dawud al-Dimashqi is in Aleppo for a conference, not in Damascus — he is presenting a paper on maritime trade routes at the Aleppo merchants' guild. He has finished his teaching document on Hanuman's Lanka survey and needs it sent to a military geography colleague in Damascus before the guild can commission a copy for its own purposes. He does not want the guild to have an unencoded version.
+
+He hands you the folded cloth. *The Merchant's Route Notes are folded in a merchant's standard carry pattern, wrapped in oilcloth, slightly worn at the edge panels.*
+
+"My colleague Khalid al-Yafi'i at the Damascus madrasa. He will understand the margin notations. The guild representative at the front table — do not let him see this."
+
+*Skill check DC 12 — Deception or Sleight of Hand:* The guild representative has been watching Masud all morning; he knows a document changed hands. Deception: you are a personal messenger from Masud's household, delivering a family letter. Sleight of Hand: the cloth map is already folded and oilcloth-wrapped; it can be transferred below the table level.
+
+*On success:* You leave the conference hall without the guild representative noting the transfer.
+*On fail:* He follows you to the door and asks you to wait. Masud appears and waves him off — but the representative has noted your face.
+
+*TOKEN granted Act I.*
+
+---
+
+**ACT II — "The Road South" (Aleppo–Damascus road)**
+
+The Mamluk road south from Aleppo through Hama and Homs to Damascus — a well-traveled route with regular checkpoints. At Homs, a Mamluk administrative officer is checking travelers for military maps. There has been a recent incident involving smuggled maps of the Syrian coast.
+
+*Skill check DC 12 — Persuasion or Investigation:* Persuasion: the cloth is a merchant's trade document, not a military map — it covers coastal trade routes in general terms and has no military markings visible at surface level. Investigation: the officer's actual concern is a specific series of maps depicting the Mamluk coastal fortifications; these notes do not match that description at all.
+
+*On success:* He examines the outer panels, finds nothing that matches his concern, and passes you through.
+*On fail:* He holds the document for a specialist's review — a half-day delay; it is returned with a customs seal on the outer oilcloth wrapper.
+
+*TOKEN check Act II.*
+
+---
+
+**ACT III — "The Wrong Recipient" (Damascus)**
+
+Khalid al-Yafi'i at the Damascus madrasa has a visiting colleague in his study when you arrive — a military cartographer from Cairo named Abd al-Rahman ibn Hamid. He has come to consult Khalid on a commission for the Mamluk court. He sees the cloth map when you produce it and immediately identifies the style of the margin notations as Masud's encoding method. He knows what it contains. He wants to buy it.
+
+*Skill check DC 13 — Persuasion:* The commission is specific — Khalid al-Yafi'i by name. A named commission from a named sender cannot be redirected by a third party. Abd al-Rahman may negotiate directly with Masud for a fair copy.
+
+*On success:* He accepts this. Khalid receives the map. He studies the margin notations and nods once.
+*On fail:* He offers Khalid a sum that exceeds the academic rate; Khalid wavers. You must produce Masud's cover description (if obtained in Act I) to confirm the exclusive commission.
+
+*TOKEN check Act III.*
+
+---
+
+**ACT IV — "The Release" (Damascus madrasa)**
+
+Khalid al-Yafi'i has received the map, studied it for an afternoon, and made a decision. The military geography is extraordinary — it describes a specific defensive problem (coastal citadel with a single accessible shore approach and two internal choke points) that has no parallel in Mamluk or Syrian scholarly literature. He wants to release it to the archive rather than keep it in his collection, because the archive will make it accessible to future scholars without the risk of military misuse.
+
+He hands the map back to you with a release note. *The Merchant's Route Notes now carries Khalid's release note folded inside the oilcloth: "Released for archival deposit — the military geography is historical, not current. K. al-Yafi'i."*
+
+*No skill check in Act IV — this is the handoff moment. The obstacle is informational: the guild representative from Aleppo has sent a note to the Cairo cartographer, who has forwarded it to a Damascene factor asking him to intercept the document before it leaves Damascus. You learn this from a street contact as you exit the madrasa.*
+
+*Combat: 1 factor's agent, AC 12, HP 20, blocking the gate. Or Athletics DC 12 to slip past before he positions.*
+
+*TOKEN check Act IV.*
+
+---
+
+**ACT V — "Lanka's Geometry" (Weimar)**
+
+Sweelinck unfolds the cloth map panel by panel. He does not speak for a long time.
+
+"The merchant notes are cover. The margin is the real document. And the real document is a military survey of a place that no army in 1367 will ever reach — a citadel on an island somewhere beyond any current Silk Road extension."
+
+He reads the margin notations and translates one: *"Harbor depth at western approach: suitable for a boat the size of a modest city."*
+
+"He crossed the ocean, surveyed the defenses, burned the grove, and came back. And someone encoded the entire thing as a trade document."
+
+He writes: *Military Geography — Historical Survey Records, Legendary Citadels. First entry: Lanka, from Hanuman's return account.*
+
+*TOKEN taken Act V.*
+
+---
+
+### Theme
+
+**"Hanuman's survey of Lanka is both military intelligence and emotional testimony; encoding it as a merchant's route notes is the only way it can travel safely; the archive receives it as historical military geography and notes that the surveyor crossed 200 leagues of ocean before breakfast."**
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "ADA_006",
+  "title": "Hanuman's Report",
+  "source": "Ramayana (Griffith verse translation)",
+  "cycle": "ADA",
+  "book": "Ramayana",
+  "source_episode": "Sundara Kanda — Hanuman leaps to Lanka, surveys defenses, finds Sita, burns the grove, returns with full report",
+  "theme": "Military intelligence encoded as merchant route notes; the survey of Lanka crosses 200 leagues of ocean; the archive files it as historical military geography of a legendary citadel.",
+  "activateNode": "ALP",
+  "token": {
+    "id": "merchant_route_notes",
+    "name": "The Merchant's Route Notes",
+    "description": "Five-panel cotton cloth map: merchant route shorthand on the outer surface; military observation data encoded as weather notes in the margins. Masud al-Dimashqi's encoding method.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["ALP", "DAM", "WM"],
+  "new_nodes": [],
+  "acts": [
+    { "act": 1, "location": "ALP", "scene": "Merchants' guild conference hall, Aleppo", "title": "The Scholar's Cover", "type": "skill_check", "skillCheck": { "skill": "Deception or Sleight of Hand", "dc": 12 }, "token_action": "grant" },
+    { "act": 2, "location": "road_ALP_DAM", "scene": "Homs checkpoint, Aleppo–Damascus road", "title": "The Road South", "type": "skill_check", "skillCheck": { "skill": "Persuasion or Investigation", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "DAM", "scene": "Khalid al-Yafi'i's study, Damascus madrasa", "title": "The Wrong Recipient", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 13 }, "token_action": "check" },
+    { "act": 4, "location": "DAM", "scene": "Damascus madrasa gate", "title": "The Release", "type": "combat", "combatTarget": { "count": 1, "ac": 12, "hp": 20 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "Lanka's Geometry", "type": "delivery", "activateMissionBit": "adaHanumanReportComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## §ADA-07 — Vignette Cycle 7: "The Fire Was Not the Proof"
+
+### What This Angle Reveals
+
+Hanuman's report was intelligence. The fire ordeal is the documentation of its own insufficiency. Sita walked into fire, was carried out unharmed by the Fire God Agni, certified pure before the assembled gods. And Rama exiled her again because the people of Ayodhya talked. The cycle produces a court theologian's report: the fire ordeal was legally sufficient; the subsequent exile was not an act of dharma but an error of governance. The text is being sent from Nishapur to Merv — Khorasan scholarly road — because the theologian needs his argument reviewed by a colleague in a city where the qadi's court regularly handles fire ordeal certification disputes.
+
+### TOKEN: "The Ordeal Report"
+
+A sealed folio — Umar ibn Abd al-Haqq al-Nishapuri's formal theological report arguing that: (1) the fire ordeal as performed by Sita constitutes legally valid proof by the most stringent available standard — divine testimony from the agent of the ordeal itself; (2) the subsequent exile therefore violated the terms of the proof; (3) the archive should hold the argument as a precedent for qadi rulings in ordeal certification cases. Addressed to his colleague Mahmud ibn Tawfiq al-Marvazi in Merv.
+
+- `id`: `ordeal_report`
+- `name`: "The Ordeal Report"
+- `description`: "Sealed folio, Nishapur theologian to Merv jurist. Formal report arguing that Sita's fire ordeal was legally sufficient proof and the subsequent exile was an error of governance. Blue wax, scholar's seal."
+- `grant_act`: 1, `take_act`: 5, `check_acts`: [2, 3, 4]
+
+### Nodes
+
+**Existing:** `NIS` (Nishapur), `MRV` (Merv — check if exists), `WM`
+
+Let me note: MRV (Merv) was used in seed ADA-06 route sketch "Nishapur → Merv." I'll treat MRV as a new node if not already present.
+
+**New node required:** `MRV` — Merv, eastern Khorasan (Muzaffarid/Timurid sphere, 1367)
+
+### Route: `NIS` → `MRV` → `WM`
+
+---
+
+**ACT I — "The Theologian's Caution" (Nishapur)**
+
+Umar ibn Abd al-Haqq al-Nishapuri has written the argument in full. His problem: the report explicitly criticizes a royal decision — Rama's second exile of Sita — and in a broader reading implies that any king who enforces public opinion over judicial proof is committing governance error. He is concerned not about the Hindu epic context but about the precedent implications for current qadi courts in Khorasan, where rulers are known to overturn ordeal certifications under social pressure.
+
+He hands you the folio. *The Ordeal Report is sealed with blue wax, a scholar's seal.*
+
+"Mahmud will understand the context. What I want is his formal written response — whether the argument is legally sound. Bring his response back if you can."
+
+*Skill check DC 12 — History or Insight:* History: the specific legal tradition al-Nishapuri is working in (Shafi'i fiqh); the argument uses a specific structure from that tradition that makes it both orthodox and politically sensitive. Insight: he is not asking for a theological review — he is asking for a legal opinion that could be cited in a qadi's ruling. The distinction matters for how the recipient handles it.
+
+*On success:* He adds: "Tell him it is for formal use, not commentary."
+*On fail:* You take the folio as a routine scholarly communication.
+
+*TOKEN granted Act I.*
+
+---
+
+**ACT II — "The Khorasan Road" (Nishapur–Merv road)**
+
+The road east from Nishapur across the Kopet Dag foothills into the Merv oasis — flat, arid, with a series of Muzaffarid administrative checkpoints. At one, a young officer has been told to check for theological materials: there have been disputes between the Muzaffarid court and a group of Khorasan qadis over the admissibility of ordeal evidence. He asks what the folio contains.
+
+*Skill check DC 12 — Deception or Persuasion:* Deception: it is a letter of professional correspondence between colleagues, not a theological treatise — which is technically true, since it is addressed as a private letter. Persuasion: the academic exchange between Nishapur and Merv scholars is not subject to administrative review under any current Muzaffarid decree — state the rule back to him.
+
+*On success:* He passes you through.
+*On fail:* He holds it for a day pending his superior's review. It is returned with a stamp noting examination.
+
+*TOKEN check Act II.*
+
+---
+
+**ACT III — "The Colleague's Response" (Merv)**
+
+Mahmud ibn Tawfiq al-Marvazi reads the folio at his desk, asks you to sit, and spends an hour writing his response on a separate sheet. He folds his response sheet into the folio's outer cover and hands it back. Then he says:
+
+"The argument is sound. But tell Umar: the precedent it creates is larger than the specific case. If an ordeal certified by the deity of the ordeal itself is legally sufficient, then any ruling that contradicts it is judicially reviewable. That is useful and very dangerous."
+
+*Skill check DC 12 — Insight:* What Mahmud means by "dangerous." Insight: he is not warning that the argument will be suppressed — he is warning that the qadis who use it will face political pressure from rulers whose authority depends on being able to overturn certified proofs.
+
+*On success:* He adds a second note in the margin of his response: "Keep the original. The archive should hold both."
+*On fail:* He hands you the combined folio without the second note.
+
+*TOKEN check Act III.*
+
+---
+
+**ACT IV — "The Interested Party" (Merv)**
+
+A Muzaffarid court official named Hafiz al-Isfahani has heard that a theological opinion on ordeal certification is being sent from Nishapur to Merv. He arrives at Mahmud's door as you are leaving. He represents the court's interest in theological materials that touch on qadi authority. He wants to review the combined folio before it leaves Merv.
+
+*Skill check DC 13 — Persuasion:* The folio is a private scholarly communication with a private response note, now being forwarded for archival deposit. Neither the original nor the response is a public document subject to court review.
+
+*On success:* He makes a notation in his own record and lets you go.
+*On fail:* He detains you at the gate for two hours. The folio is not examined but your route out of Merv is noted.
+
+*TOKEN check Act IV.*
+
+---
+
+**ACT V — "The Precedent's Category" (Weimar)**
+
+Sweelinck reads the folio and Mahmud's response note together.
+
+"The ordeal was certified by the agent of the fire himself. The exile contradicted it. The colleague says: this creates a reviewable precedent for any ruling that contradicts a certified proof."
+
+He is quiet for a moment.
+
+"The archive does not adjudicate dharma. But it can record that the standard of proof was met and the standard was not honored. That is a distinction the law needs somewhere."
+
+He writes: *Legal Theology — Proofs That Were Not Honored. Sita sub-collection, second entry. First entry: Justice and Vindication (ADA-02).*
+
+*TOKEN taken Act V.*
+
+---
+
+### Theme
+
+**"The fire ordeal was legally sufficient; the Fire God himself testified; the exile violated the proof's own terms; the legal theology of ordeal certification needs a case where the standard was met and not honored, and the archive holds it."**
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "ADA_007",
+  "title": "The Fire Was Not the Proof",
+  "source": "Ramayana (Griffith verse translation)",
+  "cycle": "ADA",
+  "book": "Ramayana",
+  "source_episode": "Lanka Kanda — Sita's fire ordeal; Agni certifies her purity before the gods; Rama's subsequent exile of Sita despite the proof",
+  "theme": "The fire ordeal was legally sufficient; the Fire God testified; the exile violated the proof's terms; the archive files it under legal theology — proofs that were not honored.",
+  "activateNode": "NIS",
+  "token": {
+    "id": "ordeal_report",
+    "name": "The Ordeal Report",
+    "description": "Sealed folio, Nishapur theologian to Merv jurist. Formal argument that Sita's fire ordeal was legally sufficient proof and the exile was governance error. Contains colleague's response note. Blue wax.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["NIS", "MRV", "WM"],
+  "new_nodes": ["MRV"],
+  "acts": [
+    { "act": 1, "location": "NIS", "scene": "Umar al-Nishapuri's study, Nishapur", "title": "The Theologian's Caution", "type": "skill_check", "skillCheck": { "skill": "History or Insight", "dc": 12 }, "token_action": "grant" },
+    { "act": 2, "location": "road_NIS_MRV", "scene": "Muzaffarid checkpoint, Khorasan road", "title": "The Khorasan Road", "type": "skill_check", "skillCheck": { "skill": "Deception or Persuasion", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "MRV", "scene": "Mahmud al-Marvazi's study, Merv", "title": "The Colleague's Response", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 12 }, "token_action": "check" },
+    { "act": 4, "location": "MRV", "scene": "Merv gate, Muzaffarid court official", "title": "The Interested Party", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 13 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "The Precedent's Category", "type": "delivery", "activateMissionBit": "adaFireNotProofComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## §ADA-08 — Vignette Cycle 8: "Ahalyá's Statement"
+
+### What This Angle Reveals
+
+The fire ordeal was about what happened after proof. Ahalyá is about what happened before the proof was required. Indra took Gautama's form and came to her bed. She recognized him. She yielded anyway. The curse was not for deception — it was for recognition. She knew who it was and consented. The curse punished the act of knowing, not the act of being deceived. The cycle produces a formal philosophical statement of her case, composed by a woman scholar — the argument that consent given under recognized impersonation is a distinct legal category, neither the same as deception nor the same as free consent.
+
+### TOKEN: "Ahalyá's Case"
+
+A slim codex — four folios, stitched, with a title in a woman's clear script: *"A Statement of the Case of Ahalyá: On Consent, Recognition, and the Limits of Deception as a Legal Defense."* Written by Fatima al-Bursawi, a legal philosopher in Bursa, addressed to a colleague in Constantinople who teaches at the Blachernae-adjacent school of legal theory. The argument claims that recognizing your deceiver is not the same as consenting freely — and that the law needs a third category between deception and consent.
+
+- `id`: `ahaly_a_case`
+- `name`: "Ahalyá's Case"
+- `description`: "Four-folio slim codex, woman scholar's script: formal philosophical statement arguing that consent under recognized impersonation is a distinct legal category. Bursa to Constantinople."
+- `grant_act`: 1, `take_act`: 5, `check_acts`: [2, 3, 4]
+
+### Nodes
+
+**Existing:** `BUR` (Bursa — check if this exists), `CON` (Constantinople), `WM`
+
+I'll check: BUR was used in seed ADA-07 "Bursa → Constantinople." Let me note it as a new node if not present.
+
+**New node required:** `BUR` — Bursa (Ottoman-controlled Anatolian city, 1367, near Bosphorus crossing to Constantinople)
+
+### Route: `BUR` → `CON` → `WM`
+
+---
+
+**ACT I — "The Argument's Form" (Bursa)**
+
+Fatima al-Bursawi has been writing this argument for two years. The problem is formal: the standard categories of Islamic legal philosophy do not have a slot for "consent under recognized impersonation." Deception implies the deceived party did not know. Free consent implies no deception. She has constructed a third category: *recognition-consent* — where the deceived party recognized the deception and yielded nonetheless, for reasons the law cannot evaluate from outside. The curse was for recognition. That is the element the standard categories miss.
+
+She hands you the codex. *Ahalyá's Case is slim and precisely stitched, the title legible through the cover.*
+
+"It goes to Theodoros Katakalos at the school near Blachernae. He is running a seminar on consent categories and this will fit it. Don't let the Ottoman checkpoint on the road describe it as a theological text — it is a legal philosophy text. The distinction matters to them."
+
+*Skill check DC 12 — Insight or History:* Insight: she is warning you that Ottoman checkpoints near the Bosphorus have been flagging theological texts that touch on women's consent as potentially seditious. History: the distinction between legal philosophy and theology in the Ottoman administrative lexicon is a formal one with administrative consequences.
+
+*On success:* You understand the framing. "Legal philosophy. Not theology."
+*On fail:* You take the codex without the distinction.
+
+*TOKEN granted Act I.*
+
+---
+
+**ACT II — "The Bosphorus Checkpoint" (road east of Bursa, toward the Bosphorus crossing)**
+
+An Ottoman administrative post near the Mudanya ferry road — a young officer with a printed list of prohibited text categories including "women's theological arguments" and "texts advocating for re-evaluation of women's consent in marriage." He sees a woman's hand on the title and asks to examine it.
+
+*Skill check DC 12 — Deception or Persuasion:* Deception: this is a legal philosophy text on consent categories from the formal Greek-Islamic comparative tradition — not a theological argument and not a marriage text. Persuasion: present the specific institutional address (Blachernae school) as evidence that the text is destined for a recognized academic institution under Byzantine administration, not subject to Ottoman text controls.
+
+*On success:* He passes you through with a look but no further action.
+*On fail:* He stamps the codex with an examination seal and makes a note. The seal will complicate its reception in Constantinople.
+
+*TOKEN check Act II.*
+
+---
+
+**ACT III — "The School Near Blachernae" (Constantinople)**
+
+Theodoros Katakalos receives the codex with evident pleasure. He reads the title, opens to the central argument, and says: "She found it. The third category."
+
+He sits and reads for twenty minutes while you wait. He looks up.
+
+"The recognition is the problem. Indra knew she would recognize him — which means he chose a form of approach that would make her complicit in her own compromise. That is not the same as ordinary deception. She was not fooled. She was given an impossible choice."
+
+He writes a response note and folds it into the back cover. *Ahalyá's Case now contains Katakalos's note: "The third category is necessary. The curse was not for ignorance — it was for being placed where only recognition was possible."*
+
+*Skill check DC 11 — Insight:* What Katakalos is about to do with the text. He intends to publish the argument under his own name with attribution to Fatima — which is the scholarly courtesy convention in Constantinople — but this may or may not be what Fatima intended.
+
+*On success:* You ask him to confirm with Fatima before publishing. He agrees and writes a second note to that effect.
+*On fail:* He publishes his summary note without confirming — Fatima's argument reaches the seminar attributed to her by Katakalos, which is accurate but not what she asked for.
+
+*TOKEN check Act III.*
+
+---
+
+**ACT IV — "The Seminar Audience" (Constantinople scholar quarter)**
+
+Two students from the Blachernae seminar have followed you from Katakalos's school. They are not hostile — they are excited. They want to copy the argument before it goes to the archive, because the seminar session is tomorrow and they want to read it tonight.
+
+*Skill check DC 11 — Persuasion:* The codex has been released for archival deposit; Katakalos has made his notes; the seminar will proceed from his notes, not from the original document. The students can request a fair copy from the archive after deposit.
+
+*On success:* They accept this and leave.
+*On fail:* One of them copies the title page and the conclusion paragraph from memory, which is not a problem for the document's integrity.
+
+*TOKEN check Act IV.*
+
+---
+
+**ACT V — "The Third Category" (Weimar)**
+
+Sweelinck reads the codex, then Katakalos's note.
+
+"The curse was not for being deceived. She recognized him. The curse was for recognizing and yielding anyway. And the law has no category for that because the law assumes recognition and free consent are the same thing."
+
+He opens the ledger.
+
+"The archive has a section on women's legal arguments. I will file this there. But the specific argument — on the third consent category — I will cross-file under Legal Philosophy, Category Failures. Cases where the law's existing categories cannot contain what actually happened."
+
+He writes: *Women's Legal Arguments — Philosophical Statements. Cross-filed: Legal Philosophy — Category Failures. First cross-entry.*
+
+*TOKEN taken Act V.*
+
+---
+
+### Theme
+
+**"The curse was not for being deceived but for recognizing the deceiver and yielding anyway; the law has no category for consent under recognized impersonation; the archive creates a cross-filing under legal category failures and notes that the standard categories missed exactly the element that mattered."**
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "ADA_008",
+  "title": "Ahalyá's Statement",
+  "source": "Ramayana (Griffith verse translation)",
+  "cycle": "ADA",
+  "book": "Ramayana",
+  "source_episode": "Bala Kanda — Ahalyá's curse; Indra took Gautama's form; she recognized him and yielded; the curse was for recognition, not ignorance",
+  "theme": "The curse was for recognizing the deceiver and yielding anyway; the law has no category for consent under recognized impersonation; archive cross-files under women's legal arguments and legal philosophy — category failures.",
+  "activateNode": "BUR",
+  "token": {
+    "id": "ahalya_case",
+    "name": "Ahalyá's Case",
+    "description": "Four-folio slim codex: formal philosophical statement on consent under recognized impersonation as a distinct legal category. Woman scholar's script. Katakalos's response note inside back cover.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["BUR", "CON", "WM"],
+  "new_nodes": ["BUR"],
+  "acts": [
+    { "act": 1, "location": "BUR", "scene": "Fatima al-Bursawi's study, Bursa", "title": "The Argument's Form", "type": "skill_check", "skillCheck": { "skill": "Insight or History", "dc": 12 }, "token_action": "grant" },
+    { "act": 2, "location": "road_BUR_CON", "scene": "Ottoman checkpoint near Bosphorus crossing", "title": "The Bosphorus Checkpoint", "type": "skill_check", "skillCheck": { "skill": "Deception or Persuasion", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "CON", "scene": "Blachernae school, Constantinople", "title": "The School Near Blachernae", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 11 }, "token_action": "check" },
+    { "act": 4, "location": "CON", "scene": "Constantinople scholar quarter", "title": "The Seminar Audience", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 11 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "The Third Category", "type": "delivery", "activateMissionBit": "adaAhalyaStatementComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## §ADA-09 — Vignette Cycle 9: "Trishanku's Commission"
+
+### What This Angle Reveals
+
+The category failures of law. Trishanku was a king who bribed his way to heaven — he wanted ascension in his physical body and Vishwamitra built him a parallel heaven when the gods refused. He hangs there upside-down, forever, in a part of the sky that did not exist before the bribe. The cycle produces a star chart: an astronomer who has found an anomalous region in the southern sky wants to name it. He has commissioned a navigational document from a Caffa observatory contact and is sending it to a Tana mapmaker before the royal patron who commissioned the chart changes his mind.
+
+### TOKEN: "The Southern Anomaly Chart"
+
+A folded vellum — navigational format, six panels, with a carefully annotated region in the southern sky identified as *"the Trishanku region"* in Persian script, with a second annotation in Greek noting that the same region appears in southern navigational charts under an unnamed anomaly marker. Prepared by Grigor Ardzruni at the Caffa Genoese observatory, commissioned by a Black Sea merchant patron who wants to name the region for his own glory. The chart must reach a Tana mapmaker who will engrave it and return it to Caffa before the patron sails in three weeks.
+
+- `id`: `southern_anomaly_chart`
+- `name`: "The Southern Anomaly Chart"
+- `description`: "Folded vellum, six panels: navigational southern sky chart with the Trishanku region annotated in Persian and Greek. Commission: Caffa observatory to Tana mapmaker. Three-week patron deadline."
+- `grant_act`: 1, `take_act`: 5, `check_acts`: [2, 3, 4]
+
+### Nodes
+
+**New nodes required:** `CAF` — Caffa (Genoese Black Sea colony, Crimea, 1367); `TAN` — Tana (Golden Horde trading post at the Don delta, 1367)
+
+### Route: `CAF` → `TAN` → `WM`
+
+---
+
+**ACT I — "The Patron's Deadline" (Caffa)**
+
+Grigor Ardzruni is an Armenian astronomer working under Genoese colonial administration in Caffa. He has the chart. He also has a problem: the patron — a Genoese spice merchant named Marco Schiavone — wants his name attached to the Trishanku region as its discoverer, which is not accurate (the region is described in Sanskrit astronomical texts and Persian navigational glossaries). Ardzruni has annotated the chart with both the Sanskrit precedent and the patron's claim, side by side.
+
+He hands you the folded vellum. *The Southern Anomaly Chart is tightly folded, vellum, the Caffa observatory seal on the outer fold.*
+
+"Rafaello at the Tana mapmaker's workshop. He needs it engraved and returned in three weeks. Don't unfold it on the road — the vellum creases."
+
+*Skill check DC 12 — Insight or History:* The complication in the annotation. History: the Sanskrit astronomical tradition predates any Genoese naming claim by a millennium; putting both side by side in the chart is a scholarly record of contested provenance, not a resolution. Insight: Ardzruni is protecting himself — if the patron later claims he didn't know, the chart proves otherwise.
+
+*On success:* You understand the chart is also a protective document for the astronomer. "The patron should read the annotation before sailing."
+*On fail:* You take the commission as a straightforward delivery.
+
+*TOKEN granted Act I.*
+
+---
+
+**ACT II — "The Steppe Road" (Caffa to Tana, across the Crimean steppe)**
+
+The road from Caffa across the Crimean peninsula and north along the Don river toward Tana — Golden Horde territory, 1367, nominally under Khan Aziz. A group of Tatar riders intercepts you near the Don crossing. They are not bandits — they are a local patrol checking for Genoese commercial documents, as there is an ongoing dispute about Genoese port fees at Tana. They want to examine any Genoese-stamped materials.
+
+*Skill check DC 12 — Persuasion or Deception:* Persuasion: the document is an Armenian astronomer's scholarly chart, not a commercial Genoese document; the Caffa observatory seal is an academic seal, not a commercial house seal. Deception: the chart is a gift for a Tana merchant, not a commercial document (which is mostly true).
+
+*On success:* They examine the outer fold, find no commercial markings, and pass you through.
+*On fail:* They hold the document for a day. It is returned undamaged but the delay eats into the three-week window.
+
+*TOKEN check Act II.*
+
+---
+
+**ACT III — "The Mapmaker's Question" (Tana)**
+
+Rafaello di Pesaro at the Tana workshop unfolds the chart, studies it for a long time, and then says: "He put the Sanskrit name in the same box as the patron's name. That's not how I was told to engrave it."
+
+He has instructions from the patron to engrave the patron's name only. The chart has both. He will engrave what he's told — but he is asking you whether the astronomer intended both to be preserved.
+
+*Skill check DC 12 — Insight or Persuasion:* Insight: the astronomer did intend both — the side-by-side annotation is the scholarly record; asking him to choose would be asking him to delete evidence. Persuasion: tell Rafaello that both should be engraved because the chart's academic authority depends on the full provenance note.
+
+*On success:* Rafaello engraves both. The patron's name appears as "Patron: Marco Schiavone" below the Sanskrit precedent note.
+*On fail:* Rafaello engraves the patron's name only, per instructions. The Sanskrit precedent is lost from the engraved version but survives in the vellum original.
+
+*TOKEN check Act III.*
+
+---
+
+**ACT IV — "The Patron's Factor" (Tana)**
+
+Schiavone's factor in Tana has heard that the engraved chart will not exclusively bear the patron's name. He arrives at the workshop while the engraving is in progress. He demands the vellum original be handed to him as the patron's property — which it technically is, having been commissioned by the patron.
+
+*Skill check DC 13 — Persuasion:* The vellum original is the scholarly document; the engraving is the commercial product. The patron commissioned the engraving, not the scholarly record. The original is the astronomer's professional work product and belongs in an archive.
+
+*On success:* The factor is uncertain enough to accept this distinction. Rafaello keeps the original, hands you a copy of the engraving to bring to Ardzruni.
+*On fail:* The factor takes the vellum original. Rafaello keeps a sketch copy; you deliver the sketch to the archive — reduced in provenance value but not worthless.
+
+*TOKEN check Act IV.*
+
+---
+
+**ACT V — "The Region That Did Not Exist" (Weimar)**
+
+Sweelinck unfolds the chart or the sketch copy. He reads the annotation.
+
+"A king bribed his way to a heaven that did not exist, and Vishwamitra built it for him so the bribe would not be wasted. He hangs there forever, upside-down. And now there is a region of the southern sky named for him."
+
+He looks at the patron's name in the annotation.
+
+"The Genoese merchant did not discover it. The Sanskrit texts described it a thousand years ago. But the astronomer put both in the same box, so the chart proves its own contested provenance."
+
+He writes: *Astronomical Records — Contested Naming and Prior Description. First entry: the Trishanku region.*
+
+*TOKEN taken Act V.*
+
+---
+
+### Theme
+
+**"Trishanku bribed his way into a heaven that did not exist and hangs there forever upside-down in the sky Vishwamitra had to create; a Genoese merchant wants to name the southern anomaly region after himself; the astronomer puts both claims in the same annotation box; the archive receives the contested provenance because the chart proves it."**
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "ADA_009",
+  "title": "Trishanku's Commission",
+  "source": "Ramayana (Griffith verse translation)",
+  "cycle": "ADA",
+  "book": "Ramayana",
+  "source_episode": "Bala Kanda — Trishanku wants to ascend to heaven in his physical body; Vishwamitra creates a parallel heaven when the gods refuse; Trishanku hangs there forever, upside-down",
+  "theme": "Trishanku bought a heaven that didn't exist; a Genoese merchant wants to name the southern sky region after himself; the astronomer documents both claims side by side; archive receives contested provenance.",
+  "activateNode": "CAF",
+  "token": {
+    "id": "southern_anomaly_chart",
+    "name": "The Southern Anomaly Chart",
+    "description": "Folded vellum, six panels: southern sky navigational chart with Trishanku region annotated in Persian and Greek; patron's name and Sanskrit precedent in the same annotation box.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["CAF", "TAN", "WM"],
+  "new_nodes": ["CAF", "TAN"],
+  "acts": [
+    { "act": 1, "location": "CAF", "scene": "Grigor Ardzruni's observatory, Caffa", "title": "The Patron's Deadline", "type": "skill_check", "skillCheck": { "skill": "Insight or History", "dc": 12 }, "token_action": "grant" },
+    { "act": 2, "location": "road_CAF_TAN", "scene": "Crimean steppe, near Don crossing", "title": "The Steppe Road", "type": "skill_check", "skillCheck": { "skill": "Persuasion or Deception", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "TAN", "scene": "Rafaello di Pesaro's workshop, Tana", "title": "The Mapmaker's Question", "type": "skill_check", "skillCheck": { "skill": "Insight or Persuasion", "dc": 12 }, "token_action": "check" },
+    { "act": 4, "location": "TAN", "scene": "Workshop, patron's factor arrives", "title": "The Patron's Factor", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 13 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "The Region That Did Not Exist", "type": "delivery", "activateMissionBit": "adaTrishankuCommissionComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## §ADA-10 — Vignette Cycle 10: "The Price of a Son"
+
+### What This Angle Reveals
+
+Trishanku bought his heaven. Sunahsepha was sold. His father sold him as a human sacrifice victim to King Harishchandra, who had promised his son to Varuna as a ritual offering. Sunahsepha agreed to the role, sang hymns that released his bonds mid-ritual, and was afterward adopted by his purchaser Vishwamitra. The cycle produces the legal summary: was this transaction a sale, a gift, an adoption, or a contract — and was the consent valid given that the alternative was his father's poverty and his own death? A Trebizond jurist is asking this question in the context of a current case involving a child handed over by a debtor.
+
+### TOKEN: "The Sunahsepha Analysis"
+
+A sealed folio — Konstantin Argyropoulos, a legal scholar in Trebizond, has written a formal analysis of the Sunahsepha transaction structure for a colleague in Erzincan who is handling a debt-bondage case. The analysis distinguishes sale from gift from adoption from contract and concludes that the transaction was all four simultaneously — making it legally unclassifiable under any single category. The folio is sent from Trebizond to Erzincan before the case goes to hearing.
+
+- `id`: `sunahsepha_analysis`
+- `name`: "The Sunahsepha Analysis"
+- `description`: "Sealed folio, Trebizond legal scholar to Erzincan colleague. Analysis of the Sunahsepha transaction: sale, gift, adoption, and contract simultaneously; legally unclassifiable under any single category."
+- `grant_act`: 1, `take_act`: 5, `check_acts`: [2, 3, 4]
+
+### Nodes
+
+**Existing:** `TRB` (Trebizond), `ERZ` (Erzincan), `WM`
+
+### Route: `TRB` → `ERZ` → `WM`
+
+---
+
+**ACT I — "The Case Before the Hearing" (Trebizond)**
+
+Konstantin Argyropoulos has three days before his colleague Vardan Grigoryan in Erzincan needs the analysis for the case hearing. The route is Trebizond to Erzincan — the reverse of the Zigana pass direction, but the same mountain road.
+
+He hands you the folio. *The Sunahsepha Analysis is sealed with green wax.*
+
+"Vardan has the current case. He needs the historical analysis as precedent. The hearing is in three days — you have time if the pass is clear."
+
+*Skill check DC 11 — Insight:* What the analysis actually concludes. Insight: a transaction that is four categories simultaneously is legally unclassifiable — this is Argyropoulos's point. The analysis doesn't resolve the current case; it establishes that the categories themselves are insufficient.
+
+*On success:* He nods. "Tell Vardan: the analysis proves the categories can't hold the transaction. That is the argument for the court."
+*On fail:* You take the folio as a routine legal opinion.
+
+*TOKEN granted Act I.*
+
+---
+
+**ACT II — "The Pass in Rain" (Zigana pass, reverse direction)**
+
+The Zigana pass eastbound in a summer rain — the track is slick with runoff and visibility is reduced. A Byzantine courier going the other direction has lost his horse at the upper section. He is stranded and injured — his ankle is twisted, his horse has gone back down the western slope, and he has no food. The pass is three hours' journey in clear conditions; in rain, five.
+
+*Skill check DC 12 — Medicine or Athletics or Persuasion:* Medicine: assess and stabilize the ankle for the descent. Athletics: assist him down the eastern slope toward Erzincan — slower but achievable. Persuasion: talk him through the descent himself, with specific route instructions for the rain-cleared path.
+
+*On success:* You bring him down to the first shelter east of the pass. He gives you a Byzantine route pass as thanks — useful at mountain checkpoints.
+*On fail:* You leave him with directions and a note for the Erzincan garrison. He is found; you arrive having spent an extra half-day.
+
+*TOKEN check Act II.*
+
+---
+
+**ACT III — "The Receiving Scholar" (Erzincan)**
+
+Vardan Grigoryan at the Erzincan court receives the folio and reads the analysis in your presence. He is quiet for a minute, then: "He is right. The categories can't hold it. Which means the current case also can't be classified under the standard categories."
+
+He writes a brief note in his own hand and folds it into the outer seal — his own formal observation on how the historical analysis applies to the current debt-bondage case. *The Sunahsepha Analysis now contains both Argyropoulos's analysis and Vardan's application note.*
+
+*No skill check here — this is the receiving scene. But Vardan asks a question: "Did the father have any obligation to the son after the transaction?" If you can answer correctly (from Act I's context), Vardan's note will be more detailed.*
+
+*Skill check DC 11 — History:* The Hindu legal tradition on parental obligation in ritual transaction contexts.
+
+*On success:* Vardan's note includes a third observation — on post-transaction parental obligation — drawn from your information.
+*On fail:* He adds only the standard two-part application note.
+
+*TOKEN check Act III.*
+
+---
+
+**ACT IV — "The Case Party's Agent" (Erzincan)**
+
+The party on the creditor's side in the Erzincan case has an agent who has been watching Vardan's mail. The agent approaches you as you leave Vardan's office. He wants to know what the Trebizond analysis concludes — specifically whether it favors the creditor or the debtor.
+
+*Skill check DC 12 — Deception or Insight:* Deception: the analysis is neutral — it concludes only that the standard categories are insufficient, not which party's position they support. Insight: the agent already knows the analysis exists; what he actually wants to know is whether it will be cited at the hearing.
+
+*On success:* He accepts the answer and leaves.
+*On fail:* He follows you until you are out of the Erzincan district.
+
+*TOKEN check Act IV.*
+
+---
+
+**ACT V — "The Four Categories" (Weimar)**
+
+Sweelinck reads both documents — the analysis and Vardan's application note.
+
+"Sale, gift, adoption, contract. All simultaneously. The father sold him, the purchaser gifted him to the ritual, the ritual released him, the purchaser adopted him afterward. And the boy sang his way out himself."
+
+He pauses.
+
+"The analysis concludes the categories are insufficient. The application note says: therefore the standard legal instrument cannot handle this case."
+
+He writes: *Legal Analysis — Transaction Categories, Insufficiency Records. First entry: the Sunahsepha analysis. Cross-file: Instruments of Succession — cases where the legal instrument predates the category it needs.*
+
+*TOKEN taken Act V.*
+
+---
+
+### Theme
+
+**"Sunahsepha's transaction was a sale, a gift, an adoption, and a contract simultaneously — which means it was none of them; the analysis concludes the categories are insufficient; the archive files it under legal insufficiency records and cross-files it with the category failures started by Ahalyá's case."**
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "ADA_010",
+  "title": "The Price of a Son",
+  "source": "Ramayana (Griffith verse translation)",
+  "cycle": "ADA",
+  "book": "Ramayana",
+  "source_episode": "Bala Kanda — Sunahsepha sold by his father as a ritual sacrifice victim; sang hymns that released his bonds; adopted by his purchaser Vishwamitra",
+  "theme": "The transaction was four legal categories simultaneously and therefore none of them; the analysis concludes the categories are insufficient; archive files under legal insufficiency records.",
+  "activateNode": "TRB",
+  "token": {
+    "id": "sunahsepha_analysis",
+    "name": "The Sunahsepha Analysis",
+    "description": "Sealed folio, Trebizond legal scholar to Erzincan colleague. The Sunahsepha transaction was sale, gift, adoption, and contract simultaneously — legally unclassifiable. Contains Vardan Grigoryan's application note.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["TRB", "ERZ", "WM"],
+  "new_nodes": [],
+  "acts": [
+    { "act": 1, "location": "TRB", "scene": "Argyropoulos's study, Trebizond", "title": "The Case Before the Hearing", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 11 }, "token_action": "grant" },
+    { "act": 2, "location": "road_TRB_ERZ", "scene": "Zigana pass, eastbound in rain", "title": "The Pass in Rain", "type": "skill_check", "skillCheck": { "skill": "Medicine or Athletics or Persuasion", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "ERZ", "scene": "Vardan Grigoryan's office, Erzincan", "title": "The Receiving Scholar", "type": "skill_check", "skillCheck": { "skill": "History", "dc": 11 }, "token_action": "check" },
+    { "act": 4, "location": "ERZ", "scene": "Erzincan, outside Vardan's office", "title": "The Case Party's Agent", "type": "skill_check", "skillCheck": { "skill": "Deception or Insight", "dc": 12 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "The Four Categories", "type": "delivery", "activateMissionBit": "adaPriceOfSonComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## §ADA-11 — Vignette Cycle 11: "The Brahmin's Credentials"
+
+### What This Angle Reveals
+
+Sunahsepha's transaction was unclassifiable. Vishwamitra's credentials are the opposite problem: a credential that took a thousand years to earn. He was born a Kshatriya warrior-king and became a brahmin sage through merit alone — a thousand years of penance, a thousand years of accumulated spiritual weight, and at the end only one test: Vasishtha's acknowledgment. Without Vasishtha saying the words, nothing counted. The cycle produces the recognition certificate itself — Vasishtha's formal acknowledgment of Vishwamitra's new status — being returned to Vishwamitra's lineage after the original was lost, via a Samarkand manuscript dealer who found it in a Bukhara collection.
+
+### TOKEN: "The Recognition Certificate"
+
+A folded folio, gold-bordered, copied from an older document — a formal acknowledgment by the sage Vasishtha that Vishwamitra has achieved brahmin status by merit. The copy was made in Samarkand from a Bukhara manuscript and is being returned to a scholar in Bukhara who claims descent from Vishwamitra's lineage and has been seeking this document for thirty years. The carrier must bring it from Samarkand's manuscript market to Bukhara's scholar quarter.
+
+- `id`: `recognition_certificate`
+- `name`: "The Recognition Certificate"
+- `description`: "Folded folio, gold-bordered copy: Vasishtha's formal acknowledgment that Vishwamitra achieved brahmin status by merit. Copy made in Samarkand from a Bukhara manuscript, being returned to the lineage scholar."
+- `grant_act`: 1, `take_act`: 5, `check_acts`: [2, 3, 4]
+
+### Nodes
+
+**New node required:** `BUK` — Bukhara (Timurid Central Asia, major scholarly city, 1367)
+**Existing:** `SAM` (Samarkand), `WM`
+
+### Route: `SAM` → `BUK` → `WM`
+
+---
+
+**ACT I — "The Copy's Provenance" (Samarkand)**
+
+Timur ibn Masud al-Samarqandi, a manuscript dealer in the Samarkand bazaar, has made a fair copy from a Bukhara collection that was briefly in Samarkand during a private sale. The original has returned to Bukhara. His copy is the only version outside the original owner's collection. He has agreed to sell the copy to a lineage scholar in Bukhara named Mahmud ibn Ibrahim al-Bukhari — but the scholar cannot travel, and the dealer cannot leave his stall this week.
+
+He hands you the folio. *The Recognition Certificate is carefully folded in oilcloth, the gold border visible at one corner.*
+
+"Mahmud al-Bukhari at the Mir-i Arab madrasa. He's been waiting for this for thirty years. Don't tell him it's a copy until he's read it — he knows it's a copy, but he needs to hold it first."
+
+*Skill check DC 12 — Insight or Persuasion:* Insight: the dealer is slightly uncomfortable with this instruction — he's not asking you to deceive the scholar, but to manage the emotional sequence of the delivery. Persuasion: if you challenge this, the dealer explains that the scholar's attachment to the original versus the copy distinction can be discussed once he has read the text; he just needs to read it first.
+
+*On success:* You understand the emotional choreography. You will hand it over, let him read it, and only then clarify the copy status.
+*On fail:* You take the folio and will handle the delivery as you see fit.
+
+*TOKEN granted Act I.*
+
+---
+
+**ACT II — "The Road to Bukhara" (Samarkand–Bukhara road)**
+
+The road west from Samarkand toward Bukhara across the Zerafshan valley — flat, fertile, with administrative posts at the river crossings. A Timurid customs officer at the second crossing is checking manuscripts and scholarly documents for title provenance — there has been a recent case of fraudulent manuscript copies being sold as originals.
+
+*Skill check DC 12 — Persuasion or Deception:* Persuasion: the document is a declared copy — the dealer's seal on the cover explicitly marks it as a fair copy — and is therefore not subject to anti-fraud provisions that cover misrepresented originals. Deception: it is a personal gift between a scholar and a patron, not a commercial transaction — the fair copy distinction does not apply to gifts.
+
+*On success:* He logs it as "declared copy, scholarly exchange" and passes you through.
+*On fail:* He holds it for a day to verify the dealer's seal against a registry. It is returned with a customs stamp.
+
+*TOKEN check Act II.*
+
+---
+
+**ACT III — "Thirty Years" (Bukhara)**
+
+Mahmud ibn Ibrahim al-Bukhari receives the folio with both hands. He reads it standing up. He does not say anything for several minutes. He then says: "It is complete. The full text."
+
+He sits down.
+
+"My grandfather's grandfather was told this document existed. His grandfather was told. I was told. It took thirty years of correspondence with every manuscript dealer between here and Delhi."
+
+He hands it back to you. "For the archive. I have read it. That is what I needed."
+
+*Skill check DC 11 — Insight:* Whether Mahmud wants to keep a copy for himself. Insight: he does not — he has read it, and the reading is the completion. The object itself belongs in an archive where it can be found by others who are also looking.
+
+*On success:* He writes a brief provenance note in his own hand: "Read and witnessed by the lineage scholar. The document is complete."
+*On fail:* He hands it back without the note.
+
+*TOKEN check Act III.*
+
+---
+
+**ACT IV — "The Other Claimant" (Bukhara)**
+
+A second scholar in Bukhara — Yusuf ibn Ahmad al-Bukhari, who also claims Vishwamitra lineage descent through a different branch — has heard that the document is in the city. He arrives at the madrasa gate and presents a competing claim: the document belongs to the whole lineage, not to Mahmud specifically.
+
+*Skill check DC 13 — Persuasion:* Mahmud has received and released the document for archival deposit. The archival deposit means neither branch of the lineage controls it — it is preserved for all. This outcome actually serves both parties better than either party holding it privately.
+
+*On success:* Yusuf accepts the archival logic. He asks if he can submit a lineage note to accompany the deposit.
+*On fail:* He files a formal objection with the madrasa administration. The document leaves Bukhara regardless, but the objection is noted in the archive.
+
+*TOKEN check Act IV.*
+
+---
+
+**ACT V — "A Thousand Years of Penance" (Weimar)**
+
+Sweelinck reads the certificate and Mahmud's provenance note.
+
+"A thousand years of penance. The formal recognition of a new rank earned by accumulated merit, not by birth. And the only proof that the rank was achieved is one man's spoken acknowledgment — which has now been written down, copied, and found by the lineage thirty generations later."
+
+He pauses.
+
+"The formal credential is the one that takes the longest. Everything else — birth, wealth, connection — can be arranged. Merit takes a thousand years and still needs someone to say the words."
+
+He writes: *Credentials — Merit-Based Rank Certification. First entry: Vishwamitra's brahmin recognition. Three generations of search; one reading.*
+
+*TOKEN taken Act V.*
+
+---
+
+### Theme
+
+**"A thousand years of penance earned the rank; the rank only counted when Vasishtha said the words; the recognition certificate was lost for thirty generations and the lineage scholar spent thirty years of correspondence finding it; he read it once and gave it to the archive."**
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "ADA_011",
+  "title": "The Brahmin's Credentials",
+  "source": "Ramayana (Griffith verse translation)",
+  "cycle": "ADA",
+  "book": "Ramayana",
+  "source_episode": "Bala Kanda — Vishwamitra born Kshatriya, achieves brahmin status through a thousand years of penance; Vasishtha's formal acknowledgment is the only proof that counts",
+  "theme": "Merit-based rank still requires one person to say the words; the certificate was lost for thirty generations; the lineage scholar read it once and gave it to the archive; the archive files it under merit-based rank certification.",
+  "activateNode": "SAM",
+  "token": {
+    "id": "recognition_certificate",
+    "name": "The Recognition Certificate",
+    "description": "Folded folio, gold-bordered copy: Vasishtha's formal acknowledgment that Vishwamitra achieved brahmin status by merit alone. Contains Mahmud al-Bukhari's provenance note: 'Read and witnessed by the lineage scholar.'",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["SAM", "BUK", "WM"],
+  "new_nodes": ["BUK"],
+  "acts": [
+    { "act": 1, "location": "SAM", "scene": "Timur al-Samarqandi's stall, Samarkand bazaar", "title": "The Copy's Provenance", "type": "skill_check", "skillCheck": { "skill": "Insight or Persuasion", "dc": 12 }, "token_action": "grant" },
+    { "act": 2, "location": "road_SAM_BUK", "scene": "Zerafshan valley customs post", "title": "The Road to Bukhara", "type": "skill_check", "skillCheck": { "skill": "Persuasion or Deception", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "BUK", "scene": "Mir-i Arab madrasa, Bukhara", "title": "Thirty Years", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 11 }, "token_action": "check" },
+    { "act": 4, "location": "BUK", "scene": "Madrasa gate, Bukhara", "title": "The Other Claimant", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 13 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "A Thousand Years of Penance", "type": "delivery", "activateMissionBit": "adaBrahminCredentialsComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## §ADA-12 — Vignette Cycle 12: "The Coats of Bark"
+
+### What This Angle Reveals
+
+Vishwamitra's credentials were earned over a thousand years. Kaikeyi's ceremony was performed in open court, in front of the king, Vasishtha, and the assembled nobles — and it was designed to be witnessed. She handed bark hermit coats to Rama and Lakshmana in the throne room. Sita struggled to tie hers over her silk robes. Vasishtha protested. The king wept but did not stop it. The cycle produces the court noble's deposition: one of the assembled witnesses wrote down what was said and by whom. He is sending it to Bharat as a record of what Bharat will inherit — the account of the ceremony that changed his brother's life while Bharat was away from home.
+
+### TOKEN: "The Court Deposition"
+
+A sealed scroll — Subhash ibn Kiran al-Vaishnava, court noble of Ayodhya, recording the exact sequence: who handed the coats, what Kaikeyi said, Sita's difficulty with the knot, Vasishtha's protest and the king's silence. Sent in translation (Persian intermediary) to Bharat through a Golden Horde steppe route, via Tana, toward Saray where Bharat's diplomatic mission is temporarily stationed. The carrier must reach Bharat before the political situation at Saray shifts.
+
+- `id`: `court_deposition`
+- `name`: "The Court Deposition"
+- `description`: "Sealed scroll, court noble's eyewitness account: Kaikeyi's ceremony in the throne room, Sita's difficulty with the bark coat, Vasishtha's protest, the king's silence. Translation into Persian, route via Tana to Saray."
+- `grant_act`: 1, `take_act`: 5, `check_acts`: [2, 3, 4]
+
+### Nodes
+
+**New nodes required:** `SAR` — Saray (Golden Horde capital, Volga delta, 1367)
+**Existing:** `TAN`, `WM`
+
+### Route: `TAN` → `SAR` → `WM`
+
+---
+
+**ACT I — "The Commission at Tana" (Tana)**
+
+The translator — Yusuf ibn Musa al-Tanawi, a multilingual merchant at Tana who does court document translations — has received the original Sanskrit deposition from a courier from the east and has rendered it into Persian. He is now sending it north to Saray, where Bharat is part of a diplomatic delegation from the Ayodhya court to the Golden Horde.
+
+He hands you the scroll. *The Court Deposition is sealed with brown wax, the Persian translation rolled over the Sanskrit original.*
+
+"Bharat is at the Khan's winter court. He will be there for another three weeks. After that the delegation moves and finding him becomes complicated."
+
+*Skill check DC 12 — Insight or Investigation:* The situation at Saray. Insight: there is a court faction at Saray that would prefer to delay any communications from Ayodhya reaching Bharat — they want the diplomatic mission to remain uninformed of the home-court situation as long as possible. Investigation: the route north from Tana to Saray follows the Volga floodplain; two specific checkpoints are controlled by that faction.
+
+*On success:* You know which checkpoints to avoid and which route to take.
+*On fail:* You travel the main road without this intelligence.
+
+*TOKEN granted Act I.*
+
+---
+
+**ACT II — "The Steppe Checkpoint" (Volga floodplain road)**
+
+A Golden Horde checkpoint on the main Volga road, controlled by the faction the translator warned you about. The officer is checking for Ayodhya diplomatic correspondence.
+
+*Skill check DC 12 — Deception or Athletics:* Deception: you are a private merchant carrying personal correspondence for a member of the delegation — not diplomatic mail, not court business. Athletics (if you learned the alternate route in Act I): the eastern bypass crosses the floodplain on a seasonal track; it adds three hours but avoids this post entirely.
+
+*On success:* You pass through or bypass without the scroll being logged.
+*On fail:* The scroll is logged as Ayodhya-origin correspondence. Bharat will still receive it, but the faction now knows it arrived.
+
+*TOKEN check Act II.*
+
+---
+
+**ACT III — "Bharat at the Winter Court" (Saray)**
+
+Bharat is not at the diplomatic residence — he is in the Khan's public hall for a ceremonial morning audience. You gain access through his chamberlain, who knows you are carrying Ayodhya correspondence. Bharat steps away from the audience for five minutes.
+
+He reads the deposition standing up, in public, at the edge of the hall. He does not change expression. He reads it twice.
+
+"She tied the coat over the silk," he says. It is not a question.
+
+He folds the scroll and holds it.
+
+*Skill check DC 11 — Insight:* What Bharat does with the information. Insight: he is not going to respond publicly or alter his diplomatic conduct at the current session. He is cataloguing the detail — the specific image of Sita struggling with the knot — as a factual record of what his absence cost.
+
+*On success:* He asks you one question: "Was Vasishtha's protest recorded verbatim?"
+*On fail:* He folds the scroll without asking anything.
+
+*TOKEN check Act III.*
+
+---
+
+**ACT IV — "The Faction's Response" (Saray)**
+
+The faction has learned the scroll arrived. A court official named Temur-Beg approaches you as you leave the hall. He is polite and very clear: he would like to see the deposition, as it may contain information relevant to the Khan's interests in the Ayodhya mission.
+
+*Skill check DC 13 — Persuasion:* The deposition has been received by its named recipient. The transaction is complete. Any further interest the Khan's court has in its contents should be directed to Bharat, who is a member of a diplomatic delegation and entitled to receive personal correspondence without administrative review.
+
+*On success:* He accepts this.
+*On fail:* He makes a formal note that the contents were not made available. This creates a minor diplomatic tension Bharat will have to manage.
+
+*TOKEN check Act IV — Bharat has kept the scroll; what goes to the archive is a release note he writes.*
+
+---
+
+**ACT V — "What the Ceremony Proved" (Weimar)**
+
+Bharat has released the deposition to the archive through the diplomatic mail. His release note: *"Let this record stand. The ceremony was performed in public so that it could not be denied. Let the archive hold the proof that it was witnessed."*
+
+Sweelinck reads both the deposition and the release note.
+
+"She struggled with the knot. The court watched. Vasishtha protested and the king said nothing. The ceremony was designed to be irrevocable — and the noble understood that, which is why he wrote it down."
+
+He writes: *Witness Depositions — Public Ceremonies Designed to Be Irrevocable. First entry: Kaikeyi's bark coat ceremony.*
+
+*TOKEN taken Act V.*
+
+---
+
+### Theme
+
+**"The ceremony was performed in public precisely so it could not be denied; the court noble wrote it down because an irrevocable act requires a witness; Bharat received the account in exile and released it to the archive so the proof would stand."**
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "ADA_012",
+  "title": "The Coats of Bark",
+  "source": "Ramayana (Griffith verse translation)",
+  "cycle": "ADA",
+  "book": "Ramayana",
+  "source_episode": "Ayodhya Kanda — Kaikeyi hands bark hermit coats to Rama and Lakshmana in the throne room; Sita struggles to tie hers; Vasishtha protests; the king does not stop it",
+  "theme": "The ceremony was designed to be irrevocable and public; the court noble's deposition is the proof it was witnessed; Bharat releases it to the archive from exile.",
+  "activateNode": "TAN",
+  "token": {
+    "id": "court_deposition",
+    "name": "The Court Deposition",
+    "description": "Sealed scroll: eyewitness account of Kaikeyi's bark-coat ceremony in the throne room. Sanskrit original + Persian translation. Bharat's release note inside: 'Let this record stand.'",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["TAN", "SAR", "WM"],
+  "new_nodes": ["SAR"],
+  "acts": [
+    { "act": 1, "location": "TAN", "scene": "Yusuf al-Tanawi's translation workshop, Tana", "title": "The Commission at Tana", "type": "skill_check", "skillCheck": { "skill": "Insight or Investigation", "dc": 12 }, "token_action": "grant" },
+    { "act": 2, "location": "road_TAN_SAR", "scene": "Volga floodplain checkpoint", "title": "The Steppe Checkpoint", "type": "skill_check", "skillCheck": { "skill": "Deception or Athletics", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "SAR", "scene": "Khan's winter court hall, Saray", "title": "Bharat at the Winter Court", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 11 }, "token_action": "check" },
+    { "act": 4, "location": "SAR", "scene": "Court hall, Saray", "title": "The Faction's Response", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 13 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "What the Ceremony Proved", "type": "delivery", "activateMissionBit": "adaCoatsOfBarkComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## §ADA-13 — Vignette Cycle 13: "The False Track"
+
+### What This Angle Reveals
+
+The ceremony was designed to be witnessed. Sumantra's maneuver was designed to erase witnesses. After the exile, Sumantra drove Rama's chariot north — deliberately making a false trail through the city before turning back — so the grieving crowd following the wheel-ruts could not find their way. A deception performed out of loyalty, not deception's usual motive. The cycle produces Sumantra's own account of it, written afterward and sent to a scholar of statecraft who studies the obligations of loyal servants — specifically, what a loyal servant owes to the master's grief versus what the servant owes to the crowd's grief.
+
+### TOKEN: "Sumantra's Explanation"
+
+A single folio — Sumantra, the king's charioteer, has written an account of his reasoning in the years after the exile: why he drove north first, what the crowd looked like following the tracks, why he judged it better for them to be lost than to witness the moment Rama crossed out of Kosala's jurisdiction. It is forwarded through an Alexandria-based Mamluk court administrator named Ahmad ibn Khalil al-Iskandarani, who has collected accounts of morally difficult loyal service, to a Cairo scholar of statecraft.
+
+- `id`: `sunantras_explanation`
+- `name`: "Sumantra's Explanation"
+- `description`: "Single folio, Sumantra the charioteer's account: why he made the false track, what the crowd's grief required, what the master's exile required; the decision where both obligations could not be met."
+- `grant_act`: 1, `take_act`: 5, `check_acts`: [2, 3, 4]
+
+### Nodes
+
+**Existing:** `ALE` (Alexandria), `CAI` (Cairo), `WM`
+
+### Route: `ALE` → `CAI` → `WM`
+
+---
+
+**ACT I — "The Collector's Archive" (Alexandria)**
+
+Ahmad ibn Khalil al-Iskandarani has spent twenty years collecting accounts of morally difficult loyal service. He has thirty such accounts in his collection, of which three are in question: he is uncertain whether to send them to Cairo for active scholarly use, or to send them directly to the Weimar archive for long-term preservation. He has decided the Sumantra account should go to Cairo first, because the Cairo scholar Rashid ibn Yusuf al-Qahiri is currently writing a treatise on charioteer-ethics and this account will fit the chapter on deliberate misdirection.
+
+He hands you the folio. *Sumantra's Explanation is a single folio, written in a clean administrative hand with one correction in the margin.*
+
+"Rashid is at the al-Azhar adjacent school. He knows I am sending this. Don't let it go through the Mamluk chancery mail — I want him to receive it directly."
+
+*Skill check DC 12 — Investigation or Insight:* Investigation: what Ahmad means by "not through the chancery." The Mamluk chancery has been logging all incoming scholarly documents on statecraft and loyalty theory — there is a current political sensitivity about texts that question where a servant's obligation ends. Insight: Ahmad is protecting the scholar, not himself.
+
+*On success:* You understand to use private courier routes, not the official postal system.
+*On fail:* You take the normal road without the distinction.
+
+*TOKEN granted Act I.*
+
+---
+
+**ACT II — "The Delta Road" (Alexandria–Cairo road)**
+
+The main road along the western Nile delta from Alexandria to Cairo — a well-traveled road with Mamluk administrative posts at river crossings. One officer has a standing order to log any documents from Ahmad al-Iskandarani's collection. He knows the name.
+
+*Skill check DC 12 — Deception or Persuasion:* Deception: the folio is a private letter from a private citizen, not a document from a named collection. Persuasion: a private scholarly exchange between two scholars in separate cities is not subject to administrative logging under any current Mamluk statute — state the statute back to him.
+
+*On success:* He logs it as "private correspondence" and passes you through.
+*On fail:* He logs it under Ahmad's name. The scholar in Cairo will receive it with a note that it was flagged.
+
+*TOKEN check Act II.*
+
+---
+
+**ACT III — "The Charioteer Chapter" (Cairo)**
+
+Rashid ibn Yusuf al-Qahiri at the school near al-Azhar reads the folio in your presence. He reads it twice and then says: "He drove north because he loved the crowd. He knew they would follow the wheel-ruts, and he knew they couldn't cross the border, and he knew that not crossing was better for them than crossing and witnessing the moment Rama became an exile."
+
+He is quiet.
+
+"The false track was not a deception of Rama. It was a mercy to the crowd. Those are not the same obligation."
+
+He writes a chapter note and folds it into the folio. *Sumantra's Explanation now contains the chapter note: "This account belongs in the chapter on obligations divided between the master and the witnesses — not in the chapter on deception."*
+
+*Skill check DC 11 — Insight:* Rashid's plan for the folio. He intends to cite it extensively in his treatise and then send it to the archive. The question is whether he wants to keep the original during the writing period.
+
+*On success:* He decides immediately to release it. "I have read it. That is sufficient for the citation."
+*On fail:* He asks to keep it for six weeks, then release it through a trusted courier.
+
+*TOKEN check Act III.*
+
+---
+
+**ACT IV — "The Chancery Note" (Cairo)**
+
+A Mamluk chancery official — alerted by the Act II flag — sends a clerk to the school to request a copy of the document for the chancery archive. He is polite and specific: the chancery has a legitimate interest in scholarly texts on servant-loyalty theory that may have implications for Mamluk administrative practice.
+
+*Skill check DC 12 — Persuasion:* The document has been reviewed by the scholar and is being released for archival deposit at an institution outside Mamluk jurisdiction. The chancery may submit a request for a fair copy through the archive's standard process.
+
+*On success:* The clerk accepts the process explanation and notes the archive address.
+*On fail:* He insists on copying the document before it leaves Cairo. A brief delay while Rashid and the chancery negotiate — the chancery gets a copy, the original proceeds to the archive.
+
+*TOKEN check Act IV.*
+
+---
+
+**ACT V — "The Divided Obligation" (Weimar)**
+
+Sweelinck reads the folio and the chapter note.
+
+"He drove north first. Not to deceive Rama — to give the crowd a false trail that would stop them at the city's edge instead of at the border. He was dividing the grief."
+
+He pauses.
+
+"The chapter note is right. This is not a deception account. It is an account of divided obligation — what the loyal servant owes to the master and what the loyal servant owes to those who love the master."
+
+He writes: *Loyal Service — Divided Obligation Records. First entry: Sumantra's false track. Cross-file: the chapter on obligations divided between the master and the witnesses.*
+
+*TOKEN taken Act V.*
+
+---
+
+### Theme
+
+**"Sumantra drove north first to give the crowd a false trail so they would stop at the city's edge instead of witnessing the moment Rama became an exile; the deception was a mercy to the crowd, not a betrayal of the master; the archive files it under divided obligation records."**
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "ADA_013",
+  "title": "The False Track",
+  "source": "Ramayana (Griffith verse translation)",
+  "cycle": "ADA",
+  "book": "Ramayana",
+  "source_episode": "Ayodhya Kanda — Sumantra drives Rama's chariot north before turning; deliberate false trail for the grieving crowd; the misdirection as loyalty, not deception",
+  "theme": "The false track was a mercy to the crowd, not a betrayal of the master; what the loyal servant owes the master is not the same as what he owes those who love the master; archive files under divided obligation records.",
+  "activateNode": "ALE",
+  "token": {
+    "id": "sumantras_explanation",
+    "name": "Sumantra's Explanation",
+    "description": "Single folio, charioteer's account: why he made the false track, what the crowd's grief required vs. the master's exile. Scholar's chapter note inside: 'This belongs in the chapter on divided obligation, not on deception.'",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["ALE", "CAI", "WM"],
+  "new_nodes": [],
+  "acts": [
+    { "act": 1, "location": "ALE", "scene": "Ahmad al-Iskandarani's study, Alexandria", "title": "The Collector's Archive", "type": "skill_check", "skillCheck": { "skill": "Investigation or Insight", "dc": 12 }, "token_action": "grant" },
+    { "act": 2, "location": "road_ALE_CAI", "scene": "Delta road checkpoint, Nile crossing", "title": "The Delta Road", "type": "skill_check", "skillCheck": { "skill": "Deception or Persuasion", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "CAI", "scene": "Rashid al-Qahiri's study, Cairo", "title": "The Charioteer Chapter", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 11 }, "token_action": "check" },
+    { "act": 4, "location": "CAI", "scene": "School near al-Azhar, Cairo", "title": "The Chancery Note", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 12 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "The Divided Obligation", "type": "delivery", "activateMissionBit": "adaFalseTrackComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## §ADA-14 — Vignette Cycle 14: "Sita's Vow on the Ganga"
+
+### What This Angle Reveals
+
+Sumantra's divided obligation was private — the crowd never knew what he had done for them. Sita's vow was public and liturgical — spoken aloud to the river goddess from a moving boat, before witnesses, with specific commitments. She promised 100,000 cows, 100 jars of wine, meat, rice, and offerings to the Brahmans when Rama returned safely. She said the words in front of the boatman Guha, who heard them and understood their weight. The cycle produces the notarial record of the vow: Guha forwarded it to the priests at a Ganga shrine for preservation until the queen's return. A Syrian coast version of this document — whether it is a copy, a translation, or an independent account — is making its way from a Syrian monastery near Antioch to a shrine record-keeper in Beirut.
+
+### TOKEN: "The River Vow Record"
+
+A folded parchment — a notarial record in the tradition of vow-preservation documents kept by river shrine priests, recording: location (the Ganga crossing at Shringaverapura), speaker (the queen traveling into exile), witnesses (Guha the boatman, Lakshmana), the specific terms of the vow (100,000 cows, 100 jars, meat and rice for the Brahmans), the conditional structure (fulfilled when Rama returns from exile safely). Sent from a Syrian monastery near Antioch — which received it as a curiosity from a merchant traveling from the east — to a Beirut shrine record-keeper who catalogues such documents.
+
+- `id`: `river_vow_record`
+- `name`: "The River Vow Record"
+- `description`: "Folded parchment, notarial format: the queen's vow on the Ganga — 100,000 cows, 100 jars of wine, Brahman offerings — spoken in exile, conditional on safe return. From Syrian monastery to Beirut shrine records."
+- `grant_act`: 1, `take_act`: 5, `check_acts`: [2, 3, 4]
+
+### Nodes
+
+**New nodes required:** `ANT_C` — Antioch (Mamluk Syrian coast city, 1367) — but wait, ANT is already used for two things in quest-map.md. I'll use `ANT` as Antioch since that's the established convention from processed quests.
+**Existing:** `ANT` (Antioch city), `BEY` — wait, BEY is the Mandeville source book code, not a city node. Let me use a different code for Beirut. Looking at the ADA seed table: it says "Antioch → Beirut." What is Beirut's node code?
+
+Looking at quest-map.md: line 162 has route `CAI → ALE → VEN → WM` (BGW-04); line 171 has `CAI → ALE → WM`. I haven't seen BEY used as a city code. Actually in BGW routes: `BAG → BEY → ANT → WM` — here BEY might be Beirut or Beyrut. Let me use `BYR` for Beirut to avoid confusion with the source book code BEY.
+
+Actually let me just check what codes are used in the system for Beirut.
+
+Hmm, I'll use `BYR` for Beirut as a new node.
+
+### Route: `ANT` → `BYR` → `WM`
+
+New node: `BYR` (Beirut — Mamluk Syrian coast city, 1367)
+
+---
+
+**ACT I — "The Monastery's Curiosity" (Antioch)**
+
+Brother Theodoros at the Syrian monastery near Antioch received the vow record six months ago from a Venetian merchant who had acquired it at a Sinop market as part of a mixed lot of eastern documents. He has not been able to identify the document's tradition but he understands it is a sacred vow record of some kind — he can read enough of the translation to recognize the conditional structure. He has decided to send it to the Beirut shrine record-keeper, Yusuf ibn Masud al-Bayruti, who specializes in cross-tradition vow documents.
+
+He hands you the folded parchment. *The River Vow Record is old, a little water-stained on one corner, but the text is clean.*
+
+"It has been waiting in my library for someone who can place it. Yusuf will know the tradition."
+
+*Skill check DC 11 — History or Religion:* History: recognize the document's origin in the Hindu river-vow tradition, the specific structure (conditional vow, enumerated commitments, named witnesses), and the likely time period. Religion: the conditional vow structure is widespread across Abrahamic and Hindu traditions — the specific enumerations (100,000 cows) mark it as Hindu epic tradition.
+
+*On success:* You provide Brother Theodoros with the basic identification: Hindu epic tradition, vow made at a river crossing, royal speaker going into exile. He is delighted and adds a note to the exterior fold.
+*On fail:* You take the document without providing identification.
+
+*TOKEN granted Act I.*
+
+---
+
+**ACT II — "The Mamluk Coast Road" (Antioch–Beirut coastal road)**
+
+The Mamluk coastal road south from Antioch — through Latakia and Tripoli — a well-traveled route with administrative posts. An officer at Tripoli is checking for documents related to religious practices: there has been a recent dispute about non-Islamic vow documents being circulated among the Syrian Christian communities. He asks what the parchment is.
+
+*Skill check DC 12 — Persuasion or Deception:* Persuasion: the document is a scholarly curiosity from the eastern tradition, being sent from a monastery to a document specialist — not a religious practice document and not intended for circulation. Deception: it is a personal letter from a monk to a colleague (which it partly is).
+
+*On success:* He passes you through.
+*On fail:* He examines the document's first line and makes a note. A minor log entry; no confiscation.
+
+*TOKEN check Act II.*
+
+---
+
+**ACT III — "The Cross-Tradition Specialist" (Beirut)**
+
+Yusuf ibn Masud al-Bayruti at his study in Beirut receives the document and identifies it in approximately four minutes.
+
+"The conditional vow structure with enumerated return-offerings. She spoke it from a moving boat, which is the specific form for a journey vow — it activates at departure and releases at arrival. The boatman is the witness because he is the last person she could trust with the words before crossing."
+
+He writes a full provenance note for the archive: tradition, form, context, the significance of Guha as witness.
+
+*Skill check DC 12 — Insight:* Yusuf's emotional response to the document. Insight: he is moved specifically by the detail that the vow was conditional — she did not know if Rama would return safely, so she committed in advance in case the asking itself helped.
+
+*On success:* He adds one line to his provenance note: "The vow was a form of hope. She was not certain of the outcome when she made the commitment."
+*On fail:* The provenance note is accurate but technical.
+
+*TOKEN check Act III.*
+
+---
+
+**ACT IV — "The Merchant's Interest" (Beirut)**
+
+The Venetian merchant who originally sold the document in Sinop has a factor in Beirut. The factor has heard a cross-tradition vow document from the eastern lot has surfaced in the city — if the document has scholarly value, the merchant may have a claim on proceeds from its academic circulation. The factor approaches you outside Yusuf's study.
+
+*Skill check DC 11 — Persuasion:* The document was sold without reservation to Brother Theodoros, who has now donated it to a specialist scholar for archival deposit. The commercial chain is complete. Any residual interest the merchant has should be addressed to the monastery, not to the carrier.
+
+*On success:* The factor accepts this and leaves.
+*On fail:* He files a note with the Venetian factor-house in Beirut for future reference.
+
+*TOKEN check Act IV.*
+
+---
+
+**ACT V — "The Hope That Arrived" (Weimar)**
+
+Sweelinck reads the vow record and Yusuf's provenance note — both the technical analysis and the final line about hope.
+
+"She made the commitment not knowing the outcome. Conditional on his safe return. She was on a moving boat in exile, in a foreign country, making promises to a river goddess on behalf of a future she could not see."
+
+He looks at the list of commitments: 100,000 cows, 100 jars of wine, meat and rice.
+
+"She was very specific. When you hope for something, you are specific."
+
+He writes: *Vow Records — Conditional Commitments Made from Exile. First entry: the Ganga vow, queen in exile, conditional on return.*
+
+*TOKEN taken Act V.*
+
+---
+
+### Theme
+
+**"The vow was made from a moving boat in exile, conditional on a return she could not yet see; she enumerated everything specifically because when you hope for something you are specific; the archive files it under conditional commitments made from exile."**
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "ADA_014",
+  "title": "Sita's Vow on the Ganga",
+  "source": "Ramayana (Griffith verse translation)",
+  "cycle": "ADA",
+  "book": "Ramayana",
+  "source_episode": "Ayodhya Kanda — Sita prays aloud to the Ganga from Guha's boat; specific liturgical commitments if Rama returns safely; Guha witnesses",
+  "theme": "The conditional vow made from exile enumerates everything specifically because hope is specific; archive files under conditional commitments made from exile.",
+  "activateNode": "ANT",
+  "token": {
+    "id": "river_vow_record",
+    "name": "The River Vow Record",
+    "description": "Folded parchment, notarial: the queen's Ganga vow — 100,000 cows, 100 jars, Brahman offerings — conditional on Rama's safe return. Boatman Guha as witness. Yusuf al-Bayruti's provenance note inside.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["ANT", "BYR", "WM"],
+  "new_nodes": ["BYR"],
+  "acts": [
+    { "act": 1, "location": "ANT", "scene": "Syrian monastery near Antioch, Brother Theodoros's library", "title": "The Monastery's Curiosity", "type": "skill_check", "skillCheck": { "skill": "History or Religion", "dc": 11 }, "token_action": "grant" },
+    { "act": 2, "location": "road_ANT_BYR", "scene": "Tripoli checkpoint, Mamluk coast road", "title": "The Mamluk Coast Road", "type": "skill_check", "skillCheck": { "skill": "Persuasion or Deception", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "BYR", "scene": "Yusuf al-Bayruti's study, Beirut", "title": "The Cross-Tradition Specialist", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 12 }, "token_action": "check" },
+    { "act": 4, "location": "BYR", "scene": "Outside Yusuf's study, Beirut", "title": "The Merchant's Interest", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 11 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "The Hope That Arrived", "type": "delivery", "activateMissionBit": "adaGangaVowComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## §ADA-15 — Vignette Cycle 15: "The Curse of the Blind Parents"
+
+### What This Angle Reveals
+
+The Ganga vow was hope. The blind parents' curse was the shadow that waited. Dasharatha once shot a young hermit by night, mistaking the sound of a water jar for an elephant. He confessed immediately to the dying boy's blind parents. They cursed him: as you grieve for a son, so shall you die. The curse was fulfilled precisely — Dasharatha died weeping for Rama. The cycle produces the deposition of the original incident: the exact wording of the curse, the exact circumstance. It is sent from an Amasya-based scholar to a theologian in Sivas who is debating whether deathbed curses are legally binding or morally actionable against the speaker.
+
+### TOKEN: "The Curse Deposition"
+
+A sealed folio — the original incident and the curse's exact wording, compiled by Bahram ibn Yusuf al-Amasyawi from a Greek-language intermediary text (the story circulated in Pontine Armenian and Greek communities through a translation tradition), addressed to his colleague Muhsin ibn Taha al-Sivasi in Sivas, who is running a philosophical seminar on deathbed obligations. The folio records: the arrow, the darkness, the sound, the hermit's death, the blind parents' question to Dasharatha, and the curse's exact terms.
+
+- `id`: `curse_deposition`
+- `name`: "The Curse Deposition"
+- `description`: "Sealed folio, Amasya scholar to Sivas theologian: the exact wording of the blind parents' curse — 'as you grieve for a son, so shall you die' — and its fulfillment. Greek intermediary text noted."
+- `grant_act`: 1, `take_act`: 5, `check_acts`: [2, 3, 4]
+
+### Nodes
+
+**New nodes required:** `AMY` — Amasya (Anatolian highland city, Ottoman frontier, 1367); `SIV` — Sivas (central Anatolian city, Eretna principality, 1367)
+**Existing:** `WM`
+
+### Route: `AMY` → `SIV` → `WM`
+
+---
+
+**ACT I — "The Text's Journey" (Amasya)**
+
+Bahram ibn Yusuf al-Amasyawi has been working on this text for two years. His source is a Greek intermediary translation that arrived in Amasya via Trebizond — one of the small Ramayana episodes that circulated in the Black Sea scholarly community independently of the main epic. He has rendered it into Arabic with extensive annotation on the curse's legal structure. His colleague in Sivas is specifically running a seminar on the question: can a dying parent's curse create a binding obligation on the person cursed? And if fulfilled, does the fulfillment retroactively validate the curse as a legal act?
+
+He hands you the folio. *The Curse Deposition is sealed with grey wax.*
+
+"Muhsin will want to use this in the seminar. He has three weeks. The road through the Yeşilırmak valley is passable this time of year."
+
+*Skill check DC 12 — History or Insight:* History: the specific legal question — whether a dying person's spoken curse has the force of a legal instrument in either Greek-Byzantine or Islamic traditions. Insight: Bahram has answered the question in the annotation, but he has not told Muhsin his answer in the covering note — he wants Muhsin to reach the conclusion independently before seeing the annotation.
+
+*On success:* You understand the deliberate omission. "Don't mention the annotation until he has formed his own position."
+*On fail:* You take the folio as routine correspondence.
+
+*TOKEN granted Act I.*
+
+---
+
+**ACT II — "The Yeşilırmak Road" (Amasya–Sivas road)**
+
+The road west from Amasya through the Yeşilırmak valley and up into the central Anatolian plateau toward Sivas — Eretna principality territory, a well-traveled road. A caravan ahead has broken an axle at a river ford; the ford is blocked, the caravan master is shouting, and the ford crossing is the only practical route across without adding three hours.
+
+*Skill check DC 12 — Athletics or Persuasion:* Athletics: wade the ford with the document held above head-height — the water is fast but knee-deep in the current crossing point. Persuasion: organize the waiting travelers to help shift the caravan's wheel load, clearing the ford in forty minutes rather than four hours.
+
+*On success:* You cross without delay. *The Curse Deposition is dry.*
+*On fail:* You wade the ford unassisted, the folio wrapped in your riding coat. It survives but the outer cover is slightly damp at the edges.
+
+*TOKEN check Act II.*
+
+---
+
+**ACT III — "The Seminar's Conclusion" (Sivas)**
+
+Muhsin ibn Taha al-Sivasi receives the folio, reads the deposition twice without looking at the annotation, and then says: "The curse was legally binding by the standard of any witnessed oath — the parents stated specific terms and Dasharatha heard them and did not deny them. The fulfillment validated the terms post-factum."
+
+He then opens the annotation. He reads it, looks up, and smiles.
+
+"He reached the same conclusion."
+
+He writes his seminar summary on a separate sheet and folds it into the folio. *The Curse Deposition now contains both the original deposition, Bahram's annotation, and Muhsin's seminar conclusion.*
+
+*Skill check DC 11 — Insight:* What Muhsin will do with this in the seminar. His conclusion is that the curse is a valid legal instrument — which has implications for a current case in Sivas involving a dying merchant's oral revocation of a prior will. He has not mentioned this yet.
+
+*On success:* You ask. He confirms: the seminar question is not hypothetical. He thanks you.
+*On fail:* You leave not knowing the local application.
+
+*TOKEN check Act III.*
+
+---
+
+**ACT IV — "The Will Case's Party" (Sivas)**
+
+One of the parties in the will case — a merchant's adult son who would benefit if the oral revocation is invalidated — has heard that a theological opinion supporting the validity of oral deathbed statements has arrived in the city. He sends a representative to Muhsin's door before you leave.
+
+*Skill check DC 12 — Persuasion:* The document is a scholarly text on Hindu-epic legal precedent, not a legal opinion in the Sivas will case. The seminar conclusion is Muhsin's academic work; its application to any specific case is Muhsin's professional decision, not the carrier's. The representative should address his concerns to the qadi's court directly.
+
+*On success:* The representative withdraws.
+*On fail:* He makes a formal objection with the Eretna court administration. Minor procedural note; the document proceeds.
+
+*TOKEN check Act IV.*
+
+---
+
+**ACT V — "The Curse That Was Also a Prophecy" (Weimar)**
+
+Sweelinck reads all three layers: deposition, annotation, seminar conclusion.
+
+"The parents were blind. He had just killed their only son in the dark by accident. They cursed him: as you grieve for a son, so shall you die. And that is how he died."
+
+He pauses.
+
+"The seminar note says it was a valid legal instrument. I think it was also a prophecy. The parents did not invent the form of his death — they described it. They knew what kind of man he was before he knew he was going to be exiled by his own son's mother."
+
+He writes: *Curses and Prophecies — Deathbed Statements That Described Rather Than Caused. First entry: the blind parents' curse.*
+
+*TOKEN taken Act V.*
+
+---
+
+### Theme
+
+**"The parents described the form of his death because they knew what kind of man he was; the curse was also a prophecy; the archive files it under deathbed statements that described rather than caused, noting that the distinction may not matter."**
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "ADA_015",
+  "title": "The Curse of the Blind Parents",
+  "source": "Ramayana (Griffith verse translation)",
+  "cycle": "ADA",
+  "book": "Ramayana",
+  "source_episode": "Ayodhya Kanda — Dasharatha kills a hermit by night; blind parents curse him: 'as you grieve for a son, so shall you die'; fulfilled at Rama's exile",
+  "theme": "The curse was also a prophecy; the parents described rather than caused the form of his death; archive files under deathbed statements that described rather than caused.",
+  "activateNode": "AMY",
+  "token": {
+    "id": "curse_deposition",
+    "name": "The Curse Deposition",
+    "description": "Sealed folio: exact wording of the blind parents' curse, the incident record, Bahram al-Amasyawi's annotation, and Muhsin al-Sivasi's seminar conclusion. Grey wax.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["AMY", "SIV", "WM"],
+  "new_nodes": ["AMY", "SIV"],
+  "acts": [
+    { "act": 1, "location": "AMY", "scene": "Bahram al-Amasyawi's study, Amasya", "title": "The Text's Journey", "type": "skill_check", "skillCheck": { "skill": "History or Insight", "dc": 12 }, "token_action": "grant" },
+    { "act": 2, "location": "road_AMY_SIV", "scene": "Yeşilırmak valley ford crossing", "title": "The Yeşilırmak Road", "type": "skill_check", "skillCheck": { "skill": "Athletics or Persuasion", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "SIV", "scene": "Muhsin al-Sivasi's seminar room, Sivas", "title": "The Seminar's Conclusion", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 11 }, "token_action": "check" },
+    { "act": 4, "location": "SIV", "scene": "Outside Muhsin's study, Sivas", "title": "The Will Case's Party", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 12 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "The Curse That Was Also a Prophecy", "type": "delivery", "activateMissionBit": "adaBlindParentsCurseComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## §ADA-16 — Vignette Cycle 16: "The Sage's Feast"
+
+### What This Angle Reveals
+
+The blind parents' curse was the death of the intimate catastrophe. The sage's feast is the opposite end of the scale: an army of 100,000 men fed in one night through divine hospitality, after which they refused to march. The army captain's report is the most interesting document — not the feast itself (which was miraculous) but the captain's attempt to explain to his king why 100,000 trained soldiers couldn't be moved until morning because the food was too good. The cycle produces this report, traveling from Constantinople (where it reached via Greek scholarly channels) to Thessaloniki, where a Byzantine military historian is writing a treatise on logistics.
+
+### TOKEN: "The Army Captain's Report"
+
+A folded document — a Byzantine military historian's commissioned translation of the army captain's report from Sanskrit via Persian into Greek: why the advance stopped, what the men were given, whether any of it was reproducible for field logistics. The historian — Nikephoros Skleros — is in Constantinople and wants the text sent to his colleague in Thessaloniki who handles the logistics chapter. Being forwarded from Constantinople to Thessaloniki before the chapter deadline.
+
+- `id`: `army_captain_report`
+- `name`: "The Army Captain's Report"
+- `description`: "Folded document: Greek translation of the army captain's account of Bharadvaja's feast — 100,000 men fed in one night; the advance stopped until morning because the food was too good."
+- `grant_act`: 1, `take_act`: 5, `check_acts`: [2, 3, 4]
+
+### Nodes
+
+**New nodes required:** `THE` — Thessaloniki (Byzantine-controlled city, 1367)
+**Existing:** `CON` (Constantinople), `WM`
+
+### Route: `CON` → `THE` → `WM`
+
+---
+
+**ACT I — "The Logistics Chapter" (Constantinople)**
+
+Nikephoros Skleros is a military historian under Byzantine court patronage. He found the army captain's report in a Persian intermediary translation and has had it rendered into Greek. He wants it in his colleague Demetrios Tarchaneiotes's hands in Thessaloniki before the chapter is drafted — because the specific content (divine intervention stopping an army advance through abundance rather than force) is what Demetrios calls "the logistics paradox": a supply success that created a tactical problem.
+
+He hands you the folded document. *The Army Captain's Report is in the standard military document format: folded in thirds, wax strip across the center fold.*
+
+"Demetrios will know what to do with it. If he has already drafted the chapter, tell him to revise — this is the canonical example."
+
+*Skill check DC 12 — History or Insight:* History: the specific tradition of Byzantine military logistics history that Demetrios works in; the feast episode fits a known analytical category — miraculous supply as tactical disruption. Insight: Skleros is slightly competitive with Demetrios and wants credit for finding the source; how you frame the delivery matters.
+
+*On success:* You understand to present it as Skleros's discovery specifically.
+*On fail:* You take the document as a routine transfer.
+
+*TOKEN granted Act I.*
+
+---
+
+**ACT II — "The Via Egnatia" (Constantinople–Thessaloniki road)**
+
+The Via Egnatia westbound from Constantinople — the great Thracian road across the Balkans — an Ottoman-patrolled road in 1367, with Byzantine administrative posts at the major junctions. At the Adrianople junction, a checkpoint combining Ottoman and Byzantine transit officers is checking all documents moving west from Constantinople. The Byzantine officer wants to log scholarly documents moving through the Byzantine academic system.
+
+*Skill check DC 12 — Persuasion or Deception:* Persuasion: the document is a military history text commissioned under Byzantine court patronage, moving between two historians on the court's approved scholarly route — it is in the court's own administrative framework. Deception: it is a private letter between colleagues, not a court document.
+
+*On success:* He logs it under "Byzantine court scholarship, transit to Thessaloniki" and passes you through.
+*On fail:* He holds it for a senior Byzantine official's confirmation. Two-hour delay; released with a transit stamp.
+
+*TOKEN check Act II.*
+
+---
+
+**ACT III — "Demetrios at the Chapter" (Thessaloniki)**
+
+Demetrios Tarchaneiotes has already drafted the logistics chapter. He reads the army captain's report and immediately says: "He's right. This is the canonical example. I have to revise."
+
+He goes to his desk and begins rewriting. After twenty minutes, he looks up.
+
+"The feast stopped the army not through scarcity but through abundance. The standard logistics problem is supply failure. This is the problem of supply so complete that the army won't move. I don't have a category for that."
+
+He folds the report back into its format with his revision notes written on the inside of the outer fold. *The Army Captain's Report now contains Demetrios's chapter notes.*
+
+*Skill check DC 11 — Investigation:* Whether Demetrios intends to keep the original or send it with the notes to the archive. He intends to keep it for the final chapter revision — which means there will be a second delivery to the archive after the chapter is done.
+
+*On success:* You negotiate an immediate archive release: he keeps a copy, the original goes to the archive now.
+*On fail:* He keeps the original, promises to release it in six weeks.
+
+*TOKEN check Act III.*
+
+---
+
+**ACT IV — "The Competing Historian" (Thessaloniki)**
+
+A rival Byzantine military historian named Ioannis Phrantzis has heard a Sanskrit-derived logistics text is in Thessaloniki. He wants to see the document before Demetrios publishes his chapter — he has been working on the same analytical category independently and believes he has the prior claim.
+
+*Skill check DC 12 — Persuasion:* The document was commissioned and translated by Skleros in Constantinople; Demetrios received it as the intended recipient; any prior claim Phrantzis believes he has is an academic dispute with Skleros, not a document custody issue.
+
+*On success:* He accepts this framing.
+*On fail:* He threatens to report the document's provenance to the Byzantine academic registry, creating a minor procedural dispute.
+
+*TOKEN check Act IV.*
+
+---
+
+**ACT V — "The Supply That Stopped the Army" (Weimar)**
+
+Sweelinck reads the report and Demetrios's chapter notes.
+
+"He fed 100,000 men in one night. He invoked Vishvakarma, 20,000 divine nymphs, rivers of milk and wine, buildings that appeared from nothing. And the army refused to march in the morning because they wanted to stay."
+
+He considers this.
+
+"The supply failure stops an army. This is known. But an army stopped by supply success — that is new. The chapter note calls it the logistics paradox. I will file it under that."
+
+He writes: *Military Logistics — The Paradox of Abundance. First entry: Bharadvaja's feast.*
+
+*TOKEN taken Act V.*
+
+---
+
+### Theme
+
+**"The army stopped not because supply failed but because supply was so complete they didn't want to leave; the logistics paradox is the supply success that creates a tactical problem; the archive files the first canonical example."**
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "ADA_016",
+  "title": "The Sage's Feast",
+  "source": "Ramayana (Griffith verse translation)",
+  "cycle": "ADA",
+  "book": "Ramayana",
+  "source_episode": "Ayodhya Kanda — Bharadvaja feeds 100,000 men in one night through divine hospitality; the army refuses to march until morning",
+  "theme": "Supply so complete that the army won't move; the logistics paradox; archive files the first canonical example under Military Logistics — The Paradox of Abundance.",
+  "activateNode": "CON",
+  "token": {
+    "id": "army_captain_report",
+    "name": "The Army Captain's Report",
+    "description": "Greek translation of the army captain's account: 100,000 men fed in one night; the advance halted until morning because the food was too good. Contains Demetrios Tarchaneiotes's chapter revision notes.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["CON", "THE", "WM"],
+  "new_nodes": ["THE"],
+  "acts": [
+    { "act": 1, "location": "CON", "scene": "Nikephoros Skleros's study, Constantinople", "title": "The Logistics Chapter", "type": "skill_check", "skillCheck": { "skill": "History or Insight", "dc": 12 }, "token_action": "grant" },
+    { "act": 2, "location": "road_CON_THE", "scene": "Adrianople junction checkpoint, Via Egnatia", "title": "The Via Egnatia", "type": "skill_check", "skillCheck": { "skill": "Persuasion or Deception", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "THE", "scene": "Demetrios Tarchaneiotes's study, Thessaloniki", "title": "Demetrios at the Chapter", "type": "skill_check", "skillCheck": { "skill": "Investigation", "dc": 11 }, "token_action": "check" },
+    { "act": 4, "location": "THE", "scene": "Thessaloniki, competing historian", "title": "The Competing Historian", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 12 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "The Supply That Stopped the Army", "type": "delivery", "activateMissionBit": "adaSagesFeastComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## §ADA-17 — Vignette Cycle 17: "The Crow's Eye"
+
+### What This Angle Reveals
+
+The feast was hospitality scaled to the impossible. The crow's eye is proportion scaled to the absurd. Rama shot a magic arrow at a crow that pecked Sita. The arrow pursued the crow through all the worlds — past gods, through space, into the underworld, up through the sky — for days. The crow finally surrendered and offered an eye. Rama couldn't un-loose the arrow so he asked what it would sacrifice. The crow gave one eye and lived. The cycle produces a philosophical commentary on Rama's legal position: if the arrow had to fly, what obligation did Rama have to limit its harm? A Bursa legal philosopher is sending this to a Nicaea colleague who is writing on the ethics of proportional punishment.
+
+### TOKEN: "The Proportionality Commentary"
+
+A slim folio — Yusuf al-Bursawi (nephew of Fatima al-Bursawi, ADA-08) has written a commentary on Rama's crow-arrow episode as a case study in proportional punishment: when a punishment cannot be recalled once initiated, what is the punisher's obligation? His conclusion: the punisher's obligation shifts from harm-prevention to harm-minimization once the punishment is irreversible; the crow's offer of an eye was the negotiated minimum that satisfied the arrow's requirement to land. Sent to a colleague in Nicaea.
+
+- `id`: `proportionality_commentary`
+- `name`: "The Proportionality Commentary"
+- `description`: "Slim folio, Bursa legal philosopher on proportional punishment: when a punishment cannot be recalled, the punisher's obligation shifts to harm-minimization; the crow's eye was the negotiated minimum. Sent to Nicaea."
+- `grant_act`: 1, `take_act`: 5, `check_acts`: [2, 3, 4]
+
+### Nodes
+
+**New nodes required:** `NIC` — Nicaea (Byzantine city in Bithynia, 1367, under Ottoman control since 1331 — check: Nicaea fell to the Ottomans in 1331. So Nicaea in 1367 is Ottoman-administered with some remaining Byzantine Greek scholarly community.)
+
+Actually — let me check: was Nicaea Byzantine in 1367? Nicaea fell to the Ottomans in 1331. So in 1367 it is an Ottoman-administered city. However, it was the seat of the restored Byzantine Empire from 1204–1261 and retained significant Greek scholarly traditions.
+
+**New node:** `NIC` — Nicaea (Ottoman-administered city in Bithynia, 1367; former Byzantine scholarly center)
+**Existing:** `BUR`, `WM`
+
+### Route: `BUR` → `NIC` → `WM`
+
+---
+
+**ACT I — "The Proportionality Problem" (Bursa)**
+
+Yusuf al-Bursawi has written the commentary in three days. He is excited — the crow-arrow episode is an unusually clean case study because the structure is explicit: the arrow was released, could not be recalled, and the question of what happens next is answered in the text. He is sending it to his colleague Georgios Palaiologos in Nicaea, who is writing on the ethics of proportional punishment specifically in cases where the punishment has already begun.
+
+He hands you the slim folio. *The Proportionality Commentary is folded once, sealed with blue-black wax.*
+
+"Tell Georgios: the crow is not the victim. The crow is the negotiator. That is the key."
+
+*Skill check DC 11 — Insight:* What distinguishes this case from standard proportionality analysis. Insight: in standard cases the punisher controls the punishment throughout; here, once the arrow was released, the question was not "should this continue" but "how does this end with minimum damage." The crow's offer is not submission — it is contract negotiation.
+
+*On success:* You understand the analytical distinction. "The crow negotiated, not surrendered."
+*On fail:* You take the folio as a routine delivery.
+
+*TOKEN granted Act I.*
+
+---
+
+**ACT II — "The Bithynian Road" (Bursa–Nicaea road)**
+
+The road east from Bursa across the Bithynian plain toward Nicaea — Ottoman-administered territory, 1367. A local Ottoman official has been told to log documents moving between known scholars in Bursa and Nicaea: there has been concern about coordinated academic activity between the two cities that might have political implications. He asks about the document.
+
+*Skill check DC 12 — Deception or Persuasion:* Deception: this is a private letter from Yusuf al-Bursawi to his colleague, not a coordinated academic document — which is technically true, as it is an informal folio, not a formal treatise. Persuasion: the Ottoman administration has no stated interest in the ethics of proportional punishment as an academic subject; state the category back to the officer.
+
+*On success:* He passes you through.
+*On fail:* He logs the document under both scholars' names. Not a confiscation; just a note.
+
+*TOKEN check Act II.*
+
+---
+
+**ACT III — "The Negotiating Crow" (Nicaea)**
+
+Georgios Palaiologos at his study in Nicaea reads the commentary and then laughs — not mockingly, but with the specific pleasure of encountering an argument he hadn't thought of.
+
+"The crow negotiated the minimum sacrifice. It did not beg for mercy — it made an offer. 'I will give one eye.' And the arrow accepted because one eye satisfied the requirement to land."
+
+He adds a paragraph to his own chapter draft, which he folds into the commentary. *The Proportionality Commentary now contains Georgios's chapter paragraph: "The crow's offer is the first case in the record of punishment-as-contract: the punished party negotiates the terms of completion."*
+
+*Skill check DC 12 — History or Insight:* History: whether the chapter paragraph is analytically novel (it is — punishment-as-contract is not a standard category in either Greek or Islamic jurisprudence). Insight: Georgios will cite this extensively; you should confirm he has a reference for Yusuf's full name and the folio's provenance.
+
+*On success:* He notes the full reference. "Yusuf ibn Ahmad al-Bursawi, Bursa, sent this folio on the date of composition."
+*On fail:* He has the argument but not the attribution in the chapter notes.
+
+*TOKEN check Act III.*
+
+---
+
+**ACT IV — "The Ottoman Academic Registry" (Nicaea)**
+
+An Ottoman academic registry officer in Nicaea has a standing protocol: any document from Bursa scholars that contains a legal analysis must be filed with the registry before leaving the city for western destinations. He presents this protocol to you as you are departing.
+
+*Skill check DC 12 — Persuasion:* The document is a private scholarly exchange released for archival deposit at a non-Ottoman institution. The registry protocol applies to documents retained in the city, not to documents passing through en route to external archives. The distinction is in the protocol's own language.
+
+*On success:* He checks his protocol text and concedes the transit distinction.
+*On fail:* He insists on a copy being filed. The original proceeds to the archive with a registry stamp on the outer fold.
+
+*TOKEN check Act IV.*
+
+---
+
+**ACT V — "The Arrow That Could Not Be Recalled" (Weimar)**
+
+Sweelinck reads the commentary and Georgios's chapter paragraph.
+
+"The arrow was released. It could not be recalled. The punisher's obligation shifted from prevention to minimization. The crow offered the minimum that would satisfy the arrow's requirement to land. One eye."
+
+He pauses.
+
+"This is clean. The text has done the philosopher's work. It stated the problem and its solution in the same story."
+
+He reads the chapter paragraph. "Punishment-as-contract. The punished party negotiates the terms of completion."
+
+He writes: *Proportional Punishment — Cases Where the Obligation Shifts at Release Point. First entry: the crow-arrow episode. Cross-file: the chapter on punishment-as-contract.*
+
+*TOKEN taken Act V.*
+
+---
+
+### Theme
+
+**"Once the arrow was released it could not be recalled; the punisher's obligation shifted from harm-prevention to harm-minimization; the crow negotiated the minimum sacrifice that would satisfy the arrow; the archive files the first case of punishment-as-contract."**
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "ADA_017",
+  "title": "The Crow's Eye",
+  "source": "Ramayana (Griffith verse translation)",
+  "cycle": "ADA",
+  "book": "Ramayana",
+  "source_episode": "Aranya Kanda — Rama fires a magic arrow at a crow that pecked Sita; the arrow pursues the crow through all worlds; the crow offers one eye as the minimum; the arrow accepts",
+  "theme": "The punisher's obligation shifts at release point; the crow negotiated rather than submitted; punishment-as-contract; archive files the first canonical case.",
+  "activateNode": "BUR",
+  "token": {
+    "id": "proportionality_commentary",
+    "name": "The Proportionality Commentary",
+    "description": "Slim folio, Yusuf al-Bursawi on proportional punishment when punishment cannot be recalled; the crow's eye as negotiated minimum. Georgios Palaiologos's chapter paragraph inside.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["BUR", "NIC", "WM"],
+  "new_nodes": ["NIC"],
+  "acts": [
+    { "act": 1, "location": "BUR", "scene": "Yusuf al-Bursawi's study, Bursa", "title": "The Proportionality Problem", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 11 }, "token_action": "grant" },
+    { "act": 2, "location": "road_BUR_NIC", "scene": "Bithynian plain road, Ottoman checkpoint", "title": "The Bithynian Road", "type": "skill_check", "skillCheck": { "skill": "Deception or Persuasion", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "NIC", "scene": "Georgios Palaiologos's study, Nicaea", "title": "The Negotiating Crow", "type": "skill_check", "skillCheck": { "skill": "History or Insight", "dc": 12 }, "token_action": "check" },
+    { "act": 4, "location": "NIC", "scene": "Nicaea, Ottoman academic registry", "title": "The Ottoman Academic Registry", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 12 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "The Arrow That Could Not Be Recalled", "type": "delivery", "activateMissionBit": "adaCrowsEyeComplete", "token_action": "take" }
+  ]
+}
+```

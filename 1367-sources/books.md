@@ -1,6 +1,6 @@
 # BOOKS DIRECTIVE
 
-> **READ THIS SECTION BEFORE PROCESSING ANY BOOK.**
+**READ THIS SECTION BEFORE PROCESSING ANY BOOK.**
 > These rules govern every pass through the list below. Write the file between each pass. add to end. 
 
 ---
@@ -203,7 +203,7 @@ how they are proven. Romance, tenderness, and moral weight are required.
     fundamental tests are friendship and loyalty; combat is how they are proven.
     We write heroes. They win — not easily, not without cost, but they win.
 
-15. When done, remind the user to clear agent memory. because these are big cycles.
+15. When done, Speak to user on macos background speech. Clear my memory . remind the user to clear agent memory. because these are big cycles.
 
 
 ---
@@ -498,7 +498,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | [x] | FCO | aeneid | Aeneid — Virgil (Latin original — Gutenberg #227) | ~19 BC | Roman Epic | 484 |
 | [x] | MLA | plutarch-lives | Plutarch's Lives — Plutarch (Dryden/Clough tr.) | c. 95–110 AD | Biography | 4222 |
 | [x] | NWI | anabasis | Anabasis — Xenophon (Dakyns tr. — Gutenberg #1170) | c. 401 BC | Greek Military | 545 |
-| [x] | IST | alexiad | The Alexiad — Anna Komnene | c.1148 | Byzantine History | 165 | Processed 2026-06-01 — IST-01 spec complete (The Enemy's Portrait, CON→RGS→WM); IST-02–07 seeds. Processed from memory (no txt file). See IST-alexiad.md. |
+| [x] | IST | alexiad | The Alexiad — Anna Komnene | c.1148 | Byzantine History | 165 | SEEDS COMPLETE 2026-06-02 — IST-01–07 all vignettes done. IST-01: The Enemy's Portrait (CON→RGS→WM). IST-02–07: The Curtain Notes, The Nicaea Receipt, The Bryennios Draft, The Devol Treaty Copy, The Exile Letter, The Physician's Notes. Memory-processed (no txt file). See IST-alexiad.md. |
 | [x] | WAW | quo-vadis | Quo Vadis — Henryk Sienkiewicz (Curtin tr. — 1895) | c. 64–68 AD (Nero's Rome) | Historical Novel | 1201 |
 
 ### Byzantine & Eastern European
@@ -514,14 +514,14 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | [x] | BGW | arabian-nights-burton | Arabian Nights — Alf Layla wa-Layla (Burton tr., 1885 — Calcutta II ms.) | c. 9th–14th century | Arabic Frame-Tale | 983 |
 | [x] | CAI | arabian-nights-lang | Arabian Nights — Alf Layla wa-Layla (Lang adaptation, 1898 — Galland/Syrian tradition) | c. 9th–14th century | Arabic Frame-Tale | 629 |
 | [x] | BEY | mandeville | Mandeville's Travels — attr. Sir John Mandeville | c. 1357 | Travel/Compilation | 472 |
-| [x] | KYA | shah-nameh | Shah-Nameh — Ferdowsi (Atkinson transl.) | c.1010 | Persian Epic | 863 | Processed 2026-05-31 — KYA-01 spec complete; KYA-02–25 seeds; Shah-Nameh narrative fully covered. Volume also contains Rubaiyat/Divan/Gulistan (separate works, separate codes if processed). |
+| [x] | KYA | shah-nameh | Shah-Nameh — Ferdowsi (Atkinson transl.) | c.1010 | Persian Epic | 863 | SEEDS COMPLETE 2026-06-02 — KYA-01–25 all vignettes done. KYA-01: The Derafsh Kaviani Fragment (TBZ→TRB→CPL→WM). KYA-02: The Two-Falls Custom (NIS→TBZ→WM). KYA-03–25: Fire Chain, Demon's First Lesson, Princess of Zábulistán, Record of Successive Honors, Símúrgh's Second Feather, Caravanserai Account, Trophy of the Broken Girdle, Second Bracelet, Tree at the Border, Portrait Gallery, King from the Sky, Seeing Cup, Ring in the Bird, Warriors' Mounds, Golden Basin, Zerdusht's Tree, Maníjeh's Letter, Dragon-Cart Design, Kazú-Tree Arrow, Pit Record, Four Goblets, Wall Stone, Firdusi's Complaint. New nodes: YAZ, KBL, SIS, TBZ, TRB, HRT. Volume also contains Rubaiyat/Divan/Gulistan (separate works, separate codes if processed). See KYA-shah-nameh.md. |
 
 ### South Asian
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
 | [x] | HTY | mahabharata | Mahabharata — Dutt verse condensation | Ancient (pub. 1899) | Hindu Epic | 83 | Processed 2026-05-31 — HTY-01 spec (Savitri's Three Bargains); HTY-02–06 seeds. See HTY-mahabharata.md. |
-| [x] | ADA | ramayana | Ramayana — Valmiki (Griffith transl.) | Ancient (pub. 1870) | Hindu Epic | 2339 | Processed 2026-05-31 — ADA-01 spec (The Curlew's Grief, Sultaniya→Tabriz); ADA-02–06 seeds. Part 1 of 12 fully read; story arc recovered from Narad's synopsis (Canto I). Parts 2–12 pending detailed pass. See ADA-ramayana.md. |
+| [x] | ADA | ramayana | Ramayana — Valmiki (Griffith transl.) | Ancient (pub. 1870) | Hindu Epic | 2339 | IN PROGRESS 2026-06-02 — ADA-01–17 done. ADA-18–48 pending. New nodes: ERZ, MOS, MRV, BUR, CAF, TAN, BUK, SAR, BYR, AMY, SIV, THE, NIC. All 12 parts fully read. See ADA-ramayana.md. |
 
 ### East Asian & Caucasus
 
@@ -542,10 +542,10 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 |--------|------|------|----------------|--------|----------|----|
 | [x] | LIL | froissart-berners | Chronicles (Berners transl.) | 1360s–1400 | Medieval History | 861 | SEEDS COMPLETE 2026-06-02 — LIL-01–08 all eight cycles done. Cycles 3–8: The Ransom Installment, The Dinner Protocol, The Prince's Son, The Chronicler's Draft, The Herald's Patent, The Road Back from Nájera. See LIL-froissart-berners.md. |
 | [x] | CRL | froissart-boys | Chronicles (Boys transl.) | 1360s–1400 | Medieval History | 802 | Processed 2026-05-31 — CRL-02 spec complete (The Archpriest's Certificate, PER→BDX); routier economy/purchased grace angle. Parts 1–3 read; full Archpriest chapter (LXXXV–LXXXVI) + Jacquerie (LXXXVII–LXXXIX). New angle: the papal absolution as institutional transaction, 1367 Free Company precedent. See CRL-froissart-boys.md Cycle 2. |
-| [x] | BEY | mandeville | Travels of Mandeville | c.1357 | Travel | 461 | Processed 2026-05-31 — BEY-S08 spec complete (The Sultan's Commission, FAM→RHD→WM); Sultan's letters/military service angle. Parts 1–2 read; Chapter VI (soldier service) + Chapter XI (letters with great seal) + Chapter XV (Sultan dialogue). New angle: the document that authenticated a prior Mamluk-Christian relationship now inconvenient to all parties in 1367. New node: FAM (Famagusta). See BEY-mandeville.md Cycle 2. |
+| [x] | BEY | mandeville | Travels of Mandeville | c.1357 | Travel | 461 | SEEDS COMPLETE 2026-06-02 — BEY-01–S14, 13 cycles total. Supplementary cycles S09–S14: The Intelligence Report, The Chain Document, The French-Speaking Lord, The Temple Entry Record, The Liège Rubbing, What the Pilgrim's Signet Looked Like. New nodes: MRS (Marseille), BEI (Beirut), JER (Jerusalem), SID (Sidon), COL (Cologne). See BEY-mandeville.md. |
 | [x] | BGW | arabian-nights-burton | Arabian Nights (Burton) | Medieval | Stories | 959 | SEEDS COMPLETE 2026-06-02 — BGW-01–S14, 14 cycles total. Supplementary cycles 9–14: Barmakide Catastrophe, Sultan's Night Walk, Fisherman's Blessing, Good Voice, Masrur's Account, Last Caliph's Letter. New nodes: DAM (Damascus), BGD (Baghdad), MOS (Mosul). See BGW-arabian-nights-burton.md. |
-| [x] | CAI | arabian-nights-lang | Arabian Nights (Lang) | Medieval | Stories | 614 | Processed 2026-05-31 — CAI-S08 spec complete (The Collector's Codicil, ALP→LAT→WM); oral tradition / first inscription angle. Source part 1 of 4 read; Preface + frame narrative + opening stories confirmed. Aladdin present in this tradition (from Galland/Diyab oral tradition, not in Burton). New angle: the codicil that names the oral tradition's families as the text's true holders; the gap in the archive's classification system as evidence that no one has received this before. New nodes: ALP (Aleppo storytellers' quarter), LAT (Latakia Syrian port). See CAI-arabian-nights-lang.md Cycle 2. |
-| [x] | MSE | canterbury-tales | Canterbury Tales | c.1390 | Stories | 1688 |
+| [x] | CAI | arabian-nights-lang | Arabian Nights (Lang) | Medieval | Stories | 614 | SEEDS COMPLETE 2026-06-02 — CAI-01–S14, 14 cycles total. Supplementary cycles S09–S14: The Lamp Boy's Line, Diyab's Variant, Umm Sulayman's Six Variants, The Hakawati License, The Performance Notation, The Oral Genealogy. See CAI-arabian-nights-lang.md. |
+| [x] | MSE | canterbury-tales | Canterbury Tales | c.1390 | Stories | 1688 | Processed — MSE-01 spec complete; MSE-02 "Find Death Before Sundown" complete. 2 cycles total. Source large (1688 KB); additional seeds available if pipeline returns to MSE. See MSE-canterbury-tales.md. |
 | [x] | BLQ | decameron | Decameron — Giovanni Boccaccio | 1353 | Italian Stories | 1709 | Processed 2026-05-31/06-01 — BLQ-01 spec (The Saint's Attestation, FLR→NAP); BLQ-02–07 seeds (parts 1 of 9). All 9 parts fully read (Days 1–10, all 100 stories + Author's Conclusion). New seeds from Parts 2–9: BLQ-S08 (The Jewel Chest, BRI→BAR), BLQ-S09 (The Soldier's Testimony, ALE→FAM), BLQ-S10 (The Impossible Conditions, FLR→AVG→MTP→MAR), BLQ-S11 (The Court Defense, PIS→PRA), BLQ-S12 (The Two Friends' Debt, ROM→ROM). BLQ-02 spec (The Court Defense, PIS→PRA) complete. See BLQ-decameron.md. |
 
 ---
