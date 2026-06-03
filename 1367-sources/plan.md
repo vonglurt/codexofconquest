@@ -753,7 +753,7 @@ Every quest in §MATH-01 carries a Noether signature: every TOKEN that reaches t
 | 68 | MLA | Plutarch's Lives | QUEUED |
 | 69 | CRL | Froissart (Boys) | **SEEDS COMPLETE 2026-06-03 — CRL-01–08 done (8 cycles). questComplete added to CRL-08. New node AVG added. Theme threads for all 8 cycles.** |
 | 70 | CPH | Gesta Danorum | **SEEDS COMPLETE 2026-06-03 — CPH-01–02 done (2 cycles). questComplete added to CPH-02. Theme threads already present. Rows updated.** |
-| 71 | MOL | Laxdaela Saga | QUEUED |
+| 71 | MOL | Laxdaela Saga | **SEEDS COMPLETE 2026-06-03 — MOL-01–02 done (2 cycles). questComplete added to MOL-02. Theme threads already present. Rows updated.** |
 | 72 | LBC | Nibelungenlied | QUEUED |
 | 73 | FRO | Volsunga Saga | QUEUED |
 | 74 | MSE | Canterbury Tales | QUEUED |

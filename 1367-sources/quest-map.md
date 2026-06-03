@@ -115,8 +115,8 @@ The game asks: what does it mean to keep your word when the world does not?
 | HFT | The False Name | 5 | HFT → CON → WM | Alias Records — The Identity That Was Correct While It Was Used |
 | HFT | The Arm-Ring Returns | 6 | HFT → VEN → WM | Estate Transfer Records — The Gift That Circled Through Three Hands and Came Home |
 | HFT | Helge's Weapon | 7 | HFT → LDN → WM | Truce Records — The Weapon Made in Violation of the Peace |
-| MOL | Guðrún's Debt | 1 | LGR → LXF → HHL (Laugar → Sælingsdals Ford → Herðholt) | Pride that cannot confess returns the stolen thing anonymously |
-| MOL | Bolli Bollason's Letter | 2 | VRG → BLT → HFG (Varangian barracks → Baltic port → Helgafell hermit cell) | The question asked across an ocean that cannot be answered while the carrier is present |
+| MOL-01 | Guðrún's Debt | 1 | LGR → LXF → HHL | Pride that cannot confess returns the stolen thing anonymously |
+| MOL-02 | Bolli Bollason's Letter | 2 | VRG → BLT → HFG | The question asked across an ocean that cannot be answered while the carrier is present |
 | CPH-01 | Starkad's Account | 1 | STK → DAN → HEO | The divided life insists on its own record before the court simplifies it |
 | CPH-02 | Amleth's Altered Letter | 2 | DNS → BRK | The carrier who discovers mid-commission that the object has changed character |
 | ARN | Jurand's Scratch | 1 | JUR → TKT → KRK (Spychów → Teutonic crossing → Kraków) | The institution silences its victim so the diplomat can speak for him |

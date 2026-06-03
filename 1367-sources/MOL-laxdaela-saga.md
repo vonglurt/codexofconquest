@@ -645,6 +645,7 @@ question is in the room. You are already at the door.*
     "introducedAct": 1,
     "consumedAct": 5
   },
+  "questComplete": true,
   "acts": [
     {
       "act": 1,
