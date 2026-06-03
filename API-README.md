@@ -1101,7 +1101,17 @@ Read the source files to understand story geography. Location information must a
 1367-sources/index.md            — canonical node list, airport codes, terrain types
 ```
 
-**Node naming:** Use the IATA airport code of the nearest major airport. If already taken, use the nearest alternate airport in the same region. If no airport exists (medieval-only location), derive a 3-letter abbreviation and add it to `index.md`. Verify uniqueness: `GET /api/list/node`.
+**Node naming — two tiers:**
+
+**Tier 1 — Cities and towns** (world-map travel destinations): 3-letter IATA airport code of the nearest major airport. If taken, use nearest alternate. If no airport, derive a 3-letter city abbreviation and add to `index.md`.
+- Examples: `PSA` (Florence/Tuscany), `NAP` (Naples), `EMA` (Nottingham)
+
+**Tier 2 — Named specific locations** (a market, court, inn, palace, field, guard shack, bakery, forest clearing — any place *within* or *near* a city): 4–6 character descriptive code, format `{CITY}{LOC}`.
+- The code must be self-explanatory: city prefix + location type.
+- Examples: `BIRGS` (Birka Guard Shack), `PSAGLD` (Florence guild counting house), `NAPCRT` (Naples ecclesiastical court), `SHWFST` (Sherwood Forest), `EMACHT` (Nottingham city gate)
+- Record every Tier 2 code in `index.md` with the location's description and story role.
+
+**Rule:** City/town node → 3-letter code. Specific named place inside a city → 4–6 char Tier 2 code. Label must encode the reason the location exists in the story. Verify uniqueness: `GET /api/list/node`.
 
 ---
 

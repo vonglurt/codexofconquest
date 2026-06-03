@@ -798,7 +798,28 @@ The lecture concludes: *"No one has sat still long enough to hear this explained
 
 **Before starting any import:** Read `{CODE}-{title}.md` (vignette seeds + UQF cycles) and `index.md` (canonical nodes, airport codes, terrain) to understand the story geography. Location information must adhere to the story — do not invent geography.
 
-**Node naming:** Use the IATA airport code for the nearest major airport. If already taken, use the nearest alternate airport in the same region. If no airport exists, derive a 3-letter abbreviation from the city name and record it in `index.md`.
+**Node naming — two tiers:**
+
+**Tier 1 — Cities and towns** (the player travels to these on the world map):
+Use the IATA airport code of the nearest major airport as the 3-letter node code.
+- If taken, use the nearest alternate airport in the same region.
+- If no airport exists, derive a 3-letter abbreviation from the city/town name and record it in `index.md`.
+- Examples: `PSA` (Florence/Pisa region), `NAP` (Naples), `EMA` (Nottingham/East Midlands)
+
+**Tier 2 — Named specific locations** (a place within or near a city: market, court, inn, field, palace, guard shack, bakery, counting house, forest clearing, harbour dock, etc.):
+Do NOT use airport codes. Use a 4–5 character descriptive code that encodes the city abbreviation + location type.
+- Format: `{CITY}{LOC}` — 2–3 chars from the city name + 2–3 chars from the location type = 4–5 chars total
+- The code must be self-explanatory: a reader should be able to guess what city and what kind of place it is
+- Examples:
+  - `BIRGS` — Birka Guard Shack (BIR + GS)
+  - `BIRTV` — Birka Tavern (BIR + TV)
+  - `PSAGLD` — Florence/Pisa guild counting house (PSA + GLD)
+  - `NAPCRT` — Naples ecclesiastical court (NAP + CRT)
+  - `SHWFST` — Sherwood Forest (SHW + FST)
+  - `EMACHT` — Nottingham/EMA city gate (EMA + CHT)
+- Record every Tier 2 code in `index.md` with: the full location name, its city anchor, terrain type, and story role.
+
+**Rule:** City or town the player travels to = 3-letter Tier 1 code. Any specific named place inside or near that city (a building, institution, field, road junction, shack) = 4–5 char Tier 2 descriptive code. Not all locations need to be airport codes — only cities and towns do. The label must encode *why* the location exists: its name and its story purpose.
 
 ---
 
