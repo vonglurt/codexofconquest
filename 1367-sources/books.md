@@ -436,7 +436,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | [x] | STN | robin-hood | Merry Adventures of Robin Hood — Howard Pyle | c.1883 (medieval) | Outlaw Hero | 621 |
 | [x] | MAN | ivanhoe | Ivanhoe — Sir Walter Scott | 1819 (Norman Eng.) | Historical Novel | 1140 |
 | [x] | SEN | treasure-island | Treasure Island — Robert Louis Stevenson | 1883 | Pirate Adventure | 390 |
-| [x] | GCI | toilers-of-the-sea | Toilers of the Sea — Victor Hugo | 1866 | Sea Epic | 5506 |
+| [x] | GCI | toilers-of-the-sea | Toilers of the Sea — Victor Hugo | 1866 | Sea Epic | 5506 | SEEDS COMPLETE 2026-06-03 — GCI-01–07 all vignettes done. STP/GHL already in Location Grid. No new nodes. See GCI-toilers-of-the-sea.md. |
 | [x] | KIR | mabinogion | Mabinogion — Anon (Welsh medieval) | ~12th–13th C | Celtic Myth | 365 |
 | [x] | INV | ossian | Fragments of Ancient Poetry — James Macpherson | 1760 (ancient) | Highland Bard Epic | 87 | SEEDS COMPLETE 2026-06-03 — INV-01–07 all vignettes done. No new nodes. See INV-ossian.md. |
 | [x] | BHD | cuchulain | Cuchulain of Muirthemne — Lady Gregory | 1902 (Iron Age) | Irish Hero Epic | 132 | SEEDS COMPLETE 2026-06-03 — BHD-01–07 all vignettes done. New nodes: EMR (Emer's Hall, Ulster plain). See BHD-cuchulain.md. |

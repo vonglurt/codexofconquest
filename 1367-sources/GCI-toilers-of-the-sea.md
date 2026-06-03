@@ -658,3 +658,235 @@ activateMissionBit: gciSeatComplete
 ---
 
 *Cycle 2 complete. Mark `[x]` for GCI-toilers-of-the-sea in books.md.*
+
+---
+
+## Cycle 3 — *Gilliatt's Salvage Log*
+
+**Archive category:** Solitary Engineering Records — The Account of What Was Done Without Witnesses
+
+**What this angle reveals:** Cycles 1-2 were about what Gilliatt gave away and what he chose at the end. This angle enters the middle: the salvage itself. Gilliatt recovered a steam engine from a shipwreck lodged in a reef called Douvres — alone, in winter, over two months, using tools he made himself, solving engineering problems no one had solved before because no one had been alone in those rocks with that machine. The novel describes the salvage in extraordinary technical detail — Hugo understood steam engines and was interested in showing that Gilliatt's heroism was not romantic abstraction but specific practical knowledge applied under extreme conditions. The archive wants his working log: the sequence of actions, the specific tools, the problems and the solutions, in his own hand.
+
+---
+
+**THE TOKEN: `gilliatt_salvage_log`** — Gilliatt's working log from the Douvres salvage: each day's entry in his careful, self-taught handwriting, the tools named, the specific problems encountered and the specific solutions applied. Weeks of entries, then a gap of three days when the storm came and the work was nearly destroyed, then more entries, then the final entry: "Engine free. Returning on the morning tide." The log that documents what was done alone.
+
+---
+
+```json
+{
+  "quest_id": "GCI-03",
+  "title": "Gilliatt's Salvage Log",
+  "source": "Toilers of the Sea — Victor Hugo (1866)",
+  "cycle": 3,
+  "book": "GCI",
+  "source_episode": "Gilliatt's solo salvage of the Durande's steam engine from the Douvres reef — two months alone in winter, in rocks, with tools he made himself",
+  "theme": "The technical record of heroism performed without witnesses; the log that proves what was done by showing how",
+  "activateNode": "STP",
+  "token": {
+    "id": "gilliatt_salvage_log",
+    "name": "Gilliatt's Salvage Log",
+    "description": "Working log from the Douvres salvage: daily entries, tools named, problems and solutions, in Gilliatt's careful self-taught hand. Ends: 'Engine free. Returning on the morning tide.' The record of what was done alone.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["STP", "BK", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "STP", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "Mess Lethierry hands you the log at the harbor. He found it in Gilliatt's house after. He says: people will say he was brave. He was brave. He was also a very good engineer who thought carefully about every problem before he solved it. The log shows the thinking. Understand before the road why the archive wants the log and not the engine: the engine is in the harbor; the thinking is here."},
+    {"act": 2, "node": "STP_to_BK", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "A French engineer at a Norman port on the northern route wants to copy the log for a technical study of improvised marine salvage equipment. His interest is entirely practical. He has no interest in Gilliatt as a person — only in the specific tool-making solutions described in weeks four through six. The archive makes copies available after deposit. Not on the road."},
+    {"act": 3, "node": "BK", "type": "combat", "dc": 13, "skill": "Persuasion", "enemies": "Flemish merchant, AC 11, HP 18, knife", "prompt": "A Flemish merchant in the Birka harbor district who deals in technical documents wants the log for a buyer interested in steam-engine salvage methods. He offers a significant sum and has a hired man with him. The technical content has commercial value. The log goes to the archive."},
+    {"act": 4, "node": "BK_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "The road to Weimar. Three days. The log is in the case. The gap in the entries — three days, storm, silence — is in the middle. After the gap, the entries continue. Keep moving."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the log from the beginning. He reads the final entry. He notes the three-day gap. Solitary Engineering Records opens."}
+  ],
+  "archiveCategory": "Solitary Engineering Records — The Account of What Was Done Without Witnesses",
+  "sweelinckNote": "He was alone for two months. No one watched. The log says what he did each day. The gap is when the storm came. He resumed after the gap. The archive holds the sequence."
+}
+```
+
+---
+
+## Cycle 4 — *Clubin's Scheme Notebook*
+
+**Archive category:** Premeditated Wreck Records — The Notes Found After the Plan Completed Itself
+
+**What this angle reveals:** Cycle 3 was Gilliatt's achievement. This angle finds the person responsible for the problem Gilliatt solved: Sieur Clubin, the villain of Toilers of the Sea. Clubin was Lethierry's trusted captain — trusted above everyone, trusted with the Durande's operations, trusted with the route and the schedule. He deliberately wrecked the Durande on the Douvres reef, planning to swim free with Lethierry's stolen money in a waterproof belt and disappear into a new life. He was killed by an octopus in the underwater rocks before he could escape. His notebook — a careful, methodical planner's record — was found on the wreck. It contains the scheme in detail: the navigation plan for the deliberate grounding, the money calculation, the identity papers for his new life. The archive wants the notebook because the gap between Clubin's meticulous planning and the octopus that killed him is the record of a world that does not always arrange itself according to plan.
+
+---
+
+**THE TOKEN: `clubins_scheme_notebook`** — Sieur Clubin's small leather notebook, recovered from the Durande wreck by Gilliatt during the salvage: the deliberate grounding plan in careful columns, the tide calculations, the money total, the name of the identity document he had prepared for his new life. The scheme notated by a man who trusted his own competence completely.
+
+---
+
+```json
+{
+  "quest_id": "GCI-04",
+  "title": "Clubin's Scheme Notebook",
+  "source": "Toilers of the Sea — Victor Hugo (1866)",
+  "cycle": 4,
+  "book": "GCI",
+  "source_episode": "Sieur Clubin deliberately wrecks the Durande to steal Lethierry's money and disappear; he is killed by an octopus before he can swim free; his notebook is found on the wreck",
+  "theme": "The careful plan that ended in the rocks; the record of complete competence that was insufficient for one thing the planner did not include",
+  "activateNode": "STP",
+  "token": {
+    "id": "clubins_scheme_notebook",
+    "name": "Clubin's Scheme Notebook",
+    "description": "Small leather notebook from the Durande wreck: deliberate grounding plan, tide calculations, money total, prepared identity name. A careful planner's record. Found by Gilliatt during salvage.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["STP", "VEN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "STP", "type": "skill_check", "dc": 12, "skill": "Insight", "prompt": "Gilliatt found the notebook while clearing the wreck for salvage. He gave it to Lethierry without reading it carefully. Lethierry read it and has been holding it for three months not knowing what to do with it. The scheme is in there — every column, the identity name, the tide calculations. Understand before the road why the archive wants the notebook and not the scheme: the notebook is the record of competence applied to betrayal, and what the world did with that competence afterward is in the gap between the final column and what happened to Clubin."},
+    {"act": 2, "node": "STP_to_VEN", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "A Norman merchant on the sea route south who was financially damaged by the Durande's loss wants the notebook for a civil proceeding against Clubin's estate. His case has merit. The archive holds evidence for the permanent record; courts have their own channels for active proceedings."},
+    {"act": 3, "node": "VEN", "type": "skill_check", "dc": 13, "skill": "Persuasion", "prompt": "A Venetian insurance underwriter wants the notebook as evidence in an insurance fraud proceeding — the Durande's owner received a settlement for the loss; if the wrecking was deliberate, the settlement may be recoverable. His interest is commercial and legally grounded. The archive's preservation and a court's proceeding can both hold the same document."},
+    {"act": 4, "node": "VEN_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "The Alpine road north. Three days to Weimar. The notebook is in the sealed case. The tide calculations in it are correct. The identity name is someone who never existed. The octopus is not in the notebook. Keep moving."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the columns. He notes the tide calculations. He notes the identity name. He notes the date of the final column. Premeditated Wreck Records opens."}
+  ],
+  "archiveCategory": "Premeditated Wreck Records — The Notes Found After the Plan Completed Itself",
+  "sweelinckNote": "The calculations are correct. The identity document was ready. The octopus is not in any column. The archive holds the notebook and the fact that the plan was complete and correct up to the moment it was not."
+}
+```
+
+---
+
+## Cycle 5 — *Rantaine's Signed Confession*
+
+**Archive category:** Returned Evidence Records — The Document That Came Back After It Was No Longer Useful to Its Holder
+
+**What this angle reveals:** Cycles 3-4 were about the engineering and the villainy. This angle finds the plot's hinge: the document that enabled the resolution. Rantaine had years earlier stolen from Lethierry and left Guernsey, keeping a signed document that gave him power over Lethierry's financial standing. Gilliatt arranged — through Rantaine, at gunpoint or through the force of whatever he had become — the return of this document and a signed confession. The return of the document enabled Lethierry to rebuild, gave him grounds to give his blessing to Caudray and Déruchette, and removed the last obstacle between Gilliatt's gift and its completion. Gilliatt obtained the document, returned it to Lethierry, and asked for nothing. The archive wants the confession itself: the document that changed from a weapon into a completed transaction.
+
+---
+
+**THE TOKEN: `rantaine_signed_confession`** — Rantaine's signed confession and returned financial instrument, handed over to Gilliatt: acknowledgment of the theft, the sum, the circumstances, Rantaine's signature. The document that Lethierry needed and that Gilliatt obtained and returned without keeping any record of how he had obtained it.
+
+---
+
+```json
+{
+  "quest_id": "GCI-05",
+  "title": "Rantaine's Signed Confession",
+  "source": "Toilers of the Sea — Victor Hugo (1866)",
+  "cycle": 5,
+  "book": "GCI",
+  "source_episode": "Gilliatt arranges the return of Rantaine's stolen document and signed confession; returns it to Lethierry; Lethierry can now rebuild and give his blessing to the marriage; Gilliatt asks nothing",
+  "theme": "The document returned after it was no longer useful to its holder; the last obstacle removed by the person who needed nothing from removing it",
+  "activateNode": "STP",
+  "token": {
+    "id": "rantaine_signed_confession",
+    "name": "Rantaine's Signed Confession",
+    "description": "Rantaine's signed confession and returned instrument: acknowledgment of theft, sum, Rantaine's signature. Obtained by Gilliatt, returned to Lethierry. The document that changed from a weapon into a completed transaction.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["STP", "CON", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "STP", "type": "skill_check", "dc": 12, "skill": "Insight", "prompt": "Lethierry hands over the confession at the harbor office. He says: Gilliatt brought this to me and said nothing about how he had gotten it. That is the part the archive should hold. Understand before the road what the document is: it is a weapon returned to its victim, by a person who had no interest in either party's financial standing, who obtained it as a necessary step in the sequence of giving Déruchette away correctly."},
+    {"act": 2, "node": "STP_to_CON", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "Rantaine has learned the confession is leaving Guernsey. A man he hired in a Norman port wants to retrieve it — Rantaine's legal exposure is diminished if the signed confession is destroyed. The hired man is on the road south. He has a description of the document-carrier. Take the sea route east."},
+    {"act": 3, "node": "CON", "type": "combat", "dc": 13, "skill": "Persuasion", "enemies": "Rantaine's agent, AC 12, HP 21, sword", "prompt": "The agent tracked the sea route. He found you at the Constantinople harbor. His commission is the confession. The document goes to the archive."},
+    {"act": 4, "node": "CON_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "West from Constantinople, three weeks. The confession is in the sealed wallet. Rantaine is in Guernsey, legally exposed. Lethierry has rebuilt. The marriage has happened. Gilliatt is at the tidal seat. Keep moving."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the confession. He notes the sum, the signature, the date. He notes the document's transit: stolen, held as leverage, returned. Returned Evidence Records opens."}
+  ],
+  "archiveCategory": "Returned Evidence Records — The Document That Came Back After It Was No Longer Useful to Its Holder",
+  "sweelinckNote": "Rantaine kept it as leverage for years. Gilliatt obtained it and returned it and kept no record of how. The archive holds the document and the fact of its return. The how is not in this file."
+}
+```
+
+---
+
+## Cycle 6 — *Déruchette's Undelivered Letter*
+
+**Archive category:** Undelivered Gratitude Records — The Thanks Written Before They Knew He Had Already Gone
+
+**What this angle reveals:** Cycles 3-5 were about Gilliatt's acts — the engineering, the arranged confession. This angle finds Déruchette's act: after the wedding, before the boat carrying her and Ebenezer Caudray departed from St. Peter Port, she wrote Gilliatt a letter. She thanked him for what he had done — the salvage, the confession, the ring, the arrangement of her happiness — knowing that he had paid for all of it with what he had wanted. She left the letter at the harbor inn to be delivered to him. By the time it was delivered to his house, he was at the Gild-Holm-'Ur seat. He did not return before the tide came. The letter was on his table when they found it. It had never been read.
+
+---
+
+**THE TOKEN: `deruchette_unread_letter`** — Déruchette's letter to Gilliatt, written before the boat's departure, left at the harbor inn, delivered to his empty house. Found on the table. Sealed. Unread. The gratitude that arrived after he had already left.
+
+---
+
+```json
+{
+  "quest_id": "GCI-06",
+  "title": "Déruchette's Undelivered Letter",
+  "source": "Toilers of the Sea — Victor Hugo (1866)",
+  "cycle": 6,
+  "book": "GCI",
+  "source_episode": "Déruchette writes Gilliatt a letter of thanks before the boat departs; leaves it at the harbor inn; it is delivered to his house after he has gone to the tidal seat; found sealed on the table",
+  "theme": "The gratitude that arrived after the person who earned it was no longer able to receive it; the letter on the table in the empty house",
+  "activateNode": "STP",
+  "token": {
+    "id": "deruchette_unread_letter",
+    "name": "Déruchette's Letter to Gilliatt",
+    "description": "Letter written before the boat's departure, left at the harbor inn, delivered to his empty house. Found sealed on his table. Unread. The thanks that arrived after he had gone.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["STP", "RME", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "STP", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "Mess Lethierry hands you the letter sealed. He says: she wrote it at the inn while waiting for the tide. The innkeeper delivered it to Gilliatt's house after the boat was gone. It was on the table, still sealed. Understand before the road why the archive holds an unread letter: the letter's value is not in its content — no one has read it; the value is in the sequence: written, left, delivered, found sealed, and what that sequence describes about the timing of gratitude and departure."},
+    {"act": 2, "node": "STP_to_RME", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "A Norman priest on the sea route south believes the letter should be destroyed out of respect for Déruchette's privacy — she wrote it for one person who cannot now read it; no one else should read it. His argument is about privacy; the archive's argument is about the record. The letter travels sealed. Neither the priest nor the archive opens it."},
+    {"act": 3, "node": "RME", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "A church official at Rome who has heard the story of Gilliatt wants the letter for a collection of examples of Christian self-sacrifice — he believes Gilliatt's life has hagiographic value and the letter would complete the account. His use of the letter requires opening it. The archive holds it sealed."},
+    {"act": 4, "node": "RME_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "North from Rome, five days to Weimar. The sealed letter is in the case. Déruchette is on a boat somewhere east of England. Gilliatt is under the tide at Gild-Holm-'Ur. The letter is between them in a document case on an Alpine road. Keep moving."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck takes the letter. He examines the seal — Déruchette's hand, a small impression. He does not break it. He marks it: sealed, unread, delivered post-mortem. Undelivered Gratitude Records opens."}
+  ],
+  "archiveCategory": "Undelivered Gratitude Records — The Thanks Written Before They Knew He Had Already Gone",
+  "sweelinckNote": "The letter is still sealed. The archive holds it sealed. Sweelinck's note: 'The archive holds documents. This document's content is not the archive's to read. What is in the record is the fact of the letter, the fact of the sealing, and the sequence of when it was written, when it was delivered, and what was already done.'"
+}
+```
+
+---
+
+## Cycle 7 — *Lethierry's Final Account*
+
+**Archive category:** Witness Records — The Account of the Last Act Given by the One Who Understood It
+
+**What this angle reveals:** Cycles 1-6 covered Gilliatt's actions — the gift of the ring, the choice at the tidal seat, the salvage, the villain's notebook, the returned confession, the unread letter. This cycle closes at the quay, with the person who saw everything: Mess Lethierry, the old man, the shipowner, the father Gilliatt didn't have, the man who received everything Gilliatt gave without understanding the cost until afterward. After Déruchette's boat left, Lethierry walked back from the quay. He saw Gilliatt. He saw which direction Gilliatt walked. He understood. He was the only one who understood what Gilliatt was doing and where he was going. He wrote the account of what he saw on the quay that morning — the last record of Gilliatt, still above the tide.
+
+---
+
+**THE TOKEN: `lethierry_quay_account`** — Mess Lethierry's written account: what happened on the quay after the boat left, what he saw Gilliatt do, which direction Gilliatt walked, what Lethierry understood in that moment. Written three days later, when he could write again. The account of the last act given by the one who had known Gilliatt longest and understood what he was completing.
+
+---
+
+```json
+{
+  "quest_id": "GCI-07",
+  "title": "Lethierry's Final Account",
+  "source": "Toilers of the Sea — Victor Hugo (1866)",
+  "cycle": 7,
+  "book": "GCI",
+  "source_episode": "Lethierry sees Gilliatt on the quay after the boat leaves; understands which direction Gilliatt walks; writes the account three days later when he can write again",
+  "theme": "The witness account of the last visible act; the understanding given by the longest friendship",
+  "activateNode": "STP",
+  "token": {
+    "id": "lethierry_quay_account",
+    "name": "Lethierry's Quay Account",
+    "description": "Written account: the quay after the boat left, Gilliatt's posture, direction walked, what Lethierry understood. Three days later. The last record of Gilliatt above the tide.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["STP", "LDN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "STP", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "Lethierry hands you the pages at his house. He says: I wrote it when I could write. Three days after. It describes what I saw on the quay. Understand before the road what makes this account different from any other record in the file: Lethierry is not a witness to Gilliatt's death — no one witnessed that; he is the witness to the last act Gilliatt chose to perform in public view, which is not the same thing. The account holds the last moment before the private."},
+    {"act": 2, "node": "STP_to_LDN", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "A Norman journalist on the coastal route north has been writing about Gilliatt's salvage as a human interest piece for a French newspaper. He wants Lethierry's account for the final article. The archive holds the original. His article can quote from the record after deposit."},
+    {"act": 3, "node": "LDN", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "An English publisher in London wants to acquire Lethierry's account as a source document for a Victor Hugo biography — the event is recent enough that primary sources are rare. His offer is significant. The account travels to the archive. After deposit, access can be arranged."},
+    {"act": 4, "node": "LDN_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "Three days east to Weimar. The account is in the case. Lethierry is alive at St. Peter Port. The boat with Déruchette is in the Channel somewhere. Gild-Holm-'Ur is under the spring tide. Keep moving."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the account from the beginning. He reads the direction Lethierry names — toward the coast path. He reads what Lethierry says he understood. The archive closes the GCI file."}
+  ],
+  "archiveCategory": "Witness Records — The Account of the Last Act Given by the One Who Understood It",
+  "questComplete": true,
+  "sweelinckNote": "Lethierry wrote it three days later. He was the only one on the quay who knew Gilliatt well enough to understand the direction. The archive holds the account. Gild-Holm-'Ur is in the Location Grid. Both documents are filed under the same heading."
+}
+```
+

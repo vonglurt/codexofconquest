@@ -317,7 +317,7 @@ All files under 60 KB in 1367-sources/. Each to receive full pipeline: read → 
 | ARN | Knights of the Cross — Henryk Sienkiewicz | 57 | **SEEDS COMPLETE 2026-06-03 — ARN-01–07 all vignettes done. KRK/JUR/TKT/CHP in Location Grid. No new nodes. See ARN-knights-of-the-cross.md.** |
 | VBY | Grettir's Saga — Anon | 58 | **SEEDS COMPLETE 2026-06-03 — VBY-01–07 all vignettes done. RKN/BWH in Location Grid. No new nodes. See VBY-grettir-saga.md.** |
 | RIX | Egil's Saga — Anon (attr. Snorri) | 58 | **SEEDS COMPLETE 2026-06-03 — RIX-01–07 all vignettes done. YRK/ISL in Location Grid. No new nodes. See RIX-egil-saga.md.** |
-| GCI | Toilers of the Sea — Victor Hugo | 59 | QUEUED |
+| GCI | Toilers of the Sea — Victor Hugo | 59 | **SEEDS COMPLETE 2026-06-03 — GCI-01–07 all vignettes done. STP/GHL in Location Grid. No new nodes. See GCI-toilers-of-the-sea.md.** |
 | FCO | Piers Plowman — William Langland | 59 | QUEUED |
 | MAD | Don Quixote — Miguel de Cervantes | 59 | QUEUED |
 | BRU | Amadis of Gaul — Garci Rodríguez de Montalvo | 60 | QUEUED |
