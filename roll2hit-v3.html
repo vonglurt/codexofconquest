@@ -7955,6 +7955,7 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   FRRFRY: { num:173, name:"freshwater_lake", label:"Ferrara — Po River Ferry Crossing", act:3 },
   MESFRY: { num:174, name:"freshwater_lake", label:"Mestre — Mainland Ferry Landing", act:3 },
   VENCTR: { num:175, name:"city", label:"Venice — Ca Tron Grand Canal", act:3 },
+  RHD: { num:176, name:"market_quarter", label:"Rhodes — Mandraki Harbor Commercial Dock", act:3 },
 };
 // ◆◆◆ WORLDBUILDER:NODE_MAP:END ◆◆◆
 
@@ -8058,6 +8059,7 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   FRRFRY:{r:129,c:216},
   MESFRY:{r:132,c:219},
   VENCTR:{r:133,c:221},
+  RHD:{r:168,c:236},
 };
 // ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆
 
@@ -10831,6 +10833,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   blq_05_act3: { id:"blq_05_act3", type:"skill_check", title:"The Falcon's Inventory — Act 3: Alvise Is Dead", failText:"You are unsure of the legality and turn back toward Florence. The deed travels no further. The promise dies with Alvise.", npc:"federigo_alberighi", activateNode:"FRR", reward:NaN, activateCond:blq05GasparoManaged },
   blq_05_act4: { id:"blq_05_act4", type:"skill_check", title:"The Falcon's Inventory — Act 4: Ser Barnaba at the Landing", failText:"Ser Barnaba shakes his head. You must find another ferryman, or produce better credentials. The lagoon waits.", npc:"federigo_alberighi", activateNode:"MESFRY", reward:NaN, activateCond:blq05ContinuedNorth },
   blq_05_act5: { id:"blq_05_act5", type:"skill_check", title:"The Falcon's Inventory — Act 5: Madonna Taddea Receives the Deed", failText:"Madonna Taddea is not satisfied with the credentials. She will not accept the document without further verification. Return to Federigo for a second attestation.", npc:"federigo_alberighi", activateNode:"VENCTR", reward:NaN, activateCond:blq05TaddeaMeeting },
+  blq_06_act1: { id:"blq_06_act1", type:"skill_check", title:"The Three Descents — Act 1: Grimaldi's Warning", failText:"You depart with the letter and general caution about the harbor district. The evening's events will have to be improvised.", npc:"grimaldi_luca", activateNode:"NAP", reward:NaN, activateCond:null },
+  blq_06_act2: { id:"blq_06_act2", type:"skill_check", title:"The Three Descents — Act 2: Carmela's Trap (First Descent)", failText:"You fall into the cistern. The coat is taken above. You must find the figure in the Seggio del Nilo in the next half hour before they go to ground.", npc:"grimaldi_luca", activateNode:"NAP", reward:NaN, activateCond:blq06DangerUnderstood },
+  blq_06_act3: { id:"blq_06_act3", type:"skill_check", title:"The Three Descents — Act 3: Maso's Salvage (Second Descent)", failText:"Maso detains you until near dawn. You escape but the letter is still at the barge. You must fight your way back to the rope stack and search before the tide comes in.", npc:"grimaldi_luca", activateNode:"NAP", reward:NaN, activateCond:blq06FirstDescent },
+  blq_06_act4: { id:"blq_06_act4", type:"skill_check", title:"The Three Descents — Act 4: Rodrigo's Wall (Third Descent)", failText:"Rodrigo blocks the main exit. Combat required. If you win, you run for the dock. If you lose, Rodrigo reads the margin — and decides it is not what he feared. He lets you go anyway, but the delay costs you.", npc:"grimaldi_luca", activateNode:"NAP", reward:NaN, activateCond:blq06SecondDescent },
+  blq_06_act5: { id:"blq_06_act5", type:"skill_check", title:"The Three Descents — Act 5: Fra Simone Receives the Seal", failText:"Fra Simone requires an additional attestation before accepting — the condition is too irregular. The chapter house factor is consulted. Three hours pass. The commercial session is almost closed. The letter is accepted at last minute, at reduced authority.", npc:"grimaldi_luca", activateNode:"RHD", reward:NaN, activateCond:blq06ThirdDescent },
 };
 // ◆◆◆ WORLDBUILDER:QUEST_DB:END ◆◆◆
 
@@ -11810,6 +11817,7 @@ const BIRKA_NPC_PROFILES = { // → doc: world.md §Birka Six NPCs
   abramo_simone: { key:"abramo_simone", name:"Abramo di Simone", occupation:"Neutral Factor", node:"GENWHS" },
   lapo_matteo: { key:"lapo_matteo", name:"Lapo di Ser Matteo", occupation:"Silversmith", node:"PSAFAB" },
   federigo_alberighi: { key:"federigo_alberighi", name:"Federigo degli Alberighi", occupation:"Ruined knight and falconer — once Florence's most celebrated spendthrift, now a smallholder outside the eastern gate. His famous falcon was his last treasure, already cooked for a guest who arrived too late.", node:"PSAFM" },
+  grimaldi_luca: { key:"grimaldi_luca", name:"Messer Luca Grimaldi", occupation:"Grain merchant and letter-of-credit issuer, Naples. Holds accounts with the Hospitaller order's eastern network. Commissioned tonight's delivery himself; is afraid of something he has not named.", node:"NAP" },
 };
 // ◆◆◆ WORLDBUILDER:BIRKA_NPC:END ◆◆◆
 
@@ -12136,6 +12144,11 @@ const _S_DEFAULTS = () => ({
     blq05ContinuedNorth: false,
     blq05TaddeaMeeting: false,
     blq05Complete: false,
+    blq06DangerUnderstood: false,
+    blq06FirstDescent: false,
+    blq06SecondDescent: false,
+    blq06ThirdDescent: false,
+    blq06Complete: false,
 });
 
 /* ── Layer 48: Luck — Seventh Stat ── */
