@@ -4,7 +4,7 @@
 
 **Architecture**: Browser UI → Node.js REST server → `roll2hit-v3.html` (game file)  
 **Server port**: `localhost:1367`  
-**Game file**: `roll2hit-v3.html` (1.7 MB, ~11,530 lines)
+**Game file**: `roll2hit-v3.html` (single-file game, ~14,900 lines)
 
 ---
 
@@ -20,17 +20,14 @@ brew install node        # Node.js via Homebrew on macOS
 
 ```bash
 # From the roll2hit directory:
-./start-wbapi.sh                  # uses roll2hit-v3.html in same dir
-./start-wbapi.sh my-save.html     # different game file
-PORT=3002 ./start-wbapi.sh        # different port
+./wbapi-toggle.sh start           # run in background (auto-restart loop)
+./wbapi-toggle.sh fg              # run in foreground with full log scroll
+./wbapi-toggle.sh stop            # kill background instance
+./wbapi-toggle.sh status          # show PID and port
+./wbapi-toggle.sh restart         # stop + start
 ```
 
-The script:
-- Verifies Node.js and the game file exist
-- Starts `wbapi-server.js` with verbose logging
-- Captures all output to `wbapi-server.log`
-- **Restarts automatically** if the server crashes
-- Press `Ctrl+C` to stop cleanly
+The server writes all output to `wbapi-server.log`. The restart loop is active: `POST /api/restart` causes the server to exit with code 67, which the toggle script catches and relaunches.
 
 Once running:
 ```
@@ -45,46 +42,60 @@ Once running:
 
 1. Open `worldbuilder.html` in your browser
 2. Click **📂 Load roll2hit-v3.html** and select the game file
-3. The topbar shows **● Server** (green) if the server is running, **○ Browser only** if not
-4. All PUT/DELETE operations now write to disk automatically
+3. The topbar shows **● Server** (green) if the server is running
+4. All PUT/DELETE operations write to disk automatically via `POST /api/save`
+
+---
+
+## Nonce System — Write Protection
+
+Every write operation (POST create, destructive PUT, DELETE) requires a **nonce** — a single-use token that proves intent and prevents accidental writes.
+
+**Step 1 — request a nonce:**
+```bash
+NONCE=$(curl -s -X POST http://localhost:1367/api/nonce \
+  -H 'Content-Type: application/json' \
+  -d '{"type":"quest","id":"quest_new_01"}' | jq -r .nonce)
+```
+
+Response: `{ "nonce": "ab12cd34ef56gh78", "expires": 300 }`
+
+- Nonces expire in 5 minutes
+- Each nonce is bound to one `{type, id}` pair — reuse is rejected
+- `type`: `node | quest | monster | npc | terrain`
+
+**Step 2 — send the write with the nonce header:**
+```bash
+curl -X POST http://localhost:1367/api/quest \
+  -H 'Content-Type: application/json' \
+  -H 'X-Nonce: ab12cd34ef56gh78' \
+  -d '{"id":"quest_new_01","title":"...","type":"mission_bit","activateNode":"CI"}'
+```
+
+DELETE always requires a nonce. POST and PUT for create/update accept nonces; some lower-risk POST endpoints (terrain, monster fork) are nonce-optional.
+
+See: `GET /api/help/nonce` for extended explanation.
 
 ---
 
 ## Verbose Logging
 
-The server logs two streams — visible in your terminal and in `wbapi-server.log`:
+Two log streams: terminal and `wbapi-server.log`.
 
 | Tag | Meaning |
 |---|---|
-| `[REQUEST]` | Incoming HTTP method, URL, and request body from the browser |
-| `[LOGIC]`   | Internal decisions: key resolution, routing strategy, blockers found |
-| `[RESPONSE]`| Outgoing HTTP status code and result summary |
+| `[REQUEST]` | Incoming HTTP method, URL, and request body |
+| `[LOGIC]`   | Key resolution, routing strategy, blockers |
+| `[RESPONSE]`| HTTP status code and result summary |
 | `[LOAD]`    | Game file parse events with entity counts |
 | `[INFO]`    | Server lifecycle (start, restart) |
 | `[ERROR]`   | Exceptions and server-side failures |
-
-**Example log for a monster PUT:**
-```
-2026-05-29 16:42:11 [REQUEST ] PUT /api/monster/commoner
-2026-05-29 16:42:11 [REQUEST ] Body: {"ac":15,"hp":8}
-2026-05-29 16:42:11 [LOGIC   ] Key resolved: "commoner" → "commoner" (type=monster)
-2026-05-29 16:42:11 [LOGIC   ] Field "ac" is number → ns.put (in-memory)
-2026-05-29 16:42:11 [LOGIC   ] Field "hp" is number → ns.put (in-memory)
-            └─ 200 monster:commoner — 2 fields: ac=ok, hp=ok
-```
-
-**Example log for a blocked DELETE:**
-```
-2026-05-29 16:43:05 [REQUEST ] DELETE /api/node/CY
-2026-05-29 16:43:05 [LOGIC   ] DELETE blocked — nested content: {"quests":["quest_antecedent_01",...],"npcs":["crov"]}
-            └─ 409 DELETE blocked for node:CY
-```
 
 ---
 
 ## Response Envelope
 
-Every `GET`, `PUT`, and `DELETE` response wraps the entity in a connection-aware envelope:
+Every `GET`, `PUT`, and `DELETE` response wraps the entity:
 
 ```json
 {
@@ -97,14 +108,14 @@ Every `GET`, `PUT`, and `DELETE` response wraps the entity in a connection-aware
 }
 ```
 
-The `_meta.canDelete` flag tells the UI whether to show a Delete button or a "blocked" warning — no second request needed.
+`_meta.canDelete` tells the UI whether to show a Delete button or a "blocked" warning.
 
 ---
 
 ## Endpoints
 
 ### GET /api/ping
-Health check. Use this to detect if the server is running.
+Health check. Returns counts of all loaded collections.
 
 ```bash
 curl http://localhost:1367/api/ping
@@ -114,10 +125,52 @@ curl http://localhost:1367/api/ping
   "ok": true,
   "loaded": true,
   "file": "roll2hit-v3.html",
-  "nodes": 144,
-  "quests": 210,
-  "monsters": 392
+  "nodes": 148,
+  "quests": 228,
+  "monsters": 392,
+  "terrains": 107,
+  "npcs": 9,
+  "fish": 25,
+  "lakeMagic": 8
 }
+```
+
+---
+
+### GET /api/help[/{topic}]
+
+Built-in man-page style reference. Topics:
+
+| Topic | Contents |
+|---|---|
+| *(none)* / `index` | Topic index |
+| `overview` | Architecture and typical workflow |
+| `modes` | Read-only vs. guided-write mode |
+| `nonce` | Write protection and nonce lifecycle |
+| `read` | All safe read-only endpoints |
+| `write` | All write endpoints and their requirements |
+| `quest` | Quest schema, fields, and lifecycle |
+| `node` | Node schema, fields, and connections |
+| `monster` | Monster schema and terrain linkage |
+| `terrain` | Terrain schema and monster arrays |
+| `mission_bit` | Mission-bit token pattern |
+| `export` | Exporting arrays as JSON / JS / module |
+| `wizard` | Full workflow: terrain → node → monster → quest |
+| `audit` | Integrity scan and fixing errors |
+| `curl` | curl cheat sheet for every operation |
+
+```bash
+curl http://localhost:1367/api/help/quest
+curl 'http://localhost:1367/api/help/wizard?format=text'   # plain text output
+```
+
+---
+
+### GET /api/source
+Returns the raw HTML of `roll2hit-v3.html`. Pipe to a file for a full backup.
+
+```bash
+curl http://localhost:1367/api/source -o backup.html
 ```
 
 ---
@@ -126,12 +179,12 @@ curl http://localhost:1367/api/ping
 
 Fetch a single entity with full connection envelope.
 
-`type` = `node` | `quest` | `monster` | `npc`
+`type` = `node` | `quest` | `monster` | `npc` | `terrain`
 
 **GET /api/monster/commoner**
 ```json
 {
-  "entity": { "name": "Commoner", "ac": 10, "hp": 4, "atk": 0, "tier": "trivial" },
+  "entity": { "name": "Commoner", "ac": 10, "hp": 4, "atk": 0, "tier": 1 },
   "connections": {
     "terrains": [
       { "key": "market_quarter", "label": "Market Quarter",
@@ -139,7 +192,7 @@ Fetch a single entity with full connection envelope.
     ],
     "drop": null
   },
-  "_meta": { "canDelete": false, "blockedBy": { "terrains": ["market_quarter", "...19 more"] } }
+  "_meta": { "canDelete": false, "blockedBy": { "terrains": ["market_quarter"] } }
 }
 ```
 
@@ -149,12 +202,12 @@ Fetch a single entity with full connection envelope.
   "entity": { "label": "Neon Undercity", "name": "cyberpunk_streets", "act": 3 },
   "connections": {
     "terrain": "cyberpunk_streets",
-    "monsters": [{ "key": "street_thug", "name": "Street Thug", "tier": "medium" }],
+    "monsters": [{ "key": "street_thug", "name": "Street Thug", "tier": 2 }],
     "quests":   [{ "id": "quest_antecedent_01", "title": "The Question", "type": "side" }],
     "npcs":     [],
     "linkedNodes": { "N": "BI", "S": null, "E": null, "W": null }
   },
-  "_meta": { "canDelete": false, "blockedBy": { "quests": ["quest_antecedent_01"], "npcs": [] } }
+  "_meta": { "canDelete": false, "blockedBy": { "quests": ["quest_antecedent_01"] } }
 }
 ```
 
@@ -171,7 +224,7 @@ curl http://localhost:1367/api/location/CI
 {
   "node": { "label": "City Streets — Birka", "name": "city", "act": 1 },
   "terrain": { "label": "City", "icon": "🏙", "monsters": [...] },
-  "monsters": [ { "key": "commoner", "name": "Commoner", "ac": 10, ... } ],
+  "monsters": [ { "key": "commoner", "name": "Commoner", "ac": 10 } ],
   "quests":   [ { "id": "quest_wis_01", "title": "...", "type": "side" } ],
   "npcs":     [ { "key": "yael", "name": "Yael" } ]
 }
@@ -179,11 +232,27 @@ curl http://localhost:1367/api/location/CI
 
 ---
 
+### GET /api/quest/{id}/chain
+
+Upstream and downstream dependency graph for a quest.
+
+```bash
+curl http://localhost:1367/api/quest/quest_anath/chain
+```
+```json
+{
+  "upstream": ["quest_basket_damascus"],
+  "downstream": ["quest_barnach_vouches", "quest_hellenists_jerusalem"]
+}
+```
+
+---
+
 ### GET /api/list/{type}
 
-Returns lightweight list with `_meta.canDelete` per item.
+Returns a lightweight list with `_meta.canDelete` per item.
 
-`type` = `node` | `quest` | `monster` | `npc` | `terrain`
+`type` = `node` | `quest` | `monster` | `npc` | `terrain` | `fish` | `lake-magic`
 
 **Query parameters:**
 | Param | Applies to | Example |
@@ -196,6 +265,159 @@ Returns lightweight list with `_meta.canDelete` per item.
 ```bash
 curl 'http://localhost:1367/api/list/quest?node=CY'
 curl 'http://localhost:1367/api/list/monster?terrain=market_quarter'
+curl 'http://localhost:1367/api/list/quest?type=mission_bit'
+```
+
+---
+
+### GET /api/schema[/{type}]
+
+Canonical field list for each entity type — required fields, editable fields, types.
+
+```bash
+curl http://localhost:1367/api/schema
+curl http://localhost:1367/api/schema/quest
+```
+
+---
+
+### GET /api/flags
+
+List all `_S_DEFAULTS` state flags and their default values.
+
+```bash
+curl http://localhost:1367/api/flags
+```
+```json
+{
+  "ok": true,
+  "count": 87,
+  "flags": {
+    "escapedDamascus": false,
+    "plContactMet": false,
+    "...": "..."
+  }
+}
+```
+
+---
+
+### GET /api/missionbits
+
+List all mission bit tokens extracted from quest source — flags, associated quests, and node references.
+
+```bash
+curl http://localhost:1367/api/missionbits
+```
+```json
+{
+  "ok": true,
+  "count": 14,
+  "bits": [
+    {
+      "flagRef": "sealedChestDone",
+      "tokenName": "Sealed Chest Token",
+      "event": "pass",
+      "questId": "quest_chest_01",
+      "questTitle": "The Sealed Chest",
+      "questType": "mission_bit",
+      "nodeCode": "CI",
+      "nodeLabel": "City Streets — Birka",
+      "retryable": true
+    }
+  ]
+}
+```
+
+---
+
+### GET /api/audit
+
+Integrity scan of all in-memory game data. Returns findings by severity.
+
+```bash
+curl http://localhost:1367/api/audit
+curl http://localhost:1367/api/audit | jq '.errors'
+```
+
+Severity levels:
+- `error` — broken reference; will cause bugs at runtime
+- `warning` — style issue or likely mistake
+- `suggestion` — improvement; not required
+- `parse` — section could not be parsed; data may be missing
+
+Common errors: `node quest ref` (quest.activateNode → missing node), `monster key ref` (terrain monster list → missing pool key), `quest chain ref` (quest.chain → missing quest ID).
+
+---
+
+### GET /api/export/{collection}
+
+Dump a full in-memory collection as JSON, JS literal, or CommonJS module.
+
+`collection` = `node_map` | `quest_db` | `monster_pool` | `world_db` | `fish_pool` | `monster_drops` | `condition_items` | `all`
+
+```bash
+curl 'http://localhost:1367/api/export/quest_db?format=json' -o quests.json
+curl 'http://localhost:1367/api/export/all?format=module' -o game-data.js
+```
+
+`format` = `json` (default) | `js` (JS assignment `const X = {...}`) | `module` (CommonJS `module.exports`)
+
+---
+
+### GET /api/fish[/{key}]
+
+Fish pool entries. Optional filters: `?rank=N` · `?night=true|false`
+
+```bash
+curl http://localhost:1367/api/fish
+curl 'http://localhost:1367/api/fish?night=true&rank=3'
+curl http://localhost:1367/api/fish/perch
+```
+
+---
+
+### GET /api/drops
+
+Monster drop table entries. Sorted by sell value descending.
+
+```bash
+curl http://localhost:1367/api/drops
+curl 'http://localhost:1367/api/drops?sell=50'     # drops worth ≥50gp
+curl 'http://localhost:1367/api/drops?q=sword'     # name search
+```
+
+---
+
+### GET /api/loot
+
+d100 loot table with rollRange annotations, totalWeight, gap, and gap-fill suggestions.
+
+```bash
+curl http://localhost:1367/api/loot
+```
+```json
+{
+  "ok": true,
+  "totalWeight": 97,
+  "gap": 3,
+  "coverage": "97%",
+  "typeBreakdown": { "potion": 30, "scroll": 20, "gold": 47 },
+  "suggestions": ["add 3 weight to fill gap"],
+  "entries": [...]
+}
+```
+
+---
+
+### GET /api/lake-magic[/{key}]
+
+Lake magic item list or single entry. Optional filters: `?effect=X` · `?minRank=N`
+
+```bash
+curl http://localhost:1367/api/lake-magic
+curl 'http://localhost:1367/api/lake-magic?minRank=3'
+curl http://localhost:1367/api/lake-magic/ember_shard
 ```
 
 ---
@@ -232,9 +454,9 @@ curl -X PUT http://localhost:1367/api/node/CY \
     { "field": "ac",  "ok": true, "strategy": "put" },
     { "field": "hp",  "ok": true, "strategy": "put" }
   ],
-  "entity": { "name": "Commoner", "ac": 15, "hp": 8, "..." },
+  "entity": { "name": "Commoner", "ac": 15, "hp": 8 },
   "connections": { "..." },
-  "_meta": { "canDelete": false, "blockedBy": { "terrains": [...] } }
+  "_meta": { "canDelete": false }
 }
 ```
 
@@ -252,17 +474,41 @@ curl -X PUT http://localhost:1367/api/node/CY \
 
 ---
 
-### DELETE /api/{type}/{id}
+### PUT /api/loot
+### PUT /api/loot/{index}
 
-Delete an entity. Returns **HTTP 409** if nested content blocks deletion.
+Replace the entire d100 loot table or update a single entry by index.
 
 ```bash
-curl -X DELETE http://localhost:1367/api/monster/rabid_monkey
+# Update single entry (index 0)
+curl -X PUT http://localhost:1367/api/loot/0 \
+  -H 'Content-Type: application/json' \
+  -d '{"weight": 15, "_type": "potion"}'
+
+# Full replace
+curl -X PUT http://localhost:1367/api/loot \
+  -H 'Content-Type: application/json' \
+  -d '{"entries": [{"weight":30,"_type":"potion"},{"weight":20,"_type":"scroll"}]}'
+```
+
+Valid `_type` values: `potion_minor` · `potion` · `potion_greater` · `potion_superior` · `scroll` · `flashbang` · `dagger` · `mainweapon` · `gold`
+
+---
+
+### DELETE /api/{type}/{id}
+
+Delete an entity. Returns **HTTP 409** if nested content blocks deletion. Requires a nonce.
+
+```bash
+NONCE=$(curl -s -X POST http://localhost:1367/api/nonce \
+  -H 'Content-Type: application/json' \
+  -d '{"type":"monster","id":"rabid_monkey"}' | jq -r .nonce)
+curl -X DELETE http://localhost:1367/api/monster/rabid_monkey -H "X-Nonce: $NONCE"
 ```
 
 **200 — deleted:**
 ```json
-{ "ok": true, "key": "rabid_monkey", "wasEntity": { "name": "Rabid Monkey", "..." } }
+{ "ok": true, "key": "rabid_monkey", "wasEntity": { "name": "Rabid Monkey" } }
 ```
 
 **409 — blocked:**
@@ -270,8 +516,7 @@ curl -X DELETE http://localhost:1367/api/monster/rabid_monkey
 {
   "ok": false,
   "error": "Delete blocked — nested content exists",
-  "blockedBy": { "terrains": ["market_quarter", "city_ruins"] },
-  "connections": { "terrains": [{ "key": "market_quarter", "nodes": [...] }] }
+  "blockedBy": { "terrains": ["market_quarter", "city_ruins"] }
 }
 ```
 
@@ -288,13 +533,15 @@ curl -X DELETE http://localhost:1367/api/monster/rabid_monkey
 
 ### POST /api/{type} — Create
 
-Add a new entity to its section. All create endpoints require `POST /api/save` afterward to persist to disk.
+Add a new entity to its section. All create endpoints require `POST /api/save` afterward.
 
 ---
 
 **POST /api/quest**
 
-Required: `id`, `type`, `title`, `activateNode`. All text fields are optional but recommended.
+Required: `id`, `type`, `title`, `activateNode`. All other fields optional.
+
+Valid types: `combat` · `explore` · `trade` · `social` · `mission_bit` · `skill_check`
 
 ```bash
 curl -X POST http://localhost:1367/api/quest \
@@ -335,7 +582,7 @@ Required: `key`, `name`. Stats default to 0 if omitted.
 ```bash
 curl -X POST http://localhost:1367/api/monster \
   -H 'Content-Type: application/json' \
-  -d '{"key":"dock_rat","name":"Dock Rat","ac":11,"hp":4,"atk":2,"tier":"trivial"}'
+  -d '{"key":"dock_rat","name":"Dock Rat","ac":11,"hp":4,"atk":2,"dmg":3,"xp":10,"tier":1}'
 ```
 
 ---
@@ -354,7 +601,7 @@ curl -X POST http://localhost:1367/api/terrain \
 
 **POST /api/npc**
 
-Add a named NPC to `BIRKA_NPC_PROFILES`. Required: `key` (snake_case), `name`, `node` (must exist in NODE_MAP). Dialogue tiers (`neutral`, `friendly`, `dearFriend`) are optional but render in the NPC card UI.
+Add a named NPC to `BIRKA_NPC_PROFILES`. Required: `key` (snake_case), `name`, `node`.
 
 ```bash
 curl -X POST http://localhost:1367/api/npc \
@@ -367,58 +614,19 @@ curl -X POST http://localhost:1367/api/npc \
     "neutral": {
       "greeting": "A woman coiling rope at the far end of the dock.",
       "dialogue": "\"Three ships this week. None of them stopped.\""
-    },
-    "friendly": {
-      "greeting": "Maret nods when you come down the gangway.",
-      "dialogue": "\"You came back. Good.\""
-    },
-    "dearFriend": {
-      "greeting": "She has a chair out for you before you reach the dock.",
-      "dialogue": "\"I have been thinking about what you said. The part about the harbor at Visby.\""
     }
   }'
 ```
-
-Response includes `connections` — the node it was placed at, nearby NPCs, and any quests that reference it.
 
 ---
 
 **POST /api/item**
 
-Add an item definition to `ITEM_DB`. Required: `key` (snake_case), `name`, `type`. Valid types: `weapon` · `amulet` · `consumable` · `readable` · `armor` · `tool` · `mission_bit` · `lake_magic`.
+Add an item definition to `ITEM_DB`. Required: `key` (snake_case), `name`, `type`.
+
+Valid types: `weapon` · `amulet` · `consumable` · `readable` · `armor` · `tool` · `mission_bit` · `lake_magic`
 
 ```bash
-# Weapon
-curl -X POST http://localhost:1367/api/item \
-  -H 'Content-Type: application/json' \
-  -d '{
-    "key": "harbor_blade",
-    "name": "Harbor Blade",
-    "icon": "🗡",
-    "type": "weapon",
-    "sell": 30,
-    "desc": "A short blade kept under dock planks for thirty years. Still sharp.",
-    "atkBonus": 1,
-    "dmgDie": 6,
-    "dmgCount": 1,
-    "dmgFlat": 0,
-    "minLevel": 2
-  }'
-
-# Passive amulet (active when HP ≤ threshold)
-curl -X POST http://localhost:1367/api/item \
-  -H 'Content-Type: application/json' \
-  -d '{
-    "key": "ember_shard",
-    "name": "Ember Shard",
-    "icon": "🔥",
-    "type": "amulet",
-    "sell": 0,
-    "passive": true,
-    "desc": "Passive — when HP ≤ 50%, +2 ATK on all attacks. The shard was pulled from the forge after it cooled."
-  }'
-
-# Readable
 curl -X POST http://localhost:1367/api/item \
   -H 'Content-Type: application/json' \
   -d '{
@@ -427,45 +635,95 @@ curl -X POST http://localhost:1367/api/item \
     "icon": "📒",
     "type": "readable",
     "sell": 0,
-    "readText": "Every ship. Every cargo. Every captain. Three pages are water-damaged beyond reading. The fourth page is the one that matters."
+    "readText": "Every ship. Every cargo. Every captain."
   }'
 ```
 
-Items live in `ITEM_DB` and are referenced from quest completion handlers (`storyCheckQuests`) or granted via `_grantItem()`. The `ITEM_DB` section is anchored in `roll2hit-v3.html` between `WORLDBUILDER:ITEM_DB:START` and `WORLDBUILDER:ITEM_DB:END`.
+---
+
+**POST /api/fish**
+
+Add a fish entry to the day or night pool.
+
+```bash
+curl -X POST http://localhost:1367/api/fish \
+  -H 'Content-Type: application/json' \
+  -d '{"key":"harbor_eel","name":"Harbor Eel","rank":2,"isNight":true,"desc":"..."}'
+```
+
+**POST /api/fish/simulate**
+
+Simulate a fishing roll with given modifiers. Returns a roll result and the fish caught.
+
+```bash
+curl -X POST http://localhost:1367/api/fish/simulate \
+  -H 'Content-Type: application/json' \
+  -d '{"dexMod": 2, "catchMod": 1, "typeMod": 0}'
+```
+
+---
+
+**POST /api/lake-magic**
+
+Add a lake magic item to `LAKE_MAGIC_DB`.
+
+```bash
+curl -X POST http://localhost:1367/api/lake-magic \
+  -H 'Content-Type: application/json' \
+  -d '{"key":"tide_ring","name":"Tide Ring","effect":"water_speed","base":2,"levelScale":0.5}'
+```
+
+---
+
+**POST /api/flags**
+
+Add a new state flag to `_S_DEFAULTS`. Required: `name` (valid JS identifier), `defaultValue`.
+
+```bash
+curl -X POST http://localhost:1367/api/flags \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"escapedDamascus","defaultValue":false,"comment":"Paul arc — basket escape"}'
+```
+
+Response: `{ "ok": true, "name": "escapedDamascus", "defaultValue": false, "note": "POST /api/save to persist." }`
 
 ---
 
 ### POST /api/monster/{id}/rename
 
-Change a monster's display name globally (key is unchanged).
+Change a monster's display name globally (key unchanged).
 
 ```bash
 curl -X POST http://localhost:1367/api/monster/commoner/rename \
   -H 'Content-Type: application/json' \
-  -d '{"name": "Rabid Monkey"}'
+  -d '{"name": "Market Goer"}'
 ```
 ```json
-{ "ok": true, "key": "commoner", "from": "Commoner", "to": "Rabid Monkey", "terrains": [...20...] }
+{ "ok": true, "key": "commoner", "from": "Commoner", "to": "Market Goer", "terrains": [20] }
 ```
 
 ---
 
 ### POST /api/monster/{id}/fork
 
-Create a new monster as a copy of an existing one (for terrain-specific variants).
+Create a new monster as a copy of an existing one.
 
 ```bash
 curl -X POST http://localhost:1367/api/monster/commoner/fork \
   -H 'Content-Type: application/json' \
-  -d '{"newKey": "rabid_monkey", "overrides": {"name": "Rabid Monkey", "hp": 8}}'
+  -d '{"newKey": "dock_worker", "overrides": {"name": "Dock Worker", "hp": 8}}'
 ```
 
-Then optionally replace in a specific terrain only:
+---
+
+### POST /api/terrain/{key}/swap
+
+Replace one monster key with another in a specific terrain only.
 
 ```bash
 curl -X POST http://localhost:1367/api/terrain/market_quarter/swap \
   -H 'Content-Type: application/json' \
-  -d '{"oldKey": "commoner", "newKey": "rabid_monkey"}'
+  -d '{"oldKey": "commoner", "newKey": "dock_worker"}'
 ```
 
 ---
@@ -487,16 +745,16 @@ curl -X POST http://localhost:1367/api/node/CY/move \
 
 ### POST /api/save
 
-Write all pending changes to a new timestamped HTML file. Original is never overwritten.
+Write all pending in-memory changes to a new timestamped HTML file. The original is never overwritten.
 
 ```bash
-curl -X POST http://localhost:1367/api/save -H 'Content-Type: application/json' -d '{}'
+curl -X POST http://localhost:1367/api/save
 ```
 ```json
 { "ok": true, "path": "/Users/user/code/roll2hit.com/roll2hit-v3-20260529-162839.html" }
 ```
 
-Use `outputPath` to specify a custom save location:
+Use `outputPath` for a custom save location:
 ```bash
 curl -X POST http://localhost:1367/api/save \
   -H 'Content-Type: application/json' \
@@ -507,17 +765,29 @@ curl -X POST http://localhost:1367/api/save \
 
 ### POST /api/reload
 
-Re-read the game file from disk (picks up changes made by a previous session).
+Re-read `roll2hit-v3.html` from disk, discarding all pending in-memory edits.
 
 ```bash
-curl -X POST http://localhost:1367/api/reload -H 'Content-Type: application/json' -d '{}'
+curl -X POST http://localhost:1367/api/reload
 ```
 
 ---
 
-## CRUD Detail View — How the Browser UI Works
+### POST /api/restart
 
-The World Builder browser uses a **diff-tracking detail view** pattern:
+Save all pending changes, then exit with code 67. The toggle script catches code 67 and relaunches the server automatically. Use this after adding function fields or making structural changes that require a fresh parse.
+
+```bash
+curl -X POST http://localhost:1367/api/restart
+```
+
+`reload` vs `restart`:
+- **reload** — discard in-memory edits; re-parse from disk (no exit)
+- **restart** — save current edits; exit + relaunch (picks up structural changes)
+
+---
+
+## CRUD Detail View — How the Browser UI Works
 
 ```
 1. Load entity      → GET /api/{type}/{id}
@@ -532,14 +802,10 @@ The World Builder browser uses a **diff-tracking detail view** pattern:
 3. Click PUT        → PUT /api/monster/commoner  body: {"ac": 15}
                        Server patches _rawSrc, returns updated entity
                        UI re-renders with new originals
-                       Change indicators clear
 
 4. Click Save       → POST /api/save
                        Timestamped HTML written to disk
-                       Button shows "✓ Saved" briefly
 ```
-
-The diff accumulates across multiple edits before saving — you can change 10 fields, click PUT once, then click Save once. Each PUT call is atomic: all named fields in the request body are applied together.
 
 **Editable fields by entity type:**
 
@@ -548,358 +814,162 @@ The diff accumulates across multiple edits before saving — you can change 10 f
 | name | title | label | name |
 | ac | type | act | occupation |
 | hp | hint/hook | battle | node |
-| atk | passText | npc | greeting |
-| dmgCount | failText | desc | neutral.dialogue |
-| dmgDie | rewardText | locked | friendly.dialogue |
-| dmgFlat | activateNode | N/S/E/W links | dearFriend.dialogue |
+| atk | passText/startText | npc | neutral.dialogue |
+| dmgCount | failText | desc | friendly.dialogue |
+| dmgDie | rewardText | locked | dearFriend.dialogue |
+| dmgFlat | activateNode | N/S/E/W links | |
 | tier | waypointNode | | |
 | xp | npc | | |
-| morale | checkDC/Stat/Skill | | |
+| morale | checkDC/Stat | | |
 | | xpAward | | |
-| | reward | | |
+| | chain | | |
+| | missionBitKey | | |
 
 ---
 
 ## Multi-Edit Session Workflow
 
-**Important:** Every `POST /api/save` writes the current in-memory state of `_rawSrc`. If you want multiple edits to accumulate in a single file, chain all PUTs before saving:
+Every `POST /api/save` writes the current in-memory state. Chain all PUTs before saving:
 
 ```javascript
-// Wrong: two independent sessions, two output files
-fetch('/api/monster/commoner', { method:'PUT', body: JSON.stringify({name:'Rabid Monkey'}) })
-  .then(() => fetch('/api/save', { method:'POST', body:'{}' }))
-// then separately:
-fetch('/api/monster/npc_merchant', { method:'PUT', body: JSON.stringify({name:'Badger'}) })
-  .then(() => fetch('/api/save', { method:'POST', body:'{}' }))
-
 // Correct: both PUTs before one save
 Promise.all([
-  fetch('/api/monster/commoner',     { method:'PUT', body: JSON.stringify({name:'Rabid Monkey'}) }),
+  fetch('/api/monster/commoner',     { method:'PUT', body: JSON.stringify({name:'Market Goer'}) }),
   fetch('/api/monster/npc_merchant', { method:'PUT', body: JSON.stringify({name:'Badger'}) }),
 ]).then(() => fetch('/api/save', { method:'POST', body:'{}' }))
 ```
 
-Or use `POST /api/reload` to load the output of a previous session so changes accumulate:
-
+To accumulate across sessions, load the previous timestamped output:
 ```bash
-# Session 1: rename Commoner
-curl -X PUT .../api/monster/commoner -d '{"name":"Rabid Monkey"}'
-curl -X POST .../api/save   # → roll2hit-v3-20260529-162643.html
-
-# Session 2: load previous output, add another rename
-curl -X POST .../api/reload  # reloads original roll2hit-v3.html
-# ... actually load the timestamped file via ROLL2HIT_FILE env var
-ROLL2HIT_FILE=roll2hit-v3-20260529-162643.html ./start-wbapi.sh
-curl -X PUT .../api/monster/npc_merchant -d '{"name":"Badger"}'
-curl -X POST .../api/save   # → roll2hit-v3-20260529-162839.html  (has BOTH renames)
+ROLL2HIT_FILE=roll2hit-v3-20260529-162643.html ./wbapi-toggle.sh start
 ```
 
 ---
 
 ## Use Case: Implementing a Quest Chain One Story at a Time
 
-> **Scenario:** You are writing the Paul arc — a 12-quest escort chain across 13 nodes. Each quest has a different mechanic (STR check, WIS check, side event, skill block). You want to implement it one quest at a time, verify each one with a GET, then save the game file. This is the API-driven authoring workflow.
-
----
-
 ### Step 0 — Verify the starting node exists
-
-Before adding any quests, confirm the target node is in the game and has the terrain you expect:
 
 ```bash
 curl http://localhost:1367/api/location/KS
 ```
 
-```json
-{
-  "entity": { "node": { "code": "KS", "label": "Damascus — Lower City", "act": 4, "name": "damascus" } },
-  "connections": { "quests": [...], "npcs": [...], "monsters": [...] },
-  "_meta": { "canDelete": false }
-}
-```
-
-If the node doesn't exist yet, add it first:
-
+If the node doesn't exist, create it first:
 ```bash
-curl -X PUT http://localhost:1367/api/node/KS \
+curl -X POST http://localhost:1367/api/node \
   -H 'Content-Type: application/json' \
-  -d '{"label":"Damascus — Lower City","name":"damascus","act":4}'
+  -d '{"code":"KS","label":"Damascus — Lower City","name":"damascus","act":4}'
 ```
 
 ---
 
 ### Step 1 — Add a state flag
 
-The first quest needs a completion flag. Add it to `_S_DEFAULTS` in the game file manually (WBAPI does not yet write `_S_DEFAULTS` — this is the one field that stays a direct edit). Flag naming convention: `camelCase`, scoped to the arc, descriptive.
-
-```
-escapedDamascus: false,   // added to _S_DEFAULTS manually
-```
-
-After adding the flag, reload the server:
 ```bash
-# Restart wbapi-server.js against the updated game file
-ROLL2HIT_FILE=roll2hit-v3.html ./start-wbapi.sh
+curl -X POST http://localhost:1367/api/flags \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"escapedDamascus","defaultValue":false,"comment":"Paul arc — basket escape"}'
+curl -X POST http://localhost:1367/api/save
+curl -X POST http://localhost:1367/api/restart
 ```
 
 ---
 
-### Step 2 — Inspect the schema before writing the quest
+### Step 2 — Inspect the quest schema
 
 ```bash
 curl http://localhost:1367/api/schema/quest
 ```
 
-Returns the canonical field list for quest objects — required fields, editable fields, types. Use this to avoid typos in field names before writing the quest object.
-
-```json
-{
-  "_section": "QUEST_DB",
-  "fields": {
-    "id":           { "type": "string",   "required": true  },
-    "type":         { "type": "string",   "required": true,  "values": ["side","skill_check","epic","main"] },
-    "title":        { "type": "string",   "required": true,  "editable": true },
-    "desc":         { "type": "string",   "required": true,  "editable": true },
-    "hint":         { "type": "string",   "required": true,  "editable": true },
-    "activateNode": { "type": "string",   "required": true                    },
-    "checkAbility": { "type": "string",   "required": false, "note": "skill_check only" },
-    "checkDC":      { "type": "number",   "required": false, "note": "skill_check only" },
-    ...
-  }
-}
-```
-
 ---
 
-### Step 3 — Add the first quest
-
-The basket escape quest. This is a skill_check (STR Athletics DC 12) at node KS. The `POST /api/quest` endpoint creates a new quest object in `QUEST_DB`:
+### Step 3 — Add the quest
 
 ```bash
+NONCE=$(curl -s -X POST http://localhost:1367/api/nonce \
+  -H 'Content-Type: application/json' \
+  -d '{"type":"quest","id":"quest_basket_damascus"}' | jq -r .nonce)
+
 curl -X POST http://localhost:1367/api/quest \
   -H 'Content-Type: application/json' \
+  -H "X-Nonce: $NONCE" \
   -d '{
     "id": "quest_basket_damascus",
     "type": "skill_check",
     "title": "Over the Wall",
-    "desc": "The magistrate has issued a detention order. The gate is watched. The wall is not. The rope is knotted cloth — seven knots, tested against the window frame.",
-    "hint": "Lower him over the wall. Hold the rope.",
     "activateNode": "KS",
     "activateCond": "anathSightRestored",
-    "checkAbility": "str",
+    "checkStat": "str",
     "checkLabel": "Athletics",
     "checkDC": 12,
+    "checkPassFlag": "escapedDamascus",
     "retryable": true,
     "retryGateDays": 1,
     "xpAward": 150,
-    "checkPassFlag": "escapedDamascus",
-    "vignetteText": "He gets in. He does not speak. You hold the rope.",
-    "passText": "Down. Controlled. The gate guard does not turn. The facts are accurate. They do not include the knots.",
-    "failText": "The rope shifts. You pull back. The window remains. Tomorrow.",
-    "disposition": "Through a window in the wall his disciples lowered him in a basket."
+    "passText": "Down. Controlled. The gate guard does not turn.",
+    "failText": "The rope shifts. You pull back. Tomorrow."
   }'
-```
-
-Response:
-
-```json
-{ "ok": true, "key": "quest_basket_damascus", "action": "created" }
 ```
 
 ---
 
-### Step 4 — Verify the quest is readable
+### Step 4 — Verify
 
 ```bash
 curl http://localhost:1367/api/quest/quest_basket_damascus
 ```
 
-Returns the full quest object. Check that `activateNode`, `checkAbility`, `checkDC`, and `checkPassFlag` are all set correctly before proceeding.
-
 ---
 
-### Step 5 — Edit quest text without rewriting the whole quest
-
-Once a quest exists, individual fields can be patched:
+### Step 5 — Edit text without rewriting the quest
 
 ```bash
 curl -X PUT http://localhost:1367/api/quest/quest_basket_damascus \
   -H 'Content-Type: application/json' \
-  -d '{"passText": "Down. Controlled. The last three feet you lower slowly because you can hear him breathing. He lands and crouches and then he is moving. The gate guard does not turn."}'
+  -d '{"passText": "Down. Controlled. The last three feet you lower slowly because you can hear him breathing."}'
 ```
-
-```json
-{
-  "ok": true,
-  "key": "quest_basket_damascus",
-  "fields": [{ "field": "passText", "strategy": "editField", "ok": true }]
-}
-```
-
-The `editField` strategy patches only the `passText` value in `_rawSrc` — the surrounding quest object (including function bodies in other fields) is untouched.
 
 ---
 
-### Step 6 — Repeat for each quest in the chain
-
-Each quest is one `POST /api/quest` call. The chain order is:
-
-```
-quest_basket_damascus  →  quest_anath  →  quest_barnach_vouches  →  quest_ezzir
-→  quest_governor_cyprus  →  quest_lame_lystra  →  quest_stoning_lystra
-→  quest_prison_phillam  →  quest_areopagus  →  quest_ephesus_riot
-→  quest_corinth_letters  →  quest_rome_arrest
-```
-
-Each quest's `activateCond` references the `checkPassFlag` of the preceding quest. The chain is verified after each addition with `GET /api/quest/{id}`.
-
----
-
-### Step 7 — Verify the full chain with `chain`
-
-After adding all quests, run the chain query to confirm the dependency graph is correct:
+### Step 6 — Verify the full chain
 
 ```bash
 curl http://localhost:1367/api/quest/quest_anath/chain
+# { "upstream": ["quest_basket_damascus"], "downstream": ["quest_barnach_vouches"] }
 ```
-
-```json
-{
-  "upstream": ["quest_basket_damascus"],
-  "downstream": ["quest_barnach_vouches", "quest_hellenists_jerusalem"]
-}
-```
-
-If any quest appears in the wrong position, or a flag name is misspelled (which severs the chain), it will show up here as a disconnection.
 
 ---
 
-### Step 8 — Save to a timestamped file
+### Step 7 — Run audit before saving
 
 ```bash
-curl -X POST http://localhost:1367/api/save -H 'Content-Type: application/json' -d '{}'
+curl http://localhost:1367/api/audit | jq '.errors'
+# [] — no errors
 ```
-
-```json
-{ "ok": true, "path": "/Users/.../roll2hit-v3-20260529-143012.html" }
-```
-
-Load the timestamped file to verify it renders correctly in the browser. The chain is now committed. The next session loads the timestamped file and continues from there.
 
 ---
 
-### Pattern Summary — One Quest at a Time
+### Step 8 — Save
+
+```bash
+curl -X POST http://localhost:1367/api/save
+```
+
+---
+
+### Pattern Summary
 
 | Step | API call | What it verifies |
 |------|----------|-----------------|
-| 0 | `GET /location/{nodeCode}` | Node exists; terrain is correct |
-| 1 | Edit `_S_DEFAULTS` manually | State flag is registered |
+| 0 | `GET /location/{code}` | Node exists; terrain correct |
+| 1 | `POST /api/flags` | State flag registered |
 | 2 | `GET /schema/quest` | Field names before writing |
 | 3 | `POST /api/quest` | Quest created in QUEST_DB |
 | 4 | `GET /api/quest/{id}` | Quest is readable; all fields set |
 | 5 | `PUT /api/quest/{id}` | Patch text fields without full rewrite |
-| 6 | Repeat 3–5 | Add each quest in the chain |
-| 7 | `GET /api/quest/{id}/chain` | Dependency graph is connected |
+| 6 | `GET /api/quest/{id}/chain` | Dependency graph connected |
+| 7 | `GET /api/audit` | No broken references |
 | 8 | `POST /api/save` | Commit to timestamped HTML |
-
----
-
-## Use Case: Generic Mission Builder — Starting Location → Mission Type → Skill Check
-
-> **Scenario:** You want to create a repeatable pattern for new quest arcs. Starting at a node, you choose a sequence of mission types (hunt, escort, skill_check, collect, talk_chain). Each type has a canonical set of required fields and a matching skill check stat. The API validates each mission against the pattern before inserting it.
-
----
-
-### Query 1 — What missions currently exist at a node?
-
-```bash
-curl http://localhost:1367/api/location/LT
-```
-
-The `connections.quests` array in the response shows every quest whose `activateNode` or `waypointNode` is `LT`. Before adding a new quest, confirm:
-- No other quest uses the same `checkPassFlag` you plan to use
-- The activation chain does not orphan an existing quest
-
----
-
-### Query 2 — What mission types are valid here?
-
-Use the schema to get the canonical mission type list:
-
-```bash
-curl http://localhost:1367/api/schema/quest | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['fields']['type']['values'])"
-```
-
-```
-["side", "skill_check", "epic", "main"]
-```
-
-The operational class taxonomy (from `§WORLDBUILDER-02-B`) maps these to richer types:
-
-| API `type` | Operational class | Canonical stat | DC range |
-|-----------|------------------|----------------|----------|
-| `skill_check` | `hunt` | STR Athletics | 10–14 |
-| `skill_check` | `escort` | STR Athletics | 12–15 |
-| `skill_check` | `skill_check` | WIS/INT/CHA | 10–15 |
-| `skill_check` | `investigation` | INT Investigation | 12–16 |
-| `skill_check` | `survival` | CON Endurance | 12–16 |
-| `side` | `talk_chain` | No roll | — |
-| `side` | `collect` | No roll | — |
-| `side` | `lore_collect` | No roll | — |
-| `epic` | `epic` | Multiple | Varies |
-| `main` | `gate_pass` | No roll | — |
-
----
-
-### Query 3 — Build a three-quest escort chain at PL
-
-A three-quest escort chain at Philippi: meet the contact, secure the prison, depart.
-
-**Mission 1: meet the contact (talk_chain / side)**
-```bash
-curl -X POST http://localhost:1367/api/quest \
-  -d '{"id":"quest_pl_01","type":"side","title":"The Bridge Meeting","activateNode":"PL","checkPassFlag":"plContactMet","desc":"..."}'
-```
-
-**Mission 2: secure the prison (skill_check / escort, WIS DC 12)**
-```bash
-curl -X POST http://localhost:1367/api/quest \
-  -d '{"id":"quest_pl_02","type":"skill_check","title":"Seven Stairs, Then Five","activateNode":"PL","activateCond":"plContactMet","checkAbility":"wis","checkLabel":"Insight","checkDC":12,"checkPassFlag":"plPrisonSecured","desc":"..."}'
-```
-
-**Mission 3: depart (gate_pass / side)**
-```bash
-curl -X POST http://localhost:1367/api/quest \
-  -d '{"id":"quest_pl_03","type":"side","title":"The Road East","activateNode":"PL","activateCond":"plPrisonSecured","checkPassFlag":"plDeparted","desc":"..."}'
-```
-
-Then verify the chain:
-```bash
-curl http://localhost:1367/api/quest/quest_pl_01/chain
-# upstream: [], downstream: [quest_pl_02, quest_pl_03]
-```
-
----
-
-### Query 4 — Validate before saving
-
-After building the chain, run a GET on each quest and confirm:
-1. All `activateCond` flags exist in `_S_DEFAULTS` (manual check — WBAPI cannot query `_S_DEFAULTS` yet)
-2. All `checkPassFlag` values are unique (the server does not enforce this; check with `GET /api/quest/{flagName}` — if it returns a quest, the flag is taken)
-3. All `activateNode` values exist: `GET /api/node/{code}`
-
-These three checks are the pre-flight for any quest chain. After passing, `POST /api/save`.
-
----
-
-The server applies two strategies for each PUT field:
-
-| Strategy | Used for | How |
-|---|---|---|
-| `editField` | String fields | Regex find-and-replace in `_rawSrc` between `◆◆◆ WBAPI:SECTION:START/END ◆◆◆` anchors |
-| `put` | Number / boolean fields | In-memory object merge; serialized to `_rawSrc` on `save()` |
-
-**Why strings use `editField`:** Quest fields like `passText` can contain JavaScript function bodies (`completeFn: (S) => { S.gold += 100 }`). `editField` patches only the named string field in the raw HTML, preserving all surrounding code. Numeric fields (AC, HP, XP) don't have this constraint and update cleanly in memory.
 
 ---
 
@@ -908,36 +978,35 @@ The server applies two strategies for each PUT field:
 | HTTP | Meaning |
 |---|---|
 | 200 | Success |
-| 201 | Created (fork) |
-| 207 | Multi-status (partial PUT success — check `fields[].ok`) |
+| 201 | Created |
+| 207 | Multi-status (partial PUT — check `fields[].ok`) |
 | 400 | Bad request (missing field, invalid JSON, unknown type) |
 | 404 | Entity not found |
 | 405 | Method not allowed |
-| 409 | Conflict — nested content blocks DELETE, or node code already exists |
+| 409 | Conflict — nested content blocks DELETE, or entity already exists, or nonce mismatch |
 | 500 | Unhandled server exception |
 
 ---
 
 ## Data Architecture Reference
 
-`roll2hit-v3.html` is a single-file game. All data lives in `<script>` blocks, bounded by 14 anchor comments:
+`roll2hit-v3.html` is a single-file game. All data lives in `<script>` blocks bounded by anchor comments:
 
 ```
 // ◆◆◆ WORLDBUILDER:{SECTION}:START ◆◆◆
 // ◆◆◆ WORLDBUILDER:{SECTION}:END ◆◆◆
 ```
 
-| Section | Contents | Notes |
+| Section | Line | Contents |
 |---|---|---|
-| MONSTER_POOL | 392 monsters | `{ key: { name, ac, hp, atk, dmgDie, tier, ... } }` |
-| MONSTER_DROPS | 392 drop tables | `{ key: { icon, name, sell } }` |
-| WORLD_DB | 107 terrain types | Uses `P.monsterKey` refs, parsed with P proxy |
-| NODE_MAP | 148 world nodes | `{ code: { label, name(=terrain), act, battle, npc, N,S,E,W } }` |
-| NODE_COORDS | 148 canvas coords | `{ code: { x, y } }` |
-| QUEST_DB | 228 quests | Contains JS closures — parsed with `removeFns` sanitizer |
-| BIRKA_NPC | 9 named NPCs | Full dialogue trees with neutral/friendly/dearFriend tiers |
-| LAKE_MAGIC | 8 lake magic items | `{ key: { name, icon, effect, base, levelScale, luckScale, minRank, minLevel } }` |
-| ITEM_DB | General items | `{ key: { name, icon, type, sell, desc, atkBonus?, passive?, readText?, ... } }` — writable via `POST /api/item` |
-| FISH_DB | 25 fish | Day pool (FISH_POOL) + night pool (NIGHT_FISH_POOL); share keys with MONSTER_POOL |
+| MONSTER_POOL | 4869 | Monster stat blocks `{ key: { name, ac, hp, atk, … } }` |
+| NODE_MAP | 7627 | World nodes `{ code: { label, name(=terrain), act, … } }` |
+| QUEST_DB | anchored | Quest objects with JS closures — parsed with `removeFns` sanitizer |
+| BIRKA_NPC | 11643 | Named NPC profiles with full dialogue trees |
+| FISH_DB | 14818 | Fish pool entries (day + night) |
+| LAKE_MAGIC | 14850 | Lake magic item definitions |
+| ITEM_DB | 14863 | General items (weapon, amulet, readable, mission_bit, …) |
 
 The server never executes the full game file. It reads it as text, slices sections by anchor comments, and evaluates each section in isolation with appropriate guards.
+
+The strategy for patching string fields (`editField`) patches the named field in raw HTML, preserving surrounding code including JS function bodies in quest objects. Numeric and boolean fields are updated in-memory and serialized on `POST /api/save`.
