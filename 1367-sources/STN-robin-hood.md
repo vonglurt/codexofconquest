@@ -575,3 +575,469 @@ activateMissionBit: stnGisbourneComplete
 ---
 
 *Cycle 2 complete. Mark `[x]` for STN-robin-hood in books.md.*
+
+---
+
+## STN-03 — "Sir Richard's Night Ride"
+
+**Quest API Stub (Quest ID: STN-03)**
+
+```
+Quest: Sir Richard's Night Ride
+quest_id: STN-03
+cycle: 3
+book: STN — The Merry Adventures of Robin Hood
+token: The Corrupt Cellarer's Copy
+route: EMT → LEA → WM
+theme: The debt instrument delivered before the bell; the corrupt copy hidden to
+  extend the claim recovered in bad faith; the night ride through forest paths
+  with four hundred pounds of silver and the document that would make the silver
+  irrelevant if it wasn't found
+archive_category: Debt Instrument Records — The Mortgage Copy Hidden By the
+  Lender to Keep a Valid Repayment From Being Received; The Silver That Arrived
+  Before Prime and the Document That Made Its Arrival Possible
+
+missionAccept: "Sir Richard of the Lea must repay four hundred pounds to the
+  Priory of Emmet before Prime or the monks seize his lands and turn his household
+  into the road. Robin has the silver. But the cellarer at Emmet has hidden his
+  own copy of the mortgage deed — without the copy, the repayment cannot be
+  registered and the Prior will claim the silver is insufficient. The copy must
+  be found and the silver delivered before the bell. The forest path at night,
+  the corrupt cellarer's study, and two hours before dawn."
+
+Act I — Emmet Priory, Cellarer's Study
+activateNode: EMT
+type: skill_check
+scene: "The Priory of Emmet before midnight. The main gate is watched by two lay
+  brothers; the cellarer's study window is on the east side, reachable from the
+  wall walk without crossing the yard. Brother Martin the cellarer is a man who
+  has spent forty years making the Prior's requirements coincide with his own
+  convenience; the hidden deed copy is somewhere in this study, in a place he
+  chose so he could plausibly claim he had mislaid it."
+skillCheck: "Perception DC 14: Find the deed copy before the cellarer returns
+  from Compline."
+failText: "You hear his sandals on the stone corridor. The desk is still closed.
+  He is thirty seconds from the door."
+successText: "The sealed copy is between the binding-boards of a wine ledger —
+  plausible deniability, poor concealment for someone actually looking. You
+  receive the Corrupt Cellarer's Copy."
+grantItem: "The Corrupt Cellarer's Copy — A sealed deed document hidden between
+  a wine ledger's boards. The Prior will deny knowledge of its existence. The
+  seal is authentic and the mortgage is paid once this is registered."
+
+Act II — The Forest Path, Midnight
+activateNode: SHW
+type: skill_check
+scene: "The path between Emmet Priory and Castle Lea in full dark — two hours
+  of forest road carrying a sealed document and the implicit weight of four
+  hundred pounds of silver being transported by Robin's mules somewhere behind
+  you. The road splits at the mill stream: the fast path crosses a plank bridge
+  in open ground; the covered path adds twenty minutes. Someone has been on the
+  fast path recently — boot prints in the mill-stream mud that are not yours."
+skillCheck: "Stealth DC 12: Read the boot prints and decide which route is safe.
+  The covered path is slower. The plank bridge path may not be empty."
+failText: "You take the plank bridge path and find one of the Prior's outriders
+  waiting at the far bank with a horse and a document bag. He is not expecting
+  you — but he is going to delay you."
+successText: "You take the covered path. Twenty minutes added. The Priory bell
+  has not yet rung. You arrive at Castle Lea with the sky still dark."
+
+Act III — Castle Lea, Main Gate
+activateNode: LEA
+type: dialogue
+scene: "Sir Richard of the Lea meets you at the gate in his nightgown, a candle
+  in his hand and the look of a man who has not slept. His steward is behind
+  him with the repayment accounts. You give him the deed copy. He looks at it
+  once, checks the seal, and makes a sound that is not quite speech. 'He hid it.'
+  'Yes.' 'And the silver.' 'Behind you on the road.' He turns to his steward."
+prompt: "Persuasion DC 11: Confirm the timeline — the registered copy and the
+  silver together, before Prime. Sir Richard needs to know the registration
+  can be completed tonight."
+failText: "He is shaken. He needs a moment. The Prior's bell will ring in
+  forty-five minutes."
+successText: "He straightens. 'Wake the registrar. We ride to the Priory at
+  dawn.' The silver is unloaded in the yard. The deed copy goes into his coat."
+
+Act IV — Weimar Archive Gate
+activateNode: WM
+type: escort
+scene: "Sweelinck receives the registered repayment confirmation — Sir Richard
+  provided a duplicate to the carrier as evidence of completion. 'The cellarer
+  hid the copy.' 'Yes.' 'To prevent a valid repayment.' 'Yes.' 'And the copy
+  was found anyway.' 'Before Prime.' Sweelinck examines the repayment confirmation."
+successText: "Sweelinck creates Debt Instrument Records — The Mortgage Copy
+  Hidden By the Lender to Keep a Valid Repayment From Being Received; first entry:
+  'the copy was hidden in bad faith; it was found; the repayment was registered
+  before Prime; the archive notes that a valid debt payment still requires a
+  carrier — the silver does not deliver itself'"
+failText: "The Prior disputed the copy's authenticity after the fact. The
+  repayment is in a legal dispute. The archive holds an unresolved claim."
+takeItem: "The Corrupt Cellarer's Copy"
+```
+
+*STN-03 complete. 2026-06-03.*
+
+---
+
+## STN-04 — "Gray Goose at the Fair"
+
+**Quest API Stub (Quest ID: STN-04)**
+
+```
+Quest: Gray Goose at the Fair
+quest_id: STN-04
+cycle: 4
+book: STN — The Merry Adventures of Robin Hood
+token: The Sheriff's Golden Arrow
+route: NTN → SHW → WM
+theme: The tournament won under a false name; whether to be remembered for
+  winning; the disguise that holds until the archer decides it shouldn't
+archive_category: Competition Records — The Golden Arrow Won by an Anonymous
+  Archer Who Was Not Anonymous; The Prize the Winner Could Not Carry Openly;
+  Filed Under the Name the Sheriff Never Found in His Register
+
+missionAccept: "The Sheriff has announced a golden arrow as prize for the archery
+  tournament at Nottingham Fair. Robin will enter under a false name. If he wins
+  and slips away, the Sheriff never knows. If he wins and makes himself known, it
+  is the most expensive public statement in Nottinghamshire. The Fighter carries
+  the golden arrow out of the fairground regardless of which choice Robin makes —
+  because someone has to, and the arrow does not leave Nottingham quietly on its own."
+
+Act I — Nottingham Fair, The Lists
+activateNode: NTN
+type: skill_check
+scene: "Nottingham Fair, tournament morning. Forty archers entered — squires,
+  foresters, freemen. Robin is in a gray cloak and has given the registrar the
+  name 'Gilbert Whitehand.' The Sheriff is in the stands watching every face with
+  the specific attention of a man who has been tricked before and has not decided
+  to stop looking. The first round is at sixty yards. The marker calls for Gilbert
+  Whitehand."
+skillCheck: "Stealth DC 12: Keep Robin's pre-tournament preparation — testing
+  his draw in the camp, consulting the wind — from being connected to the archer
+  at post when the registrar calls the name."
+failText: "A vendor at the fairground stall recognized Robin's profile from a
+  handbill. He has not said anything yet, but he is watching with the calculation
+  of a man deciding whether the information is worth something."
+successText: "Nobody at the lists connects the gray-cloaked archer with the
+  description on the Sheriff's warrants. The final arrow splits the previous
+  winner's shaft at a hundred yards. Gilbert Whitehand is named the winner."
+
+Act II — The Award Ceremony
+activateNode: NTN
+type: dialogue
+scene: "The Sheriff himself presents the golden arrow at the dais. He is pleased
+  with the tournament and expansive with good humor — until he looks at the gray-
+  cloaked figure accepting the prize, and the figure looks back, and the Sheriff's
+  good humor begins the slow process of becoming something else. Robin accepts
+  the arrow, bows, and the Fighter is standing two steps behind him."
+prompt: "Courage DC 13: Stand in the award ceremony while the Sheriff's eyes move
+  between Robin's face and his memory. If the Sheriff decides, you will have two
+  seconds before his guards move."
+failText: "The Sheriff's hand comes down from the rail. He is pointing. His guards
+  have already started. Robin is already moving. The arrow changes hands now."
+successText: "The Sheriff almost has it — his eyes have nearly arrived at the
+  recognition — and Robin bows again, very deeply, very pleasantly, and when he
+  straightens he is already three steps toward the gate. The Sheriff is still
+  processing the bow."
+grantItem: "The Sheriff's Golden Arrow — A yard of gilded ash with a gold
+  fletching and a tournament broadhead. The Sheriff's prize for the best archer
+  in Nottinghamshire, won by a man the Sheriff will spend the next week trying
+  to identify."
+
+Act III — The East Gate
+activateNode: NTN
+type: combat
+scene: "The east gate out of Nottingham. Robin has gone by a different exit.
+  The golden arrow is in your quiver, indistinguishable from any tournament arrow
+  except for being made of gold. Two of the Sheriff's men have been told to
+  stop every archer leaving the fairground and examine their prizes. They are
+  not subtle about this."
+combat: "Sheriff's Gate Guard (AC 13, HP 18) × 2 — or Deception DC 13 to pass
+  with the arrow inside a rolled broadcloth"
+successText: "The gate is clear. You take the Nottingham road west. Robin is
+  ahead at the treeline, already laughing."
+failText: "They identify the arrow. You fight. The arrow stays in your quiver
+  through the fight because dropping it is the one thing you cannot do."
+
+Act IV — Weimar Archive Gate
+activateNode: WM
+type: escort
+scene: "Sweelinck receives the golden arrow. He reads the Sheriff's tournament
+  register entry — which Robin, characteristically, provided as a duplicate to
+  the carrier. 'Gilbert Whitehand, winner.' 'Yes.' 'And the Sheriff.' 'He almost
+  had it.' Sweelinck holds the arrow and examines the fletching. 'He had it
+  made well.' 'He wanted everyone to see it.' 'Did they.' 'Yes. Just not in
+  the way he expected.'"
+successText: "Sweelinck creates Competition Records — The Golden Arrow Won by an
+  Anonymous Archer Who Was Not Anonymous; first entry: 'the register records
+  Gilbert Whitehand; the archive holds the arrow; the Sheriff knows who won
+  and cannot prove it; the archive notes that competition results are sometimes
+  more accurate than the register'"
+failText: "The arrow was identified at the gate. The Sheriff has it as evidence.
+  The archive holds a gap where the prize should be."
+takeItem: "The Sheriff's Golden Arrow"
+```
+
+*STN-04 complete. 2026-06-03.*
+
+---
+
+## STN-05 — "Seven Black Friars"
+
+**Quest API Stub (Quest ID: STN-05)**
+
+```
+Quest: Seven Black Friars
+quest_id: STN-05
+cycle: 5
+book: STN — The Merry Adventures of Robin Hood
+token: The King's Sealed Pardon
+route: SHW → WM
+theme: How you behave when you don't know who is listening determines whether you
+  receive a pardon or a warrant; the test that is its own answer; the king who needs
+  to know whether the men he is pardoning are worth pardoning
+archive_category: Royal Pardon Records — The Document Issued After The Recipient
+  Demonstrated By Behavior That They Merited It; The Test Conducted Without
+  Disclosure of the Tester; Filed Under the Moment Before the Mask Dropped
+
+missionAccept: "Seven Black Friars are riding the Nottingham road with a purse of
+  one hundred pounds. Robin will stop them and take his toll — he doesn't know
+  one of them is King Richard conducting an impromptu test. The Fighter is in
+  the party but not the one making the decisions. How Robin behaves toward the
+  friars, what he says about the King when he doesn't know the King is listening,
+  and whether he shows hospitality to strangers — all of it is being assessed.
+  If the assessment is positive, the King reveals himself and the pardon follows.
+  If not, the warrant is already written."
+
+Act I — The Sherwood Road Stop
+activateNode: SHW
+type: dialogue
+scene: "The road between Nottingham and Mansfield. Seven monks in black habits
+  on good horses — too good for monks. Robin steps into the road with a staff
+  and his most cheerful face. 'God save thee, good father! What hast thou in
+  that purse? It is a sin to carry gold without sharing it with them that have
+  none.' The largest of the friars — the one with gold-thread sandals and hair
+  that is not quite tonsured correctly — answers in a voice that carries unexpectedly."
+prompt: "Insight DC 14: Read the large friar correctly before Robin speaks
+  about King Richard. Something about this group is wrong."
+failText: "You read nothing in the large friar that the situation doesn't show.
+  Robin begins his speech about how much he has always wished to meet the King."
+successText: "The gold-thread sandals. The bearing. The voice that carries like
+  a man accustomed to rooms where voice is authority. You know before Robin says
+  a word about the King — but Robin is already talking."
+
+Act II — The Speech about the King
+activateNode: SHW
+type: skill_check
+scene: "Robin, with the natural garrulity of a man who has nobody to fear in
+  Sherwood, begins explaining to the large friar exactly what he thinks of King
+  Richard's management of England: his Crusade, the ransom, the tax burden on
+  yeomen, and also — turning the staff in his hands — the specific quality of
+  generosity and justice that, in Robin's estimation, the King has and most of
+  his Norman barons have not. The large friar is listening with the concentrated
+  attention of a man deciding something."
+skillCheck: "Perception DC 12: Watch the large friar's face through Robin's
+  speech and understand that the decision is being made in real time."
+failText: "You watch the friar listen but cannot read what the listening means.
+  Robin finishes. The friar's expression has not changed."
+successText: "The friar's decision happens somewhere in the middle of Robin's
+  account of the tax burden. A small expression — not approval, not amusement,
+  something more private — and then it is gone. He has decided. You know which way."
+
+Act III — The Feast in Sherwood
+activateNode: SHW
+type: skill_check
+scene: "The feast in the forest — venison, Canary wine, the long tables under
+  the oak canopy. Robin seats the seven friars and sits the large one at his
+  right hand. He tells stories, asks questions, is entirely himself: merry,
+  direct, occasionally rude in the specific generous way that is not rudeness.
+  The large friar eats heartily. Then he stands, removes his hood, and the
+  hair is gold and the eyes are the specific blue of a summer sky. 'I would
+  that I had an army of such,' says King Richard."
+skillCheck: "Composure DC 11: Receive the revelation — the king at the table —
+  without the expression of a person who knew twenty minutes ago."
+failText: "Your face betrays something. The King looks at you with slight
+  interest. He does not say anything. The pardon is still coming."
+successText: "You receive the revelation with the composure of a person hearing
+  it for the first time. Robin drops to one knee. The King pulls him up."
+grantItem: "The King's Sealed Pardon — A vellum document sealed with Richard's
+  personal cipher. The pardon for Robin Hood and all his company, signed in
+  Sherwood by the king who ate the venison and won the buffet contest."
+
+Act IV — Weimar Archive Gate
+activateNode: WM
+type: escort
+scene: "Sweelinck receives the pardon's registered duplicate. 'The King conducted
+  the test.' 'Yes.' 'Without announcing it was a test.' 'Yes.' 'And the pardon
+  was the result.' 'Yes.' 'What would the warrant have been.' 'He had it ready.'
+  'And he chose the pardon.' 'After the feast.' Sweelinck examines the seal."
+successText: "Sweelinck creates Royal Pardon Records — The Document Issued After
+  the Recipient Demonstrated by Behavior That They Merited It; first entry:
+  'the test was the feast; the feast was the test; the king who ate the venison
+  and lost the buffet contest issued a pardon that was already decided before
+  the hood came off; the archive notes that behavior under observation is the
+  same as behavior unobserved, except that someone is counting'"
+failText: "The warrant was issued. The pardon does not exist. The archive holds
+  a different document."
+takeItem: "The King's Sealed Pardon"
+```
+
+*STN-05 complete. 2026-06-03.*
+
+---
+
+## STN-06 — "The Widow's Sons"
+
+**Quest API Stub (Quest ID: STN-06)**
+
+```
+Quest: The Widow's Sons
+quest_id: STN-06
+cycle: 6
+book: STN — The Merry Adventures of Robin Hood
+token: The Widow's Sons' Poaching Indictment
+route: NGM → SHW → WM
+theme: The rescue before the bell; the man who went in to buy time and was
+  captured doing it; the document that condemned three brothers retrieved from
+  the officer who carried it so it cannot be re-used
+archive_category: Poaching Indictment Records — The Charge That Condemned Three
+  Yeomen For Feeding Their Mother's Household; Retrieved By the Person It Was
+  Used Against; Filed Under the Officer Who Carried It to the Scaffold
+
+missionAccept: "Three young men have been taken by the Sheriff on a poaching
+  charge and will hang at noon from the oak tree at the edge of Nottingham common.
+  Little John went in disguise to buy time. His bow split in the press. He has
+  been captured. The party must reach him before the Sheriff decides to stop
+  waiting and hang all four at once. The poaching indictment is in the officer's
+  satchel and must be retrieved — without it, the charge can be reissued tomorrow."
+
+Act I — Nottingham Common, Before Noon
+activateNode: NGM
+type: skill_check
+scene: "Nottingham common, an hour before noon. The oak tree, the Sheriff's
+  company, four figures on the scaffold — three young men and Little John, who
+  is considerably larger than the scaffold post suggests was planned for. The
+  officer with the indictment satchel is standing at the scaffold's base.
+  Getting to the satchel requires getting to him, which requires getting through
+  the ring, which requires a reason to be at the scaffold base."
+skillCheck: "Deception DC 13: Enter the ring as a legal observer — a petitioner
+  who wants to verify the charge before the sentence is carried out."
+failText: "The officer looks at your face and decides you are not a legal
+  observer. He signals the guard. You have twenty seconds."
+successText: "The officer accepts the role. You are in the ring, two feet from
+  the satchel. Little John has recognized you and is carefully not showing it."
+
+Act II — The Indictment
+activateNode: NGM
+type: skill_check
+scene: "You are beside the officer. The satchel is at his hip. The indictment
+  is rolled inside. It is the only copy — the Sheriff's clerk is still writing
+  the duplicate in the court building on the far side of the common. If the
+  satchel empties now, the charge cannot be reissued before tomorrow. If you
+  are found with it, the charge will apply to you too."
+skillCheck: "Sleight of Hand DC 14: Transfer the indictment from the satchel
+  to your coat while the officer is watching the scaffold."
+failText: "His hand drops to the satchel. He looks inside. He looks at you.
+  He has not yet shouted. This is the interval between his finding and his voice."
+successText: "The rolled document is inside your coat. The satchel is empty.
+  The officer has not looked inside since you arrived. You receive the
+  Widow's Sons' Poaching Indictment."
+grantItem: "The Widow's Sons' Poaching Indictment — A sealed indictment naming
+  three young men of Barnesdale for taking two deer from the King's forest to
+  feed a widow's household. The Sheriff's only copy. Without this, the charge
+  cannot be reissued before the men are out of the county."
+
+Act III — The Rescue
+activateNode: NGM
+type: combat
+scene: "The noon bell. The officer opens his satchel. He finds nothing. He
+  shouts. The ring begins to move. Little John — who has been waiting for any
+  signal, any signal at all — drops his full weight onto the scaffold post and
+  it splits. The three brothers have momentum and daylight. You have three
+  Sheriff's men between you and the forest road."
+combat: "Sheriff's Arrest Officer (AC 13, HP 20) × 2 + Sheriff's Man (AC 12,
+  HP 16) × 1"
+successText: "The road to Sherwood is open. Little John reaches you at the
+  treeline, winded, grinning with the specific grin of a man who has just
+  been nearly hanged. 'Well,' he says, 'that was longer than expected.'"
+failText: "You get two of them and the third gets between you and the road.
+  Little John comes through the scatter like a mill wheel. 'I had it,' he
+  says, which is not quite true."
+
+Act IV — Weimar Archive Gate
+activateNode: WM
+type: escort
+scene: "Sweelinck receives the indictment. 'Taken deer from the King's forest.'
+  'Yes.' 'To feed a widow.' 'Their mother.' 'And the Sheriff's copy.' 'This
+  is it.' 'So the charge cannot be reissued.' 'Not without the clerk rewriting
+  it. By then they were in Barnesdale.' Sweelinck reads the indictment all
+  the way through."
+successText: "Sweelinck creates Poaching Indictment Records — The Charge That
+  Condemned Three Yeomen For Feeding Their Mother's Household; first entry:
+  'the charge was retrieved from the officer before the duplicate could be
+  completed; the indictment is in the archive rather than in the court's file;
+  this is the archive's primary form of justice — receiving documents before
+  they can do what they were written to do'"
+failText: "The clerk completed his duplicate before the men were out of the
+  county. The indictment in the archive is superseded."
+takeItem: "The Widow's Sons' Poaching Indictment"
+```
+
+*STN-06 complete. 2026-06-03.*
+
+---
+
+## STN-07 — "The Last Arrow"
+
+```json
+{
+  "quest_id": "STN-07",
+  "title": "The Last Arrow",
+  "cycle": 7,
+  "book": "STN — The Merry Adventures of Robin Hood",
+  "token": "Robin Hood's Last Arrow",
+  "route": ["KLN", "SHW", "WM"],
+  "theme": "The death that chooses its own form; the grave marked by the last act of the life; the witness who holds the space of the final decision and carries forward what the death cannot carry",
+  "archive_category": "Last Act Records — The Arrow Shot From the Casement; The Grave Marked By Where It Fell; Filed Under the Man Who Instructed His Own Memorial With His Final Gesture",
+  "questComplete": true,
+  "acts": [
+    {
+      "act": 1,
+      "activateNode": "KLN",
+      "type": "skill_check",
+      "scene": "Kirklees Nunnery. The studded oak door with iron spikes, barred from inside. Little John has been at the gate for an hour. Three weak bugle notes came from the upper window an hour ago, then silence. A stone mortar from the garden wall. The door is the problem.",
+      "skillCheck": { "skill": "Athletics", "dc": 13 },
+      "failText": "The door holds. Little John tears the mortar free with both hands and hits the door a second time. The iron spikes bite but the door moves.",
+      "successText": "Little John takes the mortar in both hands and hits the door once at the hinge-plate. The iron spikes bite into his palms. The door opens inward on the second blow."
+    },
+    {
+      "act": 2,
+      "activateNode": "KLN",
+      "type": "dialogue",
+      "scene": "The tower room. Robin Hood in a chair at the casement, blood drawn too far and too long by his cousin's betrayal. A candle on the table. His bow on the floor beside him. He looks up when the door opens. He knows it is Little John by the sound of the tread. He says: 'I knew thou wouldst come, John. I am right glad thou art here.' He reaches for the bow.",
+      "prompt": { "skill": "Wisdom", "dc": 10, "prompt": "Understand what Robin is asking when he reaches for the bow. He is not trying to fight. He is choosing the form of his ending." },
+      "failText": "You move to take the bow — to stop him, to carry it — and he shakes his head gently. 'Nay, it must be mine own hand.' You step back.",
+      "successText": "You understand before he says anything. You lift the casement latch. Little John steadies the chair. Robin raises the bow."
+    },
+    {
+      "act": 3,
+      "activateNode": "KLN",
+      "type": "escort",
+      "scene": "The arrow flight: two hundred yards across the nunnery orchard, over the wall, into the forest edge. It falls where it falls. You mark it — the specific oak, the specific yard of ground — before Little John has finished covering Robin's face. The nuns are in the corridor, not yet at the door. You have ten minutes to reach the arrow before the location is claimed by anyone else.",
+      "escort": "Reach the arrow's landing point before the nunnery groundskeeper marks the orchard for the prioress.",
+      "successText": "You reach the arrow in the orchard grass, still quivering. You pull it free and look back at the tower window. Little John is there, not looking at anything. You have the arrow.",
+      "failText": "The groundskeeper reaches the arrow first. He does not know what it is. He pulls it free and takes it toward the garden shed."
+    },
+    {
+      "act": 4,
+      "activateNode": "WM",
+      "type": "escort",
+      "scene": "Sweelinck receives the arrow at the archive gate. He holds it flat on both palms. He does not speak for a long moment. 'He shot it himself.' 'Yes.' 'From the casement.' 'Yes.' 'To mark where he wanted to be buried.' 'Yes.' 'And he was.' 'Yes.' Sweelinck looks at the arrow — the specific nick in the fletching, the broadhead still on, the shaft straight. 'He chose the form.' 'Yes. He always chose the form.'",
+      "successText": "Sweelinck creates Last Act Records — The Arrow Shot From the Casement; The Grave Marked By Where It Fell; first entry: 'the arrow is the document; it was shot as an instruction; the instruction was followed; the grave inscription at Kirklees reads: HEAR UNDERNEAD DIS LAITL STEAN LAIS ROBERT EARL OF HUNTINGTUN NEA ARCIR VER AS HIE SAE GEUD; the archive holds the arrow that pointed to the stone'",
+      "failText": "The arrow was taken by the groundskeeper and lost to identification. The grave was dug at a site chosen by the prioress. The archive holds a gap where the last instruction should be."
+    }
+  ]
+}
+```
+
+*STN-07 complete. 2026-06-03.*
