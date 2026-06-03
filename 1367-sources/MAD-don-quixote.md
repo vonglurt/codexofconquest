@@ -599,3 +599,235 @@ He looks at the Fighter.
 *quest-map.md: append new theme thread (before "The tool of reassembly" ALF line).*
 *quest-map.md: append MAS, ACL to Location Grid.*
 *books.md: mark MAD [x] (don-quixote entry).*
+
+---
+
+## Cycle 3 — *The Cave of Montesinos Account*
+
+**Archive category:** Uncertain Vision Records — The Account Whose Narrator Could Not Confirm Whether It Was True
+
+**What this angle reveals:** Cycles 1-2 were about objects whose reality was disputed by others. This angle finds a vision whose reality is disputed by the person who had it. When Don Quixote is lowered into the Cave of Montesinos, he is down for an hour by everyone else's count. He says he was there for three days. He describes a vision of the knight Montesinos, of Durandarte's still-beating heart in a salt box, of Dulcinea in enchanted sleep, of a hideous peasant woman who comes to borrow six reales in Dulcinea's name. At Maese Pedro's puppet show, Don Quixote writes out his account. Questioned by the magician Maese Pedro's monkey, he says: "Part of what I saw, I believe I truly saw. Part of what I said, I am not certain." The archive wants the account exactly as he wrote it — including the doubt in the margin.
+
+---
+
+**THE TOKEN: `cave_montesinos_account`** — Don Quixote's written account of the Cave of Montesinos, produced at Maese Pedro's puppet show: the vision described in full, the narrative ending with the appearance of the hideous woman borrowing six reales, and a marginal note in his hand: "I may have dreamed some of this." The first vision account in the archive from a narrator who annotated his own uncertainty.
+
+---
+
+```json
+{
+  "quest_id": "MAD-03",
+  "title": "The Cave of Montesinos Account",
+  "source": "Don Quixote — Miguel de Cervantes (Part II, 1615)",
+  "cycle": 3,
+  "book": "MAD",
+  "source_episode": "Don Quixote is lowered into the Cave of Montesinos; claims to have been there for three days; describes an elaborate chivalric vision; at Maese Pedro's show, when asked, says 'I may have dreamed some of this'",
+  "theme": "The vision account annotated with the narrator's own doubt; the archive that holds uncertain testimony without forcing it to become certain",
+  "activateNode": "SMR",
+  "token": {
+    "id": "cave_montesinos_account",
+    "name": "Cave of Montesinos Account",
+    "description": "Don Quixote's written account of the cave vision, produced at Maese Pedro's show. The full narrative, ending with the six-reale borrowing. Marginal note in his hand: 'I may have dreamed some of this.'",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["SMR", "BK", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "SMR", "type": "skill_check", "dc": 12, "skill": "Insight", "prompt": "Don Quixote hands over the account at the inn near the cave. He says: I wrote it while it was still clear, and then I added the note in the margin when it became less clear. Understand before the road why the archive wants the account with the marginal note: the note is not a retraction, it is an annotation; the account is more valuable with the narrator's doubt visible than it would be without it."},
+    {"act": 2, "node": "SMR_to_BK", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "A clergyman on the northern road wants the account destroyed on the grounds that it describes a pagan vision as though it were real, with saints and chivalric figures mixed together improperly. His theological objection is specific. The account is not a theological statement — it is a record of what was claimed, with the narrator's own annotation of uncertainty."},
+    {"act": 3, "node": "BK", "type": "combat", "dc": 13, "skill": "Persuasion", "enemies": "Sansón Carrasco's agent, AC 11, HP 18, short sword", "prompt": "Sansón Carrasco has heard of the account and wants it suppressed before it travels further — specifically the marginal note, which he believes will be used to dismiss his legal challenge to Don Quixote's sanity. The note is part of the document."},
+    {"act": 4, "node": "BK_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "Three days to Weimar. The account is in the case. The marginal note is visible at the bottom right corner. The cave was real. Whether the vision was real is in the note. Keep moving."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the account. He reads the marginal note. He files it with the note visible. Uncertain Vision Records opens."}
+  ],
+  "archiveCategory": "Uncertain Vision Records — The Account Whose Narrator Could Not Confirm Whether It Was True",
+  "sweelinckNote": "The narrator annotated his own doubt. The archive holds the annotation. Uncertain testimony held with its uncertainty intact is more honest than certain testimony that was never uncertain. This is the first entry."
+}
+```
+
+---
+
+## Cycle 4 — *Sancho Panza's Resignation*
+
+**Archive category:** Voluntary Relinquishment Records — The Resignation That Named the Mismatch
+
+**What this angle reveals:** Cycle 3 was about what Don Quixote saw. This angle finds the most honest moment in the novel: Sancho Panza governed Barataria for ten days, discovered that governing was nothing like he had imagined, and resigned with complete candor. He writes a letter of resignation explaining that he was not born to govern; that his hands are better suited to a spade than to a governor's staff; that he learned more about himself in ten days of governance than in a lifetime of following a knight. The resignation is not failure — it is knowledge accurately reported. Sancho found out what he wanted and found out it was not for him, and had the honesty to say so in writing.
+
+---
+
+**THE TOKEN: `sancho_resignation_letter`** — Sancho Panza's formal resignation letter from the governorship of Barataria: the title at the top, the resignation stated in the first paragraph, the reasons given in the second (I am not suited; I have learned this; the island deserves a better governor), and Sancho's mark at the bottom. Written without irony, addressed to the Duke.
+
+---
+
+```json
+{
+  "quest_id": "MAD-04",
+  "title": "Sancho Panza's Resignation",
+  "source": "Don Quixote — Miguel de Cervantes (Part II, 1615)",
+  "cycle": 4,
+  "book": "MAD",
+  "source_episode": "Sancho governs Barataria for ten days; concludes he was not made for governance; resigns formally with complete candor about the mismatch",
+  "theme": "The voluntary relinquishment that names exactly what was learned; the resignation that is knowledge, not failure",
+  "activateNode": "MNT",
+  "token": {
+    "id": "sancho_resignation_letter",
+    "name": "Sancho Panza's Resignation Letter",
+    "description": "Formal resignation from the governorship of Barataria: title, stated resignation, reasons given (not suited; learned this; island deserves better), Sancho's mark. Written without irony. Addressed to the Duke.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["MNT", "VEN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "MNT", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "Sancho hands you the letter at the fair ground. He says: I wrote it myself and the secretary helped with the spelling. It says what I mean. Understand before the road why the archive wants this document: it is the only letter in the novel written entirely for its writer's benefit — not to a recipient who needed it, but as a record of what ten days of governance taught a man about himself."},
+    {"act": 2, "node": "MNT_to_VEN", "type": "skill_check", "dc": 11, "skill": "Persuasion", "prompt": "The Duke's secretary on the road south wants the letter for the Duke's records — as documentation that Sancho resigned rather than was removed. His request is technically correct. The archive's copy is the one that travels to Weimar. The Duke's copy is in his records."},
+    {"act": 3, "node": "VEN", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "A Venetian political theorist wants the resignation as a primary source in a study of the relationship between natural aptitude and political office. His use is legitimate. The archive holds the original for general access after deposit."},
+    {"act": 4, "node": "VEN_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "North from Venice, three days. The resignation letter is in the case. Sancho Panza is on a grey donkey somewhere in Castile looking for Don Quixote. The letter says what he learned. Keep moving."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the reasons paragraph. He notes Sancho's mark. Voluntary Relinquishment Records opens."}
+  ],
+  "archiveCategory": "Voluntary Relinquishment Records — The Resignation That Named the Mismatch",
+  "sweelinckNote": "He governed for ten days and resigned. The letter says why. The archive notes that this is rare: a resignation that names the mismatch accurately, without self-pity or excuse. The island deserves a better governor. He is right about that."
+}
+```
+
+---
+
+## Cycle 5 — *The Knight of the White Moon's Conditions*
+
+**Archive category:** Conditional Defeat Records — The Terms Accepted After the Last Combat
+
+**What this angle reveals:** Cycles 3-4 were about uncertainty and self-knowledge. This angle finds the document that ended Don Quixote's career. Sansón Carrasco, dressed as the Knight of the White Moon, challenges Don Quixote on the beach at Barcelona. The combat is formal: both knights present, witnesses present, conditions stated before the encounter. Carrasco wins. Don Quixote, unhorsed and unable to continue, accepts the stated conditions: return home, give up knight-errantry for one year. He keeps these conditions exactly. The formal conditions document — stated before the combat, accepted after — is both a legal instrument and the record of Don Quixote's last field.
+
+---
+
+**THE TOKEN: `white_moon_conditions`** — The Knight of the White Moon's formal challenge conditions, stated before the combat and countersigned by Don Quixote after his defeat: the requirement to return home, the one-year prohibition on knight-errantry, the witnesses' signatures, and Don Quixote's acceptance mark. The document that ended the career on its own terms.
+
+---
+
+```json
+{
+  "quest_id": "MAD-05",
+  "title": "The Knight of the White Moon's Conditions",
+  "source": "Don Quixote — Miguel de Cervantes (Part II, 1615)",
+  "cycle": 5,
+  "book": "MAD",
+  "source_episode": "Sansón Carrasco as the Knight of the White Moon challenges and defeats Don Quixote on the beach at Barcelona; imposes the condition of one year's retirement; Don Quixote accepts and keeps the terms",
+  "theme": "The conditions that ended a career; the defeat accepted with complete fidelity to the terms; the document that the loser honored exactly",
+  "activateNode": "CMG",
+  "token": {
+    "id": "white_moon_conditions",
+    "name": "Knight of the White Moon's Conditions",
+    "description": "Challenge conditions countersigned after defeat: return home, one-year prohibition on knight-errantry, witnesses' signatures, Don Quixote's acceptance mark. The document that ended the career.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["CMG", "CON", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "CMG", "type": "skill_check", "dc": 12, "skill": "History", "prompt": "The combat witness at the Camino Real magistrate's post hands over the conditions document. It was filed here after the Barcelona beach — a formal record of the encounter. Understand before the road why the archive wants the conditions: Don Quixote accepted them and kept them exactly; the document is evidence of a man who was defeated honestly and honored the defeat honestly; both facts are in the same document."},
+    {"act": 2, "node": "CMG_to_CON", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "Sansón Carrasco, now back in La Mancha, has heard the document is leaving Spain and wants it returned for the parish records — he says it demonstrates that the defeat was legitimate. His request is based on wanting the record close by. The archive is the right destination for a formal combat document."},
+    {"act": 3, "node": "CON", "type": "skill_check", "dc": 13, "skill": "Persuasion", "prompt": "A Byzantine scholar of legal combat wants to study the conditions as an example of how a formal chivalric challenge is framed in written terms. He wants to copy the document. Archive access after deposit."},
+    {"act": 4, "node": "CON_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "West from Constantinople, three weeks. The conditions document is in the case. Don Quixote is at home in La Mancha, keeping the terms. He will die before the year is up. Keep moving."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the conditions. He reads Don Quixote's acceptance mark. He notes the one-year term. Conditional Defeat Records opens."}
+  ],
+  "archiveCategory": "Conditional Defeat Records — The Terms Accepted After the Last Combat",
+  "sweelinckNote": "He accepted the conditions and kept them. He died before the year was complete, which means the conditions were still in force at his death. The archive notes this. The defeat was honored."
+}
+```
+
+---
+
+## Cycle 6 — *Cide Hamete's Pen Notation*
+
+**Archive category:** Author's Final Notation Records — The Claim Written After the Last Page
+
+**What this angle reveals:** Cycles 3-5 were about Don Quixote's inner life and defeat. This angle enters the meta-narrative: the novel's fictional Arabic historian Cide Hamete Benengeli writes a final notation on his pen, directed at any future author who might try to continue the story. He says the pen has been reserved exclusively for Don Quixote and should not be touched by any other hand; whoever reaches for it will write only lies and trickery; he, Cide Hamete, has written the true history and it is finished. The notation is directed specifically at Avellaneda — the real author of a false Don Quixote sequel published in 1614. The pen's final notation is simultaneously a copyright claim, a literary curse, and a historian's colophon.
+
+---
+
+**THE TOKEN: `cide_hamete_pen_notation`** — The notation Cide Hamete Benengeli writes on his pen after the final chapter: his declaration that the pen is reserved exclusively for Don Quixote's history; the warning to any future author; the claim of the completed history's truthfulness. A legal claim, a literary curse, and a formal ending written on the instrument that made the history.
+
+---
+
+```json
+{
+  "quest_id": "MAD-06",
+  "title": "Cide Hamete's Pen Notation",
+  "source": "Don Quixote — Miguel de Cervantes (Part II, 1615)",
+  "cycle": 6,
+  "book": "MAD",
+  "source_episode": "Cide Hamete Benengeli writes a notation on his pen after the final chapter — reserving it exclusively for Don Quixote's history, warning off future authors, claiming the history complete and true",
+  "theme": "The author's final claim written on the instrument of the work; the colophon as legal declaration, literary curse, and formal ending",
+  "activateNode": "ACL",
+  "token": {
+    "id": "cide_hamete_pen_notation",
+    "name": "Cide Hamete's Pen Notation",
+    "description": "Notation written on the pen itself: reservation of the pen for Don Quixote's history exclusively; warning to future authors; claim of the history's completeness and truth. Legal claim, literary curse, colophon.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["ACL", "RME", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "ACL", "type": "skill_check", "dc": 12, "skill": "Insight", "prompt": "The notary's clerk at Alcalá hands over a certified copy of the pen's notation. The original is attached to the manuscript; this is the certified transcription for circulation. Understand before the road what the document is: it is three things simultaneously — a legal claim on a literary object, a warning about a specific real author of a false sequel, and a formal declaration that a work is complete; the archive holds all three functions in the same text."},
+    {"act": 2, "node": "ACL_to_RME", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "An Aragonese bookseller on the road south who has the Avellaneda sequel in his shop wants the pen notation suppressed on commercial grounds — the notation specifically identifies the sequel as lies. His commercial interest is clear. The notation is historical and travels."},
+    {"act": 3, "node": "RME", "type": "skill_check", "dc": 13, "skill": "Persuasion", "prompt": "A Roman literary scholar wants the notation for a study of authorial claims in the romances. He wants to compare it with comparable colophons from Italian and French chivalric literature. His scholarship is legitimate. The archive holds the original; his comparison can proceed after deposit."},
+    {"act": 4, "node": "RME_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "North from Rome, five days to Weimar. The notation is in the sealed case. Cide Hamete is fictional. The pen is fictional. The warning to Avellaneda is addressed to a real person. Keep moving."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the three functions of the notation. He notes the Avellaneda reference. Author's Final Notation Records opens."}
+  ],
+  "archiveCategory": "Author's Final Notation Records — The Claim Written After the Last Page",
+  "sweelinckNote": "The notation is on the pen. The pen is fictional. The warning is addressed to a real author of a false sequel. The archive holds the notation as: a legal claim over a fictional instrument, directed at a real person, by a fictional author writing in a real book. All four descriptions are accurate."
+}
+```
+
+---
+
+## Cycle 7 — *Alonso Quijano's Death Certificate*
+
+**Archive category:** Identity Restoration Records — The Name Recovered at the End
+
+**What this angle reveals:** Cycles 1-6 covered Don Quixote's career — the objects, the defeats, the vision, the resignation, the final combat, the author's claim. This cycle closes at the death. Don Quixote falls ill. He recovers his sanity. He renounces his chivalric identity, declares himself Alonso Quijano "the Good," dictates his will (which specifically disinherits his niece if she marries a man who reads romances), and dies. The death certificate names him as Alonso Quijano. The curate who prepared the certificate added a single annotation: that this man was the same person who was known in this province as Don Quixote de la Mancha. The archive wants both names in the same document, and the curate's note that the same person held both.
+
+---
+
+**THE TOKEN: `alonso_quijano_death_certificate`** — Death certificate for Alonso Quijano, issued by the curate of his village: name, date of death, rites received. Curate's annotation below the official text: "This man was also known in this province as Don Quixote de la Mancha. He died as Alonso Quijano. Both names were his." The document that holds both the beginning and the end of the same life.
+
+---
+
+```json
+{
+  "quest_id": "MAD-07",
+  "title": "Alonso Quijano's Death Certificate",
+  "source": "Don Quixote — Miguel de Cervantes (Part II, 1615)",
+  "cycle": 7,
+  "book": "MAD",
+  "source_episode": "Don Quixote recovers his sanity, renounces his chivalric identity, declares himself Alonso Quijano the Good, dictates his will, and dies; the curate's death certificate names both identities",
+  "theme": "The name recovered at the end; the certificate that holds both identities in the same text; the man who was two people and died as one",
+  "activateNode": "MAS",
+  "token": {
+    "id": "alonso_quijano_death_certificate",
+    "name": "Alonso Quijano's Death Certificate",
+    "description": "Official death certificate: name (Alonso Quijano), date, rites. Curate's annotation: 'This man was also known in this province as Don Quixote de la Mancha. He died as Alonso Quijano. Both names were his.'",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["MAS", "LDN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "MAS", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "The curate hands you the certificate at the magistrate's evidence room. He says: I added the note because I thought the record should hold both names. Without the note, only Alonso Quijano dies. With the note, the question of who died is answered correctly. Understand before the road why the archive wants the annotated version and not the clean official text."},
+    {"act": 2, "node": "MAS_to_LDN", "type": "skill_check", "dc": 11, "skill": "Persuasion", "prompt": "Sansón Carrasco, who helped engineer Don Quixote's defeat and retirement, wants the certificate to confirm that the death was peaceful and the sanity recovery real — he has been carrying some guilt. The certificate confirms both. The archive holds the original."},
+    {"act": 3, "node": "LDN", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "An English printer who has acquired rights to an English translation of the novel wants to use the death certificate as a frontispiece for an authenticity argument — that the novel is based on a real man. The certificate is fictional. It travels to the archive as a record of a fictional death in a real novel."},
+    {"act": 4, "node": "LDN_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "Three days to Weimar. The death certificate is in the case. The curate's note is below the official text. The name recovered at the end is in both places. Keep moving."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the official text. He reads the curate's annotation. He notes both names. Identity Restoration Records opens."}
+  ],
+  "archiveCategory": "Identity Restoration Records — The Name Recovered at the End",
+  "questComplete": true,
+  "sweelinckNote": "He was two people and died as one. The certificate names one. The annotation names both. The archive holds the annotation because both names were his and the record should say so."
+}
+```
+
