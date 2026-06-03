@@ -689,8 +689,36 @@ Every quest in §MATH-01 carries a Noether signature: every TOKEN that reaches t
 - MATH-03 (Quintic): conservation of honest failure as a form of proof
 - MATH-04 (Counting): conservation of independent discovery as natural necessity
 - MATH-05 (Moonshine): conservation of coincidences that are not coincidences
+- MATH-06 (Small Numbers): conservation of the correct argument regardless of whether anyone sat through it
 
 **Archive category for the series:** Mathematical Records — Conservation of Structural Truth.
+
+---
+
+#### MATH-06: "There Are Not Enough Small Numbers" (The Strong Law of Small Numbers — Mandatory Lecture)
+*EHZ → WM*
+
+Richard the Enumerator has been stationed at the Event Horizon node since before any current resident can verify. He carries a pamphlet, a portable chalkboard on articulated iron legs, a hand bell, and cold tea. His opening statement to every visitor, within thirty seconds of arrival:
+
+> *"There aren't enough small numbers to meet the demands made of them."* — R.K. Guy, 1988.
+
+He rings the bell. The lecture begins.
+
+**His satisfaction is not in proving the point. It is in having an audience.** He has never successfully gotten anyone to attend voluntarily. He has a 100% completion rate anyway — the chalkboard blocks the exit. When a visitor sits down (voluntarily or otherwise), the satisfaction on his face is the most genuine emotion in the room.
+
+The lecture covers: Guy's Strong Law (small integers carry too many simultaneous mathematical properties; their coincidences are collisions, not patterns); Rabin (2000)'s formal model of belief in the law of small numbers (the urn that doesn't exist; the gambler's fallacy as a structural consequence; over-inference from short sequences; the posterior variance that is always too high after two signals); fictitious variation (observers inventing the good and bad analysts that don't exist because they've seen two performances each); endogenous observation (the person who fires underperformers and keeps overperformers long enough to confirm they're average, and ends up believing average talent is lower than it is).
+
+The lecture concludes: *"No one has sat still long enough to hear this explained — until now."* He does not ring the bell at the end. He hands the pamphlet to the Fighter and tells them about the window he has never mentioned to anyone before.
+
+**TOKEN:** Richard's Lecture Notes — Pamphlet: THE STRONG LAW OF SMALL NUMBERS; stamped DELIVERED. ATTENDANCE WAS NONOPTIONAL.
+
+**Route:** EHZ → WM
+
+**Theme:** The pattern that looks like more than coincidence because the sample is too small to contain enough counter-examples; the man whose life's work is ensuring no one leaves the station without understanding why they are wrong about the pattern they just noticed; the satisfaction of a man who finally has a full audience; the archive that receives the notes as its first entry in a category that should not need to exist but apparently does.
+
+**Archive category:** Compulsory Education Records — Lectures Delivered on the Law of Small Numbers; Arguments Whose Correctness Did Not Depend on Whether the Audience Arrived Voluntarily; first entry: "There aren't enough small numbers to meet the demands made of them. The Fighter attended. The chalkboard thumped."
+
+**See:** `1367-sources/MATH-small-numbers.md`
 
 ---
 
