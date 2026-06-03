@@ -533,3 +533,574 @@ Existing threads do not cover: the explanation withheld not from weakness but as
 *quest-map.md: append new theme thread (before "The tool of reassembly" ALF line).*
 *quest-map.md: append DNG, CHC, ANT, PRH to Location Grid.*
 *books.md: mark ERF [x].*
+
+---
+
+## Cycle 3 — *The Name in the Forest*
+
+**Archive category:** Hidden Identity Records — The Name Spoken Where No One Was Supposed to Hear
+
+**What this angle reveals:** Cycles 1 and 2 took the indirection angle — testimony delivered to the wrong venue and silence maintained at the cost of stone. This angle reveals the collection's third mechanism: the absolute certainty of privacy that is the antagonist's only real weapon. Rumpelstiltskin does not guard the name. He sings it. He dances around his own fire in a forest three miles from any road, certain no one is there. The charcoal-burner is there by accident. He is tending his kiln. He does not go closer. He listens, and then he writes it down at first light because he is a craftsman who keeps notes, and he recognized he had overheard something remarkable.
+
+---
+
+**THE TOKEN: `forest_name_account`** — A single folded page in a charcoal-burner's hand: two syllables, the location of the forest fire, the hour (midnight, confirmed by the moon's position), and the number of circuits he counted (eleven). The charcoal-burner's mark is at the bottom. He kept the page for eight years before bringing it to the ERF collection point.
+
+---
+
+**ACT I — The ERF Collection Point**
+
+*Grant act. Location: the archive intake hall, Erfurt.*
+
+The charcoal-burner is a broad man with soot-stained wrists and the specific discomfort of someone who does not come indoors by choice. He has the paper wrapped in oilcloth and folded again inside that, and he holds it the way a man holds something he has not yet decided to release.
+
+He explains the circumstances in three sentences. Midnight. A far fire, not his. A figure dancing. Eleven circuits. The same two syllables each time. He scratched them in the kiln ash. He copied them at first light.
+
+"I don't know what to do with it," he says. "I've been keeping it eight years."
+
+*The oilcloth package is in his hand. He has not moved to give it to anyone.*
+
+Insight DC 12 — the charcoal-burner is not uncertain about the truth of what he heard. He is uncertain about whether it will be used correctly, and whether he will get the oilcloth back. Pass: Fighter recognizes what he needs — confirmation the account will be treated seriously, not argument about its admissibility — and he hands over both the folded page and the oilcloth without further reservation. Fail: Fighter attempts to explain the legal standing; the charcoal-burner listens, hands over the page, and keeps the oilcloth.
+
+---
+
+**ACT II — The Forest Road North**
+
+*Check act. Location: the forest road between Erfurt and the northern trade route.*
+
+A guild factor from Lübeck — Gerhard, wool authentication — is traveling the same road. He has heard about the ERF collection's incoming records and he has his own copy of the name from a secondary source: a copy of a copy, no witness mark, hearsay filtered through two intermediaries. He is polite. He wants to compare documents.
+
+"I'm not asking to take it. Just to see the hand."
+
+*He is also hoping to identify the charcoal-burner's location mark so he can approach the original source himself.*
+
+Perception DC 12 — Gerhard is not looking at your face. He is watching the oilcloth's fold pattern to determine which side of the page the writing begins on. Pass: Fighter keeps the oilcloth folded and the page interior, gives Gerhard nothing to read from posture or handling; he accepts the refusal and parts ways at the road fork. Fail: Fighter's handling of the package confirms the writing-side orientation; Gerhard makes a note.
+
+---
+
+**ACT III — The Birka Factor Hall**
+
+*Check act. Location: the Birka merchant factor hall.*
+
+Haakon Eiriksson, salt and Baltic amber, has records of two similar transactions — a creature of the same category, Swedish forest provenance, twelve years prior. His documentation confirms the account form: midnight fire, single-name singing, solitary witness by accident. He makes a notation on the back of the charcoal-burner's page in his merchant's hand, signs it with his full factor mark.
+
+The notation changes the account's standing. An independent Northern merchant with comparable documentation has recognized the circumstance. The page now carries a corroborating annotation from a party with no interest in the original case.
+
+Two of Haakon's factor hall competitors want the notation suppressed. They have a competing claim on the creature transaction records from twelve years ago and would prefer Haakon's archive remain non-comparative.
+
+**2× factor hall agents, AC 12, HP 19.** They are here to argue, then to push, then to do whatever happens after that.
+
+Athletics DC 13 — hold the hall entrance while Haakon finishes his notation. The factor mark takes forty seconds to complete correctly.
+
+---
+
+**ACT IV — The Road to Weimar**
+
+*Check act. Location: the trade road, two days from Weimar.*
+
+At a waystation inn, the innkeeper's daughter — she is twelve, curious, and has been listening to every traveler who has come through in the last month — says she heard a name like that once, in the woods behind the mill, a long time ago. She asks to read the account.
+
+She is not dangerous. She is also, if she reads it and repeats the name to anyone on the road behind you, a proliferation vector.
+
+Composure DC 12 — answer her question without showing the page and without lying, which would make the refusal more interesting to her. The question she is actually asking is whether you take her seriously. Pass: Fighter does; she accepts the refusal and tells them about a shorter route through the mill track. Fail: Fighter hedges or deflects; she is not fooled and asks twice more before giving up.
+
+---
+
+**ACT V — Hidden Identity Records**
+
+*Take act. Location: the Weimar Archive.*
+
+Sweelinck holds the page under the lamp for forty seconds. He reads the charcoal-burner's three-sentence account. He reads Haakon's notation on the back.
+
+"The morning copy is always the question," he says. "Whether it is accurate. Whether something changed between the ash and the paper." *He turns it over again.* "The Baltic factor mark argues it is. Two sources with independent provenance saying the same thing eight years apart."
+
+He marks the file: **Hidden Identity Records — The Name Spoken Where No One Was Supposed to Hear**. He opens a new section. The first entry goes in clean.
+
+"The creature was certain it was alone," he says. "That certainty is the entire archive."
+
+*The charcoal-burner will never know this category exists.*
+
+---
+
+```json
+{
+  "quest_id": "ERF-03",
+  "title": "The Name in the Forest",
+  "source": "Grimm's Fairy Tales — Brothers Grimm (1812)",
+  "cycle": 3,
+  "book": "ERF",
+  "source_episode": "Rumpelstiltskin — the charcoal-burner at the midnight fire",
+  "theme": "The absolute certainty of privacy that is the antagonist's only weapon; the accidental witness who kept notes",
+  "activateNode": "ERF",
+  "token": {
+    "id": "forest_name_account",
+    "name": "Charcoal-Burner's Name Account",
+    "description": "A single folded page: two syllables overheard at a midnight forest fire, location mark, hour, eleven counted circuits. Corroborated on reverse by Haakon Eiriksson's Baltic factor notation. Eight years in oilcloth before delivery.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["ERF", "BK", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "ERF", "type": "skill_check", "dc": 12, "skill": "Insight", "prompt": "Recognize what the charcoal-burner needs: not argument about admissibility, but confirmation the account will be taken seriously."},
+    {"act": 2, "node": "ERF_to_BK", "type": "skill_check", "dc": 12, "skill": "Perception", "prompt": "The Lübeck factor is reading the oilcloth's fold pattern, not your face. Do not confirm which side the writing begins on."},
+    {"act": 3, "node": "BK", "type": "combat", "dc": 13, "skill": "Athletics", "enemies": "2x factor hall agents, AC 12, HP 19", "prompt": "Hold the hall entrance while Haakon finishes the forty-second factor mark. The notation changes the account's evidentiary standing."},
+    {"act": 4, "node": "BK_to_WM", "type": "skill_check", "dc": 12, "skill": "Composure", "prompt": "The innkeeper's daughter wants to read the page. Answer her seriously without showing it. She accepts the refusal if she believes you take her seriously."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the morning copy and Haakon's notation. The Baltic factor mark argues accuracy. Hidden Identity Records opens."}
+  ],
+  "archiveCategory": "Hidden Identity Records — The Name Spoken Where No One Was Supposed to Hear",
+  "sweelinckNote": "The creature was certain it was alone. That certainty is the entire archive."
+}
+```
+
+---
+
+## Cycle 4 — *The Third Task*
+
+**Archive category:** Contract Completion Records — The Independent Witness Who Made the Third Task Count
+
+**What this angle reveals:** Cycles 1-3 moved suppressed evidence through institutions. This angle turns the mechanism inside out. The contract exists. The first two tasks are completed and sealed. The third task requires an independent witness to countersign the completion document before the deadline. The lord's agents are not trying to steal the document — they are simply ensuring no qualified independent witness arrives in time. The Fighter is the witness. The token is the signed contract, which must reach the lord's notary before vespers, because the countersignature alone is not sufficient — the document must physically arrive while the office is open.
+
+---
+
+**THE TOKEN: `third_task_completion`** — A debt-release contract on parchment, two tasks sealed, the third completion line bearing Fighter's independent witness mark. The lord's notary's Venice office receipt stamp is dated seven minutes before vespers. Fighter's mark is the contract's completion; the receipt is its proof.
+
+---
+
+**ACT I — The Family's House**
+
+*Grant act. Location: a modest house at Erfurt's eastern edge.*
+
+The family has three members present: an elderly mother, a son of about twenty, and a daughter who has clearly been managing the negotiation since before the Fighter arrived. She has the contract open on the table.
+
+"Two tasks done," she says. "Both documented, both sealed. The third was: get an independent party to witness our completion and sign it. We can't use ourselves — we're interested parties. We can't use anyone the lord knows. We can't use anyone from the guild." *She looks at the Fighter.* "We looked everywhere."
+
+The third task is the neatest trap the lord ever laid. It is nearly impossible to satisfy with anyone who would also be willing to complete the journey in time.
+
+Insight DC 11 — the daughter's phrasing is careful in a way that conceals her real fear: she has already had three potential witnesses withdraw. She does not want the Fighter to know how difficult this has become. Pass: Fighter recognizes the concealment without pressing on it, takes the contract, signs the completion line without conditions. Fail: Fighter asks why the prior witnesses withdrew; she is forced to name the number; the weight of three prior failures is now in the room.
+
+*Fighter takes the contract. The completion line has Fighter's mark. The document is now the token.*
+
+---
+
+**ACT II — The Lord's Road**
+
+*Check act. Location: the main road east from Erfurt.*
+
+The lord's courier passed the family's house this morning. He is three hours ahead, also going to Venice — where the lord's notary holds the contract's receiving office. The courier carries nothing, because the lord is not trying to steal the contract. He is trying to ensure the notary's office is closed to intake before the Fighter arrives.
+
+There is a shorter path through the lower valley: two miles longer but avoids a toll gate that the lord owns, where the keeper has been paid to delay.
+
+Athletics DC 12 — the toll gate keeper is expecting the Fighter. The lower valley path avoids him but requires crossing the river twice at unmarked fords. The river is low this season. Pass: Fighter takes the valley path, makes both fords, and arrives at the Alpine staging inn ahead of the courier's timeline. Fail: Fighter takes the main road; the toll gate keeper finds four reasons to delay; one hour lost.
+
+---
+
+**ACT III — The Venice Notary's Office**
+
+*Check act. Location: a notarial office near the Venetian dockside.*
+
+The lord's advocate arrived an hour ago. He is seated across from the notary with a polished brief: the contract has a technical defect in the third task's completion requirements — the independent witness's mark lacks the city-seal counter-stamp that the lord's original contract required for all completion notations. Fighter's mark is correct. The city-seal counter-stamp requirement appears in an addendum inserted after the contract was signed. The addendum is undated.
+
+The advocate is calm. He has done this before.
+
+Persuasion DC 14 — in Venetian notarial practice, an undated addendum cannot modify a signed contract retroactively. The notary knows this. The advocate knows the notary knows this. The Fighter needs to name it cleanly, because the notary will not name it first — his office is in the lord's commercial district. Pass: Fighter states the undated addendum argument in one sentence; the notary opens the register; the advocate has no counter. Fail: Fighter overargues; the notary defers pending clarification; the advocate signals his agent.
+
+**1× advocate's document agent, AC 13, HP 21.** Positioned between the Fighter and the notary's table. Not aggressive. Present. He moves when the advocate signals.
+
+---
+
+**ACT IV — Venice to Weimar**
+
+*Check act. Location: the Alpine road, third day.*
+
+The vespers deadline was for the Venice office. The receipt stamp is dated seven minutes before the bell. The lord's rider overtakes the Fighter on the mountain road: he is checking whether the receipt is dated before or after vespers. It is before — by seven minutes. He knows this. He is trying to make the Fighter express uncertainty about the margin.
+
+Composure DC 11 — the receipt is dated. Seven minutes is not uncertainty. Stating the fact once, without qualification, is the correct move. Hedging turns seven minutes into a question. Pass: Fighter states the date once, rides on; the lord's rider falls behind. Fail: Fighter adds a qualifier; the lord's rider notes it and dispatches a message ahead.
+
+---
+
+**ACT V — Contract Completion Records**
+
+*Take act. Location: the Weimar Archive.*
+
+Sweelinck lays the contract flat and reads it start to finish. He reads Fighter's mark in the completion line. He reads the notary's Venice receipt stamp.
+
+"The third task is always the trap," he says. "Name a witness no interested party can supply. Wait for the deadline. The family fails by structure, not by merit." He reads the stamp date again. "Seven minutes."
+
+He files it. **Contract Completion Records — The Independent Witness Who Made the Third Task Count.**
+
+He makes one additional notation in the margin of his own records: *the independent witness was the only party who was neither interested nor warned.*
+
+---
+
+```json
+{
+  "quest_id": "ERF-04",
+  "title": "The Third Task",
+  "source": "Grimm's Fairy Tales — Brothers Grimm (1812)",
+  "cycle": 4,
+  "book": "ERF",
+  "source_episode": "The impossible third condition; the debt-release contract designed to fail by structural requirement",
+  "theme": "The contract completion that requires an independent witness; the task designed so that no qualified party can arrive in time",
+  "activateNode": "ERF",
+  "token": {
+    "id": "third_task_completion",
+    "name": "Third Task Completion Contract",
+    "description": "A debt-release contract with two tasks sealed and the third completion line bearing Fighter's independent witness mark. Notary's Venice receipt stamp dated seven minutes before vespers.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["ERF", "VEN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "ERF", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "Three witnesses have already withdrawn. Recognize the concealment without pressing on it; take the contract and sign without conditions."},
+    {"act": 2, "node": "ERF_to_VEN", "type": "skill_check", "dc": 12, "skill": "Athletics", "prompt": "The lord's toll gate is on the main road. The lower valley path avoids it: two miles longer, two unmarked fords, low river season."},
+    {"act": 3, "node": "VEN", "type": "combat", "dc": 14, "skill": "Persuasion", "enemies": "1x advocate's document agent, AC 13, HP 21", "prompt": "The undated addendum cannot modify a signed contract retroactively. Name it in one sentence. The notary knows but will not name it first."},
+    {"act": 4, "node": "VEN_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "The lord's rider wants the Fighter to hedge about the seven-minute margin. The receipt is dated. State the fact once without qualification."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the receipt stamp: seven minutes. The third task is always the trap. Contract Completion Records opens."}
+  ],
+  "archiveCategory": "Contract Completion Records — The Independent Witness Who Made the Third Task Count",
+  "sweelinckNote": "The independent witness was the only party who was neither interested nor warned."
+}
+```
+
+---
+
+## Cycle 5 — *Godfather's Ledger*
+
+**Archive category:** Compact Compliance Records — The Physician Who Documented Every Decision
+
+**What this angle reveals:** Cycles 1-4 moved suppressed evidence through institutions. This angle asks a different question: what happens when the documentation is complete, meticulous, and entirely on the physician's side — and the guild complaint is still proceeding because the families of the patients he declined to treat cannot read the covenant terms? The physician is dying. The ledger is at the bedside. The guild has filed a complaint saying he let people die. The ledger proves he was contractually obligated to let them die, and documents every single compliance decision with full notation. The archive category is about the physician who turned covenant adherence into bureaucratic record — including the two times he violated it.
+
+---
+
+**THE TOKEN: `godfathers_ledger`** — A physician's ledger, forty years of practice, bound in worn calfskin. Every patient entry: name, date, prognosis (at feet / at head), action taken (treated / declined), and outcome noted six weeks later. Two violation entries in red ink, marginal note in the physician's hand: *I knew the terms. I could not comply.* The guild's complaint is wrong in every respect this ledger addresses.
+
+---
+
+**ACT I — The Physician's House**
+
+*Grant act. Location: a physician's house in Erfurt's old city district.*
+
+The physician is in bed. He is not afraid of dying — his godfather arranged that question long ago — but he is very concerned about the guild complaint, which he has read three times and which is based on a fundamental misreading of the documentary record.
+
+"They say I let people die," he says. "They're correct that people died. They have not read the ledger." *He gestures at the table beside the bed.* "Every decision is in there. Every patient I declined to treat was one whose prognosis I read correctly. Every case I took was one I could save. The guild has not requested the ledger. They are proceeding on the complaint without it."
+
+He cannot carry it himself. He is too ill to appear. He does not have the energy to explain it twice.
+
+Insight DC 11 — the physician's concern is not primarily about his own outcome. He will die either way. His concern is that the ledger not be misread by a second party who receives it without context. He needs the Fighter to understand the ledger's logic before carrying it. Pass: Fighter asks one question that demonstrates understanding of the compliance structure; the physician hands over the ledger with visible relief. Fail: Fighter takes the ledger without that acknowledgment; the physician adds a covering note that tries to summarize the logic in two sentences.
+
+---
+
+**ACT II — The Eastern Road**
+
+*Check act. Location: the road through the Hungarian plain.*
+
+The guild's hearing notary is also traveling to Constantinople, where the complaint will be formally filed in the physicians' guild's eastern chapter. He overtakes the Fighter on the second day. He has a subpoena for the ledger as a guild record — which it technically is — but a subpoena from the eastern chapter allows the guild to seal the document pending review, which means the physician's defense cannot use it at the hearing.
+
+He is polite, correct, and entirely serious about the subpoena.
+
+Persuasion DC 13 — the subpoena covers guild records. The ledger is a personal medical record maintained under covenant terms that are not guild instruments. The physician's compact predates the guild and operates outside guild jurisdiction. The distinction is technical, correct, and the notary knows it — he was hoping the Fighter would not. Pass: Fighter names the jurisdictional distinction; the notary acknowledges it and withdraws. Fail: Fighter cannot hold the argument precisely enough; the notary accepts the partial argument but drafts a second subpoena for when they arrive at Constantinople.
+
+---
+
+**ACT III — The Constantinople Medical Guild Archive**
+
+*Check act. Location: the physicians' guild archive in Constantinople.*
+
+The eastern chapter's archive holds comparable covenant documentation — three other physicians entered similar compacts with comparable entities. The archivist can authenticate the ledger's compact category, which would make the guild's complaint jurisdictionally incoherent. She is willing to help. She is not willing to antagonize the chapter's senior officer, who has made clear that the complaint should proceed.
+
+The senior officer's deputy is in the archive. He is recording every document the archivist touches. He is not here to obstruct; he is here to witness.
+
+Athletics DC 12 — the authentication process takes twelve minutes. The deputy is watching. The task is to create conditions where the archivist can complete the twelve minutes without the deputy being able to claim she was under duress.
+
+**2× guild archive sentries, AC 13, HP 20.** The senior officer sent them an hour after the deputy arrived. They become relevant if the Fighter creates conditions the deputy interprets as pressure.
+
+---
+
+**ACT IV — The Return Road**
+
+*Check act. Location: a waystation on the road west from Constantinople.*
+
+The authenticated ledger is now admissible. The guild notary who attempted the subpoena is behind the Fighter but on a fresh horse. He has a second instrument: an emergency preservation order requiring the ledger to be sealed at the nearest guild chapter office for safekeeping pending the hearing. It is technically a request, not an order, but the waystation master is a guild associate and will honor it.
+
+Insight DC 12 — the preservation order requires the waystation master to receive the document as a "guild associate acting in good faith." That phrase is the mechanism. A guild associate acting outside his district of association does not have the authority to receive a sealed document on the guild's behalf. The waystation master does not know this. The notary is hoping neither does the Fighter. Pass: Fighter names the district-of-association limitation; the waystation master declines the request. Fail: Fighter does not identify the mechanism; the waystation master begins the receipt process; the ledger is delayed two days pending the nearest in-district associate.
+
+---
+
+**ACT V — Compact Compliance Records**
+
+*Take act. Location: the Weimar Archive.*
+
+Sweelinck opens the ledger to the first page and reads forward for approximately three minutes. He does not speak. He reads the two red-ink violation entries. He reads the marginal note: *I knew the terms. I could not comply.*
+
+"The complaint says he let people die," he says finally. "The ledger says he followed the terms in every case except two, and in those two cases he knew exactly what he was doing and recorded the violation himself at the time it occurred." *He closes the ledger.* "The guild has no case. They have a complaint from families who don't know what compact their physician was under."
+
+He files it. **Compact Compliance Records — The Physician Who Documented Every Decision.**
+
+"He was meticulous," he says. "Even about the violations."
+
+---
+
+```json
+{
+  "quest_id": "ERF-05",
+  "title": "Godfather's Ledger",
+  "source": "Grimm's Fairy Tales — Brothers Grimm (1812)",
+  "cycle": 5,
+  "book": "ERF",
+  "source_episode": "Godfather Death — the physician who documented his covenant compliance for forty years",
+  "theme": "The complete and meticulous record that the guild has not asked to see; the complaint proceeding without the exonerating document",
+  "activateNode": "ERF",
+  "token": {
+    "id": "godfathers_ledger",
+    "name": "The Physician's Ledger",
+    "description": "Forty years of practice in worn calfskin. Every patient: prognosis, action, outcome. Two red-ink violation entries with marginal note: 'I knew the terms. I could not comply.' The guild's complaint is wrong in every respect this ledger addresses.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["ERF", "CON", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "ERF", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "Ask one question that demonstrates understanding of the compliance structure. The physician needs to know the ledger will be received with context, not just carried."},
+    {"act": 2, "node": "ERF_to_CON", "type": "skill_check", "dc": 13, "skill": "Persuasion", "prompt": "The guild subpoena covers guild records. The ledger is a covenant record predating guild jurisdiction. Name the jurisdictional distinction precisely."},
+    {"act": 3, "node": "CON", "type": "combat", "dc": 12, "skill": "Athletics", "enemies": "2x guild archive sentries, AC 13, HP 20", "prompt": "The archivist needs twelve minutes for authentication. Create conditions where she can complete it without the deputy claiming she acted under duress."},
+    {"act": 4, "node": "CON_to_WM", "type": "skill_check", "dc": 12, "skill": "Insight", "prompt": "The preservation order requires a guild associate in his district of association. The waystation master is outside his district. Name the mechanism before he begins the receipt process."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads three minutes forward, finds the violation entries, reads the marginal note. The guild has no case. Compact Compliance Records opens."}
+  ],
+  "archiveCategory": "Compact Compliance Records — The Physician Who Documented Every Decision",
+  "sweelinckNote": "He was meticulous. Even about the violations."
+}
+```
+
+---
+
+## Cycle 6 — *The Bones' Song*
+
+**Archive category:** Environmental Testimony Records — What the Arrangement of the Bones Said
+
+**What this angle reveals:** Cycles 1-5 have dealt in human testimony and documentary record. This angle is the collection's stranger documentary: the environmental record. A priest found bones under a juniper tree. He was not looking for evidence — he was checking the field drainage after a wet autumn. He documented the arrangement because that is what a careful man does when he finds something that should not be there, and because the arrangement of the bones told a clear story to someone who knew how to read burial posture, impact angles, and the difference between bones scattered by animals and bones in their last position. The victim's surviving brother claims natural death. The bone arrangement says otherwise. The priest is dead; his successor found the account while sorting old records and brought it to the collection point.
+
+---
+
+**THE TOKEN: `priest_bone_account`** — A priest's written account, three pages, with a marginal diagram of the bone arrangement. Seventeen years old. Filed at the local parish as a drainage survey anomaly, never forwarded to any authority. Fra Bartolomeo's Lateran authentication seal now on the cover. The impact angle in the diagram shows a man struck from behind.
+
+---
+
+**ACT I — The ERF Collection Point**
+
+*Grant act. Location: the archive intake hall, Erfurt.*
+
+The successor priest is young and somewhat nervous about having brought the account at all. He has read it. He understands what it implies. He has also received a visit from the victim's surviving brother — now an old man with a prosperous household — asking whether the parish records from seventeen years ago had been recently disturbed.
+
+"He was very polite," the young priest says. "He offered a donation. I told him the records were intact." *A pause.* "The account was already wrapped and outside the building by then."
+
+Persuasion DC 11 — the young priest needs one acknowledgment: that bringing the account was the correct decision and that it will be received seriously. He does not need lengthy reassurance. Pass: Fighter states it once, clearly; the priest hands over the leather folder without conditions. Fail: Fighter attempts to elaborate on the legal standing; the priest appreciates the effort but asks for a written receipt before releasing the account.
+
+*The marginal diagram is precise — the kind of drawing a methodical man makes slowly, with attention to angle.*
+
+---
+
+**ACT II — The Road South to Rome**
+
+*Check act. Location: the road through the Alpine passes.*
+
+The victim's brother has a church administrative instrument: an emergency petition filed in the diocesan records office claiming the parish account was removed without proper authorization, and requesting a hold on any document from that parish pending review. The petition is technically coherent. At a Roman checkpoint, it could require Fighter to surrender the account for diocesan review.
+
+The Alpine checkpoints are staffed by diocesan road wardens three days a week. Today is one of those days.
+
+Athletics DC 13 — the road warden at the pass is checking documents against the diocesan hold list. The east pass avoids that checkpoint but adds four hours and loses the weather window before the second summit. Pass: Fighter takes the east pass; arrives at the staging inn before dark; weather holds. Fail: Fighter takes the main pass; the warden finds the account on the hold list; a two-day delay begins.
+
+---
+
+**ACT III — The Papal Documentary Office, Rome**
+
+*Check act. Location: a small office near the Lateran archive complex.*
+
+Fra Bartolomeo — documentary review officer, environmental testimony specialist — has authenticated three prior bone accounts in twelve years. He knows what he is looking at. He also knows the victim's brother: not a friend, but a trade guild colleague. He is discomfited.
+
+The brother has already sent a letter. Fra Bartolomeo has read it. He has not replied. He is holding the pen when the Fighter arrives.
+
+Insight DC 13 — Fra Bartolomeo is not corrupt. He is uncomfortable. The distinction matters: a corrupt official needs to be worked around; an uncomfortable one needs to be given the mechanism to do the correct thing. The mechanism: he does not have to address the brother's letter. He only has to authenticate the account, which is a technical act he is fully qualified to perform, with no judgment required about the brother. Pass: Fighter names the mechanism exactly; Fra Bartolomeo sets down the letter, opens the authentication register, and begins. Fail: Fighter approaches it as persuasion; Fra Bartolomeo agrees in principle but finds three procedural steps to complete before beginning.
+
+**1× diocesan record clerk, AC 11, HP 14.** The brother's letter asked the clerk to delay the Fighter's appointment by any reasonable means. The clerk is trying to do this without understanding why.
+
+---
+
+**ACT IV — Rome to Weimar**
+
+*Check act. Location: a waystation on the northern road.*
+
+Fra Bartolomeo's authentication seal is on the account. The victim's brother has one remaining instrument: a civil challenge to Fra Bartolomeo's authentication authority, filed in a regional magistrate's court two days ahead of the Fighter on the same road. The challenge, if served, requires a response within forty-eight hours or the authentication is suspended pending review.
+
+The server is waiting at the city gate ahead.
+
+Composure DC 12 — the server is here to serve the challenge notice, not to take the document. Accepting service requires acknowledgment. The Fighter does not have to accept service — they can use the external road around the city, resume the main route at the northern junction, and arrive at Weimar before the forty-eight hours would expire regardless. The external road adds six hours and crosses three unmarked fords. Rain has been falling for two days. Pass: Fighter takes the external road without hesitation; the service is never completed; the forty-eight-hour clock never starts. Fail: Fighter pauses at the gate to assess; the server reads the first line of the challenge aloud; acknowledgment is contested.
+
+---
+
+**ACT V — Environmental Testimony Records**
+
+*Take act. Location: the Weimar Archive.*
+
+Sweelinck opens the account to the marginal diagram. He looks at it for a long time.
+
+"The impact angle," he says, not looking up. "A man who wandered away doesn't fall at that angle. A man who was struck from behind does." *He traces the diagram with one finger.* "Seventeen years in a parish folder. The priest filed it correctly and never forwarded it because no one asked. No one asked because the brother said it was natural death and everyone accepted it."
+
+He files it. **Environmental Testimony Records — What the Arrangement of the Bones Said.**
+
+"The priest didn't know he was filing testimony," he says. "He thought he was documenting a drainage survey anomaly. That's why it survived."
+
+---
+
+```json
+{
+  "quest_id": "ERF-06",
+  "title": "The Bones' Song",
+  "source": "Grimm's Fairy Tales — Brothers Grimm (1812)",
+  "cycle": 6,
+  "book": "ERF",
+  "source_episode": "The Singing Bone — the bone arrangement the priest documented as a drainage anomaly",
+  "theme": "The testimony the witness did not know he was recording; environmental evidence seventeen years after the fact",
+  "activateNode": "ERF",
+  "token": {
+    "id": "priest_bone_account",
+    "name": "The Priest's Bone Account",
+    "description": "Three pages with a marginal diagram: bone arrangement, impact angle, position notation. Seventeen years old. Filed as a parish drainage anomaly. Fra Bartolomeo's Lateran authentication seal on the cover. The impact angle shows a man struck from behind.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["ERF", "RME", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "ERF", "type": "skill_check", "dc": 11, "skill": "Persuasion", "prompt": "The young priest needs one acknowledgment that bringing the account was correct. One time, stated clearly, before he releases the folder."},
+    {"act": 2, "node": "ERF_to_RME", "type": "skill_check", "dc": 13, "skill": "Athletics", "prompt": "The diocesan hold applies at the Alpine checkpoint. The east pass avoids it: four hours longer, weather window at risk."},
+    {"act": 3, "node": "RME", "type": "combat", "dc": 13, "skill": "Insight", "enemies": "1x diocesan record clerk, AC 11, HP 14", "prompt": "Fra Bartolomeo is uncomfortable, not corrupt. Give him the mechanism: authentication is a technical act requiring no judgment about the brother's letter."},
+    {"act": 4, "node": "RME_to_WM", "type": "skill_check", "dc": 12, "skill": "Composure", "prompt": "The server requires acknowledgment to complete service. The external road avoids the city gate entirely. Six hours, three unmarked fords, two days of rain."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck traces the impact angle. Seventeen years as a drainage anomaly. The priest didn't know he was filing testimony. Environmental Testimony Records opens."}
+  ],
+  "archiveCategory": "Environmental Testimony Records — What the Arrangement of the Bones Said",
+  "sweelinckNote": "The priest didn't know he was filing testimony. That's why it survived."
+}
+```
+
+---
+
+## Cycle 7 — *All-Kinds-of-Fur*
+
+**Archive category:** Recovered Identity Records — The Document That Survived the Purge
+
+**What this angle reveals:** Six cycles have moved evidence through suppression, deadline, jurisdiction, and institutional friction. This final angle is the plainest. A woman who had to disappear took one precaution before she fled: she signed a contract naming herself — her real name, her lineage, her household of origin — and slipped it into a bowl of soup served at the lord's table. He found it. He didn't know what it was. He filed it in his household records as unclaimed correspondence, and there it has sat for two years, waiting for the quarterly purge to destroy it with everything else. The woman needs her name back. The document is the name. The purge is in three days. The Fighter has to walk into a records office, find one filed document in two years of unclaimed papers, and carry it out before the purge date.
+
+This is the archive's simplest quest. The document was not suppressed — it was misfiled and forgotten. The purge is not malicious; it is administrative. The woman simply needs a person to go and get it before the clerk burns it with everything else.
+
+---
+
+**THE TOKEN: `all_kinds_fur_contract`** — A small folded formal declaration: the woman's real name, her father's name, her household seal, and one line — *I have not broken my word. I have only changed my location.* Signed in her hand. Found in a soup bowl two years ago. Filed under unclaimed household correspondence, autumn quarter, third shelf, folder eleven. Purge date: three days from today.
+
+---
+
+**ACT I — The Lord's Steward**
+
+*Grant act. Location: the lord's estate near Erfurt.*
+
+The lord's steward has a receipt for the filed document — he logged it when it arrived via the kitchen records two years ago. The receipt is the only proof the document exists and where it was filed. He gives it to the Fighter without much ceremony: the lord has authorized retrieval, and the steward is glad to have one fewer unclaimed item in the quarterly purge review.
+
+"It was in the soup," he says, with the tone of a man who has stopped finding this remarkable. "She put it in the soup. He found it when the bowl was cleared. He said it must be a contract of some kind. I filed it."
+
+Insight DC 11 — the steward knows more than he has said. He knows who the woman is — the household has quietly known for six months. The filing was not ignorance; it was patience. He is handing over the receipt because the time has finally arrived for the document to do what it was put in the soup to do. Pass: Fighter recognizes the patience in the steward's manner and asks no further questions; the steward adds one additional note about the reorganized shelving system. Fail: Fighter asks about the soup; the steward answers but provides no additional information.
+
+*The receipt lists the filing location: London records office, unclaimed household correspondence, autumn quarter, third shelf, folder eleven.*
+
+---
+
+**ACT II — The Road to London**
+
+*Check act. Location: the road through the Channel crossing.*
+
+The purge is in three days. The crossing takes one. The records office closes at vespers. The window is functional but not comfortable.
+
+At the Channel port, a clerk from the household records office is also crossing — he is delivering the quarterly purge authorization to the London office and will arrive this evening. His authorization document, once delivered, starts an early-purge clock: the office can begin the purge twenty-four hours earlier if the authorization arrives before the scheduled date.
+
+Athletics DC 12 — the clerk is on a faster boat, same departure. The Fighter has to arrive at the London records office before the early-purge authorization is logged in. Pass: Fighter takes the earliest crossing, smaller boat, shorter route; arrives at the records office two hours before the clerk's authorization is filed. Fail: The authorization is logged before the Fighter arrives; the stacks are one day closer to purge.
+
+---
+
+**ACT III — The London Records Office**
+
+*Check act. Location: the household records office, London.*
+
+The early-purge authorization is on the clerk's desk, not yet filed. The records office has two floors of shelf records. The receipt says: third shelf, folder eleven, autumn quarter. But the office reorganized its shelves three months ago under a new clerk, new organization system. The old system and the new system overlap on the autumn quarter. Third shelf in the old system is fifth shelf in the new. Folder eleven corresponds only in the first fifty records; after that, the numbering shifts.
+
+The filing receipt has an identifier code used in the old system. That code appears on exactly one folder in the entire reorganized office.
+
+Perception DC 13 — the code is small, written in the old clerk's hand on the folder's spine tab. It is on what is now the fifth shelf of the new system. The old-system code is the key; the shelf numbers are useless. Pass: Fighter finds the code on the fifth shelf; the folder is intact; the document is inside. Fail: Fighter searches by shelf number; finds three candidate folders; opens one wrong folder before identifying the correct one by the code.
+
+**2× purge authorization sentries, AC 12, HP 17.** The early-purge authorization's delivery means the clerk has called for sentries to begin the pre-purge stack lock. They are not hostile; they are closing the stacks. They will close them with the Fighter inside if the Fighter does not move.
+
+---
+
+**ACT IV — London to Weimar**
+
+*Check act. Location: the road east from London.*
+
+The document is retrieved. The purge cannot claim it. But the records office clerk has filed a complaint — the Fighter removed a document from the pre-purge stacks without following the twenty-four-hour review window. The complaint is technically correct. It is also being used by someone in the household who did not want the document to reach Weimar.
+
+A messenger with the complaint notice overtakes the Fighter at the Dover road junction. The complaint, if acknowledged, requires the Fighter to return the document to the London office for review — which puts it back inside the purge window.
+
+Composure DC 12 — the complaint requires a response within seventy-two hours. The Fighter has the original receipt, which predates the early-purge authorization. A document retrieved before the early-purge authorization was logged is not subject to the pre-purge review window. Stating this once, clearly, without acknowledging the complaint's validity, closes the mechanism. Pass: Fighter states the pre-authorization retrieval date once; the messenger notes it and withdraws. Fail: Fighter engages with the complaint's framing; the messenger treats this as partial acknowledgment and files it as contested.
+
+---
+
+**ACT V — Recovered Identity Records**
+
+*Take act. Location: the Weimar Archive.*
+
+Sweelinck unfolds the document. He reads the woman's name. He reads her father's name. He reads the household seal notation. He reads the last line: *I have not broken my word. I have only changed my location.*
+
+"She put it in the soup," he says. He is not asking. "She needed him to find it without receiving it from her hand, because anything she handed him directly he could refuse. But a document found in his own household — that he had to file."
+
+He opens the final category in the Grimm collection's archive. **Recovered Identity Records — The Document That Survived the Purge.**
+
+"Her name is back," he says. "That's what this is. The record that gives the name back."
+
+*He closes the archive. The Grimm series is complete.*
+
+---
+
+```json
+{
+  "quest_id": "ERF-07",
+  "title": "All-Kinds-of-Fur",
+  "source": "Grimm's Fairy Tales — Brothers Grimm (1812)",
+  "cycle": 7,
+  "book": "ERF",
+  "source_episode": "Allerleirauh — the identity contract hidden in the soup, filed as unclaimed correspondence",
+  "theme": "The document not suppressed but misfiled and forgotten; the quarterly purge as administrative threat to identity recovery",
+  "activateNode": "ERF",
+  "token": {
+    "id": "all_kinds_fur_contract",
+    "name": "All-Kinds-of-Fur Identity Contract",
+    "description": "A small folded formal declaration: the woman's real name, her father's name, her household seal, and one line — 'I have not broken my word. I have only changed my location.' Found in a soup bowl. Filed as unclaimed household correspondence. Purge date was three days after retrieval.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["ERF", "LDN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "ERF", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "Recognize that the steward's patience was intentional. The filing was not ignorance. Ask no further questions about the soup."},
+    {"act": 2, "node": "ERF_to_LDN", "type": "skill_check", "dc": 12, "skill": "Athletics", "prompt": "The purge clerk is on a faster boat with an early-purge authorization. Arrive at the London records office before the authorization is logged in."},
+    {"act": 3, "node": "LDN", "type": "combat", "dc": 13, "skill": "Perception", "enemies": "2x purge authorization sentries, AC 12, HP 17", "prompt": "The old filing code appears on exactly one folder in the reorganized office. Find it on the fifth shelf before the sentries lock the stacks."},
+    {"act": 4, "node": "LDN_to_WM", "type": "skill_check", "dc": 12, "skill": "Composure", "prompt": "The complaint requires acknowledgment to be valid. A document retrieved before the early-purge authorization was logged is not subject to the review window. State it once without engaging the framing."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads her name. She put it in the soup so he had to file it. Recovered Identity Records opens. The Grimm series is complete."}
+  ],
+  "archiveCategory": "Recovered Identity Records — The Document That Survived the Purge",
+  "sweelinckNote": "Her name is back. That's what this is. The record that gives the name back.",
+  "questComplete": true
+}
+```
