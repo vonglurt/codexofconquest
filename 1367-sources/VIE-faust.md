@@ -617,3 +617,560 @@ You give it. She writes it. You leave. Outside, in the civic quarter, the magist
 *quest-map.md: append CLK to Location Grid.*
 
 *books.md: mark VIE [x].*
+
+---
+
+## Cycle 3 — *The Scholar's Confession*
+
+**Archive category:** Academic Corruption Records — The Testimony That Was Fabricated for Pay
+
+**What this angle reveals:** Cycles 1 and 2 were about individuals — a condemned woman's right to be heard and a dying clerk's obligation to correct what he had done. This angle reveals the institutional layer beneath both: the guild that commissions the fabrication, pays for the testimony, and profits from the conviction. The dying professor is the instrument; the guild is the patron. He kept a second document — not the confession addressed to the chancellor, but the original commission receipt showing exactly what sum was paid and by which guild officer. The commission receipt is the evidence that makes the confession actionable rather than merely posthumous.
+
+---
+
+**THE TOKEN: `scholars_confession_VIE`** — A sealed confession in the professor's hand, notarized, naming the guild members who commissioned false testimony and the sum paid. Attached to the outer wrapper: the original commission receipt, folded and sealed with a different wax. The commission receipt was the document the professor kept for twenty years as protection. He no longer needs protection.
+
+---
+
+**ACT I — The Professor's Study**
+
+*Grant act. Location: a university study in the old city district.*
+
+The professor is not in bed — he is at his desk, which suggests he is either not as dying as reported or has chosen to receive this commission sitting up. The confession is already sealed and wrapped. The commission receipt is in a separate wallet beside the inkwell.
+
+"I kept the receipt because I thought someday I might need it as leverage," he says. "I was wrong about that too." *He pushes both documents across the desk.* "The confession is the one addressed to the chancellor. The receipt is the one that matters. The confession names what I did. The receipt proves who ordered it."
+
+Insight DC 11 — the professor's calm is genuine, not theatrical. He has been living with this for twenty years and has arrived at a place on the other side of guilt that looks, from the outside, like serenity. He is not asking for anything. Pass: Fighter recognizes the completion in his manner — he needs no reassurance — and takes both documents without the unnecessary acknowledgment that would interrupt his composure. Fail: Fighter offers a word of absolution; the professor receives it politely and closes his eyes for a moment; it costs thirty seconds.
+
+---
+
+**ACT II — The University District Gate**
+
+*Check act. Location: the gate between the university district and the civic streets.*
+
+The guild officers knew about the commission receipt before the professor did. They knew he would eventually find a use for it. A law clerk in the guild's hire is stationed at the university district gate with a jurisdictional writ: all documents originating from university premises are subject to academic senate review before civic distribution. The writ is real. Its application here is deliberately misconstrued.
+
+Persuasion DC 12 — the jurisdictional writ covers academic disputes. A personal confession and a commercial receipt do not originate from the university as an institution; they originate from a private individual who happens to work there. The clerk knows this. The misapplication is the point. Pass: Fighter names the distinction cleanly; the clerk has no counter; he logs the exit as "personal correspondence" and waves them through. Fail: Fighter accepts the partial review argument; the clerk opens the outer wrapper's description log; the commission receipt's existence is now on record and will be reported.
+
+---
+
+**ACT III — The Birka Factor Hall**
+
+*Check act. Location: the Birka merchant factor hall.*
+
+The guild that commissioned the testimony has northern trade connections — their senior officer's seal appears on three Baltic bond-documents in the Birka factor hall's records from the past decade. A factor here, Solvei Halvorsdóttir, has been quietly tracking this guild's activity for seven years after a separate incident involving a forged provenance document. She can authenticate the guild officer's handwriting on the commission receipt by comparison to the bond documents she holds.
+
+The authentication will take twenty minutes. The guild knows she has the comparative documents. Two of their northern agents arrived in Birka three days ago.
+
+**2× northern guild agents, AC 12, HP 18.** They are not here to kill anyone. They are here to prevent the twenty-minute authentication from completing.
+
+Athletics DC 13 — hold the factor hall corridor while Solvei works. She needs to compare three documents against the receipt. Interrupting her at any point in the twenty minutes restarts the comparison.
+
+---
+
+**ACT IV — The Road to Weimar**
+
+*Check act. Location: the trade road, Birka south.*
+
+Solvei's authentication note is attached to the commission receipt's wrapper. The professor's confession now has evidentiary backing that makes it a legal instrument rather than a dying man's statement. The guild's legal officer is on the same road, three hours ahead, carrying a pre-emptive filing: a civil claim against the professor's estate for "misappropriation of guild administrative records" — specifically the commission receipt, which the guild is retroactively classifying as guild property.
+
+The claim, if served before the confession reaches Weimar, could put a hold on the receipt as a disputed asset.
+
+Composure DC 12 — the service of the civil claim requires acknowledgment. The Fighter does not have to accept service. The road south has a fork at the waystation: the main road, where the guild's server is waiting, and the forest track, which is slower by two hours but bypasses the waystation entirely. Pass: Fighter takes the forest track without hesitation; the civil claim is never served; it arrives at Weimar's intake desk six hours after the confession. Fail: Fighter considers the main road; the server identifies the Fighter at the waystation and reads the first clause of the claim; acknowledgment is contested but potentially partial.
+
+---
+
+**ACT V — Academic Corruption Records**
+
+*Take act. Location: the Weimar Archive.*
+
+Sweelinck lays out the confession, the commission receipt, and Solvei's authentication note in a row. He reads each document separately, in order.
+
+"The confession names what he did," he says. "The receipt proves who ordered it and what they paid. The authentication confirms the guild officer's hand." *He looks at the row.* "The confession alone is a dying man's statement. The receipt makes it a transaction record."
+
+He opens a new archive section. **Academic Corruption Records — The Testimony That Was Fabricated for Pay.**
+
+"The guild paid for a conviction," he says. "Someone kept the receipt. Those two facts together are the document."
+
+---
+
+```json
+{
+  "quest_id": "VIE-03",
+  "title": "The Scholar's Confession",
+  "source": "Faust — Johann Wolfgang von Goethe (1808)",
+  "cycle": 3,
+  "book": "VIE",
+  "source_episode": "The perjured testimony; the institutional machinery behind individual corruption",
+  "theme": "The confession names what he did; the commission receipt proves who ordered it; together they are a transaction record, not a dying man's statement",
+  "activateNode": "VIE",
+  "token": {
+    "id": "scholars_confession_VIE",
+    "name": "The Scholar's Confession with Commission Receipt",
+    "description": "A sealed confession naming the guild members who commissioned false testimony, with the original commission receipt attached — guild officer's seal, sum paid, date. Authenticated against Baltic bond records by Solvei Halvorsdóttir, Birka.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["VIE", "BK", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "VIE", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "The professor's calm is completion, not performance. Take both documents without the absolution he is not asking for."},
+    {"act": 2, "node": "VIE_to_BK", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "The jurisdictional writ covers academic disputes, not personal correspondence. Name the distinction. The clerk knows it."},
+    {"act": 3, "node": "BK", "type": "combat", "dc": 13, "skill": "Athletics", "enemies": "2x northern guild agents, AC 12, HP 18", "prompt": "Hold the corridor for twenty minutes while Solvei completes the three-document comparison. Any interruption restarts it."},
+    {"act": 4, "node": "BK_to_WM", "type": "skill_check", "dc": 12, "skill": "Composure", "prompt": "The civil claim requires acknowledgment to be served. The forest track bypasses the waystation where the server is waiting. Two hours slower."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads all three documents in order. The confession alone is a dying man's statement. The receipt makes it a transaction record. Academic Corruption Records opens."}
+  ],
+  "archiveCategory": "Academic Corruption Records — The Testimony That Was Fabricated for Pay",
+  "sweelinckNote": "The guild paid for a conviction. Someone kept the receipt. Those two facts together are the document."
+}
+```
+
+---
+
+## Cycle 4 — *The Cancelled Bond*
+
+**Archive category:** Duress Voidance Records — The Escape Clause Invoked Before Midnight
+
+**What this angle reveals:** Cycles 1-3 moved evidence of past wrongs through present institutions. This angle is about a wrong still in process. A family's seven-year labor indenture is active right now. The mine lord drafted it under duress — wage theft, then a false debt, then a contract signed when the father had no other option. An escape clause buried in the fine print requires the original contract to be presented to the city court within thirty days of signing to invoke duress-voidance. Thirty days expire at midnight tonight. A reforming notary obtained the original this morning by purchasing the mine lord's document copy from a corrupt clerk who knew the mine lord was about to burn it. The notary cannot go himself. The Fighter has eight hours.
+
+---
+
+**THE TOKEN: `cancelled_bond_VIE`** — The original labor indenture on vellum, bearing the family's marks and the mine lord's seal. The duress-voidance clause is in the third paragraph of the fine print, in smaller type. The notary has circled it in red chalk. The contract must be presented at the city court intake desk before midnight.
+
+---
+
+**ACT I — The Notary's Office**
+
+*Grant act. Location: a reforming notary's office near the civic quarter.*
+
+The notary is at his desk with the contract open to the third paragraph. He has been awake since before dawn. He has red chalk on his fingers.
+
+"The escape clause is in the third paragraph," he says, tapping it. "The mine lord knew it was there when he drafted the contract — he put it there to satisfy the city's standard indenture requirements and then relied on the family never finding it. They found it. They brought it to me."
+
+He cannot go himself: the mine lord has filed a restraining order against the notary's practice, and the city court will not receive documents from a restrained practitioner. The Fighter is carrying the document in a personal capacity.
+
+Persuasion DC 11 — the family is present: the mother, the two older children who have already served two years under the contract. The youngest child is not yet old enough to be covered. The notary needs the Fighter to understand the family, not just the document, before accepting the commission. Pass: Fighter acknowledges all three family members directly; the notary hands over the contract with visible relief. Fail: Fighter focuses on the notary; the mother explains the situation herself in four sentences; the commission is accepted.
+
+---
+
+**ACT II — The Market Road**
+
+*Check act. Location: the main road between the notary's district and the civic gate.*
+
+The mine lord's agent has been watching the notary's office since morning. He knows the contract was there; he does not know it left. He is on the market road now, looking at faces.
+
+The mine lord's contract copy — the one the clerk sold to the notary — is missing from the mine lord's records room. The mine lord has filed a theft report. The constable accompanying the agent has a description of the document and authority to inspect packages carried through the market district.
+
+Athletics DC 12 — the inspection point is at the market's east end, a hundred yards from the civic gate. The route through the chandler's alley bypasses the inspection but adds twenty minutes in the tight-packed storage district. Pass: Fighter takes the chandler's alley; arrives at the civic gate without interception. Fail: The constable stops the Fighter at the inspection point; the document description is general enough that Fighter can argue the vellum contract is not the described item; the argument costs thirty minutes.
+
+---
+
+**ACT III — The Venice Notary's Office**
+
+*Check act. Location: a Venetian notarial office holding cross-jurisdiction contracts.*
+
+The mine lord's indenture was drafted under an old guild framework that no longer operates in the German cities but remains valid in Venetian commercial law. The city court will accept it for duress-voidance purposes only if a Venetian notary confirms the clause's enforceability under its originating framework. The reforming notary knew this; he sent a letter to his Venice counterpart three days ago requesting a pre-confirmation. The Venice notary has the confirmation ready.
+
+The mine lord's Venice factor arrived this morning to suppress the confirmation. He is in the Venetian office now.
+
+Persuasion DC 13 — the Venice notary's standing pre-confirmation is a completed notarial act. The mine lord's factor cannot void it retroactively. The factor's argument is that the pre-confirmation was issued before the mine lord's theft report, which changes the document's custodial status. The Venice notary knows this argument is wrong; he needs the Fighter to say it out loud so he can agree with it on record. Pass: Fighter states the theft-report-timing argument's invalidity; the Venice notary agrees on record; the confirmation stands. Fail: Fighter argues but is not precise enough; the Venice notary issues a conditional confirmation that the mine lord's factor will challenge.
+
+**1× mine lord's Venice factor, AC 13, HP 22.** Not violent unless the notary stamps the confirmation. If he does, the factor stops the restraint.
+
+---
+
+**ACT IV — Venice to Weimar**
+
+*Check act. Location: the Alpine road, midnight approach.*
+
+The Venice notary's confirmation is sealed and attached. The city court's intake closes at midnight — this is the contract's presentation deadline. The road from Venice to the court is clear. The mine lord's agent has one more instrument: a document forfeit order, signed by a cooperative sub-magistrate, classifying the contract as evidence in the theft case and requiring its surrender to the magistrate's custodian.
+
+A city constable with the forfeit order is at the road's entry into the court district.
+
+Composure DC 12 — the forfeit order applies to stolen goods. The contract was not stolen; it was purchased from the mine lord's clerk in a documented transaction. The purchase receipt is in the notary's files. The Fighter does not have it. But the forfeit order requires the constable to establish theft provenance — a purchased document is not stolen goods under imperial statute. Stating this once, firmly, without acknowledging the order's potential validity, is sufficient. Pass: Fighter names the purchase-vs-theft distinction; the constable's authority lapses; the court district gate opens. Fail: Fighter acknowledges the order; the constable notes the partial acknowledgment; the fighter must argue further at the intake desk.
+
+---
+
+**ACT V — Duress Voidance Records**
+
+*Take act. Location: the Weimar Archive.*
+
+Sweelinck examines the contract, the Venetian confirmation, and the red chalk circle on the third paragraph.
+
+"The escape clause was there when the mine lord drafted it," he says. "He relied on the family never finding it." *He reads the clause.* "Thirty days. Invoked by presentation of the original. Presentation at — " *he checks the city court's intake stamp on the wrapper* " — eleven forty-two."
+
+He files it. **Duress Voidance Records — The Escape Clause Invoked Before Midnight.**
+
+"The mine lord put it there to satisfy the standard requirements," he says. "He did not anticipate that someone would actually read the third paragraph."
+
+---
+
+```json
+{
+  "quest_id": "VIE-04",
+  "title": "The Cancelled Bond",
+  "source": "Faust — Johann Wolfgang von Goethe (1808)",
+  "cycle": 4,
+  "book": "VIE",
+  "source_episode": "The labor-debt contract; the structural trap designed to never be escaped",
+  "theme": "The escape clause buried in the fine print; the thirty-day window expiring at midnight; the document that voids the indenture if presented in time",
+  "activateNode": "VIE",
+  "token": {
+    "id": "cancelled_bond_VIE",
+    "name": "The Labor Indenture Contract",
+    "description": "The original vellum indenture with the duress-voidance clause in the third paragraph, circled in red chalk. Venice notary's confirmation attached. City court intake stamp: eleven forty-two. Family's marks and mine lord's seal.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["VIE", "VEN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "VIE", "type": "skill_check", "dc": 11, "skill": "Persuasion", "prompt": "The family is present. Acknowledge all three members before taking the contract. The notary needs to know the commission is accepted with full understanding."},
+    {"act": 2, "node": "VIE_to_VEN", "type": "skill_check", "dc": 12, "skill": "Athletics", "prompt": "The inspection point is watching for vellum contracts. The chandler's alley bypasses it: twenty minutes longer, tight storage district."},
+    {"act": 3, "node": "VEN", "type": "combat", "dc": 13, "skill": "Persuasion", "enemies": "1x mine lord's Venice factor, AC 13, HP 22", "prompt": "The pre-confirmation is a completed notarial act. The theft report postdates it. Say it out loud so the Venice notary can agree on record."},
+    {"act": 4, "node": "VEN_to_WM", "type": "skill_check", "dc": 12, "skill": "Composure", "prompt": "The forfeit order requires theft provenance. The contract was purchased, not stolen. State the distinction without acknowledging the order's potential validity."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the escape clause and the intake stamp: eleven forty-two. The mine lord put it there to satisfy requirements. He didn't anticipate someone reading the third paragraph. Duress Voidance Records opens."}
+  ],
+  "archiveCategory": "Duress Voidance Records — The Escape Clause Invoked Before Midnight",
+  "sweelinckNote": "He put it there to satisfy the standard requirements. He did not anticipate that someone would actually read the third paragraph."
+}
+```
+
+---
+
+## Cycle 5 — *The Voiding Order*
+
+**Archive category:** Legislative Delivery Records — The Ordinance That Required Delivery Before the Bell
+
+**What this angle reveals:** Cycles 1-4 moved individual documents — a deposition, a recantation, a confession, a contract. This angle reveals what happens when the document is not about one person but about a class of people: a new civic ordinance voids all life-debt contracts signed under the old guild rules. Every indentured laborer in the city is freed by this ordinance the moment it is formally delivered to the guild master. The guild legal officers are delaying official delivery until after the annual renewal ceremony at tonight's bell — after which all contracts auto-renew for another year and the ordinance's effective date becomes irrelevant until next renewal. The city clerk who holds the sealed ordinance cannot deliver it himself: the guild has filed a conflict-of-interest challenge against him. He needs a neutral carrier.
+
+---
+
+**THE TOKEN: `voiding_order_VIE`** — The sealed civic ordinance from the city council, bearing the mayor's seal and the full council quorum mark. It voids all life-debt contracts signed under guild rules prior to the new charter. The delivery must be formally logged at the guild master's office before the renewal bell.
+
+---
+
+**ACT I — The City Clerk's Office**
+
+*Grant act. Location: a city administrative office near the civic hall.*
+
+The city clerk is a thin man with the manner of someone who has been managing one specific injustice for three weeks and has run out of legal mechanisms. The ordinance is on his desk, already sealed.
+
+"The conflict-of-interest challenge is procedurally correct," he says. "The guild filed it correctly. I cannot contest it. I cannot deliver the ordinance myself. I need a neutral party — someone with no prior connection to the guild, no pending business with the city, no interest in the outcome." *He looks at the Fighter.* "I need someone who will walk through that door and hand it across the desk and get a receipt."
+
+The renewal bell rings at vespers. It is mid-afternoon.
+
+Insight DC 11 — the clerk's "neutral party" requirement is not a procedural fiction — it is legally necessary. The Fighter's status as neutral carrier is the instrument that makes the delivery valid. Pass: Fighter understands that the commission is not about sympathy or advocacy; it is about being exactly what the clerk said: someone who walks through the door and hands the ordinance across the desk. Fail: Fighter asks about the guild's objections; the clerk explains for five minutes; the time spent does not change what the Fighter needs to do.
+
+---
+
+**ACT II — The Guild Quarter Road**
+
+*Check act. Location: the streets between the civic hall and the guild quarter.*
+
+The guild legal officers have six instruments to delay delivery. They are deploying them in sequence: first, a procedural hold on any council document pending a formatting challenge; second, a city ordinance requiring a two-day notification period for guild-addressed civic documents; third, a private security guard at the guild quarter entrance claiming a private property right to inspect incoming correspondence.
+
+Only the third instrument is actually present at this moment, at the gate to the guild quarter. The first two are in reserve if the Fighter gets through.
+
+Persuasion DC 12 — the private security guard has no authority to inspect correspondence addressed to a guild officer. The inspection right applies to deliveries of goods, not sealed administrative documents. The guard knows this. He was told to cite it anyway. Pass: Fighter names the goods-vs-documents distinction; the guard steps aside. Fail: Fighter allows a partial inspection; the guard logs the ordinance's description in his book; this information reaches the guild master's office ahead of the Fighter by two minutes.
+
+---
+
+**ACT III — The Constantinople Trade Court**
+
+*Check act. Location: the Constantinople trade court's local representative office.*
+
+The guild master is not in his main office. He has temporarily relocated his official operations to the Constantinople trade court's local representative office — a technically extra-territorial space where guild-addressed civic documents require a diplomatic note before delivery. This is not a legal instrument; it is a location chosen specifically because it requires one additional step.
+
+The diplomat on duty is a young man who is clearly uncomfortable with the situation. He knows the extra-territorial argument is weak. He is under pressure to honor it anyway.
+
+Insight DC 13 — the young diplomat is not corrupt; he is caught between two authorities and looking for a graceful exit. The graceful exit is: the ordinance bears the city's mayor's seal, which constitutes diplomatic recognition of the receiving party's civic status, which supersedes the extra-territorial claim. The diplomat wants to hear this argument specifically because it allows him to yield without appearing to have been pressured. Pass: Fighter names the mayor's seal as diplomatic recognition and the argument's specific structure; the diplomat accepts it with visible relief; he stamps the delivery log. Fail: Fighter argues the extra-territorial weakness directly; the diplomat digs in; a formal diplomatic note exchange is required.
+
+**2× guild liaison officers, AC 12, HP 19.** Positioned at the office's inner door. They will prevent the delivery log stamp from being issued if the diplomat appears to be yielding under physical pressure.
+
+---
+
+**ACT IV — Constantinople to Weimar**
+
+*Check act. Location: the return road, vespers approaching.*
+
+The delivery is logged. The ordinance is formally received. The renewal bell has not yet rung. The guild master's legal officer is running to the city magistrate with an emergency injunction claiming the delivery was procedurally invalid due to the incomplete diplomatic note process.
+
+The injunction will take forty minutes to process at the magistrate's office. The Weimar archive closes its intake at the same bell as the renewal ceremony. The Fighter needs to file the delivery receipt at Weimar before the bell.
+
+Athletics DC 12 — the archive's intake closes at the same bell as renewal. The direct road is longer. The canal freight path arrives fifteen minutes faster. Pass: Fighter takes the canal freight path; arrives at the archive intake with twelve minutes before the bell. Fail: Fighter takes the direct road; arrives with four minutes; the intake clerk is already preparing to close the intake window.
+
+---
+
+**ACT V — Legislative Delivery Records**
+
+*Take act. Location: the Weimar Archive.*
+
+Sweelinck examines the ordinance, the delivery log stamp, and the renewal bell's time.
+
+"The renewal was at vespers," he says. "The delivery was logged before vespers. The injunction was filed after the delivery." *He sets the documents in order.* "The ordinance is valid. The contracts are void. The injunction is an argument about a delivery that has already occurred."
+
+He opens a new section. **Legislative Delivery Records — The Ordinance That Required Delivery Before the Bell.**
+
+"Every case of this type is a race between the document and the renewal clock," he says. "The document arrived first. That is what makes it a record."
+
+---
+
+```json
+{
+  "quest_id": "VIE-05",
+  "title": "The Voiding Order",
+  "source": "Faust — Johann Wolfgang von Goethe (1808)",
+  "cycle": 5,
+  "book": "VIE",
+  "source_episode": "The life-debt contract; the institutional mechanism that auto-renews what the law has freed",
+  "theme": "The ordinance that voids a class of contracts; delivery before the renewal bell as the single condition on which every affected person's freedom turns",
+  "activateNode": "VIE",
+  "token": {
+    "id": "voiding_order_VIE",
+    "name": "The Civic Voiding Ordinance",
+    "description": "Sealed civic ordinance bearing the mayor's seal and the full council quorum mark, voiding all life-debt contracts under the old guild rules. Delivery receipt stamped at the Constantinople trade court's representative office before vespers.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["VIE", "CON", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "VIE", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "The neutral carrier is not a fiction — it is the legal instrument. Understand: the commission is to walk through the door and hand it across the desk. Nothing more than that is required."},
+    {"act": 2, "node": "VIE_to_CON", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "The private security guard has no authority to inspect sealed administrative correspondence. The inspection right covers goods, not documents. Name the distinction."},
+    {"act": 3, "node": "CON", "type": "combat", "dc": 13, "skill": "Insight", "enemies": "2x guild liaison officers, AC 12, HP 19", "prompt": "The young diplomat wants a graceful exit. The mayor's seal constitutes diplomatic recognition superseding the extra-territorial claim. Name the specific structure so he can yield without appearing pressured."},
+    {"act": 4, "node": "CON_to_WM", "type": "skill_check", "dc": 12, "skill": "Athletics", "prompt": "The archive intake closes at the renewal bell. The canal freight path is fifteen minutes faster than the direct road."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the delivery log stamp and the renewal bell's time. Delivery before renewal. Injunction after delivery. The document arrived first. Legislative Delivery Records opens."}
+  ],
+  "archiveCategory": "Legislative Delivery Records — The Ordinance That Required Delivery Before the Bell",
+  "sweelinckNote": "The document arrived first. That is what makes it a record."
+}
+```
+
+---
+
+## Cycle 6 — *The Wager's Record*
+
+**Archive category:** Private Compact Records — The Agreement That the Guild Denied Making
+
+**What this angle reveals:** The previous five cycles moved documents between individual actors and institutional records. This angle is about the compact between institutions — the private agreement between the guild and the magistrate that allowed harbor pollution to continue in exchange for the magistrate's silence about price-fixing. The compact was witnessed, signed, and sealed. The guild is denying it exists. The magistrate is discredited and cannot testify credibly. The harbor is fouled; illness in the fishing district; the city council is meeting right now to assign blame. The magistrate's secretary kept a personal copy. She hires the Fighter to carry it from her house to the city council's session before the vote is taken.
+
+---
+
+**THE TOKEN: `wager_record_VIE`** — The sealed private compact between the guild's senior officer and the city magistrate: guild agrees to cease harbor dumping; magistrate agrees to silence on price-fixing investigation. Both parties' seals. Two witness signatures. The magistrate's secretary's retention copy, kept against this day.
+
+---
+
+**ACT I — The Secretary's House**
+
+*Grant act. Location: a private residence in the civic quarter.*
+
+The magistrate's secretary is a woman of about fifty who has held that position for twenty-three years. She kept the copy because she transcribed it and knew what it was. She has been waiting for a moment when presenting it would accomplish something rather than simply ending her career.
+
+"The council meets in an hour," she says. "They are going to vote to censure the magistrate alone. He deserves censure — he agreed to the compact, he took the guild's silence on price-fixing in exchange for the harbor poisoning. But if the council only censures him, the guild walks out of that chamber having paid nothing." *She places the sealed copy on the table.* "The compact is their side of the transaction. It needs to be in the record."
+
+Insight DC 12 — the secretary has thought about the ethics of this for two years. She is not seeking revenge; she is seeking accuracy. The magistrate's culpability and the guild's culpability are both true, and only a partial account is a false one. Pass: Fighter understands the precision of her framing — the document is not advocacy, it is correction — and takes it with that understanding. Fail: Fighter assumes she is acting from loyalty to the discredited magistrate; the misreading colors the commission with a personal dimension it doesn't have.
+
+---
+
+**ACT II — The Civic Hall Road**
+
+*Check act. Location: the road between the residential quarter and the civic hall.*
+
+The guild master knows the secretary has the copy. He has known for a year. He has been waiting to see whether she would use it. She has. He has had two men watching her door. They are on the road between her house and the civic hall, not with weapons but with a civil document: a writ of personal restraint filed against the secretary for "unauthorized retention of guild contract documents."
+
+The writ is addressed to her, not to the Fighter. If she were present, it would stop her. She is not present. The Fighter is.
+
+Perception DC 12 — the men are watching the wrong person. The writ applies to the secretary's right to carry the document, not the Fighter's, because the retention charge applies to her custody, not to a neutral carrier. The Fighter is carrying it at her instruction, not in custody. Pass: Fighter recognizes the targeting error and walks past without acknowledging the writ's relevance; the men look at each other for seven seconds before deciding whether to escalate; the Fighter is through the gate by then. Fail: Fighter pauses; one of the men reads the writ aloud; a partial engagement gives them the escalation hook they were waiting for.
+
+---
+
+**ACT III — The Rome Ecclesiastical Records Office**
+
+*Check act. Location: a church administrative office near the civic hall.*
+
+The guild's private compact contains a witnessing clause: the witnesses signed under their guild member identification marks, which are registered with the local ecclesiastical records office as commercial identity documents. The city council requires third-party authentication of sealed compacts before entering them into council record. The Rome ecclesiastical records office's local representative holds the comparison documents.
+
+The guild's legal officer got there first. He is arguing that the witness marks were signed under the guild's own internal convention, not the ecclesiastical registration standard, and therefore the office cannot authenticate.
+
+Persuasion DC 14 — the ecclesiastical registration standard requires witness marks to be distinguishable from forgery. If the guild's internal convention uses the same marks as the ecclesiastical registration — which it does, because the guild members are registered individuals — then the registration standard applies by equivalence, regardless of the convention under which they were applied. The local officer knows this argument; the guild's officer knows it too. The Fighter needs to state it before the guild officer can introduce a procedural delay. Pass: Fighter names the equivalence argument before the guild officer's delay tactic completes; the local officer authenticates; the compact enters the council's receiving queue. Fail: Fighter's argument is one sentence too slow; a twenty-minute procedural hold is imposed.
+
+**1× guild legal officer, AC 12, HP 18.** Not violent. Procedurally aggressive. Will become violent if the authentication is completed against his objection.
+
+---
+
+**ACT IV — To the Council Session**
+
+*Check act. Location: the final approach to the civic hall.*
+
+The authentication is complete. The council vote is in twenty minutes. The guild master is in the hall. He has just made a prepared statement attributing the harbor fouling entirely to "inadequate oversight by the civil magistracy" and asking the council to vote on that basis. The vote is proceeding.
+
+An usher at the hall's side door tells the Fighter that new evidentiary documents can be entered into the session record before the vote's final call but after the vote motion has been proposed. The Fighter has twelve minutes.
+
+Athletics DC 11 — the side door is at the far end of the civic hall's exterior corridor; the council session entrance, where the clerk receives new evidence, is at the near end. The compact and the authentication need to reach the clerk before the vote's final call. The corridor is crowded with guild associates watching the door. Pass: Fighter moves through the corridor at the pace of someone who belongs there; the clerk receives the packet with six minutes before the final call. Fail: Fighter is slowed by two guild associates who recognize the packet's outer seal and attempt a procedural interception at the clerk's table.
+
+---
+
+**ACT V — Private Compact Records**
+
+*Take act. Location: the Weimar Archive.*
+
+Sweelinck reads the compact's text, the two parties' seals, the witness marks, and the authentication note.
+
+"Guild agrees to cease harbor dumping," he reads. "Magistrate agrees to silence on the price-fixing investigation." *He sets it down.* "Both parties signed it. Two witnesses. Both culpable. The council's vote, whatever it was, was taken with this in the record."
+
+He opens a new section. **Private Compact Records — The Agreement That the Guild Denied Making.**
+
+"The guild denied it," he says. "The magistrate denied it. The secretary kept the copy. That is the entire story in four sentences."
+
+---
+
+```json
+{
+  "quest_id": "VIE-06",
+  "title": "The Wager's Record",
+  "source": "Faust — Johann Wolfgang von Goethe (1808)",
+  "cycle": 6,
+  "book": "VIE",
+  "source_episode": "The private wager between powers; the compact that trades one harm for another's silence",
+  "theme": "The private agreement between institutions; the guild that denies the compact's existence while the harbor stays fouled",
+  "activateNode": "VIE",
+  "token": {
+    "id": "wager_record_VIE",
+    "name": "The Guild-Magistrate Private Compact",
+    "description": "Sealed private agreement between the guild's senior officer and the city magistrate: harbor dumping for price-fixing silence. Both seals, two witnesses, ecclesiastical authentication attached. The secretary kept the retention copy.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["VIE", "RME", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "VIE", "type": "skill_check", "dc": 12, "skill": "Insight", "prompt": "The secretary is not acting from loyalty to the discredited magistrate. The document is correction, not advocacy. Both parties are guilty; a partial account is false."},
+    {"act": 2, "node": "VIE_to_RME", "type": "skill_check", "dc": 12, "skill": "Perception", "prompt": "The writ applies to the secretary's custody, not the Fighter's. Recognize the targeting error and walk through without acknowledging the writ's relevance."},
+    {"act": 3, "node": "RME", "type": "combat", "dc": 14, "skill": "Persuasion", "enemies": "1x guild legal officer, AC 12, HP 18", "prompt": "Guild members' internal marks are their registered ecclesiastical marks. Equivalence applies. Name it before the guild officer's procedural delay completes."},
+    {"act": 4, "node": "RME_to_WM", "type": "skill_check", "dc": 11, "skill": "Athletics", "prompt": "New evidence enters the session record before the vote's final call. The clerk is at the near end of the corridor. Twelve minutes."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads both seals and the compact's terms. Both culpable. The vote was taken with this in the record. Private Compact Records opens."}
+  ],
+  "archiveCategory": "Private Compact Records — The Agreement That the Guild Denied Making",
+  "sweelinckNote": "The guild denied it. The magistrate denied it. The secretary kept the copy. That is the entire story in four sentences."
+}
+```
+
+---
+
+## Cycle 7 — *The Undelivered Release*
+
+**Archive category:** Testamentary Release Records — The Will Clause the Heir Did Not Want Found
+
+**What this angle reveals:** Six cycles have moved documents through institutional resistance. This final angle is the quietest. A usurer converted to a religious order two years before his death — genuine conversion, not financial maneuvering. His will contains a clause releasing all life-debt contracts held at death. He wanted his estate clean. His heir has buried the will in the estate archive and is collecting the debts anyway — thirty-seven families still bound by contracts the dead man released. The notary who drafted the will made two copies. The heir has suppressed the will's copy. The notary's copy is in his office. He cannot bring it to the city court himself: his practice is across the city from the court, and the heir has been watching his office. He needs the document to move without the heir knowing it has moved.
+
+This is the simplest delivery in the series. The document is not dangerous. The road is not blocked. The only difficulty is that the city court closes its probate intake at the fourth bell, and it is already the second bell, and the notary's office is a twenty-minute walk from the intake counter.
+
+---
+
+**THE TOKEN: `undelivered_release_VIE`** — A certified copy of the usurer's will, specifically the third clause: release of all life-debt contracts held at the time of death, effective from the date of the testator's death. The notary's certification mark and the deceased's testator seal. The date is two years ago. The heir has been collecting debts that ceased to be valid on that date.
+
+---
+
+**ACT I — The Notary's Office**
+
+*Grant act. Location: a notary's office near the university district.*
+
+The notary is elderly and moves slowly and has been drafting the same civic letter of complaint for two months without sending it. He has the will copy in the second drawer of his left cabinet. He has been waiting for someone to come and take it so he does not have to make a decision about going himself.
+
+"I drafted the will," he says. "He was clear about the release clause. He told me specifically: when I die, those families are free. He asked me to make certain the clause was binding and complete. I made it binding and complete." *He places the certified copy on the desk.* "It has been two years. He is dead. Those families have been paying debts they no longer owe."
+
+There is nothing adversarial in the notary's manner. He is sad. He is relieved that the Fighter has come.
+
+Insight DC 11 — the notary's sadness is real and appropriate and does not need to be addressed. He is not asking for consolation. He is asking for someone to carry the document so the thing the usurer wanted to happen can happen. Pass: Fighter takes the document without comment and without making the commission into something larger than it is. Fail: Fighter acknowledges the two-year delay; the notary explains why he didn't go himself; four minutes of explanation that changes nothing.
+
+---
+
+**ACT II — The University Quarter Road**
+
+*Check act. Location: the road between the notary's district and the civic hall.*
+
+The heir's watcher — a single man, a young clerk — is at the notary's front gate. He did not see the Fighter enter, but he sees them leave with a sealed document. He is not dangerous. He has a fast horse at the stable on the corner. He will reach the heir's solicitor before the Fighter reaches the probate intake counter, and the solicitor will file a challenge before the document is presented.
+
+Athletics DC 12 — the civic hall's probate intake is twenty minutes at walking pace, eight minutes at pace. The heir's watcher on a fast horse can reach the solicitor in six minutes. The Fighter needs to arrive at the intake counter before the challenge is filed. Pass: Fighter moves at pace through the civic district; the certified copy is in the intake clerk's hands when the solicitor arrives three minutes later with a challenge that applies to a document no longer in transit. Fail: The solicitor's challenge arrives at the intake counter simultaneously with the Fighter; a temporary hold is imposed while the intake clerk reads both documents.
+
+---
+
+**ACT III — London Probate Chancery**
+
+*Check act. Location: the London probate chancery's continental representative office.*
+
+The heir's solicitor has filed a cross-jurisdictional challenge: the will's life-debt release clause uses phrasing from an English commercial framework that is enforceable only through London probate procedure. The life-debt contracts were issued under this framework. The London chancery's continental representative must counter-certify the release clause before the city court's probate intake can act on it.
+
+The representative is available. He has the comparative documents. The heir's solicitor is present.
+
+Persuasion DC 13 — the solicitor's cross-jurisdictional argument is technically correct about the contract framework but incorrect about the will. The will's release clause uses the standard form for debt-release under German imperial probate law, not the English framework. The English framework applies to the contracts; the German probate law applies to the will's release of those contracts. The representative knows this; the solicitor knows it. The Fighter needs to name the distinction before the solicitor can introduce a second procedural layer. Pass: Fighter states the contracts/will distinction in one sentence; the representative counter-certifies immediately. Fail: Fighter argues the substance but not the procedural structure; a second procedural hold is imposed.
+
+**1× heir's solicitor, AC 12, HP 17.** Becomes a physical obstruction if the counter-certification is completed without his objection being formally logged.
+
+---
+
+**ACT IV — London to Weimar**
+
+*Check act. Location: the road, final leg.*
+
+The counter-certification is complete. The will's release clause is enforceable. The city court's probate intake has the document. Thirty-seven families are no longer bound.
+
+The heir has filed one final instrument: a civil suit against the Fighter personally for "unauthorized transport of estate documents." The suit requires a response within ten days. It is not a hold on the document, which has already been filed. It is a nuisance action.
+
+Composure DC 11 — a civil suit requiring a response in ten days is not an urgent matter and does not require acknowledgment today. The Fighter can choose to walk past the serving clerk without receiving the notice, or to receive it and note the response deadline, or to refuse service by leaving the serving area. All three options are valid. The correct move is the one that does not treat the nuisance action as a serious instrument. Pass: Fighter receives the notice without slowing down, notes the ten-day window, and moves on; the action is logged but not acknowledged as significant. Fail: Fighter treats the notice as a potential obstacle and stops to read it at the server's request; the heir's solicitor notes the pause.
+
+---
+
+**ACT V — Testamentary Release Records**
+
+*Take act. Location: the Weimar Archive.*
+
+Sweelinck opens the certified copy to the third clause. He reads it. He reads it again.
+
+"Two years ago," he says. "He signed this two years ago. He is dead two years. Those families have been paying debts that ceased on the day he died." *He closes the document.* "He wanted his estate clean. He asked the notary to make the clause binding and complete. The notary made it binding and complete. The heir buried it."
+
+He opens the final Faust cycle archive category. **Testamentary Release Records — The Will Clause the Heir Did Not Want Found.**
+
+"The usurer converted and tried to release the debts through the proper form," he says. "The proper form is now in the record. The heir has a civil suit and no debts to collect."
+
+*He closes the archive. The Faust series is complete.*
+
+---
+
+```json
+{
+  "quest_id": "VIE-07",
+  "title": "The Undelivered Release",
+  "source": "Faust — Johann Wolfgang von Goethe (1808)",
+  "cycle": 7,
+  "book": "VIE",
+  "source_episode": "The release that arrives after death; the conversion that tried to undo what the living man did",
+  "theme": "The will clause the heir buried; thirty-seven families paying debts that ceased on the day the usurer died",
+  "activateNode": "VIE",
+  "token": {
+    "id": "undelivered_release_VIE",
+    "name": "The Will's Release Clause",
+    "description": "Certified notary's copy of the usurer's will, third clause: release of all life-debt contracts at death. Notary's mark and testator's seal. London chancery counter-certification attached. The date is two years ago.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["VIE", "LDN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "VIE", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "The notary is sad and relieved. He is not asking for consolation. Take the document without comment and without making the commission larger than it is."},
+    {"act": 2, "node": "VIE_to_LDN", "type": "skill_check", "dc": 12, "skill": "Athletics", "prompt": "The watcher on a fast horse reaches the solicitor in six minutes. The Fighter needs to reach the intake counter before the challenge is filed. Eight minutes at pace."},
+    {"act": 3, "node": "LDN", "type": "combat", "dc": 13, "skill": "Persuasion", "enemies": "1x heir's solicitor, AC 12, HP 17", "prompt": "The English framework applies to the contracts; German probate law applies to the will's release. Name the contracts/will distinction before the second procedural layer is introduced."},
+    {"act": 4, "node": "LDN_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "The civil nuisance suit requires a response in ten days. Receiving the notice without treating it as significant is the correct move. Do not slow down."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the third clause and the date: two years ago. He wanted his estate clean. The notary made it binding. The heir buried it. Testamentary Release Records opens. Faust series complete."}
+  ],
+  "archiveCategory": "Testamentary Release Records — The Will Clause the Heir Did Not Want Found",
+  "sweelinckNote": "The usurer converted and tried to release the debts through the proper form. The proper form is now in the record. The heir has a civil suit and no debts to collect.",
+  "questComplete": true
+}
+```

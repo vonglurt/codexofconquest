@@ -306,7 +306,7 @@ All files under 60 KB in 1367-sources/. Each to receive full pipeline: read → 
 | FLR | Divine Comedy: Inferno — Dante Alighieri | 50 | **SEEDS COMPLETE 2026-06-03 — FLR-01–07 all vignettes done. No new nodes needed. See FLR-divine-comedy-inferno.md.** |
 | HFT | Frithiof's Saga — Esaias Tegnér | 51 | **SEEDS COMPLETE 2026-06-03 — HFT-01–07 all vignettes done. No new nodes needed. See HFT-frithiof-saga.md.** |
 | ERF | Grimm's Fairy Tales — Brothers Grimm | 52 | **SEEDS COMPLETE 2026-06-03 — ERF-01–07 all vignettes done. No new nodes needed. See ERF-grimm-fairy-tales.md.** |
-| VIE | Faust — Johann Wolfgang von Goethe | 52 | QUEUED |
+| VIE | Faust — Johann Wolfgang von Goethe | 52 | **SEEDS COMPLETE 2026-06-03 — VIE-01–07 all vignettes done. No new nodes needed. See VIE-faust.md.** |
 | ALF | Kalevala — Elias Lönnrot | 52 | QUEUED |
 | KSU | Heimskringla — Snorri Sturluson | 53 | QUEUED |
 | RKV | Poetic Edda — Anon | 53 | QUEUED |
