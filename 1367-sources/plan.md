@@ -744,7 +744,7 @@ Every quest in §MATH-01 carries a Noether signature: every TOKEN that reaches t
 | # | Code | Title | Status |
 |---|------|-------|--------|
 | 61 | BLQ | Decameron | **SEEDS COMPLETE 2026-06-03 — BLQ-01–12 all vignettes done. 12 cycles. Theme threads added.** |
-| 62 | HAV | Buccaneers of America | QUEUED |
+| 62 | HAV | Buccaneers of America | **SEEDS COMPLETE 2026-06-03 — HAV-01–07 done. UQF cycles written. No new nodes.** |
 | 63 | AMS | Tale of Genji | QUEUED |
 | 64 | HTY | Mahabharata | QUEUED |
 | 65 | CLJ | Dracula | QUEUED |

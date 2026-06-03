@@ -1303,3 +1303,272 @@ He opens the classification ledger. "Testimony Records — Firsthand Accounts Wi
 ```
 
 *HAV-06 complete. 2026-06-02.*
+
+---
+
+## UQF Cycles 1–7
+
+### Cycle 1 — *The Articles*
+
+**Archive category:** Corsair Company Records — The Articles That Made the Outlaw Accountable
+
+```json
+{
+  "quest_id": "HAV-01",
+  "title": "The Articles",
+  "source": "Buccaneers of America — Alexandre Exquemelin (Williams transl.)",
+  "cycle": 1,
+  "book": "HAV",
+  "source_episode": "Before every voyage, the corsair company signed articles specifying shares, wound compensation, surgeon's fee, and rules of division; the same document that governed an outlaw society with more rigor than most official agreements was also the single instrument distinguishing corsairs from pirates",
+  "theme": "The outlaw society that governs itself with more precise rules than the courts that prosecute it; the distinction between corsair and pirate is a single document's presence or absence",
+  "activateNode": "CHI",
+  "token": {
+    "id": "corsair_articles_parchment",
+    "name": "Corsair Company Articles",
+    "description": "Notarized parchment — corsair company articles of association. Fifteen signatures on the back; Chios notary seal in red wax. Wound compensation table on the front face: right arm 600 pieces of eight, left arm 500, right leg 500, left leg 400, eye 100, finger 100. Smells of salt air and old leather.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["CHI", "RHD"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "CHI", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "Georgios Palaiologos, the Chios notary who witnessed the articles, is reluctant to release the original — his professional liability as authenticating notary is exposed if anything happens in transit. Persuade him that the certified copy in his register provides all the protection he needs."},
+    {"act": 2, "node": "CHI_to_RHD", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "Venetian factor Marco Loredan is in the same sea lane — he is the representative of the Venetian merchant who filed the complaint. He asks in a friendly manner what business brings someone from Chios in such obvious haste. He is watchful. Get through without revealing the errand."},
+    {"act": 3, "node": "RHD", "type": "skill_check", "dc": 12, "skill": "History", "prompt": "Harbor master Fra Thibault de Montauban must log arriving documents. If logged as commercial correspondence: no flag. If logged as piracy-related materials: Venetian consul notified immediately. Argue the correct classification before he writes it down."},
+    {"act": 4, "node": "RHD", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "Venetian agent Pietro Soranzo is waiting at the commandery gate with instructions to delay. He positions himself between the carrier and the gate and says he only wants to verify the document. His hand is on the document case."},
+    {"act": 5, "node": "RHD", "type": "delivery", "prompt": "Fra Denis at the session secretary's desk logs the articles as an original certified submission. The Prior reads the wound compensation table. He says: these men have considered every loss in advance. Most merchants have not. Corsair Company Records opens."}
+  ],
+  "archiveCategory": "Corsair Company Records — The Articles That Made the Outlaw Accountable",
+  "sweelinckNote": "The articles are more carefully drafted than most official agreements. The distinction between corsair and pirate is whether this document exists. The archive files it under the corsair company, not under the court that questioned it."
+}
+```
+
+---
+
+### Cycle 2 — *The Admiral's Letter*
+
+**Archive category:** Mutual Recognition Records — Correspondence Between Parties Who Deny Each Other's Right to Exist
+
+```json
+{
+  "quest_id": "HAV-02",
+  "title": "The Admiral's Letter",
+  "source": "Buccaneers of America — Alexandre Exquemelin (Williams transl.)",
+  "cycle": 2,
+  "book": "HAV",
+  "source_episode": "Morgan and the Spanish admiral Don Alonso del Campo y Espinosa exchanged formal letters — ultimatum and counter-ultimatum — conducted in full diplomatic language while both parties were in a state of armed readiness; by replying to a corsair as if to a military peer, the admiral made the corsair a party capable of receiving diplomatic correspondence",
+  "theme": "The formal exchange of demands between two parties who recognize each other's authority even while denying each other's right to exist; the letter of ultimatum is also a form of recognition",
+  "activateNode": "FAM",
+  "token": {
+    "id": "exchange_case_letters",
+    "name": "The Exchange Case",
+    "description": "Genoese-notary-certified leather document case sealed with grey wax ring-seal. Inside: corsair demand letter (Catalan/Italian trade formal, Ramon de Cortés's name and vessel mark) and Rhodian merchant counter-offer (Greek/Italian formal, blue merchant house seal). Both open 'In the name of God and of good faith.' Both address the other by title.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["FAM", "RHD", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "FAM", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "Matteo Fiorello, the Genoese notary who certified both letters, is willing to release the case but cautious — an unidentified man came to his door an hour ago asking whether the carrier had collected it yet. Establish credibility without revealing knowledge of the letter contents."},
+    {"act": 2, "node": "FAM_to_RHD", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "On the Famagusta south quay, the corsair's man Pere Marí steps out from a rope coil's shadow and says his captain's terms have changed — he wants the demand letter back to revise them upward. He holds a new demand ready to substitute. The merchant's counter-offer is already sealed in the same case."},
+    {"act": 3, "node": "RHD", "type": "skill_check", "dc": 13, "skill": "Persuasion", "prompt": "The Rhodes customs house requires classification of the case contents. The Venetian consul's representative is at the counter watching. If classified as a corsair case: flagged to the consul. Argue it correctly before the harbor clerk writes the category."},
+    {"act": 4, "node": "RHD", "type": "skill_check", "dc": 12, "skill": "Composure", "prompt": "Two days to the commandery session. The exchange case is in the sealed carrier's bag. The corsair's agent knows where the case is going. The Prior does not know what is coming. Keep moving through the Rhodes harbor district without drawing attention."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads both letters. He reads the salutation on each. He notes both parties addressed each other by title. Mutual Recognition Records opens — filed under both parties simultaneously."}
+  ],
+  "archiveCategory": "Mutual Recognition Records — Correspondence Between Parties Who Deny Each Other's Right to Exist",
+  "sweelinckNote": "Neither letter alone is the evidence. The mutual recognition is only legible when both are read together. The archive creates a new category and files both simultaneously."
+}
+```
+
+---
+
+### Cycle 3 — *The Sunk Boat*
+
+**Archive category:** Irreversible Commission Records — The Document That Cannot Be Walked Back
+
+```json
+{
+  "quest_id": "HAV-03",
+  "title": "The Sunk Boat",
+  "source": "Buccaneers of America — Alexandre Exquemelin (Williams transl.)",
+  "cycle": 3,
+  "book": "HAV",
+  "source_episode": "Pierre le Grand had the surgeon bore a hole in their own boat before boarding the Spanish vice-admiral — so it would sink and there could be no retreat; the irreversible commitment creates a different quality of action than any decision that leaves retreat open",
+  "theme": "The decision that cannot be walked back; the commission usage attestation that makes the irreversible act permanent in the record",
+  "activateNode": "CAF",
+  "token": {
+    "id": "commission_usage_attestation",
+    "name": "Commission Usage Attestation",
+    "description": "A sealed wax-covered cylinder containing the commission usage attestation — a single sheet in Genoese chancery hand, stamped with the captain's mark. Heavy. Cold from being carried in a boat overnight. The attestation records that the letter of marque was invoked at the moment of seizure; once registered, the act is the letter's act, not the captain's.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["CAF", "BK", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "CAF", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "The Genoese factor at Caffa holds the commission usage attestation for the corsair captain. The factor wants the document retained at Caffa rather than registered at Trebizond — he fears exposure if the registration draws the Mongol tribunal's attention. Persuade him that registration is protection, not exposure."},
+    {"act": 2, "node": "CAF_to_BK", "type": "skill_check", "dc": 12, "skill": "Composure", "prompt": "Overland from Caffa north and west. The Black Sea road is watched by the Mongol toll-network. A Mongol toll-master at a river crossing wants the sealed cylinder opened for inspection. The wax seal is the Genoese factor's. Breaking it voids the chain-of-custody. Keep moving."},
+    {"act": 3, "node": "BK", "type": "skill_check", "dc": 13, "skill": "Persuasion", "prompt": "A Bruges maritime law scholar has heard a sealed Genoese commission cylinder is in transit and wants to delay it pending a legal opinion on whether the Caffa commission's authority extends to Black Sea Mongol-tributary vessels. His opinion will take three weeks. The registration deadline is four days."},
+    {"act": 4, "node": "BK_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "Three days to Weimar. The cylinder is in the sealed case. The corsair captain bored a hole in his own boat before he went over the rail. The attestation is the written form of that same commitment. Keep moving."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck breaks the wax, reads the attestation, notes the captain's mark and the invocation date. Irreversible Commission Records opens."}
+  ],
+  "archiveCategory": "Irreversible Commission Records — The Document That Cannot Be Walked Back",
+  "sweelinckNote": "The archive notes: the boat was sunk before the boarding. The document records the same principle in writing. Both acts are permanent. Neither can be argued back."
+}
+```
+
+---
+
+### Cycle 4 — *The Surgeon's Log*
+
+**Archive category:** Wound Register Records — The Cost Tabulated Against the Glory
+
+```json
+{
+  "quest_id": "HAV-04",
+  "title": "The Surgeon's Log",
+  "source": "Buccaneers of America — Alexandre Exquemelin (Williams transl.)",
+  "cycle": 4,
+  "book": "HAV",
+  "source_episode": "Exquemelin served as barber-surgeon and eyewitness; his wound register is the clearest accounting of any expedition's actual cost — every wound treated, every death, the exact tabulation against the compensation schedule; none of the entries are glorious",
+  "theme": "The healer in the company of killers holds the most complete record; the wound register is the real arithmetic; all the names the glory omits are in it",
+  "activateNode": "RHD",
+  "token": {
+    "id": "wound_log_three_volumes",
+    "name": "Surgeon's Wound Log",
+    "description": "Three small vellum volumes bound together with cord — physician's hand throughout, compact and water-stained at the corners. Each entry: date, wound type, treatment, prognosis, compensation claimed. Names are initials only. The last entry is the physician's own: rope-burn across both palms from a boarding operation.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["RHD", "VEN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "RHD", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "The physician Nikephoros Melissenos hands over the log at Rhodes. He says: I wrote down what I treated, not what I helped decide. Understand before the road why the archive wants this account above all others: it is the one account on any expedition that cannot be accused of advocacy — the physician had nothing to gain from any outcome except the patient's survival."},
+    {"act": 2, "node": "RHD_to_VEN", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "One of the initialed names in the log is a Knight of St. John who did not tell his order about his corsair service. He has heard the log is traveling and sends a factor on the Adriatic sea route to offer a considerable sum for the volume that contains his entry. The log travels intact."},
+    {"act": 3, "node": "VEN", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "A Venetian medical college wants the log for their trauma surgery collection — it is the most methodical field wound record they have seen. They present a formal acquisition offer through the Venetian consul. The archive holds the original after deposit; copies can be made for the college."},
+    {"act": 4, "node": "VEN_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "North from Venice, four days. The wound log is in the case. The Knight's factor is somewhere behind on the road, still calculating. Keep moving."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the first entry. He reads the last entry — the physician's own hands. He notes the initials. Wound Register Records opens."}
+  ],
+  "archiveCategory": "Wound Register Records — The Cost Tabulated Against the Glory",
+  "sweelinckNote": "The archive receives the wound log. The entries are in the physician's hand. None of the names are given in full. All of the real arithmetic is here — what was paid in blood, against what was promised in the articles. This is the other half of the corsair company record."
+}
+```
+
+---
+
+### Cycle 5 — *The Dead Man's Bluff*
+
+**Archive category:** Nullification Records — The Commission Declared Dead and Never Was
+
+```json
+{
+  "quest_id": "HAV-05",
+  "title": "The Dead Man's Bluff",
+  "source": "Buccaneers of America — Alexandre Exquemelin (Williams transl.)",
+  "cycle": 5,
+  "book": "HAV",
+  "source_episode": "Lolonois survived the Spanish massacre at Campechy by covering himself in sand and blood and lying among the dead; the appearance of death is the most effective passport in a searched field; applied to documents: the formally voided commission still carries authority for every act performed before the void",
+  "theme": "The dissolution stamp cannot reach back before it existed; the document that has been declared dead still lives for its past acts",
+  "activateNode": "FAM",
+  "token": {
+    "id": "voided_commission_document",
+    "name": "Voided Commission Document",
+    "description": "An old parchment commission, formerly sealed (seal broken, wax fragments still attached at the fold), carrying the dissolved privateering company's mark. Age-browned. The dissolution stamp is marked across the face in red ink, but the original text and the company's authorized signature are fully legible beneath it.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["FAM", "CON", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "FAM", "type": "skill_check", "dc": 12, "skill": "History", "prompt": "The Venetian factor at Famagusta holds the commission. He explains the legal question: the dissolution decree canceled future operations but did not void past acts performed under the old commission. The 1361 seizure was a past act. The heirs of the seized party are now claiming in the new jurisdiction. Understand before the road why the archive wants the voided document: the dissolution stamp is visible on the face but does not reach into the past."},
+    {"act": 2, "node": "FAM_to_CON", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "A Venetian legal representative on the Constantinople road argues the voided commission should be held by the Venetian court pending the new jurisdiction claim — it is evidence in their proceeding. The archive holds the primary document; the Venetian court can request access after deposit."},
+    {"act": 3, "node": "CON", "type": "skill_check", "dc": 13, "skill": "Persuasion", "prompt": "A Byzantine legal scholar at Constantinople wants to classify the document as a nullity — void on its face, the dissolution stamp is conclusive, past acts do not create residual validity. His classification would strip the document of evidentiary value before it reaches the archive. The distinction between 'voided for future acts' and 'voided retroactively' is not in the stamp; it is in the date of the dissolution decree versus the date of the act."},
+    {"act": 4, "node": "CON_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "West from Constantinople, three weeks. The voided commission is in the sealed case. The dissolution stamp is on its face. The original text is fully legible beneath it. Keep moving."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the dissolution stamp date and the original commission date. He reads the 1361 seizure record attached. Nullification Records opens."}
+  ],
+  "archiveCategory": "Nullification Records — The Commission Declared Dead and Never Was",
+  "sweelinckNote": "The dissolution stamp is visible on the face. The archive notes its date and the date of the act it was declared to cover. Lolonois lay among the dead until the searchers left. Then he walked away. The document does the same thing."
+}
+```
+
+---
+
+### Cycle 6 — *The Letter of Marque*
+
+**Archive category:** Commission Records — The Single Document That Is the Only Difference Between a Crime and a License
+
+```json
+{
+  "quest_id": "HAV-06",
+  "title": "The Letter of Marque",
+  "source": "Buccaneers of America — Alexandre Exquemelin (Williams transl.)",
+  "cycle": 6,
+  "book": "HAV",
+  "source_episode": "The entire moral and legal status of the buccaneers turned on a single document — the letter of marque; with it, the same acts that constitute piracy become licensed corsairing; without it, licensed corsairing becomes piracy; the acts are identical; only the paper differs",
+  "theme": "The letter of marque as the only instrument that transforms crime into license; without it, all the articles, all the wound registers, all the diplomatic correspondence prove only that the acts were organized — and organization without commission is simply better-documented piracy",
+  "activateNode": "CHI",
+  "token": {
+    "id": "genoese_letter_of_marque",
+    "name": "Genoese Letter of Marque",
+    "description": "A commission issued by the Genoese commune of Chios authorizing a named corsair captain to seize vessels hostile to Genoese trade interests. The Genoese seal at the bottom right. The captain's name, the vessel name, the authorized zone of operation, the duration. The document that makes everything else legal.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["CHI", "RME", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "CHI", "type": "skill_check", "dc": 12, "skill": "History", "prompt": "The Genoese commune clerk at Chios releases the letter of marque for archive deposit. He pauses before handing it over and says: do you understand what this document is? Without it, everything else in the corsair record is evidence of piracy. With it, everything is evidence of licensed operation. This is the one document that changes the category of every other document in the archive. Understand before the road what the archive receives."},
+    {"act": 2, "node": "CHI_to_RME", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "A Venetian factor on the Adriatic road argues that the letter of marque was issued without sufficient authority — the Genoese commune of Chios does not have independent commission-granting authority; only the Genoese Republic proper does. If this argument stands, the letter is void. The Chios commune's authority in 1367 is exactly the question."},
+    {"act": 3, "node": "RME", "type": "skill_check", "dc": 13, "skill": "Persuasion", "prompt": "A Roman ecclesiastical lawyer wants an opinion entered into the archive alongside the letter of marque arguing that no secular authority can grant a commission to attack vessels of Christian nations — the letter authorizes attacks on Venetian vessels, and Venice is a Christian republic. His opinion is directed at the archive's classification decision. The archive receives both the commission and the objection."},
+    {"act": 4, "node": "RME_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "North from Rome, five days to Weimar. The letter of marque is in the sealed case. Every wound in the log, every share in the articles, every diplomatic exchange in the correspondence — all of it changes category depending on what Sweelinck writes next to this document. Keep moving."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the letter of marque. He reads the commune seal. He files it at the front of the HAV collection. Commission Records opens."}
+  ],
+  "archiveCategory": "Commission Records — The Single Document That Is the Only Difference Between a Crime and a License",
+  "sweelinckNote": "The archive notes: every other document in this collection — the articles, the wound log, the diplomatic exchange, the voided commission, the attestation — changes its legal category depending on this document. Filed first. The commission records precede the corsair records. That is the order of dependency."
+}
+```
+
+---
+
+### Cycle 7 — *The Eyewitness Account*
+
+**Archive category:** Non-Interested Witness Records — The Account Written by the Man Nobody Tried to Impress
+
+```json
+{
+  "quest_id": "HAV-07",
+  "title": "The Eyewitness Account",
+  "source": "Buccaneers of America — Alexandre Exquemelin (Williams transl.)",
+  "cycle": 7,
+  "book": "HAV",
+  "source_episode": "Exquemelin was present at every operation as barber-surgeon — not in command, not a common mariner; he saw what had to be treated and counted the dead; his account has full access and no complicity in the decisions; he is the person nobody was trying to impress and nobody remembered to silence",
+  "theme": "The witness who was present but not responsible; the account free of institutional interest; the testimony that cannot be dismissed as advocacy because the witness had nothing to gain",
+  "activateNode": "RHD",
+  "token": {
+    "id": "demetrios_physicians_journal",
+    "name": "Demetrios's Physician's Journal",
+    "description": "A physician's journal, three volumes bound together — dates, case notes, treatments, prognoses. In the margins of the third volume: observations about what was happening on the ship during the operations he treated. Not written as evidence. Written to remember. The last marginal note reads: 'I treated both sides in the same hour. Both were men. The articles paid the same rate for each wound regardless of the other party's nationality.'",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["RHD", "LDN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "RHD", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "The physician Demetrios Agallias hands over his journal at Rhodes. He says: I wrote down what I saw. I was not asked to see it. I was not paid to remember it. No one asked me to be quiet afterward, which means no one thought I had anything worth saying. Understand before the road why the archive wants exactly this: the account of the man nobody tried to impress."},
+    {"act": 2, "node": "RHD_to_LDN", "type": "skill_check", "dc": 11, "skill": "Persuasion", "prompt": "The Hospitallers' judicial committee at Rhodes wants the journal held for their review — the physician served on vessels they are currently adjudicating. Their jurisdiction claim is procedurally sound. The archive's commission precedes their request. The journal travels."},
+    {"act": 3, "node": "LDN", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "An English chronicler in London who is writing about Mediterranean piracy wants the journal for his research. He presents a formal request through the English crown's trade office. His intentions are legitimate. The archive holds the original; he may request access after deposit. The marginal notes are part of the document."},
+    {"act": 4, "node": "LDN_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "Three days to Weimar. The physician's journal is in the case. Every operation in it was witnessed by a man who had no stake in the outcome except his patients' survival. Keep moving."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the case notes. He reads the marginal observations. He reads the last note. Non-Interested Witness Records opens."}
+  ],
+  "archiveCategory": "Non-Interested Witness Records — The Account Written by the Man Nobody Tried to Impress",
+  "questComplete": true,
+  "sweelinckNote": "The physician was present at every operation described in this collection. He was not trying to win anything. He was not trying to prove anything. He wrote down what he treated. That is the most reliable testimony available, and it is the last document received. The archive is complete."
+}
+```
