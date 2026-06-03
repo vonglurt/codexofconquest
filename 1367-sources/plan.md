@@ -846,11 +846,13 @@ This procedure runs once per vignette act (one quest at a time). Complete all 8 
 - Fix every error reported before proceeding
 - No quest book is fully imported until audit is clean
 
-**Step 8 — Review unresolved items with user, then repeat**
+**Step 8 — Review unresolved items with user, mark done, speak, then repeat**
 - Report any items that could not be imported: missing source data, ambiguous node codes, NPC identity conflicts
 - Ask the user to resolve before continuing
 - When all acts of a vignette cycle are imported and audit is clean: `POST /api/save`
-- Then repeat from Step 1 for the next act / next vignette cycle
+- **If user confirms good:** mark the vignette cycle as `IMPORTED` in the §IMPORT-01 Import Queue table (change `QUEUED` → `IMPORTED — {date}`)
+- Run: `say "Cycle imported. Ready to continue. Say yes to proceed to the next quest."` (or equivalent per next cycle)
+- Wait for user confirmation, then return to Step 1 for the next act / next vignette cycle
 
 ---
 

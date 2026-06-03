@@ -1228,16 +1228,22 @@ The audit checks: all `activateNode` codes exist, all `activateCond` flags exist
 
 ---
 
-### Step 8 — Review unresolved items, then save and repeat
+### Step 8 — Review unresolved items, mark done, speak, then repeat
 
-Report any items that could not be imported: missing source data, ambiguous node codes, NPC identity conflicts, unresolvable geography. Ask the user to resolve these before continuing.
+Report any items that could not be imported: missing source data, ambiguous node codes, NPC identity conflicts, unresolvable geography. Ask the user to resolve before continuing.
 
 When all acts of the vignette cycle are imported and audit is clean:
 ```bash
 curl -X POST http://localhost:1367/api/save
 ```
 
-Then return to Step 1 for the next act or next vignette cycle.
+**If the user confirms the cycle is good:**
+1. Mark the vignette cycle as `IMPORTED` in `plan.md §IMPORT-01` Import Queue (change `QUEUED` → `IMPORTED — {date}`)
+2. Speak the completion prompt:
+```bash
+say "Cycle imported. Ready to continue. Say yes to proceed to the next quest."
+```
+3. Wait for user confirmation, then return to Step 1 for the next act or next vignette cycle.
 
 ---
 
