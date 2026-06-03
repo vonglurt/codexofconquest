@@ -291,7 +291,7 @@ All files under 60 KB in 1367-sources/. Each to receive full pipeline: read → 
 
 | Code | Title | KB | Status |
 |------|-------|----|--------|
-| SDQ | Rob Roy — Walter Scott | 36 | QUEUED |
+| SDQ | Rob Roy — Walter Scott | 36 | **SEEDS COMPLETE 2026-06-03 — SDQ-01–07 all vignettes done. New nodes: OBH, GLA, ABF, GLN, LLM, EDI.** |
 | TBS | Knight in the Panther's Skin — Rustaveli | 41 | QUEUED |
 | LHR | Beowulf — Anon (Gummere) | 42 | QUEUED |
 | BHD | Cuchulain of Muirthemne — Lady Gregory | 43 | QUEUED |
