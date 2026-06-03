@@ -853,3 +853,558 @@ is the last word you will ever say about this.
 *quest-map.md: append KVF and KVM to Location Grid.*
 
 *books.md: mark ALF [x].*
+
+---
+
+## Cycle 3 — *The Honey-Bee's Errand*
+
+**Archive category:** Forest Passage Records — The Path That Could Not Be Forced, Only Cleared
+
+**What this angle reveals:** Cycles 1 and 2 were about will — the mother's absolute refusal to accept her son's death, and Kullervo's absolute acceptance of his own. This angle reveals the third register of the Kalevala's logic: the task that cannot be accomplished by force or cleverness, only by understanding what the thing needs and removing every obstacle from its path. The bee cannot be carried; it cannot be hurried; it cannot be helped by anything except the clearing of each gate between here and the forest god's honey. The Fighter's whole commission is negative: don't stop it, don't redirect it, don't protect it in ways that alter its course. Just open each door and close it after.
+
+---
+
+**THE TOKEN: `tapiola_passage_token`** — A carved birch-bark marker, thumbnail-sized, given to the Fighter by Tapio, the forest god, at the outer edge of his realm. It is the acknowledgment that the Fighter has been through Tapiola and back without breaking the compact of passage: nothing taken, nothing disturbed, the bee's path cleared and nothing else. It smells of pine resin and cold earth.
+
+---
+
+**ACT I — The Bee's Departure**
+
+*Grant act. Location: the forest edge at Lemminkäinen's mother's position.*
+
+The mother has done what she can with what the rake brought back. The body is assembled. What is missing is the animation — the honey of life from Tapiola that only a bee can carry, because only a bee moves between the flower and the hive without violating the compact between the forest god and the world's making.
+
+The bee is here. It is small and unremarkable and knows exactly where it is going. It will go through four gates in Tapiola: the pine gate, the birch gate, the stone gate, and the water gate. At each gate the Fisher of the Gate will try to stop it — not from malice, but because that is what the Fishers do; they test everything that passes. The bee cannot argue its way through. It cannot fight. It can only pass if the gate is cleared.
+
+The mother looks at the Fighter. The bee looks at the gate.
+
+Insight DC 11 — the commission is a negative task: the Fighter's job is subtraction, not addition. Every instinct toward protection or guidance is a way of altering the bee's course. Pass: Fighter understands and takes the commission as a constraint on action, not a license for it. Fail: Fighter asks what to do if the bee seems to be going wrong; the mother says "It will not go wrong if you clear the gate and stand aside."
+
+*The bee departs. The Fighter is one step behind.*
+
+---
+
+**ACT II — The Pine Gate**
+
+*Check act. Location: the pine gate of Tapiola.*
+
+The Fisher of the Pine Gate is a tall man made of spruce-wood and patience. He has been standing at this gate since before the forest had a name for what a gate is. He does not want to fight anyone. He wants to ask a question, and the question must be answered correctly, and if it is not answered correctly the gate stays closed, and the bee cannot pass, and the honey of life does not reach the body.
+
+The question is about wood: what is the name of the tree that bends without breaking.
+
+The gate Fisher expects wrong answers about strength. The correct answer is about flexibility.
+
+Persuasion DC 12 — the answer is the willow; not the oak, which does not bend; not the pine, which breaks at the wind's direct pressure; the willow, which yields to every wind and is standing when the oak is kindling. Pass: Fighter names the willow and the gate opens before the bee reaches it. Fail: Fighter names the wrong tree; the gate Fisher holds the gate for one minute while the bee waits; eventually the bee's presence at the gate is itself the answer, and the gate opens, but the delay costs a position.
+
+---
+
+**ACT III — The Birch Gate**
+
+*Check act. Location: the birch gate of Tapiola.*
+
+The Fisher of the Birch Gate is a woman who has been turning leaves from white to gold since before the concept of autumn existed. She does not ask a question. She asks the Fighter to sit down and wait.
+
+Sitting down and waiting is exactly what cannot happen. The bee is moving. The honey must arrive at the body before the last warmth leaves it. The mother has waited long enough.
+
+The Fisher of the Birch Gate is not an enemy. She is a test of the exact kind of patience that looks like its opposite.
+
+Composure DC 13 — the Fisher is testing whether the Fighter will force the gate, which would violate the passage compact and close all remaining gates permanently. The correct response is not to sit down (which accepts her terms) and not to force the gate (which breaks the compact), but to stand at the gate quietly and do absolutely nothing — because the bee is at the gate and the bee's presence there, if the gate remains open for passage, constitutes the clearing. Pass: Fighter stands without speaking or acting; the Fisher looks at the bee; the bee passes; the gate closes behind it. Fail: Fighter speaks or gestures; the Fisher closes the gate for five minutes and then opens it; the delay costs another position.
+
+**2× birch gate wardens, AC 11, HP 16.** They are positioned at the gate posts; they are not hostile; they become an obstacle if the Fighter attempts to physically move the Fisher or force the gate.
+
+---
+
+**ACT IV — The Stone Gate and the Water Gate**
+
+*Check act. Location: the stone and water gates of Tapiola.*
+
+The stone gate has no Fisher. It is a gate that opens only from the inside; someone on the inside must choose to open it from Tapiola's center outward. The bee is already inside. It has been to the hive. It has the honey. It is trying to return through a gate that opens only when the outer compact is kept.
+
+The outer compact: the carrier must not have taken anything from Tapiola during the passage. The stone gate's recognition is automatic — it reads the carrier's burden and opens if nothing was taken.
+
+Athletics DC 12 — the passage back through the water gate requires crossing Tapiola's boundary stream, which moves in unexpected directions. The bee is in front, moving correctly. The Fighter must stay within three paces of the bee or the water gate closes behind the bee and opens only for the living, leaving the Fighter in the forest god's realm.
+
+---
+
+**ACT V — Forest Passage Records**
+
+*Take act. Location: the Weimar Archive.*
+
+Sweelinck holds the carved birch-bark marker under the lamp. He reads the grain pattern — it is not writing, but it contains something that reading can approximate.
+
+"The forest god's acknowledgment," he says. "Passage through Tapiola and back. The compact kept." *He turns it in his hand.* "The bee reached the body. The body was animated. The marker exists because nothing was taken and nothing was forced."
+
+He opens a new archive section. **Forest Passage Records — The Path That Could Not Be Forced, Only Cleared.**
+
+"Every other commission in this archive involves doing something," he says. "This one involves not doing things. That is harder to document because nothing is the evidence."
+
+---
+
+```json
+{
+  "quest_id": "ALF-03",
+  "title": "The Honey-Bee's Errand",
+  "source": "Kalevala — Elias Lönnrot (1835/1849)",
+  "cycle": 3,
+  "book": "ALF",
+  "source_episode": "Lemminkäinen's resurrection — the bee's journey to Tapiola for the honey of life",
+  "theme": "The task accomplished by subtraction: clearing each gate without touching the path the bee must walk itself",
+  "activateNode": "ALF",
+  "token": {
+    "id": "tapiola_passage_token",
+    "name": "Tapio's Passage Marker",
+    "description": "A carved birch-bark marker, thumbnail-sized, given by the forest god at the outer edge of Tapiola. Acknowledgment that the passage compact was kept: nothing taken, nothing forced, the bee's path cleared and nothing else.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["ALF", "BK", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "ALF", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "The commission is subtraction, not addition. The instinct to protect or guide the bee is the obstacle. Understand: clear the gate and stand aside."},
+    {"act": 2, "node": "ALF_to_BK", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "The Fisher of the Pine Gate asks which tree bends without breaking. The answer is the willow, not the oak. Name it before the bee reaches the gate."},
+    {"act": 3, "node": "BK", "type": "combat", "dc": 13, "skill": "Composure", "enemies": "2x birch gate wardens, AC 11, HP 16", "prompt": "Stand at the gate without speaking or acting. The Fisher tests whether you will force it. The bee's presence is sufficient if the gate is not forced."},
+    {"act": 4, "node": "BK_to_WM", "type": "skill_check", "dc": 12, "skill": "Athletics", "prompt": "Stay within three paces of the bee through the water gate. The boundary stream moves in unexpected directions. The gate closes behind the bee if you fall behind."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the birch-bark grain. Nothing was taken. Nothing was forced. The bee reached the body. Forest Passage Records opens."}
+  ],
+  "archiveCategory": "Forest Passage Records — The Path That Could Not Be Forced, Only Cleared",
+  "sweelinckNote": "Every other commission involves doing something. This one involves not doing things. That is harder to document because nothing is the evidence."
+}
+```
+
+---
+
+## Cycle 4 — *The Kantele at the Bottom*
+
+**Archive category:** Recovered Instrument Records — The Pike-Jaw Kantele Saved from the Sea Before the Last Song Was Lost
+
+**What this angle reveals:** Cycles 1-3 were about recovery and passage — reassembling the dead, removing a sword from its context, clearing a path without force. This angle reveals the Kalevala's instrument at the center of everything: the kantele Väinämöinen made from a pike's jawbone and a maiden's hair is the means by which the Sampo's guards are sung to sleep. Without it, the great songs cannot be sung. It went into the sea during the battle with Louhi and the seabirds and the eagle. It is on the bottom. The last song before it sinks permanently will be the last chance. The Fighter must go into the sea.
+
+---
+
+**THE TOKEN: `pike_jaw_kantele`** — The kantele Väinämöinen made from the jaw of the great pike: seven strings of hair, the body salt-cold and still resonant. Retrieved from the sea bottom before it became permanently lost. The strings are waterlogged but intact; when the Fighter carries it out of the water and holds it, it hums against the hands.
+
+---
+
+**ACT I — The Ship's Deck**
+
+*Grant act. Location: Väinämöinen's ship, after the battle with Louhi.*
+
+The battle is over. Louhi has retreated. The Sampo is shattered; pieces are in the sea. The kantele went overboard in the last exchange. Väinämöinen is at the prow watching the place where it went down. The water is grey and deep.
+
+"I know where it landed," he says. "I can hear it from here. It is not singing yet — it sings when it touches air and a hand. It is on the bottom, silent." *He does not look away from the water.* "The Sampo's guards are not asleep. I cannot sing them to sleep without the kantele. We will not be able to leave this water until they sleep."
+
+The place where it sank is forty feet below the surface. The water is cold. There is something moving in the deep water — not Louhi's eagle, which is above; something the sea keeps in the places between things.
+
+Insight DC 11 — Väinämöinen is not sending the Fighter because he cannot dive; he is sending the Fighter because the kantele must be retrieved by someone who will not be distracted by what they hear at the bottom. The kantele will make a sound when touched. Pass: Fighter understands that the sound is the instrument recognizing contact, not a danger, and accepts the commission with that knowledge. Fail: Fighter dives without this understanding and is briefly confused by the hum.
+
+---
+
+**ACT II — The Dive**
+
+*Check act. Location: the sea, forty feet below the surface.*
+
+The water is grey-green and cold and not entirely silent. There are things moving at the edge of visibility that are not fish. The kantele is on a shelf of rock twenty feet from the surface's pull — it got caught on the rock on the way down and is not resting on the sea floor. This is the difference between possible and impossible: it is within range.
+
+Athletics DC 13 — diving forty feet into cold sea with the recovery of a specific object requires lungs, cold tolerance, and the ability to navigate toward a sound that is not quite a sound. The rock shelf is visible from above as a difference in the dark. Pass: Fighter reaches the shelf, touches the kantele (it hums immediately, a single note against the hand), and kicks back up with it in both arms. Fail: Fighter reaches the shelf but the kantele slips off the rock on the first touch and sinks another ten feet; Fighter must make a second dive, emerging once to breathe.
+
+---
+
+**ACT III — Louhi's Eagle**
+
+*Check act. Location: the ship's deck, the kantele retrieved.*
+
+Louhi's eagle is still circling. It has been waiting for the kantele to surface — it knew the kantele was there and knew that retrieving it would mean Väinämöinen would sing. The eagle wants to prevent the singing. An eagle at Birka's harbor, a known associate of the northern power, has been watching the ship's approach for three days. When the kantele surfaces, a local agent hired by the eagle's patron — a northern factor with ties to Louhi's trading interests — attempts to intercept the carrier at the dock.
+
+Perception DC 12 — the factor is at the dock before the ship arrives, which means he was informed before the dive completed. He knew the kantele was being retrieved. Pass: Fighter spots the factor at the dock while still on the water and brings the kantele through the harbor's secondary gate before the factor positions himself. Fail: The factor intercepts at the main dock; he attempts to purchase the kantele at an insulting sum; the refusal must be made without allowing physical contact with the instrument.
+
+**2× northern factors' dock agents, AC 12, HP 18.** At the secondary gate if the pass fails.
+
+---
+
+**ACT IV — The Road to Weimar**
+
+*Check act. Location: the road south.*
+
+The factor's network has sent a legal instrument ahead: a maritime salvage claim on "unidentified recovered objects from the sea between Kalevala and the Northern Sea." The claim's specificity is calibrated to include the kantele without naming it. A civil officer at a road checkpoint is processing the claim.
+
+Persuasion DC 12 — a maritime salvage claim requires the object to have been abandoned property — which means it cannot apply to an object a living creator made and lost within the current voyage. The kantele was not abandoned; it fell overboard during combat and was retrieved within hours. The civil officer knows this; the claim's timing makes it facially invalid for an object retrieved in the same trip. Pass: Fighter names the abandonment requirement; the claim lapses; the checkpoint opens. Fail: Fighter does not name the specific requirement; the civil officer places a two-day hold pending maritime review.
+
+---
+
+**ACT V — Recovered Instrument Records**
+
+*Take act. Location: the Weimar Archive.*
+
+Sweelinck holds the kantele at arm's length before taking it, as if he is not quite sure how to handle an instrument that hums when touched.
+
+"Väinämöinen's first kantele," he says. "Made from a pike's jaw and a maiden's hair. Sea-retrieved." *He sets it on the intake counter very carefully.* "Without this, the guards sleep. Without the guards sleeping, the Sampo's fragments stay in a sea watched by people who do not want them found."
+
+He opens a new archive section. **Recovered Instrument Records — The Pike-Jaw Kantele Saved from the Sea Before the Last Song Was Lost.**
+
+"The last song was not lost," he says. "That is what this record is."
+
+---
+
+```json
+{
+  "quest_id": "ALF-04",
+  "title": "The Kantele at the Bottom",
+  "source": "Kalevala — Elias Lönnrot (1835/1849)",
+  "cycle": 4,
+  "book": "ALF",
+  "source_episode": "The battle with Louhi — the kantele overboard, the Sampo's guards unsleeping",
+  "theme": "The instrument without which the songs cannot be sung; retrieved from the sea before it became permanently lost",
+  "activateNode": "ALF",
+  "token": {
+    "id": "pike_jaw_kantele",
+    "name": "The Pike-Jaw Kantele",
+    "description": "The kantele made from a great pike's jaw and seven strings of maiden's hair. Sea-cold, waterlogged, still resonant — it hums against the hand when touched. Retrieved from a rock shelf forty feet below the surface during the battle's aftermath.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["ALF", "BK", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "ALF", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "The kantele will hum when touched. Understand that this is recognition, not danger, before the dive."},
+    {"act": 2, "node": "ALF_to_BK", "type": "skill_check", "dc": 13, "skill": "Athletics", "prompt": "Forty feet, cold water, rock shelf. The kantele hums on contact. Kick back up with both arms full before the cold locks the lungs."},
+    {"act": 3, "node": "BK", "type": "combat", "dc": 12, "skill": "Perception", "enemies": "2x northern factors' dock agents, AC 12, HP 18", "prompt": "The factor was at the dock before the ship arrived. He was informed before the dive completed. Spot him from the water and use the secondary gate."},
+    {"act": 4, "node": "BK_to_WM", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "Maritime salvage requires abandoned property. The kantele was retrieved in the same voyage it was lost. Name the abandonment requirement. The claim lapses."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck holds it at arm's length. Without this, the guards do not sleep. The last song was not lost. Recovered Instrument Records opens."}
+  ],
+  "archiveCategory": "Recovered Instrument Records — The Pike-Jaw Kantele Saved from the Sea Before the Last Song Was Lost",
+  "sweelinckNote": "The last song was not lost. That is what this record is."
+}
+```
+
+---
+
+## Cycle 5 — *The Sampo Fragment*
+
+**Archive category:** Fragment Preservation Records — The Piece That Was Not Lost to the Eagle
+
+**What this angle reveals:** Cycles 1-4 have been about acts of recovery and clearing — reassembling what was scattered, removing what needed removing, clearing paths, retrieving instruments. This angle reveals the destruction at the heart of the Kalevala's middle arc: the Sampo, the mill of miraculous plenty, is shattered in the battle with Louhi. Most of it sinks into the sea. But one fragment, glowing and warm, lands on the ship's deck. Louhi's eagle is circling. The sea is hungry. The Sampo's power is not in the complete object but in any piece that can be brought to land — the fragment that reaches shore is the seed of what comes next, and the eagle wants it back.
+
+---
+
+**THE TOKEN: `sampo_fragment`** — A fragment of the Sampo: warm in the hand even wet from the spray, heavy for its size, catching light from inside the metal rather than from the surface. It was the mill of plenty; this piece does not mill anything, but it holds the memory of milling in the grain of the metal. Louhi's eagle wants it back. The sea wants it. The Fighter keeps it on the deck.
+
+---
+
+**ACT I — The Ship's Deck, Fragment Landing**
+
+*Grant act. Location: Väinämöinen's ship, the battle's end.*
+
+The Sampo shattered when it hit the gunwale. Pieces went into the sea. One fragment — the size of a man's palm — landed on the deck planking and is sitting there, warm, slightly luminous, and entirely out of place among the rope-coils and salt-water.
+
+Väinämöinen is watching the sky. Louhi's eagle is above — the great one, three hundred fathoms of wingspan — circling the ship. It knows the fragment is on the deck. It has been circling since the shattering.
+
+"Hold it," Väinämöinen says. He does not look at the Fighter. He is watching the eagle. "Whatever happens on this deck, hold it. If it goes into the sea it is gone. If the eagle takes it we will never have what could have been made from it."
+
+The fragment is warm in the hand. The eagle circles.
+
+Insight DC 11 — the Sampo fragment is not inert. It responds to the intent of the holder: greed makes it hot, desperation makes it dim, steady purpose makes it the same warm weight it was on the deck. Pass: Fighter holds it with steady purpose and it stays warm and still. Fail: Fighter's grip tightens involuntarily with the eagle's approach; the fragment pulses once, brighter.
+
+---
+
+**ACT II — The Eagle's Strike**
+
+*Check act. Location: the ship's deck, Louhi's eagle descending.*
+
+The eagle makes one pass. It is not subtle about what it is doing. A wing the size of a sail sweeps the deck; the wind of it knocks two sailors into the rail. The eagle is not trying to kill anyone. It is trying to knock the fragment loose — off the deck, into the sea, where it cannot be followed.
+
+Athletics DC 13 — the wind of the eagle's wing is not weather; it is intent. Hold position on a moving deck in the sweep of a wing the size of a sail, with the fragment in both hands, without being moved to the rail.
+
+---
+
+**ACT III — The Constantinople Factor**
+
+*Check act. Location: the Constantinople trade harbor.*
+
+The fragment is warm in the pouch. At Constantinople, a merchant who has been trying to acquire fragments of the Sampo for seven years is at the harbor — he has a network of northern informants and knows what was on Väinämöinen's ship. He has a legitimate offer: three talents of silver for the fragment, to be used for "historical study." He is not a threat. He is a very large temptation.
+
+The fragment is not the Fighter's to sell. It is not anyone's to sell. The offer is real. The merchant is sincere.
+
+Composure DC 12 — the merchant is genuinely interested in the fragment's history and genuinely believes the offer is fair. He is not wrong about the fairness of the price. He is wrong about the nature of the transaction. The fragment is a commission object, not a personal possession. Pass: Fighter explains, without contempt, that the fragment is not available for sale and the commission does not permit negotiation; the merchant accepts this with regret. Fail: Fighter allows a negotiation to begin; the merchant's offer escalates; ending the negotiation costs thirty minutes and the merchant's goodwill.
+
+**1× merchant's hired persuader, AC 12, HP 17.** Present if the negotiation exceeds four exchanges. Not a threat; a continuation of the negotiation by other means.
+
+---
+
+**ACT IV — The Road to Weimar**
+
+*Check act. Location: the road north from Constantinople.*
+
+The fragment is cooler now than it was on the ship but still warmer than the ambient temperature of a late-autumn road. A scholar traveling the same road recognizes it from its description in the northern chronicles and asks to examine it.
+
+The scholar is genuinely scholarly. He wants to write about it. He has asked the right person — someone carrying the actual object — and he means no harm.
+
+Insight DC 11 — the scholar's request to "examine" the fragment means holding it, which the fragment's nature makes complicated: it responds to intent, and a scholar's intent (acquisition of knowledge, documentation, understanding) is not possession-intent, but it is also not the same as the steady purpose that keeps the fragment stable. The safe answer is to show it without transferring it. Pass: Fighter shows the fragment without removing it from the pouch; the scholar can see the light from inside without touching it; he accepts this and makes his notes. Fail: Fighter transfers the fragment to the scholar's hands; the fragment dims briefly; the scholar notes the dimming in his chronicle.
+
+---
+
+**ACT V — Fragment Preservation Records**
+
+*Take act. Location: the Weimar Archive.*
+
+Sweelinck holds out his hand and waits. The Fighter places the fragment in his palm. It is warm.
+
+"The Sampo shattered," he says. "Most of it is in the northern sea. This piece is on this table." *He looks at it.* "It does not mill anything. But it holds the memory of milling in the grain of the metal. Everything that could be made from what the Sampo was is somewhere in this fragment."
+
+He opens a new archive section. **Fragment Preservation Records — The Piece That Was Not Lost to the Eagle.**
+
+"The eagle wanted it back," he says. "The sea wanted it. Someone held it through both. That is the record."
+
+---
+
+```json
+{
+  "quest_id": "ALF-05",
+  "title": "The Sampo Fragment",
+  "source": "Kalevala — Elias Lönnrot (1835/1849)",
+  "cycle": 5,
+  "book": "ALF",
+  "source_episode": "The shattering of the Sampo — the fragment that landed on the deck while the eagle circled",
+  "theme": "The piece that survives the destruction; the fragment that holds the memory of the whole",
+  "activateNode": "ALF",
+  "token": {
+    "id": "sampo_fragment",
+    "name": "The Sampo Fragment",
+    "description": "A palm-sized piece of the Sampo: warm in the hand, heavy for its size, catching light from inside the metal. Does not mill anything but holds the memory of milling in the grain. The eagle wanted it back. The sea wanted it.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["ALF", "CON", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "ALF", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "The fragment responds to intent. Steady purpose keeps it stable. Greed makes it hot; desperation dims it. Hold it with steady purpose."},
+    {"act": 2, "node": "ALF_to_CON", "type": "skill_check", "dc": 13, "skill": "Athletics", "prompt": "The eagle's wingbeat is intent, not weather. Hold position on the moving deck in the sweep of a wing the size of a sail."},
+    {"act": 3, "node": "CON", "type": "combat", "dc": 12, "skill": "Composure", "enemies": "1x merchant's hired persuader, AC 12, HP 17", "prompt": "The offer is genuine and fair and wrong. The fragment is not available for sale. Explain without contempt."},
+    {"act": 4, "node": "CON_to_WM", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "The scholar wants to examine it. Show it without transferring it. A scholar's intent is not possession-intent but it is not steady purpose either."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck holds out his hand. The fragment is warm. The eagle wanted it. The sea wanted it. Someone held it through both. Fragment Preservation Records opens."}
+  ],
+  "archiveCategory": "Fragment Preservation Records — The Piece That Was Not Lost to the Eagle",
+  "sweelinckNote": "The eagle wanted it back. The sea wanted it. Someone held it through both. That is the record."
+}
+```
+
+---
+
+## Cycle 6 — *The Origin-Words Tablet*
+
+**Archive category:** Sacred Text Records — The Words That Tame the Metal Before It Burns
+
+**What this angle reveals:** Cycles 1-5 were about recovering things — a body's pieces, a sword's removal, a bee's path, an instrument, a fragment. This angle reveals the knowledge layer beneath all of those: the origin-songs of iron, fire, and water that Väinämöinen inscribed on a birch-bark tablet are the reason the metal can be worked at all. Without the origin-words, the forge is dangerous. Ilmarinen needs the tablet before he can begin. It was left at Louhi's hall on the last journey, and Louhi knows exactly what it is and what its absence means.
+
+---
+
+**THE TOKEN: `origin_words_tablet`** — A birch-bark tablet, palm-sized, with Väinämöinen's inscriptions on both sides: the origin-songs of iron (how it came from the three mothers of creation), fire (how it began before there were things to burn), and water (how it moves in the deep places of the world where no one goes). The bark is brown and smooth from handling. Louhi has it on a shelf in her hall's archive room because she knows what it is and what its absence costs.
+
+---
+
+**ACT I — Pohjola's Gate**
+
+*Grant act. Location: the outer gate of Louhi's hall in the North.*
+
+Louhi is not present. She is occupied with the aftermath of the Sampo battle. The hall is reduced — the battle took much — but the archive room's shelf is intact, and the tablet is on it. The gate-keeper is a young man who did not fight in the battle and is uncertain about his authority.
+
+"You can have it," he says, finally. "She didn't say to keep it from anyone specifically." *A pause.* "She didn't say to let anyone take it either."
+
+Persuasion DC 12 — the gate-keeper is not looking for a bribe; he is looking for a clear authority. The authority is: the tablet belongs to the one who inscribed it, and Väinämöinen inscribed it, and inscribed property does not become Louhi's by being left in her hall. Pass: Fighter names the inscribed-property argument; the gate-keeper accepts it; the tablet is retrieved. Fail: Fighter offers something in exchange; the gate-keeper refuses on principle; the argument must be made cleanly on the second attempt.
+
+---
+
+**ACT II — The North Road**
+
+*Check act. Location: the road south from Pohjola.*
+
+Louhi returns earlier than expected. She does not pursue in person — she sends a shape: a hawk with iron wings that does not need to land to interfere. It cannot carry anything, but it can distract, misdirect, and slow. It will not attack the Fighter. It will spend the next six hours doing everything short of direct violence to delay the tablet's arrival at the forge.
+
+Athletics DC 13 — the iron hawk's strategy is attrition. It does not tire. The road south has four places where the hawk can create delay: a collapsed-looking bridge (which is not collapsed — the hawk knocked the crossing-log loose and will not put it back), a cattle-crossing (the hawk scattered the herd across the road), a ford (the hawk stirred the bottom to mud), and a waystation (the hawk knocked the door-bar to the outside). At each place, the fighter must get through the obstacle before the hawk creates the next one.
+
+---
+
+**ACT III — The Forge at Rome**
+
+*Check act. Location: a forge-district scholar's house near Rome, comparable smith's tradition.*
+
+The tablet's inscription uses a notation system from Väinämöinen's own hand that requires glossing before Ilmarinen can work from it directly — the notation is ancient and partially idiomatic. A scholar of old northern texts near Rome, Fra Domenico, has a comparative glossary and can note the two ambiguous passages in the margins in thirty minutes. The tablet's delivery to the forge needs the glossing; without it Ilmarinen will misread one passage and that misreading burns him.
+
+Insight DC 13 — Fra Domenico works quickly and accurately. The delay risk is not him but his colleague at the neighboring desk, who will want to copy the tablet's content for a treatise he is writing on pre-Roman inscription systems. The copy would not harm the tablet but would take three additional hours. Pass: Fighter recognizes the colleague's interest before the request is made and positions the tablet's angle so the colleague cannot read the reverse side; Fra Domenico completes the gloss without the copy request arising. Fail: The colleague asks; Fra Domenico defers to the Fighter; Fighter must explain why a copy cannot be made without insulting either scholar.
+
+**2× forge guild agents, AC 12, HP 17.** Present at the scholar's door; they want the tablet's inscription for their guild's own use. They are here to wait, not to fight — but they will try to have the tablet in hand while the Fighter is occupied with the scholars.
+
+---
+
+**ACT IV — The Final Road to the Forge**
+
+*Check act. Location: the road to Ilmarinen's forge.*
+
+The gloss is complete. The tablet is ready. Ilmarinen has been waiting at the forge since the first day without the tablet — he has been keeping the forge cold, which means the metal has set wrong and will need re-tempering. The tablet must arrive before the third heating cycle or the metal will set permanently wrong.
+
+Ilmarinen's forge assistant is at the road's end with the news: the third heating cycle begins in forty minutes.
+
+Composure DC 11 — forty minutes is sufficient if the Fighter does not stop to explain what happened at Louhi's hall, the hawk on the north road, or the scholars in Rome. Ilmarinen will want to know. The correct answer is to hand him the tablet and tell him the gloss is in the margins and step back. Everything else is for later. Pass: Fighter hands over the tablet with one sentence and steps back; Ilmarinen opens the tablet to the first inscription; the heating cycle begins correctly. Fail: Fighter adds two sentences of context; Ilmarinen asks a question; the exchange takes eight minutes.
+
+---
+
+**ACT V — Sacred Text Records**
+
+*Take act. Location: the Weimar Archive.*
+
+Sweelinck reads the inscriptions carefully — both sides, then the marginal gloss. He takes longer than usual.
+
+"The origin-songs of iron, fire, and water," he says. "Not metaphor. Not poetry in the decorative sense. These are the working instructions for what those things are and how they behave when you handle them correctly." *He reads the margin again.* "Fra Domenico's gloss on the two ambiguous passages is very good."
+
+He opens a new archive section. **Sacred Text Records — The Words That Tame the Metal Before It Burns.**
+
+"Ilmarinen worked from this," he says. "The forge was correct. The metal set right. Without these words, the forge burns the smith."
+
+---
+
+```json
+{
+  "quest_id": "ALF-06",
+  "title": "The Origin-Words Tablet",
+  "source": "Kalevala — Elias Lönnrot (1835/1849)",
+  "cycle": 6,
+  "book": "ALF",
+  "source_episode": "Väinämöinen's inscribed origin-songs; left at Louhi's hall on the last journey",
+  "theme": "The knowledge without which the work cannot begin safely; the origin-words that tame the metal before it burns",
+  "activateNode": "ALF",
+  "token": {
+    "id": "origin_words_tablet",
+    "name": "The Origin-Words Tablet",
+    "description": "A birch-bark tablet with Väinämöinen's inscriptions on both sides: origin-songs of iron, fire, and water. Brown and smooth from handling. Fra Domenico's marginal gloss on two ambiguous passages. Left at Louhi's hall. Ilmarinen was waiting.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["ALF", "RME", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "ALF", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "The gate-keeper needs clear authority. Inscribed property does not become Louhi's by being left in her hall. Name the argument cleanly."},
+    {"act": 2, "node": "ALF_to_RME", "type": "skill_check", "dc": 13, "skill": "Athletics", "prompt": "The iron hawk does not tire and does not attack directly. Four obstacles on the south road, each engineered for delay. Get through before the hawk creates the next one."},
+    {"act": 3, "node": "RME", "type": "combat", "dc": 13, "skill": "Insight", "enemies": "2x forge guild agents, AC 12, HP 17", "prompt": "The colleague wants to copy the tablet's reverse. Position it before the request arises. Fra Domenico completes the gloss in thirty minutes without the copy taking three hours."},
+    {"act": 4, "node": "RME_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "Hand Ilmarinen the tablet, say the gloss is in the margins, step back. The third heating cycle is in forty minutes. Everything else is for later."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads both sides and the marginal gloss. The origin-songs are working instructions, not decoration. Ilmarinen worked from this. Sacred Text Records opens."}
+  ],
+  "archiveCategory": "Sacred Text Records — The Words That Tame the Metal Before It Burns",
+  "sweelinckNote": "Without these words, the forge burns the smith."
+}
+```
+
+---
+
+## Cycle 7 — *The Copper Boat's Last Cargo*
+
+**Archive category:** Final Commission Records — The Objects Left for the New World
+
+**What this angle reveals:** The Kalevala ends with Väinämöinen sailing away in a copper boat. He leaves behind three objects the new world should have — the iron rake, the kantele, the Sampo fragment, and two others unnamed. He does not carry them himself because the boat is already full of his going. The Fighter carries each one from the shore to the new king's hall — not because the new king asked for them, but because Väinämöinen asked, and Väinämöinen understood what the new world would need even if the new world did not know yet.
+
+The final commission is the archive's simplest delivery: five objects, one hall, one instruction. Carry them from the shore before the tide covers the place where the boat was. The new king will not understand what he is receiving. The archive will.
+
+---
+
+**THE TOKEN: `copper_boat_manifest`** — A carved wooden tablet, left by Väinämöinen at the waterline: the list of five objects and where they are to go. Not a letter; not an explanation; just the names of the things and the name of the hall. Five words and a destination. The tablet is smooth from the copper boat's water and warm from the contact with the departing hand.
+
+---
+
+**ACT I — The Shore**
+
+*Grant act. Location: the shore where Väinämöinen's copper boat was.*
+
+The boat is gone. The waterline is already receding. Five objects are on the wet sand: the iron rake (dry now, and lighter than it was in Tuonela), the kantele (the new one, made from birch wood and tears, the one he made when the pike-jaw kantele was gone), the Sampo fragment (already used up as seed for the land's first milling — this is a second fragment, found in the wave-wash), a sealed clay pot containing fire from the forge's first heating, and a cloth pouch containing the origin-words in a different form — not on a tablet, but spoken into wax, sealed with the impression of the speaking mouth.
+
+The manifest tablet is in the sand beside them. The new king's hall is a day's walk inland.
+
+Insight DC 11 — the manifest is the token; the five objects are the cargo; the commission is the carrying. The only thing to understand is the difference between what Väinämöinen meant for the new king to have and what the new king will think he is receiving. Pass: Fighter understands that the new king will not know what most of these objects are, and that this is the correct state for the new king to be in — the archive is the explanation, not the hall. Fail: Fighter plans to explain the objects to the new king; this is correct in intention and wrong in the commission's terms.
+
+---
+
+**ACT II — The Inland Road**
+
+*Check act. Location: the road from shore to the new king's hall.*
+
+The tide covers the shore in six hours. The objects are already above the tide line — that is not the urgency. The urgency is the new king's hall-council, which is in session now and will make a decision about "unclaimed coastal salvage" if the objects arrive before the Fighter does with the manifest. Three coastal factors have already reported the beached objects to the hall's administrative officer.
+
+Athletics DC 12 — the factors' report reaches the administrative officer in two hours. The Fighter has the manifest, which establishes prior claim (a departing master's instruction is not salvage), but the manifest must arrive before the administrative officer's assessment closes. Pass: Fighter reaches the hall with an hour before the assessment closes; the manifest is presented first; the objects are received as commission goods. Fail: The assessment closes before the Fighter arrives; the objects have been categorized as salvage; a brief jurisdictional argument is required.
+
+---
+
+**ACT III — The New King's Hall**
+
+*Check act. Location: the new king's hall.*
+
+The new king is young and surrounded by councilors who are suspicious of unannounced arrivals carrying unusual objects. The iron rake is alarming in their context. The kantele is interpretable as a political gift, which has implications they have opinions about. The sealed clay pot of forge-fire they simply do not understand. The manifest names the hall but not the king by name — he was not the king when Väinämöinen left.
+
+The councilors want to know what the objects mean before they accept them.
+
+Persuasion DC 13 — the correct answer is: "I was asked to bring them here. The objects are what they are. I don't have more information than the manifest." The incorrect answer is any explanation that tries to interpret the objects, because interpretation claims authority over the objects that the manifest does not grant the carrier. Pass: Fighter states the commission's terms once — the manifest names the hall; the objects are delivered per the commission; what happens next is the hall's business — and the councilors accept that the hall's name on the manifest is sufficient authorization. Fail: Fighter attempts to explain the rake or the kantele; one councilor asks a question about the sealed clay pot; the session extends thirty minutes while the administrative officer checks coastal salvage records.
+
+**2× hall guards, AC 13, HP 20.** Standard caution; they become an obstacle only if Fighter tries to proceed past the council to place the objects directly in the throne room.
+
+---
+
+**ACT IV — The Last Road to Weimar**
+
+*Check act. Location: the road from the new king's hall to Weimar.*
+
+The delivery is made. The hall has the objects. The manifest has been countersigned by the administrative officer. The commission is complete in every respect except the filing of the manifest at the Weimar archive — Väinämöinen asked that the manifest be archived, which is why the carved tablet is the token rather than one of the objects.
+
+A hall courier overtakes the Fighter on the road: the new king's council has decided to attach a note to the manifest requesting "historical context on the origin of the items." The note is politely phrased. It is also a request to delay the filing pending the context note.
+
+Composure DC 11 — the context note is the council's legitimate interest and a postponement tactic simultaneously. The manifest is complete and signed and belongs to the archive's intake. A context note can be appended after filing. Filing does not require the context note's prior completion. Pass: Fighter notes the request, continues to Weimar, and informs Sweelinck that a context note from the hall's council may arrive separately. Fail: Fighter pauses on the road to draft a reply; the pause costs two hours and the context note question remains unresolved.
+
+---
+
+**ACT V — Final Commission Records**
+
+*Take act. Location: the Weimar Archive.*
+
+Sweelinck reads the manifest. Five items, the new king's hall, the destination confirmed. He reads the administrative officer's countersignature. He sets it down.
+
+"Väinämöinen left without explaining what he was leaving," he says. "That is the last thing he did before the copper boat disappeared." *He opens the archive's final section.* "The objects are at the hall. The hall's council will spend a generation arguing about what they mean. The archive has the manifest. What was left and where it went. That is enough."
+
+He opens the last category in the Kalevala series. **Final Commission Records — The Objects Left for the New World.**
+
+"He understood what the new world would need," he says. "He also understood that explaining it was not his job. He left a list."
+
+*He closes the archive. The Kalevala series is complete.*
+
+---
+
+```json
+{
+  "quest_id": "ALF-07",
+  "title": "The Copper Boat's Last Cargo",
+  "source": "Kalevala — Elias Lönnrot (1835/1849)",
+  "cycle": 7,
+  "book": "ALF",
+  "source_episode": "Väinämöinen's departure — the objects left for the new world on the shore where the copper boat was",
+  "theme": "The final commission: carrying what was left without explaining what it means; the manifest is the record",
+  "activateNode": "ALF",
+  "token": {
+    "id": "copper_boat_manifest",
+    "name": "Väinämöinen's Departure Manifest",
+    "description": "A carved wooden tablet left at the waterline: five objects named, one hall named, nothing else. Smooth from the copper boat's water, warm from the departing hand. Administrative officer's countersignature on arrival. A context note from the hall's council may arrive separately.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["ALF", "LDN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "ALF", "type": "skill_check", "dc": 11, "skill": "Insight", "prompt": "The new king will not know what the objects are. This is the correct state. The archive is the explanation, not the hall. Understand this before picking up the manifest."},
+    {"act": 2, "node": "ALF_to_LDN", "type": "skill_check", "dc": 12, "skill": "Athletics", "prompt": "The coastal factors' report reaches the administrative officer in two hours. The manifest must arrive before the salvage assessment closes. The objects are commission goods, not salvage."},
+    {"act": 3, "node": "LDN", "type": "combat", "dc": 13, "skill": "Persuasion", "enemies": "2x hall guards, AC 13, HP 20", "prompt": "The council wants an explanation. The correct answer is: the manifest names the hall; the objects are delivered per the commission. Do not interpret the objects. That authority is not the carrier's."},
+    {"act": 4, "node": "LDN_to_WM", "type": "skill_check", "dc": 11, "skill": "Composure", "prompt": "The context note can be appended after filing. Filing does not require it first. Continue to Weimar; note that the hall's context note may arrive separately."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the manifest and the countersignature. The objects are at the hall. What was left and where it went. Final Commission Records opens. The Kalevala series is complete."}
+  ],
+  "archiveCategory": "Final Commission Records — The Objects Left for the New World",
+  "sweelinckNote": "He understood what the new world would need. He also understood that explaining it was not his job. He left a list.",
+  "questComplete": true
+}
+```
