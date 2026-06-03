@@ -297,7 +297,7 @@ All files under 60 KB in 1367-sources/. Each to receive full pipeline: read → 
 | BHD | Cuchulain of Muirthemne — Lady Gregory | 43 | **SEEDS COMPLETE 2026-06-03 — BHD-01–07 all vignettes done. New nodes: EMR. See BHD-cuchulain.md.** |
 | ZTH | Odyssey — Homer (Butler) | 43 | **SEEDS COMPLETE 2026-06-03 — ZTH-01–07 all vignettes done. New nodes: PHC, RME. See ZTH-odyssey.md.** |
 | ATH | Iliad — Homer (Lang) | 45 | **SEEDS COMPLETE 2026-06-03 — ATH-01–07 all vignettes done. No new nodes. See ATH-iliad.md.** |
-| GDN | Njal's Saga — Anon (Dasent) | 45 | QUEUED |
+| GDN | Njal's Saga — Anon (Dasent) | 45 | **SEEDS COMPLETE 2026-06-03 — GDN-01–07 all vignettes done. No new nodes. See GDN-njal-saga.md.** |
 | JRS | Jerusalem Delivered — Torquato Tasso | 46 | QUEUED |
 | LIS | Lusiads — Luís de Camões | 47 | QUEUED |
 | MAD | Chronicle of the Cid — Anon (Southey) | 48 | QUEUED |
