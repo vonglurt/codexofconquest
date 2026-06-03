@@ -527,7 +527,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
-| [x] | AMS | tale-of-genji | Tale of Genji — Murasaki Shikibu | c.1010 | Japanese Novel | 435 | Processed 2026-05-31/06-01 — AMS-01 spec (The Scarlet Fence Poem, NIS→TBZ); AMS-02–06 seeds. ALL 3 PARTS FULLY READ (Chapters I–IX + Appendices). New seed from Parts 2–3: AMS-07 (The Exchanged Fans, TBZ→MRG→TBZ). See AMS-tale-of-genji.md. |
+| [x] | AMS | tale-of-genji | Tale of Genji — Murasaki Shikibu | c.1010 | Japanese Novel | 435 | SEEDS COMPLETE 2026-06-03 — AMS-01–07 all vignettes done. New node: MRG (Maragha — Observatory District and Road Junction Inn Quarter). See AMS-tale-of-genji.md. |
 | [x] | TBS | knight-panther-skin | Knight in the Panther's Skin — Shota Rustaveli | c.1225 | Georgian Epic | mem | SEEDS COMPLETE 2026-06-03 — TBS-01–07 all vignettes done. Memory-processed (source .txt not read; source file contained unrelated content). No new nodes needed (GEO, TIF, ALP, CON, DAM, CAF all exist). See TBS-knight-panther-skin.md. |
 
 ### Caribbean & Americas

@@ -1577,6 +1577,7 @@ He opens the classification ledger. "Diplomatic Documents — Objects That Prove
   "route": "TBZ → MRG → TBZ → WM",
   "theme": "The identifying object exchanged in darkness has a different meaning once light arrives; the cipher that proves ownership also disqualifies it; the fan proves and forecloses simultaneously",
   "archive_category": "Diplomatic Documents — Objects That Prove Identity and Simultaneously Negate It",
+  "questComplete": true,
   "new_nodes": [
     {
       "code": "MRG",
