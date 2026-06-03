@@ -251,6 +251,74 @@ Fra Bonaventura's report is the official record. "Poisoned groundwater; communit
 }
 ```
 
+### CLJ-01 UQF Stub
+
+```json
+{
+  "quest_id": "CLJ_001",
+  "title": "The Compiled Account",
+  "cycle": 1,
+  "book": "Dracula (Bram Stoker, 1897)",
+  "token": {
+    "id": "compiled_dossier",
+    "name": "The Compiled Dossier",
+    "description": "Stitched folio — three separately dated accounts in three hands on three kinds of paper, prefaced by Doktor Janos's analytical note arguing that independent agreement from unconnected witnesses is the only form of evidence that cannot be accused of collaboration. Sealed with black wax, physician's mark on outside. Slightly damp, cold."
+  },
+  "route": "BIS → KLZ → WM",
+  "theme": "The proof exists in the compilation; each account separately is an anecdote and is deniable; assembled by someone who understood that agreement from independent sources is the only argument that cannot be accused of collaboration, the accounts become evidence; the compiler creates the argument by committing to the work of assembly",
+  "archive_category": "Compiled Witness Records — Independent Accounts That Cannot Be Accused of Collaboration",
+  "acts": [
+    {
+      "act_id": "CLJ_001_act1",
+      "location": "BIS",
+      "type": "skill_check",
+      "activateNode": "BIS",
+      "scene": "Doktor Janos's study; the sealed dossier for the archdeacon's court; Janos wants to add his own account — which would destroy the independent-testimony argument.",
+      "skillCheck": { "stat": "Insight", "dc": 11, "pass": "fighter understands why Janos's addition would undermine the argument; Janos accepts; folio sealed as-is; flag set", "fail": "Janos adds a postscript; fighter cannot prevent it; the argument is weakened but not destroyed" },
+      "checkPassFlag": "dossier_sealed_clean",
+      "grantItem": { "id": "compiled_dossier", "name": "The Compiled Dossier", "description": "Three independent accounts stitched together, physician's analytical preface. Sealed. The proof is in the compilation." }
+    },
+    {
+      "act_id": "CLJ_001_act2",
+      "location": "Road",
+      "type": "hybrid",
+      "activateNode": "BIS",
+      "scene": "Mountain road from Bistritz; a wolf follows the coach; coachman wants to stop for the night; eight-hour delay would miss the archdeacon's submission deadline.",
+      "skillCheck": { "stat": "Animal Handling", "dc": 12, "pass": "coachman convinced; wolf driven off; journey continues", "fail": "combat" },
+      "combat": { "enemies": [{"name": "Wolf", "ac": 13, "hp": 22, "count": 1}], "pass": "proceed; some delay", "fail": "held overnight; late arrival" }
+    },
+    {
+      "act_id": "CLJ_001_act3",
+      "location": "KLZ",
+      "type": "skill_check",
+      "activateNode": "KLZ",
+      "scene": "The archdeacon's court submission desk; Fra Bonaventura's assistant Fra Clement recognizes the physician's seal and wants to inspect the folio before submission.",
+      "skillCheck": { "stat": "Persuasion", "dc": 12, "pass": "Fra Clement accepts that unsealing compromises the argument; folio submitted intact; deadline met", "fail": "Fra Clement insists; brief inspection; wax resealed; argument weakened but folio submitted" }
+    },
+    {
+      "act_id": "CLJ_001_act4",
+      "location": "Road",
+      "type": "skill_check",
+      "activateNode": "KLZ",
+      "scene": "Road north; the surviving victim Erzsebet is traveling with a recantation document; her recantation would reopen the case the dossier helped close.",
+      "skillCheck": { "stat": "Insight", "dc": 12, "pass": "fighter understands her fear as the cause of recantation, not a change of testimony; offers a way to preserve her safety without recanting; flag set", "fail": "recantation noted; no intervention made" },
+      "checkPassFlag": "erzsebet_understood"
+    },
+    {
+      "act_id": "CLJ_001_act5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Sweelinck reads the three accounts and the physician's preface; creates Compiled Witness Records — Independent Accounts That Cannot Be Accused of Collaboration.",
+      "skillCheck": { "stat": "History", "dc": 11, "pass": "full provenance: three witnesses, the compilation argument, the Klausenburg submission and outcome", "fail": "category created; shorter record" },
+      "takeItem": { "id": "compiled_dossier" }
+    }
+  ]
+}
+```
+
+*CLJ-01 UQF stub complete. 2026-06-03.*
+
 ---
 
 ## Seeds CLJ-02 through CLJ-06
@@ -1947,6 +2015,7 @@ Archivus Sweelinck reads the certified transcription. He reads the shorthand vol
   "route": "BIS → WM",
   "theme": "Transcription is not copying but translation from private knowledge into public record; making legible is the final act in the chain of evidence; the factual witness creates what the notarial system could not",
   "archive_category": "Transcription Records — Private Knowledge Made Public: Certification by Factual Witness",
+  "questComplete": true,
   "acts": [
     { "act_id": "CLJ_009_act1", "location": "BIS", "type": "skill_check", "activateNode": "BIS", "scene": "Vera transcribing; twelve of sixteen done; rival's clerk visible through window.", "skillCheck": { "stat": "Investigation", "dc": 11, "pass": "surveillance pattern identified; Vera alerted; flag set", "fail": "presence noted; pattern missed" }, "checkPassFlag": "surveillance_detected", "grantItem": { "id": "deciphered_notebook", "name": "The Deciphered Notary Notebook", "description": "Four shorthand volumes, partial transcription. Vera Papp is the only person who can read the shorthand." } },
     { "act_id": "CLJ_009_act2", "location": "BIS", "type": "hybrid", "activateNode": "BIS", "scene": "Bodor's notarial authority challenge; factual witness vs. notarial authority distinction.", "skillCheck": { "stat": "Persuasion", "dc": 13, "pass": "challenge not sustained", "fail": "combat" }, "combat": { "enemies": [{"name": "Bodor's Man", "ac": 12, "hp": 22, "count": 2}], "pass": "volumes with fighter", "fail": "volumes recovered" } },

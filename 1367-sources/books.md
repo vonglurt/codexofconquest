@@ -505,7 +505,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
-| [x] | CLJ | dracula | Dracula — Bram Stoker | 1897 | Gothic Horror | 869 | Processed 2026-05-31/06-01 — CLJ-01 spec (The Compiled Account, Bistritz→Klausenburg); CLJ-02–09 seeds. All 5 parts fully read (Chapters I–XXVII + epilogue). New seeds from Parts 2–5: CLJ-07 (The Haarlem Garlic, SIB→BOR), CLJ-08 (Van Helsing's Contingency, KLZ→KLZ), CLJ-09 (The Transcript, BIS). See CLJ-dracula.md. |
+| [x] | CLJ | dracula | Dracula — Bram Stoker | 1897 | Gothic Horror | 869 | SEEDS COMPLETE 2026-06-03 — CLJ-01–09 all vignettes done. CLJ-01 UQF stub written from prose spec; questComplete added to CLJ-09. No new nodes (BIS, KLZ, SIB, BOR, BDA all pre-existing). See CLJ-dracula.md. |
 
 ### Middle Eastern
 
