@@ -487,7 +487,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
 | [x] | FLR | divine-comedy-inferno | Divine Comedy: Inferno — Dante Alighieri | c.1320 | Allegorical Epic | 641 |
-| [x] | JRS | jerusalem-delivered | Jerusalem Delivered — Torquato Tasso | 1581 | Renaissance Epic | 237 |
+| [x] | JRS | jerusalem-delivered | Jerusalem Delivered — Torquato Tasso | 1581 | Renaissance Epic | 237 | SEEDS COMPLETE 2026-06-03 — JRS-01–07 all vignettes done. No new nodes (PKR, SGA, JAR, OLN, CON, VEN, DAM, RME all exist). See JRS-jerusalem-delivered.md. |
 
 ### Classical Mediterranean
 

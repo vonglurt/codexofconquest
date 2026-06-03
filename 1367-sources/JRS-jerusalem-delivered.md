@@ -458,3 +458,802 @@ activateMissionBit: jrsSophComplete
 
 *quest-map.md: add JRS cycle 2 row and theme thread; append OLN, JAR to Location Grid.*
 *books.md: mark JRS [x].*
+
+---
+
+### 5-Act Vignette Play: *Tancred's Grant*
+
+**THE TOKEN: TANCRED'S PETITION TABLET** — A rectangular olive-wood tablet, twice the length of a hand. On one face, carved in a soldier's functional Latin: the boundary marks of a small valley northwest of the city wall, the request to allocate it in perpetuity as a chapel site, the legal basis, and Tancred's name. On the reverse face, a line scratched in haste the night before: *this is where she died*. No other annotation. The five boundary marks are precise enough to exclude the possibility of confusion with any other valley. Tancred himself drew them.
+
+---
+
+**ACT I — "The Allocation Window"**
+*Node: JAR — Jerusalem Archive and Administration Registry.*
+
+The Crusade land council is closing its allocation session in one hour. After that, unclaimed valley parcels revert to the administrative pool and a new session will not be called for months. The tablet is already written. Tancred gave it to you at dawn. His exact words: "File it before the session ends."
+
+The land allocation desk is at the far end of the registry hall. Between you and it: the queue from this morning's petitions, a side-corridor argument between a Crusade quartermaster and a pilgrim hostel proprietor over stable rights, and the desk clerk who has been processing documents since before first light.
+
+> **Persuasion DC 12.** The clerk has fifteen documents ahead of yours. The session window is real. Ask him to log the petition now, before the session ends, on the basis that it has already been reviewed — Tancred's name is on it, the boundaries are specified, the legal basis is written. He does not need to make a decision. He only needs to log that a petition has been received.
+
+**Fail:** He logs it as received but marks it as pending session review. The session ends. The tablet is in the queue but unclosed. You need to return tomorrow.
+
+**Pass:** He reads the name. He reads the boundary marks. He reads the line on the reverse. He logs it in the current session without comment.
+
+TOKEN GRANTED: Tancred's Petition Tablet.
+
+---
+
+**ACT II — "The Orchard Interest"**
+*Node: JAR road departing.*
+
+A Crusade knight named Bernard is waiting outside the registry. He has been watching the session door. His steward holds a draft petition of his own — for the same valley, framed as an agricultural allocation for an orchard his family will plant. He speaks to you pleasantly. He knows who Tancred is. He is not hostile. He says: Tancred can build a chapel somewhere else.
+
+> **History DC 11.** The valley is the site of a specific combat — the night fight in which Tancred killed Clorinda. That combat is already in the Crusade's military record. A site where a named engagement in the official record occurred is not available for agricultural allocation under the campaign's own land-use provisions. Bernard's petition would have failed on those grounds before it reached a decision. Tancred did not know this when he filed his petition. It doesn't change what he asked for. It changes what Bernard can legally do.
+
+**Fail:** Bernard's steward argues the military record provision is informal. You file a counter-argument with the clerk and the question will take weeks.
+
+**Pass:** Bernard receives the information. He reads his steward's face. He withdraws the petition without speaking further about it.
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "The Relic Offer"**
+*Node: CON — Constantinople archive district.*
+
+A Byzantine collector — not hostile, cultured, with a good library — finds you in the archive waiting room. He wants the olive-wood tablet. His argument is careful: the line on the back (*this is where she died*) is a relic notation; the object has intrinsic significance independent of what it files; he can offer a price proportional to the significance. His offer is genuinely proportional.
+
+> **Insight DC 12.** The tablet's significance is relational, not intrinsic. The line on the back means what it means because Tancred wrote it about a specific valley, and the object's function is to identify that valley in a land registry. Removed from the registry function and placed in a collection, it becomes an object about something that cannot be explained from the object. The line *this is where she died* requires the five boundary marks to be meaningful; without the context of the allocation petition, the words become grief-decoration. The collector would possess an object he cannot interpret correctly.
+
+**Fail:** He makes a second offer. You hold.
+
+**Pass:** You give him the distinction between relic and working document. He thinks about it. He says he will commission a copy of the valley's description from a geographer instead.
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "The Byzantine Transit Check"**
+*Node: CON road toward WM.*
+
+A Byzantine customs official stops you at the city gate. Carved objects are subject to documentation — the empire has been losing architectural records and inscriptions to informal export. He reads the Latin. He reads the boundary marks. He cannot parse the boundary references — they describe a valley northwest of Jerusalem, which is outside Byzantine administrative jurisdiction.
+
+> **Athletics DC 12.** This is not a Persuasion check. The official's procedure requires a written authorization for any carved object that cannot be assessed by his office. The authorization office is twenty minutes back in the customs district. The road ahead will be passable for four more hours before the evening gate closes. You need to get the written authorization, return, and reach the gate before the evening closure. This requires moving fast through a busy customs district and back without damaging the tablet.
+
+**Fail:** You miss the gate. One day's delay at the customs hostel.
+
+**Pass:** You make both trips and pass through the gate with the authorization stamp before the evening closure.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Archivist's Note"**
+*Node: WM — Weimar Archive.*
+
+Sweelinck reads the petition. He reads the boundary marks. He reads the line on the reverse. He sets the tablet down carefully with the reverse facing up.
+
+"He filed this himself?"
+
+You explain: he gave it to you at dawn and asked you to file it before the allocation session closed.
+
+Sweelinck looks at the line again. He turns it over and reads the boundary marks again.
+
+"The site where a man killed what he loved and baptized what he killed cannot be given to an orchard," he says, and this is not poetic. It is the legal basis he will cite in the archive note.
+
+> **Investigation DC 11.** The archive needs to classify the petition under a category that preserves both the land grant function and the personal record it carries. Standard land grant records do not cover sites whose significance is simultaneous with the event that created them. Sweelinck needs you to read the existing category list and confirm that no existing category covers this — that the archive must create a new one.
+
+**Fail:** Sweelinck selects an existing category that partially fits. The tablet is filed but the category is approximate.
+
+**Pass:** You confirm the gap. Sweelinck creates: *Council Land Grants — Sites Marked by Irresolvable Personal History, First Entry. The valley northwest of Jerusalem where Tancred killed Clorinda and baptized her: the five boundary marks are not a memorial notation but a legal description; the chapel Tancred will build is not a monument but a location; this is where the event happened and this document marks it as that place permanently.*
+
+TOKEN TAKEN: Tancred's Petition Tablet.
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "JRS_003",
+  "title": "Tancred's Grant",
+  "source": "Jerusalem Delivered — Torquato Tasso (1581), Fairfax translation (1600)",
+  "cycle": 3,
+  "book": "jerusalem-delivered",
+  "source_episode": "Books III and XII — Tancred kills Clorinda in darkness, baptizes her, barely survives grief; the site of her death is a specific valley northwest of the city wall",
+  "theme": "The site where a man killed what he loved and baptized what he killed cannot be given to an orchard: the allocation petition is a legal document and a location-record simultaneously; filing it before the session closes is not urgency but precision",
+  "activateNode": "JAR",
+  "token": {
+    "id": "tancred_petition_tablet",
+    "name": "Tancred's Petition Tablet",
+    "description": "Olive-wood tablet, twice the length of a hand: five boundary marks of a small valley northwest of the city wall, the chapel site request, the legal basis, Tancred's name. On the reverse, scratched in haste: 'this is where she died.'",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["JAR", "CON", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {
+      "act": 1,
+      "node": "JAR",
+      "type": "skill_check",
+      "skill": "Persuasion",
+      "dc": 12,
+      "summary": "Land allocation session closes in one hour. Ask the desk clerk to log the petition as received before the session ends — Tancred's name is on it, the boundaries specified, the legal basis written. TOKEN GRANTED."
+    },
+    {
+      "act": 2,
+      "node": "JAR road",
+      "type": "skill_check",
+      "skill": "History",
+      "dc": 11,
+      "summary": "A knight waiting outside has a competing orchard petition for the same valley. History DC 11: the valley is the site of a named combat in the Crusade's military record; that classification makes it unavailable for agricultural allocation. Bernard receives this and withdraws."
+    },
+    {
+      "act": 3,
+      "node": "CON",
+      "type": "skill_check",
+      "skill": "Insight",
+      "dc": 12,
+      "summary": "A Byzantine collector wants the tablet as a relic (the reverse line). Insight DC 12: the line requires the five boundary marks to be meaningful; removed from its registry function it becomes grief-decoration without context. He commissions a geographer's copy instead."
+    },
+    {
+      "act": 4,
+      "node": "CON gate",
+      "type": "skill_check",
+      "skill": "Athletics",
+      "dc": 12,
+      "summary": "Byzantine customs requires written authorization for carved objects. Athletics DC 12 to collect the authorization, return, and reach the evening gate before closure — two trips through a busy customs district without damaging the tablet."
+    },
+    {
+      "act": 5,
+      "node": "WM",
+      "type": "skill_check",
+      "skill": "Investigation",
+      "dc": 11,
+      "summary": "Sweelinck reads both faces. Investigation DC 11: confirm no existing category covers sites whose significance is simultaneous with the event that created them. Sweelinck creates: Council Land Grants — Sites Marked by Irresolvable Personal History, First Entry. TOKEN TAKEN."
+    }
+  ]
+}
+```
+
+---
+
+### 5-Act Vignette Play: *Ismen's Notebooks*
+
+**THE TOKEN: ISMEN'S ARCHITECTURAL NOTEBOOK** — A small iron-clasped notebook, octavo size, in black-dyed calfskin. The clasp is iron because the contents require a material that will not respond to the enchantment the book documents. Inside: seventy pages of architectural diagrams, measurement tables, and margin notes in the sorcerer Ismen's hand — detailed records of how the enchanted forest was constructed layer by layer, which trees were modified first, the harmonic sequence of the enchantments, the specific psychological material each zone was keyed to. On the cover, fastened with a wax seal: the Crusade council's destruction order, issued three days after Jerusalem fell, classifying the notebooks as "materials employed in black art, to be burned." The seal has not been broken. The order is still valid.
+
+---
+
+**ACT I — "The Scholar's Argument"**
+*Node: PKR — Pilgrim's Quarter.*
+
+The scholar Magister Aldo found the notebook in Ismen's quarters after the sorcerer was killed. He brought it to the pilgrims' district rather than the council because he had read enough of it to know what the council would do. He wants you to carry it to an archive where it will not be burned.
+
+His argument: the notebook is not a spell. It is a record of architectural method. Ismen documented how enchantment works the way an engineer documents how a vault is built — materials, sequence, load-bearing relationships. The destruction order covers "materials employed in black art." The notebook documents; it does not employ.
+
+> **History DC 11.** The distinction is not merely semantic. Architectural records of construction are in a different legal and documentary category from the construction itself. Magister Aldo's argument holds under standard archive law: a document that describes a method does not instantiate the method. The destruction order's language cannot be read to cover documentation without also covering every other technical manual the council would prefer to keep.
+
+**Fail:** You carry the notebook without internalizing the distinction. You will need to make the argument under pressure in Act II without preparation.
+
+**Pass:** You have the argument before anyone asks for it.
+
+TOKEN GRANTED: Ismen's Architectural Notebook.
+
+---
+
+**ACT II — "The Destruction Order"**
+*Node: PKR gate.*
+
+A Crusade captain at the quarter gate has a copy of the destruction order. He has been watching for exactly this notebook — someone told the council that Magister Aldo had it. The captain is professional. He is not cruel. He is enforcing a valid legal order.
+
+> **Persuasion DC 13.** The destruction order reads "materials employed in black art." The notebook documents the architecture of enchantment; it does not employ enchantment. The distinction is legible in the order's own language: "employed" requires active use; documentation is passive. Carrying an architectural record of what the enchanted forest was is not carrying the enchanted forest. The captain must either accept the distinction or challenge it in writing — and a written challenge will require him to argue that documentation of a thing is the same as the thing, which will not survive review.
+
+**Fail:** He detains the notebook for twenty-four hours pending council review. You wait.
+
+**Pass:** He reads the order again. He reads the cover notation. He accepts the distinction and lets you pass with a warning.
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "The Venetian Factor"**
+*Node: VEN — Venice, Merchant Republic Archive District.*
+
+A Venetian factor who handles acquisition commissions for a Levantine collector meets you in the archive district. He has heard about the notebook through a ship manifest and wants to purchase it for his client. His offer is generous. His framing is part commercial, part genuinely scholarly — he notes that the Levantine collector has a library that includes three other works on enchantment methodology and would treat the notebook as a research document.
+
+> **Insight DC 12.** The factor's interest is genuinely divided: the commercial commission is driving the inquiry, but there is authentic scholarly motivation behind it. The distinction matters because the correct response is not to reject him entirely but to give the scholarly interest its correct answer: archive records are accessible to researchers; the notebook will be reachable at Weimar through standard scholarly access. The archive provides what the collector actually needs — legibility of the record — without transferring custody to a private collection where the destruction order's legal status remains unresolved.
+
+**Fail:** He makes a second, higher offer. You decline again. He follows you to the harbor.
+
+**Pass:** He receives the distinction. He notes Weimar's access protocols and says his client will send a letter of inquiry. This is an acceptable outcome.
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "The Dominican's Authorization"**
+*Node: VEN harbor road.*
+
+A Dominican friar intercepts you on the harbor road. He carries a letter from a Papal legate authorizing him to collect and remand to Rome any materials related to black magic found in the eastern theater. The letter is genuine and broad. He is polite and unhurrying. He believes he is performing a service.
+
+> **Deception DC 13.** His authorization covers "materials related to black magic." The notebook documents architectural methodology; its subject is enchantment, but its character is analytical and archival. Tell him honestly that the notebook is an architectural record of method — not a spellbook, not an active magical instrument, not a scroll of incantations. The friar's authorization cannot logically cover a technical manual without also covering every alchemical notebook in Venice. You are not deceiving him about what the notebook is; you are preventing him from misclassifying it under a category it does not occupy.
+
+**Fail:** He flags the notebook for forwarding to the Papal legate for assessment. A two-week delay while the legate's office in Avignon reads a letter.
+
+**Pass:** He accepts the classification. He notes the Weimar destination in his record. He lets you pass.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Destruction Order in the Record"**
+*Node: WM — Weimar Archive.*
+
+Sweelinck reads the architectural diagrams. He reads the harmonic sequence tables. He reads the margin notes. He puts the notebook down and looks at the destruction order on the cover.
+
+"The council wanted this burned. It was not burned. Both facts are part of the record."
+
+He begins to remove the wax seal from the cover.
+
+> **Investigation DC 11.** Stop him. The destruction order is not incidental to the notebook's provenance — it is the central fact of the notebook's existence as a document. The notebook survived because the distinction between "materials employed in black art" and "architectural records of method" was maintained. Removing the order would remove the evidence of the challenge that defines the notebook's significance. The archive should receive the notebook and the order together, with both intact.
+
+**Fail:** Sweelinck removes the seal before you speak. The destruction order is filed separately. The notebook is separated from the evidence of its own survival.
+
+**Pass:** Sweelinck stops. He reads your argument. He sets down the wax tool. He files them together: notebook and destruction order, intact. His notation: *Architectural Records of Supernatural Intervention — The Construction Behind the Illusion, First Entry. Ismen's notebook documenting the enchanted forest's construction layer by layer: this record survived because it is a document about enchantment, not a material of enchantment; the destruction order on the cover is part of the provenance chain and will remain attached.*
+
+TOKEN TAKEN: Ismen's Architectural Notebook.
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "JRS_004",
+  "title": "Ismen's Notebooks",
+  "source": "Jerusalem Delivered — Torquato Tasso (1581), Fairfax translation (1600)",
+  "cycle": 4,
+  "book": "jerusalem-delivered",
+  "source_episode": "Books XIII and XVIII — Ismen enchants the forest from which the Crusaders need timber; Rinaldo alone breaks through the illusion by refusing it; Ismen is killed by a stone from the siege engine",
+  "theme": "An architectural record of enchantment is not an enchantment: the document that describes how the illusion was built survives because the distinction between documentation and use was maintained; the destruction order on the cover is proof of the challenge and belongs with the record permanently",
+  "activateNode": "PKR",
+  "token": {
+    "id": "ismen_architectural_notebook",
+    "name": "Ismen's Architectural Notebook",
+    "description": "Iron-clasped black calfskin notebook, octavo: seventy pages of architectural diagrams, measurement tables, and margin notes documenting the enchanted forest's construction layer by layer. On the cover, fastened with the council's wax seal: the Crusade council's destruction order classifying it as 'materials employed in black art, to be burned.'",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["PKR", "VEN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {
+      "act": 1,
+      "node": "PKR",
+      "type": "skill_check",
+      "skill": "History",
+      "dc": 11,
+      "summary": "Magister Aldo's argument: the notebook documents architectural method, it does not employ enchantment. History DC 11: the distinction holds under archive law — a document that describes a method does not instantiate it. TOKEN GRANTED."
+    },
+    {
+      "act": 2,
+      "node": "PKR gate",
+      "type": "skill_check",
+      "skill": "Persuasion",
+      "dc": 13,
+      "summary": "Crusade captain enforcing the destruction order. Persuasion DC 13: 'employed in black art' requires active use; documentation is passive; carrying an architectural record is not carrying the thing it describes."
+    },
+    {
+      "act": 3,
+      "node": "VEN",
+      "type": "skill_check",
+      "skill": "Insight",
+      "dc": 12,
+      "summary": "Venetian factor wants to purchase it for a Levantine collector. Insight DC 12: the scholarly interest behind the commercial offer deserves the correct answer — archive access at Weimar provides what the collector needs without transferring custody."
+    },
+    {
+      "act": 4,
+      "node": "VEN harbor road",
+      "type": "skill_check",
+      "skill": "Deception",
+      "dc": 13,
+      "summary": "Dominican friar with Papal authorization to collect 'materials related to black magic.' Deception DC 13: the notebook is an architectural record of method — not a spellbook or active instrument; his authorization cannot logically cover technical manuals."
+    },
+    {
+      "act": 5,
+      "node": "WM",
+      "type": "skill_check",
+      "skill": "Investigation",
+      "dc": 11,
+      "summary": "Sweelinck begins to remove the destruction order from the cover. Investigation DC 11: stop him — the order is part of the provenance chain that defines the notebook's survival. Both filed together intact. Architectural Records of Supernatural Intervention — The Construction Behind the Illusion, First Entry. TOKEN TAKEN."
+    }
+  ]
+}
+```
+
+---
+
+### 5-Act Vignette Play: *Erminia's Safe Passage*
+
+**THE TOKEN: ERMINIA'S ESTATE GRANT** — A parchment folded into quarters, Godfrey's seal intact at the fold. The document grants Erminia, daughter of the late king of Antioch, rights of residence and agricultural income from her father's estate pending full title resolution under the new Crusade administration. The seal is genuine. Godfrey himself wrote the attestation line at the bottom. The problem is that Erminia has been living among shepherds for months. Her court dress is in a locked chest she has not opened since she stole Clorinda's silver armor. She looks like what she has been: a shepherd woman in an upland pasture, and the garrison commander who must accept the grant has never seen her in any other condition.
+
+---
+
+**ACT I — "The Shepherd Valley"**
+*Node: OLN — Olindo's district, Jerusalem, where Erminia has stayed since returning to the city.*
+
+Erminia sits at the edge of the stable courtyard. She has been here three days since Vafrine brought her back. She has washed but she has not changed. The locked chest is behind her.
+
+She wants you to carry the estate grant to the land registry before the garrison commander closes the file. She hands you the parchment. Then she says: "He does not know what I look like without armor or wool."
+
+> **Insight DC 11.** She is telling you something specific: the identity problem is not the document's — the document is correct — it is hers. The garrison commander has seen Clorinda's silver armor (and believes she wore it as a spy), not Erminia. He may dispute the identity of the person the grant names. Knowing this before you arrive at the registry gives you the argument before he makes the challenge.
+
+**Fail:** You take the parchment without grasping the identity problem. You will face it unprepared.
+
+**Pass:** You understand before she finishes. "Who saw you in the shepherd valley who knows your name?"
+
+She gives you two names.
+
+TOKEN GRANTED: Erminia's Estate Grant.
+
+---
+
+**ACT II — "The Silver Armor Question"**
+*Node: JAR approach — garrison commander's office, outside the land registry.*
+
+The garrison commander is correct and organized. He reads the grant. He reads the attestation. He looks up. He asks where she was for the months between her departure from the city and her return.
+
+You tell him.
+
+He pauses. He has a report from three months ago: Clorinda's silver armor was seen moving through the Christian camp at night, toward the wounded. He suspects Erminia used the armor as a spy's disguise. His suspicion is wrong but it is not unreasonable.
+
+> **Persuasion DC 12.** The silver armor belonged to Clorinda; Erminia borrowed it to reach Tancred's camp to heal him, not to gather intelligence. Clorinda is dead; the armor was not stolen, and Erminia's presence in the Christian camp was medical, not military. The commander needs to hear the sequence clearly: she left Jerusalem to heal Tancred, the patrol chased her, she was lost, she found the shepherds. The grant was issued by Godfrey on the basis of this full account.
+
+**Fail:** He forwards the armor question to a Crusade security assessment. The file is open pending review. Delay.
+
+**Pass:** He accepts the sequence. He makes a note in the report and moves to the document assessment.
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "The Origin Challenge"**
+*Node: JAR — land registry desk.*
+
+A records clerk at the land registry raises a procedural challenge: Erminia's father was the king of Antioch, a Saracen vassal ruler. Under the new administration's property regulations, estates held by Saracen rulers are subject to administrative review before any grant to Saracen-lineage heirs can be finalized. The clerk is reading the regulations correctly.
+
+> **History DC 12.** The regulation applies to Saracen rulers' estates passing to Saracen-lineage heirs under Saracen succession law. Godfrey's grant is not a succession instrument — it is a Crusade administration grant to a specific named person (Erminia) based on her current Christian ally status, issued under the new administration's authority and not derived from Saracen succession law. The regulation doesn't apply because the grant's legal basis is the new administration's authority, not her father's title.
+
+**Fail:** The clerk files a request for legal opinion. Two weeks.
+
+**Pass:** The clerk rereads the grant's legal basis. He accepts the distinction and processes the registration.
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "The River Crossing"**
+*Node: JAR road toward WM.*
+
+The road north from Jerusalem runs through a ford that has been running high for three days from the spring snowmelt in the hills. The estate grant is parchment. Godfrey's seal is wax. The document cannot get wet.
+
+> **Athletics DC 11.** The ford is knee-deep at the crossing line but the current is fast. The document is folded into quarters but needs to be held above your head through the crossing. The footing is loose gravel. The far bank is dry. This is a physical problem requiring steady balance and a free arm.
+
+**Fail:** You slip once. The document corner catches a splash. The parchment is damp but legible; the seal impression is slightly softened but intact. A minor complication at Weimar.
+
+**Pass:** You cross with the document dry. Godfrey's seal is sharp and unaffected.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Pilgrim Notation"**
+*Node: WM — Weimar Archive.*
+
+Sweelinck reads the grant. He reads the attestation. He reads the garrison commander's notation confirming identity verification.
+
+"She was a shepherd for how long?"
+
+Months, you say.
+
+He reads the document again. "The grant was made to a woman who had been living in a pasture and did not look like what the document said she was. The identity verification is the document's most important provenance detail."
+
+> **Religion DC 11.** The grant references Erminia's father's tomb. Under pilgrimage and shrine access provisions, the heir's right of access to a parent's tomb site is a separate legal category from property inheritance rights. Sweelinck needs this noted — the estate grant provides residential rights; the pilgrimage provision covers tomb access specifically. Both need to be in the file.
+
+**Fail:** The tomb access provision is filed under general estate rights. The distinction is lost.
+
+**Pass:** Sweelinck adds a notation covering both provisions. He writes the archive category: *Identity Verification Records — The Person Who Has Been Someone Else and Returns, First Entry. Erminia's estate grant: the garrison commander's identity confirmation is the document's primary provenance chain; she had been living as a shepherd for months; the grant was issued to a woman who looked like someone else and was verified as herself through named witness testimony; the archive holds the verification alongside the grant because together they are what the document is.*
+
+TOKEN TAKEN: Erminia's Estate Grant.
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "JRS_005",
+  "title": "Erminia's Safe Passage",
+  "source": "Jerusalem Delivered — Torquato Tasso (1581), Fairfax translation (1600)",
+  "cycle": 5,
+  "book": "jerusalem-delivered",
+  "source_episode": "Books VI–VII and XIX — Erminia steals Clorinda's silver armor, is chased by a patrol, lives among shepherds for months, returns to heal Tancred at the poem's end",
+  "theme": "The person who has been someone else and returns must be verified as herself: the estate grant is correct, the seal is genuine, the identity is what it says — but the garrison commander has never seen her except in armor she borrowed from a dead woman, and the identity verification is the document's most important provenance detail",
+  "activateNode": "OLN",
+  "token": {
+    "id": "erminia_estate_grant",
+    "name": "Erminia's Estate Grant",
+    "description": "Parchment folded into quarters, Godfrey's seal intact: grants Erminia, daughter of the late king of Antioch, rights of residence and agricultural income from her father's estate. Godfrey's attestation in his own hand at the bottom. The garrison commander's identity confirmation note added during Act II.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["OLN", "JAR", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {
+      "act": 1,
+      "node": "OLN",
+      "type": "skill_check",
+      "skill": "Insight",
+      "dc": 11,
+      "summary": "Erminia gives you the grant and says the garrison commander doesn't know what she looks like. Insight DC 11: the identity problem is hers, not the document's — understand this before arriving. TOKEN GRANTED."
+    },
+    {
+      "act": 2,
+      "node": "JAR approach",
+      "type": "skill_check",
+      "skill": "Persuasion",
+      "dc": 12,
+      "summary": "Garrison commander suspects the silver armor incident was espionage. Persuasion DC 12: she borrowed it to heal Tancred, not gather intelligence; the sequence is medical, not military; Godfrey's grant was issued on the basis of the full account."
+    },
+    {
+      "act": 3,
+      "node": "JAR",
+      "type": "skill_check",
+      "skill": "History",
+      "dc": 12,
+      "summary": "Records clerk: Saracen-lineage estates require administrative review. History DC 12: Godfrey's grant is not a succession instrument under Saracen law but a new-administration grant based on her current Christian ally status — the regulation doesn't apply."
+    },
+    {
+      "act": 4,
+      "node": "JAR road",
+      "type": "skill_check",
+      "skill": "Athletics",
+      "dc": 11,
+      "summary": "High ford, fast current, parchment and wax seal cannot get wet. Athletics DC 11: loose gravel footing, document held above head, far bank dry."
+    },
+    {
+      "act": 5,
+      "node": "WM",
+      "type": "skill_check",
+      "skill": "Religion",
+      "dc": 11,
+      "summary": "Sweelinck needs the tomb access provision noted separately from estate rights. Religion DC 11: pilgrimage/shrine access provisions cover heir's tomb access independently of property inheritance. Identity Verification Records — The Person Who Has Been Someone Else and Returns, First Entry. TOKEN TAKEN."
+    }
+  ]
+}
+```
+
+---
+
+### 5-Act Vignette Play: *Armida's Conversion*
+
+**THE TOKEN: ARMIDA'S DECLARATION OF CONVERSION** — A doubled parchment — two copies side by side, folded together, sealed with a single wax seal bearing an impression neither Arabic nor Latin but Armida's own device: a damascene rose, pressed into the wax with her thumb ring. The left copy is in Arabic, the right in Latin. Both signed in her own hand with her full title: *Armida, formerly of Damascus, ward of Hidraoth, now under the protection of Rinaldo di Este.* Below her signature on both copies: Rinaldo's countersignature and seal. The Damascus property attachment is folded inside: three buildings, two estates, current under dispute by her uncle's heirs.
+
+---
+
+**ACT I — "Before She Leaves Damascus"**
+*Node: DAM — Damascus.*
+
+Armida is standing at the window of the house she will not see again. The declaration is on the table. It is already written. Her stylus is in her hand and she is not moving.
+
+This is not hesitation. She has decided. She is determining whether the act of signing publicly commits her to a category she has not fully defined for herself.
+
+> **Persuasion DC 13.** She needs to hear the specific distinction: signing the declaration does not transfer her properties to the Church or to Rinaldo — it opens the process of regularizing their status under Christian protection, which means her Damascus properties remain legally hers while the dispute is resolved under the new administration's law rather than under her uncle's heirs' claim. She is not surrendering her holdings. She is claiming them through a different legal structure. The distinction between surrender and claim matters to her precisely.
+
+**Fail:** She signs without being given the distinction. She files the declaration. She will ask about the properties later and the question will be harder to answer.
+
+**Pass:** She hears the distinction. She picks up the stylus. She signs both copies in full, titles included.
+
+TOKEN GRANTED: Armida's Declaration of Conversion.
+
+---
+
+**ACT II — "The Damascus Civil Official"**
+*Node: DAM gate.*
+
+A Damascus civil official intercepts you at the city gate. The Damascus property dispute has generated a contested-property flag on outbound documents naming those estates. He wants to hold the declaration pending resolution of the property status — his interpretation is that a conversion declaration affecting property rights is a property document.
+
+> **Insight DC 12.** His interpretation is wrong in a specific way: a personal religious status declaration is not a property document. It precedes property decisions and is independent of them. The conversion declaration establishes who Armida is under the new legal framework; what she owns is a subsequent question decided in a different proceeding. His flag applies to property instruments; the declaration is a status instrument.
+
+**Fail:** He holds the declaration for forty-eight hours while the distinction is reviewed. You wait.
+
+**Pass:** He reads the argument. He lifts the flag for status instruments. You pass with the declaration.
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "The Byzantine Ecclesiastical Counter-Signature"**
+*Node: CON — Byzantine ecclesiastical administration.*
+
+The ecclesiastical authority at Constantinople wants a Bishop's countersignature before he will ratify Christian protection for a converted sorceress. His position: the conversion of a known practitioner of black arts requires episcopal oversight. He is not hostile. He believes he is protecting her.
+
+> **Persuasion DC 12.** Rinaldo's countersignature as her sponsor is sufficient under the Crusade administration's field authority — the same authority that issued Godfrey's land grants, Tancred's allocation petition, and all other legal instruments of the campaign. Requiring a Bishop's countersignature retroactively for a field conversion would invalidate every similar instrument issued during the campaign. The ecclesiastical authority's oversight role is documentary review, not co-signature.
+
+**Fail:** He writes a letter requesting episcopal review. The declaration is valid but with a conditional notation. Delay.
+
+**Pass:** He accepts the Crusade administration's authority. He ratifies the declaration and adds his review notation: "valid under field authority."
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "The Papal Agent's Interception"**
+*Node: CON road toward WM.*
+
+A Dominican agent on horseback stops you at the road junction. He carries instructions from Rome: the Armida conversion is a diplomatic precedent the Curia wants to control. His instructions are to divert the declaration to Rome before it reaches any other archive. His instructions are genuine.
+
+> **Deception DC 13.** The declaration is a private conversion record, not a diplomatic instrument. It was issued under field authority, not diplomatic authority; it concerns one woman's legal status, not an international precedent; it is addressed to an archive, not to Rome. You are not deceiving him about what it is — you are preventing him from treating it as what it isn't. A private status document is not a diplomatic instrument by virtue of the subject's unusual history.
+
+**Fail:** He forwards a copy of his instructions to the Weimar archive as a challenge to the filing. The declaration arrives encumbered.
+
+**Pass:** He accepts the classification. He notes his instructions will require Rome to make a formal archival request if they want a copy. He lets you pass.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Archive's Category"**
+*Node: WM — Weimar Archive.*
+
+Sweelinck reads both copies. He reads the Arabic and then asks you to read him the Latin, slowly. He looks at the damascene rose impression in the wax.
+
+"She designed her own seal," he says. This is not a question.
+
+He opens the property attachment and reads the three buildings and two estates listed. He sets it down.
+
+"Her uncle's heirs are disputing these," you say.
+
+"Her uncle's heirs," Sweelinck says, "are disputing with a woman who converted at Rinaldo's side at the end of the war that destroyed most of what they are heirs to. The archive does not adjudicate the property. It holds the declaration."
+
+> **Investigation DC 11.** Sweelinck needs to choose the correct filing category. Armida was sent to the Crusade camp as a weapon and converted as herself; the usual category for conversion records covers captives or willing converts who came to the faith gradually. Neither fits. This is something more specific: a former enemy who converted in the open, under her own authority, at the moment the enemy cause concluded. The archive needs a category that holds both the before and the after.
+
+**Fail:** He files it under standard conversion records. The "formerly of Damascus, ward of Hidraoth" is absorbed into a category that doesn't hold what it says.
+
+**Pass:** Sweelinck creates: *Conversion Records — The Former Enemy's Declaration Made Under Her Own Authority, First Entry. Armida's declaration: she came to the Crusade camp as a weapon and left it as herself; the damascene rose in the wax is her device and not a baptismal seal; what she declared she declared without being required to; the archive holds the conversion and the Damascus property attachment because the former precedes the latter and the latter is why the former is not merely private.*
+
+TOKEN TAKEN: Armida's Declaration of Conversion.
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "JRS_006",
+  "title": "Armida's Conversion",
+  "source": "Jerusalem Delivered — Torquato Tasso (1581), Fairfax translation (1600)",
+  "cycle": 6,
+  "book": "jerusalem-delivered",
+  "source_episode": "Book XX — Armida arrives at the final battle to kill Rinaldo; her arrows are deflected by the shield; she falls from her horse; he catches her; she says 'You have conquered'; she converts to Christianity",
+  "theme": "The former enemy who converts under her own authority is not a captive and not a gradual convert: she came as a weapon and declared as herself; the damascene rose in the wax is her device; what she declared she declared without being required to",
+  "activateNode": "DAM",
+  "token": {
+    "id": "armida_conversion_declaration",
+    "name": "Armida's Declaration of Conversion",
+    "description": "Doubled parchment, Arabic and Latin copies sealed together with Armida's damascene rose device in wax. Both copies signed: 'Armida, formerly of Damascus, ward of Hidraoth, now under the protection of Rinaldo di Este.' Rinaldo's countersignature below hers. Damascus property attachment folded inside: three buildings, two estates, under dispute.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["DAM", "CON", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {
+      "act": 1,
+      "node": "DAM",
+      "type": "skill_check",
+      "skill": "Persuasion",
+      "dc": 13,
+      "summary": "Armida at the window before she leaves Damascus. She needs to hear the distinction: signing opens the process of claiming her properties under Christian protection, not surrendering them. Persuasion DC 13. TOKEN GRANTED."
+    },
+    {
+      "act": 2,
+      "node": "DAM gate",
+      "type": "skill_check",
+      "skill": "Insight",
+      "dc": 12,
+      "summary": "Damascus official wants to hold the declaration pending property resolution. Insight DC 12: a personal religious status declaration is not a property document; it precedes property decisions; his contested-property flag applies to property instruments, not status instruments."
+    },
+    {
+      "act": 3,
+      "node": "CON",
+      "type": "skill_check",
+      "skill": "Persuasion",
+      "dc": 12,
+      "summary": "Byzantine ecclesiastical authority wants a Bishop's countersignature for a converted sorceress. Persuasion DC 12: Rinaldo's countersignature under field authority is sufficient — requiring episcopal co-signature retroactively would invalidate every similar instrument of the campaign."
+    },
+    {
+      "act": 4,
+      "node": "CON road",
+      "type": "skill_check",
+      "skill": "Deception",
+      "dc": 13,
+      "summary": "Papal agent wants to divert the declaration to Rome as a diplomatic precedent. Deception DC 13: it is a private status document, not a diplomatic instrument — Rome may make a formal archival request if they want a copy."
+    },
+    {
+      "act": 5,
+      "node": "WM",
+      "type": "skill_check",
+      "skill": "Investigation",
+      "dc": 11,
+      "summary": "Standard conversion categories don't fit. Investigation DC 11: she came as a weapon and declared as herself; the archive needs the category that holds the before and the after. Conversion Records — The Former Enemy's Declaration Made Under Her Own Authority, First Entry. TOKEN TAKEN."
+    }
+  ]
+}
+```
+
+---
+
+### 5-Act Vignette Play: *The Godfrey Dispatch*
+
+**THE TOKEN: GODFREY'S LETTER TO ROME** — A sealed cylinder, oiled leather wrapped over a rolled parchment, the Crusade seal — Godfrey's eagle device — pressed into black wax at both ends. Inside: the official commander's dispatch describing the fall of Jerusalem, the final assault, the entry into the Church of the Holy Sepulchre, and the Crusade's conclusion. The text was dictated to a clerk two hours after Godfrey left the Church. It differs from Raymond of Toulouse's version in four specific places, all of which concern which commander ordered what at which hour of the assault. Godfrey did not write those differences as points of dispute. He wrote them as facts. The differences are an accident of precision.
+
+---
+
+**ACT I — "The Wounded Courier"**
+*Node: PKR — Pilgrim's Quarter, near the Jerusalem harbor district.*
+
+The courier is in the back room of the pilgrim hospice. He cannot travel. He took a crossbow bolt in the shoulder during the last night of fighting and the wound has stiffened; he will recover but not in time for the sailing window. He holds the cylinder against his chest with his good arm. He cannot explain the commission verbally. The cylinder is the commission.
+
+> **Insight DC 11.** He cannot give you the ship departure time, the recipient's name, or the routing instructions. None of these things are written on the cylinder. He cannot speak them clearly — he has lost too much blood and the fever is beginning. What he can do is push the cylinder into your hands. Insight DC 11: the commission is to carry the letter to Rome before the sailing window closes, not to understand it. Everything necessary is either inside the cylinder or will become obvious when you reach the harbor.
+
+**Fail:** You ask three questions he cannot answer. He loses consciousness before the transfer completes. You take the cylinder anyway, but you don't know the ship.
+
+**Pass:** You take the cylinder. He relaxes. You find the ship's manifest by asking the harbor master who is holding a Crusade dispatch commission.
+
+TOKEN GRANTED: Godfrey's Letter to Rome.
+
+---
+
+**ACT II — "Raymond's Agent"**
+*Node: PKR harbor road.*
+
+Raymond of Toulouse's agent is waiting at the road to the harbor. He knows the sailing window. He knows Godfrey sent a dispatch. He is polite and not physically blocking your path. He wants to delay you by approximately thirty minutes — just long enough for Raymond's own dispatch to be loaded before Godfrey's.
+
+His argument: Godfrey's dispatch requires additional countersignature from the Crusade council to carry official authority. He has a blank council receipt in his hand. The countersignature could take twenty minutes.
+
+> **Persuasion DC 12.** Godfrey is the commander elected by unanimous council vote. His dispatches carry command authority without additional countersignature. The blank receipt is not a procedural requirement — it is a mechanism for introducing a twenty-minute delay. Raymond's own dispatches do not carry this requirement because Raymond did not contest the point when it applied to him.
+
+**Fail:** He delays you fifteen minutes. The sailing window is tighter. You make the harbor at a run.
+
+**Pass:** He accepts the argument. He watches you go. He does not follow.
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "The Vatican Archive Classification"**
+*Node: RME — Rome, Vatican archive intake.*
+
+The Vatican records official reads the dispatch. He reads it carefully and thoroughly. He sets it down.
+
+"I will file this under Crusade Administration — General Dispatches," he says. This classification places the letter in an uncatalogued section with hundreds of routine communications. It will be technically accessible but effectively unavailable to anyone researching the Crusade's conclusion.
+
+> **History DC 12.** A commander's dispatch describing the conclusion of a military campaign is a primary command document, not an administrative communication. Under canon law, commander's dispatches have a specific primary archive category. The Vatican official's classification is not incorrect under his reading of "Crusade Administration" — but it is the wrong category. Primary command documents from the elected commander of a Papal-sanctioned military campaign have their own category precisely because they are primary evidence of what happened and who decided it.
+
+**Fail:** He files it under Administration. Godfrey's version is buried. Raymond's version, filed three hours earlier as a primary record, is the accessible account.
+
+**Pass:** He rereads the canon law category table. He accepts the classification. He files it as a primary commander's dispatch.
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "The Alpine Passage"**
+*Node: RME road toward WM.*
+
+The road north from Rome crosses an Alpine pass that has been running high meltwater for two weeks. The pass itself is navigable. The problem is a single bridge over the runoff channel on the northern descent — the planks are wet from three days of spray, the rope rail is slick, and the channel below is fast and cold. The oiled leather cylinder must not be submerged.
+
+> **Athletics DC 13.** The bridge is twelve feet long. The rail is a single rope at chest height. The planks are slick with spray. The channel below is eight feet down and fast. You cross with the cylinder held inside your cloak, one hand on the rope rail, your weight distributed carefully through the wet planks.
+
+**Fail:** Your foot slips at the midpoint. You catch the rope rail. The cylinder stays inside your cloak — dry, but you spent thirty seconds with one hand on the rope and your heart going. You reach the other side.
+
+**Pass:** You cross without incident. The cylinder is dry. You descend the northern slope in good time.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Seal's Condition"**
+*Node: WM — Weimar Archive.*
+
+Sweelinck takes the cylinder. He reads the Crusade seal on both ends. He reads the contents.
+
+He sets the letter down and looks at the end-seal on the right side. There is a hairline crack running across the eagle's wing.
+
+"This crack," he says. "Is it new?"
+
+> **Perception DC 11.** The crack is new — it occurred during the Alpine descent, from the cold and the stress on the leather when you caught the rope rail. The seal was intact when the courier handed you the cylinder in Jerusalem. The letter was not opened. The crack is a stress fracture in the wax from the journey, not evidence of tampering. Sweelinck needs to know this before he writes the provenance note, because a cracked seal on a commander's dispatch creates a question that must be answered in the record.
+
+**Fail:** You cannot say definitively when the crack occurred. Sweelinck notes it as "condition uncertain at receipt" — a provenance question that will follow the document.
+
+**Pass:** You tell him: the crack is from the Alpine crossing. The seal was intact in Jerusalem. He writes the provenance note accordingly. He creates the archive category: *Commander's Dispatches — The Account That Names Its Own Differences From the Competing Version, First Entry. Godfrey's letter to Rome: dictated two hours after leaving the Church of the Holy Sepulchre; the four differences from Raymond's version are in this document as facts, not as points of dispute; both accounts are in the archive and the differences are visible to anyone who reads both; the commander's account is filed as the primary record because it was sent by the commander; both are available; neither replaces the other.*
+
+TOKEN TAKEN: Godfrey's Letter to Rome. *questComplete: true.*
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "JRS_007",
+  "title": "The Godfrey Dispatch",
+  "source": "Jerusalem Delivered — Torquato Tasso (1581), Fairfax translation (1600)",
+  "cycle": 7,
+  "book": "jerusalem-delivered",
+  "source_episode": "Book XX — The fall of Jerusalem; Godfrey enters the Church of the Holy Sepulchre in full armor and kneels at the tomb, weaponed, weeping; the official Crusade dispatch is dictated two hours later",
+  "theme": "The commander's account that names its own differences from the competing version is not a political document but a precise one: Godfrey wrote what happened as he knew it; both accounts are in the archive; the differences are visible to anyone who reads both; neither replaces the other",
+  "activateNode": "PKR",
+  "token": {
+    "id": "godfrey_letter_to_rome",
+    "name": "Godfrey's Letter to Rome",
+    "description": "Oiled leather cylinder, Crusade seal — Godfrey's eagle device — pressed into black wax at both ends. Inside: the official commander's dispatch describing the fall of Jerusalem, the final assault, and the Crusade's conclusion. Differs from Raymond of Toulouse's version in four specific places concerning which commander ordered what at which hour.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["PKR", "RME", "WM"],
+  "new_nodes": [],
+  "questComplete": true,
+  "acts": [
+    {
+      "act": 1,
+      "node": "PKR",
+      "type": "skill_check",
+      "skill": "Insight",
+      "dc": 11,
+      "summary": "Wounded courier cannot speak the commission. Insight DC 11: take the cylinder and find the ship — the commission is to carry the letter to Rome before the sailing window closes, not to understand it. TOKEN GRANTED."
+    },
+    {
+      "act": 2,
+      "node": "PKR harbor road",
+      "type": "skill_check",
+      "skill": "Persuasion",
+      "dc": 12,
+      "summary": "Raymond's agent wants to delay you twenty minutes with a false countersignature requirement. Persuasion DC 12: Godfrey's dispatches carry command authority by election; the blank receipt is a delay mechanism, not a procedural requirement."
+    },
+    {
+      "act": 3,
+      "node": "RME",
+      "type": "skill_check",
+      "skill": "History",
+      "dc": 12,
+      "summary": "Vatican official wants to file as Crusade Administration (buried). History DC 12: under canon law, commander's dispatches from an elected commander of a Papal-sanctioned campaign have a primary archive category; this is primary evidence, not administrative communication."
+    },
+    {
+      "act": 4,
+      "node": "RME road",
+      "type": "skill_check",
+      "skill": "Athletics",
+      "dc": 13,
+      "summary": "Wet Alpine bridge, slick planks, rope rail, fast channel below. Athletics DC 13: cylinder held inside cloak, one hand on the rope, weight distributed through twelve feet of wet planking."
+    },
+    {
+      "act": 5,
+      "node": "WM",
+      "type": "skill_check",
+      "skill": "Perception",
+      "dc": 11,
+      "summary": "Sweelinck finds a hairline crack in the end-seal. Perception DC 11: the crack is new — it occurred during the Alpine crossing when you caught the rope rail; the seal was intact in Jerusalem; the letter was not opened. Sweelinck writes the provenance note. Commander's Dispatches — The Account That Names Its Own Differences From the Competing Version, First Entry. TOKEN TAKEN. questComplete: true."
+    }
+  ]
+}
+```
