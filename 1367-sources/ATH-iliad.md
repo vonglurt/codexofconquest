@@ -462,3 +462,616 @@ activateMissionBit: athHelenComplete
 
 *quest-map.md: add ATH cycle 2 row and theme thread; append TRH to Location Grid.*
 *books.md: mark ATH [x].*
+
+---
+
+## Cycle 3 — Angle: *The Embassy's Offer — The Rejected Transaction That Still Binds*
+
+**What this angle reveals that Cycles 1–2 missed:** The first two cycles dealt with the ends of things — the diplomatic record of a city's final transaction, a grieving woman's voice preserved before the Greek version absorbed it. Cycle 3 goes to the moment before the war's turning: the embassy in Book 9, where Agamemnon sent Odysseus, Ajax, and Phoenix to Achilles with an enormous formal list of gifts to buy his return to the fighting. Achilles refused everything. After the war, the offer document carries legal weight: it establishes what was offered, confirms the honor-debt Agamemnon acknowledged, and records that Achilles's refusal was given under conditions that may not satisfy the ordinary terms of negotiation. The archive needs both the offer and the refusal in the same record.
+
+---
+
+### 5-Act Vignette Play: *The Embassy's Offer*
+
+**THE TOKEN: EMBASSY OFFER RECORD** — The formal gift list composed by Odysseus before the embassy in Book 9: seven women, seven cities, the cauldrons, the tripods, the gold, Briseis returned with an oath, Agamemnon's daughter in marriage. It was carried to Achilles unsigned and carried back unsigned after the refusal. It documents both what was offered and its rejection — the acknowledgment of a debt and the refusal to accept payment on the terms offered.
+
+---
+
+**ACT I — "The Unsigned List"**
+*The record: unsigned, both sides blank at the signature line. Location: IDC — refugee camp outside Troy.*
+
+Idaeus the old herald has kept this document since the embassy. He carried it into Achilles's tent among the gifts, and carried it out again the same evening with both signature lines empty. He has held it through the sack and the camp and the dispersal. He did not know what to do with it then. He knows now: it needs to travel north with the Herald's Tablet.
+
+TOKEN: `embassy_offer_record`
+
+> **History DC 11.** Understand why an unsigned offer document is an active record rather than a failed transaction — because the document establishes both what was acknowledged as owed and what the offered terms were; the refusal is on record; the debt's existence is on record; neither side denied the other; this is the only document in the entire war where both parties were honest about the terms.
+
+**Fail:** You carry the record without grasping the legal argument. Idaeus summarizes it while you pack.
+
+**Pass:** You understand. He nods. "Take it with the tablet," he says. "They belong together."
+
+TOKEN GRANTED: Embassy Offer Record.
+
+---
+
+**ACT II — "The Inheritance Clerk"**
+*The record: rolled, in the pack. Location: Greek camp road.*
+
+A Greek legal clerk is processing the estates of the dead and the claims of the living. He has heard there is a formal gift-list record from the Book 9 embassy. He wants it — he is preparing the legal basis for claims against Agamemnon's estate from Achilles's heirs. The refusal record supports their position.
+
+> **Persuasion DC 12.** The document is already in transit to a neutral archive; it should be filed there before any party uses it as litigation evidence; once filed at the archive, both parties can cite it; but if one party receives it before filing, the record's neutrality is compromised regardless of the document's contents.
+
+**Fail:** He files an administrative notice that the document is under claim. You continue; the notice follows the document to the archive.
+
+**Pass:** He accepts the neutrality argument. He files a request with the archive for future access.
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "Achilles's Heirs"**
+*The record: traveling. Location: Corinthian road.*
+
+Two men — soldiers' sons, not soldiers — are waiting on the road. They represent Achilles's heir and want the refusal confirmed in writing before the document reaches the archive. Their argument: Achilles's refusal was made under conditions of divine compulsion (his grief over Briseis was itself caused by Agamemnon's dishonor), and a refusal made under divine compulsion does not satisfy the ordinary terms of transaction; the debt was not discharged. They want the Fighter to certify this interpretation.
+
+> **Insight DC 12.** Their legal argument may be correct but the certification they are asking for is not the Fighter's to give; the archive receives documents and their chain of custody, not legal interpretations; if they want a certified interpretation of whether divine compulsion modifies contractual refusal, that question belongs to an archive scholar or a court, not to the carrier; the archive can hold both the document and competing interpretations without one prejudicing the other.
+
+**Fail:** They follow for two hours. You eventually name an archive scholar they can consult after filing. They accept.
+
+**Pass:** They accept the carrier/interpreter distinction. One of them says: "At least the record will be there." You say: yes.
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "The Agamemnon Faction"**
+*The record: traveling. Location: mountain road.*
+
+Two men on the road — different faction. They represent claimants to Agamemnon's estate who want the unsigned offer document to disappear: if the archive holds it, it confirms that Agamemnon publicly acknowledged a debt to Achilles; that acknowledgment creates a claim against the estate. They are not interested in litigation; they want the record unavailable.
+
+> **Athletics DC 13.** They are not hired men this time — they are serious agents who know what they are doing. They will not fight openly on a road with witnesses. But the road narrows to a cliff section ahead, and the section is a natural place for an accident.
+
+**Fail:** You navigate the cliff section with a near-miss — they force you close to the edge. The record stays with you. They follow no further but the road is watched.
+
+**Pass:** You take the wider path and the cliff section passes without incident. They abandon the follow.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Archive"**
+*The record: unsigned, original. Location: Weimar.*
+
+Sweelinck reads the offer list. He reads both empty signature lines. He reads Idaeus's covering note.
+
+"He offered seven cities. He acknowledged the debt. Achilles refused. Neither party denied the other's position. Both signature lines are empty because neither transaction was completed — but the offer's existence, the refusal's existence, and the conditions on both sides are in this document." He sets it down. "The archive files this beside the Herald's Tablet."
+
+He writes: *Rejected Offers Under Divine Compulsion — Records Where the Ordinary Terms of Negotiation Did Not Apply, First Entry. The Embassy's Offer: the formal gift list that named the debt without discharging it; the unsigned double record that confirms both parties' positions simultaneously; the archive holds this alongside the diplomatic commission as evidence that a city at war was also capable, at the same moment, of honest accounting.*
+
+TOKEN TAKEN: Embassy Offer Record.
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "ATH_003",
+  "title": "The Embassy's Offer",
+  "source": "The Iliad — Homer (Lang translation)",
+  "cycle": "ATH",
+  "book": "The Iliad",
+  "source_episode": "Book 9: Agamemnon sends Odysseus, Ajax, and Phoenix to Achilles with a formal gift list including seven women, seven cities, Briseis returned with an oath, and his daughter in marriage; Achilles refuses everything; the document records both the acknowledged debt and the refusal",
+  "theme": "The unsigned offer document as the only record in the war where both parties were honest about the terms simultaneously; the refusal that did not deny the debt; the archive that holds both positions without adjudicating them.",
+  "activateNode": "IDC",
+  "token": {
+    "id": "embassy_offer_record",
+    "name": "Embassy Offer Record",
+    "description": "The formal gift list composed before the Book 9 embassy — seven women, seven cities, Briseis returned, Agamemnon's daughter; both signature lines empty; carried into Achilles's tent and out again the same evening; the acknowledged debt and the refusal in the same document.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["IDC", "CON", "WM"],
+  "new_nodes": [],
+  "acts": [
+    { "act": 1, "location": "IDC", "scene": "Refugee camp — Idaeus the herald with the unsigned offer list", "title": "The Unsigned List", "type": "skill_check", "skillCheck": { "skill": "History", "dc": 11 }, "token_action": "grant" },
+    { "act": 2, "location": "road_IDC_CON", "scene": "Greek camp road — legal clerk processing estates", "title": "The Inheritance Clerk", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "CON", "scene": "Corinthian road — Achilles's heirs want interpretation certified", "title": "Achilles's Heirs", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 12 }, "token_action": "check" },
+    { "act": 4, "location": "road_CON_WM", "scene": "Mountain road cliff section — Agamemnon estate faction", "title": "The Agamemnon Faction", "type": "skill_check", "skillCheck": { "skill": "Athletics", "dc": 13 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake — filed beside the Herald's Tablet", "title": "The Archive", "type": "delivery", "activateMissionBit": "athEmbassyComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## Cycle 4 — Angle: *Patroclus's Commission — The Last Instruction Before the Fatal Decision*
+
+**What this angle reveals that Cycles 1–3 missed:** The first three cycles turned on acts of record-keeping — the diplomatic commission, a funeral speech, a rejected offer list. Cycle 4 is about the moment before the act that changed the war. Achilles sent Patroclus out in his own armor with a specific instruction: drive the Trojans from the ships but turn back at the wall. Patroclus pressed too far. Apollo intervened. He died outside Troy's walls. The question of what Achilles actually said — whether the instruction was clear, whether Patroclus chose to disobey, or whether something in the commission allowed for the advance that Patroclus made — is the one question in the entire war that both Achilles's heirs and Patroclus's surviving family need answered. Two squires were present. One has written it down.
+
+---
+
+### 5-Act Vignette Play: *Patroclus's Commission*
+
+**THE TOKEN: PATROCLUS'S COMMISSION TABLET** — A single clay tablet written by Automedon, Achilles's charioteer, who was present when Achilles gave Patroclus the commission and who recorded the exact terms from memory the evening after the battle. The instruction to turn back at the ships is in it. So is the part where Achilles said "do not go further — it could diminish my glory." Automedon recorded both.
+
+---
+
+**ACT I — "The Charioteer's Record"**
+*The tablet: fresh clay, hardened. Location: IDC — refugee camp.*
+
+Automedon has carried this tablet since the evening after the battle. He wrote it the same day while the words were exact. He did not write it for legal purposes — he wrote it because the conversation mattered and he wanted to hold it. He is giving it to the archive because he cannot hold it any longer; the weight of carrying the exact words is not something he wants to keep through a long voyage home.
+
+TOKEN: `patroclus_commission_tablet`
+
+> **Insight DC 11.** Understand why Automedon recorded both the limit instruction and the glory comment — he did not write it as evidence for one side; he wrote the whole conversation because the whole conversation was what made the commission what it was; the tablet is not a legal document but a complete record of what was said in the tent, and its completeness is why it belongs in the archive and not with Achilles's heirs.
+
+**Fail:** You carry the tablet. Automedon adds a brief note explaining the tablet's circumstances.
+
+**Pass:** You grasp the completeness argument. Automedon hands you the tablet without comment.
+
+TOKEN GRANTED: Patroclus's Commission Tablet.
+
+---
+
+**ACT II — "Achilles's Heir"**
+*The tablet: hardened clay, in the pack. Location: Greek camp road.*
+
+A man claiming authority from Achilles's heirs in Phthia is on the road. He has heard about the tablet. He wants to know if it contains the glory comment — the part where Achilles asked Patroclus not to press too far because it would diminish his glory. That comment, if recorded, changes the moral accounting: it suggests the limit was personal rather than tactical, which changes what kind of limit it was.
+
+> **Persuasion DC 12.** The tablet records what was said; it does not adjudicate which part of what was said was operative; the glory comment and the tactical limit are both in the record; the archive receives the complete conversation; the Fighter is not in a position to characterize what the tablet contains before it is filed.
+
+**Fail:** He asks you to describe what you observed of Automedon's state when he handed over the tablet. You describe it neutrally. He notes this and turns back.
+
+**Pass:** He accepts that the carrier cannot characterize the tablet's contents. He turns back.
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "The Nestor Problem"**
+*The tablet: traveling. Location: Ragusa.*
+
+A scholar at Ragusa has been collecting everything related to the embassy accounts and the final campaign. He has Nestor's oral account (transcribed by a student) of what he understood Achilles's commission to be. His account differs slightly from what Automedon recorded. He wants the Fighter to confirm which account is accurate.
+
+> **Insight DC 12.** Both accounts can be accurate — Nestor heard a different part of the conversation, or summarized it differently; neither transcription is false; the archive needs both; the Fighter cannot confirm which version of the commission is the authoritative one, because the answer to that question is precisely what the archive will be asked to help adjudicate; filing Automedon's tablet alongside Nestor's transcription is exactly what the archive is for.
+
+**Fail:** He argues for thirty minutes before accepting that the carrier cannot settle competing witness accounts. He gives you a copy of the Nestor transcription to carry alongside the tablet. You carry both.
+
+**Pass:** He accepts the argument. He says he will send the Nestor transcription to the archive separately.
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "The Patroclus Family"**
+*The tablet: traveling north. Location: road toward Weimar.*
+
+A woman on the road is Patroclus's aunt — a surviving relative who has traveled far on the chance the tablet exists. Her argument is not adversarial: she wants to know if it says he went willingly beyond the ships, or was pushed. She is not asking for legal reasons.
+
+> **Insight DC 11.** Her question is genuine and not tactical. The tablet records what Achilles said to Patroclus; it does not record what Patroclus decided — the decision itself is not in the tablet. She is asking a question the tablet cannot fully answer, and telling her the tablet might answer it would be a misrepresentation of what it contains.
+
+**Fail:** You tell her the tablet records the commission, not the decision. She thanks you and sits down at the roadside.
+
+**Pass:** You understand what she actually needs before she finishes asking. You say: the tablet is what Achilles said. It doesn't say what Patroclus decided. She closes her eyes for a moment. She lets you pass.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Archive"**
+*The tablet: hardened clay, complete. Location: Weimar.*
+
+Sweelinck reads the tablet. He reads the limit instruction. He reads the glory comment. He sets it down.
+
+"He told him to turn back at the ships. He also told him it was for his glory, not only for Patroclus's safety. Automedon recorded both. Neither clause cancels the other." He pauses. "The tablet is complete. That means it is also unanswerable. The archive files unanswerable things."
+
+He writes: *Commission Records — Instructions Given Before the Fatal Decision, First Entry. Patroclus's Commission: the complete record of what was said in the tent — the tactical limit and the personal stake named simultaneously; the archive notes that a commission in which the instruction and its motivation are both on record is the most honest kind, even when — especially when — the person who received it pressed beyond both.*
+
+TOKEN TAKEN: Patroclus's Commission Tablet.
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "ATH_004",
+  "title": "Patroclus's Commission",
+  "source": "The Iliad — Homer (Lang translation)",
+  "cycle": "ATH",
+  "book": "The Iliad",
+  "source_episode": "Before Book 16: Achilles sends Patroclus out in his armor with a specific commission — drive the Trojans from the ships but turn back at the walls, because pressing further would diminish Achilles's glory; Patroclus goes too far, is struck by Apollo, and dies outside the walls; Automedon the charioteer was present",
+  "theme": "The complete commission record that cannot adjudicate what it documents; the instruction and its personal stake named simultaneously; the archive that files unanswerable things.",
+  "activateNode": "IDC",
+  "token": {
+    "id": "patroclus_commission_tablet",
+    "name": "Patroclus's Commission Tablet",
+    "description": "Clay tablet written by Automedon, Achilles's charioteer, from memory the evening of the battle: the limit instruction and the glory comment both recorded; the complete conversation as it was said, not as either family needs it to have been said.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["IDC", "RGS", "WM"],
+  "new_nodes": [],
+  "acts": [
+    { "act": 1, "location": "IDC", "scene": "Refugee camp — Automedon the charioteer with the commission tablet", "title": "The Charioteer's Record", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 11 }, "token_action": "grant" },
+    { "act": 2, "location": "road_IDC_RGS", "scene": "Greek camp road — Achilles's heir and the glory comment", "title": "Achilles's Heir", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "RGS", "scene": "Ragusa — scholar with Nestor's competing account", "title": "The Nestor Problem", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 12 }, "token_action": "check" },
+    { "act": 4, "location": "road_RGS_WM", "scene": "Road north — Patroclus's surviving aunt", "title": "The Patroclus Family", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 11 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "The Archive", "type": "delivery", "activateMissionBit": "athPatroclusComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## Cycle 5 — Angle: *Andromache's Loom — The Half-Finished Morning*
+
+**What this angle reveals that Cycles 1–4 missed:** The first four cycles followed military and diplomatic records — the commission tablet, the rejected offer, the herald's document, the funeral speech. Cycle 5 is about the domestic interior of the war. In Book 22, when the cry went up from the walls, Andromache was at her loom in her room, weaving a purple cloth figured with flowers, and had set water to heat for Hector's bath after he returned. She dropped the shuttle and ran. The cloth was never finished. A household slave who survived the sack cut it from the loom before the room burned. It is the half-woven record of a morning that was still normal until it wasn't — the domestic life of the war's best defender, interrupted at the exact moment the war ended.
+
+---
+
+### 5-Act Vignette Play: *Andromache's Loom*
+
+**THE TOKEN: ANDROMACHE'S WEAVING FRAGMENT** — Half a purple cloth figured with flowers, cut from the loom still attached to the frame-bar. The dropped shuttle hangs from the last thread. The weft line at the break is exact: you can see the moment of interruption in the weave. The slave Chrysis cut it before the room burned.
+
+---
+
+**ACT I — "What Chrysis Kept"**
+*The fragment: rolled around the frame-bar, shuttle attached. Location: TRH — Troy harbor.*
+
+Chrysis is old and has nothing. She will be assigned to a Greek household. She managed to keep this in the confusion because a piece of cloth in a woman's hands is invisible. She has been carrying it since the morning the crying started. She cannot take it to wherever she is going.
+
+TOKEN: `andromache_weaving_fragment`
+
+> **Insight DC 11.** Understand what Chrysis means when she holds out the cloth and says nothing — she is not asking for pity; she is making a specific transfer of evidence; she has carried this for a long time at some cost, and what she wants from you is not thanks but competent receipt.
+
+**Fail:** You say something inadequate. She hands it over anyway. She looks away.
+
+**Pass:** You take it with both hands and say nothing. She looks at you for a moment. She nods.
+
+TOKEN GRANTED: Andromache's Weaving Fragment.
+
+---
+
+**ACT II — "The Greek Inventory Officer"**
+*The fragment: wrapped in undyed linen. Location: Troy harbor checkpoint.*
+
+A Greek inventory officer is logging textiles: Trojan women are required to declare all portable property for assessment. The purple cloth with the shuttle still attached is clearly valuable — purple dye, quality fiber, fine figure-work even incomplete. He wants to log it as property.
+
+> **Persuasion DC 12.** The cloth is not property — it is an incomplete object, cut from a loom it was still attached to, carrying evidence of the moment of interruption; its value as a textile is incidental; its value as a record is what makes it worth carrying north; logging it as property assigns it a category it cannot fit and routes it toward a Greek warehouse rather than an archive.
+
+**Fail:** He logs it as "purple textile, incomplete, origin Troy, status disputed." You argue for release on archive transit; he grants a provisional release with the notation following the cloth.
+
+**Pass:** He accepts the archive distinction. He notes: "cultural record, non-assessable, archive transit."
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "The Greek Woman"**
+*The fragment: traveling north. Location: Adriatic coast road.*
+
+A Greek woman on the same coastal road is the wife of a mid-rank Greek officer. She has heard about the purple cloth. She is not hostile; she lost a son at Troy. She wants to know if the cloth can be sent to Andromache — she doesn't know where Andromache is now, but she is sure someone must know. To her, returning the cloth to Andromache is the obviously right thing to do.
+
+> **Insight DC 12.** Her instinct is generous. But Andromache is a captive with no possessions and no address; the cloth cannot be delivered to her; the archive preserves it as a record of what was, not as a lost object being returned; the archive may be the only place the cloth exists in a form Andromache's heirs could one day consult; the archive is not the second-best option but the only available form of return.
+
+**Fail:** She argues about it for a while. You explain the archive's preservation role. She eventually agrees, though unhappily.
+
+**Pass:** You explain the archive as the form of return. She accepts it. She says: "Tell them whose cloth it was."
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "The Weaver's Guild"**
+*The fragment: traveling. Location: Visby.*
+
+At the Visby trading port, a senior member of the weavers' guild examines the cloth with professional eyes. He is not hostile — he is fascinated. The figure-work is Eastern Aegean in a style he has never seen this far north; he wants to bring in two colleagues to examine it; he has a technical guild right to examine imported textiles for provenance and duty assessment; the examination will take two days.
+
+> **Persuasion DC 11.** The cloth is not a textile import subject to guild examination — it is an archival document in transit; its provenance is known and documented; the guild's right of examination applies to commercial textiles; this cloth entered the Visby port as a documented archive document, not as a commercial good.
+
+**Fail:** He brings his two colleagues. They examine it for one day. They are careful. The cloth is returned intact with three technical observations added to the carrier's bundle.
+
+**Pass:** He accepts the archive document distinction. He asks if the archive would accept a guild technical report as supplementary material. You say: write to Weimar.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Archive"**
+*The fragment: cloth and frame-bar, shuttle attached. Location: Weimar.*
+
+Sweelinck unwraps the cloth and holds the frame-bar so the shuttle hangs free. He examines the break-line in the weave.
+
+"She was in the middle of the fourth figure when the crying started. The thread breaks here — you can see where the shuttle moved incorrectly." He sets it down. "The water was already set to heat for his bath."
+
+He writes: *Interrupted Work Records — The Unfinished Thing That Shows the Shape of What the Interruption Was, First Entry. Andromache's Loom: the half-woven cloth cut before the room burned; the dropped shuttle still attached; the weft-break at the exact moment; the archive notes that an interrupted domestic record is also a military record — the war appears in this cloth at the point where the woman doing the ordinary work dropped it and ran.*
+
+TOKEN TAKEN: Andromache's Weaving Fragment.
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "ATH_005",
+  "title": "Andromache's Loom",
+  "source": "The Iliad — Homer (Lang translation)",
+  "cycle": "ATH",
+  "book": "The Iliad",
+  "source_episode": "Book 22: When the wailing began on the walls, Andromache was weaving a purple cloth figured with flowers and had set water to heat for Hector's bath; she dropped the shuttle and ran; the room later burned; a household slave cut the cloth from the loom before the fire reached it",
+  "theme": "The interrupted domestic record as military record; the war appearing in the cloth at the point where the woman dropped the shuttle and ran; the exact moment of interruption visible in the weft-break.",
+  "activateNode": "TRH",
+  "token": {
+    "id": "andromache_weaving_fragment",
+    "name": "Andromache's Weaving Fragment",
+    "description": "Half a purple cloth figured with flowers, cut from the loom still on the frame-bar; the dropped shuttle attached by its last thread; the weft-break shows the exact moment of interruption; Chrysis the slave carried it out of the burning room.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["TRH", "VS", "WM"],
+  "new_nodes": [],
+  "acts": [
+    { "act": 1, "location": "TRH", "scene": "Troy harbor — Chrysis the household slave with the cloth", "title": "What Chrysis Kept", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 11 }, "token_action": "grant" },
+    { "act": 2, "location": "TRH", "scene": "Harbor checkpoint — Greek inventory officer and textile assessment", "title": "The Greek Inventory Officer", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "road_TRH_VS", "scene": "Adriatic coast road — Greek woman who wants the cloth returned", "title": "The Greek Woman", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 12 }, "token_action": "check" },
+    { "act": 4, "location": "VS", "scene": "Visby — weavers' guild provenance examination", "title": "The Weaver's Guild", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 11 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "The Archive", "type": "delivery", "activateMissionBit": "athAndromacheComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## Cycle 6 — Angle: *The Shield's Description — The World Before the Battle*
+
+**What this angle reveals that Cycles 1–5 missed:** The first five cycles recorded human acts — diplomatic transactions, a funeral speech, a rejected offer, a fatal commission, a domestic morning interrupted. Cycle 6 is about what Hephaestus made. When Thetis asked for new armor for Achilles, the god engraved on the shield the entire world: two cities (one celebrating a wedding, one at war), plowed fields, a vineyard at harvest, herds, a dancing floor, the constellations, the river of Ocean running around the rim. He made this world on the night before Achilles returned to battle. The shield was fought over after Achilles's death and eventually lost. But one of Hephaestus's bronze attendants — the self-moving golden women who served in his hall — wrote down what was on it before the shield left Olympus, because the god makes things to last and his attendants keep records.
+
+---
+
+### 5-Act Vignette Play: *The Shield's Description*
+
+**THE TOKEN: SHIELD DESCRIPTION SCROLL** — The bronze attendant's description of the shield's images, written in an angular script on a thin copper scroll: the two cities, the fields and vintage, the dancing floor, the herdsmen and the lion, the river of Ocean at the rim. The world as Hephaestus made it the night before the man who would fight in it set out to destroy most of it.
+
+---
+
+**ACT I — "The Bronze Attendant"**
+*The scroll: copper, rolled and sealed. Location: SKN — Scaean Gate ruins.*
+
+The bronze attendant is not a person — she is a mechanical figure in female form, made by Hephaestus, one of the golden women who move on their own and assist the god's work. She has been at the Scaean Gate ruins since the gate fell. She is waiting because her instruction was to hold the scroll until a carrier suitable for an archive arrived. She has been waiting a long time.
+
+She says nothing when she hands you the scroll. She holds it out. You take it. She turns and walks toward the sea and does not come back.
+
+TOKEN: `shield_description_scroll`
+
+> **History DC 12.** Understand what the bronze attendant's record represents — not the shield itself (which was lost) but the description of a specific thing Hephaestus made: the world he thought was worth engraving on a man's armor the night before that man returned to war; the description is a record of what a god imagined the world was worth, made as a frame for a weapon; the archive needs both the weapon-context and the world-image to file it correctly.
+
+**Fail:** You carry the scroll without the full context. At Act 5, Sweelinck asks you how you acquired it and from whom. You describe the bronze attendant. He writes it down.
+
+**Pass:** You understand the dual context. The bronze attendant's instruction was to find an archive, not to explain.
+
+TOKEN GRANTED: Shield Description Scroll.
+
+---
+
+**ACT II — "The Philosopher of Crafts"**
+*The scroll: copper, sealed. Location: road from SKN toward Constantinople.*
+
+A Greek philosopher of crafts is traveling the same road north. He has heard about the shield from various sources. He argues that the shield's description is primarily an aesthetic document — the most important surviving record of archaic visual composition — and that an archive filing it as a military or diplomatic record would misclassify it. It belongs in an aesthetic collection, not an archive for documents.
+
+> **Persuasion DC 12.** The aesthetic argument is not wrong, but the document is not only an aesthetic record — it is also a record of what Hephaestus chose to put on a war-shield the night before a man returned to war; the content and the context are inseparable; an aesthetic collection that extracts the images from their frame loses the document's argument; the archive files the whole thing and lets scholars classify the aesthetic dimension without removing it from its military context.
+
+**Fail:** He argues the aesthetic primacy at length and eventually agrees that the archive can cross-file. He asks for the archive's address.
+
+**Pass:** He accepts the inseparability argument. He says: "The world on a weapon is not decoration. You're right."
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "The Ajax Estate"**
+*The scroll: traveling. Location: Constantinople.*
+
+A legal representative of the Ajax estate (his heirs and creditors) claims that the shield was awarded to Odysseus in the famous contest after Achilles's death, but that the estate has a prior claim because Ajax carried the body — the shield should have gone with the man who did the fighting, not the man who argued best. The description document, if it establishes the shield's composition and provenance, is material evidence in the ongoing estate dispute.
+
+> **Insight DC 12.** The legal dispute over who received the shield after Achilles's death is real and active. But the description document predates both claimants — it was written before the shield left Olympus, before it was ever in either man's hands; it is not evidence of who owned the shield but evidence of what was on it; the estate dispute is about possession, not composition; the document does not bear on possession.
+
+**Fail:** The representative follows to the next waystation arguing about the composition evidence being relevant to the provenance claim. Eventually he accepts that composition pre-dates possession.
+
+**Pass:** He accepts the composition/possession distinction. He notes the archive destination and withdraws.
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "The River Crossing"**
+*The scroll: copper, thin. Location: Danube river road.*
+
+A river crossing in late autumn flood. The copper scroll is sealed but thin — extended immersion in cold flood water will expand the copper slightly and may break the wax seal without damage to the text. The seal is the authentication. The text is on the copper and will survive water; the seal will not.
+
+> **Athletics DC 12.** Cross the swollen Danube tributary with the scroll held above water — difficult in cold, fast, thigh-deep water with a pack.
+
+**Fail:** One hand drops. The wax seal takes water contact. At Act 5, Sweelinck examines the seal and notes: "The bronze attendant's impression is partially damaged; the text is intact." He files it.
+
+**Pass:** The scroll crosses dry. The seal is perfect.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Archive"**
+*The scroll: copper, sealed. Location: Weimar.*
+
+Sweelinck opens the seal carefully. He reads the scroll with a lens — the script is old and angular and precise. He reads without expression for a long time. He sets the scroll down.
+
+"The wedding city and the war city on the same surface. The vintage and the herd and the dancing floor and the lion taking the heifer and the river of Ocean at the rim. He made this the night before Achilles put it on." He pauses. "The world as a frame for a weapon that would reduce most of it. The god made both things and understood what he was doing."
+
+He writes: *Divine Craft Records — Objects Described Before Their Destruction, First Entry. The Shield's Description: the bronze attendant's record of what Hephaestus engraved before the shield left Olympus; the world made as armor-decoration the night before the armor was used; the archive files the description alongside the context — the world-image and the weapon are one document.*
+
+TOKEN TAKEN: Shield Description Scroll.
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "ATH_006",
+  "title": "The Shield's Description",
+  "source": "The Iliad — Homer (Lang translation)",
+  "cycle": "ATH",
+  "book": "The Iliad",
+  "source_episode": "Book 18: Hephaestus makes Achilles's shield in one night and engraves on it the entire world — two cities, the fields, the vintage, the herdsmen, the dancing floor, the river of Ocean; the shield was later contested and lost; one of Hephaestus's self-moving bronze attendants wrote down the description before the shield left Olympus",
+  "theme": "The world engraved as armor-decoration the night before it was used; the god who made both things and understood what he was doing; the description that preserves the world-image alongside its weapon-context.",
+  "activateNode": "SKN",
+  "token": {
+    "id": "shield_description_scroll",
+    "name": "Shield Description Scroll",
+    "description": "Thin copper scroll in angular script — the bronze attendant's record of the shield's images: the two cities, the vintage, the herdsmen, the dancing floor, the river of Ocean at the rim; the world as Hephaestus made it the night before the man who would fight in it set out to destroy most of it.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["SKN", "CON", "WM"],
+  "new_nodes": [],
+  "acts": [
+    { "act": 1, "location": "SKN", "scene": "Scaean Gate ruins — the bronze self-moving attendant", "title": "The Bronze Attendant", "type": "skill_check", "skillCheck": { "skill": "History", "dc": 12 }, "token_action": "grant" },
+    { "act": 2, "location": "road_SKN_CON", "scene": "Road north — Greek philosopher of crafts and the aesthetic classification argument", "title": "The Philosopher of Crafts", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "CON", "scene": "Constantinople — Ajax estate legal representative", "title": "The Ajax Estate", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 12 }, "token_action": "check" },
+    { "act": 4, "location": "road_CON_WM", "scene": "Danube tributary flood crossing — copper scroll and wax seal", "title": "The River Crossing", "type": "skill_check", "skillCheck": { "skill": "Athletics", "dc": 12 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "The Archive", "type": "delivery", "activateMissionBit": "athShieldComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## Cycle 7 — Angle: *Hecuba's Supplication — The Correctly Offered Gift That Was Refused*
+
+**What this angle reveals that Cycles 1–6 missed:** The first six cycles followed records of acts that had human consequences — war, grief, rejected offers, fatal commissions. Cycle 7 is about the gods' silence. In Book 6, Hecuba led the women of Troy to Athena's temple on the citadel and offered Athena the most beautiful robe in the Trojan treasury — a golden, star-figured Sidonian robe, the finest thing the household owned. The priestess Theano laid it on the knees of the goddess's statue. Athena refused. The robe sat on the altar through the sack. A Trojan woman who survived carried it out of the burning temple. It needs an archive because it is the only existing record of a supplication that was performed correctly and denied anyway — the document of a ritual that failed not from error but from the gods' decision.
+
+---
+
+### 5-Act Vignette Play: *Hecuba's Supplication*
+
+**THE TOKEN: HECUBA'S SUPPLICATION ROBE** — The golden Sidonian robe left on Athena's altar — star-figured, gold-worked, brought from Sidon; the finest thing in the Trojan treasury. It sat on the knees of the goddess's statue through the night before the sack and the morning of the sack and the day of the burning. Myrine, a Trojan woman who survived, carried it out of the burning temple with her bare hands. The robe is singed at one corner but the gold thread is intact. It is the record of a supplication performed correctly and refused.
+
+---
+
+**ACT I — "Myrine's Hands"**
+*The robe: folded, singed at one corner. Location: SKN — Scaean Gate ruins.*
+
+Myrine has the robe folded under a stone at the ruins. She carried it out of the temple with the fire already in the roof timbers. She has burns on both hands. She does not know what to do with it — she cannot keep it as a possession; she cannot leave it in the ruins; she knows it should be somewhere that records what happened.
+
+TOKEN: `hecuba_supplication_robe`
+
+> **Religion DC 11.** Understand why the robe's archival destination is different from other sacred objects — this robe was offered in correct form to a god who refused it; it did not fail because of error in the ritual; it failed because Athena chose not to protect Troy; the robe therefore is evidence not of a failed ritual but of a correctly performed act of petition and a divine decision that preceded and enabled the destruction; the archive that receives it holds the record of the gods' side of the war, not just the human side.
+
+**Fail:** You carry the robe. Myrine adds a note describing the circumstances of the supplication and the robe's removal from the temple.
+
+**Pass:** You understand the divine-side argument before she explains. She looks at you once and says: "She was there when we laid it on the statue's knees." You say: I understand.
+
+TOKEN GRANTED: Hecuba's Supplication Robe.
+
+---
+
+**ACT II — "The Temple Inventory"**
+*The robe: folded. Location: Scaean Gate road, Greek camp checkpoint.*
+
+A Greek officer is conducting a temple inventory for the religious commission that will decide what belongs to the gods and what to the victors. The golden robe is clearly significant. He wants to log it as temple property — either for return to the goddess (if a new Athena temple is established) or for the Roman treasury (which has authority over Greek sacred property captured in war).
+
+> **Persuasion DC 13.** The robe was not temple property in the ordinary sense — it was a dedicatory offering placed on the goddess's statue in a specific ritual; when Athena refused the supplication, the offering was neither accepted nor rejected in the registrable sense; it remained on the statue; its status is unique: a Trojan dedicatory offering to a Greek goddess who chose the Greek side; it belongs in a neutral archive that can hold the paradox, not in a temple inventory that will assign it to one side.
+
+**Fail:** He notes it as "disputed temple property, Trojan origin, Athena dedication" and issues a transit document. You continue with the document attached.
+
+**Pass:** He accepts the paradox argument. He notes: "dedicatory offering in contested status, archive transit authorized."
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "The Priestess Theano"**
+*The robe: traveling. Location: Rome.*
+
+Theano, who was Athena's priestess in Troy and laid the robe on the goddess's statue herself, has survived and is now in Rome. She wants the robe. She has not asked for it as property — she is asking because she was the one who placed it, and she wants to be the one who carries it to its final destination. She believes the archive is the right place for it, but she believes she should be its carrier.
+
+> **Insight DC 12.** Her claim is not legal but moral — she performed the ritual; she laid the robe on the knees; she was there when Athena refused. Her connection to the robe is real. But the chain of custody from her hands to the archive would run: Hecuba→Theano→altar→Myrine→Fighter→archive; substituting Theano's hands for the Fighter's at this stage breaks the chain that Myrine established. The archive will want to know the chain from Myrine's removal to delivery — and Theano receiving it now and re-delivering it adds a gap, not a completion.
+
+**Fail:** She takes the robe and agrees to carry it to the archive. You accompany her. The chain arrives with the gap noted.
+
+**Pass:** You explain the custody chain's integrity. She accepts it. She asks if her name can be in the archive's record of the supplication. You say: write to Weimar.
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "The Religious Commission"**
+*The robe: traveling north. Location: Alpine road.*
+
+A representative of the Roman religious commission — the authority that received all captured Greek sacred property — intercepts the Fighter on the Alpine road. His commission pre-dates the archive transit document. His argument: the commission's authority over captured sacred property is absolute and the archive transit document issued by the camp officer was issued without the commission's authorization.
+
+> **Persuasion DC 12.** The robe is not captured sacred property in the commission's sense — it was not in the temple's permanent inventory; it was a dedicatory offering placed by a Trojan queen in a failed petition; captured sacred property is property the temple owned; this robe was never accepted by the temple because the goddess who owns the temple refused the supplication; it has no permanent sacred status that the commission's authority covers.
+
+**Fail:** He flags the argument as novel and sends a message to Rome for clarification. He does not stop you — the argument is strong enough to release — but the flag follows you.
+
+**Pass:** He accepts that the robe's unique status falls outside the commission's category. He notes: "offering in unresolved dedicatory status, commission authority does not apply."
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Archive"**
+*The robe: gold-figured, one singed corner. Location: Weimar.*
+
+Sweelinck holds the robe to the light. He examines the gold thread and the Sidonian pattern and the singed corner. He reads Myrine's note and the camp officer's transit document and the commission representative's release.
+
+"She offered this correctly. The ritual was performed correctly. The priestess laid it on the statue's knees. Athena refused." He sets it down carefully. "The archive does not often receive evidence of divine decisions. This is one."
+
+He writes: *Supplication Records — Correctly Executed Petitions That Were Denied, First Entry. Hecuba's Robe: the Sidonian offering placed on Athena's knees the night before the sack; the goddess refused; the robe sat on the altar through the burning; the archive notes that this is not a document of failed ritual but of a correct petition answered in the negative; the gods' decision is in the record alongside the human act that prompted it; together they are the complete account of what Athena chose.*
+
+TOKEN TAKEN: Hecuba's Supplication Robe.
+
+*questComplete: true*
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "ATH_007",
+  "title": "Hecuba's Supplication",
+  "source": "The Iliad — Homer (Lang translation)",
+  "cycle": "ATH",
+  "book": "The Iliad",
+  "source_episode": "Book 6: Hecuba leads the Trojan women to Athena's temple and offers the most beautiful robe in the treasury — a golden star-figured Sidonian robe — which the priestess Theano lays on the statue's knees; Athena refuses; the robe remains on the altar through the sack; a surviving Trojan woman carries it out of the burning temple",
+  "theme": "The correctly executed petition that was denied; not a document of failed ritual but of a correct act answered in the negative; the gods' decision in the record alongside the human act that prompted it.",
+  "activateNode": "SKN",
+  "token": {
+    "id": "hecuba_supplication_robe",
+    "name": "Hecuba's Supplication Robe",
+    "description": "The golden Sidonian robe — star-figured, gold-worked, finest thing in the Trojan treasury; laid on Athena's knees by the priestess Theano in a correctly performed supplication; refused; left on the altar through the sack; carried out of the burning temple by Myrine with burns on both hands; one singed corner, gold thread intact.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["SKN", "RME", "WM"],
+  "new_nodes": [],
+  "acts": [
+    { "act": 1, "location": "SKN", "scene": "Scaean Gate ruins — Myrine with the robe she carried from the burning temple", "title": "Myrine's Hands", "type": "skill_check", "skillCheck": { "skill": "Religion", "dc": 11 }, "token_action": "grant" },
+    { "act": 2, "location": "SKN", "scene": "Scaean Gate road checkpoint — Greek temple inventory officer", "title": "The Temple Inventory", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 13 }, "token_action": "check" },
+    { "act": 3, "location": "RME", "scene": "Rome — the priestess Theano wants to carry the robe herself", "title": "The Priestess Theano", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 12 }, "token_action": "check" },
+    { "act": 4, "location": "road_RME_WM", "scene": "Alpine road — Roman religious commission representative", "title": "The Religious Commission", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 12 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "The Archive", "type": "delivery", "activateMissionBit": "athHecubaComplete", "questComplete": true, "token_action": "take" }
+  ]
+}
+```
+
+---
+
+*ATH SEEDS COMPLETE. §ATH-01 through §ATH-07 written. Admin pass: quest-map.md, books.md, plan.md.*
