@@ -300,7 +300,7 @@ All files under 60 KB in 1367-sources/. Each to receive full pipeline: read → 
 | GDN | Njal's Saga — Anon (Dasent) | 45 | **SEEDS COMPLETE 2026-06-03 — GDN-01–07 all vignettes done. No new nodes. See GDN-njal-saga.md.** |
 | JRS | Jerusalem Delivered — Torquato Tasso | 46 | **SEEDS COMPLETE 2026-06-03 — JRS-01–07 all vignettes done. No new nodes. See JRS-jerusalem-delivered.md.** |
 | LIS | Lusiads — Luís de Camões | 47 | **SEEDS COMPLETE 2026-06-03 — LIS-01–07 all vignettes done. No new nodes. See LIS-lusiad.md.** |
-| MAD | Chronicle of the Cid — Anon (Southey) | 48 | QUEUED |
+| MAD | Chronicle of the Cid — Anon (Southey) | 48 | **SEEDS COMPLETE 2026-06-03 — CID-01–07 all vignettes done. New node: VLC. See MAD-chronicle-cid.md.** |
 | INV | Ossian — James MacPherson | 48 | QUEUED |
 | LCY | The White Company — Arthur Conan Doyle | 49 | QUEUED |
 | FLR | Divine Comedy: Inferno — Dante Alighieri | 50 | QUEUED |

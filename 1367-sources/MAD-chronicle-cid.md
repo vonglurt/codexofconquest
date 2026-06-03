@@ -402,3 +402,786 @@ activateMissionBit: cidPledgeSandComplete
 
 *quest-map.md: append RVH, CDN to Location Grid.*
 *books.md: mark MAD [x] (chronicle-cid entry).*
+
+---
+
+### 5-Act Vignette Play: *The Lion and the Bench*
+
+**THE TOKEN: THE LIONKEEPER'S ACCOUNT** — A single page of vellum, the Valencia palace lionkeeper's official incident record: the date, the hour, the sequence of events as he witnessed them from the cage-room doorway. He was in the room. He saw everything. The Infantes of Carrión were in the hall. He wrote down what he saw each man do. The account is neutral in language and precise in sequence: who went where, what they said, what they were carrying when they moved. He made it because he has been a lionkeeper for twenty years and understands that a lion-escape incident requires formal documentation. He did not intend it as an indictment. It became one.
+
+---
+
+**ACT I — "The Keeper's Register"**
+*Node: VLC — Valencia.*
+
+The lionkeeper Salim is being pressured to alter the record. The Infantes of Carrión were in Burgalese livery — great lords of Castile — and their servants have come twice asking whether the timing in his written account is correct. He believes it is correct. He wrote it down the same afternoon. He is not a man who adjusts his records for lords' servants.
+
+He gives you the vellum. He says: "Carry it somewhere that does not have a count's factor at the gate."
+
+> **Insight DC 11.** The servants' two visits were not requests. They were preliminary pressure. The third approach will not be a visit; it will be an offer of a different kind. Understanding that the escalation is coming lets you leave VLC on your own schedule rather than theirs.
+
+**Fail:** You take the vellum and leave by the main gate. A man follows from the palace district. You lose him in the market, but you lose half a day.
+
+**Pass:** You understand the pattern from the two visits and leave through the harbor district before the third visit arrives.
+
+TOKEN GRANTED: The Lionkeeper's Account.
+
+---
+
+**ACT II — "The Count's Agent in the Port"**
+*Node: VLC harbor.*
+
+A Burgalese agent is at the harbor asking questions. He is not looking for you specifically; he is looking for the account — the Infantes' servants reported a document leaving the palace district. He has a description of the vellum (single page, official palace register format) and of Salim.
+
+He does not know what you look like.
+
+> **Persuasion DC 12.** This is not confrontation. He is asking harborside workers if they have seen anyone with palace paperwork. If he asks you directly, you can truthfully say you are a private carrier with sealed correspondence — the vellum is folded and inside your cloak, not visible. If he does not ask you directly, your stillness and your route choice matter more than any argument.
+
+**Fail:** He asks you directly. You give him a version that is technically accurate but redirecting. He accepts it, but he notes your direction. You will see him again at the first waystation.
+
+**Pass:** He never directly approaches you. You read his movements, cross the dock at the right moment, and board your passage north.
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "The Diplomatic Framing"**
+*Node: CON — Constantinople.*
+
+A Byzantine official with a general brief on Iberian political affairs wants to read the account before it is filed. His framing: if the account documents what it documents, it has diplomatic implications for the Castilian Crown's relationship with the Byzantine Church, which recently received a donation from the Infantes' family. He is not hostile. He is careful.
+
+> **Insight DC 12.** His concern is real but his proposed action — reading the account before filing — gives him editorial knowledge that he would then have a diplomatic motive to act on. The correct answer is not to debate whether the account has diplomatic implications but to name the distinction: a palace incident record filed in a neutral archive is publicly accessible to anyone who requests it through standard scholarly access; his diplomatic brief can be served by reading the archived record. He does not need to see it before it is filed.
+
+**Fail:** He reads the account. He does not alter anything. He says nothing about it. But he has read it, and the knowledge is now in play.
+
+**Pass:** He accepts the archive-access distinction. He says he will submit a scholarly access request after the filing.
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "The Bosphorus Crossing"**
+*Node: CON harbor toward WM.*
+
+The ferry crossing from CON to the European shore in autumn swell is a short, choppy crossing. The vellum is a single page of fine material — not brittle, not likely to crack, but vulnerable to spray. The ferry has no cover. The crossing is eight minutes in good conditions; in this chop, twelve to fifteen.
+
+> **Athletics DC 11.** Keep the vellum inside your cloak throughout the crossing. The swell is irregular — stand-braced rather than seated, weight on the back foot, cloak held tight. Twelve minutes of controlled balance.
+
+**Fail:** A wave-slap wets the side of your cloak. The vellum's left margin catches light spray. The ink is fast-dyed and holds; the vellum warps slightly at the corner. Sweelinck will note the water damage.
+
+**Pass:** You cross without the vellum taking water.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Incident Category"**
+*Node: WM — Weimar Archive.*
+
+Sweelinck reads the account. He reads it twice. He reads the sequence of events carefully — who moved where, in what order, what the Cid did that differed from everyone else in the room.
+
+"He woke, walked in, and took the lion by the mane," Sweelinck says. "The lionkeeper wrote it down because that is what happened."
+
+> **Investigation DC 11.** The archive needs a category that holds the incident record without framing it as either a condemnation (which would require adjudicating what the Infantes' behavior meant) or a praise-document (which would subordinate the keeper's neutral account to a purpose the keeper did not intend). Something precise: the incident record of an event that settled a question about the people who were present, written by the one witness who had no stake in the settlement.
+
+**Fail:** Sweelinck files it under Valencia Palace Records — Incident Documents. Neutral and accessible but not distinctively categorized.
+
+**Pass:** Sweelinck creates: *Incident Records — Events That Settled Questions About the People Present, First Entry. The lionkeeper's account: the lion escaped the cage; the Cid walked in and took it by the mane; the lionkeeper had no stake in what the account documents, which is what makes it the correct record; the archive holds it under the keeper's name.*
+
+TOKEN TAKEN: The Lionkeeper's Account.
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "CID_003",
+  "title": "The Lion and the Bench",
+  "source": "Chronicle of the Cid — Anon (Robert Southey translation, 1808)",
+  "cycle": 3,
+  "book": "chronicle-cid",
+  "source_episode": "Book IX — The Cid's caged lion escapes; the Infantes of Carrión disgrace themselves; Rodrigo wakes, walks in, and takes the lion by the mane; it returns to its cage without resistance",
+  "theme": "The incident record written by the one witness who had no stake in what it documents: the lionkeeper made it because a lion-escape requires formal documentation; it became an indictment without intending to; the archive holds it under the keeper's name",
+  "activateNode": "VLC",
+  "token": {
+    "id": "lionkeeper_incident_account",
+    "name": "The Lionkeeper's Account",
+    "description": "Single page of vellum: the Valencia palace lionkeeper's official incident record. Date, hour, sequence — who went where, what they said, what they carried when they moved. Written the same afternoon. Neutral in language. Precise in sequence.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["VLC", "CON", "WM"],
+  "new_nodes": ["VLC"],
+  "acts": [
+    {
+      "act": 1,
+      "node": "VLC",
+      "type": "skill_check",
+      "skill": "Insight",
+      "dc": 11,
+      "summary": "Lionkeeper Salim gives you the account. Two visits from the Infantes' servants already. Insight DC 11: the third approach will not be a visit; leave before it arrives. TOKEN GRANTED."
+    },
+    {
+      "act": 2,
+      "node": "VLC harbor",
+      "type": "skill_check",
+      "skill": "Persuasion",
+      "dc": 12,
+      "summary": "Burgalese agent asking harborside workers if they have seen palace paperwork. Persuasion DC 12: if asked directly, technically accurate redirection; if not, movement and route choice matter more than argument."
+    },
+    {
+      "act": 3,
+      "node": "CON",
+      "type": "skill_check",
+      "skill": "Insight",
+      "dc": 12,
+      "summary": "Byzantine official wants to read the account before filing due to diplomatic implications. Insight DC 12: reading before filing gives him editorial knowledge with a diplomatic motive to act on; he can read the archived record through standard access instead."
+    },
+    {
+      "act": 4,
+      "node": "CON harbor",
+      "type": "skill_check",
+      "skill": "Athletics",
+      "dc": 11,
+      "summary": "Bosphorus crossing in autumn swell, twelve minutes, single vellum page. Athletics DC 11: stand-braced, cloak held tight, weight back."
+    },
+    {
+      "act": 5,
+      "node": "WM",
+      "type": "skill_check",
+      "skill": "Investigation",
+      "dc": 11,
+      "summary": "The account settled a question about the people present without intending to. Investigation DC 11: create a category that holds the incident record without framing it as condemnation or praise. Incident Records — Events That Settled Questions About the People Present, First Entry. TOKEN TAKEN."
+    }
+  ]
+}
+```
+
+---
+
+### 5-Act Vignette Play: *The Oath at Santa Gadea*
+
+**THE TOKEN: THE SANTA GADEA ATTESTATION** — A formal document in three copies, the middle copy made for the court record at the time: the text of the oath Alfonso VI swore on the Holy Gospels and the Gospels' lock at Santa Gadea de Burgos. Three times, the same oath, each time touching the reliquary cross. Twelve Castilian knights as witnesses, their names listed in the margin in the court recorder's hand. The curse is written in full: *may you die as your brother died, by the hand of a villain of your own trust, one who is not a hidalgo.* Alfonso's signature is below the third oath's text. The document is the proof that the question was asked and the answer was given and the king swore he had no hand in Sancho's death. It is dangerous to Alfonso's faction because it is simultaneously the record of the question and the proof that the question required asking.
+
+---
+
+**ACT I — "The Court Archivist"**
+*Node: IBR — Castilian road district.*
+
+The court archivist at the Toledo regional office has one of the three copies. The middle copy — the one with all twelve witnesses' names — is his. He has been holding it for three years in a locked chest because no one has asked for it and he does not volunteer it. He is not afraid; he is careful. The document exists. He has not declared it. He has not destroyed it. He has waited.
+
+You arrive. He takes the copy out and sets it on his desk. He looks at you without moving it toward you.
+
+> **History DC 11.** The three-copy structure means this is the evidentiary copy — the one with the witnesses' full names. The court recorder made three copies because the ceremony required three oath-takings; the middle copy's function was to make the three-oath structure legible to any future reader. Without it, the other two copies document the first and third oaths but not the sequence. The middle copy is the document that proves the oath was taken completely, all three times, in the correct form.
+
+**Fail:** You take the document but without understanding the three-copy structure. In Act II you will be unable to explain why this specific copy matters when challenged.
+
+**Pass:** You understand the structure. The archivist watches you read. He nods once and hands it over.
+
+TOKEN GRANTED: The Santa Gadea Attestation.
+
+---
+
+**ACT II — "The King's Chamberlain"**
+*Node: IBR road, Toledo outskirts.*
+
+A royal chamberlain intercepts the road north from Toledo. He is not armed in a threatening way. He carries a letter from a royal secretary requesting that the document be returned to crown custody for permanent preservation. His framing: a document of this importance belongs in the royal archive.
+
+> **Persuasion DC 12.** The royal archive is the archive of the crown whose king the document implicates. Crown custody of an oath sworn by the crown's current king is not neutral preservation — it is the crown deciding whether the document is accessible. The twelve witnesses' names are public record; the text of the oath is public record; the only question is where the document is held. A neutral archive holds it as a permanent accessible record.
+
+**Fail:** He requests a receipt acknowledging the exchange and says he will forward the crown's position to Weimar directly. He does not block you. The crown's position will reach Weimar as a challenge to the filing.
+
+**Pass:** He accepts the neutral archive argument. He notes the document's route in his record without further interference.
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "The Venetian Historian"**
+*Node: VEN — Venice.*
+
+A Venetian chronicler specializing in Iberian court history has heard about the document through scholarly correspondence. He wants to publish a transcription in his chronicle of the Iberian courts. His request is genuine; his intentions are scholarly; he believes the document's importance justifies immediate publication.
+
+> **Insight DC 12.** His publication would consume the document's evidentiary value for a specific historical purpose — establishing the primary archive record — before the primary record exists. Once a transcription is in a published chronicle, the original can be challenged as derivative of the publication rather than the other way around. The correct sequence is archive filing first, then scholarly citation of the archived record.
+
+**Fail:** He publishes a note about the document's existence before it reaches Weimar. Sweelinck will need to address the precedence question in the intake notes.
+
+**Pass:** He accepts the archiving-before-publication sequence. He asks for the Weimar entry reference when it is filed.
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "The Alpine East Road"**
+*Node: VEN road to WM.*
+
+The Alpine road east from Venice climbs through a section of loose limestone track where the spring rains have washed the path surface to bare rock. The track is passable in dry conditions. It is currently not dry. The formal document with its twelve witness names and Alfonso's signature cannot be allowed to crumple if you fall on wet limestone.
+
+> **Athletics DC 12.** Two leagues of wet limestone track, the attestation in a waterproof wrap inside your pack, the pack strapped close. Careful footing, hand to the cliff face at the steep sections, weight distributed forward. Don't run. Don't hurry. Get it right.
+
+**Fail:** You slip once at a steep section and your knee goes to the limestone. The pack holds steady. Your knee does not.
+
+**Pass:** You descend the limestone section carefully. The attestation arrives dry.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Curse in the Record"**
+*Node: WM — Weimar Archive.*
+
+Sweelinck reads the attestation. He reads the three-oath structure. He reads the curse.
+
+He sets the document down and looks at the twelve witnesses' names.
+
+"He made the king swear on the Gospels that he did not kill his brother," Sweelinck says. "And the king swore. And three years later the king exiled him."
+
+> **Investigation DC 11.** The archive needs to hold the document in a way that names what it is: not a document of accusation (no accusation is in it — only an oath) and not a praise-document for Rodrigo (it records an action he chose that he knew would cost him the court). Something that holds the simultaneous quality: the question required asking, the oath was given, and both the question and the answer are in the record.
+
+**Fail:** Sweelinck files it under Royal Oaths — Alfonso VI. Accurate but the document's specific quality is lost in the category.
+
+**Pass:** Sweelinck creates: *Oath Records — The Sworn Statement Extracted at Maximum Political Cost, First Entry. The Santa Gadea attestation: the question required asking because its alternative was silence about a king's possible murder of his brother; Alfonso swore three times; the twelve witnesses signed; Rodrigo knew when he forced the issue that he was paying the full price for the answer; the document holds the question and the answer and the certainty that both were offered at a cost.*
+
+TOKEN TAKEN: The Santa Gadea Attestation.
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "CID_004",
+  "title": "The Oath at Santa Gadea",
+  "source": "Chronicle of the Cid — Anon (Robert Southey translation, 1808)",
+  "cycle": 4,
+  "book": "chronicle-cid",
+  "source_episode": "Book I — Rodrigo forces King Alfonso VI to swear three times on the Gospels at Santa Gadea de Burgos that he had no hand in his brother King Sancho's murder; twelve knights witness; Alfonso swears; the question and the answer both enter the record; Rodrigo accepts the political cost",
+  "theme": "The sworn statement extracted at maximum political cost: the question required asking; Alfonso swore three times; the twelve witnesses signed; Rodrigo knew when he forced the issue that he was paying the full price for the answer; the document holds both the question and the answer",
+  "activateNode": "IBR",
+  "token": {
+    "id": "santa_gadea_attestation",
+    "name": "The Santa Gadea Attestation",
+    "description": "Formal document: the text of Alfonso VI's oath at Santa Gadea de Burgos, sworn three times on the Holy Gospels. Twelve witnesses named in the margin. The curse written in full. Alfonso's signature below the third oath's text. The evidentiary middle copy of three.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["IBR", "VEN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {
+      "act": 1,
+      "node": "IBR",
+      "type": "skill_check",
+      "skill": "History",
+      "dc": 11,
+      "summary": "Court archivist has held the middle copy for three years. History DC 11: this is the evidentiary copy — the one with all twelve witnesses' names that proves the three-oath sequence was completed correctly. TOKEN GRANTED."
+    },
+    {
+      "act": 2,
+      "node": "IBR road",
+      "type": "skill_check",
+      "skill": "Persuasion",
+      "dc": 12,
+      "summary": "Royal chamberlain requests return to crown custody. Persuasion DC 12: the royal archive is the archive of the crown whose king the document implicates; crown custody is not neutral preservation; a neutral archive holds it as a permanently accessible record."
+    },
+    {
+      "act": 3,
+      "node": "VEN",
+      "type": "skill_check",
+      "skill": "Insight",
+      "dc": 12,
+      "summary": "Venetian chronicler wants to publish a transcription immediately. Insight DC 12: publication before archiving reverses the precedence — the original is then derivative of the publication; archive filing first, then scholarly citation."
+    },
+    {
+      "act": 4,
+      "node": "VEN road",
+      "type": "skill_check",
+      "skill": "Athletics",
+      "dc": 12,
+      "summary": "Wet limestone Alpine track, two leagues, steep sections. Athletics DC 12: hand to cliff face, weight forward, no hurrying."
+    },
+    {
+      "act": 5,
+      "node": "WM",
+      "type": "skill_check",
+      "skill": "Investigation",
+      "dc": 11,
+      "summary": "The document holds the question and the answer simultaneously. Investigation DC 11: the archive needs a category that holds both without framing as accusation or praise. Oath Records — The Sworn Statement Extracted at Maximum Political Cost, First Entry. TOKEN TAKEN."
+    }
+  ]
+}
+```
+
+---
+
+### 5-Act Vignette Play: *Corpes — The Oak Forest*
+
+**THE TOKEN: FELEZ MUÑOZ'S ACCOUNT** — Two pages of vellum, the nephew's own hand, written three days after the event at a monastery south of Burgos where the daughters were taken to recover. On the first page: the sequence — what Felez heard at the road junction that made him turn back, what he found in the forest, the condition of the two women, what Doña Sol asked for. On the second page: the witnesses' names — two monks who came out with the infirmary staff and saw what the nephew found. He wrote it down because he knew what it would be needed for. The word "water" appears in the middle of the first page. It is the only request Doña Sol made.
+
+---
+
+**ACT I — "The Nephew's Register"**
+*Node: CDN — Monastery of San Pedro de Cardeña.*
+
+Felez Muñoz comes to the monastery at Cardeña with the two pages. He is the Cid's nephew. He is twenty-two. He has been awake for three days and is doing his best not to show it. He found his cousins "left to the mountain birds and the beasts" and he carried them out, and now he has written down what he found.
+
+He wants someone to carry it to the Cid — the account must reach the Cid before any other version does.
+
+> **Insight DC 11.** The Cid already knows something happened — the Infantes' departure was too fast and the daughters' company too thin. What the Cid does not know is the exact account, in Felez's hand, with the witnesses' names. The word "water" is not a detail. It is the account's center. Understanding what Felez is carrying means understanding that this document precedes the legal action at Toledo — it is not commentary on the Cortes proceeding; it is the foundation of it.
+
+**Fail:** You carry it without grasping why the sequence matters. A faster courier reaches the Cid first with a partial account.
+
+**Pass:** You understand. You move quickly.
+
+TOKEN GRANTED: Felez Muñoz's Account.
+
+---
+
+**ACT II — "The Infantes' Messenger"**
+*Node: CDN gate, road south.*
+
+A messenger from the Infantes of Carrión intercepts you at the monastery gate. He is polite and professional. He has a letter from the Infantes requesting any documents related to "a recent matter of family honor" be held pending a statement from the Infante's household. The letter is addressed to the monastery, not to you.
+
+> **Persuasion DC 12.** The letter is addressed to the monastery, not to you, and its subject is "family documents" — a category the monastery's current holdings do not include. What you are carrying is a personal account by Felez Muñoz of what he witnessed; it is not monastery property and was not produced under the monastery's authority. The letter's request cannot legally apply to what you carry. If the messenger tries to apply it by force, he is acting beyond his letter's scope.
+
+**Fail:** He makes the argument anyway and the monastery gate-keeper is uncertain. You are delayed two hours while the gatekeeper finds the relevant provision. He eventually agrees the letter doesn't apply.
+
+**Pass:** The messenger accepts the distinction. He notes your direction in his record and sends a rider ahead.
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "The Competing Account"**
+*Node: IBR — Castilian road district, Toledo approach.*
+
+The Infantes' household has already filed a statement with the Toledo court clerks. Their version describes a "domestic correction" carried out within the rights of the marriage compact. A court clerk on the road is carrying their version and heading toward the regional archive to register it first.
+
+> **Persuasion DC 12.** The registration sequence matters. Filing a primary account before a competing account creates a presumption of priority that must be actively argued against in any subsequent proceeding. Felez Muñoz's account was written by an eyewitness with two named witnesses; the Infantes' statement was written by their household with no independent witnesses. Ask the court clerk to note the evidentiary difference in the registration — both documents should enter the record with the evidentiary basis noted, not the sequence of filing.
+
+**Fail:** The Infantes' statement is registered first. Felez's account is registered as a response. The sequence disadvantage will need to be argued at Toledo.
+
+**Pass:** The clerk notes the evidentiary difference. Both documents are registered with equal standing.
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "The Road to the Cid"**
+*Node: IBR road, river crossing.*
+
+The road south to the Cid's location crosses a river ford that has been running high. The two pages of vellum — Felez's account and the witnesses' names — cannot get wet. The ink on page one is ordinary; the word "water" on page one is one of a hundred words. The names on page two are legally essential.
+
+> **Athletics DC 11.** The ford is passable but fast. Hold both pages inside a leather wrap, the wrap tied shut, inside your cloak, pressed to your body. Wade the ford with the cloak held up, the current cold and fast at mid-crossing.
+
+**Fail:** The cloak's hem catches the current and you stumble. Your arm goes out for balance. The leather wrap stays pressed to your chest. The pages are dry.
+
+**Pass:** You cross with the pages dry and both names legible.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "What She Asked For"**
+*Node: WM — Weimar Archive.*
+
+Sweelinck reads the account. He reads both pages. He reads the witnesses' names. He reads the word in the middle of page one.
+
+He does not speak for a moment.
+
+"She was tied to a post and beaten and left. And when her cousin found her she asked for water."
+
+> **Perception DC 11.** The word "water" appears once, in plain text, with no annotation. Sweelinck needs the account filed in a way that makes legible what Felez understood when he wrote it: the request was not weakness; it was the first act of a person who has decided to continue. Verify that the word is in the same ink and hand as the rest of the account — not added, not interpolated, not annotated — before Sweelinck writes the category.
+
+**Fail:** Sweelinck files under Court Evidence — Corpes Incident. The document is accessible. The word is not highlighted.
+
+**Pass:** You confirm the ink and hand. Sweelinck creates: *Rescue Testimony — What Was Found and What Was Asked For, First Entry. Felez Muñoz's account: he turned back at the road junction out of instinct; he found his cousins in the forest; the condition is described in the first twelve lines; in the middle of page one, one word in the same ink and hand: "water"; the account notes this was the first thing Doña Sol asked for; the archive holds the request as part of the rescue record because the act of asking is what began the return.*
+
+TOKEN TAKEN: Felez Muñoz's Account.
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "CID_005",
+  "title": "Corpes — The Oak Forest",
+  "source": "Chronicle of the Cid — Anon (Robert Southey translation, 1808)",
+  "cycle": 5,
+  "book": "chronicle-cid",
+  "source_episode": "Book IX — The Infantes of Carrión beat the Cid's daughters in the oak forest at Corpes, leave them for dead; Felez Muñoz turns back out of instinct and finds them; Doña Sol asks only for water",
+  "theme": "The rescue testimony that holds what was found and what was asked for: the word in the middle of page one is not weakness; it is the first act of a person who has decided to continue; the archive holds the request as part of the rescue record",
+  "activateNode": "CDN",
+  "token": {
+    "id": "felez_munoz_rescue_account",
+    "name": "Felez Muñoz's Account",
+    "description": "Two pages of vellum in the nephew's own hand: the sequence of what he found, the condition of the two women, what Doña Sol asked for. Two witness names on the second page. Written three days after the event. The word 'water' appears in the middle of page one.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["CDN", "IBR", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {
+      "act": 1,
+      "node": "CDN",
+      "type": "skill_check",
+      "skill": "Insight",
+      "dc": 11,
+      "summary": "Felez Muñoz wants the account to reach the Cid before any other version. Insight DC 11: this document precedes the legal action at Toledo — it is the foundation of the Cortes proceeding, not commentary on it; the sequence matters. TOKEN GRANTED."
+    },
+    {
+      "act": 2,
+      "node": "CDN gate",
+      "type": "skill_check",
+      "skill": "Persuasion",
+      "dc": 12,
+      "summary": "Infantes' messenger with a letter requesting 'family documents' be held. Persuasion DC 12: the letter is addressed to the monastery, not to you; what you carry is a personal account not produced under monastery authority; the letter's request cannot legally apply."
+    },
+    {
+      "act": 3,
+      "node": "IBR",
+      "type": "skill_check",
+      "skill": "Persuasion",
+      "dc": 12,
+      "summary": "Infantes' household statement being registered at the court archive first. Persuasion DC 12: ask the clerk to note the evidentiary difference in the registration — both documents should enter the record with evidentiary standing noted, not just filing order."
+    },
+    {
+      "act": 4,
+      "node": "IBR road",
+      "type": "skill_check",
+      "skill": "Athletics",
+      "dc": 11,
+      "summary": "River ford, fast current, two pages of vellum. Athletics DC 11: leather wrap tied shut, inside cloak, pressed to body, cloak held up."
+    },
+    {
+      "act": 5,
+      "node": "WM",
+      "type": "skill_check",
+      "skill": "Perception",
+      "dc": 11,
+      "summary": "The word 'water' appears once with no annotation. Perception DC 11: verify same ink and hand as the rest — not added or interpolated. Sweelinck creates: Rescue Testimony — What Was Found and What Was Asked For, First Entry. TOKEN TAKEN."
+    }
+  ]
+}
+```
+
+---
+
+### 5-Act Vignette Play: *The Toledo Cortes*
+
+**THE TOKEN: THE THREE DEMANDS RECORD** — A formal court document in the hand of the King's senior clerk, recording Rodrigo's three demands in the exact sequence they were made: first, the Cid's two swords Colada and Tizona returned to his hands in open court; second, the return of his daughters' dowry gold and silver, the full amount named and itemized; third, the naming of the Infantes of Carrión as villains and traitors before the assembled court, with the legal basis cited for each term. The clerk recorded the demands in real time. He noted at the bottom, in a different ink — added after the session: *These three were made in sequence and the sequence was necessary.* He understood what Rodrigo had done.
+
+---
+
+**ACT I — "The Clerk's Note"**
+*Node: IBR — Toledo court district.*
+
+The King's senior clerk is a careful man who has served three kings. He has the document and the note he added at the bottom. He is not afraid of it, but he understands what it is. He wants it filed somewhere that will not require him to explain the note's addition to the crown's legal secretary.
+
+He hands it over.
+
+> **History DC 12.** The three-demand sequence was a legal strategy: if Rodrigo named the Infantes as traitors before the King had spoken to the evidence, the proceedings could be terminated on procedural grounds. By demanding the swords first (property), then the dowry (financial remedy), then the naming (legal classification), Rodrigo established the factual record before requesting the judgment. The clerk's note names this because the clerk was the only person in the room who was recording the session in real time and understood what the sequence accomplished.
+
+**Fail:** You take the document without fully understanding the sequence logic. In Act II you will be unable to explain why the sequence specifically matters.
+
+**Pass:** You understand the strategy. The clerk sees this in how you read the document. He says: "Good."
+
+TOKEN GRANTED: The Three Demands Record.
+
+---
+
+**ACT II — "The Infantes' Estate"**
+*Node: IBR road north.*
+
+Two of the Infantes' estate managers are watching the road from Toledo. They want the document. Not destroyed — they want it, because possession of the court record gives them leverage over how the Toledo proceedings are remembered. Their argument: the document is an internal court record and belongs to the crown's custody.
+
+> **Persuasion DC 13.** An internal court record belongs to the crown's custody in the crown's archive, which is precisely why you are not taking it to the crown's archive. A court document whose subject is a proceeding involving the crown's own legal errors — the marriages were arranged by Alfonso, and his judgment is part of the record — is better preserved in a neutral archive where the crown cannot exercise custody. The estate managers are making the crown's argument; the argument's weakness is that it names the crown as the neutral arbiter of a record about the crown's own conduct.
+
+**Fail:** One of them makes a legal claim and files it with the road customs officer. The document travels with a challenge notation.
+
+**Pass:** They hear the argument. The older one turns to the younger one. "We're done here." They go.
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "The Venetian Law Review"**
+*Node: VEN — Venice.*
+
+A Venetian legal scholar has been tracking the Toledo Cortes through chronicle correspondence and wants to analyze the sequence strategy. His request: a copy for publication in a comparative legal analysis of Iberian and Mediterranean court procedures. He frames it as contributing to the scholarly record.
+
+> **Insight DC 12.** His analysis would publish the sequence strategy in a scholarly context where it becomes a referenced legal technique — citing the Weimar archive record as a secondary source rather than the primary document. The value to his scholarship of having a copy versus citing an archived original is zero; the value to the archive's evidentiary quality of having the original filed before a copy circulates is not zero.
+
+**Fail:** He publishes a description of the document from his correspondence sources. Sweelinck will receive the document alongside the published description.
+
+**Pass:** He accepts the archive-citation arrangement. He will request scholarly access after the filing.
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "The Po River Crossing"**
+*Node: VEN road to WM.*
+
+The road north from Venice crosses the Po at a ford that is passable but running fast from spring rains. The court document has a wax seal at the clerk's addition note — the bottom annotation. The seal must arrive intact.
+
+> **Athletics DC 12.** The ford is thigh-deep at the center. Keep the document above your head through the deepest section. The current is not violent but it is fast. Twenty feet at the deepest point.
+
+**Fail:** The current takes your footing for two steps. You recover. The document stays dry.
+
+**Pass:** You cross the deepest section with the document held steadily above your head.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Sequence Category"**
+*Node: WM — Weimar Archive.*
+
+Sweelinck reads the document. He reads the three demands. He reads the clerk's addition.
+
+"*These three were made in sequence and the sequence was necessary.*"
+
+He reads it again.
+
+"The clerk understood the session in real time," Sweelinck says. "He wrote down what the sequence accomplished before he had the conversation with anyone."
+
+> **Investigation DC 11.** The archive needs a category that holds the procedural strategy as a document of legal intelligence — not simply a court record (which would group it with ordinary trial documents) and not a legal theory text (which would imply it was written as instruction). Something specific: a record of a legal session in which the sequence was the argument, written in real time by the one recorder who noted the sequence while it was happening.
+
+**Fail:** Sweelinck files it under Court Records — Toledo Cortes. Accurate and accessible.
+
+**Pass:** Sweelinck creates: *Procedural Records — Three Demands Made in the Correct Sequence, First Entry. The Toledo Cortes three-demands record: property first, financial remedy second, legal classification third; the sequence prevented the proceedings from being terminated before the evidence was in the record; the clerk's addition is part of the document; the archive holds both the sequence and the understanding of the sequence, because together they are what the session was.*
+
+TOKEN TAKEN: The Three Demands Record.
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "CID_006",
+  "title": "The Toledo Cortes",
+  "source": "Chronicle of the Cid — Anon (Robert Southey translation, 1808)",
+  "cycle": 6,
+  "book": "chronicle-cid",
+  "source_episode": "Book IX — The Toledo Cortes; Rodrigo makes three demands in sequence: swords returned, dowry recovered, Infantes named as traitors; the sequence was a legal strategy that prevented the proceedings from being terminated before the evidence was established",
+  "theme": "Three demands made in the correct sequence: property first, financial remedy second, legal classification third; the sequence was the argument; the clerk's real-time addition names this; the archive holds both the sequence and the understanding of the sequence",
+  "activateNode": "IBR",
+  "token": {
+    "id": "toledo_cortes_three_demands",
+    "name": "The Three Demands Record",
+    "description": "Formal court document in the King's senior clerk's hand: three demands recorded in real time — swords, dowry, naming. Clerk's addition in different ink at the bottom: 'These three were made in sequence and the sequence was necessary.'",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["IBR", "VEN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {
+      "act": 1,
+      "node": "IBR",
+      "type": "skill_check",
+      "skill": "History",
+      "dc": 12,
+      "summary": "Senior clerk's note added after the session. History DC 12: if Rodrigo had named the Infantes before establishing the evidence, the proceedings could have been terminated on procedural grounds; the three-demand sequence was a legal strategy that created the evidentiary record before requesting judgment. TOKEN GRANTED."
+    },
+    {
+      "act": 2,
+      "node": "IBR road",
+      "type": "skill_check",
+      "skill": "Persuasion",
+      "dc": 13,
+      "summary": "Infantes' estate managers claim the court record belongs to crown custody. Persuasion DC 13: a court document about a proceeding involving the crown's own legal errors is better preserved where the crown cannot exercise custody; making the crown the arbiter of a record about its own conduct names the argument's weakness."
+    },
+    {
+      "act": 3,
+      "node": "VEN",
+      "type": "skill_check",
+      "skill": "Insight",
+      "dc": 12,
+      "summary": "Venetian legal scholar wants a copy for comparative legal analysis. Insight DC 12: citing an archived primary document provides the same scholarly value as a copy, with greater evidentiary quality for the archive's primary record."
+    },
+    {
+      "act": 4,
+      "node": "VEN road",
+      "type": "skill_check",
+      "skill": "Athletics",
+      "dc": 12,
+      "summary": "Po River ford, thigh-deep at center, fast current. Athletics DC 12: document above head through the twenty deepest feet."
+    },
+    {
+      "act": 5,
+      "node": "WM",
+      "type": "skill_check",
+      "skill": "Investigation",
+      "dc": 11,
+      "summary": "The clerk wrote down what the sequence accomplished in real time. Investigation DC 11: a category that holds procedural strategy as a real-time record, not ordinary trial document or legal theory. Procedural Records — Three Demands Made in the Correct Sequence, First Entry. TOKEN TAKEN."
+    }
+  ]
+}
+```
+
+---
+
+### 5-Act Vignette Play: *The Dead Man's Ride*
+
+**THE TOKEN: GIL DÍAZ'S FRAME-AND-SADDLE ACCOUNT** — Four pages of vellum, technical and precise: Gil Díaz's full description of the frame he built to carry the Cid's embalmed body on horseback from Valencia to San Pedro de Cardeña. The two hollowed boards, their dimensions. The bolt configuration that made the body sit as if vertebrate. The saddling arrangement. The schedule of the nine stages — each night halt, each morning departure, the condition of the body at each check. The final note: *At Cardeña, the body was lifted from between the boards by King Alfonso VI himself and found to be still firm and still bearing its natural colour.* Gil Díaz wrote this because he knew it would be needed. He was right about everything.
+
+---
+
+**ACT I — "The Carpenter's Record"**
+*Node: VLC — Valencia.*
+
+Gil Díaz wrote the account four days before the departure from Valencia. He understood that the departure would be confused — a garrison evacuating a city under cover of darkness while an army attacked — and that no one would be available to answer questions afterward about how the frame was built. He gave the account to you on the morning of the twelfth day. He said: "Carry this to Cardeña and from there to wherever records go now."
+
+He did not ask you to come back and tell him how it went.
+
+> **Insight DC 11.** Gil Díaz is giving you this document the morning of the departure because after the departure there will not be another opportunity. He knows the garrison will scatter, the city will fall to the Moors, and the specific technical knowledge in the account will be unlocatable except in this document. Understanding that means moving exactly at the time he intends, which is: now.
+
+**Fail:** You delay one hour making preparations. Gil Díaz's instruction was the morning. The harbor is louder at the second hour.
+
+**Pass:** You understand the timing. You move.
+
+TOKEN GRANTED: Gil Díaz's Frame-and-Saddle Account.
+
+---
+
+**ACT II — "The Moorish Intelligence"**
+*Node: VLC harbor.*
+
+At the harbor, a Moorish factor from Bucar's camp wants to know the column's route. He is not asking about the account specifically — he is asking generally, collecting intelligence before the departure. He is professionally calm and politely persistent.
+
+> **Persuasion DC 12.** This is not a question you can answer honestly and should not answer falsely in ways that will come back through the harbor intelligence network. The correct answer is: you are a private carrier with materials for a Benedictine monastery in Castile. This is technically true. It does not name the column's route. It does not name the dead man. It gives the factor exactly as much information as you want him to have.
+
+**Fail:** He is not satisfied but he is professional. He notes your direction and sends a rider. You will have company at the second waystation.
+
+**Pass:** He accepts the monastery framing and notes it. He lets you board.
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "The Road People"**
+*Node: CDN approach — Castilian road outside Cardeña.*
+
+The people who come to see the Cid riding are not few. Word traveled ahead of the column and people are coming from Rioja and all Castile — "hardly could they be persuaded that he was dead." A local abbot intercepts you on the road. He wants to add a section to your account: a description of the miracle of the open eyes, the fresh countenance, the natural color. He believes it belongs with the technical record.
+
+> **Insight DC 12.** Gil Díaz's account is a technical record of engineering and logistics. The miracle is real — Alfonso's astonishment at Cardeña is recorded in the chronicle — but a technical document is not enhanced by appending a theological interpretation. The abbot's observation belongs in a different document. The engineering account and the miracle account serve different functions. Filing them together subordinates the technical record to the theological claim.
+
+**Fail:** The abbot adds his note on a new page. The document arrives with an appendix.
+
+**Pass:** The abbot accepts the distinction. He says he will write his observation in the monastery's own chronicle.
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "The Cardeña Gate"**
+*Node: CDN — San Pedro de Cardeña.*
+
+The monastery at Cardeña is receiving the Cid's body. King Alfonso has arrived from Toledo. The body has been set in the ivory chair. The gate is controlled by the King's guard. You are a carrier with a technical document that needs to pass the gate without being held for royal review.
+
+> **Athletics DC 13.** This is not a persuasion problem. The King's guard is not hostile but they are thorough. The gate check will hold you for twenty minutes per the standard procedure, and there are forty people in the queue. The monastery has a secondary infirmary gate on the eastern wall, used by physicians, carriers, and the monastery's daily suppliers. It does not have the same queue. Getting there from the main road requires a half-league detour through the hillside orchard.
+
+**Fail:** You wait in the main queue. You reach the gate at the thirty-minute mark. Standard review. You pass.
+
+**Pass:** You reach the infirmary gate in twelve minutes. The gate monk recognizes the Benedictine carrier-pass format. You enter.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Technical Record"**
+*Node: WM — Weimar Archive.*
+
+Sweelinck reads the four pages carefully. He reads the bolt configuration. He reads the condition notes from each stage. He reads the final note.
+
+"Alfonso lifted the body himself. Found it still firm." He reads the final note again.
+
+"Gil Díaz knew," Sweelinck says. "He wrote this four days before the departure. He knew exactly what would be needed."
+
+> **Perception DC 11.** The document has nine stage-condition notes — one for each night halt. The note for the seventh stage (two days from Cardeña) is longer than the others. Read it. It notes a change in the road's quality that required adjusting the frame's resting angle at the evening halt to prevent the bolt arrangement from loosening. This note is the only evidence that Gil Díaz made real-time modifications to the frame during the journey. The archive needs to know this was a live commission — not just a documented plan but an executed engineering solution with mid-journey adjustments — before Sweelinck writes the category.
+
+**Fail:** Sweelinck files under Funerary Records — Notable Spanish Burials. Accurate but the engineering quality is lost.
+
+**Pass:** You read the seventh-stage note and give Sweelinck the modification detail. He writes: *Military Logistics — The Engineering Solution to an Impossible Commission, First Entry. Gil Díaz's frame-and-saddle account: the Cid was embalmed and carried on horseback through nine stages to Cardeña sitting upright because a carpenter built a frame that made it possible and adjusted it mid-journey; the dead man rode nine days; Alfonso lifted the body and found it still firm; the technical record preceded the departure by four days because Gil Díaz knew it would be needed and would not be asked for at any convenient moment afterward.*
+
+TOKEN TAKEN: Gil Díaz's Frame-and-Saddle Account. *questComplete: true.*
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "CID_007",
+  "title": "The Dead Man's Ride",
+  "source": "Chronicle of the Cid — Anon (Robert Southey translation, 1808)",
+  "cycle": 7,
+  "book": "chronicle-cid",
+  "source_episode": "Books X–XI — The Cid dies in Valencia; Gil Díaz builds a frame to carry the embalmed body on horseback; the garrison evacuates the city at midnight; the dead man rides nine stages to San Pedro de Cardeña, sitting upright on Bavieca; people come from all Castile; Alfonso lifts the body and finds it still firm",
+  "theme": "The engineering solution to an impossible commission: Gil Díaz wrote the technical account four days before the departure because he knew it would not be asked for at any convenient moment afterward; the dead man rode nine days; the modification at the seventh stage is the evidence that it was a live commission, not just a plan",
+  "activateNode": "VLC",
+  "token": {
+    "id": "gil_diaz_frame_account",
+    "name": "Gil Díaz's Frame-and-Saddle Account",
+    "description": "Four pages of vellum: the frame's construction, the bolt configuration, the saddling arrangement, nine stage-condition notes. Final note: 'At Cardeña, the body was lifted from between the boards by King Alfonso VI himself and found to be still firm and still bearing its natural colour.' Written four days before the departure.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["VLC", "CDN", "WM"],
+  "new_nodes": [],
+  "questComplete": true,
+  "acts": [
+    {
+      "act": 1,
+      "node": "VLC",
+      "type": "skill_check",
+      "skill": "Insight",
+      "dc": 11,
+      "summary": "Gil Díaz gives you the account the morning of the departure. Insight DC 11: he is giving it now because after the departure there will be no opportunity; the technical knowledge will be unlocatable; move exactly when he intends. TOKEN GRANTED."
+    },
+    {
+      "act": 2,
+      "node": "VLC harbor",
+      "type": "skill_check",
+      "skill": "Persuasion",
+      "dc": 12,
+      "summary": "Moorish intelligence factor wants the column's route. Persuasion DC 12: technically true answer — a private carrier with materials for a Benedictine monastery in Castile; this names your destination without naming the column's route or the dead man."
+    },
+    {
+      "act": 3,
+      "node": "CDN approach",
+      "type": "skill_check",
+      "skill": "Insight",
+      "dc": 12,
+      "summary": "Local abbot wants to append a theological miracle observation to the technical account. Insight DC 12: the engineering record and the miracle observation serve different functions; appending them subordinates the technical record to the theological claim; the abbot should write his observation in the monastery's own chronicle."
+    },
+    {
+      "act": 4,
+      "node": "CDN gate",
+      "type": "skill_check",
+      "skill": "Athletics",
+      "dc": 13,
+      "summary": "King's guard at the main gate, twenty-minute queue. Athletics DC 13: half-league detour through the hillside orchard to the infirmary gate, which has no queue; Benedictine carrier-pass format recognized."
+    },
+    {
+      "act": 5,
+      "node": "WM",
+      "type": "skill_check",
+      "skill": "Perception",
+      "dc": 11,
+      "summary": "Nine stage-condition notes; the seventh stage note is longer. Perception DC 11: read it — it documents a real-time frame modification at the evening halt; this is the evidence it was a live commission with mid-journey adjustments. Military Logistics — The Engineering Solution to an Impossible Commission, First Entry. TOKEN TAKEN. questComplete: true."
+    }
+  ]
+}
+```
