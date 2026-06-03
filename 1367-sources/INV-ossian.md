@@ -651,3 +651,788 @@ activateMissionBit: invMornaComplete
 ---
 
 *Cycle 2 complete. Mark `[x]` for INV-ossian in books.md.*
+
+---
+
+### 5-Act Vignette Play: *The Ghost at Noon*
+
+**THE TOKEN: VINVELA'S CARVED TABLET** — A small bone tablet, palm-sized, carved at the edges with knotwork in the Highland tradition. On one face, scratched in the old letters: *I will be here when you come back. On the hill. At noon. This is the promise.* On the other face: her device, a running deer, completed in two lines. She made it before Shilric left for Fingal's wars. She left it at the stone on the hill where she said she would wait. She died before he came back. Her ghost appeared there at noon on the day he returned — he spoke to her, and she answered, and told him she was not there for long, and she was not afraid. He picked up the tablet after she was gone. He has held it for three months and cannot put it down.
+
+---
+
+**ACT I — "Three Months"**
+*Node: CNA — Vale of Cona.*
+
+Shilric is sitting at the base of the hill stone. He has been here, on and off, for three months. He is not mad. He is a man who spoke to a ghost at noon and does not know what to do with the fact that the promise was kept by someone who was already dead when she kept it.
+
+He holds the tablet out without looking up.
+
+> **Insight DC 11.** He is not asking the Fighter to validate his experience or explain it or comfort him. He is asking the Fighter to carry the proof somewhere that it can be documented — not so that anyone will believe it, but so that the promise exists in a record somewhere beyond his own memory. Understanding this distinction is the act of taking the tablet correctly.
+
+**Fail:** You reach for the tablet and say something. He pulls it back. You wait. He offers it again. You take it without speaking.
+
+**Pass:** You understand before you reach for it. You take it in silence. He nods once.
+
+TOKEN GRANTED: Vinvela's Carved Tablet.
+
+---
+
+**ACT II — "The Collector"**
+*Node: CNA road north.*
+
+A collector of Highland curiosities has heard about the tablet and intercepts the road. He frames it carefully: he preserves things; the tablet would be safe with him; he would not publish its existence without Shilric's permission. He is genuine about the preservation claim.
+
+> **Persuasion DC 12.** The tablet is not a curiosity. It is a specific commission: a promise recorded, a promise kept from beyond death, and a record of the keeping. Curiosity collections absorb the object into the collector's context. The archive receives it as itself — the tablet's content, not the collector's possession of it.
+
+**Fail:** He offers a sum. You decline. He follows to the road fork.
+
+**Pass:** He hears the distinction. He says: "When it is filed, may I correspond with the archive?" You say yes.
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "The Ecclesiastical Challenge"**
+*Node: CON — Constantinople archive district.*
+
+A Byzantine church official intercepts you at the archive district gate. He has received a report about a document related to a ghost appearance and communication. His concern: a document that records a ghost's speech is either a pious relic or evidence of necromantic practice, and the Church needs to classify it before it enters a secular archive.
+
+> **Insight DC 12.** His framing presents two options and misses the third: the tablet is a physical object made before the death; the carved words are a living person's promise; the promise was kept by the dead person's ghost; the tablet itself predates the ghost appearance and is not a record of the ghost's speech but of the human being's promise. The tablet's documentary character is the promise, not the appearance. Classification under pious relic or necromantic evidence misses what the document is.
+
+**Fail:** He requires a deposition about the ghost appearance before releasing the tablet to secular archive intake. A week's delay.
+
+**Pass:** He accepts the distinction between the promise document and the ghost encounter. The tablet's character is the promise. He lets it through.
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "The Bosphorus Cold"**
+*Node: CON toward WM.*
+
+November, the Bosphorus crossing in early morning dark, the water the color of iron and the wind from the east. The bone tablet is not water-sensitive but the knotwork edges have fine cuts that could catch ice. A hard freeze has been descending from the north.
+
+> **Athletics DC 11.** The crossing is short. Keep the tablet inside your cloak, not in the pack where it could take an edge impact. The ferry is stable but cold. Fifteen minutes.
+
+**Fail:** The wind off the water is sharper than expected. Your cloak blows open for two seconds. The tablet is unharmed; you are cold.
+
+**Pass:** You hold the cloak closed with one hand throughout the crossing.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Promise Category"**
+*Node: WM — Weimar Archive.*
+
+Sweelinck reads the carved text. He reads it twice, tracing the letters. He turns the tablet and reads the device: the running deer, two lines.
+
+"She made it before he left," he says. "She placed it at the stone on the hill. She was dead when he came back. The ghost kept the promise."
+
+He sets the tablet down.
+
+> **Religion DC 11.** The archive needs a category that holds the promise and its keeping without adjudicating the theological claim. Not a pious relic category (which assumes the Church's classification of the ghost), not a ghost-testimony category (which would require treating the ghost as a witness), not a Highland folklore category (which would make it an ethnographic specimen). The specific character: a human promise, inscribed in a physical object, kept from beyond death; the archive holds the inscription and the account of its keeping.
+
+**Fail:** Sweelinck creates Ghost Testimonies — Appearances at Named Locations. Technically accurate.
+
+**Pass:** Sweelinck creates: *Ghost Testimony Records — Promises Kept by the Dead, First Entry. Vinvela's carved tablet: she inscribed the promise before she died; the ghost appeared at noon on the promised hill at the promised hour; the tablet is the human document — the promise in her living hand; the ghost's appearance is not in the tablet, it is the event that the tablet's promise anticipated and the dead fulfilled; the archive holds both the promise and the account of its keeping separately, because they are different documents.*
+
+TOKEN TAKEN: Vinvela's Carved Tablet.
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "INV_003",
+  "title": "The Ghost at Noon",
+  "source": "Ossian — James MacPherson (1760–1763)",
+  "cycle": 3,
+  "book": "ossian",
+  "source_episode": "The Songs of Selma — Vinvela; she promises to wait on the hill; she dies; her ghost keeps the promise at noon when Shilric returns",
+  "theme": "A promise kept by the dead: the tablet is the human document — the promise in her living hand; the ghost's appearance is not in the tablet, it is the event the promise anticipated and the dead fulfilled; the archive holds both separately",
+  "activateNode": "CNA",
+  "token": {
+    "id": "vinvela_carved_tablet",
+    "name": "Vinvela's Carved Tablet",
+    "description": "Palm-sized bone tablet with knotwork edges. One face: 'I will be here when you come back. On the hill. At noon. This is the promise.' Other face: her running-deer device in two lines. Made before Shilric left for the wars.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["CNA", "CON", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {
+      "act": 1,
+      "node": "CNA",
+      "type": "skill_check",
+      "skill": "Insight",
+      "dc": 11,
+      "summary": "Shilric holds the tablet out without looking up. Insight DC 11: he wants the promise documented beyond his own memory, not validated or explained — take it in silence. TOKEN GRANTED."
+    },
+    {
+      "act": 2,
+      "node": "CNA road",
+      "type": "skill_check",
+      "skill": "Persuasion",
+      "dc": 12,
+      "summary": "Curiosity collector intercepts the road. Persuasion DC 12: the tablet is a specific commission, not a curiosity; archive context vs. collection context."
+    },
+    {
+      "act": 3,
+      "node": "CON",
+      "type": "skill_check",
+      "skill": "Insight",
+      "dc": 12,
+      "summary": "Byzantine church official wants to classify the tablet as pious relic or necromantic evidence. Insight DC 12: the tablet predates the death and records the living promise, not the ghost's speech; its character is the human inscription."
+    },
+    {
+      "act": 4,
+      "node": "CON crossing",
+      "type": "skill_check",
+      "skill": "Athletics",
+      "dc": 11,
+      "summary": "November Bosphorus, iron water, east wind. Athletics DC 11: tablet inside cloak, one hand holding it closed."
+    },
+    {
+      "act": 5,
+      "node": "WM",
+      "type": "skill_check",
+      "skill": "Religion",
+      "dc": 11,
+      "summary": "Classify the promise document without adjudicating the theological claim. Religion DC 11: not relic, not ghost-testimony, not folklore — the human promise and the account of its keeping are different documents. Ghost Testimony Records — Promises Kept by the Dead, First Entry. TOKEN TAKEN."
+    }
+  ]
+}
+```
+
+---
+
+### 5-Act Vignette Play: *Crimora's Arrow*
+
+**THE TOKEN: CRIMORA'S RESTRICTION ORDER** — A small folded parchment from the Highland clan elders: Crimora of the clan of Connal's father is forbidden to enter the battlefield at Lena before the engagement closes, on grounds that her grief for Connal could cause her to loose an arrow at a figure she cannot identify clearly in the fighting. The elders wrote this order not from cruelty but from knowledge — Crimora is a skilled archer, and skilled archers loose when they see their target, and in a battle where Connal fights Dargo both men are in the field and Crimora does not know what Dargo looks like in his war-kit. The order is correct. The problem is it arrived too late for Crimora to hear it calmly.
+
+---
+
+**ACT I — "The Field Edge"**
+*Node: HLD — Scottish Highland.*
+
+Crimora has her bow. She is at the field's edge in the grey early morning. She is not mad or reckless; she is prepared. She has been watching the field from the hill and she knows where Connal is — she thinks. She is wrong: the figure she has been watching is Dargo.
+
+> **Insight DC 12.** She does not know she has the wrong figure. She is watching with complete precision. The problem is not her aim; it is that she has been watching the field for an hour in poor light and the two figures have moved, and the one she has been tracking since they were at distance has changed position with the one she did not recognize. Before giving her the restriction order, the Fighter must understand that the order alone will not work — she will resist it because she believes she knows what she is doing. The only approach that can reach her is acknowledging her precision and then asking her to hold it for five more minutes while the light improves.
+
+**Fail:** You give her the order directly. She reads it and stands still. "I know where he is." She does not lower the bow.
+
+**Pass:** You acknowledge the precision first. She pauses. The five minutes create the light. She sees the switch.
+
+TOKEN GRANTED: Crimora's Restriction Order.
+
+---
+
+**ACT II — "The Elder's Authority"**
+*Node: HLD.*
+
+A warrior from the clan — one of the men at the field's edge — challenges you for the restriction order. His argument: the elders sent the restriction, but the elders are not in the field; he is; and he says Crimora knows the fighters better than the elders do. He wants to give the order back to Crimora.
+
+> **Persuasion DC 12.** The restriction order's authority is not the elders' judgment of Crimora's skill; it is the elders' knowledge that both Connal and Dargo are in the field and that Dargo's war-kit resembles Connal's by deliberate choice, as a provocation strategy. The elders have information the warrior does not. The restriction is correct not because Crimora is unskilled but because the target identification is genuinely ambiguous and one of the two men in the field is doing it deliberately.
+
+**Fail:** He takes the order back to Crimora. She reads it a second time. She has now seen the switch in the light. She agrees. You retrieve the order from her hands.
+
+**Pass:** He accepts the information. He stands down.
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "The Venetian Scholar"**
+*Node: VEN — Venice.*
+
+A Venetian scholar of comparative battle customs has heard about the clan elders' restriction order — a document limiting a woman's participation in a battle on grounds of her grief. He wants to publish it as evidence in a comparative analysis of Highland vs. Mediterranean battle customs regarding women's military roles. He is not hostile; he is genuinely interested.
+
+> **Insight DC 12.** His publication framing misclassifies the document's character. The restriction order is not a statement about women's military capacity; it is a specific intelligence assessment — the elders knew about Dargo's war-kit as a deliberate provocation. Filing it as a document about women's battle roles would make it available to researchers looking for exactly the wrong thing while making it unavailable to researchers studying battlefield intelligence practices.
+
+**Fail:** He publishes a summary of the document before it reaches Weimar. Sweelinck receives the document alongside the published summary.
+
+**Pass:** He accepts the intelligence-assessment classification. He asks for the Weimar reference for his research notes.
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "The Alpine Road"**
+*Node: VEN road to WM.*
+
+Three days of mountain road from Venice in autumn. The parchment restriction order is small and folded; it will survive the journey without special treatment as long as it stays dry. A brief mountain storm on the second day closes the path for six hours.
+
+> **Athletics DC 11.** Wait out the storm in a mountain shepherd's hut. Keep the document in the interior pocket. The hut is dry. The road opens by late afternoon. Make the next stage before dark.
+
+**Fail:** You attempt the road before the storm clears and are turned back. One day lost.
+
+**Pass:** You wait correctly. You reach the next stage before dark and make the final day's journey easily.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Intelligence Category"**
+*Node: WM — Weimar Archive.*
+
+Sweelinck reads the restriction order. He reads the grounds: "grief could cause her to loose at a figure she cannot identify." He sets it down.
+
+"That is not a restriction of grief," he says. "That is an intelligence assessment. The elders knew about Dargo's war-kit."
+
+> **Investigation DC 11.** The archive needs a category that holds the restriction order as battlefield intelligence — the specific information that makes it correct — rather than as a cultural document about Highland women's battle roles. The intelligence assessment is: Dargo chose to resemble Connal in the field deliberately; the elders knew; the restriction was correct. The category should name the precision of the information, not the restriction.
+
+**Fail:** Sweelinck files it under Highland Battle Customs — Clan Elder Restrictions. Accurate but misclassifying.
+
+**Pass:** Sweelinck creates: *Battlefield Intelligence Records — The Restriction Issued Because the Information Was Correct, First Entry. Crimora's restriction order: the elders knew that Dargo's war-kit was a deliberate provocation designed to create identification ambiguity; the restriction was not about her grief or her skill — it was about accurate intelligence that the restricted party did not yet have; the order arrived at the field's edge and the light improved before the arrow was loosed; both the restriction and the information that made it correct are in this record.*
+
+TOKEN TAKEN: Crimora's Restriction Order.
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "INV_004",
+  "title": "Crimora's Arrow",
+  "source": "Ossian — James MacPherson (1760–1763)",
+  "cycle": 4,
+  "book": "ossian",
+  "source_episode": "Carric-thura / various — Crimora watches the battle where Connal fights Dargo; the risk of misidentification; the clan elders' intelligence about Dargo's war-kit",
+  "theme": "The restriction issued because the information was correct: the elders knew about Dargo's war-kit; the restriction was not about grief or skill but about accurate intelligence the restricted party did not yet have; the order and the intelligence are the same document",
+  "activateNode": "HLD",
+  "token": {
+    "id": "crimora_restriction_order",
+    "name": "Crimora's Restriction Order",
+    "description": "Folded parchment from the Highland clan elders: Crimora is forbidden to enter the battlefield at Lena before the engagement closes. Grounds: Dargo's war-kit resembles Connal's by deliberate choice; identification is genuinely ambiguous. The restriction is correct.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["HLD", "VEN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {
+      "act": 1,
+      "node": "HLD",
+      "type": "skill_check",
+      "skill": "Insight",
+      "dc": 12,
+      "summary": "Crimora at the field's edge with the bow drawn. Insight DC 12: she believes she has the right figure; she does not; the order alone won't reach her — acknowledge her precision first, then the five minutes of improving light let her see the switch. TOKEN GRANTED."
+    },
+    {
+      "act": 2,
+      "node": "HLD",
+      "type": "skill_check",
+      "skill": "Persuasion",
+      "dc": 12,
+      "summary": "Clan warrior challenges the restriction on grounds that Crimora knows the fighters better than the elders. Persuasion DC 12: the restriction is based on intelligence about Dargo's kit as deliberate provocation — information the warrior does not have."
+    },
+    {
+      "act": 3,
+      "node": "VEN",
+      "type": "skill_check",
+      "skill": "Insight",
+      "dc": 12,
+      "summary": "Venetian scholar wants to publish the order as a document about women's battle roles. Insight DC 12: the order is a battlefield intelligence assessment, not a cultural statement; filing under the wrong category makes it available to wrong researchers, unavailable to right ones."
+    },
+    {
+      "act": 4,
+      "node": "VEN road",
+      "type": "skill_check",
+      "skill": "Athletics",
+      "dc": 11,
+      "summary": "Mountain storm closes the path for six hours. Athletics DC 11: wait in the shepherd's hut, road opens by afternoon, make the next stage before dark."
+    },
+    {
+      "act": 5,
+      "node": "WM",
+      "type": "skill_check",
+      "skill": "Investigation",
+      "dc": 11,
+      "summary": "Restriction order needs classification as intelligence assessment, not cultural document. Battlefield Intelligence Records — The Restriction Issued Because the Information Was Correct, First Entry. TOKEN TAKEN."
+    }
+  ]
+}
+```
+
+---
+
+### 5-Act Vignette Play: *Euran's Message*
+
+**THE TOKEN: EURAN'S COUNTER-DISPATCH** — A sealed leather pouch, small enough to fit in a fist, containing a single folded note in Euran's hand. The note reveals the lie: both armed men received messages at sunset telling them that the other had named him a coward at the gate of the north. Both messages were fabricated by a third party who wants the gate held by neither. The counter-dispatch names the fabrication and the fabricator, and if it reaches one of the two men before they meet in the dark, the collision will not happen. The pouch seal is Euran's. The message is true. The time is extremely short.
+
+---
+
+**ACT I — "Euran's Haste"**
+*Node: CNA — Vale of Cona.*
+
+Euran arrives at the vale at a run. He has been running for two hours. He speaks in the abbreviated manner of a man who has already decided everything and needs the carrier to understand the situation in thirty seconds: two men, one lie, midnight meeting at the gate, the counter-dispatch will stop it if it arrives in time. The pouch.
+
+> **Insight DC 11.** He is choosing you to carry this, not a mounted rider, because a mounted rider going north will be visible and the fabricator is watching the road. On foot, at a run, taking the drover's track along the glen, you can reach the gate in ninety minutes. A mounted rider takes the road and will be intercepted. Understanding this is how you know which way to go.
+
+**Fail:** You ask which route. He has to explain it. You lose eight minutes.
+
+**Pass:** You understand. You already know the drover's track. You go.
+
+TOKEN GRANTED: Euran's Counter-Dispatch.
+
+---
+
+**ACT II — "The Road Watcher"**
+*Node: CNA drover's track.*
+
+Halfway to the gate, there is a figure on the high ground above the track. He has seen you. He has a horse. He is coming down.
+
+He works for the fabricator. His job is to intercept any counter-message from Euran.
+
+> **Persuasion DC 12.** He does not know which track Euran used or whether you are carrying anything specific. His interception is precautionary. The argument: you are a carrier for a clan household, moving a private communication on the drover's track, and the private character of your commission means his interception requires a specific authority he does not have. He can cite the fabricator's instruction; he cannot cite an official mandate.
+
+**Fail:** He demands to see the pouch. You refuse. He dismounts and draws. Brief combat: AC 12, HP 16, short sword. You win; he retreats.
+
+**Pass:** He accepts the authority argument. He watches you from the high ground but does not descend.
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "The First Arrival"**
+*Node: HLD — Scottish Highland, approaching the gate.*
+
+You reach the outer edge of the gate's approach with forty minutes to spare. One of the two men — Bremo of the eastern clan — is already visible on the approach road, moving steadily toward the gate. He is not hurrying, which means he is early. He will arrive before the meeting hour.
+
+If you give him the counter-dispatch now, he will read it, believe it, and turn back. The collision will not happen. But if you give it to him now, the fabricator will know the counter-dispatch reached the gate before midnight, and will take different action next time.
+
+> **Persuasion DC 12.** This is not a security problem — it is a priority problem. The counter-dispatch's purpose is to prevent the collision tonight. The fabricator's future plans are not within the commission's scope. Give Bremo the counter-dispatch now. The commission is specific and immediate.
+
+**Fail:** You hesitate, trying to calculate the secondary effects. Bremo passes the outer approach and you have to run to intercept him.
+
+**Pass:** You intercept Bremo cleanly. He reads the counter-dispatch. He turns back. He says: "Euran sent this?" Yes. He says: "I know who wrote the other one."
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "The Gate Road to the Archive"**
+*Node: HLD road toward RGS.*
+
+The counter-dispatch has served its purpose. Euran wants it filed — the fabrication and the fabricator named, in a permanent record, at a neutral archive. The road south takes you to the coast and then to Ragusa.
+
+The problem is weather — Highland autumn gales, three days of road, the coast crossing exposed. The leather pouch's seal is intact and will survive rain; the folded note inside is uncoated parchment.
+
+> **Athletics DC 11.** Three days of Highland autumn road. Keep the pouch in your interior pocket, against your body, where your warmth and the leather will keep the interior dry. Check the seal at each overnight stop.
+
+**Fail:** The seal loosens on the second day. You notice and re-press it with a coin-edge at the evening fire. The interior stays dry.
+
+**Pass:** Three clean days. The seal is intact when you reach the coast.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Fabrication Category"**
+*Node: WM — Weimar Archive.*
+
+Sweelinck reads the counter-dispatch. He reads Euran's note. He opens his log and writes the fabricator's name.
+
+"Both men received fabricated messages. Euran found out before midnight and sent a counter. The collision did not happen." He looks up. "Do you know if the fabricator has been dealt with?"
+
+You tell him what Bremo said: he knows who wrote the other one.
+
+> **Investigation DC 11.** The archive needs a category that holds the counter-dispatch as a specific intelligence document — not general deception records (which would group it with commercial fraud and false witness), not Highland conflict records (which would group it with feud documentation). Something specific: the counter-message that arrived before the fabricated messages' consequences were irreversible, with the fabrication and the fabricator named.
+
+**Fail:** Sweelinck files under Conflict Prevention Records — Highland Disputes.
+
+**Pass:** Sweelinck creates: *Counter-Intelligence Records — Messages That Prevent Collisions at the Gate, First Entry. Euran's counter-dispatch: two fabricated insult-messages, one fabricator, one counter-message arriving forty minutes before midnight; the collision did not happen; the fabrication is named, the fabricator is named, the mechanism is described; the archive holds this as a record of a specific intelligence act rather than a conflict-prevention act, because the intelligence is what the prevention required.*
+
+TOKEN TAKEN: Euran's Counter-Dispatch.
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "INV_005",
+  "title": "Euran's Message",
+  "source": "Ossian — James MacPherson (1760–1763)",
+  "cycle": 5,
+  "book": "ossian",
+  "source_episode": "Oithona / various — fabricated insult messages sending two armed men to the same gate at midnight; Euran's intelligence about the fabrication; the counter-dispatch",
+  "theme": "The counter-message that arrived before the collision: the intelligence is what the prevention required; the fabrication is named, the fabricator is named, the mechanism is described; the archive holds the intelligence act, not the conflict-prevention act",
+  "activateNode": "CNA",
+  "token": {
+    "id": "euran_counter_dispatch",
+    "name": "Euran's Counter-Dispatch",
+    "description": "Sealed leather pouch, fist-sized. Inside: a single note in Euran's hand naming the fabrication, the fabricator, and the two recipients of the false messages. The pouch seal is Euran's. The message is true. The time is extremely short.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["CNA", "HLD", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {
+      "act": 1,
+      "node": "CNA",
+      "type": "skill_check",
+      "skill": "Insight",
+      "dc": 11,
+      "summary": "Euran arrives at a run with the pouch. Insight DC 11: a mounted rider takes the road and will be intercepted; foot-travel on the drover's track reaches the gate in ninety minutes without being visible. TOKEN GRANTED."
+    },
+    {
+      "act": 2,
+      "node": "CNA track",
+      "type": "skill_check",
+      "skill": "Persuasion",
+      "dc": 12,
+      "summary": "Fabricator's agent on the high ground descends to intercept. Persuasion DC 12: private commission on a private track; his interception requires official authority he does not have. Combat fallback: AC 12 HP 16."
+    },
+    {
+      "act": 3,
+      "node": "HLD gate approach",
+      "type": "skill_check",
+      "skill": "Persuasion",
+      "dc": 12,
+      "summary": "Bremo is already on approach, early. Persuasion DC 12 (internal): the commission is specific and immediate; give him the counter-dispatch now without calculating secondary effects. He reads it and turns back."
+    },
+    {
+      "act": 4,
+      "node": "HLD road to RGS",
+      "type": "skill_check",
+      "skill": "Athletics",
+      "dc": 11,
+      "summary": "Three days of Highland autumn road to the coast. Athletics DC 11: interior pocket, body heat, seal checked each overnight stop."
+    },
+    {
+      "act": 5,
+      "node": "WM",
+      "type": "skill_check",
+      "skill": "Investigation",
+      "dc": 11,
+      "summary": "Counter-dispatch with fabrication and fabricator named. Investigation DC 11: not conflict-prevention records, not general deception — the intelligence act that made prevention possible. Counter-Intelligence Records — Messages That Prevent Collisions at the Gate, First Entry. TOKEN TAKEN."
+    }
+  ]
+}
+```
+
+---
+
+### 5-Act Vignette Play: *The Rock at Sea*
+
+**THE TOKEN: ARINDEL'S TIDE CHART** — A piece of oiled bark, palm-sized, with the patrol schedule at Arindel's western watch-post scratched in charcoal by an informant who had access to the watch-house. The schedule gives the tide window: high water plus two hours, when Arindel's patrol turns inland. The bark was given to the rescue boat captain the previous morning. He has been waiting for permission to move. Daura is on a sea-rock visible from the headland. The signal fire has been burning for two days. The tide window opens in three hours.
+
+---
+
+**ACT I — "The Captain's Problem"**
+*Node: HLD — Highland coastal headland.*
+
+The rescue boat captain is a practical man. He has the bark. He has the boat. He has the window. He does not have authorization from the clan elders to run a rescue mission through Arindel's patrol waters without a formal declaration of intent. The clan elders are two hours away by horse. The tide window is three hours away.
+
+> **Insight DC 11.** The authorization problem is real but the elders' current position is: they authorized the rescue mission three days ago when Daura was first confirmed on the rock. The patrol schedule was not known at the time of authorization; the bark was obtained afterward. The captain needs to understand that the bark is new information that changes the practical shape of an already-authorized mission, not a new mission requiring new authorization.
+
+**Fail:** The captain wants written confirmation. You spend one hour drafting a statement he accepts. Two hours remain.
+
+**Pass:** You give him the framing. He reads the bark again. "The mission was already authorized." He gives the order.
+
+TOKEN GRANTED: Arindel's Tide Chart.
+
+---
+
+**ACT II — "The Patrol Contact"**
+*Node: HLD coastal waters.*
+
+Moving toward the rock, the rescue boat is spotted by Arindel's patrol boat before the tide window. The patrol boat is smaller but faster and makes contact before the window opens. Arindel's officer asks their business.
+
+> **Persuasion DC 13.** This is a specific timing problem: the tide window opens in forty minutes. If the patrol boat officer is given a reason to wait forty minutes before making a formal decision, the window will open and the rescue will be legal under the patrol's own rules (the window is acknowledged in the patrol schedule as a time when rescue operations are permitted). The argument: they are a clan medical escort, not a military operation; medical escorts have a forty-minute protocol period for registration; they are within their rights to be on this water.
+
+**Fail:** The officer is skeptical but professional. He accompanies the rescue boat to the rock. The mission completes with a witness, which is not ideal but is not stopped.
+
+**Pass:** He accepts the medical escort framing and the forty-minute protocol. The window opens. He lets them pass.
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "The Rock"**
+*Node: HLD sea-rock.*
+
+Daura is on the rock. She has been there three days. The signal fire is down to coals. She is alive. The rescue is straightforward. While the boat's crew assists her, a wave-surge pushes the boat against the rock's base and the bark chart — in the bow-pack — takes a splash.
+
+> **Athletics DC 12.** Get to the bow-pack before the next surge. The bark is oiled and will survive contact with seawater, but the charcoal markings will not survive direct spray. One surge has already hit. The pack is in the bow, the next surge is coming from the north side.
+
+**Fail:** The second surge catches the edge of the pack. The bark survives; one of the charcoal patrol-time notations is smeared. Sweelinck will note the damage.
+
+**Pass:** You get the pack closed and braced before the second surge. The markings are intact.
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "The Coast Road"**
+*Node: HLD road south.*
+
+Three days south along the Highland coast. The bark chart is in your interior pack. The autumn coast road is passable but exposed. On the second day a fog bank moves in from the sea and the road becomes a matter of footing and direction rather than visibility.
+
+> **Athletics DC 11.** Navigate the fog section by road-feel and the sound of the sea. Two miles of coast road in thick fog, the cliff edge on the right, the road surface distinguishable from the heath by the slightly compacted soil. The bark chart is safe; this is a navigation problem.
+
+**Fail:** You go off the road once in the fog and correct. Half an hour lost.
+
+**Pass:** You hold the road through the fog section without difficulty.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "The Window Category"**
+*Node: WM — Weimar Archive.*
+
+Sweelinck reads the bark chart. He reads the patrol schedule. He reads the tide window notation.
+
+"An informant had access to the watch-house schedule. The captain waited for the window. The rescue was conducted in the window." He looks up. "She had been on the rock three days."
+
+> **Perception DC 11.** The bark chart has two sets of markings: the informant's charcoal patrol schedule and a second set of smaller marks in a different charcoal stroke — these are the captain's own notations added when he received the bark, showing the three calculations he made (tide height, patrol overlap, signal fire burn rate). The archive needs to note both sets of marks because together they document two separate intelligences: what the informant knew and what the captain determined from it.
+
+**Fail:** Sweelinck notes the bark as a single intelligence document.
+
+**Pass:** You show him the two marking sets. He writes the provenance note naming both hands. He creates: *Rescue Logistics Records — The Tide Window and the Signal Fire, First Entry. Arindel's tide chart: one informant, one rescue captain, two intelligence contributions on the same piece of bark; the mission was authorized three days earlier; the bark is the new information that made the authorized mission possible; Daura had been on the rock three days when the window opened.*
+
+TOKEN TAKEN: Arindel's Tide Chart.
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "INV_006",
+  "title": "The Rock at Sea",
+  "source": "Ossian — James MacPherson (1760–1763)",
+  "cycle": 6,
+  "book": "ossian",
+  "source_episode": "Dar-thula / various — Daura on the sea-rock; Arindel's patrol; the tide window; the rescue",
+  "theme": "The rescue logistics document: one informant's patrol schedule and one captain's calculations on the same piece of bark; the bark is the new information that made an already-authorized mission possible; Daura had been on the rock three days when the window opened",
+  "activateNode": "HLD",
+  "token": {
+    "id": "arindel_tide_chart",
+    "name": "Arindel's Tide Chart",
+    "description": "Piece of oiled bark, palm-sized: informant's charcoal patrol schedule with tide window marked. Captain's smaller notations added when he received it: tide height, patrol overlap, signal fire burn rate. Two intelligences on one bark.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["HLD", "CNA", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {
+      "act": 1,
+      "node": "HLD",
+      "type": "skill_check",
+      "skill": "Insight",
+      "dc": 11,
+      "summary": "Captain has the bark and the window but not written authorization. Insight DC 11: the bark is new information for an already-authorized mission; the elders authorized the rescue three days ago; the framing lets the captain proceed. TOKEN GRANTED."
+    },
+    {
+      "act": 2,
+      "node": "HLD coast",
+      "type": "skill_check",
+      "skill": "Persuasion",
+      "dc": 13,
+      "summary": "Patrol boat contacts them before the window opens. Persuasion DC 13: medical escort, forty-minute protocol registration period — wait for the window without triggering a formal decision."
+    },
+    {
+      "act": 3,
+      "node": "HLD rock",
+      "type": "skill_check",
+      "skill": "Athletics",
+      "dc": 12,
+      "summary": "Wave-surge hits the boat; the bow-pack with the bark chart is exposed. Athletics DC 12: get to the pack before the second surge, brace it before the charcoal markings take spray."
+    },
+    {
+      "act": 4,
+      "node": "HLD coast road",
+      "type": "skill_check",
+      "skill": "Athletics",
+      "dc": 11,
+      "summary": "Highland coast fog, two miles, cliff edge on the right. Athletics DC 11: navigation by road-feel and sea-sound."
+    },
+    {
+      "act": 5,
+      "node": "WM",
+      "type": "skill_check",
+      "skill": "Perception",
+      "dc": 11,
+      "summary": "Two sets of charcoal markings on the bark. Perception DC 11: identify the informant's schedule and the captain's calculations as separate intelligences. Rescue Logistics Records — The Tide Window and the Signal Fire, First Entry. TOKEN TAKEN."
+    }
+  ]
+}
+```
+
+---
+
+### 5-Act Vignette Play: *The Message No One Sends*
+
+**THE TOKEN: TONTHENA'S SWORD** — A Highland warrior's sword, carried south through Lochlin country by his king's emissary after the battle. The warrior's name was Tonthena. He died in the battle with distinction. His king is returning his effects to the clan as a mark of respect. The sword is wrapped in linen and tied with a cord. A note is attached to the cord in the king's hand: *From Tonthena's king, who respected him. His sword returns to his people.* There is nothing else. No other message. That is what the note says. The Fighter knows one more thing: Colna-dona of Tonthena's clan loved him. She does not know he is dead.
+
+---
+
+**ACT I — "The King's Emissary"**
+*Node: CNA — Vale of Cona.*
+
+The king's emissary is a careful man. He has carried the sword for five days. He is near the clan's territory. He gives you the sword and the note and tells you one more thing: there is a woman of the clan, Colna-dona, who was known to love Tonthena. His king would like the sword delivered to the clan, not to Colna-dona specifically; the clan will know what to do with it. He is trying to avoid something.
+
+> **Insight DC 11.** He is trying to avoid something he cannot avoid. Colna-dona will meet you on the road. She has been watching the approach for two days. She already knows, or she suspects, or she does not know but will recognize the sword. Understanding this before the road means you arrive at the meeting prepared rather than surprised.
+
+**Fail:** You take the sword without understanding the warning. On the road, Colna-dona's question is a surprise.
+
+**Pass:** You understand. You think about what you will say when she asks. You have no answer. You set out.
+
+TOKEN GRANTED: Tonthena's Sword.
+
+---
+
+**ACT II — "The Road Meeting"**
+*Node: CNA road to HLD.*
+
+She is on the road. You see her before she sees you. She is walking toward you with the specific quality of a woman who has been walking for a long time and has no other destination.
+
+She sees the sword.
+
+She looks at your face.
+
+She says: "Is that all there is?"
+
+> **Persuasion DC 13.** The answer is yes. There is no other message. His king respected him. The sword returns to his people. This is all there is. The only answer that serves her is the true answer — not softened, not extended, not accompanied by consolation. She asked a specific question. She is ready for the specific answer. The terrible mercy of the moment is that she already knows.
+
+**Fail:** You say something that is not the answer to the question she asked. She looks at you for a long time. Then she says: "Tell me what you know." You tell her the truth anyway.
+
+**Pass:** "Yes." One word. She nods. She walks alongside you for a hundred steps without speaking. Then she turns back.
+
+TOKEN check Act II.
+
+---
+
+**ACT III — "The Clan Delivery"**
+*Node: HLD — Scottish Highland, clan hall.*
+
+The clan elder receives the sword. He reads the note. He thanks the Fighter. He asks one question: did you carry this from Tonthena's king directly, or through intermediaries?
+
+> **Insight DC 12.** He is asking about the chain of custody — not to challenge the sword's authenticity but to know how many people handled it between the king's hands and his. He needs to know because he will tell Colna-dona something about the delivery, and the chain of custody is part of what he will tell her. Understanding this means answering fully: through the king's emissary at the vale of Cona, and then directly.
+
+**Fail:** You give a simplified answer. He nods, but the simplification omits the meeting on the road. He will find out about that meeting eventually.
+
+**Pass:** You give him the full chain including the road meeting. He is quiet. He says: "She met you on the road." You say yes. He says nothing else about it.
+
+TOKEN check Act III.
+
+---
+
+**ACT IV — "The Road to Weimar"**
+*Node: HLD road south toward VEN.*
+
+The sword must reach Weimar as a record — not because anyone has directed this, but because the commission was one of the Ossianic archive's most specific: an object that was all that remained, carried with the knowledge that it was all that remained, delivered to the person who asked the question the note could not answer.
+
+The road south from the Highlands is long. The sword is heavy. The linen wrapping is intact. The cord and note are intact.
+
+> **Athletics DC 12.** Twelve days of southern road with the sword in a carrying pack. The sword does not need special treatment but the note and cord do — they must arrive as they were received. Keep the sword upright in the pack where the note won't crumple.
+
+**Fail:** On the fifth day the pack strap breaks. You repair it with cord from your kit. The note is unharmed. The repair costs two hours.
+
+**Pass:** Twelve days clean. The note and cord arrive in the same condition as the morning of the delivery.
+
+TOKEN check Act IV.
+
+---
+
+**ACT V — "All That Remained"**
+*Node: WM — Weimar Archive.*
+
+Sweelinck unwraps the linen. He reads the note.
+
+He holds the sword across both hands and looks at it.
+
+"His king respected him. The sword returns to his people." He sets it on the intake table. "That is what the note says. What did the woman on the road ask?"
+
+You tell him: "Is that all there is?"
+
+> **Investigation DC 11.** The archive needs a category that holds the sword as the physical remainder of a life — not a trophy record (which assumes the collector's perspective), not a war-spoil record (which assumes the victor's perspective), not a relic record (which assumes a religious context). Something specific: the last possession returned to the people of the dead, delivered through the hands of a carrier who knew when he lifted it that it was all that remained, and who was asked on the road whether that was the case.
+
+**Fail:** Sweelinck files it under Diplomatic Objects — Returned Effects. Accurate, cold.
+
+**Pass:** Sweelinck creates: *Last Possession Records — The Object That Was All That Remained, First Entry. Tonthena's sword: his king respected him; the sword returned to his people; the woman on the road asked the only question there was to ask; the answer was yes; the archive holds the sword and the note and the fact that the question was asked and answered on the road before the delivery was made; together these are the complete record of what the sword was.*
+
+TOKEN TAKEN: Tonthena's Sword. *questComplete: true.*
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "INV_007",
+  "title": "The Message No One Sends",
+  "source": "Ossian — James MacPherson (1760–1763)",
+  "cycle": 7,
+  "book": "ossian",
+  "source_episode": "Colna-dona / various — Colna-dona loved an enemy warrior who died in battle; his king returns the sword; she meets the carrier on the road and asks whether the sword is all that is left",
+  "theme": "The object that was all that remained: the woman on the road asked the only question there was to ask; the answer was yes; the archive holds the sword and the note and the fact that the question was asked and answered on the road before the delivery was made",
+  "activateNode": "CNA",
+  "token": {
+    "id": "tonthena_sword",
+    "name": "Tonthena's Sword",
+    "description": "Highland warrior's sword wrapped in linen, tied with cord. Note attached in the king's hand: 'From Tonthena's king, who respected him. His sword returns to his people.' There is nothing else.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["CNA", "HLD", "WM"],
+  "new_nodes": [],
+  "questComplete": true,
+  "acts": [
+    {
+      "act": 1,
+      "node": "CNA",
+      "type": "skill_check",
+      "skill": "Insight",
+      "dc": 11,
+      "summary": "King's emissary gives you the sword and a warning about Colna-dona. Insight DC 11: she will meet you on the road; she is already watching the approach; arrive at the meeting prepared rather than surprised. TOKEN GRANTED."
+    },
+    {
+      "act": 2,
+      "node": "CNA road",
+      "type": "skill_check",
+      "skill": "Persuasion",
+      "dc": 13,
+      "summary": "Colna-dona on the road. She sees the sword. She asks: 'Is that all there is?' Persuasion DC 13: the true answer is yes; give it directly in one word; she is ready for it; the terrible mercy is that she already knows."
+    },
+    {
+      "act": 3,
+      "node": "HLD",
+      "type": "skill_check",
+      "skill": "Insight",
+      "dc": 12,
+      "summary": "Clan elder asks about the chain of custody. Insight DC 12: he needs to know for what he will tell Colna-dona; give the full chain including the road meeting — simplified answer omits what he will find out anyway."
+    },
+    {
+      "act": 4,
+      "node": "HLD road south",
+      "type": "skill_check",
+      "skill": "Athletics",
+      "dc": 12,
+      "summary": "Twelve days of southern road with sword in pack. Athletics DC 12: sword upright so the cord and note don't crumple; arrive with note in the same condition as the delivery morning."
+    },
+    {
+      "act": 5,
+      "node": "WM",
+      "type": "skill_check",
+      "skill": "Investigation",
+      "dc": 11,
+      "summary": "Sweelinck holds the sword and asks what the woman on the road asked. Investigation DC 11: not trophy, not war-spoil, not relic — the last possession returned through hands that knew it was all that remained, with the question and answer documented. Last Possession Records — The Object That Was All That Remained, First Entry. TOKEN TAKEN. questComplete: true."
+    }
+  ]
+}
+```
