@@ -703,3 +703,61 @@ Every quest in §MATH-01 carries a Noether signature: every TOKEN that reaches t
 | ZERO | The Zero Transit | CON or CAI | The passage point where zero entered European mathematics; a corridor with two doors: one labeled MXLVII and one labeled 1047; only one opens from the inside |
 | CNTR | Cantor's Attic | EHZ → emergency ladder, ∞ rungs up | Accessible only in endgame; the room where countable and uncountable infinity meet; the ladder never ends but the first 10 rungs are enough to solve the quest |
 
+
+---
+
+## Batch 3 — Remaining Queue (Books 61–78, reversed processing order)
+
+**Directive:** Process reversed. Each book: write/complete UQF cycles to reach questComplete, run admin pass (quest-map.md rows + theme threads, Location Grid, books.md SEEDS COMPLETE, plan.md update), commit, `say` audio, continue.
+
+**State key:**
+- `ADMIN ONLY` — cycles done, questComplete present; need books.md + plan.md + quest-map.md admin pass
+- `NEEDS QC` — cycles done but questComplete missing from final cycle; add questComplete then admin pass
+- `NEEDS N–7` — has N UQF cycles; write cycles N+1 through 7 then admin pass
+- `OLD FORMAT` — file uses prose-pass format (not UQF stubs); write full UQF cycles 1–7 from seeds in file
+
+| # | Code | Title | Era | Genre | KB | State | Notes |
+|---|------|-------|-----|-------|----|-------|-------|
+| 61 | BLQ | Decameron — Giovanni Boccaccio | 1353 | Italian Stories | 1709 | NEEDS QC | 11 cycles written, no questComplete; mark cycle 11 complete + admin pass |
+| 62 | HAV | Buccaneers of America — Alexandre Exquemelin | 1678 | Pirate History | 247 | OLD FORMAT | Pass 1–3 + seeds in file; HAV-01 spec + HAV-02 spec done; write UQF 03–07 from seeds |
+| 63 | AMS | Tale of Genji — Murasaki Shikibu | c.1010 | Japanese Novel | 435 | OLD FORMAT | Pass 1–3 + seeds; AMS-01 spec done + AMS-07 seed; write UQF 02–07 from seeds |
+| 64 | HTY | Mahabharata — Dutt condensation | Ancient | Hindu Epic | 83 | OLD FORMAT | §HTY-01 spec + §HTY-02–06 seeds in file; write UQF 01–07 from seeds |
+| 65 | CLJ | Dracula — Bram Stoker | 1897 | Gothic Horror | 869 | OLD FORMAT | Pass 1–3 + CLJ-01 spec + CLJ-02–09 seeds; write UQF 02–07 (CLJ-01 → CLJ-07) |
+| 66 | WAW | Quo Vadis — Sienkiewicz | c.64–68 AD | Historical Novel | 1201 | ADMIN ONLY | 7 UQF cycles + questComplete present; run admin pass |
+| 67 | NWI | Anabasis — Xenophon | c.401 BC | Greek Military | 545 | ADMIN ONLY | 8 UQF cycles + questComplete present; run admin pass |
+| 68 | MLA | Plutarch's Lives — Plutarch | c.95–110 AD | Biography | 4222 | ADMIN ONLY | 7 UQF cycles + questComplete present; run admin pass |
+| 69 | CRL | Froissart Chronicles (Boys transl.) | 14th–15th C | Medieval History | 802 | NEEDS QC | 8 cycles written, no questComplete; mark cycle 8 complete + admin pass |
+| 70 | CPH | Gesta Danorum — Saxo Grammaticus | c.1200 | Danish Chronicles | 689 | OLD FORMAT | Pass 1–3 + 5-act vignette in file; write UQF 01–07 from seeds |
+| 71 | MOL | Laxdaela Saga — Anon | ~13th C | Icelandic Saga | 347 | OLD FORMAT | Pass 1–3 + 5-act vignette in file; write UQF 01–07 from seeds |
+| 72 | LBC | Nibelungenlied — Anon | c.1200 | German Epic | 660 | NEEDS 5–7 | 4 UQF cycles done; write cycles 5–7 then admin pass |
+| 73 | FRO | Volsunga Saga — Anon | ~13th C | Norse Legend | 342 | NEEDS 3–7 | 2 UQF cycles done; write cycles 3–7 then admin pass |
+| 74 | MSE | Canterbury Tales — Chaucer | c.1390 | Medieval Stories | 1688 | NEEDS 2–7 | 1 UQF cycle done (spec + seeds); write cycles 2–7 then admin pass |
+| 75 | KIR | Mabinogion — Anon | ~12th–13th C | Celtic Myth | 365 | NEEDS 3–7 | 2 UQF cycles done; write cycles 3–7 then admin pass |
+| 76 | SEN | Treasure Island — Stevenson | 1883 | Pirate Adventure | 390 | OLD FORMAT | Pass 1–3 + seeds in file; write UQF 01–07 from seeds |
+| 77 | MAN | Ivanhoe — Walter Scott | 1819 | Historical Novel | 1140 | NEEDS 3–7 | 2 UQF cycles done; write cycles 3–7 then admin pass |
+| 78 | STN | Robin Hood — Howard Pyle | c.1883 | Outlaw Hero | 621 | OLD FORMAT | Pass 1–3 + seeds in file; write UQF 01–07 from seeds |
+
+---
+
+### Batch 3 Progress
+
+| # | Code | Title | Status |
+|---|------|-------|--------|
+| 61 | BLQ | Decameron | QUEUED |
+| 62 | HAV | Buccaneers of America | QUEUED |
+| 63 | AMS | Tale of Genji | QUEUED |
+| 64 | HTY | Mahabharata | QUEUED |
+| 65 | CLJ | Dracula | QUEUED |
+| 66 | WAW | Quo Vadis | QUEUED |
+| 67 | NWI | Anabasis | QUEUED |
+| 68 | MLA | Plutarch's Lives | QUEUED |
+| 69 | CRL | Froissart (Boys) | QUEUED |
+| 70 | CPH | Gesta Danorum | QUEUED |
+| 71 | MOL | Laxdaela Saga | QUEUED |
+| 72 | LBC | Nibelungenlied | QUEUED |
+| 73 | FRO | Volsunga Saga | QUEUED |
+| 74 | MSE | Canterbury Tales | QUEUED |
+| 75 | KIR | Mabinogion | QUEUED |
+| 76 | SEN | Treasure Island | QUEUED |
+| 77 | MAN | Ivanhoe | QUEUED |
+| 78 | STN | Robin Hood | QUEUED |
