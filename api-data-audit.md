@@ -1,0 +1,315 @@
+# api-data-audit.md — Quest Text Backfill Loop
+
+**Self-referential procedure.** Read this file to know what to do next.
+One book per "continue." Mark status as work completes.
+
+---
+
+## The Loop
+
+Every iteration follows this exact sequence:
+
+**Step 1 — Find the first missing field**
+```bash
+curl 'http://localhost:1367/api/next-error?severity=warning'
+```
+Note the quest `id` in `.finding.key`. Stop if `found: false` — all warnings cleared.
+
+> The first warning returned may be from MONSTER_POOL or WORLD_DB, not QUEST_DB.
+> The `section` field tells you which. Keep calling with `?skip=N` until `section == "QUEST_DB"`,
+> or filter the export directly (see Quick Reference).
+
+**Step 2 — Identify the quest source**
+
+Check the quest ID prefix:
+
+| Prefix pattern         | Source                               | Action                                   |
+|------------------------|--------------------------------------|------------------------------------------|
+| `bgw_`, `cai_`, `lbc_` etc. | Imported book → `1367-sources/`  | Go to Step 3 (verbatim extraction)       |
+| `mq_`, `sq_`           | Original main/side quest             | Go to §Original-Game path below          |
+| `quest_ef_`, `quest_eh_` etc. | Epic battleground quest         | Go to §Original-Game path below          |
+| `quest_wis_`, `quest_ng_` etc. | Legacy game quest              | Go to §Original-Game path below          |
+
+Rule for book code: first 2–4 letters before `_`, uppercase → match in Source File Index.
+
+**Step 3 — Read the source markdown (book imports only)**
+
+Open `1367-sources/{CODE}-*.md`. Find the Quest API Stub block for this quest's cycle and act.
+The heading format is usually `### {CODE}-{N} Act {N}` or `**Quest API Stub — {CODE}-{N}:**`.
+
+**Step 4 — Extract verbatim text**
+
+| Source field      | Target field   |
+|-------------------|----------------|
+| `scene:`          | `desc`         |
+| `missionAccept:`  | `desc` (alt)   |
+| `successText:`    | `passText`     |
+| `failText:`       | `failText`     |
+
+Copy **verbatim** from the Quest API Stub. Do not paraphrase.
+
+**Step 5 — Write the fix**
+```bash
+curl -X PUT http://localhost:1367/api/quest/{id} \
+  -H 'Content-Type: application/json' \
+  -d '{"desc":"...","passText":"...","failText":"..."}'
+```
+200 response confirms the write. Server restarts automatically.
+
+**Step 6 — Verify**
+```bash
+curl 'http://localhost:1367/api/next-error?severity=warning'
+```
+The fixed quest should not reappear. Repeat from Step 1.
+
+**Step 7 — Mark progress**
+When all quests for a book are clean, update its status below: `QUEUED` → `DONE {date}`.
+
+---
+
+## activateNode Validation
+
+If next-error returns an **error** (not warning) on `activateNode`:
+
+- `"QUEST"`, `"TBD"`, `"TODO"`, `"UNKNOWN"`, `"NONE"`, `"XXX"`, `"PLACEHOLDER"` → rejected by API with 422
+- Open `1367-sources/{CODE}-*.md` → find the act → locate the city/location where it fires
+- Verify code: `curl 'http://localhost:1367/api/list/node'`
+- Fix: `curl -X PUT http://localhost:1367/api/quest/{id} -d '{"activateNode":"<real-code>"}'`
+
+Errors sort before warnings. Run `?severity=error` first if any errors exist.
+
+---
+
+## §Original-Game Path — No Source File
+
+When the quest ID does not map to a `1367-sources/` book (prefix `mq_`, `sq_`, `quest_ef_`,
+`quest_wis_`, etc.), there is no Quest API Stub to extract from. Follow this search chain:
+
+**Search order:**
+1. `grep -rn "{quest_id}\|{title}" *.md lab-report-*.md` — look for text in story arc docs
+2. Check `mechanics.md` and `mechanics-economy.md` — sidequests and game systems
+3. Check `story-arc-*.md` files — main narrative arcs
+4. Check the HTML game file directly:
+   ```bash
+   grep -n "{quest_id}" roll2hit-v3.html
+   ```
+   Read the entry. The `desc` and `hint` fields give you the full narrative context.
+5. Check `lab-report-*.md` files that cover the arc (epic battlegrounds, crown hags, etc.)
+
+**If no passText/failText is found anywhere:**
+Write from context. Use the quest's `desc`, `hint`, `completeItems`, and NPC name.
+
+**Writing style** (match the game's voice):
+- Spare, literary, one or two sentences
+- Show the outcome through a specific detail — do not say "Quest complete"
+- Present tense or close third person
+- Name the NPC, the object, the place — make it concrete
+- passText: the moment the thing resolves; what the NPC does or says
+- failText: what is still true; what hasn't changed yet; often ends open ("still waiting", "not yet")
+
+**Examples written in this session (2026-06-04):**
+```
+mq_4 passText: "The shaman has been told all his life that the shard is power.
+                It is not power. He learns this when you take it."
+mq_4 failText: "The warrens drove you out. Mordus does not say anything.
+                He is still looking at you."
+
+mq_7 passText: "The Convergence begins. Sweelinck steps back. This part is yours."
+mq_7 failText: "The sky over Birka is wrong. The seventh new moon is coming.
+                Return before it does."
+
+sq_2 passText: "The kelpie does not leave the loch. It sinks. The water road is clear.
+                Elder Fionn says thank you by not saying anything at all."
+sq_battling failText: "Three drops. You need three. The fence is still waiting."
+```
+
+---
+
+## Quest Type Reference
+
+Valid types as of 2026-06-04 (schema updated to match live data):
+
+| Type         | Count | Description                                              |
+|--------------|-------|----------------------------------------------------------|
+| `skill_check`| 733   | D20+mod vs DC roll; most imported book quests            |
+| `side`       | 109   | Optional side quests; no story gate                      |
+| `epic`       | 40    | Dungeon boss chains; primary + return quest pair         |
+| `combat`     | 36    | Direct battle objective                                  |
+| `escort`     | 22    | Move NPC between nodes                                   |
+| `main`       | 7     | Main quest arc; gated by story flags                     |
+| `dialogue`   | 7     | NPC conversation quest                                   |
+| `hybrid`     | 6     | Mixed mechanic                                           |
+| `mission_bit`| —     | Token-gated mission bit quest                            |
+
+`side quest` (with a space) is not a type — the correct value is `side`.
+
+---
+
+## Per-Book Queue
+
+| Code | Book                          | Missing desc | Missing passText | Missing failText | Status              |
+|------|-------------------------------|-------------|-----------------|-----------------|---------------------|
+| NWI  | Anabasis (Xenophon)           | ~45         | 0               | 0               | QUEUED              |
+| CLJ  | Dracula (Stoker)              | ~45         | 0               | 0               | QUEUED              |
+| BGW  | Arabian Nights (Burton tr.)   | 40          | 0               | 0               | QUEUED              |
+| CAI  | Arabian Nights (Lang)         | 40          | 0               | 0               | QUEUED              |
+| CRL  | Froissart (Boy's)             | ~40         | 0               | 0               | QUEUED              |
+| WAW  | Quo Vadis (Sienkiewicz)       | ~40         | 0               | 0               | QUEUED              |
+| AMS  | Tale of Genji                 | ~35         | 0               | 0               | QUEUED              |
+| HTY  | Mahabharata                   | ~35         | 0               | 0               | QUEUED              |
+| LBC  | Nibelungenlied                | ~35         | 0               | 0               | QUEUED              |
+| FRO  | Völsunga Saga                 | ~35         | 0               | 0               | QUEUED              |
+| MSE  | Canterbury Tales              | ~35         | 0               | 0               | QUEUED              |
+| KIR  | Mabinogion                    | ~35         | 0               | 0               | QUEUED              |
+| IST  | The Alexiad (Anna Komnene)    | ~35         | 0               | 0               | QUEUED              |
+| MLA  | Plutarch's Lives              | ~35         | 0               | 0               | QUEUED              |
+| MAN  | Ivanhoe (Scott)               | ~32         | 0               | 0               | QUEUED              |
+| HAV  | Buccaneers of America         | ~30         | 0               | 0               | QUEUED              |
+| SEN  | Treasure Island (Stevenson)   | ~30         | 0               | 0               | QUEUED              |
+| STN  | Robin Hood                    | ~30         | 0               | 0               | QUEUED              |
+| CPH  | Gesta Danorum (Saxo)          | ~10         | 0               | 0               | QUEUED              |
+| MOL  | Laxdaela Saga                 | ~10         | 0               | 0               | QUEUED              |
+| BLQ  | Decameron (Boccaccio)         | 0           | 0               | 0               | DONE 2026-06-03     |
+| FCO  | Aeneid (Virgil)               | 0           | 0               | 0               | DONE 2026-06-03     |
+| MQ   | Main quest chain (mq_1–7)     | 0           | 0               | 0               | DONE 2026-06-04     |
+| SQ   | Side quests (sq_1/2/battling/leveling) | 0  | 0               | 0               | DONE 2026-06-04     |
+| GAME | Legacy game quests (quest_*, trap_*) | ~386 | ~210           | ~180            | SEPARATE — see §GAME |
+
+---
+
+## §GAME — Legacy Game Quests
+
+Original game quests (prefixes: `quest_wis_`, `quest_ng_`, `quest_ef_`, `quest_eh_`, `trap_`, etc.)
+have no `1367-sources/` markdown. They are the lowest-priority backfill pass.
+
+**What was fixed 2026-06-04:** `mq_1`–`mq_7` and `sq_1`, `sq_2`, `sq_battling`, `sq_leveling`
+— all had `desc` already; `passText` and `failText` were written from narrative context.
+
+**What remains:** ~386 quests missing `desc`, ~210 missing `passText`, ~180 missing `failText`.
+These are mainly `quest_ef_*` (epic battleground primaries), `quest_eh_*`, and legacy `quest_*` quests.
+
+To isolate only GAME quests in next-error:
+```bash
+# Skip until you hit a non-book prefix
+curl 'http://localhost:1367/api/next-error?severity=warning' | jq '.finding.key'
+# If it starts with a known book code (bgw_, cai_, etc.) skip forward:
+curl 'http://localhost:1367/api/next-error?severity=warning&skip=N'
+```
+
+Process GAME quests as a dedicated pass after all book imports are clean.
+
+---
+
+## Source File Index
+
+| Code | Source file (1367-sources/)             |
+|------|-----------------------------------------|
+| BGW  | BGW-arabian-nights-burton.md            |
+| CAI  | CAI-arabian-nights-lang.md              |
+| LBC  | LBC-nibelungenlied.md                   |
+| FRO  | FRO-volsunga-saga.md                    |
+| MSE  | MSE-canterbury-tales.md                 |
+| KIR  | KIR-mabinogion.md                       |
+| IST  | IST-alexiad.md                          |
+| MAN  | MAN-ivanhoe.md                          |
+| SEN  | SEN-treasure-island.md                  |
+| STN  | STN-robin-hood.md                       |
+| MLA  | MLA-plutarchs-lives.md                  |
+| NWI  | NWI-anabasis.md                         |
+| WAW  | WAW-quo-vadis.md                        |
+| CRL  | CRL-froissart-boys.md                   |
+| AMS  | AMS-tale-of-genji.md                    |
+| HTY  | HTY-mahabharata.md                      |
+| CLJ  | CLJ-dracula.md                          |
+| HAV  | HAV-buccaneers-of-america.md            |
+| CPH  | CPH-gesta-danorum.md                    |
+| MOL  | MOL-laxdaela-saga.md                    |
+| FCO  | FCO-aeneid.md                           |
+| BLQ  | BLQ-decameron.md                        |
+
+If a file is not listed: `ls 1367-sources/ | grep -i {code}`
+
+---
+
+## Iteration Log
+
+| Date       | Group   | Quests Fixed | Method        | Notes |
+|------------|---------|-------------|---------------|-------|
+| 2026-06-04 | MQ (mq_1–7)            | 7  | Written from context | No source file. Used desc+hint+completeItems+story-arc-*.md. Schema updated to include epic/combat/escort/dialogue/hybrid types. |
+| 2026-06-04 | SQ (sq_1/2/battling/leveling) | 4 | Written from context | No source file. sq_battling/sq_leveling: mechanics.md flavor + objective. sq_1/sq_2: game narrative context. |
+
+---
+
+## Completed Example — What Was Done 2026-06-04
+
+This documents the full decision chain from this session as a reference for future iterations.
+
+**1. Ran next-error:**
+```bash
+curl 'http://localhost:1367/api/next-error?severity=warning'
+```
+Returned `section: "MONSTER_POOL"` — not a quest. Continued scanning.
+
+**2. Found first QUEST_DB warning:**
+The first quest warnings were for `mq_*` and `sq_*` — original game quests, not book imports.
+
+**3. Identified that list/quest is a summary endpoint:**
+`GET /api/list/quest` does not return `desc`, `passText`, or `failText`.
+To check actual missing fields, use individual quest endpoints:
+```bash
+curl http://localhost:1367/api/quest/{id} | jq '{desc,passText,failText}'
+```
+All 11 MQ/SQ quests had `desc` already but were missing `passText` and `failText`.
+
+**4. Searched for existing text:**
+Search order used:
+- `grep -rn "mq_\|sq_\|{title}" *.md lab-report-*.md` — found quest listed in mechanics.md flavor text but no passText/failText
+- Checked `story-arc-coastal.md`, `story-arc-investigation.md`, `story-arc-ngplus.md` — epigraphs and arc notes only; no passText/failText existed
+- Read HTML directly: `grep -n "mq_1\|sq_1" roll2hit-v3.html` — found desc and hint for all, confirmed no passText/failText had ever been written
+
+**5. Validated quest types:**
+`GET /api/list/quest` + type analysis showed `epic` (40), `combat` (36), `escort` (22), `dialogue` (7), `hybrid` (6) in live data but not in schema. Updated schema in `wbapi-server.js` to include all real types.
+
+**6. Wrote passText/failText from context:**
+For each quest: read `desc` + `hint` + `completeItems` + NPC name → wrote outcome text in the game's literary style. No paraphrase of existing text — these were net-new sentences.
+
+**7. Verified:**
+All 11 confirmed via individual `GET /api/quest/{id}` calls. passText and failText present on all.
+
+---
+
+## Quick Reference
+
+```bash
+# First failing warning
+curl 'http://localhost:1367/api/next-error?severity=warning'
+
+# First failing error (check before warnings)
+curl 'http://localhost:1367/api/next-error?severity=error'
+
+# Skip N items
+curl 'http://localhost:1367/api/next-error?severity=warning&skip=N'
+
+# Full quest record (includes all text fields)
+curl http://localhost:1367/api/quest/{id} | jq '.entity | {id,type,desc,passText,failText}'
+
+# Fix one or more fields
+curl -X PUT http://localhost:1367/api/quest/{id} \
+  -H 'Content-Type: application/json' \
+  -d '{"desc":"...","passText":"...","failText":"..."}'
+
+# Check quest type distribution
+curl http://localhost:1367/api/list/quest | python3 -c "
+import json,sys; qs=json.load(sys.stdin)
+from collections import Counter; print(Counter(q.get('type') for q in qs).most_common())"
+
+# Find all quests by book prefix missing a field
+curl http://localhost:1367/api/list/quest | python3 -c "
+import json,sys,re; qs=json.load(sys.stdin)
+for q in qs:
+  if re.match(r'^bgw_', q.get('id','')): print(q['id'], q.get('title',''))"
+# then: curl http://localhost:1367/api/quest/{id} | jq '.entity.desc'
+
+# Node list (for fixing activateNode errors)
+curl http://localhost:1367/api/list/node
+```

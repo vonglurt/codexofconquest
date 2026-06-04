@@ -157,14 +157,53 @@ function parseSanitized(block, name) {
 // Avoids full re-serialization so function bodies are preserved.
 // ═══════════════════════════════════════════════════════════════════════════
 function patchStringField(sectionSrc, entryKey, field, newValue) {
-  // Match:  field: "old value"  or  field: 'old value'  or  field: `old value`
+  // Match field within the SAME entry block — find entry boundaries first to
+  // prevent cross-entry contamination from the lazy [\s\S]*? span.
   const escaped = newValue.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
-  const re = new RegExp(
-    `(${entryKey}\\s*:[\\s\\S]*?\\b${field}\\s*:\\s*)(["\`'])(.*?)\\2`,
-    'm'
+
+  // Locate the entry: key followed by its object literal up to the closing },
+  const entryRe = new RegExp(
+    `([ \\t]*${entryKey}\\s*:\\s*\\{)([\\s\\S]*?)(\\}\\s*,?)`,
+    'gm'
   );
-  if (!re.test(sectionSrc)) return null; // field not found
-  return sectionSrc.replace(re, (_, pre, q) => `${pre}"${escaped}"`);
+  let entryMatch;
+  // Use exec loop to avoid greedy spanning across multiple entries
+  while ((entryMatch = entryRe.exec(sectionSrc)) !== null) {
+    const [fullMatch, open, body, close] = entryMatch;
+    // Only patch the field if it exists in this specific entry body
+    const fieldRe = new RegExp(`(\\b${field}\\s*:\\s*)(["\`'])(.*?)\\2`, 'm');
+    if (!fieldRe.test(body)) continue; // not in this entry
+    const patchedBody = body.replace(fieldRe, (_, pre, q) => `${pre}"${escaped}"`);
+    return (
+      sectionSrc.slice(0, entryMatch.index) +
+      open + patchedBody + close +
+      sectionSrc.slice(entryMatch.index + fullMatch.length)
+    );
+  }
+  return null; // field not found in this entry
+}
+
+// Insert a new string field into an existing entry's body (before the closing }).
+function insertStringField(sectionSrc, entryKey, field, newValue) {
+  const escaped = newValue.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+  // Find the entry line: "  entryKey: { ..."
+  const entryLineRe = new RegExp(`([ \\t]*${entryKey}\\s*:[^\\n]*\\n)`, 'g');
+  const lineMatch = entryLineRe.exec(sectionSrc);
+  if (!lineMatch) return null;
+  // Find the closing brace of this entry (first }, after the opening line)
+  const afterOpen = lineMatch.index + lineMatch[0].length;
+  const closeRe = /\},?\s*\n/g;
+  closeRe.lastIndex = afterOpen;
+  const closeMatch = closeRe.exec(sectionSrc);
+  if (!closeMatch) return null;
+  // Insert field on a new line before the closing brace
+  const indent = (lineMatch[0].match(/^([ \t]*)/) || ['',''])[1] + '  ';
+  const insertion = `${indent}${field}:"${escaped}",\n`;
+  return (
+    sectionSrc.slice(0, closeMatch.index) +
+    insertion +
+    sectionSrc.slice(closeMatch.index)
+  );
 }
 
 // Replace an entire entry block in a section (for add/delete)
@@ -459,12 +498,15 @@ const WBAPI = {
     const key = this._findKey(col, idOrTitle); if (!key) return { ok:false, error:'not found' };
 
     const sectionSrc = extrSection(this._rawSrc, section);
-    const patched = patchStringField(sectionSrc, key, field, String(value));
-    if (!patched) return { ok:false, error:`field "${field}" not found on "${key}" in ${section}` };
-
+    let patched = patchStringField(sectionSrc, key, field, String(value));
+    const isNew = !patched;
+    if (isNew) {
+      patched = insertStringField(sectionSrc, key, field, String(value));
+      if (!patched) return { ok:false, error:`entry "${key}" not found in ${section}` };
+    }
     this._rawSrc = respliceSection(this._rawSrc, section, patched);
     col[key][field] = value;
-    return { ok:true, key, field, value };
+    return { ok:true, key, field, value, inserted: isNew };
   },
 
   renameNodeKey(oldCode, newCode) {

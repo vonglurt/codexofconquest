@@ -47,6 +47,9 @@ const GAME_FILE = process.env.ROLL2HIT_FILE
   || process.argv.find((a, i) => process.argv[i-1] === '--file')
   || path.join(__dirname, 'roll2hit-v3.html');
 
+// ── Placeholder node codes that are never valid geographic locations ─────────
+const PLACEHOLDER_NODES = new Set(['QUEST','TBD','TODO','UNKNOWN','NONE','XXX','PLACEHOLDER']);
+
 // ── Logging ──────────────────────────────────────────────────────────────────
 const LOG_FILE = path.join(__dirname, 'wbapi-server.log');
 const logStream = fs.createWriteStream(LOG_FILE, { flags: 'a' });
@@ -321,8 +324,9 @@ const SCHEMAS = {
     _description: 'Quest database. Contains all 210 quests. Function bodies (activateCond, completeFn) are preserved as raw JS — not editable via API. Text fields are fully editable.',
     fields: {
       title:       { type:'string',  required:true,  editable:true,  note:'Display title shown in quest log.' },
-      type:        { type:'string',  required:true,  editable:true,  values:['side','main','skill_check','hunt'],
-                     note:'Quest type. main quests gated by story flags. skill_check requires DC roll. hunt targets specific monsters.' },
+      type:        { type:'string',  required:true,  editable:true,
+                     values:['side','main','skill_check','hunt','epic','combat','escort','dialogue','hybrid','mission_bit'],
+                     note:'Quest type. main: gated by story flags. skill_check: DC roll. hunt: targets specific monsters. epic: dungeon boss chain. combat: direct battle. escort: move NPC. dialogue: NPC conversation. hybrid: mixed mechanic. mission_bit: token-gated.' },
       hook:        { type:'string',  required:false, editable:true,  note:'Alternative name for hint. Intro text.' },
       hint:        { type:'string',  required:false, editable:true,  note:'Intro/hook text shown when quest becomes available.' },
       passText:    { type:'string',  required:false, editable:true,  note:'Success outcome text shown on quest completion.' },
@@ -418,6 +422,32 @@ function json(res, status, body) {
   res.writeHead(status, { 'Content-Type': 'application/json' });
   logBody('out', body);
   res.end(JSON.stringify(body, null, 2));
+}
+
+// After every successful write: save to disk and restart (exit 67 → toggle relaunches).
+function saveAndRestart(res, status, payload) {
+  const r = WBAPI.save();
+  let saveNote, savePath;
+  if (r.ok) {
+    savePath = r.path;
+    try {
+      fs.copyFileSync(r.path, GAME_FILE);
+      saveNote = 'auto-saved';
+      logRow('autoSave', savePath);
+    } catch(e) {
+      saveNote = `save ok but overwrite failed: ${e.message}`;
+      logRow('autoSave', `WARN: ${saveNote}`);
+    }
+  } else {
+    saveNote = `auto-save failed: ${r.error}`;
+    logRow('autoSave', `ERROR: ${r.error}`);
+  }
+  cors(res);
+  res.writeHead(status, { 'Content-Type': 'application/json' });
+  const out = { ...payload, autoSaved: r.ok, savePath, restartNote: 'Server restarting — poll /api/ping until it responds.' };
+  logBody('out', out);
+  res.end(JSON.stringify(out, null, 2));
+  setTimeout(() => process.exit(67), 150);
 }
 
 function readBody(req) {
@@ -693,6 +723,7 @@ async function route(req, res) {
           '  GET /api/help/export          — exporting arrays as JSON / JS / module',
           '  GET /api/help/wizard          — full workflow: terrain→node→monster→quest',
           '  GET /api/help/audit           — integrity scan and fixing errors',
+          '  GET /api/next-error           — first failing validation item with fix action + context',
           '  GET /api/help/coords          — coordinate system, 4x expansion, and node placement',
           '  GET /api/help/import          — 1367 quest import workflow and node placement strategy',
           '  GET /api/help/curl            — curl cheat sheet for every operation',
@@ -2335,6 +2366,426 @@ async function route(req, res) {
     return json(res, 200, { ok:true, errors, warnings, suggestions, parse, summary });
   }
 
+  // ── Next Error — single-item focus validator with full debug context ──────
+  // GET /api/next-error[?severity=error|warning|suggestion|all][?skip=N][?format=text]
+  if (parts[0] === 'next-error' && method === 'GET') {
+    const sevFilter = url.searchParams.get('severity') || 'all';
+    const skipN     = Math.max(0, parseInt(url.searchParams.get('skip') || '0', 10));
+    const fmt       = url.searchParams.get('format') || 'json';
+    const b         = `http://localhost:${PORT}`;
+
+    // ── Collect all findings (same checks as /api/audit, plus passText/failText) ──
+    const neFindings = [];
+    const neAdd = (sev, section, key, field, msg) => neFindings.push({ severity:sev, section, key, field, msg });
+
+    const neMKeys = new Set(Object.keys(WBAPI.monsterPool));
+    const neDKeys = new Set(Object.keys(WBAPI.monsterDrops));
+    const neNKeys = new Set(Object.keys(WBAPI.nodeMap));
+    const neTKeys = new Set(Object.keys(WBAPI.worldDb));
+    const neAllFish = [...WBAPI.fishPool, ...WBAPI.nightFishPool];
+
+    // ERRORS
+    for (const [tk, terrain] of Object.entries(WBAPI.worldDb))
+      for (const m of (terrain.monsters||[])) {
+        const mk = typeof m==='string'?m:m?.key;
+        if (mk && !neMKeys.has(mk)) neAdd('error','WORLD_DB',tk,'monsters',`references monster "${mk}" not in MONSTER_POOL`);
+      }
+    for (const [code, node] of Object.entries(WBAPI.nodeMap))
+      if (node.name && !neTKeys.has(node.name)) neAdd('error','NODE_MAP',code,'name',`terrain "${node.name}" not found in WORLD_DB`);
+    for (const [id, q] of Object.entries(WBAPI.questDb)) {
+      if (q.activateNode && PLACEHOLDER_NODES.has(q.activateNode.toUpperCase().trim())) {
+        const bookCode = id.match(/^([a-z]{2,4})_/)?.[1]?.toUpperCase() || '';
+        const mdHint = bookCode ? `Read 1367-sources/${bookCode}-*.md for the real city/location` : 'Read source book markdown for the real city/location';
+        neAdd('error','QUEST_DB',id,'activateNode',`"${q.activateNode}" is a placeholder, not a valid node. ${mdHint}, then verify with GET /api/list/node`);
+      } else {
+        if (q.activateNode && !neNKeys.has(q.activateNode)) neAdd('error','QUEST_DB',id,'activateNode',`node "${q.activateNode}" not in NODE_MAP`);
+      }
+      if (q.waypointNode && !neNKeys.has(q.waypointNode)) neAdd('error','QUEST_DB',id,'waypointNode',`node "${q.waypointNode}" not in NODE_MAP`);
+    }
+    for (const [key, npc] of Object.entries(WBAPI.birkaNpcs))
+      if (npc.node && !neNKeys.has(npc.node)) neAdd('error','BIRKA_NPC',key,'node',`node "${npc.node}" not in NODE_MAP`);
+    for (const dk of neDKeys)
+      if (!neMKeys.has(dk)) neAdd('error','MONSTER_DROPS',dk,'key',`drop entry has no matching MONSTER_POOL entry`);
+    for (const f of neAllFish)
+      if (!neMKeys.has(f.key)) neAdd('error','FISH_DB',f.key,'key',`fish "${f.name}" has no MONSTER_POOL entry`);
+
+    // WARNINGS
+    const NE_VALID_TYPES = new Set(['side','main','skill_check','hunt','epic','combat','escort','dialogue','hybrid','mission_bit']);
+    for (const mk of neMKeys)
+      if (!neDKeys.has(mk)) neAdd('warning','MONSTER_POOL',mk,'drops',`no MONSTER_DROPS entry — creature drops nothing`);
+    for (const f of neAllFish)
+      if (!neDKeys.has(f.key)) neAdd('warning','FISH_DB',f.key,'drops',`fish "${f.name}" has no MONSTER_DROPS entry`);
+    for (const [id, q] of Object.entries(WBAPI.questDb)) {
+      if (!q.title)    neAdd('warning','QUEST_DB',id,'title',   'missing title field');
+      if (!q.desc)     neAdd('warning','QUEST_DB',id,'desc',    'missing desc field — quest log renders blank');
+      if (!q.passText) neAdd('warning','QUEST_DB',id,'passText','missing passText field — no success message');
+      if (!q.failText) neAdd('warning','QUEST_DB',id,'failText','missing failText field — no failure message');
+      if (!q.activateNode) neAdd('warning','QUEST_DB',id,'activateNode','missing activateNode — quest never appears on map');
+      if (q.type && !NE_VALID_TYPES.has(q.type)) neAdd('warning','QUEST_DB',id,'type',`"${q.type}" is not a recognised quest type — valid: ${[...NE_VALID_TYPES].join(', ')}`);
+    }
+    for (const [tk, terrain] of Object.entries(WBAPI.worldDb))
+      if (!terrain.monsters || !terrain.monsters.length) neAdd('warning','WORLD_DB',tk,'monsters',`terrain has no monsters defined`);
+    for (const [npcKey, npc] of Object.entries(WBAPI.birkaNpcs))
+      if (!WBAPI.npcDialogues[npcKey]) neAdd('warning','BIRKA_NPC',npcKey,'NPC_DIALOGUES',`"${npc.name||npcKey}" has no NPC_DIALOGUES entry — dialogue card blank in game`);
+
+    // SUGGESTIONS
+    const neUsed = new Set();
+    for (const t of Object.values(WBAPI.worldDb))
+      for (const m of (t.monsters||[])) neUsed.add(typeof m==='string'?m:m?.key);
+    for (const mk of neMKeys)
+      if (!neUsed.has(mk) && !neAllFish.some(f=>f.key===mk)) neAdd('suggestion','MONSTER_POOL',mk,'terrains',`not assigned to any terrain — never appears in combat`);
+    for (const code of neNKeys)
+      if (!WBAPI.nodeCoords[code]) neAdd('suggestion','NODE_COORDS',code,'coords',`no entry in NODE_COORDS — won't appear on map`);
+
+    // ── Sort: errors first, then warnings, then suggestions ──────────────────
+    const SEV_ORD = { error:0, warning:1, suggestion:2 };
+    neFindings.sort((a, b_) => SEV_ORD[a.severity] - SEV_ORD[b_.severity]);
+    const filtered = sevFilter === 'all' ? neFindings : neFindings.filter(f => f.severity === sevFilter);
+    const neCounts = {
+      errors:      neFindings.filter(f=>f.severity==='error').length,
+      warnings:    neFindings.filter(f=>f.severity==='warning').length,
+      suggestions: neFindings.filter(f=>f.severity==='suggestion').length,
+      total:       neFindings.length,
+    };
+
+    if (filtered.length === 0 || skipN >= filtered.length) {
+      logResponse(method, url.pathname, 200, `next-error: clean (severity=${sevFilter})`);
+      return json(res, 200, {
+        ok: true, found: false, counts: neCounts,
+        position: { skip: skipN, ofFiltered: filtered.length },
+        message: filtered.length === 0 ? `No findings for severity="${sevFilter}" — all clear!`
+          : `skip=${skipN} is past end of ${filtered.length} findings`,
+      });
+    }
+
+    const neItem = filtered[skipN];
+
+    // ── Build FIX_THIS block ──────────────────────────────────────────────────
+    function neBuildFix(item) {
+      const { section, key, field, msg } = item;
+      const base = `${b}/api`;
+
+      if (section === 'QUEST_DB') {
+        const entity = { ...WBAPI.questDb[key], id: key };
+        const QUEST_FIELD_HINTS = {
+          desc:     { why:'Player-facing description shown in quest log. Quest renders blank without it.', placeholder:'<what this quest is about, 1–2 sentences>' },
+          passText: { why:'Text shown to player when quest succeeds / TOKEN received.', placeholder:'<narrative outcome on success>' },
+          failText: { why:'Text shown on failure or retry gate. Player needs to know what to do next.', placeholder:'<why it failed and when to retry>' },
+          title:    { why:'Display name shown in quest log and map tooltip.', placeholder:'<short quest title>' },
+        };
+        if (QUEST_FIELD_HINTS[field]) {
+          const { why, placeholder } = QUEST_FIELD_HINTS[field];
+          const bodyTpl = { [field]: placeholder };
+          return { entity, field, why,
+            howToFix: {
+              method: 'PUT', url: `${base}/quest/${key}`,
+              body: bodyTpl,
+              curl: `curl -XPUT ${base}/quest/${key} -H 'Content-Type: application/json' -d '${JSON.stringify(bodyTpl)}'`,
+            },
+          };
+        }
+        if (field === 'activateNode' || field === 'waypointNode') {
+          const bad = entity[field];
+          return { entity, field, why: `Node "${bad}" does not exist in NODE_MAP. Quest cannot fire.`,
+            howToFix: { options: [
+              { label:`Fix: point to a valid node`, method:'PUT', url:`${base}/quest/${key}`,
+                body:{ [field]:'<valid-node-code>' },
+                curl:`curl -XPUT ${base}/quest/${key} -H 'Content-Type: application/json' -d '{"${field}":"<valid-node-code>"}'  # see GET ${base}/list/node` },
+              { label:`Fix: create missing node "${bad}"`, method:'POST', url:`${base}/node`,
+                body:{ code:bad, label:'<location name>', act:1, name:'<terrain-key>' },
+                curl:`curl -XPOST ${base}/node -H 'Content-Type: application/json' -d '{"code":"${bad}","label":"...","act":1,"name":"..."}'` },
+            ]}};
+        }
+      }
+
+      if (section === 'NODE_MAP' && field === 'name') {
+        const entity = { ...WBAPI.nodeMap[key], id: key };
+        const bad = entity.name;
+        return { entity, field, why:`Terrain "${bad}" not in WORLD_DB. Node has no monster pool.`,
+          howToFix: { options: [
+            { label:'Fix: point to a valid terrain key', method:'PUT', url:`${base}/node/${key}`,
+              body:{ name:'<valid-terrain-key>' },
+              curl:`curl -XPUT ${base}/node/${key} -H 'Content-Type: application/json' -d '{"name":"<terrain-key>"}' # see GET ${base}/list/terrain` },
+            { label:`Create terrain "${bad}"`, method:'POST', url:`${base}/terrain`,
+              body:{ key:bad, label:'<terrain label>', monsters:[] },
+              curl:`curl -XPOST ${base}/terrain -H 'Content-Type: application/json' -d '{"key":"${bad}","label":"...","monsters":[]}'` },
+          ]}};
+      }
+
+      if (section === 'BIRKA_NPC' && field === 'node') {
+        const entity = { ...WBAPI.birkaNpcs[key], key };
+        return { entity, field, why:`NPC node "${entity.node}" not in NODE_MAP. NPC won't appear.`,
+          howToFix: { method:'PUT', url:`${base}/npc/${key}`, body:{ node:'<valid-node-code>' },
+            curl:`curl -XPUT ${base}/npc/${key} -H 'Content-Type: application/json' -d '{"node":"<valid-node-code>"}'` }};
+      }
+
+      if (section === 'BIRKA_NPC' && field === 'NPC_DIALOGUES') {
+        const entity = { ...WBAPI.birkaNpcs[key], key };
+        return { entity, field, why:`No NPC_DIALOGUES entry for "${entity.name||key}". Dialogue card blank in game.`,
+          howToFix: { method:'POST', url:`${base}/npc/${key}/dialogue`,
+            body:{ quote:'<NPC catchphrase or one-liner>', impartial:['<greeting at neutral>'], friendly:['<greeting at friendly>'] },
+            curl:`curl -XPOST ${base}/npc/${key}/dialogue -H 'Content-Type: application/json' -d '{"quote":"..."}'` }};
+      }
+
+      if (section === 'MONSTER_POOL' && field === 'drops') {
+        const entity = { ...WBAPI.monsterPool[key], key };
+        return { entity, field, why:`No drop in MONSTER_DROPS for "${key}". Defeating it yields nothing.`,
+          howToFix: { method:'POST', url:`${base}/monster/${key}/drop`,
+            body:{ name:`${entity.name||key} remains`, sell:0, icon:'💀' },
+            curl:`curl -XPOST ${base}/monster/${key}/drop -H 'Content-Type: application/json' -d '{"name":"${entity.name||key} remains","sell":0,"icon":"💀"}'` }};
+      }
+
+      if (section === 'MONSTER_DROPS' && field === 'key') {
+        const entity = { ...WBAPI.monsterDrops[key], key };
+        return { entity, field, why:`Drop entry "${key}" has no matching MONSTER_POOL entry. Drop is orphaned.`,
+          howToFix: { options: [
+            { label:`Create monster "${key}" in MONSTER_POOL`, method:'POST', url:`${base}/monster`,
+              body:{ key, name:key, ac:12, hp:10, atk:2, dmg:4, xp:10, tier:1 },
+              curl:`curl -XPOST ${base}/monster -H 'Content-Type: application/json' -d '{"key":"${key}","name":"${key}","ac":12,"hp":10,"atk":2,"dmg":4,"xp":10,"tier":1}'` },
+            { label:`Delete orphan drop (requires nonce)`,
+              note:`NONCE=$(curl -s -XPOST ${base}/nonce -H 'Content-Type: application/json' -d '{"type":"monster","id":"${key}"}' | jq -r .nonce)  && curl -XDELETE ${base}/drops/${key} -H "X-Nonce: $NONCE"` },
+          ]}};
+      }
+
+      if (section === 'WORLD_DB' && field === 'monsters') {
+        const entity = { ...WBAPI.worldDb[key], key };
+        const missing = msg.match(/"([^"]+)" not in MONSTER_POOL/)?.[1];
+        const currentList = WBAPI._terrainToMonsters[key] || [];
+        return { entity, field, why:msg,
+          howToFix: missing ? { options:[
+            { label:`Create missing monster "${missing}"`, method:'POST', url:`${base}/monster`,
+              body:{ key:missing, name:missing, ac:12, hp:20, atk:3, dmg:6, xp:20, tier:2 },
+              curl:`curl -XPOST ${base}/monster -H 'Content-Type: application/json' -d '{"key":"${missing}","name":"${missing}","ac":12,"hp":20,"atk":3,"dmg":6,"xp":20,"tier":2}'` },
+            { label:`Remove "${missing}" from terrain`, method:'PUT', url:`${base}/terrain/${key}`,
+              body:{ monsters: currentList.filter(m=>m!==missing) },
+              curl:`curl -XPUT ${base}/terrain/${key} -H 'Content-Type: application/json' -d '{"monsters":${JSON.stringify(currentList.filter(m=>m!==missing))}}'` },
+          ]} : { note:`Inspect terrain "${key}" monster list and remove or create missing entries` }};
+      }
+
+      if (section === 'NODE_COORDS' && field === 'coords') {
+        const entity = { ...WBAPI.nodeMap[key], id: key };
+        return { entity, field, why:`Node "${key}" has no coordinates. Won't appear on world map.`,
+          howToFix: {
+            method:'PUT', url:`${base}/coords/${key}`,
+            body:{ r:'<row>', c:'<col>' },
+            curl:`curl -XPUT ${base}/coords/${key} -H 'Content-Type: application/json' -d '{"r":<row>,"c":<col>}'`,
+            hint:`Run GET ${base}/coords/near/${key}?radius=8 to find available slots near connected nodes`,
+          }};
+      }
+
+      if (section === 'MONSTER_POOL' && field === 'terrains') {
+        const entity = { ...WBAPI.monsterPool[key], key };
+        return { entity, field, why:`Monster "${key}" not in any terrain. It never appears in combat.`,
+          howToFix: {
+            note:`Choose a terrain, then:`,
+            method:'PUT', url:`${base}/terrain/<terrain-key>`,
+            body:{ monsters:['...existing...', key] },
+            curl:`curl ${base}/list/terrain  # find the right terrain, then PUT its monster list`,
+          }};
+      }
+
+      // Fallback
+      const entity = WBAPI.questDb[key]||WBAPI.nodeMap[key]||WBAPI.monsterPool[key]||WBAPI.birkaNpcs[key]||WBAPI.worldDb[key]||{ key };
+      return { entity, field, why:msg, howToFix:{ note:'No automated fix template. Review entity manually.' }};
+    }
+
+    // ── Build CONTEXT block ────────────────────────────────────────────────────
+    function neBuildContext(item) {
+      const { section, key } = item;
+      const base = `${b}/api`;
+      const ctx = { _label:'Reference only — for context and lookup, not the item being fixed', lookups:[] };
+
+      if (section === 'QUEST_DB') {
+        const q = WBAPI.questDb[key]; if (!q) return ctx;
+        ctx.lookups.push(`GET ${base}/quest/${key}`);
+        if (q.activateNode) {
+          const n = WBAPI.nodeMap[q.activateNode];
+          ctx.activateNode = n
+            ? { code:q.activateNode, label:n.label, terrain:n.name, lookup:`GET ${base}/node/${q.activateNode}` }
+            : { code:q.activateNode, status:'NOT IN NODE_MAP' };
+          ctx.lookups.push(`GET ${base}/location/${q.activateNode}`);
+        }
+        if (q.waypointNode) {
+          const n = WBAPI.nodeMap[q.waypointNode];
+          ctx.waypointNode = n
+            ? { code:q.waypointNode, label:n.label, lookup:`GET ${base}/node/${q.waypointNode}` }
+            : { code:q.waypointNode, status:'NOT IN NODE_MAP' };
+        }
+        if (q.npc) {
+          const npc = WBAPI.birkaNpcs[q.npc];
+          ctx.npc = npc
+            ? { key:q.npc, name:npc.name, node:npc.node, lookup:`GET ${base}/npc/${q.npc}` }
+            : { key:q.npc, status:'NOT IN BIRKA_NPC' };
+        }
+        const chain = WBAPI.quests.chain(key);
+        if (chain.upstream.length || chain.downstream.length) {
+          ctx.chain = {
+            upstream:   chain.upstream.map(id => ({ id, title:WBAPI.questDb[id]?.title })),
+            downstream: chain.downstream.map(id => ({ id, title:WBAPI.questDb[id]?.title })),
+            lookup:`GET ${base}/quest/${key}/chain`,
+          };
+          ctx.lookups.push(`GET ${base}/quest/${key}/chain`);
+        }
+        if (q.activateNode) {
+          const sameNode = (WBAPI._questsByNode[q.activateNode]||[]).filter(id=>id!==key);
+          if (sameNode.length) {
+            ctx.otherQuestsAtNode = sameNode.slice(0,5).map(id=>({ id, title:WBAPI.questDb[id]?.title }));
+            if (sameNode.length>5) ctx.otherQuestsAtNode.push({ _note:`+${sameNode.length-5} more` });
+            ctx.lookups.push(`GET ${base}/list/quest?node=${q.activateNode}`);
+          }
+        }
+      }
+
+      if (section === 'NODE_MAP' || section === 'NODE_COORDS') {
+        const n = WBAPI.nodeMap[key]; if (!n) return ctx;
+        ctx.lookups.push(`GET ${base}/node/${key}`, `GET ${base}/location/${key}`);
+        if (n.name) {
+          const t = WBAPI.worldDb[n.name];
+          ctx.terrain = t
+            ? { key:n.name, label:t.label, monsters:WBAPI._terrainToMonsters[n.name]||[], lookup:`GET ${base}/terrain/${n.name}` }
+            : { key:n.name, status:'NOT IN WORLD_DB' };
+        }
+        const npcs = WBAPI.npcs.byNode(key);
+        if (npcs.length) ctx.npcs = npcs.map(np=>({ key:np.key, name:np.name }));
+        const qList = WBAPI.quests.byNode(key);
+        if (qList.length) {
+          ctx.quests = qList.slice(0,5).map(q=>({ id:q.id, title:q.title }));
+          if (qList.length>5) ctx.quests.push({ _note:`+${qList.length-5} more` });
+          ctx.lookups.push(`GET ${base}/list/quest?node=${key}`);
+        }
+        if (section === 'NODE_COORDS') {
+          const linked = ['N','S','E','W'].map(d=>n[d]).filter(Boolean).filter(c=>WBAPI.nodeCoords[c]);
+          if (linked.length) {
+            ctx.connectedNodesWithCoords = linked.map(c=>({ code:c, ...WBAPI.nodeCoords[c], label:WBAPI.nodeMap[c]?.label }));
+            ctx.lookups.push(`GET ${base}/coords/near/${key}?radius=8`);
+          }
+        }
+      }
+
+      if (section === 'BIRKA_NPC') {
+        const npc = WBAPI.birkaNpcs[key]; if (!npc) return ctx;
+        ctx.lookups.push(`GET ${base}/npc/${key}`);
+        if (npc.node) {
+          const n = WBAPI.nodeMap[npc.node];
+          ctx.node = n
+            ? { code:npc.node, label:n.label, terrain:n.name, lookup:`GET ${base}/node/${npc.node}` }
+            : { code:npc.node, status:'NOT IN NODE_MAP' };
+          ctx.lookups.push(`GET ${base}/location/${npc.node}`);
+        }
+        const qRefs = WBAPI.quests.all().filter(q=>q.npc===key||(npc.name&&q.npc===npc.name));
+        if (qRefs.length) ctx.quests = qRefs.slice(0,5).map(q=>({ id:q.id, title:q.title }));
+      }
+
+      if (section === 'MONSTER_POOL' || section === 'MONSTER_DROPS') {
+        ctx.lookups.push(`GET ${base}/monster/${key}`);
+        const terrains = WBAPI._monsterToTerrains[key]||[];
+        if (terrains.length) ctx.terrains = terrains.map(tk=>({ key:tk, label:WBAPI.worldDb[tk]?.label, lookup:`GET ${base}/terrain/${tk}` }));
+        else ctx.terrains = [];
+      }
+
+      if (section === 'WORLD_DB') {
+        ctx.lookups.push(`GET ${base}/terrain/${key}`, `GET ${base}/list/monster`);
+        const usingNodes = Object.entries(WBAPI.nodeMap).filter(([,n])=>n.name===key).map(([code,n])=>({ code, label:n.label }));
+        if (usingNodes.length) ctx.nodesUsingTerrain = usingNodes;
+      }
+
+      return ctx;
+    }
+
+    const fixBlock = neBuildFix(neItem);
+    const ctxBlock = neBuildContext(neItem);
+
+    logRow('finding', `[${neItem.severity.toUpperCase()}]  ${neItem.section}  ${neItem.key}.${neItem.field}`);
+    logRow('position', `skip=${skipN}  of ${filtered.length} filtered (${neCounts.errors}E ${neCounts.warnings}W ${neCounts.suggestions}S)`);
+    logRow('remaining', filtered.length - skipN - 1);
+    logResponse(method, url.pathname, 200, `next-error[${skipN}]: ${neItem.severity} — ${neItem.section} ${neItem.key}.${neItem.field}`);
+
+    const nePayload = {
+      ok: true,
+      found: true,
+      counts: neCounts,
+      position: {
+        skip: skipN,
+        ofFiltered: filtered.length,
+        remaining: filtered.length - skipN - 1,
+        nextUrl: skipN + 1 < filtered.length ? `${b}/api/next-error?skip=${skipN+1}${sevFilter!=='all'?`&severity=${sevFilter}`:''}` : null,
+      },
+      finding: neItem,
+      FIX_THIS: { _label:'★ THIS IS THE ITEM TO FIX', ...fixBlock },
+      CONTEXT:  { ...ctxBlock },
+    };
+
+    if (fmt === 'text') {
+      const HR  = '═'.repeat(66);
+      const HR2 = '─'.repeat(66);
+      const sev = neItem.severity.toUpperCase();
+      const lines = [
+        '',
+        HR,
+        ` NEXT ERROR REPORT — ${path.basename(GAME_FILE)}`,
+        ` ${neCounts.errors} error${neCounts.errors!==1?'s':''}  ·  ${neCounts.warnings} warning${neCounts.warnings!==1?'s':''}  ·  ${neCounts.suggestions} suggestion${neCounts.suggestions!==1?'s':''}`,
+        HR,
+        '',
+        ` Item ${skipN + 1} of ${filtered.length}${sevFilter!=='all'?` (severity=${sevFilter})`:''}`,
+        '',
+        HR2,
+        ` ★  FIX THIS`,
+        HR2,
+        ` [${sev}]  ${neItem.section} › ${neItem.key}.${neItem.field}`,
+        ` PROBLEM: ${neItem.msg}`,
+        '',
+        ` WHY: ${fixBlock.why || neItem.msg}`,
+        '',
+      ];
+      const hf = fixBlock.howToFix;
+      if (hf) {
+        if (hf.curl) {
+          lines.push(` HOW TO FIX:`);
+          lines.push(`   ${hf.curl}`);
+        } else if (hf.options) {
+          lines.push(` HOW TO FIX (choose one):`);
+          for (const opt of hf.options) {
+            lines.push(`   Option: ${opt.label}`);
+            if (opt.curl)  lines.push(`     ${opt.curl}`);
+            if (opt.note)  lines.push(`     ${opt.note}`);
+          }
+        } else if (hf.note) {
+          lines.push(` HOW TO FIX: ${hf.note}`);
+        }
+        if (hf.hint) lines.push(``, ` HINT: ${hf.hint}`);
+      }
+      lines.push('', HR2, ' ◈  CONTEXT  (reference only — not the item to fix)', HR2);
+      const lookup_list = ctxBlock.lookups || [];
+      if (ctxBlock.activateNode) lines.push(` activateNode: ${ctxBlock.activateNode.code} — ${ctxBlock.activateNode.label||''}${ctxBlock.activateNode.status?' ['+ctxBlock.activateNode.status+']':''}`);
+      if (ctxBlock.waypointNode) lines.push(` waypointNode: ${ctxBlock.waypointNode.code} — ${ctxBlock.waypointNode.label||''}${ctxBlock.waypointNode.status?' ['+ctxBlock.waypointNode.status+']':''}`);
+      if (ctxBlock.npc)          lines.push(` npc: ${ctxBlock.npc.name||ctxBlock.npc.key} @ ${ctxBlock.npc.node||''}${ctxBlock.npc.status?' ['+ctxBlock.npc.status+']':''}`);
+      if (ctxBlock.node)         lines.push(` node: ${ctxBlock.node.code} — ${ctxBlock.node.label||''}${ctxBlock.node.status?' ['+ctxBlock.node.status+']':''}`);
+      if (ctxBlock.terrain)      lines.push(` terrain: ${ctxBlock.terrain.key} — ${ctxBlock.terrain.label||''}`);
+      if (ctxBlock.chain) {
+        if (ctxBlock.chain.upstream.length)   lines.push(` chain upstream:   ${ctxBlock.chain.upstream.map(q=>`${q.id} "${q.title||''}"`).join(', ')}`);
+        if (ctxBlock.chain.downstream.length) lines.push(` chain downstream: ${ctxBlock.chain.downstream.map(q=>`${q.id} "${q.title||''}"`).join(', ')}`);
+      }
+      if (ctxBlock.connectedNodesWithCoords?.length) lines.push(` connected nodes: ${ctxBlock.connectedNodesWithCoords.map(n=>`${n.code}(r${n.r},c${n.c})`).join(' ')}`);
+      if (lookup_list.length) {
+        lines.push('', ' LOOKUPS:');
+        for (const l of lookup_list) lines.push(`   ${l}`);
+      }
+      lines.push('', HR);
+      if (nePayload.position.nextUrl) {
+        lines.push(` NEXT:    curl '${nePayload.position.nextUrl}'`);
+        lines.push(` CURRENT: curl '${b}/api/next-error?skip=${skipN}${sevFilter!=='all'?`&severity=${sevFilter}`:''}' `);
+      } else {
+        lines.push(` END OF LIST — no more findings with severity="${sevFilter}"`);
+      }
+      lines.push(HR, '');
+      cors(res);
+      res.writeHead(200, { 'Content-Type':'text/plain; charset=utf-8' });
+      return res.end(lines.join('\n'));
+    }
+
+    return json(res, 200, nePayload);
+  }
+
   // ── Mission Bits catalog ──────────────────────────────────────────────────
   if (parts[0] === 'missionbits' && method === 'GET') {
     const bits = [];
@@ -2475,7 +2926,7 @@ async function route(req, res) {
       WBAPI._rawSrc = WBAPI._rawSrc.slice(0, sIdx) + section + WBAPI._rawSrc.slice(eIdx);
       logRow('coords', `${targetCode}  ${prev?`r:${prev.r},c:${prev.c} → `:'(new) '}r:${r},c:${c}`);
       logResponse(method, url.pathname, 200, `coords/${targetCode} → r:${r} c:${c}`);
-      return json(res, 200, { ok:true, code: targetCode, prev, coords: { r, c }, note:'POST /api/save to persist.' });
+      return saveAndRestart(res, 200, { ok:true, code: targetCode, prev, coords: { r, c } });
     }
   }
 
@@ -2532,7 +2983,7 @@ async function route(req, res) {
       WBAPI._rawSrc = WBAPI._rawSrc.slice(0, lineStart + 1) + newLine + WBAPI._rawSrc.slice(lineStart + 1);
       log('LOGIC', `Added flag "${name}" = ${valStr} to _S_DEFAULTS`);
       logResponse('POST', '/api/flags', 201, `flag "${name}" added`);
-      return json(res, 201, { ok:true, name, defaultValue, note:'POST /api/save to persist.' });
+      return saveAndRestart(res, 201, { ok:true, name, defaultValue });
     }
   }
 
@@ -2695,9 +3146,37 @@ async function route(req, res) {
     }
     if (type === 'quest') {
       const { id } = body;
-      if (!id || !body.type || !body.title || !body.activateNode) {
-        logResponse(method, url.pathname, 400, 'missing required fields');
-        return json(res, 400, { error:'Required fields: id, type, title, activateNode' });
+      // Hard required fields
+      const hardMissing = ['id','type','title','activateNode'].filter(f => !body[f]);
+      if (hardMissing.length) {
+        logResponse(method, url.pathname, 400, `missing required fields: ${hardMissing.join(', ')}`);
+        return json(res, 400, { ok:false, error:'Missing required fields', missing: hardMissing.map(f => ({ field:f, required:true })) });
+      }
+      // Placeholder activateNode guard
+      if (body.activateNode && PLACEHOLDER_NODES.has(body.activateNode.toUpperCase().trim())) {
+        const bookCode = (id || '').match(/^([a-z]{2,4})_/)?.[1]?.toUpperCase() || '';
+        const mdHint = bookCode ? `Read 1367-sources/${bookCode}-*.md — find the city/location where this act fires.` : 'Read the source book markdown and find the city where this act fires.';
+        logResponse(method, url.pathname, 422, `activateNode "${body.activateNode}" is a placeholder`);
+        return json(res, 422, {
+          ok: false,
+          error: `activateNode "${body.activateNode}" is a placeholder, not a valid node code`,
+          hint: `Find the real geographic location for this quest act. ${mdHint} Then check GET /api/list/node for the correct node code.`,
+          lookups: [`GET http://localhost:${PORT}/api/list/node`, bookCode ? `1367-sources/${bookCode}-*.md — Quest API Stub section` : ''].filter(Boolean),
+        });
+      }
+      // Incomplete data guard — reject with 422 so importer must supply all fields
+      const incomplete = [];
+      if (!body.desc) incomplete.push({ field:'desc', msg:'Player-facing quest description text shown in quest log. Quest renders blank without it.' });
+      if (!body.passText) incomplete.push({ field:'passText', msg:'Text shown to player on quest success / TOKEN received.' });
+      if (!body.failText) incomplete.push({ field:'failText', msg:'Text shown to player on quest failure or retry gate.' });
+      if (incomplete.length) {
+        logResponse(method, url.pathname, 422, `incomplete quest: missing ${incomplete.map(f=>f.field).join(', ')}`);
+        return json(res, 422, {
+          ok: false,
+          error: 'Quest data incomplete — submission rejected to prevent audit warnings',
+          incomplete,
+          hint: 'Supply all missing fields and resubmit. See GET /api/schema/quest for field descriptions.',
+        });
       }
       if (WBAPI.questDb[id]) {
         logResponse(method, url.pathname, 409, `quest "${id}" already exists`);
@@ -2712,15 +3191,9 @@ async function route(req, res) {
       const hasFns = FN_FIELDS.some(f => body[f] !== undefined);
       logRow('id', id);
       logRow('title', `${body.title}  ·  type: ${body.type}  ·  node: ${body.activateNode}`);
-      if (hasFns) logRow('note', 'function fields written — POST /api/save then /api/reload');
+      if (hasFns) logRow('note', 'function fields written to source');
       logResponse(method, url.pathname, 201, `created quest/${id}`);
-      return json(res, 201, {
-        ok:true, id,
-        note: hasFns
-          ? 'Function fields written to source. POST /api/save then /api/reload to activate.'
-          : 'POST /api/save to persist.',
-        ...questConnections(id),
-      });
+      return saveAndRestart(res, 201, { ok:true, id, ...questConnections(id) });
     }
 
     if (type === 'node') {
@@ -2765,10 +3238,7 @@ async function route(req, res) {
       logRow('code', code);
       logRow('label', `${body.label}  ·  Act ${body.act}  ·  terrain: ${body.name||'—'}${coordNote}`);
       logResponse(method, url.pathname, 201, `created node/${code}`);
-      return json(res, 201, { ok:true, code,
-        note:`POST /api/save to persist.${coordNote}`,
-        coords: WBAPI.nodeCoords[code] || null,
-        ...nodeConnections(code) });
+      return saveAndRestart(res, 201, { ok:true, code, coords: WBAPI.nodeCoords[code] || null, ...nodeConnections(code) });
     }
 
     if (type === 'terrain') {
@@ -2795,8 +3265,7 @@ async function route(req, res) {
       logRow('key', `${key}  ·  ${body.icon||''}  ${body.label||key}`);
       logRow('monsters', `${monsterKeys.length}  →  ${sample(monsterKeys, 4)}`);
       logResponse(method, url.pathname, 201, `created terrain/${key}`);
-      return json(res, 201, { ok:true, key, note:'POST /api/save to persist.',
-        entity: WBAPI.worldDb[key], connections: { monsters: monsterKeys } });
+      return saveAndRestart(res, 201, { ok:true, key, entity: WBAPI.worldDb[key], connections: { monsters: monsterKeys } });
     }
 
     if (type === 'monster') {
@@ -2818,7 +3287,7 @@ async function route(req, res) {
       logRow('key', key);
       logRow('stats', `${body.name}  ·  AC ${body.ac||'?'}  HP ${body.hp||'?'}  ATK +${body.atk||'?'}  tier: ${body.tier||'?'}`);
       logResponse(method, url.pathname, 201, `created monster/${key}`);
-      return json(res, 201, { ok:true, key, note:'POST /api/save to persist.', entity: WBAPI.monsterPool[key] });
+      return saveAndRestart(res, 201, { ok:true, key, entity: WBAPI.monsterPool[key] });
     }
 
     if (type === 'npc') {
@@ -2848,7 +3317,7 @@ async function route(req, res) {
       logRow('key', key);
       logRow('npc', `${body.name}  ·  ${body.occupation||'—'}  ·  node: ${body.node}`);
       logResponse(method, url.pathname, 201, `created npc/${key}`);
-      return json(res, 201, { ok:true, key, note:'POST /api/save to persist.', ...npcConnections(key) });
+      return saveAndRestart(res, 201, { ok:true, key, ...npcConnections(key) });
     }
   }
 
@@ -3198,28 +3667,39 @@ async function route(req, res) {
 
     const col = { node:WBAPI.nodeMap, quest:WBAPI.questDb, monster:WBAPI.monsterPool, npc:WBAPI.birkaNpcs }[type];
     const resolvedKey = WBAPI._findKey(col, rawId) || rawId;
+    if (!col[resolvedKey]) {
+      logResponse(method, url.pathname, 404, `${type} "${resolvedKey}" not found`);
+      return json(res, 404, { ok:false, error:`${type} "${resolvedKey}" not found` });
+    }
 
     const results = [];
     for (const [field, value] of Object.entries(body)) {
       if (typeof value === 'string') {
         const r = WBAPI.editField(type, resolvedKey, field, value);
-        results.push({ field, ok: r.ok, error: r.error, strategy: 'editField' });
+        results.push({ field, ok: r.ok, error: r.error, inserted: r.inserted || false, strategy: 'editField' });
       } else {
+        // Non-string values (arrays, numbers) go through ns.put — in-memory only, requires /api/save
         const ns = { node:WBAPI.nodes, quest:WBAPI.quests, monster:WBAPI.monsters, npc:WBAPI.npcs }[type];
         const r = ns.put(resolvedKey, { [field]: value });
-        results.push({ field, ok: r.ok, strategy: 'put' });
+        results.push({ field, ok: r.ok, strategy: 'put-memory-only', note: 'non-string; call POST /api/save to persist' });
       }
     }
 
     const allOk = results.every(r => r.ok);
-    const failed = results.filter(r => !r.ok).map(r => r.field);
+    const failed = results.filter(r => !r.ok);
+    if (!allOk) {
+      logRow('target', `${type} › ${resolvedKey}`);
+      failed.forEach(r => logRow(r.field, `${C.red}✗ ${r.error||'failed'}${C.reset}`));
+      logResponse(method, url.pathname, 422,
+        `PUT failed: ${failed.map(r => r.field + (r.error ? ' — ' + r.error : '')).join('; ')}`);
+      return json(res, 422, { ok:false, error:'Some fields could not be written to source', failed, results });
+    }
+
     const updated = CONNECT[type](resolvedKey);
     logRow('target', `${type} › ${resolvedKey}`);
-    results.forEach(r => logRow(r.field, r.ok ? `${C.green}✓${C.reset} updated` : `${C.red}✗ ${r.error||'failed'}${C.reset}`));
-    logResponse(method, url.pathname, allOk ? 200 : 207,
-      `${results.length} field${results.length>1?'s':''} updated${failed.length?' — '+failed.length+' failed':''}`);
-    return json(res, allOk ? 200 : 207, { ok: allOk, fields: results,
-      ...(failed.length ? { failed } : {}), ...updated });
+    results.forEach(r => logRow(r.field, `${C.green}✓${C.reset} ${r.inserted ? 'inserted' : 'updated'}`));
+    logResponse(method, url.pathname, 200, `${results.length} field${results.length>1?'s':''} written to source`);
+    return saveAndRestart(res, 200, { ok:true, fields: results, ...updated });
   }
 
   // ── DELETE ──
