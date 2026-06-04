@@ -39,6 +39,11 @@ Two-tier naming rule: cities = 3-letter IATA or city-derived code; specific loca
 | MRG | Maragha | Azerbaijan, NW Iran | MRG derived (no major IATA) | 162,238 | AMS | AMS-07 intermediate city; observatory district and road junction inn quarter |
 | BUR | Bursa | Ottoman Anatolia (former capital) | BUR derived (BRS = Bristol IATA — reserved for SEN) | 154,228 | HTY | HTY-04 delivery city; Ottoman silk market; Haji Mehmed Arslan's warehouse; Armen's nephew dispute |
 | GNJ | Ganja | Caucasus, Azerbaijan (Armenian community) | GNJ derived (no major IATA; city name) | 153,240 | HTY | HTY-06 commission city; Armenian monastery library; Brother Grigor's custody |
+| BIS | Bistritz | Transylvania (Saxon district capital) | BIS derived from city name (Bistrița) | 137,224 | CLJ | CLJ-01 commission city; court physician Janos; compiled witness folio; CLJ-04/09 waypoint |
+| KLZ | Klausenburg | Transylvania (administrative and court city) | KLZ derived from city name (Klausenburg/Cluj-Napoca) | 139,222 | CLJ | CLJ-02/03/05/08 commission city; archdeacon's court; property registry; contingency letter |
+| SIB | Sibiu | Transylvania (Saxon administrative capital) | SIB derived (Hermannstadt/Sibiu) | 141,223 | CLJ | CLJ-02/04/05/07 waypoint city; archdeacon court; apothecary; shorthand documents |
+| BDA | Buda | Hungary (royal capital and registry) | BDA derived from city name (Buda, before Budapest unification) | 138,217 | CLJ | CLJ-03 delivery city; Hungarian royal registry; Péter's enrollment desk |
+| BOR | Borgo Pass | Carpathian Mountains (Transylvania–Moldavia route) | BOR derived from Borgo Pass location | 135,225 | CLJ | CLJ-06/07 waypoint; mountain pass inn; Brother Corneliu's earth box custody; Florescu's commission |
 
 ---
 

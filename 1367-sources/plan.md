@@ -885,7 +885,7 @@ This procedure runs once per vignette act (one quest at a time). Complete all 8 
 | 62 | HAV | Buccaneers of America | CHI (Chios) | CHI/CAF/TRB + RHD/FAM/CON/VEN/DBV/NUE(existing); HAV-01–06 imported (30 acts) | IMPORTED — 2026-06-03 |
 | 63 | AMS | Tale of Genji | NIS (Nishapur) | NIS/TBZ/BGD/SAM/MRV/MRG + TRB/CON/DBV/NUE(existing); AMS-01–07 imported (35 acts) | IMPORTED — 2026-06-04 |
 | 64 | HTY | Mahabharata | TBZ (Tabriz) | BUR (Bursa, using BUR not BRS to preserve BRS for SEN/Bristol)/GNJ (Ganja) + TBZ/NIS/BGD/SAM/TRB/CON/NUE(existing); HTY-01–07 imported (35 acts) | IMPORTED — 2026-06-03 |
-| 65 | CLJ | Dracula | OTP (Transylvania) | OTP, BUD (Budapest), LHR (London) | QUEUED |
+| 65 | CLJ | Dracula | BIS (Bistritz) | BIS/KLZ/SIB/BDA/BOR + NUE(existing); CLJ-01–09 imported (45 acts) | IMPORTED — 2026-06-03 |
 | 66 | WAW | Quo Vadis | FCO (Rome) | FCO already in map; SAU/VFM/BLO need creation | QUEUED |
 | 67 | NWI | Anabasis | IST (Sardis/Asia Minor) | IST, CPL, BLK, SIN, ORC, VAR, MYS, ANC | QUEUED |
 | 68 | MLA | Plutarch's Lives | ATH (Athens) | ATH or use existing; LMO, THA, ROM | QUEUED |
