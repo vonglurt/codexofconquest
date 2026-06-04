@@ -37,6 +37,8 @@ Two-tier naming rule: cities = 3-letter IATA or city-derived code; specific loca
 | SAM | Samarkand | Uzbekistan (Timurid approach) | SAM derived (SKD=Samarkand) | 157,240 | AMS | AMS-06 commission city; Silk Road scholar district; Brother Kenji's room |
 | MRV | Merv | Turkmenistan (ancient city) | MRV derived (MYP=Mary Airport) | 165,240 | AMS | AMS-06 delivery; Central Asian music theory quarter; Hamid al-Sarakhsi's study |
 | MRG | Maragha | Azerbaijan, NW Iran | MRG derived (no major IATA) | 162,238 | AMS | AMS-07 intermediate city; observatory district and road junction inn quarter |
+| BUR | Bursa | Ottoman Anatolia (former capital) | BUR derived (BRS = Bristol IATA — reserved for SEN) | 154,228 | HTY | HTY-04 delivery city; Ottoman silk market; Haji Mehmed Arslan's warehouse; Armen's nephew dispute |
+| GNJ | Ganja | Caucasus, Azerbaijan (Armenian community) | GNJ derived (no major IATA; city name) | 153,240 | HTY | HTY-06 commission city; Armenian monastery library; Brother Grigor's custody |
 
 ---
 
@@ -76,3 +78,4 @@ Codes that were planned but found already occupied by existing game nodes:
 | OTP | Transylvania | "Trench Titan" (fantasy node) | Will use different code for Transylvania when CLJ imported |
 | CLJ | Dracula starting city | "Vampire Castle Ruins" (game node) | Will use different code when CLJ imported |
 | HAV | Havana | "Admiral's Last Cove" (game node) | Will use different code when HAV imported |
+| BRS | Bursa (HTY-04 spec used BRS) | Reserved for Bristol (IATA BRS) for SEN/Treasure Island import | Used BUR for Bursa instead |
