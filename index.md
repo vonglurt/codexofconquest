@@ -375,6 +375,37 @@ All previously logged conflicts resolved. Current known gaps:
 
 ---
 
-*Last updated: 2026-06-02*
-*Codebase: `roll2hit-v3.html` · ~21,200 lines · Layers 0–104 complete · 121 nodes · 378 monsters · 54 lab reports*
+---
+
+## Data Audit Loop — Quest Text Backfill
+
+Procedure: `api-data-audit.md` — self-referential loop that runs until all errors and warnings are cleared.
+
+**How it works:**
+1. `curl 'http://localhost:1367/api/next-error?severity=error'` → fix all errors first
+2. `curl 'http://localhost:1367/api/next-error?severity=warning'` → then warnings
+3. Identify quest source: book prefix → `1367-sources/{CODE}-*.md`; original game → write from context
+4. PUT the fix; response includes `verified` array confirming disk write (no server restart)
+5. Commit after each book completes; announce with macOS `say`
+
+**macOS say — loop protocol (applies everywhere in this project):**
+```bash
+# After each commit:
+git commit -m "message" && say "message" &
+# At each loop pause point:
+say "continue, continue, continue!" &
+# After each PUT in the audit loop:
+say "Fixed quest id. Verified on disk." &
+```
+`say` always runs in background (`&`) so it never blocks the next step.
+This rule applies to `api-data-audit.md`, `plan.md §TTS`, and all session loops.
+
+**Source fidelity:** When `1367-sources/{CODE}-*.md` exists, copy `scene:/successText:/failText:` fields verbatim. City names and geographic anchors in quest text must match the city referenced in the source file. The book authored as a 1367-source uses the city name in the title and the plan — those landmarks carry into the quest desc and hint.
+
+**Status (2026-06-04):** MQ/SQ/EPIC done. ~20 books queued. See `api-data-audit.md §Per-Book Queue`.
+
+---
+
+*Last updated: 2026-06-04*
+*Codebase: `roll2hit-v3.html` · ~21,300 lines · Layers 0–104 complete · 305 nodes · 392 monsters · 960 quests*
 *MIT License — roll2hit.com — Copyright (c) 2026 — Free to use, modify, and share.*

@@ -54,7 +54,9 @@ curl -X PUT http://localhost:1367/api/quest/{id} \
   -H 'Content-Type: application/json' \
   -d '{"desc":"...","passText":"...","failText":"..."}'
 ```
-200 response confirms the write. Server restarts automatically.
+The PUT response includes a `verified` array confirming each field was read back from disk correctly.
+No server restart — the server reloads in-memory from the saved file and keeps the connection alive.
+A `422` with `error: "field mismatch after reload"` means the write was corrupted; investigate before continuing.
 
 **Step 6 — Verify**
 ```bash
@@ -62,8 +64,13 @@ curl 'http://localhost:1367/api/next-error?severity=warning'
 ```
 The fixed quest should not reappear. Repeat from Step 1.
 
-**Step 7 — Mark progress**
-When all quests for a book are clean, update its status below: `QUEUED` → `DONE {date}`.
+**Step 7 — Commit and announce**
+When all quests for a book are clean:
+```bash
+git add -A && git commit -m "BOOK IMPORTED — BookName: N quests patched"
+say "Book done: commit sent. Continuing loop." &
+```
+Then update its status below: `QUEUED` → `DONE {date}`.
 
 ---
 
@@ -145,6 +152,28 @@ Valid types as of 2026-06-04 (schema updated to match live data):
 
 ---
 
+## Loop Until Clean
+
+The loop runs until `next-error` returns `found: false` for both errors and warnings. The loop is:
+
+1. Check errors first: `curl '.../api/next-error?severity=error'`
+2. Then warnings: `curl '.../api/next-error?severity=warning'`
+3. Fix, PUT, verify (the PUT response confirms disk write)
+4. When a book's last warning clears → git commit + `say` announcement + mark DONE
+5. Repeat from 1
+
+**Source fidelity rule:** When a book's source file exists in `1367-sources/`, copy text **verbatim** from the Quest API Stub. The city name used in the quest `desc` and `hint` must match the city referenced in the `1367-sources/{CODE}-*.md` plan and the node name in the game. The source markdown uses the city as a landmark — that geographic anchor must be preserved.
+
+**macOS say pattern:**
+```bash
+say "Fixed quest id. Committing." &
+git commit -m "..."
+say "Commit done. Next." &
+```
+Run `say` in background (`&`) so it doesn't block the loop.
+
+---
+
 ## Per-Book Queue
 
 | Code | Book                          | Missing desc | Missing passText | Missing failText | Status              |
@@ -173,7 +202,8 @@ Valid types as of 2026-06-04 (schema updated to match live data):
 | FCO  | Aeneid (Virgil)               | 0           | 0               | 0               | DONE 2026-06-03     |
 | MQ   | Main quest chain (mq_1–7)     | 0           | 0               | 0               | DONE 2026-06-04     |
 | SQ   | Side quests (sq_1/2/battling/leveling) | 0  | 0               | 0               | DONE 2026-06-04     |
-| GAME | Legacy game quests (quest_*, trap_*) | ~386 | ~210           | ~180            | SEPARATE — see §GAME |
+| EPIC | Epic battleground (quest_e*_primary/return) | 0 | 0          | 0               | DONE 2026-06-04     |
+| GAME | Legacy game quests (quest_*, trap_*) | ~346 | ~170           | ~140            | SEPARATE — see §GAME |
 
 ---
 
@@ -182,11 +212,12 @@ Valid types as of 2026-06-04 (schema updated to match live data):
 Original game quests (prefixes: `quest_wis_`, `quest_ng_`, `quest_ef_`, `quest_eh_`, `trap_`, etc.)
 have no `1367-sources/` markdown. They are the lowest-priority backfill pass.
 
-**What was fixed 2026-06-04:** `mq_1`–`mq_7` and `sq_1`, `sq_2`, `sq_battling`, `sq_leveling`
-— all had `desc` already; `passText` and `failText` were written from narrative context.
+**What was fixed 2026-06-04:**
+- `mq_1`–`mq_7` and `sq_1`, `sq_2`, `sq_battling`, `sq_leveling` — written from narrative context
+- All 40 epic battleground quests (`quest_e*_primary` and `quest_e*_return`) — written from in-game context
 
-**What remains:** ~386 quests missing `desc`, ~210 missing `passText`, ~180 missing `failText`.
-These are mainly `quest_ef_*` (epic battleground primaries), `quest_eh_*`, and legacy `quest_*` quests.
+**What remains:** ~346 quests missing `desc`, ~170 missing `passText`, ~140 missing `failText`.
+These are `quest_wis_*`, `quest_ng_*`, `trap_*`, and other legacy prefixes.
 
 To isolate only GAME quests in next-error:
 ```bash
@@ -235,8 +266,9 @@ If a file is not listed: `ls 1367-sources/ | grep -i {code}`
 
 | Date       | Group   | Quests Fixed | Method        | Notes |
 |------------|---------|-------------|---------------|-------|
-| 2026-06-04 | MQ (mq_1–7)            | 7  | Written from context | No source file. Used desc+hint+completeItems+story-arc-*.md. Schema updated to include epic/combat/escort/dialogue/hybrid types. |
-| 2026-06-04 | SQ (sq_1/2/battling/leveling) | 4 | Written from context | No source file. sq_battling/sq_leveling: mechanics.md flavor + objective. sq_1/sq_2: game narrative context. |
+| 2026-06-04 | MQ (mq_1–7)            | 7  | Written from context | No source file. Used desc+hint+completeItems+story-arc-*.md. Schema updated. |
+| 2026-06-04 | SQ (sq_1/2/battling/leveling) | 4 | Written from context | No source file. sq_battling/sq_leveling: mechanics.md flavor. |
+| 2026-06-04 | EPIC (quest_e*_primary + _return) | 40 | Written from context | NPC name + boss + city anchor pattern. Bulk-patched via saveAndVerify (no restart). |
 
 ---
 

@@ -9740,3 +9740,22 @@ say "continue, continue, continue!"
 # then output: "FCO part 2/3 done — Books 4–8 covered. Type 'continue' for part 3."
 ```
 
+### Data audit loop — api-data-audit.md
+
+The audit loop (`api-data-audit.md`) runs `/api/next-error` to find missing quest text and patches it via PUT. Each PUT now uses `saveAndVerify` (saves, reloads in-memory, confirms the written value — no process restart, no silent failures). The loop runs until `found: false` on both errors and warnings.
+
+After each book completes:
+
+```bash
+git add -A && git commit -m "BOOK IMPORTED — BookName: N quests patched"
+say "Book done. Commit sent. Continuing loop." &
+```
+
+Mid-loop after each individual PUT, speak the result:
+
+```bash
+say "Fixed quest_id. Verified on disk." &
+```
+
+The `&` runs `say` in background so it doesn't block the next request. Always announce commits and loop transitions out loud.
+
