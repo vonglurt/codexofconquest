@@ -274,7 +274,7 @@ Next books to process (in approximate priority order):
 | WAW | Quo Vadis (Sienkiewicz) | 1201 | **IMPORTED — 2026-06-04 — SAU/VFM/ANT new nodes; WAW_001–WAW-07 (8 cycles, 40 acts); questComplete on WAW-03 (cycle 8)** |
 | MLA | Plutarch's Lives | 4222 | **IMPORTED — 2026-06-04 — LMO/THA/NXS new nodes; MLA-01–05/02/04/06/03 (7 cycles, 35 acts); questComplete on MLA-05 (cycle 7); island→islands terrain fix on NXS** |
 | BGW | Arabian Nights (Burton) | 983 | **IMPORTED — 2026-06-04 — KHR new node (Cairo); TUN new node (Tunis); BGW-01–08 (8 cycles, 40 acts); CAI→KHR; WM→NUE; BAG→BGD** |
-| CAI | Arabian Nights (Lang) | 629 | **SEEDS COMPLETE 2026-06-02 — CAI-01–08 all vignettes done** |
+| CAI | Arabian Nights (Lang) | 629 | **IMPORTED — 2026-06-04 — ALB/ALP/LAT new nodes (Aleppo Hills/Storytellers'/Latakia); CAI-01–08 (8 cycles, 40 acts); WM→NUE; BAG→BGD** |
 | BEY | Mandeville's Travels | 472 | **SEEDS COMPLETE 2026-06-02 — BEY-01–07 all vignettes done** |
 | KYA | Shah-Nameh | 883 | **SEEDS COMPLETE 2026-06-02 — KYA-01–25 all vignettes done. New nodes: YAZ, KBL, SIS, TBZ, TRB, HRT. See §KYA-CONT.** |
 | HTY | Mahabharata | 83 | **SEEDS COMPLETE 2026-06-02 — HTY-01–06 all vignettes done** |
@@ -901,6 +901,7 @@ This procedure runs once per vignette act (one quest at a time). Complete all 8 
 | 78 | STN | Robin Hood | SHW (Sherwood Forest) | BLW/GMT/NGM/EMT/LEA/NTN/KLN new nodes (SHW shared from MAN); STN-01–07 (7 cycles, 30 acts: cycles 1–2 have 5 acts, cycles 3–7 have 4 acts); questComplete on all 7; WM→NUE | IMPORTED — 2026-06-04 |
 | 79 | IST | The Alexiad (Anna Komnene) | CON (Constantinople) | PAR new node (Palermo, r:187 c:210); existing: CON/DBV/RHD/THA/AOI/NUE; IST-01–07 (7 cycles, 35 acts); questComplete on all 7; RGS→DBV; ANC→AOI; WM→NUE | IMPORTED — 2026-06-04 |
 | 80 | BGW | Arabian Nights (Burton tr.) | KHR new node (Cairo Booksellers' Quarter, r:193 c:230); TUN new node (Tunis Monastery, r:183 c:205); existing: FAM/ALE/VEN/TBZ/BGD/GEN/CON/NUE; BGW-01–08 (8 cycles, 40 acts); questComplete on all 8; CAI→KHR (collision); WM→NUE; BAG→BGD | IMPORTED — 2026-06-04 |
+| 81 | CAI | Arabian Nights (Lang adaptation) | ALB new node (Aleppo Hills — Mar Marun Monastery, r:170 c:237); ALP new node (Aleppo — Storytellers' Quarter, r:168 c:238); LAT new node (Latakia — Syrian Mediterranean Port, r:166 c:233); existing: ANT/BGD/TRB/CON/DAM/ALE/NUE; CAI-01–08 (8 cycles, 40 acts); questComplete on all 8; WM→NUE; BAG→BGD | IMPORTED — 2026-06-04 |
 
 ---
 

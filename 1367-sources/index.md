@@ -68,6 +68,9 @@ Two-tier naming rule: cities = 3-letter IATA or city-derived code; specific loca
 | PAR | Palermo | Sicily, Italy (Kingdom of Sicily) | PAR derived from city name (no dedicated IATA; PMO = Palermo) | 187,210 | IST | IST-05 (Devol Treaty Copy) commission city; Norman archive district; Margherita di Ferro's family archive tower |
 | KHR | Cairo — Booksellers' Quarter | Egypt (Mamluk Sultanate) | KHR derived from Al-Qahira (Arabic name for Cairo); CAI code collides with existing fantasy node | 193,230 | BGW | BGW-01–03/08 commission node; manuscript market near al-Azhar mosque; scholars_qtr terrain |
 | TUN | Tunis — Monastery of the Two Saints | Tunisia (Hafsid Sultanate) | TUN derived from city name | 183,205 | BGW | BGW-05 commission node; monastery library north of Tunis; Brother Ilario's custody; city terrain |
+| ALB | Aleppo Hills — Mar Marun Monastery | Syria (Mamluk Sultanate) | ALB derived from Aleppo hill monastery context; no IATA collision | 170,237 | CAI | CAI-01 commission node; Maronite monastery library above Aleppo; Brother Yuhanna's custody; city terrain |
+| ALP | Aleppo — Storytellers' Quarter | Syria (Mamluk Sultanate) | ALP derived from Aleppo city name | 168,238 | CAI | CAI-02/03/04/07 commission node; hakawati market district; Fatima bint Sulayman, Ser Marco, Father Elias; city terrain |
+| LAT | Latakia — Syrian Mediterranean Port | Syria (Mamluk Sultanate) | LAT derived from Latakia (Laodicea); no collision | 166,233 | CAI | CAI-02/04 commission node; Syrian coast port; manuscript transit intercept point; docks terrain |
 
 ---
 
