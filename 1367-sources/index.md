@@ -31,6 +31,12 @@ Two-tier naming rule: cities = 3-letter IATA or city-derived code; specific loca
 | CHI | Chios | Aegean, Greece | CHI derived from city name (Chios island) | 160,233 | HAV | Acts 1-2 HAV-01; Genoese Maona harbor district; corsair articles notary |
 | CAF | Caffa | Crimea (Genoese colony) | CAF derived from city name (Feodosiya/Caffa Genoese factor quarter) | 134,237 | HAV | Acts 1-2 HAV-03; Genoese factor quarter; commission usage attestation |
 | TRB | Trebizond | Black Sea coast, Byzantine | TRB derived (TZX=Trabzon Airport) | 152,240 | HAV | Acts 3-4 HAV-03; Genoese registry quarter; Black Sea admiralty registration |
+| TBZ | Tabriz | Azerbaijan (Jalayirid Persia) | TBZ derived (no major IATA) | 160,240 | AMS | Jalayirid scholar quarter; AMS-01 delivery / AMS-02, 03, 04, 05, 07 commission nodes |
+| NIS | Nishapur | Khorasan, Eastern Persia | NIS derived (no major IATA) | 168,240 | AMS | AMS-01 commission city; Ahmad ibn Ibrahim's madrasa; chrysanthemum box origin |
+| BGD | Baghdad | Iraq (Mamluk-Jalayirid border) | BGD derived (SDA=Baghdad Intl) | 182,238 | AMS | AMS-02 delivery; Sufi scholar quarter; Hafiz ibn Walid's study |
+| SAM | Samarkand | Uzbekistan (Timurid approach) | SAM derived (SKD=Samarkand) | 157,240 | AMS | AMS-06 commission city; Silk Road scholar district; Brother Kenji's room |
+| MRV | Merv | Turkmenistan (ancient city) | MRV derived (MYP=Mary Airport) | 165,240 | AMS | AMS-06 delivery; Central Asian music theory quarter; Hamid al-Sarakhsi's study |
+| MRG | Maragha | Azerbaijan, NW Iran | MRG derived (no major IATA) | 162,238 | AMS | AMS-07 intermediate city; observatory district and road junction inn quarter |
 
 ---
 
