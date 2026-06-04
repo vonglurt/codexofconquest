@@ -272,7 +272,7 @@ Next books to process (in approximate priority order):
 | IST | Alexiad (Anna Komnene) | 165 | **SEEDS COMPLETE 2026-06-02 — IST-01–07 all vignettes done. Memory-processed (no txt file). See §IST above.** |
 | NWI | Anabasis (Xenophon) | 545 | **IMPORTED — 2026-06-04 — BLK/BTR/SIN/ORC/VAR/MYS/AOI/REG new nodes; NWI_001–NWI-08 (9 cycles, 45 acts); questComplete on NWI-08 (cycle 9); ANC code collision → AOI used for Ancona; TBZ→TRB; RGS→DBV (cycles 2,3,4) / REG for Regensburg (cycle 9)** |
 | WAW | Quo Vadis (Sienkiewicz) | 1201 | **IMPORTED — 2026-06-04 — SAU/VFM/ANT new nodes; WAW_001–WAW-07 (8 cycles, 40 acts); questComplete on WAW-03 (cycle 8)** |
-| MLA | Plutarch's Lives | 4222 | **SEEDS COMPLETE 2026-06-03 — MLA-01–07 done (7 cycles). questComplete added to MLA-05. New nodes LMO/THA/ROM added. Theme threads for all 7 cycles.** |
+| MLA | Plutarch's Lives | 4222 | **IMPORTED — 2026-06-04 — LMO/THA/NXS new nodes; MLA-01–05/02/04/06/03 (7 cycles, 35 acts); questComplete on MLA-05 (cycle 7); island→islands terrain fix on NXS** |
 | BGW | Arabian Nights (Burton) | 983 | **SEEDS COMPLETE 2026-06-02 — BGW-01–08 all vignettes done** |
 | CAI | Arabian Nights (Lang) | 629 | **SEEDS COMPLETE 2026-06-02 — CAI-01–08 all vignettes done** |
 | BEY | Mandeville's Travels | 472 | **SEEDS COMPLETE 2026-06-02 — BEY-01–07 all vignettes done** |
@@ -888,7 +888,7 @@ This procedure runs once per vignette act (one quest at a time). Complete all 8 
 | 65 | CLJ | Dracula | BIS (Bistritz) | BIS/KLZ/SIB/BDA/BOR + NUE(existing); CLJ-01–09 imported (45 acts) | IMPORTED — 2026-06-03 |
 | 66 | WAW | Quo Vadis | ROM (Rome) | SAU/VFM/ANT new nodes; WAW_001–WAW-07 (8 cycles, 40 acts); questComplete WAW-03 | IMPORTED — 2026-06-04 |
 | 67 | NWI | Anabasis | CON (Constantinople) | BLK/BTR/SIN/ORC/VAR/MYS/AOI/REG new nodes; NWI_001–NWI-08 (9 cycles, 45 acts); questComplete NWI-08; ANC→AOI; TBZ→TRB; RGS→DBV(cycles 2,3,4)/REG(cycle 9) | IMPORTED — 2026-06-04 |
-| 68 | MLA | Plutarch's Lives | ATH (Athens) | ATH or use existing; LMO, THA, ROM | QUEUED |
+| 68 | MLA | Plutarch's Lives | LMO (Thessaloniki) | LMO/THA/NXS new nodes; MLA-01–05/02/04/06/03 (7 cycles, 35 acts); questComplete MLA-05 (cycle 7); AOI/MYS from NWI reused | IMPORTED — 2026-06-04 |
 | 69 | CRL | Froissart (Boys) | CDG (Paris) | CDG or use existing; AVG (Avignon) | QUEUED |
 | 70 | CPH | Gesta Danorum | CPH (Copenhagen) | CPH, HEL (Helsingborg) | QUEUED |
 | 71 | MOL | Laxdaela Saga | KEF (Iceland) | KEF, REY (Reykjavik area) | QUEUED |

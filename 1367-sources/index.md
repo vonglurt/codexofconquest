@@ -55,6 +55,9 @@ Two-tier naming rule: cities = 3-letter IATA or city-derived code; specific loca
 | MYS | Mystras | Peloponnese, Greece (Byzantine Despotate of Morea) | MYS derived from city name | 167,218 | NWI | NWI-07 commission node; Peloponnesian monastery; Father Demetrios; Scillus Survey Transcription custody |
 | AOI | Ancona | Marche, Italy (Adriatic coast) | AOI from IATA (Ancona Falconara); ANC code collision → AOI used | 143,214 | NWI | NWI-07 waypoint; Adriatic factor's quarter; Florentine humanist encounter; Greek noble family ambush road |
 | REG | Regensburg | Bavaria, Germany | REG derived from city name (IATA ratisbon/REG); used for NWI-08 Regensburg notary | 120,208 | NWI | NWI-08 act_4 node; document intake office; Herr Friedrich Mühlberg; Anabasis cross-reference verification |
+| LMO | Thessaloniki — Monastery of the Latomos | Macedonia, Greece (Byzantine) | LMO derived from Latomos monastery name | 160,219 | MLA | MLA-001 commission node; Father Simeon's scriptorium; The Third Comparison |
+| THA | Thessaloniki — Harbor | Macedonia, Greece (Byzantine) | THA derived from Thessaloniki Harbor | 162,220 | MLA | MLA-001/MLA-05 node; Father Christodoulos; harbor quarter; The Nicias Correspondence |
+| NXS | Naxos — Ducal Monastery Library | Cyclades, Greece (Latin Duchy) | NXS derived from Naxos city name | 167,229 | MLA | MLA-002 commission node; Brother Grigorios; The Missing Preface (Epaminondas/Scipio) |
 
 ---
 
