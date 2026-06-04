@@ -47,6 +47,14 @@ Two-tier naming rule: cities = 3-letter IATA or city-derived code; specific loca
 | SAU | Sant'Urbano alla Caffarella | Latium, Italy (Appian Way south of Rome) | SAU derived from church name | 165,213 | WAW | WAW_001 commission node; Appian Way monastery; Brother Rinaldo's secondary archive; Banquet Letter custody |
 | VFM | Via Flaminia Apennine Section | Apennine Mountains (Rome–Bologna mountain road) | VFM derived from Via Flaminia | 148,210 | WAW | WAW_001 transit node; Apennine pass; brigand encounter on narrow mountain road |
 | ANT | Antioch | Syria (Ottoman/late Byzantine frontier) | ANT derived from city name (Antakya) | 165,238 | WAW | WAW-06 commission node; Syrian monastery above the city; Brother Athanasius; Antioch Community Record Fragment custody |
+| BLK | Black Sea Coastal Road | Anatolian Black Sea coast (Bosphorus to Trebizond) | BLK derived from Black Sea route | 151,234 | NWI | NWI_001 transit node; caravanserai on the coastal road; Venetian manuscript agent Marco Zane waystation |
+| BTR | Bosphorus Thracian Noble Estate | Thrace (European side, near Bosphorus) | BTR derived from Bosphorus-Thracian | 148,229 | NWI | NWI_002 commission node; stone archive room; steward Dragomir; Seuthes Grant Record custody |
+| SIN | Sinope | Northern Anatolia, Black Sea coast | SIN derived from city name (Sinope) | 151,236 | NWI | NWI-06 commission node; merchant quarter; Konstantinos; Cretan Archer's Dictation custody |
+| ORC | Orchomenos | Boeotia, Greece (inland) | ORC derived from city name | 163,218 | NWI | NWI-03 commission node; monastery library; Brother Stavros; Proxenus's Letter custody |
+| VAR | Varna | Bulgaria, Black Sea coast | VAR derived from city name | 147,225 | NWI | NWI-05 commission node; civic archive; Radu; Salmydessus Salvage Catalog custody |
+| MYS | Mystras | Peloponnese, Greece (Byzantine Despotate of Morea) | MYS derived from city name | 167,218 | NWI | NWI-07 commission node; Peloponnesian monastery; Father Demetrios; Scillus Survey Transcription custody |
+| AOI | Ancona | Marche, Italy (Adriatic coast) | AOI from IATA (Ancona Falconara); ANC code collision → AOI used | 143,214 | NWI | NWI-07 waypoint; Adriatic factor's quarter; Florentine humanist encounter; Greek noble family ambush road |
+| REG | Regensburg | Bavaria, Germany | REG derived from city name (IATA ratisbon/REG); used for NWI-08 Regensburg notary | 120,208 | NWI | NWI-08 act_4 node; document intake office; Herr Friedrich Mühlberg; Anabasis cross-reference verification |
 
 ---
 
