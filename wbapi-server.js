@@ -450,6 +450,75 @@ function saveAndRestart(res, status, payload) {
   setTimeout(() => process.exit(67), 150);
 }
 
+// Save to disk, soft-reload in memory, verify the written entity — no process restart.
+// Returns the full HTTP response on the same connection.
+// expectedFields: { fieldName: expectedStringValue } — verified against reloaded data.
+// connectType/connectKey: optional, recomputed after reload for fresh connection metadata.
+function saveAndVerify(res, status, payload, expectedFields, connectType, connectKey) {
+  // 1. Save to disk
+  const r = WBAPI.save();
+  if (!r.ok) {
+    logRow('autoSave', `${C.red}ERROR: ${r.error}${C.reset}`);
+    return json(res, 500, { ok:false, error:`save failed: ${r.error}` });
+  }
+  try {
+    fs.copyFileSync(r.path, GAME_FILE);
+    logRow('autoSave', r.path);
+  } catch(e) {
+    return json(res, 500, { ok:false, error:`overwrite failed: ${e.message}`, savePath: r.path });
+  }
+
+  // 2. Soft reload — re-parse all collections from the saved file (keeps process alive)
+  try {
+    WBAPI.load(GAME_FILE);
+    logRow('reload', 'memory refreshed from disk');
+  } catch(e) {
+    return json(res, 500, { ok:false, error:`reload failed after save: ${e.message}`, savePath: r.path });
+  }
+
+  // 3. Verify written fields by reading them back from the freshly loaded data
+  const COL_MAP = { node:WBAPI.nodeMap, quest:WBAPI.questDb, monster:WBAPI.monsterPool, npc:WBAPI.birkaNpcs };
+  const col = connectType ? COL_MAP[connectType] : null;
+  const entity = col && connectKey ? col[connectKey] : null;
+
+  const verified = [];
+  const mismatches = [];
+  if (entity && expectedFields) {
+    for (const [field, expected] of Object.entries(expectedFields)) {
+      const actual = entity[field];
+      const ok = actual === expected;
+      verified.push({ field, ok, ...(ok ? {} : { expected, actual }) });
+      if (!ok) mismatches.push(field);
+    }
+  }
+
+  const verifyOk = mismatches.length === 0;
+  if (verified.length > 0) {
+    logRow('verify', verifyOk
+      ? `${C.green}✓ ${verified.length} field(s) confirmed on disk${C.reset}`
+      : `${C.red}✗ mismatch after reload: ${mismatches.join(', ')}${C.reset}`);
+  }
+
+  // 4. Recompute connection metadata from freshly loaded data
+  const connections = (connectType && connectKey && CONNECT[connectType])
+    ? CONNECT[connectType](connectKey)
+    : {};
+
+  cors(res);
+  const httpStatus = verifyOk ? status : 422;
+  res.writeHead(httpStatus, { 'Content-Type': 'application/json' });
+  const out = {
+    ...payload,
+    ...connections,
+    autoSaved: true,
+    savePath: r.path,
+    ...(verified.length > 0 ? { verified } : {}),
+    ...(verifyOk ? {} : { ok:false, error:`field mismatch after reload: ${mismatches.join(', ')}` }),
+  };
+  logBody('out', out);
+  res.end(JSON.stringify(out, null, 2));
+}
+
 function readBody(req) {
   return new Promise((resolve, reject) => {
     let buf = '';
@@ -3695,11 +3764,15 @@ async function route(req, res) {
       return json(res, 422, { ok:false, error:'Some fields could not be written to source', failed, results });
     }
 
-    const updated = CONNECT[type](resolvedKey);
     logRow('target', `${type} › ${resolvedKey}`);
     results.forEach(r => logRow(r.field, `${C.green}✓${C.reset} ${r.inserted ? 'inserted' : 'updated'}`));
     logResponse(method, url.pathname, 200, `${results.length} field${results.length>1?'s':''} written to source`);
-    return saveAndRestart(res, 200, { ok:true, fields: results, ...updated });
+    // Collect expected values for disk-verification (string fields only — non-string are in-memory only)
+    const expectedFields = {};
+    for (const r of results) {
+      if (r.ok && r.strategy === 'editField') expectedFields[r.field] = String(body[r.field]);
+    }
+    return saveAndVerify(res, 200, { ok:true, fields: results }, expectedFields, type, resolvedKey);
   }
 
   // ── DELETE ──
@@ -3730,6 +3803,48 @@ async function route(req, res) {
       logRow('remaining', arr.length);
       logResponse(method, url.pathname, 200, `removed dialogue/${key}/${dlgField}/${dlgIdx}`);
       return json(res, 200, { ok:true, key, field:dlgField, removed, remaining: arr.length, note:'POST /api/save to persist.' });
+    }
+
+    // DELETE /api/monster/:key/drop — remove a drop entry (nonce type:monster, id:key)
+    if (type === 'monster' && action === 'drop') {
+      const nonce = req.headers['x-nonce'] || url.searchParams.get('nonce');
+      if (!nonce) {
+        logResponse(method, url.pathname, 403, 'DELETE drop requires X-Nonce');
+        return json(res, 403, { ok:false,
+          error:'DELETE drop requires a nonce. POST /api/nonce with {type:"monster",id:"<key>"} first.',
+          hint:`NONCE=$(curl -s -XPOST http://localhost:${PORT}/api/nonce -H 'Content-Type: application/json' -d '{"type":"monster","id":"${key}"}' | jq -r .nonce) && curl -XDELETE http://localhost:${PORT}/api/monster/${key}/drop -H "X-Nonce: $NONCE"` });
+      }
+      const nc = nonceConsume(nonce, 'monster', key);
+      if (!nc.ok) {
+        logResponse(method, url.pathname, 403, `nonce rejected: ${nc.error}`);
+        return json(res, 403, { ok:false, error: nc.error });
+      }
+      if (!WBAPI.monsterDrops[key]) {
+        logResponse(method, url.pathname, 404, `no drop entry for "${key}"`);
+        return json(res, 404, { ok:false, error:`No drop entry for "${key}"` });
+      }
+      // Remove the entry line from MONSTER_DROPS section in _rawSrc
+      const DS = '// ◆◆◆ WORLDBUILDER:MONSTER_DROPS:START ◆◆◆';
+      const DE = '// ◆◆◆ WORLDBUILDER:MONSTER_DROPS:END ◆◆◆';
+      const dsIdx = WBAPI._rawSrc.indexOf(DS) + DS.length;
+      const deIdx = WBAPI._rawSrc.indexOf(DE);
+      if (dsIdx < DS.length || deIdx === -1) {
+        logResponse(method, url.pathname, 500, 'MONSTER_DROPS section not found in source');
+        return json(res, 500, { ok:false, error:'MONSTER_DROPS section markers not found in source' });
+      }
+      const dropSec = WBAPI._rawSrc.slice(dsIdx, deIdx);
+      const lineRe  = new RegExp(`[ \\t]*${key}\\s*:\\s*\\{[^\\n]*\\},?[ \\t]*\\n`);
+      const patchedDrop = dropSec.replace(lineRe, '');
+      if (patchedDrop === dropSec) {
+        logResponse(method, url.pathname, 404, `drop line for "${key}" not found in source text`);
+        return json(res, 404, { ok:false, error:`Drop entry "${key}" not found in source text` });
+      }
+      WBAPI._rawSrc = WBAPI._rawSrc.slice(0, dsIdx) + patchedDrop + WBAPI._rawSrc.slice(deIdx);
+      const removed = { ...WBAPI.monsterDrops[key] };
+      delete WBAPI.monsterDrops[key];
+      logRow('deleted', `drop › ${key}  ·  ${removed.icon||''} ${removed.name}`);
+      logResponse(method, url.pathname, 200, `deleted drop/${key}`);
+      return saveAndVerify(res, 200, { ok:true, key, deleted: removed }, {}, null, null);
     }
 
     // Require a valid nonce issued by POST /api/nonce
@@ -3982,6 +4097,7 @@ server.listen(PORT, '127.0.0.1', () => {
     ['GET',    '/api/monster/{id}/drop              → single drop entry'],
     ['POST',   '/api/monster/{id}/drop              body: {name, icon?, sell?}'],
     ['PUT',    '/api/monster/{id}/drop              body: {name?, icon?, sell?}'],
+    ['DELETE', '/api/monster/{id}/drop              X-Nonce: <token>  (nonce type:monster,id:key)'],
     ['GET',    '/api/loot                           → d100 table with rollRanges, gap, suggestions'],
     ['PUT',    '/api/loot                           body: {entries:[{weight,_type,_magic?},...]}'],
     ['PUT',    '/api/loot/{index}                   body: {weight?,_type?,_magic?}'],

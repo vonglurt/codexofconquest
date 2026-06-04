@@ -157,53 +157,60 @@ function parseSanitized(block, name) {
 // Avoids full re-serialization so function bodies are preserved.
 // ═══════════════════════════════════════════════════════════════════════════
 function patchStringField(sectionSrc, entryKey, field, newValue) {
-  // Match field within the SAME entry block — find entry boundaries first to
-  // prevent cross-entry contamination from the lazy [\s\S]*? span.
   const escaped = newValue.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
-
-  // Locate the entry: key followed by its object literal up to the closing },
-  const entryRe = new RegExp(
-    `([ \\t]*${entryKey}\\s*:\\s*\\{)([\\s\\S]*?)(\\}\\s*,?)`,
-    'gm'
-  );
-  let entryMatch;
-  // Use exec loop to avoid greedy spanning across multiple entries
-  while ((entryMatch = entryRe.exec(sectionSrc)) !== null) {
-    const [fullMatch, open, body, close] = entryMatch;
-    // Only patch the field if it exists in this specific entry body
-    const fieldRe = new RegExp(`(\\b${field}\\s*:\\s*)(["\`'])(.*?)\\2`, 'm');
-    if (!fieldRe.test(body)) continue; // not in this entry
-    const patchedBody = body.replace(fieldRe, (_, pre, q) => `${pre}"${escaped}"`);
-    return (
-      sectionSrc.slice(0, entryMatch.index) +
-      open + patchedBody + close +
-      sectionSrc.slice(entryMatch.index + fullMatch.length)
-    );
-  }
-  return null; // field not found in this entry
+  // Use brace-depth tracking to find the true entry boundary (handles nested {} in completeFn).
+  const b = findEntryBounds(sectionSrc, entryKey);
+  if (!b) return null;
+  const { openEnd, bodyEnd } = b;
+  const body = sectionSrc.slice(openEnd, bodyEnd);
+  const fieldRe = new RegExp(`(\\b${field}\\s*:\\s*)(["\`'])(.*?)\\2`, 'm');
+  if (!fieldRe.test(body)) return null;
+  const patchedBody = body.replace(fieldRe, (_, pre, q) => `${pre}"${escaped}"`);
+  return sectionSrc.slice(0, openEnd) + patchedBody + sectionSrc.slice(bodyEnd);
 }
 
-// Insert a new string field into an existing entry's body (before the closing }).
+// Find the true entry bounds using brace-depth tracking (handles nested {} in completeFn etc.).
+// Returns { openEnd, bodyEnd, baseIndent } or null.
+function findEntryBounds(sectionSrc, entryKey) {
+  const keyRe = new RegExp(`([ \\t]*)${entryKey}\\s*:\\s*\\{`, 'g');
+  const km = keyRe.exec(sectionSrc);
+  if (!km) return null;
+  const baseIndent = km[1];
+  const openEnd = km.index + km[0].length;
+  let depth = 1, i = openEnd, inStr = null;
+  while (i < sectionSrc.length) {
+    const c = sectionSrc[i];
+    if (inStr) {
+      if (c === '\\' && inStr !== '`') { i += 2; continue; }
+      if (c === inStr) inStr = null;
+    } else if (c === '/' && sectionSrc[i+1] === '/') {
+      while (i < sectionSrc.length && sectionSrc[i] !== '\n') i++;
+      continue;
+    } else {
+      if (c === '"' || c === "'" || c === '`') inStr = c;
+      else if (c === '{') depth++;
+      else if (c === '}') { depth--; if (depth === 0) break; }
+    }
+    i++;
+  }
+  return depth === 0 ? { openEnd, bodyEnd: i, baseIndent } : null;
+}
+
+// Insert a new string field into an existing entry's body (appended before the true closing }).
+// Uses brace-depth tracking so nested {} inside completeFn or other functions are never confused
+// for the entry boundary.
 function insertStringField(sectionSrc, entryKey, field, newValue) {
   const escaped = newValue.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
-  // Find the entry line: "  entryKey: { ..."
-  const entryLineRe = new RegExp(`([ \\t]*${entryKey}\\s*:[^\\n]*\\n)`, 'g');
-  const lineMatch = entryLineRe.exec(sectionSrc);
-  if (!lineMatch) return null;
-  // Find the closing brace of this entry (first }, after the opening line)
-  const afterOpen = lineMatch.index + lineMatch[0].length;
-  const closeRe = /\},?\s*\n/g;
-  closeRe.lastIndex = afterOpen;
-  const closeMatch = closeRe.exec(sectionSrc);
-  if (!closeMatch) return null;
-  // Insert field on a new line before the closing brace
-  const indent = (lineMatch[0].match(/^([ \t]*)/) || ['',''])[1] + '  ';
-  const insertion = `${indent}${field}:"${escaped}",\n`;
-  return (
-    sectionSrc.slice(0, closeMatch.index) +
-    insertion +
-    sectionSrc.slice(closeMatch.index)
-  );
+  const b = findEntryBounds(sectionSrc, entryKey);
+  if (!b) return null;
+  const { openEnd, bodyEnd, baseIndent } = b;
+  const fieldIndent = baseIndent + '  ';
+  const body = sectionSrc.slice(openEnd, bodyEnd);
+  const trimmed = body.trimEnd();
+  let newBody = trimmed;
+  if (newBody && !newBody.endsWith(',')) newBody += ',';
+  newBody += `\n${fieldIndent}${field}:"${escaped}",\n${baseIndent}`;
+  return sectionSrc.slice(0, openEnd) + newBody + sectionSrc.slice(bodyEnd);
 }
 
 // Replace an entire entry block in a section (for add/delete)
