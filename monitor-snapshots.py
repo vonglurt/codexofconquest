@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-monitor-snapshots.py  —  TUI monitor for roll2hit snapshot archiving.
+Monitor-Snapshots  —  TUI monitor for roll2hit snapshot archiving.
+PaulRicheson@Roll2hit.com  MIT License
 
 Watches for new roll2hit-v3-YYYYMMDD-HHMMSS.html files, waits until all
 file handles close (lsof), shows a scrollable unified diff between
@@ -35,6 +36,10 @@ LAST_NAME_F = PATCHES_DIR / "_last.name"
 GLOB        = "roll2hit-v3-????????-??????.html"
 SETTLE      = 2.0   # grace seconds after lsof shows no handles
 POLL        = 0.8   # directory scan interval
+
+_TITLE     = "Monitor-Snapshots"
+_COPYRIGHT = "PaulRicheson@Roll2hit.com MIT License"
+_COPY_MED  = "PaulRicheson@Roll2hit.com ..."
 
 
 # ── file-close helpers ───────────────────────────────────────────────────────
@@ -87,13 +92,14 @@ class Monitor:
         self.alive  = True
 
         # state shared with worker (guarded by self.lk)
-        self.count  = 0
-        self.status = "scanning…"
-        self.plbl   = ""
-        self.clbl   = ""
-        self.dlines = []
-        self.scroll = 0
-        self._prev  = ""   # text of last archived file (for diff input)
+        self.count         = 0
+        self.status        = "scanning…"
+        self.plbl          = ""
+        self.clbl          = ""
+        self.dlines        = []
+        self.scroll        = 0
+        self._prev         = ""    # text of last archived file (for diff input)
+        self.flash_pending = False
 
         # resume from last session if patches dir has state
         if LAST_HTML.exists():
@@ -158,13 +164,14 @@ class Monitor:
         f.unlink()
 
         with self.lk:
-            self._prev  = text
-            self.plbl   = plbl
-            self.clbl   = f.name
-            self.dlines = diff
-            self.scroll = 0
-            self.count += 1
-            self.status = "watching…"
+            self._prev         = text
+            self.plbl          = plbl
+            self.clbl          = f.name
+            self.dlines        = diff
+            self.scroll        = 0
+            self.count        += 1
+            self.status        = "watching…"
+            self.flash_pending = True
 
     # ── drawing ──────────────────────────────────────────────────────────────
 
@@ -214,9 +221,24 @@ class Monitor:
 
         row = 0
 
-        # header bar
+        # title bar: "Monitor-Snapshots" left, copyright right-aligned
+        left_t = f" {_TITLE} "
+        avail_r = w - len(left_t)
+        if avail_r >= len(_COPYRIGHT) + 2:
+            right_t = (" " + _COPYRIGHT + " ").rjust(avail_r)
+        elif avail_r >= len(_COPY_MED) + 2:
+            right_t = (" " + _COPY_MED + " ").rjust(avail_r)
+        elif avail_r >= 5:
+            right_t = " ... ".rjust(avail_r)
+        else:
+            right_t = ""
+        title_line = (left_t + right_t)[:w].ljust(w)[:w]
+        put(row, 0, title_line, P(1) | curses.A_BOLD)
+        row += 1
+
+        # info bar
         hdr = f" ⏱ {hms}   {count} patched   {status}"
-        put(row, 0, hdr.ljust(w), P(1) | curses.A_BOLD)
+        put(row, 0, hdr.ljust(w), P(1))
         row += 1
 
         # file label pair
@@ -287,14 +309,27 @@ class Monitor:
                 break
 
             with self.lk:
-                n    = len(self.dlines)
-                h, _ = scr.getmaxyx()
-            page = max(1, h - 6)
+                n             = len(self.dlines)
+                h, _          = scr.getmaxyx()
+                fp            = self.flash_pending
+                if fp:
+                    self.flash_pending = False
+            page = max(1, h - 7)
 
             if   k == curses.KEY_DOWN:   self._scroll(1,    n)
             elif k == curses.KEY_UP:     self._scroll(-1,   n)
             elif k == curses.KEY_NPAGE:  self._scroll(page, n)
             elif k == curses.KEY_PPAGE:  self._scroll(-page, n)
+
+            if fp:
+                try:
+                    curses.beep()
+                except curses.error:
+                    pass
+                try:
+                    curses.flash()
+                except curses.error:
+                    pass
 
             self.draw(scr)
 
