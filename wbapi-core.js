@@ -505,6 +505,22 @@ const WBAPI = {
 
   save(outputPath) {
     if (!this._rawSrc) return { ok:false, error:'no source loaded' };
+
+    // Guard: coerced objects
+    if (this._rawSrc.includes('[object Object]'))
+      return { ok:false, error:'save aborted: source contains "[object Object]" — a non-string value was coerced during serialization' };
+
+    // Guard: bare-identifier activateCond (undefined variable at runtime)
+    const questSrc = extrSection(this._rawSrc, 'QUEST_DB') || '';
+    const badConds = [];
+    for (const m of questSrc.matchAll(/activateCond:\s*([^\s(,}][^,}]*)/g)) {
+      const val = m[1].trim();
+      if (/^[A-Za-z_$][A-Za-z0-9_$]*$/.test(val))
+        badConds.push(val);
+    }
+    if (badConds.length)
+      return { ok:false, error:`save aborted: ${badConds.length} activateCond value(s) are bare identifiers (not arrow functions) — will throw ReferenceError at runtime: ${badConds.slice(0,5).join(', ')}${badConds.length>5?' …':''}`};
+
     const dest = outputPath || this.getStampedName();
     fs.writeFileSync(dest, this._rawSrc, 'utf8');
     return { ok:true, path: path.resolve(dest) };

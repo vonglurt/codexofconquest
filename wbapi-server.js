@@ -460,7 +460,13 @@ function serializeQuestLiteral(id, body) {
   for (const f of STR)  if (body[f] !== undefined) parts.push(`${f}:${JSON.stringify(body[f])}`);
   for (const f of NUM)  if (body[f] !== undefined) parts.push(`${f}:${Number(body[f])}`);
   for (const f of BOOL) if (body[f] !== undefined) parts.push(`${f}:${!!body[f]}`);
-  for (const f of FN)   if (body[f] !== undefined) parts.push(`${f}:${body[f]}`);
+  for (const f of FN) {
+    if (typeof body[f] !== 'string') continue;
+    const v = body[f].trimStart();
+    // Plain flag name (no JS syntax) → wrap as S_story check; already-valid JS passes through
+    const isBareIdent = /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(v);
+    parts.push(`${f}:${isBareIdent ? `() => !!S_story.${v}` : v}`);
+  }
   return parts.join(', ') + ' },\n';
 }
 
@@ -1163,7 +1169,7 @@ async function route(req, res) {
           '      "activateNode":"EMA","checkStat":"wis","checkDC":12,',
           '      "passText":"...","failText":"...","checkPassFlag":"stnAct1Done"',
           '    }\'',
-          '  Act 2+: add "activateCond":"stnAct1Done" (prev act checkPassFlag)',
+          '  Act 2+: add "activateCond":"stnAct1Done" (prev act checkPassFlag — serialized as () => !!S_story.stnAct1Done)',
           '  Final act: add "questComplete":true',
           '',
           'STEP 6 — Chain via mission bits',
