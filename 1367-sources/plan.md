@@ -269,11 +269,11 @@ Next books to process (in approximate priority order):
 
 | Code | Title | KB | Status |
 |------|-------|----|--------|
-| IST | Alexiad (Anna Komnene) | 165 | **SEEDS COMPLETE 2026-06-02 — IST-01–07 all vignettes done. Memory-processed (no txt file). See §IST above.** |
+| IST | Alexiad (Anna Komnene) | 165 | **IMPORTED — 2026-06-04 — PAR new node (Palermo); IST-01–07 (7 cycles, 35 acts); questComplete on all 7; RGS→DBV; ANC→AOI; WM→NUE** |
 | NWI | Anabasis (Xenophon) | 545 | **IMPORTED — 2026-06-04 — BLK/BTR/SIN/ORC/VAR/MYS/AOI/REG new nodes; NWI_001–NWI-08 (9 cycles, 45 acts); questComplete on NWI-08 (cycle 9); ANC code collision → AOI used for Ancona; TBZ→TRB; RGS→DBV (cycles 2,3,4) / REG for Regensburg (cycle 9)** |
 | WAW | Quo Vadis (Sienkiewicz) | 1201 | **IMPORTED — 2026-06-04 — SAU/VFM/ANT new nodes; WAW_001–WAW-07 (8 cycles, 40 acts); questComplete on WAW-03 (cycle 8)** |
 | MLA | Plutarch's Lives | 4222 | **IMPORTED — 2026-06-04 — LMO/THA/NXS new nodes; MLA-01–05/02/04/06/03 (7 cycles, 35 acts); questComplete on MLA-05 (cycle 7); island→islands terrain fix on NXS** |
-| BGW | Arabian Nights (Burton) | 983 | **SEEDS COMPLETE 2026-06-02 — BGW-01–08 all vignettes done** |
+| BGW | Arabian Nights (Burton) | 983 | **IMPORTED — 2026-06-04 — KHR new node (Cairo); TUN new node (Tunis); BGW-01–08 (8 cycles, 40 acts); CAI→KHR; WM→NUE; BAG→BGD** |
 | CAI | Arabian Nights (Lang) | 629 | **SEEDS COMPLETE 2026-06-02 — CAI-01–08 all vignettes done** |
 | BEY | Mandeville's Travels | 472 | **SEEDS COMPLETE 2026-06-02 — BEY-01–07 all vignettes done** |
 | KYA | Shah-Nameh | 883 | **SEEDS COMPLETE 2026-06-02 — KYA-01–25 all vignettes done. New nodes: YAZ, KBL, SIS, TBZ, TRB, HRT. See §KYA-CONT.** |
@@ -492,7 +492,7 @@ Seeds complete 2026-06-02:
 
 ## CRL — The Boy's Froissart, Supplementary 1367 Cycle (Lanier adaptation)
 
-**SEEDS COMPLETE 2026-06-02 — CRL-01–08 all vignettes done**
+**IMPORTED — 2026-06-04 — LON/CDV/FRK/PER/BDX/SRL new nodes (AVG reused from BLQ); CRL-001–008 (8 cycles, 40 acts); questComplete on CRL-008 (cycle 8)**
 
 **Processed 2026-05-31** — CRL-02 spec complete (The Archpriest's Certificate, PER→BDX). Supplementary Cycle 2 written; four admin updates applied. Parts 1–3 of source read; full Archpriest chapter (LXXXV–LXXXVI) and Jacquerie chapters (LXXXVII–LXXXIX). Nodes used: PER (Périgord forest road — dissolving priory), BDX (Bordeaux). See CRL-froissart-boys.md Cycle 2.
 
@@ -889,16 +889,18 @@ This procedure runs once per vignette act (one quest at a time). Complete all 8 
 | 66 | WAW | Quo Vadis | ROM (Rome) | SAU/VFM/ANT new nodes; WAW_001–WAW-07 (8 cycles, 40 acts); questComplete WAW-03 | IMPORTED — 2026-06-04 |
 | 67 | NWI | Anabasis | CON (Constantinople) | BLK/BTR/SIN/ORC/VAR/MYS/AOI/REG new nodes; NWI_001–NWI-08 (9 cycles, 45 acts); questComplete NWI-08; ANC→AOI; TBZ→TRB; RGS→DBV(cycles 2,3,4)/REG(cycle 9) | IMPORTED — 2026-06-04 |
 | 68 | MLA | Plutarch's Lives | LMO (Thessaloniki) | LMO/THA/NXS new nodes; MLA-01–05/02/04/06/03 (7 cycles, 35 acts); questComplete MLA-05 (cycle 7); AOI/MYS from NWI reused | IMPORTED — 2026-06-04 |
-| 69 | CRL | Froissart (Boys) | CDG (Paris) | CDG or use existing; AVG (Avignon) | QUEUED |
-| 70 | CPH | Gesta Danorum | CPH (Copenhagen) | CPH, HEL (Helsingborg) | QUEUED |
-| 71 | MOL | Laxdaela Saga | KEF (Iceland) | KEF, REY (Reykjavik area) | QUEUED |
-| 72 | LBC | Nibelungenlied | FRA (Frankfurt/Rhine) | NIL, WOR, RHN, KOL, HST | QUEUED |
-| 73 | FRO | Volsunga Saga | OSL (Norse heartland) | FLM, ATL, WRM, ODD, LYG, HKL, SIG, VLN | QUEUED |
-| 74 | MSE | Canterbury Tales | LGW (London/Canterbury) | BRT, ORL, ACT, RDW, CHY, PCR, LRD, SAL, COT | QUEUED |
-| 75 | KIR | Mabinogion | CWL (Wales) | HVY, ARB, ARD, GWN, WLD, MGL, HER | QUEUED |
-| 76 | SEN | Treasure Island | BRS (Bristol) | HMS, STK, BGC, NHS, TIS | QUEUED |
-| 77 | MAN | Ivanhoe | LBA (Yorkshire/Nottingham) | SHF, HMT | QUEUED |
-| 78 | STN | Robin Hood | EMA (Nottingham/Sherwood) | EMT, LEA, NTN, KLN, SHW | QUEUED |
+| 69 | CRL | Froissart (Boys) | LON (London) | LON/CDV/FRK/PER/BDX/SRL new nodes; AVG reused; CRL-001–008 (8 cycles, 40 acts); questComplete CRL-008 | IMPORTED — 2026-06-04 |
+| 70 | CPH | Gesta Danorum | STK (Starkad's coast) | STK/DAN/HEO/DNS/BRK new nodes; CPH-01–02 (2 cycles, 10 acts); questComplete CPH-02 | IMPORTED — 2026-06-04 |
+| 71 | MOL | Laxdaela Saga | LGR (Iceland) | LGR/LXF/HHL/VRG/BLT/HFG new nodes; MOL-01–02 (2 cycles, 10 acts); questComplete MOL-02 | IMPORTED — 2026-06-04 |
+| 72 | LBC | Nibelungenlied | ETZ (Etzel's Court) | ETZ/DBN/NIL/WOR/RHN/KOL/HST/BTL new nodes; LBC-01–07 (7 cycles, 35 acts); questComplete LBC-07; GNH→WOR; WM→NUE | IMPORTED — 2026-06-04 |
+| 73 | FRO | Volsunga Saga | SFJ (Sigmund's field) | SFJ/BK/GNP/FLM/WRM/ODD/LYG/HKL/SIG/VLN new nodes; FRO-01–07 (7 cycles, 35 acts); questComplete FRO-01/02/03/05/06/07; GNH→WOR; ATL→ETZ; WM→NUE | IMPORTED — 2026-06-04 |
+| 74 | MSE | Canterbury Tales | MSE (Canterbury) | MSE/TVO/OKD/BRT/ORL/ACT/RDW/CHY/PCR/LRD/SAL/COT new nodes; MSE-01–07 (7 cycles, 35 acts); questComplete on all 7; WM→NUE | IMPORTED — 2026-06-04 |
+| 75 | KIR | Mabinogion | CWT (Cwm Wyllt) | CWT/RDV/CWL/TWY/BRC/HLG/GWL/LDN/HVY/ARB/HFD/ARD/GWN/WLD/MGL new nodes (HER collision→HFD); KIR-01–07 (7 cycles, 35 acts); questComplete on all 7; WM→NUE | IMPORTED — 2026-06-04 |
+| 76 | SEN | Treasure Island | ADM (Admiral Benbow) | ADM/TL/VS/HMS/SKD/BGC/NHS/TIS new nodes (STK collision→SKD); SEN-01–07 (7 cycles, 30 acts: cycles 1–2 have 5 acts, cycles 3–7 have 4 acts); questComplete on all 7; WM→NUE | IMPORTED — 2026-06-04 |
+| 77 | MAN | Ivanhoe | YRK (York) | YRK/ASH/NRG/ROT/TPR/SHF/SHW/HMT new nodes (AHB collision→ASH); MAN-01–07 (7 cycles, 32 acts: cycles 1–4 have 5 acts, cycles 5–7 have 4 acts); questComplete on all 7; WM→NUE | IMPORTED — 2026-06-04 |
+| 78 | STN | Robin Hood | SHW (Sherwood Forest) | BLW/GMT/NGM/EMT/LEA/NTN/KLN new nodes (SHW shared from MAN); STN-01–07 (7 cycles, 30 acts: cycles 1–2 have 5 acts, cycles 3–7 have 4 acts); questComplete on all 7; WM→NUE | IMPORTED — 2026-06-04 |
+| 79 | IST | The Alexiad (Anna Komnene) | CON (Constantinople) | PAR new node (Palermo, r:187 c:210); existing: CON/DBV/RHD/THA/AOI/NUE; IST-01–07 (7 cycles, 35 acts); questComplete on all 7; RGS→DBV; ANC→AOI; WM→NUE | IMPORTED — 2026-06-04 |
+| 80 | BGW | Arabian Nights (Burton tr.) | KHR new node (Cairo Booksellers' Quarter, r:193 c:230); TUN new node (Tunis Monastery, r:183 c:205); existing: FAM/ALE/VEN/TBZ/BGD/GEN/CON/NUE; BGW-01–08 (8 cycles, 40 acts); questComplete on all 8; CAI→KHR (collision); WM→NUE; BAG→BGD | IMPORTED — 2026-06-04 |
 
 ---
 

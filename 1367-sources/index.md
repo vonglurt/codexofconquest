@@ -58,6 +58,16 @@ Two-tier naming rule: cities = 3-letter IATA or city-derived code; specific loca
 | LMO | Thessaloniki — Monastery of the Latomos | Macedonia, Greece (Byzantine) | LMO derived from Latomos monastery name | 160,219 | MLA | MLA-001 commission node; Father Simeon's scriptorium; The Third Comparison |
 | THA | Thessaloniki — Harbor | Macedonia, Greece (Byzantine) | THA derived from Thessaloniki Harbor | 162,220 | MLA | MLA-001/MLA-05 node; Father Christodoulos; harbor quarter; The Nicias Correspondence |
 | NXS | Naxos — Ducal Monastery Library | Cyclades, Greece (Latin Duchy) | NXS derived from Naxos city name | 167,229 | MLA | MLA-002 commission node; Brother Grigorios; The Missing Preface (Epaminondas/Scipio) |
+| BLW | Blidworth | Nottinghamshire, England | BLW derived from Blidworth village | 104,152 | STN | STN-01/02 node; forest toll gate on the Sherwood road; Half-Sixpence delivery route |
+| GMT | Gamston | Nottinghamshire, England | GMT derived from Gamston village | 106,154 | STN | STN-01 node; Ellen's village; rescue/wedding scene; Sheriff's men at the church |
+| NGM | Nottingham Common | Nottinghamshire, England | NGM derived from Nottingham Common | 106,153 | STN | STN-02/06 node; Gallows Tree; scaffold scene; widow's sons indictment |
+| EMT | Emmet Priory | Nottinghamshire, England | EMT derived from Priory of Emmet | 101,150 | STN | STN-03 node; ruined chapel; corrupt cellarer's hidden copy of Sir Richard's mortgage deed |
+| LEA | Castle Lea | Nottinghamshire, England | LEA derived from Castle Lea | 104,149 | STN | STN-03 node; Sir Richard of the Lea's estate; debt delivery destination |
+| NTN | Nottingham Town Fair | Nottinghamshire, England | NTN derived from Nottingham Town | 106,151 | STN | STN-04 node; fair grounds; Golden Arrow tournament; Sheriff's archery contest |
+| KLN | Kirklees Nunnery | Yorkshire, England | KLN derived from Kirklees | 100,149 | STN | STN-07 node; gate chapel ruins; Robin Hood's death; last arrow scene |
+| PAR | Palermo | Sicily, Italy (Kingdom of Sicily) | PAR derived from city name (no dedicated IATA; PMO = Palermo) | 187,210 | IST | IST-05 (Devol Treaty Copy) commission city; Norman archive district; Margherita di Ferro's family archive tower |
+| KHR | Cairo — Booksellers' Quarter | Egypt (Mamluk Sultanate) | KHR derived from Al-Qahira (Arabic name for Cairo); CAI code collides with existing fantasy node | 193,230 | BGW | BGW-01–03/08 commission node; manuscript market near al-Azhar mosque; scholars_qtr terrain |
+| TUN | Tunis — Monastery of the Two Saints | Tunisia (Hafsid Sultanate) | TUN derived from city name | 183,205 | BGW | BGW-05 commission node; monastery library north of Tunis; Brother Ilario's custody; city terrain |
 
 ---
 
