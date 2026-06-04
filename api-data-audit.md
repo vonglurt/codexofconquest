@@ -5,6 +5,28 @@ One book per "continue." Mark status as work completes.
 
 ---
 
+## Required Reading — Load at Session Start
+
+Before beginning any loop iteration, read these three files in order:
+
+1. **`api-data-audit.md`** (this file) — procedure, queue status, say protocol, source index
+2. **`1367-sources/index.md`** — canonical node/city registry; use to confirm `activateNode` codes and city names used in `desc`/`hint`
+3. **`1367-sources/{CODE}-*.md`** — the specific source file for the current book being patched
+
+The index and source file must be loaded before patching any quest. Node codes in `desc` must match codes in `1367-sources/index.md`. City names used in scene descriptions must match the city referenced in the source `.md` plan.
+
+```bash
+# Quick reference — confirm a node exists before using it
+curl -s http://localhost:1367/api/list/node | python3 -c "
+import sys,json; nodes=json.load(sys.stdin)
+for n in nodes: print(n.get('id'), n.get('name'))" | grep -i {city}
+
+# Check the source index for a book code
+grep -i "{CODE}" 1367-sources/index.md | head -20
+```
+
+---
+
 ## The Loop
 
 Every iteration follows this exact sequence:
@@ -34,8 +56,20 @@ Rule for book code: first 2–4 letters before `_`, uppercase → match in Sourc
 
 **Step 3 — Read the source markdown (book imports only)**
 
-Open `1367-sources/{CODE}-*.md`. Find the Quest API Stub block for this quest's cycle and act.
-The heading format is usually `### {CODE}-{N} Act {N}` or `**Quest API Stub — {CODE}-{N}:**`.
+Open `1367-sources/{CODE}-*.md`. Before patching any act, **read the relevant section** of the source file — not just the Quest API Stub JSON, but the full vignette prose above it. Each cycle has a `## §{CODE}-{N}` heading with:
+- A **premise paragraph** naming the NPCs, objects, and mission context
+- **Act-by-act prose** with scene descriptions, dialogue, and skill check outcomes
+- A **Quest API Stub** JSON block that codifies the above
+
+Read at minimum the prose section for the current cycle before writing `desc` and `hint`. The stub JSON gives structure; the prose gives the quotes, the sensory details, and the character voices that make the text match the source. Use `grep -n "§{CODE}-{N}\|{cycle_title}"` to locate the right line range, then Read the block.
+
+The heading format is usually `## §{CODE}-{N} — Vignette Cycle {N}: "{Title}"` or `**Quest API Stub — {CODE}-{N}:**`.
+
+```bash
+# Locate the cycle section quickly
+grep -n "§{CODE}-0{N}\|{Cycle Title}" 1367-sources/{CODE}-*.md | head -5
+# Then Read from that line number for ~120 lines
+```
 
 **Step 4 — Extract verbatim text**
 
@@ -164,13 +198,43 @@ The loop runs until `next-error` returns `found: false` for both errors and warn
 
 **Source fidelity rule:** When a book's source file exists in `1367-sources/`, copy text **verbatim** from the Quest API Stub. The city name used in the quest `desc` and `hint` must match the city referenced in the `1367-sources/{CODE}-*.md` plan and the node name in the game. The source markdown uses the city as a landmark — that geographic anchor must be preserved.
 
-**macOS say pattern:**
+**macOS say protocol — full enriched form:**
+
+Run all `say` calls in the background (`&`) so they never block the loop.
+
 ```bash
-say "Fixed quest id. Committing." &
-git commit -m "..."
-say "Commit done. Next." &
+# 1. BEFORE patching a cycle — announce intent
+say "Starting {BOOK} {cycle}: {N} acts. {short theme}." &
+
+# 2. DURING — after each PUT success — announce field name + verbatim quote
+say "{BOOK} {cycle} act {N}: {field} fixed. {verbatim quote from patched text}." &
+#    Example:
+#    say "HTY 01 act 5: desc fixed. The argument works — but only if the reader believes Yama was bound by his own word. In our tradition, Death is not." &
+
+# 3. AFTER completing the cycle — announce completion before commit
+say "{BOOK} {cycle} complete. All acts patched. Committing." &
+
+# 4. ON COMMIT — after git commit
+git commit -m "{BOOK} — {BookName}: {N} quests patched ({BOOK}-01 through {BOOK}-0N, all acts desc+hint)"
+say "{BOOK} committed. {N} quests across {M} cycles." &
+
+# 5. NEXT — after commit, call api/next-error and announce what's up next
+curl -s 'http://localhost:1367/api/next-error?severity=warning&skip=50' | python3 -c "
+import sys,json; d=json.load(sys.stdin)
+if d.get('found'):
+    e=d['finding']; print(e['key'], e['field'])
+else:
+    print('found: false — all warnings cleared')
+"
+say "Next: {BOOK} {next_cycle} — {quest title}." &
+# Or: say "All warnings cleared. Loop complete." &
 ```
-Run `say` in background (`&`) so it doesn't block the loop.
+
+**Say content rules:**
+- The field name (e.g., "desc fixed", "hint fixed") must always appear
+- Include a verbatim quote — short, one sentence maximum — lifted directly from the text just patched
+- Book abbreviation + cycle number (e.g., "HTY 01") are mandatory so oral log is self-annotating
+- After a commit, name the next key from api/next-error so the speaker always signals what is coming
 
 ---
 
@@ -178,32 +242,32 @@ Run `say` in background (`&`) so it doesn't block the loop.
 
 | Code | Book                          | Missing desc | Missing passText | Missing failText | Status              |
 |------|-------------------------------|-------------|-----------------|-----------------|---------------------|
-| NWI  | Anabasis (Xenophon)           | ~45         | 0               | 0               | QUEUED              |
+| HTY  | Mahabharata                   | ~25         | 0               | 0               | IN PROGRESS 2026-06-04 (HTY-01 done) |
 | CLJ  | Dracula (Stoker)              | ~45         | 0               | 0               | QUEUED              |
-| BGW  | Arabian Nights (Burton tr.)   | 40          | 0               | 0               | QUEUED              |
-| CAI  | Arabian Nights (Lang)         | 40          | 0               | 0               | QUEUED              |
 | CRL  | Froissart (Boy's)             | ~40         | 0               | 0               | QUEUED              |
-| WAW  | Quo Vadis (Sienkiewicz)       | ~40         | 0               | 0               | QUEUED              |
-| AMS  | Tale of Genji                 | ~35         | 0               | 0               | QUEUED              |
-| HTY  | Mahabharata                   | ~35         | 0               | 0               | QUEUED              |
 | LBC  | Nibelungenlied                | ~35         | 0               | 0               | QUEUED              |
 | FRO  | Völsunga Saga                 | ~35         | 0               | 0               | QUEUED              |
 | MSE  | Canterbury Tales              | ~35         | 0               | 0               | QUEUED              |
 | KIR  | Mabinogion                    | ~35         | 0               | 0               | QUEUED              |
 | IST  | The Alexiad (Anna Komnene)    | ~35         | 0               | 0               | QUEUED              |
-| MLA  | Plutarch's Lives              | ~35         | 0               | 0               | QUEUED              |
 | MAN  | Ivanhoe (Scott)               | ~32         | 0               | 0               | QUEUED              |
-| HAV  | Buccaneers of America         | ~30         | 0               | 0               | QUEUED              |
 | SEN  | Treasure Island (Stevenson)   | ~30         | 0               | 0               | QUEUED              |
 | STN  | Robin Hood                    | ~30         | 0               | 0               | QUEUED              |
 | CPH  | Gesta Danorum (Saxo)          | ~10         | 0               | 0               | QUEUED              |
 | MOL  | Laxdaela Saga                 | ~10         | 0               | 0               | QUEUED              |
+| GAME | Legacy game quests (quest_*, trap_*) | ~346 | ~170           | ~140            | SEPARATE — see §GAME |
+| BGW  | Arabian Nights (Burton tr.)   | 0           | 0               | 0               | DONE 2026-06-03     |
+| CAI  | Arabian Nights (Lang)         | 0           | 0               | 0               | DONE 2026-06-03     |
 | BLQ  | Decameron (Boccaccio)         | 0           | 0               | 0               | DONE 2026-06-03     |
 | FCO  | Aeneid (Virgil)               | 0           | 0               | 0               | DONE 2026-06-03     |
+| NWI  | Anabasis (Xenophon)           | 0           | 0               | 0               | DONE 2026-06-03     |
+| MLA  | Plutarch's Lives              | 0           | 0               | 0               | DONE 2026-06-03     |
+| WAW  | Quo Vadis (Sienkiewicz)       | 0           | 0               | 0               | DONE 2026-06-03     |
+| HAV  | Buccaneers of America         | 0           | 0               | 0               | DONE 2026-06-04     |
+| AMS  | Tale of Genji                 | 0           | 0               | 0               | DONE 2026-06-04     |
 | MQ   | Main quest chain (mq_1–7)     | 0           | 0               | 0               | DONE 2026-06-04     |
 | SQ   | Side quests (sq_1/2/battling/leveling) | 0  | 0               | 0               | DONE 2026-06-04     |
 | EPIC | Epic battleground (quest_e*_primary/return) | 0 | 0          | 0               | DONE 2026-06-04     |
-| GAME | Legacy game quests (quest_*, trap_*) | ~346 | ~170           | ~140            | SEPARATE — see §GAME |
 
 ---
 
