@@ -321,3 +321,6 @@ Standard path — Auros fight proceeds normally. No change needed.
 ---
 
 *Lab report complete. Proceed with HTML implementation (Phase 1 first) after this file is committed.*
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

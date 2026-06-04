@@ -225,3 +225,6 @@ Having Benedikt deliver the four-author synthesis (rather than a game message or
 | `lab-report-weimar-scholar-gate.md` | §II.C | `wmFirstResearcherKnown` origin — prerequisite for §XVII |
 | `lab-report-ng-plus-remembrance.md` | §II.D | `entry42Written` origin — required for `vaArchitectureKnown` |
 | `lab-report-void-shaman.md` | §II | MT tunnel extended use in §XXI — Warden encounter |
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

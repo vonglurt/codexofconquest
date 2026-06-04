@@ -222,3 +222,6 @@ Roll2hit started as a dice roller, became a quest engine, built a world that rem
 | `lab-report-timeline-history-completed.md` | Full document | Complete layer-by-layer development timeline (L0–L45) |
 | `lab-report-architecture-full.md` | Full document | Complete function catalog — canonical function reference |
 | `lab-report-documentation-system-design.md` | Full document | IEEE analysis of the two-way sync architecture |
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

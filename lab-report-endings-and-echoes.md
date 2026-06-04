@@ -431,4 +431,4 @@ Fades before the title appears. Can't be paused or screenshot. It's there for on
 
 
 ---
-*© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

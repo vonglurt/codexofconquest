@@ -925,4 +925,4 @@ All 37 layers are implemented in `roll2hit-v3.html` (~10,200 lines, 515 div pair
 
 
 ---
-*© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

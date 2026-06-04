@@ -702,4 +702,4 @@ Add `'story-corridor-overlay'` to:
 
 
 ---
-*© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

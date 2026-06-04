@@ -409,3 +409,6 @@ for q in qs:
 # Node list (for fixing activateNode errors)
 curl http://localhost:1367/api/list/node
 ```
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

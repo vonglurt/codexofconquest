@@ -9759,3 +9759,5 @@ say "Fixed quest_id. Verified on disk." &
 
 The `&` runs `say` in background so it doesn't block the next request. Always announce commits and loop transitions out loud.
 
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

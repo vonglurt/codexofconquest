@@ -428,3 +428,5 @@ Display thresholds (existing CSS, now active): 16h awake → `warn` class; 24h a
 - **`fishmongerRowRestored: true`** is set on quest completion but does not currently trigger any visual change at FR. A potential Layer 79+ extension: if `fishmongerRowRestored`, FR terrain changes from `ruins` to `partial_market` with modified node text. Not implemented; deferred.
 - **Kenickie fav 3 naming line** for the Covenant Keeper ending (`SWEELINCK_NAMING_LINES`) was not added in this pass. Suggested: *"Kenickie, who kept the account book. Who knows every name in it."* Deferred to NG+ pass.
 
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

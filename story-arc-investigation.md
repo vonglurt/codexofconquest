@@ -454,3 +454,6 @@ The callback fires only on the persuasion path because the persuasion path left 
 | `lab-report-void-shaman.md` | All | §XXI full implementation record |
 | `lab-report-ng-plus-remembrance.md` | §II.D | `entry42Written` origin — required for §XVII gate |
 | `lab-report-tilbury-visby-arcs.md` | §II.C | `vsShamanKnown` origin — §XX prerequisite for §XXI |
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

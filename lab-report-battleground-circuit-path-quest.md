@@ -883,3 +883,6 @@ Active (last-traveled) corridor cells render in `var(--gold-lt)` with `text-shad
 *Document complete.*  
 *Roll2Hit: The Shattered Codex — single-file HTML RPG, `roll2hit-v3.html`*  
 *MIT License — Copyright (c) 2026 roll2hit.com*
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

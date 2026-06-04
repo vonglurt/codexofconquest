@@ -267,4 +267,4 @@ The following mechanics are **described in this report but not yet implemented**
 
 
 ---
-*© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

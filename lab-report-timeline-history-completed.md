@@ -797,4 +797,4 @@ Ocean EB nodes         →  London sea
 
 
 ---
-*© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

@@ -525,3 +525,6 @@ The three unresolved threads are Vera Keel (what she was testing, who sent her),
 **Cross-references:** `plan.md §DESIGN-REF` · `plan.md §NAVAL-01` · `plan.md §PORT-01/02` · `plan.md §HUNT-01/02` · `plan.md §SPARK-02` · `quest.md §HUNT-01` · `lab-report-meta-process-loop-expansion.md §III`  
 **Nodes added:** OW(139), LD(140), BN(141), SK(142), DF(143), SB(144), DA3(138)  
 **Total live quests after this layer:** ~151
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

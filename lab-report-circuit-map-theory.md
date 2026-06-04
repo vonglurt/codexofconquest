@@ -692,4 +692,4 @@ This is the philosophical conclusion: by reducing the infinite grid to a sparse 
 
 
 ---
-*© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

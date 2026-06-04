@@ -221,3 +221,6 @@ The `#gameover-chronicle` div is hidden until `_populateGameoverChronicle()` run
 | `roll2hit-v3.html` | Line 16756 | Character sheet Chronicle section — reads `careerStats` live |
 | `lab-report-ally-cat.md` | §5 | `quest_cat_05` quest chain — Sandy, vendor chip unlock, original design |
 | `plan.md` | §XL + §XLII | Original design directives for Layers 75 and 77 |
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

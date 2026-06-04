@@ -139,3 +139,6 @@ Consider adding a one-time tutorial message when a player first reaches CHA ≥ 
 | `roll2hit-v3.html` | Line 16734 | Character sheet display |
 | `plan.md` | §XIII | Original design directive |
 | `lab-report-fishing-bait-prompting.md` | §Luck integration | Fishing×Luck interaction context |
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

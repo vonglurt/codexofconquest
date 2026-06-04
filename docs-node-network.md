@@ -373,3 +373,6 @@ GL    3   15  Old Guard's Corner
 6. If the connection crosses a region (distance ≥ 3), add `CORRIDOR_TERRAIN['A-B'] = 'terrain'`.
 7. If a junction is needed, pick a J-code (next available after J7) and place it between.
 8. Update docs: `story.md`, `maps.md`, `plan.md`.
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

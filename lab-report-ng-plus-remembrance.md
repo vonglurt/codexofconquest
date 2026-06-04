@@ -173,3 +173,6 @@ The "Leave It Blank" option was essential. A forced text-entry mechanic alienate
 | `plan.md` | §XV | Original design directive |
 | `lab-report-quest-minus-one-world-creator.md` | §II.C | `priorQuestMinusOne` origin — Quest -1 cross-reference |
 | `lab-report-endings-and-echoes.md` | §NG+ | `storyNewGamePlus()` base preservation fields |
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

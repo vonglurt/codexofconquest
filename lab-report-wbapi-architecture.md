@@ -640,3 +640,6 @@ The 11 audit errors are data integrity warnings (e.g., quests referencing node c
 **Filed:** 2026-05-30  
 **Cross-references:** `lab-report-wbapi-evolution.md` · `wbapi-core.js` · `wbapi-server.js` · `plan.md §ARCH-01`  
 **Port 1367:** Matches canonical game year.
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

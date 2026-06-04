@@ -379,3 +379,6 @@ Each Layer 18 addition satisfies a checklist for rapid-play game design addition
 ---
 
 MIT License — roll2hit.com — Copyright (c) 2026 — Free to use, modify, and share.
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

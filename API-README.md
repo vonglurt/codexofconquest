@@ -1268,3 +1268,6 @@ say "Cycle imported. Ready to continue. Say yes to proceed to the next quest."
 The 4x expansion (2026-06-03) left 3 empty grid cells between every adjacent pair of original nodes. There is ample room — use `GET /api/coords/near/{code}` to find unoccupied slots.
 
 See also: `GET /api/help/import`, `GET /api/help/coords`, `1367-sources/plan.md §IMPORT-01`
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

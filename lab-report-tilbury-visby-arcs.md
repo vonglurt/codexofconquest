@@ -231,3 +231,6 @@ Quest_tl_03 resolves entirely through dialogue. Ori does not need to be escorted
 | `plan.md` | §XIX + §XX | Original design directives |
 | `lab-report-void-shaman.md` | §II | `vsShamanKnown` downstream use — §XXI Warden encounter |
 | `lab-report-weimar-scholar-gate.md` | §II.G | `tlLedgerRead` cross-reference via archiveLetterObtained path |
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

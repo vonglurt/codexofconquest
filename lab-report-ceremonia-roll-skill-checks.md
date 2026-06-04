@@ -532,3 +532,6 @@ quest_ceremonia_yael_05: {
 ---
 
 *Lab report complete. Implementation may begin at P1.*
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

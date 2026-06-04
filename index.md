@@ -409,3 +409,6 @@ This rule applies to `api-data-audit.md`, `plan.md §TTS`, and all session loops
 *Last updated: 2026-06-04*
 *Codebase: `roll2hit-v3.html` · ~21,300 lines · Layers 0–104 complete · 305 nodes · 392 monsters · 960 quests*
 *MIT License — roll2hit.com — Copyright (c) 2026 — Free to use, modify, and share.*
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

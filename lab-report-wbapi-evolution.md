@@ -749,3 +749,6 @@ The game is always in a state where it can be opened in a browser and played. Th
 
 **Filed:** 2026-05-29  
 **Cross-references:** `plan.md §I` (Directive / API-First Policy) · `plan.md §WBAPI-01` · `wbapi-server.js` · `wbapi-core.js` · `wbapi-toggle.sh` · `worldbuilder.html` · `lab-report-meta-process-loop-expansion.md`
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

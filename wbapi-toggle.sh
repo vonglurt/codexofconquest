@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com
+# MIT License — Copyright (c) 2026 Paul Richeson
 # wbapi-toggle.sh — manage wbapi-server.js
 #
 # Usage: ./wbapi-toggle.sh [start|stop|restart|status|fg]

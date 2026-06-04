@@ -1021,3 +1021,6 @@ This is one of the most explicit meal scenes in Acts — the language ("took bre
 **Routes:** Paul's journeys largely follow Roman road infrastructure (Via Sebaste in Asia Minor, Via Egnatia in Macedonia, Via Appia into Rome) and established sailing routes (Alexandria→Puteoli grain run, coastal hopping). He moves with and against these systems — sometimes using them, sometimes avoiding main routes for safety.
 
 **The 276:** The full ship's manifest surviving the Malta wreck is the only precise crowd count in Acts (other than the vague "three thousand" at Pentecost). It suggests Luke was counting carefully and had access to the ship's records.
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

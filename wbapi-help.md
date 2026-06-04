@@ -268,3 +268,6 @@ WBAPI.syncWorld('./world')
 export ROLL2HIT_FILE=/path/to/roll2hit-v3.html
 node wbapi-cli.js list nodes
 ```
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

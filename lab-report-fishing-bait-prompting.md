@@ -490,3 +490,6 @@ At Level 1, the player begins fishing with Luck Mod +1. Every ASI that improves 
 *End of report.*
 
 **MIT License — roll2hit.com — Copyright (c) 2026 — Free to use, modify, and share.**
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

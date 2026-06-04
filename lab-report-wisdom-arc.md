@@ -449,3 +449,6 @@ JS syntax validation after each edit block
 **Total new quests if implemented:** 8. Running total: ~159 live.  
 **Total new items if implemented:** 3 (Pages, Shadow Shard, Complete Laws)  
 **Total new NPCs:** 2 (Silas Vance, Master Fenn Ardley — deceased)
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

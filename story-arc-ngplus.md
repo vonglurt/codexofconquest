@@ -236,3 +236,6 @@ A player who reached NG+ without finding Quest -1's door is not asked to write E
 | `lab-report-void-archaeology.md` | §II.B | `entry42Written` as required gate for `vaArchitectureKnown` |
 | `lab-report-quest-minus-one-world-creator.md` | §II.C | `priorQuestMinusOne` origin — Quest -1 cross-reference |
 | `lab-report-endings-and-echoes.md` | §NG+ | `storyNewGamePlus()` base preservation fields |
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

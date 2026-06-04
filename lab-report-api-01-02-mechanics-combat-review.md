@@ -266,3 +266,6 @@ _rollD100Loot()
 | `mechanics-economy.md` | §Story Mode | Vendor, save system, items |
 | `mechanics-economy.md` | §F4 Function Reference | Economy + pre-battle functions |
 | `combat.md` | F6 scope | `doPlayerAttack()`, `offhandRoll()`, `oppRoll()`, `newCombat()` — F6 scope |
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

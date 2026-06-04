@@ -739,3 +739,6 @@ Precise hunting completes quest kills in 2h vs 4–6h of random encounters. Surp
 ---
 
 *© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

@@ -239,3 +239,6 @@ The `// → doc:` annotation system is now fully deployed. The forward maintenan
 | FC items completed | 8 (FC01–FC08) |
 | HTML lines at close | 17,762 |
 | Implemented layers at close | 0–77 (§I–§XLII) |
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

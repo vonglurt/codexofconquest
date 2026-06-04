@@ -188,3 +188,6 @@ Adding a world node to support one merchant appearance is a high-cost decision f
 ---
 
 *Layer 61, §XXVI — Corelli the Wandering Merchant. roll2hit-v3.html. 2026-05-25.*
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

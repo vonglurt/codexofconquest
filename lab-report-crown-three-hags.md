@@ -1211,3 +1211,6 @@ leviathanDefeated: false,        // HCA arc boss defeated; conversion can procee
 
 **Amendment A Filed:** 2026-05-28  
 **Status:** ✅ Implemented 2026-05-28 — commit c0c952b
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

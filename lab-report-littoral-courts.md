@@ -225,3 +225,6 @@ The arc completion is a commission stamp, not an adventure. LCA is a terminal re
 | world.md sync | ⚠️ PENDING — increment 5 |
 | quest.md sync | ⚠️ PENDING — increment 2 |
 | index.md sync | ⚠️ PENDING — increment 6 |
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

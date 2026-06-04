@@ -123,3 +123,6 @@ The console-completion path (`S_story.questMinusOne = true`) is the correct impl
 | `roll2hit-v3.html` | Line 14261 | `quest_ng_02` activation on `priorQuestMinusOne` |
 | `plan.md` | §XIV | Full World Creator Wizard spec |
 | `lab-report-ng-plus-remembrance.md` | — | Layer 50 post-mortem — Entry 42 and quest_ng_02 cross-reference |
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

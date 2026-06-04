@@ -223,3 +223,6 @@ The Benedikt callback fires only on `vsShamanPersuaded`. A player who fought the
 | `lab-report-tilbury-visby-arcs.md` | §II.C | `vsShamanKnown` origin — §XX prerequisite |
 | `lab-report-void-archaeology.md` | §II.E | `vaLastWardVisited` origin — §XVII prerequisite |
 | `lab-report-weimar-scholar-gate.md` | §II.D | Constructor's Log — §XVI archive source |
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

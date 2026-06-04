@@ -294,3 +294,6 @@ The ten instances documented here show that this project has consistently follow
 
 **Filed:** 2026-05-26  
 **Cross-references:** `plan.md §I` (Directive) · `plan.md §0` (Dashboard) · `plan.md §DESIGN-03-G` · `plan.md §DUNGEON-01-G` · `plan.md §DUNGEON-02` · `quest.md`
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

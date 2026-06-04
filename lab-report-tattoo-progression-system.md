@@ -603,3 +603,6 @@ All systems are passive collection only — no new game mechanics are surfaced. 
 ---
 
 *Report prepared for internal design documentation of roll2hit.com. Not submitted to any external publication venue. IEEE formatting applied for structural clarity.*
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

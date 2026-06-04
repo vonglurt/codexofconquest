@@ -356,3 +356,6 @@ This is not a puzzle. There is no quest to remove it. The answer has already bee
 **Filed:** 2026-05-27  
 **Source material:** `lab-report-saul-paul-travel-reference.md`  
 **Plan reference:** `plan.md §FUTURE-01`
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

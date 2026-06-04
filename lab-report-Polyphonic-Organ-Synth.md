@@ -568,3 +568,6 @@ A "Randomize" button calls `genMotif(Date.now() & 0xFFFF, 8)` to generate a new 
 ---
 
 *© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

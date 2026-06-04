@@ -204,3 +204,6 @@ Benedikt's Annotated Copy provides `+1 atk` only while at least one quest is act
 | `roll2hit-v3.html` | Lines 14325–14373 | Quest activation chain and reading circle logic at SQ |
 | `plan.md` | §XVI | Original design directive |
 | `lab-report-ng-plus-remembrance.md` | §II.B | `wmFirstResearcherKnown` cross-reference — Entry 42 prerequisite |
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

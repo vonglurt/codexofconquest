@@ -323,3 +323,6 @@ Make it for them.
 ---
 
 MIT License — roll2hit.com — Copyright (c) 2026 — Free to use, modify, and share.
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

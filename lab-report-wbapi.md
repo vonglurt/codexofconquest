@@ -402,3 +402,6 @@ The **⚙ API** tab exposes the same operations in the UI:
 | `NODE_COORDS` brace count off by 1 | `/* Paul's Journeys */` apostrophe treated as JS string delimiter | Added `//` and `/* */` skip branches to `extractObj` before string/brace logic |
 | `location.get` returned `terrain:null` | Used `node.terrain` (undefined) — node's terrain key is stored in `node.name` | Changed to `node.name` for WORLD_DB lookup |
 | GET by display name failed for nodes | `_findKey` searched `name`+`title` only — nodes use `label` for display | Added `label` to the search order: `label → name → title` |
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

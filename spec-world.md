@@ -934,3 +934,6 @@ Until that migration, all Phase 3 code remains in one file. No module syntax, no
 ---
 
 *MIT License — Copyright (c) 2026 roll2hit.com*
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

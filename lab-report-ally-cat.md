@@ -234,3 +234,6 @@ cat_quarter: { displayName:"The Cat Quarter" }
 - **`alley` terrain** — adding 7 new cats to the existing `alley` terrain widens random encounter pool for all alley nodes (not just CQ). Acceptable per spec (alley encounters are intended to include cat types), but note the pool expansion.
 - **`fluffy_cat` double entry** in `cat_quarter` monsters array is intentional (higher spawn weight).
 - **NPC_DIALOGUES `jimmy` key** — confirm no collision with existing NPC keys named `jimmy` or `Jimmy`.
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

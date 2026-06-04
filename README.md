@@ -132,4 +132,4 @@ The game saves automatically to `localStorage` after every meaningful action. To
 
 
 ---
-*© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

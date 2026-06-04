@@ -442,3 +442,6 @@
 
 **Q71.R — Return**
 > Mordus reads Kazrath's journal for a long time. "He was writing to someone in Birka. Someone in a position of authority. When I've thought about it, I'll find you." He pays. "The extra 100gp is for the journal. That's worth money in my line of work."
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

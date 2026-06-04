@@ -2910,3 +2910,6 @@ LJ0(entry) → LC1(court) → LJ1(battle) → LC2(court) → LJ2(battle) → LC3
 **Overseer design:** WIS DC 15 (matches Succubus/Incubus charm save DC). Not a battle — dialogue in the fog. Pass = name the structure aloud, go to fourth court anyway. Fail = accept the "helpful offer" (one specific framing at Port Solen). The offer is transparent; the difficulty is not deception but the knight's willingness to accept assistance from something that has been instrumentalizing them.
 
 **State flags:** `aurelTideRead`, `betrayalThought`, `caliceBridgeCrossed`, `betrayalWord`, `mireilleAmiNamed`, `betrayalDeed`, `solenSoonRead`, `littorialComplete`, `seaOverseerMet`, `charmResisted` — all in `S_story` defaults, `§SIREN-01` comment block.
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

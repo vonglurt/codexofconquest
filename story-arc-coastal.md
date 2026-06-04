@@ -298,3 +298,6 @@ The Harrow Manifest's `wmFirstResearcherKnown` gate creates a direct connection 
 | `lab-report-tilbury-visby-arcs.md` | All | §XIX + §XX full implementation record |
 | `lab-report-void-shaman.md` | §II | `vsShamanKnown` downstream use — §XXI Warden encounter |
 | `lab-report-weimar-scholar-gate.md` | §II.G | `tlLedgerRead` cross-reference; archiveLetterObtained path |
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

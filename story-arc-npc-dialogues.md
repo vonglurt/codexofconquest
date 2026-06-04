@@ -247,3 +247,6 @@ At **Dear Friend+** (level 3), joint NPC moments unlock:
 2. "The Scholar Kings built infrastructure that outlasted them by three centuries. They didn't document the maintenance because they planned to be around to do it. That's the problem with making things that last — you have to also plan for not being there."
 3. "I've been here three years. In that time I've filed fourteen reports and received twelve 'Noted' stamps and two genuine responses." She looks at the terminal. "You're the third genuine response."
 4. "The relay will hold now. Not indefinitely — nothing holds indefinitely. But long enough. That's all infrastructure ever does: hold long enough for the next person to figure out the rest."
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

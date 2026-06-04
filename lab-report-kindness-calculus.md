@@ -531,3 +531,6 @@ The math checks out.
 **Revised:** 2026-05-28 (same day; the authors work quickly when the bioluminescence is flowing)  
 **Accepted:** 2026-05-28  
 **DOI:** 10.1109/TINAS.2026.0001337 *(the authors chose this DOI deliberately; see Section III-C for context)*
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

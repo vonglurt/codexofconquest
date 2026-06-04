@@ -572,3 +572,6 @@ After full migration:
 *§ARCH-01 — Quest API Architecture & Universal Mission Format*  
 *Author: World Builder — roll2hit.com*  
 *Status: Pre-Implementation Design — awaiting Phase 1 kickoff*
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

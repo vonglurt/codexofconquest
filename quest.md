@@ -548,3 +548,6 @@ MINE (*À moi*). She corrects it again. The correction is the same each time. CH
 4. The battle is Act III. Always.
 5. Act V is always the story-driving Ceremonia Roll.
 6. The object must arrive changed by Act V.
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

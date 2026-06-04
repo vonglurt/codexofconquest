@@ -280,3 +280,6 @@ Nodes where two or more named arcs cross. These are the most structurally loaded
 | `story-arc-coastal.md` | §XIX Tilbury Harbor · §XX Visby Underground | `lab-report-tilbury-visby-arcs.md` |
 | `story-arc-ngplus.md` | §XV NG+ Remembrance · Entry 42 · quest_ng_01/02/03 | `lab-report-ng-plus-remembrance.md` |
 | `story-flowchart.md` | This file — flowchart + arc overlays + intersection points | — |
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

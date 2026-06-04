@@ -172,3 +172,6 @@ No nodes, monsters, or items were added. The single-file architecture was not st
 ---
 
 *IEEE Post-Mortem Format. roll2hit-v3.html companion arc series. Layers 70, 72, 74. 2026-05-25.*
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

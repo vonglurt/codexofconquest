@@ -737,3 +737,6 @@ The jester sits back down. The coin resumes its arc. He never asked you to come 
 **Filed:** 2026-05-29  
 **Cross-references:** `plan.md §1367` · `plan.md §1367-F` · `lab-report-wbapi-evolution.md` · `quest.md`  
 **Gate answered:** All 8 clarification questions resolved in `plan.md §1367-D`. Integration in progress.
+
+---
+*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
