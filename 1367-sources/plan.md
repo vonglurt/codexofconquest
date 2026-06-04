@@ -271,7 +271,7 @@ Next books to process (in approximate priority order):
 |------|-------|----|--------|
 | IST | Alexiad (Anna Komnene) | 165 | **SEEDS COMPLETE 2026-06-02 — IST-01–07 all vignettes done. Memory-processed (no txt file). See §IST above.** |
 | NWI | Anabasis (Xenophon) | 545 | **SEEDS COMPLETE 2026-06-02 — NWI-01–08 all vignettes done** |
-| WAW | Quo Vadis (Sienkiewicz) | 1201 | **SEEDS COMPLETE 2026-06-02 — WAW-01–08 all vignettes done** |
+| WAW | Quo Vadis (Sienkiewicz) | 1201 | **IMPORTED — 2026-06-04 — SAU/VFM/ANT new nodes; WAW_001–WAW-07 (8 cycles, 40 acts); questComplete on WAW-03 (cycle 8)** |
 | MLA | Plutarch's Lives | 4222 | **SEEDS COMPLETE 2026-06-03 — MLA-01–07 done (7 cycles). questComplete added to MLA-05. New nodes LMO/THA/ROM added. Theme threads for all 7 cycles.** |
 | BGW | Arabian Nights (Burton) | 983 | **SEEDS COMPLETE 2026-06-02 — BGW-01–08 all vignettes done** |
 | CAI | Arabian Nights (Lang) | 629 | **SEEDS COMPLETE 2026-06-02 — CAI-01–08 all vignettes done** |

@@ -44,6 +44,9 @@ Two-tier naming rule: cities = 3-letter IATA or city-derived code; specific loca
 | SIB | Sibiu | Transylvania (Saxon administrative capital) | SIB derived (Hermannstadt/Sibiu) | 141,223 | CLJ | CLJ-02/04/05/07 waypoint city; archdeacon court; apothecary; shorthand documents |
 | BDA | Buda | Hungary (royal capital and registry) | BDA derived from city name (Buda, before Budapest unification) | 138,217 | CLJ | CLJ-03 delivery city; Hungarian royal registry; Péter's enrollment desk |
 | BOR | Borgo Pass | Carpathian Mountains (Transylvania–Moldavia route) | BOR derived from Borgo Pass location | 135,225 | CLJ | CLJ-06/07 waypoint; mountain pass inn; Brother Corneliu's earth box custody; Florescu's commission |
+| SAU | Sant'Urbano alla Caffarella | Latium, Italy (Appian Way south of Rome) | SAU derived from church name | 165,213 | WAW | WAW_001 commission node; Appian Way monastery; Brother Rinaldo's secondary archive; Banquet Letter custody |
+| VFM | Via Flaminia Apennine Section | Apennine Mountains (Rome–Bologna mountain road) | VFM derived from Via Flaminia | 148,210 | WAW | WAW_001 transit node; Apennine pass; brigand encounter on narrow mountain road |
+| ANT | Antioch | Syria (Ottoman/late Byzantine frontier) | ANT derived from city name (Antakya) | 165,238 | WAW | WAW-06 commission node; Syrian monastery above the city; Brother Athanasius; Antioch Community Record Fragment custody |
 
 ---
 
