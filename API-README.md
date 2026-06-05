@@ -27,7 +27,7 @@ brew install node        # Node.js via Homebrew on macOS
 ./wbapi-toggle.sh restart         # stop + start
 ```
 
-The server writes all output to `wbapi-server.log`. The restart loop is active: `POST /api/restart` causes the server to exit with code 67, which the toggle script catches and relaunches.
+The server writes all output to `milepoints/wbapi-server.log`. The restart loop is active: `POST /api/restart` causes the server to exit with code 67, which the toggle script catches and relaunches.
 
 Once running:
 ```
@@ -35,7 +35,7 @@ Once running:
   WBAPI Server  —  http://localhost:1367/api
 ════════════════════════════════════════════════════════════════
   Game file: roll2hit-v3.html
-  Log file:  wbapi-server.log
+  Log file:  milepoints/wbapi-server.log
 ```
 
 ### Connect the browser UI
@@ -80,7 +80,7 @@ See: `GET /api/help/nonce` for extended explanation.
 
 ## Verbose Logging
 
-Two log streams: terminal and `wbapi-server.log`.
+Two log streams: terminal and `milepoints/wbapi-server.log`.
 
 | Tag | Meaning |
 |---|---|
