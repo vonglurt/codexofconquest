@@ -1,6 +1,6 @@
 # SHK — Complete Works of William Shakespeare
 
-**Source:** Parts 1–20 read. Parts 21–28 pending. | **Progress:** Cycles 1–10 complete. Cycle 11 due after Part 22.
+**Source:** Parts 1–22 read. Parts 23–28 pending. | **Progress:** Cycles 1–11 complete. Cycle 12 due after Part 24.
 **Gutenberg:** #100 — Complete Works (Shakespeare)
 **Period:** c.1590–1613 | Drama, Poetry, Sonnets
 **Part 1 contains:** The Sonnets (all 154) + All's Well That Ends Well Act I (begins)
@@ -1978,4 +1978,126 @@ questComplete: true
 
 ```
 SHK | The Restoration Certificate | Cycle 10 | BK/VBY/NUE | Superseded accurate record — loss documented then authenticated return, both states preserved
+```
+
+---
+
+## Part 21 Coverage
+
+*Romeo and Juliet complete + Taming of the Shrew Act I begins*
+
+Part 21 completes Romeo and Juliet: the balcony scene ("What's in a name? That which we call a rose / By any other word would smell as sweet"), secret marriage by Friar Lawrence, Mercutio killed by Tybalt, Romeo kills Tybalt and is banished, Juliet takes the sleeping potion, and Friar Lawrence sends Friar John with a letter to Romeo in Mantua explaining the plan — but Friar John is detained at a plague-quarantine house and the letter never arrives. Romeo hears from his servant that Juliet is dead, buys poison from a poor apothecary, rides to the tomb; he kills Paris and drinks the poison, Juliet wakes to find Romeo dead and kills herself with his dagger; the Prince pronounces judgment — "All are punished" — and the families reconcile over golden statues: "For never was a story of more woe / Than this of Juliet and her Romeo." The mechanism of the tragedy is the undelivered letter: a genuine message, sent in good faith, obstructed by a legitimate plague quarantine, arriving too late to prevent two deaths. The Taming of the Shrew then opens: the Sly induction (a drunken tinker tricked into believing he is a lord), and in Padua Lucentio arrives and falls instantly for Bianca while her fiercer sister Katherine must be married first.
+
+---
+
+## Part 22 Coverage
+
+*Taming of the Shrew complete + The Tempest complete + Timon of Athens begins*
+
+Part 22 completes Taming of the Shrew: Petruchio courts Katherine by matching her wit and aggression ("Say that she rail, why then I'll tell her plain / She sings as sweetly as a nightingale"), marries her chaotically, subjects her to the "taming" at his house — denying her food, sleep, and new clothes on the pretext of care — until she agrees that the sun is the moon and a young man is an old woman; the play ends with the wager scene where Petruchio bets on Katherine's obedience against all other wives and wins, and Katherine delivers her final speech on wifely duty — which reads simultaneously as sincere submission and as the most brilliant performance in the play. The Tempest follows complete: Prospero's island, Ariel and Caliban ("This island's mine, by Sycorax my mother, / Which thou tak'st from me"), the shipwreck, Ferdinand and Miranda's love, the spirit masque, the great speech — "Our revels now are ended... We are such stuff / As dreams are made on; and our little life / Is rounded with a sleep" — and Prospero's surrender of his power: "I'll break my staff, / Bury it certain fathoms in the earth, / And deeper than did ever plummet sound / I'll drown my book" — the only Shakespearean protagonist to choose retirement over continuation. Part 22 then opens Timon of Athens: Timon's extraordinary generosity at his feast, the flatterers who surround him, and the first hints of his financial ruin.
+
+---
+
+## Cycle 11 — The Quarantine Letter
+
+*Parts 21–22 | Plays: Romeo and Juliet + Taming of the Shrew + The Tempest*
+
+*Before beginning: Themes avoided — superseded accurate record (Cycle 10), meaning-bearing vessel (Cycle 9), identical letter sent twice (Cycle 8). This cycle centers on a new mode: the document whose non-arrival was caused not by theft, loss, or incompetence, but by a legitimate public health obstruction — the quarantine hold. The document was genuine, the intent was right, the quarantine was lawful, and the consequences were permanent.*
+
+**Theme this cycle introduces:** *The quarantine letter — a document detained at a plague barrier, creating irrevocable consequences from a temporary and legitimate obstruction of delivery.*
+
+**TOKEN**: A plague-quarantine hold notice — a document issued by a city health officer in 1367 (the year of the Black Death's recurrence in northern Europe) recording that a letter was held for the standard quarantine period because the carrier arrived from an infected area. The detained letter inside is sealed and unread. The hold notice is the only record of what was detained. The original letter was never retrieved and its contents are unknown — but a death, an inheritance dispute, or a failed treaty somewhere may have depended on it.
+
+---
+
+### Act I — Birka
+```yaml
+activateNode: BK
+type: skill_check
+scene: "Egil Thorvaldsen has a quarantine hold notice from a Visby port officer,
+  dated 1367. A letter was held for forty days under plague quarantine. The
+  carrier died during the hold period. The detained letter was never claimed.
+  The hold notice is the only surviving document. Egil does not know what
+  to do with a hold notice whose detained letter no longer exists."
+prompt: "Investigation DC 13. The hold notice is itself a complete record —
+  it documents: date of detention, carrier identity, origin city, plague
+  status of origin, period of hold, and outcome (carrier death, letter
+  unclaimed). Propose: the hold notice is the primary document; the detained
+  letter is the absent referent. Log the hold notice as an archival record
+  of a document's non-arrival."
+failText: "He cannot file a record of absence — the archive holds documents,
+  not the absence of documents. Propose instead: the hold notice records
+  a quarantine event; file it in the public health records with a cross-
+  reference to an unresolved document inquiry."
+successText: "He logs the hold notice as its own document: record of a
+  letter's detention and non-delivery. You receive the Quarantine Hold Notice."
+grantItem: "Quarantine Hold Notice"
+checkPassFlag: holdNoticeSecured
+activateMissionBit: shk11_act1Active
+```
+
+### Act II — Visby
+```yaml
+activateNode: VBY
+type: skill_check
+scene: "Marta at the Visby archive issued this hold notice herself. She
+  remembers the carrier — a Franciscan friar traveling from Mantua — and
+  remembers that the letter was sealed with a physician's wax. She never
+  opened it. She knows it concerned something urgent because the friar
+  was distressed. She wants to know: is the archive responsible for
+  consequences that may have followed from the hold?"
+prompt: "Investigation DC 14. The quarantine hold was lawful — Visby
+  health ordinances of 1349 required forty-day holds on all correspondence
+  from infected areas. The authority was valid, the procedure was correct,
+  the obstruction was temporary and lifting it would have been illegal.
+  Propose: the archive is not responsible for downstream consequences;
+  the hold notice is evidence of due process, not negligence."
+failText: "She says due process does not resolve moral responsibility when
+  consequences are known. Propose instead: the archive records the act,
+  not its consequences. The consequences belong to the history of what
+  was not received; the archive holds only what was."
+successText: "She adds a note to the hold notice: quarantine held per
+  ordinance, consequences unknown and outside archive's scope. You receive
+  Marta's Liability Note."
+grantItem: "Marta's Liability Note"
+checkPassFlag: liabilityNoted
+activateMissionBit: shk11_act2Active
+```
+
+### Act III — Nuremberg
+```yaml
+activateNode: NUE
+type: skill_check
+scene: "Ulrich von Gessert reads the hold notice and Marta's liability note.
+  He says: this is a new category. He has held documents destroyed by fire,
+  lost at sea, suppressed by rulers. But a document held by a lawful authority
+  for a lawful period, then never collected because its carrier died — that
+  is different. He wants the category."
+prompt: "Investigation DC 12. Propose: The Lapsed Detention — a document
+  held under legitimate temporary authority, whose period of detention
+  outlasted the need for it (carrier death, recipient's situation resolved
+  or destroyed), so that the detention became permanent through lapse
+  rather than through any further action."
+failText: "Too procedural. He wants the essential quality: the letter was
+  not suppressed, not lost, not destroyed — it simply stopped being needed
+  while still under lawful hold. Try: The Document of Obsolete Urgency —
+  detained at the moment of its greatest need, released into a world that
+  no longer required it."
+successText: "Stamped. Logged: document of obsolete urgency, detained under
+  lawful quarantine, lapsed into irrelevance through carrier death and
+  resolution of the need it was sent to serve. You receive Ulrich's Eleventh
+  Receipt. Quest complete."
+takeItem: "Quarantine Hold Notice"
+takeItem: "Marta's Liability Note"
+grantItem: "Ulrich's Eleventh Receipt"
+checkPassFlag: quarantineLogged
+questComplete: true
+```
+
+---
+
+## Quest Map Entry — Cycle 11
+
+```
+SHK | The Quarantine Letter | Cycle 11 | BK/VBY/NUE | Document of obsolete urgency — detained under lawful quarantine, lapsed into irrelevance
 ```
