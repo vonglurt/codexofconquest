@@ -9825,4 +9825,86 @@ One additional book (`SHK`) was found in `1367-sources/` with 28 `.txt` parts bu
 
 ---
 
+## §AUDIT-02 — NPC/Quest Connection Gap (📋 INVESTIGATE)
+
+**Logged:** 2026-06-05 — discovered via new `./api.sh audit` validator rules  
+**Status:** 📋 INVESTIGATE — do not fix blindly; understand patterns first
+
+### Finding 1: 985 quests have no `npc` field (ERROR)
+
+Every quest must be anchored to an NPC. The validator now flags this as an ERROR. The scope breaks down as:
+
+**All 21 completed book imports — 35 quests each, 0 NPCs wired:**
+
+| Book arc | Quests missing npc |
+|----------|--------------------|
+| lhr, lcy, lgw, gci, inv, bhd, sdq, plw, gdn, boo | 35 each |
+| alf, ksu, cdg, vie, erf, hft, rkv, ost, arn, vby, rix | 35 each |
+| blq (Decameron — partial) | 20 |
+
+**Legacy arcs (pre-import, never had NPCs):**
+
+| Arc | Count |
+|-----|-------|
+| quest (misc 24 unnamed) | 24 |
+| quest_wis | 8 |
+| mq (main quests) | 7 |
+| quest_alch | 7 |
+| quest_whisper, quest_glut, quest_wane, quest_inn, quest_cat, quest_tour | 6 each |
+
+**Root cause:** The import scripts (`import_*.py`) created quest stubs but never populated `npc`. The NPC role was implicit in the vignette text but not stored as a structured field.
+
+**Investigation questions before fixing:**
+1. Do the book-arc nodes (e.g. `LHR`, `LCY`) already have NPCs registered in BIRKA_NPC who should own these quests?
+2. For arcs with no named NPC, should a new NPC be created per-arc, or should quests reference the inline `node.npc` string?
+3. Can `./api.sh list npc --node {CODE}` for each arc's `activateNode` reveal an already-registered NPC to wire in?
+
+**Suggested fix workflow (when ready):**
+```bash
+# For each book arc, find the node and any existing NPC:
+./api.sh location LHR     # shows NPCs registered at that node
+./api.sh list npc --node LHR
+# If an NPC exists, patch all quests for that arc:
+./api.sh list quest --node LHR --raw | jq '.[].id' | xargs -I{} ./api.sh put quest {} npc=yael
+# Run audit after each arc to confirm errors reduce
+./api.sh audit --raw | jq '.errors | length'
+```
+
+---
+
+### Finding 2: 13 NPCs have no quests (WARNING)
+
+These NPCs exist in BIRKA_NPC with full dialogue entries but give no quests. They have no gameplay function beyond ambient dialogue.
+
+| NPC key | Name | Node | Notes |
+|---------|------|------|-------|
+| `yael` | Guard Captain Yael Scheidemann | LHR | Core Birka — has NPC_DIALOGUES arc; quest arc planned (§CEREMONIA-03?) |
+| `brynn` | Innkeeper Brynn Clerambault | TLL | Core Birka — has NPC_DIALOGUES arc; quest arc planned |
+| `quill` | Bard Tomas Couperin | MHQ | Core Birka — has NPC_DIALOGUES arc; quest arc planned |
+| `pachelbel` | Fence Pachelbel | LLA | Core Birka — has NPC_DIALOGUES; fencing/trade arc unwritten |
+| `crov` | Pit Master Weckmann | HKG | Core Birka — pit combat arena NPC |
+| `auros` | Commander Seraphine Bruhns | HKG | Core Birka — has story arc notes elsewhere |
+| `ser_bardo` | Ser Bardo Albizzi | PSAGLD | Decameron import — created as NPC stub, no quests written yet |
+| `ser_taddeo` | Ser Taddeo Borghini | PISNOT | Decameron import — same |
+| `abramo_simone` | Abramo di Simone | GENWHS | Decameron import — same |
+| `lapo_matteo` | Lapo di Ser Matteo | PSAFAB | Decameron import — same |
+| `kyriakos_philanthropenos` | Kyriakos Philanthropenos | TRB | Book import stub |
+| `georgios_sphrantzes` | Georgios Sphrantzes | CON | Book import stub — Byzantine node |
+| `hamid_al_sarakhsi` | Hamid al-Sarakhsi | MRV | Book import stub |
+
+**Two distinct groups:**
+
+- **Core Birka 6 (yael/brynn/quill/pachelbel/crov/auros):** These are deeply characterised. They have NPC_DIALOGUES, story arcs planned in other §sections, and are waiting for their quest arcs to be written. Do not add placeholder quests. Write the real arcs.
+- **Book-import stubs (ser_bardo etc.):** Created during Decameron/Byzantine imports. The quests exist in QUEST_DB but have no `npc` field pointing back to them (Finding 1). Fix: wire the existing quests → NPC, not create new quests.
+
+**Quick check to run when investigating:**
+```bash
+# See what quests activate at each orphaned NPC's node:
+./api.sh location PSAGLD    # ser_bardo's node — what quests are already there?
+./api.sh location CON        # georgios_sphrantzes — Byzantine node
+./api.sh --ai "which quests at node CON have no NPC, and which NPC at CON should own them?"
+```
+
+---
+
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
