@@ -1,6 +1,6 @@
 # SHK — Complete Works of William Shakespeare
 
-**Source:** Parts 1–4 read. Parts 5–28 pending. | **Progress:** Cycles 1–3 complete.
+**Source:** Parts 1–10 read. Parts 11–28 pending. | **Progress:** Cycles 1–5 complete. Cycle 6 due after Part 12.
 **Gutenberg:** #100 — Complete Works (Shakespeare)
 **Period:** c.1590–1613 | Drama, Poetry, Sonnets
 **Part 1 contains:** The Sonnets (all 154) + All's Well That Ends Well Act I (begins)
@@ -645,6 +645,14 @@ SHK | The Chain That Cannot Be Named | Cycle 2 | ABF/ARF/NUE | Gift given before
 
 ---
 
+### Part 4 Coverage
+
+*Comedy of Errors* concludes: Egeon, condemned to death in Ephesus, is freed when all four separated family members — himself, his wife Emilia (the Abbess), and both sets of twins — converge before the Duke simultaneously, the Abbess revealing herself after thirty-three years. The Dromios close the play: "We came into the world like brother and brother, / And now let's go hand in hand, not one before another." The rest of Part 4 is *Coriolanus* Acts I–IV: Caius Martius earns his name Coriolanus by storming Corioles alone and bleeding, refuses a tenth of the war's spoils, then cannot stand in the Forum in the gown of humility and beg the plebeians' votes without visible contempt — the Tribunes use that contempt to engineer his banishment. He leaves saying "I banish you! There is a world elsewhere" and Part 4 ends as he arrives in disguise at Aufidius's house in Antium, his sworn enemy, offering his throat or his sword.
+
+*Quest seeds from Part 4 (used in Cycle 3):* The murdered man's unread treaty — Coriolanus brought a peace document to Antium that Aufidius prevented from being read before the killing.
+
+---
+
 ### Part 5 Coverage
 
 *Cymbeline (complete) + Hamlet (Acts I–II begin)*
@@ -652,6 +660,14 @@ SHK | The Chain That Cannot Be Named | Cycle 2 | ABF/ARF/NUE | Gift given before
 Cymbeline runs complete: Iachimo bets Posthumus he can seduce Imogen, fails, hides in a trunk in her bedchamber to steal her bracelet and note a mole on her breast as false "proof," and Posthumus orders her death — Pisanio instead gives Imogen men's clothes and she flees to Wales as Fidele, finding there her stolen brothers Guiderius and Arviragus living with the exile Belarius. After battle and revelation Iachimo confesses the trunk deception, the princes are restored as Cymbeline's sons, Posthumus and Imogen are reunited, and Cymbeline agrees to pay Rome tribute despite victory. Hamlet then opens: the ghost has named Claudius as King Hamlet's murderer, Hamlet feigns madness, and Polonius reads Hamlet's private love letter to Ophelia aloud to the court as evidence of love-madness — "Doubt thou the stars are fire, / Doubt that the sun doth move, / Doubt truth to be a liar, / But never doubt I love" — while Rosencrantz and Guildenstern arrive and Hamlet tells them Denmark is a prison.
 
 *Quest seeds: Imogen's Bracelet — the token stolen while its owner slept, used to manufacture a false conviction (Cymbeline). Hamlet's Letter to Ophelia — a private love letter seized by a father and weaponized as court evidence (Hamlet).*
+
+---
+
+### Part 6 Coverage
+
+Part 6 opens mid-Hamlet Act II and runs through Act III: "What a piece of work is man," the players' arrival ("The play's the thing wherein I'll catch the conscience of the king"), then Act III's "To be or not to be," the nunnery scene where Ophelia returns Hamlet's gifts and he denies giving them ("Rich gifts wax poor when givers prove unkind"), and the Mousetrap — Hamlet's instruction to the players to perform a murder scene matching his father's death, while Horatio watches the King's face. *Henry IV Part 1* then opens: Prince Hal at the Boar's Head tavern with Falstaff, the rebels (Hotspur, Glendower, Mortimer, Worcester) meeting to divide England's map, Hotspur arguing over the Trent's course — "I'll have the current in this place dammed up" — and Part 6 ends mid-Act III Scene 1 as Glendower and Hotspur quarrel over who controls the river.
+
+*Quest seeds from Part 6:* The Mousetrap script — the dozen lines Hamlet inserted into "The Murder of Gonzago" to catch a king. Ophelia's returned remembrances — love tokens given back in a scene of deliberate denial. The rebels' map of England — a document dividing a kingdom among men who have not yet won it.
 
 ---
 
@@ -889,6 +905,516 @@ questComplete: true
 
 ```
 SHK | The Unread Treaty | Cycle 3 | ANT/ROM/NUE | Peace made and not enforced, guarantor killed before document was read
+```
+
+*(Append to quest-map.md)*
+
+---
+
+### Part 7 Coverage
+
+*Henry IV Part 1* concludes at Shrewsbury: Hal kills Hotspur, whose final speech admits his honor dies with his name — "But thought's the slave of life, and life time's fool, / And time, that takes survey of all the world, / Must have a stop" — while Falstaff lies dead-playing beside him, then rises to stab the corpse and claim the kill to Hal's face. *Henry IV Part 2* then opens: Rumor as prologue, the dying king who "uneasy lies the head that wears a crown," Prince Hal still carousing with Falstaff in the tavern, and the Lord Chief Justice learning the king has died and fearing the new young king he once sent to prison for striking him. Part 7 ends as Falstaff in Gloucestershire recruits ragged men into the king's army with Justice Shallow, while news of Henry IV's death reaches him and he rides for London certain Prince Hal will make him anything he wants.
+
+*Quest seeds from Part 7:* Falstaff's false claim to Hotspur's kill — the lie that rewrites the battle's record while Hal watches. The crown taken from the sleeping king's pillow by a prince who thinks his father dead. The Lord Chief Justice's warrant for a prince who once struck him.
+
+---
+
+### Part 8 Coverage
+
+*Henry IV Part 2* concludes with the new King Henry V meeting Falstaff at his coronation and saying "I know thee not, old man: fall to thy prayers" — the coldest line in the histories, delivered to the man who rode all night from Gloucestershire certain of preferment. *Henry V* then runs through the Salic law justification for the French war, the Dauphin's tennis-ball insult (Henry: "Tell the Dauphin his jest will savour but of shallow wit, / When thousands weep more than did laugh at it"), and the Cambridge–Scroop–Grey conspiracy, which Henry exposes by handing the three men envelopes they believe contain a pardon — which are in fact their own death warrants, read aloud by each as Henry watches. *Henry VI Part 1* then opens: England mourning Henry V's sudden death, the English lords in France losing ground as Joan of Arc begins her victories, Talbot besieged at Orleans. Part 8 ends at Orleans with Salisbury and Talbot watching from the turrets.
+
+*Quest seeds from Part 8:* The death warrant disguised as a favor — Henry V hands the conspirators their own sentences as if granting them preferment. Falstaff's rejection — the letter sent ahead announcing his arrival, unread by a king who has already decided. Joan of Arc's first appearance before the Dauphin, offering her sword and her body as proof.
+
+---
+
+## Cycle 4 — Angle: The Script That Functions as Accusation
+
+*Cycles 1–3 used: a poem intercepted under social obstruction (Cycle 1); a gift inside a fiction that names a relationship (Cycle 2); a peace treaty outliving its guarantor (Cycle 3). Cycle 4 draws from Hamlet — specifically the Mousetrap: the play-within-a-play that Hamlet commissions and inserts a dozen lines into, staging his father's murder before the murderer. The theme is new: not delivery obstructed, not a gift that cannot be named, not an unacknowledged agreement — but an artistic work that functions as evidence, an accusation staged as entertainment, indictment delivered through performance.*
+
+**Theme this cycle introduces:** *The script as weapon — art commissioned to carry a true charge into a space where direct accusation means death. The performance is the proof. The script is the trap.*
+
+**Themes avoided:** Cycles 1–3. "Grief carried in an object" (existing). "The carrier becomes the hunted" (existing — this is about the document, not the carrier's danger).
+
+---
+
+## 5-Act Vignette Play — Cycle 4
+
+**Title:** *The Dozen Lines*
+**TOKEN:** *The inserted speech* — twelve to sixteen lines that Hamlet wrote on a folio sheet and gave to the First Player, to be inserted into "The Murder of Gonzago" at the point where the poisoner pours venom in the sleeping king's ear. These lines are not in the original play. They are exact. They name a method. If the King recognizes his own act in the performance, his face will confirm what the ghost told Hamlet. If the speech is read by Claudius's agents before the performance, Hamlet's entire strategy dies in the discovery. The Fighter is carrying the folio sheet from Hamlet's rooms to the players' tiring house, through a court where Polonius and Rosencrantz are asking questions.
+
+**New node:** ELS — Elsinore Castle, Scandinavian coast, terrain: stone fortress. Cold, watched, every corridor known to the court. The players perform in the great hall.
+
+---
+
+*The Thing · its current state · who holds it · where the scene takes place.*
+
+**ACT I**
+*The Speech · freshly written, ink not entirely dry · in Hamlet's hand → the Fighter's · the corridor outside Hamlet's chambers, Elsinore, late afternoon*
+
+Hamlet gives you the folded sheet with no explanation beyond: *get this to the First Player before the evening's rehearsal, and do not let Polonius or Rosencrantz see what you are carrying.* He is not secretive about the errand — he is conspicuous about it in the way of someone who wants you to be unremarkable. The corridor outside his chambers is watched. Rosencrantz is somewhere on this floor. You are holding a folio sheet whose ink you can still smell.
+
+*The Fighter's internal reaction: He wrote it in a hurry. The ink is not quite dry. Whatever this says, it was urgent to him.*
+
+**SCENE**
+The corridor outside Hamlet's chambers. Stone floor, one tapestry moved aside for a cleaning that never finished, two servants who work for someone other than Hamlet. The tiring house where the players are preparing is at the far end of the east wing — forty feet of corridor, a staircase, and a gallery that Rosencrantz uses to watch who visits the players' rooms. The folio sheet is in your coat. You need to reach the First Player before the evening's rehearsal call.
+
+**PROMPT:** Stealth DC 12. Move through the corridor and down to the tiring house without Rosencrantz seeing you approach. If he sees you heading toward the players, he will ask what you are carrying for them — and he reports to the King.
+
+**FAIL TEXT:** Rosencrantz steps out of the gallery alcove directly into your path. He asks, with the pleasant tone of someone who is always listening, whether you have business with the players. You say: a personal matter for a friend. He nods with the expression of someone who will mention this to someone. You arrive at the tiring house with him watching. Try again: slip the sheet to the First Player's boy at the tiring house door before Rosencrantz can see the exchange.
+
+**SUCCESS TEXT:** You reach the tiring house without being seen. The First Player is reviewing his part. You give him the folded sheet. He reads it once. His expression does not change — a professional's face — but he folds it carefully and sets it beside his manuscript. He says: *when in the play?* You tell him: act three, the poisoning. He nods. You receive *The Player's Receipt* — a torn corner of an old script the First Player presses into your hand as acknowledgment. He does not want a written confirmation; the receipt is habit.
+
+**grantItem:** Player's Receipt
+**checkPassFlag:** speechDelivered
+
+---
+
+**ACT II**
+*The Speech · in the First Player's manuscript · Elsinore tiring house · under inspection*
+
+Polonius has come to the tiring house. He does this before every performance — he considers it his function to review what the players intend to say. He is looking at the First Player's manuscript. He has not found the inserted folio sheet yet because the First Player slid it between two pages of an older play when Polonius walked in. But he is thorough.
+
+*The Fighter's internal reaction: If he finds the sheet, he reads it. If he reads it, the King sees it tonight. The play happens without its trap.*
+
+**SCENE**
+The tiring house is full of preparations — costumes, props, a boy practicing a monologue in the corner. Polonius stands at the First Player's table with the comfortable authority of someone who has always been allowed to stand there. The First Player is beside him, patient and cooperative. Between the pages of the manuscript, two centimeters of the folio sheet's edge is visible if you know what to look for. Polonius does not know what to look for — but he is turning pages methodically.
+
+**PROMPT:** Sleight of Hand DC 13. Create a distraction that makes Polonius turn away from the manuscript long enough for the First Player to close the pages over the inserted sheet — without implicating yourself as the distraction's source.
+
+**FAIL TEXT:** Polonius does not turn. He reaches the page where the sheet is visible. His finger stops. He pulls it out. He reads the first line. He does not recognize it as novel — old lord, he has seen many scripts. He puts it back in a different position. The First Player's face does not change. Try again: you need a more physical distraction — something drops in the corridor, a player knocks over a costume rack.
+
+**SUCCESS TEXT:** A costume rack at the room's edge goes over — a player catching your eye has understood what was needed. Polonius turns. The First Player's hands move and the sheet disappears into the manuscript's middle. Polonius turns back. He finishes the inspection. He tells the First Player the play should not run past the King's attention. He leaves. You receive *The Closed Manuscript* — not a physical object, but the clear sense that the speech is secured and will be performed exactly as written.
+
+**grantItem:** The Closed Manuscript
+**checkPassFlag:** poloniusDeflected
+
+---
+
+**ACT III**
+*The Speech · memorized, the sheet destroyed at the First Player's discretion · in the First Player's mind · the gallery before the great hall*
+
+The First Player has burned the sheet. Memorized it first, then burned it — safer that way. He tells you this before the performance begins. He is now carrying the speech only in his head. If he breaks down during the performance, if the King's response rattles him into skipping the insertion, the speech never happens. The First Player is professional and calm. He also knows, because players always know, exactly whose face he is supposed to be watching for.
+
+*The Fighter's internal reaction: The trap is in a man's memory now. That is the most fragile place anything can be.*
+
+**SCENE**
+The gallery before the great hall. Twenty minutes to performance. The court is assembling inside — you can hear the chairs, the murmur, the King's laugh from somewhere. The First Player stands in the gallery doorway in costume, reviewing his part. His lips move slightly. He has the inserted speech memorized; he can deliver it in sequence without breaking the performance's flow. The problem: Guildenstern has appeared in the gallery and is speaking to the First Player in the tone of someone delivering an instruction from above.
+
+**PROMPT:** Persuasion DC 14. Reach the First Player before Guildenstern finishes speaking. Interrupt the conversation naturally — you have a prop the First Player needs for Act II. Separate the First Player from Guildenstern for the sixty seconds it takes to confirm the insertion is still in the performance.
+
+**FAIL TEXT:** Guildenstern has already delivered his message. The First Player's face has changed very slightly — not fear, but the calculation of a professional assessing what he has just been told to omit. He tells you quietly: they asked him to cut the third act's court scene. You tell him: do not cut it. He asks if you know what you are asking him to risk. Try again: tell him what the scene is for — that it is the only evidence a prince has.
+
+**SUCCESS TEXT:** You arrive in time to interrupt. The prop you produce is sufficiently necessary that Guildenstern accepts the break. You confirm the insertion with the First Player in thirty seconds. He says only: *it will play.* You receive *The Player's Nod* — nothing written, but the certainty that the speech will be performed. Guildenstern watches you leave the gallery. His face is careful.
+
+**grantItem:** The Player's Nod
+**checkPassFlag:** performanceSecured
+
+---
+
+**ACT IV**
+*The Speech · performed · the King's face · the great hall, Elsinore, during the performance*
+
+It is playing. You are watching the King's face from a position near the door. Hamlet is watching too, from somewhere in the room. Horatio is watching too. The King has been watching with royal attention — controlled, pleasant, the face of a man accustomed to being observed. Then the Player-King sleeps in his garden. The poisoner enters with the vial. He pours. The Player-King's nephew pours the venom in his ear. The King rises. He calls for lights. He is leaving.
+
+*The Fighter's internal reaction: He recognized it. The speech worked. Everything that follows belongs to Hamlet. Your part is the record.*
+
+**SCENE**
+The great hall, mid-performance. The abrupt exit has broken the court into confusion — chairs, voices, torches called for. Hamlet is laughing. Horatio is steady. Polonius is calling for lights with the authority of someone who needs the event to be over. In the chaos, the First Player stands at the edge of the playing space with the particular stillness of a professional who has just completed a very dangerous piece of work and knows it. He looks at you. You need to be gone before the confusion resolves into questioning about who arranged the play.
+
+**PROMPT:** Athletics DC 12. Move through the breaking crowd — chairs, startled courtiers, servants with torches — to reach the tiring house before Polonius begins organizing who was where during the performance.
+
+**FAIL TEXT:** Polonius catches your arm. He asks where you have been during the performance. You say: watching from the gallery. He says: which gallery? He is counting the audience, reconstructing the room. You are in the count. Try again when a servant passes between you with a torch — step with the servant.
+
+**SUCCESS TEXT:** You reach the tiring house through the servant's corridor before Polonius has finished calling for lights. The First Player arrives a minute after. He changes quickly. He says nothing about what happened. You give him the Player's Receipt back — he looks at it, nods, burns it in the tiring house candle. You receive *The Burning Receipt* — the act of its destruction, the last material trace of the inserted speech removed from the room.
+
+**grantItem:** The Burning Receipt
+**checkPassFlag:** evidenceCleared
+
+---
+
+**ACT V**
+*The Speech · no longer in any document · in two men's memories · the NUE archive, Nuremberg, weeks later*
+
+The court at Elsinore has become ungovernable. You have left. You carry only what you remember: the twelve lines, which you memorized when Hamlet gave you the sheet because you needed to know what you were carrying. Ulrich von Gessert at the Nuremberg archive — secondary acquisitions — has been collecting records of performances used as testimony, artistic work deployed as evidence. He has heard, through channels, that a court performance in the north produced an abrupt royal exit. He does not know what was performed. He is interested in the mechanism.
+
+*The Fighter's internal reaction: The speech exists now only in three memories: Hamlet, the First Player, and mine. The archive can receive the account. It cannot receive the proof.*
+
+**SCENE**
+Nuremberg. The intake room. Ulrich has a fresh piece of paper and a pen. He asks you to describe: the nature of the work, its commission, its insertion, its performance, and the response it produced. He wants to log it under a new category he has been building — *Performative Documents: Works Deployed as Evidence.* He says: I do not need the text. I need the account of what the text did.
+
+**PROMPT:** Investigation DC 12. Describe the Mousetrap accurately — commission, insertion, delivery, performance, the royal exit — without naming the prince, the king, or the court. Give Ulrich the mechanism: a work of art commissioned to carry a specific factual charge into a specific space where direct accusation was fatal, performed once, material destroyed afterward. The category is the record.
+
+**FAIL TEXT:** He asks for the name of the court. You decline. He says he cannot log an unlocated event. You tell him: the location can be anonymized — what matters for his category is the mechanism, not the address. He considers this. He accepts. Try again with the full description.
+
+**SUCCESS TEXT:** He writes. He reads it back: *An original speech commissioned by an interested party and inserted into an existing dramatic work without the knowledge of the work's owner; performed before the accused party; produced a non-verbal confession (flight from the performance); text destroyed at commission's end; one witness account survives. Category: Performative Documents — Art as Testimony, Single-Instance Evidence.* He stamps it. You receive *Ulrich's Third Receipt*. The quest is complete.
+
+**takeItem:** Player's Receipt *(already burned at Elsinore)*
+**grantItem:** Ulrich's Third Receipt
+**checkPassFlag:** mechanismLogged
+**missionSuccessBit:** shk_cycle4Complete
+
+---
+
+## Quest API Stub — Cycle 4
+
+```
+Act I — The Corridor
+activateNode: ELS
+type: skill_check
+missionAccept: "Hamlet has written twelve lines to be inserted into a
+  court performance — the exact method of his father's murder, staged
+  before the murderer. He needs the speech delivered to the First Player
+  before the rehearsal call, without Polonius or Rosencrantz seeing what
+  you carry."
+scene: "The corridor outside Hamlet's chambers. The tiring house is at
+  the far end — forty feet, a staircase, a gallery Rosencrantz uses to
+  watch who visits the players. The folio sheet is in your coat. The ink
+  is not entirely dry."
+prompt: "Stealth DC 12. Reach the tiring house without Rosencrantz seeing
+  you approach the players."
+failText: "Rosencrantz steps into your path and asks what you carry for
+  the players. Try again: slip the sheet to the First Player's boy at the
+  tiring house door before Rosencrantz sees the exchange."
+successText: "You reach the tiring house unseen. The First Player reads
+  the sheet once, folds it carefully. You receive the Player's Receipt."
+grantItem: "Player's Receipt"
+checkPassFlag: speechDelivered
+activateMissionBit: shk4_act1Active
+
+Act II — The Tiring House
+activateNode: ELS
+type: skill_check
+scene: "Polonius reviews the manuscript before every performance. He is
+  turning pages methodically. Two centimeters of the folio sheet's edge
+  are visible if you know what to look for. He is getting close."
+prompt: "Sleight of Hand DC 13. Create a distraction that makes Polonius
+  turn away long enough for the First Player to close the pages over the
+  inserted sheet."
+failText: "Polonius does not turn. His finger stops on the sheet's edge.
+  Try a more physical distraction — something drops in the corridor."
+successText: "A costume rack goes over. Polonius turns. The First Player's
+  hands move. The sheet disappears. Polonius finishes the inspection and
+  leaves. You receive The Closed Manuscript."
+grantItem: "The Closed Manuscript"
+checkPassFlag: poloniusDeflected
+activateMissionBit: shk4_act2Active
+
+Act III — The Gallery
+activateNode: ELS
+type: skill_check
+scene: "Twenty minutes to performance. The First Player reviews his part
+  in the gallery doorway. Guildenstern is speaking to him with the tone
+  of someone delivering an instruction from above — the third act's court
+  scene may have been cut."
+prompt: "Persuasion DC 14. Interrupt with a prop the First Player needs.
+  Separate him from Guildenstern for sixty seconds to confirm the
+  insertion survives."
+failText: "Guildenstern has already delivered the message. The First Player
+  has been asked to cut the third act. Tell him: this is the only evidence
+  a prince has."
+successText: "You interrupt in time. The First Player: it will play. You
+  receive The Player's Nod."
+grantItem: "The Player's Nod"
+checkPassFlag: performanceSecured
+activateMissionBit: shk4_act3Active
+
+Act IV — The Great Hall
+activateNode: ELS
+type: skill_check
+scene: "Mid-performance. The Player-King sleeps. The poisoner pours the
+  venom. The King rises and calls for lights. He is leaving. The hall
+  breaks into confusion. Polonius is counting the audience."
+prompt: "Athletics DC 12. Move through the breaking crowd to the tiring
+  house before Polonius organizes who was where during the performance."
+failText: "Polonius catches your arm. He asks which gallery you were in.
+  Step with a servant carrying a torch."
+successText: "You reach the tiring house through the servant's corridor.
+  The First Player burns the Player's Receipt. You receive The Burning
+  Receipt — the last material trace of the inserted speech removed."
+grantItem: "The Burning Receipt"
+checkPassFlag: evidenceCleared
+activateMissionBit: shk4_act4Active
+
+Act V — Nuremberg Archive
+activateNode: NUE
+type: skill_check
+scene: "Ulrich von Gessert, secondary acquisitions. He is building a
+  category: Performative Documents — Art Deployed as Evidence. He wants
+  the account of what the text did, not the text itself."
+prompt: "Investigation DC 12. Describe the mechanism — commission,
+  insertion, performance, royal exit, text destroyed — without naming
+  the prince, king, or court."
+failText: "He asks for the court's name. You decline. Convince him the
+  mechanism matters more than the address."
+successText: "Category logged: Art as Testimony, Single-Instance Evidence.
+  You receive Ulrich's Third Receipt. Quest complete."
+grantItem: "Ulrich's Third Receipt"
+checkPassFlag: mechanismLogged
+questComplete: true
+```
+
+---
+
+## Quest Map Entry — Cycle 4
+
+```
+SHK | The Dozen Lines | Cycle 4 | ELS/NUE | Art commissioned as accusation, staged before the accused, text destroyed
+```
+
+*(Append to quest-map.md)*
+
+---
+
+### Part 9 Coverage
+
+*Henry VI Part 1* runs through the young King Henry VI's inability to hold the peace between Gloucester and Winchester; the Temple Garden scene where the lords pluck red and white roses as allegiance symbols, founding the gesture of the Wars of the Roses; Joan of Arc's campaign and her capture; Talbot's death at the French siege, falling across his son's body. *Henry VI Part 2* then opens: Margaret arrives from France as Henry's queen, having been secretly courted by Suffolk, who loves her; Suffolk is later banished for the murder of the good Duke Humphrey of Gloucester; the Jack Cade rebellion erupts in London with Cade demanding the kingdom and executing learned men. Part 9 ends with Suffolk's parting from Margaret — he is going into exile; she begs him to curse their enemies; his curse-speech is the most elaborate in the play.
+
+*Quest seeds from Part 9:* The first red rose plucked in the Temple Garden — a flower that started a war. Suffolk's letter to Margaret, written on the ship before his murder.
+
+---
+
+### Part 10 Coverage
+
+*Henry VI Part 2* concludes with Suffolk's head delivered to the queen — she carries it, weeping — and the Cardinal Beaufort's terrified death ("O, beat away the busy meddling fiend / That lays strong siege unto this wretch's soul"). *Henry VI Part 3* then opens with the Wars of the Roses at full pitch: Richard of York claiming the throne, Henry agreeing to disinherit his son to keep the peace, his queen Margaret furious at the capitulation, then battle after battle, the son of York killing a young Lancastrian and immediately being killed himself. Part 10 ends with Richard (later Richard III) in the Tower with the imprisoned Henry VI, who reads Richard's face correctly: "The owl shriek'd at thy birth — an evil sign."
+
+*Quest seeds from Part 10:* Suffolk's head in Margaret's hands — grief carrying what it cannot keep. The Disinheritance Act — Henry's agreement to give the crown to York after his death, signed under duress while Margaret is not in the room.
+
+---
+
+## Cycle 5 — Angle: The Flower That Founded a War
+
+*Cycles 1–4: poem intercepted (1), gift inside fiction (2), peace treaty outliving its guarantor (3), art deployed as accusation (4). Cycle 5 draws from Henry VI Part 1 — the Temple Garden scene, in which a legal argument about lineage is resolved not by words but by the act of plucking a rose. The lords declare their allegiances silently. The token becomes a faction marker. The theme is new: not a document, not a gift, not a performance — but a natural object made into an emblem through an act of choosing, now carrying that meaning across a world that will burn for it.*
+
+**Theme this cycle introduces:** *The token that became a symbol through an act of choosing in a private garden — and must now cross a public world where that symbol means death to carry.*
+
+**Themes avoided:** Cycles 1–4. "Loyalty under the long watch" (existing). The flower is not grief, not loyalty — it is allegiance made visible before the bearer understands what allegiance will cost.
+
+---
+
+## 5-Act Vignette Play — Cycle 5
+
+**Title:** *The First Rose*
+**TOKEN:** *The White Rose* — a single white rose plucked from the Temple Garden in London by Richard Plantagenet in a legal argument over inheritance, in the moment before anyone understood that choosing a rose would mean choosing a side in a war that would last thirty years. He plucked it without thinking it would mean anything. It meant everything. The rose is now in the hands of a York sympathizer in Birka — a merchant who received it as a gift from a legal clerk who was present in the garden that day and has been carrying it north ever since. Its meaning has followed it. Someone wants it destroyed, or delivered, or authenticated. The Fighter carries it.
+
+---
+
+*The Thing · its current state · who holds it · where the scene takes place.*
+
+**ACT I**
+*The Rose · pressed, dried, folded in a small cloth · in a Birka merchant's locked box · Birka dockside quarter, winter*
+
+Aldric Magnusson, wool merchant, has had the rose for six months. He received it from a Southwark legal clerk named Thomas who came north on a trading ship and could not stop talking about what he had witnessed: a garden, a legal dispute, a man who settled a question of lineage by reaching for a flower and asking who agreed with him. The clerk said: everyone who disagreed plucked red. Thomas pressed the white one he had picked himself and gave it to Aldric as a curiosity. Since then, two men have come asking about it. One was polite. One was not.
+
+*The Fighter's internal reaction: A dried flower in a cloth. And two men have already come for it.*
+
+**SCENE**
+Aldric's locked room above the wool merchants' hall, Birka. He opens the box with the expression of someone who has been sleeping badly for six months. The rose is pressed flat, still white at the center, edges gone to the color of old paper. He tells you the story quickly — the clerk, the ship, the two men. He does not want the rose anymore. He wants to give it to someone who understands what it is, and he does not understand what it is. He asks you to take it to someone who does.
+
+**PROMPT:** History DC 12. Tell Aldric what the rose means — that the Temple Garden scene was the moment the English nobility divided into two factions and that this particular flower, plucked white, is Yorkist evidence in a succession dispute that is already producing deaths. Not to frighten him, but to explain why the two men came and why carrying it requires care.
+
+**FAIL TEXT:** He does not follow the historical argument. He says it is a flower and he wants it gone. You take it. He gives you nothing else. On the stairs you realize you do not know who sent the two men. Try again: ask him what the second man said when Aldric told him he no longer had it.
+
+**SUCCESS TEXT:** He understands enough. He gives you the rose in its cloth and also a letter the Southwark clerk Thomas left — a brief account of what happened in the garden, in Thomas's hand. It names the men who plucked white, the men who plucked red, and the precise words spoken. This is the only written eyewitness account of the Temple Garden scene. You receive *Thomas's Letter* — the clerk's account, signed, dated, a week after the event.
+
+**grantItem:** Thomas's Letter
+**checkPassFlag:** roseReceived
+
+---
+
+**ACT II**
+*The Rose · in the Fighter's cloth · moving through Birka toward the south gate · under watch*
+
+The first man who came for the rose is still in Birka. He is a Lancastrian agent — not professional, but effective. He has been watching the wool merchants' hall since Aldric told him the rose was gone and he did not believe it. He is at the market entrance. You are three hundred yards away with the rose and Thomas's letter in your coat. He has seen your face once; he does not know what you carry, but he knows you left Aldric's building.
+
+*The Fighter's internal reaction: He watched the building. He knows I left. He does not know what I carry. Those are different facts.*
+
+**SCENE**
+Birka winter market, mid-morning. The entrance to the south road passes through two stalls selling salted fish. The Lancastrian agent is at the nearer stall, buying nothing, watching the foot traffic. He has not identified you yet. You are in the crowd, moving toward the gate. If you reach the south road without being stopped, you are out of his reach in Birka. If he stops you and searches your coat, the rose is his argument.
+
+**PROMPT:** Deception DC 13. Move through the market crowd as a wool merchant's assistant — carrying a cloth-wrapped parcel of documented samples, which you happen to have from Aldric's hall. The rose's cloth is the same size as a standard wool sample. If the agent stops you, the parcel is the explanation.
+
+**FAIL TEXT:** He steps in front of you. He asks what you are carrying for Magnusson. You say: wool samples for a buyer in Visby. He reaches for the parcel. You pull back. He says he is entitled to check the samples. You say: the merchant's seal is on them. He backs down, because breaking a merchant's sealed parcel in public is a crime in Birka. You have thirty seconds before he finds someone with authority to make the check legitimate. Try again: reach the south gate before he finds the port magistrate.
+
+**SUCCESS TEXT:** He looks at the cloth-wrapped parcel in your arms and sees a wool merchant's assistant running a routine errand. He lets you pass. You reach the south gate. You receive *Aldric's Invoice* — a genuine wool invoice in Aldric's hand that you took from the hall as cover, which will explain your presence in Birka to any checkpoint south.
+
+**grantItem:** Aldric's Invoice
+**checkPassFlag:** birkaCleared
+
+---
+
+**ACT III**
+*The Rose · carried south · in the Fighter's possession · a roadside wayhouse between Birka and Visby*
+
+The rose needs to reach someone who can authenticate it as connected to the Temple Garden event — not as a Yorkist weapon, but as a historical object. The person with that knowledge is a legal scholar named Brother Konrad of Visby, who was studying in London in the years of the dispute and knows the players personally. But Brother Konrad cannot receive the rose at the monastery — there are Lancastrian interests in Visby's merchant council who watch what arrives at the scriptorium. You are meeting him at a wayhouse on the road, and he arrives with a companion who is not the companion you expected.
+
+*The Fighter's internal reaction: He brought someone. He did not tell me he would bring someone. These are the decisions that change every other decision.*
+
+**SCENE**
+The wayhouse common room, midday. Brother Konrad is a careful man of sixty, in travelling clothes without monastery insignia. Beside him is a young woman in merchant dress who he introduces as Ingrid Haraldsdottir — a legal copyist, he says, who helps him with documents. She knows why you are here. She is looking at your coat with the expression of someone who has been thinking about this meeting for longer than Brother Konrad has. She knows about the rose.
+
+**PROMPT:** Insight DC 14. Read Ingrid — whether she is who Konrad says she is, or whether she represents one of the interested parties who sent men to Birka. The answer determines whether you show them the rose in the wayhouse or wait until you have separated Konrad from her.
+
+**FAIL TEXT:** You cannot read her cleanly. She might be exactly what Konrad says. She might not. You show Konrad the rose without showing Ingrid, by angling your back. She sees you do this and her expression confirms something. Try again: ask Konrad directly, in Ingrid's presence, whether she was his idea or someone else's.
+
+**SUCCESS TEXT:** She is a legal copyist, as described — but she arrived at this meeting via a Lancastrian merchant who paid her to report what she saw here. She does not know you have identified this. You show the rose to Konrad only, and tell Ingrid the document you are carrying is encoded and will require specialist reading she cannot assist with. She accepts this. She is gathering information, not the rose itself. You receive *Konrad's Authentication* — a brief note in his hand confirming the rose's provenance as consistent with the Temple Garden account in Thomas's letter.
+
+**grantItem:** Konrad's Authentication
+**checkPassFlag:** roseAuthenticated
+
+---
+
+**ACT IV**
+*The Rose · authenticated · at the Visby archive's edge · Visby, the scholars' harbor quarter*
+
+The authenticated rose and Thomas's letter need to be deposited somewhere that is neither Yorkist nor Lancastrian — a neutral archive that will receive it as a historical object rather than a political weapon. The Visby archive's harbor-quarter annex receives documents from English and Hanseatic shipping lanes; its intake clerk is a Flemish woman named Marta who is scrupulously neutral on English politics because she is scrupulously neutral on all politics. But the Lancastrian merchant who sent Ingrid to watch the wayhouse meeting has also sent a message to the Visby archive claiming the rose is stolen property from a London legal institution and should be held pending investigation.
+
+*The Fighter's internal reaction: He cannot prove it. But he has filed the claim before I arrived. That is the problem.*
+
+**SCENE**
+Marta's annex, harborside. She has the Lancastrian merchant's letter in front of her and is reading it with the expression of someone who has seen this kind of pre-emptive claim before. She looks at you, then at your cloth-wrapped parcel, then back at the letter. She says: I have a claim of prior ownership on anything English that arrives today. She does not say I believe the claim. She says I have the claim.
+
+**PROMPT:** Persuasion DC 15. Present Thomas's letter alongside Konrad's authentication and argue that the rose is a historical document of an event in a legal institution's garden — it has no institutional owner, only witnesses. The claim of prior ownership requires proof of ownership, which a merchant in Visby cannot provide for an event in a London garden.
+
+**FAIL TEXT:** She is not persuaded by the legal argument. She says she will hold both documents — the claim and your authentication — until a superior can rule. You ask her to at least log the deposit date and the chain of custody so the record exists. She agrees to that. Try again: use Aldric's invoice as proof of your separate chain of custody from the merchant who filed the claim.
+
+**SUCCESS TEXT:** She compares the Lancastrian merchant's letter with the chain of custody you present. The merchant's letter names no specific owner, only a vague institutional claim. The chain of custody — Aldric, Thomas, you — is specific and documented. She logs the rose under: *English historical object, political contention noted, deposited by neutral carrier with supporting documentation.* She sets the Lancastrian claim letter aside in a separate file — not destroyed, but not blocking the intake. You receive *Marta's Intake Note* — the deposit record, stamped, logged under neutral custody.
+
+**grantItem:** Marta's Intake Note
+**checkPassFlag:** roseDeposited
+
+---
+
+**ACT V**
+*The Rose · deposited, logged, separated from the war · the Visby archive's secured room · NUE, secondary record*
+
+Ulrich von Gessert receives the secondary record from Visby — the intake note, Thomas's letter, Konrad's authentication. He reads them in sequence. He looks up and says: *this is a rose that started a war.* You say: it is a rose that was plucked in a garden before anyone knew a war was starting. He considers this distinction. He writes for a while.
+
+*The Fighter's internal reaction: The rose is in Visby. The war is in England. Both are real. Only one of them is in the archive.*
+
+**SCENE**
+The Nuremberg intake room. Ulrich has the three documents spread on his desk. He is building the secondary record — a pointer to the primary deposit in Visby. He says: I want to note this correctly. The rose is not the cause of the war. It is the emblem. The emblem arrived before the war's cause was understood. He asks: what should the category be?
+
+**PROMPT:** Investigation DC 12. Propose the category: *Objects Made Symbolic Through Acts of Choosing — tokens that acquired political meaning in the moment they were selected, before their meaning was understood by those who selected them.* The category must be precise enough to separate this from deliberate propaganda and careful enough to include the genuine moment of inadvertent symbol-making.
+
+**FAIL TEXT:** He thinks the category is too broad. He asks for a narrower formulation. Try: *Inadvertent Emblems — Objects Selected in Dispute Before Their Symbolic Meaning Was Understood.* He accepts this.
+
+**SUCCESS TEXT:** He writes the category heading. He adds: *Primary deposit: Visby harbor-quarter archive. Object: pressed white rose, provenance Temple Garden, London, date of plucking recorded in eyewitness letter. Emblem of: Yorkist faction in English succession dispute. Status: object arrived neutral; meaning attached in transit.* He stamps it. You receive *Ulrich's Fourth Receipt*. The quest is complete.
+
+**takeItem:** Thomas's Letter *(filed as primary supporting document at Visby)*
+**takeItem:** Aldric's Invoice *(filed as chain-of-custody documentation)*
+**grantItem:** Ulrich's Fourth Receipt
+**checkPassFlag:** emblomLogged
+**missionSuccessBit:** shk_cycle5Complete
+
+---
+
+## Quest API Stub — Cycle 5
+
+```
+Act I — Aldric's Room
+activateNode: BK
+type: skill_check
+missionAccept: "A Birka wool merchant has a pressed white rose from the
+  Temple Garden in London — the moment when the English lords chose
+  factions by plucking flowers, founding the Wars of the Roses. Two men
+  have already come asking for it. He wants it gone."
+scene: "Birka, winter. Aldric's locked room above the wool hall. The rose
+  is pressed flat, still white at the center. He gives you the rose and
+  a clerk's letter from the man who witnessed the scene and wrote down
+  every name."
+prompt: "History DC 12. Explain what the rose means and why the two men
+  came — that this is Yorkist evidence in a succession dispute already
+  producing deaths."
+failText: "He doesn't follow the historical argument. Ask him what the
+  second man said when told the rose was gone."
+successText: "He understands enough. He gives you the rose and Thomas's
+  Letter — the only eyewitness account, naming every man who plucked
+  white and red."
+grantItem: "Thomas's Letter"
+checkPassFlag: roseReceived
+activateMissionBit: shk5_act1Active
+
+Act II — Birka Market
+activateNode: BK
+type: skill_check
+scene: "The Lancastrian agent is still in Birka, watching the wool hall.
+  He has seen your face. He does not know what you carry, but he knows
+  you left Aldric's building. The south gate is three hundred yards
+  through the winter market."
+prompt: "Deception DC 13. Move as a wool merchant's assistant — the rose's
+  cloth parcel is the same size as a standard wool sample. If stopped,
+  the parcel is wool samples for a Visby buyer."
+failText: "He asks to check the samples. A merchant's sealed parcel is a
+  legal protection in Birka — argue it. Reach the south gate before he
+  finds someone with authority to break it."
+successText: "He sees a routine errand. You pass. You receive Aldric's Invoice
+  — a genuine wool document that explains your presence."
+grantItem: "Aldric's Invoice"
+checkPassFlag: birkaCleared
+activateMissionBit: shk5_act2Active
+
+Act III — The Wayhouse
+activateNode: VBY
+type: skill_check
+scene: "Brother Konrad at a wayhouse, midday. He has brought Ingrid
+  Haraldsdottir, a legal copyist. She knows why you are here. She arrived
+  via a Lancastrian merchant who paid her to report what she sees."
+prompt: "Insight DC 14. Read whether Ingrid is exactly what Konrad says,
+  or represents an interested party."
+failText: "You cannot read her. Show Konrad the rose with your back to
+  Ingrid. Her expression confirms something. Ask Konrad directly: was
+  she his idea or someone else's?"
+successText: "She is a copyist, but Lancastrian-sourced. You show only
+  Konrad the rose. You receive Konrad's Authentication."
+grantItem: "Konrad's Authentication"
+checkPassFlag: roseAuthenticated
+activateMissionBit: shk5_act3Active
+
+Act IV — Visby Archive Annex
+activateNode: VBY
+type: skill_check
+scene: "Marta, Flemish intake clerk, scrupulously neutral. A Lancastrian
+  merchant has filed a pre-emptive claim of prior ownership on any English
+  object arriving today. She has the claim letter in front of her."
+prompt: "Persuasion DC 15. The rose is a historical object with no
+  institutional owner — only witnesses. The merchant's claim names no
+  specific owner. Your chain of custody is specific and documented."
+failText: "She will hold both documents. Ask her to at least log deposit
+  date and chain of custody. Use Aldric's invoice as proof your chain
+  is separate from the claimant's."
+successText: "She logs it: English historical object, political contention
+  noted, neutral custody. The Lancastrian claim filed separately. You
+  receive Marta's Intake Note."
+grantItem: "Marta's Intake Note"
+checkPassFlag: roseDeposited
+activateMissionBit: shk5_act4Active
+
+Act V — Nuremberg Archive
+activateNode: NUE
+type: skill_check
+scene: "Ulrich von Gessert reads the three documents. He says: this is
+  a rose that started a war. You say: it was plucked before anyone
+  knew a war was starting. He wants that distinction in the record."
+prompt: "Investigation DC 12. Propose the category: Objects Made Symbolic
+  Through Acts of Choosing — tokens that acquired political meaning in
+  the moment they were selected, before their meaning was understood."
+failText: "Too broad. Narrow it: Inadvertent Emblems — Objects Selected
+  in Dispute Before Their Symbolic Meaning Was Understood."
+successText: "He stamps it. Object arrived neutral; meaning attached in
+  transit. You receive Ulrich's Fourth Receipt. Quest complete."
+takeItem: "Thomas's Letter"
+takeItem: "Aldric's Invoice"
+grantItem: "Ulrich's Fourth Receipt"
+checkPassFlag: emblomLogged
+questComplete: true
+```
+
+---
+
+## Quest Map Entry — Cycle 5
+
+```
+SHK | The First Rose | Cycle 5 | BK/VBY/NUE | Inadvertent emblem, token made symbolic before its meaning was understood
 ```
 
 *(Append to quest-map.md)*
