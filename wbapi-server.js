@@ -3054,42 +3054,70 @@ async function route(req, res) {
     // Tier 2 (deg = 3, 1 free):   spawn_junction first
     // Tier 3 (deg = 4):           excluded — too crowded
     if (parts[1] === 'connect' && method === 'GET') {
-      const minHops  = parseInt(url.searchParams.get('minHops') || '8', 10);
-      const skip     = parseInt(url.searchParams.get('skip')    || '0', 10);
-      const limit    = parseInt(url.searchParams.get('limit')   || '20', 10);
-      const qByNode  = questsByNode();
-      const nByNode  = npcsByNode();
-      const clusters = components(unreachable);
+      const minHops    = parseInt(url.searchParams.get('minHops') || '8', 10);
+      const skip       = parseInt(url.searchParams.get('skip')    || '0', 10);
+      const limit      = parseInt(url.searchParams.get('limit')   || '20', 10);
+      const spatialR   = parseInt(url.searchParams.get('spatialRadius') || '40', 10);
+      const qByNode    = questsByNode();
+      const nByNode    = npcsByNode();
+      const clusters   = components(unreachable);
+      const coords     = WBAPI.nodeCoords; // {code:{r,c}}
+      const DIR_DELTA  = { N:[-1,0], S:[1,0], E:[0,1], W:[0,-1] };
 
-      // Next auto-J-code at suggestion time (advisory — actual creation uses current state)
+      function spatialDist(ca, cb) {
+        if (!ca || !cb) return null;
+        const dr = ca.r - cb.r, dc = ca.c - cb.c;
+        return Math.round(Math.sqrt(dr*dr + dc*dc));
+      }
+
+      // Given anchor coords and cluster coords, which cardinal dir from anchor points toward cluster?
+      function suggestedDirection(ca, cc) {
+        if (!ca || !cc) return null;
+        const dr = cc.r - ca.r, dc = cc.c - ca.c;
+        if (Math.abs(dr) >= Math.abs(dc)) return dr > 0 ? 'S' : 'N';
+        return dc > 0 ? 'E' : 'W';
+      }
+
+      // Does the chosen direction agree with the coordinate relationship?
+      function dirConsistent(anchorCoords, clusterCoords, dir) {
+        if (!anchorCoords || !clusterCoords || !dir) return null;
+        const [dr, dc] = DIR_DELTA[dir];
+        const actualDr = clusterCoords.r - anchorCoords.r;
+        const actualDc = clusterCoords.c - anchorCoords.c;
+        if (dr !== 0) return (dr > 0) === (actualDr > 0);
+        if (dc !== 0) return (dc > 0) === (actualDc > 0);
+        return null;
+      }
+
+      // Next J-code (advisory — actual POST /api/graph/junction uses live state)
       function nextJCode() {
         const nums = Object.keys(nm).filter(c => /^J\d+$/.test(c)).map(c => parseInt(c.slice(1), 10));
         return `J${(nums.length ? Math.max(...nums) : 0) + 1}`;
       }
 
-      // Build tiered anchor pool
+      // Build tiered anchor pools — enriched with coords
       const directPool   = []; // Tier 1: deg ≤ 2 (2+ free dirs)
       const junctionPool = []; // Tier 2: deg = 3 (1 free dir)
       for (const c of allCodes) {
         if (!reachable.has(c)) continue;
         const d  = degree(c);
         const fd = freeDirs(c);
-        if (d >= 4 || fd.length === 0) continue; // too crowded
+        if (d >= 4 || fd.length === 0) continue;
         const entry = {
           code: c, degree: d, freeDirs: fd,
           distFromHub: hubDistMap.get(c) ?? 0,
           label: nm[c]?.label,
           isJunction: !!(nm[c]?.junction),
           terrain: nm[c]?.name || null,
+          coords: coords[c] || null,
         };
         if (d <= 2) directPool.push(entry);
-        else        junctionPool.push(entry); // deg === 3
+        else        junctionPool.push(entry);
       }
-      directPool.sort((a, b)   => a.degree !== b.degree ? a.degree - b.degree : b.distFromHub - a.distFromHub);
+      directPool.sort((a, b) => a.degree !== b.degree ? a.degree - b.degree : b.distFromHub - a.distFromHub);
       junctionPool.sort((a, b) => b.distFromHub - a.distFromHub);
 
       const minAnchorDist = Math.max(0, minHops - 1);
-
       function pickBest(pool) {
         const meets = pool.filter(a => a.distFromHub >= minAnchorDist);
         return meets.length ? meets : pool;
@@ -3098,98 +3126,159 @@ async function route(req, res) {
       const suggestions = clusters.map((cluster, i) => {
         const missions = cluster.flatMap(c => (qByNode.get(c) || []).map(q => ({ node: c, nodeLabel: nm[c]?.label, ...q })));
         const npcs     = cluster.flatMap(c => (nByNode.get(c) || []).map(n => ({ node: c, nodeLabel: nm[c]?.label, ...n })));
-        const clusterEntry      = (missions[0]?.node) || (npcs[0]?.node) || cluster[0];
-        const clusterEntryLabel = nm[clusterEntry]?.label;
+        const clusterEntry       = (missions[0]?.node) || (npcs[0]?.node) || cluster[0];
+        const clusterEntryLabel  = nm[clusterEntry]?.label;
+        const clusterEntryCoords = coords[clusterEntry] || null;
+
+        // Bounding box of cluster nodes that have coords
+        const clusterWithCoords = cluster.filter(c => coords[c]);
+        const clusterBounds = clusterWithCoords.length ? {
+          minR: Math.min(...clusterWithCoords.map(c => coords[c].r)),
+          maxR: Math.max(...clusterWithCoords.map(c => coords[c].r)),
+          minC: Math.min(...clusterWithCoords.map(c => coords[c].c)),
+          maxC: Math.max(...clusterWithCoords.map(c => coords[c].c)),
+          nodesWithCoords:    clusterWithCoords.length,
+          nodesWithoutCoords: cluster.length - clusterWithCoords.length,
+        } : null;
+
+        // Spatially-ranked anchors: reachable nodes with coords near cluster entry
+        const spatialAnchors = clusterEntryCoords
+          ? allCodes
+              .filter(c => reachable.has(c) && coords[c] && freeDirs(c).length > 0 && degree(c) < 4)
+              .map(c => {
+                const sd      = spatialDist(coords[c], clusterEntryCoords);
+                const fd      = freeDirs(c);
+                const sugDir  = suggestedDirection(coords[c], clusterEntryCoords);
+                const bestDir = fd.includes(sugDir) ? sugDir : fd[0];
+                const isDir   = degree(c) <= 2 ? 'connect_direct' : 'spawn_junction';
+                return {
+                  code: c, label: nm[c]?.label, degree: degree(c),
+                  freeDirs: fd, coords: coords[c], spatialDist: sd,
+                  distFromHub: hubDistMap.get(c) ?? 0,
+                  isJunction: !!(nm[c]?.junction), terrain: nm[c]?.name || null,
+                  suggestedDir: sugDir, bestDir, dirAvailable: fd.includes(sugDir),
+                  action: isDir,
+                  curl: isDir === 'connect_direct'
+                    ? `curl -XPUT http://localhost:1367/api/node/${c} -H 'Content-Type: application/json' -d '{"${bestDir}":"${clusterEntry}"}' && curl -XPUT http://localhost:1367/api/node/${clusterEntry} -H 'Content-Type: application/json' -d '{"${OPP[bestDir]}":"${c}"}'`
+                    : `curl -XPOST http://localhost:1367/api/graph/junction -H 'Content-Type: application/json' -d '{"anchor":"${c}","anchorDir":"${bestDir}","clusterEntry":"${clusterEntry}","clusterDir":"${OPP[bestDir]}"}'`,
+                };
+              })
+              .filter(a => a.spatialDist !== null && a.spatialDist <= spatialR)
+              .sort((a, b) => a.spatialDist - b.spatialDist)
+              .slice(0, 6)
+          : [];
 
         const bestDirect   = pickBest(directPool);
         const bestJunction = pickBest(junctionPool);
 
         const directAnchors = bestDirect.slice(0, 3).map(a => {
-          const dir = a.freeDirs[0];
+          const sugDir  = suggestedDirection(a.coords, clusterEntryCoords);
+          const bestDir = a.freeDirs.includes(sugDir) ? sugDir : a.freeDirs[0];
+          const sd      = spatialDist(a.coords, clusterEntryCoords);
           return {
             code: a.code, label: a.label, degree: a.degree,
             freeDirs: a.freeDirs, distFromHub: a.distFromHub,
             isJunction: a.isJunction, terrain: a.terrain,
+            coords: a.coords, spatialDist: sd,
+            suggestedDir: sugDir, dirAvailable: a.freeDirs.includes(sugDir),
             action: 'connect_direct',
             hopsToCluster: a.distFromHub + 1,
             meetsMinHops: a.distFromHub + 1 >= minHops,
-            curl: `curl -XPUT http://localhost:1367/api/node/${a.code} -H 'Content-Type: application/json' -d '{"${dir}":"${clusterEntry}"}' && curl -XPUT http://localhost:1367/api/node/${clusterEntry} -H 'Content-Type: application/json' -d '{"${OPP[dir]}":"${a.code}"}'`,
+            curl: `curl -XPUT http://localhost:1367/api/node/${a.code} -H 'Content-Type: application/json' -d '{"${bestDir}":"${clusterEntry}"}' && curl -XPUT http://localhost:1367/api/node/${clusterEntry} -H 'Content-Type: application/json' -d '{"${OPP[bestDir]}":"${a.code}"}'`,
           };
         });
 
         const jCode = nextJCode();
         const junctionAnchors = bestJunction.slice(0, 2).map(a => {
-          const dir = a.freeDirs[0];
+          const sugDir  = suggestedDirection(a.coords, clusterEntryCoords);
+          const bestDir = a.freeDirs.includes(sugDir) ? sugDir : a.freeDirs[0];
+          const sd      = spatialDist(a.coords, clusterEntryCoords);
           return {
             code: a.code, label: a.label, degree: a.degree,
             freeDirs: a.freeDirs, distFromHub: a.distFromHub,
             isJunction: a.isJunction, terrain: a.terrain,
+            coords: a.coords, spatialDist: sd,
+            suggestedDir: sugDir, dirAvailable: a.freeDirs.includes(sugDir),
             action: 'spawn_junction',
             hopsToCluster: a.distFromHub + 2,
             meetsMinHops: a.distFromHub + 2 >= minHops,
-            junctionCode: jCode,
-            junctionTerrain: a.terrain,
-            curl: `curl -XPOST http://localhost:1367/api/graph/junction -H 'Content-Type: application/json' -d '{"anchor":"${a.code}","anchorDir":"${dir}","clusterEntry":"${clusterEntry}","clusterDir":"${OPP[dir]}"}'`,
+            junctionCode: jCode, junctionTerrain: a.terrain,
+            curl: `curl -XPOST http://localhost:1367/api/graph/junction -H 'Content-Type: application/json' -d '{"anchor":"${a.code}","anchorDir":"${bestDir}","clusterEntry":"${clusterEntry}","clusterDir":"${OPP[bestDir]}"}'`,
           };
         });
 
-        // Best overall anchor
-        const bestAnchor = directAnchors[0] || junctionAnchors[0] || null;
+        // Prefer spatial anchor when it is much closer than graph-theoretic best
+        const topSpatial  = spatialAnchors[0] || null;
+        const topGraph    = directAnchors[0] || junctionAnchors[0] || null;
+        const graphSD     = topGraph ? spatialDist(topGraph.coords, clusterEntryCoords) : null;
+        const spatialSD   = topSpatial ? topSpatial.spatialDist : null;
+        const useSpatial  = topSpatial && (graphSD === null || spatialSD < (graphSD || Infinity) / 2);
+        const bestAnchor  = useSpatial ? topSpatial : topGraph;
 
-        // Validate block — full action spec for the top recommendation
+        // Full validate block with spatial + graph context
         let validate = null;
         if (bestAnchor) {
-          if (bestAnchor.action === 'connect_direct') {
-            const dir = bestAnchor.freeDirs[0];
-            validate = {
-              action: 'connect_direct',
-              description: `Wire ${bestAnchor.code} (${bestAnchor.label}) → ${clusterEntry} (${clusterEntryLabel}) directly`,
-              anchor: bestAnchor.code, anchorLabel: bestAnchor.label,
-              anchorDeg: bestAnchor.degree, anchorFreeDirs: bestAnchor.freeDirs,
-              clusterEntry, clusterEntryLabel,
-              hops: bestAnchor.distFromHub + 1, meetsMinHops: bestAnchor.meetsMinHops,
-              steps: [
-                `PUT /api/node/${bestAnchor.code}   body: {"${dir}":"${clusterEntry}"}`,
-                `PUT /api/node/${clusterEntry}  body: {"${OPP[dir]}":"${bestAnchor.code}"}`,
-              ],
-              curl: bestAnchor.curl,
-            };
-          } else {
-            const dir = bestAnchor.freeDirs[0];
-            validate = {
-              action: 'spawn_junction',
-              description: `Spawn junction ${jCode} on ${bestAnchor.code} (${bestAnchor.label}), wire to ${clusterEntry} (${clusterEntryLabel})`,
-              anchor: bestAnchor.code, anchorLabel: bestAnchor.label,
-              anchorDeg: bestAnchor.degree, anchorDir: dir,
-              junctionCode: jCode, junctionTerrain: bestAnchor.terrain,
-              clusterEntry, clusterEntryLabel,
-              hops: bestAnchor.distFromHub + 2, meetsMinHops: bestAnchor.meetsMinHops,
-              steps: [
-                `POST /api/graph/junction  body: {"anchor":"${bestAnchor.code}","anchorDir":"${dir}","clusterEntry":"${clusterEntry}","clusterDir":"${OPP[dir]}"}`,
-              ],
-              curl: bestAnchor.curl,
-            };
-          }
+          const anchorCoords  = bestAnchor.coords || null;
+          const sd            = spatialDist(anchorCoords, clusterEntryCoords);
+          const sugDir        = bestAnchor.suggestedDir || bestAnchor.freeDirs?.[0] || null;
+          const chosenDir     = bestAnchor.bestDir || bestAnchor.freeDirs?.[0] || sugDir;
+          const consistent    = dirConsistent(anchorCoords, clusterEntryCoords, chosenDir);
+          const coordWarn     = (!anchorCoords || !clusterEntryCoords)
+            ? `Missing coords: ${[!anchorCoords && bestAnchor.code, !clusterEntryCoords && clusterEntry].filter(Boolean).join(', ')} — spatial check skipped`
+            : sd > 30
+            ? `Spatial gap ${sd} cells between anchor and cluster — consider a closer anchor from spatialAnchors`
+            : consistent === false
+            ? `Direction ${chosenDir} disagrees with coords (anchor ${anchorCoords.r},${anchorCoords.c} → cluster ${clusterEntryCoords.r},${clusterEntryCoords.c}; expected ${sugDir})`
+            : null;
+
+          const isJunctionAction = bestAnchor.action === 'spawn_junction' || (bestAnchor.degree != null && bestAnchor.degree >= 3);
+          validate = {
+            action: isJunctionAction ? 'spawn_junction' : 'connect_direct',
+            description: isJunctionAction
+              ? `Spawn junction ${bestAnchor.junctionCode || jCode} on ${bestAnchor.code} (${bestAnchor.label}), wire to ${clusterEntry} (${clusterEntryLabel})`
+              : `Wire ${bestAnchor.code} (${bestAnchor.label}) → ${clusterEntry} (${clusterEntryLabel}) directly`,
+            // Anchor
+            anchor: bestAnchor.code, anchorLabel: bestAnchor.label,
+            anchorCoords, anchorDeg: bestAnchor.degree,
+            anchorFreeDirs: bestAnchor.freeDirs, anchorTerrain: bestAnchor.terrain,
+            // Cluster
+            clusterEntry, clusterEntryLabel, clusterEntryCoords, clusterBounds,
+            // Spatial analysis
+            spatialDist: sd, suggestedDir: sugDir, chosenDir,
+            dirConsistent: consistent, coordWarning: coordWarn, spatialOk: coordWarn === null,
+            // Nearby reachable anchors ranked by spatial proximity (the list I was searching manually)
+            spatialAnchors,
+            // Graph analysis
+            hops: bestAnchor.hopsToCluster || (bestAnchor.distFromHub + 1),
+            meetsMinHops: bestAnchor.meetsMinHops,
+            // Execution
+            steps: isJunctionAction
+              ? [`POST /api/graph/junction  body: {"anchor":"${bestAnchor.code}","anchorDir":"${chosenDir}","clusterEntry":"${clusterEntry}","clusterDir":"${OPP[chosenDir]}"}`]
+              : [
+                  `PUT /api/node/${bestAnchor.code}   body: {"${chosenDir}":"${clusterEntry}"}`,
+                  `PUT /api/node/${clusterEntry}  body: {"${OPP[chosenDir]}":"${bestAnchor.code}"}`,
+                ],
+            curl: bestAnchor.curl,
+            pickedBy: useSpatial ? 'spatial_proximity' : 'graph_distance',
+          };
         }
 
         return {
-          clusterIndex: i,
-          size: cluster.length,
-          nodes: cluster,
-          clusterEntry, clusterEntryLabel,
+          clusterIndex: i, size: cluster.length, nodes: cluster,
+          clusterEntry, clusterEntryLabel, clusterEntryCoords, clusterBounds,
           missions, npcs,
-          directAnchors, junctionAnchors,
+          directAnchors, junctionAnchors, spatialAnchors,
           validate,
           note: !bestAnchor
             ? 'No reachable anchors (all deg-4 or full)'
-            : bestAnchor.action === 'connect_direct'
+            : (bestAnchor.degree <= 2 || bestAnchor.action === 'connect_direct')
             ? `deg-${bestAnchor.degree} direct anchor — connect with one PUT pair`
             : `deg-${bestAnchor.degree} anchor full — spawn junction first`,
         };
       });
 
       const page = suggestions.slice(skip, skip + limit);
-      return json(res, 200, { ok:true, hub, minHops, total:suggestions.length, skip, limit, results:page });
+      return json(res, 200, { ok:true, hub, minHops, spatialRadius: spatialR, total:suggestions.length, skip, limit, results:page });
     }
 
     // ── POST /api/graph/junction ───────────────────────────────────────────
