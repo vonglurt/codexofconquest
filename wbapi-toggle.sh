@@ -99,6 +99,6 @@ case "$CMD" in
     echo "       (no arg = toggle)"
     echo ""
     echo "  fg   — foreground mode: terminal stays attached, log scrolls live"
-    echo "  start — background mode: runs silently, log goes to wbapi-server.log"
+    echo "  start — background mode: runs silently, log goes to milepoints/wbapi-server.log"
     exit 1 ;;
 esac

@@ -51,7 +51,7 @@ const GAME_FILE = process.env.ROLL2HIT_FILE
 const PLACEHOLDER_NODES = new Set(['QUEST','TBD','TODO','UNKNOWN','NONE','XXX','PLACEHOLDER']);
 
 // ── Logging ──────────────────────────────────────────────────────────────────
-const LOG_FILE = path.join(__dirname, 'wbapi-server.log');
+const LOG_FILE = path.join(__dirname, 'milepoints', 'wbapi-server.log');
 const logStream = fs.createWriteStream(LOG_FILE, { flags: 'a' });
 
 const C = {

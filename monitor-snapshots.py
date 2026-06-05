@@ -35,6 +35,7 @@ _say_proc = None
 ROOT        = Path(__file__).resolve().parent
 PATCHES_DIR = ROOT / "milepoints" / "patches"
 SAY_LOG     = ROOT / "milepoints" / "say.log"
+SERVER_LOG  = ROOT / "milepoints" / "wbapi-server.log"
 LAST_HTML   = PATCHES_DIR / "_last.html"
 LAST_NAME_F = PATCHES_DIR / "_last.name"
 GLOB        = "roll2hit-v3-????????-??????.html"
@@ -136,8 +137,9 @@ class Monitor:
         # row → diff-line-index map; built each draw, only used on main thread
         self._row_map = {}
 
-        # byte offset into say.log — tracks lines already appended to prior patches
-        self._say_log_pos = SAY_LOG.stat().st_size if SAY_LOG.exists() else 0
+        # byte offsets — track lines already appended to prior patches
+        self._say_log_pos    = SAY_LOG.stat().st_size    if SAY_LOG.exists()    else 0
+        self._server_log_pos = SERVER_LOG.stat().st_size if SERVER_LOG.exists() else 0
 
         # resume from last session if patches dir has state
         if LAST_HTML.exists():
@@ -200,10 +202,21 @@ class Monitor:
                         self._say_log_pos = sf.tell()
                 except OSError:
                     pass
-            if say_lines:
+            server_lines = []
+            if SERVER_LOG.exists():
+                try:
+                    with SERVER_LOG.open("r", encoding="utf-8", errors="replace") as sl:
+                        sl.seek(self._server_log_pos)
+                        server_lines = [l.rstrip("\n") for l in sl.readlines()]
+                        self._server_log_pos = sl.tell()
+                except OSError:
+                    pass
+            if say_lines or server_lines:
                 with patch_path.open("a", encoding="utf-8") as pf:
                     pf.write("\n")
                     for line in say_lines:
+                        pf.write(f"# {line}\n")
+                    for line in server_lines:
                         pf.write(f"# {line}\n")
         else:
             # first ever file: save as gzip base, no diff to store
