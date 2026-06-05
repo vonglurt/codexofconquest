@@ -274,6 +274,7 @@ say "Next: {BOOK} {next_cycle} — {quest title}." &
 | RKV  | Poetic Edda (Anon, ~10th–13th C) | 0          | 0               | 0               | DONE 2026-06-05 — 35 acts imported; VLH/AEG/RSS new nodes; RKV collision (Frost Warden's Throne)→AEG hub cycles 3–7; cycle 1→VLH; cycle 2→AEG/ASG/RSS |
 | OST  | Song of Roland (Anon, c.1100)   | 0           | 0               | 0               | DONE 2026-06-05 — 35 acts imported; RON/PYR/AIX/FRS new nodes; OST collision (Bruges—Cloth Hall)→quest prefix only; cycles 1–2 route RON/PYR/AIX/FRS; cycles 3–7 hub at AIX or RON |
 | ARN  | Knights of the Cross (Sienkiewicz, 1900) | 0   | 0               | 0               | DONE 2026-06-05 — 35 acts imported; KRK/JUR/TKT/CHP new nodes; cycles 1–2 full prose; cycles 3–7 expanded from stubs |
+| VBY  | Grettir's Saga (Anon, c.1310)           | 0   | 0               | 0               | DONE 2026-06-05 — 35 acts imported; RKN/BWH new nodes; cycles 1–2 full prose; cycles 3–7 expanded from stubs |
 | GAME | Legacy game quests (quest_*, trap_*) | ~346 | ~170           | ~140            | SEPARATE — see §GAME |
 | BGW  | Arabian Nights (Burton tr.)   | 0           | 0               | 0               | DONE 2026-06-03     |
 | CAI  | Arabian Nights (Lang)         | 0           | 0               | 0               | DONE 2026-06-03     |
