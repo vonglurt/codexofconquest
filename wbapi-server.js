@@ -2888,6 +2888,256 @@ async function route(req, res) {
     return json(res, 200, { ok:true, count: bits.length, bits });
   }
 
+  // ── Graph analysis ────────────────────────────────────────────────────────
+  // GET /api/graph/reachability            — reachable counts + degree buckets
+  // GET /api/graph/connect[?hub=LHR&minHops=8&skip=N&limit=M]
+  //                                        — per-cluster connection plan with quests
+  if (parts[0] === 'graph' && method === 'GET') {
+    const nm = WBAPI.nodeMap;
+
+    // Undirected adjacency: union of both sides of each N/S/E/W edge
+    // so BFS treats the graph as undirected even if one side is missing
+    const undirAdj = new Map();
+    for (const code of Object.keys(nm)) undirAdj.set(code, new Set());
+    for (const [code, node] of Object.entries(nm)) {
+      for (const d of ['N','S','E','W']) {
+        const nb = node[d]; if (!nb || !nm[nb]) continue;
+        undirAdj.get(code).add(nb);
+        undirAdj.get(nb).add(code);
+      }
+    }
+
+    // Directed degree: how many N/S/E/W slots are filled on a node (for "how full is it")
+    function degree(code) {
+      const n = nm[code]; if (!n) return 0;
+      return ['N','S','E','W'].filter(d => n[d]).length;
+    }
+    // Free directions on a node (empty N/S/E/W slots)
+    function freeDirs(code) {
+      const n = nm[code]; if (!n) return [];
+      return ['N','S','E','W'].filter(d => !n[d]);
+    }
+
+    // BFS reachability using undirected adjacency
+    function bfsReach(start) {
+      if (!undirAdj.has(start)) return new Set([start]);
+      const visited = new Set([start]);
+      const queue   = [start];
+      while (queue.length) {
+        const cur = queue.shift();
+        for (const nb of (undirAdj.get(cur) || [])) {
+          if (!visited.has(nb)) { visited.add(nb); queue.push(nb); }
+        }
+      }
+      return visited;
+    }
+
+    // BFS distance map from a start node (undirected)
+    function bfsDist(start) {
+      const dist = new Map([[start, 0]]);
+      const queue = [start];
+      while (queue.length) {
+        const cur = queue.shift();
+        for (const nb of (undirAdj.get(cur) || [])) {
+          if (!dist.has(nb)) { dist.set(nb, dist.get(cur) + 1); queue.push(nb); }
+        }
+      }
+      return dist;
+    }
+
+    // Connected components within a subset of node codes (undirected)
+    function components(codes) {
+      const codeSet = new Set(codes);
+      const visited = new Set();
+      const clusters = [];
+      for (const code of codes) {
+        if (visited.has(code)) continue;
+        const comp = new Set([code]);
+        const q = [code];
+        while (q.length) {
+          const cur = q.shift();
+          for (const nb of (undirAdj.get(cur) || [])) {
+            if (codeSet.has(nb) && !comp.has(nb)) { comp.add(nb); q.push(nb); }
+          }
+        }
+        comp.forEach(c => visited.add(c));
+        clusters.push([...comp]);
+      }
+      return clusters;
+    }
+
+    // Build quest→node index: node → list of full quest context objects
+    function questsByNode() {
+      const idx = new Map();
+      // Build NPC key→name lookup for quest NPC cross-ref
+      const npcNames = Object.fromEntries(
+        Object.entries(WBAPI.birkaNpcs || {}).map(([k, n]) => [k, n.name])
+      );
+      for (const [id, q] of Object.entries(WBAPI.questDb || {})) {
+        for (const nodeCode of [q.activateNode, q.waypointNode].filter(Boolean)) {
+          if (!idx.has(nodeCode)) idx.set(nodeCode, []);
+          // Infer arc/chain from quest id prefix (e.g. "bgw_c1a1" → "bgw")
+          const arcMatch = id.match(/^([a-z]+)/);
+          const arc = arcMatch ? arcMatch[1] : null;
+          idx.get(nodeCode).push({
+            id,
+            title:        q.title || id,
+            type:         q.type  || 'side',
+            arc,
+            desc:         q.desc  || null,
+            hint:         q.hint  || null,
+            activateNode: q.activateNode || null,
+            activateNodeLabel: q.activateNode ? (nm[q.activateNode]?.label || null) : null,
+            waypointNode: q.waypointNode  || null,
+            waypointNodeLabel: q.waypointNode  ? (nm[q.waypointNode]?.label  || null) : null,
+            reward:       q.reward        || null,
+            npcKey:       q.npc           || null,
+            npcName:      q.npc ? (npcNames[q.npc] || q.npc) : null,
+            role:         nodeCode === q.activateNode ? 'activateNode' : 'waypointNode',
+          });
+        }
+      }
+      return idx;
+    }
+
+    // NPC → node index
+    function npcsByNode() {
+      const idx = new Map();
+      for (const [key, n] of Object.entries(WBAPI.birkaNpcs || {})) {
+        if (!n.node) continue;
+        if (!idx.has(n.node)) idx.set(n.node, []);
+        idx.get(n.node).push({ key, name: n.name, occupation: n.occupation });
+      }
+      return idx;
+    }
+
+    const hub         = url.searchParams.get('hub') || 'LHR';
+    const reachable   = bfsReach(hub);
+    const allCodes    = Object.keys(nm);
+    const unreachable = allCodes.filter(c => !reachable.has(c));
+    const hubDistMap  = bfsDist(hub);
+
+    // ── GET /api/graph/reachability ───────────────────────────────────────
+    if (parts[1] === 'reachability') {
+      const qByNode  = questsByNode();
+      const nByNode  = npcsByNode();
+      const clusters = components(unreachable);
+
+      return json(res, 200, {
+        ok: true,
+        hub,
+        counts: {
+          total: allCodes.length,
+          reachable: reachable.size,
+          unreachable: unreachable.length,
+          clusters: clusters.length,
+        },
+        reachableByDegree: {
+          deg1: allCodes.filter(c => reachable.has(c) && degree(c) === 1),
+          deg2: allCodes.filter(c => reachable.has(c) && degree(c) === 2),
+          deg3: allCodes.filter(c => reachable.has(c) && degree(c) === 3),
+          deg4: allCodes.filter(c => reachable.has(c) && degree(c) === 4),
+        },
+        unreachableClusters: clusters.map(cluster => ({
+          size: cluster.length,
+          nodes: cluster,
+          missions: cluster.flatMap(c => (qByNode.get(c) || []).map(q => ({ node: c, ...q }))),
+          npcs:     cluster.flatMap(c => (nByNode.get(c) || []).map(n => ({ node: c, ...n }))),
+        })),
+      });
+    }
+
+    // ── GET /api/graph/connect ─────────────────────────────────────────────
+    // Returns per-cluster suggestions: which missions are there, which
+    // reachable nodes can serve as the connection anchor, free directions.
+    if (parts[1] === 'connect') {
+      const minHops  = parseInt(url.searchParams.get('minHops') || '8', 10);
+      const skip     = parseInt(url.searchParams.get('skip')    || '0', 10);
+      const limit    = parseInt(url.searchParams.get('limit')   || '20', 10);
+      const qByNode  = questsByNode();
+      const nByNode  = npcsByNode();
+      const clusters = components(unreachable);
+
+      // All reachable anchors ranked: deg-2 first, then deg-3; at target depth
+      const anchorPool = allCodes
+        .filter(c => reachable.has(c) && degree(c) <= 3 && freeDirs(c).length > 0)
+        .map(c => ({
+          code: c,
+          degree: degree(c),
+          freeDirs: freeDirs(c),
+          distFromHub: hubDistMap.get(c) ?? 0,
+          label: nm[c]?.label,
+          junction: !!(nm[c]?.junction),
+        }))
+        .sort((a, b) => {
+          if (a.degree !== b.degree) return a.degree - b.degree; // prefer deg-2
+          // prefer nodes further from hub (more likely to satisfy minHops)
+          return b.distFromHub - a.distFromHub;
+        });
+
+      const suggestions = clusters.map((cluster, i) => {
+        // Collect all missions + NPCs in this cluster
+        const missions = cluster.flatMap(c => (qByNode.get(c) || []).map(q => ({ node: c, nodeLabel: nm[c]?.label, ...q })));
+        const npcs     = cluster.flatMap(c => (nByNode.get(c) || []).map(n => ({ node: c, nodeLabel: nm[c]?.label, ...n })));
+
+        // Choose the cluster entry node: prefer a node that has a quest/NPC,
+        // or fall back to the first node in the cluster
+        const clusterEntry = (missions[0]?.node) || (npcs[0]?.node) || cluster[0];
+
+        // Intra-cluster BFS distance from clusterEntry
+        const clusterDist = bfsDist(clusterEntry);
+
+        // Best anchors: after connecting anchor → clusterEntry, total hops = hubDist(anchor)+1
+        // We want that total ≥ minHops, so anchor.distFromHub ≥ minHops-1
+        const minAnchorDist = Math.max(0, minHops - 1);
+
+        const validAnchors = anchorPool.filter(a => a.distFromHub >= minAnchorDist);
+        const anyAnchors   = validAnchors.length ? validAnchors : anchorPool; // fallback: ignore distance
+
+        return {
+          clusterIndex: i,
+          size: cluster.length,
+          clusterEntry,
+          clusterEntryLabel: nm[clusterEntry]?.label,
+          missions,          // quests referencing nodes in this cluster
+          npcs,              // NPCs in this cluster
+          // Suggested anchors — top 5, deg-2 preferred
+          anchors: anyAnchors.slice(0, 5).map(a => ({
+            code:        a.code,
+            label:       a.label,
+            degree:      a.degree,
+            distFromHub: a.distFromHub,
+            freeDirs:    a.freeDirs,
+            isJunction:  a.junction,
+            hopsToCluster: a.distFromHub + 1, // after adding 1 edge to clusterEntry
+            meetsMinHops:  a.distFromHub + 1 >= minHops,
+          })),
+          missingAnchor: anyAnchors.length === 0,
+          note: anyAnchors.length === 0
+            ? 'All reachable nodes are full (deg 4) — need a new junction node'
+            : validAnchors.length === 0
+            ? `No anchor ≥${minHops} hops — closest is ${anyAnchors[0]?.distFromHub + 1} hops`
+            : anyAnchors[0].degree === 2
+            ? 'deg-2 anchor available'
+            : 'deg-3 anchor (no deg-2 at required distance)',
+        };
+      });
+
+      const page = suggestions.slice(skip, skip + limit);
+      return json(res, 200, {
+        ok: true,
+        hub,
+        minHops,
+        total: suggestions.length,
+        skip,
+        limit,
+        results: page,
+      });
+    }
+
+    return json(res, 404, { error:'Unknown graph sub-route. Available: /api/graph/reachability  /api/graph/connect' });
+  }
+
   // ── Coords (NODE_COORDS) ─────────────────────────────────────────────────
   if (parts[0] === 'coords') {
     const coordAction = parts[1]; // undefined | 'near' | <nodeCode>
