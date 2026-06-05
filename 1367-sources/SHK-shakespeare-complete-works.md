@@ -1,6 +1,6 @@
 # SHK — Complete Works of William Shakespeare
 
-**Source:** Parts 1–24 read. Parts 25–28 pending. | **Progress:** Cycles 1–12 complete. Cycle 13 due after Part 26.
+**Source:** All 28 parts read. | **Progress:** All 14 cycles complete and imported. Processing complete.
 **Gutenberg:** #100 — Complete Works (Shakespeare)
 **Period:** c.1590–1613 | Drama, Poetry, Sonnets
 **Part 1 contains:** The Sonnets (all 154) + All's Well That Ends Well Act I (begins)
@@ -2220,3 +2220,262 @@ questComplete: true
 ```
 SHK | The Forged Instruction | Cycle 12 | BK/VBY/NUE | Performative forgery — false document that generates compliance, target's obedience is the weapon
 ```
+
+---
+
+## Part 25 Coverage
+
+*Twelfth Night complete + The Two Noble Kinsmen Act I–II begins*
+
+Part 25 completes Twelfth Night: the consequences of Maria's forged letter unfold — Malvolio appears before Olivia in yellow stockings and cross-garters, smiling grotesquely, is thought mad and imprisoned in a dark room; Feste visits him disguised as Sir Topas the curate and torments him; Sebastian arrives and marries Olivia, mistaking her hospitality for prior acquaintance; the twins are revealed, Orsino claims Viola, Olivia and Sebastian make peace with their mutual error. But Malvolio, shown the letter and understanding the deception, delivers the comedy's darkest exit: "I'll be revenged on the whole pack of you!" — the only character in any Shakespearean comedy who leaves the stage unreconciled. The Two Noble Kinsmen then begins (co-written with Fletcher, from Chaucer's Knight's Tale): Theseus and Hippolyta's wedding is interrupted by three queens demanding justice; after victory, Palamon and Arcite — cousins and closest friends — are captured in battle, imprisoned together, and from their prison window both see Emilia in a garden below; both fall in love simultaneously and immediately, and their friendship collapses into rivalry.
+
+---
+
+## Part 26 Coverage
+
+*The Two Noble Kinsmen complete + The Winter's Tale Act I–III begins*
+
+Part 26 completes The Two Noble Kinsmen: Arcite is released, Palamon is freed by the Jailer's Daughter who loves him obsessively and goes mad when he does not return her feeling; Arcite and Palamon are found fighting privately by Theseus, condemned, then pardoned on condition of a tournament — the winner claims Emilia, the loser dies; Arcite wins, is riding to Emilia, when a horse bolts and crushes him; dying, he gives Emilia to Palamon: "Take Emilia / And with her all the world's joy." The Jailer's Daughter is cured by having her betrothed impersonate Palamon — a healing through fiction. The Winter's Tale then opens: Leontes's jealousy erupts suddenly from nothing ("Is whispering nothing? Is leaning cheek to cheek? Is meeting noses? / Kissing with inside lip?"), Hermione is accused and imprisoned, the oracle at Delphos is consulted; Mamillius begins his tale — "A sad tale's best for winter: I have one / Of sprites and goblins... There was a man — dwelt by a churchyard" — but is interrupted when his mother is arrested; Mamillius dies of grief and shame; Perdita is born and Antigonus is ordered to abandon the baby in Bohemia; Antigonus is killed by a bear ("Exit, pursued by a bear") and Part 26 ends with the sixteen-year gap announced.
+
+---
+
+## Cycle 13 — The Unfinished Tale
+
+*Parts 25–26 | Plays: Twelfth Night + Two Noble Kinsmen + The Winter's Tale*
+
+*Before beginning: Themes avoided — performative forgery (Cycle 12), quarantine letter (Cycle 11), superseded record (Cycle 10). This cycle centers on a new mode: not a legal or administrative document, but a narrative — a story broken off before completion, whose ending was never provided because the teller died or was silenced mid-sentence.*
+
+**Theme this cycle introduces:** *The unfinished tale — a narrative document cut off before its completion, preserved only in its opening, whose ending was never provided.*
+
+**TOKEN**: A parchment with the beginning of a tale — "There was a man who dwelt by a churchyard" — written in a child's hand, the sentence unfinished. Below it, the same sentence is copied in an adult's hand (the mother who heard it, or a scribe who preserved the fragment) and then the page goes blank. The tale was never told. The document exists only as an opening — the rarest kind of incomplete document: not a draft abandoned for revision, but a story cut off by circumstance at the moment it began.
+
+---
+
+### Act I — Birka
+```yaml
+activateNode: BK
+type: skill_check
+scene: "Egil Thorvaldsen has a parchment fragment: a single sentence in a
+  child's hand, unfinished, followed by the same sentence copied in a different
+  adult hand, and then nothing. No title. No date. No name. He wants to know
+  what category of document this is — he cannot file it as a letter, a deed,
+  or a record."
+prompt: "Investigation DC 12. The document is a narrative fragment — neither
+  administrative nor epistolary. The double hand (child then adult) suggests
+  the adult witnessed or heard the child begin the tale and copied its opening
+  after the child could no longer continue. Propose: narrative fragment,
+  unfinished tale, preserved in opening only."
+failText: "He says he cannot file a story in a commerce archive. Propose
+  instead: file it as a curiosity document — objects whose category is their
+  incompleteness. The value is not the content but the cut-off."
+successText: "He logs it as a curiosity: narrative fragment, single sentence
+  preserved, ending unknown. You receive the Tale Fragment."
+grantItem: "Tale Fragment"
+checkPassFlag: fragmentSecured
+activateMissionBit: shk13_act1Active
+```
+
+### Act II — Visby
+```yaml
+activateNode: VBY
+type: skill_check
+scene: "Marta at the Visby archive has a category for incomplete documents —
+  torn contracts, half-burnt deeds — but those are damaged. This document is
+  not damaged; it stops intentionally. The adult hand copied the child's
+  opening and then chose not to continue. She wants to know what distinguishes
+  an intentionally incomplete document from a damaged one."
+prompt: "Investigation DC 13. The adult's copy is clean and deliberate —
+  no ink blot, no trailing mark, no evidence of interruption. The adult
+  chose to preserve only the opening. This is not damage; it is curation.
+  Propose: intentionally preserved incompleteness — a fragment conserved as
+  a fragment, not as an incomplete whole."
+failText: "She says curation and damage look the same from the archive's
+  view. Propose: examine whether the copying hand shows any sign of haste
+  or trauma — shaking lines, irregular pressure — which would indicate the
+  adult was unable to continue, not unwilling."
+successText: "She notes it: intentionally preserved narrative fragment,
+  adult hand clean, no evidence of interruption — curation, not damage.
+  You receive Marta's Fragment Note."
+grantItem: "Marta's Fragment Note"
+checkPassFlag: fragmentCurated
+activateMissionBit: shk13_act2Active
+```
+
+### Act III — Nuremberg
+```yaml
+activateNode: NUE
+type: skill_check
+scene: "Ulrich von Gessert reads the fragment and Marta's note. He says:
+  this is the only document in his archive that is complete precisely because
+  it is incomplete. The tale's ending is not missing — the tale was never
+  meant to have an ending in this document. The document's completeness is
+  its opening. He wants the category."
+prompt: "Investigation DC 11. Propose: The Preserved Opening — a narrative
+  document whose archival value is specifically its incompleteness; the
+  fragment is the artifact, not an artifact that should be whole. Unlike
+  a damaged document (which aspires to wholeness), this one was conserved
+  as a beginning, and a beginning is what it contains."
+failText: "He says: how do we know it was meant to be preserved this way
+  rather than simply never finished? Narrow it: the double hand is the
+  evidence — someone made a clean copy of an unfinished sentence. That act
+  of copying committed to the incompleteness as the form."
+successText: "Stamped. Logged: preserved opening — narrative fragment
+  conserved in its incomplete state by a subsequent hand, incompleteness
+  is the document's intentional form. You receive Ulrich's Thirteenth
+  Receipt. Quest complete."
+takeItem: "Tale Fragment"
+takeItem: "Marta's Fragment Note"
+grantItem: "Ulrich's Thirteenth Receipt"
+checkPassFlag: fragmentLogged
+questComplete: true
+```
+
+---
+
+## Quest Map Entry — Cycle 13
+
+```
+SHK | The Unfinished Tale | Cycle 13 | BK/VBY/NUE | Preserved opening — narrative fragment conserved in incomplete state, incompleteness is the document's intentional form
+```
+
+---
+
+## Part 27 Coverage
+
+*The Winter's Tale complete + Venus and Adonis (poem) begins*
+
+Part 27 completes The Winter's Tale: sixteen years later, Perdita is at the sheepshearing festival among flowers — "daffodils / That come before the swallow dares, and take / The winds of March with beauty" — and Florizel (Polixenes's son in disguise) courts her; when Polixenes reveals himself and forbids the match, Camillo helps them flee to Sicilia; Leontes, penitent for sixteen years, reunites with Perdita and then with Hermione in the play's astonishing statue scene: Paulina commands music, says "Be stone no more; approach; I'll fill your grave up; stir; nay, come away," and Hermione descends and embraces Leontes — sixteen years of guilt made good in silence. The poem Venus and Adonis begins in Part 27: Venus pursues the beautiful Adonis who only wants to hunt; she keeps him from his horse, he escapes; she warns him against the boar; he goes anyway; Part 27 ends with Venus's long speech about the hare — "Poor Wat" the hare who outfoxes the hounds — as an elaborate digression in the poem's central argument about vulnerability and desire.
+
+---
+
+## Part 28 Coverage
+
+*Venus and Adonis conclusion + Project Gutenberg boilerplate*
+
+Part 28 completes Venus and Adonis (the last 278 lines of the file): Venus finds Adonis dead, gored by the boar, and her lament transforms into mythology — from his blood springs an anemone, the flower of mourning; Venus plucks it, presses it to her heart, and flies away to Paphos; the poem ends with the observation that ever since, love has been associated with pain: "Since the unruly wind / Once touched her with a mortal wound." The Rape of Lucrece would have followed in the original collection but is not included here. The file concludes with Project Gutenberg licensing boilerplate. The 28-part Complete Works is now fully processed.
+
+---
+
+## Cycle 14 — The Pressed Anemone
+
+*Parts 27–28 | Plays: The Winter's Tale + Venus and Adonis*
+
+*Before beginning: Themes avoided — preserved opening (Cycle 13), performative forgery (Cycle 12), quarantine letter (Cycle 11). This is the final cycle. It centers on a botanical grief token: an object that is not a document but accompanies one — a pressed flower preserved alongside a mourning record, whose documentary context is absent, leaving only the object and a single annotation.*
+
+**Theme this cycle introduces:** *The botanical grief token — a natural object (pressed flower, dried herb, leaf) preserved alongside a documentary record at the moment of loss, whose accompanying document is lost, leaving the object as the only surviving evidence of the grief that created it.*
+
+**TOKEN**: A pressed anemone — dried, still identifiable, found between the pages of what appears to be a mourning record; the single annotation reads "gathered at the moment of identification." The mourning record itself is gone. The flower was pressed at the instant someone confirmed a death. The archive holds the flower and the annotation but does not know whose death, or who gathered it, or what record it accompanied.
+
+---
+
+### Act I — Birka
+```yaml
+activateNode: BK
+type: skill_check
+scene: "Egil Thorvaldsen has a pressed flower — a dried anemone — found between
+  the pages of a water-damaged register. The register's text is unreadable.
+  Only the annotation beside the flower survives: 'gathered at the moment of
+  identification.' He wants to know what category a pressed flower belongs in,
+  and whether it qualifies as a document."
+prompt: "Investigation DC 12. A pressed flower accompanying a record is a
+  documentary supplement — not itself a document, but an object whose archival
+  meaning is entirely dependent on its documentary context. The annotation
+  is the document; the flower is the evidence the annotation references.
+  Propose: document with material supplement — the annotation is primary,
+  the flower is attached evidence."
+failText: "He says he cannot file a flower. The annotation alone is the
+  document then — file the annotation as a record of an unknown grief event,
+  with the flower preserved as material accompaniment in a physical envelope."
+successText: "He files both: the annotation as document, the flower as
+  preserved material supplement. You receive the Pressed Anemone."
+grantItem: "Pressed Anemone"
+checkPassFlag: anemoneSecured
+activateMissionBit: shk14_act1Active
+```
+
+### Act II — Visby
+```yaml
+activateNode: VBY
+type: skill_check
+scene: "Marta at the Visby archive. She has seen botanical supplements before —
+  a sprig of rosemary pressed into a burial certificate, a lock of hair in a
+  will. But those documents survive. This annotation survives without its
+  document. She wants to know: is the annotation a primary document in its
+  own right, or is it permanently incomplete?"
+prompt: "Investigation DC 13. The annotation is complete in itself — it records
+  a fact ('gathered at the moment of identification'), a subject (the flower),
+  and an implied time reference (the moment). The loss of the surrounding
+  document does not make the annotation incomplete; it makes the annotation
+  orphaned. Propose: orphaned supplement — a documentary annotation that
+  has survived the loss of its primary document and must be treated as
+  primary in its absence."
+failText: "She says an orphaned annotation is just a fragment. Distinguish:
+  a fragment is part of a larger whole; an orphaned supplement is complete
+  in itself, it simply lacks context. The context is lost; the supplement
+  is whole."
+successText: "She logs it: orphaned botanical supplement, annotation complete,
+  primary document absent, flower preserved as material evidence of unknown
+  loss. You receive Marta's Orphan Note."
+grantItem: "Marta's Orphan Note"
+checkPassFlag: orphanNoted
+activateMissionBit: shk14_act2Active
+```
+
+### Act III — Nuremberg
+```yaml
+activateNode: NUE
+type: skill_check
+scene: "Ulrich von Gessert holds the anemone carefully. He reads the annotation.
+  He says: every archive has objects like this — a thing that was present at
+  a death, preserved because the person who preserved it could not throw it
+  away, surviving its context through the weight of grief alone. He wants to
+  know what the archive owes an object like this."
+prompt: "Investigation DC 11. The archive owes it preservation and honest
+  description: it is an object preserved by grief, accompanying a record of
+  loss, whose context is irrecoverable. The category is not what it is but
+  what preserved it: Grief-Preserved Object — a material item kept solely
+  because it was present at a moment of loss, surviving its documentary
+  context through the persistence of the grief that created it."
+failText: "He says: grief is not an archival category. Reframe: the object
+  was preserved deliberately, not accidentally — someone chose to keep it.
+  That choice is the document. Call it: Object of Deliberate Preservation —
+  kept not for its evidence value but for its presence at a significant moment."
+successText: "He stamps it gently. Logged: grief-preserved botanical object,
+  orphaned supplement to an unknown mourning record, kept by deliberate
+  act whose motivation was presence at loss rather than evidentiary value.
+  You receive Ulrich's Fourteenth Receipt. The Shakespeare archive is complete."
+takeItem: "Pressed Anemone"
+takeItem: "Marta's Orphan Note"
+grantItem: "Ulrich's Fourteenth Receipt"
+checkPassFlag: anemoneLogged
+questComplete: true
+```
+
+---
+
+## Quest Map Entry — Cycle 14
+
+```
+SHK | The Pressed Anemone | Cycle 14 | BK/VBY/NUE | Grief-preserved botanical object — orphaned supplement to unknown mourning record, kept by presence at loss
+```
+
+---
+
+## SHK Processing Complete
+
+**28 parts read. 14 cycles written and imported. Parts 1–28 fully summarized.**
+
+**Cycle themes (taxonomy of document meaning):**
+1. The poem intercepted by a rival — art blocked from its reader
+2–3. (prior session — archived in commit history)
+4. The Dozen Lines — disputed authenticity
+5. The First Rose — inadvertent emblem, token made symbolic before meaning understood
+6. The Inventory of Wolsey — self-authored document that ruined by being read
+7. The Dagger Before the Murder — proximity contamination, guilt by adjacency
+8. The Identical Letter — duplicated singular address, harm released by comparison
+9. The Handkerchief — meaning-bearing vessel, accumulated misreading
+10. The Restoration Certificate — superseded accurate record, both states preserved
+11. The Quarantine Letter — document of obsolete urgency, lawful detention
+12. The Forged Instruction — performative forgery, target's compliance is the weapon
+13. The Unfinished Tale — preserved opening, incompleteness as intentional form
+14. The Pressed Anemone — grief-preserved object, orphaned from its mourning record
