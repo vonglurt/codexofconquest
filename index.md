@@ -403,7 +403,7 @@ This rule applies to `api-data-audit.md`, `plan.md §TTS`, and all session loops
 
 **Source fidelity:** When `1367-sources/{CODE}-*.md` exists, copy `scene:/successText:/failText:` fields verbatim. City names and geographic anchors in quest text must match the city referenced in the source file. The book authored as a 1367-source uses the city name in the title and the plan — those landmarks carry into the quest desc and hint.
 
-**Status (2026-06-05):** MQ/SQ/EPIC done. §IMPORT-101 VBY complete (449 nodes, 1660 quests). See `api-data-audit.md §Per-Book Queue`.
+**Status (2026-06-05):** MQ/SQ/EPIC done. §IMPORT-102 RIX complete (449 nodes, 1695 quests). See `api-data-audit.md §Per-Book Queue`.
 
 **§IMPORT-99 OST nodes** (La Chanson de Roland, Anon, c.1100):
 - `RON` — Roncevaux Pass (r:110 c:128, highlands)
@@ -414,7 +414,7 @@ This rule applies to `api-data-audit.md`, `plan.md §TTS`, and all session loops
 ---
 
 *Last updated: 2026-06-05*
-*Codebase: `roll2hit-v3.html` · ~21,300 lines · Layers 0–104 complete · 449 nodes · 392 monsters · 1660 quests*
+*Codebase: `roll2hit-v3.html` · ~21,300 lines · Layers 0–104 complete · 449 nodes · 392 monsters · 1695 quests*
 *MIT License — roll2hit.com — Copyright (c) 2026 — Free to use, modify, and share.*
 
 ---
