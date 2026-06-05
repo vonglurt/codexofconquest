@@ -213,6 +213,21 @@ function insertStringField(sectionSrc, entryKey, field, newValue) {
   return sectionSrc.slice(0, openEnd) + newBody + sectionSrc.slice(bodyEnd);
 }
 
+// Remove a string field from an existing entry's body.
+// Handles both leading-comma and trailing-comma forms.
+function removeStringField(sectionSrc, entryKey, field) {
+  const b = findEntryBounds(sectionSrc, entryKey);
+  if (!b) return null;
+  const { openEnd, bodyEnd } = b;
+  const body = sectionSrc.slice(openEnd, bodyEnd);
+  // Match field with any quoted value: ,\s*field\s*:\s*'...' or field\s*:\s*'...'\s*,
+  let patchedBody = body
+    .replace(new RegExp(`,\\s*${field}\\s*:\\s*(['"\`])[^\\1]*?\\1`), '')
+    .replace(new RegExp(`${field}\\s*:\\s*(['"\`])[^\\1]*?\\1,?\\s*`), '');
+  if (patchedBody === body) return null;
+  return sectionSrc.slice(0, openEnd) + patchedBody + sectionSrc.slice(bodyEnd);
+}
+
 // Replace an entire entry block in a section (for add/delete)
 function respliceSection(rawSrc, sectionName, newContent) {
   const S = `// ◆◆◆ WORLDBUILDER:${sectionName}:START ◆◆◆`;
@@ -505,6 +520,16 @@ const WBAPI = {
     const key = this._findKey(col, idOrTitle); if (!key) return { ok:false, error:'not found' };
 
     const sectionSrc = extrSection(this._rawSrc, section);
+
+    // null value → remove the field entirely
+    if (value === null || value === undefined) {
+      const patched = removeStringField(sectionSrc, key, field);
+      if (!patched) return { ok:false, error:`field "${field}" not found on "${key}" or strip failed` };
+      this._rawSrc = respliceSection(this._rawSrc, section, patched);
+      delete col[key][field];
+      return { ok:true, key, field, value:null, removed:true };
+    }
+
     let patched = patchStringField(sectionSrc, key, field, String(value));
     const isNew = !patched;
     if (isNew) {

@@ -3333,7 +3333,7 @@ async function route(req, res) {
                   action: isDir,
                   curl: isDir === 'connect_direct'
                     ? `curl -XPUT http://localhost:1367/api/node/${c} -H 'Content-Type: application/json' -d '{"${bestDir}":"${clusterEntry}"}' && curl -XPUT http://localhost:1367/api/node/${clusterEntry} -H 'Content-Type: application/json' -d '{"${OPP[bestDir]}":"${c}"}'`
-                    : `curl -XPOST http://localhost:1367/api/graph/junction -H 'Content-Type: application/json' -d '{"anchor":"${c}","anchorDir":"${bestDir}","clusterEntry":"${clusterEntry}","clusterDir":"${OPP[bestDir]}"}'`,
+                    : `curl -XPOST http://localhost:1367/api/graph/junction -H 'Content-Type: application/json' -d '{"anchor":"${c}","anchorDir":"${bestDir}","clusterEntry":"${clusterEntry}","clusterDir":"${bestDir}"}'`,
                 };
               })
               .filter(a => a.spatialDist !== null && a.spatialDist <= spatialR)
@@ -3376,7 +3376,7 @@ async function route(req, res) {
             hopsToCluster: a.distFromHub + 2,
             meetsMinHops: a.distFromHub + 2 >= minHops,
             junctionCode: jCode, junctionTerrain: a.terrain,
-            curl: `curl -XPOST http://localhost:1367/api/graph/junction -H 'Content-Type: application/json' -d '{"anchor":"${a.code}","anchorDir":"${bestDir}","clusterEntry":"${clusterEntry}","clusterDir":"${OPP[bestDir]}"}'`,
+            curl: `curl -XPOST http://localhost:1367/api/graph/junction -H 'Content-Type: application/json' -d '{"anchor":"${a.code}","anchorDir":"${bestDir}","clusterEntry":"${clusterEntry}","clusterDir":"${bestDir}"}'`,
           };
         });
 
@@ -3467,7 +3467,7 @@ async function route(req, res) {
             meetsMinHops: bestAnchor.meetsMinHops,
             // Execution
             steps: isJunctionAction
-              ? [`POST /api/graph/junction  body: {"anchor":"${bestAnchor.code}","anchorDir":"${chosenDir}","clusterEntry":"${clusterEntry}","clusterDir":"${OPP[chosenDir]}"}`]
+              ? [`POST /api/graph/junction  body: {"anchor":"${bestAnchor.code}","anchorDir":"${chosenDir}","clusterEntry":"${clusterEntry}","clusterDir":"${chosenDir}"}`]
               : [
                   `PUT /api/node/${bestAnchor.code}   body: {"${chosenDir}":"${clusterEntry}"}`,
                   `PUT /api/node/${clusterEntry}  body: {"${OPP[chosenDir]}":"${bestAnchor.code}"}`,
@@ -4621,13 +4621,13 @@ async function route(req, res) {
 
     const results = [];
     for (const [field, value] of Object.entries(body)) {
-      if (typeof value === 'string') {
+      if (typeof value === 'string' || value === null) {
         const r = WBAPI.editField(type, resolvedKey, field, value);
-        results.push({ field, ok: r.ok, error: r.error, inserted: r.inserted || false, strategy: 'editField' });
+        results.push({ field, ok: r.ok, error: r.error, inserted: r.inserted || false, removed: r.removed || false, strategy: 'editField' });
       } else {
         // Non-string values (arrays, numbers) go through ns.put — in-memory only, requires /api/save
         const ns = { node:WBAPI.nodes, quest:WBAPI.quests, monster:WBAPI.monsters, npc:WBAPI.npcs }[type];
-        const r = ns.put(resolvedKey, { [field]: value });
+        const r = ns ? ns.put(resolvedKey, { [field]: value }) : { ok:false, error:'unknown type' };
         results.push({ field, ok: r.ok, strategy: 'put-memory-only', note: 'non-string; call POST /api/save to persist' });
       }
     }
@@ -4648,7 +4648,7 @@ async function route(req, res) {
     // Collect expected values for disk-verification (string fields only — non-string are in-memory only)
     const expectedFields = {};
     for (const r of results) {
-      if (r.ok && r.strategy === 'editField') expectedFields[r.field] = String(body[r.field]);
+      if (r.ok && r.strategy === 'editField' && !r.removed) expectedFields[r.field] = String(body[r.field]);
     }
     const putReminder = type === 'node' ? { reminder: 'Use API only: PUT /api/node/{code}, PUT /api/coords/{code}, POST /api/graph/junction — never edit roll2hit-v3.html directly.' } : {};
     return saveAndVerify(res, 200, { ok:true, fields: results, ...putReminder }, expectedFields, type, resolvedKey);
