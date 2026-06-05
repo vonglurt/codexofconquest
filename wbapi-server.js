@@ -960,7 +960,17 @@ async function route(req, res) {
           '  Fish pool entries. Filter by rank or night flag.',
           '',
           `GET ${b}/api/loot`,
-          '  d100 loot table — annotated with rollRange per entry, totalWeight, gap, and suggestions.',
+          '  d100 consumable table (potions/scrolls/flashbangs/gold) — annotated with rollRange, totalWeight, gap.',
+          '  Magic weapons (+1–+4) are fishing-only. Monster weapon quality via d6 (see GET /api/loot-drop).',
+          '',
+          `GET ${b}/api/loot-drop[?terrain=&monster=&fishing=&bonus=&name=]`,
+          '  Unified loot-drop query. Combines monster trophy/weapon drops and fishing magic items.',
+          '  fishing=true → fishing drops only (lake magic + fish trophies)',
+          '  fishing=false → monster drops only',
+          '  terrain=<key> → filter by terrain key (shows monsters in that terrain)',
+          '  monster=<key> → filter by monster key',
+          '  bonus=<n>     → n≤0 filters monster weapon quality; n>0 filters lake magic base bonus',
+          '  name=<q>      → substring search on monster name, trophy name, or magic item name',
           '',
           `GET ${b}/api/lake-magic[/{key}][?effect=&minRank=]`,
           '  Lake magic item list or single entry.',
@@ -1853,6 +1863,126 @@ async function route(req, res) {
       logResponse(method, url.pathname, 200, `loot table replaced  ·  ${entries.length} entries  ·  ${totalWeight}/100`);
       return json(res, 200, { ok:true, entries:lootAnnotate(WBAPI.d100Table), totalWeight, gap, suggestions:lootSuggestions(gap), note:'POST /api/save to persist.' });
     }
+  }
+
+  // ── Loot-Drop unified query ───────────────────────────────────────────────
+  if (parts[0] === 'loot-drop' && method === 'GET') {
+    const terrainQ = url.searchParams.get('terrain');
+    const monsterQ = url.searchParams.get('monster');
+    const fishingQ = url.searchParams.get('fishing');   // 'true' = fishing only
+    const bonusQ   = url.searchParams.get('bonus');     // numeric string, e.g. '-2' or '1'
+    const nameQ    = (url.searchParams.get('name') || '').toLowerCase();
+    const bonusN   = bonusQ !== null ? Number(bonusQ) : null;
+
+    const QUALITY_TABLE = [
+      { roll:'1',   bonus:-4, prefix:'Wrecked', probability:'1-in-6 (16.7%)' },
+      { roll:'2',   bonus:-3, prefix:'Rusted',  probability:'1-in-6 (16.7%)' },
+      { roll:'3',   bonus:-2, prefix:'Chipped', probability:'1-in-6 (16.7%)' },
+      { roll:'4',   bonus:-1, prefix:'Worn',    probability:'1-in-6 (16.7%)' },
+      { roll:'5–6', bonus:0,  prefix:'(base)',  probability:'2-in-6 (33.3%)' },
+    ];
+
+    const showMonsters = fishingQ !== 'true';
+    const showFishing  = fishingQ !== 'false';
+    const results = [];
+
+    if (showMonsters) {
+      let monsterKeys;
+      if (terrainQ)       monsterKeys = WBAPI._terrainToMonsters[terrainQ] || [];
+      else if (monsterQ)  monsterKeys = [monsterQ];
+      else                monsterKeys = Object.keys(WBAPI.monsterDrops);
+
+      for (const key of monsterKeys) {
+        const monster = WBAPI.monsterPool[key];
+        const rawDrop = WBAPI.monsterDrops[key];
+        if (!rawDrop && !monster) continue;
+        // bonus filter for monster entries: only applies to negative/zero
+        if (bonusN !== null && bonusN > 0) continue;
+        // name filter
+        const monName   = monster ? monster.name : key;
+        const dropNames = Array.isArray(rawDrop) ? rawDrop.map(d => d.name).join(' ') : (rawDrop ? rawDrop.name : '');
+        if (nameQ && !monName.toLowerCase().includes(nameQ) && !dropNames.toLowerCase().includes(nameQ)) continue;
+        results.push({
+          source:      'monster',
+          monsterKey:  key,
+          monsterName: monName,
+          terrains:    WBAPI._monsterToTerrains[key] || [],
+          dmgDie:      monster ? (monster.dmgDie || 4) : null,
+          trophy:      rawDrop || null,
+          weaponDrop:  {
+            rule:         'Base weapon ≤ monster dmgDie, quality 1d6: 1→-4(Wrecked), 2→-3(Rusted), 3→-2(Chipped), 4→-1(Worn), 5-6→0(base)',
+            qualityTable: bonusN !== null
+              ? QUALITY_TABLE.filter(q => q.bonus === bonusN)
+              : QUALITY_TABLE,
+          },
+        });
+      }
+    }
+
+    if (showFishing) {
+      // Lake magic items
+      for (const [key, item] of Object.entries(WBAPI.lakeMagicDb)) {
+        if (bonusN !== null && bonusN <= 0) continue; // positive bonus = fishing
+        if (bonusN !== null && item.base !== bonusN) continue;
+        if (nameQ && !(item.name || '').toLowerCase().includes(nameQ)) continue;
+        results.push({
+          source:     'fishing',
+          subtype:    'lake_magic',
+          key,
+          name:       item.name,
+          icon:       item.icon,
+          effect:     item.effect,
+          base:       item.base,
+          levelScale: item.levelScale,
+          luckScale:  item.luckScale,
+          minRank:    item.minRank,
+          minLevel:   item.minLevel,
+          desc:       item.desc,
+          bonusFormula: `${item.base}${item.levelScale ? ' + floor(level×'+item.levelScale+')' : ''}${item.luckScale ? ' + floor(luck×'+item.luckScale+')' : ''}`,
+          fishing:    true,
+        });
+      }
+      // Fish trophies (only when no terrain/monster filter)
+      if (!terrainQ && !monsterQ && bonusN === null) {
+        const allFish = [...WBAPI.fishPool, ...WBAPI.nightFishPool];
+        for (const fish of allFish) {
+          const drop = WBAPI.monsterDrops[fish.key];
+          if (!drop) continue;
+          const isNight = WBAPI.nightFishPool.some(f => f.key === fish.key);
+          if (nameQ && !(fish.name||'').toLowerCase().includes(nameQ) && !(drop.name||'').toLowerCase().includes(nameQ)) continue;
+          results.push({
+            source:   'fishing',
+            subtype:  'fish_trophy',
+            key:      fish.key,
+            name:     fish.name,
+            fishRank: fish.rank,
+            isNight,
+            trophy:   drop,
+            fishing:  true,
+          });
+        }
+      }
+    }
+
+    const filterDesc = [
+      terrainQ  && `terrain=${terrainQ}`,
+      monsterQ  && `monster=${monsterQ}`,
+      fishingQ  && `fishing=${fishingQ}`,
+      bonusQ    && `bonus=${bonusQ}`,
+      nameQ     && `name=${nameQ}`,
+    ].filter(Boolean).join('  ');
+    if (filterDesc) logRow('filters', filterDesc);
+    logRow('results', results.length);
+    logResponse(method, url.pathname, 200, `${results.length} loot-drop entries`);
+    return json(res, 200, {
+      ok: true, count: results.length, drops: results,
+      _meta: {
+        qualityTable:  QUALITY_TABLE,
+        sources:       ['monster','fishing'],
+        queryParams:   ['terrain','monster','fishing=true|false','bonus=<n>','name=<q>'],
+        note:          'd100 consumable table at GET /api/loot  ·  magic weapons are fishing-only',
+      },
+    });
   }
 
   // ── Items (ITEM_DB) ──────────────────────────────────────────────────────
@@ -4979,9 +5109,10 @@ server.listen(PORT, '127.0.0.1', () => {
     ['POST',   '/api/monster/{id}/drop              body: {name, icon?, sell?}'],
     ['PUT',    '/api/monster/{id}/drop              body: {name?, icon?, sell?}'],
     ['DELETE', '/api/monster/{id}/drop              X-Nonce: <token>  (nonce type:monster,id:key)'],
-    ['GET',    '/api/loot                           → d100 table with rollRanges, gap, suggestions'],
-    ['PUT',    '/api/loot                           body: {entries:[{weight,_type,_magic?},...]}'],
-    ['PUT',    '/api/loot/{index}                   body: {weight?,_type?,_magic?}'],
+    ['GET',    '/api/loot                           → d100 consumable table (potions/scrolls/gold) with rollRanges, gap'],
+    ['PUT',    '/api/loot                           body: {entries:[{weight,_type},...]}  (consumables only — no magic weapons)'],
+    ['PUT',    '/api/loot/{index}                   body: {weight?,_type?}'],
+    ['GET',    '/api/loot-drop[?terrain=&monster=&fishing=&bonus=&name=] → unified drop query (monster+fishing)'],
     ['GET',    '/api/npc/{id}/dialogue[/{field}[/{index}]]  → whole entry, one field, or one line'],
     ['POST',   '/api/npc/{id}/dialogue              body: {quote, meta?, impartial?, ...}  (create)'],
     ['POST',   '/api/npc/{id}/dialogue/{array}      body: {text}  (append line)'],

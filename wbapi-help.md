@@ -136,6 +136,136 @@ An enemy encountered in combat.
 
 ---
 
+## Loot Drop System
+
+The game uses three distinct drop channels after every battle. They do not overlap.
+
+### Channel 1 — Monster Trophy (MONSTER_DROPS)
+A single themed item keyed per monster. Always drops on kill. Sell-only (no equip). Accessible via `GET /api/drops` or `GET /api/monster/{key}/drop`.
+
+### Channel 2 — Monster Weapon Drop (`_rollMonsterWeaponDrop`)
+One base weapon drop per kill. Weapon die ≤ monster's own dmgDie. Quality is rolled on **1d6**:
+
+| d6 | Bonus | Prefix   | Probability |
+|----|-------|----------|-------------|
+| 1  | −4    | Wrecked  | 1-in-6      |
+| 2  | −3    | Rusted   | 1-in-6      |
+| 3  | −2    | Chipped  | 1-in-6      |
+| 4  | −1    | Worn     | 1-in-6      |
+| 5  |  0    | (base)   | 2-in-6      |
+| 6  |  0    | (base)   | 2-in-6      |
+
+Monsters **never** drop +1, +2, +3, or +4 weapons. All magic-bonus equipment comes exclusively from fishing.
+
+### Channel 3 — d100 Consumable Table (`_D100_TABLE`)
+One roll per battle-end. Potions, scrolls, flashbangs, and gold only. Luck modifier shifts the roll toward better consumables.
+
+| Range | Type                | Weight |
+|-------|---------------------|--------|
+| 01–35 | Minor Healing Potion| 35     |
+| 36–53 | Healing Potion      | 18     |
+| 54–67 | Greater Healing Potion | 14  |
+| 68–73 | Superior Healing Potion | 6  |
+| 74–84 | Spell Scroll        | 11     |
+| 85–90 | Flashbang           | 6      |
+| 91–100| Gold Cache          | 10     |
+
+Manage via `GET /api/loot` (read) or `PUT /api/loot` (replace table).
+
+### Channel 4 — Fishing / Lake Magic (LAKE_MAGIC_DB)
+Magic-enhanced items (+1 to +4 equivalent). Exclusive to high-rank fishing at Yugurt Lake. Stat bonuses scale with player level and luck modifier via `base + floor(level × levelScale) + floor(luck × luckScale)`.
+
+Manage via `GET /api/lake-magic` and `POST /api/lake-magic`.
+
+---
+
+## Unified Loot-Drop Query
+
+```bash
+GET /api/loot-drop
+```
+
+Returns a combined view of all monster drop entries and fishing magic items in one response.
+
+**Query parameters:**
+
+| Param        | Description |
+|--------------|-------------|
+| `terrain`    | Filter to monsters in this terrain key (e.g. `dungeon`, `coastal`) |
+| `monster`    | Filter to a single monster key (e.g. `goblin`) |
+| `fishing`    | `true` = fishing drops only · `false` = monster drops only |
+| `bonus`      | Integer — negative filters monster weapon quality; positive filters lake magic base bonus |
+| `name`       | Substring search on monster name, trophy name, or magic item name |
+
+**Examples:**
+
+```bash
+# All drops for monsters in the dungeon terrain
+curl 'http://localhost:1367/api/loot-drop?terrain=dungeon'
+
+# Only fishing drops
+curl 'http://localhost:1367/api/loot-drop?fishing=true'
+
+# Lake magic items with base bonus = 2
+curl 'http://localhost:1367/api/loot-drop?fishing=true&bonus=2'
+
+# Monster drops where a Chipped (−2) weapon could drop
+curl 'http://localhost:1367/api/loot-drop?fishing=false&bonus=-2'
+
+# Name search across all sources
+curl 'http://localhost:1367/api/loot-drop?name=spine'
+
+# Single monster full drop profile
+curl 'http://localhost:1367/api/loot-drop?monster=ancient_dragon'
+```
+
+**Response schema:**
+
+```json
+{
+  "ok": true,
+  "count": N,
+  "drops": [
+    {
+      "source": "monster",
+      "monsterKey": "goblin",
+      "monsterName": "Goblin",
+      "terrains": ["dungeon"],
+      "dmgDie": 6,
+      "trophy": { "name": "Goblin Ear", "icon": "👂", "sell": 3 },
+      "weaponDrop": {
+        "rule": "Base weapon ≤ monster dmgDie, quality 1d6",
+        "qualityTable": [
+          { "roll": "1", "bonus": -4, "prefix": "Wrecked", "probability": "1-in-6 (16.7%)" },
+          ...
+        ]
+      }
+    },
+    {
+      "source": "fishing",
+      "subtype": "lake_magic",
+      "key": "lake_mag_04",
+      "name": "Void-Touched Fin",
+      "effect": "atk_bonus",
+      "base": 1,
+      "levelScale": 0.2,
+      "luckScale": 0,
+      "minRank": 16,
+      "minLevel": 5,
+      "bonusFormula": "1 + floor(level×0.2)",
+      "fishing": true
+    }
+  ],
+  "_meta": {
+    "qualityTable": [...],
+    "sources": ["monster", "fishing"],
+    "note": "d100 consumable table at GET /api/loot  ·  magic weapons are fishing-only"
+  }
+}
+```
+
+---
+
 ## World folder structure
 
 After `node wbapi-cli.js export ./world`, content is laid out as:

@@ -341,6 +341,7 @@ select.fi{appearance:none;}
   <h1>◆ Roll2Hit World Builder</h1>
   <div class="nav-tab active" data-tab="map">🗺 Map</div>
   <div class="nav-tab" data-tab="bestiary">⚔ Bestiary</div>
+  <div class="nav-tab" data-tab="loot">🎣 Loot</div>
   <div class="nav-tab" data-tab="npcs">👤 NPCs</div>
   <div class="nav-tab" data-tab="quests">📜 Quests</div>
   <div class="nav-tab" data-tab="dice">🎲 Dice Lab</div>
@@ -545,6 +546,88 @@ select.fi{appearance:none;}
     </div>
   </div>
 
+  <!-- ═══ LOOT ═══ -->
+  <div class="panel" id="tab-loot">
+    <div class="split">
+      <!-- Filter sidebar -->
+      <div class="sidebar" style="width:200px">
+        <div class="sidebar-hd">Loot Drops</div>
+        <div style="padding:6px 8px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:6px">
+          <div>
+            <div class="fl">Source</div>
+            <select id="loot-src-filter" class="fi" style="width:100%">
+              <option value="">All</option>
+              <option value="monster">Monster only</option>
+              <option value="fishing">Fishing only</option>
+            </select>
+          </div>
+          <div>
+            <div class="fl">Terrain</div>
+            <select id="loot-terrain-filter" class="fi" style="width:100%">
+              <option value="">Any terrain</option>
+            </select>
+          </div>
+          <div>
+            <div class="fl">Bonus filter</div>
+            <select id="loot-bonus-filter" class="fi" style="width:100%">
+              <option value="">Any bonus</option>
+              <option value="-4">−4 Wrecked</option>
+              <option value="-3">−3 Rusted</option>
+              <option value="-2">−2 Chipped</option>
+              <option value="-1">−1 Worn</option>
+              <option value="0">0 Base</option>
+              <option value="1">+1 (fishing)</option>
+              <option value="2">+2 (fishing)</option>
+            </select>
+          </div>
+          <div class="search-bar" style="padding:0"><input id="loot-name-search" class="fi" style="width:100%" placeholder="Search name…"></div>
+          <button class="btn primary" id="btn-loot-query" style="width:100%">Query</button>
+        </div>
+        <!-- D100 table link -->
+        <div style="padding:8px;border-top:1px solid var(--border);margin-top:auto">
+          <button class="btn" id="btn-loot-d100" style="width:100%;font-size:11px">⚙ D100 Table</button>
+        </div>
+      </div>
+      <!-- Results table -->
+      <div class="main-area">
+        <div id="loot-empty" class="empty"><h2>Query loot drops</h2><p>Click "Query" to load all drops, or filter by terrain, source, or bonus.</p></div>
+        <table class="monster-table" id="loot-table" style="display:none">
+          <thead><tr>
+            <th></th><th>Source / Name</th><th>Terrain</th><th>Trophy Drop</th><th>Weapon / Effect</th>
+          </tr></thead>
+          <tbody id="loot-tbody"></tbody>
+        </table>
+      </div>
+      <!-- Drop detail pane -->
+      <div class="detail-pane" id="loot-detail" style="display:none;width:280px">
+        <div class="detail-hd">
+          <span id="ld-title" style="font-size:13px;font-weight:700;color:var(--text)"></span>
+          <span id="ld-badge" style="margin-left:auto"></span>
+        </div>
+        <div class="detail-body" id="ld-body"></div>
+        <div class="edit-toolbar" id="ld-toolbar" style="display:none">
+          <span class="change-count" id="ld-change-count"></span>
+          <button class="btn primary sm" id="btn-ld-put" disabled>Save Drop</button>
+          <button class="btn sm" id="btn-ld-reset">Reset</button>
+        </div>
+      </div>
+    </div>
+    <!-- D100 table editor (shown when btn-loot-d100 clicked) -->
+    <div id="loot-d100-wrap" style="display:none;padding:12px 16px;border-top:2px solid var(--border);flex-direction:column;gap:8px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:12px;font-weight:700;color:var(--text)">⚙ D100 Consumable Table</span>
+        <span id="d100-total-badge" style="font-size:11px;color:var(--muted)"></span>
+        <button class="btn sm" id="btn-d100-close" style="margin-left:auto;font-size:11px">Close</button>
+      </div>
+      <div id="d100-entries" style="display:flex;flex-direction:column;gap:4px"></div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="btn primary" id="btn-d100-put" disabled style="font-size:11px">PUT Table</button>
+        <button class="btn" id="btn-d100-reload" style="font-size:11px">Reload</button>
+        <span id="d100-put-status" style="font-size:11px;color:var(--green)"></span>
+      </div>
+    </div>
+  </div>
+
   <!-- ═══ NPCS ═══ -->
   <div class="panel" id="tab-npcs">
     <div class="split">
@@ -700,6 +783,8 @@ select.fi{appearance:none;}
           <option value="terrain">terrain</option>
           <option value="fish">fish</option>
           <option value="lake-magic">lake-magic</option>
+          <option value="loot-drop">loot-drop</option>
+          <option value="loot">loot (d100)</option>
           <option value="schema">schema</option>
         </select>
       </div>
@@ -2535,12 +2620,26 @@ function renderMonsterDetail(m) {
   if (full.xp    != null) body.appendChild(mkMonsterField('xp',    'XP Award',  'number'));
   if (full.morale!= null) body.appendChild(mkMonsterField('morale','Morale',    'number'));
 
-  // Drop (read-only)
-  if (full.drop) {
-    const drp = document.createElement('div'); drp.className = 'fg';
-    drp.innerHTML = `<div class="fl">Trophy Drop</div>
-      <div class="fv">${full.drop.icon} ${full.drop.name} <span style="color:var(--yellow)">${full.drop.sell}gp</span></div>`;
-    body.appendChild(drp);
+  // Trophy Drop — editable (PUT /api/monster/{key}/drop or POST if new)
+  {
+    const dropSec = document.createElement('div'); dropSec.id = 'md-drop-section';
+    const existingDrop = full.drop || null;
+    const dropIcon = existingDrop?.icon || '';
+    const dropName = existingDrop?.name || '';
+    const dropSell = existingDrop?.sell ?? '';
+    dropSec.innerHTML = `<div class="fl" style="display:flex;align-items:center;gap:6px">Trophy Drop
+        <span style="font-size:10px;color:var(--muted)">(PUT saves to server)</span>
+      </div>
+      <div style="display:grid;grid-template-columns:40px 1fr 60px 58px;gap:4px;margin-top:3px;align-items:center">
+        <input id="md-drop-icon" class="fi" value="${dropIcon}" placeholder="🐺" style="text-align:center">
+        <input id="md-drop-name" class="fi" value="${dropName}" placeholder="Drop name">
+        <input id="md-drop-sell" class="fi" type="number" value="${dropSell}" placeholder="gp">
+        <button class="btn primary sm" id="btn-md-drop-put" style="width:100%;padding:5px 4px">
+          ${existingDrop ? 'PUT' : 'POST'}
+        </button>
+      </div>
+      <div id="md-drop-status" style="font-size:10px;color:var(--green);margin-top:2px;min-height:13px"></div>`;
+    body.appendChild(dropSec);
   }
 
   // Terrain appearances (read-only)
@@ -2594,6 +2693,383 @@ $('btn-md-put').addEventListener('click', async () => {
     btn.textContent = 'PUT Changes'; btn.disabled = false;
   }
 });
+
+// Monster detail — trophy drop PUT/POST via event delegation on #monster-detail
+$('monster-detail').addEventListener('click', async (e) => {
+  if (e.target.id !== 'btn-md-drop-put') return;
+  const key = mdCurrentKey; if (!key) return;
+  const icon = ($('md-drop-icon')?.value || '').trim();
+  const name = ($('md-drop-name')?.value || '').trim();
+  const sell = Number($('md-drop-sell')?.value) || 0;
+  if (!name) { $('md-drop-status').textContent = '⚠ Name required'; return; }
+  const btn = e.target; btn.disabled = true; btn.textContent = '…';
+  const status = $('md-drop-status');
+  try {
+    const hasExisting = !!WBAPI.monsterDrops[key];
+    let result;
+    if (SERVER.active) {
+      const method = hasExisting ? 'PUT' : 'POST';
+      const r = await fetch(`${SERVER.url}/api/monster/${encodeURIComponent(key)}/drop`, {
+        method, headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ icon, name, sell }),
+      });
+      result = await r.json();
+    } else {
+      WBAPI.monsterDrops[key] = { icon, name, sell };
+      result = { ok: true };
+    }
+    if (result.ok) {
+      WBAPI.monsterDrops[key] = { icon, name, sell };
+      status.style.color = 'var(--green)';
+      status.textContent = '✓ Saved';
+      btn.textContent = 'PUT'; btn.disabled = false;
+      renderMonsterTable();
+    } else {
+      status.style.color = 'var(--red)';
+      status.textContent = result.error || 'Save failed';
+      btn.textContent = hasExisting ? 'PUT' : 'POST'; btn.disabled = false;
+    }
+  } catch(err) {
+    status.style.color = 'var(--red)';
+    status.textContent = err.message;
+    btn.textContent = WBAPI.monsterDrops[key] ? 'PUT' : 'POST'; btn.disabled = false;
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+// LOOT TAB
+// ═══════════════════════════════════════════════════════════════════════════
+const QUALITY_TABLE_LABELS = {
+  '-4':'−4 Wrecked', '-3':'−3 Rusted', '-2':'−2 Chipped', '-1':'−1 Worn', '0':'0 Base',
+};
+let _lootResults = [];
+let _lootSelKey  = null;
+let _ldDropOriginal = null;
+
+function lootTerrainPopulate() {
+  const sel = $('loot-terrain-filter');
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">Any terrain</option>';
+  for (const [tk, t] of Object.entries(WBAPI.worldDb||{})) {
+    const o = document.createElement('option');
+    o.value = tk; o.textContent = `${t.icon||''} ${t.label||tk}`;
+    if (tk === cur) o.selected = true;
+    sel.appendChild(o);
+  }
+}
+
+function buildLootUrl() {
+  const src     = $('loot-src-filter').value;
+  const terrain = $('loot-terrain-filter').value;
+  const bonus   = $('loot-bonus-filter').value;
+  const name    = ($('loot-name-search').value||'').trim();
+  const p = new URLSearchParams();
+  if (src === 'monster') p.set('fishing','false');
+  else if (src === 'fishing') p.set('fishing','true');
+  if (terrain) p.set('terrain', terrain);
+  if (bonus !== '') p.set('bonus', bonus);
+  if (name) p.set('name', name);
+  return '/api/loot-drop' + (p.toString() ? '?'+p : '');
+}
+
+async function runLootQuery() {
+  const btn = $('btn-loot-query');
+  btn.disabled = true; btn.textContent = 'Loading…';
+  const tbody = $('loot-tbody');
+  try {
+    let drops;
+    if (SERVER.active) {
+      const r = await fetch(SERVER.url + buildLootUrl());
+      const d = await r.json();
+      drops = d.drops || [];
+    } else {
+      // Local fallback — build from in-memory data
+      drops = [];
+      const src = $('loot-src-filter').value;
+      const terrain = $('loot-terrain-filter').value;
+      const bonus = $('loot-bonus-filter').value;
+      const nameQ = ($('loot-name-search').value||'').toLowerCase();
+      if (src !== 'fishing') {
+        const keys = terrain ? (WBAPI._terrainToMonsters[terrain]||[]) : Object.keys(WBAPI.monsterDrops);
+        for (const key of keys) {
+          const m = WBAPI.monsterPool[key];
+          const d = WBAPI.monsterDrops[key];
+          if (!m && !d) continue;
+          if (bonus !== '' && Number(bonus) > 0) continue;
+          const mname = (m?.name||key).toLowerCase();
+          const dname = (Array.isArray(d)?d.map(x=>x.name).join(' '):(d?.name||'')).toLowerCase();
+          if (nameQ && !mname.includes(nameQ) && !dname.includes(nameQ)) continue;
+          drops.push({ source:'monster', monsterKey:key, monsterName:m?.name||key,
+            terrains:WBAPI._monsterToTerrains[key]||[], dmgDie:m?.dmgDie||4, trophy:d||null });
+        }
+      }
+      if (src !== 'monster') {
+        for (const [key, item] of Object.entries(WBAPI.lakeMagicDb||{})) {
+          if (bonus !== '' && Number(bonus) <= 0) continue;
+          if (bonus !== '' && item.base !== Number(bonus)) continue;
+          if (nameQ && !(item.name||'').toLowerCase().includes(nameQ)) continue;
+          drops.push({ source:'fishing', subtype:'lake_magic', key, name:item.name,
+            icon:item.icon, effect:item.effect, base:item.base,
+            levelScale:item.levelScale, luckScale:item.luckScale,
+            minRank:item.minRank, minLevel:item.minLevel, desc:item.desc,
+            bonusFormula:`${item.base}${item.levelScale?'+'+item.levelScale+'×lv':''}${item.luckScale?'+'+item.luckScale+'×luck':''}`,
+            fishing:true });
+        }
+      }
+    }
+    _lootResults = drops;
+    renderLootTable(drops);
+  } catch(e) {
+    $('loot-empty').style.display = 'flex';
+    $('loot-table').style.display = 'none';
+    $('loot-empty').querySelector('p').textContent = 'Error: ' + e.message;
+  } finally {
+    btn.disabled = false; btn.textContent = 'Query';
+  }
+}
+
+function renderLootTable(drops) {
+  const tbody = $('loot-tbody');
+  tbody.innerHTML = '';
+  if (!drops.length) {
+    $('loot-empty').style.display = 'flex'; $('loot-table').style.display = 'none'; return;
+  }
+  $('loot-empty').style.display = 'none'; $('loot-table').style.display = '';
+  for (const entry of drops) {
+    const tr = document.createElement('tr');
+    tr.className = (entry.source==='monster'?entry.monsterKey:entry.key) === _lootSelKey ? 'sel' : '';
+    if (entry.source === 'monster') {
+      const trophy = entry.trophy;
+      const trophyCell = trophy
+        ? (Array.isArray(trophy) ? trophy.map(t=>t.icon).join('')+' '+trophy.map(t=>t.name).join('/')
+          : `${trophy.icon||''} ${trophy.name} (${trophy.sell}gp)`)
+        : '<span style="color:var(--muted)">—</span>';
+      const terrainStr = (entry.terrains||[]).slice(0,3).map(tk=>`<span class="flag-pill flag-read" style="font-size:9px">${tk}</span>`).join('');
+      const weaponStr = `d6 · die ${entry.dmgDie||'?'} · −4 to 0`;
+      tr.innerHTML = `<td style="font-size:15px">⚔</td>
+        <td><span style="font-weight:600;color:var(--text)">${entry.monsterName}</span><div style="font-size:10px;color:var(--muted)">${entry.monsterKey}</div></td>
+        <td style="font-size:10px">${terrainStr}</td>
+        <td style="font-size:11px;color:var(--muted)">${trophyCell}</td>
+        <td style="font-size:10px;color:var(--muted)">${weaponStr}</td>`;
+      tr.addEventListener('click', () => { _lootSelKey = entry.monsterKey; renderLootTable(_lootResults); renderLootDetail(entry); $('loot-detail').style.display='flex'; });
+    } else {
+      const bonusStr = entry.bonusFormula || entry.base;
+      tr.innerHTML = `<td style="font-size:15px">${entry.icon||'🎣'}</td>
+        <td><span style="font-weight:600;color:var(--accent)">${entry.name||entry.key}</span><div style="font-size:10px;color:var(--muted)">${entry.key} · rank ${entry.minRank}+</div></td>
+        <td style="font-size:10px;color:var(--muted)">Yugurt Lake</td>
+        <td style="font-size:11px;color:var(--muted)">—</td>
+        <td style="font-size:11px;color:var(--accent)">${entry.effect}: ${bonusStr}</td>`;
+      tr.addEventListener('click', () => { _lootSelKey = entry.key; renderLootTable(_lootResults); renderLootDetail(entry); $('loot-detail').style.display='flex'; });
+    }
+    tbody.appendChild(tr);
+  }
+}
+
+function renderLootDetail(entry) {
+  const body = $('ld-body');
+  body.innerHTML = '';
+  _ldDropOriginal = null;
+  if (entry.source === 'monster') {
+    $('ld-title').textContent = entry.monsterName;
+    $('ld-badge').innerHTML = `<span class="tier-badge tier-${WBAPI.monsterPool[entry.monsterKey]?.tier||'trivial'}">${WBAPI.monsterPool[entry.monsterKey]?.tier||'?'}</span>`;
+    // Trophy drop edit
+    const trophy = entry.trophy && !Array.isArray(entry.trophy) ? entry.trophy : null;
+    _ldDropOriginal = trophy ? { icon:trophy.icon||'', name:trophy.name||'', sell:trophy.sell??0 } : null;
+    const icon = _ldDropOriginal?.icon || '';
+    const name = _ldDropOriginal?.name || '';
+    const sell = _ldDropOriginal?.sell ?? '';
+    body.innerHTML += `<div class="fg"><div class="fl" style="display:flex;align-items:center;gap:4px">
+        Trophy Drop <span style="font-size:10px;color:var(--muted)">${trophy?'(edit)':'(create)'}</span></div>
+      <div style="display:grid;grid-template-columns:36px 1fr 54px;gap:4px;margin-top:3px">
+        <input id="ld-drop-icon" class="fi" value="${icon}" placeholder="🗡" style="text-align:center">
+        <input id="ld-drop-name" class="fi" value="${name}" placeholder="Item name">
+        <input id="ld-drop-sell" class="fi" type="number" value="${sell}" placeholder="gp">
+      </div></div>`;
+    // Weapon quality d6 table
+    body.innerHTML += `<div class="fg"><div class="fl">Weapon Drop — 1d6 Quality (die ≤ ${entry.dmgDie||'?'})</div>
+      <table style="width:100%;font-size:10px;border-collapse:collapse;margin-top:3px">
+        <tr><th style="text-align:left;color:var(--muted);padding:2px 4px">d6</th><th style="text-align:left;color:var(--muted);padding:2px 4px">Bonus</th><th style="text-align:left;color:var(--muted);padding:2px 4px">Prefix</th><th style="text-align:right;color:var(--muted);padding:2px 4px">Odds</th></tr>
+        <tr><td style="padding:2px 4px">1</td><td style="color:var(--red)">−4</td><td>Wrecked</td><td style="text-align:right;color:var(--muted)">16.7%</td></tr>
+        <tr><td style="padding:2px 4px">2</td><td style="color:var(--red)">−3</td><td>Rusted</td><td style="text-align:right;color:var(--muted)">16.7%</td></tr>
+        <tr><td style="padding:2px 4px">3</td><td style="color:var(--yellow)">−2</td><td>Chipped</td><td style="text-align:right;color:var(--muted)">16.7%</td></tr>
+        <tr><td style="padding:2px 4px">4</td><td style="color:var(--yellow)">−1</td><td>Worn</td><td style="text-align:right;color:var(--muted)">16.7%</td></tr>
+        <tr><td style="padding:2px 4px">5–6</td><td style="color:var(--green)">0</td><td>(base)</td><td style="text-align:right;color:var(--muted)">33.3%</td></tr>
+      </table></div>`;
+    // Terrains
+    if (entry.terrains?.length) {
+      body.innerHTML += `<div class="fg"><div class="fl">Terrains</div>
+        <div>${entry.terrains.map(tk=>`<span class="flag-pill flag-read" style="font-size:10px">${(WBAPI.worldDb[tk]||{}).icon||''} ${tk}</span>`).join('')}</div></div>`;
+    }
+    $('ld-toolbar').style.display = 'flex';
+    $('btn-ld-put').disabled = false;
+    $('btn-ld-put').textContent = trophy ? 'PUT Drop' : 'POST Drop';
+    // watch for changes
+    ['ld-drop-icon','ld-drop-name','ld-drop-sell'].forEach(id => {
+      document.getElementById(id)?.addEventListener('input', ldCheckChanges);
+    });
+  } else {
+    // Fishing / lake magic
+    $('ld-title').textContent = entry.name || entry.key;
+    $('ld-badge').innerHTML = `<span style="font-size:10px;color:var(--accent)">🎣 fishing</span>`;
+    body.innerHTML = `
+      <div class="fg"><div class="fl">Effect</div><div class="fv" style="color:var(--accent)">${entry.effect||'—'}</div></div>
+      <div class="fg"><div class="fl">Bonus Formula</div><div class="fv">${entry.bonusFormula||entry.base}</div></div>
+      <div class="fg"><div class="fl">Min Rank / Level</div><div class="fv">Rank ${entry.minRank||'—'} · Level ${entry.minLevel||'—'}</div></div>
+      <div class="fg"><div class="fl">Luck Scale</div><div class="fv">${entry.luckScale||0}×luck</div></div>
+      <div class="fg"><div class="fl">Level Scale</div><div class="fv">${entry.levelScale||0}×level</div></div>
+      <div class="fg"><div class="fl">Description</div><div class="fv" style="color:var(--muted);font-size:11px;line-height:1.5">${entry.desc||'—'}</div></div>`;
+    $('ld-toolbar').style.display = 'none';
+  }
+  $('ld-change-count').textContent = '';
+}
+
+function ldCheckChanges() {
+  if (!_ldDropOriginal) { $('btn-ld-put').disabled = false; return; }
+  const icon = $('ld-drop-icon')?.value || '';
+  const name = $('ld-drop-name')?.value || '';
+  const sell = Number($('ld-drop-sell')?.value) || 0;
+  const changed = icon !== _ldDropOriginal.icon || name !== _ldDropOriginal.name || sell !== _ldDropOriginal.sell;
+  $('btn-ld-put').disabled = !changed;
+  $('ld-change-count').textContent = changed ? '1 field changed' : '';
+}
+
+$('btn-ld-reset').addEventListener('click', () => {
+  if (_lootSelKey) {
+    const entry = _lootResults.find(e => (e.monsterKey||e.key) === _lootSelKey);
+    if (entry) renderLootDetail(entry);
+  }
+});
+
+$('btn-ld-put').addEventListener('click', async () => {
+  if (!_lootSelKey) return;
+  const entry = _lootResults.find(e => (e.monsterKey||e.key) === _lootSelKey);
+  if (!entry || entry.source !== 'monster') return;
+  const icon = ($('ld-drop-icon')?.value || '').trim();
+  const name = ($('ld-drop-name')?.value || '').trim();
+  const sell = Number($('ld-drop-sell')?.value) || 0;
+  if (!name) { alert('Drop name is required.'); return; }
+  const btn = $('btn-ld-put'); btn.disabled = true; btn.textContent = 'Saving…';
+  try {
+    const hasExisting = !!WBAPI.monsterDrops[_lootSelKey];
+    let result;
+    if (SERVER.active) {
+      const method = hasExisting ? 'PUT' : 'POST';
+      const r = await fetch(`${SERVER.url}/api/monster/${encodeURIComponent(_lootSelKey)}/drop`, {
+        method, headers:{'Content-Type':'application/json'}, body:JSON.stringify({icon,name,sell}),
+      });
+      result = await r.json();
+    } else {
+      WBAPI.monsterDrops[_lootSelKey] = {icon,name,sell};
+      result = {ok:true};
+    }
+    if (result.ok) {
+      WBAPI.monsterDrops[_lootSelKey] = {icon,name,sell};
+      _ldDropOriginal = {icon,name,sell};
+      entry.trophy = {icon,name,sell};
+      $('ld-change-count').textContent = '✓ Saved';
+      btn.textContent = 'PUT Drop'; btn.disabled = true;
+      renderLootTable(_lootResults);
+    } else {
+      alert('Save failed: ' + (result.error||JSON.stringify(result)));
+      btn.textContent = hasExisting ? 'PUT Drop' : 'POST Drop'; btn.disabled = false;
+    }
+  } catch(e) {
+    alert('Error: ' + e.message);
+    btn.textContent = WBAPI.monsterDrops[_lootSelKey] ? 'PUT Drop' : 'POST Drop'; btn.disabled = false;
+  }
+});
+
+// D100 table editor
+let _d100Entries = [];
+
+async function loadD100Table() {
+  const wrap = $('d100-entries'); wrap.innerHTML = '';
+  try {
+    if (SERVER.active) {
+      const r = await fetch(`${SERVER.url}/api/loot`);
+      const d = await r.json();
+      _d100Entries = (d.entries || []).map(e => ({ weight:e.weight, _type:e._type }));
+    } else {
+      _d100Entries = (WBAPI.d100Table || []).map(e => ({ weight:e.weight, _type:e._type }));
+    }
+    renderD100Entries();
+  } catch(e) {
+    wrap.textContent = 'Error: ' + e.message;
+  }
+}
+
+function renderD100Entries() {
+  const wrap = $('d100-entries'); wrap.innerHTML = '';
+  const total = _d100Entries.reduce((s,e) => s+e.weight, 0);
+  $('d100-total-badge').textContent = `Total: ${total}/100 ${total!==100?'⚠':'✓'}`;
+  $('d100-total-badge').style.color = total === 100 ? 'var(--green)' : 'var(--red)';
+  $('btn-d100-put').disabled = total !== 100;
+  for (let i = 0; i < _d100Entries.length; i++) {
+    const e = _d100Entries[i];
+    const row = document.createElement('div');
+    row.style.cssText = 'display:grid;grid-template-columns:140px 60px 1fr;gap:6px;align-items:center;font-size:11px';
+    row.innerHTML = `<span style="color:var(--text)">${e._type}</span>
+      <input type="number" class="fi" min="0" max="100" value="${e.weight}" data-d100-idx="${i}" style="font-size:11px;padding:3px 6px">
+      <div class="d100-bar" style="height:8px;background:var(--bg3);border-radius:4px;overflow:hidden">
+        <div style="height:100%;width:${e.weight}%;background:var(--accent);border-radius:4px;transition:width .2s"></div>
+      </div>`;
+    row.querySelector('input').addEventListener('input', (ev) => {
+      const idx = Number(ev.target.dataset.d100Idx);
+      _d100Entries[idx].weight = Number(ev.target.value)||0;
+      renderD100Entries();
+    });
+    wrap.appendChild(row);
+  }
+}
+
+$('btn-d100-put').addEventListener('click', async () => {
+  const btn = $('btn-d100-put'); btn.disabled = true; btn.textContent = 'Saving…';
+  try {
+    let result;
+    if (SERVER.active) {
+      const r = await fetch(`${SERVER.url}/api/loot`, {
+        method:'PUT', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ entries: _d100Entries }),
+      });
+      result = await r.json();
+    } else {
+      WBAPI.d100Table = _d100Entries.map(e=>({...e}));
+      result = {ok:true};
+    }
+    if (result.ok) {
+      $('d100-put-status').textContent = '✓ Saved — POST /api/save to persist';
+      btn.textContent = 'PUT Table'; btn.disabled = false;
+    } else {
+      $('d100-put-status').style.color = 'var(--red)';
+      $('d100-put-status').textContent = result.error || 'Failed';
+      btn.textContent = 'PUT Table'; btn.disabled = false;
+    }
+  } catch(e) {
+    $('d100-put-status').style.color = 'var(--red)';
+    $('d100-put-status').textContent = e.message;
+    btn.textContent = 'PUT Table'; btn.disabled = false;
+  }
+});
+
+$('btn-d100-reload').addEventListener('click', loadD100Table);
+$('btn-d100-close').addEventListener('click', () => { $('loot-d100-wrap').style.display='none'; });
+$('btn-loot-d100').addEventListener('click', () => {
+  const wrap = $('loot-d100-wrap');
+  if (wrap.style.display === 'none') { wrap.style.display = 'flex'; loadD100Table(); }
+  else wrap.style.display = 'none';
+});
+
+$('btn-loot-query').addEventListener('click', runLootQuery);
+$('loot-name-search').addEventListener('keydown', e => { if (e.key==='Enter') runLootQuery(); });
+['loot-src-filter','loot-terrain-filter','loot-bonus-filter'].forEach(id => {
+  $(id).addEventListener('change', () => {});
+});
+
+// Populate terrain dropdown when data loads and tab is activated
+function lootTabActivated() {
+  lootTerrainPopulate();
+  if (!_lootResults.length) runLootQuery();
+}
 
 // ═══════════════════════════════════════════════════════════════════════════
 // NPC TAB
@@ -3253,6 +3729,7 @@ $('file-input').addEventListener('change',e=>{ if(e.target.files[0]) readFile(e.
 function switchTab(name){
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===name));
   document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===`tab-${name}`));
+  if (name === 'loot' && WBAPI.loaded) lootTabActivated();
 }
 document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>switchTab(t.dataset.tab)));
 
@@ -3611,6 +4088,10 @@ document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>
       { label:'All terrains',             url:'/api/list/terrain' },
       { label:'All fish',                 url:'/api/fish' },
       { label:'All lake magic',           url:'/api/lake-magic' },
+      { label:'All loot drops',           url:'/api/loot-drop' },
+      { label:'Loot drops — fishing only',url:'/api/loot-drop?fishing=true' },
+      { label:'Loot drops — by terrain',  url:'/api/loot-drop?terrain={v}',   param:'Terrain key (e.g. dungeon)' },
+      { label:'D100 consumable table',    url:'/api/loot' },
       { label:'Nodes — by act',           url:'/api/list/node?act={v}',        param:'Act (1–4)' },
       { label:'Quests — by type',         url:'/api/list/quest?type={v}',      param:'Type (story/battle/…)' },
       { label:'Quests — for node',        url:'/api/list/quest?node={v}',      param:'Node code (e.g. CY)' },
@@ -3636,6 +4117,8 @@ document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>
       { label:'Terrain',      url:'/api/terrain/{v}',        param:'Key' },
       { label:'Location',     url:'/api/location/{v}',       param:'Node code' },
       { label:'Fish',         url:'/api/fish/{v}',           param:'Fish key' },
+      { label:'Monster drop', url:'/api/monster/{v}/drop',   param:'Monster key' },
+      { label:'Loot drop — monster', url:'/api/loot-drop?monster={v}', param:'Monster key' },
     ],
     audit: [
       { label:'Full integrity audit',     url:'/api/audit' },
