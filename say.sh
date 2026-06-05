@@ -22,7 +22,7 @@
 VOICE="Samantha"
 RATE=185
 
-LOG="/Users/user/code/roll2hit.com/say.log"
+LOG="/Users/user/code/roll2hit.com/milepoints/say.log"
 
 if [[ $# -gt 0 ]]; then
     TEXT="$*"
