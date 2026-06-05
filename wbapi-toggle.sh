@@ -19,6 +19,19 @@ SCRIPT="wbapi-server.js"
 DIR="$(cd "$(dirname "$0")" && pwd)"
 CMD="${1:-toggle}"
 
+# ── Load .env if present (secrets — gitignored) ───────────────────────────────
+ENV_FILE="$DIR/.env"
+if [ -f "$ENV_FILE" ]; then
+  while IFS='=' read -r key value; do
+    # Skip comments and blank lines
+    [[ "$key" =~ ^[[:space:]]*# ]] && continue
+    [[ -z "$key" ]] && continue
+    # Skip placeholder value
+    [[ "$value" == *"PASTE-YOUR-KEY-HERE"* ]] && continue
+    export "$key"="$value"
+  done < "$ENV_FILE"
+fi
+
 PID=$(pgrep -f "$SCRIPT" | head -1)
 
 # ── Run server in a restart loop ─────────────────────────────────────────────
