@@ -443,30 +443,31 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | [x] | MSE | canterbury-tales | The Canterbury Tales — Geoffrey Chaucer | c.1390 | Medieval Stories | 1688 | SEEDS COMPLETE 2026-06-03 — MSE-01–07 all vignettes done (7 cycles). questComplete added to MSE-07 (cycle 7). New nodes: BRT, ORL, ACT, RDW, CHY, PCR, LRD, SAL, COT added to Location Grid. Theme threads for all 7 cycles. See MSE-canterbury-tales.md. |
 | [x] | SDQ | rob-roy | Rob Roy — Sir Walter Scott | 1817 (1715 setting) | Scottish Adventure | 370 | SEEDS COMPLETE 2026-06-03 — SDQ-01–07 all vignettes done. Memory-processed (source .txt not read). New nodes: OBH, GLA, ABF, GLN, LLM, EDI. See SDQ-rob-roy.md. |
 | [x] | FCO | vision-of-piers-plowman | Piers Plowman — William Langland | c.1370–1386 | Allegorical Poem | 265 | SEEDS COMPLETE 2026-06-03 — FCO-01–07 all vignettes done. MGF already in Location Grid. No new nodes. See FCO-vision-of-piers-plowman.md. |
+| [ ] | SHK | shakespeare-complete-works | Complete Works — William Shakespeare | c.1590–1613 | Drama / Poetry | 5318 | 28 parts. Histories, tragedies, comedies, sonnets. Source txt confirmed present. See SHK-shakespeare-complete-works.md. |
 
 ### Norse & Scandinavian
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
 | [x] | FRO | volsunga-saga | Volsunga Saga — Anon | ~13th C (legendary) | Norse Legend | 342 | SEEDS COMPLETE 2026-06-03 — FRO-01–07 all vignettes done (7 cycles). questComplete added to FRO-07 (cycle 7). New nodes: FLM, ATL, WRM, ODD, LYG, HKL, SIG, VLN added to Location Grid. Theme threads for all 7 cycles. See FRO-volsunga-saga.md. |
-| [x] | VBY | grettir-saga | Grettir's Saga — Anon | ~14th C | Icelandic Saga | 373 | SEEDS COMPLETE 2026-06-03 — VBY-01–07 all vignettes done. RKN/BWH already in Location Grid. No new nodes. See VBY-grettir-saga.md. |
+| [ ] | VBY | grettir-saga | Grettir's Saga — Anon | ~14th C | Icelandic Saga | 373 | Source txt missing — prior cycle was memory-processed only. Add VBY-grettir-saga.txt before processing. Prior notes: VBY-01–07 done, RKN/BWH in grid. |
 | [x] | LBC | nibelungenlied | Nibelungenlied — Anon | c.1200 | German Epic | 660 | SEEDS COMPLETE 2026-06-03 — LBC-01–07 all vignettes done (7 cycles). questComplete added to LBC-07 (cycle 7). New nodes: NIL, WOR, RHN, KOL, HST added to Location Grid. Theme threads for all 7 cycles. See LBC-nibelungenlied.md. |
 | [x] | GDN | njal-saga | Njal's Saga — Anon (Dasent transl.) | ~13th C | Icelandic Saga | 787 | SEEDS COMPLETE 2026-06-03 — GDN-01–07 all vignettes done. No new nodes (ISL, BK, VS, HHL, HEO, CON all exist). See GDN-njal-saga.md. |
-| [x] | RIX | egil-saga | Egil's Saga — Anon (attr. Snorri) | ~13th C | Icelandic Saga | 869 | SEEDS COMPLETE 2026-06-03 — RIX-01–07 all vignettes done. YRK/ISL already in Location Grid. No new nodes. See RIX-egil-saga.md. |
+| [ ] | RIX | egil-saga | Egil's Saga — Anon (attr. Snorri) | ~13th C | Icelandic Saga | 869 | Source txt missing — prior cycle was memory-processed only. Add RIX-egil-saga.txt before processing. Prior notes: RIX-01–07 done, YRK/ISL in grid. |
 | [x] | BOO | prose-edda | Prose Edda — Snorri Sturluson | c.1220 | Norse Mythology | 514 | SEEDS COMPLETE 2026-06-03 — BOO-01–07 all vignettes done. HNJ already in Location Grid. No new nodes. See BOO-prose-edda.md. |
 | [x] | ALF | kalevala | Kalevala — Elias Lönnrot | 1835/1849 | Finnish Epic | 642 | SEEDS COMPLETE 2026-06-03 — ALF-01–07 all vignettes done. KVF/KVM added in cycle 2 pass (already in grid). See ALF-kalevala.md. |
 | [x] | KSU | heimskringla | Heimskringla — Snorri Sturluson | c.1230 | Norse Kings History | 1707 | SEEDS COMPLETE 2026-06-03 — KSU-01–07 all vignettes done. ECF already in Location Grid. No new nodes needed. See KSU-heimskringla.md. |
-| [x] | RKV | poetic-edda | Poetic Edda — Anon | ~10th–13th C | Norse Poetry | 1924 | SEEDS COMPLETE 2026-06-03 — RKV-01–07 all vignettes done. AEG/RSS already in Location Grid. No new nodes. See RKV-poetic-edda.md. |
-| [x] | HFT | frithiof-saga | Frithiof's Saga — Esaias Tegnér | 1825 (Old Norse) | Romantic Epic | 403 | SEEDS COMPLETE 2026-06-03 — HFT-01–07 all vignettes done. No new nodes (BLG/ALR/RNG/ING pre-existing). See HFT-frithiof-saga.md. |
-| [x] | MOL | laxdaela-saga | Laxdaela Saga — Anon | ~13th C | Icelandic Saga | 347 | SEEDS COMPLETE 2026-06-03 — MOL-01–02 all vignettes done (2 cycles). questComplete added to MOL-02 (cycle 2). All nodes already in Location Grid. Theme threads for both cycles already present. See MOL-laxdaela-saga.md. |
-| [x] | CPH | gesta-danorum | Gesta Danorum — Saxo Grammaticus | c.1200 | Danish Chronicles | 689 | SEEDS COMPLETE 2026-06-03 — CPH-01–02 all vignettes done (2 cycles). questComplete added to CPH-02 (cycle 2). Nodes DNS/BRK already in Location Grid. Theme threads for both cycles already present. See CPH-gesta-danorum.md. |
-| [x] | ARN | knights-of-the-cross | Knights of the Cross — Henryk Sienkiewicz | 1900 (1399 setting) | Polish Historical Epic | 324 | SEEDS COMPLETE 2026-06-03 — ARN-01–07 all vignettes done. KRK/JUR/TKT/CHP already in Location Grid. No new nodes. See ARN-knights-of-the-cross.md. |
+| [ ] | RKV | poetic-edda | Poetic Edda — Anon | ~10th–13th C | Norse Poetry | 1924 | Source txt missing — prior cycle was memory-processed only. Add RKV-poetic-edda.txt before processing. Prior notes: RKV-01–07 done, AEG/RSS in grid. |
+| [ ] | HFT | frithiof-saga | Frithiof's Saga — Esaias Tegnér | 1825 (Old Norse) | Romantic Epic | 403 | Source txt missing — prior cycle was memory-processed only. Add HFT-frithiof-saga.txt before processing. Prior notes: HFT-01–07 done, BLG/ALR/RNG/ING pre-existing. |
+| [ ] | MOL | laxdaela-saga | Laxdaela Saga — Anon | ~13th C | Icelandic Saga | 347 | Source txt missing — prior cycles were memory-processed only. Add MOL-laxdaela-saga.txt before processing. Prior notes: MOL-01–02 done, all nodes in grid. |
+| [ ] | CPH | gesta-danorum | Gesta Danorum — Saxo Grammaticus | c.1200 | Danish Chronicles | 689 | Source txt missing — prior cycles were memory-processed only. Add CPH-gesta-danorum.txt before processing. Prior notes: CPH-01–02 done, DNS/BRK in grid. |
+| [ ] | ARN | knights-of-the-cross | Knights of the Cross — Henryk Sienkiewicz | 1900 (1399 setting) | Polish Historical Epic | 324 | Source txt missing — prior cycle was memory-processed only. Add ARN-knights-of-the-cross.txt before processing. Prior notes: ARN-01–07 done, KRK/JUR/TKT/CHP in grid. |
 
 ### French & Continental
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
-| [x] | OST | song-of-roland | Song of Roland — Anon | c.1100 | French Chanson | 195 | SEEDS COMPLETE 2026-06-03 — OST-01–07 all vignettes done. AIX/RON/PYR/FRS already in Location Grid. No new nodes. See OST-song-of-roland.md. |
+| [ ] | OST | song-of-roland | Song of Roland — Anon | c.1100 | French Chanson | 195 | Source txt missing — prior cycle was memory-processed only. Add OST-song-of-roland.txt before processing. Prior notes: OST-01–07 done, AIX/RON/PYR/FRS in grid. |
 | [x] | CDG | three-musketeers | The Three Musketeers — Alexandre Dumas | 1844 (1625 setting) | Swashbuckler | 1356 | SEEDS COMPLETE 2026-06-03 — CDG-01–07 all vignettes done. BTH/REL/DAR already in Location Grid. No new nodes. See CDG-three-musketeers.md. |
 | [x] | VIE | faust | Faust — Johann Wolfgang von Goethe | 1808–1832 | Philosophical Drama | 213 | SEEDS COMPLETE 2026-06-03 — VIE-01–07 all vignettes done. No new nodes needed (MGR/CLK/DKN all pre-existing). See VIE-faust.md. |
 | [x] | ERF | grimm-fairy-tales | Grimm's Fairy Tales — Brothers Grimm | 1812 | Folk Tales | 547 | SEEDS COMPLETE 2026-06-03 — ERF-01–07 all vignettes done. No new nodes needed (STB/GLD/DNG/CHC/ANT/PRH already added). See ERF-grimm-fairy-tales.md. |
@@ -498,7 +499,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | [x] | FCO | aeneid | Aeneid — Virgil (Latin original — Gutenberg #227) | ~19 BC | Roman Epic | 484 |
 | [x] | MLA | plutarch-lives | Plutarch's Lives — Plutarch (Dryden/Clough tr.) | c. 95–110 AD | Biography | 4222 | SEEDS COMPLETE 2026-06-03 — MLA-01–07 all vignettes done (7 cycles). questComplete added to MLA-05 (cycle 7). New nodes: LMO, THA, ROM added to Location Grid. Theme threads for all 7 cycles. See MLA-plutarch-lives.md. |
 | [x] | NWI | anabasis | Anabasis — Xenophon (Dakyns tr. — Gutenberg #1170) | c. 401 BC | Greek Military | 545 | SEEDS COMPLETE 2026-06-03 — NWI-01–09 all vignettes done (9 cycles). questComplete added to NWI-08 (cycle 9). New nodes: CPL, BLK, SIN, ORC, VAR, MYS, ANC added to Location Grid. Theme threads for all 9 cycles. See NWI-anabasis.md. |
-| [x] | IST | alexiad | The Alexiad — Anna Komnene | c.1148 | Byzantine History | 165 | SEEDS COMPLETE 2026-06-02 — IST-01–07 all vignettes done. IST-01: The Enemy's Portrait (CON→RGS→WM). IST-02–07: The Curtain Notes, The Nicaea Receipt, The Bryennios Draft, The Devol Treaty Copy, The Exile Letter, The Physician's Notes. Memory-processed (no txt file). See IST-alexiad.md. |
+| [ ] | IST | alexiad | The Alexiad — Anna Komnene | c.1148 | Byzantine History | 165 | Source txt missing — prior cycle was memory-processed only. Add IST-alexiad.txt before processing. Prior notes: IST-01–07 done (Enemy's Portrait, Curtain Notes, Nicaea Receipt, Bryennios Draft, Devol Treaty, Exile Letter, Physician's Notes). |
 | [x] | WAW | quo-vadis | Quo Vadis — Henryk Sienkiewicz (Curtin tr. — 1895) | c. 64–68 AD (Nero's Rome) | Historical Novel | 1201 | SEEDS COMPLETE 2026-06-03 — WAW-01–08 all vignettes done (8 cycles). questComplete added to WAW-03 (cycle 8). New nodes: SAU, VFM, BLO added to Location Grid. Theme threads for all 8 cycles. See WAW-quo-vadis.md. |
 
 ### Byzantine & Eastern European
@@ -528,7 +529,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
 | [x] | AMS | tale-of-genji | Tale of Genji — Murasaki Shikibu | c.1010 | Japanese Novel | 435 | SEEDS COMPLETE 2026-06-03 — AMS-01–07 all vignettes done. New node: MRG (Maragha — Observatory District and Road Junction Inn Quarter). See AMS-tale-of-genji.md. |
-| [x] | TBS | knight-panther-skin | Knight in the Panther's Skin — Shota Rustaveli | c.1225 | Georgian Epic | mem | SEEDS COMPLETE 2026-06-03 — TBS-01–07 all vignettes done. Memory-processed (source .txt not read; source file contained unrelated content). No new nodes needed (GEO, TIF, ALP, CON, DAM, CAF all exist). See TBS-knight-panther-skin.md. |
+| [ ] | TBS | knight-panther-skin | Knight in the Panther's Skin — Shota Rustaveli | c.1225 | Georgian Epic | mem | Source txt missing — prior cycle was memory-processed only (source file contained unrelated content). Add TBS-knight-panther-skin.txt before processing. Prior notes: TBS-01–07 done, GEO/TIF/ALP/CON/DAM/CAF in grid. |
 
 ### Caribbean & Americas
 

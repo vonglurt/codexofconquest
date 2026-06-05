@@ -9760,4 +9760,44 @@ say "Fixed quest_id. Verified on disk." &
 Run `say` blocking — no `&` — so each announcement completes before the next request. Always announce commits and loop transitions out loud.
 
 ---
+
+## §BOOKS-01 — Source Text Audit: Books Requiring Proper Processing
+
+Audit completed 2026-06-05. All books below were found in `books.md` with `[x]` status but no corresponding `.txt` source file, meaning they were processed from memory only. Per directive: memory-processed cycles are invalid. All have been reset to `[ ]` in `books.md`. Each requires a real `.txt` source file added to `1367-sources/` before the full books.md protocol can be applied.
+
+One additional book (`SHK`) was found in `1367-sources/` with 28 `.txt` parts but had never been listed in `books.md`. It has been added as a `[ ]` entry and is ready to process.
+
+### Books needing source `.txt` files (reset to `[ ]`)
+
+| Code | Slug | Title | KB est. | Source to find |
+|------|------|-------|---------|----------------|
+| VBY | grettir-saga | Grettir's Saga — Anon | 373 | Gutenberg #17329 |
+| RIX | egil-saga | Egil's Saga — Anon (attr. Snorri) | 869 | Gutenberg #40014 |
+| RKV | poetic-edda | Poetic Edda — Anon | 1924 | Gutenberg #1220 |
+| HFT | frithiof-saga | Frithiof's Saga — Esaias Tegnér | 403 | Gutenberg #11612 |
+| MOL | laxdaela-saga | Laxdaela Saga — Anon | 347 | Gutenberg #598 |
+| CPH | gesta-danorum | Gesta Danorum — Saxo Grammaticus | 689 | Gutenberg #1150 |
+| ARN | knights-of-the-cross | Knights of the Cross — Sienkiewicz | 324 | Gutenberg #8289 |
+| OST | song-of-roland | Song of Roland — Anon | 195 | Gutenberg #391 |
+| IST | alexiad | The Alexiad — Anna Komnene | 165 | Gutenberg #15097 |
+| TBS | knight-panther-skin | Knight in the Panther's Skin — Rustaveli | mem | Needs sourcing |
+
+### Book with `.txt` present — ready to process
+
+| Code | Slug | Title | Parts | Status |
+|------|------|-------|-------|--------|
+| SHK | shakespeare-complete-works | Complete Works — Shakespeare | 28 | `[ ]` — process next |
+
+### Protocol for sourcing missing `.txt` files
+
+1. Download the Gutenberg plain-text file for each book
+2. Run `split-sources.sh` to split at 200 KB boundaries: `bash split-sources.sh {CODE}-{slug}.txt`
+3. Confirm parts appear in `1367-sources/` directory
+4. Process using the full `books.md` protocol (3 passes + 7 storylines + 5-act vignette + quest API stub)
+5. Update `books.md` status from `[ ]` to `[x]` after completing all phases
+
+**Priority order:** SHK first (txt ready). Then add missing txt files one at a time and process each.
+
+---
+
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
