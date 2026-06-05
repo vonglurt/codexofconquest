@@ -198,6 +198,7 @@ Codes that were planned but found already occupied by existing game nodes:
 | BOO | Prose Edda starting node | "Yugurt Lake — Steppe Shore" (steppe_lake game node) | No node collision — cycle 1 activates at ASG (Ásgarðr); quest prefix boo_ unaffected |
 | ALF | Kalevala starting node | "North Shore Path" (lake_north game node) | No node collision — cycle 1 activates at TUO (Tuonela boundary shore); quest prefix alf_ unaffected |
 | KSU | Heimskringla starting node | "The Lake Harbor" (game node) | No node collision — all cycles activate at NID (Nidaros); quest prefix ksu_ unaffected |
+| CDG | Three Musketeers starting node | "The Cat Quarter" (game node) | CDG collision — cycles 3–7 activate at LON (existing London); quest prefix cdg_ unaffected |
 
 ---
 
@@ -227,3 +228,13 @@ Codes that were planned but found already occupied by existing game nodes:
 |------|-------|----------|--------|--------------|------|-------|
 | NID | Nidaros — Olaf's Shrine City | Trondheim, Norway | Saint Olaf's tomb; Danish governor's compound; bishop's church; cathedral under construction; hub for all 7 cycles | 79,118 | KSU | Created 2026-06-05; city terrain; hub for cycles 1/3–7; cycle 2 acts 4–5 |
 | ECF | Eclipse Farm — Coast North of Stiklestad | Norwegian coast | The coastal farmstead where the eclipse witness hid three years; water-drip measurement; cycle 2 acts 1–3 | 77,116 | KSU | Created 2026-06-05; beach terrain; cycle 2 departure point |
+
+---
+
+## Three Musketeers (CDG) Nodes
+
+| Code | Label | Location | Source | Coords (r,c) | Book | Notes |
+|------|-------|----------|--------|--------------|------|-------|
+| BTH | Bethune — Convent of the Carmelites | Bethune, northern France | The walled convent where Constance Bonacieux hid; she pressed her warning letter into the Fighter's hands at the gate; Milady had come that morning | 86,118 | CDG | Created 2026-06-05; camelot terrain; cycle 2 acts 1–2 |
+| REL | Relay Post — Twelve Miles South of Bethune | South road, Artois | Postmaster absent; assistant won't authorize; innkeeper's son available for motivated errand; letter must leave in thirty minutes | 88,120 | CDG | Created 2026-06-05; city terrain; cycle 2 acts 3–4 |
+| DAR | The Road Junction — South of the Relay Post | South road fork, Artois | Where D'Artagnan read Constance's letter in four seconds and turned his horse north; carrier's commission ended here | 90,122 | CDG | Created 2026-06-05; highlands terrain; cycle 2 act 5 |
