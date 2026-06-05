@@ -1480,3 +1480,240 @@ The token is taken.
 
 *Cycle 7 complete. LCY SEEDS COMPLETE.*
 
+---
+
+## Cycle 8 — Angle: *Aylward's Barbary Cargo — The Manumission Scroll from the Moorish Coaster*
+
+*Source read: Part 5 only. All prior cycles have been reviewed. New angle chosen from content exclusive to Part 5.*
+
+**What prior cycles missed:** Cycles 1–7 drew from the English setting (Surrey, Hampshire), the Spanish campaign (Nájera), and the French command structure. None used the Barbary episode — the strangest and most geographically remote event in the book. After being captured at the last stand, Sir Nigel and Aylward were carried by sea to a Moorish prison, enslaved on a galley, and escaped by killing the Moorish captain and seizing a coaster. They sailed it to England with its Barbary cargo. Some of that cargo went to Father Christopher's chapel. What was the rest?
+
+**This cycle introduces:** *The manumission scroll — a document releasing a captive from bondage, carried by accident from the place of release to the land of origin, arriving too late to matter to the person it freed.*
+
+**Themes avoided (all prior LCY cycles):** honor held in trust (1), unacknowledged love (2), reserved equipment records (3), first action records (4), voluntary intelligence (5), parole records (6), household management records (7).
+
+---
+
+### The Five-Act Vignette — "Aylward's Scroll"
+
+*A Fighter carries an Arabic document from a Lyndhurst inn to a Weimar archive. The document is a slave's manumission from Barbary. The man it freed may never have come home. Aylward does not know what he has been carrying.*
+
+---
+
+**ACT I — "The Pied Merlin"**
+*The Moorish Scroll · rolled tight, sealed with cheap wax, wrapped in a piece of torn sail-cloth · Aylward sets it on the tavern table · The Pied Merlin inn, Lyndhurst, Hampshire.*
+
+Aylward has been landlord here six months since he married the good widow who keeps the place. He has made it comfortable: long tables, good ale, honest company. On the table in front of him is something he has carried since the return voyage from Barbary, wrapped in sailcloth in the bottom of his pack. He pulled it out this morning while looking for his whetstone. He had forgotten it was there.
+
+It is a scroll, rolled tight, sealed with rough wax. The outside has a line of characters he cannot read — Arabic, he supposes, though he would not swear to it. It was among the cargo of the Moorish coaster that he and Sir Nigel seized when they escaped the galley. He does not know if it was private property or ship's manifest or what a churchman would call a sacred document. He does not read Arabic. He does not know who would.
+
+He has been asking around. Someone told him that the Fighter knows something about documents. He shows it across the table.
+
+"I have been carrying this since Barbary," he says. "Tell me if it is worth something, or if I should burn it."
+
+*The Fighter turned the scroll over. The seal was cheap, but the document inside had been carefully rolled. Whoever sent this had intended it to arrive.*
+
+**Skill Check — History DC 12:** Recognize the format from its outer seal and cord-binding as a legal document class — the form used in North African notarial practice for official releases and property instruments. This is not a ship's manifest. It is someone's paperwork.
+
+**Fail:** You cannot identify the format but you know it was written for a reason. Tell Aylward: this should go to someone who reads Arabic before he burns it.
+**Success:** You identify it as a legal document and tell Aylward it may be a release or a transfer of some kind — it was meant to be delivered to someone.
+
+*You receive: Aylward's Barbary Scroll.*
+
+---
+
+**ACT II — "The Harbor Translator"**
+*The Scroll · still sealed · Fighter carries it wrapped in linen · Tilbury harbor, a Genoese merchant's counting house.*
+
+The Genoese have offices in Tilbury because their ships pass through. Among their factors is a man who trades in Mediterranean goods and has dealings with both Spanish and North African ports. He is not a scholar, but he has seen documents like this before.
+
+He breaks the seal — carefully, at the Fighter's request, preserving it — and unrolls the scroll on his table. He reads slowly, moving his lips, twice looking up. Then he sets it down and sits back.
+
+"This is a manumission," he says. "A formal freeing of a slave. The man's name — the slave — is given in Arabic, but also in his original Christian name. He came from somewhere in the North. The manumission was signed by the judge of a port in the Maghreb. It was dated four years ago."
+
+He pauses.
+
+"The man it freed was named Thomas. The village named is 'Hardefleu' — which I think is Harfleur. Or it may be something further north. The document was issued and sealed. It was to be delivered to the man's family as proof of his freedom." He looks up. "Four years ago. Do you know if he ever came home?"
+
+*The Fighter looked at the scroll. Someone had paid a court fee to free this man. Someone had paid for the document to be written and sealed. Then it ended up in the cargo of a pirate coaster.*
+
+**Skill Check — Investigation DC 13:** Examine the document's carrying record — is there any endorsement showing it was forwarded, or any evidence it was en route somewhere when the ship was seized?
+
+**Fail:** The document shows no endorsement — it was never forwarded. It was being kept, perhaps for safekeeping or sale.
+**Success:** There is a small notation in the margin — a partial address in broken Latin. The document was being carried as cargo toward an unknown port, suggesting it was being transported on behalf of a family or a broker.
+
+*You receive: The Genoese Factor's Note (identifying the document as a manumission, with the partial address).*
+
+---
+
+**ACT III — "The Name"**
+*The Scroll · now identified and unrolled · Fighter carries both scroll and note · Weimar archive reading room.*
+
+Sweelinck reads the scroll and the factor's note. He has seen Arabic documents before — not many, but some, from the Iberian and Mediterranean trade. He confirms the identification: a formal manumission, issued by a Muslim court of law, freeing a Christian slave named Thomas, son of a person whose name is given in Arabic but whose place-of-origin is noted in the margin in Frankish script. The script is rough — added by someone who did not write Arabic but wanted the document to be understood.
+
+He reads: "'Thomas, the son of Roger, of the village of Itchen Abbas in the county of Hampshire, England.'"
+
+He looks up.
+
+"Itchen Abbas," he says. "That is not far from Southampton."
+
+*The Fighter stood very still. The document was four years old. The man it freed was from Hampshire. He had been carried to Barbary, freed by a court, and the proof of his freedom had been put on a ship that was seized by the very men who had themselves just escaped from slavery. The document had come home. The man had not.*
+
+**Skill Check — Persuasion DC 14:** Convince Sweelinck to check his records — has any returning captive from Hampshire submitted a claim, or has any family from that county recorded a missing person?
+
+**Fail:** No records exist in Weimar for this village. The archive holds what it is given. No claim has been filed.
+**Success:** Sweelinck opens a supplementary register — reports filed by parish priests on behalf of missing men from English coastal counties. Under 1362 there is a notation: Thomas Roger, Itchen Abbas, reported missing at sea, presumed taken by Barbary corsairs. His wife remarried in 1365. His children are grown.
+
+---
+
+**ACT IV — "The Wife"**
+*The Scroll · still in the Fighter's hands · the reading has been done, and the archive holds the notice of the remarriage · Weimar archive, evening light.*
+
+Sweelinck closes the register.
+
+He says: "The document frees a man who cannot be found. His wife has remarried. His children are grown without him. He may be dead. He may have been freed and found no way home. He may be alive somewhere and does not know his family has moved on." He pauses. "The document still has legal force. If he is alive, it proves he was freed. If he presents it, his freedom is confirmed. But it cannot be sent to him. We do not know where he is."
+
+He looks at the scroll.
+
+"What shall I do with it?"
+
+*The Fighter thought of Aylward, who had been a slave himself for a month or two, and had killed his way out. Thomas of Itchen Abbas had been freed by a judge's signature. And still he had not come home.*
+
+**Skill Check — Wisdom DC 13:** Determine the right disposition for the document — not what the law says but what serves this situation. Should it be filed as a valid manumission, as a missing-person supplement, or as both?
+
+**Fail:** No clear answer. File it as a document pending claim — the valid manumission of a man whose whereabouts are unknown.
+**Success:** File it as both: a valid manumission (the document's own category) with a notation linking it to the missing-person register. If Thomas Roger ever appears at an English court, the manumission can be produced.
+
+---
+
+**ACT V — "Filed as Found"**
+*The Scroll · now at rest in Sweelinck's hands · the archive has it · Weimar intake room.*
+
+Sweelinck writes the entry. He reads it aloud as he goes:
+
+*"Manumission Document, Arabic, North African court, dated four years past. Subject: Thomas, son of Roger, of Itchen Abbas, Hampshire, England. Freed from slavery by judicial order. Document carried as cargo on a Moorish vessel, seized by Sir Nigel Loring and Samkin Aylward in their escape from Barbary captivity. Delivered to Weimar by a Fighter. Subject's whereabouts unknown. Wife has remarried. Children grown. Document preserved pending any claim."*
+
+He closes the record.
+
+"I will add one note," he says, and writes a single line at the foot: *"Freedom was granted. We do not know if it was received."*
+
+He looks up. "Who pays for this, by the way?"
+
+The Fighter reaches into their purse.
+
+"Aylward," says the Fighter, "says he will."
+
+TOKEN TAKEN: Aylward's Barbary Scroll.
+
+*questComplete: true*
+
+*You receive: Sweelinck's Manumission Record — the archive's filed copy of the document, stamped and noted, with the entry that freedom was granted but not known to have been received.*
+
+---
+
+### Quest API Stub
+
+```
+Act I — "The Pied Merlin"
+activateNode: LCY
+type: skill_check
+missionAccept: "Aylward has been carrying an Arabic document in his saddlebag
+  since the escape from Barbary. He doesn't know what it is. He wants someone
+  to find out before he burns it."
+scene: "The Pied Merlin inn, Lyndhurst. Aylward sets a rolled scroll on the
+  table — wrapped in sailcloth, sealed with cheap wax. He found it this morning
+  at the bottom of his pack while looking for a whetstone. He's been carrying
+  it since the Moorish coaster they seized to escape the galley. The characters
+  on the outside are Arabic. He cannot read them."
+prompt: "History DC 12. Identify the document format from its outer binding
+  and seal. Is this a ship's manifest, a private letter, or an official
+  legal instrument?"
+failText: "Format unclear, but this was not casually carried. Tell Aylward
+  it should go to someone who reads Arabic before he burns it."
+successText: "Identified as a North African legal instrument — the format used
+  for official releases and transfers. This was meant to be delivered somewhere.
+  You receive Aylward's Barbary Scroll."
+grantItem: "Aylward's Barbary Scroll"
+checkPassFlag: scrollReceived
+activateMissionBit: lcy8_act1Active
+
+Act II — "The Harbor Translator"
+activateNode: TL
+type: skill_check
+scene: "A Genoese factor's counting house at Tilbury. He breaks the seal
+  carefully and reads. His face changes twice. He sets it down and looks
+  at you. A manumission — a formal freeing of a slave. The man named is
+  Thomas, son of Roger, from a village somewhere in the North. The document
+  was signed four years ago by a judge in a Maghrebi port."
+prompt: "Investigation DC 13. Examine the document for any carrying record —
+  is there evidence it was en route somewhere when the ship was seized, or
+  was it being held for safekeeping?"
+failText: "No endorsement visible. The document was never forwarded. It was
+  kept — possibly for sale or safekeeping."
+successText: "A small notation in the margin — a partial address in broken
+  Latin. The document was being transported on behalf of someone. It was in
+  transit when the ship was taken. You receive the Genoese Factor's Note."
+grantItem: "Genoese Factor's Note"
+checkPassFlag: translationComplete
+activateCond: scrollReceived
+
+Act III — "The Name"
+activateNode: WM
+type: skill_check
+scene: "Sweelinck reads the scroll and the factor's note. He confirms: a
+  valid manumission, Arabic court, Christian slave named Thomas, son of Roger,
+  from Itchen Abbas in Hampshire. The document is four years old. Freedom
+  was granted. Then he opens a supplementary register."
+prompt: "Persuasion DC 14. Ask Sweelinck to cross-reference: any missing-person
+  report from this village, any returning captive claim, any family notice
+  filed by a parish priest on behalf of a man lost to Barbary corsairs."
+failText: "No records for this village in the Weimar archive. Nothing has
+  been filed. The archive holds only what it is given."
+successText: "In the 1362 register: Thomas Roger, Itchen Abbas, reported
+  missing at sea, presumed taken by corsairs. His wife remarried in 1365.
+  Children are grown."
+checkPassFlag: nameFound
+activateCond: translationComplete
+
+Act IV — "Filed as Found"
+activateNode: WM
+type: skill_check
+scene: "Sweelinck closes the register. Freedom was granted. We do not know
+  if it was received. The wife has remarried. The children are grown. The
+  document is still legally valid — if Thomas Roger appears at any English
+  court, this proves his freedom. But we cannot send it to him. We do not
+  know where he is."
+prompt: "Wisdom DC 13. Determine the right disposition: file it as a valid
+  manumission only, as a missing-person supplement only, or as both — linking
+  the two entries so that any future claim can be matched."
+failText: "No clear answer in law. File it as a document pending claim —
+  valid manumission, subject whereabouts unknown."
+successText: "File as both: a valid manumission with a notation linking to
+  the missing-person register. If Thomas Roger ever appears, the document
+  can be produced."
+checkPassFlag: dispositionSet
+activateCond: nameFound
+
+Act V — "Freedom Was Granted"
+activateNode: WM
+type: skill_check
+scene: "Sweelinck writes the entry aloud as he goes: 'Manumission Document,
+  Arabic, North African court, dated four years past. Subject: Thomas, son
+  of Roger, of Itchen Abbas, Hampshire. Freed from slavery by judicial order.
+  Document carried on a Moorish vessel seized during an escape from Barbary
+  captivity. Delivered by a Fighter. Subject's whereabouts unknown.' He adds
+  one final note: Freedom was granted. We do not know if it was received."
+prompt: "History DC 11. The archive charges a filing fee. Determine the
+  correct category to file this under — and who pays."
+failText: "The fee is uncertain. Sweelinck waits. You will need to cover it
+  and seek reimbursement from Aylward."
+successText: "Filed under Manumission Records, Barbary Origin, England Subject,
+  Pending Claim. You pay Aylward's fee. You receive Sweelinck's Manumission
+  Record — stamped, noted, preserved."
+takeItem: "Aylward's Barbary Scroll"
+grantItem: "Sweelinck's Manumission Record"
+checkPassFlag: scrollFiled
+questComplete: true
+activateCond: dispositionSet
+```
+
