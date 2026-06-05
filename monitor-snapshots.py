@@ -214,6 +214,14 @@ class Monitor:
             if say_lines or server_lines:
                 sidecar = PATCHES_DIR / (f.stem + ".patch.log")
                 sidecar.write_text("".join(say_lines + server_lines), encoding="utf-8")
+            # truncate both logs now that their contents are captured
+            for log_path in (SAY_LOG, SERVER_LOG):
+                try:
+                    log_path.write_text("", encoding="utf-8")
+                except OSError:
+                    pass
+            self._say_log_pos = 0
+            self._server_log_pos = 0
         else:
             # first ever file: save as gzip base, no diff to store
             base_path = PATCHES_DIR / "_base.html.gz"
