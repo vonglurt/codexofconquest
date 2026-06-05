@@ -293,7 +293,7 @@ All files under 60 KB in 1367-sources/. Each to receive full pipeline: read → 
 |------|-------|----|--------|
 | SDQ | Rob Roy — Walter Scott | 36 | **SEEDS COMPLETE 2026-06-03 — SDQ-01–07 all vignettes done. New nodes: OBH, GLA, ABF, GLN, LLM, EDI.** |
 | TBS | Knight in the Panther's Skin — Rustaveli | 41 | **SEEDS COMPLETE 2026-06-03 — TBS-01–07 all vignettes done. No new nodes. See TBS-knight-panther-skin.md.** |
-| LHR | Beowulf — Anon (Gummere) | 42 | **SEEDS COMPLETE 2026-06-03 — LHR-01–07 all vignettes done. New nodes: GEA, DAN. See LHR-beowulf.md.** |
+| LHR | Beowulf — Anon (Gummere) | 42 | **IMPORTED — 2026-06-05 — BRW/GEA/WM new nodes; HEO/DAN reused from CPH; LHR-01–07 (7 cycles, 35 acts); questComplete on LHR-07 act5; coast→beach terrain fix on GEA; WM created as central archive hub** |
 | BHD | Cuchulain of Muirthemne — Lady Gregory | 43 | **SEEDS COMPLETE 2026-06-03 — BHD-01–07 all vignettes done. New nodes: EMR. See BHD-cuchulain.md.** |
 | ZTH | Odyssey — Homer (Butler) | 43 | **SEEDS COMPLETE 2026-06-03 — ZTH-01–07 all vignettes done. New nodes: PHC, RME. See ZTH-odyssey.md.** |
 | ATH | Iliad — Homer (Lang) | 45 | **SEEDS COMPLETE 2026-06-03 — ATH-01–07 all vignettes done. No new nodes. See ATH-iliad.md.** |
@@ -902,6 +902,7 @@ This procedure runs once per vignette act (one quest at a time). Complete all 8 
 | 79 | IST | The Alexiad (Anna Komnene) | CON (Constantinople) | PAR new node (Palermo, r:187 c:210); existing: CON/DBV/RHD/THA/AOI/NUE; IST-01–07 (7 cycles, 35 acts); questComplete on all 7; RGS→DBV; ANC→AOI; WM→NUE | IMPORTED — 2026-06-04 |
 | 80 | BGW | Arabian Nights (Burton tr.) | KHR new node (Cairo Booksellers' Quarter, r:193 c:230); TUN new node (Tunis Monastery, r:183 c:205); existing: FAM/ALE/VEN/TBZ/BGD/GEN/CON/NUE; BGW-01–08 (8 cycles, 40 acts); questComplete on all 8; CAI→KHR (collision); WM→NUE; BAG→BGD | IMPORTED — 2026-06-04 |
 | 81 | CAI | Arabian Nights (Lang adaptation) | ALB new node (Aleppo Hills — Mar Marun Monastery, r:170 c:237); ALP new node (Aleppo — Storytellers' Quarter, r:168 c:238); LAT new node (Latakia — Syrian Mediterranean Port, r:166 c:233); existing: ANT/BGD/TRB/CON/DAM/ALE/NUE; CAI-01–08 (8 cycles, 40 acts); questComplete on all 8; WM→NUE; BAG→BGD | IMPORTED — 2026-06-04 |
+| 82 | LHR | Beowulf (Gummere) | HEO/DAN reused from CPH; BRW new node (Dragon's Barrow, r:99 c:169, ruins); GEA new node (Geatland coast, r:100 c:169, beach); WM new node (Weimar Archive, r:117 c:204, scholars_qtr); LHR-01–07 (7 cycles, 35 acts); questComplete on LHR-07 act5; coast→beach terrain fix on GEA | IMPORTED — 2026-06-05 |
 
 ---
 

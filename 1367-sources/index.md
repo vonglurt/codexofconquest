@@ -98,6 +98,18 @@ Two-tier naming rule: cities = 3-letter IATA or city-derived code; specific loca
 
 ---
 
+## Beowulf (LHR) Nodes
+
+| Code | City/Location | Region | Basis | Coords (r,c) | Book | Notes |
+|------|--------------|--------|-------|-------------|------|-------|
+| HEO | Heorot — Danish Royal Mead-Hall | Denmark (Lejre area, Sjælland) | Derived from Heorot (Beowulf's primary setting) | 98,168 | LHR + CPH | Created during CPH (Gesta Danorum) import; reused for LHR vignettes |
+| DAN | Danish Coastal Road — Hrothgar's Shore | Denmark (Baltic coast road south of Lejre) | Derived from Danes + coastal road | 99,168 | LHR + CPH | Created during CPH import; reused for LHR cycle 7 |
+| BRW | Dragon's Barrow — Beowulf's Last Battle Site | Geatland (southern Sweden coast) | Derived from Barrow (burial mound, dragon's lair) | 99,169 | LHR | Created 2026-06-05; ruins terrain |
+| GEA | Geatland Coastal Settlement — Beowulf's Village After the Fire | Geatland (southern Sweden, Baltic coast) | Derived from Geats (Beowulf's people) | 100,169 | LHR | Created 2026-06-05; beach terrain |
+| WM | Weimar Archive — Sweelinck's Collection | Thuringia, Germany (central) | Derived from Weimar; Sweelinck is the archive NPC | 117,204 | LHR + many others | Created 2026-06-05; scholars_qtr terrain; central delivery hub for archival vignettes |
+
+---
+
 ## Code Collision Register
 
 Codes that were planned but found already occupied by existing game nodes:

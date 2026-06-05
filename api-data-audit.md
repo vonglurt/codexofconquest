@@ -255,6 +255,7 @@ say "Next: {BOOK} {next_cycle} — {quest title}." &
 | STN  | Robin Hood                    | ~30         | 0               | 0               | QUEUED              |
 | CPH  | Gesta Danorum (Saxo)          | ~10         | 0               | 0               | QUEUED              |
 | MOL  | Laxdaela Saga                 | ~10         | 0               | 0               | QUEUED              |
+| LHR  | Beowulf (Gummere)             | 0           | 0               | 0               | DONE 2026-06-05 — 35 acts imported with full text |
 | GAME | Legacy game quests (quest_*, trap_*) | ~346 | ~170           | ~140            | SEPARATE — see §GAME |
 | BGW  | Arabian Nights (Burton tr.)   | 0           | 0               | 0               | DONE 2026-06-03     |
 | CAI  | Arabian Nights (Lang)         | 0           | 0               | 0               | DONE 2026-06-03     |
