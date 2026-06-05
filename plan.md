@@ -9825,6 +9825,36 @@ One additional book (`SHK`) was found in `1367-sources/` with 28 `.txt` parts bu
 
 ---
 
+## §API-CLI-01-B — Session Notes 2026-06-05
+
+### What was built this session
+
+**`api.sh` / `api/wb.js`** — primary CLI wrapper, committed as `§API-CLI-01`:
+- Queued HTTP, exponential backoff retry, auto-nonce for `post`/`del`
+- `--out <file>` file output, pipe-friendly stdin, `--raw` for `jq` pipes
+- `--ai "<prompt>"` asks Claude Haiku (ANTHROPIC_API_KEY) for 1-3 line answers
+- Compact man-page synopsis printed to stderr before every command (TTY only)
+
+**`wb import <file.json>`** — bulk import endpoint added by user after initial commit:
+- Server: `POST /api/import/book` — accepts `{book, nodes:[], cycles:[]}` payload
+- Idempotent: existing nodes/quests silently skipped; one save at the end
+- No per-entity nonces — the import request is its own authorization
+- CLI reports nodes/quests created vs skipped, surfaces errors inline
+- Designed to consume the output of `import_*.py` scripts directly
+
+**Validator rules added to `/api/audit` + `/api/next-error`:**
+- ERROR: `quest.npc` missing — every quest must be anchored to an NPC
+- WARNING: NPC has no quests — NPC has no gameplay function
+
+### Outstanding follow-ups (do not forget)
+
+- `wb import` calls `POST /api/import/book` — **verify the endpoint is actually wired into the server's route table** and test with a real book JSON before relying on it in production
+- `wb import` synopsis line in `HELP` text may need updating to match the full flag set (`--out` works; verify others pass through)
+- 985 quests missing `npc` field — see `§AUDIT-02` for full breakdown and fix workflow; the `wb import` path going forward should always include `npc` in each act object
+- 13 NPCs with no quests — see `§AUDIT-02`; core Birka 6 need real quest arcs written, import stubs need existing quests wired back
+
+---
+
 ## §AUDIT-02 — NPC/Quest Connection Gap (📋 INVESTIGATE)
 
 **Logged:** 2026-06-05 — discovered via new `./api.sh audit` validator rules  

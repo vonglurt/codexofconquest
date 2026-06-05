@@ -356,6 +356,34 @@ const CMD = {
     process.stdout.write(`${C.cyan}${reply}${C.reset}\n`);
   },
 
+  async import(pos, flags) {
+    await requireServer();
+    const [, file] = pos;
+    const piped = await readStdin();
+    let body;
+    if (piped && typeof piped === 'object') {
+      body = piped;
+    } else if (file) {
+      if (!fs.existsSync(file)) die(`File not found: ${file}`);
+      try { body = JSON.parse(fs.readFileSync(file, 'utf8')); }
+      catch(e) { die(`Invalid JSON in ${file}: ${e.message}`); }
+    } else {
+      die('Usage: wb import <file.json>  (or pipe JSON)');
+    }
+    const acts = (body.cycles || []).reduce((s, c) => s + (c.acts || []).length, 0);
+    info(`importing ${body.book || '?'} — ${(body.nodes||[]).length} node(s), ${acts} act(s)`);
+    const r = await request('POST', '/api/import/book', body);
+    if (r.status >= 400) { printError(r); process.exit(1); }
+    const d = r.body;
+    if (d.nodesCreated?.length)  ok(`nodes created:   ${d.nodesCreated.join(', ')}`);
+    if (d.nodesSkipped?.length)  info(`nodes skipped:   ${d.nodesSkipped.join(', ')}`);
+    if (d.questsCreated?.length) ok(`quests created:  ${d.questsCreated.length}  (${d.questsCreated[0]} … ${d.questsCreated[d.questsCreated.length - 1]})`);
+    if (d.questsSkipped?.length) info(`quests skipped:  ${d.questsSkipped.length}`);
+    if (d.errors?.length)        stderr(`${C.red}errors (${d.errors.length}): ${JSON.stringify(d.errors)}${C.reset}\n`);
+    if (d.total)                 info(`baseline: ${d.total.nodes} nodes  ${d.total.quests} quests`);
+    if (flags.out) { fs.writeFileSync(flags.out, JSON.stringify(d, null, 2) + '\n'); ok(`→ ${flags.out}`); }
+  },
+
   help() { process.stdout.write(HELP + '\n'); },
 };
 
@@ -369,6 +397,7 @@ ${C.bold}COMMANDS${C.reset}
   put   <type> <id> [k=v ...]     Update fields  (or pipe JSON body)
   post  <type> [k=v ...]          Create entity  (nonce auto-handled)
   del   <type> <id>               Delete entity  (nonce auto-handled)
+  import <file.json>              Bulk import nodes + quest cycles  (or pipe JSON)
   audit                           Integrity scan  [--map] [--text]
   chain <quest-id>                Quest dependency chain
   export <collection>             Dump collection  [--format json|js|module]
@@ -407,7 +436,9 @@ ${C.bold}EXAMPLES${C.reset}
   echo '{"passText":"Done."}' | wb put quest quest_wis_01
   cat nodes.json | wb post node
   wb ai "how do I link two nodes?"
-  wb --ai "what monsters appear in dungeon terrain?"`.trim();
+  wb --ai "what monsters appear in dungeon terrain?"
+  wb import import_zth.json
+  cat import_zth.json | wb import`.trim();
 
 // ── Compact synopsis — printed before every response (stderr, TTY only) ───────
 const SYNOPSIS = [
@@ -418,6 +449,7 @@ const SYNOPSIS = [
   `  ${C.green}put${C.reset}   <type> <id> [k=v…]      update fields  (or pipe JSON)`,
   `  ${C.green}post${C.reset}  <type> [k=v…]           create  (nonce auto)`,
   `  ${C.green}del${C.reset}   <type> <id>             delete  (nonce auto)`,
+  `  ${C.green}import${C.reset} <file.json>            bulk import nodes + quest cycles`,
   `  ${C.green}audit${C.reset} [--map]                 integrity scan`,
   `  ${C.green}chain${C.reset} <quest-id>              quest chain`,
   `  ${C.green}export${C.reset} <collection>           dump JSON  [--format js|module]`,

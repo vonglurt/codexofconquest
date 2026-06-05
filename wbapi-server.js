@@ -4240,6 +4240,110 @@ async function route(req, res) {
     return json(res, 400, { error:`Unknown format "${fmt}". Valid: json, js, module` });
   }
 
+  // ── POST /api/import/book — bulk import nodes + quest cycles ─────────────
+  // Accepts: { book, nodes:[{code,name,label,act,r?,c?,desc?,...}],
+  //            cycles:[{num,title,acts:[{id,title,activateNode,desc,passText,failText,
+  //                                      checkStat?,checkDC?,checkPassFlag?,activateCond?,
+  //                                      questComplete?,monster?,monsterHP?,monsterAC?}]}] }
+  // No per-entity nonces required — the import request is its own authorization.
+  // Idempotent: existing nodes/quests are silently skipped.
+  // One save at the end.
+  if (type === 'import' && rawId === 'book' && method === 'POST') {
+    let body;
+    try { body = await readBody(req); } catch(e) {
+      return json(res, 400, { error:'Invalid JSON' });
+    }
+    const { book, nodes = [], cycles = [] } = body;
+    if (!book) return json(res, 400, { error:'Missing required field: book' });
+
+    const results = {
+      book,
+      nodesCreated: [], nodesSkipped: [],
+      questsCreated: [], questsSkipped: [],
+      errors: [],
+    };
+
+    // 1. Nodes
+    for (const nodeBody of nodes) {
+      const code = nodeBody.code;
+      if (!code) { results.errors.push({ type:'node', error:'missing code' }); continue; }
+      if (WBAPI.nodeMap[code]) { results.nodesSkipped.push(code); continue; }
+      const missing = ['name','label'].filter(f => !nodeBody[f]);
+      if (nodeBody.act === undefined) missing.push('act');
+      if (missing.length) { results.errors.push({ type:'node', code, error:`missing: ${missing.join(', ')}` }); continue; }
+      const entry = serializeNodeLiteral(code, nodeBody);
+      const ins   = insertBeforeSectionClose('NODE_MAP', entry);
+      if (!ins.ok) { results.errors.push({ type:'node', code, error: ins.error }); continue; }
+      const maxNum = Object.values(WBAPI.nodeMap).reduce((m, n) => Math.max(m, n.num || 0), 0);
+      const { code:_c, r:_r, c:_col, ...nodeFields } = nodeBody;
+      WBAPI.nodeMap[code] = { ...nodeFields, num: maxNum + 1 };
+      if (nodeBody.r !== undefined && nodeBody.c !== undefined) {
+        const r = Number(nodeBody.r), c = Number(nodeBody.c);
+        const START = '// ◆◆◆ WORLDBUILDER:NODE_COORDS:START ◆◆◆';
+        const END   = '// ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆';
+        const sIdx  = WBAPI._rawSrc.indexOf(START) + START.length;
+        const eIdx  = WBAPI._rawSrc.indexOf(END);
+        let section = WBAPI._rawSrc.slice(sIdx, eIdx);
+        const closeIdx = section.lastIndexOf('\n};');
+        section = section.slice(0, closeIdx + 1) + `  ${code}:{r:${r},c:${c}},\n` + section.slice(closeIdx + 1);
+        WBAPI._rawSrc = WBAPI._rawSrc.slice(0, sIdx) + section + WBAPI._rawSrc.slice(eIdx);
+        WBAPI.nodeCoords[code] = { r, c };
+      }
+      results.nodesCreated.push(code);
+    }
+    WBAPI._buildIndexes();
+
+    // 2. Quests from all cycles
+    for (const cycle of cycles) {
+      for (const act of (cycle.acts || [])) {
+        const id = act.id;
+        if (!id) { results.errors.push({ type:'quest', error:'missing id', cycle: cycle.num }); continue; }
+        if (WBAPI.questDb[id]) { results.questsSkipped.push(id); continue; }
+        const missing = ['title','activateNode','desc','passText','failText'].filter(f => !act[f]);
+        if (missing.length) { results.errors.push({ type:'quest', id, error:`missing: ${missing.join(', ')}` }); continue; }
+        const questBody = {
+          id,
+          type: (act.monster && !act.checkStat) ? 'combat' : 'skill_check',
+          title:        act.title,
+          desc:         act.desc,
+          passText:     act.passText,
+          failText:     act.failText,
+          activateNode: act.activateNode,
+          checkStat:    act.checkStat  || null,
+          checkDC:      act.checkDC    || 0,
+          ...(act.checkPassFlag && { checkPassFlag: act.checkPassFlag }),
+          ...(act.activateCond  && { activateCond:  act.activateCond  }),
+          ...(act.questComplete && { questComplete: true }),
+          ...(act.monster       && { monster:       act.monster       }),
+          ...(act.monsterHP     && { monsterHP:     act.monsterHP     }),
+          ...(act.monsterAC     && { monsterAC:     act.monsterAC     }),
+        };
+        const entry = serializeQuestLiteral(id, questBody);
+        const ins   = insertBeforeSectionClose('QUEST_DB', entry);
+        if (!ins.ok) { results.errors.push({ type:'quest', id, error: ins.error }); continue; }
+        const FN_FIELDS = ['activateCond','completeFn','onPass','onFail'];
+        WBAPI.questDb[id] = Object.fromEntries(Object.entries(questBody).filter(([k]) => !FN_FIELDS.includes(k)));
+        results.questsCreated.push(id);
+      }
+    }
+    WBAPI._buildIndexes();
+
+    // 3. Single save
+    const saveR = WBAPI.save();
+    if (!saveR.ok) return json(res, 500, { ok:false, error:`save failed: ${saveR.error}`, results });
+    try { fs.copyFileSync(saveR.path, GAME_FILE); } catch(e) {
+      return json(res, 500, { ok:false, error:`overwrite failed: ${e.message}`, results });
+    }
+    try { WBAPI.load(GAME_FILE); } catch(e) {
+      return json(res, 500, { ok:false, error:`reload failed: ${e.message}`, results });
+    }
+
+    const total = { nodes: Object.keys(WBAPI.nodeMap).length, quests: Object.keys(WBAPI.questDb).length };
+    logResponse(method, url.pathname, 201,
+      `${book}: +${results.nodesCreated.length} nodes, +${results.questsCreated.length} quests  (${results.errors.length} errors)`);
+    return json(res, 201, { ok: true, ...results, total, saved: saveR.path });
+  }
+
   // ── POST /api/{quest|node|terrain|monster} (create new entity) ────────────
   if (!rawId && method === 'POST' && (type === 'quest' || type === 'node' || type === 'terrain' || type === 'monster' || type === 'npc')) {
     let body;
