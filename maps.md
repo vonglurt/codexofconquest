@@ -430,6 +430,57 @@ Four passages require a specific item in inventory to traverse. The lock is **on
 
 ---
 
+## NODE_COORDS — Grid Placement Rules
+
+Every node that should appear on the map canvas must have an entry in `NODE_COORDS`. The coordinate system is a flat integer grid: `r` = row (north → south, increasing), `c` = column (west → east, increasing).
+
+### Hard constraints (enforced by corridor engine)
+
+| rule | requirement |
+|------|-------------|
+| **Axis alignment** | Two nodes connected by N/S/E/W must share the **exact same column** (N/S link) or **exact same row** (E/W link). Off-axis pairs break `buildCorridorMap()` and will not render a corridor. |
+| **Maximum link distance** | Connected nodes may be at most **4 cells apart** on the shared axis. The corridor animation walks one cell per tick — links longer than 4 require intermediate junction nodes. |
+| **Junction chains** | For links longer than 4 cells, insert up to 4 junction nodes, each ≤ 4 cells from the previous. A chain of 4 junctions with step 4 spans up to 20 cells. |
+| **Cardinal exits only** | `N`, `S`, `E`, `W` are valid. `NW`, `NE`, `SW`, `SE` are rejected by the audit and break map rendering. |
+
+### Grid layout API
+
+Use the WBAPI layout tools to validate or recompute coordinates:
+
+```bash
+# Audit current violations
+curl "http://localhost:1367/api/audit/map?format=text"
+
+# Solve a clean BFS layout (step=4 keeps all links ≤4 cells)
+curl "http://localhost:1367/api/layout/solve?step=4&root=TLS" > layout.json
+
+# Inspect: how many alignment/distance problems?
+cat layout.json | jq '.validation'
+
+# Apply the proposed layout
+cat layout.json | jq '{coords: .proposed}' | \
+  curl -XPOST http://localhost:1367/api/layout/apply \
+    -H 'Content-Type: application/json' -d @-
+
+# Fix individual coordinate
+curl -XPUT http://localhost:1367/api/coords/BEL \
+  -H 'Content-Type: application/json' -d '{"r":68,"c":80}'
+```
+
+### Audit rules for coordinates
+
+| check | severity | description |
+|-------|----------|-------------|
+| `alignment` | warning | connected pair does not share a row or column |
+| `axis_distance` | warning | connected pair is axis-aligned but >4 cells apart |
+| `direction_sign` | warning | N link goes to higher r (south); E link goes to lower c (west) |
+| `long_link` | suggestion | Euclidean distance >4 — catches off-axis diagonal links |
+| `missing_coords` | suggestion | node exists in NODE_MAP but has no NODE_COORDS entry |
+
+Run `POST /api/audit/map/fix` to auto-fix diagonal exits and one-way links. Coordinate positioning (alignment, axis_distance) must be corrected manually or via the layout solver.
+
+---
+
 ## CIRCUIT CORRIDORS (Layer 9)
 
 The `CORRIDOR_CELLS` computed grid provides animated transit between non-adjacent nodes. When the player moves between two nodes that are ≥ 2 grid cells apart (Manhattan distance), `storyCorridorTravel()` fires — the player walks cell-by-cell through the corridor rather than jumping directly.
@@ -556,7 +607,7 @@ MILEPOINT E  _updateWaypointBtn() clears waypoint display on arrival
 | Constant | Type | Shape | Purpose |
 |----------|------|-------|---------|
 | `NODE_MAP` | plain object | `{code: {num,name,label,act,N,S,E,W,text,npc,battle,loot,sleep,...}}` | 76 nodes; single source for connections AND content |
-| `NODE_COORDS` | plain object | `{code: {r,c}}` | Grid position for each node; drives corridor routing and map render |
+| `NODE_COORDS` | plain object | `{code: {r,c}}` | Grid position for each node; drives corridor routing and map render. **Grid rules:** connected nodes must share the same row or column, and be ≤ 4 cells apart. Use junction nodes (spaced ≤ 4 cells apart, up to 4 in a chain) for longer links. |
 | `CORRIDOR_CELLS` | plain object (computed) | `{"r,c": {dirs,glyph,terrain,edges}}` | Sparse grid of traversable corridor cells; built once at startup by `buildCorridorMap()` |
 | `GATE_LOCKS` | array | `[{from,to,item,label}]` | 4 item-gated one-way passages; checked in `storyMove()` |
 | `HUNTING_GROUNDS` | plain object | `{terrain: {displayName}}` | 42 + 20 EB terrain display names; used in stalk/hunt overlays |

@@ -350,6 +350,74 @@ Common errors: `node quest ref` (quest.activateNode → missing node), `monster 
 
 ---
 
+### GET /api/audit/map
+
+Map graph conformity scan — checks every node connection against the grid placement rules. Returns `{errors, warnings, suggestions, summary}`.
+
+```bash
+curl http://localhost:1367/api/audit/map
+curl "http://localhost:1367/api/audit/map?format=text"   # human-readable report
+```
+
+Rules checked (in order):
+
+| # | check | severity | what it catches |
+|---|-------|----------|-----------------|
+| 0 | `diagonal_exit` | **error** | node has a NW/NE/SW/SE key — diagonal exits are not supported |
+| 1 | `max_connections` | **error** | node appears in more than one direction slot, or has >4 connections |
+| 2 | `dangling_link` | **error** | `code.dir="TARGET"` but TARGET is not in NODE_MAP |
+| 3 | `bidirectional` | warning | A→B exists but B→A is missing |
+| 4 | `direction_sign` | warning | N exit leads to higher r; E exit leads to lower c, etc. |
+| 5 | `long_link` | suggestion | Euclidean distance between two connected nodes > 4 cells |
+| 6 | `density` | warning | too many nodes within radius 3 (threshold varies by terrain type) |
+| 7 | `market_proximity` | suggestion | market node has no other market within 1 cell |
+| 8 | `missing_coords` | suggestion | node has no entry in NODE_COORDS |
+| 9 | `alignment` | warning | connected pair does not share a row **or** column — breaks corridor routing |
+| 10 | `axis_distance` | warning | connected pair is on the same axis but >4 cells apart — add junction nodes |
+
+Fixable items include a `fix` object: `{method, url, body, curl}`. The Worldbuilder Map Audit panel renders a "Fix Now" button for each.
+
+```json
+{
+  "errors": [{ "check": "diagonal_exit", "code": "SID", "dir": "SW", "target": "OTP",
+               "msg": "...", "fix": { "method": "POST", "url": "/api/audit/map/fix",
+               "body": { "check": "diagonal_exit", "code": "SID", "dir": "SW" }, "curl": "..." } }],
+  "warnings": [...],
+  "suggestions": [...],
+  "summary": { "errors": 1, "warnings": 64, "suggestions": 150,
+               "nodesChecked": 200, "totalNodes": 305 }
+}
+```
+
+---
+
+### POST /api/audit/map/fix
+
+Apply one fix or all fixable audit items (diagonal exits + one-way links) in one call.
+
+```bash
+# Fix everything at once
+curl -XPOST http://localhost:1367/api/audit/map/fix \
+  -H 'Content-Type: application/json' -d '{}'
+
+# Fix one diagonal exit
+curl -XPOST http://localhost:1367/api/audit/map/fix \
+  -H 'Content-Type: application/json' \
+  -d '{"check":"diagonal_exit","code":"SID","dir":"SW"}'
+
+# Fix one one-way link (adds the reverse direction on the target node)
+curl -XPOST http://localhost:1367/api/audit/map/fix \
+  -H 'Content-Type: application/json' \
+  -d '{"check":"bidirectional","code":"WK","dir":"S","target":"LHR"}'
+```
+```json
+{ "ok": true, "fixed": ["diagonal_exit SID.SW", "bidirectional WK.S→LHR"] }
+```
+
+Alignment and axis_distance issues require a layout solve; they cannot be auto-fixed because moving a node affects all its neighbours.
+
+---
+
 ### GET /api/export/{collection}
 
 Dump a full in-memory collection as JSON, JS literal, or CommonJS module.
@@ -815,6 +883,76 @@ curl -X PUT http://localhost:1367/api/coords/NTN \
 ```
 
 Coordinates are patched into the `NODE_COORDS` section in memory. Call `POST /api/save` to write to disk.
+
+---
+
+### GET /api/layout/solve
+
+BFS grid layout solver. Starting from a root node, it traverses the full NODE_MAP graph and assigns each node a `{r, c}` grid position such that every directly-connected pair shares a row or column, spaced exactly `step` cells apart. Nodes not reachable from the root (disconnected components) are placed in a row below the main grid.
+
+```bash
+curl "http://localhost:1367/api/layout/solve"               # default: step=8, root=most-connected node
+curl "http://localhost:1367/api/layout/solve?step=4&root=TLS"
+```
+```json
+{
+  "ok": true, "root": "TLS", "step": 4,
+  "total": 305, "placed": 305, "orphans": 220,
+  "validation": { "alignOk": 102, "alignBad": 0, "distOk": 99, "distBad": 46 },
+  "proposed": { "TLS": {"r": 8, "c": 112}, "LHR": {"r": 16, "c": 112}, "..." },
+  "applyCmd": "curl -XPOST http://localhost:1367/api/layout/apply -H 'Content-Type: application/json' -d '{\"coords\":<proposed>}'"
+}
+```
+
+**Parameters:**
+
+| param | default | description |
+|-------|---------|-------------|
+| `step` | `8` | Grid spacing between connected nodes (cells). Use `4` for the tightest layout that stays within the 4-cell corridor limit. Use `8` to match the original main-spine spacing. |
+| `root` | most-connected node | BFS starting node. The root is anchored at its existing `NODE_COORDS` position (rounded to the nearest step), or `(100, 100)` if it has none. |
+
+**Validation fields:**
+
+| field | meaning |
+|-------|---------|
+| `alignOk` | connection pairs that share a row or column in the proposed layout |
+| `alignBad` | pairs that are still off-axis (indicates a collision that couldn't be resolved on the primary axis) |
+| `distOk` | axis-aligned pairs within 4 cells |
+| `distBad` | axis-aligned pairs more than 4 cells apart (collision resolution pushed them further) |
+| `orphans` | nodes not reachable from root; placed below the grid in a straight row |
+
+**Workflow** — solve, inspect, then apply:
+```bash
+# 1. Solve and save proposed coords
+curl "http://localhost:1367/api/layout/solve?step=4" > layout.json
+
+# 2. Inspect: how many alignment problems remain?
+cat layout.json | jq '.validation'
+
+# 3. Apply when satisfied
+cat layout.json | jq '{coords: .proposed}' | \
+  curl -XPOST http://localhost:1367/api/layout/apply \
+    -H 'Content-Type: application/json' -d @-
+```
+
+> ⚠️ The current world graph has ~220 disconnected nodes (isolated sub-graphs). They will all be placed and are not lost, but they land in a block below the main grid. Use `GET /api/graph/reachability` to see which nodes are unreachable from the main hub before applying.
+
+---
+
+### POST /api/layout/apply
+
+Mass-update NODE_COORDS from a `{code:{r,c}}` map. Accepts the `proposed` object from `GET /api/layout/solve` or any partial override. Rewrites the entire `NODE_COORDS` section in source (sorted by row then column), saves, and restarts.
+
+```bash
+curl -XPOST http://localhost:1367/api/layout/apply \
+  -H 'Content-Type: application/json' \
+  -d '{"coords": {"TLS":{"r":8,"c":112}, "LHR":{"r":16,"c":112}}}'
+```
+```json
+{ "ok": true, "updated": 2 }
+```
+
+Only codes included in `coords` are updated. Existing entries for other nodes are preserved. All `r` and `c` values must be numbers; the endpoint returns 400 for any non-numeric entry.
 
 ---
 

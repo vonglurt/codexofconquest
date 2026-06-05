@@ -314,7 +314,7 @@ All files under 60 KB in 1367-sources/. Each to receive full pipeline: read → 
 | BOO | Prose Edda — Snorri Sturluson | 53 | **IMPORTED — 2026-06-05 — ASG/THK/HNJ new nodes (Ásgarðr/Þökk's Cave/Hnitbjörg); boo_01–07 (7 cycles, 35 acts); questComplete on boo_07_act5; BOO node collision (Yugurt Lake)→quest prefix only** |
 | CDG | The Three Musketeers — Alexandre Dumas | 54 | **IMPORTED — 2026-06-05 — BTH/REL/DAR new nodes (Bethune Convent/Relay Post/Road Junction); cdg_01–07 (7 cycles, 35 acts); questComplete on cdg_07_act5; CDG node collision (Cat Quarter)→LON hub for cycles 3–7; RME→ROM** |
 | LGW | Le Morte d'Arthur — Sir Thomas Malory | 55 | **IMPORTED — 2026-06-05 — AST/RVP/CAM/LKS new nodes; LGW-01–07 (7 cycles, 35 acts); questComplete on LGW-07 act5** |
-| OST | Song of Roland — Anon | 56 | **SEEDS COMPLETE 2026-06-03 — OST-01–07 all vignettes done. AIX/RON/PYR/FRS in Location Grid. No new nodes. See OST-song-of-roland.md.** |
+| OST | Song of Roland — Anon | 56 | **IMPORTED — 2026-06-05 — RON/PYR/AIX/FRS new nodes (Roncevaux Pass/Pyrenean High Road/Aix-la-Chapelle Chapel/Frankish Road-Town); ost_01–07 (7 cycles, 35 acts); questComplete on ost_07_act5; OST collision (Bruges—Cloth Hall)→quest prefix only; cycles 1–2 route RON/PYR/AIX/FRS naturally; cycles 3–7 hub at AIX or RON** |
 | ARN | Knights of the Cross — Henryk Sienkiewicz | 57 | **SEEDS COMPLETE 2026-06-03 — ARN-01–07 all vignettes done. KRK/JUR/TKT/CHP in Location Grid. No new nodes. See ARN-knights-of-the-cross.md.** |
 | VBY | Grettir's Saga — Anon | 58 | **SEEDS COMPLETE 2026-06-03 — VBY-01–07 all vignettes done. RKN/BWH in Location Grid. No new nodes. See VBY-grettir-saga.md.** |
 | RIX | Egil's Saga — Anon (attr. Snorri) | 58 | **SEEDS COMPLETE 2026-06-03 — RIX-01–07 all vignettes done. YRK/ISL in Location Grid. No new nodes. See RIX-egil-saga.md.** |
@@ -920,6 +920,7 @@ This procedure runs once per vignette act (one quest at a time). Complete all 8 
 | 96 | ERF | Grimm's Fairy Tales (Brothers Grimm, 1812) | ERF existing (Grimm Archive city hub); ANT existing (Prince's Antechamber); STB new node (Livery Stable District, r:98 c:128, city); GLD new node (Trade Guild Court, r:98 c:130, city); CI new node (Chancery Court, r:100 c:130, city); DNG new node (Faithful John's Restoration Room, r:98 c:132, camelot); CHC new node (Castle Household Corridor, r:100 c:132, camelot); PRH new node (Prince's Great Hall, r:102 c:133, camelot); BK/VEN/CON/ROM/LDN/WM existing; erf_01–07 (7 cycles, 35 acts); questComplete on erf_07_act5; RME→ROM; CI finale for cycle 1 (chancery court); PRH finale for cycle 2 (prince's seal) | IMPORTED — 2026-06-05 |
 | 97 | HFT | Frithiof's Saga (Tegnér, 1825) | ALR new node (Alrekstaðir Temple, r:104 c:128, camelot); BLG new node (Balder's Grove, r:104 c:130, highlands); RNG new node (Ring's Private Chamber, r:106 c:128, camelot); ING new node (Ingeborg's Chamber, r:106 c:130, camelot); HEO existing (Lejre); BK/CON/VEN/LDN/WM existing; hft_01–07 (7 cycles, 35 acts); questComplete on hft_07_act5; HFT collision (South Shore Fishermen)→BLG hub for cycles 3–7 | IMPORTED — 2026-06-05 |
 | 98 | RKV | Poetic Edda (Anon, ~10th–13th C, Codex Regius c.1270) | VLH new node (Völva's Heath, r:108 c:128, highlands); AEG new node (Ægir's Feast Hall, r:108 c:130, camelot); RSS new node (Standing Stone Archive Road, r:108 c:132, ruins); ASG/BK/CON/VEN/ROM/LDN/WM existing; rkv_01–07 (7 cycles, 35 acts); questComplete on rkv_07_act5; RKV collision (Frost Warden's Throne)→AEG hub cycles 3–7; cycle 1→VLH; cycle 2→AEG/ASG/RSS | IMPORTED — 2026-06-05 |
+| 99 | OST | Song of Roland (Anon, c.1100) | RON new node (Roncevaux Pass, r:110 c:128, highlands); PYR new node (Pyrenean High Road, r:110 c:130, highlands); AIX new node (Aix-la-Chapelle Chapel, r:110 c:132, camelot); FRS new node (Frankish Road-Town, r:110 c:134, city); BK/CON/VEN/ROM/LDN/WM existing; ost_01–07 (7 cycles, 35 acts); questComplete on ost_07_act5; OST collision (Bruges—Cloth Hall)→quest prefix only; cycles 1–2 route RON/PYR/AIX/FRS naturally; cycles 3–7 hub at AIX or RON | IMPORTED — 2026-06-05 |
 
 ---
 
@@ -958,5 +959,45 @@ This procedure runs once per vignette act (one quest at a time). Complete all 8 
 **SEN (Treasure Island):** BRS (Bristol) anchors. HMS (Hispaniola island), STK (Stockade camp), BGC (Black Cave cache), NHS (North Harbour Shore), TIS (Treasure Island summit). Terrain: `coast`, `island`, `forest`.
 
 **MAN (Ivanhoe):** LBA (Leeds-Bradford/Yorkshire) anchors. SHF (Sheffield area — Locksley village), HMT (Helmsley — tournament site). Terrain: `forest`, `city`.
+
+---
+
+## §SESSION-END-2026-06-05 — Outstanding Import Work
+
+### Completed this session (tracking files NOT yet updated)
+
+**§IMPORT-99 OST — La Chanson de Roland (Anon, c.1100 AD)**
+- Script: `import_ost.py` — written and run cleanly
+- 4 new nodes: RON (Roncevaux Pass, highlands, 110,128), PYR (Pyrenean High Road, highlands, 110,130), AIX (Aix-la-Chapelle Chapel, camelot, 110,132), FRS (Frankish Road-Town, city, 110,134)
+- 35 quests: ost_01_act1 through ost_07_act5; questComplete on ost_07_act5
+- OST code collision (Bruges — Cloth Hall) → quest prefix only; no OST hub node needed; cycles 1–2 route RON/PYR/AIX/FRS naturally; cycles 3–7 hub at AIX or RON
+- Post-import audit: **443 nodes, 1590 quests**
+- **Still needed**: update api-data-audit.md (add OST row after RKV), update plan.md line 317 (OST → IMPORTED), add import queue entry #99, update index.md (add OST collision entry + OST node section), commit as §IMPORT-99
+
+### Next books to import (all SEEDS COMPLETE)
+
+In approximate queue order:
+
+| Code | Title | New Nodes | Source File |
+|------|-------|-----------|-------------|
+| ARN | Knights of the Cross — Sienkiewicz | KRK/JUR/TKT/CHP (per Location Grid) | ARN-knights-of-the-cross.md |
+| VBY | Grettir's Saga — Anon | RKN/BWH | VBY-grettir-saga.md |
+| RIX | Egil's Saga — Anon (attr. Snorri) | YRK/ISL | RIX-egil-saga.md |
+| ZTH | Odyssey — Homer (Butler) | PHC/RME | ZTH-odyssey.md |
+| ATH | Iliad — Homer (Lang) | none | ATH-iliad.md |
+| JRS | Jerusalem Delivered — Tasso | none | JRS-jerusalem-delivered.md |
+| LIS | Lusiads — Camões | none | LIS-lusiad.md |
+| MAD | Chronicle of the Cid — Anon (Southey) | VLC | MAD-chronicle-cid.md |
+| FLR | Divine Comedy: Inferno — Dante | none | FLR-divine-comedy-inferno.md |
+| TBS | Knight in the Panther's Skin — Rustaveli | none | TBS-knight-panther-skin.md |
+| BEY | Mandeville's Travels | unknown (FAM/RGS per earlier notes) | BEY-mandeville.md |
+| KYA | Shah-Nameh | YAZ/KBL/SIS/TBZ/TRB/HRT — 25 cycles | §KYA-CONT in plan.md |
+
+### Procedure on next session start
+
+1. Complete OST tracking file updates first (3 files + commit §IMPORT-99)
+2. Check each book's source file for node collisions before writing import script
+3. RME→ROM substitution applies throughout
+4. Current baseline: 443 nodes, 1590 quests
 
 **STN (Robin Hood):** EMA (East Midlands Airport, nearest to Nottingham) anchors. EMT (Emmet Priory), LEA (Castle Lea), NTN (Nottingham city), KLN (Kirklees Nunnery). SHW (Sherwood Forest proper) placed between EMA and NTN. Terrain: `forest` (Sherwood), `city` (Nottingham), `ruins` (priories).

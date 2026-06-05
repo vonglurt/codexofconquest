@@ -372,6 +372,7 @@ All previously logged conflicts resolved. Current known gaps:
 | F4 table re-drifted (+9–53 lines) after SP4 annotation pass | `mechanics-economy.md` | ✅ All 29 entries re-verified 2026-05-26 |
 | `surveyDeliveredToAuros` flag name wrong in world.md §Blue Shutters Archive | `world.md` | ✅ Corrected to `undercitySurveyDelivered` 2026-05-26 |
 | 5 `// → doc:` annotations pointed to non-existent section names (§Inn Sleep, §Gate Locks, §Quiet Return, §Act III NPC Lines, §Sweelinck Naming Ceremony) | `roll2hit-v3.html` · `story.md` | ✅ All fixed 2026-05-26 — annotations corrected; `#### Gate Locks` section added to story.md |
+| OST code collision: `OST` node code was already used (Bruges — Cloth Hall), so La Chanson de Roland uses quest prefix `ost_` only; no OST hub node created | `1367-sources/plan.md` · `api-data-audit.md` | ✅ Resolved 2026-06-05 — 4 new nodes RON/PYR/AIX/FRS created; cycles 1–2 route RON/PYR/AIX/FRS naturally; cycles 3–7 hub at AIX or RON |
 
 ---
 
@@ -402,12 +403,18 @@ This rule applies to `api-data-audit.md`, `plan.md §TTS`, and all session loops
 
 **Source fidelity:** When `1367-sources/{CODE}-*.md` exists, copy `scene:/successText:/failText:` fields verbatim. City names and geographic anchors in quest text must match the city referenced in the source file. The book authored as a 1367-source uses the city name in the title and the plan — those landmarks carry into the quest desc and hint.
 
-**Status (2026-06-04):** MQ/SQ/EPIC done. ~20 books queued. See `api-data-audit.md §Per-Book Queue`.
+**Status (2026-06-05):** MQ/SQ/EPIC done. §IMPORT-99 OST complete (443 nodes, 1590 quests). See `api-data-audit.md §Per-Book Queue`.
+
+**§IMPORT-99 OST nodes** (La Chanson de Roland, Anon, c.1100):
+- `RON` — Roncevaux Pass (r:110 c:128, highlands)
+- `PYR` — Pyrenean High Road (r:110 c:130, highlands)
+- `AIX` — Aix-la-Chapelle Chapel (r:110 c:132, camelot)
+- `FRS` — Frankish Road-Town (r:110 c:134, city)
 
 ---
 
-*Last updated: 2026-06-04*
-*Codebase: `roll2hit-v3.html` · ~21,300 lines · Layers 0–104 complete · 305 nodes · 392 monsters · 960 quests*
+*Last updated: 2026-06-05*
+*Codebase: `roll2hit-v3.html` · ~21,300 lines · Layers 0–104 complete · 443 nodes · 392 monsters · 1590 quests*
 *MIT License — roll2hit.com — Copyright (c) 2026 — Free to use, modify, and share.*
 
 ---
