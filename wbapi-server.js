@@ -424,30 +424,30 @@ function json(res, status, body) {
   res.end(JSON.stringify(body, null, 2));
 }
 
-// After every successful write: save to disk and restart (exit 67 → toggle relaunches).
+// After every successful write: save to disk, hot-reload in memory, respond — no process restart.
 function saveAndRestart(res, status, payload) {
   const r = WBAPI.save();
-  let saveNote, savePath;
-  if (r.ok) {
-    savePath = r.path;
-    try {
-      fs.copyFileSync(r.path, GAME_FILE);
-      saveNote = 'auto-saved';
-      logRow('autoSave', savePath);
-    } catch(e) {
-      saveNote = `save ok but overwrite failed: ${e.message}`;
-      logRow('autoSave', `WARN: ${saveNote}`);
-    }
-  } else {
-    saveNote = `auto-save failed: ${r.error}`;
-    logRow('autoSave', `ERROR: ${r.error}`);
+  if (!r.ok) {
+    logRow('autoSave', `${C.red}ERROR: ${r.error}${C.reset}`);
+    return json(res, 500, { ok:false, error:`save failed: ${r.error}` });
+  }
+  try {
+    fs.copyFileSync(r.path, GAME_FILE);
+    logRow('autoSave', r.path);
+  } catch(e) {
+    return json(res, 500, { ok:false, error:`overwrite failed: ${e.message}`, savePath: r.path });
+  }
+  try {
+    WBAPI.load(GAME_FILE);
+    logRow('reload', 'memory refreshed from disk');
+  } catch(e) {
+    return json(res, 500, { ok:false, error:`reload failed after save: ${e.message}`, savePath: r.path });
   }
   cors(res);
   res.writeHead(status, { 'Content-Type': 'application/json' });
-  const out = { ...payload, autoSaved: r.ok, savePath, restartNote: 'Server restarting — poll /api/ping until it responds.' };
+  const out = { ...payload, autoSaved: true, savePath: r.path };
   logBody('out', out);
   res.end(JSON.stringify(out, null, 2));
-  setTimeout(() => process.exit(67), 150);
 }
 
 // Save to disk, soft-reload in memory, verify the written entity — no process restart.
@@ -1602,17 +1602,16 @@ async function route(req, res) {
       return json(res, 500, { ok:false, error: e.message, backup: backupPath });
     }
 
-    // 3. Respond, then restart so the server reloads from roll2hit-v3.html clean
-    logResponse(method, url.pathname, 200, `saved → restarting`);
-    res.writeHead(200, { 'Content-Type':'application/json' });
-    res.end(JSON.stringify({
-      ok: true,
-      backup: backupPath,
-      primary: GAME_FILE,
-      note: 'Server restarting. Poll /api/ping until it responds.',
-    }));
-    setTimeout(() => process.exit(67), 120); // let response flush before exit
-    return;
+    // 3. Hot-reload in memory, then respond — no process restart
+    try {
+      WBAPI.load(GAME_FILE);
+      logRow('reload', 'memory refreshed from disk');
+    } catch(e) {
+      logResponse(method, url.pathname, 500, `reload failed: ${e.message}`);
+      return json(res, 500, { ok:false, error:`reload failed after save: ${e.message}`, backup: backupPath });
+    }
+    logResponse(method, url.pathname, 200, `saved → reloaded`);
+    return json(res, 200, { ok:true, backup: backupPath, primary: GAME_FILE });
   }
 
   // ── Schema ──

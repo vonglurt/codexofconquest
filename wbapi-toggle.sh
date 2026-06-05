@@ -31,7 +31,7 @@ _run_loop() {
     if [ "$CODE" -eq 67 ]; then
       echo ""
       echo "[wbapi-toggle] ↺  Server requested restart (exit 67) — relaunching…"
-      sleep 0.3
+      sleep 0.1
     else
       echo "[wbapi-toggle] ⏹  Server exited with code $CODE."
       break
