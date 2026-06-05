@@ -821,6 +821,20 @@ select.fi{appearance:none;}
     </div>
     <div id="map-audit-list" style="display:flex;flex-direction:column;gap:4px"></div>
 
+    <!-- Grid Layout Solver -->
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:4px;border-top:1px solid var(--border);padding-top:12px">
+      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;flex:1">Grid Layout Solver</div>
+      <label style="font-size:11px;color:var(--muted)">step
+        <input id="layout-step" type="number" min="4" max="32" value="8" style="width:40px;font-size:11px;margin-left:4px;background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:3px;padding:1px 3px">
+      </label>
+      <label style="font-size:11px;color:var(--muted)">root
+        <input id="layout-root" type="text" placeholder="TLS" style="width:52px;font-size:11px;margin-left:4px;background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:3px;padding:1px 3px">
+      </label>
+      <button class="btn" id="btn-layout-solve" disabled style="font-size:11px">Solve</button>
+      <button class="btn primary" id="btn-layout-apply" style="font-size:11px;display:none">Apply Layout</button>
+    </div>
+    <div id="layout-result" style="display:flex;flex-direction:column;gap:4px"></div>
+
   </div>
 
   <!-- ═══ STATS ═══ -->
@@ -3439,6 +3453,7 @@ document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>
   window._auditEnableServer = () => {
     $('btn-audit-server').disabled = false;
     $('btn-map-audit').disabled = false;
+    $('btn-layout-solve').disabled = false;
   };
 
   // ── Map Connectivity Audit ──────────────────────────────────────────────────
@@ -3513,6 +3528,72 @@ document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>
     } catch(e) {
       $('btn-map-fix-all').textContent = 'Fix All';
       $('btn-map-fix-all').disabled = false;
+    }
+  });
+
+  // ── Grid Layout Solver ─────────────────────────────────────────────────────
+  let _layoutProposed = null;
+
+  async function runLayoutSolve() {
+    const result = $('layout-result');
+    const step   = parseInt($('layout-step').value, 10) || 8;
+    const root   = $('layout-root').value.trim() || '';
+    result.innerHTML = '<div style="color:var(--muted);font-size:12px">Solving…</div>';
+    $('btn-layout-apply').style.display = 'none';
+    _layoutProposed = null;
+    try {
+      const params = `step=${step}${root ? '&root='+encodeURIComponent(root) : ''}`;
+      const r = await fetch(`${SERVER.url}/api/layout/solve?${params}`);
+      const d = await r.json();
+      if (!d.ok) { result.innerHTML = `<div style="color:var(--red);font-size:12px">${d.error||'Solver error'}</div>`; return; }
+      _layoutProposed = d.proposed;
+      const v = d.validation;
+      const rows = [
+        ['Root', d.root], ['Step', d.step],
+        ['Nodes placed', d.placed + ' / ' + d.total],
+        ['Orphans (disconnected)', d.orphans],
+        ['Aligned pairs', `${v.alignOk} ok · ${v.alignBad} misaligned`],
+        ['Within 4-cell pairs', `${v.distOk} ok · ${v.distBad} over`],
+      ];
+      let html = '<div style="display:grid;grid-template-columns:auto 1fr;gap:2px 12px;font-size:11px;font-family:monospace;padding:6px 0">';
+      for (const [k, val] of rows)
+        html += `<span style="color:var(--muted)">${k}</span><span style="color:var(--text)">${val}</span>`;
+      html += '</div>';
+      if (d.orphans > 0)
+        html += `<div style="color:var(--yellow);font-size:11px">${d.orphans} disconnected nodes will be placed below the main grid.</div>`;
+      result.innerHTML = html;
+      $('btn-layout-apply').style.display = '';
+    } catch(e) {
+      result.innerHTML = `<div style="color:var(--red);font-size:12px">Solve failed: ${e.message}</div>`;
+    }
+  }
+
+  $('btn-layout-solve').addEventListener('click', runLayoutSolve);
+
+  $('btn-layout-apply').addEventListener('click', async () => {
+    if (!_layoutProposed) return;
+    $('btn-layout-apply').disabled = true;
+    $('btn-layout-apply').textContent = 'Applying…';
+    try {
+      const r = await fetch(`${SERVER.url}/api/layout/apply`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ coords: _layoutProposed }),
+      });
+      const d = await r.json();
+      if (d.ok) {
+        $('btn-layout-apply').textContent = `✓ Applied ${d.updated} coords`;
+        $('layout-result').insertAdjacentHTML('beforeend',
+          `<div style="color:var(--green);font-size:11px">Layout written — reload game file to see changes on canvas.</div>`);
+      } else {
+        $('btn-layout-apply').textContent = 'Apply Layout';
+        $('btn-layout-apply').disabled = false;
+        $('layout-result').insertAdjacentHTML('beforeend',
+          `<div style="color:var(--red);font-size:11px">${d.error||'Apply failed'}</div>`);
+      }
+    } catch(e) {
+      $('btn-layout-apply').textContent = 'Apply Layout';
+      $('btn-layout-apply').disabled = false;
     }
   });
 })();

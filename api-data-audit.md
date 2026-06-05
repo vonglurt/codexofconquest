@@ -263,6 +263,7 @@ say "Next: {BOOK} {next_cycle} — {quest title}." &
 | BHD  | Cuchulain of Muirthemne (Gregory) | 0       | 0               | 0               | DONE 2026-06-05 — 35 acts imported with full text; EMR/PSU/ULC nodes created; BHD collision→EMR |
 | SDQ  | Rob Roy (Scott)               | 0           | 0               | 0               | DONE 2026-06-05 — 35 acts imported; OBH/GLA/ABF/GLN/LLM/EDI nodes created; SDQ collision→OBH; node name fix (terrain key patch) |
 | PLW  | Piers Plowman (Langland)      | 0           | 0               | 0               | DONE 2026-06-05 — 35 acts imported; MGF node created; FCO collision (Aeneid)→PLW quest prefix; RME→ROM |
+| GDN  | Njal's Saga (Anon, 13th c.)   | 0           | 0               | 0               | DONE 2026-06-05 — 35 acts imported; IGH/SWF/ISL nodes created; GDN collision (Danzig)→quest prefix only |
 | GAME | Legacy game quests (quest_*, trap_*) | ~346 | ~170           | ~140            | SEPARATE — see §GAME |
 | BGW  | Arabian Nights (Burton tr.)   | 0           | 0               | 0               | DONE 2026-06-03     |
 | CAI  | Arabian Nights (Lang)         | 0           | 0               | 0               | DONE 2026-06-03     |

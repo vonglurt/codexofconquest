@@ -297,7 +297,7 @@ All files under 60 KB in 1367-sources/. Each to receive full pipeline: read → 
 | BHD | Cuchulain of Muirthemne — Lady Gregory | 43 | **IMPORTED — 2026-06-05 — EMR/PSU/ULC new nodes; BHD-01–07 (7 cycles, 35 acts); questComplete on BHD-07 act5; BHD collision→EMR (Emain Macha)** |
 | ZTH | Odyssey — Homer (Butler) | 43 | **SEEDS COMPLETE 2026-06-03 — ZTH-01–07 all vignettes done. New nodes: PHC, RME. See ZTH-odyssey.md.** |
 | ATH | Iliad — Homer (Lang) | 45 | **SEEDS COMPLETE 2026-06-03 — ATH-01–07 all vignettes done. No new nodes. See ATH-iliad.md.** |
-| GDN | Njal's Saga — Anon (Dasent) | 45 | **SEEDS COMPLETE 2026-06-03 — GDN-01–07 all vignettes done. No new nodes. See GDN-njal-saga.md.** |
+| GDN | Njal's Saga — Anon (Dasent) | 45 | **IMPORTED — 2026-06-05 — IGH/SWF/ISL new nodes (Ingolf's Head/Swinefell/Althing Ground); gdn_01–07 (7 cycles, 35 acts); questComplete on gdn_07_act5; GDN node collision (Danzig)→quest prefix only** |
 | JRS | Jerusalem Delivered — Torquato Tasso | 46 | **SEEDS COMPLETE 2026-06-03 — JRS-01–07 all vignettes done. No new nodes. See JRS-jerusalem-delivered.md.** |
 | LIS | Lusiads — Luís de Camões | 47 | **SEEDS COMPLETE 2026-06-03 — LIS-01–07 all vignettes done. No new nodes. See LIS-lusiad.md.** |
 | MAD | Chronicle of the Cid — Anon (Southey) | 48 | **SEEDS COMPLETE 2026-06-03 — CID-01–07 all vignettes done. New node: VLC. See MAD-chronicle-cid.md.** |
@@ -910,6 +910,7 @@ This procedure runs once per vignette act (one quest at a time). Complete all 8 
 | 87 | BHD | Cuchulain of Muirthemne (Gregory) | EMR new node (Emain Macha Ulster Hall, r:84 c:140, camelot); PSU new node (Plain of Murthemne Standing Stone, r:82 c:140, ruins); ULC new node (Ulster Ford Red Branch Road, r:86 c:140, road); BK/VS/WM existing; BHD-01–07 (7 cycles, 35 acts); questComplete on BHD-07 act5; BHD node collision (Camelot road)→EMR for cycle 1 | IMPORTED — 2026-06-05 |
 | 89 | PLW | Piers Plowman (Langland) | MGF new node (Malvern Field, r:113 c:143, highlands); BK/VEN/CON/ROM/LDN/WM existing; PLW-01–07 (7 cycles, 35 acts); questComplete on PLW-07 act5; FCO quest-prefix collision (Aeneid already imported)→PLW prefix; RME→ROM | IMPORTED — 2026-06-05 |
 | 88 | SDQ | Rob Roy (Scott) | OBH new node (Osbaldistone Hall, r:109 c:142, camelot); GLA new node (Glasgow, r:93 c:143, city); ABF new node (Aberfoyle, r:91 c:142, highlands); GLN new node (MacGregor Glen, r:89 c:141, highlands); LLM new node (Loch Lomond, r:93 c:145, freshwater_lake); EDI new node (Edinburgh, r:96 c:148, city); LON/WM existing; SDQ-01–07 (7 cycles, 35 acts); questComplete on SDQ-07 act5; SDQ collision (Crones' Domain)→OBH; PUT /api/node/{code} terrain key fix applied | IMPORTED — 2026-06-05 |
+| 90 | GDN | Njal's Saga (Anon, Dasent) | IGH new node (Ingolf's Head Iceland coast, r:82 c:108, beach); SWF new node (Swinefell Flosi's hall, r:84 c:110, camelot); ISL new node (Althing Ground Iceland, r:86 c:112, highlands); HHL/BK/VS/HEO/CON/WM existing; gdn_01–07 (7 cycles, 35 acts); questComplete on gdn_07_act5; GDN node collision (Danzig Grain Port)→quest prefix only (no node created) | IMPORTED — 2026-06-05 |
 
 ---
 

@@ -166,6 +166,16 @@ Two-tier naming rule: cities = 3-letter IATA or city-derived code; specific loca
 
 ---
 
+## Njal's Saga (GDN) Nodes
+
+| Code | Label | Location | Source | Coords (r,c) | Book | Notes |
+|------|-------|----------|--------|--------------|------|-------|
+| IGH | Ingolf's Head — Iceland Coast Wreck Site | South Iceland coast | Kari's ship wrecks here; start of reconciliation arc | 82,108 | GDN | Created 2026-06-05; beach terrain; cycles 1 (coastal scenes), 2 (wreck/storm road start) |
+| SWF | Swinefell — Flosi's Hall, Iceland | South Iceland | Flosi's hall; start and end of escort arc; reconciliation scene | 84,110 | GDN | Created 2026-06-05; camelot terrain; cycles 1 (escort departure/return), 2 (gate/hall/reconciliation) |
+| ISL | Althing Ground — Iceland | Þingvellir, Iceland | Icelandic parliament; Njal's booth, Fifth Court | 86,112 | GDN | Created 2026-06-05; highlands terrain; cycles 3/4/6/7 (dower/prophecy/leap/fifth-court acts) |
+
+---
+
 ## Code Collision Register
 
 Codes that were planned but found already occupied by existing game nodes:
@@ -184,3 +194,4 @@ Codes that were planned but found already occupied by existing game nodes:
 | BHD | Cuchulain starting node | "Camelot — Arthurian Road" (Arthurian game node) | Used EMR (Emain Macha) instead |
 | SDQ | Rob Roy starting node | "The Crones' Domain" (hag_swamp game node) | Used OBH (Osbaldistone Hall) instead |
 | FCO | Piers Plowman quest prefix | FCO already used by Aeneid (Virgil) quest IDs | Used PLW prefix for quest IDs instead |
+| GDN | Njal's Saga starting node | "Danzig — Grain Port" (docks game node) | No node collision for cycle 1 — cycle 1 activates at SWF (Swinefell); quest prefix gdn_ unaffected |
