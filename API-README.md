@@ -981,6 +981,76 @@ Only codes included in `coords` are updated. Existing entries for other nodes ar
 
 ---
 
+### POST /api/import/book
+
+Bulk-import nodes and quest cycles in a single idempotent request. No per-entity nonces required. One save at the end.
+
+```bash
+# From a JSON file:
+curl -X POST http://localhost:1367/api/import/book \
+     -H 'Content-Type: application/json' \
+     -d @import_zth.json
+
+# Via wb CLI:
+./api.sh import import_zth.json
+cat import_zth.json | ./api.sh import
+```
+
+**Request body:**
+
+```json
+{
+  "book": "ZTH",
+  "nodes": [
+    { "code": "PHC", "name": "beach", "label": "Phaeacia Shore",
+      "act": 1, "r": 150, "c": 170, "desc": "Sandy shore..." }
+  ],
+  "cycles": [
+    {
+      "num": 1, "title": "The Raft Commission",
+      "acts": [
+        { "id": "zth_01_act1", "title": "The Commission",
+          "activateNode": "PHC",
+          "desc": "...", "passText": "...", "failText": "...",
+          "checkStat": "WIS", "checkDC": 13,
+          "checkPassFlag": "zthC1A1Done" },
+        { "id": "zth_01_act2", "title": "The Storm",
+          "activateNode": "PHC",
+          "desc": "...", "passText": "...", "failText": "...",
+          "checkStat": "STR", "checkDC": 14,
+          "checkPassFlag": "zthC1A2Done",
+          "activateCond": "() => !!S_story.zthC1A1Done" }
+      ]
+    }
+  ]
+}
+```
+
+**Node fields:** `code` (required), `name` terrain key (required), `label` (required), `act` (required), `r`, `c` (coordinates — optional, stored in NODE_COORDS if provided), `desc`, plus any other NODE_MAP fields.
+
+**Act fields:** `id`, `title`, `activateNode`, `desc`, `passText`, `failText` (all required). Optional: `checkStat`, `checkDC`, `checkPassFlag`, `activateCond`, `questComplete`, `monster`, `monsterHP`, `monsterAC`.
+
+Acts with `monster` set and no `checkStat` are typed as `"combat"`. All others are `"skill_check"`.
+
+**Idempotent:** existing nodes and quests are silently skipped (`nodesSkipped`, `questsSkipped` in response).
+
+**Response:**
+```json
+{
+  "ok": true,
+  "book": "ZTH",
+  "nodesCreated": ["PHC", "RME"],
+  "nodesSkipped": [],
+  "questsCreated": ["zth_01_act1", "zth_01_act2"],
+  "questsSkipped": [],
+  "errors": [],
+  "total": { "nodes": 451, "quests": 1730 },
+  "saved": "/path/to/roll2hit-v3-20260605-120000.html"
+}
+```
+
+---
+
 ### POST /api/save
 
 Write all pending in-memory changes to a new timestamped HTML file. The original is never overwritten.

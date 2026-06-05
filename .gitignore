@@ -1,10 +1,71 @@
+# ── macOS / editor noise ──────────────────────────────────────────────────────
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+*.swp
+*.swo
+*~
+
+# ── Claude Code internal ──────────────────────────────────────────────────────
 .claude/
-milepoints/wbapi-server.log
-milepoints/wbapi-server*.log
+
+# ── Archives and binary blobs ─────────────────────────────────────────────────
+*.gz
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.bz2
+*.xz
+*.7z
+*.rar
+*.dmg
+*.pkg
+*.exe
+*.bin
+*.dll
+*.so
+*.dylib
+
+# ── Images / media ────────────────────────────────────────────────────────────
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.ico
+*.svg
+*.webp
+*.bmp
+*.tiff
+*.mp3
+*.mp4
+*.mov
+*.wav
+
+# ── PDFs and office docs ─────────────────────────────────────────────────────
+*.pdf
+*.doc
+*.docx
+*.xls
+*.xlsx
+*.ppt
+*.pptx
+
+# ── Binary patch files ────────────────────────────────────────────────────────
 milepoints/patches/*.patch
 milepoints/patches/*.patch.log
-milepoints/patches/_last.html
-milepoints/patches/_last.name
+milepoints/patches/_base.html.gz
+
+# ── Server logs ───────────────────────────────────────────────────────────────
+milepoints/wbapi-server.log
+milepoints/wbapi-server*.log
+milepoints/say.lock
+
+# ── Timestamped HTML snapshots (session-level, not milestones) ───────────────
+roll2hit-v3-2*.html
 milepoints/snapshots.zip
-roll2hit-v3-????????-??????.html
+
+# ── _last.html / _last.name ARE tracked (current game state pointer) ─────────
+# (not ignored — intentionally committed)
