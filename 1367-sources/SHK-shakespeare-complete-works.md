@@ -1,6 +1,6 @@
 # SHK — Complete Works of William Shakespeare
 
-**Source:** Parts 1–14 read. Parts 15–28 pending. | **Progress:** Cycles 1–7 complete. Cycle 8 due after Part 16.
+**Source:** Parts 1–16 read. Parts 17–28 pending. | **Progress:** Cycles 1–8 complete. Cycle 9 due after Part 18.
 **Gutenberg:** #100 — Complete Works (Shakespeare)
 **Period:** c.1590–1613 | Drama, Poetry, Sonnets
 **Part 1 contains:** The Sonnets (all 154) + All's Well That Ends Well Act I (begins)
@@ -1635,4 +1635,119 @@ questComplete: true
 
 ```
 SHK | The Dagger Before the Murder | Cycle 7 | BK/VBY/NUE | Object contaminated by proximity to violence — guilt by adjacency
+```
+
+---
+
+## Part 15 Coverage
+
+*Measure for Measure complete + Merchant of Venice Acts I–II*
+
+Part 15 continues Measure for Measure at Act I: Angelo propositions Isabella — "redeem thy brother by yielding up thy body to my will" — and she refuses, choosing her brother's death over her honour while the Duke watches in disguise as a friar; the Duke arranges a bed-trick, substituting Mariana (Angelo's jilted betrothed) for Isabella; Angelo then orders Claudio executed anyway, but the Provost substitutes the head of a drunkard named Barnardine who refuses to die, and Claudio is preserved alive. In the final scene the Duke unmasks Angelo publicly, forgives everyone in a mercy simultaneously just and queasy — every character gets what they need and not what they deserve — closing with "What's mine is yours, and what is yours is mine," a line of reconciliation so expansive it covers everything the play has done wrong. The Merchant of Venice then opens: Antonio borrows three thousand ducats from Shylock to fund Bassanio's courtship of Portia; Shylock's bond, offered "in merry sport," requires a pound of Antonio's flesh if unrepaid; the casket trial at Belmont (gold, silver, lead) opens; Morocco and Aragon choose wrong; and Act II ends with Jessica eloping with Lorenzo and Shylock's ducats, and Shylock's grief-rage over daughter and ducats — "My daughter! O my ducats!"
+
+---
+
+## Part 16 Coverage
+
+*Merchant of Venice complete + Merry Wives of Windsor complete + A Midsummer Night's Dream Act I–II*
+
+Part 16 completes The Merchant of Venice: Bassanio chooses the lead casket ("who chooseth me must give and hazard all he hath") and wins Portia; Antonio's ships all fail and Shylock demands his bond; Portia comes disguised as the lawyer Balthazar, delivers "The quality of mercy is not strained — it droppeth as the gentle rain from heaven," then springs the legal trap — no blood may be shed with the flesh — destroying Shylock's case entirely; Shylock is stripped of half his estate and forced to convert, and the play ends with the rings comedy and Antonio's ships miraculously safe. The Merry Wives of Windsor follows complete: Falstaff sends identical love letters to Mistress Ford and Mistress Page; the wives compare notes and plan three humiliations — Falstaff hidden in the laundry basket and dumped in the Thames, Falstaff disguised as an old woman and beaten by Ford, and finally Falstaff lured to the forest at midnight where the children dressed as fairies pinch and burn him before the community's judgment. A Midsummer Night's Dream then opens Act I: Hermia is ordered to marry Demetrius or face death, she and Lysander flee to the forest, Oberon sends Puck to put love juice on Demetrius's sleeping eyes but Puck mistakes Lysander — the part ends with the wrongly-dosed Lysander asleep, Demetrius and Helena arriving, and the four lovers' positions already scrambled before the play has properly begun.
+
+---
+
+## Cycle 8 — The Identical Letter
+
+*Parts 15–16 | Plays: Measure for Measure + Merchant of Venice + Merry Wives*
+
+*Before beginning: Themes avoided — guilt by proximity (Cycle 7), self-authored ruin (Cycle 6), inadvertent emblem (Cycle 5). This cycle centers on a new mode: the document sent to the wrong recipient — or identically to two recipients who can compare. Not forgery, not interception: the damage comes from the sender's failure to account for recipients who talk to each other.*
+
+**Theme this cycle introduces:** *The letter that ruins its sender by being compared — documents sent identically to multiple recipients without accounting for the possibility that those recipients would share them.*
+
+**TOKEN**: A pair of letters — two documents with identical text, sealed with the same stamp, found together in a Birka merchant's correspondence archive. Both were delivered: one to Gudrid Karlsdottir, the other to Astrid Magnusdottir. The letters are addressed to "my dearest friend" with no name. The sender apparently assumed the recipients would never meet. They did. The sender — a wool merchant — was ruined within a fortnight. The archive holds both letters as a cautionary pair.
+
+---
+
+### Act I — Birka
+```yaml
+activateNode: BK
+type: skill_check
+scene: "Egil Thorvaldsen has found two letters in the correspondence archive —
+  identical text, identical seal, different recipients, same hand, same week.
+  He wants to know if this is a copying error, a deliberate double-send, or
+  forgery. The wool merchant who sent them never returned to Birka."
+prompt: "Investigation DC 13. Examine both letters side by side: same hand,
+  different ink saturation (the second was written first, with fresher ink).
+  The sender made a clean copy — this was deliberate. Both letters were meant
+  to be read, just not compared. The damage was not in the sending but in
+  the meeting of the recipients."
+failText: "Cannot confirm intent from ink alone. Ask Egil whether both
+  recipients acknowledged the letters in their own correspondence. If so,
+  the sender received two replies — and may have thought the plan worked
+  until it didn't."
+successText: "Deliberate double-send confirmed. Two letters, one message,
+  two recipients who met. You receive the Letter Pair."
+grantItem: "Identical Letter Pair"
+checkPassFlag: lettersExamined
+activateMissionBit: shk8_act1Active
+```
+
+### Act II — Visby
+```yaml
+activateNode: VBY
+type: skill_check
+scene: "Marta at the Visby archive. She has seen this before — not the same
+  letters, but the same form. Merchants who maintained multiple households
+  or business partnerships sometimes sent identical letters of affection or
+  promise. The practice was not unusual. The ruin came when recipients compared.
+  She wants to know what harm category applies."
+prompt: "Investigation DC 14. The harm is not in the letter itself — both
+  are genuine. The harm is in the assumption the sender made about the
+  recipients' social isolation. Propose the category: Assumption of Ignorance
+  — documents whose harmlessness depended on recipients not knowing of each
+  other, and whose damage was activated when that assumption failed."
+failText: "Too broad — covers all private letters made public. Narrow it:
+  the letters are not merely private — they are deliberately identical.
+  The sender assumed both recipients would feel uniquely addressed. The
+  injury is specifically to that uniqueness."
+successText: "She logs it: deliberate identical correspondence, assumption
+  of recipient isolation, harm activated by comparison. You receive Marta's
+  Comparison Note."
+grantItem: "Marta's Comparison Note"
+checkPassFlag: categoryDrafted
+activateMissionBit: shk8_act2Active
+```
+
+### Act III — Nuremberg
+```yaml
+activateNode: NUE
+type: skill_check
+scene: "Ulrich von Gessert reads the letter pair and Marta's note. He says:
+  the letters are not a fraud — both are honest in their way. The sender
+  loved both recipients in the same words. He asks: is the wrong here in
+  the sending, or in the words themselves — that words of uniqueness were
+  used as a template?"
+prompt: "Investigation DC 12. Propose the final category: The Duplicated
+  Singular — documents that use language of unique address identically across
+  multiple recipients, where the harm is not in deception but in the
+  industrialization of what the recipient understood as singular attention."
+failText: "He says: that is a philosopher's answer. Give him an archivist's
+  one. The category must name what was done, not what it felt like. Try:
+  Identical Singular Address — form letters using the language of personal
+  uniqueness, whose damage is released upon comparison."
+successText: "Stamped. Logged: identical singular address, harm activated by
+  recipient comparison, sender's error was structural not individual.
+  You receive Ulrich's Seventh Receipt. Quest complete."
+takeItem: "Identical Letter Pair"
+takeItem: "Marta's Comparison Note"
+grantItem: "Ulrich's Seventh Receipt"
+checkPassFlag: identicalLetterLogged
+questComplete: true
+```
+
+---
+
+## Quest Map Entry — Cycle 8
+
+```
+SHK | The Identical Letter | Cycle 8 | BK/VBY/NUE | Duplicated singular address — form letters in the language of uniqueness, harm released by recipient comparison
 ```
