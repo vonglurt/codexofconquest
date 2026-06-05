@@ -199,6 +199,7 @@ Codes that were planned but found already occupied by existing game nodes:
 | ALF | Kalevala starting node | "North Shore Path" (lake_north game node) | No node collision — cycle 1 activates at TUO (Tuonela boundary shore); quest prefix alf_ unaffected |
 | KSU | Heimskringla starting node | "The Lake Harbor" (game node) | No node collision — all cycles activate at NID (Nidaros); quest prefix ksu_ unaffected |
 | CDG | Three Musketeers starting node | "The Cat Quarter" (game node) | CDG collision — cycles 3–7 activate at LON (existing London); quest prefix cdg_ unaffected |
+| VIE | Faust (Goethe) starting node | Vienna — The Imperial City (existing) | VIE exists; MGR/DKN/CLK created as new nodes; cycles 3–7 activate at VIE |
 
 ---
 
@@ -238,3 +239,13 @@ Codes that were planned but found already occupied by existing game nodes:
 | BTH | Bethune — Convent of the Carmelites | Bethune, northern France | The walled convent where Constance Bonacieux hid; she pressed her warning letter into the Fighter's hands at the gate; Milady had come that morning | 86,118 | CDG | Created 2026-06-05; camelot terrain; cycle 2 acts 1–2 |
 | REL | Relay Post — Twelve Miles South of Bethune | South road, Artois | Postmaster absent; assistant won't authorize; innkeeper's son available for motivated errand; letter must leave in thirty minutes | 88,120 | CDG | Created 2026-06-05; city terrain; cycle 2 acts 3–4 |
 | DAR | The Road Junction — South of the Relay Post | South road fork, Artois | Where D'Artagnan read Constance's letter in four seconds and turned his horse north; carrier's commission ended here | 90,122 | CDG | Created 2026-06-05; highlands terrain; cycle 2 act 5 |
+
+---
+
+## Faust (VIE) Nodes
+
+| Code | Label | Location | Source | Coords (r,c) | Book | Notes |
+|------|-------|----------|--------|--------------|------|-------|
+| MGR | Gretchen's Prison Tower | Imperial German city | Stone anteroom; chaplain with ink-stained shaking hands; Margarete's thumb-mark in blue wax on the sealed deposition; execution before midday | 92,126 | VIE | Created 2026-06-05; city terrain; cycle 1 all 5 acts |
+| DKN | Dominican Legal Court | Imperial German city | Competing jurisdictions; family-commissioned writs; household retainers in the corridor; the duty clerk who was briefed | 92,128 | VIE | Created 2026-06-05; city terrain; cycle 1 acts 3–4; cycle 2 act 3 hub |
+| CLK | The Clerk's Sickroom | Imperial German city civic quarter | Seventy, thin, in pain for months; notarized recantation of twenty-two-year-old perjury; Magistrate Haas named in the second sentence; agents watching the front gate | 94,127 | VIE | Created 2026-06-05; city terrain; cycle 2 acts 1–2 |

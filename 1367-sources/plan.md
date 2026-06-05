@@ -307,7 +307,7 @@ All files under 60 KB in 1367-sources/. Each to receive full pipeline: read → 
 | FLR | Divine Comedy: Inferno — Dante Alighieri | 50 | **SEEDS COMPLETE 2026-06-03 — FLR-01–07 all vignettes done. No new nodes needed. See FLR-divine-comedy-inferno.md.** |
 | HFT | Frithiof's Saga — Esaias Tegnér | 51 | **SEEDS COMPLETE 2026-06-03 — HFT-01–07 all vignettes done. No new nodes needed. See HFT-frithiof-saga.md.** |
 | ERF | Grimm's Fairy Tales — Brothers Grimm | 52 | **SEEDS COMPLETE 2026-06-03 — ERF-01–07 all vignettes done. No new nodes needed. See ERF-grimm-fairy-tales.md.** |
-| VIE | Faust — Johann Wolfgang von Goethe | 52 | **SEEDS COMPLETE 2026-06-03 — VIE-01–07 all vignettes done. No new nodes needed. See VIE-faust.md.** |
+| VIE | Faust — Johann Wolfgang von Goethe | 52 | **IMPORTED — 2026-06-05 — MGR/DKN/CLK new nodes (Prison Tower/Dominican Court/Clerk's Sickroom); VIE existed; vie_01–07 (7 cycles, 35 acts); questComplete on vie_07_act5; RME→ROM** |
 | ALF | Kalevala — Elias Lönnrot | 52 | **IMPORTED — 2026-06-05 — TUO/KVF/KVM new nodes (Tuonela shore/Kullervo's forest/Master's hall); alf_01–07 (7 cycles, 35 acts); questComplete on alf_07_act5; ALF collision (North Shore Path)→quest prefix only** |
 | KSU | Heimskringla — Snorri Sturluson | 53 | **IMPORTED — 2026-06-05 — NID/ECF new nodes (Nidaros shrine city/Eclipse Farm); ksu_01–07 (7 cycles, 35 acts); questComplete on ksu_07_act5; KSU collision (Lake Harbor)→NID hub** |
 | RKV | Poetic Edda — Anon | 53 | **SEEDS COMPLETE 2026-06-03 — RKV-01–07 all vignettes done. AEG/RSS in Location Grid. See RKV-poetic-edda.md.** |
@@ -916,6 +916,7 @@ This procedure runs once per vignette act (one quest at a time). Complete all 8 
 | 92 | ALF | Kalevala (Lönnrot, 1849) | TUO new node (Tuonela boundary shore, r:84 c:116, ruins); KVF new node (Kullervo's forest clearing, r:80 c:114, highlands); KVM new node (Master's hall, r:82 c:116, camelot); BK/CON/ROM/LDN/WM existing; alf_01–07 (7 cycles, 35 acts); questComplete on alf_07_act5; ALF collision (North Shore Path)→quest prefix only | IMPORTED — 2026-06-05 |
 | 93 | KSU | Heimskringla (Snorri, c.1230) | NID new node (Nidaros shrine city, r:79 c:118, city); ECF new node (Eclipse Farm coast, r:77 c:116, beach); BK/VEN/CON/ROM/LDN/WM existing; ksu_01–07 (7 cycles, 35 acts); questComplete on ksu_07_act5; KSU collision (Lake Harbor)→NID hub for cycles 3–7 | IMPORTED — 2026-06-05 |
 | 94 | CDG | The Three Musketeers (Dumas & Maquet, 1844) | BTH new node (Bethune Convent, r:86 c:118, camelot); REL new node (Relay Post, r:88 c:120, city); DAR new node (Road Junction, r:90 c:122, highlands); LON/CDV/TL/BK/VEN/CON/ROM/LDN/WM existing; cdg_01–07 (7 cycles, 35 acts); questComplete on cdg_07_act5; CDG node collision (Cat Quarter)→LON hub for cycles 3–7; RME→ROM | IMPORTED — 2026-06-05 |
+| 95 | VIE | Faust (Goethe, 1808) | MGR new node (Gretchen's Prison Tower, r:92 c:126, city); DKN new node (Dominican Legal Court, r:92 c:128, city); CLK new node (Clerk's Sickroom, r:94 c:127, city); VIE existing; BK/VEN/CON/ROM/LDN/WM existing; vie_01–07 (7 cycles, 35 acts); questComplete on vie_07_act5; RME→ROM | IMPORTED — 2026-06-05 |
 
 ---
 
