@@ -6302,14 +6302,16 @@ function _rollCeremonia(questId) {
   const iodineBonus = S_story.iodineBuffActive ? (S_story.iodineBuffBonus || 3) : 0;
   const iodineName  = S_story.iodineBuffBonus >= 5 ? 'Charged Iodine' : 'Iodine Salt';
   if (S_story.iodineBuffActive) { S_story.iodineBuffActive = false; S_story.iodineBuffBonus = 0; }
-  const total = d20 + mod + prof + iodineBonus;
+  const abilityBonus = _lakeMagicBonuses().allAbility;
+  const total = d20 + mod + prof + iodineBonus + abilityBonus;
   const passed = total >= q.checkDC;
   const modStr = (mod >= 0 ? '+' : '') + mod;
   const iodineStr = iodineBonus > 0 ? ' + ' + iodineName + '(+' + iodineBonus + ')' : '';
+  const abilityStr = abilityBonus > 0 ? ' + Dream Scale(+' + abilityBonus + ')' : '';
   _appendStoryHcard({
     round: 'Day ' + (S_story.day || 1),
     actor: 'ROLL',
-    formula: 'd20(' + d20 + ') + ' + q.checkLabel + '(' + modStr + ') + Prof(+' + prof + ')' + iodineStr,
+    formula: 'd20(' + d20 + ') + ' + q.checkLabel + '(' + modStr + ') + Prof(+' + prof + ')' + iodineStr + abilityStr,
     outcome: total + ' vs DC ' + q.checkDC + ' — ' + (passed ? 'PASS ✓' : 'FAIL'),
     dmg: passed ? (typeof q.passText === 'function' ? q.passText() : q.passText) : (typeof q.failText === 'function' ? q.failText() : q.failText),
   });
@@ -17354,6 +17356,29 @@ function _tomeBonuses() {
   return out;
 }
 
+function _lakeMagicBonuses() {
+  const out = { ac:0, atk:0, firstStrike:0, fishingCatch:0, nightType:0, allAbility:0 };
+  const lv     = S_story.level || 1;
+  const lkMod  = _luckMod();
+  (S_story.inventory || []).forEach(item => {
+    if (item.type !== 'lake_magic' || !item.key) return;
+    const def = LAKE_MAGIC_DB[item.key]; if (!def) return;
+    if (lv < (def.minLevel || 1)) return;
+    const bonus = (def.base || 0)
+      + Math.floor(lv     * (def.levelScale || 0))
+      + Math.floor(lkMod  * (def.luckScale  || 0));
+    switch (def.effect) {
+      case 'ac_bonus':     out.ac           += bonus; break;
+      case 'atk_bonus':    out.atk          += bonus; break;
+      case 'first_strike': out.firstStrike  += bonus; break;
+      case 'fishing_dc':   out.fishingCatch += bonus; break;
+      case 'night_type':   out.nightType    += bonus; break;
+      case 'all_ability':  out.allAbility   += bonus; break;
+    }
+  });
+  return out;
+}
+
 function _calcLuck() {
   const s = S_story.abilityScores || { str:16, dex:12, con:14, int:10, wis:12, cha:8 };
   const product = s.str * s.dex * s.con * s.int * s.wis * s.cha;
@@ -18430,7 +18455,8 @@ function _calcPlayerAc() {
   const base = S.char.baseAc || S.char.ac || 10;
   return base
     + (S_story.equippedShield ? (S_story.equippedShield.acBonus || 0) : 0)
-    + (S_story.acBonus || 0);
+    + (S_story.acBonus || 0)
+    + _lakeMagicBonuses().ac;
 }
 
 const CONDITION_GOLD = { // → doc: mechanics-combat.md §Combat Flow
@@ -18453,6 +18479,7 @@ function _storyRollInit() {
   S_story.usedRealAttack       = false;
   S_story.conditionRoundsLeft  = S.opp.cond ? 3 : 0;
   S_story.spellAdvantageReady  = false;
+  S_story._lmFirstStrikeUsed   = false;
   // surgeCharges persist across battles (rest-gated); no reset here
   _statTally('battlesAttempted', 1);
   S_story.hour = ((S_story.hour || 0) + 1) % 24;
@@ -18820,7 +18847,8 @@ function _overlayPlayerAttack() {
   const critMin = _lv >= 20 ? 17 : _lv >= 15 ? 18 : _lv >= 3 ? 19 : 20;
   const atkMod       = getAtkAbilityMod();
   const profB        = S.weapon.prof ? getProfBonus() : 0;
-  const lvlAtk       = (S_story.atkBonus || 0) + _tomeBonuses().atk;
+  const _lmb         = _lakeMagicBonuses();
+  const lvlAtk       = (S_story.atkBonus || 0) + _tomeBonuses().atk + _lmb.atk;
   const weaponAtk    = S_story.equippedWeapon     ? (S_story.equippedWeapon.atkBonus     || 0) : 0;
   const mainWeaponAtk= S_story.equippedMainWeapon ? (S_story.equippedMainWeapon.magicBonus|| 0) : 0;
 
@@ -18859,14 +18887,16 @@ function _overlayPlayerAttack() {
       const dmgCount = (isCrit ? S.weapon.count * 2 : S.weapon.count) * S.dmgMultiplier;
       const dmgRolls = rollN(S.weapon.die, dmgCount);
       const drunkBonus = S_story._drunkFight ? 3 : 0;
-      const flat = S.weapon.flatMod + getDmgMod() + drunkBonus + _scarsLight;
+      const fsBonus  = S_story._lmFirstStrikeUsed ? 0 : _lmb.firstStrike;
+      if (fsBonus) S_story._lmFirstStrikeUsed = true;
+      const flat = S.weapon.flatMod + getDmgMod() + drunkBonus + _scarsLight + fsBonus;
       const raw  = Math.max(0, dmgRolls.reduce((a,b)=>a+b,0) + flat);
       finalDmg   = applyDmgMod(raw, S.opp.dmgMod);
       S.opp.hp   = Math.max(0, S.opp.hp - finalDmg);
       refreshLeftPanel();
       _statTally('dmgDealt', finalDmg);
       _statTally('attacksHit', 1);
-      logMsg = lbl + (isCrit ? '★ CRIT! ' : '✓ HIT! ') + atkTotal + ' vs AC ' + S.enemy.ac + ' — ' + finalDmg + ' dmg dealt.';
+      logMsg = lbl + (isCrit ? '★ CRIT! ' : '✓ HIT! ') + atkTotal + ' vs AC ' + S.enemy.ac + ' — ' + finalDmg + ' dmg dealt.' + (fsBonus ? ' ⚗ First Strike +' + fsBonus : '');
     }
     appendCard({ round: S.round, actor:'YOU',
       formula: 'd20(' + d20Val + ')+' + atkMod + '(mod)+' + profB + '(prof)=' + atkTotal,
@@ -22677,12 +22707,13 @@ function storyFishing() {
     const castDesc= dexTot < 12 ? 'Clumsy cast (−2)' : dexTot >= 17 ? 'Perfect cast (+2)' : 'Clean cast';
 
     // Phase 3: Catch Roll
+    const _lmbFish  = _lakeMagicBonuses();
     const favBonus  = S_story.fishingYugurtFavour ? 1 : 0;
     const rodBonus  = Math.max(0, ...(S_story.inventory||[]).filter(i => i.rodBonus !== undefined).map(i => i.rodBonus));
     const cDie1 = Math.ceil(Math.random() * 20);
     const cDie2 = bait.advantage ? Math.ceil(Math.random() * 20) : null;
     const cResult = cDie2 !== null ? Math.max(cDie1, cDie2) : cDie1;
-    const catchTotal = cResult + bait.catch + castMod + favBonus + rodBonus;
+    const catchTotal = cResult + bait.catch + castMod + favBonus + rodBonus + _lmbFish.fishingCatch;
 
     const sizeOrder = ['small','medium','large','very_large','legendary'];
     let sizeKey = catchTotal <= 5 ? null : catchTotal <= 10 ? 'small' : catchTotal <= 16 ? 'medium' : catchTotal <= 19 ? 'large' : catchTotal === 20 ? 'very_large' : 'legendary';
@@ -22694,7 +22725,7 @@ function storyFishing() {
     if (sizeKey) {
       const tDie = Math.ceil(Math.random() * 20);
       const eelBonus = S_story.eelSkinPouchActive ? 1 : 0; // §XLVIII
-      typeTotal  = tDie + bait.type + _luckMod() + eelBonus; // Layer 48: Luck; §XLVIII: eel pouch
+      typeTotal  = tDie + bait.type + _luckMod() + eelBonus + (isNight ? _lmbFish.nightType : 0);
       rarity     = _rarityFromRoll(typeTotal);
       // Special Catch (raw die 20 before bait) → force legendary rarity
       if (catchTotal >= 20 && cResult === 20) rarity = 'legendary';
