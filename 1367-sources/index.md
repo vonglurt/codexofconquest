@@ -195,3 +195,14 @@ Codes that were planned but found already occupied by existing game nodes:
 | SDQ | Rob Roy starting node | "The Crones' Domain" (hag_swamp game node) | Used OBH (Osbaldistone Hall) instead |
 | FCO | Piers Plowman quest prefix | FCO already used by Aeneid (Virgil) quest IDs | Used PLW prefix for quest IDs instead |
 | GDN | Njal's Saga starting node | "Danzig — Grain Port" (docks game node) | No node collision for cycle 1 — cycle 1 activates at SWF (Swinefell); quest prefix gdn_ unaffected |
+| BOO | Prose Edda starting node | "Yugurt Lake — Steppe Shore" (steppe_lake game node) | No node collision — cycle 1 activates at ASG (Ásgarðr); quest prefix boo_ unaffected |
+
+---
+
+## Prose Edda (BOO) Nodes
+
+| Code | Label | Location | Source | Coords (r,c) | Book | Notes |
+|------|-------|----------|--------|--------------|------|-------|
+| ASG | Ásgarðr — Frigg's Hall | Norse Mythology realm | Odin's citadel; Baldr mourned here; primary hub for cycles 1/3–7 | 78,112 | BOO | Created 2026-06-05; camelot terrain; acts at ASG across cycles 1/3/4/5/6/7 |
+| THK | Þökk's Cave — The One Who Would Not Weep | Norse wilderness | The giantess Þökk who refused to weep for Baldr | 80,108 | BOO | Created 2026-06-05; ruins terrain; cycle 1 act 4 destination |
+| HNJ | Hnitbjörg — Suttungr's Mountain Vault | Norse highlands | Suttungr's mountain where the Mead of Poetry is kept | 82,110 | BOO | Created 2026-06-05; highlands terrain; cycle 2 (mead-theft all 5 acts) |
