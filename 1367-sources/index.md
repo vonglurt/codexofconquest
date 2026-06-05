@@ -145,6 +145,14 @@ Two-tier naming rule: cities = 3-letter IATA or city-derived code; specific loca
 
 ---
 
+## Vision of Piers Plowman (FCO/PLW) Nodes
+
+| Code | Label | Location | Source | Coords (r,c) | Book | Notes |
+|------|-------|----------|--------|--------------|------|-------|
+| MGF | Malvern Field — The Field of Folk | Malvern Hills, Worcestershire, England | Opening dream-field in Piers Plowman | 113,143 | PLW | Created 2026-06-05; highlands terrain; all 7 cycles originate at MGF; FCO quest prefix collision→PLW |
+
+---
+
 ## Rob Roy (SDQ) Nodes
 
 | Code | Label | Location | Source | Coords (r,c) | Book | Notes |
@@ -175,3 +183,4 @@ Codes that were planned but found already occupied by existing game nodes:
 | INV | Ossian starting node | "Loch of the Drowned King" (epic battleground) | Used CNA (Vale of Cona) instead |
 | BHD | Cuchulain starting node | "Camelot — Arthurian Road" (Arthurian game node) | Used EMR (Emain Macha) instead |
 | SDQ | Rob Roy starting node | "The Crones' Domain" (hag_swamp game node) | Used OBH (Osbaldistone Hall) instead |
+| FCO | Piers Plowman quest prefix | FCO already used by Aeneid (Virgil) quest IDs | Used PLW prefix for quest IDs instead |
