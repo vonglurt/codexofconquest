@@ -101,7 +101,8 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | File | Purpose |
 |------|---------|
 | `wbapi-core.js` | Core WBAPI library — `extractObj`, `removeFns`, Proxy model, comment-aware brace counting |
-| `wbapi-cli.js` | CLI entry point — command dispatch, read/write operations against `roll2hit-v3.html` |
+| `api.sh` / `api/wb.js` | **Primary CLI wrapper** — queued HTTP to WBAPI, auto-nonce, retry/backoff, `--ai` Claude assist, `--out` file output, pipe-friendly |
+| `wbapi-cli.js` | Low-level CLI — direct in-process reads/writes against `roll2hit-v3.html` (use `api.sh` for day-to-day work) |
 | `wbapi-server.js` | Local HTTP server — REST endpoints for worldbuilder.html at port 1367 |
 | `wbapi-toggle.sh` | Shell helper — start/stop wbapi-server |
 | `wbapi-help.md` | WBAPI usage reference — endpoint list, anchor syntax, example calls |

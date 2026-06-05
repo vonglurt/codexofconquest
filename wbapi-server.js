@@ -1410,6 +1410,12 @@ async function route(req, res) {
           '  monster key ref — terrain monster list references missing MONSTER_POOL key',
           '  quest chain ref — quest.chain points to a missing quest ID',
           '  npc node ref    — NPC.node points to a missing node code',
+          '  quest no npc    — quest.npc is missing (every quest must have an NPC anchor)',
+          '',
+          'COMMON WARNINGS',
+          '  npc no quests   — NPC exists but has no quests (no gameplay function)',
+          '  npc no dialogue — NPC has no NPC_DIALOGUES entry',
+          '  terrain no mon  — terrain has no monsters defined',
           '',
           'FIXING ERRORS',
           '  1. Run audit to get the error list',
@@ -1417,7 +1423,8 @@ async function route(req, res) {
           '  3. For typos in existing keys: use /rename or /swap endpoints',
           '  4. Run audit again to confirm errors dropped to zero',
           '',
-          `  e.g. curl ${b}/api/audit | jq \'.errors\'`,
+          `  e.g. ./api.sh audit`,
+          `      ./api.sh audit --raw | jq '.errors'`,
         ].join('\n'),
       },
 
@@ -2539,6 +2546,10 @@ async function route(req, res) {
     for (const [key, npc] of Object.entries(WBAPI.birkaNpcs))
       if (npc.node && !nodeKeys.has(npc.node))
         errors.push({ section:'BIRKA_NPC', key, field:'node', msg:`node "${npc.node}" not in NODE_MAP` });
+    // ERROR — quest missing npc anchor
+    for (const [id, q] of Object.entries(WBAPI.questDb))
+      if (!q.npc)
+        errors.push({ section:'QUEST_DB', key:id, field:'npc', msg:`quest has no npc field — every quest must be anchored to an NPC` });
     for (const dk of dropKeys)
       if (!monsterKeys.has(dk))
         errors.push({ section:'MONSTER_DROPS', key:dk, field:'key', msg:`drop entry has no matching MONSTER_POOL entry` });
@@ -2571,6 +2582,12 @@ async function route(req, res) {
     for (const [npcKey, npc] of Object.entries(WBAPI.birkaNpcs))
       if (!WBAPI.npcDialogues[npcKey])
         warnings.push({ section:'BIRKA_NPC', key:npcKey, field:'NPC_DIALOGUES', msg:`"${npc.name||npcKey}" has no NPC_DIALOGUES entry — dialogue card will not render in game` });
+    // WARNINGS — NPC with no quests (has no gameplay function)
+    const _npcQuestKeys = new Set();
+    for (const q of Object.values(WBAPI.questDb)) if (q.npc) _npcQuestKeys.add(q.npc);
+    for (const [key, npc] of Object.entries(WBAPI.birkaNpcs))
+      if (!_npcQuestKeys.has(key) && !_npcQuestKeys.has(npc.name))
+        warnings.push({ section:'BIRKA_NPC', key, field:'quests', msg:`"${npc.name||key}" has no quests — NPC has no gameplay function` });
 
     // WARNINGS — loot table gap
     const lootTotal = (WBAPI.d100Table||[]).reduce((s,e)=>s+(e.weight||0), 0);
@@ -2759,6 +2776,9 @@ async function route(req, res) {
     }
     for (const [key, npc] of Object.entries(WBAPI.birkaNpcs))
       if (npc.node && !neNKeys.has(npc.node)) neAdd('error','BIRKA_NPC',key,'node',`node "${npc.node}" not in NODE_MAP`);
+    // ERROR — quest missing npc anchor
+    for (const [id, q] of Object.entries(WBAPI.questDb))
+      if (!q.npc) neAdd('error','QUEST_DB',id,'npc',`quest has no npc field — every quest must be anchored to an NPC`);
     for (const dk of neDKeys)
       if (!neMKeys.has(dk)) neAdd('error','MONSTER_DROPS',dk,'key',`drop entry has no matching MONSTER_POOL entry`);
     for (const f of neAllFish)
@@ -2782,6 +2802,12 @@ async function route(req, res) {
       if (!terrain.monsters || !terrain.monsters.length) neAdd('warning','WORLD_DB',tk,'monsters',`terrain has no monsters defined`);
     for (const [npcKey, npc] of Object.entries(WBAPI.birkaNpcs))
       if (!WBAPI.npcDialogues[npcKey]) neAdd('warning','BIRKA_NPC',npcKey,'NPC_DIALOGUES',`"${npc.name||npcKey}" has no NPC_DIALOGUES entry — dialogue card blank in game`);
+    // WARNING — NPC with no quests
+    const _neNpcQuestKeys = new Set();
+    for (const q of Object.values(WBAPI.questDb)) if (q.npc) _neNpcQuestKeys.add(q.npc);
+    for (const [key, npc] of Object.entries(WBAPI.birkaNpcs))
+      if (!_neNpcQuestKeys.has(key) && !_neNpcQuestKeys.has(npc.name))
+        neAdd('warning','BIRKA_NPC',key,'quests',`"${npc.name||key}" has no quests — NPC has no gameplay function`);
 
     // SUGGESTIONS
     const neUsed = new Set();

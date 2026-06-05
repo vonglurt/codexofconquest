@@ -569,23 +569,35 @@ Every `POST /api/save` produces a timestamped backup at `roll2hit-v3-YYYYMMDD-HH
 
 ### 7.1 Primary: AI-Assisted World Building
 
-The WBAPI was designed for AI agent use via curl. An AI agent (such as Claude Code) can:
+The WBAPI was designed for AI agent use. Use `./api.sh` (the HTTP wrapper) for all agent and day-to-day work — it handles nonces, retry, and queuing automatically. An AI agent (such as Claude Code) can:
 
 ```bash
 # Discover what exists
-curl http://localhost:1367/api/list/node
-curl http://localhost:1367/api/audit
+./api.sh list node
+./api.sh audit
 
-# Read an entity
-curl http://localhost:1367/api/quest/quest_wis_01
+# Read an entity + its connections
+./api.sh get quest quest_wis_01
+./api.sh location CY                    # composite: node + terrain + NPCs + quests
 
-# Create an entity
-curl -X POST http://localhost:1367/api/quest \
-  -H 'Content-Type: application/json' \
-  -d '{"id":"quest_1367_a_najera","type":"combat","title":"The Free Company",...}'
+# NPC investigation — who has quests, who doesn't
+./api.sh list npc --node CY             # NPCs at a specific node
+./api.sh audit | jq '.warnings[] | select(.field=="quests")'  # NPCs with no quests
 
-# Save and restart
-curl -X POST http://localhost:1367/api/save
+# Monster investigation
+./api.sh list monster --terrain dungeon
+./api.sh get monster goblin
+
+# Create an entity (NPC field required on quests)
+./api.sh post quest id=quest_1367_a_najera type=combat npc=aldric \
+  title="The Free Company" activateNode=NAJ
+
+# Update fields
+./api.sh put quest quest_1367_a_najera passText="The company disperses."
+
+# Chain and audit before save
+./api.sh chain quest_1367_a_najera
+./api.sh audit
 ```
 
 This eliminates the need for the AI to hand-edit 1.75 MB of JavaScript — a task prone to bracket errors, Unicode corruption, and accidental function body deletion.

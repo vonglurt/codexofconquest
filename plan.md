@@ -143,11 +143,28 @@ Earlier layers (9–47): see `lab-report-architecture-full.md` and `lab-report-t
 
 **Preferred workflow for any data addition or edit to `roll2hit-v3.html`:**
 
-1. **Check API first** — before editing HTML, query `http://localhost:1367/api` to confirm current state. Use `curl` to inspect entities, audit, or list before making changes.
-2. **Write the API method first** — if the operation isn't yet supported (e.g., `POST /api/terrain`, `PATCH /api/world_db`), add the endpoint to `wbapi-server.js` and restart before touching the HTML.
-3. **Create/modify via API, not HTML** — preferred: `curl -X POST http://localhost:1367/api/<type> -d '...'` followed by `POST /api/save` to write back. Direct HTML edits are a fallback only when the API cannot yet express the operation.
+1. **Check API first** — before editing HTML, use `./api.sh` to confirm current state: `./api.sh ping`, `./api.sh list <type>`, `./api.sh audit`. Direct HTML edits are a fallback only when the API cannot yet express the operation.
+2. **Write the API method first** — if the operation isn't yet supported, add the endpoint to `wbapi-server.js` and restart before touching the HTML.
+3. **Create/modify via API, not HTML** — preferred: `./api.sh post <type> [k=v ...]` or `./api.sh put <type> <id> [k=v ...]`. The tool handles nonces automatically and queues all requests with retry.
 4. **Restart server after adding endpoints** — `./wbapi-toggle.sh restart` (or `start` if stopped).
-5. **When adding items to plan.md** — cross-reference the current API at `localhost:1367/api/audit` and `localhost:1367/api/list/<type>` to confirm what actually exists vs. what the plan assumes. Do not add a plan item without verifying the API-reported current state.
+5. **When adding items to plan.md** — cross-reference current state with `./api.sh audit` and `./api.sh list <type>` to confirm what actually exists vs. what the plan assumes. Do not add a plan item without verifying the API-reported current state.
+
+**CLI quick reference (`./api.sh`):**
+```bash
+./api.sh ping                              # health check
+./api.sh get node LHR                      # fetch node + connections + _meta
+./api.sh list quest --node LHR             # quests at a node
+./api.sh list npc --node LHR               # NPCs at a node
+./api.sh list monster --terrain city       # monsters by terrain
+./api.sh put quest quest_wis_01 passText="..." # update field
+./api.sh post quest id=q_foo npc=aldric type=side activateNode=CY title="..." # create
+./api.sh del quest quest_old_01            # delete (nonce auto-handled)
+./api.sh audit                             # full integrity scan
+./api.sh chain quest_wis_01               # quest dependency chain
+./api.sh export quest_db --out quests.json # dump collection to file
+./api.sh location CY                       # composite node view
+./api.sh --ai "how do I link two nodes?"  # ask Claude (ANTHROPIC_API_KEY)
+```
 
 **Goal state:** All large JS arrays in `roll2hit-v3.html` (`NODE_MAP`, `QUEST_DB`, `WORLD_DB`, `MONSTER_POOL`, `MONSTER_DROPS`, `FISH_POOL`, `LAKE_MAGIC_DB`, `CONDITION_ITEMS`, `EPIC_BOSS_POOL`, etc.) are exportable via the API. The HTML file is the single source of truth — it should be possible to run all game logic on Node/V8 by feeding API-extracted code sections, without a browser. See `§WBAPI-01` for the export roadmap.
 
@@ -7568,16 +7585,34 @@ One-click presets that pre-fill the field set for each proven template:
 
 This is the canonical workflow for adding any quest chain via the API. It applies whether you are adding 2 quests or 20. The steps are invariant; the content changes.
 
-```
-Step 0:  GET /location/{startNode}         — node exists, terrain is correct
-Step 1:  Edit _S_DEFAULTS                  — register new flags (manual, one-time)
-Step 2:  GET /schema/quest                 — canonical field list before writing
-Step 3:  POST /api/quest                   — add one quest
-Step 4:  GET /api/quest/{id}              — verify quest is readable; all fields set
-Step 5:  PUT /api/quest/{id}              — patch text fields if needed (no full rewrite)
-Step 6:  Repeat steps 3–5 for each quest in the chain
-Step 7:  GET /api/quest/{anyId}/chain     — verify dependency graph is connected
-Step 8:  POST /api/save                   — commit to timestamped HTML
+```bash
+# Step 0: confirm node exists and terrain is correct
+./api.sh location {startNode}
+
+# Step 1: register new flags in _S_DEFAULTS (manual, one-time edit in roll2hit-v3.html)
+
+# Step 2: inspect quest schema before writing
+./api.sh get quest --schema    # or: ./api.sh --ai "what fields does a quest need?"
+
+# Step 3: create one quest (nonce auto-handled; NPC field required)
+./api.sh post quest id=quest_{arc}_{nn} type=side npc={npc_key} activateNode={code} title="..."
+
+# Step 4: verify quest is readable and all fields set
+./api.sh get quest quest_{arc}_{nn}
+
+# Step 5: patch text fields if needed
+./api.sh put quest quest_{arc}_{nn} passText="..." failText="..."
+
+# Step 6: repeat steps 3–5 for each quest in the chain
+
+# Step 7: verify dependency graph is connected end-to-end
+./api.sh chain quest_{arc}_{nn}
+
+# Step 8: run audit — must be clean before save
+./api.sh audit
+
+# Step 9: commit to timestamped HTML
+# (auto-save fires after each POST/PUT; explicit save via server restart or worldbuilder.html Save button)
 ```
 
 **One session per arc.** All POSTs and PUTs in the chain must happen in a single server session before Step 8. Each `save()` produces a new timestamped file. The next session loads that timestamped file as `ROLL2HIT_FILE`.
@@ -7687,7 +7722,7 @@ Every mission type has a minimum required field set. These are the templates. Co
 Before saving any quest chain, verify all three of these pass:
 
 1. **All `activateCond` flags exist in `_S_DEFAULTS`:**
-   - Grep the game file: `grep -o 'flagName: false' roll2hit-v3.html` (or `wbapi-cli.js` once `_S_DEFAULTS` is indexed)
+   - Check flags: `./api.sh export _s_defaults --raw` (or grep: `grep -o 'flagName: false' roll2hit-v3.html`)
    - Every flag referenced in `activateCond` must be listed there
 
 2. **All `checkPassFlag` values are unique:**
@@ -8218,20 +8253,20 @@ The complete round-trip from world creation intent to saved game file:
 
 4. EDIT (text fields via file or inline)
    WBAPI.editField('quest', 'quest_escort_aldric', 'title', 'Walk With Me')
-   // or: node wbapi-cli.js edit quest quest_escort_aldric title "Walk With Me"
+   // or: ./api.sh put quest quest_escort_aldric title="Walk With Me"
 
 5. CHAIN CHECK
    WBAPI.quests.chain('quest_escort_aldric')
    // → { upstream: ['quest_aldric_intro'], downstream: [] }
 
 6. EXPORT (for human review)
-   node wbapi-cli.js export ./world
-   // → world/CY/npcs/aldric/quests/quest_escort_aldric/
-   //     meta.json, title.txt, passText.txt …
+   ./api.sh export quest_db --out world/quests.json
+   // or full tree export: node wbapi-cli.js export ./world
+   //     world/CY/npcs/aldric/quests/quest_escort_aldric/
 
-7. SYNC + SAVE
-   node wbapi-cli.js sync ./world && node wbapi-cli.js save
-   // → roll2hit-v3-YYYYMMDD-HHMMSS.html
+7. AUDIT + SAVE
+   ./api.sh audit              // must be clean before save
+   // then save via worldbuilder.html Save button or wbapi-cli.js save
 ```
 
 ---
@@ -8289,7 +8324,7 @@ WBAPI.worlds.flagUniqueInArc(flag, arcId)  // flag not reused across arc
 
 **Phase 5 — Full advisory enforcement**
 - [ ] `quests.create()` hard-blocks on world-logic failures (node not found, NPC not placed)
-- [ ] World Builder CLI: `node wbapi-cli.js advise quest <id>` command
+- [ ] World Builder CLI: `./api.sh audit` advise mode — `./api.sh get quest <id>` + chain check in one call
 
 ---
 
@@ -8792,13 +8827,13 @@ Returns the named constant as a raw JS literal string that can be pasted directl
 
 ```bash
 # Export full WORLD_DB as pasteable JS literal
-curl http://localhost:1367/api/export/world_db
+./api.sh export world_db
 
 # Export MONSTER_POOL as JSON
-curl http://localhost:1367/api/export/monster_pool?format=json
+./api.sh export monster_pool --format json
 
 # Export all collections as a standalone Node module
-curl http://localhost:1367/api/export/all?format=module > world.js
+./api.sh export all --format module --out world.js
 node -e "const W = require('./world.js'); console.log(Object.keys(W.MONSTER_POOL).length);"
 ```
 
@@ -8807,14 +8842,8 @@ node -e "const W = require('./world.js'); console.log(Object.keys(W.MONSTER_POOL
 ### §WBAPI-01-D. `POST /api/terrain` — Create Terrain Entry
 
 ```bash
-curl -X POST http://localhost:1367/api/terrain \
-  -H 'Content-Type: application/json' \
-  -d '{
-    "key": "forum_romanum",
-    "label": "Forum Romanum — Ancient Civic Heart",
-    "icon": "🏛",
-    "monsters": ["golem","graveir","penitent","higher_vampire"]
-  }'
+./api.sh post terrain key=forum_romanum label="Forum Romanum — Ancient Civic Heart" \
+  icon=🏛 monsters='["golem","graveir","penitent","higher_vampire"]'
 ```
 
 Server validates monster keys against `MONSTER_POOL`, writes entry to `WORLD_DB` anchor block, calls `POST /api/save` automatically.
@@ -8823,27 +8852,22 @@ Server validates monster keys against `MONSTER_POOL`, writes entry to `WORLD_DB`
 
 **Add a terrain entry:**
 ```bash
-curl -X POST http://localhost:1367/api/terrain \
-  -H 'Content-Type: application/json' \
-  -d '{"key":"new_terrain","label":"New Place","icon":"🗺","monsters":["goblin","bandit"]}'
-curl -X POST http://localhost:1367/api/save
+./api.sh post terrain key=new_terrain label="New Place" icon=🗺 monsters='["goblin","bandit"]'
 ./wbapi-toggle.sh restart
-curl http://localhost:1367/api/audit | jq '.summary'
+./api.sh audit
 ```
 
-**Create a quest:**
+**Create a quest (NPC required):**
 ```bash
-curl -X POST http://localhost:1367/api/quest \
-  -H 'Content-Type: application/json' \
-  -d '{"id":"quest_my_01","type":"main","title":"My Quest","activateNode":"CY","objectiveText":"Do the thing."}'
-curl -X POST http://localhost:1367/api/save
+./api.sh post quest id=quest_my_01 type=main npc=aldric title="My Quest" \
+  activateNode=CY objectiveText="Do the thing."
 ```
 
 **Inspect before planning:**
 ```bash
-curl -s http://localhost:1367/api/audit | jq '.items[] | select(.level=="error")'
-curl -s http://localhost:1367/api/list/terrain | jq '.[].key'
-curl -s http://localhost:1367/api/list/node?type=story | jq '.[].code'
+./api.sh audit --raw | jq '.items[] | select(.level=="error")'
+./api.sh list terrain --raw | jq '.[].key'
+./api.sh list node --raw | jq '.[].code'
 ```
 
 ### §WBAPI-01-F. Implementation Checklist

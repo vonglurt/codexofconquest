@@ -14,7 +14,8 @@ Three artifacts that form a complete read/write data layer over the game file:
 |---|---|
 | `worldbuilder.html` | Browser UI — Map, Bestiary, NPCs, Quests, Dice Lab, **API tab** |
 | `wbapi-core.js` | Node.js module — full parse + CRUD + save/export/sync |
-| `wbapi-cli.js` | CLI wrapper — all WBAPI methods from the terminal |
+| `api.sh` / `api/wb.js` | **Primary CLI** — queued HTTP wrapper, auto-nonce, retry, `--ai` Claude assist |
+| `wbapi-cli.js` | Low-level CLI — direct in-process WBAPI (use `api.sh` for day-to-day work) |
 | `wbapi-help.md` | Field reference + command cheatsheet |
 
 ---
@@ -93,7 +94,13 @@ const WBAPI = require('./wbapi-core');
 WBAPI.load('./roll2hit-v3.html');   // path → fs.readFileSync internally
 ```
 
-**CLI:**
+**CLI (primary — via WBAPI HTTP server):**
+```bash
+./api.sh list node          # list all nodes via HTTP API
+./api.sh ping               # confirm server is running
+```
+
+**CLI (low-level — direct in-process, no server required):**
 ```bash
 # ROLL2HIT_FILE env var sets the source (default: ./roll2hit-v3.html)
 node wbapi-cli.js list node
@@ -275,7 +282,7 @@ WBAPI.quests.delete('quest_governor_cyprus')
 
 ```javascript
 // Renames CY → CY2, re-links all quest refs and NPC node refs automatically
-WBAPI.nodes  // (via CLI: node wbapi-cli.js move node CY CY2)
+WBAPI.nodes  // (via low-level CLI: node wbapi-cli.js move node CY CY2)
 ```
 
 ---
@@ -296,8 +303,9 @@ The original file is **never modified**. Every `save()` call produces a new time
 
 ```bash
 # Wrong (each save is independent — renames don't accumulate):
-node wbapi-cli.js edit monster commoner name "Rabid Monkey" && node wbapi-cli.js save
-node wbapi-cli.js edit monster npc_merchant name "Badger" && node wbapi-cli.js save
+./api.sh put monster commoner name="Rabid Monkey"
+./api.sh put monster npc_merchant name="Badger"
+# (auto-save fires after each PUT; prefer batching in a single session)
 
 # Right (both edits in one session):
 node -e "
@@ -312,7 +320,8 @@ node -e "
 ### Export — world/ folder structure
 
 ```bash
-node wbapi-cli.js export ./world
+./api.sh export quest_db --out world/quests.json    # single collection via API
+node wbapi-cli.js export ./world                     # full folder tree (low-level)
 ```
 
 Writes the full game data as editable files:
@@ -339,8 +348,11 @@ monsters/
 
 ```bash
 # Edit world/CI/npcs/yael/quests/quest_wis_01/passText.txt in any editor
-node wbapi-cli.js sync ./world
+node wbapi-cli.js sync ./world     # low-level folder sync
 # → applies all .txt / .json changes, auto-saves timestamped HTML
+
+# Or update a single field via API:
+./api.sh put quest quest_wis_01 passText="$(cat ./edits/pass.txt)"
 ```
 
 ### JSON patch
@@ -361,20 +373,39 @@ DIFF.json()
 
 ## CLI Quick Reference
 
+**Primary: `./api.sh` (HTTP wrapper — use this for all day-to-day work)**
 ```bash
-# Query
-node wbapi-cli.js get location CI
-node wbapi-cli.js get quest "The Question"
-node wbapi-cli.js list quests --node CY
-node wbapi-cli.js list monsters --terrain market_quarter
-node wbapi-cli.js chain quest_governor_cyprus
+# Investigate
+./api.sh ping                                      # server alive?
+./api.sh location CI                               # composite node view
+./api.sh get quest "quest_wis_01"                  # fetch quest + connections
+./api.sh list quest --node CY                      # quests at node CY
+./api.sh list npc --node CY                        # NPCs at node CY
+./api.sh list monster --terrain market_quarter     # monsters by terrain
+./api.sh chain quest_governor_cyprus               # quest dependency chain
+./api.sh audit                                     # integrity scan (errors/warnings)
 
-# Edit
-node wbapi-cli.js edit monster commoner name "Rabid Monkey"
+# Create / edit (NPC required on all quests)
+./api.sh post quest id=quest_foo npc=yael type=side activateNode=CY title="Quest Title"
+./api.sh put quest quest_wis_01 passText="You recalled the text."
+./api.sh put monster commoner name="Rabid Monkey"
+./api.sh del quest quest_old_01                    # nonce auto-handled
+
+# Export
+./api.sh export quest_db --out world/quests.json
+./api.sh export monster_pool --format json --out world/monsters.json
+
+# AI assist
+./api.sh --ai "what NPCs have no quests?"
+./api.sh --ai "show me the quest chain for the Froberger arc"
+```
+
+**Low-level: `node wbapi-cli.js` (direct in-process, no server required)**
+```bash
+node wbapi-cli.js get location CI
+node wbapi-cli.js list quests --node CY
 node wbapi-cli.js edit quest quest_wis_01 passText --file ./edits/pass.txt
 node wbapi-cli.js move node CY CY2
-
-# File structure
 node wbapi-cli.js export ./world
 node wbapi-cli.js sync ./world
 node wbapi-cli.js save

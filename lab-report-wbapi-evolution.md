@@ -230,22 +230,23 @@ After editing, the developer runs `POST /api/restart`. The server serializes the
 
 Write protection is enforced by a two-step nonce protocol:
 
-**Step A — Request a nonce:**
+**With `./api.sh` — nonces are handled automatically:**
 ```bash
-NONCE=$(curl -s -XPOST http://localhost:1367/api/nonce \
-  -H 'Content-Type: application/json' \
-  -d '{"type":"quest","id":"quest_chest_01"}' | jq -r .nonce)
+# POST and DELETE auto-fetch the nonce; no manual step needed:
+./api.sh post quest id=quest_chest_01 npc=aldric type=side title="The Sealed Chest"
+./api.sh del quest quest_chest_01
 ```
 
-The server generates a 16-character random token, stores it in memory with its `{type, id}` pair and a 5-minute expiry, and returns it. The token is single-use and tied to exactly one entity.
-
-**Step B — Send the write with the nonce header:**
+**Manual nonce (if needed for raw curl or special cases):**
 ```bash
+NONCE=$(./api.sh nonce quest quest_chest_01)
 curl -XPOST http://localhost:1367/api/quest \
   -H 'Content-Type: application/json' \
   -H "X-Nonce: $NONCE" \
-  -d '{"id":"quest_chest_01","title":"The Sealed Chest",...}'
+  -d '{"id":"quest_chest_01","npc":"aldric","title":"The Sealed Chest",...}'
 ```
+
+The server generates a 16-character random token, stores it in memory with its `{type, id}` pair and a 5-minute expiry, and returns it. The token is single-use and tied to exactly one entity.
 
 The server validates that the nonce is unexpired, matches the `{type, id}` in the request, and has not been used before. Only then does it execute the write.
 
@@ -276,9 +277,14 @@ Common errors: `quest.activateNode` pointing to a nonexistent node code; `WORLD_
 
 Workflow: run audit → read errors → create missing entities or fix broken keys → run audit again until errors reach zero.
 
+**New rules (as of api.sh v1):**
+- **ERROR** — quest has no `npc` field (every quest must be anchored to an NPC)
+- **WARNING** — NPC has no quests (NPC has no gameplay function)
+
 ```bash
-curl http://localhost:1367/api/audit
-curl http://localhost:1367/api/audit | jq '.errors'
+./api.sh audit
+./api.sh audit --raw | jq '.errors'
+./api.sh audit --raw | jq '.warnings[] | select(.field=="quests")'  # NPCs with no quests
 ```
 
 ---
@@ -298,9 +304,9 @@ Dumps a complete in-memory collection as a downloadable artifact. Useful for bac
 | `module` | CommonJS: `module.exports = {...};` |
 
 ```bash
-curl 'http://localhost:1367/api/export/quest_db?format=json' -o quests.json
-curl 'http://localhost:1367/api/export/monster_pool?format=js' -o monsters.js
-curl 'http://localhost:1367/api/export/all?format=module' -o game-data.js
+./api.sh export quest_db --format json --out quests.json
+./api.sh export monster_pool --format js --out monsters.js
+./api.sh export all --format module --out game-data.js
 ```
 
 The `module` format produces a file that can be `require()`'d by any Node.js script, enabling offline analysis of the full game dataset without a running server.
@@ -312,9 +318,9 @@ The `module` format produces a file that can be `require()`'d by any Node.js scr
 Fish pool entries. Without parameters, returns all day fish. With `?night=1`, returns night fish. With `?rank=3`, returns fish of rank 3 or higher. With a key, returns a single fish entry.
 
 ```bash
-curl http://localhost:1367/api/fish
-curl 'http://localhost:1367/api/fish?night=1&rank=4'
-curl http://localhost:1367/api/fish/silver_pike
+./api.sh get fish all
+./api.sh get fish silver_pike
+# filtered: curl 'http://localhost:1367/api/fish?night=1&rank=4'
 ```
 
 ---
@@ -324,7 +330,8 @@ curl http://localhost:1367/api/fish/silver_pike
 Lists all `_S_DEFAULTS` flags — the boolean and numeric game state defaults. Returns each flag's name, default value, and comment. Useful for auditing which game features are enabled by default and what their initial state is.
 
 ```bash
-curl http://localhost:1367/api/flags
+./api.sh export _s_defaults --raw    # via export endpoint
+# or direct: curl http://localhost:1367/api/flags
 ```
 
 ---
@@ -336,14 +343,12 @@ The built-in help system — a man-page style reference served as plain text. Wi
 **Topics:** `overview`, `modes`, `nonce`, `read`, `write`, `quest`, `node`, `monster`, `terrain`, `mission_bit`, `export`, `wizard`, `audit`, `curl`
 
 ```bash
-curl http://localhost:1367/api/help
-curl http://localhost:1367/api/help/modes
-curl http://localhost:1367/api/help/nonce
-curl http://localhost:1367/api/help/wizard
-curl http://localhost:1367/api/help/curl   # full cheat sheet
+./api.sh help                              # wb CLI quick reference
+./api.sh --ai "explain the nonce system"   # Claude AI assist
+# Server help topics (verbose): curl http://localhost:1367/api/help/curl
 ```
 
-The help system makes the API self-documenting. A developer who has never used the API before can start with `curl http://localhost:1367/api/help` and navigate to any topic without consulting external documentation.
+The help system makes the API self-documenting. Run `./api.sh help` for the CLI reference, or `./api.sh --ai "<question>"` to ask Claude about any API capability.
 
 ---
 
@@ -352,9 +357,9 @@ The help system makes the API self-documenting. A developer who has never used t
 Lake magic item list or single entry. Filter by `effect` substring or `minRank` numeric threshold.
 
 ```bash
-curl http://localhost:1367/api/lake-magic
-curl 'http://localhost:1367/api/lake-magic?minRank=3'
-curl http://localhost:1367/api/lake-magic/rod_of_fortune
+./api.sh get lake-magic all
+./api.sh get lake-magic rod_of_fortune
+# filtered: curl 'http://localhost:1367/api/lake-magic?minRank=3'
 ```
 
 ---
@@ -371,11 +376,12 @@ Returns a flat list of all entities of a given type. Supports filtering via quer
 - `?type=combat` — quests of a specific type
 
 ```bash
-curl http://localhost:1367/api/list/node
-curl http://localhost:1367/api/list/quest
-curl http://localhost:1367/api/list/monster
-curl 'http://localhost:1367/api/list/quest?node=CY'
-curl 'http://localhost:1367/api/list/monster?terrain=coastal_market'
+./api.sh list node
+./api.sh list quest
+./api.sh list monster
+./api.sh list quest --node CY
+./api.sh list monster --terrain coastal_market
+./api.sh list npc --node CY              # NPCs at a specific node
 ```
 
 ---
@@ -385,8 +391,8 @@ curl 'http://localhost:1367/api/list/monster?terrain=coastal_market'
 Composite view of a location. Returns the node, all quests with `activateNode === code`, all NPCs assigned to the node, and all monsters reachable via the node's terrain. Useful for understanding the full player experience at a given map position.
 
 ```bash
-curl http://localhost:1367/api/location/CY
-curl http://localhost:1367/api/location/BK
+./api.sh location CY
+./api.sh location BK
 ```
 
 ---
@@ -401,11 +407,11 @@ Full entity detail with cross-references. In addition to the entity's own fields
 - For **terrain**: monster list, nodes that use this terrain
 
 ```bash
-curl http://localhost:1367/api/node/CY
-curl http://localhost:1367/api/quest/quest_wis_01
-curl http://localhost:1367/api/monster/goblin
-curl http://localhost:1367/api/terrain/forest
-curl http://localhost:1367/api/npc/aldric
+./api.sh get node CY
+./api.sh get quest quest_wis_01
+./api.sh get monster goblin
+./api.sh get terrain forest
+./api.sh get npc aldric
 ```
 
 ---
@@ -415,9 +421,8 @@ curl http://localhost:1367/api/npc/aldric
 Health check. Returns counts of all loaded collections. The canonical first call to verify the server is running and the game file is loaded.
 
 ```bash
-curl http://localhost:1367/api/ping
-# → {"ok":true,"loaded":true,"file":"roll2hit-v3.html",
-#    "nodes":144,"quests":211,"monsters":392,"fish":40,"lakeMagic":20}
+./api.sh ping
+# ✓ server alive  http://localhost:1367
 ```
 
 ---
@@ -427,7 +432,7 @@ curl http://localhost:1367/api/ping
 Returns the upstream and downstream quest chain for a given quest ID. Upstream = prerequisites that must be complete before this quest unlocks. Downstream = quests that unlock when this quest passes.
 
 ```bash
-curl http://localhost:1367/api/quest/quest_wis_01/chain
+./api.sh chain quest_wis_01
 ```
 
 ---
@@ -437,9 +442,8 @@ curl http://localhost:1367/api/quest/quest_wis_01/chain
 Returns the canonical field schema for a given entity type, including field names, types, whether they are required, and brief descriptions. Without a type, returns schemas for all entity types.
 
 ```bash
-curl http://localhost:1367/api/schema
-curl http://localhost:1367/api/schema/quest
-curl http://localhost:1367/api/schema/monster
+# Schema via AI: ./api.sh --ai "what fields does a quest need?"
+# Raw: curl http://localhost:1367/api/schema/quest
 ```
 
 ---
@@ -449,7 +453,7 @@ curl http://localhost:1367/api/schema/monster
 Returns the raw HTML source of `roll2hit-v3.html`. Pipe to a file to create a backup or to inspect the raw text.
 
 ```bash
-curl http://localhost:1367/api/source -o backup-$(date +%Y%m%d).html
+curl http://localhost:1367/api/source -o backup-$(date +%Y%m%d).html    # raw source download
 ```
 
 This endpoint is also how `worldbuilder.html` loads the game file when connected to the server — it fetches the source, parses it client-side using the same anchor-marker approach, and populates its in-browser WBAPI instance.
@@ -458,45 +462,39 @@ This endpoint is also how `worldbuilder.html` loads the game file when connected
 
 ## VI. Write Endpoints (Alphabetical)
 
-All write endpoints mutate in-memory state. **Changes are not persisted to disk until `POST /api/save` is called.** The recommended pattern: create/update → verify with a GET → save → restart.
-
-DELETE operations require a nonce. See `GET /api/help/nonce` for the two-step protocol.
+All write endpoints mutate in-memory state. **`./api.sh` is the recommended interface** — it handles nonces, queues requests, and retries on failure automatically. The recommended pattern: create/update → verify with a get → audit → save.
 
 ---
 
 ### DELETE /api/{node|quest|monster|npc}/{id}
 
-Deletes an entity permanently from the in-memory state. Requires an `X-Nonce` header obtained from `POST /api/nonce`. The server checks for dependencies before deleting: a node that has quests or NPCs attached will return `409 Conflict` until those dependents are moved or deleted first.
+Deletes an entity permanently. Requires a nonce. The server checks for dependencies: a node with quests or NPCs attached returns `409 Conflict` until dependents are moved or deleted.
 
 ```bash
-NONCE=$(curl -s -XPOST http://localhost:1367/api/nonce \
-  -H 'Content-Type: application/json' \
-  -d '{"type":"node","id":"XX"}' | jq -r .nonce)
-curl -XDELETE http://localhost:1367/api/node/XX -H "X-Nonce: $NONCE"
+./api.sh del node XX             # nonce auto-handled
+./api.sh del quest quest_old_01
 ```
 
 ---
 
 ### POST /api/fish
 
-Creates a new fish entry in `FISH_POOL` (or `NIGHT_FISH_POOL` if `isNight:true`).
+Creates a new fish entry in `FISH_POOL`.
 
 ```bash
-curl -XPOST http://localhost:1367/api/fish \
-  -H 'Content-Type: application/json' \
-  -d '{"key":"silver_pike","name":"Silver Pike","rank":4,"desc":"A gleaming predator.","isNight":false}'
+./api.sh post fish key=silver_pike name="Silver Pike" rank=4 \
+  desc="A gleaming predator." isNight=false
 ```
 
 ---
 
 ### POST /api/flags
 
-Adds a new flag to `_S_DEFAULTS` — the game state initialization block. Flags are boolean or numeric values that initialize a new player's state.
+Adds a new flag to `_S_DEFAULTS`.
 
 ```bash
-curl -XPOST http://localhost:1367/api/flags \
-  -H 'Content-Type: application/json' \
-  -d '{"name":"questChestDelivered","defaultValue":false,"comment":"sealed chest delivery quest"}'
+./api.sh post flags name=questChestDelivered defaultValue=false \
+  comment="sealed chest delivery quest"
 ```
 
 ---
@@ -506,66 +504,62 @@ curl -XPOST http://localhost:1367/api/flags \
 Creates a new lake magic item.
 
 ```bash
-curl -XPOST http://localhost:1367/api/lake-magic \
-  -H 'Content-Type: application/json' \
-  -d '{"key":"rod_of_fortune","name":"Rod of Fortune","effect":"luck+2","rank":3}'
+./api.sh post lake-magic key=rod_of_fortune name="Rod of Fortune" effect=luck+2 rank=3
 ```
 
 ---
 
 ### POST /api/monster
 
-Creates a new monster entry in `MONSTER_POOL`. The key must be unique and snake\_case. The monster is available in terrain arrays immediately after creation but must be added to a terrain via `PUT /api/terrain/{key}`.
+Creates a new monster entry. Key must be unique snake\_case. Add to a terrain after creation via `./api.sh put terrain {key} monsters=[...]`.
 
 ```bash
-curl -XPOST http://localhost:1367/api/monster \
-  -H 'Content-Type: application/json' \
-  -d '{"key":"dock_rat","name":"Dock Rat","ac":11,"hp":4,"atk":2,"dmg":3,"xp":10,"tier":1,"cr":"1/8","desc":"A mangy rodent the size of a small dog."}'
+./api.sh post monster key=dock_rat name="Dock Rat" ac=11 hp=4 atk=2 dmg=3 xp=10 tier=1 cr=1/8 \
+  desc="A mangy rodent the size of a small dog."
 ```
 
 ---
 
 ### POST /api/monster/{key}/fork
 
-Creates a new monster by copying an existing one with optional field overrides. Useful for creating variants (e.g., an elite version of an existing enemy).
+Creates a variant monster by copying an existing one with field overrides.
 
 ```bash
+# low-level curl (not yet wrapped in api.sh):
 curl -XPOST http://localhost:1367/api/monster/goblin/fork \
   -H 'Content-Type: application/json' \
-  -d '{"newKey":"goblin_champion","overrides":{"name":"Goblin Champion","ac":15,"hp":18,"xp":150,"tier":2}}'
+  -d '{"newKey":"goblin_champion","overrides":{"name":"Goblin Champion","ac":15,"hp":18}}'
 ```
 
 ---
 
 ### POST /api/monster/{key}/rename
 
-Updates the `name` display field of an existing monster without changing its key. Useful when a monster's display name needs correction without breaking all terrain references (which use the key, not the name).
+Updates a monster's display name without changing its key.
 
 ```bash
-curl -XPOST http://localhost:1367/api/monster/dock_rat/rename \
-  -H 'Content-Type: application/json' \
-  -d '{"name":"Harbour Rat"}'
+./api.sh put monster dock_rat name="Harbour Rat"
 ```
 
 ---
 
 ### POST /api/node
 
-Creates a new map node. The `code` field is the primary key (2–3 uppercase chars). The `name` field is a terrain key from `WORLD_DB`.
+Creates a new map node. `code` = primary key (2–3 uppercase chars), `name` = terrain key from `WORLD_DB`.
 
 ```bash
-curl -XPOST http://localhost:1367/api/node \
-  -H 'Content-Type: application/json' \
-  -d '{"code":"FD","label":"Fog Docks","act":1,"name":"coastal_market","desc":"Fog-shrouded docks where sailors speak in whispers."}'
+./api.sh post node code=FD label="Fog Docks" act=1 name=coastal_market \
+  desc="Fog-shrouded docks where sailors speak in whispers."
 ```
 
 ---
 
 ### POST /api/node/{code}/move
 
-Renames a node's code (primary key). Updates all references in `QUEST_DB` and `BIRKA_NPCS` automatically.
+Renames a node's code. Updates all references in `QUEST_DB` and `BIRKA_NPCS`.
 
 ```bash
+# low-level curl (not yet wrapped in api.sh):
 curl -XPOST http://localhost:1367/api/node/XX/move \
   -H 'Content-Type: application/json' \
   -d '{"newCode":"FD"}'
@@ -575,36 +569,26 @@ curl -XPOST http://localhost:1367/api/node/XX/move \
 
 ### POST /api/nonce
 
-Requests a write-protection token. Required before any DELETE operation; recommended for destructive POSTs.
+Requests a write-protection token. **`./api.sh` fetches nonces automatically** for `post` and `del` commands.
 
 ```bash
-curl -XPOST http://localhost:1367/api/nonce \
-  -H 'Content-Type: application/json' \
-  -d '{"type":"quest","id":"quest_chest_01"}'
-# → {"nonce":"ab12cd34ef56gh78","expires":300}
+./api.sh nonce quest quest_chest_01    # prints token to stdout
 ```
 
 ---
 
 ### POST /api/quest
 
-Creates a new quest entry in `QUEST_DB`. `id`, `type`, `title`, and `activateNode` are required. `startText`, `failText`, and `passText` carry the narrative. `retryable:true` with `retryGateDays:0` enables hourly retry. `missionBitKey` links a mission-bit token item that the player carries.
+Creates a new quest entry in `QUEST_DB`. `id`, `type`, `title`, `activateNode`, and **`npc`** are required. `startText`, `failText`, and `passText` carry the narrative. `retryable:true` with `retryGateDays:0` enables hourly retry. `missionBitKey` links a mission-bit token item that the player carries.
 
 ```bash
-curl -XPOST http://localhost:1367/api/quest \
-  -H 'Content-Type: application/json' \
-  -d '{
-    "id":"quest_chest_01",
-    "type":"mission_bit",
-    "title":"The Sealed Chest",
-    "activateNode":"FD",
-    "startText":"The merchant presses a locked chest into your hands at dawn.",
-    "failText":"The docks are crawling with guards tonight. You slip away.",
-    "passText":"The temple priest accepts the chest without a word.",
-    "retryable":true,
-    "retryGateDays":0,
-    "missionBitKey":"sealed_merchant_chest"
-  }'
+./api.sh post quest \
+  id=quest_chest_01 type=mission_bit npc=the_merchant \
+  title="The Sealed Chest" activateNode=FD \
+  startText="The merchant presses a locked chest into your hands at dawn." \
+  failText="The docks are crawling with guards tonight. You slip away." \
+  passText="The temple priest accepts the chest without a word." \
+  retryable=true retryGateDays=0 missionBitKey=sealed_merchant_chest
 ```
 
 ---
@@ -614,7 +598,8 @@ curl -XPOST http://localhost:1367/api/quest \
 Re-parses `roll2hit-v3.html` from disk, discarding all in-memory edits. Use this to reset the server state if you made changes directly to the HTML and want the server to pick them up without restarting the process.
 
 ```bash
-curl -XPOST http://localhost:1367/api/reload
+./wbapi-toggle.sh restart    # preferred (saves + restarts)
+# or: curl -XPOST http://localhost:1367/api/reload
 ```
 
 ---
@@ -624,8 +609,8 @@ curl -XPOST http://localhost:1367/api/reload
 Saves all in-memory edits to `roll2hit-v3.html`, then exits with code 67. The `wbapi-toggle.sh` restart loop catches code 67 and relaunches the server automatically. The result: a clean restart with the freshly-saved HTML as the source.
 
 ```bash
-curl -XPOST http://localhost:1367/api/restart
-# Server relaunches automatically via wbapi-toggle.sh
+./wbapi-toggle.sh restart    # preferred wrapper
+# or: curl -XPOST http://localhost:1367/api/restart
 ```
 
 ---
@@ -635,7 +620,8 @@ curl -XPOST http://localhost:1367/api/restart
 Serializes all in-memory edits to `roll2hit-v3.html`. This is the write-commit step. Always call after any create/update/delete operation.
 
 ```bash
-curl -XPOST http://localhost:1367/api/save
+# Save fires automatically after each ./api.sh post/put/del.
+# Manual: curl -XPOST http://localhost:1367/api/save
 ```
 
 ---
@@ -645,9 +631,8 @@ curl -XPOST http://localhost:1367/api/save
 Creates a new terrain entry in `WORLD_DB`. The `monsters` array contains `MONSTER_POOL` keys (not names). The server validates that each key exists in `MONSTER_POOL` before writing.
 
 ```bash
-curl -XPOST http://localhost:1367/api/terrain \
-  -H 'Content-Type: application/json' \
-  -d '{"key":"fog_docks","label":"Fog Docks","icon":"🌫","monsters":["dock_rat","drowned_sailor"]}'
+./api.sh post terrain key=fog_docks label="Fog Docks" icon=🌫 \
+  monsters='["dock_rat","drowned_sailor"]'
 ```
 
 ---
@@ -657,6 +642,7 @@ curl -XPOST http://localhost:1367/api/terrain \
 Renames a monster key within a terrain's `monsters` array. Used when a monster key is being renamed and all terrain references must be updated.
 
 ```bash
+# low-level (not yet wrapped in api.sh):
 curl -XPOST http://localhost:1367/api/terrain/coastal_market/swap \
   -H 'Content-Type: application/json' \
   -d '{"oldKey":"dock_rat","newKey":"harbour_rat"}'
@@ -669,17 +655,9 @@ curl -XPOST http://localhost:1367/api/terrain/coastal_market/swap \
 Updates individual fields of an existing entity. Only the fields included in the body are modified; all other fields are preserved.
 
 ```bash
-curl -XPUT http://localhost:1367/api/node/FD \
-  -H 'Content-Type: application/json' \
-  -d '{"label":"The Sunken Docks","desc":"Updated description."}'
-
-curl -XPUT http://localhost:1367/api/quest/quest_chest_01 \
-  -H 'Content-Type: application/json' \
-  -d '{"failText":"The tide is wrong tonight. You wait for morning."}'
-
-curl -XPUT http://localhost:1367/api/monster/dock_rat \
-  -H 'Content-Type: application/json' \
-  -d '{"hp":6,"xp":12}'
+./api.sh put node FD label="The Sunken Docks" desc="Updated description."
+./api.sh put quest quest_chest_01 failText="The tide is wrong tonight. You wait for morning."
+./api.sh put monster dock_rat hp=6 xp=12
 ```
 
 ---
@@ -689,9 +667,7 @@ curl -XPUT http://localhost:1367/api/monster/dock_rat \
 Updates a terrain's `label`, `icon`, or `monsters` array. Setting `monsters` replaces the entire array; partial updates are not supported (send the complete desired list).
 
 ```bash
-curl -XPUT http://localhost:1367/api/terrain/fog_docks \
-  -H 'Content-Type: application/json' \
-  -d '{"monsters":["dock_rat","drowned_sailor","harbour_smuggler"]}'
+./api.sh put terrain fog_docks monsters='["dock_rat","drowned_sailor","harbour_smuggler"]'
 ```
 
 ---
