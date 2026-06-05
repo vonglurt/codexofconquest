@@ -443,7 +443,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | [x] | MSE | canterbury-tales | The Canterbury Tales — Geoffrey Chaucer | c.1390 | Medieval Stories | 1688 | SEEDS COMPLETE 2026-06-03 — MSE-01–07 all vignettes done (7 cycles). questComplete added to MSE-07 (cycle 7). New nodes: BRT, ORL, ACT, RDW, CHY, PCR, LRD, SAL, COT added to Location Grid. Theme threads for all 7 cycles. See MSE-canterbury-tales.md. |
 | [x] | SDQ | rob-roy | Rob Roy — Sir Walter Scott | 1817 (1715 setting) | Scottish Adventure | 370 | SEEDS COMPLETE 2026-06-03 — SDQ-01–07 all vignettes done. Memory-processed (source .txt not read). New nodes: OBH, GLA, ABF, GLN, LLM, EDI. See SDQ-rob-roy.md. |
 | [x] | FCO | vision-of-piers-plowman | Piers Plowman — William Langland | c.1370–1386 | Allegorical Poem | 265 | SEEDS COMPLETE 2026-06-03 — FCO-01–07 all vignettes done. MGF already in Location Grid. No new nodes. See FCO-vision-of-piers-plowman.md. |
-| [ ] | SHK | shakespeare-complete-works | Complete Works — William Shakespeare | c.1590–1613 | Drama / Poetry | 5318 | Part 1 read (Sonnets + All's Well Act I). Cycle 1 angle: The Rival and the Poem. 5-act vignette: The Rival's Door (BK/CI/IN/CY). Parts 2–28 pending. See SHK-shakespeare-complete-works.md. |
+| [ ] | SHK | shakespeare-complete-works | Complete Works — William Shakespeare | c.1590–1613 | Drama / Poetry | 5318 | Parts 1–2 read. Part 1: Sonnets + All's Well Act I. Part 2: All's Well conclusion + Antony and Cleopatra (complete) + As You Like It Act I Scene I. Cycle 1 angle: The Rival and the Poem. 5-act vignette: The Rival's Door (BK/CI/IN/CY). Parts 3–28 pending. See SHK-shakespeare-complete-works.md. |
 
 ### Norse & Scandinavian
 
@@ -459,8 +459,8 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | [x] | KSU | heimskringla | Heimskringla — Snorri Sturluson | c.1230 | Norse Kings History | 1707 | SEEDS COMPLETE 2026-06-03 — KSU-01–07 all vignettes done. ECF already in Location Grid. No new nodes needed. See KSU-heimskringla.md. |
 | [ ] | RKV | poetic-edda | Poetic Edda — Anon | ~10th–13th C | Norse Poetry | 1924 | Source txt missing — prior cycle was memory-processed only. Add RKV-poetic-edda.txt before processing. Prior notes: RKV-01–07 done, AEG/RSS in grid. |
 | [ ] | HFT | frithiof-saga | Frithiof's Saga — Esaias Tegnér | 1825 (Old Norse) | Romantic Epic | 403 | Source txt missing — prior cycle was memory-processed only. Add HFT-frithiof-saga.txt before processing. Prior notes: HFT-01–07 done, BLG/ALR/RNG/ING pre-existing. |
-| [ ] | MOL | laxdaela-saga | Laxdaela Saga — Anon | ~13th C | Icelandic Saga | 347 | Source txt missing — prior cycles were memory-processed only. Add MOL-laxdaela-saga.txt before processing. Prior notes: MOL-01–02 done, all nodes in grid. |
-| [ ] | CPH | gesta-danorum | Gesta Danorum — Saxo Grammaticus | c.1200 | Danish Chronicles | 689 | Source txt missing — prior cycles were memory-processed only. Add CPH-gesta-danorum.txt before processing. Prior notes: CPH-01–02 done, DNS/BRK in grid. |
+| [x] | MOL | laxdaela-saga | Laxdaela Saga — Anon | ~13th C | Icelandic Saga | 347 | IMPORTED — 2026-06-04 — LGR/LXF/HHL/VRG/BLT/HFG new nodes; MOL-01–02 (2 cycles, 10 acts); questComplete on MOL-02. Source txt missing (memory-processed). |
+| [x] | CPH | gesta-danorum | Gesta Danorum — Saxo Grammaticus | c.1200 | Danish Chronicles | 689 | IMPORTED — 2026-06-04 — STK/DAN/HEO/DNS/BRK new nodes; CPH-01–02 (2 cycles, 10 acts); questComplete on CPH-02. Source txt missing (memory-processed). |
 | [ ] | ARN | knights-of-the-cross | Knights of the Cross — Henryk Sienkiewicz | 1900 (1399 setting) | Polish Historical Epic | 324 | Source txt missing — prior cycle was memory-processed only. Add ARN-knights-of-the-cross.txt before processing. Prior notes: ARN-01–07 done, KRK/JUR/TKT/CHP in grid. |
 
 ### French & Continental
@@ -499,7 +499,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | [x] | FCO | aeneid | Aeneid — Virgil (Latin original — Gutenberg #227) | ~19 BC | Roman Epic | 484 |
 | [x] | MLA | plutarch-lives | Plutarch's Lives — Plutarch (Dryden/Clough tr.) | c. 95–110 AD | Biography | 4222 | SEEDS COMPLETE 2026-06-03 — MLA-01–07 all vignettes done (7 cycles). questComplete added to MLA-05 (cycle 7). New nodes: LMO, THA, ROM added to Location Grid. Theme threads for all 7 cycles. See MLA-plutarch-lives.md. |
 | [x] | NWI | anabasis | Anabasis — Xenophon (Dakyns tr. — Gutenberg #1170) | c. 401 BC | Greek Military | 545 | SEEDS COMPLETE 2026-06-03 — NWI-01–09 all vignettes done (9 cycles). questComplete added to NWI-08 (cycle 9). New nodes: CPL, BLK, SIN, ORC, VAR, MYS, ANC added to Location Grid. Theme threads for all 9 cycles. See NWI-anabasis.md. |
-| [ ] | IST | alexiad | The Alexiad — Anna Komnene | c.1148 | Byzantine History | 165 | Source txt missing — prior cycle was memory-processed only. Add IST-alexiad.txt before processing. Prior notes: IST-01–07 done (Enemy's Portrait, Curtain Notes, Nicaea Receipt, Bryennios Draft, Devol Treaty, Exile Letter, Physician's Notes). |
+| [x] | IST | alexiad | The Alexiad — Anna Komnene | c.1148 | Byzantine History | 165 | IMPORTED — 2026-06-04 — PAR new node (Palermo); IST-01–07 (7 cycles, 35 acts); questComplete on all 7; RGS→DBV; ANC→AOI; WM→NUE. Source txt missing (memory-processed). |
 | [x] | WAW | quo-vadis | Quo Vadis — Henryk Sienkiewicz (Curtin tr. — 1895) | c. 64–68 AD (Nero's Rome) | Historical Novel | 1201 | SEEDS COMPLETE 2026-06-03 — WAW-01–08 all vignettes done (8 cycles). questComplete added to WAW-03 (cycle 8). New nodes: SAU, VFM, BLO added to Location Grid. Theme threads for all 8 cycles. See WAW-quo-vadis.md. |
 
 ### Byzantine & Eastern European

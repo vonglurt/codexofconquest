@@ -1,9 +1,10 @@
 # SHK — Complete Works of William Shakespeare
 
-**Source:** SHK-shakespeare-complete-works.part1of28.txt (Parts 2–28 pending)
+**Source:** SHK-shakespeare-complete-works.part1of28.txt + part2of28.txt (Parts 3–28 pending)
 **Gutenberg:** #100 — Complete Works (Shakespeare)
 **Period:** c.1590–1613 | Drama, Poetry, Sonnets
 **Part 1 contains:** The Sonnets (all 154) + All's Well That Ends Well Act I (begins)
+**Part 2 contains:** All's Well That Ends Well Acts IV–V (conclusion) + Antony and Cleopatra (complete) + As You Like It Act I Scene I (begins)
 
 ---
 
@@ -47,9 +48,19 @@ The plays — across the 28 parts — divide into four groups:
 
 *The Sonnets* (Part 1): 154 poems addressed to the Fair Youth and Dark Lady. The opening 17 urge procreation ("breed another thee"). The middle section (18–126) develops the love, the rivalry, and the fear of time. The Dark Lady sequence (127–152) introduces erotic obsession, mutual deceit, and self-reproach. The coda (153–154) is a cold-water epigram about desire that never quenches.
 
-*All's Well That Ends Well* (Parts 1–2): Opens at the Countess's court in Rossillon. Helena loves Bertram, who is leaving for Paris. The central mechanism — a bed-trick — is uncomfortable in the modern reading; in the period, it was a stock comic resolution. Helena is the play's moral center: she is the one who actually does anything.
+*All's Well That Ends Well* (Parts 1–2): Opens at the Countess's court in Rossillon. Helena loves Bertram, who is leaving for Paris. The central mechanism — a bed-trick — is uncomfortable in the modern reading; in the period, it was a stock comic resolution. Helena is the play's moral center: she is the one who actually does anything. **Conclusion (Part 2, lines 1–657):** Act IV centers on the Parolles unmasking — Lord Lafeu and the Lords stage a fake capture; Parolles betrays every military secret and slanders all his friends to save himself. His soliloquy is the play's moral anchor: "Simply the thing I am / Shall make me live" — survival through total self-knowledge, no pretense, no honor. Act V: Helena reveals herself alive at court, produces Bertram's ring as proof of the bed-trick. Bertram capitulates in the play's most unconvincing line: "If she, my liege, can make me know this clearly, / I'll love her dearly, ever, ever dearly." The Epilogue offers no comfort: "All's well that ends well; still the fine's the crown." The play knows its happy ending is earned through deception, and does not pretend otherwise.
 
-*(Parts 2–28: Antony and Cleopatra through Venus and Adonis — to be read in subsequent sessions.)*
+*Antony and Cleopatra* (Part 2, complete, lines 658–3738): The political tragedy of a great man choosing love over empire, knowing what he is choosing.
+- **Act I:** Philo's framing speech ("dotage of our general's o'erflows the measure") against the spectacle of Antony and Cleopatra. Soothsayer scene — Charmian's "I love long life better than figs." News of Fulvia's wars and death reaches Antony. Cleopatra's jealous manipulation of Antony's departure ("I am sick and sullen"). Enobarbus's darkly comic commentary throughout. Antony announces return to Rome.
+- **Act II:** Antony–Caesar meeting in Rome; Agrippa proposes Octavia as wife to cement alliance. The barge speech — Enobarbus's description of Cleopatra at Cydnus ("The barge she sat in, like a burnished throne, / Burned on the water... Age cannot wither her, nor custom stale / Her infinite variety"). Pompey's galley feast: Menas privately offers to cut the cable and kill all three triumvirs; Pompey refuses: "Being done unknown / I should have found it afterwards well done / But must condemn it now." Enobarbus: "Hoo! Hearts, tongues, figures, scribes, bards, poets, cannot / Think, speak, cast, write, sing, number... his love to Antony." Cleopatra beats the messenger who brings news of the Octavia marriage; then asks for Octavia's physical description (round face, brown hair, thirty, a widow — she judges each detail).
+- **Act III:** Soothsayer warns Antony: "near him, thy angel / Becomes afeard." Octavia as peacemaker caught between husband and brother. Caesar strips Lepidus, Octavia returns to Rome ignored. Battle of Actium: every officer and soldier argues against fighting by sea — Antony insists. Cleopatra's fleet flees; Antony follows abandoning his army. Shame and defeat. The Thidias scene: Caesar tries to buy Cleopatra's surrender; Antony has the messenger whipped. Cleopatra swears her loyalty; Antony recovers briefly. Enobarbus aside: "When valour preys on reason, / It eats the sword it fights with."
+- **Act IV:** Enobarbus deserts to Caesar. Antony sends his full treasure after him — the act of bounty that breaks Enobarbus: "O Antony, / Thou mine of bounty, how wouldst thou have paid / My better service, when my turpitude / Thou dost so crown with gold!" Enobarbus dies of grief in Caesar's camp. Act IV Scene III: soldiers hear music underground — "Tis the god Hercules, whom Antony loved, / Now leaves him." Antony wins one battle; the fleet surrenders the next day. Cleopatra sends word she is dead. Eros refuses to kill Antony and kills himself instead: "Thus do I escape the sorrow / Of Antony's death." Antony falls on his sword but survives, is carried to Cleopatra's monument. She will not come down: "I dare not, / Lest I be taken." He is lifted to her. "I am dying, Egypt, dying."
+- **Act V:** Cleopatra's dream speech: "His legs bestrid the ocean; his reared arm / Crested the world... For his bounty, / There was no winter in't; an autumn 'twas / That grew the more by reaping." Caesar comes to take her for his triumph — she sees through his honeyed words: "He words me, girls, he words me." The Clown delivers figs with an asp: "his biting is immortal." Cleopatra dresses in crown and robes for death: "I have / Immortal longings in me... Husband, I come!" Iras dies first from the asp. Cleopatra applies it to her breast: "Peace, peace! / Dost thou not see my baby at my breast / That sucks the nurse asleep?" Charmian straightens Cleopatra's crown and applies a second asp: "It is well done, and fitting for a princess / Descended of so many royal kings." Caesar's epitaph: "She shall be buried by her Antony. / No grave upon the earth shall clip in it / A pair so famous."
+- **Central tragic mechanism:** Antony has everything — Rome, Cleopatra, command — but cannot hold them simultaneously. He knows each choice unmakes the other. His tragedy is full self-knowledge that does not prevent the fall. Cleopatra is not a temptress but a queen: her death is the most sovereign act in the play.
+
+*As You Like It* (Part 2, begins, lines 3739–3874): Act I Scene I opens the play. Orlando, youngest son of Sir Rowland de Boys, has been kept like a stable boy by his elder brother Oliver despite their father's dying wish. He confronts Oliver and demands his birthright. Loyal old Adam witnesses it ("God be with my old master"). Charles the wrestler arrives with exposition: the old Duke has been banished to the Forest of Arden by his younger brother Duke Frederick, where he lives "like the old Robin Hood of England"; Rosalind (old Duke's daughter) stays at court because her cousin Celia loves her. Charles is about to warn Oliver that Orlando plans to enter the wrestling match in disguise. Part 2 ends mid-scene.
+
+*(Parts 3–28: As You Like It continued through The Comedy of Errors and beyond — read in subsequent sessions.)*
 
 ---
 
@@ -350,4 +361,274 @@ SHK | The Rival's Door | Cycle 1 | BK/CI/IN/CY | Poem intercepted, rival blocked
 
 ---
 
-*Parts 2–28 pending. Next session: read SHK part 2 and append continuation of All's Well That Ends Well and begin Antony and Cleopatra.*
+*Part 2 complete. Parts 3–28 pending. Next session: read SHK part 3 and append As You Like It (continuation) and The Comedy of Errors.*
+
+---
+
+### Part 3 Coverage
+
+*As You Like It Acts I–V (complete) + The Comedy of Errors (complete)*
+
+Oliver lies to Charles the wrestler, telling him Orlando is villainous — while privately knowing Orlando is everything he is not. The wrestling match: Orlando throws Charles; Rosalind gives him her gold chain from her own neck ("Wear this for me — one out of suits with Fortune"). Duke Frederick banishes Rosalind ("Thou art thy father's daughter, there's enough"); Celia refuses to stay without her. They flee as Ganymede and Aliena. In the Forest of Arden: Duke Senior's exile court, the melancholy Jaques observing a wounded stag ("Thus most invectively he pierceth through / The body of the country, city, court"), Adam giving Orlando his life savings. Rosalind-as-Ganymede meets Orlando posting poems for Rosalind on trees; the forest game begins. Oliver arrives, saved from a lioness by Orlando, converted, now in love with Aliena. The Comedy of Errors runs through the same part: its central token is also a gold chain — the goldsmith Angelo's chain delivered to the wrong twin Antipholus, causing cascading misidentification, arrest, and denial. In both plays the chain names a relationship that is in the wrong hands.
+
+*New quest seeds from Part 3:* The chain given before words existed for it (As You Like It). The chain in the wrong hands that both parties deny (Comedy of Errors). Oliver's conversion as the hinge between manhunt and restoration.
+
+---
+
+## Cycle 2 — Angle: The Token That Precedes Its Own Meaning
+
+*Before beginning: Cycle 1 used the Sonnet sequence (The Rival Poet, the sealed letter, the Dark Lady). Cycle 2 draws from As You Like It — specifically the gold chain given at the wrestling match, now separated from its giver and receiver by exile and disguise. The theme is distinct: not interception under social obstruction (Cycle 1), but a token already held, whose meaning cannot be spoken because both parties are inside a fiction the token would rupture.*
+
+**Theme this cycle introduces:** *The gift that precedes its own declaration — given in a three-second window, held through exile and forest, orbited by both giver and receiver inside a fiction neither can break without losing the fiction entirely.*
+
+**Themes avoided:** Cycle 1 (the poem reaching its reader despite a rival). "Love and fate intertwined" (existing). "Grief carried in an object" (existing). "Truth delivered posthumously" (existing).
+
+---
+
+## 5-Act Vignette Play — Cycle 2
+
+**Title:** *The Chain That Cannot Be Named*
+**TOKEN:** *Rosalind's Chain* — a gold chain, warm from her neck at the wrestling match, pressed into Orlando's palm in the moment between applause and judgment. Given without preface. The last thing she had to give. Now in Oliver de Boys's possession — taken as evidence during Duke Frederick's manhunt — and needing to travel back through the forest to the clearing where Ganymede and Orlando are practicing love in the fiction of not knowing what they are doing.
+
+**New node:** ARF — Forest of Arden clearing, English interior forest, terrain: forest. The permanent node where the Ganymede/Orlando game takes place. Proposed coordinates: r:113 c:143 (between the English Scottish cluster and the Arthurian nodes).
+
+---
+
+*The Thing · its current state · who holds it · where the scene takes place.*
+
+**ACT I**
+*The Chain · warm, pocketed, guiltily held · Oliver de Boys's hands · the forest edge at Aberfoyle, where the manhunt has come to rest*
+
+Oliver came here to capture his brother. He did not capture him. Orlando found him unconscious under an oak tree, a lioness crouching at his side — and chose, despite everything, to kill the lioness rather than leave Oliver to it. Oliver woke up to find Orlando bleeding from the lioness's claw and his enemy's life in his hands. He does not know how to hold this. He brought the chain as evidence for Frederick; he will not take it back to Frederick now. He is standing at the edge of the Aberfoyle forest with the chain in his fist, looking at you the way a man looks at a stranger when he needs to give something to someone and has no one else to give it to.
+
+*The Fighter's internal reaction: He is holding it the way you hold something you know you took wrong.*
+
+**SCENE**
+The forest edge at Aberfoyle, early morning, the ground still wet. Oliver de Boys stands with a gold chain coiled in his palm — small enough to pocket, significant enough that he hasn't. He tells you it belongs to the youngest son of Sir Rowland de Boys, who is somewhere in this forest posting love poems on trees. He tells you it was given to Orlando by a woman at a wrestling match. He does not tell you he took it. You can see that he took it. He asks you to return it.
+
+**PROMPT:** Insight DC 13. Read whether Oliver's contrition is complete — whether he is giving the chain back because he has changed, or because it has become inconvenient to carry. The answer determines whether you trust what he tells you about where Orlando can be found.
+
+**FAIL TEXT:** You cannot read him cleanly. He might be lying about the location, using you to flush Orlando into the open for agents you haven't seen. You wait and watch the treeline for an hour before following. You lose the track. Try again when a shepherd comes through with news of a young man who speaks in verse.
+
+**SUCCESS TEXT:** He is genuinely changed. You see it — the way he holds the chain, the way he doesn't meet your eye when he names the wrestling match. He is not disposing of evidence. He is returning something that was never his. He tells you Orlando has made a camp near a large oak. You receive *Oliver's Telling* — a folded note in Oliver's hand that names the location of the oak tree. It is the first honest thing he has written for Orlando in years.
+
+**grantItem:** Oliver's Telling
+**checkPassFlag:** chainRecovered
+
+---
+
+**ACT II**
+*The Chain · wrapped in the Fighter's cloth, carried · the Fighter's hands · the Forest of Arden interior, ARF, the great oak clearing*
+
+You find Orlando at the oak. He has carved something in the bark. He is standing back from it, looking at what he has written with the expression of a man who is checking whether it is true. He is not alone: Ganymede is watching from the other edge of the clearing with the stillness of someone who has been watching for a while. Neither of them has seen you. The chain is in your cloth. You need to approach without breaking the scene — Ganymede's eyes are very quick, and if you walk toward Orlando directly, Ganymede will understand immediately where the chain came from and what it means that it has been missing.
+
+*The Fighter's internal reaction: The fiction in this clearing is load-bearing. Interrupt it wrong and it collapses.*
+
+**SCENE**
+The great oak at the center of the ARF clearing. Orlando has carved "Rosalind" in the bark — it joins five or six other carvings, all names, all hers, different scripts as if he kept changing his mind about how to write it. Ganymede stands at the clearing's far edge, arms folded, watching Orlando watch the tree. The morning is quiet enough that a twig-snap would carry. The chain is in your cloth. Ganymede's eyes have not moved from Orlando's back.
+
+**PROMPT:** Stealth DC 12. Move through the clearing's edge to a position where you can signal Ganymede without crossing Orlando's sightline — so that Ganymede comes to you rather than you going to Orlando with the chain visible.
+
+**FAIL TEXT:** You snap a branch. Orlando turns. He sees you; he sees something in your cloth; he asks what you are carrying. You show him a merchant's pouch from your belt — not the chain. He accepts this and turns back to the tree. Ganymede's eyes are now on you instead. Try again: meet Ganymede's gaze and tilt your head toward the clearing's edge.
+
+**SUCCESS TEXT:** You reach the tree-line at the south edge and catch Ganymede's eye. A slight tilt of the head. Ganymede uncrosses their arms and walks around the clearing's perimeter — unhurried, as if going to look at something in the undergrowth — until they reach you. You receive *The Clearing's Edge* — a fallen oak leaf Ganymede presses into your hand in lieu of a word. A signal that they are ready to listen.
+
+**grantItem:** The Clearing's Edge
+**checkPassFlag:** ganymederReached
+
+---
+
+**ACT III**
+*The Chain · unwrapped, offered · the Fighter's hands → Ganymede's hands · the forest edge, out of Orlando's sight*
+
+Ganymede looks at the chain. They know it immediately — it was on their own neck for three years before the wrestling match. They look at it for a long time. They do not pick it up. They ask, very quietly, where it came from. You tell them: Oliver de Boys. Ganymede nods, slowly, as if this confirms something. Then they look at you and say: *do not tell Orlando who brought it back. Do not tell him where it has been. Give me one minute and then bring it to the clearing yourself, as if you found it on the road.* They are asking you to be the fiction's final instrument.
+
+*The Fighter's internal reaction: They are not asking me to lie. They are asking me to let a truth arrive in the right order.*
+
+**SCENE**
+The two of you stand behind a stand of oaks, out of Orlando's sight. The chain is in your open palm. Ganymede looks at it with the particular stillness of someone who is deciding something that has already been decided. Their voice, when they speak, is careful: *if he sees it come from me, he will ask how I knew it was his. If he sees it come from you — a stranger who found it on the road — it goes back to him without the question.* A pause. *I will give it back to him myself. After. When it means something different than it means now.* They are not asking you to help them deceive Orlando. They are asking you to let the chain arrive on a path that keeps the game intact one moment longer.
+
+**PROMPT:** Persuasion DC 14. Agree to their terms — but first extract one condition: that when Ganymede returns the chain to Orlando, they do so in a way that makes clear it was never lost, only out of place. The truth should be preserved in the return even if not in the approach.
+
+**FAIL TEXT:** Ganymede looks at you with faint irritation — who are you to set conditions? — and says that if you will not play the role they need, they will take the chain to Orlando themselves and explain everything. You watch their face and realize this would end the forest game entirely, which would end something real that is happening inside the fiction. You relent. Try again: agree, but say it quietly, as if the condition is already understood between you.
+
+**SUCCESS TEXT:** Ganymede considers this for one breath. Then: *yes. That is right.* They take the chain from your palm — not pocketing it, holding it visible in their closed fist. They tell you to walk to the clearing with it and say you found it on the road near the oak where the names are carved. You receive *The Agreed Return* — a verbal confirmation, nothing written, that Ganymede will give the chain back to Orlando themselves after you have brought it into the clearing. The fiction's terms are set.
+
+**grantItem:** The Agreed Return
+**checkPassFlag:** termsSet
+
+---
+
+**ACT IV**
+*The Chain · returned, acknowledged · Orlando's hands · the ARF clearing, the oak, midmorning*
+
+You walk to the clearing with the chain visible. You tell Orlando you found it on the road near the oak. He takes it immediately — no hesitation — and holds it in both hands for a moment before putting it on. He says: *she gave it to me at the wrestling match. I've been looking for it since Aberfoyle.* He does not ask how you found it. He does not need to. It is back where it belongs. He turns to Ganymede and says, with a simplicity that is almost comic: *I lost something and it came back. I think that is a good omen.* Ganymede says nothing for one full beat. Then: *or perhaps someone knew where it was the entire time.* Orlando hears this. His face changes slightly — not understanding it, but filing it.
+
+*The Fighter's internal reaction: She told him without telling him. He heard it without knowing he heard it.*
+
+**SCENE**
+Orlando puts the chain on over the collar of his shirt, where it sits exactly where it sat before. He and Ganymede stand in the dappled light under the oak where the names are carved. Ganymede's hand — just for a moment — reaches toward the chain where it rests on Orlando's chest, then stops. Orlando looks down at where the hand almost was. He looks up. Something is being measured. The Fighter is standing at the clearing's edge, near the carved tree, witnessing this.
+
+**PROMPT:** Wisdom DC 14. The moment is live. Stand completely still. Say nothing. Make no move that would bring attention back to you or to Oliver or to where the chain has been. The fiction requires one witness who does nothing.
+
+**FAIL TEXT:** You shift your weight. A branch cracks under your heel. Both of them look at you. The moment is interrupted. Ganymede steps back. Orlando turns to ask you something about the road where you found the chain — a detail that would, if answered, explain more than it should. You give a non-answer and step back. Try again when they turn back to each other.
+
+**SUCCESS TEXT:** You do not move. The moment holds. Ganymede's hand completes the motion it started — just touching the chain once, quickly, before pulling back. Orlando watches this. He says nothing. But his expression when he looks at Ganymede is different from what it was before the chain came back. You receive *The Unbroken Moment* — nothing physical, but a clear sense that the fiction in this clearing has just become something else that both parties know and neither has named. The quest's weight has transferred to them.
+
+**grantItem:** The Unbroken Moment
+**checkPassFlag:** momentHeld
+
+---
+
+**ACT V**
+*The Chain · worn, claimed, on Orlando's chest · the archive's intake desk · NUE, Nuremberg scholars' quarter, a week later*
+
+The Fisher needs to account for what was carried. Not the chain — the chain belongs to Orlando and Rosalind and to whatever happens in the clearing after Ganymede removes the disguise. But the record of the transit — who had the chain and when, what Oliver did with it, how it came back — is a historical document. A scholar at the Nuremberg archive is collecting accounts of the 1367 pilgrim season's most unusual deliveries: objects carried under unusual terms, tokens returned after improper removal. The chain's story is exactly what he is looking for, minus the names.
+
+*The Fighter's internal reaction: The archive receives the shape of the thing. The names are the forest's.*
+
+**SCENE**
+The Nuremberg scholars' quarter. A small intake room with two desks and a window looking onto a courtyard. The scholar — Ulrich von Gessert, secondary acquisitions — has heard about the chain through channels and wants a deposition: what was carried, from whom, to whom, under what terms. He is sympathetic but thorough. He will press for names if you let him. The chain is not here; the chain is in the forest. What you have is the record of the carrying.
+
+**PROMPT:** Investigation DC 12. Describe the transit accurately enough to be archivally useful — the forest, the manhunt, the conversion, the return, the moment at the oak — while naming no individual, citing no living party, giving Ulrich only the shape of the transaction. The shape is the document.
+
+**FAIL TEXT:** He pushes for a name. Just one. The agent of return — who gave the chain to you. You deflect twice and he sets down his pen and says he can't log an unsigned document. You ask him to hold it unsigned for one season, citing the pilgrim convention. He accepts reluctantly. Try once more when the season closes and he is ready to log it.
+
+**SUCCESS TEXT:** He writes as you speak. At the end he reads it back. He has rendered it as: *A chain, given without declaration, carried by proxy through forest territory during a manhunt, returned under agreed fiction to its rightful bearer before the fiction dissolved.* He pauses after reading it. He says: *that is the most accurate description of a return I have logged this year.* He receives the account under: Archive Category — Primary Documents: Gifts That Preceded Declaration. You receive *Ulrich's Receipt* — a stamped archival intake note, the official record of the chain's transit. The quest is complete.
+
+**takeItem:** Oliver's Telling *(the evidence of Oliver's confession, spent — filed under the archive's manhunt records)*
+**grantItem:** Ulrich's Receipt
+**checkPassFlag:** chainArchived
+**missionSuccessBit:** shk_cycle2Complete
+
+---
+
+## Quest API Stub — Cycle 2
+
+```
+Act I — The Forest Edge
+activateNode: ABF
+type: skill_check
+missionAccept: "Oliver de Boys stands at the Aberfoyle forest edge holding
+  a gold chain that is not his. His brother saved his life from a lioness.
+  He cannot face his brother directly. He needs someone to carry the chain
+  back through the forest — to the man it was given to, through the woman
+  who gave it."
+scene: "The Aberfoyle forest edge, morning-wet ground. Oliver de Boys stands
+  with a gold chain coiled in his palm — too significant to pocket, too
+  incriminating to keep. He has changed. You can see it. He names the location
+  of a great oak in the forest interior where a young man has been carving
+  a woman's name in the bark. He asks you to carry the chain there."
+prompt: "Insight DC 13. Read whether Oliver's contrition is complete — whether
+  he is giving back the chain because he has changed, or because it is
+  inconvenient. The answer tells you whether you can trust his directions."
+failText: "You cannot read him. You wait an hour watching the treeline for
+  evidence of agents. You lose the trail. Try again when a shepherd brings
+  news of a young man who speaks in verse."
+successText: "He is genuinely changed. He does not meet your eye when he
+  names the wrestling match. You receive Oliver's Telling."
+grantItem: "Oliver's Telling"
+checkPassFlag: chainRecovered
+activateMissionBit: shk2_act1Active
+
+Act II — The Great Oak
+activateNode: ARF
+type: skill_check
+scene: "The great oak clearing in the Forest of Arden. Orlando has carved
+  Rosalind's name in the bark — five or six times, different scripts. He
+  stands back from it, checking whether it is true. Ganymede watches from
+  the far edge with the stillness of someone who has been watching for a
+  while. Neither has seen you. The chain is in your cloth. Ganymede's eyes
+  are very quick."
+prompt: "Stealth DC 12. Reach the treeline at the clearing's south edge
+  and catch Ganymede's eye without crossing Orlando's sightline — signal
+  them to come to you."
+failText: "A branch snaps. Orlando turns. You show a merchant's pouch — not
+  the chain. Ganymede's eyes are now on you. Try again: hold Ganymede's
+  gaze and tilt your head toward the edge."
+successText: "You catch Ganymede's eye without breaking Orlando's attention.
+  They walk the perimeter, unhurried, until they reach you. You receive
+  The Clearing's Edge — an oak leaf pressed into your hand as signal."
+grantItem: "The Clearing's Edge"
+checkPassFlag: ganymederReached
+activateMissionBit: shk2_act2Active
+
+Act III — Out of Sight
+activateNode: ARF
+type: skill_check
+scene: "Behind the oak stand, out of Orlando's sight. The chain is in your
+  open palm. Ganymede looks at it with the stillness of someone deciding
+  something already decided. Their voice is careful: if he sees it come
+  from me, he will ask how I knew. If it comes from you — a stranger who
+  found it on the road — it goes back without the question. They are not
+  asking you to lie. They are asking the truth to arrive in the right order."
+prompt: "Persuasion DC 14. Agree to their terms — but extract one condition:
+  that when Ganymede returns the chain to Orlando, they do so in a way that
+  makes clear it was never lost, only out of place."
+failText: "Ganymede's eyes sharpen. They say they will take the chain to
+  Orlando directly and explain everything. You see this would end the game,
+  which would end something real inside the fiction. Relent — but quietly,
+  as if the condition is already understood."
+successText: "Ganymede: yes. That is right. They take the chain, holding
+  it visible in their closed fist. You receive The Agreed Return — a verbal
+  confirmation that Ganymede will give the chain back to Orlando themselves."
+grantItem: "The Agreed Return"
+checkPassFlag: termsSet
+activateMissionBit: shk2_act3Active
+
+Act IV — The Unbroken Moment
+activateNode: ARF
+type: skill_check
+scene: "You walk to the clearing with the chain visible and say you found
+  it on the road near the carved oak. Orlando takes it immediately, holds
+  it in both hands, puts it on. He tells Ganymede: I lost something and
+  it came back — I think that is a good omen. Ganymede says: or perhaps
+  someone knew where it was the entire time. Orlando hears it. His face
+  changes slightly. Ganymede's hand reaches toward the chain on his chest,
+  stops. The moment is live."
+prompt: "Wisdom DC 14. Stand completely still. Say nothing. Make no move
+  that breaks the moment — the fiction is becoming something else and
+  requires one witness who does nothing."
+failText: "A branch cracks under your heel. Both turn. Orlando asks about
+  the road where you found the chain. You deflect. Try again when they
+  turn back to each other."
+successText: "You do not move. Ganymede's hand completes the motion —
+  touching the chain once, quickly. Orlando's expression changes. You
+  receive The Unbroken Moment."
+grantItem: "The Unbroken Moment"
+checkPassFlag: momentHeld
+activateMissionBit: shk2_act4Active
+
+Act V — The Archive
+activateNode: NUE
+type: skill_check
+scene: "Nuremberg scholars' quarter. Ulrich von Gessert, secondary
+  acquisitions, wants a deposition of the chain's transit — what was
+  carried, from whom, to whom, under what terms. He is sympathetic but
+  thorough. He will press for names if you let him. The chain is in the
+  forest. What you have is the shape of the transaction."
+prompt: "Investigation DC 12. Describe the transit accurately — the forest,
+  the manhunt, the conversion, the return, the moment at the oak — while
+  naming no individual. Give Ulrich only the shape. The shape is the document."
+failText: "He pushes for one name. You deflect twice. He sets down his pen.
+  You ask him to hold it unsigned for one season. He accepts reluctantly.
+  Try when the season closes."
+successText: "He reads it back: a chain given without declaration, carried
+  by proxy through forest territory during a manhunt, returned under agreed
+  fiction before the fiction dissolved. He logs it: Gifts That Preceded
+  Declaration. You receive Ulrich's Receipt. Quest complete."
+takeItem: "Oliver's Telling"
+grantItem: "Ulrich's Receipt"
+checkPassFlag: chainArchived
+questComplete: true
+```
+
+---
+
+## Quest Map Entry — Cycle 2
+
+```
+SHK | The Chain That Cannot Be Named | Cycle 2 | ABF/ARF/NUE | Gift given before declaration, returned through fiction
+```
+
+*(Append to quest-map.md)*
