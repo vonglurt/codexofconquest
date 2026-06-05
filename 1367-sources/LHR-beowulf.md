@@ -1240,3 +1240,249 @@ TOKEN TAKEN: Hrunting Bond Record.
 ---
 
 *LHR SEEDS COMPLETE. §LHR-01 through §LHR-07 written. Admin pass: quest-map.md, books.md, plan.md.*
+
+---
+
+## Cycle 8 — Angle: *The Hilt That Is Also a Document — Pre-Flood Runes on a Dissolved Sword*
+
+*Source re-read: full text, second pass. This angle was not taken in cycles 1–7.*
+
+**New angle — what prior cycles missed:** All seven prior cycles focused on relationships, obligations, and objects that circulated among living characters. None examined the hilt Beowulf brought from the underwater hall — which is the oldest artifact in the poem. The blade dissolved in the monster's blood. The hilt survived. The hilt is gold, rune-covered, and pre-Flood: it records the giants' war with God and names the ancient king for whom it was made. The hilt is not just a weapon artifact — it is the only pre-human document in the story.
+
+**Themes avoided (prior LHR cycles):** loyalty under the long watch (Cycle 1), oath remembered in fire (Cycle 2), covert political observation (Cycle 3), the catalytic object (Cycle 4), death dispatch (Cycle 5), anonymous elegy (Cycle 6), gift-obligation release (Cycle 7).
+
+**This cycle introduces:** *The oldest writing recovered from below the world — a pre-Flood document that survived by outlasting the instrument that carried it.*
+
+---
+
+### Seven Storyline Ideas — Cycle 8
+
+1. **The Hilt's Reading** — Hrothgar reads the runes and delivers his wisdom speech: the hilt is the oldest writing he has ever seen. A scholar must authenticate the runic text before Denmark can claim it as record. The Fighter carries the hilt to the harbor scholar before the sea-water corrodes the grooves.
+
+2. **The Dissolved Blade** — A weapons registry at the district boundary refuses to record an incomplete weapon. The Fighter must argue that a hilt without a blade is a relic, not a weapon — and that the blade's dissolution in monster-blood is itself the document.
+
+3. **The Name in the Runes** — The runes name an ancient king. A descendant's representative arrives and claims the hilt as inheritance. The Fighter must deliver it to the archive before the claim is enforced in court.
+
+4. **The Flood Record** — The runes describe the Flood and the giants' destruction of the world. A religious authority declares the hilt pagan cosmogony that must be suppressed. The Fighter smuggles it to a scholar before the authority acts.
+
+5. **Chain of Custody** — The hilt passed through three hands in a day: Beowulf recovered it, gave it to Hrothgar, and Hrothgar commissioned its delivery. The archive requires a signed chain-of-custody before accepting any object of disputed origin.
+
+6. **What the Monsters Owned** — The hilt hung in Grendel's Mother's underwater hall as decoration. Legal question: who owns objects taken from a monster's den? The Fighter carries the hilt through a property dispute between Danish law and Geatish salvage custom.
+
+7. **Edric's Hands** — The harbor scholar Edric is the only man alive who has studied pre-Danish runes. He reads the hilt and cannot stop shaking. The reading is the most important event in his life; he needs one full night to make his rubbing. The Fighter guards the door.
+
+**Chosen quest: #1 / #7 combined — "The Hilt's Reading"**
+
+Theme selected because it does not duplicate any prior LHR cycle, any prior SHK cycle, or any active quest-map thread. The specific quality: a document that survived by outlasting the instrument that bore it.
+
+---
+
+### The Five-Act Vignette — "The Giant's Hilt"
+
+*A Fighter carries the hilt of a pre-Flood sword from Heorot to a harbor scholar, and from there to the Weimar archive. The blade dissolved. The gold remained. The runes must be read before the sea corrodes the grooves.*
+
+---
+
+**ACT I — "What Hrothgar Read"**
+*The Giant-Sword Hilt · fresh from the mere, still damp with sea-water and traces of black blood · Beowulf presses it into the Fighter's hands at Hrothgar's direction · Heorot, outer hall, the feasting quiet.*
+
+Hrothgar read the hilt and said nothing for a long time. Then he spoke his wisdom speech — about pride, about the flower of youth failing, about Heremod who had everything and gave nothing. The hilt was the occasion. It is older than his people.
+
+He calls the Fighter over after the Geats have gone to sleep. Speaks quietly. The harbor at Lejre has a scholar — Edric, a rune-thane, old, who has studied marks made before the Danes existed. The hilt must reach him before the ship sails and before the salt-water works its way into the gold grooves. The runes are in the grooves. If they dissolve, no one will know what they said.
+
+The Fighter sees, before accepting the hilt, that the grooves at the base of the guard are already beginning to go pale.
+
+*The Fighter held the hilt in both hands. It was heavier than any sword they had carried. Not from the gold. From what the gold contained.*
+
+**Skill Check — Perception DC 12:** Read the corrosion pattern on the guard. The damage will reach the first rune within three days if the hilt stays wet. The scholar needs it tonight, not tomorrow.
+**Fail:** You judge two days remain. Hrothgar accepts your assessment and adds: "Do not let it be stolen. Do not let it be bought."
+**Success:** You identify the exact groove in danger and show Hrothgar. He wraps it himself in oiled linen and says: "Go now."
+
+*You receive: Hrothgar's Linen-Wrapped Hilt.*
+
+---
+
+**ACT II — "The Weapons Registry"**
+*The Giant-Sword Hilt · wrapped in linen, carried at the belt · Fighter on the coastal road · Danish district boundary checkpoint, two guards with registry ledger.*
+
+The checkpoint guards a boundary. A gold sword-hilt counts as a weapon. Weapons entering the harbor district must be registered. The man with the ledger is not cruel — he is doing his job. He looks at the wrapped bundle, looks at the Fighter, opens the ledger.
+
+"Hilt? Without a blade?" He has never entered a hilt without a blade. The ledger has columns: weapon type, blade length, owner, originating lord. The blade column is empty. "What happened to the blade?"
+
+*The Fighter could tell him. The blade dissolved in the blood of a monster under a mere. The Fighter said nothing.*
+
+**Skill Check — Persuasion DC 13:** Convince the guard that a hilt without a blade is a relic in transit to an archive, not a weapon entering commerce. It should be logged as Relic (Ancient), not Weapon (Unregistered).
+**Fail:** He will not let you pass with an unregistered weapon-hilt. Offer him: the weapon's originating lord was King Hrothgar of the Danes, and the archive destination is the Lejre scholar Edric. He logs it under Relic (Ancient, King's Commission). You lose two hours.
+**Success:** He logs it: Relic (Ancient) — hilt without blade, Geatish recovery, King's commission, scholar-archive destination. He stamps the ledger and tears out a receipt.
+
+*You receive: District Transit Receipt.*
+
+---
+
+**ACT III — "Edric's Hands"**
+*The Giant-Sword Hilt · unwrapped on a scholar's table · Edric holds it in lamplight · Harbor study, Lejre, night.*
+
+Edric is old. His hands are careful. He has spent forty years on rune-carving, on the marks cut into standing stones, into ship-planks, into border-stones, into grave-goods. He knows what humans carve. He does not know what he is looking at now.
+
+He traces a groove with one finger, very slowly. Traces it again. His hands are shaking slightly — not from fear, not from age. From the weight of what he is touching.
+
+"This is not Danish work. This is not Frisian. This is not any runic family I have studied." He pauses. "I think these marks are older than human runic tradition. I think whoever made this sword was not a man."
+
+He looks up. Asks if the Fighter will stay while he makes a rubbing. The rubbing will take two hours. He will do it by lamp, with charcoal pressed into the lines.
+
+A second scholar arrives — younger, aggressive — claiming that the hilt belongs to Geat salvage-law and that Edric has no right to copy it without Hygelac's seal. He demands the hilt be sealed until the legal question is resolved. Edric looks at the Fighter. The rune in the corroded groove is half-gone already.
+
+*The Fighter understood: if the rubbing was not made tonight, the rune would be gone by morning. The argument would outlast what it argued about.*
+
+**Skill Check — Persuasion DC 14:** Convince the second scholar that the rubbing is not a claim of ownership but a preservation act — the rune is dissolving; the copy saves the text regardless of who owns the gold. Edric's work cannot wait for Hygelac's seal.
+**Fail:** The second scholar is unmoved. Edric looks at the Fighter. The Fighter must physically interpose — stand between Edric and the door. The scholar backs down for now but says he will return at dawn.
+**Success:** The second scholar accepts the preservation argument. He insists on witnessing the rubbing. Edric nods: "Then watch."
+
+*You receive: Edric's Rune Rubbing — charcoal on linen, the complete text of the hilt, including the partly-dissolved rune traced from memory by Edric who had seen it intact for a single hour.*
+
+---
+
+**ACT IV — "The Harbor at Night"**
+*The Giant-Sword Hilt · re-wrapped, now with the rubbing sealed separately · Fighter on the Lejre quay · The harbor, three hours before dawn.*
+
+The second scholar did not go home. He sent word to someone — a Danish thane who claims old-blood right to any pre-Danish relic found in Danish water. Three men come to the quay. They are polite. They say the hilt must be held in the thane's estate pending a ruling. They carry weapons. They expect the Fighter to hand it over.
+
+*The Fighter looked at the three men. The hilt was heavier than ever. The rubbing was in their satchel. One of them would do.*
+
+**Skill Check — Athletics DC 14 (Hold the Dock):** Stand your ground against three armed men on a narrow dock without drawing first blood. Reputation and stance may prevent the escalation.
+**Fail:** One lands a blow before withdrawing. You hold the hilt. They retreat but promise to meet you on the road. You have a bruised shoulder and the hilt intact.
+**Success:** They read your stance, confer, withdraw. One says: "We'll find you at the archive." They will not. The road to Weimar is long and they don't have the speed.
+
+*You receive: Bruise or nothing — but the Hilt is still in your hands.*
+
+---
+
+**ACT V — "The Archive"**
+*The Giant-Sword Hilt · carried inland over many days · Scholar Sweelinck receives it from the Fighter · Weimar archive, intake hall, winter light.*
+
+Sweelinck reads Edric's rubbing for a long time. Then he reads it again. He holds the hilt up in the window light and traces the grooves with his thumbnail without touching them.
+
+He says: "This describes the Flood. This names the giant who made the sword and the ancient king who received it. This is older than any writing in my archive. It may be older than any writing in any archive."
+
+He sets it on the table. Looks at the Fighter.
+
+"What do I call this? I have categories for weapons, relics, estate documents, correspondence, charters, king-lists, treaties. I have nothing for a document made before human civilization that survived by outlasting the blade that was its companion." He opens a new ledger.
+
+He writes: *Pre-Human Record — Document Surviving Its Instrument, First Entry. The Giant-Sword's Hilt: gold guard, etched with runic staves recording the Flood and the war of the giants against heaven; names the ancient king for whom the sword was made; blade dissolved in monster-blood; hilt preserved by the insolubility of gold; received in this archive from a Fighter who carried it from Heorot; rubbing made by Edric of Lejre harbor, now included as documentary supplement; the rune partially destroyed by sea-corrosion is reconstructed from witness memory.*
+
+He closes the ledger. Looks at the Fighter again. "The oldest document in the archive is in better condition than I expected."
+
+He seals the hilt in oiled cloth and carries it to the deepest shelf. Brings back the rubbing — Edric's charcoal on linen — sealed with his own stamp.
+
+"The gold stays here. You carry the reading."
+
+TOKEN TAKEN: Giant-Sword Hilt.
+
+*questComplete: true*
+
+*You receive: Edric's Rune Rubbing — the authenticated translation of the hilt's runes; the oldest document ever carried out of the archive.*
+
+---
+
+### Quest API Stub
+
+```
+Act I — "What Hrothgar Read"
+activateNode: HEO
+type: skill_check
+missionAccept: "Hrothgar has read runes older than the Danes and cannot explain what he saw. A harbor scholar named Edric may be able to. The hilt is corroding. It must reach him tonight."
+scene: "Heorot is quiet after feasting. Hrothgar calls you forward while the
+  Geats sleep. He holds the golden hilt of a sword whose blade dissolved
+  in monster-blood. The rune-grooves along the guard are beginning to
+  pale at the base. He wraps it himself and presses it into your hands.
+  The smell of the mere is still on it."
+prompt: "Perception DC 12. Read the corrosion on the guard. How much time
+  do the runes have before the sea-water takes the oldest one?"
+failText: "You estimate two days. Hrothgar accepts this and adds: do not
+  let it be stolen, do not let it be bought."
+successText: "You identify the exact groove in danger and show Hrothgar.
+  He wraps it in oiled linen himself. 'Go now.' You receive Hrothgar's
+  Linen-Wrapped Hilt."
+grantItem: "Hrothgar's Linen-Wrapped Hilt"
+checkPassFlag: hiltReceived
+activateMissionBit: lhr8_act1Active
+
+Act II — "The Weapons Registry"
+activateNode: DAN
+type: skill_check
+scene: "The district boundary checkpoint on the coastal road. A guard
+  with a ledger. He has never entered a hilt without a blade. The blade
+  column in his ledger is empty. He looks at you and asks what happened
+  to the blade."
+prompt: "Persuasion DC 13. Convince the guard that a hilt without a blade
+  is a relic in transit to an archive, not an unregistered weapon. It
+  should be logged as Relic (Ancient), not Weapon (Unregistered)."
+failText: "He will not pass you. Offer the King's commission as authority —
+  he logs it under Relic (Ancient, King's Commission). You lose two hours."
+successText: "He logs it: Relic (Ancient), scholar-archive destination,
+  King's commission. He stamps the ledger and tears out a receipt. You
+  receive the District Transit Receipt."
+grantItem: "District Transit Receipt"
+checkPassFlag: checkpointCleared
+activateCond: hiltReceived
+
+Act III — "Edric's Hands"
+activateNode: DAN
+type: skill_check
+scene: "Edric's harbor study, lamplight, night. The old scholar traces
+  a groove with one finger, very slowly. His hands are shaking — not from
+  fear or age, but from the weight of what he holds. 'I think whoever
+  made this sword was not a man.' A second scholar arrives and demands
+  the hilt be sealed until Hygelac's legal claim is resolved. The rune
+  in the corroded groove is half-gone already."
+prompt: "Persuasion DC 14. Convince the second scholar that the rubbing
+  is a preservation act, not a claim of ownership — the rune is dissolving
+  and Edric's copy saves it regardless of who owns the gold."
+failText: "The second scholar is unmoved. Stand between Edric and the door.
+  The scholar backs down but says he will return at dawn. Edric works."
+successText: "The second scholar accepts the preservation argument and
+  witnesses the rubbing. You receive Edric's Rune Rubbing — charcoal
+  on linen, the complete text including the dissolving rune."
+grantItem: "Edric's Rune Rubbing"
+checkPassFlag: rubbingMade
+activateCond: checkpointCleared
+
+Act IV — "The Harbor at Night"
+activateNode: DAN
+type: skill_check
+scene: "The Lejre quay, three hours before dawn. Three armed men come
+  politely. A Danish thane claims old-blood right to any pre-Danish relic.
+  They expect you to hand it over. The dock is narrow. The hilt is in
+  your hands and the rubbing is in your satchel."
+prompt: "Athletics DC 14. Hold the quay against three armed men through
+  stance alone, without drawing first blood."
+failText: "One lands a blow before withdrawing. Your shoulder aches. The
+  hilt is intact. They promise to find you at the archive. They won't."
+successText: "They read your stance, confer, and go. The road to Weimar
+  is long and they have neither speed nor warrant."
+checkPassFlag: quayHeld
+activateCond: rubbingMade
+
+Act V — "The Archive"
+activateNode: WM
+type: skill_check
+scene: "Weimar archive, winter light. Sweelinck reads Edric's rubbing
+  twice, then holds the hilt up to the window. He says: 'This describes
+  the Flood. This may be older than any writing in any archive. I have
+  no category for a document made before human civilization that survived
+  by outlasting the blade that was its companion.'"
+prompt: "History DC 12. Help Sweelinck name the category for the oldest
+  document in the archive — a record that survived by outlasting its
+  instrument."
+failText: "He creates the category himself: 'Document Surviving Its
+  Instrument.' He looks at you. 'You may as well have suggested it.'"
+successText: "He writes: Pre-Human Record — Document Surviving Its
+  Instrument, First Entry. The hilt goes to the deepest shelf. He hands
+  you the rubbing, stamped. 'The gold stays here. You carry the reading.'
+  You receive Edric's Rune Rubbing (Authenticated)."
+takeItem: "Hrothgar's Linen-Wrapped Hilt"
+grantItem: "Edric's Rune Rubbing (Authenticated)"
+checkPassFlag: hiltArchived
+questComplete: true
+activateCond: quayHeld
+```

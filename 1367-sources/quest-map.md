@@ -1230,3 +1230,4 @@ Game cities are canonical. Source-book settings are proposed new nodes.
 *When a new location is used, append its row to the Location Grid.*
 
 SHK | The Rival's Door | Cycle 1 | BK/CI/IN/CY | Poem intercepted, rival blocked, sonnet returned
+| LHR | The Giant's Hilt | 8 | HEO/DAN/WM | Pre-Flood rune document surviving its dissolved blade; oldest writing recovered from monster-mere |

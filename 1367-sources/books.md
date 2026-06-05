@@ -430,7 +430,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
-| [x] | LHR | beowulf | Beowulf — Anon (Gummere transl.) | ~700–1000 AD | Old English Epic | 166 | SEEDS COMPLETE 2026-06-03 — LHR-01–07 all vignettes done. New nodes: GEA (Geatland coast), DAN (Danish port/Lejre). See LHR-beowulf.md. |
+| [x] | LHR | beowulf | Beowulf — Anon (Gummere transl.) | ~700–1000 AD | Old English Epic | 166 | SEEDS COMPLETE 2026-06-03 — LHR-01–07 all vignettes done. Cycle 8 2026-06-05 — "The Giant's Hilt" (HEO/DAN/WM); pre-Flood rune document. New nodes: GEA (Geatland coast), DAN (Danish port/Lejre). See LHR-beowulf.md. |
 | [x] | LCY | white-company | The White Company — Arthur Conan Doyle | 1366 AD (pub. 1891) | Historical Adventure | 625 | SEEDS COMPLETE 2026-06-03 — LCY-01–07 all vignettes done. No new nodes. See LCY-white-company.md. |
 | [x] | LGW | morte-darthur | Le Morte d'Arthur — Sir Thomas Malory | pub. 1485 | Arthurian Romance | 896 | SEEDS COMPLETE 2026-06-03 — LGW-01–07 all vignettes done. AST/CAM/LKS already in Location Grid. No new nodes. See LGW-morte-darthur.md. |
 | [x] | STN | robin-hood | Merry Adventures of Robin Hood — Howard Pyle | c.1883 (medieval) | Outlaw Hero | 621 | SEEDS COMPLETE 2026-06-03 — STN-01–07 all vignettes done (7 cycles). questComplete added to STN-07 (cycle 7). New nodes: EMT, LEA, NTN, KLN added to Location Grid (SHW, NGM already existed). Theme threads for all 7 cycles. See STN-robin-hood.md. |
@@ -443,7 +443,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | [x] | MSE | canterbury-tales | The Canterbury Tales — Geoffrey Chaucer | c.1390 | Medieval Stories | 1688 | SEEDS COMPLETE 2026-06-03 — MSE-01–07 all vignettes done (7 cycles). questComplete added to MSE-07 (cycle 7). New nodes: BRT, ORL, ACT, RDW, CHY, PCR, LRD, SAL, COT added to Location Grid. Theme threads for all 7 cycles. See MSE-canterbury-tales.md. |
 | [x] | SDQ | rob-roy | Rob Roy — Sir Walter Scott | 1817 (1715 setting) | Scottish Adventure | 370 | SEEDS COMPLETE 2026-06-03 — SDQ-01–07 all vignettes done. Memory-processed (source .txt not read). New nodes: OBH, GLA, ABF, GLN, LLM, EDI. See SDQ-rob-roy.md. |
 | [x] | FCO | vision-of-piers-plowman | Piers Plowman — William Langland | c.1370–1386 | Allegorical Poem | 265 | SEEDS COMPLETE 2026-06-03 — FCO-01–07 all vignettes done. MGF already in Location Grid. No new nodes. See FCO-vision-of-piers-plowman.md. |
-| [ ] | SHK | shakespeare-complete-works | Complete Works — William Shakespeare | c.1590–1613 | Drama / Poetry | 5318 | Parts 1–2 read. Part 1: Sonnets + All's Well Act I. Part 2: All's Well conclusion + Antony and Cleopatra (complete) + As You Like It Act I Scene I. Cycle 1 angle: The Rival and the Poem. 5-act vignette: The Rival's Door (BK/CI/IN/CY). Parts 3–28 pending. See SHK-shakespeare-complete-works.md. |
+| [x] | SHK | shakespeare-complete-works | Complete Works — William Shakespeare | c.1590–1613 | Drama / Poetry | 5318 | COMPLETE 2026-06-05 — All 28 parts read. 14 cycles written and imported (shk6_act1–shk14_act3, 27 live quests). Taxonomy of document meaning: interception, accidental revelation, identical address, misreading chain, superseded record, quarantine, performative forgery, preserved incompleteness, grief-preserved object. See SHK-shakespeare-complete-works.md. |
 
 ### Norse & Scandinavian
 
