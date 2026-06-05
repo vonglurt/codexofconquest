@@ -4670,9 +4670,8 @@ async function route(req, res) {
   if (method === 'GET') {
 
     // GET /api/npc/{id}/speak?prompt=...&state=neutral|friendly|dearFriend
-    // ⚠️ FEATURE INCOMPLETE — NEED TO SETUP SAFE SEEDS
-    // Currently replays existing NPC dialogue data verbatim.
-    // Full implementation: Claude SDK + prompt caching once ANTHROPIC_API_KEY configured.
+    // Claude SDK — prompt caching on system block, one call per greeting.
+    // Falls back to seed replay if ANTHROPIC_API_KEY not set.
     if (type === 'npc' && action === 'speak') {
       const npc = WBAPI.birkaNpcs[key];
       if (!npc) {
@@ -4680,7 +4679,9 @@ async function route(req, res) {
         return json(res, 404, { error: `NPC "${key}" not found` });
       }
 
-      const state     = url.searchParams.get('state') || 'neutral';
+      const prompt    = url.searchParams.get('prompt') || 'Good afternoon.';
+      const state     = url.searchParams.get('state')  || 'neutral';
+      const model     = url.searchParams.get('model')  || 'claude-haiku-4-5-20251001';
       const stateData = npc[state] || npc.neutral;
 
       if (!stateData) {
@@ -4688,21 +4689,66 @@ async function route(req, res) {
         return json(res, 400, { error: `NPC "${key}" has no state data. Available: ${Object.keys(npc).filter(k => typeof npc[k] === 'object').join(', ')}` });
       }
 
-      const reply = [stateData.greeting, stateData.dialogue].filter(Boolean).join(' ');
-      logResponse(method, url.pathname, 200, `${npc.name} — STUB (seed data)`);
-      return json(res, 200, {
-        npc:   key,
-        name:  npc.name,
-        state,
-        reply,
-        status: 'FEATURE INCOMPLETE — NEED TO SETUP SAFE SEEDS',
-        note:   'Replaying existing NPC dialogue. Full Claude-voiced response requires ANTHROPIC_API_KEY.',
-        seed: {
-          greeting: stateData.greeting || null,
-          dialogue: stateData.dialogue || null,
-          special:  stateData.special  || null,
-        },
-      });
+      const AI_KEY = process.env.ANTHROPIC_API_KEY;
+
+      // ── Stub fallback (no key) ──────────────────────────────────────────────
+      if (!AI_KEY) {
+        const reply = [stateData.greeting, stateData.dialogue].filter(Boolean).join(' ');
+        logResponse(method, url.pathname, 200, `${npc.name} — seed fallback (no API key)`);
+        return json(res, 200, {
+          npc: key, name: npc.name, state, reply,
+          status: 'SEED FALLBACK — set ANTHROPIC_API_KEY in .env for live Claude responses',
+          seed: { greeting: stateData.greeting||null, dialogue: stateData.dialogue||null, special: stateData.special||null },
+        });
+      }
+
+      // ── Claude voiced response ──────────────────────────────────────────────
+      const stateLines = ['neutral','friendly','dearFriend']
+        .filter(s => npc[s])
+        .map(s => {
+          const d = npc[s];
+          return [`  ${s} greeting: ${d.greeting||''}`, `  ${s} dialogue: ${d.dialogue||''}`].join('\n');
+        }).join('\n');
+
+      const nodeLabel  = WBAPI.nodeMap[npc.node]?.label || npc.node || 'unknown location';
+      const systemText =
+        `You are ${npc.name}, ${npc.occupation || 'a character'} at ${nodeLabel}.\n\n` +
+        `Voice examples:\n${stateLines}\n\n` +
+        `Current relationship state: ${state}.\n` +
+        `Respond in one to three sentences. Match the register of the ${state} examples exactly — ` +
+        `same rhythm, same level of disclosure, same vocabulary. No stage directions. No asterisks.`;
+
+      logRow('npc',    `${npc.name}  ·  state: ${state}  ·  model: ${model}`);
+      logRow('prompt', prompt);
+
+      try {
+        const client = new Anthropic({ apiKey: AI_KEY });
+        const msg = await client.messages.create({
+          model,
+          max_tokens: 256,
+          system: [{ type: 'text', text: systemText, cache_control: { type: 'ephemeral' } }],
+          messages: [{ role: 'user', content: prompt }],
+        });
+
+        const reply = msg.content?.[0]?.text || '';
+        const usage = msg.usage || {};
+        logRow('reply',  reply.slice(0, 100) + (reply.length > 100 ? '…' : ''));
+        logRow('tokens', `in:${usage.input_tokens} out:${usage.output_tokens} cache_read:${usage.cache_read_input_tokens||0} cache_write:${usage.cache_creation_input_tokens||0}`);
+        logResponse(method, url.pathname, 200, `${npc.name} spoke`);
+        return json(res, 200, {
+          npc: key, name: npc.name, state, prompt, reply, model,
+          usage: {
+            input:      usage.input_tokens,
+            output:     usage.output_tokens,
+            cacheRead:  usage.cache_read_input_tokens    || 0,
+            cacheWrite: usage.cache_creation_input_tokens || 0,
+          },
+        });
+      } catch (e) {
+        const msg = e?.message || String(e);
+        logResponse(method, url.pathname, 502, `Claude error: ${msg}`);
+        return json(res, 502, { error: `Claude API error: ${msg}` });
+      }
     }
 
     // GET /api/npc/{id}/dialogue[/{field}[/{index}]]
