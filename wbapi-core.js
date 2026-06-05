@@ -172,7 +172,7 @@ function patchStringField(sectionSrc, entryKey, field, newValue) {
 // Find the true entry bounds using brace-depth tracking (handles nested {} in completeFn etc.).
 // Returns { openEnd, bodyEnd, baseIndent } or null.
 function findEntryBounds(sectionSrc, entryKey) {
-  const keyRe = new RegExp(`([ \\t]*)${entryKey}\\s*:\\s*\\{`, 'g');
+  const keyRe = new RegExp(`^([ \\t]*)${entryKey}\\s*:\\s*\\{`, 'gm');
   const km = keyRe.exec(sectionSrc);
   if (!km) return null;
   const baseIndent = km[1];
