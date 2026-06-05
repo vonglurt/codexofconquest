@@ -574,7 +574,7 @@ function serializeNodeLiteral(code, body) {
   const num = body.num !== undefined ? Number(body.num) : maxNum + 1;
   const STR  = ['name','label','text','npc','loot','N','S','E','W'];
   const NUM  = ['act','sleepCost'];
-  const BOOL = ['sleep'];
+  const BOOL = ['sleep', 'junction'];
   const parts = [`  ${code}: { num:${num}`];
   for (const f of STR)  if (body[f] !== undefined) parts.push(`${f}:${JSON.stringify(body[f])}`);
   for (const f of NUM)  if (body[f] !== undefined) parts.push(`${f}:${Number(body[f])}`);
@@ -2892,8 +2892,9 @@ async function route(req, res) {
   // GET /api/graph/reachability            — reachable counts + degree buckets
   // GET /api/graph/connect[?hub=LHR&minHops=8&skip=N&limit=M]
   //                                        — per-cluster connection plan with quests
-  if (parts[0] === 'graph' && method === 'GET') {
+  if (parts[0] === 'graph') {
     const nm = WBAPI.nodeMap;
+    const OPP = { N:'S', S:'N', E:'W', W:'E' };
 
     // Undirected adjacency: union of both sides of each N/S/E/W edge
     // so BFS treats the graph as undirected even if one side is missing
@@ -3018,7 +3019,7 @@ async function route(req, res) {
     const hubDistMap  = bfsDist(hub);
 
     // ── GET /api/graph/reachability ───────────────────────────────────────
-    if (parts[1] === 'reachability') {
+    if (parts[1] === 'reachability' && method === 'GET') {
       const qByNode  = questsByNode();
       const nByNode  = npcsByNode();
       const clusters = components(unreachable);
@@ -3048,9 +3049,11 @@ async function route(req, res) {
     }
 
     // ── GET /api/graph/connect ─────────────────────────────────────────────
-    // Returns per-cluster suggestions: which missions are there, which
-    // reachable nodes can serve as the connection anchor, free directions.
-    if (parts[1] === 'connect') {
+    // Per-cluster connection plan with tiered anchor suggestions.
+    // Tier 1 (deg ≤ 2, 2+ free): connect_direct
+    // Tier 2 (deg = 3, 1 free):   spawn_junction first
+    // Tier 3 (deg = 4):           excluded — too crowded
+    if (parts[1] === 'connect' && method === 'GET') {
       const minHops  = parseInt(url.searchParams.get('minHops') || '8', 10);
       const skip     = parseInt(url.searchParams.get('skip')    || '0', 10);
       const limit    = parseInt(url.searchParams.get('limit')   || '20', 10);
@@ -3058,84 +3061,243 @@ async function route(req, res) {
       const nByNode  = npcsByNode();
       const clusters = components(unreachable);
 
-      // All reachable anchors ranked: deg-2 first, then deg-3; at target depth
-      const anchorPool = allCodes
-        .filter(c => reachable.has(c) && degree(c) <= 3 && freeDirs(c).length > 0)
-        .map(c => ({
-          code: c,
-          degree: degree(c),
-          freeDirs: freeDirs(c),
+      // Next auto-J-code at suggestion time (advisory — actual creation uses current state)
+      function nextJCode() {
+        const nums = Object.keys(nm).filter(c => /^J\d+$/.test(c)).map(c => parseInt(c.slice(1), 10));
+        return `J${(nums.length ? Math.max(...nums) : 0) + 1}`;
+      }
+
+      // Build tiered anchor pool
+      const directPool   = []; // Tier 1: deg ≤ 2 (2+ free dirs)
+      const junctionPool = []; // Tier 2: deg = 3 (1 free dir)
+      for (const c of allCodes) {
+        if (!reachable.has(c)) continue;
+        const d  = degree(c);
+        const fd = freeDirs(c);
+        if (d >= 4 || fd.length === 0) continue; // too crowded
+        const entry = {
+          code: c, degree: d, freeDirs: fd,
           distFromHub: hubDistMap.get(c) ?? 0,
           label: nm[c]?.label,
-          junction: !!(nm[c]?.junction),
-        }))
-        .sort((a, b) => {
-          if (a.degree !== b.degree) return a.degree - b.degree; // prefer deg-2
-          // prefer nodes further from hub (more likely to satisfy minHops)
-          return b.distFromHub - a.distFromHub;
-        });
+          isJunction: !!(nm[c]?.junction),
+          terrain: nm[c]?.name || null,
+        };
+        if (d <= 2) directPool.push(entry);
+        else        junctionPool.push(entry); // deg === 3
+      }
+      directPool.sort((a, b)   => a.degree !== b.degree ? a.degree - b.degree : b.distFromHub - a.distFromHub);
+      junctionPool.sort((a, b) => b.distFromHub - a.distFromHub);
+
+      const minAnchorDist = Math.max(0, minHops - 1);
+
+      function pickBest(pool) {
+        const meets = pool.filter(a => a.distFromHub >= minAnchorDist);
+        return meets.length ? meets : pool;
+      }
 
       const suggestions = clusters.map((cluster, i) => {
-        // Collect all missions + NPCs in this cluster
         const missions = cluster.flatMap(c => (qByNode.get(c) || []).map(q => ({ node: c, nodeLabel: nm[c]?.label, ...q })));
         const npcs     = cluster.flatMap(c => (nByNode.get(c) || []).map(n => ({ node: c, nodeLabel: nm[c]?.label, ...n })));
+        const clusterEntry      = (missions[0]?.node) || (npcs[0]?.node) || cluster[0];
+        const clusterEntryLabel = nm[clusterEntry]?.label;
 
-        // Choose the cluster entry node: prefer a node that has a quest/NPC,
-        // or fall back to the first node in the cluster
-        const clusterEntry = (missions[0]?.node) || (npcs[0]?.node) || cluster[0];
+        const bestDirect   = pickBest(directPool);
+        const bestJunction = pickBest(junctionPool);
 
-        // Intra-cluster BFS distance from clusterEntry
-        const clusterDist = bfsDist(clusterEntry);
+        const directAnchors = bestDirect.slice(0, 3).map(a => {
+          const dir = a.freeDirs[0];
+          return {
+            code: a.code, label: a.label, degree: a.degree,
+            freeDirs: a.freeDirs, distFromHub: a.distFromHub,
+            isJunction: a.isJunction, terrain: a.terrain,
+            action: 'connect_direct',
+            hopsToCluster: a.distFromHub + 1,
+            meetsMinHops: a.distFromHub + 1 >= minHops,
+            curl: `curl -XPUT http://localhost:1367/api/node/${a.code} -H 'Content-Type: application/json' -d '{"${dir}":"${clusterEntry}"}' && curl -XPUT http://localhost:1367/api/node/${clusterEntry} -H 'Content-Type: application/json' -d '{"${OPP[dir]}":"${a.code}"}'`,
+          };
+        });
 
-        // Best anchors: after connecting anchor → clusterEntry, total hops = hubDist(anchor)+1
-        // We want that total ≥ minHops, so anchor.distFromHub ≥ minHops-1
-        const minAnchorDist = Math.max(0, minHops - 1);
+        const jCode = nextJCode();
+        const junctionAnchors = bestJunction.slice(0, 2).map(a => {
+          const dir = a.freeDirs[0];
+          return {
+            code: a.code, label: a.label, degree: a.degree,
+            freeDirs: a.freeDirs, distFromHub: a.distFromHub,
+            isJunction: a.isJunction, terrain: a.terrain,
+            action: 'spawn_junction',
+            hopsToCluster: a.distFromHub + 2,
+            meetsMinHops: a.distFromHub + 2 >= minHops,
+            junctionCode: jCode,
+            junctionTerrain: a.terrain,
+            curl: `curl -XPOST http://localhost:1367/api/graph/junction -H 'Content-Type: application/json' -d '{"anchor":"${a.code}","anchorDir":"${dir}","clusterEntry":"${clusterEntry}","clusterDir":"${OPP[dir]}"}'`,
+          };
+        });
 
-        const validAnchors = anchorPool.filter(a => a.distFromHub >= minAnchorDist);
-        const anyAnchors   = validAnchors.length ? validAnchors : anchorPool; // fallback: ignore distance
+        // Best overall anchor
+        const bestAnchor = directAnchors[0] || junctionAnchors[0] || null;
+
+        // Validate block — full action spec for the top recommendation
+        let validate = null;
+        if (bestAnchor) {
+          if (bestAnchor.action === 'connect_direct') {
+            const dir = bestAnchor.freeDirs[0];
+            validate = {
+              action: 'connect_direct',
+              description: `Wire ${bestAnchor.code} (${bestAnchor.label}) → ${clusterEntry} (${clusterEntryLabel}) directly`,
+              anchor: bestAnchor.code, anchorLabel: bestAnchor.label,
+              anchorDeg: bestAnchor.degree, anchorFreeDirs: bestAnchor.freeDirs,
+              clusterEntry, clusterEntryLabel,
+              hops: bestAnchor.distFromHub + 1, meetsMinHops: bestAnchor.meetsMinHops,
+              steps: [
+                `PUT /api/node/${bestAnchor.code}   body: {"${dir}":"${clusterEntry}"}`,
+                `PUT /api/node/${clusterEntry}  body: {"${OPP[dir]}":"${bestAnchor.code}"}`,
+              ],
+              curl: bestAnchor.curl,
+            };
+          } else {
+            const dir = bestAnchor.freeDirs[0];
+            validate = {
+              action: 'spawn_junction',
+              description: `Spawn junction ${jCode} on ${bestAnchor.code} (${bestAnchor.label}), wire to ${clusterEntry} (${clusterEntryLabel})`,
+              anchor: bestAnchor.code, anchorLabel: bestAnchor.label,
+              anchorDeg: bestAnchor.degree, anchorDir: dir,
+              junctionCode: jCode, junctionTerrain: bestAnchor.terrain,
+              clusterEntry, clusterEntryLabel,
+              hops: bestAnchor.distFromHub + 2, meetsMinHops: bestAnchor.meetsMinHops,
+              steps: [
+                `POST /api/graph/junction  body: {"anchor":"${bestAnchor.code}","anchorDir":"${dir}","clusterEntry":"${clusterEntry}","clusterDir":"${OPP[dir]}"}`,
+              ],
+              curl: bestAnchor.curl,
+            };
+          }
+        }
 
         return {
           clusterIndex: i,
           size: cluster.length,
-          clusterEntry,
-          clusterEntryLabel: nm[clusterEntry]?.label,
-          missions,          // quests referencing nodes in this cluster
-          npcs,              // NPCs in this cluster
-          // Suggested anchors — top 5, deg-2 preferred
-          anchors: anyAnchors.slice(0, 5).map(a => ({
-            code:        a.code,
-            label:       a.label,
-            degree:      a.degree,
-            distFromHub: a.distFromHub,
-            freeDirs:    a.freeDirs,
-            isJunction:  a.junction,
-            hopsToCluster: a.distFromHub + 1, // after adding 1 edge to clusterEntry
-            meetsMinHops:  a.distFromHub + 1 >= minHops,
-          })),
-          missingAnchor: anyAnchors.length === 0,
-          note: anyAnchors.length === 0
-            ? 'All reachable nodes are full (deg 4) — need a new junction node'
-            : validAnchors.length === 0
-            ? `No anchor ≥${minHops} hops — closest is ${anyAnchors[0]?.distFromHub + 1} hops`
-            : anyAnchors[0].degree === 2
-            ? 'deg-2 anchor available'
-            : 'deg-3 anchor (no deg-2 at required distance)',
+          nodes: cluster,
+          clusterEntry, clusterEntryLabel,
+          missions, npcs,
+          directAnchors, junctionAnchors,
+          validate,
+          note: !bestAnchor
+            ? 'No reachable anchors (all deg-4 or full)'
+            : bestAnchor.action === 'connect_direct'
+            ? `deg-${bestAnchor.degree} direct anchor — connect with one PUT pair`
+            : `deg-${bestAnchor.degree} anchor full — spawn junction first`,
         };
       });
 
       const page = suggestions.slice(skip, skip + limit);
-      return json(res, 200, {
+      return json(res, 200, { ok:true, hub, minHops, total:suggestions.length, skip, limit, results:page });
+    }
+
+    // ── POST /api/graph/junction ───────────────────────────────────────────
+    // Creates a junction node on a reachable anchor and optionally wires it
+    // to a cluster entry node — all in one step.
+    //
+    // Body:
+    //   anchor       — reachable node code to attach junction to
+    //   anchorDir    — N|S|E|W direction on the anchor for the new junction
+    //   clusterEntry — (optional) unreachable node to wire the junction toward
+    //   clusterDir   — N|S|E|W direction on the junction pointing to clusterEntry
+    //   text         — (optional) flavor text for the junction node
+    //   act          — (optional) act number (defaults to anchor's act)
+    if (parts[1] === 'junction' && method === 'POST') {
+      let body;
+      try { body = await readBody(req); } catch(e) {
+        return json(res, 400, { error:'Invalid JSON' });
+      }
+      const { anchor, anchorDir, clusterEntry, clusterDir, text, act } = body || {};
+
+      if (!anchor || !anchorDir || !['N','S','E','W'].includes(anchorDir))
+        return json(res, 400, { error:'Required: anchor (node code), anchorDir (N|S|E|W)' });
+
+      const anchorNode = nm[anchor];
+      if (!anchorNode)
+        return json(res, 400, { error:`Anchor node "${anchor}" not in NODE_MAP` });
+      if (!reachable.has(anchor))
+        return json(res, 400, { error:`Anchor "${anchor}" is not reachable from hub "${hub}"` });
+      if (degree(anchor) >= 4)
+        return json(res, 400, { error:`Anchor "${anchor}" is full (deg 4) — too crowded to attach a junction` });
+      if (anchorNode[anchorDir])
+        return json(res, 400, { error:`Anchor "${anchor}.${anchorDir}" is already occupied by "${anchorNode[anchorDir]}"` });
+
+      if (clusterEntry) {
+        if (!nm[clusterEntry])
+          return json(res, 400, { error:`clusterEntry "${clusterEntry}" not in NODE_MAP` });
+        if (reachable.has(clusterEntry))
+          return json(res, 400, { error:`clusterEntry "${clusterEntry}" is already reachable` });
+        if (!clusterDir || !['N','S','E','W'].includes(clusterDir))
+          return json(res, 400, { error:'clusterDir (N|S|E|W) required when clusterEntry is given' });
+        if (degree(clusterEntry) >= 4)
+          return json(res, 400, { error:`clusterEntry "${clusterEntry}" is full (deg 4)` });
+        if (nm[clusterEntry][OPP[clusterDir]])
+          return json(res, 400, { error:`clusterEntry "${clusterEntry}.${OPP[clusterDir]}" already occupied by "${nm[clusterEntry][OPP[clusterDir]]}"` });
+      }
+
+      // Auto-generate next J-code
+      const nums = Object.keys(nm).filter(c => /^J\d+$/.test(c)).map(c => parseInt(c.slice(1), 10));
+      const jCode = `J${(nums.length ? Math.max(...nums) : 0) + 1}`;
+
+      const junctionTerrain = anchorNode.name || 'junction';
+      const junctionAct     = act !== undefined ? Number(act) : (anchorNode.act || 1);
+      const junctionLabel   = `Junction near ${anchorNode.label || anchor}`;
+      const junctionText    = text || `The road branches here, a junction between ${anchorNode.label || anchor} and the ${anchorDir.toLowerCase()} path.`;
+
+      // Junction body — pre-wired to anchor and optionally to clusterEntry
+      const junctionBody = {
+        name:    junctionTerrain,
+        label:   junctionLabel,
+        text:    junctionText,
+        act:     junctionAct,
+        junction: true,
+        npc:     null,
+        battle:  null,
+        loot:    null,
+        sleep:   false,
+        [OPP[anchorDir]]: anchor,
+        ...(clusterEntry && clusterDir ? { [clusterDir]: clusterEntry } : {}),
+      };
+
+      // Insert into NODE_MAP source
+      const jEntry = serializeNodeLiteral(jCode, junctionBody);
+      const ins = insertBeforeSectionClose('NODE_MAP', jEntry);
+      if (!ins.ok) return json(res, 500, { error:`NODE_MAP insert failed: ${ins.error}` });
+      const newNum = Object.values(WBAPI.nodeMap).reduce((m, n) => Math.max(m, n.num || 0), 0) + 1;
+      WBAPI.nodeMap[jCode] = { ...junctionBody, num: newNum };
+
+      // Wire anchor → junction
+      const r1 = WBAPI.editField('node', anchor, anchorDir, jCode);
+      if (!r1.ok) return json(res, 500, { error:`Wire anchor ${anchor}.${anchorDir}=${jCode} failed: ${r1.error}` });
+
+      // Wire clusterEntry back → junction
+      let clusterWired = false;
+      if (clusterEntry && clusterDir) {
+        const r2 = WBAPI.editField('node', clusterEntry, OPP[clusterDir], jCode);
+        clusterWired = r2.ok;
+        if (!r2.ok) logRow('warn', `clusterEntry wire ${clusterEntry}.${OPP[clusterDir]}=${jCode} failed: ${r2.error}`);
+      }
+
+      WBAPI._buildIndexes();
+      logRow('junction', `${jCode}  ·  terrain:${junctionTerrain}  ·  act:${junctionAct}`);
+      logRow('wires', `${anchor}.${anchorDir}→${jCode}  ${jCode}.${OPP[anchorDir]}→${anchor}${clusterEntry ? `  ${clusterEntry}.${OPP[clusterDir]}→${jCode}  ${jCode}.${clusterDir}→${clusterEntry}` : ''}`);
+      logResponse('POST', url.pathname, 201, `junction/${jCode}`);
+
+      return saveAndRestart(res, 201, {
         ok: true,
-        hub,
-        minHops,
-        total: suggestions.length,
-        skip,
-        limit,
-        results: page,
+        junctionCode: jCode,
+        junctionTerrain, junctionAct, junctionLabel,
+        anchor, anchorDir,
+        clusterEntry: clusterEntry || null,
+        clusterDir:   clusterDir   || null,
+        clusterWired,
+        junctionNode: WBAPI.nodeMap[jCode],
+        note: `Junction ${jCode} created and wired to ${anchor}.${anchorDir}.${clusterEntry ? ` Cluster entry ${clusterEntry} also wired.` : ''}`,
       });
     }
 
-    return json(res, 404, { error:'Unknown graph sub-route. Available: /api/graph/reachability  /api/graph/connect' });
+    return json(res, 404, { error:'Unknown graph sub-route. Available: GET /api/graph/reachability  GET /api/graph/connect  POST /api/graph/junction' });
   }
 
   // ── Coords (NODE_COORDS) ─────────────────────────────────────────────────
