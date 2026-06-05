@@ -192,13 +192,13 @@ class Monitor:
         if prev:
             patch_path = PATCHES_DIR / (f.stem + ".patch")
             patch_path.write_text("\n".join(diff) + "\n", encoding="utf-8")
-            # append any speech logged since the last patch as # comments
+            # collect say.log and server log lines written since the last patch
             say_lines = []
             if SAY_LOG.exists():
                 try:
                     with SAY_LOG.open("r", encoding="utf-8", errors="replace") as sf:
                         sf.seek(self._say_log_pos)
-                        say_lines = [l.rstrip("\n") for l in sf.readlines()]
+                        say_lines = sf.readlines()
                         self._say_log_pos = sf.tell()
                 except OSError:
                     pass
@@ -207,17 +207,13 @@ class Monitor:
                 try:
                     with SERVER_LOG.open("r", encoding="utf-8", errors="replace") as sl:
                         sl.seek(self._server_log_pos)
-                        server_lines = [l.rstrip("\n") for l in sl.readlines()]
+                        server_lines = sl.readlines()
                         self._server_log_pos = sl.tell()
                 except OSError:
                     pass
             if say_lines or server_lines:
-                with patch_path.open("a", encoding="utf-8") as pf:
-                    pf.write("\n")
-                    for line in say_lines:
-                        pf.write(f"# {line}\n")
-                    for line in server_lines:
-                        pf.write(f"# {line}\n")
+                sidecar = PATCHES_DIR / (f.stem + ".patch.log")
+                sidecar.write_text("".join(say_lines + server_lines), encoding="utf-8")
         else:
             # first ever file: save as gzip base, no diff to store
             base_path = PATCHES_DIR / "_base.html.gz"
