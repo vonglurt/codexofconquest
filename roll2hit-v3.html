@@ -5356,7 +5356,80 @@ const MONSTER_DROPS = { // → doc: mechanics-combat.md §Monster Trophy Drops
   scholars_guard:       { name:"Scholar Kings' Seal",     icon:'🔏', sell:20 },
   // ── Layer 55: Visby Underground drop ──
   hollow_hands_guard:   { name:'Hollow Hands Seal',       icon:'🖤', sell:0  },
-  // ── Layer 56: void_shaman drop is scripted inline (warden_token) — not in random table ──
+  // ── Void Shaman (The Warden) — rare arcane guardian, goblin sanctum ──
+  void_shaman: [
+    { icon:'💜', name:'Void Ichor Vial',         sell:28, weight:4 },
+    { icon:'🧿', name:'Warden Sigil Shard',       sell:22, weight:3 },
+    { icon:'🪨', name:'Nullstone Bead',            sell:18, weight:3 },
+    { icon:'🗡',  name:'Cracked Void Staff',        sell:10, weight:2 },
+  ],
+  // ── Farmyard & Urban Animals ──
+  rabid_dog: [
+    { icon:'🐾', name:'Mangy Hide',               sell:2,  weight:5 },
+    { icon:'🦷', name:'Broken Dog Tooth',          sell:2,  weight:4 },
+    { icon:'🪢', name:'Matted Leather Collar',     sell:3,  weight:2 },
+  ],
+  aggressive_turkey: [
+    { icon:'🪶', name:'Tail Feather Bundle',       sell:2,  weight:5 },
+    { icon:'🍖', name:'Drumstick',                 sell:3,  weight:4 },
+    { icon:'🌿', name:'Turkey Spur Claw',          sell:2,  weight:3 },
+  ],
+  horned_goat: [
+    { icon:'🌿', name:'Goat Horn',                 sell:4,  weight:5 },
+    { icon:'🐾', name:'Rough Goat Hide',            sell:3,  weight:4 },
+    { icon:'🦴', name:'Hoof Flint',                sell:2,  weight:3 },
+    { icon:'🔔', name:'Stolen Bell',               sell:4,  weight:1 },
+  ],
+  toilet_leech: [
+    { icon:'🩸', name:'Leech Blood Vial',          sell:3,  weight:5 },
+    { icon:'🧪', name:'Mucus Sac',                 sell:2,  weight:4 },
+    { icon:'🌑', name:'Dried Leech Husk',          sell:2,  weight:3 },
+  ],
+  honeybucket_spider: [
+    { icon:'🌿', name:'Foul Silk Tuft',             sell:3,  weight:5 },
+    { icon:'🧪', name:'Weak Venom Gland',           sell:4,  weight:3 },
+    { icon:'⚙',  name:'Chitin Shell Shard',         sell:2,  weight:4 },
+  ],
+  cockroach_swarm: [
+    { icon:'⚙',  name:'Chitin Fragment',            sell:2,  weight:5 },
+    { icon:'🧪', name:'Compound Eye Cluster',       sell:3,  weight:3 },
+    { icon:'🩸', name:'Roach Ichor',                sell:2,  weight:4 },
+  ],
+  skittish_sheep: [
+    { icon:'🌿', name:'Wool Tuft',                  sell:2,  weight:5 },
+    { icon:'🍖', name:'Mutton Shank',               sell:4,  weight:3 },
+    { icon:'🦴', name:'Split Hoof',                 sell:2,  weight:3 },
+    { icon:'🔔', name:'Sheep Bell',                 sell:3,  weight:1 },
+  ],
+  swarming_wasps: [
+    { icon:'🌿', name:'Stinger Bundle',             sell:4,  weight:5 },
+    { icon:'🧪', name:'Wasp Venom Sac',             sell:5,  weight:3 },
+    { icon:'🍯', name:'Comb Fragment',              sell:3,  weight:2 },
+  ],
+  night_owl: [
+    { icon:'🪶', name:'Night Owl Primary Feather',  sell:5,  weight:5 },
+    { icon:'🌿', name:'Owl Talon',                  sell:4,  weight:4 },
+    { icon:'🦴', name:'Owl Beak Fragment',           sell:3,  weight:3 },
+    { icon:'👟', name:'Tiny Boot',                  sell:5,  weight:1 },
+  ],
+  raging_bull: [
+    { icon:'🌿', name:'Bull Horn',                  sell:9,  weight:5 },
+    { icon:'🐾', name:'Thick Bull Hide',            sell:7,  weight:4 },
+    { icon:'⚙',  name:'Iron Nose Ring',             sell:6,  weight:3 },
+    { icon:'🪢', name:'Snapped Tether Rope',        sell:3,  weight:2 },
+  ],
+  spooked_horse: [
+    { icon:'⚙',  name:'Thrown Horseshoe',           sell:6,  weight:4 },
+    { icon:'🌿', name:'Horse Mane Lock',             sell:5,  weight:4 },
+    { icon:'🐾', name:'Hide Strip',                  sell:6,  weight:3 },
+    { icon:'🪙', name:'Saddlebag Coin',              sell:8,  weight:1 },
+  ],
+  catnabbing_eagle: [
+    { icon:'🪶', name:'Eagle Primary Feather',       sell:7,  weight:5 },
+    { icon:'🌿', name:'Eagle Talon',                 sell:6,  weight:4 },
+    { icon:'🦴', name:'Eagle Beak Fragment',          sell:5,  weight:3 },
+    { icon:'🐾', name:'Tuft of Cat Fur',             sell:3,  weight:1 },
+  ],
   // ── Trivial ──
   commoner:             { name:'Tattered Purse',          icon:'🗡', sell:3  },
   kobold:               { name:'Kobold Fang',             icon:'🦷', sell:4  },
@@ -6266,8 +6339,16 @@ function _rollCeremonia(questId) {
 ══════════════════════════════════════════════════════════ */
 let _killFired = false;
 
+function _pickDrop(table) {
+  const total = table.reduce((s, e) => s + (e.weight ?? 1), 0);
+  let r = Math.random() * total;
+  for (const e of table) { r -= (e.weight ?? 1); if (r <= 0) return e; }
+  return table[table.length - 1];
+}
+
 function battKillEvent() {
-  const drop = MONSTER_DROPS[S.enemy.key];
+  const _rawDrop = MONSTER_DROPS[S.enemy.key];
+  const drop = Array.isArray(_rawDrop) ? _pickDrop(_rawDrop) : _rawDrop;
   if (S.enemy.key === 'horned_shark' && S_story.active) S_story.hornedSharkSlain = true; // §XLVII
   if (S.enemy.key === 'night_03' && S_story.active) S_story.lanternEelLanded = true; // §XLVIII: quest_night_eel trigger
   if (S.enemy.key === 'cave_lurker' && S_story.active) S_story.shaleDropFound = true; // §XLIX: quest_shale_drop trigger
@@ -9051,7 +9132,9 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     passText:"The crate is there. Scholar Kings Distribution stamp, no matching manifest number. You bring it to Muffat. She sets it on the counter and looks at it the way she looks at manifests: correctly, and with no illusions about what that means.",
     failText:'The watch catches the movement before you clear the shadow line. You pull back. The crate stays where it is. The watch makes a note in the margin of the wrong ledger.',
     completeItems:[], checkPassFlag:'muffatBerthReached', bitLabel:'Muffat Berth',
-    disposition:'"There are three things on that berth that should not be there. The crate is one of them." — Magistra Elara Muffat' },
+    disposition:'"There are three things on that berth that should not be there. The crate is one of them." — Magistra Elara Muffat',
+    desc:"Magistra Muffat has been watching the third berth for three days. A Scholar Kings clearance stamp on the hold keeps harbor search away. You have the Trade Seal. The crane rigging casts shadow over the approach. The watch works the main berths, not the third. This is the window.",
+  },
   // ── §LVIII: Cycle 4 ──
   quest_muffat_05: { id:'quest_muffat_05', type:'side', title:'Cycle 4',
     desc:"Muffat has had three Scholar Kings crates on her shelf for two years, unopened. The stamp prevented harbor search. The question is closed now. She opens one. The receiver array inside is expected. The handwritten requisition note in the packing material is not.",
