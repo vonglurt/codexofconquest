@@ -119,6 +119,30 @@ Two-tier naming rule: cities = 3-letter IATA or city-derived code; specific loca
 | CAM | Vale of Camlann — The Final Field | Somerset/western Britain (Arthurian) | Derived from Camlann (Arthur's last battle) | 116,150 | LGW | Created 2026-06-05; ruins terrain; Bedevere's commission scene |
 | LKS | Avalon Shore — The Lake of Excalibur | Somerset (Glastonbury area, Arthurian) | Derived from Lake Shore | 116,149 | LGW | Created 2026-06-05; freshwater_lake terrain; Bedevere's third throw |
 
+## Toilers of the Sea (GCI) Nodes
+
+| Code | Label | Location | Source | Coords (r,c) | Book | Notes |
+|------|-------|----------|--------|--------------|------|-------|
+| STP | St. Peter Port — Guernsey Harbor | Guernsey, Channel Islands | Derived from St. Peter Port | 118,163 | GCI | Created 2026-06-05; docks terrain; all GCI cycle 1+2 origin node |
+| GHL | Gild-Holm-Ur Seat — The Tidal Rock | Guernsey coast, tidal rock | Derived from Gild-Holm-'Ur seat | 119,163 | GCI | Created 2026-06-05; beach terrain; GCI cycle 2 acts 3–5 |
+
+## Ossian / Fragments of Ancient Poetry (INV) Nodes
+
+| Code | Label | Location | Source | Coords (r,c) | Book | Notes |
+|------|-------|----------|--------|--------------|------|-------|
+| CNA | Vale of Cona — Highland Glen | Scottish Highlands (legendary) | Derived from Brook of Cona | 86,148 | INV | Created 2026-06-05; highlands terrain; INV code collision (epic battleground) — cycle 1 uses CNA |
+| HLD | Scottish Highland — Coastal Headland | Scottish Highlands coast | Derived from Highland coastal setting | 86,152 | INV | Created 2026-06-05; highlands terrain; cycles 4/5/6/7 gate/coastal scenes |
+
+---
+
+## Cuchulain of Muirthemne (BHD) Nodes
+
+| Code | Label | Location | Source | Coords (r,c) | Book | Notes |
+|------|-------|----------|--------|--------------|------|-------|
+| EMR | Emain Macha — Ulster Hall | Ulster, Ireland (legendary) | Capital of Ulster in Irish mythology | 84,140 | BHD | Created 2026-06-05; camelot terrain; BHD code collision (Camelot road) — cycle 1 uses EMR |
+| PSU | Plain of Murthemne — The Standing Stone | Ulster plain, Cuchulain's death site | Plain of Murthemne in Cuchulain legend | 82,140 | BHD | Created 2026-06-05; ruins terrain; cycles 2/3 standing stone scenes |
+| ULC | Ulster Ford — Red Branch Road | Ulster ford crossing | Red Branch knights' road in Ulster | 86,140 | BHD | Created 2026-06-05; road terrain; cycles 4–7 ford/battle scenes |
+
 ---
 
 ## Code Collision Register
@@ -134,3 +158,6 @@ Codes that were planned but found already occupied by existing game nodes:
 | CLJ | Dracula starting city | "Vampire Castle Ruins" (game node) | Will use different code when CLJ imported |
 | HAV | Havana | "Admiral's Last Cove" (game node) | Will use different code when HAV imported |
 | BRS | Bursa (HTY-04 spec used BRS) | Reserved for Bristol (IATA BRS) for SEN/Treasure Island import | Used BUR for Bursa instead |
+| GCI | Toilers of the Sea starting node | "The Intercept — Three Miles Out" (merchant ship near Tilbury) | Used STP (St. Peter Port, Guernsey) instead |
+| INV | Ossian starting node | "Loch of the Drowned King" (epic battleground) | Used CNA (Vale of Cona) instead |
+| BHD | Cuchulain starting node | "Camelot — Arthurian Road" (Arthurian game node) | Used EMR (Emain Macha) instead |

@@ -294,14 +294,14 @@ All files under 60 KB in 1367-sources/. Each to receive full pipeline: read → 
 | SDQ | Rob Roy — Walter Scott | 36 | **SEEDS COMPLETE 2026-06-03 — SDQ-01–07 all vignettes done. New nodes: OBH, GLA, ABF, GLN, LLM, EDI.** |
 | TBS | Knight in the Panther's Skin — Rustaveli | 41 | **SEEDS COMPLETE 2026-06-03 — TBS-01–07 all vignettes done. No new nodes. See TBS-knight-panther-skin.md.** |
 | LHR | Beowulf — Anon (Gummere) | 42 | **IMPORTED — 2026-06-05 — BRW/GEA/WM new nodes; HEO/DAN reused from CPH; LHR-01–07 (7 cycles, 35 acts); questComplete on LHR-07 act5; coast→beach terrain fix on GEA; WM created as central archive hub** |
-| BHD | Cuchulain of Muirthemne — Lady Gregory | 43 | **SEEDS COMPLETE 2026-06-03 — BHD-01–07 all vignettes done. New nodes: EMR. See BHD-cuchulain.md.** |
+| BHD | Cuchulain of Muirthemne — Lady Gregory | 43 | **IMPORTED — 2026-06-05 — EMR/PSU/ULC new nodes; BHD-01–07 (7 cycles, 35 acts); questComplete on BHD-07 act5; BHD collision→EMR (Emain Macha)** |
 | ZTH | Odyssey — Homer (Butler) | 43 | **SEEDS COMPLETE 2026-06-03 — ZTH-01–07 all vignettes done. New nodes: PHC, RME. See ZTH-odyssey.md.** |
 | ATH | Iliad — Homer (Lang) | 45 | **SEEDS COMPLETE 2026-06-03 — ATH-01–07 all vignettes done. No new nodes. See ATH-iliad.md.** |
 | GDN | Njal's Saga — Anon (Dasent) | 45 | **SEEDS COMPLETE 2026-06-03 — GDN-01–07 all vignettes done. No new nodes. See GDN-njal-saga.md.** |
 | JRS | Jerusalem Delivered — Torquato Tasso | 46 | **SEEDS COMPLETE 2026-06-03 — JRS-01–07 all vignettes done. No new nodes. See JRS-jerusalem-delivered.md.** |
 | LIS | Lusiads — Luís de Camões | 47 | **SEEDS COMPLETE 2026-06-03 — LIS-01–07 all vignettes done. No new nodes. See LIS-lusiad.md.** |
 | MAD | Chronicle of the Cid — Anon (Southey) | 48 | **SEEDS COMPLETE 2026-06-03 — CID-01–07 all vignettes done. New node: VLC. See MAD-chronicle-cid.md.** |
-| INV | Ossian — James MacPherson | 48 | **SEEDS COMPLETE 2026-06-03 — INV-01–07 all vignettes done. No new nodes. See INV-ossian.md.** |
+| INV | Ossian — James MacPherson | 48 | **IMPORTED — 2026-06-05 — CNA/HLD new nodes (Vale of Cona/Scottish Coastal Headland); INV-01–07 (7 cycles, 35 acts); questComplete on INV-07 act5; INV node collision→CNA for cycle 1** |
 | LCY | The White Company — Arthur Conan Doyle | 49 | **IMPORTED — 2026-06-05 — No new nodes (LCY/LDN/WM all existing); LCY-01–07 (7 cycles, 35 acts); questComplete on LCY-07 act5** |
 | FLR | Divine Comedy: Inferno — Dante Alighieri | 50 | **SEEDS COMPLETE 2026-06-03 — FLR-01–07 all vignettes done. No new nodes needed. See FLR-divine-comedy-inferno.md.** |
 | HFT | Frithiof's Saga — Esaias Tegnér | 51 | **SEEDS COMPLETE 2026-06-03 — HFT-01–07 all vignettes done. No new nodes needed. See HFT-frithiof-saga.md.** |
@@ -317,7 +317,7 @@ All files under 60 KB in 1367-sources/. Each to receive full pipeline: read → 
 | ARN | Knights of the Cross — Henryk Sienkiewicz | 57 | **SEEDS COMPLETE 2026-06-03 — ARN-01–07 all vignettes done. KRK/JUR/TKT/CHP in Location Grid. No new nodes. See ARN-knights-of-the-cross.md.** |
 | VBY | Grettir's Saga — Anon | 58 | **SEEDS COMPLETE 2026-06-03 — VBY-01–07 all vignettes done. RKN/BWH in Location Grid. No new nodes. See VBY-grettir-saga.md.** |
 | RIX | Egil's Saga — Anon (attr. Snorri) | 58 | **SEEDS COMPLETE 2026-06-03 — RIX-01–07 all vignettes done. YRK/ISL in Location Grid. No new nodes. See RIX-egil-saga.md.** |
-| GCI | Toilers of the Sea — Victor Hugo | 59 | **SEEDS COMPLETE 2026-06-03 — GCI-01–07 all vignettes done. STP/GHL in Location Grid. No new nodes. See GCI-toilers-of-the-sea.md.** |
+| GCI | Toilers of the Sea — Victor Hugo | 59 | **IMPORTED — 2026-06-05 — STP/GHL new nodes (Guernsey harbor + tidal rock); GCI-01–07 (7 cycles, 35 acts); questComplete on GCI-07 act5; cycle 1 uses STP (not existing GCI merchant ship); RME→ROM** |
 | FCO | Piers Plowman — William Langland | 59 | **SEEDS COMPLETE 2026-06-03 — FCO-01–07 all vignettes done. MGF in Location Grid. No new nodes. See FCO-vision-of-piers-plowman.md.** |
 | MAD | Don Quixote — Miguel de Cervantes | 59 | **SEEDS COMPLETE 2026-06-03 — MAD-01–07 all vignettes done. No new nodes (SMR, CMG, MNT, MAS, ACL all pre-existing). See MAD-don-quixote.md.** |
 | BRU | Amadis of Gaul — Garci Rodríguez de Montalvo | 60 | **SEEDS COMPLETE 2026-06-03 — BRU-01–07 all vignettes done. No new nodes (CHT, LTN, PBK all pre-existing). See BRU-amadis-of-gaul.md.** |
@@ -905,6 +905,9 @@ This procedure runs once per vignette act (one quest at a time). Complete all 8 
 | 82 | LHR | Beowulf (Gummere) | HEO/DAN reused from CPH; BRW new node (Dragon's Barrow, r:99 c:169, ruins); GEA new node (Geatland coast, r:100 c:169, beach); WM new node (Weimar Archive, r:117 c:204, scholars_qtr); LHR-01–07 (7 cycles, 35 acts); questComplete on LHR-07 act5; coast→beach terrain fix on GEA | IMPORTED — 2026-06-05 |
 | 83 | LCY | The White Company (Doyle) | LCY (existing Harbor Docks–Tilbury)/LDN/WM all existing; LCY-01–07 (7 cycles, 35 acts); questComplete on LCY-07 act5 | IMPORTED — 2026-06-05 |
 | 84 | LGW | Le Morte d'Arthur (Malory) | AST new node (Astolat manor, r:109 c:156, camelot); RVP new node (River Ford, r:110 c:155, freshwater_lake); CAM new node (Vale of Camlann, r:116 c:150, ruins); LKS new node (Avalon Shore, r:116 c:149, freshwater_lake); LGW/BK/ROM/CON/LDN/WM existing; LGW-01–07 (7 cycles, 35 acts); questComplete on LGW-07 act5 | IMPORTED — 2026-06-05 |
+| 85 | GCI | Toilers of the Sea (Hugo) | STP new node (St. Peter Port Guernsey, r:118 c:163, docks); GHL new node (Gild-Holm-Ur tidal rock, r:119 c:163, beach); BK/VEN/CON/ROM/LDN/WM existing; GCI-01–07 (7 cycles, 35 acts); questComplete on GCI-07 act5; cycle 1 uses STP (existing GCI is merchant ship); RME→ROM | IMPORTED — 2026-06-05 |
+| 86 | INV | Ossian (MacPherson) | CNA new node (Vale of Cona, r:86 c:148, highlands); HLD new node (Scottish Coastal Headland, r:86 c:152, highlands); CON/VEN/WM existing; INV-01–07 (7 cycles, 35 acts); questComplete on INV-07 act5; INV node collision (epic battleground)→CNA for cycle 1 | IMPORTED — 2026-06-05 |
+| 87 | BHD | Cuchulain of Muirthemne (Gregory) | EMR new node (Emain Macha Ulster Hall, r:84 c:140, camelot); PSU new node (Plain of Murthemne Standing Stone, r:82 c:140, ruins); ULC new node (Ulster Ford Red Branch Road, r:86 c:140, road); BK/VS/WM existing; BHD-01–07 (7 cycles, 35 acts); questComplete on BHD-07 act5; BHD node collision (Camelot road)→EMR for cycle 1 | IMPORTED — 2026-06-05 |
 
 ---
 

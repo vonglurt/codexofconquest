@@ -258,6 +258,9 @@ say "Next: {BOOK} {next_cycle} — {quest title}." &
 | LHR  | Beowulf (Gummere)             | 0           | 0               | 0               | DONE 2026-06-05 — 35 acts imported with full text |
 | LCY  | The White Company (Doyle)     | 0           | 0               | 0               | DONE 2026-06-05 — 35 acts imported with full text |
 | LGW  | Le Morte d'Arthur (Malory)    | 0           | 0               | 0               | DONE 2026-06-05 — 35 acts imported with full text |
+| GCI  | Toilers of the Sea (Hugo)     | 0           | 0               | 0               | DONE 2026-06-05 — 35 acts imported with full text; STP/GHL nodes created |
+| INV  | Ossian (MacPherson)           | 0           | 0               | 0               | DONE 2026-06-05 — 35 acts imported with full text; CNA/HLD nodes created; INV collision→CNA |
+| BHD  | Cuchulain of Muirthemne (Gregory) | 0       | 0               | 0               | DONE 2026-06-05 — 35 acts imported with full text; EMR/PSU/ULC nodes created; BHD collision→EMR |
 | GAME | Legacy game quests (quest_*, trap_*) | ~346 | ~170           | ~140            | SEPARATE — see §GAME |
 | BGW  | Arabian Nights (Burton tr.)   | 0           | 0               | 0               | DONE 2026-06-03     |
 | CAI  | Arabian Nights (Lang)         | 0           | 0               | 0               | DONE 2026-06-03     |
