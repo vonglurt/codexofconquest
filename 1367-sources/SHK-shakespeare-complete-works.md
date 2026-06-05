@@ -1,6 +1,6 @@
 # SHK — Complete Works of William Shakespeare
 
-**Source:** SHK-shakespeare-complete-works.part1of28.txt + part2of28.txt (Parts 3–28 pending)
+**Source:** Parts 1–4 read. Parts 5–28 pending. | **Progress:** Cycles 1–3 complete.
 **Gutenberg:** #100 — Complete Works (Shakespeare)
 **Period:** c.1590–1613 | Drama, Poetry, Sonnets
 **Part 1 contains:** The Sonnets (all 154) + All's Well That Ends Well Act I (begins)
@@ -639,6 +639,256 @@ questComplete: true
 
 ```
 SHK | The Chain That Cannot Be Named | Cycle 2 | ABF/ARF/NUE | Gift given before declaration, returned through fiction
+```
+
+*(Append to quest-map.md)*
+
+---
+
+### Part 5 Coverage
+
+*Cymbeline (complete) + Hamlet (Acts I–II begin)*
+
+Cymbeline runs complete: Iachimo bets Posthumus he can seduce Imogen, fails, hides in a trunk in her bedchamber to steal her bracelet and note a mole on her breast as false "proof," and Posthumus orders her death — Pisanio instead gives Imogen men's clothes and she flees to Wales as Fidele, finding there her stolen brothers Guiderius and Arviragus living with the exile Belarius. After battle and revelation Iachimo confesses the trunk deception, the princes are restored as Cymbeline's sons, Posthumus and Imogen are reunited, and Cymbeline agrees to pay Rome tribute despite victory. Hamlet then opens: the ghost has named Claudius as King Hamlet's murderer, Hamlet feigns madness, and Polonius reads Hamlet's private love letter to Ophelia aloud to the court as evidence of love-madness — "Doubt thou the stars are fire, / Doubt that the sun doth move, / Doubt truth to be a liar, / But never doubt I love" — while Rosencrantz and Guildenstern arrive and Hamlet tells them Denmark is a prison.
+
+*Quest seeds: Imogen's Bracelet — the token stolen while its owner slept, used to manufacture a false conviction (Cymbeline). Hamlet's Letter to Ophelia — a private love letter seized by a father and weaponized as court evidence (Hamlet).*
+
+---
+
+## Cycle 3 — Angle: The Instrument of Peace That Outlives Its Guarantor
+
+*Cycle 1 used the Sonnets. Cycle 2 used As You Like It. Cycle 3 draws from Coriolanus — specifically the sealed treaty Coriolanus offers to the Volscian lords in his final minutes, which Aufidius immediately prevents from being read before the murder. The theme is new: not delivery obstructed (Cycle 1), not a token whose meaning cannot be spoken in the current context (Cycle 2), but a document that enacted something real — a genuine peace — and was prevented from being acknowledged before its maker was killed. The peace was made. No one read the proof. The Fighter carries the document from the murder scene to an archive so that what was agreed is at least on record, even if it was never enforced.*
+
+**Theme this cycle introduces:** *The document that made peace and was not allowed to be read — the peace treaty that outlives its guarantor, valid by signature and void by murder, worth preserving precisely because it proves the agreement was reached.*
+
+**Themes avoided:** Cycle 1 (social interception). Cycle 2 (token inside a fiction). "Truth delivered posthumously" (existing thread — that is about testimony; this is about a legal instrument). "Grief carried in an object" (existing). None of the active themes match this: the treaty is not grief, not truth posthumous — it is a binding agreement that was made but never acknowledged.
+
+---
+
+## 5-Act Vignette Play — Cycle 3
+
+**Title:** *The Unread Treaty*
+**TOKEN:** *Coriolanus's Peace Document* — a formal treaty subscribed by the Roman consuls and patricians, guaranteed under the Senate's seal, granting Rome safety in exchange for tribute. Coriolanus brought it to Antium to deliver to the Volscian lords. Aufidius said: "Read it not, noble lords." No one in the room read it. Coriolanus was killed. The document — still in his hand or on the ground beside him — is the only proof that the peace was genuinely made, not merely promised.
+
+---
+
+*The Thing · its current state · who holds it · where the scene takes place.*
+
+**ACT I**
+*The Treaty · dropped beside a dead man · on the ground of the Antium public square · just after the murder*
+
+The square is not empty yet — the Volscian crowd that called for his death is pulling back, stunned at what they have done. Aufidius stands on the body and then steps off it. The lords are withdrawing. No one is looking at the ground where the document fell. You are the one who sees it — a folded parchment, the Senate's wax seal still intact on the outside, never broken. A Roman merchant nearby has gone very still. He saw what just happened. He knows what the document is. He asks you, very quietly, to pick it up before Aufidius's men notice.
+
+*The Fighter's internal reaction: The seal is unbroken. No one in this square knows what this document says.*
+
+**SCENE**
+The Antium public square, minutes after the murder. The Volscian lords are moving away, speaking in low voices. Aufidius is still near the body. The document lies on the stones at the edge of the crowd — the Senate's wax seal visible, red, intact. The Roman merchant Flavius Marcellus steps close to you and says: *that document is a treaty. It ends the war. If Aufidius's men find it, it disappears. If it reaches Rome, it is the proof that Coriolanus made the peace before they killed him.* He does not have the courage to pick it up himself.
+
+**PROMPT:** Sleight of Hand DC 13. Retrieve the treaty from the ground without drawing the attention of Aufidius's men, who are beginning to move through the crowd checking for Roman observers.
+
+**FAIL TEXT:** One of Aufidius's men steps close. You freeze. The treaty is still on the ground. You drift to the edge of the square and watch as the man nearly steps on it, then moves on. Try again when the crowd thickens between you and the guards.
+
+**SUCCESS TEXT:** You pocket it in the press of bodies moving back from the murder. The seal is intact. The document is warm from the ground. Flavius exhales and says: *go. Do not stop in Antium tonight.* You receive *Flavius's Commission* — a brief signed note from the merchant authorizing you to carry "a document of Roman origin" on his behalf. It will not protect you but it gives you a name to argue with.
+
+**grantItem:** Flavius's Commission
+**checkPassFlag:** treatyRecovered
+
+---
+
+**ACT II**
+*The Treaty · sealed, inside the Fighter's coat · under pressure · the road north from Antium, a Volscian patrol checkpoint*
+
+You are three miles from Antium when the patrol finds you. They are thorough — Aufidius has sent riders after anyone who left the square quickly. They are looking for a document. They know something was on the ground by the body. They do not know it was a treaty; they know it was paper with a seal. The patrol leader is not stupid. He is looking at your coat.
+
+*The Fighter's internal reaction: He knows I have something. He does not know what. Those are different problems.*
+
+**SCENE**
+The north road out of Antium, late afternoon. The patrol — four Volscian soldiers and a sergeant — has stopped you at a road junction. The sergeant has Flavius's Commission in his hand. He is reading it slowly. He asks what document you are carrying for the Roman merchant. Behind him, one of the soldiers is watching your coat. The treaty is folded flat against your ribs. The sergeant is not hostile yet; he is deciding.
+
+**PROMPT:** Deception DC 14. Tell the sergeant the commission authorizes transport of a private land deed — an inheritance dispute, Roman property in Campania, no military or political content. Show him the outer edge of a folded document (not the treaty — a blank sheet you fold to the same thickness).
+
+**FAIL TEXT:** He is not satisfied. He asks to see the seal on the actual document. You stall — the seal on the treaty is the Roman Senate's, which he will recognize. He steps closer. You have perhaps one more exchange before this becomes a search. Try again: ask him to send word ahead to his commander that a Roman land deed is in transit, and offer the name of a Volscian magistrate in Antium who can verify Flavius's standing.
+
+**SUCCESS TEXT:** He looks at the blank sheet, looks at the commission, and decides the trouble of confiscating a land deed outweighs the likelihood it matters. He waves you through. You receive *The Sergeant's Mark* — a chalk mark he made on the commission as cleared, which will pass three more checkpoints before it expires.
+
+**grantItem:** The Sergeant's Mark
+**checkPassFlag:** patrolPassed
+
+---
+
+**ACT III**
+*The Treaty · still sealed, carried north · the Fighter's hands · the Roman consul's antechamber, ROM*
+
+The document is in Rome. The consul's office receives you — Flavius's name carries weight here. But when you explain what you are carrying, the atmosphere changes. The consul — Gnaeus Marcius Scaeva, a secondary official, careful about his career — goes very still. He knows the treaty exists: he is one of the men who signed it. He knows Coriolanus is dead. He is calculating what it means to take possession of a document signed by a man the Senate sent into exile, made on behalf of an army the Senate did not sanction, while Aufidius is still alive and Rome has just avoided being sacked. He says, carefully: *this is a sensitive document.*
+
+*The Fighter's internal reaction: He signed it. He is now afraid of his own signature.*
+
+**SCENE**
+The consul's antechamber, marble floor, a slave with water, two scribes pretending not to listen. Gnaeus Marcius Scaeva sits behind a desk with his hands folded. He has looked at the outer seal — he recognized it immediately — and has not touched it since. He tells you that any document signed under the current circumstances may be considered unauthorized, that Coriolanus acted without the Senate's mandate in treating with Aufidius, that the treaty's legal standing is unclear. He is asking you to let him give it back to you and pretend you were never here.
+
+**PROMPT:** Persuasion DC 15. The treaty is not his to dismiss. The Senate's seal is on it. His own signature is inside it. Tell him that a treaty that was made is a treaty that exists — and that an archive can hold it without the Senate having to act on it, at least until the political situation clarifies.
+
+**FAIL TEXT:** He is unmoved by legal argument. He says the document is dangerous to receive openly. He offers to "hold it in private confidence" — which means it disappears into his personal files and is never logged. You decline. You walk out with the treaty. Try again at the public records office on the Aventine, where a different clerk has different instructions.
+
+**SUCCESS TEXT:** He considers you for a long moment. Then: *the archive on the Capitoline will take it as an uncontested submission — no Senate vote required, logged under treaty instruments, not actionable until called forward.* He writes you a letter of introduction to the archive keeper. He does not sign it with his full name. You receive *The Unsigned Introduction* — addressed to the Capitoline archive, authorizing deposit of a treaty instrument, signed only with a duty seal.
+
+**grantItem:** The Unsigned Introduction
+**checkPassFlag:** consulNavigated
+
+---
+
+**ACT IV**
+*The Treaty · about to be registered · the archive keeper's desk · the Capitoline archive, ROM*
+
+The archive keeper — Lucius Aufidianus, no relation to the Volscian general, a fact he is tired of explaining — takes the unsigned introduction and reads it without expression. He reads it again. He puts it down. He looks at the sealed treaty on his desk with the expression of a man who has been in the archive business long enough to know that the document that is politically inconvenient to receive is almost always the document most worth keeping. He asks you three questions: when was it signed, who was present, and is the maker alive.
+
+*The Fighter's internal reaction: He already knows the answer to the third question. He is asking it to put it on the record.*
+
+**SCENE**
+The Capitoline archive: cool stone, the smell of old papyrus, racks of sealed scrolls going back two hundred years. Lucius Aufidianus sits behind a desk that has accumulated three generations of intake forms. He has read the introduction. He is looking at the treaty with professional detachment. He asks his three questions with the tone of someone who will write the answers down exactly as you give them. This is not a tribunal. It is a record.
+
+**PROMPT:** History DC 13. Answer the three questions accurately and completely: the date of signing (the day before the Volscian army reached Rome's gates), the parties present (Roman consuls and the Volscian commander), and the status of the maker (dead, in Antium, by violence, this week). The archive requires precise language, not diplomatic softening.
+
+**FAIL TEXT:** You hedge on the third question — you say "the signatory is no longer available" — and Lucius stops writing. He says he needs plain language for the record. Imprecision creates ambiguity in intake documents, and ambiguous intake creates arguments about authenticity later. Give him the plain word. Try again: Coriolanus was killed.
+
+**SUCCESS TEXT:** He writes everything down. He reads it back. He breaks the treaty's outer seal — carefully, with a bronze tool — and opens it without reading the content. He logs the external information: signed, sealed, received, date, signatories, circumstances of delivery. He folds it shut. He says: *this will be filed under Treaty Instruments — Submitted Without Senate Action. It can be called forward by any consul within the next fifty years.* You receive *The Intake Receipt* — the archive's formal log of the treaty's deposit.
+
+**grantItem:** The Intake Receipt
+**checkPassFlag:** treatyDeposited
+
+---
+
+**ACT V**
+*The Treaty · logged, stored, sealed again · in the Capitoline archive's rack · NUE, the Nuremberg archive, six months later*
+
+Flavius has sent the intake receipt to the Nuremberg archive as a secondary record — proof that a primary document exists, where it is held, and under what circumstances it was made. The Nuremberg archive receives secondary records of documents held elsewhere: the intake receipt is sufficient. The scholar who receives it — Albrecht von Kettner, northern European acquisitions — has never held a Roman treaty instrument secondary record before. He is very interested in the circumstances. He asks about the phrase "submitted without Senate action."
+
+*The Fighter's internal reaction: The treaty was made. The peace was real. This is the proof that it happened, held by a man who will never enforce it and an archive that will never need to.*
+
+**SCENE**
+The Nuremberg archive, morning light on pale stone. Albrecht von Kettner reads the intake receipt twice, then holds it at arm's length as if the distance will help. He says: *a treaty instrument with no enforcement party — the maker dead, the Senate silent, the Volscian signatory in political crisis. What is the archive receiving? A record of an agreement that no one will honor?* He is genuinely asking, not objecting.
+
+**PROMPT:** Investigation DC 12. Answer him: the archive is receiving proof that the agreement was reached — which is different from proof that it was honored. A document that proves the peace was made is not the same as a peace. Both are worth keeping. The category it needs is new: *Treaty Instruments — Peace Made and Not Enforced; Agreements Reached Without Surviving Guarantors.*
+
+**FAIL TEXT:** He is not sure the archive has a category that fits. He asks you to come back when he has consulted with the senior acquisitions clerk. You wait a day. You come back. The category question has been resolved in your favor. Try again.
+
+**SUCCESS TEXT:** He writes the category heading himself, in the intake margin: *Treaty Instruments — Peace Made, Not Enforced.* He adds a note: *Primary held Capitoline archive, Rome. Secondary record received NUE. Maker: Caius Martius Coriolanus. Signatory parties: Rome and Antium. Status of guarantor: deceased at delivery.* He slides the receipt into its sleeve. The document exists. The peace was real. It is on the record now. You receive *Von Kettner's Annotation* — the secondary intake note in his hand, marking the first entry in a new archive category. The quest is complete.
+
+**takeItem:** Flavius's Commission *(spent — the merchant's authorization is filed under the archive's intake documents)*
+**grantItem:** Von Kettner's Annotation
+**checkPassFlag:** secondaryFiled
+**missionSuccessBit:** shk_cycle3Complete
+
+---
+
+## Quest API Stub — Cycle 3
+
+```
+Act I — The Ground of the Square
+activateNode: ANT
+type: skill_check
+missionAccept: "Coriolanus is dead in the Antium public square. The treaty
+  he brought to deliver — subscribed by Roman consuls, sealed, never read —
+  is on the ground beside him. Aufidius's men are moving through the crowd.
+  The Roman merchant Flavius Marcellus needs someone to pick it up."
+scene: "The Antium square, minutes after the murder. The crowd is pulling
+  back. The document lies on the stones near the body — Senate wax seal
+  intact, red, unbroken. Aufidius is still nearby. The merchant Flavius
+  stands at your shoulder and says: that document ends the war. If it
+  disappears here, the peace disappears with it."
+prompt: "Sleight of Hand DC 13. Retrieve the treaty from the ground without
+  drawing the attention of Aufidius's men moving through the crowd."
+failText: "A guard steps close. You freeze. The treaty stays on the ground.
+  Try again when the crowd thickens between you and the patrol."
+successText: "You pocket it in the press of bodies. The seal is intact, warm
+  from the stone. You receive Flavius's Commission."
+grantItem: "Flavius's Commission"
+checkPassFlag: treatyRecovered
+activateMissionBit: shk3_act1Active
+
+Act II — The Road Checkpoint
+activateNode: ANT
+type: skill_check
+scene: "Three miles north of Antium. A Volscian patrol — sergeant and four
+  soldiers — has stopped you at a road junction. They are looking for paper
+  with a seal. The sergeant has Flavius's Commission. He is reading it slowly.
+  One soldier is watching your coat. The treaty is flat against your ribs."
+prompt: "Deception DC 14. Tell the sergeant you carry a private land deed —
+  a Roman inheritance dispute, no military content. Show him a blank folded
+  sheet, not the treaty."
+failText: "He asks to see the actual seal. You stall, offer to name a Volscian
+  magistrate who can verify Flavius's standing. Try again."
+successText: "He waves you through. You receive The Sergeant's Mark — a chalk
+  clearance on the commission that passes three more checkpoints."
+grantItem: "The Sergeant's Mark"
+checkPassFlag: patrolPassed
+activateMissionBit: shk3_act2Active
+
+Act III — The Consul's Antechamber
+activateNode: ROM
+type: skill_check
+scene: "The Roman consul's antechamber. Gnaeus Marcius Scaeva has looked at
+  the outer seal and not touched the document since. He signed it. He is afraid
+  of his own signature. He says the treaty's legal standing is unclear and
+  offers to hold it in private confidence — which means it disappears."
+prompt: "Persuasion DC 15. A treaty that was made is a treaty that exists.
+  An archive can hold it without the Senate acting on it. Convince him to
+  write the introduction to the Capitoline archive keeper."
+failText: "He is unmoved. You walk out with the treaty. Try the public records
+  office on the Aventine, where different instructions apply."
+successText: "He writes the introduction — unsigned except for a duty seal.
+  You receive The Unsigned Introduction, addressed to the Capitoline archive."
+grantItem: "The Unsigned Introduction"
+checkPassFlag: consulNavigated
+activateMissionBit: shk3_act3Active
+
+Act IV — The Capitoline Archive
+activateNode: ROM
+type: skill_check
+scene: "The Capitoline archive. Lucius Aufidianus reads the introduction twice.
+  He puts it down. He looks at the sealed treaty with professional recognition.
+  He asks three questions: when signed, who present, is the maker alive.
+  He already knows the answer to the third. He is asking to put it on record."
+prompt: "History DC 13. Answer all three questions precisely — date, parties,
+  status of maker (dead, in Antium, by violence, this week). Plain language.
+  The archive requires it."
+failText: "You hedge on the third. He stops writing. He needs the plain word.
+  Try again: Coriolanus was killed."
+successText: "He logs everything, breaks the outer seal without reading content,
+  files it: Treaty Instruments — Submitted Without Senate Action. You receive
+  The Intake Receipt."
+grantItem: "The Intake Receipt"
+checkPassFlag: treatyDeposited
+activateMissionBit: shk3_act4Active
+
+Act V — The Secondary Record
+activateNode: NUE
+type: skill_check
+scene: "Nuremberg archive. Albrecht von Kettner reads the intake receipt and
+  asks: what is the archive receiving? A record of an agreement no one will
+  honor? He is genuinely asking. The treaty was made. The peace was real.
+  This is proof it happened."
+prompt: "Investigation DC 12. Tell him: proof that peace was made is not the
+  same as peace, but both are worth keeping. Propose the category: Treaty
+  Instruments — Peace Made, Not Enforced; Agreements Reached Without
+  Surviving Guarantors."
+failText: "He needs to consult the senior clerk. You wait a day. Try again
+  when the category question is resolved."
+successText: "He writes the category heading himself. Primary held Capitoline.
+  Maker: Caius Martius Coriolanus. Status: deceased at delivery. You receive
+  Von Kettner's Annotation. Quest complete."
+takeItem: "Flavius's Commission"
+grantItem: "Von Kettner's Annotation"
+checkPassFlag: secondaryFiled
+questComplete: true
+```
+
+---
+
+## Quest Map Entry — Cycle 3
+
+```
+SHK | The Unread Treaty | Cycle 3 | ANT/ROM/NUE | Peace made and not enforced, guarantor killed before document was read
 ```
 
 *(Append to quest-map.md)*
