@@ -403,12 +403,17 @@ class Monitor:
                 try:
                     _, _mx, my, _, bstate = curses.getmouse()
                     if bstate & curses.BUTTON1_DOUBLE_CLICKED:
-                        idx = self._row_map.get(my)
-                        if idx is not None:
-                            with self.lk:
-                                line = self.dlines[idx] if idx < len(self.dlines) else ""
-                            if line.startswith("+") and not line.startswith("+++"):
-                                threading.Thread(target=_say, args=(line,), daemon=True).start()
+                        with self.lk:
+                            dl = self.dlines
+                        # find display rows that map to green (+) lines
+                        green_rows = [r for r, i in self._row_map.items()
+                                      if i < len(dl)
+                                      and dl[i].startswith("+")
+                                      and not dl[i].startswith("+++")]
+                        if green_rows:
+                            closest = min(green_rows, key=lambda r: abs(r - my))
+                            line = dl[self._row_map[closest]]
+                            threading.Thread(target=_say, args=(line,), daemon=True).start()
                     elif bstate & curses.BUTTON1_CLICKED:
                         _stop_say()
                 except curses.error:
