@@ -1,4 +1,10 @@
 .DS_Store
 .claude/
 milepoints/wbapi-server.log
+milepoints/wbapi-server*.log
+milepoints/patches/*.patch
+milepoints/patches/*.patch.log
+milepoints/patches/_last.html
+milepoints/patches/_last.name
+milepoints/snapshots.zip
 roll2hit-v3-????????-??????.html
