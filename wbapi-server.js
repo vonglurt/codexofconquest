@@ -1979,6 +1979,85 @@ async function route(req, res) {
   }
 
   // ── Audit: Map conformity (spatial + graph) ──────────────────────────────
+  // ── POST /api/audit/map/fix — apply diagonal + one-way fixes ────────────────
+  if (parts[0] === 'audit' && parts[1] === 'map' && parts[2] === 'fix' && method === 'POST') {
+    let body = {};
+    try { body = await readBody(req); } catch(_) {}
+
+    const OPP2  = { N:'S', S:'N', E:'W', W:'E' };
+    const DIAG2 = ['NW','NE','SW','SE'];
+    const DIRS2 = ['N','S','E','W'];
+    const nm    = WBAPI.nodeMap;
+    const fixed = [];
+    const errs  = [];
+
+    // helper: remove a diagonal exit from _rawSrc (nodes are single-line entries)
+    function stripDiag(code, dir) {
+      const S = '// ◆◆◆ WORLDBUILDER:NODE_MAP:START ◆◆◆';
+      const E = '// ◆◆◆ WORLDBUILDER:NODE_MAP:END ◆◆◆';
+      const a = WBAPI._rawSrc.indexOf(S) + S.length;
+      const e = WBAPI._rawSrc.indexOf(E);
+      if (a < S.length || e < 0) return false;
+      const sec  = WBAPI._rawSrc.slice(a, e);
+      const lineRe = new RegExp(`^([ \\t]*${code}\\s*:\\s*\\{[^\\n]+)$`, 'm');
+      const m = lineRe.exec(sec);
+      if (!m) return false;
+      const before = m[1];
+      const after  = before
+        .replace(new RegExp(`,\\s*${dir}\\s*:\\s*'[^']*'`), '')
+        .replace(new RegExp(`\\b${dir}\\s*:\\s*'[^']*',?\\s*`), '');
+      if (after === before) return false;
+      WBAPI._rawSrc = WBAPI._rawSrc.slice(0, a) + sec.replace(before, after) + WBAPI._rawSrc.slice(e);
+      delete nm[code][dir];
+      return true;
+    }
+
+    // which issues to fix
+    const specific = body.check && body.code;
+
+    if (!specific || body.check === 'diagonal_exit') {
+      const targets = specific
+        ? [{ code: body.code, dir: body.dir }]
+        : Object.entries(nm).flatMap(([code, n]) =>
+            DIAG2.filter(d => n[d] != null).map(d => ({ code, dir:d })));
+      for (const { code, dir } of targets) {
+        if (nm[code]?.[dir] == null) continue;
+        if (stripDiag(code, dir)) fixed.push({ check:'diagonal_exit', code, dir });
+        else errs.push({ check:'diagonal_exit', code, dir, error:'source patch failed' });
+      }
+    }
+
+    if (!specific || body.check === 'bidirectional') {
+      const targets = specific
+        ? [{ code: body.code, dir: body.dir, target: body.target }]
+        : Object.entries(nm).flatMap(([code, n]) =>
+            DIRS2.filter(d => n[d] && nm[n[d]] && nm[n[d]][OPP2[d]] !== code)
+                 .map(d => ({ code, dir:d, target:n[d] })));
+      for (const { code, dir, target } of targets) {
+        if (!nm[target]) { errs.push({ check:'bidirectional', code, dir, target, error:'target not in NODE_MAP' }); continue; }
+        if (nm[target][OPP2[dir]] === code) continue; // already fixed by a previous iteration
+        const r = WBAPI.editField('node', target, OPP2[dir], code);
+        if (r.ok) fixed.push({ check:'bidirectional', code, dir, target, set:`${target}.${OPP2[dir]}="${code}"` });
+        else errs.push({ check:'bidirectional', code, dir, target, error: r.error });
+      }
+    }
+
+    if (fixed.length) {
+      const stamp = WBAPI.getStampedName();
+      const sv    = WBAPI.save(stamp);
+      if (!sv.ok) {
+        logResponse(method, url.pathname, 500, `fix ok but save failed: ${sv.error}`);
+        return json(res, 500, { ok:false, error:`fixes applied but save failed: ${sv.error}`, fixed });
+      }
+      await WBAPI.load(stamp);
+      logRow('fixed', fixed.length);
+      logRow('saved', stamp);
+    }
+    logResponse(method, url.pathname, 200, `${fixed.length} fixed  ·  ${errs.length} failed`);
+    return json(res, 200, { ok:true, fixed, errors:errs, saved: fixed.length > 0,
+      note: fixed.length ? 'Changes saved and reloaded.' : 'Nothing to fix.' });
+  }
+
   if (parts[0] === 'audit' && parts[1] === 'map' && method === 'GET') {
     const OPP   = { N:'S', S:'N', E:'W', W:'E' };
     const DIRS  = ['N','S','E','W'];
@@ -2015,6 +2094,19 @@ async function route(req, res) {
     const nodeCodesWithCoords = Object.keys(coords).filter(c => nodeMap[c]);
     const allNodeCodes = Object.keys(nodeMap);
 
+    // ── 0. Diagonal exits (NW/NE/SW/SE must be null) ─────────────────────────
+    const DIAG_DIRS = ['NW','NE','SW','SE'];
+    for (const code of allNodeCodes) {
+      const n = nodeMap[code];
+      for (const d of DIAG_DIRS) {
+        if (n[d] != null)
+          errors.push({ check:'diagonal_exit', code, dir:d, target:String(n[d]),
+            msg:`${code}.${d}="${n[d]}" — diagonal exits are not supported; use N/S/E/W only`,
+            fix:{ method:'POST', url:`/api/audit/map/fix`, body:{ check:'diagonal_exit', code, dir:d },
+                  curl:`curl -XPOST http://localhost:${PORT}/api/audit/map/fix -H 'Content-Type: application/json' -d '{"check":"diagonal_exit","code":"${code}","dir":"${d}"}'` } });
+      }
+    }
+
     // ── 1. Max-4-connections: no node in more than one direction slot ─────────
     for (const code of allNodeCodes) {
       const n = nodeMap[code];
@@ -2042,7 +2134,9 @@ async function route(req, res) {
         const back = nodeMap[target][OPP[dir]];
         if (back !== code)
           warnings.push({ check:'bidirectional', code, dir, target,
-            msg:`${code}.${dir}="${target}" but ${target}.${OPP[dir]}="${back||'(null)'}" — link is one-way` });
+            msg:`${code}.${dir}="${target}" but ${target}.${OPP[dir]}="${back||'(null)'}" — link is one-way`,
+            fix:{ method:'POST', url:`/api/audit/map/fix`, body:{ check:'bidirectional', code, dir, target },
+                  curl:`curl -XPOST http://localhost:${PORT}/api/audit/map/fix -H 'Content-Type: application/json' -d '{"check":"bidirectional","code":"${code}","dir":"${dir}","target":"${target}"}'` } });
       }
     }
 
@@ -2146,11 +2240,15 @@ async function route(req, res) {
       ];
       const mapFixHint = (item) => {
         const { check, code, dir, target } = item;
+        if (check === 'diagonal_exit')
+          return `   → curl -XPOST ${b2}/api/audit/map/fix -H 'Content-Type: application/json' -d '{"check":"diagonal_exit","code":"${code}","dir":"${dir}"}'  # fix now\n` +
+                 `     OR fix all: curl -XPOST ${b2}/api/audit/map/fix`;
         if (check === 'dangling_link')
           return `   → curl -XPUT ${b2}/api/node/${code} -H 'Content-Type: application/json' -d '{"${dir}":null}'  # remove broken link\n` +
                  `     OR create the missing node: curl -XPOST ${b2}/api/node -d '{"code":"${target}",...}'`;
         if (check === 'bidirectional' && code && target && dir)
-          return `   → curl -XPUT ${b2}/api/node/${target} -H 'Content-Type: application/json' -d '{"${OPP[dir]}":"${code}"}'`;
+          return `   → curl -XPOST ${b2}/api/audit/map/fix -H 'Content-Type: application/json' -d '{"check":"bidirectional","code":"${code}","dir":"${dir}","target":"${target}"}'  # fix now\n` +
+                 `     OR fix all: curl -XPOST ${b2}/api/audit/map/fix`;
         if (check === 'max_connections')
           return `   → curl ${b2}/api/node/${code}  # inspect N/S/E/W links and remove duplicate`;
         if (check === 'long_link' && item.suggestedCoords)

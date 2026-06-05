@@ -813,6 +813,14 @@ select.fi{appearance:none;}
     <!-- Issue list -->
     <div id="audit-list" style="display:flex;flex-direction:column;gap:4px"></div>
 
+    <!-- Map connectivity audit -->
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:4px;border-top:1px solid var(--border);padding-top:12px">
+      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;flex:1">Map Connectivity Audit</div>
+      <button class="btn" id="btn-map-audit" disabled style="font-size:11px">Map Audit</button>
+      <button class="btn danger" id="btn-map-fix-all" style="font-size:11px;display:none">Fix All</button>
+    </div>
+    <div id="map-audit-list" style="display:flex;flex-direction:column;gap:4px"></div>
+
   </div>
 
   <!-- ═══ STATS ═══ -->
@@ -3428,7 +3436,85 @@ document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>
   });
 
   // btn-run-audit enabled by loadFile() above; server button enabled when server connects
-  window._auditEnableServer = () => { $('btn-audit-server').disabled = false; };
+  window._auditEnableServer = () => {
+    $('btn-audit-server').disabled = false;
+    $('btn-map-audit').disabled = false;
+  };
+
+  // ── Map Connectivity Audit ──────────────────────────────────────────────────
+  async function runMapAudit() {
+    const list = $('map-audit-list');
+    list.innerHTML = '<div style="color:var(--muted);font-size:12px">Running map audit…</div>';
+    $('btn-map-fix-all').style.display = 'none';
+    try {
+      const r = await fetch(`${SERVER.url}/api/audit/map`);
+      const d = await r.json();
+      list.innerHTML = '';
+      const all = [
+        ...d.errors.map(e => ({ ...e, sev:'error' })),
+        ...d.warnings.map(w => ({ ...w, sev:'warning' })),
+      ];
+      if (!all.length) {
+        list.innerHTML = '<div style="color:var(--green);font-size:12px">✓ No errors or warnings — map graph is clean.</div>';
+        return;
+      }
+      const fixable = all.filter(i => i.fix);
+      if (fixable.length) $('btn-map-fix-all').style.display = '';
+
+      const SEV_C = { error:'var(--red)', warning:'var(--yellow)' };
+      for (const item of all) {
+        const row = document.createElement('div');
+        row.style.cssText = `display:flex;align-items:flex-start;gap:8px;padding:5px 8px;border-left:3px solid ${SEV_C[item.sev]||'var(--border)'};background:var(--bg2);border-radius:0 4px 4px 0;font-size:11px;margin-bottom:2px;`;
+        const badge = document.createElement('span');
+        badge.style.cssText = 'color:var(--muted);white-space:nowrap;flex-shrink:0;font-family:monospace;font-size:10px;min-width:120px;';
+        badge.textContent = `${item.check}·${item.code}${item.dir?'.'+item.dir:''}`;
+        const msg = document.createElement('span');
+        msg.style.cssText = 'flex:1;color:var(--text);';
+        msg.textContent = item.msg;
+        row.append(badge, msg);
+        if (item.fix) {
+          const btn = document.createElement('button');
+          btn.className = 'btn primary sm';
+          btn.style.cssText = 'font-size:10px;padding:2px 7px;flex-shrink:0;white-space:nowrap;';
+          btn.textContent = 'Fix Now';
+          btn.addEventListener('click', async () => {
+            btn.disabled = true;
+            btn.textContent = '…';
+            try {
+              const fr = await fetch(`${SERVER.url}${item.fix.url}`, {
+                method: item.fix.method,
+                headers: { 'Content-Type':'application/json' },
+                body: JSON.stringify(item.fix.body),
+              });
+              const fd = await fr.json();
+              if (fd.ok) { btn.textContent = '✓'; row.style.opacity = '0.4'; }
+              else { btn.textContent = '✗'; btn.title = fd.error || 'failed'; btn.disabled = false; }
+            } catch(e) { btn.textContent = '✗'; btn.disabled = false; }
+          });
+          row.appendChild(btn);
+        }
+        list.appendChild(row);
+      }
+    } catch(e) {
+      list.innerHTML = `<div style="color:var(--red);font-size:12px">Map audit failed: ${e.message}</div>`;
+    }
+  }
+
+  $('btn-map-audit').addEventListener('click', runMapAudit);
+
+  $('btn-map-fix-all').addEventListener('click', async () => {
+    $('btn-map-fix-all').disabled = true;
+    $('btn-map-fix-all').textContent = 'Fixing…';
+    try {
+      const r = await fetch(`${SERVER.url}/api/audit/map/fix`, { method:'POST', headers:{'Content-Type':'application/json'}, body:'{}' });
+      const d = await r.json();
+      $('btn-map-fix-all').textContent = `Fixed ${d.fixed?.length ?? 0}`;
+      await runMapAudit();
+    } catch(e) {
+      $('btn-map-fix-all').textContent = 'Fix All';
+      $('btn-map-fix-all').disabled = false;
+    }
+  });
 })();
 
 // ═══════════════════════════════════════════════════════════════════════════
