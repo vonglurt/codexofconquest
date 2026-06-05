@@ -1,28 +1,13 @@
-#!/bin/bash
-# say.sh — macOS say wrapper that also appends to say.log
-# Usage: say.sh "some text"  (mirrors: say "some text")
+#!/usr/bin/env bash
+# say.sh — enqueue text for speech and return immediately
+# Usage: say.sh "some text"  OR  echo "some text" | say.sh
 #
-# Configurable constants — uncomment one VOICE and one RATE to use:
-#
-# VOICE="Samantha"    # American English female (default macOS)
-# VOICE="Alex"        # American English male
-# VOICE="Daniel"      # British English male
-# VOICE="Karen"       # Australian English female
-# VOICE="Moira"       # Irish English female
-# VOICE="Tessa"       # South African English female
-# VOICE="Victoria"    # American English female (older style)
-# VOICE="Fred"        # Classic Mac voice
-#
-# RATE=175            # words per minute — default macOS rate
-# RATE=200            # slightly faster
-# RATE=220            # noticeably faster
-# RATE=150            # slower and clearer
-# RATE=130            # deliberate pace
+# Voice and rate are configured in sayd.sh (the daemon that does the speaking).
 
-VOICE="Samantha"
-RATE=185
-
-LOG="/Users/user/code/roll2hit.com/milepoints/say.log"
+ROOT="$(cd "$(dirname "$0")" && pwd)"
+LOG="$ROOT/milepoints/say.log"
+QUEUE_DIR="$ROOT/milepoints/say.queue.d"
+DAEMON="$ROOT/sayd.sh"
 
 if [[ $# -gt 0 ]]; then
     TEXT="$*"
@@ -35,5 +20,15 @@ if [[ -z "$TEXT" ]]; then
     exit 1
 fi
 
+mkdir -p "$QUEUE_DIR"
 echo "$TEXT" | tee -a "$LOG"
-say -v "$VOICE" -r "$RATE" "$TEXT"
+
+# sequence counter makes filenames sort in strict call order within the same second
+SEQ_FILE="$ROOT/milepoints/say.seq"
+SEQ=$(( $(cat "$SEQ_FILE" 2>/dev/null || echo 0) + 1 ))
+printf '%d\n' "$SEQ" > "$SEQ_FILE"
+
+printf '%s\n' "$TEXT" > "$QUEUE_DIR/$(date +%Y%m%d-%H%M%S)-$(printf '%06d' "$SEQ").txt"
+
+# use pgrep so the check is reliable even when the daemon was just forked
+pgrep -qf "sayd\\.sh" 2>/dev/null || { "$DAEMON" </dev/null &>/dev/null & disown; }
