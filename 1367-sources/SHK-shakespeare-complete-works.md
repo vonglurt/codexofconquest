@@ -1,6 +1,6 @@
 # SHK — Complete Works of William Shakespeare
 
-**Source:** Parts 1–12 read. Parts 13–28 pending. | **Progress:** Cycles 1–6 complete. Cycle 7 due after Part 14.
+**Source:** Parts 1–14 read. Parts 15–28 pending. | **Progress:** Cycles 1–7 complete. Cycle 8 due after Part 16.
 **Gutenberg:** #100 — Complete Works (Shakespeare)
 **Period:** c.1590–1613 | Drama, Poetry, Sonnets
 **Part 1 contains:** The Sonnets (all 154) + All's Well That Ends Well Act I (begins)
@@ -1524,4 +1524,115 @@ questComplete: true
 
 ```
 SHK | The Inventory of Wolsey | Cycle 6 | BK/VBY/NUE | Self-authored document that caused ruin by being read by the wrong eyes
+```
+
+---
+
+## Part 13 Coverage
+
+*King Lear complete + Love's Labour's Lost Act I–III begins*
+
+Part 13 continues King Lear from Act I Scene I: Kent is banished for defending Cordelia, Edmund forges a letter to destroy Edgar, Goneril and Regan strip Lear's train from a hundred to fifty to twenty-five to ten to one to none — "O, reason not the need: our basest beggars are in the poorest thing superfluous" — and Lear goes out into the storm, raging "Blow, winds, and crack your cheeks!" while the Fool stays with him and mocks him with love. On the heath Lear meets Edgar disguised as Poor Tom and tears off his own clothes — "Is man no more than this? Unaccommodated man is no more but such a poor, bare, forked animal as thou art" — the play's central philosophy of stripped identity stated at the moment Lear's mind begins to go. The catastrophe of Acts IV–V: Gloucester is blinded by Cornwall ("Out, vile jelly! Where is thy lustre now?"), Edgar guides his blind father across a fake cliff edge to cure his will to die, Cordelia is hanged in prison on Edmund's secret order, and Lear enters carrying her body — "Never, never, never, never, never" — then dies, as Edgar closes the play: "The weight of this sad time we must obey; / Speak what we feel, not what we ought to say." Part 13 then opens Love's Labour's Lost Act I: the King of Navarre and three lords swear a three-year oath to study and forswear women; the Princess of France arrives immediately with her ladies on diplomatic business; Armado writes a florid love letter to the country girl Jaquenetta; and Berowne, having sworn with the rest, realizes he is already in love with Rosaline.
+
+---
+
+## Part 14 Coverage
+
+*Love's Labour's Lost complete + Macbeth complete + Measure for Measure begins*
+
+Part 14 completes Love's Labour's Lost: each lord secretly falls for one of the French ladies and is caught out by the others; all four confess at once and Berowne delivers the great speech dissolving their oath ("For when would you, my liege, or you, or you, / In leaden contemplation have found out / Such fiery numbers as the prompting eyes / Of beauty's tutors have enriched you with?"); the revels are cut short by news that the Princess's father has died — she departs, and each man is sent on a year's penance before any answer can be given: the comedy refuses its conventional happy ending, ending instead mid-sentence. Macbeth follows complete, the shortest and most compressed of the tragedies: the witches' prophecy on the heath, Lady Macbeth reading her husband's letter and calling on spirits to "unsex me here," the murder of Duncan, Banquo's ghost at the feast ("Never shake / Thy gory locks at me"), the sleep-walking scene ("Out, damned spot!"), and the final collapse — "Tomorrow and tomorrow and tomorrow / Creeps in this petty pace from day to day / To the last syllable of recorded time" — as Birnam Wood comes to Dunsinane, Macbeth dies at Macduff's hand, and Malcolm is hailed King of Scotland. Part 14 then opens Measure for Measure: Duke Vincentio of Vienna leaves the puritanical Angelo in charge, disguises himself as a friar, and within scenes Angelo has condemned Claudio to death for fornication — Claudio's sister Isabella, a novice nun, comes to plead with Angelo and Angelo begins his proposition.
+
+---
+
+## Cycle 7 — The Dagger Before the Murder
+
+*Parts 13–14 | Plays: King Lear + Macbeth + Love's Labour's Lost*
+
+*Before beginning: Themes avoided — self-authored ruin (Cycle 6), inadvertent emblem (Cycle 5), art intercepted (Cycle 1). This cycle centers on a new mode: the object contaminated by proximity to violence or guilt — a token that carries the stain of what happened near it, whether or not the stain itself is evidence.*
+
+**Theme this cycle introduces:** *Objects contaminated by guilt through proximity — tokens that bear marks no one can fully explain, where the mark may be evidence of what was done nearby or may be nothing, and that uncertainty is the point.*
+
+**TOKEN**: A sealed warrant — a parchment document found in a Scandinavian merchant archive, bearing a blood-seal over the wax. Blood-sealing was historically used: a lord could press a cut finger into wax to authenticate an urgent or secret order. But this mark is ambiguous: it could be a deliberate blood-seal on a death warrant, or an accidental contamination. The document authorizes something — the text is a property transfer — but the blood on the seal suggests it was signed under duress, in haste, or at the scene of something. The document is in good condition but the seal troubles every archivist who has handled it.
+
+---
+
+### Act I — Birka
+```yaml
+activateNode: BK
+type: skill_check
+scene: "Sigrid Ulfsdottir, a Birka archivist maintaining the coastal trade
+  records, has a sealed document recovered from a merchant ship's cargo — an
+  English property transfer, wax seal intact but stained dark red at the edge.
+  She won't log it until she knows whether the stain is evidence of violence
+  or simply a wax artifact. She needs a determination."
+prompt: "Investigation DC 13. Examine the seal: the blood mark is on the edge
+  of the wax, not pressed through it. This is consistent with a hand that was
+  bleeding when it pressed the seal — not blood used deliberately as ink.
+  The document itself shows no other signs of distress."
+failText: "Cannot determine from visual inspection alone. Propose a simple
+  test: the wax composition will tell you the temperature at sealing —
+  blood-sealing requires body-warm wax, not ambient-cooled wax."
+successText: "Mark consistent with accidental contamination at point of sealing.
+  The document is legitimate but was sealed by someone with a wound on their
+  hand. You receive the Stained Warrant."
+grantItem: "Stained Warrant"
+checkPassFlag: sealExamined
+activateMissionBit: shk7_act1Active
+```
+
+### Act II — Visby
+```yaml
+activateNode: VBY
+type: skill_check
+scene: "Marta, Flemish intake clerk. The chain of custody on the warrant passes
+  through a Scottish trading house, c. 1040s. That is the period of Macbeth's
+  reign. She says: this document may have been sealed during a political
+  execution — property transfers after a death were common. If it is from
+  that period and that house, the stain has a history."
+prompt: "Investigation DC 14. Cross-reference the Scottish trading house name
+  against Visby's Hanseatic records for the 1040-1060 period. If the house
+  appears in the records under a new owner after 1057 — the year of Macbeth's
+  death — that would place the document in a period of violent transfer."
+failText: "Records too sparse for that period. Ask Marta if she can date the
+  parchment by the ink composition — Scottish ink formulas of this period
+  are distinctive."
+successText: "The trading house reappears in 1058 under a different family name.
+  The document is from the interregnum. The stain is from the transition.
+  You receive Marta's Chain Note."
+grantItem: "Marta's Chain Note"
+checkPassFlag: chainTraced
+activateMissionBit: shk7_act2Active
+```
+
+### Act III — Nuremberg
+```yaml
+activateNode: NUE
+type: skill_check
+scene: "Ulrich von Gessert reads the warrant and Marta's note. He says: the
+  stain is not evidence of a crime — it is evidence of proximity to one. He
+  asks how you would classify an object that bears a mark from nearby violence
+  without being itself the instrument or the victim."
+prompt: "Investigation DC 12. Propose the category: Objects Contaminated by
+  Proximity — tokens that bear the physical trace of violence that occurred
+  near their creation or sealing, where the object itself was innocent of
+  the act but cannot be read without it."
+failText: "Too passive — covers any bloodstained parchment. Narrow it: Guilt
+  by Adjacency — objects whose authenticity is permanently shadowed by what
+  was happening when they were made, even if the making was legitimate."
+successText: "He stamps it. Logged: legitimate document, contaminated by
+  proximity to a political killing, permanently ambiguous. You receive
+  Ulrich's Sixth Receipt. Quest complete."
+takeItem: "Stained Warrant"
+takeItem: "Marta's Chain Note"
+grantItem: "Ulrich's Sixth Receipt"
+checkPassFlag: warrantsLogged
+questComplete: true
+```
+
+---
+
+## Quest Map Entry — Cycle 7
+
+```
+SHK | The Dagger Before the Murder | Cycle 7 | BK/VBY/NUE | Object contaminated by proximity to violence — guilt by adjacency
 ```
