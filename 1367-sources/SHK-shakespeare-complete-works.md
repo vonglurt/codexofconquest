@@ -1,6 +1,6 @@
 # SHK — Complete Works of William Shakespeare
 
-**Source:** Parts 1–22 read. Parts 23–28 pending. | **Progress:** Cycles 1–11 complete. Cycle 12 due after Part 24.
+**Source:** Parts 1–24 read. Parts 25–28 pending. | **Progress:** Cycles 1–12 complete. Cycle 13 due after Part 26.
 **Gutenberg:** #100 — Complete Works (Shakespeare)
 **Period:** c.1590–1613 | Drama, Poetry, Sonnets
 **Part 1 contains:** The Sonnets (all 154) + All's Well That Ends Well Act I (begins)
@@ -2100,4 +2100,123 @@ questComplete: true
 
 ```
 SHK | The Quarantine Letter | Cycle 11 | BK/VBY/NUE | Document of obsolete urgency — detained under lawful quarantine, lapsed into irrelevance
+```
+
+---
+
+## Part 23 Coverage
+
+*Timon of Athens complete + Troilus and Cressida Act I–III*
+
+Part 23 opens with the conclusion of Timon of Athens: Timon has invited his false friends to a last feast, served them covered dishes that contain only warm water, thrown the water in their faces, and cursed Athens in the most comprehensive curse in Shakespeare — "Matrons, turn incontinent! ... Plagues incident to men, your potent and infectious fevers heap on Athens, ripe for stroke!" — before retreating to the woods naked. In the woods he digs for roots and finds gold; he gives it to Alcibiades (who will destroy Athens) and to prostitutes (to spread disease) and to the thieves who rob him (with encouragement); his last visitor is his loyal steward Flavius, who comes with his own money; Timon tells him he is "the only honest man" and sends him away; Timon's epitaph is left at a beach grave: "Here lie I, Timon, who, alive, all living men did hate" — a man who loved too generously, was betrayed by flattery, and converted to an equal-opportunity misanthropy. Troilus and Cressida then opens, the most cynical play in the canon: set in the tenth year of the Trojan War, it debunks heroism from both sides — Ulysses's "degree" speech ("Take but degree away, untune that string / And hark what discord follows!"), the Trojans debating whether to return Helen ("She is a theme of honour and renown" vs. "Let Helen go"), and Troilus and Cressida's first night together mediated entirely by the pander Pandarus.
+
+---
+
+## Part 24 Coverage
+
+*Troilus and Cressida complete + Twelfth Night Act I–III begins*
+
+Part 24 completes Troilus and Cressida: Cressida is exchanged to the Greek camp as a prisoner of war and quickly "befriends" Diomedes, giving him Troilus's love token (the sleeve) while Troilus watches from hiding — "This is, and is not, Cressid" — the moment of self-division between what he sees and what he can believe; Hector, the one genuinely noble person in the play, is killed by Achilles's men while unarmed, because Achilles could not defeat him in fair combat; the play ends without resolution, mid-war, with Troilus vowing revenge and Pandarus delivering an epilogue about diseased panders — the anti-comedy conclusion of a play that refuses every genre it enters. Twelfth Night then opens: Orsino's famous "If music be the food of love, play on"; Viola is shipwrecked and disguises herself as Cesario to serve Orsino; Olivia is in mourning and refuses all suitors; Malvolio is Olivia's prim steward; Feste is the professional fool; Maria and Sir Toby scheme; and Part 24 ends in Act III with Sebastian and Antonio in the city, Antonio having risked his liberty to follow Sebastian.
+
+---
+
+## Cycle 12 — The Forged Instruction
+
+*Parts 23–24 | Plays: Timon of Athens + Troilus and Cressida + Twelfth Night*
+
+*Before beginning: Themes avoided — quarantine letter (Cycle 11), superseded record (Cycle 10), meaning-bearing vessel (Cycle 9), identical address (Cycle 8). This cycle centers on a new mode: the forged instruction letter — a document written in one person's hand by another, designed to cause a third person to perform specific acts through obedience to what they believed was a genuine command.*
+
+**Theme this cycle introduces:** *The forged instruction — a document that impersonates authority to compel compliance, where the harm is not financial but behavioral: the target does exactly what the letter says, believing it genuine, and is humiliated by their own obedience.*
+
+**TOKEN**: A forged household instruction — a document written to resemble the handwriting of a lady of rank, instructing a household officer to perform specific public behaviors as a demonstration of favor. The officer complied. The behaviors (specific dress, manner, approach to the household) were inappropriate to his station. He was ridiculed and disciplined. The document is in the archive because the officer brought it as evidence in his defense — he was following orders, he said. The handwriting was identified as false only afterward.
+
+---
+
+### Act I — Birka
+```yaml
+activateNode: BK
+type: skill_check
+scene: "Egil Thorvaldsen has a document — an instruction letter in the style
+  of a high-ranking household, directing an officer to wear specific colors,
+  adopt a specific manner, and present himself to his mistress as a suitor.
+  The officer is now claiming he was deceived. Egil has both the letter and
+  the officer's written defense. He wants to know if the letter is a forgery
+  or a genuine eccentric instruction."
+prompt: "Investigation DC 14. Examine the letter against the officer's other
+  correspondence. The handwriting imitates but does not match: the letterforms
+  are consistent but the pen pressure is wrong — a copy, not an original hand.
+  The wax seal has been reused (slight double impression at the edge).
+  Conclude: forgery confirmed by pressure analysis and seal irregularity."
+failText: "Cannot confirm forgery by handwriting alone without comparison
+  samples. Request the officer provide examples of his mistress's genuine
+  correspondence from the same period for direct comparison."
+successText: "Forgery confirmed: pen pressure inconsistent with author's
+  natural hand, wax seal shows double impression from reuse. You receive
+  the Forged Instruction."
+grantItem: "Forged Instruction Letter"
+checkPassFlag: forgeryConfirmed
+activateMissionBit: shk12_act1Active
+```
+
+### Act II — Visby
+```yaml
+activateNode: VBY
+type: skill_check
+scene: "Marta at the Visby archive. The document is a forgery whose harm
+  was behavioral: the target did exactly what it said and was publicly
+  humiliated. Marta's archive holds forgeries for financial gain (false
+  deeds, altered contracts) but not for what she calls 'social manipulation.'
+  She wants to know what category covers a forgery whose purpose was
+  humiliation rather than property."
+prompt: "Investigation DC 13. Propose: the document belongs in the forgery
+  register but requires a subcategory. Forgery for behavioral compliance —
+  a document that impersonates authority to compel specific acts, where
+  the intended harm is the performance of those acts in public, not the
+  transfer of property or money."
+failText: "She says behavioral harm is not archival. Reframe: the document
+  is evidence in the officer's defense — it is the instrument of an assault
+  on his dignity conducted through paperwork. The assault is documented here."
+successText: "She logs it: forgery for behavioral compliance, instrument of
+  social injury through impersonated instruction. You receive Marta's
+  Compliance Note."
+grantItem: "Marta's Compliance Note"
+checkPassFlag: complianceCategorized
+activateMissionBit: shk12_act2Active
+```
+
+### Act III — Nuremberg
+```yaml
+activateNode: NUE
+type: skill_check
+scene: "Ulrich von Gessert reads the forged instruction and Marta's note.
+  He says: the forgery is unusual. Most forgeries deny or misrepresent an
+  event. This one created an event — it caused the target to perform acts
+  he would never otherwise have performed. The document is not a record of
+  something false; it is the instrument that made something real. He wants
+  the category."
+prompt: "Investigation DC 12. Propose: Performative Forgery — a false document
+  whose function is not to misrepresent a past fact but to generate a future
+  compliance, where the forgery's success is measured by whether the target
+  performs the specified acts. The document creates reality rather than
+  falsifying it."
+failText: "He says: that covers all forged orders of any kind. Narrow it:
+  the specific case where the performance itself is the intended injury —
+  where the target's obedience is the weapon. Try: Compelled Performance —
+  a forgery designed so that the target's compliance constitutes the harm."
+successText: "Stamped. Logged: performative forgery — false document that
+  generates compliance, target's obedience is the instrument of harm.
+  You receive Ulrich's Twelfth Receipt. Quest complete."
+takeItem: "Forged Instruction Letter"
+takeItem: "Marta's Compliance Note"
+grantItem: "Ulrich's Twelfth Receipt"
+checkPassFlag: forgeryLogged
+questComplete: true
+```
+
+---
+
+## Quest Map Entry — Cycle 12
+
+```
+SHK | The Forged Instruction | Cycle 12 | BK/VBY/NUE | Performative forgery — false document that generates compliance, target's obedience is the weapon
 ```
