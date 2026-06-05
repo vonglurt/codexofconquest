@@ -291,7 +291,7 @@ All files under 60 KB in 1367-sources/. Each to receive full pipeline: read → 
 
 | Code | Title | KB | Status |
 |------|-------|----|--------|
-| SDQ | Rob Roy — Walter Scott | 36 | **SEEDS COMPLETE 2026-06-03 — SDQ-01–07 all vignettes done. New nodes: OBH, GLA, ABF, GLN, LLM, EDI.** |
+| SDQ | Rob Roy — Walter Scott | 36 | **IMPORTED — 2026-06-05 — OBH/GLA/ABF/GLN/LLM/EDI new nodes; SDQ-01–07 (7 cycles, 35 acts); questComplete on SDQ-07 act5; SDQ collision (Crones' Domain)→OBH; terrain key fix applied** |
 | TBS | Knight in the Panther's Skin — Rustaveli | 41 | **SEEDS COMPLETE 2026-06-03 — TBS-01–07 all vignettes done. No new nodes. See TBS-knight-panther-skin.md.** |
 | LHR | Beowulf — Anon (Gummere) | 42 | **IMPORTED — 2026-06-05 — BRW/GEA/WM new nodes; HEO/DAN reused from CPH; LHR-01–07 (7 cycles, 35 acts); questComplete on LHR-07 act5; coast→beach terrain fix on GEA; WM created as central archive hub** |
 | BHD | Cuchulain of Muirthemne — Lady Gregory | 43 | **IMPORTED — 2026-06-05 — EMR/PSU/ULC new nodes; BHD-01–07 (7 cycles, 35 acts); questComplete on BHD-07 act5; BHD collision→EMR (Emain Macha)** |
@@ -908,6 +908,7 @@ This procedure runs once per vignette act (one quest at a time). Complete all 8 
 | 85 | GCI | Toilers of the Sea (Hugo) | STP new node (St. Peter Port Guernsey, r:118 c:163, docks); GHL new node (Gild-Holm-Ur tidal rock, r:119 c:163, beach); BK/VEN/CON/ROM/LDN/WM existing; GCI-01–07 (7 cycles, 35 acts); questComplete on GCI-07 act5; cycle 1 uses STP (existing GCI is merchant ship); RME→ROM | IMPORTED — 2026-06-05 |
 | 86 | INV | Ossian (MacPherson) | CNA new node (Vale of Cona, r:86 c:148, highlands); HLD new node (Scottish Coastal Headland, r:86 c:152, highlands); CON/VEN/WM existing; INV-01–07 (7 cycles, 35 acts); questComplete on INV-07 act5; INV node collision (epic battleground)→CNA for cycle 1 | IMPORTED — 2026-06-05 |
 | 87 | BHD | Cuchulain of Muirthemne (Gregory) | EMR new node (Emain Macha Ulster Hall, r:84 c:140, camelot); PSU new node (Plain of Murthemne Standing Stone, r:82 c:140, ruins); ULC new node (Ulster Ford Red Branch Road, r:86 c:140, road); BK/VS/WM existing; BHD-01–07 (7 cycles, 35 acts); questComplete on BHD-07 act5; BHD node collision (Camelot road)→EMR for cycle 1 | IMPORTED — 2026-06-05 |
+| 88 | SDQ | Rob Roy (Scott) | OBH new node (Osbaldistone Hall, r:109 c:142, camelot); GLA new node (Glasgow, r:93 c:143, city); ABF new node (Aberfoyle, r:91 c:142, highlands); GLN new node (MacGregor Glen, r:89 c:141, highlands); LLM new node (Loch Lomond, r:93 c:145, freshwater_lake); EDI new node (Edinburgh, r:96 c:148, city); LON/WM existing; SDQ-01–07 (7 cycles, 35 acts); questComplete on SDQ-07 act5; SDQ collision (Crones' Domain)→OBH; PUT /api/node/{code} terrain key fix applied | IMPORTED — 2026-06-05 |
 
 ---
 

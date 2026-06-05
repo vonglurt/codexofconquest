@@ -145,6 +145,19 @@ Two-tier naming rule: cities = 3-letter IATA or city-derived code; specific loca
 
 ---
 
+## Rob Roy (SDQ) Nodes
+
+| Code | Label | Location | Source | Coords (r,c) | Book | Notes |
+|------|-------|----------|--------|--------------|------|-------|
+| OBH | Osbaldistone Hall — The Library Window | Northumberland, England | Osbaldistone Hall manor in Rob Roy | 109,142 | SDQ | Created 2026-06-05; camelot terrain; SDQ collision (Crones' Domain)→OBH for cycle 1 |
+| GLA | Glasgow — The Gallowgate Counting-House | Glasgow, Scotland | Glasgow in Rob Roy (Bailie Jarvie city) | 93,143 | SDQ | Created 2026-06-05; city terrain; cycles 1/3/7 Glasgow scenes |
+| ABF | Aberfoyle — Highland Gateway Inn | Aberfoyle, Scotland | Clachan of Aberfoyle in Rob Roy | 91,142 | SDQ | Created 2026-06-05; highlands terrain; cycles 3/4/7 Aberfoyle scenes |
+| GLN | MacGregor Glen — Rob Roy Highland Shelter | Highland Perthshire (legendary) | Rob Roy's highland shelter | 89,141 | SDQ | Created 2026-06-05; highlands terrain; cycles 2/4 glen scenes |
+| LLM | Loch Lomond — The Shore at Dawn | Loch Lomond, Scotland | Loch Lomond execution scene in Rob Roy | 93,145 | SDQ | Created 2026-06-05; freshwater_lake terrain; cycles 2/6 loch scenes |
+| EDI | Edinburgh — The Royal Mile | Edinburgh, Scotland | Edinburgh tribunal scenes in Rob Roy | 96,148 | SDQ | Created 2026-06-05; city terrain; cycles 4/6 Edinburgh scenes |
+
+---
+
 ## Code Collision Register
 
 Codes that were planned but found already occupied by existing game nodes:
@@ -161,3 +174,4 @@ Codes that were planned but found already occupied by existing game nodes:
 | GCI | Toilers of the Sea starting node | "The Intercept — Three Miles Out" (merchant ship near Tilbury) | Used STP (St. Peter Port, Guernsey) instead |
 | INV | Ossian starting node | "Loch of the Drowned King" (epic battleground) | Used CNA (Vale of Cona) instead |
 | BHD | Cuchulain starting node | "Camelot — Arthurian Road" (Arthurian game node) | Used EMR (Emain Macha) instead |
+| SDQ | Rob Roy starting node | "The Crones' Domain" (hag_swamp game node) | Used OBH (Osbaldistone Hall) instead |
