@@ -435,4 +435,113 @@ The **⚙ API** tab exposes the same operations in the UI:
 | GET by display name failed for nodes | `_findKey` searched `name`+`title` only — nodes use `label` for display | Added `label` to the search order: `label → name → title` |
 
 ---
+
+## Appendix A — NPC Speak Endpoint (`§NPC-SPEAK-01/02`)
+
+### What it does
+
+`GET /api/npc/{id}/speak` returns a voiced NPC response. Currently a **stub** — replays existing seed dialogue verbatim and labels itself `FEATURE INCOMPLETE — NEED TO SETUP SAFE SEEDS`. The full Claude-voiced implementation is wired and waiting for an API key.
+
+```bash
+# CLI
+./api.sh speak yael "Good afternoon" --state friendly
+./api.sh speak brynn "What's good today" --state neutral
+
+# curl
+curl "http://localhost:1367/api/npc/yael/speak?state=friendly&prompt=Good+afternoon"
+```
+
+**States:** `neutral` · `friendly` · `dearFriend`  
+**Model override:** `--model claude-sonnet-4-6` (default: `claude-haiku-4-5-20251001`)
+
+---
+
+### How to activate the full Claude response
+
+**Step 1 — Get an API key**
+
+1. Go to **`https://console.anthropic.com`**
+2. Sign in (or create a free account — starts with $5 credit)
+3. Click **API Keys** in the left sidebar
+4. Click **Create Key** → give it a name (e.g. `roll2hit-local`)
+5. Copy the key — it starts with `sk-ant-api03-...`
+6. **Save it somewhere safe immediately** — you cannot view it again after closing the modal
+
+**Step 2 — Paste it into `.env`**
+
+Open `roll2hit.com/.env` in any text editor:
+
+```
+ANTHROPIC_API_KEY=sk-ant-api03-PASTE-YOUR-KEY-HERE
+```
+
+Replace `sk-ant-api03-PASTE-YOUR-KEY-HERE` with your actual key. Save the file.
+
+**Step 3 — Restart the server**
+
+```bash
+./wbapi-toggle.sh restart
+```
+
+The toggle script reads `.env` automatically on start and exports the key into the server process. The placeholder value is detected and skipped — nothing breaks if the file is unchanged.
+
+**Step 4 — Test it**
+
+```bash
+./api.sh speak yael "Good afternoon" --state friendly
+```
+
+If it works, you'll get an original voiced response instead of the seed replay, and the `status` field in the JSON will be gone.
+
+---
+
+### Where to find a lost key
+
+If you lose track of which key is active:
+
+- **Console:** `https://console.anthropic.com` → API Keys — shows all keys by name, created date, last used
+- **Your `.env` file:** `cat roll2hit.com/.env` — the key is stored there after you paste it
+- **Keychain option (more secure):** Store once, retrieve forever:
+
+```bash
+# Store (do this once):
+security add-generic-password -s "anthropic-api-key" -a "$USER" -w "sk-ant-api03-..."
+
+# Retrieve (to verify or repaste into .env):
+security find-generic-password -s "anthropic-api-key" -w
+```
+
+If a key is compromised or lost: go to the console, **revoke it**, create a new one, update `.env`.
+
+---
+
+### What the Claude SDK enables (once key is set)
+
+| Feature | What it means for NPC speak |
+|---------|----------------------------|
+| **Prompt caching** | NPC system prompt cached 5 min — repeated calls cost ~10% of first call |
+| **Streaming** | `client.messages.stream()` — tokens arrive word by word (typewriter UI effect) |
+| **Tool use** | Force structured JSON output: `{ "line": "...", "mood": "guarded" }` |
+| **Message Batches** | Pre-generate all 152 NPC greetings in one batch at 50% discount |
+| **Models** | Haiku (fast/cheap, default) · Sonnet (balanced) · Opus (highest quality) |
+
+**Cost estimate at Haiku rates:**  
+~250 token system prompt + ~60 token reply per call.  
+First call (cache write): ~0.02¢ · Repeat calls (cache hit): ~0.002¢  
+10,000 NPC greetings ≈ $0.20
+
+---
+
+### Safe seeds — what needs to be designed before full activation
+
+The stub replies with seed data because the seeds ARE the voice right now. Before enabling the full Claude response, the seed data needs to become **few-shot examples** in the system prompt — not the reply itself. Outstanding design questions:
+
+- How many seed lines are enough to lock the register? (3 examples seems sufficient for Haiku)
+- Should Claude be blocked from inventing lore not in the NPC's node/quest data?
+- What happens at `dearFriend` state where the NPC knows the player's name — does the prompt need game state passed in?
+- Tone guard: the game's noir register is specific — need a system prompt rule that rejects stage directions and asterisks
+
+None of these are blockers for testing. They are blockers for shipping to players.
+
+---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
