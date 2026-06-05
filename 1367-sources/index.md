@@ -196,6 +196,7 @@ Codes that were planned but found already occupied by existing game nodes:
 | FCO | Piers Plowman quest prefix | FCO already used by Aeneid (Virgil) quest IDs | Used PLW prefix for quest IDs instead |
 | GDN | Njal's Saga starting node | "Danzig — Grain Port" (docks game node) | No node collision for cycle 1 — cycle 1 activates at SWF (Swinefell); quest prefix gdn_ unaffected |
 | BOO | Prose Edda starting node | "Yugurt Lake — Steppe Shore" (steppe_lake game node) | No node collision — cycle 1 activates at ASG (Ásgarðr); quest prefix boo_ unaffected |
+| ALF | Kalevala starting node | "North Shore Path" (lake_north game node) | No node collision — cycle 1 activates at TUO (Tuonela boundary shore); quest prefix alf_ unaffected |
 
 ---
 
@@ -206,3 +207,13 @@ Codes that were planned but found already occupied by existing game nodes:
 | ASG | Ásgarðr — Frigg's Hall | Norse Mythology realm | Odin's citadel; Baldr mourned here; primary hub for cycles 1/3–7 | 78,112 | BOO | Created 2026-06-05; camelot terrain; acts at ASG across cycles 1/3/4/5/6/7 |
 | THK | Þökk's Cave — The One Who Would Not Weep | Norse wilderness | The giantess Þökk who refused to weep for Baldr | 80,108 | BOO | Created 2026-06-05; ruins terrain; cycle 1 act 4 destination |
 | HNJ | Hnitbjörg — Suttungr's Mountain Vault | Norse highlands | Suttungr's mountain where the Mead of Poetry is kept | 82,110 | BOO | Created 2026-06-05; highlands terrain; cycle 2 (mead-theft all 5 acts) |
+
+---
+
+## Kalevala (ALF) Nodes
+
+| Code | Label | Location | Source | Coords (r,c) | Book | Notes |
+|------|-------|----------|--------|--------------|------|-------|
+| TUO | Tuonela — The Boundary Shore | Finnish underworld edge | Black water, reed-banks; the edge a living person can stand at but not cross; primary hub for cycles 1/3–7 | 84,116 | ALF | Created 2026-06-05; ruins terrain; all five acts of cycle 1 here; activateNode for cycles 3–7 |
+| KVF | Kullervo's Forest — The Pine Clearing | Finnish forest | A clearing where a man made his final arrangements; the sword stood upright; cycle 2 acts 1–3 | 80,114 | ALF | Created 2026-06-05; highlands terrain; cycle 2 departure point |
+| KVM | The Master's Hall — Kullervo's People | Finnish settlement | Kullervo's master's hall; a fire, a steward at the gate; cycle 2 acts 4–5 | 82,116 | ALF | Created 2026-06-05; camelot terrain; cycle 2 arrival and delivery point |

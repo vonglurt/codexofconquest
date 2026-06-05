@@ -265,6 +265,7 @@ say "Next: {BOOK} {next_cycle} — {quest title}." &
 | PLW  | Piers Plowman (Langland)      | 0           | 0               | 0               | DONE 2026-06-05 — 35 acts imported; MGF node created; FCO collision (Aeneid)→PLW quest prefix; RME→ROM |
 | GDN  | Njal's Saga (Anon, 13th c.)   | 0           | 0               | 0               | DONE 2026-06-05 — 35 acts imported; IGH/SWF/ISL nodes created; GDN collision (Danzig)→quest prefix only |
 | BOO  | Prose Edda (Snorri, c.1220)   | 0           | 0               | 0               | DONE 2026-06-05 — 35 acts imported; ASG/THK/HNJ nodes created; BOO collision (Yugurt Lake)→quest prefix only |
+| ALF  | Kalevala (Lönnrot, 1849)      | 0           | 0               | 0               | DONE 2026-06-05 — 35 acts imported; TUO/KVF/KVM nodes created; ALF collision (North Shore Path)→quest prefix only |
 | GAME | Legacy game quests (quest_*, trap_*) | ~346 | ~170           | ~140            | SEPARATE — see §GAME |
 | BGW  | Arabian Nights (Burton tr.)   | 0           | 0               | 0               | DONE 2026-06-03     |
 | CAI  | Arabian Nights (Lang)         | 0           | 0               | 0               | DONE 2026-06-03     |

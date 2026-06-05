@@ -307,7 +307,7 @@ All files under 60 KB in 1367-sources/. Each to receive full pipeline: read → 
 | HFT | Frithiof's Saga — Esaias Tegnér | 51 | **SEEDS COMPLETE 2026-06-03 — HFT-01–07 all vignettes done. No new nodes needed. See HFT-frithiof-saga.md.** |
 | ERF | Grimm's Fairy Tales — Brothers Grimm | 52 | **SEEDS COMPLETE 2026-06-03 — ERF-01–07 all vignettes done. No new nodes needed. See ERF-grimm-fairy-tales.md.** |
 | VIE | Faust — Johann Wolfgang von Goethe | 52 | **SEEDS COMPLETE 2026-06-03 — VIE-01–07 all vignettes done. No new nodes needed. See VIE-faust.md.** |
-| ALF | Kalevala — Elias Lönnrot | 52 | **SEEDS COMPLETE 2026-06-03 — ALF-01–07 all vignettes done. KVF/KVM in Location Grid. See ALF-kalevala.md.** |
+| ALF | Kalevala — Elias Lönnrot | 52 | **IMPORTED — 2026-06-05 — TUO/KVF/KVM new nodes (Tuonela shore/Kullervo's forest/Master's hall); alf_01–07 (7 cycles, 35 acts); questComplete on alf_07_act5; ALF collision (North Shore Path)→quest prefix only** |
 | KSU | Heimskringla — Snorri Sturluson | 53 | **SEEDS COMPLETE 2026-06-03 — KSU-01–07 all vignettes done. No new nodes. See KSU-heimskringla.md.** |
 | RKV | Poetic Edda — Anon | 53 | **SEEDS COMPLETE 2026-06-03 — RKV-01–07 all vignettes done. AEG/RSS in Location Grid. See RKV-poetic-edda.md.** |
 | BOO | Prose Edda — Snorri Sturluson | 53 | **IMPORTED — 2026-06-05 — ASG/THK/HNJ new nodes (Ásgarðr/Þökk's Cave/Hnitbjörg); boo_01–07 (7 cycles, 35 acts); questComplete on boo_07_act5; BOO node collision (Yugurt Lake)→quest prefix only** |
@@ -912,6 +912,7 @@ This procedure runs once per vignette act (one quest at a time). Complete all 8 
 | 88 | SDQ | Rob Roy (Scott) | OBH new node (Osbaldistone Hall, r:109 c:142, camelot); GLA new node (Glasgow, r:93 c:143, city); ABF new node (Aberfoyle, r:91 c:142, highlands); GLN new node (MacGregor Glen, r:89 c:141, highlands); LLM new node (Loch Lomond, r:93 c:145, freshwater_lake); EDI new node (Edinburgh, r:96 c:148, city); LON/WM existing; SDQ-01–07 (7 cycles, 35 acts); questComplete on SDQ-07 act5; SDQ collision (Crones' Domain)→OBH; PUT /api/node/{code} terrain key fix applied | IMPORTED — 2026-06-05 |
 | 90 | GDN | Njal's Saga (Anon, Dasent) | IGH new node (Ingolf's Head Iceland coast, r:82 c:108, beach); SWF new node (Swinefell Flosi's hall, r:84 c:110, camelot); ISL new node (Althing Ground Iceland, r:86 c:112, highlands); HHL/BK/VS/HEO/CON/WM existing; gdn_01–07 (7 cycles, 35 acts); questComplete on gdn_07_act5; GDN node collision (Danzig Grain Port)→quest prefix only (no node created) | IMPORTED — 2026-06-05 |
 | 91 | BOO | Prose Edda (Snorri, c.1220) | ASG new node (Ásgarðr Frigg's Hall, r:78 c:112, camelot); THK new node (Þökk's Cave, r:80 c:108, ruins); HNJ new node (Hnitbjörg, r:82 c:110, highlands); BK/VEN/CON/ROM/LDN/WM existing; boo_01–07 (7 cycles, 35 acts); questComplete on boo_07_act5; BOO node collision (Yugurt Lake)→quest prefix only (no node created) | IMPORTED — 2026-06-05 |
+| 92 | ALF | Kalevala (Lönnrot, 1849) | TUO new node (Tuonela boundary shore, r:84 c:116, ruins); KVF new node (Kullervo's forest clearing, r:80 c:114, highlands); KVM new node (Master's hall, r:82 c:116, camelot); BK/CON/ROM/LDN/WM existing; alf_01–07 (7 cycles, 35 acts); questComplete on alf_07_act5; ALF collision (North Shore Path)→quest prefix only | IMPORTED — 2026-06-05 |
 
 ---
 
