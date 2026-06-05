@@ -1,6 +1,6 @@
 # SHK — Complete Works of William Shakespeare
 
-**Source:** Parts 1–16 read. Parts 17–28 pending. | **Progress:** Cycles 1–8 complete. Cycle 9 due after Part 18.
+**Source:** Parts 1–18 read. Parts 19–28 pending. | **Progress:** Cycles 1–9 complete. Cycle 10 due after Part 20.
 **Gutenberg:** #100 — Complete Works (Shakespeare)
 **Period:** c.1590–1613 | Drama, Poetry, Sonnets
 **Part 1 contains:** The Sonnets (all 154) + All's Well That Ends Well Act I (begins)
@@ -1750,4 +1750,114 @@ questComplete: true
 
 ```
 SHK | The Identical Letter | Cycle 8 | BK/VBY/NUE | Duplicated singular address — form letters in the language of uniqueness, harm released by recipient comparison
+```
+
+---
+
+## Part 17 Coverage
+
+*A Midsummer Night's Dream complete + Much Ado About Nothing complete + Othello begins*
+
+Part 17 concludes A Midsummer Night's Dream: Puck applies the love juice to Lysander by mistake (he has the wrong Athenian), the four lovers scramble in the forest in mutual misery, Bottom has an ass's head and Titania adores him, Oberon restores Titania and the lovers, and the play's great statement arrives — "The lunatic, the lover, and the poet / Are of imagination all compact" — before the fairy blessing of the marriage beds and Puck's final apology. Much Ado About Nothing follows complete: Beatrice and Benedick maintain their "merry war" of wit, Claudio falls for Hero, Don John's malice plants the idea that Hero is unchaste; Claudio publicly shames Hero at the altar ("She's but the sign and semblance of her honour"), Hero faints and her family stages her death; Dogberry's bumbling Watch accidentally catch Don John's accomplices and extract the truth; and Beatrice's "Kill Claudio" — her furious demand that Benedick act on what he claims to feel — is the play's sharpest moment, love as a test of moral commitment. Part 17 then opens Othello: Iago's "I am not what I am," Brabantio's accusation before the Venetian Senate, and Othello's speech about how he won Desdemona — "She loved me for the dangers I had passed, / And I loved her that she did pity them" — a marriage of story and attention that Iago will destroy by substituting a story of betrayal.
+
+---
+
+## Part 18 Coverage
+
+*Othello complete + Pericles Act I–II begins*
+
+Part 18 completes Othello: Iago plants Desdemona's handkerchief — a strawberry-embroidered gift from Othello's mother — on Cassio, and Othello sees it in Bianca's hands and takes it as proof; Desdemona sings the willow song on the night she will be killed ("Sing all a green willow must be my garland"); Othello smothers her while she maintains her innocence; Emilia reveals the handkerchief's true path and exposes Iago; Iago kills Emilia and is captured; and Othello speaks his own epitaph before killing himself — "Of one that loved not wisely but too well; / Of one not easily jealous, but, being wrought, / Perplexed in the extreme" — his final accuracy about himself arriving too late to save anyone. Pericles then opens: the Prince of Tyre solves the incest riddle of Antiochus (correctly, with fatal knowledge), flees Antioch knowing the king will pursue him, wanders the Mediterranean distributing grain to starving Tarsus, is shipwrecked on Pentapolis, wins the tournament for Thaisa's hand in armor recovered from the sea, and Part 18 ends with the marriage of Pericles and Thaisa and Pericles learning his father is dead — a romance that moves through loss and restoration rather than through conflict.
+
+---
+
+## Cycle 9 — The Handkerchief
+
+*Parts 17–18 | Plays: A Midsummer Night's Dream + Much Ado + Othello*
+
+*Before beginning: Themes avoided — identical letter (Cycle 8), duplicated address, proximity contamination (Cycle 7), self-authored ruin (Cycle 6). This cycle centers on a new mode: the object whose meaning changed at every hand that held it — a token that passed through a chain of misreadings, where each new holder reinterpreted its significance without knowing what the previous holder thought it meant.*
+
+**Theme this cycle introduces:** *The object whose meaning accumulated through misreading — a token passed from hand to hand, each holder attributing a different significance, none of which the object itself carries or confirms.*
+
+**TOKEN**: A handkerchief with embroidered strawberry pattern — Venetian needlework, mid-15th century, authenticated as a gift object. It has passed through at least four recorded hands: a woman who received it as a love token, a servant who found it on the floor, a man who used it as evidence of betrayal, and a soldier who had no idea why it mattered. Each transaction changed its meaning. The archive has the handkerchief but no agreement on what it is.
+
+---
+
+### Act I — Birka
+```yaml
+activateNode: BK
+type: skill_check
+scene: "Egil Thorvaldsen has a handkerchief — strawberry embroidery, Venetian
+  silk, fine work — acquired from a Genoese contact who acquired it from Venice.
+  The provenance note says: gift, evidence, prop, nothing. Four words, four
+  different hands. He wants one word: what is it now?"
+prompt: "Persuasion DC 13. Convince Egil that the one-word answer is impossible
+  without tracing the chain — but that the chain itself is the document. Ask
+  him to let you trace each hand in sequence. Offer to return a written account
+  of each holder's interpretation."
+failText: "He wants the short answer first. Give him one: it is a record of
+  what four people believed about the same object. A history of misreading.
+  Then ask him to let you trace it."
+successText: "He lets you examine it and take the provenance note. You receive
+  the Strawberry Handkerchief and its provenance record."
+grantItem: "Strawberry Handkerchief"
+checkPassFlag: handkerchiefSecured
+activateMissionBit: shk9_act1Active
+```
+
+### Act II — Visby
+```yaml
+activateNode: VBY
+type: skill_check
+scene: "Marta at the Visby archive has a category for objects with disputed
+  provenance — but this object's provenance is not disputed, it is layered.
+  Each holder knew exactly how they acquired it. The meaning changed, not the
+  chain. She says: that is not a provenance problem, that is a semiotic one.
+  She wants to know if the archive can hold an object whose meaning is not fixed."
+prompt: "Investigation DC 14. Establish that the object's physical integrity
+  is fixed — it is the same handkerchief throughout — but its documentary
+  significance has been redefined at each transfer. Propose that the archive
+  holds the object under the provenance record, not under any single
+  interpretation. The record is the artifact."
+failText: "She says the record is a description, not an artifact. Ask her: then
+  what is the handkerchief without the record? Each interpretation is part of
+  the object's history. The record is inseparable from the cloth."
+successText: "She logs it: object with layered semiotic history, each transfer
+  redefining documentary significance. You receive Marta's Chain Interpretation."
+grantItem: "Marta's Chain Interpretation"
+checkPassFlag: chainInterpreted
+activateMissionBit: shk9_act2Active
+```
+
+### Act III — Nuremberg
+```yaml
+activateNode: NUE
+type: skill_check
+scene: "Ulrich von Gessert handles the handkerchief with two fingers. He reads
+  the provenance: gift, evidence, prop, nothing. He says: these four words are
+  not descriptions of the object. They are descriptions of what four people
+  needed the object to be. He wants one category that covers all four."
+prompt: "Investigation DC 12. Propose: The Object of Projected Need — tokens
+  whose documented meaning at each stage reflects the holder's need rather
+  than the object's intrinsic properties; the provenance chain is a record of
+  projected meanings, not of the object itself."
+failText: "Too abstract. He wants something that names what the object did,
+  not what the holders felt. Try: The Meaning-Bearing Vessel — an object
+  that accumulated and transmitted meaning through use rather than intrinsic
+  properties, where the accumulation is itself the archive."
+successText: "He stamps it. Logged: meaning-bearing vessel, meaning accumulated
+  through chain of misreading, provenance record is primary artifact.
+  You receive Ulrich's Eighth Receipt. Quest complete."
+takeItem: "Strawberry Handkerchief"
+takeItem: "Marta's Chain Interpretation"
+grantItem: "Ulrich's Eighth Receipt"
+checkPassFlag: handkerchiefLogged
+questComplete: true
+```
+
+---
+
+## Quest Map Entry — Cycle 9
+
+```
+SHK | The Handkerchief | Cycle 9 | BK/VBY/NUE | Object whose meaning accumulated through chain of misreading — meaning-bearing vessel
 ```
