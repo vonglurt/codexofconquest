@@ -52,7 +52,8 @@ const GAME_FILE = process.env.ROLL2HIT_FILE
 const PLACEHOLDER_NODES = new Set(['QUEST','TBD','TODO','UNKNOWN','NONE','XXX','PLACEHOLDER']);
 
 // ── Logging ──────────────────────────────────────────────────────────────────
-const LOG_FILE = path.join(__dirname, 'milepoints', 'wbapi-server.log');
+const LOG_FILE       = path.join(__dirname, 'milepoints', 'wbapi-server.log');
+const SPEAK_LOG_FILE = path.join(__dirname, 'milepoints', 'npc-speak.log');
 const logStream = fs.createWriteStream(LOG_FILE, { flags: 'a' });
 
 const C = {
@@ -4703,22 +4704,29 @@ async function route(req, res) {
       }
 
       // ── Claude voiced response ──────────────────────────────────────────────
+      const nodeData   = WBAPI.nodeMap[npc.node] || {};
+      const nodeLabel  = nodeData.label || npc.node || 'unknown location';
+      const nodeDesc   = nodeData.text  || '';
+
       const stateLines = ['neutral','friendly','dearFriend']
         .filter(s => npc[s])
         .map(s => {
           const d = npc[s];
-          return [`  ${s} greeting: ${d.greeting||''}`, `  ${s} dialogue: ${d.dialogue||''}`].join('\n');
+          const lines = [];
+          if (d.greeting) lines.push(`  ${s} greeting: ${d.greeting}`);
+          if (d.dialogue) lines.push(`  ${s} dialogue: ${d.dialogue}`);
+          return lines.join('\n');
         }).join('\n');
 
-      const nodeLabel  = WBAPI.nodeMap[npc.node]?.label || npc.node || 'unknown location';
       const systemText =
         `You are ${npc.name}, ${npc.occupation || 'a character'} at ${nodeLabel}.\n\n` +
-        `Voice examples:\n${stateLines}\n\n` +
-        `Current relationship state: ${state}.\n` +
-        `Respond in one to three sentences. Match the register of the ${state} examples exactly — ` +
+        (nodeDesc ? `Location — ${nodeLabel}:\n${nodeDesc}\n\n` : '') +
+        `Voice examples across relationship states:\n${stateLines}\n\n` +
+        `Current relationship state with this player: ${state}.\n` +
+        `Respond in one short paragraph or less. Match the register of the ${state} examples exactly — ` +
         `same rhythm, same level of disclosure, same vocabulary. No stage directions. No asterisks.`;
 
-      logRow('npc',    `${npc.name}  ·  state: ${state}  ·  model: ${model}`);
+      logRow('npc',    `${npc.name}  ·  state: ${state}  ·  node: ${nodeLabel}  ·  model: ${model}`);
       logRow('prompt', prompt);
 
       try {
@@ -4732,11 +4740,28 @@ async function route(req, res) {
 
         const reply = msg.content?.[0]?.text || '';
         const usage = msg.usage || {};
+
+        // ── Verbose speak log — every Claude response dated and full ───────
+        const ts     = new Date().toISOString().replace('T', ' ').slice(0, 23);
+        const divider = '─'.repeat(72);
+        const logEntry = [
+          `\n${divider}`,
+          `[${ts}]  NPC: ${key} (${npc.name})  |  node: ${npc.node} (${nodeLabel})`,
+          `         state: ${state}  |  model: ${model}`,
+          `SYSTEM PROMPT:\n${systemText}`,
+          `PROMPT: ${prompt}`,
+          `REPLY:\n${reply}`,
+          `TOKENS: input:${usage.input_tokens} output:${usage.output_tokens} cache_read:${usage.cache_read_input_tokens||0} cache_write:${usage.cache_creation_input_tokens||0}`,
+          divider,
+        ].join('\n');
+        fs.appendFileSync(SPEAK_LOG_FILE, logEntry + '\n');
+
         logRow('reply',  reply.slice(0, 100) + (reply.length > 100 ? '…' : ''));
         logRow('tokens', `in:${usage.input_tokens} out:${usage.output_tokens} cache_read:${usage.cache_read_input_tokens||0} cache_write:${usage.cache_creation_input_tokens||0}`);
-        logResponse(method, url.pathname, 200, `${npc.name} spoke`);
+        logResponse(method, url.pathname, 200, `${npc.name} spoke  [logged → npc-speak.log]`);
         return json(res, 200, {
           npc: key, name: npc.name, state, prompt, reply, model,
+          location: { code: npc.node, label: nodeLabel },
           usage: {
             input:      usage.input_tokens,
             output:     usage.output_tokens,

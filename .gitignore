@@ -66,6 +66,7 @@ milepoints/patches/_base.html.gz
 # ── Server logs ───────────────────────────────────────────────────────────────
 milepoints/wbapi-server.log
 milepoints/wbapi-server*.log
+milepoints/npc-speak.log
 milepoints/say.lock
 
 # ── Timestamped HTML snapshots (session-level, not milestones) ───────────────
