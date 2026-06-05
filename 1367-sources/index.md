@@ -202,6 +202,7 @@ Codes that were planned but found already occupied by existing game nodes:
 | VIE | Faust (Goethe) starting node | Vienna — The Imperial City (existing) | VIE exists; MGR/DKN/CLK created as new nodes; cycles 3–7 activate at VIE |
 | ERF | Grimm's Fairy Tales starting node | Grimm Archive — German Collection City (existing) | ERF exists; ANT existed; STB/GLD/CI/DNG/CHC/PRH created; cycle 1→STB hub; cycle 2→DNG hub; cycles 3–7→ERF hub |
 | HFT | Frithiof's Saga starting node | "South Shore — The Fishermen's Village" (lake_south game node) | HFT collision — cycle 1 activates at ALR; cycle 2 at RNG; cycles 3–7 at BLG (Balder's Grove); quest prefix hft_ unaffected |
+| RKV | Poetic Edda starting node | "Frost Warden's Throne" (game node) | RKV collision — cycle 1 activates at VLH (Völva's Heath); cycle 2 at AEG (Ægir's Hall)/ASG/RSS; cycles 3–7 at AEG hub; quest prefix rkv_ unaffected |
 
 ---
 
@@ -271,3 +272,11 @@ Codes that were planned but found already occupied by existing game nodes:
 | BLG | Balder's Grove — The Altar Foundation | Sognefjord sacred enclosure | The stone foundation where Balder's sacred flame once burned; Frithiof broke it in grief's extremity; he is rebuilding it; fjord visible from the grove edge; hub for cycles 3–7 (HFT collision) | 104,130 | HFT | Created 2026-06-05; highlands terrain; cycle 1 acts 4–5; hub for cycles 3–7 |
 | RNG | Ring's Private Chamber — The Low Fire | Ring's hall, Sognefjord district | King Ring propped on pillows; entirely lucid, clearly dying; sent for the Fighter specifically; four sentences to carry exactly; signet ring as seal; chamberlain outside the door | 106,128 | HFT | Created 2026-06-05; camelot terrain; cycle 2 acts 1–4 |
 | ING | Ingeborg's Chamber — The Morning Window | Ring's hall, Sognefjord district | Morning light, a writing board, a window to the courtyard; she has been waiting since early morning; she reads the face before hearing the words; she waits for the four sentences | 106,130 | HFT | Created 2026-06-05; camelot terrain; cycle 2 act 5 finale (ring delivered) |
+
+## Poetic Edda (RKV) Nodes
+
+| Code | Label | Location | Source | Coords (r,c) | Book | Notes |
+|------|-------|----------|--------|--------------|------|-------|
+| VLH | Völva's Heath — The Empty Ground | Northern Norse heath | The flat heath where the seeress was called up to speak Völuspá to Odin; grass pressed flat in a rough circle; two plain gold rings lying cold in the bent grass; quality of air after something large has been said | 108,128 | RKV | Created 2026-06-05; highlands terrain; cycle 1 hub (all 5 acts) |
+| AEG | Ægir's Feast Hall — The Flyting End | Divine feast hall of the sea-giant | Where Loki returned after ejection to say everything he had saved about every god; torches burning low; ravens near the ceiling; a rune-chip half-under a bench at the threshold; hub for cycles 2–7 (RKV collision) | 108,130 | RKV | Created 2026-06-05; camelot terrain; cycle 2 acts 1–2; hub for cycles 3–7 |
+| RSS | The Standing Stone — The Archive Road | Road's edge outside Ásgarðr | Carved with marks older than the current rune-system; at its base: things too dangerous to keep, things too true to destroy; receives what is carried here from Ásgarðr's gate a quarter-mile back | 108,132 | RKV | Created 2026-06-05; ruins terrain; cycle 2 acts 4–5 |

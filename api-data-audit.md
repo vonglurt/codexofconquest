@@ -271,6 +271,7 @@ say "Next: {BOOK} {next_cycle} — {quest title}." &
 | VIE  | Faust (Goethe, 1808)           | 0          | 0               | 0               | DONE 2026-06-05 — 35 acts imported; MGR/DKN/CLK nodes created; VIE existed; RME→ROM |
 | ERF  | Grimm's Fairy Tales (Brothers Grimm, 1812) | 0 | 0           | 0               | DONE 2026-06-05 — 35 acts imported; STB/GLD/CI/DNG/CHC/PRH new + ANT/ERF existed; cycle 1→CI; cycle 2→PRH; cycles 3–7→ERF hub; RME→ROM |
 | HFT  | Frithiof's Saga (Tegnér, 1825) | 0           | 0               | 0               | DONE 2026-06-05 — 35 acts imported; ALR/BLG/RNG/ING new + HEO existed (Lejre); HFT collision (South Shore)→BLG hub cycles 3–7; cycle 1→ALR/BK/BLG; cycle 2→RNG/ING |
+| RKV  | Poetic Edda (Anon, ~10th–13th C) | 0          | 0               | 0               | DONE 2026-06-05 — 35 acts imported; VLH/AEG/RSS new nodes; RKV collision (Frost Warden's Throne)→AEG hub cycles 3–7; cycle 1→VLH; cycle 2→AEG/ASG/RSS |
 | GAME | Legacy game quests (quest_*, trap_*) | ~346 | ~170           | ~140            | SEPARATE — see §GAME |
 | BGW  | Arabian Nights (Burton tr.)   | 0           | 0               | 0               | DONE 2026-06-03     |
 | CAI  | Arabian Nights (Lang)         | 0           | 0               | 0               | DONE 2026-06-03     |
