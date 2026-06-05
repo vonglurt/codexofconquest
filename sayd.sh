@@ -27,6 +27,7 @@ MAX_IDLE=34   # polls before exit: 34 × 0.3s ≈ 10s of silence
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 QUEUE_DIR="$ROOT/milepoints/say.queue.d"
 PID_FILE="$ROOT/milepoints/sayd.pid"
+LOCK_FILE="$ROOT/milepoints/say.lock"
 
 mkdir -p "$QUEUE_DIR"
 printf '%d\n' $$ > "$PID_FILE"
@@ -43,7 +44,7 @@ while true; do
         if mv "$FILE" "$WORK" 2>/dev/null; then
             TEXT=$(cat "$WORK")
             rm -f "$WORK"
-            [[ -n "$TEXT" ]] && say -v "$VOICE" -r "$RATE" "$TEXT"
+            [[ -n "$TEXT" ]] && flock "$LOCK_FILE" say -v "$VOICE" -r "$RATE" "$TEXT"
         fi
     else
         sleep 0.3

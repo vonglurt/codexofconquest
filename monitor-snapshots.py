@@ -21,6 +21,7 @@ Replaces watch-snapshots.sh — don't run both at once.
 """
 
 import curses
+import fcntl
 import gzip
 import os
 import subprocess
@@ -29,13 +30,15 @@ import threading
 import time
 from pathlib import Path
 
-_say_lock = threading.Lock()
-_say_proc = None
+_say_proc_lock = threading.Lock()   # guards _say_proc and _say_generation
+_say_proc      = None
+_say_generation = 0                 # incremented on each new _say() / _stop_say()
 
 ROOT        = Path(__file__).resolve().parent
 PATCHES_DIR = ROOT / "milepoints" / "patches"
 SAY_LOG     = ROOT / "milepoints" / "say.log"
 SERVER_LOG  = ROOT / "milepoints" / "wbapi-server.log"
+SAY_LOCK_FILE = ROOT / "milepoints" / "say.lock"  # shared with sayd.sh
 LAST_HTML   = PATCHES_DIR / "_last.html"
 LAST_NAME_F = PATCHES_DIR / "_last.name"
 GLOB        = "roll2hit-v3-????????-??????.html"
@@ -91,15 +94,38 @@ def unified_diff(prev_text, prev_label, new_path, new_label, context=2):
 # ── text-to-speech helpers ───────────────────────────────────────────────────
 
 def _stop_say():
-    global _say_proc
-    with _say_lock:
+    """Kill any in-progress say; cancel any thread waiting for the lock."""
+    global _say_proc, _say_generation
+    with _say_proc_lock:
+        _say_generation += 1
         if _say_proc and _say_proc.poll() is None:
             _say_proc.terminate()
         _say_proc = None
 
+def _say_worker(filtered, gen):
+    """Wait for the cross-process voice lock, then speak (unless superseded)."""
+    global _say_proc
+    proc = None
+    SAY_LOCK_FILE.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        with open(SAY_LOCK_FILE, "w") as lf:
+            fcntl.flock(lf, fcntl.LOCK_EX)          # block until sayd.sh is silent
+            with _say_proc_lock:
+                if _say_generation != gen:           # superseded while waiting
+                    return
+                proc = subprocess.Popen(["say", "-v", "Samantha", "-r", "185", filtered])
+                _say_proc = proc
+            proc.wait()                              # hold lock for full utterance
+    except Exception:
+        pass
+    finally:
+        with _say_proc_lock:
+            if _say_proc is proc:
+                _say_proc = None
+
 def _say(line):
     """Strip leading +, filter code symbols via sed, speak with say."""
-    global _say_proc
+    global _say_generation
     text = line.lstrip("+").strip()
     try:
         result = subprocess.run(
@@ -111,9 +137,13 @@ def _say(line):
         filtered = text
     if not filtered:
         return
-    _stop_say()
-    with _say_lock:
-        _say_proc = subprocess.Popen(["say", "-v", "Samantha", "-r", "185", filtered])
+    with _say_proc_lock:
+        _say_generation += 1
+        gen = _say_generation
+        if _say_proc and _say_proc.poll() is None:
+            _say_proc.terminate()
+        _say_proc = None
+    threading.Thread(target=_say_worker, args=(filtered, gen), daemon=True).start()
 
 
 # ── monitor ──────────────────────────────────────────────────────────────────
