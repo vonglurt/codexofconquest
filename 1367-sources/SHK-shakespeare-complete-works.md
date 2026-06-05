@@ -1,6 +1,6 @@
 # SHK — Complete Works of William Shakespeare
 
-**Source:** Parts 1–10 read. Parts 11–28 pending. | **Progress:** Cycles 1–5 complete. Cycle 6 due after Part 12.
+**Source:** Parts 1–12 read. Parts 13–28 pending. | **Progress:** Cycles 1–6 complete. Cycle 7 due after Part 14.
 **Gutenberg:** #100 — Complete Works (Shakespeare)
 **Period:** c.1590–1613 | Drama, Poetry, Sonnets
 **Part 1 contains:** The Sonnets (all 154) + All's Well That Ends Well Act I (begins)
@@ -1417,4 +1417,111 @@ questComplete: true
 SHK | The First Rose | Cycle 5 | BK/VBY/NUE | Inadvertent emblem, token made symbolic before its meaning was understood
 ```
 
-*(Append to quest-map.md)*
+---
+
+## Part 11 Coverage
+
+*Henry VI Part 3 conclusion + Henry VIII complete + King John begins*
+
+Part 11 opens at the close of Henry VI Part 3: Richard murders Henry VI in the Tower with his "I am myself alone" soliloquy — born with teeth, prophesied to bite the world, he states his ethics plainly and exits with the body. The bulk of the part is Henry VIII complete: Wolsey's machinations bring down Buckingham, Henry meets Anne Bullen at Wolsey's feast; Katherine's Blackfriars speech ("I have been to you a true and humble wife, at all times to your will conformable") is the finest speech in the Histories — a woman refusing humiliation with immaculate dignity. Wolsey falls when Henry finds his secret inventory accidentally sent in the packet — his great soliloquy ("Farewell! A long farewell to all my greatness") and "Had I but served my God with half the zeal I served my king" mark the most self-aware destruction of a great man in the whole canon. Katherine dies at Kimbolton with a vision of heavenly spirits, her last words requesting her servants be paid and her body laid with maiden flowers; Anne's coronation follows; and the play ends with Cranmer's prophecy over infant Elizabeth — "a most unspotted lily shall she pass to the ground, and all the world shall mourn her." Part 11 then opens King John: Philip Faulconbridge, natural son of Richard Coeur-de-lion, gives up his inheritance for honour, is knighted Sir Richard Plantagenet by the king, and the siege of Angiers opens as France and England deadlock over Arthur's claim.
+
+---
+
+## Part 12 Coverage
+
+*King John Acts III–V complete + Julius Caesar complete + King Lear Act I begins*
+
+Part 12 opens in Act III of King John: Cardinal Pandulph excommunicates John and forces France to break their marriage alliance with England; Constance's grief over Arthur's capture — "Grief fills the room up of my absent child, / Lies in his bed, walks up and down with me" — is the most sustained representation of maternal loss in the Histories, a woman who has lost everything and says so without softening. Hubert relents from blinding Arthur after the boy's gentle talk extinguishes the heated iron's spirit, but Arthur dies anyway jumping from the castle wall ("O me, my uncle's spirit is in these stones — heaven take my soul and England keep my bones"); John is poisoned by a monk at Swinstead Abbey; and the Bastard closes the play: "This England never did, nor never shall, / Lie at the proud foot of a conqueror." Julius Caesar follows complete: Cassius recruits Brutus through forged letters and a lightning storm, the conspiracy meets in Brutus's orchard with no oath ("the even virtue of our enterprise" needs none), the assassination falls on the Ides of March, Antony's Forum speech turns the mob, and at Philippi Brutus dies on his own sword — "Caesar, now be still: I kill'd not thee with half so good a will" — as Antony pronounces him "the noblest Roman of them all." Part 12 ends with the opening of King Lear: Lear divides his kingdom by love declaration, Cordelia answers "Nothing, my lord" — she will not flatter — is disowned, Kent exiled for defending her, and France takes Cordelia as his queen while Edmund's plot against Edgar has just begun.
+
+---
+
+## Cycle 6 — The Inventory of Wolsey
+
+*Parts 11–12 | Plays: Henry VIII + King John + Julius Caesar*
+
+*Before beginning: Theme chosen to avoid existing threads. "Inadvertent emblem" (Cycle 5), "art intercepted by a rival" (Cycle 1), "grief carried in an object" (existing) already active. This cycle centers on a different mode of object-meaning: the document that reveals more than intended — the record that destroys by being seen.*
+
+**Theme this cycle introduces:** *Objects that caused ruin through accidental revelation — the document, list, or letter seen by the wrong eyes, which ended a career, a life, or a cause precisely because it was read.*
+
+**TOKEN**: Cardinal Wolsey's inventory — a list of plate, treasure, and household goods accidentally sent to Henry VIII instead of to the Pope, which Henry read aloud to Wolsey and then handed back in silence. The document that ended a twenty-year rise with one look. Not forged, not stolen — simply misdirected. "O negligence, / Fit for a fool to fall by! What cross devil / Made me put this main secret in the packet / I sent the King?" It is now a historical curiosity, catalogued and handled at arm's length. Its meaning is in what reading it cost the man who wrote it.
+
+---
+
+### Act I — Birka Counting House
+```yaml
+activateNode: BK
+type: skill_check
+scene: "Egil Thorvaldsen, a Birka wool factor with Hanseatic connections, has
+  a document he acquired from a Hamburg contact — a hand-copied list of English
+  ecclesiastical goods, 1529 style, in Latin. He doesn't read Latin. He thinks
+  it's a property transfer. He wants to know if it has resale value before his
+  contact returns."
+prompt: "Persuasion DC 14. He's suspicious of scholars. Convince him the
+  document needs expert authentication to know its value — you're not buying it,
+  you're establishing what it is. Promise to return it intact and report."
+failText: "He won't let it leave the room. Offer to examine it here, at his
+  table, while he watches. Note the form: inventory format, cardinal's seal
+  impression, English plate nomenclature. Ask if you can copy three lines."
+successText: "He lets you take it to an archivist for the morning. You receive
+  the Inventory Document. Return it by prime."
+grantItem: "Wolsey's Inventory Document"
+checkPassFlag: inventorySecured
+activateMissionBit: shk6_act1Active
+```
+
+### Act II — Visby Hansa Archive
+```yaml
+activateNode: VBY
+type: skill_check
+scene: "Marta, Flemish intake clerk. She cross-references the document against
+  the archive's index of Continental copies of English ecclesiastical records.
+  She finds a matching format class — English cardinal inventories, 1520s, of
+  which three copies are held in Hamburg and Bruges. The format is authentic.
+  She wants to know how you obtained it."
+prompt: "Investigation DC 13. Identify the specific inventory class and confirm
+  this document fits the pattern: a pre-fall Wolsey inventory of moveable
+  goods, compiled for papal negotiation rather than royal accounting. The
+  seal impression style narrows the date to 1527–1529."
+failText: "She can confirm format, not authenticity. Request she note the
+  format class match in her log — not as proof, but as a reference point for
+  the Nuremberg archive to work from."
+successText: "She logs it: English cardinal inventory, format class confirmed,
+  seal impression consistent with 1527-29 production. You receive Marta's
+  Format Note."
+grantItem: "Marta's Format Note"
+checkPassFlag: formatConfirmed
+activateMissionBit: shk6_act2Active
+```
+
+### Act III — Nuremberg Archive, Ulrich von Gessert
+```yaml
+activateNode: NUE
+type: skill_check
+scene: "Ulrich von Gessert reads both documents — the inventory and Marta's
+  note. He says: the list is of a man who had everything. You say: and then
+  it went to the wrong address. He pauses. He says: what category does that
+  belong in?"
+prompt: "Investigation DC 12. Propose the category: Objects That Caused Ruin
+  Through Accidental Revelation — documents, lists, or letters read by the
+  wrong eyes, where the act of reading (not forgery, not theft) was the
+  mechanism of destruction."
+failText: "Too broad — covers all intercepted letters. Narrow it: The
+  Self-Authored Ruin — documents the victim compiled, never intending them
+  as weapons, which became weapons by misdirection."
+successText: "He stamps it. The inventory is logged: self-authored document,
+  misdirected to unintended reader, fatal revelation. You receive Ulrich's
+  Fifth Receipt. Quest complete."
+takeItem: "Wolsey's Inventory Document"
+takeItem: "Marta's Format Note"
+grantItem: "Ulrich's Fifth Receipt"
+checkPassFlag: wolseyInventoryLogged
+questComplete: true
+```
+
+---
+
+## Quest Map Entry — Cycle 6
+
+```
+SHK | The Inventory of Wolsey | Cycle 6 | BK/VBY/NUE | Self-authored document that caused ruin by being read by the wrong eyes
+```
