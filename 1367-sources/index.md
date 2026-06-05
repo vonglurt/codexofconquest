@@ -201,6 +201,7 @@ Codes that were planned but found already occupied by existing game nodes:
 | CDG | Three Musketeers starting node | "The Cat Quarter" (game node) | CDG collision — cycles 3–7 activate at LON (existing London); quest prefix cdg_ unaffected |
 | VIE | Faust (Goethe) starting node | Vienna — The Imperial City (existing) | VIE exists; MGR/DKN/CLK created as new nodes; cycles 3–7 activate at VIE |
 | ERF | Grimm's Fairy Tales starting node | Grimm Archive — German Collection City (existing) | ERF exists; ANT existed; STB/GLD/CI/DNG/CHC/PRH created; cycle 1→STB hub; cycle 2→DNG hub; cycles 3–7→ERF hub |
+| HFT | Frithiof's Saga starting node | "South Shore — The Fishermen's Village" (lake_south game node) | HFT collision — cycle 1 activates at ALR; cycle 2 at RNG; cycles 3–7 at BLG (Balder's Grove); quest prefix hft_ unaffected |
 
 ---
 
@@ -261,3 +262,12 @@ Codes that were planned but found already occupied by existing game nodes:
 | DNG | Faithful John's Restoration Room | Royal castle | The stone servant restored; sealed folio explaining three acts of apparent treason; the prince has thirty seconds to decide | 98,132 | ERF | Created 2026-06-05; camelot terrain; cycle 2 hub (acts 1–2) |
 | CHC | Castle Household Corridor — The Steward's Log | Royal castle | The steward's corridor log for kitchen inventories; name entered in a soup dish so it would stay permanently | 100,132 | ERF | Created 2026-06-05; camelot terrain; cycle 2 acts 3–4 |
 | PRH | Prince's Great Hall — The Thirty Seconds | Royal castle | The prince's decision chamber; the sealed folio delivered; thirty seconds before the corridor fills | 102,133 | ERF | Created 2026-06-05; camelot terrain; cycle 2 act 5 finale (prince's seal) |
+
+## Frithiof's Saga (HFT) Nodes
+
+| Code | Label | Location | Source | Coords (r,c) | Book | Notes |
+|------|-------|----------|--------|--------------|------|-------|
+| ALR | Alrekstaðir Temple — The Continuous Flame | Norse coastal plain | One of the few Norse temples where Balder's sacred fire never went out; an old priest who remembers when there were two fires; the only valid source for the new altar at Sognefjord | 104,128 | HFT | Created 2026-06-05; camelot terrain; cycle 1 acts 1–2 |
+| BLG | Balder's Grove — The Altar Foundation | Sognefjord sacred enclosure | The stone foundation where Balder's sacred flame once burned; Frithiof broke it in grief's extremity; he is rebuilding it; fjord visible from the grove edge; hub for cycles 3–7 (HFT collision) | 104,130 | HFT | Created 2026-06-05; highlands terrain; cycle 1 acts 4–5; hub for cycles 3–7 |
+| RNG | Ring's Private Chamber — The Low Fire | Ring's hall, Sognefjord district | King Ring propped on pillows; entirely lucid, clearly dying; sent for the Fighter specifically; four sentences to carry exactly; signet ring as seal; chamberlain outside the door | 106,128 | HFT | Created 2026-06-05; camelot terrain; cycle 2 acts 1–4 |
+| ING | Ingeborg's Chamber — The Morning Window | Ring's hall, Sognefjord district | Morning light, a writing board, a window to the courtyard; she has been waiting since early morning; she reads the face before hearing the words; she waits for the four sentences | 106,130 | HFT | Created 2026-06-05; camelot terrain; cycle 2 act 5 finale (ring delivered) |
