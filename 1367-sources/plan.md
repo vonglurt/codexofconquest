@@ -275,7 +275,7 @@ Next books to process (in approximate priority order):
 | MLA | Plutarch's Lives | 4222 | **IMPORTED — 2026-06-04 — LMO/THA/NXS new nodes; MLA-01–05/02/04/06/03 (7 cycles, 35 acts); questComplete on MLA-05 (cycle 7); island→islands terrain fix on NXS** |
 | BGW | Arabian Nights (Burton) | 983 | **IMPORTED — 2026-06-04 — KHR new node (Cairo); TUN new node (Tunis); BGW-01–08 (8 cycles, 40 acts); CAI→KHR; WM→NUE; BAG→BGD** |
 | CAI | Arabian Nights (Lang) | 629 | **IMPORTED — 2026-06-04 — ALB/ALP/LAT new nodes (Aleppo Hills/Storytellers'/Latakia); CAI-01–08 (8 cycles, 40 acts); WM→NUE; BAG→BGD** |
-| SHK | Complete Works — Shakespeare | 5318 | **IN PROGRESS — Parts 1–3 read (3/28). Cycle 1: The Rival's Door (BK, Sonnets). Cycle 2: The Chain That Cannot Be Named (ABF/ARF/NUE, As You Like It). New node: ARF (Forest of Arden, forest terrain, r:113 c:143). Parts 4–28 pending.** |
+| SHK | Complete Works — Shakespeare | 5318 | **IN PROGRESS — Parts 1–4 read (4/28). Cycle 1: The Rival's Door (BK, Sonnets). Cycle 2: The Chain That Cannot Be Named (ABF/ARF/NUE, As You Like It). New node: ARF (Forest of Arden, r:113 c:143). Part 4: Comedy of Errors conclusion + Coriolanus complete + Cymbeline begins. Seed: The Unread Treaty. Parts 5–28 pending.** |
 | BEY | Mandeville's Travels | 472 | **SEEDS COMPLETE 2026-06-02 — BEY-01–07 all vignettes done** |
 | KYA | Shah-Nameh | 883 | **SEEDS COMPLETE 2026-06-02 — KYA-01–25 all vignettes done. New nodes: YAZ, KBL, SIS, TBZ, TRB, HRT. See §KYA-CONT.** |
 | HTY | Mahabharata | 83 | **SEEDS COMPLETE 2026-06-02 — HTY-01–06 all vignettes done** |

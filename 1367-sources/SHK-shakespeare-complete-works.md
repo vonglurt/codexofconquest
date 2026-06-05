@@ -64,6 +64,16 @@ The plays — across the 28 parts — divide into four groups:
 
 ---
 
+### Part 4 Coverage
+
+*Comedy of Errors Act V conclusion + Coriolanus (complete) + Cymbeline (begins)*
+
+The Comedy of Errors resolves: Egeon is recognized by the Abbess as his long-lost wife Emilia; both sets of twins (the two Antipholuses and two Dromios) are finally separated and identified; the gold chain confusion unwinds; the family is reunited after thirty-three years. Coriolanus then runs complete: Caius Martius earns the name Coriolanus by taking the city almost alone, stands for consul but cannot submit to showing his wounds to the plebeians with genuine humility, is banished by the tribunes Sicinius and Brutus, and joins his enemy Aufidius against Rome. His mother Volumnia kneels at the gates and turns him back; he makes the treaty knowing it will destroy him ("O mother, mother! What have you done?"). In Antium, Aufidius calls him traitor and then "boy of tears"; Coriolanus shouts his deeds at Corioles — "Alone I did it. 'Boy'!" — and the conspirators kill him. Cymbeline begins at Part 4's close.
+
+*Quest seeds: The Unread Treaty — the sealed document Coriolanus offers the Volscian lords that Aufidius stops from being read before the murder (a treaty guaranteed by the consuls' seal that no one in the room ever saw the contents of). Volumnia's Plea — the words that turned an army at Rome's gates, which a scribe in Coriolanus's tent recorded in shorthand before Volumnia dismissed him.*
+
+---
+
 ## Pass 2 — Slower
 
 **Key named figures (Sonnets):**
