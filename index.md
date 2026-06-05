@@ -397,7 +397,7 @@ say "continue, continue, continue!" &
 # After each PUT in the audit loop:
 say "Fixed quest id. Verified on disk." &
 ```
-`say` always runs in background (`&`) so it never blocks the next step.
+`say` runs blocking (no `&`) — each announcement completes before the next step.
 This rule applies to `api-data-audit.md`, `plan.md §TTS`, and all session loops.
 
 **Source fidelity:** When `1367-sources/{CODE}-*.md` exists, copy `scene:/successText:/failText:` fields verbatim. City names and geographic anchors in quest text must match the city referenced in the source file. The book authored as a 1367-source uses the city name in the title and the plan — those landmarks carry into the quest desc and hint.

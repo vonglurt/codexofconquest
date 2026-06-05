@@ -157,7 +157,7 @@ Earlier layers (9–47): see `lab-report-architecture-full.md` and `lab-report-t
 
 While writing vignette content, speak short segments aloud via `say` as you produce them — every page or every couple of paragraphs. Read the element type first, then its text. Examples:
 
-Run `say` in the background so it does not block writing:
+Run `say` blocking (no `&`) so each announcement completes before writing continues:
 
 ```bash
 say "Source hook. King John the Second of France was captured at Poitiers in 1356." &
@@ -9757,7 +9757,7 @@ Mid-loop after each individual PUT, speak the result:
 say "Fixed quest_id. Verified on disk." &
 ```
 
-The `&` runs `say` in background so it doesn't block the next request. Always announce commits and loop transitions out loud.
+Run `say` blocking — no `&` — so each announcement completes before the next request. Always announce commits and loop transitions out loud.
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
