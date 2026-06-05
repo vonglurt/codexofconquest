@@ -2117,9 +2117,9 @@ function renderNodeDetail(code){
   }
   // Exits
   const exG=document.createElement('div'); exG.className='fg';
-  exG.innerHTML='<div class="fl">Exits (N/S/E/W/NW/NE/SW/SE)</div>';
+  exG.innerHTML='<div class="fl">Exits (N/S/E/W)</div>';
   const eg=document.createElement('div'); eg.style.cssText='display:grid;grid-template-columns:repeat(4,1fr);gap:4px';
-  for(const d of ['N','S','E','W','NW','NE','SW','SE']){
+  for(const d of ['N','S','E','W']){
     const wrap=document.createElement('div');
     wrap.innerHTML=`<div style="font-size:9px;color:var(--muted)">${d}</div>`;
     const inp=document.createElement('input'); inp.type='text'; inp.style.cssText='width:100%;font-size:11px;background:var(--bg3);border:1px solid var(--border);border-radius:3px;color:var(--orange);font-weight:700;padding:2px 4px;font-family:inherit;text-align:center';
