@@ -1228,3 +1228,5 @@ Game cities are canonical. Source-book settings are proposed new nodes.
 
 *When a new quest is written, append its row to the Processed Quests table.*
 *When a new location is used, append its row to the Location Grid.*
+
+SHK | The Rival's Door | Cycle 1 | BK/CI/IN/CY | Poem intercepted, rival blocked, sonnet returned

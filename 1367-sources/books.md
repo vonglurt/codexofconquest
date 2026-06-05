@@ -443,7 +443,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | [x] | MSE | canterbury-tales | The Canterbury Tales — Geoffrey Chaucer | c.1390 | Medieval Stories | 1688 | SEEDS COMPLETE 2026-06-03 — MSE-01–07 all vignettes done (7 cycles). questComplete added to MSE-07 (cycle 7). New nodes: BRT, ORL, ACT, RDW, CHY, PCR, LRD, SAL, COT added to Location Grid. Theme threads for all 7 cycles. See MSE-canterbury-tales.md. |
 | [x] | SDQ | rob-roy | Rob Roy — Sir Walter Scott | 1817 (1715 setting) | Scottish Adventure | 370 | SEEDS COMPLETE 2026-06-03 — SDQ-01–07 all vignettes done. Memory-processed (source .txt not read). New nodes: OBH, GLA, ABF, GLN, LLM, EDI. See SDQ-rob-roy.md. |
 | [x] | FCO | vision-of-piers-plowman | Piers Plowman — William Langland | c.1370–1386 | Allegorical Poem | 265 | SEEDS COMPLETE 2026-06-03 — FCO-01–07 all vignettes done. MGF already in Location Grid. No new nodes. See FCO-vision-of-piers-plowman.md. |
-| [ ] | SHK | shakespeare-complete-works | Complete Works — William Shakespeare | c.1590–1613 | Drama / Poetry | 5318 | 28 parts. Histories, tragedies, comedies, sonnets. Source txt confirmed present. See SHK-shakespeare-complete-works.md. |
+| [ ] | SHK | shakespeare-complete-works | Complete Works — William Shakespeare | c.1590–1613 | Drama / Poetry | 5318 | Part 1 read (Sonnets + All's Well Act I). Cycle 1 angle: The Rival and the Poem. 5-act vignette: The Rival's Door (BK/CI/IN/CY). Parts 2–28 pending. See SHK-shakespeare-complete-works.md. |
 
 ### Norse & Scandinavian
 
