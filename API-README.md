@@ -478,6 +478,31 @@ curl http://localhost:1367/api/loot
 
 ---
 
+### GET /api/loot-drop
+
+Unified loot-drop query across all drop channels (monster trophies + weapon quality + fishing magic). Returns one entry per monster or fishing item. Supports five filters combinable in any combination.
+
+| Param | Description |
+|-------|-------------|
+| `terrain` | Terrain key — returns drops for all monsters in this terrain |
+| `monster` | Monster key — returns drops for one specific monster |
+| `fishing` | `true` = fishing only · `false` = monster drops only |
+| `bonus` | Integer — `≤0` filters monster weapon quality · `>0` filters lake magic base bonus |
+| `name` | Substring search on all name fields |
+
+```bash
+curl http://localhost:1367/api/loot-drop                          # all drops
+curl 'http://localhost:1367/api/loot-drop?terrain=dungeon'        # monsters in dungeon terrain
+curl 'http://localhost:1367/api/loot-drop?fishing=true'           # fishing magic items only
+curl 'http://localhost:1367/api/loot-drop?fishing=true&bonus=2'   # lake magic items with base=2
+curl 'http://localhost:1367/api/loot-drop?monster=ancient_dragon' # single monster full profile
+curl 'http://localhost:1367/api/loot-drop?name=spine'             # name search across all sources
+```
+
+Response includes `_meta.qualityTable` — the full d6 weapon quality distribution — and `_meta.note` linking to `/api/loot` for the consumable table.
+
+---
+
 ### GET /api/lake-magic[/{key}]
 
 Lake magic item list or single entry. Optional filters: `?effect=X` · `?minRank=N`

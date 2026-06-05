@@ -188,28 +188,19 @@ Both values are applied immediately on kill, before the victory overlay renders.
 
 ### Loot Table
 
-> **Source:** `_D100_TABLE` (HTML line 9447) + `_rollD100Loot()` (HTML line 9472). Replaced the old d20 `LOOT_TABLE` (Layer 25). `LOOT_TABLE` remains defined but is unused dead code.
+> **Source:** `_D100_TABLE` + `_rollD100Loot()`. Consumables only — magic weapons and daggers are **fishing-exclusive**. Monster weapon drops handled by `_rollMonsterWeaponDrop()` (see below). `LOOT_TABLE` (old d20 array, Layer 25) removed; replaced by comment stub.
 
-On every enemy kill, `_rollD100Loot()` rolls d100 against the weighted table below. Up to **3 reroll attempts** before falling back to Minor Healing Potion. Equipment drops also check `_magicTierAllowed()` and skip already-owned tiers; failed attempts roll again.
+On every enemy kill, `_rollD100Loot()` rolls d100 against the weighted table below. Up to **3 reroll attempts** before falling back to Minor Healing Potion.
 
 | Weight | % | Type | Drop | Sell |
 |---|---|---|---|---|
-| 25 | 25% | `potion_minor` | 🧪 Minor Healing Potion | 25gp |
-| 12 | 12% | `potion` | 🫧 Healing Potion | 75gp |
-| 8 | 8% | `potion_greater` | 💜 Greater Healing Potion | 200gp |
-| 3 | 3% | `potion_superior` | ✨ Superior Healing Potion | 500gp |
-| 6 | 6% | `scroll` | 📜 Spell Scroll | 50gp |
-| 4 | 4% | `flashbang` | 💥 Flashbang | 75gp |
-| 6 | 6% | `gold` | 💰 50–249 Gold Pieces | n/a |
-| 5 | 5% | `dagger +1` | 🗡 +1 Royal Dagger | level-gated |
-| 4 | 4% | `dagger +2` | 🗡 +2 Painite Dagger | level-gated |
-| 3 | 3% | `dagger +3` | 🗡 +3 Gaping Dagger | level-gated |
-| 1 | 1% | `dagger +4` | 🗡 +4 Voidsteel Dagger | level-gated |
-| 8 | 8% | `mainweapon +0` | base weapon | level-gated |
-| 6 | 6% | `mainweapon +1` | +1 weapon | level-gated |
-| 4 | 4% | `mainweapon +2` | +2 weapon | level-gated |
-| 3 | 3% | `mainweapon +3` | +3 weapon | level-gated |
-| 2 | 2% | `mainweapon +4` | +4 weapon | level-gated |
+| 35 | 35% | `potion_minor` | 🧪 Minor Healing Potion | 25gp |
+| 18 | 18% | `potion` | 🫧 Healing Potion | 75gp |
+| 14 | 14% | `potion_greater` | 💜 Greater Healing Potion | 200gp |
+| 6 | 6% | `potion_superior` | ✨ Superior Healing Potion | 500gp |
+| 11 | 11% | `scroll` | 📜 Spell Scroll | 50gp |
+| 6 | 6% | `flashbang` | 💥 Flashbang | 75gp |
+| 10 | 10% | `gold` | 💰 50–249 Gold Pieces | n/a |
 
 **Total weight = 100.** Gold drop range: `floor(random × 200) + 50` → 50–249gp.
 
@@ -219,44 +210,30 @@ On every enemy kill, `_rollD100Loot()` rolls d100 against the weighted table bel
 
 ### Equipment Drops
 
-After each battle, two equipment drop rolls fire independently:
+After each battle, **one guaranteed weapon drop** fires via `_rollMonsterWeaponDrop()`. The old parallel 15%/12% separate dagger and weapon rolls are retired; the d100 table is consumables-only.
 
-**Dagger drop (12% chance):** Rolls a `+N Royal/Painite/Gaping Dagger` from `DAGGER_ITEMS` if the player meets the level gate and doesn't already own that tier.
+**Monster weapon drop — `_rollMonsterWeaponDrop(monsterDmgDie)` *(§DROP-01 — ✅ 2026-06-05)***
 
-**Main weapon drop (15% chance):** Rolls a random eligible entry from `WEAPON_ITEMS` (42 entries across 14 base types × 3 magic tiers).
-
-Both drops check the player's current level against `minLevel` gates. Duplicate or inferior equipment held in inventory can be sold at vendor nodes.
-
-**Monster Drop Nerf — Degraded Weapons Only *(Layer 47 — ✅ Implemented 2026-05-26)***
-
-Monster weapon drops are capped at the base (`magicBonus === 0`) pool and then degraded at drop time. Implementation in `_rollMonsterWeaponDrop()` (HTML line 9520):
+Drops one base weapon with die ≤ monster's own `dmgDie`. Quality determined by **1d6**:
 
 ```js
-const deg = Math.floor(Math.random() * 4) - 3; // −3 to 0
-const pfx = ['Rusted ','Chipped ','Worn ',''][deg + 3];
+const d6  = Math.ceil(Math.random() * 6);
+const deg = Math.min(0, d6 - 5);                                    // 1→-4, 2→-3, 3→-2, 4→-1, 5-6→0
+const pfx = ['Wrecked ','Rusted ','Chipped ','Worn ','',''][d6 - 1];
 return pfx ? {...base, name: pfx + base.name, magicBonus: deg} : base;
 ```
 
-Degraded weapon prefixes applied at drop time:
+| d6 | Bonus | Prefix | Probability |
+|----|-------|--------|-------------|
+| 1 | −4 | Wrecked | 16.7% |
+| 2 | −3 | Rusted | 16.7% |
+| 3 | −2 | Chipped | 16.7% |
+| 4 | −1 | Worn | 16.7% |
+| 5–6 | 0 | (base) | 33.3% |
 
-| Bonus | Prefix | Example | Sell value |
-|-------|--------|---------|-----------|
-| −3 | Rusted | Rusted Shortsword | Base only |
-| −2 | Chipped | Chipped Axe | Base only |
-| −1 | Worn | Worn Longsword | Base only |
-| 0 | Salvaged | Salvaged Dagger | Base only |
+**Invariant:** Monsters never drop +1 or higher. All positive-magic equipment comes exclusively from Yugurt Lake fishing (`LAKE_MAGIC_DB`). A player who fishes gains a permanent gear advantage no amount of combat grinding can replicate.
 
-**Scope:** `_rollMonsterWeaponDrop()` only. Unaffected: Commander Auros drop, Epic Boss drops, chest loot (`storyCollectLoot()`), vendor items, dagger drops.
-
-**Why:** Fishing predator fish becomes the only source of positive-bonus magic weapons. A player who engages with the Yugurt Lake sub-game gains a gear advantage that no amount of corridor grinding can replicate. The Fishing Guide's closing line — *"The lake is the only place for real equipment now"* — is mechanically true.
-
-**Fishing weapon drops** (predator fish only, for reference):
-
-```
-weaponMagicBonus = floor(fish.ac / 4) + max(0, Luck Mod)
-```
-
-Range: +1 (AC 5, Luck Mod 0) to +6 cap (AC 20, Luck Mod ≥ 3). See `plan.md` §XII-U and `monsters.md` Yugurt Lake Fish pool for fish AC values.
+**Scope:** `_rollMonsterWeaponDrop()` only. Unaffected: Commander Auros drop, Epic Boss drops, chest loot (`storyCollectLoot()`), vendor items.
 
 ---
 
@@ -369,16 +346,25 @@ function getLuck() {
 | 20 | 18 | 20 | 16 | 18 | 14 | 17 | +3 |
 | 8 | 8 | 8 | 8 | 8 | 8 | 8 | −1 |
 
-**Applications:**
+**Application — single call site *(§DROP-02 — ✅ 2026-06-05):***
 
-| Context | How Luck is used | Status |
-|---------|-----------------|--------|
-| Bait Search DC | `DC = max(4, (baitSatchel ? 8 : 10) − LuckMod)` | ✅ HTML line 13466 |
-| d100 loot roll | `min(99, floor(rand×100) + max(0, LuckMod))` | ✅ HTML line 9485 |
-| Corridor encounter | Encounter chance `−LuckMod × 50pp` (significant) | ✅ HTML line 17165 |
-| Death saves | `d20 + LuckMod` on each save roll | ✅ HTML line 10686 |
-| Fishing — bare hook cast | Luck Mod replaces bait bonus on Type Roll | ✅ Live — `doCast()` line ~14787 |
-| Fishing — tournament tie | Luck Mod as tiebreaker when fish ranks are equal | ✅ Live — tournament outcome line ~18112 |
+| Context | Formula | Effect |
+|---------|---------|--------|
+| Fishing — Type / Rarity roll | `typeTotal = tDie + bait.type + LuckMod + eelBonus` | Shifts catch rarity: common → rare → enchanted → golden → legendary |
+
+Luck's sole mechanical role is improving what you get from a fish catch. All other former uses (bait search DC, d100 combat drops, death saves, encounter rate, tournament tiebreaker) have been removed.
+
+**Rarity thresholds** (`_rarityFromRoll`):
+
+| Type total | Rarity | Gold multiplier (vs common) |
+|-----------|--------|----------------------------|
+| ≤ 5 | Common | 1× |
+| ≤ 10 | Rare | ~2.5× |
+| ≤ 15 | Enchanted | ~4× |
+| ≤ 18 | Golden | ~6× |
+| 19+ | Legendary | ~10× |
+
+At max practical luck (+3), average type roll shifts from ~10.5 → ~13.5 — most catches move from Common/Rare into Rare/Enchanted.
 
 **UI:** Displayed in character sheet as `🍀 Luck: 12 (Mod: +1)` below the six ability scores. Not shown on the status bar — derived on demand only.
 
