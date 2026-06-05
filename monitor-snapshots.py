@@ -24,6 +24,7 @@ import curses
 import fcntl
 import gzip
 import os
+import random
 import subprocess
 import tempfile
 import threading
@@ -33,6 +34,13 @@ from pathlib import Path
 _say_proc_lock = threading.Lock()   # guards _say_proc and _say_generation
 _say_proc      = None
 _say_generation = 0                 # incremented on each new _say() / _stop_say()
+
+_VOICES = [
+    "Samantha", "Daniel", "Karen", "Moira", "Tessa", "Rishi", "Fred",
+    "Eddy (English (US))", "Flo (English (US))", "Reed (English (US))",
+    "Rocko (English (US))", "Sandy (English (US))", "Shelley (English (US))",
+]
+_RATE = "190"
 
 ROOT        = Path(__file__).resolve().parent
 PATCHES_DIR = ROOT / "milepoints" / "patches"
@@ -113,7 +121,7 @@ def _say_worker(filtered, gen):
             with _say_proc_lock:
                 if _say_generation != gen:           # superseded while waiting
                     return
-                proc = subprocess.Popen(["say", "-v", "Samantha", "-r", "185", filtered])
+                proc = subprocess.Popen(["say", "-v", random.choice(_VOICES), "-r", _RATE, filtered])
                 _say_proc = proc
             proc.wait()                              # hold lock for full utterance
     except Exception:

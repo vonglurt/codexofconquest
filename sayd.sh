@@ -3,25 +3,22 @@
 # Started automatically by say.sh; exits after ~10s of idle queue.
 # Kill cleanly: kill $(cat milepoints/sayd.pid)
 #
-# Configurable constants — uncomment one VOICE and one RATE to use:
-#
-# VOICE="Samantha"    # American English female (default macOS)
-# VOICE="Alex"        # American English male
-# VOICE="Daniel"      # British English male
-# VOICE="Karen"       # Australian English female
-# VOICE="Moira"       # Irish English female
-# VOICE="Tessa"       # South African English female
-# VOICE="Victoria"    # American English female (older style)
-# VOICE="Fred"        # Classic Mac voice
-#
-# RATE=175            # words per minute — default macOS rate
-# RATE=200            # slightly faster
-# RATE=220            # noticeably faster
-# RATE=150            # slower and clearer
-# RATE=130            # deliberate pace
-
-VOICE="Samantha"
-RATE=185
+VOICES=(
+    "Samantha"          # en_US female
+    "Daniel"            # en_GB male
+    "Karen"             # en_AU female
+    "Moira"             # en_IE female
+    "Tessa"             # en_ZA female
+    "Rishi"             # en_IN male
+    "Fred"              # en_US classic male
+    "Eddy (English (US))"
+    "Flo (English (US))"
+    "Reed (English (US))"
+    "Rocko (English (US))"
+    "Sandy (English (US))"
+    "Shelley (English (US))"
+)
+RATE=190
 MAX_IDLE=34   # polls before exit: 34 × 0.3s ≈ 10s of silence
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
@@ -44,7 +41,16 @@ while true; do
         if mv "$FILE" "$WORK" 2>/dev/null; then
             TEXT=$(cat "$WORK")
             rm -f "$WORK"
-            [[ -n "$TEXT" ]] && flock "$LOCK_FILE" say -v "$VOICE" -r "$RATE" "$TEXT"
+            if [[ -n "$TEXT" ]]; then
+                VOICE="${VOICES[RANDOM % ${#VOICES[@]}]}"
+                python3 - "$LOCK_FILE" "$VOICE" "$RATE" "$TEXT" <<'PY'
+import fcntl, subprocess, sys
+lock_file, voice, rate, text = sys.argv[1:]
+with open(lock_file, "w") as lf:
+    fcntl.flock(lf, fcntl.LOCK_EX)
+    subprocess.run(["say", "-v", voice, "-r", rate, text])
+PY
+            fi
         fi
     else
         sleep 0.3
