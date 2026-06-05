@@ -302,7 +302,7 @@ All files under 60 KB in 1367-sources/. Each to receive full pipeline: read → 
 | LIS | Lusiads — Luís de Camões | 47 | **SEEDS COMPLETE 2026-06-03 — LIS-01–07 all vignettes done. No new nodes. See LIS-lusiad.md.** |
 | MAD | Chronicle of the Cid — Anon (Southey) | 48 | **SEEDS COMPLETE 2026-06-03 — CID-01–07 all vignettes done. New node: VLC. See MAD-chronicle-cid.md.** |
 | INV | Ossian — James MacPherson | 48 | **SEEDS COMPLETE 2026-06-03 — INV-01–07 all vignettes done. No new nodes. See INV-ossian.md.** |
-| LCY | The White Company — Arthur Conan Doyle | 49 | **SEEDS COMPLETE 2026-06-03 — LCY-01–07 all vignettes done. No new nodes. See LCY-white-company.md.** |
+| LCY | The White Company — Arthur Conan Doyle | 49 | **IMPORTED — 2026-06-05 — No new nodes (LCY/LDN/WM all existing); LCY-01–07 (7 cycles, 35 acts); questComplete on LCY-07 act5** |
 | FLR | Divine Comedy: Inferno — Dante Alighieri | 50 | **SEEDS COMPLETE 2026-06-03 — FLR-01–07 all vignettes done. No new nodes needed. See FLR-divine-comedy-inferno.md.** |
 | HFT | Frithiof's Saga — Esaias Tegnér | 51 | **SEEDS COMPLETE 2026-06-03 — HFT-01–07 all vignettes done. No new nodes needed. See HFT-frithiof-saga.md.** |
 | ERF | Grimm's Fairy Tales — Brothers Grimm | 52 | **SEEDS COMPLETE 2026-06-03 — ERF-01–07 all vignettes done. No new nodes needed. See ERF-grimm-fairy-tales.md.** |
@@ -312,7 +312,7 @@ All files under 60 KB in 1367-sources/. Each to receive full pipeline: read → 
 | RKV | Poetic Edda — Anon | 53 | **SEEDS COMPLETE 2026-06-03 — RKV-01–07 all vignettes done. AEG/RSS in Location Grid. See RKV-poetic-edda.md.** |
 | BOO | Prose Edda — Snorri Sturluson | 53 | **SEEDS COMPLETE 2026-06-03 — BOO-01–07 all vignettes done. HNJ in Location Grid. See BOO-prose-edda.md.** |
 | CDG | The Three Musketeers — Alexandre Dumas | 54 | **SEEDS COMPLETE 2026-06-03 — CDG-01–07 all vignettes done. BTH/REL/DAR in Location Grid. See CDG-three-musketeers.md.** |
-| LGW | Le Morte d'Arthur — Sir Thomas Malory | 55 | **SEEDS COMPLETE 2026-06-03 — LGW-01–07 all vignettes done. AST/CAM/LKS in Location Grid. No new nodes. See LGW-morte-darthur.md.** |
+| LGW | Le Morte d'Arthur — Sir Thomas Malory | 55 | **IMPORTED — 2026-06-05 — AST/RVP/CAM/LKS new nodes; LGW-01–07 (7 cycles, 35 acts); questComplete on LGW-07 act5** |
 | OST | Song of Roland — Anon | 56 | **SEEDS COMPLETE 2026-06-03 — OST-01–07 all vignettes done. AIX/RON/PYR/FRS in Location Grid. No new nodes. See OST-song-of-roland.md.** |
 | ARN | Knights of the Cross — Henryk Sienkiewicz | 57 | **SEEDS COMPLETE 2026-06-03 — ARN-01–07 all vignettes done. KRK/JUR/TKT/CHP in Location Grid. No new nodes. See ARN-knights-of-the-cross.md.** |
 | VBY | Grettir's Saga — Anon | 58 | **SEEDS COMPLETE 2026-06-03 — VBY-01–07 all vignettes done. RKN/BWH in Location Grid. No new nodes. See VBY-grettir-saga.md.** |
@@ -903,6 +903,8 @@ This procedure runs once per vignette act (one quest at a time). Complete all 8 
 | 80 | BGW | Arabian Nights (Burton tr.) | KHR new node (Cairo Booksellers' Quarter, r:193 c:230); TUN new node (Tunis Monastery, r:183 c:205); existing: FAM/ALE/VEN/TBZ/BGD/GEN/CON/NUE; BGW-01–08 (8 cycles, 40 acts); questComplete on all 8; CAI→KHR (collision); WM→NUE; BAG→BGD | IMPORTED — 2026-06-04 |
 | 81 | CAI | Arabian Nights (Lang adaptation) | ALB new node (Aleppo Hills — Mar Marun Monastery, r:170 c:237); ALP new node (Aleppo — Storytellers' Quarter, r:168 c:238); LAT new node (Latakia — Syrian Mediterranean Port, r:166 c:233); existing: ANT/BGD/TRB/CON/DAM/ALE/NUE; CAI-01–08 (8 cycles, 40 acts); questComplete on all 8; WM→NUE; BAG→BGD | IMPORTED — 2026-06-04 |
 | 82 | LHR | Beowulf (Gummere) | HEO/DAN reused from CPH; BRW new node (Dragon's Barrow, r:99 c:169, ruins); GEA new node (Geatland coast, r:100 c:169, beach); WM new node (Weimar Archive, r:117 c:204, scholars_qtr); LHR-01–07 (7 cycles, 35 acts); questComplete on LHR-07 act5; coast→beach terrain fix on GEA | IMPORTED — 2026-06-05 |
+| 83 | LCY | The White Company (Doyle) | LCY (existing Harbor Docks–Tilbury)/LDN/WM all existing; LCY-01–07 (7 cycles, 35 acts); questComplete on LCY-07 act5 | IMPORTED — 2026-06-05 |
+| 84 | LGW | Le Morte d'Arthur (Malory) | AST new node (Astolat manor, r:109 c:156, camelot); RVP new node (River Ford, r:110 c:155, freshwater_lake); CAM new node (Vale of Camlann, r:116 c:150, ruins); LKS new node (Avalon Shore, r:116 c:149, freshwater_lake); LGW/BK/ROM/CON/LDN/WM existing; LGW-01–07 (7 cycles, 35 acts); questComplete on LGW-07 act5 | IMPORTED — 2026-06-05 |
 
 ---
 

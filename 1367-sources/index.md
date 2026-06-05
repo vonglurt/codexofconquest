@@ -110,6 +110,17 @@ Two-tier naming rule: cities = 3-letter IATA or city-derived code; specific loca
 
 ---
 
+## Le Morte d'Arthur (LGW) Nodes
+
+| Code | City/Location | Region | Basis | Coords (r,c) | Book | Notes |
+|------|--------------|--------|-------|-------------|------|-------|
+| AST | Astolat — The Manor of Sir Bernard | Surrey, England (Thames valley) | Derived from Astolat (Elaine's home in Malory) | 109,156 | LGW | Created 2026-06-05; camelot terrain; Elaine's barge dock |
+| RVP | River Ford — Willow-Bank Crossing | River crossing, SE England | Derived from River Passage | 110,155 | LGW | Created 2026-06-05; freshwater_lake terrain; contested midnight ford |
+| CAM | Vale of Camlann — The Final Field | Somerset/western Britain (Arthurian) | Derived from Camlann (Arthur's last battle) | 116,150 | LGW | Created 2026-06-05; ruins terrain; Bedevere's commission scene |
+| LKS | Avalon Shore — The Lake of Excalibur | Somerset (Glastonbury area, Arthurian) | Derived from Lake Shore | 116,149 | LGW | Created 2026-06-05; freshwater_lake terrain; Bedevere's third throw |
+
+---
+
 ## Code Collision Register
 
 Codes that were planned but found already occupied by existing game nodes:
