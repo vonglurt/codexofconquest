@@ -1,0 +1,14 @@
+{
+  "name": "roll2hit-wbapi",
+  "version": "1.0.0",
+  "description": "Roll2Hit World Builder API server and CLI tools",
+  "license": "MIT",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "start": "node wbapi-server.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.36.3"
+  }
+}

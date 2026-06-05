@@ -356,6 +356,24 @@ const CMD = {
     process.stdout.write(`${C.cyan}${reply}${C.reset}\n`);
   },
 
+  async speak(pos, flags) {
+    await requireServer();
+    const [, id, ...rest] = pos;
+    if (!id) die('Usage: wb speak <npc-id> "<prompt>"  [--state neutral|friendly|dearFriend] [--model <model>]');
+    const prompt = rest.join(' ') || 'Good afternoon.';
+    const qs = new URLSearchParams({ prompt });
+    if (flags.state) qs.set('state', flags.state);
+    if (flags.model) qs.set('model', flags.model);
+    const r = await request('GET', `/api/npc/${encodeURIComponent(id)}/speak?${qs}`);
+    if (r.status >= 400) { printError(r); process.exit(1); }
+    const d = r.body;
+    process.stdout.write(`\n${C.bold}${d.name}${C.reset}  ${C.dim}[${d.state}]${C.reset}\n`);
+    process.stdout.write(`${C.cyan}${d.reply}${C.reset}\n\n`);
+    if (TTY) {
+      stderr(`${C.dim}model: ${d.model}  in:${d.usage?.input} out:${d.usage?.output} cache_read:${d.usage?.cacheRead} cache_write:${d.usage?.cacheWrite}${C.reset}\n`);
+    }
+  },
+
   async import(pos, flags) {
     await requireServer();
     const [, file] = pos;
@@ -397,6 +415,7 @@ ${C.bold}COMMANDS${C.reset}
   put   <type> <id> [k=v ...]     Update fields  (or pipe JSON body)
   post  <type> [k=v ...]          Create entity  (nonce auto-handled)
   del   <type> <id>               Delete entity  (nonce auto-handled)
+  speak <npc-id> "<prompt>"       Generate voiced NPC reply via Claude  [--state neutral|friendly|dearFriend]
   import <file.json>              Bulk import nodes + quest cycles  (or pipe JSON)
   audit                           Integrity scan  [--map] [--text]
   chain <quest-id>                Quest dependency chain
@@ -449,6 +468,7 @@ const SYNOPSIS = [
   `  ${C.green}put${C.reset}   <type> <id> [k=v…]      update fields  (or pipe JSON)`,
   `  ${C.green}post${C.reset}  <type> [k=v…]           create  (nonce auto)`,
   `  ${C.green}del${C.reset}   <type> <id>             delete  (nonce auto)`,
+  `  ${C.green}speak${C.reset} <npc-id> "<prompt>"      Claude-voiced NPC reply  [--state neutral|friendly|dearFriend]`,
   `  ${C.green}import${C.reset} <file.json>            bulk import nodes + quest cycles`,
   `  ${C.green}audit${C.reset} [--map]                 integrity scan`,
   `  ${C.green}chain${C.reset} <quest-id>              quest chain`,
