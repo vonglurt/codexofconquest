@@ -1,6 +1,6 @@
 # SHK — Complete Works of William Shakespeare
 
-**Source:** Parts 1–18 read. Parts 19–28 pending. | **Progress:** Cycles 1–9 complete. Cycle 10 due after Part 20.
+**Source:** Parts 1–20 read. Parts 21–28 pending. | **Progress:** Cycles 1–10 complete. Cycle 11 due after Part 22.
 **Gutenberg:** #100 — Complete Works (Shakespeare)
 **Period:** c.1590–1613 | Drama, Poetry, Sonnets
 **Part 1 contains:** The Sonnets (all 154) + All's Well That Ends Well Act I (begins)
@@ -1860,4 +1860,122 @@ questComplete: true
 
 ```
 SHK | The Handkerchief | Cycle 9 | BK/VBY/NUE | Object whose meaning accumulated through chain of misreading — meaning-bearing vessel
+```
+
+---
+
+## Part 19 Coverage
+
+*Pericles complete + Richard III Act I begins*
+
+Part 19 is largely Pericles, Prince of Tyre: Pericles solves Antiochus's incest riddle and flees, is shipwrecked, wins Thaisa's hand in armor recovered from the sea, loses Thaisa when she dies in childbirth in a storm and is buried at sea in a sealed chest — Cerimon opens the chest and finds her barely alive and restores her — leaves his infant Marina with Cleon and Dionyza at Tarsus, wanders in grief for fourteen years; Marina grows virtuous and beautiful, Dionyza jealous orders her killed but she is kidnapped by pirates and sold to a brothel where she converts clients through sheer eloquence rather than submit; Pericles, broken, is brought to Mytilene where Marina is brought to him, and the recognition scene — "My dearest wife was like this maid, and such a one my daughter might have been" — restores him to joy; Diana in a vision sends him to Thaisa's temple at Ephesus where husband and wife are reunited. The play is a romance of pure restoration through suffering, the longest and most geographically dispersed of Shakespeare's works, ending in triple reunion — Pericles, Thaisa, and Marina all restored to each other. Part 19 then opens Richard III: Richard's opening soliloquy ("Now is the winter of our discontent / Made glorious summer by this sun of York") establishes the play's radical premise — a villain who announces his villainy in advance and delivers on every promise; the plot against his brother Clarence is set in motion; and the part ends as Richard confronts Lady Anne at Henry VI's coffin.
+
+---
+
+## Part 20 Coverage
+
+*Richard III complete + Romeo and Juliet Act I opens*
+
+Part 20 completes Richard III: Lady Anne, mourning over the body of her father-in-law, is courted by Richard — the man who killed her husband and her father-in-law — and capitulates; Richard's astonished gloating afterward ("Was ever woman in this humour wooed? Was ever woman in this humour won?") is the play's most honest moment. Richard murders Clarence, manipulates Queen Elizabeth and her family, engineers the executions of Hastings and Buckingham (eventually), imprisons the young princes in the Tower and has them killed, is crowned king, then watches his political position collapse as Richmond gathers forces; on the eve of Bosworth, the ghosts of all his victims appear to curse him and bless Richmond; Richard cries "A horse, a horse, my kingdom for a horse!" and is killed by Richmond, who unites the houses of York and Lancaster. Romeo and Juliet then opens: the Prologue announces the tragic outcome in advance; Romeo is in love with the untouchable Rosaline; the Capulet servant accidentally recruits Romeo to read the guest list; at the Capulet feast Romeo sees Juliet — "She doth teach the torches to burn bright! / It seems she hangs upon the cheek of night / As a rich jewel in an Ethiop's ear" — they meet and exchange a sonnet-kiss; Part 20 ends at the feast scene mid-Tybalt's rage.
+
+---
+
+## Cycle 10 — The Restoration Certificate
+
+*Parts 19–20 | Plays: Pericles + Richard III + Romeo and Juliet*
+
+*Before beginning: Themes avoided — meaning-bearing vessel (Cycle 9), identical letter (Cycle 8), guilt by proximity (Cycle 7), self-authored ruin (Cycle 6), inadvertent emblem (Cycle 5). This cycle centers on a new mode: the administrative record of believing something that should not be true — documents that certify the return of what was definitively recorded as lost.*
+
+**Theme this cycle introduces:** *The restoration document — the certificate that records the return of what was presumed dead, lost, or gone, and the legal and archival problem of un-recording a loss once a return has been authenticated.*
+
+**TOKEN**: A restoration certificate — a Hanseatic harbor document recording the return of a ship listed as lost at sea four years prior. The ship appeared in a Gotland harbor with its original cargo holds intact. The manifest matches the loss record exactly. The document is legally valid but archivally unprecedented: once a vessel is recorded as lost, its estate has been settled, its insurance paid, its crew declared dead. The return creates a cascade of contradictions none of the standard document categories can hold.
+
+---
+
+### Act I — Birka
+```yaml
+activateNode: BK
+type: skill_check
+scene: "Egil Thorvaldsen has a restoration certificate: a ship presumed lost
+  at sea for four years returned to Gotland harbor with cargo intact. The
+  document is valid — the harbor master authenticated it. But Egil's
+  correspondence archive already holds the loss record, the insurance
+  settlement, and the death declarations for the crew. He cannot file a
+  return-of-the-lost alongside those records without creating a legal
+  impossibility. He wants to know how to log this."
+prompt: "Investigation DC 13. The solution is sequence: the loss record is
+  not wrong — it was accurate at the time. The restoration certificate
+  supersedes it, but does not erase it. Propose logging both records as
+  a pair with a cross-reference: Record of Presumed Loss paired with
+  Record of Authenticated Return."
+failText: "He cannot hold two contradictory records in the same archive
+  section. Propose instead: a separate section for restored presumed losses,
+  where the original record remains in the loss register and the certificate
+  files separately with a link."
+successText: "He logs both, cross-referenced. The ship exists in two records
+  simultaneously: lost and returned. You receive the Restoration Certificate."
+grantItem: "Restoration Certificate"
+checkPassFlag: certificateSecured
+activateMissionBit: shk10_act1Active
+```
+
+### Act II — Visby
+```yaml
+activateNode: VBY
+type: skill_check
+scene: "Marta at the Visby archive has a category for insurance disputes but
+  none for authenticated returns. The problem is the death declarations: three
+  crew members were declared dead, their estates settled, their families
+  compensated. The ship's return does not automatically restore the men —
+  two of the three actually died at sea on a subsequent voyage; one survived
+  and has since returned. She wants to know how to handle the living man's
+  legal status."
+prompt: "Investigation DC 14. The surviving crew member's legal death was
+  a presumption, not a fact — it was never confirmed by a body or witness.
+  His return is not a resurrection; it is the resolution of an unconfirmed
+  presumption. Propose: the death declaration is amended to Presumed Deceased,
+  Status Resolved, with the resolution date and method."
+failText: "The death declaration cannot be amended — it was filed under oath.
+  Propose instead a new document: Certificate of Confirmed Living Status,
+  filed against the death declaration as its supersession."
+successText: "She files both documents as a supersession pair. You receive
+  Marta's Supersession Note."
+grantItem: "Marta's Supersession Note"
+checkPassFlag: deathResolved
+activateMissionBit: shk10_act2Active
+```
+
+### Act III — Nuremberg
+```yaml
+activateNode: NUE
+type: skill_check
+scene: "Ulrich von Gessert reads the restoration certificate and Marta's
+  supersession note. He says: the archive now holds a ship as both lost and
+  returned, and a man as both dead and living. He asks for the category that
+  covers both: what do you call a record that is accurate and superseded
+  at the same time?"
+prompt: "Investigation DC 12. Propose: The Superseded Accurate Record —
+  a document that was correct when filed, that has been made obsolete by
+  a subsequent event without being made false, and that must be retained
+  alongside its supersession because both states were real."
+failText: "He says: that is not a category, that is a description of every
+  record ever written. Narrow it: the specific case where the supersession
+  documents a restoration — a return from presumed loss. Try: Restored Loss
+  Record — original record preserved, return authenticated alongside it."
+successText: "Stamped. Logged: superseded accurate record, restoration
+  authenticated, both states archived in sequence. You receive Ulrich's
+  Tenth Receipt. Quest complete."
+takeItem: "Restoration Certificate"
+takeItem: "Marta's Supersession Note"
+grantItem: "Ulrich's Tenth Receipt"
+checkPassFlag: restorationLogged
+questComplete: true
+```
+
+---
+
+## Quest Map Entry — Cycle 10
+
+```
+SHK | The Restoration Certificate | Cycle 10 | BK/VBY/NUE | Superseded accurate record — loss documented then authenticated return, both states preserved
 ```
