@@ -197,6 +197,7 @@ Codes that were planned but found already occupied by existing game nodes:
 | GDN | Njal's Saga starting node | "Danzig — Grain Port" (docks game node) | No node collision for cycle 1 — cycle 1 activates at SWF (Swinefell); quest prefix gdn_ unaffected |
 | BOO | Prose Edda starting node | "Yugurt Lake — Steppe Shore" (steppe_lake game node) | No node collision — cycle 1 activates at ASG (Ásgarðr); quest prefix boo_ unaffected |
 | ALF | Kalevala starting node | "North Shore Path" (lake_north game node) | No node collision — cycle 1 activates at TUO (Tuonela boundary shore); quest prefix alf_ unaffected |
+| KSU | Heimskringla starting node | "The Lake Harbor" (game node) | No node collision — all cycles activate at NID (Nidaros); quest prefix ksu_ unaffected |
 
 ---
 
@@ -217,3 +218,12 @@ Codes that were planned but found already occupied by existing game nodes:
 | TUO | Tuonela — The Boundary Shore | Finnish underworld edge | Black water, reed-banks; the edge a living person can stand at but not cross; primary hub for cycles 1/3–7 | 84,116 | ALF | Created 2026-06-05; ruins terrain; all five acts of cycle 1 here; activateNode for cycles 3–7 |
 | KVF | Kullervo's Forest — The Pine Clearing | Finnish forest | A clearing where a man made his final arrangements; the sword stood upright; cycle 2 acts 1–3 | 80,114 | ALF | Created 2026-06-05; highlands terrain; cycle 2 departure point |
 | KVM | The Master's Hall — Kullervo's People | Finnish settlement | Kullervo's master's hall; a fire, a steward at the gate; cycle 2 acts 4–5 | 82,116 | ALF | Created 2026-06-05; camelot terrain; cycle 2 arrival and delivery point |
+
+---
+
+## Heimskringla (KSU) Nodes
+
+| Code | Label | Location | Source | Coords (r,c) | Book | Notes |
+|------|-------|----------|--------|--------------|------|-------|
+| NID | Nidaros — Olaf's Shrine City | Trondheim, Norway | Saint Olaf's tomb; Danish governor's compound; bishop's church; cathedral under construction; hub for all 7 cycles | 79,118 | KSU | Created 2026-06-05; city terrain; hub for cycles 1/3–7; cycle 2 acts 4–5 |
+| ECF | Eclipse Farm — Coast North of Stiklestad | Norwegian coast | The coastal farmstead where the eclipse witness hid three years; water-drip measurement; cycle 2 acts 1–3 | 77,116 | KSU | Created 2026-06-05; beach terrain; cycle 2 departure point |

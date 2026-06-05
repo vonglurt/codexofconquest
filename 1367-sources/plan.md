@@ -308,7 +308,7 @@ All files under 60 KB in 1367-sources/. Each to receive full pipeline: read → 
 | ERF | Grimm's Fairy Tales — Brothers Grimm | 52 | **SEEDS COMPLETE 2026-06-03 — ERF-01–07 all vignettes done. No new nodes needed. See ERF-grimm-fairy-tales.md.** |
 | VIE | Faust — Johann Wolfgang von Goethe | 52 | **SEEDS COMPLETE 2026-06-03 — VIE-01–07 all vignettes done. No new nodes needed. See VIE-faust.md.** |
 | ALF | Kalevala — Elias Lönnrot | 52 | **IMPORTED — 2026-06-05 — TUO/KVF/KVM new nodes (Tuonela shore/Kullervo's forest/Master's hall); alf_01–07 (7 cycles, 35 acts); questComplete on alf_07_act5; ALF collision (North Shore Path)→quest prefix only** |
-| KSU | Heimskringla — Snorri Sturluson | 53 | **SEEDS COMPLETE 2026-06-03 — KSU-01–07 all vignettes done. No new nodes. See KSU-heimskringla.md.** |
+| KSU | Heimskringla — Snorri Sturluson | 53 | **IMPORTED — 2026-06-05 — NID/ECF new nodes (Nidaros shrine city/Eclipse Farm); ksu_01–07 (7 cycles, 35 acts); questComplete on ksu_07_act5; KSU collision (Lake Harbor)→NID hub** |
 | RKV | Poetic Edda — Anon | 53 | **SEEDS COMPLETE 2026-06-03 — RKV-01–07 all vignettes done. AEG/RSS in Location Grid. See RKV-poetic-edda.md.** |
 | BOO | Prose Edda — Snorri Sturluson | 53 | **IMPORTED — 2026-06-05 — ASG/THK/HNJ new nodes (Ásgarðr/Þökk's Cave/Hnitbjörg); boo_01–07 (7 cycles, 35 acts); questComplete on boo_07_act5; BOO node collision (Yugurt Lake)→quest prefix only** |
 | CDG | The Three Musketeers — Alexandre Dumas | 54 | **SEEDS COMPLETE 2026-06-03 — CDG-01–07 all vignettes done. BTH/REL/DAR in Location Grid. See CDG-three-musketeers.md.** |
@@ -913,6 +913,7 @@ This procedure runs once per vignette act (one quest at a time). Complete all 8 
 | 90 | GDN | Njal's Saga (Anon, Dasent) | IGH new node (Ingolf's Head Iceland coast, r:82 c:108, beach); SWF new node (Swinefell Flosi's hall, r:84 c:110, camelot); ISL new node (Althing Ground Iceland, r:86 c:112, highlands); HHL/BK/VS/HEO/CON/WM existing; gdn_01–07 (7 cycles, 35 acts); questComplete on gdn_07_act5; GDN node collision (Danzig Grain Port)→quest prefix only (no node created) | IMPORTED — 2026-06-05 |
 | 91 | BOO | Prose Edda (Snorri, c.1220) | ASG new node (Ásgarðr Frigg's Hall, r:78 c:112, camelot); THK new node (Þökk's Cave, r:80 c:108, ruins); HNJ new node (Hnitbjörg, r:82 c:110, highlands); BK/VEN/CON/ROM/LDN/WM existing; boo_01–07 (7 cycles, 35 acts); questComplete on boo_07_act5; BOO node collision (Yugurt Lake)→quest prefix only (no node created) | IMPORTED — 2026-06-05 |
 | 92 | ALF | Kalevala (Lönnrot, 1849) | TUO new node (Tuonela boundary shore, r:84 c:116, ruins); KVF new node (Kullervo's forest clearing, r:80 c:114, highlands); KVM new node (Master's hall, r:82 c:116, camelot); BK/CON/ROM/LDN/WM existing; alf_01–07 (7 cycles, 35 acts); questComplete on alf_07_act5; ALF collision (North Shore Path)→quest prefix only | IMPORTED — 2026-06-05 |
+| 93 | KSU | Heimskringla (Snorri, c.1230) | NID new node (Nidaros shrine city, r:79 c:118, city); ECF new node (Eclipse Farm coast, r:77 c:116, beach); BK/VEN/CON/ROM/LDN/WM existing; ksu_01–07 (7 cycles, 35 acts); questComplete on ksu_07_act5; KSU collision (Lake Harbor)→NID hub for cycles 3–7 | IMPORTED — 2026-06-05 |
 
 ---
 
