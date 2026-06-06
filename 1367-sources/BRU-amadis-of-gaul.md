@@ -806,3 +806,62 @@ He looks at the incomplete declaration in the Fighter's hands.
   "sweelinckNote": "The dismissal letter was true about its author's state and false about its premise. The reconciliation letter named both conditions without asking for anything in return. Together they are the complete record of what a twenty-year devotion looks like when tested and recovered. The archive holds them paired. Neither is complete without the other."
 }
 ```
+
+---
+
+## Cycle 8 — Angle: *The Reconstruction of the Arch Attempts — The Record Assembled from Memory and Rumor*
+
+**This cycle introduces:** *The reconstructed record — a document assembled from memory and witness accounts rather than contemporary documentation, where the value depends entirely on the quality of memory.*
+
+### Quest API Stub — "The Arch of True Lovers"
+
+```
+Act I — "The Reconstruction"
+activateNode: CHT
+type: skill_check
+missionAccept: "The Arch of True Lovers — an enchanted gate that only
+  faithful lovers can pass — was attempted by many knights and ladies.
+  No official record was kept. Now a herald has assembled a reconstruction
+  from memory, rumor, and witness accounts. Some names are disputed.
+  Some outcomes are contested. He wants it filed as what it is: a record
+  assembled from imperfect sources."
+scene: "The herald's lodge. The herald holds his reconstruction of the
+  Arch of True Lovers attempts — who tried, who passed, who failed,
+  and how the court responded to each outcome. Some entries have three
+  witnesses; some have one. Two entries are contested. 'I cannot certify
+  this as an official record,' he says. 'But if I don't file it, it will
+  be remembered incorrectly by people with reasons to remember it wrong.'"
+prompt: "Persuasion DC 12. Convince him that a reconstruction filed as
+  a reconstruction is more honest than either silence or a false official
+  record — the archive should hold what was compiled with what sources."
+failText: "He wants a formal disclaimer attached — a statement that this
+  is a reconstruction and not an official proceeding record."
+successText: "He gives you the reconstruction with his own disclaimer
+  attached. 'File it as what it is.' You receive the Arch Reconstruction."
+grantItem: "Arch of True Lovers Reconstruction"
+checkPassFlag: reconstructionReceived
+activateMissionBit: bru8_act1Active
+
+Act II — "Filed as Reconstructed Record"
+activateNode: WM
+type: skill_check
+scene: "Sweelinck reads the reconstruction and the herald's disclaimer.
+  'Assembled from memory and witness accounts. Some entries contested.
+  Compiled because the alternative was incorrect memory.' He looks at you.
+  'What is the category for a record that was assembled because no official
+  record was made, and whose value depends on the quality of its sources?'"
+prompt: "History DC 11. Name the category: a document assembled from
+  secondary sources because no primary documentation exists, explicitly
+  labeled as a reconstruction."
+failText: "He creates it himself: Explicit Reconstruction Record. He looks
+  at you. 'You may as well have suggested it.'"
+successText: "Filed: Explicit Reconstruction Record — Document Assembled
+  From Memory and Witness Accounts in the Absence of Contemporary
+  Documentation; Sources and Limitations Noted. You receive Sweelinck's
+  Reconstruction Record."
+takeItem: "Arch of True Lovers Reconstruction"
+grantItem: "Sweelinck's Reconstruction Record"
+checkPassFlag: reconstructionFiled
+questComplete: true
+activateCond: reconstructionReceived
+```

@@ -1104,3 +1104,61 @@ He opens the final category in the Grimm collection's archive. **Recovered Ident
   "questComplete": true
 }
 ```
+
+---
+
+## Cycle 8 — Angle: *The Mirror's Testimony — The Accurate Witness That No Institution Can Certify*
+
+**This cycle introduces:** *The non-human witness that cannot lie — an accurate record from a source whose testimony is reliable but whose authority no human institution can certify.*
+
+### Quest API Stub — "The Mirror's Testimony"
+
+```
+Act I — "The Record"
+activateNode: ERF
+type: skill_check
+missionAccept: "The enchanted mirror told the truth every time it was asked.
+  Its testimony condemned Snow White repeatedly — and was correct. A scholar
+  has reconstructed the mirror's daily testimony: who was fairest, when the
+  answer changed, what the queen did in response. The testimony is accurate.
+  The witness is a mirror. No court can certify a mirror's authority."
+scene: "Erfurt archive reading room. A scholar holds the reconstruction
+  of the mirror's testimony — a day-by-day record of who was fairest in
+  the kingdom, compiled from witnesses who overheard the queen's questions
+  and the mirror's answers. 'Every statement is accurate,' the scholar says.
+  'I have verified each one against independent records. But no court would
+  accept a mirror as a legal witness.'"
+prompt: "History DC 12. Argue that the testimony's value is not in the
+  witness's legal authority but in its accuracy — the archive can hold
+  the record as a historical account while noting the unusual nature of
+  its source."
+failText: "He wants a legal framework. Find precedent for non-human witness
+  testimony in the archive's existing records."
+successText: "He gives you the reconstruction. You receive the Mirror's
+  Testimony."
+grantItem: "Mirror's Testimony"
+checkPassFlag: testimonyReceived
+activateMissionBit: erf8_act1Active
+
+Act II — "Filed as Non-Human Witness"
+activateNode: WM
+type: skill_check
+scene: "Sweelinck reads the testimony. 'A day-by-day record from an enchanted
+  mirror that could not lie. The account is accurate. The source is a mirror.'
+  He looks at you. 'What is the category for a record produced by a
+  non-human witness that cannot lie but whose authority no institution can
+  certify?'"
+prompt: "History DC 11. Name the category: a testimony from a non-human
+  witness whose accuracy is verifiable but whose authority cannot be
+  certified by any human institution."
+failText: "He creates it himself: Certifiably Accurate Non-Human Testimony.
+  He looks at you. 'You may as well have suggested it.'"
+successText: "Filed: Certifiably Accurate Non-Human Testimony — Record
+  From a Non-Human Source Verified as Accurate; Witness Authority Not
+  Certifiable. You receive Sweelinck's Mirror Record."
+takeItem: "Mirror's Testimony"
+grantItem: "Sweelinck's Mirror Record"
+checkPassFlag: testimonyFiled
+questComplete: true
+activateCond: testimonyReceived
+```

@@ -888,3 +888,59 @@ D'Artagnan and the road and whatever time remains.*
   "questComplete": true
 }
 ```
+
+---
+
+## Cycle 8 — Angle: *The Cardinal's Blank Commission — The Document Whose Power Is Its Lack of a Named Recipient*
+
+**This cycle introduces:** *The blank commission — a document signed by the highest authority but addressed to "bearer," whose power is precisely that it protects whoever holds it.*
+
+### Quest API Stub — "The Blank Commission"
+
+```
+Act I — "The Blank"
+activateNode: CDG
+type: skill_check
+missionAccept: "The Cardinal's blank commission — signed, sealed, stating
+  that the bearer has acted in the service of France and is to be protected —
+  has changed hands. It protected Milady. D'Artagnan took it from her.
+  Now it protects D'Artagnan. But it cannot be kept indefinitely — its
+  power is its indefiniteness, and indefinite power accumulates enemies.
+  It must go somewhere it cannot be used and cannot be destroyed."
+scene: "Paris. D'Artagnan holds the commission. It is real: Richelieu's
+  signature, his seal, the exact language. 'Bearer has done what was
+  necessary.' This document protected a murderer. Then it protected the
+  man who exposed the murderer. In the wrong hands it would protect
+  anyone. He wants it filed somewhere it cannot circulate."
+prompt: "Persuasion DC 13. Convince D'Artagnan that an archive is the
+  correct destination — not destroyed (evidence), not held (dangerous),
+  but filed as historical record with a note that it cannot be reactivated."
+failText: "He won't trust any living person with it. Offer to seal it
+  inside a witnessed package with a five-year delay on opening."
+successText: "He gives it to you. 'Take it where it is safe from everyone,
+  including me.' You receive the Cardinal's Blank Commission."
+grantItem: "Cardinal's Blank Commission"
+checkPassFlag: commissionReceived
+activateMissionBit: cdg8_act1Active
+
+Act II — "Filed as Deactivated"
+activateNode: WM
+type: skill_check
+scene: "Sweelinck reads the blank commission. 'Addressed to bearer. Signed
+  by the Cardinal. Valid at time of issue.' He looks at the commission and
+  then at you. 'What is the category for a commission that is authentic,
+  valid, and addressed to anyone who holds it?'"
+prompt: "History DC 11. Name the category: an official commission whose
+  power derives entirely from its lack of a named recipient, making it
+  perpetually transferable until deactivated."
+failText: "He creates it himself: Perpetually Transferable Commission. He
+  looks at you. 'You may as well have suggested it.'"
+successText: "Filed: Perpetually Transferable Commission — Document Whose
+  Authority Extends to Any Bearer Until Deactivated by Archive Receipt.
+  You receive Sweelinck's Commission Record."
+takeItem: "Cardinal's Blank Commission"
+grantItem: "Sweelinck's Commission Record"
+checkPassFlag: commissionFiled
+questComplete: true
+activateCond: commissionReceived
+```

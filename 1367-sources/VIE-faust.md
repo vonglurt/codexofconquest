@@ -1174,3 +1174,60 @@ He opens the final Faust cycle archive category. **Testamentary Release Records 
   "questComplete": true
 }
 ```
+
+---
+
+## Cycle 8 — Angle: *The Pact's Receipt — The Soul Contract in an Archive That Cannot Certify Its Witness*
+
+**This cycle introduces:** *The supernatural contract — a binding agreement with a non-mortal party, and the question of whether any human institution can file a document witnessed by the Devil.*
+
+### Quest API Stub — "Mephistopheles's Receipt"
+
+```
+Act I — "The Copy"
+activateNode: VIE
+type: skill_check
+missionAccept: "A theological scholar has obtained a copy of the Faust pact —
+  signed in blood, witnessed by Mephistopheles. The scholar wants to archive
+  it as evidence of the theological debate around soul contracts. The document
+  is real. The witness is not a human authority. The question is whether a
+  human archive can receive a document whose witness cannot be certified."
+scene: "A scholar's study in a German city. He holds the copy of the pact:
+  Faust's name in blood, Mephistopheles's countersignature in an ink that
+  smells of sulfur. 'The document is authentic,' the scholar says. 'I cannot
+  certify the witness. No human authority can. But the transaction occurred.
+  It should be in the record.'"
+prompt: "Persuasion DC 13. Argue that the archive can receive documents
+  witnessed by parties whose authority it cannot certify, as long as both
+  the document's existence and the uncertainty of witness certification are
+  noted."
+failText: "The scholar wants a precedent. Find one — the archive has filed
+  documents witnessed by hearsay before."
+successText: "He gives you the copy. 'Note that the witness cannot be
+  certified. Do not pretend the document is like other documents.'
+  You receive Mephistopheles's Receipt."
+grantItem: "Mephistopheles's Receipt"
+checkPassFlag: receiptReceived
+activateMissionBit: vie8_act1Active
+
+Act II — "Filed as Uncertifiable"
+activateNode: WM
+type: skill_check
+scene: "Sweelinck reads the pact. He reads it twice. 'Signed in blood.
+  Witnessed by a party whose certification cannot be verified by any
+  human authority.' He looks at you. 'What is the category for a document
+  whose witness is outside the certification capacity of all human institutions?'"
+prompt: "History DC 11. Name the category: a contract whose witness is
+  a non-mortal party, making witness certification impossible for any
+  human institution."
+failText: "He creates it himself: Uncertifiable Witness Document. He looks
+  at you. 'You may as well have suggested it.'"
+successText: "Filed: Uncertifiable Witness Document — Contract Witnessed
+  by a Party Outside Human Certification Capacity; Authenticity of Document
+  Noted; Witness Status Unresolved. You receive Sweelinck's Pact Record."
+takeItem: "Mephistopheles's Receipt"
+grantItem: "Sweelinck's Pact Record"
+checkPassFlag: receiptFiled
+questComplete: true
+activateCond: receiptReceived
+```
