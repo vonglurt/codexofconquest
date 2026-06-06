@@ -1238,3 +1238,4 @@ SHK | The Rival's Door | Cycle 1 | BK/CI/IN/CY | Poem intercepted, rival blocked
 | SEN | Doctor Livesey's Fever Chart | 8 | STK/ADM/TL/WM | Record of medical neutrality — physician's documentation crossing enemy lines without distinction |
 | GCI | Gilliatt's Tide Table | 8 | GHL/STP/TL/WM | Predictive work record — nature's schedule annotated with completed work; tide as project calendar |
 | KIR | The Task List of Ysbaddaden | 8 | HVY/WLD/WM | Fulfilled impossible conditions — completed checklist presented as proof the conditionally-granted cannot be withheld |
+| INV | The Disputed Fragment | 8 | CNA/HLD/WM | Document of permanent contestation — authenticity neither established nor dismissed; the contest is the primary archival fact |

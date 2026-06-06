@@ -1436,3 +1436,114 @@ TOKEN TAKEN: Tonthena's Sword. *questComplete: true.*
   ]
 }
 ```
+
+---
+
+## Cycle 8 — Angle: *The Disputed Fragment — Authenticity That Cannot Be Settled*
+
+*All prior cycles reviewed. Source knowledge used directly.*
+
+**What prior cycles missed:** The Ossian text itself is disputed — Macpherson claimed to have translated ancient Gaelic originals; critics (including Samuel Johnson) argued he wrote them himself. The controversy has never been finally resolved. The "original" manuscript fragments Macpherson showed to supporters exist in various forms. A fragment presented as the source of one of the poems — old vellum, Gaelic script, faded — survives in a collector's hands. It may be genuine. It may not. The archive cannot authenticate it and cannot dismiss it.
+
+**This cycle introduces:** *The contested original — a document presented as genuine whose authenticity cannot be finally established, making the contest itself its primary archival characteristic.*
+
+---
+
+### Quest API Stub — "The Disputed Fragment"
+
+```
+Act I — "The Fragment"
+activateNode: CNA
+type: skill_check
+missionAccept: "A Highland collector has a vellum fragment he believes is one
+  of the original Gaelic manuscripts from which Macpherson translated his
+  Ossian poems. He is dying and wants it placed with an archive before it
+  passes to his heirs who will sell it to whoever offers the most. He wants
+  it somewhere it can be examined fairly."
+scene: "A stone house in the vale of Cona. The old collector holds a piece
+  of vellum — perhaps twelve inches square, covered in Gaelic script in a
+  hand that looks genuinely old. But old vellum can be found, and old script
+  can be imitated. He holds it toward the light. 'I have had two scholars
+  examine it. One says it is genuine, one says it is not. I have no way to
+  know. But it should not be lost.'"
+prompt: "Persuasion DC 12. Convince him to give you the fragment for
+  transport to a neutral archive. You make no claim about its authenticity —
+  only that it will be preserved and examined fairly."
+failText: "He wants a written promise that the archive will not destroy it
+  if it proves to be false. Give him that promise in writing."
+successText: "He gives you the fragment. 'Tell them what I told you: I do
+  not know if it is genuine. I know only that it should not be burned either
+  way.' You receive the Disputed Ossian Fragment."
+grantItem: "Disputed Ossian Fragment"
+checkPassFlag: fragmentReceived
+activateMissionBit: inv8_act1Active
+
+Act II — "The Scholar's Opinion"
+activateNode: HLD
+type: skill_check
+scene: "A scholar of Gaelic manuscripts, consulted on the road. He examines
+  the fragment under glass for twenty minutes. Then he sits back. 'The vellum
+  is old — thirteenth century at the earliest, possibly older. The ink is
+  consistent with the period. The handwriting is in a Gaelic script that
+  was used in that region. But I cannot tell you whether the words written
+  are ancient poetry or a modern composition written in an old hand. The
+  content would need to be compared line by line with the poems Macpherson
+  published.'"
+prompt: "History DC 13. Ask the right question: not whether the fragment
+  is genuine but whether its content appears in Macpherson's published poems,
+  and if so, whether the phrasing matches or differs."
+failText: "He has not read Macpherson's complete works. He can only speak
+  to the physical properties of the document."
+successText: "He finds the corresponding passage in Macpherson's published
+  text and compares it word for word. There are small differences — the
+  fragment has phrases that Macpherson rendered differently. This could mean
+  the fragment is a genuine source that Macpherson altered, or a fabrication
+  that was not perfectly synchronized with the published version."
+checkPassFlag: scholarConsulted
+activateCond: fragmentReceived
+
+Act III — "The Counter-Opinion"
+activateNode: WM
+type: skill_check
+scene: "Weimar archive intake. A second scholar — a German classicist who
+  has studied the Ossian controversy — reads the scholar's report and the
+  fragment simultaneously. He shakes his head. 'The differences in phrasing
+  cut both ways. If this were a genuine source, Macpherson would have
+  followed it more closely. The differences suggest he was improvising from
+  a partial original. But improvisers and translators behave similarly.' He
+  looks at Sweelinck. 'There is no way to settle this.'"
+prompt: "History DC 12. Propose the archival resolution: file the fragment
+  as a document of contested authenticity — neither certified genuine nor
+  dismissed as false, with both scholarly opinions attached."
+failText: "Sweelinck is uncertain whether an archive should hold a document
+  it cannot authenticate. Argue that contested documents are precisely what
+  archives are for."
+successText: "Sweelinck nods. 'The archive holds what it receives. It records
+  what it knows. What it does not know, it records as not known.'"
+checkPassFlag: resolutionProposed
+activateCond: scholarConsulted
+
+Act IV — "Filed as Contested"
+activateNode: WM
+type: skill_check
+scene: "Sweelinck writes the entry for the disputed fragment. He reads it
+  aloud: 'Vellum fragment, Gaelic script, thirteenth century or earlier,
+  content partially corresponding to Ossian poems published by James Macpherson.
+  Authenticity contested: one scholar finds physical evidence consistent with
+  genuine origin; one scholar finds phrasing evidence consistent with
+  fabrication. No resolution is possible with current evidence.' He looks up.
+  'What is the category for a document that cannot be authenticated and
+  cannot be dismissed?'"
+prompt: "History DC 11. Name the category: a document whose authenticity
+  is unresolvable — where the contest itself is the primary archival fact."
+failText: "He creates it himself: Document of Permanent Contestation.
+  He looks at you. 'You may as well have suggested it.'"
+successText: "Filed: Document of Permanent Contestation — Authenticity
+  Neither Established Nor Dismissed; the Contest Is the Primary Archival
+  Fact. You receive Sweelinck's Contestation Record."
+takeItem: "Disputed Ossian Fragment"
+grantItem: "Sweelinck's Contestation Record"
+checkPassFlag: fragmentFiled
+questComplete: true
+activateCond: resolutionProposed
+```
