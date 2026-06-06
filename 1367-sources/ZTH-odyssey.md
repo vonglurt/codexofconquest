@@ -1071,3 +1071,472 @@ TOKEN TAKEN: The Cattle Decision Reconstruction.
 ---
 
 *ZTH SEEDS COMPLETE. §ZTH-01 through §ZTH-07 written. Admin pass: quest-map.md, books.md, plan.md. New nodes: PHC (Scheria/Phaeacia), RME (Rome).*
+
+---
+
+## Source Summary — Part 1 of 4
+
+*Books 1–8: Telemachus's coming of age, Calypso's enforced release of Odysseus, and the arrival at Phaeacia — the poem's setup before Odysseus speaks in his own voice.*
+
+The poem opens in its tenth year of aftermath. Troy is ash. Most heroes are home; Odysseus alone is absent, held seven years on Ogygia by the nymph Calypso, who wants to keep him permanently and has offered him immortality. He refuses it nightly. He wants to go home. On Ithaca, a hundred and eight suitors have occupied his house, eating his livestock, drinking his wine, and pressing his wife Penelope to choose a new husband. His son Telemachus is twenty and has never known his father except as a legend and an absence.
+
+Athena sets the poem in motion by appearing to Telemachus disguised as a family friend named Mentes and telling him to assert himself. She instructs him to sail to Pylos and Sparta, to ask Nestor and Menelaus what they know of Odysseus. Telemachus obeys — his first independent act. At Pylos, Nestor confirms Odysseus was alive at Troy's fall and gives him passage to Sparta. At Sparta, Menelaus reports the news from Proteus: Odysseus is alive, imprisoned by Calypso on a remote island, and cannot get home for lack of a ship. This is the first factual confirmation in the poem that the hero still exists. Meanwhile, the suitors are already plotting to ambush and kill Telemachus on his return.
+
+On Olympus, Zeus sends Hermes to Calypso with an unmistakable order: release him. Calypso obeys with grief and resentment. She has loved him for seven years — genuinely, not abstractly. She offered him immortality and he turned it down for a mortal woman and a small rocky island he cannot even see from the cave. She says so plainly. She is a goddess compelled by divine authority to release a man who does not want to stay. She helps him build a raft, gives him provisions and navigation instructions, and watches him sail away. The raft is destroyed by Poseidon, who has not forgiven the blinding of his son Polyphemus. Odysseus is washed ashore on the island of the Phaeacians, naked and salt-crusted and clinging to an olive tree on a riverbank.
+
+Nausicaa, daughter of the Phaeacian king Alcinous, finds him on the beach. She is doing laundry with her maids. The encounter is managed with practical composure — she keeps her distance, addresses him formally, and gives him clothes, food, and directions to the palace. At Alcinous's court, Odysseus is received with full hospitality. The blind bard Demodocus sings about the Trojan War. Odysseus weeps under his cloak. Alcinous notices the weeping stranger and asks who he is. Book 8 ends at the moment before Odysseus identifies himself — the fulcrum on which the poem's second movement turns.
+
+The register of these eight books is formal and architectural. The world is still intact. Penelope weaves and unweaves. Telemachus learns to speak in public. The suitors feast without consequence — for now. The poet is staging the loss before revealing what was lost.
+
+---
+
+## Cycle 8 — *The Captivity Record — Calypso's Seven Years*
+
+**What this angle reveals that prior cycles missed:** Every previous cycle tracked documents that described journeys or decisions in transit. Cycle 8 is about seven years of stasis: the period of Odysseus's captivity on Ogygia that left no official record because no third party witnessed it. The archive holds Calypso's formal complaint — the divine record of her grievance — and needs the corresponding captive's account. The token is the inventory Odysseus kept of his own remaining days: a bone stylus and a piece of driftwood, the only writing surface available, a private tally no one ever intended to see.
+
+---
+
+**THE TOKEN: `ogygia_tally_board`** — A flat slab of smooth driftwood covered in score marks: seven years of days, tallied in groups of ten, by a man who had no calendar and knew he was counting against nothing. Calypso, after he left, found it in the cave and sent it after him with Hermes, who thought it too singular not to preserve. It arrived at the Phaeacian court as an afterthought in a parcel. No one there knew what to make of it. The archive wants it as the captive's side of a captivity no god formally authorized.
+
+---
+
+Act 1 — *The Parcel from Phaeacia*
+activateNode: PHC
+type: skill_check
+scene: "The Phaeacian harbor at Scheria. The treasury clerk is going through unclaimed items left by Odysseus's departure — gifts, blankets, a bronze cup still unwashed. At the back of a shelf sits a parcel wrapped in oiled cloth, labeled in Hermes's hand: 'miscellaneous belongings, to follow.' Inside: the tally board. The grain of the wood is dark with handling. The score marks are deep, careful, made by someone who had time."
+prompt: "History DC 12. Recognize the significance of a captive's private tally — not a public document, not a complaint, but the only record of seven years that the archive has no other source for."
+failText: "You hold it a moment and set it down. The clerk wraps it back up. It will be noted in the departure inventory as 'one carved wooden board, origin unknown.' You take it anyway on the strength of a hunch, signing for it yourself."
+successText: "You understand immediately: this is Odysseus's account of his own captivity, kept for himself because there was no one else to keep it for. It is the only record that cannot be disputed by a god, because no god made it. You receive the Ogygia Tally Board."
+grantItem: "Ogygia Tally Board"
+checkPassFlag: zth_c8_act1
+
+Act 2 — *The Goddess's Complaint*
+activateNode: PHC
+type: skill_check
+scene: "The Phaeacian court archive, where a copy of Calypso's divine grievance has been filed — the formal complaint she lodged with Zeus after Hermes came to her. It reads: seven years, faithful service, immortality offered and refused, release under compulsion. The document is cold, correct, and furious. A court scribe is cross-referencing it against the tally board you carry. He is trying to reconcile two records that describe the same seven years from opposite directions."
+prompt: "Insight DC 12. Understand why both records must travel together — the goddess's complaint and the captive's tally describe the same imprisonment from incompatible vantage points; the archive needs both sides to hold neither hostage to the other's framing."
+failText: "The scribe decides to keep the divine complaint in the Phaeacian archive, where it belongs by provenance. You leave with the tally board only. The scribe makes a note: 'human record forwarded without divine counterpart; archivist discretion advised.'"
+successText: "You make the case that a captivity record consisting only of the captor's version is not a captivity record — it is a self-justification. The scribe considers this and releases a certified copy of Calypso's complaint to accompany the tally board north. You receive the Certified Copy of Calypso's Complaint."
+grantItem: "Certified Copy of Calypso's Complaint"
+checkPassFlag: zth_c8_act2
+activateCond: zth_c8_act1
+
+Act 3 — *Nausicaa's Testimony*
+activateNode: PHC
+type: skill_check
+scene: "The palace garden at dusk. Nausicaa is here alone, sitting on a low wall near the fountain. She knows you are leaving with documents about Odysseus. She does not stop you. She asks only one question: does the archive's record include any account of who found him on the beach. The tally board accounts for seven years of imprisonment. It does not account for the hour he arrived at Scheria — which she witnessed alone, and which no one else in the palace knows the details of."
+prompt: "Persuasion DC 13. Convince her that her testimony belongs in the record — not as a romantic episode but as the documented moment of re-entry into the human world; the archive's account of captivity ends at the cave; the account of restoration begins at the beach; only she holds that."
+failText: "She shakes her head gently. 'Let him tell it.' You move on. The record will be incomplete on that point. You note the gap."
+successText: "She speaks for perhaps ten minutes. She describes the beach precisely — the olive tree, the salt on him, the way she kept her distance and called out from a safe distance as though to a man, not a wretch. It is a brief and complete account. She dictates a single paragraph for the archive. She does not ask for a copy. You receive Nausicaa's Beach Testimony."
+grantItem: "Nausicaa's Beach Testimony"
+checkPassFlag: zth_c8_act3
+activateCond: zth_c8_act2
+
+Act 4 — *The Ferryman's Question*
+activateNode: SIT
+type: combat
+scene: "A river crossing south of Sithonia. A broad man with a pole stands at the ferry. He is not a bandit — he is a retired Phaeacian sailor who crewed one of the escort ships and has heard there are documents in circulation about Odysseus's return. He believes the tally board is a forgery: Odysseus, he says, was never a tally keeper; the man he rowed had soft palms, a storyteller's hands, not a counter's. He will not let you cross until you prove the board is genuine."
+prompt: "Athletics DC 14. Force the crossing. The ferryman is large and has the better position on the raft. If you go around, you lose two days."
+failText: "You go around. Two days lost, provisions short. The board travels in a damp pack and two of the score marks blur. You note the damage at the archive intake."
+successText: "You take the pole from him and hold the raft steady until he steps back. He looks at you for a long moment. 'All right,' he says. 'But if it's false, the gods know.' You cross. You receive the Ferryman's Crossing Token."
+grantItem: "Ferryman's Crossing Token"
+checkPassFlag: zth_c8_act4
+activateCond: zth_c8_act3
+
+Act 5 — *The Archive*
+activateNode: WM
+type: skill_check
+scene: "Weimar. Sweelinck reads the tally board without touching it — he leans over it. He reads the complaint copy. He reads Nausicaa's paragraph. He sits back. 'Seven years,' he says. 'A god kept him. He kept count against a god. The goddess filed a complaint that is factually accurate and completely misleading. The woman on the beach filed nothing, so we have her testimony from you, third hand, which is how we get most of the things that matter.' He begins to write."
+prompt: "History DC 12. Provide a complete provenance account for the tally board — including the damage to two score marks, the gap in the arrival record, and the circumstances of Calypso's complaint copy — so that the archive's intake record is accurate about what is known and what is inferred."
+failText: "Sweelinck writes what you can give him. The gaps are noted as gaps. He files the board under 'Captivity Documents, Self-Reported, Unwitnessed.' He thanks you for what you brought."
+successText: "You account for every element: the parcel, the clerk, Nausicaa's dusk testimony, the ferryman, the two blurred score marks and their original placement. Sweelinck writes for several minutes. 'The gaps are part of the record,' he says. 'Seven years of counting against nothing — that is itself documented in the counting.' He writes: *Ogygia Captivity Record: private tally board, seven years of days kept by the captive without witness; divine complaint filed against compelled release; arrival testimony from the woman who found him; gaps noted and preserved. The archive holds both sides of a captivity that no official document authorized and no god has since acknowledged.* You receive the Archive Receipt."
+grantItem: "Archive Receipt — Ogygia Captivity"
+takeItem: "Ogygia Tally Board"
+checkPassFlag: zth_c8_act5
+activateCond: zth_c8_act4
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "ZTH_008",
+  "title": "The Captivity Record",
+  "source": "The Odyssey — Homer (c. 725 BCE)",
+  "cycle": "ZTH",
+  "book": "The Odyssey",
+  "source_episode": "Books 1–8: Calypso has held Odysseus on Ogygia for seven years; she offers immortality; he refuses; Zeus orders his release; she obeys with grief; he builds a raft and sails; Nausicaa finds him on the Phaeacian beach",
+  "theme": "The captivity that left no official record because no third party witnessed it; the captive's private tally against time kept on driftwood; the goddess's formal complaint and the captive's informal count describing the same seven years from incompatible directions.",
+  "activateNode": "PHC",
+  "token": {
+    "id": "ogygia_tally_board",
+    "name": "Ogygia Tally Board",
+    "description": "A flat slab of driftwood covered in score marks — seven years of days, tallied in groups of ten by a man counting against nothing. Two score marks blurred in transit. Sent after Odysseus by Calypso via Hermes as an afterthought.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["PHC", "SIT", "WM"],
+  "new_nodes": [],
+  "acts": [
+    { "act": 1, "location": "PHC", "scene": "Phaeacian treasury — unclaimed items from Odysseus's departure", "title": "The Parcel from Phaeacia", "type": "skill_check", "skillCheck": { "skill": "History", "dc": 12 }, "token_action": "grant" },
+    { "act": 2, "location": "PHC", "scene": "Phaeacian court archive — divine complaint vs. tally board", "title": "The Goddess's Complaint", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "PHC", "scene": "Palace garden at dusk — Nausicaa's beach testimony", "title": "Nausicaa's Testimony", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 13 }, "token_action": "check" },
+    { "act": 4, "location": "SIT", "scene": "River crossing — retired Phaeacian ferryman disputes provenance", "title": "The Ferryman's Question", "type": "combat", "skillCheck": { "skill": "Athletics", "dc": 14 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake — complete provenance account", "title": "The Archive", "type": "skill_check", "skillCheck": { "skill": "History", "dc": 12 }, "activateMissionBit": "zthCaptivityComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## Source Summary — Part 2 of 4
+
+*Books 9–12: Odysseus speaks in his own voice at Alcinous's court, narrating the adventures from Troy's fall through Calypso's island — the Cyclops, the winds, Circe, the Underworld, the Sirens, Scylla and Charybdis, and the cattle of the Sun.*
+
+Odysseus identifies himself to Alcinous and begins. The tone shifts immediately: the poem's third-person detachment gives way to the self-narrator's slightly unreliable warmth. He tells it well. He tells it as a man who has told it before. The first stop after Troy: the Cicons, where he sacked a city and his men refused to leave and paid for it. Then the Lotus-Eaters, where forgetting is a food. Then Polyphemus the Cyclops — Poseidon's son, the reason Odysseus has been at sea for ten years. The blinding, the Nobody stratagem, the escape under the sheep, and then the catastrophic decision to shout his real name at the island's edge, gifting Polyphemus the name he needed to curse him to his father.
+
+Aeolus gives him the winds in a bag. His men open it within sight of Ithaca, jealous of what they imagine is treasure inside. The entire fleet is blown back to the start. The Laestrygonians destroy all ships but Odysseus's own. Circe on Aeaea turns his men to pigs, is resisted by Odysseus through Hermes's herb moly, swears an oath, and becomes a year-long lover and practical ally. She gives him exact navigation charts for the route home: the Underworld, the Sirens, Scylla and Charybdis, the Cattle of the Sun — all described in operational detail with specific warnings. This is the poem's most important piece of practical intelligence; it is delivered to Odysseus in a private briefing at night while the crew sleeps.
+
+In the Underworld, Tiresias gives the prophecy: you will get home, but not if your men harm the cattle on Thrinacia. After that, one more journey west with an oar, until someone mistakes it for a winnowing shovel, and then peace. Odysseus meets his dead mother, the heroes of Troy, Agamemnon, Achilles, Ajax who will not speak to him. He notes all of it. At the Sirens, Odysseus has himself lashed to the mast — the only man in history to hear the Sirens and survive — while his crew rows with wax-stopped ears. He hears everything. He strains against the bonds until his skin bleeds and signals for release with his eyebrows. The crew binds him tighter. Past the Sirens, Scylla takes six men. The crew reaches Thrinacia and the cattle. A month of contrary winds. The men's oath breaks. They slaughter. Zeus destroys the ship with lightning. All die. Odysseus alone survives on the mast and keel lashed together, drifting to Calypso.
+
+Part 2's emotional register is the self-narrator's: precise, vivid, occasionally boastful, and always aware that the audience is Alcinous, whose ships will take him home. The adventures are real, told by the only man who lived through them. The Sirens passage is the poem's most famous and strange moment: a man arranged his own bondage so that he could listen to something he knew would destroy him if he were free to act on it.
+
+---
+
+## Cycle 9 — *The Mast Agreement — What Was Bound Before the Singing*
+
+**What this angle reveals that prior cycles missed:** Prior cycles dealt with documents made in advance (Nausicaa's letter, Penelope's shroud), documents made in reconstruction (the cattle account), and captivity records made in private (the tally board). Cycle 9 is about a pre-arranged agreement made in public, with witnesses, under time pressure, before a known danger: the binding contract between Odysseus and his crew before the Sirens. He told them to bind him and not release him regardless of his orders. They did. He ordered his release. They rowed faster. The agreement held. The archive wants the crew's version — the record of the men who were asked to override the command of their captain while he was screaming at them from the mast.
+
+---
+
+**THE TOKEN: `mast_binding_articles`** — A set of wax tablets recovered from the estate of Eurylochus's family after the disaster: the brief written record of Odysseus's pre-Siren instructions to the crew, taken down by the ship's one literate sailor (Polites) before they reached the Sirens' island. The document records: the order to bind him; the prohibition on releasing him regardless of what he ordered; the wax-stopping protocol for the crew's ears. It is the only surviving document from the Thrinacian voyage. Eurylochus's family kept it because it was evidence that Odysseus commanded the deaths of their kinsman — that he gave orders he knew the crew could not disobey.
+
+---
+
+Act 1 — *Eurylochus's Widow*
+activateNode: ITH
+type: skill_check
+scene: "A farmhouse on the eastern slope of Ithaca, well away from the palace. A woman in her fifties is grinding grain. She does not look up when you enter. On the table behind her, under a wool cloth, is a set of wax tablets — you can see the corner. Eurylochus was the second-in-command, the man who refused to enter Circe's house and was right, and who argued for breaking the oath and eating the cattle and was also right about the hunger, and who died with the rest when Zeus struck the ship. His widow has kept the tablets for twenty years. She is not hostile. She is waiting to be asked correctly."
+prompt: "Insight DC 12. Understand what she needs before she will release the tablets — not payment, not authority, but acknowledgment that the record is evidence of a wrong and not merely a curiosity; Eurylochus was bound by an order he had no voice in and died for following it."
+failText: "You offer her compensation from the archive. She shakes her head. She covers the tablets again. 'He is dead. The tablets stay here.' You leave without them and must return via a different approach — she sends word a week later that she has thought it over and will give you a copy, not the original."
+successText: "You sit down across from her and say: your husband was bound by an order he did not give, for a reason he had no part in, and died for following it. The archive needs the record of that. She is still for a long moment. Then she hands you the tablets without wrapping them. You receive the Mast Binding Articles."
+grantItem: "Mast Binding Articles"
+checkPassFlag: zth_c9_act1
+
+Act 2 — *The Surviving Sailor's Corroboration*
+activateNode: ITH
+type: skill_check
+scene: "The harbor at Ithaca. An old man is mending nets. He is the only other survivor of the Thrinacian voyage — he jumped ship before the cattle slaughter and made it to a passing merchant vessel. He has been on Ithaca for twelve years but no one knows who he is, including the household of Odysseus. He watched the Siren passage from the deck, ears stopped, unable to hear. He saw Odysseus straining at the mast. He saw the crew rowing faster when Odysseus's brows signaled release. He is the corroborating witness."
+prompt: "Persuasion DC 12. Convince him to give a witnessed statement — he has kept his survival secret out of shame at having left before the slaughter; his statement will make him identifiable as the man who jumped ship, which could open old wounds on Ithaca."
+failText: "He says nothing happened that he wants to talk about. He goes on mending nets. You leave a wax tablet with a brief note and your name, in case he changes his mind. He does not, but you note his existence in the intake report."
+successText: "He speaks in a low voice for several minutes. He describes Odysseus's face at the mast precisely: calm until the song started, then something else — not terror, but something that needed a physical anchor to exist in at all. He says: the crew rowed faster. It was the right thing. He dictates a statement. You receive the Survivor's Corroboration."
+grantItem: "Survivor's Corroboration"
+checkPassFlag: zth_c9_act2
+activateCond: zth_c9_act1
+
+Act 3 — *The Philosopher's Objection*
+activateNode: CON
+type: skill_check
+scene: "Constantinople. A Byzantine logician who has read the Alcinous-court account argues that the mast-binding agreement is not a contract at all: a man cannot bind himself to an agreement that overrides his own subsequent commands; authority cannot be delegated against itself; the crew's action in ignoring Odysseus's orders was either mutiny or obedience and cannot be both. He holds the tablets as he speaks, turning them over. He is not hostile to the archive. He is genuinely uncertain whether this is a document or a paradox."
+prompt: "Persuasion DC 13. Argue that the agreement is precisely a document because of its paradox — the crew's authority to override the captain's orders was delegated by the captain in advance; the written record exists because the paradox was anticipated and formalized before the event; that is what makes it archivable."
+failText: "He sets the tablets down. 'I will note my reservation.' He writes a letter of objection to accompany the tablets, which you accept. The archive will hold both."
+successText: "He thinks for a long time. 'The pre-authorization makes it a contract,' he says slowly. 'The captain made himself an object governed by an agreement he authored. The document is the agreement, not the action.' He stamps a provenance certificate. You receive the Provenance Certificate."
+grantItem: "Provenance Certificate"
+checkPassFlag: zth_c9_act3
+activateCond: zth_c9_act2
+
+Act 4 — *The River at Night*
+activateNode: CON
+type: combat
+scene: "A river crossing north of Constantinople, deep in the night watch. Three men are waiting at the bridge — they are relatives of sailors who died at Thrinacia, and word has traveled that someone is carrying the only surviving document from the voyage. They are not thieves. They are grieving men who want to know if the tablets name who ate first, who argued hardest, who held back. They will take the tablets by force to read them before they reach an archive where the public record will be set."
+prompt: "Athletics DC 14. Hold the bridge. There are three of them and one of you, but the bridge is narrow and the ground is yours."
+failText: "They get the tablets for one hour before you recover them. They read what they were looking for — Eurylochus's name is in the agreement, as the man Odysseus most expected to need restraining. They put the tablets back. You continue. The tablets have been read by unauthorized parties; you note it."
+successText: "You hold the bridge until they back away from the dark and the water rushing below. No one speaks. They leave. You cross. The tablets are intact. You receive the Night Bridge Crossing Mark."
+grantItem: "Night Bridge Crossing Mark"
+checkPassFlag: zth_c9_act4
+activateCond: zth_c9_act3
+
+Act 5 — *The Archive*
+activateNode: WM
+type: skill_check
+scene: "Weimar. Sweelinck reads the tablets slowly. He reads the corroboration. He reads the provenance certificate. He sets them in a row. 'He wrote down his own incapacitation,' he says. 'He ordered the crew to govern him. They did. He screamed and signaled and they rowed faster, exactly as instructed. The agreement held under the one condition that makes all agreements meaningful: the moment when one of the parties wanted very badly to break it.' He pauses. 'The Sirens promised everything. He heard everything. He came away knowing everything and is not on record as saying what that was.'"
+prompt: "History DC 12. Give a complete intake account of the tablets — their provenance from Eurylochus's widow, the corroboration, the philosopher's certificate, the night crossing — so that the archive holds the human record of an agreement that governed a god-level event."
+failText: "Sweelinck files the tablets with a note of partial provenance. The survivor's corroboration is filed separately as an unverified witness account. The record is functional but incomplete."
+successText: "You lay out every element in sequence: widow, harbor, Constantinople, bridge. Sweelinck writes it all down. He says: 'The Sirens' island is the poem's black box. No one speaks of what was heard. We have the agreement that made the hearing possible, the crew's compliance that made the hearing survivable, and a sole survivor who has not said what the song contained. The archive notes this silence as data.' He files. You receive the Archive Receipt."
+grantItem: "Archive Receipt — Mast Binding"
+takeItem: "Mast Binding Articles"
+checkPassFlag: zth_c9_act5
+activateCond: zth_c9_act4
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "ZTH_009",
+  "title": "The Mast Agreement",
+  "source": "The Odyssey — Homer (c. 725 BCE)",
+  "cycle": "ZTH",
+  "book": "The Odyssey",
+  "source_episode": "Books 9–12: Before reaching the Sirens, Odysseus instructs the crew to bind him to the mast and ignore all orders to release him; they comply; he hears the Sirens and signals desperately for release; they row faster; the agreement holds; he says nothing afterward about what he heard",
+  "theme": "The pre-arranged agreement that authorized the crew to override their captain; the written record kept by Eurylochus's family as evidence of compulsion; the silence of the sole survivor on what the Sirens actually said.",
+  "activateNode": "ITH",
+  "token": {
+    "id": "mast_binding_articles",
+    "name": "Mast Binding Articles",
+    "description": "Wax tablets recording Odysseus's pre-Siren instructions: bind him, stop the crew's ears, ignore all release orders. Kept by Eurylochus's widow for twenty years as evidence of a command her husband could not disobey.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["ITH", "CON", "WM"],
+  "new_nodes": [],
+  "acts": [
+    { "act": 1, "location": "ITH", "scene": "Ithaca farmhouse — Eurylochus's widow with the tablets", "title": "Eurylochus's Widow", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 12 }, "token_action": "grant" },
+    { "act": 2, "location": "ITH", "scene": "Ithaca harbor — surviving sailor's corroboration", "title": "The Surviving Sailor", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "CON", "scene": "Constantinople — philosopher's paradox objection", "title": "The Philosopher's Objection", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 13 }, "token_action": "check" },
+    { "act": 4, "location": "road_CON_WM", "scene": "River bridge at night — relatives of the Thrinacian dead", "title": "The River at Night", "type": "combat", "skillCheck": { "skill": "Athletics", "dc": 14 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive — complete intake of the binding record", "title": "The Archive", "type": "skill_check", "skillCheck": { "skill": "History", "dc": 12 }, "activateMissionBit": "zthMastComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## Source Summary — Part 3 of 4
+
+*Books 13–20: Odysseus returns to Ithaca in disguise, tests the loyalty of his servants, reunites secretly with Telemachus, and moves through his own household as a beggar while planning the slaughter of the suitors.*
+
+The Phaeacians deliver Odysseus to Ithaca while he sleeps. He wakes up on a beach he doesn't recognize — Athena has obscured it with fog — and is initially deceived by Athena herself, disguised as a young shepherd, before she reveals herself and the plan. She transforms him into a bent, ragged old beggar. He goes first to the swineherd Eumaeus, the most faithful servant in the poem, who feeds him and speaks bitterly and fondly of his absent master while his absent master sits across the fire listening. Eumaeus weeps for Odysseus. The dog Argos, old and flea-ridden on a dung heap outside the palace, recognizes him when no person does, wags its tail, and dies. Odysseus looks away and wipes the tear before Eumaeus can see it.
+
+Telemachus returns from Sparta. Odysseus reveals himself to his son — or rather, Athena makes him suddenly himself again for the duration of the revelation, and then old and ragged again afterward. They plan together in Eumaeus's hut: Telemachus will go ahead to the palace; Odysseus, still in beggar's guise, will follow; neither will reveal anything until the moment. In the palace, Odysseus begs from the suitors and is abused by them — one of them throws a footstool that hits his shoulder. He takes it without moving. A professional beggar named Irus tries to drive him out; Odysseus beats him efficiently and props him against the wall with his staff in his hands.
+
+Penelope, prompted by Athena, descends to the suitors and each gives her a gift. She is beautiful, untouchable, and maneuvering. She manages them as she has for twenty years — present enough to keep them there, distant enough to give nothing away. That night she has the old beggar brought to her. She asks him about her husband. He tells her lies that are strategically accurate — he claims to have met Odysseus recently and gives details that are true. She weeps. He keeps his face still. She offers him hospitality. The nurse Euryclea, washing his feet, recognizes the scar on his thigh from a boar hunt on Parnassus in his youth — a scar his father and mother sent him to get as a boy, the mark of his specific body. Odysseus grips her throat in the dark. She understands. She holds the secret.
+
+The register of Part 3 is one of surveillance and patience. Odysseus moves through his own house as a stranger, documenting the loyalty and disloyalty of every person in it. He is the archive operating in the field: identifying what remains true and what has corroded over twenty years of neglect.
+
+---
+
+## Cycle 10 — *The Beggar's Passport — The Document the Disguise Carried*
+
+**What this angle reveals that prior cycles missed:** Every previous cycle involved documents that existed before the journey. Cycle 10 is about a document generated by the performance of not-being-yourself: the record of Odysseus's cover story, the false identity he maintained for weeks inside his own house. The archive holds all versions of the disguise — the cover story he told Eumaeus, the story he told Penelope, the variant he told Antinous — and needs to reconcile them into a single provenance record for the object that anchored the fiction: the distinctive beggars' wallet that became, in the course of twenty years of real wandering, indistinguishable from the prop it was meant to be.
+
+---
+
+**THE TOKEN: `the_beggars_wallet`** — A battered leather wallet, badly repaired in three places, hanging from a rope of twisted cord. Odysseus carried it into the palace. It contained: two pieces of hard bread, a flask of oil, a small knife with a cracked handle, and a folded scrap of oiled leather with a set of false biographical details written in a hand no one has been able to identify. Eumaeus found it on the dung heap after the slaughter, beside the footstool mark on the threshold. He kept it. The archive wants it as the primary artifact of the disguise that ended twenty years of usurpation.
+
+---
+
+Act 1 — *Eumaeus's Hut*
+activateNode: ITH
+type: skill_check
+scene: "The swineherd's station in the upland forest of Ithaca, a day's walk from the palace. Eumaeus is outside, working leather. The wallet hangs from a post near the door — he has not moved it since the slaughter. He knows what it is. He kept it because it was the last object his master touched before becoming himself again, and he was not ready to let that go. He is not grieving now. He is a man who worked faithfully for twenty years and was right to do so, and he is not entirely sure what to do with being right."
+prompt: "Insight DC 12. Understand what Eumaeus needs before he will release the wallet — not authority, not argument, but the acknowledgment that his keeping it was an act of appropriate custodianship, not sentiment; the archive is not taking it from him, it is continuing the custody he began."
+failText: "He hands it over without ceremony. 'Take it. It was never mine.' He goes back to his leather. You have the wallet but the intake notes will reflect that the chain of custody explanation was not completed."
+successText: "You tell him: he was the first archive this object had. He kept the cover story intact for the twenty hours between Eumaeus's hut and the palace. Without that custody the disguise fails and the suitors survive. He looks at you for a long moment. Then he takes the wallet off the post and holds it out. You receive the Beggar's Wallet."
+grantItem: "Beggar's Wallet"
+checkPassFlag: zth_c10_act1
+
+Act 2 — *The Nurse's Account*
+activateNode: ITH
+type: skill_check
+scene: "The inner women's quarters of the palace, Ithaca. The nurse Euryclea is old and sharp-tongued and entirely composed. She knows why you are here. She recognized the scar on his thigh in the dark — twenty years older, the same boar-scar from Parnassus that she wrapped as a child. She held his ankle and understood everything in the same instant. He gripped her throat. She kept the secret for twelve hours while the plan completed. She will tell you the details. What she wants to know first is whether the archive intends to record that she knew."
+prompt: "Persuasion DC 12. Assure her that her recognition and her silence will both be documented — not as disloyalty to the household she served, but as an active element in the restoration of the household she served; her twelve hours of silence is evidence, not a detail."
+failText: "She says nothing about the twelve hours. She gives you a dry recitation of the footwashing, the scar, the grip. 'He said nothing. I said nothing.' The record is factually accurate and misses the weight entirely."
+successText: "She talks for half an hour. She describes the lamp, the angle of his thigh, the specific shape of the scar she remembered from when he was eight years old. She says: 'I had him. Then I had him again. Twenty years apart, the same.' She dictates a clean account for the archive. You receive Euryclea's Recognition Statement."
+grantItem: "Euryclea's Recognition Statement"
+checkPassFlag: zth_c10_act2
+activateCond: zth_c10_act1
+
+Act 3 — *The Cover Story's Contradictions*
+activateNode: ITH
+type: skill_check
+scene: "A room in the palace where the steward Medon — who survived the slaughter by hiding under the ox hides — has compiled three versions of the beggar's cover story as told to Eumaeus, Telemachus, and Penelope. They contradict each other in small but specific ways: his claimed homeland, the name of his fictional father, the number of ships he said he once commanded. Medon is not accusatory. He is confused. He wants the archive to tell him which version is the 'real' cover story so he can file correctly."
+prompt: "History DC 13. Explain why the contradictions are the document — a good cover story adapts to its audience; the three versions together reveal more about Odysseus's situational intelligence than any single consistent version would; the archive files all three and notes the adaptations."
+failText: "Medon files the most internally consistent version and notes the discrepancies as copying errors. The record is tidy and wrong."
+successText: "Medon pauses, then begins to write very carefully. 'He told Eumaeus one thing, Telemachus a second, Penelope a third,' he says, 'and in each case the thing he told them was what that person most needed to believe was possible.' He files all three versions with annotations. You receive the Three-Version Cover Record."
+grantItem: "Three-Version Cover Record"
+checkPassFlag: zth_c10_act3
+activateCond: zth_c10_act2
+
+Act 4 — *Antinous's Household*
+activateNode: ITH
+type: combat
+scene: "The house of Antinous's father Eupeithes, outside Ithaca town. Eupeithes is gathering men to avenge his son's death. Two of them, having heard that someone is collecting documents from the palace, believe the archive is building a case to legitimize the slaughter — that the beggar's wallet is being used to document Odysseus's pre-planned deception, which would make the suitors' deaths a legal execution rather than a massacre. They are not wrong about what the archive does. They intend to take the wallet."
+prompt: "Athletics DC 14. Protect the wallet through a short, decisive confrontation. The men are armed but do not want to escalate to a killing; they want the object, not a death."
+failText: "They get the wallet for long enough to remove the folded oiled-leather insert with the written false identities. When you recover it, the insert is gone. The wallet is intact. The written element of the cover story is lost. You note the loss."
+successText: "You take the blow and keep moving — out through the courtyard gate before they can organize a second approach. The wallet stays sealed. The insert is intact. You receive the Intact Wallet Seal."
+grantItem: "Intact Wallet Seal"
+checkPassFlag: zth_c10_act4
+activateCond: zth_c10_act3
+
+Act 5 — *The Archive*
+activateNode: WM
+type: skill_check
+scene: "Weimar. Sweelinck opens the wallet on the table. He reads the folded insert. He reads Euryclea's statement. He reads the three-version cover record. He lays them out in order. 'He walked into his own house as a stranger,' he says quietly. 'He begged from men eating his food at his table. He held still when one of them threw a stool at his shoulder. He held still when his nurse recognized him in the dark and put her hand over her mouth. He did all of this in possession of a wallet that was, depending on what you believed about him, either a beggar's life or a king's prop.' He pauses. 'The archive cannot determine from this record which it was. We file it as both.'"
+prompt: "History DC 12. Give a complete provenance account — from Eumaeus's post to the Eupeithes confrontation — so that the file reflects the full chain of custody of the disguise's primary object."
+failText: "Sweelinck files what he has. The gaps are noted. The wallet is catalogued under 'Disguise Artifacts, Self-Authored Identity, Ithaca.'"
+successText: "You give the full account. Sweelinck writes it into the record. He says: 'Twenty years of real wandering made the prop indistinguishable from the man. The archive holds a beggar's wallet that may be the most precisely accurate representation of its owner in the entire collection.' He files. You receive the Archive Receipt."
+grantItem: "Archive Receipt — Beggar's Wallet"
+takeItem: "Beggar's Wallet"
+checkPassFlag: zth_c10_act5
+activateCond: zth_c10_act4
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "ZTH_010",
+  "title": "The Beggar's Passport",
+  "source": "The Odyssey — Homer (c. 725 BCE)",
+  "cycle": "ZTH",
+  "book": "The Odyssey",
+  "source_episode": "Books 13–20: Odysseus returns to Ithaca disguised as a beggar; he passes through Eumaeus's hut, reunites secretly with Telemachus, enters the palace begging, tells three different versions of his cover story to three different listeners, is recognized by the nurse through a scar in the dark",
+  "theme": "The identity document of a man who became his own disguise; the cover story that adapted to each audience; the nurse's recognition and twelve hours of silence; the wallet kept by Eumaeus that is both prop and relic.",
+  "activateNode": "ITH",
+  "token": {
+    "id": "the_beggars_wallet",
+    "name": "The Beggar's Wallet",
+    "description": "A battered leather wallet carried by Odysseus through the palace disguise. Contains: two pieces of bread, a flask of oil, a small knife, and a folded insert with written false identities. Found by Eumaeus on the dung heap after the slaughter.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["ITH", "WM"],
+  "new_nodes": [],
+  "acts": [
+    { "act": 1, "location": "ITH", "scene": "Eumaeus's upland station — wallet on a post by the door", "title": "Eumaeus's Hut", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 12 }, "token_action": "grant" },
+    { "act": 2, "location": "ITH", "scene": "Palace women's quarters — Euryclea's recognition account", "title": "The Nurse's Account", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "ITH", "scene": "Palace steward's room — three contradicting cover story versions", "title": "The Cover Story's Contradictions", "type": "skill_check", "skillCheck": { "skill": "History", "dc": 13 }, "token_action": "check" },
+    { "act": 4, "location": "ITH", "scene": "Eupeithes's house — two men trying to seize the wallet", "title": "Antinous's Household", "type": "combat", "skillCheck": { "skill": "Athletics", "dc": 14 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive — provenance account of the disguise's primary object", "title": "The Archive", "type": "skill_check", "skillCheck": { "skill": "History", "dc": 12 }, "activateMissionBit": "zthBeggarsComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## Source Summary — Part 4 of 4
+
+*Books 21–24: Penelope's bow contest, the slaughter of the suitors, the marriage bed as proof of identity, and Odysseus's reunion with his aged father Laertes.*
+
+Penelope descends to the hall and announces the contest: she will marry whoever can string Odysseus's great bow — a guest-gift from Iphitus — and shoot an arrow through twelve axe-heads set in a row. The suitors try in order and fail. The bow resists all of them; it has been hanging untouched for twenty years and it knows who it belongs to. Odysseus, still in beggar's disguise, asks to try. The suitors object violently. Penelope insists. Telemachus sends his mother upstairs — firmly, with authority, for the first time — and says the bow will go where he says. The swineherd Eumaeus carries it to Odysseus. He handles it the way a luthier checks an instrument: quiet, professional, thorough. He strings it with no apparent effort. He shoots through all twelve axe-heads. He turns to the suitors.
+
+The slaughter takes most of Book 22. Odysseus and Telemachus and the two loyal servants kill all one hundred and eight suitors. The serving women who had slept with suitors are hanged in the courtyard afterward. The house is washed and fumigated. The nurse is sent to tell Penelope that her husband has returned and the suitors are dead.
+
+Penelope does not believe it. She comes downstairs and sits across from him in silence. She is not cold — she is cautious, and cautious with the same intelligence that kept the household intact for twenty years. She tests him: she tells the nurse loudly to move their marriage bed out of the bedroom for him to sleep on. Odysseus erupts with specificity. The bed cannot be moved. He built it himself around a living olive tree rooted in the courtyard; one bedpost is the tree; the bed is fixed to the earth; only two people in the world know this. She runs to him.
+
+In Book 24, Odysseus goes to his father Laertes in the vineyard. The old man is digging, dressed in rags, alone, having refused to live in the palace since his son disappeared. Odysseus tests him first with a false identity — he claims to be a stranger who met Odysseus years ago and gave him gifts — and watches Laertes weep for a son standing in front of him before he breaks the fiction and reveals himself. The proof is the same as for Penelope: specific embodied knowledge, the scar from the Parnassus boar hunt, the trees in the orchard that Laertes gave him as a boy and named one by one. The poem ends with Athena stopping the retaliatory violence of the suitors' families and imposing peace.
+
+The register of Part 4 is the return of full presence: Odysseus is himself again. The disguises are over. The tests are over. What remains is the living body's memory — the immovable bed, the specific trees, the old scar — which no impostor can know and no absence can erode.
+
+---
+
+## Cycle 11 — *The Bed That Could Not Be Moved — The Proof of the Living Tree*
+
+**What this angle reveals that prior cycles missed:** All previous cycles dealt with documents made on portable materials — wax, cedar, leather, driftwood. Cycle 11 is about a document made in the original sense: a mark inscribed in matter that cannot be separated from its context. The marriage bed is the proof because it is rooted. Odysseus built it around a living olive tree. The post is alive. The bed cannot be moved. The archive's problem is this: the bed is the document, and the document cannot be transported. What the archive receives instead is the testimony about the bed — the conversation in which the undeniable thing was said — which is itself a record of a body proving its own continuous identity through twenty years of transformation.
+
+---
+
+**THE TOKEN: `penelope_test_tablet`** — A single cedar tablet recording the exchange between Odysseus and Penelope on the night of the recognition, taken down by a palace scribe who happened to be within earshot behind a column. The tablet contains: Penelope's instruction to move the bed; Odysseus's eruption of specific knowledge — the olive tree, the carved posts, the sequence of construction; Penelope's response. It is the only verbatim record of the moment of recognition. The scribe, not knowing what he had witnessed, filed it in the household accounts as 'domestic exchange, bedroom allocation.' The archive found it fifteen years later under a water stain.
+
+---
+
+Act 1 — *The Palace Accounts Room*
+activateNode: ITH
+type: skill_check
+scene: "The palace accounts room, Ithaca. Stacked tablets on wooden shelves, some warped, one shelf water-damaged at the far end. The scribe who filed the recognition exchange is dead — he died the following winter from an illness. What remains is his filing system, and a household steward named Dolius's son who has been going through the water-damaged tablets trying to preserve what can be preserved. He has already found it. He is holding it very carefully when you arrive. He does not know what it is. He knows it is not a bedroom allocation note."
+prompt: "History DC 12. Identify the tablet's significance from its content — the specific architectural knowledge about the olive tree bedpost is not a domestic complaint; it is a proof-of-identity statement; the scribe who filed it as 'bedroom allocation' preserved it in the wrong category and the wrong category saved it from being cleared in the twenty years since."
+failText: "You recognize the exchange but cannot immediately place it in context. Dolius's son keeps the tablet for now, pending your return. You come back the following day with enough knowledge to name it correctly."
+successText: "You explain what the tablet contains to Dolius's son in two sentences. He hands it to you immediately, carefully, with both hands. 'I thought something had happened,' he says. 'I didn't know what.' You receive the Penelope Test Tablet."
+grantItem: "Penelope Test Tablet"
+checkPassFlag: zth_c11_act1
+
+Act 2 — *Penelope's Version*
+activateNode: ITH
+type: skill_check
+scene: "The queen's upper room, late afternoon. Penelope is at her loom but not weaving — the shuttle is in her hand. She has heard you have the scribe's tablet. She is not hostile. She is deciding how much the archive deserves. What the tablet does not record is the inside of the test: that she knew, when she gave the instruction about the bed, that the real Odysseus would react exactly as this man reacted — and that the real Odysseus would know, in the same moment, exactly why she was testing him. The tablet records the proof. It does not record the understanding."
+prompt: "Persuasion DC 13. Ask her to give the archive the inside account — not the proof itself, which the tablet holds, but the design of the test; why the bed specifically; what she was listening for in his voice before the content; the twenty years of accumulated evidence that made this particular test definitive."
+failText: "She looks at you for a long time. 'The tablet is enough,' she says. She goes back to her loom. You leave with the tablet and a gap in the record. The archive will note it."
+successText: "She sets the shuttle down. She speaks quietly and at length. She describes what the bed means: it was the thing he made for her, by his own hands, that was also the foundation of the house, rooted in the earth of the courtyard. No impersonator could know it. No impersonator could feel what he felt when she named it as something that could be taken away. 'He didn't argue,' she says. 'He stated.' She dictates a paragraph. You receive Penelope's Interior Account."
+grantItem: "Penelope's Interior Account"
+checkPassFlag: zth_c11_act2
+activateCond: zth_c11_act1
+
+Act 3 — *Laertes in the Vineyard*
+activateNode: ITH
+type: skill_check
+scene: "The farm outside Ithaca town, at midday. Laertes is in the vineyard, staking a vine. He is clean now — Athena touched him and he stands straighter than his years — but he was bent and ragged in his own field for twenty years and he still moves like a man who expects nothing. He knows the archive wants information about the recognition. He knows what Odysseus told him: the scar, the trees. He also knows what Odysseus did before that: he gave him a false identity and watched him weep for his own son. He will talk about the trees. He is not sure he will talk about the test."
+prompt: "Insight DC 12. Read why Laertes is reluctant — not pride, but the specific shame of having been tested by his own child; understanding this correctly means acknowledging it before asking him to narrate it, which is the only approach that doesn't compound the shame."
+failText: "You ask about the trees. He names all thirteen pear trees, the ten apple trees, the forty fig trees, the fifty rows of vines, in order, from memory. He gives you a clean account of the recognition. He does not mention the false identity or the hour he wept before Odysseus told the truth."
+successText: "You acknowledge, before asking anything, that being tested by your own child is a thing the archive cannot judge and does not need to frame. He is still for a moment. Then he talks about the full hour: the stranger who said he had met Odysseus years ago, the gifts, the detailed and plausible lie, the grief that came up without any help. He says: 'I knew it was him when he started lying that well.' He dictates. You receive Laertes' Recognition Account."
+grantItem: "Laertes' Recognition Account"
+checkPassFlag: zth_c11_act3
+activateCond: zth_c11_act2
+
+Act 4 — *The Bow as Instrument*
+activateNode: ITH
+type: combat
+scene: "The palace armory, where the great bow has been rehung after the slaughter. The bow-maker's son — a craftsman from Same who claims the bow as an inherited piece, since Iphitus gave it and Iphitus was murdered, making the gift legally contingent — is in the armory with two men, attempting to remove it. He is not violent but he is determined, and he has a legal case that is not entirely without merit. The tablet you carry is part of the same legal question: a document confirming Odysseus's identity also confirms his claim to every object in the palace."
+prompt: "Athletics DC 14. Prevent the removal of the bow. It is not the token you carry, but it is physically intertwined with the token's meaning — if the bow leaves, the proof of identity's primary instrument leaves with it."
+failText: "They take the bow. It will be subject to legal proceedings. The archive notes the connection between the tablet and the bow's contested provenance, and files accordingly. The recognition record is intact; the physical instrument of proof is disputed."
+successText: "You put yourself between the men and the bow rack and stay there until they consult with their legal advisor and find their case is weaker than they thought. They leave. The bow stays. You receive the Bow Remains in Place Certificate."
+grantItem: "Bow Remains in Place Certificate"
+checkPassFlag: zth_c11_act4
+activateCond: zth_c11_act3
+
+Act 5 — *The Archive*
+activateNode: WM
+type: skill_check
+scene: "Weimar. Sweelinck reads the tablet in full. He reads Penelope's interior account. He reads Laertes' full hour. He sits back. 'The bed is rooted in the earth of the courtyard,' he says. 'The proof is that only the original person knows this. The proof is not portable. What is portable is the moment of the proof being spoken — the eruption of specific knowledge in a man who had been performing ignorance for weeks.' He is quiet. 'The archive holds the testimony of three people who recognized the same person through different anatomical and architectural facts: a scar, a set of trees, a bed that cannot be moved. Together they constitute the most thoroughly documented identity verification in the collection.'"
+prompt: "History DC 13. Assemble the complete provenance account — tablet provenance, Penelope's interior account, Laertes' full version including the false-identity hour, the bow's contested status — so that the archive's identity-proof file is complete and its limits are acknowledged."
+failText: "Sweelinck files what you have with noted gaps. The record is significant but partial. He thanks you for what you brought."
+successText: "You lay out every element in sequence: the water-damaged shelf, Penelope at the loom, Laertes in the vineyard, the bow rack. Sweelinck writes for a long time. He says finally: 'The bed cannot be moved. The archive cannot hold the bed. What the archive holds is the record of a man who knew a thing about a bed that no one else could know, and said it without thinking, and was recognized by that saying. The document is the speaking. We file it as such.' He files. He writes: *questComplete.* You receive the Archive Receipt."
+grantItem: "Archive Receipt — Proof of Identity"
+takeItem: "Penelope Test Tablet"
+checkPassFlag: zth_c11_act5
+activateCond: zth_c11_act4
+questComplete: true
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "ZTH_011",
+  "title": "The Bed That Could Not Be Moved",
+  "source": "The Odyssey — Homer (c. 725 BCE)",
+  "cycle": "ZTH",
+  "book": "The Odyssey",
+  "source_episode": "Books 21–24: Penelope tests Odysseus by saying the bed could be moved; he erupts with the specific knowledge of how he built it around a living olive tree; she recognizes him; Laertes is recognized via a scar and the named orchard trees; the poem ends",
+  "theme": "The proof of identity that cannot be transported; the bed rooted in the earth as the ultimate unforgeable document; three separate recognitions through different bodily and architectural facts; the document that is the moment of speaking.",
+  "activateNode": "ITH",
+  "token": {
+    "id": "penelope_test_tablet",
+    "name": "Penelope Test Tablet",
+    "description": "A cedar tablet recording the recognition exchange between Odysseus and Penelope — Penelope's instruction to move the bed, Odysseus's eruption of specific knowledge about the olive tree bedpost, Penelope's response. Filed in error as 'bedroom allocation' by the palace scribe who witnessed it.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["ITH", "WM"],
+  "new_nodes": [],
+  "acts": [
+    { "act": 1, "location": "ITH", "scene": "Palace accounts room — water-damaged shelf, tablet misfiled", "title": "The Palace Accounts Room", "type": "skill_check", "skillCheck": { "skill": "History", "dc": 12 }, "token_action": "grant" },
+    { "act": 2, "location": "ITH", "scene": "Queen's upper room — the interior account of the test", "title": "Penelope's Version", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 13 }, "token_action": "check" },
+    { "act": 3, "location": "ITH", "scene": "Laertes' vineyard — the full recognition including the false-identity hour", "title": "Laertes in the Vineyard", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 12 }, "token_action": "check" },
+    { "act": 4, "location": "ITH", "scene": "Palace armory — bow-maker's son attempting to remove the bow", "title": "The Bow as Instrument", "type": "combat", "skillCheck": { "skill": "Athletics", "dc": 14 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive — complete identity-proof file assembled", "title": "The Archive", "type": "skill_check", "skillCheck": { "skill": "History", "dc": 13 }, "activateMissionBit": "zthBedComplete", "questComplete": true, "token_action": "take" }
+  ]
+}
+```
+
+---
+
+*ZTH PASS 4 COMPLETE. §ZTH-08 through §ZTH-11 written. Cycles: The Captivity Record (Calypso's seven years), The Mast Agreement (Sirens binding contract), The Beggar's Passport (disguise artifact), The Bed That Could Not Be Moved (proof of identity). Nodes used: PHC, ITH, SIT, CON, WM.*

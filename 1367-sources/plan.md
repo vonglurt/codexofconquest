@@ -1004,3 +1004,674 @@ In approximate queue order:
 4. Current baseline: 443 nodes, 1590 quests
 
 **STN (Robin Hood):** EMA (East Midlands Airport, nearest to Nottingham) anchors. EMT (Emmet Priory), LEA (Castle Lea), NTN (Nottingham city), KLN (Kirklees Nunnery). SHW (Sherwood Forest proper) placed between EMA and NTN. Terrain: `forest` (Sherwood), `city` (Nottingham), `ruins` (priories).
+
+---
+
+## §PHASE-1 — Source Text Acquisition Queue
+
+Books listed here have `[ ]` in books.md because their source `.txt` files are missing. They were memory-processed in a prior session. Before these books can receive a new reading pass (Pass 4 summaries, additional cycles, or corrected vignettes), the original source text must be placed in `1367-sources/`.
+
+**Procedure for each book:**
+1. Locate the public-domain text on Project Gutenberg (search by title + author).
+2. Download the plain-text `.txt` file (UTF-8, not HTML).
+3. If the file is > 200 KB, run `split-sources.sh CODE title N` to split it into 200 KB parts.
+4. Confirm file is named `{CODE}-{slug}.txt` (or `.partKofN.txt` if split).
+5. Change books.md entry from `[ ]` to `[x]` with a note: `Source txt acquired YYYY-MM-DD`.
+6. The book is then eligible for Pass 4 (source summaries) and additional vignette cycles.
+
+**Node and import status:** all these books are already IMPORTED (API quests exist). Acquiring the source text does NOT require re-importing — it enables future passes and corrections.
+
+---
+
+### §PHASE-1-VBY — Grettir's Saga (Anon, c.1310)
+
+**Code:** VBY | **Slug:** grettir-saga | **Current books.md status:** `[ ]`  
+**Import status:** IMPORTED — 2026-06-05 (7 cycles, 35 acts, RKN/BWH nodes)  
+**Why missing:** Prior processing was memory-only; no `.txt` was placed in the folder.
+
+**Find:** Project Gutenberg — search "Grettir's Saga" or "Grettir the Strong."  
+Recommended translation: G.H. Hight (1914), or Eiríkr Magnússon & William Morris (1900).  
+Expected size: ~370 KB. Split into 2 parts if > 200 KB.
+
+**Files to create:**
+- `VBY-grettir-saga.txt` (or `.part1of2.txt` / `.part2of2.txt`)
+
+**After acquisition:**
+- Update books.md VBY entry: `[ ]` → `[x]` + note `Source txt acquired`
+- VBY-grettir-saga.md already exists from memory pass — do NOT overwrite; append new Source Summary sections using Pass 4 protocol
+- Verify RKN (Reykjaness shore-farm) and BWH (burial mound, Norwegian coast) node descriptions match the actual text
+
+---
+
+### §PHASE-1-RIX — Egil's Saga (Anon, attr. Snorri, c.1240)
+
+**Code:** RIX | **Slug:** egil-saga | **Current books.md status:** `[ ]`  
+**Import status:** IMPORTED — 2026-06-05 (7 cycles, 35 acts, no new nodes — YRK/ISL existing)  
+**Why missing:** Prior processing was memory-only; no `.txt` was placed in the folder.
+
+**Find:** Project Gutenberg — search "Egil's Saga" or "Egla."  
+Recommended translation: W.C. Green (1893) — PG has this.  
+Expected size: ~580 KB. Split into 3 parts if needed.
+
+**Files to create:**
+- `RIX-egil-saga.txt` (or split parts)
+
+**After acquisition:**
+- Update books.md RIX entry: `[ ]` → `[x]` + note
+- RIX-egil-saga.md exists from memory pass — append Pass 4 Source Summary sections only
+- Verify YRK (York) and ISL (Althing/Iceland) node usage matches text geography
+
+---
+
+### §PHASE-1-RKV — Poetic Edda (Anon, ~10th–13th C, Codex Regius c.1270)
+
+**Code:** RKV | **Slug:** poetic-edda | **Current books.md status:** `[ ]`  
+**Import status:** IMPORTED — 2026-06-05 (7 cycles, 35 acts, VLH/AEG/RSS nodes)  
+**Why missing:** Prior processing was memory-only; no `.txt` was placed in the folder.
+
+**Find:** Project Gutenberg — search "Poetic Edda" or "Elder Edda."  
+Recommended translation: Henry Adams Bellows (1936) — full Eddic poems with notes.  
+Alternative: Lee M. Hollander (1962) — not PG, but widely available.  
+Expected size: ~750 KB. Split into 4 parts.
+
+**Files to create:**
+- `RKV-poetic-edda.part1of4.txt` through `.part4of4.txt`
+
+**After acquisition:**
+- Update books.md RKV entry: `[ ]` → `[x]` + note
+- RKV-poetic-edda.md exists — append Pass 4 Source Summary sections only
+- Confirm Völuspá, Hávamál, Lokasenna content matches VLH/AEG node vignette descriptions
+
+---
+
+### §PHASE-1-HFT — Frithiof's Saga (Esaias Tegnér, pub. 1825)
+
+**Code:** HFT | **Slug:** frithiof-saga | **Current books.md status:** `[ ]`  
+**Import status:** IMPORTED — 2026-06-05 (7 cycles, 35 acts, ALR/BLG/RNG/ING/HEO nodes)  
+**Why missing:** Prior processing was memory-only; no `.txt` was placed in the folder.
+
+**Find:** Project Gutenberg — search "Frithiof's Saga" or "Fridjof."  
+Recommended translation: Bayard Taylor (1866) or Thomas A. Holcomb.  
+Expected size: ~100–150 KB (poem, not a long prose saga). Single file, no split needed.
+
+**Files to create:**
+- `HFT-frithiof-saga.txt`
+
+**After acquisition:**
+- Update books.md HFT entry: `[ ]` → `[x]` + note
+- HFT-frithiof-saga.md exists — append Pass 4 Source Summary (Alternative Reading angle, since this is a single-file poetic work)
+- Confirm ALR (Alrekstaðir Temple), BLG (Balder's Grove), RNG (Ring's Chamber), ING (Ingeborg's Chamber) scene details match poem text
+
+---
+
+### §PHASE-1-ARN — Knights of the Cross (Henryk Sienkiewicz, 1900, 1399 setting)
+
+**Code:** ARN | **Slug:** knights-of-the-cross | **Current books.md status:** `[ ]`  
+**Import status:** IMPORTED — 2026-06-05 (7 cycles, 35 acts, KRK/JUR/TKT/CHP nodes)  
+**Why missing:** Prior processing was memory-only; no `.txt` was placed in the folder.
+
+**Find:** Project Gutenberg — search "Knights of the Cross" + Sienkiewicz.  
+Recommended translation: Jeremiah Curtin (1900) — same translator as Quo Vadis.  
+Expected size: ~900–1000 KB. Split into 5 parts.
+
+**Files to create:**
+- `ARN-knights-of-the-cross.part1of5.txt` through `.part5of5.txt`
+
+**After acquisition:**
+- Update books.md ARN entry: `[ ]` → `[x]` + note
+- ARN-knights-of-the-cross.md exists — append Pass 4 Source Summary sections per part
+- Verify KRK (Kraków), JUR (Spychów/Jurand's castle), TKT (Teutonic border), CHP (Mazovian chapel) match novel geography
+
+---
+
+### §PHASE-1-OST — Song of Roland (Anon, c.1100)
+
+**Code:** OST | **Slug:** song-of-roland | **Current books.md status:** `[ ]`  
+**Import status:** IMPORTED — 2026-06-05 (7 cycles, 35 acts, RON/PYR/AIX/FRS nodes)  
+**Why missing:** Prior processing was memory-only; no `.txt` was placed in the folder.
+
+**Find:** Project Gutenberg — search "Song of Roland" or "Chanson de Roland."  
+Recommended translation: John O'Hagan (1880) — PG has this.  
+Alternative: L. Bacon (1914) verse translation.  
+Expected size: ~150 KB. Single file, no split needed.
+
+**Files to create:**
+- `OST-song-of-roland.txt`
+
+**After acquisition:**
+- Update books.md OST entry: `[ ]` → `[x]` + note (currently `[ ]` with no status notes)
+- OST-song-of-roland.md exists — append Pass 4 Source Summary (Alternative Reading)
+- Verify RON (Roncevaux Pass), PYR (Pyrenean High Road), AIX (Aix-la-Chapelle Chapel), FRS (Frankish Road-Town) match chanson geography
+- Also complete §IMPORT-99 OST tracking file updates (see task #10 above)
+
+---
+
+### §PHASE-1-TBS — Knight in the Panther's Skin (Shota Rustaveli, c.1225)
+
+**Code:** TBS | **Slug:** knight-panther-skin | **Current books.md status:** `[ ]`  
+**Import status:** NOT YET IMPORTED (seeds complete from memory pass; import is Phase 2)  
+**Why missing:** Prior source file contained unrelated content (per books.md note); replaced but no correct text confirmed.
+
+**Find:** Project Gutenberg — search "Knight in the Panther's Skin" or "Vepkhistqaosani."  
+Recommended translation: Marjory Scott Wardrop (1912) — PG has this.  
+Expected size: ~250 KB. Single file or 2 parts.
+
+**Files to create:**
+- `TBS-knight-panther-skin.txt` (replace any existing incorrect file)
+
+**After acquisition:**
+- Verify TBS-knight-panther-skin.md vignette seeds match actual text (since prior pass was from incorrect source)
+- If seeds are inconsistent with real text: rewrite affected cycles before importing
+- After verification, proceed to §PHASE-2-TBS import below
+- Update books.md TBS entry: `[ ]` → `[x]` + note
+
+---
+
+### §PHASE-1-SHK — Shakespeare Complete Works (continuing, parts 6–28)
+
+**Code:** SHK | **Slug:** shakespeare-complete-works | **Current books.md status:** `[ ]` IN PROGRESS  
+**Source files:** Already present — parts 1–28 all exist in 1367-sources/  
+**Current state:** Parts 1–5 read; cycles 1–3 complete  
+- Cycle 1: The Rival's Door (Sonnets / All's Well) — BK/CI/IN/CY  
+- Cycle 2: (from Antony and Cleopatra)  
+- Cycle 3: The Unread Treaty (Coriolanus) — ANT/ROM/NUE  
+- Seeds banked: Imogen's Bracelet (Cymbeline), Hamlet's Letter to Ophelia  
+- Parts 6–28 pending: As You Like It (mid Act I Scene I) through the late plays
+
+**Next steps per multi-part protocol:**
+1. Read `SHK-shakespeare-complete-works.part6of28.txt`
+2. Append `### Part 6 coverage` to SHK-shakespeare-complete-works.md
+3. Identify new quest seeds from this part
+4. Ask user to continue for part 7
+5. Repeat through part 28; write cycles 4–7 when enough seeds are banked
+6. On part 28: complete full document, write cycles 4–7 (if not already done), apply admin updates
+
+**Note:** SHK has 28 parts. One-part-per-session rule (books.md Rule 3) applies. Short summaries capped at ~5 sentences per part (memory rule: short-summaries-for-10+-part-books).
+
+---
+
+## §PHASE-2 — API Import Queue (Seeds Complete, Not Yet Imported)
+
+These books have complete vignette seeds in their `.md` files and are ready for API import via the §IMPORT-01 8-step procedure. Each entry below gives the node checklist and import notes needed to run the import.
+
+**Baseline before starting:** Run `GET /api/audit` and note current node/quest counts. As of 2026-06-05: 443 nodes, 1590 quests.
+
+**Global substitution rule throughout all Phase 2 imports:** `RME` → `ROM` (Rome node uses ROM code).
+
+---
+
+### §PHASE-2-ZTH — Odyssey (Homer, Butler tr., ~725 BC)
+
+**Code:** ZTH | **Source:** ZTH-odyssey.md | **Cycles:** 7 | **Acts:** 35  
+**questComplete:** `zth_07_act5`
+
+**Node checklist:**
+| Code | Name | Coords | Terrain | Notes |
+|------|------|--------|---------|-------|
+| PHC | Phaeacia / Scheria — Alcinous's Court | ~162,215 | city | Nausicaa's kingdom; Odysseus washed ashore; GET first — may not exist |
+| RME | Rome — Check: use ROM | — | — | ROM already exists (r:163 c:213); use ROM throughout |
+
+**Pre-import checks:**
+- `GET /api/location/PHC` — create if missing; use coords near ROM but offset west-south toward mythological Atlantic
+- `GET /api/location/ROM` — confirm exists (added during BLQ import)
+- Check for existing node at proposed PHC coords with `GET /api/coords/near/ROM?radius=12`
+
+**Import notes:**
+- Phaeacia is mythological; place PHC in the western Mediterranean region (near Sicily/Tunisia area is conventional)
+- Odyssey quest prefix: `zth_`
+- All 7 cycles use combinations of PHC, ROM, CON, VEN, WM and classical Mediterranean nodes
+
+**Admin after import:**
+- Add to Import Queue table in this file as row #103
+- Update index.md: add PHC to Tier 1 Cities table
+- Update books.md ZTH entry to include `IMPORTED — {date}`
+
+---
+
+### §PHASE-2-ATH — Iliad (Homer, Lang tr., ~750 BC)
+
+**Code:** ATH | **Source:** ATH-iliad.md | **Cycles:** 7 | **Acts:** 35  
+**questComplete:** `ath_07_act5`
+
+**Node checklist:**
+- No new nodes. Existing: IDC (likely Troy/Ilium area), SKN, TRH — confirm all exist with `GET /api/location/{code}` before starting.
+
+**Pre-import checks:**
+- `GET /api/location/IDC` — confirm
+- `GET /api/location/SKN` — confirm
+- `GET /api/location/TRH` — confirm
+
+**Import notes:**
+- Iliad quest prefix: `ath_`
+- All 7 cycles use existing classical Mediterranean nodes
+- Confirm ROM (not RME) is used for any Rome references
+
+**Admin after import:**
+- Add to Import Queue table as row #104
+- Update books.md ATH entry to include `IMPORTED — {date}`
+
+---
+
+### §PHASE-2-JRS — Jerusalem Delivered (Torquato Tasso, 1581)
+
+**Code:** JRS | **Source:** JRS-jerusalem-delivered.md | **Cycles:** 7 | **Acts:** 35  
+**questComplete:** `jrs_07_act5`
+
+**Node checklist:**
+- No new nodes. Existing nodes per books.md: PKR, SGA, JAR, OLN, CON, VEN, DAM, RME(→ROM) — confirm all exist.
+
+**Pre-import checks:**
+- `GET /api/location/PKR` — confirm (Acre/Ptolemais area)
+- `GET /api/location/SGA` — confirm (Syrian Gate?)
+- `GET /api/location/JAR` — confirm (Armida's garden / Damascus region)
+- `GET /api/location/OLN` — confirm
+- `GET /api/location/DAM` — confirm (Damascus — added during BGW/CAI imports)
+
+**Import notes:**
+- JRS quest prefix: `jrs_`
+- Crusade geography: Jerusalem (JER if it exists), Damascus (DAM), Constantinople (CON)
+- Check that JER exists — it was added during BEY supplementary cycle per books.md City Travel Log
+
+**Admin after import:**
+- Add to Import Queue table as row #105
+- Update books.md JRS entry to include `IMPORTED — {date}`
+
+---
+
+### §PHASE-2-LIS — Lusiads (Luís de Camões, 1572)
+
+**Code:** LIS | **Source:** LIS-lusiad.md | **Cycles:** 7 | **Acts:** 35  
+**questComplete:** `lis_07_act5`
+
+**Node checklist:**
+- No new nodes. Existing per books.md: CVP, MDN, MLN, LHA, CON, RME(→ROM), VEN — confirm all exist.
+
+**Pre-import checks:**
+- `GET /api/location/CVP` — confirm (Cape Verde / Portuguese Atlantic?)
+- `GET /api/location/MDN` — confirm (Madeira?)
+- `GET /api/location/MLN` — confirm (Malindi / East Africa?)
+- `GET /api/location/LHA` — confirm (Lisbon harbor?)
+
+**Import notes:**
+- LIS quest prefix: `lis_`
+- Portuguese epic geography: Atlantic route from Lisbon to India (Vasco da Gama)
+- Indian Ocean nodes may need creation if CVP/MDN/MLN/LHA don't exist — check carefully
+
+**Admin after import:**
+- Add to Import Queue table as row #106
+- Update books.md LIS entry to include `IMPORTED — {date}`
+
+---
+
+### §PHASE-2-CID — Chronicle of the Cid (Anon, Southey tr., 12th C source)
+
+**Code:** MAD | **Quest prefix:** `cid_` | **Source:** MAD-chronicle-cid.md | **Cycles:** 7 | **Acts:** 35  
+**questComplete:** `cid_07_act5`
+
+**Node checklist:**
+| Code | Name | Coords | Terrain | Notes |
+|------|------|--------|---------|-------|
+| VLC | Valencia — El Cid's Captured City | ~160,185 | city | El Cid's prize; derive from Valencia (VLC = Valencia); no IATA collision expected |
+
+**Pre-import checks:**
+- `GET /api/location/VLC` — create if missing; place on Iberian peninsula east coast
+- `GET /api/coords/near/MAD?radius=10` to find open slot (MAD = Madrid if exists, or check existing Iberian nodes)
+- Confirm existing SMR, CMG, MNT, MAS, ACL nodes exist (used by MAD Don Quixote — different book same code block)
+
+**Import notes:**
+- Quest prefix is `cid_` (not `mad_`) — MAD code is shared with Don Quixote
+- VLC at approximately r:158–162, c:183–188 (Valencia on Iberian peninsula, east coast)
+- Cid geography: Burgos → Toledo → Valencia corridor
+
+**Admin after import:**
+- Add to Import Queue table as row #107
+- Update index.md: add VLC to Tier 1 Cities table
+- Update books.md MAD/chronicle-cid entry to include `IMPORTED — {date}`
+
+---
+
+### §PHASE-2-FLR — Divine Comedy: Inferno (Dante Alighieri, c.1320)
+
+**Code:** FLR | **Source:** FLR-divine-comedy-inferno.md | **Cycles:** 7 | **Acts:** 35  
+**questComplete:** `flr_07_act5`
+
+**Node checklist:**
+- No new nodes per books.md. Existing: MBR, PAR, HMN — confirm all exist.
+
+**Pre-import checks:**
+- `GET /api/location/MBR` — confirm (Malebolge? allegorical Inferno node)
+- `GET /api/location/PAR` — confirm (Palermo — added during IST import; or Paradiso node?)
+- `GET /api/location/HMN` — confirm
+- Note: FLR code is used for Florence (fantasy ocean node "Wreck of the Unbroken" per index.md Code Collision Register) — confirm quest prefix does not collide
+
+**Import notes:**
+- FLR quest prefix: `flr_`
+- Divine Comedy geography is allegorical; nodes are approximate real-world anchors (Florence, Rome) plus allegorical locations (Inferno circles)
+- PSA (Florence/Pisa) is the real-world Dante anchor — acts likely begin there
+
+**Admin after import:**
+- Add to Import Queue table as row #108
+- Update books.md FLR entry to include `IMPORTED — {date}`
+
+---
+
+### §PHASE-2-TBS — Knight in the Panther's Skin (Shota Rustaveli, c.1225)
+
+**Code:** TBS | **Source:** TBS-knight-panther-skin.md | **Cycles:** 7 | **Acts:** 35  
+**questComplete:** `tbs_07_act5`
+
+**DEPENDENCY:** Complete §PHASE-1-TBS (source text acquisition + vignette verification) before importing. If prior vignette seeds were based on wrong source text, seeds must be rewritten first.
+
+**Node checklist:**
+- No new nodes per books.md. Existing: GEO (Georgia?), TIF (Tbilisi?), ALP (Aleppo — added during CAI import), CON, DAM, CAF — confirm all exist.
+
+**Pre-import checks:**
+- `GET /api/location/GEO` — confirm (Georgian node; may not exist — check)
+- `GET /api/location/TIF` — confirm (Tbilisi/Tiflis — added during ADA import as TIF)
+- `GET /api/location/ALP` — confirm (Aleppo Storytellers' Quarter — added during CAI)
+- `GET /api/location/CAF` — confirm (Caffa — added during HAV import)
+
+**Import notes:**
+- TBS quest prefix: `tbs_`
+- Georgian epic geography: Tbilisi (TIF), Arabia, India — trans-continental routes
+- Verify TIF coordinates match Caucasus region (should be near GNJ/TBZ/MRG cluster)
+
+**Admin after import:**
+- Add to Import Queue table as row #109
+- Update books.md TBS entry: `[ ]` → `[x]` + `IMPORTED — {date}`
+
+---
+
+### §PHASE-2-BEY — Mandeville's Travels (attr. Sir John Mandeville, c.1357)
+
+**Code:** BEY | **Source:** BEY-mandeville.md | **Cycles:** 13 (BEY-01–07 + S08–S14) | **Acts:** ~65  
+**questComplete:** `bey_s14_act5` (or per last cycle in file)
+
+**Node checklist:**
+| Code | Name | Coords | Terrain | Notes |
+|------|------|--------|---------|-------|
+| FAM | Famagusta | r:172 c:236 | docks | Already in index.md Tier 1 (added during BLQ import) — confirm exists |
+| RGS | Ragusa / Dubrovnik | — | city | Check: DBV was used as Dubrovnik code (index.md: DBV = Dubrovnik Airport). RGS may have been replaced by DBV — confirm in API |
+| MRS | Marseille | r:144 c:178 | city | Check: MAR already exists (added BLQ-11); MRS may be same node — confirm |
+| BEI | Beirut | ~r:173 c:234 | city | New node if not present; Lebanese coast |
+| JER | Jerusalem | ~r:179 c:233 | city | Check: may exist from WAW/NWI imports |
+| SID | Sidon | ~r:172 c:233 | city | Lebanese coast south of BEI |
+| COL | Cologne | ~r:112 c:197 | city | Rhine city; check if KOL exists (Nibelungenlied import used KOL for Cologne) |
+
+**Pre-import checks:**
+- `GET /api/location/FAM` — confirm exists (r:172 c:236 per index.md)
+- `GET /api/location/DBV` — confirm (Dubrovnik); if RGS references in vignette, substitute DBV
+- `GET /api/location/MAR` — confirm (r:144 c:178, added BLQ); MRS in books.md may be same → use MAR
+- `GET /api/location/JER` — create if missing; Jerusalem ~r:179 c:233
+- `GET /api/location/BEI` — create if missing; Beirut ~r:172 c:233
+- `GET /api/location/SID` — create if missing; Sidon ~r:175 c:233
+- `GET /api/location/KOL` — confirm (added LBC import); BEY books.md says COL — use KOL
+
+**Import notes:**
+- BEY quest prefix: `bey_`
+- Mandeville's route: England → France → Mediterranean → Holy Land → Egypt → Persia → India
+- 13 cycles is a large import — plan for 2–3 sessions
+- Supplementary cycles (S08–S14) focus on the Mandeville authenticity/provenance angle
+
+**Admin after import:**
+- Add to Import Queue table as row #110
+- Update index.md: add any confirmed new nodes (BEI, JER, SID) to Tier 1 Cities table
+- Update books.md BEY entries to include `IMPORTED — {date}`
+
+---
+
+### §PHASE-2-KYA — Shah-Nameh (Ferdowsi, Atkinson tr., c.1010)
+
+**Code:** KYA | **Source:** KYA-shah-nameh.md | **Cycles:** 25 (KYA-01–25) | **Acts:** ~125  
+**questComplete:** `kya_25_act5`
+
+**This is the largest single import in the queue. Plan for 4–6 sessions.**
+
+**Node checklist:**
+| Code | Name | Approx Coords | Terrain | Notes |
+|------|------|--------------|---------|-------|
+| YAZ | Yazd — Zoroastrian Fire Temple District | r:175 c:242 | city | Zoroastrian holy city; confirm not already present |
+| KBL | Kabul — Hindu Kush Gateway | r:185 c:248 | city | Zal's kingdom; confirm not present |
+| SIS | Sistan — Rustam's City | r:180 c:248 | city | Rustam/Zal's homeland; confirm not present |
+| TBZ | Tabriz — Jalayirid Scholar Quarter | r:160 c:240 | city | Already in index.md Tier 1 (added AMS import) — confirm exists |
+| TRB | Trebizond — Genoese Registry Quarter | r:152 c:240 | city | Already in index.md Tier 1 (added NWI/HAV imports) — confirm exists |
+| HRT | Herat — Timurid City | r:178 c:248 | city | Khorasan; confirm not present |
+
+**Pre-import checks:**
+- `GET /api/location/YAZ` — create if missing at ~r:175 c:242
+- `GET /api/location/KBL` — create if missing at ~r:185 c:248
+- `GET /api/location/SIS` — create if missing at ~r:180 c:248
+- `GET /api/location/TBZ` — confirm exists (r:160 c:240 per index.md)
+- `GET /api/location/TRB` — confirm exists (r:152 c:240 per index.md)
+- `GET /api/location/HRT` — create if missing at ~r:178 c:248
+- Also confirm: NIS (r:168 c:240), SAM (r:157 c:240), MRG (r:162 c:238), MRV (r:165 c:240), BGD (r:182 c:238) — all used in KYA routes
+
+**Import batch plan (25 cycles is large — split across sessions):**
+
+| Session | Cycles | Acts | Notes |
+|---------|--------|------|-------|
+| A | KYA-01–05 | 25 | Node creation batch (YAZ/KBL/SIS/TBZ/TRB/HRT); Kaiúmers → Feridún arc |
+| B | KYA-06–10 | 25 | Sohráb tragedy arc; nodes confirmed |
+| C | KYA-11–15 | 25 | Saiáwush betrayal + Kai-khosráu arc |
+| D | KYA-16–20 | 25 | Zoroaster/Gushtásp + Isfendiyár arc |
+| E | KYA-21–25 | 25 | Rustam death + Sikander + Firdusi's Satire; questComplete |
+
+**Import notes:**
+- KYA quest prefix: `kya_`
+- Persian epic geography spans Central Asia: YAZ → TBZ → SAM → NIS → MRG → MRV → TRB → BGD → CON → WM
+- 25 cycles = ~125 quests; largest single-book import in the pipeline
+- Session A must create all new nodes before any quests fire; confirm all 6 new nodes before writing first quest
+
+**Admin after import (final session):**
+- Add to Import Queue table as row #111
+- Update index.md: add YAZ/KBL/SIS/HRT to Tier 1 Cities table (TBZ/TRB already present)
+- Update books.md KYA entry to include `IMPORTED — {date}`
+- Update §KYA-CONT entry in plan.md: mark complete, remove continuation block
+
+---
+
+## §PHASE-2-OST-ADMIN — Song of Roland Tracking File Cleanup
+
+**Background:** OST was imported 2026-06-05 (import script `import_ost.py` ran cleanly; 443 nodes, 1590 quests post-import). Three tracking files were not updated in that session.
+
+**Required updates (complete before any other Phase 2 imports):**
+
+1. **api-data-audit.md** — Add OST row after the RKV row:
+   - Format: match existing rows in the audit file
+   - Content: 4 new nodes (RON/PYR/AIX/FRS), 35 quests (ost_01_act1 through ost_07_act5), questComplete on ost_07_act5, OST collision (Bruges—Cloth Hall) → quest prefix only
+
+2. **plan.md** — The Import Queue row for OST (row #99) was written in the Session End block but not in the main Import Queue table. Confirm it appears correctly in the table or add it.
+
+3. **index.md** — Add two entries:
+   - Code Collision Register: `| OST | Song of Roland starting node | "Bruges — Cloth Hall" (docks game node) | Quest prefix only — cycles 1–2 route RON/PYR/AIX/FRS naturally; cycles 3–7 hub at AIX or RON |`
+   - New section `## Song of Roland (OST) Nodes` with RON/PYR/AIX/FRS in the standard table format
+
+4. **Commit** as `§IMPORT-99` after all 3 files are updated.
+
+---
+
+## §PHASE-2-SUMMARY — Import Priority Order
+
+Run imports in this order to minimise node creation overhead (shared nodes confirmed early benefit all later imports):
+
+| Priority | Code | Title | New Nodes | Sessions |
+|----------|------|-------|-----------|---------|
+| 1 | OST admin | Song of Roland tracking | — | 1 (tracking only) |
+| 2 | ATH | Iliad | none | 1 |
+| 3 | FLR | Divine Comedy Inferno | check MBR/PAR/HMN | 1 |
+| 4 | JRS | Jerusalem Delivered | check PKR/SGA/JAR/OLN | 1 |
+| 5 | LIS | Lusiads | check CVP/MDN/MLN/LHA | 1 |
+| 6 | ZTH | Odyssey | PHC (new) | 1 |
+| 7 | CID | Chronicle of the Cid | VLC (new) | 1 |
+| 8 | TBS | Knight in the Panther's Skin | check GEO | 1–2 (after Phase 1) |
+| 9 | BEY | Mandeville's Travels | BEI/JER/SID (new); KOL→KOL | 2–3 |
+| 10 | KYA | Shah-Nameh | YAZ/KBL/SIS/HRT (new) | 4–6 |
+
+---
+
+## §PASS-4 — Source Text Reading: Summaries + New Vignette Cycles
+
+**Triggered:** 2026-06-05. Seven books have complete `.txt` source files and complete prior-cycle `.md` files. Pass 4 reads each source part, writes a narrative source summary, and extracts one new 5-act vignette play from each part.
+
+**Scope:** ZTH (4 parts), ATH (5 parts), JRS (4 parts), LIS (6 parts), FLR (4 parts), BEY (3 parts), KYA (5 parts) — 31 parts total.
+
+**Protocol per part:**
+1. Read `{CODE}-{slug}.partKofN.txt` in full
+2. Append to `{CODE}-{slug}.md`:
+   ```
+   ## Source Summary — Part K of N
+   *[Range note: what narrative span this part covers]*
+   [3–6 paragraphs narrative summary — characters, events, key passages, quest potential]
+   ```
+3. Extract one new 5-act vignette from this part's content, numbered as the next cycle after existing ones
+4. Vignette follows UQF format: activateNode, type, scene, prompt, failText, successText, grantItem, checkPassFlag, questComplete (final act only)
+5. Theme check: read existing cycle themes in the .md file before choosing the new angle — no duplicates
+
+**Quest writing rules (condensed from books.md):**
+- Fighter = silent escort. TOKEN is grammatical subject and moves each act.
+- 5 acts: Act 1 (receive token, origin node, skill\_check DC 12+), Acts 2–4 (carry + obstacle, mix of skill\_check and combat), Act 5 (deliver to WM or destination, questComplete on final cycle's Act 5)
+- Required across 5 acts: romance or tenderness (1 act), moral weight (1 act), physical danger (1 act)
+- grantItem each act = named object from scene. takeItem Act 5 = token consumed.
+- Fail text = delay + cost, never dead end. Hero always succeeds eventually.
+- Scene field (2–3 sentences, 2nd person present): orient in space, who else present, emotional register.
+- French noir register: precise, cool, observational. Camera rests on the object.
+
+**New cycle numbering:**
+| Code | Existing cycles | New cycles (one per part) |
+|------|----------------|--------------------------|
+| ZTH  | 7              | 8–11 (parts 1–4)         |
+| ATH  | 7              | 8–12 (parts 1–5)         |
+| JRS  | 7              | 8–11 (parts 1–4)         |
+| LIS  | 7              | 8–13 (parts 1–6)         |
+| FLR  | 7              | 8–11 (parts 1–4)         |
+| BEY  | 13             | 14–16 (parts 1–3)        |
+| KYA  | 25             | 26–30 (parts 1–5)        |
+
+**Output:** Each agent appends to the book's `.md` file only. Completion confirmed by presence of `## Source Summary — Part N of N` (final part) in each file.
+
+**Phase 1 books** (VBY, RIX, RKV, HFT, ARN, OST, TBS) cannot run Pass 4 until source `.txt` files are acquired — see §PHASE-1 above.
+
+### §PASS-4 Status
+
+| Code | Parts | Status |
+|------|-------|--------|
+| ZTH  | 4 | DONE — cycles 8–11 appended (Captivity Record, Mast Agreement, Beggar's Passport, Bed That Could Not Be Moved) |
+| ATH  | 5 | DONE — cycles 8–12 appended (Apollo's Account, Dolon's Report, The Stripped Inventory, Priam's Ransom, Thetis at the Sea-Floor) |
+| JRS  | 4 | DONE — cycles 8–11 appended (The Desertion Record, The Physician's Account, The Siege Engineer's Account, The Preaching Record) |
+| LIS  | 6 | DONE — cycles 8–13 appended (Royal Commission Letter, False Pilot's Chart, Zamorim's Court Register, Flemish Secretary's Notes, Gift Inventory, São Gabriel Voyage Log) |
+| FLR  | 4 | DONE — cycles 8–11 appended (Phlegyas's Crossing Log, The Gate's Three Steps, Matilda's River Registry, Cacciaguida's Prophecy Register) |
+| BEY  | 3 | DONE — cycles 14–16 appended (The Balm Test, The Great Khan's Seal Formula, The Skull Cup of Rybothe) |
+| KYA  | 5 | DONE — cycles 26–30 appended (The Portrait in the Gallery, Gúrd-afríd's Broken Lance, The Khakán's Collar, The Merchant Kherád, The Cup of Three Kings) |
+
+---
+
+## §OUTSTANDING — All Incomplete Work (as of 2026-06-06)
+
+Canonical list of everything not yet done. Ordered by type, then priority.
+
+---
+
+### Group A — API Imports: Seeds Complete, Not Yet Imported
+
+Books with full vignette specs in their `.md` files, ready to import. Use `import_ath.py` as the template — the pattern is established. Key rule: `activateCond` must be set via `put` after `post` (CLI parser strips the `()` syntax). Each book needs its own `import_{code}.py`.
+
+**ZTH is partially imported** — cycle 1 done (Euryclea's Wax Account, ITH+PHC nodes, 5 quests). Cycles 2–7 still need scripting from ZTH-odyssey.md.
+
+| # | Code | Title | Cycles | Acts | New Nodes Needed | Import Script |
+|---|------|-------|--------|------|-----------------|---------------|
+| 1 | **ZTH** | Odyssey (Homer) | 2–7 remaining (6 left) | 30 | none (ITH/PHC created) | extend import_ath.py pattern |
+| 2 | **JRS** | Jerusalem Delivered | 1–7 | 35 | JER (create ~r:179 c:233) | write import_jrs.py |
+| 3 | **FLR** | Divine Comedy: Inferno | 1–7 | 35 | MBR/PAR/HMN (confirm exist) | write import_flr.py |
+| 4 | **LIS** | Lusiads | 1–7 | 35 | LHA/CVP/MDN/MLN (may need creation) | write import_lis.py |
+| 5 | **CID** | Chronicle of the Cid | 1–7 | 35 | VLC (Valencia, create ~r:158 c:185) | write import_cid.py |
+| 6 | **TBS** | Knight in the Panther's Skin | 1–7 | 35 | GEO (confirm/create) | write import_tbs.py — after Phase 1 verification |
+| 7 | **BEY** | Mandeville's Travels | 1–16 | ~65 | BEI/JER/SID (new); KOL (confirm) | write import_bey.py — 3 sessions |
+| 8 | **KYA** | Shah-Nameh | 1–30 | ~125 | YAZ/KBL/SIS/HRT (new); TBZ/TRB confirm | write import_kya.py — 5 sessions |
+
+**Pass 4 extra cycles** (8–11/12/13/16/30) are in the `.md` files and can be imported after the base 7 cycles are live. They don't block the base import.
+
+---
+
+### Group B — OST Tracking File Cleanup (§IMPORT-99)
+
+OST was imported 2026-06-05 (443 nodes, 1590 quests). Three files were never updated:
+
+| File | What to add |
+|------|------------|
+| `api-data-audit.md` | Add OST row after RKV row: 4 new nodes (RON/PYR/AIX/FRS), 35 quests, questComplete on ost_07_act5 |
+| `plan.md` | Confirm Import Queue row #99 is in the main table (it's in the Session End block but may not be in the queue table) |
+| `index.md` | Add OST Code Collision Register entry + `## Song of Roland (OST) Nodes` section (RON/PYR/AIX/FRS) |
+
+Commit as `§IMPORT-99` after all three files are updated.
+
+---
+
+### Group C — SHK Audit Errors (pre-existing)
+
+27 audit errors all from SHK (Shakespeare) quests missing NPC fields:
+`shk6_act1` through `shk14_act3` — 27 quests with no `npc` field.
+
+These were created before the NPC requirement was enforced. Fix: create a placeholder NPC for SHK (e.g., `shakespeare_collector`) at an appropriate node and `put` it onto all 27 quests.
+
+---
+
+### Group D — Source Text Acquisition (Phase 1)
+
+Books that were memory-processed and have no `.txt` source file. All are already imported (quests are live). Acquiring the source text enables Pass 4 (additional source summaries + new cycles).
+
+| # | Code | Title | Translation to find | Expected size | Split? |
+|---|------|-------|-------------------|---------------|--------|
+| 11 | **VBY** | Grettir's Saga | Hight 1914 or Morris/Magnusson 1900 (PG) | ~370 KB | 2 parts |
+| 12 | **RIX** | Egil's Saga | W.C. Green 1893 (PG) | ~580 KB | 3 parts |
+| 13 | **RKV** | Poetic Edda | Bellows 1936 (PG) | ~750 KB | 4 parts |
+| 14 | **HFT** | Frithiof's Saga | Bayard Taylor 1866 (PG) | ~130 KB | none |
+| 15 | **ARN** | Knights of the Cross | Curtin 1900 (PG) | ~950 KB | 5 parts |
+| 16 | **OST** | Song of Roland | O'Hagan 1880 (PG) | ~150 KB | none |
+| 17 | **TBS** | Knight in the Panther's Skin | Wardrop 1912 (PG) | ~250 KB | 1–2 parts |
+
+**After acquiring each:** name as `{CODE}-{slug}.txt`, run `split-sources.sh` if > 200 KB, update books.md `[ ]` → `[x]`. Verify `.md` vignette details match real text (especially TBS — prior source was wrong content).
+
+---
+
+### Group E — Shakespeare Continuation
+
+**Code:** SHK | **Source files:** parts 1–28 all present  
+**Current state:** Parts 1–5 read, cycles 1–3 complete
+
+- C1: The Rival's Door (Sonnets + All's Well) — BK/CI/IN/CY
+- C2: (Antony and Cleopatra angle)
+- C3: The Unread Treaty (Coriolanus) — ANT/ROM/NUE
+- **Seeds banked:** Imogen's Bracelet (Cymbeline), Hamlet's Letter to Ophelia
+
+**Next step:** Read `SHK-shakespeare-complete-works.part6of28.txt`. Append Part 6 coverage to SHK-shakespeare-complete-works.md. Continue through part 28 (one part per session). Write cycles 4–7 when enough seeds are banked.
+
+**Short summary rule:** ≤5 sentences per part (10+ part book).
+
+---
+
+### Group F — Pass 4 for Phase 1 Books (blocked on Group D)
+
+Once source texts are acquired (Group D), these books need Pass 4 (source summaries + new vignette cycles). Run same agent pattern as the 7 books done this session.
+
+| Code | Parts | Existing cycles | New cycles target |
+|------|-------|----------------|-----------------|
+| VBY | 2 | 7 | 8–9 |
+| RIX | 3 | 7 | 8–10 |
+| RKV | 4 | 7 | 8–11 |
+| HFT | 1 | 7 | 8 (Alternative Reading) |
+| ARN | 5 | 7 | 8–12 |
+| OST | 1 | 7 | 8 (Alternative Reading) |
+| TBS | 1–2 | 7 | 8–9 |
+
+---
+
+### Summary Count
+
+| Group | Items | Effort |
+|-------|-------|--------|
+| A — API Imports | 8 books (ZTH partial + 7 full) | ~16 sessions |
+| B — OST tracking | 3 file edits + commit | 1 session |
+| C — SHK NPC fix | 1 NPC + 27 put calls | 30 min |
+| D — Source text acquisition | 7 books | 7 downloads + splits |
+| E — Shakespeare | 23 parts remaining | 23 sessions |
+| F — Pass 4 (Phase 1 books) | 7 agents (after D) | 1 parallel run |

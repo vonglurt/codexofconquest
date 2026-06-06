@@ -3485,3 +3485,578 @@ In the Weimar archive's Material Evidence series, the Sultan's Commission and th
 ---
 
 *BEY-S14 complete. 2026-06-02.*
+
+---
+
+## Source Summary — Part 1 of 3
+*Prologue through Chapter XV: England to the Holy Land via Constantinople, Egypt, and the Sultan's court, including the relics of Constantinople, the itinerary to Jerusalem, the balm fields of Cairo, and Mandeville's famous private audience with the Sultan.*
+
+Part 1 opens with Mandeville's prologue — the famous declaration that he departed England in 1322, crossed many seas and kingdoms, and now writes for those who wish to visit the Holy Land. The narrative is compiled, not original: the editor's bibliographical note establishes that the text draws heavily on Boldensele (for the Holy Land) and Odoric of Pordenone (for the East), with Mandeville's compiler adding transitions and occasional first-person claims of experience. The route through Hungary, Belgrade, and Constantinople draws on standard pilgrimage itineraries. At Constantinople the text catalogs relics with precision: the True Cross made of four woods (cypress, palm, cedar, olive), the Crown of Thorns split between Paris and Constantinople, the nails, the sponge, the spear. Mandeville claims to have personally compared the two crown relics and received a thorn as a gift — one of the text's more plausible first-person assertions.
+
+The Ypocras Dragon digression (a transformed maiden waiting for a knight's kiss on the Isle of Lango, which killed every knight who tried) is purely legendary and borrowed from classical romance tradition. More valuable is the careful Egyptian itinerary: Alexandria, Damietta, Cairo (Babylon the Less), the Nile's flooding cycle explained, the Phoenix at Heliopolis, the balm fields where Mandeville gives detailed instructions for detecting counterfeit balm — a genuinely useful merchant's guide, possibly from Boldensele. The garners of Joseph (the pyramids, which he correctly identifies as granaries despite the "tomb" theory) show the text's willingness to contradict scholarly opinion with local testimony.
+
+The centerpiece of Part 1 is Chapter VI's lineage of Sultans and Chapter XV's Sultan's audience. The author claims to have served the Sultan as a soldier against the Bedouins, that the Sultan offered him a great prince's daughter in marriage if he would convert, and that the Sultan privately rebuked him on Christian corruption — French-speaking Mamluk spies had reported back on the moral state of Europe. This is the most famous passage in the text: the Sultan saying Christian men sin by selling their daughters and fighting each other while claiming the Holy Land. The passage is clearly a rhetorical device (the reproach of the Christian by the infidel) but its detail about the Sultan's intelligence network (merchants of precious stones and cloths sent as spies) has a ring of practical knowledge about it.
+
+Part 1 also covers the Dead Sea, Mount Sinai and the monastery of Saint Katherine (with the miraculous lamps, the oil-bearing birds, and the detail that flies and vermin never enter), Jerusalem's pilgrimage sites (the Holy Sepulchre, Calvary, the chain of Our Lord's imprisonment), Bethlehem, Hebron with the Double Cave of the patriarchs, and the Syrian route from Acre to Damascus. The text's hedging formula appears frequently: "as men say," "as I have heard," "but that is not so" — Mandeville corrects popular misconceptions (the Cyprus Cross is the thief's cross, not Christ's; the pyramids are granaries) with the authority of a skeptic who has been there, while nonetheless including marvels he admits he has not personally verified.
+
+---
+
+## Cycle 14 — The Balm Test
+
+**What this angle reveals that prior cycles missed:** Every prior BEY cycle has focused on documents, seals, institutional networks, and the chain of custody for written records. What no cycle has addressed is Mandeville's practical consumer's guide — the set of physical tests for detecting counterfeit balm, which is the only passage in the text where Mandeville gives a working procedure rather than a description. The balm test is the book's one operational protocol: four specific steps, specific materials, specific failure modes. It existed because counterfeit balm was endemic and the stakes (medicine, sacrament, trade) were real.
+
+---
+
+**THE TOKEN: `bey_cycle_14_token`** — *The Balm Proving Vial* — a small glass cylinder with a sealed wax stopper, originally belonging to a Cairene apothecary named Yusuf al-Rashid; contains a single measure of true balm of Matarea from the balm fields at Cairo, harvested correctly with a flint (not iron); the wax stopper is impressed with a crescent and marked with the Arabic word for "tested"; Yusuf used it as his reference specimen for comparing suspect samples sent by merchants across the Levant.
+
+---
+
+Act 1 — The Apothecary's Shelf
+activateNode: KHR
+type: skill_check
+scene: "The back room of Yusuf al-Rashid's apothecary in Cairo, late afternoon. Yusuf is an old man surrounded by labeled jars. He has spent forty years as the most trusted balm-authenticator between Alexandria and Aleppo, and he is dying. His nephew will inherit the shop but not the knowledge. He holds up his proving vial — the reference specimen he has used to calibrate every test — and tells you it needs to go somewhere it will not be lost, stolen, or misused. There is a Genoese merchant in the next room who has already offered twice what it is worth and been refused twice."
+prompt: "Medicine, DC 12. Identify the four proving tests Mandeville describes — the palm-against-sun test, the fire test, the milk-curdling test, the clear water sinking test — and explain to Yusuf why an archive that receives the proving vial with its documented test procedures is more useful to future apothecaries than any merchant's collection."
+failText: "Yusuf gives the vial to the Genoese merchant. You learn the test procedures from Yusuf's notes but leave without the specimen."
+successText: "Yusuf nods slowly. 'The merchant wants to sell it. You want to use it to teach.' He gives you the proving vial. You receive The Balm Proving Vial."
+grantItem: "The Balm Proving Vial"
+checkPassFlag: bey_c14_act1
+
+Act 2 — The Merchant's Challenge
+activateNode: ALE
+type: skill_check
+scene: "The harbor at Alexandria. A Venetian factor named Ser Giacomo intercepts you at the quay. He represents a consortium of Levantine spice merchants who have been defrauded by false balm for twenty years. He does not want the vial for profit — he wants to use it to expose a specific Damascene supplier he believes has been adulterating shipments. His cause is legitimate. His method is wrong: he wants to run a single public test on the docks that will destroy half the specimen."
+prompt: "Persuasion, DC 13. Argue that a single destructive public test proves one batch but nothing about future batches; the archive preserves the proving standard so that every merchant, in every decade, can calibrate their own tests against a known specimen — his supplier's fraud exposed once is less useful than a standard that exposes every fraud permanently."
+failText: "Ser Giacomo runs his dock test on a portion of the vial's contents, removing a third of the specimen. The vial still functions but is diminished."
+successText: "Ser Giacomo stares at you. Then: 'All right. But the archive must be accessible to commercial agents.' You agree. He lets you pass. The vial is intact."
+checkPassFlag: bey_c14_act2
+
+Act 3 — The Hermit's Counter-Claim
+activateNode: JER
+type: skill_check
+scene: "Outside Jerusalem, in a hermitage near the Church of the Holy Sepulchre. A Franciscan brother named Fra Domenico has heard of the proving vial and is waiting for you. He believes the balm of Matarea is sacred — grown from the wells Our Lord made with his foot, harvested from the field where the Holy Family rested. He is not aggressive, but he is entirely serious: this specimen belongs in a church treasury, not a lay archive. He has friends in the Jerusalem patriarchy who could make this difficult."
+prompt: "History (Religion), DC 12. Acknowledge the sacred provenance — Mandeville records the seven wells, the Holy Family, the requirement for Christian cultivators — while distinguishing the specimen's devotional significance (which Fra Domenico is right about) from its practical function as a calibration instrument (which requires secular, accessible custody). The archive can record both."
+failText: "Fra Domenico's friends delay your departure by two days. You leave without incident but arrive late at the next port."
+successText: "Fra Domenico is quiet for a long time. 'The archive will record that it is holy ground?' You say yes. 'Then it goes with you.' He makes the sign of the cross over the vial."
+checkPassFlag: bey_c14_act3
+
+Act 4 — The Valley Ambush
+activateNode: FAM
+type: combat
+scene: "The road to Famagusta, through the hills inland from the coast. Bedouin raiders — three men who have followed you from the Acre waystation — overtake you at a narrow pass. They are not after the vial specifically; they saw the pack and the Venetian escort and assumed merchants. The Fighter moves to your left. You have twenty seconds."
+prompt: "Combat, DC 14 (Athletics or Acrobatics). The vial is in the inner pack, not the outer. Keep the outer pack between yourself and the raiders while the Fighter holds the pass. Do not let the pack hit the ground."
+failText: "The pack is seized and torn open before the Fighter drives them back. The outer items are scattered. The vial is intact but you lose Yusuf's written notes — the test procedures must be reconstructed from memory."
+successText: "The Fighter's position holds. You press the pack against the rock wall. When the raiders break and run, everything is intact. The Fighter says nothing. The Fighter never says anything."
+checkPassFlag: bey_c14_act4
+
+Act 5 — The Archive Intake
+activateNode: WM
+type: skill_check
+scene: "Weimar archive, Archivus Sweelinck. He receives the proving vial and reads Yusuf's notes with the attention of a man who has received forty years of documents and knows immediately which ones matter. He uncorks the vial, passes it under his nose once, re-seals it. Then he looks at the four test procedures. 'This is a working instrument,' he says. 'Not a relic and not a curiosity.' He pauses. 'Classification matters here. If it goes in the relic section it will be reverenced and never used. If it goes in the material evidence section it can be tested against, but then every merchant who passes through will want a portion.' He looks at you."
+prompt: "Investigation, DC 12. Propose a classification that preserves the specimen as a calibration standard: Material Evidence — Provenance Standards; noted as both sacred site origin (Matarea field, seven wells of Our Lord) and practical commercial instrument; access by appointment to qualified apothecaries and trade factors; not to be sub-divided; test procedures filed alongside as companion documents."
+failText: "Filed under Devotional Materials — Eastern Relics. The test procedures are shelved separately and the connection is not made."
+successText: "Sweelinck writes: *Material Evidence — Calibration Standard: balm of Matarea, single proving specimen; sacred provenance noted; test procedures companion-filed; access by appointment to qualified commercial agents and physicians; not to be subdivided.* He looks up. 'Yusuf al-Rashid.' He writes the name carefully. 'The archive will remember who kept it.'"
+grantItem: "Balm Standard Archive Record"
+takeItem: "The Balm Proving Vial"
+checkPassFlag: bey_c14_act5
+activateCond: bey_c14_act4
+
+---
+
+## Quest API Stub — BEY-C14
+
+```json
+{
+  "quest_id": "BEY-C14",
+  "title": "The Balm Test",
+  "source": "BEY",
+  "cycle": 14,
+  "book": "Mandeville's Travels — attr. Sir John Mandeville (c. 1357)",
+  "source_episode": "Chapter VII: Of the Country of Egypt; Mandeville gives four tests for detecting counterfeit balm — palm against sun, touch to fire, drop in goat's milk, drop in clear water — noting that Saracens counterfeit it and after them the merchants and apothecaries counterfeit it again; the balm fields at Cairo watered by wells Our Lord made with his foot; must be harvested with flint or bone, not iron.",
+  "cycle_angle": "The working procedure as the archive object: not the relic, not the document, but the calibration instrument that makes all future authentication possible",
+  "theme": "The proving vial as the only operational protocol in Mandeville's text; the distinction between devotional custody and practical custody; the apothecary who spent forty years as authenticator understanding that his reference specimen outlasts any individual test",
+  "token": {
+    "id": "BEY_C14_TOKEN",
+    "name": "The Balm Proving Vial",
+    "description": "Glass cylinder with wax stopper impressed with crescent; single measure of true balm of Matarea harvested with flint, not iron; used by Yusuf al-Rashid of Cairo as reference specimen for forty years of commercial authentication; companion-filed with four test procedures.",
+    "grant_act": "act_1",
+    "take_act": "act_5",
+    "check_acts": ["act_2", "act_3", "act_4"]
+  },
+  "nodes": ["KHR", "ALE", "JER", "FAM", "WM"],
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "KHR",
+      "type": "skill_check",
+      "activateNode": "KHR",
+      "scene": "Cairo apothecary. Yusuf al-Rashid, dying, holds his reference proving vial. A Genoese merchant in the next room has already been refused twice.",
+      "prompt": "Medicine DC 12. Name the four balm tests and argue the archive as permanent calibration standard vs. merchant collection.",
+      "skillCheck": {
+        "skill": "Medicine",
+        "dc": 12,
+        "failText": "Vial goes to merchant. You take the test procedure notes only.",
+        "passText": "Yusuf gives you the proving vial. You receive The Balm Proving Vial."
+      },
+      "grantItem": "The Balm Proving Vial",
+      "checkPassFlag": "beyC14Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "ALE",
+      "type": "skill_check",
+      "activateNode": "ALE",
+      "scene": "Alexandria harbor. Venetian factor Ser Giacomo wants to run a destructive public test on the vial to expose a Damascene adulterer.",
+      "prompt": "Persuasion DC 13. Single test proves one batch; archive standard enables every future test — the permanent calibration is worth more than one exposure.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "failText": "Ser Giacomo removes a third of the specimen. Vial diminished.",
+        "passText": "Ser Giacomo lets you pass. Vial intact."
+      },
+      "checkItem": "The Balm Proving Vial",
+      "checkPassFlag": "beyC14Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "JER",
+      "type": "skill_check",
+      "activateNode": "JER",
+      "scene": "Jerusalem hermitage. Fra Domenico believes the Matarea balm is sacred and belongs in a church treasury, not a lay archive.",
+      "prompt": "History (Religion) DC 12. Acknowledge sacred provenance, distinguish devotional from practical custody, commit to recording both in the archive.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "failText": "Two-day delay by Fra Domenico's friends.",
+        "passText": "Fra Domenico blesses the vial and lets you go."
+      },
+      "checkItem": "The Balm Proving Vial",
+      "checkPassFlag": "beyC14Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "FAM",
+      "type": "combat",
+      "activateNode": "FAM",
+      "scene": "Inland road to Famagusta. Three Bedouin raiders overtake you at a narrow pass. Fighter holds position.",
+      "prompt": "Athletics or Acrobatics DC 14. Keep the outer pack between you and the raiders while Fighter holds the pass.",
+      "skillCheck": {
+        "skill": "Athletics",
+        "dc": 14,
+        "failText": "Pack torn open. Yusuf's written notes lost. Vial intact.",
+        "passText": "Everything intact. Fighter says nothing."
+      },
+      "checkItem": "The Balm Proving Vial",
+      "checkPassFlag": "beyC14Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Weimar archive. Sweelinck uncorks the vial once, re-seals it, reads Yusuf's notes. Classification decision: relic section vs. material evidence.",
+      "prompt": "Investigation DC 12. Propose: Material Evidence — Calibration Standard; sacred provenance noted; access by appointment; not to be subdivided; test procedures companion-filed.",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 12,
+        "failText": "Filed under Devotional Materials — Eastern Relics. Test procedures shelved separately.",
+        "passText": "Filed as Material Evidence — Calibration Standard. Yusuf al-Rashid's name entered in the intake record."
+      },
+      "takeItem": "The Balm Proving Vial",
+      "grantItem": "Balm Standard Archive Record",
+      "checkPassFlag": "beyC14Act5Passed",
+      "activateMissionBit": "beyBalmTestComplete",
+      "activateCond": "beyC14Act4Passed"
+    }
+  ]
+}
+```
+
+---
+
+*BEY-C14 complete. 2026-06-05.*
+
+---
+
+## Source Summary — Part 2 of 3
+*Chapters XV–XXV continuation: From the Saracen alphabet through Persia, India, Cathay, the monstrous races, the dog-headed people of Nacumera, the idol procession at Calamye, the spherical earth demonstration, the King of Java's palace, and the Great Khan's court.*
+
+Part 2 picks up mid-Chapter XV with the Saracen alphabet, then swings north into Albania, Armenia, and Noah's Ark. Mandeville gives specific detail on Ararat: the ship is visible "afar in clear weather," the mountain is seven miles high, and no one may climb it for perpetual snow — except one monk who was carried up by an angel and recovered a plank, now in the monastery at the mountain's foot. The detail about the monk who fell asleep and woke at the bottom is a classic marvel-hedging device: the miracle is both reported and gently undercut. The castle of the Sparrow-Hawk in Armenia (a fairy-lady who grants wishes to those who watch awake for seven days) introduces the motif of the wish gone wrong: the King of Armenia asked for the lady herself (a ghostly thing, not an earthly one) and was cursed with perpetual war; a knight of the Temple wished for a full purse and was told it would destroy their order through pride.
+
+The journey through Persia and the Land of Job is drawn from Odoric and standard Eastern itinerary material. The diamond chapter is notable: Mandeville describes diamonds as growing like crystals, fed by dew, gendering male and female, and gives a test for fake diamonds using the lodestone (if the diamond is real, it suppresses the needle; if false, the lodestone works normally). This is the only other testing procedure in the book, parallel to the balm test — both chapters are about practical authentication of precious Eastern substances.
+
+Chapters XVIII–XX cover India and the pepper forest of Combar, the well of youth at Polombe that changes odor every hour, Saint Thomas's hand at Calamye used as a legal instrument (bills placed in the hand; the wrong party's bill is cast out), the idol procession where devotees are crushed under the chariot wheels, and Lamary — the island of communal property and cannibalism where men go naked and all goods are shared. The spherical earth demonstration in Chapter XX is the most intellectually ambitious passage in the book: Mandeville describes his own measurements with an astrolabe at multiple latitudes (53 degrees at Brabant, 62 at the northern coast, 33 in High Libya), argues that the earth is 31,500 miles in circumference by his reckoning, and tells the story of a traveler who circumnavigated the globe and heard his own language spoken on an island — proof, says Mandeville, that he had come full circle.
+
+Chapters XXI–XXII carry the reader into Java (gold and silver palace, floors alternating gold and silver, the king who has defeated the Great Khan), through the monstrous races in detail — Cyclopes, dog-headed Cynocephales, headless men with eyes in their shoulders, the folk who live by apple-smell alone, the hairy sea-swimmers, people with horse feet, men eight toes to each foot, and hermaphrodites. The Cynocephale king is given a specific prop: 300 great pearls on a paternosters-string, each day 300 prayers, and a ruby a foot long around his neck that serves as his crown insignia. Chapters XXIII–XXV cover the Great Khan of Cathay — his court, the gold-vine with gemstone grapes, the philosophers who command the feast by hours, the four armies traveling with him, and his paper money. The seal formula is given in full Latin: *Deus in coelo, Chan super terram, ejus fortitudo. Omnium hominum imperatoris sigillum.* The Great Khan's lineage is traced from Changuys (Genghis Khan) and the white knight vision, through Mango Khan (baptized Christian) to the present (pagan). Mandeville and his companions served the Khan fifteen months against the King of Mancy — another first-person claim that mirrors the Sultan service claim of Part 1.
+
+---
+
+## Cycle 15 — The Great Khan's Seal Formula
+
+**What this angle reveals that prior cycles missed:** Prior BEY cycles have addressed the Sultan's commission under the great seal, the ordinary Mamluk signets, the document chain, and institutional authority in the Levantine-European corridor. What no cycle has touched is the other great seal in the book: the Great Khan of Cathay's seal and letter formula, given in Latin in Chapter XXIV. This is the only other seal inscription Mandeville quotes verbatim. The two seals — Mamluk Sultan's and Great Khan's — are the book's two poles of earthly power. No one has ever tried to file them together in the same archive series. A scholar who holds both inscriptions, and understands what they claim about the extent of authority and the name of God invoked in each, has something no single chancellor's record contains.
+
+---
+
+**THE TOKEN: `bey_cycle_15_token`** — *The Khan's Seal Transcription* — a single sheet of fine vellum, written in a careful Latin hand, containing the full inscription of the Great Khan's great seal (*Deus in coelo, Chan super terram, ejus fortitudo. Omnium hominum imperatoris sigillum.*) and his privy seal formula, transcribed by a Genoese merchant named Bartolomeo di Negroni who served as a translator at the Khan's court in 1348 and memorized the formula because no written copy was permitted to leave; he wrote it down the night he reached Trebizond, in the margin of his own account book, and tore the page out when he realized what he had; the vellum sheet smells faintly of camphor from twenty years in a cedar chest in Genoa.
+
+---
+
+Act 1 — The Merchant's Cedar Chest
+activateNode: CON
+type: skill_check
+scene: "A Genoese factor's warehouse in Constantinople, near the Galata shore. Bartolomeo di Negroni is seventy years old, sharp-eyed, and does not give things away. He has kept the transcription in a cedar chest for twenty years because he was afraid of it — a document that copies a ruling emperor's seal formula can get a man killed in several jurisdictions. He is willing to sell it or give it away now, because he is old and his son does not speak Latin and does not understand what the document is. But he wants to know where it is going and why."
+prompt: "Persuasion, DC 13. Explain the archive's function — neutral custody, no commercial or political use, scholarly access only — and specifically that the Khan's seal formula alongside the Sultan's Commission (already in the archive) constitutes a unique comparative record of how the two greatest non-Christian powers on earth name God and claim authority; this is not intelligence, it is scholarship."
+failText: "Bartolomeo sells it to a Venetian diplomatic agent for twelve ducats. You see it change hands on the Galata quay."
+successText: "Bartolomeo is quiet for a long time. Then: 'I never told anyone what I copied. Twenty years.' He opens the cedar chest. The vellum sheet is folded inside an account book, page torn out clean. 'Tell them it smells of camphor. That is how they will know it is mine.' You receive The Khan's Seal Transcription."
+grantItem: "The Khan's Seal Transcription"
+checkPassFlag: bey_c15_act1
+
+Act 2 — The Byzantine Clerk's Objection
+activateNode: CON
+type: skill_check
+scene: "The imperial chancery district of Constantinople, the same afternoon. A Byzantine administrative clerk named Konstantinos Palaiologos — not the imperial family, just the name — has learned, through the Galata factor network, that someone is carrying a document containing the Khan's seal formula. He represents a minor imperial bureau that maintains records of foreign sovereign claims. His position: any document claiming *Omnium hominum imperatoris* (emperor of all the people of the earth) is a potential insult to the Byzantine Emperor and should be reviewed before leaving Byzantine territory."
+prompt: "Investigation, DC 12. The formula is a historical transcription of a specific document, not a current diplomatic communication; the Khan has been dead twenty years; the formula's claim to universal sovereignty is precisely what makes it a scholarly object rather than a diplomatic threat — it is evidence of how rulers conceived of authority in 1348, not a present assertion."
+failText: "Konstantinos requires a two-day review and writes a notation on the document's wrapper that it has been reviewed by the imperial chancery. The notation is accurate but slightly compromises the document's status as a private scholarly item."
+successText: "Konstantinos considers the distinction between historical transcription and present diplomatic assertion. He lets you pass. 'The Khan is dead anyway,' he says. 'All his seal claims with him.' You continue toward the harbor."
+checkPassFlag: bey_c15_act2
+
+Act 3 — The Franciscan's Alarm
+activateNode: DBV
+type: skill_check
+scene: "The Franciscan house at Ragusa. A friar named Fra Bonaventura has read Mandeville's chapter on the Great Khan — Mango Khan was baptized, Cobyla Khan was Christian, and then the line lapsed. He is troubled by the formula *Deus in coelo* — God in heaven, the Khan on earth, his strength. This is close to Christian formulation, very close. He wants to know if Bartolomeo's transcription confirms or alters the text Mandeville gives. He is asking in good faith but the implication worries him: if the Great Khan's seal invokes the Christian God, is the Khan's paganism a lapse from a nominally Christian empire, and what does that mean for crusade planning?"
+prompt: "History (Religion), DC 12. The formula invokes *Deus* but not *Christus* — the Khan's God is the God of the Mongol shamanist tradition, the Eternal Sky, which the Nestorian Christian missionaries in the Khan's court had partially translated into Christian vocabulary by the time the seal was cut; the invocation is theological syncretism, not Christian profession; Fra Bonaventura's crusade calculation rests on a mistranslation."
+failText: "Fra Bonaventura writes a letter to his provincial superior about the document and asks you to wait two days. The letter goes; you depart before the reply comes."
+successText: "Fra Bonaventura rubs his tonsure. 'Nestorian vocabulary in a Mongol seal.' He nods slowly. 'That is not the same as Christian profession.' He lets the matter go. 'Tell the archive: the formula requires a theological note.'"
+checkPassFlag: bey_c15_act3
+
+Act 4 — The Storm at Ancona
+activateNode: DBV
+type: combat
+scene: "At sea between Ragusa and Ancona, a three-day crossing turned violent on the second night. The storm is not hostile — it is simply weather — but the ship is taking water and the captain has ordered all heavy cargo to the deck for jettisoning if needed. The pack containing the Khan's Seal Transcription is not heavy. But it is in the same dry-storage chest as the copper ballast ingots, and the sailors are not reading the labels."
+prompt: "Athletics, DC 13 (or Sleight of Hand DC 12). Extract the dry-storage chest from the ballast hold before the sailors throw the copper ingots overboard — and keep the pack dry."
+failText: "The chest takes water when a wave breaks over the rail. The Khan's Seal Transcription survives but the ink runs slightly on one corner. Sweelinck will note the water damage on intake."
+successText: "You get the pack clear of the hold before the sailors reach the chest. The copper ingots go overboard. The document is dry. The Fighter holds the mast and watches. The storm passes by dawn."
+checkPassFlag: bey_c15_act4
+
+Act 5 — The Comparative Filing
+activateNode: WM
+type: skill_check
+scene: "Weimar archive, Sweelinck's intake desk. He reads the Khan's Seal Transcription alongside the Sultan's Commission, which he retrieves from the cedar section. Two great seals. One claims: *In the name of God, the Compassionate, the Merciful — the Sultan's authority by divine right over his five kingdoms.* The other: *Deus in coelo, Chan super terram, ejus fortitudo — God in heaven, the Khan on earth, his strength; seal of the emperor of all the people of the world.* Sweelinck looks up. 'No one has filed these together before.'"
+prompt: "Investigation, DC 13. Propose: Comparative Sovereignty Records — Claims of Universal Authority; the Sultan's Commission and the Khan's Seal Transcription filed as a pair under a single cross-reference heading; a companion note required explaining the theological status of *Deus in coelo* (Nestorian syncretic vocabulary, not Christian profession); both documents to carry their own intake dates and not be merged; the series to be titled for what it is: the two greatest non-Christian claims to divine-origin authority, filed together because together they constitute a definition of the outer edges of earthly sovereignty."
+failText: "Filed separately — Sultan's Commission in Islamic Administrative Records, Khan's Seal in Cathay — Eastern Empires. No cross-reference. The comparative claim is lost."
+successText: "Sweelinck writes: *Comparative Sovereignty Records — Claims of Universal Authority: two instruments invoking divine sanction for total earthly power; the Sultan's Commission under the great seal of Egypt and the transcription of the Great Khan's seal formula of Cathay; neither Christian; both invoking God by name; both claiming universal obedience; filed together as the only such pair in this archive.* He pauses. 'Bartolomeo di Negroni.' He writes the name. 'Genoa, 1348. Copied from memory at Trebizond.' He closes the ledger."
+grantItem: "Comparative Sovereignty Archive Record"
+takeItem: "The Khan's Seal Transcription"
+checkPassFlag: bey_c15_act5
+activateCond: bey_c15_act4
+
+---
+
+## Quest API Stub — BEY-C15
+
+```json
+{
+  "quest_id": "BEY-C15",
+  "title": "The Great Khan's Seal Formula",
+  "source": "BEY",
+  "cycle": 15,
+  "book": "Mandeville's Travels — attr. Sir John Mandeville (c. 1357)",
+  "source_episode": "Chapter XXIV: The style of the Great Khan's letters; the superscription of his great seal: Deus in coelo, Chan super terram, ejus fortitudo. Omnium hominum imperatoris sigillum; and his privy seal; the lineage from Genghis Khan through Mango Khan (baptized Christian) to the current pagan line.",
+  "cycle_angle": "The two great seals at the poles of earthly power: the Sultan's Commission (West) and the Khan's seal formula (East); the archive as the only place both can be filed in the same series",
+  "theme": "The comparative claim of universal sovereignty; the Nestorian syncretic vocabulary of Deus in coelo not equivalent to Christian profession; the merchant who memorized the formula at peril and kept it twenty years in a cedar chest because he was afraid of it",
+  "token": {
+    "id": "BEY_C15_TOKEN",
+    "name": "The Khan's Seal Transcription",
+    "description": "Single vellum sheet in careful Latin hand; full inscription of the Great Khan's great seal formula and privy seal formula; transcribed from memory by Bartolomeo di Negroni at Trebizond, 1348; faint camphor scent from twenty years in a cedar chest in Genoa.",
+    "grant_act": "act_1",
+    "take_act": "act_5",
+    "check_acts": ["act_2", "act_3", "act_4"]
+  },
+  "nodes": ["CON", "DBV", "WM"],
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "CON",
+      "type": "skill_check",
+      "activateNode": "CON",
+      "scene": "Genoese factor's warehouse, Galata shore. Bartolomeo di Negroni, 70, kept the transcription twenty years from fear. His son does not read Latin.",
+      "prompt": "Persuasion DC 13. Explain neutral archive custody, no political use; Khan's formula alongside Sultan's Commission = unique comparative record of non-Christian sovereign claims to God-given authority.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 13,
+        "failText": "Document sold to Venetian diplomatic agent on the Galata quay.",
+        "passText": "Bartolomeo opens the cedar chest. You receive The Khan's Seal Transcription."
+      },
+      "grantItem": "The Khan's Seal Transcription",
+      "checkPassFlag": "beyC15Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "CON",
+      "type": "skill_check",
+      "scene": "Byzantine imperial chancery district. Clerk Konstantinos Palaiologos wants to review a document claiming Omnium hominum imperatoris before it leaves Byzantine territory.",
+      "prompt": "Investigation DC 12. Historical transcription of a dead ruler's formula, not present diplomatic assertion; the Khan has been dead twenty years.",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 12,
+        "failText": "Chancery notation added to wrapper.",
+        "passText": "'The Khan is dead anyway.' Let you pass."
+      },
+      "checkItem": "The Khan's Seal Transcription",
+      "checkPassFlag": "beyC15Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "DBV",
+      "type": "skill_check",
+      "activateNode": "DBV",
+      "scene": "Franciscan house, Ragusa. Fra Bonaventura, alarmed by Deus in coelo formula, wants to know if it confirms a Christian Khan — with implications for crusade planning.",
+      "prompt": "History (Religion) DC 12. Nestorian syncretic vocabulary, not Christian profession; Eternal Sky God partially translated into Latin by Nestorian court missionaries; the formula is theological syncretism.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "failText": "Fra Bonaventura writes to his provincial. You depart before reply.",
+        "passText": "'Nestorian vocabulary in a Mongol seal. That is not Christian profession.' Archive to add theological note."
+      },
+      "checkItem": "The Khan's Seal Transcription",
+      "checkPassFlag": "beyC15Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "DBV",
+      "type": "combat",
+      "scene": "Storm at sea between Ragusa and Ancona. Sailors jettisoning heavy cargo; the dry-storage chest containing the document is in the ballast hold with copper ingots.",
+      "prompt": "Athletics DC 13 or Sleight of Hand DC 12. Extract the dry-storage chest before the sailors reach the copper ingots.",
+      "skillCheck": {
+        "skill": "Athletics",
+        "dc": 13,
+        "failText": "Document takes water on one corner. Ink runs. Sweelinck notes water damage on intake.",
+        "passText": "Pack clear of the hold. Document dry. Fighter holds the mast."
+      },
+      "checkItem": "The Khan's Seal Transcription",
+      "checkPassFlag": "beyC15Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Weimar archive. Sweelinck reads the Khan's formula alongside the Sultan's Commission. Two great seals. 'No one has filed these together before.'",
+      "prompt": "Investigation DC 13. Propose: Comparative Sovereignty Records — Claims of Universal Authority; both documents filed as a pair with cross-reference; companion theological note on Deus in coelo; series titled for what it is.",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 13,
+        "failText": "Filed separately in separate regional series. No cross-reference.",
+        "passText": "Filed as Comparative Sovereignty Records — Claims of Universal Authority. Bartolomeo di Negroni's name and date entered."
+      },
+      "takeItem": "The Khan's Seal Transcription",
+      "grantItem": "Comparative Sovereignty Archive Record",
+      "checkPassFlag": "beyC15Act5Passed",
+      "activateMissionBit": "beyKhanSealComplete",
+      "activateCond": "beyC15Act4Passed"
+    }
+  ]
+}
+```
+
+---
+
+*BEY-C15 complete. 2026-06-05.*
+
+---
+
+## Source Summary — Part 3 of 3
+*Chapters XXVI–XXXIV and Epilogue: The Valley Perilous, the giants, the Isle of Bragman, Alexander's encounter with the naked philosophers, the Pygmies, Prester John's realm, gold-ant hills, Terrestrial Paradise, funeral customs of Rybothe, and Mandeville's return to Rome and death.*
+
+Part 3 opens in the Valley Perilous — the Devil's Head, the valley of gold and jewels that kills those who enter from covetice. Mandeville describes walking through it in company, praying, seeing the bodies of Christians who died from the fiends' attacks or from covetousness, and emerging safe. He is careful to note the bodies were "all whole without rotting" which he takes as a fiend's illusion. This self-aware skepticism about his own marvels is characteristic: he reports and hedges simultaneously. Beyond the valley are giants of 28 to 50 feet, eating raw flesh, who wade into the sea to seize ships.
+
+The Isle of Bragman (Chapter XXXII) is the moral center of Part 3 and possibly the book. The Bragmans live without theft, murder, poverty, or tempest, following natural law without Christian doctrine. They sent a letter to Alexander saying: *What may be enough to that man to whom all the world is insufficient?* Alexander was so moved he left them alone. Mandeville's comment — that God loves those who love him meekly regardless of law, as with Job — is the book's most liberal theological statement. The naked philosophers of Oxidrate and Gynosophe reinforce this: they asked Alexander why he was so busy conquering when he would die and leave it all anyway. Mandeville explicitly endorses their position, quoting Hosea and the Gospel: *Alias oves habeo.*
+
+Chapter XXXIII covers the gold-ant hills of Taprobane (large as hounds, no man can approach them in daylight, but mares are sent in with empty vessels the ants fill, then the foals call the mares home). Terrestrial Paradise is placed at the highest point of earth, touching the moon's orbit, walled with moss-covered stone, one fiery gate. The four rivers — Pison/Ganges, Nile/Gison, Tigris, Euphrates — all flow from the well at Paradise's center. Mandeville admits he cannot speak of Paradise properly: *For I was not there. It is far beyond. And that forthinketh me.* This sentence is the book's most honest admission and one of its most affecting.
+
+Chapter XXXIV's Rybothe funerary custom is one of the most specific ethnographic descriptions in the book: when a father dies, the son invites all friends and kin, the prelate cuts off the head (placed in a gold or silver dish for the wealthy), the body is cut in pieces and thrown to birds — eagles, glades, ravens — who are called "angels of God"; the son drinks from a cup made from the father's skull all his life in remembrance. The brain-pan cup is a specific named object. Mandeville also describes the rich man with fingernails so long he cannot grasp anything, and women with bound feet — both described as markers of status. The epilogue is remarkable: Mandeville returned to Rome, had his book examined by the Pope, was given absolution for many grievous points, and was told his book was confirmed against a larger *Mappa Mundi* that his text had helped compose. He acknowledges his gout, says he dictated this from memory, and asks readers to pray for him. The closing date is 1356, the 34th year since he departed England.
+
+---
+
+## Cycle 16 — The Skull Cup of Rybothe
+
+**What this angle reveals that prior cycles missed:** Every prior BEY cycle has worked within the Levantine-Mediterranean corridor and the archive's relationship to Islamic and Western European institutional authority. Part 3's furthest reaches — the Valley Perilous, the Bragman letter to Alexander, Terrestrial Paradise — are beyond archive reach by design. What falls within reach is the one specific named object from Part 3 that has a chain of custody: the skull cup of Rybothe, a drinking vessel made from a dead father's brain-pan by his son, kept all his life as a memorial. No prior cycle has addressed memorial objects — the difference between a relic (institutional), a signet (administrative), and a memorial (personal, perishable, irreplaceable). The archive has never received a memorial object. The question is whether it should.
+
+---
+
+**THE TOKEN: `bey_cycle_16_token`** — *The Skull Cup of Rybothe* — a drinking cup fashioned from a human brain-pan, silver-mounted at the rim with a simple band, the bone itself cleaned and sealed with lacquer; made in Rybothe (western Cathay borderlands) by a man named Dorje for his father's memorial feast in approximately 1340; Dorje carried it trading to Trebizond, Trebizond to Constantinople, Constantinople to Ragusa, and died at Ragusa in 1365 leaving the cup to a Ragusan merchant named Nikola Držić who did not know what it was or where it came from; Držić listed it in his estate inventory as "one cup, carved bone, silver mount, foreign make."
+
+---
+
+Act 1 — The Estate Inventory
+activateNode: DBV
+type: skill_check
+scene: "A Ragusan notary's office, late November. The estate of Nikola Držić is being probated. The skull cup appears in the inventory as 'one cup, carved bone, silver mount, foreign make' — assessed at four ducats. His heirs want to sell it at the estate auction in three days. You have examined it and recognized the brain-pan shape and lacquer treatment from Mandeville's description of the Rybothe custom. No one else in the room knows what it is."
+prompt: "History, DC 12. Identify the cup as a Rybothe memorial vessel from Cathay borderlands — the brain-pan cup made by a son from his father's skull, kept as a memorial and drinking vessel — and argue that its significance as a documented funerary custom object exceeds its four-ducat auction value. You are not asking for charity; you are asking the notary to allow a sealed bid before the public auction."
+failText: "The notary schedules the auction as planned. At auction, a Venetian curiosity dealer outbids you. The cup leaves Ragusa in a crate of oddities."
+successText: "The notary studies you. 'Foreign make.' He looks at the cup again. 'Carved bone.' He agrees to a sealed pre-auction evaluation. The heirs accept six ducats — more than auction estimate. You receive The Skull Cup of Rybothe."
+grantItem: "The Skull Cup of Rybothe"
+checkPassFlag: bey_c16_act1
+
+Act 2 — The Physician's Question
+activateNode: DBV
+type: skill_check
+scene: "The port physician's office, Ragusa. Dr. Marin Lukarević has heard that you acquired the cup and has requested an examination — not for quarantine purposes, but because he studies materials from the Eastern trade and wants to know if the lacquer treatment is the same as the preservation lacquer described in Cathay trade accounts. He is genuinely curious and professionally competent. But his examination would require him to handle the cup at length, and his methods involve scraping a small sample of the lacquer."
+prompt: "Medicine or Persuasion, DC 12. Allow a non-destructive visual examination while explaining that any sampling of the lacquer would change the object's integrity as a memorial vessel — the lacquer is part of the funerary treatment, not a separate surface coating; the archive needs the object intact."
+failText: "Dr. Lukarević takes a small lacquer scraping before you can stop him. The cup is intact but the funerary treatment is technically compromised."
+successText: "Dr. Lukarević examines the cup visually and makes notes. 'Cathay borderlands, certainly. The lacquer formula is consistent with accounts from the Trebizond traders.' He hands it back without sampling. 'Tell the archive I would like a copy of its provenance notes when they are written.'"
+checkPassFlag: bey_c16_act2
+
+Act 3 — Dorje's Daughter
+activateNode: CON
+type: skill_check
+scene: "Constantinople, a Ragusan trading house near the Galata shore. A woman named Fatima, daughter of a Trebizond silk merchant, recognizes the cup when you show it to a trader acquaintance. She is the granddaughter of a Ragusan merchant who bought goods from Dorje in 1355 — she has a family letter that names Dorje and describes the cup. She is not claiming ownership. She is crying quietly, which she tries to conceal, because she remembers her grandmother describing Dorje's grief when he spoke of his father and the cup. She wants to know if you will tell the archive who made it."
+prompt: "Persuasion or Insight, DC 12. Assure Fatima that Dorje's name, his father's memorial, and her family's connection to the cup will be part of the archive's provenance record — not as a secondary note but as part of the object's primary identity. The cup is not 'foreign make'; it is Dorje's memorial for a named man."
+failText: "Fatima nods and does not give you the family letter. She says she will keep it."
+successText: "Fatima takes the family letter from her belt purse and gives it to you. 'My grandmother kept it because she said Dorje had no one to remember his father for him when he died away from home.' She does not look at the cup again. 'Tell them his father's name was Tenzin.' You receive Fatima's Family Letter."
+grantItem: "Fatima's Family Letter"
+checkPassFlag: bey_c16_act3
+
+Act 4 — The Overland Crossing
+activateNode: KOL
+type: combat
+scene: "The road between Frankfurt and Erfurt, midwinter, two days from Weimar. A company of men-at-arms in the livery of a minor count has been following your party since the Thuringian gate. They are not bandits — they have a writ, apparently from a Cologne collector who believes the cup is a stolen relic from an Eastern monastery. The writ is false (the collector fabricated the provenance) but it is a real writ with a real seal. They intend to take the pack."
+prompt: "Combat, DC 14 (Athletics, Acrobatics, or Intimidation). The Fighter engages the lead man-at-arms. You have the pack with the cup. Do not let them pin you against the ditch."
+failText: "The men-at-arms detain you for six hours before the writ's provenance falls apart under questioning. The cup is examined and returned. Fatima's Family Letter is slightly crumpled."
+successText: "The Fighter breaks their formation at the first contact. You move left, up the bank, past the ditch. When two of the men-at-arms turn back to deal with the Fighter, you are already past them. They do not follow into the treeline. The cup is intact. Fatima's letter is intact."
+checkPassFlag: bey_c16_act4
+
+Act 5 — The Memorial Record
+activateNode: WM
+type: skill_check
+scene: "Weimar archive, Archivus Sweelinck. He receives the skull cup. He holds it for a long time, turning it over. He reads Fatima's Family Letter. He reads the provenance notes. He sets it on the desk carefully. 'The archive has received administrative instruments. It has received calibration tools. It has received documents of sovereignty.' He pauses. 'This is a memorial.' He looks at you. 'The question is whether a memorial belongs in an archive. The question is whether what belongs in an archive is only what has institutional significance, or whether the archive can hold what is simply irreplaceable.'"
+prompt: "Investigation or History, DC 13. Argue that the skull cup is both memorial and document: it is physical evidence of a funerary custom Mandeville describes, with a specific provenance chain (Dorje — Tenzin — Rybothe — Trebizond — Constantinople — Ragusa — Weimar) that makes it the only such object in Europe; and it is a memorial that deserves custody precisely because Dorje had no archive, no institution, no one to remember his father for him — and the archive, by receiving it, does what archives are for."
+failText: "Sweelinck files it under Eastern Curiosities — Funerary Objects. The provenance chain is recorded but the memorial context is not."
+successText: "Sweelinck is quiet for a long time. Then he writes: *Memorial Object with Documentary Provenance: skull cup of Rybothe, fashioned by Dorje, son of Tenzin, c. 1340, in the tradition described by Mandeville in Chapter XXXIV; provenance chain complete from maker to archive through five hands across thirty years; filed not as curiosity but as primary memorial evidence of a specific human practice at the edge of the documented world; Dorje had no archive; this archive holds what he could not.* He looks up. 'The archive can hold what is irreplaceable.' He closes the ledger. It is the last entry of the year."
+grantItem: "Rybothe Memorial Archive Record"
+takeItem: "The Skull Cup of Rybothe"
+checkPassFlag: bey_c16_act5
+activateCond: bey_c16_act4
+questComplete: true
+
+---
+
+## Quest API Stub — BEY-C16
+
+```json
+{
+  "quest_id": "BEY-C16",
+  "title": "The Skull Cup of Rybothe",
+  "source": "BEY",
+  "cycle": 16,
+  "book": "Mandeville's Travels — attr. Sir John Mandeville (c. 1357)",
+  "source_episode": "Chapter XXXIV: Of the customs of kings in isles coasting Prester John's land; the Rybothe funerary custom: the prelate cuts off the dead father's head, places it on a gold or silver dish, the body is cut in pieces and thrown to birds of ravine (called angels of God); the son makes a cup of the brain-pan and drinks from it all his life in remembrance, keeping it as the holiest relic he has.",
+  "cycle_angle": "The memorial object as archive problem: neither relic nor administrative instrument, but irreplaceable evidence of a named human practice with a complete provenance chain",
+  "theme": "What the archive is for: Dorje had no institution to remember his father; the archive receives what would otherwise be lost; the memorial and the document are not distinct categories; the brain-pan cup is both",
+  "token": {
+    "id": "BEY_C16_TOKEN",
+    "name": "The Skull Cup of Rybothe",
+    "description": "Brain-pan cup, silver-mounted at rim, bone cleaned and lacquer-sealed; made by Dorje for his father Tenzin's memorial feast, Rybothe c. 1340; carried trading from Cathay borderlands to Trebizond, Constantinople, Ragusa; listed in Ragusan estate inventory as 'one cup, carved bone, silver mount, foreign make'; Fatima's Family Letter provides the provenance chain and Tenzin's name.",
+    "grant_act": "act_1",
+    "take_act": "act_5",
+    "check_acts": ["act_2", "act_3", "act_4"]
+  },
+  "nodes": ["DBV", "CON", "KOL", "WM"],
+  "secondary_items": [
+    {
+      "id": "BEY_C16_FATIMA",
+      "name": "Fatima's Family Letter",
+      "description": "Family letter from a Trebizond merchant's household naming Dorje and describing the skull cup; records that Dorje's father was named Tenzin; the cup's primary provenance document."
+    }
+  ],
+  "acts": [
+    {
+      "act_id": "act_1",
+      "location": "DBV",
+      "type": "skill_check",
+      "activateNode": "DBV",
+      "scene": "Ragusan notary's office. Nikola Držić's estate probate. Skull cup listed as 'one cup, carved bone, silver mount, foreign make' at four ducats. Auction in three days.",
+      "prompt": "History DC 12. Identify cup as Rybothe memorial vessel; argue significance exceeds auction value; request sealed pre-auction evaluation.",
+      "skillCheck": {
+        "skill": "History",
+        "dc": 12,
+        "failText": "Auction proceeds. Venetian curiosity dealer acquires the cup.",
+        "passText": "Heirs accept six ducats in pre-auction. You receive The Skull Cup of Rybothe."
+      },
+      "grantItem": "The Skull Cup of Rybothe",
+      "checkPassFlag": "beyC16Act1Passed"
+    },
+    {
+      "act_id": "act_2",
+      "location": "DBV",
+      "type": "skill_check",
+      "scene": "Ragusan port physician Dr. Marin Lukarević wants to sample the lacquer.",
+      "prompt": "Medicine or Persuasion DC 12. Allow non-destructive visual examination only; lacquer is part of the funerary treatment, not a separate coating; archive needs the object intact.",
+      "skillCheck": {
+        "skill": "Medicine",
+        "dc": 12,
+        "failText": "Small lacquer scraping taken. Funerary treatment technically compromised.",
+        "passText": "Visual examination only. Provenance notes to be shared with Dr. Lukarević."
+      },
+      "checkItem": "The Skull Cup of Rybothe",
+      "checkPassFlag": "beyC16Act2Passed"
+    },
+    {
+      "act_id": "act_3",
+      "location": "CON",
+      "type": "skill_check",
+      "activateNode": "CON",
+      "scene": "Constantinople Galata trading house. Fatima, granddaughter of a merchant who knew Dorje, recognizes the cup and has a family letter naming Dorje and his father Tenzin.",
+      "prompt": "Persuasion or Insight DC 12. Assure Fatima that Dorje and Tenzin's names will be primary in the archive record, not secondary notes.",
+      "skillCheck": {
+        "skill": "Persuasion",
+        "dc": 12,
+        "failText": "Fatima keeps the letter.",
+        "passText": "Fatima gives you the family letter. 'His father's name was Tenzin.' You receive Fatima's Family Letter."
+      },
+      "grantItem": "Fatima's Family Letter",
+      "checkItem": "The Skull Cup of Rybothe",
+      "checkPassFlag": "beyC16Act3Passed"
+    },
+    {
+      "act_id": "act_4",
+      "location": "KOL",
+      "type": "combat",
+      "activateNode": "KOL",
+      "scene": "Road between Frankfurt and Erfurt. Men-at-arms with a false writ from a Cologne collector who claims the cup is a stolen Eastern monastery relic.",
+      "prompt": "Athletics, Acrobatics, or Intimidation DC 14. Fighter engages lead man-at-arms. Move left up the bank past the ditch before they can pin you.",
+      "skillCheck": {
+        "skill": "Athletics",
+        "dc": 14,
+        "failText": "Six-hour detention. Cup examined and returned. Fatima's letter crumpled.",
+        "passText": "Fighter breaks their formation. You are past them before they regroup. Cup and letter intact."
+      },
+      "checkItem": "The Skull Cup of Rybothe",
+      "checkPassFlag": "beyC16Act4Passed"
+    },
+    {
+      "act_id": "act_5",
+      "location": "WM",
+      "type": "skill_check",
+      "activateNode": "WM",
+      "scene": "Weimar archive. Sweelinck holds the skull cup a long time. 'This is a memorial. The question is whether a memorial belongs in an archive.'",
+      "prompt": "Investigation or History DC 13. The cup is both memorial and document; complete provenance chain; Dorje had no archive; the archive receives what would otherwise be lost — that is what archives are for.",
+      "skillCheck": {
+        "skill": "Investigation",
+        "dc": 13,
+        "failText": "Filed under Eastern Curiosities — Funerary Objects. Memorial context not recorded.",
+        "passText": "Filed as Memorial Object with Documentary Provenance. Dorje had no archive. This archive holds what he could not. Last entry of the year."
+      },
+      "takeItem": "The Skull Cup of Rybothe",
+      "grantItem": "Rybothe Memorial Archive Record",
+      "checkPassFlag": "beyC16Act5Passed",
+      "activateMissionBit": "beySkullCupComplete",
+      "activateCond": "beyC16Act4Passed",
+      "questComplete": true
+    }
+  ]
+}
+```
+
+---
+
+*BEY-C16 complete. Pass 4 complete. 2026-06-05.*

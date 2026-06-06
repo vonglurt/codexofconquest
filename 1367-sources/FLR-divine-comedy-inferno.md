@@ -1150,3 +1150,827 @@ The token is taken.
 
 *Cycle 7 complete. FLR SEEDS COMPLETE.*
 
+
+
+---
+
+## Source Summary — Part 1 of 4
+*Cantos I–XVII: the dark wood, the descent through Hell's upper circles, and the ride on Geryon to Malebolge.*
+
+Dante opens lost in a dark wood at the midpoint of his life, blocked by a wolf, a lion, and a leopard. Virgil appears — summoned by Beatrice at the request of Lucia — and offers to guide him through Hell and Purgatory. The journey begins with the vestibule, where the indifferent souls (the neutral angels and the humans who chose neither good nor evil) chase a blank banner while wasps and hornets torment them. They are rejected by both Heaven and Hell: too guilty for the first, too negligible for the second. Their administrative condition — non-persons in every ledger — gives them a strangely modern quality.
+
+The descent moves through Limbo, where unbaptized virtuous souls including Virgil himself dwell without torment but without hope, then into the circle of the lustful (Francesca da Rimini's account of the Lancelot book as the agent of her fall), the gluttonous, the hoarders and spendthrifts, and the wrathful in the Styx. In Canto VIII, the ferryman Phlegyas carries Dante and Virgil across the Styx; Filippo Argenti, a proud Florentine, is identified and gleefully torn apart by the other souls in the marsh. The City of Dis presents the poem's first serious structural obstacle: the fallen angels bar the gate; the Furies appear on the walls; ultimately a heaven-sent messenger opens the way.
+
+Canto X introduces Farinata degli Uberti rising from his burning tomb with the contemptuous composure of a man who cannot be diminished even by Hell. He twice scattered Dante's family from Florence yet single-handedly prevented the city's total destruction after the Ghibelline victory at Montaperti. His dignity in damnation is among the poem's most powerful gestures. His neighbor Cavalcante, by contrast, collapses in anguish when he misreads a tense in Dante's speech as confirmation that his son Guido is dead.
+
+Cantos XII–XVI traverse the violent: the river of blood where tyrants are submerged, the wood of the suicides (Pier della Vigna's account of his false conviction), the burning sand where blasphemers and usurers endure a rain of fire, and the bank where Brunetto Latini walks in conversation with Dante, commending his TREASURE to memory. Canto XVI introduces three Florentine nobles spinning in the fire who ask about the city's decline with such civic gravity that Dante cannot refuse their questions. The part closes with Canto XVII: the usurers seated on the burning sand with their heraldic purses, each identified only by the arms on their coin-bags, and then the ride on Geryon — the fraud-monster with a man's face, a serpent's body, and a scorpion's tail — down to Malebolge. Geryon is hired freight: he carries the poets as a transaction.
+
+---
+
+## Cycle 8 — *Phlegyas's Crossing Log*
+
+**What this angle reveals that prior cycles missed:** Every FLR cycle to this point has worked with documents created by or about named individuals — people who chose to write, who had something at stake. This cycle is about the bureaucratic record kept by an operator: Phlegyas, the ferryman of the Styx, maintains a crossing log. He does not judge; he counts. The log documents a transit that should have been impossible — a living man crossing the Styx — and the single margin note Phlegyas made beside that entry is what Sweelinck needs.
+
+---
+
+**THE TOKEN: `flr_cycle_8_token`** — Phlegyas's Crossing Log: Entry 1301. A single folio torn from a ferryman's operational register, water-stained and smelling of marsh. The entry documents a crossing on Dante's date: two passengers, one warm, one cold. The warm passenger's weight differential is noted. In the margin, a single word in a hand not Phlegyas's: *giusto* — "just." Someone else endorsed the crossing.
+
+---
+
+**ACT 1 — The Marsh Archive, Pisa**
+
+*Grant act. Location: a Pisan manuscript dealer's back room — Elena, who handles ecclesiastical uncatalogued lots.*
+
+The folio arrived in a mixed ecclesiastical lot from a Pisan monastery dissolution. Elena does not know what she has. She recognized the marsh-smell and the unusual paper — a heavy, waxed vellum used for records kept in damp conditions — but the Latin abbreviations in the register columns are not standard church Latin. They match neither a sacrament record nor a property ledger.
+
+She has been sitting on it for three months, unwilling to sell it blind.
+
+Elena spreads the folio on her table. The columns: date-notation (non-Christian calendrical system, Julian with underworld corrections), crossing direction (single: toward the further bank), passenger count (two), physical classification of each passenger (one: *frigidus, ponderis normalis* — cold, normal weight; one: *calidus, ponderis augmentati* — warm, weight increased). The warm passenger's weight differential is noted: approximately one living man's mass in addition to spirit-weight.
+
+The marginal word: *giusto*. Endorsed by a second hand, smaller, more assured.
+
+*The folio is cold to the touch even in a warm room. The Fighter notices.*
+
+---
+
+```
+Act 1 — The Marsh Archive, Pisa
+activateNode: PSA
+type: skill_check
+scene: "Elena's back room off the Piazza dei Cavalieri, mid-morning. She has the folio spread under a north-facing window. The marsh smell is faint but present. She watches you look at the column headings."
+prompt: "History DC 12 — identify the register format as an operational crossing log, not a church record, and name the weight differential's significance: one passenger was alive."
+failText: "Elena's price doubles when she senses uncertainty. She folds the folio and locks it away. Two days later you may return; she loses no value waiting. You pay an additional 5gp on your next attempt."
+successText: "You identify the format, explain the weight notation, and name what the marginal endorsement implies: a third party verified the transit as legitimate. Elena names her price. You pay. You receive the Crossing Log Folio."
+grantItem: "Crossing Log Folio"
+checkPassFlag: flr_c8_act1
+```
+
+---
+
+**ACT 2 — The Dominican Scriptorium, Rome**
+
+*Check act. Location: the Roman Dominican house scriptorium — Fra Simeone, who specializes in unusual Latin administrative systems.*
+
+The columns use a calendrical notation Fra Simeone has seen once before: in a document recovered from the Avignon papal court archive, catalogued under "instruments of contested provenance." That document referred to an underworld crossing record from classical sources — Virgil, specifically. The notation system is Virgilian commentary-Latin, developed by glossators.
+
+Fra Simeone can authenticate the folio as genuinely old and genuinely consistent with the administrative vocabulary of a classical-commentary scribal tradition. What he cannot do alone is confirm the marginal endorsement's hand. The endorsement is not Virgilian-commentary Latin; it is a different hand entirely, and the ink is a different composition — older, or at least differently prepared.
+
+Persuasion DC 13 — convince Fra Simeone that the endorsement hand matters as much as the primary text, and that the archive needs both identifications before the folio can be accessioned as a legitimate historical document rather than a literary curiosity.
+
+---
+
+```
+Act 2 — The Dominican Scriptorium, Rome
+activateNode: ROM
+type: skill_check
+scene: "Fra Simeone's table is organized by document type: liturgical left, classical commentary center, contested right. He places the folio immediately in the contested pile, then looks at you with mild suspicion. The scriptorium smells of oak gall."
+prompt: "Persuasion DC 13 — argue that the marginal endorsement is the document's historical core, not an annotation; that the primary columns are operational record, and the margin is the interpretation that makes it archivally significant."
+failText: "Fra Simeone agrees to authenticate the columns but dismisses the endorsement as a later gloss. His written opinion covers only the primary text. The archive will not accept the folio at full provenance grade without the endorsement analysis. You must spend two additional days finding a secondary expert."
+successText: "Fra Simeone examines both inks under a lens, writes two separate authentication notes — one for each hand — and dates them with a fifty-year margin that places both within the same century as Dante's journey. You receive Fra Simeone's Dual Authentication."
+grantItem: "Fra Simeone's Dual Authentication"
+checkPassFlag: flr_c8_act2
+activateCond: flr_c8_act1
+```
+
+---
+
+**ACT 3 — The Harbor Road, Palermo**
+
+*Check act. Location: the coastal road south of Palermo — two men on horseback, riding toward you.*
+
+The folio has attracted attention from a family whose ancestor appears in the crossing log's prior pages — standard entries for named Sicilian nobles, recorded in the same hand as the Dante entry, from the Sicilian Vespers period of 1282. The family does not want those entries seen by anyone with access to a Palermitan court. The prior pages document their ancestor's crossing date as approximately three weeks before his official death date — which raises questions about the inheritance the family has held for eighty years.
+
+The two riders have a writ. The writ is legitimate; it names the folio by a general description that could cover any crossing register. It does not name the specific entry the Fighter carries, because the family does not know which entry is the Dante crossing. They want the whole folio.
+
+*The Fighter reads the writ. It is correctly issued. The folio is, technically, the property they describe. But they cannot enforce the writ outside Palermitan jurisdiction.*
+
+Combat — 2× mounted retainers (AC 14, HP 26, lances; if unhorsed, short swords). The writ-holder hangs back: he will not fight. If both retainers are defeated or driven off, he concedes jurisdiction and withdraws.
+
+---
+
+```
+Act 3 — The Harbor Road, Palermo
+activateNode: PAR
+type: combat
+scene: "The coastal road, two hours before Palermo's south gate. Citrus groves on the left, the sea glinting on the right. The writ-holder reads the document aloud in a flat, official voice. Behind him, two men on large horses. They are not bluffing."
+prompt: "Combat: 2× mounted retainers (AC 14, HP 26, lance/short sword). The writ-holder will not enter combat. Defeat or drive off both retainers to break the enforcement attempt."
+failText: "You are unhorsed and the folio taken. The retainers leave you the authentication documents — they want only the folio. Three days later a Genoese factor purchases the folio at auction; you may attempt to recover it through a PAR Persuasion DC 14 contact before it leaves the island, at a cost of 15gp."
+successText: "Both retainers are down. The writ-holder folds his document and turns his horse. The road is clear. The folio is still in your pack."
+checkPassFlag: flr_c8_act3
+activateCond: flr_c8_act2
+```
+
+---
+
+**ACT 4 — The Humanist Study, Venice**
+
+*Check act. Location: a Venetian private library — Giacomo Morosini, collector of unusual administrative documents.*
+
+Giacomo has seen crossing registers before — he owns three, all from Styx-adjacent traditions in the Virgilian commentary corpus. None of them have a marginal endorsement from a second hand. He is prepared to say, in writing, that the endorsement hand is consistent with a Beatrician tradition: the small, assured script matches the few surviving manuscript marginalia attributed to glossators working explicitly in Dante's own voice-tradition.
+
+What he needs is confirmation that the folio's chain of provenance can be established from the Pisan lot to the present. The monastery dissolution records are in the Pisan episcopal archive. A certified copy of the dissolution inventory — showing the folio as item and not as a later insertion — would complete the chain.
+
+Insight DC 12 — recognize that Giacomo's provenance concern is genuine, not procedural: he has been deceived by forgeries before and will not issue an opinion without the chain. The episcopal archive is accessible; the certified copy takes one day and a standard fee.
+
+---
+
+```
+Act 4 — The Humanist Study, Venice
+activateNode: VEN
+type: skill_check
+scene: "Giacomo's study, overlooking the Grand Canal from the second floor. Three other crossing registers are laid out for comparison. He is generous with his time and suspicious of his own generosity."
+prompt: "Insight DC 12 — understand that Giacomo's hesitation is not stalling but genuine caution, and propose the specific solution: certified copy of the dissolution inventory from Pisa, establishing the folio as a pre-existing item in the lot."
+failText: "Giacomo declines to issue his opinion until the chain is complete, and names no deadline. Without his endorsement, the Weimar archive will accept the folio as interesting but not as historically certified. The mission continues, but Sweelinck's note will read 'provisional' rather than 'confirmed.' You may return with the inventory copy within seven days."
+successText: "You propose the dissolution inventory solution immediately. Giacomo nods and begins drafting his opinion while you arrange the Pisan certified copy by messenger. Three days later you have both. You receive Giacomo's Marginal Endorsement Analysis."
+grantItem: "Giacomo's Marginal Endorsement Analysis"
+checkPassFlag: flr_c8_act4
+activateCond: flr_c8_act3
+```
+
+---
+
+**ACT 5 — Weimar Archive**
+
+*Take act. Location: Weimar — Sweelinck at the filing desk.*
+
+The folio, the dual authentication, and the marginal endorsement analysis are laid out in sequence on Sweelinck's table. He reads the primary text first, column by column, then the two authentication notes, then Giacomo's analysis of the marginal hand.
+
+**Sweelinck:** *(reading the margin)* "*Giusto.*" He sets the folio down. "One word. Someone — Giacomo says a Beatrician glossator, working in Dante's voice-tradition — endorsed the crossing as just. Not permitted. Not documented. *Just.*" He is quiet for a moment.
+
+**Sweelinck:** "Phlegyas ran the ferry. He recorded what he saw. He noted the weight differential because it was anomalous and he was a careful man. And someone else — not Phlegyas — came back and wrote *just* in the margin. That person was making a theological claim in a ferryman's operational record." He picks up his pen. "First entry. The Styx Crossing — Administrative Record of a Transit Endorsed as Theologically Legitimate."
+
+He looks up. "The ferryman counted. The endorser judged. The archive holds both."
+
+The token is taken.
+
+---
+
+```
+Act 5 — Weimar Archive
+activateNode: WM
+type: skill_check
+scene: "Sweelinck's filing table, late afternoon. The three documents are laid out left to right: the folio, Fra Simeone's two authentication notes, Giacomo's analysis. Sweelinck reads without speaking for four minutes."
+prompt: "No check required — deliver the complete dossier. Sweelinck's receipt confirms the archive entry."
+failText: "N/A — delivery act."
+successText: "Sweelinck enters the folio under The Styx Crossing — Administrative Record of a Transit Endorsed as Theologically Legitimate. You receive the Archive Receipt: Styx Crossing."
+grantItem: "Archive Receipt: Styx Crossing"
+takeItem: "Crossing Log Folio"
+checkPassFlag: flr_c8_act5
+activateCond: flr_c8_act4
+```
+
+---
+
+```json
+{
+  "quest_id": "FLR-08",
+  "title": "Phlegyas's Crossing Log",
+  "source": "Divine Comedy: Inferno — Dante Alighieri",
+  "cycle": 8,
+  "book": "FLR",
+  "source_episode": "Canto VIII — Phlegyas and the Styx crossing; Filippo Argenti; the gates of Dis",
+  "theme": "The ferryman's operational record of an impossible transit; the marginal endorsement as theological claim in an administrative document",
+  "activateNode": "PSA",
+  "token": {
+    "id": "flr_cycle_8_token",
+    "name": "Phlegyas's Crossing Log: Entry 1301",
+    "description": "Single folio from a ferryman's register, waxed vellum, marsh-stained. Documents Dante's Styx crossing: two passengers, one warm, weight differential noted. Marginal endorsement in a second hand: giusto.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["PSA", "ROM", "PAR", "VEN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "PSA", "type": "skill_check", "dc": 12, "skill": "History", "prompt": "Identify the crossing log format and the weight differential's significance."},
+    {"act": 2, "node": "ROM", "type": "skill_check", "dc": 13, "skill": "Persuasion", "prompt": "Convince Fra Simeone the marginal endorsement is the document's historical core."},
+    {"act": 3, "node": "PAR", "type": "combat", "dc": 14, "notes": "2× mounted retainers (AC 14, HP 26). Family wants the folio to suppress prior entries about their ancestor."},
+    {"act": 4, "node": "VEN", "type": "skill_check", "dc": 12, "skill": "Insight", "prompt": "Recognize Giacomo's provenance concern is genuine; propose the dissolution inventory solution."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Deliver the complete dossier. The ferryman counted. The endorser judged."}
+  ],
+  "archiveCategory": "The Styx Crossing — Administrative Record of a Transit Endorsed as Theologically Legitimate",
+  "sweelinckNote": "The ferryman counted. The endorser judged. The archive holds both."
+}
+```
+
+---
+
+## Source Summary — Part 2 of 4
+*Cantos XXXIII–XXXIV (Inferno conclusion) through Purgatorio Cantos I–XII: from Ugolino's tower to the first terrace of pride.*
+
+Part 2 opens at the end of the Inferno. The final cantos of Hell move through Ptolomea, where traitors to guests are frozen face-up in the ice, and Judecca, where the worst traitors are entirely submerged. Lucifer stands at the pit's center, chewing Judas, Brutus, and Cassius. The exit from Hell is made by climbing Lucifer's body and reversing direction at the hemisphere's center — an act of cosmological inversion that opens onto Purgatory's shore under clear stars.
+
+The transition to Purgatory is abrupt and tonal: from suffocation to open air, from dark to starlight. Cato of Utica, guardian of the approach, sends Virgil to gird Dante with a reed and wash the grime of Hell from his face. The souls of the newly dead arrive by angelic bark, singing. Casella, a musician, sings Dante's own poem until Cato drives them on with impatient rebuke. Purgatory proper begins with the mountain's first obstacles — loose souls on the shore, then the ascending terraces.
+
+Cantos III–V introduce Manfredi (his bones thrown outside the kingdom by Clement IV's order, yet saved by a tear of repentance at death), then the latecomers — those who repented only at the hour of death, including Buonconte da Montefeltro, whose soul was snatched from a devil by an angel on the strength of one whispered prayer to Mary. These are not the mighty frauds or the proud sinners of Hell but the procrastinators, the distracted, the men who simply waited too long. Their archive, if they had one, would be full of unfinished business.
+
+Cantos VI–IX frame the debate on political Italy — Virgil meeting Sordello, leading to the sustained lament over the peninsula's disorder — before the dream of the eagle, Lucia's intervention, and the formal entrance through the Gate of Purgatory. The three steps of the gate (white marble, dark rough stone, red porphyry) correspond to the stages of confession: self-examination, contrition, and satisfaction. The angel-guardian inscribes seven P's on Dante's forehead with a blunted sword. Cantos X–XII show the first terrace: the proud bent under crushing stones, meditating carved images of humility (the Annunciation, David dancing before the Ark, Trajan's justice) and carved images of ruined pride (Lucifer falling, Briareus, Nimrod, Niobe, Saul). Oderisi da Gubbio, the illuminator, offers Dante the poem's central meditation on fame's transience: Cimabue eclipsed by Giotto, one Guido by another.
+
+---
+
+## Cycle 9 — *The Gate's Three Steps*
+
+**What this angle reveals that prior cycles missed:** All prior FLR cycles worked with the Inferno — with damnation, with documents made by or about the damned. This cycle crosses into Purgatorio and finds a different kind of record: the procedural record of admission. The Gate of Purgatory has an intake procedure. The angel-guardian wrote seven marks on Dante's forehead. The gate has three steps. Someone kept the entry log.
+
+---
+
+**THE TOKEN: `flr_cycle_9_token`** — The Gate Entry Log: Folio 1301. A parchment folio from the Purgatorial gate's intake register, copied into the mortal world by a Florentine notary who received it in dictation from a penitent soul who had memorized the intake procedure while waiting on the mountain's shore. The folio documents the date, the three-step examination, the seven marks inscribed, and the guardian's classification of the soul's debts. The notary signed the copy and noted its source.
+
+---
+
+**ACT 1 — The Notary's Study, Florence**
+
+*Grant act. Location: the study of Bartolo di Vanni, notary, in the Oltrarno quarter.*
+
+Bartolo is dying. He has been dying for two weeks, slowly enough to settle his affairs. Among those affairs is a folio he has kept sealed since 1305, when a pilgrim dictated it to him on the condition that it not be opened until twenty years after his own death. The pilgrim died in 1308. It is now 1328. The seal is intact.
+
+Bartolo does not want the folio destroyed with his other papers. He does not know what it contains. He knows the pilgrim was credible and the dictation was precise: the man used the language of a court scribe, careful with dates and procedural terminology.
+
+He hands the sealed folio to the Fighter with one request: that it reach an archive where it will be read.
+
+**Bartolo:** "I am a notary. I have kept documents my entire life. This one I was asked not to read. I kept that undertaking. Now I am releasing it to someone who will." He pauses. "The pilgrim told me it was a record of how a man was admitted to Purgatory. I did not ask further. A notary does not need to understand every document he keeps."
+
+*He closes his eyes. The Fighter takes the folio.*
+
+---
+
+```
+Act 1 — The Notary's Study, Florence
+activateNode: PSA
+type: skill_check
+scene: "Bartolo's study, Oltrarno, morning. The room smells of beeswax and old paper. He is propped in his chair with a shawl over his lap. The folio sits on the table beside an inkwell he no longer uses."
+prompt: "No check — receive the folio. Bartolo requires only that you name an archive and demonstrate you understand what a sealed notarial record is."
+failText: "N/A — receipt act."
+successText: "You accept the folio. Bartolo nods. You receive the Sealed Gate Entry Folio."
+grantItem: "Sealed Gate Entry Folio"
+checkPassFlag: flr_c9_act1
+```
+
+---
+
+**ACT 2 — The Episcopal Chancery, Rome**
+
+*Check act. Location: the Roman episcopal chancery — the section handling unusual sacramental records.*
+
+The folio's seal, once broken in the chancery's presence, reveals an intake document using terminology consistent with a specific theological tradition: the three steps of the gate correspond to the three acts of penance (examen, contritio, satisfactio), and the seven marks correspond to the seven capital sins in a specific penitential schema developed by Dominican theologians in the late thirteenth century. The document is either a genuine record or a very sophisticated theological exercise.
+
+The chancery archivist needs to establish which. The dictation source — the pilgrim — died in 1308. The Florentine Dominican house has a registry of souls who received last rites in the period 1305–1310 that includes a description of spiritual condition at time of death. If the pilgrim's name can be matched to a record showing specific awareness of the Dominican penitential schema, the document's provenance is strengthened.
+
+Persuasion DC 12 — convince the chancery archivist that the document deserves formal intake rather than referral to the theological commission, where it might wait years for review.
+
+---
+
+```
+Act 2 — The Episcopal Chancery, Rome
+activateNode: ROM
+type: skill_check
+scene: "The chancery intake office, mid-morning. Three clerks at three desks; the archivist at a fourth, larger desk behind a partition. He reads the folio twice without speaking, then sets it down and looks at the ceiling."
+prompt: "Persuasion DC 12 — argue that the document's provenance can be established through the Dominican registry without theological commission review, and that delay will not improve the document's authenticity."
+failText: "The archivist refers the folio to the theological commission. You retrieve it six weeks later with a commission stamp that says 'inconclusive — source unverifiable.' The archive will accept it at reduced provenance grade. Continue to Act 3."
+successText: "The archivist issues a preliminary intake note and flags the Dominican registry match as the required next step. You receive the Chancery Preliminary Intake Note."
+grantItem: "Chancery Preliminary Intake Note"
+checkPassFlag: flr_c9_act2
+activateCond: flr_c9_act1
+```
+
+---
+
+**ACT 3 — The Strada dell'Alloro, Palermo**
+
+*Check act. Location: a Palermitan archive — the Dominican provincial records office.*
+
+The Dominican provincial house in Palermo holds the registry for the Italian south, including records transferred from the Florentine house during a period of administrative consolidation. The pilgrim's name — recoverable from a marginal notation Bartolo made on the folio's wrapping — appears in the registry as a soul who received last rites from a friar specifically trained in the penitential schema the folio describes.
+
+The match is exact. The friar's name is on the registry entry. The friar is now dead, but his novice is not.
+
+The novice — Fra Luca, now elderly — will confirm in writing that his master discussed the Purgatorial intake procedure explicitly as an extension of the Dominican schema. He will not, however, do so unless he is satisfied that the document will be kept in an archive where it cannot be used to embarrass the order by implying that Purgatory operates on Dominican procedural lines rather than the other way around.
+
+Athletics DC 14 — reach Fra Luca's cell in the mountain convent above Palermo before he leaves for a three-month retreat in Calabria. The road climbs steeply. Time is narrow.
+
+---
+
+```
+Act 3 — The Strada dell'Alloro, Palermo
+activateNode: PAR
+type: skill_check
+scene: "The lower city in the early morning. Fra Luca's convent is visible on the ridge above. A servant at the provincial house tells you he leaves at the third hour. It is now the second. The road is stone-paved but very steep."
+prompt: "Athletics DC 14 — reach the convent before Fra Luca departs. The climb takes forty minutes at a run, twenty at a walk. You have approximately thirty minutes."
+failText: "You arrive as the convent door closes. Fra Luca has gone. The prior will forward a message to Calabria, but his response takes six weeks. You continue with a delayed confirmation letter instead of a signed statement. The provenance chain is complete but slower. You may proceed."
+successText: "You arrive with five minutes to spare. Fra Luca is in the courtyard with his pack. You speak quickly and well. He listens, asks two questions, and writes his statement on the spot. You receive Fra Luca's Confirmatory Statement."
+grantItem: "Fra Luca's Confirmatory Statement"
+checkPassFlag: flr_c9_act3
+activateCond: flr_c9_act2
+```
+
+---
+
+**ACT 4 — The Humanist Circle, Venice**
+
+*Check act. Location: a Venetian humanist's private study — Caterina Miani, who has spent twenty years annotating Dante's Commedia.*
+
+Caterina has read every known manuscript of the Commedia and every known commentary. The folio's description of the gate procedure matches the poem exactly in three places and diverges in one: the poem describes the guardian scribing the P marks with a blunted sword; the folio specifies the sword's material as a specific alloy (iron mixed with what the Latin calls *plumbum caeleste*, celestial lead). This is not in any version of the poem Caterina has seen.
+
+She believes the discrepancy is not an error but a detail the poem left out — which means the folio's source knew something the poem does not record. This makes it more interesting than the poem, not less.
+
+She will write a comparative analysis confirming that the folio's content is consistent with the poem's world but exceeds it in specificity. She needs one thing: a copy of the Dominican registry entry, showing the pilgrim's dates and the friar's schema, to complete her comparison.
+
+Insight DC 12 — read Caterina's interest correctly; she is not performing enthusiasm for courtesy, she is genuinely excited, and she will do more work than asked if given the right opening question.
+
+---
+
+```
+Act 4 — The Humanist Circle, Venice
+activateNode: VEN
+type: skill_check
+scene: "Caterina's study, facing the canal. Twelve manuscript copies of the Commedia on one shelf; forty-odd commentaries on the next. She reads the folio standing at her writing desk and does not sit down for fifteen minutes."
+prompt: "Insight DC 12 — recognize Caterina's excitement as genuine and ask the question that unlocks her full analysis: what does the discrepancy about the sword's material tell her about the folio's source?"
+failText: "Caterina writes a competent comparative note but does not address the sword discrepancy. The archive will accept the folio without that analysis, but Sweelinck's note will flag the unexplained detail as an open question."
+successText: "Caterina writes a full comparative analysis, including a section on the sword's material that argues the folio's source had experiential rather than literary knowledge of the intake procedure. You receive Caterina's Comparative Analysis."
+grantItem: "Caterina's Comparative Analysis"
+checkPassFlag: flr_c9_act4
+activateCond: flr_c9_act3
+```
+
+---
+
+**ACT 5 — Weimar Archive**
+
+*Take act. Location: Weimar — Sweelinck at the filing desk.*
+
+Sweelinck reads the folio, then the intake note, then Fra Luca's statement, then Caterina's analysis in full.
+
+**Sweelinck:** "The sword was iron mixed with *plumbum caeleste*." He sets Caterina's pages down. "She thinks the source had experiential knowledge. I think she is right." He is quiet for a moment.
+
+**Sweelinck:** "The poem describes the gate. The folio describes the procedure the poem implies but does not state. Bartolo kept it sealed for twenty-three years because the pilgrim asked him to. The pilgrim dictated it in the language of a court scribe because that was the only vocabulary adequate to what he had seen." He picks up his pen. "First entry. The Gate of Purgatory — Procedural Record of the 1301 Intake, Source: Experiential."
+
+He looks at you. "Every intake procedure leaves a record. This is the record."
+
+The token is taken.
+
+---
+
+```
+Act 5 — Weimar Archive
+activateNode: WM
+type: skill_check
+scene: "Sweelinck's table, late afternoon. Four documents in sequence. He reads each one and turns it face-down when finished. When all four are face-down, he sits still for a moment before writing."
+prompt: "No check required — delivery act."
+failText: "N/A."
+successText: "Sweelinck enters the folio under The Gate of Purgatory — Procedural Record of the 1301 Intake, Source: Experiential. You receive the Archive Receipt: Gate Entry."
+grantItem: "Archive Receipt: Gate Entry"
+takeItem: "Sealed Gate Entry Folio"
+checkPassFlag: flr_c9_act5
+activateCond: flr_c9_act4
+```
+
+---
+
+```json
+{
+  "quest_id": "FLR-09",
+  "title": "The Gate's Three Steps",
+  "source": "Divine Comedy: Inferno/Purgatorio — Dante Alighieri",
+  "cycle": 9,
+  "book": "FLR",
+  "source_episode": "Purgatorio Cantos IX–X — the Gate of Purgatory; the three steps; the seven P's inscribed by the angel-guardian",
+  "theme": "The procedural record of admission to Purgatory; a notarized copy made from a penitent's memory of the intake procedure, sealed twenty years and delivered to an archive",
+  "activateNode": "PSA",
+  "token": {
+    "id": "flr_cycle_9_token",
+    "name": "Gate Entry Log: Folio 1301",
+    "description": "Notarized copy of a Purgatorial intake record, dictated by a pilgrim and sealed by Bartolo di Vanni in 1305. Documents the three-step examination, seven marks, and guardian's classification. Opened 1328.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["PSA", "ROM", "PAR", "VEN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "PSA", "type": "receipt", "prompt": "Receive the sealed folio from dying notary Bartolo di Vanni, Oltrarno."},
+    {"act": 2, "node": "ROM", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "Convince the chancery archivist to process the folio rather than refer it to the theological commission."},
+    {"act": 3, "node": "PAR", "type": "skill_check", "dc": 14, "skill": "Athletics", "prompt": "Climb to Fra Luca's mountain convent before he departs for Calabria."},
+    {"act": 4, "node": "VEN", "type": "skill_check", "dc": 12, "skill": "Insight", "prompt": "Read Caterina Miani's excitement correctly and ask the question that unlocks her full comparative analysis."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Deliver the complete dossier. Every intake procedure leaves a record."}
+  ],
+  "archiveCategory": "The Gate of Purgatory — Procedural Record of the 1301 Intake, Source: Experiential",
+  "sweelinckNote": "Every intake procedure leaves a record. This is the record."
+}
+```
+
+---
+
+## Source Summary — Part 3 of 4
+*Purgatorio Cantos XII–XXXIII: from the first terrace of pride through the Earthly Paradise and Beatrice's pageant.*
+
+Part 3 spans the mountain's middle and upper terraces and culminates in the Earthly Paradise at the summit. After the first terrace (pride), where bent souls study carved examples of humility and of ruined arrogance, each terrace peels away one of Dante's seven P marks as an angel erases the sin. The envious sit with eyelids sewn shut; the wrathful move in a cloud of smoke; the slothful are condemned to perpetual running. The covetous lie face-down. Statius, the Roman poet, joins the journey after completing his long purgation.
+
+The central cantos (XIX–XXVII) present a sustained meditation on the relationship between nature, grace, and moral choice. Marco Lombardo's speech on free will and political corruption (Canto XVI) is the poem's most explicit political theory: the world's corruption does not come from the stars but from bad leadership. The Church has seized temporal power and confused both jurisdictions. The corrective is not doctrine but good shepherds.
+
+The Earthly Paradise of Cantos XXVII–XXXIII is the poem's most formally complex section. Dante passes through the wall of fire (required before entering the garden), guided by Virgil's last instruction and then a dream of Leah and Rachel. At the summit, the forest is administered by Matilda, who explains the twin rivers Lethe and Eunoe. The allegorical pageant — the gryphon-drawn chariot representing the Church, flanked by seven candlesticks and twenty-four elders, escorted by four creatures and three theological virtues — is interrupted by Beatrice's arrival in a cloud of flowers. Virgil silently departs; Beatrice immediately reproves Dante for his years of moral wandering after her death. The chariot then suffers the allegorical assaults that represent the Church's corruption: the eagle (empire), the fox (heresy), the dragon (Satan), the harlot and the giant. Beatrice's final speech (Canto XXXIII) ends the Inferno-source book's narrative with a prophecy of a coming reformer (the 515) who will destroy the corrupt system, and with the command to write and transmit.
+
+---
+
+## Cycle 10 — *Matilda's River Registry*
+
+**What this angle reveals that prior cycles missed:** The prior cycles dealt with Hell's record-keepers (Phlegyas) and Purgatory's intake procedure (the gate). This cycle moves to the Earthly Paradise and finds the administrative logic behind the two rivers. Matilda tends the garden. Lethe erases the memory of sin; Eunoe restores the memory of good. Someone must know what each soul forgets and what each soul recovers. Matilda keeps a registry.
+
+---
+
+**THE TOKEN: `flr_cycle_10_token`** — Matilda's River Registry: A Single Leaf. A single folio of unusual vellum — very white, slightly luminescent, with a texture unlike any animal skin — containing two columns: one for what was erased (Lethe) and one for what was restored (Eunoe). The entry for 1301 covers a single name, documented by a soul who emerged from the Eunoe and retained the memory of what Matilda had written. The soul transcribed the entry before the memory could fade, in a letter sealed and delivered to a Florentine convent.
+
+---
+
+**ACT 1 — The Convent of Santa Croce, Florence**
+
+*Grant act. Location: the scriptorium of a Florentine convent — Suora Margherita, who keeps the unusual correspondence archive.*
+
+The letter arrived in 1302. It was written by a pilgrim who had emerged from the Eunoe and, in the moment before the restorative memory settled fully into his soul, wrote down what he remembered of Matilda's registry entry. The letter is addressed to no one specific — to "whoever in Florence will keep it well" — and was delivered by a barefoot friar who gave no name.
+
+Suora Margherita has kept it because it is sealed with a device she has never seen on any earthly ring: a double wave, one white, one gold. The letter is written in a Latin that is precise and archivally formal — a man who knew how to write for records, not for sentiment.
+
+She will give it to the Fighter on one condition: that she is given a copy to keep. She has the means to make a copy; she needs the Fighter's consent and a moment.
+
+*Suora Margherita is not sentimental about the letter. She is archivally careful. These are not the same thing.*
+
+---
+
+```
+Act 1 — The Convent of Santa Croce, Florence
+activateNode: PSA
+type: skill_check
+scene: "The convent scriptorium, mid-morning. Suora Margherita brings the letter from a locked cabinet. She sets it on the table and does not open it. She looks at you with the expression of someone who has made a decision already and is waiting to see if you will make it easier."
+prompt: "No check — agree to the copy condition. She makes the copy herself, takes twenty minutes, returns both to the table, and hands you the original."
+failText: "N/A — consent act."
+successText: "You agree. Suora Margherita makes her copy with practiced speed. She hands you the original. You receive the River Registry Letter."
+grantItem: "River Registry Letter"
+checkPassFlag: flr_c10_act1
+```
+
+---
+
+**ACT 2 — The Theological Faculty, Rome**
+
+*Check act. Location: the Roman theological faculty — Fra Pietro, a specialist in Augustinian and Thomistic memory theory.*
+
+The letter describes Matilda's registry entry in terms that align with a specific tradition of memory theory: the two-column structure (what is erased, what is restored) maps onto the Augustinian distinction between memoria as the mind's storehouse of sin and memoria as the capacity for beatitude. The letter's author knew this tradition and used it as his organizational framework.
+
+Fra Pietro can confirm the theoretical alignment in writing. He can also identify the specific text the author was drawing on — a passage from Augustine's *Confessions* that was frequently cited in thirteenth-century Dominican memory treatises. This identification strengthens the letter's claim to authenticity: the author was educated in a specific tradition, not inventing a structure.
+
+What Fra Pietro needs is time to check the citation against his copy of Augustine. He has the text; he needs three hours.
+
+Persuasion DC 13 — convince Fra Pietro that the three hours should happen now rather than after a scheduled disputation. He is not reluctant; he is busy. The distinction matters.
+
+---
+
+```
+Act 2 — The Theological Faculty, Rome
+activateNode: ROM
+type: skill_check
+scene: "Fra Pietro's cell in the faculty buildings, mid-afternoon. His copy of the Confessions is open on the lectern at a different passage. He has the letter in one hand and is reading with a half-smile that suggests he has found something."
+prompt: "Persuasion DC 13 — make the case that the citation check takes priority over the afternoon disputation; the disputation can be covered by a colleague."
+failText: "Fra Pietro defers to the next morning. You wait overnight in Rome. He produces his analysis at the first hour: complete but undated. The provenance chain is intact, the delay noted. Continue."
+successText: "Fra Pietro sets down the Confessions, sends his student to cover the disputation, and spends the afternoon on the citation. By vespers he has a written analysis with specific text references. You receive Fra Pietro's Memory-Theory Analysis."
+grantItem: "Fra Pietro's Memory-Theory Analysis"
+checkPassFlag: flr_c10_act2
+activateCond: flr_c10_act1
+```
+
+---
+
+**ACT 3 — The Harbor, Palermo**
+
+*Check act. Location: the Palermo harbor transit shed — a locked chest in the customs bonded warehouse.*
+
+The letter passed through Palermo on its way from the Earthly Paradise to Florence. The barefoot friar who carried it used the bonded warehouse as a transit point — a standard practice for documents requiring secure cross-sea passage. The customs transit record from 1302 includes an entry for a sealed document of unusual provenance, described as "a letter in Latin, sealed, addressed to Florence, carried by a religious without papers." The customs clerk noted the seal device: a double wave, white and gold.
+
+The transit record is in the warehouse archive, still accessible. But a Sicilian merchant family has placed a lien on the entire 1302 customs archive as part of a longstanding commercial dispute. The lien does not restrict access to read the records; it restricts copying them without the family's consent.
+
+The Fighter needs a certified copy of the transit entry to complete the provenance chain.
+
+Combat — 2× hired guards posted by the merchant family to discourage anyone from copying the records without paying a fee to their factor (AC 12, HP 18, clubs and leather). The factor himself is present; defeating or neutralizing his guards ends his enforcement attempt.
+
+---
+
+```
+Act 3 — The Harbor, Palermo
+activateNode: PAR
+type: combat
+scene: "The bonded warehouse transit shed, afternoon. The factor — a thin man in good linen — is seated at a table with an abacus. Two guards stand by the archive cabinet. He explains the lien arrangement with practiced courtesy and names a fee that is three times reasonable."
+prompt: "Combat: 2× hired guards (AC 12, HP 18, clubs). The factor will withdraw if both guards are neutralized. Defeating the guards ends the enforcement attempt."
+failText: "You pay the factor's fee — 20gp — and he provides a certified copy under his family seal, which the archive will accept at reduced provenance grade (the seal's authenticity is commercial, not notarial). Continue."
+successText: "Both guards are down. The factor leaves without further argument. The warehouse clerk copies the transit entry under his own notarial seal. You receive the Customs Transit Entry (1302)."
+grantItem: "Customs Transit Entry (1302)"
+checkPassFlag: flr_c10_act3
+activateCond: flr_c10_act2
+```
+
+---
+
+**ACT 4 — The Private Library, Venice**
+
+*Check act. Location: a Venetian private library — Ser Taddeo, who collects unusual vellum and has studied the physical properties of non-standard writing materials.*
+
+The letter's vellum is unlike any earthly animal skin. Ser Taddeo has seen three other documents that share this quality: one from a Cistercian house that claimed it was written on material brought back from a pilgrimage, one from a Venetian merchant archive with no known origin, and one he purchased from a Florentine estate. All three share the same slight luminescence and the same resistance to ordinary water damage.
+
+He believes the material is prepared in a different way from standard vellum — not scraped but treated with a mineral solution that produces its properties. He has been trying to identify the mineral for twelve years.
+
+He will write an analysis of the letter's material confirming its unusual properties and noting the parallel with the three other documents. He needs one hour to examine the vellum under magnification. He does not need payment; he needs the letter to be kept in an archive where he can correspond with future researchers about it.
+
+Insight DC 12 — recognize that Ser Taddeo's one condition (archival correspondence access) is the same condition the archive will naturally provide; agreeing to it costs nothing and releases his full cooperation.
+
+---
+
+```
+Act 4 — The Private Library, Venice
+activateNode: VEN
+type: skill_check
+scene: "Ser Taddeo's library, ground floor, canal side. He has a magnifying lens on a stand and three comparison samples laid out before you arrive — he received word you were coming and prepared. He is examining the letter before you speak."
+prompt: "Insight DC 12 — understand that Ser Taddeo's condition (archival correspondence access) is automatically met by standard archive procedure, and say so directly rather than negotiating."
+failText: "You negotiate unnecessarily. Ser Taddeo is mildly annoyed by the implication that the condition required negotiation, and his analysis, while complete, does not include the comparative reference to the three parallel documents. The archive accepts the analysis without those references."
+successText: "You state immediately that the Weimar archive provides standard correspondence access to all researchers. Ser Taddeo nods, finishes his examination, and writes a full analysis including the three parallel documents. You receive Ser Taddeo's Vellum Analysis."
+grantItem: "Ser Taddeo's Vellum Analysis"
+checkPassFlag: flr_c10_act4
+activateCond: flr_c10_act3
+```
+
+---
+
+**ACT 5 — Weimar Archive**
+
+*Take act. Location: Weimar — Sweelinck at the filing desk.*
+
+Sweelinck examines the vellum first, before reading the letter. He touches it once with his fingertip, then removes his hand and reads.
+
+**Sweelinck:** "The double wave on the seal. White and gold." He reads the two-column entry slowly. "*What was erased. What was restored.*" He sets the letter down. "Matilda tends the garden. She keeps the garden's records. This is the only record I have seen that describes what she records."
+
+He reads Fra Pietro's analysis, then Ser Taddeo's.
+
+**Sweelinck:** "The author knew the Augustinian tradition. He organized his transcription using its vocabulary because that was the vocabulary that fit. He was not performing erudition; he was using the most precise framework available." He picks up his pen. "First entry. The Earthly Paradise — Registry of Lethe and Eunoe: What Was Erased and What Was Restored, Entry 1301."
+
+He pauses.
+
+**Sweelinck:** "The garden has records. Someone should have expected that."
+
+The token is taken.
+
+---
+
+```
+Act 5 — Weimar Archive
+activateNode: WM
+type: skill_check
+scene: "Sweelinck's table, morning. He touches the vellum before reading. He reads the two-column entry without expression, then reads both analyses."
+prompt: "No check required — delivery act."
+failText: "N/A."
+successText: "Sweelinck enters the letter under The Earthly Paradise — Registry of Lethe and Eunoe: What Was Erased and What Was Restored, Entry 1301. You receive the Archive Receipt: Matilda's Registry."
+grantItem: "Archive Receipt: Matilda's Registry"
+takeItem: "River Registry Letter"
+checkPassFlag: flr_c10_act5
+activateCond: flr_c10_act4
+```
+
+---
+
+```json
+{
+  "quest_id": "FLR-10",
+  "title": "Matilda's River Registry",
+  "source": "Divine Comedy: Purgatorio — Dante Alighieri",
+  "cycle": 10,
+  "book": "FLR",
+  "source_episode": "Purgatorio Cantos XXVIII–XXXI — the Earthly Paradise; Matilda; Lethe and Eunoe; Beatrice's arrival and Dante's confession",
+  "theme": "The administrative record of the two rivers; a transcription made at the moment of emerging from Eunoe, before the restored memory fully settled, documenting what was erased and what was restored",
+  "activateNode": "PSA",
+  "token": {
+    "id": "flr_cycle_10_token",
+    "name": "Matilda's River Registry: A Single Leaf",
+    "description": "Letter on non-standard luminescent vellum, sealed with a double-wave device, written by a soul emerging from Eunoe in 1301 and delivered to a Florentine convent by a barefoot friar. Two-column format: what Lethe erased, what Eunoe restored.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["PSA", "ROM", "PAR", "VEN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "PSA", "type": "receipt", "prompt": "Receive the sealed letter from Suora Margherita, convent of Santa Croce. Agree to the copy condition."},
+    {"act": 2, "node": "ROM", "type": "skill_check", "dc": 13, "skill": "Persuasion", "prompt": "Convince Fra Pietro to conduct the Augustine citation check now, before the afternoon disputation."},
+    {"act": 3, "node": "PAR", "type": "combat", "dc": 12, "notes": "2× hired guards (AC 12, HP 18) posted by a merchant family lien on the customs archive. Defeat to obtain certified transit entry."},
+    {"act": 4, "node": "VEN", "type": "skill_check", "dc": 12, "skill": "Insight", "prompt": "Recognize that Ser Taddeo's condition is automatically met by standard archive procedure."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Deliver the complete dossier. The garden has records. Someone should have expected that."}
+  ],
+  "archiveCategory": "The Earthly Paradise — Registry of Lethe and Eunoe: What Was Erased and What Was Restored, Entry 1301",
+  "sweelinckNote": "The garden has records. Someone should have expected that."
+}
+```
+
+---
+
+## Source Summary — Part 4 of 4
+*Paradiso Cantos I–XXXIII: from the first sphere of the Moon through the Empyrean and the vision of God.*
+
+Part 4 is the Paradiso in full: Dante's ascent through the nine heavens, guided by Beatrice, to the Empyrean and the final vision. The ascending spheres are organized by the souls' earthly defects: the Moon (broken vows — Piccarda Donati, Constance of Sicily), Mercury (those who acted for honour rather than pure love — Justinian's speech on the Roman eagle), Venus (the amorous — Cunizza da Romano, Folquet de Marseille), the Sun (the wise — Thomas Aquinas on Francis of Assisi, Bonaventura on Dominic), Mars (the warrior martyrs — Cacciaguida, Dante's great-great-grandfather, who prophesies Dante's exile in precise detail), Jupiter (the just rulers — the Eagle formed by souls spelling out *DILIGITE IUSTITIAM*), Saturn (the contemplatives — Peter Damian, Benedict), the Fixed Stars (the triumphant Church — Peter, James, John examining Dante on faith, hope, and love), the Primum Mobile (the angelic intelligences), and finally the Empyrean.
+
+The political content of the Paradiso is as sharp as anything in the Inferno. Justinian condemns both Guelphs and Ghibellines for misusing the imperial eagle. Peter denounces the papacy's corruption with an anger that makes the sky redden. Cacciaguida's Florence is held up as the model of civic virtue precisely because it is lost. The Eagle of Jupiter answers the question of divine justice with a firm insistence that God's ways exceed human comprehension — but also that the virtuous pagan (Trajan, Ripheus) can be saved by divine exception. The Primum Mobile is the sphere of pure act; beyond it is the Empyrean, where the Rose of the blessed unfolds.
+
+The final cantos (XXXI–XXXIII) move from the Rose's description to Bernard of Clairvaux replacing Beatrice as guide, then to the prayer to the Virgin, and finally to the direct vision of God — three circles of light, one reflecting the human form within the divine, a geometrical impossibility that the poet confesses he cannot describe. The poem ends not with triumph but with surrender: the will rolled on, like a wheel in even motion, by the Love that moves the sun and the other stars.
+
+---
+
+## Cycle 11 — *Cacciaguida's Prophecy Register*
+
+**What this angle reveals that prior cycles missed:** The prior three Pass 4 cycles worked with operational records (the ferryman's log, the gate intake, the river registry). This cycle closes the FLR sequence with a document that is neither operational nor theological but personal and political: Cacciaguida's prophecy of Dante's exile, delivered in Mars (Canto XVII), is the most specific prediction in the entire Commedia. Names, dates, bread tasted from another's salt-cellar, ascending and descending stairs — Cacciaguida told Dante exactly what was coming. Someone in Florence recorded the prophecy's fulfillment, year by year, as it came true.
+
+---
+
+**THE TOKEN: `flr_cycle_11_token`** — The Prophecy Fulfillment Record. A Florentine notarial register, forty pages, maintained by a single hand from 1302 to 1321, checking off the specific elements of Cacciaguida's prophecy as each was fulfilled. The registrant is identified only by a notarial cipher on the first page. The last entry, dated September 1321, reads: *mortuus est* — he has died. The record is complete.
+
+---
+
+**ACT 1 — The Florentine Notarial Archive, Florence**
+
+*Grant act. Location: the Florentine notarial archive — a sealed holding from a dissolved notarial family's estate.*
+
+The register was found in a sealed chest among the estate papers of a notarial family that died out in 1380. The estate administrator catalogued it as "unusual civic record, content unclear, language consistent with early fourteenth century, cipher on first page unidentified." It has sat in the archive's uncatalogued holdings for twelve years.
+
+The archive's current administrator, Ser Niccolo, has the authority to release uncatalogued documents to researchers on submission of a research purpose statement and a nominal fee. He is not difficult; he is careful about documentation.
+
+The Fighter must demonstrate a credible research purpose. The register's subject is a Florentine citizen's exile — which is civic history, which is within the archive's scope. The statement need not mention the prophecy's source; it need only establish that the exile record has legitimate historical value.
+
+*Ser Niccolo reads everything twice. He is not suspicious of the Fighter; he is simply thorough. He expects thoroughness in return.*
+
+---
+
+```
+Act 1 — The Florentine Notarial Archive, Florence
+activateNode: PSA
+type: skill_check
+scene: "The archive's intake office, morning. Ser Niccolo has the uncatalogued register on his desk, still in its original oilskin wrapping. He reads the research purpose statement while you stand. He reads it twice."
+prompt: "No DC — write a research purpose statement that names the register's subject (exile record, early fourteenth century Florentine civic history) accurately and without overstatement. Ser Niccolo releases the register if the statement is competent."
+failText: "N/A — receipt act."
+successText: "Ser Niccolo approves the statement, takes the nominal fee, logs the release, and hands you the register. You receive the Prophecy Fulfillment Register."
+grantItem: "Prophecy Fulfillment Register"
+checkPassFlag: flr_c11_act1
+```
+
+---
+
+**ACT 2 — The Papal Archive Annex, Rome**
+
+*Check act. Location: the Roman papal archive annex — Fra Domenico, who handles decipherment of notarial ciphers.*
+
+The notarial cipher on the first page is a Florentine guild cipher from the period 1290–1330. Fra Domenico has a reference table for approximately sixty such ciphers, assembled over twenty years from estate records, guild registers, and civic documents. The cipher in the register matches one in his table: it belongs to a notarial family named Cavalcanti — not the Guido Cavalcanti branch, but a collateral branch that worked in the Oltrarno quarter.
+
+The identification matters because the Cavalcanti family was allied with the Whites in the factional struggle that exiled Dante. A Cavalcanti notary recording the fulfillment of Dante's exile prophecy is not a random archivist; it is a witness from the same political world.
+
+Fra Domenico will identify the cipher and write a statement confirming the family identification. He needs the register for one day.
+
+Persuasion DC 12 — agree to leave the register in Fra Domenico's care for twenty-four hours rather than waiting in the archive while he works. This is the faster arrangement and the one he prefers, but it requires trusting the archive's custody.
+
+---
+
+```
+Act 2 — The Papal Archive Annex, Rome
+activateNode: ROM
+type: skill_check
+scene: "Fra Domenico's work table, afternoon. His cipher reference — a bound quarto of about three hundred pages, heavily annotated — is open at the Florentine guild section. He identifies the cipher in approximately eight minutes and looks up with an expression of mild professional satisfaction."
+prompt: "Persuasion DC 12 — agree to leave the register in the archive's custody for twenty-four hours rather than waiting on-site. Fra Domenico prefers to work without observation."
+failText: "You insist on waiting on-site. Fra Domenico works more slowly without solitude, and his statement, while accurate, notes the working conditions as suboptimal. The identification is the same; the provenance note is slightly weaker. Continue."
+successText: "You agree. Fra Domenico nods, sets the register in his secure cabinet, and hands you a receipt. The next morning he delivers a full written identification with family genealogical notes. You receive Fra Domenico's Cipher Identification."
+grantItem: "Fra Domenico's Cipher Identification"
+checkPassFlag: flr_c11_act2
+activateCond: flr_c11_act1
+```
+
+---
+
+**ACT 3 — The Via Alloro, Palermo**
+
+*Check act. Location: a Palermitan genealogical library — Ser Rinaldo, who holds Guelph-White network records from the Florentine exile period.*
+
+The Cavalcanti collateral branch had connections to the Sicilian court during the period of Angevin rule. Ser Rinaldo's library includes a correspondence archive from the White Florentine exile community in Sicily, 1301–1310. Among those letters is a reference to a Cavalcanti notary who was maintaining "a private civic record of the exile's progress," described in a letter as "the most careful accounting I have seen of what was promised and what has come to pass."
+
+Ser Rinaldo will provide a certified copy of the letter if the Fighter can demonstrate that the register and the letter refer to the same document. The demonstration requires comparing the register's first entry (dated and specific) against the letter's description of the record's beginning.
+
+Athletics DC 14 — the letter is in a sub-basement archive accessed by a stone staircase that flooded in a recent rain. The staircase is passable but requires careful footing on wet stone in low light, carrying the register without damage.
+
+---
+
+```
+Act 3 — The Via Alloro, Palermo
+activateNode: PAR
+type: skill_check
+scene: "Ser Rinaldo's library, a converted merchant's house near the cathedral. The main floor is dry and well-lit. He points you to the sub-basement stairs, hands you a lamp, and warns you about the third step from the bottom, which has been loose since the flood."
+prompt: "Athletics DC 14 — descend the wet stone stair to the sub-basement archive, locate the correspondence cabinet, and return with the letter without damaging the register you are carrying."
+failText: "You slip on the third step. The register is unharmed — you protected it — but you take 4 damage from the fall. The letter is retrieved; the comparison proceeds. Continue."
+successText: "You descend carefully, locate the correspondence cabinet, find the letter in the third folder from the left (Ser Rinaldo gave good directions), and return without incident. The comparison confirms the match. Ser Rinaldo provides the certified copy. You receive the White Exile Network Letter."
+grantItem: "White Exile Network Letter"
+checkPassFlag: flr_c11_act3
+activateCond: flr_c11_act2
+```
+
+---
+
+**ACT 4 — The Manuscript Chamber, Venice**
+
+*Check act. Location: a Venetian manuscript chamber — Ser Bartolomeo, who has spent thirty years annotating the Paradiso.*
+
+Ser Bartolomeo has mapped every specific prediction in Cacciaguida's speech (Canto XVII) against the documented historical record of Dante's life: the party alignment, the exile, the wandering, the patrons, the bread and the stairs (which he has matched to specific households). He has done this in the margins of his Paradiso manuscript, which fills a folio volume.
+
+He will compare the register's entries against his annotation record and confirm, in writing, which specific predictions are documented in the register and which are not. He expects to find approximately nine-tenths correspondence: the register was kept by a careful but non-scholarly observer who recorded what he saw without the benefit of Ser Bartolomeo's method.
+
+The comparison will take three hours. He will not be interrupted during the comparison.
+
+Insight DC 13 — recognize that Ser Bartolomeo's statement about not being interrupted is a boundary, not a delay tactic, and that the three hours require the Fighter to wait in a specific room and not wander the library. The library contains material he considers too fragile for casual handling.
+
+---
+
+```
+Act 4 — The Manuscript Chamber, Venice
+activateNode: VEN
+type: skill_check
+scene: "Ser Bartolomeo's manuscript chamber, a long room lit by four windows over the canal. His annotated Paradiso is already open on his comparison table. He reads the register's first entry and nods once, already absorbed."
+prompt: "Insight DC 13 — understand that Ser Bartolomeo's three-hour working boundary is a professional condition, not discourtesy; stay in the designated waiting room, touch nothing, and emerge when called."
+failText: "You misread his manner as impatience and offer to help. He politely removes you from the comparison process and conducts it alone, producing a shorter written summary rather than a full annotation comparison. The summary is accurate but less granular. Continue."
+successText: "You wait in the designated room for three hours and twelve minutes. Ser Bartolomeo emerges with a full comparative annotation: twelve of Cacciaguida's fourteen specific predictions documented in the register, two absent (likely the years Dante spent in regions beyond the registrant's correspondence network). You receive Ser Bartolomeo's Comparative Annotation."
+grantItem: "Ser Bartolomeo's Comparative Annotation"
+checkPassFlag: flr_c11_act4
+activateCond: flr_c11_act3
+```
+
+---
+
+**ACT 5 — Weimar Archive**
+
+*Take act. Location: Weimar — Sweelinck at the filing desk.*
+
+Sweelinck opens the register to the last entry first. He reads: *mortuus est.* He closes the register and sits with it in his hands for a moment before opening it to the first page.
+
+He reads the register front to back. Then Fra Domenico's cipher identification. Then the White exile network letter. Then Ser Bartolomeo's comparative annotation.
+
+**Sweelinck:** "Twelve of fourteen predictions confirmed in the register. The other two: Ser Bartolomeo notes the gaps correspond to years spent at Verona and Ravenna, outside the Cavalcanti notary's correspondence reach." He sets the comparative annotation down.
+
+**Sweelinck:** "The registrant knew about the prophecy. He did not record it; he recorded its fulfillment. He watched what was promised come true, year by year, and he wrote it down. Not because it proved anything about the afterlife. Because it was accurate. And accuracy, to a notary, is a form of respect."
+
+He picks up his pen.
+
+**Sweelinck:** "Final entry for the FLR sequence. Cacciaguida's Prophecy — Notarial Record of Fulfillment, 1302–1321, Registrant: Cavalcanti Collateral Branch." He looks up. "The Love that moves the sun and the other stars also, apparently, keeps accurate records."
+
+He writes for a long time after you leave.
+
+The token is taken. The FLR cycle is complete.
+
+---
+
+```
+Act 5 — Weimar Archive
+activateNode: WM
+type: skill_check
+scene: "Sweelinck's table, afternoon. He opens to the last page first. Reads mortuus est. Sits with the register for a moment. Then begins from the beginning."
+prompt: "No check required — delivery act. Final cycle."
+failText: "N/A."
+successText: "Sweelinck enters the register under Cacciaguida's Prophecy — Notarial Record of Fulfillment, 1302–1321, Registrant: Cavalcanti Collateral Branch. You receive the Archive Receipt: Prophecy Fulfilled. Quest complete."
+grantItem: "Archive Receipt: Prophecy Fulfilled"
+takeItem: "Prophecy Fulfillment Register"
+checkPassFlag: flr_c11_act5
+activateCond: flr_c11_act4
+questComplete: true
+```
+
+---
+
+```json
+{
+  "quest_id": "FLR-11",
+  "title": "Cacciaguida's Prophecy Register",
+  "source": "Divine Comedy: Paradiso — Dante Alighieri",
+  "cycle": 11,
+  "book": "FLR",
+  "source_episode": "Paradiso Canto XVII — Cacciaguida's prophecy of Dante's exile; the bread and the stairs; the White party's fall",
+  "theme": "The notarial record of a prophecy's fulfillment; a Cavalcanti collateral-branch notary recording year by year the coming-true of what Cacciaguida promised, closing the entry on Dante's death",
+  "activateNode": "PSA",
+  "token": {
+    "id": "flr_cycle_11_token",
+    "name": "The Prophecy Fulfillment Register",
+    "description": "Florentine notarial register, forty pages, maintained 1302–1321 by a Cavalcanti collateral-branch notary. Records the specific fulfillment of Cacciaguida's exile prophecy, item by item. Final entry: mortuus est.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["PSA", "ROM", "PAR", "VEN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "PSA", "type": "receipt", "prompt": "Obtain the uncatalogued register from Ser Niccolo at the Florentine notarial archive."},
+    {"act": 2, "node": "ROM", "type": "skill_check", "dc": 12, "skill": "Persuasion", "prompt": "Agree to leave the register with Fra Domenico for twenty-four hours for cipher identification."},
+    {"act": 3, "node": "PAR", "type": "skill_check", "dc": 14, "skill": "Athletics", "prompt": "Navigate the flooded sub-basement stair to retrieve the White exile network letter."},
+    {"act": 4, "node": "VEN", "type": "skill_check", "dc": 13, "skill": "Insight", "prompt": "Respect Ser Bartolomeo's three-hour working boundary and wait in the designated room."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Deliver the complete dossier. The Love that moves the sun also keeps accurate records."}
+  ],
+  "archiveCategory": "Cacciaguida's Prophecy — Notarial Record of Fulfillment, 1302–1321, Registrant: Cavalcanti Collateral Branch",
+  "sweelinckNote": "The Love that moves the sun and the other stars also, apparently, keeps accurate records.",
+  "questComplete": true
+}
+```
+
+---
+
+*Pass 4 complete. FLR cycles 8–11 appended. FLR sequence complete: 11 cycles, 7 original seeds + 4 Pass 4 additions.*

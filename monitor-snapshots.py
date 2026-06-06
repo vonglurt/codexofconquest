@@ -133,7 +133,7 @@ def _say_worker(filtered, gen):
 
 def _say(line):
     """Strip leading +, filter code symbols via sed, speak with say."""
-    global _say_generation
+    global _say_generation, _say_proc
     text = line.lstrip("+").strip()
     try:
         result = subprocess.run(

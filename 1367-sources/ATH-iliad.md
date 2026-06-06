@@ -1075,3 +1075,780 @@ TOKEN TAKEN: Hecuba's Supplication Robe.
 ---
 
 *ATH SEEDS COMPLETE. §ATH-01 through §ATH-07 written. Admin pass: quest-map.md, books.md, plan.md.*
+
+---
+
+## Source Summary — Part 1 of 5
+
+*Books I–IX: the Quarrel through the failed Embassy, with the Ship Catalogue, the duel of Paris and Menelaus, and the first great days of battle.*
+
+The Iliad opens in the tenth year of the war with a quarrel that is also a cosmic arrangement. Apollo sends plague upon the Achaean camp because Agamemnon refused to ransom the priest Chryses's daughter; for nine days the arrows fall and the pyres burn. When the seer Calchas names the cause, Agamemnon capitulates but immediately takes Achilles's prize-woman Briseis as substitute payment. Achilles does not kill him — Athena restrains him, catching him by the yellow hair — but he withdraws from the war entirely and asks Thetis to petition Zeus for Trojan victories until the Achaeans honour him. Thetis goes to Zeus on Olympus and clasps his knees; he bows his dark brows in consent. The poem's engine is set.
+
+Book II delivers the enormous Ship Catalogue — the census of the Greek host, fleet by fleet, city by city, with the Trojan catalogue to match. This is the poem's bureaucratic backbone, a world made legible in the meter of war. Agamemnon tests his men's will by suggesting retreat; they run for the ships until Odysseus and Athena turn them back. The ugly Thersites rails and is beaten. Then both armies are mustered and the plain is full.
+
+Book III stages the duel of Paris and Menelaus — the two men at the centre of the whole war fighting it out in single combat, as if the poem wants to see whether the original grievance can be settled cleanly. It cannot. Paris loses, Aphrodite snatches him away in a cloud and deposits him in Helen's bedroom. Helen at the Scaean wall names the Greek leaders for old Priam in one of the poem's most tender passages: here is Agamemnon, here is Odysseus, here is Ajax. She cannot find Castor and Polydeuces, her brothers, among the Achaeans — they are already dead in Sparta, but she does not know it yet.
+
+Books IV–V bring Athena and the oath-violation: she induces Pandarus to fire on Menelaus during the truce, wounding him superficially. War resumes. Book V is Diomedes's aristeia — his hour of savage glory, during which Athena removes the mist from his eyes so he can see the gods fighting, and he wounds both Ares and Aphrodite. The gods bleed ichor and howl and withdraw. Diomedes is the poem's most violent book of fighting; it establishes that mortal men, in their hour, can touch the divine.
+
+Books VI–VIII interrupt the fighting with two paired scenes: Hector's return to Troy, his meeting with Andromache and infant Astyanax at the Scaean Gate, the baby frightened of the helmet-plume while his parents laugh; and Glaucus and Diomedes on the battlefield recognizing their fathers' guest-friendship and exchanging armor — Glaucus losing badly in the trade, giving gold for bronze. Books VII–VIII bring Ajax's inconclusive single combat with Hector, the wall's construction, the second day of battle with Zeus holding the scales and tipping them toward the Trojans. Book IX is the Embassy: Phoenix, Ajax, and Odysseus come with magnificent gifts to Achilles, who refuses. Ajax says he touched Achilles's heart most of all, and Achilles still refuses. He says he will go home tomorrow. He does not go home.
+
+---
+
+## Cycle 8 — *Apollo's Account*
+
+**What this angle reveals that prior cycles missed:** The first seven cycles dealt with objects, garments, scrolls, and records held by human hands. Cycle 8 goes to the weapon that started everything — the arrows Apollo fired into the Greek camp on nine consecutive days before the poem properly begins. The poem names the sequence precisely: first the mules and dogs, then the men themselves, and the pyres burned night and day. This is a documented event with a duration and a count, and the god who filed it is still alive.
+
+---
+
+**THE TOKEN: `ath_c8_plague_tally_tablet`** — A small ivory tablet, palm-sized, with nine rows of marks scratched into its surface in a grid — days across the top, categories down the side: mules, hounds, men. The marks are precise and dry. On the reverse, a single line in archaic script: *Chryse. For the priest.* The tablet was kept by one of Apollo's temple servants at the Tenedos sanctuary and records the nine-day count that preceded the quarrel between Agamemnon and Achilles.
+
+---
+
+**Act 1 — "The Servant at Tenedos"**
+*The tablet: in a temple chest, wrapped in linen. Location: SKN — Scaean Gate ruins / Tenedos approach.*
+*The Fighter waits while a white-haired sanctuary servant lifts the linen. His hands are careful. He does not look at you.*
+
+A surviving servant of Apollo's Tenedos sanctuary has kept the plague tally for forty years. He counted the dead each morning at Chryses's direction — mules first, then dogs, then men, each category in its row. He kept the count because Chryses told him to; he kept it even after the return of Chryseis ended the plague; he kept it when the sanctuary was later burned; he has it still. He does not want money. He wants someone to take it to an archive that will not burn.
+
+> **Religion DC 12.** Understand why the tablet's categories matter — the sequence of mules before men is not incidental but ritual: divine pestilence of this kind descends first on animals, then escalates; the tally records not just a death count but a theological progression, a document of how an angered god moves through a population; the archive that holds it holds evidence of divine procedure, not just divine anger.
+
+*The Fighter says nothing. The servant folds the linen back over the tablet.*
+
+**Fail:** He gives you the tablet with a note saying only: *nine days, Chryse.* The category sequence is unmarked.
+**Success:** He explains the mule-to-dog-to-man sequence before you ask. "The god worked in order," he says. "He always did." He writes a second note explaining the progression. You receive the Plague Tally Tablet.
+
+grantItem: Plague Tally Tablet
+checkPassFlag: ath_c8_act1
+
+---
+
+**Act 2 — "The Physician's Descendants"**
+*The tablet: wrapped. Location: IDC — Troy/Ilium area.*
+*The tablet travels through the lower city. A woman at a well watches you go.*
+
+Two descendants of Machaon — the Greek physician who treated Menelaus's arrow-wound in Book IV — have set up a healing practice in the Ilium district. They want the tablet for their own archive, which documents war-wounds and their causes. Their argument: plague wounds, like arrow-wounds, are the physician's proper subject, and this tablet is a medical record as much as a divine one.
+
+> **Insight DC 12.** The physicians' claim is sincere but misclassifies the document — the tablet records a divine action in sequence, not a wound pattern in individuals; it is not a case record but a causation record; a medical archive would file it under symptom-type and lose its theological structure; the distinction matters because the Weimar Archive can hold both the divine cause and the human consequence in the same entry, while the physicians' archive can hold only the consequence.
+
+*The Fighter stands. The physicians wait.*
+
+**Fail:** They make a copy of the tablet before releasing it, noting the mule-to-man sequence as a symptom-progression document. The copy stays with them; the original continues.
+**Success:** They accept the classification distinction and release it without copying. One of them says: "The god is the better physician. We only treat what he leaves behind."
+
+checkPassFlag: ath_c8_act2
+activateCond: ath_c8_act1
+
+---
+
+**Act 3 — "The Chryses Question"**
+*The tablet: wrapped, traveling north. Location: CON — Constantinople.*
+*Rain on stone. A lamp in a library window.*
+
+A Byzantine scholar of classical theology has heard of the tablet and written requesting it for a commentary on divine wrath in the poem. His argument is that the tally does not document Apollo's anger at all — it documents Chryses's prayer being answered, which is a different theological category: not wrath but reciprocity, not punishment but fulfillment of the priest-god compact.
+
+> **History DC 13.** Both readings are in the text: Apollo is described as *furious* when he descends and as *hearing the prayer* of Chryses; the poem holds both simultaneously; the scholar's distinction is real but incomplete; the tablet's value is that it does not resolve the ambiguity — it records the count without labeling the cause, which is precisely what makes it an archive document rather than a theological argument; the archive can note both interpretations in its entry without adjudicating them.
+
+*The scholar waits with his pen.*
+
+**Fail:** He writes a marginal note on the tablet's linen wrapping: *reciprocity, not wrath.* The note travels with it.
+**Success:** He accepts that the ambiguity is the document's value. He writes instead: *Apollo — Chryse — nine days: divine procedure, cause unresolved between wrath and reciprocity.*
+
+checkPassFlag: ath_c8_act3
+activateCond: ath_c8_act2
+
+---
+
+**Act 4 — "The Mountain Road"**
+*The tablet: ivory, small, wrapped. Location: Alpine road north.*
+*Wind off the pass. Loose stone on the descent.*
+
+A late afternoon rockfall on the Alpine road — a minor slide that blocks the path for a night. The tablet, being ivory, is at no physical risk, but the Fighter must make camp on the exposed road in near-freezing conditions with the tablet as the only item that cannot be set down carelessly — it is small enough to be lost in darkness and heavy enough to crack on stone if dropped.
+
+> **Athletics DC 14.** Secure a ledge camp in failing light on a steep, rock-covered Alpine slope and keep the tablet dry and unbroken through a night of wind and rockfall aftershocks.
+
+*The Fighter moves carefully in the dark. Below, a river.*
+
+**Fail:** The tablet survives but the wrapping tears; a corner of the ivory chips. The damage is cosmetic; the text is intact. Sweelinck will note the chip.
+**Success:** The tablet arrives intact and dry. The linen wrapping is clean.
+
+checkPassFlag: ath_c8_act4
+activateCond: ath_c8_act3
+
+---
+
+**Act 5 — "The Archive"**
+*The tablet: ivory, palm-sized, nine rows. Location: WM — Weimar Archive.*
+*Sweelinck under a lamp. The tablet in both his hands.*
+
+Sweelinck turns the tablet over twice. He reads the nine rows without speaking. He reads the reverse line — *Chryse. For the priest.* — and sets it down.
+
+"The mules first." He does not say this as a question. "Then the dogs. Then the men. Nine days in order." He picks it up again. "He counted every morning."
+
+He writes: *Divine Plague Records — Documented Sequence, First Entry. Apollo at Chryse: nine-day count by the sanctuary servant at Tenedos; mules, dogs, men in that order; the reverse names the cause: for the priest; the tablet predates the poem's first line and records the event that made the poem necessary; the archive notes both interpretations of cause — wrath and reciprocity — without adjudicating; the tablet holds the sequence; that is sufficient.*
+
+TOKEN TAKEN: Plague Tally Tablet.
+
+takeItem: Plague Tally Tablet
+checkPassFlag: ath_c8_act5
+activateCond: ath_c8_act4
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "ATH_008",
+  "title": "Apollo's Account",
+  "source": "The Iliad — Homer (Butler translation)",
+  "cycle": "ATH",
+  "book": "The Iliad",
+  "source_episode": "Book 1: Apollo descends furious from Olympus and shoots plague arrows into the Greek camp for nine days, targeting first mules and dogs, then men; the pyres burn without ceasing; the cause is Agamemnon's refusal to ransom the priest Chryses's daughter; the plague ends when Chryseis is returned and a hecatomb offered.",
+  "theme": "The nine-day plague count as divine procedure; the sequence mule-dog-man as theological progression; the tablet that records the act before the poem begins.",
+  "activateNode": "SKN",
+  "token": {
+    "id": "ath_c8_plague_tally_tablet",
+    "name": "Plague Tally Tablet",
+    "description": "Small ivory tablet, palm-sized; nine rows of marks — days across, categories down: mules, hounds, men; reverse reads: Chryse. For the priest. Kept by the Tenedos sanctuary servant for forty years.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["SKN", "IDC", "CON", "WM"],
+  "new_nodes": [],
+  "acts": [
+    { "act": 1, "location": "SKN", "scene": "Tenedos approach — sanctuary servant with the tally", "title": "The Servant at Tenedos", "type": "skill_check", "skillCheck": { "skill": "Religion", "dc": 12 }, "token_action": "grant" },
+    { "act": 2, "location": "IDC", "scene": "Ilium district — physicians' descendants want the tablet as medical record", "title": "The Physician's Descendants", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "CON", "scene": "Constantinople — Byzantine scholar disputes wrath vs. reciprocity", "title": "The Chryses Question", "type": "skill_check", "skillCheck": { "skill": "History", "dc": 13 }, "token_action": "check" },
+    { "act": 4, "location": "road_CON_WM", "scene": "Alpine road — rockfall camp, ivory tablet at risk", "title": "The Mountain Road", "type": "skill_check", "skillCheck": { "skill": "Athletics", "dc": 14 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "The Archive", "type": "delivery", "activateMissionBit": "athPlagueComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## Source Summary — Part 2 of 5
+
+*Books X–XII: the night raid of Odysseus and Diomedes, the great battle of Book XI, the wounding of the Greek commanders, the beginning of Patroclus's commission, and Hector's breaching of the wall.*
+
+Part 2 opens in the dead of the first night of full Trojan siege, with the Greek leaders sleepless and afraid. Book X — the Doloneia — is the poem's night-vision episode, its spy thriller: Odysseus and Diomedes go out into the dark between the camps, catch the Trojan scout Dolon who was heading for the Greek ships hoping to win Achilles's horses as his reward. Dolon wears a wolf-skin and a ferret-skin cap. He gives them intelligence — the positions of the Trojan allies, and specifically the Thracian king Rhesus with his snow-white horses, the finest in the world. They let Dolon finish speaking, then Diomedes cuts his throat mid-sentence. They follow his directions to the Thracian camp and kill Rhesus and twelve of his men in their sleep, take the horses, and ride back to the Greek ships before dawn.
+
+Book XI is Agamemnon's aristeia — his hour of brutal excellence. He drives the Trojans back to the walls until he is wounded in the forearm by Coon son of Antenor; his wound stiffens and he withdraws. This is the signal Zeus has been waiting for: Hector surges forward and the Greek commanders fall one by one — Diomedes wounded in the foot by Paris, Odysseus surrounded and stabbed through the side by Socus, both recovered by Ajax. Machaon the physician is hit by an arrow and Nestor drives him from the field. Achilles, watching from his ship's stern, sees Nestor carrying a wounded man and sends Patroclus to find out who it is — this is the poem's hinge moment, the beginning of Patroclus's fatal commission. Nestor tells Patroclus what is needed: go back and ask Achilles to let you fight in his armor; even your appearance in his equipment will break the Trojans.
+
+Book XII is the breaching of the wall — the great stone wall the Achaeans built around their ships, which the gods will destroy after the war as if it had never been. The Trojans come forward on foot, Polydamas reading a bad omen (the eagle dropping the snake) and Hector dismissing it. Sarpedon makes his great speech to Glaucus on why men in their position must be first into battle: because they eat the best meat and drink the best wine, because men look to them. He and Glaucus lead the Lycians against the battlements. Then Hector lifts an enormous stone — as heavy as two men could barely move — and carries it to the gate and drives it through both doors at once. He leaps through into the camp. The wall is broken.
+
+The human texture of part 2 is built from small moments: Dolon in the dark with his wolf-skin and his desperate bargaining; Patroclus as gentle intermediary between the injured world and the furious Achilles; Nestor's old man's urgency. The intelligence report Dolon gives — the Thracian camp to the far end, the white horses, sleep them all — is the most precise military intelligence in the poem, and it costs him his life at the moment he finishes speaking.
+
+---
+
+## Cycle 9 — *Dolon's Report*
+
+**What this angle reveals that prior cycles missed:** Eight cycles covered divine documents, battlefield relics, diplomatic transactions, and sacred textiles. Cycle 9 is the poem's only intelligence document — a spy's complete verbal report given under duress in the dark, containing troop dispositions, camp layout, ally positions, and the crucial detail about Rhesus. The report was accurate, complete, and immediately actionable. Dolon was killed the instant he finished. Someone wrote it down.
+
+---
+
+**THE TOKEN: `ath_c9_dolon_field_report`** — A strip of cured ox-hide, narrow and long, folded in quarters. The text is scratched in a small cramped hand, clearly written fast, with the torchlight giving out at the bottom of the strip. It records in sequence: the Trojan night dispositions, the watchfire positions, the allied positions (Carians at the sea, Thracians at the far end), and then — in slightly larger script — the key intelligence: Rhesus of Thrace, his horses whiter than snow, his chariot worked in gold and silver. The last line reads: *he had not yet fought; this was his first night.* The strip was found by a Myrmidon scribe at dawn, near the place where Dolon's ferret-skin cap and wolf-skin had been left hanging on a tamarisk.
+
+---
+
+**Act 1 — "The Tamarisk"**
+*The report: folded in the dead man's things. Location: SKN — Scaean Gate / edge of no-man's-land.*
+*Torchlight at the edge of the camp. The cap still hangs on the tamarisk.*
+
+A Myrmidon scribe recorded everything Odysseus and Diomedes reported when they came back at dawn, still wet from the sea where they washed off the blood. He has kept the strip because it is the only intelligence document from the entire ten years of war that proved entirely accurate — Dolon's report was followed exactly and every element of it was confirmed. He wants it placed somewhere that will understand what a perfect intelligence asset is: a man under threat of death who tells the truth because the truth is all he has left to offer.
+
+> **Insight DC 12.** Understand the document's nature correctly: this is not a confession under torture but a voluntary exchange — Dolon gave the information freely, hoping it would buy him his life; the information was real and detailed because he wanted to survive; the irony that he was killed the moment he finished speaking does not compromise the document's integrity; it was acted on immediately and proved accurate; the archive holds it as a record of intelligence tradecraft, not of cruelty.
+
+*The scribe watches. The cap moves in the wind.*
+
+**Fail:** You carry the strip with a note: *Dolon, Trojan scout; information given in exchange for promised ransom; killed on completion; intelligence confirmed accurate at dawn.*
+**Success:** You understand the voluntary exchange structure before he explains it. He gives you the strip and says: "He was accurate about everything. The horses were exactly where he said."
+
+grantItem: Dolon Field Report
+checkPassFlag: ath_c9_act1
+
+---
+
+**Act 2 — "The Thracian Survivors"**
+*The report: folded, carried. Location: TRH — Trojan harbor district.*
+*Boats drawn up on the shore. A fire on the beach.*
+
+Two survivors of Rhesus's Thracian contingent — men who had been sleeping at the far edge of the camp and woke to find their king and twelve companions dead, the horses gone — are in the harbor quarter. They want the strip destroyed. Their argument: the intelligence report led to the death of their king on his first night in camp; he had never fought; it is a document of their disgrace, and they do not want it circulated.
+
+> **Persuasion DC 13.** The survivors' grief is real but their claim is wrong — the document is not evidence of their disgrace but of Dolon's accuracy; the Thracians' failure was not to post adequate watch; more importantly the strip is the only complete intelligence document from the war; destroying it because it reflects badly on the dead is not how archives operate; the deaths recorded in it are part of the war's account, not an insult to Rhesus specifically.
+
+*The fire pops. The survivors do not look at the strip.*
+
+**Fail:** They make you swear not to name Rhesus by name in the archive entry. You agree. The entry will read: *the Thracian king, unnamed at his survivors' request.*
+**Success:** They accept the argument. One of them says: "He would have fought well the next morning." You say nothing. He nods and lets you pass.
+
+checkPassFlag: ath_c9_act2
+activateCond: ath_c9_act1
+
+---
+
+**Act 3 — "The Catalogue Keeper"**
+*The report: folded, traveling. Location: CON — Constantinople.*
+*A scholar's table covered in lists.*
+
+A cataloguer of Iliad manuscripts has been working on a theory that Book X — the Doloneia — was added to the poem late and is not original. He wants the strip as evidence for his hypothesis: if the intelligence document is a real artifact that predates the poem's composition, it supports the Doloneia's historicity and undermines his theory, which is inconvenient. He argues that the strip should be filed under his manuscript rather than sent to the Weimar Archive.
+
+> **History DC 12.** The question of the Doloneia's authenticity is a scholarly debate and not the archive's concern; the strip is a field document recording an event, not a manuscript; its existence does not resolve the composition question one way or another because a post-hoc scribe could have produced it from the poem's text; the archive holds it as an artifact of the war's intelligence record, not as evidence in a philological dispute; the cataloguer's interest in suppressing it is professional, not scholarly.
+
+*He picks up the strip and turns it over. His eyes are calculating.*
+
+**Fail:** He adds a note to the strip's linen wrapping: *possibly late addition; Doloneia authenticity disputed.* The note travels with it.
+**Success:** He accepts the separation of historical artifact from philological argument. He writes: *field document, Book X parallel; authenticity question separate.*
+
+checkPassFlag: ath_c9_act3
+activateCond: ath_c9_act2
+
+---
+
+**Act 4 — "The River Crossing"**
+*The report: ox-hide, folded. Location: Danube river road.*
+*Flood season. The water the color of the sky.*
+
+The ox-hide strip is at no risk from water — it is cured and robust — but the fast water makes the crossing genuinely dangerous, and the strip must be held above the waterline because the scratched text on ox-hide can be disturbed by sustained immersion even if the material survives. This is a physical transit problem, not a document problem.
+
+> **Athletics DC 14.** Ford the swollen Danube tributary with the ox-hide strip held clear of the water on a current strong enough to take a man off his feet.
+
+*The Fighter goes in. The current pulls.*
+
+**Fail:** One hand drops briefly. The lower fold takes water; the last line of text — *he had not yet fought; this was his first night* — blurs slightly. The intelligence is readable but the final line requires inference. Sweelinck will note the blur.
+**Success:** The strip crosses dry. All text is intact.
+
+checkPassFlag: ath_c9_act4
+activateCond: ath_c9_act3
+
+---
+
+**Act 5 — "The Archive"**
+*The report: folded strip of ox-hide. Location: WM — Weimar Archive.*
+*Sweelinck reads slowly, moving his lips slightly.*
+
+He unfolds the strip and reads it twice. He does not speak until he reaches the last line.
+
+"He had not yet fought. His first night." He sets it down. "And Odysseus waited until he finished speaking before giving the signal."
+
+He is quiet for a moment.
+
+"Perfect intelligence. Accurate in every particular. The man was killed when he had nothing left to give." He picks up his pen. "The archive does not usually receive documents where the source and the outcome are the same sentence."
+
+He writes: *Intelligence Records — Complete and Verified, First Entry. Dolon's Report: Trojan camp dispositions, allied positions, Thracian king's location, night of the raid; given voluntarily in the dark as exchange for life; confirmed accurate at dawn; source killed on completion; the strip records the intelligence as Dolon gave it, not as Homer arranged it.*
+
+TOKEN TAKEN: Dolon Field Report.
+
+takeItem: Dolon Field Report
+checkPassFlag: ath_c9_act5
+activateCond: ath_c9_act4
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "ATH_009",
+  "title": "Dolon's Report",
+  "source": "The Iliad — Homer (Butler translation)",
+  "cycle": "ATH",
+  "book": "The Iliad",
+  "source_episode": "Book 10: Dolon, sent as a Trojan spy, is captured between the lines by Odysseus and Diomedes; he gives a complete intelligence report covering Trojan camp dispositions, allied positions, and the Thracian king Rhesus with his white horses; the information is accurate and acted upon immediately; Diomedes kills Dolon as he finishes speaking.",
+  "theme": "The voluntary intelligence report given under threat; the accuracy of what a frightened man tells you when he believes the truth will save him; the document that records the moment before the killing.",
+  "activateNode": "SKN",
+  "token": {
+    "id": "ath_c9_dolon_field_report",
+    "name": "Dolon Field Report",
+    "description": "Strip of cured ox-hide, narrow and long, folded in quarters; Trojan night dispositions and allied positions in cramped hand; last line: he had not yet fought; this was his first night. Found near the tamarisk where his wolf-skin and ferret-cap were left hanging.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["SKN", "TRH", "CON", "WM"],
+  "new_nodes": [],
+  "acts": [
+    { "act": 1, "location": "SKN", "scene": "Edge of no-man's-land — Myrmidon scribe with the intelligence strip", "title": "The Tamarisk", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 12 }, "token_action": "grant" },
+    { "act": 2, "location": "TRH", "scene": "Trojan harbor — Thracian survivors want the strip destroyed", "title": "The Thracian Survivors", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 13 }, "token_action": "check" },
+    { "act": 3, "location": "CON", "scene": "Constantinople — Doloneia authenticity scholar wants to suppress it", "title": "The Catalogue Keeper", "type": "skill_check", "skillCheck": { "skill": "History", "dc": 12 }, "token_action": "check" },
+    { "act": 4, "location": "road_CON_WM", "scene": "Danube flood crossing — ox-hide strip at risk", "title": "The River Crossing", "type": "skill_check", "skillCheck": { "skill": "Athletics", "dc": 14 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "The Archive", "type": "delivery", "activateMissionBit": "athDolonComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## Source Summary — Part 3 of 5
+
+*Books XII–XVII: the Trojan assault on the ships, the wall's fall, the sea of gods fighting, Patroclus's aristeia and death, the battle over his body.*
+
+Part 3 opens with the Trojans already inside the Greek wall, the five Trojan columns crashing against the ships. Polydamas reads a bad omen and is silenced by Hector. Sarpedon tears a breach in the battlements with his own hands. Hector breaks the gates with a boulder he lifts alone. The Greeks stand in the dark with their backs to the ships.
+
+Books XIII–XIV are the poem's most elaborate divine machinery: Zeus looks away; Neptune comes up from the sea in disguise to encourage the Greeks; Juno seduces Zeus with Aphrodite's borrowed girdle and puts him to sleep on Ida while Neptune rallies the Achaeans openly; Hector is knocked senseless by a stone from Ajax and carried off. When Zeus wakes he is furious, but the damage is done — the Greeks have recovered their wall-line. Book XV reasserts Zeus's control: Apollo is sent to revive Hector, and the Trojans sweep back. The ships are in immediate danger again.
+
+Book XVI is the hinge and catastrophe. Patroclus has been tending the wounded Eurypylus inside the tent, hearing the battle come closer. He goes to Achilles weeping — the only person who can reach him — and makes his case: let me go in your armor. Achilles agrees, with explicit conditions: drive them from the ships but do not push to Troy's walls, do not take glory from me. Patroclus agrees and goes. He is magnificent. He drives the Trojans back, kills Sarpedon (Zeus watches his son die, helpless against fate), pushes past the ships all the way to the walls themselves — directly violating Achilles's condition. Apollo strikes him three times, stuns him, knocks off his helmet, breaks his spear, loosens the armor. Euphorbos wounds him first. Hector kills him.
+
+Books XVI–XVII are the poem's longest sustained darkness. Hector strips Achilles's divine armor from Patroclus's body and puts it on himself. Zeus watches and mutters: he is equipping himself in armor he will not bring home. The battle over Patroclus's body is fierce and enormous — both sides understand what the body means. Menelaus stands over it like a lion over a calf. Ajax covers it with his shield. Hector's men drag it toward Troy. The two Ajaxes fight their way back. Achilles's immortal horses stand at the edge of the battle weeping, their manes dragging on the ground, refusing to move. Antilochus is sent to tell Achilles.
+
+The moral weight of part 3 is the moment of Patroclus's violation of his promise — not from cowardice but from the opposite, the madness of war-glory that Achilles himself understands and feared. He went past the walls. He forgot the condition. He died at the point where he became Achilles.
+
+---
+
+## Cycle 10 — *The Stripped Inventory*
+
+**What this angle reveals that prior cycles missed:** Nine cycles dealt with documents, reports, and sacred objects held by those who survived. Cycle 10 is the inventory of what was lost — a specific list of divine armor taken from a corpse. When Hector kills Patroclus and strips the body, he takes the armor Hephaestus originally made for Peleus, which Peleus gave to Achilles, which Achilles lent to Patroclus. Each piece is named. Each piece has a lineage. An Achaean armorer made a detailed inventory before Hector put it on, because someone understood that divine armor walking on a mortal man would not come back.
+
+---
+
+**THE TOKEN: `ath_c10_stripped_inventory`** — A clay tablet, finger-width, broken at one corner; text on both sides in a small bureaucratic hand. The obverse lists the items stripped from Patroclus's body: the helmet of Achilles (horse-hair plume, bronze), the corslet, the greaves with silver ankle-clasps, the great shield. The reverse gives provenance: *made by Hephaestus for Peleus; given by Peleus to his son; lent by his son to the son of Menoetius the morning of Book XVI.* Below that, in slightly different ink: *Hector son of Priam now wears it. He will not bring it back.*
+
+---
+
+**Act 1 — "The Armorer's Record"**
+*The tablet: clay, newly fired, still warm. Location: SKN — Scaean Gate ruins.*
+*Morning. The battlefield smells of ash and iron.*
+
+An Achaean armorer named Autolycus — a man whose trade was the repair and cataloguing of weapons — made the inventory the morning after Patroclus died, before Hector put the armor on. He did it because that is what armorers do: document what passes through divine hands into mortal ones, and what passes back. He fired the clay himself. He wants you to take it to an archive because he knows Achilles will die soon and the armor's history needs a record that is not inside Achilles's own grief.
+
+> **History DC 12.** Understand the document's archival logic: the armor's chain of custody (Hephaestus → Peleus → Achilles → Patroclus → Hector) is a theological as much as a legal record; divine armor given as a wedding gift to a mortal man and now on the body of the man's son's enemy is evidence of how the gods' gifts move through the world of men and what they accumulate on the way; the armorer has done the right thing by making the inventory before Hector puts it on, because after the armor is on Hector's body no Achaean can examine it.
+
+*The armorer watches you read it. He does not offer commentary.*
+
+**Fail:** You take it with a note: *inventory of Achilles's armor, stripped from Patroclus, now on Hector.* Provenance noted briefly.
+**Success:** You understand the theological chain before he explains it. He adds one line to the reverse in your presence: *the god made it the night before the war.*
+
+grantItem: Stripped Inventory Tablet
+checkPassFlag: ath_c10_act1
+
+---
+
+**Act 2 — "Andromache at the Loom"**
+*The tablet: clay, warm and cooling. Location: IDC — Troy/Ilium, the upper city.*
+*Inside a house. A half-finished cloth on the loom.*
+
+Andromache has heard that Hector is wearing Achilles's divine armor. She knows what it means — that Hector has the armor of the man who will kill him. She wants the inventory tablet not to destroy it but to keep it herself, in the room where the loom stands. Her argument: the armor's history belongs with Hector's history, and Hector's history belongs with her. She will not give it back when Hector falls.
+
+> **Insight DC 12.** Her claim is the strongest in the cycle — the armor is genuinely connected to Hector's death, and she will grieve it when he dies in it. But the archive's value is precisely that it will survive Andromache's dispossession: when Troy falls, the loom will burn, the cloth will burn, everything in this room will be carried away or destroyed; the tablet in the archive will not burn; the record she wants to keep will be better kept where she cannot keep it.
+
+*She does not look at you. Her hands are on the loom.*
+
+**Fail:** She holds the tablet for an hour before returning it. Her handprint, in clay-dust, is on its surface. It stays there.
+**Success:** She sets it in your hands and turns back to the loom. "He will die in that armor," she says. "Tell them that." You write it on the back of the wrapping.
+
+checkPassFlag: ath_c10_act2
+activateCond: ath_c10_act1
+
+---
+
+**Act 3 — "The Arms Dealer"**
+*The tablet: clay, traveling. Location: CON — Constantinople.*
+*A warehouse near the port. Men moving crates.*
+
+A Hellenistic arms trader has traced the provenance of divine armor from the myth record and wants the inventory as a legal document establishing prior ownership — specifically, he argues that divine armor given by a god to a mortal is not property in the human-legal sense and therefore subject to recovery by the temple of Hephaestus, whose craftsman made it. He has a buyer for the concept, if not the armor itself.
+
+> **Persuasion DC 12.** The legal theory is inventive but inapplicable — divine gifts in the epic tradition are unambiguously property once given; Hephaestus made the armor for Peleus as a wedding gift, not as a temple commission; the inventory tablet itself confirms the chain of gift from god to mortal to mortal; moreover the tablet is an archival document, not a title deed, and cannot serve as legal instrument for a property claim; the arms dealer is trying to monetize a historical record.
+
+*He smiles throughout the argument. He is accustomed to losing.*
+
+**Fail:** He makes a sketch of the inventory's contents — the listed pieces — for his own files. The tablet continues.
+**Success:** He accepts the gift-vs.-commission distinction and concedes the legal claim fails. "A good try," he says. "Come back if you find the actual armor."
+
+checkPassFlag: ath_c10_act3
+activateCond: ath_c10_act2
+
+---
+
+**Act 4 — "The Blind Spot"**
+*The tablet: clay, cooling to room temperature. Location: TRH — Trojan harbor.*
+*Dawn on the docks. A fishing boat going out.*
+
+A fisherman at the Trojan harbor has seen the armor in use — he was at the walls the day Hector wore it, and he knows what it looks like in motion. He wants to tell someone what divine armor looks like on a man who is not its owner: it was too large, he says, and Hector moved differently in it, as though he knew he was wearing something that was not his. He wants this testimony to accompany the tablet because the inventory records the objects, but not what they looked like wrong.
+
+> **Perception DC 12.** The fisherman's testimony is useful but needs to be categorized correctly: what he observed is not evidence of ill-fit in the physical sense — divine armor adjusts — but of how a man moves when he is wearing something divine that has not chosen him; his observation belongs alongside the inventory as a phenomenological note, not as evidence of improper sizing; the archive entry can include both.
+
+*The boat goes out. The man gestures at the horizon.*
+
+**Fail:** You write his testimony on a scrap and tuck it inside the tablet's wrapping: *witness says the armor looked wrong on him. He moved differently.*
+**Success:** You identify the phenomenological category before he finishes speaking. He nods: "Yes. That's the word. Wrong. Not too large. Just wrong."
+
+checkPassFlag: ath_c10_act4
+activateCond: ath_c10_act3
+
+---
+
+**Act 5 — "The Archive"**
+*The tablet: clay, cool, broken at one corner. Location: WM — Weimar Archive.*
+*Sweelinck reads both sides in one motion, sets it down.*
+
+He reads the last line on the reverse — *Hector son of Priam now wears it. He will not bring it back* — and is quiet for a long time.
+
+"The armorer knew," he says. Not a question.
+
+He reads the fisherman's testimony from the wrapping. He sets it alongside the tablet.
+
+"Made by the god for a wedding. Given to a son. Lent for a morning. Stripped from a body. Worn by the man who would be killed for wearing it." He writes carefully. "The inventory records the objects. The fisherman records what the objects cost a man who was not made for them. Both belong in the same entry."
+
+He writes: *Armor Records — Divine Manufacture, First Entry. Achilles's Armor: inventory of pieces stripped from Patroclus by Hector; provenance Hephaestus to Peleus to Achilles; lent to Patroclus the morning of his death; now on Hector who will die in it; witness testimony attached: the armor looked wrong on him; he moved differently; the archive holds the inventory and the observation together.*
+
+TOKEN TAKEN: Stripped Inventory Tablet.
+
+takeItem: Stripped Inventory Tablet
+checkPassFlag: ath_c10_act5
+activateCond: ath_c10_act4
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "ATH_010",
+  "title": "The Stripped Inventory",
+  "source": "The Iliad — Homer (Butler translation)",
+  "cycle": "ATH",
+  "book": "The Iliad",
+  "source_episode": "Book 17: Hector kills Patroclus and strips from his body the divine armor that Hephaestus made for Peleus as a wedding gift, that Peleus gave to Achilles, that Achilles lent to Patroclus. Hector puts it on. Zeus watches and says he will not bring it home.",
+  "theme": "The inventory of what passes from the divine world through mortal hands and into the hands of a man it was not made for; the object-chain from god to wedding to battlefield to corpse.",
+  "activateNode": "SKN",
+  "token": {
+    "id": "ath_c10_stripped_inventory",
+    "name": "Stripped Inventory Tablet",
+    "description": "Clay tablet, finger-width, broken at one corner; obverse lists the pieces stripped from Patroclus — helmet, corslet, greaves, shield; reverse gives provenance chain Hephaestus to Peleus to Achilles to Patroclus; final line: Hector son of Priam now wears it. He will not bring it back.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["SKN", "IDC", "CON", "TRH", "WM"],
+  "new_nodes": [],
+  "acts": [
+    { "act": 1, "location": "SKN", "scene": "Battlefield morning — armorer with the clay inventory", "title": "The Armorer's Record", "type": "skill_check", "skillCheck": { "skill": "History", "dc": 12 }, "token_action": "grant" },
+    { "act": 2, "location": "IDC", "scene": "Upper Troy — Andromache at her loom wants the tablet", "title": "Andromache at the Loom", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "CON", "scene": "Constantinople — arms dealer wants it as a title deed", "title": "The Arms Dealer", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 12 }, "token_action": "check" },
+    { "act": 4, "location": "TRH", "scene": "Trojan harbor — fisherman's testimony about the armor looking wrong", "title": "The Blind Spot", "type": "skill_check", "skillCheck": { "skill": "Perception", "dc": 12 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "The Archive", "type": "delivery", "activateMissionBit": "athArmorComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## Source Summary — Part 4 of 5
+
+*Books XVIII–XXIII: Achilles's grief, Thetis at the forge, the new armor, Achilles's return, the death of Hector, the funeral of Patroclus, the funeral games.*
+
+Antilochus delivers the news. Achilles does not speak. He falls into the dirt and pours ash over his head and tears his hair. The bondswomen scream. His mother Thetis hears him from the sea-floor and rises like a mist out of the waves to hold his head. She already knew. The night before Patroclus's death Achilles told her everything would be fine; she knew it would not be but said nothing. Now she holds him and he tells her he would rather die here and now than go on living having failed to save Patroclus. She says: then your death is near, for it follows Hector's. He says: so be it. She goes to Hephaestus.
+
+The forge scene in Book XVIII is the poem's great counterpoint to grief: the god who made the original armor now makes new armor, working through the night in his divine smithy full of self-moving bellows, while Thetis sits and watches and weeps. He makes the shield of Achilles — the world as armor-decoration, the two cities, the vintage, the herdsmen, the dancers, the river of Ocean at the rim — then the corslet, the helmet, the greaves. Thetis takes them at dawn, stepping down from Olympus with the armor gleaming.
+
+Books XIX–XXII cover the return to battle. Achilles reconciles with Agamemnon in a formal assembly; he does not care about the gifts anymore, only about Hector. He puts on the new armor. He goes to the plain. He kills at a scale that drives the river Scamander to flood against him in disgust. The gods fight each other directly — Ares and Aphrodite, Poseidon and Apollo, Hera and Artemis. The world is in disorder. Then Achilles finds Hector outside the Scaean Gate.
+
+Hector runs. Three times around the walls they run, at divine speed, while the gods and Priam and Hecuba watch from the walls. Athena deceives Hector into turning to fight by taking the form of his brother Deiphobus. They fight. Achilles kills him. He ties the body to the chariot and drags it in front of the watching Trojans.
+
+Book XXIII is the funeral of Patroclus: the pyre, the offering of twelve Trojan captives, the lock of hair Achilles cuts from his head for the river Spercheius (he will never go home to wash it there), Patroclus's ghost coming to ask for burial and asking that their bones be laid in the same golden urn. Then the funeral games — chariot racing, boxing, wrestling, running, the armored fight between Ajax and Diomedes. The games are the poem's long, strange exhale between the killing of Hector and the grief of Priam.
+
+Part 4 is the poem at its most operatic. The emotional range from Achilles's animal grief to the shield's divine world-miniature to the river god's fury to the funeral games is the Iliad's most sustained demonstration that grief and violence and beauty and ceremony are all, in this poem, the same substance, differently shaped.
+
+---
+
+## Cycle 11 — *Priam's Ransom*
+
+**What this angle reveals that prior cycles missed:** Ten cycles have tracked objects moving away from the war toward an archive. Cycle 11 goes to the most precise accounting in the poem: Priam loading a wagon in his cedar-wood treasury with the exact items he will bring to buy his son's body from the man who killed him. The poem counts the ransom with bureaucratic precision — twelve vestments, twelve cloaks, twelve rugs, twelve mantles, twelve shirts, ten talents of gold, two tripods, four cauldrons, and a beautiful Thracian cup. Priam weighed the gold himself, weeping. Someone recorded the weight.
+
+---
+
+**THE TOKEN: `ath_c11_ransom_manifest`** — A papyrus sheet, carefully folded, with two columns: the left column is a running inventory in a clerk's hand, the right column has weights and counts in a different hand, added later. The items match exactly what the poem records. At the bottom, in a third hand, is a note: *Priam weighed the gold himself; he dismissed his sons from the courtyard before he began; the weighing took until the second watch of night.* The manifest was made by Idaeus, the old herald who drove the wagon.
+
+---
+
+**Act 1 — "The Herald's Manifest"**
+*The papyrus: folded in the herald's satchel. Location: IDC — Troy/Ilium, the lower city.*
+*Morning in the courtyard. The wagon is gone.*
+
+Idaeus survived the war. He drove the wagon to Achilles's tent and back; he waited in the yard while Priam was inside. He made the manifest the next morning because he had spent the night memorizing the list, afraid that if he forgot any item the entire transaction would somehow become invalid. He is an old man who believes that records protect the past from being misremembered. He does not believe anyone will care about the ransom list in a generation. He is glad to be wrong.
+
+> **Persuasion DC 12.** Idaeus needs convincing not that the list is worth preserving but that an archive in another country will treat it with the dignity it deserves — specifically, that the archive will understand the list as a grief document, not a trade document; the ten talents of gold and the Thracian cup are not merely valuable goods but the specific objects a father chose to carry through the enemy camp at night to get his son's body back; the archive needs to file it under *Priam at Achilles's tent* not under *treaty exchange.*
+
+*The old herald holds the manifest in both hands. His eyes are wet.*
+
+**Fail:** He gives you the manifest with a note: *items carried by Priam son of Laomedon to the tent of Achilles; Hector's body returned in exchange.*
+**Success:** He understands you understand. He folds it carefully, the way you fold something important, and says: "He weighed the gold himself. None of the sons was allowed to help."
+
+grantItem: Ransom Manifest
+checkPassFlag: ath_c11_act1
+
+---
+
+**Act 2 — "Hecuba's Objection"**
+*The manifest: folded papyrus. Location: IDC — Troy, the palace.*
+*A room that still smells of cedar.*
+
+Hecuba tried to stop Priam going. She told him to weep Hector from home, that Achilles was a savage, that if the cruel man got hold of him he would not ransom or pity him. She did not give her blessing. She gave him wine and told him to pray to Zeus, which he did. She wants the manifest altered to include her objection — she believes the official record should show that one person in Troy told him not to go, not because she was wrong but because she wants it known she was afraid for him.
+
+> **Insight DC 12.** Her request is legitimate and adds to the document's completeness — Hecuba's fear and Priam's determination are both part of the event; a manifest that records only what went in the wagon and omits the context of how it was loaded misses the document's weight; her objection is not a correction to the manifest but a note to append; the archive entry can hold both the inventory and the dissent.
+
+*She stands at the window. The cedar smell is faint.*
+
+**Fail:** She dictates a long paragraph; you write a summary: *Hecuba advised against the journey; Priam went regardless; she gave him wine.*
+**Success:** She dictates one sentence: *I told him not to go. He went.* You write it at the bottom of the manifest in a new hand. She approves it.
+
+checkPassFlag: ath_c11_act2
+activateCond: ath_c11_act1
+
+---
+
+**Act 3 — "The Achaean Inventory Officer"**
+*The manifest: traveling. Location: SKN — Scaean Gate / Greek camp side.*
+*A clerk's table in the remains of the camp commissariat.*
+
+An Achaean inventory officer who was stationed at the ships claims he has the right of first access to any record of goods transferred between Trojan and Achaean parties — technically all such transfers were subject to Greek military accounting. He has his own incomplete record of what came through the camp gates that night, which does not match the manifest exactly: his list omits the Thracian cup, which he never saw because it was already inside Achilles's tent before his shift began.
+
+> **History DC 12.** The officer's claim has procedural legitimacy but misidentifies the document's nature — the manifest is not a trade record of goods crossing military lines but a grief document recording what a father brought to ransom his son; military accounting authority does not extend to private ransoms conducted by divine arrangement (Hermes guided the wagon); moreover the manifest's value lies in its completeness, and the officer's desire to reconcile it against his own incomplete record would result in a worse document, not a better one.
+
+*He taps his list with one finger. He is correct about the cup.*
+
+**Fail:** He notes in his record that the Thracian cup passed without inspection and inserts a gap in his manifest. The official record will show a discrepancy. The papyrus continues unaltered.
+**Success:** He accepts the divine-arrangement argument and releases the manifest without annotation. He notes in his own record: *no reconciliation possible; divine escort classified.*
+
+checkPassFlag: ath_c11_act3
+activateCond: ath_c11_act2
+
+---
+
+**Act 4 — "Achilles's Table"**
+*The manifest: papyrus, traveling. Location: CON — Constantinople.*
+*A scholar of classical hospitality rites.*
+
+A Byzantine scholar of Homeric hospitality has been studying the scene in which Achilles feeds Priam after agreeing to the ransom — he cuts a sheep, his men roast it, they eat together. The scholar wants the manifest to support his argument that the meal transforms the ransom from a transaction into a guest-friendship (xenia), and therefore the goods listed are no longer ransom but guest-gifts in the formal Greek sense. He argues this reclassification affects how the archive should file the document.
+
+> **Persuasion DC 13.** The scholar's reading of the meal is illuminating but the reclassification does not follow — the meal comes after the ransom is agreed, not before; the goods were brought as ransom, offered as ransom, accepted as ransom; the subsequent meal does not retroactively transform the transaction's legal character; the archive can note the hospitality context as important background without reclassifying the manifest; moreover the manifest was made before the meal, by Idaeus in the morning after, and records what Priam loaded, not what Achilles received.
+
+*The scholar has clearly thought about this for years.*
+
+**Fail:** He writes a marginal note on the papyrus wrapping: *see also: xenia transformation; hospitality context disputed.* The note travels with it.
+**Success:** He accepts the temporal sequence argument. He writes: *ransom document; hospitality context noted but classification unchanged.*
+
+checkPassFlag: ath_c11_act4
+activateCond: ath_c11_act3
+
+---
+
+**Act 5 — "The Archive"**
+*The manifest: papyrus, folded, with Hecuba's line at the bottom. Location: WM — Weimar Archive.*
+*Sweelinck reads it column by column. He stops at the Thracian cup.*
+
+"The Thracians gave him this when he went as envoy to their country." He pauses. "He grudged not even this." He reads to the end.
+
+He reads Hecuba's line: *I told him not to go. He went.*
+
+He is still for a long time.
+
+"Twelve of everything," he says. "And the gold weighed by the father himself, in the dark, with the sons dismissed from the courtyard." He sets the manifest down. "The archive has received diplomatic offers, intelligence reports, divine records, and sacred textiles. This is the first grief-ledger."
+
+He writes: *Ransom Records — Father to Enemy, First Entry. Priam's Ransom: the complete inventory carried by Priam to the tent of Achilles for the return of Hector's body; twelve vestments, twelve cloaks, twelve rugs, twelve mantles, twelve shirts, ten talents of gold, two tripods, four cauldrons, one Thracian cup; gold weighed by the father; Hecuba told him not to go; he went; Hermes guided the wagon through the sleeping camp; the body was returned; the archive holds the ledger and the dissent in the same entry.*
+
+TOKEN TAKEN: Ransom Manifest.
+
+takeItem: Ransom Manifest
+checkPassFlag: ath_c11_act5
+activateCond: ath_c11_act4
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "ATH_011",
+  "title": "Priam's Ransom",
+  "source": "The Iliad — Homer (Butler translation)",
+  "cycle": "ATH",
+  "book": "The Iliad",
+  "source_episode": "Book 24: Priam goes alone to Achilles's tent at night, guided by Hermes, carrying a wagon loaded with the ransom for Hector's body: twelve vestments, twelve cloaks, twelve rugs, twelve mantles, twelve shirts, ten talents of gold, two tripods, four cauldrons, and a beautiful Thracian cup; he weighed the gold himself; Hecuba told him not to go; Achilles returns the body.",
+  "theme": "The grief-ledger; what a father brings to buy his son back from the man who killed him; the exact count as a record of love.",
+  "activateNode": "IDC",
+  "token": {
+    "id": "ath_c11_ransom_manifest",
+    "name": "Ransom Manifest",
+    "description": "Papyrus sheet, two columns — inventory left, weights and counts right; items match the poem exactly; third hand at bottom: Priam weighed the gold himself; he dismissed his sons from the courtyard before he began. Made by Idaeus the herald the morning after the return.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["IDC", "SKN", "CON", "WM"],
+  "new_nodes": [],
+  "acts": [
+    { "act": 1, "location": "IDC", "scene": "Troy courtyard — Idaeus the herald with the manifest", "title": "The Herald's Manifest", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 12 }, "token_action": "grant" },
+    { "act": 2, "location": "IDC", "scene": "Troy palace — Hecuba wants her dissent in the record", "title": "Hecuba's Objection", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "SKN", "scene": "Greek camp commissariat — inventory officer wants to reconcile records", "title": "The Achaean Inventory Officer", "type": "skill_check", "skillCheck": { "skill": "History", "dc": 12 }, "token_action": "check" },
+    { "act": 4, "location": "CON", "scene": "Constantinople — hospitality scholar wants reclassification as guest-gifts", "title": "Achilles's Table", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 13 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake", "title": "The Archive", "type": "delivery", "activateMissionBit": "athRansomComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+## Source Summary — Part 5 of 5
+
+*Books XXIII–XXIV: Patroclus's ghost, the funeral pyre, the funeral games, the divine council and Priam's journey, the ransom, Hector's funeral.*
+
+Part 5 opens with Patroclus's ghost appearing to Achilles in sleep: do not let my bones lie apart from yours; bury me quickly that I may pass the gates of Hades; let our bones rest together in the golden urn your mother gave you. They try to embrace and the ghost slips through his arms like smoke. Achilles wakes, smites his hands, says: even in the house of Hades there are ghosts that have no life in them. The funeral pyre is built, a hundred feet each way. Achilles cuts the yellow lock he had been growing for the river Spercheius — he will never wash it there, never go home — and lays it in his dead comrade's hands.
+
+The funeral games in Book XXIII are the poem's most sociable passage: chariot-racing, boxing, wrestling, running, the armored combat between Ajax and Diomedes, the shot-put, archery, the javelin. There is humor — Ajax slips on cow-dung when Athena helps Odysseus in the footrace and comes in spitting it out — and tenderness: Achilles gives an urn to old Nestor because he is too old to compete. The prizes are specific and precise. The quarrel between Antilochus and Menelaus over the chariot race is resolved by Antilochus's graceful apology. This is the poem learning to breathe again after Hector's death.
+
+Book XXIV is the ending the poem earns and has been building toward since line one. For twelve days Achilles drags Hector's body around Patroclus's grave each morning. Apollo protects the body, keeping the dogs away, anointing it with rose-oil, keeping it perfect. The gods hold council; Zeus determines that the ransom must happen. Thetis is summoned to Olympus; she sits by Zeus and he places a golden cup in her hand while Juno speaks comfort to her. He tells her to go to Achilles: accept the ransom. Iris is sent to Priam: go, with gifts, to the man who killed your son.
+
+Priam goes. He crosses the Greek camp guided by Hermes in the form of a young Myrmidon. He enters Achilles's tent alone and clasps his enemy's knees and says the truest line in the poem: think of your own father; I have kissed the hands of the man who killed my sons. Achilles weeps. He weeps for his father, for Patroclus, for the old man in front of him. He agrees. He feeds Priam. Priam sleeps in the gatehouse. At dawn Hermes wakes him and sends him home before the camp wakes. He returns with Hector on the wagon; Cassandra sees him from the walls and cries the news through the city. The women mourn — Andromache, Hecuba, Helen, each in her own way. The poem ends with the funeral: the nine-day gathering of wood, the pyre, the bones white as ash collected into the golden urn, the barrow built in haste. The last line: *Such were the rites of horse-taming Hector.*
+
+The whole of part 5 turns on the question of whether grief can be shared across the line of enmity, and the answer the poem gives is: yes, briefly, at night, in private, with a meal between two old men and a young one who is already half-dead. It requires form — the cart, the treasure, the gesture of supplication — because without form the human act cannot happen in a world at war.
+
+---
+
+## Cycle 12 — *Thetis at the Sea-Floor*
+
+**What this angle reveals that prior cycles missed:** Eleven cycles tracked human documents, divine inventories, grief-ledgers, and sacred objects — all made by people or by gods serving people's needs. Cycle 12 goes to the figure who was present at every hinge of the poem and said nothing useful in any of them: Thetis, silver-footed, divine, sitting in her cave on the sea-floor with the other Nereids, knowing her son will die young and doing everything she can anyway. She has kept records. Not a mother's records — divine ones: every petition she carried to Zeus on Achilles's behalf, every night she sat by him at the ships holding his head, the date the armor left Hephaestus's forge, the date Antilochus came running. She is the only witness to the whole arc of the poem who is divine enough to survive it and human enough to have felt it.
+
+---
+
+**THE TOKEN: `ath_c12_thetis_record`** — A sealed clay cylinder, sea-glazed, the color of deep water. The seal shows a silver foot. Inside, a rolled strip of thin bronze, incised by divine hands with entries in chronological order: *Day 1: petition to Zeus, granted; Day 10: Briseis taken; Day — [date of Patroclus's death]: I held his head and wept; Day —: I went to Hephaestus; Day —: I brought the armor at dawn; Day —: I told him: your death follows Hector's; Day —: I was on Olympus when Zeus received me; Day —: I told him to accept the ransom.* The last entry, after a long gap: *He is buried with Patroclus's bones in the golden urn I brought from Olympus. I gave it to him when he was young. He did not know what it was for.* The cylinder was left on a rock at the sea's edge at Tenedos by a Nereid who will not give her name.
+
+---
+
+**Act 1 — "The Rock at Tenedos"**
+*The cylinder: sea-glazed, cold. Location: TRH — Trojan harbor / Tenedos approach.*
+*Low tide. Salt on every surface.*
+
+The Nereid who left it there waits in the shallows. She will not come out of the water. She speaks from the sea. She says: Thetis left this for the archive because she knows it will not burn. She knows Achilles's grave will not last. She knows Troy's walls will be built over. She left the record because the only thing that survives a god's grief is the habit of keeping records.
+
+The Nereid will hand the cylinder only to someone who can say correctly what Thetis was doing when she heard Achilles cry out in grief over Patroclus's death — where she was, what she was doing, what her first action was.
+
+> **Religion DC 14.** Thetis was sitting in the depths of the sea near her father the old sea-god; she heard Achilles's cry and screamed; the Nereids gathered around her; she led them in lament, naming her sorrow: I bore him glorious and he will die young; she left the cave and rose as a mist from the waves and went to hold his head. The order matters: she heard, screamed, was surrounded by sisters, led the lament, then rose and went to him. She did not go to him first. She mourned with her sisters first, because she is divine and the divine mourn in form before they act.
+
+*The Nereid watches from the water. The cylinder is in her hands.*
+
+**Fail:** You get two elements of four. She gives you the cylinder anyway, with a look that says you got the important ones. "She mourned first," the Nereid says. "That's the part men always forget."
+**Success:** You name all four in order. The Nereid comes one step out of the water, sets the cylinder in your hands, and goes back. She does not speak again.
+
+grantItem: Thetis Record Cylinder
+checkPassFlag: ath_c12_act1
+
+---
+
+**Act 2 — "The Night in the Tent"**
+*The cylinder: cold, sea-glazed. Location: SKN — Scaean Gate battlefield.*
+*The old site of Achilles's tent. The ground still gives slightly underfoot.*
+
+An old Myrmidon soldier who was outside the tent the night Priam came is still in the area. He watched Achilles laugh — actually laugh, gently, when he told Priam he must sleep outside in case some counsellor saw him — and he has been trying for years to reconcile that laugh with the man who dragged Hector's body around the grave for twelve days. He wants the cylinder because he thinks Thetis's record might help him understand what kind of man Achilles was at the end. The tenderness with Priam was real; he saw it.
+
+> **Insight DC 12.** The soldier's need is human and real but the cylinder belongs in the archive, not in a soldier's private reconciliation. What you can offer him is the frame Thetis's record provides: the divine record shows Achilles's arc from the wrath through the grief to the night with Priam; the laughter in the tent is not a contradiction of the rage but the same man in a different register; what Thetis records is that she told him to accept the ransom and he said: so be it; the soldier has witnessed the end of the arc but not the arc itself; you can describe the entry without surrendering the cylinder.
+
+*He stands with his hands at his sides. He is not aggressive — just tired.*
+
+**Fail:** You read him the last entry from the cylinder: *He is buried with Patroclus's bones in the golden urn I brought from Olympus. I gave it to him when he was young. He did not know what it was for.* He sits down on the ground.
+**Success:** You describe the full arc from Thetis's record without opening the cylinder. He nods slowly. "He always knew," he says. "That's the thing. He always knew."
+
+checkPassFlag: ath_c12_act2
+activateCond: ath_c12_act1
+
+---
+
+**Act 3 — "The Golden Urn Question"**
+*The cylinder: sealed, traveling. Location: CON — Constantinople.*
+*A collector's house. Display cases of bronze.*
+
+A collector of Homeric objects claims to have a fragment of the golden urn in which Achilles and Patroclus's bones were laid. He wants the Thetis record cylinder as authentication: if Thetis's own record confirms that she brought the urn from Olympus when Achilles was young, and his fragment matches the description, the archive's authentication would be worth an enormous amount. The fragment is real — it is undeniably old gold — but the provenance claim is impossible to verify and he knows it.
+
+> **Persuasion DC 13.** The collector is not dishonest about the fragment's age, only about the provenance claim's verifiability; the cylinder's entry says the urn was given to Achilles when he was young but does not describe its physical appearance in detail; authentication requires physical cross-referencing that the archive does not perform; moreover using a divine record as authentication for a collector's acquisition would corrupt the record's archival integrity; the cylinder goes to the archive; the fragment goes wherever gold goes.
+
+*He is charming. He pours wine.*
+
+**Fail:** He photographs the cylinder's exterior — the sea-glazing, the silver-foot seal — and notes that it matches known Nereid artifact typology. This note circulates. The cylinder continues.
+**Success:** He accepts the authentication argument and raises his cup. "A reasonable position. The archive has its standards." He does not press further.
+
+checkPassFlag: ath_c12_act3
+activateCond: ath_c12_act2
+
+---
+
+**Act 4 — "The Road North"**
+*The cylinder: cold sea-clay, sealed bronze inside. Location: Road north to WM.*
+*Full winter. The road has ice in the wheel-ruts.*
+
+The final transit is physical: the cylinder is sealed and will survive cold, but the road north in winter is genuinely dangerous, and Thetis's record — being divine-made — carries a faint cold weight that the Fighter can feel through the wrapping, like holding something that has been at the bottom of the sea. There is a river crossing near the German border, not flooded but frozen, with the ice uncertain in late winter.
+
+> **Athletics DC 15.** Cross the frozen river with the cylinder in arms, testing each step, with ice that may or may not take the weight — the cylinder adds significant cold mass to the crossing and cannot be thrown ahead or dragged behind.
+
+*The ice speaks underfoot. The far bank is thirty yards.*
+
+**Fail:** The ice gives at the center; the Fighter goes in to the waist; the cylinder is held above water; Thetis's record stays dry but the Fighter arrives at Weimar half-frozen. Sweelinck opens the door and says nothing for a moment.
+**Success:** The Fighter reads the ice correctly and crosses without breaking through. The cylinder arrives cold and dry and sealed.
+
+checkPassFlag: ath_c12_act4
+activateCond: ath_c12_act3
+
+---
+
+**Act 5 — "The Archive"**
+*The cylinder: sea-glazed, silver-foot seal intact. Location: WM — Weimar Archive.*
+*Sweelinck at his table. A lamp turned up high.*
+
+He does not open the cylinder immediately. He holds it for a moment — he can feel the cold coming off it — and sets it down.
+
+Then he breaks the seal carefully and unrolls the bronze strip. He reads without speaking for a long time. He reads the last entry twice.
+
+"She gave him the urn when he was young," he says. "He did not know what it was for."
+
+He sets it down.
+
+"Every record in this archive was made by someone who survived what they were recording. The plague servant, the herald, the armorer, the Myrmidon scribe." He pauses. "Thetis made this record and her son did not survive and she did." He picks up his pen. "She is still alive. She will always be alive. She will always have been there."
+
+He writes: *Divine Witness Records — A Mother's Archive, First Entry. Thetis at the Sea-Floor: chronological record by the sea-goddess of every act she performed for her son Achilles from the day the quarrel began to the day his bones were sealed in the golden urn she had carried from Olympus since he was a child; she knew he would die young and gloriously from his birth; she did everything she could; everything she did is in the record; the archive holds the record of a god's helplessness, which is the only kind of helplessness that does not end.*
+
+TOKEN TAKEN: Thetis Record Cylinder.
+
+questComplete: true
+
+takeItem: Thetis Record Cylinder
+checkPassFlag: ath_c12_act5
+activateCond: ath_c12_act4
+questComplete: true
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "ATH_012",
+  "title": "Thetis at the Sea-Floor",
+  "source": "The Iliad — Homer (Butler translation)",
+  "cycle": "ATH",
+  "book": "The Iliad",
+  "source_episode": "Books 1, 18, 24: Thetis sits in her cave at the sea-floor with the Nereids; she hears Achilles cry and rises to hold his head; she carries his petition to Zeus; she goes to Hephaestus for new armor; she brings the armor at dawn; she is summoned to Olympus by Zeus to hear the ransom decree; she tells Achilles to accept it; she gave him the golden urn from Olympus when he was young without telling him what it was for.",
+  "theme": "The divine mother who knows everything and can prevent nothing; the record she kept because she knew nothing else would last; the urn given before the boy knew what dying was.",
+  "activateNode": "TRH",
+  "token": {
+    "id": "ath_c12_thetis_record",
+    "name": "Thetis Record Cylinder",
+    "description": "Sealed clay cylinder, sea-glazed, silver-foot seal; bronze strip inside with entries from day of quarrel through day of burial in the golden urn; last entry: He did not know what it was for. Left on a rock at Tenedos by a Nereid.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["TRH", "SKN", "CON", "WM"],
+  "new_nodes": [],
+  "acts": [
+    { "act": 1, "location": "TRH", "scene": "Tenedos shore — Nereid in the shallows with the cylinder", "title": "The Rock at Tenedos", "type": "skill_check", "skillCheck": { "skill": "Religion", "dc": 14 }, "token_action": "grant" },
+    { "act": 2, "location": "SKN", "scene": "Achilles's tent site — old Myrmidon soldier wants the arc explained", "title": "The Night in the Tent", "type": "skill_check", "skillCheck": { "skill": "Insight", "dc": 12 }, "token_action": "check" },
+    { "act": 3, "location": "CON", "scene": "Constantinople — collector wants the cylinder as authentication for the golden urn fragment", "title": "The Golden Urn Question", "type": "skill_check", "skillCheck": { "skill": "Persuasion", "dc": 13 }, "token_action": "check" },
+    { "act": 4, "location": "road_CON_WM", "scene": "Frozen river crossing — DC 15 Athletics, cylinder in arms", "title": "The Road North", "type": "skill_check", "skillCheck": { "skill": "Athletics", "dc": 15 }, "token_action": "check" },
+    { "act": 5, "location": "WM", "scene": "Weimar archive intake — cycle and ATH quest chain complete", "title": "The Archive", "type": "delivery", "questComplete": true, "activateMissionBit": "athThetisComplete", "token_action": "take" }
+  ]
+}
+```
+
+---
+
+*ATH PASS 4 COMPLETE. §ATH-08 through §ATH-12 written. Source summaries for all 5 parts appended. questComplete on Cycle 12 Act 5.*

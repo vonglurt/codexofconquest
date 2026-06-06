@@ -5436,3 +5436,398 @@ He writes in the master ledger: *Author's Complaints — Works Where the Creatio
 ---
 
 *KYA Shah-Nameh cycle complete — 25 vignettes, cycles 1 through 25.*
+
+---
+
+## Source Summary — Part 1 of 5
+
+*Kaiúmers through the opening of the Mázinderán disaster: the mythic kings, Zohák's tyranny, Kavah's rebellion, Feridún's deliverance, and the early career of Rustem up to Kai-Káús's blind invasion of demon country.*
+
+The first part of the Atkinson Shah-Nameh opens with the scholarly introduction by Richard Gottheil and the translator's preface, then enters the narrative with Kaiúmers, the first king, whose grandson Húsheng discovered fire by accident while hurling a stone at a serpent. Húsheng founded fire-worship and the Siddeh festival; his son Tahúmers captured demons and extorted from them the gift of reading and writing as the price of their lives. Jemshíd, the greatest of the early kings, ruled seven hundred years in golden abundance — inventing armor, silk, shipbuilding, and Nú-rúz — before pride led him to declare himself sole king of the world. God withdrew the royal blessing; his nobles abandoned him; the Arab tyrant Zohák, corrupted in three stages by Iblís (who kissed his shoulders and grew two serpents there that required daily human brains for food), conquered Persia and ruled one thousand years of terror. The cook Armáiíl secretly substituted sheep brains for one of the two daily victims, sustaining a remnant of humanity.
+
+The central episode of Part 1 is Kavah the blacksmith, who tore the blood-register before Zohák's court when two of his children were scheduled as serpent-food, raised his leather apron on a javelin as a banner, rallied the people, and sought Feridún. Feridún's father Abtín had been killed by Zohák's agents; his mother hid the infant and had him nursed by the divine cow Pur'máieh and later raised by a dervish on Mount Alberz. At sixteen Feridún descended, defeated Zohák's talisman at the palace of Baghdad, freed Jemshíd's sisters Shahrnáz and Arnawáz, and chained Zohák in a mountain cave — stopped from killing him by a voice from Heaven.
+
+Part 1 contains the critical Jemshíd-in-Zábulistán episode: the fallen king, wandering as a fugitive, arrived at the garden of King Gúreng of Zábulistán. The king's unnamed daughter had been told by her Kábul nurse-sorceress that she was destined to marry Jemshíd. The princess admitted him to the garden, compared his face against a portrait in her father's gallery, identified him, married him in secret, and bore him a son. Her father Gúreng, however, planned to betray Jemshíd to Zohák for a reward. The princess intervened passionately, shaming her father and saving Jemshíd's life — though Jemshíd remained suspicious and fled. He was ultimately captured in Chín (China) by an envoy and sawn in two by Zohák. The princess, hearing of his death, "wasted away with inconsolable grief, and at last took poison." The portrait that enabled her identification of the king, and her confrontation with her father, are among the text's most specific quest objects.
+
+Feridún then divided his empire among three sons: Sílim (Rúm), Túr (Túrán), and Irij (Persia). Sílim and Túr conspired; Irij came to them voluntarily offering to resign his throne and was murdered by Túr with a golden chair and a dagger, his head sent to Feridún as a trophy. Feridún buried the head in a garden and wore black for the rest of his life. The warrior Sám abandoned his white-haired son Zál on Mount Alberz; the divine bird Símúrgh raised him, gave him a protective feather, and eventually sent him back. Zál fell in love with Rúdábeh of Kábul (a descendant of Zohák's line), engineered a meeting, and they pledged love. The Símúrgh instructed a Caesarean delivery for the enormous child Rustem, who at age eight killed a rampaging elephant and thereafter became the dominant military force of Persia.
+
+Part 1 ends mid-scene with Kai-Káús ignoring Zál's wise counsel and invading Mázinderán at a demon's musical suggestion — the first of many catastrophes caused by royal vanity.
+
+---
+
+## Cycle 26 — The Portrait in the Gallery
+
+**What this angle reveals that prior 25 cycles missed:** Every prior cycle dealt with texts, scrolls, goblets, and objects that moved between institutions — archives, courts, markets. This cycle deals with a portrait as identification instrument: the image that enabled a woman to verify the man she had been told since childhood she would marry. The portrait did not survive the episode in any known record; but the gallery that held it, and the act of comparison (the princess fetching the painting and holding it beside the living face), is the poem's single most intimate moment of visual identification. No prior cycle touched portraiture as a form of historical evidence.
+
+---
+
+**THE TOKEN: `kya_cycle_26_token`** — The Zábulistán Gallery Portrait: a single small panel portrait, approximately 30 cm × 20 cm, painted on gessoed board in the Khorasani court style of the 10th century, showing a king in blue robe and gold crown identified in the lower border in Pahlavi as "Jemshíd, King of Kings." The portrait was made by a painter of Gúreng's court — part of a gallery of legendary kings that the princess consulted when she believed the stranger at her garden gate was Jemshíd. On the verso, in a later hand, a notation: "This is the face she compared." The board is warped and the paint is stable only at the center. It survived the sack of Zábulistán and passed through several Khorasani collections before entering the library of a Timurid minor official near Herat.
+
+---
+
+Act 1 — The Comparison
+activateNode: HRT
+type: skill_check
+scene: "A minor Timurid official, Mahmud ibn Yusuf al-Haravi, keeps the Zábulistán Gallery Portrait in a locked cabinet behind his writing desk. He acquired it from an estate dispersal in Herat and has not shown it to anyone. He is not certain what it is. You arrive at his house in the thin morning light, the muezzin still audible from the Friday mosque two streets away. He places it on the table without comment and watches your face. The painted face is a man in a blue robe, crown, the eyes direct and sad."
+prompt: "Persuasion DC 12 — convince him that a portrait identified only as 'this is the face she compared' belongs in an archive that collects identification acts, not a private cabinet."
+failText: "He is uncertain. He wants a written appraisal of the Zábulistán provenance before releasing it. You must return in two days."
+successText: "He is quiet. 'The notation says the face she compared. That is the whole story.' He wraps it in felt and ties it with a cord. You receive the Zábulistán Gallery Portrait."
+grantItem: "Zábulistán Gallery Portrait"
+checkPassFlag: kya_c26_act1
+
+Act 2 — The Road from Herat
+activateNode: MRV
+type: skill_check
+scene: "The road from Herat northwest to Merv runs through a stretch of open steppe where Timurid outriders patrol for undeclared luxury goods. A panel portrait on gessoed board is technically a luxury object. The patrol commander is young, bored, and looking for a reason to confiscate something interesting. He holds the portrait up to the afternoon light. The painted face catches it. He stares."
+prompt: "Deception DC 12 — claim the portrait is a devotional icon, a family saint's image, carried for personal prayer — religious objects are exempt from luxury confiscation."
+failText: "He is skeptical. He holds it another minute, then taxes it at ten percent of declared value and marks the outer felt with a confiscation seal. The seal will complicate things at the next checkpoint."
+successText: "He hands it back. 'Carry it in front, then, where I can see you praying.' He waves you through. The Portrait passes without a mark."
+checkPassFlag: kya_c26_act2
+activateCond: kya_c26_act1
+
+Act 3 — The Scholar's Recognition
+activateNode: NIS
+type: skill_check
+scene: "Yusuf al-Ansari at the Nishapur madrasa has spent thirty years cataloguing portraits of legendary kings. He unwraps the felt. He does not speak for several minutes. He reads the Pahlavi border inscription and the verso notation twice. Then: 'I have seen four portraits identified as Jemshíd. Three are clearly later inventions — too formal, too gold. This one is different. The sadness is right. A man who knows he is being recognized but will not admit who he is.' He pauses. 'Where did the notation come from?'"
+prompt: "History DC 13 — explain the scene in the Shah-Nameh precisely: the princess fetched the portrait, compared it to the living face, and Jemshíd still denied himself. The portrait preceded the identification. The identification did not resolve the denial."
+failText: "Al-Ansari adds only a neutral authentication stamp. The scene does not make it into the archive record."
+successText: "He writes in the margin of the authentication paper: 'Portrait used in a comparison that did not produce a confession — evidence of presence without admission.' He dates it and hands the portrait back."
+checkPassFlag: kya_c26_act3
+activateCond: kya_c26_act2
+
+Act 4 — The Collector Who Wants a Set
+activateNode: TBZ
+type: combat
+scene: "At the Trebizond waterfront a Genoese collector named Bartolomeo Spinola — a different man from the one in KYA-01 but from the same trading family — has been waiting for you. His agent traced the portrait from Herat through Nishapur. He wants it for a set of four legendary king portraits he is assembling for a Venetian patron. He has two armed porters with him. He is not interested in negotiation. The harbor smells of pitch and salt fish. The porters move to flank you."
+prompt: "Combat — 2 armed porters, AC 13, HP 20. Spinola himself does not fight; if the porters fall, he withdraws."
+failText: "You lose the portrait for three days while Spinola holds it as leverage. He eventually releases it when an Ottoman harbor official intervenes — not on your behalf, but because Spinola has no bill of sale."
+successText: "The porters go down. Spinola walks away without a word. You still have the Portrait. *Fighter adjusts his grip and does not look at the painted face.*"
+checkPassFlag: kya_c26_act4
+activateCond: kya_c26_act3
+
+Act 5 — The Archive Receives the Comparison
+activateNode: WM
+scene: "Archivus Sweelinck unwraps the felt. He reads the Pahlavi border. He reads the verso notation. He holds the portrait at arm's length, then closer. He sets it down. 'The notation says: this is the face she compared. Not: this is a portrait of Jemshíd. Not: this is the king. She compared this face to the face at the garden gate, and the man at the gate denied being himself. The portrait is evidence of an identification act that produced no confession and ended in betrayal and flight and death by poison.' He writes in the master ledger: Identification Records — Images Used in Acts of Recognition That Did Not Resolve; the Zábulistán Gallery Portrait, face of Jemshíd, used by the unnamed princess of Gúreng's court in a comparison that the subject refused to confirm. First entry."
+prompt: "Persuasion DC 11 — the archive note should record not just the portrait but the denial. The portrait's value is that it worked — she knew who he was — and he still said no."
+failText: "Sweelinck records only the portrait. The denial is left out of the category description."
+successText: "He adds to the ledger: 'The identification was correct. The subject denied it. Both facts are in the record.' He places the portrait face-up in a new case. You receive the Weimar Archive Receipt for the Zábulistán Gallery Portrait."
+grantItem: "Weimar Archive Receipt — Zábulistán Gallery Portrait"
+takeItem: "Zábulistán Gallery Portrait"
+checkPassFlag: kya_c26_act5
+activateCond: kya_c26_act4
+
+---
+
+## Source Summary — Part 2 of 5
+
+*The Seven Labors of Rustem through the Sohráb tragedy: Kai-Káús's disastrous Mázinderán campaign, Rustem's rescue, the eagle-throne hubris, and the poem's central grief — father kills son unknowing.*
+
+Part 2 opens immediately with the consequences of Kai-Káús's folly: the White Demon's army has blinded and captured the entire Persian force. Rustem sets out alone on the seven-stage road to Mázinderán. The Seven Labors proceed in compressed, vivid sequence: Rakush kills a lion while Rustem sleeps and is lectured for it; a sheep leads Rustem to water in a burning desert; a dragon attacks at night but vanishes in darkness until Rustem sees it by moonlight and kills it; a sorceress transforms from beautiful woman to hag when he speaks God's name and is cut in two; the fifth stage introduces Aúlád the governor, captured by kamund and pressed into service as guide with a promise of Mázinderán's governorship if he helps; Arzang the demon-governor is killed; finally the White Demon in his cave is grappled bare-handed, his liver and heart torn out, and their blood used to restore Kai-Káús's sight. Rustem, true to his word, makes Aúlád governor. The king of Mázinderán, transformed to stone, is lifted by Rustem; when he refuses to convert, he is executed.
+
+The eagle-throne episode follows immediately: Iblís, disguised as a young companion, persuades Kai-Káús to build a throne supported by trained eagles holding meat on javelins — the birds fly upward toward the bait, carrying king and throne. The eagles tire and the throne crashes in China. Kai-Káús is rescued again. His nobles are furious; he is saved because Rustem is always there to save him.
+
+The Sohráb tragedy occupies the second half of Part 2. Rustem's horse Rakush is stolen at Samengán; the king's daughter Tahmíneh comes to Rustem at night — she has already heard stories of him since childhood — and they marry by consent. He leaves her the great gold bracelet from his arm: bind it on a son's arm as his heritage. Sohráb is born enormous; at age one he looks three. He learns Rustem is his father and begins training immediately. Afrásiyáb, learning of the young warrior, sends him to invade Persia but orders that father and son must never know each other's identity. Sohráb defeats the garrison commander Hujír and then faces the warrior-woman Gúrd-afríd, who disguises herself as a man, fights him fiercely, and when he unmasks her as a woman, bargains with her beauty for her freedom — she escapes to the fort and mocks him from the walls. The extended Sohráb section follows: Rustem delays responding to Kai-Káús's summons, insults the king, is nearly stripped of command; on the battlefield Hujír, when asked repeatedly which warrior is Rustem, lies to Sohráb to protect the Persians; two days of combat culminate in Sohráb's death. Rustem kills his son; the dying boy shows the bracelet on his arm. Rustem tears it from Sohráb's arm in shock, begs Kai-Káús for the healing medicine, and is refused out of spite and fear. Sohráb dies. Rustem burns his own possessions in grief. Tahmíneh learns and dies within the year.
+
+Key objects in Part 2 for quest purposes: Gúrd-afríd's broken lance (her javelin was pierced through the girdle belt by Sohráb's spear; she cut the spear in two); the specific negotiation language in which she bargained her face for her freedom and Sohráb let her go unescorted to the fortress walls; and the account of Hujír's systematic lying when asked to identify Rustem, which is the poem's most damning instance of institutional betrayal — a prisoner protecting his own side by ensuring a son cannot recognize his father.
+
+---
+
+## Cycle 27 — Gúrd-afríd's Broken Lance
+
+**What this angle reveals that prior 25 cycles missed:** The 25 prior cycles dealt exclusively with written documents, tablets, legal records, and symbolic objects. This cycle deals with a weapon — specifically a weapon that was broken in a combat that produced no resolution. Gúrd-afríd fought Sohráb to a draw that was not a draw: he unmasked her, she bargained her way free, he let her go and felt it as defeat. The broken lance fragment she cut from her own side is the physical residue of that unresolved combat. No prior cycle used a weapon as TOKEN, and no prior cycle dealt with combat that ended in release rather than victory or death.
+
+---
+
+**THE TOKEN: `kya_cycle_27_token`** — Gúrd-afríd's Lance Remnant: the lower half of a Persian cavalry lance, 90 cm of ash-wood shaft, split diagonally at the break point where Gúrd-afríd cut Sohráb's spear free from her own girdle belt. The break is old — the wood is dry and the cut marks still sharp. A cord is bound around the shaft just above the break: Gúrd-afríd's combat grip-mark. A Persian warrior-tradition held that a weapon broken in honorable service and then recovered by the warrior herself had protective virtue. The remnant was kept by the fort garrison as a relic after Gúrd-afríd escaped, and eventually passed, with the garrison's records, to a Khorasani military archivist in Sistan.
+
+---
+
+Act 1 — The Garrison's Memory
+activateNode: SIS
+type: skill_check
+scene: "The Sistan military archive occupies two rooms in a disused caravanserai. The archivist, Yaqub al-Sistani, a retired Khorasani cavalry officer, has kept the garrison records of the Barrier Fort for twenty years — transferred into his care when the fort itself was abandoned and the records would otherwise have been destroyed. The Lance Remnant sits in a corner, wrapped in oilcloth. He does not treat it as important. 'It is from the fort. From the time of the Sohráb invasion. That is all I know.' Outside, a dry October wind pushes grit under the door."
+prompt: "History DC 12 — identify from the garrison records' date range and the break pattern that this is the lance from the episode of the warrior-woman, and explain to Yaqub that the break was made by Gúrd-afríd herself, not by Sohráb's blow — she cut the spear free from her own body and escaped. The weapon belongs with her act, not the fort's."
+failText: "He shrugs. He will give it to you if you want it — it is just wood. But without the identification, the archive intake record will be incomplete."
+successText: "He stops. 'She cut it free herself?' He reads the garrison notation again. 'I had not understood that.' He wraps it more carefully and hands it to you. 'Then it should go somewhere that understands what it is.'"
+grantItem: "Gúrd-afríd's Lance Remnant"
+checkPassFlag: kya_c27_act1
+
+Act 2 — The Road West
+activateNode: YAZ
+type: skill_check
+scene: "Three days west of Sistan, at the Yazd caravanserai, you share a courtyard fire with a Zoroastrian family — a mother, her two daughters, and an old man who says nothing all evening. The mother asks what you are carrying. You show her the lance fragment. She holds it for a long time. 'My grandmother told me of Gúrd-afríd,' she says. 'She was not a myth to us. She was a woman who dressed as a man and fought and bargained her way free. We tell the story at the new year.' Her daughters are listening. The fire crackles. She wants to make a copy of the garrison record."
+prompt: "Persuasion DC 12 — decline the copying request without giving offense. The original garrison record is part of the TOKEN's chain of custody; a copy made here would circulate independently and might be altered. The archive will hold the full record. The family can receive a copy from Weimar."
+failText: "She is hurt. The old man says nothing. You leave the courtyard feeling you have taken something from a community it belonged to."
+successText: "She nods slowly. 'Then tell the archivist this: the story says she laughed when she got back inside the walls. Not relief — she laughed.' She hands back the lance. You carry a detail that is not in any written record."
+checkPassFlag: kya_c27_act2
+activateCond: kya_c27_act1
+
+Act 3 — The Scholar's Provocation
+activateNode: NIS
+type: skill_check
+scene: "The Nishapur madrasa scholar Farid al-Din Khorasani has spent years arguing that Gúrd-afríd is a poetic invention — no historical Persian military record names a warrior-woman at the Barrier Fort. He sees the lance fragment and the garrison record and immediately identifies both as likely forgeries produced to support a mythological tradition. He is not hostile. He is rigorous. His argument is: the garrison record is too clean, the lance too whole. Real combat debris is more damaged."
+prompt: "History DC 13 — the garrison record is not claiming Gúrd-afríd was historical; it is recording what the garrison kept and called a relic. The question of historicity is separate from the question of what the garrison believed. The archive receives both the object and the garrison's belief about it — not the resolution of the historical question."
+failText: "He annotates the garrison record with his objections. The annotation is added to the TOKEN's chain of custody file. Sweelinck will note it."
+successText: "He pauses. 'You are not claiming she was historical.' 'No.' He sets down his pen. 'Then I have nothing to object to. The garrison believed this was hers. That belief is itself a historical fact.' He writes a neutral authentication."
+checkPassFlag: kya_c27_act3
+activateCond: kya_c27_act2
+
+Act 4 — The Night Road
+activateNode: TBZ
+type: combat
+scene: "North of Tabriz, on the mountain road toward the Black Sea coast, three riders come up behind you fast. They are not bandits — their equipment is too good. One of them calls: 'The lance. We have a buyer. Fair price, right now.' They are collectors' agents. The buyer is a Venetian interested in Persian military relics. They are armed and they will not take no for an answer. *Fighter steps into the road.*"
+prompt: "Combat — 3 mounted agents, AC 14, HP 19. They fight to disable, not to kill — they want the object intact."
+failText: "They take the lance for one hour while you recover, but leave you the garrison record. You catch up to them at the next junction when their horse throws a shoe."
+successText: "The road is clear. The lance is intact. *Fighter wipes the blade and doesn't look back.* The Trebizond harbor is two days ahead."
+checkPassFlag: kya_c27_act4
+activateCond: kya_c27_act3
+
+Act 5 — The Archive Receives the Broken Weapon
+activateNode: WM
+scene: "Archivus Sweelinck holds the lance remnant horizontally, reads the break. He reads the garrison record. He sets the lance across two brackets on the shelf — it needs to lie flat, it cannot stand. He reads the break again. 'She cut it free from her own body. In the middle of the combat, with Sohráb watching, she cut the spear that had gone through her belt and pulled the piece out of her own side and rode away.' He is quiet. 'The weapons we receive in this archive have mostly been instruments of documents — arrows that carried messages, blades that protected manuscripts. This is a weapon that ended a combat without killing anyone. She bargained her way free and laughed when she got inside.' He writes in the master ledger: Combat Records — Weapons Recovered After Inconclusive Engagements; the broken lance of the warrior-woman Gúrd-afríd, cut free from her own body during the Sohráb engagement at the Barrier Fort; garrison relic, Sistan tradition. The combat ended without a death. She laughed."
+prompt: "Persuasion DC 11 — add the detail from the Zoroastrian family in Yazd: she laughed when she got back inside the walls. This is not in the garrison record. It is in the living tradition."
+failText: "Sweelinck records the garrison record only. The laugh is not in the archive."
+successText: "He looks up. 'Not in the garrison record.' 'No. From a woman whose grandmother told it.' He adds it: 'Oral tradition, Yazd: she laughed when she got inside the walls.' He dates the addition. The Lance Remnant is received into the archive."
+grantItem: "Weimar Archive Receipt — Gúrd-afríd's Lance Remnant"
+takeItem: "Gúrd-afríd's Lance Remnant"
+checkPassFlag: kya_c27_act5
+activateCond: kya_c27_act4
+
+---
+
+## Source Summary — Part 3 of 5
+
+*The Jihún crossing through the opening of Isfendiyár's Seven Labors: the escape of Kai-khosráu, his coronation, the Ferúd tragedy, the great wars against Túrán, the Byzun-and-Maníjeh comedy, the Barzú revelation, the death of Afrásiyáb, the mysterious vanishing of Kai-khosráu, the introduction of Zoroastrianism under Gushtásp, and Isfendiyár's first imprisonment.*
+
+Part 3 opens with the Jihún crossing: Gíw, Kai-khosráu, and Ferangís plunge their horses into the flooded river while Afrásiyáb watches from the far bank. Gíw captures the old general Pírán by kamund; Ferangís intercedes; Kai-khosráu suggests piercing Pírán's ears to satisfy the oath — a "humane fraud" — and Pírán is released. A coronation dispute follows: the general Tús refuses to honor Kai-khosráu, supporting Fríburz instead. Gúdarz delivers the epic's key speech defending descent from Kavah the blacksmith as a source of honor, not shame. Kai-khosráu writes the name of God on a javelin point and extinguishes the demon-fire around the enchanted fortress; he takes it where Fríburz's army had failed.
+
+The Ferúd episode is a contained tragedy: Kai-khosráu explicitly ordered the army to bypass the fort where his half-brother Ferúd lived. Tús defied the order; Ferúd defended himself; Báhrám killed Ferúd treacherously; Ferúd's mother Gúlshaher rushed out and stabbed herself at her son's side. The poem frames it as a direct replay of Saiáwush's murder. The long war against Túrán follows: Kámús the Kushánian and the Khakán of Chín join Afrásiyáb's confederacy; Rustem captures Kámús by kamund and seizes the Khakán's golden collar, crown, and elephants. Púladwund, a wrestler-champion, fights Rustem to a draw and escapes by feigning death.
+
+The Akwán Díw episode is the poem's most compressed comedy: a demon disguised as a miraculous wild ass that vanishes each time Rustem strikes. The demon carries Rustem off on a tuft of earth, asks him to choose mountain or sea, and — knowing demons act by contraries — Rustem asks for the mountain, getting the sea. He fights off crocodiles and swims to shore. Eventually he meets Akwán Díw again, catches it in the kamund, and kills it. The Byzun-and-Maníjeh story is Part 3's masterpiece: Byzun is lured to Maníjeh's garden by the jealous Girgín, drugged, carried unconscious to Túrán, imprisoned in a pit under a demon-stone with Maníjeh left barefoot to feed him bread through a fissure. Kai-khosráu uses the Cup of Jemshíd and sees Byzun alive. Rustem goes as a merchant with a thousand warriors in camel panniers, recognizes Maníjeh, sends his seal-ring inside a roasted fowl; Byzun smiles for the first time in his captivity. Rustem lifts the demon-stone and frees him.
+
+The Barzú episode reveals that Sohráb's son — Rustem's grandchild — had been recruited by Afrásiyáb as a champion. When Rustem nearly kills him, Barzú's mother screams that he is Sohráb's son and shows Sohráb's finger-ring. Rustem stops. He takes Barzú to Sistan and introduces him to Zál. The death of Pírán, the death and capture of Afrásiyáb (caught by the hermit Húm and delivered to Kai-khosráu), and the execution of both Afrásiyáb and Gersíwaz — their blood collected in a golden basin, mirroring Saiáwush's execution — conclude the war. Kai-khosráu then distributes his empire, wades into a fountain, and vanishes without a trace. His warriors fall asleep nearby and are buried by a snowstorm. Lohurásp succeeds. Gushtásp earns the throne through disguised labor in Rúm, killing a wolf and a dragon. Zerdusht (Zoroaster) appears; the fire-worship tree is planted; religious war begins. Isfendiyár leads the Persian army, spreads the faith, and is slandered into a mountain prison by the courtier Gurzam. Part 3 ends as Isfendiyár is released from prison to face Arjásp's second invasion, and the Heft-Khán begins.
+
+Key objects: the Khakán of Chín's golden collar and throne demanded by Rustem as terms of peace; the demon-stone over Byzun's pit; the seal-ring inside the roasted fowl; Sohráb's finger-ring shown by Barzú's mother; the Zoroastrian fire-worship tree planted before Gushtásp's house.
+
+---
+
+## Cycle 28 — The Khakán's Collar
+
+**What this angle reveals that prior 25 cycles missed:** Prior cycles addressed Persian epic objects — banners, bracelet, seal-rings, manuscripts — but none addressed a captured royal tribute object, the specific diplomatic trophy of a foreign empire's submission. Rustem's terms to the Khakán of Chín were explicit: "his golden collar, throne, and elephants." The collar was the most portable element. As an object it represents the moment when the easternmost edge of the epic's world — the Khakán of Chín, king of the far East — was brought by kamund into the same frame as Persia. No prior cycle engaged with China-in-Persia or with tribute as physical object.
+
+---
+
+**THE TOKEN: `kya_cycle_28_token`** — The Khakán's Golden Collar: a torque of heavy Sino-Persian gold alloy, 35 cm inner diameter, each terminal end shaped as a coiled dragon. The torque bears a Mongolian inscription added in the 14th century: "Taken from the treasury of the Khakán of Chín by the champion Rustem of Sistan — this is recorded in the Book of Kings." A wax seal is attached at one terminal end from the Ilkhanid treasury at Tabriz, c. 1320, establishing provenance. The torque is heavy, cold to the touch, and has never been worn again since it was taken.
+
+---
+
+Act 1 — The Dispersal Inventory
+activateNode: SAM
+type: skill_check
+scene: "A Timurid cultural official named Khwaja Ahmad Samarqandi oversees the redistribution of objects from the Ilkhanid treasury dispersal records. He has a list. The collar appears as Item 47: 'gold torque, dragon terminals, inscription claims Rustem trophy, condition excellent.' He does not believe the inscription. He is about to assign it to a metalworker for remelting as raw bullion — the gold is valuable; the object is not, to him. The office smells of dust and old paper. He has forty items to process before evening."
+prompt: "Persuasion DC 12 — an object that carries a false inscription is still evidence of what the inscription claims; the Ilkhanid treasury cataloguers in 1320 believed the inscription authentic enough to seal it. The archive collects the claim and the doubt together."
+failText: "He is unpersuaded. He issues a three-day review stay while you document the provenance claim. The metalworker is already scheduled."
+successText: "He stamps Item 47 RELEASED FOR SCHOLARLY TRANSFER and hands you the collar. 'If Weimar can use it, it is more useful there than as bullion.' You receive the Khakán's Golden Collar."
+grantItem: "Khakán's Golden Collar"
+checkPassFlag: kya_c28_act1
+
+Act 2 — The Silk Road Checkpoint
+activateNode: MRV
+type: skill_check
+scene: "The Merv checkpoint on the Khurasan road collects a gold-weight tax on all metal objects leaving the eastern provinces. The torque is heavy — the inspector places it on a scale. His assistant is writing numbers. The dragon terminals gleam in the afternoon sun. Outside, camels move in a slow column toward Nishapur."
+prompt: "Deception DC 12 — argue that the torque is a scholarly artifact under diplomatic protection, traveling under the authority of a Persian cultural archive that holds exemption status for historical objects. The exemption is real in general terms; the specific paperwork has not been issued yet."
+failText: "He taxes it at four percent of gold weight. You pay. The receipt is now part of the TOKEN's documentation — evidence that even a famous trophy can be treated as commodity."
+successText: "He waves you through. 'Historical, you say. The inscription then. Rustem.' He makes a note for his own file. The collar passes without charge."
+checkPassFlag: kya_c28_act2
+activateCond: kya_c28_act1
+
+Act 3 — The Chinese Scholar's Objection
+activateNode: CON
+type: skill_check
+scene: "At the Constantinople Byzantine court, a visiting scholar from the Mongol court at Dadu — Zhao Wenru, on a cultural exchange visit — examines the collar. He is a specialist in Sino-Mongolian goldwork. He identifies the alloy as consistent with Tang dynasty production, not Seleucid or Achaemenid. The dragon terminals are Chinese, not Persian. The collar is real ancient Chinese gold. His conclusion: the inscription and the Ilkhanid attribution are secondary — someone attached the Rustem-story to a genuine Chinese collar, probably in the 11th century. 'This torque was never near Rustem,' he says. 'It was made in Chín, and it was probably brought to Persia as part of a completely different tribute.'"
+prompt: "History DC 13 — Zhao Wenru's identification, if accurate, does not reduce the archive value; it increases it. A Chinese torque that Ilkhanid cataloguers in 1320 identified as Rustem's trophy and sealed accordingly is evidence of how Persian epic tradition reached out and claimed physical objects. The collar is a real Chinese artifact that was incorporated into Persian legendary memory. That process of incorporation is itself the archive category."
+failText: "Zhao Wenru adds a dissent to the provenance file. The archive note will record the dispute without resolution."
+successText: "He is quiet for a moment. 'The incorporation is documented. That is rare.' He writes in his own hand a note on Chinese academic paper: 'This collar is Chinese work. It was claimed as a Persian trophy. The claim is now part of its history.' He attaches the note to the terminal seal."
+checkPassFlag: kya_c28_act3
+activateCond: kya_c28_act2
+
+Act 4 — The Market at the Gate
+activateNode: TBZ
+type: skill_check
+scene: "At the Trebizond harbor market a Genoese gold dealer has heard about the collar. He offers twice what the Samarkand official would have charged the metalworker. He is polite, well-dressed, and his offer is genuinely fair. He sits across from you at a harbor-side table with a glass of wine. 'I will have it melted and the inscription recorded before the melt. The record will be kept.' He slides the contract across the table."
+prompt: "Persuasion DC 13 — a record of an inscription is not the same as the object that carries it. The archive needs the collar itself — the weight, the alloy, the terminals, the seal, and Zhao Wenru's note attached to the terminal. No copy of an inscription retains the physical evidence. Politely decline a genuinely fair offer."
+failText: "He is frustrated but not hostile. He follows you to the harbor exit and makes one more offer. You decline again. He raises his glass as you board."
+successText: "He nods. 'You are right, of course. A copy is not evidence.' He pockets the contract. 'Tell Weimar I would have paid well.' He finishes his wine."
+checkPassFlag: kya_c28_act4
+activateCond: kya_c28_act3
+
+Act 5 — The Archive Receives the Tribute
+activateNode: WM
+scene: "Archivus Sweelinck lifts the collar with both hands. He reads the Mongolian inscription. He reads Zhao Wenru's note. He reads the Ilkhanid seal. He sets it down on the table and looks at it from a distance. 'A Chinese torque. Made in Chín — Zhao Wenru is credible on alloy. Brought to Persia by some route before the 11th century. Then someone attached the Rustem story to it, and the Ilkhanid treasury sealed it as authentic in 1320. And now it is here.' He writes in the master ledger: Tribute Records and Their Displacements — Objects Claimed by Epic Tradition That Predate the Claim; the Khakán's Golden Collar, Tang dynasty Sino-Persian alloy, dragon terminals, inscription claiming it as the tribute-trophy taken by Rustem from the Khakán of Chín. Chinese scholar's note: 'The incorporation of this object into Persian legendary memory is itself documented.' The archive holds the collar, the claim, the doubt, and the documentation of the incorporation."
+prompt: "Persuasion DC 11 — add to the ledger entry: Rustem demanded the collar specifically as the symbol of the Khakán's submission. Whatever the collar's origin, the demand is in the text, and this collar answered it."
+failText: "He records the Chinese provenance and the claim dispute. The connection to the poem's specific demand is not entered."
+successText: "'The demand is in the text.' He adds: 'Rustem named the collar. Whether or not this is the collar he named, someone named it in return.' He closes the ledger. The collar is placed in the archive's east case, between the Kavah Pages and the Seal Stone."
+grantItem: "Weimar Archive Receipt — Khakán's Golden Collar"
+takeItem: "Khakán's Golden Collar"
+checkPassFlag: kya_c28_act5
+activateCond: kya_c28_act4
+
+---
+
+## Source Summary — Part 4 of 5
+
+*Isfendiyár's Seven Labors through Firdusi's Satire on Mahmúd: the capture of the Brazen Fortress, the father-son catastrophe of Isfendiyár and Rustem, the death of Rustem by Shughad's treachery, the last dynasties, Alexander, and Firdusi's own voice in complaint.*
+
+Part 4 completes the Shah-Nameh narrative. It opens with the Heft-Khán of Isfendiyár: guided by the captured demon Kurugsar, Isfendiyár faces two wolves, two lions, a dragon (defeated by the sword-blade cart — he rides inside while the dragon swallows it and is cut apart from within), an enchantress and her ghoul, the Símúrgh (attacked with arrows, its young fleeing), a snowstorm, and a burning sand plain (which turns out to be cooled by the prior snowfall). In disguise as the merchant "Kherád," Isfendiyár infiltrates the Brazen Fortress with 160 warriors hidden in merchandise chests, holds a feast for Arjásp, fires a signal, and kills Arjásp and his son Kahram. He frees his sisters and Lohurásp's corpse.
+
+Returning victorious, Isfendiyár expects the throne but Gushtásp, advised by the treacherous Gurázm, instead sends him to chain Rustem and bring him to court — a mission intended to kill one or both. Three days of speech, feasting, and combat follow. Rustem and Isfendiyár are equals; both are severely wounded. At night Zál burns the Símúrgh feather; the Símúrgh heals Rustem's wounds and reveals Isfendiyár's vulnerability — only the eyes — and shows the Kazú-tree from which the arrow must be cut. On day two the forked Kazú-arrow blinds Isfendiyár; he dies slowly, commending his son Bahman to Rustem's care and naming Gushtásp as the true killer. Rustem's subsequent education of Bahman is described; Gushtásp is eventually acquitted by those present and Bahman inherits.
+
+The death of Rustem follows: his half-brother Shughad and the king of Kábul dig seven concealed pits filled with sword-blades on a hunting road. Rustem falls into the first pit; Rakush falls with him; they rise, fall again seven times, and emerge mortally wounded. Rustem shoots Shughad through the tree he hides behind — his last deed — and dies. Ferámurz recovers the bones. Bahman later ravages Sistan, hangs Ferámurz, and Zál is briefly imprisoned.
+
+The final dynasties proceed rapidly: Húmaí, queen-regent, places her son Dáráb in a golden box and casts it on the Euphrates; the washerman finds it; Dáráb is raised in secret, recognized by a supernatural voice, makes his way to court, and eventually becomes king. His son Dárá inherits. Sikander (Alexander) is framed as Dáráb's half-Persian son — the Macedonian princess Náhíd bore him after being sent home for bad breath; Failakús raised the child as his own. Three great battles; Dárá is stabbed by his own ministers; Sikander holds the dying king. Alexander conquers India using iron fire-machines against elephants, discovers the speaking trees that prophecy his death at Kashán, builds the Wall of Gog and Magog, and dies. Firdusi's Invocation follows, and then his famous Satire on Mahmúd — a controlled eight-page attack on the sultan who paid him in silver after thirty years and the promise of gold, calling Mahmúd the son of an Isfahán blacksmith.
+
+Key objects: the merchant "Kherád" false identity papers used by Isfendiyár at the Brazen Fortress; the Kazú-tree forked arrow; Shughad's pit construction record (covered in KYA-22); Alexander's four golden goblets (KYA-23); Dáráb's ruby (the one left on the child's arm when Húmaí cast him into the river).
+
+---
+
+## Cycle 29 — The Merchant Kherád
+
+**What this angle reveals that prior 25 cycles missed:** Every prior cycle dealt with documents that were what they claimed to be — even disputed ones were genuine documents. This cycle deals with a false document: the trade permit issued in the name of "Kherád," the merchant identity Isfendiyár created to infiltrate the Brazen Fortress. The false identity is fully described in the Atkinson text — Isfendiyár walked into Arjásp's court as a peaceful merchant, was received with full hospitality, and killed his host from inside the feast he himself had arranged. The false permit is the instrument of that access. No prior cycle addressed forgery as a form of necessary action, or a document whose falseness was itself the source of its power.
+
+---
+
+**THE TOKEN: `kya_cycle_29_token`** — The Kherád Trade Permit: a small clay tablet, 12 cm × 8 cm, impressed with a merchant's seal device (a scales-and-double-fish motif) and the name "Kherád of Persia, trader in embroideries and gems" in Pahlavi script. A secondary impression at the lower left is the gate-seal of Arjásp's fortress compound — proof the permit was actually presented and accepted at the Brazen Fortress gate. The permit passed into the possession of Arjásp's gate-keeper, who survived the storming and kept the clay tablet as evidence of the deception that destroyed his master. It entered the Herat library in the 11th century with a notation: "The merchant who was not a merchant. The feast that was a siege."
+
+---
+
+Act 1 — The Gate-Keeper's Testimony
+activateNode: HRT
+type: skill_check
+scene: "The Herat manuscript room holds the tablet in a cedar box with the notation on the lid. The current custodian, Ahmad ibn Jafar al-Haravi — a different man from Cycle 26's Mahmud ibn Yusuf, but working in the same building of the Timurid administrative complex — knows what it is and is proud of it. He is not certain it should leave Herat. 'This is part of our history,' he says. 'The gate-keeper who kept this was from this region. His family kept it for two hundred years.' The afternoon light through the latticed window marks the wall in a grid of gold and shadow."
+prompt: "Persuasion DC 13 — the archive in Weimar now holds documentation of Isfendiyár's Seven Labors, the Kazú-arrow, the death of Rustem. The Kherád tablet is the one object that documents the deception at the source — the gate that opened. It belongs with the complete record of the campaign, not in a regional archive that does not hold the other components."
+failText: "He is unconvinced by the argument of completeness. He will release the tablet only if the scholar Ahmad al-Farghani in Tabriz writes a letter of authentication. You must travel to Tabriz and return."
+successText: "He opens the cedar box himself. 'The gate-keeper's name was Barzin,' he says. 'That is not in any text. His family told us.' He writes the name on a slip and tucks it inside the box. You receive the Kherád Trade Permit with Barzin's name attached."
+grantItem: "Kherád Trade Permit"
+checkPassFlag: kya_c29_act1
+
+Act 2 — The Caravan Road
+activateNode: MRG
+type: skill_check
+scene: "The road from Herat to Maragha passes through the upland plateau in late autumn — thin air, bright cold sun, the distant mountains still white from the first snow. At the Maragha caravanserai you are approached by a scribe employed by the Mongol court historians. He has heard of the tablet and wants a rubbing. His court history is being compiled — the Ilkhanid court was assembling a universal history, and the Kherád episode is in it. He has legitimate scholarly credentials. He asks politely."
+prompt: "Insight DC 12 — determine whether a rubbing made here would enter the court history as 'confirmed artifact' before the archive can assess the original. A rubbing attributed to a court history carries different weight than a rubbing attributed to an independent archive."
+failText: "You allow the rubbing. The court history will reference the Maragha rubbing, not the Weimar original — a minor complication but not a disaster."
+successText: "You recognize that the court history attribution would preempt the archive's own assessment. You politely decline. 'The archive will make a rubbing available through its normal process.' The scribe notes your refusal in his own records — which means the tablet is now mentioned in Mongol court historiography as being in transit to Weimar."
+checkPassFlag: kya_c29_act2
+activateCond: kya_c29_act1
+
+Act 3 — Ahmad al-Farghani's Final Note on a False Document
+activateNode: TAB
+type: skill_check
+scene: "Ahmad al-Farghani appears for the last time in the KYA cycle. He reads the Pahlavi on the tablet with his loupe. He reads the gate-seal. He reads the gate-keeper's name on the slip. He sets the tablet down and is quiet for a long time. 'Kherád means wisdom in Persian,' he says. 'Isfendiyár chose the name. The merchant who is wise. The seal device is a fabrication — the scales-and-fish motif is real merchant iconography, but the specific combination does not appear in any Persian guild register I have seen. He made a plausible lie.' He pauses. 'The gate-keeper kept it. That is what I cannot stop thinking about. The man who was deceived kept the evidence of his deception.'"
+prompt: "Persuasion DC 11 — ask al-Farghani to write his observation into the authentication: the gate-keeper kept the tablet. That act of preservation is as important as the forgery itself."
+failText: "He writes a neutral authentication. His observation about the gate-keeper stays in the room."
+successText: "He writes it: 'Barzin the gate-keeper preserved the evidence of his own deception. This is the most honest thing in the document.' He dates the authentication. It is his last act in the KYA cycle."
+checkPassFlag: kya_c29_act3
+activateCond: kya_c29_act2
+
+Act 4 — The Border and the Name
+activateNode: TBZ
+type: skill_check
+scene: "At the Trebizond harbor-side customs station the official opens the cedar box and reads the notation. He knows enough Persian to recognize 'merchant' and 'fortress.' He wants to understand what it is. He is not trying to confiscate it — he is simply curious in the way of a man who spends his days looking at what passes through the world. 'A false merchant's permit,' you say. He looks at it again. 'And it worked?' 'Yes.' He holds it for another moment."
+prompt: "History DC 11 — describe what happened at the Brazen Fortress briefly enough to satisfy his curiosity without triggering the luxury-goods review process. The tablet is clay, not gold; it has no material value; it should pass as a scholarly curiosity."
+failText: "He decides it needs a scholarly import review — three-day hold. He is not being difficult; he simply wants everything properly documented."
+successText: "He closes the box. 'Then it is a more interesting document than most of what I see.' He stamps it through under scholarly import and waves you on. *Fighter has not spoken in two days.*"
+checkPassFlag: kya_c29_act4
+activateCond: kya_c29_act3
+
+Act 5 — The Archive Receives the Forgery
+activateNode: WM
+scene: "Archivus Sweelinck reads the Pahlavi. He reads the gate-seal. He reads al-Farghani's authentication with its final note. He reads Barzin's name on the slip. He sets the tablet down and taps the scales-and-fish motif with one finger. 'Kherád means wisdom,' he says. 'He named himself the merchant who is wise, and then he killed his host.' He is quiet. 'The gate-keeper kept the permit. The man who was deceived kept the evidence. That is not recorded in any text — it is in the authentication.' He writes in the master ledger: False Documents That Enabled Entry — Forgeries Preserved by Their Victims; the Kherád Trade Permit, clay tablet, Pahlavi script, gate-seal of the Brazen Fortress, name of the gate-keeper Barzin who preserved it. 'The merchant who was not a merchant. The feast that was a siege.' The archive opens a new category for documents that worked by being false."
+prompt: "Persuasion DC 12 — the archive category should specify that the preservation of the forgery by the victim is what makes this entry distinct. Not the forgery itself — the act of keeping it."
+failText: "Sweelinck creates the category without the specification. The archive holds the tablet but the category description misses the key distinction."
+successText: "'The gate-keeper kept it.' He rewrites the ledger entry: 'Preserved by the victim of the deception. First entry in the category — False Documents That Enabled Entry, Preserved by Those They Deceived.' He closes the ledger. You receive the Weimar Archive Receipt for the Kherád Trade Permit."
+grantItem: "Weimar Archive Receipt — Kherád Trade Permit"
+takeItem: "Kherád Trade Permit"
+checkPassFlag: kya_c29_act5
+activateCond: kya_c29_act4
+
+---
+
+## Source Summary — Part 5 of 5
+
+*The Divan of Háfiz: Part 5 contains no Shah-Nameh narrative. The entire text is the Divan of Shams al-Din Mohammed Háfiz of Shiraz (c. 1325–1390), translated by Herman Bicknell, comprising selections from his lyric ghazals — odes on wine, love, the rose and the nightingale, Sufi divine love under worldly imagery, and the poet's relationship to kings and patrons.*
+
+Part 5 is the third and final literary work in the KYA volume — the Persian Literature volume containing the Shah-Nameh (Atkinson), the Rubaiyat of Omar Khayyam (Fitzgerald), and the Divan of Hafiz (Bicknell). The Hafiz selections cover approximately 750 lines of translated verse. The ghazals proceed under Roman numeral headings (I, II, III, IV, etc.) without titles; each is a complete lyric poem, typically ten to fourteen couplets. The dominant themes are the Sakí (wine-bearer) as mediator of divine grace, the wine-cup as instrument of revelation, the bulbul (nightingale) and the rose as figures for the soul's longing, and the Sufi paradox of intoxication-as-piety.
+
+One ghazal in this part contains a direct reference to the Shah-Nameh's Alexander material. In the poem numbered XII in this translation, a couplet reads: "Sikander's mirror, once so famed, is the wine-filled cup: behold / All that haps in Dárá's realm glassed within its wondrous mould." This verse uses the Sikander-and-Dárá episode from the Shah-Nameh as its frame — the wine-cup as the successor to Alexander's mirror, which itself recalled the Cup of Jemshíd (the seeing-cup Kai-khosráu used to locate Byzun in the pit). The Hafiz ghazal thus draws a chain: Jemshíd's Cup → Sikander's mirror → the wine-cup of the Sufi mystic. All three see all things.
+
+The Bicknell translation is less well-known than Fitzgerald's Khayyam; Bicknell was a Victorian physician and amateur Persianist who translated Hafiz with scholarly precision and less poetic license than Fitzgerald's Khayyam. His version preserves the Sufi register but lacks the idiomatic compression of the original Persian ghazals. The volume ends at line 873 with the notation "END OF VOLUME ONE," confirming that the Gulistan of Sa'di referenced in the introduction is in a separate volume.
+
+Quest potential in Part 5 lies entirely in the Sikander-cup verse: a manuscript of this specific Hafiz ghazal, in a Tabriz copy known to connect the wine-cup to the Shah-Nameh's seeing tradition, bridges the two works in the volume. In 1367 Hafiz is still alive in Shiraz — he died c. 1390 — and a scribe in Tabriz who had access to the KYA volume in full could have been the one who assembled the chain of citations: Cup of Jemshíd, Sikander's mirror, Háfiz's wine-cup. The assembled citation is the TOKEN for Cycle 30.
+
+---
+
+## Cycle 30 — The Cup of Three Kings
+
+**What this angle reveals that prior 25 cycles missed:** Twenty-five cycles covered documents, weapons, stones, tablets, and folios — all objects that existed before they were archived. This final cycle covers an act of literary connection: a scholar in Tabriz who noticed that the Divan of Hafiz, which references Alexander's mirror glassed in the wine-cup, sits in the same volume as the Shah-Nameh's Cup of Jemshíd and Sikander's four stolen goblets — and wrote the chain down. The three cups are one insight distributed across three works, three centuries, and three authors. The TOKEN is not a cup but the page where the chain was first written in a single hand. This is the archive receiving not an object but the act of reading that produced the connection.
+
+---
+
+**THE TOKEN: `kya_cycle_30_token`** — The Three-Cup Folio: a single folio, recto and verso, in the hand of the Tabriz scribe and scholar Nasir al-Din Kashani (d. 1371), written c. 1367. Recto: the Hafiz ghazal verse "Sikander's mirror, once so famed, is the wine-filled cup" in full, with Kashani's interlinear annotation tracing the verse back to the Shah-Nameh Cup of Jemshíd and then to Sikander's four goblets at Dárá's table. Verso: Kashani's own prose note, seven lines: "There are three cups in Persian literature that see everything. Jemshíd's Cup reveals the seven climes. Alexander's mirror sees all that happens in Dárá's realm. Hafiz's wine-cup holds all three. The man who pours the wine is the archivist. He does not drink; he shows." The folio is water-stained at the lower right corner but entirely legible.
+
+---
+
+Act 1 — Kashani's Study
+activateNode: TAB
+type: skill_check
+scene: "Nasir al-Din Kashani is seventy years old and knows he is dying. He has been a scholar in the Tabriz Jalayirid court his entire life — compiler of anthologies, corrector of manuscripts, a man who has read more Persian than almost anyone alive. His study is warm. The folio is on his desk, face-up. He has been looking at it. 'I wrote this two months ago,' he says. 'I was reading the new KYA volume — the Shah-Nameh and the Hafiz together in one binding — and I saw the chain. I do not think anyone has written it down before.' He pauses. 'I am not certain anyone cares.' He is asking a real question."
+prompt: "Persuasion DC 11 — the archive in Weimar holds the Shah-Nameh cycle, the four-goblet folio, the cup of Jemshíd's seeing. If Kashani's folio comes with them, the chain is complete. The archive cares precisely because no one else has written it down."
+failText: "He is uncertain. 'An archive is an institution. I am a person. What I saw may not be what they see.' He gives you the folio but without conviction. Sweelinck will note the hesitation."
+successText: "He is quiet for a moment. 'Then give it to someone who can hold all three.' He folds the folio once along an existing crease. 'Tell the archivist: the man who pours the wine does not drink.' He gives you the Three-Cup Folio."
+grantItem: "Three-Cup Folio"
+checkPassFlag: kya_c30_act1
+
+Act 2 — The Hafiz Manuscript Parallel
+activateNode: NIS
+type: skill_check
+scene: "At Nishapur you find Yaqub ibn Ibrahim — still in his study, still careful with paper — who has a Hafiz manuscript that contains the same ghazal Kashani cited. He has never noticed the Shah-Nameh connection. You show him the Three-Cup Folio. He reads it twice. He looks at his own manuscript, open to the relevant ghazal. The two texts are in front of him simultaneously — Kashani's chain and the Hafiz verse it annotates. Outside, rain moves across Nishapur for the first time in a month."
+prompt: "History DC 12 — explain the full three-cup chain: the Cup of Jemshíd (Shah-Nameh Part 3), Alexander's four goblets from Dárá's table (Shah-Nameh Part 4), and Hafiz's wine-cup as Sikander's mirror (the Divan). All three are in the KYA volume. The chain is visible only to someone who has read all three parts."
+failText: "Yaqub nods but does not add to the folio's documentation. The chain remains Kashani's alone."
+successText: "He reaches for a pen. 'May I add a note on the verso of the Nishapur confirmation?' You show him the folio. He writes in the margin: 'Confirmed by comparison with Nishapur Hafiz MS. Chain complete. Y. ibn I.' He dates it. The folio now carries two hands."
+checkPassFlag: kya_c30_act2
+activateCond: kya_c30_act1
+
+Act 3 — The Wine-Cup Question
+activateNode: BGD
+type: skill_check
+scene: "At the Baghdad Sufi lodge — the tekke of Sheikh Ahmad ibn Musa al-Baghdadi — you present the Three-Cup Folio to a small gathering of Sufi scholars who have been debating the Hafiz ghazal for years. They receive Kashani's annotation with the careful intensity of men who have been arguing about this specific verse. Sheikh Ahmad reads it aloud. The debate stops. He says: 'The man who pours the wine does not drink. Kashani wrote that.' He sets the folio down. 'He is correct. The archivist and the Saki are the same figure.'"
+prompt: "Persuasion DC 13 — this is the moral-weight act. The Sufi lodge wants to retain the folio as a teaching document. They will make a copy but they want the original for the lodge library. Decline while honoring the insight: the archive at Weimar already holds the Shah-Nameh cycle — the folio belongs with the objects it connects. A teaching document without the objects it teaches from is less than the archive where all three are held together."
+failText: "The sheikh makes a copy before releasing it. The copy will circulate in the Sufi teaching tradition — which is not a harm, but it means the folio will be referenced before Sweelinck has assessed it."
+successText: "The sheikh is quiet. He looks at the folio, then at you. 'Tell the archivist: the Saki is grateful.' He releases the folio without making a copy. He trusts the connection you have described."
+checkPassFlag: kya_c30_act3
+activateCond: kya_c30_act2
+
+Act 4 — The Final Road
+activateNode: CON
+type: skill_check
+scene: "Constantinople. The last checkpoint before Weimar. You have carried the Three-Cup Folio from Tabriz through Nishapur and Baghdad. Nikephoros Katakalon's door is open when you pass; he sees you through the window and calls out. He is working on his Byzantine Alexander-cycle commentary. He wants one look at the folio — he has heard about it through the scholars' network. You stop at his doorway. He reads Kashani's note standing up, folio in hand."
+prompt: "Persuasion DC 12 — Katakalon wants to add a note connecting the Byzantine Alexander tradition to the Persian cup-chain. His note would be valuable but would need to be added before the archive intake. Persuade him to send his note directly to Weimar rather than writing in the margin — the folio's margins are Kashani's and Yaqub's, and they belong to the Persian tradition. Katakalon's Byzantine connection deserves its own document, not a margin."
+failText: "He adds a brief note in Greek in the upper right margin. It is not wrong but it changes the folio's scholarly register."
+successText: "He pauses. 'You are protecting the margins.' 'Yes.' He hands it back. 'I will write to Sweelinck directly.' He goes back to his desk. *Fighter waits in the doorway until you are ready to leave.*"
+checkPassFlag: kya_c30_act4
+activateCond: kya_c30_act3
+
+Act 5 — The Archive Completes the Cycle
+activateNode: WM
+scene: "Archivus Sweelinck reads the Three-Cup Folio recto and verso. He reads Yaqub ibn Ibrahim's margin note. He sets it down and looks at it for a long time. The archive is quiet. Outside, snow has begun — the first of the season. He says: 'Kashani saw that all three cups in the Persian tradition are one cup. The Cup of Jemshíd sees the seven climes. Sikander's mirror sees Dárá's realm. Hafiz's wine-cup holds both. And the man who pours does not drink.' He is quiet. 'The Shah-Nameh cycle opened with Kavah the blacksmith raising his apron. It closes with a scholar in Tabriz who read the whole volume and saw the cup that runs through it.' He writes in the master ledger: Acts of Reading That Produced the Archive — Connections Made by a Single Reader Across Multiple Works; the Three-Cup Folio of Nasir al-Din Kashani, Tabriz, c. 1367: the cup of Jemshíd, Sikander's mirror, Hafiz's wine-cup, written as a chain in one hand. The archive opens this category and places the folio as its first entry. The Shah-Nameh cycle — thirty vignettes, from the first fire to the last cup — is complete."
+prompt: "No skill check required. The cycle closes."
+successText: "Sweelinck places the Three-Cup Folio in the archive's west case, at the end of the Shah-Nameh sequence. He writes a final note in the master ledger: 'The KYA cycle: thirty documents. The fire and the anger, the first night and the last cup. The man who pours the wine does not drink. The archive is the man who pours.' He closes the ledger. You receive the Weimar Archive Receipt for the Three-Cup Folio."
+grantItem: "Weimar Archive Receipt — Three-Cup Folio"
+takeItem: "Three-Cup Folio"
+checkPassFlag: kya_c30_act5
+activateCond: kya_c30_act4
+questComplete: true
+
+---
+
+*KYA Shah-Nameh cycle complete — 30 vignettes, cycles 1 through 30. Pass 4 added cycles 26–30.*

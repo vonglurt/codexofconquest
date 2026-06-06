@@ -1257,3 +1257,852 @@ TOKEN TAKEN: Godfrey's Letter to Rome. *questComplete: true.*
   ]
 }
 ```
+
+---
+
+## Source Summary — Part 1 of 4
+*Cantos 1–5: Gabriel's commission to Godfrey through Armida's seduction of the Christian knights.*
+
+Book I opens at the six-year mark of the Crusade. God dispatches the angel Gabriel to rouse Godfrey of Bouillon, who is divinely elected captain-general. The muster scene catalogues the crusading forces: French, Norman, Baldwin's Lorrainers, Guelpho's Germans, Tancred of Sicily (whose fatal weakness is his love for the Pagan warrior-maid he glimpsed at a stream), and the young Rinaldo — barely fifteen, already the army's most formidable fighter. Peter the Hermit rises to endorse Godfrey's authority and argues for unified command.
+
+Book II introduces sorcerer-priest Ismen, who steals and re-enchants the Virgin's image from a Jerusalem church to magically protect the walls. When the image vanishes from Ismen's custody, the paranoid king Aladine threatens to massacre Jerusalem's Christians. Sophronia, a young Christian woman, goes to Aladine and falsely confesses to the theft — offering herself to save her people. Her admirer Olindo interrupts and claims responsibility, trying to die in her place. They are sentenced together to the stake. The warrior-maid Clorinda, a Pagan fighter newly arrived from Persia, intervenes to save them both — bargaining Aladine's mercy in exchange for her military service. Egyptian ambassadors Aletes and Argantes arrive: Aletes with flattery and a peace proposal, Argantes with an open challenge to single combat. Godfrey rejects the peace and accepts the defiance.
+
+Book III narrates the Crusaders' first sight of Jerusalem — soldiers weeping, barefoot, going in procession. Clorinda leads a Pagan sortie; Erminia, the captive princess of Antioch, watches from the walls and identifies the Christian commanders for King Aladine, betraying her own pity for Tancred. Tancred and Clorinda clash directly: he recognizes her, holds back his sword, tries to declare his love; the moment is broken by troops. Dudon, captain of the adventurers, is killed by Argantes. Rinaldo nearly storms the walls alone in his grief before Godfrey recalls him.
+
+Book IV shows Satan summoning his legions and dispatching them to corrupt the Crusade from within. Damascus ruler Hidraort sends his niece, the sorceress Armida, to the Christian camp with a fabricated story of displacement and persecution — she needs ten knights to recover her Damascus throne from a treacherous uncle. Godfrey refuses her; she weeps devastatingly and withdraws. His knights, led by Eustace, override his refusal and volunteer. Armida then works the camp systematically, enslaving dozens of knights through desire, jealousy, and manufactured hope. Her technique is precise: the false sign of availability, the artful withdrawal.
+
+Book V follows the knights who abandoned the camp to follow Armida. Their account will be told in retrospect later; here the key thread is Rinaldo's exile. Rinaldo kills Gernando in a duel over an insult, and Godfrey — bound by law — must banish him from the camp. The loss of Rinaldo is the crisis the demons engineered. Peter the Hermit, seeing the long arc, says nothing yet.
+
+---
+
+## Cycle 8 — The Desertion Record
+
+**What this angle reveals that prior cycles missed:** Every prior cycle treats documents that were created with intent — commissions, confessions, conversion records, dispatches. This cycle takes the opposite: a record that nobody wanted to exist, created not by authority but by absence, which becomes the only honest account of what actually happened to the men who left.
+
+---
+
+**THE TOKEN: `jrs_cycle_8_token`** — A muster-roll sheet, folded three times, smeared at one corner with camp grease. Forty-three names are listed in a clerk's hand under the heading "Absent Without Assignment — Armida's Following, Day 9 of the Siege." Beside each name: rank, unit, and a single column that reads either *returned* or *not returned*. Twelve names have *returned* written in a different hand, later. Thirty-one have nothing. At the bottom, in Godfrey's own script: "Let this remain unburned. They were not cowards." The sheet was never formally entered into the campaign archive. It traveled in a clerk's satchel for fourteen months before anyone thought to file it.
+
+---
+
+### 5-Act Vignette Play: *The Men Who Went With Her*
+
+**ACT I — "The Clerk's Satchel"**
+*activateNode: PKR*
+*type: skill_check*
+
+The token sits in a harbor-side provisioner's storeroom in Acre, tucked inside a muster-roll satchel that arrived with the campaign baggage train. The provisioner doesn't know what it is. He knows it is paper with names on it and that no one has come to claim it in eleven months. He is mildly superstitious about it — it arrived with three sacks of spoiled grain and a broken whetstone and he associates the lot with bad luck. He would rather the satchel were somewhere else.
+
+*scene: "The storeroom is low-ceilinged and smells of salt and turned oil. The token sits on a shelf between a coil of hemp rope and a brass weight that has lost its chain. The provisioner is willing to let the satchel go, but he wants to know what's in it before he does — not from greed, but from the persistent sense that some papers are trouble and he would prefer to know what kind."*
+
+*prompt: "Insight DC 12. He is not hiding anything. He is genuinely uneasy. The question is whether you can tell him enough of what this document is — not its full weight, but enough of its nature — that he can decide to hand it over without feeling that he is passing the trouble to you. He needs a name for what it is."*
+
+*failText: "You give him a partial answer. He holds the satchel longer than you'd like, turning it over. When he finally hands it across, he asks you twice if you are sure. You leave with it, but his unease stays behind in the room."*
+
+*successText: "You tell him: it is a record of men who left a campaign and did not come back. He nods. 'I thought it was something like that,' he says, and hands it over without further question. You receive the Muster-Roll of Armida's Following."*
+
+*grantItem: "Muster-Roll of Armida's Following"*
+*checkPassFlag: jrs_c8_act1*
+
+*The Fighter reads no names. Stands in the doorway while you examine the paper. Looks at the harbor instead.*
+
+---
+
+**ACT II — "The Unit Commander's Testimony"**
+*activateNode: SGA*
+*type: skill_check*
+*activateCond: jrs_c8_act1*
+
+At the Syrian Gate checkpoint, a retired unit commander is traveling south toward Damascus on personal business. He is one of the twelve men on the muster-roll whose column reads *returned*. He does not know the muster-roll exists. When you show it to him, he goes still.
+
+He left Armida's following after three weeks. He will not say why in detail. What he will say is this: the men on the list were not weak men. They were not traitors. Something was done to them that he does not have a word for. He came back. He doesn't know why he was able to and they weren't.
+
+*scene: "The checkpoint road is dusty, noon-bright, travelers moving past in both directions. The commander sits on a stone bollard with the muster-roll open across his knees. He is not crying. His face has the flatness of a man who expected this paper to surface eventually and had already decided what he would say when it did."*
+
+*prompt: "Persuasion DC 13. He is willing to give a statement that the departure was not ordinary desertion — that something external acted on those men — but he will not say it unless he believes you understand the distinction he is drawing. He needs to hear you name the difference between a man who leaves because he chooses to and a man who leaves because something that should not be possible was done to his will."*
+
+*failText: "He closes the muster-roll and hands it back. 'I can't explain it to someone who hasn't seen it,' he says. He continues south. You have the document but not the testimony."*
+
+*successText: "He gives you three sentences, carefully measured. You write them on the reverse of the muster-roll in the margin: *These men left under an influence no standard-issue courage could hold against. I know because I was among them and I am not a weak man. Whatever the archive calls this, it is not desertion in the sense the word is used for soldiers who run from a fight.* He signs it."*
+
+*checkPassFlag: jrs_c8_act2*
+
+*The Fighter watched the exchange without expression. When the commander walked away, she moved to stand between you and the road.*
+
+---
+
+**ACT III — "The Chaplain's Objection"**
+*activateNode: JAR*
+*type: skill_check*
+*activateCond: jrs_c8_act2*
+
+Near the Damascus approach, a campaign chaplain who administered last rites at the siege is traveling toward a posting in Antioch. He hears you have the muster-roll and seeks you out. His objection is theological: a man who abandoned the Crusade — regardless of circumstance — cannot be given a clean record. The Church has a category for this. He wants to add a notation to the document before it is archived.
+
+His notation would read: *Absented themselves from sacred duty, circumstances unknown.* This is not false. But it is not the same as what Godfrey wrote at the bottom.
+
+*scene: "The road south of Damascus, late afternoon, the chaplain walking beside your horse with the energy of a man who has been rehearsing this argument for several days. He is not hostile. He believes genuinely that the archive has an obligation to God as well as to history, and that these are not always the same thing."*
+
+*prompt: "History DC 14. You need to show him that Godfrey's own note — written in the commander's hand, on the document itself — constitutes a field determination that supersedes the default category. A commander's written assessment of his own men is not overrideable by a chaplain's theological category. The archive will hold both, but Godfrey's hand is primary. This is not theology; it is archival precedent."*
+
+*failText: "The chaplain adds his notation. The document now carries two competing assessments. The archive will have to decide which to treat as primary, and it will probably choose the one that fits its existing categories."*
+
+*successText: "The chaplain reads the precedent argument twice. He does not agree with it, but he accepts it — a distinction he makes out loud, which you appreciate. He writes nothing on the document. He blesses you instead and continues toward Antioch."*
+
+*checkPassFlag: jrs_c8_act3*
+
+*The Fighter had her hand near her sword through the entire conversation. The chaplain did not notice.*
+
+---
+
+**ACT IV — "The River Crossing"**
+*activateNode: CON*
+*type: skill_check*
+*activateCond: jrs_c8_act3*
+
+The road north to Constantinople crosses a wide river at a bridge controlled by a Byzantine toll-collector who has standing instructions to inspect all campaign documents passing through. He has a list of papers that require verification before transit. Muster-rolls are on the list. He wants to hold this one for verification — three to five days.
+
+The verification process would involve copying the document and sending the copy to a Byzantine administrative post. The original would be held at the bridge. He is not corrupt. He is conscientious, which is the problem.
+
+*scene: "The bridge approach in late afternoon, the toll-house a stone box with a charcoal brazier inside. The collector spreads the muster-roll on his table under a lamp and runs his finger down the names, cross-checking them against his list. He looks up with the expression of a man who has found exactly what he was told to look for and is now doing exactly what he was told to do about it."*
+
+*prompt: "Deception DC 13. The muster-roll is a primary document in transit to a permanent archive — it is not subject to the same verification hold as operational orders or requisition documents. The Byzantine verification protocol applies to documents that will be acted upon; this document is being retired. He cannot hold a document that has been formally retired from operational use. You will need to say this with enough authority that he doesn't reach for the protocol manual."*
+
+*failText: "He holds the document for two days. When you receive it back, it has been copied. There is now a Byzantine administrative copy of the muster-roll somewhere in a provincial archive. This may matter later."*
+
+*successText: "He considers the argument, then stamps the document with a transit seal — which actually helps the archival case — and waves you through. The document is formally in transit to a permanent archive. This is now on record."*
+
+*checkPassFlag: jrs_c8_act4*
+
+*The Fighter was already on the bridge before the toll-collector finished his first sentence. You caught up with her on the other side.*
+
+---
+
+**ACT V — "The Category That Doesn't Exist"**
+*activateNode: WM*
+*type: skill_check*
+*activateCond: jrs_c8_act4*
+
+Sweelinck takes the muster-roll and reads it in full, including the testimony on the reverse. He reads Godfrey's note three times.
+
+The problem is classification. The archive has categories for deserters, for casualties, for prisoners, for the returned. It does not have a category for men who left under external magical compulsion, some of whom returned and some of whom did not, and whose commanding officer wrote on the record itself that they were not cowards. The document cannot be filed under any existing heading without falsifying it.
+
+*scene: "Sweelinck sits with the muster-roll at his reading table for a long time. The archive is quiet around him. He turns the paper over twice. When he looks up, his expression is that of a man who has just discovered that his filing system has a gap he did not know was there."*
+
+*prompt: "Investigation DC 13. The archive needs a new category, and you have enough from the document itself to name it. The category should hold: men absent from duty under external compulsion, status varied; commander's assessment appended; neither the standard desertion record nor the standard casualty record is sufficient. The name of the category matters because it will be cited in future cases."*
+
+*failText: "Sweelinck files the document in a miscellaneous drawer marked *Contested Status — Crusade Personnel.* It is technically accessible but practically invisible. Future researchers will not find it by searching the obvious headings."*
+
+*successText: "You give him the category name: *Personnel Records — Absence Under Magical Compulsion, Commander's Determination Appended, First Entry.* Sweelinck writes it on a new tab. He files the muster-roll behind it. He notes on the tab: *See also Godfrey's field note on reverse; see testimony of returned soldier, unnamed, dated.* The gap in the system now has a shape, and the shape has a name."*
+
+*grantItem: "Stamped archive receipt"*
+*takeItem: "Muster-Roll of Armida's Following"*
+*checkPassFlag: jrs_c8_act5*
+
+*The Fighter did not come inside the archive. She waited in the courtyard. When you came out, she looked at your hands to see if you were still carrying the paper.*
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "JRS_008",
+  "title": "The Desertion Record",
+  "source": "Jerusalem Delivered — Torquato Tasso (1581), Fairfax translation (1600)",
+  "cycle": 8,
+  "book": "jerusalem-delivered",
+  "source_episode": "Books IV–V — Armida arrives in the Christian camp, enchants and leads away dozens of knights; Godfrey issues a muster-roll of the absent; his handwritten note on the document reads 'Let this remain unburned. They were not cowards.'",
+  "theme": "A record no one wanted to create becomes the only document that tells the truth about what happened to men who were not cowards but also did not stay; the gap it reveals in the archive's categories is itself archival evidence",
+  "activateNode": "PKR",
+  "token": {
+    "id": "muster_roll_armidas_following",
+    "name": "Muster-Roll of Armida's Following",
+    "description": "Campaign muster-roll, folded three times, forty-three names, twelve marked 'returned' in a later hand, thirty-one blank. Godfrey's handwritten note at the bottom: 'Let this remain unburned. They were not cowards.' Testimony of a returned soldier written in the margin on the reverse.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["PKR", "SGA", "JAR", "CON", "WM"],
+  "new_nodes": [],
+  "questComplete": false,
+  "acts": [
+    {
+      "act": 1,
+      "node": "PKR",
+      "type": "skill_check",
+      "skill": "Insight",
+      "dc": 12,
+      "summary": "A provisioner in Acre holds the muster-roll satchel from the campaign baggage train. Insight DC 12: give him a name for what the document is — a record of men who left and did not come back — so he can hand it over without feeling he is passing the trouble forward. TOKEN GRANTED."
+    },
+    {
+      "act": 2,
+      "node": "SGA",
+      "type": "skill_check",
+      "skill": "Persuasion",
+      "dc": 13,
+      "summary": "A returned soldier on the Syrian Gate road sees his name on the muster-roll. Persuasion DC 13: name the distinction between a man who leaves by choice and a man whose will was acted upon by something that should not be possible — so he gives a signed margin statement."
+    },
+    {
+      "act": 3,
+      "node": "JAR",
+      "type": "skill_check",
+      "skill": "History",
+      "dc": 14,
+      "summary": "A campaign chaplain wants to add a theological notation. History DC 14: a commander's written field determination on the document itself is primary evidence and supersedes default ecclesiastical categories; archival precedent holds the commander's hand."
+    },
+    {
+      "act": 4,
+      "node": "CON",
+      "type": "skill_check",
+      "skill": "Deception",
+      "dc": 13,
+      "summary": "Byzantine toll-collector at a river crossing wants to hold the muster-roll for verification. Deception DC 13: verification holds apply to operational documents, not documents in transit to permanent archive retirement; this document has been retired from operational use."
+    },
+    {
+      "act": 5,
+      "node": "WM",
+      "type": "skill_check",
+      "skill": "Investigation",
+      "dc": 13,
+      "summary": "Sweelinck cannot file the document under any existing category. Investigation DC 13: name the new category — Personnel Records, Absence Under Magical Compulsion, Commander's Determination Appended, First Entry — so the gap in the archive system acquires a shape. TOKEN TAKEN."
+    }
+  ]
+}
+```
+
+---
+
+## Source Summary — Part 2 of 4
+*Cantos 6–11: Erminia's flight in Clorinda's armor, Raymond's single combat with Argantes, Solyman's night assault, Peter the Hermit prophesies Rinaldo's return, the great siege assault and Godfrey's wounding.*
+
+Books VI–VII follow Erminia's flight through the Christian camp in disguise. Having loved Tancred in secret since her capture at Antioch, she steals Clorinda's silver armor to pass the walls, intending to reach Tancred's tent and nurse his wounds. She is mistaken for Clorinda and chased. She flees into the wilderness, finds an old shepherd on the Jordan, and lives among his family — carving love-poetry for Tancred into the bark of trees in the forest.
+
+Book VII follows Tancred's search for Erminia, which leads him instead into Armida's trap: her enchanted castle by the Dead Sea, where Rambaldo, a Christian apostate, challenges him at the bridge. Tancred defeats Rambaldo but is lured into the castle by enchantment, imprisoned. Meanwhile, Argantes demands single combat from the Crusader camp. Raymond of Toulouse is chosen by lot. An angel from Heaven carries a heavenly shield beside Raymond unseen. The combat is hard, interrupted by a treacherous arrow, and cut short by Satan raising a storm.
+
+Books VIII–IX bring news of Prince Sweno of Denmark — who marched overland toward Jerusalem with two thousand men, was ambushed and massacred. One survivor reaches Godfrey's camp carrying Sweno's sword, which two hermits declared must pass to Rinaldo. Then Alecto the fury works through a soldier named Argillan, inflaming the Italian and English contingents with the false rumor that Godfrey murdered Rinaldo. The camp nearly mutinies; Godfrey walks into the crowd unarmed and shames them back to discipline. Meanwhile Solyman — the exiled Sultan of Nicaea, now mercenary-captain for Egypt — attacks the camp at night with his Arab cavalry. Godfrey and Solyman fight in the darkness; Michael descends and drives the infernal spirits from the field; Solyman escapes.
+
+Book X: the sorcerer Ismen brings Solyman into Jerusalem by a secret tunnel. The military council — Aladine, Solyman, Argantes, Clorinda — is described. Godfrey gathers the returned knights who had followed Armida; they tell him what happened in the enchanted garden. Peter the Hermit falls into vision and prophesies that Rinaldo lives, will return, and that his bloodline will found an empire.
+
+Book XI: Godfrey orders a solemn procession to the Mount of Olives — barefoot, singing, carrying the cross — before the assault. The siege begins. Clorinda commands the Pagan defense from the walls. The great tower advances. Godfrey is shot in the leg by Clorinda's arrow. He withdraws; an angel heals him miraculously with dictamnum from Ida. He returns to fight. Nightfall ends the assault without a decision.
+
+---
+
+## Cycle 9 — The Physician's Account
+
+**What this angle reveals that prior cycles missed:** Six prior cycles work through legal and administrative documents. This cycle goes to the body: a medical account that cannot be falsified because it was written by a man who watched, with his own hands, a weapon come out of a wound by itself when no instrument could move it. The miracle is not in the theology — it is in the physician's clinical notation of what his hands did and did not do.
+
+---
+
+**THE TOKEN: `jrs_cycle_9_token`** — A physician's case notebook, small, covered in dark calfskin, its spine cracked from being carried in a belt-pouch for a campaign season. The relevant pages describe the wound in Godfrey's leg: the broken reed, the arrowhead left behind, the failed extractions, the swooning of the patient, and then — in the same clinical hand, without theological commentary — the notation that the arrowhead *left the wound without instrument or visible hand* and the bleeding stopped at the same moment. The physician, Erotimus, trained on the Po and later taught himself wound-verse. He wrote what he saw. He did not interpret it. He signed it with his mark.
+
+---
+
+### 5-Act Vignette Play: *What the Hands Did Not Do*
+
+**ACT I — "Erotimus's Effects"**
+*activateNode: PKR*
+*type: skill_check*
+
+Erotimus died eight months after Jerusalem fell, of fever contracted in a river crossing near Antioch. His notebook passed to his assistant, who carried it back to Acre, who sold it along with other campaign effects to a document-dealer in the Pilgrim's Quarter. The dealer believes it is a recipe collection with some personal notes. He is not wrong, exactly. He wants market value for what he thinks it is.
+
+*scene: "The dealer's stall in the Pilgrim's Quarter, long afternoon light through a gap in the awning. The notebook sits under three other manuscripts. The dealer is cordial and patient. He quotes a price for a recipe collection — reasonable, not extortionate. He has no idea what is inside the pages you are looking at."*
+
+*prompt: "Insight DC 12. He is not concealing anything; he simply hasn't read closely. Insight DC 12: find the notation in the physician's hand that distinguishes this as a case record, not a recipe book — and understand enough of what the mark means that you can either accept his price without revealing the notebook's significance, or find another basis for the negotiation."*
+
+*failText: "You overpay slightly, or he notices your attention and raises his price slightly. You leave with the notebook but spent more than you needed to."*
+
+*successText: "You pay the recipe price without comment. Outside, you open the notebook to the siege pages. Erotimus's mark is on every case entry. You receive the Case Notebook of Erotimus."*
+
+*grantItem: "Case Notebook of Erotimus"*
+*checkPassFlag: jrs_c9_act1*
+
+*The Fighter watched from the alley mouth while you browsed. She does not like document dealers.*
+
+---
+
+**ACT II — "The Assistant's Memory"**
+*activateNode: OLN*
+*type: skill_check*
+*activateCond: jrs_c9_act1*
+
+Near the Jerusalem outskirts, the physician's assistant is still in the region — he stayed after the campaign as a field surgeon for the garrison. He was in Godfrey's tent when the arrow came out. He is the second witness. He has never written down what he saw.
+
+He is not resistant to speaking. He is cautious about what he says in public. He will talk if you can give him a place to be heard that is not the open road.
+
+*scene: "An olive grove east of the Jerusalem walls, late morning, the assistant sitting on a fallen trunk with his hands loose in his lap. He has the posture of a man who has answered this question carefully many times in his head before being asked it aloud. He is looking at the notebook in your hands and his expression is difficult to read — recognition, and something that might be relief."*
+
+*prompt: "Persuasion DC 13. He needs to hear that the notebook is going to an archive — not to a church authority, not to a relics collection, not to a theologian. He will give his testimony for the historical record, not for the devotional record. He needs the distinction stated clearly."*
+
+*failText: "He gives you a short, careful description that omits the critical moment. 'I was present,' he says. 'The Duke recovered.' You have his presence, not his testimony."*
+
+*successText: "He tells you exactly what his hands did: he tried the instrument twice, tried his fingers twice, felt the arrowhead shift and then leave on its own without any motion he produced. He describes the bleeding stopping as though a hand — not his hand — had pressed the wound from inside. You write it on the notebook's inside cover as he speaks. He checks what you wrote and nods."*
+
+*checkPassFlag: jrs_c9_act2*
+
+*The Fighter stood twenty feet off, facing the walls, while you spoke with the surgeon. She did not turn around.*
+
+---
+
+**ACT III — "The Relics Office"**
+*activateNode: JER*
+*type: skill_check*
+*activateCond: jrs_c9_act2*
+
+Inside Jerusalem, the newly established Christian administrative office includes a relics and miracles registry — a clerk whose function is to evaluate reported miraculous events and assign them to the appropriate devotional category for Church documentation. He has heard of the incident with Godfrey's wound. He wants the notebook.
+
+Not to archive it. To transfer it to the relics registry, where it will be classified as testimonial evidence of a battlefield miracle, associated with the campaign's religious mandate. This is not falsification. But once the notebook enters the relics registry, its clinical character — what it is, a physician's case record — will be subsumed into devotional use.
+
+*scene: "The registry office is in a ground-floor room of the administrative quarter, clean, organized, a clerk with a ledger open in front of him and a pleasant expression that does not quite conceal his certainty that he is entitled to what he is asking for."*
+
+*prompt: "History DC 13. A physician's case notebook is a medical record. Medical records are civil documents. The relics registry has jurisdiction over devotional objects and testimonial accounts gathered for the purpose of devotion — it does not have jurisdiction over clinical case records that happen to describe unusual events. The notebook's character as a civil medical record supersedes any claim the devotional registry can make on it."*
+
+*failText: "The clerk is persuasive and patient. He files a request for the notebook with the senior administrator. You leave before the request is acted on, but there is now a pending claim on the document."*
+
+*successText: "He accepts the jurisdictional argument, visibly unhappy about it. 'If you change your mind,' he says, 'the registry would welcome it.' You keep the notebook."*
+
+*checkPassFlag: jrs_c9_act3*
+
+*The Fighter's hand was on the doorframe through the conversation. She did not come inside.*
+
+---
+
+**ACT IV — "The Flooded Road"**
+*activateNode: VEN*
+*type: skill_check*
+*activateCond: jrs_c9_act3*
+
+The road north along the coast toward Venice, where the notebook will be entrusted to a Venetian medical archive before final transfer to Weimar, passes a river mouth that has been flooding with spring tides for a week. The ford is passable on foot at low tide — a two-hour window, twice daily — but the soft mud on both banks makes footing treacherous and the notebook must be kept dry.
+
+*scene: "Late morning at the ford approach, the tide just beginning to fall. The water is brown, moving, not violent, but the banks on both sides are soft from the week's flooding, and the current at mid-channel is fast enough to push you sideways. The notebook is in your belt-pouch, which is water-resistant but not waterproof."*
+
+*prompt: "Athletics DC 14. The ford is forty feet wide. The current at the middle is ankle-deep but fast. The banks are soft mud for the first six and last six feet. You need to distribute your weight carefully at the entry and exit points and angle your crossing slightly upstream to compensate for drift."*
+
+*failText: "Your footing breaks at the far bank. You go to one knee, catch yourself, keep the pouch out of the water. You are muddy and shaken but the notebook is dry. You reach the far side breathing hard."*
+
+*successText: "You enter at a slight angle, feel the current's push, adjust your weight forward, and step out clean on the far bank. The notebook is dry. You continue north without stopping."*
+
+*checkPassFlag: jrs_c9_act4*
+
+*The Fighter crossed six feet to your left, watching your footing instead of hers, and was on the far bank before you were.*
+
+---
+
+**ACT V — "What Cannot Be Falsified"**
+*activateNode: WM*
+*type: skill_check*
+*activateCond: jrs_c9_act4*
+
+Sweelinck reads the notebook from the beginning. He reads the siege pages twice. He reads the assistant's testimony on the inside cover.
+
+He sets the notebook down. "A physician's account of what his hands did and did not do," he says. "This is not a miracle account. This is a clinical record that contains an event the physician could not explain with his clinical vocabulary."
+
+He wants to verify one detail: the identity of Erotimus. The mark on the entries — he has seen similar marks on Italian medical manuscripts. He needs to confirm it is the same man before he opens a new file.
+
+*scene: "Sweelinck's reading table, late afternoon. He is holding the notebook open to the mark page. He looks up at you. The question is simple: can you confirm, from what the assistant told you or from any other evidence in the notebook itself, that this Erotimus is the physician born on the Po who treated Godfrey? He does not need formal documentation. He needs to be able to write 'confirmed by witness testimony' in his provenance note."*
+
+*prompt: "Perception DC 12. In the notebook's early pages, Erotimus wrote a brief case-note about a river crossing injury that mentions the Po by name and describes a technique specific to northern Italian wound practice. This is the confirmation Sweelinck needs — internal evidence from the document itself, consistent with the assistant's testimony about a man who trained on that river."*
+
+*failText: "You cannot find the internal confirmation quickly enough. Sweelinck marks the provenance note 'physician identity probable, not confirmed.' The notebook is filed, but with an open question."*
+
+*successText: "You find the Po reference in the early pages. You find the technique notation. Sweelinck reads both, nods, and writes: 'Physician identity confirmed by internal evidence and witness statement.' He creates the archive category: *Medical Records — The Clinical Account That Contains What the Physician's Vocabulary Could Not Name, First Entry.* He files the notebook. He does not pray over it."*
+
+*grantItem: "Archive receipt, sealed"*
+*takeItem: "Case Notebook of Erotimus"*
+*checkPassFlag: jrs_c9_act5*
+
+*The Fighter was in the courtyard again. When you came out, she looked at your hands. Empty. She nodded once.*
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "JRS_009",
+  "title": "The Physician's Account",
+  "source": "Jerusalem Delivered — Torquato Tasso (1581), Fairfax translation (1600)",
+  "cycle": 9,
+  "book": "jerusalem-delivered",
+  "source_episode": "Book XI — Godfrey wounded in the leg by Clorinda's arrow; physician Erotimus cannot extract the arrowhead; the angel brings dictamnum from Ida, dissolves it in the bath, and the arrowhead leaves the wound without instrument; Erotimus cries out that no human art could do this so quickly",
+  "theme": "The miracle is not in the theology but in the physician's clinical notation: he wrote what his hands did and did not do, signed it, and did not interpret it; the archive's obligation is to the clinical record, not to what the Church wants to do with it",
+  "activateNode": "PKR",
+  "token": {
+    "id": "case_notebook_erotimus",
+    "name": "Case Notebook of Erotimus",
+    "description": "Calfskin notebook, cracked spine, physician's mark on every entry. The siege pages describe Godfrey's wound, the failed extractions, the swooning, and the arrowhead leaving without instrument. The assistant's testimony written on the inside cover in a second hand.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["PKR", "OLN", "JER", "VEN", "WM"],
+  "new_nodes": [],
+  "questComplete": false,
+  "acts": [
+    {
+      "act": 1,
+      "node": "PKR",
+      "type": "skill_check",
+      "skill": "Insight",
+      "dc": 12,
+      "summary": "A document dealer in Acre has the notebook, thinks it is a recipe collection. Insight DC 12: find the physician's mark and identify the case-record character of the document; purchase at recipe price without revealing its significance. TOKEN GRANTED."
+    },
+    {
+      "act": 2,
+      "node": "OLN",
+      "type": "skill_check",
+      "skill": "Persuasion",
+      "dc": 13,
+      "summary": "The physician's assistant, now a garrison surgeon, witnessed the extraction. Persuasion DC 13: make clear the notebook is going to an archive, not a church authority — he will give testimony for the historical record but not the devotional one."
+    },
+    {
+      "act": 3,
+      "node": "JER",
+      "type": "skill_check",
+      "skill": "History",
+      "dc": 13,
+      "summary": "The Jerusalem relics registry wants the notebook for devotional classification. History DC 13: a physician's case record is a civil medical document; the relics registry has no jurisdiction over clinical records that happen to describe unusual events."
+    },
+    {
+      "act": 4,
+      "node": "VEN",
+      "type": "skill_check",
+      "skill": "Athletics",
+      "dc": 14,
+      "summary": "Flooded coastal river ford, spring tides, soft mud banks. Athletics DC 14: angle upstream, distribute weight carefully through entry and exit mud, keep the belt-pouch dry through forty feet of moving water."
+    },
+    {
+      "act": 5,
+      "node": "WM",
+      "type": "skill_check",
+      "skill": "Perception",
+      "dc": 12,
+      "summary": "Sweelinck needs to confirm the physician's identity before filing. Perception DC 12: find the Po river reference and the northern Italian technique notation in the notebook's early pages — internal evidence that confirms Erotimus's identity without separate documentation. TOKEN TAKEN."
+    }
+  ]
+}
+```
+
+---
+
+## Source Summary — Part 3 of 4
+*Cantos 12–16: Clorinda's night raid and death, the enchanted forest, Rinaldo's location found, the two knights cross underground to the wizard, and Rinaldo is recovered from Armida's island.*
+
+Book XII is the emotional center of the poem. Clorinda — told by her eunuch Arsetes the secret of her birth (daughter of an Ethiopian Christian queen, white-skinned in a black court, given away at birth to save her life, never baptized despite a dream-angel's command) — resolves to burn Godfrey's siege tower before dawn. She goes in black armor to disguise herself, burns the tower with Argantes, is accidentally shut outside the city gates when the Pagans retreat. Tancred, on night patrol, mistakes her for an enemy, chases her, and fights her in the dark. Neither knows who the other is. The duel is brilliant and mortal; Clorinda takes the fatal wound. As she dies, she asks for baptism. Tancred, pulling off her helmet, recognizes her face — too late. He baptizes her with his own helmet filled from a stream. She dies in grace, smiling, saying "Farewell, I die in peace." Tancred collapses and must be carried from the field. He recovers physically but mourns at her tomb and sees her in a dream, forgiving him.
+
+Book XIII: Ismen enchants the cedar forest that supplied the Crusaders' timber, filling every tree with a bound devil. Godfrey's woodcutters are driven back by supernatural terror: roaring, fire-walls, monstrous apparitions. Even Alcasto, the fearless Swiss captain, flees. Tancred alone enters the forest. He passes the fire-wall unhurt, reaches a clearing, reads Syriac characters on a cypress warning him not to cut. He strikes the tree anyway — and hears Clorinda's voice from inside, crying that he has wounded her again. He drops his sword and retreats, undone by grief. Godfrey himself considers entering but is told by Peter to wait for Rinaldo.
+
+Books XIV–XV: God sends Godfrey a dream-vision of Hugo, who tells him to recall Rinaldo. The knights Ubaldo and Carlo are sent, guided by Peter to a wizard-sage named Armida's old teacher under the sea. The wizard leads them through an underground passage, shows them the origin of all the world's rivers from underground, then arms them with a diamond shield that reflects Armida's enchantments. They sail to the Fortunate Islands, find Armida's garden, and discover Rinaldo lying with Armida in the pleasure-garden, wearing soft clothes instead of armor. They show him his face in the shield and read him the book of his ancestors' valor. He tears free, re-arms, and leaves. Armida watches him go and does not stop him, though she threatens suicide. She does not die.
+
+Book XVI continues Rinaldo's departure: Armida pleads, transforms from a weeping woman into cold fury, and finally follows the crusade at a distance, consumed by a desire for either reunion or revenge. The pleasure-garden collapses — pavement, towers, fountains — into swamp after Rinaldo departs. Meanwhile Peter the Hermit performs an exorcism-absolution for Rinaldo's sin of the killing that got him banished, and Rinaldo prays alone at the Mount of Olives before rejoining the army.
+
+---
+
+## Cycle 10 — The Siege Engineer's Account
+
+**What this angle reveals that prior cycles missed:** Prior cycles handle documents of persons — confessions, commissions, conversions, case records, personnel rolls. This cycle handles the document of a place: a professional account of why the siege of a city that should have been taken was halted, not by military force, but by something the engineer cannot categorize and will not falsify.
+
+---
+
+**THE TOKEN: `jrs_cycle_10_token`** — A siege engineer's field report, written on two sheets of heavy vellum folded together, the outer sheet marked with charcoal sketches of the forest's approach geometry and the positions of the failed timber-cutting expeditions. The inner sheet contains the engineer's written account: three attempts, three retreats, the specific sounds and visions reported by the men, the engineer's own observation that the tree-line showed no physical obstacles or military preparation that would explain the rout. At the bottom: "I cannot account for this by the principles of my science. I report it as I observed it." Signed with his professional guild mark.
+
+---
+
+### 5-Act Vignette Play: *What Stopped the Siege*
+
+**ACT I — "The Engineer's Guild"**
+*activateNode: SGA*
+*type: skill_check*
+
+The siege engineer survived the campaign and returned to his guild post in Antioch. He is a precise man who filed his field reports carefully and kept copies. The copy of the forest report is in his guild archive in Antioch; the original was submitted to Godfrey's field headquarters and has not been seen since. The engineer is willing to provide the copy but needs the guild master's sign-off, which requires a formal request stating the intended use.
+
+*scene: "The guild hall in Antioch, a room of drafting tables and scale-model fragments. The engineer is present, cooperative, slightly formal. He finds the copy in a bound folder within two minutes of your arrival — he knows exactly where it is. He looks at it, then at you. 'The guild master will want to know why,' he says. 'Not to block it. It's a professional matter of record. But the request needs a stated purpose.'"*
+
+*prompt: "Persuasion DC 12. The purpose is archival: the forest account is being filed with a permanent historical archive as part of the campaign record. The guild master's concern is professional reputation — he wants the document associated with competent professional reporting, not superstition. You need to state the purpose in a way that foregrounds the engineer's professional rigor: he reported what he observed and stated clearly that he could not explain it. That is exemplary professional conduct."*
+
+*failText: "The guild master approves after a one-day delay and a written statement that the guild does not endorse supernatural interpretation of the observations. This notation is added to the copy."*
+
+*successText: "The guild master approves the release that afternoon. No notation is added. The copy is handed to you as a professional field document without qualification."*
+
+*grantItem: "Field Report — The Enchanted Forest (Copy)"*
+*checkPassFlag: jrs_c10_act1*
+
+*The Fighter waited in the guild hall's courtyard, which is full of stone blocks in various states of being shaped. She examined each one carefully. The masons were unnerved.*
+
+---
+
+**ACT II — "Alcasto's Statement"**
+*activateNode: DAM*
+*type: skill_check*
+*activateCond: jrs_c10_act1*
+
+Alcasto — the fearless Swiss captain who was the boldest man to attempt the forest and the only one who reached the fire-wall before retreating — is in Damascus on a mercenary contract. He fled the campaign in shame after his retreat and has been working in Syria. He will not give testimony willingly. He is not afraid of you. He is ashamed of what happened, and shame makes him hostile to anyone who reminds him of it.
+
+The document needs his account because he went furthest and saw most. His retreat was not cowardice — the engineer's report says so clearly — but Alcasto does not believe that yet.
+
+*scene: "A Damascus tavern in mid-afternoon, Alcasto at a back table, aware of you before you reach him. He is a large man who carries himself as though braced for a blow. He looks at the field report and says nothing for a long moment. 'I know what's in that,' he says. 'I was there.'"*
+
+*prompt: "Insight DC 13. He is not hostile to the archive — he is hostile to being described as the man who ran. Insight DC 13: see that the engineer's report already describes his retreat as caused by something external and non-military; show him the specific language the engineer used; let him see that the document already gives him more credit than he has been giving himself."*
+
+*failText: "He won't sign anything. He says, 'I don't need a piece of paper to tell me I'm not a coward.' He leaves before you finish. You have the report without his corroboration."*
+
+*successText: "He reads the engineer's language — 'no physical obstacles or military preparation that would account for the rout' — and goes quiet for a moment. 'That's accurate,' he says. He adds four sentences to the report's margin in his own hand: what he heard, what he saw at the fire-wall, how long he stood there before he ran. He does not sign it. He dates it and marks it with his company seal."*
+
+*checkPassFlag: jrs_c10_act2*
+
+*The Fighter did not come inside the tavern. She stood in the doorway, which was almost exactly her width.*
+
+---
+
+**ACT III — "The Ismen Problem"**
+*activateNode: JER*
+*type: skill_check*
+*activateCond: jrs_c10_act2*
+
+In Jerusalem, the newly installed Christian administration includes an ecclesiastical inquiry office processing claims related to the campaign's supernatural events. The minster in charge has heard of the forest incident and has a competing account: a captured Pagan soldier's confession that Ismen the sorcerer performed the enchantment. The minster wants to file this confession alongside the engineer's report, which would categorize the document as *evidence of enemy sorcery* rather than *engineer's report of inexplicable phenomenon.*
+
+The distinction matters. Enemy-sorcery classification means the document enters a Church file. Engineer-report classification means it stays in the civil campaign archive.
+
+*scene: "The inquiry office in the former Pagan administrative quarter. The minster is methodical and not unkind. He has the Pagan soldier's confession on the table. 'Both documents describe the same event,' he says. 'It seems sensible to file them together.' He is not wrong that they describe the same event."*
+
+*prompt: "History DC 13. The engineer's report and the Pagan confession are different kinds of documents describing the same event from different positions: the engineer reports the effect from outside (the failed expeditions), the confession reports the cause from inside (the enchantment). They belong in different archives — the confession in the ecclesiastical file, the report in the civil campaign record — with cross-reference between them. Filing them together under the Church's enemy-sorcery category would subordinate the civil record to the theological one."*
+
+*failText: "The minster files them together. A note on the engineer's report now reads 'see also: enemy sorcery, Ismen enchantment, Book XII inquiry.' The document is accessible but framed."*
+
+*successText: "The minster accepts the cross-reference argument. He files the confession in his own archive, notes the engineer's report reference on its cover, and writes the reference number on the engineer's report in return. Both documents remain in their proper archives; both point to the other. The engineer's report retains its civil character."*
+
+*checkPassFlag: jrs_c10_act3*
+
+*The Fighter stood at the window of the inquiry office looking out at the city. She did not look at the minster.*
+
+---
+
+**ACT IV — "The Mountain Road"**
+*activateNode: CON*
+*type: skill_check*
+*activateCond: jrs_c10_act3*
+
+The road north through Anatolia toward Constantinople passes a mountain section that has been hit by late-season rockfall. The main road is blocked for two days while a repair crew works. The alternate route climbs higher and crosses a narrow ridge where the wind is strong enough to make footing difficult for anyone carrying gear — or, in this case, a document folder.
+
+The vellum is water-resistant but not windproof. The outer sheet is charcoal sketches. Charcoal smears in damp wind.
+
+*scene: "The ridge path, mid-morning, wind coming off the mountain in gusts that come without warning. You have the document folder held against your body with both arms. The path is wide enough for one person, drops thirty feet to the left, the slope on the right is scree that moves when you put your weight on it. The gusts are irregular — you cannot time them."*
+
+*prompt: "Acrobatics DC 13. The problem is not the drop; it is that each gust requires a small weight-shift to stay balanced, and the weight-shift cannot be too large or the scree moves. You need to keep your body low and lean into the hill-side on the gusts while keeping your arms wrapped around the folder."*
+
+*failText: "A gust catches you at the path's narrowest point. You go to one knee, the folder stays sealed, but your knee is cut on the scree and you lose five minutes. You reach the far side of the ridge intact."*
+
+*successText: "You feel the first gust start and lower your center of gravity before it arrives. You read the next three the same way. You cross the ridge in eleven minutes without losing your footing or your grip on the folder."*
+
+*checkPassFlag: jrs_c10_act4*
+
+*The Fighter crossed ahead of you, turned on the far side, and watched you come across. She said nothing when you reached her.*
+
+---
+
+**ACT V — "The Principles of His Science"**
+*activateNode: WM*
+*type: skill_check*
+*activateCond: jrs_c10_act4*
+
+Sweelinck reads the report, including Alcasto's margin annotations. He reads the engineer's final sentence twice: *I cannot account for this by the principles of my science. I report it as I observed it.*
+
+"This is the document I would most want in the archive," he says, "and the hardest to file correctly." The problem is that the archive's engineering section files siege reports under *successful operations* and *failed operations.* This report describes an operation that failed for reasons outside the engineer's science. Filing it under *failed operations* implies engineering failure. Filing it under *successful operations* is obviously wrong. The archive needs a third category.
+
+*scene: "Sweelinck at his table, the report spread open. He has a pen in his hand. He is waiting for the right words. 'I've had this problem before,' he says, 'with reports that describe something outside the reporter's competence. But this man was careful. He did not speculate. He said what he could not account for. That deserves a precise home.'"*
+
+*prompt: "Investigation DC 14. The category needs to capture: a competent professional's report of an operation that failed, where the cause of failure was outside the professional's domain of knowledge, and the professional said so explicitly. This is not a failed siege operation. It is a professional report of a limit. The category should name the limit, not the failure."*
+
+*failText: "Sweelinck files the report in a miscellaneous engineering supplement with a note: 'Cause of failure: undetermined.' The document is preserved but the engineer's precision is lost in the filing."*
+
+*successText: "You give him the phrase: *Engineering Reports — Operation Halted at the Limit of the Science, Cause Outside Professional Domain, First Entry.* Sweelinck writes it slowly, reads it back, nods. 'That's what he said,' he agrees. He files the report, adds Alcasto's annotations to the provenance note, and marks the cross-reference to the Ismen confession in Jerusalem. 'Both documents are right,' he says. 'They describe the same event from different positions. The archive needs both.'"*
+
+*grantItem: "Weimar archive receipt"*
+*takeItem: "Field Report — The Enchanted Forest (Copy)"*
+*checkPassFlag: jrs_c10_act5*
+
+*The Fighter came inside the archive for the first time. She stood beside the door, looked at the shelves for a long moment, and said nothing. Then she went back out.*
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "JRS_010",
+  "title": "The Siege Engineer's Account",
+  "source": "Jerusalem Delivered — Torquato Tasso (1581), Fairfax translation (1600)",
+  "cycle": 10,
+  "book": "jerusalem-delivered",
+  "source_episode": "Book XIII — Ismen enchants the cedar forest; three expeditions are driven back by supernatural terror; Alcasto alone reaches the fire-wall; the engineer submits a report stating he cannot account for the rout by the principles of his science",
+  "theme": "A professional who reports what he observed and states clearly what he cannot explain has produced the most honest document in the archive; the filing problem is not falsification but precision: where does a report of a limit belong?",
+  "activateNode": "SGA",
+  "token": {
+    "id": "field_report_enchanted_forest",
+    "name": "Field Report — The Enchanted Forest (Copy)",
+    "description": "Two sheets of heavy vellum, charcoal approach-geometry sketches on the outer, written account on the inner. Three expeditions, three retreats, no physical military obstacles found. Final line: 'I cannot account for this by the principles of my science. I report it as I observed it.' Guild mark signed. Alcasto's four-sentence margin annotation added later, with his company seal.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["SGA", "DAM", "JER", "CON", "WM"],
+  "new_nodes": [],
+  "questComplete": false,
+  "acts": [
+    {
+      "act": 1,
+      "node": "SGA",
+      "type": "skill_check",
+      "skill": "Persuasion",
+      "dc": 12,
+      "summary": "The engineer's guild in Antioch holds the copy. Persuasion DC 12: state the archival purpose in a way that foregrounds the engineer's professional rigor — he reported what he observed and stated clearly he could not explain it; that is exemplary professional conduct, not superstition. TOKEN GRANTED."
+    },
+    {
+      "act": 2,
+      "node": "DAM",
+      "type": "skill_check",
+      "skill": "Insight",
+      "dc": 13,
+      "summary": "Alcasto in Damascus is ashamed of his retreat and hostile to testimony. Insight DC 13: the engineer's report already gives him credit — 'no physical obstacles that would account for the rout'; show him the specific language so he can see the document already says what he needs to hear."
+    },
+    {
+      "act": 3,
+      "node": "JER",
+      "type": "skill_check",
+      "skill": "History",
+      "dc": 13,
+      "summary": "The Jerusalem ecclesiastical inquiry wants to file the report with the Pagan soldier's Ismen confession. History DC 13: they describe the same event from different positions — effect and cause — and belong in different archives with cross-reference; filing together would subordinate the civil record to the theological."
+    },
+    {
+      "act": 4,
+      "node": "CON",
+      "type": "skill_check",
+      "skill": "Acrobatics",
+      "dc": 13,
+      "summary": "Mountain ridge path with irregular wind gusts, scree slope on one side, drop on the other, charcoal sketches that smear in damp wind. Acrobatics DC 13: read the gusts, lower center of gravity before they arrive, keep arms wrapped around the folder through the narrowest section."
+    },
+    {
+      "act": 5,
+      "node": "WM",
+      "type": "skill_check",
+      "skill": "Investigation",
+      "dc": 14,
+      "summary": "Sweelinck cannot file the report under 'failed operations' without implying engineering failure. Investigation DC 14: name the correct category — Engineering Reports, Operation Halted at the Limit of the Science, Cause Outside Professional Domain, First Entry — so the engineer's precision is preserved in the filing. TOKEN TAKEN."
+    }
+  ]
+}
+```
+
+---
+
+## Source Summary — Part 4 of 4
+*Cantos 17–20: Peter the Hermit's sermon and the crusade's final moral consolidation, the great final siege and fall of Jerusalem, Tancred's killing of Argantes, Godfrey's entry into the Church of the Holy Sepulchre.*
+
+Book XVII: Peter the Hermit delivers a sermon to the reassembled army that functions as the poem's spiritual center — a long accounting of why they came, what they have suffered, what they owe, and what awaits. Rinaldo is reconciled, performs a solo penance at the Mount of Olives at dawn, and rejoins as a transformed figure. The Egyptian relief army under Emiren is approaching Gaza; Godfrey knows the siege must be completed before it arrives.
+
+Books XVIII–XIX cover the final assault. Rinaldo alone is able to enter the enchanted forest now — his penance has purified him — and cut the timber. The siege towers are rebuilt. The assault on Jerusalem's walls begins again; Ismen attempts counter-magic from the walls but a stone from the Crusaders' catapult kills him and his two assistants. The archangel Michael appears to Godfrey, strips away the cloud from his eyes, and shows him the souls of the dead crusaders fighting alongside the living. The tower reaches the wall; Godfrey crosses first. The city falls.
+
+Book XIX: Tancred pursues Argantes out of the city for their final duel in a small valley. The fight is brilliant and precise: Tancred active and low, Argantes upright and massive. Argantes is badly wounded but will not yield; he offers a treacherous strike when Tancred offers mercy. Tancred kills him through the visor. Tancred then collapses from his own wounds and is found unconscious in the field. Erminia arrives with Vafrine the spy (who has been gathering intelligence inside Pagan courts) and nurses Tancred back to consciousness. She has loved him across the whole poem and finally touches him.
+
+Book XX: The remnant of Pagan resistance — Aladine and Solyman in the Tower of David — is reduced. Raymond of Toulouse, captured in a sortie, is rescued. Solyman makes a last heroic stand with his mace at the gate. The final battle disperses the Egyptian relief army. Godfrey enters the Church of the Holy Sepulchre in full armor, kneels at the tomb, and weeps. He lays down his weapons. Two hours later, a clerk records the official end of the Crusade.
+
+---
+
+## Cycle 11 — The Preaching Record
+
+**What this angle reveals that prior cycles missed:** Every prior cycle preserves a document created in proximity to a single person or event. This cycle preserves the record of a voice — Peter the Hermit's sermon to the assembled army before the final assault. The sermon is the moral engine of the entire campaign. It was never written down at the time. This cycle is the effort to reconstruct it: fragments, witnesses, a single scribe who wrote while Peter spoke, and the question of whether what was said can be filed honestly without falsifying the silence that surrounded it.
+
+---
+
+**THE TOKEN: `jrs_cycle_11_token`** — A wax tablet, twelve inches by eight, its soft surface covered in tight abbreviated notes in a chaplain's shorthand. The chaplain sat forty feet from Peter during the sermon and wrote what he could catch. The tablet has been preserved in a leather case; the wax is still readable but fragile — heat will destroy it. At the upper corner, in full script rather than shorthand: *Peter the Hermit, to the assembled host, before the final assault. I could not keep up with him. What is here is what I caught.* The rest is shorthand. The translation is incomplete. There are gaps where the chaplain's pen could not move fast enough.
+
+---
+
+### 5-Act Vignette Play: *What He Said and What We Could Not Write Fast Enough*
+
+**ACT I — "The Chaplain's Case"**
+*activateNode: OLN*
+*type: skill_check*
+
+The chaplain who took the notes is still alive, now old and posted to a small monastery near Jerusalem. He kept the wax tablet in a leather case under his bed for two years after the sermon, unable to transcribe it and unable to destroy it. He has never shown it to anyone. He took the notes for himself — not for the archive — and he is not certain anyone should have them.
+
+He will speak with you. He will not immediately hand over the tablet.
+
+*scene: "A small stone room at the monastery, morning light, the chaplain seated across from you with the leather case on his knee and his hands folded on top of it. He is not hostile. He is considering you. 'I have heard,' he says slowly, 'that there is a place in the north where documents of this kind are kept. Not for use. Not for theology. Just to be preserved.' He is asking you to confirm this."*
+
+*prompt: "Persuasion DC 13. Confirm it — not with abstractions, but specifically: the archive is secular, holds documents regardless of their religious significance, is not accessible to Church administrative use, and preserves things because they happened, not because they are convenient. He needs to hear that the gaps in the tablet — the places where he could not write fast enough — will be preserved as gaps, not filled in."*
+
+*failText: "He keeps the tablet another day before handing it over. When he does, he asks you to promise to keep it as it is. You can promise that but cannot confirm it formally. He is not satisfied but he gives it to you anyway."*
+
+*successText: "His hands relax on the case. 'The gaps must stay gaps,' he says. 'What I didn't catch, I didn't catch. That is also the truth of what happened.' He opens the case and hands you the tablet. He does not watch you take it."*
+
+*grantItem: "Wax Tablet of Peter's Sermon (Fragment)"*
+*checkPassFlag: jrs_c11_act1*
+
+*The Fighter stood in the monastery courtyard among the olive trees. When you came out with the case, she looked at it for a long moment before she looked at you.*
+
+---
+
+**ACT II — "The Shorthand Reader"**
+*activateNode: JER*
+*type: skill_check*
+*activateCond: jrs_c11_act1*
+
+In Jerusalem, a notary who worked in the campaign's administrative corps reads the ecclesiastical shorthand of the period. He is one of perhaps twenty people alive who can read this specific abbreviation system without guessing. You need a partial transcription — not for the archive's filing copy, but so the archivist can write an accurate description of what the tablet contains.
+
+The notary is available but charges professional fees, and his first reading will be quick — he will transcribe what he can read clearly and skip the gaps. You need him to mark the gaps as gaps, not omit them.
+
+*scene: "The notary's office in the Jerusalem administrative quarter, the tablet on a reading stand under a lamp, the notary working with a stylus and a wax reference block. He reads quickly, murmuring to himself. After ten minutes he looks up. 'Some of this is unclear. I'm going to skip the uncertain parts and give you the clear text.' He is about to do the opposite of what you need."*
+
+*prompt: "Insight DC 12. He is defaulting to professional habit: deliver clean text, omit ambiguity. Insight DC 12: understand that what he is about to do is standard notarial practice but wrong for this specific purpose — you need the ambiguities marked, because the ambiguities are part of the document's meaning, and a transcript that omits them is less true than the original. Find the right way to explain this to a professional whose instinct is toward clean deliverables."*
+
+*failText: "He gives you clean text with gaps unmarked. You have a transcript of what Peter said where the chaplain caught it clearly. The gaps are not recorded."*
+
+*successText: "You explain that this is not a legal transcript — it is a description for an archive that needs to know the shape of the original, including its silences. He considers this, nods, and marks each gap with a bracket notation: *[unclear — 3 words approx]* or *[extended passage — duration unknown].* The transcript now has a true shape."*
+
+*checkPassFlag: jrs_c11_act2*
+
+*The Fighter waited in the notary's anteroom. When you came out she looked at the transcript, then at the tablet case, then at you. "Same?" she asked. "Same," you said.*
+
+---
+
+**ACT III — "The Witness Who Was There"**
+*activateNode: PKR*
+*type: skill_check*
+*activateCond: jrs_c11_act2*
+
+In Acre, a former sergeant who was in the front rank of the assembled army when Peter preached is working as a harbor guard. He was twenty feet from Peter — closer than the chaplain. He remembers specific phrases. He is not literate. He has never told anyone what he remembers because no one asked.
+
+He will talk. The question is whether what he remembers can be added to the document as testimony without overwriting the chaplain's gaps.
+
+*scene: "The harbor wall in late afternoon, the sergeant leaning on a post, looking at the sea. He has the posture of a man who has been carrying something heavy for a long time and has stopped noticing the weight. When you show him the transcript, he reads it with his finger, lips moving, and then laughs — not unkindly. 'He said more than that,' the sergeant says. 'There was a long part about the men who left for the woman. What they did and didn't know. He didn't call them cowards. He called them men who were fighting in a war they didn't understand.'"*
+
+*prompt: "History DC 13. You need to add his testimony to the archive record without folding it into the tablet — the tablet is what the chaplain wrote, the testimony is what the sergeant remembers, and these are different orders of evidence. History DC 13: know the difference between a primary document and a witness account, and find the right words so the sergeant's memory can be recorded on the archive's external provenance sheet without being written onto or into the tablet."*
+
+*failText: "You write his memory on the back of the transcript. This is imprecise — the transcript and the testimony are now on the same sheet, which blurs their different status. The archive will have to sort this out."*
+
+*successText: "You write his testimony on a separate sheet, mark it *Witness account — sergeant, unnamed, front rank, 20 feet from the preacher,* with the date and your attestation. The tablet is the tablet. The testimony is the testimony. They will be filed together but they will be clearly distinct."*
+
+*checkPassFlag: jrs_c11_act3*
+
+*The Fighter was looking at the harbor while you talked to the sergeant. When he said the part about the men who left for the woman, she turned her head slightly. Not at you. At the sea.*
+
+---
+
+**ACT IV — "The Heat and the Wax"**
+*activateNode: DAM*
+*type: skill_check*
+*activateCond: jrs_c11_act3*
+
+The road south of Damascus crosses a plateau that is notoriously hot in the afternoon — the kind of heat that does not declare itself but simply accumulates. The wax tablet in the leather case will begin to soften at sustained temperatures above what the late-afternoon plateau routinely achieves. A soft wax tablet in a leather case that is pressed against a warm body or left in direct sun will blur. Some of the shorthand is fine-stroked and will lose its form before heavy strokes.
+
+*scene: "The plateau road, mid-afternoon, the air still and hot. You are carrying the leather case. The sun is behind you and to the right. You have been walking for two hours and you can feel the heat through the leather when you check it with your hand. The fine strokes of the shorthand are at risk. You need to reach shade — a caravan stop half a mile ahead — without the case warming any further."*
+
+*prompt: "Survival DC 12. Find the way to keep the case cool for half a mile in direct afternoon heat: which side of your body to carry it, how to use your cloak as a shield from the sun's angle, how to pace your walking so you don't generate additional body heat against the case. The caravan stop has shade and water."*
+
+*failText: "Three fine-stroke characters in the tablet's middle section soften slightly. When you check them at the caravan stop, you can still read two. The third is uncertain. You mark it in the transcript."*
+
+*successText: "You shift the case to the shaded side, fold your cloak over it, and slow your pace to reduce body heat. You reach the caravan stop in good time. The tablet is unchanged. You check every character in the fine-stroke sections before continuing."*
+
+*checkPassFlag: jrs_c11_act4*
+
+*The Fighter, walking beside you, said nothing but angled her body to add her shadow to yours over the case for the last quarter mile. She did not acknowledge doing this.*
+
+---
+
+**ACT V — "The Archive's Honest Silence"**
+*activateNode: WM*
+*type: skill_check*
+*activateCond: jrs_c11_act4*
+
+Sweelinck reads the transcript, including the gap notations. He reads the sergeant's testimony. He reads the chaplain's note at the top of the tablet.
+
+He is quiet for a long time.
+
+"This is the hardest thing to file," he says at last. "Not because the document is damaged. Because the document is honest. It shows what was caught and what was not caught, and both are true. The archive's instinct is to complete things. This one should not be completed."
+
+He needs the category. And he needs to know — from you — whether the tablet and the testimony should be filed as a unit or as two cross-referenced documents. The answer will determine the archive structure for all future partial-witness records.
+
+*scene: "Sweelinck at his table, both hands on the transcript, not writing yet. He looks up. 'If I file them as a unit, the archive treats them as one document with supporting evidence. If I file them as cross-referenced documents, the archive treats them as two separate things that speak to each other. Which is true?' He is asking you the question because he believes you have earned the right to answer it."*
+
+*prompt: "Investigation DC 14. The tablet is a primary document: the chaplain wrote it in the moment. The sergeant's testimony is a secondary document: memory reconstructed after the fact. They are not the same thing. They should be cross-referenced, not united — because the gap between them (what the chaplain missed that the sergeant remembers) is itself evidence of how the sermon moved through the people who heard it. The gap is the sermon's effect on the archive."*
+
+*failText: "Sweelinck files them as a unit. The distinction between what was written in the moment and what was remembered after the fact is flattened. The archive is less honest than the chaplain was."*
+
+*successText: "Sweelinck listens. He writes slowly: *Sermon Record — Primary Document (wax tablet, chaplain's shorthand, gaps marked) and Secondary Document (witness testimony, front-rank sergeant) cross-referenced. The gap between them is evidence. Neither document completes the other. Both are filed whole.* He creates the category: *Preaching Records — The Sermon That Could Not Be Written Fast Enough, First Entry.* He files the tablet in its case. He files the testimony beside it. He marks both with the same reference number and a note: *See the other.* He does not close the file. 'In case more witnesses come,' he says."*
+
+*grantItem: "Weimar archive receipt, dual-entry"*
+*takeItem: "Wax Tablet of Peter's Sermon (Fragment)"*
+*checkPassFlag: jrs_c11_act5*
+*questComplete: true*
+
+*The Fighter came inside. She walked to the shelf where the tablet was filed, looked at the spine of the case for a moment, and walked back out. She said, when you reached her: "Good."*
+
+---
+
+### UQF v1.0 JSON Stub
+
+```json
+{
+  "quest_id": "JRS_011",
+  "title": "The Preaching Record",
+  "source": "Jerusalem Delivered — Torquato Tasso (1581), Fairfax translation (1600)",
+  "cycle": 11,
+  "book": "jerusalem-delivered",
+  "source_episode": "Book XVII — Peter the Hermit delivers the sermon to the assembled host before the final assault; no official record was created; a chaplain took partial shorthand notes on a wax tablet; the notes include gaps where he could not write fast enough",
+  "theme": "The honest record is the incomplete one: the gaps in the chaplain's notes are evidence of how the sermon moved through the people who heard it; the archive's obligation is to preserve the shape of what was and was not caught, not to complete what the chaplain could not write",
+  "activateNode": "OLN",
+  "token": {
+    "id": "wax_tablet_peters_sermon",
+    "name": "Wax Tablet of Peter's Sermon (Fragment)",
+    "description": "Wax tablet twelve by eight inches, chaplain's ecclesiastical shorthand, gaps where the pen could not keep pace. Upper corner in full script: 'I could not keep up with him. What is here is what I caught.' Leather case. Fragile in heat.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["OLN", "JER", "PKR", "DAM", "WM"],
+  "new_nodes": [],
+  "questComplete": true,
+  "acts": [
+    {
+      "act": 1,
+      "node": "OLN",
+      "type": "skill_check",
+      "skill": "Persuasion",
+      "dc": 13,
+      "summary": "The chaplain at a Jerusalem monastery has kept the tablet for two years without showing anyone. Persuasion DC 13: confirm the archive is secular and non-Church-administrative, and specifically that the gaps in the tablet will be preserved as gaps, not filled in. TOKEN GRANTED."
+    },
+    {
+      "act": 2,
+      "node": "JER",
+      "type": "skill_check",
+      "skill": "Insight",
+      "dc": 12,
+      "summary": "A notary reading the ecclesiastical shorthand defaults to professional habit: deliver clean text, skip ambiguities. Insight DC 12: understand that skipping the gaps is wrong for this purpose; explain why ambiguities must be marked, not omitted, so the transcript has a true shape."
+    },
+    {
+      "act": 3,
+      "node": "PKR",
+      "type": "skill_check",
+      "skill": "History",
+      "dc": 13,
+      "summary": "A sergeant from the front rank remembers specific phrases the chaplain missed. History DC 13: know the difference between a primary document and a witness account, and record the sergeant's memory on a separate provenance sheet rather than onto the transcript, preserving their distinct evidentiary status."
+    },
+    {
+      "act": 4,
+      "node": "DAM",
+      "type": "skill_check",
+      "skill": "Survival",
+      "dc": 12,
+      "summary": "Afternoon plateau heat south of Damascus risks softening the wax and blurring fine-stroke shorthand. Survival DC 12: carry the case on the shaded side, use a cloak as a sun-shield, reduce walking pace to avoid body heat — reach the caravan stop without the wax softening."
+    },
+    {
+      "act": 5,
+      "node": "WM",
+      "type": "skill_check",
+      "skill": "Investigation",
+      "dc": 14,
+      "summary": "Sweelinck asks whether the tablet and the testimony should be filed as a unit or as cross-referenced documents. Investigation DC 14: they are different orders of evidence — the gap between them is itself evidence of how the sermon moved through the people who heard it; cross-reference, not union, is the honest filing. Preaching Records — The Sermon That Could Not Be Written Fast Enough, First Entry. TOKEN TAKEN. questComplete: true."
+    }
+  ]
+}
+```

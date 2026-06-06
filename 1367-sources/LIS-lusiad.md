@@ -1305,3 +1305,549 @@ TOKEN TAKEN: The Survivor's Deposition. *questComplete: true.*
   ]
 }
 ```
+```
+
+---
+
+## Source Summary — Part 1 of 6
+
+*Preface, translator's life of Camoëns, dissertation on epic poetry, and Canto I: the commission from Dom Manuel, the fleet's departure from Lisbon, divine council of gods, Bacchus's opposition and Venus's protection, arrival at Mozambique and first Moorish treachery.*
+
+Part 1 opens with Mickle's translation apparatus: a biography of Luís de Camões (born Lisbon c.1524, died in poverty 1579), and a dissertation situating the Lusiad as a new kind of epic whose subject is not war but voyage — the opening of the eastern world to the western. Camões lost his right eye fighting Moors in Africa, wrote the poem across sixteen years and two hemispheres, and carried the manuscript swimming from a shipwreck near Cochin China. His Javanese servant begged in the streets of Lisbon to feed him. The poem was published 1572, praised by Tasso, and its author died in an almshouse.
+
+Canto I opens *in medias res*: Vasco da Gama's fleet is already rounding the Cape of Good Hope, and the gods hold council over its fate. Bacchus, who had been worshipped as a conqueror in the East and now fears displacement, works against the Portuguese. Venus, who sees in the Portuguese a kinship with ancient Rome (in language and spirit), champions them. Jupiter delivers to Venus the first great prophecy: the Portuguese will build an empire from the Red Sea to China and Japan that no Roman or Greek expedition approached. Mercury is dispatched to Melinda to prepare a friendly reception.
+
+The fleet arrives at Mozambique. The Moorish regent, inflamed by Bacchus in disguise, feigns friendship while plotting destruction: a corrupted pilot is supplied to wreck the fleet on rocks. Gama's sailors fight their way to the freshwater spring, Gama bombards the town in retribution for the treachery, and the fleet escapes — bearing the treacherous pilot aboard, not yet knowing the extent of his purpose. The key passage is Gama's presentation of Portuguese arms to the Mozambique regent: cannon, arquebus, plumed helmets, steel — displayed with deliberate restraint, never fired at the regent's feet, "for brave and generous ever are the same."
+
+The commission from Dom Manuel, King Portugal — the document that authorized everything — is implicit throughout but never shown on page. It is the absent center. Gama acts under royal mandate; the poem's first book is the unfolding of that mandate against the first resistance of an entire hemisphere.
+
+---
+
+## Cycle 8 — The Commission Letter
+
+**What this angle reveals that prior cycles missed:** Every previous cycle follows the voyage after departure — the storm, the treachery, the prophecy, the testimony. This cycle goes earlier: to the document that made the departure possible. The royal commission letter is the authorization that Gama carries in his sealed chest, the instrument that converts a sea captain into a sovereign ambassador. No prior cycle has touched what it means to hold a document that says *you may speak for a king at the ends of the earth.*
+
+---
+
+**THE TOKEN: `lis_cycle_8_token`** — The Royal Commission Letter, sealed under Dom Manuel I's cipher, dated Lisbon 1497. Parchment, double-folded, impressed with the royal arms in red wax on a silk tag. Written in formal chancery Portuguese with a Latin attestation clause. The letter authorizes Vasco da Gama to treat with any sovereign encountered, promise and receive alliance, and use force of arms at his discretion in service of the crown. It was copied once, by a court notary; the copy remained in Lisbon; this original sailed with the fleet. It survived Mozambique, Mombas, the Cape storm, and the return. When Gama arrived in Calicut, the Zamorim — the lord of all India — asked through Monsaide what authority he held. Gama produced the letter. The Zamorim could not read Portuguese. He handed it back. The letter did its work not by being read but by being *presented*. An archive cannot classify a document whose authority derives from a gesture.
+
+---
+
+*The commission letter arrived at the Weimar Archive rolled in a later diplomatic envelope postmarked Lisbon, 1521. The envelope is addressed to no one. The commission is addressed to the world.*
+
+*The Fighter watches from the doorway of the LHA reading room. The archivist is arguing with a man in a black coat. Something about jurisdiction. Something about what a letter can authorize when the king who wrote it has been dead for fifty years.*
+
+---
+
+**Act 1 — "The Chancery Secretary"**
+activateNode: LHA
+type: skill_check
+scene: "You are in the Lisbon Humanist Archive, morning. A man in a black coat — Frei Domingos, secretary to the crown's archival commission — has placed his hand on the commission letter's case. He says the letter belongs to the royal archive, not the neutral one: it is an instrument of state, not a literary document. He has a classification form. He is polite. The Fighter leans against the far wall and watches. The commission letter sits in its case between you."
+prompt: "Persuasion DC 12. The commission letter is Dom Manuel's document but its subject is the voyage — it belongs to the archive that holds the Lusiad's context, not the archive that holds state instruments. An instrument of state acts; when it has acted and the voyage is history, it becomes evidence of what was authorized. Persuasion DC 12: the letter's operative life ended when Gama returned; what survives is testimony, not policy."
+failText: "Frei Domingos notes your argument. He says he will file the classification form and allow the archive to contest it. The letter stays, under dispute. You may proceed, but the dispute will complicate passage at Mombas — a Portuguese consular officer has been notified."
+successText: "Frei Domingos reads the argument twice. He folds the classification form. 'The letter is evidence,' he says, as if testing the word. He withdraws. The case is yours. You receive the Royal Commission Letter."
+grantItem: "Royal Commission Letter"
+checkPassFlag: lis_c8_act1
+
+---
+
+**Act 2 — "The Duplicate Copy"**
+activateNode: CVP
+type: skill_check
+scene: "Cape Verde, the Atlantic waypoint. A Lisbon merchant house has a factor here — a small man named Esteves who trades in copies. He approaches you on the dock with a rolled document: a notarial copy of the commission letter, he says, made in 1497 from the court's retained exemplar. He wants to trade: the copy for the original, so that he can sell the original to a collector in Venice. He is pleasant. He has the copy under his arm. The original is in your possession. He is offering you a clean substitute."
+prompt: "Insight DC 13. The copy is not the letter — it is what the court kept, not what Gama carried. The commission letter's provenance value is precisely that it crossed the ocean. A copy did not. Insight DC 13: determine whether Esteves knows the difference, or whether he is acting for someone who does and who prefers the original to disappear into a private collection."
+failText: "Esteves is opaque — you cannot read him. You decline the trade but leave uncertain whether he was testing you or genuinely ignorant. He watches you board the next ship. A note under your cabin door that night: *The duplicate is already in Venice. Think about what that means.*"
+successText: "Esteves knows exactly what he is offering. He is acting for a Venetian collector who understands that the letter in Gama's hand is the only document that physically accompanied the first contact between Europe and India. He will not stop you, but he has confirmed: the original is worth more than the copy, and the copy's existence does not diminish the original's singularity. The archive needs to know this when it accessions."
+checkPassFlag: lis_c8_act2
+activateCond: lis_c8_act1
+
+---
+
+**Act 3 — "The Zamorim's Question"**
+activateNode: MLN
+type: skill_check
+scene: "Malindi, East Africa. A Swahili scholar named Bwana Fahari keeps a copying house and has studied the Portuguese arrival at Calicut from Monsaide's account. He has a question he wants answered before he will certify the letter's provenance chain: when Gama presented the letter to the Zamorim and the Zamorim handed it back unread, what was the nature of that exchange? Was it a diplomatic presentation or a display of force? Fahari argues the difference matters for how the archive classifies the letter's function — treaty document or coercion instrument. He is not hostile, but he will not sign the provenance chain until the question is resolved."
+prompt: "History DC 13. The Zamorim was lord of India's richest port; he received ambassadors daily. The Portuguese were one delegation among many. He handed the letter back not in submission but because he could not read it and had interpreters for that purpose. The exchange was a presentation — an offer of alliance, refused for now, revisited later. Persuasion DC 13: the letter's classification cannot be determined by what happened after Gama left Calicut; it must be determined by what the letter said and what Gama was instructed to do."
+failText: "Fahari declines to certify. He will write a note of contested provenance — 'function unclear, possibly coercive instrument' — that will follow the letter to the archive. Sweelinck will need to adjudicate."
+successText: "Fahari nods slowly. 'It was a presentation,' he says. 'Like any letter of introduction. The refusal came later, from different men, for different reasons.' He certifies the provenance chain. The letter's function is: authorized communication between sovereign powers, peaceful intent, offer of alliance."
+checkPassFlag: lis_c8_act3
+activateCond: lis_c8_act2
+
+---
+
+**Act 4 — "The Mountain Road"**
+activateNode: CON
+type: skill_check
+scene: "The road north from Constantinople into the Danube basin. Three days, mountain terrain. On the second afternoon, a Venetian courier — fast horse, good coat — overtakes you on the road and asks to see your documents. He is pleasant, well-mannered, and armed. He says he is carrying dispatches for the Duke of Mantua. He wants to know what you are carrying. You are carrying the commission letter in a leather satchel under your coat."
+prompt: "Athletics DC 14. The courier is not a courier — his saddle bags are wrong for dispatches, he arrived from the wrong direction, and he has been matching your pace for an hour before overtaking. He will attempt to take the satchel by force if you show uncertainty. Athletics DC 14: physical readiness, the kind that does not escalate but does not yield."
+failText: "He gets a hand on the satchel strap. You hold. The strap tears. He has the outer sleeve — an empty leather case — and rides. The commission letter is still under your coat, wrapped in oilcloth. Your left shoulder is bruised. You are three hours behind schedule."
+successText: "He reads your posture correctly and decides the risk is wrong. He nods, touches his hat, and rides ahead. You hear nothing from him again. The commission letter arrives at the next waypoint dry and intact."
+checkPassFlag: lis_c8_act4
+activateCond: lis_c8_act3
+
+---
+
+**Act 5 — "The Authorization Problem"**
+activateNode: WM
+type: skill_check
+scene: "Weimar Archive. Sweelinck takes the commission letter and reads it for forty minutes without speaking. Then: 'The king who wrote this has been dead for seventy years. The voyage it authorized has been complete for seventy years. The empire it enabled exists, is presently governed by Spain, and has committed acts that this letter cannot have foreseen.' He looks at you. 'What does the archive do with a document whose authorization has outrun its author by a century?' The Fighter is at the window. It is raining."
+prompt: "Investigation DC 13. The commission letter is not an ongoing authorization — it is a historical act. Its meaning is not what it currently authorizes but what it authorized at the moment of departure: a voyage, a contact, an opening. Investigation DC 13: the archive classifies by what the document *did*, not by what it might be taken to justify. The letter authorized a departure. What came after was the consequence of men's choices, not the letter's."
+failText: "Sweelinck writes: 'Authorization instrument — scope disputed.' The letter is filed under administrative documents pending a second review. It will wait there. You receive the Commission Transcript (a working copy) in lieu of the accession confirmation."
+successText: "Sweelinck sets down his pen. 'A departure,' he says. 'Yes. The archive can classify a departure.' He writes: *Royal Commission Records — The Letter That Authorized the Opening of the Eastern World, First Entry. Dom Manuel's charge to Vasco da Gama, 1497: to sail, to treat, to open. The consequences of that opening belong to history; the document belongs here, as the record of what was asked and of the man who agreed to do it.* You receive the Commission Transcript. The Royal Commission Letter is taken."
+grantItem: "Commission Transcript"
+takeItem: "Royal Commission Letter"
+checkPassFlag: lis_c8_act5
+activateCond: lis_c8_act4
+
+---
+
+## Cycle 9 — The False Pilot's Chart
+
+**What this angle reveals that prior cycles missed:** All prior cycles concern documents of testimony, prophecy, or moral weight. This cycle concerns physical evidence of deliberate navigational sabotage — a chart drawn to wreck a fleet. The Mozambique pilot who attempted to steer Gama onto the rocks of Quiloa and then the shoals of Mombas did not act alone; he was given instructions. The chart is the instruction, inscribed in the pilot's own hand on a strip of coastal leather, showing a false channel. It is the only piece of evidence that proves the wreck attempt was premeditated and not navigational error.
+
+---
+
+**THE TOKEN: `lis_cycle_9_token`** — The False Pilot's Navigational Chart, a strip of tanned coastal leather roughly eighteen inches long, hand-drawn in brown ink by the Mozambique pilot appointed by the Regent of Mozambique to destroy Gama's fleet. The chart shows the approach to Quiloa with the true channel erased and a false one drawn in its place, leading directly to a reef. A second notation, in a different hand, marks Mombas harbor with the sandbar underlined — the bar that caught Gama's flagship before the Nereids (or the current, or luck) turned it back. The pilot leaped into the sea when the fraud was discovered. The chart was found lashed to the inside of the pilot's bench by a Portuguese soldier during the search of the abandoned quarters. It was bundled with a report to Gama's fleet log. The fleet log went to Lisbon. The chart was separated from it in transit and arrived at a Melindi merchant's house as scrap wrapping for a bolt of silk. The merchant's grandson recognized it for what it was.
+
+---
+
+*The chart entered the Weimar Archive in a bundle of coastal navigation notes, unopened, in 1598. No one read the bundle for forty years. A catalogue entry from 1638 describes it as: "Eastern African coastal notations, origin unknown, condition poor." The false channel is drawn in a slightly different shade of brown from the rest. Forty years of darkness did not change that.*
+
+*The Fighter does not look at the chart when you show it. She looks at the door.*
+
+---
+
+**Act 1 — "The Merchant's Grandson"**
+activateNode: MDN
+type: skill_check
+scene: "Mozambique waypoint. A young man named Habib — grandson of the merchant whose house received the chart — meets you at the harbor. He wants something before he hands over the chart: acknowledgment that his grandfather acted in good faith, that receiving scrap from a fleet transaction is not participation in a plot. The chart was used as packing material; his grandfather did not know what it was. Habib wants a written statement to that effect, signed by a credentialed archivist, to clear his family name before the chart becomes evidence of a conspiracy that touched them only accidentally."
+prompt: "Persuasion DC 12. The archive does not assign culpability in its intake documents, but it does record provenance accurately. An intake note that says 'received in good faith from a merchant household that acquired it as scrap packing from a fleet transaction' is not exoneration — it is the truth. Persuasion DC 12: the archive can write what is true; it cannot write what is advocacy."
+failText: "Habib is not satisfied. He will give you the chart but asks that you note his request at the archive. He will write a separate letter to Sweelinck. The chart comes with a dispute attached."
+successText: "Habib accepts the distinction. 'The truth is enough,' he says, quietly. He goes inside and returns with the chart in a rolled leather case. 'My grandfather would have wanted it known.' You receive the False Pilot's Chart."
+grantItem: "False Pilot's Chart"
+checkPassFlag: lis_c9_act1
+
+---
+
+**Act 2 — "The Regent's Descendant"**
+activateNode: MDN
+type: skill_check
+scene: "Still at the Mozambique waypoint, before you board the ship north. A man in a white robe approaches the dock: he identifies himself as a descendant of the Mozambique regent who gave the pilot his orders. He wants the chart destroyed. Not suppressed — destroyed. His argument is that the chart proves only that his ancestor tried and failed; it is evidence of incompetence as much as malice. He is a man of some local standing. He is not threatening you, but there are three other men at the end of the dock who are watching."
+prompt: "Insight DC 12. The chart proves premeditated intent — two separate false notations in two hands, meaning the regent coordinated with at least one other person. The act was organized, not impulsive. Insight DC 12: the descendant is here because the chart reaching an archive is more damaging than the chart disappearing, which means the archive's role in preserving uncomfortable evidence is precisely the issue. Read his actual level of risk tolerance."
+failText: "You cannot fully read him. You hold the chart and board the ship. He does not follow, but the three men at the dock note your departure direction. At your next port, a message is waiting: *Someone asks that you reconsider.*"
+successText: "He is frightened, not threatening. The chart reaching an archive closes a chapter he has spent his life hoping would remain open. You tell him: the archive classifies evidence, not judgment. The chart proves the act; historians will weigh what it means. He stands in the sun for a moment, then walks away without speaking."
+checkPassFlag: lis_c9_act2
+activateCond: lis_c9_act1
+
+---
+
+**Act 3 — "The Navigation Scholar"**
+activateNode: CON
+type: skill_check
+scene: "Constantinople, the Ottoman chart library. A cartographer named Mehmed Çelebi has been consulted to authenticate the chart — is the coastal rendering accurate enough to have been useful as a guide, or was it drawn by someone who did not know the coast well enough to create a convincing false channel? His authentication will determine whether the chart is evidence of skilled sabotage (meaning the pilot knew exactly what he was doing) or of an incompetent attempt. He has been reviewing it for two hours. He has a conclusion."
+prompt: "Investigation DC 12. Çelebi's conclusion is that the chart is accurate in every detail except the channel — which means the pilot knew the coast perfectly and altered one specific element deliberately. This is not incompetence; it is precise, surgical falsification. Investigation DC 12: work through Çelebi's methodology with him, confirm the single altered element, and establish that the rest of the chart's accuracy makes the falsification undeniable rather than ambiguous."
+failText: "Çelebi is uncertain about one secondary notation — he cannot rule out that it might be a copying error rather than deliberate falsification. His authentication note reads: 'possibly deliberate, inconclusive.' The chart's evidential value is reduced."
+successText: "Çelebi points to the channel notation: 'The soundings around it are exact. The pilot knew the depth at every point. He chose this one spot to draw the channel into the reef. No one who drew the rest of this chart could have made that error by accident.' His authentication is unambiguous: surgical falsification by a skilled navigator acting under instruction."
+checkPassFlag: lis_c9_act3
+activateCond: lis_c9_act2
+
+---
+
+**Act 4 — "The Mountain River Crossing"**
+activateNode: CON
+type: skill_check
+scene: "The Danube crossing, early spring. The river is running high from snowmelt. The ferry is a flat-bottomed barge worked by two men with poles. Halfway across, the current catches the barge's stern. The pilot tries to correct; the barge swings sideways. The chart in its leather case is under your arm. The river is cold."
+prompt: "Athletics DC 13. The barge is going broadside. One ferryman is shouting. The other has dropped his pole. The chart case cannot go in the water — the ink on coastal leather does not survive submersion. Athletics DC 13: cross the deck without losing your footing, get a hand on the stern rail, and give the working ferryman enough stability to bring the bow back around."
+failText: "You keep the chart dry but go to one knee on the wet deck. The case skids two feet along the boards before you catch it. Your knee is bruised. The ferryman corrects the barge unassisted. You arrive on the north bank five minutes later, wet to the thigh."
+successText: "You cross the deck in four steps, hit the stern rail, and brace. The ferryman gets the pole set and the bow comes around. You arrive on the north bank dry. The ferryman says nothing. The chart is intact."
+checkPassFlag: lis_c9_act4
+activateCond: lis_c9_act3
+
+---
+
+**Act 5 — "The Evidence Problem"**
+activateNode: WM
+type: skill_check
+scene: "Weimar Archive. Sweelinck holds the chart at arm's length under the north light. 'A chart drawn to wreck a fleet,' he says, 'authenticated by a cartographer in Constantinople, carried by a grandson's apology and a regent's descendant's fear.' He sets it down. 'What do I call this? It is not a diplomatic document. It is not a literary text. It is a physical instrument of attempted murder that happened to fail.' He looks at you. 'The archive does not classify objects by what they tried to do. I need to know what it *is*."
+prompt: "Investigation DC 12. The chart is navigational evidence: it is a coastal chart, made by a trained pilot, with a deliberate falsification. Its category is navigational record with forensic annotation. The falsification makes it unusual but does not change its type — it is still a chart, and charts belong to cartographic collections. The forensic interest is secondary to the archival category. Investigation DC 12: propose the precise classification that Sweelinck needs."
+failText: "Sweelinck files it under 'uncategorized instruments of the Indian voyage.' It will be reclassified eventually. A note in the margin reads: 'origin contested, evidential weight unresolved.'"
+successText: "Sweelinck writes: *Cartographic Records — The Chart Drawn to Kill: A Coastal Navigation Document with a Surgical Falsification, First Entry. The Mozambique pilot's chart of the East African approach, 1498: accurate in every detail but one; the one detail is a reef where the chart draws a channel; the authentication is unambiguous; the intent is on record; the fleet it was meant to destroy arrived in India anyway; the chart belongs here as evidence that the voyage was contested at every point by men who knew exactly what they were doing.* You receive the Pilot's Authentication Note. The chart is taken."
+grantItem: "Pilot's Authentication Note"
+takeItem: "False Pilot's Chart"
+checkPassFlag: lis_c9_act5
+activateCond: lis_c9_act4
+
+---
+
+## Source Summary — Part 2 of 6
+
+*Continuation of Canto I into Canto II: Mombas treachery and the Nereid rescue; Cantos II–III: Jupiter's prophecy to Venus, Mercury's guidance to Melinda, the king of Melinda's welcome, and Gama's long historical narrative of Portugal through the story of Inês de Castro.*
+
+Part 2 opens with the fleet approaching Mombas, where Bacchus — disguised as a Moorish sage — has inflamed the Moorish king's hatred. The king feigns Christian fellowship; Bacchus erects a false altar attended by what appear to be rites of the true faith. Gama's two scouts are brought to this false shrine and kneel, believing they have found Christians in the East. They return and report: there is a shrine, the priests spoke the name of Mary. The fleet enters the harbor — and Venus dispatches the Nereids to throw their silver bodies against the prows and push the fleet back from the submerged sandbar where the Moorish king's armed garrison waits. The pilot's fraud is discovered when he leaps overboard.
+
+Venus flies to Olympus to present her case to Jupiter. The great speech of Jupiter — the poem's prophetic center — guarantees the Portuguese empire from the Red Sea to China, promises Gama will return and be appointed viceroy, and names by implication the shape of the coming century. Mercury is sent to Melinda to prepare a welcome. The fleet sails from Mombas to Melinda; the king of Melinda receives them with generosity and genuine warmth. The alliance is made.
+
+The king asks Gama to tell Portugal's history. Canto III is Gama's long narrative: the origin of Portugal from a Roman province, the first kings, the battle of Ourique, the liberation from Moorish rule, the founding of the Portuguese nation. At its heart, one of the poem's most celebrated passages: the story of Inês de Castro, the Spanish noblewoman secretly married to Prince Pedro, murdered by order of King Afonso IV while Pedro was away from court. When Pedro became king, he exhumed her body and crowned her queen of Portugal as a corpse, compelling his court to pay homage to a dead woman. The story's power for Camões is in its witness: Inês's beauty speaks to the stone that cannot feel, and the stone does not answer. The indifference of power to the claims of love, told in a voice that refuses to be calm about it.
+
+---
+
+## Cycle 9 — [completed above]
+
+---
+
+## Source Summary — Part 3 of 6
+
+*Cantos IV–VI: Paulus de Gama's display of the Portuguese heroes on the fleet's painted ensigns; the end of Gama's historical recital; the alliance with Melinda; departure, Bacchus's council with Neptune, the great Atlantic storm, and the first sight of India.*
+
+Part 3 opens mid-poem with the Melinda king's visit to the fleet, where Paulus de Gama — Vasco's brother — shows the king the painted battle-flags depicting Portugal's warrior saints and heroes. Each image is an episode: the twelve Portuguese knights who sailed to England to defend the honor of twelve English ladies accused of adultery; the battle of Aljubarrota; the heroes of Africa. The king is moved. Gama concludes his historical account with a comparison challenging Homer and Virgil: my voyage exceeded Ulysses and Aeneas by the simple measure of where it went and what it cost.
+
+Book VI: the alliance with Melinda is confirmed. A faithful Melindi pilot — a genuine one, unlike Mozambique's agent — joins the fleet. Bacchus descends to Neptune's coral palace in the depths of the sea, convenes the gods of the ocean, and inflames them with the argument that the Portuguese are trespassing on their domain. Neptune unleashes the winds. The great storm — one of the poem's set pieces — is a full orchestral destruction: masts rent, sails torn, Gama standing on the poop with his arms spread to heaven, praying. The Venus star appears through the tempest. The Nereids return, each one subduing a wind-god with her beauty and her command. Calm. Then: a lookout shouts *Land!* The Melindi pilot stands at the bow: "Behold the shores of India rise." Gama falls to his knees.
+
+Book VII: Calicut. The Zamorim's capital. The fleet anchors; the city pours out to meet them. Monsaide — a Moorish merchant from Tunis who speaks Spanish — runs through the crowd to meet the Portuguese herald and brings him home for dinner. Monsaide joins Gama's ship and describes all of India: its geography from the Himalayas to Ceylon, its religion, its caste system, its history from the divison of the old Perimal king's realm. The Catual, the Zamorim's prime minister, visits the fleet. Paulus shows him the battle-flags again. The Catual is shown the cannon. The fleet sails to the palace. Gama meets the Zamorim and offers Dom Manuel's alliance.
+
+---
+
+## Cycle 10 — The Zamorim's Diplomatic Record
+
+**What this angle reveals that prior cycles missed:** Every prior cycle concerns documents held by Portuguese agents or their allies. This cycle examines the Calicut encounter from the Indian side. The Zamorim maintained his own court records; his scribes noted the arrival of the Portuguese and the content of the alliance proposal. That record — the Indian diplomatic record of Gama's first audience — shows what the Zamorim heard, what he asked, and what he concluded. It is the only document of the first contact written from the receiving end.
+
+---
+
+**THE TOKEN: `lis_cycle_10_token`** — The Zamorim's Court Register Entry, a palm-leaf folio in Malayalam script, dated to the visit of the Portuguese fleet in 1498. Written by the Zamorim's head scribe in the standard format for reception of foreign ambassadors: date, delegation composition, gifts presented, demands made, replies given, disposition of the audience. The entry notes that the Portuguese representative presented a letter in an unknown script, claimed to speak for the king of a western country beyond the ocean, offered alliance and trade, and was given a polite preliminary refusal pending further deliberation. The last line of the entry reads, in Malayalam, a phrase that translates approximately as: *These men have traveled a great distance to offer what we do not yet know whether we want. They should be watched carefully.* The entry was preserved in the Zamorim's palace archive until the Portuguese bombardment of Calicut in 1502; it was removed by a palace scribe named Kunhiraman, who took it to his family's village inland. His descendants eventually sold it to a Dutch trader in the seventeenth century. The Dutch trader's estate went to auction in Amsterdam in 1688.
+
+---
+
+*The palm-leaf folio reached the Weimar Archive in a lot of 'Oriental manuscripts, origin uncertain, language unidentified' purchased at the Amsterdam auction. It sat unread for thirty years because no one in Weimar read Malayalam. Sweelinck eventually had it translated by a Jesuit missionary passing through. The missionary read the last line and said: they were right to watch them.*
+
+*The Fighter stands at the harbor wall in Calicut and watches the light on the water. She has said nothing since Mozambique.*
+
+---
+
+**Act 1 — "The Scribe's Descendant"**
+activateNode: MLN
+type: skill_check
+scene: "Malindi, East Africa — the waypoint for the Indian route. A man named Rajan, a merchant of Tamil descent, has a rolled palm-leaf folio in a tin box. He is selling it, but he has three buyers: you, a Portuguese crown representative named Frei Simão who says it belongs to Portugal as a document of the Indian voyage, and a Venetian factor who wants it for a private collection. Rajan wants to sell to whomever will preserve it best. He is asking each buyer to explain their case."
+prompt: "Persuasion DC 13. The Portuguese crown representative wants it as property — a document about the Portuguese belongs to Portugal. The Venetian factor will lock it in a vault. The neutral archive will make it accessible. Persuasion DC 13: the folio's value is precisely that it is the *Indian* record of the Portuguese arrival — it cannot belong to Portugal, because it is not Portugal's document. It is the Zamorim's document, which means it belongs to no empire and to the archive that has no empire."
+failText: "Frei Simão outbids you financially. The folio is not sold but held for Simão's review of the price. You have three days before Simão's letter of credit arrives from Lisbon. Rajan will speak with you again if you return with a counter-argument."
+successText: "Rajan considers for a long moment. 'The archive,' he says. 'Because the Zamorim would have wanted it read.' He hands you the tin box. You receive the Zamorim's Court Register Entry."
+grantItem: "Zamorim's Court Register Entry"
+checkPassFlag: lis_c10_act1
+
+---
+
+**Act 2 — "Frei Simão's Objection"**
+activateNode: MLN
+type: skill_check
+scene: "Frei Simão has followed you to the dock. He is not threatening you — he is a scholar, not a soldier — but he is certain: a document describing the arrival of a Portuguese admiral on the first voyage to India is Portuguese patrimony, and the crown has the right to reclaim it. He cites the law of discovery. He is standing between you and the gangway."
+prompt: "Insight DC 12. Frei Simão's argument turns on the law of discovery — that Portugal's claim to have discovered the sea route to India extends to documents about that discovery. But the folio was not written by the Portuguese; it was written by the Zamorim's scribe, on Indian palm-leaf, in Malayalam. The law of discovery covers what was found; it does not cover the records kept by the people who were already there. Insight DC 12: identify the specific weakness in Simão's legal argument and name it precisely."
+failText: "Simão is not wrong enough to dismiss cleanly. He files a formal objection with the Portuguese trade factor in Malindi. A hold order will reach the next port ahead of you. Passage at Constantinople will require a document review."
+successText: "The weakness is clear: the law of discovery governs the discoverer's records, not the discovered nation's. The Zamorim was not discovered; he was visited. His scribe's entry is his own record of a visitor. Simão hears you, opens his mouth, closes it. He steps aside. You board."
+checkPassFlag: lis_c10_act2
+activateCond: lis_c10_act1
+
+---
+
+**Act 3 — "The Translation Problem"**
+activateNode: CON
+type: skill_check
+scene: "Constantinople. A Greek scholar named Nikolaos who reads Malayalam — trained by Jesuit missionaries who passed through in the 1540s — is translating the folio. He has finished. He wants to discuss the last line. His reading of the Malayalam phrase is: 'These men have traveled a great distance to offer what we do not yet know whether we want. They should be watched carefully.' But he says there is an alternate reading of the final phrase: it could be *watched carefully* or it could be *understood carefully.* The distinction matters for the archive's classification of the Zamorim's attitude — hostile surveillance or cautious inquiry."
+prompt: "Investigation DC 12. The folio's diplomatic value turns on whether the Zamorim's response was surveillance (treating the Portuguese as a threat) or inquiry (treating them as unknown visitors to be understood). The surrounding context of the entry — the polite preliminary refusal, the note that the alliance was deferred pending deliberation — supports cautious inquiry, not hostile surveillance. Investigation DC 12: work through the contextual evidence with Nikolaos to establish which reading is better supported."
+failText: "Nikolaos marks both readings in the translation. The archive will receive a document with an unresolved ambiguity in its central interpretive line."
+successText: "Nikolaos reviews the full entry. The gifts were returned courteously; the audience was granted, not refused; the deliberation was genuine. 'Understood carefully,' he says. 'The Zamorim wanted to understand these men before deciding what to do with them.' The translation is unambiguous."
+checkPassFlag: lis_c10_act3
+activateCond: lis_c10_act2
+
+---
+
+**Act 4 — "The Courier Road"**
+activateNode: CON
+type: skill_check
+scene: "North of Constantinople, the road toward the Danube. Rain. The tin box is wrapped in oilcloth inside your pack. A fellow traveler — a Ragusian merchant named Petar — has been walking the same road for two days and is now asking too many questions about your business in Constantinople. He is not armed visibly. He is very curious about the box."
+prompt: "Perception DC 13. Petar is not a merchant; his boots are wrong, his calluses are wrong, his questions are calibrated — he does not ask what is in the box, he asks where you are going with it, which means he already has a guess about the contents. Perception DC 13: identify the tell that distinguishes a curious traveler from someone who has been briefed on what you are carrying."
+failText: "Petar's tell is subtle enough that you cannot be certain. You keep your distance and arrive at the next waystation with the box intact, but uneasy. A horse outside the waystation has been ridden hard from the south."
+successText: "His left hand rests on his belt in the exact position of a man accustomed to carrying a weapon under his coat. No sword, no knife visible — but the resting position is trained. You change your route at the next crossroads and lose him in an hour. The box arrives at the next waystation intact."
+checkPassFlag: lis_c10_act4
+activateCond: lis_c10_act3
+
+---
+
+**Act 5 — "The Receiving Nation's Record"**
+activateNode: WM
+type: skill_check
+scene: "Weimar Archive. Sweelinck reads the translation twice. He sets it down. 'The Zamorim watched them carefully and was right to.' He is quiet for a moment. 'The Portuguese came back in 1502 and bombarded Calicut. This entry is from 1498 — four years before that. The Zamorim's scribe recorded the beginning of a story that ended badly for Calicut.' He looks at you. 'Where does this belong in the archive? With the Gama documents? Separately? It is the Indian record of a Portuguese event.'"
+prompt: "Investigation DC 12. The folio belongs in the Gama collection but as a distinct voice: the receiving nation's record. It should be accessioned with a note that it is the only surviving document of the first Gama-Zamorim meeting written from the Indian side, that it predates the Portuguese bombardment of Calicut by four years, and that the Zamorim's final note — understood carefully, not watched with hostility — should be read against what came after. Investigation DC 12: propose the exact accession language."
+failText: "Sweelinck files it under 'Eastern accounts of the Indian voyage.' It will be read eventually. A note reads: 'translation contested, final line ambiguous.' The ambiguity Nikolaos resolved will be reopened."
+successText: "Sweelinck writes: *Indian Ocean Diplomatic Records — The Receiving Nation's Account, First Entry. The Zamorim's court register entry on the arrival of Vasco da Gama, 1498: written in Malayalam by the head palace scribe; the Portuguese offered alliance; the Zamorim deferred; the final line reads 'understood carefully'; four years later the Portuguese bombarded Calicut; this document belongs to the archive as the record of what the Zamorim thought before that happened.* You receive the Malayalam Translation. The folio is taken."
+grantItem: "Malayalam Translation"
+takeItem: "Zamorim's Court Register Entry"
+checkPassFlag: lis_c10_act5
+activateCond: lis_c10_act4
+
+---
+
+## Source Summary — Part 4 of 6
+
+*Cantos VIII–IX: the Moorish plot against Gama at Calicut, the catual's corruption, Gama's standoff and departure; the beginning of Canto X: the Island of Venus (Ilha dos Amores), the prophetic banquet, Tethys shows Gama the globe and sings the future of Portuguese empire.*
+
+Part 4 contains the crisis of the Calicut mission and its resolution through force. The Catual — the Zamorim's prime minister — is bribed by Moorish merchants who fear Portuguese competition. The Catual detains Gama's factors on shore. Gama retaliates by detaining Moorish traders from his decks. A standoff ensues: the Zamorim orders Gama to leave; Gama refuses until his men are released; the Zamorim's prime minister is bribed and scheming; the Moorish merchants argue to the court that these Portuguese are the advance guard of a conquest force. Gama eventually recovers his men, exchanges hostages, and sails. The mission ends without a formal alliance, with trade established in principle only.
+
+Then the poem's great reward. Venus, having protected the fleet through the entire voyage, creates the Island of Love as a divine gift for the sailors' return voyage. The island rises from the sea: enchanted, perfumed, peopled by sea-nymphs. Each sailor finds a nymph waiting; each nymph is love itself, the embodiment of glory translated into tenderness. Gama himself is taken by Tethys — the goddess of the sea — to a mountain peak where she shows him a luminous globe of the entire world: the celestial spheres, the continents, the empires. And then she sings: a prophetic catalogue of the future heroes of Portuguese India. Pacheco, who will hold the Cambalão river with a hundred spears against all India. Almeida, who will be bound to his mast still fighting. Albuquerque, who will take Ormuz, Goa, and Malacca. The great future is laid out, complete, including its shadows: Pacheco dying in an almshouse, Albuquerque stained by a soldier's unjust execution.
+
+The poem ends on the return to Lisbon: the fleet arrives, the king receives the news of India discovered, the poem's final address to King Sebastian — *be worthy of this*.
+
+---
+
+## Cycle 11 — Venus's Island Account
+
+**What this angle reveals that prior cycles missed:** Prior cycles handle the voyage's hardships, treacheries, and moral weight. This cycle examines the poem's only moment of pure reward — the Island of Love — from the sailors' side. The sailors' account of what happened on the island is the only first-person testimony to an experience the poem describes allegorically. Camões himself says the island is an allegory for the satisfaction virtue brings. The sailors do not know this. They experienced something. Their account — written down by a Flemish secretary attached to the fleet's return, who interviewed three sailors in Lisbon harbor before the official reports were filed — is the record of what they said happened, before the allegorical interpretation was imposed.
+
+---
+
+**THE TOKEN: `lis_cycle_11_token`** — The Flemish Secretary's Interview Notes, six pages in a Flemish clerk's hand on rag paper, dated Lisbon harbor, 1499. The secretary, one Adriaan van der Berg, attached to a Flemish merchant house in Lisbon, was present at the dock when the fleet returned. He interviewed three sailors before the official reception. The sailors described an island that rose from the sea, women who came down from the hills speaking in their own language, music from no visible source, food and wine that tasted unlike anything in Portugal, and a week of rest that felt like a dream they all shared identically. One sailor said: "It was not a dream because we were all there and we all remember the same things." Another said: "I have tried to describe the woman I met and I cannot. Not because she was beyond description but because every description I give sounds like a description of something else." The third sailor would not describe his experience at all. He said: "It was the best week of my life. That's enough." Van der Berg did not know what to make of any of this. He filed his notes in his house's commercial correspondence archive. They were found by his employer's heir in 1521 and sold as curiosities.
+
+---
+
+*The notes reached the Weimar Archive through an intermediate Amsterdam broker who sold them as 'sailor's accounts of the Indian Ocean, possibly fictional.' Sweelinck read them and wrote in the margin: 'If fictional, very specifically fictional. If true, very specifically true.' He never resolved which.*
+
+*The Fighter sits on the harbor wall reading one of the pages. She reads it twice. She sets it down and says: "He's right. It does sound like something else."*
+
+---
+
+**Act 1 — "The Flemish Heir"**
+activateNode: LHA
+type: skill_check
+scene: "Lisbon Humanist Archive, morning. A Flemish merchant named Van Houten — grandson of the broker who sold the notes — has decided he wants them back. Not for commercial reasons: he has been reading his ancestor's records and believes the notes are evidence that the Island of Venus actually occurred, and that this is a religious matter he wants handled by the Church, not an archive. He has engaged a Dominican friar to accompany him. The friar is reading the notes with a troubled expression. Van Houten is waiting for the friar's judgment."
+prompt: "Persuasion DC 12. The notes are a secular document — a Flemish secretary's field interview record, commercial in origin, describing an anomalous experience. The Church's jurisdiction extends to determinations of miracle or heresy; a secular interview record of sailors describing a pleasant island is neither. Persuasion DC 12: separate the theological question (did a miraculous island exist?) from the archival question (are these notes a credible historical record?) and establish that the archive can hold the latter without adjudicating the former."
+failText: "The Dominican wants to review the notes for three days before releasing them. You wait. On the third day, he releases them with a note attached: 'Contents spiritually ambiguous. Not recommended for general circulation.' The note will follow the document to the archive."
+successText: "The Dominican reads your distinction aloud back to you, as if testing it. Then: 'The archive holds testimony. The Church holds judgment. These are different offices.' He closes his breviary. Van Houten looks annoyed but yields. You receive the Flemish Secretary's Interview Notes."
+grantItem: "Flemish Secretary's Interview Notes"
+checkPassFlag: lis_c11_act1
+
+---
+
+**Act 2 — "The Third Sailor's Son"**
+activateNode: CVP
+type: skill_check
+scene: "Cape Verde, the Atlantic waypoint. A Portuguese fisherman named Manuel — son of the third sailor, the one who would not describe his experience — has been waiting for this ship. He does not want the notes destroyed. He wants a specific change: his father's description should be read as a refusal to speak, not as an inability to speak. The notes currently render his father's silence as a kind of failure — 'would not describe.' Manuel wants it recorded that his father *chose* silence because the experience was complete in itself and description would diminish it. He is not asking for the notes to be altered. He is asking for a supplementary note."
+prompt: "Insight DC 12. Manuel's request is legitimate and accurate: the difference between 'would not' and 'could not' is significant as testimony. A man who chooses not to describe an experience is testifying to its adequacy; a man who cannot is testifying to its excess. Manuel's father said 'that's enough' — that is a statement of sufficiency, not of failure. Insight DC 12: determine whether the supplementary note serves the archive's accuracy or serves Manuel's desire to rehabilitate a silence his neighbors may have mocked."
+failText: "Both are true simultaneously — Manuel wants accuracy and he wants his father honored. You cannot cleanly separate them. The supplementary note is added, but with a hedged formulation: 'silence interpreted by the subject's son as chosen, not compelled.'"
+successText: "The note is accurate and the motive is irrelevant to its accuracy. You write: 'Supplementary note from subject's son: the silence was a chosen statement of sufficiency, not an indication of inability to describe. The subject said: that's enough. This should be read as testimony, not as refusal.' The notes gain precision."
+checkPassFlag: lis_c11_act2
+activateCond: lis_c11_act1
+
+---
+
+**Act 3 — "The Allegorical Reading"**
+activateNode: MLN
+type: skill_check
+scene: "Malindi. A Portuguese Jesuit named Padre Henrique has studied Camões for thirty years and knows the Island of Venus as allegory: the reward of virtue, the glory of the hero made flesh. He wants to add a classification note to the interview records that describes them as allegorical illustration — as if the sailors were unconsciously enacting the poem's meaning. He is friendly, scholarly, enthusiastic. He does not understand why you are resisting."
+prompt: "Investigation DC 12. The sailors' accounts predate the publication of the Lusiad by seventy years — Van der Berg interviewed them in 1499; the poem appeared in 1572. The sailors were not enacting the poem's allegory; the poem was later written partly from accounts like this one. The interview notes are primary evidence, not illustration of a secondary text. Investigation DC 12: establish the chronological relationship that Padre Henrique has inverted."
+failText: "Padre Henrique is unconvinced — he argues that Camões had access to these accounts and shaped them into the allegory, which means the allegory and the testimony are the same event viewed from different angles. His classification note is added as an alternative reading."
+successText: "Padre Henrique goes very still. 'Seventy years,' he says. 'I had the dates wrong.' He withdraws the classification note. 'Then the poem is what Camões made of what they said.' He pauses. 'That's more interesting, isn't it.' The notes are reclassified as primary testimony."
+checkPassFlag: lis_c11_act3
+activateCond: lis_c11_act2
+
+---
+
+**Act 4 — "The Night Road"**
+activateNode: CON
+type: skill_check
+scene: "Outside Constantinople, the road north, after dark. You chose a night departure to avoid the Ragusian from the previous cycle — a bad instinct, in retrospect. The road is unlit. Half a mile from the city gate, two men step from the treeline. They want your pack. They are carrying cudgels, not swords — this is a robbery, not an assassination. The notes are in the pack."
+prompt: "Athletics DC 14. Two men with cudgels at ten feet. The notes are in the pack. Running is an option but not a good one — they know this road and you do not. Athletics DC 14: the correct physical response to two cudgels at close range in the dark, without drawing a weapon."
+failText: "You take a blow across your left forearm deflecting a swing. You get enough distance to run. The pack stays on. Your arm aches. You reach the next waystation limping. The notes are intact but the ink of the second page has smeared slightly where the pack hit the ground."
+successText: "You step into the space between them before either can wind up. Close work, bad range for cudgels. They recalculate and step back. You walk north at the same pace. They do not follow. The notes arrive at the next waystation dry."
+checkPassFlag: lis_c11_act4
+activateCond: lis_c11_act3
+
+---
+
+**Act 5 — "The Testimony of Sufficiency"**
+activateNode: WM
+type: skill_check
+scene: "Weimar Archive. Sweelinck reads all six pages, including the supplementary note on the third sailor. He reads it twice. He sets it down and looks at the window for a long time. 'Three sailors,' he says. 'All remember the same things. One cannot describe the woman. One will not describe his experience because it was sufficient. And the Flemish secretary did not know what to make of any of it.' He turns to you. 'Camões made it into allegory. What does the archive make of it?'"
+prompt: "Investigation DC 11. The archive makes it into testimony — primary, pre-literary, uncategorized by its original recorder. Sweelinck needs a classification that does not foreclose the question of what the sailors actually experienced, because the archive is not in the business of deciding that. Investigation DC 11: the classification is: firsthand account of anomalous experience, pre-literary, origin genuine, interpretation deferred to the reader."
+failText: "Sweelinck writes: 'Sailor accounts, probable embellishment, possibly allegorical in origin.' The notes are filed under literary background material. The third sailor's silence is lost in the category."
+successText: "Sweelinck considers the formulation. He writes: *Testimony of the Indian Voyage — Three Sailors on the Island of Love, First Entry. Six pages by a Flemish secretary, 1499: three sailors describe an island that rose from the sea; the first cannot describe the woman he met; the second chose silence because the experience was sufficient; the third says it was the best week of his life; the archivist does not adjudicate; the poet made it allegory; the archive holds what was said before the allegory was written.* You receive the Van der Berg Transcript. The notes are taken."
+grantItem: "Van der Berg Transcript"
+takeItem: "Flemish Secretary's Interview Notes"
+checkPassFlag: lis_c11_act5
+activateCond: lis_c11_act4
+
+---
+
+## Source Summary — Part 5 of 6
+
+*Footnotes and scholarly apparatus for Cantos I–IX: translator's notes on mythological sources, historical identifications, commentary on specific passages, comparative quotations from Virgil, Homer, Tasso, Ariosto, and Milton.*
+
+Part 5 is almost entirely Mickle's scholarly footnotes — a dense apparatus identifying every classical allusion, defending every translation choice, and providing historical context for the voyage. The notes illuminate several key tensions: between Fanshaw's more literal translation and Mickle's freer poetic version; between Camões's allegorical intent (explicitly stated twice in the poem) and the literal reading of the machinery; between the poem's Roman Catholic triumphalism and the historical reality of Portuguese conduct in India. The most significant notes concern: the treachery of the Mozambique pilot (described as historical fact by Barros and Castaneda); the Zamorim and his Catual (their names explained, their historical behavior documented); and Monsaide the Moorish merchant from Tunis who is described as historically accurate — he died in Portugal in the Christian faith.
+
+Two footnotes stand out as quest-relevant. First, Note 379: the sailors' confusion of Portuguese for Moorish traders because of their dark complexion — a detail that haunts the poem's claim to be a Christian epic. Second, Note 543: the account of what Gama actually brought as gifts to the Zamorim — four scarlet mantles, six feathered hats, four coral chaplets, twelve Turkish carpets, seven brass drinking cups, a chest of sugar, two barrels of oil, two of honey. The Zamorim's contempt was openly expressed. The gap between the grandeur of the poem's imperial vision and the shabbiness of the actual gift-offering is one of the Lusiad's unresolved ironies.
+
+---
+
+## Cycle 12 — The Gift Inventory
+
+**What this angle reveals that prior cycles missed:** Prior cycles concern high-stakes documents: commissions, charts, diplomatic records. This cycle descends to the material level of the encounter — the actual gift inventory that Gama presented to the Zamorim and that the Zamorim received with visible contempt. The gift inventory is the document that records the gap between the poem's imperial grandeur and the fleet's actual preparedness. The Portuguese brought gifts for savages; they found a civilization. The inventory is the evidence of that miscalculation.
+
+---
+
+**THE TOKEN: `lis_cycle_12_token`** — The Fleet Quartermaster's Gift Inventory, a single page in the hand of Gama's fleet quartermaster, dated before departure for the palace reception at Calicut. Written in Portuguese, listing every item removed from the ship's stores for presentation to the Indian sovereign: four scarlet mantles, six feathered hats, four chaplets of coral, twelve Turkish carpets, seven brass drinking cups, a chest of sugar, two barrels of oil, two barrels of honey. Beside each item, a note in a second hand — possibly Monsaide's, possibly the fleet notary's — giving its estimated value in the Calicut market. The values are dismal. The Turkish carpets are the most valuable item on the list; the rest are trade goods for a minor coastal exchange. The Zamorim was lord of India's richest port. He received these gifts and said nothing, which was worse than contempt. The quartermaster's inventory was returned to the fleet log after the audience. The fleet log went to Lisbon. The inventory was separated in the archive and reclassified in 1530 under "fleet provisioning records." No one connected it to the Calicut diplomatic failure for sixty years.
+
+---
+
+*The inventory reached the Weimar Archive in a bundle of Portuguese maritime records sold by the Lisbon crown archive in 1590, during the Hapsburg reorganization. It was catalogued as: "Provisioning manifest, Indian voyage, 1498." Sweelinck found it while looking for something else, recognized the contents, and moved it to the diplomatic section. He wrote in the catalogue: "This is not a provisioning manifest. This is an embarrassment."*
+
+*The Fighter reads the list over your shoulder. "Sugar," she says. "They brought sugar to Calicut." A pause. "The Zamorim grew sugarcane."*
+
+---
+
+**Act 1 — "The Archivist's Reclassification"**
+activateNode: LHA
+type: skill_check
+scene: "Lisbon Humanist Archive. The inventory has been reclassified — it is currently in the maritime provisioning files, marked 'fleet quartermaster, Indian voyage.' A Lisbon crown official named Soares has flagged it for re-reclassification back to provisioning records, because the official diplomatic failure at Calicut is a sensitive matter and a document that evidences the miscalculation should not be easily findable. He has filed a reclassification order. The archive's senior cataloguer is reviewing it, uncertainly. He is waiting for someone to make a clear argument."
+prompt: "Investigation DC 12. The reclassification order misidentifies the document's archival character. The inventory is not a provisioning record — it is a diplomatic brief, because it records what was offered to a foreign sovereign in an official capacity. Its subject is not what the fleet carried; its subject is what the crown chose to offer the Zamorim, which is a diplomatic decision. Investigation DC 12: make the argument for the correct classification with enough precision that the cataloguer can write it into his decision."
+failText: "The cataloguer is uncertain. He defers the decision for a week and asks Soares to provide a written justification for the reclassification. The inventory remains in limbo. You can take it, but the dispute will follow it."
+successText: "The cataloguer reads your argument, nods twice, and writes: 'document reclassified to diplomatic records per the argument that its subject is the content of a sovereign presentation, not fleet logistics.' Soares is overridden. You receive the Fleet Quartermaster's Gift Inventory."
+grantItem: "Fleet Quartermaster's Gift Inventory"
+checkPassFlag: lis_c12_act1
+
+---
+
+**Act 2 — "Monsaide's Market Valuations"**
+activateNode: CVP
+type: skill_check
+scene: "Cape Verde. A scholar of Indian Ocean trade named Ibrahim has studied the second-hand marginal valuations on the inventory — the estimates in the secondary hand. He believes they are in Monsaide's handwriting; he has a sample of Monsaide's hand from a letter in the Melindi archive. He wants to add a certification to the inventory noting that Monsaide valued the gifts before the presentation and said nothing to Gama about their inadequacy. Ibrahim's interpretation: Monsaide was loyal to Gama but knew the gifts were wrong and let the presentation happen anyway. This changes how the document reads."
+prompt: "Insight DC 13. Ibrahim's interpretation assumes Monsaide's silence was a choice — that he knew and did not say. But Monsaide may not have known the Zamorim's reception standards; he was a North African merchant, not a Malabar court insider. His valuations may have been honest estimates from market knowledge, not a calculated silence. Insight DC 13: determine whether the handwriting certification and the inference about Monsaide's intent should be separated in the archive's notes."
+failText: "Ibrahim adds both the handwriting certification and the interpretation as a combined note. Future readers will have difficulty separating the certified fact from the interpretive inference."
+successText: "Ibrahim accepts the separation. The certification reads: 'Secondary annotations consistent with Monsaide's hand, certified by comparison sample.' The interpretation reads: 'Historian's inference — not archival determination.' The two claims are listed distinctly. The document gains precision."
+checkPassFlag: lis_c12_act2
+activateCond: lis_c12_act1
+
+---
+
+**Act 3 — "The Zamorim's Contempt"**
+activateNode: MLN
+type: skill_check
+scene: "Malindi. A Swahili historian named Fatuma has written a study of the Calicut encounter and wants to add a contextual note to the inventory: that the Zamorim's silent reception of the gifts was, in Malabar court protocol, equivalent to a formal rejection. He received them without comment, which was the standard form for indicating that a visitor had failed the basic requirements of diplomatic exchange. Fatuma wants the archive to classify the inventory as documentation of a diplomatic failure, not merely an inadequate gift list. She has a point. She also has a secondary argument: the Portuguese returned in 1502 and bombarded Calicut, which suggests the failure was never resolved. She wants both points noted."
+prompt: "Persuasion DC 12. Fatuma's first point — the Malabar protocol reading of the reception — is archival context and should be included. Her second point — that the 1502 bombardment was the unresolved consequence — is historical interpretation and should be noted as such, attributed to her, not as established fact. Persuasion DC 12: accept the protocol note, propose the proper attribution for the interpretation, and have Fatuma agree to the distinction."
+failText: "Fatuma insists both points be presented as historical fact. You include both but add a hedge: 'per historian Fatuma.' She objects to the hedge. The note is added in dispute."
+successText: "Fatuma considers. 'The protocol is fact. The bombardment consequence is my argument.' She nods. The archive receives both, correctly labelled: the protocol note as documented Malabar court custom, the 1502 connection as Fatuma's historical interpretation, attributed."
+checkPassFlag: lis_c12_act3
+activateCond: lis_c12_act2
+
+---
+
+**Act 4 — "The Rain on the Road"**
+activateNode: CON
+type: skill_check
+scene: "The road north from Constantinople. Three days of rain. The inventory — a single page of Portuguese — is in an oilskin pouch inside your pack. On the second day, the pack gets wet when a stream ford rises faster than expected and the pack goes under for three seconds before you pull it clear. You are cold and the nearest waystation is two hours ahead."
+prompt: "Survival DC 12. Three seconds in cold moving water. The oilskin may or may not have held. You need to assess the damage and dry the document without heat damage — open flame will cause the ink to run faster than the water. Survival DC 12: make the correct decisions about how to handle a possibly-wet period document in cold field conditions."
+failText: "The oilskin held but you cannot be certain until you open it, and opening it wet is worse than waiting. You carry it closed for two hours, arrive at the waystation, and find the inventory lightly damp at one edge. The ink has not run, but the margin notations — Monsaide's hand — are slightly blurred. The certification will note the condition."
+successText: "You do not open the oilskin in the rain. You carry it inside your coat, close to your body, for the two hours to the waystation. The warmth and pressure dry the exterior without opening it to the air. At the waystation, by candlelight, you open it: dry throughout. The margin notations are intact."
+checkPassFlag: lis_c12_act4
+activateCond: lis_c12_act3
+
+---
+
+**Act 5 — "The Document of Miscalculation"**
+activateNode: WM
+type: skill_check
+scene: "Weimar Archive. Sweelinck reads the inventory and then reads it again. He reads the margin valuations. He reads Fatuma's note. 'The greatest voyage in recorded history,' he says, 'and they brought sugar and brass cups.' He is not laughing. 'This document is worse for the crown's reputation than anything in the diplomatic records. No wonder it was filed as provisioning.' He looks at you. 'I need to write an accession note for a document that proves the most famous diplomatic mission of the age was sent to a sovereign court with gifts for a market stall. How do I write that without it sounding like mockery?'"
+prompt: "Investigation DC 12. Sweelinck's challenge is archival honesty without editorial cruelty. The document records what happened; the archive's note should record what the document is without amplifying its irony. Investigation DC 12: propose the exact formulation that states the fact, includes Fatuma's protocol note, notes the margin valuations, and does not tip into commentary."
+failText: "Sweelinck writes a careful but slightly deflating note that will be read as understated mockery by anyone who knows the context. The document is accessioned accurately but without the calibration the tone required."
+successText: "Sweelinck writes: *Diplomatic Records — The Gift Inventory at Calicut, First Entry. The Portuguese fleet quartermaster's list of items presented to the Zamorim of Calicut, 1498: four scarlet mantles, six feathered hats, four chaplets of coral, twelve Turkish carpets, seven brass cups, one chest of sugar, two barrels each of oil and honey; market valuations in a secondary hand, attributed to Monsaide; the Zamorim received them without comment, which in Malabar court protocol constituted a formal rejection; the archive holds this document as a record of the gap between the voyage's ambition and its diplomatic preparation; the gap is noted, not judged.* You receive the Inventory Transcript. The inventory is taken."
+grantItem: "Inventory Transcript"
+takeItem: "Fleet Quartermaster's Gift Inventory"
+checkPassFlag: lis_c12_act5
+activateCond: lis_c12_act4
+
+---
+
+## Source Summary — Part 6 of 6
+
+*Concluding footnotes for Cantos IX–X, the translator's final scholarly notes, the comparison of the Lusiad's ending with Milton's Paradise Lost, and the Project Gutenberg license text.*
+
+Part 6 is the final scholarly apparatus. The most substantial notes concern the Island of Love (Canto X): Mickle defends the allegory at length, compares it to Tasso's island of Armida and Milton's vision of the globe from the mountain, and argues that Camões invented this form of epic reward — the hero shown the future as a gift, not a prophecy of doom. The note on the poem's final address to King Sebastian (Note 677) is worth quoting: Mickle calls the ending "all the force of ancient simplicity and the true sublime" — the fleet arrives, the king receives India, the poem closes. The apparatus ends with Mickle quoting Fletcher's epitaph for Spenser, applied to Camões: *Poorly (poor man) he lived; poorly (poor man) he died.* The comparison stands. Both men wrote their masterworks in exile, carried them home, and were inadequately rewarded.
+
+The concluding comparison with Milton — Adam on the mountain seeing the world spread before him, a scene Mickle argues was copied from Tethys showing Gama the globe — establishes the Lusiad's position: not a second-tier epic but the origin of a formal device that Milton required for the greatest English epic. The ocean voyage as the structure of history; the globe shown from a mountaintop as the structure of prophecy. These are Camões's inventions, passed to Milton, passed to us.
+
+The last quest cycle takes up the poem's own ending: Gama's return to Lisbon, the official log of the voyage, the document that is the voyage's own record of itself.
+
+---
+
+## Cycle 13 — The Official Voyage Log
+
+**What this angle reveals that prior cycles missed:** All previous cycles deal with specific moments or documents from the voyage: the commission, the pilot's chart, the diplomatic exchange, the sailors' testimony, the gift inventory. This final cycle concerns the voyage log itself — the fleet's official record, maintained from departure to return, the administrative document that is the voyage's own account of itself. The log does not contain any of the poem's beauty. It records dates, weather, distances, casualties, water consumed, anchors dropped. It is the skeleton beneath the Lusiad's flesh. And it is — or was — the document that the Portuguese crown used to verify that the voyage happened. Without the log, the voyage is a story. With it, it is a fact.
+
+---
+
+**THE TOKEN: `lis_cycle_13_token`** — The Official Voyage Log of the São Gabriel, Gama's flagship, maintained by the fleet notary from departure Lisbon July 1497 to return Lisbon September 1499. Leather-bound, water-stained, written in a clear chancery hand with insertions in at least three other hands representing different periods of the voyage. The log contains: daily weather notations, latitude readings, distance estimates, crew casualties with causes of death, water and provisions consumed, port contacts and their outcomes (Mozambique, Mombas, Melinda, Calicut noted), a brief entry for the storm at the Cape noting seventeen hours of extreme weather and no loss of ships, and a final entry for the arrival in Lisbon harbor. The entry for the first day in Calicut harbor says: "We anchored. The country appeared much greater than we supposed." The entry for the departure from Calicut says: "We departed with less than we came for but with the knowledge that we had been there." Neither line sounds like a fleet notary's voice. Someone revised the log before it was filed.
+
+---
+
+*The voyage log went to the Casa da Índia in Lisbon and was accessioned in 1502. In 1755, the Lisbon earthquake destroyed the Casa da Índia and most of its holdings. The voyage log was believed lost. In 1847, a water-stained leather volume was found in the ruins of a Jesuit library in Coimbra, identified by its contents as a copy — made in 1510, at royal command, for a second archive outside Lisbon. The copy is what the Weimar Archive holds. The question of whose voice revised the two anomalous entries has never been answered.*
+
+---
+
+**Act 1 — "The Coimbra Copy"**
+activateNode: LHA
+type: skill_check
+scene: "Lisbon Humanist Archive. The 1847 discovery of the Coimbra copy is contested: a Lisbon antiquarian named Rodrigues claims the volume is a forgery made in the 1820s by a Portuguese nationalist who wanted a 'recovered' artifact of the Indian voyage to support the liberal movement's argument for national pride. He has a list of anachronistic phrasings. He is loud and his argument is being taken seriously by the archive's cataloguer, who is risk-averse. The log is in a glass case. You need to get it out of the case before Rodrigues's objection is filed as a formal challenge."
+prompt: "Investigation DC 13. Rodrigues's anachronisms need to be checked against the 1510 copy date, not against 1498 — a 1510 copy would use 1510 Portuguese, not 1498 Portuguese. If his 'anachronisms' are actually 1510 usages rather than 1820s usages, his forgery argument collapses. Investigation DC 13: review his list against known 1510 chancery Portuguese and identify whether his examples prove forgery or prove only that the copy dates to the sixteenth century as claimed."
+failText: "Rodrigues has two examples that are genuinely difficult to date — they could be 1510 or 1820. The cataloguer places the log in a contested status holding category. You may take it but with a dispute annotation that will complicate the archive's intake at Weimar."
+successText: "All of Rodrigues's examples are consistent with sixteenth-century chancery Portuguese. His forgery argument is anachronism-based and the anachronisms are not anachronisms — they are simply older than his frame of reference. The cataloguer releases the log. You receive the Official Voyage Log."
+grantItem: "Official Voyage Log"
+checkPassFlag: lis_c13_act1
+
+---
+
+**Act 2 — "The Revised Entries"**
+activateNode: CVP
+type: skill_check
+scene: "Cape Verde. A palaeographer named Conceição studies the two anomalous log entries — 'We anchored. The country appeared much greater than we supposed' and 'We departed with less than we came for but with the knowledge that we had been there.' She has examined the ink and the hand. Her conclusion: the insertions are in a third hand, different from the primary notary and from the two secondary hands that enter casualty records. She needs one more comparison sample to identify the hand. She has a candidate: a letter in the Lisbon archive written by Gama himself, in 1499, shortly after the return. The letter is in the colonial records."
+prompt: "Persuasion DC 12. The letter is in the colonial records but is technically accessible for scholarly comparison. The comparison serves the historical record: if the hand is Gama's, the log entries are the admiral's own revision of his notary's record — a moment of literary intrusion into an administrative document. Persuasion DC 12: get access to the comparison letter from the colonial archivist, who is protective of the collection."
+failText: "The colonial archivist allows a visual inspection but not removal. Conceição must work from photographs, which are not sharp enough for definitive comparison. She writes: 'possibly consistent with Gama's hand, comparison inconclusive.'"
+successText: "The archivist allows a supervised comparison. Conceição examines both hands for twenty minutes and says: 'The letterforms are consistent across six indicators. I would not call this proof in a court, but I would call it highly probable.' The identification note: 'secondary insertions in a hand highly consistent with Vasco da Gama, 1499.'"
+checkPassFlag: lis_c13_act2
+activateCond: lis_c13_act1
+
+---
+
+**Act 3 — "The Casa da Índia Destruction"**
+activateNode: MLN
+type: skill_check
+scene: "Malindi. A Portuguese archivist named Santos has spent his career documenting the 1755 earthquake losses. He has a list of every document that was in the Casa da Índia in 1755 and a list of every document known to have survived. The original voyage log is on the lost list. But Santos has found a discrepancy: the 1510 copy order signed by the crown says 'copy to be kept at Coimbra as protection against loss of original in fire or flood' — which means the copy was made precisely because someone anticipated the original might be destroyed. Santos wants to add a note to the Coimbra copy's accession record: this is not a substitute for the lost original; it was designed from the start to be the survival copy, and its status is not inferior to the original but parallel to it."
+prompt: "Insight DC 12. Santos's argument is historically and archivally sound: a copy made by royal command specifically as a disaster backup has a different status than an ordinary copy. It was designed to carry the same authority if the original was lost. The 1755 earthquake confirmed the original's loss and activated the copy's designed function. Insight DC 12: assess whether Santos's argument is genuinely supported by the 1510 copy order language or whether it is a post-hoc rationalization."
+failText: "The 1510 copy order language is ambiguous on the question of equal authority — it says 'protection against loss' but does not say 'equal status.' Santos adds his note with the caveat 'interpretation contested.'"
+successText: "The 1510 order language is explicit: 'the copy shall serve in all purposes as the original, should the original be unavailable.' Santos is correct. The Coimbra copy's status is not inferior; it was designed by the crown to be the surviving record. The note is added without qualification."
+checkPassFlag: lis_c13_act3
+activateCond: lis_c13_act2
+
+---
+
+**Act 4 — "The Final Road"**
+activateNode: CON
+type: skill_check
+scene: "The last road to Weimar. Three days north of Constantinople. Spring, clear weather, good roads. You have the voyage log in your pack, the Coimbra copy status confirmed, Gama's hand identified in the insertions, Santos's note attached. A Portuguese naval officer named Capitão Braga is riding the same road northward and has been overtaking you for two hours. He is polite, well-dressed, and carries no documents. He asks if you are going to Weimar. You say yes. He says: 'A friend of mine is very interested in what you are carrying.' He names no friend."
+prompt: "Persuasion DC 14. Braga is not threatening you — he is making a social approach on behalf of someone who wants the log and cannot take it by force. His offer, when he makes it, will be financial. The question is how to decline in a way that closes the conversation without creating an enemy who will make the last stage of the journey difficult. Persuasion DC 14: give Braga a response that is final, courteous, and leaves no room for a counter-offer."
+failText: "Braga is not satisfied but is not hostile. He rides ahead. At the Weimar city gate, a man in a gray coat is waiting and asks your business. He is not blocking you — but he is noting your arrival time."
+successText: "Braga listens to your answer and rides for a moment in silence. Then: 'My friend will be disappointed.' He touches his hat and takes a fork in the road south. You arrive at Weimar the following evening without further contact."
+checkPassFlag: lis_c13_act4
+activateCond: lis_c13_act3
+
+---
+
+**Act 5 — "The Skeleton Beneath the Poem"**
+activateNode: WM
+type: skill_check
+scene: "Weimar Archive, evening. Sweelinck takes the voyage log and carries it to the north window. He reads slowly. He reads the two anomalous entries twice. He reads them again. He sets the log on the table and is quiet for a long time. 'Gama wrote these himself,' he says. 'Into his own notary's log. After the fact, probably. Before he filed it.' He picks it up again. 'The country appeared much greater than we supposed. We departed with less than we came for but with the knowledge that we had been there.' He looks at you. 'That is not fleet administration. That is a man trying to say what happened to him. He tried to say it in the official record and no one noticed for four hundred years.' He sets it down. 'How do I write the accession note for the document that is the voyage's own record of itself, with a poet's revision buried in the administrator's text?'"
+prompt: "Investigation DC 12. The note should identify the document's layers: the official record, the notary's primary hand, the casualty insertions in two secondary hands, and the anomalous entries in a hand identified as highly consistent with Gama's own. The accession note should neither overclaim the identification as certain nor dismiss it as mere possibility. Investigation DC 12: propose the formulation that names all four layers and holds the Gama identification at its appropriate level of confidence."
+failText: "Sweelinck writes a careful accession note that slightly hedges the Gama identification in a way that will cause future readers to discount it. The note is accurate but not fully brave."
+successText: "Sweelinck takes the pen. He writes slowly. *Indian Voyage Records — The Official Log of the São Gabriel, First Entry. The fleet notary's record from departure Lisbon 1497 to return September 1499: four hands, three voices, one voyage; the primary notary records weather, position, casualties, provisions, and port contacts; two secondary hands enter deaths at sea; a fourth hand, identified as highly consistent with Gama's own, inserted two entries in the Calicut section: 'The country appeared much greater than we supposed' and 'We departed with less than we came for but with the knowledge that we had been there'; these insertions are not administrative language; they are a man trying to say what happened to him in the only record he knew would survive; the archive holds the skeleton beneath the poem; the poem was written later; the skeleton was always here.* You receive the Log Transcript. The voyage log is taken.*
+questComplete: true"
+grantItem: "Log Transcript"
+takeItem: "Official Voyage Log"
+checkPassFlag: lis_c13_act5
+activateCond: lis_c13_act4
+questComplete: true
+
