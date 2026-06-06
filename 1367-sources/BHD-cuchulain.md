@@ -1233,3 +1233,109 @@ TOKEN TAKEN: Deirdre's Hall Account.
 ---
 
 *BHD SEEDS COMPLETE. §BHD-01 through §BHD-07 written. Admin pass: quest-map.md, books.md, plan.md.*
+
+---
+
+## Cycle 8 — Angle: *Cuchulain's Ford Record — The Solo Defense Log*
+
+*All prior cycles reviewed. Source knowledge used directly.*
+
+**What prior cycles missed:** Cuchulain held the ford of Ulster alone for months while the province's warriors lay under Macha's curse of weakness. Each day Connacht's queen Maeve sent a different champion. Each day Cuchulain fought and killed or drove them back. Someone — a bard, a watcher — kept the record of each encounter: who came, what weapons they used, how long the combat lasted, and what happened. This record is the log of an impossible solo defense.
+
+**This cycle introduces:** *The solo defense record — the account of one man holding a military position against many opponents, kept day by day because the siege had to be accounted for.*
+
+---
+
+### Quest API Stub — "Cuchulain's Ford Record"
+
+```
+Act I — "The Watcher's Account"
+activateNode: ULC
+type: skill_check
+missionAccept: "A bard has kept the day-by-day record of Cuchulain's defense
+  at the ford — each champion Maeve sent, each combat's outcome. He is old
+  now and the record is in his memory and on a dozen small tablets. Before he
+  dies he wants the tablets copied to a single document and sent somewhere
+  it will be preserved. He has heard of an archive."
+scene: "Emain Macha, Ulster. An old bard sits with a pile of wooden tablets,
+  each scratched with the name of a champion and a line or two of outcome.
+  Ferdia's name is the last entry — and it is the only one with no outcome
+  line. 'I could not write what happened at the ford of Ferdia,' he says.
+  'I tried for a year. I could not do it. You will have to leave that entry
+  as it is.'"
+prompt: "Persuasion DC 12. Convince him to give you the tablets for copying
+  and transport. Offer to have a professional scribe produce the clean copy
+  in front of him, so he can verify each entry before you go."
+failText: "He will not trust a stranger with the tablets until the copy is
+  made. Find a scribe in the town — this will take two days."
+successText: "He gives you the tablets and trusts you to copy them faithfully.
+  'Do not try to fill in Ferdia's entry. Leave it blank. A blank is more
+  honest than what I would write.'"
+grantItem: "Cuchulain's Ford Record (tablets)"
+checkPassFlag: tabletsReceived
+activateMissionBit: bhd8_act1Active
+
+Act II — "The Missing Entry"
+activateNode: HLD
+type: skill_check
+scene: "A scribe's house in a Highland settlement. The scribe copies the
+  tablets faithfully. When he reaches the final entry — Ferdia's name with
+  a blank line — he stops. 'I cannot copy a blank. A blank in a record is
+  an error, not a statement. If I submit this to any registry, they will
+  ask what happened at Ferdia's entry and assume the record is incomplete.'"
+prompt: "History DC 13. Argue that a deliberate blank is not an incompleteness
+  but a notation of refusal to describe — a documentary form of unspeakable
+  grief. The blank should be preserved with a marginal note: 'Entry withheld.
+  The event occurred. The bard chose not to record it.'"
+failText: "The scribe will not accept this. He fills in a minimal entry
+  from his own knowledge of the story: 'Ferdia, foster-brother. Combat
+  at ford. Cuchulain prevailed. Ferdia died.' Accurate. Inadequate."
+successText: "He accepts the argument. He copies the blank and adds the
+  marginal note in his own hand. The blank is now a documentary statement."
+checkPassFlag: blankPreserved
+activateCond: tabletsReceived
+
+Act III — "The Military Evaluator"
+activateNode: BK
+type: skill_check
+scene: "Birka. A Scandinavian war-captain who has studied siege accounts
+  reads the Ford Record with interest. 'This is the most complete single-man
+  siege account I have ever seen. Better than anything from our chronicles.
+  The combat succession is tactical information — you can see how Maeve
+  calibrated her choices, how she escalated, when she tried to break him
+  by sending friends rather than enemies.' He wants a copy for military study."
+prompt: "Persuasion DC 13. The record belongs to the bard's tradition,
+  not to military strategy. Offer him a copy if he contributes a professional
+  military evaluation as a supplementary document, to be filed alongside
+  the bard's account in the archive."
+failText: "He wants the record without conditions. Decline — but offer to
+  write to the archive on his behalf after filing."
+successText: "He writes the evaluation immediately, three pages, precise
+  analysis of the tactical pattern. It is the most useful supplementary
+  document the archive has ever received for a heroic narrative."
+checkPassFlag: evaluationReceived
+activateCond: blankPreserved
+
+Act IV — "Filed Under Solo Defense"
+activateNode: WM
+type: skill_check
+scene: "Sweelinck reads the Ford Record, the blank Ferdia entry with its
+  marginal note, and the military evaluation. He reads for a long time.
+  He closes the document and looks at the ceiling. 'One man. Months. How
+  many entries are there?' You tell him: forty-three champions named,
+  forty-two entries with outcomes, one blank. He opens the register.
+  'What is the category for a military log kept by a bard?'"
+prompt: "History DC 11. The category combines the form (military log)
+  with the recorder (bard, not a military clerk) and the circumstance
+  (solo defense, unlimited opponents). Name the category."
+failText: "He creates it: Solo Defense Records — Single-Combatant Siege
+  Accounts. He looks at you. 'You may as well have suggested it.'"
+successText: "Filed: Solo Defense Record — Single-Combatant Siege Account
+  Kept by Witness-Bard; Blank Entry Preserved as Refusal to Record.
+  You receive Sweelinck's Defense Record."
+takeItem: "Cuchulain's Ford Record (tablets)"
+grantItem: "Sweelinck's Defense Record"
+checkPassFlag: recordFiled
+questComplete: true
+activateCond: evaluationReceived
+```
