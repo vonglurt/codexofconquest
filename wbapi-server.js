@@ -2357,7 +2357,7 @@ async function route(req, res) {
           msg:`${code} has no entry in NODE_COORDS — won't appear on map canvas` });
     }
 
-    // ── 8. Alignment: connected pair not on same row or column ───────────────
+    // ── 8. Alignment: connected pair not on same row or column (diagonal) ──────
     const alignSeen = new Set();
     for (const code of nodeCodesWithCoords) {
       const n  = nodeMap[code];
@@ -2369,11 +2369,23 @@ async function route(req, res) {
         if (alignSeen.has(pairKey)) continue;
         alignSeen.add(pairKey);
         const cb = coords[target];
-        if (ca.r !== cb.r && ca.c !== cb.c)
-          warnings.push({ check:'alignment', code, dir, target,
-            msg:`${code}(r:${ca.r},c:${ca.c})↔${target}(r:${cb.r},c:${cb.c}) — connected nodes must share a row or column`,
-            fix:{ method:'GET', url:`/api/layout/solve`,
-                  curl:`curl http://localhost:${PORT}/api/layout/solve  # get proposed grid layout` } });
+        if (ca.r === cb.r || ca.c === cb.c) continue; // aligned — fine
+        // Diagonal: N/S edge means they should share column; E/W edge means they should share row
+        const isNS = dir === 'N' || dir === 'S';
+        const diagAxis    = isNS ? 'c' : 'r';
+        const diagSrcVal  = isNS ? ca.c : ca.r;
+        const diagTgtVal  = isNS ? cb.c : cb.r;
+        const diagDesc    = `${code} ${diagAxis}=${diagSrcVal}, ${target} ${diagAxis}=${diagTgtVal}`;
+        // Suggested fix: move target so it shares the correct axis with source
+        const fixCoords   = isNS ? { r: cb.r, c: ca.c } : { r: ca.r, c: cb.c };
+        const fixText     = `Move ${target} to (${fixCoords.r},${fixCoords.c})`;
+        warnings.push({ check:'alignment', code, dir, target,
+          diagDesc, fixCoords, fixText,
+          msg:`Diagonal (${diagDesc})`,
+          suggestedFix: fixText,
+          fix:{ method:'PUT', url:`/api/node/${target}`,
+                body:{ r: fixCoords.r, c: fixCoords.c },
+                curl:`curl -XPUT http://localhost:${PORT}/api/node/${target} -H 'Content-Type: application/json' -d '{"r":${fixCoords.r},"c":${fixCoords.c}}'` } });
       }
     }
 
@@ -2389,18 +2401,96 @@ async function route(req, res) {
         if (axisSeen.has(pairKey)) continue;
         axisSeen.add(pairKey);
         const cb = coords[target];
-        if (ca.r !== cb.r && ca.c !== cb.c) continue; // alignment rule handles this
+        if (ca.r !== cb.r && ca.c !== cb.c) continue; // diagonal handled above
         const axisD = ca.r === cb.r ? Math.abs(ca.c - cb.c) : Math.abs(ca.r - cb.r);
-        if (axisD > 4)
-          warnings.push({ check:'axis_distance', code, dir, target, distance: axisD,
-            msg:`${code}↔${target} axis distance ${axisD} cells (max 4) — use junction nodes spaced ≤4 cells apart`,
-            fix:{ method:'GET', url:`/api/layout/solve`,
-                  curl:`curl http://localhost:${PORT}/api/layout/solve  # get proposed grid layout` } });
+        if (axisD <= 4) continue;
+        // Compute intermediate junction positions spaced ≤4 cells apart
+        const junctionsNeeded = Math.ceil(axisD / 4) - 1;
+        const midpoints = [];
+        for (let i = 1; i <= junctionsNeeded; i++) {
+          const t = i / (junctionsNeeded + 1);
+          midpoints.push({
+            r: Math.round(ca.r + (cb.r - ca.r) * t),
+            c: Math.round(ca.c + (cb.c - ca.c) * t),
+          });
+        }
+        let fixText;
+        if (axisD > 24) {
+          fixText = `Gap=${axisD} — dense collision region, needs manual rearrangement`;
+        } else if (junctionsNeeded === 1) {
+          fixText = `Insert 1 junction at (${midpoints[0].r},${midpoints[0].c})`;
+        } else {
+          fixText = `Insert ${junctionsNeeded} junctions at ${midpoints.map(p=>`(${p.r},${p.c})`).join(', ')}`;
+        }
+        warnings.push({ check:'axis_distance', code, dir, target, distance: axisD,
+          junctionsNeeded, midpoints, fixText,
+          msg:`Gap=${axisD}`,
+          suggestedFix: fixText,
+          fix:{ method:'POST', url:`/api/node`,
+                note:`Create junction node at each: ${midpoints.map(p=>`r=${p.r},c=${p.c}`).join(' | ')}`,
+                curl: midpoints.map(p =>
+                  `curl -XPOST http://localhost:${PORT}/api/node -H 'Content-Type: application/json' -d '{"code":"J??","name":"junction","label":"Junction","r":${p.r},"c":${p.c}}'`
+                ).join('\n') } });
       }
     }
 
+    // ── 10. Corner-node consistency ───────────────────────────────────────────
+    // A node with both N/S and E/W connections is a corner/T/cross node.
+    // Its coords must sit at the intersection of its two connection axes:
+    //   • The N or S neighbour must share the same column as this node.
+    //   • The E or W neighbour must share the same row as this node.
+    // If either fails, report the misalignment and suggest the correct position.
+    for (const code of nodeCodesWithCoords) {
+      const n  = nodeMap[code];
+      const ca = coords[code];
+      const nsDir = ['N','S'].find(d => n[d] && coords[n[d]]);
+      const ewDir = ['E','W'].find(d => n[d] && coords[n[d]]);
+      if (!nsDir || !ewDir) continue; // not a corner/T node
+      const nsTarget = n[nsDir], ewTarget = n[ewDir];
+      const cns = coords[nsTarget], cew = coords[ewTarget];
+      const nsColOk = cns.c === ca.c;
+      const ewRowOk = cew.r === ca.r;
+      if (nsColOk && ewRowOk) continue;
+      // Compute what this node's correct position should be
+      // Correct r = E/W neighbour's row; correct c = N/S neighbour's column
+      const correctR = ewRowOk ? ca.r : cew.r;
+      const correctC = nsColOk ? ca.c : cns.c;
+      const problems = [];
+      if (!nsColOk) problems.push(`${nsDir}-neighbour ${nsTarget} at c=${cns.c} ≠ ${code} c=${ca.c} — column mismatch`);
+      if (!ewRowOk) problems.push(`${ewDir}-neighbour ${ewTarget} at r=${cew.r} ≠ ${code} r=${ca.r} — row mismatch`);
+      warnings.push({ check:'corner_misalign', code,
+        nsDir, nsTarget, ewDir, ewTarget,
+        currentCoords: { r: ca.r, c: ca.c },
+        correctCoords: { r: correctR, c: correctC },
+        problems,
+        msg:`Corner-node ${code}(${ca.r},${ca.c}): must sit at intersection of ${nsTarget}-column(${cns.c}) × ${ewTarget}-row(${cew.r}) = (${correctR},${correctC})`,
+        suggestedFix: `Move ${code} to (${correctR},${correctC})`,
+        fix:{ method:'PUT', url:`/api/node/${code}`,
+              body:{ r: correctR, c: correctC },
+              curl:`curl -XPUT http://localhost:${PORT}/api/node/${code} -H 'Content-Type: application/json' -d '{"r":${correctR},"c":${correctC}}'` } });
+    }
+
+    // ── Blocked-edges table ───────────────────────────────────────────────────
+    // Collect all edge-level problems into a single ordered list for the table.
+    const blockedEdges = [];
+    const edgeSeen = new Set();
+    for (const w of warnings) {
+      if (!['alignment','axis_distance','corner_misalign'].includes(w.check)) continue;
+      if (!w.code || !w.dir || !w.target) continue;
+      const edgeKey = `${w.code}-${w.dir}→${w.target}`;
+      if (edgeSeen.has(edgeKey)) continue;
+      edgeSeen.add(edgeKey);
+      blockedEdges.push({
+        edge:    edgeKey,
+        problem: w.msg,
+        fix:     w.suggestedFix || '—',
+        check:   w.check,
+      });
+    }
+
     const summary = { errors: errors.length, warnings: warnings.length, suggestions: suggestions.length,
-      nodesChecked: nodeCodesWithCoords.length, totalNodes: allNodeCodes.length };
+      nodesChecked: nodeCodesWithCoords.length, totalNodes: allNodeCodes.length,
+      blockedEdges: blockedEdges.length };
 
     // ── verbose audit log ────────────────────────────────────────────────────
     logRow('nodes checked', `${nodeCodesWithCoords.length}/${allNodeCodes.length} have coords`);
@@ -2449,9 +2539,14 @@ async function route(req, res) {
           return `   → Suggested intermediate node: r=${item.suggestedCoords.r}, c=${item.suggestedCoords.c}`;
         if (check === 'missing_coords')
           return `   → Add coords in NODE_COORDS: ${code}: { r:<row>, c:<col> }`;
-        if (check === 'alignment' || check === 'axis_distance')
-          return `   → curl ${b2}/api/layout/solve              # get proposed grid layout\n` +
-                 `     curl -XPOST ${b2}/api/layout/apply -H 'Content-Type: application/json' -d @layout.json`;
+        if (check === 'alignment' && item.fix?.curl)
+          return `   → ${item.fix.curl}`;
+        if (check === 'axis_distance' && item.fix?.curl)
+          return item.fix.curl.split('\n').map(l => `   → ${l}`).join('\n');
+        if (check === 'corner_misalign' && item.fix?.curl)
+          return `   → ${item.fix.curl}`;
+        if (check === 'alignment' || check === 'axis_distance' || check === 'corner_misalign')
+          return `   → curl ${b2}/api/layout/solve              # get proposed grid layout`;
         return '';
       };
 
@@ -2488,9 +2583,49 @@ async function route(req, res) {
           lines.push('');
         }
       }
+      // ── Blocked-edges table ──────────────────────────────────────────────────
+      if (blockedEdges.length > 0) {
+        lines.push(HR);
+        lines.push(`  BLOCKED EDGES (${blockedEdges.length})`);
+        lines.push(HR);
+        // Column widths
+        const colEdge    = Math.max(6,  ...blockedEdges.map(e => e.edge.length));
+        const colProblem = Math.max(9,  ...blockedEdges.map(e => e.problem.length));
+        const colFix     = Math.max(11, ...blockedEdges.map(e => e.fix.length));
+        const pad = (s, w) => s.length >= w ? s : s + ' '.repeat(w - s.length);
+        const TL='┌', TR='┐', BL='└', BR='┘', H='─', V='│', TM='┬', BM='┴', LM='├', RM='┤', C='┼';
+        const rowSep = (l,m,r) =>
+          l + H.repeat(colEdge+2) + m + H.repeat(colProblem+2) + m + H.repeat(colFix+2) + r;
+        lines.push('  ' + rowSep(TL, TM, TR));
+        lines.push(`  ${V} ${pad('Edge', colEdge)} ${V} ${pad('Problem', colProblem)} ${V} ${pad('Fix needed', colFix)} ${V}`);
+        lines.push('  ' + rowSep(LM, C, RM));
+        for (const be of blockedEdges) {
+          lines.push(`  ${V} ${pad(be.edge, colEdge)} ${V} ${pad(be.problem, colProblem)} ${V} ${pad(be.fix, colFix)} ${V}`);
+        }
+        lines.push('  ' + rowSep(BL, BM, BR));
+        lines.push('');
+      }
+
+      // ── Corner-node narrative ─────────────────────────────────────────────
+      const cornerIssues = warnings.filter(w => w.check === 'corner_misalign');
+      if (cornerIssues.length > 0) {
+        lines.push(HR);
+        lines.push('  CORNER NODE ANALYSIS');
+        lines.push(HR);
+        for (const ci of cornerIssues) {
+          lines.push(`  ${ci.code} (${ci.currentCoords.r},${ci.currentCoords.c}) is a corner node`);
+          lines.push(`  Connects: ${ci.nsDir}→${ci.nsTarget}  ×  ${ci.ewDir}→${ci.ewTarget}`);
+          for (const p of ci.problems) lines.push(`    ⚠  ${p}`);
+          lines.push(`  Correct position: (${ci.correctCoords.r},${ci.correctCoords.c})`);
+          lines.push(`  ${ci.suggestedFix}`);
+          if (ci.fix?.curl) lines.push(`  → ${ci.fix.curl}`);
+          lines.push('');
+        }
+      }
+
       lines.push(HR);
       const clean = errors.length === 0 && warnings.length === 0;
-      lines.push(`  SUMMARY  ${errors.length} errors  ·  ${warnings.length} warnings  ·  ${suggestions.length} suggestions  ·  ${nodeCodesWithCoords.length}/${allNodeCodes.length} nodes positioned`);
+      lines.push(`  SUMMARY  ${errors.length} errors  ·  ${warnings.length} warnings  ·  ${suggestions.length} suggestions  ·  ${blockedEdges.length} blocked edges  ·  ${nodeCodesWithCoords.length}/${allNodeCodes.length} nodes positioned`);
       if (clean) lines.push('  MAP GRAPH OK — no structural errors or warnings.');
       lines.push(HR);
       lines.push('');
@@ -2499,7 +2634,7 @@ async function route(req, res) {
       return res.end(lines.join('\n'));
     }
 
-    return json(res, 200, { ok:true, errors, warnings, suggestions, summary });
+    return json(res, 200, { ok:true, errors, warnings, suggestions, blockedEdges, summary });
   }
 
   // ── Audit (data integrity scan) ───────────────────────────────────────────
@@ -3758,7 +3893,193 @@ async function route(req, res) {
       });
     }
 
-    return json(res, 404, { error:'Unknown graph sub-route. Available: GET /api/graph/reachability  GET /api/graph/connect  POST /api/graph/junction' });
+    // ── GET /api/graph/validate/{code} ───────────────────────────────────────
+    // Check one node's N/E/S/W connections for walkability (gap ≤ maxGap, same axis)
+    if (parts[1] === 'validate' && method === 'GET') {
+      const code = parts[2];
+      const maxGap = Math.max(1, parseInt(url.searchParams.get('maxGap') || '4', 10));
+      if (!code || !nm[code]) return json(res, 404, { error:`Node "${code}" not found` });
+      const cc = WBAPI.nodeCoords[code];
+      const result = { code, coords: cc || null, maxGap, connections: {}, also_target_of: [] };
+      const DIRS4 = ['N','E','S','W'];
+      const DR4 = { N:-1,S:1,E:0,W:0 };
+      const DC4 = { N:0,S:0,E:1,W:-1 };
+
+      for (const d of DIRS4) {
+        const tgt = nm[code]?.[d];
+        if (!tgt) { result.connections[d] = { target:null, status:'unset' }; continue; }
+        const tc = WBAPI.nodeCoords[tgt];
+        if (!cc) { result.connections[d] = { target:tgt, status:'src_no_coords' }; continue; }
+        if (!tc) { result.connections[d] = { target:tgt, status:'tgt_no_coords', fix:`PUT /api/coords/${tgt} {"r":?,"c":?}` }; continue; }
+        const dr = tc.r - cc.r, dc = tc.c - cc.c;
+        const gap  = d in {N:1,S:1} ? Math.abs(dr) : Math.abs(dc);
+        const off  = d in {N:1,S:1} ? Math.abs(dc) : Math.abs(dr);
+        const sign = d in {N:1,S:1} ? Math.sign(dr) : Math.sign(dc);
+        const goodDir = (d==='N'&&dr<0)||(d==='S'&&dr>0)||(d==='E'&&dc>0)||(d==='W'&&dc<0);
+        let status = 'ok', fix = null;
+        if (off > 0 && gap > maxGap) { status = 'diagonal_and_gap'; fix = `corner-junction or move both nodes`; }
+        else if (off > 0)            { status = 'off_axis';          fix = `POST /api/graph/corner-junction`; }
+        else if (!goodDir)           { status = 'wrong_direction';   fix = `coords reversed — check if ${tgt} is actually ${OPP[d]} of ${code}`; }
+        else if (gap > maxGap)       { status = 'gap_too_large';     fix = `POST /api/graph/fill-gap {"from":"${code}","dir":"${d}","to":"${tgt}","maxGap":${maxGap}}`; }
+        result.connections[d] = { target:tgt, targetCoords:tc, gap, axisOffset:off, goodDirection:goodDir, status, fix };
+      }
+
+      // Check: is this node the target of any off-axis connection?
+      for (const [src, dirs] of Object.entries(nm)) {
+        if (src === code) continue;
+        const sc = WBAPI.nodeCoords[src];
+        for (const d of DIRS4) {
+          if (dirs[d] !== code) continue;
+          if (!sc || !cc) continue;
+          const dr = cc.r - sc.r, dc = cc.c - sc.c;
+          const gap = d in {N:1,S:1} ? Math.abs(dr) : Math.abs(dc);
+          const off = d in {N:1,S:1} ? Math.abs(dc) : Math.abs(dr);
+          if (off > 0 || gap > maxGap) {
+            result.also_target_of.push({ from:src, fromDir:d, fromCoords:sc, gap, axisOffset:off,
+              status: off>0 ? 'off_axis' : 'gap_too_large' });
+          }
+        }
+      }
+
+      // Diagnosis for corner nodes
+      const incoming = result.also_target_of;
+      const nsIncoming = incoming.filter(x=>x.fromDir in {N:1,S:1});
+      const ewIncoming = incoming.filter(x=>x.fromDir in {E:1,W:1});
+      if ((nsIncoming.length && ewIncoming.length) || (Object.values(result.connections).some(c=>c.status==='off_axis'))) {
+        const rFromEW = cc ? cc.r : '?';
+        const cFromNS = nsIncoming[0] ? WBAPI.nodeCoords[nsIncoming[0].from]?.c : '?';
+        result.diagnosis = `CORNER NODE — must sit at axis intersection: r=${rFromEW} c=${cFromNS}`;
+        if (cc && cFromNS !== '?' && (cc.c !== cFromNS)) result.fixCommand = `PUT /api/coords/${code} {"r":${rFromEW},"c":${cFromNS}}`;
+      }
+
+      logResponse('GET', url.pathname, 200, `validate/${code}`);
+      return json(res, 200, result);
+    }
+
+    // ── GET /api/graph/broken ─────────────────────────────────────────────────
+    // Find all connected pairs that violate walkability rules
+    if (parts[1] === 'broken' && method === 'GET') {
+      const maxGap = Math.max(1, parseInt(url.searchParams.get('maxGap') || '4', 10));
+      const root   = url.searchParams.get('root') || null;
+      const DIRS4 = ['N','E','S','W'];
+      const edges = [], seen = new Set();
+      let totalChecked = 0;
+
+      for (const [code, dirs] of Object.entries(nm)) {
+        const cc = WBAPI.nodeCoords[code];
+        for (const d of DIRS4) {
+          const tgt = dirs[d]; if (!tgt) continue;
+          const key = [code,tgt].sort().join(':');
+          if (seen.has(key)) continue; seen.add(key); totalChecked++;
+          const tc = WBAPI.nodeCoords[tgt];
+          if (!cc || !tc) { edges.push({ from:code,dir:d,to:tgt,type:'missing_coords' }); continue; }
+          const dr = tc.r-cc.r, dc = tc.c-cc.c;
+          const gap = d in {N:1,S:1} ? Math.abs(dr) : Math.abs(dc);
+          const off = d in {N:1,S:1} ? Math.abs(dc) : Math.abs(dr);
+          let type = null;
+          if (off>0 && gap>maxGap) type = 'diagonal_and_gap';
+          else if (off>0)          type = 'diagonal';
+          else if (gap>maxGap)     type = 'gap_too_large';
+          if (type) {
+            const juncsNeeded = type==='gap_too_large' ? Math.ceil(gap/maxGap)-1 : null;
+            edges.push({ from:code, fromCoords:cc, dir:d, to:tgt, toCoords:tc,
+              gap, axisOffset:off, type,
+              junctionsNeeded: juncsNeeded,
+              fix: type==='diagonal' ? 'corner_junction' : type==='gap_too_large' ? 'fill_gap' : 'both' });
+          }
+        }
+      }
+      const categories = {};
+      for (const e of edges) categories[e.type] = (categories[e.type]||0)+1;
+      logResponse('GET', url.pathname, 200, `${edges.length} broken edges`);
+      return json(res, 200, { ok:true, maxGap, totalChecked, broken:edges.length, categories, edges });
+    }
+
+    // ── POST /api/graph/fill-gap ──────────────────────────────────────────────
+    // Plan (or execute) inserting junction chain between two directly-connected nodes
+    if (parts[1] === 'fill-gap' && method === 'POST') {
+      let body; try { body = await readBody(req); } catch(e) { return json(res,400,{error:'Invalid JSON'}); }
+      const { from: src, dir, to: tgt, maxGap=4, step=4, terrain='inherit', dryRun=true } = body||{};
+      if (!src||!dir||!tgt) return json(res,400,{error:'Required: from, dir, to'});
+      if (!nm[src]||!nm[tgt]) return json(res,400,{error:`Node not found: ${nm[src]?tgt:src}`});
+      const sc = WBAPI.nodeCoords[src], tc = WBAPI.nodeCoords[tgt];
+      if (!sc) return json(res,400,{error:`${src} has no coordinates`});
+      if (!tc) return json(res,400,{error:`${tgt} has no coordinates`});
+      const DR4={N:-1,S:1,E:0,W:0}, DC4={N:0,S:0,E:1,W:-1};
+      const dr=tc.r-sc.r, dc=tc.c-sc.c;
+      const gap = dir in {N:1,S:1} ? Math.abs(dr) : Math.abs(dc);
+      const off = dir in {N:1,S:1} ? Math.abs(dc) : Math.abs(dr);
+      if (off>0) return json(res,400,{error:`Connection is off-axis (offset=${off}). Use POST /api/graph/corner-junction instead.`});
+      if (gap<=maxGap) return json(res,200,{ok:true,message:'Gap is already within limit',gap,maxGap});
+
+      const juncsNeeded = Math.ceil(gap/step)-1;
+      const terrainType = terrain==='inherit' ? (nm[src]?.name||'junction') : terrain;
+      const occupied = new Map(Object.entries(WBAPI.nodeCoords).map(([c,p])=>[`${p.r},${p.c}`,c]));
+
+      // Generate positions
+      const plan = [];
+      const nums = Object.keys(nm).filter(c=>/^J\d+$/.test(c)).map(c=>+c.slice(1));
+      let nextJ = (nums.length?Math.max(...nums):0)+1;
+
+      for (let i=1; i<=juncsNeeded; i++) {
+        const r = sc.r + DR4[dir]*step*i;
+        const c = sc.c + DC4[dir]*step*i;
+        const key = `${r},${c}`;
+        const slot = occupied.get(key);
+        const jCode = `J${nextJ++}`;
+        plan.push({ code:jCode, r, c, slot: slot ? `OCCUPIED by ${slot}` : 'free', conflict: !!slot });
+      }
+
+      const conflicts = plan.filter(p=>p.conflict);
+      if (dryRun) {
+        return json(res,200,{ ok:true, dryRun:true, from:src, to:tgt, dir, gap, maxGap, step,
+          junctionsNeeded:juncsNeeded, terrain:terrainType, plan, conflicts,
+          wireChain: `${src}.${dir}→${plan.map(p=>p.code).join('→')}→${tgt}`,
+          note: conflicts.length ? `${conflicts.length} slot conflicts — resolve before executing` : 'Ready to execute',
+          executeCommand: `POST /api/graph/fill-gap (same body, dryRun:false)` });
+      }
+      if (conflicts.length) return json(res,409,{ error:`${conflicts.length} slot conflicts`, conflicts,
+        suggestion:'Move conflicting nodes first, or use dryRun:true to see the plan' });
+
+      // Execute: create junctions and wire chain
+      const created = [];
+      let prev = src, prevDir = dir;
+      for (const p of plan) {
+        const jBody = { name:terrainType, label:`Junction near ${nm[prev]?.label||prev}`,
+          text:`Junction along ${dir} path.`, act:nm[src]?.act||1, junction:true, npc:null, battle:null, loot:null, sleep:false,
+          [OPP[dir]]: prev };
+        const jEntry = serializeNodeLiteral(p.code, jBody);
+        const ins = insertBeforeSectionClose('NODE_MAP', jEntry);
+        if (!ins.ok) return json(res,500,{error:`NODE_MAP insert failed for ${p.code}: ${ins.error}`});
+        const newNum = Object.values(WBAPI.nodeMap).reduce((m,n)=>Math.max(m,n.num||0),0)+1;
+        WBAPI.nodeMap[p.code] = { ...jBody, num:newNum };
+        WBAPI.editField('node', prev, prevDir, p.code);
+        // Place coords
+        WBAPI.nodeCoords[p.code] = { r:p.r, c:p.c };
+        const START2='// ◆◆◆ WORLDBUILDER:NODE_COORDS:START ◆◆◆', END2='// ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆';
+        const sI=WBAPI._rawSrc.indexOf(START2)+START2.length, eI=WBAPI._rawSrc.indexOf(END2);
+        let sec=WBAPI._rawSrc.slice(sI,eI);
+        const cIdx=sec.lastIndexOf('\n};');
+        sec=sec.slice(0,cIdx+1)+`  ${p.code}:{r:${p.r},c:${p.c}},\n`+sec.slice(cIdx+1);
+        WBAPI._rawSrc=WBAPI._rawSrc.slice(0,sI)+sec+WBAPI._rawSrc.slice(eI);
+        occupied.set(`${p.r},${p.c}`, p.code);
+        created.push(p.code);
+        prev = p.code; prevDir = dir;
+      }
+      WBAPI.editField('node', prev, dir, tgt);
+      WBAPI.editField('node', tgt, OPP[dir], prev);
+      WBAPI._buildIndexes();
+      logResponse('POST', url.pathname, 201, `fill-gap: ${juncsNeeded} junctions created`);
+      return saveAndRestart(res, 201, { ok:true, from:src, to:tgt, dir, gap, junctionsCreated:juncsNeeded, created, wireChain:`${src}→${created.join('→')}→${tgt}` });
+    }
+
+    // ── POST /api/coords/{code}/nudge ─────────────────────────────────────────
+    // Handled below in the coords block
+
+    // ── POST /api/coords/swap ─────────────────────────────────────────────────
+    // Handled below in the coords block
+
+    return json(res, 404, { error:'Unknown graph sub-route. Available: GET /api/graph/reachability  GET /api/graph/connect  POST /api/graph/junction  GET /api/graph/validate/{code}  GET /api/graph/broken  POST /api/graph/fill-gap' });
   }
 
   // ── Coords (NODE_COORDS) ─────────────────────────────────────────────────
@@ -3869,6 +4190,57 @@ async function route(req, res) {
       logRow('coords', `${targetCode}  ${prev?`r:${prev.r},c:${prev.c} → `:'(new) '}r:${r},c:${c}`);
       logResponse(method, url.pathname, 200, `coords/${targetCode} → r:${r} c:${c}`);
       return saveAndRestart(res, 200, { ok:true, code: targetCode, prev, coords: { r, c }, reminder: 'Use API only: PUT /api/node/{code}, PUT /api/coords/{code}, POST /api/graph/junction — never edit roll2hit-v3.html directly.' });
+    }
+
+    // ── POST /api/coords/{code}/nudge — move relatively ──────────────────────
+    if (method === 'POST' && parts[2] === 'nudge') {
+      const code = parts[1];
+      if (!code) return json(res, 400, { error:'Usage: POST /api/coords/{code}/nudge  body: {dr, dc}' });
+      let body; try { body = await readBody(req); } catch(e) { return json(res,400,{error:'Invalid JSON'}); }
+      const { dr, dc } = body||{};
+      if (dr===undefined && dc===undefined) return json(res,400,{error:'body must have dr and/or dc (relative offsets)'});
+      const prev = WBAPI.nodeCoords[code];
+      if (!prev) return json(res,404,{error:`Node "${code}" has no coordinates. Use PUT /api/coords/${code} to set initial position.`});
+      const nr = prev.r + (Number(dr)||0), nc = prev.c + (Number(dc)||0);
+      const collision = Object.entries(WBAPI.nodeCoords).find(([c,p])=>p.r===nr&&p.c===nc&&c!==code);
+      if (collision) return json(res,409,{error:`r:${nr} c:${nc} already occupied by "${collision[0]}"`});
+      WBAPI.nodeCoords[code] = { r:nr, c:nc };
+      const START='// ◆◆◆ WORLDBUILDER:NODE_COORDS:START ◆◆◆', END='// ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆';
+      const sI=WBAPI._rawSrc.indexOf(START)+START.length, eI=WBAPI._rawSrc.indexOf(END);
+      let sec=WBAPI._rawSrc.slice(sI,eI);
+      const existRe=new RegExp(`(\\b${code}:\\s*\\{)[^}]*(\\})`);
+      if (existRe.test(sec)) sec=sec.replace(existRe,`$1r:${nr},c:${nc}$2`);
+      else { const cIdx=sec.lastIndexOf('\n};'); sec=sec.slice(0,cIdx+1)+`  ${code}:{r:${nr},c:${nc}},\n`+sec.slice(cIdx+1); }
+      WBAPI._rawSrc=WBAPI._rawSrc.slice(0,sI)+sec+WBAPI._rawSrc.slice(eI);
+      logResponse('POST', url.pathname, 200, `nudge ${code}: (${prev.r},${prev.c})→(${nr},${nc})`);
+      return saveAndRestart(res, 200, { ok:true, code, before:prev, after:{r:nr,c:nc}, dr:Number(dr)||0, dc:Number(dc)||0 });
+    }
+
+    // ── POST /api/coords/swap — atomically exchange two node positions ─────────
+    if (method === 'POST' && parts[1] === 'swap') {
+      let body; try { body = await readBody(req); } catch(e) { return json(res,400,{error:'Invalid JSON'}); }
+      const { a, b } = body||{};
+      if (!a||!b) return json(res,400,{error:'body must have: a (code), b (code)'});
+      const ac = WBAPI.nodeCoords[a], bc = WBAPI.nodeCoords[b];
+      if (!ac) return json(res,404,{error:`"${a}" has no coordinates`});
+      if (!bc) return json(res,404,{error:`"${b}" has no coordinates`});
+      const writeCoord = (code, r, c) => {
+        WBAPI.nodeCoords[code] = { r, c };
+        const START='// ◆◆◆ WORLDBUILDER:NODE_COORDS:START ◆◆◆', END='// ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆';
+        const sI=WBAPI._rawSrc.indexOf(START)+START.length, eI=WBAPI._rawSrc.indexOf(END);
+        let sec=WBAPI._rawSrc.slice(sI,eI);
+        const existRe=new RegExp(`(\\b${code}:\\s*\\{)[^}]*(\\})`);
+        if (existRe.test(sec)) sec=sec.replace(existRe,`$1r:${r},c:${c}$2`);
+        else { const cIdx=sec.lastIndexOf('\n};'); sec=sec.slice(0,cIdx+1)+`  ${code}:{r:${r},c:${c}},\n`+sec.slice(cIdx+1); }
+        WBAPI._rawSrc=WBAPI._rawSrc.slice(0,sI)+sec+WBAPI._rawSrc.slice(eI);
+      };
+      writeCoord(a, bc.r, bc.c);
+      writeCoord(b, ac.r, ac.c);
+      logResponse('POST', url.pathname, 200, `swap ${a}↔${b}`);
+      return saveAndRestart(res, 200, { ok:true, swapped:[
+        { code:a, before:ac, after:{r:bc.r,c:bc.c} },
+        { code:b, before:bc, after:{r:ac.r,c:ac.c} }
+      ], verify:[`GET /api/graph/validate/${a}`,`GET /api/graph/validate/${b}`] });
     }
   }
 
