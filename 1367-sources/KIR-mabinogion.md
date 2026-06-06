@@ -1425,3 +1425,101 @@ activateMissionBit: kirAnimalYearsComplete
 ---
 
 *KIR-07 complete. 2026-06-03.*
+
+---
+
+## Cycle 8 — Angle: *The Task List of Ysbaddaden — The Completed Impossible Checklist*
+
+*All prior cycles reviewed. Source knowledge used directly.*
+
+**What prior cycles missed:** Ysbaddaden Chief Giant recited thirty-nine impossible tasks that Culhwch must complete before he could have Olwen as his bride. The tasks were real: find the comb and scissors in the hair of the Chief Boar, hunt the Twrch Trwyth, light the cauldron of Diwrnach, and more. Culhwch's companions fulfilled every one. The completed task list is the proof that compels Ysbaddaden to honor his word. Ysbaddaden died when Olwen was married — his life was bound to the debt of his tasks.
+
+**This cycle introduces:** *The completed impossible task list — a checklist of demands that were declared impossible, fulfilled, and presented as proof that the original demands must now be honored.*
+
+---
+
+### Quest API Stub — "The Task List of Ysbaddaden"
+
+```
+Act I — "The List"
+activateNode: HVY
+type: skill_check
+missionAccept: "Ysbaddaden Chief Giant named thirty-nine impossible tasks as
+  bride-price for Olwen. They were fulfilled. Now the list, marked complete,
+  must be presented at the giant's hall so that he cannot claim a single task
+  remains undone. The list must arrive before his hall is sealed at dusk."
+scene: "The Welsh hills above Ysbaddaden's hall. Culhwch's companion holds
+  the task list — thirty-nine items, each marked with a note of completion.
+  The handwriting changes halfway through: Culhwch wrote the first eighteen,
+  then Cei took over when Culhwch's hand was hurt in the boar-hunt.
+  Different hands, one continuous record. The giant's doorwardens are
+  visible below."
+prompt: "History DC 12. Verify the list is complete — count thirty-nine
+  items, confirm each has a completion mark, and note that the change of
+  hand partway through does not invalidate the document."
+failText: "You count thirty-eight. One task was overlooked. You have one
+  hour to identify which and produce proof of its completion."
+successText: "All thirty-nine, marked and complete. The list is valid.
+  You receive the Completed Task List of Ysbaddaden."
+grantItem: "Completed Task List of Ysbaddaden"
+checkPassFlag: listVerified
+activateMissionBit: kir8_act1Active
+
+Act II — "The Giant's Refusal"
+activateNode: HVY
+type: skill_check
+scene: "Ysbaddaden's hall. The giant sits in his chair. He knows what the
+  list means: if it is complete, he must give Olwen, and his life will end
+  when she is wed. He looks at the list for a long time. Then he says:
+  'The task of the cauldron of Diwrnach is not complete. The cauldron was
+  not brought to me — it was used and then taken across the sea to Ireland.
+  Bringing and using are different things.'"
+prompt: "Persuasion DC 14. Argue that the task specified 'obtain the cauldron,'
+  not 'bring it to the hall.' The cauldron was obtained. The task is complete."
+failText: "The giant's position is not without merit. You must fetch a
+  witness who was present when the cauldron was obtained."
+successText: "Ysbaddaden sits back. He knows the argument is sound. He has
+  been trying to find a way out of his word. He has not found one."
+checkPassFlag: refusalOvercome
+activateCond: listVerified
+
+Act III — "The Presentation"
+activateNode: WLD
+type: skill_check
+scene: "Before Olwen and Culhwch, the list is presented formally. A
+  court-keeper reads each task aloud with its completion note. Thirty-nine
+  tasks. Thirty-nine completions. Ysbaddaden says nothing more. His silence
+  is his consent."
+prompt: "Persuasion DC 12. Present the list with the formal declaration
+  that all tasks are complete, all conditions met, and the bride-price is
+  paid. The form of the declaration matters."
+failText: "The declaration is incomplete — you named the tasks but not
+  the witnesses to each. Culhwch's companions must each confirm their part."
+successText: "The declaration is accepted. Ysbaddaden bows his head. The
+  impossible has been done. The list is the proof."
+checkPassFlag: listPresented
+activateCond: refusalOvercome
+
+Act IV — "Archived After Death"
+activateNode: WM
+type: skill_check
+scene: "Weimar archive. Sweelinck reads the task list. He counts the items.
+  He reads the change of hand partway through. He looks at the completion
+  notes — some formal, some barely legible, one in blood rather than ink.
+  'What is the category for a document that records the fulfillment of
+  conditions set by a power that did not believe they could be met — and
+  whose death was the consequence of the conditions being met?'"
+prompt: "History DC 12. Name the category: a completed task list where
+  the completion of the list was itself the instrument of the task-setter's
+  end."
+failText: "He creates it himself: Fulfilled Impossible Conditions. He looks
+  at you. 'You may as well have suggested it.'"
+successText: "Filed: Fulfilled Impossible Conditions — Completed Task Record
+  Presented as Proof That the Conditionally-Granted Cannot Be Withheld.
+  You receive Sweelinck's Impossible Record."
+takeItem: "Completed Task List of Ysbaddaden"
+grantItem: "Sweelinck's Impossible Record"
+checkPassFlag: listFiled
+questComplete: true
+activateCond: listPresented
+```
