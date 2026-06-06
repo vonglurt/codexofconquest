@@ -1484,3 +1484,90 @@ activateMissionBit: lbcShieldComplete
 ---
 
 *LBC-07 complete. 2026-06-03.*
+
+---
+
+## Cycle 8 — Angle: *The Linden Leaf — The Protective Disclosure Inverted*
+
+*All prior cycles reviewed. Source knowledge used directly.*
+
+**What prior cycles missed:** When Siegfried bathed in the dragon's blood to become invulnerable, a linden leaf fell and adhered to the skin between his shoulder blades. That spot, unprotected, was where Hagen struck him. Kriemhild knew. She told Hagen — marking Siegfried's cloak with a cross, intending Hagen to guard that point in battle. Hagen used the information to kill him. The protective disclosure was the weapon.
+
+**This cycle introduces:** *The protective disclosure that was inverted — information given in confidence to enable protection, which was used instead to enable the specific harm it was intended to prevent.*
+
+---
+
+### Quest API Stub — "The Linden Leaf"
+
+```
+Act I — "Kriemhild's Account"
+activateNode: ETZ
+type: skill_check
+missionAccept: "A scholar has reconstructed Kriemhild's original testimony:
+  why she marked the cloak, what she told Hagen, what she believed he would
+  do with the information. The reconstruction is based on sources that are
+  later than the events, but the pattern of disclosure is clear. The scholar
+  wants the reconstruction archived before a court uses it to blame Kriemhild
+  for Siegfried's death."
+scene: "Etzel's court, after the catastrophe. A scholar holds a careful
+  reconstruction of Kriemhild's testimony about the cloak. She marked it
+  with a cross. She told Hagen: this is where he is vulnerable. She believed
+  Hagen would guard that point. 'She gave him the weapon,' the scholar says,
+  'but she gave it to him to be a shield. The document must show both things.'"
+prompt: "Persuasion DC 13. Convince the scholar to give you the reconstruction
+  for archive. It may not survive in a court's hands — courts will use it
+  against her. The archive can hold it as a record, not as a finding."
+failText: "He is uncertain. He will give you a copy — the original stays
+  with him."
+successText: "He gives you the original. 'Archive it. Record what she intended,
+  not what the result was. Those are two different documents and deserve
+  to be treated so.' You receive Kriemhild's Linden Leaf Account."
+grantItem: "Kriemhild's Linden Leaf Account"
+checkPassFlag: accountReceived
+activateMissionBit: lbc8_act1Active
+
+Act II — "The Inversion"
+activateNode: WOR
+type: skill_check
+scene: "A legal scholar in Worms reviews the account. She reads it slowly.
+  'The information was given to protect. The same information was used to
+  destroy. The disclosure and the harm share an identical subject — the
+  specific location of the vulnerability.' She looks at you. 'Is this
+  betrayal, or is this the hazard that disclosure inherently carries?'"
+prompt: "History DC 13. Argue the distinction: the hazard of disclosure
+  is the general risk of any vulnerability information reaching hostile
+  hands; betrayal is the specific use of protected information by the
+  person to whom it was entrusted, against the subject. Hagen's act is
+  betrayal, not hazard."
+failText: "She finds the distinction inadequate. She will note both possibilities
+  in the archive record."
+successText: "She accepts the distinction. 'Betrayal of confidential
+  vulnerability information. The form of trust makes the harm worse,
+  not the content of the information.'"
+checkPassFlag: inversionClassified
+activateCond: accountReceived
+
+Act III — "Filed as Inverted Disclosure"
+activateNode: WM
+type: skill_check
+scene: "Sweelinck reads the account and the legal scholar's note. 'Information
+  given specifically to enable protection, used specifically to enable the
+  harm it was to prevent.' He is quiet. 'I have records of disclosures that
+  were stolen, disclosures that were inferred, disclosures that were coerced.
+  I have never had a disclosure that was given voluntarily, in trust, to
+  the person who used it to commit the harm.' He opens the register. 'What
+  is the category?'"
+prompt: "History DC 11. Name the category: a protective disclosure made
+  in trust to an identified person, inverted by that person to commit the
+  specific harm the disclosure was intended to prevent."
+failText: "He creates it himself: Inverted Protective Disclosure. He looks
+  at you. 'You may as well have suggested it.'"
+successText: "Filed: Inverted Protective Disclosure — Vulnerability Information
+  Given in Confidence to Enable Protection, Used by the Entrusted Party
+  to Enable the Specific Harm. You receive Sweelinck's Inversion Record."
+takeItem: "Kriemhild's Linden Leaf Account"
+grantItem: "Sweelinck's Inversion Record"
+checkPassFlag: accountFiled
+questComplete: true
+activateCond: inversionClassified
+```
