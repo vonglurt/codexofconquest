@@ -1200,3 +1200,94 @@ activateMissionBit: froDecoyComplete
 ---
 
 *FRO-07 complete. 2026-06-03.*
+
+---
+
+## Cycle 8 — Angle: *Andvari's Curse — The Malediction That Proved Accurate in Every Particular*
+
+*All prior cycles reviewed. Source knowledge used directly.*
+
+**What prior cycles missed:** Andvari the dwarf was forced by Loki to give up his gold — every piece, including a ring he tried to conceal. Before surrendering it, he pronounced a curse: the gold would destroy every owner in turn. Hreidmar was killed for it by his son. Fafnir became a dragon guarding it and was killed by Sigurd. Sigurd was killed for it. Gudrun's brothers died for it. The curse was fulfilled in every particular — but it was not stated as a prophecy. It was stated as an intention. Afterward, it looks identical to a prophecy.
+
+**This cycle introduces:** *The curse document that proved accurate — a stated malediction that was fulfilled so completely that it became retroactively indistinguishable from prophecy.*
+
+---
+
+### Quest API Stub — "Andvari's Curse"
+
+```
+Act I — "The Witness Account"
+activateNode: ATL
+type: skill_check
+missionAccept: "A scholar of runic knowledge has found a witness account of
+  the moment Andvari pronounced his curse over the gold — a fragmentary
+  record kept by one of the dwarves present. The curse is recorded almost
+  verbatim. Given how completely the curse was fulfilled, the scholar wants
+  the document archived before someone uses it to argue that dwarves have
+  prophetic authority."
+scene: "A hall in Atlaborg. The scholar holds a piece of runic wood —
+  six lines of inscription recording Andvari's curse as it was spoken.
+  The words are specific: Hreidmar will die for it. Fafnir will become
+  a beast. The gold will not rest. Each named person died as named.
+  'The problem,' the scholar says, 'is that I cannot tell if this was
+  a curse or a prophecy. The document cannot tell the difference.'"
+prompt: "History DC 13. Identify the archival problem: curses and prophecies
+  are formally distinct (curses are intended harm; prophecies are perceived
+  revelations), but they become indistinguishable when the curse is fulfilled
+  in every particular."
+failText: "You identify the problem but cannot propose the solution.
+  The scholar suggests filing it under both categories."
+successText: "You identify the formal distinction and the evidentiary
+  collapse. The scholar nods. 'Exactly. This is why it must go to the
+  archive, not to a court.' You receive Andvari's Curse Inscription."
+grantItem: "Andvari's Curse Inscription"
+checkPassFlag: inscriptionReceived
+activateMissionBit: fro8_act1Active
+
+Act II — "The Runic Verification"
+activateNode: BK
+type: skill_check
+scene: "Birka. A runemaster reads the inscription. She is careful. She
+  identifies the runic script as genuine — the inscription is old, made
+  by a hand accustomed to the writing, not a later copy. She looks at
+  the scholar's notes on the curse's fulfillment. 'Each line names a
+  specific outcome and a specific person. All are documented as having
+  occurred. The inscription predates the events.' She pauses. 'By my craft,
+  this is either accurate prophecy or a curse of unusual power. I cannot
+  distinguish them from the text alone.'"
+prompt: "History DC 13. Propose the archival solution: the document records
+  a statement made before the events it describes. Whether it is a curse
+  or a prophecy is a theological question. The archive's task is to record
+  that the statement was made and that the described events occurred."
+failText: "She wants a theological determination before certifying it.
+  You will need to find a scholar of Norse faith traditions."
+successText: "She certifies: 'Runic inscription authenticated as original.
+  Content verified against historical record. Theological classification
+  not determinable from text alone.'"
+checkPassFlag: inscriptionVerified
+activateCond: inscriptionReceived
+
+Act III — "Filed as Indeterminate"
+activateNode: WM
+type: skill_check
+scene: "Sweelinck reads the inscription, the runemaster's certification,
+  and the scholar's notes on fulfillment. 'A statement made before its
+  described events. All described events occurred. The maker's intention
+  was harm; the effect was complete harm; the formal mechanism — curse or
+  prophecy — cannot be determined from the evidence.' He looks at you.
+  'What is the category for a document that cannot be classified as curse
+  or prophecy because it fulfilled both functions equally?'"
+prompt: "History DC 11. Name the category: a statement of intended harm
+  that was fulfilled so completely it became retrospectively indistinguishable
+  from prophecy."
+failText: "He creates it himself: Fulfilled Malediction of Indeterminate
+  Mechanism. He looks at you. 'You may as well have suggested it.'"
+successText: "Filed: Fulfilled Malediction of Indeterminate Mechanism —
+  Statement of Intended Harm Whose Fulfillment Made Curse and Prophecy
+  Retrospectively Indistinguishable. You receive Sweelinck's Malediction Record."
+takeItem: "Andvari's Curse Inscription"
+grantItem: "Sweelinck's Malediction Record"
+checkPassFlag: inscriptionFiled
+questComplete: true
+activateCond: inscriptionVerified
+```

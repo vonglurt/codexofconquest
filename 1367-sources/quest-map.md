@@ -1242,4 +1242,5 @@ SHK | The Rival's Door | Cycle 1 | BK/CI/IN/CY | Poem intercepted, rival blocked
 | BHD | Cuchulain's Ford Record | 8 | ULC/HLD/BK/WM | Solo defense record — single-combatant siege account kept by bard; blank entry preserved as refusal to record |
 | MSE | Appius's False Writ | 8 | ACT/LRD/WM | Frustrated corrupt instrument — legal document whose intended crime was defeated and which became evidence of it |
 | FCO | The Devils' Precedent Brief | 8 | MGF/WM | Override by superior principle — correctly-argued case defeated by an appeal that changed the jurisdictional framework |
+| FRO | Andvari's Curse Inscription | 8 | ATL/BK/WM | Fulfilled malediction of indeterminate mechanism — curse fulfilled so completely it became indistinguishable from prophecy |
 | SDQ | Morris's Bill of Exchange | 8 | OBH/GLA/WM | Commercial instrument of political significance — monetary value superseded by political meaning during circulation |
