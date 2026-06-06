@@ -831,3 +831,60 @@ He looks at the Fighter.
 }
 ```
 
+
+---
+
+## Cycle 8 — Angle: *The Enchanted Dulcinea's Disenchantment Commission — The Impossible Task Given in Good Faith*
+
+**This cycle introduces:** *The disenchantment commission — a task assigned in good faith that is impossible because the person who assigned it did not know it was impossible.*
+
+### Quest API Stub — "The Disenchantment Commission"
+
+```
+Act I — "The Commission"
+activateNode: SMR
+type: skill_check
+missionAccept: "Don Quixote believed that Sancho Panza could disenchant
+  Dulcinea by flagellating himself three thousand three hundred times.
+  This was told to him by Merlin (actually the Duke's majordomo in disguise).
+  Quixote accepted it as genuine. He commissioned Sancho to carry out the
+  task. Sancho accepted the commission and its pay. Now Quixote is dead.
+  Sancho carries the commission record: three thousand three hundred
+  lashes, never completed."
+scene: "La Mancha. Sancho Panza holds the written record of the commission —
+  how many lashes were owed, how many were completed (in Sancho's own hand:
+  very few). Quixote died before the task was finished. Dulcinea, insofar
+  as she existed, remains enchanted. Sancho does not know whether to carry
+  the incomplete commission to an archive or simply burn it."
+prompt: "Persuasion DC 12. Convince Sancho that an incomplete commission
+  for an impossible task belongs in an archive — as evidence of a genuine
+  belief that generated a genuine obligation."
+failText: "He burns it. He keeps the money. He feels bad about both decisions."
+successText: "He gives it to you. 'File it under whatever you file things
+  that didn't work.' You receive the Disenchantment Commission."
+grantItem: "Disenchantment Commission"
+checkPassFlag: commissionReceived
+activateMissionBit: mad8_act1Active
+
+Act II — "Filed as Incomplete"
+activateNode: WM
+type: skill_check
+scene: "Sweelinck reads the commission. 'An impossible task assigned in
+  good faith by someone who did not know it was impossible. An obligation
+  accepted for pay. Never completed.' He looks at you. 'What is the
+  category for a commission that cannot be completed because its premise
+  does not exist?'"
+prompt: "History DC 11. Name the category: a commission whose completion
+  is impossible because the problem it was meant to solve does not exist
+  in the material world."
+failText: "He creates it himself: Premises-Nonexistent Commission. He looks
+  at you. 'You may as well have suggested it.'"
+successText: "Filed: Premises-Nonexistent Commission — Task Assigned for
+  a Purpose Whose Existence Was Not Established; Obligation Genuine; Task
+  Incomplete. You receive Sweelinck's Commission Record."
+takeItem: "Disenchantment Commission"
+grantItem: "Sweelinck's Commission Record"
+checkPassFlag: commissionFiled
+questComplete: true
+activateCond: commissionReceived
+```

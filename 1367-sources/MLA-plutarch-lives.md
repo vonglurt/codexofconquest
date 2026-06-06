@@ -1770,3 +1770,60 @@ He notes: "Cross-reference: MLA-01 (Lives as parallel comparison). The archive n
 
 *MLA-05 complete. 2026-06-02.*
 
+
+---
+
+## Cycle 8 — Angle: *The Parallel Lives' Cross-Reference — The Biography That Reads Another Biography*
+
+**This cycle introduces:** *The cross-referenced biography — a life written explicitly against another life, whose meaning depends on the comparison, and which cannot be understood without its pair.*
+
+### Quest API Stub — "The Parallel Lives Cross-Reference"
+
+```
+Act I — "The Paired Lives"
+activateNode: LMO
+type: skill_check
+missionAccept: "Plutarch wrote his Lives in pairs — one Greek, one Roman —
+  precisely so that each would be read against the other. A scholar has
+  compiled the cross-reference notations: every place in one life where
+  Plutarch cites the parallel. These notations are themselves a document —
+  a map of the comparison Plutarch wanted his reader to make. The scholar
+  wants this cross-reference map filed before it is lost."
+scene: "A scholar's hall. He holds the cross-reference map: every citation
+  in the Demosthenes that refers to Cicero; every citation in the Alexander
+  that refers to Caesar. 'The Lives cannot be read alone,' he says. 'Plutarch
+  built the comparison into the text. This map shows where. Without it,
+  readers pick one life and ignore the other.'"
+prompt: "History DC 12. Identify the document type: a comparative citation
+  map that makes explicit the cross-reference structure implicit in paired
+  biography."
+failText: "You cannot classify it. The scholar suggests filing it as an
+  index with supplementary notes."
+successText: "You identify it: a comparative architecture document —
+  the structural map of how two biographies are designed to be read.
+  You receive the Parallel Lives Cross-Reference."
+grantItem: "Parallel Lives Cross-Reference"
+checkPassFlag: crossRefReceived
+activateMissionBit: mla8_act1Active
+
+Act II — "Filed as Comparative Architecture"
+activateNode: WM
+type: skill_check
+scene: "Sweelinck reads the cross-reference map. 'A document whose purpose
+  is to show how two other documents are designed to be read together. It
+  exists only because neither document alone contains this information.' He
+  looks at you. 'What is the category for a document that reveals the
+  structural relationship between two other documents?'"
+prompt: "History DC 11. Name the category: a structural map showing
+  how two documents are designed to be read in relation to each other."
+failText: "He creates it himself: Comparative Architecture Document.
+  He looks at you. 'You may as well have suggested it.'"
+successText: "Filed: Comparative Architecture Document — Structural Map
+  of the Designed Relationship Between Two Other Documents; Neither Document
+  Alone Contains This Information. You receive Sweelinck's Cross-Reference Record."
+takeItem: "Parallel Lives Cross-Reference"
+grantItem: "Sweelinck's Cross-Reference Record"
+checkPassFlag: crossRefFiled
+questComplete: true
+activateCond: crossRefReceived
+```

@@ -1597,3 +1597,55 @@ He opens the classification ledger. "Diplomatic Documents — Objects That Prove
 ```
 
 *AMS-07 complete. 2026-06-02.*
+
+---
+
+## §AMS-08 — Vignette Cycle 8: "The Radiant Prince's Index"
+
+**Declared theme — Cycle 8:** The catalog that reveals the cataloguer. Chapter 17 of the Genji — "The Picture Contest" — has Genji presenting paintings in competition with the rival court. He has catalogued and organized his entire collection. The catalog is not just a list: it is a record of aesthetic judgment, of what Genji chose to preserve and how he categorized it. The catalog reveals the prince's mind more completely than his poems.
+
+### Quest API Stub — "Genji's Picture Catalog"
+
+```
+Act I — "The Catalog"
+activateNode: MRG
+type: skill_check
+missionAccept: "A scholar has obtained a copy of the catalog Genji compiled
+  for the Picture Contest — his annotations on each piece, his categories,
+  his reasons for ranking. The catalog reveals Genji's aesthetic as no
+  direct statement could. The scholar wants it filed as a document of
+  mind, not just of art."
+scene: "A scholar's study. The catalog: every painting listed, annotated
+  in Genji's hand, with brief notes on what he valued in each. 'The
+  catalog is not the paintings,' the scholar says. 'It is the mind that
+  organized them. A catalog is always a portrait of its maker.'"
+prompt: "Persuasion DC 12. Convince the scholar that the catalog belongs
+  in an archive as a document of aesthetic judgment, not just as an art
+  inventory."
+failText: "He wants to keep it for his own scholarship. Offer to have it
+  copied first."
+successText: "He gives it to you. 'File it under the mind that made it,
+  not the things it describes.' You receive Genji's Picture Catalog."
+grantItem: "Genji's Picture Catalog"
+checkPassFlag: catalogReceived
+activateMissionBit: ams8_act1Active
+
+Act II — "Filed as Mind Document"
+activateNode: WM
+type: skill_check
+scene: "Sweelinck reads the catalog. 'A list of art objects with annotations
+  revealing the cataloguer's values. The catalog's subject is the list; its
+  content is the mind.' He looks at you. 'What is the category for a catalog
+  that is primarily a self-portrait of its maker?'"
+prompt: "History DC 11. Name the category: an inventory whose annotations
+  reveal the annotator's character more completely than any direct account."
+failText: "He creates it himself: Self-Revealing Inventory. He looks at you.
+  'You may as well have suggested it.'"
+successText: "Filed: Self-Revealing Inventory — Catalog Whose Annotations
+  Are a Portrait of the Cataloguer's Mind. You receive Sweelinck's Mind Record."
+takeItem: "Genji's Picture Catalog"
+grantItem: "Sweelinck's Mind Record"
+checkPassFlag: catalogFiled
+questComplete: true
+activateCond: catalogReceived
+```

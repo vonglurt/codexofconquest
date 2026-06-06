@@ -1252,4 +1252,11 @@ SHK | The Rival's Door | Cycle 1 | BK/CI/IN/CY | Poem intercepted, rival blocked
 | VIE | Mephistopheles's Receipt | 8 | VIE/WM | Uncertifiable witness document — contract witnessed by a party outside human certification capacity |
 | ERF | The Mirror's Testimony | 8 | ERF/WM | Certifiably accurate non-human testimony — record from a source verified as accurate but whose authority cannot be certified |
 | BRU | The Arch Reconstruction | 8 | CHT/WM | Explicit reconstruction record — assembled from memory in the absence of contemporary documentation |
+| MAD | The Disenchantment Commission | 8 | SMR/WM | Premises-nonexistent commission — task assigned for a purpose whose existence was never established |
+| CID | The Unrevoked Exile Decree | 8 | IBR/WM | Unrevoked punitive decree alongside service record — anomaly preserved without resolution |
+| MLA | The Parallel Lives Cross-Reference | 8 | LMO/WM | Comparative architecture document — structural map showing how two documents are designed to be read together |
+| WAW | Petronius's Letter Copy | 8 | SAU/WM | Death-guaranteed witness account — testimony whose authority derives from the sender's sacrifice of future interests |
+| HTY | The River Crossing Record | 8 | KUR/WM | Uncommented departure record — timing documented without editorial comment; silence is the primary feature |
+| AMS | Genji's Picture Catalog | 8 | MRG/WM | Self-revealing inventory — catalog whose annotations are a portrait of the cataloguer's mind |
+| HAV | Morgan's Ransom Demand | 8 | HAV/WM | Unrhetoricated demand — terms stated without justification; clarity is the document's primary feature |
 | SDQ | Morris's Bill of Exchange | 8 | OBH/GLA/WM | Commercial instrument of political significance — monetary value superseded by political meaning during circulation |

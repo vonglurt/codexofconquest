@@ -1572,3 +1572,56 @@ He opens the classification ledger. "Testimony Records — Firsthand Accounts Wi
   "sweelinckNote": "The physician was present at every operation described in this collection. He was not trying to win anything. He was not trying to prove anything. He wrote down what he treated. That is the most reliable testimony available, and it is the last document received. The archive is complete."
 }
 ```
+
+---
+
+### Cycle 8 — *The Ransom Letter*
+
+**Declared theme — Cycle 8:** The ransom demand as the only honest document in the exchange. When Morgan demanded ransom for hostages and the city refused, both parties knew what the situation was. The ransom letter names the terms precisely. It is the most formally honest thing either party produces in the entire transaction — more honest than the city's refusals, more honest than Morgan's justifications. The demand is what it is.
+
+### Quest API Stub — "The Ransom Letter"
+
+```
+Act I — "The Letter"
+activateNode: HAV
+type: skill_check
+missionAccept: "Morgan's ransom demand — for hostages taken at Porto Bello —
+  is a document of unusual honesty: it names the sum, the hostages, the
+  deadline, and the consequence. No rhetoric. No justification. A clean
+  commercial demand. A copy has survived. A maritime lawyer wants it filed
+  as the clearest example of pirate negotiating terms in the record."
+scene: "A Caribbean port. The lawyer holds the copy: sum demanded, names
+  of hostages, deadline, consequence of non-payment. 'This is the most
+  clearly written document Morgan produced,' he says. 'Every other document
+  he issued justified or explained. This one simply states.' He wants it
+  archived as an exemplar."
+prompt: "Persuasion DC 12. Convince him to give you the copy for a neutral
+  archive rather than a court that would use it only as evidence against Morgan."
+failText: "He wants it in a legal court. Offer to have it archived with
+  a note that it has been offered to both legal and archival authorities."
+successText: "He gives it to you. 'Archive it as what it is: the clearest
+  document he ever wrote.' You receive the Ransom Demand."
+grantItem: "Morgan's Ransom Demand"
+checkPassFlag: demandReceived
+activateMissionBit: hav8_act1Active
+
+Act II — "Filed as Honest Demand"
+activateNode: WM
+type: skill_check
+scene: "Sweelinck reads the ransom demand. 'Sum stated. Hostages named.
+  Deadline given. Consequence specified. No justification, no rhetoric.'
+  He looks at you. 'What is the category for a demand that is notable
+  primarily for its clarity and absence of self-justification?'"
+prompt: "History DC 11. Name the category: a demand document notable for
+  stating its terms without justification or rhetorical framing."
+failText: "He creates it himself: Unrhetoricated Demand. He looks at you.
+  'You may as well have suggested it.'"
+successText: "Filed: Unrhetoricated Demand — Terms Stated Without
+  Justification; Document's Clarity Is Its Primary Feature.
+  You receive Sweelinck's Demand Record."
+takeItem: "Morgan's Ransom Demand"
+grantItem: "Sweelinck's Demand Record"
+checkPassFlag: demandFiled
+questComplete: true
+activateCond: demandReceived
+```

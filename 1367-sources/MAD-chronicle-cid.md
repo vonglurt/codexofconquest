@@ -1185,3 +1185,61 @@ TOKEN TAKEN: Gil Díaz's Frame-and-Saddle Account. *questComplete: true.*
   ]
 }
 ```
+
+---
+
+## Cycle 8 — Angle: *The Unrevoked Exile Decree — The Banishment Still Valid When Valencia Fell*
+
+**This cycle introduces:** *The unrevoked decree — a formal banishment whose subject became a loyal vassal without the decree being formally cancelled.*
+
+### Quest API Stub — "The Exile Decree"
+
+```
+Act I — "The Decree"
+activateNode: IBR
+type: skill_check
+missionAccept: "The Cid's exile decree — nine days to leave Castile —
+  was never formally revoked. He conquered Valencia in exile. He sent
+  tribute to Alfonso. He died in Valencia. The decree still stands in
+  Castilian records. A legal scholar wants it archived alongside evidence
+  of the subsequent loyalty, creating a complete record of the anomaly."
+scene: "A Castilian record office. The exile decree is still in the registry.
+  The scholar holds a summary of the Cid's subsequent service: Valencia
+  conquered, tribute sent, daughters married into the royal families of
+  Aragon and Navarre. The decree of exile and the record of loyal service
+  exist simultaneously in the same registry without contradiction. 'The
+  law is silent on what this means,' the scholar says."
+prompt: "History DC 13. Propose the archival resolution: the decree and
+  the service record are filed together with a notation that no formal
+  revocation was ever issued — the anomaly itself is the document."
+failText: "The clerk wants a resolution before filing. Find evidence of
+  Alfonso's tacit approval — the tribute receipts would serve."
+successText: "He files both together with your notation: unrevoked exile
+  decree alongside loyal service record; anomaly preserved. You receive
+  the Exile Decree and Service Record."
+grantItem: "Exile Decree and Service Record"
+checkPassFlag: decreeReceived
+activateMissionBit: cid8_act1Active
+
+Act II — "Filed as Unresolved Anomaly"
+activateNode: WM
+type: skill_check
+scene: "Sweelinck reads both documents. 'A formal banishment. Service rendered
+  under the banishment. Tribute accepted. Banishment never revoked.' He
+  looks at you. 'What is the category for a punitive document that was
+  never cancelled but whose subject continued to serve the issuing authority
+  without legal resolution?'"
+prompt: "History DC 11. Name the category: a punitive decree whose subject
+  rendered loyal service under its terms without the decree being formally
+  revoked or the loyalty formally acknowledged."
+failText: "He creates it himself: Unrevoked Punitive Decree with Service Record.
+  He looks at you. 'You may as well have suggested it.'"
+successText: "Filed: Unrevoked Punitive Decree Alongside Service Record —
+  Anomaly Preserved Without Resolution; Both Documents Filed as Inseparable.
+  You receive Sweelinck's Anomaly Record."
+takeItem: "Exile Decree and Service Record"
+grantItem: "Sweelinck's Anomaly Record"
+checkPassFlag: decreeFiled
+questComplete: true
+activateCond: decreeReceived
+```

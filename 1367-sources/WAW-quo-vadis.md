@@ -1966,3 +1966,61 @@ Archivus Sweelinck opens the register to Day 4, session 2, page 7. He reads the 
 ---
 
 *WAW-03 complete. 2026-06-02.*
+
+---
+
+## Cycle 8 — Angle: *Petronius's Suicide Note — The Letter That Closed Every Account at Once*
+
+**This cycle introduces:** *The comprehensive farewell — a document that simultaneously cancelled social debts, made final statements, and documented the writer's last considered views, all in one act.*
+
+### Quest API Stub — "Petronius's Suicide Note"
+
+```
+Act I — "The Letter"
+activateNode: SAU
+type: skill_check
+missionAccept: "Petronius wrote Nero a letter before his suicide — a
+  document that named every sin, every debauchery, every specific cruelty
+  of the emperor's that Petronius had witnessed firsthand. Not a petition.
+  Not a complaint. A comprehensive account signed with the witness's own
+  death. A copy has been obtained by a scholar who wants it filed before
+  the emperor's agents find it."
+scene: "Rome, 66 AD. The scholar holds the copy: Petronius's letter to
+  Nero, listing specific crimes with specific witnesses. Sealed with
+  Petronius's ring before he died. The original was sent to Nero, who
+  would have received a list of his crimes in the writing of the one man
+  whose opinion he had valued. 'This is the most expensive letter in Rome,'
+  the scholar says. 'The sender paid with his life to make certain it
+  would be read.'"
+prompt: "Persuasion DC 14. Convince the scholar to give you the copy
+  for archive. The agents are coming. Speed matters."
+failText: "He buries the copy. You must find another way to preserve it —
+  memorize the key passages before the agents arrive."
+successText: "He gives it to you. You ride with it. You receive Petronius's
+  Letter Copy."
+grantItem: "Petronius's Letter Copy"
+checkPassFlag: letterReceived
+activateMissionBit: waw8_act1Active
+
+Act II — "Filed as Terminal Accounting"
+activateNode: WM
+type: skill_check
+scene: "Sweelinck reads the letter. 'A comprehensive witness account of
+  crimes, signed by the witness's death. Every statement is verified by
+  the fact that the sender had no future.' He looks at you. 'What is
+  the category for a document whose witness authority derives precisely
+  from the fact that the sender died to produce it?'"
+prompt: "History DC 11. Name the category: witness testimony whose
+  authority is guaranteed by the sender's death, which removes all
+  possible motive for exaggeration or omission."
+failText: "He creates it himself: Death-Guaranteed Witness Account. He
+  looks at you. 'You may as well have suggested it.'"
+successText: "Filed: Death-Guaranteed Witness Account — Testimony Whose
+  Authority Derives From the Sender's Sacrifice of Future Interests.
+  You receive Sweelinck's Terminal Record."
+takeItem: "Petronius's Letter Copy"
+grantItem: "Sweelinck's Terminal Record"
+checkPassFlag: letterFiled
+questComplete: true
+activateCond: letterReceived
+```

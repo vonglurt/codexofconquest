@@ -1605,3 +1605,56 @@ He opens the classification ledger. "Transformation Records — Objects Whose Or
 ```
 
 *HTY-07 complete. 2026-06-03.*
+
+---
+
+## §HTY-08 — Vignette Cycle 8: "The River's Resolution"
+
+**Declared theme — Cycle 8:** The river as witness and judge. At the end of the Mahabharata, the Pandavas and Draupadi walk toward the Himalayas and die one by one on the road. Each death is a judgment — each reveals what error the dying person carried. Draupadi fell first: she loved Arjuna more than the others. Nakula fell: he had thought himself handsomer than anyone. Only Yudhishthira and the dog reached the gate of heaven alive. The river at the foot of the mountain saw every departure. A bard stationed at the river crossing recorded each passing.
+
+### Quest API Stub — "The River Crossing Record"
+
+```
+Act I — "The Final Crossing"
+activateNode: KUR
+type: skill_check
+missionAccept: "A bard stationed at the mountain river crossing recorded
+  every departure of the Pandava party — who fell, when, and what was
+  said of the reason. Each entry is a judgment recorded without being
+  pronounced. The bard wants the record archived before it becomes hagiography."
+scene: "The foot of the Himalayan path. A bard holds his record: six
+  crossings, six departures. Draupadi's entry notes only that she fell
+  before reaching the next ridge. Yudhishthira's final crossing is the
+  last entry — he arrived. 'I did not record the reasons,' the bard says.
+  'I recorded the order and the time. The reasons were already known.'"
+prompt: "History DC 12. Identify the document as a departure record —
+  not a judgment but a timing record of who crossed and who did not."
+failText: "The local religious authority wants to add commentary. Decline —
+  the record's value is in its silence."
+successText: "The bard gives you the crossing record intact, uncommented.
+  You receive the River Crossing Record."
+grantItem: "River Crossing Record"
+checkPassFlag: crossingReceived
+activateMissionBit: hty8_act1Active
+
+Act II — "Filed as Uncommented Departure"
+activateNode: WM
+type: skill_check
+scene: "Sweelinck reads the crossing record. 'Six departures, one arrival.
+  Each recorded with time, no comment.' He looks at you. 'What is the
+  category for a departure record kept without editorial comment, where
+  the silence is the document's primary feature?'"
+prompt: "History DC 11. Name the category: a departure record whose
+  value derives from its deliberate silence about reasons — the timing
+  recorded, the judgment withheld."
+failText: "He creates it himself: Uncommented Departure Record. He looks
+  at you. 'You may as well have suggested it.'"
+successText: "Filed: Uncommented Departure Record — Timing Documented
+  Without Editorial Comment; Silence Is the Document's Primary Feature.
+  You receive Sweelinck's Departure Record."
+takeItem: "River Crossing Record"
+grantItem: "Sweelinck's Departure Record"
+checkPassFlag: crossingFiled
+questComplete: true
+activateCond: crossingReceived
+```
