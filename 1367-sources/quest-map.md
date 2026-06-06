@@ -1245,4 +1245,7 @@ SHK | The Rival's Door | Cycle 1 | BK/CI/IN/CY | Poem intercepted, rival blocked
 | FRO | Andvari's Curse Inscription | 8 | ATL/BK/WM | Fulfilled malediction of indeterminate mechanism — curse fulfilled so completely it became indistinguishable from prophecy |
 | LBC | The Linden Leaf | 8 | ETZ/WOR/WM | Inverted protective disclosure — vulnerability information given in trust to enable protection, used by the entrusted party to cause the harm |
 | GDN | The Burning Witness Account | 8 | ISL/BK/WM | Arranged death record — witness account of a death deliberately prepared by the dying person as a final considered statement |
+| BOO | Utgard-Loki's Confession | 8 | BOO/WM | Consequence-free confession — complete voluntary disclosure given after the confessing party escaped all consequences |
+| ALF | Vainamoinen's Departure Promise | 8 | ALF/WM | Trigger-indeterminate conditional promise — commitment whose condition cannot be declared met by any available party |
+| KSU | The Skald's Safe-Conduct | 8 | KSU/WM | Self-protective diplomatic text — document whose content functions as its own diplomatic credential in hostile territory |
 | SDQ | Morris's Bill of Exchange | 8 | OBH/GLA/WM | Commercial instrument of political significance — monetary value superseded by political meaning during circulation |

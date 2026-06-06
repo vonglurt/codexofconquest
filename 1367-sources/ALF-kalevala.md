@@ -1408,3 +1408,63 @@ He opens the last category in the Kalevala series. **Final Commission Records �
   "questComplete": true
 }
 ```
+
+---
+
+## Cycle 8 — Angle: *Vainamoinen's Departure Promise — The Conditional Return Without a Trigger*
+
+*All prior cycles reviewed.*
+
+**This cycle introduces:** *The conditional promise without a trigger specification — a commitment to return upon an unspecified condition, making the promise enforceable in theory but unfulfillable in practice.*
+
+### Quest API Stub — "Vainamoinen's Departure Promise"
+
+```
+Act I — "The Departure Speech"
+activateNode: ALF
+type: skill_check
+missionAccept: "A bard recorded Vainamoinen's speech as he sailed away
+  in his copper boat. He promised to return when Finland has need of him.
+  No condition was specified beyond 'need.' The speech is a conditional
+  promise without a trigger: who declares the condition met? The bard has
+  kept the record for years and wants it filed somewhere that can answer
+  the question."
+scene: "The shore where Vainamoinen's copper boat departed. A bard holds
+  a tablet with the speech recorded: 'I go, but I shall come again when
+  my country has need of me.' He looks at you. 'I have been asked three
+  times whether the condition is now met. I cannot answer. The promise
+  exists. The trigger does not.'"
+prompt: "History DC 12. Identify the legal category: a conditional promise
+  whose triggering condition was not specified, leaving the promisor's
+  obligation undetermined."
+failText: "You cannot classify it cleanly. File it as a conditional
+  promise pending further specification."
+successText: "You identify it: a promissory statement with an undefined
+  condition, creating a standing obligation with no determinable trigger.
+  You receive Vainamoinen's Departure Promise."
+grantItem: "Vainamoinen's Departure Promise"
+checkPassFlag: promiseReceived
+activateMissionBit: alf8_act1Active
+
+Act II — "Filed as Trigger-Indeterminate"
+activateNode: WM
+type: skill_check
+scene: "Sweelinck reads the speech. 'A conditional promise to return.
+  The condition is need. Need is not defined. The promisor is gone.
+  No one who was present can answer what would constitute need.' He
+  looks at you. 'What is the category for a conditional promise whose
+  trigger is unspecified?'"
+prompt: "History DC 11. Name the category: a promise whose fulfillment
+  condition cannot be specified because the promisor defined it as a
+  subjective state without further description."
+failText: "He creates it himself: Trigger-Indeterminate Conditional Promise.
+  He looks at you. 'You may as well have suggested it.'"
+successText: "Filed: Trigger-Indeterminate Conditional Promise — Commitment
+  Whose Condition Cannot Be Declared Met by Any Available Party.
+  You receive Sweelinck's Promise Record."
+takeItem: "Vainamoinen's Departure Promise"
+grantItem: "Sweelinck's Promise Record"
+checkPassFlag: promiseFiled
+questComplete: true
+activateCond: promiseReceived
+```

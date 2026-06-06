@@ -1058,3 +1058,63 @@ He does not ask again about the location. He takes a ring from his middle finger
   "questComplete": true
 }
 ```
+
+---
+
+## Cycle 8 — Angle: *The Skald's Safe-Conduct — The Poem as Its Own Diplomatic Protection*
+
+*All prior cycles reviewed.*
+
+**This cycle introduces:** *The poem as safe-conduct — a document whose content (praise) functioned as diplomatic protection for its carrier during delivery.*
+
+### Quest API Stub — "The Skald's Safe-Conduct"
+
+```
+Act I — "The Poem on the Road"
+activateNode: KSU
+type: skill_check
+missionAccept: "A skald has composed a praise-poem for a foreign king —
+  a king whose men are hostile to the skald's people. The poem must be
+  delivered personally. A praise-poem for a king is supposed to protect
+  its bearer from that king's men: it is a diplomatic instrument that
+  declares itself. But the protection only holds if the soldiers on the
+  road recognize the document's nature. Most soldiers don't read poetry."
+scene: "A road checkpoint between kingdoms. The skald holds his poem
+  written on vellum. A border guard is suspicious. The poem is proof
+  of purpose — the skald is traveling to deliver it, not to spy. But
+  the guard cannot read. The skald can recite it. Whether recitation
+  functions as proof is a question neither of them knows how to answer."
+prompt: "Persuasion DC 13. Convince the guard that a written praise-poem
+  being carried toward its subject is a form of diplomatic safe-conduct —
+  no spy carries a written praise-poem for the enemy king."
+failText: "The guard doesn't accept this. He can't read it and doesn't
+  trust what he can't read. Find a literate officer in the garrison."
+successText: "The guard accepts the logic even without the literacy.
+  'Nobody fakes a poem for a king they're trying to spy on.' He lets
+  you through. You receive the Skald's Praise-Poem."
+grantItem: "Skald's Praise-Poem"
+checkPassFlag: poemCarried
+activateMissionBit: ksu8_act1Active
+
+Act II — "Filed as Diplomatic Poem"
+activateNode: WM
+type: skill_check
+scene: "Sweelinck reads the praise-poem. He reads it again. 'This is
+  a genuine diplomatic instrument. It carried the skald through hostile
+  territory and was redeemed by the king for gold and safe passage.'
+  He looks at you. 'What is the category for a document whose content —
+  praise — functions as its own diplomatic credential?'"
+prompt: "History DC 11. Name the category: a document whose content is
+  simultaneously its message and its protection — praise addressed to a
+  power whose men it protects the bearer from."
+failText: "He creates it himself: Self-Protective Diplomatic Text. He
+  looks at you. 'You may as well have suggested it.'"
+successText: "Filed: Self-Protective Diplomatic Text — Document Whose
+  Content Functions as Its Own Diplomatic Credential in Hostile Territory.
+  You receive Sweelinck's Diplomatic Poem Record."
+takeItem: "Skald's Praise-Poem"
+grantItem: "Sweelinck's Diplomatic Poem Record"
+checkPassFlag: poemFiled
+questComplete: true
+activateCond: poemCarried
+```

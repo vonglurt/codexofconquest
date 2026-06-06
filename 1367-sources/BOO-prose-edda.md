@@ -1077,3 +1077,63 @@ You have a small clay vessel in your belt-pouch — you don't know when it got t
   "questComplete": true
 }
 ```
+
+---
+
+## Cycle 8 — Angle: *Utgard-Loki's Confession — The Disclosure Given After the Deceiver Was Safe*
+
+*All prior cycles reviewed.*
+
+**This cycle introduces:** *The confession given after the deceiver was safe — a complete disclosure of every deception, made when the confessing party had already escaped the consequences.*
+
+### Quest API Stub — "Utgard-Loki's Confession"
+
+```
+Act I — "The Parting Confession"
+activateNode: BOO
+type: skill_check
+missionAccept: "As Thor left Utgard, the giant king revealed everything:
+  the mead-horn was connected to the sea; the cat was the Midgard Serpent;
+  Elli was Old Age herself. He confessed the entire architecture of deception
+  because he would vanish before Thor could act on the knowledge."
+scene: "The gate of Utgard-Loki's hall. As Thor and his companions prepare
+  to depart, the giant king appears at the gate and begins speaking. He
+  explains each deception in order: the horn, the cat, the old woman, the
+  fire. He is calm. He knows that the moment he finishes speaking, the city
+  will vanish. A scholar present recorded every word. He now holds the
+  confession and is unsure what to do with a document that no court can act
+  on and no archive has a category for."
+prompt: "Persuasion DC 12. Convince the scholar that a confession made
+  safely is still a confession — the archive holds what happened, regardless
+  of whether consequences followed."
+failText: "He doubts a confession without consequences belongs in an archive
+  at all. Offer to file it as a witness account rather than a confession."
+successText: "He gives you the account. 'Record it as what it is: a complete
+  and voluntary disclosure of every deception, given by the deceiver when
+  he was already beyond reach.' You receive Utgard-Loki's Confession."
+grantItem: "Utgard-Loki's Confession"
+checkPassFlag: confessionReceived
+activateMissionBit: boo8_act1Active
+
+Act II — "Filed as Safe Confession"
+activateNode: WM
+type: skill_check
+scene: "Sweelinck reads the confession. 'A complete disclosure. Voluntary.
+  Accurate — we can verify the deceptions against independent accounts.
+  But given when the consequences were already impossible.' He looks at you.
+  'What is the category for a confession made after the confessing party
+  had escaped all consequences?'"
+prompt: "History DC 11. Name the category: a complete and accurate voluntary
+  disclosure of wrongdoing, given when the disclosing party was already
+  beyond the reach of any consequence."
+failText: "He creates it himself: Consequence-Free Confession. He looks at you.
+  'You may as well have suggested it.'"
+successText: "Filed: Consequence-Free Confession — Complete and Accurate
+  Voluntary Disclosure Given After the Confessing Party Had Escaped All
+  Consequences. You receive Sweelinck's Confession Record."
+takeItem: "Utgard-Loki's Confession"
+grantItem: "Sweelinck's Confession Record"
+checkPassFlag: confessionFiled
+questComplete: true
+activateCond: confessionReceived
+```
