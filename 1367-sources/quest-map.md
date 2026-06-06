@@ -1236,3 +1236,4 @@ SHK | The Rival's Door | Cycle 1 | BK/CI/IN/CY | Poem intercepted, rival blocked
 | STN | The Royal Ranger Roll | 8 | SHW/NGM/WM | Registry of collective pardon — names that transform outlaws to rangers, priority of presentation wins |
 | MAN | The Trial of Templestowe | 8 | TPR/HMT/WM | Judgment by inward conflict — verdict produced by the accuser's champion's psychological state |
 | SEN | Doctor Livesey's Fever Chart | 8 | STK/ADM/TL/WM | Record of medical neutrality — physician's documentation crossing enemy lines without distinction |
+| GCI | Gilliatt's Tide Table | 8 | GHL/STP/TL/WM | Predictive work record — nature's schedule annotated with completed work; tide as project calendar |

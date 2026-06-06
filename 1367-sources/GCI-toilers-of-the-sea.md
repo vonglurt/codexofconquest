@@ -890,3 +890,106 @@ activateMissionBit: gciSeatComplete
 }
 ```
 
+
+---
+
+## Cycle 8 — Angle: *Gilliatt's Tide Table — The Predictive Document That Held a Project*
+
+*All prior cycles reviewed. Source knowledge used directly.*
+
+**What prior cycles missed:** Gilliatt's salvage work at the Douvres reef was entirely governed by the tides. He had weeks, not months, before the Atlantic season ended and the reef became impassable. He had to know every tide, every window, every dangerous interval. He must have calculated or kept a tide table — a predictive document, written on whatever surface he had, holding the schedule of natural forces against which he planned every operation. That table is the structural heart of the salvage, more important than any tool he brought.
+
+**This cycle introduces:** *The predictive work document — the tide table that structured months of solitary labor, turning nature's schedule into a project plan.*
+
+---
+
+### Quest API Stub — "Gilliatt's Tide Table"
+
+```
+Act I — "What He Left on the Reef"
+activateNode: GHL
+type: skill_check
+missionAccept: "When Gilliatt was finally taken off the Douvres reef after
+  the salvage, he left things behind — his shelter, his tools, and among them
+  a piece of oilskin marked with tide times and work notations. A fisherman
+  found it weeks later. He does not know what it is."
+scene: "The Gild-Holm-'Ur tidal seat, Guernsey coast, two months after
+  Gilliatt's salvage. A fisherman holds a piece of oilskin marked in
+  charcoal — columns of numbers, times, short notes in French, a few
+  diagrams of the reef at different water levels. It looks like nonsense.
+  But it is not."
+prompt: "History DC 12. Read the document as a tide table: the numbers
+  are times, the diagrams show the reef's accessible surfaces at each
+  tidal state, the notations mark what work was done in each window."
+failText: "You can tell it is a work document but cannot read the tidal
+  notation. You carry it anyway — it needs a coastal surveyor."
+successText: "You read it clearly: a complete tide schedule for the Douvres
+  reef across six weeks, with work completed in each window marked off.
+  This is how one man planned an impossible salvage. You receive
+  Gilliatt's Tide Table."
+grantItem: "Gilliatt's Tide Table"
+checkPassFlag: tableReceived
+activateMissionBit: gci8_act1Active
+
+Act II — "The Harbor Master's Assessment"
+activateNode: STP
+type: skill_check
+scene: "St. Peter Port harbor master's office. He reads the tide table
+  with the expression of a man seeing something he recognizes. 'These
+  tidal recordings are accurate. More accurate than our own tables for
+  that section of coast — Douvres is difficult to survey from a boat.'
+  He pauses. 'The man who made these lived on that reef for weeks and
+  measured the tides by living inside them.'"
+prompt: "Persuasion DC 13. Convince the harbor master to add his certification:
+  that these tidal observations, made from direct habitation of the reef,
+  are accurate to within the margin of professional survey."
+failText: "He will certify only the portions he can independently verify.
+  The deepest reef sections remain uncertified."
+successText: "He certifies the complete table: 'Observed tidal measurements
+  at Douvres reef, authenticated by comparison with St. Peter Port official
+  records. Margin of accuracy within professional survey standards.'"
+checkPassFlag: tableCertified
+activateCond: tableReceived
+
+Act III — "The Admiralty Surveyor"
+activateNode: TL
+type: skill_check
+scene: "Tilbury. A naval surveyor examines the certified tide table. He is
+  interested: the Douvres reef is notoriously difficult to chart from
+  conventional survey positions, and these observations from inside the
+  reef's own tidal system are unique. He wants to retain the original for
+  the Admiralty's chart-making office."
+prompt: "Persuasion DC 14. Argue that the document belongs to the archive
+  as Gilliatt's work product, not to the Admiralty as a navigational resource.
+  Offer to have it copied for the Admiralty while the original goes to Weimar."
+failText: "The surveyor insists on the original. You must negotiate: the
+  original stays at the Admiralty with a certified copy going to Weimar.
+  Less than you wanted, but the document is preserved."
+successText: "He accepts the copy arrangement. The original goes to Weimar.
+  He has the copy he needs. You receive a certified copy for the archive."
+checkPassFlag: admiraltyNegotiated
+activateCond: tableCertified
+
+Act IV — "The Calendar of Work"
+activateNode: WM
+type: skill_check
+scene: "Weimar archive. Sweelinck looks at the tide table for a long time.
+  Then he looks at the work notations alongside the tide times — what was
+  accomplished in each window. 'This is not just a tide table,' he says.
+  'It is a project record. Every tidal window is marked with what was done
+  in it. The tides were the calendar. The salvage was planned inside the
+  calendar.' He looks at you. 'What is the category?'"
+prompt: "History DC 12. Name the category: a predictive natural schedule
+  used as a project framework, where the document records both the prediction
+  and the work accomplished within each predicted interval."
+failText: "He creates it himself: Predictive Work Record. He looks at you.
+  'You may as well have suggested it.'"
+successText: "Filed: Predictive Work Record — A Natural Schedule Annotated
+  with Completed Work; Nature as Project Management. You receive Sweelinck's
+  Tide Record."
+takeItem: "Gilliatt's Tide Table"
+grantItem: "Sweelinck's Tide Record"
+checkPassFlag: tableFiled
+questComplete: true
+activateCond: admiraltyNegotiated
+```
