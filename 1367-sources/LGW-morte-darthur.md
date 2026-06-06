@@ -832,3 +832,214 @@ activateMissionBit: lgwBedevereComplete
   "questComplete": true
 }
 ```
+
+---
+
+## Cycle 8 — Angle: *The Dolorous Stroke — Balin's Petition and the Three Ruined Countries*
+
+*Source re-read: Part 1 (Balin episode confirmed in text). All prior cycles reviewed.*
+
+**What prior cycles missed:** Seven cycles covered the court's dissolution, love's remnants, the Grail procession, Morgan's letters, and Tristan's music. None examined the Dolorous Stroke — the single act that created the Wasteland. Balin struck King Pellam with the Spear of Longinus, destroyed three countries in a moment, and rode out past the dead. The text records: "three countries are destroyed." Someone counted. Someone filed the claim.
+
+**Themes avoided (all prior cycles):** dead love's truth (1), loyalty named traitor (2), encoded message (3), proxy authority (4), reconciliation (5), procession records (6), undelivered apology (7).
+
+**This cycle introduces:** *The catastrophe petition — the administrative record of a disaster caused by a single act using a sacred object as a weapon.*
+
+---
+
+### The Five-Act Vignette — "The Petition of Three Countries"
+
+*A Fighter carries a petition from the ruined lands of King Pellam's kingdom to the archive. Three countries destroyed by one blow. The petition records who died, what was lost, and what the survivors claim. It is the only document that proves the Dolorous Stroke happened as reported and not as rumor.*
+
+---
+
+**ACT I — "The Survivors"**
+*The Petition · unrolled on a stone floor · A village elder holds it before the Fighter · The ruins of a hall in the Waste Lands, three days' ride from where King Pellam once held court.*
+
+The hall is roofless. Grass grows between the flagstones. The elder is the last man of any age left in the valley — the others either died that day or fled. He has been keeping this document for six years. He made it himself, from memory and from what people told him, on pieces of parchment stitched together with gut. It is not formal. It is not written by a clerk. But it contains names, and places, and numbers of the dead, and one eyewitness account — a woman who saw the moment of the stroke and described it to him.
+
+He cannot carry it himself. He cannot leave. He wants someone to take it to a place where it will be kept.
+
+"When people ask what happened here," he says, "I want there to be an answer."
+
+*The Fighter took the petition. It was heavy with names.*
+
+**Skill Check — Persuasion DC 12:** Convince the elder to let you take the document. He is reluctant — it is the only record he has of what was lost. Offer to have it copied before it leaves his hands.
+
+**Fail:** He will not give you the original. He will let you make a copy of the first sheet, which names the three countries and the date of the stroke. Return with a promise to copy all of it, and he will consider.
+**Success:** He gives you the full petition. "Take it where it will not be lost again."
+
+*You receive: The Petition of Three Countries.*
+
+---
+
+**ACT II — "The Boundary Stone"**
+*The Petition · in the Fighter's saddlebag, wrapped in oilcloth · A road checkpoint between the Waste Lands and the first inhabited territory · A stone road marker, two guards.*
+
+The guards at the boundary have seen people come out of the Waste Lands before. They have a standing order: anyone coming from that territory must be searched and questioned. The Waste Lands are held to be cursed, or under royal interdict, or both — the precise legal status has never been resolved.
+
+The petition is a document of unknown authority. It was made by a village elder, not a clerk. It carries no seal. It references events of six years ago. One of the guards thinks it might be seditious — it names a knight of Arthur's court (Balin) as the cause of the disaster.
+
+*The Fighter held the document at arm's length. It was a list of the dead. But it named a name that courts preferred not to hear.*
+
+**Skill Check — Deception DC 13:** Pass through the checkpoint without the guards understanding what the petition says. Present it as a property inventory from a ruined estate — technically accurate, since many entries describe lost holdings.
+
+**Fail:** The guard can read. He sees the name Balin and calls his sergeant. You must wait an hour while the sergeant reads the document. He finds nothing actionable and waves you through, but he makes a note of you.
+**Success:** The guard waves you through with a glance. The document looks like an estate inventory. He has seen dozens.
+
+---
+
+**ACT III — "The Clerk's Assessment"**
+*The Petition · now at a church scriptorium · A trained clerk examines it · A monastery two days' ride from the Waste Lands.*
+
+The clerk is not unkind. He is competent. He reads the petition carefully and identifies several problems. First, it was not made by a trained scrivener — some of the witness statements are in the wrong form for legal use. Second, it references events that are within royal jurisdiction and should have been filed with Arthur's court, not an archive. Third, it names the Spear of Longinus, which is a sacred relic under ecclesiastical authority — any petition mentioning it should be routed through a bishop.
+
+He offers to re-draft the petition in correct legal form. This would make it more useful to an archive. It would also, as the Fighter can see, soften the language around Balin.
+
+*The Fighter looked at what he proposed to soften: the line that read "and the knight rode out past the dead as they lay in the road." It was the truest line in the document.*
+
+**Skill Check — History DC 13:** Argue that the petition's value is precisely its unmediated form — it was written by a survivor, not a clerk; its rough language is its authenticity. Request that the clerk authenticate it as genuine without re-drafting.
+
+**Fail:** He will authenticate only a revised copy. Take the revised copy — it is at least certified.
+**Success:** He stamps the original as "witnessed as genuine, form irregular, content accepted." The elder's language survives.
+
+*You receive: The Clerk's Authenticity Stamp (added to the petition).*
+
+---
+
+**ACT IV — "The Steward's Objection"**
+*The Petition · authenticated, traveling toward the archive · A great house on the road, owned by a steward of a lord whose lands border the Waste Lands · Evening, a fire.*
+
+The steward has heard you are carrying a petition about the Waste Lands. He invites you in — forcefully. His lord's estate was not technically in the three countries but lost significant business when the disaster struck. He wants to add a supplementary claim to the petition. He will pay for it.
+
+The supplementary claim is not false. But it is vague, large, and designed to make the petition's scope so broad that it becomes a general commercial dispute rather than a specific record of the Dolorous Stroke. If attached, the petition becomes a different document.
+
+*The Fighter set down the petition. The steward's supplement was well-written. It was also an absorption.*
+
+**Skill Check — Insight DC 14:** Read the steward's real intent. He is not a villain — he genuinely lost money. But his attachment would transform the petition from a survivor's record into a commercial instrument, and something of the elder's intent would be lost.
+
+**Fail:** You cannot tell if his attachment would destroy the petition's purpose. Accept the supplement with a note that it is separate from the core record.
+**Success:** You see it clearly: his addition would change what the document is. Decline politely. The steward is unhappy but does not pursue it.
+
+---
+
+**ACT V — "The Archive"**
+*The Petition · carried intact to Weimar · Sweelinck receives it · The archive reading room.*
+
+Sweelinck reads the petition. He reads it twice. He is quiet for a while.
+
+"Three countries," he says. "Named. A date. A cause — one stroke, one man, one spear. An eyewitness account. A list of the dead that runs to four hundred and twelve names." He looks up. "This is the only document in the archive that describes what the Waste Lands were before they became the Waste Lands."
+
+He opens the register.
+
+"What category? I have petitions of war damage. I have petitions of flood and plague. I have never had a petition of a sacred blow. A single act using an object of such power that it created what might be called a permanent consequence."
+
+He writes: *Dolorous Stroke Petition — The Three Countries' Record of the Sacred Spear's Strike. Filed as: Catastrophe Petition — Administrative Record of a Disaster Caused by a Single Sacred Act. First and, one hopes, only entry.*
+
+TOKEN TAKEN: The Petition of Three Countries.
+
+*questComplete: true*
+
+*You receive: Sweelinck's Catastrophe Record — the archive's filed notation, stamped, noting the petition as the first entry in the new category.*
+
+---
+
+### Quest API Stub
+
+```
+Act I — "The Survivors"
+activateNode: LGW
+type: skill_check
+missionAccept: "The last man left in the Waste Lands has kept a petition for
+  six years — a list of the dead from the day Balin struck King Pellam with
+  the Spear of Longinus and destroyed three countries in a moment. He wants
+  someone to carry it to a place where it will not be lost again."
+scene: "A roofless hall in the Waste Lands. Grass grows between the flagstones.
+  An old man holds a petition made of stitched parchment — names, places,
+  numbers of the dead, and one eyewitness account of the stroke itself.
+  He made it himself from memory. He cannot leave. He wants it preserved."
+prompt: "Persuasion DC 12. Convince the elder to give you the original. He
+  has kept it six years. It is the only record he has of what was lost."
+failText: "He will not give the original. Offer to copy the first sheet
+  and return with a promise to copy all of it."
+successText: "He gives you the full petition. 'Take it where it will not
+  be lost again.' You receive the Petition of Three Countries."
+grantItem: "Petition of Three Countries"
+checkPassFlag: petitionReceived
+activateMissionBit: lgw8_act1Active
+
+Act II — "The Boundary Stone"
+activateNode: LGW
+type: skill_check
+scene: "The road checkpoint at the edge of the Waste Lands. Two guards with
+  a standing order to search travelers coming out of that territory. The
+  petition is not a formal document. It names Balin — a name courts prefer
+  not to hear — as the cause of the disaster. One guard is suspicious."
+prompt: "Deception DC 13. Present the petition as a property inventory from
+  a ruined estate — technically accurate, since it describes lost holdings.
+  Do not let the guards understand what it says about the stroke."
+failText: "The guard can read. He sees Balin's name and calls his sergeant.
+  You wait an hour. The sergeant waves you through but makes a note of you."
+successText: "The guard waves you through with a glance. The document looks
+  like an estate inventory. He has seen dozens."
+checkPassFlag: checkpointPassed
+activateCond: petitionReceived
+
+Act III — "The Clerk's Assessment"
+activateNode: LGW
+type: skill_check
+scene: "A monastery scriptorium. The clerk reads the petition carefully and
+  offers to re-draft it in legal form. This would make it more useful — and
+  would soften the line: 'the knight rode out past the dead as they lay in
+  the road.' The truest line in the document."
+prompt: "History DC 13. Argue that the petition's rough form is its value —
+  a survivor's unmediated language. Request the clerk authenticate it as
+  genuine without re-drafting."
+failText: "He will authenticate only a revised copy. Take the revised copy —
+  it is at least certified."
+successText: "He stamps the original as witnessed and genuine, form irregular,
+  content accepted. The elder's language survives. You receive the Clerk's
+  Authenticity Stamp added to the petition."
+grantItem: "Authenticated Petition"
+checkPassFlag: petitionAuthenticated
+activateCond: checkpointPassed
+
+Act IV — "The Steward's Objection"
+activateNode: LGW
+type: skill_check
+scene: "A great house on the road. The steward wants to add a supplementary
+  claim to the petition — his lord's estate lost business when the disaster
+  struck. His supplement is well-written and not false. But attached, it
+  transforms the petition from a survivor's record into a commercial dispute.
+  The elder's intent would be absorbed."
+prompt: "Insight DC 14. Read whether the steward's attachment would change
+  what the document fundamentally is — and whether to decline."
+failText: "Unclear. Accept the supplement with a note that it is separate
+  from the core record, not part of the original petition."
+successText: "You see it: his addition would change what the document is.
+  Decline. The steward is unhappy but does not pursue it."
+checkPassFlag: supplementDeclined
+activateCond: petitionAuthenticated
+
+Act V — "Filed as Catastrophe"
+activateNode: WM
+type: skill_check
+scene: "Sweelinck reads the petition twice and is quiet. Three countries
+  named. A date. One eyewitness. Four hundred and twelve names of the dead.
+  He opens the register: 'I have petitions of war damage, flood, and plague.
+  I have never had a petition of a sacred blow. A single act using an object
+  of such power that it created a permanent consequence.'"
+prompt: "History DC 12. Help Sweelinck find the right category. This is
+  not war damage, not an accident, not an act of God — it is the record of
+  one man's single sacred act and its permanent cost."
+failText: "He creates the category himself: Catastrophe Petition. He looks
+  at you. 'You may as well have suggested it.'"
+successText: "Filed as: Catastrophe Petition — Administrative Record of a
+  Disaster Caused by a Single Sacred Act. First and, one hopes, only entry.
+  You receive Sweelinck's Catastrophe Record."
+takeItem: "Petition of Three Countries"
+grantItem: "Sweelinck's Catastrophe Record"
+checkPassFlag: petitionFiled
+questComplete: true
+activateCond: supplementDeclined
+```
