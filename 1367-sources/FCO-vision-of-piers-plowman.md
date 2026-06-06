@@ -884,3 +884,93 @@ activateMissionBit: fcoFragmentsComplete
 }
 ```
 
+
+---
+
+## Cycle 8 — Angle: *The Devils' Precedent Brief — The Legal Case That Mercy Overrode*
+
+*All prior cycles reviewed. Source knowledge used directly.*
+
+**What prior cycles missed:** Passus XVIII — the Harrowing of Hell. Christ descends after the Crucifixion. Hell's devils argue from legal precedent: Adam sinned; the contract with death was valid; these souls belong to Hell by right. They have case law. They have a brief. They are legally correct. Christ argues that love is a higher law than contract and that mercy was implicit in creation before the fall. The gates break. The devils' brief was correctly argued and lost to an appeal that transcended the legal framework within which it was made.
+
+**This cycle introduces:** *The legal brief overridden by a higher principle — a correctly-argued case defeated not by a superior legal argument but by an appeal to a principle outside law.*
+
+---
+
+### Quest API Stub — "The Devils' Precedent Brief"
+
+```
+Act I — "The Defeated Brief"
+activateNode: MGF
+type: skill_check
+missionAccept: "A scholar of allegorical theology has written out the
+  devils' legal argument from Passus XVIII of Piers Plowman — the brief
+  they presented when Christ came to break the gates of Hell. The argument
+  is correct within its own terms. It was defeated. The scholar wants the
+  document preserved so that future students can see what a correctly-argued
+  losing case looks like."
+scene: "Malvern field edge at dusk. A scholar with ink-stained hands holds
+  a careful transcription of the devils' legal argument from the Harrowing
+  of Hell. Satan argues from the first contract: Adam sinned, mankind fell,
+  the souls are forfeit by legitimate obligation. Each clause is sound.
+  The brief holds together. 'The remarkable thing,' the scholar says,
+  'is that the argument is not wrong. It is simply answered by something
+  that does not argue back.'"
+prompt: "History DC 12. Identify what kind of legal document this is:
+  a precedent brief presenting the contractual basis of Hell's claim to
+  human souls. Correctly argue its category so you can ask for it."
+failText: "You misidentify the document type. The scholar corrects you
+  but gives it to you anyway — he has a copy."
+successText: "You identify it: a precedent brief asserting contractual
+  rights established at the Fall, presented in a jurisdictional challenge.
+  The scholar hands it over. You receive the Devils' Precedent Brief."
+grantItem: "Devils' Precedent Brief"
+checkPassFlag: briefReceived
+activateMissionBit: fco8_act1Active
+
+Act II — "The Counter-Argument"
+activateNode: MGF
+type: skill_check
+scene: "A friar's study, Malvern. You carry the devils' brief alongside
+  the scholar's notes on Christ's counter-argument. The friar reads both.
+  He is troubled: 'The difficulty is that Christ's response does not engage
+  with the devils' premises. He does not argue that the contract was invalid.
+  He does not argue that Adam's sin was excused. He asserts that mercy,
+  which was older than the fall, supersedes contract. This is not a legal
+  rebuttal. It is a change of jurisdiction.'"
+prompt: "History DC 13. Argue that a change of jurisdiction is a valid
+  legal response — the authority under which the contract was made was
+  superseded by a higher authority. The contract was valid in its own
+  jurisdiction; that jurisdiction was then overridden."
+failText: "The friar finds this philosophically incomplete. He will attach
+  a note: 'Jurisdictional override asserted but not demonstrated.' The
+  brief is less clean."
+successText: "He accepts this framing. He notes: 'The contract was valid.
+  The jurisdiction in which it was valid was terminated.' The brief and
+  its defeat are now clearly framed."
+checkPassFlag: counterFramed
+activateCond: briefReceived
+
+Act III — "Filed as a Losing Case"
+activateNode: WM
+type: skill_check
+scene: "Weimar archive. Sweelinck reads the devils' brief and the scholar's
+  framing. 'A correctly-argued case that lost because the court's jurisdiction
+  was changed mid-argument.' He looks at you. 'I have losing cases. I have
+  cases overturned on appeal. I have cases where new evidence was introduced.
+  I have never had a case where the entire framework of law was replaced
+  during the argument.' He pauses. 'What is the category?'"
+prompt: "History DC 11. Name the category: a legal brief that was correctly
+  argued and defeated not by a superior legal argument but by an appeal to
+  a principle that overrides the legal framework in which the brief was made."
+failText: "He creates it himself: Override by Superior Principle. He looks
+  at you. 'You may as well have suggested it.'"
+successText: "Filed: Override by Superior Principle — Legal Brief Correctly
+  Argued and Defeated by an Appeal That Changed the Jurisdictional Framework
+  Rather Than the Legal Premises. You receive Sweelinck's Override Record."
+takeItem: "Devils' Precedent Brief"
+grantItem: "Sweelinck's Override Record"
+checkPassFlag: briefFiled
+questComplete: true
+activateCond: counterFramed
+```
