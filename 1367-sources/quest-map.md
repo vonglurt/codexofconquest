@@ -1235,3 +1235,4 @@ SHK | The Rival's Door | Cycle 1 | BK/CI/IN/CY | Poem intercepted, rival blocked
 | LGW | The Petition of Three Countries | 8 | LGW/LGW/WM | Catastrophe petition — administrative record of a disaster caused by one sacred act |
 | STN | The Royal Ranger Roll | 8 | SHW/NGM/WM | Registry of collective pardon — names that transform outlaws to rangers, priority of presentation wins |
 | MAN | The Trial of Templestowe | 8 | TPR/HMT/WM | Judgment by inward conflict — verdict produced by the accuser's champion's psychological state |
+| SEN | Doctor Livesey's Fever Chart | 8 | STK/ADM/TL/WM | Record of medical neutrality — physician's documentation crossing enemy lines without distinction |

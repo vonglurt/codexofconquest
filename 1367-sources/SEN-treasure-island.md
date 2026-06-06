@@ -1082,3 +1082,123 @@ takeItem: "Israel Hands's Dirk"
 ```
 
 *SEN-07 complete. 2026-06-03.*
+
+---
+
+## Cycle 8 — Angle: *Doctor Livesey's Fever Chart — Medical Neutrality in a Shooting War*
+
+*All prior cycles reviewed. Source knowledge used directly.*
+
+**What prior cycles missed:** Doctor Livesey crossing the open ground under Silver's escort to treat wounded pirates. He was a physician: his duty was to patients regardless of which side they were on. He kept meticulous records of symptoms, treatments, and outcomes. That fever chart is both a medical document and an inadvertent roster of which mutineers were alive, where, and in what condition — potentially the most complete surviving record of the pirate complement.
+
+**This cycle introduces:** *The medical record that crossed enemy lines — a physician's neutral documentation of combatants on both sides, which could serve as evidence in a subsequent prosecution.*
+
+---
+
+### Quest API Stub — "Doctor Livesey's Fever Chart"
+
+```
+Act I — "The Chart"
+activateNode: STK
+type: skill_check
+missionAccept: "Doctor Livesey kept his physician's notes through the entire
+  island siege — stockade patients and pirate patients alike. His fever chart
+  is a medical record. It is also a list of who was alive among the mutineers
+  and when. Squire Trelawney needs it for his legal case. Livesey is willing
+  to give a copy, but the original must go somewhere it can be authenticated."
+scene: "The Hispaniola, riding at anchor off the island. The wounded are
+  being tended. Doctor Livesey sits at the ship's table with his case book.
+  He opens it to a section of dense, careful handwriting — names, symptoms,
+  dates, treatments, outcomes. He looks at you. 'I crossed their lines to
+  treat them. They trusted me as a physician. I would not have that record
+  used to hang men I treated in good faith without proper process.'"
+prompt: "Persuasion DC 13. Convince Livesey to let you carry the chart
+  to Bristol for authentication. Promise proper legal process — it will be
+  received as medical evidence, not as a list of informants."
+failText: "He will give you a copy stripped of identifying details. The
+  original stays with him for now."
+successText: "He gives you the original. 'Take it where it will be properly
+  kept. A physician's notes deserve better than a magistrate's drawer.'
+  You receive Doctor Livesey's Fever Chart."
+grantItem: "Doctor Livesey's Fever Chart"
+checkPassFlag: chartReceived
+activateMissionBit: sen8_act1Active
+
+Act II — "The Squire's Claim"
+activateNode: ADM
+type: skill_check
+scene: "Bristol. Squire Trelawney's factor has heard you carry the chart.
+  He arrives at the inn with an offer: the Squire will pay well for the chart
+  and submit it as prosecution evidence in the mutineer's trial. A fair
+  enough use — but Livesey did not give it to you for that purpose."
+prompt: "Insight DC 13. Read whether the Squire's factor is acting in good
+  faith or whether Trelawney intends to use the chart selectively, to
+  convict the men he dislikes while protecting those he has already pardoned."
+failText: "You cannot read his intent. Accept the offer cautiously — the
+  chart goes to the Squire with a written condition that it be used as
+  medical evidence, not as an informant's list."
+successText: "You see it: the Squire has already decided which men to pursue
+  and which to let go. The chart would not be used neutrally. Decline.
+  The chart goes to an authority that will treat it as Livesey intended."
+checkPassFlag: squireDeclined
+activateCond: chartReceived
+
+Act III — "The Customs Clerk"
+activateNode: TL
+type: skill_check
+scene: "Tilbury harbor. A customs and admiralty clerk has authority over
+  documents relating to maritime crimes. He receives the chart with interest.
+  'A physician's record of men on a pirate ship — this is admissible evidence
+  in a maritime court, but only if we can establish that Livesey treated these
+  men in his capacity as a licensed physician, not as a prisoner under coercion.'"
+prompt: "History DC 13. Establish that medical documentation produced under
+  conditions of professional duty retains its evidentiary status regardless
+  of the political status of the patients — a physician's notes are a
+  physician's notes."
+failText: "He is uncertain. He will forward it to the Admiralty for a ruling.
+  This takes months."
+successText: "He accepts the argument. Notes on the chart: 'Received as
+  medical evidence; physician's professional neutrality acknowledged.'"
+checkPassFlag: admiraltyAccepted
+activateCond: squireDeclined
+
+Act IV — "The Survivor's Objection"
+activateNode: TL
+type: skill_check
+scene: "One of the pirates who was treated — and who survived — has learned
+  the chart is being archived. He arrives through an intermediary with an
+  objection: the doctor promised confidentiality as a condition of treatment.
+  Submitting the chart to any authority violates that promise."
+prompt: "Persuasion DC 14. Argue that Livesey made no promise of confidentiality
+  to mutineers who were in active insurrection — medical confidentiality applies
+  to patients, but the chart is being filed as a historical record, not as
+  evidence in his specific prosecution."
+failText: "The argument is accepted, but the clerk redacts the surviving
+  man's name from the chart before filing. The record is less complete."
+successText: "The clerk notes the objection and dismisses it: medical records
+  retained for historical purposes are distinct from records submitted as
+  prosecution evidence. The chart is filed intact."
+checkPassFlag: objectionHandled
+activateCond: admiraltyAccepted
+
+Act V — "Filed as Neutral Record"
+activateNode: WM
+type: skill_check
+scene: "Sweelinck reads the fever chart. Names, symptoms, dates — stockade
+  patients on the left pages, pirate camp patients on the right. The same
+  handwriting, the same care, throughout. He sets it down. 'What is the
+  category for a medical record that crossed enemy lines and treated
+  combatants on both sides without distinction?'"
+prompt: "History DC 12. Name the category: a physician's documentation
+  of patients without regard to their legal or military status — medical
+  neutrality as an archival category."
+failText: "He creates it and looks at you. 'You may as well have suggested it.'"
+successText: "Filed: Record of Medical Neutrality — Documentation of Patients
+  Without Regard to Legal Status, First Entry. You receive Sweelinck's
+  Neutral Medical Record."
+takeItem: "Doctor Livesey's Fever Chart"
+grantItem: "Sweelinck's Neutral Medical Record"
+checkPassFlag: chartFiled
+questComplete: true
+activateCond: objectionHandled
+```
