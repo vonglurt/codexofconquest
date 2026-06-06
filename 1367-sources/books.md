@@ -479,8 +479,8 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
-| [x] | MAD | don-quixote | Don Quixote — Miguel de Cervantes | 1605–1615 | Comic Epic | 2335 | SEEDS COMPLETE 2026-06-03 — MAD-01–07 all vignettes done. No new nodes (SMR, CMG, MNT, MAS, ACL all pre-existing). See MAD-don-quixote.md. |
-| [x] | MAD | chronicle-cid | Chronicle of the Cid — Anon (Southey transl.) | 12th C source | Spanish Epic | 664 | SEEDS COMPLETE 2026-06-03 — CID-01–07 all vignettes done. New node: VLC (Valencia). See MAD-chronicle-cid.md. |
+| [x] | MAD | don-quixote | Don Quixote — Miguel de Cervantes | 1605–1615 | Comic Epic | 2335 | SEEDS COMPLETE 2026-06-03 — MAD-01–07 all vignettes done. Cycle 8 2026-06-05 — "The Disenchantment Commission" (SMR/WM). No new nodes. See MAD-don-quixote.md. |
+| [x] | MAD | chronicle-cid | Chronicle of the Cid — Anon (Southey transl.) | 12th C source | Spanish Epic | 664 | SEEDS COMPLETE 2026-06-03 — CID-01–07 all vignettes done. Cycle 8 2026-06-05 — "The Unrevoked Exile Decree" (IBR/WM). See MAD-chronicle-cid.md. |
 | [x] | LIS | lusiad | The Lusiads — Luís de Camões | 1572 | Portuguese Epic | 207 | SEEDS COMPLETE 2026-06-03 — LIS-01–07 all vignettes done. No new nodes (CVP, MDN, MLN, LHA, CON, RME, VEN all exist). See LIS-lusiad.md. |
 
 ### Italian
@@ -497,10 +497,10 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | [x] | ATH | iliad | Iliad — Homer (Lang transl.) | ~750 BC | Greek Epic | 907 | SEEDS COMPLETE 2026-06-03 — ATH-01–07 all vignettes done. No new nodes (IDC, SKN, TRH all exist). See ATH-iliad.md. |
 | [x] | ZTH | odyssey | Odyssey — Homer (Butler transl.) | ~725 BC | Greek Epic | 700 | SEEDS COMPLETE 2026-06-03 — ZTH-01–07 all vignettes done. New nodes: PHC (Scheria/Phaeacia), RME (Rome). See ZTH-odyssey.md. |
 | [x] | FCO | aeneid | Aeneid — Virgil (Latin original — Gutenberg #227) | ~19 BC | Roman Epic | 484 |
-| [x] | MLA | plutarch-lives | Plutarch's Lives — Plutarch (Dryden/Clough tr.) | c. 95–110 AD | Biography | 4222 | SEEDS COMPLETE 2026-06-03 — MLA-01–07 all vignettes done (7 cycles). questComplete added to MLA-05 (cycle 7). New nodes: LMO, THA, ROM added to Location Grid. Theme threads for all 7 cycles. See MLA-plutarch-lives.md. |
+| [x] | MLA | plutarch-lives | Plutarch's Lives — Plutarch (Dryden/Clough tr.) | c. 95–110 AD | Biography | 4222 | SEEDS COMPLETE 2026-06-03 — MLA-01–07 done. Cycle 8 2026-06-05 — "The Parallel Lives Cross-Reference" (LMO/WM). See MLA-plutarch-lives.md. |
 | [x] | NWI | anabasis | Anabasis — Xenophon (Dakyns tr. — Gutenberg #1170) | c. 401 BC | Greek Military | 545 | SEEDS COMPLETE 2026-06-03 — NWI-01–09 all vignettes done (9 cycles). questComplete added to NWI-08 (cycle 9). New nodes: CPL, BLK, SIN, ORC, VAR, MYS, ANC added to Location Grid. Theme threads for all 9 cycles. See NWI-anabasis.md. |
 | [x] | IST | alexiad | The Alexiad — Anna Komnene | c.1148 | Byzantine History | 165 | IMPORTED — 2026-06-04 — PAR new node (Palermo); IST-01–07 (7 cycles, 35 acts); questComplete on all 7; RGS→DBV; ANC→AOI; WM→NUE. Source txt missing (memory-processed). |
-| [x] | WAW | quo-vadis | Quo Vadis — Henryk Sienkiewicz (Curtin tr. — 1895) | c. 64–68 AD (Nero's Rome) | Historical Novel | 1201 | SEEDS COMPLETE 2026-06-03 — WAW-01–08 all vignettes done (8 cycles). questComplete added to WAW-03 (cycle 8). New nodes: SAU, VFM, BLO added to Location Grid. Theme threads for all 8 cycles. See WAW-quo-vadis.md. |
+| [x] | WAW | quo-vadis | Quo Vadis — Henryk Sienkiewicz (Curtin tr. — 1895) | c. 64–68 AD (Nero's Rome) | Historical Novel | 1201 | SEEDS COMPLETE 2026-06-03 — WAW-01–08 done. Cycle 8 (base): 2026-06-05 — "Petronius's Letter Copy" (SAU/WM). See WAW-quo-vadis.md. |
 
 ### Byzantine & Eastern European
 
@@ -521,21 +521,21 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
-| [x] | HTY | mahabharata | Mahabharata — Dutt verse condensation | Ancient (pub. 1899) | Hindu Epic | 83 | SEEDS COMPLETE 2026-06-03 — HTY-01–07 all vignettes done. HTY-01 stub written from prose spec; HTY-07 new cycle (The Final Form, NIS→BK→WM). GNJ node already in grid. See HTY-mahabharata.md. |
+| [x] | HTY | mahabharata | Mahabharata — Dutt verse condensation | Ancient (pub. 1899) | Hindu Epic | 83 | SEEDS COMPLETE 2026-06-03 — HTY-01–07 done. Cycle 8 2026-06-05 — "The River Crossing Record" (KUR/WM). See HTY-mahabharata.md. |
 | [x] | ADA | ramayana | Ramayana — Valmiki (Griffith transl.) | Ancient (pub. 1870) | Hindu Epic | 2339 | COMPLETE 2026-06-02 — ADA-01–48 all done. New nodes: ERZ, MOS, MRV, BUR, CAF, TAN, BUK, SAR, BYR, AMY, SIV, THE, NIC, AMD, TUN, FEZ, ANK, HAM, TIF, ADR. All 12 parts fully read. See ADA-ramayana.md. |
 
 ### East Asian & Caucasus
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
-| [x] | AMS | tale-of-genji | Tale of Genji — Murasaki Shikibu | c.1010 | Japanese Novel | 435 | SEEDS COMPLETE 2026-06-03 — AMS-01–07 all vignettes done. New node: MRG (Maragha — Observatory District and Road Junction Inn Quarter). See AMS-tale-of-genji.md. |
+| [x] | AMS | tale-of-genji | Tale of Genji — Murasaki Shikibu | c.1010 | Japanese Novel | 435 | SEEDS COMPLETE 2026-06-03 — AMS-01–07 done. Cycle 8 2026-06-05 — "Genji's Picture Catalog" (MRG/WM). See AMS-tale-of-genji.md. |
 | [ ] | TBS | knight-panther-skin | Knight in the Panther's Skin — Shota Rustaveli | c.1225 | Georgian Epic | mem | Source txt missing — prior cycle was memory-processed only (source file contained unrelated content). Add TBS-knight-panther-skin.txt before processing. Prior notes: TBS-01–07 done, GEO/TIF/ALP/CON/DAM/CAF in grid. |
 
 ### Caribbean & Americas
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
-| [x] | HAV | buccaneers-of-america | Buccaneers of America — Alexandre Exquemelin | 1678 | Pirate History | 247 | SEEDS COMPLETE 2026-06-03 — HAV-01–07 all vignettes done. No new nodes (CHI, RHD, CAF, FAM all pre-existing). See HAV-buccaneers-of-america.md. |
+| [x] | HAV | buccaneers-of-america | Buccaneers of America — Alexandre Exquemelin | 1678 | Pirate History | 247 | SEEDS COMPLETE 2026-06-03 — HAV-01–07 done. Cycle 8 2026-06-05 — "Morgan's Ransom Demand" (HAV/WM). No new nodes. See HAV-buccaneers-of-america.md. |
 
 ### Supplementary 1367 AD Sources
 
