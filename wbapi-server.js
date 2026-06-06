@@ -4595,6 +4595,16 @@ async function route(req, res) {
       if (arc)    list = list.filter(q => q.id.startsWith(arc));
       if (q)      list = list.filter(qu => (qu.title||'').toLowerCase().includes(q.toLowerCase()) || qu.id.toLowerCase().includes(q.toLowerCase()));
       if (actQ)   list = list.filter(qu => { const n=WBAPI.nodeMap[qu.activateNode]; return n && String(n.act)===String(actQ); });
+      const npcQ  = url.searchParams.get('npc');
+      const hasNpcQ = url.searchParams.get('has_npc');
+      if (npcQ)          list = list.filter(qu => qu.npc === npcQ);
+      if (hasNpcQ==='true')  list = list.filter(qu => !!qu.npc);
+      if (hasNpcQ==='false') list = list.filter(qu => !qu.npc);
+      const completeQ = url.searchParams.get('complete');
+      if (completeQ==='true')  list = list.filter(qu => !!qu.questComplete);
+      if (completeQ==='false') list = list.filter(qu => !qu.questComplete);
+      const monsterQ = url.searchParams.get('monster');
+      if (monsterQ) list = list.filter(qu => qu.monster === monsterQ);
 
       if (idsOnly) return json(res,200,{ count:list.length, ids: list.map(q=>q.id) });
 
@@ -4610,15 +4620,19 @@ async function route(req, res) {
       const hintBlock = filters.length ? null : {
         _hint: `Returning all ${total} quests. Add filters to narrow results:`,
         _filters: [
-          {param:'node',  example:'BK',                  desc:'Quests at a specific node (activateNode or waypointNode)'},
-          {param:'type',  example: allQtypes[0]||'skill_check', desc:`Quest type. Available: ${allQtypes.join(', ')}`},
-          {param:'arc',   example:'shk',                 desc:'Quest ID prefix (e.g. "shk" matches shk6_act1 etc)'},
-          {param:'q',     example:'ring',                desc:'Search title/id text'},
-          {param:'act',   example:'1',                   desc:'Quests whose node is in this act'},
-          {param:'ids',   example:'true',                desc:'Return only array of ID strings'},
+          {param:'node',     example:'BK',                  desc:'Quests at this node (activateNode or waypointNode)'},
+          {param:'type',     example:allQtypes[0]||'skill_check', desc:`Quest type. All: ${allQtypes.join(', ')}`},
+          {param:'arc',      example:'shk',                 desc:'Quest ID prefix e.g. "shk" → shk6_act1, shk6_act2…'},
+          {param:'q',        example:'ring',                desc:'Search title/id text (case-insensitive)'},
+          {param:'act',      example:'1',                   desc:'Quests whose activateNode is in this act'},
+          {param:'npc',      example:'yael',                desc:'Quests assigned to a specific NPC key'},
+          {param:'has_npc',  example:'true',                desc:'true = has NPC, false = no NPC'},
+          {param:'complete', example:'true',                desc:'true = has questComplete flag set'},
+          {param:'monster',  example:'wolf',                desc:'Quests referencing a specific monster key'},
+          {param:'ids',      example:'true',                desc:'Return only array of ID strings'},
         ],
         _typeCounts: types,
-        _examples: [`?node=BK`, `?type=${allQtypes[0]||'skill_check'}`, `?arc=shk`, `?q=ring`, `?ids=true`],
+        _examples: [`?node=BK`, `?type=skill_check`, `?arc=shk`, `?has_npc=true`, `?complete=true`, `?ids=true`],
       };
 
       logRow('total', filters.length ? `${total} total → ${out.length} matched (${filters.join(', ')})` : `${out.length} quests`);
@@ -4633,6 +4647,11 @@ async function route(req, res) {
       if (terrain) list = list.filter(m => m.terrains.includes(terrain));
       if (tier)    list = list.filter(m => m.tier === tier);
       if (q)       list = list.filter(m => (m.name||'').toLowerCase().includes(q.toLowerCase()) || m.key.toLowerCase().includes(q.toLowerCase()));
+      const hasDropQ = url.searchParams.get('has_drop');
+      if (hasDropQ==='true')  list = list.filter(m => !!WBAPI.monsterDrops?.[m.key]);
+      if (hasDropQ==='false') list = list.filter(m => !WBAPI.monsterDrops?.[m.key]);
+      const noTerrainQ = url.searchParams.get('no_terrain');
+      if (noTerrainQ==='true') list = list.filter(m => m.terrains.length === 0);
 
       if (idsOnly) return json(res,200,{ count:list.length, ids: list.map(m=>m.key) });
 
@@ -4647,13 +4666,15 @@ async function route(req, res) {
       const hintBlock = filters.length ? null : {
         _hint: `Returning all ${total} monsters. Add filters to narrow results:`,
         _filters: [
-          {param:'terrain', example:allTerrains[0]||'forest', desc:'Monsters that appear in this terrain'},
-          {param:'tier',    example:'easy',                   desc:'trivial | easy | medium | hard | boss'},
-          {param:'q',       example:'wolf',                   desc:'Search name/key text'},
-          {param:'ids',     example:'true',                   desc:'Return only array of key strings'},
+          {param:'terrain',    example:allTerrains[0]||'forest', desc:'Monsters that appear in this terrain'},
+          {param:'tier',       example:'easy',                   desc:'trivial | easy | medium | hard | boss'},
+          {param:'q',          example:'wolf',                   desc:'Search name/key text'},
+          {param:'has_drop',   example:'true',                   desc:'Only monsters with loot drops'},
+          {param:'no_terrain', example:'true',                   desc:'Only monsters not assigned to any terrain'},
+          {param:'ids',        example:'true',                   desc:'Return only array of key strings'},
         ],
         _tierCounts: tierCounts,
-        _examples: [`?terrain=forest`, `?tier=easy`, `?q=wolf`, `?ids=true`],
+        _examples: [`?terrain=forest`, `?tier=easy`, `?q=wolf`, `?has_drop=true`, `?ids=true`],
       };
 
       logRow('total', filters.length ? `${total} total → ${out.length} matched (${filters.join(', ')})` : `${out.length} monsters`);
@@ -5137,23 +5158,184 @@ async function route(req, res) {
     }
   }
 
-  if (!type || !rawId) {
+  // ── /api/count[/{subtype}] — must be before the !rawId guard ────────────
+  if (type === 'count') {
+    const subtype = rawId; // undefined = master count
+    const allNodes   = WBAPI.nodes.all();
+    const allQuests  = WBAPI.quests.all();
+    const allMonsters= WBAPI.monsters.all();
+    const allNpcs    = WBAPI.npcs.all().filter(n=>!n._inline);
+    const allTerrains= Object.keys(WBAPI.worldDb);
+    const allCoords  = WBAPI.nodeCoords;
+    const countBy = (arr, key) => {
+      const out = {};
+      arr.forEach(x => { const v = x[key]; if(v!==undefined&&v!==null) out[v]=(out[v]||0)+1; });
+      return Object.fromEntries(Object.entries(out).sort((a,b)=>b[1]-a[1]));
+    };
+
+    if (!subtype) {
+      const nodesByAct = countBy(allNodes.map(n=>({act:n.act})),'act');
+      const questsByType = countBy(allQuests.map(q=>({type:q.type})),'type');
+      const monsByTier = countBy(allMonsters.map(m=>({tier:m.tier})),'tier');
+      const nodesWithCoords  = allNodes.filter(n=>allCoords[n.id]).length;
+      const nodesWithQuests  = allNodes.filter(n=>(WBAPI._questsByNode[n.id]||[]).length>0).length;
+      const junctions        = allNodes.filter(n=>n.junction||n.id.match(/^J\d+$/)).length;
+      return json(res, 200, {
+        _hint:'Master counts. Drill into: GET /api/count/nodes | /quests | /monsters | /npcs | /terrains | /coords',
+        totals:{ nodes:allNodes.length, quests:allQuests.length, monsters:allMonsters.length,
+                 npcs:allNpcs.length, terrains:allTerrains.length,
+                 fish:(WBAPI.fishPool?.length||0)+(WBAPI.nightFishPool?.length||0),
+                 lakeMagic:Object.keys(WBAPI.lakeMagicDb||{}).length, coords:Object.keys(allCoords).length },
+        nodes:{ total:allNodes.length, withCoords:nodesWithCoords, withoutCoords:allNodes.length-nodesWithCoords,
+                withQuests:nodesWithQuests, junctions, content:allNodes.length-junctions, byAct:nodesByAct },
+        quests:{ total:allQuests.length, byType:questsByType,
+                 withNpc:allQuests.filter(q=>q.npc).length, withComplete:allQuests.filter(q=>q.questComplete).length },
+        monsters:{ total:allMonsters.length, byTier:monsByTier,
+                   withDrops:Object.keys(WBAPI.monsterDrops||{}).length },
+        npcs:{ total:allNpcs.length },
+        terrains:{ total:allTerrains.length },
+        routes:['nodes','quests','monsters','npcs','terrains','coords'].map(t=>`/api/count/${t}`),
+      });
+    }
+    if (subtype==='nodes'||subtype==='node') {
+      const byAct=countBy(allNodes.map(n=>({act:n.act})),'act');
+      const byTerrain=countBy(allNodes.map(n=>({terrain:n.name})),'terrain');
+      const wc=allNodes.filter(n=>allCoords[n.id]).length;
+      const noCoords=allNodes.filter(n=>!allCoords[n.id]).map(n=>n.id);
+      return json(res,200,{ type:'nodes',total:allNodes.length, byAct, byTerrain,
+        withCoords:wc, withoutCoords:allNodes.length-wc,
+        withQuests:allNodes.filter(n=>(WBAPI._questsByNode[n.id]||[]).length>0).length,
+        withNpcs:allNodes.filter(n=>WBAPI.npcs.byNode(n.id).length>0).length,
+        junctions:allNodes.filter(n=>n.junction||n.id.match(/^J\d+$/)).length,
+        content:allNodes.filter(n=>!n.junction&&!n.id.match(/^J\d+$/)).length,
+        nodesWithoutCoords:noCoords, filters:'GET /api/list/node?act=1&terrain=city&no_coords=true&ids=true' });
+    }
+    if (subtype==='quests'||subtype==='quest') {
+      const byType=countBy(allQuests.map(q=>({type:q.type})),'type');
+      const byArc={};
+      allQuests.forEach(q=>{const arc=q.id.replace(/_act\d+$/,'').replace(/_\d+$/,'');byArc[arc]=(byArc[arc]||0)+1;});
+      const topArcs=Object.fromEntries(Object.entries(byArc).sort((a,b)=>b[1]-a[1]).slice(0,20));
+      const byNode=countBy(allQuests.map(q=>({node:q.activateNode})),'node');
+      return json(res,200,{ type:'quests',total:allQuests.length, byType, topArcs,
+        topNodes:Object.fromEntries(Object.entries(byNode).sort((a,b)=>b[1]-a[1]).slice(0,20)),
+        withNpc:allQuests.filter(q=>q.npc).length, withoutNpc:allQuests.filter(q=>!q.npc).length,
+        withComplete:allQuests.filter(q=>q.questComplete).length, withPassFlag:allQuests.filter(q=>q.checkPassFlag).length,
+        filters:'GET /api/list/quest?type=combat&node=BK&arc=shk&has_npc=true&complete=true&ids=true' });
+    }
+    if (subtype==='monsters'||subtype==='monster') {
+      const byTier=countBy(allMonsters.map(m=>({tier:m.tier})),'tier');
+      const withDrops=Object.keys(WBAPI.monsterDrops||{}).length;
+      const byTerrain={};
+      allMonsters.forEach(m=>m.terrains.forEach(t=>{byTerrain[t]=(byTerrain[t]||0)+1;}));
+      return json(res,200,{ type:'monsters',total:allMonsters.length, byTier, withDrops, withoutDrops:allMonsters.length-withDrops,
+        withNoTerrain:allMonsters.filter(m=>m.terrains.length===0).length,
+        topTerrains:Object.fromEntries(Object.entries(byTerrain).sort((a,b)=>b[1]-a[1]).slice(0,15)),
+        filters:'GET /api/list/monster?tier=easy&terrain=forest&has_drop=true&ids=true' });
+    }
+    if (subtype==='npcs'||subtype==='npc') {
+      const byNode=countBy(allNpcs.map(n=>({node:n.node})),'node');
+      return json(res,200,{ type:'npcs',total:allNpcs.length,
+        withQuests:allNpcs.filter(n=>(WBAPI._deps.npc(n.key)?.quests?.length||0)>0).length,
+        topNodes:Object.fromEntries(Object.entries(byNode).sort((a,b)=>b[1]-a[1]).slice(0,10)),
+        filters:'GET /api/list/npc?node=BK&occupation=merchant&q=guard&ids=true' });
+    }
+    if (subtype==='terrains'||subtype==='terrain') {
+      const withMon=allTerrains.filter(t=>(WBAPI._terrainToMonsters[t]||[]).length>0).length;
+      const withNodes=allTerrains.filter(t=>Object.values(WBAPI.nodeMap).some(n=>n.name===t)).length;
+      return json(res,200,{ type:'terrains',total:allTerrains.length,
+        withMonsters:withMon, withoutMonsters:allTerrains.length-withMon,
+        usedByNodes:withNodes, unusedByNodes:allTerrains.length-withNodes,
+        allKeys:allTerrains, filters:'GET /api/list/terrain?q=city&ids=true' });
+    }
+    if (subtype==='coords') {
+      const total=Object.keys(allCoords).length;
+      const inMap=allNodes.filter(n=>allCoords[n.id]).length;
+      const orphan=Object.keys(allCoords).filter(k=>!WBAPI.nodeMap[k]).length;
+      const noCoords=allNodes.filter(n=>!allCoords[n.id]).map(n=>n.id);
+      return json(res,200,{ type:'coords',total, inNodeMap:inMap, orphanCoords:orphan,
+        nodesWithoutCoords:allNodes.length-inMap, nodesWithoutCoordsList:noCoords.slice(0,50),
+        note:noCoords.length>50?`...and ${noCoords.length-50} more`:'all nodes have coords',
+        filters:'GET /api/coords | GET /api/list/node?no_coords=true' });
+    }
+    return json(res,404,{ error:`Unknown count sub-type: "${subtype}"`,
+      available:['nodes','quests','monsters','npcs','terrains','coords'],
+      routes:['nodes','quests','monsters','npcs','terrains','coords'].map(t=>`/api/count/${t}`),
+      masterCount:'/api/count' });
+  }
+
+  // location can work without rawId (lists all locations), count is already handled above
+  if (!type || (!rawId && type !== 'location')) {
     logResponse(method, url.pathname, 400, 'missing type/id');
-    return json(res, 400, { error: 'Path: /api/{type}/{id}' });
+    return json(res, 400, { error: 'Path: /api/{type}/{id}', hint:'GET /api/list for all entity types and counts', routeIndex:'/api/list' });
   }
 
   // ── Location (composite) ──
   if (type === 'location') {
+    // /api/location — list all locations with counts (no id needed)
+    if (!rawId || rawId === 'list') {
+      const allLocs = WBAPI.nodes.all().map(n => {
+        const q  = (WBAPI._questsByNode[n.id]||[]).length;
+        const np = WBAPI.npcs.byNode(n.id).length;
+        const mn = (WBAPI._nodeToMonsters?.[n.id] || (WBAPI._terrainToMonsters[n.name]||[])).length;
+        return { code:n.id, label:n.label, terrain:n.name, act:n.act,
+                 counts:{ quests:q, npcs:np, monsters:mn },
+                 hasCoords:!!WBAPI.nodeCoords[n.id] };
+      });
+      const actQ = url.searchParams.get('act');
+      const terrainQ = url.searchParams.get('terrain');
+      const q = url.searchParams.get('q');
+      const hasQuestsQ = url.searchParams.get('has_quests');
+      let filtered = allLocs;
+      if (actQ) filtered = filtered.filter(l=>String(l.act)===String(actQ));
+      if (terrainQ) filtered = filtered.filter(l=>l.terrain===terrainQ);
+      if (q) filtered = filtered.filter(l=>(l.label||'').toLowerCase().includes(q.toLowerCase())||l.code.toLowerCase().includes(q.toLowerCase()));
+      if (hasQuestsQ==='true') filtered = filtered.filter(l=>l.counts.quests>0);
+      if (hasQuestsQ==='false') filtered = filtered.filter(l=>l.counts.quests===0);
+      const idsOnly = url.searchParams.get('ids')==='true';
+      if (idsOnly) return json(res, 200, { count:filtered.length, ids:filtered.map(l=>l.code) });
+
+      const hint = (!actQ&&!terrainQ&&!q&&!hasQuestsQ) ? {
+        _hint:`Listing all ${allLocs.length} locations. Filter with: ?act=1 ?terrain=city ?q=birka ?has_quests=true ?ids=true`,
+        _filters:[
+          {param:'act',        example:'1',      desc:'Act number'},
+          {param:'terrain',    example:'city',   desc:'Terrain key'},
+          {param:'q',          example:'birka',  desc:'Label/code search'},
+          {param:'has_quests', example:'true',   desc:'Only locations with quests'},
+          {param:'ids',        example:'true',   desc:'IDs only'},
+        ],
+      } : null;
+      const out = hint ? [hint, ...filtered] : filtered;
+      logResponse(method, url.pathname, 200, `${filtered.length} locations`);
+      return json(res, 200, out);
+    }
+
     const r = locationConnections(rawId);
     if (r) {
       const node = WBAPI.nodeMap[rawId] || {};
+      const coords = WBAPI.nodeCoords[rawId] || null;
+      const links = ['N','E','S','W'].reduce((acc,d) => { if(node[d]) acc[d]=node[d]; return acc; }, {});
+      const linkedNodes = Object.entries(links).map(([d,code])=>({
+        dir:d, code, label:WBAPI.nodeMap[code]?.label||code, terrain:WBAPI.nodeMap[code]?.name||null,
+        coords: WBAPI.nodeCoords[code]||null
+      }));
+      const out = {
+        ...r,
+        coords,
+        links: linkedNodes,
+        counts: { monsters:r.monsters?.length||0, quests:r.quests?.length||0, npcs:r.npcs?.length||0, linkedNodes:linkedNodes.length },
+        _detail: `Full entity: GET /api/node/${rawId}`,
+        _nearby: `Nearby coords: GET /api/coords/near/${rawId}?radius=8`,
+        _validate: `Walkability: GET /api/graph/validate/${rawId}`,
+      };
       logRow('location', `${rawId}  ·  ${node.label||rawId}  ·  Act ${node.act||'?'}`);
-      logRow('connections', `${r.monsters?.length||0} monsters  ·  ${r.quests?.length||0} quests  ·  ${r.npcs?.length||0} NPCs`);
+      logRow('connections', `${out.counts.monsters} monsters  ·  ${out.counts.quests} quests  ·  ${out.counts.npcs} NPCs  ·  ${out.counts.linkedNodes} links`);
       logResponse(method, url.pathname, 200, `location/${rawId}`);
-      return json(res, 200, r);
+      return json(res, 200, out);
     }
+    // Verbose 404 — list what's available
+    const allIds = WBAPI.nodes.all().map(n=>n.id);
     logResponse(method, url.pathname, 404, `location "${rawId}" not found`);
-    return json(res, 404, { error: `Location "${rawId}" not found` });
+    return json(res, 404, { error:`Location "${rawId}" not found`, hint:'GET /api/location lists all locations', allNodeCodes:allIds, count:allIds.length });
   }
 
   // ── Terrain (WORLD_DB) ──
@@ -5215,7 +5397,7 @@ async function route(req, res) {
 
   if (!CONNECT[type]) {
     logResponse(method, url.pathname, 400, `Unknown type "${type}"`);
-    return json(res, 400, { error: `Unknown type "${type}". Use: node quest monster npc terrain location fish lake-magic` });
+    return json(res, 400, { error: `Unknown type "${type}". Use: node quest monster npc terrain location fish lake-magic count`, availableTypes: ['node','quest','monster','npc','terrain','location','fish','lake-magic','count'], routeIndex: '/api/list' });
   }
 
   const key = resolveId(type, rawId);
@@ -5418,33 +5600,130 @@ async function route(req, res) {
 
     const r = CONNECT[type](key);
     if (r) {
-      // Rich entity breadcrumb based on type
+      // ── ENRICH: add full details to every entity GET ──────────────────────
       const ent = r.entity || {};
+
       if (type === 'node') {
-        const exits = Object.entries(r.connections?.linkedNodes||{}).filter(([,v])=>v).map(([d,c])=>`${d}:${c}`).join(' ');
+        // Full coordinates
+        r.entity.coords = WBAPI.nodeCoords[key] || null;
+        // Full linked-node details for each direction
+        const dirs = ['N','E','S','W'];
+        r.entity.links = {};
+        dirs.forEach(d => {
+          const tgt = ent[d];
+          if (tgt) r.entity.links[d] = { code:tgt, label:WBAPI.nodeMap[tgt]?.label||tgt,
+            terrain:WBAPI.nodeMap[tgt]?.name||null, act:WBAPI.nodeMap[tgt]?.act||null,
+            coords:WBAPI.nodeCoords[tgt]||null };
+        });
+        // Quest count + list on entity
+        const qlist = (WBAPI._questsByNode[key]||[]);
+        r.entity.questCount = qlist.length;
+        r.entity.questIds   = qlist.map(q=>q.id);
+        // NPC count
+        r.entity.npcCount = WBAPI.npcs.byNode(key).length;
+        // Walkability helpers
+        r._lookups = [
+          `GET /api/location/${key}`,
+          `GET /api/graph/validate/${key}`,
+          `GET /api/coords/near/${key}?radius=8`,
+          `GET /api/list/quest?node=${key}`,
+          `GET /api/list/npc?node=${key}`,
+        ];
+        const exits = dirs.filter(d=>ent[d]).map(d=>`${d}:${ent[d]}`).join(' ');
         logRow('entity', `${ent.label||key}  ·  Act ${ent.act}  ·  terrain: ${ent.name||'—'}`);
-        logRow('connections', `${(r.connections?.quests||[]).length} quests  ·  ${(r.connections?.npcs||[]).length} NPCs  ·  ${(r.connections?.monsters||[]).length} monsters${exits?' ·  exits: '+exits:''}`);
+        logRow('connections', `${qlist.length} quests  ·  ${r.entity.npcCount} NPCs  ·  ${(r.connections?.monsters||[]).length} monsters${exits?' ·  exits: '+exits:''}`);
+
       } else if (type === 'quest') {
-        logRow('entity', `${ent.title||key}  ·  type: ${ent.type}  ·  node: ${ent.activateNode||'—'}`);
+        // Full node details
+        const qnode = WBAPI.nodeMap[ent.activateNode];
+        r.entity.nodeDetails   = qnode ? { code:ent.activateNode, label:qnode.label, terrain:qnode.name, act:qnode.act, coords:WBAPI.nodeCoords[ent.activateNode]||null } : null;
+        // Full NPC details if attached
+        const qnpc = ent.npc ? WBAPI.npcs.get?.(ent.npc) : null;
+        r.entity.npcDetails = qnpc ? { key:qnpc.key, name:qnpc.name, node:qnpc.node, occupation:qnpc.occupation } : null;
+        // All schema fields with nulls shown explicitly
+        const QUEST_FIELDS = ['id','type','title','desc','passText','failText','activateNode','waypointNode',
+          'npc','checkStat','checkDC','checkPassFlag','activateCond','questComplete','monster',
+          'monsterHP','monsterAC','grantItem','takeItem','activateMissionBit'];
+        QUEST_FIELDS.forEach(f => { if (r.entity[f] === undefined) r.entity[f] = null; });
+        r._lookups = [
+          `GET /api/quest/${key}/chain`,
+          `GET /api/location/${ent.activateNode||''}`,
+          `GET /api/list/quest?arc=${key.replace(/_act\d+$/,'')}`,
+        ];
         const up = (r.connections?.upstream||[]).length, dn = (r.connections?.downstream||[]).length;
+        logRow('entity', `${ent.title||key}  ·  type: ${ent.type}  ·  node: ${ent.activateNode||'—'}`);
         logRow('chain', `↑${up} upstream  ·  ↓${dn} downstream${ent.npc?' ·  NPC: '+ent.npc:''}`);
+
       } else if (type === 'monster') {
+        // All schema fields
+        const MON_FIELDS = ['key','name','tier','ac','hp','atk','dmg','xp','morale','loot'];
+        MON_FIELDS.forEach(f => { if (r.entity[f] === undefined) r.entity[f] = null; });
+        // Full drop details
+        const drop = WBAPI.monsterDrops?.[key];
+        r.entity.drop = drop || null;
+        // Associated quests
+        const questsWithMon = WBAPI.quests.all().filter(q=>q.monster===key);
+        r.entity.questCount = questsWithMon.length;
+        r.entity.questIds   = questsWithMon.map(q=>q.id);
+        // Full terrain details
+        if (r.connections?.terrains) {
+          r.connections.terrainDetails = r.connections.terrains.map(tk => ({
+            key:tk, label:WBAPI.worldDb[tk]?.label||tk, icon:WBAPI.worldDb[tk]?.icon||'',
+            nodeCount: Object.values(WBAPI.nodeMap).filter(n=>n.name===tk).length
+          }));
+        }
+        r._lookups = [
+          `GET /api/loot-drop?monster=${key}`,
+          `GET /api/list/monster?tier=${ent.tier||''}`,
+        ];
         logRow('entity', `${ent.name||key}  ·  AC ${ent.ac}  HP ${ent.hp}  ATK +${ent.atk}  tier: ${ent.tier||'?'}`);
-        logRow('terrains', `${(r.connections?.terrains||[]).length} terrains${r.connections?.drop?' ·  drop: '+r.connections.drop.name:''}`);
+        logRow('terrains+quests', `${(r.connections?.terrains||[]).length} terrains  ·  ${questsWithMon.length} quest refs${drop?' ·  drop: '+drop.name:''}`);
+
       } else if (type === 'npc') {
+        // Full node details
+        const nnode = WBAPI.nodeMap[ent.node];
+        r.entity.nodeDetails = nnode ? { code:ent.node, label:nnode.label, terrain:nnode.name, act:nnode.act, coords:WBAPI.nodeCoords[ent.node]||null } : null;
+        // All quests this NPC appears in — full detail
+        const npcQuests = WBAPI.quests.all().filter(q=>q.npc===key);
+        r.entity.questCount  = npcQuests.length;
+        r.entity.questIds    = npcQuests.map(q=>q.id);
+        r.entity.questsDetail= npcQuests.map(q=>({ id:q.id, title:q.title, type:q.type, activateNode:q.activateNode }));
+        // All schema fields
+        const NPC_FIELDS = ['key','name','node','role','occupation','desc','state'];
+        NPC_FIELDS.forEach(f => { if (r.entity[f] === undefined) r.entity[f] = null; });
+        r._lookups = [
+          `GET /api/location/${ent.node||''}`,
+          `GET /api/list/quest?node=${ent.node||''}`,
+        ];
         logRow('entity', `${ent.name||key}  ·  ${ent.occupation||''}  ·  node: ${ent.node||'—'}`);
+        logRow('quests', `${npcQuests.length} quests reference this NPC`);
+
       } else {
         const connSummary = Object.entries(r.connections||{})
           .filter(([,v]) => Array.isArray(v) ? v.length : v)
           .map(([k,v]) => `${k}:${Array.isArray(v)?v.length:1}`).join('  ·  ');
         if (connSummary) logRow('connections', connSummary);
       }
+
       logRow('can delete', r._meta?.canDelete ? `${C.green}yes${C.reset}` : `${C.red}no — blocked by ${JSON.stringify(r._meta?.blockedBy||{})}${C.reset}`);
       logResponse(method, url.pathname, 200, `${type}/${key}`);
       return json(res, 200, r);
     }
+
+    // Verbose 404 — show all valid IDs for this type
     logResponse(method, url.pathname, 404, `${type} "${rawId}" not found`);
-    return json(res, 404, { error: `${type} "${rawId}" not found` });
+    const allIds404 = type==='node' ? WBAPI.nodes.all().map(n=>n.id)
+      : type==='quest'   ? WBAPI.quests.all().map(q=>q.id)
+      : type==='monster' ? WBAPI.monsters.all().map(m=>m.key)
+      : type==='npc'     ? WBAPI.npcs.all().filter(n=>!n._inline).map(n=>n.key)
+      : type==='terrain' ? Object.keys(WBAPI.worldDb)
+      : [];
+    return json(res, 404, {
+      error: `${type} "${rawId}" not found`,
+      hint: `Use GET /api/list/${type} to browse all ${type}s, or GET /api/list/ids/${type} for all valid IDs`,
+      count: allIds404.length,
+      allValidIds: allIds404,
+    });
   }
 
   // ── PUT ──
