@@ -1234,3 +1234,4 @@ SHK | The Rival's Door | Cycle 1 | BK/CI/IN/CY | Poem intercepted, rival blocked
 | LCY | Aylward's Scroll | 8 | LCY/TL/WM | Manumission document from Barbary coaster — freedom granted, man's whereabouts unknown, family moved on |
 | LGW | The Petition of Three Countries | 8 | LGW/LGW/WM | Catastrophe petition — administrative record of a disaster caused by one sacred act |
 | STN | The Royal Ranger Roll | 8 | SHW/NGM/WM | Registry of collective pardon — names that transform outlaws to rangers, priority of presentation wins |
+| MAN | The Trial of Templestowe | 8 | TPR/HMT/WM | Judgment by inward conflict — verdict produced by the accuser's champion's psychological state |

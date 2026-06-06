@@ -1131,3 +1131,109 @@ takeItem: "Athelstane's Marriage Withdrawal Seal"
 ```
 
 *MAN-07 complete. 2026-06-03.*
+
+*MAN-07 complete. 2026-06-03.*
+
+---
+
+## Cycle 8 — Angle: *Rebecca's Trial Record — The Combat Where No Blow Was Struck*
+
+*All prior cycles reviewed. Source knowledge used directly.*
+
+**What prior cycles missed:** The legal record of Rebecca's Templar trial for sorcery. A formal proceeding. Witnesses. A champion (Ivanhoe, barely upright). The accuser's champion (Bois-Guilbert) rode into the lists — and died before a blow was struck, destroyed by his own conflicting passions. The Grand Master declared God's judgment and released Rebecca. That record either vindicates Rebecca or is suppressed by the order.
+
+**This cycle introduces:** *The trial record where the verdict was divine intervention — a legal document where a man died of his own inward conflict and the court called it God's verdict.*
+
+---
+
+### Quest API Stub — "The Trial of Templestowe"
+
+```
+Act I — "The Record in the Scriptorium"
+activateNode: TPR
+type: skill_check
+missionAccept: "The Grand Master released Rebecca and called Bois-Guilbert's
+  death God's judgment. The trial record proves it — but senior knights want
+  it sealed. The preceptory recorder has unlocked the scriptorium and left.
+  The document is on the desk."
+scene: "Templestowe scriptorium, morning after the trial. The recorder stands
+  by the door. He does not want to lie for the order. The trial record —
+  testimony, challenge, Bois-Guilbert's death, the Grand Master's declaration —
+  lies on the desk. He is not looking at you."
+prompt: "Persuasion DC 13. Convince the recorder to formally sign a transfer
+  note rather than simply leave the room. His name gives the document weight."
+failText: "He won't sign. He leaves. You take the document. He will say he
+  saw nothing — which is technically true."
+successText: "He signs: Document of the Trial of Templestowe, transferred
+  to bearer for presentation to lawful ecclesiastical authority. Hands
+  shaking, signature firm. You receive the Trial Record of Templestowe."
+grantItem: "Trial Record of Templestowe"
+checkPassFlag: recordReceived
+activateMissionBit: man8_act1Active
+
+Act II — "The Preceptory Gate"
+activateNode: TPR
+type: skill_check
+scene: "The gate of Templestowe. Two knight-administrators, politely asking
+  to see what you carry. Politeness in the powerful is often the most
+  dangerous thing."
+prompt: "Deception DC 14. Present the transfer note and suggest you carry
+  a copy to be made in town — technically plausible."
+failText: "They see through it. You surrender a copy, keep the original —
+  the recorder made two. The document gets out, though not cleanly."
+successText: "They read the note, confer, and let you through. One looks
+  at you for a long moment. He says nothing."
+checkPassFlag: gatePassed
+activateCond: recordReceived
+
+Act III — "The Bishop's House"
+activateNode: HMT
+type: skill_check
+scene: "The Bishop of Hereford reads the trial record. 'A man dead before a
+  blow was struck, and the court calls it God's judgment. The order will argue
+  the trial is incomplete. Can you give me corroborating witness to
+  Bois-Guilbert's state before the combat?'"
+prompt: "Persuasion DC 13. The Grand Master's own declaration is the
+  corroboration — no subordinate official of the order can overrule him."
+failText: "He wants more. He will write to the Grand Master directly.
+  Weeks of delay while the order reasserts its position."
+successText: "He accepts. Will publish the record with the Grand Master's
+  declaration as part of the document."
+checkPassFlag: bishopAccepts
+activateCond: gatePassed
+
+Act IV — "The Order's Objection"
+activateNode: HMT
+type: skill_check
+scene: "A Templar envoy arrives: the record was removed without Chapter
+  authorization, the recorder acted outside his authority, the document should
+  be returned. The Bishop looks at the Fighter once with a question in his eyes."
+prompt: "History DC 13. An ecclesiastical court in possession of a document
+  concerning matters of faith cannot be required by a military order to return
+  it — the Church's jurisdiction supersedes the order's administrative authority."
+failText: "The Bishop is uncertain. He holds the record while writing to his
+  Archbishop. More delay."
+successText: "The Bishop cites this with more confidence after you nod.
+  The envoy protests. 'The record stays.'"
+checkPassFlag: objectionDenied
+activateCond: bishopAccepts
+
+Act V — "Judgment by Inward Conflict"
+activateNode: WM
+type: skill_check
+scene: "Sweelinck reads the trial record and publication note. 'A trial where
+  the accusing champion died of no visible wound. The court called it God's
+  judgment. What is the category for a verdict produced by the accuser's
+  champion's psychological state rather than any external act?'"
+prompt: "History DC 12. Name the category: judgment produced not by formal
+  combat but by the accuser's champion's inward conflict."
+failText: "He creates it and looks at you. 'You may as well have suggested it.'"
+successText: "Filed: Judgment by Unintended Consequence — Legal Proceedings
+  Where the Verdict Was Produced by the Psychological State of the Accuser's
+  Champion. You receive Sweelinck's Judgment Record."
+takeItem: "Trial Record of Templestowe"
+grantItem: "Sweelinck's Judgment Record"
+checkPassFlag: recordFiled
+questComplete: true
+activateCond: objectionDenied
+```
