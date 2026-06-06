@@ -1073,3 +1073,88 @@ TOKEN TAKEN: Thorhall's Procedural Account.
 ---
 
 *GDN SEEDS COMPLETE. §GDN-01 through §GDN-07 written. Admin pass: quest-map.md, books.md, plan.md.*
+
+---
+
+## Cycle 8 — Angle: *The Burning Witness Account — The Death Arranged as a Final Statement*
+
+*All prior cycles reviewed. Source knowledge used directly.*
+
+**What prior cycles missed:** The burning of Bergthorskoll. Flosi's men set fire to the hall. Njal and Bergthora refused to leave. He said he was old, not up to the vengeance journey that would follow. He arranged the children's exit, then he and Bergthora lay down on the bed together and pulled an oxhide over themselves. When the ashes were cleared, the bodies were found in that arrangement — with Njal's hands undamaged and the hide above them. That deliberate arrangement is Njal's final legal document. The witness account records it.
+
+**This cycle introduces:** *The death arranged in advance — the witness account of a scene where the manner of dying was itself a final considered statement.*
+
+---
+
+### Quest API Stub — "The Burning Witness Account"
+
+```
+Act I — "What Was Found"
+activateNode: ISL
+type: skill_check
+missionAccept: "A witness was present when the ashes of Bergthorskoll were
+  cleared. He recorded what he found. He has given his account to a chieftain
+  who wants to use it in the subsequent lawsuit against Flosi. But the account
+  contains details that go beyond evidence of murder — it also records the
+  deliberate arrangement of the deaths. He wants it preserved as both."
+scene: "Iceland Althing, the aftermath of the burning. A man holds a written
+  account of what was found in the ashes: Njal and Bergthora arranged on the
+  bed, the oxhide pulled over them, Njal's hands undamaged. 'He made a space,'
+  the witness says. 'He cleared the floor for his grandchild to lie in.
+  He set the oxhide. Then he lay down. This was arranged.' He looks at you.
+  'This should not be only evidence in a murder trial.'"
+prompt: "Persuasion DC 13. Convince him to give you the account for both
+  uses: as evidence in the lawsuit and as a preserved record of an unusual
+  death — a death arranged as a considered act rather than imposed as violence."
+failText: "He will give only the evidentiary portions. The deliberateness
+  of the arrangement must be inferred from evidence, not stated."
+successText: "He gives you the full account. 'Record what I saw. Record
+  that it was arranged. The law will use part of it. The archive can hold
+  all of it.' You receive the Burning Witness Account."
+grantItem: "Burning Witness Account"
+checkPassFlag: accountReceived
+activateMissionBit: gdn8_act1Active
+
+Act II — "The Evidentiary Use"
+activateNode: BK
+type: skill_check
+scene: "Birka. A legal scholar reviews the witness account for the lawsuit.
+  He extracts the evidentiary portions — the fire's origin, the failure
+  to allow exit, the specific acts that constitute murder. Then he looks at
+  the remaining portion: the arrangement of the bodies, the oxhide, the
+  undamaged hands. 'This part is not evidence of murder,' he says. 'It is
+  evidence that Njal chose his death and arranged it. The law has no
+  category for that distinction.'"
+prompt: "History DC 13. Propose that the two portions be formally separated:
+  the evidentiary record goes to the lawsuit; the descriptive record of the
+  deliberate arrangement goes to the archive as a separate document."
+failText: "He insists on keeping the account intact — separating it would
+  weaken the evidentiary portion."
+successText: "He accepts the separation with a condition: both portions
+  must reference each other so neither can be used without acknowledging
+  the other."
+checkPassFlag: separationAccepted
+activateCond: accountReceived
+
+Act III — "Filed as Arranged Death"
+activateNode: WM
+type: skill_check
+scene: "Sweelinck reads the descriptive portion — the arrangement, the oxhide,
+  the undamaged hands. 'He arranged his death,' Sweelinck says. 'Not metaphorically.
+  He made a physical arrangement of the space and of his body. This is a
+  document of a person who treated his own death as a considered act requiring
+  preparation.' He looks at you. 'What is the category for a witness account
+  of a death that was itself a deliberate arrangement?'"
+prompt: "History DC 11. Name the category: a witness account of a death
+  arranged in advance by the dying person as a final considered statement."
+failText: "He creates it himself: Arranged Death Record. He looks at you.
+  'You may as well have suggested it.'"
+successText: "Filed: Arranged Death Record — Witness Account of a Death
+  Deliberately Prepared by the Dying Person; the Arrangement Was Itself
+  a Statement. You receive Sweelinck's Death Record."
+takeItem: "Burning Witness Account"
+grantItem: "Sweelinck's Death Record"
+checkPassFlag: accountFiled
+questComplete: true
+activateCond: separationAccepted
+```
